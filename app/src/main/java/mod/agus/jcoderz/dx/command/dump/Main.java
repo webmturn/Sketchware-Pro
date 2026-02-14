@@ -16,6 +16,8 @@
 
 package mod.agus.jcoderz.dx.command.dump;
 
+
+import android.util.Log;
 import mod.agus.jcoderz.dex.util.FileUtils;
 import mod.agus.jcoderz.dx.cf.iface.ParseException;
 import mod.agus.jcoderz.dx.util.HexParser;
@@ -102,7 +104,7 @@ public class Main {
             } catch (ParseException ex) {
                 System.err.println("\ntrouble parsing:");
                 if (parsedArgs.debug) {
-                    ex.printStackTrace();
+                    Log.e("Main", ex.getMessage(), ex);
                 } else {
                     ex.printContext(System.err);
                 }

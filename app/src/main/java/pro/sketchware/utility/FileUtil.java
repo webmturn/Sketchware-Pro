@@ -157,7 +157,7 @@ public class FileUtil {
         try {
             if (!file.exists()) file.createNewFile();
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("FileUtil", e.getMessage(), e);
         }
     }
 
@@ -173,7 +173,7 @@ public class FileUtil {
                 sb.append(new String(buff, 0, length));
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("FileUtil", e.getMessage(), e);
         }
 
         return sb.toString();
@@ -189,7 +189,7 @@ public class FileUtil {
                 sb.append(new String(buff, 0, length));
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("FileUtil", e.getMessage(), e);
         }
 
         return sb.toString();
@@ -202,7 +202,7 @@ public class FileUtil {
             fileWriter.write(str);
             fileWriter.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("FileUtil", e.getMessage(), e);
         }
     }
 
@@ -219,7 +219,7 @@ public class FileUtil {
                 fos.write(buffer, 0, length);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("FileUtil", e.getMessage(), e);
         }
     }
 
@@ -518,7 +518,7 @@ public class FileUtil {
         try (FileOutputStream out = new FileOutputStream(destPath)) {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("FileUtil", e.getMessage(), e);
         }
     }
 
@@ -528,13 +528,17 @@ public class FileUtil {
         int width = decodeFile.getWidth();
         int height = decodeFile.getHeight();
         if (width > height) {
-            int i3 = i / width * height;
+            int i3 = i * height / width;
             i2 = i;
             i = i3;
         } else {
             i2 = width * i / height;
         }
-        return Bitmap.createScaledBitmap(decodeFile, i2, i, true);
+        Bitmap scaled = Bitmap.createScaledBitmap(decodeFile, i2, i, true);
+        if (scaled != decodeFile) {
+            decodeFile.recycle();
+        }
+        return scaled;
     }
 
     public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
@@ -565,13 +569,21 @@ public class FileUtil {
 
     public static void resizeBitmapFileRetainRatio(String fromPath, String destPath, int max) {
         if (isExistFile(fromPath)) {
-            saveBitmap(getScaledBitmap(fromPath, max), destPath);
+            Bitmap scaled = getScaledBitmap(fromPath, max);
+            saveBitmap(scaled, destPath);
+            scaled.recycle();
         }
     }
 
     public static void resizeBitmapFileToSquare(String fromPath, String destPath, int max) {
         if (isExistFile(fromPath)) {
-            saveBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeFile(fromPath), max, max, true), destPath);
+            Bitmap decodeFile = BitmapFactory.decodeFile(fromPath);
+            Bitmap scaled = Bitmap.createScaledBitmap(decodeFile, max, max, true);
+            if (scaled != decodeFile) {
+                decodeFile.recycle();
+            }
+            saveBitmap(scaled, destPath);
+            scaled.recycle();
         }
     }
 
@@ -589,7 +601,9 @@ public class FileUtil {
         canvas.drawCircle((float) (decodeFile.getWidth() / 2), (float) (decodeFile.getHeight() / 2), (float) (decodeFile.getWidth() / 2), paint);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         canvas.drawBitmap(decodeFile, rect, rect, paint);
+        decodeFile.recycle();
         saveBitmap(createBitmap, destPath);
+        createBitmap.recycle();
     }
 
     public static void resizeBitmapFileWithRoundedBorder(String fromPath, String destPath, int pixels) {
@@ -608,7 +622,9 @@ public class FileUtil {
         canvas.drawRoundRect(rectF, f, f, paint);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         canvas.drawBitmap(decodeFile, rect, rect, paint);
+        decodeFile.recycle();
         saveBitmap(createBitmap, destPath);
+        createBitmap.recycle();
     }
 
     public static void cropBitmapFileFromCenter(String fromPath, String destPath, int w, int h) {
@@ -618,8 +634,10 @@ public class FileUtil {
         int width = src.getWidth();
         int height = src.getHeight();
 
-        if (width < w && height < h)
+        if (width < w && height < h) {
+            src.recycle();
             return;
+        }
 
         int x = 0;
         int y = 0;
@@ -640,7 +658,11 @@ public class FileUtil {
             ch = height;
 
         Bitmap bitmap = Bitmap.createBitmap(src, x, y, cw, ch);
+        if (bitmap != src) {
+            src.recycle();
+        }
         saveBitmap(bitmap, destPath);
+        bitmap.recycle();
     }
 
     public static void rotateBitmapFile(String fromPath, String destPath, float angle) {
@@ -649,7 +671,12 @@ public class FileUtil {
         Bitmap decodeFile = BitmapFactory.decodeFile(fromPath);
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
-        saveBitmap(Bitmap.createBitmap(decodeFile, 0, 0, decodeFile.getWidth(), decodeFile.getHeight(), matrix, true), destPath);
+        Bitmap rotated = Bitmap.createBitmap(decodeFile, 0, 0, decodeFile.getWidth(), decodeFile.getHeight(), matrix, true);
+        if (rotated != decodeFile) {
+            decodeFile.recycle();
+        }
+        saveBitmap(rotated, destPath);
+        rotated.recycle();
     }
 
     public static void scaleBitmapFile(String fromPath, String destPath, float x, float y) {
@@ -658,7 +685,12 @@ public class FileUtil {
         Bitmap decodeFile = BitmapFactory.decodeFile(fromPath);
         Matrix matrix = new Matrix();
         matrix.postScale(x, y);
-        saveBitmap(Bitmap.createBitmap(decodeFile, 0, 0, decodeFile.getWidth(), decodeFile.getHeight(), matrix, true), destPath);
+        Bitmap scaled = Bitmap.createBitmap(decodeFile, 0, 0, decodeFile.getWidth(), decodeFile.getHeight(), matrix, true);
+        if (scaled != decodeFile) {
+            decodeFile.recycle();
+        }
+        saveBitmap(scaled, destPath);
+        scaled.recycle();
     }
 
     public static void skewBitmapFile(String fromPath, String destPath, float x, float y) {
@@ -667,7 +699,12 @@ public class FileUtil {
         Bitmap decodeFile = BitmapFactory.decodeFile(fromPath);
         Matrix matrix = new Matrix();
         matrix.postSkew(x, y);
-        saveBitmap(Bitmap.createBitmap(decodeFile, 0, 0, decodeFile.getWidth(), decodeFile.getHeight(), matrix, true), destPath);
+        Bitmap skewed = Bitmap.createBitmap(decodeFile, 0, 0, decodeFile.getWidth(), decodeFile.getHeight(), matrix, true);
+        if (skewed != decodeFile) {
+            decodeFile.recycle();
+        }
+        saveBitmap(skewed, destPath);
+        skewed.recycle();
     }
 
     public static void setBitmapFileColorFilter(String fromPath, String destPath, int color) {
@@ -675,10 +712,14 @@ public class FileUtil {
 
         Bitmap decodeFile = BitmapFactory.decodeFile(fromPath);
         Bitmap createBitmap = Bitmap.createBitmap(decodeFile, 0, 0, decodeFile.getWidth() - 1, decodeFile.getHeight() - 1);
+        if (createBitmap != decodeFile) {
+            decodeFile.recycle();
+        }
         Paint paint = new Paint();
         paint.setColorFilter(new LightingColorFilter(color, 1));
         new Canvas(createBitmap).drawBitmap(createBitmap, 0.0f, 0.0f, paint);
         saveBitmap(createBitmap, destPath);
+        createBitmap.recycle();
     }
 
     public static void setBitmapFileBrightness(String fromPath, String destPath, float brightness) {
@@ -698,7 +739,9 @@ public class FileUtil {
         Paint paint = new Paint();
         paint.setColorFilter(new ColorMatrixColorFilter(cm));
         canvas.drawBitmap(src, 0, 0, paint);
+        src.recycle();
         saveBitmap(bitmap, destPath);
+        bitmap.recycle();
     }
 
     public static void setBitmapFileContrast(String fromPath, String destPath, float contrast) {
@@ -718,8 +761,9 @@ public class FileUtil {
         Paint paint = new Paint();
         paint.setColorFilter(new ColorMatrixColorFilter(cm));
         canvas.drawBitmap(src, 0, 0, paint);
-
+        src.recycle();
         saveBitmap(bitmap, destPath);
+        bitmap.recycle();
     }
 
     public static int getJpegRotate(String filePath) {
@@ -780,10 +824,10 @@ public class FileUtil {
         if (!target.exists()) {
             target.getParentFile().mkdirs();
         }
-        BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(target));
-        outputStream.write(data);
-        outputStream.flush();
-        outputStream.close();
+        try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(target))) {
+            outputStream.write(data);
+            outputStream.flush();
+        }
     }
 
     public static void extractZipTo(ZipInputStream input, String outPath) throws IOException {
@@ -791,14 +835,18 @@ public class FileUtil {
         if (!outDir.exists()) {
             outDir.mkdirs();
         }
+        String canonicalOutDir = outDir.getCanonicalPath() + File.separator;
 
         ZipEntry entry = input.getNextEntry();
         while (entry != null) {
-            String entryPathExtracted = new File(outPath, entry.getName()).getAbsolutePath();
+            File destFile = new File(outPath, entry.getName());
+            if (!destFile.getCanonicalPath().startsWith(canonicalOutDir)) {
+                throw new IOException("Zip entry outside target dir: " + entry.getName());
+            }
 
             if (!entry.isDirectory()) {
-                new File(entryPathExtracted).getParentFile().mkdirs();
-                writeBytes(new File(entryPathExtracted), readFromInputStream(input));
+                destFile.getParentFile().mkdirs();
+                writeBytes(destFile, readFromInputStream(input));
             }
             input.closeEntry();
             entry = input.getNextEntry();

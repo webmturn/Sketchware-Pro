@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -150,7 +151,7 @@ public class QuizBoard extends LinearLayout implements View.OnClickListener {
         }
 
         invalidateClickListeners();
-        new Handler().postDelayed(() -> {
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
             resetQuizViews();
             b();
         }, 2000); // ask next question after 2 secs
@@ -187,7 +188,7 @@ public class QuizBoard extends LinearLayout implements View.OnClickListener {
 
         @Override
         public void onTick(long millisUntilFinished) {
-            new Handler().post(() -> quizBinding.tvRemaingTime.setText(String.valueOf(millisUntilFinished / 1000L + 1L)));
+            new Handler(Looper.getMainLooper()).post(() -> quizBinding.tvRemaingTime.setText(String.valueOf(millisUntilFinished / 1000L + 1L)));
         }
     }
 }

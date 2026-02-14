@@ -69,7 +69,7 @@ public class ApkSigner {
                 System.setOut(oldOut);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("ApkSigner", e.getMessage(), e);
         }
     }
 
@@ -117,7 +117,7 @@ public class ApkSigner {
                 System.setOut(oldOut);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("ApkSigner", e.getMessage(), e);
         }
     }
 

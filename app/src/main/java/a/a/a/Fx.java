@@ -1,5 +1,7 @@
 package a.a.a;
 
+
+import android.util.Log;
 import android.util.Pair;
 
 import com.besome.sketch.beans.BlockBean;
@@ -931,7 +933,7 @@ public class Fx {
                         %s.add(_map);
                         }
                         } catch (Exception _e) {
-                        _e.printStackTrace();
+                        Log.e("Fx", _e.getMessage(), _e);
                         }
                         %s
                         }

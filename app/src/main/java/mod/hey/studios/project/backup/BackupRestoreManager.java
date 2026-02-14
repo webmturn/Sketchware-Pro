@@ -185,9 +185,11 @@ public class BackupRestoreManager {
 
         @Override
         protected void onPreExecute() {
-            ProgressMsgBoxBinding loadingDialogBinding = ProgressMsgBoxBinding.inflate(LayoutInflater.from(activityWeakReference.get()));
+            var act = activityWeakReference.get();
+            if (act == null) return;
+            ProgressMsgBoxBinding loadingDialogBinding = ProgressMsgBoxBinding.inflate(LayoutInflater.from(act));
             loadingDialogBinding.tvProgress.setText("Creating backup...");
-            dlg = new MaterialAlertDialogBuilder(activityWeakReference.get())
+            dlg = new MaterialAlertDialogBuilder(act)
                     .setTitle("Please wait")
                     .setCancelable(false)
                     .setView(loadingDialogBinding.getRoot())
@@ -197,11 +199,13 @@ public class BackupRestoreManager {
 
         @Override
         protected String doInBackground(String... params) {
+            var act = activityWeakReference.get();
+            if (act == null) return "";
             bm = new BackupFactory(sc_id);
             bm.setBackupLocalLibs(options.get(0));
             bm.setBackupCustomBlocks(options.get(1));
 
-            bm.backup(activityWeakReference.get(), project_name);
+            bm.backup(act, project_name);
 
             return "";
         }
@@ -237,9 +241,11 @@ public class BackupRestoreManager {
 
         @Override
         protected void onPreExecute() {
-            ProgressMsgBoxBinding loadingDialogBinding = ProgressMsgBoxBinding.inflate(LayoutInflater.from(activityWeakReference.get()));
+            var act = activityWeakReference.get();
+            if (act == null) return;
+            ProgressMsgBoxBinding loadingDialogBinding = ProgressMsgBoxBinding.inflate(LayoutInflater.from(act));
             loadingDialogBinding.tvProgress.setText("Restoring...");
-            dlg = new MaterialAlertDialogBuilder(activityWeakReference.get())
+            dlg = new MaterialAlertDialogBuilder(act)
                     .setTitle("Please wait")
                     .setCancelable(false)
                     .setView(loadingDialogBinding.getRoot())

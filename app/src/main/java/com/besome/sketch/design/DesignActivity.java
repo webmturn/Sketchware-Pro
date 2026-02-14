@@ -491,9 +491,13 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         });
         bottomMenu.add(Menu.NONE, 2, Menu.NONE, "Clean temporary files").setVisible(false).setOnMenuItemClickListener(item -> {
             new Thread(() -> {
-                FileUtil.deleteFile(q.projectMyscPath);
-                updateBottomMenu();
-                runOnUiThread(() -> SketchwareUtil.toast("Done cleaning temporary files!"));
+                try {
+                    FileUtil.deleteFile(q.projectMyscPath);
+                    updateBottomMenu();
+                    runOnUiThread(() -> SketchwareUtil.toast("Done cleaning temporary files!"));
+                } catch (Exception e) {
+                    Log.e("DesignActivity", "Failed to clean temporary files", e);
+                }
             }).start();
             return true;
         });
@@ -802,18 +806,23 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         if (projectFile == null) return;
         k();
         new Thread(() -> {
-            var filename = Helper.getText(fileName);
-            var code = new yq(getApplicationContext(), sc_id).getFileSrc(filename, jC.b(sc_id), jC.a(sc_id), jC.c(sc_id));
-            runOnUiThread(() -> {
-                if (isFinishing()) return;
-                h();
-                if (code.isEmpty()) {
-                    SketchwareUtil.toast("Failed to generate source.");
-                    return;
-                }
-                var scheme = filename.endsWith(".xml") ? CodeViewerActivity.SCHEME_XML : CodeViewerActivity.SCHEME_JAVA;
-                launchActivity(CodeViewerActivity.class, null, new Pair<>("code", code), new Pair<>("sc_id", sc_id), new Pair<>("scheme", scheme));
-            });
+            try {
+                var filename = Helper.getText(fileName);
+                var code = new yq(getApplicationContext(), sc_id).getFileSrc(filename, jC.b(sc_id), jC.a(sc_id), jC.c(sc_id));
+                runOnUiThread(() -> {
+                    if (isFinishing()) return;
+                    h();
+                    if (code.isEmpty()) {
+                        SketchwareUtil.toast("Failed to generate source.");
+                        return;
+                    }
+                    var scheme = filename.endsWith(".xml") ? CodeViewerActivity.SCHEME_XML : CodeViewerActivity.SCHEME_JAVA;
+                    launchActivity(CodeViewerActivity.class, null, new Pair<>("code", code), new Pair<>("sc_id", sc_id), new Pair<>("scheme", scheme));
+                });
+            } catch (Exception e) {
+                Log.e("DesignActivity", "Failed to generate source code", e);
+                runOnUiThread(() -> { h(); SketchwareUtil.toast("Failed to generate source."); });
+            }
         }).start();
     }
 
@@ -852,20 +861,25 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         if (projectFile == null) return;
         k();
         new Thread(() -> {
-            String filename = Helper.getText(fileName);
-            // var yq = new yq(getApplicationContext(), sc_id);
-            var xmlGenerator = new Ox(q.N, projectFile);
-            var projectDataManager = jC.a(sc_id);
-            var viewBeans = projectDataManager.d(filename);
-            var viewFab = projectDataManager.h(filename);
-            xmlGenerator.setExcludeAppCompat(true);
-            xmlGenerator.a(eC.a(viewBeans), viewFab);
-            String content = xmlGenerator.b();
-            runOnUiThread(() -> {
-                if (isFinishing()) return;
-                h();
-                launchActivity(ViewCodeEditorActivity.class, openViewCodeEditor, new Pair<>("title", filename), new Pair<>("content", content));
-            });
+            try {
+                String filename = Helper.getText(fileName);
+                // var yq = new yq(getApplicationContext(), sc_id);
+                var xmlGenerator = new Ox(q.N, projectFile);
+                var projectDataManager = jC.a(sc_id);
+                var viewBeans = projectDataManager.d(filename);
+                var viewFab = projectDataManager.h(filename);
+                xmlGenerator.setExcludeAppCompat(true);
+                xmlGenerator.a(eC.a(viewBeans), viewFab);
+                String content = xmlGenerator.b();
+                runOnUiThread(() -> {
+                    if (isFinishing()) return;
+                    h();
+                    launchActivity(ViewCodeEditorActivity.class, openViewCodeEditor, new Pair<>("title", filename), new Pair<>("content", content));
+                });
+            } catch (Exception e) {
+                Log.e("DesignActivity", "Failed to generate view code", e);
+                runOnUiThread(() -> { h(); SketchwareUtil.toast("Failed to generate code."); });
+            }
         }).start();
     }
 

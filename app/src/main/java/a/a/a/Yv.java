@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -230,7 +231,7 @@ public class Yv extends qA {
                     int position = getLayoutPosition();
                     sounds.get(position).isSelected = isChecked;
                     updateImportSoundsText();
-                    new Handler().post(() -> notifyItemChanged(position));
+                    new Handler(Looper.getMainLooper()).post(() -> notifyItemChanged(position));
                 });
             }
 

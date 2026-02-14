@@ -14,6 +14,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -78,8 +79,8 @@ public class IconCreatorActivity extends BaseAppCompatActivity {
         try (FileOutputStream fileOutputStream = new FileOutputStream(path)) {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
             fileOutputStream.flush();
-        } catch (IOException ignored) {
-
+        } catch (IOException e) {
+            Log.e("IconCreatorActivity", "Failed to save bitmap to " + path, e);
         }
     }
 
@@ -160,7 +161,8 @@ public class IconCreatorActivity extends BaseAppCompatActivity {
                             Bitmap newBitmap = iB.a(bitmap, attributeInt != 3 ? attributeInt != 6 ? attributeInt != 8 ? 0 : 270 : 90 : 180);
                             BitmapDrawable bd = new BitmapDrawable(getResources(), newBitmap);
                             binding.appIcoImg.setBackground(bd);
-                        } catch (Exception ignored) {
+                        } catch (Exception e) {
+                            Log.e("IconCreatorActivity", "Failed to load picked icon", e);
                         }
                     }
                 });
@@ -177,7 +179,8 @@ public class IconCreatorActivity extends BaseAppCompatActivity {
                             iconFilePath = null;
                             BitmapDrawable bd = new BitmapDrawable(getResources(), appIconBitmap);
                             binding.appIcoImg.setBackground(bd);
-                        } catch (Exception ignored) {
+                        } catch (Exception e) {
+                            Log.e("IconCreatorActivity", "Failed to load cropped icon", e);
                         }
                     }
                 });
@@ -403,8 +406,8 @@ public class IconCreatorActivity extends BaseAppCompatActivity {
             Bitmap newBitmap = iB.a(bitmap, attributeInt != 3 ? attributeInt != 6 ? attributeInt != 8 ? 0 : 270 : 90 : 180);
             binding.appIcoTexture.setPattern(newBitmap);
             selectedTextureType = 3;
-        } catch (Exception ignored) {
-
+        } catch (Exception e) {
+            Log.e("IconCreatorActivity", "Failed to set texture", e);
         }
     }
 
@@ -500,7 +503,7 @@ public class IconCreatorActivity extends BaseAppCompatActivity {
         intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
 
-        intent.setDataAndType(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, "image/*");
+        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
         intent.putExtra("crop", "true");
         intent.putExtra("aspectX", 1);
         intent.putExtra("aspectY", 1);
@@ -532,34 +535,30 @@ public class IconCreatorActivity extends BaseAppCompatActivity {
         create.show();
     }
 
-    private void saveIconToRes() {
-        saveBitmapTo(captureAppIco(binding.appIcoCard), getIconPath("mipmap-hdpi", "ic_launcher.png"));
-        saveBitmapTo(captureAppIco(binding.appIcoCard), getIconPath("mipmap-mdpi", "ic_launcher.png"));
-        saveBitmapTo(captureAppIco(binding.appIcoCard), getIconPath("mipmap-xhdpi", "ic_launcher.png"));
-        saveBitmapTo(captureAppIco(binding.appIcoCard), getIconPath("mipmap-xxhdpi", "ic_launcher.png"));
-        saveBitmapTo(captureAppIco(binding.appIcoCard), getIconPath("mipmap-xxxhdpi", "ic_launcher.png"));
+    private static final String[] MIPMAP_DENSITIES = {
+            "mipmap-mdpi", "mipmap-hdpi", "mipmap-xhdpi", "mipmap-xxhdpi", "mipmap-xxxhdpi"
+    };
 
+    private void saveBitmapToAllDensities(Bitmap bitmap, String fileName) {
+        for (String density : MIPMAP_DENSITIES) {
+            saveBitmapTo(bitmap, getIconPath(density, fileName));
+        }
+    }
+
+    private void saveIconToRes() {
+        Bitmap launcherIcon = captureAppIco(binding.appIcoCard);
+        saveBitmapToAllDensities(launcherIcon, "ic_launcher.png");
     }
 
     private void saveForegroundToRes() {
-        saveBitmapTo(captureForeground(binding.appIcoItems, eff_score, eff_texture, binding.appIcoTexture, binding.appIcoScore, binding.appIcoBg), getIconPath("mipmap-mdpi", "ic_launcher_foreground.png"));
-        saveBitmapTo(captureForeground(binding.appIcoItems, eff_score, eff_texture, binding.appIcoTexture, binding.appIcoScore, binding.appIcoBg), getIconPath("mipmap-hdpi", "ic_launcher_foreground.png"));
-        saveBitmapTo(captureForeground(binding.appIcoItems, eff_score, eff_texture, binding.appIcoTexture, binding.appIcoScore, binding.appIcoBg), getIconPath("mipmap-xhdpi", "ic_launcher_foreground.png"));
-        saveBitmapTo(captureForeground(binding.appIcoItems, eff_score, eff_texture, binding.appIcoTexture, binding.appIcoScore, binding.appIcoBg), getIconPath("mipmap-xxhdpi", "ic_launcher_foreground.png"));
-        saveBitmapTo(captureForeground(binding.appIcoItems, eff_score, eff_texture, binding.appIcoTexture, binding.appIcoScore, binding.appIcoBg), getIconPath("mipmap-xxxhdpi", "ic_launcher_foreground.png"));
+        Bitmap foreground = captureForeground(binding.appIcoItems, eff_score, eff_texture, binding.appIcoTexture, binding.appIcoScore, binding.appIcoBg);
+        saveBitmapToAllDensities(foreground, "ic_launcher_foreground.png");
 
-        saveBitmapTo(captureForeground(binding.appIcoItems, false, false, binding.appIcoTexture, binding.appIcoScore, binding.appIcoBg), getIconPath("mipmap-mdpi", "ic_launcher_monochrome.png"));
-        saveBitmapTo(captureForeground(binding.appIcoItems, false, false, binding.appIcoTexture, binding.appIcoScore, binding.appIcoBg), getIconPath("mipmap-hdpi", "ic_launcher_monochrome.png"));
-        saveBitmapTo(captureForeground(binding.appIcoItems, false, false, binding.appIcoTexture, binding.appIcoScore, binding.appIcoBg), getIconPath("mipmap-xhdpi", "ic_launcher_monochrome.png"));
-        saveBitmapTo(captureForeground(binding.appIcoItems, false, false, binding.appIcoTexture, binding.appIcoScore, binding.appIcoBg), getIconPath("mipmap-xxhdpi", "ic_launcher_monochrome.png"));
-        saveBitmapTo(captureForeground(binding.appIcoItems, false, false, binding.appIcoTexture, binding.appIcoScore, binding.appIcoBg), getIconPath("mipmap-xxxhdpi", "ic_launcher_monochrome.png"));
+        Bitmap monochrome = captureForeground(binding.appIcoItems, false, false, binding.appIcoTexture, binding.appIcoScore, binding.appIcoBg);
+        saveBitmapToAllDensities(monochrome, "ic_launcher_monochrome.png");
 
-        saveBitmapTo(captureAppIco(binding.appIcoBg), getIconPath("mipmap-mdpi", "ic_launcher_background.png"));
-        saveBitmapTo(captureAppIco(binding.appIcoBg), getIconPath("mipmap-hdpi", "ic_launcher_background.png"));
-        saveBitmapTo(captureAppIco(binding.appIcoBg), getIconPath("mipmap-xhdpi", "ic_launcher_background.png"));
-        saveBitmapTo(captureAppIco(binding.appIcoBg), getIconPath("mipmap-xxhdpi", "ic_launcher_background.png"));
-        saveBitmapTo(captureAppIco(binding.appIcoBg), getIconPath("mipmap-xxxhdpi", "ic_launcher_background.png"));
-
+        Bitmap background = captureAppIco(binding.appIcoBg);
+        saveBitmapToAllDensities(background, "ic_launcher_background.png");
     }
 
     private void loadSelectedTexture(int selectedTextureType) {
@@ -624,7 +623,8 @@ public class IconCreatorActivity extends BaseAppCompatActivity {
 
                 iconFilePath = path;
 
-            } catch (Exception ignored) {
+            } catch (Exception e) {
+                Log.e("IconCreatorActivity", "Failed to save app icon bitmap", e);
             }
         }
     }

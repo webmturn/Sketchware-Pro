@@ -1,19 +1,23 @@
 package a.a.a;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import java.lang.ref.WeakReference;
+
 import pro.sketchware.R;
 
-@SuppressLint("StaticFieldLeak")
 public abstract class MA extends AsyncTask<Void, String, String> {
 
-    public Context a;
+    private final WeakReference<Context> contextRef;
 
     public MA(Context var1) {
-        a = var1;
+        contextRef = new WeakReference<>(var1);
+    }
+
+    public Context getContext() {
+        return contextRef.get();
     }
 
     @Override
@@ -30,7 +34,11 @@ public abstract class MA extends AsyncTask<Void, String, String> {
             if (e instanceof By) {
                 return e.getMessage();
             }
-            return a.getString(R.string.common_error_an_error_occurred) + "[" + e.getMessage() + "]";
+            Context context = getContext();
+            if (context != null) {
+                return context.getString(R.string.common_error_an_error_occurred) + "[" + e.getMessage() + "]";
+            }
+            return "An error occurred[" + e.getMessage() + "]";
         }
     }
 
@@ -47,7 +55,10 @@ public abstract class MA extends AsyncTask<Void, String, String> {
             a();
         } else {
             a(result);
-            bB.b(a, result, 1).show();
+            Context context = getContext();
+            if (context != null) {
+                bB.b(context, result, 1).show();
+            }
         }
     }
 }

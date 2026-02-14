@@ -1,6 +1,7 @@
 package pro.sketchware.utility;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -35,7 +36,8 @@ public class InvokeUtil {
             Constructor<?> con = clazz.getDeclaredConstructor(Context.class);
             con.setAccessible(true);
             return (View) con.newInstance(context);
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Log.w("InvokeUtil", "Failed to create view: " + name, e);
         }
         return null;
     }
@@ -49,7 +51,7 @@ public class InvokeUtil {
             return method.invoke(v, params);
 
         } catch (Exception e) {
-
+            Log.w("InvokeUtil", "Failed to invoke method: " + name, e);
         }
         return null;
     }

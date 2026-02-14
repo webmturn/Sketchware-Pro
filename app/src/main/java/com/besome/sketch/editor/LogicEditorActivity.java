@@ -13,6 +13,7 @@ import android.media.SoundPool;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Parcelable;
 import android.os.Vibrator;
 import android.text.Editable;
@@ -135,7 +136,7 @@ import pro.sketchware.utility.SvgUtils;
 @SuppressLint({"ClickableViewAccessibility", "RtlHardcoded", "SetTextI18n", "DefaultLocale"})
 public class LogicEditorActivity extends BaseAppCompatActivity implements View.OnClickListener, Vs, View.OnTouchListener, MoreblockImporterDialog.CallBack {
 
-    private final Handler handler = new Handler();
+    private final Handler handler = new Handler(Looper.getMainLooper());
     private final int[] v = new int[2];
     private final FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
     public ProjectFileBean M;
@@ -446,7 +447,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
     public void L() {
         try {
-            new Handler().postDelayed(() -> new ProjectSaver(this).execute(), 500L);
+            new Handler(Looper.getMainLooper()).postDelayed(() -> new ProjectSaver(this).execute(), 500L);
         } catch (Exception e) {
             crashlytics.recordException(e);
         }
@@ -2510,20 +2511,26 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
         @Override
         public void a() {
-            activity.get().h();
-            activity.get().finish();
+            var act = activity.get();
+            if (act == null) return;
+            act.h();
+            act.finish();
         }
 
         @Override
         public void a(String str) {
             Toast.makeText(getContext(), R.string.common_error_failed_to_save, Toast.LENGTH_SHORT).show();
-            activity.get().h();
+            var act = activity.get();
+            if (act == null) return;
+            act.h();
         }
 
         @Override
         public void b() {
+            var act = activity.get();
+            if (act == null) return;
             publishProgress("Now saving..");
-            activity.get().E();
+            act.E();
         }
     }
 

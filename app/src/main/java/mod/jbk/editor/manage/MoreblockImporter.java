@@ -1,5 +1,7 @@
 package mod.jbk.editor.manage;
 
+
+import android.util.Log;
 import android.app.Activity;
 import android.text.InputType;
 import android.util.Pair;
@@ -230,7 +232,7 @@ public class MoreblockImporter {
                 fileUtil.a(wq.a() + File.separator + "image" + File.separator + "data" + File.separator + image.resFullName, wq.g() + File.separator + sc_id + File.separator + image.resFullName);
                 jC.d(sc_id).b.add(image);
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e("MoreblockImporter", e.getMessage(), e);
             }
         }
     }
@@ -242,7 +244,7 @@ public class MoreblockImporter {
                 fileUtil.a(wq.a() + File.separator + "sound" + File.separator + "data" + File.separator + a2.resFullName, wq.t() + File.separator + sc_id + File.separator + a2.resFullName);
                 jC.d(sc_id).c.add(a2);
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e("MoreblockImporter", e.getMessage(), e);
             }
         }
     }
@@ -254,7 +256,7 @@ public class MoreblockImporter {
                 fileUtil.a(wq.a() + File.separator + "font" + File.separator + "data" + File.separator + font.resFullName, wq.d() + File.separator + sc_id + File.separator + font.resFullName);
                 jC.d(sc_id).d.add(font);
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e("MoreblockImporter", e.getMessage(), e);
             }
         }
     }

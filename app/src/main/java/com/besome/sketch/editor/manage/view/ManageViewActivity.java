@@ -9,6 +9,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -235,7 +236,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
                 } else {
                     k();
                     try {
-                        new Handler().postDelayed(() -> new a(ManageViewActivity.this).execute(), 500L);
+                        new Handler(Looper.getMainLooper()).postDelayed(() -> new a(ManageViewActivity.this).execute(), 500L);
                     } catch (Exception e) {
                         Log.e("ManageViewActivity", e.getMessage(), e);
                         h();
@@ -346,6 +347,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
         @Override
         public void a() {
             var activity = this.activity.get();
+            if (activity == null) return;
             activity.h();
             activity.setResult(RESULT_OK);
             activity.finish();
@@ -353,12 +355,15 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
 
         @Override
         public void a(String var1) {
-            activity.get().h();
+            var activity = this.activity.get();
+            if (activity == null) return;
+            activity.h();
         }
 
         @Override
         public void b() throws By {
             var activity = this.activity.get();
+            if (activity == null) return;
             try {
                 publishProgress(activity.getString(R.string.common_message_progress));
                 activity.m();

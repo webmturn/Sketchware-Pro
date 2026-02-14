@@ -1,11 +1,15 @@
 package com.besome.sketch.editor.manage.image;
 
+import android.util.Log;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.Intent;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -37,6 +41,8 @@ import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 
 public class AddImageActivity extends BaseDialogActivity implements View.OnClickListener {
+
+    private ActivityResultLauncher<Intent> imagePickerLauncher;
     private ArrayList<ProjectResourceBean> existingImages;
     private TextView tv_add_photo;
     private ImageView preview;
@@ -74,44 +80,6 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 215 && preview != null) {
-            preview.setEnabled(true);
-            if (resultCode == RESULT_OK) {
-                tv_add_photo.setVisibility(View.GONE);
-                imageRotationDegrees = 0;
-                imageScaleY = 1;
-                imageScaleX = 1;
-                if (data.getClipData() == null) {
-                    B = true;
-                    multipleImagesPicked = false;
-                    setImageFromUri(data.getData());
-                    if (O != null) {
-                        O.a(1);
-                    }
-                } else {
-                    ClipData clipData = data.getClipData();
-                    if (clipData.getItemCount() == 1) {
-                        B = true;
-                        multipleImagesPicked = false;
-                        setImageFromUri(clipData.getItemAt(0).getUri());
-                        if (O != null) {
-                            O.a(1);
-                        }
-                    } else {
-                        handleImagePickClipData(clipData);
-                        multipleImagesPicked = true;
-                        if (O != null) {
-                            O.a(clipData.getItemCount());
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.cancel_button) {
@@ -136,6 +104,43 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+        imagePickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (preview != null) {
+                        preview.setEnabled(true);
+                        if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                            Intent data = result.getData();
+                            tv_add_photo.setVisibility(View.GONE);
+                            imageRotationDegrees = 0;
+                            imageScaleY = 1;
+                            imageScaleX = 1;
+                            if (data.getClipData() == null) {
+                                B = true;
+                                multipleImagesPicked = false;
+                                setImageFromUri(data.getData());
+                                if (O != null) {
+                                    O.a(1);
+                                }
+                            } else {
+                                ClipData clipData = data.getClipData();
+                                if (clipData.getItemCount() == 1) {
+                                    B = true;
+                                    multipleImagesPicked = false;
+                                    setImageFromUri(clipData.getItemAt(0).getUri());
+                                    if (O != null) {
+                                        O.a(1);
+                                    }
+                                } else {
+                                    handleImagePickClipData(clipData);
+                                    multipleImagesPicked = true;
+                                    if (O != null) {
+                                        O.a(clipData.getItemCount());
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
         e(getString(R.string.design_manager_image_title_add_image));
         d(getString(R.string.common_word_save));
         setContentView(R.layout.manage_image_add);
@@ -216,7 +221,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
 
     private void save() {
         if (a(O)) {
-            new Handler().postDelayed(() -> {
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 k();
                 new SaveAsyncTask(this).execute();
             }, 500L);
@@ -241,7 +246,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
             if (allowMultiple) {
                 intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
             }
-            startActivityForResult(Intent.createChooser(intent, getString(R.string.common_word_choose)), 215);
+            imagePickerLauncher.launch(Intent.createChooser(intent, getString(R.string.common_word_choose)));
         } catch (ActivityNotFoundException unused) {
             bB.b(this, getString(R.string.common_error_activity_not_found), bB.TOAST_NORMAL).show();
         }
@@ -261,7 +266,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
             imageExifOrientation = iB.a(path);
             refreshPreview();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e("AddImageActivity", e.getMessage(), e);
         }
         s();
     }
@@ -344,6 +349,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
         @Override
         public void a() {
             var activity = this.activity.get();
+            if (activity == null) return;
             activity.h();
             Intent intent = new Intent();
             intent.putExtra("sc_id", activity.sc_id);
@@ -359,6 +365,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
         @Override
         public void b() throws By {
             var activity = this.activity.get();
+            if (activity == null) return;
             try {
                 publishProgress("Now processing..");
                 if (!activity.multipleImagesPicked) {
@@ -440,14 +447,16 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
                     }
                     throw new By(message);
                 }
-                e.printStackTrace();
+                Log.e("AddImageActivity", e.getMessage(), e);
                 throw new By(e.getMessage());
             }
         }
 
         @Override
         public void a(String str) {
-            activity.get().h();
+            var activity = this.activity.get();
+            if (activity == null) return;
+            activity.h();
         }
     }
 }

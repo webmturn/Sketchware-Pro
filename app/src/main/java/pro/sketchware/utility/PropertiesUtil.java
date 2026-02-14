@@ -71,6 +71,14 @@ public class PropertiesUtil {
                 .collect(Collectors.toList());
     }
 
+    public static boolean isColorLight(int color) {
+        return Color.red(color) * 0.299 + Color.green(color) * 0.587 + Color.blue(color) * 0.114 > 186;
+    }
+
+    public static int getContrastTextColor(int backgroundColor) {
+        return isColorLight(backgroundColor) ? Color.BLACK : Color.WHITE;
+    }
+
     public static String parseReferName(String reference, String sep) {
         if (reference == null) {
             return null;

@@ -1,5 +1,7 @@
 package com.besome.sketch.tools;
 
+
+import android.util.Log;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -114,7 +116,7 @@ public class NewKeyStoreActivity extends BaseAppCompatActivity implements OnClic
                 E.a(wq.j(), stringBuilder.toString(), validityInYears, Helper.getText(alias), text);
                 showDoneDialog(true, text);
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e("NewKeyStoreActivity", e.getMessage(), e);
                 showDoneDialog(false, null);
             }
         }

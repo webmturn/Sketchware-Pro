@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Vibrator;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -70,7 +71,7 @@ import pro.sketchware.widgets.WidgetsCreatorManager;
 @SuppressLint({"ClickableViewAccessibility", "SetTextI18n"})
 public class ViewEditor extends RelativeLayout implements View.OnClickListener, View.OnTouchListener {
     private final int[] posDummy = new int[2];
-    private final Handler handler = new Handler();
+    private final Handler handler = new Handler(Looper.getMainLooper());
     public boolean isLayoutChanged = true;
     public PaletteWidget paletteWidget;
     public WidgetsCreatorManager widgetsCreatorManager;

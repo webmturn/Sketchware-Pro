@@ -215,13 +215,18 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
 
         String scId = yB.c(projectMap, "sc_id");
         new Thread(() -> {
-            lC.a(activity, scId);
-            activity.runOnUiThread(() -> {
-                progressDialog.dismiss();
-                shownProjects.remove(position);
-                notifyDataSetChanged();
-                allProjects.remove(projectMap);
-            });
+            try {
+                lC.a(activity, scId);
+                activity.runOnUiThread(() -> {
+                    progressDialog.dismiss();
+                    shownProjects.remove(position);
+                    notifyDataSetChanged();
+                    allProjects.remove(projectMap);
+                });
+            } catch (Exception e) {
+                android.util.Log.e("ProjectsAdapter", "Failed to delete project: " + scId, e);
+                activity.runOnUiThread(progressDialog::dismiss);
+            }
         }).start();
     }
 

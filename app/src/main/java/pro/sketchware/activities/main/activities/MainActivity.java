@@ -103,7 +103,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
     public void h(int i) {
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         intent.setData(Uri.parse("package:" + getApplicationContext().getPackageName()));
-        startActivityForResult(intent, i);
+        startActivity(intent);
     }
 
     @Override

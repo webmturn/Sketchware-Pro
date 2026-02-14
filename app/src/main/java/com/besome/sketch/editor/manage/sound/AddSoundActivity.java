@@ -1,7 +1,10 @@
 package com.besome.sketch.editor.manage.sound;
 
+import android.util.Log;
 import android.app.Activity;
 import android.content.Intent;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import android.media.AudioAttributes;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
@@ -42,7 +45,7 @@ import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.SketchwareUtil;
 
 public class AddSoundActivity extends BaseDialogActivity implements View.OnClickListener {
-    private static final int REQUEST_CODE_SOUND_PICKER = 218;
+    private ActivityResultLauncher<Intent> soundPickerLauncher;
 
     private CheckBox addToCollection;
     private TextInputEditText soundName;
@@ -83,7 +86,7 @@ public class AddSoundActivity extends BaseDialogActivity implements View.OnClick
     private void pickSound() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("audio/*");
-        startActivityForResult(Intent.createChooser(intent, getString(R.string.common_word_choose)), REQUEST_CODE_SOUND_PICKER);
+        soundPickerLauncher.launch(Intent.createChooser(intent, getString(R.string.common_word_choose)));
     }
 
     private void playOrPause() {
@@ -93,19 +96,6 @@ public class AddSoundActivity extends BaseDialogActivity implements View.OnClick
             nowPlayingPlayer.start();
             startNowPlayingProgressUpdater();
             playPause.setImageResource(R.drawable.ic_mtrl_circle_pause);
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == REQUEST_CODE_SOUND_PICKER && selectFile != null) {
-            selectFile.setEnabled(true);
-            Uri intentData;
-            if (resultCode == Activity.RESULT_OK && (intentData = data.getData()) != null) {
-                playSound(intentData);
-            }
         }
     }
 
@@ -128,6 +118,17 @@ public class AddSoundActivity extends BaseDialogActivity implements View.OnClick
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        soundPickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (selectFile != null) {
+                        selectFile.setEnabled(true);
+                        Uri intentData;
+                        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null
+                                && (intentData = result.getData().getData()) != null) {
+                            playSound(intentData);
+                        }
+                    }
+                });
         setContentView(R.layout.manage_sound_add);
         e(getString(R.string.design_manager_sound_title_add_sound));
         d(getString(R.string.common_word_save));
@@ -338,7 +339,7 @@ public class AddSoundActivity extends BaseDialogActivity implements View.OnClick
             isSoundPlayable = false;
             nowPlayingContainer.setVisibility(View.GONE);
             guide.setVisibility(View.VISIBLE);
-            e.printStackTrace();
+            Log.e("AddSoundActivity", e.getMessage(), e);
         }
     }
 

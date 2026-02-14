@@ -6,6 +6,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -143,7 +144,8 @@ public class ImportFontFragment extends qA {
                 try {
                     importFont(resourceBean.resFullName, getResourceFilePath(resourceBean));
                     oB.c(resourceBean.resFullName);
-                } catch (Exception ignored) {
+                } catch (Exception e) {
+                    Log.e("ImportFontFragment", "Failed to import font: " + resourceBean.resFullName, e);
                 }
             }
         }
@@ -360,7 +362,8 @@ public class ImportFontFragment extends qA {
 
             try {
                 holder.binding.tvFontPreview.setTypeface(Typeface.createFromFile(fontPath));
-            } catch (Exception ignored) {
+            } catch (Exception e) {
+                Log.w("ImportFontFragment", "Failed to load font preview: " + fontPath, e);
             }
         }
 

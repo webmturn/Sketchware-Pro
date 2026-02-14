@@ -10,6 +10,7 @@ import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.util.Pair;
 import android.view.Gravity;
@@ -174,7 +175,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
         });
 
 
-        new Handler().postDelayed(() -> new InitialIconLoader(this).execute(), 300L);
+        new Handler(Looper.getMainLooper()).postDelayed(() -> new InitialIconLoader(this).execute(), 300L);
     }
 
     @Override
@@ -288,11 +289,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
         dialogBinding.selectColour.setText(selected_color_hex);
         dialogBinding.selectColour.setBackgroundColor(selected_color);
 
-        if (Color.red(selected_color) * 0.299 + Color.green(selected_color) * 0.587 + Color.blue(selected_color) * 0.114 > 186) {
-            dialogBinding.selectColour.setTextColor(Color.BLACK);
-        } else {
-            dialogBinding.selectColour.setTextColor(Color.WHITE);
-        }
+        dialogBinding.selectColour.setTextColor(PropertiesUtil.getContrastTextColor(selected_color));
         dialogBinding.selectColour.setOnClickListener(view -> {
             ColorPickerDialog colorPicker = new ColorPickerDialog(this, selected_color_hex, false, false, sc_id);
             colorPicker.a(new ColorPickerDialog.b() {
@@ -305,12 +302,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
                     adapter.notifyDataSetChanged();
 
                     dialogBinding.selectColour.setBackgroundColor(selected_color);
-
-                    if (Color.red(selected_color) * 0.299 + Color.green(selected_color) * 0.587 + Color.blue(selected_color) * 0.114 > 186) {
-                        dialogBinding.selectColour.setTextColor(Color.BLACK);
-                    } else {
-                        dialogBinding.selectColour.setTextColor(Color.WHITE);
-                    }
+                    dialogBinding.selectColour.setTextColor(PropertiesUtil.getContrastTextColor(selected_color));
                 }
 
                 @Override
@@ -322,12 +314,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
                     adapter.notifyDataSetChanged();
 
                     dialogBinding.selectColour.setBackgroundColor(selected_color);
-
-                    if (Color.red(selected_color) * 0.299 + Color.green(selected_color) * 0.587 + Color.blue(selected_color) * 0.114 > 186) {
-                        dialogBinding.selectColour.setTextColor(Color.BLACK);
-                    } else {
-                        dialogBinding.selectColour.setTextColor(Color.WHITE);
-                    }
+                    dialogBinding.selectColour.setTextColor(PropertiesUtil.getContrastTextColor(selected_color));
                 }
             });
             colorPicker.materialColorAttr((attr, attrColor) -> {
@@ -339,12 +326,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
                 adapter.notifyDataSetChanged();
 
                 dialogBinding.selectColour.setBackgroundColor(selected_color);
-
-                if (Color.red(selected_color) * 0.299 + Color.green(selected_color) * 0.587 + Color.blue(selected_color) * 0.114 > 186) {
-                    dialogBinding.selectColour.setTextColor(Color.BLACK);
-                } else {
-                    dialogBinding.selectColour.setTextColor(Color.WHITE);
-                }
+                dialogBinding.selectColour.setTextColor(PropertiesUtil.getContrastTextColor(selected_color));
             });
             colorPicker.showAtLocation(view, Gravity.CENTER, 0, 0);
         });
@@ -458,6 +440,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
         @Override
         public void a() {
             var activity = this.activity.get();
+            if (activity == null) return;
             activity.h();
             activity.setIconColor();
         }
@@ -465,6 +448,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
         @Override
         public void b() {
             var activity = this.activity.get();
+            if (activity == null) return;
             if (!activity.doExtractedIconsExist()) {
                 activity.extractIcons();
             }
@@ -472,7 +456,9 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
 
         @Override
         public void a(String str) {
-            activity.get().h();
+            var activity = this.activity.get();
+            if (activity == null) return;
+            activity.h();
         }
 
     }
@@ -490,6 +476,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
         @Override
         public void a() {
             var activity = this.activity.get();
+            if (activity == null) return;
             activity.h();
             activity.selectedIconPosition = -1;
         }
@@ -497,6 +484,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
         @Override
         public void b() {
             var activity = this.activity.get();
+            if (activity == null) return;
             activity.listIcons();
             activity.runOnUiThread(() -> {
                 if (activity.searchView != null) {
@@ -507,7 +495,9 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
 
         @Override
         public void a(String str) {
-            activity.get().h();
+            var activity = this.activity.get();
+            if (activity == null) return;
+            activity.h();
         }
     }
 }

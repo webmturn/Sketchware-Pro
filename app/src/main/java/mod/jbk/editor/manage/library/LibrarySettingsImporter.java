@@ -68,15 +68,19 @@ public class LibrarySettingsImporter {
         recyclerView.setLayoutManager(new LinearLayoutManager(null));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         new Thread(() -> {
-            loadProjects();
-            activity.runOnUiThread(() -> {
-                animationView.cancelAnimation();
-                animationView.setVisibility(View.GONE);
-                root.removeView(animationView);
-                recyclerView.setVisibility(View.VISIBLE);
-                adapter = new ProjectAdapter();
-                recyclerView.setAdapter(adapter);
-            });
+            try {
+                loadProjects();
+                activity.runOnUiThread(() -> {
+                    animationView.cancelAnimation();
+                    animationView.setVisibility(View.GONE);
+                    root.removeView(animationView);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    adapter = new ProjectAdapter();
+                    recyclerView.setAdapter(adapter);
+                });
+            } catch (Exception e) {
+                android.util.Log.e("LibrarySettingsImporter", "Failed to load projects", e);
+            }
         }).start();
         dialog.setView(root);
         dialog.setPositiveButton(R.string.common_word_select, (v, which) -> {

@@ -270,11 +270,8 @@ public class AppSettings extends BaseAppCompatActivity {
                 .create();
 
         ApkSigner signer = new ApkSigner();
-        new Thread() {
-            @Override
-            public void run() {
-                super.run();
-
+        new Thread(() -> {
+            try {
                 ApkSigner.LogCallback callback = line -> runOnUiThread(() ->
                         tv_log.setText(Helper.getText(tv_log) + line));
 
@@ -295,8 +292,11 @@ public class AppSettings extends BaseAppCompatActivity {
                         tv_progress.setText("An error occurred. Check the log for more details.");
                     }
                 });
+            } catch (Exception e) {
+                android.util.Log.e("AppSettings", "Failed to sign APK", e);
+                runOnUiThread(() -> tv_progress.setText("Signing failed: " + e.getMessage()));
             }
-        }.start();
+        }).start();
 
         building_dialog.show();
     }

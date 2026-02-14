@@ -15,6 +15,8 @@
  */
 package kellinwood.zipio;
 
+
+import android.util.Log;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -161,7 +163,7 @@ public class ZipInput
 
         }
         catch (Throwable t) {
-            t.printStackTrace();
+            Log.e("ZipInput", t.getMessage(), t);
         }    	
     }
 

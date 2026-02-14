@@ -86,7 +86,8 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
         try (FileOutputStream fileOutputStream = new FileOutputStream(path)) {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
             fileOutputStream.flush();
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            Log.e("MyProjectSettingActivity", "Failed to save bitmap to " + path, e);
         }
     }
 
@@ -358,7 +359,8 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
             String[] split = toParse.split("\\.");
             projectVersionNameFirstPart = parseInt(split[0], 1);
             projectVersionNameSecondPart = parseInt(split[1], 0);
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Log.w("MyProjectSettingActivity", "Failed to parse version: " + toParse, e);
         }
     }
 

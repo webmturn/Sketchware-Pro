@@ -3,6 +3,7 @@ package com.besome.sketch.editor.manage.sound;
 import androidx.activity.OnBackPressedCallback;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -54,7 +55,7 @@ public class ManageSoundActivity extends BaseAppCompatActivity implements ViewPa
                     try {
                         projectSounds.stopPlayback();
                         collectionSounds.stopPlayback();
-                        new Handler().postDelayed(() -> new SaveAsyncTask(ManageSoundActivity.this).execute(), 500L);
+                        new Handler(Looper.getMainLooper()).postDelayed(() -> new SaveAsyncTask(ManageSoundActivity.this).execute(), 500L);
                     } catch (Exception e) {
                         h();
                     }
@@ -120,6 +121,7 @@ public class ManageSoundActivity extends BaseAppCompatActivity implements ViewPa
         @Override
         public void a() {
             var activity = activityWeakReference.get();
+            if (activity == null) return;
             activity.h();
             activity.setResult(RESULT_OK);
             activity.finish();
@@ -128,12 +130,16 @@ public class ManageSoundActivity extends BaseAppCompatActivity implements ViewPa
 
         @Override
         public void b() {
-            activityWeakReference.get().projectSounds.saveSounds();
+            var activity = activityWeakReference.get();
+            if (activity == null) return;
+            activity.projectSounds.saveSounds();
         }
 
         @Override
         public void a(String str) {
-            activityWeakReference.get().h();
+            var activity = activityWeakReference.get();
+            if (activity == null) return;
+            activity.h();
         }
     }
 

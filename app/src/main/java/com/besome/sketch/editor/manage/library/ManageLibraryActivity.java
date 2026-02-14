@@ -11,6 +11,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -265,7 +266,7 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
             public void handleOnBackPressed() {
                 k();
                 try {
-                    new Handler().postDelayed(() -> new SaveLibraryTask(ManageLibraryActivity.this).execute(), 500L);
+                    new Handler(Looper.getMainLooper()).postDelayed(() -> new SaveLibraryTask(ManageLibraryActivity.this).execute(), 500L);
                 } catch (Exception e) {
                     Log.e("ManageLibraryActivity", e.getMessage(), e);
                     h();
@@ -440,26 +441,32 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
 
         @Override
         public void a() {
-            activity.get().h();
+            var act = activity.get();
+            if (act == null) return;
+            act.h();
             Intent intent = new Intent();
-            intent.putExtra("sc_id", activity.get().sc_id);
-            intent.putExtra("firebase", activity.get().firebaseLibraryBean);
-            intent.putExtra("compat", activity.get().compatLibraryBean);
-            intent.putExtra("admob", activity.get().admobLibraryBean);
-            intent.putExtra("google_map", activity.get().googleMapLibraryBean);
-            activity.get().setResult(RESULT_OK, intent);
-            activity.get().finish();
+            intent.putExtra("sc_id", act.sc_id);
+            intent.putExtra("firebase", act.firebaseLibraryBean);
+            intent.putExtra("compat", act.compatLibraryBean);
+            intent.putExtra("admob", act.admobLibraryBean);
+            intent.putExtra("google_map", act.googleMapLibraryBean);
+            act.setResult(RESULT_OK, intent);
+            act.finish();
         }
 
         @Override
         public void a(String idk) {
-            activity.get().h();
+            var act = activity.get();
+            if (act == null) return;
+            act.h();
         }
 
         @Override
         public void b() {
+            var act = activity.get();
+            if (act == null) return;
             try {
-                activity.get().saveLibraryConfiguration();
+                act.saveLibraryConfiguration();
             } catch (Exception e) {
                 Log.e("ManageLibraryActivity", e.getMessage(), e);
             }

@@ -306,13 +306,13 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
             export_source_output_stage.setVisibility(View.GONE);
             export_source_loading_anim.setVisibility(View.VISIBLE);
             export_source_loading_anim.playAnimation();
-            new Thread() {
-                @Override
-                public void run() {
-                    super.run();
+            new Thread(() -> {
+                try {
                     exportSrc();
+                } catch (Exception e) {
+                    Log.e("ExportProjectActivity", "Failed to export source", e);
                 }
-            }.start();
+            }).start();
         });
         export_source_send_button.setOnClickListener(v -> shareExportedSourceCode());
     }
@@ -399,7 +399,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
-            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(Intent.createChooser(intent, Helper.getResString(R.string.myprojects_export_src_chooser_title_email)));
         }
     }
@@ -438,11 +438,11 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
             project_metadata = exportProjectActivity.project_metadata;
             loading_sign_apk = new WeakReference<>(exportProjectActivity.sign_apk_loading_anim);
             // Register as AsyncTask with dialog to Activity
-            activity.get().addTask(this);
+            exportProjectActivity.addTask(this);
             // Make a simple ProgressDialog show and set its OnCancelListener
-            activity.get().a((DialogInterface.OnCancelListener) this);
+            exportProjectActivity.a((DialogInterface.OnCancelListener) this);
             // Allow user to use back button
-            activity.get().progressDialog.setCancelable(false);
+            exportProjectActivity.progressDialog.setCancelable(false);
         }
 
         /**
@@ -455,7 +455,9 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
                 return;
             }
 
-            String sc_id = activity.get().sc_id;
+            var act = activity.get();
+            if (act == null) return;
+            String sc_id = act.sc_id;
 
             try {
                 publishProgress("Deleting temporary files...");
@@ -487,12 +489,12 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
                         throw new IllegalStateException("Couldn't delete file " + outputFile.getAbsolutePath());
                     }
                 }
-                project_metadata.c(a);
+                project_metadata.c(getContext());
                 if (canceled) {
                     cancel(true);
                     return;
                 }
-                project_metadata.a(a, wq.e("600"));
+                project_metadata.a(getContext(), wq.e("600"));
                 if (canceled) {
                     cancel(true);
                     return;
@@ -516,7 +518,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
                 kCVar.c(project_metadata.resDirectoryPath + File.separator + "raw");
                 kCVar.a(project_metadata.assetsPath + File.separator + "fonts");
 
-                builder = new ProjectBuilder(this, a, project_metadata);
+                builder = new ProjectBuilder(this, getContext(), project_metadata);
                 builder.setBuildAppBundle(buildingAppBundle);
 
                 project_metadata.a(iCVar, hCVar, eCVar, exportType);
@@ -670,13 +672,14 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
                     }
                 }
             } catch (Throwable throwable) {
+                var errorAct = activity.get();
                 if (throwable instanceof LoadKeystoreException &&
                         "Incorrect password, or integrity check failed.".equals(throwable.getMessage())) {
-                    activity.get().runOnUiThread(() -> SketchwareUtil.showAnErrorOccurredDialog(activity.get(),
+                    if (errorAct != null) errorAct.runOnUiThread(() -> SketchwareUtil.showAnErrorOccurredDialog(errorAct,
                             "Either an incorrect password was entered, or your key store is corrupt."));
                 } else {
                     Log.e("AppExporter", throwable.getMessage(), throwable);
-                    activity.get().runOnUiThread(() -> SketchwareUtil.showAnErrorOccurredDialog(activity.get(),
+                    if (errorAct != null) errorAct.runOnUiThread(() -> SketchwareUtil.showAnErrorOccurredDialog(errorAct,
                             Log.getStackTraceString(throwable)));
                 }
 
@@ -686,9 +689,11 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
 
         @Override
         public void onCancel(DialogInterface dialog) {
-            if (!activity.get().progressDialog.isCancelable()) {
-                activity.get().progressDialog.setCancelable(true);
-                activity.get().a((DialogInterface.OnCancelListener) this);
+            var act = activity.get();
+            if (act == null) return;
+            if (!act.progressDialog.isCancelable()) {
+                act.progressDialog.setCancelable(true);
+                act.a((DialogInterface.OnCancelListener) this);
                 publishProgress("Canceling process...");
                 canceled = true;
             }
@@ -698,29 +703,37 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
         public void onCancelled() {
             super.onCancelled();
             builder = null;
-            activity.get().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            var act = activity.get();
+            if (act == null) return;
+            act.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             // Dismiss the ProgressDialog
-            activity.get().i();
-            activity.get().sign_apk_output_stage.setVisibility(View.GONE);
+            act.i();
+            act.sign_apk_output_stage.setVisibility(View.GONE);
             LottieAnimationView loading_sign_apk = this.loading_sign_apk.get();
-            if (loading_sign_apk.isAnimating()) {
-                loading_sign_apk.cancelAnimation();
+            if (loading_sign_apk != null) {
+                if (loading_sign_apk.isAnimating()) {
+                    loading_sign_apk.cancelAnimation();
+                }
+                loading_sign_apk.setVisibility(View.GONE);
             }
-            loading_sign_apk.setVisibility(View.GONE);
-            activity.get().sign_apk_button.setVisibility(View.VISIBLE);
+            act.sign_apk_button.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void onPreExecute() {
             super.onPreExecute();
-            activity.get().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            var act = activity.get();
+            if (act == null) return;
+            act.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
 
         @Override // android.os.AsyncTask
         public void onProgressUpdate(String... strArr) {
             super.onProgressUpdate(strArr);
             // Update the ProgressDialog's text
-            activity.get().a(strArr[0]);
+            var act = activity.get();
+            if (act == null) return;
+            act.a(strArr[0]);
         }
 
         /**
@@ -728,17 +741,19 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
          */
         @Override // a.a.a.MA
         public void a() {
-            activity.get().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            var act = activity.get();
+            if (act == null) return;
+            act.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             // Dismiss the ProgressDialog
-            activity.get().i();
+            act.i();
 
             if (new File(getCorrectResultFilename(project_metadata.releaseApkPath)).exists()) {
-                activity.get().f(getCorrectResultFilename(project_metadata.projectName + "_release.apk"));
+                act.f(getCorrectResultFilename(project_metadata.projectName + "_release.apk"));
             }
 
             String aabFilename = getCorrectResultFilename(project_metadata.projectName + ".aab");
             if (buildingAppBundle && new File(Environment.getExternalStorageDirectory(), "sketchware" + File.separator + "signed_aab" + File.separator + aabFilename).exists()) {
-                MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(activity.get());
+                MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(act);
                 dialog.setIcon(R.drawable.open_box_48);
                 dialog.setTitle("Finished exporting AAB");
                 dialog.setMessage("You can find the generated, signed AAB file at:\n" +
@@ -754,17 +769,21 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
          */
         @Override // a.a.a.MA
         public void a(String str) {
-            activity.get().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            var act = activity.get();
+            if (act == null) return;
+            act.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             // Dismiss the ProgressDialog
-            activity.get().i();
-            SketchwareUtil.showAnErrorOccurredDialog(activity.get(), str);
-            activity.get().sign_apk_output_stage.setVisibility(View.GONE);
+            act.i();
+            SketchwareUtil.showAnErrorOccurredDialog(act, str);
+            act.sign_apk_output_stage.setVisibility(View.GONE);
             LottieAnimationView loading_sign_apk = this.loading_sign_apk.get();
-            if (loading_sign_apk.isAnimating()) {
-                loading_sign_apk.cancelAnimation();
+            if (loading_sign_apk != null) {
+                if (loading_sign_apk.isAnimating()) {
+                    loading_sign_apk.cancelAnimation();
+                }
+                loading_sign_apk.setVisibility(View.GONE);
             }
-            loading_sign_apk.setVisibility(View.GONE);
-            activity.get().sign_apk_button.setVisibility(View.VISIBLE);
+            act.sign_apk_button.setVisibility(View.VISIBLE);
         }
 
         public void enableAppBundleBuild() {

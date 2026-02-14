@@ -1,5 +1,7 @@
 package pro.sketchware.utility;
 
+
+import android.util.Log;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -56,14 +58,14 @@ public class Network {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                e.printStackTrace();
+                Log.e("Network", e.getMessage(), e);
                 runOnUiThread(() -> handler.handleResponse(null));
             }
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) {
-                try {
-                    String responseBody = response.body() != null ? response.body().string() : null;
+                try (Response responseCopy = response) {
+                    String responseBody = responseCopy.body() != null ? responseCopy.body().string() : null;
                     runOnUiThread(() -> handler.handleResponse(responseBody));
                 } catch (IOException e) {
                     runOnUiThread(() -> handler.handleResponse(null));

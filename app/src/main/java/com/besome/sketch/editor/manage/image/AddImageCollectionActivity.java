@@ -1,10 +1,14 @@
 package com.besome.sketch.editor.manage.image;
 
+import android.util.Log;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -37,6 +41,8 @@ import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 
 public class AddImageCollectionActivity extends BaseDialogActivity implements View.OnClickListener {
+
+    private ActivityResultLauncher<Intent> imagePickerLauncher;
 
     private TextView tv_add_photo;
     private ImageView preview;
@@ -82,24 +88,6 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 215 && preview != null) {
-            preview.setEnabled(true);
-            if (resultCode == RESULT_OK) {
-                imageRotationDegrees = 0;
-                imageScaleY = 1;
-                imageScaleX = 1;
-                z = true;
-                setImageFromUri(data.getData());
-                if (imageNameValidator != null) {
-                    imageNameValidator.a(1);
-                }
-            }
-        }
-    }
-
-    @Override
     public void onClick(View v) {
         if (!mB.a()) {
             int id = v.getId();
@@ -128,6 +116,22 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        imagePickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (preview != null) {
+                        preview.setEnabled(true);
+                        if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                            imageRotationDegrees = 0;
+                            imageScaleY = 1;
+                            imageScaleX = 1;
+                            z = true;
+                            setImageFromUri(result.getData().getData());
+                            if (imageNameValidator != null) {
+                                imageNameValidator.a(1);
+                            }
+                        }
+                    }
+                });
         e(getString(R.string.design_manager_image_title_add_image));
         d(getString(R.string.common_word_save));
         setContentView(R.layout.manage_image_add);
@@ -197,7 +201,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
         try {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             intent.setType("image/*");
-            startActivityForResult(Intent.createChooser(intent, getString(R.string.common_word_choose)), 215);
+            imagePickerLauncher.launch(Intent.createChooser(intent, getString(R.string.common_word_choose)));
         } catch (ActivityNotFoundException unused) {
             bB.b(this, getString(R.string.common_error_activity_not_found), bB.TOAST_NORMAL).show();
         }
@@ -209,7 +213,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
 
     private void save() {
         if (a(imageNameValidator)) {
-            new Handler().postDelayed(() -> {
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 k();
                 new SaveAsyncTask(this).execute();
             }, 500L);
@@ -252,7 +256,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
             imageExifOrientation = iB.a(path);
             refreshPreview();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e("AddImageCollectionActivity", e.getMessage(), e);
         }
         t();
     }
@@ -290,6 +294,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
         @Override
         public void a() {
             var activity = this.activity.get();
+            if (activity == null) return;
             bB.a(activity.getApplicationContext(), activity.getString(
                     activity.editing ? R.string.design_manager_message_edit_complete :
                             R.string.design_manager_message_add_complete), bB.TOAST_NORMAL).show();
@@ -300,6 +305,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
         @Override
         public void b() throws By {
             var activity = this.activity.get();
+            if (activity == null) return;
             try {
                 publishProgress("Now processing..");
                 if (!activity.editing) {
@@ -339,14 +345,16 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
                     }
                     throw new By(message);
                 }
-                e.printStackTrace();
+                Log.e("AddImageCollectionActivity", e.getMessage(), e);
                 throw new By(e.getMessage());
             }
         }
 
         @Override
         public void a(String str) {
-            activity.get().h();
+            var activity = this.activity.get();
+            if (activity == null) return;
+            activity.h();
         }
     }
 }

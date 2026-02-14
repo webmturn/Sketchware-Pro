@@ -68,7 +68,7 @@ public class qA extends Fragment {
         });
     }
 
-    public void handleInsetts(View root) {
+    public void handleInsets(View root) {
         Insetter.builder()
                 .padding(WindowInsetsCompat.Type.navigationBars())
                 .applyToView(root);

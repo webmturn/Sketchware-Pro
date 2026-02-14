@@ -1,5 +1,7 @@
 package com.besome.sketch.editor.view;
 
+
+import android.util.Log;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.PorterDuff;
@@ -198,7 +200,7 @@ public class ViewProperty extends LinearLayout implements Kw {
                         try {
                             Op.g().a(sc_id, jC.d(sc_id).g(backgroundResource));
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            Log.e("ViewProperty", e.getMessage(), e);
                             bB.b(getContext(), e.getMessage(), bB.TOAST_NORMAL).show();
                         }
                     }

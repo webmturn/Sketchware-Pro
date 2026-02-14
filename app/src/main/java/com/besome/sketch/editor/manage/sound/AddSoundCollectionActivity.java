@@ -1,6 +1,10 @@
 package com.besome.sketch.editor.manage.sound;
 
+
+import android.util.Log;
 import android.content.Intent;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -33,6 +37,8 @@ import pro.sketchware.R;
 import pro.sketchware.databinding.ManageSoundAddBinding;
 
 public class AddSoundCollectionActivity extends BaseDialogActivity implements View.OnClickListener {
+
+    private ActivityResultLauncher<Intent> soundPickerLauncher;
 
     public MediaPlayer G;
     public TimerTask I;
@@ -77,24 +83,6 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
     }
 
     @Override
-    public void onActivityResult(int i, int i2, Intent intent) {
-        MaterialCardView relativeLayout;
-        Uri data;
-        super.onActivityResult(i, i2, intent);
-        if (i == 218 && (relativeLayout = binding.selectFile) != null) {
-            relativeLayout.setEnabled(true);
-            if (i2 != -1 || (data = intent.getData()) == null) {
-                return;
-            }
-            K = data;
-            if (HB.a(this, K) == null) {
-                return;
-            }
-            a(data);
-        }
-    }
-
-    @Override
     public void onClick(View view) {
         int id = view.getId();
 
@@ -121,6 +109,23 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+        soundPickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    MaterialCardView relativeLayout;
+                    Uri data;
+                    if ((relativeLayout = binding.selectFile) != null) {
+                        relativeLayout.setEnabled(true);
+                        if (result.getResultCode() != -1 || result.getData() == null
+                                || (data = result.getData().getData()) == null) {
+                            return;
+                        }
+                        K = data;
+                        if (HB.a(this, K) == null) {
+                            return;
+                        }
+                        a(data);
+                    }
+                });
         e(getString(R.string.design_manager_sound_title_add_sound));
         binding = ManageSoundAddBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -182,7 +187,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
     private void p() {
         Intent intent = new Intent("android.intent.action.GET_CONTENT", MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.setType("audio/*");
-        startActivityForResult(Intent.createChooser(intent, getString(R.string.common_word_choose)), 218);
+        soundPickerLauncher.launch(Intent.createChooser(intent, getString(R.string.common_word_choose)));
     }
 
     private void q() {
@@ -292,7 +297,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
             binding.layoutControl.setVisibility(View.VISIBLE);
             binding.layoutGuide.setVisibility(View.GONE);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e("AddSoundCollectionActivity", e.getMessage(), e);
         }
     }
 
@@ -349,7 +354,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
             L = false;
             binding.layoutControl.setVisibility(View.GONE);
             binding.layoutGuide.setVisibility(View.VISIBLE);
-            e.printStackTrace();
+            Log.e("AddSoundCollectionActivity", e.getMessage(), e);
         }
     }
 

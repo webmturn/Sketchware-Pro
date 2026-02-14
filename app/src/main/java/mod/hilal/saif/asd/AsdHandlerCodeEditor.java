@@ -1,5 +1,7 @@
 package mod.hilal.saif.asd;
 
+
+import android.util.Log;
 import android.view.View;
 
 import com.besome.sketch.editor.LogicEditorActivity;
@@ -33,7 +35,7 @@ public class AsdHandlerCodeEditor implements View.OnClickListener {
                     content = "";
                 }
             } catch (NumberFormatException e) {
-                e.printStackTrace();
+                Log.e("AsdHandlerCodeEditor", e.getMessage(), e);
                 content = "";
             }
         } else if (!content.isEmpty() && content.charAt(0) == '@') {

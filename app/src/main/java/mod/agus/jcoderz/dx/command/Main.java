@@ -16,6 +16,8 @@
 
 package mod.agus.jcoderz.dx.command;
 
+
+import android.util.Log;
 import mod.agus.jcoderz.dx.Version;
 
 /**
@@ -118,11 +120,11 @@ public class Main {
             showUsage = true;
         } catch (RuntimeException ex) {
             System.err.println("\nUNEXPECTED TOP-LEVEL EXCEPTION:");
-            ex.printStackTrace();
+            Log.e("Main", ex.getMessage(), ex);
             System.exit(2);
         } catch (Throwable ex) {
             System.err.println("\nUNEXPECTED TOP-LEVEL ERROR:");
-            ex.printStackTrace();
+            Log.e("Main", ex.getMessage(), ex);
             if ((ex instanceof NoClassDefFoundError)
                     || (ex instanceof NoSuchMethodError)) {
                 System.err.println(

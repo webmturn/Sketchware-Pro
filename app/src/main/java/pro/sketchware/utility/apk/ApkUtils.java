@@ -1,5 +1,7 @@
 package pro.sketchware.utility.apk;
 
+
+import android.util.Log;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.MessageDigest;
@@ -38,7 +40,7 @@ public class ApkUtils {
 
             return byteArrayToHex(digest.digest());
         } catch (IOException | NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            Log.e("ApkUtils", e.getMessage(), e);
             return null;
         }
     }

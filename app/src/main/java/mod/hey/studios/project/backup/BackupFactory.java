@@ -140,11 +140,15 @@ public class BackupFactory {
         int DEFAULT_BUFFER = 2048;
         try (ZipFile zip = new ZipFile(zipFile)) {
             destinationDir.mkdirs();
+            String canonicalDestDir = destinationDir.getCanonicalPath() + File.separator;
             Enumeration<? extends ZipEntry> zipFileEntries = zip.entries();
             while (zipFileEntries.hasMoreElements()) {
                 ZipEntry entry = zipFileEntries.nextElement();
                 String entryName = entry.getName();
                 File destFile = new File(destinationDir, entryName);
+                if (!destFile.getCanonicalPath().startsWith(canonicalDestDir)) {
+                    throw new IOException("Zip entry outside target dir: " + entryName);
+                }
                 File destinationParent = destFile.getParentFile();
                 if (destinationParent != null && !destinationParent.exists()) {
                     destinationParent.mkdirs();
@@ -247,7 +251,7 @@ public class BackupFactory {
                     out.write(buffer, 0, length);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e("BackupFactory", e.getMessage(), e);
             }
         }
     }
@@ -270,7 +274,8 @@ public class BackupFactory {
 
             zp.close();
 
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Log.e("BackupFactory", "Failed to check zip contents", e);
         }
 
         return false;
@@ -377,7 +382,8 @@ public class BackupFactory {
 
                     }
 
-                } catch (Exception ignored) {
+                } catch (Exception e) {
+                    Log.e("BackupFactory", "Failed to backup local libraries", e);
                 }
             }
         }

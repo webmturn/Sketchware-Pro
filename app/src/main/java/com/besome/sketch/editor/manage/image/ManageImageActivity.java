@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -70,7 +71,7 @@ public class ManageImageActivity extends BaseAppCompatActivity implements ViewPa
                     binding.layoutBtnImport.setVisibility(View.GONE);
                 } else {
                     k();
-                    new Handler().postDelayed(() -> new SaveImagesAsyncTask(ManageImageActivity.this).execute(), 500L);
+                    new Handler(Looper.getMainLooper()).postDelayed(() -> new SaveImagesAsyncTask(ManageImageActivity.this).execute(), 500L);
                 }
             }
         });
@@ -142,6 +143,7 @@ public class ManageImageActivity extends BaseAppCompatActivity implements ViewPa
         @Override
         public void a() {
             var activity = this.activity.get();
+            if (activity == null) return;
             activity.h();
             activity.setResult(Activity.RESULT_OK);
             activity.finish();
@@ -150,12 +152,16 @@ public class ManageImageActivity extends BaseAppCompatActivity implements ViewPa
 
         @Override
         public void b() {
-            activity.get().projectImagesFragment.saveImages();
+            var activity = this.activity.get();
+            if (activity == null) return;
+            activity.projectImagesFragment.saveImages();
         }
 
         @Override
         public void a(String str) {
-            activity.get().h();
+            var activity = this.activity.get();
+            if (activity == null) return;
+            activity.h();
         }
     }
 

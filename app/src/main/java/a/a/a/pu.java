@@ -214,7 +214,7 @@ public class pu extends qA {
                         iB.a(path, image.isNinePatch() ? str + ".9.png" : str + ".png", image.rotate, image.flipHorizontal, image.flipVertical);
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Log.e("pu", e.getMessage(), e);
                 }
             }
             index++;

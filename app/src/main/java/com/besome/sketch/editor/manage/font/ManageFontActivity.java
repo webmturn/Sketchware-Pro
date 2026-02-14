@@ -3,6 +3,7 @@ package com.besome.sketch.editor.manage.font;
 import androidx.activity.OnBackPressedCallback;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -43,7 +44,7 @@ public class ManageFontActivity extends BaseAppCompatActivity {
                 } else {
                     k();
                     try {
-                        new Handler().postDelayed(() -> new SaveAsyncTask(ManageFontActivity.this).execute(), 500L);
+                        new Handler(Looper.getMainLooper()).postDelayed(() -> new SaveAsyncTask(ManageFontActivity.this).execute(), 500L);
                     } catch (Exception e) {
                         h();
                     }
@@ -126,6 +127,7 @@ public class ManageFontActivity extends BaseAppCompatActivity {
         @Override
         public void a() {
             var activity = activityWeakReference.get();
+            if (activity == null) return;
             activity.h();
             activity.setResult(RESULT_OK);
             activity.finish();
@@ -134,12 +136,16 @@ public class ManageFontActivity extends BaseAppCompatActivity {
 
         @Override
         public void b() {
-            activityWeakReference.get().projectFontsFragment.processResources();
+            var activity = activityWeakReference.get();
+            if (activity == null) return;
+            activity.projectFontsFragment.processResources();
         }
 
         @Override
         public void a(String str) {
-            activityWeakReference.get().h();
+            var activity = activityWeakReference.get();
+            if (activity == null) return;
+            activity.h();
         }
     }
 

@@ -352,19 +352,25 @@ public class ExcludeBuiltInLibrariesActivity extends BaseAppCompatActivity {
 
         @Override
         public void a() {
-            activity.get().h();
-            activity.get().setResult(RESULT_OK);
-            activity.get().finish();
+            var act = activity.get();
+            if (act == null) return;
+            act.h();
+            act.setResult(RESULT_OK);
+            act.finish();
         }
 
         @Override
         public void a(String s) {
-            activity.get().onSaveError("Couldn't save configuration: " + s);
+            var act = activity.get();
+            if (act == null) return;
+            act.onSaveError("Couldn't save configuration: " + s);
         }
 
         @Override
         public void b() {
-            saveConfig(activity.get().sc_id, activity.get().isExcludingEnabled, activity.get().excludedLibraries);
+            var act = activity.get();
+            if (act == null) return;
+            saveConfig(act.sc_id, act.isExcludingEnabled, act.excludedLibraries);
         }
 
     }

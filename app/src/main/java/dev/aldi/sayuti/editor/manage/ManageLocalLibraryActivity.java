@@ -1,5 +1,7 @@
 package dev.aldi.sayuti.editor.manage;
 
+
+import android.util.Log;
 import static dev.aldi.sayuti.editor.manage.LocalLibrariesUtil.createLibraryMap;
 import static dev.aldi.sayuti.editor.manage.LocalLibrariesUtil.deleteSelectedLocalLibraries;
 import static dev.aldi.sayuti.editor.manage.LocalLibrariesUtil.getAllLocalLibraries;
@@ -9,6 +11,7 @@ import static dev.aldi.sayuti.editor.manage.LocalLibrariesUtil.rewriteLocalLibFi
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -235,7 +238,7 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
 
     private void runLoadLocalLibrariesTask() {
         k();
-        new Handler().postDelayed(() -> new LoadLocalLibrariesTask(this).execute(), 500L);
+        new Handler(Looper.getMainLooper()).postDelayed(() -> new LoadLocalLibrariesTask(this).execute(), 500L);
     }
 
     private List<LocalLibrary> getAdapterLocalLibraries() {
@@ -323,20 +326,26 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
 
         @Override
         public void a() {
-            activity.get().h();
+            var act = activity.get();
+            if (act == null) return;
+            act.h();
         }
 
         @Override
         public void a(String idk) {
-            activity.get().h();
+            var act = activity.get();
+            if (act == null) return;
+            act.h();
         }
 
         @Override
         public void b() {
+            var act = activity.get();
+            if (act == null) return;
             try {
-                activity.get().loadLibraries();
+                act.loadLibraries();
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e("ManageLocalLibraryActivity", e.getMessage(), e);
             }
         }
     }

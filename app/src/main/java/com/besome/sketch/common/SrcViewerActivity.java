@@ -77,16 +77,16 @@ public class SrcViewerActivity extends BaseAppCompatActivity {
         k(); // show loading
 
         new Thread(() -> {
-            var yq = new yq(getBaseContext(), sc_id);
-            var fileManager = jC.b(sc_id);
-            var dataManager = jC.a(sc_id);
-            var libraryManager = jC.c(sc_id);
-            yq.a(libraryManager, fileManager, dataManager, a.a.a.yq.ExportType.SOURCE_CODE_VIEWING);
-            ProjectBuilder builder = new ProjectBuilder(this, yq);
-            builder.buildBuiltInLibraryInformation();
-            sourceCodeBeans = yq.a(fileManager, dataManager, builder.getBuiltInLibraryManager());
-
             try {
+                var yq = new yq(getBaseContext(), sc_id);
+                var fileManager = jC.b(sc_id);
+                var dataManager = jC.a(sc_id);
+                var libraryManager = jC.c(sc_id);
+                yq.a(libraryManager, fileManager, dataManager, a.a.a.yq.ExportType.SOURCE_CODE_VIEWING);
+                ProjectBuilder builder = new ProjectBuilder(this, yq);
+                builder.buildBuiltInLibraryInformation();
+                sourceCodeBeans = yq.a(fileManager, dataManager, builder.getBuiltInLibraryManager());
+
                 runOnUiThread(() -> {
                     if (sourceCodeBeans == null) {
                         bB.b(getApplicationContext(), Helper.getResString(R.string.common_error_unknown), bB.TOAST_NORMAL).show();
@@ -102,8 +102,8 @@ public class SrcViewerActivity extends BaseAppCompatActivity {
                         h(); // hide loading
                     }
                 });
-            } catch (Exception ignored) {
-                // May occur if the activity is killed
+            } catch (Exception e) {
+                android.util.Log.e("SrcViewerActivity", "Failed to generate source code", e);
             }
         }).start();
     }

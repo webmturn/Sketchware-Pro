@@ -322,7 +322,7 @@ public class yq {
         try {
             fileUtil.a(iconPath, resDirectoryPath + File.separator + "mipmap-xhdpi" + File.separator + "ic_launcher.png");
         } catch (Exception e2) {
-            e2.printStackTrace();
+            Log.e("yq", e2.getMessage(), e2);
         }
     }
 
@@ -334,7 +334,7 @@ public class yq {
         try {
             FileUtil.copyDirectory(new File(iconPath), new File(resDirectoryPath + File.separator));
         } catch (Exception e2) {
-            e2.printStackTrace();
+            Log.e("yq", e2.getMessage(), e2);
         }
     }
 
@@ -346,7 +346,7 @@ public class yq {
         try {
             fileUtil.b(resDirectoryPath + File.separator + "mipmap-anydpi-v26" + File.separator + "ic_launcher.xml", content);
         } catch (Exception e2) {
-            e2.printStackTrace();
+            Log.e("yq", e2.getMessage(), e2);
         }
     }
 
