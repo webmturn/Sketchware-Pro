@@ -1,9 +1,13 @@
 package com.besome.sketch.editor.manage.library.admob;
 
+
+import android.util.Log;
 import static android.text.TextUtils.isEmpty;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -37,6 +41,7 @@ public class ManageAdmobActivity extends BaseAppCompatActivity implements View.O
 
     private static final int REQUEST_CODE_ENABLE_ADMOB = 8001;
     private static final int REQUEST_CODE_ADMOB_SETTINGS = 8002;
+    private ActivityResultLauncher<Intent> admobActivityLauncher;
     private DB A;
     private TestDeviceAdapter testDeviceAdapter;
     private ArrayList<AdTestDeviceBean> testDeviceList = new ArrayList<>();
@@ -105,7 +110,7 @@ public class ManageAdmobActivity extends BaseAppCompatActivity implements View.O
                 intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
                 startActivity(intent);
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e("ManageAdmobActivity", e.getMessage(), e);
                 downloadChromeDialog();
             }
         } else {
@@ -133,10 +138,6 @@ public class ManageAdmobActivity extends BaseAppCompatActivity implements View.O
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case 236:
-                    initializeLibrary(data.getParcelableExtra("admob"));
-                    break;
-
                 case REQUEST_CODE_ENABLE_ADMOB:
                     binding.libSwitch.setChecked(true);
                     admobLibraryBean.useYn = "Y";
@@ -182,6 +183,12 @@ public class ManageAdmobActivity extends BaseAppCompatActivity implements View.O
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        admobActivityLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        initializeLibrary(result.getData().getParcelableExtra("admob"));
+                    }
+                });
         binding = ManageLibraryManageAdmobBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -285,7 +292,7 @@ public class ManageAdmobActivity extends BaseAppCompatActivity implements View.O
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra("sc_id", sc_id);
         intent.putExtra("admob", admobLibraryBean);
-        startActivityForResult(intent, 236);
+        admobActivityLauncher.launch(intent);
     }
 
     private void configure() {

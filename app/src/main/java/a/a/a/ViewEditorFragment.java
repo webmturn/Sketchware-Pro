@@ -2,6 +2,8 @@ package a.a.a;
 
 import android.animation.ObjectAnimator;
 import android.content.Intent;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -34,6 +36,7 @@ import pro.sketchware.widgets.WidgetsCreatorManager;
 
 public class ViewEditorFragment extends qA {
 
+    private ActivityResultLauncher<Intent> propertyLauncher;
     public ViewEditor viewEditor;
     private ProjectFileBean projectFileBean;
     private boolean isFabEnabled = false;
@@ -195,7 +198,7 @@ public class ViewEditorFragment extends qA {
         intent.putExtra("sc_id", sc_id);
         intent.putExtra("bean", viewBean);
         intent.putExtra("project_file", projectFileBean);
-        startActivityForResult(intent, 213);
+        propertyLauncher.launch(intent);
     }
 
     private void b(ArrayList<ViewBean> viewBeans) {
@@ -444,21 +447,6 @@ public class ViewEditorFragment extends qA {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 213) {
-            if (resultCode == -1) {
-                c(data.getParcelableExtra("bean"));
-            }
-
-            if (data != null && data.getBooleanExtra("is_edit_image", false)) {
-                for (ViewBean viewBean : jC.a(sc_id).d(projectFileBean.getXmlName())) {
-                    c(viewBean);
-                }
-                if (isFabEnabled) {
-                    c(jC.a(sc_id).h(projectFileBean.getXmlName()));
-                }
-            }
-            invalidateOptionsMenu();
-        }
     }
 
     @Override
@@ -471,6 +459,22 @@ public class ViewEditorFragment extends qA {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        propertyLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (result.getResultCode() == -1 && result.getData() != null) {
+                        c(result.getData().getParcelableExtra("bean"));
+                    }
+                    Intent data = result.getData();
+                    if (data != null && data.getBooleanExtra("is_edit_image", false)) {
+                        for (ViewBean viewBean : jC.a(sc_id).d(projectFileBean.getXmlName())) {
+                            c(viewBean);
+                        }
+                        if (isFabEnabled) {
+                            c(jC.a(sc_id).h(projectFileBean.getXmlName()));
+                        }
+                    }
+                    invalidateOptionsMenu();
+                });
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.besome.sketch.editor.property;
 
-import android.app.Activity;
+import com.besome.sketch.editor.PropertyActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Pair;
@@ -992,10 +992,7 @@ public class ViewPropertyItems extends LinearLayout implements Kw, View.OnClickL
     @Override
     public void onClick(View v) {
         if (!mB.a() && !b) {
-            Intent intent = new Intent(getContext(), ManageImageActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            intent.putExtra("sc_id", sc_id);
-            ((Activity) getContext()).startActivityForResult(intent, 209);
+            ((PropertyActivity) getContext()).p();
         }
     }
 }

@@ -1,6 +1,8 @@
 package com.besome.sketch.editor.manage;
 
 import android.content.Intent;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +34,11 @@ import pro.sketchware.utility.ThemeUtils;
 import pro.sketchware.utility.UI;
 
 public class ViewSelectorActivity extends BaseAppCompatActivity {
+    private ActivityResultLauncher<Intent> addActivityLauncher;
+    private ActivityResultLauncher<Intent> editActivityLauncher;
+    private ActivityResultLauncher<Intent> addCustomViewLauncher;
+    private ActivityResultLauncher<Intent> presetLauncher;
+    private int lastPresetRequestCode;
     private final int[] x = new int[19];
     private final int TAB_ACTIVITY = ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY;
     private final int TAB_CUSTOM_VIEW = ProjectFileBean.PROJECT_FILE_TYPE_CUSTOM_VIEW;
@@ -71,101 +78,95 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
         return screenNames;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case 264:
-                if (resultCode == RESULT_OK) {
-                    ProjectFileBean projectFile = data.getParcelableExtra("project_file");
-                    jC.b(sc_id).a(projectFile);
-                    if (projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)) {
-                        jC.b(sc_id).a(2, projectFile.getDrawerName());
-                    }
-                    if (data.hasExtra("preset_views")) {
-                        a(projectFile, data.getParcelableArrayListExtra("preset_views"));
-                    }
-                    jC.b(sc_id).j();
-                    jC.b(sc_id).l();
-                    viewSelectorAdapter.notifyDataSetChanged();
-                }
-                break;
-            case 265:
-                if (resultCode == RESULT_OK) {
-                    ProjectFileBean projectFile = data.getParcelableExtra("project_file");
-                    ProjectFileBean activity = jC.b(sc_id).b().get(viewSelectorAdapter.selectedItem);
-                    activity.keyboardSetting = projectFile.keyboardSetting;
-                    activity.orientation = projectFile.orientation;
-                    activity.options = projectFile.options;
-                    if (projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)) {
-                        if (jC.b(sc_id).b(projectFile.getDrawerXmlName()) == null) {
-                            jC.b(sc_id).a(2, projectFile.getDrawerName());
-                        }
-                    } else {
-                        jC.b(sc_id).b(2, projectFile.getDrawerName());
-                    }
-                    if (projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)
-                            || projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB)) {
-                        jC.c(sc_id).c().useYn = "Y";
-                    }
-                    viewSelectorAdapter.notifyItemChanged(viewSelectorAdapter.selectedItem);
-                    Intent intent = new Intent();
-                    intent.putExtra("project_file", projectFile);
-                    setResult(RESULT_OK, intent);
-                }
-                break;
-            case 266:
-                if (resultCode == RESULT_OK) {
-                    ProjectFileBean projectFile = data.getParcelableExtra("project_file");
-                    jC.b(sc_id).a(projectFile);
-                    if (data.hasExtra("preset_views")) {
-                        a(projectFile, data.getParcelableArrayListExtra("preset_views"));
-                    }
-                    jC.b(sc_id).j();
-                    jC.b(sc_id).l();
-                    viewSelectorAdapter.notifyDataSetChanged();
-                }
-                break;
-            case 276:
-                if (resultCode == RESULT_OK) {
-                    ProjectFileBean presetData = data.getParcelableExtra("preset_data");
-                    ProjectFileBean activity = jC.b(sc_id).b().get(viewSelectorAdapter.selectedItem);
-                    activity.keyboardSetting = presetData.keyboardSetting;
-                    activity.orientation = presetData.orientation;
-                    activity.options = presetData.options;
-                    if (presetData.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)
-                            || presetData.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB)) {
-                        jC.c(sc_id).c().useYn = "Y";
-                    }
-                    a(presetData, activity, requestCode);
-                    jC.b(sc_id).j();
-                    viewSelectorAdapter.notifyDataSetChanged();
-                    Intent intent2 = new Intent();
-                    intent2.putExtra("project_file", activity);
-                    setResult(RESULT_OK, intent2);
-                }
-                break;
-            case 277:
-            case 278:
-                if (resultCode == RESULT_OK) {
-                    ProjectFileBean presetData = data.getParcelableExtra("preset_data");
-                    ProjectFileBean customView = jC.b(sc_id).c().get(viewSelectorAdapter.selectedItem);
-                    a(presetData, customView, requestCode);
-                    jC.b(sc_id).j();
-                    viewSelectorAdapter.notifyDataSetChanged();
-                    Intent intent3 = new Intent();
-                    intent3.putExtra("project_file", customView);
-                    setResult(RESULT_OK, intent3);
-                }
-                break;
-            default:
-        }
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         enableEdgeToEdgeNoContrast();
         super.onCreate(savedInstanceState);
+        addActivityLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        ProjectFileBean projectFile = result.getData().getParcelableExtra("project_file");
+                        jC.b(sc_id).a(projectFile);
+                        if (projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)) {
+                            jC.b(sc_id).a(2, projectFile.getDrawerName());
+                        }
+                        if (result.getData().hasExtra("preset_views")) {
+                            a(projectFile, result.getData().getParcelableArrayListExtra("preset_views"));
+                        }
+                        jC.b(sc_id).j();
+                        jC.b(sc_id).l();
+                        viewSelectorAdapter.notifyDataSetChanged();
+                    }
+                });
+        editActivityLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        ProjectFileBean projectFile = result.getData().getParcelableExtra("project_file");
+                        ProjectFileBean activity = jC.b(sc_id).b().get(viewSelectorAdapter.selectedItem);
+                        activity.keyboardSetting = projectFile.keyboardSetting;
+                        activity.orientation = projectFile.orientation;
+                        activity.options = projectFile.options;
+                        if (projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)) {
+                            if (jC.b(sc_id).b(projectFile.getDrawerXmlName()) == null) {
+                                jC.b(sc_id).a(2, projectFile.getDrawerName());
+                            }
+                        } else {
+                            jC.b(sc_id).b(2, projectFile.getDrawerName());
+                        }
+                        if (projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)
+                                || projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB)) {
+                            jC.c(sc_id).c().useYn = "Y";
+                        }
+                        viewSelectorAdapter.notifyItemChanged(viewSelectorAdapter.selectedItem);
+                        Intent intent = new Intent();
+                        intent.putExtra("project_file", projectFile);
+                        setResult(RESULT_OK, intent);
+                    }
+                });
+        addCustomViewLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        ProjectFileBean projectFile = result.getData().getParcelableExtra("project_file");
+                        jC.b(sc_id).a(projectFile);
+                        if (result.getData().hasExtra("preset_views")) {
+                            a(projectFile, result.getData().getParcelableArrayListExtra("preset_views"));
+                        }
+                        jC.b(sc_id).j();
+                        jC.b(sc_id).l();
+                        viewSelectorAdapter.notifyDataSetChanged();
+                    }
+                });
+        presetLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        ProjectFileBean presetData = result.getData().getParcelableExtra("preset_data");
+                        if (lastPresetRequestCode == 276) {
+                            ProjectFileBean activity = jC.b(sc_id).b().get(viewSelectorAdapter.selectedItem);
+                            activity.keyboardSetting = presetData.keyboardSetting;
+                            activity.orientation = presetData.orientation;
+                            activity.options = presetData.options;
+                            if (presetData.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)
+                                    || presetData.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB)) {
+                                jC.c(sc_id).c().useYn = "Y";
+                            }
+                            a(presetData, activity, lastPresetRequestCode);
+                            jC.b(sc_id).j();
+                            viewSelectorAdapter.notifyDataSetChanged();
+                            Intent intent2 = new Intent();
+                            intent2.putExtra("project_file", activity);
+                            setResult(RESULT_OK, intent2);
+                        } else {
+                            ProjectFileBean customView = jC.b(sc_id).c().get(viewSelectorAdapter.selectedItem);
+                            a(presetData, customView, lastPresetRequestCode);
+                            jC.b(sc_id).j();
+                            viewSelectorAdapter.notifyDataSetChanged();
+                            Intent intent3 = new Intent();
+                            intent3.putExtra("project_file", customView);
+                            setResult(RESULT_OK, intent3);
+                        }
+                    }
+                });
         binding = FileSelectorPopupSelectXmlBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -218,11 +219,11 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
                     Intent intent = new Intent(getApplicationContext(), AddViewActivity.class);
                     intent.putStringArrayListExtra("screen_names", getScreenNames());
                     intent.putExtra("request_code", 264);
-                    startActivityForResult(intent, 264);
+                    addActivityLauncher.launch(intent);
                 } else if (selectedTab == TAB_CUSTOM_VIEW) {
                     Intent intent = new Intent(getApplicationContext(), AddCustomViewActivity.class);
                     intent.putStringArrayListExtra("screen_names", getScreenNames());
-                    startActivityForResult(intent, 266);
+                    addCustomViewLauncher.launch(intent);
 
                 }
             }
@@ -415,7 +416,7 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
                         Intent intent = new Intent(getApplicationContext(), AddViewActivity.class);
                         intent.putExtra("project_file", jC.b(sc_id).b().get(getLayoutPosition()));
                         intent.putExtra("request_code", 265);
-                        startActivityForResult(intent, 265);
+                        editActivityLauncher.launch(intent);
                     }
                 });
                 itemBinding.imgPresetSetting.setOnClickListener(v -> {
@@ -425,7 +426,8 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
                         Intent intent = new Intent(getApplicationContext(), PresetSettingActivity.class);
                         intent.putExtra("request_code", requestCode);
                         intent.putExtra("edit_mode", true);
-                        startActivityForResult(intent, requestCode);
+                        lastPresetRequestCode = requestCode;
+                        presetLauncher.launch(intent);
                     }
                 });
             }

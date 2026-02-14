@@ -1,6 +1,8 @@
 package com.besome.sketch.editor.manage;
 
 import android.content.Intent;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -63,15 +65,12 @@ import mod.jbk.util.SoundPlayingAdapter;
 import pro.sketchware.R;
 
 public class ManageCollectionActivity extends BaseAppCompatActivity implements View.OnClickListener {
-    private static final int REQUEST_CODE_ADD_IMAGE_DIALOG = 267;
-    private static final int REQUEST_CODE_SHOW_IMAGE_DETAILS = 268;
-    private static final int REQUEST_CODE_ADD_SOUND_DIALOG = 269;
-    private static final int REQUEST_CODE_SHOW_SOUND_DETAILS = 270;
-    private static final int REQUEST_CODE_ADD_FONT_DIALOG = 271;
-    private static final int REQUEST_CODE_SHOW_FONT_DETAILS = 272;
-    private static final int REQUEST_CODE_SHOW_WIDGET_DETAILS = 273;
-    private static final int REQUEST_CODE_SHOW_BLOCK_DETAILS = 274;
-    private static final int REQUEST_CODE_SHOW_MORE_BLOCK_DETAILS = 279;
+    private ActivityResultLauncher<Intent> imageLauncher;
+    private ActivityResultLauncher<Intent> soundLauncher;
+    private ActivityResultLauncher<Intent> fontLauncher;
+    private ActivityResultLauncher<Intent> widgetLauncher;
+    private ActivityResultLauncher<Intent> blockLauncher;
+    private ActivityResultLauncher<Intent> moreBlockLauncher;
 
     private LinearLayout actionButtonGroup;
     private boolean hasDeletedWidget;
@@ -94,7 +93,7 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
         Intent intent = new Intent(getApplicationContext(), AddImageCollectionActivity.class);
         intent.putParcelableArrayListExtra("images", images);
         intent.putExtra("sc_id", sc_id);
-        startActivityForResult(intent, REQUEST_CODE_ADD_IMAGE_DIALOG);
+        imageLauncher.launch(intent);
     }
 
     private void showAddSoundDialog() {
@@ -102,7 +101,7 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
         Intent intent = new Intent(getApplicationContext(), AddSoundCollectionActivity.class);
         intent.putParcelableArrayListExtra("sounds", sounds);
         intent.putExtra("sc_id", sc_id);
-        startActivityForResult(intent, REQUEST_CODE_ADD_SOUND_DIALOG);
+        soundLauncher.launch(intent);
     }
 
     private void showAddFontDialog() {
@@ -110,7 +109,7 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
         intent.putParcelableArrayListExtra("font_names", fonts);
         intent.putExtra("sc_id", sc_id);
         intent.putExtra("add_to_collection", true);
-        startActivityForResult(intent, REQUEST_CODE_ADD_FONT_DIALOG);
+        fontLauncher.launch(intent);
     }
 
     private int getBlockIcon(BlockBean block) {
@@ -158,7 +157,7 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
         intent.putParcelableArrayListExtra("images", images);
         intent.putExtra("sc_id", sc_id);
         intent.putExtra("edit_target", editTarget);
-        startActivityForResult(intent, REQUEST_CODE_SHOW_IMAGE_DETAILS);
+        imageLauncher.launch(intent);
     }
 
     private void openSoundDetails(int position) {
@@ -168,7 +167,7 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
         intent.putParcelableArrayListExtra("sounds", sounds);
         intent.putExtra("sc_id", sc_id);
         intent.putExtra("edit_target", editTarget);
-        startActivityForResult(intent, REQUEST_CODE_SHOW_SOUND_DETAILS);
+        soundLauncher.launch(intent);
     }
 
     private void openFontDetails(int position) {
@@ -177,7 +176,7 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
         intent.putParcelableArrayListExtra("fonts", fonts);
         intent.putExtra("sc_id", sc_id);
         intent.putExtra("edit_target", editTarget);
-        startActivityForResult(intent, REQUEST_CODE_SHOW_FONT_DETAILS);
+        fontLauncher.launch(intent);
     }
 
     private void openWidgetDetails(int position) {
@@ -185,21 +184,21 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
         Intent intent = new Intent(getApplicationContext(), ShowWidgetCollectionActivity.class);
         intent.putExtra("sc_id", sc_id);
         intent.putExtra("widget_name", widgetName);
-        startActivityForResult(intent, REQUEST_CODE_SHOW_WIDGET_DETAILS);
+        widgetLauncher.launch(intent);
     }
 
     private void openBlockDetails(int position) {
         String blockName = Mp.h().g().get(position);
         Intent intent = new Intent(getApplicationContext(), ShowBlockCollectionActivity.class);
         intent.putExtra("block_name", blockName);
-        startActivityForResult(intent, REQUEST_CODE_SHOW_BLOCK_DETAILS);
+        blockLauncher.launch(intent);
     }
 
     private void openMoreBlockDetails(int position) {
         String blockName = Pp.h().g().get(position);
         Intent intent = new Intent(getApplicationContext(), ShowMoreBlockCollectionActivity.class);
         intent.putExtra("block_name", blockName);
-        startActivityForResult(intent, REQUEST_CODE_SHOW_MORE_BLOCK_DETAILS);
+        moreBlockLauncher.launch(intent);
     }
 
     private int getSelectedIndex(int id) {
@@ -382,20 +381,6 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case REQUEST_CODE_ADD_IMAGE_DIALOG, REQUEST_CODE_SHOW_IMAGE_DETAILS -> loadImages();
-            case REQUEST_CODE_ADD_SOUND_DIALOG, REQUEST_CODE_SHOW_SOUND_DETAILS -> loadSounds();
-            case REQUEST_CODE_ADD_FONT_DIALOG, REQUEST_CODE_SHOW_FONT_DETAILS -> loadFonts();
-            case REQUEST_CODE_SHOW_WIDGET_DETAILS -> loadWidgets();
-            case REQUEST_CODE_SHOW_BLOCK_DETAILS -> loadBlocks();
-            case REQUEST_CODE_SHOW_MORE_BLOCK_DETAILS -> loadMoreBlocks();
-        }
-
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
     public void onBackPressed() {
         if (selectingToBeDeletedItems) {
             changeDeletingItemsState(false);
@@ -435,6 +420,18 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        imageLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> loadImages());
+        soundLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> loadSounds());
+        fontLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> loadFonts());
+        widgetLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> loadWidgets());
+        blockLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> loadBlocks());
+        moreBlockLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> loadMoreBlocks());
         if (!isStoragePermissionGranted()) {
             finish();
         }

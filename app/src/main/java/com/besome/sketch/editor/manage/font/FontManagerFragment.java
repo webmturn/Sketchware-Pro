@@ -2,6 +2,8 @@ package com.besome.sketch.editor.manage.font;
 
 import android.app.Activity;
 import android.content.Intent;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,6 +32,7 @@ import pro.sketchware.databinding.ManageFontListItemBinding;
 
 public class FontManagerFragment extends qA {
 
+    private ActivityResultLauncher<Intent> importFontLauncher;
     public String sc_id;
     public fontAdapter adapter;
     public String dirPath = "";
@@ -116,7 +119,7 @@ public class FontManagerFragment extends qA {
             Intent intent = new Intent(getActivity(), ManageFontImportActivity.class);
             intent.putParcelableArrayListExtra("project_fonts", fontCollection);
             intent.putParcelableArrayListExtra("selected_collections", selectedFonts);
-            startActivityForResult(intent, 232);
+            importFontLauncher.launch(intent);
         }
 
         resetSelection();
@@ -126,6 +129,12 @@ public class FontManagerFragment extends qA {
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
+        importFontLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        processProjectResources(result.getData().getParcelableArrayListExtra("results"));
+                    }
+                });
 
         new oB().f(dirPath);
 
@@ -138,14 +147,6 @@ public class FontManagerFragment extends qA {
         }
 
         loadProjectResources();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 232 && resultCode == Activity.RESULT_OK && data != null) {
-            processProjectResources(data.getParcelableArrayListExtra("results"));
-        }
     }
 
     @Override

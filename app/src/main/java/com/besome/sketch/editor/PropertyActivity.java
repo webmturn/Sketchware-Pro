@@ -1,6 +1,8 @@
 package com.besome.sketch.editor;
 
 import android.content.Intent;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.os.Bundle;
@@ -46,6 +48,7 @@ import pro.sketchware.R;
 
 public class PropertyActivity extends BaseAppCompatActivity implements Kw {
 
+    private ActivityResultLauncher<Intent> imageManagerLauncher;
     private final ArrayList<Integer> propertyGroups = new ArrayList<>();
     private ProjectFileBean projectFileBean;
     private ViewBean viewBean;
@@ -132,19 +135,6 @@ public class PropertyActivity extends BaseAppCompatActivity implements Kw {
         finish();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 209 && resultCode == -1 && jC.d(sc_id) != null && data != null) {
-            String var4 = data.getStringExtra("sc_id");
-            ArrayList<ProjectResourceBean> result = data.getParcelableArrayListExtra("result");
-            if (jC.d(var4) != null) {
-                jC.d(var4).b(result);
-                m();
-            }
-        }
-
-    }
 
     @Override
     public void onBackPressed() {
@@ -155,6 +145,17 @@ public class PropertyActivity extends BaseAppCompatActivity implements Kw {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        imageManagerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (result.getResultCode() == RESULT_OK && jC.d(sc_id) != null && result.getData() != null) {
+                        String var4 = result.getData().getStringExtra("sc_id");
+                        ArrayList<ProjectResourceBean> resultList = result.getData().getParcelableArrayListExtra("result");
+                        if (jC.d(var4) != null) {
+                            jC.d(var4).b(resultList);
+                            m();
+                        }
+                    }
+                });
         setContentView(R.layout.property);
 
         content = findViewById(R.id.content);
@@ -246,7 +247,7 @@ public class PropertyActivity extends BaseAppCompatActivity implements Kw {
         Intent var1 = new Intent(getApplicationContext(), ManageImageActivity.class);
         var1.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         var1.putExtra("sc_id", sc_id);
-        startActivityForResult(var1, 209);
+        imageManagerLauncher.launch(var1);
     }
 
     public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {

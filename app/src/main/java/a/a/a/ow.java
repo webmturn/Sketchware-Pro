@@ -2,6 +2,8 @@ package a.a.a;
 
 import android.app.Activity;
 import android.content.Intent;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -39,6 +41,8 @@ import pro.sketchware.utility.SketchwareUtil;
 
 public class ow extends qA {
 
+    private ActivityResultLauncher<Intent> addSoundLauncher;
+    private ActivityResultLauncher<Intent> editSoundLauncher;
     public ArrayList<ProjectResourceBean> sounds;
     public boolean isSelecting = false;
     private String sc_id;
@@ -64,7 +68,7 @@ public class ow extends qA {
         intent.putExtra("sc_id", sc_id);
         intent.putExtra("dir_path", dirPath);
         intent.putExtra("sound_names", getSoundsNames());
-        startActivityForResult(intent, 269);
+        addSoundLauncher.launch(intent);
     }
 
     private void editSound() {
@@ -74,12 +78,32 @@ public class ow extends qA {
         intent.putExtra("sound_names", getSoundsNames());
         intent.putExtra("request_code", 270);
         intent.putExtra("project_resource", sounds.get(adapter.lastSelectedSound));
-        startActivityForResult(intent, 270);
+        editSoundLauncher.launch(intent);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        addSoundLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        sounds.add(result.getData().getParcelableExtra("project_resource"));
+                        SketchwareUtil.toast(Helper.getResString(R.string.design_manager_message_add_complete));
+                        adapter.notifyDataSetChanged();
+                        updateNoSoundsTextVisibility();
+                        ((ManageSoundActivity) requireActivity()).collectionSounds.loadProjectSounds();
+                    }
+                });
+        editSoundLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        sounds.set(adapter.lastSelectedSound, result.getData().getParcelableExtra("project_resource"));
+                        SketchwareUtil.toast(Helper.getResString(R.string.design_manager_message_edit_complete));
+                        adapter.notifyDataSetChanged();
+                        updateNoSoundsTextVisibility();
+                        ((ManageSoundActivity) requireActivity()).collectionSounds.loadProjectSounds();
+                    }
+                });
         new oB().f(dirPath);
         sounds = new ArrayList<>();
         if (savedInstanceState == null) {
@@ -98,25 +122,6 @@ public class ow extends qA {
         }
         adapter.notifyDataSetChanged();
         updateNoSoundsTextVisibility();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 269 && resultCode == Activity.RESULT_OK) {
-            sounds.add(data.getParcelableExtra("project_resource"));
-            SketchwareUtil.toast(Helper.getResString(R.string.design_manager_message_add_complete));
-
-            adapter.notifyDataSetChanged();
-            updateNoSoundsTextVisibility();
-            ((ManageSoundActivity) requireActivity()).collectionSounds.loadProjectSounds();
-        } else if (requestCode == 270 && resultCode == Activity.RESULT_OK) {
-            sounds.set(adapter.lastSelectedSound, data.getParcelableExtra("project_resource"));
-            SketchwareUtil.toast(Helper.getResString(R.string.design_manager_message_edit_complete));
-            adapter.notifyDataSetChanged();
-            updateNoSoundsTextVisibility();
-            ((ManageSoundActivity) requireActivity()).collectionSounds.loadProjectSounds();
-        }
     }
 
     @Override

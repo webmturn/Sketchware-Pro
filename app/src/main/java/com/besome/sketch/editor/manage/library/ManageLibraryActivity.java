@@ -1,9 +1,13 @@
 package com.besome.sketch.editor.manage.library;
 
+
+import android.util.Log;
 import static android.text.TextUtils.isEmpty;
 
 import android.app.Activity;
 import android.content.Intent;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -42,12 +46,12 @@ import pro.sketchware.utility.UI;
 
 public class ManageLibraryActivity extends BaseAppCompatActivity implements View.OnClickListener {
 
-    private final int REQUEST_CODE_ADMOB_ACTIVITY = 234;
-    private final int REQUEST_CODE_APPCOMPAT_ACTIVITY = 231;
-    private final int REQUEST_CODE_FIREBASE_ACTIVITY = 230;
-    private final int REQUEST_CODE_GOOGLE_MAPS_ACTIVITY = 241;
-    private final int REQUEST_CODE_MATERIAL3_ACTIVITY = 242;
-    private final int REQUEST_CODE_CUSTOM_ITEM_LIBRARY_ACTIVITY = 243;
+    private ActivityResultLauncher<Intent> compatLauncher;
+    private ActivityResultLauncher<Intent> firebaseLauncher;
+    private ActivityResultLauncher<Intent> admobLauncher;
+    private ActivityResultLauncher<Intent> googleMapLauncher;
+    private ActivityResultLauncher<Intent> material3Launcher;
+    private ActivityResultLauncher<Intent> customLibLauncher;
 
     private String sc_id;
     private LinearLayout libraryItemLayout;
@@ -116,7 +120,7 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
         intent.putExtra("sc_id", sc_id);
         intent.putExtra("compat", compatLibraryBean);
         intent.putExtra("firebase", firebaseLibraryBean);
-        startActivityForResult(intent, REQUEST_CODE_APPCOMPAT_ACTIVITY);
+        compatLauncher.launch(intent);
     }
 
     private void initializeLibrary(@Nullable ProjectLibraryBean libraryBean) {
@@ -154,7 +158,7 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra("sc_id", sc_id);
         intent.putExtra("admob", libraryBean);
-        startActivityForResult(intent, REQUEST_CODE_ADMOB_ACTIVITY);
+        admobLauncher.launch(intent);
     }
 
     private void toFirebaseActivity(ProjectLibraryBean libraryBean) {
@@ -162,7 +166,7 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra("sc_id", sc_id);
         intent.putExtra("firebase", libraryBean);
-        startActivityForResult(intent, REQUEST_CODE_FIREBASE_ACTIVITY);
+        firebaseLauncher.launch(intent);
     }
 
     private void toGoogleMapActivity(ProjectLibraryBean libraryBean) {
@@ -170,7 +174,7 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra("sc_id", sc_id);
         intent.putExtra("google_map", libraryBean);
-        startActivityForResult(intent, REQUEST_CODE_GOOGLE_MAPS_ACTIVITY);
+        googleMapLauncher.launch(intent);
     }
 
     private void launchCustomActivity(Class<? extends Activity> toLaunch) {
@@ -178,14 +182,14 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra("sc_id", sc_id);
         intent.putExtra("app_compat", compatLibraryBean);
-        startActivityForResult(intent, REQUEST_CODE_CUSTOM_ITEM_LIBRARY_ACTIVITY);
+        customLibLauncher.launch(intent);
     }
 
     private void toMaterial3Activity() {
         Intent intent = new Intent(getApplicationContext(), Material3LibraryActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra("compat", compatLibraryBean);
-        startActivityForResult(intent, REQUEST_CODE_MATERIAL3_ACTIVITY);
+        material3Launcher.launch(intent);
     }
 
     private void launchActivity(Class<? extends Activity> toLaunch) {
@@ -209,49 +213,12 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case REQUEST_CODE_FIREBASE_ACTIVITY:
-                    ProjectLibraryBean libraryBean = data.getParcelableExtra("firebase");
-                    initializeLibrary(libraryBean);
-                    if (libraryBean.useYn.equals("Y") && !compatLibraryBean.useYn.equals("Y")) {
-                        libraryBean = compatLibraryBean;
-                        libraryBean.useYn = "Y";
-                        initializeLibrary(libraryBean);
-                        showFirebaseNeedCompatDialog();
-                    }
-                    break;
-
-                case REQUEST_CODE_APPCOMPAT_ACTIVITY, REQUEST_CODE_MATERIAL3_ACTIVITY:
-                    initializeLibrary(data.getParcelableExtra("compat"));
-                    break;
-
-                case REQUEST_CODE_ADMOB_ACTIVITY:
-                    initializeLibrary(data.getParcelableExtra("admob"));
-                    break;
-
-                case REQUEST_CODE_GOOGLE_MAPS_ACTIVITY:
-                    initializeLibrary(data.getParcelableExtra("google_map"));
-                    break;
-
-                case REQUEST_CODE_CUSTOM_ITEM_LIBRARY_ACTIVITY:
-                    initializeLibrary(null);
-                    break;
-
-                default:
-            }
-        }
-    }
-
-    @Override
     public void onBackPressed() {
         k();
         try {
             new Handler().postDelayed(() -> new SaveLibraryTask(this).execute(), 500L);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e("ManageLibraryActivity", e.getMessage(), e);
             h();
         }
     }
@@ -303,6 +270,49 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
     public void onCreate(Bundle savedInstanceState) {
         enableEdgeToEdgeNoContrast();
         super.onCreate(savedInstanceState);
+        compatLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        initializeLibrary(result.getData().getParcelableExtra("compat"));
+                    }
+                });
+        firebaseLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        ProjectLibraryBean libraryBean = result.getData().getParcelableExtra("firebase");
+                        initializeLibrary(libraryBean);
+                        if (libraryBean.useYn.equals("Y") && !compatLibraryBean.useYn.equals("Y")) {
+                            libraryBean = compatLibraryBean;
+                            libraryBean.useYn = "Y";
+                            initializeLibrary(libraryBean);
+                            showFirebaseNeedCompatDialog();
+                        }
+                    }
+                });
+        admobLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        initializeLibrary(result.getData().getParcelableExtra("admob"));
+                    }
+                });
+        googleMapLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        initializeLibrary(result.getData().getParcelableExtra("google_map"));
+                    }
+                });
+        material3Launcher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        initializeLibrary(result.getData().getParcelableExtra("compat"));
+                    }
+                });
+        customLibLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        initializeLibrary(null);
+                    }
+                });
         if (!super.isStoragePermissionGranted()) {
             finish();
         }
@@ -449,7 +459,7 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
             try {
                 activity.get().saveLibraryConfiguration();
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e("ManageLibraryActivity", e.getMessage(), e);
             }
         }
     }

@@ -153,11 +153,8 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     private ViewLogicEditor viewLogicEditor;
     private ViewDummy dummy;
     private PaletteSelector paletteSelector;
-    private final ActivityResultLauncher<Intent> openResourcesEditor = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-        if (result.getResultCode() == RESULT_OK) {
-            paletteSelector.performClickPalette(-1);
-        }
-    });
+    private ActivityResultLauncher<Intent> openResourcesEditor;
+    private ActivityResultLauncher<Intent> makeBlockLauncher;
     private Rs w;
     private float posInitY, posInitX, s, t;
     private int minDist, S, x, y;
@@ -1836,9 +1833,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == 222) {
-                c(data.getStringExtra("block_name"), data.getStringExtra("block_spec"));
-            } else if (requestCode == 224) {
+            if (requestCode == 224) {
                 a(7, 0xff2ca5e2);
             }
         }
@@ -1881,7 +1876,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     intent.putExtra("sc_id", scId);
                     intent.putExtra("project_file", M);
                     intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    startActivityForResult(intent, 222);
+                    makeBlockLauncher.launch(intent);
                 } else if (tag.equals("componentAdd")) {
                     AddComponentBottomSheet addComponentBottomSheet = AddComponentBottomSheet.newInstance(scId, M, () -> a(7, 0xff2ca5e2));
                     addComponentBottomSheet.show(getSupportFragmentManager(), null);
@@ -1909,6 +1904,18 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        openResourcesEditor = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        paletteSelector.performClickPalette(-1);
+                    }
+                });
+        makeBlockLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        c(result.getData().getStringExtra("block_name"), result.getData().getStringExtra("block_spec"));
+                    }
+                });
         setContentView(R.layout.logic_editor);
         if (!super.isStoragePermissionGranted()) {
             finish();
@@ -2507,7 +2514,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
         @Override
         public void a(String str) {
-            Toast.makeText(a, R.string.common_error_failed_to_save, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.common_error_failed_to_save, Toast.LENGTH_SHORT).show();
             activity.get().h();
         }
 

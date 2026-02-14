@@ -2,6 +2,8 @@ package com.besome.sketch.editor.manage.font;
 
 import android.app.Activity;
 import android.content.Intent;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -35,6 +37,7 @@ import pro.sketchware.utility.SketchwareUtil;
 
 public class ImportFontFragment extends qA {
 
+    private ActivityResultLauncher<Intent> addFontLauncher;
     public String sc_id;
     public boolean isSelecting = false;
     public String dirPath = "";
@@ -180,12 +183,23 @@ public class ImportFontFragment extends qA {
         Intent intent = new Intent(getContext(), AddFontActivity.class);
         intent.putExtra("sc_id", sc_id);
         intent.putStringArrayListExtra("font_names", getResourceNames());
-        startActivityForResult(intent, 271);
+        addFontLauncher.launch(intent);
     }
 
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
+        addFontLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        ProjectResourceBean resourceBean = result.getData().getParcelableExtra("resource_bean");
+                        projectResourceBeans.add(resourceBean);
+                        adapter.notifyDataSetChanged();
+                        toggleEmptyStateVisibility();
+                        ((ManageFontActivity) requireActivity()).collectionFontsFragment.loadProjectResources();
+                        SketchwareUtil.toast(Helper.getResString(R.string.design_manager_message_add_complete));
+                    }
+                });
         oB = new oB();
         oB.f(dirPath);
         projectResourceBeans = new ArrayList<>();
@@ -209,23 +223,14 @@ public class ImportFontFragment extends qA {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
-        ProjectResourceBean resourceBean;
-        if (requestCode == 271 && resultCode == Activity.RESULT_OK) {
-            resourceBean = intent.getParcelableExtra("resource_bean");
-            projectResourceBeans.add(resourceBean);
-            adapter.notifyDataSetChanged();
-            toggleEmptyStateVisibility();
-            ((ManageFontActivity) requireActivity()).collectionFontsFragment.loadProjectResources();
-            SketchwareUtil.toast(Helper.getResString(R.string.design_manager_message_add_complete));
-        } else if (requestCode == 272 && resultCode == Activity.RESULT_OK) {
-            resourceBean = intent.getParcelableExtra("resource_bean");
+        if (requestCode == 272 && resultCode == Activity.RESULT_OK) {
+            ProjectResourceBean resourceBean = intent.getParcelableExtra("resource_bean");
             projectResourceBeans.set(adapter.selectedPosition, resourceBean);
             adapter.notifyDataSetChanged();
             toggleEmptyStateVisibility();
             ((ManageFontActivity) requireActivity()).collectionFontsFragment.loadProjectResources();
             SketchwareUtil.toast(Helper.getResString(R.string.design_manager_message_edit_complete));
         }
-
     }
 
     @Override

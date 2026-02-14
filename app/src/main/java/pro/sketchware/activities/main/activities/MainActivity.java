@@ -3,6 +3,8 @@ package pro.sketchware.activities.main.activities;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.Uri;
@@ -57,6 +59,7 @@ import pro.sketchware.utility.SketchwareUtil;
 import pro.sketchware.utility.UI;
 
 public class MainActivity extends BasePermissionAppCompatActivity {
+    private ActivityResultLauncher<Intent> programInfoLauncher;
     private static final String PROJECTS_FRAGMENT_TAG = "projects_fragment";
     private static final String PROJECTS_STORE_FRAGMENT_TAG = "projects_store_fragment";
     private ActionBarDrawerToggle drawerToggle;
@@ -122,10 +125,6 @@ public class MainActivity extends BasePermissionAppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case 105:
-                    DataResetter.a(this, data.getBooleanExtra("onlyConfig", true));
-                    break;
-
                 case 111:
                     invalidateOptionsMenu();
                     break;
@@ -157,6 +156,12 @@ public class MainActivity extends BasePermissionAppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         SplashScreen.installSplashScreen(this);
         super.onCreate(savedInstanceState);
+        programInfoLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        DataResetter.a(this, result.getData().getBooleanExtra("onlyConfig", true));
+                    }
+                });
         enableEdgeToEdgeNoContrast();
 
         binding = MainBinding.inflate(getLayoutInflater());
@@ -473,4 +478,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
         }
     }
 
+    public void launchProgramInfo(Intent intent) {
+        programInfoLauncher.launch(intent);
+    }
 }
