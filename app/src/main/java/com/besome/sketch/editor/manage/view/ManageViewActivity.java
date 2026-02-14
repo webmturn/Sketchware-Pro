@@ -3,6 +3,10 @@ package com.besome.sketch.editor.manage.view;
 import static pro.sketchware.utility.SketchwareUtil.dpToPx;
 
 import android.content.Intent;
+import android.util.Log;
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
@@ -46,6 +50,10 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
     private static final int TAB_COUNT = 2;
     private static final int REQUEST_CODE_ADD_ACTIVITY = 264;
     private static final int REQUEST_CODE_ADD_CUSTOM_VIEW = 266;
+    private boolean launchedForActivity = false;
+
+    private ActivityResultLauncher<Intent> addViewLauncher;
+
     private final int[] x = new int[19];
     // signature mustn't be changed: used in La/a/a/Bw;->a(Landroidx/recyclerview/widget/RecyclerView;II)V, La/a/a/tw;->a(Landroidx/recyclerview/widget/RecyclerView;II)V
     public FloatingActionButton s;
@@ -182,51 +190,6 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
         jC.a(sc_id).a(jC.b(sc_id));
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        ProjectFileBean projectFileBean;
-        if (requestCode == REQUEST_CODE_ADD_ACTIVITY) {
-            if (resultCode == RESULT_OK) {
-                projectFileBean = data.getParcelableExtra("project_file");
-                activitiesFragment.a(projectFileBean);
-                if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)) {
-                    b(projectFileBean.getDrawerName());
-                }
-
-                if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER) || projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB)) {
-                    jC.c(sc_id).c().useYn = "Y";
-                }
-
-                if (data.hasExtra("preset_views")) {
-                    a(projectFileBean, data.getParcelableArrayListExtra("preset_views"));
-                }
-            }
-        } else if (requestCode == REQUEST_CODE_ADD_CUSTOM_VIEW && resultCode == RESULT_OK) {
-            projectFileBean = data.getParcelableExtra("project_file");
-            customViewsFragment.a(projectFileBean);
-            customViewsFragment.g();
-            if (data.hasExtra("preset_views")) {
-                a(projectFileBean, data.getParcelableArrayListExtra("preset_views"));
-            }
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (selecting) {
-            a(false);
-        } else {
-            k();
-
-            try {
-                new Handler().postDelayed(() -> new a(this).execute(), 500L);
-            } catch (Exception e) {
-                e.printStackTrace();
-                h();
-            }
-        }
-    }
 
     @Override
     public void onClick(View v) {
@@ -255,7 +218,8 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
                 if (isActivitiesTab) {
                     intent.putExtra("request_code", REQUEST_CODE_ADD_ACTIVITY);
                 }
-                startActivityForResult(intent, isActivitiesTab ? REQUEST_CODE_ADD_ACTIVITY : REQUEST_CODE_ADD_CUSTOM_VIEW);
+                launchedForActivity = isActivitiesTab;
+                addViewLauncher.launch(intent);
             }
         }
     }
@@ -263,13 +227,56 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (selecting) {
+                    a(false);
+                } else {
+                    k();
+                    try {
+                        new Handler().postDelayed(() -> new a(ManageViewActivity.this).execute(), 500L);
+                    } catch (Exception e) {
+                        Log.e("ManageViewActivity", e.getMessage(), e);
+                        h();
+                    }
+                }
+            }
+        });
+        addViewLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        Intent data = result.getData();
+                        ProjectFileBean projectFileBean;
+                        if (launchedForActivity) {
+                            projectFileBean = data.getParcelableExtra("project_file");
+                            activitiesFragment.a(projectFileBean);
+                            if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)) {
+                                b(projectFileBean.getDrawerName());
+                            }
+                            if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER) || projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB)) {
+                                jC.c(sc_id).c().useYn = "Y";
+                            }
+                            if (data.hasExtra("preset_views")) {
+                                a(projectFileBean, data.getParcelableArrayListExtra("preset_views"));
+                            }
+                        } else {
+                            projectFileBean = data.getParcelableExtra("project_file");
+                            customViewsFragment.a(projectFileBean);
+                            customViewsFragment.g();
+                            if (data.hasExtra("preset_views")) {
+                                a(projectFileBean, data.getParcelableArrayListExtra("preset_views"));
+                            }
+                        }
+                    }
+                });
         if (!super.isStoragePermissionGranted()) {
             finish();
         }
 
         setContentView(R.layout.manage_view);
         MaterialToolbar topAppBar = findViewById(R.id.topAppBar);
-        topAppBar.setNavigationOnClickListener(v -> onBackPressed());
+        topAppBar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
 
         actionButtonsContainer = findViewById(R.id.layout_btn_group);
         Button delete = findViewById(R.id.btn_delete);
@@ -356,7 +363,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
                 publishProgress(activity.getString(R.string.common_message_progress));
                 activity.m();
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e("ManageViewActivity", e.getMessage(), e);
                 throw new By(activity.getString(R.string.common_error_unknown));
             }
         }

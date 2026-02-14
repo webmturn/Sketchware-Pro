@@ -1,5 +1,8 @@
 package com.besome.sketch.editor.manage.library.firebase;
 
+
+import android.util.Log;
+import androidx.activity.OnBackPressedCallback;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -111,7 +114,7 @@ public class FirebaseActivity extends BaseAppCompatActivity implements View.OnCl
                     intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
                     startActivity(intent);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Log.e("FirebaseActivity", e.getMessage(), e);
                     showGetChromeDialog();
                 }
             } else {
@@ -131,7 +134,7 @@ public class FirebaseActivity extends BaseAppCompatActivity implements View.OnCl
                 intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
                 startActivity(intent);
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e("FirebaseActivity", e.getMessage(), e);
                 showGetChromeDialog();
             }
         } else {
@@ -139,15 +142,6 @@ public class FirebaseActivity extends BaseAppCompatActivity implements View.OnCl
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        if (stepNumber > STEP_1) {
-            setStep(--stepNumber);
-        } else {
-            setResult(Activity.RESULT_CANCELED);
-            finish();
-        }
-    }
 
     @Override
     public void onClick(View v) {
@@ -158,7 +152,7 @@ public class FirebaseActivity extends BaseAppCompatActivity implements View.OnCl
             } else if (id == R.id.cv_console) {
                 openFirebaseConsole();
             } else if (id == R.id.img_backbtn || id == R.id.tv_prevbtn) {
-                onBackPressed();
+                getOnBackPressedDispatcher().onBackPressed();
             } else if (id == R.id.tv_nextbtn) {
                 onNextPressed();
             } else if (id == R.id.btn_import) {
@@ -176,6 +170,17 @@ public class FirebaseActivity extends BaseAppCompatActivity implements View.OnCl
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (stepNumber > STEP_1) {
+                    setStep(--stepNumber);
+                } else {
+                    setResult(Activity.RESULT_CANCELED);
+                    finish();
+                }
+            }
+        });
         setContentView(R.layout.manage_library_firebase);
 
         ImageView icon = findViewById(R.id.icon);
@@ -195,7 +200,7 @@ public class FirebaseActivity extends BaseAppCompatActivity implements View.OnCl
         getSupportActionBar().setTitle(Helper.getResString(R.string.change_firebase_config_title));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+        toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
 
         if (savedInstanceState != null) {
             sc_id = savedInstanceState.getString("sc_id");

@@ -1,5 +1,6 @@
 package com.besome.sketch.editor.manage.sound;
 
+import androidx.activity.OnBackPressedCallback;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.ViewGroup;
@@ -39,26 +40,27 @@ public class ManageSoundActivity extends BaseAppCompatActivity implements ViewPa
     }
 
     @Override
-    public void onBackPressed() {
-        if (projectSounds.isSelecting) {
-            projectSounds.setSelecting(false);
-        } else if (collectionSounds.isSelecting()) {
-            collectionSounds.resetSelection();
-        } else {
-            k();
-            try {
-                projectSounds.stopPlayback();
-                collectionSounds.stopPlayback();
-                new Handler().postDelayed(() -> new SaveAsyncTask(this).execute(), 500L);
-            } catch (Exception e) {
-                h();
-            }
-        }
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (projectSounds.isSelecting) {
+                    projectSounds.setSelecting(false);
+                } else if (collectionSounds.isSelecting()) {
+                    collectionSounds.resetSelection();
+                } else {
+                    k();
+                    try {
+                        projectSounds.stopPlayback();
+                        collectionSounds.stopPlayback();
+                        new Handler().postDelayed(() -> new SaveAsyncTask(ManageSoundActivity.this).execute(), 500L);
+                    } catch (Exception e) {
+                        h();
+                    }
+                }
+            }
+        });
         if (!super.isStoragePermissionGranted()) {
             finish();
         }
@@ -68,7 +70,7 @@ public class ManageSoundActivity extends BaseAppCompatActivity implements ViewPa
 
         binding.toolbar.setNavigationOnClickListener(v -> {
             if (!mB.a()) {
-                onBackPressed();
+                getOnBackPressedDispatcher().onBackPressed();
             }
         });
         sc_id = savedInstanceState == null ? getIntent().getStringExtra("sc_id") : savedInstanceState.getString("sc_id");

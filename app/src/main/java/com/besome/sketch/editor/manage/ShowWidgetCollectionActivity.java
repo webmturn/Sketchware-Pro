@@ -60,7 +60,7 @@ public class ShowWidgetCollectionActivity extends BaseAppCompatActivity implemen
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.img_back) {
-            onBackPressed();
+            getOnBackPressedDispatcher().onBackPressed();
         } else if (id == R.id.save_button && widgetNameValidator.b()) {
             Rp.h().a(widgetName, Helper.getText(widgetNameInput), true);
             bB.a(getApplicationContext(), getString(R.string.design_manager_message_edit_complete), bB.TOAST_NORMAL).show();
@@ -86,7 +86,7 @@ public class ShowWidgetCollectionActivity extends BaseAppCompatActivity implemen
 
         binding.toolbar.setNavigationOnClickListener(v -> {
             if (!mB.a()) {
-                onBackPressed();
+                getOnBackPressedDispatcher().onBackPressed();
             }
         });
 

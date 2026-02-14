@@ -6,6 +6,7 @@ import static android.text.TextUtils.isEmpty;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import android.net.Uri;
@@ -151,13 +152,6 @@ public class ManageAdmobActivity extends BaseAppCompatActivity implements View.O
     }
 
     @Override
-    public void onBackPressed() {
-        getIntent().putExtra("admob", admobLibraryBean);
-        setResult(RESULT_OK, getIntent());
-        super.onBackPressed();
-    }
-
-    @Override
     public void onClick(View v) {
         if (!mB.a()) {
             int id = v.getId();
@@ -183,6 +177,14 @@ public class ManageAdmobActivity extends BaseAppCompatActivity implements View.O
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                getIntent().putExtra("admob", admobLibraryBean);
+                setResult(RESULT_OK, getIntent());
+                finish();
+            }
+        });
         admobActivityLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
@@ -202,7 +204,7 @@ public class ManageAdmobActivity extends BaseAppCompatActivity implements View.O
         getSupportActionBar().setTitle(Helper.getResString(R.string.design_library_admob_title_admob_manager));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        binding.toolbar.setNavigationOnClickListener(v -> onBackPressed());
+        binding.toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
 
         A = new DB(getApplicationContext(), "P1");
         admobLibraryBean = getIntent().getParcelableExtra("admob");

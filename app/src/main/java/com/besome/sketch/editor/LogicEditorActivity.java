@@ -39,6 +39,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -1840,23 +1841,6 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     @Override
-    public void onBackPressed() {
-        if (ia) {
-            g(false);
-            return;
-        }
-        if (X) {
-            e(false);
-            return;
-        }
-        k();
-        if (!p()) {
-            return;
-        }
-        L();
-    }
-
-    @Override
     public void onClick(View v) {
         if (!mB.a()) {
             Object tag = v.getTag();
@@ -1904,6 +1888,24 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (ia) {
+                    g(false);
+                    return;
+                }
+                if (X) {
+                    e(false);
+                    return;
+                }
+                k();
+                if (!p()) {
+                    return;
+                }
+                L();
+            }
+        });
         openResourcesEditor = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     if (result.getResultCode() == RESULT_OK) {
@@ -1939,7 +1941,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(v -> {
             if (!mB.a()) {
-                onBackPressed();
+                getOnBackPressedDispatcher().onBackPressed();
             }
         });
         G = new DB(getContext(), "P12").a("P12I0", true);

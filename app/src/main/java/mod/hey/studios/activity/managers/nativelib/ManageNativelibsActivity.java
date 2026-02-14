@@ -1,5 +1,6 @@
 package mod.hey.studios.activity.managers.nativelib;
 
+import androidx.activity.OnBackPressedCallback;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -57,6 +58,18 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
     public void onCreate(Bundle savedInstanceState) {
         enableEdgeToEdgeNoContrast();
         super.onCreate(savedInstanceState);
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                nativeLibrariesPath = nativeLibrariesPath.substring(0, nativeLibrariesPath.lastIndexOf("/"));
+                if (nativeLibrariesPath.contains("native_libs")) {
+                    handleAdapter(nativeLibrariesPath);
+                    handleFab();
+                } else {
+                    finish();
+                }
+            }
+        });
         binding = ManageFileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -142,16 +155,6 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
                 .setInterpolator(new OvershootInterpolator());
     }
 
-    @Override
-    public void onBackPressed() {
-        nativeLibrariesPath = nativeLibrariesPath.substring(0, nativeLibrariesPath.lastIndexOf("/"));
-        if (nativeLibrariesPath.contains("native_libs")) {
-            handleAdapter(nativeLibrariesPath);
-            handleFab();
-        } else {
-            super.onBackPressed();
-        }
-    }
 
     @Override
     public void onClick(View v) {

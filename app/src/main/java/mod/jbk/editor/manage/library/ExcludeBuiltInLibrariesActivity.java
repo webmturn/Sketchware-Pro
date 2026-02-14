@@ -1,5 +1,6 @@
 package mod.jbk.editor.manage.library;
 
+import androidx.activity.OnBackPressedCallback;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.Environment;
@@ -151,6 +152,22 @@ public class ExcludeBuiltInLibrariesActivity extends BaseAppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (config != null && config.first.equals(isExcludingEnabled) && config.second.equals(excludedLibraries)) {
+                    finish();
+                } else {
+                    k();
+                    try {
+                        new Handler(Looper.myLooper()).postDelayed(() ->
+                                new SaveConfigTask(ExcludeBuiltInLibrariesActivity.this).execute(), 500);
+                    } catch (Exception e) {
+                        onSaveError(e);
+                    }
+                }
+            }
+        });
         if (!isStoragePermissionGranted()) {
             finish();
             return;
@@ -169,7 +186,7 @@ public class ExcludeBuiltInLibrariesActivity extends BaseAppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Exclude built-in libraries");
-        binding.toolbar.setNavigationOnClickListener(view -> onBackPressed());
+        binding.toolbar.setNavigationOnClickListener(view -> getOnBackPressedDispatcher().onBackPressed());
 
         binding.tvEnable.setText(Helper.getResString(R.string.design_library_settings_title_enabled));
 
@@ -199,21 +216,6 @@ public class ExcludeBuiltInLibrariesActivity extends BaseAppCompatActivity {
             return false;
         }
         return false;
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (config != null && config.first.equals(isExcludingEnabled) && config.second.equals(excludedLibraries)) {
-            super.onBackPressed();
-        } else {
-            k();
-            try {
-                new Handler(Looper.myLooper()).postDelayed(() ->
-                        new SaveConfigTask(this).execute(), 500);
-            } catch (Exception e) {
-                onSaveError(e);
-            }
-        }
     }
 
     private void onSaveError(Throwable throwable) {

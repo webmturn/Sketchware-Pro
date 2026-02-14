@@ -1,5 +1,6 @@
 package com.besome.sketch.editor.manage.image;
 
+import androidx.activity.OnBackPressedCallback;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -90,12 +91,6 @@ public class ManageImageImportActivity extends BaseAppCompatActivity implements 
     }
 
     @Override
-    public void onBackPressed() {
-        setResult(RESULT_OK);
-        super.onBackPressed();
-    }
-
-    @Override
     public void onClick(View v) {
         if (!mB.a()) {
             int id = v.getId();
@@ -108,7 +103,7 @@ public class ManageImageImportActivity extends BaseAppCompatActivity implements 
                         finish();
                     }
                 } else {
-                    onBackPressed();
+                    getOnBackPressedDispatcher().onBackPressed();
                 }
             } else {
                 String name = Helper.getText(ed_input_edittext);
@@ -137,6 +132,13 @@ public class ManageImageImportActivity extends BaseAppCompatActivity implements 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                setResult(RESULT_OK);
+                finish();
+            }
+        });
         if (!super.j()) {
             finish();
         }

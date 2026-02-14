@@ -69,7 +69,7 @@ public class ManageAppCompatActivity extends BaseAppCompatActivity {
         binding.toolbar.setNavigationOnClickListener(
                 v -> {
                     if (!mB.a()) {
-                        onBackPressed();
+                        getOnBackPressedDispatcher().onBackPressed();
                     }
                 });
         binding.fab.setOnClickListener(v -> dialog("create", 0));

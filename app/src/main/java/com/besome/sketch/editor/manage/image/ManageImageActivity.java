@@ -1,5 +1,6 @@
 package com.besome.sketch.editor.manage.image;
 
+import androidx.activity.OnBackPressedCallback;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -57,21 +58,22 @@ public class ManageImageActivity extends BaseAppCompatActivity implements ViewPa
     }
 
     @Override
-    public void onBackPressed() {
-        if (projectImagesFragment.isSelecting) {
-            projectImagesFragment.a(false);
-        } else if (collectionImagesFragment.isSelecting()) {
-            collectionImagesFragment.unselectAll();
-            binding.layoutBtnImport.setVisibility(View.GONE);
-        } else {
-            k();
-            new Handler().postDelayed(() -> new SaveImagesAsyncTask(this).execute(), 500L);
-        }
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (projectImagesFragment.isSelecting) {
+                    projectImagesFragment.a(false);
+                } else if (collectionImagesFragment.isSelecting()) {
+                    collectionImagesFragment.unselectAll();
+                    binding.layoutBtnImport.setVisibility(View.GONE);
+                } else {
+                    k();
+                    new Handler().postDelayed(() -> new SaveImagesAsyncTask(ManageImageActivity.this).execute(), 500L);
+                }
+            }
+        });
         binding = ManageImageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -83,7 +85,7 @@ public class ManageImageActivity extends BaseAppCompatActivity implements ViewPa
         binding.topAppBar.setTitle(R.string.design_actionbar_title_manager_image);
         binding.topAppBar.setNavigationOnClickListener(v -> {
             if (!mB.a()) {
-                onBackPressed();
+                getOnBackPressedDispatcher().onBackPressed();
             }
         });
         if (savedInstanceState == null) {

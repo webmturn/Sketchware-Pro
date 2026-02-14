@@ -1,5 +1,7 @@
 package com.besome.sketch.projects;
 
+
+import android.util.Log;
 import static mod.hey.studios.util.ProjectFile.getDefaultColor;
 
 import android.content.Context;
@@ -15,6 +17,8 @@ import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.transition.AutoTransition;
@@ -58,7 +62,7 @@ import pro.sketchware.utility.SketchwareUtil;
 
 public class MyProjectSettingActivity extends BaseAppCompatActivity implements View.OnClickListener {
 
-    private static final int REQUEST_CODE_CREATE_ICON = 200212;
+    private ActivityResultLauncher<Intent> openIconCreator;
     private final String[] themeColorKeys = {"color_accent", "color_primary", "color_primary_dark", "color_control_highlight", "color_control_normal"};
     private final String[] themeColorLabels = {"colorAccent", "colorPrimary", "colorPrimaryDark", "colorControlHighlight", "colorControlNormal"};
     private final int[] projectThemeColors = new int[themeColorKeys.length];
@@ -89,10 +93,22 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        openIconCreator = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        Intent data = result.getData();
+                        if (data.getParcelableExtra("appIco") != null) {
+                            icon = data.getParcelableExtra("appIco");
+                            isIconAdaptive = data.getBooleanExtra("isIconAdaptive", false);
+                            binding.appIcon.setImageBitmap(icon);
+                            projectHasCustomIcon = true;
+                        }
+                    }
+                });
         binding = MyprojectSettingBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.toolbar.setNavigationOnClickListener(arg0 -> onBackPressed());
+        binding.toolbar.setNavigationOnClickListener(arg0 -> getOnBackPressedDispatcher().onBackPressed());
 
         if (!isStoragePermissionGranted()) finish();
 
@@ -198,32 +214,13 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (data == null) {
-            return;
-        }
-
-        if (requestCode == REQUEST_CODE_CREATE_ICON && resultCode == RESULT_OK) {
-            if (data.getParcelableExtra("appIco") != null) {
-                icon = data.getParcelableExtra("appIco");
-
-                isIconAdaptive = data.getBooleanExtra("isIconAdaptive", false);
-                binding.appIcon.setImageBitmap(icon);
-                projectHasCustomIcon = true;
-            }
-        }
-
-    }
-
-    @Override
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.app_icon_layout) {
             Intent intent = new Intent();
             intent.setClass(getApplicationContext(), IconCreatorActivity.class);
             intent.putExtra("sc_id", sc_id);
-            startActivityForResult(intent, REQUEST_CODE_CREATE_ICON);
+            openIconCreator.launch(intent);
         } else if (id == R.id.ok_button) {
             mB.a(v);
             if (isInputValid()) {
@@ -270,7 +267,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
             try {
                 o.createNewFile();
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e("MyProjectSettingActivity", e.getMessage(), e);
             }
         }
     }
@@ -559,7 +556,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
                 FileUtil.copyDirectory(new File(getTempIconsFolderPath("temp_icons" + File.separator)), new File(getIconsFolderPath()));
                 FileUtil.deleteFile(getTempIconsFolderPath("temp_icons" + File.separator));
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e("MyProjectSettingActivity", e.getMessage(), e);
             }
 
         }

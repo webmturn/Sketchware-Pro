@@ -2,6 +2,7 @@ package mod.hey.studios.code;
 
 import static pro.sketchware.utility.GsonUtils.getGson;
 
+import androidx.activity.OnBackPressedCallback;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -277,6 +278,26 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
         enableEdgeToEdgeNoContrast();
         super.onCreate(savedInstanceState);
 
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (beforeContent.equals(binding.editor.getText().toString())) {
+                    finish();
+                } else {
+                    MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(SrcCodeEditor.this);
+                    dialog.setIcon(R.drawable.ic_warning_96dp);
+                    dialog.setTitle(Helper.getResString(R.string.common_word_warning));
+                    dialog.setMessage(Helper.getResString(R.string.src_code_editor_unsaved_changes_dialog_warning_message));
+                    dialog.setPositiveButton(Helper.getResString(R.string.common_word_exit), (v, which) -> {
+                        v.dismiss();
+                        finish();
+                    });
+                    dialog.setNegativeButton(Helper.getResString(R.string.common_word_cancel), null);
+                    dialog.show();
+                }
+            }
+        });
+
         binding = CodeEditorHsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -361,25 +382,6 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
         } else FileUtil.writeFile(getIntent().getStringExtra("content"), beforeContent);
 
         SketchwareUtil.toast("Saved");
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (beforeContent.equals(binding.editor.getText().toString())) {
-            super.onBackPressed();
-        } else {
-            MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
-            dialog.setIcon(R.drawable.ic_warning_96dp);
-            dialog.setTitle(Helper.getResString(R.string.common_word_warning));
-            dialog.setMessage(Helper.getResString(R.string.src_code_editor_unsaved_changes_dialog_warning_message));
-
-            dialog.setPositiveButton(Helper.getResString(R.string.common_word_exit), (v, which) -> {
-                v.dismiss();
-                finish();
-            });
-            dialog.setNegativeButton(Helper.getResString(R.string.common_word_cancel), null);
-            dialog.show();
-        }
     }
 
     private void loadToolbar() {

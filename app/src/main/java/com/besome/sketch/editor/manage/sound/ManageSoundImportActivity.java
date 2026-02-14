@@ -1,5 +1,8 @@
 package com.besome.sketch.editor.manage.sound;
 
+
+import android.util.Log;
+import androidx.activity.OnBackPressedCallback;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.AudioManager;
@@ -94,12 +97,6 @@ public class ManageSoundImportActivity extends BaseAppCompatActivity implements 
     }
 
     @Override
-    public void onBackPressed() {
-        setResult(RESULT_OK);
-        super.onBackPressed();
-    }
-
-    @Override
     public void onClick(View v) {
         if (!mB.a()) {
             int id = v.getId();
@@ -124,7 +121,7 @@ public class ManageSoundImportActivity extends BaseAppCompatActivity implements 
                     ed_input_edittext.setText(selectedCollections.get(selectedItem).resName);
                 }
             } else if (id == R.id.img_backbtn) {
-                onBackPressed();
+                getOnBackPressedDispatcher().onBackPressed();
             } else if (id == R.id.img_play) {
                 if (mediaPlayerIsPrepared) {
                     if (mediaPlayer.isPlaying()) {
@@ -152,6 +149,13 @@ public class ManageSoundImportActivity extends BaseAppCompatActivity implements 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                setResult(RESULT_OK);
+                finish();
+            }
+        });
         if (!super.j()) {
             finish();
         }
@@ -271,7 +275,7 @@ public class ManageSoundImportActivity extends BaseAppCompatActivity implements 
             mediaPlayer.setDataSource(filePath);
             mediaPlayer.prepare();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e("ManageSoundImportActivity", e.getMessage(), e);
         }
     }
 

@@ -1,5 +1,6 @@
 package com.besome.sketch.editor.manage.library.firebase;
 
+import androidx.activity.OnBackPressedCallback;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -129,13 +130,6 @@ public class ManageFirebaseActivity extends BaseAppCompatActivity implements Vie
     }
 
     @Override
-    public void onBackPressed() {
-        getIntent().putExtra("firebase", firebaseLibraryBean);
-        setResult(RESULT_OK, getIntent());
-        super.onBackPressed();
-    }
-
-    @Override
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.btn_console) {
@@ -162,6 +156,14 @@ public class ManageFirebaseActivity extends BaseAppCompatActivity implements Vie
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                getIntent().putExtra("firebase", firebaseLibraryBean);
+                setResult(RESULT_OK, getIntent());
+                finish();
+            }
+        });
         setContentView(R.layout.manage_library_manage_firebase);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -170,7 +172,7 @@ public class ManageFirebaseActivity extends BaseAppCompatActivity implements Vie
         getSupportActionBar().setTitle(Helper.getResString(R.string.design_library_firebase_title_firebase_manager));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+        toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
 
         s = new DB(getApplicationContext(), "P1");
         firebaseLibraryBean = getIntent().getParcelableExtra("firebase");

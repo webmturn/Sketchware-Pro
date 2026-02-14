@@ -102,7 +102,7 @@ public class ManageXMLCommandActivity extends BaseAppCompatActivity {
         binding.toolbar.setNavigationOnClickListener(
                 v -> {
                     if (!mB.a()) {
-                        onBackPressed();
+                        getOnBackPressedDispatcher().onBackPressed();
                     }
                 });
         binding.fab.setOnClickListener(v -> dialog(false, 0));

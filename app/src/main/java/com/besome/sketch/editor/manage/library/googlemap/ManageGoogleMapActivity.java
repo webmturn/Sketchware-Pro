@@ -1,5 +1,7 @@
 package com.besome.sketch.editor.manage.library.googlemap;
 
+import android.util.Log;
+import androidx.activity.OnBackPressedCallback;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -43,7 +45,7 @@ public class ManageGoogleMapActivity extends BaseAppCompatActivity implements Vi
                 openDocIntent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
                 startActivity(openDocIntent);
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e("ManageGoogleMapActivity", e.getMessage(), e);
                 downloadChromeDialog();
             }
         } else {
@@ -66,20 +68,6 @@ public class ManageGoogleMapActivity extends BaseAppCompatActivity implements Vi
         });
         dialog.setNegativeButton(Helper.getResString(R.string.common_word_cancel), null);
         dialog.show();
-    }
-
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent();
-        googleMapLibraryBean.useYn = libSwitch.isChecked() ? "Y" : "N";
-        googleMapLibraryBean.data = Helper.getText(editApiKey);
-        intent.putExtra("google_map", googleMapLibraryBean);
-        setResult(RESULT_OK, intent);
-        if (Helper.getText(editApiKey).isEmpty() && libSwitch.isChecked()) {
-            bB.a(getApplicationContext(), "Api key can't be empty!", Toast.LENGTH_SHORT).show();
-        } else {
-            super.onBackPressed();
-        }
     }
 
     @Override
@@ -106,6 +94,21 @@ public class ManageGoogleMapActivity extends BaseAppCompatActivity implements Vi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                Intent intent = new Intent();
+                googleMapLibraryBean.useYn = libSwitch.isChecked() ? "Y" : "N";
+                googleMapLibraryBean.data = Helper.getText(editApiKey);
+                intent.putExtra("google_map", googleMapLibraryBean);
+                setResult(RESULT_OK, intent);
+                if (Helper.getText(editApiKey).isEmpty() && libSwitch.isChecked()) {
+                    bB.a(getApplicationContext(), "Api key can't be empty!", Toast.LENGTH_SHORT).show();
+                } else {
+                    finish();
+                }
+            }
+        });
         setContentView(R.layout.manage_library_manage_googlemap);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -121,7 +124,7 @@ public class ManageGoogleMapActivity extends BaseAppCompatActivity implements Vi
         getSupportActionBar().setTitle("GoogleMap Settings");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+        toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
         LinearLayout switchLayout = findViewById(R.id.layout_switch);
         switchLayout.setOnClickListener(this);
         libSwitch = findViewById(R.id.lib_switch);

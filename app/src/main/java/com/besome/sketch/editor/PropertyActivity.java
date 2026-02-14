@@ -1,6 +1,7 @@
 package com.besome.sketch.editor;
 
 import android.content.Intent;
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import android.graphics.ColorMatrix;
@@ -137,14 +138,15 @@ public class PropertyActivity extends BaseAppCompatActivity implements Kw {
 
 
     @Override
-    public void onBackPressed() {
-        propertyItems.i(viewBean);
-        o();
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                propertyItems.i(viewBean);
+                o();
+            }
+        });
         imageManagerLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     if (result.getResultCode() == RESULT_OK && jC.d(sc_id) != null && result.getData() != null) {
@@ -174,7 +176,7 @@ public class PropertyActivity extends BaseAppCompatActivity implements Kw {
         getSupportActionBar().setTitle(Helper.getResString(R.string.edit_view_properties_title));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+        toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
 
         propertyGroups.add(1);
         propertyGroups.add(2);

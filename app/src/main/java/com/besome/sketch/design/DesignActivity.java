@@ -27,6 +27,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -397,25 +398,6 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         startActivity(intent);
     }
 
-    @Override
-    public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.END)) {
-            drawer.closeDrawer(GravityCompat.END);
-        } else if (viewTabAdapter.isPropertyViewVisible()) {
-            hideViewPropertyView();
-        } else {
-            if (currentTabNumber > 0) {
-                currentTabNumber--;
-                viewPager.setCurrentItem(currentTabNumber);
-            } else if (t.c("P12I2")) {
-                k();
-                saveChangesAndCloseProject();
-            } else {
-                showSaveBeforeQuittingDialog();
-            }
-        }
-    }
-
     public void hideViewPropertyView() {
         viewTabAdapter.a(false);
     }
@@ -436,6 +418,26 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     public void onCreate(Bundle savedInstanceState) {
         enableEdgeToEdgeNoContrast();
         super.onCreate(savedInstanceState);
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (drawer.isDrawerOpen(GravityCompat.END)) {
+                    drawer.closeDrawer(GravityCompat.END);
+                } else if (viewTabAdapter.isPropertyViewVisible()) {
+                    hideViewPropertyView();
+                } else {
+                    if (currentTabNumber > 0) {
+                        currentTabNumber--;
+                        viewPager.setCurrentItem(currentTabNumber);
+                    } else if (t.c("P12I2")) {
+                        k();
+                        saveChangesAndCloseProject();
+                    } else {
+                        showSaveBeforeQuittingDialog();
+                    }
+                }
+            }
+        });
         setContentView(R.layout.design);
         if (!isStoragePermissionGranted()) {
             finish();
@@ -453,7 +455,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setSubtitle(sc_id);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+        toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
 
         drawer = findViewById(R.id.drawer_layout);
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
@@ -1328,7 +1330,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             if (activity == null) return null;
 
             Intent cancelIntent = new Intent(BuildTask.ACTION_CANCEL_BUILD);
-            return PendingIntent.getBroadcast(activity, 0, cancelIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            return PendingIntent.getBroadcast(activity, 0, cancelIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         }
 
         private void createNotificationChannelIfNeeded() {

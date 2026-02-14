@@ -209,7 +209,7 @@ public class IconCreatorActivity extends BaseAppCompatActivity {
         binding.appIcoTexture.setVisibility(View.GONE);
 
 
-        binding.toolbar.setNavigationOnClickListener(_v -> onBackPressed());
+        binding.toolbar.setNavigationOnClickListener(_v -> getOnBackPressedDispatcher().onBackPressed());
 
         binding.colorPreviewCard.setOnClickListener(v -> showColorPicker(v, 0, bgClr));
         binding.gradColorPreviewCard.setOnClickListener(v -> showColorPicker(v, 1, gradClr0));
@@ -220,7 +220,7 @@ public class IconCreatorActivity extends BaseAppCompatActivity {
         binding.imgColorPreviewCard.setOnClickListener(v -> showColorPicker(v, 6, imgColor));
         binding.patternColorPreviewCard.setOnClickListener(v -> showColorPicker(v, 7, patternColor));
 
-        binding.cancel.setOnClickListener(v -> onBackPressed());
+        binding.cancel.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
 
         binding.scoreCheck.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {

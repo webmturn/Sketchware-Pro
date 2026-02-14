@@ -136,7 +136,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         toolbar.setNavigationOnClickListener(v -> {
             if (!mB.a()) {
-                onBackPressed();
+                getOnBackPressedDispatcher().onBackPressed();
             }
         });
 
@@ -228,7 +228,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
                             Paths.get(iconPackStoreLocation, folderName).toString()
                     )));
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("ImportIconActivity", e.getMessage(), e);
         }
 
         icons = new ArrayList<>();

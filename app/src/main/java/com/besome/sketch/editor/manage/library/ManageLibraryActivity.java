@@ -6,6 +6,7 @@ import static android.text.TextUtils.isEmpty;
 
 import android.app.Activity;
 import android.content.Intent;
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import android.os.Bundle;
@@ -213,17 +214,6 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
     }
 
     @Override
-    public void onBackPressed() {
-        k();
-        try {
-            new Handler().postDelayed(() -> new SaveLibraryTask(this).execute(), 500L);
-        } catch (Exception e) {
-            Log.e("ManageLibraryActivity", e.getMessage(), e);
-            h();
-        }
-    }
-
-    @Override
     public void onClick(View v) {
         if (!mB.a()) {
             Object tag = v.getTag();
@@ -270,6 +260,18 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
     public void onCreate(Bundle savedInstanceState) {
         enableEdgeToEdgeNoContrast();
         super.onCreate(savedInstanceState);
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                k();
+                try {
+                    new Handler().postDelayed(() -> new SaveLibraryTask(ManageLibraryActivity.this).execute(), 500L);
+                } catch (Exception e) {
+                    Log.e("ManageLibraryActivity", e.getMessage(), e);
+                    h();
+                }
+            }
+        });
         compatLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
@@ -329,7 +331,7 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
         getSupportActionBar().setTitle(Helper.getResString(R.string.design_actionbar_title_library));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+        toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
         libraryItemLayout = findViewById(R.id.contents);
 
         ViewCompat.setOnApplyWindowInsetsListener(libraryItemLayout, (v, windowInsets) -> {

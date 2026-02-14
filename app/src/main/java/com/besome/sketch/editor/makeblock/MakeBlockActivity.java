@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 
@@ -43,18 +44,18 @@ public class MakeBlockActivity extends BaseAppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        if (makeBlock.a()) {
-            super.onBackPressed();
-        } else {
-            goBackDialog();
-        }
-
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (makeBlock.a()) {
+                    finish();
+                } else {
+                    goBackDialog();
+                }
+            }
+        });
         if (!isStoragePermissionGranted()) {
             finish();
         }

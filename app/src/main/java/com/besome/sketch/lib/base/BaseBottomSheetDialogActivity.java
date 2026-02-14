@@ -1,5 +1,6 @@
 package com.besome.sketch.lib.base;
 
+import androidx.activity.OnBackPressedCallback;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -36,6 +37,12 @@ public class BaseBottomSheetDialogActivity extends BaseAppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                finish();
+            }
+        });
         super.setContentView(R.layout.common_bottom_sheet_dialog_layout);
 
         Window window = getWindow();
@@ -138,9 +145,4 @@ public class BaseBottomSheetDialogActivity extends BaseAppCompatActivity {
         dialogContentView.addView(view);
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
-    }
 }

@@ -1,7 +1,10 @@
 package com.besome.sketch.editor.manage.library.admob;
 
+
+import android.util.Log;
 import static android.text.TextUtils.isEmpty;
 
+import androidx.activity.OnBackPressedCallback;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -121,16 +124,6 @@ public class AdmobActivity extends BaseAppCompatActivity implements View.OnClick
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        if (stepPosition > 0) {
-            showStep(--stepPosition);
-        } else {
-            setResult(RESULT_CANCELED);
-            finish();
-        }
-    }
 
     @Override
     public void onClick(View v) {
@@ -143,7 +136,7 @@ public class AdmobActivity extends BaseAppCompatActivity implements View.OnClick
         } else if (id == binding.tvNextbtn.getId()) {
             nextStep();
         } else if (id == binding.tvPrevbtn.getId()) {
-            onBackPressed();
+            getOnBackPressedDispatcher().onBackPressed();
         } else if (id == binding.btnImport.getId()) {
             LibrarySettingsImporter importer = new LibrarySettingsImporter(sc_id, iC::b);
             importer.addOnProjectSelectedListener(settings -> {
@@ -170,7 +163,7 @@ public class AdmobActivity extends BaseAppCompatActivity implements View.OnClick
                 intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
                 startActivity(intent);
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e("AdmobActivity", e.getMessage(), e);
                 showGoogleChromeNotice();
             }
         } else {
@@ -181,6 +174,17 @@ public class AdmobActivity extends BaseAppCompatActivity implements View.OnClick
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (stepPosition > 0) {
+                    showStep(--stepPosition);
+                } else {
+                    setResult(RESULT_CANCELED);
+                    finish();
+                }
+            }
+        });
         binding = ManageLibraryAdmobBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         if (savedInstanceState != null) {
@@ -242,7 +246,7 @@ public class AdmobActivity extends BaseAppCompatActivity implements View.OnClick
                     intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
                     startActivity(intent);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Log.e("AdmobActivity", e.getMessage(), e);
                     showGoogleChromeNotice();
                 }
             } else {

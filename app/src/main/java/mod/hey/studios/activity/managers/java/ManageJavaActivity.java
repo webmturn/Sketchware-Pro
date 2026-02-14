@@ -1,5 +1,6 @@
 package mod.hey.studios.activity.managers.java;
 
+import androidx.activity.OnBackPressedCallback;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -107,6 +108,17 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         enableEdgeToEdgeNoContrast();
         super.onCreate(savedInstanceState);
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (Objects.equals(Uri.parse(current_path).getPath(), Uri.parse(fpu.getPathJava(sc_id)).getPath())) {
+                    finish();
+                } else {
+                    current_path = current_path.substring(0, current_path.lastIndexOf("/"));
+                    refresh();
+                }
+            }
+        });
         binding = ManageFileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -119,15 +131,6 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
         refresh();
     }
 
-    @Override
-    public void onBackPressed() {
-        if (Objects.equals(Uri.parse(current_path).getPath(), Uri.parse(fpu.getPathJava(sc_id)).getPath())) {
-            super.onBackPressed();
-        } else {
-            current_path = current_path.substring(0, current_path.lastIndexOf("/"));
-            refresh();
-        }
-    }
 
     private void setupUI() {
         binding.topAppBar.setNavigationOnClickListener(Helper.getBackPressedClickListener(this));

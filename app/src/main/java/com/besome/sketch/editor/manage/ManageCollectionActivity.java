@@ -1,6 +1,7 @@
 package com.besome.sketch.editor.manage;
 
 import android.content.Intent;
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import android.content.res.Configuration;
@@ -352,7 +353,7 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         toolbar.setNavigationOnClickListener(v -> {
             if (!mB.a()) {
-                onBackPressed();
+                getOnBackPressedDispatcher().onBackPressed();
             }
         });
 
@@ -381,20 +382,6 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
     }
 
     @Override
-    public void onBackPressed() {
-        if (selectingToBeDeletedItems) {
-            changeDeletingItemsState(false);
-        } else {
-            if (hasDeletedWidget) {
-                setResult(RESULT_OK);
-                finish();
-            }
-
-            super.onBackPressed();
-        }
-    }
-
-    @Override
     public void onClick(View v) {
         int id = v.getId();
 
@@ -420,6 +407,19 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (selectingToBeDeletedItems) {
+                    changeDeletingItemsState(false);
+                } else {
+                    if (hasDeletedWidget) {
+                        setResult(RESULT_OK);
+                    }
+                    finish();
+                }
+            }
+        });
         imageLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> loadImages());
         soundLauncher = registerForActivityResult(

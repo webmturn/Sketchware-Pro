@@ -1,5 +1,6 @@
 package com.besome.sketch.editor.manage.library.compat;
 
+import androidx.activity.OnBackPressedCallback;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -50,15 +51,6 @@ public class ManageCompatActivity extends BaseAppCompatActivity implements View.
     }
 
     @Override
-    public void onBackPressed() {
-        compatLibraryBean.useYn = binding.libSwitch.isChecked() ? "Y" : "N";
-        Intent intent = new Intent();
-        intent.putExtra("compat", compatLibraryBean);
-        setResult(RESULT_OK, intent);
-        super.onBackPressed();
-    }
-
-    @Override
     public void onClick(View v) {
         if (v.getId() == R.id.layout_switch) {
             binding.libSwitch.setChecked(!binding.libSwitch.isChecked());
@@ -83,13 +75,23 @@ public class ManageCompatActivity extends BaseAppCompatActivity implements View.
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                compatLibraryBean.useYn = binding.libSwitch.isChecked() ? "Y" : "N";
+                Intent intent = new Intent();
+                intent.putExtra("compat", compatLibraryBean);
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+        });
         binding = ManageLibraryManageCompatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        binding.toolbar.setNavigationOnClickListener(v -> onBackPressed());
+        binding.toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
 
         compatLibraryBean = getIntent().getParcelableExtra("compat");
         firebaseLibraryBean = getIntent().getParcelableExtra("firebase");

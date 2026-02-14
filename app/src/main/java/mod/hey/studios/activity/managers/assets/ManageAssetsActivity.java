@@ -1,5 +1,6 @@
 package mod.hey.studios.activity.managers.assets;
 
+import androidx.activity.OnBackPressedCallback;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -59,6 +60,20 @@ public class ManageAssetsActivity extends BaseAppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         enableEdgeToEdgeNoContrast();
         super.onCreate(savedInstanceState);
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (Objects.equals(
+                        Uri.parse(current_path).getPath(),
+                        Uri.parse(fpu.getPathAssets(sc_id)).getPath()
+                )) {
+                    finish();
+                } else {
+                    current_path = current_path.substring(0, current_path.lastIndexOf(File.separator));
+                    refresh();
+                }
+            }
+        });
         binding = ManageFileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -99,18 +114,6 @@ public class ManageAssetsActivity extends BaseAppCompatActivity {
                 .setInterpolator(new OvershootInterpolator());
     }
 
-    @Override
-    public void onBackPressed() {
-        if (Objects.equals(
-                Uri.parse(current_path).getPath(),
-                Uri.parse(fpu.getPathAssets(sc_id)).getPath()
-        )) {
-            super.onBackPressed();
-        } else {
-            current_path = current_path.substring(0, current_path.lastIndexOf(File.separator));
-            refresh();
-        }
-    }
 
     @SuppressLint("SetTextI18n")
     private void showCreateDialog() {

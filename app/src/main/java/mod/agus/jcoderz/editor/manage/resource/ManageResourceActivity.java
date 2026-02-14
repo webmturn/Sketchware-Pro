@@ -1,5 +1,6 @@
 package mod.agus.jcoderz.editor.manage.resource;
 
+import androidx.activity.OnBackPressedCallback;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -75,6 +76,22 @@ public class ManageResourceActivity extends BaseAppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         enableEdgeToEdgeNoContrast();
         super.onCreate(savedInstanceState);
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                try {
+                    temp = temp.substring(0, temp.lastIndexOf("/"));
+                    if (temp.contains("resource")) {
+                        handleAdapter(temp);
+                        handleFab();
+                        return;
+                    }
+                } catch (IndexOutOfBoundsException ignored) {
+                }
+                setResult(RESULT_OK);
+                finish();
+            }
+        });
         binding = ManageFileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -132,7 +149,7 @@ public class ManageResourceActivity extends BaseAppCompatActivity {
 
     private void initToolbar() {
         binding.topAppBar.setTitle("Resource Manager");
-        binding.topAppBar.setNavigationOnClickListener(v -> onBackPressed());
+        binding.topAppBar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
         binding.showOptionsButton.setOnClickListener(view -> {
             if (isInMainDirectory()) {
                 createNewDialog(true);
@@ -168,22 +185,6 @@ public class ManageResourceActivity extends BaseAppCompatActivity {
     public void onResume() {
         super.onResume();
         binding.filesListRecyclerView.getAdapter().notifyDataSetChanged();
-    }
-
-    @Override
-    public void onBackPressed() {
-        try {
-            temp = temp.substring(0, temp.lastIndexOf("/"));
-            if (temp.contains("resource")) {
-                handleAdapter(temp);
-                handleFab();
-                return;
-            }
-        } catch (IndexOutOfBoundsException ignored) {
-        }
-        setResult(RESULT_OK);
-        finish();
-        super.onBackPressed();
     }
 
     private void createNewDialog(boolean isFolder) {

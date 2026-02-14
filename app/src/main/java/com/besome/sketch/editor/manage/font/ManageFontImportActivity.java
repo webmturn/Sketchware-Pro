@@ -1,5 +1,6 @@
 package com.besome.sketch.editor.manage.font;
 
+import androidx.activity.OnBackPressedCallback;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -104,12 +105,6 @@ public class ManageFontImportActivity extends BaseAppCompatActivity implements V
     }
 
     @Override
-    public void onBackPressed() {
-        setResult(RESULT_OK);
-        super.onBackPressed();
-    }
-
-    @Override
     public void onClick(View v) {
         int id = v.getId();
         if (id == binding.btnDecide.getId()) {
@@ -135,7 +130,7 @@ public class ManageFontImportActivity extends BaseAppCompatActivity implements V
             }
 
         } else if (id == binding.imgBackbtn.getId()) {
-            onBackPressed();
+            getOnBackPressedDispatcher().onBackPressed();
         } else if (id == binding.tvSendbtn.getId() && !n()) {
             Intent intent = new Intent();
             intent.putParcelableArrayListExtra("results", selectedCollection);
@@ -147,6 +142,13 @@ public class ManageFontImportActivity extends BaseAppCompatActivity implements V
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                setResult(RESULT_OK);
+                finish();
+            }
+        });
         if (!super.j()) {
             finish();
         }
