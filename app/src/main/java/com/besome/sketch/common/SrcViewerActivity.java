@@ -19,11 +19,13 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import a.a.a.ProjectBuilder;
-import a.a.a.bB;
-import a.a.a.jC;
-import a.a.a.yq;
+import a.a.a.SketchToast;
+import a.a.a.ProjectDataManager;
+import a.a.a.ProjectFilePaths;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.SrcViewerBinding;
@@ -31,6 +33,7 @@ import pro.sketchware.utility.EditorUtils;
 
 public class SrcViewerActivity extends BaseAppCompatActivity {
 
+    private final ExecutorService backgroundExecutor = Executors.newSingleThreadExecutor();
     private SrcViewerBinding binding;
     private String sc_id;
     private ArrayList<SrcCodeBean> sourceCodeBeans;
@@ -76,20 +79,20 @@ public class SrcViewerActivity extends BaseAppCompatActivity {
 
         k(); // show loading
 
-        new Thread(() -> {
+        backgroundExecutor.execute(() -> {
             try {
-                var yq = new yq(getBaseContext(), sc_id);
-                var fileManager = jC.b(sc_id);
-                var dataManager = jC.a(sc_id);
-                var libraryManager = jC.c(sc_id);
-                yq.a(libraryManager, fileManager, dataManager, a.a.a.yq.ExportType.SOURCE_CODE_VIEWING);
-                ProjectBuilder builder = new ProjectBuilder(this, yq);
+                var ProjectFilePaths = new ProjectFilePaths(getBaseContext(), sc_id);
+                var fileManager = ProjectDataManager.getFileManager(sc_id);
+                var dataManager = ProjectDataManager.getProjectDataManager(sc_id);
+                var libraryManager = ProjectDataManager.getLibraryManager(sc_id);
+                ProjectFilePaths.initializeMetadata(libraryManager, fileManager, dataManager, a.a.a.ProjectFilePaths.ExportType.SOURCE_CODE_VIEWING);
+                ProjectBuilder builder = new ProjectBuilder(this, ProjectFilePaths);
                 builder.buildBuiltInLibraryInformation();
-                sourceCodeBeans = yq.a(fileManager, dataManager, builder.getBuiltInLibraryManager());
+                sourceCodeBeans = ProjectFilePaths.generateSourceCodeBeans(fileManager, dataManager, builder.getBuiltInLibraryManager());
 
                 runOnUiThread(() -> {
                     if (sourceCodeBeans == null) {
-                        bB.b(getApplicationContext(), Helper.getResString(R.string.common_error_unknown), bB.TOAST_NORMAL).show();
+                        SketchToast.warning(getApplicationContext(), Helper.getResString(R.string.common_error_unknown), SketchToast.TOAST_NORMAL).show();
                     } else {
                         binding.filesListSpinner.setAdapter(new FilesListSpinnerAdapter());
                         for (SrcCodeBean src : sourceCodeBeans) {
@@ -105,7 +108,8 @@ public class SrcViewerActivity extends BaseAppCompatActivity {
             } catch (Exception e) {
                 android.util.Log.e("SrcViewerActivity", "Failed to generate source code", e);
             }
-        }).start();
+        });
+
     }
 
     private void configureEditor() {
@@ -119,6 +123,12 @@ public class SrcViewerActivity extends BaseAppCompatActivity {
         } else {
             EditorUtils.loadJavaConfig(binding.editor);
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        backgroundExecutor.shutdownNow();
     }
 
     @Override
