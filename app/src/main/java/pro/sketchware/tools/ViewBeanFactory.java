@@ -9,7 +9,10 @@ import com.besome.sketch.beans.ViewBean;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
-
+import android.util.Log;
+import android.util.Pair;
+import android.view.Gravity;
+import android.view.View;
 import mod.agus.jcoderz.beans.ViewBeans;
 import pro.sketchware.utility.AttributeConstants;
 import pro.sketchware.utility.PropertiesUtil;
@@ -664,7 +667,8 @@ public class ViewBeanFactory {
             if (size != null) {
                 try {
                     return Integer.parseInt(size);
-                } catch (NumberFormatException ignored) {
+                } catch (NumberFormatException e) {
+                    Log.d("ViewBeanFactory", "Failed to parse dimension size: " + size, e);
                 }
             }
             injectAttributes.put(attributeName, value);

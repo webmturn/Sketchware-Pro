@@ -5,6 +5,8 @@ import static mod.hey.studios.util.ProjectFile.getDefaultColor;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.ContextWrapper;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 
 import androidx.core.content.ContextCompat;
@@ -113,7 +115,8 @@ public class ColorsEditorManager {
                 }
                 return String.format("#%06X", (0xFFFFFF & MaterialColors.getColor(themedContext, attrId, "getColorValue")));
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Log.w("ColorsEditorManager", "Failed to get Material color for attribute: " + attrName, e);
         }
         return defaultHexColor;
     }
