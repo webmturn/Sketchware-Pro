@@ -1,6 +1,8 @@
 package com.besome.sketch.editor.manage;
 
 import android.content.Intent;
+import android.util.Log;
+
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -56,9 +58,9 @@ import a.a.a.Op;
 import a.a.a.Pp;
 import a.a.a.Qp;
 import a.a.a.Rp;
-import a.a.a.bB;
+import a.a.a.SketchToast;
 import a.a.a.mB;
-import a.a.a.wq;
+import a.a.a.SketchwarePaths;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.AudioMetadata;
 import mod.jbk.util.BlockUtil;
@@ -326,7 +328,7 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
             fab.show();
         }
 
-        bB.a(getApplicationContext(), Helper.getResString(R.string.common_message_complete_delete), 1).show();
+        SketchToast.toast(getApplicationContext(), Helper.getResString(R.string.common_message_complete_delete), 1).show();
         collectionAdapter.notifyDataSetChanged();
     }
 
@@ -661,7 +663,7 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
 
             Glide.with(getApplicationContext())
                     .asBitmap()
-                    .load(wq.a() + File.separator + "image" + File.separator + "data" + File.separator + bean.resFullName)
+                    .load(SketchwarePaths.getCollectionPath() + File.separator + "image" + File.separator + "data" + File.separator + bean.resFullName)
                     .centerCrop()
                     .error(R.drawable.ic_remove_grey600_24dp)
                     .into(new BitmapImageViewTarget(holder.image).getView());
@@ -724,10 +726,10 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
             holder.name.setText(bean.resName + ".ttf");
 
             try {
-                holder.preview.setTypeface(Typeface.createFromFile(wq.a() + File.separator + "font" + File.separator + "data" + File.separator + bean.resFullName));
+                holder.preview.setTypeface(Typeface.createFromFile(SketchwarePaths.getCollectionPath() + File.separator + "font" + File.separator + "data" + File.separator + bean.resFullName));
                 holder.preview.setText(Helper.getResString(R.string.design_manager_font_description_example_sentence));
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e("ManageCollectionActivity", "Failed to load font typeface", e);
             }
         }
 
@@ -861,7 +863,7 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
 
         @Override
         public Path getAudio(int position) {
-            return Paths.get(wq.a(), "sound", "data", getData(position).resFullName);
+            return Paths.get(SketchwarePaths.getCollectionPath(), "sound", "data", getData(position).resFullName);
         }
 
         private class BlockCollectionViewHolder extends SoundlessViewHolder {

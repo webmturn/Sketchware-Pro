@@ -1,5 +1,7 @@
 package com.besome.sketch.editor.manage.library.firebase;
 
+import android.util.Log;
+
 import androidx.activity.OnBackPressedCallback;
 import android.app.Activity;
 import android.content.Intent;
@@ -30,7 +32,7 @@ import java.util.regex.Pattern;
 
 import a.a.a.DB;
 import a.a.a.GB;
-import a.a.a.bB;
+import a.a.a.SketchToast;
 import dev.pranav.filepicker.FilePickerCallback;
 import dev.pranav.filepicker.FilePickerDialogFragment;
 import dev.pranav.filepicker.FilePickerOptions;
@@ -73,11 +75,11 @@ public class ManageFirebaseActivity extends BaseAppCompatActivity implements Vie
                 intent.setData(consoleUrl);
                 startActivity(intent);
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e("ManageFirebaseActivity", "Failed to open Firebase console", e);
                 downloadChromeDialog();
             }
         } else {
-            bB.a(getApplicationContext(), Helper.getResString(R.string.common_message_check_network), bB.TOAST_NORMAL).show();
+            SketchToast.toast(getApplicationContext(), Helper.getResString(R.string.common_message_check_network), SketchToast.TOAST_NORMAL).show();
         }
     }
 
