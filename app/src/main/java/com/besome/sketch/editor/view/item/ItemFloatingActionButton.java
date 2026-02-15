@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Canvas;
 
+import androidx.core.content.ContextCompat;
+
 import com.besome.sketch.beans.ViewBean;
 import com.besome.sketch.editor.view.ItemView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -58,7 +60,7 @@ public class ItemFloatingActionButton extends FloatingActionButton implements It
         if (isSelected) {
             setBackgroundTintList(ColorStateList.valueOf(0x9599d5d0));
         } else {
-            ColorStateList colorStateList = ColorStateList.valueOf(getResources().getColor(R.color.color_accent));
+            ColorStateList colorStateList = ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.color_accent));
             if (maincolor != 0) {
                 colorStateList = ColorStateList.valueOf(maincolor);
             }
