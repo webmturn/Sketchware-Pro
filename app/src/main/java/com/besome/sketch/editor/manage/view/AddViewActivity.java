@@ -21,10 +21,10 @@ import com.google.android.material.button.MaterialButtonToggleGroup;
 
 import java.util.ArrayList;
 
-import a.a.a.YB;
-import a.a.a.bB;
+import a.a.a.ActivityNameValidator;
+import a.a.a.SketchToast;
 import a.a.a.rq;
-import a.a.a.uq;
+import a.a.a.BlockConstants;
 import a.a.a.wB;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
@@ -43,7 +43,7 @@ public class AddViewActivity extends BaseAppCompatActivity {
     private static final int FEATURE_TYPE_TOOLBAR = 1;
     private static final int FEATURE_TYPE_DRAWER = 2;
     private static final int FEATURE_TYPE_FAB = 3;
-    private YB nameValidator;
+    private ActivityNameValidator nameValidator;
     private boolean featureStatusBar, featureToolbar, featureFab, featureDrawer;
     private int requestCode;
     private ProjectFileBean projectFileBean;
@@ -101,7 +101,7 @@ public class AddViewActivity extends BaseAppCompatActivity {
         }
     }
 
-    private boolean isValid(YB validator) {
+    private boolean isValid(ActivityNameValidator validator) {
         return validator.b();
     }
 
@@ -178,8 +178,9 @@ public class AddViewActivity extends BaseAppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 276 && resultCode == RESULT_OK) {
+        if (requestCode == 276 && resultCode == RESULT_OK && data != null) {
             ProjectFileBean presetData = data.getParcelableExtra("preset_data");
+            if (presetData == null) return;
             presetName = presetData.presetName;
             initItem(presetData.options);
             initializeItems();
@@ -263,7 +264,7 @@ public class AddViewActivity extends BaseAppCompatActivity {
         Intent intent = new Intent();
         intent.putExtra("project_file", projectFileBean);
         setResult(RESULT_OK, intent);
-        bB.a(getApplicationContext(), getString(R.string.design_manager_message_edit_complete, new Object[0]), bB.TOAST_NORMAL).show();
+        SketchToast.toast(getApplicationContext(), getString(R.string.design_manager_message_edit_complete, new Object[0]), SketchToast.TOAST_NORMAL).show();
         finish();
     }
 
@@ -276,12 +277,12 @@ public class AddViewActivity extends BaseAppCompatActivity {
             intent.putExtra("preset_views", getPresetData(presetName));
         }
         setResult(RESULT_OK, intent);
-        bB.a(getApplicationContext(), getString(R.string.design_manager_message_add_complete, new Object[0]), bB.TOAST_NORMAL).show();
+        SketchToast.toast(getApplicationContext(), getString(R.string.design_manager_message_add_complete, new Object[0]), SketchToast.TOAST_NORMAL).show();
         finish();
     }
 
     private void handleEditModeInitialization() {
-        nameValidator = new YB(getApplicationContext(), binding.tiName, uq.b, new ArrayList<>(), projectFileBean.fileName);
+        nameValidator = new ActivityNameValidator(getApplicationContext(), binding.tiName, BlockConstants.b, new ArrayList<>(), projectFileBean.fileName);
         binding.edName.setText(projectFileBean.fileName);
         binding.edName.setEnabled(false);
         binding.edName.setBackgroundResource(R.color.transparent);
@@ -304,7 +305,7 @@ public class AddViewActivity extends BaseAppCompatActivity {
     private void handleCreateModeInitialization() {
         featureToolbar = true;
         featureStatusBar = true;
-        nameValidator = new YB(getApplicationContext(), binding.tiName, uq.b, screenNames);
+        nameValidator = new ActivityNameValidator(getApplicationContext(), binding.tiName, BlockConstants.b, screenNames);
     }
 
 

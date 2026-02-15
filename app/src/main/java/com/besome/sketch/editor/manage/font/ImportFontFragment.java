@@ -16,6 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.view.MenuHost;
+import androidx.core.view.MenuProvider;
+import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,9 +29,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-import a.a.a.jC;
+import a.a.a.ProjectDataManager;
 import a.a.a.oB;
-import a.a.a.qA;
+import a.a.a.BaseFragment;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.FrManageFontListBinding;
@@ -36,7 +40,7 @@ import pro.sketchware.databinding.ManageFontListItemBinding;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.SketchwareUtil;
 
-public class ImportFontFragment extends qA {
+public class ImportFontFragment extends BaseFragment implements MenuProvider {
 
     private ActivityResultLauncher<Intent> addFontLauncher;
     public String sc_id;
@@ -45,7 +49,7 @@ public class ImportFontFragment extends qA {
     public oB oB;
     public ArrayList<ProjectResourceBean> projectResourceBeans;
     private FrManageFontListBinding binding;
-    private fontAdapter adapter;
+    private FontAdapter adapter;
     private ManageFontBinding actBinding;
 
     public String getResourceFilePath(ProjectResourceBean resourceBean) {
@@ -164,10 +168,10 @@ public class ImportFontFragment extends qA {
             }
         }
 
-        jC.d(sc_id).a(projectResourceBeans);
-        jC.d(sc_id).y();
-        jC.a(sc_id).a(jC.d(sc_id));
-        jC.a(sc_id).k();
+        ProjectDataManager.getResourceManager(sc_id).a(projectResourceBeans);
+        ProjectDataManager.getResourceManager(sc_id).y();
+        ProjectDataManager.getProjectDataManager(sc_id).a(ProjectDataManager.getResourceManager(sc_id));
+        ProjectDataManager.getProjectDataManager(sc_id).k();
     }
 
     public final void toggleEmptyStateVisibility() {
@@ -189,12 +193,13 @@ public class ImportFontFragment extends qA {
     }
 
     @Override
-    public void onActivityCreated(Bundle bundle) {
-        super.onActivityCreated(bundle);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         addFontLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                         ProjectResourceBean resourceBean = result.getData().getParcelableExtra("resource_bean");
+                        if (resourceBean == null) return;
                         projectResourceBeans.add(resourceBean);
                         adapter.notifyDataSetChanged();
                         toggleEmptyStateVisibility();
@@ -202,20 +207,25 @@ public class ImportFontFragment extends qA {
                         SketchwareUtil.toast(Helper.getResString(R.string.design_manager_message_add_complete));
                     }
                 });
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         oB = new oB();
         oB.f(dirPath);
         projectResourceBeans = new ArrayList<>();
-        if (bundle == null) {
+        if (savedInstanceState == null) {
             sc_id = requireActivity().getIntent().getStringExtra("sc_id");
-            dirPath = jC.d(sc_id).j();
-            ArrayList<ProjectResourceBean> resourceBeans = jC.d(sc_id).d;
+            dirPath = ProjectDataManager.getResourceManager(sc_id).j();
+            ArrayList<ProjectResourceBean> resourceBeans = ProjectDataManager.getResourceManager(sc_id).d;
             if (resourceBeans != null) {
                 projectResourceBeans.addAll(resourceBeans);
             }
         } else {
-            sc_id = bundle.getString("sc_id");
-            dirPath = bundle.getString("dir_path");
-            projectResourceBeans = bundle.getParcelableArrayList("fonts");
+            sc_id = savedInstanceState.getString("sc_id");
+            dirPath = savedInstanceState.getString("dir_path");
+            projectResourceBeans = savedInstanceState.getParcelableArrayList("fonts");
         }
 
         adapter.notifyDataSetChanged();
@@ -227,6 +237,7 @@ public class ImportFontFragment extends qA {
         super.onActivityResult(requestCode, resultCode, intent);
         if (requestCode == 272 && resultCode == Activity.RESULT_OK) {
             ProjectResourceBean resourceBean = intent.getParcelableExtra("resource_bean");
+            if (resourceBean == null) return;
             projectResourceBeans.set(adapter.selectedPosition, resourceBean);
             adapter.notifyDataSetChanged();
             toggleEmptyStateVisibility();
@@ -241,8 +252,7 @@ public class ImportFontFragment extends qA {
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-        super.onCreateOptionsMenu(menu, menuInflater);
+    public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
         menuInflater.inflate(R.menu.manage_font_menu, menu);
         menu.findItem(R.id.menu_font_delete).setVisible(!isSelecting);
     }
@@ -252,7 +262,8 @@ public class ImportFontFragment extends qA {
 
         binding = FrManageFontListBinding.inflate(layoutInflater, root, false);
 
-        setHasOptionsMenu(true);
+        MenuHost menuHost = requireActivity();
+        menuHost.addMenuProvider(this, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
 
         actBinding = ((ManageFontActivity) requireActivity()).binding;
         actBinding.btnCancel.setOnClickListener(view -> setSelectingMode(false));
@@ -273,7 +284,7 @@ public class ImportFontFragment extends qA {
         });
 
         binding.fontList.setLayoutManager(new LinearLayoutManager(requireContext()));
-        adapter = new fontAdapter();
+        adapter = new FontAdapter();
         binding.fontList.setAdapter(adapter);
 
         binding.fontList.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -303,12 +314,12 @@ public class ImportFontFragment extends qA {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onMenuItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.menu_font_delete) {
             setSelectingMode(!isSelecting);
+            return true;
         }
-
-        return super.onOptionsItemSelected(item);
+        return false;
     }
 
     @Override
@@ -319,10 +330,10 @@ public class ImportFontFragment extends qA {
         super.onSaveInstanceState(bundle);
     }
 
-    public class fontAdapter extends RecyclerView.Adapter<fontAdapter.ViewHolder> {
+    public class FontAdapter extends RecyclerView.Adapter<FontAdapter.ViewHolder> {
         public int selectedPosition;
 
-        public fontAdapter() {
+        public FontAdapter() {
             selectedPosition = -1;
         }
 
@@ -351,7 +362,8 @@ public class ImportFontFragment extends qA {
 
             holder.binding.chkSelect.setChecked(resource.isSelected);
 
-            holder.binding.tvFontName.setText(resource.resName + ".ttf");
+            String fileExtension = resource.resFullName.substring(resource.resFullName.lastIndexOf("."));
+            holder.binding.tvFontName.setText(resource.resName + fileExtension);
 
             String fontPath;
             if (resource.isNew) {
@@ -392,8 +404,6 @@ public class ImportFontFragment extends qA {
                         binding.chkSelect.setChecked(newState);
                         projectResourceBeans.get(selectedPosition).isSelected = newState;
                         notifyItemChanged(selectedPosition);
-                    } else {
-                        importFont(projectResourceBeans.get(getLayoutPosition()).resFullName, getResourceFilePath(projectResourceBeans.get(getLayoutPosition())));
                     }
                 });
 
@@ -405,7 +415,7 @@ public class ImportFontFragment extends qA {
                     binding.chkSelect.setChecked(newState);
                     projectResourceBeans.get(selectedPosition).isSelected = newState;
 
-                    return false;
+                    return true;
                 });
             }
         }

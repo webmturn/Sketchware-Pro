@@ -22,10 +22,10 @@ import java.util.ArrayList;
 
 import a.a.a.eC;
 import a.a.a.hC;
-import a.a.a.jC;
+import a.a.a.ProjectDataManager;
 import a.a.a.mB;
 import a.a.a.rq;
-import a.a.a.wq;
+import a.a.a.SketchwarePaths;
 import pro.sketchware.R;
 import pro.sketchware.databinding.FileSelectorPopupSelectXmlActivityItemBinding;
 import pro.sketchware.databinding.FileSelectorPopupSelectXmlBinding;
@@ -63,13 +63,13 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
 
     private ArrayList<String> getScreenNames() {
         ArrayList<String> screenNames = new ArrayList<>();
-        ArrayList<ProjectFileBean> activities = jC.b(sc_id).b();
+        ArrayList<ProjectFileBean> activities = ProjectDataManager.getFileManager(sc_id).b();
         if (activities != null) {
             for (ProjectFileBean projectFileBean : activities) {
                 screenNames.add(projectFileBean.fileName);
             }
         }
-        ArrayList<ProjectFileBean> customViews = jC.b(sc_id).c();
+        ArrayList<ProjectFileBean> customViews = ProjectDataManager.getFileManager(sc_id).c();
         if (customViews != null) {
             for (ProjectFileBean projectFileBean : customViews) {
                 screenNames.add(projectFileBean.fileName);
@@ -87,15 +87,16 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         ProjectFileBean projectFile = result.getData().getParcelableExtra("project_file");
-                        jC.b(sc_id).a(projectFile);
+                        if (projectFile == null) return;
+                        ProjectDataManager.getFileManager(sc_id).a(projectFile);
                         if (projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)) {
-                            jC.b(sc_id).a(2, projectFile.getDrawerName());
+                            ProjectDataManager.getFileManager(sc_id).a(2, projectFile.getDrawerName());
                         }
                         if (result.getData().hasExtra("preset_views")) {
                             a(projectFile, result.getData().getParcelableArrayListExtra("preset_views"));
                         }
-                        jC.b(sc_id).j();
-                        jC.b(sc_id).l();
+                        ProjectDataManager.getFileManager(sc_id).j();
+                        ProjectDataManager.getFileManager(sc_id).l();
                         viewSelectorAdapter.notifyDataSetChanged();
                     }
                 });
@@ -103,20 +104,21 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         ProjectFileBean projectFile = result.getData().getParcelableExtra("project_file");
-                        ProjectFileBean activity = jC.b(sc_id).b().get(viewSelectorAdapter.selectedItem);
+                        if (projectFile == null) return;
+                        ProjectFileBean activity = ProjectDataManager.getFileManager(sc_id).b().get(viewSelectorAdapter.selectedItem);
                         activity.keyboardSetting = projectFile.keyboardSetting;
                         activity.orientation = projectFile.orientation;
                         activity.options = projectFile.options;
                         if (projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)) {
-                            if (jC.b(sc_id).b(projectFile.getDrawerXmlName()) == null) {
-                                jC.b(sc_id).a(2, projectFile.getDrawerName());
+                            if (ProjectDataManager.getFileManager(sc_id).b(projectFile.getDrawerXmlName()) == null) {
+                                ProjectDataManager.getFileManager(sc_id).a(2, projectFile.getDrawerName());
                             }
                         } else {
-                            jC.b(sc_id).b(2, projectFile.getDrawerName());
+                            ProjectDataManager.getFileManager(sc_id).b(2, projectFile.getDrawerName());
                         }
                         if (projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)
                                 || projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB)) {
-                            jC.c(sc_id).c().useYn = "Y";
+                            ProjectDataManager.getLibraryManager(sc_id).c().useYn = "Y";
                         }
                         viewSelectorAdapter.notifyItemChanged(viewSelectorAdapter.selectedItem);
                         Intent intent = new Intent();
@@ -128,12 +130,13 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         ProjectFileBean projectFile = result.getData().getParcelableExtra("project_file");
-                        jC.b(sc_id).a(projectFile);
+                        if (projectFile == null) return;
+                        ProjectDataManager.getFileManager(sc_id).a(projectFile);
                         if (result.getData().hasExtra("preset_views")) {
                             a(projectFile, result.getData().getParcelableArrayListExtra("preset_views"));
                         }
-                        jC.b(sc_id).j();
-                        jC.b(sc_id).l();
+                        ProjectDataManager.getFileManager(sc_id).j();
+                        ProjectDataManager.getFileManager(sc_id).l();
                         viewSelectorAdapter.notifyDataSetChanged();
                     }
                 });
@@ -141,25 +144,26 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         ProjectFileBean presetData = result.getData().getParcelableExtra("preset_data");
+                        if (presetData == null) return;
                         if (lastPresetRequestCode == 276) {
-                            ProjectFileBean activity = jC.b(sc_id).b().get(viewSelectorAdapter.selectedItem);
+                            ProjectFileBean activity = ProjectDataManager.getFileManager(sc_id).b().get(viewSelectorAdapter.selectedItem);
                             activity.keyboardSetting = presetData.keyboardSetting;
                             activity.orientation = presetData.orientation;
                             activity.options = presetData.options;
                             if (presetData.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)
                                     || presetData.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB)) {
-                                jC.c(sc_id).c().useYn = "Y";
+                                ProjectDataManager.getLibraryManager(sc_id).c().useYn = "Y";
                             }
                             a(presetData, activity, lastPresetRequestCode);
-                            jC.b(sc_id).j();
+                            ProjectDataManager.getFileManager(sc_id).j();
                             viewSelectorAdapter.notifyDataSetChanged();
                             Intent intent2 = new Intent();
                             intent2.putExtra("project_file", activity);
                             setResult(RESULT_OK, intent2);
                         } else {
-                            ProjectFileBean customView = jC.b(sc_id).c().get(viewSelectorAdapter.selectedItem);
+                            ProjectFileBean customView = ProjectDataManager.getFileManager(sc_id).c().get(viewSelectorAdapter.selectedItem);
                             a(presetData, customView, lastPresetRequestCode);
-                            jC.b(sc_id).j();
+                            ProjectDataManager.getFileManager(sc_id).j();
                             viewSelectorAdapter.notifyDataSetChanged();
                             Intent intent3 = new Intent();
                             intent3.putExtra("project_file", customView);
@@ -244,30 +248,30 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
     }
 
     private void a(ProjectFileBean projectFile, ArrayList<ViewBean> presetViews) {
-        jC.a(sc_id);
+        ProjectDataManager.getProjectDataManager(sc_id);
         for (ViewBean view : eC.a(presetViews)) {
             view.id = a(view.type, projectFile.getXmlName());
-            jC.a(sc_id).a(projectFile.getXmlName(), view);
+            ProjectDataManager.getProjectDataManager(sc_id).a(projectFile.getXmlName(), view);
             if (view.type == ViewBean.VIEW_TYPE_WIDGET_BUTTON
                     && projectFile.fileType == ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY) {
-                jC.a(sc_id).a(projectFile.getJavaName(), 1, view.type, view.id, "onClick");
+                ProjectDataManager.getProjectDataManager(sc_id).a(projectFile.getJavaName(), 1, view.type, view.id, "onClick");
             }
         }
     }
 
     private void a(ProjectFileBean presetData, ProjectFileBean projectFile, int requestCode) {
-        ArrayList<ViewBean> d = jC.a(sc_id).d(projectFile.getXmlName());
+        ArrayList<ViewBean> d = ProjectDataManager.getProjectDataManager(sc_id).d(projectFile.getXmlName());
         for (int size = d.size() - 1; size >= 0; size--) {
-            jC.a(sc_id).a(projectFile, d.get(size));
+            ProjectDataManager.getProjectDataManager(sc_id).a(projectFile, d.get(size));
         }
         ArrayList<ViewBean> a = a(presetData.presetName, requestCode);
-        jC.a(sc_id);
+        ProjectDataManager.getProjectDataManager(sc_id);
         for (ViewBean view : eC.a(a)) {
             view.id = a(view.type, projectFile.getXmlName());
-            jC.a(sc_id).a(projectFile.getXmlName(), view);
+            ProjectDataManager.getProjectDataManager(sc_id).a(projectFile.getXmlName(), view);
             if (view.type == ViewBean.VIEW_TYPE_WIDGET_BUTTON
                     && projectFile.fileType == ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY) {
-                jC.a(sc_id).a(projectFile.getJavaName(), 1, view.type, view.id, "onClick");
+                ProjectDataManager.getProjectDataManager(sc_id).a(projectFile.getJavaName(), 1, view.type, view.id, "onClick");
             }
         }
     }
@@ -283,14 +287,14 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
     }
 
     private String a(int viewType, String xmlName) {
-        String b = wq.b(viewType);
+        String b = SketchwarePaths.getWidgetTypeName(viewType);
         StringBuilder sb = new StringBuilder();
         sb.append(b);
         int i2 = x[viewType] + 1;
         x[viewType] = i2;
         sb.append(i2);
         String sb2 = sb.toString();
-        ArrayList<ViewBean> d = jC.a(sc_id).d(xmlName);
+        ArrayList<ViewBean> d = ProjectDataManager.getProjectDataManager(sc_id).d(xmlName);
         while (true) {
             boolean z = false;
             for (ViewBean viewBean : d) {
@@ -326,7 +330,7 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
             if (selectedTab == TAB_ACTIVITY) {
                 viewHolder.itemBinding.tvFilename.setVisibility(View.VISIBLE);
                 viewHolder.itemBinding.tvLinkedFilename.setVisibility(View.VISIBLE);
-                ProjectFileBean projectFileBean = jC.b(sc_id).b().get(position);
+                ProjectFileBean projectFileBean = ProjectDataManager.getFileManager(sc_id).b().get(position);
                 String xmlName = projectFileBean.getXmlName();
                 if (currentXml.equals(xmlName)) {
                     viewHolder.itemBinding.cardView.setStrokeColor(
@@ -344,7 +348,7 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
             } else if (selectedTab == TAB_CUSTOM_VIEW) {
                 viewHolder.itemBinding.imgEdit.setVisibility(View.GONE);
                 viewHolder.itemBinding.tvLinkedFilename.setVisibility(View.GONE);
-                ProjectFileBean customView = jC.b(sc_id).c().get(position);
+                ProjectFileBean customView = ProjectDataManager.getFileManager(sc_id).c().get(position);
                 if (currentXml.equals(customView.getXmlName())) {
                     viewHolder.itemBinding.cardView.setStrokeColor(
                             ThemeUtils.getColor(ViewSelectorActivity.this, R.attr.colorPrimary));
@@ -373,7 +377,7 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
         @Override
         public int getItemCount() {
             binding.emptyMessage.setVisibility(View.GONE);
-            hC hC = jC.b(sc_id);
+            hC hC = ProjectDataManager.getFileManager(sc_id);
             ArrayList<ProjectFileBean> list = switch (selectedTab) {
                 case TAB_ACTIVITY -> hC.b();
                 case TAB_CUSTOM_VIEW -> hC.c();
@@ -395,7 +399,7 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
                 itemBinding.cardView.setOnClickListener(v -> {
                     if (!mB.a()) {
                         selectedItem = getLayoutPosition();
-                        hC hC = jC.b(sc_id);
+                        hC hC = ProjectDataManager.getFileManager(sc_id);
                         ArrayList<ProjectFileBean> list = switch (selectedTab) {
                             case TAB_ACTIVITY -> hC.b();
                             case TAB_CUSTOM_VIEW -> hC.c();
@@ -414,7 +418,7 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
                     if (selectedTab == TAB_ACTIVITY && !mB.a()) {
                         selectedItem = getLayoutPosition();
                         Intent intent = new Intent(getApplicationContext(), AddViewActivity.class);
-                        intent.putExtra("project_file", jC.b(sc_id).b().get(getLayoutPosition()));
+                        intent.putExtra("project_file", ProjectDataManager.getFileManager(sc_id).b().get(getLayoutPosition()));
                         intent.putExtra("request_code", 265);
                         editActivityLauncher.launch(intent);
                     }
@@ -422,7 +426,7 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
                 itemBinding.imgPresetSetting.setOnClickListener(v -> {
                     if (!mB.a()) {
                         selectedItem = getLayoutPosition();
-                        int requestCode = a(jC.b(sc_id).b().get(getLayoutPosition()));
+                        int requestCode = a(ProjectDataManager.getFileManager(sc_id).b().get(getLayoutPosition()));
                         Intent intent = new Intent(getApplicationContext(), PresetSettingActivity.class);
                         intent.putExtra("request_code", requestCode);
                         intent.putExtra("edit_mode", true);

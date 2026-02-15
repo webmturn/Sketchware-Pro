@@ -408,7 +408,11 @@ public class FileUtil {
     }
 
     public static String getPackageDataDir(Context context) {
-        return context.getExternalFilesDir(null).getAbsolutePath();
+        File dir = context.getExternalFilesDir(null);
+        if (dir == null) {
+            return context.getFilesDir().getAbsolutePath();
+        }
+        return dir.getAbsolutePath();
     }
 
     public static String getPublicDir(String type) {
@@ -786,7 +790,12 @@ public class FileUtil {
     }
 
     public static File createNewPictureFile(Context context) {
-        return new File(context.getExternalFilesDir(Environment.DIRECTORY_DCIM).getAbsolutePath() + File.separator + new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH).format(new Date()) + ".jpg");
+        File dcimDir = context.getExternalFilesDir(Environment.DIRECTORY_DCIM);
+        if (dcimDir == null) {
+            dcimDir = new File(context.getFilesDir(), Environment.DIRECTORY_DCIM);
+            dcimDir.mkdirs();
+        }
+        return new File(dcimDir.getAbsolutePath() + File.separator + new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH).format(new Date()) + ".jpg");
     }
 
     public static byte[] readFromInputStream(InputStream stream) {
@@ -799,7 +808,7 @@ public class FileUtil {
         }
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        byte[] buffer = new byte[available];
+        byte[] buffer = new byte[Math.max(available, 1024)];
 
         try {
             for (int len = stream.read(buffer); len != -1; len = stream.read(buffer)) {
@@ -822,7 +831,10 @@ public class FileUtil {
      */
     public static void writeBytes(File target, byte[] data) throws IOException {
         if (!target.exists()) {
-            target.getParentFile().mkdirs();
+            File parentFile = target.getParentFile();
+            if (parentFile != null) {
+                parentFile.mkdirs();
+            }
         }
         try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(target))) {
             outputStream.write(data);

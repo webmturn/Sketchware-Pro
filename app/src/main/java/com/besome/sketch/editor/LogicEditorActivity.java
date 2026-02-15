@@ -88,30 +88,30 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import a.a.a.DB;
 import a.a.a.FB;
-import a.a.a.Fx;
+import a.a.a.BlockInterpreter;
 import a.a.a.GB;
-import a.a.a.MA;
+import a.a.a.BaseAsyncTask;
 import a.a.a.Mp;
-import a.a.a.NB;
-import a.a.a.Ox;
+import a.a.a.UniqueNameValidator;
+import a.a.a.LayoutGenerator;
 import a.a.a.Pp;
 import a.a.a.Rs;
 import a.a.a.Ss;
 import a.a.a.Ts;
 import a.a.a.Us;
 import a.a.a.Vs;
-import a.a.a.ZB;
+import a.a.a.IdentifierValidator;
 import a.a.a.bC;
 import a.a.a.eC;
-import a.a.a.jC;
-import a.a.a.jq;
+import a.a.a.ProjectDataManager;
+import a.a.a.BuildConfig;
 import a.a.a.kC;
 import a.a.a.mB;
-import a.a.a.sq;
-import a.a.a.uq;
+import a.a.a.SketchwareConstants;
+import a.a.a.BlockConstants;
 import a.a.a.wB;
 import a.a.a.xB;
-import a.a.a.yq;
+import a.a.a.ProjectFilePaths;
 import dev.aldi.sayuti.block.ExtraPaletteBlock;
 import mod.bobur.VectorDrawableLoader;
 import mod.hey.studios.editor.view.IdGenerator;
@@ -172,7 +172,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
     public static ArrayList<String> getAllJavaFileNames(String projectScId) {
         ArrayList<String> javaFileNames = new ArrayList<>();
-        for (ProjectFileBean projectFile : jC.b(projectScId).b()) {
+        for (ProjectFileBean projectFile : ProjectDataManager.getFileManager(projectScId).b()) {
             javaFileNames.add(projectFile.getJavaName());
         }
         return javaFileNames;
@@ -180,7 +180,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
     public static ArrayList<String> getAllXmlFileNames(String projectScId) {
         ArrayList<String> xmlFileNames = new ArrayList<>();
-        for (ProjectFileBean projectFile : jC.b(projectScId).b()) {
+        for (ProjectFileBean projectFile : ProjectDataManager.getFileManager(projectScId).b()) {
             String xmlName = projectFile.getXmlName();
             if (xmlName != null && !xmlName.isEmpty()) {
                 xmlFileNames.add(xmlName);
@@ -191,7 +191,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
     private void loadEventBlocks() {
         crashlytics.log("Loading event blocks");
-        ArrayList<BlockBean> eventBlocks = jC.a(scId).a(M.getJavaName(), id + "_" + eventName);
+        ArrayList<BlockBean> eventBlocks = ProjectDataManager.getProjectDataManager(scId).a(M.getJavaName(), id + "_" + eventName);
         if (eventBlocks != null) {
             if (eventBlocks.isEmpty()) {
                 runOnUiThread(() -> e(X));
@@ -301,23 +301,23 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
     }
 
-    public void C() {
+    public void refreshOptionsMenu() {
         invalidateOptionsMenu();
     }
 
-    public void E() {
-        eC a2 = jC.a(scId);
+    public void saveBlocks() {
+        eC a2 = ProjectDataManager.getProjectDataManager(scId);
         String javaName = M.getJavaName();
         a2.a(javaName, id + "_" + eventName, o.getBlocks());
     }
 
-    public void G() {
+    public void showAddListDialog() {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.logic_editor_title_add_new_list);
         View a2 = wB.a(this, R.layout.logic_popup_add_list);
         RadioGroup radioGroup = a2.findViewById(R.id.rg_type);
         TextInputEditText editText = a2.findViewById(R.id.ed_input);
-        ZB zb = new ZB(getContext(), a2.findViewById(R.id.ti_input), uq.b, uq.a(), jC.a(scId).a(M));
+        IdentifierValidator zb = new IdentifierValidator(getContext(), a2.findViewById(R.id.ti_input), BlockConstants.b, BlockConstants.a(), ProjectDataManager.getProjectDataManager(scId).a(M));
         dialog.setView(a2);
         dialog.setPositiveButton(R.string.common_word_add, (v, which) -> {
             if (zb.b()) {
@@ -346,7 +346,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         View customView = wB.a(this, R.layout.logic_popup_add_variable);
         RadioGroup radioGroup = customView.findViewById(R.id.rg_type);
         TextInputEditText editText = customView.findViewById(R.id.ed_input);
-        ZB nameValidator = new ZB(getContext(), customView.findViewById(R.id.ti_input), uq.b, uq.a(), jC.a(scId).a(M));
+        IdentifierValidator nameValidator = new IdentifierValidator(getContext(), customView.findViewById(R.id.ti_input), BlockConstants.b, BlockConstants.a(), ProjectDataManager.getProjectDataManager(scId).a(M));
         dialog.setView(customView);
         dialog.setPositiveButton(R.string.common_word_add, (v, which) -> {
             int variableType = 1;
@@ -376,17 +376,17 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         openResourcesEditor.launch(intent);
     }
 
-    public void I() {
+    public void showMoreBlockImporter() {
         ArrayList<MoreBlockCollectionBean> moreBlocks = Pp.h().f();
         new MoreblockImporterDialog(this, moreBlocks, this).show();
     }
 
-    public void J() {
+    public void showRemoveListDialog() {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.logic_editor_title_remove_list);
         View a2 = wB.a(this, R.layout.property_popup_selector_single);
         ViewGroup viewGroup = a2.findViewById(R.id.rg_content);
-        for (Pair<Integer, String> list : jC.a(scId).j(M.getJavaName())) {
+        for (Pair<Integer, String> list : ProjectDataManager.getProjectDataManager(scId).j(M.getJavaName())) {
             viewGroup.addView(e(list.second));
         }
         dialog.setView(a2);
@@ -397,7 +397,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 RadioButton radioButton = (RadioButton) viewGroup.getChildAt(i);
                 if (radioButton.isChecked()) {
                     if (!o.b(Helper.getText(radioButton))) {
-                        if (!jC.a(scId).b(M.getJavaName(), Helper.getText(radioButton), id + "_" + eventName)) {
+                        if (!ProjectDataManager.getProjectDataManager(scId).b(M.getJavaName(), Helper.getText(radioButton), id + "_" + eventName)) {
                             l(Helper.getText(radioButton));
                         }
                     }
@@ -412,12 +412,12 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         dialog.show();
     }
 
-    public void K() {
+    public void showRemoveVariableDialog() {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.logic_editor_title_remove_variable);
         View a2 = wB.a(this, R.layout.property_popup_selector_single);
         ViewGroup viewGroup = a2.findViewById(R.id.rg_content);
-        for (Pair<Integer, String> next : jC.a(scId).k(M.getJavaName())) {
+        for (Pair<Integer, String> next : ProjectDataManager.getProjectDataManager(scId).k(M.getJavaName())) {
             RadioButton e = e(next.second);
             e.setTag(next.first);
             viewGroup.addView(e);
@@ -430,7 +430,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 RadioButton radioButton = (RadioButton) viewGroup.getChildAt(i);
                 if (radioButton.isChecked()) {
                     if (!o.c(Helper.getText(radioButton))) {
-                        if (!jC.a(scId).c(M.getJavaName(), Helper.getText(radioButton), id + "_" + eventName)) {
+                        if (!ProjectDataManager.getProjectDataManager(scId).c(M.getJavaName(), Helper.getText(radioButton), id + "_" + eventName)) {
                             m(Helper.getText(radioButton));
                         }
                     }
@@ -445,7 +445,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         dialog.show();
     }
 
-    public void L() {
+    public void saveProject() {
         try {
             new Handler(Looper.getMainLooper()).postDelayed(() -> new ProjectSaver(this).execute(), 500L);
         } catch (Exception e) {
@@ -554,7 +554,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             return imageView;
         }
 
-        File imageFile = new File(jC.d(scId).f(name));
+        File imageFile = new File(ProjectDataManager.getResourceManager(scId).f(name));
         if (imageFile.exists()) {
             String path = imageFile.getAbsolutePath();
             Uri uri = FileProvider.getUriForFile(this, getPackageName() + ".provider", imageFile);
@@ -665,7 +665,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public void a(int i, String str) {
-        jC.a(scId).b(M.getJavaName(), i, str);
+        ProjectDataManager.getProjectDataManager(scId).b(M.getJavaName(), i, str);
         a(1, 0xffcc5b22);
     }
 
@@ -713,7 +713,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         ss.E.p().k();
         ss.E.pa.b();
         bC.d(scId).a(s(), clone, ss.E.getBean().clone());
-        C();
+        refreshOptionsMenu();
     }
 
     public void pickImage(Ss ss, String str) {
@@ -732,7 +732,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        ArrayList<String> images = jC.d(scId).m();
+        ArrayList<String> images = ProjectDataManager.getResourceManager(scId).m();
         images.addAll(new VectorDrawableLoader().getVectorDrawables(DesignActivity.sc_id));
         if (selectingImage) {
             images.add(0, "default_image");
@@ -840,7 +840,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                             String javaName = M.getJavaName();
                             String xmlName = M.getXmlName();
                             if (eventName.equals("onBindCustomView")) {
-                                var eC = jC.a(scId);
+                                var eC = ProjectDataManager.getProjectDataManager(scId);
                                 var view = eC.c(xmlName, id);
                                 if (view == null) {
                                     // Event is of a Drawer View
@@ -854,7 +854,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
                             if (!parameter.isEmpty()) {
                                 if (ss.b.equals("m")) {
-                                    eC eC = jC.a(scId);
+                                    eC eC = ProjectDataManager.getProjectDataManager(scId);
 
                                     switch (ss.c) {
                                         case "varInt":
@@ -1022,7 +1022,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
                                         case "resource_bg":
                                         case "resource":
-                                            for (String str : jC.d(scId).m()) {
+                                            for (String str : ProjectDataManager.getResourceManager(scId).m()) {
                                                 // Like this in vanilla Sketchware. Don't ask me why.
                                                 //noinspection StatementWithEmptyBody
                                                 if (parameter.equals(str)) {
@@ -1031,7 +1031,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                                             break;
 
                                         case "activity":
-                                            for (String str : jC.b(scId).d()) {
+                                            for (String str : ProjectDataManager.getFileManager(scId).d()) {
                                                 // Like this in vanilla Sketchware. Don't ask me why.
                                                 //noinspection StatementWithEmptyBody
                                                 if (parameter.equals(str.substring(str.indexOf(".java")))) {
@@ -1040,7 +1040,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                                             break;
 
                                         case "sound":
-                                            for (String str : jC.d(scId).p()) {
+                                            for (String str : ProjectDataManager.getResourceManager(scId).p()) {
                                                 // Like this in vanilla Sketchware. Don't ask me why.
                                                 //noinspection StatementWithEmptyBody
                                                 if (parameter.equals(str)) {
@@ -1224,7 +1224,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             return true;
         }
         if (blockBean.opCode.equals("definedFunc")) {
-            Iterator<Pair<String, String>> it = jC.a(scId).i(M.getJavaName()).iterator();
+            Iterator<Pair<String, String>> it = ProjectDataManager.getProjectDataManager(scId).i(M.getJavaName()).iterator();
             boolean z = false;
             while (it.hasNext()) {
                 if (blockBean.spec.equals(ReturnMoreblockManager.getMbName(it.next().second))) {
@@ -1251,7 +1251,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public void b(int i, String str) {
-        jC.a(scId).c(M.getJavaName(), i, str);
+        ProjectDataManager.getProjectDataManager(scId).c(M.getJavaName(), i, str);
         a(0, 0xffee7d16);
     }
 
@@ -1312,7 +1312,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         editText.setLines(1);
         editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
-        NB nb = new NB(this, a2.findViewById(R.id.ti_input), Mp.h().g());
+        UniqueNameValidator nb = new UniqueNameValidator(this, a2.findViewById(R.id.ti_input), Mp.h().g());
         dialog.setView(a2);
         dialog.setPositiveButton(R.string.common_word_save, (v, which) -> {
             if (nb.b()) {
@@ -1344,7 +1344,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public void c(String str, String str2) {
-        jC.a(scId).a(M.getJavaName(), str, str2);
+        ProjectDataManager.getProjectDataManager(scId).a(M.getJavaName(), str, str2);
         a(8, 0xff8a55d7);
     }
 
@@ -1376,7 +1376,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             typeface = Typeface.DEFAULT;
         } else {
             try {
-                typeface = Typeface.createFromFile(jC.d(scId).d(fontName));
+                typeface = Typeface.createFromFile(ProjectDataManager.getResourceManager(scId).d(fontName));
             } catch (RuntimeException e) {
                 crashlytics.log("Loading font preview");
                 crashlytics.recordException(e);
@@ -1410,7 +1410,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         View customView = wB.a(this, R.layout.property_popup_selector_color);
         RadioGroup radioGroup = customView.findViewById(R.id.rg);
         LinearLayout linearLayout = customView.findViewById(R.id.content);
-        ArrayList<String> fontNames = jC.d(scId).k();
+        ArrayList<String> fontNames = ProjectDataManager.getResourceManager(scId).k();
         fontNames.add(0, "default_font");
         for (String fontName : fontNames) {
             RadioButton font = getFontRadioButton(fontName);
@@ -1537,7 +1537,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         String xmlName = M.getXmlName();
 
         if (eventName.equals("onBindCustomView")) {
-            var eC = jC.a(scId);
+            var eC = ProjectDataManager.getProjectDataManager(scId);
             var view = eC.c(xmlName, id);
             if (view == null) {
                 view = eC.c("_drawer_" + xmlName, id);
@@ -1548,15 +1548,15 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
 
         dialog.setTitle(R.string.logic_editor_title_select_view);
-        ArrayList<ViewBean> views = jC.a(scId).d(xmlName);
+        ArrayList<ViewBean> views = ProjectDataManager.getProjectDataManager(scId).d(xmlName);
         for (ViewBean viewBean : views) {
             String convert = viewBean.convert;
             String typeName = convert.isEmpty() ? ViewBean.getViewTypeName(viewBean.type) : IdGenerator.getLastPath(convert);
             if (!convert.equals("include")) {
-                Set<String> toNotAdd = new Ox(new jq(), M).readAttributesToReplace(viewBean);
+                Set<String> toNotAdd = new LayoutGenerator(new BuildConfig(), M).readAttributesToReplace(viewBean);
                 if (!toNotAdd.contains("android:id")) {
                     String classInfo = ss.getClassInfo().getClassName();
-                    if ((classInfo.equals("CheckBox") && viewBean.getClassInfo().a("CompoundButton")) || viewBean.getClassInfo().a(classInfo)) {
+                    if ((classInfo.equals("CheckBox") && viewBean.getClassInfo().matchesType("CompoundButton")) || viewBean.getClassInfo().matchesType(classInfo)) {
                         viewGroup.addView(d(typeName, viewBean.id));
                     }
                 }
@@ -1707,13 +1707,13 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             }
         });
 
-        for (String soundName : jC.d(scId).p()) {
+        for (String soundName : ProjectDataManager.getResourceManager(scId).p()) {
             RadioButton sound = e(soundName);
             radioGroup.addView(sound);
             if (soundName.equals(ss.getArgValue())) {
                 sound.setChecked(true);
             }
-            sound.setOnClickListener(v -> soundPool.load(jC.d(scId).i(Helper.getText(sound)), 1));
+            sound.setOnClickListener(v -> soundPool.load(ProjectDataManager.getResourceManager(scId).i(Helper.getText(sound)), 1));
         }
         dialog.setView(customView);
         dialog.setPositiveButton(R.string.common_word_select, (v, which) -> {
@@ -1746,7 +1746,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         dialog.setTitle(R.string.logic_editor_title_select_typeface);
         View a3 = wB.a(this, R.layout.property_popup_selector_single);
         RadioGroup radioGroup = a3.findViewById(R.id.rg_content);
-        for (Pair<Integer, String> pair : sq.a("property_text_style")) {
+        for (Pair<Integer, String> pair : SketchwareConstants.getPropertyPairs("property_text_style")) {
             RadioButton e = e(pair.second);
             radioGroup.addView(e);
             if (pair.second.equals(ss.getArgValue())) {
@@ -1780,7 +1780,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public void l(String str) {
-        jC.a(scId).o(M.getJavaName(), str);
+        ProjectDataManager.getProjectDataManager(scId).o(M.getJavaName(), str);
         a(1, 0xffcc5b22);
     }
 
@@ -1794,7 +1794,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public void m(String str) {
-        jC.a(scId).p(M.getJavaName(), str);
+        ProjectDataManager.getProjectDataManager(scId).p(M.getJavaName(), str);
         a(0, 0xffee7d16);
     }
 
@@ -1849,13 +1849,13 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 if (tag.equals("variableAdd")) {
                     showAddNewVariableDialog();
                 } else if (tag.equals("variableRemove")) {
-                    K();
+                    showRemoveVariableDialog();
                 } else if (tag.equals("openResourcesEditor")) {
                     openResourcesEditor();
                 } else if (tag.equals("listAdd")) {
-                    G();
+                    showAddListDialog();
                 } else if (tag.equals("listRemove")) {
-                    J();
+                    showRemoveListDialog();
                 } else if (tag.equals("blockAdd")) {
                     Intent intent = new Intent(this, MakeBlockActivity.class);
                     intent.putExtra("sc_id", scId);
@@ -1866,7 +1866,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     AddComponentBottomSheet addComponentBottomSheet = AddComponentBottomSheet.newInstance(scId, M, () -> a(7, 0xff2ca5e2));
                     addComponentBottomSheet.show(getSupportFragmentManager(), null);
                 } else if (tag.equals("blockImport")) {
-                    I();
+                    showMoreBlockImporter();
                 }
             }
             int id = v.getId();
@@ -1904,7 +1904,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 if (!p()) {
                     return;
                 }
-                L();
+                saveProject();
             }
         });
         openResourcesEditor = registerForActivityResult(
@@ -1934,6 +1934,10 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             id = savedInstanceState.getString("id");
             eventName = savedInstanceState.getString("event");
             parcelable = savedInstanceState.getParcelable("project_file");
+        }
+        if (parcelable == null) {
+            finish();
+            return;
         }
         isViewBindingEnabled = new ProjectSettings(scId).getValue(ProjectSettings.SETTING_ENABLE_VIEWBINDING, "false").equals("true");
         M = (ProjectFileBean) parcelable;
@@ -2001,7 +2005,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
         String title;
         if (eventName.equals("moreBlock")) {
-            title = getString(R.string.root_spec_common_define) + " " + ReturnMoreblockManager.getLogicEditorTitle(jC.a(scId).b(M.getJavaName(), id));
+            title = getString(R.string.root_spec_common_define) + " " + ReturnMoreblockManager.getLogicEditorTitle(ProjectDataManager.getProjectDataManager(scId).b(M.getJavaName(), id));
         } else if (id.equals("_fab")) {
             title = xB.b().a(getContext(), "fab", eventName);
         } else {
@@ -2053,10 +2057,10 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         bundle.putParcelable("project_file", M);
         super.onSaveInstanceState(bundle);
         ArrayList<BlockBean> blocks = o.getBlocks();
-        eC a2 = jC.a(scId);
+        eC a2 = ProjectDataManager.getProjectDataManager(scId);
         String javaName = M.getJavaName();
         a2.a(javaName, id + "_" + eventName, blocks);
-        jC.a(scId).k();
+        ProjectDataManager.getProjectDataManager(scId).k();
     }
 
     @Override
@@ -2213,7 +2217,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     int[] oLocationOnScreen = new int[2];
                     o.getLocationOnScreen(oLocationOnScreen);
                     bC.d(scId).b(s(), arrayList, ((int) s) - oLocationOnScreen[0], ((int) t) - oLocationOnScreen[1], blockBean2, blockBean3);
-                    C();
+                    refreshOptionsMenu();
                 }
             } else if (logicTopMenu.isFavoriteActive) {
                 d(false);
@@ -2304,7 +2308,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 int[] oLocationOnScreen = new int[2];
                 o.getLocationOnScreen(oLocationOnScreen);
                 bC.d(scId).a(s(), a3, width - oLocationOnScreen[0], a2 - oLocationOnScreen[1], null, null);
-                C();
+                refreshOptionsMenu();
             } else if (v instanceof Rs rs13) {
                 dummy.a(this.v);
                 if (rs13.getBlockType() == 1) {
@@ -2385,7 +2389,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     }
                     o.c();
                 }
-                C();
+                refreshOptionsMenu();
                 o.c();
             }
             dummy.setAllow(false);
@@ -2463,9 +2467,9 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public void showSourceCode() {
-        yq yq = new yq(this, scId);
-        yq.a(jC.c(scId), jC.b(scId), jC.a(scId));
-        String code = new Fx(M.getActivityName(), yq.N, o.getBlocks(), isViewBindingEnabled).a();
+        ProjectFilePaths ProjectFilePaths = new ProjectFilePaths(this, scId);
+        ProjectFilePaths.initializeMetadata(ProjectDataManager.getLibraryManager(scId), ProjectDataManager.getFileManager(scId), ProjectDataManager.getProjectDataManager(scId));
+        String code = new BlockInterpreter(M.getActivityName(), ProjectFilePaths.buildConfig, o.getBlocks(), isViewBindingEnabled).interpretBlocks();
         var intent = new Intent(this, CodeViewerActivity.class);
         intent.putExtra("code", code);
         intent.putExtra("sc_id", scId);
@@ -2500,7 +2504,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
     }
 
-    private static class ProjectSaver extends MA {
+    private static class ProjectSaver extends BaseAsyncTask {
         private final WeakReference<LogicEditorActivity> activity;
 
         public ProjectSaver(LogicEditorActivity logicEditorActivity) {
@@ -2530,7 +2534,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             var act = activity.get();
             if (act == null) return;
             publishProgress("Now saving..");
-            act.E();
+            act.saveBlocks();
         }
     }
 

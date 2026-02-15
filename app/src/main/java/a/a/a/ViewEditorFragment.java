@@ -15,6 +15,10 @@ import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.view.MenuHost;
+import androidx.core.view.MenuProvider;
+import androidx.lifecycle.Lifecycle;
 
 import com.besome.sketch.beans.HistoryViewBean;
 import com.besome.sketch.beans.ProjectFileBean;
@@ -34,7 +38,7 @@ import pro.sketchware.R;
 import pro.sketchware.utility.SketchwareUtil;
 import pro.sketchware.widgets.WidgetsCreatorManager;
 
-public class ViewEditorFragment extends qA {
+public class ViewEditorFragment extends BaseFragment implements MenuProvider {
 
     private ActivityResultLauncher<Intent> propertyLauncher;
     public ViewEditor viewEditor;
@@ -53,7 +57,8 @@ public class ViewEditorFragment extends qA {
     }
 
     private void initialize(ViewGroup viewGroup) {
-        setHasOptionsMenu(true);
+        MenuHost menuHost = requireActivity();
+        menuHost.addMenuProvider(this, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
         viewEditor = viewGroup.findViewById(R.id.view_editor);
         viewEditor.setScreenType(getResources().getConfiguration().orientation);
         widgetsCreatorManager = new WidgetsCreatorManager(this);
@@ -71,7 +76,7 @@ public class ViewEditorFragment extends qA {
             }
         });
         viewProperty.setOnPropertyValueChangedListener(viewBean -> {
-            a(viewBean.id);
+            refreshView(viewBean.id);
             viewProperty.e();
             invalidateOptionsMenu();
         });
@@ -87,31 +92,31 @@ public class ViewEditorFragment extends qA {
         viewEditor.setOnWidgetSelectedListener(new cy() {
             @Override
             public void a() {
-                n();
+                updatePropertyViews();
                 viewProperty.e();
             }
 
             @Override
             public void a(String viewId) {
-                n();
+                updatePropertyViews();
                 viewProperty.a(viewId);
             }
 
             @Override
             public void a(boolean var1, String viewId) {
                 if (!viewId.isEmpty()) {
-                    a();
+                    updatePropertyViews();
                     viewProperty.a(viewId);
                     viewProperty.e();
                 }
 
-                ViewEditorFragment.this.a(var1);
+                ViewEditorFragment.this.togglePropertyView(var1);
             }
         });
         viewEditor.setOnDraggingListener(new DraggingListener() {
             @Override
             public boolean isAdmobEnabled() {
-                return jC.c(sc_id).b().isEnabled();
+                return ProjectDataManager.getLibraryManager(sc_id).b().isEnabled();
             }
 
             @Override
@@ -122,7 +127,7 @@ public class ViewEditorFragment extends qA {
 
             @Override
             public boolean isGoogleMapEnabled() {
-                return jC.c(sc_id).e().isEnabled();
+                return ProjectDataManager.getLibraryManager(sc_id).e().isEnabled();
             }
 
             @Override
@@ -141,24 +146,24 @@ public class ViewEditorFragment extends qA {
         viewEditor.initialize(sc_id, projectFileBean);
         viewEditor.h();
         viewProperty.a(sc_id, this.projectFileBean);
-        e();
-        i();
+        setupPalette();
+        refreshAllViews();
         invalidateOptionsMenu();
     }
 
-    private void a(ViewBean viewBean) {
+    private void updateFab(ViewBean viewBean) {
         viewEditor.removeFab();
         if (isFabEnabled) viewEditor.addFab(viewBean);
     }
 
-    private void a(String viewId) {
+    private void refreshView(String viewId) {
         ViewBean viewBean;
         if (viewId.equals("_fab")) {
-            viewBean = jC.a(sc_id).h(projectFileBean.getXmlName());
+            viewBean = ProjectDataManager.getProjectDataManager(sc_id).h(projectFileBean.getXmlName());
         } else {
-            viewBean = jC.a(sc_id).c(projectFileBean.getXmlName(), viewId);
+            viewBean = ProjectDataManager.getProjectDataManager(sc_id).c(projectFileBean.getXmlName(), viewId);
         }
-        c(viewBean);
+        updateViewDisplay(viewBean);
         viewProperty.e();
     }
 
@@ -173,12 +178,12 @@ public class ViewEditorFragment extends qA {
         requireContext().startActivity(intent);
     }
 
-    public void a(ArrayList<ViewBean> viewBeans) {
+    public void loadViews(ArrayList<ViewBean> viewBeans) {
         viewEditor.h();
         viewEditor.a(eC.a(viewBeans));
     }
 
-    public void a(boolean var1) {
+    public void togglePropertyView(boolean var1) {
         startAnimation();
         if (!isPropertyViewVisible || !var1) {
             cancelAnimations();
@@ -201,9 +206,9 @@ public class ViewEditorFragment extends qA {
         propertyLauncher.launch(intent);
     }
 
-    private void b(ArrayList<ViewBean> viewBeans) {
-        l();
-        a(viewBeans);
+    private void clearAndLoadViews(ArrayList<ViewBean> viewBeans) {
+        clearViewEditor();
+        loadViews(viewBeans);
     }
 
     private void cancelAnimations() {
@@ -211,7 +216,7 @@ public class ViewEditorFragment extends qA {
         if (hidePropertyViewAnimator.isRunning()) hidePropertyViewAnimator.cancel();
     }
 
-    public void c(ViewBean var1) {
+    public void updateViewDisplay(ViewBean var1) {
         viewEditor.e(var1);
     }
 
@@ -219,11 +224,11 @@ public class ViewEditorFragment extends qA {
         viewProperty.setVisibility(shouldShow ? View.VISIBLE : View.GONE);
     }
 
-    public ProjectFileBean d() {
+    public ProjectFileBean getProjectFileBean() {
         return projectFileBean;
     }
 
-    public void e() {
+    public void setupPalette() {
         viewEditor.removeWidgetsAndLayouts();
         viewEditor.setPaletteLayoutVisible(View.VISIBLE);
         viewEditor.addWidgetLayout(PaletteWidget.a.a, "");
@@ -321,7 +326,7 @@ public class ViewEditorFragment extends qA {
                 int actionType = historyViewBean.getActionType();
                 if (actionType == HistoryViewBean.ACTION_TYPE_ADD) {
                     for (ViewBean viewBean : historyViewBean.getAddedData()) {
-                        jC.a(sc_id).a(projectFileBean.getXmlName(), viewBean);
+                        ProjectDataManager.getProjectDataManager(sc_id).a(projectFileBean.getXmlName(), viewBean);
                     }
                     viewEditor.a(viewEditor.a(historyViewBean.getAddedData(), false), false);
                 } else if (actionType == HistoryViewBean.ACTION_TYPE_UPDATE) {
@@ -332,41 +337,41 @@ public class ViewEditorFragment extends qA {
                     }
 
                     if (currentUpdateData.id.equals("_fab")) {
-                        jC.a(sc_id).h(projectFileBean.getXmlName()).copy(currentUpdateData);
+                        ProjectDataManager.getProjectDataManager(sc_id).h(projectFileBean.getXmlName()).copy(currentUpdateData);
                     } else {
-                        jC.a(sc_id).c(projectFileBean.getXmlName(), prevUpdateData.id).copy(currentUpdateData);
+                        ProjectDataManager.getProjectDataManager(sc_id).c(projectFileBean.getXmlName(), prevUpdateData.id).copy(currentUpdateData);
                     }
 
                     viewEditor.a(viewEditor.e(currentUpdateData), false);
                 } else if (actionType == HistoryViewBean.ACTION_TYPE_REMOVE) {
                     for (ViewBean viewBean : historyViewBean.getRemovedData()) {
-                        jC.a(sc_id).a(projectFileBean, viewBean);
+                        ProjectDataManager.getProjectDataManager(sc_id).a(projectFileBean, viewBean);
                     }
                     viewEditor.b(historyViewBean.getRemovedData(), false);
                     viewEditor.i();
                 } else if (actionType == HistoryViewBean.ACTION_TYPE_MOVE) {
                     ViewBean movedData = historyViewBean.getMovedData();
-                    ViewBean viewBean = jC.a(sc_id).c(projectFileBean.getXmlName(), movedData.id);
+                    ViewBean viewBean = ProjectDataManager.getProjectDataManager(sc_id).c(projectFileBean.getXmlName(), movedData.id);
                     viewBean.copy(movedData);
                     viewEditor.a(viewEditor.b(viewBean, false), false);
                 } else if (actionType == HistoryViewBean.ACTION_TYPE_OVERRIDE) {
-                    jC.a(sc_id).c.put(projectFileBean.getXmlName(), historyViewBean.getAddedData());
-                    i();
+                    ProjectDataManager.getProjectDataManager(sc_id).c.put(projectFileBean.getXmlName(), historyViewBean.getAddedData());
+                    refreshAllViews();
                 }
             }
             invalidateOptionsMenu();
         }
     }
 
-    public void i() {
+    public void refreshAllViews() {
         invalidateOptionsMenu();
         if (projectFileBean != null) {
-            b(jC.a(sc_id).d(projectFileBean.getXmlName()));
-            a(jC.a(sc_id).h(projectFileBean.getXmlName()));
+            clearAndLoadViews(ProjectDataManager.getProjectDataManager(sc_id).d(projectFileBean.getXmlName()));
+            updateFab(ProjectDataManager.getProjectDataManager(sc_id).h(projectFileBean.getXmlName()));
         }
     }
 
-    public void j() {
+    public void refreshFavorites() {
         viewEditor.setFavoriteData(Rp.h().f());
     }
 
@@ -376,7 +381,7 @@ public class ViewEditorFragment extends qA {
         }
     }
 
-    public void l() {
+    public void clearViewEditor() {
         viewEditor.j();
     }
 
@@ -387,7 +392,7 @@ public class ViewEditorFragment extends qA {
                 int actionType = historyViewBean.getActionType();
                 if (actionType == HistoryViewBean.ACTION_TYPE_ADD) {
                     for (ViewBean view : historyViewBean.getAddedData()) {
-                        jC.a(sc_id).a(projectFileBean, view);
+                        ProjectDataManager.getProjectDataManager(sc_id).a(projectFileBean, view);
                     }
                     viewEditor.b(historyViewBean.getAddedData(), false);
                     viewEditor.i();
@@ -398,19 +403,19 @@ public class ViewEditorFragment extends qA {
                         prevUpdateData.preId = currentUpdateData.id;
                     }
                     if (currentUpdateData.id.equals("_fab")) {
-                        jC.a(sc_id).h(projectFileBean.getXmlName()).copy(prevUpdateData);
+                        ProjectDataManager.getProjectDataManager(sc_id).h(projectFileBean.getXmlName()).copy(prevUpdateData);
                     } else {
-                        jC.a(sc_id).c(projectFileBean.getXmlName(), currentUpdateData.id).copy(prevUpdateData);
+                        ProjectDataManager.getProjectDataManager(sc_id).c(projectFileBean.getXmlName(), currentUpdateData.id).copy(prevUpdateData);
                     }
                     viewEditor.a(viewEditor.e(prevUpdateData), false);
                 } else if (actionType == HistoryViewBean.ACTION_TYPE_REMOVE) {
                     for (ViewBean view : historyViewBean.getRemovedData()) {
-                        jC.a(sc_id).a(projectFileBean.getXmlName(), view);
+                        ProjectDataManager.getProjectDataManager(sc_id).a(projectFileBean.getXmlName(), view);
                     }
                     viewEditor.a(viewEditor.a(historyViewBean.getRemovedData(), false), false);
                 } else if (actionType == HistoryViewBean.ACTION_TYPE_MOVE) {
                     ViewBean movedData = historyViewBean.getMovedData();
-                    ViewBean viewBean = jC.a(sc_id).c(projectFileBean.getXmlName(), movedData.id);
+                    ViewBean viewBean = ProjectDataManager.getProjectDataManager(sc_id).c(projectFileBean.getXmlName(), movedData.id);
                     viewBean.preIndex = movedData.index;
                     viewBean.index = movedData.preIndex;
                     viewBean.parent = movedData.preParent;
@@ -419,19 +424,19 @@ public class ViewEditorFragment extends qA {
                     viewBean.preParentType = movedData.parentType;
                     viewEditor.a(viewEditor.b(viewBean, false), false);
                 } else if (actionType == HistoryViewBean.ACTION_TYPE_OVERRIDE) {
-                    jC.a(sc_id).c.put(projectFileBean.getXmlName(), historyViewBean.getRemovedData());
-                    i();
+                    ProjectDataManager.getProjectDataManager(sc_id).c.put(projectFileBean.getXmlName(), historyViewBean.getRemovedData());
+                    refreshAllViews();
                 }
             }
             invalidateOptionsMenu();
         }
     }
 
-    public void n() {
-        ArrayList<ViewBean> viewBeanArrayList = eC.a(jC.a(sc_id).d(projectFileBean.getXmlName()));
+    public void updatePropertyViews() {
+        ArrayList<ViewBean> viewBeanArrayList = eC.a(ProjectDataManager.getProjectDataManager(sc_id).d(projectFileBean.getXmlName()));
         ViewBean viewBean;
         if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB)) {
-            viewBean = jC.a(sc_id).h(projectFileBean.getXmlName());
+            viewBean = ProjectDataManager.getProjectDataManager(sc_id).h(projectFileBean.getXmlName());
         } else {
             viewBean = null;
         }
@@ -439,8 +444,32 @@ public class ViewEditorFragment extends qA {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+        menuInflater.inflate(R.menu.design_view_menu, menu);
+        menu.findItem(R.id.menu_view_redo).setEnabled(false);
+        menu.findItem(R.id.menu_view_undo).setEnabled(false);
+        if (projectFileBean != null) {
+            menu.findItem(R.id.menu_view_redo).setEnabled(cC.c(sc_id).f(projectFileBean.getXmlName()));
+            menu.findItem(R.id.menu_view_undo).setEnabled(cC.c(sc_id).g(projectFileBean.getXmlName()));
+        }
+    }
+
+    @Override
+    public boolean onMenuItemSelected(@NonNull MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.menu_view_redo) {
+            onRedo();
+            return true;
+        } else if (itemId == R.id.menu_view_undo) {
+            onUndo();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         invalidateOptionsMenu();
     }
 
@@ -462,31 +491,19 @@ public class ViewEditorFragment extends qA {
         propertyLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     if (result.getResultCode() == -1 && result.getData() != null) {
-                        c(result.getData().getParcelableExtra("bean"));
+                        updateViewDisplay(result.getData().getParcelableExtra("bean"));
                     }
                     Intent data = result.getData();
                     if (data != null && data.getBooleanExtra("is_edit_image", false)) {
-                        for (ViewBean viewBean : jC.a(sc_id).d(projectFileBean.getXmlName())) {
-                            c(viewBean);
+                        for (ViewBean viewBean : ProjectDataManager.getProjectDataManager(sc_id).d(projectFileBean.getXmlName())) {
+                            updateViewDisplay(viewBean);
                         }
                         if (isFabEnabled) {
-                            c(jC.a(sc_id).h(projectFileBean.getXmlName()));
+                            updateViewDisplay(ProjectDataManager.getProjectDataManager(sc_id).h(projectFileBean.getXmlName()));
                         }
                     }
                     invalidateOptionsMenu();
                 });
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-        super.onCreateOptionsMenu(menu, menuInflater);
-        menuInflater.inflate(R.menu.design_view_menu, menu);
-        menu.findItem(R.id.menu_view_redo).setEnabled(false);
-        menu.findItem(R.id.menu_view_undo).setEnabled(false);
-        if (projectFileBean != null) {
-            menu.findItem(R.id.menu_view_redo).setEnabled(cC.c(sc_id).f(projectFileBean.getXmlName()));
-            menu.findItem(R.id.menu_view_undo).setEnabled(cC.c(sc_id).g(projectFileBean.getXmlName()));
-        }
     }
 
     @Override
@@ -500,17 +517,6 @@ public class ViewEditorFragment extends qA {
         }
 
         return viewGroup;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
-        if (itemId == R.id.menu_view_redo) {
-            onRedo();
-        } else if (itemId == R.id.menu_view_undo) {
-            onUndo();
-        }
-        return true;
     }
 
     @Override

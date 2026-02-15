@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,15 +24,15 @@ import java.util.ArrayList;
 
 import a.a.a.Np;
 import a.a.a.oB;
-import a.a.a.qA;
-import a.a.a.wq;
+import a.a.a.BaseFragment;
+import a.a.a.SketchwarePaths;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.FrManageFontListBinding;
 import pro.sketchware.databinding.ManageFontBinding;
 import pro.sketchware.databinding.ManageFontListItemBinding;
 
-public class FontManagerFragment extends qA {
+public class FontManagerFragment extends BaseFragment {
 
     private ActivityResultLauncher<Intent> importFontLauncher;
     public String sc_id;
@@ -104,7 +105,7 @@ public class FontManagerFragment extends qA {
 
         for (ProjectResourceBean resource : projectResourceBeans) {
             if (resource.isSelected) {
-                String path = wq.a() +
+                String path = SketchwarePaths.getCollectionPath() +
                         File.separator +
                         "font" +
                         File.separator +
@@ -128,23 +129,28 @@ public class FontManagerFragment extends qA {
     }
 
     @Override
-    public void onActivityCreated(Bundle bundle) {
-        super.onActivityCreated(bundle);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         importFontLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                         processProjectResources(result.getData().getParcelableArrayListExtra("results"));
                     }
                 });
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         new oB().f(dirPath);
 
-        if (bundle == null) {
+        if (savedInstanceState == null) {
             sc_id = requireActivity().getIntent().getStringExtra("sc_id");
             dirPath = requireActivity().getIntent().getStringExtra("dir_path");
         } else {
-            sc_id = bundle.getString("sc_id");
-            dirPath = bundle.getString("dir_path");
+            sc_id = savedInstanceState.getString("sc_id");
+            dirPath = savedInstanceState.getString("dir_path");
         }
 
         loadProjectResources();
@@ -154,8 +160,6 @@ public class FontManagerFragment extends qA {
     public View onCreateView(@NonNull LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
         binding = FrManageFontListBinding.inflate(layoutInflater, viewGroup, false);
         actBinding = ((ManageFontActivity) requireActivity()).binding;
-
-        setHasOptionsMenu(true);
 
         binding.fontList.setLayoutManager(new LinearLayoutManager(requireActivity()));
         adapter = new fontAdapter();
@@ -191,7 +195,7 @@ public class FontManagerFragment extends qA {
         public void onBindViewHolder(fontHolder holder, int position) {
             ProjectResourceBean resource = projectResourceBeans.get(position);
 
-            String fontPath = wq.a() + File.separator + "font" + File.separator + "data" + File.separator + resource.resFullName;
+            String fontPath = SketchwarePaths.getCollectionPath() + File.separator + "font" + File.separator + "data" + File.separator + resource.resFullName;
 
             holder.binding.chkSelect.setVisibility(View.VISIBLE);
             holder.binding.chkSelect.setChecked(resource.isSelected);
