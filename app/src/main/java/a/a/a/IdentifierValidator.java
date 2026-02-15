@@ -1,0 +1,95 @@
+package a.a.a;
+
+import android.content.Context;
+
+import com.google.android.material.textfield.TextInputLayout;
+
+import java.util.ArrayList;
+import java.util.regex.Pattern;
+
+import pro.sketchware.R;
+
+public class IdentifierValidator extends MB {
+
+    private static final Pattern validNamePattern = Pattern.compile("^[a-zA-Z][a-zA-Z0-9_]*");
+    private final String[] restrictedNames;
+    private final ArrayList<String> excludedNames;
+    private String[] reservedNames;
+    private String lastValidName;
+
+    public IdentifierValidator(Context context, TextInputLayout textInputLayout, String[] newReservedNames, String[] strArr2, ArrayList<String> arrayList) {
+        super(context, textInputLayout);
+        restrictedNames = newReservedNames;
+        reservedNames = strArr2;
+        excludedNames = arrayList;
+    }
+
+    public void setReservedNames(String[] newReservedNames) {
+        reservedNames = newReservedNames;
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        if (s.toString().trim().isEmpty()) {
+            b.setErrorEnabled(true);
+            b.setError(a.getString(R.string.invalid_value_min_lenth, 1));
+            d = false;
+            return;
+        }
+        if (s.toString().trim().length() > 100) {
+            b.setErrorEnabled(true);
+            b.setError(a.getString(R.string.invalid_value_max_lenth, 100));
+            d = false;
+            return;
+        }
+        String previousValidName = lastValidName;
+        if (previousValidName != null && !previousValidName.isEmpty() && s.toString().equals(lastValidName)) {
+            b.setError(null);
+            b.setErrorEnabled(false);
+            d = true;
+            return;
+        }
+        if (excludedNames.contains(s.toString())) {
+            b.setErrorEnabled(true);
+            b.setError(a.getString(R.string.common_message_name_unavailable));
+            d = false;
+            return;
+        }
+        for (String reservedName : reservedNames) {
+            if (s.toString().equals(reservedName)) {
+                b.setErrorEnabled(true);
+                b.setError(a.getString(R.string.common_message_name_unavailable));
+                d = false;
+                return;
+            }
+        }
+        for (String restrictedName : restrictedNames) {
+            if (s.toString().equals(restrictedName)) {
+                b.setErrorEnabled(true);
+                b.setError(a.getString(R.string.logic_editor_message_reserved_keywords));
+                d = false;
+                return;
+            }
+        }
+        if (!Character.isLetter(s.charAt(0))) {
+            b.setErrorEnabled(true);
+            b.setError(a.getString(R.string.logic_editor_message_variable_name_must_start_letter));
+            d = false;
+            return;
+        }
+        if (validNamePattern.matcher(s.toString()).matches()) {
+            b.setError(null);
+            b.setErrorEnabled(false);
+            d = true;
+        } else {
+            b.setErrorEnabled(true);
+            b.setError(a.getString(R.string.invalid_value_rule_3));
+            d = false;
+        }
+        if (s.toString().trim().isEmpty()) {
+            b.setErrorEnabled(true);
+            b.setError(a.getString(R.string.invalid_value_min_lenth, 1));
+            d = false;
+        }
+    }
+}
