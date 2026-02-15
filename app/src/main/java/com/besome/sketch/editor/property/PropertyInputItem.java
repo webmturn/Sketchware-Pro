@@ -50,14 +50,14 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import a.a.a.Jx;
+import a.a.a.ActivityCodeGenerator;
 import a.a.a.Kw;
 import a.a.a.OB;
-import a.a.a.SB;
+import a.a.a.LengthRangeValidator;
 import a.a.a.jC;
-import a.a.a.lC;
+import a.a.a.ProjectListManager;
 import a.a.a.mB;
-import a.a.a.uq;
+import a.a.a.BlockConstants;
 import a.a.a.wB;
 import a.a.a.yB;
 import mod.hey.studios.util.Helper;
@@ -478,7 +478,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
         binding.tiInput.setHint(String.format(Helper.getResString(R.string.property_enter_value), "widget ID"));
 
         binding.edInput.setSingleLine();
-        PropertyNameValidator validator = new PropertyNameValidator(context, binding.tiInput, uq.b, uq.a(), jC.a(sc_id).a(projectFileBean), value);
+        PropertyNameValidator validator = new PropertyNameValidator(context, binding.tiInput, BlockConstants.b, BlockConstants.a(), jC.a(sc_id).a(projectFileBean), value);
         validator.a(value);
         dialog.setView(binding.getRoot());
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_save), (v, which) -> {
@@ -506,17 +506,17 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
 
         binding.tiInput.setHint(String.format(Helper.getResString(R.string.property_enter_value), Helper.getText(tvName)));
 
-        SB lengthValidator;
+        LengthRangeValidator lengthValidator;
 
         if (isInject) {
-            lengthValidator = new SB(context, binding.tiInput, 0, maxValue);
+            lengthValidator = new LengthRangeValidator(context, binding.tiInput, 0, maxValue);
             binding.tiAutoCompleteInput.setVisibility(View.GONE);
             SyntaxScheme.setXMLHighlighter(binding.edInput);
         } else {
             loadStringsListMap();
             setupTextWatcher(binding.tiAutoCompleteInput, binding.edTiAutoCompleteInput);
 
-            lengthValidator = new SB(context, binding.tiAutoCompleteInput, 0, maxValue);
+            lengthValidator = new LengthRangeValidator(context, binding.tiAutoCompleteInput, 0, maxValue);
             binding.tiAutoCompleteInput.setVisibility(View.VISIBLE);
             binding.tiInput.setVisibility(View.GONE);
 
@@ -570,7 +570,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
         });
     }
 
-    private void handleSave(SB lengthValidator, EditText input,
+    private void handleSave(LengthRangeValidator lengthValidator, EditText input,
                             MaterialAutoCompleteTextView autoCompleteTextView, TextInputLayout textAutoCompleteInput,
                             boolean isInject, DialogInterface dialog) {
         if (lengthValidator.b() && textAutoCompleteInput.getError() == null) {
@@ -607,7 +607,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
                 filePath != null) {
             HashMap<String, Object> map = new HashMap<>();
             map.put("key", "app_name");
-            map.put("text", yB.c(lC.b(sc_id), "my_app_name"));
+            map.put("text", yB.c(ProjectListManager.getProjectById(sc_id), "my_app_name"));
             stringsListMap.add(0, map);
         }
     }
@@ -676,7 +676,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
         input.setAdapter(adapter);
         binding.tiInput.setVisibility(View.GONE);
         binding.tiAutoCompleteInput.setVisibility(View.VISIBLE);
-        SB lengthValidator = new SB(context, binding.tiInput, 0, 99);
+        LengthRangeValidator lengthValidator = new LengthRangeValidator(context, binding.tiInput, 0, 99);
         lengthValidator.a(value);
         dialog.setView(binding.getRoot());
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_save), (v, which) -> {
@@ -867,7 +867,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
     }
 
     private String getSimpleName(ViewBean bean) {
-        return Jx.WIDGET_NAME_PATTERN.matcher(bean.convert).replaceAll("");
+        return ActivityCodeGenerator.WIDGET_NAME_PATTERN.matcher(bean.convert).replaceAll("");
     }
 
     private void showInjectDialog() {

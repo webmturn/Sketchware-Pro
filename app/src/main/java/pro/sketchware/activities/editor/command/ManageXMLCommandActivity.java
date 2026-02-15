@@ -30,12 +30,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.concurrent.Executors;
 
-import a.a.a.Jx;
+import a.a.a.ActivityCodeGenerator;
 import a.a.a.hC;
-import a.a.a.jC;
+import a.a.a.ProjectDataManager;
 import a.a.a.mB;
-import a.a.a.wq;
-import a.a.a.yq;
+import a.a.a.SketchwarePaths;
+import a.a.a.ProjectFilePaths;
 import io.github.rosemoe.sora.widget.CodeEditor;
 import io.github.rosemoe.sora.widget.component.Magnifier;
 import mod.hey.studios.project.ProjectSettings;
@@ -65,20 +65,20 @@ public class ManageXMLCommandActivity extends BaseAppCompatActivity {
     private ArrayList<String> xmlFiles;
 
     public static void fetchXMLCommand(Context context, String sc_id) {
-        var path = wq.b(sc_id) + "/command";
+        var path = SketchwarePaths.getDataPath(sc_id) + "/command";
         if (FileUtil.isExistFile(path)) {
             return;
         }
-        var yq = new yq(context, sc_id);
-        var projectLibraryManager = jC.c(sc_id);
-        var projectFileManager = jC.b(sc_id);
-        var projectDataManager = jC.a(sc_id);
-        yq.a(projectLibraryManager, projectFileManager, projectDataManager);
+        var ProjectFilePaths = new ProjectFilePaths(context, sc_id);
+        var projectLibraryManager = ProjectDataManager.getLibraryManager(sc_id);
+        var projectFileManager = ProjectDataManager.getFileManager(sc_id);
+        var projectDataManager = ProjectDataManager.getProjectDataManager(sc_id);
+        ProjectFilePaths.initializeMetadata(projectLibraryManager, projectFileManager, projectDataManager);
         CommandBlock.x();
         ArrayList<ProjectFileBean> files = new ArrayList<>(projectFileManager.b());
         files.addAll(new ArrayList<>(projectFileManager.c()));
         for (ProjectFileBean file : files) {
-            CommandBlock.CBForXml(new Jx(yq.N, file, projectDataManager).generateCode(false, sc_id));
+            CommandBlock.CBForXml(new ActivityCodeGenerator(ProjectFilePaths.buildConfig, file, projectDataManager).generateCode(false, sc_id));
         }
         String commandPath = FileUtil.getExternalStorageDir().concat("/.sketchware/temp/commands");
         if (FileUtil.isExistFile(commandPath)) {
@@ -111,8 +111,8 @@ public class ManageXMLCommandActivity extends BaseAppCompatActivity {
         } else {
             sc_id = savedInstanceState.getString("sc_id");
         }
-        commandPath = wq.b(sc_id) + "/command";
-        hC projectFile = jC.b(sc_id);
+        commandPath = SketchwarePaths.getDataPath(sc_id) + "/command";
+        hC projectFile = ProjectDataManager.getFileManager(sc_id);
         xmlFiles = new ArrayList<>(projectFile.e());
         xmlFiles.addAll(
                 Arrays.asList("strings.xml", "colors.xml", "styles.xml", "AndroidManifest.xml"));
@@ -299,7 +299,7 @@ public class ManageXMLCommandActivity extends BaseAppCompatActivity {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle("Confirmation");
         dialog.setMessage(
-                "Would you like to enable the new XML Command? It will speed up XML generation and compilation, but this change cannot be undone. Don’t worry, your previous changes with the XML Command Block will transfered here so it will remain unaffected.");
+                "Would you like to enable the new XML Command? It will speed up XML generation and compilation, but this change cannot be undone. Don闂備胶鍋ㄩ崕鏌ユ偘?worry, your previous changes with the XML Command Block will transfered here so it will remain unaffected.");
         dialog.setPositiveButton(
                 R.string.common_word_yes,
                 (d, w) -> {
@@ -319,12 +319,12 @@ public class ManageXMLCommandActivity extends BaseAppCompatActivity {
                 .execute(
                         () -> {
                             String source =
-                                    new yq(getApplicationContext(), sc_id)
+                                    new ProjectFilePaths(getApplicationContext(), sc_id)
                                             .getFileSrc(
                                                     filename,
-                                                    jC.b(sc_id),
-                                                    jC.a(sc_id),
-                                                    jC.c(sc_id));
+                                                    ProjectDataManager.getFileManager(sc_id),
+                                                    ProjectDataManager.getProjectDataManager(sc_id),
+                                                    ProjectDataManager.getLibraryManager(sc_id));
 
                             var dialogBuilder =
                                     new MaterialAlertDialogBuilder(this)

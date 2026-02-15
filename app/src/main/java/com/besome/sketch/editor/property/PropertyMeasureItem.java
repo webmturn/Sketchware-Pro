@@ -12,7 +12,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import a.a.a.Kw;
 import a.a.a.mB;
-import a.a.a.sq;
+import a.a.a.SketchwareConstants;
 import a.a.a.wB;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
@@ -73,11 +73,11 @@ public class PropertyMeasureItem extends RelativeLayout implements View.OnClickL
     public void setValue(int value) {
         measureValue = value;
         if (!isWrapContent && value == LayoutParams.WRAP_CONTENT) {
-            tvValue.setText(sq.a(key, LayoutParams.MATCH_PARENT));
+            tvValue.setText(SketchwareConstants.getPropertyValueString(key, LayoutParams.MATCH_PARENT));
         } else if (isCustomValue || value < 0) {
-            tvValue.setText(sq.a(key, value));
+            tvValue.setText(SketchwareConstants.getPropertyValueString(key, value));
         } else {
-            tvValue.setText(sq.a(key, LayoutParams.WRAP_CONTENT));
+            tvValue.setText(SketchwareConstants.getPropertyValueString(key, LayoutParams.WRAP_CONTENT));
         }
     }
 

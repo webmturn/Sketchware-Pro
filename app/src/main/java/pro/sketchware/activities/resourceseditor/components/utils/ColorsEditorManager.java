@@ -27,8 +27,8 @@ import java.util.Set;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import a.a.a.lC;
-import a.a.a.wq;
+import a.a.a.ProjectListManager;
+import a.a.a.SketchwarePaths;
 import a.a.a.yB;
 import pro.sketchware.R;
 import pro.sketchware.SketchApplication;
@@ -58,8 +58,8 @@ public class ColorsEditorManager {
     }
 
     public void initialize() {
-        String filePath = wq.b(sc_id) + "/files/resource/values/colors.xml";
-        String filePathNight = wq.b(sc_id) + "/files/resource/values-night/colors.xml";
+        String filePath = SketchwarePaths.getDataPath(sc_id) + "/files/resource/values/colors.xml";
+        String filePathNight = SketchwarePaths.getDataPath(sc_id) + "/files/resource/values-night/colors.xml";
         parseColorsXML(resColorsList, FileUtil.readFileIfExist(filePath));
         parseColorsXML(resColorsNightList, FileUtil.readFileIfExist(filePathNight));
     }
@@ -198,7 +198,7 @@ public class ColorsEditorManager {
             }
 
             if (isDefaultVariant && defaultColors != null && sc_id != null) {
-                HashMap<String, Object> metadata = lC.b(sc_id);
+                HashMap<String, Object> metadata = ProjectListManager.getProjectById(sc_id);
                 Set<String> missingKeys = new HashSet<>(defaultColors.keySet());
                 foundPrimaryColors.forEach(missingKeys::remove);
 
@@ -224,7 +224,7 @@ public class ColorsEditorManager {
 
             // Save the updated XML if changes are detected
             if (hasChanges) {
-                XmlUtil.saveXml(wq.b(sc_id) + "/files/resource/values/colors.xml", convertListToXml(colorList, notesMap));
+                XmlUtil.saveXml(SketchwarePaths.getDataPath(sc_id) + "/files/resource/values/colors.xml", convertListToXml(colorList, notesMap));
             }
 
         } catch (Exception e) {

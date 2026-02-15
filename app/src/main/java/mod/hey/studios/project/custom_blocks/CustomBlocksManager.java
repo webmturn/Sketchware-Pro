@@ -17,8 +17,8 @@ import java.util.Optional;
 
 import a.a.a.eC;
 import a.a.a.hC;
-import a.a.a.jC;
-import a.a.a.kq;
+import a.a.a.ProjectDataManager;
+import a.a.a.BlockColorMapper;
 import dev.aldi.sayuti.block.ExtraBlockFile;
 import mod.hey.studios.editor.manage.block.ExtraBlockInfo;
 import mod.hey.studios.editor.manage.block.v2.BlockLoader;
@@ -84,8 +84,8 @@ public class CustomBlocksManager {
 
         ArrayList<String> usedBlocks = new ArrayList<>();
 
-        hC hc = jC.b(sc_id);
-        eC ec = jC.a(sc_id);
+        hC hc = ProjectDataManager.getFileManager(sc_id);
+        eC ec = ProjectDataManager.getProjectDataManager(sc_id);
 
         for (ProjectFileBean bean : hc.b()) {
             for (Map.Entry<String, ArrayList<BlockBean>> entry : ec.b(bean.getJavaName()).entrySet()) {
@@ -93,7 +93,7 @@ public class CustomBlocksManager {
                     if (!(block.opCode.equals("definedFunc")
                             || block.opCode.equals("getVar")
                             || block.opCode.equals("getArg"))) {
-                        if (kq.a(context, block.opCode, block.type) == 0xff8a55d7) {
+                        if (BlockColorMapper.a(context, block.opCode, block.type) == 0xff8a55d7) {
                             if (!usedBlocks.contains(block.opCode)) {
                                 usedBlocks.add(block.opCode);
 
@@ -172,10 +172,10 @@ import java.util.ArrayList;
 import com.besome.sketch.beans.ProjectFileBean;
 import java.util.Map;
 import com.besome.sketch.beans.BlockBean;
-import a.a.a.kq;
+import a.a.a.BlockColorMapper;
 import a.a.a.hC;
 import a.a.a.eC;
-import a.a.a.jC;
+import a.a.a.ProjectDataManager;
 import mod.hey.studios.editor.manage.block.v2.BlockLoader;
 import mod.hey.studios.editor.manage.block.ExtraBlockInfo;
 import pro.sketchware.utility.FileUtil;
@@ -203,8 +203,8 @@ public class CustomBlocksManager {
 
         ArrayList<String> usedBlocks = new ArrayList<>();
 
-        hC hc = jC.b(sc_id);
-        eC ec = jC.a(sc_id);
+        hC hc = ProjectDataManager.getFileManager(sc_id);
+        eC ec = ProjectDataManager.getProjectDataManager(sc_id);
 
         for (ProjectFileBean bean : hc.b())
         {
@@ -217,7 +217,7 @@ public class CustomBlocksManager {
 
                     if (!(block.opCode.equals("definedFunc") || block.opCode.equals("getVar") || block.opCode.equals("getArg")))
                     {
-                        if (kq.a(block.opCode, block.type) == -7711273)
+                        if (BlockColorMapper.a(block.opCode, block.type) == -7711273)
                         {
                             if (!usedBlocks.contains(block.opCode))
                             {

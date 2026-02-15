@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import a.a.a.Lx;
+import a.a.a.ComponentCodeGenerator;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.OldResourceIdMapper;
 import pro.sketchware.R;
@@ -27,11 +27,11 @@ import pro.sketchware.SketchApplication;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.SketchwareUtil;
 //responsible code :
-//ComponentBean == sketchware / beans √
-//Manage components == agus /component √
-//Manage events components == agus/editor/event √
-//TypeVarComponent == agus / lib √
-//TypeClassComponent == agus/lib √
+//ComponentBean == sketchware / beans 闂?
+//Manage components == agus /component 闂?
+//Manage events components == agus/editor/event 闂?
+//TypeVarComponent == agus / lib 闂?
+//TypeClassComponent == agus/lib 闂?
 //importClass== dev.aldi.sayuti.editor.manage
 
 public class ComponentsHandler {
@@ -47,7 +47,7 @@ public class ComponentsHandler {
     /**
      * Called at {@link ComponentBean#getComponentTypeByTypeName(String)}.
      */
-    //√ give typeName and return id
+    //闂?give typeName and return id
     public static int id(String name) {
         if (name.equals("AsyncTask")) {
             return 36;
@@ -87,7 +87,7 @@ public class ComponentsHandler {
     /**
      * Called at {@link ComponentBean#getComponentTypeName(int)}.
      */
-    // √ give id and return typeName
+    // 闂?give id and return typeName
     public static String typeName(int id) {
         if (id == 36) {
             return "AsyncTask";
@@ -129,7 +129,7 @@ public class ComponentsHandler {
     /**
      * Called at {@link ComponentBean#getComponentName(Context, int)}.
      */
-    //√ give id and return name
+    //闂?give id and return name
     public static String name(int id) {
         if (id == 36) {
             return "AsyncTask";
@@ -170,7 +170,7 @@ public class ComponentsHandler {
     /**
      * Called at {@link ComponentBean#getIconResource(int)}.
      */
-    //√ give id and return icon
+    //闂?give id and return icon
     public static int icon(int id) {
         if (id == 36) {
             return R.drawable.ic_cycle_color_48dp;
@@ -267,7 +267,7 @@ public class ComponentsHandler {
     /**
      * Called at {@link ComponentBean#getComponentDocsUrlByTypeName(int)}.
      */
-    // √give id and return docs url
+    // 闂傚倷鐒﹂崜姘跺储娴犲鏁嗘慨婵撶e id and return docs url
     public static String docs(int id) {
         if (id != 36) {
             for (int i = 0; i < cachedCustomComponents.size(); i++) {
@@ -344,13 +344,13 @@ public class ComponentsHandler {
         return "";
     }
 
-    // mod •••••••••••••••••••••••••••••••
+    // mod 闂傚倷鑳堕崑銊╁磿椤曗偓楠炲﹪宕堕鈧悞鍨亜閹达絽袚闁革絼鍗抽弻宥堫檨闁稿繑锕㈤獮濠囧炊椤掆偓閻掑灚銇勯幋锝呅撻柛锝勫嵆閺屽秷顧侀柛蹇旓耿楠炲﹪宕堕鈧悞鍨亜閹达絽袚闁革絼鍗抽弻宥堫檨闁稿繑锕㈤獮濠囧炊椤掆偓閻掑灚銇勯幋锝呅撻柛锝勫嵆閺屽秷顧侀柛蹇旓耿楠炲﹪宕堕鈧悞鍨亜閹达絽袚闁革絼鍗抽弻宥堫檨闁稿繑锕㈤獮濠囧炊椤掆偓閻掑灚銇勯幋锝呅撻柛锝勫嵆閺屽秷顧侀柛蹇旓耿楠炲﹪宕堕鈧悞鍨亜閹达絽袚闁革絼鍗抽弻宥堫檨闁稿繑锕㈤獮濠囧炊椤掆偓閻掑灚銇勯幋锝呅撻柛锝勫嵆閺屽秷顧侀柛蹇旓耿楠炲﹪宕堕鈧悞鍨亜閹达絽袚闁革絼鍗抽弻宥堫檨闁稿繑锕㈤獮濠囧炊椤掆偓閻掑灚銇勯幋锝呅撻柛锝勫嵆閺屽秷顧侀柛蹇旓耿楠炲﹪宕堕鈧悞鍨亜閹达絽袚闁革絼鍗抽弻宥堫檨闁稿繑锕㈤獮濠囧炊椤掆偓閻掑灚銇勯幋锝呅撻柛锝勫嵆閺屽秷顧侀柛蹇旓耿楠炲﹪宕堕鈧悞鍨亜閹达絽袚闁革絼鍗抽弻宥堫檨闁稿繑锕㈤獮濠囧炊椤掆偓閻掑灚銇勯幋锝呅撻柛锝勫嵆閺屽秷顧侀柛蹇旓耿楠炲﹪宕堕鈧悞鍨亜閹达絽袚闁革絼鍗抽弻?
 
     /**
      * Adds Custom Components to available Components section.
      * Used at {@link com.besome.sketch.editor.component.AddComponentBottomSheet#onCreate(Bundle)}.
      */
-    // √ add components to sk
+    // 闂?add components to sk
     //structure : list.add(new ComponentBean(27));
     public static void add(ArrayList<ComponentBean> list) {
         list.add(new ComponentBean(36));
@@ -451,7 +451,7 @@ public class ComponentsHandler {
     }
 
     /**
-     * Used at {@link Lx#a(String, String, Lx.AccessModifier, String...)}
+     * Used at {@link Lx#a(String, String, ComponentCodeGenerator.AccessModifier, String...)}
      * to get Custom Components' fields.
      */
     public static String extraVar(String name, String code, String varName) {
@@ -486,7 +486,7 @@ public class ComponentsHandler {
         return code;
     }
 
-    //√√
+    //闂傚倷鐒﹂崜姘跺储娴犲鏄ラ柛鎰靛枛閸?
     public static String defineExtraVar(String name, String varName) {
         for (int i = 0; i < cachedCustomComponents.size(); i++) {
             HashMap<String, Object> component = cachedCustomComponents.get(i);

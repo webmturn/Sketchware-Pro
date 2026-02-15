@@ -13,7 +13,7 @@ import com.besome.sketch.lib.ui.PropertyTwoLineItem;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import a.a.a.GB;
-import a.a.a.bB;
+import a.a.a.SketchToast;
 import a.a.a.mB;
 import a.a.a.wB;
 import mod.hey.studios.util.Helper;
@@ -108,7 +108,7 @@ public class ProgramInfoActivity extends BaseAppCompatActivity {
                     case ITEM_SYSTEM_INFORMATION -> toSystemInfoActivity();
                     case ITEM_OPEN_SOURCE_LICENSES -> {
                         if (!GB.h(getApplicationContext())) {
-                            bB.a(getApplicationContext(), Helper.getResString(R.string.common_message_check_network), bB.TOAST_NORMAL).show();
+                            SketchToast.toast(getApplicationContext(), Helper.getResString(R.string.common_message_check_network), SketchToast.TOAST_NORMAL).show();
                         } else {
                             toLicenseActivity();
                         }

@@ -18,10 +18,10 @@ import java.util.Arrays;
 import java.util.regex.Pattern;
 
 import a.a.a.Rs;
-import a.a.a.ZB;
-import a.a.a.bB;
+import a.a.a.IdentifierValidator;
+import a.a.a.SketchToast;
 import a.a.a.mB;
-import a.a.a.uq;
+import a.a.a.BlockConstants;
 import a.a.a.wB;
 import mod.hey.studios.moreblock.MoreblockValidator;
 import mod.hey.studios.moreblock.ReturnMoreblockManager;
@@ -39,8 +39,8 @@ public class MoreBlockBuilderView extends LinearLayout {
     private boolean customVariableInvalid;
     private Activity activity;
     private VariableItemView addVariable;
-    private ZB variableNameValidator;
-    private ZB labelTextValidator;
+    private IdentifierValidator variableNameValidator;
+    private IdentifierValidator labelTextValidator;
     private MoreblockValidator blockNameValidator;
     private Rs block;
 
@@ -57,9 +57,9 @@ public class MoreBlockBuilderView extends LinearLayout {
         initRefresh();
         addVariable = new VariableItemView(activity);
         binding.varTypeSpinner.addView(addVariable);
-        blockNameValidator = new MoreblockValidator(activity, binding.tiName, uq.b, uq.a(), new ArrayList<>());
-        labelTextValidator = new ZB(activity, binding.tiLabel, uq.b, uq.a(), new ArrayList<>());
-        variableNameValidator = new ZB(activity, binding.tiVariableName, uq.b, uq.a(), new ArrayList<>());
+        blockNameValidator = new MoreblockValidator(activity, binding.tiName, BlockConstants.b, BlockConstants.a(), new ArrayList<>());
+        labelTextValidator = new IdentifierValidator(activity, binding.tiLabel, BlockConstants.b, BlockConstants.a(), new ArrayList<>());
+        variableNameValidator = new IdentifierValidator(activity, binding.tiVariableName, BlockConstants.b, BlockConstants.a(), new ArrayList<>());
         binding.edName.setPrivateImeOptions("defaultInputmode=english;");
         binding.edLabel.setPrivateImeOptions("defaultInputmode=english;");
         binding.edVariableName.setPrivateImeOptions("defaultInputmode=english;");
@@ -85,7 +85,7 @@ public class MoreBlockBuilderView extends LinearLayout {
                     variablesSpecAndNamePair.add(new Pair<>(fullSpec, Helper.getText(binding.edVariableName)));
                     updateBlockPreview(binding.blockArea, binding.removeArea, block, Helper.getText(binding.edName), variablesSpecAndNamePair);
 
-                    ArrayList<String> reservedVariableNames = new ArrayList<>(Arrays.asList(uq.a()));
+                    ArrayList<String> reservedVariableNames = new ArrayList<>(Arrays.asList(BlockConstants.a()));
 
                     for (Pair<String, String> variable : variablesSpecAndNamePair) {
                         if (!variable.first.equals("t")) {
@@ -93,7 +93,7 @@ public class MoreBlockBuilderView extends LinearLayout {
                         }
                     }
 
-                    variableNameValidator.a(reservedVariableNames.toArray(new String[0]));
+                    variableNameValidator.setReservedNames(reservedVariableNames.toArray(new String[0]));
                     binding.edVariableName.setText("");
                 }
 
@@ -121,13 +121,13 @@ public class MoreBlockBuilderView extends LinearLayout {
                 binding.parameter.setText("");
                 binding.name.setText("");
 
-                ArrayList<String> prohibitedVariableNames = new ArrayList<>(Arrays.asList(uq.a()));
+                ArrayList<String> prohibitedVariableNames = new ArrayList<>(Arrays.asList(BlockConstants.a()));
                 for (Pair<String, String> variable : variablesSpecAndNamePair) {
                     if (!(variable.first).equals("t")) {
                         prohibitedVariableNames.add(variable.second);
                     }
                 }
-                variableNameValidator.a(prohibitedVariableNames.toArray(new String[0]));
+                variableNameValidator.setReservedNames(prohibitedVariableNames.toArray(new String[0]));
             }
         });
         binding.addLabel.setOnClickListener(v -> {
@@ -217,7 +217,7 @@ public class MoreBlockBuilderView extends LinearLayout {
                     }
 
                     variables.remove(indexOfChild);
-                    ArrayList<String> reservedVariableNames = new ArrayList<>(Arrays.asList(uq.a()));
+                    ArrayList<String> reservedVariableNames = new ArrayList<>(Arrays.asList(BlockConstants.a()));
 
                     for (Pair<String, String> parameter : variables) {
                         if (!parameter.first.equals("t")) {
@@ -225,7 +225,7 @@ public class MoreBlockBuilderView extends LinearLayout {
                         }
                     }
 
-                    variableNameValidator.a(reservedVariableNames.toArray(new String[0]));
+                    variableNameValidator.setReservedNames(reservedVariableNames.toArray(new String[0]));
                     updateBlockPreview(blockArea, removeArea, rs, blockName, variables);
                 });
             }
@@ -241,7 +241,7 @@ public class MoreBlockBuilderView extends LinearLayout {
         if (!Helper.getText(binding.edName).isEmpty() && blockNameValidator.b()) {
             return true;
         } else {
-            bB.b(getContext(), Helper.getResString(R.string.logic_editor_message_name_requied), Toast.LENGTH_SHORT).show();
+            SketchToast.warning(getContext(), Helper.getResString(R.string.logic_editor_message_name_requied), Toast.LENGTH_SHORT).show();
             return false;
         }
     }
@@ -267,7 +267,7 @@ public class MoreBlockBuilderView extends LinearLayout {
     }
 
     public void setFuncNameValidator(ArrayList<String> var1) {
-        blockNameValidator = new MoreblockValidator(activity, binding.tiName, uq.b, uq.a(), var1);
+        blockNameValidator = new MoreblockValidator(activity, binding.tiName, BlockConstants.b, BlockConstants.a(), var1);
     }
 
 }

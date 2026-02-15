@@ -14,7 +14,7 @@ import android.view.Window;
 
 import com.besome.sketch.editor.LogicEditorActivity;
 
-import a.a.a.Lx;
+import a.a.a.ComponentCodeGenerator;
 import a.a.a.Ss;
 import io.github.rosemoe.sora.widget.component.EditorAutoCompletion;
 import mod.hey.studios.code.SrcCodeEditor;
@@ -82,7 +82,7 @@ public class AsdDialog extends Dialog implements DialogInterface.OnDismissListen
                 boolean failed = false;
                 String code = sb.toString();
                 try {
-                    code = Lx.j(code, true);
+                    code = ComponentCodeGenerator.formatCode(code, true);
                 } catch (Exception e) {
                     failed = true;
                     SketchwareUtil.toastError("Your code contains incorrectly nested parentheses");

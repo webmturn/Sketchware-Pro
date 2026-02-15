@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import a.a.a.qA;
+import a.a.a.BaseFragment;
 import dev.pranav.filepicker.FilePickerCallback;
 import dev.pranav.filepicker.FilePickerDialogFragment;
 import dev.pranav.filepicker.FilePickerOptions;
@@ -41,7 +41,7 @@ import pro.sketchware.fragments.settings.block.selector.details.BlockSelectorDet
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.SketchwareUtil;
 
-public class BlockSelectorManagerFragment extends qA {
+public class BlockSelectorManagerFragment extends BaseFragment {
     private FragmentBlockSelectorManagerBinding binding;
     private ArrayList<Selector> selectors = new ArrayList<>();
     private BlockSelectorAdapter adapter;

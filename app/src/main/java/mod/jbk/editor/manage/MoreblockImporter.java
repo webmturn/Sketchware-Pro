@@ -25,15 +25,15 @@ import a.a.a.Gx;
 import a.a.a.Np;
 import a.a.a.Op;
 import a.a.a.Qp;
-import a.a.a.ZB;
-import a.a.a.bB;
+import a.a.a.IdentifierValidator;
+import a.a.a.SketchToast;
 import a.a.a.eC;
-import a.a.a.jC;
+import a.a.a.ProjectDataManager;
 import a.a.a.mB;
 import a.a.a.oB;
-import a.a.a.uq;
+import a.a.a.BlockConstants;
 import a.a.a.wB;
-import a.a.a.wq;
+import a.a.a.SketchwarePaths;
 import mod.hey.studios.moreblock.ReturnMoreblockManager;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
@@ -66,7 +66,7 @@ public class MoreblockImporter {
         String blockName = ReturnMoreblockManager.getMbName(ReturnMoreblockManager.getMbNameWithTypeFromSpec(moreblock.spec));
 
         boolean duplicateNameFound = false;
-        for (Pair<String, String> projectMoreBlock : jC.a(sc_id).i(activityJavaName)) {
+        for (Pair<String, String> projectMoreBlock : ProjectDataManager.getProjectDataManager(sc_id).i(activityJavaName)) {
             if (ReturnMoreblockManager.getMbName(projectMoreBlock.first).equals(blockName)) {
                 duplicateNameFound = true;
                 break;
@@ -115,24 +115,24 @@ public class MoreblockImporter {
                     Gx gx = paramClassInfo.get(i);
                     String str = next.parameters.get(i);
                     if (!str.isEmpty() && str.charAt(0) != '@') {
-                        if (gx.b("boolean.SelectBoolean")) {
+                        if (gx.isExactType("boolean.SelectBoolean")) {
                             maybeAddVariable(0, str);
-                        } else if (gx.b("double.SelectDouble")) {
+                        } else if (gx.isExactType("double.SelectDouble")) {
                             maybeAddVariable(1, str);
-                        } else if (gx.b("String.SelectString")) {
+                        } else if (gx.isExactType("String.SelectString")) {
                             maybeAddVariable(2, str);
-                        } else if (gx.b("Map")) {
+                        } else if (gx.isExactType("Map")) {
                             maybeAddVariable(3, str);
-                        } else if (gx.b("ListInt")) {
+                        } else if (gx.isExactType("ListInt")) {
                             maybeAddList(1, str);
-                        } else if (gx.b("ListString")) {
+                        } else if (gx.isExactType("ListString")) {
                             maybeAddList(2, str);
-                        } else if (gx.b("ListMap")) {
+                        } else if (gx.isExactType("ListMap")) {
                             maybeAddList(3, str);
-                        } else if (!gx.b("resource_bg") && !gx.b("resource")) {
-                            if (gx.b("sound")) {
+                        } else if (!gx.isExactType("resource_bg") && !gx.isExactType("resource")) {
+                            if (gx.isExactType("sound")) {
                                 maybeAddSound(str);
-                            } else if (gx.b("font")) {
+                            } else if (gx.isExactType("font")) {
                                 maybeAddFont(str);
                             }
                         } else {
@@ -152,9 +152,9 @@ public class MoreblockImporter {
     private void createEvent(MoreBlockCollectionBean moreBlock) {
         String moreBlockName = ReturnMoreblockManager.getMbNameWithTypeFromSpec(moreBlock.spec);
 
-        jC.a(sc_id).a(activityJavaName, moreBlockName, moreBlock.spec);
-        jC.a(sc_id).a(activityJavaName, moreBlockName + "_moreBlock", moreBlock.blocks);
-        bB.a(activity, activity.getString(R.string.common_message_complete_save), 0).show();
+        ProjectDataManager.getProjectDataManager(sc_id).a(activityJavaName, moreBlockName, moreBlock.spec);
+        ProjectDataManager.getProjectDataManager(sc_id).a(activityJavaName, moreBlockName + "_moreBlock", moreBlock.blocks);
+        SketchToast.toast(activity, activity.getString(R.string.common_message_complete_save), 0).show();
         callback.onImportComplete();
     }
 
@@ -165,11 +165,11 @@ public class MoreblockImporter {
         aBVar.setMessage(R.string.logic_more_block_desc_add_variable_resource);
         aBVar.setPositiveButton(R.string.common_word_continue, (v, which) -> {
             for (Pair<Integer, String> pair : toBeAddedVariables) {
-                eC eC = jC.a(sc_id);
+                eC eC = ProjectDataManager.getProjectDataManager(sc_id);
                 eC.c(activityJavaName, pair.first, pair.second);
             }
             for (Pair<Integer, String> pair : toBeAddedLists) {
-                eC eC = jC.a(sc_id);
+                eC eC = ProjectDataManager.getProjectDataManager(sc_id);
                 eC.b(activityJavaName, pair.first, pair.second);
             }
             for (ProjectResourceBean bean : toBeAddedImages) {
@@ -202,11 +202,11 @@ public class MoreblockImporter {
         newName.setImeOptions(EditorInfo.IME_ACTION_DONE);
 
         List<String> moreBlockNamesWithoutReturnTypes = new LinkedList<>();
-        for (String moreBlockName : jC.a(sc_id).a(projectActivity)) {
+        for (String moreBlockName : ProjectDataManager.getProjectDataManager(sc_id).a(projectActivity)) {
             moreBlockNamesWithoutReturnTypes.add(ReturnMoreblockManager.getMbName(moreBlockName));
         }
 
-        ZB validator = new ZB(activity, customView.findViewById(R.id.ti_input), uq.b, uq.a(), new ArrayList<>(moreBlockNamesWithoutReturnTypes));
+        IdentifierValidator validator = new IdentifierValidator(activity, customView.findViewById(R.id.ti_input), BlockConstants.b, BlockConstants.a(), new ArrayList<>(moreBlockNamesWithoutReturnTypes));
         dialog.setView(customView);
         dialog.setPositiveButton(R.string.common_word_save, (v, which) -> {
             if (validator.b()) {
@@ -229,8 +229,8 @@ public class MoreblockImporter {
         if (Op.g().b(imageName)) {
             ProjectResourceBean image = Op.g().a(imageName);
             try {
-                fileUtil.a(wq.a() + File.separator + "image" + File.separator + "data" + File.separator + image.resFullName, wq.g() + File.separator + sc_id + File.separator + image.resFullName);
-                jC.d(sc_id).b.add(image);
+                fileUtil.a(SketchwarePaths.getCollectionPath() + File.separator + "image" + File.separator + "data" + File.separator + image.resFullName, SketchwarePaths.getImagesPath() + File.separator + sc_id + File.separator + image.resFullName);
+                ProjectDataManager.getResourceManager(sc_id).b.add(image);
             } catch (Exception e) {
                 Log.e("MoreblockImporter", e.getMessage(), e);
             }
@@ -241,8 +241,8 @@ public class MoreblockImporter {
         if (Qp.g().b(soundName)) {
             ProjectResourceBean a2 = Qp.g().a(soundName);
             try {
-                fileUtil.a(wq.a() + File.separator + "sound" + File.separator + "data" + File.separator + a2.resFullName, wq.t() + File.separator + sc_id + File.separator + a2.resFullName);
-                jC.d(sc_id).c.add(a2);
+                fileUtil.a(SketchwarePaths.getCollectionPath() + File.separator + "sound" + File.separator + "data" + File.separator + a2.resFullName, SketchwarePaths.getSoundsPath() + File.separator + sc_id + File.separator + a2.resFullName);
+                ProjectDataManager.getResourceManager(sc_id).c.add(a2);
             } catch (Exception e) {
                 Log.e("MoreblockImporter", e.getMessage(), e);
             }
@@ -253,8 +253,8 @@ public class MoreblockImporter {
         if (Np.g().b(fontName)) {
             ProjectResourceBean font = Np.g().a(fontName);
             try {
-                fileUtil.a(wq.a() + File.separator + "font" + File.separator + "data" + File.separator + font.resFullName, wq.d() + File.separator + sc_id + File.separator + font.resFullName);
-                jC.d(sc_id).d.add(font);
+                fileUtil.a(SketchwarePaths.getCollectionPath() + File.separator + "font" + File.separator + "data" + File.separator + font.resFullName, SketchwarePaths.getFontsResourcePath() + File.separator + sc_id + File.separator + font.resFullName);
+                ProjectDataManager.getResourceManager(sc_id).d.add(font);
             } catch (Exception e) {
                 Log.e("MoreblockImporter", e.getMessage(), e);
             }
@@ -265,7 +265,7 @@ public class MoreblockImporter {
         if (toBeAddedVariables == null) {
             toBeAddedVariables = new ArrayList<>();
         }
-        for (Pair<Integer, String> variable : jC.a(sc_id).k(activityJavaName)) {
+        for (Pair<Integer, String> variable : ProjectDataManager.getProjectDataManager(sc_id).k(activityJavaName)) {
             if (variable.first == variableType && variable.second.equals(variableName)) {
                 return;
             }
@@ -286,7 +286,7 @@ public class MoreblockImporter {
         if (toBeAddedLists == null) {
             toBeAddedLists = new ArrayList<>();
         }
-        for (Pair<Integer, String> list : jC.a(sc_id).j(activityJavaName)) {
+        for (Pair<Integer, String> list : ProjectDataManager.getProjectDataManager(sc_id).j(activityJavaName)) {
             if (list.first == listType && list.second.equals(listName)) {
                 return;
             }
@@ -308,7 +308,7 @@ public class MoreblockImporter {
         if (toBeAddedSounds == null) {
             toBeAddedSounds = new ArrayList<>();
         }
-        for (String soundInProjectName : jC.d(sc_id).p()) {
+        for (String soundInProjectName : ProjectDataManager.getResourceManager(sc_id).p()) {
             if (soundInProjectName.equals(soundName)) {
                 return;
             }
@@ -332,7 +332,7 @@ public class MoreblockImporter {
         if (toBeAddedFonts == null) {
             toBeAddedFonts = new ArrayList<>();
         }
-        for (String fontInProjectName : jC.d(sc_id).k()) {
+        for (String fontInProjectName : ProjectDataManager.getResourceManager(sc_id).k()) {
             if (fontInProjectName.equals(fontName)) {
                 return;
             }
@@ -356,7 +356,7 @@ public class MoreblockImporter {
         if (toBeAddedImages == null) {
             toBeAddedImages = new ArrayList<>();
         }
-        for (String imageInProjectName : jC.d(sc_id).m()) {
+        for (String imageInProjectName : ProjectDataManager.getResourceManager(sc_id).m()) {
             if (imageInProjectName.equals(imageName)) {
                 return;
             }

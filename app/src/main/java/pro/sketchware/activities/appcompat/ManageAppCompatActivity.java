@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-import a.a.a.jC;
+import a.a.a.ProjectDataManager;
 import a.a.a.mB;
 import dev.aldi.sayuti.editor.injection.AppCompatInjection;
 import mod.hey.studios.util.Helper;
@@ -230,8 +230,8 @@ public class ManageAppCompatActivity extends BaseAppCompatActivity {
     }
 
     private void initializeProjectBean() {
-        projectFile = jC.b(sc_id).b(filename);
-        projectLibrary = jC.c(sc_id).c();
+        projectFile = ProjectDataManager.getFileManager(sc_id).b(filename);
+        projectLibrary = ProjectDataManager.getLibraryManager(sc_id).c();
     }
 
     private void resetData() {

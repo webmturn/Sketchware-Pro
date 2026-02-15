@@ -3,7 +3,7 @@ package mod.hey.studios.util;
 import android.graphics.Color;
 import android.os.Build;
 
-import a.a.a.lC;
+import a.a.a.ProjectListManager;
 import a.a.a.yB;
 import pro.sketchware.SketchApplication;
 
@@ -15,10 +15,10 @@ public class ProjectFile {
     public static final String COLOR_CONTROL_NORMAL = "color_control_normal";
 
     public static int getColor(String sc_id, String color) {
-        return yB.a(lC.b(sc_id), color, getDefaultColor(color));
+        return yB.a(ProjectListManager.getProjectById(sc_id), color, getDefaultColor(color));
         /*
         Old in-progress by Mike?
-        HashMap<String, Object> hashMap = lC.b(sc_id);
+        HashMap<String, Object> hashMap = ProjectListManager.getProjectById(sc_id);
 
         return 0;//yB.a(hashMap, color, getDefaultColor(color));
         */

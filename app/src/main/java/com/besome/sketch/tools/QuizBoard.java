@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import a.a.a.mB;
-import a.a.a.tq;
+import a.a.a.CompileQuizManager;
 import pro.sketchware.R;
 import pro.sketchware.databinding.QuizBoardBinding;
 
@@ -83,7 +83,7 @@ public class QuizBoard extends LinearLayout implements View.OnClickListener {
 
     public void b() {
         if (q == null || q.isEmpty()) {
-            q = tq.a();
+            q = CompileQuizManager.a();
         }
 
         int var1 = new Random().nextInt(q.size());

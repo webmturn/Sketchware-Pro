@@ -70,7 +70,7 @@ public class StringsEditor extends Fragment {
 
         ArrayList<HashMap<String, Object>> defaultStrings = new ArrayList<>();
         if ((activity.variant.isEmpty() || hasUnsavedChanges) && !FileUtil.isExistFile(filePath)) {
-            String generatedContent = activity.yq.getXMLString();
+            String generatedContent = activity.ProjectFilePaths.getXMLString();
             stringsEditorManager.convertXmlStringsToListMap(generatedContent, defaultStrings);
         } else {
             stringsEditorManager.convertXmlStringsToListMap(FileUtil.readFileIfExist(filePath), defaultStrings);

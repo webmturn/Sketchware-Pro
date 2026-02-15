@@ -17,7 +17,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import a.a.a.GB;
 import a.a.a.Uu;
-import a.a.a.bB;
+import a.a.a.SketchToast;
 import a.a.a.iC;
 import a.a.a.mB;
 import mod.hey.studios.util.Helper;
@@ -167,7 +167,7 @@ public class AdmobActivity extends BaseAppCompatActivity implements View.OnClick
                 showGoogleChromeNotice();
             }
         } else {
-            bB.a(this, Helper.getResString(R.string.common_message_check_network), 0).show();
+            SketchToast.toast(this, Helper.getResString(R.string.common_message_check_network), 0).show();
         }
     }
 
@@ -250,7 +250,7 @@ public class AdmobActivity extends BaseAppCompatActivity implements View.OnClick
                     showGoogleChromeNotice();
                 }
             } else {
-                bB.a(this, Helper.getResString(R.string.common_message_check_network), 0).show();
+                SketchToast.toast(this, Helper.getResString(R.string.common_message_check_network), 0).show();
             }
         }
     }

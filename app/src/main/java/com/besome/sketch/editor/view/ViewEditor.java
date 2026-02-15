@@ -51,15 +51,15 @@ import a.a.a.GB;
 import a.a.a.Iw;
 import a.a.a.Op;
 import a.a.a.Rp;
-import a.a.a.ay;
-import a.a.a.bB;
+import a.a.a.SimpleCallback;
+import a.a.a.SketchToast;
 import a.a.a.cC;
 import a.a.a.cy;
-import a.a.a.jC;
+import a.a.a.ProjectDataManager;
 import a.a.a.oB;
-import a.a.a.uy;
+import a.a.a.WidgetPaletteIcon;
 import a.a.a.wB;
-import a.a.a.wq;
+import a.a.a.SketchwarePaths;
 import mod.agus.jcoderz.beans.ViewBeans;
 import mod.hey.studios.util.ProjectFile;
 import mod.jbk.util.LogUtil;
@@ -86,7 +86,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
     private cy widgetSelectedListener;
     private Iw propertyClickListener;
     private DraggingListener draggingListener;
-    private ay historyChangeListener;
+    private SimpleCallback historyChangeListener;
     private ProjectFileBean projectFileBean;
     private boolean S = true;
     private boolean T = false;
@@ -191,7 +191,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
     }
 
     public void h() {
-        viewPane.setResourceManager(jC.d(a));
+        viewPane.setResourceManager(ProjectDataManager.getResourceManager(a));
     }
 
     public void i() {
@@ -359,7 +359,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
                     deleteWidget(widget.getBean());
                     break lol;
                 }
-                if (D && currentTouchedView instanceof uy collectionWidget) {
+                if (D && currentTouchedView instanceof WidgetPaletteIcon collectionWidget) {
                     deleteWidgetFromCollection(collectionWidget.getName());
                     break lol;
                 }
@@ -368,7 +368,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
                     break lol;
                 }
                 viewPane.resetView(false);
-                if (currentTouchedView instanceof uy uyVar) {
+                if (currentTouchedView instanceof WidgetPaletteIcon uyVar) {
                     ArrayList<ViewBean> arrayList = new ArrayList<>();
                     oB oBVar = new oB();
                     boolean areImagesAdded = false;
@@ -377,35 +377,35 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
                         arrayList.add(viewBean.clone());
                         String backgroundResource = viewBean.layout.backgroundResource;
                         String resName = viewBean.image.resName;
-                        if (!jC.d(a).l(backgroundResource) && Op.g().b(backgroundResource)) {
+                        if (!ProjectDataManager.getResourceManager(a).l(backgroundResource) && Op.g().b(backgroundResource)) {
                             ProjectResourceBean a2 = Op.g().a(backgroundResource);
                             try {
-                                oBVar.a(wq.a() + File.separator + "image" + File.separator + "data" + File.separator + a2.resFullName, wq.g() + File.separator + a + File.separator + a2.resFullName);
+                                oBVar.a(SketchwarePaths.getCollectionPath() + File.separator + "image" + File.separator + "data" + File.separator + a2.resFullName, SketchwarePaths.getImagesPath() + File.separator + a + File.separator + a2.resFullName);
                             } catch (Exception e) {
                                 LogUtil.e("ViewEditor", "", e);
                             }
-                            jC.d(a).b.add(a2);
+                            ProjectDataManager.getResourceManager(a).b.add(a2);
                             areImagesAdded = true;
                         }
-                        if (!jC.d(a).l(resName) && Op.g().b(resName)) {
+                        if (!ProjectDataManager.getResourceManager(a).l(resName) && Op.g().b(resName)) {
                             ProjectResourceBean a3 = Op.g().a(resName);
                             try {
-                                oBVar.a(wq.a() + File.separator + "image" + File.separator + "data" + File.separator + a3.resFullName, wq.g() + File.separator + a + File.separator + a3.resFullName);
+                                oBVar.a(SketchwarePaths.getCollectionPath() + File.separator + "image" + File.separator + "data" + File.separator + a3.resFullName, SketchwarePaths.getImagesPath() + File.separator + a + File.separator + a3.resFullName);
                             } catch (Exception e2) {
                                 LogUtil.e("ViewEditor", "", e2);
                             }
-                            jC.d(a).b.add(a3);
+                            ProjectDataManager.getResourceManager(a).b.add(a3);
                             areImagesAdded = true;
                         }
                     }
                     if (areImagesAdded) {
-                        bB.a(getContext(), getString(R.string.view_widget_favorites_image_auto_added), bB.TOAST_NORMAL).show();
+                        SketchToast.toast(getContext(), getString(R.string.view_widget_favorites_image_auto_added), SketchToast.TOAST_NORMAL).show();
                     }
                     if (!arrayList.isEmpty()) {
                         HashMap<String, String> idMappings = new HashMap<>();
                         viewPane.updateViewBeanProperties(arrayList.get(0), (int) motionEvent.getRawX(), (int) motionEvent.getRawY());
                         for (ViewBean next : arrayList) {
-                            if (jC.a(a).h(projectFileBean.getXmlName(), next.id)) {
+                            if (ProjectDataManager.getProjectDataManager(a).h(projectFileBean.getXmlName(), next.id)) {
                                 idMappings.put(next.id, generateWidgetId(next));
                             } else {
                                 idMappings.put(next.id, next.id);
@@ -414,7 +414,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
                             if (arrayList.indexOf(next) != 0 && (str = next.parent) != null && !str.isEmpty()) {
                                 next.parent = idMappings.get(next.parent);
                             }
-                            jC.a(a).a(b, next);
+                            ProjectDataManager.getProjectDataManager(a).a(b, next);
                         }
                         a(a(arrayList, true), true);
                     }
@@ -422,9 +422,9 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
                     ViewBean bean = icon.getBean();
                     bean.id = generateWidgetId(bean);
                     viewPane.updateViewBeanProperties(bean, (int) motionEvent.getRawX(), (int) motionEvent.getRawY());
-                    jC.a(a).a(b, bean);
+                    ProjectDataManager.getProjectDataManager(a).a(b, bean);
                     if (bean.type == 3 && projectFileBean.fileType == ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY) {
-                        jC.a(a).a(projectFileBean.getJavaName(), 1, bean.type, bean.id, "onClick");
+                        ProjectDataManager.getProjectDataManager(a).a(projectFileBean.getJavaName(), 1, bean.type, bean.id, "onClick");
                     }
                     a(a(bean, true), true);
                 } else if (currentTouchedView instanceof ItemView sy) {
@@ -453,9 +453,9 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
     }
 
     public void deleteWidget(ViewBean viewBean) {
-        ArrayList<ViewBean> b2 = jC.a(a).b(b, viewBean);
+        ArrayList<ViewBean> b2 = ProjectDataManager.getProjectDataManager(a).b(b, viewBean);
         for (int size = b2.size() - 1; size >= 0; size--) {
-            jC.a(a).a(projectFileBean, b2.get(size));
+            ProjectDataManager.getProjectDataManager(a).a(projectFileBean, b2.get(size));
         }
         b(b2, true);
     }
@@ -475,7 +475,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         draggingListener = dragListener;
     }
 
-    public void setOnHistoryChangeListener(ay ayVar) {
+    public void setOnHistoryChangeListener(SimpleCallback ayVar) {
         historyChangeListener = ayVar;
     }
 
@@ -628,8 +628,8 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
     private void e() {
         if (currentTouchedView == null) return;
         if (isViewAnIconBase(currentTouchedView)) {
-            boolean isAppCompatEnabled = jC.c(a).c().isEnabled();
-            if (currentTouchedView instanceof uy collectionWidget) {
+            boolean isAppCompatEnabled = ProjectDataManager.getLibraryManager(a).c().isEnabled();
+            if (currentTouchedView instanceof WidgetPaletteIcon collectionWidget) {
                 var collectionData = collectionWidget.getData();
                 boolean isAdViewUsed = false;
                 for (ViewBean view : collectionData) {
@@ -639,7 +639,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
                     }
                 }
                 if (isAdViewUsed && !draggingListener.isAdmobEnabled()) {
-                    bB.b(getContext(), getString(R.string.design_library_guide_setup_first), bB.TOAST_NORMAL).show();
+                    SketchToast.warning(getContext(), getString(R.string.design_library_guide_setup_first), SketchToast.TOAST_NORMAL).show();
                     return;
                 }
 
@@ -651,7 +651,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
                     }
                 }
                 if (isMapViewUsed && !draggingListener.isGoogleMapEnabled()) {
-                    bB.b(getContext(), getString(R.string.design_library_guide_setup_first), bB.TOAST_NORMAL).show();
+                    SketchToast.warning(getContext(), getString(R.string.design_library_guide_setup_first), SketchToast.TOAST_NORMAL).show();
                     return;
                 }
                 boolean isAppCompatViewUsed = false;
@@ -673,17 +673,17 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
                 }
 
                 if (isAppCompatViewUsed && !isAppCompatEnabled) {
-                    bB.b(getContext(), getString(R.string.design_library_guide_setup_first), bB.TOAST_NORMAL).show();
+                    SketchToast.warning(getContext(), getString(R.string.design_library_guide_setup_first), SketchToast.TOAST_NORMAL).show();
                     return;
                 }
             } else if (currentTouchedView instanceof IconAdView && !draggingListener.isAdmobEnabled()) {
-                bB.b(getContext(), getString(R.string.design_library_guide_setup_first), bB.TOAST_NORMAL).show();
+                SketchToast.warning(getContext(), getString(R.string.design_library_guide_setup_first), SketchToast.TOAST_NORMAL).show();
                 return;
             } else if (currentTouchedView instanceof IconMapView && !draggingListener.isGoogleMapEnabled()) {
-                bB.b(getContext(), getString(R.string.design_library_guide_setup_first), bB.TOAST_NORMAL).show();
+                SketchToast.warning(getContext(), getString(R.string.design_library_guide_setup_first), SketchToast.TOAST_NORMAL).show();
                 return;
             } else if (currentTouchedView instanceof AndroidxOrMaterialView && !isAppCompatEnabled) {
-                bB.b(getContext(), getString(R.string.design_library_guide_setup_first), bB.TOAST_NORMAL).show();
+                SketchToast.warning(getContext(), getString(R.string.design_library_guide_setup_first), SketchToast.TOAST_NORMAL).show();
                 return;
             }
         }
@@ -698,7 +698,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         dummyView.a(currentTouchedView, posInitX, posInitY, posInitX, posInitY);
         dummyView.a(posDummy);
         if (isViewAnIconBase(currentTouchedView)) {
-            if (currentTouchedView instanceof uy || currentTouchedView instanceof IconCustomWidget) {
+            if (currentTouchedView instanceof WidgetPaletteIcon || currentTouchedView instanceof IconCustomWidget) {
                 b(true, currentTouchedView instanceof IconCustomWidget);
                 viewPane.addRootLayout(null);
             } else {
@@ -737,7 +737,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
     public ItemView createAndAddView(ViewBean viewBean) {
         View itemView = viewPane.createItemView(viewBean);
         viewPane.addViewAndUpdateIndex(itemView);
-        String generatedId = wq.b(viewBean.type);
+        String generatedId = SketchwarePaths.getWidgetTypeName(viewBean.type);
         if (viewBean.id.indexOf(generatedId) == 0 && viewBean.id.length() > generatedId.length()) {
             try {
                 int intValue = Integer.parseInt(viewBean.id.substring(generatedId.length()));
@@ -839,7 +839,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
             S = projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_TOOLBAR);
             T = projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FULLSCREEN);
             if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB)) {
-                addFab(jC.a(str).h(projectFileBean.getXmlName()));
+                addFab(ProjectDataManager.getProjectDataManager(str).h(projectFileBean.getXmlName()));
             }
         } else {
             S = false;
@@ -967,14 +967,14 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
 
     private String generateWidgetId(ViewBean bean) {
         int type = bean.type;
-        String b2 = !bean.isCustomWidget ? wq.b(type) : widgetsCreatorManager.generateCustomWidgetId(bean.convert);
+        String b2 = !bean.isCustomWidget ? SketchwarePaths.getWidgetTypeName(type) : widgetsCreatorManager.generateCustomWidgetId(bean.convert);
         StringBuilder sb = new StringBuilder();
         sb.append(b2);
         int i2 = countItems[type] + 1;
         countItems[type] = i2;
         sb.append(i2);
         String sb2 = sb.toString();
-        ArrayList<ViewBean> d = jC.a(a).d(b);
+        ArrayList<ViewBean> d = ProjectDataManager.getProjectDataManager(a).d(b);
         while (true) {
             boolean isIdUsed = false;
             for (ViewBean view : d) {

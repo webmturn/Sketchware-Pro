@@ -17,7 +17,7 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 
 import java.lang.ref.WeakReference;
 
-import a.a.a.MA;
+import a.a.a.BaseAsyncTask;
 import a.a.a.Np;
 import a.a.a.mB;
 import mod.hey.studios.util.Helper;
@@ -115,7 +115,7 @@ public class ManageFontActivity extends BaseAppCompatActivity {
         super.onSaveInstanceState(outState);
     }
 
-    private static class SaveAsyncTask extends MA {
+    private static class SaveAsyncTask extends BaseAsyncTask {
         private final WeakReference<ManageFontActivity> activityWeakReference;
 
         public SaveAsyncTask(ManageFontActivity activity) {

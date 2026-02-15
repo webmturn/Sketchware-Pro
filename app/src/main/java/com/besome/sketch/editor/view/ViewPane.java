@@ -72,11 +72,11 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import a.a.a.Gx;
+import a.a.a.ClassInfo;
 import a.a.a.kC;
-import a.a.a.lC;
+import a.a.a.ProjectListManager;
 import a.a.a.wB;
-import a.a.a.wq;
+import a.a.a.SketchwarePaths;
 import a.a.a.yB;
 import a.a.a.zB;
 import dev.aldi.sayuti.editor.view.item.ItemBadgeView;
@@ -386,7 +386,7 @@ public class ViewPane extends RelativeLayout {
                 layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
             }
             view.setLayoutParams(layoutParams);
-            if (viewBean.getClassInfo().b("FloatingActionButton") && (imageBean = viewBean.image) != null && (str = imageBean.resName) != null && !str.isEmpty()) {
+            if (viewBean.getClassInfo().isExactType("FloatingActionButton") && (imageBean = viewBean.image) != null && (str = imageBean.resName) != null && !str.isEmpty()) {
                 try {
                     crashlytics.log("ViewPane: trying to set image to FAB");
                     FloatingActionButton fab = (FloatingActionButton) view;
@@ -482,8 +482,8 @@ public class ViewPane extends RelativeLayout {
                 Log.e("DEBUG", e.getMessage(), e);
             }
         }
-        Gx classInfo = viewBean.getClassInfo();
-        if (classInfo.a("LinearLayout")) {
+        ClassInfo classInfo = viewBean.getClassInfo();
+        if (classInfo.matchesType("LinearLayout")) {
             LinearLayout linearLayout = (LinearLayout) view;
             linearLayout.setOrientation(viewBean.layout.orientation);
             linearLayout.setWeightSum(viewBean.layout.weightSum);
@@ -494,10 +494,10 @@ public class ViewPane extends RelativeLayout {
         if (viewBean.parentType == ViewBean.VIEW_TYPE_LAYOUT_RELATIVE) {
             updateRelative(view, injectHandler);
         }
-        if (classInfo.a("TextView")) {
+        if (classInfo.matchesType("TextView")) {
             TextView textView = (TextView) view;
             updateTextView(textView, viewBean);
-            if (!classInfo.b("Button") && !classInfo.b("Switch")) {
+            if (!classInfo.isExactType("Button") && !classInfo.isExactType("Switch")) {
                 textView.setGravity(viewBean.layout.gravity);
             } else {
                 int gravity = viewBean.layout.gravity;
@@ -508,10 +508,10 @@ public class ViewPane extends RelativeLayout {
                 }
             }
         }
-        if (classInfo.a("EditText")) {
+        if (classInfo.matchesType("EditText")) {
             updateEditText((EditText) view, viewBean);
         }
-        if (classInfo.a("ImageView")) {
+        if (classInfo.matchesType("ImageView")) {
             if (resourcesManager.h(viewBean.image.resName) == ProjectResourceBean.PROJECT_RES_TYPE_RESOURCE) {
                 ((ImageView) view).setImageResource(getContext().getResources().getIdentifier(viewBean.image.resName, "drawable", getContext().getPackageName()));
             } else if (viewBean.image.resName.equals("default_image")) {
@@ -540,30 +540,30 @@ public class ViewPane extends RelativeLayout {
                     ((ImageView) view).setImageResource(R.drawable.default_image);
                 }
             }
-            if (classInfo.b("CircleImageView")) {
+            if (classInfo.isExactType("CircleImageView")) {
                 updateCircleImageView((ItemCircleImageView) view, injectHandler);
             } else {
                 ((ImageView) view).setScaleType(ImageView.ScaleType.valueOf(viewBean.image.scaleType));
             }
         }
-        if (classInfo.a("CompoundButton")) {
+        if (classInfo.matchesType("CompoundButton")) {
             ((CompoundButton) view).setChecked(viewBean.checked != 0);
         }
-        if (classInfo.b("SeekBar")) {
+        if (classInfo.isExactType("SeekBar")) {
             SeekBar seekBar = (SeekBar) view;
             seekBar.setProgress(viewBean.progress);
             seekBar.setMax(viewBean.max);
         }
-        if (classInfo.b("ProgressBar")) {
+        if (classInfo.isExactType("ProgressBar")) {
             ((ItemProgressBar) view).setProgressBarStyle(viewBean.progressStyle);
         }
-        if (classInfo.b("CalendarView")) {
+        if (classInfo.isExactType("CalendarView")) {
             ((CalendarView) view).setFirstDayOfWeek(viewBean.firstDayOfWeek);
         }
-        if (classInfo.b("AdView")) {
+        if (classInfo.isExactType("AdView")) {
             ((ItemAdView) view).setAdSize(viewBean.adSize);
         }
-        if (classInfo.b("CardView")) {
+        if (classInfo.isExactType("CardView")) {
             var cardView = (ItemCardView) view;
             cardView.setContentPadding(
                     viewBean.layout.paddingLeft,
@@ -572,13 +572,13 @@ public class ViewPane extends RelativeLayout {
                     viewBean.layout.paddingBottom);
             updateCardView(cardView, injectHandler);
         }
-        if (classInfo.b("TabLayout")) {
+        if (classInfo.isExactType("TabLayout")) {
             updateTabLayout((ItemTabLayout) view, injectHandler);
         }
-        if (classInfo.b("MaterialButton")) {
+        if (classInfo.isExactType("MaterialButton")) {
             updateMaterialButton((ItemMaterialButton) view, injectHandler);
         }
-        if (classInfo.b("SignInButton")) {
+        if (classInfo.isExactType("SignInButton")) {
             ItemSignInButton button = (ItemSignInButton) view;
             boolean hasButtonSize = false;
             boolean hasColorScheme = false;
@@ -1305,7 +1305,7 @@ public class ViewPane extends RelativeLayout {
         if (sc_id == null) {
             return key;
         }
-        String filePath = wq.b(sc_id) + "/files/resource/values/strings.xml";
+        String filePath = SketchwarePaths.getDataPath(sc_id) + "/files/resource/values/strings.xml";
 
         ArrayList<HashMap<String, Object>> stringsListMap = new ArrayList<>();
 
@@ -1313,7 +1313,7 @@ public class ViewPane extends RelativeLayout {
         stringsEditorManager.convertXmlStringsToListMap(FileUtil.readFileIfExist(filePath), stringsListMap);
 
         if (key.equals("@string/app_name") && !stringsEditorManager.isXmlStringsExist(stringsListMap, "app_name")) {
-            return yB.c(lC.b(sc_id), "my_app_name");
+            return yB.c(ProjectListManager.getProjectById(sc_id), "my_app_name");
         }
 
         for (HashMap<String, Object> map : stringsListMap) {

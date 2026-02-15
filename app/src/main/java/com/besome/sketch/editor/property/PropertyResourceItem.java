@@ -31,7 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import a.a.a.Kw;
-import a.a.a.jC;
+import a.a.a.ProjectDataManager;
 import a.a.a.kC;
 import a.a.a.mB;
 import a.a.a.wB;
@@ -105,14 +105,14 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
         if (str != null && !str.equalsIgnoreCase("NONE")) {
             c = str;
             f.setText(str);
-            if (jC.d(a).h(str) == ProjectResourceBean.PROJECT_RES_TYPE_RESOURCE) {
+            if (ProjectDataManager.getResourceManager(a).h(str) == ProjectResourceBean.PROJECT_RES_TYPE_RESOURCE) {
                 g.setImageResource(getContext().getResources().getIdentifier(str, "drawable", getContext().getPackageName()));
                 return;
             } else if (str.equals("default_image")) {
                 g.setImageResource(getContext().getResources().getIdentifier(str, "drawable", getContext().getPackageName()));
                 return;
             } else {
-                File file = new File(jC.d(a).f(str));
+                File file = new File(ProjectDataManager.getResourceManager(a).f(str));
                 if (file.exists()) {
                     Context context = getContext();
                     fromFile = FileProvider.getUriForFile(context, getContext().getPackageName() + ".provider", file);
@@ -173,7 +173,7 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
     public final void a() {
         SearchWithRecyclerViewBinding binding = SearchWithRecyclerViewBinding.inflate(LayoutInflater.from(getContext()));
 
-        ArrayList<String> images = jC.d(a).m();
+        ArrayList<String> images = ProjectDataManager.getResourceManager(a).m();
         images.addAll(new VectorDrawableLoader().getVectorDrawables(DesignActivity.sc_id));
         images.add(0, d ? "default_image" : "NONE");
 
@@ -288,7 +288,7 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
             if ("default_image".equals(image)) {
                 imageView.setImageResource(getResources().getIdentifier(image, "drawable", getContext().getPackageName()));
             } else {
-                File file = new File(jC.d(a).f(image));
+                File file = new File(ProjectDataManager.getResourceManager(a).f(image));
                 if (file.exists()) {
                     Uri uri = FileProvider.getUriForFile(getContext(), getContext().getPackageName() + ".provider", file);
                     if (file.getAbsolutePath().endsWith(".xml")) {

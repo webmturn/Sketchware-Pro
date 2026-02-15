@@ -42,7 +42,7 @@ import java.util.Objects;
 
 import a.a.a.HB;
 import a.a.a.iB;
-import a.a.a.wq;
+import a.a.a.SketchwarePaths;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ActivityIconCreatorBinding;
@@ -481,7 +481,7 @@ public class IconCreatorActivity extends BaseAppCompatActivity {
     }
 
     private String getCustomIconPath() {
-        return wq.e() + File.separator + sc_id + File.separator + "icon.png";
+        return SketchwarePaths.getIconsPath() + File.separator + sc_id + File.separator + "icon.png";
     }
 
     private void pickCustomIcon(ActivityResultLauncher<Intent> launcher) {
@@ -761,10 +761,10 @@ public class IconCreatorActivity extends BaseAppCompatActivity {
     }
 
     private String baseDir() {
-        return wq.b(sc_id) + File.separator + "files" + File.separator + "app-icon" + File.separator;
+        return SketchwarePaths.getDataPath(sc_id) + File.separator + "files" + File.separator + "app-icon" + File.separator;
     }
 
     private String getIconPath(String folder, String fileName) {
-        return wq.e() + File.separator + sc_id + File.separator + "temp_icons" + File.separator + folder + File.separator + fileName;
+        return SketchwarePaths.getIconsPath() + File.separator + sc_id + File.separator + "temp_icons" + File.separator + folder + File.separator + fileName;
     }
 }

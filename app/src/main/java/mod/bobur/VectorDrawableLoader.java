@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Objects;
 
-import a.a.a.wq;
+import a.a.a.SketchwarePaths;
 import pro.sketchware.utility.FileUtil;
 
 public class VectorDrawableLoader {
@@ -21,7 +21,7 @@ public class VectorDrawableLoader {
         ArrayList<String> files = new ArrayList<>();
         ArrayList<String> allPaths = new ArrayList<>();
 
-        File resDir = new File(wq.b(sc_id) + "/files/resource/");
+        File resDir = new File(SketchwarePaths.getDataPath(sc_id) + "/files/resource/");
         if (resDir.exists() && resDir.isDirectory()) {
             for (File subDir : Objects.requireNonNull(resDir.listFiles())) {
                 if (subDir.isDirectory() && subDir.getName().startsWith("drawable")) {
@@ -51,7 +51,7 @@ public class VectorDrawableLoader {
 
 
     public String getVectorFullPath(String sc_id, String fileName) {
-        return wq.b(sc_id) + "/files/resource/drawable/" + fileName + ".xml";
+        return SketchwarePaths.getDataPath(sc_id) + "/files/resource/drawable/" + fileName + ".xml";
     }
 
     public void setImageVectorFromFile(ImageView imageView, String filePath) throws Exception {

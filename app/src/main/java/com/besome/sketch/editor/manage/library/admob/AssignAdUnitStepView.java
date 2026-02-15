@@ -17,8 +17,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.util.ArrayList;
 
 import a.a.a.Uu;
-import a.a.a.bB;
-import a.a.a.gB;
+import a.a.a.SketchToast;
+import a.a.a.AnimationUtil;
 import a.a.a.wB;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
@@ -85,7 +85,7 @@ public class AssignAdUnitStepView extends LinearLayout implements Uu, OnClickLis
     @SuppressLint("SetTextI18n")
     private void initialize(Context context) {
         wB.a(context, this, R.layout.manage_library_admob_set_unit);
-        gB.b(this, 600, 200, null);
+        AnimationUtil.fadeSlideIn(this, 600, 200, null);
         bannerAdName = findViewById(R.id.tv_banner_name);
         bannerAdUnitIdView = findViewById(R.id.tv_banner_id);
         interstitialAdName = findViewById(R.id.tv_inter_name);
@@ -168,7 +168,7 @@ public class AssignAdUnitStepView extends LinearLayout implements Uu, OnClickLis
         if (!bannerAdUnitId.isEmpty() && !interstitialAdUnitId.isEmpty()) {
             return true;
         } else {
-            bB.a(getContext(), Helper.getResString(R.string.design_library_admob_message_select_ad_unit), 1).show();
+            SketchToast.toast(getContext(), Helper.getResString(R.string.design_library_admob_message_select_ad_unit), 1).show();
             return false;
         }
     }

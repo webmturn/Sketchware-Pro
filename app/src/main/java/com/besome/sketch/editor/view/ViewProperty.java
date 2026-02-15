@@ -34,12 +34,12 @@ import a.a.a.Iw;
 import a.a.a.Jw;
 import a.a.a.Kw;
 import a.a.a.Lw;
-import a.a.a.NB;
+import a.a.a.UniqueNameValidator;
 import a.a.a.Op;
 import a.a.a.Qs;
 import a.a.a.Rp;
-import a.a.a.bB;
-import a.a.a.jC;
+import a.a.a.SketchToast;
+import a.a.a.ProjectDataManager;
 import a.a.a.mB;
 import a.a.a.wB;
 import mod.hey.studios.project.ProjectSettings;
@@ -187,28 +187,28 @@ public class ViewProperty extends LinearLayout implements Kw {
         editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
 
-        NB validator = new NB(getContext(), view.findViewById(R.id.ti_input), Rp.h().g());
+        UniqueNameValidator validator = new UniqueNameValidator(getContext(), view.findViewById(R.id.ti_input), Rp.h().g());
         dialog.setView(view);
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_save), (v, which) -> {
             if (!mB.a() && validator.b()) {
                 String widgetName = Helper.getText(editText);
-                ArrayList<ViewBean> viewBeans = jC.a(sc_id).b(projectFile.getXmlName(), projectActivityViews.get(idsAdapter.getSelectedItemPosition()));
+                ArrayList<ViewBean> viewBeans = ProjectDataManager.getProjectDataManager(sc_id).b(projectFile.getXmlName(), projectActivityViews.get(idsAdapter.getSelectedItemPosition()));
                 for (ViewBean viewBean : viewBeans) {
                     String backgroundResource = viewBean.layout.backgroundResource;
                     String resName = viewBean.image.resName;
-                    if (backgroundResource != null && !backgroundResource.equals("NONE") && jC.d(sc_id).l(backgroundResource) && !Op.g().b(backgroundResource)) {
+                    if (backgroundResource != null && !backgroundResource.equals("NONE") && ProjectDataManager.getResourceManager(sc_id).l(backgroundResource) && !Op.g().b(backgroundResource)) {
                         try {
-                            Op.g().a(sc_id, jC.d(sc_id).g(backgroundResource));
+                            Op.g().a(sc_id, ProjectDataManager.getResourceManager(sc_id).g(backgroundResource));
                         } catch (Exception e) {
                             Log.e("ViewProperty", e.getMessage(), e);
-                            bB.b(getContext(), e.getMessage(), bB.TOAST_NORMAL).show();
+                            SketchToast.warning(getContext(), e.getMessage(), SketchToast.TOAST_NORMAL).show();
                         }
                     }
-                    if (resName != null && !resName.equals("default_image") && !resName.equals("NONE") && jC.d(sc_id).l(resName) && !Op.g().b(resName)) {
+                    if (resName != null && !resName.equals("default_image") && !resName.equals("NONE") && ProjectDataManager.getResourceManager(sc_id).l(resName) && !Op.g().b(resName)) {
                         try {
-                            Op.g().a(sc_id, jC.d(sc_id).g(resName));
+                            Op.g().a(sc_id, ProjectDataManager.getResourceManager(sc_id).g(resName));
                         } catch (Exception e) {
-                            bB.b(getContext(), e.getMessage(), bB.TOAST_NORMAL).show();
+                            SketchToast.warning(getContext(), e.getMessage(), SketchToast.TOAST_NORMAL).show();
                         }
                     }
                 }
@@ -216,7 +216,7 @@ public class ViewProperty extends LinearLayout implements Kw {
                 if (propertyListener != null) {
                     propertyListener.a();
                 }
-                bB.a(getContext(), Helper.getResString(R.string.common_message_complete_save), bB.TOAST_NORMAL).show();
+                SketchToast.toast(getContext(), Helper.getResString(R.string.common_message_complete_save), SketchToast.TOAST_NORMAL).show();
                 v.dismiss();
             }
         });

@@ -24,9 +24,9 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import java.util.ArrayList;
 
 import a.a.a.QB;
-import a.a.a.bB;
+import a.a.a.SketchToast;
 import a.a.a.mB;
-import a.a.a.uq;
+import a.a.a.BlockConstants;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageFontImportBinding;
@@ -92,8 +92,8 @@ public class ManageFontImportActivity extends BaseAppCompatActivity implements V
                 names += name;
             }
 
-            bB.a(getApplicationContext(), getString(R.string.common_message_name_unavailable)
-                    + "\n[" + names + "]", bB.TOAST_WARNING).show();
+            SketchToast.toast(getApplicationContext(), getString(R.string.common_message_name_unavailable)
+                    + "\n[" + names + "]", SketchToast.TOAST_WARNING).show();
             return true;
         } else {
             return false;
@@ -170,7 +170,7 @@ public class ManageFontImportActivity extends BaseAppCompatActivity implements V
         r.setText(selectedCollection.get(0).resName);
         r.setPrivateImeOptions("defaultInputmode=english;");
         binding.edInput.setHint(getString(R.string.design_manager_font_hint_enter_font_name));
-        nameValidator = new QB(getApplicationContext(), binding.edInput.getTextInputLayout(), uq.b, getReservedProjectImageNames(), getReservedSelectedCollectionNames());
+        nameValidator = new QB(getApplicationContext(), binding.edInput.getTextInputLayout(), BlockConstants.b, getReservedProjectImageNames(), getReservedSelectedCollectionNames());
         binding.chkSamename.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 nameValidator.c(null);
@@ -215,9 +215,9 @@ public class ManageFontImportActivity extends BaseAppCompatActivity implements V
         }
 
         if (!duplicateCollections.isEmpty()) {
-            bB.b(getApplicationContext(), getString(R.string.design_manager_message_collection_name_conflict), 1).show();
+            SketchToast.warning(getApplicationContext(), getString(R.string.design_manager_message_collection_name_conflict), 1).show();
         } else {
-            bB.a(getApplicationContext(), getString(R.string.design_manager_message_collection_name_no_conflict), 0).show();
+            SketchToast.toast(getApplicationContext(), getString(R.string.design_manager_message_collection_name_no_conflict), 0).show();
         }
 
         selectedCollection = new ArrayList<>();

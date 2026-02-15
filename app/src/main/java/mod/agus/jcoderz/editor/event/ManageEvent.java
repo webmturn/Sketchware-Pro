@@ -2,8 +2,8 @@ package mod.agus.jcoderz.editor.event;
 
 import java.util.ArrayList;
 
-import a.a.a.Gx;
-import a.a.a.Lx;
+import a.a.a.ClassInfo;
+import a.a.a.ComponentCodeGenerator;
 import mod.hilal.saif.events.EventsHandler;
 import pro.sketchware.R;
 import pro.sketchware.blocks.generator.components.analyzers.BlockReturnAnalyzer;
@@ -11,133 +11,133 @@ import pro.sketchware.blocks.generator.components.analyzers.BlockReturnAnalyzer;
 public class ManageEvent {
 
     /**
-     * Used in {@link a.a.a.oq#getEventsForClass(Gx)} to retrieve extra Events of Components.
+     * Used in {@link a.a.a.oq#getEventsForClass(ClassInfo)} to retrieve extra Events of Components.
      */
-    public static void addExtraEvents(Gx gx, ArrayList<String> events) {
-        if (gx.a("RatingBar")) {
+    public static void addExtraEvents(ClassInfo gx, ArrayList<String> events) {
+        if (gx.matchesType("RatingBar")) {
             events.add("onRatingChanged");
         }
-        if (gx.a("TimePicker")) {
+        if (gx.matchesType("TimePicker")) {
             events.add("onTimeChanged");
         }
-        if (gx.a("DatePicker")) {
+        if (gx.matchesType("DatePicker")) {
             events.add("onDateChanged");
         }
-        if (gx.a("VideoView")) {
+        if (gx.matchesType("VideoView")) {
             events.add("onPrepared");
             events.add("onError");
             events.add("onCompletion");
         }
-        if (gx.a("SearchView")) {
+        if (gx.matchesType("SearchView")) {
             events.add("onQueryTextSubmit");
             events.add("onQueryTextChanged");
         }
-        if (gx.a("ListView")) {
+        if (gx.matchesType("ListView")) {
             events.add("onScrollChanged");
             events.add("onScrolled");
         }
-        if (gx.a("RecyclerView")) {
+        if (gx.matchesType("RecyclerView")) {
             events.add("onBindCustomView");
             events.add("onRecyclerScrollChanged");
             events.add("onRecyclerScrolled");
         }
-        if (gx.a("GridView")) {
+        if (gx.matchesType("GridView")) {
             events.add("onItemClicked");
             events.add("onItemLongClicked");
             events.add("onBindCustomView");
         }
-        if (gx.a("Spinner")) {
+        if (gx.matchesType("Spinner")) {
             events.add("onBindCustomView");
         }
-        if (gx.a("ViewPager")) {
+        if (gx.matchesType("ViewPager")) {
             events.add("onBindCustomView");
             events.add("onPageScrolled");
             events.add("onPageSelected");
             events.add("onPageChanged");
         }
-        if (gx.a("TabLayout")) {
+        if (gx.matchesType("TabLayout")) {
             events.add("onTabSelected");
             events.add("onTabUnselected");
             events.add("onTabReselected");
         }
-        if (gx.a("BottomNavigationView")) {
+        if (gx.matchesType("BottomNavigationView")) {
             events.add("onNavigationItemSelected");
         }
-        if (gx.a("PatternLockView")) {
+        if (gx.matchesType("PatternLockView")) {
             events.add("onPatternLockStarted");
             events.add("onPatternLockProgress");
             events.add("onPatternLockComplete");
             events.add("onPatternLockCleared");
         }
-        if (gx.a("WaveSideBar")) {
+        if (gx.matchesType("WaveSideBar")) {
             events.add("onLetterSelected");
         }
         EventsHandler.addEvents(gx, events);
     }
 
     /**
-     * Used in {@link a.a.a.oq#getListenersForClass(Gx)}
+     * Used in {@link a.a.a.oq#getListenersForClass(ClassInfo)}
      * to get extra listeners for Components and Widgets.
      */
-    public static void addExtraListeners(Gx gx, ArrayList<String> listeners) {
-        if (gx.a("RatingBar")) {
+    public static void addExtraListeners(ClassInfo gx, ArrayList<String> listeners) {
+        if (gx.matchesType("RatingBar")) {
             listeners.add("OnRatingBarChangeListener");
         }
-        if (gx.a("TimePicker")) {
+        if (gx.matchesType("TimePicker")) {
             listeners.add("OnTimeChangeListener");
         }
-        if (gx.a("DatePicker")) {
+        if (gx.matchesType("DatePicker")) {
             listeners.add("OnDateChangeListener");
         }
-        if (gx.a("VideoView")) {
+        if (gx.matchesType("VideoView")) {
             listeners.add("OnPreparedListener");
             listeners.add("OnErrorListener");
             listeners.add("OnCompletionListener");
         }
-        if (gx.a("SearchView")) {
+        if (gx.matchesType("SearchView")) {
             listeners.add("OnQueryTextListener");
         }
-        if (gx.a("TimePickerDialog")) {
+        if (gx.matchesType("TimePickerDialog")) {
             listeners.add("OnTimeSetListener");
         }
-        if (gx.a("DatePickerDialog")) {
+        if (gx.matchesType("DatePickerDialog")) {
             listeners.add("OnDateSetListener");
         }
-        if (gx.a("FragmentAdapter")) {
+        if (gx.matchesType("FragmentAdapter")) {
             listeners.add("FragmentStatePagerAdapter");
         }
-        if (gx.a("RewardedVideoAd")) {
+        if (gx.matchesType("RewardedVideoAd")) {
             listeners.add("rewardedAdLoadCallback");
             listeners.add("fullScreenContentCallback");
             listeners.add("onUserEarnedRewardListener");
         }
-        if (gx.a("ListView")) {
+        if (gx.matchesType("ListView")) {
             listeners.add("OnScrollListener");
         }
-        if (gx.a("RecyclerView")) {
+        if (gx.matchesType("RecyclerView")) {
             listeners.add("OnRecyclerScrollListener");
         }
-        if (gx.a("GridView")) {
+        if (gx.matchesType("GridView")) {
             listeners.add("OnGridItemClickListener");
             listeners.add("OnGridItemLongClickListener");
         }
-        if (gx.a("ViewPager")) {
+        if (gx.matchesType("ViewPager")) {
             listeners.add("OnPageChangeListener");
             listeners.add("OnAdapterChangeListener");
         }
-        if (gx.a("TabLayout")) {
+        if (gx.matchesType("TabLayout")) {
             listeners.add("OnTabSelectedListener");
         }
-        if (gx.a("BottomNavigationView")) {
+        if (gx.matchesType("BottomNavigationView")) {
             listeners.add("OnNavigationItemSelected");
         }
-        if (gx.a("PatternLockView")) {
+        if (gx.matchesType("PatternLockView")) {
             listeners.add("PatternLockViewListener");
         }
-        if (gx.a("WaveSideBar")) {
+        if (gx.matchesType("WaveSideBar")) {
             listeners.add("OnLetterSelectedListener");
         }
-        if (gx.a("FirebaseAuth")) {
+        if (gx.matchesType("FirebaseAuth")) {
             listeners.add("authUpdateEmailComplete");
             listeners.add("authUpdatePasswordComplete");
             listeners.add("authEmailVerificationSent");
@@ -146,10 +146,10 @@ public class ManageEvent {
             listeners.add("authUpdateProfileComplete");
             listeners.add("googleSignInListener");
         }
-        if (gx.a("FirebasePhoneAuth")) {
+        if (gx.matchesType("FirebasePhoneAuth")) {
             listeners.add("OnVerificationStateChangedListener");
         }
-        if (gx.a("FirebaseCloudMessage")) {
+        if (gx.matchesType("FirebaseCloudMessage")) {
             listeners.add("OnCompleteListenerFCM");
         }
         EventsHandler.addListeners(gx, listeners);
@@ -663,7 +663,7 @@ public class ManageEvent {
     }
 
     /**
-     * @return Code of extra listeners, used in {@link a.a.a.Lx#getListenerCode(String, String, String)}
+     * @return Code of extra listeners, used in {@link a.a.a.ComponentCodeGenerator#getListenerCode(String, String, String)}
      */
     public static String g(String listenerName, String targetId, String listenerLogic) {
         return switch (listenerName) {
@@ -700,7 +700,7 @@ public class ManageEvent {
                             listenerLogic + "\r\n" +
                             "};";
             case "FragmentStatePagerAdapter" -> {
-                String className = Lx.a(targetId + "Fragment", false);
+                String className = ComponentCodeGenerator.getAdapterClassName(targetId + "Fragment", false);
                 yield "public class " + className + " extends FragmentStatePagerAdapter {\r\n" +
                         "// This class is deprecated, you should migrate to ViewPager2:\r\n" +
                         "// https://developer.android.com/reference/androidx/viewpager2/widget/ViewPager2\r\n" +
@@ -878,8 +878,8 @@ public class ManageEvent {
         };
     }
 
-    public static void addExtraComponentEvents(Gx gx, ArrayList<String> list) {
-        if (gx.a("RewardedVideoAd")) {
+    public static void addExtraComponentEvents(ClassInfo gx, ArrayList<String> list) {
+        if (gx.matchesType("RewardedVideoAd")) {
             list.add("onRewardAdLoaded");
             list.add("onRewardAdFailedToLoad");
             list.add("onUserEarnedReward");
@@ -887,17 +887,17 @@ public class ManageEvent {
             list.add("onAdFailedToShowFullScreenContent");
             list.add("onAdShowedFullScreenContent");
         }
-        if (gx.a("FragmentAdapter")) {
+        if (gx.matchesType("FragmentAdapter")) {
             list.add("onTabAdded");
             list.add("onFragmentAdded");
         }
-        if (gx.a("TimePickerDialog")) {
+        if (gx.matchesType("TimePickerDialog")) {
             list.add("onTimeSet");
         }
-        if (gx.a("DatePickerDialog")) {
+        if (gx.matchesType("DatePickerDialog")) {
             list.add("onDateSet");
         }
-        if (gx.a("FirebaseAuth")) {
+        if (gx.matchesType("FirebaseAuth")) {
             list.add("onUpdateEmailComplete");
             list.add("onUpdatePasswordComplete");
             list.add("onEmailVerificationSent");
@@ -906,15 +906,15 @@ public class ManageEvent {
             list.add("onUpdateProfileComplete");
             list.add("onGoogleSignIn");
         }
-        if (gx.a("FirebasePhoneAuth")) {
+        if (gx.matchesType("FirebasePhoneAuth")) {
             list.add("onVerificationCompleted");
             list.add("onVerificationFailed");
             list.add("onCodeSent");
         }
-        if (gx.a("FirebaseCloudMessage")) {
+        if (gx.matchesType("FirebaseCloudMessage")) {
             list.add("onCompleteRegister");
         }
-        if (gx.a("FirebaseGoogleLogin")) {
+        if (gx.matchesType("FirebaseGoogleLogin")) {
             list.add("onAccountPicker");
             list.add("onAccountPickerCancelled");
         }

@@ -15,8 +15,8 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import a.a.a.lC;
-import a.a.a.wq;
+import a.a.a.ProjectListManager;
+import a.a.a.SketchwarePaths;
 import a.a.a.yB;
 import pro.sketchware.activities.resourceseditor.ResourcesEditorActivity;
 import pro.sketchware.utility.XmlUtil;
@@ -54,9 +54,9 @@ public class StringsEditorManager {
             if (isDefaultVariant && !hasAppNameKey) {
                 HashMap<String, Object> map = new HashMap<>();
                 map.put("key", "app_name");
-                map.put("text", yB.c(lC.b(sc_id), "my_app_name"));
+                map.put("text", yB.c(ProjectListManager.getProjectById(sc_id), "my_app_name"));
                 listMap.add(0, map);
-                XmlUtil.saveXml(wq.b(sc_id) + "/files/resource/values/strings.xml", convertListMapToXmlStrings(listMap, notesMap));
+                XmlUtil.saveXml(SketchwarePaths.getDataPath(sc_id) + "/files/resource/values/strings.xml", convertListMapToXmlStrings(listMap, notesMap));
             }
         } catch (Exception ignored) {
             isDataLoadingFailed = !xmlString.trim().isEmpty();

@@ -19,7 +19,7 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.List;
 
-import a.a.a.lC;
+import a.a.a.ProjectListManager;
 import dev.pranav.filepicker.FilePickerCallback;
 import dev.pranav.filepicker.FilePickerDialogFragment;
 import dev.pranav.filepicker.FilePickerOptions;
@@ -255,7 +255,7 @@ public class BackupRestoreManager {
 
         @Override
         protected String doInBackground(String... params) {
-            bm = new BackupFactory(lC.b());
+            bm = new BackupFactory(ProjectListManager.getNextProjectId());
             bm.setBackupLocalLibs(restoreLocalLibs);
 
             try {

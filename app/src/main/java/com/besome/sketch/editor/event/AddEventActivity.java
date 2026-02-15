@@ -31,14 +31,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
-import a.a.a.Ox;
-import a.a.a.bB;
-import a.a.a.gB;
-import a.a.a.jC;
-import a.a.a.jq;
+import a.a.a.LayoutGenerator;
+import a.a.a.SketchToast;
+import a.a.a.AnimationUtil;
+import a.a.a.ProjectDataManager;
+import a.a.a.BuildConfig;
 import a.a.a.mB;
-import a.a.a.oq;
-import a.a.a.rs;
+import a.a.a.EventRegistry;
+import a.a.a.EventListFragment;
 import a.a.a.wB;
 import dev.chrisbanes.insetter.Insetter;
 import pro.sketchware.R;
@@ -72,7 +72,7 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
     private void l() {
         if (eventsToAdd.isEmpty() && !C) {
             C = true;
-            gB.a(binding.eventsPreview, 300, new Animator.AnimatorListener() {
+            AnimationUtil.rotate(binding.eventsPreview, 300, new Animator.AnimatorListener() {
                 @Override
                 public void onAnimationStart(@NonNull Animator animation) {
                 }
@@ -93,7 +93,7 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
         } else if (!eventsToAdd.isEmpty() && C) {
             C = false;
             binding.eventsPreview.setVisibility(View.VISIBLE);
-            gB.b(binding.eventsPreview, 300, null);
+            AnimationUtil.expandView(binding.eventsPreview, 300, null);
         }
     }
 
@@ -105,9 +105,9 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
         addableEtcEvents.clear();
         eventsToAdd.clear();
 
-        for (var activityEvent : oq.getAllActivityEvents()) {
+        for (var activityEvent : EventRegistry.getAllActivityEvents()) {
             boolean exists = false;
-            for (var existingEvent : jC.a(sc_id).g(projectFile.getJavaName())) {
+            for (var existingEvent : ProjectDataManager.getProjectDataManager(sc_id).g(projectFile.getJavaName())) {
                 if (existingEvent.eventType == EventBean.EVENT_TYPE_ACTIVITY
                         && activityEvent.equals(existingEvent.eventName)) {
                     exists = true;
@@ -119,19 +119,19 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
                 addableActivityEvents.add(new EventBean(EventBean.EVENT_TYPE_ACTIVITY, 0, activityEvent, activityEvent));
             }
         }
-        ArrayList<ViewBean> views = jC.a(sc_id).d(projectFile.getXmlName());
-        ArrayList<ComponentBean> components = jC.a(sc_id).e(projectFile.getJavaName());
+        ArrayList<ViewBean> views = ProjectDataManager.getProjectDataManager(sc_id).d(projectFile.getXmlName());
+        ArrayList<ComponentBean> components = ProjectDataManager.getProjectDataManager(sc_id).e(projectFile.getJavaName());
         if (views != null) {
             for (ViewBean view : views) {
-                Set<String> toNotAdd = new Ox(new jq(), projectFile).readAttributesToReplace(view);
-                for (String viewEvent : oq.getEventsForClass(view.getClassInfo())) {
+                Set<String> toNotAdd = new LayoutGenerator(new BuildConfig(), projectFile).readAttributesToReplace(view);
+                for (String viewEvent : EventRegistry.getEventsForClass(view.getClassInfo())) {
                     boolean exists;
                     if (viewEvent.equals("onBindCustomView") && (view.customView.isEmpty()
                             || view.customView.equals("none"))) {
                         exists = true;
                     } else {
                         exists = false;
-                        for (var existingEvent : jC.a(sc_id).g(projectFile.getJavaName())) {
+                        for (var existingEvent : ProjectDataManager.getProjectDataManager(sc_id).g(projectFile.getJavaName())) {
                             if (existingEvent.eventType == EventBean.EVENT_TYPE_VIEW
                                     && view.id.equals(existingEvent.targetId)
                                     && viewEvent.equals(existingEvent.eventName)) {
@@ -149,9 +149,9 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
         }
         if (components != null) {
             for (ComponentBean component : components) {
-                for (String componentEvent : oq.getComponentEventsForClass(component.getClassInfo())) {
+                for (String componentEvent : EventRegistry.getComponentEventsForClass(component.getClassInfo())) {
                     boolean exists = false;
-                    for (var existingEvent : jC.a(sc_id).g(projectFile.getJavaName())) {
+                    for (var existingEvent : ProjectDataManager.getProjectDataManager(sc_id).g(projectFile.getJavaName())) {
                         if (existingEvent.eventType == EventBean.EVENT_TYPE_COMPONENT
                                 && component.componentId.equals(existingEvent.targetId)
                                 && componentEvent.equals(existingEvent.eventName)) {
@@ -166,10 +166,10 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
             }
         }
         ViewBean fab;
-        if (projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB) && (fab = jC.a(sc_id).h(projectFile.getXmlName())) != null) {
-            for (String fabEvent : oq.getEventsForClass(fab.getClassInfo())) {
+        if (projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB) && (fab = ProjectDataManager.getProjectDataManager(sc_id).h(projectFile.getXmlName())) != null) {
+            for (String fabEvent : EventRegistry.getEventsForClass(fab.getClassInfo())) {
                 boolean exists = false;
-                for (var existingFabEvent : jC.a(sc_id).g(projectFile.getJavaName())) {
+                for (var existingFabEvent : ProjectDataManager.getProjectDataManager(sc_id).g(projectFile.getJavaName())) {
                     if (existingFabEvent.eventType == EventBean.EVENT_TYPE_VIEW
                             && fab.id.equals(existingFabEvent.targetId)
                             && fabEvent.equals(existingFabEvent.eventName)) {
@@ -183,13 +183,13 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
             }
         }
         if (projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)) {
-            ArrayList<ViewBean> drawerViews = jC.a(sc_id).d(projectFile.getDrawerXmlName());
+            ArrayList<ViewBean> drawerViews = ProjectDataManager.getProjectDataManager(sc_id).d(projectFile.getDrawerXmlName());
             if (drawerViews != null) {
                 for (ViewBean drawerView : drawerViews) {
-                    Set<String> toNotAdd = new Ox(new jq(), projectFile).readAttributesToReplace(drawerView);
-                    for (String drawerViewEvent : oq.getEventsForClass(drawerView.getClassInfo())) {
+                    Set<String> toNotAdd = new LayoutGenerator(new BuildConfig(), projectFile).readAttributesToReplace(drawerView);
+                    for (String drawerViewEvent : EventRegistry.getEventsForClass(drawerView.getClassInfo())) {
                         boolean exists = false;
-                        for (var existingEvent : jC.a(sc_id).g(projectFile.getJavaName())) {
+                        for (var existingEvent : ProjectDataManager.getProjectDataManager(sc_id).g(projectFile.getJavaName())) {
                             if (existingEvent.eventType == EventBean.EVENT_TYPE_DRAWER_VIEW
                                     && drawerView.id.equals(existingEvent.targetId)
                                     && drawerViewEvent.equals(existingEvent.eventName)) {
@@ -207,7 +207,7 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
         if (categoryAdapter.lastSelectedCategory == -1) {
             eventAdapter.setEvents(categories.get(categoryIndex));
             categoryAdapter.lastSelectedCategory = categoryIndex;
-            binding.tvCategory.setText(rs.a(getApplicationContext(), categoryIndex));
+            binding.tvCategory.setText(EventListFragment.getCategoryName(getApplicationContext(), categoryIndex));
             if (categoryAdapter != null) {
                 categoryAdapter.notifyItemChanged(categoryIndex);
             }
@@ -236,26 +236,26 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
                         if (!moreBlockView.b()) {
                             eventAdapter.setEvents(categories.get(4));
                             categoryAdapter.lastSelectedCategory = 4;
-                            binding.tvCategory.setText(rs.a(getApplicationContext(), 4));
+                            binding.tvCategory.setText(EventListFragment.getCategoryName(getApplicationContext(), 4));
                             binding.emptyMessage.setVisibility(View.GONE);
                             binding.moreblockLayout.setVisibility(View.VISIBLE);
                             categoryAdapter.notifyDataSetChanged();
                             finished = true;
                         } else {
                             Pair<String, String> blockInformation = moreBlockView.getBlockInformation();
-                            jC.a(sc_id).a(projectFile.getJavaName(), blockInformation.first, blockInformation.second);
+                            ProjectDataManager.getProjectDataManager(sc_id).a(projectFile.getJavaName(), blockInformation.first, blockInformation.second);
                         }
                     }
                     if (!finished) {
                         for (EventBean eventBean : eventsToAdd) {
-                            jC.a(sc_id).a(projectFile.getJavaName(), eventBean);
+                            ProjectDataManager.getProjectDataManager(sc_id).a(projectFile.getJavaName(), eventBean);
                         }
                         if (eventsToAdd.size() == 1) {
-                            bB.a(getApplicationContext(), getApplicationContext().getString(R.string.event_message_new_event), bB.TOAST_NORMAL).show();
+                            SketchToast.toast(getApplicationContext(), getApplicationContext().getString(R.string.event_message_new_event), SketchToast.TOAST_NORMAL).show();
                         } else if (eventsToAdd.size() > 1) {
-                            bB.a(getApplicationContext(), getApplicationContext().getString(R.string.event_message_new_events), bB.TOAST_NORMAL).show();
+                            SketchToast.toast(getApplicationContext(), getApplicationContext().getString(R.string.event_message_new_events), SketchToast.TOAST_NORMAL).show();
                         }
-                        jC.a(sc_id).k();
+                        ProjectDataManager.getProjectDataManager(sc_id).k();
                         setResult(RESULT_OK);
                         finish();
                     }
@@ -325,13 +325,13 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
     @Override
     public void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        moreBlockView.setFuncNameValidator(jC.a(sc_id).a(projectFile));
+        moreBlockView.setFuncNameValidator(ProjectDataManager.getProjectDataManager(sc_id).a(projectFile));
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        gB.a(binding.container, 500);
+        AnimationUtil.fadeInBackground(binding.container, 500);
         if (projectFile != null) {
             initialize();
         }
@@ -366,7 +366,7 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
             layoutParams.width = a;
             layoutParams.height = a;
             imageView.setLayoutParams(layoutParams);
-            imageView.setImageResource(oq.getEventIconResource(event.eventName));
+            imageView.setImageResource(EventRegistry.getEventIconResource(event.eventName));
             imageView.setColorFilter(MaterialColors.getColor(imageView, com.google.android.material.R.attr.colorOutline));
             holder.events_preview.addView(imageView);
             holder.img_icon.setImageResource(EventBean.getEventIconResource(event.eventType, event.targetType));
@@ -388,7 +388,7 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
             } else {
                 holder.tv_target_id.setText(event.targetId);
             }
-            holder.tv_event_name.setText(oq.getEventName(event.eventName));
+            holder.tv_event_name.setText(EventRegistry.getEventName(event.eventName));
             holder.checkbox.setChecked(event.isSelected);
             e = false;
         }
@@ -481,7 +481,7 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            holder.img_icon.setImageResource(rs.a(position));
+            holder.img_icon.setImageResource(EventListFragment.getCategoryIcon(position));
             if (lastSelectedCategory == position) {
                 holder.container.setBackgroundResource(R.drawable.border_top_corner_white_no_stroke);
                 holder.img_icon.animate().scaleX(1.0f).scaleY(1.0f).alpha(1.0f).start();
@@ -528,7 +528,7 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
                     if (layoutPosition != lastSelectedCategory) {
                         lastSelectedCategory = getLayoutPosition();
                         notifyDataSetChanged();
-                        binding.tvCategory.setText(rs.a(getApplicationContext(), lastSelectedCategory));
+                        binding.tvCategory.setText(EventListFragment.getCategoryName(getApplicationContext(), lastSelectedCategory));
                         if (lastSelectedCategory == 4) {
                             binding.moreblockLayout.setVisibility(View.VISIBLE);
                             binding.emptyMessage.setVisibility(View.GONE);
@@ -558,7 +558,7 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
                 holder.ll_img_event.setVisibility(View.GONE);
             }
             holder.img_icon.setImageResource(EventBean.getEventIconResource(event.eventType, event.targetType));
-            holder.img_event.setImageResource(oq.getEventIconResource(event.eventName));
+            holder.img_event.setImageResource(EventRegistry.getEventIconResource(event.eventName));
         }
 
         @Override

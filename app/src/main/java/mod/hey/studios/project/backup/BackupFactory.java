@@ -40,7 +40,7 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import a.a.a.lC;
+import a.a.a.ProjectListManager;
 import a.a.a.yB;
 import mod.hey.studios.editor.manage.block.ExtraBlockInfo;
 import mod.hey.studios.editor.manage.block.v2.BlockLoader;
@@ -286,9 +286,9 @@ public class BackupFactory {
     public void backup(Context context, String project_name) {
         String customFileName = ConfigActivity.getBackupFileName();
 
-        String versionName = yB.c(lC.b(sc_id), "sc_ver_name");
-        String versionCode = yB.c(lC.b(sc_id), "sc_ver_code");
-        String pkgName = yB.c(lC.b(sc_id), "my_sc_pkg_name");
+        String versionName = yB.c(ProjectListManager.getProjectById(sc_id), "sc_ver_name");
+        String versionCode = yB.c(ProjectListManager.getProjectById(sc_id), "sc_ver_code");
+        String pkgName = yB.c(ProjectListManager.getProjectById(sc_id), "my_sc_pkg_name");
         String projectNameOnly = project_name.replace("_d", "").replace(File.separator, "");
         String finalFileName;
 

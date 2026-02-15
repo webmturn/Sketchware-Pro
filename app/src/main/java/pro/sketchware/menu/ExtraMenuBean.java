@@ -30,8 +30,8 @@ import java.util.regex.Pattern;
 
 import a.a.a.Ss;
 import a.a.a.eC;
-import a.a.a.jC;
-import a.a.a.uq;
+import a.a.a.ProjectDataManager;
+import a.a.a.BlockConstants;
 import a.a.a.wB;
 import dev.pranav.filepicker.FilePickerCallback;
 import dev.pranav.filepicker.FilePickerDialogFragment;
@@ -83,7 +83,7 @@ public class ExtraMenuBean {
         fpu = new FilePathUtil();
         frc = new FileResConfig(logicA.scId);
         defaultExtraMenu = new DefaultExtraMenuBean(logicA);
-        projectDataManager = jC.a(logicA.scId);
+        projectDataManager = ProjectDataManager.getProjectDataManager(logicA.scId);
         javaName = logicA.M.getJavaName();
     }
 
@@ -301,12 +301,12 @@ public class ExtraMenuBean {
 
             case "intentAction":
                 title = logicEditor.getString(R.string.logic_editor_title_select_component_intent_action);
-                menus = new ArrayList<>(Arrays.asList(uq.b()));
+                menus = new ArrayList<>(Arrays.asList(BlockConstants.b()));
                 break;
 
             case "intentFlags":
                 title = logicEditor.getString(R.string.logic_editor_title_select_component_intent_flags);
-                menus = new ArrayList<>(Arrays.asList(uq.c()));
+                menus = new ArrayList<>(Arrays.asList(BlockConstants.c()));
                 break;
 
             case "calendar":
@@ -316,7 +316,7 @@ public class ExtraMenuBean {
 
             case "calendarField":
                 title = logicEditor.getString(R.string.logic_editor_title_select_component_calendar_field);
-                menus = new ArrayList<>(Arrays.asList(uq.e));
+                menus = new ArrayList<>(Arrays.asList(BlockConstants.e));
                 break;
 
             case "vibrator":
@@ -366,27 +366,27 @@ public class ExtraMenuBean {
 
             case "aniRepeatMode":
                 title = logicEditor.getString(R.string.logic_editor_title_select_animator_repeat_mode);
-                menus = new ArrayList<>(Arrays.asList(uq.j));
+                menus = new ArrayList<>(Arrays.asList(BlockConstants.j));
                 break;
 
             case "aniInterpolator":
                 title = logicEditor.getString(R.string.logic_editor_title_select_animator_interpolator);
-                menus = new ArrayList<>(Arrays.asList(uq.k));
+                menus = new ArrayList<>(Arrays.asList(BlockConstants.k));
                 break;
 
             case "visible":
                 title = logicEditor.getString(R.string.logic_editor_title_select_visibility);
-                menus = new ArrayList<>(Arrays.asList(uq.g));
+                menus = new ArrayList<>(Arrays.asList(BlockConstants.g));
                 break;
 
             case "cacheMode":
                 title = logicEditor.getString(R.string.logic_editor_title_select_cache_mode);
-                menus = new ArrayList<>(Arrays.asList(uq.h));
+                menus = new ArrayList<>(Arrays.asList(BlockConstants.h));
                 break;
 
             case "animatorproperty":
                 title = logicEditor.getString(R.string.logic_editor_title_select_animator_target_property);
-                menus = new ArrayList<>(Arrays.asList(uq.i));
+                menus = new ArrayList<>(Arrays.asList(BlockConstants.i));
                 break;
 
             case "gyroscope":
@@ -411,7 +411,7 @@ public class ExtraMenuBean {
 
             case "directoryType":
                 title = logicEditor.getString(R.string.logic_editor_title_select_directory_type);
-                menus = new ArrayList<>(Arrays.asList(uq.l));
+                menus = new ArrayList<>(Arrays.asList(BlockConstants.l));
                 break;
 
             case "requestnetwork":
@@ -421,12 +421,12 @@ public class ExtraMenuBean {
 
             case "method":
                 title = logicEditor.getString(R.string.logic_editor_title_request_network_method);
-                menus = new ArrayList<>(Arrays.asList(uq.n));
+                menus = new ArrayList<>(Arrays.asList(BlockConstants.n));
                 break;
 
             case "requestType":
                 title = logicEditor.getString(R.string.logic_editor_title_request_network_request_type);
-                menus = new ArrayList<>(Arrays.asList(uq.o));
+                menus = new ArrayList<>(Arrays.asList(BlockConstants.o));
                 break;
 
             case "texttospeech":
@@ -501,17 +501,17 @@ public class ExtraMenuBean {
 
             case "providerType":
                 title = logicEditor.getString(R.string.logic_editor_title_location_manager_provider_type);
-                menus = new ArrayList<>(Arrays.asList(uq.p));
+                menus = new ArrayList<>(Arrays.asList(BlockConstants.p));
                 break;
 
             case "mapType":
                 title = logicEditor.getString(R.string.logic_editor_title_mapview_map_type);
-                menus = new ArrayList<>(Arrays.asList(uq.q));
+                menus = new ArrayList<>(Arrays.asList(BlockConstants.q));
                 break;
 
             case "markerColor":
                 title = logicEditor.getString(R.string.logic_editor_title_mapview_marker_color);
-                menus = new ArrayList<>(Arrays.asList(uq.r));
+                menus = new ArrayList<>(Arrays.asList(BlockConstants.r));
                 break;
 
             case "service":
@@ -531,7 +531,7 @@ public class ExtraMenuBean {
             case "activity":
                 ArrayList<String> activityMenu = new ArrayList<>();
                 title = logicEditor.getString(R.string.logic_editor_title_select_activity);
-                for (ProjectFileBean projectFileBean : jC.b(sc_id).b()) {
+                for (ProjectFileBean projectFileBean : ProjectDataManager.getFileManager(sc_id).b()) {
                     activityMenu.add(projectFileBean.getActivityName());
                 }
                 for (String activity : activityMenu) {
@@ -560,7 +560,7 @@ public class ExtraMenuBean {
 
             case "customViews":
                 title = "Select a Custom View";
-                for (ProjectFileBean projectFileBean : jC.b(sc_id).c()) {
+                for (ProjectFileBean projectFileBean : ProjectDataManager.getFileManager(sc_id).c()) {
                     menus.add(projectFileBean.fileName);
                 }
                 break;
@@ -610,7 +610,7 @@ public class ExtraMenuBean {
             case "AdUnit":
                 dialog.setIcon(R.drawable.unit_96);
                 title = "Select an Ad Unit";
-                for (AdUnitBean bean : jC.c(sc_id).e.adUnits) {
+                for (AdUnitBean bean : ProjectDataManager.getLibraryManager(sc_id).e.adUnits) {
                     menus.add(bean.id);
                 }
                 break;
@@ -618,7 +618,7 @@ public class ExtraMenuBean {
             case "TestDevice":
                 dialog.setIcon(R.drawable.ic_test_device_48dp);
                 title = "Select a Test device";
-                for (AdTestDeviceBean testDevice : jC.c(sc_id).e.testDevices) {
+                for (AdTestDeviceBean testDevice : ProjectDataManager.getLibraryManager(sc_id).e.testDevices) {
                     menus.add(testDevice.deviceId);
                 }
                 break;

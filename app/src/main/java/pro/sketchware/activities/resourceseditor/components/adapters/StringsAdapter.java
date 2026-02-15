@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import a.a.a.eC;
-import a.a.a.jC;
+import a.a.a.ProjectDataManager;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.activities.resourceseditor.ResourcesEditorActivity;
@@ -165,7 +165,7 @@ public class StringsAdapter extends RecyclerView.Adapter<StringsAdapter.ViewHold
         }
 
         String projectScId = sc_id;
-        eC projectDataManager = jC.a(projectScId);
+        eC projectDataManager = ProjectDataManager.getProjectDataManager(projectScId);
 
         return isStringUsedInJavaFiles(projectScId, projectDataManager, key) || isStringUsedInXmlFiles(projectScId, projectDataManager, key);
     }

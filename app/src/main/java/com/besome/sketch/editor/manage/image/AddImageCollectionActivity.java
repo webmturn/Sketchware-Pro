@@ -28,14 +28,14 @@ import java.util.ArrayList;
 
 import a.a.a.By;
 import a.a.a.HB;
-import a.a.a.MA;
+import a.a.a.BaseAsyncTask;
 import a.a.a.Op;
 import a.a.a.PB;
-import a.a.a.bB;
+import a.a.a.SketchToast;
 import a.a.a.iB;
 import a.a.a.mB;
-import a.a.a.uq;
-import a.a.a.wq;
+import a.a.a.BlockConstants;
+import a.a.a.SketchwarePaths;
 import a.a.a.yy;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
@@ -157,7 +157,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
         ed_input_edittext = ed_input.getEditText();
         ed_input_edittext.setPrivateImeOptions("defaultInputmode=english;");
         ed_input.setHint(getString(R.string.design_manager_image_hint_enter_image_name));
-        imageNameValidator = new PB(this, ed_input.getTextInputLayout(), uq.b, getReservedImageNames());
+        imageNameValidator = new PB(this, ed_input.getTextInputLayout(), BlockConstants.b, getReservedImageNames());
         imageNameValidator.a(1);
         tv_add_photo.setText(R.string.design_manager_image_title_add_image);
         preview.setOnClickListener(this);
@@ -178,7 +178,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
         if (editing) {
             editTarget.isEdited = true;
             e(getString(R.string.design_manager_image_title_edit_image_name));
-            imageNameValidator = new PB(this, ed_input.getTextInputLayout(), uq.b, getReservedImageNames(), editTarget.resName);
+            imageNameValidator = new PB(this, ed_input.getTextInputLayout(), BlockConstants.b, getReservedImageNames(), editTarget.resName);
             imageNameValidator.a(1);
             ed_input_edittext.setText(editTarget.resName);
             chk_collection.setVisibility(View.GONE);
@@ -203,7 +203,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
             intent.setType("image/*");
             imagePickerLauncher.launch(Intent.createChooser(intent, getString(R.string.common_word_choose)));
         } catch (ActivityNotFoundException unused) {
-            bB.b(this, getString(R.string.common_error_activity_not_found), bB.TOAST_NORMAL).show();
+            SketchToast.warning(this, getString(R.string.common_error_activity_not_found), SketchToast.TOAST_NORMAL).show();
         }
     }
 
@@ -279,10 +279,10 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
     }
 
     private String a(ProjectResourceBean projectResourceBean) {
-        return wq.a() + File.separator + "image" + File.separator + "data" + File.separator + projectResourceBean.resFullName;
+        return SketchwarePaths.getCollectionPath() + File.separator + "image" + File.separator + "data" + File.separator + projectResourceBean.resFullName;
     }
 
-    private static class SaveAsyncTask extends MA {
+    private static class SaveAsyncTask extends BaseAsyncTask {
         private final WeakReference<AddImageCollectionActivity> activity;
 
         public SaveAsyncTask(AddImageCollectionActivity activity) {
@@ -295,9 +295,9 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
         public void a() {
             var activity = this.activity.get();
             if (activity == null) return;
-            bB.a(activity.getApplicationContext(), activity.getString(
+            SketchToast.toast(activity.getApplicationContext(), activity.getString(
                     activity.editing ? R.string.design_manager_message_edit_complete :
-                            R.string.design_manager_message_add_complete), bB.TOAST_NORMAL).show();
+                            R.string.design_manager_message_add_complete), SketchToast.TOAST_NORMAL).show();
             activity.h();
             activity.finish();
         }

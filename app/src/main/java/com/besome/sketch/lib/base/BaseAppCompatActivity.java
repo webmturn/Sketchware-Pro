@@ -24,8 +24,8 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 
-import a.a.a.MA;
-import a.a.a.lC;
+import a.a.a.BaseAsyncTask;
+import a.a.a.ProjectListManager;
 import dev.chrisbanes.insetter.Insetter;
 import pro.sketchware.dialogs.ProgressDialog;
 
@@ -38,31 +38,32 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
     public Activity parent;
     protected ProgressDialog progressDialog;
     private LoadingDialog lottieDialog;
-    private ArrayList<MA> taskList;
+    private ArrayList<BaseAsyncTask> taskList;
 
-    public void a(MA var1) {
-        taskList.add(var1);
+    @Deprecated
+    public void a(BaseAsyncTask var1) {
+        addTask(var1);
     }
 
-    public void addTask(MA task) {
+    public void addTask(BaseAsyncTask task) {
         taskList.add(task);
     }
 
-    public void a(OnCancelListener cancelListener) {
+    public void showProgressDialogWithCancel(OnCancelListener cancelListener) {
         if (progressDialog != null && !progressDialog.isShowing()) {
             progressDialog.setOnCancelListener(cancelListener);
             progressDialog.show();
         }
     }
 
-    public void a(String var1) {
+    public void setProgressMessage(String var1) {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.setMessage(var1);
         }
     }
 
-    public void g() {
-        for (MA task : taskList) {
+    public void cancelAllTasks() {
+        for (BaseAsyncTask task : taskList) {
             if (task.getStatus() != Status.FINISHED && !task.isCancelled()) {
                 task.cancel(true);
             }
@@ -70,7 +71,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
         taskList.clear();
     }
 
-    public void h() {
+    public void dismissLoadingDialog() {
         try {
             if (lottieDialog != null && lottieDialog.isShowing()) {
                 lottieDialog.dismiss();
@@ -81,7 +82,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
         }
     }
 
-    public void i() {
+    public void dismissProgressDialog() {
         try {
             if (progressDialog != null && progressDialog.isShowing()) {
                 progressDialog.dismiss();
@@ -97,14 +98,45 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
         return ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == 0 && ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == 0;
     }
 
+    @Deprecated
     public boolean j() {
         return isStoragePermissionGranted();
     }
 
-    public void k() {
+    public void showLoadingDialog() {
         if (lottieDialog != null && !lottieDialog.isShowing() && !isFinishing()) {
             lottieDialog.show();
         }
+    }
+
+    @Deprecated
+    public void k() {
+        showLoadingDialog();
+    }
+
+    @Deprecated
+    public void h() {
+        dismissLoadingDialog();
+    }
+
+    @Deprecated
+    public void g() {
+        cancelAllTasks();
+    }
+
+    @Deprecated
+    public void i() {
+        dismissProgressDialog();
+    }
+
+    @Deprecated
+    public void a(OnCancelListener cancelListener) {
+        showProgressDialogWithCancel(cancelListener);
+    }
+
+    @Deprecated
+    public void a(String message) {
+        setProgressMessage(message);
     }
 
     @Override
@@ -113,14 +145,14 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
         e = getApplicationContext();
         taskList = new ArrayList<>();
         lottieDialog = new LoadingDialog(this);
-        lC.a(getApplicationContext(), false);
+        ProjectListManager.initializeDb(getApplicationContext(), false);
         progressDialog = new ProgressDialog(this);
         mAnalytics = null;
     }
 
     @Override
     public void onDestroy() {
-        g();
+        cancelAllTasks();
         if (lottieDialog != null && lottieDialog.isShowing()) {
             lottieDialog.cancelAnimation();
         }

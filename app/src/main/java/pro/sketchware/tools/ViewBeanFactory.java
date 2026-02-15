@@ -125,10 +125,10 @@ public class ViewBeanFactory {
         applyGravity(attributes, injectAttributes);
 
         applyBackgroundResource(attributes, injectAttributes);
-        if (bean.getClassInfo().a("TextView")) {
+        if (bean.getClassInfo().matchesType("TextView")) {
             applyText(attributes, injectAttributes);
         }
-        if (bean.getClassInfo().a("ImageView")) {
+        if (bean.getClassInfo().matchesType("ImageView")) {
             applyImage(attributes, injectAttributes);
         }
         for (Map.Entry<String, String> entry : attributes.entrySet()) {
@@ -154,11 +154,11 @@ public class ViewBeanFactory {
                 injectAttributes.put(attrName, attrValue);
             }
         }
-        if (bean.getClassInfo().b("ListView")
-                || bean.getClassInfo().b("GridView")
-                || bean.getClassInfo().b("Spinner")
-                || bean.getClassInfo().b("RecyclerView")
-                || bean.getClassInfo().b("ViewPager")) {
+        if (bean.getClassInfo().isExactType("ListView")
+                || bean.getClassInfo().isExactType("GridView")
+                || bean.getClassInfo().isExactType("Spinner")
+                || bean.getClassInfo().isExactType("RecyclerView")
+                || bean.getClassInfo().isExactType("ViewPager")) {
             var customView = attributes.getOrDefault("tools:listitem", null);
             if (customView != null) {
                 if (customView.startsWith("@layout/")) {

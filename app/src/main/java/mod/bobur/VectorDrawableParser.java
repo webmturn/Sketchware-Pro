@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import a.a.a.wq;
+import a.a.a.SketchwarePaths;
 import pro.sketchware.SketchApplication;
 import pro.sketchware.activities.resourceseditor.components.utils.ColorsEditorManager;
 import pro.sketchware.utility.FileUtil;
@@ -390,12 +390,12 @@ public class VectorDrawableParser {
     private void ensureColorsXmlPath() {
         if (!isEmpty(colorsXmlPath)) return;
 
-        String p1 = wq.b(sc_id) + "/files/resource/values/colors.xml";
+        String p1 = SketchwarePaths.getDataPath(sc_id) + "/files/resource/values/colors.xml";
         if (FileUtil.isExistFile(p1)) {
             colorsXmlPath = p1;
             return;
         }
-        String p2 = wq.d(sc_id) + "/app/src/main/res/values/colors.xml";
+        String p2 = SketchwarePaths.getMyscPath(sc_id) + "/app/src/main/res/values/colors.xml";
         if (FileUtil.isExistFile(p2)) {
             colorsXmlPath = p2;
         }

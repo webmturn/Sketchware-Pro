@@ -25,13 +25,14 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import a.a.a.Cx;
+import a.a.a.ClassInfo;
 import a.a.a.Gx;
 import a.a.a.Kw;
 import a.a.a.Lw;
 import a.a.a.cC;
-import a.a.a.jC;
+import a.a.a.ProjectDataManager;
 import a.a.a.mB;
-import a.a.a.oq;
+import a.a.a.EventRegistry;
 import mod.hey.studios.project.ProjectSettings;
 import mod.pranav.viewbinding.ViewBindingBuilder;
 import pro.sketchware.R;
@@ -74,7 +75,7 @@ public class ViewPropertyItems extends LinearLayout implements Kw, View.OnClickL
     }
 
     private void a(ViewBean bean, String property) {
-        boolean isNotAdview = !bean.getClassInfo().a("AdView");
+        boolean isNotAdview = !bean.getClassInfo().matchesType("AdView");
         boolean isGeneratedId = bean.id.charAt(0) == '_';
 
         switch (property) {
@@ -271,7 +272,7 @@ public class ViewPropertyItems extends LinearLayout implements Kw, View.OnClickL
             f.put(key, propertyCustomViewItem);
         }
 
-        propertyCustomViewItem.setCustomView(jC.b(sc_id).c());
+        propertyCustomViewItem.setCustomView(ProjectDataManager.getFileManager(sc_id).c());
         propertyCustomViewItem.setValue(value);
         addView(propertyCustomViewItem);
     }
@@ -408,8 +409,8 @@ public class ViewPropertyItems extends LinearLayout implements Kw, View.OnClickL
             a(getContext().getString(R.string.property_header_layout));
         }
 
-        Gx classInfo = bean.getClassInfo();
-        Gx parentClassInfo = bean.getParentClassInfo();
+        ClassInfo classInfo = bean.getClassInfo();
+        ClassInfo parentClassInfo = bean.getParentClassInfo();
         a(bean, "property_layout_width");
         a(bean, "property_layout_height");
         if (bean.parentType == ViewBean.VIEW_TYPE_LAYOUT_RELATIVE) {
@@ -417,23 +418,23 @@ public class ViewPropertyItems extends LinearLayout implements Kw, View.OnClickL
         }
         a(bean, "property_padding");
         a(bean, "property_margin");
-        if (classInfo.a("LinearLayout")) {
+        if (classInfo.matchesType("LinearLayout")) {
             a(bean, "property_orientation");
             a(bean, "property_weight_sum");
             a(bean, "property_gravity");
         }
 
-        if (classInfo.a("TextView")) {
+        if (classInfo.matchesType("TextView")) {
             a(bean, "property_gravity");
         }
 
         if (parentClassInfo != null) {
-            if (parentClassInfo.a("LinearLayout")) {
+            if (parentClassInfo.matchesType("LinearLayout")) {
                 a(bean, "property_layout_gravity");
                 a(bean, "property_weight");
             }
 
-            if (parentClassInfo.a("ScrollView") || parentClassInfo.a("HorizontalScrollView")) {
+            if (parentClassInfo.matchesType("ScrollView") || parentClassInfo.matchesType("HorizontalScrollView")) {
                 a(bean, "property_layout_gravity");
             }
         }
@@ -518,7 +519,7 @@ public class ViewPropertyItems extends LinearLayout implements Kw, View.OnClickL
     }
 
     private void setupAttributes(String key, HashMap<String, String> value) {
-        ArrayList<ViewBean> viewBeans = jC.a(sc_id).d(e.getXmlName());
+        ArrayList<ViewBean> viewBeans = ProjectDataManager.getProjectDataManager(sc_id).d(e.getXmlName());
         List<String> ids = new ArrayList<>();
         for (ViewBean bean : viewBeans) {
             if (!bean.id.equals(c.id) && bean.parent.equals(c.parent)) {
@@ -546,67 +547,67 @@ public class ViewPropertyItems extends LinearLayout implements Kw, View.OnClickL
 
     public void f(ViewBean bean) {
         if (!bean.id.equals("_fab")) {
-            Gx classInfo = bean.getClassInfo();
+            ClassInfo classInfo = bean.getClassInfo();
             a(bean, "property_inject");
             a(bean, "property_convert");
-            if (classInfo.b("Spinner")) {
+            if (classInfo.isExactType("Spinner")) {
                 a(bean, "property_spinner_mode");
             }
 
-            if (classInfo.b("ListView")) {
+            if (classInfo.isExactType("ListView")) {
                 a(bean, "property_divider_height");
                 a(bean, "property_custom_view_listview");
             }
 
-            if (classInfo.b("GridView")) {
+            if (classInfo.isExactType("GridView")) {
                 a(bean, "property_custom_view_listview");
             }
 
-            if (classInfo.b("RecyclerView")) {
+            if (classInfo.isExactType("RecyclerView")) {
                 a(bean, "property_custom_view_listview");
             }
 
-            if (classInfo.b("ViewPager")) {
+            if (classInfo.isExactType("ViewPager")) {
                 a(bean, "property_custom_view_listview");
             }
 
-            if (classInfo.b("Spinner")) {
+            if (classInfo.isExactType("Spinner")) {
                 a(bean, "property_custom_view_listview");
             }
 
-            if (classInfo.b("AutoCompleteTextView")) {
+            if (classInfo.isExactType("AutoCompleteTextView")) {
                 a(bean, "property_hint");
                 a(bean, "property_hint_color");
             }
 
-            if (classInfo.b("MultiAutoCompleteTextView")) {
+            if (classInfo.isExactType("MultiAutoCompleteTextView")) {
                 a(bean, "property_hint");
                 a(bean, "property_hint_color");
             }
 
-            if (classInfo.b("WaveSideBar")) {
+            if (classInfo.isExactType("WaveSideBar")) {
                 b("property_text_size", String.valueOf(bean.text.textSize));
                 a(bean, "property_text_color");
             }
 
-            if (classInfo.a("CompoundButton") && getOrientation() == LinearLayout.VERTICAL) {
+            if (classInfo.matchesType("CompoundButton") && getOrientation() == LinearLayout.VERTICAL) {
                 a(bean, "property_checked");
             }
 
-            if (classInfo.b("SeekBar")) {
+            if (classInfo.isExactType("SeekBar")) {
                 a(bean, "property_max");
                 a(bean, "property_progress");
             }
 
-            if (classInfo.b("CalendarView")) {
+            if (classInfo.isExactType("CalendarView")) {
                 a(bean, "property_first_day_of_week");
             }
 
-            if (classInfo.b("AdView")) {
+            if (classInfo.isExactType("AdView")) {
                 a(bean, "property_ad_size");
             }
 
-            if (classInfo.b("ProgressBar")) {
+            if (classInfo.isExactType("ProgressBar")) {
                 a(bean, "property_max");
                 a(bean, "property_progress");
                 a(bean, "property_progressbar_style");
@@ -616,8 +617,8 @@ public class ViewPropertyItems extends LinearLayout implements Kw, View.OnClickL
     }
 
     public void g(ViewBean bean) {
-        Gx classInfo = bean.getClassInfo();
-        if (classInfo.a("TextView")) {
+        ClassInfo classInfo = bean.getClassInfo();
+        if (classInfo.matchesType("TextView")) {
             if (getOrientation() == LinearLayout.VERTICAL) {
                 a(getContext().getString(R.string.property_header_text));
             }
@@ -626,7 +627,7 @@ public class ViewPropertyItems extends LinearLayout implements Kw, View.OnClickL
             b("property_text_size", String.valueOf(bean.text.textSize));
             a(bean, "property_text_style");
             a(bean, "property_text_color");
-            if (classInfo.b("EditText")) {
+            if (classInfo.isExactType("EditText")) {
                 a(bean, "property_hint");
                 a(bean, "property_hint_color");
                 if (getOrientation() == LinearLayout.VERTICAL) {
@@ -638,7 +639,7 @@ public class ViewPropertyItems extends LinearLayout implements Kw, View.OnClickL
                 a(bean, "property_ime_option");
             }
 
-            if (classInfo.b("TextView")) {
+            if (classInfo.isExactType("TextView")) {
                 if (getOrientation() == LinearLayout.VERTICAL) {
                     a(bean, "property_single_line");
                 }
@@ -649,16 +650,16 @@ public class ViewPropertyItems extends LinearLayout implements Kw, View.OnClickL
     }
 
     public void h(ViewBean bean) {
-        Gx classInfo = bean.getClassInfo();
+        ClassInfo classInfo = bean.getClassInfo();
         if (getOrientation() == LinearLayout.VERTICAL) {
-            if (classInfo.a("ImageView")) {
+            if (classInfo.matchesType("ImageView")) {
                 a(getContext().getString(R.string.property_header_image), this);
                 a(bean, "property_image");
                 a(bean, "property_scale_type");
             } else {
                 a(getContext().getString(R.string.property_header_image));
             }
-        } else if (classInfo.a("ImageView")) {
+        } else if (classInfo.matchesType("ImageView")) {
             a(bean, "property_image");
             a(bean, "property_scale_type");
         }
@@ -669,11 +670,11 @@ public class ViewPropertyItems extends LinearLayout implements Kw, View.OnClickL
         }
 
         if (getOrientation() == LinearLayout.VERTICAL
-                && !classInfo.b("LinearLayout")
-                && !classInfo.b("ScrollView")
-                && !classInfo.b("HorizontalScrollView")
-                && !classInfo.b("ListView")
-                && !classInfo.b("FloatingActionButton")) {
+                && !classInfo.isExactType("LinearLayout")
+                && !classInfo.isExactType("ScrollView")
+                && !classInfo.isExactType("HorizontalScrollView")
+                && !classInfo.isExactType("ListView")
+                && !classInfo.isExactType("FloatingActionButton")) {
             a(bean, "property_enabled");
         }
 
@@ -821,22 +822,22 @@ public class ViewPropertyItems extends LinearLayout implements Kw, View.OnClickL
 
         if (!bean.id.equals(bean.preId)) {
             boolean viewBinding = settings.getValue(ProjectSettings.SETTING_ENABLE_VIEWBINDING, "false").equals("true");
-            for (ViewBean viewBean : jC.a(sc_id).d(e.getXmlName())) {
+            for (ViewBean viewBean : ProjectDataManager.getProjectDataManager(sc_id).d(e.getXmlName())) {
                 if (viewBean.parent.equals(bean.preId)) {
                     viewBean.parent = bean.id;
                 }
             }
 
             if (e.fileType == ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY) {
-                for (EventBean eventBean : jC.a(sc_id).g(e.getJavaName())) {
+                for (EventBean eventBean : ProjectDataManager.getProjectDataManager(sc_id).g(e.getJavaName())) {
                     if (eventBean.targetId.equals(bean.preId)) {
                         eventBean.targetId = bean.id;
                     }
                 }
 
-                HashMap<String, ArrayList<BlockBean>> beanMap = jC.a(sc_id).b(e.getJavaName());
+                HashMap<String, ArrayList<BlockBean>> beanMap = ProjectDataManager.getProjectDataManager(sc_id).b(e.getJavaName());
 
-                for (String events : oq.getEventsForClass(bean.getClassInfo())) {
+                for (String events : EventRegistry.getEventsForClass(bean.getClassInfo())) {
                     StringBuilder eventBodyBuilder = new StringBuilder();
                     eventBodyBuilder.append(bean.preId);
                     eventBodyBuilder.append("_");
@@ -857,7 +858,7 @@ public class ViewPropertyItems extends LinearLayout implements Kw, View.OnClickL
                     events.add("onCreate_initializeLogic");
                 }
 
-                for (Pair<String, String> moreblocks : jC.a(sc_id).i(e.getJavaName())) {
+                for (Pair<String, String> moreblocks : ProjectDataManager.getProjectDataManager(sc_id).i(e.getJavaName())) {
                     String key = moreblocks.first +
                             "_" +
                             "moreBlock";
@@ -866,7 +867,7 @@ public class ViewPropertyItems extends LinearLayout implements Kw, View.OnClickL
                     }
                 }
 
-                for (EventBean eventBean : jC.a(sc_id).g(e.getJavaName())) {
+                for (EventBean eventBean : ProjectDataManager.getProjectDataManager(sc_id).g(e.getJavaName())) {
                     if (!eventBean.eventName.equals("onBindCustomView")) {
                         String eventKey = eventBean.getEventKey();
                         if (beanMap.containsKey(eventKey)) {
@@ -879,9 +880,9 @@ public class ViewPropertyItems extends LinearLayout implements Kw, View.OnClickL
                     ArrayList<BlockBean> blockBeans = beanMap.get(event);
                     if (blockBeans != null) {
                         for (BlockBean blockBean : blockBeans) {
-                            Gx classInfo = blockBean.getClassInfo();
+                            ClassInfo classInfo = blockBean.getClassInfo();
 
-                            if (classInfo != null && classInfo.d() && blockBean.spec.equals(viewBinding ? "binding." + ViewBindingBuilder.generateParameterFromId(bean.preId) : bean.preId)) {
+                            if (classInfo != null && classInfo.isView() && blockBean.spec.equals(viewBinding ? "binding." + ViewBindingBuilder.generateParameterFromId(bean.preId) : bean.preId)) {
                                 blockBean.spec = viewBinding ? "binding." + ViewBindingBuilder.generateParameterFromId(bean.id) : bean.id;
                             } else {
                                 ArrayList<Gx> paramClassInfo = blockBean.getParamClassInfo();
@@ -899,8 +900,8 @@ public class ViewPropertyItems extends LinearLayout implements Kw, View.OnClickL
             } else {
                 ArrayList<Pair<String, String>> viewBeanItems = new ArrayList<>();
 
-                for (ProjectFileBean projectFileBean : jC.b(sc_id).b()) {
-                    for (ViewBean viewBean : jC.a(sc_id).f(projectFileBean.getXmlName())) {
+                for (ProjectFileBean projectFileBean : ProjectDataManager.getFileManager(sc_id).b()) {
+                    for (ViewBean viewBean : ProjectDataManager.getProjectDataManager(sc_id).f(projectFileBean.getXmlName())) {
                         if (viewBean.customView.equals(e.fileName)) {
                             String javaName = projectFileBean.getJavaName();
                             String key = viewBean.id +
@@ -912,12 +913,12 @@ public class ViewPropertyItems extends LinearLayout implements Kw, View.OnClickL
                 }
 
                 for (Pair<String, String> viewBean : viewBeanItems) {
-                    ArrayList<BlockBean> blockBeans = jC.a(sc_id).b(viewBean.first).get(viewBean.second);
+                    ArrayList<BlockBean> blockBeans = ProjectDataManager.getProjectDataManager(sc_id).b(viewBean.first).get(viewBean.second);
                     if (blockBeans != null) {
                         for (BlockBean blockBean : blockBeans) {
-                            Gx classInfo = blockBean.getClassInfo();
+                            ClassInfo classInfo = blockBean.getClassInfo();
 
-                            if (classInfo != null && classInfo.d() && blockBean.spec.equals(viewBinding ? "binding." + ViewBindingBuilder.generateParameterFromId(bean.preId) : bean.preId)) {
+                            if (classInfo != null && classInfo.isView() && blockBean.spec.equals(viewBinding ? "binding." + ViewBindingBuilder.generateParameterFromId(bean.preId) : bean.preId)) {
                                 blockBean.spec = viewBinding ? "binding." + ViewBindingBuilder.generateParameterFromId(bean.id) : bean.id;
                             } else {
                                 ArrayList<Gx> paramClassInfo = blockBean.getParamClassInfo();
@@ -936,19 +937,19 @@ public class ViewPropertyItems extends LinearLayout implements Kw, View.OnClickL
         }
 
         if (bean.type == ViewBean.VIEW_TYPE_WIDGET_LISTVIEW) {
-            ViewBean viewBean = jC.a(sc_id).c(e.getXmlName(), bean.preId);
+            ViewBean viewBean = ProjectDataManager.getProjectDataManager(sc_id).c(e.getXmlName(), bean.preId);
             String custom = bean.customView;
             if (custom != null && viewBean != null) {
                 String customView = viewBean.customView;
                 if (customView != null && !customView.equals(custom)) {
-                    ArrayList<EventBean> eventBeans = jC.a(sc_id).g(e.getJavaName());
+                    ArrayList<EventBean> eventBeans = ProjectDataManager.getProjectDataManager(sc_id).g(e.getJavaName());
                     int size = eventBeans.size();
 
                     while (true) {
                         childCount = size - 1;
                         if (childCount < 0) {
                             if (bean.customView.isEmpty() || bean.customView.equals("none")) {
-                                Iterator<Entry<String, ArrayList<BlockBean>>> blocks = jC.a(sc_id).b(e.getJavaName()).entrySet().iterator();
+                                Iterator<Entry<String, ArrayList<BlockBean>>> blocks = ProjectDataManager.getProjectDataManager(sc_id).b(e.getJavaName()).entrySet().iterator();
 
                                 while (blocks.hasNext()) {
                                     for (BlockBean blockBean : blocks.next().getValue()) {
@@ -966,7 +967,7 @@ public class ViewPropertyItems extends LinearLayout implements Kw, View.OnClickL
                         if (eventBean.targetId.equals(bean.id)) {
                             if (eventBean.eventName.equals("onBindCustomView")) {
                                 eventBeans.remove(eventBean);
-                                HashMap<String, ArrayList<BlockBean>> blocks = jC.a(sc_id).b(e.getJavaName());
+                                HashMap<String, ArrayList<BlockBean>> blocks = ProjectDataManager.getProjectDataManager(sc_id).b(e.getJavaName());
                                 blocks.remove(eventBean.getEventKey());
                             }
                         }

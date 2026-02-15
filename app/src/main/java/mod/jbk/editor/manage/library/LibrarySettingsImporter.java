@@ -31,10 +31,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import a.a.a.iC;
-import a.a.a.lC;
+import a.a.a.ProjectListManager;
 import a.a.a.mB;
 import a.a.a.wB;
-import a.a.a.wq;
+import a.a.a.SketchwarePaths;
 import a.a.a.yB;
 import pro.sketchware.R;
 
@@ -99,7 +99,7 @@ public class LibrarySettingsImporter {
     }
 
     private void loadProjects() {
-        projects = lC.a().stream()
+        projects = ProjectListManager.listProjects().stream()
                 .filter(project -> {
                     var projectSc_id = yB.c(project, "sc_id");
                     if (!sc_id.equals(projectSc_id)) {
@@ -130,7 +130,7 @@ public class LibrarySettingsImporter {
             Map<String, Object> projectMap = projects.get(position);
             String sc_id = yB.c(projectMap, "sc_id");
             if (yB.a(projectMap, "custom_icon")) {
-                String iconPath = wq.e() + File.separator + sc_id;
+                String iconPath = SketchwarePaths.getIconsPath() + File.separator + sc_id;
                 Uri iconUri;
                 iconUri = FileProvider.getUriForFile(activity.getApplicationContext(), activity.getPackageName() + ".provider", new File(iconPath, "icon.png"));
                 viewHolder.imgIcon.setImageURI(iconUri);

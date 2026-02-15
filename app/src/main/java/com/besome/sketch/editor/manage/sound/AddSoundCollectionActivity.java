@@ -28,9 +28,9 @@ import java.util.TimerTask;
 import a.a.a.HB;
 import a.a.a.Qp;
 import a.a.a.WB;
-import a.a.a.bB;
-import a.a.a.uq;
-import a.a.a.wq;
+import a.a.a.SketchToast;
+import a.a.a.BlockConstants;
+import a.a.a.SketchwarePaths;
 import a.a.a.yy;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
@@ -140,7 +140,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
         }
         binding.layoutControl.setVisibility(View.GONE);
         binding.tiInput.setHint(R.string.design_manager_sound_hint_enter_sound_name);
-        M = new WB(this, binding.tiInput, uq.b, getResourceNames());
+        M = new WB(this, binding.tiInput, BlockConstants.b, getResourceNames());
         binding.play.setEnabled(false);
         binding.play.setOnClickListener(this);
         binding.seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -172,7 +172,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
         s.setOnClickListener(this);
         if (u) {
             e(getString(R.string.design_manager_sound_title_edit_sound_name));
-            M = new WB(this, binding.tiInput, uq.b, getResourceNames(), O.resName);
+            M = new WB(this, binding.tiInput, BlockConstants.b, getResourceNames(), O.resName);
             binding.edInput.setText(O.resName);
             f(a(O));
         }
@@ -213,7 +213,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
                 projectResourceBean.isNew = true;
                 try {
                     Qp.g().a(t, projectResourceBean);
-                    bB.a(this, getApplicationContext().getString(R.string.design_manager_message_add_complete), 1).show();
+                    SketchToast.toast(this, getApplicationContext().getString(R.string.design_manager_message_add_complete), 1).show();
                 } catch (Exception e) {
                     // the bytecode's lying
                     // noinspection ConstantValue
@@ -225,7 +225,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
                             default -> 0;
                         };
                         if (messageId != 0) {
-                            bB.a(this, getApplicationContext().getString(messageId), bB.TOAST_WARNING).show();
+                            SketchToast.toast(this, getApplicationContext().getString(messageId), SketchToast.TOAST_WARNING).show();
                         }
                     } else {
                         throw e;
@@ -233,7 +233,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
                 }
             } else {
                 Qp.g().a(O, Helper.getText(binding.edInput), true);
-                bB.a(this, getApplicationContext().getString(R.string.design_manager_message_edit_complete), 1).show();
+                SketchToast.toast(this, getApplicationContext().getString(R.string.design_manager_message_edit_complete), 1).show();
             }
             finish();
         }
@@ -259,7 +259,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
     }
 
     private String a(ProjectResourceBean projectResourceBean) {
-        return wq.a() + File.separator + "sound" + File.separator + "data" + File.separator + O.resFullName;
+        return SketchwarePaths.getCollectionPath() + File.separator + "sound" + File.separator + "data" + File.separator + O.resFullName;
     }
 
     private void f(String str) {

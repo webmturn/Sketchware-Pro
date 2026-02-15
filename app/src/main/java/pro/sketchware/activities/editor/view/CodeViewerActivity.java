@@ -6,7 +6,7 @@ import androidx.annotation.Nullable;
 
 import com.besome.sketch.lib.base.BaseAppCompatActivity;
 
-import a.a.a.Lx;
+import a.a.a.ComponentCodeGenerator;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.databinding.ActivityCodeViewerBinding;
 import pro.sketchware.utility.EditorUtils;
@@ -36,7 +36,7 @@ public class CodeViewerActivity extends BaseAppCompatActivity {
 
         binding.editor.setTypefaceText(EditorUtils.getTypeface(this));
         binding.editor.setTextSize(14);
-        binding.editor.setText(Lx.j(code, false));
+        binding.editor.setText(ComponentCodeGenerator.formatCode(code, false));
         binding.editor.setEditable(false);
         binding.editor.setWordwrap(false);
         loadColorScheme(scheme);

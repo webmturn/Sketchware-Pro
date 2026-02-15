@@ -18,7 +18,7 @@ import java.io.File
 class KotlinCompiler(
     private val builder: ProjectBuilder
 ) {
-    private val workspace = builder.yq
+    private val workspace = builder.ProjectFilePaths
 
     /**
      * Invokes `kotlinc`.

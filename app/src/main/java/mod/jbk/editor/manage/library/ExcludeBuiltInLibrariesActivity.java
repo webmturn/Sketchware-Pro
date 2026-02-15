@@ -49,7 +49,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import a.a.a.MA;
+import a.a.a.BaseAsyncTask;
 import mod.hey.studios.util.Helper;
 import mod.jbk.build.BuiltInLibraries;
 import mod.jbk.util.LogUtil;
@@ -341,7 +341,7 @@ public class ExcludeBuiltInLibrariesActivity extends BaseAppCompatActivity {
         dialog.show();
     }
 
-    private static class SaveConfigTask extends MA {
+    private static class SaveConfigTask extends BaseAsyncTask {
         private final WeakReference<ExcludeBuiltInLibrariesActivity> activity;
 
         public SaveConfigTask(ExcludeBuiltInLibrariesActivity activity) {

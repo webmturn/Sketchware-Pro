@@ -44,7 +44,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
-import a.a.a.Lx;
+import a.a.a.ComponentCodeGenerator;
 import io.github.rosemoe.sora.langs.java.JavaLanguage;
 import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
 import io.github.rosemoe.sora.widget.CodeEditor;
@@ -436,7 +436,7 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
                             String ss = b.toString();
 
                             try {
-                                ss = Lx.j(ss, true);
+                                ss = ComponentCodeGenerator.formatCode(ss, true);
                             } catch (Exception e) {
                                 err = true;
                                 SketchwareUtil.toastError("Your code contains incorrectly nested parentheses");

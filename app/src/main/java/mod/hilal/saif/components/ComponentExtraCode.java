@@ -5,15 +5,15 @@ import org.json.JSONArray;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import a.a.a.Hx;
+import a.a.a.EventCodeGenerator;
 import pro.sketchware.utility.FileUtil;
 
 public class ComponentExtraCode {
 
     public final StringBuilder b;
-    public final Hx hx;
+    public final EventCodeGenerator hx;
 
-    public ComponentExtraCode(Hx h, StringBuilder st) {
+    public ComponentExtraCode(EventCodeGenerator h, StringBuilder st) {
         b = st;
         hx = h;
     }

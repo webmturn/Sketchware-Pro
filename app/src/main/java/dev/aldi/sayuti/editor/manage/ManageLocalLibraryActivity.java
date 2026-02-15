@@ -39,7 +39,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.Executors;
 
-import a.a.a.MA;
+import a.a.a.BaseAsyncTask;
 import a.a.a.mB;
 import mod.hey.studios.build.BuildSettings;
 import mod.hey.studios.util.Helper;
@@ -315,7 +315,7 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
         void invoke(LocalLibrary library);
     }
 
-    private static class LoadLocalLibrariesTask extends MA {
+    private static class LoadLocalLibrariesTask extends BaseAsyncTask {
         private final WeakReference<ManageLocalLibraryActivity> activity;
 
         public LoadLocalLibrariesTask(ManageLocalLibraryActivity activity) {

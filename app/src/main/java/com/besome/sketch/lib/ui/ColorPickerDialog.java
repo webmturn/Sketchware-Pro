@@ -28,11 +28,11 @@ import java.util.HashMap;
 
 import a.a.a.DB;
 import a.a.a.GB;
-import a.a.a.bB;
-import a.a.a.jC;
-import a.a.a.sq;
-import a.a.a.wq;
-import a.a.a.yq;
+import a.a.a.SketchToast;
+import a.a.a.ProjectDataManager;
+import a.a.a.SketchwareConstants;
+import a.a.a.SketchwarePaths;
+import a.a.a.ProjectFilePaths;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.activities.resourceseditor.components.models.ColorModel;
@@ -65,7 +65,7 @@ public class ColorPickerDialog extends PopupWindow {
     private DB colorPref;
     private boolean hasMaterialColors;
     private Material3LibraryManager material3LibraryManager;
-    private yq yq;
+    private ProjectFilePaths ProjectFilePaths;
     private ColorsEditorManager colorsEditorManager;
 
     public ColorPickerDialog(Activity activity, int var3, boolean isTransparentColor, boolean isNoneColor) {
@@ -78,8 +78,8 @@ public class ColorPickerDialog extends PopupWindow {
         super(activity);
         binding = ColorPickerBinding.inflate(activity.getLayoutInflater());
         sc_id = scId;
-        yq = new yq(activity, sc_id);
-        yq.a(jC.c(sc_id), jC.b(sc_id), jC.a(sc_id), a.a.a.yq.ExportType.SOURCE_CODE_VIEWING);
+        ProjectFilePaths = new ProjectFilePaths(activity, sc_id);
+        ProjectFilePaths.initializeMetadata(ProjectDataManager.getLibraryManager(sc_id), ProjectDataManager.getFileManager(sc_id), ProjectDataManager.getProjectDataManager(sc_id), a.a.a.ProjectFilePaths.ExportType.SOURCE_CODE_VIEWING);
         material3LibraryManager = new Material3LibraryManager(scId);
         colorsEditorManager = new ColorsEditorManager();
         hasMaterialColors = true;
@@ -200,11 +200,11 @@ public class ColorPickerDialog extends PopupWindow {
             colorGroupItem.tvColorName.setOnClickListener(v -> {
                 l = finalJ;
                 if (finalJ == 0 && colorGroups.get(finalJ).length == 0) {
-                    bB.b(activity, activity.getString(R.string.picker_color_custom_color_not_found), 1).show();
+                    SketchToast.warning(activity, activity.getString(R.string.picker_color_custom_color_not_found), 1).show();
                     return;
                 }
                 if (finalJ == 1 && colorGroups.get(finalJ).length == 0) {
-                    bB.b(activity, activity.getString(R.string.picker_color_xml_is_empty), 1).show();
+                    SketchToast.warning(activity, activity.getString(R.string.picker_color_xml_is_empty), 1).show();
                     return;
                 }
                 if (sc_id != null && finalJ == 2 && !material3LibraryManager.isMaterial3Enabled()) {
@@ -384,60 +384,60 @@ public class ColorPickerDialog extends PopupWindow {
             colorList.add(new ColorBean("#FFF6F6F6", "colors.xml", "#212121", R.drawable.checked_grey_32));
         if (hasMaterialColors)
             colorList.add(new ColorBean("#FFF6F6F6", "Material 3 Colors", "#212121", R.drawable.checked_grey_32));
-        colorList.add(sq.p[0]);
-        colorList.add(sq.q[0]);
-        colorList.add(sq.r[0]);
-        colorList.add(sq.s[0]);
-        colorList.add(sq.t[0]);
-        colorList.add(sq.u[0]);
-        colorList.add(sq.v[0]);
-        colorList.add(sq.w[0]);
-        colorList.add(sq.x[0]);
-        colorList.add(sq.y[0]);
-        colorList.add(sq.z[0]);
-        colorList.add(sq.A[0]);
-        colorList.add(sq.B[0]);
-        colorList.add(sq.C[0]);
-        colorList.add(sq.D[0]);
-        colorList.add(sq.E[0]);
-        colorList.add(sq.F[0]);
-        colorList.add(sq.G[0]);
-        colorList.add(sq.H[0]);
-        colorList.add(sq.I[0]);
-        colorList.add(sq.J[0]);
+        colorList.add(SketchwareConstants.p[0]);
+        colorList.add(SketchwareConstants.q[0]);
+        colorList.add(SketchwareConstants.r[0]);
+        colorList.add(SketchwareConstants.s[0]);
+        colorList.add(SketchwareConstants.t[0]);
+        colorList.add(SketchwareConstants.u[0]);
+        colorList.add(SketchwareConstants.v[0]);
+        colorList.add(SketchwareConstants.w[0]);
+        colorList.add(SketchwareConstants.x[0]);
+        colorList.add(SketchwareConstants.y[0]);
+        colorList.add(SketchwareConstants.z[0]);
+        colorList.add(SketchwareConstants.A[0]);
+        colorList.add(SketchwareConstants.B[0]);
+        colorList.add(SketchwareConstants.C[0]);
+        colorList.add(SketchwareConstants.D[0]);
+        colorList.add(SketchwareConstants.E[0]);
+        colorList.add(SketchwareConstants.F[0]);
+        colorList.add(SketchwareConstants.G[0]);
+        colorList.add(SketchwareConstants.H[0]);
+        colorList.add(SketchwareConstants.I[0]);
+        colorList.add(SketchwareConstants.J[0]);
         colorGroups.add(getSavedColorBeans());
         if (sc_id != null)
-            colorGroups.add(sq.p);
+            colorGroups.add(SketchwareConstants.p);
         if (hasMaterialColors)
-            colorGroups.add(sq.p);
-        colorGroups.add(sq.p);
-        colorGroups.add(sq.q);
-        colorGroups.add(sq.r);
-        colorGroups.add(sq.s);
-        colorGroups.add(sq.t);
-        colorGroups.add(sq.u);
-        colorGroups.add(sq.v);
-        colorGroups.add(sq.w);
-        colorGroups.add(sq.x);
-        colorGroups.add(sq.y);
-        colorGroups.add(sq.z);
-        colorGroups.add(sq.A);
-        colorGroups.add(sq.B);
-        colorGroups.add(sq.C);
-        colorGroups.add(sq.D);
-        colorGroups.add(sq.E);
-        colorGroups.add(sq.F);
-        colorGroups.add(sq.G);
-        colorGroups.add(sq.H);
-        colorGroups.add(sq.I);
-        colorGroups.add(sq.J);
+            colorGroups.add(SketchwareConstants.p);
+        colorGroups.add(SketchwareConstants.p);
+        colorGroups.add(SketchwareConstants.q);
+        colorGroups.add(SketchwareConstants.r);
+        colorGroups.add(SketchwareConstants.s);
+        colorGroups.add(SketchwareConstants.t);
+        colorGroups.add(SketchwareConstants.u);
+        colorGroups.add(SketchwareConstants.v);
+        colorGroups.add(SketchwareConstants.w);
+        colorGroups.add(SketchwareConstants.x);
+        colorGroups.add(SketchwareConstants.y);
+        colorGroups.add(SketchwareConstants.z);
+        colorGroups.add(SketchwareConstants.A);
+        colorGroups.add(SketchwareConstants.B);
+        colorGroups.add(SketchwareConstants.C);
+        colorGroups.add(SketchwareConstants.D);
+        colorGroups.add(SketchwareConstants.E);
+        colorGroups.add(SketchwareConstants.F);
+        colorGroups.add(SketchwareConstants.G);
+        colorGroups.add(SketchwareConstants.H);
+        colorGroups.add(SketchwareConstants.I);
+        colorGroups.add(SketchwareConstants.J);
         if (isColorTransparent) {
-            colorList.add(sq.K[0]);
-            colorGroups.add(sq.K);
+            colorList.add(SketchwareConstants.K[0]);
+            colorGroups.add(SketchwareConstants.K);
         }
         if (isColorNone) {
-            colorList.add(sq.L[0]);
-            colorGroups.add(sq.L);
+            colorList.add(SketchwareConstants.L[0]);
+            colorGroups.add(SketchwareConstants.L);
         }
     }
 
@@ -502,7 +502,7 @@ public class ColorPickerDialog extends PopupWindow {
     private void savePickedColor(String color) {
         String savedColors = colorPref.f("P24I1");
         if (savedColors.contains(color)) {
-            bB.b(activity, activity.getString(R.string.picker_color_already_exist), 0).show();
+            SketchToast.warning(activity, activity.getString(R.string.picker_color_already_exist), 0).show();
         } else {
             String colorsToSave = color + "," + savedColors;
             colorPref.a("P24I1", (Object) colorsToSave);
@@ -566,14 +566,14 @@ public class ColorPickerDialog extends PopupWindow {
     }
 
     private void initializeResColors() {
-        if (sc_id == null || yq == null)
+        if (sc_id == null || ProjectFilePaths == null)
             return;
-        String fileNightPath = wq.b(sc_id) + "/files/resource/values-night/colors.xml";
+        String fileNightPath = SketchwarePaths.getDataPath(sc_id) + "/files/resource/values-night/colors.xml";
 
         ArrayList<ColorModel> colorList = new ArrayList<>();
         ArrayList<ColorModel> colorNightList = new ArrayList<>();
 
-        colorsEditorManager.parseColorsXML(colorList, yq.getXMLColor());
+        colorsEditorManager.parseColorsXML(colorList, ProjectFilePaths.getXMLColor());
         colorsEditorManager.parseColorsXML(colorNightList, FileUtil.readFileIfExist(fileNightPath));
 
         HashMap<String, String> nightColorsMap = new HashMap<>();

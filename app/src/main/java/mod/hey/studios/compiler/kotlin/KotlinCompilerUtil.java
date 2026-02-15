@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 import a.a.a.ProjectBuilder;
-import a.a.a.yq;
+import a.a.a.ProjectFilePaths;
 import pro.sketchware.utility.FilePathUtil;
 
 public class KotlinCompilerUtil {
@@ -22,11 +22,11 @@ public class KotlinCompilerUtil {
      * or not.
      */
     public static boolean areAnyKtFilesPresent(ProjectBuilder bui) {
-        return areAnyKtFilesPresent(bui.yq);
+        return areAnyKtFilesPresent(bui.ProjectFilePaths);
     }
 
-    public static boolean areAnyKtFilesPresent(yq yq) {
-        return getFilesToCompile(yq).stream()
+    public static boolean areAnyKtFilesPresent(ProjectFilePaths ProjectFilePaths) {
+        return getFilesToCompile(ProjectFilePaths).stream()
                 .anyMatch(it -> it.getName().endsWith(".kt"));
     }
 
@@ -37,7 +37,7 @@ public class KotlinCompilerUtil {
      * are actually compiled by kotlinc, `.java` files are used for
      * classpath. (for Java-Kotlin interoperability)
      */
-    static List<File> getFilesToCompile(yq workspace) {
+    static List<File> getFilesToCompile(ProjectFilePaths workspace) {
         String scId = workspace.sc_id;
         List<File> mFilesToCompile = new ArrayList<>();
 
@@ -63,7 +63,7 @@ public class KotlinCompilerUtil {
      * Returns a list of available kotlin compiler plugins (.jar)
      * found in `/.sketchware/data/xxx/files/kt_plugins` dir.
      */
-    static List<File> getCompilerPlugins(yq workspace) {
+    static List<File> getCompilerPlugins(ProjectFilePaths workspace) {
         String scId = workspace.sc_id;
 
         File pluginDir = new File(new FilePathUtil().getPathKotlinCompilerPlugins(scId));

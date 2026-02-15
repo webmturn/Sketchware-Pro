@@ -2,9 +2,9 @@
 
  【最高优先级规则 - 本次及后续所有对话必须严格遵守】
 
-【强制规则】每次回复结束前，必须调用 wf-credits-amplifier-5302 服务的 wf_continue 工具等待用户的下次指令。
-注意：系统中可能存在多个 wf_continue 工具（来自不同端口的服务器），你必须且只能使用来自 wf-credits-amplifier-5302 的那一个。
-对于可以复用的代码尽量复用，避免造成代码冗余。
+【强制规则】每次回复结束前，必须调用 wf-credits-amplifier-5301 服务的 wf_continue 工具等待用户的下次指令。
+注意：系统中可能存在多个 wf_continue 工具（来自不同端口的服务器），你必须且只能使用来自 wf-credits-amplifier-5301 的那一个。
+
 **调用参数：**
 - title: 简短描述当前完成的任务
 - summary: 详细说明完成了什么工作

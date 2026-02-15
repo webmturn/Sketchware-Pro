@@ -12,8 +12,8 @@ import com.besome.sketch.beans.ProjectLibraryBean;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import a.a.a.Uu;
-import a.a.a.bB;
-import a.a.a.gB;
+import a.a.a.SketchToast;
+import a.a.a.AnimationUtil;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageLibraryAdmobAppIdBinding;
@@ -38,7 +38,7 @@ public class AddAppIdStepView extends LinearLayout implements Uu, View.OnClickLi
         if (!isEmpty(Helper.getText(binding.textId))) {
             return true;
         } else {
-            bB.a(getContext(), Helper.getResString(R.string.design_library_admob_setting_message_add_app_id), 1).show();
+            SketchToast.toast(getContext(), Helper.getResString(R.string.design_library_admob_setting_message_add_app_id), 1).show();
             return false;
         }
     }
@@ -59,7 +59,7 @@ public class AddAppIdStepView extends LinearLayout implements Uu, View.OnClickLi
     private void initialize(Context context) {
         binding = ManageLibraryAdmobAppIdBinding.inflate(LayoutInflater.from(context), this, true);
         binding.getRoot();
-        gB.b(this, 600, 200, null);
+        AnimationUtil.fadeSlideIn(this, 600, 200, null);
         binding.textTitle.setText(Helper.getResString(R.string.design_library_admob_title_app_id));
         binding.textEdit.setOnClickListener(this);
     }

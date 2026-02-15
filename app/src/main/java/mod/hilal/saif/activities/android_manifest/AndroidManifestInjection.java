@@ -25,9 +25,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-import a.a.a.jC;
+import a.a.a.ProjectDataManager;
 import a.a.a.wB;
-import a.a.a.yq;
+import a.a.a.ProjectFilePaths;
 import mod.hey.studios.code.SrcCodeEditor;
 import mod.hey.studios.util.Helper;
 import mod.hilal.saif.android_manifest.AndroidManifestInjector;
@@ -340,7 +340,7 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
         k();
         new Thread(() -> {
             try {
-                String source = new yq(getApplicationContext(), sc_id).getFileSrc("AndroidManifest.xml", jC.b(sc_id), jC.a(sc_id), jC.c(sc_id));
+                String source = new ProjectFilePaths(getApplicationContext(), sc_id).getFileSrc("AndroidManifest.xml", ProjectDataManager.getFileManager(sc_id), ProjectDataManager.getProjectDataManager(sc_id), ProjectDataManager.getLibraryManager(sc_id));
 
                 runOnUiThread(() -> {
                     if (isFinishing()) return;

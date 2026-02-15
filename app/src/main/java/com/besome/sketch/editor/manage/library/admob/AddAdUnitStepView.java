@@ -22,10 +22,10 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 
-import a.a.a.SB;
+import a.a.a.LengthRangeValidator;
 import a.a.a.Uu;
-import a.a.a.bB;
-import a.a.a.gB;
+import a.a.a.SketchToast;
+import a.a.a.AnimationUtil;
 import a.a.a.wB;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
@@ -53,12 +53,12 @@ public class AddAdUnitStepView extends LinearLayout implements Uu, OnClickListen
         TextInputLayout tiName = rootView.findViewById(R.id.ti_name);
         tiName.setHint(Helper.getResString(R.string.design_library_admob_dialog_add_adunit_hint_adunit_name));
         EditText edName = rootView.findViewById(R.id.ed_name);
-        SB nameValidator = new SB(getContext(), tiName, 1, 50);
+        LengthRangeValidator nameValidator = new LengthRangeValidator(getContext(), tiName, 1, 50);
 
         TextInputLayout tiAdUnitId = rootView.findViewById(R.id.ti_adunit_id);
         tiAdUnitId.setHint(Helper.getResString(R.string.design_library_admob_dialog_add_adunit_hint_adunit_id));
         EditText edAdUnitId = rootView.findViewById(R.id.ed_adunit_id);
-        SB adUnitValidator = new SB(getContext(), tiAdUnitId, 1, 100);
+        LengthRangeValidator adUnitValidator = new LengthRangeValidator(getContext(), tiAdUnitId, 1, 100);
 
         edName.setPrivateImeOptions("defaultInputmode=english;");
         dialog.setView(rootView);
@@ -87,7 +87,7 @@ public class AddAdUnitStepView extends LinearLayout implements Uu, OnClickListen
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_delete), (v, which) -> {
             adUnitBeanArrayList.remove(position);
             adUnitsAdapter.notifyItemRemoved(position);
-            bB.a(getContext(), Helper.getResString(R.string.common_message_complete_delete), 0).show();
+            SketchToast.toast(getContext(), Helper.getResString(R.string.common_message_complete_delete), 0).show();
             v.dismiss();
         });
         dialog.setNegativeButton(Helper.getResString(R.string.common_word_cancel), null);
@@ -96,7 +96,7 @@ public class AddAdUnitStepView extends LinearLayout implements Uu, OnClickListen
 
     private void initialize(Context context) {
         wB.a(context, this, R.layout.manage_library_admob_listing);
-        gB.b(this, 600, 200, null);
+        AnimationUtil.fadeSlideIn(this, 600, 200, null);
         findViewById(R.id.layout_manual_add_ad_unit).setOnClickListener(this);
         tvWarning = findViewById(R.id.tv_warning);
 
@@ -124,7 +124,7 @@ public class AddAdUnitStepView extends LinearLayout implements Uu, OnClickListen
         if (!adUnitBeanArrayList.isEmpty()) {
             return true;
         } else {
-            bB.a(getContext(), Helper.getResString(R.string.design_library_admob_setting_message_add_ad_unit), 1).show();
+            SketchToast.toast(getContext(), Helper.getResString(R.string.design_library_admob_setting_message_add_ad_unit), 1).show();
             return false;
         }
     }

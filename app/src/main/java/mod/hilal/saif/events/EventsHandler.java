@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import a.a.a.Gx;
-import a.a.a.oq;
+import a.a.a.ClassInfo;
+import a.a.a.EventRegistry;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;
 import mod.jbk.util.OldResourceIdMapper;
@@ -30,7 +30,7 @@ public class EventsHandler {
     }
 
     /**
-     * Used in {@link oq#getAllActivityEvents()}
+     * Used in {@link EventRegistry#getAllActivityEvents()}
      *
      * @return Array of Activity Events.
      * @apiNote Custom Activity Events can be added by writing to the file
@@ -84,17 +84,17 @@ public class EventsHandler {
     }
 
     /**
-     * Used in {@link mod.agus.jcoderz.editor.event.ManageEvent#addExtraEvents(Gx, ArrayList)} to retrieve extra
+     * Used in {@link mod.agus.jcoderz.editor.event.ManageEvent#addExtraEvents(ClassInfo, ArrayList)} to retrieve extra
      * Events for Components, such as custom ones.
      */
-    public static void addEvents(Gx gx, ArrayList<String> list) {
-        if (gx.a("Clickable")) {
+    public static void addEvents(ClassInfo gx, ArrayList<String> list) {
+        if (gx.matchesType("Clickable")) {
             list.add(" onLongClick");
         }
-        if (gx.a("SwipeRefreshLayout")) {
+        if (gx.matchesType("SwipeRefreshLayout")) {
             list.add("onSwipeRefreshLayout");
         }
-        if (gx.a("AsyncTask")) {
+        if (gx.matchesType("AsyncTask")) {
             list.add("onPreExecute");
             list.add("doInBackground");
             list.add("onProgressUpdate");
@@ -107,7 +107,7 @@ public class EventsHandler {
                 Object var = customEvent.get("var");
 
                 if (var instanceof String) {
-                    if (gx.a((String) var)) {
+                    if (gx.matchesType((String) var)) {
                         Object name = customEvent.get("name");
 
                         if (name instanceof String) {
@@ -126,17 +126,17 @@ public class EventsHandler {
     }
 
     /**
-     * Used in {@link mod.agus.jcoderz.editor.event.ManageEvent#addExtraListeners(Gx, ArrayList)} to get extra
+     * Used in {@link mod.agus.jcoderz.editor.event.ManageEvent#addExtraListeners(ClassInfo, ArrayList)} to get extra
      * listeners for Components and Widgets, such as custom ones.
      */
-    public static void addListeners(Gx gx, ArrayList<String> list) {
-        if (gx.a("Clickable")) {
+    public static void addListeners(ClassInfo gx, ArrayList<String> list) {
+        if (gx.matchesType("Clickable")) {
             list.add(" onLongClickListener");
         }
-        if (gx.a("SwipeRefreshLayout")) {
+        if (gx.matchesType("SwipeRefreshLayout")) {
             list.add("onSwipeRefreshLayoutListener");
         }
-        if (gx.a("AsyncTask")) {
+        if (gx.matchesType("AsyncTask")) {
             list.add("AsyncTaskClass");
         }
 
@@ -146,7 +146,7 @@ public class EventsHandler {
                 Object var = customEvent.get("var");
 
                 if (var instanceof String) {
-                    if (gx.a((String) var)) {
+                    if (gx.matchesType((String) var)) {
                         Object listener = customEvent.get("listener");
 
                         if (listener instanceof String) {

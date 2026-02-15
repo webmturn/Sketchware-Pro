@@ -10,7 +10,7 @@ import com.besome.sketch.lib.ui.CustomScrollView;
 
 import java.util.ArrayList;
 
-import a.a.a.uy;
+import a.a.a.WidgetPaletteIcon;
 import a.a.a.wB;
 import pro.sketchware.R;
 
@@ -29,7 +29,7 @@ public class PaletteFavorite extends LinearLayout {
     }
 
     public View a(String name, ArrayList<ViewBean> viewBeans) {
-        uy favoriteWidget = new uy(getContext(), name, viewBeans);
+        WidgetPaletteIcon favoriteWidget = new WidgetPaletteIcon(getContext(), name, viewBeans);
         collectionWidgets.addView(favoriteWidget);
         return favoriteWidget;
     }

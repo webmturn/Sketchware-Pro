@@ -18,7 +18,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 
-import a.a.a.kq;
+import a.a.a.BlockColorMapper;
 import a.a.a.mB;
 import a.a.a.wB;
 import mod.hey.studios.util.Helper;
@@ -62,7 +62,7 @@ public class VariableItemView extends LinearLayout {
                 break;
 
             default:
-                type = kq.b(name);
+                type = BlockColorMapper.b(name);
         }
 
         switch (name) {

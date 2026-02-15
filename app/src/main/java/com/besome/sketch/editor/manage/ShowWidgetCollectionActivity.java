@@ -16,13 +16,13 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import java.util.ArrayList;
 
 import a.a.a.GB;
-import a.a.a.NB;
+import a.a.a.UniqueNameValidator;
 import a.a.a.Op;
 import a.a.a.Rp;
-import a.a.a.bB;
+import a.a.a.SketchToast;
 import a.a.a.kC;
 import a.a.a.mB;
-import a.a.a.wq;
+import a.a.a.SketchwarePaths;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageCollectionShowWidgetBinding;
@@ -30,7 +30,7 @@ import pro.sketchware.databinding.ManageCollectionShowWidgetBinding;
 public class ShowWidgetCollectionActivity extends BaseAppCompatActivity implements View.OnClickListener {
     private String widgetName;
     private EditText widgetNameInput;
-    private NB widgetNameValidator;
+    private UniqueNameValidator widgetNameValidator;
     private ManageCollectionShowWidgetBinding binding;
 
     private ItemView loadViews(ArrayList<ViewBean> views) {
@@ -63,7 +63,7 @@ public class ShowWidgetCollectionActivity extends BaseAppCompatActivity implemen
             getOnBackPressedDispatcher().onBackPressed();
         } else if (id == R.id.save_button && widgetNameValidator.b()) {
             Rp.h().a(widgetName, Helper.getText(widgetNameInput), true);
-            bB.a(getApplicationContext(), getString(R.string.design_manager_message_edit_complete), bB.TOAST_NORMAL).show();
+            SketchToast.toast(getApplicationContext(), getString(R.string.design_manager_message_edit_complete), SketchToast.TOAST_NORMAL).show();
             finish();
         }
     }
@@ -94,7 +94,7 @@ public class ShowWidgetCollectionActivity extends BaseAppCompatActivity implemen
         String sc_id = getIntent().getStringExtra("sc_id");
         binding.pane.initialize(sc_id, true);
         binding.pane.setVerticalScrollBarEnabled(true);
-        kC kCVar = new kC("", wq.a() + "/image/data/", "", "");
+        kC kCVar = new kC("", SketchwarePaths.getCollectionPath() + "/image/data/", "", "");
         kCVar.b(Op.g().f());
         binding.pane.setResourceManager(kCVar);
         widgetNameInput = binding.edInput.getEditText();
@@ -102,7 +102,7 @@ public class ShowWidgetCollectionActivity extends BaseAppCompatActivity implemen
         widgetNameInput.setText(widgetName);
         binding.edInput.setHint(getString(R.string.design_manager_widget_hint_enter_widget_name));
         binding.saveButton.setOnClickListener(this);
-        widgetNameValidator = new NB(this, binding.edInput.getTextInputLayout(), Rp.h().g());
+        widgetNameValidator = new UniqueNameValidator(this, binding.edInput.getTextInputLayout(), Rp.h().g());
     }
 
     @Override

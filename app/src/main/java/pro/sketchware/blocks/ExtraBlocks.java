@@ -10,7 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import a.a.a.eC;
-import a.a.a.jC;
+import a.a.a.ProjectDataManager;
 import mod.hilal.saif.activities.tools.ConfigActivity;
 
 public class ExtraBlocks {
@@ -24,7 +24,7 @@ public class ExtraBlocks {
         eventName = logicEditor.eventName;
         this.logicEditor = logicEditor;
         javaName = logicEditor.M.getJavaName();
-        projectDataManager = jC.a(logicEditor.scId);
+        projectDataManager = ProjectDataManager.getProjectDataManager(logicEditor.scId);
     }
 
     public static void extraBlocks(ArrayList<HashMap<String, Object>> arrayList) {

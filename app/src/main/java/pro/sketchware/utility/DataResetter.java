@@ -7,10 +7,10 @@ import android.content.Intent;
 import java.util.HashMap;
 
 import a.a.a.DB;
-import a.a.a.bB;
-import a.a.a.lC;
+import a.a.a.SketchToast;
+import a.a.a.ProjectListManager;
 import a.a.a.oB;
-import a.a.a.wq;
+import a.a.a.SketchwarePaths;
 import a.a.a.yB;
 import mod.hey.studios.util.Helper;
 import mod.jbk.build.BuiltInLibraries;
@@ -29,14 +29,14 @@ public class DataResetter {
         new DB(context, "P16").a("P16I0");
 
         oB oBVar = new oB();
-        oBVar.b(wq.r());
+        oBVar.b(SketchwarePaths.getLibsPath());
         oBVar.b(BuiltInLibraries.EXTRACTED_COMPILE_ASSETS_PATH.getAbsolutePath());
 
         if (!resetOnlySettings) {
-            oBVar.b(wq.q());
-            oBVar.b(wq.s());
+            oBVar.b(SketchwarePaths.getSketchwareRootPath());
+            oBVar.b(SketchwarePaths.getSketchwarePath());
 
-            for (HashMap<String, Object> project : lC.a()) {
+            for (HashMap<String, Object> project : ProjectListManager.listProjects()) {
                 String sc_id = yB.c(project, "sc_id");
                 new DB(context, "D01_" + sc_id).a();
                 new DB(context, "D02_" + sc_id).a();
@@ -47,8 +47,8 @@ public class DataResetter {
             new DB(context, "P15").a();
         }
 
-        bB.a(context, Helper.getResString(R.string.program_information_reset_system_complete_initialize), bB.TOAST_NORMAL).show();
-        lC.a(context, true);
+        SketchToast.toast(context, Helper.getResString(R.string.program_information_reset_system_complete_initialize), SketchToast.TOAST_NORMAL).show();
+        ProjectListManager.initializeDb(context, true);
 
         Intent intent = new Intent(context, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);

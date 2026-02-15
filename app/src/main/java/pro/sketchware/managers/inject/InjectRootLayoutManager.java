@@ -10,7 +10,7 @@ import com.google.gson.reflect.TypeToken;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import a.a.a.wq;
+import a.a.a.SketchwarePaths;
 import pro.sketchware.tools.ViewBeanFactory;
 import pro.sketchware.tools.ViewBeanParser;
 import pro.sketchware.utility.FileUtil;
@@ -19,7 +19,7 @@ public class InjectRootLayoutManager {
     private final String path;
 
     public InjectRootLayoutManager(String sc_id) {
-        path = wq.b(sc_id) + "/view_root";
+        path = SketchwarePaths.getDataPath(sc_id) + "/view_root";
     }
 
     public static Root getDefaultRootLayout() {

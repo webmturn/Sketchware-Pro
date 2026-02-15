@@ -14,9 +14,9 @@ import java.io.File;
 import java.util.ArrayList;
 
 import a.a.a.Np;
-import a.a.a.bB;
-import a.a.a.uq;
-import a.a.a.wq;
+import a.a.a.SketchToast;
+import a.a.a.BlockConstants;
+import a.a.a.SketchwarePaths;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageFontAddBinding;
@@ -49,8 +49,8 @@ public class AddFontCollectionActivity extends BaseDialogActivity implements Vie
         binding.fontPreviewView.setVisibility(View.VISIBLE);
         r.setOnClickListener(this);
         s.setOnClickListener(this);
-        fontValidator = new FontNameValidator(this, binding.tiInput, uq.b, getExistingFontNames());
-        fontValidator = new FontNameValidator(this, binding.tiInput, uq.b, getExistingFontNames(), projectResourceBean.resName);
+        fontValidator = new FontNameValidator(this, binding.tiInput, BlockConstants.b, getExistingFontNames());
+        fontValidator = new FontNameValidator(this, binding.tiInput, BlockConstants.b, getExistingFontNames(), projectResourceBean.resName);
         binding.edInput.setText(projectResourceBean.resName);
         binding.fontPreviewTxt.setTypeface(Typeface.createFromFile(getFontFilePath(projectResourceBean)));
         addBasicTextChangedListener(binding.edInput, str -> {
@@ -81,12 +81,12 @@ public class AddFontCollectionActivity extends BaseDialogActivity implements Vie
     public final void saveFont() {
         if (fontValidator.b()) {
             Np.g().a(projectResourceBean, Helper.getText(binding.edInput), true);
-            bB.a(this, getString(R.string.design_manager_message_edit_complete), 1).show();
+            SketchToast.toast(this, getString(R.string.design_manager_message_edit_complete), 1).show();
             finish();
         }
     }
 
     public final String getFontFilePath(ProjectResourceBean projectResourceBean) {
-        return wq.a() + File.separator + "font" + File.separator + "data" + File.separator + projectResourceBean.resFullName;
+        return SketchwarePaths.getCollectionPath() + File.separator + "font" + File.separator + "data" + File.separator + projectResourceBean.resFullName;
     }
 }

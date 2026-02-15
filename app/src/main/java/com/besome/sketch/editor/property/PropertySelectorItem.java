@@ -16,7 +16,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import a.a.a.Kw;
 import a.a.a.mB;
-import a.a.a.sq;
+import a.a.a.SketchwareConstants;
 import a.a.a.wB;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
@@ -94,7 +94,7 @@ public class PropertySelectorItem extends RelativeLayout implements View.OnClick
 
     public void setValue(int value) {
         this.value = value;
-        tvValue.setText(sq.a(key, value));
+        tvValue.setText(SketchwareConstants.getPropertyValueString(key, value));
     }
 
     @Override
@@ -158,7 +158,7 @@ public class PropertySelectorItem extends RelativeLayout implements View.OnClick
         } else {
             desc.setVisibility(GONE);
         }
-        for (Pair<Integer, String> pair : sq.a(key)) {
+        for (Pair<Integer, String> pair : SketchwareConstants.getPropertyPairs(key)) {
             radioGroupContent.addView(getOption(pair));
         }
         for (int i = 0; radioGroupContent.getChildCount() > i; i++) {

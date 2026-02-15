@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import a.a.a.jq;
+import a.a.a.BuildConfig;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.xml.XmlBuilder;
@@ -26,8 +26,8 @@ public class AppCompatInjection {
     private final String sc_id;
     private final ProjectFileBean projectFile;
 
-    public AppCompatInjection(jq jq, ProjectFileBean projectFileBean) {
-        sc_id = jq.sc_id;
+    public AppCompatInjection(BuildConfig BuildConfig, ProjectFileBean projectFileBean) {
+        sc_id = BuildConfig.sc_id;
         projectFile = projectFileBean;
     }
 

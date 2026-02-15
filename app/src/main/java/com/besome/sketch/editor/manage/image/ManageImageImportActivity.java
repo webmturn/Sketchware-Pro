@@ -28,9 +28,9 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import java.util.ArrayList;
 
 import a.a.a.QB;
-import a.a.a.bB;
+import a.a.a.SketchToast;
 import a.a.a.mB;
-import a.a.a.uq;
+import a.a.a.BlockConstants;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 
@@ -81,8 +81,8 @@ public class ManageImageImportActivity extends BaseAppCompatActivity implements 
             }
             names = names + name;
         }
-        bB.a(getApplicationContext(), getString(R.string.common_message_name_unavailable)
-                + "\n[" + names + "]", bB.TOAST_WARNING).show();
+        SketchToast.toast(getApplicationContext(), getString(R.string.common_message_name_unavailable)
+                + "\n[" + names + "]", SketchToast.TOAST_WARNING).show();
         return true;
     }
 
@@ -166,7 +166,7 @@ public class ManageImageImportActivity extends BaseAppCompatActivity implements 
         ed_input_edittext.setText(selectedCollections.get(0).resName);
         ed_input_edittext.setPrivateImeOptions("defaultInputmode=english;");
         ed_input.setHint(getString(R.string.design_manager_image_hint_enter_image_name));
-        nameValidator = new QB(getApplicationContext(), ed_input.getTextInputLayout(), uq.b, getReservedProjectImageNames(), getReservedSelectedCollectionNames());
+        nameValidator = new QB(getApplicationContext(), ed_input.getTextInputLayout(), BlockConstants.b, getReservedProjectImageNames(), getReservedSelectedCollectionNames());
         chk_samename = findViewById(R.id.chk_samename);
         chk_samename.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
@@ -212,9 +212,9 @@ public class ManageImageImportActivity extends BaseAppCompatActivity implements 
             }
         }
         if (!duplicateCollections.isEmpty()) {
-            bB.b(getApplicationContext(), getString(R.string.design_manager_message_collection_name_conflict), bB.TOAST_WARNING).show();
+            SketchToast.warning(getApplicationContext(), getString(R.string.design_manager_message_collection_name_conflict), SketchToast.TOAST_WARNING).show();
         } else {
-            bB.a(getApplicationContext(), getString(R.string.design_manager_message_collection_name_no_conflict), bB.TOAST_NORMAL).show();
+            SketchToast.toast(getApplicationContext(), getString(R.string.design_manager_message_collection_name_no_conflict), SketchToast.TOAST_NORMAL).show();
         }
         selectedCollections = new ArrayList<>();
         selectedCollections.addAll(duplicateCollections);

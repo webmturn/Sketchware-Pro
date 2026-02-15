@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 import a.a.a.FB;
 import a.a.a.Rs;
 import a.a.a.Ts;
-import a.a.a.kq;
+import a.a.a.BlockColorMapper;
 import mod.hey.studios.moreblock.ReturnMoreblockManager;
 
 public class BlockUtil {
@@ -54,7 +54,7 @@ public class BlockUtil {
             case 'm' -> {
                 String specLast = spec.substring(spec.lastIndexOf(".") + 1);
                 String specFirst = spec.substring(spec.indexOf(".") + 1, spec.lastIndexOf("."));
-                yield new Rs(context, id, specLast, kq.a(specFirst), kq.b(specFirst), opCode);
+                yield new Rs(context, id, specLast, BlockColorMapper.a(specFirst), BlockColorMapper.b(specFirst), opCode);
             }
             default -> null;
         };

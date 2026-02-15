@@ -16,7 +16,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import a.a.a.Kw;
 import a.a.a.mB;
-import a.a.a.sq;
+import a.a.a.SketchwareConstants;
 import a.a.a.wB;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
@@ -126,9 +126,9 @@ public class PropertyStringSelectorItem extends RelativeLayout implements View.O
         radioGroupContent = view.findViewById(R.id.rg_content);
 
         String[] items = switch (key) {
-            case "property_ad_size" -> sq.k;
-            case "property_indeterminate" -> sq.l;
-            case "property_scale_type" -> sq.j;
+            case "property_ad_size" -> SketchwareConstants.k;
+            case "property_indeterminate" -> SketchwareConstants.l;
+            case "property_scale_type" -> SketchwareConstants.j;
             default -> null;
         };
 

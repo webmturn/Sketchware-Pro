@@ -21,12 +21,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import a.a.a.GB;
-import a.a.a.NB;
+import a.a.a.UniqueNameValidator;
 import a.a.a.Pp;
 import a.a.a.Rs;
 import a.a.a.Ss;
 import a.a.a.Ts;
-import a.a.a.bB;
+import a.a.a.SketchToast;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.BlockUtil;
 import pro.sketchware.R;
@@ -39,7 +39,7 @@ public class ShowMoreBlockCollectionActivity extends BaseAppCompatActivity imple
     private String moreBlockName;
     private BlockPane pane;
     private EditText moreBlockNameEditorText;
-    private NB moreBlockNameValidator;
+    private UniqueNameValidator moreBlockNameValidator;
     private ManageCollectionShowBlockBinding binding;
 
     private void addBlocks(ArrayList<BlockBean> blockBeans) {
@@ -124,7 +124,7 @@ public class ShowMoreBlockCollectionActivity extends BaseAppCompatActivity imple
     public void onClick(View v) {
         if (v.getId() == R.id.save_button && moreBlockNameValidator.b()) {
             Pp.h().a(moreBlockName, Helper.getText(moreBlockNameEditorText), true);
-            bB.a(getApplicationContext(), Helper.getResString(R.string.design_manager_message_edit_complete), bB.TOAST_NORMAL).show();
+            SketchToast.toast(getApplicationContext(), Helper.getResString(R.string.design_manager_message_edit_complete), SketchToast.TOAST_NORMAL).show();
             finish();
         }
     }
@@ -158,7 +158,7 @@ public class ShowMoreBlockCollectionActivity extends BaseAppCompatActivity imple
 
         binding.saveButton.setText(Helper.getResString(R.string.common_word_save));
         binding.saveButton.setOnClickListener(this);
-        moreBlockNameValidator = new NB(this, binding.edInput.getTextInputLayout(), Pp.h().g());
+        moreBlockNameValidator = new UniqueNameValidator(this, binding.edInput.getTextInputLayout(), Pp.h().g());
     }
 
     @Override

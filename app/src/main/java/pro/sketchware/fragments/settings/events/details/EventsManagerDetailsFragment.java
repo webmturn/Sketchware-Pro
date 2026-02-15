@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-import a.a.a.qA;
+import a.a.a.BaseFragment;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.OldResourceIdMapper;
 import pro.sketchware.R;
@@ -30,7 +30,7 @@ import pro.sketchware.fragments.settings.events.creator.EventsManagerCreatorFrag
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.UI;
 
-public class EventsManagerDetailsFragment extends qA {
+public class EventsManagerDetailsFragment extends BaseFragment {
 
     private final ArrayList<HashMap<String, Object>> listMap = new ArrayList<>();
     private String listName = "";

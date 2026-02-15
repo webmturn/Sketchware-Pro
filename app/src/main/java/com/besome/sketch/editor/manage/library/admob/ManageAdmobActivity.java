@@ -32,7 +32,7 @@ import java.util.ArrayList;
 
 import a.a.a.DB;
 import a.a.a.GB;
-import a.a.a.bB;
+import a.a.a.SketchToast;
 import a.a.a.mB;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
@@ -115,7 +115,7 @@ public class ManageAdmobActivity extends BaseAppCompatActivity implements View.O
                 downloadChromeDialog();
             }
         } else {
-            bB.a(getApplicationContext(), Helper.getResString(R.string.common_message_check_network), bB.TOAST_NORMAL).show();
+            SketchToast.toast(getApplicationContext(), Helper.getResString(R.string.common_message_check_network), SketchToast.TOAST_NORMAL).show();
         }
     }
 

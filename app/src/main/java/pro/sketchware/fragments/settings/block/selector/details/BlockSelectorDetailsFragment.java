@@ -21,7 +21,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-import a.a.a.qA;
+import a.a.a.BaseFragment;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.databinding.DialogAddCustomActivityBinding;
 import pro.sketchware.databinding.DialogSelectorActionsBinding;
@@ -31,7 +31,7 @@ import pro.sketchware.fragments.settings.block.selector.Selector;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.SketchwareUtil;
 
-public class BlockSelectorDetailsFragment extends qA {
+public class BlockSelectorDetailsFragment extends BaseFragment {
     private int index;
     private List<Selector> selectors;
     private FragmentBlockSelectorManagerBinding binding;

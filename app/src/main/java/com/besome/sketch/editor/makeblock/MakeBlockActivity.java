@@ -16,7 +16,7 @@ import com.besome.sketch.beans.ProjectFileBean;
 import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import a.a.a.jC;
+import a.a.a.ProjectDataManager;
 import a.a.a.mB;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
@@ -77,7 +77,7 @@ public class MakeBlockActivity extends BaseAppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         toolbar.setNavigationOnClickListener(Helper.getBackPressedClickListener(this));
         makeBlock = new MoreBlockBuilderView(this);
-        makeBlock.setFuncNameValidator(jC.a(sc_id).a(project));
+        makeBlock.setFuncNameValidator(ProjectDataManager.getProjectDataManager(sc_id).a(project));
         LinearLayout makeBlock = findViewById(R.id.makeblock_view);
         makeBlock.addView(this.makeBlock);
     }

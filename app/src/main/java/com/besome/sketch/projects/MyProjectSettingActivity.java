@@ -38,14 +38,14 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import a.a.a.GB;
-import a.a.a.MA;
-import a.a.a.VB;
-import a.a.a.lC;
+import a.a.a.BaseAsyncTask;
+import a.a.a.VariableNameValidator;
+import a.a.a.ProjectListManager;
 import a.a.a.mB;
 import a.a.a.nB;
 import a.a.a.oB;
 import a.a.a.wB;
-import a.a.a.wq;
+import a.a.a.SketchwarePaths;
 import a.a.a.yB;
 import mod.hey.studios.project.ProjectSettings;
 import mod.hey.studios.util.Helper;
@@ -68,7 +68,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
     private final int[] projectThemeColors = new int[themeColorKeys.length];
     public MyprojectSettingBinding binding;
     private PackageNameValidator projectPackageNameValidator;
-    private VB projectNameValidator;
+    private VariableNameValidator projectNameValidator;
     private AppNameValidator projectAppNameValidator;
     private boolean projectHasCustomIcon = false;
     private boolean updatingExistingProject = false;
@@ -135,7 +135,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
 
         projectAppNameValidator = new AppNameValidator(getApplicationContext(), binding.tilAppName);
         projectPackageNameValidator = new PackageNameValidator(getApplicationContext(), binding.tilPackageName);
-        projectNameValidator = new VB(getApplicationContext(), binding.tilProjectName);
+        projectNameValidator = new VariableNameValidator(getApplicationContext(), binding.tilProjectName);
         binding.tilPackageName.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
                 if (!shownPackageNameChangeWarning && !Helper.getText((EditText) v).trim().contains("com.my.newproject")) {
@@ -164,7 +164,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
         if (updatingExistingProject) {
             /* Set the dialog's title & save button label */
             binding.toolbar.setTitle("Project Settings");
-            HashMap<String, Object> metadata = lC.b(sc_id);
+            HashMap<String, Object> metadata = ProjectListManager.getProjectById(sc_id);
             binding.etPackageName.setText(yB.c(metadata, "my_sc_pkg_name"));
             binding.etProjectName.setText(yB.c(metadata, "my_ws_name"));
             binding.etAppName.setText(yB.c(metadata, "my_app_name"));
@@ -186,8 +186,8 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
             String newProjectName = getIntent().getStringExtra("my_ws_name");
             String newProjectPackageName = getIntent().getStringExtra("my_sc_pkg_name");
             if (sc_id == null || sc_id.isEmpty()) {
-                sc_id = lC.b();
-                newProjectName = lC.c();
+                sc_id = ProjectListManager.getNextProjectId();
+                newProjectName = ProjectListManager.getNextWorkspaceName();
                 newProjectPackageName = "com.my." + newProjectName.toLowerCase();
             }
             binding.etPackageName.setText(newProjectPackageName);
@@ -259,10 +259,10 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
         super.onStart();
 
         oB oBVar = new oB();
-        oBVar.f(wq.e() + File.separator + sc_id);
-        oBVar.f(wq.g() + File.separator + sc_id);
-        oBVar.f(wq.t() + File.separator + sc_id);
-        oBVar.f(wq.d() + File.separator + sc_id);
+        oBVar.f(SketchwarePaths.getIconsPath() + File.separator + sc_id);
+        oBVar.f(SketchwarePaths.getImagesPath() + File.separator + sc_id);
+        oBVar.f(SketchwarePaths.getSoundsPath() + File.separator + sc_id);
+        oBVar.f(SketchwarePaths.getFontsResourcePath() + File.separator + sc_id);
         File o = getCustomIcon();
         if (!o.exists()) {
             try {
@@ -403,15 +403,15 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
     }
 
     private String getCustomIconPath() {
-        return wq.e() + File.separator + sc_id + File.separator + "icon.png";
+        return SketchwarePaths.getIconsPath() + File.separator + sc_id + File.separator + "icon.png";
     }
 
     private String getTempIconsFolderPath(String foldername) {
-        return wq.e() + File.separator + sc_id + File.separator + foldername;
+        return SketchwarePaths.getIconsPath() + File.separator + sc_id + File.separator + foldername;
     }
 
     private String getIconsFolderPath() {
-        return wq.e() + File.separator + sc_id + File.separator + "mipmaps" + File.separator;
+        return SketchwarePaths.getIconsPath() + File.separator + sc_id + File.separator + "mipmaps" + File.separator;
     }
 
     private boolean isInputValid() {
@@ -497,7 +497,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
         }
     }
 
-    private class SaveProjectAsyncTask extends MA {
+    private class SaveProjectAsyncTask extends BaseAsyncTask {
 
         public SaveProjectAsyncTask(Context context) {
             super(context);
@@ -532,7 +532,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
                 for (int i = 0; i < themeColorKeys.length; i++) {
                     data.put(themeColorKeys[i], projectThemeColors[i]);
                 }
-                lC.b(sc_id, data);
+                ProjectListManager.updateProject(sc_id, data);
                 updateProjectResourcesContents(data);
             } else {
                 data.put("my_sc_reg_dt", new nB().a("yyyyMMddHHmmss"));
@@ -544,10 +544,10 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
                 for (int i = 0; i < themeColorKeys.length; i++) {
                     data.put(themeColorKeys[i], projectThemeColors[i]);
                 }
-                lC.a(sc_id, data);
+                ProjectListManager.saveProject(sc_id, data);
                 updateProjectResourcesContents(data);
-                wq.a(getApplicationContext(), sc_id);
-                new oB().b(wq.b(sc_id));
+                SketchwarePaths.clearPreferenceData(getApplicationContext(), sc_id);
+                new oB().b(SketchwarePaths.getDataPath(sc_id));
                 ProjectSettings projectSettings = new ProjectSettings(sc_id);
                 projectSettings.setValue(ProjectSettings.SETTING_NEW_XML_COMMAND, ProjectSettings.SETTING_GENERIC_VALUE_TRUE);
                 projectSettings.setValue(ProjectSettings.SETTING_ENABLE_VIEWBINDING, ProjectSettings.SETTING_GENERIC_VALUE_TRUE);
@@ -564,7 +564,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
         }
 
         private void updateProjectResourcesContents(HashMap<String, Object> data) {
-            String baseDir = wq.b(sc_id) + "/files/resource/values/";
+            String baseDir = SketchwarePaths.getDataPath(sc_id) + "/files/resource/values/";
             String stringsFilePath = baseDir + "strings.xml";
             String colorsFilePath = baseDir + "colors.xml";
             String newAppName = Objects.requireNonNull(data.get("my_app_name")).toString();

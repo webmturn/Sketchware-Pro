@@ -20,9 +20,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.util.ArrayList;
 
 import a.a.a.Qs;
-import a.a.a.bB;
-import a.a.a.jC;
-import a.a.a.oq;
+import a.a.a.SketchToast;
+import a.a.a.ProjectDataManager;
+import a.a.a.EventRegistry;
 import a.a.a.wB;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
@@ -61,10 +61,10 @@ public class ViewEvents extends LinearLayout {
         this.sc_id = sc_id;
         this.projectFileBean = projectFileBean;
 
-        String[] viewEvents = oq.getEventsForClass(viewBean.getClassInfo());
+        String[] viewEvents = EventRegistry.getEventsForClass(viewBean.getClassInfo());
         events.clear();
 
-        ArrayList<EventBean> alreadyAddedEvents = jC.a(sc_id).g(projectFileBean.getJavaName());
+        ArrayList<EventBean> alreadyAddedEvents = ProjectDataManager.getProjectDataManager(sc_id).g(projectFileBean.getJavaName());
         for (String event : viewEvents) {
             boolean eventAlreadyInActivity = false;
             for (EventBean bean : alreadyAddedEvents) {
@@ -88,9 +88,9 @@ public class ViewEvents extends LinearLayout {
         EventBean eventBean = events.get(eventPosition);
         if (!eventBean.isSelected) {
             eventBean.isSelected = true;
-            jC.a(sc_id).a(projectFileBean.getJavaName(), eventBean);
+            ProjectDataManager.getProjectDataManager(sc_id).a(projectFileBean.getJavaName(), eventBean);
             eventAdapter.notifyItemChanged(eventPosition);
-            bB.a(getContext(), getContext().getString(R.string.event_message_new_event), 0).show();
+            SketchToast.toast(getContext(), getContext().getString(R.string.event_message_new_event), 0).show();
         }
         if (onEventClickListener != null) {
             onEventClickListener.a(eventBean);
@@ -127,7 +127,7 @@ public class ViewEvents extends LinearLayout {
 
             public void bind(EventBean event, int position) {
                 binding.container.setOnClickListener(v -> createEvent(getLayoutPosition()));
-                binding.imgIcon.setImageResource(oq.getEventIconResource(event.eventName));
+                binding.imgIcon.setImageResource(EventRegistry.getEventIconResource(event.eventName));
                 binding.tvTitle.setText(event.eventName);
                 binding.tvTitle.setTextColor(MaterialColors.getColor(binding.tvTitle, event.isSelected ? com.google.android.material.R.attr.colorOnSurface : com.google.android.material.R.attr.colorOutline));
                 binding.imgIcon.setColorFilter(MaterialColors.getColor(binding.tvTitle, event.isSelected ? com.google.android.material.R.attr.colorOnSurface : com.google.android.material.R.attr.colorOutline));
@@ -143,7 +143,7 @@ public class ViewEvents extends LinearLayout {
                         dialog.setPositiveButton(Helper.getResString(R.string.common_word_delete), (view, which) -> {
                             view.dismiss();
                             EventBean.deleteEvent(sc_id, event, projectFileBean);
-                            bB.a(getContext(), getContext().getString(R.string.common_message_complete_delete), 0).show();
+                            SketchToast.toast(getContext(), getContext().getString(R.string.common_message_complete_delete), 0).show();
                             event.isSelected = false;
                             eventAdapter.notifyItemChanged(position);
                         });

@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
-import a.a.a.wq;
+import a.a.a.SketchwarePaths;
 import pro.sketchware.utility.InvokeUtil;
 
 public class ViewBeanParser {
@@ -56,7 +56,7 @@ public class ViewBeanParser {
     }
 
     public static String generateUniqueId(Set<String> ids, int type, String className) {
-        String prefix = wq.b(type);
+        String prefix = SketchwarePaths.getWidgetTypeName(type);
         var name = ViewBean.getViewTypeName(type);
         // Skip these types as they're the only ones with a different view type name: VScrollView
         // (ScrollView) and HScrollView (HorizontalScrollView).

@@ -20,7 +20,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.materialswitch.MaterialSwitch;
 
 import a.a.a.GB;
-import a.a.a.bB;
+import a.a.a.SketchToast;
 import a.a.a.iC;
 import a.a.a.mB;
 import mod.hey.studios.util.Helper;
@@ -49,7 +49,7 @@ public class ManageGoogleMapActivity extends BaseAppCompatActivity implements Vi
                 downloadChromeDialog();
             }
         } else {
-            bB.a(getApplicationContext(), Helper.getResString(R.string.common_message_check_network), 0).show();
+            SketchToast.toast(getApplicationContext(), Helper.getResString(R.string.common_message_check_network), 0).show();
         }
     }
 
@@ -103,7 +103,7 @@ public class ManageGoogleMapActivity extends BaseAppCompatActivity implements Vi
                 intent.putExtra("google_map", googleMapLibraryBean);
                 setResult(RESULT_OK, intent);
                 if (Helper.getText(editApiKey).isEmpty() && libSwitch.isChecked()) {
-                    bB.a(getApplicationContext(), "Api key can't be empty!", Toast.LENGTH_SHORT).show();
+                    SketchToast.toast(getApplicationContext(), "Api key can't be empty!", Toast.LENGTH_SHORT).show();
                 } else {
                     finish();
                 }

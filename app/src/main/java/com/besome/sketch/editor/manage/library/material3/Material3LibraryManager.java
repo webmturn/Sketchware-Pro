@@ -8,7 +8,7 @@ import androidx.annotation.StyleRes;
 
 import com.besome.sketch.beans.ProjectLibraryBean;
 
-import a.a.a.jC;
+import a.a.a.ProjectDataManager;
 import pro.sketchware.R;
 import pro.sketchware.utility.ThemeUtils;
 
@@ -21,7 +21,7 @@ public class Material3LibraryManager {
 
     public Material3LibraryManager(String sc_id) {
         isEditingState = false;
-        appCombatLibraryBean = jC.c(sc_id).c();
+        appCombatLibraryBean = ProjectDataManager.getLibraryManager(sc_id).c();
         isAppCompatEnabled = appCombatLibraryBean.isEnabled();
         context = getContext();
     }
@@ -29,7 +29,7 @@ public class Material3LibraryManager {
     public Material3LibraryManager(Context context, String sc_id) {
         this.context = context;
         isEditingState = false;
-        appCombatLibraryBean = jC.c(sc_id).c();
+        appCombatLibraryBean = ProjectDataManager.getLibraryManager(sc_id).c();
         isAppCompatEnabled = appCombatLibraryBean.isEnabled();
     }
 

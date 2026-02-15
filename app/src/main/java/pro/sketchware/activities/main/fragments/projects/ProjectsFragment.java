@@ -38,9 +38,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.IntStream;
 
-import a.a.a.DA;
+import a.a.a.PermissionFragment;
 import a.a.a.DB;
-import a.a.a.lC;
+import a.a.a.ProjectListManager;
 import dev.chrisbanes.insetter.Insetter;
 import mod.hey.studios.project.ProjectTracker;
 import mod.hey.studios.project.backup.BackupRestoreManager;
@@ -50,7 +50,7 @@ import pro.sketchware.databinding.MyprojectsBinding;
 import pro.sketchware.databinding.SortProjectDialogBinding;
 import pro.sketchware.utility.UI;
 
-public class ProjectsFragment extends DA {
+public class ProjectsFragment extends PermissionFragment {
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private final List<HashMap<String, Object>> projectsList = new ArrayList<>();
     private MyprojectsBinding binding;
@@ -83,7 +83,7 @@ public class ProjectsFragment extends DA {
     }
 
     @Override
-    public void b(int requestCode) {
+    public void onPermissionGranted(int requestCode) {
     }
 
     public void toDesignActivity(String sc_id) {
@@ -95,21 +95,21 @@ public class ProjectsFragment extends DA {
     }
 
     @Override
-    public void c(int requestCode) {
+    public void openAppSettings(int requestCode) {
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         intent.setData(Uri.parse("package:" + requireContext().getPackageName()));
         startActivity(intent);
     }
 
     @Override
-    public void d() {
+    public void onPermissionDenied() {
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).s();
         }
     }
 
     @Override
-    public void e() {
+    public void onSettingsDenied() {
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).s();
         }
@@ -214,14 +214,14 @@ public class ProjectsFragment extends DA {
         if (!isAdded()) return;
 
         // Don't load project list without having permissions
-        if (!c()) {
+        if (!hasStoragePermission()) {
             if (binding.swipeRefresh.isRefreshing()) binding.swipeRefresh.setRefreshing(false);
             ((MainActivity) requireActivity()).s(); // ask for permissions
             return;
         }
 
         executorService.execute(() -> {
-            List<HashMap<String, Object>> loadedProjects = lC.a();
+            List<HashMap<String, Object>> loadedProjects = ProjectListManager.listProjects();
             loadedProjects.sort(new ProjectComparator(preference.d("sortBy"),preference.a("pinnedProject", "-1")));
 
             DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new ProjectDiffCallback(projectsList, loadedProjects));
@@ -246,7 +246,7 @@ public class ProjectsFragment extends DA {
 
     private void addProject(String sc_id) {
         executorService.execute(() -> {
-            HashMap<String, Object> newProject = lC.b(sc_id);
+            HashMap<String, Object> newProject = ProjectListManager.getProjectById(sc_id);
             if (newProject != null) {
                 var activity = getActivity();
                 if (activity == null) return;
@@ -262,7 +262,7 @@ public class ProjectsFragment extends DA {
 
     private void updateProject(String sc_id) {
         executorService.execute(() -> {
-            HashMap<String, Object> updatedProject = lC.b(sc_id);
+            HashMap<String, Object> updatedProject = ProjectListManager.getProjectById(sc_id);
             if (updatedProject != null) {
                 int index = IntStream.range(0, projectsList.size()).filter(i -> projectsList.get(i).get("sc_id").equals(sc_id)).findFirst().orElse(-1);
                 if (index != -1) {

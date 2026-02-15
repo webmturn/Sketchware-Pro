@@ -35,8 +35,8 @@ import java.util.TimerTask;
 
 import a.a.a.Qp;
 import a.a.a.WB;
-import a.a.a.bB;
-import a.a.a.uq;
+import a.a.a.SketchToast;
+import a.a.a.BlockConstants;
 import a.a.a.yy;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;
@@ -152,7 +152,7 @@ public class AddSoundActivity extends BaseDialogActivity implements View.OnClick
         nowPlayingContainer.setVisibility(View.GONE);
         TextInputLayout soundInputLayout = findViewById(R.id.ti_input);
         soundName = findViewById(R.id.ed_input);
-        soundNameValidator = new WB(this, soundInputLayout, uq.b, existingSoundNames);
+        soundNameValidator = new WB(this, soundInputLayout, BlockConstants.b, existingSoundNames);
         playPause.setEnabled(false);
         playPause.setOnClickListener(this);
         nowPlayingProgressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -185,7 +185,7 @@ public class AddSoundActivity extends BaseDialogActivity implements View.OnClick
         if (requestCode == 270) {
             e(getString(R.string.design_manager_sound_title_edit_sound));
             ProjectResourceBean projectResourceBean = intent.getParcelableExtra("project_resource");
-            soundNameValidator = new WB(this, soundInputLayout, uq.b, new ArrayList<>());
+            soundNameValidator = new WB(this, soundInputLayout, BlockConstants.b, new ArrayList<>());
             soundName.setText(projectResourceBean.resName);
             soundName.setEnabled(false);
             addToCollection.setEnabled(false);
@@ -227,15 +227,15 @@ public class AddSoundActivity extends BaseDialogActivity implements View.OnClick
 
                                     switch (message) {
                                         case "duplicate_name":
-                                            bB.b(this, getString(R.string.collection_duplicated_name), 1).show();
+                                            SketchToast.warning(this, getString(R.string.collection_duplicated_name), 1).show();
                                             break;
 
                                         case "file_no_exist":
-                                            bB.b(this, getString(R.string.collection_no_exist_file), 1).show();
+                                            SketchToast.warning(this, getString(R.string.collection_no_exist_file), 1).show();
                                             break;
 
                                         case "fail_to_copy":
-                                            bB.b(this, getString(R.string.collection_failed_to_copy), 1).show();
+                                            SketchToast.warning(this, getString(R.string.collection_failed_to_copy), 1).show();
                                             break;
 
                                         default:

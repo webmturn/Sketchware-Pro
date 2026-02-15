@@ -16,7 +16,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import a.a.a.Kw;
 import a.a.a.mB;
-import a.a.a.sq;
+import a.a.a.SketchwareConstants;
 import a.a.a.wB;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
@@ -115,7 +115,7 @@ public class PropertyStringPairSelectorItem extends RelativeLayout implements Vi
         View view = wB.a(getContext(), R.layout.property_popup_selector_single);
         radioGroupContent = view.findViewById(R.id.rg_content);
         int counter = 0;
-        for (Pair<String, String> pair : sq.b(key)) {
+        for (Pair<String, String> pair : SketchwareConstants.getStringPropertyPairs(key)) {
             radioGroupContent.addView(getOption(pair));
         }
         int childCount = radioGroupContent.getChildCount();

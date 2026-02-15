@@ -24,12 +24,12 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import a.a.a.GB;
-import a.a.a.bB;
+import a.a.a.SketchToast;
 import a.a.a.iC;
-import a.a.a.kv;
-import a.a.a.lv;
+import a.a.a.FirebasePreviewView;
+import a.a.a.FirebaseSettingsView;
 import a.a.a.mB;
-import a.a.a.mv;
+import a.a.a.FirebaseStorageView;
 import a.a.a.nv;
 import mod.hey.studios.util.Helper;
 import mod.jbk.editor.manage.library.LibrarySettingsImporter;
@@ -65,19 +65,19 @@ public class FirebaseActivity extends BaseAppCompatActivity implements View.OnCl
         layout_container.removeAllViews();
         if (stepNumber == STEP_1) {
             cv_console.setVisibility(View.VISIBLE);
-            lv lvVar = new lv(this);
+            FirebaseSettingsView lvVar = new FirebaseSettingsView(this);
             layout_container.addView(lvVar);
             lvVar.setData(firebaseSettings);
             step = lvVar;
         } else if (stepNumber == STEP_2) {
             cv_console.setVisibility(View.VISIBLE);
-            mv mvVar = new mv(this);
+            FirebaseStorageView mvVar = new FirebaseStorageView(this);
             layout_container.addView(mvVar);
             mvVar.setData(firebaseSettings);
             step = mvVar;
         } else if (stepNumber == STEP_3) {
             cv_console.setVisibility(View.GONE);
-            kv kvVar = new kv(this);
+            FirebasePreviewView kvVar = new FirebasePreviewView(this);
             layout_container.addView(kvVar);
             kvVar.setData(firebaseSettings);
             step = kvVar;
@@ -118,7 +118,7 @@ public class FirebaseActivity extends BaseAppCompatActivity implements View.OnCl
                     showGetChromeDialog();
                 }
             } else {
-                bB.a(getApplicationContext(), getString(R.string.common_message_check_network), bB.TOAST_NORMAL).show();
+                SketchToast.toast(getApplicationContext(), getString(R.string.common_message_check_network), SketchToast.TOAST_NORMAL).show();
             }
         }
     }
@@ -138,7 +138,7 @@ public class FirebaseActivity extends BaseAppCompatActivity implements View.OnCl
                 showGetChromeDialog();
             }
         } else {
-            bB.a(getApplicationContext(), getString(R.string.common_message_check_network), bB.TOAST_NORMAL).show();
+            SketchToast.toast(getApplicationContext(), getString(R.string.common_message_check_network), SketchToast.TOAST_NORMAL).show();
         }
     }
 

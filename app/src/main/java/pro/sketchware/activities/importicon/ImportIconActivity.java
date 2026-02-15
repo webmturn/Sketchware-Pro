@@ -43,12 +43,12 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import a.a.a.KB;
-import a.a.a.MA;
+import a.a.a.BaseAsyncTask;
 import a.a.a.WB;
 import a.a.a.mB;
 import a.a.a.oB;
-import a.a.a.uq;
-import a.a.a.wq;
+import a.a.a.BlockConstants;
+import a.a.a.SketchwarePaths;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.activities.importicon.adapters.IconAdapter;
@@ -105,11 +105,11 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
     }
 
     private boolean doExtractedIconsExist() {
-        return new oB().e(wq.getExtractedIconPackStoreLocation());
+        return new oB().e(SketchwarePaths.getExtractedIconPackStoreLocation());
     }
 
     private void extractIcons() {
-        KB.a(this, "icons" + File.separator + "icon_pack.zip", wq.getExtractedIconPackStoreLocation());
+        KB.a(this, "icons" + File.separator + "icon_pack.zip", SketchwarePaths.getExtractedIconPackStoreLocation());
     }
 
     @Override
@@ -220,7 +220,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
     private void listIcons() {
         allIconPaths = new ArrayList<>();
 
-        String iconPackStoreLocation = wq.getExtractedIconPackStoreLocation() + File.separator + "svg/";
+        String iconPackStoreLocation = SketchwarePaths.getExtractedIconPackStoreLocation() + File.separator + "svg/";
         try (Stream<Path> iconFiles = Files.list(Paths.get(iconPackStoreLocation))) {
             iconFiles.map(Path::getFileName)
                     .map(Path::toString)
@@ -406,7 +406,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
 
         svgUtils.loadImage(dialogBinding.icon, adapter.getCurrentList().get(iconPosition).second + File.separator + selected_icon_type + ".svg");
         dialogBinding.icon.setColorFilter(selected_color, PorterDuff.Mode.SRC_IN);
-        iconNameValidator = new WB(getApplicationContext(), dialogBinding.textInputLayout, uq.b, alreadyAddedImageNames);
+        iconNameValidator = new WB(getApplicationContext(), dialogBinding.textInputLayout, BlockConstants.b, alreadyAddedImageNames);
         dialogBinding.licenceInfo.setOnClickListener(v -> {
             Uri webpage = Uri.parse("https://www.apache.org/licenses/LICENSE-2.0.txt");
             Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
@@ -428,7 +428,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
         }
     }
 
-    private static class InitialIconLoader extends MA {
+    private static class InitialIconLoader extends BaseAsyncTask {
         private final WeakReference<ImportIconActivity> activity;
 
         public InitialIconLoader(ImportIconActivity activity) {
@@ -463,7 +463,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
 
     }
 
-    private static class IconColorChangedIconLoader extends MA {
+    private static class IconColorChangedIconLoader extends BaseAsyncTask {
         private final WeakReference<ImportIconActivity> activity;
 
         public IconColorChangedIconLoader(ImportIconActivity activity) {

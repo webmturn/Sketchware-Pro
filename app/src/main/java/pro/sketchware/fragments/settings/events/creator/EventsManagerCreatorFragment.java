@@ -16,7 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import a.a.a.qA;
+import a.a.a.BaseFragment;
 import mod.hey.studios.util.Helper;
 import mod.hilal.saif.activities.tools.IconSelectorDialog;
 import mod.jbk.util.OldResourceIdMapper;
@@ -25,7 +25,7 @@ import pro.sketchware.databinding.FragmentEventsManagerCreatorBinding;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.SketchwareUtil;
 
-public class EventsManagerCreatorFragment extends qA {
+public class EventsManagerCreatorFragment extends BaseFragment {
 
     private String _code;
     private String _desc;

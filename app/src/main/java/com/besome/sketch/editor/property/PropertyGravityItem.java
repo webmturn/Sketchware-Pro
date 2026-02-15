@@ -13,7 +13,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import a.a.a.Kw;
 import a.a.a.mB;
-import a.a.a.sq;
+import a.a.a.SketchwareConstants;
 import a.a.a.wB;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
@@ -61,7 +61,7 @@ public class PropertyGravityItem extends RelativeLayout implements View.OnClickL
 
     public void setValue(int value) {
         gravityValue = value;
-        tvValue.setText(sq.a(value));
+        tvValue.setText(SketchwareConstants.gravityToString(value));
     }
 
     @Override

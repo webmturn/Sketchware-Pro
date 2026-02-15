@@ -10,7 +10,7 @@ import com.google.gson.annotations.Expose;
 import java.util.ArrayList;
 
 import a.a.a.Gx;
-import a.a.a.mq;
+import a.a.a.ComponentTypeMapper;
 
 public class BlockBean extends SelectableBean implements Parcelable {
     public static final Parcelable.Creator<BlockBean> CREATOR = new Parcelable.Creator<>() {
@@ -94,8 +94,8 @@ public class BlockBean extends SelectableBean implements Parcelable {
     }
 
     private void buildClassInfo() {
-        classInfo = mq.a(type, typeName);
-        paramClassInfo = mq.a(spec);
+        classInfo = ComponentTypeMapper.a(type, typeName);
+        paramClassInfo = ComponentTypeMapper.a(spec);
     }
 
     public void copy(BlockBean other) {

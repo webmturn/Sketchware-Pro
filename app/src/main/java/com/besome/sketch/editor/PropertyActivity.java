@@ -40,7 +40,7 @@ import java.util.Map;
 
 import a.a.a.Kw;
 import a.a.a.cC;
-import a.a.a.jC;
+import a.a.a.ProjectDataManager;
 import a.a.a.mB;
 import a.a.a.ro;
 import mod.hey.studios.project.ProjectSettings;
@@ -71,7 +71,7 @@ public class PropertyActivity extends BaseAppCompatActivity implements Kw {
     }
 
     private void m() {
-        ArrayList<String> var1 = jC.d(sc_id).m();
+        ArrayList<String> var1 = ProjectDataManager.getResourceManager(sc_id).m();
         PropertyResourceItem resourceProperty;
         if (!var1.contains(viewBean.layout.backgroundResource)) {
             viewBean.layout.backgroundResource = null;
@@ -89,8 +89,8 @@ public class PropertyActivity extends BaseAppCompatActivity implements Kw {
             }
         }
 
-        for (String fileName : jC.b(sc_id).e()) {
-            for (ViewBean bean : jC.a(sc_id).d(fileName)) {
+        for (String fileName : ProjectDataManager.getFileManager(sc_id).e()) {
+            for (ViewBean bean : ProjectDataManager.getProjectDataManager(sc_id).d(fileName)) {
                 if (bean.type == 6 && !var1.contains(bean.image.resName)) {
                     bean.image.resName = "default_image";
                     p = true;
@@ -103,8 +103,8 @@ public class PropertyActivity extends BaseAppCompatActivity implements Kw {
             }
         }
 
-        for (String fileName : jC.b(sc_id).d()) {
-            for (Map.Entry<String, ArrayList<BlockBean>> var4 : jC.a(sc_id).b(fileName).entrySet()) {
+        for (String fileName : ProjectDataManager.getFileManager(sc_id).d()) {
+            for (Map.Entry<String, ArrayList<BlockBean>> var4 : ProjectDataManager.getProjectDataManager(sc_id).b(fileName).entrySet()) {
                 for (BlockBean bean : var4.getValue()) {
                     if ("setImage".equals(bean.opCode)) {
                         if (!var1.contains(bean.parameters.get(1))) {
@@ -121,9 +121,9 @@ public class PropertyActivity extends BaseAppCompatActivity implements Kw {
     public void o() {
         ViewBean viewBean;
         if (this.viewBean.id.equals("_fab")) {
-            viewBean = jC.a(sc_id).h(projectFileBean.getXmlName());
+            viewBean = ProjectDataManager.getProjectDataManager(sc_id).h(projectFileBean.getXmlName());
         } else {
-            viewBean = jC.a(sc_id).c(projectFileBean.getXmlName(), this.viewBean.preId);
+            viewBean = ProjectDataManager.getProjectDataManager(sc_id).c(projectFileBean.getXmlName(), this.viewBean.preId);
         }
 
         cC.c(sc_id).a(projectFileBean.getXmlName(), viewBean.clone(), this.viewBean);
@@ -149,11 +149,11 @@ public class PropertyActivity extends BaseAppCompatActivity implements Kw {
         });
         imageManagerLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
-                    if (result.getResultCode() == RESULT_OK && jC.d(sc_id) != null && result.getData() != null) {
+                    if (result.getResultCode() == RESULT_OK && ProjectDataManager.getResourceManager(sc_id) != null && result.getData() != null) {
                         String var4 = result.getData().getStringExtra("sc_id");
                         ArrayList<ProjectResourceBean> resultList = result.getData().getParcelableArrayListExtra("result");
-                        if (jC.d(var4) != null) {
-                            jC.d(var4).b(resultList);
+                        if (ProjectDataManager.getResourceManager(var4) != null) {
+                            ProjectDataManager.getResourceManager(var4).b(resultList);
                             m();
                         }
                     }

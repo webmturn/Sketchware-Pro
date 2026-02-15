@@ -19,18 +19,18 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 
 import java.lang.ref.WeakReference;
 
-import a.a.a.MA;
+import a.a.a.BaseAsyncTask;
 import a.a.a.Op;
-import a.a.a.fu;
+import a.a.a.ImageCollectionFragment;
 import a.a.a.mB;
-import a.a.a.pu;
+import a.a.a.ImageListFragment;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageImageBinding;
 
 public class ManageImageActivity extends BaseAppCompatActivity implements ViewPager.OnPageChangeListener {
     private String sc_id;
-    private pu projectImagesFragment;
-    private fu collectionImagesFragment;
+    private ImageListFragment projectImagesFragment;
+    private ImageCollectionFragment collectionImagesFragment;
     private ManageImageBinding binding;
 
     public static int getImageGridColumnCount(Context context) {
@@ -46,15 +46,15 @@ public class ManageImageActivity extends BaseAppCompatActivity implements ViewPa
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
     }
 
-    public void f(int i) {
+    public void setCurrentPage(int i) {
         binding.viewPager.setCurrentItem(i);
     }
 
-    public fu l() {
+    public ImageCollectionFragment getCollectionFragment() {
         return collectionImagesFragment;
     }
 
-    public pu m() {
+    public ImageListFragment getProjectImagesFragment() {
         return projectImagesFragment;
     }
 
@@ -65,7 +65,7 @@ public class ManageImageActivity extends BaseAppCompatActivity implements ViewPa
             @Override
             public void handleOnBackPressed() {
                 if (projectImagesFragment.isSelecting) {
-                    projectImagesFragment.a(false);
+                    projectImagesFragment.setSelectionMode(false);
                 } else if (collectionImagesFragment.isSelecting()) {
                     collectionImagesFragment.unselectAll();
                     binding.layoutBtnImport.setVisibility(View.GONE);
@@ -127,11 +127,11 @@ public class ManageImageActivity extends BaseAppCompatActivity implements ViewPa
         } else {
             binding.fab.animate().translationY(400F).setDuration(200L).start();
             binding.fab.hide();
-            projectImagesFragment.a(false);
+            projectImagesFragment.setSelectionMode(false);
         }
     }
 
-    private static class SaveImagesAsyncTask extends MA {
+    private static class SaveImagesAsyncTask extends BaseAsyncTask {
         private final WeakReference<ManageImageActivity> activity;
 
         public SaveImagesAsyncTask(ManageImageActivity activity) {
@@ -185,9 +185,9 @@ public class ManageImageActivity extends BaseAppCompatActivity implements ViewPa
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
             Fragment fragment = (Fragment) super.instantiateItem(container, position);
             if (position == 0) {
-                projectImagesFragment = (pu) fragment;
+                projectImagesFragment = (ImageListFragment) fragment;
             } else {
-                collectionImagesFragment = (fu) fragment;
+                collectionImagesFragment = (ImageCollectionFragment) fragment;
             }
             return fragment;
         }
@@ -196,9 +196,9 @@ public class ManageImageActivity extends BaseAppCompatActivity implements ViewPa
         @NonNull
         public Fragment getItem(int position) {
             if (position != 0) {
-                return new fu();
+                return new ImageCollectionFragment();
             }
-            return new pu();
+            return new ImageListFragment();
         }
 
         @Override

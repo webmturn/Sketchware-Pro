@@ -22,11 +22,11 @@ import java.util.HashMap;
 
 import a.a.a.GB;
 import a.a.a.Mp;
-import a.a.a.NB;
+import a.a.a.UniqueNameValidator;
 import a.a.a.Rs;
 import a.a.a.Ss;
 import a.a.a.Ts;
-import a.a.a.bB;
+import a.a.a.SketchToast;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageCollectionShowBlockBinding;
@@ -38,7 +38,7 @@ public class ShowBlockCollectionActivity extends BaseAppCompatActivity implement
     private String blockName;
     private BlockPane pane;
     private EditText blockNameEditorText;
-    private NB blockNameValidator;
+    private UniqueNameValidator blockNameValidator;
 
     private ManageCollectionShowBlockBinding binding;
 
@@ -118,7 +118,7 @@ public class ShowBlockCollectionActivity extends BaseAppCompatActivity implement
     public void onClick(View v) {
         if (v.getId() == R.id.save_button && blockNameValidator.b()) {
             Mp.h().a(blockName, Helper.getText(blockNameEditorText), true);
-            bB.a(getApplicationContext(), Helper.getResString(R.string.design_manager_message_edit_complete), bB.TOAST_NORMAL).show();
+            SketchToast.toast(getApplicationContext(), Helper.getResString(R.string.design_manager_message_edit_complete), SketchToast.TOAST_NORMAL).show();
             finish();
         }
     }
@@ -151,7 +151,7 @@ public class ShowBlockCollectionActivity extends BaseAppCompatActivity implement
 
         binding.saveButton.setText(Helper.getResString(R.string.common_word_save));
         binding.saveButton.setOnClickListener(this);
-        blockNameValidator = new NB(this, binding.edInput.getTextInputLayout(), Mp.h().g());
+        blockNameValidator = new UniqueNameValidator(this, binding.edInput.getTextInputLayout(), Mp.h().g());
     }
 
     @Override

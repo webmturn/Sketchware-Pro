@@ -27,11 +27,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 
-import a.a.a.ZB;
-import a.a.a.bB;
+import a.a.a.IdentifierValidator;
+import a.a.a.SketchToast;
 import a.a.a.eC;
-import a.a.a.jC;
-import a.a.a.uq;
+import a.a.a.ProjectDataManager;
+import a.a.a.BlockConstants;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.AddCustomListBinding;
@@ -52,7 +52,7 @@ public class LogicClickListener implements View.OnClickListener {
 
     public LogicClickListener(LogicEditorActivity logicEditor) {
         this.logicEditor = logicEditor;
-        projectDataManager = jC.a(logicEditor.scId);
+        projectDataManager = ProjectDataManager.getProjectDataManager(logicEditor.scId);
         projectFile = logicEditor.M;
         eventName = logicEditor.id + "_" + logicEditor.eventName;
         javaName = logicEditor.M.getJavaName();
@@ -104,7 +104,7 @@ public class LogicClickListener implements View.OnClickListener {
         VariableTypeValidator varTypeValidator = new VariableTypeValidator(getContext(), binding.typeLayout);
         binding.type.addTextChangedListener(varTypeValidator);
 
-        ZB validator = new ZB(getContext(), binding.nameLayout, uq.b, uq.a(), projectDataManager.a(projectFile));
+        IdentifierValidator validator = new IdentifierValidator(getContext(), binding.nameLayout, BlockConstants.b, BlockConstants.a(), projectDataManager.a(projectFile));
 
         dialog.setView(binding.getRoot());
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_add), (v, which) -> {
@@ -224,7 +224,7 @@ public class LogicClickListener implements View.OnClickListener {
 
         AddCustomListBinding listBinding = AddCustomListBinding.inflate(logicEditor.getLayoutInflater());
 
-        ZB validator = new ZB(getContext(), listBinding.nameLayout, uq.b, uq.a(), projectDataManager.a(projectFile));
+        IdentifierValidator validator = new IdentifierValidator(getContext(), listBinding.nameLayout, BlockConstants.b, BlockConstants.a(), projectDataManager.a(projectFile));
 
         dialog.setView(listBinding.getRoot());
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_add), (v, which) -> {
@@ -382,7 +382,7 @@ public class LogicClickListener implements View.OnClickListener {
                     if (item.type == Item.TYPE_ITEM && isChecked) {
                         if (isInUseChecker.apply(item.text)) {
                             //noinspection ConstantConditions Item#inUseMessage can't be null if Item#type is Item#TYPE_ITEM
-                            SketchwareUtil.toastError(Helper.getResString(item.inUseMessage), bB.TOAST_WARNING);
+                            SketchwareUtil.toastError(Helper.getResString(item.inUseMessage), SketchToast.TOAST_WARNING);
                             checkBoxHolder.checkBox.performClick();
                         }
                     }

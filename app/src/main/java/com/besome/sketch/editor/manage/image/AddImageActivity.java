@@ -29,13 +29,13 @@ import java.util.ArrayList;
 
 import a.a.a.By;
 import a.a.a.HB;
-import a.a.a.MA;
+import a.a.a.BaseAsyncTask;
 import a.a.a.Op;
 import a.a.a.PB;
-import a.a.a.bB;
+import a.a.a.SketchToast;
 import a.a.a.iB;
 import a.a.a.oB;
-import a.a.a.uq;
+import a.a.a.BlockConstants;
 import a.a.a.yy;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
@@ -166,7 +166,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
         ed_input_edittext = ed_input.getEditText();
         ed_input_edittext.setPrivateImeOptions("defaultInputmode=english;");
         ed_input.setHint(getString(R.string.design_manager_image_hint_enter_image_name));
-        O = new PB(this, ed_input.getTextInputLayout(), uq.b, getReservedImageNames());
+        O = new PB(this, ed_input.getTextInputLayout(), BlockConstants.b, getReservedImageNames());
         O.a(1);
         chk_collection.setText(R.string.design_manager_title_add_to_collection);
         tv_add_photo.setText(R.string.design_manager_image_title_add_image);
@@ -193,7 +193,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
             imageRotationDegrees = image.rotate;
             imageScaleX = image.flipHorizontal;
             imageScaleY = image.flipVertical;
-            O = new PB(this, ed_input.getTextInputLayout(), uq.b, getReservedImageNames(), image.resName);
+            O = new PB(this, ed_input.getTextInputLayout(), BlockConstants.b, getReservedImageNames(), image.resName);
             O.a(1);
             ed_input_edittext.setText(image.resName);
             ed_input_edittext.setEnabled(false);
@@ -248,7 +248,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
             }
             imagePickerLauncher.launch(Intent.createChooser(intent, getString(R.string.common_word_choose)));
         } catch (ActivityNotFoundException unused) {
-            bB.b(this, getString(R.string.common_error_activity_not_found), bB.TOAST_NORMAL).show();
+            SketchToast.warning(this, getString(R.string.common_error_activity_not_found), SketchToast.TOAST_NORMAL).show();
         }
     }
 
@@ -337,7 +337,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
         return dir_path + File.separator + projectResourceBean.resFullName;
     }
 
-    private static class SaveAsyncTask extends MA {
+    private static class SaveAsyncTask extends BaseAsyncTask {
         private final WeakReference<AddImageActivity> activity;
 
         public SaveAsyncTask(AddImageActivity activity) {

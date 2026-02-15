@@ -27,9 +27,9 @@ import java.util.List;
 import java.util.Objects;
 
 import a.a.a.DB;
-import a.a.a.lC;
+import a.a.a.ProjectListManager;
 import a.a.a.mB;
-import a.a.a.wq;
+import a.a.a.SketchwarePaths;
 import a.a.a.yB;
 import mod.hey.studios.project.ProjectSettingsDialog;
 import mod.hey.studios.project.backup.BackupRestoreManager;
@@ -144,16 +144,16 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
         if (yB.c(projectMap, "sc_ver_code").isEmpty()) {
             projectMap.put("sc_ver_code", "1");
             projectMap.put("sc_ver_name", "1.0");
-            lC.b(scId, projectMap);
+            ProjectListManager.updateProject(scId, projectMap);
         }
 
         if (yB.b(projectMap, "sketchware_ver") <= 0) {
             projectMap.put("sketchware_ver", 61);
-            lC.b(scId, projectMap);
+            ProjectListManager.updateProject(scId, projectMap);
         }
 
         if (yB.a(projectMap, "custom_icon")) {
-            String iconFolder = wq.e() + File.separator + scId;
+            String iconFolder = SketchwarePaths.getIconsPath() + File.separator + scId;
             File iconFile = new File(iconFolder, "icon.png");
             if (iconFile.exists()) {
                 Uri uri;
@@ -216,7 +216,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
         String scId = yB.c(projectMap, "sc_id");
         new Thread(() -> {
             try {
-                lC.a(activity, scId);
+                ProjectListManager.deleteProject(activity, scId);
                 activity.runOnUiThread(() -> {
                     progressDialog.dismiss();
                     shownProjects.remove(position);

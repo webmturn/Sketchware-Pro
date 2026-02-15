@@ -2,7 +2,7 @@ package pro.sketchware.xml;
 
 import java.util.ArrayList;
 
-import a.a.a.Jx;
+import a.a.a.ActivityCodeGenerator;
 
 public class XmlBuilder {
 
@@ -100,7 +100,7 @@ public class XmlBuilder {
     }
 
     public String c() {
-        return Jx.WIDGET_NAME_PATTERN.matcher(rootElementName).replaceAll("");
+        return ActivityCodeGenerator.WIDGET_NAME_PATTERN.matcher(rootElementName).replaceAll("");
     }
 
     private void b(int indentSize) {

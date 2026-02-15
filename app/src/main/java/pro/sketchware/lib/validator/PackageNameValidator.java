@@ -7,7 +7,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.util.regex.Pattern;
 
 import a.a.a.MB;
-import a.a.a.uq;
+import a.a.a.BlockConstants;
 import pro.sketchware.R;
 
 public class PackageNameValidator extends MB {
@@ -49,7 +49,7 @@ public class PackageNameValidator extends MB {
         }
         boolean containsReservedWord = false;
         for (String packagePart : s.toString().split("\\.")) {
-            String[] reservedWords = uq.b;
+            String[] reservedWords = BlockConstants.b;
             int length = reservedWords.length;
             int reservedWordIndex = 0;
             while (true) {

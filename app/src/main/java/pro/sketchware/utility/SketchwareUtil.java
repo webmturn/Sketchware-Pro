@@ -28,7 +28,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.function.Consumer;
 
-import a.a.a.bB;
+import a.a.a.SketchToast;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;
 import pro.sketchware.R;
@@ -61,7 +61,7 @@ public class SketchwareUtil {
      */
     public static void toast(String message, int length) {
         try {
-            bB.a(getContext(), message, length).show();
+            SketchToast.toast(getContext(), message, length).show();
         } catch (RuntimeException e) {
             LogUtil.e("SketchwareUtil", "Failed to toast regular message, " + "Toast's message was: \"" + message + "\"", e);
         }
@@ -84,7 +84,7 @@ public class SketchwareUtil {
      */
     public static void toastError(String message, int length) {
         try {
-            bB.b(getContext(), message, length).show();
+            SketchToast.warning(getContext(), message, length).show();
         } catch (RuntimeException e) {
             LogUtil.e("SketchwareUtil", "Failed to toast regular message, " + "Toast's message was: \"" + message + "\"", e);
         }

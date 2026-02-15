@@ -247,7 +247,7 @@ public class WidgetsCreatorManager {
                 if (!allCategories.contains(widgetClass)) {
                     allCategories.add(widgetClass);
                 }
-                viewEditorFragment.e();
+                viewEditorFragment.setupPalette();
                 v.dismiss();
             } catch (Exception e) {
                 SketchwareUtil.toastError("Failed: " + e.getMessage());
@@ -332,7 +332,7 @@ public class WidgetsCreatorManager {
 
         if (!widgetConfigurationsList.isEmpty()) {
             FileUtil.writeFile(widgetsJsonFilePath, getGson().toJson(widgetConfigurationsList));
-            viewEditorFragment.e();
+            viewEditorFragment.setupPalette();
             SketchwareUtil.toast("Imported!");
         }
     }
@@ -513,7 +513,7 @@ public class WidgetsCreatorManager {
                 allCategories.remove(Class);
             }
             FileUtil.writeFile(widgetsJsonFilePath, getGson().toJson(widgetConfigurationsList));
-            viewEditorFragment.e();
+            viewEditorFragment.setupPalette();
             v.dismiss();
         });
         dialog.setNegativeButton(R.string.common_word_cancel, null);

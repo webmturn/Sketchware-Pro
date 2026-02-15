@@ -20,7 +20,7 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import a.a.a.cC;
-import a.a.a.jC;
+import a.a.a.ProjectDataManager;
 import io.github.rosemoe.sora.widget.CodeEditor;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
@@ -97,8 +97,8 @@ public class ViewCodeEditorActivity extends BaseAppCompatActivity {
         }
         rootLayoutManager = new InjectRootLayoutManager(sc_id);
         String title = getIntent().getStringExtra("title");
-        projectFile = jC.b(sc_id).b(title);
-        projectLibrary = jC.c(sc_id).c();
+        projectFile = ProjectDataManager.getFileManager(sc_id).b(title);
+        projectLibrary = ProjectDataManager.getLibraryManager(sc_id).c();
         getOnBackPressedDispatcher().addCallback(this, onBackPressedCallback);
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setTitle("XML Editor");
@@ -258,7 +258,7 @@ public class ViewCodeEditorActivity extends BaseAppCompatActivity {
             var root = parser.getRootAttributes();
             rootLayoutManager.set(filename, InjectRootLayoutManager.toRoot(root));
             HistoryViewBean bean = new HistoryViewBean();
-            bean.actionOverride(parsedLayout, jC.a(sc_id).d(filename));
+            bean.actionOverride(parsedLayout, ProjectDataManager.getProjectDataManager(sc_id).d(filename));
             var cc = cC.c(sc_id);
             if (!cc.c.containsKey(filename)) {
                 cc.e(filename);
@@ -266,7 +266,7 @@ public class ViewCodeEditorActivity extends BaseAppCompatActivity {
             cc.a(filename);
             cc.a(filename, bean);
             // Replace the view beans with the parsed layout
-            jC.a(sc_id).c.put(filename, parsedLayout);
+            ProjectDataManager.getProjectDataManager(sc_id).c.put(filename, parsedLayout);
             setResult(RESULT_OK);
         } catch (Exception e) {
             SketchwareUtil.toastError(e.toString());

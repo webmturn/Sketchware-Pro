@@ -1,6 +1,6 @@
 package mod.pranav.build
 
-import a.a.a.yq
+import a.a.a.ProjectFilePaths
 import com.android.tools.r8.CompilationMode
 import com.android.tools.r8.OutputMode
 import com.android.tools.r8.R8
@@ -15,7 +15,7 @@ class R8Compiler(
     val libs: Array<String>,
     private val inputs: Array<String>,
     private val minApi: Int,
-    val yq: yq
+    val yq: ProjectFilePaths
 ) {
 
     fun compile() {
