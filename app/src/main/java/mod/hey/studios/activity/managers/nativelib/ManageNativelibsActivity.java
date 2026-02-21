@@ -171,7 +171,7 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
         var dialog = new MaterialAlertDialogBuilder(this)
                 .setView(dialogBinding.getRoot())
                 .setTitle(R.string.manager_create_new_title)
-                .setMessage("Enter the name of the new folder")
+                .setMessage(R.string.nativelib_create_folder_msg)
                 .setNegativeButton(R.string.common_word_cancel, (dialogInterface, i) -> dialogInterface.dismiss())
                 .setPositiveButton(R.string.common_word_create, null)
                 .create();
@@ -216,7 +216,7 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
 
                 FileUtil.makeDir(path);
                 handleAdapter(nativeLibrariesPath);
-                SketchwareUtil.toast("Created folder successfully");
+                SketchwareUtil.toast(Helper.getResString(R.string.nativelib_toast_created_folder));
 
                 dialog.dismiss();
             });
@@ -244,7 +244,7 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
                     try {
                         FileUtil.copyDirectory(file, new File(nativeLibrariesPath + File.separator + Uri.fromFile(file).getLastPathSegment()));
                     } catch (IOException e) {
-                        SketchwareUtil.toastError("Couldn't import library! [" + e.getMessage() + "]");
+                        SketchwareUtil.toastError(String.format(Helper.getResString(R.string.nativelib_error_import), e.getMessage()));
                     }
                 }
 
@@ -268,14 +268,14 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
                     String newName = Helper.getText(inputText);
                     if (!newName.isEmpty()) {
                         if (FileUtil.renameFile(path, path.substring(0, path.lastIndexOf(File.separator)) + File.separator + newName)) {
-                            SketchwareUtil.toast("Renamed successfully");
+                            SketchwareUtil.toast(Helper.getResString(R.string.nativelib_toast_renamed));
                         } else {
-                            SketchwareUtil.toastError("Renaming failed");
+                            SketchwareUtil.toastError(Helper.getResString(R.string.nativelib_error_rename_failed));
                         }
                         handleAdapter(nativeLibrariesPath);
                         handleFab();
                     } else {
-                        SketchwareUtil.toast("Nothing changed");
+                        SketchwareUtil.toast(Helper.getResString(R.string.nativelib_toast_nothing_changed));
                     }
                     dialogInterface.dismiss();
                 })
@@ -354,7 +354,7 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
                     menu.setOnMenuItemClickListener(item -> {
                         FileUtil.deleteFile(frc.listFileNativeLibs.get(position));
                         handleAdapter(nativeLibrariesPath);
-                        SketchwareUtil.toast("Deleted");
+                        SketchwareUtil.toast(Helper.getResString(R.string.nativelib_toast_deleted));
 
                         return true;
                     });

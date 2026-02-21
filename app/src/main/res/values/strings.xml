@@ -1525,6 +1525,22 @@ You must enter the API key to operate the map normally."</string>
     <string name="blocks_error_import">An error occurred! [%s]</string>
     <string name="blocks_error_invalid_json">Invalid JSON file</string>
     <string name="common_word_all">All</string>
+    <string name="blocks_error_invalid_name_in_palette">Custom Block #%d in current palette has an invalid name</string>
+
+    <!-- Native library manager -->
+    <string name="nativelib_create_folder_msg">Enter the name of the new folder</string>
+    <string name="nativelib_toast_created_folder">Created folder successfully</string>
+    <string name="nativelib_error_import">Couldn\'t import library! [%s]</string>
+    <string name="nativelib_toast_renamed">Renamed successfully</string>
+    <string name="nativelib_error_rename_failed">Renaming failed</string>
+    <string name="nativelib_toast_nothing_changed">Nothing changed</string>
+    <string name="nativelib_toast_deleted">Deleted</string>
+
+    <!-- Config activity -->
+    <string name="config_error_parse_settings">Couldn\'t parse App Settings! Restoring defaults.</string>
+    <string name="config_backup_filename_msg">This defines how SWB backup files get named.\nAvailable variables:\n - $projectName - Project name\n - $versionCode - App version code\n - $versionName - App version name\n - $pkgName - App package name\n - $timeInMs - Time during backup in milliseconds\n\nAdditionally, you can format your own time like this using Java\'s date formatter syntax:\n$time(yyyy-MM-dd\'T\'HHmmss)\n</string>
+    <string name="config_toast_reset_default">Reset to default complete.</string>
+
     <string name="blocks_remove_palette_msg">Remove all blocks related to this palette?</string>
     <string name="blocks_import_reverse">Reverse</string>
 

@@ -445,7 +445,7 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
                     if (name instanceof String) {
                         id_detector.add((String) name);
                     } else {
-                        SketchwareUtil.toastError("Custom Block #" + i + " in current palette has an invalid name");
+                        SketchwareUtil.toastError(String.format(Helper.getResString(R.string.blocks_error_invalid_name_in_palette), i));
                     }
                 }
                 return;
@@ -502,7 +502,7 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
         tempMap.put("palette", String.valueOf(blockPosition));
         blocksList.add(tempMap);
         FileUtil.writeFile(path, getGson().toJson(blocksList));
-        SketchwareUtil.toast("Saved");
+        SketchwareUtil.toast(Helper.getResString(R.string.common_word_saved));
         finish();
     }
 
@@ -527,7 +527,7 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
         tempMap.put("palette", blocksList.get(position).get("palette"));
         blocksList.add(position, tempMap);
         FileUtil.writeFile(path, getGson().toJson(blocksList));
-        SketchwareUtil.toast("Saved");
+        SketchwareUtil.toast(Helper.getResString(R.string.common_word_saved));
         finish();
     }
 
@@ -548,7 +548,7 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
         tempMap.put("imports", Helper.getText(binding.customImport));
         tempMap.put("code", Helper.getText(binding.code));
         FileUtil.writeFile(path, getGson().toJson(blocksList));
-        SketchwareUtil.toast("Saved");
+        SketchwareUtil.toast(Helper.getResString(R.string.common_word_saved));
         finish();
     }
 }
