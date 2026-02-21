@@ -2422,6 +2422,45 @@ You must enter the API key to operate the map normally."</string>
     <!-- Java: MoreBlockBuilderView -->
     <string name="error_invalid_format">Invalid format</string>
 
+    <!-- Java: BlockSelectorManagerFragment (setHint) -->
+    <string name="selector_hint_name">Selector name</string>
+    <string name="selector_hint_title">Selector title (ex: Select View:)</string>
+
+    <!-- Java: AndroidManifestInjectionDetails (setHint) -->
+    <string name="manifest_hint_attr_value">android:attr=\"value\"</string>
+    <string name="manifest_hint_permission">permission</string>
+
+    <!-- Java: ManageNativelibsActivity (setHint) -->
+    <string name="nativelib_hint_folder_name">Folder name</string>
+
+    <!-- Java: PropertyInputItem (setHint) -->
+    <string name="property_hint_enter_new_attr">Enter new attribute</string>
+
+    <!-- Java: BlocksManagerDetailsActivity (popup menu) -->
+    <string name="blocks_menu_delete_permanently">Delete permanently</string>
+    <string name="blocks_menu_restore">Restore</string>
+    <string name="blocks_menu_insert_above">Insert above</string>
+    <string name="blocks_menu_delete">Delete</string>
+    <string name="blocks_menu_duplicate">Duplicate</string>
+    <string name="blocks_menu_move_to_palette">Move to palette</string>
+
+    <!-- Java: CodeEditorLayout (popup menu) -->
+    <string name="code_editor_menu_font_size">Font size</string>
+    <string name="code_editor_menu_word_wrap">Word wrap</string>
+    <string name="code_editor_menu_complete_brackets">Complete brackets</string>
+    <string name="code_editor_menu_dark_theme">Dark theme</string>
+    <string name="code_editor_menu_pretty_print">Pretty print</string>
+    <string name="code_editor_menu_exit_confirmation">Exit confirmation</string>
+
+    <!-- Java: ManageJavaActivity (popup menu) -->
+    <string name="java_menu_remove_activity">Remove Activity from manifest</string>
+    <string name="java_menu_add_activity">Add as Activity to manifest</string>
+    <string name="java_menu_remove_service">Remove Service from manifest</string>
+    <string name="java_menu_add_service">Add as Service to manifest</string>
+    <string name="java_menu_edit">Edit</string>
+    <string name="java_menu_edit_with">Edit with…</string>
+    <string name="java_menu_rename">Rename</string>
+
     <!-- ViewCodeEditorActivity menu items -->
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>

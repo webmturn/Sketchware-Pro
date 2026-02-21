@@ -177,7 +177,7 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
                 .create();
 
         dialogBinding.chipGroupTypes.setVisibility(View.GONE);
-        textInputLayout.setHint("Folder name");
+        textInputLayout.setHint(getString(R.string.nativelib_hint_folder_name));
 
         inputText.addTextChangedListener(new TextWatcher() {
             @Override

@@ -939,7 +939,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
         var input = binding.edTiAutoCompleteInput;
         binding.tiInput.setVisibility(View.GONE);
         binding.tiAutoCompleteInput.setVisibility(View.VISIBLE);
-        binding.tiAutoCompleteInput.setHint("Enter new attribute");
+        binding.tiAutoCompleteInput.setHint(getContext().getString(R.string.property_hint_enter_new_attr));
         input.setAdapter(
                 new ArrayAdapter<>(
                         getContext(),

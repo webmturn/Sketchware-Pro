@@ -135,7 +135,7 @@ public class AndroidManifestInjectionDetails extends BaseAppCompatActivity {
         dialog.setView(attributeBinding.getRoot());
 
         attributeBinding.inputText.setText((String) listMap.get(pos).get("value"));
-        attributeBinding.inputText.setHint("android:attr=\"value\"");
+        attributeBinding.inputText.setHint(getString(R.string.manifest_hint_attr_value));
         dialog.setPositiveButton(R.string.common_word_save, (dialog1, which) -> {
             listMap.get(pos).put("value", Helper.getText(attributeBinding.inputText));
             applyChange();
@@ -152,7 +152,7 @@ public class AndroidManifestInjectionDetails extends BaseAppCompatActivity {
         if (type.equals("permission")) {
             attributeBinding.inputRes.setText("android");
             attributeBinding.inputAttr.setText("name");
-            attributeBinding.inputLayoutValue.setHint("permission");
+            attributeBinding.inputLayoutValue.setHint(getString(R.string.manifest_hint_permission));
         }
         dialog.setPositiveButton(R.string.common_word_save, (dialog1, which) -> {
             String fstr = Helper.getText(attributeBinding.inputRes).trim() + ":" + Helper.getText(attributeBinding.inputAttr).trim() + "=\"" + Helper.getText(attributeBinding.inputValue).trim() + "\"";

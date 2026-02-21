@@ -124,8 +124,8 @@ public class BlockSelectorManagerFragment extends BaseFragment {
 
     private void showCreateEditDialog(int index, boolean isEdit) {
         DialogBlockConfigurationBinding dialogBinding = DialogBlockConfigurationBinding.inflate(LayoutInflater.from(requireContext()));
-        dialogBinding.tilPalettesPath.setHint("Selector name");
-        dialogBinding.tilBlocksPath.setHint("Selector title (ex: Select View:)");
+        dialogBinding.tilPalettesPath.setHint(getString(R.string.selector_hint_name));
+        dialogBinding.tilBlocksPath.setHint(getString(R.string.selector_hint_title));
 
         if (isEdit) {
             dialogBinding.palettesPath.setText(selectors.get(index).getName());
