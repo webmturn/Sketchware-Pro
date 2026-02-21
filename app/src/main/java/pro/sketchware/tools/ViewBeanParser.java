@@ -3,6 +3,7 @@ package pro.sketchware.tools;
 import static pro.sketchware.SketchApplication.getContext;
 import static pro.sketchware.utility.PropertiesUtil.parseReferName;
 
+import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
@@ -103,7 +104,8 @@ public class ViewBeanParser {
             if (s.contains(".")) {
                 return s.substring(s.lastIndexOf(".") + 1);
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Log.w("ViewBeanParser", "Failed to extract name from tag: " + s, e);
         }
         return s;
     }

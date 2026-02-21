@@ -57,7 +57,9 @@ public final class JarCheck {
                         success = false;
                     }
                 }
-            } catch (EOFException ignored) {
+            } catch (EOFException e) {
+                // EOFException is expected when reaching the end of the ZIP entries
+                android.util.Log.d("JarCheck", "Reached end of ZIP entries while checking class versions");
             }
 
             zip.close();

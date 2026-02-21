@@ -203,7 +203,10 @@ public class FontManagerFragment extends BaseFragment {
 
             try {
                 holder.binding.tvFontPreview.setTypeface(Typeface.createFromFile(fontPath));
-            } catch (Exception ignored) {
+            } catch (Exception e) {
+                android.util.Log.e("FontManagerFragment", "Failed to load font from path: " + fontPath, e);
+                // Set default font as fallback
+                holder.binding.tvFontPreview.setTypeface(Typeface.DEFAULT);
             }
         }
 

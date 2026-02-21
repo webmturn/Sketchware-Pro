@@ -191,7 +191,8 @@ public class ProjectListManager {
             } else if (workspaceName.indexOf("NewProject") == 0) {
                 try {
                     projectIndices.add(Integer.parseInt(workspaceName.substring(10)));
-                } catch (Exception ignored) {
+                } catch (NumberFormatException e) {
+                    Log.w("ProjectListManager", "Failed to parse project index from: " + workspaceName, e);
                 }
             }
         }

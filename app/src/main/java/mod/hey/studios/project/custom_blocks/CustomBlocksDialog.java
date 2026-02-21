@@ -166,7 +166,8 @@ public class CustomBlocksDialog {
                 if (!content.isEmpty()) {
                     result = new Gson().fromJson(content, Helper.TYPE_MAP_LIST);
                 }
-            } catch (JsonParseException | NullPointerException ignored) {
+            } catch (JsonParseException | NullPointerException e) {
+                android.util.Log.w("CustomBlocksDialog", "Failed to parse JSON from file: " + path, e);
             }
         }
         return result;
@@ -268,7 +269,8 @@ public class CustomBlocksDialog {
                 blockData.put("code", customBlocksManager.getCustomBlockCode(block.opCode));
                 blockData.put("palette", String.valueOf(paletteIndex));
                 blocksList.add(blockData);
-            } catch (Exception ignored) {
+            } catch (Exception e) {
+                android.util.Log.w("CustomBlocksDialog", "Failed to process block data: " + block.opCode, e);
             }
         }
     }

@@ -6,6 +6,7 @@ import static pro.sketchware.utility.SketchwareUtil.getDip;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -380,7 +381,9 @@ public class ManageXMLCommandActivity extends BaseAppCompatActivity {
                 commands =
                         getGson().fromJson(FileUtil.readFile(commandPath), Helper.TYPE_MAP_LIST);
                 adapter.submitList(commands);
-            } catch (Exception ignored) {
+            } catch (Exception e) {
+                Log.e("ManageXMLCommand", "Failed to load XML commands from: " + commandPath, e);
+                adapter.submitList(new ArrayList<>()); // Submit empty list on error
             }
         }
     }

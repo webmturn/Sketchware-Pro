@@ -100,7 +100,8 @@ public class LogicHandler {
                 }
             }
             FileUtil.writeFile(newStr, FileUtil.getExternalStorageDir().concat("/.sketchware/data/system/temp/").concat(javaName));
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            android.util.Log.e("LogicHandler", "Failed to process Java code file: " + javaName, e);
         }
     }
 

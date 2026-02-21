@@ -326,7 +326,8 @@ public class LogReaderActivity extends BaseAppCompatActivity {
                             } else {
                                 binding.pkgName.setVisibility(View.VISIBLE);
                             }
-                        } catch (Exception ignored) {
+                        } catch (Exception e) {
+                            android.util.Log.d("LogReaderActivity", "Failed to compare package names, defaulting to visible", e);
                             binding.pkgName.setVisibility(View.VISIBLE);
                         }
                         try {
@@ -335,11 +336,13 @@ public class LogReaderActivity extends BaseAppCompatActivity {
                             } else {
                                 binding.dateHeader.setVisibility(View.VISIBLE);
                             }
-                        } catch (Exception ignored) {
+                        } catch (Exception e) {
+                            android.util.Log.d("LogReaderActivity", "Failed to compare headers, defaulting to visible", e);
                             binding.dateHeader.setVisibility(View.VISIBLE);
                         }
                     }
-                } catch (Exception ignored) {
+                } catch (Exception e) {
+                    android.util.Log.e("LogReaderActivity", "Failed to process log item at position " + position, e);
                 }
             } else {
                 binding.log.setText(data.get(position).get("logRaw").toString());

@@ -131,9 +131,13 @@ public class SketchwareUtil {
 
     public static void copySafDocumentToTempFile(Uri document, Activity context, String tempFileExtension, Consumer<File> tempFileConsumer, Consumer<IOException> exceptionHandler) {
         new Thread(() -> {
-            try (ParcelFileDescriptor parcelFileDescriptor = context.getContentResolver().openFileDescriptor(document, "r"); FileInputStream inputStream = new FileInputStream(parcelFileDescriptor.getFileDescriptor())) {
+            try (ParcelFileDescriptor parcelFileDescriptor = context.getContentResolver().openFileDescriptor(document, "r"); 
+                 FileInputStream inputStream = new FileInputStream(parcelFileDescriptor.getFileDescriptor())) {
+                
                 File temporaryFile = File.createTempFile("document", "." + tempFileExtension);
-                try (FileOutputStream outputStream = new FileOutputStream(temporaryFile); BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream)) {
+                try (FileOutputStream outputStream = new FileOutputStream(temporaryFile); 
+                     BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream)) {
+                    
                     byte[] buffer = new byte[4096];
                     int length;
                     while ((length = inputStream.read(buffer)) > 0) {

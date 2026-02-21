@@ -1060,7 +1060,8 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
                 }
                 eventType = parser.next();
             }
-        } catch (XmlPullParserException | IOException | RuntimeException ignored) {
+        } catch (XmlPullParserException | IOException | RuntimeException e) {
+            android.util.Log.e("PropertyInputItem", "Failed to parse XML attributes: " + value, e);
         }
 
         return attributes;

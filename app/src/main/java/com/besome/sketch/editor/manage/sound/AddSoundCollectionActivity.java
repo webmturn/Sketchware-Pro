@@ -348,7 +348,8 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
                     }
                     binding.edInput.setText(a.substring(lastIndexOf + 1, lastIndexOf2));
                 }
-            } catch (Exception ignored) {
+            } catch (Exception e) {
+                Log.w("AddSoundCollectionActivity", "Failed to extract filename for input field", e);
             }
         } catch (Exception e) {
             L = false;
@@ -368,7 +369,8 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
                 imageView.setImageResource(R.drawable.default_album_art_200dp);
             }
             mediaMetadataRetriever.release();
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Log.w("AddSoundCollectionActivity", "Failed to extract album art from audio file: " + str, e);
             imageView.setImageResource(R.drawable.default_album_art_200dp);
         }
     }
