@@ -479,7 +479,7 @@ public class FileUtil {
         if (path != null) {
             try {
                 return URLDecoder.decode(path, StandardCharsets.UTF_8);
-            } catch (Exception e) {
+            } catch (IllegalArgumentException e) {
                 return null;
             }
         }
@@ -500,7 +500,7 @@ public class FileUtil {
                 int column_index = cursor.getColumnIndexOrThrow(column);
                 return cursor.getString(column_index);
             }
-        } catch (Exception e) {
+        } catch (SecurityException | IllegalArgumentException e) {
             Log.w("FileUtil", "Failed to query column '" + column + "' from uri: " + uri, e);
         } finally {
             if (cursor != null) {
