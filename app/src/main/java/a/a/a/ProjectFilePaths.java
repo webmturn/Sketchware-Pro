@@ -16,6 +16,7 @@ import com.besome.sketch.beans.ViewBean;
 import com.besome.sketch.editor.manage.library.material3.Material3LibraryManager;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -333,7 +334,7 @@ public class ProjectFilePaths {
     public void copyMipmapFolder(String iconPath) {
         try {
             FileUtil.copyDirectory(new File(iconPath), new File(resDirectoryPath + File.separator));
-        } catch (Exception e2) {
+        } catch (IOException e2) {
             Log.e("ProjectFilePaths", e2.getMessage(), e2);
         }
     }

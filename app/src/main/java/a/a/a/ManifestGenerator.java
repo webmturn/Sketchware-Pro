@@ -6,12 +6,14 @@ import static com.besome.sketch.Config.VAR_DEFAULT_TARGET_SDK_VERSION;
 import android.Manifest;
 import android.app.Service;
 import android.content.BroadcastReceiver;
+import android.util.Log;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.util.Pair;
 
 import com.besome.sketch.beans.ProjectFileBean;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -702,7 +704,8 @@ public class ManifestGenerator {
         if (FileUtil.isExistFile(activityAttributesPath)) {
             try {
                 return new Gson().fromJson(FileUtil.readFile(activityAttributesPath), Helper.TYPE_MAP_LIST);
-            } catch (Exception ignored) {
+            } catch (JsonSyntaxException e) {
+                Log.w("ManifestGenerator", "Failed to parse activity attributes from: " + activityAttributesPath, e);
             }
         }
         return new ArrayList<>();
