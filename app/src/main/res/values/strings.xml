@@ -2329,7 +2329,30 @@ You must enter the API key to operate the map normally."</string>
     <string name="store_size_format">Size: %s</string>
     <string name="store_released_format">Released: %s</string>
     <string name="store_verified">Verified</string>
-    <string name="store_editors_choice">Editor\'s Choice</string>
+
+    <!-- Java: MainActivity -->
+    <string name="main_major_changes_title">Major changes in v7.0.0</string>
+    <string name="main_major_changes_desc">There have been major changes since v6.3.0 fix1, and it\'s very important to know them all if you want your projects to still work.\n\nYou can view all changes whenever you want at the About Sketchware Pro screen.</string>
+    <string name="main_storage_access_message">Starting with Android 11, Sketchware Pro needs a new permission to avoid taking ages to build projects. Don\'t worry, we can\'t do more to storage than with current granted permissions.</string>
+
+    <!-- Java: SketchwareUtil -->
+    <string name="parse_error_title_format">Couldn\'t get %s</string>
+    <string name="parse_error_message_format">Failed to parse %1$s from file %2$s. Fix by renaming old file to %3$s? If not, no %1$s will be used.</string>
+
+    <!-- Java: BlocksManager -->
+    <string name="blocks_recycle_bin_confirm">Are you sure you want to empty the recycle bin? Blocks inside will be deleted PERMANENTLY, you CANNOT recover them!</string>
+
+    <!-- Java: ManageJavaActivity -->
+    <string name="delete_confirm_format">Are you sure you want to delete this %1$s? %2$sThis action cannot be undone.</string>
+
+    <!-- Java: ManageAssetsActivity -->
+    <string name="create_file_extension_hint">If you\'re creating a file, make sure to add an extension.</string>
+
+    <!-- Java: ManageResourceActivity -->
+    <string name="create_enter_name_format">Enter a name for the new %s</string>
+
+    <!-- Java: AppSettings -->
+    <string name="overwrite_apk_format">An APK named %s already exists at /sketchware/signed_apk/.  Overwrite it?</string>
 
     <!-- ViewCodeEditorActivity menu items -->
     <string name="menu_undo">Undo</string>

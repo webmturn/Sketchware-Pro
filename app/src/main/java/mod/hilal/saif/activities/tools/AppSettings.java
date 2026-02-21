@@ -231,7 +231,7 @@ public class AppSettings extends BaseAppCompatActivity {
                 MaterialAlertDialogBuilder confirmOverwrite = new MaterialAlertDialogBuilder(this);
                 confirmOverwrite.setIcon(R.drawable.color_save_as_new_96);
                 confirmOverwrite.setTitle(R.string.app_settings_file_exists_title);
-                confirmOverwrite.setMessage("An APK named " + output_apk_file_name + " already exists at /sketchware/signed_apk/.  Overwrite it?");
+                confirmOverwrite.setMessage(getString(R.string.overwrite_apk_format, output_apk_file_name));
 
                 confirmOverwrite.setNegativeButton(Helper.getResString(R.string.common_word_cancel), null);
                 confirmOverwrite.setPositiveButton(R.string.common_word_overwrite, (view, which1) -> {

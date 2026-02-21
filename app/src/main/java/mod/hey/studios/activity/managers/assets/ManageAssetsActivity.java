@@ -123,7 +123,7 @@ public class ManageAssetsActivity extends BaseAppCompatActivity {
         var dialog = new MaterialAlertDialogBuilder(this)
                 .setView(dialogBinding.getRoot())
                 .setTitle(R.string.manager_create_new_title)
-                .setMessage("If you're creating a file, make sure to add an extension.")
+                .setMessage(getString(R.string.create_file_extension_hint))
                 .setNegativeButton(R.string.common_word_cancel, (dialogInterface, i) -> dialogInterface.dismiss())
                 .setPositiveButton(R.string.common_word_create, null)
                 .create();
@@ -217,8 +217,8 @@ public class ManageAssetsActivity extends BaseAppCompatActivity {
     private void showDeleteDialog(int position) {
         new MaterialAlertDialogBuilder(this)
                 .setTitle(String.format(Helper.getResString(R.string.manager_delete_title), assetsAdapter.getFileName(position)))
-                .setMessage("Are you sure you want to delete this " + (assetsAdapter.isFolder(position) ? "folder" : "file") + "? "
-                        + "This action cannot be undone.")
+                .setMessage(getString(R.string.delete_confirm_format,
+                        assetsAdapter.isFolder(position) ? "folder" : "file", ""))
                 .setPositiveButton(R.string.common_word_delete, (dialog, which) -> {
                     FileUtil.deleteFile(assetsAdapter.getItem(position));
                     refresh();

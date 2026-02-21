@@ -194,7 +194,7 @@ public class ManageResourceActivity extends BaseAppCompatActivity {
         var dialog = new MaterialAlertDialogBuilder(this)
                 .setView(dialogBinding.getRoot())
                 .setTitle(isFolder ? R.string.manager_create_folder : R.string.manager_create_file)
-                .setMessage("Enter a name for the new " + (isFolder ? "folder" : "file"))
+                .setMessage(getString(R.string.create_enter_name_format, isFolder ? "folder" : "file"))
                 .setNegativeButton(R.string.common_word_cancel, (dialogInterface, i) -> dialogInterface.dismiss())
                 .setPositiveButton(R.string.common_word_create, null)
                 .create();
@@ -316,8 +316,8 @@ public class ManageResourceActivity extends BaseAppCompatActivity {
     private void showDeleteDialog(int position) {
         new MaterialAlertDialogBuilder(this)
                 .setTitle(getString(R.string.common_word_delete) + " " + Uri.fromFile(new File(adapter.getItem(position))).getLastPathSegment() + "?")
-                .setMessage("Are you sure you want to delete this " + (FileUtil.isDirectory(adapter.getItem(position)) ? "folder" : "file") + "? "
-                        + "This action cannot be undone.")
+                .setMessage(getString(R.string.delete_confirm_format,
+                        FileUtil.isDirectory(adapter.getItem(position)) ? "folder" : "file", ""))
                 .setPositiveButton(R.string.common_word_delete, (dialog, which) -> {
                     FileUtil.deleteFile(frc.listFileResource.get(position));
                     handleAdapter(temp);
