@@ -40,10 +40,10 @@
 | `DA` | `PermissionFragment` | Fragment with storage permission handling | 4KB |
 | `MA` | `BaseAsyncTask` | Abstract AsyncTask with error handling | 2KB |
 
-### UI - Validators (MB subclasses)
+### UI - Validators (BaseValidator subclasses)
 | Current | Proposed Name | Role | Size |
 |---------|--------------|------|------|
-| `MB` | ⚠️ IN JAR - cannot rename | Base text input validator | - |
+| `MB` | `BaseValidator` | Base text input validator (JAR wrapper kept) | 2KB |
 | `NB` | `UniqueNameValidator` | Validates name not in predefined list | 1KB |
 | `RB` | `LowercaseNameValidator` | Validates lowercase name pattern | 1KB |
 | `SB` | `LengthRangeValidator` | Validates text length within min/max range | 1KB |
@@ -95,18 +95,30 @@
 ### Interfaces
 | Current | Proposed Name | Role | Size |
 |---------|--------------|------|------|
-| `ay` | `SimpleCallback` | Simple void callback interface | <1KB |
+| `ay` | `SimpleCallback` | Simple void callback interface (method: `onCallback()`) | <1KB |
 
 ### Built-in Library
 | Current | Proposed Name | Role | Size |
 |---------|--------------|------|------|
 | `Jp` | `BuiltInLibrary` | Represents a bundled library with metadata | 2KB |
 
-## Refactoring Priority Order
-1. **Phase 1 - Small utilities** (low risk, few references): `wB`, `gB`, `bB`, `aB`, `ay`, `Jp`, `uy`
-2. **Phase 2 - Validators**: `NB`, `RB`, `SB`, `VB`, `YB`, `ZB`
-3. **Phase 3 - Fragments**: `qA`, `DA`, `Fw`, `br`, `fu`, `ow`, `pu`, `rs`, `Yv`
-4. **Phase 4 - Firebase views**: `kv`, `lv`, `mv`
-5. **Phase 5 - Data/Logic**: `jC`, `jq`, `lC`, `wq`, `yq`, `MA`
-6. **Phase 6 - Code generators**: `Fx`, `Gx`, `Hx`, `Ix`, `Jx`, `Lx`, `Ox`
-7. **Phase 7 - Registries**: `kq`, `mq`, `oq`, `sq`, `tq`, `uq`
+## Refactoring Priority Order (All Phases Complete ✅)
+1. **Phase 1 - Small utilities** ✅: `wB`→ViewUtil (reverted), `gB`→AnimationUtil, `bB`→SketchToast, `aB`→SketchDialog, `ay`→SimpleCallback, `Jp`→BuiltInLibrary, `uy`→WidgetPaletteIcon
+2. **Phase 2 - Validators** ✅: `NB`→UniqueNameValidator, `RB`→LowercaseNameValidator, `SB`→LengthRangeValidator, `VB`→VariableNameValidator, `YB`→ActivityNameValidator, `ZB`→IdentifierValidator
+3. **Phase 3 - Fragments** ✅: `qA`→BaseFragment, `DA`→PermissionFragment, `Fw`→ViewFilesFragment, `br`→ComponentListFragment, `fu`→ImageCollectionFragment, `ow`→SoundListFragment, `pu`→ImageListFragment, `rs`→EventListFragment, `Yv`→SoundImportFragment
+4. **Phase 4 - Firebase views** ✅: `kv`→FirebasePreviewView, `lv`→FirebaseSettingsView, `mv`→FirebaseStorageView
+5. **Phase 5 - Data/Logic** ✅: `jC`→ProjectDataManager, `jq`→BuildConfig, `lC`→ProjectListManager, `wq`→SketchwarePaths, `yq`→ProjectFilePaths, `MA`→BaseAsyncTask
+6. **Phase 6 - Code generators** ✅: `Fx`→BlockInterpreter, `Gx`→ClassInfo, `Hx`→EventCodeGenerator, `Ix`→ManifestGenerator, `Jx`→ActivityCodeGenerator, `Lx`→ComponentCodeGenerator, `Ox`→LayoutGenerator
+7. **Phase 7 - Registries** ✅: `kq`→BlockColorMapper, `mq`→ComponentTypeMapper, `oq`→EventRegistry, `sq`→SketchwareConstants, `tq`→CompileQuizManager, `uq`→BlockConstants
+
+## JAR Wrapper Classes (for binary compatibility)
+- `qA` extends `BaseFragment` (for xw JAR)
+- `jC` extends `ProjectDataManager` (for xw JAR)
+- `jq` extends `BuildConfig` (for eC JAR)
+- `kq` extends `BlockColorMapper` (for Rs, Ss JARs)
+- `mq` extends `ComponentTypeMapper` (for Ts, BlockPane JARs)
+- `wq` extends `SketchwarePaths` (for multiple JARs)
+- `kv` extends `FirebasePreviewView` (for jv JAR)
+- `Gx` extends `ClassInfo` (for eC, Ts, BlockPane JARs - must remain concrete type in bean classes)
+- `MB` extends `BaseValidator` (for OB, PB, QB, WB JARs)
+- `wB`: fully reverted (GB JAR calls wB.a())
