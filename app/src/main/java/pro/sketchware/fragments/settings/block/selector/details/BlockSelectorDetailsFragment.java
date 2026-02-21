@@ -190,8 +190,7 @@ public class BlockSelectorDetailsFragment extends BaseFragment {
 
     private void saveAll() {
         FileUtil.writeFile(BlockSelectorConsts.BLOCK_SELECTORS_FILE.getAbsolutePath(), getGson().toJson(selectors));
-        SketchwareUtil.toast(getString(R.string.common_word_saved));
-        SketchwareUtil.toast("Saved!");
+        SketchwareUtil.toast(Helper.getResString(R.string.common_word_saved));
     }
 
     @Override

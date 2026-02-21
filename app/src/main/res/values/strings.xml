@@ -1562,7 +1562,16 @@ You must enter the API key to operate the map normally."</string>
     <string name="toast_events_imported">Successfully imported events</string>
     <string name="toast_copied_to_clipboard">Copied to clipboard</string>
     <string name="toast_save_completed">Save completed</string>
-    <string name="file_picker_select_txt">Select a .txt file</string>
+    <string name="toast_exported_in">Exported in %s</string>
+    <string name="toast_imported">Imported!</string>
+    <string name="toast_added">Added</string>
+    <string name="error_loading_widgets">Error loading widgets: %s</string>
+    <string name="error_missing_widget_keys">Missing required keys for widget: %s</string>
+    <string name="error_invalid_widget_type">Invalid widget type: %s</string>
+    <string name="error_invalid_type_format">Invalid type format for widget: %s</string>
+    <string name="error_add_widget_failed">Failed to add widget: %s</string>
+    <string name="error_add_extra_widget_failed">Failed to add extra widget classes: %s</string>
+    <string name="error_failed_prefix">Failed: %s</string>
 
     <!-- Colors editor -->
     <string name="color_title_create">Create new color</string>

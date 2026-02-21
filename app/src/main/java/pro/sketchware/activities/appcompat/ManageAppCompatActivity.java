@@ -281,13 +281,13 @@ public class ManageAppCompatActivity extends BaseAppCompatActivity {
                         map.put("value", newValue);
                         if (type.equals("create")) {
                             activityInjections.add(map);
-                            SketchwareUtil.toast("Added");
+                            SketchwareUtil.toast(Helper.getResString(R.string.toast_added));
                         } else if (type.equals("edit")) {
                             if (position != -1) {
                                 activityInjections.remove(position);
                                 activityInjections.add(position, map);
                             }
-                            SketchwareUtil.toast("Saved");
+                            SketchwareUtil.toast(Helper.getResString(R.string.common_word_saved));
                         }
                         dialog1.dismiss();
                         FileUtil.writeFile(path, new Gson().toJson(activityInjections));
