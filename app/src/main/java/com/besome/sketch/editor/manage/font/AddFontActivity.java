@@ -69,7 +69,7 @@ public class AddFontActivity extends BaseDialogActivity implements View.OnClickL
                                 Log.e("AddFontActivity", e.getMessage(), e);
                                 validFontPicked = false;
                                 binding.fontPreviewView.setVisibility(View.GONE);
-                                SketchwareUtil.toast("Couldn't load font: " + e.getMessage());
+                                SketchwareUtil.toast(String.format(Helper.getResString(R.string.error_load_font), e.getMessage()));
                                 LogUtil.e("AddFontActivity", "Failed to load font", e);
                             }
                         }, e -> {

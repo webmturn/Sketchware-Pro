@@ -243,8 +243,7 @@ public class EventsManagerFragment extends BaseFragment {
             }
         }
         FileUtil.writeFile(concat + ex.get(0).get("name").toString() + ".txt", new Gson().toJson(ex) + "\n" + new Gson().toJson(ex2));
-        SketchwareUtil.toast("Successfully exported event to:\n" +
-                "/Internal storage/.sketchware/data/system/export/events", Toast.LENGTH_LONG);
+        SketchwareUtil.toast(Helper.getResString(R.string.toast_event_exported), Toast.LENGTH_LONG);
     }
 
     private void exportAllEvents() {
@@ -254,8 +253,7 @@ public class EventsManagerFragment extends BaseFragment {
         }
         FileUtil.writeFile(new File(EventsManagerConstants.EVENT_EXPORT_LOCATION, "All_Events.txt").getAbsolutePath(),
                 new Gson().toJson(listMap) + "\n" + new Gson().toJson(events));
-        SketchwareUtil.toast("Successfully exported events to:\n" +
-                "/Internal storage/.sketchware/data/system/export/events", Toast.LENGTH_LONG);
+        SketchwareUtil.toast(Helper.getResString(R.string.toast_events_exported), Toast.LENGTH_LONG);
     }
 
     private void addListenerItem() {

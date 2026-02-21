@@ -1608,6 +1608,23 @@ You must enter the API key to operate the map normally."</string>
     <!-- CollectErrorActivity -->
     <string name="toast_copied">Copied</string>
 
+    <!-- EventsManagerFragment export -->
+    <string name="toast_event_exported">Successfully exported event to:\n/Internal storage/.sketchware/data/system/export/events</string>
+    <string name="toast_events_exported">Successfully exported events to:\n/Internal storage/.sketchware/data/system/export/events</string>
+
+    <!-- FirebasePreviewView / ManageFirebaseActivity -->
+    <string name="toast_configure_firebase">Configure Firebase settings first, either by importing google-services.json, or by manually entering the project\'s details.</string>
+
+    <!-- ShowBlockCollectionActivity / ShowMoreBlockCollectionActivity -->
+    <string name="toast_block_image_saved">Saved image to /Internal storage/sketchware/saved_block/%s.png!</string>
+    <string name="error_save_image_failed">Couldn\'t save image</string>
+
+    <!-- AddFontActivity -->
+    <string name="error_load_font">Couldn\'t load font: %s</string>
+
+    <!-- LibraryDownloaderDialogFragment -->
+    <string name="toast_library_downloaded">Library downloaded successfully</string>
+
     <!-- ViewCodeEditorActivity menu items -->
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
