@@ -259,7 +259,7 @@ public class ColorsEditor extends Fragment {
         });
 
         if (colorModel != null && !defaultColors.containsKey(colorModel.getColorName())) {
-            dialog.setNeutralButton("Delete", (v1, which) -> {
+            dialog.setNeutralButton(R.string.common_word_delete, (v1, which) -> {
                 colorList.remove(position);
                 adapter.notifyItemRemoved(position);
                 adapter.notifyItemRangeChanged(position, colorList.size());

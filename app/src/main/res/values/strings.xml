@@ -2484,6 +2484,34 @@ You must enter the API key to operate the map normally."</string>
     <string name="editor_drag_to_actions">Drag here to see the Actions</string>
     <string name="editor_drag_to_delete">Drag here to delete</string>
 
+    <!-- Java: BlocksManagerCreatorActivity (toast messages) -->
+    <string name="error_invalid_hex_color_toast">Invalid hex color</string>
+    <string name="error_invalid_block_params">Invalid block params</string>
+
+    <!-- Java: AddEventActivity -->
+    <string name="event_type_activity">Activity</string>
+
+    <!-- Java: LogicEditorActivity -->
+    <string name="font_preview">Preview</string>
+    <string name="font_load_failed">Couldn\'t load font</string>
+
+    <!-- Java: PropertyInputItem -->
+    <string name="property_slider">Slider</string>
+
+    <!-- Java: PropertyIndentItem -->
+    <string name="property_indent_format">left: %1$d, top: %2$d, right: %3$d, bottom: %4$d</string>
+
+    <!-- Java: PropertyAttributesItem -->
+    <string name="property_configure_parent_attrs">Configure parent attributes</string>
+
+    <!-- Java: Material3LibraryItemView -->
+    <string name="material3_description">Modern Material design with adaptive dynamic theming</string>
+
+    <!-- Java: common dialog buttons -->
+    <string name="common_word_code_editor">Code Editor</string>
+    <string name="common_word_defaults">Defaults</string>
+    <string name="common_word_custom">Custom</string>
+
     <!-- Java: ManageJavaActivity -->
     <string name="java_rename_occurrences_format">Rename occurrences of \"%s\" in file</string>
 

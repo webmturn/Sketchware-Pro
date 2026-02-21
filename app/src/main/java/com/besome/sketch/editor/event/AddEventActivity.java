@@ -372,7 +372,7 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
             holder.img_icon.setImageResource(EventBean.getEventIconResource(event.eventType, event.targetType));
             int eventType = event.eventType;
             if (eventType == EventBean.EVENT_TYPE_ACTIVITY) {
-                holder.tv_target_type.setText("Activity");
+                holder.tv_target_type.setText(getString(R.string.event_type_activity));
                 holder.events_preview.setVisibility(View.GONE);
             } else if (eventType == EventBean.EVENT_TYPE_VIEW) {
                 holder.tv_target_type.setText(ViewBean.getViewTypeName(event.targetType));

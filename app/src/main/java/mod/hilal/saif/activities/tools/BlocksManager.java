@@ -226,7 +226,7 @@ public class BlocksManager extends BaseAppCompatActivity {
 
         dialog.setNegativeButton(Helper.getResString(R.string.common_word_cancel), null);
 
-        dialog.setNeutralButton("Defaults", (view, which) -> {
+        dialog.setNeutralButton(R.string.common_word_defaults, (view, which) -> {
             ConfigActivity.setSetting(ConfigActivity.SETTING_BLOCKMANAGER_DIRECTORY_PALETTE_FILE_PATH, ConfigActivity.getDefaultValue(ConfigActivity.SETTING_BLOCKMANAGER_DIRECTORY_PALETTE_FILE_PATH));
             ConfigActivity.setSetting(ConfigActivity.SETTING_BLOCKMANAGER_DIRECTORY_BLOCK_FILE_PATH, ConfigActivity.getDefaultValue(ConfigActivity.SETTING_BLOCKMANAGER_DIRECTORY_BLOCK_FILE_PATH));
 

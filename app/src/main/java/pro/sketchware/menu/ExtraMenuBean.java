@@ -710,7 +710,7 @@ public class ExtraMenuBean {
             v.dismiss();
         });
         dialog.setNegativeButton(R.string.common_word_cancel, null);
-        dialog.setNeutralButton("Code Editor", (v, which) -> {
+        dialog.setNeutralButton(R.string.common_word_code_editor, (v, which) -> {
             AsdDialog editor = new AsdDialog(logicEditor);
             editor.setContent(menu.getArgValue().toString());
             editor.show();
@@ -758,7 +758,7 @@ public class ExtraMenuBean {
             v.dismiss();
         });
         dialog.setNegativeButton(R.string.common_word_cancel, null);
-        dialog.setNeutralButton("Code Editor", (v, which) -> {
+        dialog.setNeutralButton(R.string.common_word_code_editor, (v, which) -> {
             AsdDialog asdDialog = new AsdDialog(logicEditor);
             asdDialog.setContent(Helper.getText(edittext));
             asdDialog.show();
