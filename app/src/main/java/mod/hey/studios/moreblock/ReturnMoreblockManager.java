@@ -38,7 +38,7 @@ public class ReturnMoreblockManager {
             if (!str.contains("]") || !str.contains("[")) return "void";
 
             return str.substring(str.indexOf("[") + 1, str.lastIndexOf("]"));
-        } catch (Exception e) {
+        } catch (StringIndexOutOfBoundsException e) {
             return "void";
         }
     }
@@ -54,7 +54,7 @@ public class ReturnMoreblockManager {
             }
 
             return substring;
-        } catch (Exception e) {
+        } catch (StringIndexOutOfBoundsException e) {
             return "void";
         }
     }
@@ -85,7 +85,7 @@ public class ReturnMoreblockManager {
             }
 
             return substring;
-        } catch (Exception e) {
+        } catch (StringIndexOutOfBoundsException e) {
             return "void";
         }
     }
