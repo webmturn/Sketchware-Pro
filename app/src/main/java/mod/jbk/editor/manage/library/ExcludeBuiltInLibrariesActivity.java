@@ -31,6 +31,7 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.transition.MaterialFadeThrough;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
@@ -103,7 +104,7 @@ public class ExcludeBuiltInLibrariesActivity extends BaseAppCompatActivity {
                 }
                 errorMessage = "read config was null";
                 // fall-through to shared handler
-            } catch (Exception e) {
+            } catch (JsonSyntaxException e) {
                 errorMessage = Log.getStackTraceString(e);
                 // fall-through to shared handler
             }
