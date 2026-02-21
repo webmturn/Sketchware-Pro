@@ -1725,6 +1725,85 @@ You must enter the API key to operate the map normally."</string>
     <string name="error_corrupt_block">Can\'t open corrupt Block</string>
     <string name="error_corrupt_more_block">Can\'t open corrupt More Block</string>
 
+    <!-- Menu: main_drawer_menu -->
+    <string name="menu_about_team">About the team</string>
+    <string name="menu_changelog">Changelog</string>
+    <string name="menu_app_info">App information</string>
+    <string name="menu_create_keystore">Create keystore</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_apps">Apps</string>
+    <string name="menu_related_links">Related links</string>
+
+    <!-- Menu: menu_code_editor_hs -->
+    <string name="menu_paste">Paste</string>
+    <string name="menu_word_wrap">Word wrap</string>
+    <string name="menu_pretty_print">Pretty print</string>
+    <string name="menu_find_replace">Find &amp; Replace</string>
+    <string name="menu_auto_complete">Auto complete</string>
+    <string name="menu_auto_complete_symbol_pair">Auto complete symbol pair</string>
+
+    <!-- Menu: popup_menu_double -->
+    <string name="menu_add_to_manifest">Add to AndroidManifest</string>
+    <string name="menu_edit_with">Edit with…</string>
+
+    <!-- Menu: logic_menu -->
+    <string name="menu_show_source_code">Show Source Code</string>
+    <string name="menu_blocks_collection">Blocks collection</string>
+
+    <!-- Menu: menu_logcat -->
+    <string name="menu_auto_scroll">Auto scroll</string>
+    <string name="menu_filter_by_package">Filter by package name</string>
+    <string name="menu_export_logcat">Export Logcat</string>
+    <string name="menu_clear_all_logs">Clear all logs</string>
+
+    <!-- Menu: var_type_selector_menu -->
+    <string name="menu_variables">Variables</string>
+    <string name="menu_views">Views</string>
+    <string name="menu_components">Components</string>
+
+    <!-- Menu: block_selector_menu -->
+    <string name="menu_import_block_selector">Import block selector menus</string>
+    <string name="menu_export_all_block_selector">Export all block selector menus</string>
+
+    <!-- Menu: events_manager_menu -->
+    <string name="menu_import_events">Import events</string>
+    <string name="menu_export_events">Export events</string>
+
+    <!-- Menu: main_menu -->
+    <string name="menu_projects">Projects</string>
+    <string name="menu_store">Store</string>
+
+    <!-- Menu: manage_admob_menu -->
+    <string name="menu_admob_help">Admob Help</string>
+    <string name="menu_admob_config">Admob Configuration</string>
+
+    <!-- Menu: manage_collection_menu / manage_font_menu / manage_sound_menu / manage_screen_menu -->
+    <string name="menu_edit_lowercase">edit</string>
+    <string name="menu_remove">remove</string>
+    <string name="menu_add_lowercase">add</string>
+
+    <!-- Menu: manage_firebase_menu -->
+    <string name="menu_firebase_settings">Settings</string>
+
+    <!-- Menu: menu_expanded_local_libraries -->
+    <string name="menu_select_all">Select all</string>
+    <string name="menu_delete_selected_libs">Delete selected local libraries</string>
+
+    <!-- Menu: resources_editor_menu -->
+    <string name="menu_open_in_editor">Open in editor</string>
+
+    <!-- Menu: design_menu -->
+    <string name="menu_design_drawer">Design Drawer</string>
+
+    <!-- Menu: manage_custom_attribute_menu -->
+    <string name="menu_components_asd">Components ASD</string>
+
+    <!-- Menu: moreblock_menu -->
+    <string name="menu_create">Create</string>
+
+    <!-- Menu: permission_manager_menu -->
+    <string name="menu_reset">Reset</string>
+
     <!-- ViewCodeEditorActivity menu items -->
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
