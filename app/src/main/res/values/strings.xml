@@ -1282,6 +1282,32 @@ You must enter the API key to operate the map normally."</string>
     <string name="design_cancel_build_desc">Are you sure you want to cancel building? This may take some time.</string>
     <string name="design_cancel_build_btn_stop">Stop building</string>
     <string name="design_cancel_build_btn_continue">Continue building</string>
+
+    <!-- Export / Build progress strings -->
+    <string name="export_title_important_note">Important note</string>
+    <string name="export_btn_understood">Understood</string>
+    <string name="export_aab_sign_note">The generated .aab file must be signed.\nCopy your keystore to /Internal storage/sketchware/keystore/release_key.jks and enter the alias\' password.</string>
+    <string name="export_aab_sign_dialog_title">Sign outputted AAB</string>
+    <string name="export_aab_sign_dialog_desc">Fill in the keystore details to sign the AAB.</string>
+    <string name="export_aab_finished_title">Finished exporting AAB</string>
+    <string name="export_aab_finished_message">You can find the generated, signed AAB file at:\n/Internal storage/sketchware/signed_aab/%s</string>
+    <string name="export_apk_sign_note">To sign an APK, you need a keystore. Use your already created one, and copy it to /Internal storage/sketchware/keystore/release_key.jks and enter the alias\'s password.\n\nNote that this only signs your APK using signing scheme V1, to target Android 11+ for example, use a 3rd-party tool (for now).</string>
+    <string name="export_apk_sign_dialog_title">Sign an APK</string>
+    <string name="export_apk_sign_dialog_desc">Fill in the keystore details to sign the APK. If you don\'t have a keystore, you can use a test key.</string>
+    <string name="build_progress_deleting_temp">Deleting temporary files…</string>
+    <string name="build_progress_extracting_aapt2">Extracting AAPT/AAPT2 binaries…</string>
+    <string name="build_progress_extracting_libraries">Extracting built-in libraries…</string>
+    <string name="build_progress_aapt2_running">AAPT2 is running…</string>
+    <string name="build_progress_java_compiling">Java is compiling…</string>
+    <string name="build_progress_merging_dex">Merging libraries\' DEX files…</string>
+    <string name="build_progress_creating_module">Creating app module…</string>
+    <string name="build_progress_building_bundle">Building app bundle…</string>
+    <string name="build_progress_signing_bundle">Signing app bundle…</string>
+    <string name="build_progress_building_apk">Building APK…</string>
+    <string name="build_progress_aligning_apk">Aligning APK…</string>
+    <string name="build_progress_signing_apk">Signing APK…</string>
+    <string name="build_progress_canceling">Canceling process…</string>
+
     <string name="design_tab_title_component">Component</string>
     <string name="design_tab_title_event">Event</string>
     <string name="design_tab_title_view">View</string>

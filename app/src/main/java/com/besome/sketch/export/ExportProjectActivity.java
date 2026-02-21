@@ -264,11 +264,11 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
     private void initializeAppBundleExportViews() {
         export_aab_button.setOnClickListener(view -> {
             MaterialAlertDialogBuilder confirmationDialog = new MaterialAlertDialogBuilder(this);
-            confirmationDialog.setTitle("Important note");
-            confirmationDialog.setMessage("The generated .aab file must be signed.\nCopy your keystore to /Internal storage/sketchware/keystore/release_key.jks and enter the alias' password.");
+            confirmationDialog.setTitle(Helper.getResString(R.string.export_title_important_note));
+            confirmationDialog.setMessage(Helper.getResString(R.string.export_aab_sign_note));
             confirmationDialog.setIcon(R.drawable.ic_mtrl_info);
 
-            confirmationDialog.setPositiveButton("Understood", (v, which) -> {
+            confirmationDialog.setPositiveButton(Helper.getResString(R.string.export_btn_understood), (v, which) -> {
                 showAabSigningDialog();
                 v.dismiss();
             });
@@ -278,7 +278,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
 
     private void showAabSigningDialog() {
         GetKeyStoreCredentialsDialog credentialsDialog = new GetKeyStoreCredentialsDialog(this,
-                R.drawable.ic_mtrl_key, "Sign outputted AAB", "Fill in the keystore details to sign the AAB.");
+                R.drawable.ic_mtrl_key, Helper.getResString(R.string.export_aab_sign_dialog_title), Helper.getResString(R.string.export_aab_sign_dialog_desc));
         credentialsDialog.setListener(credentials -> {
             BuildingAsyncTask task = new BuildingAsyncTask(this, ProjectFilePaths.ExportType.AAB);
             task.enableAppBundleBuild();
@@ -331,16 +331,11 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
 
         sign_apk_button.setOnClickListener(view -> {
             MaterialAlertDialogBuilder confirmationDialog = new MaterialAlertDialogBuilder(this);
-            confirmationDialog.setTitle("Important note");
-            confirmationDialog.setMessage("""
-                    To sign an APK, you need a keystore. Use your already created one, and copy it to \
-                    /Internal storage/sketchware/keystore/release_key.jks and enter the alias's password.
-                    
-                    Note that this only signs your APK using signing scheme V1, to target Android 11+ for example, \
-                    use a 3rd-party tool (for now).""");
+            confirmationDialog.setTitle(Helper.getResString(R.string.export_title_important_note));
+            confirmationDialog.setMessage(Helper.getResString(R.string.export_apk_sign_note));
             confirmationDialog.setIcon(R.drawable.ic_mtrl_info);
 
-            confirmationDialog.setPositiveButton("Understood", (v, which) -> {
+            confirmationDialog.setPositiveButton(Helper.getResString(R.string.export_btn_understood), (v, which) -> {
                 showApkSigningDialog();
                 v.dismiss();
             });
@@ -351,9 +346,8 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
     private void showApkSigningDialog() {
         GetKeyStoreCredentialsDialog credentialsDialog = new GetKeyStoreCredentialsDialog(this,
                 R.drawable.ic_mtrl_key,
-                "Sign an APK",
-                "Fill in the keystore details to sign the APK. " +
-                        "If you don't have a keystore, you can use a test key.");
+                Helper.getResString(R.string.export_apk_sign_dialog_title),
+                Helper.getResString(R.string.export_apk_sign_dialog_desc));
         credentialsDialog.setListener(credentials -> {
             sign_apk_button.setVisibility(View.GONE);
             sign_apk_output_stage.setVisibility(View.GONE);
@@ -465,7 +459,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
             String sc_id = act.sc_id;
 
             try {
-                publishProgress("Deleting temporary files...");
+                publishProgress(Helper.getResString(R.string.build_progress_deleting_temp));
                 FileUtil.deleteFile(project_metadata.projectMyscPath);
 
                 publishProgress(Helper.getResString(R.string.design_run_title_ready_to_build));
@@ -535,7 +529,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
                 }
 
                 /* Check AAPT/AAPT2 */
-                publishProgress("Extracting AAPT/AAPT2 binaries...");
+                publishProgress(Helper.getResString(R.string.build_progress_extracting_aapt2));
                 builder.maybeExtractAapt2();
                 if (canceled) {
                     cancel(true);
@@ -543,7 +537,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
                 }
 
                 /* Check built-in libraries */
-                publishProgress("Extracting built-in libraries...");
+                publishProgress(Helper.getResString(R.string.build_progress_extracting_libraries));
                 BuiltInLibraries.extractCompileAssets(this);
                 if (canceled) {
                     cancel(true);
@@ -552,7 +546,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
 
                 builder.buildBuiltInLibraryInformation();
 
-                publishProgress("AAPT2 is running...");
+                publishProgress(Helper.getResString(R.string.build_progress_aapt2_running));
                 builder.compileResources();
                 if (canceled) {
                     cancel(true);
@@ -565,7 +559,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
                     return;
                 }
 
-                publishProgress("Java is compiling...");
+                publishProgress(Helper.getResString(R.string.build_progress_java_compiling));
                 builder.compileJavaCode();
                 if (canceled) {
                     cancel(true);
@@ -597,7 +591,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
                 }
 
                 /* Merge DEX file(s) with libraries' dexes */
-                publishProgress("Merging libraries' DEX files...");
+                publishProgress(Helper.getResString(R.string.build_progress_merging_dex));
                 builder.getDexFilesReady();
                 if (canceled) {
                     cancel(true);
@@ -606,13 +600,13 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
 
                 if (buildingAppBundle) {
                     AppBundleCompiler compiler = new AppBundleCompiler(builder);
-                    publishProgress("Creating app module...");
+                    publishProgress(Helper.getResString(R.string.build_progress_creating_module));
                     compiler.createModuleMainArchive();
-                    publishProgress("Building app bundle...");
+                    publishProgress(Helper.getResString(R.string.build_progress_building_bundle));
                     compiler.buildBundle();
 
                     /* Sign the generated .aab file */
-                    publishProgress("Signing app bundle...");
+                    publishProgress(Helper.getResString(R.string.build_progress_signing_bundle));
 
                     String createdBundlePath = AppBundleCompiler.getDefaultAppBundleOutputFile(project_metadata).getAbsolutePath();
                     String signedAppBundleDirectoryPath = FileUtil.getExternalStorageDir()
@@ -642,21 +636,21 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
                         FileUtil.copyFile(createdBundlePath, getCorrectResultFilename(outputPath));
                     }
                 } else {
-                    publishProgress("Building APK...");
+                    publishProgress(Helper.getResString(R.string.build_progress_building_apk));
                     builder.buildApk();
                     if (canceled) {
                         cancel(true);
                         return;
                     }
 
-                    publishProgress("Aligning APK...");
+                    publishProgress(Helper.getResString(R.string.build_progress_aligning_apk));
                     builder.runZipalign(builder.ProjectFilePaths.unsignedUnalignedApkPath, builder.ProjectFilePaths.unsignedAlignedApkPath);
                     if (canceled) {
                         cancel(true);
                         return;
                     }
 
-                    publishProgress("Signing APK...");
+                    publishProgress(Helper.getResString(R.string.build_progress_signing_apk));
                     String outputLocation = getCorrectResultFilename(builder.ProjectFilePaths.releaseApkPath);
                     if (signWithTestkey) {
                         TestkeySignBridge.signWithTestkey(builder.ProjectFilePaths.unsignedAlignedApkPath, outputLocation);
@@ -699,7 +693,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
             if (!act.progressDialog.isCancelable()) {
                 act.progressDialog.setCancelable(true);
                 act.a((DialogInterface.OnCancelListener) this);
-                publishProgress("Canceling process...");
+                publishProgress(Helper.getResString(R.string.build_progress_canceling));
                 canceled = true;
             }
         }
@@ -760,9 +754,8 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
             if (buildingAppBundle && new File(Environment.getExternalStorageDirectory(), "sketchware" + File.separator + "signed_aab" + File.separator + aabFilename).exists()) {
                 MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(act);
                 dialog.setIcon(R.drawable.open_box_48);
-                dialog.setTitle("Finished exporting AAB");
-                dialog.setMessage("You can find the generated, signed AAB file at:\n" +
-                        "/Internal storage/sketchware/signed_aab/" + aabFilename);
+                dialog.setTitle(Helper.getResString(R.string.export_aab_finished_title));
+                dialog.setMessage(String.format(Helper.getResString(R.string.export_aab_finished_message), aabFilename));
                 dialog.setPositiveButton(Helper.getResString(R.string.common_word_ok), null);
                 dialog.show();
             }
