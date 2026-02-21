@@ -6,6 +6,7 @@ import android.os.Environment;
 import com.besome.sketch.beans.BlockBean;
 import com.besome.sketch.beans.ProjectFileBean;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
@@ -113,7 +114,7 @@ public class CustomBlocksManager {
                         FileUtil.readFile(customBlocksConfig.getAbsolutePath()),
                         new TypeToken<ArrayList<ExtraBlockInfo>>() {
                         }.getType());
-            } catch (Exception e) {
+            } catch (JsonSyntaxException e) {
                 SketchwareUtil.toastError("Failed to get Custom Blocks : " + e.getMessage());
             }
         }
@@ -127,7 +128,8 @@ public class CustomBlocksManager {
                     return info.getCode();
                 }
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            android.util.Log.e("CustomBlocksManager", "Failed to get code for custom block: " + opCode, e);
         }
         return "";
     }
@@ -139,7 +141,8 @@ public class CustomBlocksManager {
                     return info.getSpec2();
                 }
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            android.util.Log.e("CustomBlocksManager", "Failed to get spec2 for custom block: " + opCode, e);
         }
         return "";
     }

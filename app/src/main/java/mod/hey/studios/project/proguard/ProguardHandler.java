@@ -1,6 +1,7 @@
 package mod.hey.studios.project.proguard;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -147,7 +148,7 @@ public class ProguardHandler {
                     debugFiles = debug.equals("true");
                 }
 
-            } catch (Exception e) {
+            } catch (JsonSyntaxException e) {
                 debugFiles = false;
             }
         }
@@ -168,7 +169,7 @@ public class ProguardHandler {
                     proguardEnabled = enabled.equals("true");
                 }
 
-            } catch (Exception e) {
+            } catch (JsonSyntaxException e) {
                 proguardEnabled = false;
             }
         }
@@ -196,7 +197,7 @@ public class ProguardHandler {
                     r8Enabled = enabled.equals("true");
                 }
 
-            } catch (Exception e) {
+            } catch (JsonSyntaxException e) {
                 r8Enabled = false;
             }
         }
@@ -224,7 +225,8 @@ public class ProguardHandler {
                 ArrayList<String> config = new Gson().fromJson(configContent, Helper.TYPE_STRING);
                 enabled = config.contains(library);
                 return enabled;
-            } catch (Exception ignored) {
+            } catch (JsonSyntaxException e) {
+                android.util.Log.e("ProguardHandler", "Failed to parse JSON config: " + configContent, e);
             }
         }
 

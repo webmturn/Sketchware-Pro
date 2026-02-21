@@ -11,6 +11,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import java.io.File;
 import java.util.HashMap;
@@ -75,7 +76,7 @@ public class ProjectSettings {
         if (FileUtil.isExistFile(path)) {
             try {
                 hashmap = new Gson().fromJson(FileUtil.readFile(path).trim(), Helper.TYPE_STRING_MAP);
-            } catch (Exception e) {
+            } catch (JsonSyntaxException e) {
                 Log.e("ProjectSettings", "Failed to read project settings for project " + sc_id + "!", e);
                 hashmap = new HashMap<>();
                 save();
