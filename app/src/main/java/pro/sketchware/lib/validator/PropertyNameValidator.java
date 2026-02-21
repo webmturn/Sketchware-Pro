@@ -7,10 +7,10 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-import a.a.a.MB;
+import a.a.a.BaseValidator;
 import pro.sketchware.R;
 
-public class PropertyNameValidator extends MB {
+public class PropertyNameValidator extends BaseValidator {
 
     private final String[] reservedNames;
     private final String[] reservedMethodNames;

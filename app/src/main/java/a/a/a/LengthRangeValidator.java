@@ -6,7 +6,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import pro.sketchware.R;
 
-public class LengthRangeValidator extends MB {
+public class LengthRangeValidator extends BaseValidator {
 
     private final int min;
     private final int max;

@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 import pro.sketchware.R;
 
-public class ActivityNameValidator extends MB {
+public class ActivityNameValidator extends BaseValidator {
 
     private static final Pattern namePattern = Pattern.compile("^[a-z][a-z0-9_]*");
     private final String[] reservedNames;

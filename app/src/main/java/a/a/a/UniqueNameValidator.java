@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 import pro.sketchware.R;
 
-public class UniqueNameValidator extends MB {
+public class UniqueNameValidator extends BaseValidator {
 
     private final ArrayList<String> preDefNames;
 

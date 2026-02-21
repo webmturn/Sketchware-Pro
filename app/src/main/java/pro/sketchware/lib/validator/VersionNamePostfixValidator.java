@@ -6,9 +6,9 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.regex.Pattern;
 
-import a.a.a.MB;
+import a.a.a.BaseValidator;
 
-public class VersionNamePostfixValidator extends MB {
+public class VersionNamePostfixValidator extends BaseValidator {
 
     private static final Pattern VERSION_NAME_POSTFIX_PATTERN = Pattern.compile("^[a-zA-Z0-9_]*");
 

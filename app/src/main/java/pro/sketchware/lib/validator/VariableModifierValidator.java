@@ -8,9 +8,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import a.a.a.MB;
+import a.a.a.BaseValidator;
 
-public class VariableModifierValidator extends MB {
+public class VariableModifierValidator extends BaseValidator {
     public static final Pattern PATTERN_MODIFIER = Pattern.compile(
             "\\b(public|protected|private|static|final|transient|volatile)\\b"
     );

@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 import pro.sketchware.R;
 
-public class LowercaseNameValidator extends MB {
+public class LowercaseNameValidator extends BaseValidator {
 
     private final Pattern NAME_PATTERN = Pattern.compile("^[a-z][a-z0-9_ ]*");
 

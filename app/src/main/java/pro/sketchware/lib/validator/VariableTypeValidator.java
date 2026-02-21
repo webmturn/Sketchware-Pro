@@ -7,9 +7,9 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.regex.Pattern;
 
-import a.a.a.MB;
+import a.a.a.BaseValidator;
 
-public class VariableTypeValidator extends MB {
+public class VariableTypeValidator extends BaseValidator {
     public static final Pattern PATTERN_TYPE = Pattern.compile(
             "^[a-zA-Z0-9._]+(<[a-zA-Z0-9.,_ ?<>\\[\\]]+>)?(\\[\\])*?$"
     );
