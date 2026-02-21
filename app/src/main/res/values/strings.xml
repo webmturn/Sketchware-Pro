@@ -1308,6 +1308,24 @@ You must enter the API key to operate the map normally."</string>
     <string name="build_progress_signing_apk">Signing APK…</string>
     <string name="build_progress_canceling">Canceling process…</string>
 
+    <!-- Build error dialogs -->
+    <string name="build_error_missing_directory_title">Missing directory detected</string>
+    <string name="build_error_missing_directory_msg">A directory important for building is missing. Sketchware Pro can try creating %s if you\'d like to.</string>
+    <string name="build_error_missing_file_title">Missing file detected</string>
+    <string name="build_error_missing_file_msg">A file needed for building is missing. Put the correct file back to %s and try building again.</string>
+    <string name="build_error_failed_create_directory">Failed to create directory / directories!</string>
+
+    <!-- Crash report -->
+    <string name="error_crash_report_msg">An error occurred while running Sketchware Pro. Do you want to report this error log so that we can fix it? No personal information will be included.</string>
+    <string name="error_crash_show_error">Show error</string>
+
+    <!-- Event delete -->
+    <string name="dialog_title_confirm_delete">Confirm Delete</string>
+    <string name="dialog_msg_delete_event_confirm">Click on Confirm to delete the selected Event.</string>
+
+    <!-- Common words (missing) -->
+    <string name="common_word_please_wait">Please wait</string>
+
     <string name="design_tab_title_component">Component</string>
     <string name="design_tab_title_event">Event</string>
     <string name="design_tab_title_view">View</string>
