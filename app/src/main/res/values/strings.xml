@@ -1541,6 +1541,31 @@ You must enter the API key to operate the map normally."</string>
     <string name="config_backup_filename_msg">This defines how SWB backup files get named.\nAvailable variables:\n - $projectName - Project name\n - $versionCode - App version code\n - $versionName - App version name\n - $pkgName - App package name\n - $timeInMs - Time during backup in milliseconds\n\nAdditionally, you can format your own time like this using Java\'s date formatter syntax:\n$time(yyyy-MM-dd\'T\'HHmmss)\n</string>
     <string name="config_toast_reset_default">Reset to default complete.</string>
 
+    <!-- About page -->
+    <string name="about_status_active">Active</string>
+    <string name="about_status_inactive">Inactive</string>
+    <string name="about_badge_core_team">Core Team</string>
+    <string name="about_badge_contributor">Contributor</string>
+    <string name="about_core_team_title">Core Team Members</string>
+    <string name="about_contributors_title">Contributors</string>
+    <string name="about_deleted_account">Deleted Account</string>
+    <string name="about_update_new">New Update</string>
+    <string name="about_update_old">Old Version</string>
+    <string name="about_update_current">Current Version</string>
+    <string name="about_date_today">Today</string>
+    <string name="about_date_yesterday">Yesterday</string>
+    <string name="about_date_this_week">This week</string>
+    <string name="about_date_last_week">Last week</string>
+    <string name="about_date_last_month">Last month</string>
+    <string name="about_date_months_ago">%d months ago</string>
+    <string name="about_date_one_month_ago">1 month ago</string>
+    <string name="about_date_years_ago">%d years ago</string>
+    <string name="about_date_one_year_ago">1 year ago</string>
+    <string name="about_changelog_error">We\'ve messed something up, sorry for the inconvenience!\n(Details: Invalid data type of \"title\")</string>
+    <string name="about_variant_beta">Beta</string>
+    <string name="about_variant_official">Official</string>
+    <string name="about_released_on">Released on: %s</string>
+
     <!-- DesignActivity menu items -->
     <string name="design_menu_build_settings">Build Settings</string>
     <string name="design_menu_clean_temp">Clean temporary files</string>

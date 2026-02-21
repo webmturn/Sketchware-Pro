@@ -54,7 +54,7 @@ public class AboutResponseModel {
         }
 
         public String getTitle() {
-            return is_core_team ? "Core Team Members" : "Contributors";
+            return Helper.getResString(is_core_team ? R.string.about_core_team_title : R.string.about_contributors_title);
         }
 
         public String getDescription() {
@@ -98,7 +98,7 @@ public class AboutResponseModel {
 
         public String getCommitterName() {
             String commiterName = safeGetValueFromMap(author, "login");
-            return commiterName.isEmpty() ? "Deleted Account" : commiterName;
+            return commiterName.isEmpty() ? Helper.getResString(R.string.about_deleted_account) : commiterName;
         }
 
         public String getCommitterImage() {
@@ -145,23 +145,23 @@ public class AboutResponseModel {
             LocalDate today = LocalDate.now(ZoneOffset.UTC);
 
             if (commitDate.equals(today)) {
-                return "Today";
+                return Helper.getResString(R.string.about_date_today);
             } else if (commitDate.equals(today.minusDays(1))) {
-                return "Yesterday";
+                return Helper.getResString(R.string.about_date_yesterday);
             } else if (commitDate.isAfter(today.minusWeeks(1))) {
-                return "This week";
+                return Helper.getResString(R.string.about_date_this_week);
             } else if (commitDate.isAfter(today.minusWeeks(2))) {
-                return "Last week";
+                return Helper.getResString(R.string.about_date_last_week);
             } else if (commitDate.isAfter(today.minusMonths(1))) {
-                return "Last month";
+                return Helper.getResString(R.string.about_date_last_month);
             } else {
                 long monthsAgo = ChronoUnit.MONTHS.between(commitDate.withDayOfMonth(1), today.withDayOfMonth(1));
                 if (monthsAgo <= 12) {
-                    return monthsAgo + (monthsAgo == 1 ? " month ago" : " months ago");
+                    return monthsAgo == 1 ? Helper.getResString(R.string.about_date_one_month_ago) : String.format(Helper.getResString(R.string.about_date_months_ago), monthsAgo);
                 }
 
                 long yearsAgo = ChronoUnit.YEARS.between(commitDate, today);
-                return yearsAgo + (yearsAgo == 1 ? " year ago" : " years ago");
+                return yearsAgo == 1 ? Helper.getResString(R.string.about_date_one_year_ago) : String.format(Helper.getResString(R.string.about_date_years_ago), yearsAgo);
             }
         }
 
