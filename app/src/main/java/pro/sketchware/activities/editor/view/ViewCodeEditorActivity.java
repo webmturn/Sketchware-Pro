@@ -133,21 +133,21 @@ public class ViewCodeEditorActivity extends BaseAppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(Menu.NONE, 0, Menu.NONE, "Undo")
+        menu.add(Menu.NONE, 0, Menu.NONE, Helper.getResString(R.string.menu_undo))
                 .setIcon(AppCompatResources.getDrawable(this, R.drawable.ic_mtrl_undo))
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        menu.add(Menu.NONE, 1, Menu.NONE, "Redo")
+        menu.add(Menu.NONE, 1, Menu.NONE, Helper.getResString(R.string.menu_redo))
                 .setIcon(AppCompatResources.getDrawable(this, R.drawable.ic_mtrl_redo))
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        menu.add(Menu.NONE, 2, Menu.NONE, "Save")
+        menu.add(Menu.NONE, 2, Menu.NONE, Helper.getResString(R.string.menu_save))
                 .setIcon(AppCompatResources.getDrawable(this, R.drawable.ic_mtrl_save))
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         if (projectFile.fileType == ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY
                 && projectLibrary.isEnabled()) {
-            menu.add(Menu.NONE, 3, Menu.NONE, "Edit AppCompat");
+            menu.add(Menu.NONE, 3, Menu.NONE, Helper.getResString(R.string.menu_edit_appcompat));
         }
-        menu.add(Menu.NONE, 4, Menu.NONE, "Reload color schemes");
-        menu.add(Menu.NONE, 5, Menu.NONE, "Layout Preview");
+        menu.add(Menu.NONE, 4, Menu.NONE, Helper.getResString(R.string.menu_reload_colors));
+        menu.add(Menu.NONE, 5, Menu.NONE, Helper.getResString(R.string.menu_layout_preview));
         return true;
     }
 

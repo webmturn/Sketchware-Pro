@@ -1541,6 +1541,14 @@ You must enter the API key to operate the map normally."</string>
     <string name="config_backup_filename_msg">This defines how SWB backup files get named.\nAvailable variables:\n - $projectName - Project name\n - $versionCode - App version code\n - $versionName - App version name\n - $pkgName - App package name\n - $timeInMs - Time during backup in milliseconds\n\nAdditionally, you can format your own time like this using Java\'s date formatter syntax:\n$time(yyyy-MM-dd\'T\'HHmmss)\n</string>
     <string name="config_toast_reset_default">Reset to default complete.</string>
 
+    <!-- ViewCodeEditorActivity menu items -->
+    <string name="menu_undo">Undo</string>
+    <string name="menu_redo">Redo</string>
+    <string name="menu_save">Save</string>
+    <string name="menu_edit_appcompat">Edit AppCompat</string>
+    <string name="menu_reload_colors">Reload color schemes</string>
+    <string name="menu_layout_preview">Layout Preview</string>
+
     <!-- BuildSettingsBottomSheet -->
     <string name="toast_enable_d8_reminder">Don\'t forget to enable D8 to be able to compile Java 8+ code</string>
     <string name="toast_no_http_legacy_warning">Note that this option may cause issues if RequestNetwork component is used</string>
