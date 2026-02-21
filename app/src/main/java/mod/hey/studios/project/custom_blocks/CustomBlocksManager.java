@@ -128,7 +128,7 @@ public class CustomBlocksManager {
                     return info.getCode();
                 }
             }
-        } catch (Exception e) {
+        } catch (NullPointerException e) {
             android.util.Log.e("CustomBlocksManager", "Failed to get code for custom block: " + opCode, e);
         }
         return "";
@@ -141,7 +141,7 @@ public class CustomBlocksManager {
                     return info.getSpec2();
                 }
             }
-        } catch (Exception e) {
+        } catch (NullPointerException e) {
             android.util.Log.e("CustomBlocksManager", "Failed to get spec2 for custom block: " + opCode, e);
         }
         return "";
