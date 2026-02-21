@@ -13,91 +13,91 @@ public class FilePathUtil {
         return new File(SKETCHWARE_DATA, sc_id + "/compile_log").getAbsolutePath();
     }
 
-    public String getPathPermission(String sc_id) {
+    public static String getPathPermission(String sc_id) {
         return new File(SKETCHWARE_DATA, sc_id + "/permission").getAbsolutePath();
     }
 
-    public String getPathImport(String sc_id) {
+    public static String getPathImport(String sc_id) {
         return new File(SKETCHWARE_DATA, sc_id + "/import").getAbsolutePath();
     }
 
-    public String getPathBroadcast(String sc_id) {
+    public static String getPathBroadcast(String sc_id) {
         return new File(SKETCHWARE_DATA, sc_id + "/files/broadcast").getAbsolutePath();
     }
 
-    public String getPathSvg(String sc_id) {
+    public static String getPathSvg(String sc_id) {
         return new File(SKETCHWARE_DATA, sc_id + "/converted-vectors/").getAbsolutePath();
     }
 
-    public String getSvgFullPath(String sc_id, String resName) {
+    public static String getSvgFullPath(String sc_id, String resName) {
         return new File(getPathSvg(sc_id) + File.separator + resName + ".svg").getAbsolutePath();
     }
 
-    public String getPathService(String sc_id) {
+    public static String getPathService(String sc_id) {
         return new File(SKETCHWARE_DATA, sc_id + "/files/service").getAbsolutePath();
     }
 
-    public String getPathAssets(String sc_id) {
+    public static String getPathAssets(String sc_id) {
         return new File(SKETCHWARE_DATA, sc_id + "/files/assets").getAbsolutePath();
     }
 
-    public String getPathJava(String sc_id) {
+    public static String getPathJava(String sc_id) {
         return new File(SKETCHWARE_DATA, sc_id + "/files/java").getAbsolutePath();
     }
 
-    public String getPathKotlinCompilerPlugins(String sc_id) {
+    public static String getPathKotlinCompilerPlugins(String sc_id) {
         return new File(SKETCHWARE_DATA, sc_id + "/files/kt_plugins").getAbsolutePath();
     }
 
-    public String getPathResource(String sc_id) {
+    public static String getPathResource(String sc_id) {
         return new File(SKETCHWARE_DATA, sc_id + "/files/resource").getAbsolutePath();
     }
 
-    public String getPathProguard(String sc_id) {
+    public static String getPathProguard(String sc_id) {
         return new File(SKETCHWARE_DATA, sc_id + "/proguard-rules.pro").getAbsolutePath();
     }
 
-    public String getPathLocalLibrary(String sc_id) {
+    public static String getPathLocalLibrary(String sc_id) {
         return new File(SKETCHWARE_DATA, sc_id + "/local_library").getAbsolutePath();
     }
 
-    public String getJarPathLocalLibrary(String libraryName) {
+    public static String getJarPathLocalLibrary(String libraryName) {
         return new File(SKETCHWARE_LOCAL_LIBS, libraryName + "/classes.jar").getAbsolutePath();
     }
 
-    public String getDexPathLocalLibrary(String libraryName) {
+    public static String getDexPathLocalLibrary(String libraryName) {
         return new File(SKETCHWARE_LOCAL_LIBS, libraryName + "/classes.dex").getAbsolutePath();
     }
 
-    public String getResPathLocalLibrary(String libraryName) {
+    public static String getResPathLocalLibrary(String libraryName) {
         return new File(SKETCHWARE_LOCAL_LIBS, libraryName + "/res").getAbsolutePath();
     }
 
-    public String getJarPathLocalLibraryUser(String sc_id) {
+    public static String getJarPathLocalLibraryUser(String sc_id) {
         return new File(SKETCHWARE_DATA, sc_id + "/files/library/jar").getAbsolutePath();
     }
 
-    public String getDexPathLocalLibraryUser(String sc_id) {
+    public static String getDexPathLocalLibraryUser(String sc_id) {
         return new File(SKETCHWARE_DATA, sc_id + "/files/library/dex").getAbsolutePath();
     }
 
-    public String getResPathLocalLibraryUser(String sc_id) {
+    public static String getResPathLocalLibraryUser(String sc_id) {
         return new File(SKETCHWARE_DATA, sc_id + "/files/library/res").getAbsolutePath();
     }
 
-    public String getManifestJava(String sc_id) {
+    public static String getManifestJava(String sc_id) {
         return new File(SKETCHWARE_DATA, sc_id + "/java").getAbsolutePath();
     }
 
-    public String getManifestBroadcast(String sc_id) {
+    public static String getManifestBroadcast(String sc_id) {
         return new File(SKETCHWARE_DATA, sc_id + "/broadcast").getAbsolutePath();
     }
 
-    public String getPathNativelibs(String sc_id) {
+    public static String getPathNativelibs(String sc_id) {
         return new File(SKETCHWARE_DATA, sc_id + "/files/native_libs").getAbsolutePath();
     }
 
-    public String getManifestService(String sc_id) {
+    public static String getManifestService(String sc_id) {
         return new File(SKETCHWARE_DATA, sc_id + "/service").getAbsolutePath();
     }
 }

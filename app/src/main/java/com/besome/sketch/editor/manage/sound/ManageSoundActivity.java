@@ -119,7 +119,7 @@ public class ManageSoundActivity extends BaseAppCompatActivity implements ViewPa
         }
 
         @Override
-        public void a() {
+        public void onSuccess() {
             var activity = activityWeakReference.get();
             if (activity == null) return;
             activity.h();
@@ -129,14 +129,14 @@ public class ManageSoundActivity extends BaseAppCompatActivity implements ViewPa
         }
 
         @Override
-        public void b() {
+        public void doWork() {
             var activity = activityWeakReference.get();
             if (activity == null) return;
             activity.projectSounds.saveSounds();
         }
 
         @Override
-        public void a(String str) {
+        public void onError(String str) {
             var activity = activityWeakReference.get();
             if (activity == null) return;
             activity.h();

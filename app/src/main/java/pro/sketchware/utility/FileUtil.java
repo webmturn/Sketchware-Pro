@@ -442,10 +442,13 @@ public class FileUtil {
                     }
                 }
 
-                Uri contentUri = ContentUris
-                        .withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.parseLong(id));
-
-                path = getDataColumn(context, contentUri, null, null);
+                try {
+                    Uri contentUri = ContentUris
+                            .withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.parseLong(id));
+                    path = getDataColumn(context, contentUri, null, null);
+                } catch (NumberFormatException e) {
+                    Log.w("FileUtil", "Non-numeric download document id: " + id);
+                }
             } else if (isMediaDocument(uri)) {
                 String docId = DocumentsContract.getDocumentId(uri);
                 String[] split = docId.split(":");
@@ -497,8 +500,8 @@ public class FileUtil {
                 int column_index = cursor.getColumnIndexOrThrow(column);
                 return cursor.getString(column_index);
             }
-        } catch (Exception ignored) {
-
+        } catch (Exception e) {
+            Log.w("FileUtil", "Failed to query column '" + column + "' from uri: " + uri, e);
         } finally {
             if (cursor != null) {
                 cursor.close();
@@ -532,6 +535,9 @@ public class FileUtil {
     public static Bitmap getScaledBitmap(String str, int i) {
         int i2;
         Bitmap decodeFile = BitmapFactory.decodeFile(str);
+        if (decodeFile == null) {
+            return null;
+        }
         int width = decodeFile.getWidth();
         int height = decodeFile.getHeight();
         if (width > height) {

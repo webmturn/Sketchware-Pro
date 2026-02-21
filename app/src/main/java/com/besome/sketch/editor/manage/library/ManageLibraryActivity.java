@@ -445,7 +445,7 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
         }
 
         @Override
-        public void a() {
+        public void onSuccess() {
             var act = activity.get();
             if (act == null) return;
             act.h();
@@ -460,14 +460,14 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
         }
 
         @Override
-        public void a(String idk) {
+        public void onError(String idk) {
             var act = activity.get();
             if (act == null) return;
             act.h();
         }
 
         @Override
-        public void b() {
+        public void doWork() {
             var act = activity.get();
             if (act == null) return;
             try {

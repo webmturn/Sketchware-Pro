@@ -2514,7 +2514,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
 
         @Override
-        public void a() {
+        public void onSuccess() {
             var act = activity.get();
             if (act == null) return;
             act.h();
@@ -2522,7 +2522,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
 
         @Override
-        public void a(String str) {
+        public void onError(String str) {
             Toast.makeText(getContext(), R.string.common_error_failed_to_save, Toast.LENGTH_SHORT).show();
             var act = activity.get();
             if (act == null) return;
@@ -2530,7 +2530,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
 
         @Override
-        public void b() {
+        public void doWork() {
             var act = activity.get();
             if (act == null) return;
             publishProgress("Now saving..");

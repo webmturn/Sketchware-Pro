@@ -506,7 +506,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
         }
 
         @Override
-        public void a() {
+        public void onSuccess() {
             h();
             Intent intent = getIntent();
             intent.putExtra("sc_id", sc_id);
@@ -517,7 +517,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
         }
 
         @Override
-        public void b() {
+        public void doWork() {
             HashMap<String, Object> data = new HashMap<>();
             data.put("sc_id", sc_id);
             data.put("my_sc_pkg_name", Helper.getText(binding.etPackageName));
@@ -588,7 +588,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
         }
 
         @Override
-        public void a(String str) {
+        public void onError(String str) {
             h();
         }
 

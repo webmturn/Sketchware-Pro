@@ -438,7 +438,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
         }
 
         @Override
-        public void a() {
+        public void onSuccess() {
             var activity = this.activity.get();
             if (activity == null) return;
             activity.h();
@@ -446,7 +446,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
         }
 
         @Override
-        public void b() {
+        public void doWork() {
             var activity = this.activity.get();
             if (activity == null) return;
             if (!activity.doExtractedIconsExist()) {
@@ -455,7 +455,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
         }
 
         @Override
-        public void a(String str) {
+        public void onError(String str) {
             var activity = this.activity.get();
             if (activity == null) return;
             activity.h();
@@ -474,7 +474,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
         }
 
         @Override
-        public void a() {
+        public void onSuccess() {
             var activity = this.activity.get();
             if (activity == null) return;
             activity.h();
@@ -482,7 +482,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
         }
 
         @Override
-        public void b() {
+        public void doWork() {
             var activity = this.activity.get();
             if (activity == null) return;
             activity.listIcons();
@@ -494,7 +494,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
         }
 
         @Override
-        public void a(String str) {
+        public void onError(String str) {
             var activity = this.activity.get();
             if (activity == null) return;
             activity.h();

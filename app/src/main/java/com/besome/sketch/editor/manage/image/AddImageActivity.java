@@ -347,7 +347,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
         }
 
         @Override
-        public void a() {
+        public void onSuccess() {
             var activity = this.activity.get();
             if (activity == null) return;
             activity.h();
@@ -363,7 +363,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
         }
 
         @Override
-        public void b() throws By {
+        public void doWork() throws By {
             var activity = this.activity.get();
             if (activity == null) return;
             try {
@@ -453,7 +453,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
         }
 
         @Override
-        public void a(String str) {
+        public void onError(String str) {
             var activity = this.activity.get();
             if (activity == null) return;
             activity.h();

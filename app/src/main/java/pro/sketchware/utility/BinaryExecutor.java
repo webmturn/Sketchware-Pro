@@ -16,11 +16,14 @@ public class BinaryExecutor {
 
     public String execute() {
         try {
-            Scanner scanner = new Scanner(mProcess.start().getErrorStream());
-            while (scanner.hasNextLine()) {
-                mWriter.append(scanner.nextLine());
-                mWriter.append(System.lineSeparator());
+            Process process = mProcess.redirectErrorStream(true).start();
+            try (Scanner scanner = new Scanner(process.getInputStream())) {
+                while (scanner.hasNextLine()) {
+                    mWriter.append(scanner.nextLine());
+                    mWriter.append(System.lineSeparator());
+                }
             }
+            process.waitFor();
         } catch (Exception e) {
             e.printStackTrace(new PrintWriter(mWriter));
         }

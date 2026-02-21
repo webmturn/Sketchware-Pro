@@ -451,10 +451,10 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
         }
 
         /**
-         * a.a.a.BaseAsyncTask's doInBackground()
+         * a.a.a.BaseAsyncTask's doWork() - runs in background thread
          */
         @Override // a.a.a.BaseAsyncTask
-        public void b() {
+        public void doWork() {
             if (canceled) {
                 cancel(true);
                 return;
@@ -742,10 +742,10 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
         }
 
         /**
-         * a.a.a.BaseAsyncTask's onPostExecute()
+         * a.a.a.BaseAsyncTask's onSuccess() - called on the UI thread after successful doWork()
          */
         @Override // a.a.a.BaseAsyncTask
-        public void a() {
+        public void onSuccess() {
             var act = activity.get();
             if (act == null) return;
             act.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -769,11 +769,11 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
         }
 
         /**
-         * Called by a.a.a.BaseAsyncTask if doInBackground() (a.a.a.BaseAsyncTask#b()) returned a non-empty String,
+         * Called by a.a.a.BaseAsyncTask if doWork() returned a non-empty String,
          * ergo, an error occurred.
          */
         @Override // a.a.a.BaseAsyncTask
-        public void a(String str) {
+        public void onError(String str) {
             var act = activity.get();
             if (act == null) return;
             act.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);

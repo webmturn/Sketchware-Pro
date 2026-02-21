@@ -351,7 +351,7 @@ public class ExcludeBuiltInLibrariesActivity extends BaseAppCompatActivity {
         }
 
         @Override
-        public void a() {
+        public void onSuccess() {
             var act = activity.get();
             if (act == null) return;
             act.h();
@@ -360,14 +360,14 @@ public class ExcludeBuiltInLibrariesActivity extends BaseAppCompatActivity {
         }
 
         @Override
-        public void a(String s) {
+        public void onError(String s) {
             var act = activity.get();
             if (act == null) return;
             act.onSaveError("Couldn't save configuration: " + s);
         }
 
         @Override
-        public void b() {
+        public void doWork() {
             var act = activity.get();
             if (act == null) return;
             saveConfig(act.sc_id, act.isExcludingEnabled, act.excludedLibraries);

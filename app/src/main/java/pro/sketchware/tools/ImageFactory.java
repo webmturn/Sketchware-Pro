@@ -28,12 +28,14 @@ public class ImageFactory {
         }
         File savedBitmap = new File(saveToDirectory.getPath() + File.separator + imageName + ".png");
         Bitmap bitmap = getBitmapFromView(view);
+        if (bitmap == null) {
+            return savedBitmap;
+        }
         try {
             savedBitmap.createNewFile();
-            FileOutputStream fileOutputStream = new FileOutputStream(savedBitmap);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
-            fileOutputStream.flush();
-            fileOutputStream.close();
+            try (FileOutputStream fileOutputStream = new FileOutputStream(savedBitmap)) {
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
+            }
         } catch (IOException e) {
             Log.e(ImageFactory.class.getSimpleName(), "Couldn't save bitmap with name " + imageName + ": " + e.getMessage(), e);
         }
@@ -41,6 +43,9 @@ public class ImageFactory {
     }
 
     public static Bitmap getBitmapFromView(View view) {
+        if (view.getWidth() <= 0 || view.getHeight() <= 0) {
+            return null;
+        }
         Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         Drawable background = view.getBackground();

@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import a.a.a.SketchwarePaths;
 import a.a.a.ViewEditorFragment;
 import dev.pranav.filepicker.FilePickerCallback;
 import dev.pranav.filepicker.FilePickerDialogFragment;
@@ -51,7 +52,7 @@ import pro.sketchware.utility.SketchwareUtil;
 
 public class WidgetsCreatorManager {
 
-    private final String widgetResourcesDirectoryPath = "/storage/emulated/0/.sketchware/resources/widgets/";
+    private final String widgetResourcesDirectoryPath = SketchwarePaths.getAbsolutePathOf(".sketchware/resources/widgets") + "/";
     private final String widgetsJsonFilePath = widgetResourcesDirectoryPath + "widgets.json";
     private final String widgetExportDirectoryPath = widgetResourcesDirectoryPath + "export/";
     private final ArrayList<String> allCategories = new ArrayList<>();
@@ -449,7 +450,8 @@ public class WidgetsCreatorManager {
                     }
                     viewEditor.createCustomWidget(map);
                 }
-            } catch (Exception ignored) {
+            } catch (Exception e) {
+                SketchwareUtil.toastError("Failed to add widget: " + e.getMessage());
             }
         }
     }
@@ -464,7 +466,8 @@ public class WidgetsCreatorManager {
                     viewEditor.paletteWidget.extraTitle(item, 1);
                     addWidgetsByTitle(item);
                 }
-            } catch (Exception ignored) {
+            } catch (Exception e) {
+                SketchwareUtil.toastError("Failed to add extra widget classes: " + e.getMessage());
             }
         }
     }

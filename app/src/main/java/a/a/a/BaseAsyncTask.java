@@ -26,10 +26,10 @@ public abstract class BaseAsyncTask extends AsyncTask<Void, String, String> {
             if (isCancelled()) {
                 return "";
             }
-            b();
+            doWork();
             return "";
         } catch (Exception e) {
-            Log.e("MA", e.getMessage(), e);
+            Log.e("BaseAsyncTask", e.getMessage(), e);
             // the bytecode's lying
             if (e instanceof By) {
                 return e.getMessage();
@@ -42,19 +42,19 @@ public abstract class BaseAsyncTask extends AsyncTask<Void, String, String> {
         }
     }
 
-    public abstract void a();
+    public abstract void onSuccess();
 
-    public abstract void a(String var1);
+    public abstract void onError(String message);
 
-    public abstract void b() throws By;
+    public abstract void doWork() throws By;
 
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
         if (result.isEmpty()) {
-            a();
+            onSuccess();
         } else {
-            a(result);
+            onError(result);
             Context context = getContext();
             if (context != null) {
                 SketchToast.warning(context, result, 1).show();

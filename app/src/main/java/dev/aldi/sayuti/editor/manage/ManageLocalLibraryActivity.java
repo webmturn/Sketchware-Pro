@@ -325,21 +325,21 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
         }
 
         @Override
-        public void a() {
+        public void onSuccess() {
             var act = activity.get();
             if (act == null) return;
             act.h();
         }
 
         @Override
-        public void a(String idk) {
+        public void onError(String idk) {
             var act = activity.get();
             if (act == null) return;
             act.h();
         }
 
         @Override
-        public void b() {
+        public void doWork() {
             var act = activity.get();
             if (act == null) return;
             try {

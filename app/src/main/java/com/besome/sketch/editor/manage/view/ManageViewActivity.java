@@ -236,7 +236,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
                 } else {
                     k();
                     try {
-                        new Handler(Looper.getMainLooper()).postDelayed(() -> new a(ManageViewActivity.this).execute(), 500L);
+                        new Handler(Looper.getMainLooper()).postDelayed(() -> new SaveViewAsyncTask(ManageViewActivity.this).execute(), 500L);
                     } catch (Exception e) {
                         Log.e("ManageViewActivity", e.getMessage(), e);
                         h();
@@ -337,17 +337,17 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
         super.onSaveInstanceState(newState);
     }
 
-    private static class a extends BaseAsyncTask {
+    private static class SaveViewAsyncTask extends BaseAsyncTask {
         private final WeakReference<ManageViewActivity> activity;
 
-        public a(ManageViewActivity activity) {
+        public SaveViewAsyncTask(ManageViewActivity activity) {
             super(activity.getApplicationContext());
             this.activity = new WeakReference<>(activity);
             activity.addTask(this);
         }
 
         @Override
-        public void a() {
+        public void onSuccess() {
             var activity = this.activity.get();
             if (activity == null) return;
             activity.h();
@@ -356,14 +356,14 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
         }
 
         @Override
-        public void a(String var1) {
+        public void onError(String var1) {
             var activity = this.activity.get();
             if (activity == null) return;
             activity.h();
         }
 
         @Override
-        public void b() throws By {
+        public void doWork() throws By {
             var activity = this.activity.get();
             if (activity == null) return;
             try {

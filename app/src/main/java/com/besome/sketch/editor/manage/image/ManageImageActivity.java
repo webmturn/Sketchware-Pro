@@ -141,7 +141,7 @@ public class ManageImageActivity extends BaseAppCompatActivity implements ViewPa
         }
 
         @Override
-        public void a() {
+        public void onSuccess() {
             var activity = this.activity.get();
             if (activity == null) return;
             activity.h();
@@ -151,14 +151,14 @@ public class ManageImageActivity extends BaseAppCompatActivity implements ViewPa
         }
 
         @Override
-        public void b() {
+        public void doWork() {
             var activity = this.activity.get();
             if (activity == null) return;
             activity.projectImagesFragment.saveImages();
         }
 
         @Override
-        public void a(String str) {
+        public void onError(String str) {
             var activity = this.activity.get();
             if (activity == null) return;
             activity.h();
