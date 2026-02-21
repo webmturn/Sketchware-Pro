@@ -20,6 +20,7 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
@@ -295,7 +296,7 @@ public class BlockSelectorManagerFragment extends BaseFragment {
         String json = FileUtil.readFile(file.getAbsolutePath());
         try {
             return getGson().fromJson(json, Selector.class);
-        } catch (Exception e) {
+        } catch (JsonSyntaxException e) {
             Log.e(BlockSelectorConsts.TAG, e.toString());
             SketchwareUtil.toastError("An error occurred while trying to get the selector");
             return null;

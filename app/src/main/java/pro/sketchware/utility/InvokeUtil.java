@@ -36,7 +36,7 @@ public class InvokeUtil {
             Constructor<?> con = clazz.getDeclaredConstructor(Context.class);
             con.setAccessible(true);
             return (View) con.newInstance(context);
-        } catch (Exception e) {
+        } catch (ReflectiveOperationException | ClassCastException e) {
             Log.w("InvokeUtil", "Failed to create view: " + name, e);
         }
         return null;
@@ -50,7 +50,7 @@ public class InvokeUtil {
             method.setAccessible(true);
             return method.invoke(v, params);
 
-        } catch (Exception e) {
+        } catch (ReflectiveOperationException e) {
             Log.w("InvokeUtil", "Failed to invoke method: " + name, e);
         }
         return null;
@@ -62,8 +62,8 @@ public class InvokeUtil {
              superClass = superClass.getSuperclass()) {
             try {
                 return superClass.getDeclaredMethod(name, types);
-            } catch (Exception e) {
-
+            } catch (NoSuchMethodException e) {
+                // Expected: method not found in this class, continue searching superclass
             }
         }
         return null;

@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -202,7 +203,7 @@ public class EventsManagerFragment extends BaseFragment {
                         String[] split = FileUtil.readFile(file.getAbsolutePath()).split("\n");
                         importEvents(new Gson().fromJson(split[0], Helper.TYPE_MAP_LIST),
                                 new Gson().fromJson(split[1], Helper.TYPE_MAP_LIST));
-                    } catch (Exception e) {
+                    } catch (JsonSyntaxException | ArrayIndexOutOfBoundsException e) {
                         SketchwareUtil.toastError("Invalid file");
                     }
                 }

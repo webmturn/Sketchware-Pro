@@ -109,7 +109,7 @@ public class ViewBeanFactory {
         if (weight != null) {
             try {
                 layoutBean.weight = Integer.parseInt(weight);
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
                 injectAttributes.put("android:layout_weight", weight);
             }
         }
@@ -118,7 +118,7 @@ public class ViewBeanFactory {
         if (weightSum != null) {
             try {
                 layoutBean.weightSum = Integer.parseInt(weightSum);
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
                 injectAttributes.put("android:weightSum", weightSum);
             }
         }
@@ -252,7 +252,7 @@ public class ViewBeanFactory {
         if (rotation != null) {
             try {
                 bean.image.rotate = Integer.parseInt(rotation);
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
                 injectAttributes.put("android:rotation", rotation);
             }
         }
@@ -275,7 +275,7 @@ public class ViewBeanFactory {
                 if (progress != null) {
                     try {
                         bean.progress = Integer.parseInt(progress);
-                    } catch (Exception e) {
+                    } catch (NumberFormatException e) {
                         injectAttributes.put("android:progress", progress);
                     }
                 }
@@ -287,7 +287,7 @@ public class ViewBeanFactory {
                         if (maxValue != ViewBean.DEFAULT_MAX) {
                             bean.max = maxValue;
                         }
-                    } catch (Exception e) {
+                    } catch (NumberFormatException e) {
                         injectAttributes.put("android:max", max);
                     }
                 }
@@ -321,7 +321,7 @@ public class ViewBeanFactory {
                         if (firstDayOfWeekValue != 1) {
                             bean.firstDayOfWeek = firstDayOfWeekValue;
                         }
-                    } catch (Exception e) {
+                    } catch (NumberFormatException e) {
                         injectAttributes.put("android:firstDayOfWeek", firstDayOfWeek);
                     }
                 }
@@ -564,7 +564,7 @@ public class ViewBeanFactory {
                 if (lines != null) {
                     try {
                         bean.line = Integer.parseInt(lines);
-                    } catch (Exception e) {
+                    } catch (NumberFormatException e) {
                         injectAttributes.put("android:lines", lines);
                     }
                 }
@@ -608,7 +608,7 @@ public class ViewBeanFactory {
                 if (lines != null) {
                     try {
                         bean.line = Integer.parseInt(lines);
-                    } catch (Exception e) {
+                    } catch (NumberFormatException e) {
                         injectAttributes.put("android:lines", lines);
                     }
                 }
