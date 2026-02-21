@@ -1441,6 +1441,37 @@ You must enter the API key to operate the map normally."</string>
     <string name="proguard_select_local_libs">Select Local libraries</string>
     <string name="proguard_title">Code Shrinking Manager</string>
 
+    <!-- AndroidManifest -->
+    <string name="manifest_title">AndroidManifest Manager</string>
+    <string name="manifest_edit_value">Edit Value</string>
+    <string name="manifest_delete_attr_title">Delete this attribute?</string>
+    <string name="manifest_delete_attr_msg">This action cannot be undone.</string>
+
+    <!-- XML Command -->
+    <string name="xml_command_title">XML Command Manager</string>
+    <string name="xml_command_select_xml">Select an XML</string>
+    <string name="xml_command_confirmation_title">Confirmation</string>
+
+    <!-- MainActivity -->
+    <string name="main_storage_access_title">Android 11 storage access</string>
+    <string name="common_word_skip">Skip</string>
+    <string name="common_word_dont_copy">Don\'t copy</string>
+    <string name="common_word_dont_show_anymore">Don\'t show anymore</string>
+    <string name="common_word_actions">Actions</string>
+    <string name="common_word_confirmation">Confirmation</string>
+    <string name="common_word_delete_confirm">Are you sure you want to delete this item?</string>
+
+    <!-- Logic editor -->
+    <string name="logic_add_custom_variable">Add a new custom variable</string>
+    <string name="logic_add_custom_list">Add a new custom List</string>
+
+    <!-- Extra menu / block menus -->
+    <string name="menu_select_asset">Select an Asset</string>
+    <string name="menu_select_native_lib">Select a Native library</string>
+
+    <!-- Widgets -->
+    <string name="widgets_select_json">Select .json widgets files</string>
+
     <!-- Colors editor -->
     <string name="color_title_create">Create new color</string>
     <string name="color_title_edit">Edit color</string>

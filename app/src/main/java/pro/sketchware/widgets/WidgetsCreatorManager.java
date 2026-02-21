@@ -279,7 +279,7 @@ public class WidgetsCreatorManager {
                 FilePickerOptions options = new FilePickerOptions();
                 options.setMultipleSelection(true);
                 options.setExtensions(new String[]{"json"});
-                options.setTitle("Select .json widgets files");
+                options.setTitle(Helper.getResString(R.string.widgets_select_json));
 
                 FilePickerCallback callback = new FilePickerCallback() {
                     @Override
@@ -476,7 +476,7 @@ public class WidgetsCreatorManager {
         Activity activity = viewEditorFragment.requireActivity();
         DialogSelectorActionsBinding dialogBinding = DialogSelectorActionsBinding.inflate(LayoutInflater.from(activity));
         MaterialAlertDialogBuilder dialogBuilder = new MaterialAlertDialogBuilder(activity);
-        dialogBuilder.setTitle("Actions");
+        dialogBuilder.setTitle(R.string.common_word_actions);
         dialogBuilder.setView(dialogBinding.getRoot());
 
         AlertDialog dialog = dialogBuilder.create();

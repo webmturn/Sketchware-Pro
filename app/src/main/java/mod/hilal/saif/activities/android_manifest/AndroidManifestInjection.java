@@ -315,7 +315,7 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("AndroidManifest Manager");
+        getSupportActionBar().setTitle(R.string.manifest_title);
         toolbar.setNavigationOnClickListener(view -> getOnBackPressedDispatcher().onBackPressed());
     }
 

@@ -776,11 +776,11 @@ public class ExtraMenuBean {
         mOptions.setSelectionMode(SelectionMode.BOTH);
         String path = null;
         if (menuName.equals("Assets")) {
-            mOptions.setTitle("Select an Asset");
+            mOptions.setTitle(Helper.getResString(R.string.menu_select_asset));
             path = String.format(ASSETS_PATH, sc_id);
             markedPath.add(0, path + ss.getArgValue().toString());
         } else if (menuName.equals("NativeLib")) {
-            mOptions.setTitle("Select a Native library");
+            mOptions.setTitle(Helper.getResString(R.string.menu_select_native_lib));
             path = String.format(NATIVE_PATH, sc_id);
             markedPath.add(0, path + ss.getArgValue().toString());
         }
