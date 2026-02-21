@@ -62,7 +62,7 @@ public class MoreblockImporterDialog extends MaterialAlertDialogBuilder {
             MoreBlockCollectionBean selectedBean = adapter.getSelectedItem();
 
             if (selectedBean == null) {
-                SketchwareUtil.toastError("Select a more block");
+                SketchwareUtil.toastError(Helper.getResString(R.string.error_select_more_block));
             } else {
                 callback.onSelected(selectedBean);
                 v.dismiss();

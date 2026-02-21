@@ -148,7 +148,7 @@ public class IconCreatorActivity extends BaseAppCompatActivity {
         iconPickerLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     if (result.getData() == null) {
-                        SketchwareUtil.toastError("Received invalid data");
+                        SketchwareUtil.toastError(Helper.getResString(R.string.error_received_invalid_data));
                         return;
                     }
                     Uri uri = result.getData().getData();
@@ -169,7 +169,7 @@ public class IconCreatorActivity extends BaseAppCompatActivity {
         croppedIconPickerLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     if (result.getData() == null) {
-                        SketchwareUtil.toastError("Received invalid data");
+                        SketchwareUtil.toastError(Helper.getResString(R.string.error_received_invalid_data));
                         return;
                     }
                     Bundle extras = result.getData().getExtras();
@@ -187,7 +187,7 @@ public class IconCreatorActivity extends BaseAppCompatActivity {
         texturePickerLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     if (result.getData() == null) {
-                        SketchwareUtil.toastError("Received invalid data");
+                        SketchwareUtil.toastError(Helper.getResString(R.string.error_received_invalid_data));
                         return;
                     }
                     Uri uri = result.getData().getData();

@@ -708,10 +708,10 @@ public class ProjectBuilder {
                         }
                     }
                 } else {
-                    SketchwareUtil.toastError("Invalid DEX file path of enabled Local library #" + i1, Toast.LENGTH_LONG);
+                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.error_invalid_dex_path), i1), Toast.LENGTH_LONG);
                 }
             } else {
-                SketchwareUtil.toastError("Invalid name of enabled Local library #" + i1, Toast.LENGTH_LONG);
+                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.error_invalid_lib_name), i1), Toast.LENGTH_LONG);
             }
         }
 

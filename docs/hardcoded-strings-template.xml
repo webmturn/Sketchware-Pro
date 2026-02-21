@@ -1,0 +1,835 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Sketchware Pro - Hardcoded Strings Template (v8.1) -->
+<!-- Total: 732 unique string entries -->
+<!-- Source: documentation tables (333) + XML layouts (318) + menus (63) + preferences (18) -->
+<resources>
+
+    <!-- ========== 对话框 (25条) ========== -->
+    <string name="dialog_title_filter_package">Filter by package name</string>
+    <string name="dialog_title_backup_options">Backup Options</string>
+    <string name="dialog_title_please_wait">Please wait</string>
+    <string name="dialog_msg_package_filter_hint">For multiple package names, separate them with a comma (,).</string>
+    <string name="dialog_msg_creating_backup">Creating backup...</string>
+    <string name="dialog_title_confirm_delete">Confirm Delete</string>
+    <string name="dialog_msg_delete_event_confirm">Click on Confirm to delete the selected Event.</string>
+    <string name="dialog_title_select_icon">Select an icon</string>
+    <string name="dialog_title_select_font_size">Select font size</string>
+    <string name="dialog_title_delete">Delete</string>
+    <string name="dialog_msg_delete_attr">Are you sure you want to delete %s?</string>
+    <string name="dialog_title_add_attribute">Add new attribute</string>
+    <string name="dialog_title_choose_attr">Choose an attributes</string>
+    <string name="dialog_title_choose_id">Choose an id</string>
+    <string name="dialog_title_actions">Actions</string>
+    <string name="dialog_title_attention">Attention</string>
+    <string name="dialog_title_rename">Rename</string>
+    <string name="dialog_title_create_new">Create new</string>
+    <string name="dialog_select_action">Select an action</string>
+    <string name="dialog_delete_folder">Delete folder?</string>
+    <string name="dialog_delete_file">Delete file?</string>
+    <string name="dialog_delete_confirm_message">Are you sure you want to delete this %s permanently? This cannot be undone.</string>
+    <string name="dialog_sign_apk_title">Sign APK with testkey</string>
+    <string name="dialog_file_exists">File exists</string>
+    <string name="dialog_file_exists_message">An APK named %s already exists at /sketchware/signed_apk/. Overwrite it?</string>
+
+    <!-- ========== 按钮 (23条) ========== -->
+    <string name="button_copy">Copy</string>
+    <string name="button_create_palette">Create new palette</string>
+    <string name="button_understood">Understood</string>
+    <string name="button_recycle_bin">Recycle bin</string>
+    <string name="button_delete_permanently">Delete permanently</string>
+    <string name="button_restore">Restore</string>
+    <string name="button_move">Move</string>
+    <string name="button_download">Download</string>
+    <string name="button_yes">Yes</string>
+    <string name="button_rename">Rename</string>
+    <string name="button_okay">Okay</string>
+    <string name="button_dont_copy">Don\'t copy</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="button_ok">OK</string>
+    <string name="button_delete">Delete</string>
+    <string name="button_save">Save</string>
+    <string name="button_no">No</string>
+    <string name="button_create">Create</string>
+    <string name="button_edit">Edit</string>
+    <string name="button_close">Close</string>
+    <string name="button_continue">Continue</string>
+    <string name="button_retry">Retry</string>
+    <string name="button_skip">Skip</string>
+
+    <!-- ========== 通用 (2条) ========== -->
+    <string name="common_word_warning">Warning</string>
+    <string name="common_word_please_wait">Please wait</string>
+
+    <!-- ========== 导出 (5条) ========== -->
+    <string name="export_dialog_title_important">Important note</string>
+    <string name="export_msg_aab_sign_required">The generated .aab file must be signed.\nCopy your keystore to /Internal storage/sketchware/keystore/release_key.jks and enter the alias\' password.</string>
+    <string name="export_msg_apk_sign_info">To sign an APK, you need a keystore. Use your already created one, and copy it to /Internal storage/sketchware/keystore/release_key.jks and enter the alias\'s password.</string>
+    <string name="export_title_aab_complete">Finished exporting AAB</string>
+    <string name="export_msg_aab_location">You can find the generated, signed AAB file at:\n/Internal storage/sketchware/signed_aab/%s</string>
+
+    <!-- ========== 备份 (4条) ========== -->
+    <string name="backup_title_options">Backup Options</string>
+    <string name="backup_title_select_restore">Select backups to restore</string>
+    <string name="backup_msg_creating">Creating backup…</string>
+    <string name="backup_msg_restoring">Restoring…</string>
+
+    <!-- ========== 库管理 (7条) ========== -->
+    <string name="library_title_exclude">Exclude built-in libraries</string>
+    <string name="library_title_select">Select built-in libraries</string>
+    <string name="library_msg_reset_confirm">Reset excluded built-in libraries? This action cannot be undone.</string>
+    <string name="library_remove_warning_msg">This library \"%s\" already used in your project, removing it may break your project. Do you want to continue removing it?</string>
+    <string name="library_download_confirm_title">Confirm Download</string>
+    <string name="library_appcompat_disabled_title">AppCompat is disabled!</string>
+    <string name="library_appcompat_disabled_msg">Please enable AppCompat first to use this feature</string>
+
+    <!-- ========== 块管理 (15条) ========== -->
+    <string name="blocks_title_import_to">Import Custom blocks to</string>
+    <string name="blocks_title_create_palette">Create a new palette</string>
+    <string name="blocks_button_create_palette">Create new palette</string>
+    <string name="blocks_recycle_bin">Recycle Bin</string>
+    <string name="blocks_manage_title">Manage Block</string>
+    <string name="blocks_delete_title">Delete block?</string>
+    <string name="blocks_delete_msg">Are you sure you want to delete this block?</string>
+    <string name="blocks_restore_title">Restore to</string>
+    <string name="blocks_move_title">Move to</string>
+    <string name="blocks_import_title">Import blocks</string>
+    <string name="blocks_type_title">Block type</string>
+    <string name="blocks_add_title">Add a new block</string>
+    <string name="blocks_insert_title">Insert block</string>
+    <string name="blocks_edit_title">Edit block</string>
+    <string name="blocks_config_title">Block configuration</string>
+
+    <!-- ========== logcat (4条) ========== -->
+    <string name="logcat_title_filter_package">Filter by package name</string>
+    <string name="logcat_msg_filter_hint">For multiple package names, separate them with a comma (,).</string>
+    <string name="logcat_filter_title">Filter by package name</string>
+    <string name="logcat_filter_msg">For multiple package names, separate them with a comma (,).</string>
+
+    <!-- ========== 错误消息 (46条) ========== -->
+    <string name="error_msg_crash_report">An error occurred while running Sketchware Pro. Do you want to report this error log so that we can fix it? No personal information will be included.</string>
+    <string name="error_crash_report_msg">An error occurred while running Sketchware Pro. Do you want to report this error log so that we can fix it? No personal information will be included.</string>
+    <string name="error_couldnt_get_prefix">Couldn\'t get %s</string>
+    <string name="error_parse_json_msg">Failed to parse %s from file %s. Fix by renaming old file to %s.bak? If not, no %s will be used.</string>
+    <string name="error_invalid_custom_event">Found invalid %s data type in Custom Event #%d</string>
+    <string name="error_null_custom_event">Found invalid (null) Custom Event at position %d</string>
+    <string name="error_loading_widgets">Error loading widgets: %s</string>
+    <string name="error_missing_widget_keys">Missing required keys for widget: %s</string>
+    <string name="error_invalid_widget_type">Invalid widget type: %s</string>
+    <string name="error_add_widget_failed">Failed to add widget: %s</string>
+    <string name="error_invalid_name">Invalid name!</string>
+    <string name="error_file_empty">The selected file is empty!</string>
+    <string name="error_invalid_file">Invalid file</string>
+    <string name="error_invalid_selector_file">Make sure you select a file that contains selector item(s).</string>
+    <string name="error_get_selector_failed">An error occurred while trying to get the selector</string>
+    <string name="error_nothing_to_export">Nothing to Export</string>
+    <string name="error_something_went_wrong">Something went wrong!</string>
+    <string name="error_invalid_variant">Invalid variant input</string>
+    <string name="error_invalid_hex_color">Please enter a valid HEX color</string>
+    <string name="error_array_name_empty">Array name Input is Empty</string>
+    <string name="error_array_type_not_selected">Array type not selected</string>
+    <string name="error_keystore_not_found">Keystore not found</string>
+    <string name="error_download_unavailable">Downloading projects is unavailable right now!</string>
+    <string name="error_required_fields_empty">Some required fields are empty!</string>
+    <string name="error_cannot_change_selector_name">You cannot change the name of this selector</string>
+    <string name="error_selector_name_required">Please type the selector\'s name</string>
+    <string name="error_selector_title_required">Please type the selector\'s title</string>
+    <string name="error_item_already_exists">An item with this name already exists</string>
+    <string name="error_circular_dependency">Circular dependency found in \"%s\"\nPlease resolve the issue before saving</string>
+    <string name="error_block_name_exists">Block name already in use</string>
+    <string name="error_invalid_name_data">Invalid name block data</string>
+    <string name="error_invalid_type_data">Invalid type block data</string>
+    <string name="error_invalid_typename_data">Invalid typeName block data</string>
+    <string name="error_invalid_spec_data">Invalid spec block data</string>
+    <string name="error_invalid_spec2_data">Invalid spec2 block data</string>
+    <string name="error_invalid_imports_data">Invalid imports block data</string>
+    <string name="error_invalid_color_data">Invalid color block data</string>
+    <string name="error_enter_dependency">Please enter a dependency</string>
+    <string name="error_invalid_dependency_format">Invalid dependency format</string>
+    <string name="error_version_not_available">Version not available</string>
+    <string name="error_dependencies_not_found">Dependencies not found</string>
+    <string name="error_invalid_scope">Invalid scope: %s</string>
+    <string name="error_invalid_packaging">Invalid packaging</string>
+    <string name="error_dexing_failed">Dexing failed: %s</string>
+    <string name="error_check_log">An error occurred. Check the log for more details.</string>
+    <string name="error_signing_failed">Signing failed: %s</string>
+
+    <!-- ========== 菜单XML (100条) ========== -->
+    <string name="menu_custom_activities">Custom Activities</string>
+    <string name="menu_undo">Undo</string>
+    <string name="menu_redo">Redo</string>
+    <string name="menu_save">Save</string>
+    <string name="menu_edit_appcompat">Edit AppCompat</string>
+    <string name="menu_reload_colors">Reload color schemes</string>
+    <string name="menu_layout_preview">Layout Preview</string>
+    <string name="menu_deprecated_title">Deprecated</string>
+    <string name="menu_deprecated_msg">This Block Menu was initially used to parse resource values, but was too I/O heavy and has been removed due to that. Please use the Code Editor instead.</string>
+    <string name="menu_about_team">About the team</string>
+    <string name="menu_changelog">Changelog</string>
+    <string name="menu_app_info">App information</string>
+    <string name="menu_create_keystore">Create keystore</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_apps">Apps</string>
+    <string name="menu_swassist">SwAssist</string>
+    <string name="menu_related_links">Related links</string>
+    <string name="menu_discord">Discord</string>
+    <string name="menu_telegram">Telegram</string>
+    <string name="menu_github">GitHub</string>
+    <string name="menu_word_wrap">Word wrap</string>
+    <string name="menu_pretty_print">Pretty print</string>
+    <string name="menu_find_replace">Find &amp; Replace</string>
+    <string name="menu_auto_complete">Auto complete</string>
+    <string name="menu_auto_complete_symbol">Auto complete symbol pair</string>
+    <string name="menu_show_source">Show Source Code</string>
+    <string name="menu_blocks_collection">Blocks collection</string>
+    <string name="menu_add_to_manifest">Add to AndroidManifest</string>
+    <string name="menu_edit_with">Edit with…</string>
+    <string name="menu_rename">Rename</string>
+    <string name="menu_remove">remove</string>
+    <string name="menu_auto_scroll">Auto scroll</string>
+    <string name="menu_filter_package">Filter by package name</string>
+    <string name="menu_export_logcat">Export Logcat</string>
+    <string name="menu_clear_logs">Clear all logs</string>
+    <string name="menu_select_language">Select language</string>
+    <string name="menu_select_theme">Select theme</string>
+    <string name="menu_block_selector_menu_import_block_selector_menus">Import block selector menus</string>
+    <string name="menu_block_selector_menu_export_all_block_selector_menus">Export all block selector menus</string>
+    <string name="menu_design_menu_design_drawer">Design Drawer</string>
+    <string name="menu_design_view_menu_undo">Undo</string>
+    <string name="menu_design_view_menu_redo">Redo</string>
+    <string name="menu_events_manager_menu_import_events">Import events</string>
+    <string name="menu_events_manager_menu_export_events">Export events</string>
+    <string name="menu_logic_menu_show_source_code">Show Source Code</string>
+    <string name="menu_logic_menu_undo">Undo</string>
+    <string name="menu_logic_menu_redo">Redo</string>
+    <string name="menu_logic_menu_blocks_collection">Blocks collection</string>
+    <string name="menu_main_drawer_menu_about_the_team">About the team</string>
+    <string name="menu_main_drawer_menu_changelog">Changelog</string>
+    <string name="menu_main_drawer_menu_app_information">App information</string>
+    <string name="menu_main_drawer_menu_create_keystore">Create keystore</string>
+    <string name="menu_main_drawer_menu_settings">Settings</string>
+    <string name="menu_main_drawer_menu_apps">Apps</string>
+    <string name="menu_main_drawer_menu_swassist">SwAssist</string>
+    <string name="menu_main_drawer_menu_related_links">Related links</string>
+    <string name="menu_main_drawer_menu_discord">Discord</string>
+    <string name="menu_main_drawer_menu_telegram">Telegram</string>
+    <string name="menu_main_drawer_menu_github">GitHub</string>
+    <string name="menu_main_menu_projects">Projects</string>
+    <string name="menu_main_menu_store">Store</string>
+    <string name="menu_manage_admob_menu_admob_help">Admob Help</string>
+    <string name="menu_manage_admob_menu_admob_configuration">Admob Configuration</string>
+    <string name="menu_manage_collection_menu_edit">edit</string>
+    <string name="menu_manage_collection_menu_remove">remove</string>
+    <string name="menu_manage_custom_attribute_menu_components_asd">Components ASD</string>
+    <string name="menu_manage_firebase_menu_settings">Settings</string>
+    <string name="menu_manage_font_menu_edit">edit</string>
+    <string name="menu_manage_font_menu_remove">remove</string>
+    <string name="menu_manage_font_menu_add">add</string>
+    <string name="menu_manage_screen_menu_edit">edit</string>
+    <string name="menu_manage_sound_menu_edit">edit</string>
+    <string name="menu_manage_sound_menu_remove">remove</string>
+    <string name="menu_manage_sound_menu_add">add</string>
+    <string name="menu_menu_code_editor_hs_undo">Undo</string>
+    <string name="menu_menu_code_editor_hs_redo">Redo</string>
+    <string name="menu_menu_code_editor_hs_paste">Paste</string>
+    <string name="menu_menu_code_editor_hs_word_wrap">Word wrap</string>
+    <string name="menu_menu_code_editor_hs_pretty_print">Pretty print</string>
+    <string name="menu_menu_code_editor_hs_find_amp_replace">Find &amp; Replace</string>
+    <string name="menu_menu_code_editor_hs_auto_complete">Auto complete</string>
+    <string name="menu_menu_code_editor_hs_auto_complete_symbol_pair">Auto complete symbol pair</string>
+    <string name="menu_menu_expanded_local_libraries_select_all">Select all</string>
+    <string name="menu_menu_expanded_local_libraries_delete_selected_local_libraries">Delete selected local libraries</string>
+    <string name="menu_menu_logcat_auto_scroll">Auto scroll</string>
+    <string name="menu_menu_logcat_filter_by_package_name">Filter by package name</string>
+    <string name="menu_menu_logcat_export_logcat">Export Logcat</string>
+    <string name="menu_menu_logcat_clear_all_logs">Clear all logs</string>
+    <string name="menu_moreblock_menu_create">Create</string>
+    <string name="menu_permission_manager_menu_reset">Reset</string>
+    <string name="menu_popup_menu_double_add_to_androidmanifest">Add to AndroidManifest</string>
+    <string name="menu_popup_menu_double_edit">Edit</string>
+    <string name="menu_popup_menu_double_edit_with">Edit with...</string>
+    <string name="menu_popup_menu_double_rename">Rename</string>
+    <string name="menu_popup_menu_double_delete">Delete</string>
+    <string name="menu_resources_editor_menu_save">Save</string>
+    <string name="menu_resources_editor_menu_open_in_editor">Open in editor</string>
+    <string name="menu_var_type_selector_menu_variables">Variables</string>
+    <string name="menu_var_type_selector_menu_views">Views</string>
+    <string name="menu_var_type_selector_menu_components">Components</string>
+
+    <!-- ========== 构建 (4条) ========== -->
+    <string name="build_error_missing_directory_title">Missing directory detected</string>
+    <string name="build_error_missing_directory_msg">A directory important for building is missing. Sketchware Pro can try creating %s if you\'d like to.</string>
+    <string name="build_error_missing_file_title">Missing file detected</string>
+    <string name="build_error_missing_file_msg">A file needed for building is missing. Put the correct file back to %s and try building again.</string>
+
+    <!-- ========== 设置 (24条) ========== -->
+    <string name="settings_title">App Settings</string>
+    <string name="settings_backup_directory_title">Backup directory</string>
+    <string name="settings_backup_directory_msg">Directory inside /Internal storage/, e.g. .sketchware/backups</string>
+    <string name="settings_backup_filename_title">Backup filename format</string>
+    <string name="settings_backup_filename_msg">This defines how SWB backup files get named.\nAvailable variables:\n - $projectName - Project name\n - $versionCode - App version code\n - $versionName - App version name\n - $pkgName - Package name</string>
+    <string name="settings_category_managers">Managers</string>
+    <string name="settings_category_general">General</string>
+    <string name="settings_block_manager">Block manager</string>
+    <string name="settings_block_manager_desc">Manage your own blocks to use in Logic Editor</string>
+    <string name="settings_block_selector_manager">Block selector menu manager</string>
+    <string name="settings_block_selector_manager_desc">Manage your own block selector menus</string>
+    <string name="settings_component_manager">Component manager</string>
+    <string name="settings_component_manager_desc">Manage your own components</string>
+    <string name="settings_event_manager">Event manager</string>
+    <string name="settings_event_manager_desc">Manage your own events</string>
+    <string name="settings_local_library_manager">Local library manager</string>
+    <string name="settings_local_library_manager_desc">Manage and download local libraries</string>
+    <string name="settings_app_settings">App settings</string>
+    <string name="settings_app_settings_desc">Change general app settings</string>
+    <string name="settings_open_working_dir">Open working directory</string>
+    <string name="settings_open_working_dir_desc">Open Sketchware Pro\'s directory and edit files in it</string>
+    <string name="settings_sign_apk">Sign an APK file with testkey</string>
+    <string name="settings_sign_apk_desc">Sign an already existing APK file with testkey and signature schemes up to V4</string>
+    <string name="settings_system_settings_desc">Auto-save and vibrations</string>
+
+    <!-- ========== 文件选择器 (9条) ========== -->
+    <string name="file_picker_select_json">Select a JSON file</string>
+    <string name="file_picker_select_txt">Select a .txt file</string>
+    <string name="file_picker_select_json_selector">Select .json selector file</string>
+    <string name="file_picker_select_json_component">Select .json selector file</string>
+    <string name="file_picker_select_asset">Select an Asset</string>
+    <string name="file_picker_select_native_lib">Select a Native library</string>
+    <string name="file_picker_select_file">Select a file</string>
+    <string name="file_picker_select_folder">Select a folder</string>
+    <string name="file_picker_select_entry">Select an entry to modify</string>
+
+    <!-- ========== keystore (1条) ========== -->
+    <string name="keystore_export_path_prefix">Export path: </string>
+
+    <!-- ========== compile (2条) ========== -->
+    <string name="compile_log_title_last">Last compile log</string>
+    <string name="compile_log_title">Compile log</string>
+
+    <!-- ========== view (2条) ========== -->
+    <string name="view_title_create_new">Create new</string>
+    <string name="view_title_edit_prefix">Edit %s</string>
+
+    <!-- ========== firebase (1条) ========== -->
+    <string name="firebase_select_json_title">Select your google-services.json</string>
+
+    <!-- ========== googlemap (1条) ========== -->
+    <string name="googlemap_settings_title">GoogleMap Settings</string>
+
+    <!-- ========== 项目 (9条) ========== -->
+    <string name="project_settings_title">Project Settings</string>
+    <string name="project_size_prefix">Size: %s</string>
+    <string name="project_released_prefix">Released: %s</string>
+    <string name="project_options_settings">Project settings</string>
+    <string name="project_backup">Backup project</string>
+    <string name="project_export_sign">Export/Sign</string>
+    <string name="project_change_settings">Change project settings</string>
+    <string name="project_configuration">Project configuration</string>
+    <string name="project_delete">Delete project</string>
+
+    <!-- ========== 事件管理 (9条) ========== -->
+    <string name="events_new_listener">New Listener</string>
+    <string name="events_edit_listener">Edit Listener</string>
+    <string name="events_delete_listener_title">Delete listener</string>
+    <string name="events_delete_confirm_msg">Are you sure you want to delete this item?</string>
+    <string name="events_details_title">Event Details</string>
+    <string name="events_delete_event_msg">Delete this event?</string>
+    <string name="events_properties_title">Event Properties</string>
+    <string name="events_new_activity_title">New Activity Event</string>
+    <string name="events_new_title">New Event</string>
+
+    <!-- ========== selector (3条) ========== -->
+    <string name="selector_new_title">New selector</string>
+    <string name="selector_edit_title">Edit selector</string>
+    <string name="selector_new_item_title">New Selector Item</string>
+
+    <!-- ========== array (3条) ========== -->
+    <string name="array_title_create">Create new array</string>
+    <string name="array_title_edit">Edit array</string>
+    <string name="array_select_type_title">Select Array Type</string>
+
+    <!-- ========== item (2条) ========== -->
+    <string name="item_title_create">Create new item</string>
+    <string name="item_title_edit">Edit item</string>
+
+    <!-- ========== color (2条) ========== -->
+    <string name="color_title_create">Create new color</string>
+    <string name="color_title_edit">Edit color</string>
+
+    <!-- ========== proguard (2条) ========== -->
+    <string name="proguard_select_libraries_title">Select Local libraries</string>
+    <string name="proguard_manager_title">Code Shrinking Manager</string>
+
+    <!-- ========== nativelib (2条) ========== -->
+    <string name="nativelib_manager_title">Native Library Manager</string>
+    <string name="nativelib_import_title">Import Native Libraries</string>
+
+    <!-- ========== folder (2条) ========== -->
+    <string name="folder_create_title">Create a new folder</string>
+    <string name="folder_create_msg">Enter the name of the new folder</string>
+
+    <!-- ========== java (2条) ========== -->
+    <string name="java_manager_title">Java/Kotlin Manager</string>
+    <string name="java_create_msg">File extension will be added automatically based on the file type you select</string>
+
+    <!-- ========== 编辑器 (2条) ========== -->
+    <string name="editor_select_theme_title">Select Theme</string>
+    <string name="editor_select_language_title">Select Language</string>
+
+    <!-- ========== widgets (1条) ========== -->
+    <string name="widgets_select_json_title">Select .json widgets files</string>
+
+    <!-- ========== 资源管理 (6条) ========== -->
+    <string name="resource_manager_title">Resource Manager</string>
+    <string name="resource_create_folder_title">Create a new folder</string>
+    <string name="resource_create_file_title">Create a new file</string>
+    <string name="resource_create_msg">Enter a name for the new %s</string>
+    <string name="resource_select_files_title">Select resource files</string>
+    <string name="resource_delete_msg">Are you sure you want to delete this %s? This action cannot be undone.</string>
+
+    <!-- ========== permission (4条) ========== -->
+    <string name="permission_reset_title">Reset permissions</string>
+    <string name="permission_reset_msg">Are you sure you want to reset all permissions?</string>
+    <string name="permission_storage_android11_title">Android 11 storage access</string>
+    <string name="permission_storage_android11_msg">Starting with Android 11, Sketchware Pro needs a new permission to avoid taking ages to build projects. Don\'t worry, we can\'t do more to storage than with current granted permissions.</string>
+
+    <!-- ========== changelog (1条) ========== -->
+    <string name="changelog_v7_title">Major changes in v7.0.0</string>
+
+    <!-- ========== Toast消息 (12条) ========== -->
+    <string name="toast_exported_in">Exported in %s</string>
+    <string name="toast_imported">Imported!</string>
+    <string name="toast_events_imported">Successfully imported events</string>
+    <string name="toast_event_exported">Successfully exported event to:\n/Internal storage/.sketchware/data/system/export/events</string>
+    <string name="toast_saved">Saved</string>
+    <string name="toast_added">Added</string>
+    <string name="toast_no_changes">No changes to save</string>
+    <string name="toast_logcat_exported">Logcat exported successfully: %s</string>
+    <string name="toast_enable_d8_reminder">Don\'t forget to enable D8 to be able to compile Java 8+ code</string>
+    <string name="toast_no_http_legacy_warning">Note that this option may cause issues if RequestNetwork component is used</string>
+    <string name="toast_select_apk_file">Please select an APK file to sign</string>
+    <string name="toast_apk_signed_success">Successfully saved signed APK to: %s</string>
+
+    <!-- ========== appcompat (9条) ========== -->
+    <string name="appcompat_no_options_title">No options are found.</string>
+    <string name="appcompat_no_options_msg">No AppCompat options are currently available in this activity.</string>
+    <string name="appcompat_disabled_title">AppCompat is disabled.</string>
+    <string name="appcompat_disabled_msg">Please enable AppCompat in the Library Manager to use it.</string>
+    <string name="appcompat_not_available_title">Not available.</string>
+    <string name="appcompat_not_available_msg">You\'re not currently in the Activity layout.</string>
+    <string name="appcompat_reset_confirm_msg">Are you sure you want to reset appcompat attributes for %s?</string>
+    <string name="appcompat_add_attr">Add new attribute</string>
+    <string name="appcompat_edit_attr">Edit attribute</string>
+
+    <!-- ========== XML布局硬编码 (320条) ========== -->
+    <string name="xml_editor_title">XML Editor</string>
+    <string name="xml_editor_appcompat_note">Use AppCompat Manager to modify attributes for CoordinatorLayout, Toolbar, and other appcompat layout/widget.</string>
+    <string name="xml_activity_blocks_manager_text_recycle_bin">Recycle bin</string>
+    <string name="xml_activity_blocks_manager_text_palettes">Palettes</string>
+    <string name="xml_activity_blocks_manager_creator_text_properties">Properties</string>
+    <string name="xml_activity_blocks_manager_creator_hint_name">Name</string>
+    <string name="xml_activity_blocks_manager_creator_hint_type">Type</string>
+    <string name="xml_activity_blocks_manager_creator_hint_type_name">Type name</string>
+    <string name="xml_activity_blocks_manager_creator_text_design">Design</string>
+    <string name="xml_activity_blocks_manager_creator_hint_color">Color</string>
+    <string name="xml_activity_blocks_manager_creator_text_parameters">Parameters</string>
+    <string name="xml_activity_blocks_manager_creator_hint_spec">Spec</string>
+    <string name="xml_activity_blocks_manager_creator_hint_spec2">Spec2</string>
+    <string name="xml_activity_blocks_manager_creator_text_block_preview">Block Preview</string>
+    <string name="xml_activity_blocks_manager_creator_text_block_import_eg_androidvi">Block import (e.g., android.view.View)</string>
+    <string name="xml_activity_blocks_manager_creator_hint_enter_imports_line_by_lin">Enter imports line by line</string>
+    <string name="xml_activity_blocks_manager_creator_text_block_embedded_code">Block embedded code</string>
+    <string name="xml_activity_blocks_manager_creator_hint_code">Code</string>
+    <string name="xml_activity_icon_creator_text_badge">badge</string>
+    <string name="xml_activity_icon_creator_text_background_type">Background Type</string>
+    <string name="xml_activity_icon_creator_text_color">Color</string>
+    <string name="xml_activity_icon_creator_text_gradient">Gradient</string>
+    <string name="xml_activity_icon_creator_text_gradient_direction">Gradient Direction</string>
+    <string name="xml_activity_icon_creator_text_effects">Effects</string>
+    <string name="xml_activity_icon_creator_text_score_effect">Score effect</string>
+    <string name="xml_activity_icon_creator_text_textures">Textures</string>
+    <string name="xml_activity_icon_creator_text_opacity">Opacity</string>
+    <string name="xml_activity_icon_creator_text_scale">Scale</string>
+    <string name="xml_activity_icon_creator_text_rotation">Rotation</string>
+    <string name="xml_activity_icon_creator_text_corners">Corners</string>
+    <string name="xml_activity_icon_creator_text_image">Image</string>
+    <string name="xml_activity_icon_creator_text_size">Size</string>
+    <string name="xml_activity_icon_creator_text_vertical_position">Vertical position</string>
+    <string name="xml_activity_icon_creator_text_horizontal_position">horizontal position</string>
+    <string name="xml_activity_icon_creator_hint_text">Text</string>
+    <string name="xml_activity_icon_creator_text_other">Other</string>
+    <string name="xml_activity_icon_creator_hint_badge_text">Badge text</string>
+    <string name="xml_activity_icon_creator_text_badge_background_color">Badge background color</string>
+    <string name="xml_activity_icon_creator_text_adaptive_icon">Adaptive Icon</string>
+    <string name="xml_activity_logcatreader_hint_search_log">Search log</string>
+    <string name="xml_activity_logcatreader_text_logcat_hasnt_captured_any">Logcat hasn't captured anything yet</string>
+    <string name="xml_activity_logcatreader_text_keep_this_screen_open_the">Keep this screen open then run your app</string>
+    <string name="xml_add_custom_list_hint_type_eg_arraylistltdatagt">Type, e.g. ArrayList&lt;Data&gt;</string>
+    <string name="xml_add_custom_list_hint_name_eg_datalist">Name, e.g. dataList</string>
+    <string name="xml_add_custom_variable_hint_private_public_or_public_">private, public or public static (optional)</string>
+    <string name="xml_add_custom_variable_hint_type_eg_file">Type, e.g. File</string>
+    <string name="xml_add_custom_variable_hint_name_eg_file">Name, e.g. file</string>
+    <string name="xml_add_custom_variable_hint_initializer_eg_new_file_o">Initializer, e.g. new File() (optional)</string>
+    <string name="xml_android_manifest_injection_text_activities">Activities</string>
+    <string name="xml_arrays_editor_add_hint_array_name">Array name</string>
+    <string name="xml_arrays_editor_add_hint_array_type">Array type</string>
+    <string name="xml_arrays_editor_add_hint_array_header_value_option">Array header value ( optional )</string>
+    <string name="xml_arrays_editor_add_attr_hint_enter_item_name">Enter Item Name</string>
+    <string name="xml_arrays_editor_add_attr_hint_enter_item_value">Enter Item Value</string>
+    <string name="xml_block_customview_text_application">Application</string>
+    <string name="xml_bottom_sheet_project_options_text_project_settings">Project settings</string>
+    <string name="xml_bottom_sheet_project_options_text_pin_project">Pin project</string>
+    <string name="xml_bottom_sheet_project_options_text_backup_project">Backup project</string>
+    <string name="xml_bottom_sheet_project_options_text_exportsign">Export/Sign</string>
+    <string name="xml_bottom_sheet_project_options_text_change_project_settings">Change project settings</string>
+    <string name="xml_bottom_sheet_project_options_text_project_configuration">Project configuration</string>
+    <string name="xml_bottom_sheet_project_options_text_delete_project">Delete project</string>
+    <string name="xml_color_editor_add_hint_color_name">Color name</string>
+    <string name="xml_color_editor_add_hint_color_value">Color value</string>
+    <string name="xml_color_editor_add_hint_string_header_value_optio">String header value ( optional )</string>
+    <string name="xml_color_picker_text_pick_your_color">Pick your color</string>
+    <string name="xml_color_picker_text_either_enter_a_hex_color_">Either enter a hex color code or pick a color from the list below.</string>
+    <string name="xml_color_picker_text_new_color">New color</string>
+    <string name="xml_color_picker_custom_attr_hint_entre_your_custom_attr">Entre your custom attr</string>
+    <string name="xml_color_picker_custom_attr_text_color_preview_">Color Preview :</string>
+    <string name="xml_compile_log_text_awesome_no_bugs_to_fix">Awesome, no bugs to fix!</string>
+    <string name="xml_compile_log_text_lets_continue_working_on_">Let's continue working on the project</string>
+    <string name="xml_custom_dialog_attribute_hint_res">res</string>
+    <string name="xml_custom_dialog_attribute_hint_attr">attr</string>
+    <string name="xml_custom_dialog_attribute_hint_value">value</string>
+    <string name="xml_design_text_main">main</string>
+    <string name="xml_design_text_run">Run</string>
+    <string name="xml_dialog_add_custom_activity_hint_activity_name">Activity name</string>
+    <string name="xml_dialog_add_new_listener_hint_name">Name</string>
+    <string name="xml_dialog_add_new_listener_hint_custom_import">Custom import</string>
+    <string name="xml_dialog_add_new_listener_hint_code_variable_name">Code (### => variable name)</string>
+    <string name="xml_dialog_add_new_listener_text_independent_classmethod">Independent class/method</string>
+    <string name="xml_dialog_advanced_version_control_hint_version_code">Version code</string>
+    <string name="xml_dialog_advanced_version_control_hint_version_name">Version name</string>
+    <string name="xml_dialog_advanced_version_control_hint_version_name_extra">Version name extra</string>
+    <string name="xml_dialog_app_signatures_text_textview">TextView</string>
+    <string name="xml_dialog_block_configuration_hint_json_file_with_palettes">JSON file with palettes</string>
+    <string name="xml_dialog_block_configuration_hint_json_file_with_blocks">JSON file with blocks</string>
+    <string name="xml_dialog_create_new_file_layout_hint_enter_a_name">Enter a name</string>
+    <string name="xml_dialog_create_new_file_layout_text_folder">Folder</string>
+    <string name="xml_dialog_create_new_file_layout_text_class">Class</string>
+    <string name="xml_dialog_create_new_file_layout_text_activity">Activity</string>
+    <string name="xml_dialog_create_new_file_layout_text_file">File</string>
+    <string name="xml_dialog_create_new_file_layout_text_java_class">Java Class</string>
+    <string name="xml_dialog_create_new_file_layout_text_java_activity">Java Activity</string>
+    <string name="xml_dialog_create_new_file_layout_text_kotlin_class">Kotlin Class</string>
+    <string name="xml_dialog_create_new_file_layout_text_kotlin_activity">Kotlin Activity</string>
+    <string name="xml_dialog_filter_icons_layout_text_style">Style</string>
+    <string name="xml_dialog_filter_icons_layout_text_outlined">Outlined</string>
+    <string name="xml_dialog_filter_icons_layout_text_baseline">Baseline</string>
+    <string name="xml_dialog_filter_icons_layout_text_round">Round</string>
+    <string name="xml_dialog_filter_icons_layout_text_sharp">Sharp</string>
+    <string name="xml_dialog_filter_icons_layout_text_two_tone">Two Tone</string>
+    <string name="xml_dialog_filter_icons_layout_text_selected_color">Selected color</string>
+    <string name="xml_dialog_filter_icons_layout_text_ffffff">#FFFFFF</string>
+    <string name="xml_dialog_input_layout_hint_enter_the_new_name">Enter the new name</string>
+    <string name="xml_dialog_input_layout_text_rename_occurrences_in_fil">Rename occurrences in file</string>
+    <string name="xml_dialog_keystore_credentials_hint_signing_mode">Signing mode</string>
+    <string name="xml_dialog_keystore_credentials_hint_keystore_alias">Keystore alias</string>
+    <string name="xml_dialog_keystore_credentials_hint_alias_password">Alias password</string>
+    <string name="xml_dialog_keystore_credentials_hint_signing_algorithm">Signing algorithm</string>
+    <string name="xml_dialog_palette_hint_palette_name">Palette name</string>
+    <string name="xml_dialog_palette_hint_color_hex_code">Color hex code</string>
+    <string name="xml_dialog_palette_text_">\#</string>
+    <string name="xml_dialog_project_settings_hint_minimum_sdk_version">Minimum SDK version</string>
+    <string name="xml_dialog_project_settings_hint_target_sdk_version">Target SDK version</string>
+    <string name="xml_dialog_project_settings_hint_application_class_name">Application class name</string>
+    <string name="xml_dialog_project_settings_text_enable_viewbinding">Enable ViewBinding</string>
+    <string name="xml_dialog_project_settings_text_this_will_enable_viewbind">This will enable ViewBinding in your project. Note: Manual changes may be required for widgets used in ASD block</string>
+    <string name="xml_dialog_project_settings_text_remove_old_deprecated_met">Remove old deprecated methods</string>
+    <string name="xml_dialog_project_settings_text_this_will_remove_methods_">This will remove methods in files, like showMessage, getDip, etc.</string>
+    <string name="xml_dialog_project_settings_text_use_materialcomponents">Use MaterialComponents</string>
+    <string name="xml_dialog_project_settings_text_this_will_replace_eg_butt">This will replace e.g. Button with MaterialButton, be careful!</string>
+    <string name="xml_dialog_save_icon_hint_enter_icon_name">Enter icon name</string>
+    <string name="xml_dialog_save_icon_text_this_icon_is_available_un">This icon is available under the Apache Licence Version 2.0. Press to read more.</string>
+    <string name="xml_dialog_select_apk_to_sign_text_selected_apk">Selected APK</string>
+    <string name="xml_dialog_select_apk_to_sign_text_apk_path_will_appear_here">APK path will appear here</string>
+    <string name="xml_dialog_select_libraries_hint_search_for_libraries">Search for libraries</string>
+    <string name="xml_dialog_selector_actions_text_edit">Edit</string>
+    <string name="xml_dialog_selector_actions_text_export">Export</string>
+    <string name="xml_dialog_selector_actions_text_delete">Delete</string>
+    <string name="xml_export_project_text_export_aab_android_app_bu">Export AAB (Android App Bundle)</string>
+    <string name="xml_export_project_text_export_aab">Export AAB</string>
+    <string name="xml_file_selector_popup_select_xml_text_create_new_view">Create new view</string>
+    <string name="xml_fr_logic_list_item_addevent_text__">: </string>
+    <string name="xml_fragment_events_manager_text_new_listener">New Listener</string>
+    <string name="xml_fragment_events_manager_creator_hint_event_name">Event Name</string>
+    <string name="xml_fragment_events_manager_creator_hint_widgetcomponent_name">Widget/Component name</string>
+    <string name="xml_fragment_events_manager_creator_hint_icon">Icon</string>
+    <string name="xml_fragment_events_manager_creator_hint_description">Description</string>
+    <string name="xml_fragment_events_manager_creator_hint_parameters">Parameters</string>
+    <string name="xml_fragment_events_manager_creator_hint_spec_variable_name">Spec  (### => Variable name)</string>
+    <string name="xml_fragment_events_manager_creator_hint_event_code_variable_name">Event code (### ==> Variable name)</string>
+    <string name="xml_fragment_events_manager_creator_text_listener_properties_">Listener properties :</string>
+    <string name="xml_fragment_events_manager_creator_hint_listener_code_variable_na">Listener Code (### ==> variable name)</string>
+    <string name="xml_fragment_events_manager_creator_hint_custom_import">Custom Import</string>
+    <string name="xml_fragment_events_manager_details_text_no_events">No events</string>
+    <string name="xml_fragment_events_manager_details_text_start_by_creating_a_new_o">Start by creating a new one</string>
+    <string name="xml_fragment_events_manager_details_text_new_event">New Event</string>
+    <string name="xml_fragment_projects_store_text_this_is_still_a_basic_imp">This is still a basic implementation of the projects store. We're actively working on improving it. Stay tuned!</string>
+    <string name="xml_fragment_projects_store_text_editors_choice">Editor\'s Choice</string>
+    <string name="xml_fragment_projects_store_text_new_amp_updated">New &amp; Updated</string>
+    <string name="xml_fragment_projects_store_text_most_downloaded_projects">Most downloaded projects</string>
+    <string name="xml_fragment_settings_appearance_text_system_default">System default</string>
+    <string name="xml_fragment_settings_appearance_text_follow_system_theme_setti">Follow system theme settings</string>
+    <string name="xml_fragment_settings_appearance_text_light">Light</string>
+    <string name="xml_fragment_settings_appearance_text_dark">Dark</string>
+    <string name="xml_fragment_store_project_preview_text_screenshots">Screenshots</string>
+    <string name="xml_fragment_store_project_preview_text_about_this_project">About this project</string>
+    <string name="xml_fragment_store_project_preview_text_comments">Comments</string>
+    <string name="xml_fragment_store_project_preview_text_download">Download</string>
+    <string name="xml_fragment_store_project_preview_comments_text_comments">Comments</string>
+    <string name="xml_fragment_stringfog_manager_text_stringfog_manager">StringFog Manager</string>
+    <string name="xml_fragment_stringfog_manager_text_activated">Activated</string>
+    <string name="xml_fragment_stringfog_manager_text_activating_stringfog_will">Activating StringFog will encrypt the strings in compilation time, which will make your app more difficult to reverse-engineer.</string>
+    <string name="xml_import_icon_text_filter">Filter</string>
+    <string name="xml_import_icon_list_item_text_title">Title</string>
+    <string name="xml_library_downloader_dialog_text_download_a_dependency">Download a dependency</string>
+    <string name="xml_library_downloader_dialog_hint_enter_a_dependency">Enter a dependency</string>
+    <string name="xml_logic_editor_drawer_text_settings">Settings</string>
+    <string name="xml_main_text_search_for_projects">Search for projects...</string>
+    <string name="xml_main_text_new_project">New project</string>
+    <string name="xml_make_block_layout_text_use_moreblocknametypetype">use (moreblockName[type|typeName] or\nmoreblockName[type|typeName|typeCode]) for custom moreblock type(S)</string>
+    <string name="xml_make_block_layout_hint_block_name">Block name</string>
+    <string name="xml_make_block_layout_text_select_moreblock_type">Select Moreblock type</string>
+    <string name="xml_make_block_layout_text_void">Void</string>
+    <string name="xml_make_block_layout_text_string">String</string>
+    <string name="xml_make_block_layout_text_number">Number</string>
+    <string name="xml_make_block_layout_text_boolean">Boolean</string>
+    <string name="xml_make_block_layout_text_map">Map</string>
+    <string name="xml_make_block_layout_text_list_string">List String</string>
+    <string name="xml_make_block_layout_text_list_map">List Map</string>
+    <string name="xml_make_block_layout_text_view">View</string>
+    <string name="xml_make_block_layout_text_add_variable">Add Variable</string>
+    <string name="xml_make_block_layout_hint_variable_name">Variable name</string>
+    <string name="xml_make_block_layout_hint_label_text">Label text</string>
+    <string name="xml_make_block_layout_text_custom_parameter">Custom Parameter</string>
+    <string name="xml_make_block_layout_hint_parameter">Parameter</string>
+    <string name="xml_manage_font_add_text_font_preview">Font preview</string>
+    <string name="xml_manage_font_add_text_this_is_how_your_font_loo">This is how your font looks like.</string>
+    <string name="xml_manage_font_add_hint_font_name">Font name</string>
+    <string name="xml_manage_font_add_text_select">Select</string>
+    <string name="xml_manage_font_add_text_clear">Clear</string>
+    <string name="xml_manage_font_add_text_add_to_my_collection">Add to my collection</string>
+    <string name="xml_manage_font_import_text__"> / </string>
+    <string name="xml_manage_image_import_text__"> / </string>
+    <string name="xml_manage_library_admob_app_id_text_edit">EDIT</string>
+    <string name="xml_manage_library_admob_listing_text_no_ad_units_to_display">No Ad Units to display</string>
+    <string name="xml_manage_library_admob_preview_text_rewarded_ad">Rewarded Ad</string>
+    <string name="xml_manage_library_admob_preview_text_ad_name_">Ad Name : </string>
+    <string name="xml_manage_library_admob_preview_text_ad_unit_id_">Ad Unit ID : </string>
+    <string name="xml_manage_library_admob_set_unit_text_edit">EDIT</string>
+    <string name="xml_manage_library_admob_set_unit_text_rewarded_ad">Rewarded Ad</string>
+    <string name="xml_manage_library_exclude_builtin_libraries_text_no_excluded_builtin_libra">No excluded built-in libraries found</string>
+    <string name="xml_manage_library_exclude_builtin_libraries_text_enable_this_feature_if_di">Enable this feature if disabled, and tap a floating action button to select and exclude built-in library.</string>
+    <string name="xml_manage_library_exclude_builtin_libraries_text_excluded_builtin_librarie">Excluded built-in libraries</string>
+    <string name="xml_manage_library_exclude_builtin_libraries_text_this_might_break_your_pro">This might break your project if you don't know what you're doing!</string>
+    <string name="xml_manage_library_exclude_builtin_libraries_text_exclude_library">Exclude library</string>
+    <string name="xml_manage_library_manage_admob_text_rewarded_ad">Rewarded Ad</string>
+    <string name="xml_manage_library_manage_firebase_text_import_from_googleservice">Import from google-services.json</string>
+    <string name="xml_manage_library_material3_text_enable_material3">Enable Material3</string>
+    <string name="xml_manage_library_material3_text_material3_theme_preferenc">Material3 Theme Preference :</string>
+    <string name="xml_manage_library_material3_text_daynight">DayNight</string>
+    <string name="xml_manage_library_material3_text_light">Light</string>
+    <string name="xml_manage_library_material3_text_dark">Dark</string>
+    <string name="xml_manage_library_material3_text_enable_dynamic_colors">Enable Dynamic Colors</string>
+    <string name="xml_manage_locallibraries_hint_search_for_libraries">Search for libraries</string>
+    <string name="xml_manage_permission_hint_search_for_permissions">Search for permissions</string>
+    <string name="xml_manage_permission_text_scroll_to_the_top">Scroll to the top</string>
+    <string name="xml_manage_proguard_text_activated">Activated</string>
+    <string name="xml_manage_proguard_text_full_mode">Full Mode</string>
+    <string name="xml_manage_screen_activity_add_temp_hint_enter_name">Enter name</string>
+    <string name="xml_manage_screen_activity_add_temp_text_important_note">Important note</string>
+    <string name="xml_manage_screen_activity_add_temp_text_type">Type</string>
+    <string name="xml_manage_screen_activity_add_temp_text_activity">Activity</string>
+    <string name="xml_manage_screen_activity_add_temp_text_fragment">Fragment</string>
+    <string name="xml_manage_screen_activity_add_temp_text_dialogfragment">DialogFragment</string>
+    <string name="xml_manage_screen_activity_add_temp_text_bottomsheetdialogfragment">BottomSheetDialogFragment</string>
+    <string name="xml_manage_screen_activity_add_temp_text_screen_orientation">Screen orientation</string>
+    <string name="xml_manage_screen_activity_add_temp_text_portrait">Portrait</string>
+    <string name="xml_manage_screen_activity_add_temp_text_landscape">Landscape</string>
+    <string name="xml_manage_screen_activity_add_temp_text_both">Both</string>
+    <string name="xml_manage_screen_activity_add_temp_text_keyboard_settings">Keyboard settings</string>
+    <string name="xml_manage_screen_activity_add_temp_text_unspecified">Unspecified</string>
+    <string name="xml_manage_screen_activity_add_temp_text_visible">Visible</string>
+    <string name="xml_manage_screen_activity_add_temp_text_hidden">Hidden</string>
+    <string name="xml_manage_screen_activity_add_temp_text_cancel">Cancel</string>
+    <string name="xml_manage_screen_activity_add_temp_text_save">Save</string>
+    <string name="xml_manage_screen_custom_view_add_text_custom_view_can_be_used_t">Custom View can be used to change the way items are displayed inside the ListView or the Spinner</string>
+    <string name="xml_manage_sound_add_text_add_sound">Add Sound</string>
+    <string name="xml_manage_sound_add_hint_enter_sound_name">Enter sound name</string>
+    <string name="xml_manage_sound_add_text_add_to_my_collection">Add to my collection</string>
+    <string name="xml_manage_sound_import_text__"> / </string>
+    <string name="xml_manage_xml_command_add_hint_xml_namewith_xml">XML name(with .xml)</string>
+    <string name="xml_manage_xml_command_add_hint_reference">Reference</string>
+    <string name="xml_manage_xml_command_add_hint_select_command">Select command</string>
+    <string name="xml_manage_xml_command_add_hint_distance">Distance</string>
+    <string name="xml_manage_xml_command_add_hint_frontend">Frontend</string>
+    <string name="xml_manage_xml_command_add_hint_backend">Backend</string>
+    <string name="xml_manage_xml_command_add_hint_input_code">Input code</string>
+    <string name="xml_menu_activity_text_title">Title</string>
+    <string name="xml_menu_activity_text_new_menu_">New menu: </string>
+    <string name="xml_menu_activity_hint_name">Name</string>
+    <string name="xml_menu_activity_hint_title">Title</string>
+    <string name="xml_menu_activity_text_cancel">cancel</string>
+    <string name="xml_menu_activity_text_save">save</string>
+    <string name="xml_menu_activity_hint_value">Value</string>
+    <string name="xml_myproject_setting_text_version_code">Version code</string>
+    <string name="xml_myproject_setting_text_version_name">Version name</string>
+    <string name="xml_myprojects_text_projects">Projects</string>
+    <string name="xml_myprojects_item_special_text_get_your_projects_in_a_co">Get your projects in a couple of clicks</string>
+    <string name="xml_palettes_search_dialog_hint_search">Search...</string>
+    <string name="xml_project_config_layout_text_build_settings">Build Settings</string>
+    <string name="xml_project_config_layout_hint_custom_androidjar">Custom android.jar</string>
+    <string name="xml_project_config_layout_hint_classpath_separated_by_">Classpath 'separated by :'</string>
+    <string name="xml_project_config_layout_text_dexer">Dexer</string>
+    <string name="xml_project_config_layout_text_java_version">Java version</string>
+    <string name="xml_project_config_layout_text_hide_warnings_in_error_lo">Hide warnings in error log</string>
+    <string name="xml_project_config_layout_text_dont_include_httplegacy28">Don't include http-legacy-28.dex</string>
+    <string name="xml_project_config_layout_text_enable_debug_logcat_logs_">Enable debug logcat logs viewable in Logcat Reader. Not enabled in exported AABs/APKs.</string>
+    <string name="xml_property_popup_input_indent_hint_enter_padding_value">Enter padding value</string>
+    <string name="xml_property_popup_input_indent_text_dp">dp</string>
+    <string name="xml_property_popup_input_indent_hint_left">left</string>
+    <string name="xml_property_popup_input_indent_hint_right">right</string>
+    <string name="xml_property_popup_input_indent_hint_top">top</string>
+    <string name="xml_property_popup_input_indent_hint_bottom">bottom</string>
+    <string name="xml_property_popup_input_indent_text_padding_on_all_sides">Padding on all sides</string>
+    <string name="xml_property_popup_input_size_hint_enter_divider_height_valu">Enter divider height value</string>
+    <string name="xml_property_popup_input_size_text_dp">dp</string>
+    <string name="xml_property_popup_measurement_text_matchparent">match_parent</string>
+    <string name="xml_property_popup_measurement_text_wrapcontent">wrap_content</string>
+    <string name="xml_property_popup_measurement_text_custom_value">Custom value</string>
+    <string name="xml_property_popup_measurement_hint_enter_value">Enter value</string>
+    <string name="xml_property_popup_measurement_text_dp">dp</string>
+    <string name="xml_property_popup_parent_attr_text_parent_attributes">Parent attributes</string>
+    <string name="xml_property_popup_selector_gravity_text_left">left</string>
+    <string name="xml_property_popup_selector_gravity_text_right">right</string>
+    <string name="xml_property_popup_selector_gravity_text_center">center</string>
+    <string name="xml_property_popup_selector_gravity_text_centerhorizontal">center_horizontal</string>
+    <string name="xml_property_popup_selector_gravity_text_top">top</string>
+    <string name="xml_property_popup_selector_gravity_text_bottom">bottom</string>
+    <string name="xml_property_popup_selector_gravity_text_centervertical">center_vertical</string>
+    <string name="xml_property_popup_selector_single_hint_search">Search</string>
+    <string name="xml_quiz_board_text_while_you_wait">While you wait...</string>
+    <string name="xml_resources_editor_import_dialog_text_select_import_option">Select Import option</string>
+    <string name="xml_resources_editor_import_dialog_text_merge_and_skip">Merge and Skip</string>
+    <string name="xml_resources_editor_import_dialog_text_merge_and_replace">Merge and Replace</string>
+    <string name="xml_resources_editor_import_dialog_text_replace_all">Replace all</string>
+    <string name="xml_search_with_recycler_view_hint_search">Search...</string>
+    <string name="xml_sort_project_dialog_text_sort_by_project_name">Sort by Project Name</string>
+    <string name="xml_sort_project_dialog_text_sort_by_id">Sort by ID</string>
+    <string name="xml_sort_project_dialog_text_ascending_az">Ascending (A-Z)</string>
+    <string name="xml_sort_project_dialog_text_descending_za">Descending (Z-A)</string>
+    <string name="xml_style_editor_add_hint_style_name">Style name</string>
+    <string name="xml_style_editor_add_hint_style_parent">Style Parent</string>
+    <string name="xml_style_editor_add_hint_style_header_value_option">Style header value ( optional )</string>
+    <string name="xml_style_editor_add_attr_hint_enter_attribute_name">Enter Attribute Name</string>
+    <string name="xml_style_editor_add_attr_hint_enter_attribute_value">Enter Attribute Value</string>
+    <string name="xml_view_editor_text_drag_here_to_delete">Drag here to delete</string>
+    <string name="xml_view_store_project_item_text_12k">1.2K</string>
+    <string name="xml_view_store_project_preview_comment_text_random_user">Random User</string>
+    <string name="xml_view_string_editor_add_hint_string_key">String key</string>
+    <string name="xml_view_string_editor_add_hint_string_value">String value</string>
+    <string name="xml_view_string_editor_add_hint_string_header_value_optio">String header value ( optional )</string>
+    <string name="xml_widget_layout_text_widget">Widget</string>
+    <string name="xml_widgets_creator_dialog_hint_widget_title">Widget title</string>
+    <string name="xml_widgets_creator_dialog_hint_widget_class_name">Widget class name</string>
+    <string name="xml_widgets_creator_dialog_hint_select_widget_type">Select widget type</string>
+    <string name="xml_widgets_creator_dialog_hint_select_category">Select category</string>
+    <string name="xml_widgets_creator_dialog_hint_xml_attributes">XML attributes</string>
+
+    <!-- ========== projects (1条) ========== -->
+    <string name="projects_sort_title">Sort options</string>
+
+    <!-- ========== sort (4条) ========== -->
+    <string name="sort_by_name">Sort by Project Name</string>
+    <string name="sort_by_id">Sort by ID</string>
+    <string name="sort_ascending">Ascending (A-Z)</string>
+    <string name="sort_descending">Descending (Z-A)</string>
+
+    <!-- ========== 偏好设置XML (36条) ========== -->
+    <string name="pref_builtin_blocks_title">Built-in blocks</string>
+    <string name="pref_builtin_blocks_summary">May slow down loading blocks in Logic Editor.</string>
+    <string name="pref_show_all_var_blocks_title">Show all variable blocks</string>
+    <string name="pref_show_all_var_blocks_summary">All variable blocks will be visible, even if you don\'t have variables for them.</string>
+    <string name="pref_show_all_blocks_title">Show all blocks of palettes</string>
+    <string name="pref_show_all_blocks_summary">Every single available block will be shown. Will slow down opening palettes!</string>
+    <string name="pref_backup_dir_title">Backup directory</string>
+    <string name="pref_backup_dir_summary">The default directory is /Internal storage/.sketchware/backups/.</string>
+    <string name="pref_root_install_title">Install projects with root access</string>
+    <string name="pref_root_install_summary">Automatically installs project APKs after building using root access.</string>
+    <string name="pref_root_launch_title">Launch projects after installing</string>
+    <string name="pref_root_launch_summary">Opens projects automatically after auto-installation using root.</string>
+    <string name="pref_version_control_title">Use new Version Control</string>
+    <string name="pref_version_control_summary">Enables custom version code and name for projects.</string>
+    <string name="pref_asd_highlighter_title">Enable block text input highlighting</string>
+    <string name="pref_asd_highlighter_summary">Enables syntax highlighting while editing blocks\' text parameters.</string>
+    <string name="pref_backup_filename_title">Backup filename format</string>
+    <string name="pref_backup_filename_summary">Default is \"$projectName v$versionName ($pkgName, $versionCode) $time(yyyy-MM-dd\'T\'HHmmss)\"</string>
+    <string name="pref_preferences_config_activity_summary_may_slow_down_loading_blo">May slow down loading blocks in Logic Editor.</string>
+    <string name="pref_preferences_config_activity_title_builtin_blocks">Built-in blocks</string>
+    <string name="pref_preferences_config_activity_summary_all_variable_blocks_will_">All variable blocks will be visible, even if you don't have variables for them.</string>
+    <string name="pref_preferences_config_activity_title_show_all_variable_blocks">Show all variable blocks</string>
+    <string name="pref_preferences_config_activity_summary_every_single_available_bl">Every single available block will be shown. Will slow down opening palettes!</string>
+    <string name="pref_preferences_config_activity_title_show_all_blocks_of_palett">Show all blocks of palettes</string>
+    <string name="pref_preferences_config_activity_summary_the_default_directory_is_">The default directory is /Internal storage/.sketchware/backups/.</string>
+    <string name="pref_preferences_config_activity_title_backup_directory">Backup directory</string>
+    <string name="pref_preferences_config_activity_summary_automatically_installs_pr">Automatically installs project APKs after building using root access.</string>
+    <string name="pref_preferences_config_activity_title_install_projects_with_roo">Install projects with root access</string>
+    <string name="pref_preferences_config_activity_summary_opens_projects_automatica">Opens projects automatically after auto-installation using root.</string>
+    <string name="pref_preferences_config_activity_title_launch_projects_after_ins">Launch projects after installing</string>
+    <string name="pref_preferences_config_activity_summary_enables_custom_version_co">Enables custom version code and name for projects.</string>
+    <string name="pref_preferences_config_activity_title_use_new_version_control">Use new Version Control</string>
+    <string name="pref_preferences_config_activity_summary_enables_syntax_highlighti">Enables syntax highlighting while editing blocks' text parameters.</string>
+    <string name="pref_preferences_config_activity_title_enable_block_text_input_h">Enable block text input highlighting</string>
+    <string name="pref_preferences_config_activity_summary_default_is_quotprojectnam">Default is &quot;$projectName v$versionName ($pkgName, $versionCode) $time(yyyy-MM-dd'T'HHmmss)&quot;</string>
+    <string name="pref_preferences_config_activity_title_backup_filename_format">Backup filename format</string>
+
+    <!-- ========== 通知 (4条) ========== -->
+    <string name="notification_building_project">Building project</string>
+    <string name="notification_starting_build">Starting build…</string>
+    <string name="notification_channel_name">Sketchware Pro Notifications</string>
+    <string name="notification_action_cancel_build">Cancel build</string>
+
+    <!-- ========== Snackbar (2条) ========== -->
+    <string name="snackbar_root_access_failed">Couldn\'t acquire root access</string>
+    <string name="snackbar_reset_complete">Reset to default complete.</string>
+
+    <!-- ========== TabLayout (3条) ========== -->
+    <string name="tab_default_1">Tab 1</string>
+    <string name="tab_default_2">Tab 2</string>
+    <string name="tab_default_3">Tab 3</string>
+
+    <!-- ========== 工具栏 (1条) ========== -->
+    <string name="toolbar_subtitle_export_path">Export path: %s</string>
+
+    <!-- ========== 搜索 (1条) ========== -->
+    <string name="search_hint">Search</string>
+
+    <!-- ========== 弹出菜单 (8条) ========== -->
+    <string name="popup_remove_activity_manifest">Remove Activity from manifest</string>
+    <string name="popup_add_activity_manifest">Add as Activity to manifest</string>
+    <string name="popup_remove_service_manifest">Remove Service from manifest</string>
+    <string name="popup_add_service_manifest">Add as Service to manifest</string>
+    <string name="popup_edit">Edit</string>
+    <string name="popup_edit_with">Edit with…</string>
+    <string name="popup_rename">Rename</string>
+    <string name="popup_delete">Delete</string>
+
+    <!-- ========== 辅助文本 (1条) ========== -->
+    <string name="helper_text_modifier">Enter modifier e.g. private, public, public static, or empty (package private).</string>
+
+    <!-- ========== 操作 (4条) ========== -->
+    <string name="action_edit">Edit</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_continue">Continue</string>
+    <string name="action_overwrite">Overwrite</string>
+
+    <!-- ========== 进度 (1条) ========== -->
+    <string name="progress_signing_apk">Signing APK…</string>
+
+</resources>

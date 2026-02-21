@@ -1694,6 +1694,37 @@ You must enter the API key to operate the map normally."</string>
     <string name="extra_block_error_invalid_block_type">Custom Block #%d of current palette has an invalid block type data type</string>
     <string name="extra_block_error_invalid_block_palette">Custom Block #%d of current palette has an invalid block palette data type</string>
 
+    <!-- Scattered toastError messages -->
+    <string name="error_received_invalid_data">Received invalid data</string>
+    <string name="error_theme_name_empty">Theme name Input is Empty</string>
+    <string name="error_style_name_empty">Style name Input is Empty</string>
+    <string name="error_xml_name_required">XML name is required</string>
+    <string name="error_reference_required">reference is required</string>
+    <string name="error_keystore_not_found">Keystore not found</string>
+    <string name="error_play_sound">Failed to play Sound: %s</string>
+    <string name="error_release_file">Failed to release file %1$s: %2$s</string>
+    <string name="error_parse_palette_color">Couldn\'t parse color of Custom Block Palette #%d</string>
+    <string name="error_load_palette">Error occurred while loading Custom Block Palette: %s</string>
+    <string name="error_parse_backup_filename">Failed To Parse Custom Filename For Backup. Using default</string>
+    <string name="error_content_null">content is null</string>
+    <string name="error_downloading_unavailable">Downloading projects is unavailable right now!</string>
+    <string name="error_copy_backup">Failed to copy backup file to temporary location: %s</string>
+    <string name="error_load_custom_blocks">Failed to load Custom Blocks: %s</string>
+    <string name="error_import_moreblocks">Couldn\'t import: %s</string>
+    <string name="error_invalid_hex_color_value">Invalid hex color value</string>
+    <string name="error_load_font_file">Error while loading font: %s</string>
+    <string name="error_select_more_block">Select a more block</string>
+    <string name="error_enable_material3">Please enable Material3 in the Library Manager first</string>
+    <string name="error_nested_parentheses">Error: Your code contains incorrectly nested parentheses</string>
+    <string name="error_invalid_dex_path">Invalid DEX file path of enabled Local library #%d</string>
+    <string name="error_invalid_lib_name">Invalid name of enabled Local library #%d</string>
+    <string name="error_font_invalid">Warning: Font doesn\'t seem to be valid</string>
+    <string name="error_load_sound">Error while loading sound: %s</string>
+    <string name="error_circular_rel_layout">IllegalStateException : Circular dependencies cannot exist in RelativeLayout</string>
+    <string name="error_get_custom_blocks">Failed to get Custom Blocks : %s</string>
+    <string name="error_corrupt_block">Can\'t open corrupt Block</string>
+    <string name="error_corrupt_more_block">Can\'t open corrupt More Block</string>
+
     <!-- ViewCodeEditorActivity menu items -->
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>

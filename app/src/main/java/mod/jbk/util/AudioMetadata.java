@@ -41,7 +41,7 @@ public class AudioMetadata {
             try {
                 mediaMetadataRetriever.release();
             } catch (IOException e) {
-                SketchwareUtil.toastError("Failed to release file " + audio + ": " + e);
+                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.error_release_file), audio, e));
             }
         }
     }

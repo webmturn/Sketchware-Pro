@@ -30,7 +30,7 @@ public class PaletteSelector {
                     try {
                         color = Color.parseColor(item.get("color").toString());
                     } catch (IllegalArgumentException e) {
-                        SketchwareUtil.toastError("Couldn't parse color of Custom Block Palette #" + (i + 1));
+                        SketchwareUtil.toastError(String.format(Helper.getResString(R.string.error_parse_palette_color), i + 1));
                         color = 0xff8a55d7;
                     }
 
@@ -38,7 +38,7 @@ public class PaletteSelector {
                     start++;
                 }
             } catch (JSONException e) {
-                SketchwareUtil.toastError("Error occurred while loading Custom Block Palette: " + e);
+                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.error_load_palette), e));
             }
         }
 

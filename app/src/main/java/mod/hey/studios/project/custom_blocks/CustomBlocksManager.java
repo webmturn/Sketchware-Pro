@@ -115,7 +115,7 @@ public class CustomBlocksManager {
                         new TypeToken<ArrayList<ExtraBlockInfo>>() {
                         }.getType());
             } catch (JsonSyntaxException e) {
-                SketchwareUtil.toastError("Failed to get Custom Blocks : " + e.getMessage());
+                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.error_get_custom_blocks), e.getMessage()));
             }
         }
 

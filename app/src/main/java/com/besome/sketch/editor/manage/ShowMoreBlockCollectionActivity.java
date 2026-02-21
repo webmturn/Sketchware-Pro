@@ -177,7 +177,7 @@ public class ShowMoreBlockCollectionActivity extends BaseAppCompatActivity imple
             addBlocks(moreBlock.blocks);
             resizeBottomViews();
         } else {
-            SketchwareUtil.toastError("Can't open corrupt More Block");
+            SketchwareUtil.toastError(Helper.getResString(R.string.error_corrupt_more_block));
             finish();
         }
     }

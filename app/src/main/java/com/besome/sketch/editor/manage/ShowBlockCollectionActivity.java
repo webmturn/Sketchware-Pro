@@ -169,7 +169,7 @@ public class ShowBlockCollectionActivity extends BaseAppCompatActivity implement
             addBlocks(block.blocks);
             resizeBottomViews();
         } else {
-            SketchwareUtil.toastError("Can't open corrupt Block");
+            SketchwareUtil.toastError(Helper.getResString(R.string.error_corrupt_block));
             finish();
         }
     }

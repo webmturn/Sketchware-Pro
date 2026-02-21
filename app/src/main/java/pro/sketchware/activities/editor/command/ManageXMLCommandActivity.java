@@ -259,11 +259,11 @@ public class ManageXMLCommandActivity extends BaseAppCompatActivity {
                     var reference = Helper.getText(binding.reference);
                     var command = Helper.getText(binding.command);
                     if (TextUtils.isEmpty(xmlName)) {
-                        SketchwareUtil.toastError("XML name is required");
+                        SketchwareUtil.toastError(Helper.getResString(R.string.error_xml_name_required));
                         return;
                     }
                     if (TextUtils.isEmpty(reference)) {
-                        SketchwareUtil.toastError("reference is required");
+                        SketchwareUtil.toastError(Helper.getResString(R.string.error_reference_required));
                         return;
                     }
                     HashMap<String, Object> map = new HashMap<>();

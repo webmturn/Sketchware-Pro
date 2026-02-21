@@ -247,7 +247,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
                             // Clear intent so it doesn't duplicate
                             getIntent().setData(null);
                         } else {
-                            SketchwareUtil.toastError("Failed to copy backup file to temporary location: " + reason, Toast.LENGTH_LONG);
+                            SketchwareUtil.toastError(String.format(Helper.getResString(R.string.error_copy_backup), reason), Toast.LENGTH_LONG);
                         }
                     }
                 }).copyFile(data);

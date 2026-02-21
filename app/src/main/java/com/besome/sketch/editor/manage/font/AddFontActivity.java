@@ -54,7 +54,7 @@ public class AddFontActivity extends BaseDialogActivity implements View.OnClickL
                             try {
                                 Typeface typeface = Typeface.createFromFile(tempFontFile);
                                 if (typeface.equals(Typeface.DEFAULT)) {
-                                    SketchwareUtil.toastError("Warning: Font doesn't seem to be valid");
+                                    SketchwareUtil.toastError(Helper.getResString(R.string.error_font_invalid));
                                     return;
                                 }
                                 validFontPicked = true;
@@ -73,7 +73,7 @@ public class AddFontActivity extends BaseDialogActivity implements View.OnClickL
                                 LogUtil.e("AddFontActivity", "Failed to load font", e);
                             }
                         }, e -> {
-                            SketchwareUtil.toastError("Error while loading font: " + e.getMessage());
+                            SketchwareUtil.toastError(String.format(Helper.getResString(R.string.error_load_font_file), e.getMessage()));
                             Log.e("AddFontActivity", e.getMessage(), e);
                             LogUtil.e("AddFontActivity", "Failed to load font", e);
                         });
