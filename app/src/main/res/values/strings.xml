@@ -2246,6 +2246,12 @@ You must enter the API key to operate the map normally."</string>
     <!-- Layout: search_with_recycler_view -->
     <string name="search_hint">Search…</string>
 
+    <!-- Layout: property_popup_input_indent (directional hints) -->
+    <string name="indent_hint_left">left</string>
+    <string name="indent_hint_right">right</string>
+    <string name="indent_hint_top">top</string>
+    <string name="indent_hint_bottom">bottom</string>
+
     <!-- ViewCodeEditorActivity menu items -->
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>

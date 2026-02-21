@@ -62,7 +62,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="left"
+                android:hint="@string/indent_hint_left"
                 android:importantForAutofill="noExcludeDescendants"
                 app:errorEnabled="true">
 
@@ -94,7 +94,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="right"
+                android:hint="@string/indent_hint_right"
                 android:importantForAutofill="noExcludeDescendants"
                 app:errorEnabled="true">
 
@@ -129,7 +129,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="top"
+                android:hint="@string/indent_hint_top"
                 android:importantForAutofill="noExcludeDescendants"
                 app:errorEnabled="true">
 
@@ -161,7 +161,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="bottom"
+                android:hint="@string/indent_hint_bottom"
                 android:importantForAutofill="noExcludeDescendants"
                 app:errorEnabled="true">
 
