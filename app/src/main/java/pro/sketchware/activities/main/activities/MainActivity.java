@@ -82,7 +82,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
     private static boolean isFirebaseInitialized(Context context) {
         try {
             return FirebaseApp.getApps(context) != null && !FirebaseApp.getApps(context).isEmpty();
-        } catch (Exception e) {
+        } catch (IllegalStateException e) {
             return false;
         }
     }

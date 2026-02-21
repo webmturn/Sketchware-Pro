@@ -127,7 +127,7 @@ public class ColorsEditorManager {
         try {
             int colorInt = ContextCompat.getColor(context, colorId);
             return String.format("#%06X", (0xFFFFFF & colorInt));
-        } catch (Exception e) {
+        } catch (android.content.res.Resources.NotFoundException e) {
             return defaultHexColor;
         }
     }
