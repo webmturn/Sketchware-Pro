@@ -1953,6 +1953,30 @@ You must enter the API key to operate the map normally."</string>
     <string name="store_new_updated">New &amp; Updated</string>
     <string name="store_most_downloaded">Most downloaded projects</string>
 
+    <!-- Layout: fragment_settings_appearance -->
+    <string name="theme_settings_title">Theme Settings</string>
+    <string name="theme_system_default">System default</string>
+    <string name="theme_system_default_desc">Follow system theme settings</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+
+    <!-- Layout: fragment_store_project_preview -->
+    <string name="store_screenshots">Screenshots</string>
+    <string name="store_about_project">About this project</string>
+    <string name="store_comments">Comments</string>
+    <string name="store_download">Download</string>
+
+    <!-- Layout: manage_library_admob_set_unit -->
+    <string name="admob_edit">EDIT</string>
+    <string name="admob_rewarded_ad">Rewarded Ad</string>
+
+    <!-- Layout: menu_activity -->
+    <string name="menu_activity_title">Title</string>
+    <string name="menu_activity_new_menu">New menu: </string>
+    <string name="menu_activity_hint_name">Name</string>
+    <string name="menu_activity_hint_title">Title</string>
+    <string name="menu_activity_hint_value">Value</string>
+
     <!-- ViewCodeEditorActivity menu items -->
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
