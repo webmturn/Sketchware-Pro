@@ -2036,6 +2036,30 @@ You must enter the API key to operate the map normally."</string>
     <!-- Layout: design -->
     <string name="design_run">Run</string>
 
+    <!-- Layout: dialog_select_apk_to_sign -->
+    <string name="sign_apk_selected">Selected APK</string>
+    <string name="sign_apk_path_placeholder">APK path will appear here</string>
+
+    <!-- Layout: export_project -->
+    <string name="export_aab_title">Export AAB (Android App Bundle)</string>
+    <string name="export_aab_button">Export AAB</string>
+
+    <!-- Layout: main -->
+    <string name="main_search_projects">Search for projects…</string>
+    <string name="main_new_project">New project</string>
+
+    <!-- Layout: manage_proguard -->
+    <string name="proguard_activated">Activated</string>
+    <string name="proguard_full_mode">Full Mode</string>
+
+    <!-- Layout: manage_sound_add -->
+    <string name="sound_add">Add Sound</string>
+    <string name="sound_hint_name">Enter sound name</string>
+
+    <!-- Layout: myproject_setting -->
+    <string name="project_version_code">Version code</string>
+    <string name="project_version_name">Version name</string>
+
     <!-- ViewCodeEditorActivity menu items -->
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
