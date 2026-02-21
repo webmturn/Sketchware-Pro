@@ -1,5 +1,6 @@
 package mod.pranav.build
 
+import android.util.Log
 import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileInputStream
@@ -66,7 +67,7 @@ object JarBuilder {
                 }
             }
         } catch (e: IOException) {
-            e.printStackTrace()
+            Log.e("JarBuilder", "Failed to add entry to JAR: $name", e)
         }
         target.closeEntry()
     }
