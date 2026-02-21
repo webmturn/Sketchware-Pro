@@ -1,5 +1,6 @@
 package pro.sketchware.utility;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class BinaryExecutor {
                 }
             }
             process.waitFor();
-        } catch (Exception e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace(new PrintWriter(mWriter));
         }
         return mWriter.toString();

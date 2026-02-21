@@ -104,7 +104,7 @@ public class ViewBeanParser {
             if (s.contains(".")) {
                 return s.substring(s.lastIndexOf(".") + 1);
             }
-        } catch (Exception e) {
+        } catch (StringIndexOutOfBoundsException e) {
             Log.w("ViewBeanParser", "Failed to extract name from tag: " + s, e);
         }
         return s;
