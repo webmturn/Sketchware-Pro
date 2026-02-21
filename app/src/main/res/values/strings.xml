@@ -932,6 +932,9 @@ Please click on Settings to allow permission for Storage. Without this permissio
     <string name="common_signin_button_text_long">Sign in with Google</string>
     <string name="common_word_accept">Save</string>
     <string name="common_word_activity">Activity</string>
+    <string name="common_word_fragment">Fragment</string>
+    <string name="common_word_dialog_fragment">DialogFragment</string>
+    <string name="common_word_bottom_sheet_dialog_fragment">BottomSheetDialogFragment</string>
     <string name="common_word_add">Add</string>
     <string name="common_word_agree">Agree</string>
     <string name="common_word_all">ALL</string>
@@ -1826,6 +1829,29 @@ You must enter the API key to operate the map normally."</string>
     <string name="icon_creator_badge_bg_color">Badge background color</string>
     <string name="icon_creator_adaptive_icon">Adaptive Icon</string>
     <string name="icon_creator_badge">badge</string>
+
+    <!-- Layout: manage_screen_activity_add_temp -->
+    <string name="create_view_title">Create view</string>
+    <string name="create_view_important_note">Important note</string>
+    <string name="create_view_hint_name">Enter name</string>
+    <string name="create_view_type">Type</string>
+    <string name="create_view_screen_orientation">Screen orientation</string>
+    <string name="create_view_portrait">Portrait</string>
+    <string name="create_view_landscape">Landscape</string>
+    <string name="create_view_both">Both</string>
+    <string name="create_view_keyboard_settings">Keyboard settings</string>
+    <string name="create_view_unspecified">Unspecified</string>
+    <string name="create_view_visible">Visible</string>
+    <string name="create_view_hidden">Hidden</string>
+
+    <!-- Layout: make_block_layout -->
+    <string name="make_block_select_type">Select Moreblock type</string>
+    <string name="make_block_add_variable">Add Variable</string>
+    <string name="make_block_hint_name">Block name</string>
+    <string name="make_block_hint_variable">Variable name</string>
+    <string name="make_block_hint_label">Label text</string>
+    <string name="make_block_custom_param">Custom Parameter</string>
+    <string name="make_block_hint_parameter">Parameter</string>
 
     <!-- ViewCodeEditorActivity menu items -->
     <string name="menu_undo">Undo</string>
