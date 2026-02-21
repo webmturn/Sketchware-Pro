@@ -51,6 +51,6 @@
     <Preference
         app:iconSpaceReserved="false"
         app:key="backup-filename"
-        app:summary="Default is &quot;$projectName v$versionName ($pkgName, $versionCode) $time(yyyy-MM-dd'T'HHmmss)&quot;"
+        app:summary="@string/pref_backup_filename_summary"
         app:title="@string/pref_backup_filename_title" />
 </PreferenceScreen>

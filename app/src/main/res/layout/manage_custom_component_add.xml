@@ -87,7 +87,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    app:helperText="The actual variable name used in class fields (e.g., 'private VariableName name').\nKeep this consistent with the Component Name to correctly utilize 'Additional Variable' features."
+                    app:helperText="@string/component_helper_var_name"
                     app:helperTextEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -177,7 +177,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    app:helperText="Allows adding multiple fields to your class.\nUse '###' as a placeholder for the component name."
+                    app:helperText="@string/component_helper_add_var"
                     app:helperTextEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -192,7 +192,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    app:helperText="Use this to initialize any additionally added variables.\nUse '###' as a placeholder for the component name."
+                    app:helperText="@string/component_helper_def_add_var"
                     app:helperTextEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText

@@ -319,7 +319,7 @@
                     app:counterMaxLength="100"
                     app:endIconMode="clear_text"
                     app:helperTextEnabled="true"
-                    app:helperText="m.name (without % sign)"
+                    app:helperText="@string/block_helper_spec"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">

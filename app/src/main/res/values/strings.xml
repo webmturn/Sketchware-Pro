@@ -2288,6 +2288,18 @@ You must enter the API key to operate the map normally."</string>
     <string name="pref_block_highlighting_title">Enable block text input highlighting</string>
     <string name="pref_block_highlighting_summary">Enables syntax highlighting while editing blocks\' text parameters.</string>
     <string name="pref_backup_filename_title">Backup filename format</string>
+    <string name="pref_backup_filename_summary">Default is \"$projectName v$versionName ($pkgName, $versionCode) $time(yyyy-MM-dd\'T\'HHmmss)\"</string>
+
+    <!-- Layout: dialog_keystore_credentials (helperText) -->
+    <string name="keystore_helper_algorithm">Example: SHA256withRSA</string>
+
+    <!-- Layout: make_block_layout (helperText) -->
+    <string name="block_helper_spec">m.name (without % sign)</string>
+
+    <!-- Layout: manage_custom_component_add (helperTexts) -->
+    <string name="component_helper_var_name">The actual variable name used in class fields (e.g., \'private VariableName name\').\nKeep this consistent with the Component Name to correctly utilize \'Additional Variable\' features.</string>
+    <string name="component_helper_add_var">Allows adding multiple fields to your class.\nUse \'###\' as a placeholder for the component name.</string>
+    <string name="component_helper_def_add_var">Use this to initialize any additionally added variables.\nUse \'###\' as a placeholder for the component name.</string>
 
     <!-- ViewCodeEditorActivity menu items -->
     <string name="menu_undo">Undo</string>
