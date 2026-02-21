@@ -592,7 +592,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         if (z) {
             cC.c(a).b(projectFileBean.getXmlName(), arrayList);
             if (historyChangeListener != null) {
-                historyChangeListener.a();
+                historyChangeListener.onCallback();
             }
         }
         int size = arrayList.size();
@@ -728,7 +728,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         if (z) {
             cC.c(a).b(projectFileBean.getXmlName(), viewBean);
             if (historyChangeListener != null) {
-                historyChangeListener.a();
+                historyChangeListener.onCallback();
             }
         }
         return viewPane.d(viewBean);
@@ -1000,7 +1000,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         if (z) {
             cC.c(a).a(projectFileBean.getXmlName(), arrayList);
             if (historyChangeListener != null) {
-                historyChangeListener.a();
+                historyChangeListener.onCallback();
             }
         }
         ItemView syVar = null;
@@ -1018,7 +1018,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         if (isInHistory) {
             cC.c(a).a(projectFileBean.getXmlName(), viewBean);
             if (historyChangeListener != null) {
-                historyChangeListener.a();
+                historyChangeListener.onCallback();
             }
         }
         return createAndAddView(viewBean);
