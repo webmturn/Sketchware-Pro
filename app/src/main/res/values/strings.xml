@@ -1541,6 +1541,17 @@ You must enter the API key to operate the map normally."</string>
     <string name="config_backup_filename_msg">This defines how SWB backup files get named.\nAvailable variables:\n - $projectName - Project name\n - $versionCode - App version code\n - $versionName - App version name\n - $pkgName - App package name\n - $timeInMs - Time during backup in milliseconds\n\nAdditionally, you can format your own time like this using Java\'s date formatter syntax:\n$time(yyyy-MM-dd\'T\'HHmmss)\n</string>
     <string name="config_toast_reset_default">Reset to default complete.</string>
 
+    <!-- ManageAppCompatActivity -->
+    <string name="appcompat_no_options_title">No options are found.</string>
+    <string name="appcompat_no_options_msg">No AppCompat options are currently available in this activity.</string>
+    <string name="appcompat_disabled_title">AppCompat is disabled.</string>
+    <string name="appcompat_disabled_msg">Please enable AppCompat in the Library Manager to use it.</string>
+    <string name="appcompat_not_available_title">Not available.</string>
+    <string name="appcompat_not_available_msg">You\'re not currently in the Activity layout.</string>
+    <string name="appcompat_reset_confirm_msg">Are you sure you want to reset appcompat attributes for %s?</string>
+    <string name="appcompat_add_attr">Add new attribute</string>
+    <string name="appcompat_edit_attr">Edit attribute</string>
+
     <!-- About page -->
     <string name="about_status_active">Active</string>
     <string name="about_status_inactive">Inactive</string>

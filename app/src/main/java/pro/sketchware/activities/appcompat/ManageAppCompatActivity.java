@@ -98,8 +98,8 @@ public class ManageAppCompatActivity extends BaseAppCompatActivity {
         adapter.setOnItemClickListener(
                 item -> {
                     PopupMenu popupMenu = new PopupMenu(this, item.first);
-                    popupMenu.getMenu().add(Menu.NONE, 0, Menu.NONE, "Edit");
-                    popupMenu.getMenu().add(Menu.NONE, 1, Menu.NONE, "Delete");
+                    popupMenu.getMenu().add(Menu.NONE, 0, Menu.NONE, Helper.getResString(R.string.common_word_edit));
+                    popupMenu.getMenu().add(Menu.NONE, 1, Menu.NONE, Helper.getResString(R.string.common_word_delete));
                     popupMenu.setOnMenuItemClickListener(
                             itemMenu -> {
                                 int position = adapter.getCurrentList().indexOf(item.second);
@@ -157,7 +157,7 @@ public class ManageAppCompatActivity extends BaseAppCompatActivity {
                     appCompats.add("NavigationDrawer");
                 }
                 if (appCompats.isEmpty()) {
-                    setNote("No options are found.", "No AppCompat options are currently available in this activity.");
+                    setNote(Helper.getResString(R.string.appcompat_no_options_title), Helper.getResString(R.string.appcompat_no_options_msg));
                 } else {
                     for (int i = 0; i < appCompats.size(); i++) {
                         TabLayout.Tab tab = binding.tabLayout.newTab();
@@ -171,10 +171,10 @@ public class ManageAppCompatActivity extends BaseAppCompatActivity {
                 }
             } else {
                 setNote(
-                        "AppCompat is disabled.", "Please enable AppCompat in the Library Manager to use it.");
+                        Helper.getResString(R.string.appcompat_disabled_title), Helper.getResString(R.string.appcompat_disabled_msg));
             }
         } else {
-            setNote("Not available.", "You're not currently in the Activity layout.");
+            setNote(Helper.getResString(R.string.appcompat_not_available_title), Helper.getResString(R.string.appcompat_not_available_msg));
         }
     }
 
@@ -200,7 +200,7 @@ public class ManageAppCompatActivity extends BaseAppCompatActivity {
                 MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
                 dialog.setTitle(R.string.common_word_reset);
                 dialog.setMessage(
-                        "Are you sure you want to reset appcompat attributes for " + filename + "?");
+                        String.format(Helper.getResString(R.string.appcompat_reset_confirm_msg), filename));
                 dialog.setPositiveButton(
                         R.string.common_word_yes,
                         (d, w) -> {
@@ -252,7 +252,7 @@ public class ManageAppCompatActivity extends BaseAppCompatActivity {
 
     private void dialog(String type, int position) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
-        dialog.setTitle(type.equals("create") ? "Add new attribute" : "Edit attribute");
+        dialog.setTitle(type.equals("create") ? Helper.getResString(R.string.appcompat_add_attr) : Helper.getResString(R.string.appcompat_edit_attr));
         CustomDialogAttributeBinding attributeBinding =
                 CustomDialogAttributeBinding.inflate(getLayoutInflater());
         dialog.setView(attributeBinding.getRoot());
