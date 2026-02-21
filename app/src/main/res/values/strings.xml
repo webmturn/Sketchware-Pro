@@ -1998,6 +1998,25 @@ You must enter the API key to operate the map normally."</string>
     <string name="color_picker_desc">Either enter a hex color code or pick a color from the list below.</string>
     <string name="color_picker_new">New color</string>
 
+    <!-- Layout: dialog_selector_actions -->
+    <string name="action_edit">Edit</string>
+    <string name="action_export">Export</string>
+    <string name="action_delete">Delete</string>
+
+    <!-- Layout: fragment_events_manager_details -->
+    <string name="events_no_events">No events</string>
+    <string name="events_start_creating">Start by creating a new one</string>
+    <string name="events_new_event">New Event</string>
+
+    <!-- Layout: fragment_stringfog_manager -->
+    <string name="stringfog_title">StringFog Manager</string>
+    <string name="stringfog_activated">Activated</string>
+    <string name="stringfog_desc">Activating StringFog will encrypt the strings in compilation time, which will make your app more difficult to reverse-engineer.</string>
+
+    <!-- Layout: manage_library_admob_preview -->
+    <string name="admob_ad_name_label">Ad Name : </string>
+    <string name="admob_ad_unit_id_label">Ad Unit ID : </string>
+
     <!-- ViewCodeEditorActivity menu items -->
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
