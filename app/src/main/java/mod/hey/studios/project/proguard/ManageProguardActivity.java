@@ -56,7 +56,7 @@ public class ManageProguardActivity extends BaseAppCompatActivity
         }
 
         MaterialAlertDialogBuilder bld = new MaterialAlertDialogBuilder(this);
-        bld.setTitle("Select Local libraries");
+        bld.setTitle(R.string.proguard_select_local_libs);
         bld.setMultiChoiceItems(
                 libraries,
                 enabledLibraries,
@@ -120,7 +120,7 @@ public class ManageProguardActivity extends BaseAppCompatActivity
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Code Shrinking Manager");
+        getSupportActionBar().setTitle(R.string.proguard_title);
         binding.toolbar.setNavigationOnClickListener(view -> getOnBackPressedDispatcher().onBackPressed());
     }
 }

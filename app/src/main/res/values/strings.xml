@@ -1427,6 +1427,20 @@ You must enter the API key to operate the map normally."</string>
     <string name="array_item_title_create">Create new item</string>
     <string name="array_item_title_edit">Edit item</string>
 
+    <!-- Block selector -->
+    <string name="selector_title_actions">Actions</string>
+    <string name="selector_title_attention">Attention</string>
+    <string name="selector_title_new_item">New Selector Item</string>
+    <string name="selector_select_json">Select .json selector file</string>
+
+    <!-- Code editor -->
+    <string name="code_editor_select_theme">Select Theme</string>
+    <string name="code_editor_select_language">Select Language</string>
+
+    <!-- Proguard -->
+    <string name="proguard_select_local_libs">Select Local libraries</string>
+    <string name="proguard_title">Code Shrinking Manager</string>
+
     <!-- Colors editor -->
     <string name="color_title_create">Create new color</string>
     <string name="color_title_edit">Edit color</string>

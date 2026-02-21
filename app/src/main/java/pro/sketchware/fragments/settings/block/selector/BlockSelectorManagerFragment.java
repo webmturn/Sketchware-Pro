@@ -180,7 +180,7 @@ public class BlockSelectorManagerFragment extends BaseFragment {
     private void showActionsDialog(int index) {
         DialogSelectorActionsBinding dialogBinding = DialogSelectorActionsBinding.inflate(LayoutInflater.from(requireContext()));
         AlertDialog dialog = new MaterialAlertDialogBuilder(requireActivity()).create();
-        dialog.setTitle("Actions");
+        dialog.setTitle(R.string.selector_title_actions);
         dialog.setView(dialogBinding.getRoot());
 
         dialogBinding.edit.setOnClickListener(v -> {
@@ -208,10 +208,10 @@ public class BlockSelectorManagerFragment extends BaseFragment {
 
     private void showConfirmationDialog(String message, ConfirmListener onConfirm, CancelListener onCancel) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(requireActivity());
-        dialog.setTitle("Attention");
+        dialog.setTitle(R.string.selector_title_attention);
         dialog.setMessage(message);
-        dialog.setPositiveButton("Yes", (v, which) -> onConfirm.onConfirm(v));
-        dialog.setNegativeButton("Cancel", (v, which) -> onCancel.onCancel(v));
+        dialog.setPositiveButton(R.string.common_word_yes, (v, which) -> onConfirm.onConfirm(v));
+        dialog.setNegativeButton(R.string.common_word_cancel, (v, which) -> onCancel.onCancel(v));
         dialog.setCancelable(false);
         dialog.show();
     }
@@ -233,7 +233,7 @@ public class BlockSelectorManagerFragment extends BaseFragment {
 
     private void showImportSelectorDialog() {
         FilePickerOptions options = new FilePickerOptions();
-        options.setTitle("Select .json selector file");
+        options.setTitle(Helper.getResString(R.string.selector_select_json));
         options.setExtensions(new String[]{"json"});
 
         FilePickerCallback callback = new FilePickerCallback() {

@@ -253,7 +253,7 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
                 .map(pair -> pair.first)
                 .toArray(String[]::new);
         new MaterialAlertDialogBuilder(activity)
-                .setTitle("Select Theme")
+                .setTitle(R.string.code_editor_select_theme)
                 .setSingleChoiceItems(themeItems, selectedThemeIndex, listener)
                 .setNegativeButton(R.string.common_word_cancel, null)
                 .show();
@@ -267,7 +267,7 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
         };
 
         new MaterialAlertDialogBuilder(activity)
-                .setTitle("Select Language")
+                .setTitle(R.string.code_editor_select_language)
                 .setSingleChoiceItems(languagesList, languageId, listener)
                 .setNegativeButton(R.string.common_word_cancel, null)
                 .show();

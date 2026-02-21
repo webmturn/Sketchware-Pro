@@ -122,14 +122,14 @@ public class BlockSelectorDetailsFragment extends BaseFragment {
 
     private void showCreateEditDialog(boolean isEdit, int indexA) {
         DialogAddCustomActivityBinding dialogBinding = DialogAddCustomActivityBinding.inflate(LayoutInflater.from(requireContext()));
-        dialogBinding.activityNameInputLayout.setHint("Name");
+        dialogBinding.activityNameInputLayout.setHint(getString(R.string.selector_hint_name));
         if (isEdit) {
             dialogBinding.activityNameInput.setText(selectors.get(index).getData().get(indexA));
         }
 
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(requireActivity());
-        dialog.setTitle("New Selector Item");
-        dialog.setPositiveButton("Create", (v, which) -> {
+        dialog.setTitle(R.string.selector_title_new_item);
+        dialog.setPositiveButton(R.string.common_word_create, (v, which) -> {
             String newItem = Helper.getText(dialogBinding.activityNameInput);
             if (newItem != null && !newItem.isEmpty()) {
                 if (!isEdit) {
@@ -142,7 +142,7 @@ public class BlockSelectorDetailsFragment extends BaseFragment {
             }
             v.dismiss();
         });
-        dialog.setNegativeButton("Cancel", null);
+        dialog.setNegativeButton(R.string.common_word_cancel, null);
         dialog.setView(dialogBinding.getRoot());
         dialog.show();
     }
@@ -151,7 +151,7 @@ public class BlockSelectorDetailsFragment extends BaseFragment {
         DialogSelectorActionsBinding dialogBinding = DialogSelectorActionsBinding.inflate(LayoutInflater.from(requireContext()));
 
         AlertDialog dialog = new MaterialAlertDialogBuilder(requireActivity()).create();
-        dialog.setTitle("Actions");
+        dialog.setTitle(R.string.selector_title_actions);
         dialog.setView(dialogBinding.getRoot());
 
         dialogBinding.edit.setOnClickListener(v -> {
@@ -164,7 +164,7 @@ public class BlockSelectorDetailsFragment extends BaseFragment {
         dialogBinding.delete.setOnClickListener(v -> {
             dialog.dismiss();
             showConfirmationDialog(
-                    "Are you sure you want to delete this Selector Item?",
+                    getString(R.string.selector_message_delete_item),
                     confirmDialog -> {
                         selectors.get(index).getData().remove(indexA);
                         saveAll();
@@ -180,16 +180,17 @@ public class BlockSelectorDetailsFragment extends BaseFragment {
 
     private void showConfirmationDialog(String message, OnDialogClickListener onConfirm, OnDialogClickListener onCancel) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(requireActivity());
-        dialog.setTitle("Attention");
+        dialog.setTitle(R.string.selector_title_attention);
         dialog.setMessage(message);
-        dialog.setPositiveButton("Yes", (v, which) -> onConfirm.onClick(v));
-        dialog.setNegativeButton("Cancel", (v, which) -> onCancel.onClick(v));
+        dialog.setPositiveButton(R.string.common_word_yes, (v, which) -> onConfirm.onClick(v));
+        dialog.setNegativeButton(R.string.common_word_cancel, (v, which) -> onCancel.onClick(v));
 
         dialog.show();
     }
 
     private void saveAll() {
         FileUtil.writeFile(BlockSelectorConsts.BLOCK_SELECTORS_FILE.getAbsolutePath(), getGson().toJson(selectors));
+        SketchwareUtil.toast(getString(R.string.common_word_saved));
         SketchwareUtil.toast("Saved!");
     }
 
