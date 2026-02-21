@@ -1625,6 +1625,32 @@ You must enter the API key to operate the map normally."</string>
     <!-- LibraryDownloaderDialogFragment -->
     <string name="toast_library_downloaded">Library downloaded successfully</string>
 
+    <!-- ComponentsHandler -->
+    <string name="component_error_null">Invalid (null) Custom Component at position %d</string>
+    <string name="component_error_invalid_id_in">Invalid ID entry in Custom Component #%d</string>
+    <string name="component_error_invalid_id_at">Invalid ID entry at Custom Component #%d</string>
+    <string name="component_error_invalid_id_for">Invalid ID entry for Custom Component #%d</string>
+    <string name="component_error_invalid_type_name_in">Invalid type name entry in Custom Component #%d</string>
+    <string name="component_error_invalid_type_name_at">Invalid type name entry at Custom Component #%d</string>
+    <string name="component_error_invalid_type_name_for">Invalid type name entry for Custom Component #%d</string>
+    <string name="component_error_invalid_name_at">Invalid name entry at Custom Component #%d</string>
+    <string name="component_error_invalid_name_for">Invalid name entry for Custom Component #%d</string>
+    <string name="component_error_invalid_icon">Invalid icon entry for Custom Component #%d</string>
+    <string name="component_error_invalid_description">Invalid description entry for Custom Component #%d</string>
+    <string name="component_error_invalid_url">Invalid URL entry for Custom Component #%d</string>
+    <string name="component_error_invalid_build_class">Invalid build class entry for Custom Component #%d</string>
+    <string name="component_error_invalid_var_name">Invalid variable name entry for Custom Component #%d</string>
+    <string name="component_error_invalid_class">Invalid class entry for Custom Component #%d</string>
+    <string name="component_error_invalid_additional_var">Invalid additional variable entry at Custom Component #%d</string>
+    <string name="component_error_invalid_define_additional_var">Invalid define additional variable entry at Custom Component #%d</string>
+    <string name="component_error_invalid_listener">Invalid listener entry at Custom Component #%d</string>
+    <string name="component_error_invalid_additional_var_in">Invalid additional variable entry in Custom Component #%d</string>
+    <string name="component_error_invalid_name_in">Invalid name entry in Custom Component #%d</string>
+    <string name="component_error_invalid_imports">Invalid imports entry in Custom Component #%d</string>
+    <string name="component_error_invalid_var_name_in">Invalid variable name entry in Custom Component #%d</string>
+    <string name="component_error_read_failed">Couldn\'t read Custom Components file: %s</string>
+    <string name="component_error_invalid_file">Found invalid Custom Components file</string>
+
     <!-- ViewCodeEditorActivity menu items -->
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
