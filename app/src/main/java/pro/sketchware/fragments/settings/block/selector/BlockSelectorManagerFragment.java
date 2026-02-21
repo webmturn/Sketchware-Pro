@@ -261,7 +261,7 @@ public class BlockSelectorManagerFragment extends BaseFragment {
     private void exportSelector(Selector selector) {
         String path = BlockSelectorConsts.EXPORT_FILE.getAbsolutePath().replace("All_Menus", selector.getName());
         FileUtil.writeFile(path, getGson().toJson(selector));
-        SketchwareUtil.toast("Exported in " + path);
+        SketchwareUtil.toast(String.format(Helper.getResString(R.string.toast_exported_in), path));
     }
 
     private void handleToImportFile(File file) {

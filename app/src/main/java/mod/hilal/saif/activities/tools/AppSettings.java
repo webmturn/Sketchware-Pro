@@ -218,7 +218,7 @@ public class AppSettings extends BaseAppCompatActivity {
 
         apkPathDialog.setPositiveButton(R.string.common_word_continue, (v, which) -> {
             if (!isAPKSelected[0]) {
-                SketchwareUtil.toast("Please select an APK file to sign", Toast.LENGTH_SHORT);
+                SketchwareUtil.toast(Helper.getResString(R.string.apk_sign_select_file), Toast.LENGTH_SHORT);
                 shakeView(binding.selectFile);
                 return;
             }
@@ -285,8 +285,8 @@ public class AppSettings extends BaseAppCompatActivity {
                 runOnUiThread(() -> {
                     if (ApkSigner.LogCallback.errorCount.get() == 0) {
                         building_dialog.dismiss();
-                        SketchwareUtil.toast("Successfully saved signed APK to: /Internal storage/sketchware/signed_apk/"
-                                        + Uri.fromFile(new File(outputApkPath)).getLastPathSegment(),
+                        SketchwareUtil.toast(String.format(Helper.getResString(R.string.apk_sign_success),
+                                        Uri.fromFile(new File(outputApkPath)).getLastPathSegment()),
                                 Toast.LENGTH_LONG);
                     } else {
                         tv_progress.setText("An error occurred. Check the log for more details.");

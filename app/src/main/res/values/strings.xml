@@ -1568,6 +1568,10 @@ You must enter the API key to operate the map normally."</string>
     <string name="toast_service_not_in_manifest">Service was not defined in AndroidManifest.</string>
 
     <!-- SrcCodeEditor -->
+    <string name="menu_find_replace">Find &amp; Replace</string>
+    <string name="menu_word_wrap">Word wrap</string>
+    <string name="menu_pretty_print">Pretty print</string>
+    <string name="menu_select_language">Select language</string>
     <string name="error_incorrect_parentheses">Your code contains incorrectly nested parentheses</string>
     <string name="error_format_xml_failed">Failed to format XML file</string>
     <string name="toast_only_java_xml_format">Only Java and XML files can be formatted</string>
@@ -1588,6 +1592,21 @@ You must enter the API key to operate the map normally."</string>
     <string name="blocks_toast_blocks_imported">Blocks imported!</string>
     <string name="blocks_error_missing">This block is Missing</string>
     <string name="blocks_error_already_exists">This block already exists in your collection</string>
+
+    <!-- AppSettings -->
+    <string name="apk_sign_select_file">Please select an APK file to sign</string>
+    <string name="apk_sign_success">Successfully saved signed APK to: /Internal storage/sketchware/signed_apk/%s</string>
+    <string name="error_name_empty">Name cannot be empty</string>
+
+    <!-- BlocksManager -->
+    <string name="blocks_error_valid_hex">Please enter a valid HEX color</string>
+
+    <!-- CompileLogActivity -->
+    <string name="toast_compile_logs_cleared">Compile logs have been cleared.</string>
+    <string name="toast_no_compile_logs">No compile logs found.</string>
+
+    <!-- CollectErrorActivity -->
+    <string name="toast_copied">Copied</string>
 
     <!-- ViewCodeEditorActivity menu items -->
     <string name="menu_undo">Undo</string>

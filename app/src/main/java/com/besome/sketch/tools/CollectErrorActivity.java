@@ -73,7 +73,7 @@ public class CollectErrorActivity extends BaseAppCompatActivity {
                 ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData clip = ClipData.newPlainText("error", deviceInfo + "\n\n```\n" + error + "\n```");
                 clipboard.setPrimaryClip(clip);
-                runOnUiThread(() -> SketchwareUtil.toast("Copied", Toast.LENGTH_LONG));
+                runOnUiThread(() -> SketchwareUtil.toast(Helper.getResString(R.string.toast_copied), Toast.LENGTH_LONG));
             });
         }
     }
