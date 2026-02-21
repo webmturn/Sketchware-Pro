@@ -25,7 +25,7 @@
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Parent attributes"
+                android:text="@string/parent_attr_title"
                 android:textAppearance="?attr/textAppearanceTitleLarge" />
 
             <TextView

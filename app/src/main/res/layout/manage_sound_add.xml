@@ -148,5 +148,5 @@
         android:id="@+id/chk_collection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add to my collection" />
+        android:text="@string/sound_add_to_collection" />
 </LinearLayout>

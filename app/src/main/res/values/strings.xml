@@ -2105,6 +2105,51 @@ You must enter the API key to operate the map normally."</string>
     <!-- Layout: import_icon -->
     <string name="import_icon_filter">Filter</string>
 
+    <!-- Layout: library_downloader_dialog -->
+    <string name="lib_downloader_title">Download a dependency</string>
+    <string name="lib_downloader_hint">Enter a dependency</string>
+
+    <!-- Layout: logic_editor_drawer -->
+    <string name="logic_editor_settings">Settings</string>
+
+    <!-- Layout: manage_library_admob_app_id -->
+    <string name="admob_edit_label">EDIT</string>
+
+    <!-- Layout: manage_library_admob_listing -->
+    <string name="admob_no_ad_units">No Ad Units to display</string>
+
+    <!-- Layout: manage_library_manage_firebase -->
+    <string name="firebase_import_json">Import from google-services.json</string>
+
+    <!-- Layout: manage_permission -->
+    <string name="permission_manager_title">Permissions Manager</string>
+    <string name="permission_hint_search">Search for permissions</string>
+    <string name="permission_scroll_top">Scroll to the top</string>
+
+    <!-- Layout: manage_screen_custom_view_add -->
+    <string name="custom_view_desc">Custom View can be used to change the way items are displayed inside the ListView or the Spinner</string>
+
+    <!-- Layout: myprojects -->
+    <string name="projects_title">Projects</string>
+
+    <!-- Layout: myprojects_item_special -->
+    <string name="projects_restore_desc">Get your projects in a couple of clicks</string>
+
+    <!-- Layout: property_popup_input_size -->
+    <string name="input_size_hint">Enter divider height value</string>
+
+    <!-- Layout: property_popup_parent_attr -->
+    <string name="parent_attr_title">Parent attributes</string>
+
+    <!-- Layout: quiz_board -->
+    <string name="quiz_while_you_wait">While you wait…</string>
+
+    <!-- Layout: view_editor -->
+    <string name="view_editor_drag_delete">Drag here to delete</string>
+
+    <!-- Layout: manage_sound_add -->
+    <string name="sound_add_to_collection">Add to my collection</string>
+
     <!-- ViewCodeEditorActivity menu items -->
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
