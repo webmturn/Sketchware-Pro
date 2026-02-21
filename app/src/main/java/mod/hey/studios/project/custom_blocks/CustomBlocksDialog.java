@@ -143,7 +143,7 @@ public class CustomBlocksDialog {
                     showCreatePaletteDialog(context, paletteList, paletteDir, customBlocksManager, list, blocksList, allBlocksList, blocksDir);
                     dialog.dismiss();
                 })
-                .setPositiveButton("Import", (dialog, which) -> {
+                .setPositiveButton(R.string.common_word_import, (dialog, which) -> {
                     addBlocksToList(customBlocksManager, list, blocksList, selectedPalette.get() + 9);
                     allBlocksList.addAll(blocksList);
                     FileUtil.writeFile(blocksDir, new Gson().toJson(allBlocksList));

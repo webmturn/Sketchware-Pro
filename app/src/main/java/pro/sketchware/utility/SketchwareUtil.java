@@ -160,7 +160,7 @@ public class SketchwareUtil {
         dialog.setIcon(R.drawable.break_warning_96_red);
         dialog.setTitle("Couldn't get " + componentLabel);
         dialog.setMessage("Failed to parse " + componentLabel + " from file " + json + ". Fix by renaming old file to " + json.getName() + ".bak? " + "If not, no " + componentLabel + " will be used.");
-        dialog.setPositiveButton("Rename", (v, which) -> {
+        dialog.setPositiveButton(R.string.common_word_rename, (v, which) -> {
             FileUtil.renameFile(json.getAbsolutePath(), json.getAbsolutePath() + ".bak");
             afterRenameLogic.accept(null);
             v.dismiss();
@@ -174,7 +174,7 @@ public class SketchwareUtil {
         builder.setTitle(Helper.getResString(R.string.common_error_an_error_occurred));
         builder.setIcon(R.drawable.ic_mtrl_warning);
         builder.setMessage(errorMessage);
-        builder.setPositiveButton("Okay", null);
+        builder.setPositiveButton(R.string.common_word_okay, null);
         builder.show();
     }
 

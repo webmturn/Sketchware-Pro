@@ -1476,6 +1476,10 @@ You must enter the API key to operate the map normally."</string>
     <string name="common_word_rename">Rename</string>
     <string name="common_word_apply">Apply</string>
     <string name="common_word_empty">Empty</string>
+    <string name="common_word_import">Import</string>
+    <string name="common_word_okay">Okay</string>
+    <string name="common_word_view_changes">View changes</string>
+    <string name="resources_open_code_editor">Open code editor</string>
 
     <!-- Project settings -->
     <string name="project_settings_title">Project Settings</string>

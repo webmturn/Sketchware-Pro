@@ -371,7 +371,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
                 
                 You can view all changes whenever you want at the About Sketchware Pro screen.""");
 
-        bottomSheetDialog.setPositiveButton("View changes", (dialog, which) -> {
+        bottomSheetDialog.setPositiveButton(getString(R.string.common_word_view_changes), (dialog, which) -> {
             ConfigActivity.setSetting(ConfigActivity.SETTING_CRITICAL_UPDATE_REMINDER, true);
             Intent launcher = new Intent(this, AboutActivity.class);
             launcher.putExtra("select", "changelog");

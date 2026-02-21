@@ -227,7 +227,7 @@ public class EventsManagerDetailsFragment extends BaseFragment {
                             fragment.setArguments(args);
                             openFragment(fragment);
                         })
-                        .setNegativeButton("Cancel", (di, i) -> di.dismiss())
+                        .setNegativeButton(R.string.common_word_cancel, (di, i) -> di.dismiss())
                         .show();
                 return true;
             });

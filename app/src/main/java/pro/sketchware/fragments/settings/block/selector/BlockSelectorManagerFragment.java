@@ -173,7 +173,7 @@ public class BlockSelectorManagerFragment extends BaseFragment {
             adapter.notifyDataSetChanged();
             v.dismiss();
         });
-        dialog.setNegativeButton("Cancel", (v, which) -> v.dismiss());
+        dialog.setNegativeButton(R.string.common_word_cancel, (v, which) -> v.dismiss());
         dialog.show();
     }
 

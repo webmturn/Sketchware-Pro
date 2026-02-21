@@ -154,7 +154,7 @@ public class SrcViewerActivity extends BaseAppCompatActivity {
                 .setTitle(R.string.dialog_title_select_font_size)
                 .setIcon(R.drawable.ic_mtrl_formattext)
                 .setView(layout)
-                .setPositiveButton("Apply", (dialog, which) -> {
+                .setPositiveButton(R.string.common_word_apply, (dialog, which) -> {
                     editorFontSize = picker.getValue();
                     binding.editor.setTextSize(editorFontSize);
                 })
