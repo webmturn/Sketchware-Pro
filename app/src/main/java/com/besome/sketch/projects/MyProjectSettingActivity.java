@@ -267,7 +267,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
         if (!o.exists()) {
             try {
                 o.createNewFile();
-            } catch (Exception e) {
+            } catch (IOException e) {
                 Log.e("MyProjectSettingActivity", e.getMessage(), e);
             }
         }
@@ -359,7 +359,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
             String[] split = toParse.split("\\.");
             projectVersionNameFirstPart = parseInt(split[0], 1);
             projectVersionNameSecondPart = parseInt(split[1], 0);
-        } catch (Exception e) {
+        } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
             Log.w("MyProjectSettingActivity", "Failed to parse version: " + toParse, e);
         }
     }
@@ -431,7 +431,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
     private int parseInt(String input, int fallback) {
         try {
             return Integer.parseInt(input);
-        } catch (Exception unused) {
+        } catch (NumberFormatException unused) {
             return fallback;
         }
     }
@@ -557,7 +557,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
                 FileUtil.deleteFile(getTempIconsFolderPath("mipmaps" + File.separator));
                 FileUtil.copyDirectory(new File(getTempIconsFolderPath("temp_icons" + File.separator)), new File(getIconsFolderPath()));
                 FileUtil.deleteFile(getTempIconsFolderPath("temp_icons" + File.separator));
-            } catch (Exception e) {
+            } catch (IOException e) {
                 Log.e("MyProjectSettingActivity", e.getMessage(), e);
             }
 

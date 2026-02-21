@@ -638,7 +638,7 @@ public class ViewPane extends RelativeLayout {
                 if (TextUtils.isEmpty(listitem)) {
                     try {
                         listItem.setItemCount(Integer.parseInt(itemCount));
-                    } catch (Exception exception) {
+                    } catch (NumberFormatException exception) {
                         crashlytics.recordException(exception);
                     }
                 }
