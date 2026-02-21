@@ -1421,6 +1421,7 @@ You must enter the API key to operate the map normally."</string>
     <string name="googlemap_settings_title">GoogleMap Settings</string>
 
     <!-- Settings -->
+    <string name="settings_title">App Settings</string>
     <string name="dialog_title_select_icon">Select an icon</string>
     <string name="settings_backup_directory_title">Backup directory</string>
     <string name="settings_backup_directory_msg">Directory inside /Internal storage/, e.g. .sketchware/backups</string>

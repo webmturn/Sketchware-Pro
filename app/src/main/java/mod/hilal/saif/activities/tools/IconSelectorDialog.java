@@ -18,6 +18,7 @@ import java.util.List;
 
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.OldResourceIdMapper;
+import pro.sketchware.R;
 import pro.sketchware.databinding.DialogIconSelectorBinding;
 import pro.sketchware.databinding.ItemIconSelectorBinding;
 
@@ -53,9 +54,9 @@ public class IconSelectorDialog {
         }
 
         builder = new MaterialAlertDialogBuilder(activity)
-                .setTitle("Select an icon")
+                .setTitle(R.string.dialog_title_select_icon)
                 .setView(dialogBinding.getRoot())
-                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                .setNegativeButton(R.string.common_word_cancel, (dialog, which) -> dialog.dismiss())
                 .create();
         builder.show();
     }
