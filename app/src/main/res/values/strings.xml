@@ -1546,6 +1546,27 @@ You must enter the API key to operate the map normally."</string>
     <string name="toast_logcat_exported">Logcat exported successfully: %s</string>
     <string name="error_key_already_exists">\"%s\" is already exist</string>
 
+    <!-- File manager common messages -->
+    <string name="error_invalid_file_name">Invalid file name</string>
+    <string name="error_invalid_name_short">Invalid name</string>
+    <string name="toast_folder_created">Folder was created successfully</string>
+    <string name="toast_file_created">File was created successfully</string>
+    <string name="toast_select_file_type">Select a file type</string>
+    <string name="toast_renamed_successfully">Renamed successfully</string>
+    <string name="error_file_exists">File exists already</string>
+    <string name="toast_created_file">Created file successfully</string>
+    <string name="error_no_files_selected">No files selected</string>
+    <string name="error_import_resource">Couldn\'t import resource! [%s]</string>
+    <string name="error_import_file">Couldn\'t import file! [%s]</string>
+    <string name="toast_only_xml_editable">Only XML files can be edited</string>
+    <string name="toast_removed_activity_manifest">NOTE: Removed Activity from manifest</string>
+    <string name="toast_added_activity_manifest">Successfully added %s as Activity to AndroidManifest</string>
+    <string name="toast_removed_activity_from_manifest">Successfully removed Activity %s from AndroidManifest</string>
+    <string name="toast_activity_not_in_manifest">Activity was not defined in AndroidManifest.</string>
+    <string name="toast_added_service_manifest">Successfully added %s as Service to AndroidManifest</string>
+    <string name="toast_removed_service_from_manifest">Successfully removed Service %s from AndroidManifest</string>
+    <string name="toast_service_not_in_manifest">Service was not defined in AndroidManifest.</string>
+
     <!-- ViewCodeEditorActivity menu items -->
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>

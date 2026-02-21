@@ -134,7 +134,7 @@ public class ManageAssetsActivity extends BaseAppCompatActivity {
                 String editable = Helper.getText(inputText).trim();
 
                 if (editable.isEmpty()) {
-                    SketchwareUtil.toastError("Invalid name");
+                    SketchwareUtil.toastError(Helper.getResString(R.string.error_invalid_name_short));
                     return;
                 }
 
@@ -144,12 +144,12 @@ public class ManageAssetsActivity extends BaseAppCompatActivity {
                 } else if (checkedChipId == R.id.chip_folder) {
                     FileUtil.makeDir(new File(current_path, editable).getAbsolutePath());
                 } else {
-                    SketchwareUtil.toast("Select a file type");
+                    SketchwareUtil.toast(Helper.getResString(R.string.toast_select_file_type));
                     return;
                 }
 
                 refresh();
-                SketchwareUtil.toast("File was created successfully");
+                SketchwareUtil.toast(Helper.getResString(R.string.toast_file_created));
                 dialogInterface.dismiss();
             });
         });
@@ -178,7 +178,7 @@ public class ManageAssetsActivity extends BaseAppCompatActivity {
                         FileUtil.copyDirectory(file, new File(current_path, file.getName()));
                         refresh();
                     } catch (IOException e) {
-                        SketchwareUtil.toastError("Couldn't import file! [" + e.getMessage() + "]");
+                        SketchwareUtil.toastError(String.format(Helper.getResString(R.string.error_import_file), e.getMessage()));
                     }
                 }
             }
@@ -200,7 +200,7 @@ public class ManageAssetsActivity extends BaseAppCompatActivity {
                     if (!Helper.getText(inputText).isEmpty()) {
                         FileUtil.renameFile(assetsAdapter.getItem(position), new File(current_path, Helper.getText(inputText)).getAbsolutePath());
                         refresh();
-                        SketchwareUtil.toast("Renamed successfully");
+                        SketchwareUtil.toast(Helper.getResString(R.string.toast_renamed_successfully));
                     }
                     dialogInterface.dismiss();
                 })
@@ -222,7 +222,7 @@ public class ManageAssetsActivity extends BaseAppCompatActivity {
                 .setPositiveButton(R.string.common_word_delete, (dialog, which) -> {
                     FileUtil.deleteFile(assetsAdapter.getItem(position));
                     refresh();
-                    SketchwareUtil.toast("Deleted successfully");
+                    SketchwareUtil.toast(Helper.getResString(R.string.toast_deleted_successfully));
                 })
                 .setNegativeButton(R.string.common_word_cancel, null)
                 .create()

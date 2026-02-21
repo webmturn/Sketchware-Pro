@@ -195,7 +195,7 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
             Button positiveButton = ((androidx.appcompat.app.AlertDialog) dialogInterface).getButton(DialogInterface.BUTTON_POSITIVE);
             positiveButton.setOnClickListener(view -> {
                 if (Helper.getText(inputText).isEmpty()) {
-                    SketchwareUtil.toastError("Invalid file name");
+                    SketchwareUtil.toastError(Helper.getResString(R.string.error_invalid_file_name));
                     return;
                 }
 
@@ -220,17 +220,17 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
                 } else if (checkedChipId == R.id.chip_folder) {
                     FileUtil.makeDir(new File(current_path, name).getAbsolutePath());
                     refresh();
-                    SketchwareUtil.toast("Folder was created successfully");
+                    SketchwareUtil.toast(Helper.getResString(R.string.toast_folder_created));
                     dialog.dismiss();
                     return;
                 } else {
-                    SketchwareUtil.toast("Select a file type");
+                    SketchwareUtil.toast(Helper.getResString(R.string.toast_select_file_type));
                     return;
                 }
 
                 FileUtil.writeFile(new File(current_path, name + extension).getAbsolutePath(), newFileContent);
                 refresh();
-                SketchwareUtil.toast("File was created successfully");
+                SketchwareUtil.toast(Helper.getResString(R.string.toast_file_created));
                 dialog.dismiss();
             });
 
@@ -286,7 +286,7 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
                     if (frc.getJavaManifestList().contains(filesAdapter.getFullName(position))) {
                         frc.getJavaManifestList().remove(filesAdapter.getFullName(position));
                         FileUtil.writeFile(fpu.getManifestJava(sc_id), new Gson().toJson(frc.listJavaManifest));
-                        SketchwareUtil.toast("NOTE: Removed Activity from manifest");
+                        SketchwareUtil.toast(Helper.getResString(R.string.toast_removed_activity_manifest));
                     }
 
                     if (renameOccurrencesCheckBox.isChecked()) {
@@ -297,7 +297,7 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
 
                 FileUtil.renameFile(filesAdapter.getItem(position), new File(current_path, Helper.getText(inputText)).getAbsolutePath());
                 refresh();
-                SketchwareUtil.toast("Renamed successfully");
+                SketchwareUtil.toast(Helper.getResString(R.string.toast_renamed_successfully));
             }
             dialogInterface.dismiss();
         }).create();
@@ -328,7 +328,7 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
 
             FileUtil.deleteFile(filesAdapter.getItem(position));
             refresh();
-            SketchwareUtil.toast("Deleted successfully");
+            SketchwareUtil.toast(Helper.getResString(R.string.toast_deleted_successfully));
         }).setNegativeButton(R.string.common_word_cancel, null).create().show();
     }
 
@@ -499,27 +499,27 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
                     case "Add as Activity to manifest" -> {
                         frc.getJavaManifestList().add(getFullName(position));
                         FileUtil.writeFile(fpu.getManifestJava(sc_id), new Gson().toJson(frc.listJavaManifest));
-                        SketchwareUtil.toast("Successfully added " + getFileNameWoExt(position) + " as Activity to AndroidManifest");
+                        SketchwareUtil.toast(String.format(Helper.getResString(R.string.toast_added_activity_manifest), getFileNameWoExt(position)));
                     }
                     case "Remove Activity from manifest" -> {
                         if (frc.getJavaManifestList().remove(getFullName(position))) {
                             FileUtil.writeFile(fpu.getManifestJava(sc_id), new Gson().toJson(frc.listJavaManifest));
-                            SketchwareUtil.toast("Successfully removed Activity " + getFileNameWoExt(position) + " from AndroidManifest");
+                            SketchwareUtil.toast(String.format(Helper.getResString(R.string.toast_removed_activity_from_manifest), getFileNameWoExt(position)));
                         } else {
-                            SketchwareUtil.toast("Activity was not defined in AndroidManifest.");
+                            SketchwareUtil.toast(Helper.getResString(R.string.toast_activity_not_in_manifest));
                         }
                     }
                     case "Add as Service to manifest" -> {
                         frc.getServiceManifestList().add(getFullName(position));
                         FileUtil.writeFile(fpu.getManifestService(sc_id), new Gson().toJson(frc.listServiceManifest));
-                        SketchwareUtil.toast("Successfully added " + getFileNameWoExt(position) + " as Service to AndroidManifest");
+                        SketchwareUtil.toast(String.format(Helper.getResString(R.string.toast_added_service_manifest), getFileNameWoExt(position)));
                     }
                     case "Remove Service from manifest" -> {
                         if (frc.getServiceManifestList().remove(getFullName(position))) {
                             FileUtil.writeFile(fpu.getManifestService(sc_id), new Gson().toJson(frc.listServiceManifest));
-                            SketchwareUtil.toast("Successfully removed Service " + getFileNameWoExt(position) + " from AndroidManifest");
+                            SketchwareUtil.toast(String.format(Helper.getResString(R.string.toast_removed_service_from_manifest), getFileNameWoExt(position)));
                         } else {
-                            SketchwareUtil.toast("Service was not defined in AndroidManifest.");
+                            SketchwareUtil.toast(Helper.getResString(R.string.toast_service_not_in_manifest));
                         }
                     }
                     case "Edit" -> goEditFile(position);
