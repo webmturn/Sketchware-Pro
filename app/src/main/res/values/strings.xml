@@ -1326,6 +1326,32 @@ You must enter the API key to operate the map normally."</string>
     <!-- Common words (missing) -->
     <string name="common_word_please_wait">Please wait</string>
 
+    <!-- Backup / Restore -->
+    <string name="backup_title_options">Backup Options</string>
+    <string name="backup_include_local_libs">Include used Local libraries</string>
+    <string name="backup_include_custom_blocks">Include used Custom Blocks</string>
+    <string name="backup_button_back_up">Back up</string>
+    <string name="backup_select_to_restore">Select backups to restore (%s)</string>
+    <string name="backup_msg_creating">Creating backup…</string>
+    <string name="backup_msg_restoring">Restoring…</string>
+    <string name="backup_msg_success">Successfully created backup to: %s</string>
+    <string name="backup_button_copy_libs">Copy</string>
+    <string name="backup_button_dont_copy_libs">Don\'t copy</string>
+
+    <!-- Library exclude -->
+    <string name="library_title_exclude">Exclude built-in libraries</string>
+    <string name="library_title_select">Select built-in libraries</string>
+    <string name="library_msg_reset_confirm">Reset excluded built-in libraries? This action cannot be undone.</string>
+
+    <!-- Custom blocks -->
+    <string name="blocks_title_import_to">Import Custom blocks to</string>
+    <string name="blocks_title_create_palette">Create a new palette</string>
+    <string name="blocks_button_create_palette">Create new palette</string>
+
+    <!-- Logcat -->
+    <string name="logcat_title_filter_package">Filter by package name</string>
+    <string name="logcat_msg_filter_hint">For multiple package names, separate them with a comma (,).</string>
+
     <string name="design_tab_title_component">Component</string>
     <string name="design_tab_title_event">Event</string>
     <string name="design_tab_title_view">View</string>
