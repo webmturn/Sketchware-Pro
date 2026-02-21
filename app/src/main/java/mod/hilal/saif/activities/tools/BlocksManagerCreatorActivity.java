@@ -366,7 +366,7 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
         if (typeObject instanceof String typeString) {
 
             if (typeString.equals(" ")) {
-                binding.type.setText("regular");
+                binding.type.setText(getString(R.string.block_type_regular));
             } else {
                 binding.type.setText(typeString);
             }

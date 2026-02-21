@@ -2301,6 +2301,36 @@ You must enter the API key to operate the map normally."</string>
     <string name="component_helper_add_var">Allows adding multiple fields to your class.\nUse \'###\' as a placeholder for the component name.</string>
     <string name="component_helper_def_add_var">Use this to initialize any additionally added variables.\nUse \'###\' as a placeholder for the component name.</string>
 
+    <!-- Java: ExtraMenuBean -->
+    <string name="logic_custom_activities">Custom Activities</string>
+
+    <!-- Java: EventsManagerDetailsFragment -->
+    <string name="events_activity_event">Activity event</string>
+
+    <!-- Java: StylesAdapter -->
+    <string name="style_no_parent">No Parent</string>
+
+    <!-- Java: BlocksManager -->
+    <string name="blocks_count_format">Blocks: %d</string>
+    <string name="blocks_no_palettes">No palettes</string>
+    <string name="blocks_palette_count_format">%d Palettes</string>
+
+    <!-- Java: AppSettings -->
+    <string name="signing_apk_progress">Signing APK…</string>
+
+    <!-- Java: XMLCommandAdapter -->
+    <string name="xml_cmd_reference_format">Reference: %s</string>
+
+    <!-- Java: BlocksManagerCreatorActivity -->
+    <string name="block_type_regular">regular</string>
+
+    <!-- Java: ProjectPreviewActivity -->
+    <string name="store_downloads_format">Downloads: %s</string>
+    <string name="store_size_format">Size: %s</string>
+    <string name="store_released_format">Released: %s</string>
+    <string name="store_verified">Verified</string>
+    <string name="store_editors_choice">Editor\'s Choice</string>
+
     <!-- ViewCodeEditorActivity menu items -->
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>

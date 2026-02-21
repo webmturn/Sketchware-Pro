@@ -263,7 +263,7 @@ public class AppSettings extends BaseAppCompatActivity {
         scroll_view.addView(tv_log);
         layout_quiz.addView(scroll_view);
 
-        tv_progress.setText("Signing APK...");
+        tv_progress.setText(getString(R.string.signing_apk_progress));
 
         AlertDialog building_dialog = new MaterialAlertDialogBuilder(this)
                 .setView(building_root)

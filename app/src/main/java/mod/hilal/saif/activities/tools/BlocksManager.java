@@ -312,7 +312,7 @@ public class BlocksManager extends BaseAppCompatActivity {
         }
 
         binding.paletteRecycler.setAdapter(new PaletteAdapter(pallet_listmap));
-        binding.recycleSub.setText("Blocks: " + (long) getN(-1));
+        binding.recycleSub.setText(getString(R.string.blocks_count_format, (long) getN(-1)));
         refreshCount();
     }
 
@@ -330,9 +330,9 @@ public class BlocksManager extends BaseAppCompatActivity {
 
     private void refreshCount() {
         if (pallet_listmap.isEmpty()) {
-            binding.paletteCount.setText("No palettes");
+            binding.paletteCount.setText(getString(R.string.blocks_no_palettes));
         } else {
-            binding.paletteCount.setText(pallet_listmap.size() + " Palettes");
+            binding.paletteCount.setText(getString(R.string.blocks_palette_count_format, pallet_listmap.size()));
         }
     }
 
@@ -568,10 +568,10 @@ public class BlocksManager extends BaseAppCompatActivity {
 
             holder.itemView.setVisibility(View.VISIBLE);
             holder.itemBinding.title.setText(Objects.requireNonNull(pallet_listmap.get(position).get("name")).toString());
-            holder.itemBinding.sub.setText("Blocks: " + (long) getN(position + 9));
+            holder.itemBinding.sub.setText(getString(R.string.blocks_count_format, (long) getN(position + 9)));
             holder.itemBinding.color.setBackgroundColor(backgroundColor);
             holder.itemBinding.dragHandler.setVisibility(View.VISIBLE);
-            binding.recycleSub.setText("Blocks: " + (long) getN(-1));
+            binding.recycleSub.setText(getString(R.string.blocks_count_format, (long) getN(-1)));
 
             holder.itemBinding.backgroundCard.setOnLongClickListener(v -> {
                 final String edit = "Edit";

@@ -73,7 +73,7 @@ public class XMLCommandAdapter
                     CommandBlock.getInputName(
                             item.get("input") != null ? item.get("input").toString() : ""));
             binding.tvName.setSingleLine(true);
-            binding.tvValue.setText("Reference: " + item.get("reference").toString());
+            binding.tvValue.setText(binding.getRoot().getContext().getString(R.string.xml_cmd_reference_format, item.get("reference").toString()));
             binding.tvValue.setSingleLine(true);
             binding.imgLeftIcon.setImageResource(R.drawable.ic_mtrl_code);
             binding.getRoot()

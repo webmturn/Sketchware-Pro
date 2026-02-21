@@ -546,7 +546,7 @@ public class ExtraMenuBean {
                     }
                     if (!activityMenu.isEmpty()) {
                         TextView txt = new TextView(logicEditor);
-                        txt.setText("Custom Activities");
+                        txt.setText(logicEditor.getString(R.string.logic_custom_activities));
                         txt.setPadding((int) getDip(2), (int) getDip(4), (int) getDip(4), (int) getDip(4));
                         txt.setTextSize(14f);
                         viewGroup.addView(txt);

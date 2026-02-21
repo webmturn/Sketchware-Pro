@@ -60,18 +60,18 @@ public class ProjectPreviewActivity extends BaseAppCompatActivity {
         }
 
         if (project.getIsEditorChoice().equals("1")) {
-            addChip("Editor's Choice");
+            addChip(getString(R.string.store_editors_choice));
         }
 
         if (project.getIsVerified().equals("1")) {
-            addChip("Verified");
+            addChip(getString(R.string.store_verified));
         }
 
         addChip(project.getCategory());
 
-        binding.downloads.setText("Downloads: " + project.getDownloads());
-        binding.filesize.setText("Size: " + project.getProjectSize());
-        binding.timestamp.setText("Released: " + DateFormat.getDateInstance().format(new Date(Long.parseLong(project.getPublishedTimestamp()))));
+        binding.downloads.setText(getString(R.string.store_downloads_format, project.getDownloads()));
+        binding.filesize.setText(getString(R.string.store_size_format, project.getProjectSize()));
+        binding.timestamp.setText(getString(R.string.store_released_format, DateFormat.getDateInstance().format(new Date(Long.parseLong(project.getPublishedTimestamp())))));
         binding.btnComments.setOnClickListener(v -> openCommentsSheet());
         binding.btnDownload.setOnClickListener(v -> SketchwareUtil.toastError(Helper.getResString(R.string.error_downloading_unavailable)));
         binding.btnOpenIn.setOnClickListener(v -> openProject());
