@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:navigationIcon="?attr/homeAsUpIndicator"
-            app:title="Exclude built-in libraries" />
+            app:title="@string/exclude_libs_title" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
@@ -90,7 +90,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="No excluded built-in libraries found"
+                        android:text="@string/exclude_libs_no_content"
                         android:textAppearance="?attr/textAppearanceBodyLargeEmphasized"
                         android:textColor="?attr/colorOnSurface"
                         android:textStyle="bold" />
@@ -100,7 +100,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:gravity="center"
-                        android:text="Enable this feature if disabled, and tap a floating action button to select and exclude built-in library."
+                        android:text="@string/exclude_libs_no_content_desc"
                         android:textAppearance="?attr/textAppearanceBodyMedium"
                         android:textColor="?attr/colorOnSurfaceVariant" />
                 </LinearLayout>
@@ -120,7 +120,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="8dp"
-                        android:text="Excluded built-in libraries"
+                        android:text="@string/exclude_libs_excluded_title"
                         android:textColor="?attr/colorOnSurface"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -149,7 +149,7 @@
                         android:layout_marginTop="16dp"
                         android:drawablePadding="12dp"
                         android:paddingEnd="16dp"
-                        android:text="This might break your project if you don't know what you're doing!"
+                        android:text="@string/exclude_libs_warning"
                         android:textColor="?attr/colorError"
                         app:drawableStartCompat="@drawable/ic_mtrl_warning"
                         app:drawableTint="?attr/colorError" />
@@ -165,6 +165,6 @@
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="24dp"
-        android:text="Exclude library"
+        android:text="@string/exclude_libs_fab"
         app:icon="@drawable/ic_mtrl_add" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

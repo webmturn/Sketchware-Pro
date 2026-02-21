@@ -1927,6 +1927,32 @@ You must enter the API key to operate the map normally."</string>
     <string name="build_settings_no_http_legacy">Don\'t include http-legacy-28.dex</string>
     <string name="build_settings_enable_logcat">Enable debug logcat logs viewable in Logcat Reader. Not enabled in exported AABs/APKs.</string>
 
+    <!-- Layout: property_popup_input_indent -->
+    <string name="padding_hint_value">Enter padding value</string>
+    <string name="padding_all_sides">Padding on all sides</string>
+
+    <!-- Layout: manage_font_add -->
+    <string name="font_preview_title">Font preview</string>
+    <string name="font_preview_sample">This is how your font looks like.</string>
+    <string name="font_hint_name">Font name</string>
+    <string name="font_select">Select</string>
+    <string name="font_clear">Clear</string>
+    <string name="font_add_to_collection">Add to my collection</string>
+
+    <!-- Layout: manage_library_exclude_builtin_libraries -->
+    <string name="exclude_libs_title">Exclude built-in libraries</string>
+    <string name="exclude_libs_no_content">No excluded built-in libraries found</string>
+    <string name="exclude_libs_no_content_desc">Enable this feature if disabled, and tap a floating action button to select and exclude built-in library.</string>
+    <string name="exclude_libs_excluded_title">Excluded built-in libraries</string>
+    <string name="exclude_libs_warning">This might break your project if you don\'t know what you\'re doing!</string>
+    <string name="exclude_libs_fab">Exclude library</string>
+
+    <!-- Layout: fragment_projects_store -->
+    <string name="store_side_note">This is still a basic implementation of the projects store. We\'re actively working on improving it. Stay tuned!</string>
+    <string name="store_editors_choice">Editor\'s Choice</string>
+    <string name="store_new_updated">New &amp; Updated</string>
+    <string name="store_most_downloaded">Most downloaded projects</string>
+
     <!-- ViewCodeEditorActivity menu items -->
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
