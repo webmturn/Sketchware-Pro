@@ -188,13 +188,13 @@ public class PropertyAttributesItem extends LinearLayout implements View.OnClick
                 }
             }
             new MaterialAlertDialogBuilder(getContext())
-                    .setTitle("Choose an attributes")
+                    .setTitle(R.string.dialog_title_choose_attr)
                     .setAdapter(
                             new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, list), (d, w) -> {
                                 var attr = list.get(w);
                                 if (RELATIVE_IDS.contains(attr)) {
                                     new MaterialAlertDialogBuilder(getContext())
-                                            .setTitle("Choose an id")
+                                            .setTitle(R.string.dialog_title_choose_id)
                                             .setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, ids), (d2, w2) -> {
                                                 var id = ids.get(w2);
                                                 if (new CircularDependencyDetector(beans, bean).isLegalAttribute(id, attr)) {
@@ -284,7 +284,7 @@ public class PropertyAttributesItem extends LinearLayout implements View.OnClick
                     var filteredIds = new ArrayList<>(ids);
                     filteredIds.remove(value.get(attr));
                     new MaterialAlertDialogBuilder(getContext())
-                            .setTitle("Choose an id")
+                            .setTitle(R.string.dialog_title_choose_id)
                             .setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, filteredIds), (d, w) -> {
                                 var id = filteredIds.get(w);
                                 value.put(attr, id);
@@ -297,16 +297,16 @@ public class PropertyAttributesItem extends LinearLayout implements View.OnClick
                 });
                 itemView.setOnLongClickListener(v -> {
                     MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(getContext());
-                    dialog.setTitle("Delete");
-                    dialog.setMessage("Are you sure you want to delete " + attr + "?");
-                    dialog.setPositiveButton("Yes", (view, which) -> {
+                    dialog.setTitle(R.string.dialog_title_delete);
+                    dialog.setMessage(String.format(Helper.getResString(R.string.dialog_msg_delete_attr), attr));
+                    dialog.setPositiveButton(R.string.common_word_yes, (view, which) -> {
                         value.remove(attr);
                         if (valueChangeListener != null)
                             valueChangeListener.a(key, value);
                         submitList(new ArrayList<>(value.keySet()));
                         view.dismiss();
                     });
-                    dialog.setNegativeButton("No", (view, which) -> view.dismiss());
+                    dialog.setNegativeButton(R.string.common_word_no, (view, which) -> view.dismiss());
                     dialog.show();
                     return true;
                 });
@@ -333,9 +333,9 @@ public class PropertyAttributesItem extends LinearLayout implements View.OnClick
                 });
                 itemView.setOnLongClickListener(v -> {
                     MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(getContext());
-                    dialog.setTitle("Delete");
-                    dialog.setMessage("Are you sure you want to delete " + attr + "?");
-                    dialog.setPositiveButton("Yes", (view, which) -> {
+                    dialog.setTitle(R.string.dialog_title_delete);
+                    dialog.setMessage(String.format(Helper.getResString(R.string.dialog_msg_delete_attr), attr));
+                    dialog.setPositiveButton(R.string.common_word_yes, (view, which) -> {
                         value.remove(attr);
                         if (valueChangeListener != null)
                             valueChangeListener.a(key, value);
@@ -343,7 +343,7 @@ public class PropertyAttributesItem extends LinearLayout implements View.OnClick
                         view.dismiss();
                     });
 
-                    dialog.setNegativeButton("No", (view, which) -> view.dismiss());
+                    dialog.setNegativeButton(R.string.common_word_no, (view, which) -> view.dismiss());
                     dialog.show();
                     return true;
                 });

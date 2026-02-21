@@ -1352,6 +1352,51 @@ You must enter the API key to operate the map normally."</string>
     <string name="logcat_title_filter_package">Filter by package name</string>
     <string name="logcat_msg_filter_hint">For multiple package names, separate them with a comma (,).</string>
 
+    <!-- Block management -->
+    <string name="file_picker_select_json">Select a JSON file</string>
+    <string name="blocks_recycle_bin">Recycle Bin</string>
+    <string name="blocks_manage_title">Manage Block</string>
+    <string name="blocks_delete_title">Delete block?</string>
+    <string name="blocks_delete_msg">Are you sure you want to delete this block?</string>
+    <string name="button_recycle_bin">Recycle bin</string>
+    <string name="button_delete_permanently">Delete permanently</string>
+    <string name="blocks_restore_title">Restore to</string>
+    <string name="button_restore">Restore</string>
+    <string name="blocks_move_title">Move to</string>
+    <string name="button_move">Move</string>
+    <string name="blocks_import_title">Import blocks</string>
+    <string name="common_word_import">Import</string>
+    <string name="blocks_type_title">Block type</string>
+    <string name="blocks_add_title">Add a new block</string>
+    <string name="blocks_insert_title">Insert block</string>
+    <string name="blocks_edit_title">Edit block</string>
+    <string name="blocks_config_title">Block configuration</string>
+
+    <!-- Property editors -->
+    <string name="dialog_title_delete">Delete</string>
+    <string name="dialog_msg_delete_attr">Are you sure you want to delete %s?</string>
+    <string name="dialog_title_add_attribute">Add new attribute</string>
+    <string name="dialog_title_choose_attr">Choose an attributes</string>
+    <string name="dialog_title_choose_id">Choose an id</string>
+
+    <!-- Events manager -->
+    <string name="events_new_listener">New Listener</string>
+    <string name="events_edit_listener">Edit Listener</string>
+    <string name="events_delete_listener_title">Delete listener</string>
+    <string name="events_delete_confirm_msg">Are you sure you want to delete this item?</string>
+    <string name="events_details_title">Event Details</string>
+    <string name="events_delete_event_msg">Delete this event?</string>
+    <string name="events_properties_title">Event Properties</string>
+    <string name="events_new_activity_title">New Activity Event</string>
+    <string name="file_picker_select_txt">Select a .txt file</string>
+
+    <!-- Settings -->
+    <string name="dialog_title_select_icon">Select an icon</string>
+    <string name="settings_backup_directory_title">Backup directory</string>
+    <string name="settings_backup_directory_msg">Directory inside /Internal storage/, e.g. .sketchware/backups</string>
+    <string name="settings_backup_filename_title">Backup filename format</string>
+    <string name="settings_backup_filename_msg">This defines how SWB backup files get named.\nAvailable variables:\n - $projectName - Project name\n - $versionCode - App version code\n - $versionName - App version name\n - $pkgName - Package name</string>
+
     <string name="design_tab_title_component">Component</string>
     <string name="design_tab_title_event">Event</string>
     <string name="design_tab_title_view">View</string>

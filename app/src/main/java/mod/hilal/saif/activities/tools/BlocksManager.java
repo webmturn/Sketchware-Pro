@@ -206,7 +206,7 @@ public class BlocksManager extends BaseAppCompatActivity {
     private void showBlockConfigurationDialog() {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setIcon(R.drawable.ic_folder_48dp);
-        dialog.setTitle("Block configuration");
+        dialog.setTitle(R.string.blocks_config_title);
 
         DialogBlockConfigurationBinding dialogBinding = DialogBlockConfigurationBinding.inflate(getLayoutInflater());
 
