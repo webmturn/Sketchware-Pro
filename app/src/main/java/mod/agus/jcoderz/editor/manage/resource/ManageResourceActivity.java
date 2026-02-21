@@ -148,7 +148,7 @@ public class ManageResourceActivity extends BaseAppCompatActivity {
     }
 
     private void initToolbar() {
-        binding.topAppBar.setTitle("Resource Manager");
+        binding.topAppBar.setTitle(R.string.manager_resource_title);
         binding.topAppBar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
         binding.showOptionsButton.setOnClickListener(view -> {
             if (isInMainDirectory()) {
@@ -252,7 +252,7 @@ public class ManageResourceActivity extends BaseAppCompatActivity {
         FilePickerOptions options = new FilePickerOptions();
         options.setSelectionMode(SelectionMode.BOTH);
         options.setMultipleSelection(true);
-        options.setTitle("Select resource files");
+        options.setTitle(Helper.getResString(R.string.manager_resource_select_files));
 
         FilePickerCallback callback = new FilePickerCallback() {
             @Override

@@ -1427,6 +1427,24 @@ You must enter the API key to operate the map normally."</string>
     <string name="array_item_title_create">Create new item</string>
     <string name="array_item_title_edit">Edit item</string>
 
+    <!-- Colors editor -->
+    <string name="color_title_create">Create new color</string>
+    <string name="color_title_edit">Edit color</string>
+
+    <!-- File managers -->
+    <string name="manager_java_title">Java/Kotlin Manager</string>
+    <string name="manager_java_select_files">Select Java/Kotlin file(s)</string>
+    <string name="manager_resource_title">Resource Manager</string>
+    <string name="manager_resource_select_files">Select resource file(s)</string>
+    <string name="manager_assets_title">Asset Manager</string>
+    <string name="manager_assets_select_files">Select asset file(s)</string>
+    <string name="manager_nativelibs_title">Native library Manager</string>
+    <string name="manager_nativelibs_select_files">Select native library file(s)</string>
+    <string name="manager_create_new_title">Create new</string>
+    <string name="manager_create_new_msg">File extension will be added automatically based on the file type you select</string>
+    <string name="manager_rename_title">Rename %s</string>
+    <string name="manager_delete_title">Delete %s?</string>
+
     <!-- AppSettings -->
     <string name="app_settings_category_managers">Managers</string>
     <string name="app_settings_category_general">General</string>
