@@ -31,7 +31,7 @@
             android:id="@+id/rb_directinput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Custom value"
+            android:text="@string/measurement_custom_value"
             android:textSize="15sp" />
     </RadioGroup>
 
@@ -49,7 +49,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Enter value"
+            android:hint="@string/measurement_hint_value"
             android:importantForAutofill="noExcludeDescendants"
             app:errorEnabled="true">
 

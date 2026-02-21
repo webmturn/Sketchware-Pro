@@ -1977,6 +1977,27 @@ You must enter the API key to operate the map normally."</string>
     <string name="menu_activity_hint_title">Title</string>
     <string name="menu_activity_hint_value">Value</string>
 
+    <!-- Layout: property_popup_measurement -->
+    <string name="measurement_custom_value">Custom value</string>
+    <string name="measurement_hint_value">Enter value</string>
+
+    <!-- Layout: resources_editor_import_dialog -->
+    <string name="import_select_option">Select Import option</string>
+    <string name="import_merge_skip">Merge and Skip</string>
+    <string name="import_merge_replace">Merge and Replace</string>
+    <string name="import_replace_all">Replace all</string>
+
+    <!-- Layout: sort_project_dialog -->
+    <string name="sort_by_name">Sort by Project Name</string>
+    <string name="sort_by_id">Sort by ID</string>
+    <string name="sort_ascending">Ascending (A-Z)</string>
+    <string name="sort_descending">Descending (Z-A)</string>
+
+    <!-- Layout: color_picker -->
+    <string name="color_picker_title">Pick your color</string>
+    <string name="color_picker_desc">Either enter a hex color code or pick a color from the list below.</string>
+    <string name="color_picker_new">New color</string>
+
     <!-- ViewCodeEditorActivity menu items -->
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
