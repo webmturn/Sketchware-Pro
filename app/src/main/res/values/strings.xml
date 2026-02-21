@@ -1512,6 +1512,13 @@ You must enter the API key to operate the map normally."</string>
 
     <!-- Blocks manager -->
     <string name="blocks_recycle_bin_title">Recycle bin</string>
+    <string name="blocks_remove_permanently">Remove permanently</string>
+    <string name="blocks_remove_palette_msg">Remove all blocks related to this palette?</string>
+    <string name="blocks_import_reverse">Reverse</string>
+
+    <!-- Resource manager create dialog -->
+    <string name="manager_create_folder">Create a new folder</string>
+    <string name="manager_create_file">Create a new file</string>
 
     <!-- Strings editor adapter -->
     <string name="strings_edit_title">Edit string</string>
