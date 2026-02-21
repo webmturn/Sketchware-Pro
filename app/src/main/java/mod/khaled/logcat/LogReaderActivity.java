@@ -190,7 +190,7 @@ public class LogReaderActivity extends BaseAppCompatActivity {
 
             }
             FileUtil.writeFile(filePath, contentBuilder.toString());
-            SketchwareUtil.toast("Logcat exported successfully: " + filePath);
+            SketchwareUtil.toast(String.format(Helper.getResString(R.string.toast_logcat_exported), filePath));
         } catch (Exception ex) {
             SketchwareUtil.toastError(Helper.getResString(R.string.error_something_went_wrong));
         }

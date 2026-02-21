@@ -223,8 +223,7 @@ public class ViewCodeEditorActivity extends BaseAppCompatActivity {
                     for (String attr : viewBean.parentAttributes.keySet()) {
                         String targetId = viewBean.parentAttributes.get(attr);
                         if (!detector.isLegalAttribute(targetId, attr)) {
-                            SketchwareUtil.toastError("Circular dependency found in \"" + viewBean.name + "\"\n" +
-                                    "Please resolve the issue before saving");
+                            SketchwareUtil.toastError(String.format(Helper.getResString(R.string.error_circular_dependency), viewBean.name));
                             return;
                         }
                     }

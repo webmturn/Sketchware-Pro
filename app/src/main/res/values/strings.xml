@@ -1541,6 +1541,11 @@ You must enter the API key to operate the map normally."</string>
     <string name="config_backup_filename_msg">This defines how SWB backup files get named.\nAvailable variables:\n - $projectName - Project name\n - $versionCode - App version code\n - $versionName - App version name\n - $pkgName - App package name\n - $timeInMs - Time during backup in milliseconds\n\nAdditionally, you can format your own time like this using Java\'s date formatter syntax:\n$time(yyyy-MM-dd\'T\'HHmmss)\n</string>
     <string name="config_toast_reset_default">Reset to default complete.</string>
 
+    <!-- ViewCodeEditorActivity -->
+    <string name="error_circular_dependency">Circular dependency found in \"%s\"\nPlease resolve the issue before saving</string>
+    <string name="toast_logcat_exported">Logcat exported successfully: %s</string>
+    <string name="error_key_already_exists">\"%s\" is already exist</string>
+
     <!-- ViewCodeEditorActivity menu items -->
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>

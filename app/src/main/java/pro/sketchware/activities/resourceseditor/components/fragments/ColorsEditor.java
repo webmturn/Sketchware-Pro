@@ -278,7 +278,7 @@ public class ColorsEditor extends Fragment {
         ColorModel newItem = new ColorModel(name, value);
         for (int i = 0; i < colorList.size(); i++) {
             if (colorList.get(i).getColorName().equals(name)) {
-                SketchwareUtil.toastError("\"" + name + "\" is already exist");
+                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.error_key_already_exists), name));
                 return;
             }
         }
