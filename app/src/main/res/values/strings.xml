@@ -1567,6 +1567,28 @@ You must enter the API key to operate the map normally."</string>
     <string name="toast_removed_service_from_manifest">Successfully removed Service %s from AndroidManifest</string>
     <string name="toast_service_not_in_manifest">Service was not defined in AndroidManifest.</string>
 
+    <!-- SrcCodeEditor -->
+    <string name="error_incorrect_parentheses">Your code contains incorrectly nested parentheses</string>
+    <string name="error_format_xml_failed">Failed to format XML file</string>
+    <string name="toast_only_java_xml_format">Only Java and XML files can be formatted</string>
+
+    <!-- AndroidManifestInjection -->
+    <string name="toast_new_activity_added">New Activity added</string>
+    <string name="toast_activity_removed">Activity removed</string>
+    <string name="error_enter_activity_name">Enter activity name</string>
+
+    <!-- BackupRestoreManager -->
+    <string name="backup_error_prefix">Error: %s</string>
+    <string name="backup_error_restore">Couldn\'t restore: %s</string>
+    <string name="backup_toast_restored">Restored successfully</string>
+    <string name="backup_toast_restored_refresh">Restored successfully. Refresh to see the project</string>
+
+    <!-- CustomBlocksDialog -->
+    <string name="blocks_error_select_at_least_one">Please select at least one block to import.</string>
+    <string name="blocks_toast_blocks_imported">Blocks imported!</string>
+    <string name="blocks_error_missing">This block is Missing</string>
+    <string name="blocks_error_already_exists">This block already exists in your collection</string>
+
     <!-- ViewCodeEditorActivity menu items -->
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>

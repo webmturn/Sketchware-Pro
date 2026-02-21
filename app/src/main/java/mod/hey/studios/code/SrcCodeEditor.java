@@ -362,7 +362,7 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
                     if (activitiesComponents.get(i).get("name").equals(activityName)) {
                         activitiesComponents.get(i).put("value", beforeContent);
                         FileUtil.writeFile(filePath, getGson().toJson(activitiesComponents));
-                        SketchwareUtil.toast("Saved");
+                        SketchwareUtil.toast(Helper.getResString(R.string.common_word_saved));
                         return;
                     }
                 }
@@ -381,7 +381,7 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
             }
         } else FileUtil.writeFile(getIntent().getStringExtra("content"), beforeContent);
 
-        SketchwareUtil.toast("Saved");
+        SketchwareUtil.toast(Helper.getResString(R.string.common_word_saved));
     }
 
     private void loadToolbar() {
@@ -439,7 +439,7 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
                                 ss = ComponentCodeGenerator.formatCode(ss, true);
                             } catch (Exception e) {
                                 err = true;
-                                SketchwareUtil.toastError("Your code contains incorrectly nested parentheses");
+                                SketchwareUtil.toastError(Helper.getResString(R.string.error_incorrect_parentheses));
                             }
 
                             if (!err) binding.editor.setText(ss);
@@ -450,10 +450,10 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
                             if (format != null) {
                                 binding.editor.setText(format);
                             } else {
-                                SketchwareUtil.toastError("Failed to format XML file", Toast.LENGTH_LONG);
+                                SketchwareUtil.toastError(Helper.getResString(R.string.error_format_xml_failed), Toast.LENGTH_LONG);
                             }
                         } else {
-                            SketchwareUtil.toast("Only Java and XML files can be formatted");
+                            SketchwareUtil.toast(Helper.getResString(R.string.toast_only_java_xml_format));
                         }
                         break;
 

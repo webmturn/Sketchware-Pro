@@ -217,7 +217,7 @@ public class BackupRestoreManager {
             if (bm.getOutFile() != null) {
                 SketchwareUtil.toast(String.format(Helper.getResString(R.string.backup_msg_success), bm.getOutFile().getAbsolutePath()));
             } else {
-                SketchwareUtil.toastError("Error: " + bm.error, Toast.LENGTH_LONG);
+                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.backup_error_prefix), bm.error), Toast.LENGTH_LONG);
             }
         }
     }
@@ -273,12 +273,12 @@ public class BackupRestoreManager {
             dlg.dismiss();
 
             if (!bm.isRestoreSuccess() || error) {
-                SketchwareUtil.toastError("Couldn't restore: " + bm.error, Toast.LENGTH_LONG);
+                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.backup_error_restore), bm.error), Toast.LENGTH_LONG);
             } else if (projectsFragment != null) {
                 projectsFragment.refreshProjectsList();
-                SketchwareUtil.toast("Restored successfully");
+                SketchwareUtil.toast(Helper.getResString(R.string.backup_toast_restored));
             } else {
-                SketchwareUtil.toast("Restored successfully. Refresh to see the project", Toast.LENGTH_LONG);
+                SketchwareUtil.toast(Helper.getResString(R.string.backup_toast_restored_refresh), Toast.LENGTH_LONG);
             }
         }
     }

@@ -95,7 +95,7 @@ public class CustomBlocksDialog {
                         }
 
                         if (selectedBeans.isEmpty()) {
-                            SketchwareUtil.toastError("Please select at least one block to import.");
+                            SketchwareUtil.toastError(Helper.getResString(R.string.blocks_error_select_at_least_one));
                             return;
                         }
 
@@ -148,7 +148,7 @@ public class CustomBlocksDialog {
                     allBlocksList.addAll(blocksList);
                     FileUtil.writeFile(blocksDir, new Gson().toJson(allBlocksList));
                     BlockLoader.refresh();
-                    SketchwareUtil.toast("Blocks imported!");
+                    SketchwareUtil.toast(Helper.getResString(R.string.blocks_toast_blocks_imported));
                 })
                 .show();
     }
@@ -220,7 +220,7 @@ public class CustomBlocksDialog {
             allBlocksList.addAll(blocksList);
             FileUtil.writeFile(blocksDir, new Gson().toJson(allBlocksList));
             BlockLoader.refresh();
-            SketchwareUtil.toast("Blocks imported!");
+            SketchwareUtil.toast(Helper.getResString(R.string.blocks_toast_blocks_imported));
             dialogInterface.dismiss();
         });
         dialog.setNegativeButton(Helper.getResString(R.string.common_word_cancel), null);
@@ -374,9 +374,9 @@ public class CustomBlocksDialog {
                         binding.checkBox.setChecked(reversedState);
                         block.isSelected = reversedState;
                     } else if (blockInfo.equals("Missing")) {
-                        SketchwareUtil.toastError("This block is Missing");
+                        SketchwareUtil.toastError(Helper.getResString(R.string.blocks_error_missing));
                     } else {
-                        SketchwareUtil.toastError("This block already exists in your collection");
+                        SketchwareUtil.toastError(Helper.getResString(R.string.blocks_error_already_exists));
                     }
                 });
             }

@@ -165,10 +165,10 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_save), (v, which) -> {
             if (!Helper.getText(activity_name_input).trim().isEmpty()) {
                 AndroidManifestInjector.setLauncherActivity(sc_id, Helper.getText(activity_name_input));
-                SketchwareUtil.toast("Saved");
+                SketchwareUtil.toast(Helper.getResString(R.string.common_word_saved));
                 v.dismiss();
             } else {
-                activity_name_input.setError("Enter activity name");
+                activity_name_input.setError(Helper.getResString(R.string.error_enter_activity_name));
             }
         });
         dialog.setNegativeButton(Helper.getResString(R.string.common_word_cancel), null);
@@ -189,10 +189,10 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_save), (v, which) -> {
             if (!Helper.getText(activity_name_input).trim().isEmpty()) {
                 addNewActivity(Helper.getText(activity_name_input));
-                SketchwareUtil.toast("New Activity added");
+                SketchwareUtil.toast(Helper.getResString(R.string.toast_new_activity_added));
                 v.dismiss();
             } else {
-                activity_name_input.setError("Enter activity name");
+                activity_name_input.setError(Helper.getResString(R.string.error_enter_activity_name));
             }
         });
         dialog.setNegativeButton(Helper.getResString(R.string.common_word_cancel), null);
@@ -291,7 +291,7 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
         FileUtil.writeFile(path, getGson().toJson(data));
         refreshList();
         removeComponents(activity_name);
-        SketchwareUtil.toast("Activity removed");
+        SketchwareUtil.toast(Helper.getResString(R.string.toast_activity_removed));
     }
 
     private void removeComponents(String str) {
