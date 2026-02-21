@@ -25,7 +25,7 @@ public class VersionDialog {
     public void show() {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(activity);
         dialog.setIcon(R.drawable.numbers_48);
-        dialog.setTitle("Advanced Version Control");
+        dialog.setTitle(R.string.version_control_title);
 
         binding.versionCode.setText(String.valueOf(Integer.parseInt(Helper.getText(activity.binding.verCode))));
         binding.versionName1.setText(Helper.getText(activity.binding.verName).split(" ")[0]);

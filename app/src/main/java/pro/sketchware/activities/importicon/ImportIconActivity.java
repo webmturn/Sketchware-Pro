@@ -280,9 +280,9 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
 
         var dialog = new MaterialAlertDialogBuilder(this)
                 .setView(dialogBinding.getRoot())
-                .setTitle("Filter icons")
-                .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.dismiss())
-                .setPositiveButton("Apply", null)
+                .setTitle(R.string.import_icon_filter_title)
+                .setNegativeButton(R.string.common_word_cancel, (dialogInterface, i) -> dialogInterface.dismiss())
+                .setPositiveButton(R.string.common_word_apply, null)
                 .create();
         dialog.setView(dialogBinding.getRoot());
 
@@ -379,9 +379,9 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
 
         var dialog = new MaterialAlertDialogBuilder(this)
                 .setView(dialogBinding.getRoot())
-                .setTitle("Save")
-                .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.dismiss())
-                .setPositiveButton("Save", null)
+                .setTitle(R.string.common_word_save)
+                .setNegativeButton(R.string.common_word_cancel, (dialogInterface, i) -> dialogInterface.dismiss())
+                .setPositiveButton(R.string.common_word_save, null)
                 .create();
 
         dialog.setOnShowListener(dialogInterface -> {

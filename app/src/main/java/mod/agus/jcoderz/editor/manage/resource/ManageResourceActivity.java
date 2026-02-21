@@ -282,10 +282,10 @@ public class ManageResourceActivity extends BaseAppCompatActivity {
         var inputText = dialogBinding.inputText;
 
         var dialog = new MaterialAlertDialogBuilder(this)
-                .setTitle("Rename")
+                .setTitle(R.string.common_word_rename)
                 .setView(dialogBinding.getRoot())
-                .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.dismiss())
-                .setPositiveButton("Rename", (dialogInterface, i) -> {
+                .setNegativeButton(R.string.common_word_cancel, (dialogInterface, i) -> dialogInterface.dismiss())
+                .setPositiveButton(R.string.common_word_rename, (dialogInterface, i) -> {
                     if (!Helper.getText(inputText).isEmpty()) {
                         if (FileUtil.renameFile(path, path.substring(0, path.lastIndexOf("/")) + "/" + Helper.getText(inputText))) {
                             SketchwareUtil.toast("Renamed successfully");
@@ -315,7 +315,7 @@ public class ManageResourceActivity extends BaseAppCompatActivity {
 
     private void showDeleteDialog(int position) {
         new MaterialAlertDialogBuilder(this)
-                .setTitle("Delete " + Uri.fromFile(new File(adapter.getItem(position))).getLastPathSegment() + "?")
+                .setTitle(getString(R.string.common_word_delete) + " " + Uri.fromFile(new File(adapter.getItem(position))).getLastPathSegment() + "?")
                 .setMessage("Are you sure you want to delete this " + (FileUtil.isDirectory(adapter.getItem(position)) ? "folder" : "file") + "? "
                         + "This action cannot be undone.")
                 .setPositiveButton(R.string.common_word_delete, (dialog, which) -> {

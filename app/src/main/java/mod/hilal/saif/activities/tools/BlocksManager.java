@@ -346,10 +346,10 @@ public class BlocksManager extends BaseAppCompatActivity {
         });
         view.setOnLongClickListener(v -> {
             new MaterialAlertDialogBuilder(this)
-                    .setTitle("Recycle bin")
+                    .setTitle(R.string.blocks_recycle_bin_title)
                     .setMessage("Are you sure you want to empty the recycle bin? " +
                             "Blocks inside will be deleted PERMANENTLY, you CANNOT recover them!")
-                    .setPositiveButton("Empty", (dialog, which) -> emptyRecyclebin())
+                    .setPositiveButton(R.string.common_word_empty, (dialog, which) -> emptyRecyclebin())
                     .setNegativeButton(R.string.common_word_cancel, null)
                     .show();
             return true;

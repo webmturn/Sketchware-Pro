@@ -163,7 +163,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
         }
         if (updatingExistingProject) {
             /* Set the dialog's title & save button label */
-            binding.toolbar.setTitle("Project Settings");
+            binding.toolbar.setTitle(R.string.project_settings_title);
             HashMap<String, Object> metadata = ProjectListManager.getProjectById(sc_id);
             binding.etPackageName.setText(yB.c(metadata, "my_sc_pkg_name"));
             binding.etProjectName.setText(yB.c(metadata, "my_ws_name"));

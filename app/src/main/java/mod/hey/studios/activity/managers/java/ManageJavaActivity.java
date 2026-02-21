@@ -280,7 +280,7 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
         var inputText = dialogBinding.inputText;
         var renameOccurrencesCheckBox = dialogBinding.renameOccurrencesCheckBox;
 
-        var dialog = new MaterialAlertDialogBuilder(this).setTitle("Rename " + filesAdapter.getFileName(position)).setView(dialogBinding.getRoot()).setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.dismiss()).setPositiveButton("Rename", (dialogInterface, i) -> {
+        var dialog = new MaterialAlertDialogBuilder(this).setTitle(getString(R.string.common_word_rename) + " " + filesAdapter.getFileName(position)).setView(dialogBinding.getRoot()).setNegativeButton(R.string.common_word_cancel, (dialogInterface, i) -> dialogInterface.dismiss()).setPositiveButton(R.string.common_word_rename, (dialogInterface, i) -> {
             if (!Helper.getText(inputText).isEmpty()) {
                 if (!filesAdapter.isFolder(position)) {
                     if (frc.getJavaManifestList().contains(filesAdapter.getFullName(position))) {
@@ -320,7 +320,7 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
     private void showDeleteDialog(int position) {
         boolean isInManifest = frc.getJavaManifestList().contains(filesAdapter.getFullName(position));
 
-        new MaterialAlertDialogBuilder(this).setTitle("Delete " + filesAdapter.getFileName(position) + "?").setMessage("Are you sure you want to delete this " + (filesAdapter.isFolder(position) ? "folder" : "file") + "? " + (isInManifest ? "This will also remove it from AndroidManifest. " : "") + "This action cannot be undone.").setPositiveButton(R.string.common_word_delete, (dialog, which) -> {
+        new MaterialAlertDialogBuilder(this).setTitle(getString(R.string.common_word_delete) + " " + filesAdapter.getFileName(position) + "?").setMessage("Are you sure you want to delete this " + (filesAdapter.isFolder(position) ? "folder" : "file") + "? " + (isInManifest ? "This will also remove it from AndroidManifest. " : "") + "This action cannot be undone.").setPositiveButton(R.string.common_word_delete, (dialog, which) -> {
             if (!filesAdapter.isFolder(position) && isInManifest) {
                 frc.getJavaManifestList().remove(filesAdapter.getFullName(position));
                 FileUtil.writeFile(fpu.getManifestJava(sc_id), new Gson().toJson(frc.listJavaManifest));

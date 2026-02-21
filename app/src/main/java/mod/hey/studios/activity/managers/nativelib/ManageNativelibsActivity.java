@@ -261,10 +261,10 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
         var inputText = dialogBinding.inputText;
 
         var dialog = new MaterialAlertDialogBuilder(this)
-                .setTitle("Rename")
+                .setTitle(R.string.common_word_rename)
                 .setView(dialogBinding.getRoot())
-                .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.dismiss())
-                .setPositiveButton("Rename", (dialogInterface, i) -> {
+                .setNegativeButton(R.string.common_word_cancel, (dialogInterface, i) -> dialogInterface.dismiss())
+                .setPositiveButton(R.string.common_word_rename, (dialogInterface, i) -> {
                     String newName = Helper.getText(inputText);
                     if (!newName.isEmpty()) {
                         if (FileUtil.renameFile(path, path.substring(0, path.lastIndexOf(File.separator)) + File.separator + newName)) {

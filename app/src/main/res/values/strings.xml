@@ -1472,6 +1472,46 @@ You must enter the API key to operate the map normally."</string>
     <!-- Widgets -->
     <string name="widgets_select_json">Select .json widgets files</string>
 
+    <!-- Common words (new) -->
+    <string name="common_word_rename">Rename</string>
+    <string name="common_word_apply">Apply</string>
+    <string name="common_word_empty">Empty</string>
+
+    <!-- Project settings -->
+    <string name="project_settings_title">Project Settings</string>
+
+    <!-- Permission manager -->
+    <string name="permission_reset_title">Reset permissions</string>
+    <string name="permission_reset_message">Are you sure you want to reset all permissions?</string>
+
+    <!-- Code editor layout -->
+    <string name="code_editor_select_font_size">Select font size</string>
+
+    <!-- Import icon -->
+    <string name="import_icon_filter_title">Filter icons</string>
+
+    <!-- Version control -->
+    <string name="version_control_title">Advanced Version Control</string>
+
+    <!-- Layout preview -->
+    <string name="layout_preview_title">Layout Preview</string>
+
+    <!-- View code editor -->
+    <string name="view_code_editor_title">XML Editor</string>
+
+    <!-- Projects -->
+    <string name="projects_sort_title">Sort options</string>
+
+    <!-- Custom component -->
+    <string name="component_select_json">Select json file</string>
+    <string name="component_select_json_selector">Select .json selector file</string>
+
+    <!-- Blocks manager -->
+    <string name="blocks_recycle_bin_title">Recycle bin</string>
+
+    <!-- Strings editor adapter -->
+    <string name="strings_edit_title">Edit string</string>
+
     <!-- Colors editor -->
     <string name="color_title_create">Create new color</string>
     <string name="color_title_edit">Edit color</string>

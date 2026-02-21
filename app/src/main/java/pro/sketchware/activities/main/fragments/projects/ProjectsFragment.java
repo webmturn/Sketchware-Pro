@@ -277,7 +277,7 @@ public class ProjectsFragment extends PermissionFragment {
 
     private void showProjectSortingDialog() {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(requireActivity());
-        dialog.setTitle("Sort options");
+        dialog.setTitle(R.string.projects_sort_title);
 
         SortProjectDialogBinding dialogBinding = SortProjectDialogBinding.inflate(LayoutInflater.from(requireActivity()));
         RadioButton sortByName = dialogBinding.sortByName;
