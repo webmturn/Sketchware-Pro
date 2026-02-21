@@ -2452,6 +2452,39 @@ You must enter the API key to operate the map normally."</string>
     <string name="code_editor_menu_pretty_print">Pretty print</string>
     <string name="code_editor_menu_exit_confirmation">Exit confirmation</string>
 
+    <!-- Java: CustomBlocksDialog -->
+    <string name="custom_blocks_none_used">You haven\'t used any custom blocks in this project</string>
+
+    <!-- Java: ManageStringFogFragment -->
+    <string name="stringfog_enabled">StringFog is enabled</string>
+    <string name="stringfog_disabled">StringFog is disabled</string>
+
+    <!-- Java: ManageNativelibsActivity -->
+    <string name="nativelib_new_folder">New folder</string>
+    <string name="nativelib_import_library">Import library</string>
+
+    <!-- Java: ManageResourceActivity -->
+    <string name="resource_create_new">Create new</string>
+    <string name="resource_create_or_import">Create or import</string>
+
+    <!-- Java: MyProjectSettingActivity -->
+    <string name="project_save_changes">Save changes</string>
+
+    <!-- Java: AppSettings -->
+    <string name="signing_error_occurred">An error occurred. Check the log for more details.</string>
+    <string name="signing_failed_format">Signing failed: %s</string>
+
+    <!-- Java: PropertyColorItem -->
+    <string name="color_transparent">TRANSPARENT</string>
+    <string name="color_none">NONE</string>
+
+    <!-- Java: ViewEditor -->
+    <string name="editor_drag_to_actions">Drag here to see the Actions</string>
+    <string name="editor_drag_to_delete">Drag here to delete</string>
+
+    <!-- Java: ManageJavaActivity -->
+    <string name="java_rename_occurrences_format">Rename occurrences of \"%s\" in file</string>
+
     <!-- Java: ManageJavaActivity (popup menu) -->
     <string name="java_menu_remove_activity">Remove Activity from manifest</string>
     <string name="java_menu_add_activity">Add as Activity to manifest</string>

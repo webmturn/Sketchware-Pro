@@ -72,10 +72,10 @@ public class PropertyColorItem extends RelativeLayout implements View.OnClickLis
         this.value = value;
         resValue = null;
         if (value == 0) {
-            tvValue.setText("TRANSPARENT");
+            tvValue.setText(getContext().getString(R.string.color_transparent));
             viewColor.setBackgroundColor(value);
         } else if (value == 0xffffff) {
-            tvValue.setText("NONE");
+            tvValue.setText(getContext().getString(R.string.color_none));
             viewColor.setBackgroundColor(value);
         } else {
             tvValue.setText(String.format("#%08X", value));
@@ -91,9 +91,9 @@ public class PropertyColorItem extends RelativeLayout implements View.OnClickLis
         this.value = value;
         this.resValue = resValue;
         if (value == 0) {
-            tvValue.setText("TRANSPARENT");
+            tvValue.setText(getContext().getString(R.string.color_transparent));
         } else if (value == 0xffffff) {
-            tvValue.setText("NONE");
+            tvValue.setText(getContext().getString(R.string.color_none));
         } else {
             tvValue.setText(resValue);
         }

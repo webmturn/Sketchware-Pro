@@ -140,10 +140,10 @@ public class ManageResourceActivity extends BaseAppCompatActivity {
     private void handleFab() {
         var optionsButton = binding.showOptionsButton;
         if (isInMainDirectory()) {
-            optionsButton.setText("Create new");
+            optionsButton.setText(getString(R.string.resource_create_new));
             hideShowOptionsButton(true);
         } else {
-            optionsButton.setText("Create or import");
+            optionsButton.setText(getString(R.string.resource_create_or_import));
         }
     }
 

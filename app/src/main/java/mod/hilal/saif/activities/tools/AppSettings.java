@@ -289,12 +289,12 @@ public class AppSettings extends BaseAppCompatActivity {
                                         Uri.fromFile(new File(outputApkPath)).getLastPathSegment()),
                                 Toast.LENGTH_LONG);
                     } else {
-                        tv_progress.setText("An error occurred. Check the log for more details.");
+                        tv_progress.setText(getString(R.string.signing_error_occurred));
                     }
                 });
             } catch (Exception e) {
                 android.util.Log.e("AppSettings", "Failed to sign APK", e);
-                runOnUiThread(() -> tv_progress.setText("Signing failed: " + e.getMessage()));
+                runOnUiThread(() -> tv_progress.setText(getString(R.string.signing_failed_format, e.getMessage())));
             }
         }).start();
 

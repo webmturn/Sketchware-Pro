@@ -309,7 +309,7 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
 
         if (!isFolder) {
             renameOccurrencesCheckBox.setVisibility(View.VISIBLE);
-            renameOccurrencesCheckBox.setText("Rename occurrences of \"" + filesAdapter.getFileNameWoExt(position) + "\" in file");
+            renameOccurrencesCheckBox.setText(getString(R.string.java_rename_occurrences_format, filesAdapter.getFileNameWoExt(position)));
         }
         dialog.show();
 

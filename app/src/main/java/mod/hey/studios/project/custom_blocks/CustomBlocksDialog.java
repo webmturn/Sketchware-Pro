@@ -106,7 +106,7 @@ public class CustomBlocksDialog {
 
             } else {
                 context.runOnUiThread(() -> {
-                    dialogBinding.subtitle.setText("You haven't used any custom blocks in this project");
+                    dialogBinding.subtitle.setText(activity.getString(R.string.custom_blocks_none_used));
                     dialogBinding.progressIndicator.setVisibility(View.GONE);
                 });
             }
