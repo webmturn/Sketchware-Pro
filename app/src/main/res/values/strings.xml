@@ -1391,6 +1391,25 @@ You must enter the API key to operate the map normally."</string>
     <string name="events_new_event_title">New Event</string>
     <string name="file_picker_select_txt">Select a .txt file</string>
 
+    <!-- Resource editor (themes/styles/strings) -->
+    <string name="theme_title_create">Create new theme</string>
+    <string name="theme_title_edit">Edit theme</string>
+    <string name="style_title_create">Create new style</string>
+    <string name="style_title_edit">Edit style</string>
+    <string name="string_title_create">Create new string</string>
+    <string name="attr_title_create">Create new attribute</string>
+    <string name="attr_title_edit">Edit attribute</string>
+    <string name="dialog_msg_delete_confirm">Are you sure you want to delete %s?</string>
+
+    <!-- Tools -->
+    <string name="compile_log_title_last">Last compile log</string>
+    <string name="compile_log_title">Compile log</string>
+    <string name="dialog_title_select_font_size">Select font size</string>
+
+    <!-- Library download -->
+    <string name="library_download_confirm_title">Confirm Download</string>
+    <string name="library_remove_warning_msg">This library \"%s\" is already used in your project, removing it may break your project. Do you want to continue removing it?</string>
+
     <!-- View management -->
     <string name="view_title_create_new">Create new</string>
     <string name="view_title_edit">Edit %s</string>

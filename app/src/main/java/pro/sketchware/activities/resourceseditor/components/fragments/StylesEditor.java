@@ -129,8 +129,8 @@ public class StylesEditor extends Fragment {
     public void showAddStyleDialog() {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(requireActivity());
         StyleEditorAddBinding binding = StyleEditorAddBinding.inflate(getLayoutInflater());
-        dialog.setTitle("Create new style");
-        dialog.setPositiveButton("Create", (d, which) -> {
+        dialog.setTitle(R.string.style_title_create);
+        dialog.setPositiveButton(R.string.common_word_create, (d, which) -> {
             String styleName = Objects.requireNonNull(binding.styleName.getText()).toString();
             String parent = Objects.requireNonNull(binding.styleParent.getText()).toString();
             String header = Objects.requireNonNull(binding.styleHeaderInput.getText()).toString();
@@ -171,8 +171,8 @@ public class StylesEditor extends Fragment {
             binding.styleHeaderInput.setText(notesMap.get(position));
         }
 
-        dialog.setTitle("Edit style");
-        dialog.setPositiveButton("Edit", (d, which) -> {
+        dialog.setTitle(R.string.style_title_edit);
+        dialog.setPositiveButton(R.string.common_word_edit, (d, which) -> {
             String styleName = Objects.requireNonNull(binding.styleName.getText()).toString();
             String parent = Objects.requireNonNull(binding.styleParent.getText()).toString();
             String header = Objects.requireNonNull(binding.styleHeaderInput.getText()).toString();
@@ -193,8 +193,8 @@ public class StylesEditor extends Fragment {
             adapter.notifyItemChanged(position);
         });
         dialog.setNeutralButton(Helper.getResString(R.string.common_word_delete), (d, which) -> new MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Warning")
-                .setMessage("Are you sure you want to delete " + style.getStyleName() + "?")
+                .setTitle(R.string.common_word_warning)
+                .setMessage(String.format(Helper.getResString(R.string.dialog_msg_delete_confirm), style.getStyleName()))
                 .setPositiveButton(R.string.common_word_yes, (d2, w) -> {
                     stylesList.remove(position);
                     notesMap.remove(position);
@@ -203,7 +203,7 @@ public class StylesEditor extends Fragment {
                     updateNoContentLayout();
                     hasUnsavedChanges = true;
                 })
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton(R.string.common_word_cancel, null)
                 .create()
                 .show());
         dialog.setNegativeButton(getString(R.string.cancel), null);
@@ -231,15 +231,15 @@ public class StylesEditor extends Fragment {
                     @Override
                     public void onItemLongClick(LinkedHashMap<String, String> attributes, String attr) {
                         new MaterialAlertDialogBuilder(requireContext())
-                                .setTitle("Warning")
-                                .setMessage("Are you sure you want to delete " + attr + "?")
+                                .setTitle(R.string.common_word_warning)
+                                .setMessage(String.format(Helper.getResString(R.string.dialog_msg_delete_confirm), attr))
                                 .setPositiveButton(R.string.common_word_yes, (d, w) -> {
                                     attributes.remove(attr);
                                     style.setAttributes(attributes);
                                     attributesAdapter.submitList(new ArrayList<>(attributes.keySet()));
                                     hasUnsavedChanges = true;
                                 })
-                                .setNegativeButton("Cancel", null)
+                                .setNegativeButton(R.string.common_word_cancel, null)
                                 .create()
                                 .show();
                     }
@@ -269,7 +269,7 @@ public class StylesEditor extends Fragment {
             binding.attrValue.setText(style.getAttribute(attr));
         }
 
-        dialog.setTitle(isEditing ? "Edit attribute" : "Create new attribute");
+        dialog.setTitle(isEditing ? R.string.attr_title_edit : R.string.attr_title_create);
 
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_save), (d, which) -> {
             String attribute = Objects.requireNonNull(binding.attrName.getText()).toString();
