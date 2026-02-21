@@ -210,13 +210,13 @@ public class ColorsEditor extends Fragment {
             String value = Objects.requireNonNull(dialogBinding.colorValueInput.getText()).toString();
 
             if (key.isEmpty() || value.isEmpty()) {
-                SketchwareUtil.toastError("Please fill in all fields", Toast.LENGTH_SHORT);
+                SketchwareUtil.toastError(Helper.getResString(R.string.error_fill_all_fields), Toast.LENGTH_SHORT);
                 return;
             }
 
             if (value.startsWith("#")) {
                 if (!PropertiesUtil.isHexColor(value)) {
-                    SketchwareUtil.toastError("Please enter a valid HEX color");
+                    SketchwareUtil.toastError(Helper.getResString(R.string.error_invalid_hex_color));
                     return;
                 }
             }

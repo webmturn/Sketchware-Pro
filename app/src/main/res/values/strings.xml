@@ -1523,6 +1523,47 @@ You must enter the API key to operate the map normally."</string>
     <!-- Strings editor adapter -->
     <string name="strings_edit_title">Edit string</string>
 
+    <!-- Toast/error messages - DesignActivity -->
+    <string name="design_toast_package_installed">Package installed successfully!</string>
+    <string name="design_error_cannot_launch">Couldn\'t launch project, either not installed or not with launcher activity.</string>
+    <string name="design_error_no_root_access">No root access granted. Continuing using default package install prompt.</string>
+    <string name="design_toast_clean_temp_done">Done cleaning temporary files!</string>
+    <string name="design_error_apk_not_exist">APK doesn\'t exist anymore</string>
+    <string name="design_error_generate_source">Failed to generate source.</string>
+    <string name="design_error_generate_code">Failed to generate code.</string>
+
+    <!-- Toast/error messages - VersionDialog -->
+    <string name="version_error_invalid_code">Invalid Version Code</string>
+    <string name="version_error_invalid_name">Invalid Version Name</string>
+
+    <!-- Toast/error messages - ExtraMenuBean -->
+    <string name="menu_deprecated_title">Deprecated</string>
+    <string name="menu_deprecated_msg">This Block Menu was initially used to parse resource values, but was too I/O heavy and has been removed due to that. Please use the Code Editor instead.</string>
+
+    <!-- Toast/error messages - Various -->
+    <string name="error_fill_all_fields">Please fill in all fields</string>
+    <string name="error_invalid_hex_color">Please enter a valid HEX color</string>
+    <string name="error_array_name_empty">Array name Input is Empty</string>
+    <string name="error_array_type_not_selected">Array type not selected</string>
+    <string name="error_invalid_variant">Invalid variant input</string>
+    <string name="toast_no_changes">No changes to save</string>
+    <string name="error_nothing_to_export">Nothing to Export</string>
+    <string name="error_something_went_wrong">Something went wrong!</string>
+    <string name="error_invalid_name">Invalid name!</string>
+    <string name="error_file_empty">The selected file is empty!</string>
+    <string name="error_invalid_file">Invalid file</string>
+    <string name="error_invalid_selector_file">Make sure you select a file that contains selector item(s).</string>
+    <string name="error_get_selector_failed">An error occurred while trying to get the selector</string>
+    <string name="error_cannot_change_selector_name">You cannot change the name of this selector</string>
+    <string name="error_selector_name_required">Please type the selector\'s name</string>
+    <string name="error_selector_title_required">Please type the selector\'s title</string>
+    <string name="error_item_already_exists">An item with this name already exists</string>
+    <string name="error_required_fields_empty">Some required fields are empty!</string>
+    <string name="toast_events_imported">Successfully imported events</string>
+    <string name="toast_copied_to_clipboard">Copied to clipboard</string>
+    <string name="toast_save_completed">Save completed</string>
+    <string name="file_picker_select_txt">Select a .txt file</string>
+
     <!-- Colors editor -->
     <string name="color_title_create">Create new color</string>
     <string name="color_title_edit">Edit color</string>

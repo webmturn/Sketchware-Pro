@@ -147,12 +147,12 @@ public class ArraysEditor extends Fragment {
             String header = Objects.requireNonNull(binding.arrayHeaderInput.getText()).toString();
 
             if (arrayName.isEmpty()) {
-                SketchwareUtil.toastError("Array name Input is Empty");
+                SketchwareUtil.toastError(Helper.getResString(R.string.error_array_name_empty));
                 return;
             }
 
             if (arrayTypeString.isEmpty()) {
-                SketchwareUtil.toastError("Array type not selected");
+                SketchwareUtil.toastError(Helper.getResString(R.string.error_array_type_not_selected));
                 return;
             }
 
@@ -202,7 +202,7 @@ public class ArraysEditor extends Fragment {
             String header = Objects.requireNonNull(binding.arrayHeaderInput.getText()).toString();
 
             if (arrayName.isEmpty()) {
-                SketchwareUtil.toastError("Array name Input is Empty");
+                SketchwareUtil.toastError(Helper.getResString(R.string.error_array_name_empty));
                 return;
             }
 
@@ -308,7 +308,7 @@ public class ArraysEditor extends Fragment {
             String value = Objects.requireNonNull(binding.itemValue.getText()).toString();
 
             if (attribute.isEmpty() || value.isEmpty()) {
-                SketchwareUtil.toastError("Please fill in all fields");
+                SketchwareUtil.toastError(Helper.getResString(R.string.error_fill_all_fields));
                 return;
             }
 

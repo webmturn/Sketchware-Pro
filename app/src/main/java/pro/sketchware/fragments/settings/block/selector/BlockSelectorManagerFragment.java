@@ -142,7 +142,7 @@ public class BlockSelectorManagerFragment extends BaseFragment {
 
         if ("typeview".equals(Objects.requireNonNull(dialogBinding.palettesPath.getText()).toString())) {
             dialogBinding.palettesPath.setEnabled(false);
-            dialogBinding.tilPalettesPath.setOnClickListener(v -> SketchwareUtil.toast("You cannot change the name of this selector"));
+            dialogBinding.tilPalettesPath.setOnClickListener(v -> SketchwareUtil.toast(Helper.getResString(R.string.error_cannot_change_selector_name)));
         }
 
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(requireActivity());
@@ -153,18 +153,18 @@ public class BlockSelectorManagerFragment extends BaseFragment {
             String selectorTitle = Objects.requireNonNull(dialogBinding.blocksPath.getText()).toString();
 
             if (selectorName.isEmpty()) {
-                SketchwareUtil.toast("Please type the selector's name");
+                SketchwareUtil.toast(Helper.getResString(R.string.error_selector_name_required));
                 return;
             }
             if (selectorTitle.isEmpty()) {
-                SketchwareUtil.toast("Please type the selector's title");
+                SketchwareUtil.toast(Helper.getResString(R.string.error_selector_title_required));
                 return;
             }
             if (!isEdit) {
                 if (!itemAlreadyExists(selectorName)) {
                     selectors.add(new Selector(selectorTitle, selectorName, new ArrayList<>()));
                 } else {
-                    SketchwareUtil.toast("An item with this name already exists");
+                    SketchwareUtil.toast(Helper.getResString(R.string.error_item_already_exists));
                 }
             } else {
                 selectors.set(index, new Selector(selectorTitle, selectorName, selectors.get(index).getData()));
@@ -274,7 +274,7 @@ public class BlockSelectorManagerFragment extends BaseFragment {
                     saveAllSelectors();
                     adapter.notifyDataSetChanged();
                 } else {
-                    SketchwareUtil.toastError("Make sure you select a file that contains selector item(s).");
+                    SketchwareUtil.toastError(Helper.getResString(R.string.error_invalid_selector_file));
                 }
             } else {
                 List<Selector> selectorsN = getSelectorsFromFile(file);
@@ -283,12 +283,12 @@ public class BlockSelectorManagerFragment extends BaseFragment {
                     saveAllSelectors();
                     adapter.notifyDataSetChanged();
                 } else {
-                    SketchwareUtil.toastError("Make sure you select a file that contains selector item(s).");
+                    SketchwareUtil.toastError(Helper.getResString(R.string.error_invalid_selector_file));
                 }
             }
         } catch (JsonSyntaxException e) {
             Log.e(BlockSelectorConsts.TAG, e.toString());
-            SketchwareUtil.toastError("Make sure you select a file that contains a selector item(s).");
+            SketchwareUtil.toastError(Helper.getResString(R.string.error_invalid_selector_file));
         }
     }
 
@@ -298,7 +298,7 @@ public class BlockSelectorManagerFragment extends BaseFragment {
             return getGson().fromJson(json, Selector.class);
         } catch (JsonSyntaxException e) {
             Log.e(BlockSelectorConsts.TAG, e.toString());
-            SketchwareUtil.toastError("An error occurred while trying to get the selector");
+            SketchwareUtil.toastError(Helper.getResString(R.string.error_get_selector_failed));
             return null;
         }
     }
@@ -311,7 +311,7 @@ public class BlockSelectorManagerFragment extends BaseFragment {
             return getGson().fromJson(json, itemListType);
         } catch (JsonSyntaxException e) {
             Log.e(BlockSelectorConsts.TAG, e.toString());
-            SketchwareUtil.toastError("An error occurred while trying to get the selectors");
+            SketchwareUtil.toastError(Helper.getResString(R.string.error_get_selector_failed));
             return null;
         }
     }

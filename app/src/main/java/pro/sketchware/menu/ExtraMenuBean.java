@@ -603,8 +603,8 @@ public class ExtraMenuBean {
             case "ResInteger":
             case "ResAttr":
             case "ResXml":
-                title = "Deprecated";
-                dialog.setMessage("This Block Menu was initially used to parse resource values, but was too I/O heavy and has been removed due to that. Please use the Code Editor instead.");
+                title = Helper.getResString(R.string.menu_deprecated_title);
+                dialog.setMessage(Helper.getResString(R.string.menu_deprecated_msg));
                 break;
 
             case "AdUnit":

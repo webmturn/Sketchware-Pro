@@ -44,13 +44,13 @@ public class VersionDialog {
             if (validVerCode) {
                 binding.versionCode.setError(null);
             } else {
-                binding.versionCode.setError("Invalid Version Code");
+                binding.versionCode.setError(Helper.getResString(R.string.version_error_invalid_code));
             }
 
             if (validVerName) {
                 binding.versionName1.setError(null);
             } else {
-                binding.versionName1.setError("Invalid Version Name");
+                binding.versionName1.setError(Helper.getResString(R.string.version_error_invalid_name));
             }
 
             if (!mB.a() && validVerCode && validVerName) {

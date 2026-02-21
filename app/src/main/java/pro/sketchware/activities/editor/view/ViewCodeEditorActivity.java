@@ -235,9 +235,9 @@ public class ViewCodeEditorActivity extends BaseAppCompatActivity {
                 if (!isEdited) {
                     isEdited = true;
                 }
-                SketchwareUtil.toast("Saved");
+                SketchwareUtil.toast(Helper.getResString(R.string.common_word_saved));
             } else {
-                SketchwareUtil.toast("No changes to save");
+                SketchwareUtil.toast(Helper.getResString(R.string.toast_no_changes));
             }
         } catch (Exception e) {
             SketchwareUtil.toastError(e.toString());

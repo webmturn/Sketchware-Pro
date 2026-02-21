@@ -369,13 +369,13 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
 
                     Shell.cmd("cat " + apkUri + " | pm install -S " + length).to(stdout, stderr).submit(result -> {
                         if (result.isSuccess()) {
-                            SketchwareUtil.toast("Package installed successfully!");
+                            SketchwareUtil.toast(Helper.getResString(R.string.design_toast_package_installed));
                             if (ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_ROOT_AUTO_OPEN_AFTER_INSTALLING)) {
                                 Intent launcher = getPackageManager().getLaunchIntentForPackage(q.packageName);
                                 if (launcher != null) {
                                     startActivity(launcher);
                                 } else {
-                                    SketchwareUtil.toastError("Couldn't launch project, either not installed or not with launcher activity.");
+                                    SketchwareUtil.toastError(Helper.getResString(R.string.design_error_cannot_launch));
                                 }
                             }
                         } else {
@@ -385,7 +385,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                         }
                     });
                 } else {
-                    SketchwareUtil.toastError("No root access granted. Continuing using default package install prompt.");
+                    SketchwareUtil.toastError(Helper.getResString(R.string.design_error_no_root_access));
                     requestPackageInstallerInstall();
                 }
             });
@@ -499,7 +499,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 try {
                     FileUtil.deleteFile(q.projectMyscPath);
                     updateBottomMenu();
-                    runOnUiThread(() -> SketchwareUtil.toast("Done cleaning temporary files!"));
+                    runOnUiThread(() -> SketchwareUtil.toast(Helper.getResString(R.string.design_toast_clean_temp_done)));
                 } catch (Exception e) {
                     Log.e("DesignActivity", "Failed to clean temporary files", e);
                 }
@@ -517,7 +517,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         bottomMenu.add(Menu.NONE, 4, Menu.NONE, "Install last built APK").setVisible(false).setOnMenuItemClickListener(item -> {
             if (FileUtil.isExistFile(q.finalToInstallApkPath)) {
                 installBuiltApk();
-            } else SketchwareUtil.toast("APK doesn't exist anymore");
+            } else SketchwareUtil.toast(Helper.getResString(R.string.design_error_apk_not_exist));
             return true;
         });
         bottomMenu.add(Menu.NONE, 6, Menu.NONE, "Show Apk signatures").setVisible(false).setOnMenuItemClickListener(item -> {
@@ -819,7 +819,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                     if (isFinishing()) return;
                     h();
                     if (code.isEmpty()) {
-                        SketchwareUtil.toast("Failed to generate source.");
+                        SketchwareUtil.toast(Helper.getResString(R.string.design_error_generate_source));
                         return;
                     }
                     var scheme = filename.endsWith(".xml") ? CodeViewerActivity.SCHEME_XML : CodeViewerActivity.SCHEME_JAVA;
@@ -827,7 +827,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 });
             } catch (Exception e) {
                 Log.e("DesignActivity", "Failed to generate source code", e);
-                runOnUiThread(() -> { h(); SketchwareUtil.toast("Failed to generate source."); });
+                runOnUiThread(() -> { h(); SketchwareUtil.toast(Helper.getResString(R.string.design_error_generate_source)); });
             }
         });
     }
@@ -884,7 +884,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 });
             } catch (Exception e) {
                 Log.e("DesignActivity", "Failed to generate view code", e);
-                runOnUiThread(() -> { h(); SketchwareUtil.toast("Failed to generate code."); });
+                runOnUiThread(() -> { h(); SketchwareUtil.toast(Helper.getResString(R.string.design_error_generate_code)); });
             }
         });
     }

@@ -398,7 +398,7 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
         themesEditor.saveThemesFile();
         arraysEditor.saveArraysFile();
         updateProjectMetadata();
-        SketchwareUtil.toast("Save completed");
+        SketchwareUtil.toast(Helper.getResString(R.string.toast_save_completed));
     }
 
     private void updateProjectMetadata() {
@@ -547,7 +547,7 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
             if (newVariant.startsWith(variantFullNameStarts)) {
                 initializeBackgroundTask(newVariant.replace("values", ""));
             } else {
-                SketchwareUtil.toastError("Invalid variant input");
+                SketchwareUtil.toastError(Helper.getResString(R.string.error_invalid_variant));
             }
         } else {
             initializeBackgroundTask(variants.get(selectedChoice.get()).replace("values", ""));

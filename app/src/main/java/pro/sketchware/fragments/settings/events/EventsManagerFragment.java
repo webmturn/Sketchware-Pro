@@ -169,7 +169,7 @@ public class EventsManagerFragment extends BaseFragment {
                         addListenerItem();
                         di.dismiss();
                     } else {
-                        SketchwareUtil.toastError("Invalid name!");
+                        SketchwareUtil.toastError(Helper.getResString(R.string.error_invalid_name));
                     }
                 })
                 .setNegativeButton(R.string.common_word_cancel, (di, i) -> di.dismiss()).create();
@@ -195,16 +195,16 @@ public class EventsManagerFragment extends BaseFragment {
             @Override
             public void onFileSelected(File file) {
                 if (FileUtil.readFile(file.getAbsolutePath()).isEmpty()) {
-                    SketchwareUtil.toastError("The selected file is empty!");
+                    SketchwareUtil.toastError(Helper.getResString(R.string.error_file_empty));
                 } else if (FileUtil.readFile(file.getAbsolutePath()).equals("[]")) {
-                    SketchwareUtil.toastError("The selected file is empty!");
+                    SketchwareUtil.toastError(Helper.getResString(R.string.error_file_empty));
                 } else {
                     try {
                         String[] split = FileUtil.readFile(file.getAbsolutePath()).split("\n");
                         importEvents(new Gson().fromJson(split[0], Helper.TYPE_MAP_LIST),
                                 new Gson().fromJson(split[1], Helper.TYPE_MAP_LIST));
                     } catch (JsonSyntaxException | ArrayIndexOutOfBoundsException e) {
-                        SketchwareUtil.toastError("Invalid file");
+                        SketchwareUtil.toastError(Helper.getResString(R.string.error_invalid_file));
                     }
                 }
             }
@@ -225,7 +225,7 @@ public class EventsManagerFragment extends BaseFragment {
         listMap.addAll(data);
         FileUtil.writeFile(EventsManagerConstants.LISTENERS_FILE.getAbsolutePath(), new Gson().toJson(listMap));
         refreshList();
-        SketchwareUtil.toast("Successfully imported events");
+        SketchwareUtil.toast(Helper.getResString(R.string.toast_events_imported));
     }
 
     private void exportListener(int p) {

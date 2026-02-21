@@ -154,7 +154,7 @@ public class EventsManagerCreatorFragment extends BaseFragment {
 
     private void save() {
         if (!filledIn()) {
-            SketchwareUtil.toast("Some required fields are empty!");
+            SketchwareUtil.toast(Helper.getResString(R.string.error_required_fields_empty));
             return;
         }
         if (!OldResourceIdMapper.isValidIconId(Helper.getText(binding.eventsCreatorIcon))) {
@@ -189,7 +189,7 @@ public class EventsManagerCreatorFragment extends BaseFragment {
             arrayList.add(hashMap);
         }
         FileUtil.writeFile(concat, getGson().toJson(arrayList));
-        SketchwareUtil.toast("Saved");
+        SketchwareUtil.toast(Helper.getResString(R.string.common_word_saved));
         getParentFragmentManager().popBackStack();
     }
 
