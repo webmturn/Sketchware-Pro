@@ -1651,6 +1651,18 @@ You must enter the API key to operate the map normally."</string>
     <string name="component_error_read_failed">Couldn\'t read Custom Components file: %s</string>
     <string name="component_error_invalid_file">Found invalid Custom Components file</string>
 
+    <!-- EventsHandler -->
+    <string name="event_error_null">Found invalid (null) Custom Event at position %d</string>
+    <string name="event_error_invalid_name">Found invalid name data type in Custom Event #%d</string>
+    <string name="event_error_invalid_var">Found invalid var data type in Custom Event #%d</string>
+    <string name="event_error_invalid_listener">Found invalid listener data type in Custom Event #%d</string>
+    <string name="event_error_invalid_icon">Found invalid icon data type in Custom Event #%d</string>
+    <string name="event_error_invalid_description">Found invalid description data type in Custom Event #%d</string>
+    <string name="event_error_invalid_code">Found invalid code data type in Custom Event #%d</string>
+    <string name="event_error_invalid_parameters">Found invalid parameters data type in Custom Event #%d</string>
+    <string name="event_error_invalid_header_spec">Found invalid header spec data type in Custom Event #%d</string>
+    <string name="event_error_invalid_import">Found invalid import data type in Custom Event #%d</string>
+
     <!-- ViewCodeEditorActivity menu items -->
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
