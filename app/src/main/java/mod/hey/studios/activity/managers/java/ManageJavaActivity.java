@@ -354,6 +354,15 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
         binding.noContentLayout.setVisibility(currentTree.isEmpty() ? View.VISIBLE : View.GONE);
     }
 
+    private static final int MENU_ADD_ACTIVITY = 1;
+    private static final int MENU_REMOVE_ACTIVITY = 2;
+    private static final int MENU_ADD_SERVICE = 3;
+    private static final int MENU_REMOVE_SERVICE = 4;
+    private static final int MENU_EDIT = 5;
+    private static final int MENU_EDIT_WITH = 6;
+    private static final int MENU_RENAME = 7;
+    private static final int MENU_DELETE_ITEM = 8;
+
     public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> {
         private final List<String> currentTree;
 
@@ -476,32 +485,32 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
 
             if (!isFolder(position)) {
                 if (isActivityInManifest) {
-                    popupMenuMenu.add("Remove Activity from manifest");
+                    popupMenuMenu.add(Menu.NONE, MENU_REMOVE_ACTIVITY, Menu.NONE, R.string.java_menu_remove_activity);
                 } else if (!isServiceInManifest) {
-                    popupMenuMenu.add("Add as Activity to manifest");
+                    popupMenuMenu.add(Menu.NONE, MENU_ADD_ACTIVITY, Menu.NONE, R.string.java_menu_add_activity);
                 }
 
                 if (isServiceInManifest) {
-                    popupMenuMenu.add("Remove Service from manifest");
+                    popupMenuMenu.add(Menu.NONE, MENU_REMOVE_SERVICE, Menu.NONE, R.string.java_menu_remove_service);
                 } else if (!isActivityInManifest) {
-                    popupMenuMenu.add("Add as Service to manifest");
+                    popupMenuMenu.add(Menu.NONE, MENU_ADD_SERVICE, Menu.NONE, R.string.java_menu_add_service);
                 }
 
-                popupMenuMenu.add("Edit");
-                popupMenuMenu.add("Edit with...");
+                popupMenuMenu.add(Menu.NONE, MENU_EDIT, Menu.NONE, R.string.java_menu_edit);
+                popupMenuMenu.add(Menu.NONE, MENU_EDIT_WITH, Menu.NONE, R.string.java_menu_edit_with);
             }
 
-            popupMenuMenu.add("Rename");
-            popupMenuMenu.add("Delete");
+            popupMenuMenu.add(Menu.NONE, MENU_RENAME, Menu.NONE, R.string.java_menu_rename);
+            popupMenuMenu.add(Menu.NONE, MENU_DELETE_ITEM, Menu.NONE, R.string.common_word_delete);
 
             popupMenu.setOnMenuItemClickListener(item -> {
-                switch (item.getTitle().toString()) {
-                    case "Add as Activity to manifest" -> {
+                switch (item.getItemId()) {
+                    case MENU_ADD_ACTIVITY -> {
                         frc.getJavaManifestList().add(getFullName(position));
                         FileUtil.writeFile(fpu.getManifestJava(sc_id), new Gson().toJson(frc.listJavaManifest));
                         SketchwareUtil.toast(String.format(Helper.getResString(R.string.toast_added_activity_manifest), getFileNameWoExt(position)));
                     }
-                    case "Remove Activity from manifest" -> {
+                    case MENU_REMOVE_ACTIVITY -> {
                         if (frc.getJavaManifestList().remove(getFullName(position))) {
                             FileUtil.writeFile(fpu.getManifestJava(sc_id), new Gson().toJson(frc.listJavaManifest));
                             SketchwareUtil.toast(String.format(Helper.getResString(R.string.toast_removed_activity_from_manifest), getFileNameWoExt(position)));
@@ -509,12 +518,12 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
                             SketchwareUtil.toast(Helper.getResString(R.string.toast_activity_not_in_manifest));
                         }
                     }
-                    case "Add as Service to manifest" -> {
+                    case MENU_ADD_SERVICE -> {
                         frc.getServiceManifestList().add(getFullName(position));
                         FileUtil.writeFile(fpu.getManifestService(sc_id), new Gson().toJson(frc.listServiceManifest));
                         SketchwareUtil.toast(String.format(Helper.getResString(R.string.toast_added_service_manifest), getFileNameWoExt(position)));
                     }
-                    case "Remove Service from manifest" -> {
+                    case MENU_REMOVE_SERVICE -> {
                         if (frc.getServiceManifestList().remove(getFullName(position))) {
                             FileUtil.writeFile(fpu.getManifestService(sc_id), new Gson().toJson(frc.listServiceManifest));
                             SketchwareUtil.toast(String.format(Helper.getResString(R.string.toast_removed_service_from_manifest), getFileNameWoExt(position)));
@@ -522,14 +531,14 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
                             SketchwareUtil.toast(Helper.getResString(R.string.toast_service_not_in_manifest));
                         }
                     }
-                    case "Edit" -> goEditFile(position);
-                    case "Edit with..." -> {
+                    case MENU_EDIT -> goEditFile(position);
+                    case MENU_EDIT_WITH -> {
                         Intent launchIntent = new Intent(Intent.ACTION_VIEW);
                         launchIntent.setDataAndType(Uri.fromFile(new File(getItem(position))), "text/plain");
                         startActivity(launchIntent);
                     }
-                    case "Rename" -> showRenameDialog(position);
-                    case "Delete" -> showDeleteDialog(position);
+                    case MENU_RENAME -> showRenameDialog(position);
+                    case MENU_DELETE_ITEM -> showDeleteDialog(position);
                     default -> {
                         return false;
                     }

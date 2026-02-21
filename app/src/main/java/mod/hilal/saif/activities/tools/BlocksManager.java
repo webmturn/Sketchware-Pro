@@ -542,6 +542,10 @@ public class BlocksManager extends BaseAppCompatActivity {
     }
 
 
+    private static final int PALETTE_MENU_EDIT = 1;
+    private static final int PALETTE_MENU_DELETE = 2;
+    private static final int PALETTE_MENU_INSERT = 3;
+
     public class PaletteAdapter extends RecyclerView.Adapter<PaletteAdapter.ViewHolder> {
 
         private final ArrayList<HashMap<String, Object>> palettes;
@@ -573,25 +577,21 @@ public class BlocksManager extends BaseAppCompatActivity {
             binding.recycleSub.setText(getString(R.string.blocks_count_format, (long) getN(-1)));
 
             holder.itemBinding.backgroundCard.setOnLongClickListener(v -> {
-                final String edit = "Edit";
-                final String delete = "Delete";
-                final String insert = "Insert";
-
                 PopupMenu popup = new PopupMenu(BlocksManager.this, holder.itemBinding.color);
                 Menu menu = popup.getMenu();
-                menu.add(edit);
-                menu.add(delete);
-                menu.add(insert);
+                menu.add(Menu.NONE, PALETTE_MENU_EDIT, Menu.NONE, R.string.blocks_menu_edit);
+                menu.add(Menu.NONE, PALETTE_MENU_DELETE, Menu.NONE, R.string.blocks_menu_delete);
+                menu.add(Menu.NONE, PALETTE_MENU_INSERT, Menu.NONE, R.string.blocks_menu_insert);
                 popup.setOnMenuItemClickListener(item -> {
                     int pos = holder.getAbsoluteAdapterPosition();
-                    switch (Objects.requireNonNull(item.getTitle()).toString()) {
-                        case edit:
+                    switch (item.getItemId()) {
+                        case PALETTE_MENU_EDIT:
                             showPaletteDialog(true, pos,
                                     Objects.requireNonNull(pallet_listmap.get(pos).get("name")).toString(),
                                     Objects.requireNonNull(pallet_listmap.get(pos).get("color")).toString(), null);
                             break;
 
-                        case delete:
+                        case PALETTE_MENU_DELETE:
                             new MaterialAlertDialogBuilder(BlocksManager.this)
                                     .setTitle(Objects.requireNonNull(pallet_listmap.get(pos).get("name")).toString())
                                     .setMessage(R.string.blocks_remove_palette_msg)
@@ -615,7 +615,7 @@ public class BlocksManager extends BaseAppCompatActivity {
                                     }).show();
                             break;
 
-                        case insert:
+                        case PALETTE_MENU_INSERT:
                             showPaletteDialog(false, null, null, null, position);
                             break;
 

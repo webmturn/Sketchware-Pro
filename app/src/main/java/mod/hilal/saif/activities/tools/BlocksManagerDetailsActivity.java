@@ -307,19 +307,26 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
         _refreshLists();
     }
 
+    private static final int MENU_DELETE_PERMANENTLY = 1;
+    private static final int MENU_RESTORE = 2;
+    private static final int MENU_INSERT_ABOVE = 3;
+    private static final int MENU_DELETE = 4;
+    private static final int MENU_DUPLICATE = 5;
+    private static final int MENU_MOVE_TO_PALETTE = 6;
+
     private void _showItemPopup(View view, int position) {
         if (palette == -1) {
             PopupMenu popupMenu = new PopupMenu(this, view);
             Menu menu = popupMenu.getMenu();
-            menu.add("Delete permanently");
-            menu.add("Restore");
+            menu.add(Menu.NONE, MENU_DELETE_PERMANENTLY, Menu.NONE, R.string.blocks_menu_delete_permanently);
+            menu.add(Menu.NONE, MENU_RESTORE, Menu.NONE, R.string.blocks_menu_restore);
             popupMenu.setOnMenuItemClickListener(item -> {
-                switch (item.getTitle().toString()) {
-                    case "Delete permanently":
+                switch (item.getItemId()) {
+                    case MENU_DELETE_PERMANENTLY:
                         _deleteBlock(position);
                         break;
 
-                    case "Restore":
+                    case MENU_RESTORE:
                         _changePallette(position);
                         break;
 
@@ -333,17 +340,17 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
         }
         PopupMenu popupMenu = new PopupMenu(this, view);
         Menu menu = popupMenu.getMenu();
-        menu.add("Insert above");
-        menu.add("Delete");
-        menu.add("Duplicate");
-        menu.add("Move to palette");
+        menu.add(Menu.NONE, MENU_INSERT_ABOVE, Menu.NONE, R.string.blocks_menu_insert_above);
+        menu.add(Menu.NONE, MENU_DELETE, Menu.NONE, R.string.blocks_menu_delete);
+        menu.add(Menu.NONE, MENU_DUPLICATE, Menu.NONE, R.string.blocks_menu_duplicate);
+        menu.add(Menu.NONE, MENU_MOVE_TO_PALETTE, Menu.NONE, R.string.blocks_menu_move_to_palette);
         popupMenu.setOnMenuItemClickListener(item -> {
-            switch (item.getTitle().toString()) {
-                case "Duplicate":
+            switch (item.getItemId()) {
+                case MENU_DUPLICATE:
                     _duplicateBlock(position);
                     break;
 
-                case "Insert above":
+                case MENU_INSERT_ABOVE:
                     Object paletteColor = pallet_list.get(palette - 9).get("color");
                     if (paletteColor instanceof String) {
                         Intent intent = new Intent(getApplicationContext(), BlocksManagerCreatorActivity.class);
@@ -357,11 +364,11 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
                     }
                     break;
 
-                case "Move to palette":
+                case MENU_MOVE_TO_PALETTE:
                     _changePallette(position);
                     break;
 
-                case "Delete":
+                case MENU_DELETE:
                     new MaterialAlertDialogBuilder(this)
                             .setTitle(R.string.blocks_delete_title)
                             .setMessage(R.string.blocks_delete_msg)

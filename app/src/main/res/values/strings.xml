@@ -2443,6 +2443,8 @@ You must enter the API key to operate the map normally."</string>
     <string name="blocks_menu_delete">Delete</string>
     <string name="blocks_menu_duplicate">Duplicate</string>
     <string name="blocks_menu_move_to_palette">Move to palette</string>
+    <string name="blocks_menu_edit">Edit</string>
+    <string name="blocks_menu_insert">Insert</string>
 
     <!-- Java: CodeEditorLayout (popup menu) -->
     <string name="code_editor_menu_font_size">Font size</string>
