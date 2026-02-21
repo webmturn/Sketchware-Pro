@@ -1420,6 +1420,26 @@ You must enter the API key to operate the map normally."</string>
     <string name="firebase_select_json_title">Select your google-services.json</string>
     <string name="googlemap_settings_title">GoogleMap Settings</string>
 
+    <!-- Arrays editor -->
+    <string name="array_title_create">Create new array</string>
+    <string name="array_title_edit">Edit array</string>
+    <string name="array_select_type">Select Array Type</string>
+    <string name="array_item_title_create">Create new item</string>
+    <string name="array_item_title_edit">Edit item</string>
+
+    <!-- AppSettings -->
+    <string name="app_settings_category_managers">Managers</string>
+    <string name="app_settings_category_general">General</string>
+    <string name="app_settings_file_select_entry">Select an entry to modify</string>
+    <string name="app_settings_select_action">Select an action</string>
+    <string name="app_settings_delete_confirm_title">Delete %s?</string>
+    <string name="app_settings_delete_confirm_msg">Are you sure you want to delete this %s permanently? This cannot be undone.</string>
+    <string name="app_settings_sign_apk_title">Sign APK with testkey</string>
+    <string name="app_settings_file_exists_title">File exists</string>
+    <string name="app_settings_file_exists_msg">An APK named %1$s already exists at /sketchware/signed_apk/. Overwrite it?</string>
+    <string name="common_word_overwrite">Overwrite</string>
+    <string name="common_word_continue">Continue</string>
+
     <!-- Settings -->
     <string name="settings_title">App Settings</string>
     <string name="dialog_title_select_icon">Select an icon</string>

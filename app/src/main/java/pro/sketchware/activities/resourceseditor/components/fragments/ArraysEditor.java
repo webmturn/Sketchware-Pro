@@ -128,12 +128,12 @@ public class ArraysEditor extends Fragment {
     public void showAddArrayDialog() {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(requireActivity());
         ArraysEditorAddBinding binding = ArraysEditorAddBinding.inflate(getLayoutInflater());
-        dialog.setTitle("Create new array");
+        dialog.setTitle(R.string.array_title_create);
 
         binding.arrayType.setOnClickListener(view -> {
             String[] arrayTypes = {"STRING", "INTEGER", "OBJECT"};
             new MaterialAlertDialogBuilder(requireContext())
-                    .setTitle("Select Array Type")
+                    .setTitle(R.string.array_select_type)
                     .setSingleChoiceItems(arrayTypes, -1, (dialogInterface, which) -> {
                         binding.arrayType.setText(arrayTypes[which]);
                         dialogInterface.dismiss();
@@ -141,7 +141,7 @@ public class ArraysEditor extends Fragment {
                     .show();
         });
 
-        dialog.setPositiveButton("Create", (d, which) -> {
+        dialog.setPositiveButton(R.string.common_word_create, (d, which) -> {
             String arrayName = Objects.requireNonNull(binding.arrayName.getText()).toString();
             String arrayTypeString = Objects.requireNonNull(binding.arrayType.getText()).toString();
             String header = Objects.requireNonNull(binding.arrayHeaderInput.getText()).toString();
@@ -187,7 +187,7 @@ public class ArraysEditor extends Fragment {
         binding.arrayType.setOnClickListener(view -> {
             String[] arrayTypes = {"STRING", "INTEGER", "OBJECT"};
             new MaterialAlertDialogBuilder(requireContext())
-                    .setTitle("Select Array Type")
+                    .setTitle(R.string.array_select_type)
                     .setSingleChoiceItems(arrayTypes, -1, (dialogInterface, which) -> {
                         binding.arrayType.setText(arrayTypes[which]);
                         dialogInterface.dismiss();
@@ -195,8 +195,8 @@ public class ArraysEditor extends Fragment {
                     .show();
         });
 
-        dialog.setTitle("Edit array");
-        dialog.setPositiveButton("Edit", (d, which) -> {
+        dialog.setTitle(R.string.array_title_edit);
+        dialog.setPositiveButton(R.string.common_word_edit, (d, which) -> {
             String arrayName = Objects.requireNonNull(binding.arrayName.getText()).toString();
             String arrayType = Objects.requireNonNull(binding.arrayType.getText()).toString();
             String header = Objects.requireNonNull(binding.arrayHeaderInput.getText()).toString();
@@ -217,8 +217,8 @@ public class ArraysEditor extends Fragment {
             hasUnsavedChanges = true;
         });
         dialog.setNeutralButton(Helper.getResString(R.string.common_word_delete), (d, which) -> new MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Warning")
-                .setMessage("Are you sure you want to delete " + array.getArrayName() + "?")
+                .setTitle(R.string.common_word_warning)
+                .setMessage(String.format(Helper.getResString(R.string.dialog_msg_delete_confirm), array.getArrayName()))
                 .setPositiveButton(R.string.common_word_yes, (d2, w) -> {
                     arraysList.remove(position);
                     notesMap.remove(position);
@@ -227,7 +227,7 @@ public class ArraysEditor extends Fragment {
                     updateNoContentLayout();
                     hasUnsavedChanges = true;
                 })
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton(R.string.common_word_cancel, null)
                 .show());
         dialog.setNegativeButton(getString(R.string.cancel), null);
         dialog.setView(binding.getRoot());
@@ -254,15 +254,15 @@ public class ArraysEditor extends Fragment {
                     @Override
                     public void onItemLongClick(LinkedHashMap<String, String> attributes, String attr) {
                         new MaterialAlertDialogBuilder(requireContext())
-                                .setTitle("Warning")
-                                .setMessage("Are you sure you want to delete " + attr + "?")
+                                .setTitle(R.string.common_word_warning)
+                                .setMessage(String.format(Helper.getResString(R.string.dialog_msg_delete_confirm), attr))
                                 .setPositiveButton(R.string.common_word_yes, (d, w) -> {
                                     attributes.remove(attr);
                                     array.setAttributes(attributes);
                                     attributesAdapter.submitList(new ArrayList<>(attributes.keySet()));
                                     hasUnsavedChanges = true;
                                 })
-                                .setNegativeButton("Cancel", null)
+                                .setNegativeButton(R.string.common_word_cancel, null)
                                 .create()
                                 .show();
                     }
@@ -301,7 +301,7 @@ public class ArraysEditor extends Fragment {
             binding.itemValue.requestFocus();
         }
 
-        dialog.setTitle(isEditing ? "Edit item" : "Create new item");
+        dialog.setTitle(isEditing ? R.string.array_item_title_edit : R.string.array_item_title_create);
 
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_save), (d, which) -> {
             String attribute = Objects.requireNonNull(binding.itemName.getText()).toString();
