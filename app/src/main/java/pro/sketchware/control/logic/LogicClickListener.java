@@ -128,7 +128,7 @@ public class LogicClickListener implements View.OnClickListener {
             } else {
                 binding.typeLayout.requestFocus();
                 if (variableType.isEmpty()) {
-                    binding.typeLayout.setError("Type can't be empty");
+                    binding.typeLayout.setError(getString(R.string.error_type_empty));
                     binding.typeLayout.setErrorEnabled(true);
                 }
                 return;
@@ -140,7 +140,7 @@ public class LogicClickListener implements View.OnClickListener {
             } else {
                 binding.nameLayout.requestFocus();
                 if (variableName.isEmpty()) {
-                    binding.nameLayout.setError("Name can't be empty");
+                    binding.nameLayout.setError(getString(R.string.error_name_empty));
                     binding.nameLayout.setErrorEnabled(true);
                 }
                 return;
@@ -239,7 +239,7 @@ public class LogicClickListener implements View.OnClickListener {
                 listBinding.typeLayout.setErrorEnabled(false);
             } else {
                 if (validName) listBinding.typeLayout.requestFocus();
-                listBinding.typeLayout.setError("Type can't be empty");
+                listBinding.typeLayout.setError(getString(R.string.error_type_empty));
                 listBinding.typeLayout.setErrorEnabled(true);
             }
 
@@ -250,7 +250,7 @@ public class LogicClickListener implements View.OnClickListener {
                     listBinding.nameLayout.setErrorEnabled(false);
                 } else {
                     listBinding.nameLayout.requestFocus();
-                    listBinding.nameLayout.setError("Name can't be empty");
+                    listBinding.nameLayout.setError(getString(R.string.error_name_empty));
                     listBinding.nameLayout.setErrorEnabled(true);
                 }
             }

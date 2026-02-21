@@ -201,7 +201,7 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
                 String name = Helper.getText(inputText);
 
                 if (name.isEmpty()) {
-                    textInputLayout.setError("Invalid folder name");
+                    textInputLayout.setError(getString(R.string.error_invalid_folder_name));
                     return;
                 }
                 textInputLayout.setError(null);
@@ -209,7 +209,7 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
                 String path = fpu.getPathNativelibs(numProj) + "/" + name;
 
                 if (FileUtil.isExistFile(path)) {
-                    textInputLayout.setError("Folder already exists");
+                    textInputLayout.setError(getString(R.string.error_folder_already_exists));
                     return;
                 }
                 textInputLayout.setError(null);

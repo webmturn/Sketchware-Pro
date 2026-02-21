@@ -134,7 +134,7 @@ public class BlockSelectorManagerFragment extends BaseFragment {
 
         addBasicTextChangedListener(dialogBinding.palettesPath, str -> {
             if (itemAlreadyExists(str)) {
-                dialogBinding.tilPalettesPath.setError("An item with this name already exists");
+                dialogBinding.tilPalettesPath.setError(getString(R.string.error_item_already_exists));
             } else {
                 dialogBinding.tilPalettesPath.setError(null);
             }

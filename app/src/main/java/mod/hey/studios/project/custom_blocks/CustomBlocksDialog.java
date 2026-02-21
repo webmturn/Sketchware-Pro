@@ -234,19 +234,19 @@ public class CustomBlocksDialog {
 
     private boolean validateInput(DialogPaletteBinding binding, String name, String color) {
         if (name.isEmpty()) {
-            binding.name.setError("Name cannot be empty");
+            binding.name.setError(activity.getString(R.string.error_name_cannot_be_empty));
             binding.name.requestFocus();
             return false;
         }
         if (color.isEmpty()) {
-            binding.color.setError("Color cannot be empty");
+            binding.color.setError(activity.getString(R.string.error_color_cannot_be_empty));
             binding.color.requestFocus();
             return false;
         }
         try {
             Color.parseColor(color);
         } catch (IllegalArgumentException e) {
-            binding.color.setError("Invalid hexadecimal color");
+            binding.color.setError(activity.getString(R.string.error_invalid_hex_color));
             binding.color.requestFocus();
             return false;
         }

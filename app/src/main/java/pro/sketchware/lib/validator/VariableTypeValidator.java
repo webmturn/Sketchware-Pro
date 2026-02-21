@@ -8,6 +8,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.util.regex.Pattern;
 
 import a.a.a.BaseValidator;
+import pro.sketchware.R;
 
 public class VariableTypeValidator extends BaseValidator {
     public static final Pattern PATTERN_TYPE = Pattern.compile(
@@ -26,33 +27,33 @@ public class VariableTypeValidator extends BaseValidator {
         String reconsInput = String.join(" ", words);
 
         if (!variableType.equals(reconsInput)) {
-            b.setError("Extra spaces between or at the end are not allowed.");
+            b.setError(b.getContext().getString(R.string.error_extra_spaces_not_allowed));
             d = false;
             return;
         }
 
         if (!TextUtils.isEmpty(charSequence)) {
             if (!Character.isLetter(charSequence.charAt(0))) {
-                b.setError("Variable data type must start with a letter");
+                b.setError(b.getContext().getString(R.string.error_type_must_start_letter));
                 d = false;
                 return;
             }
         }
 
         if (!isValidAngleBracket(variableType)) {
-            b.setError("Angle bracket not matched");
+            b.setError(b.getContext().getString(R.string.error_angle_bracket_not_matched));
             d = false;
             return;
         }
 
         if (!isValidBoxBracket(variableType)) {
-            b.setError("Box bracket not matched");
+            b.setError(b.getContext().getString(R.string.error_box_bracket_not_matched));
             d = false;
             return;
         }
 
         if (!PATTERN_TYPE.matcher(variableType).matches()) {
-            b.setError("Invalid variable data type");
+            b.setError(b.getContext().getString(R.string.error_invalid_variable_type));
             d = false;
             return;
         }

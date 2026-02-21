@@ -2354,6 +2354,74 @@ You must enter the API key to operate the map normally."</string>
     <!-- Java: AppSettings -->
     <string name="overwrite_apk_format">An APK named %s already exists at /sketchware/signed_apk/.  Overwrite it?</string>
 
+    <!-- Java: Validators -->
+    <string name="error_no_spaces_allowed">Spaces aren\'t allowed to prevent crashes</string>
+    <string name="error_only_letters_numbers_special">Only use letters (a-zA-Z), numbers and Special characters (_)</string>
+    <string name="error_extra_spaces_not_allowed">Extra spaces between or at the end are not allowed.</string>
+    <string name="error_extra_spaces_words_not_allowed">Extra spaces between words or at the end are not allowed.</string>
+    <string name="error_type_must_start_letter">Variable data type must start with a letter</string>
+    <string name="error_angle_bracket_not_matched">Angle bracket not matched</string>
+    <string name="error_box_bracket_not_matched">Box bracket not matched</string>
+    <string name="error_invalid_variable_type">Invalid variable data type</string>
+    <string name="error_invalid_modifier_format">Invalid modifier: %s</string>
+    <string name="error_duplicate_modifier_format">Duplicate modifier: %s</string>
+    <string name="error_access_modifier_only_one">Access modifier can only set one of public / protected / private</string>
+
+    <!-- Java: LogicClickListener -->
+    <string name="error_type_empty">Type can\'t be empty</string>
+    <string name="error_name_empty">Name can\'t be empty</string>
+
+    <!-- Java: GetKeyStoreCredentialsDialog -->
+    <string name="error_alias_empty">Alias can\'t be empty</string>
+    <string name="error_password_empty">Password can\'t be empty</string>
+    <string name="error_algorithm_empty">Algorithm can\'t be empty</string>
+
+    <!-- Java: ManageNativelibsActivity -->
+    <string name="error_invalid_folder_name">Invalid folder name</string>
+    <string name="error_folder_already_exists">Folder already exists</string>
+
+    <!-- Java: CustomBlocksDialog -->
+    <string name="error_name_cannot_be_empty">Name cannot be empty</string>
+    <string name="error_color_cannot_be_empty">Color cannot be empty</string>
+    <string name="error_invalid_hex_color">Invalid hexadecimal color</string>
+
+    <!-- Java: BlocksManagerCreatorActivity -->
+    <string name="error_block_name_in_use">Block name already in use</string>
+    <string name="error_invalid_hex_color_short">Invalid hex color</string>
+    <string name="error_invalid_name_data">Invalid name block data</string>
+    <string name="error_invalid_type_data">Invalid type block data</string>
+    <string name="error_invalid_typename_data">Invalid typeName block data</string>
+    <string name="error_invalid_spec_data">Invalid spec block data</string>
+    <string name="error_invalid_spec2_data">Invalid spec2 block data</string>
+    <string name="error_invalid_imports_data">Invalid imports block data</string>
+    <string name="error_invalid_color_data">Invalid color block data</string>
+
+    <!-- Java: LibraryDownloaderDialogFragment -->
+    <string name="error_enter_dependency">Please enter a dependency</string>
+    <string name="error_invalid_dependency_format">Invalid dependency format</string>
+    <string name="error_version_not_available">Version not available</string>
+    <string name="error_dependencies_not_found">Dependencies not found</string>
+    <string name="error_invalid_scope_format">Invalid scope: %s</string>
+    <string name="error_invalid_packaging">Invalid packaging</string>
+    <string name="error_dexing_failed_format">Dexing failed: %s</string>
+
+    <!-- Java: PropertyInputItem -->
+    <string name="error_value_min_01">Value must be 0.1 or greater</string>
+    <string name="error_value_min_0">Value must be 0 or greater</string>
+    <string name="error_invalid_value">Invalid value</string>
+
+    <!-- Java: ColorsEditor -->
+    <string name="error_invalid_hex_color_caps">Invalid HEX color</string>
+
+    <!-- Java: BlockSelectorManagerFragment -->
+    <string name="error_item_already_exists">An item with this name already exists</string>
+
+    <!-- Java: EventsManagerCreatorFragment -->
+    <string name="error_invalid_icon_id">Invalid icon ID</string>
+
+    <!-- Java: MoreBlockBuilderView -->
+    <string name="error_invalid_format">Invalid format</string>
+
     <!-- ViewCodeEditorActivity menu items -->
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
