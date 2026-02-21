@@ -352,7 +352,7 @@ public class CodeEditorLayout extends LinearLayout implements TextWatcher {
                     editText.getLayout().getLineStart(lineNo),
                     end - ((deleting && end == editText.length()) ? 0 : 1)
             ).toString();
-        } catch (Exception ex) {
+        } catch (NullPointerException | IndexOutOfBoundsException ex) {
             return "";
         }
     }
@@ -379,7 +379,7 @@ public class CodeEditorLayout extends LinearLayout implements TextWatcher {
     private String safeSubstring(String main, int start, int end) {
         try {
             return main.substring(start, end);
-        } catch (Exception e) {
+        } catch (StringIndexOutOfBoundsException e) {
             return "";
         }
     }

@@ -50,7 +50,7 @@ public class Helper {
     public static void fixFileprovider() {
         try {
             StrictMode.class.getMethod("disableDeathOnFileUriExposure").invoke(null);
-        } catch (Exception e) {
+        } catch (ReflectiveOperationException e) {
             Log.e("Helper", "An error occurred while trying to fix death on file URI exposure: " + e.getMessage(), e);
         }
     }
