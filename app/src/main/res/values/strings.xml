@@ -2017,6 +2017,25 @@ You must enter the API key to operate the map normally."</string>
     <string name="admob_ad_name_label">Ad Name : </string>
     <string name="admob_ad_unit_id_label">Ad Unit ID : </string>
 
+    <!-- Layout: activity_blocks_manager -->
+    <string name="block_manager_title">Block Manager</string>
+    <string name="block_manager_recycle_bin">Recycle bin</string>
+    <string name="block_manager_palettes">Palettes</string>
+
+    <!-- Layout: activity_logcatreader -->
+    <string name="logcat_title">Logcat Reader</string>
+    <string name="logcat_hint_search">Search log</string>
+    <string name="logcat_no_content">Logcat hasn\'t captured anything yet</string>
+    <string name="logcat_no_content_desc">Keep this screen open then run your app</string>
+
+    <!-- Layout: compile_log -->
+    <string name="compile_log_title">Last Compile Log</string>
+    <string name="compile_log_no_bugs">Awesome, no bugs to fix!</string>
+    <string name="compile_log_continue">Let\'s continue working on the project</string>
+
+    <!-- Layout: design -->
+    <string name="design_run">Run</string>
+
     <!-- ViewCodeEditorActivity menu items -->
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
