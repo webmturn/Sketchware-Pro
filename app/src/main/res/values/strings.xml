@@ -2060,6 +2060,51 @@ You must enter the API key to operate the map normally."</string>
     <string name="project_version_code">Version code</string>
     <string name="project_version_name">Version name</string>
 
+    <!-- Layout: android_manifest_injection -->
+    <string name="manifest_activities">Activities</string>
+
+    <!-- Layout: color_picker_custom_attr -->
+    <string name="color_picker_custom_attr_hint">Enter your custom attr</string>
+    <string name="color_picker_preview_label">Color Preview :</string>
+
+    <!-- Layout: dialog_add_new_listener -->
+    <string name="listener_hint_name">Name</string>
+    <string name="listener_hint_custom_import">Custom import</string>
+    <string name="listener_hint_code">Code (### =&gt; variable name)</string>
+    <string name="listener_independent_class">Independent class/method</string>
+
+    <!-- Layout: dialog_input_layout -->
+    <string name="input_hint_new_name">Enter the new name</string>
+    <string name="input_rename_occurrences">Rename occurrences in file</string>
+
+    <!-- Layout: dialog_save_icon -->
+    <string name="save_icon_hint_name">Enter icon name</string>
+    <string name="save_icon_licence">This icon is available under the Apache Licence Version 2.0. Press to read more.</string>
+
+    <!-- Layout: file_selector_popup_select_xml -->
+    <string name="file_selector_create_new_view">Create new view</string>
+
+    <!-- Layout: fragment_events_manager -->
+    <string name="events_new_listener">New Listener</string>
+
+    <!-- Layout: fragment_events_manager_creator -->
+    <string name="events_creator_hint_name">Event Name</string>
+    <string name="events_creator_hint_widget">Widget/Component name</string>
+    <string name="events_creator_hint_icon">Icon</string>
+    <string name="events_creator_hint_desc">Description</string>
+    <string name="events_creator_hint_params">Parameters</string>
+    <string name="events_creator_hint_spec">Spec  (### =&gt; Variable name)</string>
+    <string name="events_creator_hint_code">Event code (### ==&gt; Variable name)</string>
+    <string name="events_creator_listener_props">Listener properties :</string>
+    <string name="events_creator_hint_listener_code">Listener Code (### ==&gt; variable name)</string>
+    <string name="events_creator_hint_custom_import">Custom Import</string>
+
+    <!-- Layout: fragment_store_project_preview_comments -->
+    <string name="store_comments_title">Comments</string>
+
+    <!-- Layout: import_icon -->
+    <string name="import_icon_filter">Filter</string>
+
     <!-- ViewCodeEditorActivity menu items -->
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
