@@ -1881,6 +1881,52 @@ You must enter the API key to operate the map normally."</string>
     <string name="filter_icons_two_tone">Two Tone</string>
     <string name="filter_icons_selected_color">Selected color</string>
 
+    <!-- Layout: activity_blocks_manager_creator -->
+    <string name="block_creator_title">Edit block</string>
+    <string name="block_creator_properties">Properties</string>
+    <string name="block_creator_hint_name">Name</string>
+    <string name="block_creator_hint_type">Type</string>
+    <string name="block_creator_hint_typename">Type name</string>
+    <string name="block_creator_design">Design</string>
+    <string name="block_creator_hint_color">Color</string>
+    <string name="block_creator_parameters">Parameters</string>
+    <string name="block_creator_hint_spec">Spec</string>
+    <string name="block_creator_hint_spec2">Spec2</string>
+    <string name="block_creator_block_preview">Block Preview</string>
+    <string name="block_creator_block_import">Block import (e.g., android.view.View)</string>
+    <string name="block_creator_hint_imports">Enter imports line by line</string>
+    <string name="block_creator_block_code">Block embedded code</string>
+    <string name="block_creator_hint_code">Code</string>
+
+    <!-- Layout: dialog_project_settings -->
+    <string name="project_settings_hint_min_sdk">Minimum SDK version</string>
+    <string name="project_settings_hint_target_sdk">Target SDK version</string>
+    <string name="project_settings_hint_app_class">Application class name</string>
+    <string name="project_settings_viewbinding">Enable ViewBinding</string>
+    <string name="project_settings_viewbinding_desc">This will enable ViewBinding in your project. Note: Manual changes may be required for widgets used in ASD block</string>
+    <string name="project_settings_remove_old">Remove old deprecated methods</string>
+    <string name="project_settings_remove_old_desc">This will remove methods in files, like showMessage, getDip, etc.</string>
+    <string name="project_settings_material_components">Use MaterialComponents</string>
+    <string name="project_settings_material_components_desc">This will replace e.g. Button with MaterialButton, be careful!</string>
+
+    <!-- Layout: manage_library_material3 -->
+    <string name="material3_enable">Enable Material3</string>
+    <string name="material3_theme_pref">Material3 Theme Preference :</string>
+    <string name="material3_daynight">DayNight</string>
+    <string name="material3_light">Light</string>
+    <string name="material3_dark">Dark</string>
+    <string name="material3_dynamic_colors">Enable Dynamic Colors</string>
+
+    <!-- Layout: project_config_layout -->
+    <string name="build_settings_title">Build Settings</string>
+    <string name="build_settings_hint_android_jar">Custom android.jar</string>
+    <string name="build_settings_hint_classpath">Classpath \'separated by :\'</string>
+    <string name="build_settings_dexer">Dexer</string>
+    <string name="build_settings_java_version">Java version</string>
+    <string name="build_settings_hide_warnings">Hide warnings in error log</string>
+    <string name="build_settings_no_http_legacy">Don\'t include http-legacy-28.dex</string>
+    <string name="build_settings_enable_logcat">Enable debug logcat logs viewable in Logcat Reader. Not enabled in exported AABs/APKs.</string>
+
     <!-- ViewCodeEditorActivity menu items -->
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
