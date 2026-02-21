@@ -51,9 +51,9 @@ public class CompileLogActivity extends BaseAppCompatActivity {
         binding.topAppBar.setNavigationOnClickListener(Helper.getBackPressedClickListener(this));
 
         if (getIntent().getBooleanExtra("showingLastError", false)) {
-            binding.topAppBar.setTitle("Last compile log");
+            binding.topAppBar.setTitle(R.string.compile_log_title_last);
         } else {
-            binding.topAppBar.setTitle("Compile log");
+            binding.topAppBar.setTitle(R.string.compile_log_title);
         }
 
         String sc_id = getIntent().getStringExtra("sc_id");
@@ -191,9 +191,9 @@ public class CompileLogActivity extends BaseAppCompatActivity {
                 Gravity.CENTER));
 
         new MaterialAlertDialogBuilder(this)
-                .setTitle("Select font size")
+                .setTitle(R.string.dialog_title_select_font_size)
                 .setView(layout)
-                .setPositiveButton("Save", (dialog, which) -> {
+                .setPositiveButton(R.string.common_word_save, (dialog, which) -> {
                     logViewerPreferences.edit().putInt(PREFERENCE_FONT_SIZE, picker.getValue()).apply();
 
                     binding.tvCompileLog.setTextSize((float) picker.getValue());
