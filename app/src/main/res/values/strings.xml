@@ -1513,6 +1513,18 @@ You must enter the API key to operate the map normally."</string>
     <!-- Blocks manager -->
     <string name="blocks_recycle_bin_title">Recycle bin</string>
     <string name="blocks_remove_permanently">Remove permanently</string>
+    <string name="blocks_error_invalid_color">Invalid color of palette #%d</string>
+    <string name="blocks_error_invalid_name">Invalid name of palette #%d</string>
+    <string name="blocks_error_invalid_palette_entry">Invalid palette entry in block #%d</string>
+    <string name="blocks_error_invalid_color_entry">Invalid color entry in block #%d</string>
+    <string name="blocks_error_invalid_color_palette">Invalid color in Custom Block palette #%d</string>
+    <string name="blocks_error_invalid_name_palette">Invalid name of Custom Block palette #%d</string>
+    <string name="blocks_error_invalid_name_entry">Invalid name entry of Custom Block #%d in Blocks to import</string>
+    <string name="blocks_toast_exported">Successfully exported blocks to:\n%s</string>
+    <string name="blocks_toast_imported">Imported successfully</string>
+    <string name="blocks_error_import">An error occurred! [%s]</string>
+    <string name="blocks_error_invalid_json">Invalid JSON file</string>
+    <string name="common_word_all">All</string>
     <string name="blocks_remove_palette_msg">Remove all blocks related to this palette?</string>
     <string name="blocks_import_reverse">Reverse</string>
 
