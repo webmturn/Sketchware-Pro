@@ -1663,6 +1663,37 @@ You must enter the API key to operate the map normally."</string>
     <string name="event_error_invalid_header_spec">Found invalid header spec data type in Custom Event #%d</string>
     <string name="event_error_invalid_import">Found invalid import data type in Custom Event #%d</string>
 
+    <!-- AndroidManifestInjector -->
+    <string name="manifest_error_parse_failed">Failed to parse AndroidManifest attribute injections; Reason: %s</string>
+    <string name="manifest_error_invalid_value">Invalid AndroidManifest attribute injection value in attribute #%d</string>
+    <string name="manifest_error_invalid_name">Invalid AndroidManifest attribute injection name in attribute #%d</string>
+
+    <!-- ManageLocalLibrary -->
+    <string name="local_lib_error_invalid_config">Invalid Local library configuration found! Temporarily using none</string>
+    <string name="local_lib_error_invalid_assets">Invalid assets path of enabled Local library #%d</string>
+    <string name="local_lib_error_invalid_dex">Invalid DEX path of enabled Local library #%d</string>
+    <string name="local_lib_error_invalid_jar">Invalid JAR path of enabled Local library #%1$d->%2$s</string>
+    <string name="local_lib_error_invalid_package">Invalid package name of enabled Local library #%d</string>
+    <string name="local_lib_error_invalid_proguard">Invalid ProGuard path of enabled Local library #%d</string>
+    <string name="local_lib_error_invalid_res">Invalid res/ folder path of enabled Local library #%d</string>
+
+    <!-- BlockLoader -->
+    <string name="block_error_get_custom">Failed to get Custom Blocks for project %s: %s</string>
+    <string name="block_error_invalid_name">Invalid name entry in Custom Block #%d</string>
+    <string name="block_error_invalid_color">Invalid color in Custom Block #%d</string>
+    <string name="block_error_invalid_palette_color">Invalid color in Custom Block palette #%d</string>
+    <string name="block_error_invalid_palette_color_type">Invalid color value type in Custom Block palette #%d</string>
+    <string name="block_error_invalid_palette_index_type">Invalid palette index value type in Custom Block palette #%d</string>
+    <string name="block_error_invalid_palette_number">Invalid palette number in Custom Block #%d</string>
+    <string name="block_error_invalid_palette_number_type">Invalid palette number value type in Custom Block #%d</string>
+
+    <!-- ExtraPaletteBlock -->
+    <string name="extra_block_error_invalid_var">Found invalid data of Custom Variable #%1$d: \"%2$s\"</string>
+    <string name="extra_block_error_invalid_spec">Custom Block #%d of current palette has an invalid spec data type</string>
+    <string name="extra_block_error_invalid_block_name">Custom Block #%d of current palette has an invalid name data type</string>
+    <string name="extra_block_error_invalid_block_type">Custom Block #%d of current palette has an invalid block type data type</string>
+    <string name="extra_block_error_invalid_block_palette">Custom Block #%d of current palette has an invalid block palette data type</string>
+
     <!-- ViewCodeEditorActivity menu items -->
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
