@@ -276,7 +276,7 @@ public class ManageFirebaseActivity extends BaseAppCompatActivity implements Vie
     private void showImportJsonDialog() {
         FilePickerOptions options = new FilePickerOptions();
         options.setExtensions(new String[]{"json"});
-        options.setTitle("Select your google-services.json");
+        options.setTitle(Helper.getResString(R.string.firebase_select_json_title));
 
         FilePickerCallback callback = new FilePickerCallback() {
             @Override

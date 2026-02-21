@@ -1391,6 +1391,16 @@ You must enter the API key to operate the map normally."</string>
     <string name="events_new_event_title">New Event</string>
     <string name="file_picker_select_txt">Select a .txt file</string>
 
+    <!-- View management -->
+    <string name="view_title_create_new">Create new</string>
+    <string name="view_title_edit">Edit %s</string>
+
+    <!-- Library management -->
+    <string name="library_appcompat_disabled_title">AppCompat is disabled!</string>
+    <string name="library_appcompat_disabled_msg">Please enable AppCompat first to use this feature</string>
+    <string name="firebase_select_json_title">Select your google-services.json</string>
+    <string name="googlemap_settings_title">GoogleMap Settings</string>
+
     <!-- Settings -->
     <string name="dialog_title_select_icon">Select an icon</string>
     <string name="settings_backup_directory_title">Backup directory</string>
