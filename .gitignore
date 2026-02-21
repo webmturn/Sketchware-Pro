@@ -18,6 +18,9 @@ out/
 # Gradle files
 .gradle/
 build/
+# Don't ignore source packages that happen to be named 'build'
+!app/src/main/java/**/build/
+!app/src/main/java/**/build/**
 
 # Local configuration file (sdk path, etc)
 local.properties
