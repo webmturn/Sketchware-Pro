@@ -1804,6 +1804,29 @@ You must enter the API key to operate the map normally."</string>
     <!-- Menu: permission_manager_menu -->
     <string name="menu_reset">Reset</string>
 
+    <!-- Layout: activity_icon_creator -->
+    <string name="icon_creator_bg_type">Background Type</string>
+    <string name="icon_creator_color">Color</string>
+    <string name="icon_creator_gradient">Gradient</string>
+    <string name="icon_creator_gradient_direction">Gradient Direction</string>
+    <string name="icon_creator_effects">Effects</string>
+    <string name="icon_creator_score_effect">Score effect</string>
+    <string name="icon_creator_textures">Textures</string>
+    <string name="icon_creator_opacity">Opacity</string>
+    <string name="icon_creator_scale">Scale</string>
+    <string name="icon_creator_rotation">Rotation</string>
+    <string name="icon_creator_corners">Corners</string>
+    <string name="icon_creator_image">Image</string>
+    <string name="icon_creator_size">Size</string>
+    <string name="icon_creator_vertical_position">Vertical position</string>
+    <string name="icon_creator_horizontal_position">horizontal position</string>
+    <string name="icon_creator_other">Other</string>
+    <string name="icon_creator_hint_text">Text</string>
+    <string name="icon_creator_hint_badge">Badge text</string>
+    <string name="icon_creator_badge_bg_color">Badge background color</string>
+    <string name="icon_creator_adaptive_icon">Adaptive Icon</string>
+    <string name="icon_creator_badge">badge</string>
+
     <!-- ViewCodeEditorActivity menu items -->
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
