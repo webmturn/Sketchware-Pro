@@ -2150,6 +2150,87 @@ You must enter the API key to operate the map normally."</string>
     <!-- Layout: manage_sound_add -->
     <string name="sound_add_to_collection">Add to my collection</string>
 
+    <!-- Layout: manage_xml_command_add -->
+    <string name="xml_cmd_hint_name">XML name(with .xml)</string>
+    <string name="xml_cmd_hint_reference">Reference</string>
+    <string name="xml_cmd_hint_command">Select command</string>
+    <string name="xml_cmd_hint_distance">Distance</string>
+    <string name="xml_cmd_hint_frontend">Frontend</string>
+    <string name="xml_cmd_hint_backend">Backend</string>
+    <string name="xml_cmd_hint_code">Input code</string>
+
+    <!-- Layout: widgets_creator_dialog -->
+    <string name="widget_creator_hint_title">Widget title</string>
+    <string name="widget_creator_hint_class">Widget class name</string>
+    <string name="widget_creator_hint_type">Select widget type</string>
+    <string name="widget_creator_hint_category">Select category</string>
+    <string name="widget_creator_hint_attrs">XML attributes</string>
+
+    <!-- Layout: add_custom_variable -->
+    <string name="custom_var_hint_modifier">private, public or public static (optional)</string>
+    <string name="custom_var_hint_type">Type, e.g. File</string>
+    <string name="custom_var_hint_name">Name, e.g. file</string>
+    <string name="custom_var_hint_initializer">Initializer, e.g. new File() (optional)</string>
+
+    <!-- Layout: dialog_keystore_credentials -->
+    <string name="keystore_hint_signing_mode">Signing mode</string>
+    <string name="keystore_hint_alias">Keystore alias</string>
+    <string name="keystore_hint_password">Alias password</string>
+    <string name="keystore_hint_algorithm">Signing algorithm</string>
+
+    <!-- Layout: arrays_editor_add -->
+    <string name="array_hint_name">Array name</string>
+    <string name="array_hint_type">Array type</string>
+    <string name="array_hint_header">Array header value ( optional )</string>
+
+    <!-- Layout: color_editor_add -->
+    <string name="color_editor_hint_name">Color name</string>
+    <string name="color_editor_hint_value">Color value</string>
+    <string name="color_editor_hint_header">String header value ( optional )</string>
+
+    <!-- Layout: custom_dialog_attribute -->
+    <string name="custom_attr_hint_res">res</string>
+    <string name="custom_attr_hint_attr">attr</string>
+    <string name="custom_attr_hint_value">value</string>
+
+    <!-- Layout: dialog_advanced_version_control -->
+    <string name="version_hint_code">Version code</string>
+    <string name="version_hint_name">Version name</string>
+    <string name="version_hint_name_extra">Version name extra</string>
+
+    <!-- Layout: style_editor_add -->
+    <string name="style_hint_name">Style name</string>
+    <string name="style_hint_parent">Style Parent</string>
+    <string name="style_hint_header">Style header value ( optional )</string>
+
+    <!-- Layout: view_string_editor_add -->
+    <string name="string_editor_hint_key">String key</string>
+    <string name="string_editor_hint_value">String value</string>
+    <string name="string_editor_hint_header">String header value ( optional )</string>
+
+    <!-- Layout: add_custom_list -->
+    <string name="custom_list_hint_type">Type, e.g. ArrayList&lt;Data&gt;</string>
+    <string name="custom_list_hint_name">Name, e.g. dataList</string>
+
+    <!-- Layout: arrays_editor_add_attr -->
+    <string name="array_attr_hint_name">Enter Item Name</string>
+    <string name="array_attr_hint_value">Enter Item Value</string>
+
+    <!-- Layout: dialog_block_configuration -->
+    <string name="block_config_hint_palettes">JSON file with palettes</string>
+    <string name="block_config_hint_blocks">JSON file with blocks</string>
+
+    <!-- Layout: dialog_palette -->
+    <string name="palette_hint_name">Palette name</string>
+    <string name="palette_hint_color">Color hex code</string>
+
+    <!-- Layout: manage_locallibraries -->
+    <string name="local_lib_hint_search">Search for libraries</string>
+
+    <!-- Layout: style_editor_add_attr -->
+    <string name="style_attr_hint_name">Enter Attribute Name</string>
+    <string name="style_attr_hint_value">Enter Attribute Value</string>
+
     <!-- ViewCodeEditorActivity menu items -->
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>

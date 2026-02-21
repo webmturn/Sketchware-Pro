@@ -20,7 +20,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:imeOptions="actionNext"
-                android:hint="Palette name"
+                android:hint="@string/palette_hint_name"
                 android:textSize="16sp"
                 android:singleLine="true"/>
 
@@ -43,7 +43,7 @@
                  android:id="@+id/colorEditText"
                  android:layout_height="match_parent"
                  android:layout_width="match_parent"
-                 android:hint="Color hex code"
+                 android:hint="@string/palette_hint_color"
                  android:textSize="16sp"
                  android:paddingLeft="32dp"
                  android:singleLine="true"
