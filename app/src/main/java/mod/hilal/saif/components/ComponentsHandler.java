@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 
 import com.besome.sketch.beans.ComponentBean;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -558,7 +559,7 @@ public class ComponentsHandler {
         if (FileUtil.isExistFile(getPath())) {
             try {
                 data = new Gson().fromJson(FileUtil.readFile(getPath()), Helper.TYPE_MAP_LIST);
-            } catch (Exception e) {
+            } catch (JsonSyntaxException e) {
                 data = new ArrayList<>();
                 SketchwareUtil.toastError("Couldn't read Custom Components file: " + e.getMessage());
             }

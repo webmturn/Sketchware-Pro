@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.regex.PatternSyntaxException;
 
 import mod.hey.studios.util.Helper;
 import pro.sketchware.utility.FileUtil;
@@ -70,7 +71,7 @@ public class CommandBlock {
         if (command.equals("find-replace-first")) {
             try {
                 return c.replaceFirst(reference, input);
-            } catch (Exception e) {
+            } catch (PatternSyntaxException e) {
                 return c;
             }
         }
@@ -78,7 +79,7 @@ public class CommandBlock {
         if (command.equals("find-replace-all")) {
             try {
                 return c.replaceAll(reference, input);
-            } catch (Exception e) {
+            } catch (PatternSyntaxException e) {
                 return c;
             }
         }
@@ -256,7 +257,8 @@ public class CommandBlock {
             if (FileUtil.isExistFile(path) && !FileUtil.readFile(path).isEmpty() && !FileUtil.readFile(path).equals("[]")) {
                 data = new Gson().fromJson(FileUtil.readFile(path), Helper.TYPE_MAP_LIST);
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            android.util.Log.e("CommandBlock", "Failed to parse JSON from file: " + path, e);
         }
         data.addAll(list);
         FileUtil.writeFile(path, new Gson().toJson(data));
