@@ -892,8 +892,8 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
                         dialog.dismiss();
                         var builder =
                                 new MaterialAlertDialogBuilder(getContext())
-                                        .setTitle("Delete")
-                                        .setMessage("Are you sure you want to delete " + attr + "?")
+                                        .setTitle(R.string.dialog_title_delete)
+                                        .setMessage(String.format(Helper.getResString(R.string.dialog_msg_delete_attr), attr))
                                         .setPositiveButton(
                                                 R.string.common_word_yes,
                                                 (d, w) -> {
@@ -931,7 +931,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
 
     private void addNewAttribute(Map<String, String> attributes) {
         var builder = new MaterialAlertDialogBuilder(getContext());
-        builder.setTitle("Add new attribute");
+        builder.setTitle(R.string.dialog_title_add_attribute);
 
         PropertyPopupInputTextBinding binding =
                 PropertyPopupInputTextBinding.inflate(LayoutInflater.from(getContext()));

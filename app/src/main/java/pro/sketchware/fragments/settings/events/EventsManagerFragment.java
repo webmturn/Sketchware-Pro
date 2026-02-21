@@ -149,9 +149,9 @@ public class EventsManagerFragment extends BaseFragment {
         }
 
         var dialog = new MaterialAlertDialogBuilder(requireContext())
-                .setTitle(existingListener == null ? "New Listener" : "Edit Listener")
+                .setTitle(existingListener == null ? Helper.getResString(R.string.events_new_listener) : Helper.getResString(R.string.events_edit_listener))
                 .setView(listenerBinding.getRoot())
-                .setPositiveButton("Save", (di, i) -> {
+                .setPositiveButton(R.string.common_word_save, (di, i) -> {
                     String listenerName = Helper.getText(listenerBinding.listenerName);
                     if (!listenerName.isEmpty()) {
                         HashMap<String, Object> hashMap = existingListener != null ? existingListener : new HashMap<>();
@@ -172,7 +172,7 @@ public class EventsManagerFragment extends BaseFragment {
                         SketchwareUtil.toastError("Invalid name!");
                     }
                 })
-                .setNegativeButton("Cancel", (di, i) -> di.dismiss()).create();
+                .setNegativeButton(R.string.common_word_cancel, (di, i) -> di.dismiss()).create();
         dialog.show();
     }
 
@@ -188,7 +188,7 @@ public class EventsManagerFragment extends BaseFragment {
 
     private void showImportEventsDialog() {
         FilePickerOptions options = new FilePickerOptions();
-        options.setTitle("Select a .txt file");
+        options.setTitle(Helper.getResString(R.string.file_picker_select_txt));
         options.setExtensions(new String[]{"txt"});
 
         FilePickerCallback callback = new FilePickerCallback() {
@@ -327,14 +327,14 @@ public class EventsManagerFragment extends BaseFragment {
                                     break;
                                 case 2:
                                     new MaterialAlertDialogBuilder(context)
-                                            .setTitle("Delete listener")
-                                            .setMessage("Are you sure you want to delete this item?")
-                                            .setPositiveButton("Yes", (di, i) -> {
+                                            .setTitle(R.string.events_delete_listener_title)
+                                            .setMessage(R.string.events_delete_confirm_msg)
+                                            .setPositiveButton(R.string.common_word_yes, (di, i) -> {
                                                 deleteRelatedEvents(name);
                                                 deleteItem(position);
                                                 di.dismiss();
                                             })
-                                            .setNegativeButton("No", (di, i) -> di.dismiss())
+                                            .setNegativeButton(R.string.common_word_no, (di, i) -> di.dismiss())
                                             .show();
                                     break;
                             }

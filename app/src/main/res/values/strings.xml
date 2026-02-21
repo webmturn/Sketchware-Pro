@@ -1388,6 +1388,7 @@ You must enter the API key to operate the map normally."</string>
     <string name="events_delete_event_msg">Delete this event?</string>
     <string name="events_properties_title">Event Properties</string>
     <string name="events_new_activity_title">New Activity Event</string>
+    <string name="events_new_event_title">New Event</string>
     <string name="file_picker_select_txt">Select a .txt file</string>
 
     <!-- Settings -->

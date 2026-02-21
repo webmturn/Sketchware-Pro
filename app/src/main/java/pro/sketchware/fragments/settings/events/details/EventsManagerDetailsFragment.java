@@ -64,7 +64,7 @@ public class EventsManagerDetailsFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         configureToolbar(binding.toolbar);
-        binding.toolbar.setTitle("Event Details");
+        binding.toolbar.setTitle(R.string.events_details_title);
         binding.toolbar.setSubtitle(listName);
         binding.fabNewEvent.setOnClickListener(v -> {
             Bundle args = new Bundle();
@@ -208,9 +208,9 @@ public class EventsManagerDetailsFragment extends BaseFragment {
             holder.itemView.setOnLongClickListener(v -> {
                 new MaterialAlertDialogBuilder(requireContext())
                         .setTitle((String) dataArray.get(position).get("name"))
-                        .setMessage("Delete this event?")
-                        .setPositiveButton("Delete", (dialog, i) -> deleteItem(position))
-                        .setNeutralButton("Edit", (dialog, i) -> {
+                        .setMessage(R.string.events_delete_event_msg)
+                        .setPositiveButton(R.string.common_word_delete, (dialog, i) -> deleteItem(position))
+                        .setNeutralButton(R.string.common_word_edit, (dialog, i) -> {
                             Bundle args = new Bundle();
                             args.putString("lis_name", listName);
                             args.putString("event", (String) dataArray.get(position).get("name"));

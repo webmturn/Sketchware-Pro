@@ -210,12 +210,12 @@ public class EventsManagerCreatorFragment extends BaseFragment {
         configureToolbar(binding.toolbar);
 
         if (isEdit) {
-            binding.toolbar.setTitle("Event Properties");
+            binding.toolbar.setTitle(R.string.events_properties_title);
             binding.toolbar.setSubtitle(event_name);
         } else if (isActivityEvent) {
-            binding.toolbar.setTitle("New Activity Event");
+            binding.toolbar.setTitle(R.string.events_new_activity_title);
         } else {
-            binding.toolbar.setTitle("New Event");
+            binding.toolbar.setTitle(R.string.events_new_event_title);
             binding.toolbar.setSubtitle(lisName);
         }
     }
