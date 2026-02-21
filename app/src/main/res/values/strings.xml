@@ -1853,6 +1853,34 @@ You must enter the API key to operate the map normally."</string>
     <string name="make_block_custom_param">Custom Parameter</string>
     <string name="make_block_hint_parameter">Parameter</string>
 
+    <!-- Layout: dialog_create_new_file_layout -->
+    <string name="create_file_hint_name">Enter a name</string>
+    <string name="create_file_folder">Folder</string>
+    <string name="create_file_class">Class</string>
+    <string name="create_file_file">File</string>
+    <string name="create_file_java_class">Java Class</string>
+    <string name="create_file_java_activity">Java Activity</string>
+    <string name="create_file_kotlin_class">Kotlin Class</string>
+    <string name="create_file_kotlin_activity">Kotlin Activity</string>
+
+    <!-- Layout: bottom_sheet_project_options -->
+    <string name="project_option_title">Project settings</string>
+    <string name="project_option_pin">Pin project</string>
+    <string name="project_option_backup">Backup project</string>
+    <string name="project_option_export">Export/Sign</string>
+    <string name="project_option_change_settings">Change project settings</string>
+    <string name="project_option_config">Project configuration</string>
+    <string name="project_option_delete">Delete project</string>
+
+    <!-- Layout: dialog_filter_icons_layout -->
+    <string name="filter_icons_style">Style</string>
+    <string name="filter_icons_outlined">Outlined</string>
+    <string name="filter_icons_baseline">Baseline</string>
+    <string name="filter_icons_round">Round</string>
+    <string name="filter_icons_sharp">Sharp</string>
+    <string name="filter_icons_two_tone">Two Tone</string>
+    <string name="filter_icons_selected_color">Selected color</string>
+
     <!-- ViewCodeEditorActivity menu items -->
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
