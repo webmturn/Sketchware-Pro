@@ -1541,6 +1541,15 @@ You must enter the API key to operate the map normally."</string>
     <string name="config_backup_filename_msg">This defines how SWB backup files get named.\nAvailable variables:\n - $projectName - Project name\n - $versionCode - App version code\n - $versionName - App version name\n - $pkgName - App package name\n - $timeInMs - Time during backup in milliseconds\n\nAdditionally, you can format your own time like this using Java\'s date formatter syntax:\n$time(yyyy-MM-dd\'T\'HHmmss)\n</string>
     <string name="config_toast_reset_default">Reset to default complete.</string>
 
+    <!-- DesignActivity menu items -->
+    <string name="design_menu_build_settings">Build Settings</string>
+    <string name="design_menu_clean_temp">Clean temporary files</string>
+    <string name="design_menu_show_last_error">Show last compile error</string>
+    <string name="design_menu_show_source">Show source code</string>
+    <string name="design_menu_install_apk">Install last built APK</string>
+    <string name="design_menu_show_signatures">Show Apk signatures</string>
+    <string name="design_menu_xml_editor">Direct XML editor</string>
+
     <string name="blocks_remove_palette_msg">Remove all blocks related to this palette?</string>
     <string name="blocks_import_reverse">Reverse</string>
 
