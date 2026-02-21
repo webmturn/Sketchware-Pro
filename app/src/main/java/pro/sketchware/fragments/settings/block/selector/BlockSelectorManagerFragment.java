@@ -286,7 +286,7 @@ public class BlockSelectorManagerFragment extends BaseFragment {
                     SketchwareUtil.toastError("Make sure you select a file that contains selector item(s).");
                 }
             }
-        } catch (Exception e) {
+        } catch (JsonSyntaxException e) {
             Log.e(BlockSelectorConsts.TAG, e.toString());
             SketchwareUtil.toastError("Make sure you select a file that contains a selector item(s).");
         }
@@ -309,7 +309,7 @@ public class BlockSelectorManagerFragment extends BaseFragment {
         }.getType();
         try {
             return getGson().fromJson(json, itemListType);
-        } catch (Exception e) {
+        } catch (JsonSyntaxException e) {
             Log.e(BlockSelectorConsts.TAG, e.toString());
             SketchwareUtil.toastError("An error occurred while trying to get the selectors");
             return null;
