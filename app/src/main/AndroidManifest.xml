@@ -24,7 +24,6 @@
         android:largeHeap="true"
         android:requestLegacyExternalStorage="true"
         android:theme="@style/Theme.SketchwarePro"
-        android:usesCleartextTraffic="true"
         tools:targetApi="p">
         <activity
             android:name=".activities.iconcreator.IconCreatorActivity"
