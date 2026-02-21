@@ -2252,6 +2252,43 @@ You must enter the API key to operate the map normally."</string>
     <string name="indent_hint_top">top</string>
     <string name="indent_hint_bottom">bottom</string>
 
+    <!-- Layout: activity_manage_custom_attribute -->
+    <string name="manage_custom_attr_title">Manage Custom Attribute</string>
+
+    <!-- Layout: code_editor_hs_asd -->
+    <string name="code_editor_title">Code Editor</string>
+
+    <!-- Layout: manage_app_compat -->
+    <string name="appcompat_manager_title">AppCompat Manager</string>
+
+    <!-- Layout: manage_custom_component_add -->
+    <string name="custom_component_add_title">Add new component</string>
+
+    <!-- Layout: manage_library -->
+    <string name="library_manager_title">Library Manager</string>
+
+    <!-- Layout: manage_sound -->
+    <string name="sound_manager_title">Sound Manager</string>
+
+    <!-- Preferences: preferences_config_activity -->
+    <string name="pref_built_in_blocks_title">Built-in blocks</string>
+    <string name="pref_built_in_blocks_summary">May slow down loading blocks in Logic Editor.</string>
+    <string name="pref_show_all_var_blocks_title">Show all variable blocks</string>
+    <string name="pref_show_all_var_blocks_summary">All variable blocks will be visible, even if you don\'t have variables for them.</string>
+    <string name="pref_show_all_palette_blocks_title">Show all blocks of palettes</string>
+    <string name="pref_show_all_palette_blocks_summary">Every single available block will be shown. Will slow down opening palettes!</string>
+    <string name="pref_backup_dir_title">Backup directory</string>
+    <string name="pref_backup_dir_summary">The default directory is /Internal storage/.sketchware/backups/.</string>
+    <string name="pref_root_install_title">Install projects with root access</string>
+    <string name="pref_root_install_summary">Automatically installs project APKs after building using root access.</string>
+    <string name="pref_root_launch_title">Launch projects after installing</string>
+    <string name="pref_root_launch_summary">Opens projects automatically after auto-installation using root.</string>
+    <string name="pref_new_version_control_title">Use new Version Control</string>
+    <string name="pref_new_version_control_summary">Enables custom version code and name for projects.</string>
+    <string name="pref_block_highlighting_title">Enable block text input highlighting</string>
+    <string name="pref_block_highlighting_summary">Enables syntax highlighting while editing blocks\' text parameters.</string>
+    <string name="pref_backup_filename_title">Backup filename format</string>
+
     <!-- ViewCodeEditorActivity menu items -->
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
