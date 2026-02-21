@@ -29,7 +29,7 @@ public class ProjectListManager {
                     }
                 }
             } catch (Throwable e) {
-                Log.e("ERROR", e.getMessage(), e);
+                Log.e("ProjectListManager", e.getMessage(), e);
             }
         }
         return arrayList;
@@ -109,7 +109,7 @@ public class ProjectListManager {
         try {
             oBVar.a(str, oBVar.d(a));
         } catch (Throwable e) {
-            Log.e("ERROR", e.getMessage(), e);
+            Log.e("ProjectListManager", e.getMessage(), e);
         }
     }
 
@@ -137,12 +137,12 @@ public class ProjectListManager {
             } catch (Exception e2) {
                 e = e2;
                 hashMap = a;
-                Log.e("ERROR", e.getMessage(), e);
+                Log.e("ProjectListManager", e.getMessage(), e);
                 return hashMap;
             }
         } catch (Exception e3) {
             e = e3;
-            Log.e("ERROR", e.getMessage(), e);
+            Log.e("ProjectListManager", e.getMessage(), e);
             return hashMap;
         }
     }
@@ -175,7 +175,7 @@ public class ProjectListManager {
                     fileUtil.a(path, fileUtil.d(vB.a(a)));
                 }
             } catch (Throwable e) {
-                Log.e("DEBUG", e.getMessage(), e);
+                Log.e("ProjectListManager", e.getMessage(), e);
             }
         }
     }

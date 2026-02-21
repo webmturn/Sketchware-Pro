@@ -217,7 +217,7 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
                         iB.a(path, image.isNinePatch() ? str + ".9.png" : str + ".png", image.rotate, image.flipHorizontal, image.flipVertical);
                     }
                 } catch (Exception e) {
-                    Log.e("pu", e.getMessage(), e);
+                    Log.e("ImageListFragment", e.getMessage(), e);
                 }
             }
             index++;

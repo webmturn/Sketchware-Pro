@@ -312,7 +312,7 @@ public class ProjectFilePaths {
         try {
             KB.a(context, str, resDirectoryPath);
         } catch (Exception e2) {
-            Log.e("ERROR", e2.getMessage(), e2);
+            Log.e("ProjectFilePaths", e2.getMessage(), e2);
         }
     }
 

@@ -479,7 +479,7 @@ public class ViewPane extends RelativeLayout {
                     }
                 }
             } catch (Exception e) {
-                Log.e("DEBUG", e.getMessage(), e);
+                Log.e("ViewPane", e.getMessage(), e);
             }
         }
         ClassInfo classInfo = viewBean.getClassInfo();
