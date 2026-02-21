@@ -2231,6 +2231,21 @@ You must enter the API key to operate the map normally."</string>
     <string name="style_attr_hint_name">Enter Attribute Name</string>
     <string name="style_attr_hint_value">Enter Attribute Value</string>
 
+    <!-- Layout: dialog_add_custom_activity -->
+    <string name="custom_activity_hint_name">Activity name</string>
+
+    <!-- Layout: dialog_select_libraries -->
+    <string name="select_lib_hint_search">Search for libraries</string>
+
+    <!-- Layout: palettes_search_dialog -->
+    <string name="palettes_hint_search">Search…</string>
+
+    <!-- Layout: property_popup_selector_single -->
+    <string name="property_hint_search">Search</string>
+
+    <!-- Layout: search_with_recycler_view -->
+    <string name="search_hint">Search…</string>
+
     <!-- ViewCodeEditorActivity menu items -->
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
