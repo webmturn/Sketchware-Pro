@@ -667,7 +667,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
                                 SketchwarePaths.getKeystoreFilePath(),
                                 signingKeystorePassword,
                                 signingAliasName,
-                                signingKeystorePassword,
+                                signingAliasPassword,
                                 signingAlgorithm,
                                 builder.ProjectFilePaths.unsignedAlignedApkPath,
                                 outputLocation
