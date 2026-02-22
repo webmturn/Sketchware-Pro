@@ -5,6 +5,7 @@ import android.graphics.ColorFilter;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.SystemClock;
 import android.text.SpannableStringBuilder;
 import android.view.View;
@@ -28,7 +29,7 @@ public class mB {
   
   public static void a(View paramView) {
     paramView.setEnabled(false);
-    (new Handler()).postDelayed(new jB(paramView), 100L);
+    (new Handler(Looper.getMainLooper())).postDelayed(new jB(paramView), 100L);
   }
   
   public static void a(View paramView, int paramInt, Animation.AnimationListener paramAnimationListener) {
@@ -49,7 +50,7 @@ public class mB {
     };
     if (paramAnimationListener != null)
       expandAnim.setAnimationListener(paramAnimationListener);
-    expandAnim.setDuration(((int)(targetHeight / (paramView.getContext().getResources().getDisplayMetrics()).density) * paramInt));
+    expandAnim.setDuration((long)((int)(targetHeight / (paramView.getContext().getResources().getDisplayMetrics()).density)) * paramInt);
     paramView.startAnimation(expandAnim);
   }
   
@@ -77,7 +78,7 @@ public class mB {
   public static void a(ImageView paramImageView, int paramInt) {
     ColorMatrix colorMatrix = new ColorMatrix();
     colorMatrix.setSaturation(paramInt);
-    paramImageView.setColorFilter((ColorFilter)new ColorMatrixColorFilter(colorMatrix));
+    paramImageView.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
   }
   
   public static boolean a() {
