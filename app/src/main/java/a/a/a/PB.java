@@ -115,7 +115,7 @@ public class PB extends BaseValidator {
     byte b = 0;
     while (true) {
       if (b < i) {
-        if (str.equals(arrayOfString[b])) {
+        if (paramString.equals(arrayOfString[b])) {
           b = 1;
           break;
         } 
@@ -131,13 +131,13 @@ public class PB extends BaseValidator {
       this.d = false;
       return;
     } 
-    if (!Character.isLetter(str.charAt(0))) {
+    if (!Character.isLetter(paramString.charAt(0))) {
       this.b.setErrorEnabled(true);
       this.b.setError(xB.b().a(this.a, 2131625497));
       this.d = false;
       return;
     } 
-    if (this.j.matcher(str.toString()).matches()) {
+    if (this.j.matcher(paramString).matches()) {
       this.b.setErrorEnabled(false);
       this.d = true;
     } else {
