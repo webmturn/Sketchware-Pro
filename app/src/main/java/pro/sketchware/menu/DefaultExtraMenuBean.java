@@ -212,6 +212,9 @@ public class DefaultExtraMenuBean {
 
     private String getFilename(String filePath, String filenameExtensionToCutOff) {
         String lastPathSegment = Uri.parse(filePath).getLastPathSegment();
-        return lastPathSegment.substring(0, lastPathSegment.indexOf(filenameExtensionToCutOff));
+        if (lastPathSegment == null) return "";
+        int extIndex = lastPathSegment.indexOf(filenameExtensionToCutOff);
+        if (extIndex < 0) return lastPathSegment;
+        return lastPathSegment.substring(0, extIndex);
     }
 }
