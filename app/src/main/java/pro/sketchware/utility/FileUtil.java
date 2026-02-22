@@ -591,6 +591,7 @@ public class FileUtil {
     public static void resizeBitmapFileToSquare(String fromPath, String destPath, int max) {
         if (isExistFile(fromPath)) {
             Bitmap decodeFile = BitmapFactory.decodeFile(fromPath);
+            if (decodeFile == null) return;
             Bitmap scaled = Bitmap.createScaledBitmap(decodeFile, max, max, true);
             if (scaled != decodeFile) {
                 decodeFile.recycle();
@@ -604,6 +605,7 @@ public class FileUtil {
         if (!isExistFile(fromPath)) return;
 
         Bitmap decodeFile = BitmapFactory.decodeFile(fromPath);
+        if (decodeFile == null) return;
         Bitmap createBitmap = Bitmap.createBitmap(decodeFile.getWidth(), decodeFile.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(createBitmap);
         Paint paint = new Paint();
@@ -623,6 +625,7 @@ public class FileUtil {
         if (!isExistFile(fromPath)) return;
 
         Bitmap decodeFile = BitmapFactory.decodeFile(fromPath);
+        if (decodeFile == null) return;
         Bitmap createBitmap = Bitmap.createBitmap(decodeFile.getWidth(), decodeFile.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(createBitmap);
         Paint paint = new Paint();
@@ -643,6 +646,7 @@ public class FileUtil {
     public static void cropBitmapFileFromCenter(String fromPath, String destPath, int w, int h) {
         if (!isExistFile(fromPath)) return;
         Bitmap src = BitmapFactory.decodeFile(fromPath);
+        if (src == null) return;
 
         int width = src.getWidth();
         int height = src.getHeight();
@@ -682,6 +686,7 @@ public class FileUtil {
         if (!isExistFile(fromPath)) return;
 
         Bitmap decodeFile = BitmapFactory.decodeFile(fromPath);
+        if (decodeFile == null) return;
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
         Bitmap rotated = Bitmap.createBitmap(decodeFile, 0, 0, decodeFile.getWidth(), decodeFile.getHeight(), matrix, true);
@@ -696,6 +701,7 @@ public class FileUtil {
         if (!isExistFile(fromPath)) return;
 
         Bitmap decodeFile = BitmapFactory.decodeFile(fromPath);
+        if (decodeFile == null) return;
         Matrix matrix = new Matrix();
         matrix.postScale(x, y);
         Bitmap scaled = Bitmap.createBitmap(decodeFile, 0, 0, decodeFile.getWidth(), decodeFile.getHeight(), matrix, true);
@@ -710,6 +716,7 @@ public class FileUtil {
         if (!isExistFile(fromPath)) return;
 
         Bitmap decodeFile = BitmapFactory.decodeFile(fromPath);
+        if (decodeFile == null) return;
         Matrix matrix = new Matrix();
         matrix.postSkew(x, y);
         Bitmap skewed = Bitmap.createBitmap(decodeFile, 0, 0, decodeFile.getWidth(), decodeFile.getHeight(), matrix, true);
@@ -724,6 +731,7 @@ public class FileUtil {
         if (!isExistFile(fromPath)) return;
 
         Bitmap decodeFile = BitmapFactory.decodeFile(fromPath);
+        if (decodeFile == null) return;
         Bitmap createBitmap = Bitmap.createBitmap(decodeFile, 0, 0, decodeFile.getWidth() - 1, decodeFile.getHeight() - 1);
         if (createBitmap != decodeFile) {
             decodeFile.recycle();
@@ -739,6 +747,7 @@ public class FileUtil {
         if (!isExistFile(fromPath)) return;
 
         Bitmap src = BitmapFactory.decodeFile(fromPath);
+        if (src == null) return;
         ColorMatrix cm = new ColorMatrix(new float[]
                 {
                         1, 0, 0, 0, brightness,
@@ -761,6 +770,7 @@ public class FileUtil {
         if (!isExistFile(fromPath)) return;
 
         Bitmap src = BitmapFactory.decodeFile(fromPath);
+        if (src == null) return;
         ColorMatrix cm = new ColorMatrix(new float[]
                 {
                         contrast, 0, 0, 0, 0,
