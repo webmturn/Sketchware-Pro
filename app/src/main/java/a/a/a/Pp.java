@@ -50,11 +50,11 @@ public class Pp extends Lp {
         continue; 
       throw new yy("duplicate_name");
     } 
-    iterator = (Iterator)paramArrayList.iterator();
+    Iterator<BlockBean> blockIterator = paramArrayList.iterator();
+    StringBuilder stringBuilder = new StringBuilder();
     String str;
-    for (str = ""; iterator.hasNext(); str = stringBuilder.toString()) {
-      BlockBean blockBean = (BlockBean)iterator.next();
-      StringBuilder stringBuilder = new StringBuilder();
+    for (str = ""; blockIterator.hasNext(); str = stringBuilder.toString()) {
+      BlockBean blockBean = blockIterator.next();
       stringBuilder.append(str);
       stringBuilder.append(this.g.toJson(blockBean));
       stringBuilder.append("\n");

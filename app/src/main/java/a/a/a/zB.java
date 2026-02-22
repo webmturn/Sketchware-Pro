@@ -104,9 +104,10 @@ public class zB {
     int i1 = arrayOfInt.length;
     i = 0;
     int i2 = 0;
+    int i7 = 0;
     for (k = 0; i < i1; k = i7) {
       int i6 = i2;
-      int i7 = k;
+      i7 = k;
       if (i2 != arrayOfInt[i]) {
         i7 = k + 1;
         a(byteArrayOutputStream, i);

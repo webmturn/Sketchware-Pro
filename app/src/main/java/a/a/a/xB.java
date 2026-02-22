@@ -297,9 +297,8 @@ public class xB {
     } 
     switch (b) {
       default:
-        str = this.c.get(paramString2);
-        String result = str;
-        if (str == null)
+        String result = this.c.get(paramString2);
+        if (result == null)
           result = ManageEvent.i(paramString1, paramString2); 
         return result;
       case 0:
@@ -955,16 +954,9 @@ public class xB {
   public HashMap<String, String> b(String paramString) {
     HashMap<String, String> hashMap;
     HashMap<Object, Object> hashMap1 = new HashMap<Object, Object>();
-    oB oB = new oB();
-    JB jB = new JB();
     if (!(new File(paramString)).exists())
       return (HashMap)hashMap1; 
     try {
-      HashMap<String, String> hashMap2 = a(jB.a(oB.h(paramString)));
-      hashMap = hashMap2;
-    } catch (IllegalBlockSizeException illegalBlockSizeException) {
-      hashMap = a(paramString);
-    } catch (BadPaddingException badPaddingException) {
       hashMap = a(paramString);
     } catch (Exception exception) {
       hashMap = (HashMap)hashMap1;

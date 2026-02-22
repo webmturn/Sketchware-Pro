@@ -29,10 +29,10 @@ public class Ss extends Ts {
   public Ss(Context paramContext, String paramString1, String paramString2) {
     super(paramContext, paramString1, paramString2, true);
     this.T = paramContext;
-    a(paramContext);
+    initSs(paramContext);
   }
   
-  private void a(Context paramContext) {
+  private void initSs(Context paramContext) {
     String type = this.b;
     switch (type) {
       case "b":

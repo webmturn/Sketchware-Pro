@@ -514,20 +514,20 @@ public class Rs extends Ts {
       this.T = xB.b().a(getContext(), this.U);
     }
     if (color == -7711273) {
-      mod.hey.studios.editor.manage.block.ExtraBlockInfo info = mod.hey.studios.editor.manage.block.ExtraBlockInfo.getBlockInfo(this.U);
+      mod.hey.studios.editor.manage.block.ExtraBlockInfo info = mod.hey.studios.editor.manage.block.v2.BlockLoader.getBlockInfo(this.U);
       mod.hey.studios.editor.manage.block.ExtraBlockInfo blockInfo = info;
       if (mod.hey.studios.project.ProjectTracker.SC_ID != null && info.isMissing
           && !mod.hey.studios.project.ProjectTracker.SC_ID.equals("")) {
-        blockInfo = mod.hey.studios.editor.manage.block.ExtraBlockInfo.getBlockFromProject(
+        blockInfo = mod.hey.studios.editor.manage.block.v2.BlockLoader.getBlockFromProject(
             mod.hey.studios.project.ProjectTracker.SC_ID, this.U);
-        FB.log("Rs:returned block: " + new com.google.gson.Gson().toJson(blockInfo));
+        android.util.Log.d("Rs", "Rs:returned block: " + new com.google.gson.Gson().toJson(blockInfo));
       }
       this.spec2 = blockInfo.getSpec2();
       if (this.T.equals("")) {
         this.T = blockInfo.getSpec();
       }
       if (this.T.equals("")) {
-        this.T = FB.h(this.U);
+        this.T = this.U;
       }
       setSpec(this.T);
       int blockColor = blockInfo.getColor();
@@ -545,7 +545,7 @@ public class Rs extends Ts {
       }
     } else {
       if (this.T.equals("")) {
-        this.T = FB.h(this.U);
+        this.T = this.U;
       }
       setSpec(this.T);
     }

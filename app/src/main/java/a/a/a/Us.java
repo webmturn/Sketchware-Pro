@@ -20,7 +20,7 @@ public class Us extends Rs {
     this.oa = 2;
   }
   
-  private TextView a(String paramString) {
+  private TextView createLabel(String paramString) {
     TextView textView = new TextView(((Ts)this).a);
     String str1 = ((Ts)this).c;
     String str2 = paramString;
@@ -180,7 +180,7 @@ public class Us extends Rs {
           this.fa = true;
           break;
       } 
-      this.ta = a(this.T);
+      this.ta = createLabel(this.T);
       addView((View)this.ta);
       ((Ts)this).e = getResources().getColor(2131034294);
       k();
@@ -203,7 +203,7 @@ public class Us extends Rs {
         this.fa = true;
         break;
     } 
-    this.ta = a(this.T);
+    this.ta = createLabel(this.T);
     addView((View)this.ta);
     ((Ts)this).e = getResources().getColor(2131034294);
     k();

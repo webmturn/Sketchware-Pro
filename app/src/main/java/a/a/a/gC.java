@@ -176,12 +176,12 @@ public class gC {
       int i = str.indexOf(".xml") + 4;
       this.b = str.substring(0, i);
       if (paramString.length() == i) {
-        this.d = a.a;
+        this.d = gC.a.a;
       } else {
         paramString = paramString.substring(i);
         if (paramString.charAt(0) == '_') {
           if (paramString.substring(1).equals("fab")) {
-            this.d = a.b;
+            this.d = gC.a.b;
           } else {
             throw new Exception("invalid key : Unknown type string");
           } 
@@ -225,22 +225,22 @@ public class gC {
                 if (i != 2) {
                   if (i != 3) {
                     if (i != 4) {
-                      this.d = a.h;
+                      this.d = gC.a.h;
                       this.c = paramString;
                     } else {
-                      this.d = a.g;
+                      this.d = gC.a.g;
                     } 
                   } else {
-                    this.d = a.f;
+                    this.d = gC.a.f;
                   } 
                 } else {
-                  this.d = a.e;
+                  this.d = gC.a.e;
                 } 
               } else {
-                this.d = a.d;
+                this.d = gC.a.d;
               } 
             } else {
-              this.d = a.c;
+              this.d = gC.a.c;
             } 
             return;
           } 

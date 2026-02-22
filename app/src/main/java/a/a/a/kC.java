@@ -32,7 +32,7 @@ public class kC {
   public Gson j;
   
   public kC(String paramString) {
-    this(paramString, str1, str2, stringBuilder2.toString());
+    this(paramString, "", "", "");
   }
   
   public kC(String paramString1, String paramString2, String paramString3, String paramString4) {

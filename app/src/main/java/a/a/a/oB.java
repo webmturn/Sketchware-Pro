@@ -102,7 +102,7 @@ public class oB {
       stringBuilder.append(paramFile2.getAbsolutePath());
       throw new IOException(stringBuilder.toString());
     } 
-    a(stringBuilder.getAbsolutePath(), paramFile2.getAbsolutePath());
+    a(paramFile1.getAbsolutePath(), paramFile2.getAbsolutePath());
   }
   
   public void a(File paramFile, boolean paramBoolean) {
