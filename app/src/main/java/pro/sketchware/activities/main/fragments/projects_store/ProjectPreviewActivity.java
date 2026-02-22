@@ -73,7 +73,11 @@ public class ProjectPreviewActivity extends BaseAppCompatActivity {
 
         binding.downloads.setText(getString(R.string.store_downloads_format, project.getDownloads()));
         binding.filesize.setText(getString(R.string.store_size_format, project.getProjectSize()));
-        binding.timestamp.setText(getString(R.string.store_released_format, DateFormat.getDateInstance().format(new Date(Long.parseLong(project.getPublishedTimestamp())))));
+        try {
+            binding.timestamp.setText(getString(R.string.store_released_format, DateFormat.getDateInstance().format(new Date(Long.parseLong(project.getPublishedTimestamp())))));
+        } catch (NumberFormatException e) {
+            binding.timestamp.setText(getString(R.string.store_released_format, project.getPublishedTimestamp()));
+        }
         binding.btnComments.setOnClickListener(v -> openCommentsSheet());
         binding.btnDownload.setOnClickListener(v -> SketchwareUtil.toastError(Helper.getResString(R.string.error_downloading_unavailable)));
         binding.btnOpenIn.setOnClickListener(v -> openProject());
