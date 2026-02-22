@@ -6,7 +6,11 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-public class WB extends BaseValidator {
+/**
+ * Validator for resource names (sounds, images, icons).
+ * Originally named WB, renamed to avoid Windows case collision with wB (ViewUtil).
+ */
+public class ResourceNameValidator extends BaseValidator {
   public String[] f;
   
   public ArrayList<String> g;
@@ -15,13 +19,13 @@ public class WB extends BaseValidator {
   
   public Pattern i = Pattern.compile("^[a-z][a-z0-9_]*");
   
-  public WB(Context paramContext, TextInputLayout paramTextInputLayout, String[] paramArrayOfString, ArrayList<String> paramArrayList) {
+  public ResourceNameValidator(Context paramContext, TextInputLayout paramTextInputLayout, String[] paramArrayOfString, ArrayList<String> paramArrayList) {
     super(paramContext, paramTextInputLayout);
     this.f = paramArrayOfString;
     this.g = paramArrayList;
   }
   
-  public WB(Context paramContext, TextInputLayout paramTextInputLayout, String[] paramArrayOfString, ArrayList<String> paramArrayList, String paramString) {
+  public ResourceNameValidator(Context paramContext, TextInputLayout paramTextInputLayout, String[] paramArrayOfString, ArrayList<String> paramArrayList, String paramString) {
     super(paramContext, paramTextInputLayout);
     this.f = paramArrayOfString;
     this.g = paramArrayList;
@@ -96,9 +100,3 @@ public class WB extends BaseValidator {
     } 
   }
 }
-
-
-/* Location:              C:\Users\Administrator\IdeaProjects\Sketchware-Pro\app\libs\a.a.a-notimportant-classes.jar!\a\a\a\WB.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       1.1.3
- */

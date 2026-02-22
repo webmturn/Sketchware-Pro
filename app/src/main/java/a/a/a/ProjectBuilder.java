@@ -593,7 +593,7 @@ public class ProjectBuilder {
         }
     }
 
-    public void buildApk() throws By {
+    public void buildApk() throws SketchwareException {
         String firstDexPath = dexesToAddButNotMerge.isEmpty() ? ProjectFilePaths.classesDexPath : dexesToAddButNotMerge.remove(0).getAbsolutePath();
         try {
             ApkBuilder apkBuilder = new ApkBuilder(new File(ProjectFilePaths.unsignedUnalignedApkPath), new File(ProjectFilePaths.resourcesApkPath), new File(firstDexPath), null, null, System.out);
@@ -638,13 +638,13 @@ public class ProjectBuilder {
             apkBuilder.setDebugMode(false);
             apkBuilder.sealApk();
         } catch (ApkCreationException | SealedApkException e) {
-            throw new By(e.getMessage());
+            throw new SketchwareException(e.getMessage());
         } catch (DuplicateFileException e) {
             String message = "Duplicate files from two libraries detected \r\n";
             message += "File1: " + e.getFile1() + " \r\n";
             message += "File2: " + e.getFile2() + " \r\n";
             message += "Archive path: " + e.getArchivePath();
-            throw new By(message);
+            throw new SketchwareException(message);
         }
         LogUtil.d(TAG, "Time passed since starting to compile resources until building the unsigned APK: " +
                 (System.currentTimeMillis() - timestampResourceCompilationStarted) + " ms");
@@ -735,9 +735,9 @@ public class ProjectBuilder {
     /**
      * Extracts AAPT2 binaries (if they need to be extracted).
      *
-     * @throws By If anything goes wrong while extracting
+     * @throws SketchwareException If anything goes wrong while extracting
      */
-    public void maybeExtractAapt2() throws By {
+    public void maybeExtractAapt2() throws SketchwareException {
         var abi = Build.SUPPORTED_ABIS[0];
         try {
             if (hasFileChanged("aapt/aapt2-" + abi, aapt2Binary.getAbsolutePath())) {
@@ -746,7 +746,7 @@ public class ProjectBuilder {
         } catch (Exception e) {
             LogUtil.e(TAG, "Failed to extract AAPT2 binaries", e);
             // noinspection ConstantValue: the bytecode's lying
-            throw new By(
+            throw new SketchwareException(
                     e instanceof FileNotFoundException fileNotFoundException ?
                             "Looks like the device's architecture (" + abi + ") isn't supported.\n"
                                     + Log.getStackTraceString(fileNotFoundException)
@@ -990,7 +990,7 @@ public class ProjectBuilder {
         }
     }
 
-    public void runZipalign(String inPath, String outPath) throws By {
+    public void runZipalign(String inPath, String outPath) throws SketchwareException {
         LogUtil.d(TAG, "About to zipalign " + inPath + " to " + outPath);
         long savedTimeMillis = System.currentTimeMillis();
 
@@ -998,9 +998,9 @@ public class ProjectBuilder {
              FileOutputStream out = new FileOutputStream(outPath)) {
             ZipAlign.alignZip(in, out);
         } catch (IOException e) {
-            throw new By("Couldn't run zipalign on " + inPath + " with output path " + outPath + ": " + Log.getStackTraceString(e));
+            throw new SketchwareException("Couldn't run zipalign on " + inPath + " with output path " + outPath + ": " + Log.getStackTraceString(e));
         } catch (InvalidZipException e) {
-            throw new By("Failed to zipalign due to the given zip being invalid: " + Log.getStackTraceString(e));
+            throw new SketchwareException("Failed to zipalign due to the given zip being invalid: " + Log.getStackTraceString(e));
         }
 
         LogUtil.d(TAG, "zipalign took " + (System.currentTimeMillis() - savedTimeMillis) + " ms");

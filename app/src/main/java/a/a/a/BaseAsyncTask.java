@@ -31,7 +31,7 @@ public abstract class BaseAsyncTask extends AsyncTask<Void, String, String> {
         } catch (Exception e) {
             Log.e("BaseAsyncTask", e.getMessage(), e);
             // the bytecode's lying
-            if (e instanceof By) {
+            if (e instanceof SketchwareException) {
                 return e.getMessage();
             }
             Context context = getContext();
@@ -46,7 +46,7 @@ public abstract class BaseAsyncTask extends AsyncTask<Void, String, String> {
 
     public abstract void onError(String message);
 
-    public abstract void doWork() throws By;
+    public abstract void doWork() throws SketchwareException;
 
     @Override
     protected void onPostExecute(String result) {

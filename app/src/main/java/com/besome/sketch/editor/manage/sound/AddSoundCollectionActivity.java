@@ -27,7 +27,7 @@ import java.util.TimerTask;
 
 import a.a.a.HB;
 import a.a.a.Qp;
-import a.a.a.WB;
+import a.a.a.ResourceNameValidator;
 import a.a.a.SketchToast;
 import a.a.a.BlockConstants;
 import a.a.a.SketchwarePaths;
@@ -42,7 +42,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
 
     public MediaPlayer G;
     public TimerTask I;
-    public WB M;
+    public ResourceNameValidator M;
     public ArrayList<ProjectResourceBean> N;
     public String t;
     public boolean u;
@@ -140,7 +140,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
         }
         binding.layoutControl.setVisibility(View.GONE);
         binding.tiInput.setHint(R.string.design_manager_sound_hint_enter_sound_name);
-        M = new WB(this, binding.tiInput, BlockConstants.b, getResourceNames());
+        M = new ResourceNameValidator(this, binding.tiInput, BlockConstants.b, getResourceNames());
         binding.play.setEnabled(false);
         binding.play.setOnClickListener(this);
         binding.seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -172,7 +172,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
         s.setOnClickListener(this);
         if (u) {
             e(getString(R.string.design_manager_sound_title_edit_sound_name));
-            M = new WB(this, binding.tiInput, BlockConstants.b, getResourceNames(), O.resName);
+            M = new ResourceNameValidator(this, binding.tiInput, BlockConstants.b, getResourceNames(), O.resName);
             binding.edInput.setText(O.resName);
             f(a(O));
         }
@@ -375,7 +375,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
         }
     }
 
-    public boolean a(WB wb) {
+    public boolean a(ResourceNameValidator wb) {
         if (wb.b()) {
             if ((!L || K == null) && !u) {
                 binding.selectFile.startAnimation(AnimationUtils.loadAnimation(this, R.anim.ani_1));

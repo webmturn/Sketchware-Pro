@@ -26,7 +26,7 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-import a.a.a.By;
+import a.a.a.SketchwareException;
 import a.a.a.HB;
 import a.a.a.BaseAsyncTask;
 import a.a.a.Op;
@@ -303,7 +303,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
         }
 
         @Override
-        public void doWork() throws By {
+        public void doWork() throws SketchwareException {
             var activity = this.activity.get();
             if (activity == null) return;
             try {
@@ -343,10 +343,10 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
                         }
                         message += "[" + names + "]";
                     }
-                    throw new By(message);
+                    throw new SketchwareException(message);
                 }
                 Log.e("AddImageCollectionActivity", e.getMessage(), e);
-                throw new By(e.getMessage());
+                throw new SketchwareException(e.getMessage());
             }
         }
 

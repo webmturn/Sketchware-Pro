@@ -36,7 +36,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import a.a.a.By;
+import a.a.a.SketchwareException;
 import a.a.a.ViewFilesFragment;
 import a.a.a.BaseAsyncTask;
 import a.a.a.SketchToast;
@@ -363,7 +363,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
         }
 
         @Override
-        public void doWork() throws By {
+        public void doWork() throws SketchwareException {
             var activity = this.activity.get();
             if (activity == null) return;
             try {
@@ -371,7 +371,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
                 activity.m();
             } catch (Exception e) {
                 Log.e("ManageViewActivity", e.getMessage(), e);
-                throw new By(activity.getString(R.string.common_error_unknown));
+                throw new SketchwareException(activity.getString(R.string.common_error_unknown));
             }
         }
 

@@ -52,7 +52,7 @@ import java.util.stream.Collectors;
 
 import a.a.a.ActivityCodeGenerator;
 import a.a.a.Kw;
-import a.a.a.OB;
+import a.a.a.NumberRangeValidator;
 import a.a.a.LengthRangeValidator;
 import a.a.a.jC;
 import a.a.a.ProjectListManager;
@@ -659,7 +659,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
 
         binding.edInput.setText(value);
 
-        OB validator = new OB(context, binding.tiInput, minValue, maxValue);
+        NumberRangeValidator validator = new NumberRangeValidator(context, binding.tiInput, minValue, maxValue);
 
         dialog.setView(binding.getRoot());
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_save), (v, which) -> {

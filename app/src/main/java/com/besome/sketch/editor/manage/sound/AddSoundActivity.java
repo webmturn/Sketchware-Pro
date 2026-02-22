@@ -34,7 +34,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import a.a.a.Qp;
-import a.a.a.WB;
+import a.a.a.ResourceNameValidator;
 import a.a.a.SketchToast;
 import a.a.a.BlockConstants;
 import a.a.a.yy;
@@ -57,7 +57,7 @@ public class AddSoundActivity extends BaseDialogActivity implements View.OnClick
     private MediaPlayer nowPlayingPlayer;
     private TimerTask nowPlayingProgressUpdater;
     private SeekBar nowPlayingProgressBar;
-    private WB soundNameValidator;
+    private ResourceNameValidator soundNameValidator;
     private String sc_id;
     private String soundsDirectory;
     private MaterialCardView nowPlayingContainer;
@@ -152,7 +152,7 @@ public class AddSoundActivity extends BaseDialogActivity implements View.OnClick
         nowPlayingContainer.setVisibility(View.GONE);
         TextInputLayout soundInputLayout = findViewById(R.id.ti_input);
         soundName = findViewById(R.id.ed_input);
-        soundNameValidator = new WB(this, soundInputLayout, BlockConstants.b, existingSoundNames);
+        soundNameValidator = new ResourceNameValidator(this, soundInputLayout, BlockConstants.b, existingSoundNames);
         playPause.setEnabled(false);
         playPause.setOnClickListener(this);
         nowPlayingProgressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -185,7 +185,7 @@ public class AddSoundActivity extends BaseDialogActivity implements View.OnClick
         if (requestCode == 270) {
             e(getString(R.string.design_manager_sound_title_edit_sound));
             ProjectResourceBean projectResourceBean = intent.getParcelableExtra("project_resource");
-            soundNameValidator = new WB(this, soundInputLayout, BlockConstants.b, new ArrayList<>());
+            soundNameValidator = new ResourceNameValidator(this, soundInputLayout, BlockConstants.b, new ArrayList<>());
             soundName.setText(projectResourceBean.resName);
             soundName.setEnabled(false);
             addToCollection.setEnabled(false);
@@ -362,7 +362,7 @@ public class AddSoundActivity extends BaseDialogActivity implements View.OnClick
         mediaMetadataRetriever.release();
     }
 
-    private boolean isSoundValid(WB wb) {
+    private boolean isSoundValid(ResourceNameValidator wb) {
         if (!wb.b()) {
             return false;
         }

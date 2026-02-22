@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.regex.Pattern;
 
-public class QB extends MB {
+public class QB extends BaseValidator {
   public String[] f;
   
   public ArrayList<String> g;
