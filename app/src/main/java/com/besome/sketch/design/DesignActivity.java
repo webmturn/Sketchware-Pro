@@ -75,8 +75,6 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import a.a.a.DB;
 import a.a.a.GB;
@@ -324,7 +322,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
      */
     private void indicateCompileErrorOccurred(String error) {
         new CompileErrorSaver(sc_id).writeLogsToFile(error);
-        Snackbar snackbar = Snackbar.make(coordinatorLayout, "Show compile log", Snackbar.LENGTH_INDEFINITE);
+        Snackbar snackbar = Snackbar.make(coordinatorLayout, Helper.getResString(R.string.snackbar_show_compile_log), Snackbar.LENGTH_INDEFINITE);
         snackbar.setAction(Helper.getResString(R.string.common_word_show), v -> {
             if (!mB.a()) {
                 snackbar.dismiss();
@@ -1275,6 +1273,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         }
 
         private void onPostExecute() {
+            executorService.shutdown();
             DesignActivity activity = getActivity();
             if (activity == null) return;
 
@@ -1315,11 +1314,11 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
 
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(activity, CHANNEL_ID)
                         .setSmallIcon(R.drawable.ic_mtrl_code)
-                        .setContentTitle("Building project")
-                        .setContentText("Starting build...")
+                        .setContentTitle(Helper.getResString(R.string.notification_building_project))
+                        .setContentText(Helper.getResString(R.string.notification_starting_build))
                         .setOngoing(true)
                         .setProgress(0, 0, true)
-                        .addAction(R.drawable.ic_cancel_white_96dp, "Cancel build", getCancelPendingIntent());
+                        .addAction(R.drawable.ic_cancel_white_96dp, Helper.getResString(R.string.notification_cancel_build), getCancelPendingIntent());
 
                 notificationManager.notify(notificationId, builder.build());
                 isShowingNotification = true;
@@ -1332,11 +1331,11 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(activity, CHANNEL_ID)
                     .setSmallIcon(R.drawable.ic_mtrl_code)
-                    .setContentTitle("Building project")
+                    .setContentTitle(Helper.getResString(R.string.notification_building_project))
                     .setContentText(progress)
                     .setOngoing(true)
                     .setProgress(0, 0, true)
-                    .addAction(R.drawable.ic_cancel_white_96dp, "Cancel Build", getCancelPendingIntent());
+                    .addAction(R.drawable.ic_cancel_white_96dp, Helper.getResString(R.string.notification_cancel_build), getCancelPendingIntent());
 
             notificationManager.notify(notificationId, builder.build());
         }
@@ -1353,8 +1352,8 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             DesignActivity activity = getActivity();
             if (activity == null) return;
 
-            CharSequence name = "Build Notifications";
-            String description = "Notifications for build progress";
+            CharSequence name = Helper.getResString(R.string.notification_channel_build);
+            String description = Helper.getResString(R.string.notification_channel_build_description);
             int importance = NotificationManager.IMPORTANCE_LOW;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
             channel.setDescription(description);
@@ -1375,7 +1374,6 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
 
     private static class ProjectLoader extends BaseTask {
         private final Bundle savedInstanceState;
-        private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
         public ProjectLoader(DesignActivity activity, Bundle savedInstanceState) {
             super(activity);
@@ -1384,7 +1382,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
 
         public void execute() {
             getActivity().k();
-            executorService.execute(this::doInBackground);
+            new Thread(this::doInBackground).start();
         }
 
         private void doInBackground() {
@@ -1404,7 +1402,6 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     }
 
     private static class DiscardChangesProjectCloser extends BaseTask {
-        private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
         public DiscardChangesProjectCloser(DesignActivity activity) {
             super(activity);
@@ -1412,7 +1409,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
 
         public void execute() {
             getActivity().k();
-            executorService.execute(this::doInBackground);
+            new Thread(this::doInBackground).start();
         }
 
         private void doInBackground() {
@@ -1431,7 +1428,6 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     }
 
     private static class ProjectSaver extends BaseTask {
-        private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
         public ProjectSaver(DesignActivity activity) {
             super(activity);
@@ -1439,7 +1435,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
 
         public void execute() {
             getActivity().k();
-            executorService.execute(this::doInBackground);
+            new Thread(this::doInBackground).start();
         }
 
         private void doInBackground() {
@@ -1464,7 +1460,6 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     }
 
     private static class SaveChangesProjectCloser extends BaseTask {
-        private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
         public SaveChangesProjectCloser(DesignActivity activity) {
             super(activity);
@@ -1472,7 +1467,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
 
         public void execute() {
             getActivity().k();
-            executorService.execute(this::doInBackground);
+            new Thread(this::doInBackground).start();
         }
 
         private void doInBackground() {
@@ -1496,14 +1491,13 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     }
 
     private static class UnsavedChangesSaver extends BaseTask {
-        private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
         public UnsavedChangesSaver(DesignActivity activity) {
             super(activity);
         }
 
         public void execute() {
-            executorService.execute(this::doInBackground);
+            new Thread(this::doInBackground).start();
         }
 
         private void doInBackground() {

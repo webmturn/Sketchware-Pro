@@ -67,7 +67,7 @@ public class SystemInfoActivity extends BaseAppCompatActivity {
                     startActivity(intent);
                 } catch (ActivityNotFoundException e) {
                     android.util.Log.w("SystemInfoActivity", "Developer options not found on this device", e);
-                    a.a.a.SketchToast.toast(SystemInfoActivity.this, "Developer options not available on this device", a.a.a.SketchToast.TOAST_WARNING).show();
+                    a.a.a.SketchToast.toast(SystemInfoActivity.this, Helper.getResString(R.string.error_dev_options_unavailable), a.a.a.SketchToast.TOAST_WARNING).show();
                 }
             }
         });

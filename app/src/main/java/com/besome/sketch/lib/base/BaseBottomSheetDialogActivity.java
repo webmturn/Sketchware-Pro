@@ -48,7 +48,6 @@ public class BaseBottomSheetDialogActivity extends BaseAppCompatActivity {
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(Color.parseColor("#66000000"));
-        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
         overridePendingTransition(R.anim.design_bottom_sheet_slide_in, 0);
 
