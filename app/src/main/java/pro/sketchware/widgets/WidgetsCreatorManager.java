@@ -236,7 +236,12 @@ public class WidgetsCreatorManager {
                 map.put("title", widgetTitle);
                 map.put("name", widgetName);
                 map.put("inject", widgetInject);
-                map.put("type", Integer.parseInt(widgetType));
+                try {
+                    map.put("type", Integer.parseInt(widgetType));
+                } catch (NumberFormatException e) {
+                    binding.inputType.setError(Helper.getResString(R.string.error_invalid_value));
+                    return;
+                }
                 if (isEditing) {
                     map.put("position", position);
                     widgetConfigurationsList.set(position, map);

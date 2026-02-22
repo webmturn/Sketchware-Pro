@@ -31,7 +31,11 @@ public class PropertiesUtil {
         }
         String hexColor = color.replaceFirst("#", "");
         String formattedColor = String.format("#%8s", hexColor).replaceAll(" ", "F");
-        return Color.parseColor(formattedColor);
+        try {
+            return Color.parseColor(formattedColor);
+        } catch (IllegalArgumentException e) {
+            return 0xFFFFFFFF;
+        }
     }
 
     public static int resolveSize(String value, int defaultValue) {
