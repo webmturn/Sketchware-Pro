@@ -36,7 +36,7 @@ public class MoreblockImporterDialog extends MaterialAlertDialogBuilder {
         moreBlockCollectionList = new ArrayList<>(beanList);
         adapter = new MoreBlockAdapter(moreBlockCollectionList);
 
-        setTitle("Select a more block");
+        setTitle(R.string.moreblock_dialog_title_select);
         setIcon(R.drawable.more_block_96dp);
 
         binding.searchInput.addTextChangedListener(new TextWatcher() {

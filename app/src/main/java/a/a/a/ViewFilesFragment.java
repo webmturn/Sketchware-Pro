@@ -17,6 +17,8 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import mod.hey.studios.util.Helper;
+
 import com.besome.sketch.beans.ProjectFileBean;
 import com.besome.sketch.beans.ViewBean;
 import com.besome.sketch.editor.manage.view.AddViewActivity;
@@ -329,7 +331,7 @@ public class ViewFilesFragment extends BaseFragment {
 
                 binding.viewItem.setOnLongClickListener(view -> {
                     if (getLayoutPosition() == 0) {
-                        Toast.makeText(getContext(), "Main activity cannot be deleted", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), Helper.getResString(R.string.error_main_activity_cannot_delete), Toast.LENGTH_SHORT).show();
                         return true;
                     }
                     ((ManageViewActivity) getActivity()).a(true);

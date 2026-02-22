@@ -489,7 +489,7 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
             holder.binding.tvImageName.setText(image.resName);
 
             if (colorMap.get(position) != null) {
-                int color = Objects.requireNonNullElse((int) colorMap.get(position).get("color"), 0xFFFFFFFF);
+                int color = colorMap.get(position).get("color") instanceof Number n ? n.intValue() : 0xFFFFFFFF;
                 Log.d("Applying filter to " + position, String.valueOf(color));
                 holder.binding.img.setColorFilter(color, PorterDuff.Mode.SRC_IN);
             } else {

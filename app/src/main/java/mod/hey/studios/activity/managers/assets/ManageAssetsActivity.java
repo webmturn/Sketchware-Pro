@@ -218,7 +218,7 @@ public class ManageAssetsActivity extends BaseAppCompatActivity {
         new MaterialAlertDialogBuilder(this)
                 .setTitle(String.format(Helper.getResString(R.string.manager_delete_title), assetsAdapter.getFileName(position)))
                 .setMessage(getString(R.string.delete_confirm_format,
-                        assetsAdapter.isFolder(position) ? "folder" : "file", ""))
+                        getString(assetsAdapter.isFolder(position) ? R.string.common_word_folder : R.string.common_word_file), ""))
                 .setPositiveButton(R.string.common_word_delete, (dialog, which) -> {
                     FileUtil.deleteFile(assetsAdapter.getItem(position));
                     refresh();

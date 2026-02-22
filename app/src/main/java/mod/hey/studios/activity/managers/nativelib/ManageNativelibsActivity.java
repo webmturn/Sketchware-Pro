@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -330,16 +331,14 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
                 menu.getMenu().getItem(2).setVisible(false);
 
                 menu.setOnMenuItemClickListener(item -> {
-                    String title = item.getTitle().toString();
-                    switch (title) {
-                        case "Delete" -> {
-                            FileUtil.deleteFile(frc.listFileNativeLibs.get(position));
-                            handleAdapter(nativeLibrariesPath);
-                        }
-                        case "Rename" -> showRenameDialog(frc.listFileNativeLibs.get(position));
-                        default -> {
-                            return false;
-                        }
+                    int id = item.getItemId();
+                    if (id == R.id.delete) {
+                        FileUtil.deleteFile(frc.listFileNativeLibs.get(position));
+                        handleAdapter(nativeLibrariesPath);
+                    } else if (id == R.id.rename) {
+                        showRenameDialog(frc.listFileNativeLibs.get(position));
+                    } else {
+                        return false;
                     }
 
                     return true;
@@ -350,7 +349,7 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
             binding.getRoot().setOnLongClickListener(view -> {
                 if (FileUtil.isDirectory(frc.listFileNativeLibs.get(position))) {
                     PopupMenu menu = new PopupMenu(ManageNativelibsActivity.this, view);
-                    menu.getMenu().add("Delete");
+                    menu.getMenu().add(Menu.NONE, 4, Menu.NONE, R.string.common_word_delete);
                     menu.setOnMenuItemClickListener(item -> {
                         FileUtil.deleteFile(frc.listFileNativeLibs.get(position));
                         handleAdapter(nativeLibrariesPath);
