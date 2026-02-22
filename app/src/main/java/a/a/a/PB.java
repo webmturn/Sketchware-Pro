@@ -69,7 +69,7 @@ public class PB extends BaseValidator {
       } 
     } else {
       ArrayList<String> arrayList1 = new ArrayList<>();
-      for (byte b1 = 1; b1 <= this.i; b1++) {
+      for (int b1 = 1; b1 <= this.i; b1++) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(paramString);
         stringBuilder.append("_");
@@ -113,7 +113,7 @@ public class PB extends BaseValidator {
     } 
     String[] arrayOfString = this.f;
     int i = arrayOfString.length;
-    byte b = 0;
+    int b = 0;
     while (true) {
       if (b < i) {
         if (paramString.equals(arrayOfString[b])) {

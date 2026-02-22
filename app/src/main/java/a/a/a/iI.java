@@ -77,7 +77,7 @@ public class iI {
     System.arraycopy(this.b.array(), 0, arrayOfByte, 0, this.b.position());
     int i = arrayOfByte.length;
     paramString = "";
-    for (byte b = 0; b < i; b++) {
+    for (int b = 0; b < i; b++) {
       byte b1 = arrayOfByte[b];
       StringBuilder stringBuilder = new StringBuilder();
       stringBuilder.append(paramString);

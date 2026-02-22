@@ -58,7 +58,7 @@ public class GB {
   public static String b() {
     Field[] arrayOfField = Build.VERSION_CODES.class.getFields();
     int i = arrayOfField.length;
-    byte b = 0;
+    int b = 0;
     while (true) {
       if (b < i) {
         Field field = arrayOfField[b];
@@ -108,7 +108,7 @@ public class GB {
   public static ArrayList<String> c(Context paramContext) {
     ArrayList<String> arrayList = new ArrayList<>();
     Account[] arrayOfAccount = AccountManager.get(paramContext).getAccountsByType("com.google");
-    for (byte b = 0; b < arrayOfAccount.length; b++) {
+    for (int b = 0; b < arrayOfAccount.length; b++) {
       if ((arrayOfAccount[b]).type.equals("com.google"))
         arrayList.add((arrayOfAccount[b]).name); 
     } 
@@ -172,7 +172,7 @@ public class GB {
     try {
       ConnectivityManager connectivityManager = (ConnectivityManager)paramContext.getSystemService(Context.CONNECTIVITY_SERVICE);
       int i = arrayOfInt.length;
-      for (byte b = 0; b < i; b++) {
+      for (int b = 0; b < i; b++) {
         int j = arrayOfInt[b];
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         if (networkInfo != null) {

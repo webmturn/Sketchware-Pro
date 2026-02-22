@@ -61,7 +61,7 @@ public class FB {
   
   public static String a(byte[] paramArrayOfbyte) {
     StringBuffer stringBuffer = new StringBuffer(paramArrayOfbyte.length * 2);
-    for (byte b = 0; b < paramArrayOfbyte.length; b++) {
+    for (int b = 0; b < paramArrayOfbyte.length; b++) {
       if ((paramArrayOfbyte[b] & 0xFF) < 16)
         stringBuffer.append("0"); 
       stringBuffer.append(Long.toString((paramArrayOfbyte[b] & 0xFF), 16));
@@ -137,7 +137,7 @@ public class FB {
   
   public static String d(String paramString) {
     String str = "";
-    for (byte b = 0; b < paramString.length(); b++) {
+    for (int b = 0; b < paramString.length(); b++) {
       char c = paramString.charAt(b);
       if (c == '\\') {
         StringBuilder stringBuilder = new StringBuilder();

@@ -93,7 +93,7 @@ public class oB {
       if (paramFile2.exists() || paramFile2.mkdirs()) {
         String[] arrayOfString = paramFile1.list();
         if (arrayOfString != null)
-          for (byte b = 0; b < arrayOfString.length; b++)
+          for (int b = 0; b < arrayOfString.length; b++)
             a(new File(paramFile1, arrayOfString[b]), new File(paramFile2, arrayOfString[b]));  
         return;
       } 
@@ -110,7 +110,7 @@ public class oB {
       File[] arrayOfFile = paramFile.listFiles();
       if (arrayOfFile != null) {
         int i = arrayOfFile.length;
-        for (byte b = 0; b < i; b++) {
+        for (int b = 0; b < i; b++) {
           File file = arrayOfFile[b];
           if (file.isDirectory())
             a(file); 

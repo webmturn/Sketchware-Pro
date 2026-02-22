@@ -140,7 +140,7 @@ public class Rs extends Ts {
     ArrayList<String> arrayList = FB.c(paramString);
     this.ka = new ArrayList<View>();
     this.la = new ArrayList<String>();
-    for (byte b = 0; b < arrayList.size(); b++) {
+    for (int b = 0; b < arrayList.size(); b++) {
       View view = b(arrayList.get(b), paramInt);
       if (view instanceof Ts)
         ((Ts)view).E = this; 
@@ -366,7 +366,7 @@ public class Rs extends Ts {
   
   public final void i() {
     this.V = new ArrayList<View>();
-    for (byte b = 0; b < this.ka.size(); b++) {
+    for (int b = 0; b < this.ka.size(); b++) {
       View view = this.ka.get(b);
       if (view instanceof Rs || view instanceof Ss)
         this.V.add(view); 

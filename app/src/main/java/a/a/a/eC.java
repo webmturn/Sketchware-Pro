@@ -344,7 +344,7 @@ public class eC {
                 if (arrayList3 != null) {
                   i = j;
                   if (arrayList3.size() > 0) {
-                    byte b = 0;
+                    int b = 0;
                     while (true) {
                       i = j;
                       if (b < arrayList3.size()) {
@@ -507,7 +507,7 @@ public class eC {
           if (arrayList1 != null) {
             i = j;
             if (arrayList1.size() > 0) {
-              byte b = 0;
+              int b = 0;
               while (true) {
                 i = j;
                 if (b < arrayList1.size()) {
@@ -912,7 +912,7 @@ public class eC {
           continue; 
         ArrayList<ViewBean> arrayList1 = a((ArrayList<ViewBean>)entry.getValue());
         if (arrayList1 != null && arrayList1.size() > 0) {
-          byte b = 0;
+          int b = 0;
           String str1 = "";
           while (true) {
             str = str1;
@@ -973,7 +973,7 @@ public class eC {
           return true; 
         ArrayList<Gx> arrayList = blockBean.getParamClassInfo();
         if (arrayList != null && arrayList.size() > 0)
-          for (byte b = 0; b < arrayList.size(); b++) {
+          for (int b = 0; b < arrayList.size(); b++) {
             Gx gx1 = arrayList.get(b);
             if (gx1 != null && gx1.b() && ((String)blockBean.parameters.get(b)).equals(paramString2))
               return true; 
@@ -987,7 +987,7 @@ public class eC {
     ArrayList<ViewBean> arrayList = this.c.get(paramString1);
     if (arrayList == null)
       return null; 
-    for (byte b = 0; b < arrayList.size(); b++) {
+    for (int b = 0; b < arrayList.size(); b++) {
       ViewBean viewBean = arrayList.get(b);
       if (paramString2.equals(viewBean.id))
         return viewBean; 
@@ -1068,7 +1068,7 @@ public class eC {
           return true; 
         ArrayList<Gx> arrayList = blockBean.getParamClassInfo();
         if (arrayList != null && arrayList.size() > 0)
-          for (byte b = 0; b < arrayList.size(); b++) {
+          for (int b = 0; b < arrayList.size(); b++) {
             Gx gx1 = arrayList.get(b);
             if (gx1 != null && gx1.c() && ((String)blockBean.parameters.get(b)).equals(paramString2))
               return true; 
