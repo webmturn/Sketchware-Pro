@@ -2154,6 +2154,9 @@ Do you want to continue?"</string>
     <string name="logic_editor_panel_button_create_block">Create</string>
     <string name="logic_editor_panel_button_import_collection">Import From Collection</string>
     <string name="logic_editor_deprecated_xml_command">Deprecated: Use XML Command Manager</string>
+    <string name="error_no_package_installer">No package installer found</string>
+    <string name="error_no_browser_app">No browser app found</string>
+    <string name="error_imported_widgets_empty_or_invalid">The imported widgets file #%s is empty or invalid</string>
     <string name="logic_editor_invalid_label">Invalid: %s</string>
     <string name="logic_editor_helper_modifier">Enter modifier e.g. private, public, public static, or empty (package private).</string>
     <string name="logic_add_custom_list">Add a new custom List</string>

@@ -306,7 +306,7 @@ public class WidgetsCreatorManager {
     }
 
     private void importWidgets(String[] paths) {
-        String ERROR_MESSAGE = "The imported widgets file #%s is empty or invalid";
+        String ERROR_MESSAGE = Helper.getResString(R.string.error_imported_widgets_empty_or_invalid);
         for (int i = 0; i < paths.length; i++) {
             String path = paths[i];
             String value = FileUtil.readFile(path);

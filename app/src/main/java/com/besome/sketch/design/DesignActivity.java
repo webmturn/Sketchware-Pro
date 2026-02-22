@@ -400,7 +400,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
             startActivity(intent);
         } catch (android.content.ActivityNotFoundException e) {
-            SketchwareUtil.toastError("No package installer found");
+            SketchwareUtil.toastError(Helper.getResString(R.string.error_no_package_installer));
         }
     }
 
