@@ -182,7 +182,7 @@ public class Us extends Rs {
       } 
       this.ta = createLabel(this.T);
       addView((View)this.ta);
-      ((Ts)this).e = getResources().getColor(2131034294);
+      ((Ts)this).e = getResources().getColor(pro.sketchware.R.color.scolor_red_02);
       k();
       return;
     } 
@@ -205,7 +205,7 @@ public class Us extends Rs {
     } 
     this.ta = createLabel(this.T);
     addView((View)this.ta);
-    ((Ts)this).e = getResources().getColor(2131034294);
+    ((Ts)this).e = getResources().getColor(pro.sketchware.R.color.scolor_red_02);
     k();
   }
 }

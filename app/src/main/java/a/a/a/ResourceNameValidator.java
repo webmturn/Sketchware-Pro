@@ -5,6 +5,7 @@ import android.text.Spanned;
 import com.google.android.material.textfield.TextInputLayout;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
+import pro.sketchware.R;
 
 /**
  * Validator for resource names (sounds, images, icons).
@@ -40,25 +41,25 @@ public class ResourceNameValidator extends BaseValidator {
     String str = paramCharSequence.toString().trim();
     if (str.length() < 3) {
       this.b.setErrorEnabled(true);
-      this.b.setError(xB.b().a(this.a, 2131625433, new Object[] { Integer.valueOf(3) }));
+      this.b.setError(xB.b().a(this.a, R.string.invalid_value_min_lenth, new Object[] { Integer.valueOf(3) }));
       this.d = false;
       return;
     } 
     if (str.length() > 70) {
       this.b.setErrorEnabled(true);
-      this.b.setError(xB.b().a(this.a, 2131625432, new Object[] { Integer.valueOf(70) }));
+      this.b.setError(xB.b().a(this.a, R.string.invalid_value_max_lenth, new Object[] { Integer.valueOf(70) }));
       this.d = false;
       return;
     } 
     if (str.equals("default_image") || "NONE".toLowerCase().equals(str.toLowerCase())) {
       this.b.setErrorEnabled(true);
-      this.b.setError(xB.b().a(this.a, 2131624950));
+      this.b.setError(xB.b().a(this.a, R.string.common_message_name_unavailable));
       this.d = false;
       return;
     } 
     if (!str.equals(this.h) && this.g.indexOf(str) >= 0) {
       this.b.setErrorEnabled(true);
-      this.b.setError(xB.b().a(this.a, 2131624950));
+      this.b.setError(xB.b().a(this.a, R.string.common_message_name_unavailable));
       this.d = false;
       return;
     } 
@@ -80,13 +81,13 @@ public class ResourceNameValidator extends BaseValidator {
     } 
     if (paramInt1 != 0) {
       this.b.setErrorEnabled(true);
-      this.b.setError(xB.b().a(this.a, 2131625495));
+      this.b.setError(xB.b().a(this.a, R.string.logic_editor_message_reserved_keywords));
       this.d = false;
       return;
     } 
     if (!Character.isLetter(paramCharSequence.charAt(0))) {
       this.b.setErrorEnabled(true);
-      this.b.setError(xB.b().a(this.a, 2131625497));
+      this.b.setError(xB.b().a(this.a, R.string.logic_editor_message_variable_name_must_start_letter));
       this.d = false;
       return;
     } 
@@ -95,7 +96,7 @@ public class ResourceNameValidator extends BaseValidator {
       this.d = true;
     } else {
       this.b.setErrorEnabled(true);
-      this.b.setError(xB.b().a(this.a, 2131625437));
+      this.b.setError(xB.b().a(this.a, R.string.invalid_value_rule_4));
       this.d = false;
     } 
   }

@@ -4,6 +4,7 @@ import com.besome.sketch.beans.LayoutBean;
 import com.besome.sketch.beans.ProjectFileBean;
 import com.besome.sketch.beans.ViewBean;
 import java.util.ArrayList;
+import pro.sketchware.R;
 
 public class rq {
   public static int a(String paramString) {
@@ -13,7 +14,7 @@ public class rq {
     } else {
       b = -1;
     } 
-    return (b != 0) ? -1 : 2131165293;
+    return (b != 0) ? -1 : R.drawable.activity_preset_1;
   }
   
   public static ViewBean a() {
@@ -54,7 +55,7 @@ public class rq {
     } else {
       b = -1;
     } 
-    return (b != 0) ? -1 : 2131165293;
+    return (b != 0) ? -1 : R.drawable.activity_preset_1;
   }
   
   public static ArrayList<ProjectFileBean> c() {
@@ -84,10 +85,10 @@ public class rq {
   public static int e(String paramString) {
     switch (paramString) {
       case "Empty Activity":
-        return 2131165296;
+        return R.drawable.activity_preset_4;
       case "Basic Activity":
       case "Text Activity":
-        return 2131165293;
+        return R.drawable.activity_preset_1;
       default:
         return -1;
     }

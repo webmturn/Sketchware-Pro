@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.crypto.BadPaddingException;
+import pro.sketchware.R;
 import javax.crypto.IllegalBlockSizeException;
 import mod.agus.jcoderz.editor.event.ManageEvent;
 
@@ -350,7 +351,7 @@ public class xB {
     if (str == null)
       paramString2 = ""; 
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(a((Context)null, 2131626026));
+    stringBuilder.append(a((Context)null, R.string.root_spec_common_when));
     stringBuilder.append(" ");
     stringBuilder.append(paramString1);
     stringBuilder.append(" ");

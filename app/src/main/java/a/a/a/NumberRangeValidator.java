@@ -3,6 +3,7 @@ package a.a.a;
 import android.content.Context;
 import android.text.Spanned;
 import com.google.android.material.textfield.TextInputLayout;
+import pro.sketchware.R;
 
 /**
  * Validator for numeric input within a specified range.
@@ -33,11 +34,11 @@ public class NumberRangeValidator extends BaseValidator {
       int i = Integer.parseInt(str);
       if (i < this.f) {
         this.b.setErrorEnabled(true);
-        this.b.setError(xB.b().a(this.a, 2131625433, new Object[] { Integer.valueOf(this.f) }));
+        this.b.setError(xB.b().a(this.a, R.string.invalid_value_min_lenth, new Object[] { Integer.valueOf(this.f) }));
         this.d = false;
       } else if (i > this.g) {
         this.b.setErrorEnabled(true);
-        this.b.setError(xB.b().a(this.a, 2131625432, new Object[] { Integer.valueOf(this.g) }));
+        this.b.setError(xB.b().a(this.a, R.string.invalid_value_max_lenth, new Object[] { Integer.valueOf(this.g) }));
         this.d = false;
       } else {
         this.b.setErrorEnabled(false);
@@ -45,7 +46,7 @@ public class NumberRangeValidator extends BaseValidator {
       }
     } catch (NumberFormatException numberFormatException) {
       this.b.setErrorEnabled(true);
-      this.b.setError(xB.b().a(this.a, 2131625497));
+      this.b.setError(xB.b().a(this.a, R.string.logic_editor_message_variable_name_must_start_letter));
       this.d = false;
     }
   }

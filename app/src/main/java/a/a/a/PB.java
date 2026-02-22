@@ -6,6 +6,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.regex.Pattern;
+import pro.sketchware.R;
 
 public class PB extends BaseValidator {
   public String[] f;
@@ -43,26 +44,26 @@ public class PB extends BaseValidator {
     String str = "";
     if (paramString.length() < 3) {
       this.b.setErrorEnabled(true);
-      this.b.setError(xB.b().a(this.a, 2131625433, new Object[] { Integer.valueOf(3) }));
+      this.b.setError(xB.b().a(this.a, R.string.invalid_value_min_lenth, new Object[] { Integer.valueOf(3) }));
       this.d = false;
       return;
     } 
     if (paramString.length() > 70) {
       this.b.setErrorEnabled(true);
-      this.b.setError(xB.b().a(this.a, 2131625432, new Object[] { Integer.valueOf(70) }));
+      this.b.setError(xB.b().a(this.a, R.string.invalid_value_max_lenth, new Object[] { Integer.valueOf(70) }));
       this.d = false;
       return;
     } 
     if (paramString.equals("default_image") || "NONE".toLowerCase().equals(paramString.toLowerCase())) {
       this.b.setErrorEnabled(true);
-      this.b.setError(xB.b().a(this.a, 2131624950));
+      this.b.setError(xB.b().a(this.a, R.string.common_message_name_unavailable));
       this.d = false;
       return;
     } 
     if (this.i == 1) {
       if (!paramString.equals(this.h) && this.g.indexOf(paramString) >= 0) {
         this.b.setErrorEnabled(true);
-        this.b.setError(xB.b().a(this.a, 2131624950));
+        this.b.setError(xB.b().a(this.a, R.string.common_message_name_unavailable));
         this.d = false;
         return;
       } 
@@ -82,7 +83,7 @@ public class PB extends BaseValidator {
       } 
       if (arrayList2.size() > 0) {
         this.b.setErrorEnabled(true);
-        String str1 = xB.b().a(this.a, 2131624950);
+        String str1 = xB.b().a(this.a, R.string.common_message_name_unavailable);
         Iterator<String> iterator = arrayList2.iterator();
         paramString = "";
         while (iterator.hasNext()) {
@@ -127,13 +128,13 @@ public class PB extends BaseValidator {
     } 
     if (b != 0) {
       this.b.setErrorEnabled(true);
-      this.b.setError(xB.b().a(this.a, 2131625495));
+      this.b.setError(xB.b().a(this.a, R.string.logic_editor_message_reserved_keywords));
       this.d = false;
       return;
     } 
     if (!Character.isLetter(paramString.charAt(0))) {
       this.b.setErrorEnabled(true);
-      this.b.setError(xB.b().a(this.a, 2131625497));
+      this.b.setError(xB.b().a(this.a, R.string.logic_editor_message_variable_name_must_start_letter));
       this.d = false;
       return;
     } 
@@ -142,7 +143,7 @@ public class PB extends BaseValidator {
       this.d = true;
     } else {
       this.b.setErrorEnabled(true);
-      this.b.setError(xB.b().a(this.a, 2131625437));
+      this.b.setError(xB.b().a(this.a, R.string.invalid_value_rule_4));
       this.d = false;
     } 
   }

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.besome.sketch.beans.ProjectFileBean;
+import pro.sketchware.R;
 import com.besome.sketch.beans.SelectableBean;
 import com.besome.sketch.beans.ViewBean;
 import java.util.ArrayList;
@@ -198,9 +199,9 @@ public class xw extends qA {
   }
   
   public View onCreateView(LayoutInflater paramLayoutInflater, ViewGroup paramViewGroup, Bundle paramBundle) {
-    ViewGroup viewGroup = (ViewGroup)paramLayoutInflater.inflate(2131427442, paramViewGroup, false);
+    ViewGroup viewGroup = (ViewGroup)paramLayoutInflater.inflate(R.layout.fr_manage_view_list, paramViewGroup, false);
     this.h = new ArrayList<ProjectFileBean>();
-    this.f = (RecyclerView)viewGroup.findViewById(2131231442);
+    this.f = (RecyclerView)viewGroup.findViewById(R.id.list_activities);
     this.f.setHasFixedSize(true);
     this.f.setLayoutManager((RecyclerView.LayoutManager)new LinearLayoutManager(getContext()));
     this.i = new a(this, this.f);
@@ -210,8 +211,8 @@ public class xw extends qA {
     } else {
       this.g = paramBundle.getString("sc_id");
     } 
-    this.k = (TextView)viewGroup.findViewById(2131231997);
-    this.k.setText(xB.b().a((Context)getActivity(), 2131625291));
+    this.k = (TextView)viewGroup.findViewById(R.id.tv_guide);
+    this.k.setText(xB.b().a((Context)getActivity(), R.string.design_manager_view_description_guide_create_custom_view));
     return (View)viewGroup;
   }
   
@@ -245,25 +246,25 @@ public class xw extends qA {
         param1a.u.setVisibility(View.VISIBLE);
       } 
       ProjectFileBean projectFileBean = this.d.h.get(param1Int);
-      param1a.u.setImageResource(2131165293);
+      param1a.u.setImageResource(R.drawable.activity_preset_1);
       param1a.t.setChecked(((SelectableBean)projectFileBean).isSelected);
       param1Int = projectFileBean.fileType;
       if (param1Int == 1) {
         param1a.w.setText(projectFileBean.getXmlName());
       } else if (param1Int == 2) {
         param1a.t.setVisibility(View.GONE);
-        param1a.u.setImageResource(2131165283);
+        param1a.u.setImageResource(R.drawable.activity_0110);
         param1a.w.setText(projectFileBean.fileName.substring(1));
       } 
       if (((SelectableBean)projectFileBean).isSelected) {
-        param1a.v.setImageResource(2131165707);
+        param1a.v.setImageResource(R.drawable.ic_checkmark_green_48dp);
         return;
       } 
-      param1a.v.setImageResource(2131165875);
+      param1a.v.setImageResource(R.drawable.ic_trashcan_white_48dp);
     }
     
     public ViewHolder onCreateViewHolder(ViewGroup param1ViewGroup, int param1Int) {
-      return new ViewHolder(this, LayoutInflater.from(param1ViewGroup.getContext()).inflate(2131427570, param1ViewGroup, false));
+      return new ViewHolder(this, LayoutInflater.from(param1ViewGroup.getContext()).inflate(R.layout.manage_view_custom_list_item, param1ViewGroup, false));
     }
     
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -284,12 +285,12 @@ public class xw extends qA {
       public ViewHolder(xw.a this$0, View param2View) {
         super(param2View);
         this.z = this$0;
-        this.t = (CheckBox)param2View.findViewById(2131230893);
-        this.u = (ImageView)param2View.findViewById(2131231104);
-        this.w = (TextView)param2View.findViewById(2131232144);
-        this.x = (LinearLayout)param2View.findViewById(2131230959);
-        this.v = (ImageView)param2View.findViewById(2131231132);
-        this.y = (ImageView)param2View.findViewById(2131231168);
+        this.t = (CheckBox)param2View.findViewById(R.id.chk_select);
+        this.u = (ImageView)param2View.findViewById(R.id.img_activity);
+        this.w = (TextView)param2View.findViewById(R.id.tv_screen_name);
+        this.x = (LinearLayout)param2View.findViewById(R.id.delete_img_container);
+        this.v = (ImageView)param2View.findViewById(R.id.img_delete);
+        this.y = (ImageView)param2View.findViewById(R.id.img_preset_setting);
         this.t.setVisibility(View.GONE);
         param2View.setOnClickListener(new uw(this, this$0));
         param2View.setOnLongClickListener(new vw(this, this$0));
