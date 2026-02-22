@@ -2,6 +2,7 @@ package pro.sketchware.activities.editor.component;
 
 import static pro.sketchware.utility.GsonUtils.getGson;
 
+import com.google.gson.JsonSyntaxException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -159,7 +160,11 @@ public class ManageCustomComponentActivity extends BaseAppCompatActivity {
     }
 
     private void readComponents(String _path) {
-        componentsList = getGson().fromJson(FileUtil.readFile(_path), Helper.TYPE_MAP_LIST);
+        try {
+            componentsList = getGson().fromJson(FileUtil.readFile(_path), Helper.TYPE_MAP_LIST);
+        } catch (JsonSyntaxException e) {
+            componentsList = null;
+        }
         if (componentsList != null && !componentsList.isEmpty()) {
             ComponentsAdapter adapter = new ComponentsAdapter(componentsList);
             Parcelable state = componentView.getLayoutManager().onSaveInstanceState();
@@ -392,7 +397,7 @@ public class ManageCustomComponentActivity extends BaseAppCompatActivity {
             public void bind(HashMap<String, Object> item) {
                 type.setText((String) item.get("name"));
                 description.setText((String) item.get("description"));
-                int imgRes = Integer.parseInt((String) item.get("icon"));
+                int imgRes = ((Number) item.get("icon")).intValue();
                 icon.setImageResource(OldResourceIdMapper.getDrawableFromOldResourceId(imgRes));
             }
 

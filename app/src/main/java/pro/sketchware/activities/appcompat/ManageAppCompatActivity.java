@@ -92,7 +92,12 @@ public class ManageAppCompatActivity extends BaseAppCompatActivity {
                                     AppCompatInjection.getDefaultActivityInjections(),
                                     Helper.TYPE_MAP_LIST);
         } else {
-            activityInjections = new Gson().fromJson(FileUtil.readFile(path), Helper.TYPE_MAP_LIST);
+            try {
+                activityInjections = new Gson().fromJson(FileUtil.readFile(path), Helper.TYPE_MAP_LIST);
+            } catch (com.google.gson.JsonSyntaxException e) {
+                activityInjections = new Gson().fromJson(
+                        AppCompatInjection.getDefaultActivityInjections(), Helper.TYPE_MAP_LIST);
+            }
         }
         adapter = new AppCompatAdapter();
         adapter.setOnItemClickListener(

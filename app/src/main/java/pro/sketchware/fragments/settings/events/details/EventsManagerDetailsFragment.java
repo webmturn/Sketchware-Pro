@@ -2,6 +2,7 @@ package pro.sketchware.fragments.settings.events.details;
 
 import static pro.sketchware.utility.GsonUtils.getGson;
 
+import com.google.gson.JsonSyntaxException;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -122,8 +123,13 @@ public class EventsManagerDetailsFragment extends BaseFragment {
     private void refreshList() {
         listMap.clear();
         if (FileUtil.isExistFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath())) {
-            ArrayList<HashMap<String, Object>> events = getGson()
-                    .fromJson(FileUtil.readFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath()), Helper.TYPE_MAP_LIST);
+            ArrayList<HashMap<String, Object>> events;
+            try {
+                events = getGson()
+                        .fromJson(FileUtil.readFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath()), Helper.TYPE_MAP_LIST);
+            } catch (JsonSyntaxException e) {
+                events = new ArrayList<>();
+            }
             for (int i = 0; i < events.size(); i++) {
                 if (listName.equals(events.get(i).get("listener"))) {
                     listMap.add(events.get(i));
@@ -141,8 +147,13 @@ public class EventsManagerDetailsFragment extends BaseFragment {
     private void deleteItem(int position) {
         listMap.remove(position);
         if (FileUtil.isExistFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath())) {
-            ArrayList<HashMap<String, Object>> events = getGson()
-                    .fromJson(FileUtil.readFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath()), Helper.TYPE_MAP_LIST);
+            ArrayList<HashMap<String, Object>> events;
+            try {
+                events = getGson()
+                        .fromJson(FileUtil.readFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath()), Helper.TYPE_MAP_LIST);
+            } catch (JsonSyntaxException e) {
+                return;
+            }
             for (int i = events.size() - 1; i > -1; i--) {
                 if (listName.equals(events.get(i).get("listener"))) {
                     events.remove(i);
@@ -178,7 +189,7 @@ public class EventsManagerDetailsFragment extends BaseFragment {
             if (listName.isEmpty()) {
                 holder.binding.eventIcon.setImageResource(R.drawable.ic_mtrl_code);
             } else {
-                int imgRes = Integer.parseInt((String) dataArray.get(position).get("icon"));
+                int imgRes = ((Number) dataArray.get(position).get("icon")).intValue();
                 holder.binding.eventIcon.setImageResource(OldResourceIdMapper.getDrawableFromOldResourceId(imgRes));
             }
 

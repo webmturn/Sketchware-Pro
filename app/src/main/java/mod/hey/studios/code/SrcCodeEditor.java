@@ -2,6 +2,8 @@ package mod.hey.studios.code;
 
 import static pro.sketchware.utility.GsonUtils.getGson;
 
+import com.google.gson.JsonSyntaxException;
+
 import androidx.activity.OnBackPressedCallback;
 import android.app.Activity;
 import android.content.Context;
@@ -312,8 +314,13 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
         if (fromAndroidManifest) {
             String filePath = FileUtil.getExternalStorageDir() + "/.sketchware/data/" + scId + "/Injection/androidmanifest/activities_components.json";
             if (FileUtil.isExistFile(filePath)) {
-                ArrayList<HashMap<String, Object>> arrayList = getGson()
-                        .fromJson(FileUtil.readFile(filePath), Helper.TYPE_MAP_LIST);
+                ArrayList<HashMap<String, Object>> arrayList;
+                try {
+                    arrayList = getGson()
+                            .fromJson(FileUtil.readFile(filePath), Helper.TYPE_MAP_LIST);
+                } catch (JsonSyntaxException e) {
+                    arrayList = new ArrayList<>();
+                }
                 for (int i = 0; i < arrayList.size(); i++) {
                     if (arrayList.get(i).get("name").equals(activityName)) {
                         beforeContent = (String) arrayList.get(i).get("value");
@@ -356,8 +363,13 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
         if (fromAndroidManifest) {
             String filePath = FileUtil.getExternalStorageDir() + "/.sketchware/data/" + scId + "/Injection/androidmanifest/activities_components.json";
             if (FileUtil.isExistFile(filePath)) {
-                ArrayList<HashMap<String, Object>> activitiesComponents = getGson()
-                        .fromJson(FileUtil.readFile(filePath), Helper.TYPE_MAP_LIST);
+                ArrayList<HashMap<String, Object>> activitiesComponents;
+                try {
+                    activitiesComponents = getGson()
+                            .fromJson(FileUtil.readFile(filePath), Helper.TYPE_MAP_LIST);
+                } catch (JsonSyntaxException e) {
+                    activitiesComponents = new ArrayList<>();
+                }
                 for (int i = 0; i < activitiesComponents.size(); i++) {
                     if (activitiesComponents.get(i).get("name").equals(activityName)) {
                         activitiesComponents.get(i).put("value", beforeContent);

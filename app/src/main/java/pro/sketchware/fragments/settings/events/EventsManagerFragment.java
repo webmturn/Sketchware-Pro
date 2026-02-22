@@ -179,7 +179,11 @@ public class EventsManagerFragment extends BaseFragment {
     public void refreshList() {
         listMap.clear();
         if (FileUtil.isExistFile(EventsManagerConstants.LISTENERS_FILE.getAbsolutePath())) {
-            listMap = new Gson().fromJson(FileUtil.readFile(EventsManagerConstants.LISTENERS_FILE.getAbsolutePath()), Helper.TYPE_MAP_LIST);
+            try {
+                listMap = new Gson().fromJson(FileUtil.readFile(EventsManagerConstants.LISTENERS_FILE.getAbsolutePath()), Helper.TYPE_MAP_LIST);
+            } catch (JsonSyntaxException e) {
+                listMap = new ArrayList<>();
+            }
             binding.listenersRecyclerView.setAdapter(new ListenersAdapter(listMap, requireContext()));
             binding.listenersRecyclerView.getAdapter().notifyDataSetChanged();
         }
@@ -218,7 +222,10 @@ public class EventsManagerFragment extends BaseFragment {
     private void importEvents(ArrayList<HashMap<String, Object>> data, ArrayList<HashMap<String, Object>> data2) {
         ArrayList<HashMap<String, Object>> events = new ArrayList<>();
         if (FileUtil.isExistFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath())) {
-            events = new Gson().fromJson(FileUtil.readFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath()), Helper.TYPE_MAP_LIST);
+            try {
+                events = new Gson().fromJson(FileUtil.readFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath()), Helper.TYPE_MAP_LIST);
+            } catch (JsonSyntaxException ignored) {
+            }
         }
         events.addAll(data2);
         FileUtil.writeFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath(), new Gson().toJson(events));
@@ -234,8 +241,12 @@ public class EventsManagerFragment extends BaseFragment {
         ex.add(listMap.get(p));
         ArrayList<HashMap<String, Object>> ex2 = new ArrayList<>();
         if (FileUtil.isExistFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath())) {
-            ArrayList<HashMap<String, Object>> events = new Gson()
-                    .fromJson(FileUtil.readFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath()), Helper.TYPE_MAP_LIST);
+            ArrayList<HashMap<String, Object>> events;
+            try {
+                events = new Gson().fromJson(FileUtil.readFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath()), Helper.TYPE_MAP_LIST);
+            } catch (JsonSyntaxException e) {
+                events = new ArrayList<>();
+            }
             for (int i = 0; i < events.size(); i++) {
                 if (events.get(i).get("listener").toString().equals(listMap.get(p).get("name"))) {
                     ex2.add(events.get(i));
@@ -249,7 +260,10 @@ public class EventsManagerFragment extends BaseFragment {
     private void exportAllEvents() {
         ArrayList<HashMap<String, Object>> events = new ArrayList<>();
         if (FileUtil.isExistFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath())) {
-            events = new Gson().fromJson(FileUtil.readFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath()), Helper.TYPE_MAP_LIST);
+            try {
+                events = new Gson().fromJson(FileUtil.readFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath()), Helper.TYPE_MAP_LIST);
+            } catch (JsonSyntaxException ignored) {
+            }
         }
         FileUtil.writeFile(new File(EventsManagerConstants.EVENT_EXPORT_LOCATION, "All_Events.txt").getAbsolutePath(),
                 new Gson().toJson(listMap) + "\n" + new Gson().toJson(events));
@@ -315,7 +329,7 @@ public class EventsManagerFragment extends BaseFragment {
             holder.itemView.setOnLongClickListener(v -> {
                 new MaterialAlertDialogBuilder(context)
                         .setTitle(name)
-                        .setItems(new String[]{"Edit", "Export", "Delete"}, (dialog, which) -> {
+                        .setItems(new String[]{Helper.getResString(R.string.common_word_edit), Helper.getResString(R.string.common_word_export), Helper.getResString(R.string.common_word_delete)}, (dialog, which) -> {
                             switch (which) {
                                 case 0:
                                     showEditListenerDialog(position);

@@ -43,7 +43,11 @@ public class LocalLibrariesUtil {
             writeFile(localLibFile.getAbsolutePath(), "[]");
             return new ArrayList<>();
         }
-        return new Gson().fromJson(fileContent, Helper.TYPE_MAP_LIST);
+        try {
+            return new Gson().fromJson(fileContent, Helper.TYPE_MAP_LIST);
+        } catch (com.google.gson.JsonSyntaxException e) {
+            return new ArrayList<>();
+        }
     }
 
     public static void deleteSelectedLocalLibraries(String scId, List<LocalLibrary> localLibraries, ArrayList<HashMap<String, Object>> projectUsedLibs) {

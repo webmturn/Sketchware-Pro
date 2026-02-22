@@ -1,6 +1,7 @@
 package pro.sketchware.utility;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import java.util.ArrayList;
 
@@ -29,7 +30,10 @@ public class FileResConfig {
         String permissions = FileUtil.readFile(fpu.getPathPermission(numProj));
         if (permissions.isEmpty()) return;
 
-        listFilePermission = new Gson().fromJson(FileUtil.readFile(fpu.getPathPermission(numProj)), Helper.TYPE_STRING);
+        try {
+            listFilePermission = new Gson().fromJson(FileUtil.readFile(fpu.getPathPermission(numProj)), Helper.TYPE_STRING);
+        } catch (JsonSyntaxException ignored) {
+        }
     }
 
     public ArrayList<String> getNativelibsFile(String str) {
@@ -73,7 +77,10 @@ public class FileResConfig {
         String readFile = FileUtil.readFile(fpu.getPathImport(numProj));
         if (readFile.isEmpty()) return listFileImport;
 
-        listFileImport = new Gson().fromJson(readFile, Helper.TYPE_STRING);
+        try {
+            listFileImport = new Gson().fromJson(readFile, Helper.TYPE_STRING);
+        } catch (JsonSyntaxException ignored) {
+        }
 
         return listFileImport;
     }
@@ -90,7 +97,10 @@ public class FileResConfig {
         String readFile = FileUtil.readFile(fpu.getManifestJava(numProj));
         if (readFile.isEmpty()) return listJavaManifest;
 
-        listJavaManifest = new Gson().fromJson(readFile, Helper.TYPE_STRING);
+        try {
+            listJavaManifest = new Gson().fromJson(readFile, Helper.TYPE_STRING);
+        } catch (JsonSyntaxException ignored) {
+        }
 
         return listJavaManifest;
     }
@@ -99,7 +109,10 @@ public class FileResConfig {
         String readFile = FileUtil.readFile(fpu.getManifestBroadcast(numProj));
         if (readFile.isEmpty()) return listBroadcastManifest;
 
-        listBroadcastManifest = new Gson().fromJson(readFile, Helper.TYPE_STRING);
+        try {
+            listBroadcastManifest = new Gson().fromJson(readFile, Helper.TYPE_STRING);
+        } catch (JsonSyntaxException ignored) {
+        }
 
         return listBroadcastManifest;
     }
@@ -108,7 +121,10 @@ public class FileResConfig {
         String readFile = FileUtil.readFile(fpu.getManifestService(numProj));
         if (readFile.isEmpty()) return listServiceManifest;
 
-        listServiceManifest = new Gson().fromJson(readFile, Helper.TYPE_STRING);
+        try {
+            listServiceManifest = new Gson().fromJson(readFile, Helper.TYPE_STRING);
+        } catch (JsonSyntaxException ignored) {
+        }
 
         return listServiceManifest;
     }

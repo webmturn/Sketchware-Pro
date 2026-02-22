@@ -22,7 +22,12 @@ public class ExtraBlockFile {
     public static ArrayList<HashMap<String, Object>> buildInBlocks = new ArrayList<>();
 
     public static ArrayList<HashMap<String, Object>> getExtraBlockData() {
-        ArrayList<HashMap<String, Object>> extraBlocks = new Gson().fromJson(getExtraBlockFile(), Helper.TYPE_MAP_LIST);
+        ArrayList<HashMap<String, Object>> extraBlocks;
+        try {
+            extraBlocks = new Gson().fromJson(getExtraBlockFile(), Helper.TYPE_MAP_LIST);
+        } catch (com.google.gson.JsonSyntaxException e) {
+            extraBlocks = new ArrayList<>();
+        }
 
         buildInBlocks.clear();
         BlocksHandler.builtInBlocks(buildInBlocks);

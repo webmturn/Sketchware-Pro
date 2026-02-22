@@ -2,6 +2,7 @@ package pro.sketchware.fragments.settings.events.creator;
 
 import static pro.sketchware.utility.GsonUtils.getGson;
 
+import com.google.gson.JsonSyntaxException;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -165,7 +166,11 @@ public class EventsManagerCreatorFragment extends BaseFragment {
         ArrayList<HashMap<String, Object>> arrayList;
         String concat = FileUtil.getExternalStorageDir().concat("/.sketchware/data/system/events.json");
         if (FileUtil.isExistFile(concat)) {
-            arrayList = getGson().fromJson(FileUtil.readFile(concat), Helper.TYPE_MAP_LIST);
+            try {
+                arrayList = getGson().fromJson(FileUtil.readFile(concat), Helper.TYPE_MAP_LIST);
+            } catch (JsonSyntaxException e) {
+                arrayList = new ArrayList<>();
+            }
         } else {
             arrayList = new ArrayList<>();
         }
@@ -196,7 +201,12 @@ public class EventsManagerCreatorFragment extends BaseFragment {
     private int figureP(String str) {
         String concat = FileUtil.getExternalStorageDir().concat("/.sketchware/data/system/events.json");
         if (FileUtil.isExistFile(concat)) {
-            ArrayList<HashMap<String, Object>> arrayList = getGson().fromJson(FileUtil.readFile(concat), Helper.TYPE_MAP_LIST);
+            ArrayList<HashMap<String, Object>> arrayList;
+            try {
+                arrayList = getGson().fromJson(FileUtil.readFile(concat), Helper.TYPE_MAP_LIST);
+            } catch (JsonSyntaxException e) {
+                return 0;
+            }
             for (int i = 0; i < arrayList.size(); i++) {
                 if (str.equals(arrayList.get(i).get("name"))) {
                     return i;

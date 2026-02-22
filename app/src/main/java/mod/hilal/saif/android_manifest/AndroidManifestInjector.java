@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import mod.hey.studios.util.Helper;
+import pro.sketchware.R;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.SketchwareUtil;
 import pro.sketchware.xml.XmlBuilder;
@@ -194,7 +195,13 @@ public class AndroidManifestInjector {
 
         String path = getPathAndroidManifestActivitiesComponents(projectId).getAbsolutePath();
         if (FileUtil.isExistFile(path)) {
-            ArrayList<HashMap<String, Object>> data = getGson().fromJson(FileUtil.readFile(path), Helper.TYPE_MAP_LIST);
+            ArrayList<HashMap<String, Object>> data;
+            try {
+                data = getGson().fromJson(FileUtil.readFile(path), Helper.TYPE_MAP_LIST);
+            } catch (JsonParseException e) {
+                return m;
+            }
+            if (data == null) return m;
             for (int i = 0; i < data.size(); i++) {
                 HashMap<String, Object> activityComponents = data.get(i);
 

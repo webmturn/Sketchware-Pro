@@ -47,7 +47,11 @@ public class AppCompatInjection {
             toParse = getDefaultActivityInjections();
         }
 
-        return new Gson().fromJson(toParse, Helper.TYPE_MAP_LIST);
+        try {
+            return new Gson().fromJson(toParse, Helper.TYPE_MAP_LIST);
+        } catch (com.google.gson.JsonSyntaxException e) {
+            return new Gson().fromJson(getDefaultActivityInjections(), Helper.TYPE_MAP_LIST);
+        }
     }
 
     public static void refreshInjections() {

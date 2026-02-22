@@ -178,7 +178,12 @@ public class ProguardHandler {
     }
 
     public void setProguardEnabled(boolean proguardEnabled) {
-        HashMap<String, String> config = new Gson().fromJson(FileUtil.readFile(config_path), Helper.TYPE_STRING_MAP);
+        HashMap<String, String> config;
+        try {
+            config = new Gson().fromJson(FileUtil.readFile(config_path), Helper.TYPE_STRING_MAP);
+        } catch (JsonSyntaxException e) {
+            config = new HashMap<>();
+        }
         config.put("enabled", String.valueOf(proguardEnabled));
 
         FileUtil.writeFile(config_path, new Gson().toJson(config));
@@ -206,7 +211,12 @@ public class ProguardHandler {
     }
 
     public void setR8Enabled(boolean r8Enabled) {
-        var config = new Gson().fromJson(FileUtil.readFile(config_path), Helper.TYPE_STRING_MAP);
+        HashMap<String, String> config;
+        try {
+            config = new Gson().fromJson(FileUtil.readFile(config_path), Helper.TYPE_STRING_MAP);
+        } catch (JsonSyntaxException e) {
+            config = new HashMap<>();
+        }
         config.put("r8", String.valueOf(r8Enabled));
 
         FileUtil.writeFile(config_path, new Gson().toJson(config));
@@ -234,7 +244,12 @@ public class ProguardHandler {
     }
 
     public void setDebugEnabled(boolean debugEnabled) {
-        HashMap<String, String> config = new Gson().fromJson(FileUtil.readFile(config_path), Helper.TYPE_STRING_MAP);
+        HashMap<String, String> config;
+        try {
+            config = new Gson().fromJson(FileUtil.readFile(config_path), Helper.TYPE_STRING_MAP);
+        } catch (JsonSyntaxException e) {
+            config = new HashMap<>();
+        }
         config.put("debug", String.valueOf(debugEnabled));
 
         FileUtil.writeFile(config_path, new Gson().toJson(config));

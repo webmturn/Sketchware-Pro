@@ -3,6 +3,7 @@ package mod.hilal.saif.activities.android_manifest;
 import static pro.sketchware.utility.GsonUtils.getGson;
 
 import android.annotation.SuppressLint;
+import com.google.gson.JsonSyntaxException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -76,7 +77,12 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
     private void checkAttrs() {
         String path = FileUtil.getExternalStorageDir().concat("/.sketchware/data/").concat(sc_id).concat("/Injection/androidmanifest/attributes.json");
         if (FileUtil.isExistFile(path)) {
-            ArrayList<HashMap<String, Object>> data = getGson().fromJson(FileUtil.readFile(path), Helper.TYPE_MAP_LIST);
+            ArrayList<HashMap<String, Object>> data;
+            try {
+                data = getGson().fromJson(FileUtil.readFile(path), Helper.TYPE_MAP_LIST);
+            } catch (JsonSyntaxException e) {
+                return;
+            }
             for (int i = 0; i < data.size(); i++) {
                 String str = (String) data.get(i).get("name");
                 if (Objects.requireNonNull(str).equals("_application_attrs")) {
@@ -101,7 +107,7 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
         basicCategoryView.setTitle(null);
         options.add(basicCategoryView);
 
-        basicCategoryView.addLibraryItem(createOption("Application", "Default properties for the app", R.drawable.ic_mtrl_settings_applications, v -> {
+        basicCategoryView.addLibraryItem(createOption(Helper.getResString(R.string.manifest_option_application), Helper.getResString(R.string.manifest_option_application_desc), R.drawable.ic_mtrl_settings_applications, v -> {
             Intent intent = new Intent();
             intent.setClass(getApplicationContext(), AndroidManifestInjectionDetails.class);
             intent.putExtra("sc_id", sc_id);
@@ -109,7 +115,7 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
             intent.putExtra("type", "application");
             startActivity(intent);
         }), true);
-        basicCategoryView.addLibraryItem(createOption("Permissions", "Add custom Permissions to the app", R.drawable.ic_mtrl_shield_check, v -> {
+        basicCategoryView.addLibraryItem(createOption(Helper.getResString(R.string.manifest_option_permissions), Helper.getResString(R.string.manifest_option_permissions_desc), R.drawable.ic_mtrl_shield_check, v -> {
             Intent intent = new Intent();
             intent.setClass(getApplicationContext(), AndroidManifestInjectionDetails.class);
             intent.putExtra("sc_id", sc_id);
@@ -117,8 +123,8 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
             intent.putExtra("type", "permission");
             startActivity(intent);
         }), true);
-        basicCategoryView.addLibraryItem(createOption("Launcher Activity", "Change the default Launcher Activity", R.drawable.ic_mtrl_login, v -> showLauncherActDialog(AndroidManifestInjector.getLauncherActivity(sc_id))), true);
-        basicCategoryView.addLibraryItem(createOption("All Activities", "Add attributes for all Activities", R.drawable.ic_mtrl_frame_source, v -> {
+        basicCategoryView.addLibraryItem(createOption(Helper.getResString(R.string.manifest_option_launcher_activity), Helper.getResString(R.string.manifest_option_launcher_activity_desc), R.drawable.ic_mtrl_login, v -> showLauncherActDialog(AndroidManifestInjector.getLauncherActivity(sc_id))), true);
+        basicCategoryView.addLibraryItem(createOption(Helper.getResString(R.string.manifest_option_all_activities), Helper.getResString(R.string.manifest_option_all_activities_desc), R.drawable.ic_mtrl_frame_source, v -> {
             Intent intent = new Intent();
             intent.setClass(getApplicationContext(), AndroidManifestInjectionDetails.class);
             intent.putExtra("sc_id", sc_id);
@@ -126,7 +132,7 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
             intent.putExtra("type", "all");
             startActivity(intent);
         }), true);
-        basicCategoryView.addLibraryItem(createOption("App Components", "Add extra components", R.drawable.ic_mtrl_component, v -> showAppComponentDialog()), false);
+        basicCategoryView.addLibraryItem(createOption(Helper.getResString(R.string.manifest_option_app_components), Helper.getResString(R.string.manifest_option_app_components_desc), R.drawable.ic_mtrl_component, v -> showAppComponentDialog()), false);
 
         options.forEach(binding.cards::addView);
     }
@@ -147,7 +153,7 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
         intent.putExtra("content", APP_COMPONENTS_PATH);
         intent.putExtra("xml", "");
         intent.putExtra("disableHeader", "");
-        intent.putExtra("title", "App Components");
+        intent.putExtra("title", Helper.getResString(R.string.manifest_option_app_components));
         startActivity(intent);
     }
 
@@ -203,7 +209,10 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
         String path = FileUtil.getExternalStorageDir().concat("/.sketchware/data/").concat(sc_id).concat("/Injection/androidmanifest/attributes.json");
         ArrayList<HashMap<String, Object>> data = new ArrayList<>();
         if (FileUtil.isExistFile(path)) {
-            data = getGson().fromJson(FileUtil.readFile(path), Helper.TYPE_MAP_LIST);
+            try {
+                data = getGson().fromJson(FileUtil.readFile(path), Helper.TYPE_MAP_LIST);
+            } catch (JsonSyntaxException ignored) {
+            }
         }
         {
             HashMap<String, Object> _item = new HashMap<>();
@@ -259,7 +268,11 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
         ArrayList<String> temp = new ArrayList<>();
         ArrayList<HashMap<String, Object>> data;
         if (FileUtil.isExistFile(path)) {
-            data = getGson().fromJson(FileUtil.readFile(path), Helper.TYPE_MAP_LIST);
+            try {
+                data = getGson().fromJson(FileUtil.readFile(path), Helper.TYPE_MAP_LIST);
+            } catch (JsonSyntaxException e) {
+                return;
+            }
             for (int i = 0; i < data.size(); i++) {
                 if (!temp.contains(Objects.requireNonNull(data.get(i).get("name")).toString())) {
                     if (!Objects.requireNonNull(data.get(i).get("name")).equals("_application_attrs") && !Objects.requireNonNull(data.get(i).get("name")).equals("_apply_for_all_activities") && !Objects.requireNonNull(data.get(i).get("name")).equals("_application_permissions")) {
@@ -281,7 +294,11 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
         String activity_name = (String) activitiesListMap.get(pos).get("act_name");
         String path = FileUtil.getExternalStorageDir().concat("/.sketchware/data/").concat(sc_id).concat("/Injection/androidmanifest/attributes.json");
         ArrayList<HashMap<String, Object>> data;
-        data = getGson().fromJson(FileUtil.readFile(path), Helper.TYPE_MAP_LIST);
+        try {
+            data = getGson().fromJson(FileUtil.readFile(path), Helper.TYPE_MAP_LIST);
+        } catch (JsonSyntaxException e) {
+            return;
+        }
         for (int i = data.size() - 1; i > -1; i--) {
             String temp = (String) data.get(i).get("name");
             if (Objects.requireNonNull(temp).equals(activity_name)) {
@@ -298,7 +315,11 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
         String path = FileUtil.getExternalStorageDir().concat("/.sketchware/data/").concat(sc_id).concat("/Injection/androidmanifest/activities_components.json");
         ArrayList<HashMap<String, Object>> data;
         if (FileUtil.isExistFile(path)) {
-            data = getGson().fromJson(FileUtil.readFile(path), Helper.TYPE_MAP_LIST);
+            try {
+                data = getGson().fromJson(FileUtil.readFile(path), Helper.TYPE_MAP_LIST);
+            } catch (JsonSyntaxException e) {
+                return;
+            }
             for (int i = data.size() - 1; i > -1; i--) {
                 String name = (String) data.get(i).get("name");
                 if (Objects.requireNonNull(name).equals(str)) {

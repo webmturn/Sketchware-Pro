@@ -27,6 +27,7 @@ import com.google.gson.Gson;
 import org.cosmic.ide.dependency.resolver.api.Artifact;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -311,7 +312,12 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
                         SketchwareUtil.toast(Helper.getResString(R.string.toast_library_downloaded));
                         if (!notAssociatedWithProject) {
                             var fileContent = FileUtil.readFile(localLibFile);
-                            var enabledLibs = gson.fromJson(fileContent, Helper.TYPE_MAP_LIST);
+                            ArrayList<HashMap<String, Object>> enabledLibs;
+                            try {
+                                enabledLibs = gson.fromJson(fileContent, Helper.TYPE_MAP_LIST);
+                            } catch (com.google.gson.JsonSyntaxException e) {
+                                enabledLibs = new ArrayList<>();
+                            }
                             enabledLibs.addAll(dependencies.stream()
                                     .map(name -> createLibraryMap(name, dependencyName))
                                     .toList());

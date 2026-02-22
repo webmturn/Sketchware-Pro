@@ -2,6 +2,7 @@ package pro.sketchware.activities.editor.component;
 
 import static pro.sketchware.utility.GsonUtils.getGson;
 
+import com.google.gson.JsonSyntaxException;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -120,9 +121,12 @@ public class AddCustomComponentActivity extends BaseAppCompatActivity implements
 
     private void fillUp() {
         if (FileUtil.isExistFile(path)) {
-            ArrayList<HashMap<String, Object>> list = getGson().fromJson(FileUtil.readFile(path), Helper.TYPE_MAP_LIST);
-            HashMap<String, Object> map = list.get(position);
-            setupViews(map);
+            try {
+                ArrayList<HashMap<String, Object>> list = getGson().fromJson(FileUtil.readFile(path), Helper.TYPE_MAP_LIST);
+                HashMap<String, Object> map = list.get(position);
+                setupViews(map);
+            } catch (JsonSyntaxException ignored) {
+            }
         }
     }
 
@@ -184,7 +188,10 @@ public class AddCustomComponentActivity extends BaseAppCompatActivity implements
     private void save() {
         ArrayList<HashMap<String, Object>> list = new ArrayList<>();
         if (FileUtil.isExistFile(path)) {
-            list = getGson().fromJson(FileUtil.readFile(path), Helper.TYPE_MAP_LIST);
+            try {
+                list = getGson().fromJson(FileUtil.readFile(path), Helper.TYPE_MAP_LIST);
+            } catch (JsonSyntaxException ignored) {
+            }
         }
         HashMap<String, Object> map = new HashMap<>();
         if (isEditMode) {

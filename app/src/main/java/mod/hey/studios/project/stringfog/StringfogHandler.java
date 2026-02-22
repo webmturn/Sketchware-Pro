@@ -49,7 +49,12 @@ public class StringfogHandler {
     }
 
     public void setStringfogEnabled(boolean enabled) {
-        HashMap<String, String> config = new Gson().fromJson(FileUtil.readFile(config_path), Helper.TYPE_STRING_MAP);
+        HashMap<String, String> config;
+        try {
+            config = new Gson().fromJson(FileUtil.readFile(config_path), Helper.TYPE_STRING_MAP);
+        } catch (Exception e) {
+            config = new HashMap<>();
+        }
         config.put("enabled", Boolean.valueOf(enabled).toString());
 
         FileUtil.writeFile(config_path, new Gson().toJson(config));

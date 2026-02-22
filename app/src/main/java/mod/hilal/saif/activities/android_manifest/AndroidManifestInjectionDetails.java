@@ -3,6 +3,7 @@ package mod.hilal.saif.activities.android_manifest;
 import static pro.sketchware.utility.GsonUtils.getGson;
 import static pro.sketchware.utility.SketchwareUtil.getDip;
 
+import com.google.gson.JsonSyntaxException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -86,7 +87,11 @@ public class AndroidManifestInjectionDetails extends BaseAppCompatActivity {
         listMap.clear();
         ArrayList<HashMap<String, Object>> data;
         if (FileUtil.isExistFile(ATTRIBUTES_FILE_PATH)) {
-            data = getGson().fromJson(FileUtil.readFile(ATTRIBUTES_FILE_PATH), Helper.TYPE_MAP_LIST);
+            try {
+                data = getGson().fromJson(FileUtil.readFile(ATTRIBUTES_FILE_PATH), Helper.TYPE_MAP_LIST);
+            } catch (JsonSyntaxException e) {
+                return;
+            }
             for (HashMap<String, Object> item : data) {
                 String str = (String) item.get("name");
                 if (str.equals(constant)) {
@@ -100,21 +105,21 @@ public class AndroidManifestInjectionDetails extends BaseAppCompatActivity {
 
     private void setToolbar() {
         String str = switch (type) {
-            case "all" -> "Attributes for all activities";
-            case "application" -> "Application Attributes";
-            case "permission" -> "Application Permissions";
+            case "all" -> Helper.getResString(R.string.manifest_attrs_all_activities);
+            case "application" -> Helper.getResString(R.string.manifest_attrs_application);
+            case "permission" -> Helper.getResString(R.string.manifest_attrs_permissions);
             default -> activityName;
         };
         binding.toolbar.setTitle(str);
 
         binding.toolbar.setNavigationOnClickListener(Helper.getBackPressedClickListener(this));
 
-        if (!str.equals("Attributes for all activities") && !str.equals("Application Attributes") && !str.equals("Application Permissions")) {
+        if (!type.equals("all") && !type.equals("application") && !type.equals("permission")) {
             binding.toolbar.setOnMenuItemClickListener(item -> {
                 if (item.getItemId() == R.id.asd_components) {
                     Intent intent = new Intent(this, SrcCodeEditor.class);
                     intent.putExtra(SrcCodeEditor.FLAG_FROM_ANDROID_MANIFEST, true);
-                    intent.putExtra("title", activityName + " Components");
+                    intent.putExtra("title", String.format(Helper.getResString(R.string.manifest_components_title_format), activityName));
                     intent.putExtra("sc_id", src_id);
                     intent.putExtra("activity_name", activityName);
                     startActivity(intent);
@@ -146,7 +151,7 @@ public class AndroidManifestInjectionDetails extends BaseAppCompatActivity {
 
     private void showAddDial() {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
-        dialog.setTitle(type.equals("permission") ? "Add new permission" : "Add new attribute");
+        dialog.setTitle(type.equals("permission") ? R.string.manifest_add_permission : R.string.manifest_add_attribute);
         CustomDialogAttributeBinding attributeBinding = CustomDialogAttributeBinding.inflate(getLayoutInflater());
         dialog.setView(attributeBinding.getRoot());
         if (type.equals("permission")) {
@@ -170,7 +175,11 @@ public class AndroidManifestInjectionDetails extends BaseAppCompatActivity {
     private void applyChange() {
         ArrayList<HashMap<String, Object>> data;
         if (FileUtil.isExistFile(ATTRIBUTES_FILE_PATH)) {
-            data = getGson().fromJson(FileUtil.readFile(ATTRIBUTES_FILE_PATH), Helper.TYPE_MAP_LIST);
+            try {
+                data = getGson().fromJson(FileUtil.readFile(ATTRIBUTES_FILE_PATH), Helper.TYPE_MAP_LIST);
+            } catch (JsonSyntaxException e) {
+                data = new ArrayList<>();
+            }
             for (int i = data.size() - 1; i > -1; i--) {
                 String str = (String) data.get(i).get("name");
                 if (str.equals(constant)) {
