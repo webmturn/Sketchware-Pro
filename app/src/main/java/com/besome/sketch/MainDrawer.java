@@ -113,9 +113,12 @@ public class MainDrawer extends NavigationView {
     }
 
     private void openUrl(String url) {
-        Activity activity = unwrap(getContext());
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        activity.startActivity(intent);
+        try {
+            Activity activity = unwrap(getContext());
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            activity.startActivity(intent);
+        } catch (android.content.ActivityNotFoundException ignored) {
+        }
     }
 
     private Activity unwrap(Context context) {

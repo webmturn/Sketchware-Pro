@@ -141,8 +141,11 @@ public class ProgramInfoActivity extends BaseAppCompatActivity {
         binding.appVersion.setText(GB.e(getApplicationContext()));
         binding.btnReset.setOnClickListener(this::resetDialog);
         binding.btnUpgrade.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Helper.getResString(R.string.link_github_release)));
-            startActivity(intent);
+            try {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Helper.getResString(R.string.link_github_release)));
+                startActivity(intent);
+            } catch (android.content.ActivityNotFoundException ignored) {
+            }
         });
 
         addTwoLineItem(ITEM_DOCS_LOG, R.string.program_information_title_docs, R.string.link_docs_url);
@@ -167,7 +170,10 @@ public class ProgramInfoActivity extends BaseAppCompatActivity {
     }
 
     private void openUrl(String url) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        startActivity(intent);
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(intent);
+        } catch (android.content.ActivityNotFoundException ignored) {
+        }
     }
 }

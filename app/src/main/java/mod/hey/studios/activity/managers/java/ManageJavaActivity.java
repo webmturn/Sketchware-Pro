@@ -533,9 +533,12 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
                     }
                     case MENU_EDIT -> goEditFile(position);
                     case MENU_EDIT_WITH -> {
-                        Intent launchIntent = new Intent(Intent.ACTION_VIEW);
-                        launchIntent.setDataAndType(Uri.fromFile(new File(getItem(position))), "text/plain");
-                        startActivity(launchIntent);
+                        try {
+                            Intent launchIntent = new Intent(Intent.ACTION_VIEW);
+                            launchIntent.setDataAndType(Uri.fromFile(new File(getItem(position))), "text/plain");
+                            startActivity(launchIntent);
+                        } catch (android.content.ActivityNotFoundException ignored) {
+                        }
                     }
                     case MENU_RENAME -> showRenameDialog(position);
                     case MENU_DELETE_ITEM -> showDeleteDialog(position);

@@ -161,8 +161,12 @@ public class ProjectPreviewActivity extends BaseAppCompatActivity {
     }
 
     private void openProject() {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse("https://web.sketchub.in/p/" + project.getId()));
-        startActivity(intent);
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse("https://web.sketchub.in/p/" + project.getId()));
+            startActivity(intent);
+        } catch (android.content.ActivityNotFoundException e) {
+            SketchwareUtil.toastError("No browser app found");
+        }
     }
 }

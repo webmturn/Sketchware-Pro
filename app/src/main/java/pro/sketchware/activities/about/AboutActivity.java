@@ -56,7 +56,10 @@ public class AboutActivity extends BaseAppCompatActivity {
         binding.discordButton.setOnClickListener(v -> {
             String discordLink = aboutAppData.getDiscordInviteLink().getValue();
             if (discordLink != null) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(discordLink)));
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(discordLink)));
+                } catch (android.content.ActivityNotFoundException ignored) {
+                }
             }
         });
         AboutAdapter adapter = new AboutAdapter(this);

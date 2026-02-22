@@ -354,12 +354,13 @@ public class ManageAssetsActivity extends BaseAppCompatActivity {
 
                 startActivity(launchIntent);
             } else {
-                Intent viewIntent = new Intent(Intent.ACTION_VIEW);
-
-                viewIntent.setDataAndType(Uri.fromFile(new File(getItem(position))), "*/*");
-                viewIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                startActivity(viewIntent);
+                try {
+                    Intent viewIntent = new Intent(Intent.ACTION_VIEW);
+                    viewIntent.setDataAndType(Uri.fromFile(new File(getItem(position))), "*/*");
+                    viewIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(viewIntent);
+                } catch (android.content.ActivityNotFoundException ignored) {
+                }
             }
         }
 

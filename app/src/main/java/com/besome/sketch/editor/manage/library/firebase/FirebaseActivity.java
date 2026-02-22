@@ -272,9 +272,12 @@ public class FirebaseActivity extends BaseAppCompatActivity implements View.OnCl
         dialog.setMessage(R.string.message_compatible_chrome_brower);
         dialog.setPositiveButton(R.string.common_word_ok, (v, which) -> {
             if (!mB.a()) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("market://details?id=com.android.chrome"));
-                startActivity(intent);
+                try {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse("market://details?id=com.android.chrome"));
+                    startActivity(intent);
+                } catch (android.content.ActivityNotFoundException ignored) {
+                }
                 v.dismiss();
             }
         });

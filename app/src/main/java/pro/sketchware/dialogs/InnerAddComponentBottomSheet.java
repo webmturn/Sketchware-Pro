@@ -270,9 +270,12 @@ public class InnerAddComponentBottomSheet extends BottomSheetDialogFragment {
         dialog.setMessage(Helper.getResString(R.string.message_compatible_chrome_brower));
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_ok), (v, which) -> {
             if (!mB.a()) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("market://details?id=com.android.chrome"));
-                startActivity(intent);
+                try {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse("market://details?id=com.android.chrome"));
+                    startActivity(intent);
+                } catch (android.content.ActivityNotFoundException ignored) {
+                }
                 v.dismiss();
             }
         });

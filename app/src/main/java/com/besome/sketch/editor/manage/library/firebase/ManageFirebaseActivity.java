@@ -104,9 +104,12 @@ public class ManageFirebaseActivity extends BaseAppCompatActivity implements Vie
         dialog.setTitle(Helper.getResString(R.string.title_compatible_chrome_browser));
         dialog.setMessage(Helper.getResString(R.string.message_compatible_chrome_brower));
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_ok), (v, which) -> {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse("market://details?id=com.android.chrome"));
-            startActivity(intent);
+            try {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("market://details?id=com.android.chrome"));
+                startActivity(intent);
+            } catch (android.content.ActivityNotFoundException ignored) {
+            }
             v.dismiss();
         });
         dialog.setNegativeButton(Helper.getResString(R.string.common_word_cancel), null);

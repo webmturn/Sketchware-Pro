@@ -158,35 +158,35 @@ public class ExtraPaletteBlock {
     private void variables() {
         ArrayList<String> booleanVariables = ProjectDataManager.getProjectDataManager(sc_id).e(javaName, 0);
         for (int i = 0; i < booleanVariables.size(); i++) {
-            if (i == 0) logicEditor.a("Boolean", getTitleBgColor());
+            if (i == 0) logicEditor.a(Helper.getResString(R.string.logic_editor_category_boolean), getTitleBgColor());
 
             logicEditor.a(booleanVariables.get(i), "b", "getVar").setTag(booleanVariables.get(i));
         }
 
         ArrayList<String> numberVariables = ProjectDataManager.getProjectDataManager(sc_id).e(javaName, 1);
         for (int i = 0; i < numberVariables.size(); i++) {
-            if (i == 0) logicEditor.a("Number", getTitleBgColor());
+            if (i == 0) logicEditor.a(Helper.getResString(R.string.logic_editor_category_number), getTitleBgColor());
 
             logicEditor.a(numberVariables.get(i), "d", "getVar").setTag(numberVariables.get(i));
         }
 
         ArrayList<String> stringVariables = ProjectDataManager.getProjectDataManager(sc_id).e(javaName, 2);
         for (int i = 0; i < stringVariables.size(); i++) {
-            if (i == 0) logicEditor.a("String", getTitleBgColor());
+            if (i == 0) logicEditor.a(Helper.getResString(R.string.logic_editor_category_string), getTitleBgColor());
 
             logicEditor.a(stringVariables.get(i), "s", "getVar").setTag(stringVariables.get(i));
         }
 
         ArrayList<String> mapVariables = ProjectDataManager.getProjectDataManager(sc_id).e(javaName, 3);
         for (int i = 0; i < mapVariables.size(); i++) {
-            if (i == 0) logicEditor.a("Map", getTitleBgColor());
+            if (i == 0) logicEditor.a(Helper.getResString(R.string.logic_editor_category_map), getTitleBgColor());
 
             logicEditor.a(mapVariables.get(i), "a", "getVar").setTag(mapVariables.get(i));
         }
 
         ArrayList<String> customVariables = ProjectDataManager.getProjectDataManager(sc_id).e(javaName, 5);
         for (int i = 0; i < customVariables.size(); i++) {
-            if (i == 0) logicEditor.a("Custom Variable", getTitleBgColor());
+            if (i == 0) logicEditor.a(Helper.getResString(R.string.logic_editor_category_custom_variable), getTitleBgColor());
 
             String[] split = customVariables.get(i).split(" ");
             if (split.length > 1) {
@@ -198,7 +198,7 @@ public class ExtraPaletteBlock {
 
         ArrayList<String> customVariables2 = ProjectDataManager.getProjectDataManager(sc_id).e(javaName, 6);
         for (int i = 0; i < customVariables2.size(); i++) {
-            if (i == 0) logicEditor.a("Custom Variable", getTitleBgColor());
+            if (i == 0) logicEditor.a(Helper.getResString(R.string.logic_editor_category_custom_variable), getTitleBgColor());
 
             String variable = customVariables2.get(i);
             String variableType = CustomVariableUtil.getVariableType(variable);
@@ -213,7 +213,7 @@ public class ExtraPaletteBlock {
                 };
                 logicEditor.a(variableName, type, variableType, "getVar").setTag(variable);
             } else {
-                logicEditor.a("Invalid: " + variable, getColor(logicEditor, R.attr.colorError));
+                logicEditor.a(String.format(Helper.getResString(R.string.logic_editor_invalid_label), variable), getColor(logicEditor, R.attr.colorError));
             }
         }
         BlocksHandler.primaryBlocksA(
@@ -236,7 +236,7 @@ public class ExtraPaletteBlock {
             ComponentBean component = components.get(i);
 
             if (i == 0) {
-                logicEditor.a("Components", getTitleBgColor());
+                logicEditor.a(Helper.getResString(R.string.logic_editor_category_components), getTitleBgColor());
             }
 
             if (component.type != 27) {
@@ -261,7 +261,7 @@ public class ExtraPaletteBlock {
                     ViewBean customView = customViews.get(i);
 
                     if (i == 0) {
-                        logicEditor.a("Custom Views", getTitleBgColor());
+                        logicEditor.a(Helper.getResString(R.string.logic_editor_category_custom_views), getTitleBgColor());
                     }
 
                     if (!customView.convert.equals("include")) {
@@ -284,7 +284,7 @@ public class ExtraPaletteBlock {
             Set<String> toNotAdd = new LayoutGenerator(new BuildConfig(), projectFile).readAttributesToReplace(view);
 
             if (i == 0) {
-                logicEditor.a("Views", getTitleBgColor());
+                logicEditor.a(Helper.getResString(R.string.logic_editor_category_views), getTitleBgColor());
             }
 
             if (!view.convert.equals("include")) {
@@ -304,7 +304,7 @@ public class ExtraPaletteBlock {
                     ViewBean drawerView = drawerViews.get(i);
 
                     if (i == 0) {
-                        logicEditor.a("Drawer Views", getTitleBgColor());
+                        logicEditor.a(Helper.getResString(R.string.logic_editor_category_drawer_views), getTitleBgColor());
                     }
 
                     if (!drawerView.convert.equals("include")) {
@@ -320,28 +320,28 @@ public class ExtraPaletteBlock {
     private void blockEvents() {
         switch (eventName) {
             case "onTabAdded", "onTabLayoutNewTabAdded" -> {
-                logicEditor.a("Fragment & TabLayout", getTitleBgColor());
+                logicEditor.a(Helper.getResString(R.string.logic_editor_category_fragment_tablayout), getTitleBgColor());
                 logicEditor.a("f", "returnTitle");
             }
             case "onFragmentAdded" -> {
-                logicEditor.a("Fragment & TabLayout", getTitleBgColor());
+                logicEditor.a(Helper.getResString(R.string.logic_editor_category_fragment_tablayout), getTitleBgColor());
                 logicEditor.a("f", "returnFragment");
             }
             case "onScrollChanged" -> {
-                logicEditor.a("ListView", getTitleBgColor());
+                logicEditor.a(Helper.getResString(R.string.logic_editor_category_listview), getTitleBgColor());
                 logicEditor.a("d", "listscrollparam");
                 logicEditor.a("d", "getLastVisiblePosition");
             }
             case "onScrollChanged2" -> {
-                logicEditor.a("RecyclerView", getTitleBgColor());
+                logicEditor.a(Helper.getResString(R.string.logic_editor_category_recyclerview), getTitleBgColor());
                 logicEditor.a("d", "recyclerscrollparam");
             }
             case "onPageChanged" -> {
-                logicEditor.a("ViewPager", getTitleBgColor());
+                logicEditor.a(Helper.getResString(R.string.logic_editor_category_viewpager), getTitleBgColor());
                 logicEditor.a("d", "pagerscrollparam");
             }
             case "onCreateOptionsMenu" -> {
-                logicEditor.a("Menu", getTitleBgColor());
+                logicEditor.a(Helper.getResString(R.string.logic_editor_category_menu), getTitleBgColor());
                 logicEditor.a(" ", "menuInflater");
                 logicEditor.a(" ", "menuAddItem");
                 logicEditor.a(" ", "menuAddMenuItem");
@@ -365,7 +365,7 @@ public class ExtraPaletteBlock {
                     if (variableName != null) {
                         logicEditor.a(variableName, "l", "List", "getVar").setTag(name);
                     } else {
-                        logicEditor.a("Invalid: " + name, getColor(logicEditor, R.attr.colorError));
+                        logicEditor.a(String.format(Helper.getResString(R.string.logic_editor_invalid_label), name), getColor(logicEditor, R.attr.colorError));
                     }
                 }
             }
@@ -387,7 +387,7 @@ public class ExtraPaletteBlock {
             if (paletteId == 3) {
                 logicEditor.a(" ", "addSourceDirectly");
             } else {
-                logicEditor.a("Enter the path without import & semicolon", getTitleBgColor());
+                logicEditor.a(Helper.getResString(R.string.extra_menu_import_hint), getTitleBgColor());
                 logicEditor.a(" ", "customImport");
                 logicEditor.a(" ", "customImport2");
             }
@@ -401,10 +401,10 @@ public class ExtraPaletteBlock {
                 StringsEditorManager stringsEditorManager = new StringsEditorManager();
                 stringsEditorManager.convertXmlStringsToListMap(FileUtil.readFileIfExist(filePath), StringsListMap);
 
-                logicEditor.b("Open Resources editor", "openResourcesEditor");
+                logicEditor.b(Helper.getResString(R.string.logic_editor_panel_button_open_resources_editor), "openResourcesEditor");
 
                 logicEditor.a("s", "getResString");
-                logicEditor.a("Saved Res Strings :", getTitleBgColor());
+                logicEditor.a(Helper.getResString(R.string.logic_editor_category_saved_res_strings), getTitleBgColor());
                 if (!stringsEditorManager.isXmlStringsExist(StringsListMap, "app_name")) {
                     logicEditor.a("app_name", "s", "getResStr").setTag("S98ZCSapp_name");
                 }
@@ -415,16 +415,16 @@ public class ExtraPaletteBlock {
                 }
                 return;
             case 0:
-                logicEditor.b("Add variable", "variableAdd");
-                logicEditor.b("Add custom variable", "variableAddNew", clickListener);
-                logicEditor.b("Remove variable", "variableRemove", clickListener);
+                logicEditor.b(Helper.getResString(R.string.logic_editor_panel_button_add_variable), "variableAdd");
+                logicEditor.b(Helper.getResString(R.string.logic_editor_panel_button_add_custom_variable), "variableAddNew", clickListener);
+                logicEditor.b(Helper.getResString(R.string.logic_editor_panel_button_remove_variable), "variableRemove", clickListener);
                 variables();
                 return;
 
             case 1:
-                logicEditor.b("Add list", "listAdd");
-                logicEditor.b("Add custom List", "listAddCustom", clickListener);
-                logicEditor.b("Remove list", "listRemove", clickListener);
+                logicEditor.b(Helper.getResString(R.string.logic_editor_panel_button_add_list), "listAdd");
+                logicEditor.b(Helper.getResString(R.string.logic_editor_panel_button_add_custom_list), "listAddCustom", clickListener);
+                logicEditor.b(Helper.getResString(R.string.logic_editor_panel_button_remove_list), "listRemove", clickListener);
                 list();
                 return;
 

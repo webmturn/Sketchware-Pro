@@ -404,9 +404,12 @@ public class ManageResourceActivity extends BaseAppCompatActivity {
                     switch (item.getTitle().toString()) {
                         case "Edit with..." -> {
                             if (frc.listFileResource.get(position).endsWith("xml")) {
-                                Intent intent = new Intent(Intent.ACTION_VIEW);
-                                intent.setDataAndType(Uri.fromFile(new File(frc.listFileResource.get(position))), "text/plain");
-                                startActivity(intent);
+                                try {
+                                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                                    intent.setDataAndType(Uri.fromFile(new File(frc.listFileResource.get(position))), "text/plain");
+                                    startActivity(intent);
+                                } catch (android.content.ActivityNotFoundException ignored) {
+                                }
                             } else {
                                 SketchwareUtil.toast(Helper.getResString(R.string.toast_only_xml_editable));
                             }
