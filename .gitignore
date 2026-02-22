@@ -69,3 +69,4 @@ fastlane/readme.md
 .androidide/
 /actions-runner
 release/
+app/libs/
