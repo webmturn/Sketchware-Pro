@@ -7,31 +7,19 @@ import android.graphics.ColorMatrixColorFilter;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.text.SpannableStringBuilder;
-import android.text.style.ForegroundColorSpan;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.Transformation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import java.util.ArrayList;
 
 public class mB {
   public static long a;
   
   public static SpannableStringBuilder a(Context paramContext, String paramString) {
-    tB tB = new tB(paramContext);
-    tB.a(paramString);
-    SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(paramString);
-    while (true) {
-      int i = tB.d();
-      if (i != -1) {
-        if (i != 2 && i != 3 && i != 4 && i != 5 && i != 6)
-          continue; 
-        spannableStringBuilder.setSpan(new ForegroundColorSpan(tB.a[i]), tB.b(), tB.b() + tB.a(), 33);
-        continue;
-      } 
-      return spannableStringBuilder;
-    } 
+    return new SpannableStringBuilder(paramString);
   }
   
   public static void a(Context paramContext, EditText paramEditText) {
@@ -45,23 +33,45 @@ public class mB {
   
   public static void a(View paramView, int paramInt, Animation.AnimationListener paramAnimationListener) {
     paramView.measure(-1, -2);
-    int i = paramView.getMeasuredHeight();
+    int targetHeight = paramView.getMeasuredHeight();
     (paramView.getLayoutParams()).height = 1;
-    paramView.setVisibility(0);
-    kB kB = new kB(paramView, i);
+    paramView.setVisibility(View.VISIBLE);
+    Animation expandAnim = new Animation() {
+      @Override
+      protected void applyTransformation(float interpolatedTime, Transformation t) {
+        paramView.getLayoutParams().height = interpolatedTime == 1
+            ? ViewGroup.LayoutParams.WRAP_CONTENT
+            : (int)(targetHeight * interpolatedTime);
+        paramView.requestLayout();
+      }
+      @Override
+      public boolean willChangeBounds() { return true; }
+    };
     if (paramAnimationListener != null)
-      kB.setAnimationListener(paramAnimationListener); 
-    kB.setDuration(((int)(i / (paramView.getContext().getResources().getDisplayMetrics()).density) * paramInt));
-    paramView.startAnimation((Animation)kB);
+      expandAnim.setAnimationListener(paramAnimationListener);
+    expandAnim.setDuration(((int)(targetHeight / (paramView.getContext().getResources().getDisplayMetrics()).density) * paramInt));
+    paramView.startAnimation(expandAnim);
   }
   
   public static void a(View paramView, Animation.AnimationListener paramAnimationListener) {
-    int i = paramView.getMeasuredHeight();
-    lB lB = new lB(paramView, i);
+    int initialHeight = paramView.getMeasuredHeight();
+    Animation collapseAnim = new Animation() {
+      @Override
+      protected void applyTransformation(float interpolatedTime, Transformation t) {
+        if (interpolatedTime == 1) {
+          paramView.setVisibility(View.GONE);
+        } else {
+          paramView.getLayoutParams().height = initialHeight - (int)(initialHeight * interpolatedTime);
+          paramView.requestLayout();
+        }
+      }
+      @Override
+      public boolean willChangeBounds() { return true; }
+    };
     if (paramAnimationListener != null)
-      lB.setAnimationListener(paramAnimationListener); 
-    lB.setDuration((int)(i / (paramView.getContext().getResources().getDisplayMetrics()).density));
-    paramView.startAnimation((Animation)lB);
+      collapseAnim.setAnimationListener(paramAnimationListener);
+    collapseAnim.setDuration((int)(initialHeight / (paramView.getContext().getResources().getDisplayMetrics()).density));
+    paramView.startAnimation(collapseAnim);
   }
   
   public static void a(ImageView paramImageView, int paramInt) {
@@ -78,33 +88,10 @@ public class mB {
   }
   
   public static SpannableStringBuilder b(Context paramContext, String paramString) {
-    IB iB = new IB(paramContext);
-    SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(paramString);
-    iB.b(paramString);
-    while (true) {
-      int i = iB.c();
-      if (i != -1) {
-        if (i != 2 && i != 4 && i != 5)
-          continue; 
-        spannableStringBuilder.setSpan(new ForegroundColorSpan(IB.a[i]), iB.b(), iB.b() + iB.a(), 33);
-        continue;
-      } 
-      ArrayList<int[]> arrayList = iB.a(paramString);
-      for (i = 0; i < arrayList.size(); i++) {
-        int[] arrayOfInt = arrayList.get(i);
-        spannableStringBuilder.setSpan(new ForegroundColorSpan(IB.a[3]), arrayOfInt[0], arrayOfInt[1], 33);
-      } 
-      return spannableStringBuilder;
-    } 
+    return new SpannableStringBuilder(paramString);
   }
   
   public static void b(View paramView, Animation.AnimationListener paramAnimationListener) {
     a(paramView, 1, paramAnimationListener);
   }
 }
-
-
-/* Location:              C:\Users\Administrator\IdeaProjects\Sketchware-Pro\app\libs\a.a.a-notimportant-classes.jar!\a\a\a\mB.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       1.1.3
- */
