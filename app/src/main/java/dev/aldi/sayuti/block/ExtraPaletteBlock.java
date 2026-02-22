@@ -911,7 +911,7 @@ public class ExtraPaletteBlock {
                 boolean calendarViewUsed = isWidgetUsed("CalendarView");
 
                 if (timePickerUsed || calendarViewUsed) {
-                    logicEditor.a("Date & Time", getTitleBgColor());
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_date_time), getTitleBgColor());
 
                     if (timePickerUsed) {
                         logicEditor.a(" ", "timepickerSetHour");
@@ -937,7 +937,7 @@ public class ExtraPaletteBlock {
             return;
 
             case 7:
-                logicEditor.b("Add component", "componentAdd");
+                logicEditor.b(Helper.getResString(R.string.logic_editor_panel_button_add_component), "componentAdd");
                 logicEditor.a(" ", "changeStatebarColour");
                 logicEditor.a(" ", "LightStatusBar");
                 logicEditor.a(" ", "showKeyboard");

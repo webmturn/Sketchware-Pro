@@ -2118,6 +2118,7 @@ Do you want to continue?"</string>
     <string name="logic_editor_category_androidx_components">AndroidX components</string>
     <string name="logic_editor_category_library">Library</string>
     <string name="logic_editor_category_google">Google</string>
+    <string name="logic_editor_category_date_time">Date &amp; Time</string>
     <string name="logic_editor_category_function">Function</string>
     <string name="logic_editor_category_intent">Intent</string>
     <string name="logic_editor_category_broadcast">Broadcast</string>
