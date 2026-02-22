@@ -353,7 +353,7 @@ public class BlockPane extends RelativeLayout {
     for (byte b = 0; b < i; b++) {
       View view = getChildAt(b);
       if (view instanceof Rs) {
-        byte b1;
+        byte b1 = -1;
         BlockBean blockBean = ((Rs)view).getBean();
         String str = blockBean.opCode;
         switch (str.hashCode()) {
@@ -529,7 +529,7 @@ public class BlockPane extends RelativeLayout {
   
   public Object[] b(Rs paramRs, int paramInt1, int paramInt2) {
     byte b;
-    Object[] arrayOfObject;
+    Object[] arrayOfObject = null;
     if (paramRs.fa) {
       b = 40;
     } else {
@@ -541,7 +541,7 @@ public class BlockPane extends RelativeLayout {
     paramInt1 = 0;
     paramInt2 = i;
     while (paramInt1 < this.e.size()) {
-      Object[] arrayOfObject2;
+      Object[] arrayOfObject2 = null;
       Object[] arrayOfObject1 = this.e.get(paramInt1);
       int[] arrayOfInt = (int[])arrayOfObject1[0];
       Point point = new Point(point2.x - arrayOfInt[0], point2.y - arrayOfInt[1]);
@@ -639,7 +639,7 @@ public class BlockPane extends RelativeLayout {
     for (byte b = 0; b < i; b++) {
       View view = getChildAt(b);
       if (view instanceof Rs) {
-        byte b1;
+        byte b1 = -1;
         BlockBean blockBean = ((Rs)view).getBean();
         String str = blockBean.opCode;
         switch (str.hashCode()) {

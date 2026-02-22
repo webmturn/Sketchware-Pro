@@ -50,7 +50,7 @@ public class Mp extends Lp {
       e(); 
   }
   
-  public void a(String paramString, ArrayList<BlockBean> paramArrayList, boolean paramBoolean) {
+  public void a(String paramString, ArrayList<BlockBean> paramArrayList, boolean paramBoolean) throws yy {
     if (this.e == null)
       a(); 
     if (this.g == null)

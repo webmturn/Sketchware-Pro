@@ -84,7 +84,7 @@ public class Ss extends Ts {
   }
   
   public final String a(String paramString) {
-    String str1;
+    String str1 = "";
     String str2 = kq.b(paramString);
     paramString = str2;
     if (str2.length() > 0) {

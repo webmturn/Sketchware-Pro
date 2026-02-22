@@ -143,7 +143,7 @@ public class AddFontActivity extends BaseDialogActivity implements View.OnClickL
                             }
                         }
                     } else {
-                        throw e;
+                        throw new RuntimeException(e);
                     }
                 }
             }

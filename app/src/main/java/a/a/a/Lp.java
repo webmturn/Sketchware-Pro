@@ -71,8 +71,8 @@ public abstract class Lp {
     try {
       this.c.b(this.a);
       this.c.b(this.a, stringBuilder.toString());
-    } catch (IOException iOException) {
-      iOException.printStackTrace();
+    } catch (Exception exception) {
+      exception.printStackTrace();
     } 
   }
 }

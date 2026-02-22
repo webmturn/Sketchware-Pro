@@ -7,15 +7,15 @@ import com.besome.sketch.beans.SelectableBean;
 public class uw implements View.OnClickListener {
   public final xw.a a;
   
-  public final xw.a.a b;
+  public final xw.a.ViewHolder b;
   
-  public uw(xw.a.a parama, xw.a parama1) {
+  public uw(xw.a.ViewHolder parama, xw.a parama1) {
     this.a = parama1;
     this.b = parama;
   }
   
   public void onClick(View paramView) {
-    xw.a.a a1 = this.b;
+    xw.a.ViewHolder a1 = this.b;
     a1.z.c = a1.getLayoutPosition();
     if (this.b.z.d.j.booleanValue()) {
       CheckBox checkBox = this.b.t;

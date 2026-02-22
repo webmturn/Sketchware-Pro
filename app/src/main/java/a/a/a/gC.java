@@ -10,7 +10,7 @@ import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 
 public class gC {
-  public final String a = "dataParser";
+  public final String TAG = "dataParser";
   
   public String b;
   
@@ -20,7 +20,7 @@ public class gC {
   
   public Gson e = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
   
-  public gC(String paramString) {
+  public gC(String paramString) throws Exception {
     try {
       f(paramString);
       return;
@@ -170,7 +170,7 @@ public class gC {
     return result;
   }
   
-  public final void f(String paramString) {
+  public final void f(String paramString) throws Exception {
     String str = paramString.trim();
     if (str.contains(".xml")) {
       int i = str.indexOf(".xml") + 4;

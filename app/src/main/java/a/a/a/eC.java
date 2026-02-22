@@ -59,10 +59,11 @@ public class eC {
     } 
     int j = arrayList.size();
     int i;
+    int m = 0;
     for (i = 0; i < j - 1; i++) {
       for (int k = 0; k < j - i - 1; k = m) {
         int n = ((ViewBean)arrayList.get(k)).index;
-        int m = k + 1;
+        m = k + 1;
         if (n > ((ViewBean)arrayList.get(m)).index) {
           ViewBean viewBean = arrayList.get(k);
           arrayList.set(k, arrayList.get(m));
@@ -86,10 +87,11 @@ public class eC {
     } 
     int j = arrayList.size();
     int i;
+    int m = 0;
     for (i = 0; i < j - 1; i++) {
       for (int k = 0; k < j - i - 1; k = m) {
         int n = ((ViewBean)arrayList.get(k)).index;
-        int m = k + 1;
+        m = k + 1;
         if (n > ((ViewBean)arrayList.get(m)).index) {
           ViewBean viewBean = arrayList.get(k);
           arrayList.set(k, arrayList.get(m));
@@ -127,9 +129,9 @@ public class eC {
     Iterator<ViewBean> iterator = d(str1).iterator();
     while (iterator.hasNext())
       arrayList.add(((ViewBean)iterator.next()).id); 
-    iterator = (Iterator)e(str2).iterator();
-    while (iterator.hasNext())
-      arrayList.add(((ComponentBean)iterator.next()).componentId); 
+    Iterator iteratorComp = e(str2).iterator();
+    while (iteratorComp.hasNext())
+      arrayList.add(((ComponentBean)iteratorComp.next()).componentId); 
     return (ArrayList)arrayList;
   }
   
@@ -209,7 +211,7 @@ public class eC {
     for (String str : arrayList6)
       this.e.remove(str); 
     ArrayList<String> arrayList4 = new ArrayList();
-    Iterator<Map.Entry> iterator3 = this.f.entrySet().iterator();
+    Iterator iterator3 = this.f.entrySet().iterator();
     while (iterator3.hasNext()) {
       String str = (String)((Map.Entry)iterator3.next()).getKey();
       if (!paramhC.c(str))
@@ -218,7 +220,7 @@ public class eC {
     for (String str : arrayList4)
       this.f.remove(str); 
     arrayList4 = new ArrayList<String>();
-    Iterator<Map.Entry> iterator1 = this.g.entrySet().iterator();
+    Iterator iterator1 = this.g.entrySet().iterator();
     while (iterator1.hasNext()) {
       String str = (String)((Map.Entry)iterator1.next()).getKey();
       if (!paramhC.c(str))
@@ -236,7 +238,7 @@ public class eC {
     for (String str : arrayList1)
       this.h.remove(str); 
     ArrayList<String> arrayList5 = new ArrayList();
-    Iterator<Map.Entry> iterator2 = this.i.entrySet().iterator();
+    Iterator iterator2 = this.i.entrySet().iterator();
     while (iterator2.hasNext()) {
       String str = (String)((Map.Entry)iterator2.next()).getKey();
       if (!paramhC.c(str))
@@ -251,9 +253,9 @@ public class eC {
         arrayList3.add(str);
         continue;
       } 
-      Iterator<Map.Entry> iterator = ((HashMap)entry.getValue()).entrySet().iterator();
+      Iterator iterator = ((HashMap)entry.getValue()).entrySet().iterator();
       while (iterator.hasNext()) {
-        label128: for (BlockBean blockBean : ((Map.Entry)iterator.next()).getValue()) {
+        label128: for (BlockBean blockBean : (ArrayList<BlockBean>)((Map.Entry)iterator.next()).getValue()) {
           if (blockBean.opCode.equals("intentSetScreen")) {
             Iterator<ProjectFileBean> iterator6 = paramhC.b().iterator();
             while (iterator6.hasNext()) {
@@ -271,11 +273,11 @@ public class eC {
   
   public void a(kC paramkC) {
     ArrayList arrayList = paramkC.k();
-    Iterator<Map.Entry> iterator = this.d.entrySet().iterator();
+    Iterator iterator = this.d.entrySet().iterator();
     while (iterator.hasNext()) {
-      Iterator<Map.Entry> iterator1 = ((HashMap)((Map.Entry)iterator.next()).getValue()).entrySet().iterator();
+      Iterator iterator1 = ((HashMap)((Map.Entry)iterator.next()).getValue()).entrySet().iterator();
       while (iterator1.hasNext()) {
-        for (BlockBean blockBean : ((Map.Entry)iterator1.next()).getValue()) {
+        for (BlockBean blockBean : (ArrayList<BlockBean>)((Map.Entry<String, ArrayList<BlockBean>>)iterator1.next()).getValue()) {
           if ("setTypeface".equals(blockBean.opCode) && arrayList.indexOf(blockBean.parameters.get(1)) < 0)
             blockBean.parameters.set(1, "default_font"); 
         } 
@@ -354,7 +356,6 @@ public class eC {
                       } 
                       continue label68;
                     } 
-                    break;
                   } 
                 } 
                 continue;
@@ -372,7 +373,7 @@ public class eC {
   public void a(ProjectLibraryBean paramProjectLibraryBean) {
     if (paramProjectLibraryBean.useYn.equals("Y"))
       return; 
-    Iterator<Map.Entry> iterator = this.h.entrySet().iterator();
+    Iterator iterator = this.h.entrySet().iterator();
     while (iterator.hasNext()) {
       String str = (String)((Map.Entry)iterator.next()).getKey();
       g(str, 6);
@@ -396,12 +397,12 @@ public class eC {
           a(projectFileBean, viewBean); 
       } 
     } 
-    Iterator<Map.Entry> iterator = this.h.entrySet().iterator();
+    Iterator iterator = this.h.entrySet().iterator();
     while (iterator.hasNext())
       g((String)((Map.Entry)iterator.next()).getKey(), 13); 
   }
   
-  public void a(BufferedReader paramBufferedReader) {
+  public void a(BufferedReader paramBufferedReader) throws java.io.IOException {
     HashMap<String, ArrayList<Pair<Integer, String>>> hashMap4 = this.e;
     if (hashMap4 != null)
       hashMap4.clear(); 
@@ -484,7 +485,7 @@ public class eC {
     Map map = this.d.get(paramString1);
     if (map == null)
       return; 
-    label44: for (Map.Entry entry : map.entrySet()) {
+    label44: for (Map.Entry<String, ArrayList<BlockBean>> entry : ((Map<String, ArrayList<BlockBean>>)map).entrySet()) {
       if (paramBoolean && ((String)entry.getKey()).substring(((String)entry.getKey()).lastIndexOf("_") + 1).equals("onBindCustomView"))
         continue; 
       ArrayList<BlockBean> arrayList = (ArrayList)entry.getValue();
@@ -518,7 +519,6 @@ public class eC {
                 } 
                 continue label42;
               } 
-              break;
             } 
           } 
           continue;
@@ -544,7 +544,7 @@ public class eC {
     Pair pair = new Pair(paramString2, paramString3);
     if (!this.g.containsKey(paramString1))
       this.g.put(paramString1, new ArrayList<Pair<String, String>>()); 
-    ((ArrayList<Pair>)this.g.get(paramString1)).add(pair);
+    ((ArrayList)this.g.get(paramString1)).add(pair);
   }
   
   public void a(String paramString1, String paramString2, ArrayList<BlockBean> paramArrayList) {
@@ -562,9 +562,13 @@ public class eC {
           continue; 
         Iterator<Pair> iterator = arrayList.iterator();
         String str;
+        StringBuilder stringBuilder1 = new StringBuilder();
+ 
         for (str = ""; iterator.hasNext(); str = stringBuilder1.toString()) {
+ 
           Pair pair = iterator.next();
-          StringBuilder stringBuilder1 = new StringBuilder();
+ 
+          stringBuilder1 = new StringBuilder();
           stringBuilder1.append(str);
           stringBuilder1.append(pair.first);
           stringBuilder1.append(":");
@@ -589,9 +593,13 @@ public class eC {
           continue; 
         Iterator<Pair> iterator = arrayList.iterator();
         String str;
+        StringBuilder stringBuilder1 = new StringBuilder();
+ 
         for (str = ""; iterator.hasNext(); str = stringBuilder1.toString()) {
+ 
           Pair pair = iterator.next();
-          StringBuilder stringBuilder1 = new StringBuilder();
+ 
+          stringBuilder1 = new StringBuilder();
           stringBuilder1.append(str);
           stringBuilder1.append(pair.first);
           stringBuilder1.append(":");
@@ -616,9 +624,13 @@ public class eC {
           continue; 
         Iterator<Pair> iterator = arrayList.iterator();
         String str;
+        StringBuilder stringBuilder1 = new StringBuilder();
+ 
         for (str = ""; iterator.hasNext(); str = stringBuilder1.toString()) {
+ 
           Pair pair = iterator.next();
-          StringBuilder stringBuilder1 = new StringBuilder();
+ 
+          stringBuilder1 = new StringBuilder();
           stringBuilder1.append(str);
           stringBuilder1.append((String)pair.first);
           stringBuilder1.append(":");
@@ -643,10 +655,11 @@ public class eC {
           continue; 
         Iterator<ComponentBean> iterator = arrayList.iterator();
         String str;
+        StringBuilder stringBuilder1 = new StringBuilder();
         for (str = ""; iterator.hasNext(); str = stringBuilder1.toString()) {
           ComponentBean componentBean = iterator.next();
           componentBean.clearClassInfo();
-          StringBuilder stringBuilder1 = new StringBuilder();
+          stringBuilder1 = new StringBuilder();
           stringBuilder1.append(str);
           stringBuilder1.append(this.k.toJson(componentBean));
           stringBuilder1.append("\n");
@@ -668,10 +681,9 @@ public class eC {
         if (arrayList == null || arrayList.size() <= 0)
           continue; 
         Iterator<EventBean> iterator = arrayList.iterator();
-        String str;
-        for (str = ""; iterator.hasNext(); str = stringBuilder1.toString()) {
+        StringBuilder stringBuilder1 = new StringBuilder();
+        for (String str = ""; iterator.hasNext(); str = stringBuilder1.toString()) {
           EventBean eventBean = iterator.next();
-          StringBuilder stringBuilder1 = new StringBuilder();
           stringBuilder1.append(str);
           stringBuilder1.append(this.k.toJson(eventBean));
           stringBuilder1.append("\n");
@@ -683,7 +695,7 @@ public class eC {
         stringBuilder.append("events");
         paramStringBuffer.append(stringBuilder.toString());
         paramStringBuffer.append("\n");
-        paramStringBuffer.append(str);
+        paramStringBuffer.append(stringBuilder1.toString());
         paramStringBuffer.append("\n");
       }  
     HashMap<String, HashMap<String, ArrayList<BlockBean>>> hashMap = this.d;
@@ -693,15 +705,15 @@ public class eC {
         HashMap hashMap5 = (HashMap)entry.getValue();
         if (hashMap5 == null || hashMap5.size() <= 0)
           continue; 
-        for (Map.Entry entry1 : hashMap5.entrySet()) {
+        for (Map.Entry<String, ArrayList<BlockBean>> entry1 : ((HashMap<String, ArrayList<BlockBean>>)hashMap5).entrySet()) {
           ArrayList arrayList = (ArrayList)entry1.getValue();
           if (arrayList == null || arrayList.size() <= 0)
             continue; 
           Iterator<BlockBean> iterator = arrayList.iterator();
+          StringBuilder stringBuilder1 = new StringBuilder();
           String str1;
           for (str1 = ""; iterator.hasNext(); str1 = stringBuilder1.toString()) {
             BlockBean blockBean = iterator.next();
-            StringBuilder stringBuilder1 = new StringBuilder();
             stringBuilder1.append(str1);
             stringBuilder1.append(this.k.toJson(blockBean));
             stringBuilder1.append("\n");
@@ -725,7 +737,7 @@ public class eC {
     ArrayList arrayList = this.g.get(paramString1);
     if (arrayList == null)
       return ""; 
-    for (Pair pair : arrayList) {
+    for (Pair pair : (ArrayList<Pair>)arrayList) {
       if (((String)pair.first).equals(paramString2))
         return (String)pair.second; 
     } 
@@ -739,7 +751,7 @@ public class eC {
     ArrayList arrayList = this.h.get(paramString);
     if (arrayList == null)
       return arrayList1; 
-    for (ComponentBean componentBean : arrayList) {
+    for (ComponentBean componentBean : (ArrayList<ComponentBean>)arrayList) {
       if (componentBean.type == paramInt)
         arrayList1.add(componentBean.componentId); 
     } 
@@ -788,9 +800,9 @@ public class eC {
   
   public void b(kC paramkC) {
     ArrayList arrayList = paramkC.m();
-    Iterator<Map.Entry> iterator1 = this.c.entrySet().iterator();
+    Iterator iterator1 = this.c.entrySet().iterator();
     while (iterator1.hasNext()) {
-      for (ViewBean viewBean : ((Map.Entry)iterator1.next()).getValue()) {
+      for (ViewBean viewBean : (ArrayList<ViewBean>)((Map.Entry)iterator1.next()).getValue()) {
         if (arrayList.indexOf(viewBean.layout.backgroundResource) < 0)
           viewBean.layout.backgroundResource = null; 
         if (arrayList.indexOf(viewBean.image.resName) < 0)
@@ -803,11 +815,11 @@ public class eC {
       if (arrayList.indexOf(viewBean.image.resName) < 0)
         viewBean.image.resName = "NONE"; 
     } 
-    Iterator<Map.Entry> iterator2 = this.d.entrySet().iterator();
+    Iterator iterator2 = this.d.entrySet().iterator();
     while (iterator2.hasNext()) {
-      Iterator<Map.Entry> iterator = ((HashMap)((Map.Entry)iterator2.next()).getValue()).entrySet().iterator();
+      Iterator iterator = ((HashMap)((Map.Entry)iterator2.next()).getValue()).entrySet().iterator();
       while (iterator.hasNext()) {
-        for (BlockBean blockBean : ((Map.Entry)iterator.next()).getValue()) {
+        for (BlockBean blockBean : (ArrayList<BlockBean>)((Map.Entry)iterator.next()).getValue()) {
           if ("setImage".equals(blockBean.opCode)) {
             if (arrayList.indexOf(blockBean.parameters.get(1)) < 0)
               blockBean.parameters.set(1, "default_image"); 
@@ -837,7 +849,7 @@ public class eC {
     } 
   }
   
-  public void b(BufferedReader paramBufferedReader) {
+  public void b(BufferedReader paramBufferedReader) throws java.io.IOException {
     HashMap<String, ArrayList<ViewBean>> hashMap1 = this.c;
     if (hashMap1 != null)
       hashMap1.clear(); 
@@ -875,7 +887,7 @@ public class eC {
     Pair pair = new Pair(Integer.valueOf(paramInt), paramString2);
     if (!this.f.containsKey(paramString1))
       this.f.put(paramString1, new ArrayList<Pair<Integer, String>>()); 
-    ((ArrayList<Pair>)this.f.get(paramString1)).add(pair);
+    ((ArrayList)this.f.get(paramString1)).add(pair);
   }
   
   public void b(String paramString, ComponentBean paramComponentBean) {
@@ -952,10 +964,10 @@ public class eC {
     Map map = this.d.get(paramString1);
     if (map == null)
       return false; 
-    for (Map.Entry entry : map.entrySet()) {
+    for (Map.Entry<String, ArrayList<BlockBean>> entry : ((Map<String, ArrayList<BlockBean>>)map).entrySet()) {
       if (((String)entry.getKey()).equals(paramString3))
         continue; 
-      for (BlockBean blockBean : entry.getValue()) {
+      for (BlockBean blockBean : (ArrayList<BlockBean>)entry.getValue()) {
         Gx gx = blockBean.getClassInfo();
         if (gx != null && gx.b() && blockBean.spec.equals(paramString2))
           return true; 
@@ -992,7 +1004,7 @@ public class eC {
       return arrayList1; 
     Iterator iterator = arrayList.iterator();
     while (iterator.hasNext())
-      arrayList1.add(((Pair)iterator.next()).second); 
+      arrayList1.add((String)((Pair)iterator.next()).second); 
     return arrayList1;
   }
   
@@ -1003,7 +1015,7 @@ public class eC {
     ArrayList arrayList = this.h.get(paramString);
     if (arrayList == null)
       return arrayList1; 
-    for (ComponentBean componentBean : arrayList) {
+    for (ComponentBean componentBean : (ArrayList<ComponentBean>)arrayList) {
       if (componentBean.type == paramInt)
         arrayList1.add(componentBean); 
     } 
@@ -1012,11 +1024,11 @@ public class eC {
   
   public void c(kC paramkC) {
     ArrayList arrayList = paramkC.p();
-    Iterator<Map.Entry> iterator = this.d.entrySet().iterator();
+    Iterator iterator = this.d.entrySet().iterator();
     while (iterator.hasNext()) {
-      Iterator<Map.Entry> iterator1 = ((HashMap)((Map.Entry)iterator.next()).getValue()).entrySet().iterator();
+      Iterator iterator1 = ((HashMap)((Map.Entry)iterator.next()).getValue()).entrySet().iterator();
       while (iterator1.hasNext()) {
-        for (BlockBean blockBean : ((Map.Entry)iterator1.next()).getValue()) {
+        for (BlockBean blockBean : (ArrayList<BlockBean>)((Map.Entry)iterator1.next()).getValue()) {
           if (blockBean.opCode.equals("mediaplayerCreate") && arrayList.indexOf(blockBean.parameters.get(1)) < 0)
             blockBean.parameters.set(1, ""); 
           if (blockBean.opCode.equals("soundpoolLoad") && arrayList.indexOf(blockBean.parameters.get(1)) < 0)
@@ -1030,7 +1042,7 @@ public class eC {
     Pair pair = new Pair(Integer.valueOf(paramInt), paramString2);
     if (!this.e.containsKey(paramString1))
       this.e.put(paramString1, new ArrayList<Pair<Integer, String>>()); 
-    ((ArrayList<Pair>)this.e.get(paramString1)).add(pair);
+    ((ArrayList)this.e.get(paramString1)).add(pair);
   }
   
   public boolean c() {
@@ -1047,10 +1059,10 @@ public class eC {
     Map map = this.d.get(paramString1);
     if (map == null)
       return false; 
-    for (Map.Entry entry : map.entrySet()) {
+    for (Map.Entry<String, ArrayList<BlockBean>> entry : ((Map<String, ArrayList<BlockBean>>)map).entrySet()) {
       if (((String)entry.getKey()).equals(paramString3))
         continue; 
-      for (BlockBean blockBean : entry.getValue()) {
+      for (BlockBean blockBean : (ArrayList<BlockBean>)entry.getValue()) {
         Gx gx = blockBean.getClassInfo();
         if (gx != null && gx.c() && blockBean.spec.equals(paramString2))
           return true; 
@@ -1081,9 +1093,9 @@ public class eC {
     ArrayList arrayList = this.f.get(paramString);
     if (arrayList == null)
       return arrayList1; 
-    for (Pair pair : arrayList) {
+    for (Pair pair : (ArrayList<Pair>)arrayList) {
       if (((Integer)pair.first).intValue() == paramInt)
-        arrayList1.add(pair.second); 
+        arrayList1.add((String)pair.second); 
     } 
     return arrayList1;
   }
@@ -1093,7 +1105,7 @@ public class eC {
     ArrayList arrayList = this.c.get(paramString1);
     if (arrayList == null)
       return arrayList1; 
-    for (ViewBean viewBean : arrayList) {
+    for (ViewBean viewBean : (ArrayList<ViewBean>)arrayList) {
       Pair<Integer, String> pair;
       if (paramString2.equals("CheckBox")) {
         if (viewBean.getClassInfo().a("CompoundButton")) {
@@ -1171,7 +1183,7 @@ public class eC {
     ArrayList arrayList = this.h.get(paramString1);
     if (arrayList == null)
       return false; 
-    for (ComponentBean componentBean : arrayList) {
+    for (ComponentBean componentBean : (ArrayList<ComponentBean>)arrayList) {
       if (componentBean.type == paramInt && componentBean.componentId.equals(paramString2))
         return true; 
     } 
@@ -1189,9 +1201,9 @@ public class eC {
     ArrayList arrayList = this.e.get(paramString);
     if (arrayList == null)
       return arrayList1; 
-    for (Pair pair : arrayList) {
+    for (Pair pair : (ArrayList<Pair>)arrayList) {
       if (((Integer)pair.first).intValue() == paramInt)
-        arrayList1.add(pair.second); 
+        arrayList1.add((String)pair.second); 
     } 
     return arrayList1;
   }
@@ -1222,7 +1234,7 @@ public class eC {
     ArrayList arrayList = this.f.get(paramString1);
     if (arrayList == null)
       return false; 
-    for (Pair pair : arrayList) {
+    for (Pair pair : (ArrayList<Pair>)arrayList) {
       if (((Integer)pair.first).intValue() == paramInt && ((String)pair.second).equals(paramString2))
         return true; 
     } 
@@ -1233,7 +1245,7 @@ public class eC {
     ArrayList arrayList = this.c.get(paramString1);
     if (arrayList == null)
       return false; 
-    for (ViewBean viewBean : arrayList) {
+    for (ViewBean viewBean : (ArrayList<ViewBean>)arrayList) {
       if (viewBean.getClassInfo().a("CompoundButton") && viewBean.id.equals(paramString2))
         return true; 
     } 
@@ -1245,7 +1257,7 @@ public class eC {
     ArrayList arrayList = this.c.get(paramString);
     if (arrayList == null)
       return arrayList1; 
-    for (ViewBean viewBean : arrayList) {
+    for (ViewBean viewBean : (ArrayList<ViewBean>)arrayList) {
       if (viewBean.type == 9 || viewBean.type == 10 || viewBean.type == 25 || viewBean.type == 48 || viewBean.type == 31) {
         String str = viewBean.customView;
         if (str != null && str.length() > 0 && !viewBean.customView.equals("none"))
@@ -1291,7 +1303,7 @@ public class eC {
     ArrayList arrayList = this.e.get(paramString1);
     if (arrayList == null)
       return false; 
-    for (Pair pair : arrayList) {
+    for (Pair pair : (ArrayList<Pair>)arrayList) {
       if (((Integer)pair.first).intValue() == paramInt && ((String)pair.second).equals(paramString2))
         return true; 
     } 
@@ -1302,7 +1314,7 @@ public class eC {
     Map map = this.d.get(paramString1);
     if (map == null)
       return false; 
-    for (Map.Entry entry : map.entrySet()) {
+    for (Map.Entry<String, ArrayList<BlockBean>> entry : ((Map<String, ArrayList<BlockBean>>)map).entrySet()) {
       String str = (String)entry.getKey();
       StringBuilder stringBuilder = new StringBuilder();
       stringBuilder.append(paramString2);
@@ -1310,7 +1322,7 @@ public class eC {
       stringBuilder.append("moreBlock");
       if (str.equals(stringBuilder.toString()))
         continue; 
-      for (BlockBean blockBean : entry.getValue()) {
+      for (BlockBean blockBean : (ArrayList<BlockBean>)entry.getValue()) {
         if (blockBean.opCode.equals("definedFunc")) {
           int i = blockBean.spec.indexOf(" ");
           str = blockBean.spec;
@@ -1366,7 +1378,7 @@ public class eC {
     ArrayList arrayList = this.c.get(paramString1);
     if (arrayList == null)
       return false; 
-    for (ViewBean viewBean : arrayList) {
+    for (ViewBean viewBean : (ArrayList<ViewBean>)arrayList) {
       if (viewBean.type == paramInt && viewBean.id.equals(paramString2))
         return true; 
     } 
@@ -1377,7 +1389,7 @@ public class eC {
     ArrayList arrayList = this.c.get(paramString1);
     if (arrayList == null)
       return false; 
-    for (ViewBean viewBean : arrayList) {
+    for (ViewBean viewBean : (ArrayList<ViewBean>)arrayList) {
       if (viewBean.getClassInfo().a("TextView") && viewBean.id.equals(paramString2))
         return true; 
     } 
@@ -1644,7 +1656,7 @@ public class eC {
     ArrayList arrayList = this.g.get(paramString1);
     if (arrayList == null)
       return; 
-    for (Pair pair : arrayList) {
+    for (Pair pair : (ArrayList<Pair>)arrayList) {
       if (((String)pair.first).equals(paramString2)) {
         arrayList.remove(pair);
         break;
@@ -1671,7 +1683,7 @@ public class eC {
     ArrayList arrayList = this.f.get(paramString1);
     if (arrayList == null)
       return; 
-    for (Pair pair : arrayList) {
+    for (Pair pair : (ArrayList<Pair>)arrayList) {
       if (((String)pair.second).equals(paramString2)) {
         arrayList.remove(pair);
         break;
@@ -1685,7 +1697,7 @@ public class eC {
     ArrayList arrayList = this.e.get(paramString1);
     if (arrayList == null)
       return; 
-    for (Pair pair : arrayList) {
+    for (Pair pair : (ArrayList<Pair>)arrayList) {
       if (((String)pair.second).equals(paramString2)) {
         arrayList.remove(pair);
         break;

@@ -585,7 +585,7 @@ public class BuiltInLibraries {
             /* Create the directories */
             fileUtil.f(dexsDirectoryPath);
             /* Extract dexs.zip to dexs/ */
-            new KB().a(dexsArchivePath, dexsDirectoryPath);
+            try { new KB().a(dexsArchivePath, dexsDirectoryPath); } catch (java.io.FileNotFoundException e) { throw new RuntimeException(e); }
         }
         if (ProjectBuilder.hasFileChanged(baseAssetsPath + libsArchiveName, libsArchivePath)) {
             for (BuildProgressReceiver receiver : progressReceivers) {
@@ -596,7 +596,7 @@ public class BuiltInLibraries {
             /* Create the directories */
             fileUtil.f(libsDirectoryPath);
             /* Extract libs.zip to libs/ */
-            new KB().a(libsArchivePath, libsDirectoryPath);
+            try { new KB().a(libsArchivePath, libsDirectoryPath); } catch (java.io.FileNotFoundException e) { throw new RuntimeException(e); }
         }
         maybeExtractCoreLambdaStubsJar();
         if (ProjectBuilder.hasFileChanged(baseAssetsPath + testkeyArchiveName, testkeyArchivePath)) {
@@ -608,7 +608,7 @@ public class BuiltInLibraries {
             /* Create the directories */
             fileUtil.f(testkeyDirectoryPath);
             /* Extract testkey.zip to testkey/ */
-            new KB().a(testkeyArchivePath, testkeyDirectoryPath);
+            try { new KB().a(testkeyArchivePath, testkeyDirectoryPath); } catch (java.io.FileNotFoundException e) { throw new RuntimeException(e); }
         }
     }
 
@@ -622,7 +622,7 @@ public class BuiltInLibraries {
             /* Delete android.jar */
             new oB().c(EXTRACTED_COMPILE_ASSETS_PATH.getAbsolutePath() + File.separator + "android.jar");
             /* Extract android.jar.zip to android.jar */
-            new KB().a(androidJarPath, EXTRACTED_COMPILE_ASSETS_PATH.getAbsolutePath());
+            try { new KB().a(androidJarPath, EXTRACTED_COMPILE_ASSETS_PATH.getAbsolutePath()); } catch (java.io.FileNotFoundException e) { throw new RuntimeException(e); }
         }
     }
 

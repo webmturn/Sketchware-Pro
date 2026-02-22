@@ -53,7 +53,7 @@ public class oB {
     return l;
   }
   
-  public String a(byte[] paramArrayOfbyte) {
+  public String a(byte[] paramArrayOfbyte) throws Exception {
     return new String(b(paramArrayOfbyte), "UTF-8");
   }
   
@@ -87,7 +87,7 @@ public class oB {
     a(paramFile, true);
   }
   
-  public void a(File paramFile1, File paramFile2) {
+  public void a(File paramFile1, File paramFile2) throws IOException {
     StringBuilder stringBuilder;
     if (paramFile1.isDirectory()) {
       if (paramFile2.exists() || paramFile2.mkdirs()) {
@@ -172,7 +172,7 @@ public class oB {
       f(paramString.substring(0, i)); 
     File file = new File(paramString);
     if (!file.exists())
-      file.createNewFile(); 
+      try { file.createNewFile(); } catch (IOException e) { e.printStackTrace(); } 
     FileOutputStream fos = null;
     try {
       fos = new FileOutputStream(file);
@@ -217,7 +217,7 @@ public class oB {
       f(paramString1.substring(0, i)); 
     File file = new File(paramString1);
     if (!file.exists())
-      file.createNewFile(); 
+      try { file.createNewFile(); } catch (IOException e) { e.printStackTrace(); } 
     FileWriter fw = null;
     try {
       fw = new FileWriter(file, false);
@@ -229,7 +229,7 @@ public class oB {
     }
   }
   
-  public byte[] b(byte[] paramArrayOfbyte) {
+  public byte[] b(byte[] paramArrayOfbyte) throws Exception {
     Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
     byte[] arrayOfByte = "sketchwaresecure".getBytes();
     cipher.init(2, new SecretKeySpec(arrayOfByte, "AES"), new IvParameterSpec(arrayOfByte));
@@ -257,14 +257,14 @@ public class oB {
     b(new File(paramString));
   }
   
-  public byte[] c(byte[] paramArrayOfbyte) {
+  public byte[] c(byte[] paramArrayOfbyte) throws Exception {
     Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
     byte[] arrayOfByte = "sketchwaresecure".getBytes();
     cipher.init(1, new SecretKeySpec(arrayOfByte, "AES"), new IvParameterSpec(arrayOfByte));
     return cipher.doFinal(paramArrayOfbyte);
   }
   
-  public byte[] d(String paramString) {
+  public byte[] d(String paramString) throws Exception {
     return c(paramString.getBytes("UTF-8"));
   }
   

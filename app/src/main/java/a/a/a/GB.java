@@ -24,13 +24,11 @@ public class GB {
   }
   
   public static String a() {
-    String str;
+    String str = "";
     if (Build.VERSION.SDK_INT >= 21) {
       String[] arrayOfString = Build.SUPPORTED_ABIS;
-      if (arrayOfString != null) {
+      if (arrayOfString != null && arrayOfString.length > 0) {
         str = arrayOfString[0];
-      } else {
-        arrayOfString = null;
       } 
     } else {
       str = Build.CPU_ABI;

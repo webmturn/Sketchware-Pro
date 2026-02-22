@@ -8,16 +8,16 @@ import com.besome.sketch.editor.manage.view.ManageViewActivity;
 public class vw implements View.OnLongClickListener {
   public final xw.a a;
   
-  public final xw.a.a b;
+  public final xw.a.ViewHolder b;
   
-  public vw(xw.a.a parama, xw.a parama1) {
+  public vw(xw.a.ViewHolder parama, xw.a parama1) {
     this.a = parama1;
     this.b = parama;
   }
   
   public boolean onLongClick(View paramView) {
     ((ManageViewActivity)this.b.z.d.getActivity()).a(true);
-    xw.a.a a1 = this.b;
+    xw.a.ViewHolder a1 = this.b;
     a1.z.c = a1.getLayoutPosition();
     CheckBox checkBox = this.b.t;
     checkBox.setChecked(checkBox.isChecked() ^ true);

@@ -64,7 +64,7 @@ public class kC {
     b();
   }
   
-  public void a(BufferedReader paramBufferedReader) {
+  public void a(BufferedReader paramBufferedReader) throws java.io.IOException {
     StringBuffer stringBuffer = new StringBuffer();
     String str = "";
     while (true) {

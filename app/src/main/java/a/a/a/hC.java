@@ -85,7 +85,7 @@ public class hC {
     } 
   }
   
-  public void a(BufferedReader paramBufferedReader) {
+  public void a(BufferedReader paramBufferedReader) throws java.io.IOException {
     StringBuffer stringBuffer = new StringBuffer();
     String str = "";
     while (true) {
@@ -115,7 +115,7 @@ public class hC {
   }
   
   public void a(String paramString1, String paramString2) {
-    ProjectFileBean projectFileBean;
+    ProjectFileBean projectFileBean = null;
     if (paramString1.equals("activity")) {
       paramString1 = paramString2;
       if (paramString2.length() <= 0)

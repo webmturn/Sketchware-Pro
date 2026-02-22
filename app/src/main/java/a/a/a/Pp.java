@@ -39,7 +39,7 @@ public class Pp extends Lp {
     return null;
   }
   
-  public void a(String paramString1, String paramString2, ArrayList<BlockBean> paramArrayList, boolean paramBoolean) {
+  public void a(String paramString1, String paramString2, ArrayList<BlockBean> paramArrayList, boolean paramBoolean) throws yy {
     if (this.e == null)
       a(); 
     if (this.g == null)

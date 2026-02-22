@@ -43,7 +43,7 @@ public class iC {
     this.e = paramProjectLibraryBean;
   }
   
-  public void a(BufferedReader paramBufferedReader) {
+  public void a(BufferedReader paramBufferedReader) throws java.io.IOException {
     try {
       StringBuffer stringBuffer = new StringBuffer();
       String str = "";

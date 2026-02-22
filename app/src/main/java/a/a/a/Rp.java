@@ -51,7 +51,7 @@ public class Rp extends Lp {
       e(); 
   }
   
-  public void a(String paramString, ArrayList<ViewBean> paramArrayList, boolean paramBoolean) {
+  public void a(String paramString, ArrayList<ViewBean> paramArrayList, boolean paramBoolean) throws yy {
     if (this.e == null)
       a(); 
     if (this.g == null)

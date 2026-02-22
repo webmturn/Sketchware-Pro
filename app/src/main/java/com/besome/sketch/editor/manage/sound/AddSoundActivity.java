@@ -241,7 +241,7 @@ public class AddSoundActivity extends BaseDialogActivity implements View.OnClick
                                         default:
                                     }
                                 } else {
-                                    throw e;
+                                    throw new RuntimeException(e);
                                 }
                             }
                         } else {

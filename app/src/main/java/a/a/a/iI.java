@@ -35,7 +35,7 @@ public class iI {
     this.a = (KeyStore)new JksKeyStore();
   }
   
-  public String a() {
+  public String a() throws Exception {
     Enumeration<String> enumeration = this.a.aliases();
     return enumeration.hasMoreElements() ? enumeration.nextElement() : "";
   }
@@ -55,11 +55,11 @@ public class iI {
     }
   }
   
-  public void a(String paramString1, String paramString2) {
+  public void a(String paramString1, String paramString2) throws Exception {
     a(new FileInputStream(new File(paramString1)), paramString2);
   }
   
-  public void a(String paramString1, String paramString2, int paramInt, String paramString3, String paramString4) {
+  public void a(String paramString1, String paramString2, int paramInt, String paramString3, String paramString4) throws Exception {
     byte[] arrayOfByte = a(paramString2, paramInt, paramString3, paramString4);
     File file = new File(wq.i());
     if (!file.exists())
@@ -67,7 +67,7 @@ public class iI {
     (new oB()).a(paramString1, arrayOfByte);
   }
   
-  public final byte[] a(String paramString) {
+  public final byte[] a(String paramString) throws Exception {
     if (this.a == null)
       return null; 
     this.b = ByteBuffer.allocate(8192);
@@ -87,7 +87,7 @@ public class iI {
     return arrayOfByte;
   }
   
-  public byte[] a(String paramString1, int paramInt, String paramString2, String paramString3) {
+  public byte[] a(String paramString1, int paramInt, String paramString2, String paramString3) throws Exception {
     try {
       KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
       keyPairGenerator.initialize(1024, SecureRandom.getInstance("SHA1PRNG"));
@@ -122,7 +122,7 @@ public class iI {
     } 
   }
   
-  public ZipSigner b(String paramString) {
+  public ZipSigner b(String paramString) throws Exception {
     ZipSigner zipSigner = new ZipSigner();
     zipSigner.issueLoadingCertAndKeysProgressEvent();
     String str = a();

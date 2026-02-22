@@ -43,11 +43,11 @@ public class Op extends Lp {
       e(); 
   }
   
-  public void a(String paramString, ProjectResourceBean paramProjectResourceBean) {
+  public void a(String paramString, ProjectResourceBean paramProjectResourceBean) throws yy {
     a(paramString, paramProjectResourceBean, true);
   }
   
-  public void a(String paramString, ProjectResourceBean paramProjectResourceBean, boolean paramBoolean) {
+  public void a(String paramString, ProjectResourceBean paramProjectResourceBean, boolean paramBoolean) throws yy {
     if (this.e == null) a();
     ArrayList<String> duplicates = new ArrayList<String>();
     for (CollectionBean bean : this.e) {
@@ -73,7 +73,7 @@ public class Op extends Lp {
       try {
         this.c.f(this.b);
         iB.a(srcPath, destPath, paramProjectResourceBean.rotate, paramProjectResourceBean.flipHorizontal, paramProjectResourceBean.flipVertical);
-      } catch (java.io.IOException e) {
+      } catch (Exception e) {
         throw new yy("fail_to_copy");
       }
     } else {
@@ -84,7 +84,7 @@ public class Op extends Lp {
       try {
         this.c.f(this.b);
         this.c.a(srcPath, destPath);
-      } catch (java.io.IOException e) {
+      } catch (Exception e) {
         throw new yy("fail_to_copy");
       }
     }
@@ -92,7 +92,7 @@ public class Op extends Lp {
     if (paramBoolean) e();
   }
   
-  public void a(String paramString, ArrayList<ProjectResourceBean> paramArrayList, boolean paramBoolean) {
+  public void a(String paramString, ArrayList<ProjectResourceBean> paramArrayList, boolean paramBoolean) throws yy {
     if (this.e == null)
       a(); 
     ArrayList<String> arrayList = new ArrayList();
@@ -160,7 +160,7 @@ public class Op extends Lp {
             CollectionBean collectionBean = new CollectionBean(projectResourceBean.resName, str1);
             arrayList3.add(collectionBean);
             arrayList2.add(str3);
-          } catch (IOException iOException) {
+          } catch (Exception iOException) {
             arrayList1.add(projectResourceBean.resName);
           } 
         } 

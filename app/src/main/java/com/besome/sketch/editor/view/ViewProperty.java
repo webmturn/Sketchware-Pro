@@ -212,7 +212,7 @@ public class ViewProperty extends LinearLayout implements Kw {
                         }
                     }
                 }
-                Rp.h().a(widgetName, viewBeans, true);
+                try { Rp.h().a(widgetName, viewBeans, true); } catch (a.a.a.yy ignored) {}
                 if (propertyListener != null) {
                     propertyListener.a();
                 }

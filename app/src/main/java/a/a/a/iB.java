@@ -29,7 +29,7 @@ public class iB {
     return k;
   }
   
-  public static int a(String paramString) {
+  public static int a(String paramString) throws java.io.IOException {
     int i = (new ExifInterface(paramString)).getAttributeInt("Orientation", -1);
     if (i != 3) {
       if (i != 6) {

@@ -228,7 +228,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
                             SketchToast.toast(this, getApplicationContext().getString(messageId), SketchToast.TOAST_WARNING).show();
                         }
                     } else {
-                        throw e;
+                        throw new RuntimeException(e);
                     }
                 }
             } else {

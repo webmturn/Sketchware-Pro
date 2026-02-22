@@ -221,7 +221,7 @@ public class xw extends qA {
     super.onSaveInstanceState(paramBundle);
   }
   
-  public class a extends RecyclerView.Adapter<a.a> {
+  public class a extends RecyclerView.Adapter<a.ViewHolder> {
     public int c = -1;
     
     public final xw d;
@@ -236,7 +236,7 @@ public class xw extends qA {
       return (this.d.h != null) ? this.d.h.size() : 0;
     }
     
-    public void onBindViewHolder(a param1a, int param1Int) {
+    public void onBindViewHolder(ViewHolder param1a, int param1Int) {
       if (this.d.j.booleanValue()) {
         param1a.x.setVisibility(0);
         param1a.u.setVisibility(8);
@@ -262,11 +262,11 @@ public class xw extends qA {
       param1a.v.setImageResource(2131165875);
     }
     
-    public a onCreateViewHolder(ViewGroup param1ViewGroup, int param1Int) {
-      return new a(this, LayoutInflater.from(param1ViewGroup.getContext()).inflate(2131427570, param1ViewGroup, false));
+    public ViewHolder onCreateViewHolder(ViewGroup param1ViewGroup, int param1Int) {
+      return new ViewHolder(this, LayoutInflater.from(param1ViewGroup.getContext()).inflate(2131427570, param1ViewGroup, false));
     }
     
-    public class a extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
       public CheckBox t;
       
       public ImageView u;
@@ -281,7 +281,7 @@ public class xw extends qA {
       
       public final xw.a z;
       
-      public a(xw.a this$0, View param2View) {
+      public ViewHolder(xw.a this$0, View param2View) {
         super(param2View);
         this.z = this$0;
         this.t = (CheckBox)param2View.findViewById(2131230893);

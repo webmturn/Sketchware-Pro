@@ -139,7 +139,7 @@ public class KB {
     }
   }
   
-  public void a(String paramString1, String paramString2) {
+  public void a(String paramString1, String paramString2) throws java.io.FileNotFoundException {
     a(new FileInputStream(paramString1), paramString2);
   }
   

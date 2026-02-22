@@ -41,11 +41,11 @@ public class Np extends Lp {
       e(); 
   }
   
-  public void a(String paramString, ProjectResourceBean paramProjectResourceBean) {
+  public void a(String paramString, ProjectResourceBean paramProjectResourceBean) throws yy {
     a(paramString, paramProjectResourceBean, true);
   }
   
-  public void a(String paramString, ProjectResourceBean paramProjectResourceBean, boolean paramBoolean) {
+  public void a(String paramString, ProjectResourceBean paramProjectResourceBean, boolean paramBoolean) throws yy {
     if (this.e == null) a();
     ArrayList<String> duplicates = new ArrayList<String>();
     for (CollectionBean bean : this.e) {

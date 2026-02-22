@@ -10,7 +10,7 @@ import java.io.OutputStream;
 import java.lang.reflect.Field;
 
 public class zB {
-  public static Bitmap a(InputStream paramInputStream) {
+  public static Bitmap a(InputStream paramInputStream) throws Exception {
     Field field;
     Bitmap bitmap = BitmapFactory.decodeStream(paramInputStream);
     byte[] arrayOfByte = a(bitmap);
@@ -25,7 +25,7 @@ public class zB {
     return bitmap;
   }
   
-  public static Bitmap a(String paramString) {
+  public static Bitmap a(String paramString) throws Exception {
     FileInputStream fileInputStream = new FileInputStream(paramString);
     Bitmap bitmap = a(fileInputStream);
     fileInputStream.close();
@@ -65,7 +65,7 @@ public class zB {
     } 
   }
   
-  public static void a(OutputStream paramOutputStream, int paramInt) {
+  public static void a(OutputStream paramOutputStream, int paramInt) throws java.io.IOException {
     paramOutputStream.write(paramInt >> 0 & 0xFF);
     paramOutputStream.write(paramInt >> 8 & 0xFF);
     paramOutputStream.write(paramInt >> 16 & 0xFF);
@@ -79,7 +79,7 @@ public class zB {
     paramArrayOfbyte[paramInt1 + 3] = (byte)(paramInt2 >> 24);
   }
   
-  public static byte[] a(Bitmap paramBitmap) {
+  public static byte[] a(Bitmap paramBitmap) throws java.io.IOException {
     int n;
     int m;
     int i = paramBitmap.getWidth();

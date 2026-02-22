@@ -419,7 +419,7 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
 
                     if (gx.isExactType("resource") || gx.isExactType("resource_bg")) {
                         if (ProjectDataManager.getResourceManager(sc_id).l(parameter) && !Op.g().b(parameter)) {
-                            Op.g().a(sc_id, ProjectDataManager.getResourceManager(sc_id).g(parameter));
+                            try { Op.g().a(sc_id, ProjectDataManager.getResourceManager(sc_id).g(parameter)); } catch (yy ignored) {}
                         }
                     } else if (gx.isExactType("sound")) {
                         if (ProjectDataManager.getResourceManager(sc_id).m(parameter) && !Qp.g().b(parameter)) {
@@ -431,7 +431,7 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
                         }
                     } else if (gx.isExactType("font")) {
                         if (ProjectDataManager.getResourceManager(sc_id).k(parameter) && !Np.g().b(parameter)) {
-                            Np.g().a(sc_id, ProjectDataManager.getResourceManager(sc_id).e(parameter));
+                            try { Np.g().a(sc_id, ProjectDataManager.getResourceManager(sc_id).e(parameter)); } catch (yy ignored) {}
                         }
                     }
                 }

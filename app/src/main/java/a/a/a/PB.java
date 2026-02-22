@@ -40,7 +40,7 @@ public class PB extends BaseValidator {
   }
   
   public final void b(String paramString) {
-    String str;
+    String str = "";
     if (paramString.length() < 3) {
       this.b.setErrorEnabled(true);
       this.b.setError(xB.b().a(this.a, 2131625433, new Object[] { Integer.valueOf(3) }));
