@@ -10,6 +10,7 @@ import com.bumptech.glide.Glide;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.utility.SketchwareUtil;
 

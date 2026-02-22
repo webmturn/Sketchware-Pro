@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 
 import java.lang.reflect.Field;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,9 +26,9 @@ public class LanguageOverrideManager {
     private static final String KEY_PREFIX = "str_";
 
     private static volatile LanguageOverrideManager instance;
-    private final Map<Integer, String> resIdOverrides = new HashMap<>();
-    private boolean loaded = false;
-    private boolean active = false;
+    private volatile Map<Integer, String> resIdOverrides = Collections.emptyMap();
+    private volatile boolean loaded = false;
+    private volatile boolean active = false;
 
     private LanguageOverrideManager() {
     }
@@ -59,28 +60,31 @@ public class LanguageOverrideManager {
     }
 
     private void loadOverrides(@NonNull Context context) {
-        resIdOverrides.clear();
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         int count = prefs.getInt(KEY_OVERRIDE_COUNT, 0);
-        active = count > 0;
 
-        if (!active) {
+        if (count <= 0) {
+            resIdOverrides = Collections.emptyMap();
+            active = false;
             loaded = true;
             return;
         }
 
         Map<String, Integer> nameToId = buildNameToIdMap();
         Map<String, ?> all = prefs.getAll();
+        Map<Integer, String> newMap = new HashMap<>();
         for (Map.Entry<String, ?> entry : all.entrySet()) {
             String key = entry.getKey();
             if (key.startsWith(KEY_PREFIX) && entry.getValue() instanceof String) {
                 String name = key.substring(KEY_PREFIX.length());
                 Integer resId = nameToId.get(name);
                 if (resId != null) {
-                    resIdOverrides.put(resId, (String) entry.getValue());
+                    newMap.put(resId, (String) entry.getValue());
                 }
             }
         }
+        resIdOverrides = Collections.unmodifiableMap(newMap);
+        active = true;
         loaded = true;
     }
 
@@ -144,7 +148,7 @@ public class LanguageOverrideManager {
      */
     public void clearOverrides(@NonNull Context context) {
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit().clear().apply();
-        resIdOverrides.clear();
+        resIdOverrides = Collections.emptyMap();
         active = false;
     }
 

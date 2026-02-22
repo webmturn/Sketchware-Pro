@@ -91,21 +91,21 @@ public class GetKeyStoreCredentialsDialog {
         boolean isValid = true;
 
         if (TextUtils.isEmpty(binding.etAlias.getText())) {
-            binding.tilAlias.setError(context.getString(R.string.error_alias_empty));
+            binding.tilAlias.setError(Helper.getResString(R.string.error_alias_empty));
             isValid = false;
         } else {
             binding.tilAlias.setError(null);
         }
 
         if (TextUtils.isEmpty(binding.etPassword.getText())) {
-            binding.tilPassword.setError(context.getString(R.string.error_password_empty));
+            binding.tilPassword.setError(Helper.getResString(R.string.error_password_empty));
             isValid = false;
         } else {
             binding.tilPassword.setError(null);
         }
 
         if (TextUtils.isEmpty(binding.etSigningAlgorithm.getText())) {
-            binding.tilSigningAlgorithm.setError(context.getString(R.string.error_algorithm_empty));
+            binding.tilSigningAlgorithm.setError(Helper.getResString(R.string.error_algorithm_empty));
             isValid = false;
         } else {
             binding.tilSigningAlgorithm.setError(null);

@@ -52,7 +52,7 @@ public class FirebaseMessagingServiceImpl extends FirebaseMessagingService {
 
         // Since android Oreo notification channel is needed.
         NotificationChannel channel = new NotificationChannel(channelId,
-                "Sketchware Pro Notifications",
+                getString(R.string.notification_channel_firebase),
                 NotificationManager.IMPORTANCE_HIGH);
         notificationManager.createNotificationChannel(channel);
 

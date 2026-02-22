@@ -309,10 +309,10 @@ public class LogReaderActivity extends BaseAppCompatActivity {
                     case "D" -> binding.type.setBackgroundColor(0xFF2196F3);
                     case "E" -> binding.type.setBackgroundColor(0xFFF44336);
                     case "I" -> binding.type.setBackgroundColor(0xFF4CAF50);
-                    case "V" -> binding.type.setBackgroundColor(0xFF000000);
+                    case "V" -> binding.type.setBackgroundColor(0xFF616161);
                     case "W" -> binding.type.setBackgroundColor(0xFFFFC107);
                     default -> {
-                        binding.type.setBackgroundColor(0xFF000000);
+                        binding.type.setBackgroundColor(0xFF616161);
                         binding.type.setText("U");
                     }
                 }
@@ -346,7 +346,7 @@ public class LogReaderActivity extends BaseAppCompatActivity {
                 }
             } else {
                 binding.log.setText(data.get(position).get("logRaw").toString());
-                binding.type.setBackgroundColor(0xFF000000);
+                binding.type.setBackgroundColor(0xFF616161);
                 binding.type.setText("U");
                 binding.dateHeader.setVisibility(View.GONE);
             }
