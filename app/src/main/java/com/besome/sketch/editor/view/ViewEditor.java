@@ -96,7 +96,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
     private String b;
     private int screenType;
     private boolean da = true;
-    private int[] countItems = new int[20];
+    private int[] countItems = new int[99];
     private float dip = 0;
     private int displayWidth;
     private int displayHeight;
@@ -1069,10 +1069,10 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         }
         if (isCustomWidget) {
             deleteIcon.setImageDrawable(AppCompatResources.getDrawable(getContext(), R.drawable.ic_mtrl_edit));
-            deleteText.setText(D ? "Release to see the actions" : "Drag here to see the Actions");
+            deleteText.setText(getString(D ? R.string.editor_release_to_actions : R.string.editor_drag_to_actions));
         } else {
             deleteIcon.setImageDrawable(AppCompatResources.getDrawable(getContext(), R.drawable.ic_mtrl_delete));
-            deleteText.setText(D ? "Release to delete" : "Drag here to delete");
+            deleteText.setText(getString(D ? R.string.editor_release_to_delete : R.string.editor_drag_to_delete));
         }
     }
 

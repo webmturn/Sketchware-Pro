@@ -47,12 +47,20 @@ import mod.hey.studios.editor.manage.block.v2.BlockLoader;
 import mod.hey.studios.project.custom_blocks.CustomBlocksManager;
 import mod.hey.studios.util.Helper;
 import mod.hilal.saif.activities.tools.ConfigActivity;
+import pro.sketchware.R;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.SketchwareUtil;
 
 public class BackupFactory {
     public static final String EXTENSION = "swb";
     public static final String DEF_PATH = ".sketchware/backups/";
+
+    // WARNING: These crypto constants are part of the original Sketchware project file format.
+    // Do NOT change them — doing so will break reading/writing of all existing project files
+    // and backups, as well as compatibility with other Sketchware variants.
+    // The key == IV pattern is a known weakness but is required for format compatibility.
+    private static final String CIPHER_ALGORITHM = "AES/CBC/PKCS5Padding";
+    private static final byte[] LEGACY_KEY = "sketchwaresecure".getBytes(java.nio.charset.StandardCharsets.UTF_8);
 
     private static final String[] resSubfolders = {
             "fonts", "icons", "images", "sounds"
@@ -85,9 +93,8 @@ public class BackupFactory {
 
     private static HashMap<String, Object> getProject(File file) {
         try {
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            byte[] key = "sketchwaresecure".getBytes();
-            cipher.init(2, new SecretKeySpec(key, "AES"), new IvParameterSpec(key));
+            Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
+            cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(LEGACY_KEY, "AES"), new IvParameterSpec(LEGACY_KEY));
             byte[] encrypted;
             try (RandomAccessFile raf = new RandomAccessFile(file, "r")) {
                 encrypted = new byte[(int) raf.length()];
@@ -106,9 +113,8 @@ public class BackupFactory {
         String path = file.getAbsolutePath();
 
         try {
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            byte[] key = "sketchwaresecure".getBytes();
-            cipher.init(1, new SecretKeySpec(key, "AES"), new IvParameterSpec(key));
+            Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
+            cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(LEGACY_KEY, "AES"), new IvParameterSpec(LEGACY_KEY));
             byte[] encrypted = cipher.doFinal((string.trim()).getBytes());
             try (RandomAccessFile raf = new RandomAccessFile(path, "rw")) {
                 raf.setLength(0);
@@ -130,7 +136,13 @@ public class BackupFactory {
         //noinspection Java8ListSort
         Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
 
-        int id = list.isEmpty() ? 600 : Integer.parseInt(new File(list.get(list.size() - 1)).getName());
+        int id = 600;
+        for (String path : list) {
+            try {
+                id = Math.max(id, Integer.parseInt(new File(path).getName()));
+            } catch (NumberFormatException ignored) {
+            }
+        }
         return String.valueOf(id + 1);
     }
 
@@ -257,27 +269,17 @@ public class BackupFactory {
     }
 
     public static boolean zipContainsFile(String zipPath, String fileName) {
-
-        try {
-            ZipInputStream zp = new ZipInputStream(new FileInputStream(zipPath));
-
+        try (ZipInputStream zp = new ZipInputStream(new FileInputStream(zipPath))) {
             ZipEntry en;
-
             while ((en = zp.getNextEntry()) != null) {
                 String name = en.getName();
-
                 if (name.equals(fileName) || name.startsWith(fileName + File.separator)) {
-                    zp.close();
                     return true;
                 }
             }
-
-            zp.close();
-
         } catch (Exception e) {
             Log.e("BackupFactory", "Failed to check zip contents", e);
         }
-
         return false;
     }
 

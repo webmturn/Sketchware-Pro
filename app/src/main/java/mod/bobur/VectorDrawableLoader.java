@@ -23,7 +23,9 @@ public class VectorDrawableLoader {
 
         File resDir = new File(SketchwarePaths.getDataPath(sc_id) + "/files/resource/");
         if (resDir.exists() && resDir.isDirectory()) {
-            for (File subDir : Objects.requireNonNull(resDir.listFiles())) {
+            File[] subDirs = resDir.listFiles();
+            if (subDirs == null) return files;
+            for (File subDir : subDirs) {
                 if (subDir.isDirectory() && subDir.getName().startsWith("drawable")) {
                     FileUtil.listDir(subDir.getAbsolutePath(), allPaths);
                 }

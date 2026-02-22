@@ -85,8 +85,7 @@ public class IconSelectorDialog {
                         OldResourceIdMapper.getDrawableFromOldResourceId(oldResourceId)
                 );
             } catch (Resources.NotFoundException e) {
-                iconsList.remove(position);
-                notifyDataSetChanged();
+                itemBinding.iconImage.setImageResource(R.drawable.android_icon);
             }
 
             return convertView;
