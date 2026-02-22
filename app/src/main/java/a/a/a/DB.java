@@ -97,9 +97,3 @@ public class DB {
     return paramString.isEmpty() ? new HashMap<String, Object>() : vB.a(paramString);
   }
 }
-
-
-/* Location:              C:\Users\Administrator\IdeaProjects\Sketchware-Pro\app\libs\a.a.a-notimportant-classes.jar!\a\a\a\DB.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       1.1.3
- */

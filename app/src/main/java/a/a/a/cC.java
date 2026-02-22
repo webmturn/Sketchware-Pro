@@ -154,9 +154,3 @@ public class cC {
     return ((HistoryViewBean)((ArrayList<HistoryViewBean>)this.c.get(paramString)).get(i - 1)).clone();
   }
 }
-
-
-/* Location:              C:\Users\Administrator\IdeaProjects\Sketchware-Pro\app\libs\a.a.a-notimportant-classes.jar!\a\a\a\cC.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       1.1.3
- */

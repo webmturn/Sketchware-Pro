@@ -51,9 +51,3 @@ public class CircleImageView extends AppCompatImageView {
     } 
   }
 }
-
-
-/* Location:              C:\Users\Administrator\IdeaProjects\Sketchware-Pro\app\libs\com.besome.sketch-classes.jar!\com\besome\sketch\li\\ui\CircleImageView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       1.1.3
- */

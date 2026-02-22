@@ -17,9 +17,3 @@ public class xq {
     return false;
   }
 }
-
-
-/* Location:              C:\Users\Administrator\IdeaProjects\Sketchware-Pro\app\libs\a.a.a-notimportant-classes.jar!\a\a\a\xq.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       1.1.3
- */

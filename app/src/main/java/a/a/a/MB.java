@@ -24,7 +24,7 @@ public class mB {
   }
   
   public static void a(Context paramContext, EditText paramEditText) {
-    ((InputMethodManager)paramContext.getSystemService("input_method")).hideSoftInputFromWindow(paramEditText.getWindowToken(), 0);
+    ((InputMethodManager)paramContext.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(paramEditText.getWindowToken(), 0);
   }
   
   public static void a(View paramView) {

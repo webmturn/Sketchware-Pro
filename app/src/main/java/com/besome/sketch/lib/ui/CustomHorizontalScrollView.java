@@ -55,9 +55,3 @@ public class CustomHorizontalScrollView extends HorizontalScrollView {
     void a(int param1Int1, int param1Int2, int param1Int3, int param1Int4);
   }
 }
-
-
-/* Location:              C:\Users\Administrator\IdeaProjects\Sketchware-Pro\app\libs\com.besome.sketch-classes.jar!\com\besome\sketch\li\\ui\CustomHorizontalScrollView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       1.1.3
- */

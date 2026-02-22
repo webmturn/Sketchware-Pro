@@ -300,9 +300,3 @@ public class gC {
     public static final a[] i = new a[] { a, b, c, d, e, f, g, h };
   }
 }
-
-
-/* Location:              C:\Users\Administrator\IdeaProjects\Sketchware-Pro\app\libs\a.a.a-notimportant-classes.jar!\a\a\a\gC.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       1.1.3
- */
