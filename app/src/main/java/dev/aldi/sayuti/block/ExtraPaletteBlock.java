@@ -23,6 +23,7 @@ import a.a.a.BuildConfig;
 import a.a.a.BlockColorMapper;
 import mod.agus.jcoderz.beans.ViewBeans;
 import mod.hey.studios.editor.view.IdGenerator;
+import mod.hey.studios.util.Helper;
 import mod.hey.studios.moreblock.ReturnMoreblockManager;
 import mod.hilal.saif.activities.tools.ConfigActivity;
 import mod.hilal.saif.blocks.BlocksHandler;

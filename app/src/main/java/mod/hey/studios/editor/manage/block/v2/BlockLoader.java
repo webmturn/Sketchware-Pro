@@ -17,6 +17,7 @@ import java.util.HashMap;
 import dev.aldi.sayuti.block.ExtraBlockFile;
 import mod.agus.jcoderz.editor.manage.block.palette.PaletteSelector;
 import mod.hey.studios.editor.manage.block.ExtraBlockInfo;
+import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.SketchApplication;

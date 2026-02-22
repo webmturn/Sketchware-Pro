@@ -250,7 +250,7 @@ public class ConfigActivity extends BaseAppCompatActivity {
                 if (installWithRoot.isChecked()) {
                     Shell.getShell(shell -> {
                         if (!shell.isRoot()) {
-                            Snackbar.make(snackbarView, "Couldn't acquire root access", BaseTransientBottomBar.LENGTH_SHORT).show();
+                            Snackbar.make(snackbarView, Helper.getResString(R.string.config_error_no_root), BaseTransientBottomBar.LENGTH_SHORT).show();
                             installWithRoot.setChecked(false);
                         }
                     });

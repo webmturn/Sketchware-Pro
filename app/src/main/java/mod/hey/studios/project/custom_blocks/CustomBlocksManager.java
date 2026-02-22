@@ -23,6 +23,8 @@ import a.a.a.BlockColorMapper;
 import dev.aldi.sayuti.block.ExtraBlockFile;
 import mod.hey.studios.editor.manage.block.ExtraBlockInfo;
 import mod.hey.studios.editor.manage.block.v2.BlockLoader;
+import mod.hey.studios.util.Helper;
+import pro.sketchware.R;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.SketchwareUtil;
 

@@ -146,9 +146,9 @@ public class BlockSelectorManagerFragment extends BaseFragment {
         }
 
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(requireActivity());
-        dialog.setTitle(!isEdit ? "New selector" : "Edit selector");
+        dialog.setTitle(!isEdit ? R.string.selector_dialog_title_new : R.string.selector_dialog_title_edit);
         dialog.setView(dialogBinding.getRoot());
-        dialog.setPositiveButton(!isEdit ? "Create" : "Save", (v, which) -> {
+        dialog.setPositiveButton(!isEdit ? R.string.selector_dialog_button_create : R.string.common_word_save, (v, which) -> {
             String selectorName = Helper.getText(dialogBinding.palettesPath);
             String selectorTitle = Objects.requireNonNull(dialogBinding.blocksPath.getText()).toString();
 
@@ -196,7 +196,7 @@ public class BlockSelectorManagerFragment extends BaseFragment {
         }
         dialogBinding.delete.setOnClickListener(v -> {
             dialog.dismiss();
-            showConfirmationDialog("Are you sure you want to delete this selector?", confirmDialog -> {
+            showConfirmationDialog(Helper.getResString(R.string.selector_confirm_delete), confirmDialog -> {
                 selectors.remove(index);
                 saveAllSelectors();
                 adapter.notifyDataSetChanged();
@@ -224,7 +224,7 @@ public class BlockSelectorManagerFragment extends BaseFragment {
                 showImportSelectorDialog();
                 return true;
             } else if (item.getItemId() == R.id.export_all_block_selector_menus) {
-                saveAllSelectors(BlockSelectorConsts.EXPORT_FILE.getAbsolutePath(), "Exported in " + BlockSelectorConsts.EXPORT_FILE.getAbsolutePath());
+                saveAllSelectors(BlockSelectorConsts.EXPORT_FILE.getAbsolutePath(), String.format(Helper.getResString(R.string.toast_exported_in), BlockSelectorConsts.EXPORT_FILE.getAbsolutePath()));
                 return true;
             }
             return false;
@@ -250,7 +250,7 @@ public class BlockSelectorManagerFragment extends BaseFragment {
     }
 
     private void saveAllSelectors() {
-        saveAllSelectors(BlockSelectorConsts.BLOCK_SELECTORS_FILE.getAbsolutePath(), "Saved");
+        saveAllSelectors(BlockSelectorConsts.BLOCK_SELECTORS_FILE.getAbsolutePath(), Helper.getResString(R.string.common_word_saved));
     }
 
     private void saveAllSelectors(String path, String message) {

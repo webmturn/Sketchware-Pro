@@ -23,6 +23,7 @@ import java.util.List;
 
 import a.a.a.BaseFragment;
 import mod.hey.studios.util.Helper;
+import pro.sketchware.R;
 import pro.sketchware.databinding.DialogAddCustomActivityBinding;
 import pro.sketchware.databinding.DialogSelectorActionsBinding;
 import pro.sketchware.databinding.FragmentBlockSelectorManagerBinding;

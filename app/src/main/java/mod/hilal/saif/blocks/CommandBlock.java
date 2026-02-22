@@ -341,9 +341,9 @@ public class CommandBlock {
         String res = "";
         for (int i = 0; i < arr.size(); i++) {
             String reference = (String) arr.get(i).get("reference");
-            int distance = (int) arr.get(i).get("distance");
-            int after = (int) arr.get(i).get("after");
-            int before = (int) arr.get(i).get("before");
+            int distance = ((Number) arr.get(i).get("distance")).intValue();
+            int after = ((Number) arr.get(i).get("after")).intValue();
+            int before = ((Number) arr.get(i).get("before")).intValue();
             String command = (String) arr.get(i).get("command");
             String input = (String) arr.get(i).get("input");
 

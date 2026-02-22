@@ -164,11 +164,11 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
         menu.clear();
         if (Integer.parseInt(getIntent().getStringExtra("position")) != -1) {
             if (mode.equals("normal")) {
-                menu.add(Menu.NONE, Menu.NONE, Menu.NONE, "Swap").setIcon(AppCompatResources.getDrawable(this, R.drawable.ic_mtrl_swap_vertical)).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-                menu.add(Menu.NONE, Menu.NONE, Menu.NONE, "Import");
-                menu.add(Menu.NONE, Menu.NONE, Menu.NONE, "Export");
+                menu.add(Menu.NONE, MENU_SWAP, Menu.NONE, R.string.blocks_menu_swap).setIcon(AppCompatResources.getDrawable(this, R.drawable.ic_mtrl_swap_vertical)).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                menu.add(Menu.NONE, 7, Menu.NONE, R.string.common_word_import);
+                menu.add(Menu.NONE, 8, Menu.NONE, R.string.common_word_export);
             } else {
-                menu.add(Menu.NONE, Menu.NONE, Menu.NONE, "Swap").setIcon(AppCompatResources.getDrawable(this, R.drawable.ic_mtrl_save)).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                menu.add(Menu.NONE, MENU_SWAP, Menu.NONE, R.string.blocks_menu_swap).setIcon(AppCompatResources.getDrawable(this, R.drawable.ic_mtrl_save)).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
             }
         }
         return true;
@@ -176,9 +176,8 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem menuItem) {
-        String title = menuItem.getTitle().toString();
-        switch (title) {
-            case "Swap":
+        switch (menuItem.getItemId()) {
+            case MENU_SWAP:
                 if (mode.equals("normal")) {
                     mode = "editor";
                     fabButtonVisibility(false);
@@ -193,11 +192,11 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
                 onCreateOptionsMenu(toolbar.getMenu());
                 break;
 
-            case "Import":
+            case 7:
                 openFileExplorerImport();
                 break;
 
-            case "Export":
+            case 8:
                 Object paletteName = pallet_list.get(palette - 9).get("name");
                 if (paletteName instanceof String) {
                     String exportTo = new File(BLOCK_EXPORT_PATH, paletteName + ".json").getAbsolutePath();
@@ -259,7 +258,7 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
                 // fall-through to shared error handling
             }
 
-            SketchwareUtil.showFailedToParseJsonDialog(this, new File(pallet_path), "Custom Block Palettes", v -> _refreshLists());
+            SketchwareUtil.showFailedToParseJsonDialog(this, new File(pallet_path), Helper.getResString(R.string.blocks_custom_block_palettes), v -> _refreshLists());
             pallet_list = new ArrayList<>();
         }
 
@@ -276,7 +275,7 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
                 // fall-through to shared error handling
             }
 
-            SketchwareUtil.showFailedToParseJsonDialog(this, new File(blocks_path), "Custom Blocks", v -> _refreshLists());
+            SketchwareUtil.showFailedToParseJsonDialog(this, new File(blocks_path), Helper.getResString(R.string.blocks_custom_blocks), v -> _refreshLists());
             all_blocks_list = new ArrayList<>();
         }
 
@@ -307,6 +306,7 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
         _refreshLists();
     }
 
+    private static final int MENU_SWAP = 0;
     private static final int MENU_DELETE_PERMANENTLY = 1;
     private static final int MENU_RESTORE = 2;
     private static final int MENU_INSERT_ABOVE = 3;
@@ -578,7 +578,7 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
                 spec.setHint("");
             } else {
                 name.setText("");
-                name.setHint("(Invalid block name entry)");
+                name.setHint(R.string.blocks_invalid_block_name);
             }
 
             Object blockSpec = block.get("spec");
@@ -587,7 +587,7 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
                 spec.setHint("");
             } else {
                 spec.setText("");
-                spec.setHint("(Invalid block spec entry)");
+                spec.setHint(R.string.blocks_invalid_block_spec);
             }
 
             Object blockType = block.get("type");

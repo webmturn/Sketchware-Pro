@@ -121,18 +121,18 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
                     "d", "v", "a", "f", "l", "p", "h"
             );
             List<String> choices = Arrays.asList(
-                    "Regular block (regular)",
-                    "if block (c)",
-                    "if-else block (e)",
-                    "String (s)",
-                    "Boolean (b)",
-                    "Number (d)",
-                    "Variable (v)",
-                    "Map (a)",
-                    "stop block (f)",
-                    "List (l)",
-                    "Component (p)",
-                    "Header (h)"
+                    Helper.getResString(R.string.blocks_type_regular),
+                    Helper.getResString(R.string.blocks_type_if),
+                    Helper.getResString(R.string.blocks_type_if_else),
+                    Helper.getResString(R.string.blocks_type_string),
+                    Helper.getResString(R.string.blocks_type_boolean),
+                    Helper.getResString(R.string.blocks_type_number),
+                    Helper.getResString(R.string.blocks_type_variable),
+                    Helper.getResString(R.string.blocks_type_map),
+                    Helper.getResString(R.string.blocks_type_stop),
+                    Helper.getResString(R.string.blocks_type_list),
+                    Helper.getResString(R.string.blocks_type_component),
+                    Helper.getResString(R.string.blocks_type_header)
             );
             AtomicInteger choice = new AtomicInteger();
             new MaterialAlertDialogBuilder(this).setTitle(R.string.blocks_type_title)
@@ -452,7 +452,7 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
             }
         } catch (JsonParseException e) {
         }
-        SketchwareUtil.showFailedToParseJsonDialog(this, new File(path), "Custom Blocks", v -> getBlockList());
+        SketchwareUtil.showFailedToParseJsonDialog(this, new File(path), Helper.getResString(R.string.blocks_custom_blocks), v -> getBlockList());
         blocksList = new ArrayList<>();
     }
 

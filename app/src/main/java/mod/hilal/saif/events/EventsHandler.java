@@ -261,20 +261,20 @@ public class EventsHandler {
 
     public static String getDesc(String name) {
         return switch (name) {
-            case "Import" -> "add custom imports";
+            case "Import" -> Helper.getResString(R.string.event_desc_add_custom_imports);
             case "onActivityResult" -> "onActivityResult";
             case "initializeLogic" -> "initializeLogic";
-            case "onSwipeRefreshLayout" -> "On SwipeRefreshLayout swipe";
+            case "onSwipeRefreshLayout" -> Helper.getResString(R.string.event_desc_swipe_refresh);
             case " onLongClick" -> "onLongClick";
-            case "onTabLayoutNewTabAdded" -> "return the name of current tab";
+            case "onTabLayoutNewTabAdded" -> Helper.getResString(R.string.event_desc_tab_new_tab);
             case "onPreExecute" ->
-                    "This method contains the code which is executed before the background processing starts.";
+                    Helper.getResString(R.string.event_desc_pre_execute);
             case "doInBackground" ->
-                    "This method contains the code which needs to be executed in background.";
+                    Helper.getResString(R.string.event_desc_do_in_background);
             case "onProgressUpdate" ->
-                    "This method receives progress updates from doInBackground method.";
+                    Helper.getResString(R.string.event_desc_progress_update);
             case "onPostExecute" ->
-                    "This method is called after doInBackground method completes processing.";
+                    Helper.getResString(R.string.event_desc_post_execute);
             default -> {
                 for (int i = 0, cachedCustomEventsSize = cachedCustomEvents.size(); i < cachedCustomEventsSize; i++) {
                     HashMap<String, Object> customEvent = cachedCustomEvents.get(i);
