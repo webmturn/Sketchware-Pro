@@ -387,7 +387,8 @@ public class AddSoundActivity extends BaseDialogActivity implements View.OnClick
             Optional<String> optionalFilenameExtension = SketchwareUtil.doSingleStringContentQuery(input, MediaStore.MediaColumns.MIME_TYPE);
             String filenameExtension;
             if (optionalFilenameExtension.isPresent()) {
-                filenameExtension = optionalFilenameExtension.get().split("/")[1];
+                String[] mimeParts = optionalFilenameExtension.get().split("/");
+                filenameExtension = mimeParts.length > 1 ? mimeParts[1] : "";
             } else {
                 // Failed to find out filename extension :/
                 filenameExtension = "";

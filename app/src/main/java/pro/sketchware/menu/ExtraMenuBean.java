@@ -790,7 +790,8 @@ public class ExtraMenuBean {
         FilePickerCallback callback = new FilePickerCallback() {
             @Override
             public void onFileSelected(File file) {
-                logicEditor.a(ss, file.getAbsolutePath().split(splitter)[1]);
+                String[] parts = file.getAbsolutePath().split(splitter, 2);
+                logicEditor.a(ss, parts.length > 1 ? parts[1] : "");
             }
         };
         FilePickerDialogFragment fpd = new FilePickerDialogFragment(mOptions, callback);
