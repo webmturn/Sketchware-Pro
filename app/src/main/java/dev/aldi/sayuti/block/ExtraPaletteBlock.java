@@ -465,7 +465,7 @@ public class ExtraPaletteBlock {
 
             case 5:
                 extraBlocks.fileBlocks();
-                logicEditor.a("FileUtil Blocks", getTitleBgColor());
+                logicEditor.a(Helper.getResString(R.string.logic_editor_category_fileutil_blocks), getTitleBgColor());
                 if (!frc.getAssetsFile().isEmpty()) {
                     logicEditor.a(" ", "getAssetFile");
                     logicEditor.a("s", "copyAssetFile");
@@ -571,7 +571,7 @@ public class ExtraPaletteBlock {
                 if (textViewUsed || compoundButtonUsed || autoCompleteTextViewUsed
                         || multiAutoCompleteTextViewUsed || imageViewUsed || ratingBarUsed
                         || seekBarUsed || progressBarUsed || videoViewUsed || webViewUsed) {
-                    logicEditor.a("Widgets", getTitleBgColor());
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_widgets), getTitleBgColor());
 
                     if (textViewUsed) {
                         logicEditor.a(" ", "setText");
@@ -676,7 +676,7 @@ public class ExtraPaletteBlock {
                 boolean viewPagerUsed = isWidgetUsed("ViewPager");
 
                 if (spinnerUsed || listViewUsed || recyclerViewUsed || gridViewUsed || viewPagerUsed) {
-                    logicEditor.a("List", getTitleBgColor());
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_list), getTitleBgColor());
 
                     if (spinnerUsed) {
                         logicEditor.a(" ", "spnSetData");
@@ -744,7 +744,7 @@ public class ExtraPaletteBlock {
                 boolean textInputLayoutUsed = isWidgetUsed("TextInputLayout") || extraBlocks.isCustomVarUsed("TextInputLayout");
 
                 if (drawerUsed || fabUsed || bottomNavigationViewUsed || swipeRefreshLayoutUsed || cardViewUsed || tabLayoutUsed || textInputLayoutUsed) {
-                    logicEditor.a("AndroidX components", getTitleBgColor());
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_androidx_components), getTitleBgColor());
 
                     if (drawerUsed) {
                         logicEditor.a("b", "isDrawerOpen");
@@ -808,7 +808,7 @@ public class ExtraPaletteBlock {
                 boolean otpViewUsed = isWidgetUsed("OTPView");
 
                 if (waveSideBarUsed || badgeViewUsed || bubbleLayoutUsed || patternLockViewUsed || codeViewUsed || lottieAnimationViewUsed) {
-                    logicEditor.a("Library", getTitleBgColor());
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_library), getTitleBgColor());
 
                     if (otpViewUsed) {
                         logicEditor.a(" ", "otpViewSetFieldCount");
@@ -875,7 +875,7 @@ public class ExtraPaletteBlock {
                 boolean mapViewUsed = isWidgetUsed("MapView");
 
                 if (signInButtonUsed || youtubePlayerViewUsed || adMobUsed || mapViewUsed) {
-                    logicEditor.a("Google", getTitleBgColor());
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_google), getTitleBgColor());
 
                     if (signInButtonUsed) {
                         logicEditor.a(" ", "signInButtonSetColorScheme");
@@ -928,7 +928,7 @@ public class ExtraPaletteBlock {
                     }
                 }
             }
-            logicEditor.a("Function", getTitleBgColor());
+            logicEditor.a(Helper.getResString(R.string.logic_editor_category_function), getTitleBgColor());
             logicEditor.a(" ", "performClick");
             logicEditor.a("c", "viewOnClick");
             logicEditor.a("c", "viewOnLongClick");
@@ -951,7 +951,7 @@ public class ExtraPaletteBlock {
                 logicEditor.a("f", "finishAffinity");
                 if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_INTENT)
                         || extraBlocks.isCustomVarUsed("Intent")) {
-                    logicEditor.a("Intent", getTitleBgColor());
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_intent), getTitleBgColor());
                     logicEditor.a(" ", "intentSetAction");
                     logicEditor.a(" ", "intentSetData");
                     logicEditor.a(" ", "intentSetType");
@@ -964,31 +964,31 @@ public class ExtraPaletteBlock {
                     logicEditor.a(" ", "startActivityWithChooser");
                 }
                 if (!frc.getBroadcastFile().isEmpty()) {
-                    logicEditor.a("Broadcast", getTitleBgColor());
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_broadcast), getTitleBgColor());
                     logicEditor.a(" ", "sendBroadcast");
                 }
                 if (!frc.getServiceFile().isEmpty()) {
-                    logicEditor.a("Service", getTitleBgColor());
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_service), getTitleBgColor());
                     logicEditor.a(" ", "startService");
                     logicEditor.a(" ", "stopService");
                 }
                 if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_SHAREDPREF)) {
-                    logicEditor.a("SharedPreferences", getTitleBgColor());
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_shared_preferences), getTitleBgColor());
                     logicEditor.a("b", "fileContainsData");
                     logicEditor.a("s", "fileGetData");
                     logicEditor.a(" ", "fileSetData");
                     logicEditor.a(" ", "fileRemoveData");
                 }
                 if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_DATE_PICKER_DIALOG)) {
-                    logicEditor.a("DatePickerDialog", getTitleBgColor());
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_date_picker_dialog), getTitleBgColor());
                     logicEditor.a(" ", "datePickerDialogShow");
                 }
                 if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_TIME_PICKER_DIALOG)) {
-                    logicEditor.a("TimePickerDialog", getTitleBgColor());
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_time_picker_dialog), getTitleBgColor());
                     logicEditor.a(" ", "timePickerDialogShow");
                 }
                 if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_CALENDAR)) {
-                    logicEditor.a("Calendar", getTitleBgColor());
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_calendar), getTitleBgColor());
                     logicEditor.a(" ", "calendarGetNow");
                     logicEditor.a(" ", "calendarAdd");
                     logicEditor.a(" ", "calendarSet");
@@ -998,24 +998,24 @@ public class ExtraPaletteBlock {
                     logicEditor.a(" ", "calendarSetTime");
                 }
                 if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_VIBRATOR)) {
-                    logicEditor.a("Vibrator", getTitleBgColor());
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_vibrator), getTitleBgColor());
                     logicEditor.a(" ", "vibratorAction");
                 }
                 if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_TIMERTASK)
                         || extraBlocks.isCustomVarUsed("Timer")) {
-                    logicEditor.a("Timer", getTitleBgColor());
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_timer), getTitleBgColor());
                     logicEditor.a("c", "timerAfter");
                     logicEditor.a("c", "timerEvery");
                     logicEditor.a(" ", "timerCancel");
                 }
                 if (extraBlocks.isComponentUsed(36)) {
-                    logicEditor.a("AsyncTask", getTitleBgColor());
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_async_task), getTitleBgColor());
                     logicEditor.a(" ", "AsyncTaskExecute");
                     logicEditor.a(" ", "AsyncTaskPublishProgress");
                 }
                 if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_DIALOG)
                         || extraBlocks.isCustomVarUsed("Dialog")) {
-                    logicEditor.a("Dialog", getTitleBgColor());
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_dialog), getTitleBgColor());
                     logicEditor.a(" ", "dialogSetTitle");
                     logicEditor.a(" ", "Dialog SetIcon");
                     logicEditor.a(" ", "dialogSetMessage");
@@ -1025,7 +1025,7 @@ public class ExtraPaletteBlock {
                     logicEditor.a(" ", "dialogShow");
                 }
                 if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_MEDIAPLAYER)) {
-                    logicEditor.a("MediaPlayer", getTitleBgColor());
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_media_player), getTitleBgColor());
                     logicEditor.a(" ", "mediaplayerCreate");
                     logicEditor.a(" ", "mediaplayerStart");
                     logicEditor.a(" ", "mediaplayerPause");
@@ -1039,14 +1039,14 @@ public class ExtraPaletteBlock {
                     logicEditor.a(" ", "mediaplayerRelease");
                 }
                 if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_SOUNDPOOL)) {
-                    logicEditor.a("SoundPool", getTitleBgColor());
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_sound_pool), getTitleBgColor());
                     logicEditor.a(" ", "soundpoolCreate");
                     logicEditor.a("d", "soundpoolLoad");
                     logicEditor.a("d", "soundpoolStreamPlay");
                     logicEditor.a(" ", "soundpoolStreamStop");
                 }
                 if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_OBJECTANIMATOR)) {
-                    logicEditor.a("ObjectAnimator", getTitleBgColor());
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_object_animator), getTitleBgColor());
                     logicEditor.a(" ", "objectanimatorSetTarget");
                     logicEditor.a(" ", "objectanimatorSetProperty");
                     logicEditor.a(" ", "objectanimatorSetValue");
@@ -1060,7 +1060,7 @@ public class ExtraPaletteBlock {
                     logicEditor.a("b", "objectanimatorIsRunning");
                 }
                 if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_FIREBASE)) {
-                    logicEditor.a("Firebase", getTitleBgColor());
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_firebase), getTitleBgColor());
                     logicEditor.a(" ", "firebaseAdd");
                     logicEditor.a(" ", "firebasePush");
                     logicEditor.a("s", "firebaseGetPushKey");
@@ -1070,7 +1070,7 @@ public class ExtraPaletteBlock {
                     logicEditor.a(" ", "firebaseStopListen");
                 }
                 if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH)) {
-                    logicEditor.a("FirebaseAuth", getTitleBgColor());
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_firebase_auth), getTitleBgColor());
                     logicEditor.a("b", "firebaseauthIsLoggedIn");
                     logicEditor.a("s", "firebaseauthGetCurrentUser");
                     logicEditor.a("s", "firebaseauthGetUid");
@@ -1081,45 +1081,45 @@ public class ExtraPaletteBlock {
                     logicEditor.a(" ", "firebaseauthSignOutUser");
                 }
                 if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_GYROSCOPE)) {
-                    logicEditor.a("Gyroscope", getTitleBgColor());
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_gyroscope), getTitleBgColor());
                     logicEditor.a(" ", "gyroscopeStartListen");
                     logicEditor.a(" ", "gyroscopeStopListen");
                 }
                 if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_INTERSTITIAL_AD)) {
-                    logicEditor.a("AdMob Interstitial", getTitleBgColor());
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_admob_interstitial), getTitleBgColor());
                     logicEditor.a(" ", "interstitialAdLoad");
                     logicEditor.a(" ", "interstitialAdShow");
                     logicEditor.a("b", "interstitialAdIsLoaded");
                 }
                 if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_REWARDED_VIDEO_AD)) {
-                    logicEditor.a("RewardedVideoAd", getTitleBgColor());
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_rewarded_video_ad), getTitleBgColor());
                     logicEditor.a(" ", "rewardedVideoAdLoad");
                     logicEditor.a(" ", "rewardedVideoAdShow");
                 }
                 if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_FIREBASE_STORAGE)) {
-                    logicEditor.a("Firebase Storage", getTitleBgColor());
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_firebase_storage), getTitleBgColor());
                     logicEditor.a(" ", "firebasestorageUploadFile");
                     logicEditor.a(" ", "firebasestorageDownloadFile");
                     logicEditor.a(" ", "firebasestorageDelete");
                 }
                 if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_CAMERA)) {
-                    logicEditor.a("Camera", getTitleBgColor());
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_camera), getTitleBgColor());
                     logicEditor.a(" ", "camerastarttakepicture");
                 }
                 if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_FILE_PICKER)) {
-                    logicEditor.a("FilePicker", getTitleBgColor());
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_file_picker), getTitleBgColor());
                     logicEditor.a(" ", "filepickerstartpickfiles");
                     logicEditor.a(" ", "imageCrop");
                 }
                 if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_REQUEST_NETWORK)) {
-                    logicEditor.a("RequestNetwork", getTitleBgColor());
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_request_network), getTitleBgColor());
                     logicEditor.a("b", "isConnected");
                     logicEditor.a(" ", "requestnetworkSetParams");
                     logicEditor.a(" ", "requestnetworkSetHeaders");
                     logicEditor.a(" ", "requestnetworkStartRequestNetwork");
                 }
                 if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_TEXT_TO_SPEECH)) {
-                    logicEditor.a("TextToSpeech", getTitleBgColor());
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_text_to_speech), getTitleBgColor());
                     logicEditor.a("b", "textToSpeechIsSpeaking");
                     logicEditor.a(" ", "textToSpeechSetPitch");
                     logicEditor.a(" ", "textToSpeechSetSpeechRate");
@@ -1128,13 +1128,13 @@ public class ExtraPaletteBlock {
                     logicEditor.a(" ", "textToSpeechShutdown");
                 }
                 if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_SPEECH_TO_TEXT)) {
-                    logicEditor.a("SpeechToText", getTitleBgColor());
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_speech_to_text), getTitleBgColor());
                     logicEditor.a(" ", "speechToTextStartListening");
                     logicEditor.a(" ", "speechToTextStopListening");
                     logicEditor.a(" ", "speechToTextShutdown");
                 }
                 if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_BLUETOOTH_CONNECT)) {
-                    logicEditor.a("Bluetooth", getTitleBgColor());
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_bluetooth), getTitleBgColor());
                     logicEditor.a("b", "bluetoothConnectIsBluetoothEnabled");
                     logicEditor.a("b", "bluetoothConnectIsBluetoothActivated");
                     logicEditor.a("s", "bluetoothConnectGetRandomUuid");
@@ -1148,7 +1148,7 @@ public class ExtraPaletteBlock {
                     logicEditor.a(" ", "bluetoothConnectGetPairedDevices");
                 }
                 if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_LOCATION_MANAGER)) {
-                    logicEditor.a("LocationManager", getTitleBgColor());
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_location_manager), getTitleBgColor());
                     logicEditor.a(" ", "locationManagerRequestLocationUpdates");
                     logicEditor.a(" ", "locationManagerRemoveUpdates");
                 }
@@ -1156,7 +1156,7 @@ public class ExtraPaletteBlock {
                         || extraBlocks.isCustomVarUsed("ProgressDialog")
                         || eventName.equals("onPreExecute") || eventName.equals("onProgressUpdate")
                         || eventName.equals("onPostExecute")) {
-                    logicEditor.a("ProgressDialog", getTitleBgColor());
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_progress_dialog), getTitleBgColor());
                     logicEditor.a(" ", "progressdialogCreate");
                     logicEditor.a(" ", "progressdialogSetTitle");
                     logicEditor.a(" ", "progressdialogSetMessage");
@@ -1172,21 +1172,21 @@ public class ExtraPaletteBlock {
                 return;
 
             case 8:
-                logicEditor.b("Create", "blockAdd");
-                logicEditor.b("Import From Collection", "blockImport");
+                logicEditor.b(Helper.getResString(R.string.logic_editor_panel_button_create_block), "blockAdd");
+                logicEditor.b(Helper.getResString(R.string.logic_editor_panel_button_import_collection), "blockImport");
                 if (ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_SHOW_BUILT_IN_BLOCKS)) {
                     logicEditor.a(" ", "customToast");
                     logicEditor.a(" ", "customToastWithIcon");
                 }
                 moreBlocks();
                 if (ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_SHOW_BUILT_IN_BLOCKS)) {
-                    logicEditor.a("Command Blocks", getTitleBgColor());
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_command_blocks), getTitleBgColor());
                     logicEditor.a("c", "CommandBlockJava");
-                    logicEditor.addDeprecatedBlock("Deprecated: Use XML Command Manager", "c", "CommandBlockXML");
-                    logicEditor.a("Permission Command Blocks", getTitleBgColor());
+                    logicEditor.addDeprecatedBlock(Helper.getResString(R.string.logic_editor_deprecated_xml_command), "c", "CommandBlockXML");
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_permission_command_blocks), getTitleBgColor());
                     logicEditor.a(" ", "addPermission");
                     logicEditor.a(" ", "removePermission");
-                    logicEditor.a("Other Command Blocks", getTitleBgColor());
+                    logicEditor.a(Helper.getResString(R.string.logic_editor_category_other_command_blocks), getTitleBgColor());
                     logicEditor.a(" ", "addCustomVariable");
                     logicEditor.a(" ", "addInitializer");
                     return;

@@ -391,14 +391,17 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     }
 
     private void requestPackageInstallerInstall() {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        Uri apkUri = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".provider", new File(q.finalToInstallApkPath));
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-        intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
-        intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
-
-        startActivity(intent);
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            Uri apkUri = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".provider", new File(q.finalToInstallApkPath));
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+            intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+            startActivity(intent);
+        } catch (android.content.ActivityNotFoundException e) {
+            SketchwareUtil.toastError("No package installer found");
+        }
     }
 
     public void hideViewPropertyView() {
