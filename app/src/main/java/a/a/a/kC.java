@@ -125,7 +125,7 @@ public class kC {
       reader = new java.io.BufferedReader(new java.io.StringReader(paramString2));
       String line;
       while ((line = reader.readLine()) != null) {
-        if (line.trim().charAt(0) != '{') continue;
+        if (line.trim().length() <= 0 || line.trim().charAt(0) != '{') continue;
         ProjectResourceBean bean = this.j.fromJson(line, ProjectResourceBean.class);
         if (paramString1.equals("images")) {
           this.b.add(bean);
