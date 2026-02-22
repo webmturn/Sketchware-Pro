@@ -295,7 +295,11 @@ public class ManageXMLCommandActivity extends BaseAppCompatActivity {
     }
 
     private String getIntValue(String value) {
-        return String.valueOf((int) Double.parseDouble(value));
+        try {
+            return String.valueOf((int) Double.parseDouble(value));
+        } catch (NumberFormatException e) {
+            return "0";
+        }
     }
 
     private void showConfirmationDialog() {

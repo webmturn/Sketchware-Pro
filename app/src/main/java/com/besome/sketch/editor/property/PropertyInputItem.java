@@ -155,6 +155,15 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
         this.bean = bean;
     }
 
+    private float safeParseFloat(String val, float defaultValue) {
+        if (val == null || val.isEmpty()) return defaultValue;
+        try {
+            return Float.parseFloat(val);
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
+
     @Override
     public void onClick(View v) {
         if (!mB.a()) {
@@ -163,18 +172,18 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
                 case "property_text", "property_hint" -> showTextInputDialog(9999, false);
                 case "property_rotate" -> showHybridSliderDialog(
                         Helper.getText(tvName),
-                        Float.parseFloat(value.isEmpty() ? "0" : value),
+                        safeParseFloat(value, 0f),
                         -360f, 360f, 1f, true);
                 case "property_alpha" -> showHybridSliderDialog(
                         Helper.getText(tvName),
-                        Float.parseFloat(value.isEmpty() ? "1" : value),
+                        safeParseFloat(value, 1f),
                         0f, 1f, 0.1f, false);
                 case "property_translation_x", "property_translation_y" -> showHybridSliderDialog(
                         Helper.getText(tvName),
-                        Float.parseFloat(value.isEmpty() ? "0" : value),
+                        safeParseFloat(value, 0f),
                         -200f, 200f, 1f, true);
                 case "property_scale_x", "property_scale_y" -> {
-                    float currentVal = Float.parseFloat(value.isEmpty() ? "1" : value);
+                    float currentVal = safeParseFloat(value, 1f);
                     float maxRange = Math.max(10f, currentVal * 1.2f);
                     showHybridSliderDialog(
                             Helper.getText(tvName),
@@ -183,7 +192,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
                 }
 
                 case "property_text_size" -> {
-                    float currentVal = Float.parseFloat(value.isEmpty() ? "14" : value);
+                    float currentVal = safeParseFloat(value, 14f);
                     float maxRange = Math.max(100f, currentVal);
                     float minRange = Math.min(10f, currentVal);
                     showHybridSliderDialog(
@@ -193,10 +202,10 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
                 }
                 case "property_weight", "property_weight_sum" -> showHybridSliderDialog(
                         Helper.getText(tvName),
-                        Float.parseFloat(value.isEmpty() ? "0" : value),
+                        safeParseFloat(value, 0f),
                         0f, 10f, 1f, true);
                 case "property_lines" -> {
-                    float currentVal = Float.parseFloat(value.isEmpty() ? "0" : value);
+                    float currentVal = safeParseFloat(value, 0f);
                     float maxRange = Math.max(20f, currentVal);
                     float minRange = Math.min(0f, currentVal);
                     showHybridSliderDialog(
@@ -206,18 +215,18 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
                 }
                 case "property_max" -> showHybridSliderDialog(
                         Helper.getText(tvName),
-                        Float.parseFloat(value.isEmpty() ? "100" : value),
+                        safeParseFloat(value, 100f),
                         1f, 1000f, 1f, true);
                 case "property_progress" -> {
                     float maxValue = bean != null ? bean.max : 100f;
                     showHybridSliderDialog(
                             Helper.getText(tvName),
-                            Float.parseFloat(value.isEmpty() ? "0" : value),
+                            safeParseFloat(value, 0f),
                             0f, maxValue, 1f, true);
                 }
                 case "property_divider_height" -> showHybridSliderDialog(
                         Helper.getText(tvName),
-                        Float.parseFloat(value.isEmpty() ? "1" : value),
+                        safeParseFloat(value, 1f),
                         0f, 50f, 1f, true);
                 case "property_convert" -> showAutoCompleteDialog();
                 case "property_inject" -> showInjectDialog();

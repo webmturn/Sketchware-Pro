@@ -354,13 +354,24 @@ public class BlocksManager extends BaseAppCompatActivity {
         });
     }
 
+    private double getPaletteValue(Map<String, Object> block) {
+        Object paletteObj = block.get("palette");
+        if (paletteObj == null) return Double.NaN;
+        try {
+            return Double.parseDouble(paletteObj.toString());
+        } catch (NumberFormatException e) {
+            return Double.NaN;
+        }
+    }
+
     private void removeRelatedBlocks(double _p) {
         List<Map<String, Object>> newBlocks = new LinkedList<>();
         for (int i = 0; i < all_blocks_list.size(); i++) {
-            if (!(Double.parseDouble(Objects.requireNonNull(all_blocks_list.get(i).get("palette")).toString()) == _p)) {
-                if (Double.parseDouble(Objects.requireNonNull(all_blocks_list.get(i).get("palette")).toString()) > _p) {
+            double paletteValue = getPaletteValue(all_blocks_list.get(i));
+            if (Double.isNaN(paletteValue) || paletteValue != _p) {
+                if (!Double.isNaN(paletteValue) && paletteValue > _p) {
                     HashMap<String, Object> m = all_blocks_list.get(i);
-                    m.put("palette", String.valueOf((long) (Double.parseDouble(Objects.requireNonNull(all_blocks_list.get(i).get("palette")).toString()) - 1)));
+                    m.put("palette", String.valueOf((long) (paletteValue - 1)));
                     newBlocks.add(m);
                 } else {
                     newBlocks.add(all_blocks_list.get(i));
@@ -399,8 +410,9 @@ public class BlocksManager extends BaseAppCompatActivity {
 
     private void insertBlocksAt(double _p) {
         for (int i = 0; i < all_blocks_list.size(); i++) {
-            if (Double.parseDouble(Objects.requireNonNull(all_blocks_list.get(i).get("palette")).toString()) > _p || Double.parseDouble(Objects.requireNonNull(all_blocks_list.get(i).get("palette")).toString()) == _p) {
-                all_blocks_list.get(i).put("palette", String.valueOf((long) (Double.parseDouble(Objects.requireNonNull(all_blocks_list.get(i).get("palette")).toString()) + 1)));
+            double paletteValue = getPaletteValue(all_blocks_list.get(i));
+            if (!Double.isNaN(paletteValue) && (paletteValue > _p || paletteValue == _p)) {
+                all_blocks_list.get(i).put("palette", String.valueOf((long) (paletteValue + 1)));
             }
         }
         FileUtil.writeFile(blocks_dir, getGson().toJson(all_blocks_list));
@@ -410,7 +422,8 @@ public class BlocksManager extends BaseAppCompatActivity {
 
     private void moveRelatedBlocksToRecycleBin(double _p) {
         for (int i = 0; i < all_blocks_list.size(); i++) {
-            if (Double.parseDouble(Objects.requireNonNull(all_blocks_list.get(i).get("palette")).toString()) == _p) {
+            double paletteValue = getPaletteValue(all_blocks_list.get(i));
+            if (!Double.isNaN(paletteValue) && paletteValue == _p) {
                 all_blocks_list.get(i).put("palette", "-1");
             }
         }
@@ -421,7 +434,8 @@ public class BlocksManager extends BaseAppCompatActivity {
     private void emptyRecyclebin() {
         List<Map<String, Object>> newBlocks = new LinkedList<>();
         for (int i = 0; i < all_blocks_list.size(); i++) {
-            if (!(Double.parseDouble(Objects.requireNonNull(all_blocks_list.get(i).get("palette")).toString()) == -1)) {
+            double paletteValue = getPaletteValue(all_blocks_list.get(i));
+            if (Double.isNaN(paletteValue) || paletteValue != -1) {
                 newBlocks.add(all_blocks_list.get(i));
             }
         }
