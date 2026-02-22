@@ -145,7 +145,7 @@ public class ExtraMenuBean {
                         return;
 
                     case "import":
-                        asdDialog(ss, "Enter the path without import & semicolon");
+                        asdDialog(ss, Helper.getResString(R.string.extra_menu_import_hint));
                         return;
 
                     default:

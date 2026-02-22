@@ -11,6 +11,8 @@ import java.util.ArrayList;
 
 import a.a.a.ProjectDataManager;
 import a.a.a.mB;
+import mod.hey.studios.util.Helper;
+import pro.sketchware.R;
 import pro.sketchware.databinding.ActivityLayoutPreviewBinding;
 import pro.sketchware.tools.ViewBeanParser;
 import pro.sketchware.utility.SketchwareUtil;

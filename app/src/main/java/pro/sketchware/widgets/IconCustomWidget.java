@@ -25,7 +25,7 @@ public class IconCustomWidget extends IconBase {
     public IconCustomWidget(HashMap<String, Object> map, Context context) {
         super(context);
         widgetMap.putAll(map);
-        type = (int) widgetMap.get("type");
+        type = ((Number) widgetMap.get("type")).intValue();
         Title = Objects.requireNonNull(widgetMap.get("title")).toString();
         setWidgetImage(getViewTypeResId(type));
         setWidgetName(Objects.requireNonNull(widgetMap.get("title")).toString());

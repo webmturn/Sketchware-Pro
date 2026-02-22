@@ -141,7 +141,7 @@ public class StylesEditor extends Fragment {
             }
 
             if (stylesEditorManager.isStyleExist(stylesList, styleName)) {
-                SketchwareUtil.toastError("\"" + styleName + "\" is already exist");
+                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.styles_error_already_exists), styleName));
                 return;
             }
 

@@ -34,6 +34,7 @@ import com.google.android.material.transition.MaterialFadeThrough;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.IntStream;
@@ -51,7 +52,7 @@ import pro.sketchware.databinding.SortProjectDialogBinding;
 import pro.sketchware.utility.UI;
 
 public class ProjectsFragment extends PermissionFragment {
-    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private ExecutorService executorService;
     private final List<HashMap<String, Object>> projectsList = new ArrayList<>();
     private MyprojectsBinding binding;
     private ProjectsAdapter projectsAdapter;
@@ -134,11 +135,13 @@ public class ProjectsFragment extends PermissionFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        executorService.shutdownNow();
         binding = null; // avoid memory leaks
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        executorService = Executors.newSingleThreadExecutor();
         preference = new DB(requireContext(), "project");
 
         ExtendedFloatingActionButton fab = requireActivity().findViewById(R.id.create_new_project);
@@ -341,9 +344,9 @@ public class ProjectsFragment extends PermissionFragment {
 
         @Override
         public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-            String oldId = (String) oldList.get(oldItemPosition).get("sc_id");
-            String newId = (String) newList.get(newItemPosition).get("sc_id");
-            return oldId.equals(newId);
+            Object oldId = oldList.get(oldItemPosition).get("sc_id");
+            Object newId = newList.get(newItemPosition).get("sc_id");
+            return Objects.equals(oldId, newId);
         }
 
         @Override

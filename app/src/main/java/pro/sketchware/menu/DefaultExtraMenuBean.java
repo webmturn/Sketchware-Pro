@@ -18,6 +18,7 @@ import a.a.a.BlockConstants;
 import a.a.a.SketchwarePaths;
 import mod.agus.jcoderz.editor.manage.block.makeblock.BlockMenu;
 import mod.hey.studios.util.Helper;
+import pro.sketchware.R;
 import pro.sketchware.utility.CustomVariableUtil;
 import pro.sketchware.utility.FileUtil;
 
@@ -35,23 +36,23 @@ public class DefaultExtraMenuBean {
 
     public static String getName(String menuName) {
         return switch (menuName) {
-            case "image" -> "Custom Image";
-            case "til_box_mode" -> "Box Mode";
-            case "fabsize" -> "Fab Size";
-            case "fabvisible" -> "Fab Visible";
-            case "menuaction" -> "Menu Action";
-            case "porterduff" -> "Porterduff Mode";
-            case "transcriptmode" -> "Transcript Mode";
-            case "listscrollparam", "recyclerscrollparam", "pagerscrollparam" -> "Scroll Param";
-            case "gridstretchmode" -> "Stretch Mode";
-            case "gravity_v" -> "Gravity Vertical";
-            case "gravity_h" -> "Gravity Horizontal";
-            case "gravity_t" -> "Gravity Toast";
-            case "patternviewmode" -> "Pattern Mode";
-            case "styleprogress" -> "Progress Style";
-            case "cv_theme" -> "Theme";
-            case "cv_language" -> "Language";
-            case "import" -> "Import";
+            case "image" -> Helper.getResString(R.string.menu_name_custom_image);
+            case "til_box_mode" -> Helper.getResString(R.string.menu_name_box_mode);
+            case "fabsize" -> Helper.getResString(R.string.menu_name_fab_size);
+            case "fabvisible" -> Helper.getResString(R.string.menu_name_fab_visible);
+            case "menuaction" -> Helper.getResString(R.string.menu_name_menu_action);
+            case "porterduff" -> Helper.getResString(R.string.menu_name_porterduff_mode);
+            case "transcriptmode" -> Helper.getResString(R.string.menu_name_transcript_mode);
+            case "listscrollparam", "recyclerscrollparam", "pagerscrollparam" -> Helper.getResString(R.string.menu_name_scroll_param);
+            case "gridstretchmode" -> Helper.getResString(R.string.menu_name_stretch_mode);
+            case "gravity_v" -> Helper.getResString(R.string.menu_name_gravity_vertical);
+            case "gravity_h" -> Helper.getResString(R.string.menu_name_gravity_horizontal);
+            case "gravity_t" -> Helper.getResString(R.string.menu_name_gravity_toast);
+            case "patternviewmode" -> Helper.getResString(R.string.menu_name_pattern_mode);
+            case "styleprogress" -> Helper.getResString(R.string.menu_name_progress_style);
+            case "cv_theme" -> Helper.getResString(R.string.menu_name_theme);
+            case "cv_language" -> Helper.getResString(R.string.menu_name_language);
+            case "import" -> Helper.getResString(R.string.common_word_import);
             default -> menuName;
         };
     }
@@ -68,7 +69,7 @@ public class DefaultExtraMenuBean {
             Matcher matcher2 = Pattern.compile("^(\\w+)[\\s]+(\\w+)").matcher(s);
             while (matcher2.find()) {
                 if (menuName.equals(matcher2.group(1))) {
-                    title = "Select a " + matcher2.group(1) + " Variable";
+                    title = String.format(Helper.getResString(R.string.menu_select_variable_format), matcher2.group(1));
                     menus.add(matcher2.group(2));
                 }
             }
@@ -77,24 +78,24 @@ public class DefaultExtraMenuBean {
             String variableType = CustomVariableUtil.getVariableType(variable);
             String variableName = CustomVariableUtil.getVariableName(variable);
             if (menuName.equals(variableType)) {
-                title = "Select a " + variableType + " Variable";
+                title = String.format(Helper.getResString(R.string.menu_select_variable_format), variableType);
                 menus.add(variableName);
             }
         }
         for (ComponentBean componentBean : projectDataManager.e(javaName)) {
             if (componentBean.type > 36
                     && menuName.equals(ComponentBean.getComponentTypeName(componentBean.type))) {
-                title = "Select a " + ComponentBean.getComponentTypeName(componentBean.type);
+                title = String.format(Helper.getResString(R.string.menu_select_component_format), ComponentBean.getComponentTypeName(componentBean.type));
                 menus.add(componentBean.componentId);
             }
         }
         switch (menuName) {
             case "LayoutParam" -> {
-                title = "Select layout params";
+                title = Helper.getResString(R.string.menu_select_layout_params);
                 menus.addAll(Helper.createStringList("MATCH_PARENT", "WRAP_CONTENT"));
             }
             case "Command" -> {
-                title = "Select command";
+                title = Helper.getResString(R.string.menu_select_command);
                 menus.addAll(
                         Helper.createStringList(
                                 "insert",
@@ -108,7 +109,7 @@ public class DefaultExtraMenuBean {
             //start
             case "menu", "layout", "anim", "drawable" -> {
                 String path = getPath(sc_id, menuName);
-                title = "Select a " + menuName;
+                title = String.format(Helper.getResString(R.string.menu_select_format), menuName);
                 if (menuName.equals("layout")) {
                     for (String name : ProjectDataManager.getFileManager(sc_id).e()) {
                         menus.add(name.substring(0, name.indexOf(".xml")));
@@ -120,7 +121,7 @@ public class DefaultExtraMenuBean {
             }
             case "image" -> {
                 String path = getPath(sc_id, "drawable-xhdpi");
-                title = "Select a image";
+                title = Helper.getResString(R.string.menu_select_image);
                 for (String drawable_xhdpi : FileUtil.listFiles(path, "")) {
                     if (drawable_xhdpi.contains(".png") || drawable_xhdpi.contains(".jpg")) {
                         menus.add(
@@ -131,73 +132,73 @@ public class DefaultExtraMenuBean {
                 }
             }
             case "til_box_mode" -> {
-                title = "Select box mode";
+                title = Helper.getResString(R.string.menu_select_box_mode);
                 menus.addAll(Arrays.asList(BlockConstants.TIL_BOX_MODE));
             }
             case "fabsize" -> {
-                title = "Select fab size";
+                title = Helper.getResString(R.string.menu_select_fab_size);
                 menus.addAll(Arrays.asList(BlockConstants.FAB_SIZE));
             }
             case "fabvisible" -> {
-                title = "Select fab visibility";
+                title = Helper.getResString(R.string.menu_select_fab_visibility);
                 menus.addAll(Arrays.asList(BlockConstants.FAB_VISIBLE));
             }
             case "menuaction" -> {
-                title = "Select menu action";
+                title = Helper.getResString(R.string.menu_select_menu_action);
                 menus.addAll(Arrays.asList(BlockConstants.MENU_ACTION));
             }
             case "porterduff" -> {
-                title = "Select porterduff mode";
+                title = Helper.getResString(R.string.menu_select_porterduff_mode);
                 menus.addAll(Arrays.asList(BlockConstants.PORTER_DUFF));
             }
             case "transcriptmode" -> {
-                title = "Select transcript mode";
+                title = Helper.getResString(R.string.menu_select_transcript_mode);
                 menus.addAll(Arrays.asList(BlockConstants.TRANSCRIPT_MODE));
             }
             // idk, but it seems this isn't used anywhere, yet it was included in the menu file.
             case "listscrollparam" -> {
-                title = "Select scroll param";
+                title = Helper.getResString(R.string.menu_select_scroll_param);
                 menus.addAll(Arrays.asList(BlockConstants.LIST_SCROLL_STATES));
             }
             // same with listscrollparam
             case "recyclerscrollparam", "pagerscrollparam" -> {
-                title = "Select scroll param";
+                title = Helper.getResString(R.string.menu_select_scroll_param);
                 menus.addAll(Arrays.asList(BlockConstants.RECYCLER_SCROLL_STATES));
             }
             case "gridstretchmode" -> {
-                title = "Select stretch mode";
+                title = Helper.getResString(R.string.menu_select_stretch_mode);
                 menus.addAll(Arrays.asList(BlockConstants.GRID_STRETCH_MODE));
             }
             case "gravity_v" -> {
-                title = "Select gravity vertical";
+                title = Helper.getResString(R.string.menu_select_gravity_vertical);
                 menus.addAll(Arrays.asList(BlockConstants.GRAVITY_VERTICAL));
             }
             case "gravity_h" -> {
-                title = "Select gravity horizontal";
+                title = Helper.getResString(R.string.menu_select_gravity_horizontal);
                 menus.addAll(Arrays.asList(BlockConstants.GRAVITY_HORIZONTAL));
             }
             case "gravity_t" -> {
-                title = "Select gravity toast";
+                title = Helper.getResString(R.string.menu_select_gravity_toast);
                 menus.addAll(Arrays.asList(BlockConstants.GRAVITY_TOAST));
             }
             case "patternviewmode" -> {
-                title = "Select patternview mode";
+                title = Helper.getResString(R.string.menu_select_patternview_mode);
                 menus.addAll(Arrays.asList(BlockConstants.PATTERNVIEW_MODE));
             }
             case "styleprogress" -> {
-                title = "Select progress style";
+                title = Helper.getResString(R.string.menu_select_progress_style);
                 menus.addAll(Arrays.asList(BlockConstants.PROGRESS_STYLE));
             }
             case "cv_theme" -> {
-                title = "Select theme";
+                title = Helper.getResString(R.string.menu_select_theme);
                 menus.addAll(Arrays.asList(BlockConstants.CODEVIEW_THEME));
             }
             case "cv_language" -> {
-                title = "Select language";
+                title = Helper.getResString(R.string.menu_select_language);
                 menus.addAll(Arrays.asList(BlockConstants.CODEVIEW_LANGUAGE));
             }
             case "import" -> {
-                title = "Select language";
+                title = Helper.getResString(R.string.menu_select_language);
                 menus.addAll(Arrays.asList(BlockConstants.IMPORT_CLASS_PATH));
             }
             //end

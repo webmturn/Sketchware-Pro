@@ -4,8 +4,6 @@ import static pro.sketchware.utility.ThemeUtils.isDarkThemeEnabled;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.os.Build;
-
 import androidx.annotation.NonNull;
 
 import com.google.android.material.color.MaterialColors;
@@ -61,14 +59,9 @@ public class EditorUtils {
     // todo: use dynamic color scheme for textmate language too
     private static void loadConfigByLanguage(CodeEditor editor, Language language, boolean isTextMate) {
         editor.setEditorLanguage(language);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if (isDarkThemeEnabled(editor.getContext())) {
-                editor.setColorScheme(isTextMate ?
-                        CodeEditorColorSchemes.loadTextMateColorScheme(CodeEditorColorSchemes.THEME_DRACULA) : new SchemeDarcula());
-            } else {
-                editor.setColorScheme(isTextMate ?
-                        CodeEditorColorSchemes.loadTextMateColorScheme(CodeEditorColorSchemes.THEME_GITHUB) : new EditorColorScheme());
-            }
+        if (isDarkThemeEnabled(editor.getContext())) {
+            editor.setColorScheme(isTextMate ?
+                    CodeEditorColorSchemes.loadTextMateColorScheme(CodeEditorColorSchemes.THEME_DRACULA) : new SchemeDarcula());
         } else {
             editor.setColorScheme(isTextMate ?
                     CodeEditorColorSchemes.loadTextMateColorScheme(CodeEditorColorSchemes.THEME_GITHUB) : new EditorColorScheme());
