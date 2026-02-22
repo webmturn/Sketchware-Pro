@@ -95,7 +95,7 @@ public class Op extends Lp {
   public void a(String paramString, ArrayList<ProjectResourceBean> paramArrayList, boolean paramBoolean) throws yy {
     if (this.e == null)
       a(); 
-    ArrayList<String> arrayList = new ArrayList();
+    ArrayList<String> arrayList = new ArrayList<>();
     for (CollectionBean collectionBean : this.e) {
       for (ProjectResourceBean projectResourceBean : paramArrayList) {
         if (collectionBean.name.equals(projectResourceBean.resName))
@@ -103,7 +103,7 @@ public class Op extends Lp {
       } 
     } 
     if (arrayList.size() <= 0) {
-      ArrayList<String> arrayList1 = new ArrayList();
+      ArrayList<String> arrayList1 = new ArrayList<>();
       for (ProjectResourceBean projectResourceBean : paramArrayList) {
         String str;
         if (((SelectableBean)projectResourceBean).savedPos == 0) {
@@ -122,7 +122,7 @@ public class Op extends Lp {
       } 
       if (arrayList1.size() <= 0) {
         arrayList1 = new ArrayList<String>();
-        ArrayList<String> arrayList2 = new ArrayList();
+        ArrayList<String> arrayList2 = new ArrayList<>();
         for (ProjectResourceBean projectResourceBean : paramArrayList) {
           String str2;
           String str1 = projectResourceBean.resName;
@@ -245,7 +245,7 @@ public class Op extends Lp {
   public ArrayList<ProjectResourceBean> f() {
     if (this.e == null)
       a(); 
-    ArrayList<ProjectResourceBean> arrayList = new ArrayList();
+    ArrayList<ProjectResourceBean> arrayList = new ArrayList<>();
     for (CollectionBean collectionBean : this.e)
       arrayList.add(new ProjectResourceBean(ProjectResourceBean.PROJECT_RES_TYPE_FILE, collectionBean.name, collectionBean.data)); 
     return arrayList;

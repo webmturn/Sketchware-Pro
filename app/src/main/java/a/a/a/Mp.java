@@ -115,7 +115,7 @@ public class Mp extends Lp {
       a(); 
     if (this.g == null)
       i(); 
-    ArrayList<BlockCollectionBean> arrayList = new ArrayList();
+    ArrayList<BlockCollectionBean> arrayList = new ArrayList<>();
     for (CollectionBean collectionBean : this.e)
       arrayList.add(new BlockCollectionBean(collectionBean.name, gC.a(this.g, collectionBean.data))); 
     return arrayList;
@@ -124,7 +124,7 @@ public class Mp extends Lp {
   public ArrayList<String> g() {
     if (this.e == null)
       a(); 
-    ArrayList<String> arrayList = new ArrayList();
+    ArrayList<String> arrayList = new ArrayList<>();
     Iterator<CollectionBean> iterator = this.e.iterator();
     while (iterator.hasNext())
       arrayList.add(((CollectionBean)iterator.next()).name); 

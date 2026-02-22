@@ -153,7 +153,7 @@ public class Qp extends Lp {
   public ArrayList<ProjectResourceBean> f() {
     if (this.e == null)
       a(); 
-    ArrayList<ProjectResourceBean> arrayList = new ArrayList();
+    ArrayList<ProjectResourceBean> arrayList = new ArrayList<>();
     for (CollectionBean collectionBean : this.e)
       arrayList.add(new ProjectResourceBean(ProjectResourceBean.PROJECT_RES_TYPE_FILE, collectionBean.name, collectionBean.data)); 
     return arrayList;

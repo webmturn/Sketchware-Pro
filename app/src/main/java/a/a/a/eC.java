@@ -52,7 +52,7 @@ public class eC {
   }
   
   public static ArrayList<ViewBean> a(ArrayList<ViewBean> paramArrayList) {
-    ArrayList<ViewBean> arrayList = new ArrayList();
+    ArrayList<ViewBean> arrayList = new ArrayList<>();
     for (ViewBean viewBean : paramArrayList) {
       if (viewBean.parent.equals("root"))
         arrayList.add(viewBean); 
@@ -80,7 +80,7 @@ public class eC {
   }
   
   public static ArrayList<ViewBean> a(ArrayList<ViewBean> paramArrayList, ViewBean paramViewBean) {
-    ArrayList<ViewBean> arrayList = new ArrayList();
+    ArrayList<ViewBean> arrayList = new ArrayList<>();
     for (ViewBean viewBean : paramArrayList) {
       if (viewBean.parent.equals(paramViewBean.id))
         arrayList.add(viewBean); 
@@ -116,7 +116,7 @@ public class eC {
   public ArrayList<String> a(ProjectFileBean paramProjectFileBean) {
     String str1 = paramProjectFileBean.getXmlName();
     String str2 = paramProjectFileBean.getJavaName();
-    ArrayList<Object> arrayList = new ArrayList();
+    ArrayList<Object> arrayList = new ArrayList<>();
     Iterator<Pair<Integer, String>> iterator1 = k(str2).iterator();
     while (iterator1.hasNext())
       arrayList.add(((Pair)iterator1.next()).second); 
@@ -138,7 +138,7 @@ public class eC {
   public ArrayList<EventBean> a(String paramString, ComponentBean paramComponentBean) {
     if (!this.i.containsKey(paramString))
       return new ArrayList<EventBean>(); 
-    ArrayList<EventBean> arrayList = new ArrayList();
+    ArrayList<EventBean> arrayList = new ArrayList<>();
     for (EventBean eventBean : this.i.get(paramString)) {
       if (eventBean.targetType == paramComponentBean.type && eventBean.targetId.equals(paramComponentBean.componentId))
         arrayList.add(eventBean); 
@@ -176,7 +176,7 @@ public class eC {
       if (!projectFileBean.hasActivityOption(4))
         l(projectFileBean.getJavaName()); 
     } 
-    ArrayList<String> arrayList2 = new ArrayList();
+    ArrayList<String> arrayList2 = new ArrayList<>();
     for (Map.Entry<String, ArrayList<ViewBean>> entry : this.c.entrySet()) {
       String str = (String)entry.getKey();
       if (!paramhC.d(str)) {
@@ -201,7 +201,7 @@ public class eC {
     } 
     for (String str : arrayList2)
       this.c.remove(str); 
-    ArrayList<String> arrayList6 = new ArrayList();
+    ArrayList<String> arrayList6 = new ArrayList<>();
     Iterator<Map.Entry<String, ArrayList<Pair<Integer, String>>>> iterator4 = this.e.entrySet().iterator();
     while (iterator4.hasNext()) {
       String str = (String)((Map.Entry)iterator4.next()).getKey();
@@ -210,7 +210,7 @@ public class eC {
     } 
     for (String str : arrayList6)
       this.e.remove(str); 
-    ArrayList<String> arrayList4 = new ArrayList();
+    ArrayList<String> arrayList4 = new ArrayList<>();
     Iterator iterator3 = this.f.entrySet().iterator();
     while (iterator3.hasNext()) {
       String str = (String)((Map.Entry)iterator3.next()).getKey();
@@ -228,7 +228,7 @@ public class eC {
     } 
     for (String str : arrayList4)
       this.g.remove(str); 
-    ArrayList<String> arrayList1 = new ArrayList();
+    ArrayList<String> arrayList1 = new ArrayList<>();
     Iterator<Map.Entry<String, ArrayList<ComponentBean>>> iterator5 = this.h.entrySet().iterator();
     while (iterator5.hasNext()) {
       String str = (String)((Map.Entry)iterator5.next()).getKey();
@@ -237,7 +237,7 @@ public class eC {
     } 
     for (String str : arrayList1)
       this.h.remove(str); 
-    ArrayList<String> arrayList5 = new ArrayList();
+    ArrayList<String> arrayList5 = new ArrayList<>();
     Iterator iterator2 = this.i.entrySet().iterator();
     while (iterator2.hasNext()) {
       String str = (String)((Map.Entry)iterator2.next()).getKey();
@@ -246,7 +246,7 @@ public class eC {
     } 
     for (String str : arrayList5)
       this.i.remove(str); 
-    ArrayList<String> arrayList3 = new ArrayList();
+    ArrayList<String> arrayList3 = new ArrayList<>();
     for (Map.Entry<String, HashMap<String, ArrayList<BlockBean>>> entry : this.d.entrySet()) {
       String str = (String)entry.getKey();
       if (!paramhC.c(str)) {
@@ -307,7 +307,7 @@ public class eC {
       m(paramProjectFileBean.getJavaName(), paramViewBean.id);
       a(paramProjectFileBean.getJavaName(), paramViewBean.getClassInfo(), paramViewBean.id, true);
     } else if (i == 1) {
-      ArrayList<Pair> arrayList1 = new ArrayList();
+      ArrayList<Pair> arrayList1 = new ArrayList<>();
       for (Map.Entry<String, ArrayList<ViewBean>> entry : this.c.entrySet()) {
         for (ViewBean viewBean : entry.getValue()) {
           if ((viewBean.type == 9 || viewBean.type == 10 || viewBean.type == 25 || viewBean.type == 48 || viewBean.type == 31) && viewBean.customView.equals(paramProjectFileBean.fileName)) {
@@ -745,7 +745,7 @@ public class eC {
   }
   
   public ArrayList<String> b(String paramString, int paramInt) {
-    ArrayList<String> arrayList1 = new ArrayList();
+    ArrayList<String> arrayList1 = new ArrayList<>();
     if (!this.h.containsKey(paramString))
       return arrayList1; 
     ArrayList arrayList = this.h.get(paramString);
@@ -759,7 +759,7 @@ public class eC {
   }
   
   public ArrayList<ViewBean> b(String paramString, ViewBean paramViewBean) {
-    ArrayList<ViewBean> arrayList = new ArrayList();
+    ArrayList<ViewBean> arrayList = new ArrayList<>();
     arrayList.add(paramViewBean);
     arrayList.addAll(a(this.c.get(paramString), paramViewBean));
     return arrayList;
@@ -996,7 +996,7 @@ public class eC {
   }
   
   public ArrayList<String> c(String paramString) {
-    ArrayList<String> arrayList1 = new ArrayList();
+    ArrayList<String> arrayList1 = new ArrayList<>();
     if (!this.f.containsKey(paramString))
       return arrayList1; 
     ArrayList arrayList = this.f.get(paramString);
@@ -1009,7 +1009,7 @@ public class eC {
   }
   
   public ArrayList<ComponentBean> c(String paramString, int paramInt) {
-    ArrayList<ComponentBean> arrayList1 = new ArrayList();
+    ArrayList<ComponentBean> arrayList1 = new ArrayList<>();
     if (!this.h.containsKey(paramString))
       return arrayList1; 
     ArrayList arrayList = this.h.get(paramString);
@@ -1082,12 +1082,12 @@ public class eC {
     ArrayList<ViewBean> arrayList2 = this.c.get(paramString);
     ArrayList<ViewBean> arrayList1 = arrayList2;
     if (arrayList2 == null)
-      arrayList1 = new ArrayList(); 
+      arrayList1 = new ArrayList<>(); 
     return arrayList1;
   }
   
   public ArrayList<String> d(String paramString, int paramInt) {
-    ArrayList<String> arrayList1 = new ArrayList();
+    ArrayList<String> arrayList1 = new ArrayList<>();
     if (!this.f.containsKey(paramString))
       return arrayList1; 
     ArrayList arrayList = this.f.get(paramString);
@@ -1101,7 +1101,7 @@ public class eC {
   }
   
   public ArrayList<Pair<Integer, String>> d(String paramString1, String paramString2) {
-    ArrayList<Pair<Integer, String>> arrayList1 = new ArrayList();
+    ArrayList<Pair<Integer, String>> arrayList1 = new ArrayList<>();
     ArrayList arrayList = this.c.get(paramString1);
     if (arrayList == null)
       return arrayList1; 
@@ -1195,7 +1195,7 @@ public class eC {
   }
   
   public ArrayList<String> e(String paramString, int paramInt) {
-    ArrayList<String> arrayList1 = new ArrayList();
+    ArrayList<String> arrayList1 = new ArrayList<>();
     if (!this.e.containsKey(paramString))
       return arrayList1; 
     ArrayList arrayList = this.e.get(paramString);
@@ -1253,7 +1253,7 @@ public class eC {
   }
   
   public ArrayList<ViewBean> f(String paramString) {
-    ArrayList<ViewBean> arrayList1 = new ArrayList();
+    ArrayList<ViewBean> arrayList1 = new ArrayList<>();
     ArrayList arrayList = this.c.get(paramString);
     if (arrayList == null)
       return arrayList1; 

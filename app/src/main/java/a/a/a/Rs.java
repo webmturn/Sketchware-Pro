@@ -244,7 +244,7 @@ public class Rs extends Ts {
   }
   
   public ArrayList<Rs> getAllChildren() {
-    ArrayList<Rs> arrayList = new ArrayList();
+    ArrayList<Rs> arrayList = new ArrayList<>();
     Rs rs = this;
     while (true) {
       arrayList.add(rs);

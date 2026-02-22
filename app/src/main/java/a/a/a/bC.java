@@ -64,7 +64,7 @@ public class bC {
   }
   
   public void a(String paramString, BlockBean paramBlockBean1, int paramInt1, int paramInt2, BlockBean paramBlockBean2, BlockBean paramBlockBean3) {
-    ArrayList<BlockBean> arrayList = new ArrayList();
+    ArrayList<BlockBean> arrayList = new ArrayList<>();
     arrayList.add(paramBlockBean1);
     a(paramString, arrayList, paramInt1, paramInt2, paramBlockBean2, paramBlockBean3);
   }

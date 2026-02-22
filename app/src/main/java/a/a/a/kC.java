@@ -430,7 +430,7 @@ public class kC {
   }
   
   public ArrayList<String> k() {
-    ArrayList<String> arrayList = new ArrayList();
+    ArrayList<String> arrayList = new ArrayList<>();
     Iterator<ProjectResourceBean> iterator = this.d.iterator();
     while (iterator.hasNext())
       arrayList.add(((ProjectResourceBean)iterator.next()).resName); 
@@ -460,7 +460,7 @@ public class kC {
   }
   
   public ArrayList<String> m() {
-    ArrayList<String> arrayList = new ArrayList();
+    ArrayList<String> arrayList = new ArrayList<>();
     Iterator<ProjectResourceBean> iterator = this.b.iterator();
     while (iterator.hasNext())
       arrayList.add(((ProjectResourceBean)iterator.next()).resName); 
@@ -481,7 +481,7 @@ public class kC {
   }
   
   public ArrayList<String> p() {
-    ArrayList<String> arrayList = new ArrayList();
+    ArrayList<String> arrayList = new ArrayList<>();
     Iterator<ProjectResourceBean> iterator = this.c.iterator();
     while (iterator.hasNext())
       arrayList.add(((ProjectResourceBean)iterator.next()).resName); 

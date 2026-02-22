@@ -67,7 +67,7 @@ public class PB extends BaseValidator {
         return;
       } 
     } else {
-      ArrayList<String> arrayList1 = new ArrayList();
+      ArrayList<String> arrayList1 = new ArrayList<>();
       for (byte b1 = 1; b1 <= this.i; b1++) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(paramString);
@@ -75,7 +75,7 @@ public class PB extends BaseValidator {
         stringBuilder.append(b1);
         arrayList1.add(stringBuilder.toString());
       } 
-      ArrayList<String> arrayList2 = new ArrayList();
+      ArrayList<String> arrayList2 = new ArrayList<>();
       for (String str1 : arrayList1) {
         if (this.g.indexOf(str1) >= 0)
           arrayList2.add(str1); 

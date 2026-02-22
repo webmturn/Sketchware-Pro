@@ -106,7 +106,7 @@ public class GB {
   }
   
   public static ArrayList<String> c(Context paramContext) {
-    ArrayList<String> arrayList = new ArrayList();
+    ArrayList<String> arrayList = new ArrayList<>();
     Account[] arrayOfAccount = AccountManager.get(paramContext).getAccountsByType("com.google");
     for (byte b = 0; b < arrayOfAccount.length; b++) {
       if ((arrayOfAccount[b]).type.equals("com.google"))

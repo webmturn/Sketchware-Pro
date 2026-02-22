@@ -138,7 +138,7 @@ public class Rp extends Lp {
       a(); 
     if (this.g == null)
       i(); 
-    ArrayList<WidgetCollectionBean> arrayList = new ArrayList();
+    ArrayList<WidgetCollectionBean> arrayList = new ArrayList<>();
     for (CollectionBean collectionBean : this.e)
       arrayList.add(new WidgetCollectionBean(collectionBean.name, gC.b(this.g, collectionBean.data))); 
     return arrayList;
@@ -147,7 +147,7 @@ public class Rp extends Lp {
   public ArrayList<String> g() {
     if (this.e == null)
       a(); 
-    ArrayList<String> arrayList = new ArrayList();
+    ArrayList<String> arrayList = new ArrayList<>();
     Iterator<CollectionBean> iterator = this.e.iterator();
     while (iterator.hasNext())
       arrayList.add(((CollectionBean)iterator.next()).name); 

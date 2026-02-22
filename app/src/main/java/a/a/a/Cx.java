@@ -41,7 +41,7 @@ public class Cx {
     ArrayList<String> arrayList1 = this.c.get(paramString1);
     ArrayList<String> arrayList2 = arrayList1;
     if (arrayList1 == null) {
-      arrayList2 = new ArrayList();
+      arrayList2 = new ArrayList<>();
       this.c.put(paramString1, arrayList2);
     } 
     if (arrayList2.contains(paramString2))

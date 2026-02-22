@@ -77,7 +77,7 @@ public class xw extends qA {
     } else if (paramInt == 278) {
       arrayList = rq.d(paramString);
     } else {
-      arrayList = new ArrayList();
+      arrayList = new ArrayList<>();
     }
     return arrayList;
   }

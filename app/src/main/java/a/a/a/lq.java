@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class lq {
   public static ArrayList<String> a(String paramString) {
     short s = -1;
-    ArrayList<String> arrayList2 = new ArrayList();
+    ArrayList<String> arrayList2 = new ArrayList<>();
     switch (paramString.hashCode()) {
       default:
         s = -1;
@@ -3105,7 +3105,7 @@ public class lq {
   
   public static ArrayList<String> b(String paramString) {
     byte b = -1;
-    ArrayList<String> arrayList = new ArrayList();
+    ArrayList<String> arrayList = new ArrayList<>();
     switch (paramString.hashCode()) {
       default:
         b = -1;

@@ -32,7 +32,7 @@ public class rq {
   }
   
   public static ArrayList<ProjectFileBean> b() {
-    ArrayList<ProjectFileBean> arrayList = new ArrayList();
+    ArrayList<ProjectFileBean> arrayList = new ArrayList<>();
     arrayList.add(i());
     return arrayList;
   }
@@ -58,13 +58,13 @@ public class rq {
   }
   
   public static ArrayList<ProjectFileBean> c() {
-    ArrayList<ProjectFileBean> arrayList = new ArrayList();
+    ArrayList<ProjectFileBean> arrayList = new ArrayList<>();
     arrayList.add(g());
     return arrayList;
   }
   
   public static ArrayList<ProjectFileBean> d() {
-    ArrayList<ProjectFileBean> arrayList = new ArrayList();
+    ArrayList<ProjectFileBean> arrayList = new ArrayList<>();
     arrayList.add(k());
     arrayList.add(e());
     arrayList.add(m());
@@ -119,7 +119,7 @@ public class rq {
   }
   
   public static ArrayList<ViewBean> h() {
-    ArrayList<ViewBean> arrayList = new ArrayList();
+    ArrayList<ViewBean> arrayList = new ArrayList<>();
     arrayList.add(a());
     arrayList.add(a());
     arrayList.add(a());
@@ -135,7 +135,7 @@ public class rq {
   }
   
   public static ArrayList<ViewBean> j() {
-    ArrayList<ViewBean> arrayList = new ArrayList();
+    ArrayList<ViewBean> arrayList = new ArrayList<>();
     arrayList.add(a());
     arrayList.add(a());
     arrayList.add(a());
@@ -159,7 +159,7 @@ public class rq {
   }
   
   public static ArrayList<ViewBean> n() {
-    ArrayList<ViewBean> arrayList = new ArrayList();
+    ArrayList<ViewBean> arrayList = new ArrayList<>();
     arrayList.add(a());
     arrayList.add(a());
     arrayList.add(a());

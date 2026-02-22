@@ -66,7 +66,7 @@ public class cC {
   }
   
   public void a(String paramString, ViewBean paramViewBean) {
-    ArrayList<ViewBean> arrayList = new ArrayList();
+    ArrayList<ViewBean> arrayList = new ArrayList<>();
     arrayList.add(paramViewBean);
     a(paramString, arrayList);
   }

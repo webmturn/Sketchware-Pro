@@ -108,7 +108,7 @@ public class Pp extends Lp {
       a(); 
     if (this.g == null)
       i(); 
-    ArrayList<MoreBlockCollectionBean> arrayList = new ArrayList();
+    ArrayList<MoreBlockCollectionBean> arrayList = new ArrayList<>();
     for (CollectionBean collectionBean : this.e)
       arrayList.add(new MoreBlockCollectionBean(collectionBean.name, collectionBean.reserved1, gC.a(this.g, collectionBean.data))); 
     return arrayList;
@@ -117,7 +117,7 @@ public class Pp extends Lp {
   public ArrayList<String> g() {
     if (this.e == null)
       a(); 
-    ArrayList<String> arrayList = new ArrayList();
+    ArrayList<String> arrayList = new ArrayList<>();
     Iterator<CollectionBean> iterator = this.e.iterator();
     while (iterator.hasNext())
       arrayList.add(((CollectionBean)iterator.next()).name); 

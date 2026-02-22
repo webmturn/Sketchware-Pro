@@ -125,7 +125,7 @@ public class FB {
   }
   
   public static ArrayList<String> c(String paramString) {
-    ArrayList<String> arrayList = new ArrayList();
+    ArrayList<String> arrayList = new ArrayList<>();
     a a = new a(paramString);
     while (!a.a()) {
       String str = a.b();
