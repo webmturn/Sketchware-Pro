@@ -1956,6 +1956,7 @@ public class ComponentCodeGenerator {
                 "    public static void copyDir(String oldPath, String newPath) {\r\n" +
                 "        File oldFile = new File(oldPath);\r\n" +
                 "        File[] files = oldFile.listFiles();\r\n" +
+                "        if (files == null) return;\r\n" +
                 "        File newFile = new File(newPath);\r\n" +
                 "        if (!newFile.exists()) {\r\n" +
                 "            newFile.mkdirs();\r\n" +
@@ -2047,7 +2048,8 @@ public class ComponentCodeGenerator {
                 "    }\r\n" +
                 "\r\n" +
                 "    public static String getPackageDataDir(Context context) {\r\n" +
-                "        return context.getExternalFilesDir(null).getAbsolutePath();\r\n" +
+                "        File dir = context.getExternalFilesDir(null);\r\n" +
+                "        return dir != null ? dir.getAbsolutePath() : \"\";\r\n" +
                 "    }\r\n" +
                 "\r\n" +
                 "    public static String getPublicDir(String type) {\r\n" +
@@ -2165,6 +2167,9 @@ public class ComponentCodeGenerator {
                 "\r\n" +
                 "    public static Bitmap getScaledBitmap(String path, int max) {\r\n" +
                 "        Bitmap src = BitmapFactory.decodeFile(path);\r\n" +
+                "        if (src == null) {\r\n" +
+                "            return Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);\r\n" +
+                "        }\r\n" +
                 "\r\n" +
                 "        int width = src.getWidth();\r\n" +
                 "        int height = src.getHeight();\r\n" +
@@ -2846,30 +2851,32 @@ public class ComponentCodeGenerator {
                     public static void CustomToast(Context _context, String _message, int _textColor, int _textSize, int _bgColor, int _radius, int _gravity) {
                         Toast _toast = Toast.makeText(_context, _message, Toast.LENGTH_SHORT);
                         View _view = _toast.getView();
-                        TextView _textView = _view.findViewById(android.R.id.message);
-                        _textView.setTextSize(_textSize);
-                        _textView.setTextColor(_textColor);
-                        _textView.setGravity(Gravity.CENTER);
+                        if (_view != null) {
+                            TextView _textView = _view.findViewById(android.R.id.message);
+                            _textView.setTextSize(_textSize);
+                            _textView.setTextColor(_textColor);
+                            _textView.setGravity(Gravity.CENTER);
                 
-                        GradientDrawable _gradientDrawable = new GradientDrawable();
-                        _gradientDrawable.setColor(_bgColor);
-                        _gradientDrawable.setCornerRadius(_radius);
-                        _view.setBackground(_gradientDrawable);
-                        _view.setPadding(15, 10, 15, 10);
-                        _view.setElevation(10);
+                            GradientDrawable _gradientDrawable = new GradientDrawable();
+                            _gradientDrawable.setColor(_bgColor);
+                            _gradientDrawable.setCornerRadius(_radius);
+                            _view.setBackground(_gradientDrawable);
+                            _view.setPadding(15, 10, 15, 10);
+                            _view.setElevation(10);
                 
-                        switch (_gravity) {
-                            case 1:
-                                _toast.setGravity(Gravity.TOP, 0, 150);
-                                break;
+                            switch (_gravity) {
+                                case 1:
+                                    _toast.setGravity(Gravity.TOP, 0, 150);
+                                    break;
                 
-                            case 2:
-                                _toast.setGravity(Gravity.CENTER, 0, 0);
-                                break;
+                                case 2:
+                                    _toast.setGravity(Gravity.CENTER, 0, 0);
+                                    break;
                 
-                            case 3:
-                                _toast.setGravity(Gravity.BOTTOM, 0, 150);
-                                break;
+                                case 3:
+                                    _toast.setGravity(Gravity.BOTTOM, 0, 150);
+                                    break;
+                            }
                         }
                         _toast.show();
                     }
@@ -2877,32 +2884,34 @@ public class ComponentCodeGenerator {
                     public static void CustomToastWithIcon(Context _context, String _message, int _textColor, int _textSize, int _bgColor, int _radius, int _gravity, int _icon) {
                         Toast _toast = Toast.makeText(_context, _message, Toast.LENGTH_SHORT);
                         View _view = _toast.getView();
-                        TextView _textView = (TextView) _view.findViewById(android.R.id.message);
-                        _textView.setTextSize(_textSize);
-                        _textView.setTextColor(_textColor);
-                        _textView.setCompoundDrawablesWithIntrinsicBounds(_icon, 0, 0, 0);
-                        _textView.setGravity(Gravity.CENTER);
-                        _textView.setCompoundDrawablePadding(10);
+                        if (_view != null) {
+                            TextView _textView = (TextView) _view.findViewById(android.R.id.message);
+                            _textView.setTextSize(_textSize);
+                            _textView.setTextColor(_textColor);
+                            _textView.setCompoundDrawablesWithIntrinsicBounds(_icon, 0, 0, 0);
+                            _textView.setGravity(Gravity.CENTER);
+                            _textView.setCompoundDrawablePadding(10);
                 
-                        GradientDrawable _gradientDrawable = new GradientDrawable();
-                        _gradientDrawable.setColor(_bgColor);
-                        _gradientDrawable.setCornerRadius(_radius);
-                        _view.setBackground(_gradientDrawable);
-                        _view.setPadding(10, 10, 10, 10);
-                        _view.setElevation(10);
+                            GradientDrawable _gradientDrawable = new GradientDrawable();
+                            _gradientDrawable.setColor(_bgColor);
+                            _gradientDrawable.setCornerRadius(_radius);
+                            _view.setBackground(_gradientDrawable);
+                            _view.setPadding(10, 10, 10, 10);
+                            _view.setElevation(10);
                 
-                        switch (_gravity) {
-                            case 1:
-                                _toast.setGravity(Gravity.TOP, 0, 150);
-                                break;
+                            switch (_gravity) {
+                                case 1:
+                                    _toast.setGravity(Gravity.TOP, 0, 150);
+                                    break;
                 
-                            case 2:
-                                _toast.setGravity(Gravity.CENTER, 0, 0);
-                                break;
+                                case 2:
+                                    _toast.setGravity(Gravity.CENTER, 0, 0);
+                                    break;
                 
-                            case 3:
-                                _toast.setGravity(Gravity.BOTTOM, 0, 150);
-                                break;
+                                case 3:
+                                    _toast.setGravity(Gravity.BOTTOM, 0, 150);
+                                    break;
+                            }
                         }
                         _toast.show();
                     }
@@ -2911,12 +2920,12 @@ public class ComponentCodeGenerator {
                         Collections.sort(listMap, new Comparator<HashMap<String, Object>>() {
                             public int compare(HashMap<String, Object> _compareMap1, HashMap<String, Object> _compareMap2) {
                                 if (isNumber) {
-                                    int _count1 = Integer.valueOf(_compareMap1.get(key).toString());
-                                    int _count2 = Integer.valueOf(_compareMap2.get(key).toString());
+                                    int _count1 = ((Number) _compareMap1.get(key)).intValue();
+                                    int _count2 = ((Number) _compareMap2.get(key)).intValue();
                                     if (ascending) {
-                                        return _count1 < _count2 ? -1 : _count1 < _count2 ? 1 : 0;
+                                        return Integer.compare(_count1, _count2);
                                     } else {
-                                        return _count1 > _count2 ? -1 : _count1 > _count2 ? 1 : 0;
+                                        return Integer.compare(_count2, _count1);
                                     }
                                 } else {
                                     if (ascending) {
@@ -2943,7 +2952,7 @@ public class ComponentCodeGenerator {
                             _intent.putExtra("return-data", false);
                             _activity.startActivityForResult(_intent, _requestCode);
                         } catch (ActivityNotFoundException _e) {
-                            Toast.makeText(_activity, "Your device doesn't support the crop action!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(_activity, "Your device does not support the crop feature.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 
