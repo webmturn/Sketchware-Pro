@@ -616,10 +616,10 @@ public class IconCreatorActivity extends BaseAppCompatActivity {
                 File file = new File(path);
                 file.getParentFile().mkdirs();
 
-                FileOutputStream fos = new FileOutputStream(file);
-                appIconBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-                fos.flush();
-                fos.close();
+                try (FileOutputStream fos = new FileOutputStream(file)) {
+                    appIconBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                    fos.flush();
+                }
 
                 iconFilePath = path;
 
