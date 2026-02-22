@@ -96,22 +96,23 @@ public class AppSettings extends BaseAppCompatActivity {
         managersCategory.setTitle(Helper.getResString(R.string.app_settings_category_managers));
         preferences.add(managersCategory);
 
-        managersCategory.addLibraryItem(createPreference(R.drawable.ic_mtrl_block, "Block manager", "Manage your own blocks to use in Logic Editor", new ActivityLauncher(new Intent(getApplicationContext(), BlocksManager.class))), true);
-        managersCategory.addLibraryItem(createPreference(R.drawable.ic_mtrl_pull_down, "Block selector menu manager", "Manage your own block selector menus", openSettingsActivity(SettingsActivity.BLOCK_SELECTOR_MANAGER_FRAGMENT)), true);
-        managersCategory.addLibraryItem(createPreference(R.drawable.ic_mtrl_component, "Component manager", "Manage your own components", new ActivityLauncher(new Intent(getApplicationContext(), ManageCustomComponentActivity.class))), true);
-        managersCategory.addLibraryItem(createPreference(R.drawable.ic_mtrl_list, "Event manager", "Manage your own events", openSettingsActivity(SettingsActivity.EVENTS_MANAGER_FRAGMENT)), true);
-        managersCategory.addLibraryItem(createPreference(R.drawable.ic_mtrl_box, "Local library manager", "Manage and download local libraries", new ActivityLauncher(new Intent(getApplicationContext(), ManageLocalLibraryActivity.class), new Pair<>("sc_id", "system"))), true);
+        managersCategory.addLibraryItem(createPreference(R.drawable.ic_mtrl_block, Helper.getResString(R.string.app_settings_block_manager), Helper.getResString(R.string.app_settings_block_manager_desc), new ActivityLauncher(new Intent(getApplicationContext(), BlocksManager.class))), true);
+        managersCategory.addLibraryItem(createPreference(R.drawable.ic_mtrl_pull_down, Helper.getResString(R.string.app_settings_block_selector_manager), Helper.getResString(R.string.app_settings_block_selector_manager_desc), openSettingsActivity(SettingsActivity.BLOCK_SELECTOR_MANAGER_FRAGMENT)), true);
+        managersCategory.addLibraryItem(createPreference(R.drawable.ic_mtrl_component, Helper.getResString(R.string.app_settings_component_manager), Helper.getResString(R.string.app_settings_component_manager_desc), new ActivityLauncher(new Intent(getApplicationContext(), ManageCustomComponentActivity.class))), true);
+        managersCategory.addLibraryItem(createPreference(R.drawable.ic_mtrl_list, Helper.getResString(R.string.app_settings_event_manager), Helper.getResString(R.string.app_settings_event_manager_desc), openSettingsActivity(SettingsActivity.EVENTS_MANAGER_FRAGMENT)), true);
+        managersCategory.addLibraryItem(createPreference(R.drawable.ic_mtrl_box, Helper.getResString(R.string.app_settings_local_library_manager), Helper.getResString(R.string.app_settings_local_library_manager_desc), new ActivityLauncher(new Intent(getApplicationContext(), ManageLocalLibraryActivity.class), new Pair<>("sc_id", "system"))), true);
         managersCategory.addLibraryItem(createPreference(R.drawable.ic_mtrl_article, Helper.getResString(R.string.design_drawer_menu_title_logcat_reader), Helper.getResString(R.string.design_drawer_menu_subtitle_logcat_reader), new ActivityLauncher(new Intent(getApplicationContext(), LogReaderActivity.class))), false);
 
         LibraryCategoryView generalCategory = new LibraryCategoryView(this);
         generalCategory.setTitle(Helper.getResString(R.string.app_settings_category_general));
         preferences.add(generalCategory);
 
-        generalCategory.addLibraryItem(createPreference(R.drawable.ic_mtrl_settings_applications, "App settings", "Change general app settings", new ActivityLauncher(new Intent(getApplicationContext(), ConfigActivity.class))), true);
+        generalCategory.addLibraryItem(createPreference(R.drawable.ic_mtrl_settings_applications, Helper.getResString(R.string.app_settings_app_settings), Helper.getResString(R.string.app_settings_app_settings_desc), new ActivityLauncher(new Intent(getApplicationContext(), ConfigActivity.class))), true);
         generalCategory.addLibraryItem(createPreference(R.drawable.ic_mtrl_palette, Helper.getResString(R.string.settings_appearance), Helper.getResString(R.string.settings_appearance_description), openSettingsActivity(SettingsActivity.SETTINGS_APPEARANCE_FRAGMENT)), true);
-        generalCategory.addLibraryItem(createPreference(R.drawable.ic_mtrl_folder, "Open working directory", "Open Sketchware Pro's directory and edit files in it", v -> openWorkingDirectory()), true);
-        generalCategory.addLibraryItem(createPreference(R.drawable.ic_mtrl_apk_document, "Sign an APK file with testkey", "Sign an already existing APK file with testkey and signature schemes up to V4", v -> signApkFileDialog()), true);
-        generalCategory.addLibraryItem(createPreference(R.drawable.ic_mtrl_settings, Helper.getResString(R.string.main_drawer_title_system_settings), "Auto-save and vibrations", new ActivityLauncher(new Intent(getApplicationContext(), SystemSettingActivity.class))), false);
+        generalCategory.addLibraryItem(createPreference(R.drawable.ic_mtrl_folder, Helper.getResString(R.string.app_settings_open_working_dir), Helper.getResString(R.string.app_settings_open_working_dir_desc), v -> openWorkingDirectory()), true);
+        generalCategory.addLibraryItem(createPreference(R.drawable.ic_mtrl_apk_document, Helper.getResString(R.string.app_settings_sign_apk), Helper.getResString(R.string.app_settings_sign_apk_desc), v -> signApkFileDialog()), true);
+        generalCategory.addLibraryItem(createPreference(R.drawable.ic_mtrl_language, Helper.getResString(R.string.language_settings_title), Helper.getResString(R.string.language_settings_desc), openSettingsActivity(SettingsActivity.LANGUAGE_SETTINGS_FRAGMENT)), true);
+        generalCategory.addLibraryItem(createPreference(R.drawable.ic_mtrl_settings, Helper.getResString(R.string.main_drawer_title_system_settings), Helper.getResString(R.string.app_settings_system_settings_desc), new ActivityLauncher(new Intent(getApplicationContext(), SystemSettingActivity.class))), false);
 
         preferences.forEach(content::addView);
     }
@@ -148,10 +149,10 @@ public class AppSettings extends BaseAppCompatActivity {
                 if (files.size() > 1 || isDirectory) {
                     new MaterialAlertDialogBuilder(AppSettings.this)
                             .setTitle(R.string.app_settings_select_action)
-                            .setSingleChoiceItems(new String[]{"Delete"}, -1, (actionDialog, which) -> {
+                            .setSingleChoiceItems(new String[]{Helper.getResString(R.string.app_settings_action_delete)}, -1, (actionDialog, which) -> {
                                 new MaterialAlertDialogBuilder(AppSettings.this)
-                                        .setTitle(String.format(Helper.getResString(R.string.app_settings_delete_confirm_title), isDirectory ? "folder" : "file"))
-                                        .setMessage(String.format(Helper.getResString(R.string.app_settings_delete_confirm_msg), isDirectory ? "folder" : "file"))
+                                        .setTitle(String.format(Helper.getResString(R.string.app_settings_delete_confirm_title), getString(isDirectory ? R.string.common_word_folder : R.string.common_word_file)))
+                                        .setMessage(String.format(Helper.getResString(R.string.app_settings_delete_confirm_msg), getString(isDirectory ? R.string.common_word_folder : R.string.common_word_file)))
                                         .setPositiveButton(R.string.common_word_delete, (deleteConfirmationDialog, pressedButton) -> {
                                             for (File file : files) {
                                                 FileUtil.deleteFile(file.getAbsolutePath());
@@ -166,7 +167,7 @@ public class AppSettings extends BaseAppCompatActivity {
                 } else {
                     new MaterialAlertDialogBuilder(AppSettings.this)
                             .setTitle(R.string.app_settings_select_action)
-                            .setSingleChoiceItems(new String[]{"Edit", "Delete"}, -1, (actionDialog, which) -> {
+                            .setSingleChoiceItems(new String[]{Helper.getResString(R.string.app_settings_action_edit), Helper.getResString(R.string.app_settings_action_delete)}, -1, (actionDialog, which) -> {
                                 switch (which) {
                                     case 0 -> {
                                         Intent intent = new Intent(getApplicationContext(), SrcCodeEditor.class);
@@ -176,8 +177,8 @@ public class AppSettings extends BaseAppCompatActivity {
                                         startActivity(intent);
                                     }
                                     case 1 -> new MaterialAlertDialogBuilder(AppSettings.this)
-                                            .setTitle(String.format(Helper.getResString(R.string.app_settings_delete_confirm_title), "file"))
-                                            .setMessage(String.format(Helper.getResString(R.string.app_settings_delete_confirm_msg), "file"))
+                                            .setTitle(String.format(Helper.getResString(R.string.app_settings_delete_confirm_title), getString(R.string.common_word_file)))
+                                            .setMessage(String.format(Helper.getResString(R.string.app_settings_delete_confirm_msg), getString(R.string.common_word_file)))
                                             .setPositiveButton(R.string.common_word_delete, (deleteDialog, pressedButton) ->
                                                     FileUtil.deleteFile(files.get(0).getAbsolutePath()))
                                             .setNegativeButton(R.string.common_word_cancel, null)

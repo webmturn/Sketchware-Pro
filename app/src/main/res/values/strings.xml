@@ -2751,6 +2751,36 @@ Do you want to continue?"</string>
     <string name="theme_title_create">Create new theme</string>
     <string name="theme_title_edit">Edit theme</string>
 
+    <!-- ========== 语言设置 (Language Settings) ========== -->
+    <string name="language_settings_title">Language Settings</string>
+    <string name="language_settings_desc">Export and import translation files</string>
+    <string name="language_settings_current_language">Current Language</string>
+    <string name="language_settings_custom_override">Custom (%d strings overridden)</string>
+    <string name="language_settings_system_locale">System locale: %s</string>
+    <string name="language_settings_override_active">Language Override Active</string>
+    <string name="language_settings_override_info">%d strings overridden from imported file</string>
+    <string name="language_settings_clear">Clear</string>
+    <string name="language_settings_clear_confirm_title">Clear Language Override</string>
+    <string name="language_settings_clear_confirm_msg">Are you sure you want to clear the imported language override? The app will use the default language.</string>
+    <string name="language_settings_cleared">Language override cleared</string>
+    <string name="language_settings_section_export">Export</string>
+    <string name="language_settings_export_strings">Export Strings</string>
+    <string name="language_settings_export_desc">Export all app strings to an XML file for translation</string>
+    <string name="language_settings_exported">Strings exported to:\n%s</string>
+    <string name="language_settings_export_error">Export failed: %s</string>
+    <string name="language_settings_section_import">Import</string>
+    <string name="language_settings_import_strings">Import Strings</string>
+    <string name="language_settings_import_desc">Import a translated strings XML file to override the current language</string>
+    <string name="language_settings_select_xml">Select a strings XML file</string>
+    <string name="language_settings_import_empty">The imported file contains no valid string entries</string>
+    <string name="language_settings_import_confirm_title">Import Strings</string>
+    <string name="language_settings_import_confirm_msg">Import %d strings? This will override the current language display.</string>
+    <string name="language_settings_imported">Successfully imported %d strings</string>
+    <string name="language_settings_import_error">Import failed: %s</string>
+    <string name="language_settings_import_success_title">Import Successful</string>
+    <string name="language_settings_import_success_msg">Successfully imported %d strings.\n\nThe translations are now active. Some UI elements may need the app to be restarted to fully reflect the changes.</string>
+    <string name="language_settings_help">How it works:\n\n1. Tap \"Export Strings\" to generate an XML file with all app strings.\n2. Translate the strings in the exported file.\n3. Tap \"Import Strings\" to load your translated file.\n\nThe imported strings will override the default display language. You can clear the override at any time to restore the defaults.</string>
+
     <!-- ========== 编辑器 (Editors) ========== -->
     <string name="array_attr_hint_name">Enter Item Name</string>
     <string name="array_attr_hint_value">Enter Item Value</string>

@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 
 import com.besome.sketch.tools.CollectErrorActivity;
 
+import pro.sketchware.fragments.settings.language.LanguageOverrideManager;
 import pro.sketchware.utility.theme.ThemeManager;
 
 public class SketchApplication extends Application {
@@ -34,6 +35,7 @@ public class SketchApplication extends Application {
             }
         });
         super.onCreate();
+        LanguageOverrideManager.getInstance().init(this);
         ThemeManager.applyTheme(this, ThemeManager.getCurrentTheme(this));
     }
 }
