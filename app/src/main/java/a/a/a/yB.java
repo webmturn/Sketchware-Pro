@@ -11,8 +11,8 @@ public class yB {
   public static Object a(Map<String, Object> paramMap, String paramString, Object paramObject) {
     if (paramMap == null)
       return paramObject; 
-    paramMap = (Map<String, Object>)paramMap.get(paramString);
-    return (paramMap == null) ? paramObject : paramMap;
+    Object result = paramMap.get(paramString);
+    return (result == null) ? paramObject : result;
   }
   
   public static boolean a(Map<String, Object> paramMap, String paramString) {
