@@ -2827,6 +2827,8 @@ Do you want to continue?"</string>
     <string name="custom_var_hint_type">Type, e.g. File</string>
     <string name="editor_drag_to_actions">Drag here to see the Actions</string>
     <string name="editor_drag_to_delete">Drag here to delete</string>
+    <string name="editor_release_to_actions">Release to see the actions</string>
+    <string name="editor_release_to_delete">Release to delete</string>
     <string name="indent_hint_bottom">bottom</string>
     <string name="indent_hint_left">left</string>
     <string name="indent_hint_right">right</string>

@@ -1,9 +1,11 @@
-def secrets = System.getenv("GOOGLE_SERVICES_JSON")
+plugins {
+    id "com.android.application"
+    id "org.jetbrains.kotlin.android"
+    id "com.google.gms.google-services"
+    id "com.google.firebase.crashlytics"
+}
 
-apply plugin: "com.android.application"
-apply plugin: "kotlin-android"
-apply plugin: "com.google.gms.google-services"
-apply plugin: "com.google.firebase.crashlytics"
+def secrets = System.getenv("GOOGLE_SERVICES_JSON")
 
 android {
     compileSdk = 36

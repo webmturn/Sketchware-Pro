@@ -1,11 +1,22 @@
 <lint>
-    <issue id="ContentDescription" severity="ignore" />
+    <!-- Accessibility: ImageViews should have contentDescription for screen readers.
+         Set to warning to gradually fix across the codebase. -->
+    <issue id="ContentDescription" severity="warning" />
+
+    <!-- RTL: Project does not currently support RTL layouts. Keep suppressed until
+         RTL support is planned. -->
     <issue id="RtlHardcoded" severity="ignore" />
     <issue id="RtlSymmetry" severity="ignore" />
-    <issue id="HardcodedText" severity="ignore" />
+
+    <!-- I18n: Hardcoded strings should be extracted to string resources.
+         Set to warning to track remaining hardcoded text. -->
+    <issue id="HardcodedText" severity="warning" />
+    <issue id="SetTextI18n" severity="warning" />
+
+    <!-- Autofill: Not critical for this app type (IDE / code editor). -->
     <issue id="Autofill" severity="ignore" />
+
+    <!-- Code style hints: Low priority, kept suppressed to reduce noise. -->
     <issue id="UseCompoundDrawables" severity="ignore" />
     <issue id="NotifyDataSetChanged" severity="ignore" />
-    <issue id="HardcodedText" severity="ignore" />
-    <issue id="SetTextI18n" severity="ignore" />
 </lint>
