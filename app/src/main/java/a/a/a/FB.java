@@ -70,7 +70,7 @@ public class FB {
   }
   
   public static void a(Context paramContext, String paramString1, String paramString2) {
-    ((ClipboardManager)paramContext.getSystemService("clipboard")).setPrimaryClip(ClipData.newPlainText(paramString1, paramString2));
+    ((ClipboardManager)paramContext.getSystemService(Context.CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText(paramString1, paramString2));
   }
   
   public static byte[] a(String paramString) {

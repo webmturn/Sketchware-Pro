@@ -156,11 +156,11 @@ public class xw extends qA {
     ArrayList<ProjectFileBean> arrayList = this.h;
     if (arrayList != null)
       if (arrayList.size() == 0) {
-        this.k.setVisibility(0);
-        this.f.setVisibility(8);
+        this.k.setVisibility(View.VISIBLE);
+        this.f.setVisibility(View.GONE);
       } else {
-        this.k.setVisibility(8);
-        this.f.setVisibility(0);
+        this.k.setVisibility(View.GONE);
+        this.f.setVisibility(View.VISIBLE);
       }  
   }
   
@@ -238,11 +238,11 @@ public class xw extends qA {
     
     public void onBindViewHolder(ViewHolder param1a, int param1Int) {
       if (this.d.j.booleanValue()) {
-        param1a.x.setVisibility(0);
-        param1a.u.setVisibility(8);
+        param1a.x.setVisibility(View.VISIBLE);
+        param1a.u.setVisibility(View.GONE);
       } else {
-        param1a.x.setVisibility(8);
-        param1a.u.setVisibility(0);
+        param1a.x.setVisibility(View.GONE);
+        param1a.u.setVisibility(View.VISIBLE);
       } 
       ProjectFileBean projectFileBean = this.d.h.get(param1Int);
       param1a.u.setImageResource(2131165293);
@@ -251,7 +251,7 @@ public class xw extends qA {
       if (param1Int == 1) {
         param1a.w.setText(projectFileBean.getXmlName());
       } else if (param1Int == 2) {
-        param1a.t.setVisibility(8);
+        param1a.t.setVisibility(View.GONE);
         param1a.u.setImageResource(2131165283);
         param1a.w.setText(projectFileBean.fileName.substring(1));
       } 
@@ -290,7 +290,7 @@ public class xw extends qA {
         this.x = (LinearLayout)param2View.findViewById(2131230959);
         this.v = (ImageView)param2View.findViewById(2131231132);
         this.y = (ImageView)param2View.findViewById(2131231168);
-        this.t.setVisibility(8);
+        this.t.setVisibility(View.GONE);
         param2View.setOnClickListener(new uw(this, this$0));
         param2View.setOnLongClickListener(new vw(this, this$0));
         this.y.setOnClickListener(new ww(this, this$0));

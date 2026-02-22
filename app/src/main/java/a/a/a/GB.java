@@ -82,7 +82,7 @@ public class GB {
   
   public static boolean b(Context paramContext, int paramInt) {
     boolean bool;
-    if (((SensorManager)paramContext.getSystemService("sensor")).getDefaultSensor(paramInt) != null) {
+    if (((SensorManager)paramContext.getSystemService(Context.SENSOR_SERVICE)).getDefaultSensor(paramInt) != null) {
       bool = true;
     } else {
       bool = false;
@@ -170,7 +170,7 @@ public class GB {
     arrayOfInt[0] = 0;
     arrayOfInt[1] = 1;
     try {
-      ConnectivityManager connectivityManager = (ConnectivityManager)paramContext.getSystemService("connectivity");
+      ConnectivityManager connectivityManager = (ConnectivityManager)paramContext.getSystemService(Context.CONNECTIVITY_SERVICE);
       int i = arrayOfInt.length;
       for (byte b = 0; b < i; b++) {
         int j = arrayOfInt[b];
