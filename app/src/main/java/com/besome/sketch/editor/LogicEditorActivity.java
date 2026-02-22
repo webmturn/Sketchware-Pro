@@ -82,8 +82,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
 
 import a.a.a.DB;
@@ -2540,7 +2538,6 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
     public static class LoadEventBlocksTask {
         private final WeakReference<LogicEditorActivity> activityRef;
-        private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
         public LoadEventBlocksTask(LogicEditorActivity activity) {
             activityRef = new WeakReference<>(activity);
@@ -2548,7 +2545,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
         public void execute() {
             getActivity().k();
-            executorService.execute(this::doInBackground);
+            new Thread(this::doInBackground).start();
         }
 
         private void doInBackground() {

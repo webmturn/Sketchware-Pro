@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -151,10 +150,10 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
     private void startBackgroundTask() {
         k();
 
-        Executors.newSingleThreadExecutor().execute(() -> new Handler(Looper.getMainLooper()).postDelayed(() -> {
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
             loadDataInBackground();
-            runOnUiThread(this::h);
-        }, 1000));
+            h();
+        }, 1000);
     }
 
     private void loadDataInBackground() {

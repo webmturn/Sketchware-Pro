@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import a.a.a.ActivityCodeGenerator;
@@ -64,6 +65,7 @@ public class ManageXMLCommandActivity extends BaseAppCompatActivity {
     private ProjectSettings settings;
     private ArrayList<HashMap<String, Object>> commands = new ArrayList<>();
     private ArrayList<String> xmlFiles;
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     public static void fetchXMLCommand(Context context, String sc_id) {
         var path = SketchwarePaths.getDataPath(sc_id) + "/command";
@@ -300,7 +302,7 @@ public class ManageXMLCommandActivity extends BaseAppCompatActivity {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.xml_command_confirmation_title);
         dialog.setMessage(
-                "Would you like to enable the new XML Command? It will speed up XML generation and compilation, but this change cannot be undone. Don闂備胶鍋ㄩ崕鏌ユ偘?worry, your previous changes with the XML Command Block will transfered here so it will remain unaffected.");
+                "Would you like to enable the new XML Command? It will speed up XML generation and compilation, but this change cannot be undone. Don't worry, your previous changes with the XML Command Block will be transferred here so they will remain unaffected.");
         dialog.setPositiveButton(
                 R.string.common_word_yes,
                 (d, w) -> {
@@ -316,7 +318,7 @@ public class ManageXMLCommandActivity extends BaseAppCompatActivity {
 
     private void showSourceCode(String filename) {
         k();
-        Executors.newSingleThreadExecutor()
+        executorService
                 .execute(
                         () -> {
                             String source =
@@ -397,7 +399,7 @@ public class ManageXMLCommandActivity extends BaseAppCompatActivity {
         if (newXMLCommand) {
             if (!FileUtil.isExistFile(commandPath)) {
                 k();
-                Executors.newSingleThreadExecutor()
+                executorService
                         .execute(
                                 () -> {
                                     fetchXMLCommand(this, sc_id);
@@ -417,5 +419,11 @@ public class ManageXMLCommandActivity extends BaseAppCompatActivity {
     public void onSaveInstanceState(Bundle outState) {
         outState.putString("sc_id", sc_id);
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onDestroy() {
+        executorService.shutdownNow();
+        super.onDestroy();
     }
 }

@@ -37,6 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import a.a.a.BaseAsyncTask;
@@ -58,6 +59,7 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
     private BuildSettings buildSettings;
     private ManageLocallibrariesBinding binding;
     private String scId;
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -172,7 +174,7 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
                 return true;
             } else if (id == R.id.action_delete_selected_local_libraries) {
                 k();
-                Executors.newSingleThreadExecutor().execute(() -> {
+                executorService.execute(() -> {
                     deleteSelectedLocalLibraries(scId, adapter.getLocalLibraries(), projectUsedLibs);
                     runOnUiThread(() -> {
                         h();
@@ -593,5 +595,11 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
                 this.binding = binding;
             }
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        executorService.shutdownNow();
+        super.onDestroy();
     }
 }

@@ -21,7 +21,6 @@ import com.google.gson.JsonParseException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import a.a.a.Rs;
@@ -56,7 +55,7 @@ public class CustomBlocksDialog {
                 .setView(dialogBinding.getRoot())
                 .show();
 
-        Executors.newSingleThreadExecutor().execute(() -> {
+        new Thread(() -> {
             customBlocksManager = new CustomBlocksManager(context, sc_id);
             customBlocks = customBlocksManager.getUsedBlocks();
 
@@ -106,12 +105,12 @@ public class CustomBlocksDialog {
 
             } else {
                 context.runOnUiThread(() -> {
-                    dialogBinding.subtitle.setText(activity.getString(R.string.custom_blocks_none_used));
+                    dialogBinding.subtitle.setText(Helper.getResString(R.string.custom_blocks_none_used));
                     dialogBinding.progressIndicator.setVisibility(View.GONE);
                 });
             }
 
-        });
+        }).start();
     }
 
     private void importAll(Context context, CustomBlocksManager customBlocksManager, ArrayList<BlockBean> list) {
@@ -234,19 +233,19 @@ public class CustomBlocksDialog {
 
     private boolean validateInput(DialogPaletteBinding binding, String name, String color) {
         if (name.isEmpty()) {
-            binding.name.setError(activity.getString(R.string.error_name_cannot_be_empty));
+            binding.name.setError(Helper.getResString(R.string.error_name_cannot_be_empty));
             binding.name.requestFocus();
             return false;
         }
         if (color.isEmpty()) {
-            binding.color.setError(activity.getString(R.string.error_color_cannot_be_empty));
+            binding.color.setError(Helper.getResString(R.string.error_color_cannot_be_empty));
             binding.color.requestFocus();
             return false;
         }
         try {
             Color.parseColor(color);
         } catch (IllegalArgumentException e) {
-            binding.color.setError(activity.getString(R.string.error_invalid_hex_color));
+            binding.color.setError(Helper.getResString(R.string.error_invalid_hex_color));
             binding.color.requestFocus();
             return false;
         }

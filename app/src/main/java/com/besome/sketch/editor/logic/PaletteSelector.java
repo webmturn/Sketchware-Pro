@@ -3,8 +3,6 @@ package com.besome.sketch.editor.logic;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.Editable;
 import android.util.AttributeSet;
 
@@ -17,7 +15,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.Executors;
 
 import a.a.a.Vs;
 import mod.hey.studios.util.Helper;
@@ -65,9 +62,7 @@ public class PaletteSelector extends RecyclerView {
         paletteAdapter = new PaletteSelectorAdapter(this, onBlockCategorySelectListener);
         setAdapter(paletteAdapter);
 
-        Executors.newSingleThreadExecutor().execute(() ->
-                new Handler(Looper.getMainLooper()).post(this::initializePalettes)
-        );
+        post(this::initializePalettes);
     }
 
     private void initializePalettes() {
@@ -95,8 +90,8 @@ public class PaletteSelector extends RecyclerView {
     private void addDynamicPalette(HashMap<String, Object> paletteMap) {
         String text = Objects.requireNonNull(paletteMap.get("text")).toString();
         if (matchesSearch(text)) {
-            int index = Integer.parseInt(Objects.requireNonNull(paletteMap.get("index")).toString());
-            int color = Integer.parseInt(Objects.requireNonNull(paletteMap.get("color")).toString());
+            int index = ((Number) paletteMap.get("index")).intValue();
+            int color = ((Number) paletteMap.get("color")).intValue();
             allPalettes.add(new paletteSelectorRecord(index, text, color));
         }
     }
@@ -140,12 +135,10 @@ public class PaletteSelector extends RecyclerView {
 
     private void startSearch(DialogInterface dialog, String query) {
         searchValue = query;
-        Executors.newSingleThreadExecutor().execute(() ->
-                new Handler(Looper.getMainLooper()).post(() -> {
-                    initializePalettes();
-                    dialog.dismiss();
-                })
-        );
+        post(() -> {
+            initializePalettes();
+            dialog.dismiss();
+        });
     }
 
     public void setOnBlockCategorySelectListener(Vs listener) {
