@@ -38,8 +38,8 @@ import mod.pranav.viewbinding.ViewBindingBuilder;
 import pro.sketchware.R;
 
 public class ViewPropertyItems extends LinearLayout implements PropertyChangedCallback, View.OnClickListener {
-    private final boolean b = false;
-    private final HashMap<String, View> f = new HashMap<>();
+    private final boolean isEditMode = false;
+    private final HashMap<String, View> propertyViewCache = new HashMap<>();
     private String sc_id;
     private ViewBean viewBean;
     private ViewBeanCallback viewBeanCallback;
@@ -144,15 +144,15 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     }
 
     private void a(String name, int value) {
-        PropertyColorItem colorItem = (PropertyColorItem) f.get(name);
+        PropertyColorItem colorItem = (PropertyColorItem) propertyViewCache.get(name);
         if (colorItem == null) {
-            colorItem = new PropertyColorItem(getContext(), !b);
+            colorItem = new PropertyColorItem(getContext(), !isEditMode);
             colorItem.setOrientationItem(getOrientation());
             colorItem.setKey(name);
             colorItem.setValue(value);
             colorItem.setTag(name);
             colorItem.setOnPropertyValueChangeListener(this);
-            f.put(name, colorItem);
+            propertyViewCache.put(name, colorItem);
         } else {
             colorItem.setValue(value);
         }
@@ -161,15 +161,15 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     }
 
     private void a(String key, int left, int top, int right, int bottom) {
-        PropertyIndentItem indentItem = (PropertyIndentItem) f.get(key);
+        PropertyIndentItem indentItem = (PropertyIndentItem) propertyViewCache.get(key);
         if (indentItem == null) {
-            indentItem = new PropertyIndentItem(getContext(), !b);
+            indentItem = new PropertyIndentItem(getContext(), !isEditMode);
             indentItem.setOrientationItem(getOrientation());
             indentItem.setKey(key);
             indentItem.a(left, top, right, bottom);
             indentItem.setTag(key);
             indentItem.setOnPropertyValueChangeListener(this);
-            f.put(key, indentItem);
+            propertyViewCache.put(key, indentItem);
         } else {
             indentItem.a(left, top, right, bottom);
         }
@@ -178,15 +178,15 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     }
 
     private void addColorProperty(String name, String value, int value2) {
-        PropertyColorItem colorItem = (PropertyColorItem) f.get(name);
+        PropertyColorItem colorItem = (PropertyColorItem) propertyViewCache.get(name);
         if (colorItem == null) {
-            colorItem = new PropertyColorItem(getContext(), !b, sc_id);
+            colorItem = new PropertyColorItem(getContext(), !isEditMode, sc_id);
             colorItem.setOrientationItem(getOrientation());
             colorItem.setKey(name);
             colorItem.setValue(value2, value);
             colorItem.setTag(name);
             colorItem.setOnPropertyValueChangeListener(this);
-            f.put(name, colorItem);
+            propertyViewCache.put(name, colorItem);
         } else {
             colorItem.setValue(value2, value);
         }
@@ -194,7 +194,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     }
 
     private void a(String key, int value, boolean isEnable) {
-        PropertyMeasureItem measureItem = (PropertyMeasureItem) f.get(key);
+        PropertyMeasureItem measureItem = (PropertyMeasureItem) propertyViewCache.get(key);
         int isEnabled;
         if (isEnable) {
             isEnabled = 7;
@@ -203,14 +203,14 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
         }
 
         if (measureItem == null) {
-            measureItem = new PropertyMeasureItem(getContext(), !b);
+            measureItem = new PropertyMeasureItem(getContext(), !isEditMode);
             measureItem.setOrientationItem(getOrientation());
             measureItem.setItemEnabled(isEnabled);
             measureItem.setKey(key);
             measureItem.setValue(value);
             measureItem.setTag(key);
             measureItem.setOnPropertyValueChangeListener(this);
-            f.put(key, measureItem);
+            propertyViewCache.put(key, measureItem);
         } else {
             measureItem.setItemEnabled(isEnabled);
             measureItem.setValue(value);
@@ -254,7 +254,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
         if (viewBeanCallback != null) {
             ViewBean cloned = viewBean.clone();
             i(viewBean);
-            if (!b) {
+            if (!isEditMode) {
                 ViewHistoryManager.getInstance(sc_id).recordUpdate(projectFile.getXmlName(), cloned, viewBean.clone());
                 viewBeanCallback.a(viewBean);
             }
@@ -262,14 +262,14 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     }
 
     private void a(String key, String value) {
-        PropertyCustomViewItem propertyCustomViewItem = (PropertyCustomViewItem) f.get(key);
+        PropertyCustomViewItem propertyCustomViewItem = (PropertyCustomViewItem) propertyViewCache.get(key);
         if (propertyCustomViewItem == null) {
-            propertyCustomViewItem = new PropertyCustomViewItem(getContext(), !b);
+            propertyCustomViewItem = new PropertyCustomViewItem(getContext(), !isEditMode);
             propertyCustomViewItem.setOrientationItem(getOrientation());
             propertyCustomViewItem.setKey(key);
             propertyCustomViewItem.setTag(key);
             propertyCustomViewItem.setOnPropertyValueChangeListener(this);
-            f.put(key, propertyCustomViewItem);
+            propertyViewCache.put(key, propertyCustomViewItem);
         }
 
         propertyCustomViewItem.setCustomView(ProjectDataManager.getFileManager(sc_id).c());
@@ -278,7 +278,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     }
 
     private void a(String key, String value, boolean z, String typeView) {
-        PropertyInputItem inputItem = (PropertyInputItem) f.get(key);
+        PropertyInputItem inputItem = (PropertyInputItem) propertyViewCache.get(key);
         if (inputItem == null) {
             inputItem = new PropertyInputItem(getContext(), !z);
             inputItem.setOrientationItem(getOrientation());
@@ -288,7 +288,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
             inputItem.setValue(value);
             inputItem.setTag(key);
             inputItem.setOnPropertyValueChangeListener(this);
-            f.put(key, inputItem);
+            propertyViewCache.put(key, inputItem);
         } else {
             inputItem.setTypeView(typeView);
             inputItem.a(sc_id, projectFile);
@@ -316,15 +316,15 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     }
 
     private void b(String key, int value) {
-        PropertyGravityItem gravityItem = (PropertyGravityItem) f.get(key);
+        PropertyGravityItem gravityItem = (PropertyGravityItem) propertyViewCache.get(key);
         if (gravityItem == null) {
-            gravityItem = new PropertyGravityItem(getContext(), !b);
+            gravityItem = new PropertyGravityItem(getContext(), !isEditMode);
             gravityItem.setOrientationItem(getOrientation());
             gravityItem.setKey(key);
             gravityItem.setValue(value);
             gravityItem.setTag(key);
             gravityItem.setOnPropertyValueChangeListener(this);
-            f.put(key, gravityItem);
+            propertyViewCache.put(key, gravityItem);
         } else {
             gravityItem.setValue(value);
         }
@@ -333,23 +333,23 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     }
 
     private void b(String key, String value) {
-        a(key, value, b, null);
+        a(key, value, isEditMode, null);
     }
 
     private void b(String key, String value, String viewType) {
-        a(key, value, b, viewType);
+        a(key, value, isEditMode, viewType);
     }
 
     private void b(String key, String value, boolean z) {
-        PropertyResourceItem drawableItem = (PropertyResourceItem) f.get(key);
+        PropertyResourceItem drawableItem = (PropertyResourceItem) propertyViewCache.get(key);
         if (drawableItem == null) {
-            drawableItem = new PropertyResourceItem(getContext(), !b, sc_id, z);
+            drawableItem = new PropertyResourceItem(getContext(), !isEditMode, sc_id, z);
             drawableItem.setOrientationItem(getOrientation());
             drawableItem.setKey(key);
             drawableItem.setValue(value);
             drawableItem.setTag(key);
             drawableItem.setOnPropertyValueChangeListener(this);
-            f.put(key, drawableItem);
+            propertyViewCache.put(key, drawableItem);
         } else {
             drawableItem.setValue(value);
         }
@@ -371,15 +371,15 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     }
 
     private void c(String key, int value) {
-        PropertySelectorItem selectorItem = (PropertySelectorItem) f.get(key);
+        PropertySelectorItem selectorItem = (PropertySelectorItem) propertyViewCache.get(key);
         if (selectorItem == null) {
-            selectorItem = new PropertySelectorItem(getContext(), !b);
+            selectorItem = new PropertySelectorItem(getContext(), !isEditMode);
             selectorItem.setOrientationItem(getOrientation());
             selectorItem.setKey(key);
             selectorItem.setValue(value);
             selectorItem.setTag(key);
             selectorItem.setOnPropertyValueChangeListener(this);
-            f.put(key, selectorItem);
+            propertyViewCache.put(key, selectorItem);
         } else {
             selectorItem.setValue(value);
         }
@@ -388,15 +388,15 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     }
 
     private void c(String key, String value) {
-        PropertyStringPairSelectorItem pairSelectorItem = (PropertyStringPairSelectorItem) f.get(key);
+        PropertyStringPairSelectorItem pairSelectorItem = (PropertyStringPairSelectorItem) propertyViewCache.get(key);
         if (pairSelectorItem == null) {
-            pairSelectorItem = new PropertyStringPairSelectorItem(getContext(), !b);
+            pairSelectorItem = new PropertyStringPairSelectorItem(getContext(), !isEditMode);
             pairSelectorItem.setOrientationItem(getOrientation());
             pairSelectorItem.setKey(key);
             pairSelectorItem.setValue(value);
             pairSelectorItem.setTag(key);
             pairSelectorItem.setOnPropertyValueChangeListener(this);
-            f.put(key, pairSelectorItem);
+            propertyViewCache.put(key, pairSelectorItem);
         } else {
             pairSelectorItem.setValue(value);
         }
@@ -441,15 +441,15 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     }
 
     private void d(String key, int value) {
-        PropertySizeItem propertySizeItem = (PropertySizeItem) f.get(key);
+        PropertySizeItem propertySizeItem = (PropertySizeItem) propertyViewCache.get(key);
         if (propertySizeItem == null) {
-            propertySizeItem = new PropertySizeItem(getContext(), !b);
+            propertySizeItem = new PropertySizeItem(getContext(), !isEditMode);
             propertySizeItem.setOrientationItem(getOrientation());
             propertySizeItem.setKey(key);
             propertySizeItem.setValue(value);
             propertySizeItem.setTag(key);
             propertySizeItem.setOnPropertyValueChangeListener(this);
-            f.put(key, propertySizeItem);
+            propertyViewCache.put(key, propertySizeItem);
         } else {
             propertySizeItem.setValue(value);
         }
@@ -458,15 +458,15 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     }
 
     private void d(String key, String value) {
-        PropertyStringSelectorItem stringSelectorItem = (PropertyStringSelectorItem) f.get(key);
+        PropertyStringSelectorItem stringSelectorItem = (PropertyStringSelectorItem) propertyViewCache.get(key);
         if (stringSelectorItem == null) {
-            stringSelectorItem = new PropertyStringSelectorItem(getContext(), !b);
+            stringSelectorItem = new PropertyStringSelectorItem(getContext(), !isEditMode);
             stringSelectorItem.setOrientationItem(getOrientation());
             stringSelectorItem.setKey(key);
             stringSelectorItem.setValue(value);
             stringSelectorItem.setTag(key);
             stringSelectorItem.setOnPropertyValueChangeListener(this);
-            f.put(key, stringSelectorItem);
+            propertyViewCache.put(key, stringSelectorItem);
         } else {
             stringSelectorItem.setValue(value);
         }
@@ -493,10 +493,10 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     }
 
     private void addSwitchProperty(String key, int value) {
-        PropertySwitchSingleLineItem switchSingleLineItem = (PropertySwitchSingleLineItem) f.get(key);
+        PropertySwitchSingleLineItem switchSingleLineItem = (PropertySwitchSingleLineItem) propertyViewCache.get(key);
         boolean isEnabled = false;
         if (switchSingleLineItem == null) {
-            switchSingleLineItem = new PropertySwitchSingleLineItem(getContext(), !b);
+            switchSingleLineItem = new PropertySwitchSingleLineItem(getContext(), !isEditMode);
             switchSingleLineItem.setOrientationItem(getOrientation());
             switchSingleLineItem.setKey(key);
             if (value == 1) {
@@ -506,7 +506,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
             switchSingleLineItem.setValue(isEnabled);
             switchSingleLineItem.setTag(key);
             switchSingleLineItem.setOnPropertyValueChangeListener(this);
-            f.put(key, switchSingleLineItem);
+            propertyViewCache.put(key, switchSingleLineItem);
         } else {
             if (value == 1) {
                 isEnabled = true;
@@ -526,15 +526,15 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
                 ids.add(bean.id);
             }
         }
-        PropertyAttributesItem item = (PropertyAttributesItem) f.get(key);
+        PropertyAttributesItem item = (PropertyAttributesItem) propertyViewCache.get(key);
         if (item == null) {
-            item = new PropertyAttributesItem(getContext(), !b);
+            item = new PropertyAttributesItem(getContext(), !isEditMode);
             item.setOrientationItem(getOrientation());
             item.setKey(key);
             item.setValue(value);
             item.setTag(key);
             item.setOnPropertyValueChangeListener(this);
-            f.put(key, item);
+            propertyViewCache.put(key, item);
         } else {
             item.setValue(value);
         }
@@ -992,7 +992,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
 
     @Override
     public void onClick(View v) {
-        if (!mB.a() && !b) {
+        if (!mB.a() && !isEditMode) {
             ((PropertyActivity) getContext()).p();
         }
     }
