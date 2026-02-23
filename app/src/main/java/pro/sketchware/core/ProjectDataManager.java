@@ -47,7 +47,7 @@ public class ProjectDataManager {
     }
 
     public static synchronized ProjectFileManager b(String str, boolean z) {
-        if (b != null && !str.equals(b.e)) {
+        if (b != null && !str.equals(b.projectId)) {
             c();
         }
         if (b == null) {

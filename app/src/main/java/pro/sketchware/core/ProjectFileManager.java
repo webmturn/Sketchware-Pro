@@ -11,32 +11,32 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class ProjectFileManager {
-  public ArrayList<String> a;
+  public ArrayList<String> xmlNames;
   
-  public ArrayList<String> b;
+  public ArrayList<String> javaNames;
   
-  public ArrayList<ProjectFileBean> c;
+  public ArrayList<ProjectFileBean> activities;
   
-  public ArrayList<ProjectFileBean> d;
+  public ArrayList<ProjectFileBean> customViews;
   
-  public String e;
+  public String projectId;
   
-  public EncryptedFileUtil f;
+  public EncryptedFileUtil fileUtil;
   
-  public Gson g;
+  public Gson gson;
   
   public ProjectFileManager(String paramString) {
-    this.e = paramString;
-    this.f = new EncryptedFileUtil();
-    this.a = new ArrayList<String>();
-    this.b = new ArrayList<String>();
-    this.g = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
+    this.projectId = paramString;
+    this.fileUtil = new EncryptedFileUtil();
+    this.xmlNames = new ArrayList<String>();
+    this.javaNames = new ArrayList<String>();
+    this.gson = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
     f();
     j();
   }
   
   public ProjectFileBean a(String paramString) {
-    for (ProjectFileBean projectFileBean : this.c) {
+    for (ProjectFileBean projectFileBean : this.activities) {
       if (projectFileBean.getJavaName().equals(paramString))
         return projectFileBean; 
     } 
@@ -44,21 +44,21 @@ public class ProjectFileManager {
   }
   
   public void a() {
-    String str = SketchwarePaths.a(this.e);
+    String str = SketchwarePaths.a(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str);
     stringBuilder.append(File.separator);
     stringBuilder.append("file");
     str = stringBuilder.toString();
-    this.f.c(str);
+    this.fileUtil.c(str);
   }
   
   public void a(int paramInt, String paramString) {
     ProjectFileBean projectFileBean = new ProjectFileBean(paramInt, paramString);
     if (paramInt == 0) {
-      this.c.add(projectFileBean);
+      this.activities.add(projectFileBean);
     } else {
-      this.d.add(projectFileBean);
+      this.customViews.add(projectFileBean);
     } 
   }
   
@@ -66,7 +66,7 @@ public class ProjectFileManager {
     ProjectLibraryBean projectLibraryBean = paramiC.c();
     if (projectLibraryBean != null && projectLibraryBean.useYn.equals("Y"))
       return; 
-    for (ProjectFileBean projectFileBean : this.c) {
+    for (ProjectFileBean projectFileBean : this.activities) {
       if (projectFileBean.hasActivityOption(4)) {
         b(2, projectFileBean.getDrawerName());
         projectFileBean.setActivityOptions(1);
@@ -79,9 +79,9 @@ public class ProjectFileManager {
   
   public void a(ProjectFileBean paramProjectFileBean) {
     if (paramProjectFileBean.fileType == 0) {
-      this.c.add(paramProjectFileBean);
+      this.activities.add(paramProjectFileBean);
     } else {
-      this.d.add(paramProjectFileBean);
+      this.customViews.add(paramProjectFileBean);
     } 
   }
   
@@ -125,11 +125,11 @@ public class ProjectFileManager {
         if (i < 0 || paramString1.charAt(0) != '{')
           break; 
         paramString2 = paramString1.substring(0, i);
-        ProjectFileBean projectFileBean1 = (ProjectFileBean)this.g.fromJson(paramString2, ProjectFileBean.class);
+        ProjectFileBean projectFileBean1 = (ProjectFileBean)this.gson.fromJson(paramString2, ProjectFileBean.class);
         projectFileBean1.setOptionsByTheme();
         if (projectFileBean1.fileName.equals("main")) {
           String str = null;
-          Iterator<ProjectFileBean> iterator = this.c.iterator();
+          Iterator<ProjectFileBean> iterator = this.activities.iterator();
           while (true) {
             paramString2 = str;
             if (iterator.hasNext()) {
@@ -143,10 +143,10 @@ public class ProjectFileManager {
           if (projectFileBean != null) {
             projectFileBean.copy(projectFileBean1);
           } else {
-            this.c.add(0, projectFileBean1);
+            this.activities.add(0, projectFileBean1);
           } 
         } else {
-          this.c.add(projectFileBean1);
+          this.activities.add(projectFileBean1);
         } 
         if (i >= paramString1.length() - 1)
           break; 
@@ -155,16 +155,16 @@ public class ProjectFileManager {
     } else if (paramString1.equals("customview")) {
       if (paramString2.length() <= 0)
         return; 
-      this.d = new ArrayList<ProjectFileBean>();
+      this.customViews = new ArrayList<ProjectFileBean>();
       String str = paramString2;
       while (true) {
         int i = str.indexOf("\n");
         if (i < 0 || str.charAt(0) != '{')
           break; 
         paramString1 = str.substring(0, i);
-        ProjectFileBean projectFileBean1 = (ProjectFileBean)this.g.fromJson(paramString1, ProjectFileBean.class);
+        ProjectFileBean projectFileBean1 = (ProjectFileBean)this.gson.fromJson(paramString1, ProjectFileBean.class);
         projectFileBean1.setOptionsByTheme();
-        this.d.add(projectFileBean1);
+        this.customViews.add(projectFileBean1);
         if (i >= str.length() - 1)
           break; 
         str = str.substring(i + 1);
@@ -176,33 +176,33 @@ public class ProjectFileManager {
     paramStringBuffer.append("@");
     paramStringBuffer.append("activity");
     paramStringBuffer.append("\n");
-    ArrayList<ProjectFileBean> arrayList = this.c;
+    ArrayList<ProjectFileBean> arrayList = this.activities;
     if (arrayList != null)
       for (ProjectFileBean projectFileBean : arrayList) {
-        paramStringBuffer.append(this.g.toJson(projectFileBean, ProjectFileBean.class));
+        paramStringBuffer.append(this.gson.toJson(projectFileBean, ProjectFileBean.class));
         paramStringBuffer.append("\n");
       }  
     paramStringBuffer.append("@");
     paramStringBuffer.append("customview");
     paramStringBuffer.append("\n");
-    arrayList = this.d;
+    arrayList = this.customViews;
     if (arrayList != null)
       for (ProjectFileBean projectFileBean : arrayList) {
-        paramStringBuffer.append(this.g.toJson(projectFileBean, ProjectFileBean.class));
+        paramStringBuffer.append(this.gson.toJson(projectFileBean, ProjectFileBean.class));
         paramStringBuffer.append("\n");
       }  
   }
   
   public void a(ArrayList<ProjectFileBean> paramArrayList) {
-    this.c = paramArrayList;
+    this.activities = paramArrayList;
   }
   
   public ProjectFileBean b(String paramString) {
-    for (ProjectFileBean projectFileBean : this.c) {
+    for (ProjectFileBean projectFileBean : this.activities) {
       if (projectFileBean.getXmlName().equals(paramString))
         return projectFileBean; 
     } 
-    ArrayList<ProjectFileBean> arrayList = this.d;
+    ArrayList<ProjectFileBean> arrayList = this.customViews;
     if (arrayList != null)
       for (ProjectFileBean projectFileBean : arrayList) {
         if (projectFileBean.getXmlName().equals(paramString))
@@ -212,23 +212,23 @@ public class ProjectFileManager {
   }
   
   public ArrayList<ProjectFileBean> b() {
-    if (this.c == null)
-      this.c = new ArrayList<ProjectFileBean>(); 
-    return this.c;
+    if (this.activities == null)
+      this.activities = new ArrayList<ProjectFileBean>(); 
+    return this.activities;
   }
   
   public void b(int paramInt, String paramString) {
     if (paramInt == 0) {
-      for (ProjectFileBean projectFileBean : this.c) {
+      for (ProjectFileBean projectFileBean : this.activities) {
         if (projectFileBean.fileType == paramInt && projectFileBean.fileName.equals(paramString)) {
-          this.c.remove(projectFileBean);
+          this.activities.remove(projectFileBean);
           break;
         } 
       } 
     } else {
-      for (ProjectFileBean projectFileBean : this.d) {
+      for (ProjectFileBean projectFileBean : this.customViews) {
         if (projectFileBean.fileType == paramInt && projectFileBean.fileName.equals(paramString)) {
-          this.d.remove(projectFileBean);
+          this.customViews.remove(projectFileBean);
           break;
         } 
       } 
@@ -236,17 +236,17 @@ public class ProjectFileManager {
   }
   
   public void b(ArrayList<ProjectFileBean> paramArrayList) {
-    this.d = paramArrayList;
+    this.customViews = paramArrayList;
   }
   
   public ArrayList<ProjectFileBean> c() {
-    if (this.d == null)
-      this.d = new ArrayList<ProjectFileBean>(); 
-    return this.d;
+    if (this.customViews == null)
+      this.customViews = new ArrayList<ProjectFileBean>(); 
+    return this.customViews;
   }
   
   public boolean c(String paramString) {
-    Iterator<String> iterator = this.b.iterator();
+    Iterator<String> iterator = this.javaNames.iterator();
     while (iterator.hasNext()) {
       if (paramString.equals(iterator.next()))
         return true; 
@@ -255,11 +255,11 @@ public class ProjectFileManager {
   }
   
   public ArrayList<String> d() {
-    return this.b;
+    return this.javaNames;
   }
   
   public boolean d(String paramString) {
-    Iterator<String> iterator = this.a.iterator();
+    Iterator<String> iterator = this.xmlNames.iterator();
     while (iterator.hasNext()) {
       if (paramString.equals(iterator.next()))
         return true; 
@@ -268,39 +268,39 @@ public class ProjectFileManager {
   }
   
   public ArrayList<String> e() {
-    return this.a;
+    return this.xmlNames;
   }
   
   public final void e(String paramString) {
     StringBuffer stringBuffer = new StringBuffer();
     a(stringBuffer);
     try {
-      byte[] arrayOfByte = this.f.d(stringBuffer.toString());
-      this.f.a(paramString, arrayOfByte);
+      byte[] arrayOfByte = this.fileUtil.d(stringBuffer.toString());
+      this.fileUtil.a(paramString, arrayOfByte);
     } catch (Exception exception) {
       exception.printStackTrace();
     } 
   }
   
   public final void f() {
-    this.c = new ArrayList<ProjectFileBean>();
-    this.d = new ArrayList<ProjectFileBean>();
+    this.activities = new ArrayList<ProjectFileBean>();
+    this.customViews = new ArrayList<ProjectFileBean>();
     a(0, "main");
   }
   
   public boolean g() {
-    String str1 = SketchwarePaths.a(this.e);
+    String str1 = SketchwarePaths.a(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str1);
     stringBuilder.append(File.separator);
     stringBuilder.append("file");
     String str2 = stringBuilder.toString();
-    return this.f.e(str2);
+    return this.fileUtil.e(str2);
   }
   
   public void h() {
     f();
-    String str1 = SketchwarePaths.a(this.e);
+    String str1 = SketchwarePaths.a(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str1);
     stringBuilder.append(File.separator);
@@ -308,8 +308,8 @@ public class ProjectFileManager {
     String str2 = stringBuilder.toString();
     BufferedReader bufferedReader = null;
     try {
-      byte[] arrayOfByte = this.f.h(str2);
-      String str = this.f.a(arrayOfByte);
+      byte[] arrayOfByte = this.fileUtil.h(str2);
+      String str = this.fileUtil.a(arrayOfByte);
       bufferedReader = new BufferedReader(new StringReader(str));
       a(bufferedReader);
     } catch (Exception exception) {
@@ -322,18 +322,18 @@ public class ProjectFileManager {
   
   public void i() {
     f();
-    String str1 = SketchwarePaths.b(this.e);
+    String str1 = SketchwarePaths.b(this.projectId);
     StringBuilder stringBuilder1 = new StringBuilder();
     stringBuilder1.append(str1);
     stringBuilder1.append(File.separator);
     stringBuilder1.append("file");
     str1 = stringBuilder1.toString();
-    if (!this.f.e(str1))
+    if (!this.fileUtil.e(str1))
       return; 
     BufferedReader bufferedReader = null;
     try {
-      byte[] arrayOfByte = this.f.h(str1);
-      String str = this.f.a(arrayOfByte);
+      byte[] arrayOfByte = this.fileUtil.h(str1);
+      String str = this.fileUtil.a(arrayOfByte);
       bufferedReader = new BufferedReader(new StringReader(str));
       a(bufferedReader);
     } catch (Exception exception) {
@@ -344,37 +344,37 @@ public class ProjectFileManager {
   }
   
   public void j() {
-    this.a.clear();
-    this.b.clear();
-    for (ProjectFileBean projectFileBean : this.c) {
+    this.xmlNames.clear();
+    this.javaNames.clear();
+    for (ProjectFileBean projectFileBean : this.activities) {
       if (projectFileBean.fileType == 0) {
         if (projectFileBean.fileName.equals("main")) {
-          this.a.add(0, projectFileBean.getXmlName());
-          this.b.add(0, projectFileBean.getJavaName());
+          this.xmlNames.add(0, projectFileBean.getXmlName());
+          this.javaNames.add(0, projectFileBean.getJavaName());
           continue;
         } 
-        this.a.add(projectFileBean.getXmlName());
-        this.b.add(projectFileBean.getJavaName());
+        this.xmlNames.add(projectFileBean.getXmlName());
+        this.javaNames.add(projectFileBean.getJavaName());
       } 
     } 
-    ArrayList<ProjectFileBean> arrayList = this.d;
+    ArrayList<ProjectFileBean> arrayList = this.customViews;
     if (arrayList != null)
       for (ProjectFileBean projectFileBean : arrayList) {
         int i = projectFileBean.fileType;
         if (i == 1 || i == 2)
-          this.a.add(projectFileBean.getXmlName()); 
+          this.xmlNames.add(projectFileBean.getXmlName()); 
       }  
   }
   
   public void k() {
-    this.e = "";
-    this.a = new ArrayList<String>();
-    this.b = new ArrayList<String>();
+    this.projectId = "";
+    this.xmlNames = new ArrayList<String>();
+    this.javaNames = new ArrayList<String>();
     f();
   }
   
   public void l() {
-    String str = SketchwarePaths.a(this.e);
+    String str = SketchwarePaths.a(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str);
     stringBuilder.append(File.separator);
@@ -383,7 +383,7 @@ public class ProjectFileManager {
   }
   
   public void m() {
-    String str = SketchwarePaths.b(this.e);
+    String str = SketchwarePaths.b(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str);
     stringBuilder.append(File.separator);
