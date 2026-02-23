@@ -13,7 +13,7 @@ import pro.sketchware.R;
 public class FontNameValidator extends BaseValidator {
     public String[] reservedKeywords;
     public ArrayList<String> fontNames;
-    public String h;
+    public String editingName;
     public Pattern pattern;
 
     public FontNameValidator(Context context, TextInputLayout textInputLayout, String[] reservedKeywordsArr, ArrayList<String> arrayList) {
@@ -28,7 +28,7 @@ public class FontNameValidator extends BaseValidator {
         pattern = Pattern.compile("^[a-z][a-z0-9_]*");
         reservedKeywords = strArr;
         fontNames = arrayList;
-        h = str;
+        editingName = str;
     }
 
     @Override
@@ -40,7 +40,7 @@ public class FontNameValidator extends BaseValidator {
             a2 = context.getString(R.string.invalid_value_min_lenth, 3);
         } else if (trim.length() > 70) {
             a2 = context.getString(R.string.invalid_value_max_lenth, 70);
-        } else if (trim.equals("default_image") || "NONE".equalsIgnoreCase(trim) || (!trim.equals(h) && (fontNames != null && fontNames.contains(trim)))) {
+        } else if (trim.equals("default_image") || "NONE".equalsIgnoreCase(trim) || (!trim.equals(editingName) && (fontNames != null && fontNames.contains(trim)))) {
             a2 = context.getString(R.string.common_message_name_unavailable);
         } else {
             int count = 0;

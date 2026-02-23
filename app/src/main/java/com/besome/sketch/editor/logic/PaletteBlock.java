@@ -22,7 +22,7 @@ import pro.sketchware.databinding.PaletteBlockBinding;
 
 public class PaletteBlock extends LinearLayout {
 
-    public float f = 0.0F;
+    public float density = 0.0F;
     private PaletteBlockBinding binding;
     private Context context;
 
@@ -39,7 +39,7 @@ public class PaletteBlock extends LinearLayout {
     private void initialize(Context context) {
         this.context = context;
         binding = PaletteBlockBinding.inflate(LayoutInflater.from(context), this, true);
-        f = wB.a(context, 1.0F);
+        density = wB.a(context, 1.0F);
     }
 
     public Ts a(String var1, String var2, String var3) {
@@ -70,11 +70,11 @@ public class PaletteBlock extends LinearLayout {
         textView.setTextSize(10.0F);
         textView.setTypeface(null, Typeface.BOLD);
         textView.setGravity(Gravity.CENTER);
-        textView.setPadding((int) (f * 8.0F), 0, (int) (f * 8.0F), 0);
+        textView.setPadding((int) (density * 8.0F), 0, (int) (density * 8.0F), 0);
 
         var cardView = new MaterialCardView(context);
         var params = getLayoutParams(30.0F);
-        params.setMargins(0, 0, (int) (f * 4), (int) (f * 6));
+        params.setMargins(0, 0, (int) (density * 4), (int) (density * 6));
         cardView.setLayoutParams(params);
         cardView.setCardBackgroundColor(getColor(context, isDarkThemeEnabled(context) ? R.attr.colorSurfaceContainerHigh : R.attr.colorSurfaceContainerHighest));
         cardView.addView(textView);
@@ -91,17 +91,17 @@ public class PaletteBlock extends LinearLayout {
     public void a(String title, int color) {
         var cardView = new MaterialCardView(context);
         var params = getLayoutParams(18.0F);
-        params.topMargin = (int) (f * 16.0F);
+        params.topMargin = (int) (density * 16.0F);
         cardView.setLayoutParams(params);
         cardView.setCardBackgroundColor(color);
-        cardView.setRadius(f * 8f);
+        cardView.setRadius(density * 8f);
 
         TextView textView = new TextView(context);
         textView.setText(title);
         textView.setTextColor(getColor(context, isDarkThemeEnabled(context) ? R.attr.colorOnSurface : R.attr.colorOnSurfaceInverse));
         textView.setTextSize(10.0F);
         textView.setGravity(Gravity.CENTER | Gravity.LEFT);
-        textView.setPadding((int) (f * 12.0F), 0, (int) (f * 12.0F), 0);
+        textView.setPadding((int) (density * 12.0F), 0, (int) (density * 12.0F), 0);
         cardView.addView(textView);
 
         binding.blockBuilder.addView(cardView);
@@ -138,7 +138,7 @@ public class PaletteBlock extends LinearLayout {
     }
 
     private LinearLayout.LayoutParams getLayoutParams(float heightMultiplier) {
-        return new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int) (f * heightMultiplier));
+        return new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int) (density * heightMultiplier));
     }
 
     public void setDragEnabled(boolean dragEnabled) {
@@ -152,8 +152,8 @@ public class PaletteBlock extends LinearLayout {
     }
 
     public void setMinWidth(int minWidth) {
-        binding.scroll.setMinimumWidth(minWidth - (int) (f * 5.0F));
-        binding.scrollHorizontal.setMinimumWidth(minWidth - (int) (f * 5.0F));
+        binding.scroll.setMinimumWidth(minWidth - (int) (density * 5.0F));
+        binding.scrollHorizontal.setMinimumWidth(minWidth - (int) (density * 5.0F));
         getLayoutParams().width = minWidth;
     }
 

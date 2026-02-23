@@ -17,22 +17,22 @@ public class ViewDummy extends RelativeLayout {
     public ImageView img_notallowed;
     public ImageView img_dummy;
     public LinearLayout layout_dummy;
-    public int[] d;
-    public int[] e;
+    public int[] sourceLocation;
+    public int[] dummyLocation;
     public boolean allowed;
 
     public ViewDummy(Context context) {
         super(context);
-        d = new int[2];
-        e = new int[2];
+        sourceLocation = new int[2];
+        dummyLocation = new int[2];
         allowed = false;
         initialize(context);
     }
 
     public ViewDummy(Context context, AttributeSet attrs) {
         super(context, attrs);
-        d = new int[2];
-        e = new int[2];
+        sourceLocation = new int[2];
+        dummyLocation = new int[2];
         allowed = false;
         initialize(context);
     }
@@ -46,7 +46,7 @@ public class ViewDummy extends RelativeLayout {
 
     public void b(View view) {
         Bitmap bitmap = createBitmapOfView(view);
-        view.getLocationOnScreen(d);
+        view.getLocationOnScreen(sourceLocation);
         img_dummy.setImageBitmap(bitmap);
         img_dummy.setAlpha(0.5f);
     }
@@ -100,16 +100,16 @@ public class ViewDummy extends RelativeLayout {
                 break;
         }
         img_dummy.setAlpha(0.5f);
-        rs.getLocationOnScreen(d);
+        rs.getLocationOnScreen(sourceLocation);
     }
 
     public void a(View view, float f, float f2, float f3, float f4, float f5, float f6) {
         if (layout_dummy.getVisibility() != View.VISIBLE) {
             setDummyVisibility(View.VISIBLE);
         }
-        getLocationOnScreen(e);
-        layout_dummy.setX((d[0] - e[0]) + f - f3 - img_notallowed.getWidth() + f5);
-        layout_dummy.setY((d[1] - e[1]) + f2 - f4 + f6);
+        getLocationOnScreen(dummyLocation);
+        layout_dummy.setX((sourceLocation[0] - dummyLocation[0]) + f - f3 - img_notallowed.getWidth() + f5);
+        layout_dummy.setY((sourceLocation[1] - dummyLocation[1]) + f2 - f4 + f6);
     }
 
     public void a(View view, float f, float f2, float f3, float f4) {

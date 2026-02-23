@@ -7,7 +7,7 @@ import com.besome.sketch.beans.ViewBean;
 import pro.sketchware.R;
 
 public class IconImageView extends IconBase {
-    public String f = "";
+    public String resourceName = "";
 
     public IconImageView(Context context) {
         super(context);
@@ -24,15 +24,15 @@ public class IconImageView extends IconBase {
         ViewBean viewBean = new ViewBean();
         viewBean.type = 6;
         viewBean.convert = "ImageView";
-        viewBean.image.resName = f;
+        viewBean.image.resName = resourceName;
         return viewBean;
     }
 
     public String getResourceName() {
-        return f;
+        return resourceName;
     }
 
     public void setResourceName(String str) {
-        f = str;
+        resourceName = str;
     }
 }
