@@ -19,7 +19,7 @@ import com.besome.sketch.beans.ViewBean;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class ViewFilesAdapter extends qA {
+public class ViewFilesAdapter extends BaseFragment {
   public RecyclerView f;
   
   public String g;
@@ -35,7 +35,7 @@ public class ViewFilesAdapter extends qA {
   public int[] l = new int[19];
   
   public final String a(int paramInt, String paramString) {
-    String str1 = wq.b(paramInt);
+    String str1 = SketchwarePaths.b(paramInt);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str1);
     int[] arrayOfInt = this.l;
@@ -43,7 +43,7 @@ public class ViewFilesAdapter extends qA {
     arrayOfInt[paramInt] = i;
     stringBuilder.append(i);
     String str2 = stringBuilder.toString();
-    ArrayList arrayList = jC.a(this.g).d(paramString);
+    ArrayList arrayList = ProjectDataManager.a(this.g).d(paramString);
     paramString = str2;
     while (true) {
       int found = 0;
@@ -74,9 +74,9 @@ public class ViewFilesAdapter extends qA {
   public final ArrayList<ViewBean> a(String paramString, int paramInt) {
     ArrayList<ViewBean> arrayList;
     if (paramInt == 277) {
-      arrayList = rq.b(paramString);
+      arrayList = PresetLayoutFactory.b(paramString);
     } else if (paramInt == 278) {
-      arrayList = rq.d(paramString);
+      arrayList = PresetLayoutFactory.d(paramString);
     } else {
       arrayList = new ArrayList<>();
     }
@@ -123,7 +123,7 @@ public class ViewFilesAdapter extends qA {
   }
   
   public void d() {
-    ArrayList<ProjectFileBean> arrayList = jC.b(this.g).c();
+    ArrayList<ProjectFileBean> arrayList = ProjectDataManager.b(this.g).c();
     if (arrayList == null)
       return; 
     for (ProjectFileBean projectFileBean : arrayList)
@@ -180,18 +180,18 @@ public class ViewFilesAdapter extends qA {
   public void onActivityResult(int paramInt1, int paramInt2, Intent paramIntent) {
     if ((paramInt1 == 277 || paramInt1 == 278) && paramInt2 == -1) {
       ProjectFileBean projectFileBean = this.h.get(this.i.c);
-      ArrayList<ViewBean> arrayList2 = jC.a(this.g).d(projectFileBean.getXmlName());
+      ArrayList<ViewBean> arrayList2 = ProjectDataManager.a(this.g).d(projectFileBean.getXmlName());
       for (paramInt2 = arrayList2.size() - 1; paramInt2 >= 0; paramInt2--) {
         ViewBean viewBean = arrayList2.get(paramInt2);
-        jC.a(this.g).a(projectFileBean, viewBean);
+        ProjectDataManager.a(this.g).a(projectFileBean, viewBean);
       } 
       ArrayList<ViewBean> arrayList1 = a(((ProjectFileBean)paramIntent.getParcelableExtra("preset_data")).presetName, paramInt1);
-      jC.a(this.g);
+      ProjectDataManager.a(this.g);
       for (ViewBean viewBean : ProjectDataStore.a(arrayList1)) {
         viewBean.id = a(viewBean.type, projectFileBean.getXmlName());
-        jC.a(this.g).a(projectFileBean.getXmlName(), viewBean);
+        ProjectDataManager.a(this.g).a(projectFileBean.getXmlName(), viewBean);
         if (viewBean.type == 3 && projectFileBean.fileType == 0)
-          jC.a(this.g).a(projectFileBean.getJavaName(), 1, viewBean.type, viewBean.id, "onClick"); 
+          ProjectDataManager.a(this.g).a(projectFileBean.getJavaName(), 1, viewBean.type, viewBean.id, "onClick"); 
       } 
       a a1 = this.i;
       a1.notifyItemChanged(a1.c);

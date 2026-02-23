@@ -9,7 +9,7 @@ import com.google.gson.annotations.Expose;
 
 import java.util.ArrayList;
 
-import a.a.a.Gx;
+import a.a.a.ClassInfo;
 import a.a.a.ComponentTypeMapper;
 
 public class BlockBean extends SelectableBean implements Parcelable {
@@ -25,7 +25,7 @@ public class BlockBean extends SelectableBean implements Parcelable {
         }
     };
 
-    public Gx classInfo;
+    public ClassInfo classInfo;
     @Expose
     public int color;
     @Expose
@@ -34,7 +34,7 @@ public class BlockBean extends SelectableBean implements Parcelable {
     public int nextBlock;
     @Expose
     public String opCode;
-    public ArrayList<Gx> paramClassInfo;
+    public ArrayList<ClassInfo> paramClassInfo;
     @Expose
     public ArrayList<String> parameters;
     @Expose
@@ -117,14 +117,14 @@ public class BlockBean extends SelectableBean implements Parcelable {
         return 0;
     }
 
-    public Gx getClassInfo() {
+    public ClassInfo getClassInfo() {
         if (classInfo == null) {
             buildClassInfo();
         }
         return classInfo;
     }
 
-    public ArrayList<Gx> getParamClassInfo() {
+    public ArrayList<ClassInfo> getParamClassInfo() {
         if (paramClassInfo == null) {
             buildClassInfo();
         }

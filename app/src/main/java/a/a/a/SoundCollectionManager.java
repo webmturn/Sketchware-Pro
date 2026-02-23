@@ -43,11 +43,11 @@ public class SoundCollectionManager extends BaseCollectionManager {
       e(); 
   }
   
-  public void a(String paramString, ProjectResourceBean paramProjectResourceBean) throws yy {
+  public void a(String paramString, ProjectResourceBean paramProjectResourceBean) throws CompileException {
     a(paramString, paramProjectResourceBean, true);
   }
   
-  public void a(String paramString, ProjectResourceBean paramProjectResourceBean, boolean paramBoolean) throws yy {
+  public void a(String paramString, ProjectResourceBean paramProjectResourceBean, boolean paramBoolean) throws CompileException {
     if (this.e == null) a();
     ArrayList<String> duplicates = new ArrayList<String>();
     for (CollectionBean bean : this.e) {
@@ -56,7 +56,7 @@ public class SoundCollectionManager extends BaseCollectionManager {
       }
     }
     if (duplicates.size() > 0) {
-      throw new yy("duplicate_name");
+      throw new CompileException("duplicate_name");
     }
     String dataName = paramProjectResourceBean.resName;
     if (paramProjectResourceBean.isNinePatch()) {
@@ -68,31 +68,31 @@ public class SoundCollectionManager extends BaseCollectionManager {
     if (paramProjectResourceBean.savedPos == 1) {
       String srcPath = paramProjectResourceBean.resFullName;
       if (!this.c.e(srcPath)) {
-        throw new yy("file_no_exist");
+        throw new CompileException("file_no_exist");
       }
       try {
         this.c.f(this.b);
-        iB.a(srcPath, destPath, paramProjectResourceBean.rotate, paramProjectResourceBean.flipHorizontal, paramProjectResourceBean.flipVertical);
+        BitmapUtil.a(srcPath, destPath, paramProjectResourceBean.rotate, paramProjectResourceBean.flipHorizontal, paramProjectResourceBean.flipVertical);
       } catch (Exception e) {
-        throw new yy("fail_to_copy");
+        throw new CompileException("fail_to_copy");
       }
     } else {
-      String srcPath = wq.g() + java.io.File.separator + paramString + java.io.File.separator + paramProjectResourceBean.resFullName;
+      String srcPath = SketchwarePaths.g() + java.io.File.separator + paramString + java.io.File.separator + paramProjectResourceBean.resFullName;
       if (!this.c.e(srcPath)) {
-        throw new yy("file_no_exist");
+        throw new CompileException("file_no_exist");
       }
       try {
         this.c.f(this.b);
         this.c.a(srcPath, destPath);
       } catch (Exception e) {
-        throw new yy("fail_to_copy");
+        throw new CompileException("fail_to_copy");
       }
     }
     this.e.add(new CollectionBean(paramProjectResourceBean.resName, dataName));
     if (paramBoolean) e();
   }
   
-  public void a(String paramString, ArrayList<ProjectResourceBean> paramArrayList, boolean paramBoolean) throws yy {
+  public void a(String paramString, ArrayList<ProjectResourceBean> paramArrayList, boolean paramBoolean) throws CompileException {
     if (this.e == null)
       a(); 
     ArrayList<String> arrayList = new ArrayList<>();
@@ -108,7 +108,7 @@ public class SoundCollectionManager extends BaseCollectionManager {
         String str;
         if (((SelectableBean)projectResourceBean).savedPos == 0) {
           StringBuilder stringBuilder = new StringBuilder();
-          stringBuilder.append(wq.g());
+          stringBuilder.append(SketchwarePaths.g());
           stringBuilder.append(File.separator);
           stringBuilder.append(paramString);
           stringBuilder.append(File.separator);
@@ -139,7 +139,7 @@ public class SoundCollectionManager extends BaseCollectionManager {
           } 
           if (((SelectableBean)projectResourceBean).savedPos == 0) {
             StringBuilder stringBuilder1 = new StringBuilder();
-            stringBuilder1.append(wq.g());
+            stringBuilder1.append(SketchwarePaths.g());
             stringBuilder1.append(File.separator);
             stringBuilder1.append(paramString);
             stringBuilder1.append(File.separator);
@@ -155,7 +155,7 @@ public class SoundCollectionManager extends BaseCollectionManager {
           String str3 = stringBuilder.toString();
           try {
             this.c.f(this.b);
-            iB.a(str2, str3, projectResourceBean.rotate, projectResourceBean.flipHorizontal, projectResourceBean.flipVertical);
+            BitmapUtil.a(str2, str3, projectResourceBean.rotate, projectResourceBean.flipHorizontal, projectResourceBean.flipVertical);
             ArrayList<CollectionBean> arrayList3 = this.e;
             CollectionBean collectionBean = new CollectionBean(projectResourceBean.resName, str1);
             arrayList3.add(collectionBean);
@@ -165,7 +165,7 @@ public class SoundCollectionManager extends BaseCollectionManager {
           } 
         } 
         if (arrayList1.size() > 0) {
-          yy yy2 = new yy("fail_to_copy");
+          CompileException yy2 = new CompileException("fail_to_copy");
           yy2.a(arrayList1);
           if (arrayList2.size() > 0)
             for (String str : arrayList2)
@@ -176,13 +176,13 @@ public class SoundCollectionManager extends BaseCollectionManager {
           e(); 
         return;
       } 
-      yy yy1 = new yy("file_no_exist");
+      CompileException yy1 = new CompileException("file_no_exist");
       yy1.a(arrayList1);
       throw yy1;
     } 
-    yy yy = new yy("duplicate_name");
-    yy.a(arrayList);
-    throw yy;
+    CompileException CompileException = new CompileException("duplicate_name");
+    CompileException.a(arrayList);
+    throw CompileException;
   }
   
   public void a(String paramString, boolean paramBoolean) {
@@ -213,14 +213,14 @@ public class SoundCollectionManager extends BaseCollectionManager {
   
   public void b() {
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(wq.a());
+    stringBuilder.append(SketchwarePaths.a());
     stringBuilder.append(File.separator);
     stringBuilder.append("image");
     stringBuilder.append(File.separator);
     stringBuilder.append("list");
     this.a = stringBuilder.toString();
     stringBuilder = new StringBuilder();
-    stringBuilder.append(wq.a());
+    stringBuilder.append(SketchwarePaths.a());
     stringBuilder.append(File.separator);
     stringBuilder.append("image");
     stringBuilder.append(File.separator);

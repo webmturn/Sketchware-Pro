@@ -411,10 +411,10 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
         boolean hasAnyBlocks = false;
         boolean failedToAddResourceToCollections = false;
         for (BlockBean next : moreBlockBlocks) {
-            ArrayList<Gx> paramClassInfo = next.getParamClassInfo();
+            ArrayList<ClassInfo> paramClassInfo = next.getParamClassInfo();
             if (!paramClassInfo.isEmpty()) {
                 for (int i = 0; i < paramClassInfo.size(); i++) {
-                    Gx gx = paramClassInfo.get(i);
+                    ClassInfo gx = paramClassInfo.get(i);
                     String parameter = next.parameters.get(i);
 
                     if (gx.isExactType("resource") || gx.isExactType("resource_bg")) {

@@ -26,7 +26,7 @@ import java.util.Map.Entry;
 
 import a.a.a.RecentHistoryManager;
 import a.a.a.ClassInfo;
-import a.a.a.Gx;
+import a.a.a.ClassInfo;
 import a.a.a.PropertyChangedCallback;
 import a.a.a.ViewBeanCallback;
 import a.a.a.ViewHistoryManager;
@@ -885,7 +885,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
                             if (classInfo != null && classInfo.isView() && blockBean.spec.equals(viewBinding ? "binding." + ViewBindingBuilder.generateParameterFromId(bean.preId) : bean.preId)) {
                                 blockBean.spec = viewBinding ? "binding." + ViewBindingBuilder.generateParameterFromId(bean.id) : bean.id;
                             } else {
-                                ArrayList<Gx> paramClassInfo = blockBean.getParamClassInfo();
+                                ArrayList<ClassInfo> paramClassInfo = blockBean.getParamClassInfo();
                                 if (paramClassInfo != null && !paramClassInfo.isEmpty()) {
                                     for (int i = 0; i < paramClassInfo.size(); ++i) {
                                         if (paramClassInfo.get(i).d() && blockBean.parameters.get(i).equals(viewBinding ? "binding." + ViewBindingBuilder.generateParameterFromId(bean.preId) : bean.preId)) {
@@ -921,7 +921,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
                             if (classInfo != null && classInfo.isView() && blockBean.spec.equals(viewBinding ? "binding." + ViewBindingBuilder.generateParameterFromId(bean.preId) : bean.preId)) {
                                 blockBean.spec = viewBinding ? "binding." + ViewBindingBuilder.generateParameterFromId(bean.id) : bean.id;
                             } else {
-                                ArrayList<Gx> paramClassInfo = blockBean.getParamClassInfo();
+                                ArrayList<ClassInfo> paramClassInfo = blockBean.getParamClassInfo();
                                 if (paramClassInfo != null && !paramClassInfo.isEmpty()) {
                                     for (int i = 0; i < paramClassInfo.size(); ++i) {
                                         if (paramClassInfo.get(i).d() && blockBean.parameters.get(i).equals(viewBinding ? "binding." + ViewBindingBuilder.generateParameterFromId(bean.preId) : bean.preId)) {

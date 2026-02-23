@@ -54,7 +54,7 @@ import a.a.a.ActivityCodeGenerator;
 import a.a.a.PropertyChangedCallback;
 import a.a.a.NumberRangeValidator;
 import a.a.a.LengthRangeValidator;
-import a.a.a.jC;
+import a.a.a.ProjectDataManager;
 import a.a.a.ProjectListManager;
 import a.a.a.UIHelper;
 import a.a.a.BlockConstants;
@@ -487,7 +487,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
         binding.tiInput.setHint(String.format(Helper.getResString(R.string.property_enter_value), "widget ID"));
 
         binding.edInput.setSingleLine();
-        PropertyNameValidator validator = new PropertyNameValidator(context, binding.tiInput, BlockConstants.RESERVED_KEYWORDS, BlockConstants.COMPONENT_TYPES, jC.a(sc_id).a(projectFileBean), value);
+        PropertyNameValidator validator = new PropertyNameValidator(context, binding.tiInput, BlockConstants.RESERVED_KEYWORDS, BlockConstants.COMPONENT_TYPES, ProjectDataManager.a(sc_id).a(projectFileBean), value);
         validator.setText(value);
         dialog.setView(binding.getRoot());
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_save), (v, which) -> {

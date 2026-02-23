@@ -140,7 +140,7 @@ public class BlockView extends BaseBlockView {
   }
   
   public final void a(String paramString, int paramInt) {
-    ArrayList<String> arrayList = FB.c(paramString);
+    ArrayList<String> arrayList = FormatUtil.c(paramString);
     this.ka = new ArrayList<View>();
     this.la = new ArrayList<String>();
     for (int b = 0; b < arrayList.size(); b++) {
@@ -174,9 +174,9 @@ public class BlockView extends BaseBlockView {
           str = paramString.substring(3);
         return new FieldBlockView(this.a, "s", str);
       }
-      return a(FB.d(paramString));
+      return a(FormatUtil.d(paramString));
     }
-    return a(FB.d(paramString));
+    return a(FormatUtil.d(paramString));
   }
   
   public void b(BlockView paramRs) {
@@ -557,7 +557,7 @@ public class BlockView extends BaseBlockView {
       default:
         break;
     }
-    int color = kq.a(this.U, this.b);
+    int color = BlockColorMapper.a(this.U, this.b);
     if (!this.ea && !this.U.equals("definedFunc") && !this.U.equals("getVar")
         && !this.U.equals("getResStr") && !this.U.equals("getArg") && color != -7711273) {
       this.T = StringResource.b().a(getContext(), this.U);

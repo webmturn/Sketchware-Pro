@@ -18,7 +18,7 @@ public class StringResource {
   
   public HashMap<String, String> c;
   
-  public String d = wq.l();
+  public String d = SketchwarePaths.l();
   
   public boolean e;
   
@@ -968,9 +968,9 @@ public class StringResource {
   public void b(Context paramContext, String paramString) {
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append("block_");
-    stringBuilder.append(lq.d(paramString));
+    stringBuilder.append(BlockSpecRegistry.d(paramString));
     String str = stringBuilder.toString();
-    ArrayList<String> arrayList = lq.a(paramString);
+    ArrayList<String> arrayList = BlockSpecRegistry.a(paramString);
     this.c.put(paramString, a(paramContext, str, arrayList));
   }
   
@@ -994,9 +994,9 @@ public class StringResource {
   public void c(Context paramContext, String paramString) {
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append("root_spec_");
-    stringBuilder.append(lq.c(paramString));
+    stringBuilder.append(BlockSpecRegistry.c(paramString));
     String str = stringBuilder.toString();
-    ArrayList<String> arrayList = lq.b(paramString);
+    ArrayList<String> arrayList = BlockSpecRegistry.b(paramString);
     this.c.put(paramString, a(paramContext, str, arrayList));
   }
 }

@@ -46,7 +46,7 @@ public class BaseBlockView extends RelativeLayout {
   
   public int R;
   
-  public Gx S;
+  public ClassInfo S;
   
   public Context a;
   
@@ -217,7 +217,7 @@ public class BaseBlockView extends RelativeLayout {
   }
   
   public void a() {
-    this.S = mq.a(this.b, this.c);
+    this.S = ComponentTypeMapper.a(this.b, this.c);
   }
   
   public void a(float paramFloat1, float paramFloat2, boolean paramBoolean) {
@@ -675,7 +675,7 @@ public class BaseBlockView extends RelativeLayout {
     } 
   }
   
-  public Gx getClassInfo() {
+  public ClassInfo getClassInfo() {
     if (this.S == null)
       a(); 
     return this.S;

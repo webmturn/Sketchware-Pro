@@ -6,7 +6,7 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 
-import a.a.a.Gx;
+import a.a.a.ClassInfo;
 import mod.hilal.saif.components.ComponentsHandler;
 import pro.sketchware.R;
 
@@ -54,7 +54,7 @@ public class ComponentBean extends CollapsibleBean implements Parcelable {
     public static final int COMPONENT_TYPE_FIREBASE_CLOUD_MESSAGE = 30;
     public static final int COMPONENT_TYPE_FIREBASE_AUTH_GOOGLE_LOGIN = 31;
 
-    public Gx classInfo;
+    public ClassInfo classInfo;
     @Expose
     public String componentId;
     @Expose
@@ -378,7 +378,7 @@ public class ComponentBean extends CollapsibleBean implements Parcelable {
             case COMPONENT_TYPE_FIREBASE_AUTH_GOOGLE_LOGIN -> "FirebaseGoogleLogin";
             default -> ComponentsHandler.getBuildClassById(type);
         };
-        classInfo = new Gx(typeName);
+        classInfo = new ClassInfo(typeName);
     }
 
     public void clearClassInfo() {
@@ -398,7 +398,7 @@ public class ComponentBean extends CollapsibleBean implements Parcelable {
         return 0;
     }
 
-    public Gx getClassInfo() {
+    public ClassInfo getClassInfo() {
         if (classInfo == null) {
             buildClassInfo();
         }

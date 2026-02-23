@@ -146,19 +146,19 @@
 | `ro` | `UserExperienceLevel` | Loads user experience level from DB U1 | 1KB |
 | `zy` | `SimpleException` | Simple exception wrapper | <1KB |
 
-### Phase 8b - JAR Wrapper Renames ✅ (9 classes, commit effa2547d)
-| Current | Proposed Name | Referenced by JAR | Role |
-|---------|--------------|-------------------|------|
-| `FB` | `FormatUtil` | `Rs` | Hex conversion, file size formatting, clipboard |
-| `iB` | `BitmapUtil` | `Op` | Bitmap sample size, EXIF rotation |
-| `uB` | ~~HashMapTypeToken~~ REVERTED | `vB` | Gson TypeToken requires direct subclass, wrapper breaks it |
-| `jB` | `ViewEnableRunnable` | `mB` | Runnable that re-enables a View |
-| `dC` | `ScreenOrientationConstants` | `eC` | Static int array {1..8} |
-| `gC` | `ProjectDataParser` | `eC`, `Mp`, `Pp`, `Rp` | Parses project data JSON |
-| `lq` | `BlockSpecRegistry` | `xB` | Maps block opcode → params/returns (260KB) |
-| `rq` | `PresetLayoutFactory` | `xw` | Creates preset ViewBean layouts |
-| `nA` | `ReflectiveToString` | `Rs` | toString via reflection |
-| `yy` | `CompileException` | `Mp`-`Rp` | Exception with error list |
+### Phase 8b - Former JAR Wrapper Renames ✅ (wrappers deleted, classes merged)
+| Old | New Name | Role |
+|-----|----------|------|
+| `FB` | `FormatUtil` | Hex conversion, file size formatting, clipboard |
+| `iB` | `BitmapUtil` | Bitmap sample size, EXIF rotation |
+| `uB` | `HashMapTypeToken` | Gson TypeToken for HashMap (direct rename, no wrapper) |
+| `jB` | `ViewEnableRunnable` | Runnable that re-enables a View |
+| `dC` | `ScreenOrientationConstants` | Static int array {1..8} |
+| `gC` | `ProjectDataParser` | Parses project data JSON |
+| `lq` | `BlockSpecRegistry` | Maps block opcode → params/returns (260KB) |
+| `rq` | `PresetLayoutFactory` | Creates preset ViewBean layouts |
+| `nA` | `ReflectiveToString` | toString via reflection |
+| `yy` | `CompileException` | Exception with error list |
 
 ### Phase 9 - Previously "JAR constrained" classes (now all source code) ✅
 
@@ -240,3 +240,4 @@
 
 ## All Obfuscated Names Resolved
 No remaining obfuscated class names in `a.a.a` package.
+All 17 JAR wrapper classes have been deleted and their references updated to use renamed classes directly.

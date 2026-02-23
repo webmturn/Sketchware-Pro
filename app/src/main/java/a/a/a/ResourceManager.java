@@ -33,9 +33,9 @@ public class ResourceManager {
   
   public ResourceManager(String paramString) {
     this(paramString,
-        wq.g() + File.separator + paramString,
-        wq.t() + File.separator + paramString,
-        wq.d() + File.separator + paramString);
+        SketchwarePaths.g() + File.separator + paramString,
+        SketchwarePaths.t() + File.separator + paramString,
+        SketchwarePaths.d() + File.separator + paramString);
   }
   
   public ResourceManager(String paramString1, String paramString2, String paramString3, String paramString4) {
@@ -311,7 +311,7 @@ public class ResourceManager {
   }
   
   public void e() {
-    String str = wq.u();
+    String str = SketchwarePaths.u();
     try {
       this.h.b(str);
       EncryptedFileUtil oB1 = this.h;
@@ -339,7 +339,7 @@ public class ResourceManager {
   }
   
   public void f() {
-    String str = wq.v();
+    String str = SketchwarePaths.v();
     try {
       this.h.b(str);
       EncryptedFileUtil oB1 = this.h;
@@ -360,7 +360,7 @@ public class ResourceManager {
   }
   
   public void g() {
-    String str = wq.w();
+    String str = SketchwarePaths.w();
     try {
       this.h.b(str);
       EncryptedFileUtil oB1 = this.h;
@@ -383,9 +383,9 @@ public class ResourceManager {
   }
   
   public void h() {
-    String str1 = wq.v();
-    String str2 = wq.w();
-    String str3 = wq.u();
+    String str1 = SketchwarePaths.v();
+    String str2 = SketchwarePaths.w();
+    String str3 = SketchwarePaths.u();
     try {
       this.h.b(str1);
       this.h.b(str2);
@@ -411,7 +411,7 @@ public class ResourceManager {
   }
   
   public void i() {
-    String str = wq.a(this.i);
+    String str = SketchwarePaths.a(this.i);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str);
     stringBuilder.append(File.separator);
@@ -492,7 +492,7 @@ public class ResourceManager {
   }
   
   public boolean q() {
-    String str = wq.a(this.i);
+    String str = SketchwarePaths.a(this.i);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str);
     stringBuilder.append(File.separator);
@@ -505,7 +505,7 @@ public class ResourceManager {
     this.b = new ArrayList<ProjectResourceBean>();
     this.c = new ArrayList<ProjectResourceBean>();
     this.d = new ArrayList<ProjectResourceBean>();
-    String str1 = wq.a(this.i);
+    String str1 = SketchwarePaths.a(this.i);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str1);
     stringBuilder.append(File.separator);
@@ -528,7 +528,7 @@ public class ResourceManager {
     this.b = new ArrayList<ProjectResourceBean>();
     this.c = new ArrayList<ProjectResourceBean>();
     this.d = new ArrayList<ProjectResourceBean>();
-    String str1 = wq.b(this.i);
+    String str1 = SketchwarePaths.b(this.i);
     StringBuilder stringBuilder1 = new StringBuilder();
     stringBuilder1.append(str1);
     stringBuilder1.append(File.separator);
@@ -560,7 +560,7 @@ public class ResourceManager {
   }
   
   public void u() {
-    String str = wq.u();
+    String str = SketchwarePaths.u();
     try {
       EncryptedFileUtil oB1 = this.h;
       File file2 = new File(this.g);
@@ -575,7 +575,7 @@ public class ResourceManager {
   }
   
   public void v() {
-    String str = wq.v();
+    String str = SketchwarePaths.v();
     try {
       EncryptedFileUtil oB1 = this.h;
       File file2 = new File(this.e);
@@ -590,7 +590,7 @@ public class ResourceManager {
   }
   
   public void w() {
-    String str = wq.w();
+    String str = SketchwarePaths.w();
     try {
       EncryptedFileUtil oB1 = this.h;
       File file2 = new File(this.f);
@@ -605,7 +605,7 @@ public class ResourceManager {
   }
   
   public void x() {
-    String str1 = wq.b(this.i);
+    String str1 = SketchwarePaths.b(this.i);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str1);
     stringBuilder.append(File.separator);
@@ -623,7 +623,7 @@ public class ResourceManager {
   }
   
   public void y() {
-    String str = wq.a(this.i);
+    String str = SketchwarePaths.a(this.i);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str);
     stringBuilder.append(File.separator);

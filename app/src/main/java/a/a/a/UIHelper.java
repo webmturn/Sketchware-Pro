@@ -29,7 +29,7 @@ public class UIHelper {
   
   public static void a(View paramView) {
     paramView.setEnabled(false);
-    (new Handler(Looper.getMainLooper())).postDelayed(new jB(paramView), 100L);
+    (new Handler(Looper.getMainLooper())).postDelayed(new ViewEnableRunnable(paramView), 100L);
   }
   
   public static void a(View paramView, int paramInt, Animation.AnimationListener paramAnimationListener) {

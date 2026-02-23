@@ -43,11 +43,11 @@ public class FontCollectionManager extends BaseCollectionManager {
       e(); 
   }
   
-  public void a(String paramString, ProjectResourceBean paramProjectResourceBean) throws yy {
+  public void a(String paramString, ProjectResourceBean paramProjectResourceBean) throws CompileException {
     a(paramString, paramProjectResourceBean, true);
   }
   
-  public void a(String paramString, ProjectResourceBean paramProjectResourceBean, boolean paramBoolean) throws yy {
+  public void a(String paramString, ProjectResourceBean paramProjectResourceBean, boolean paramBoolean) throws CompileException {
     if (this.e == null) a();
     ArrayList<String> duplicates = new ArrayList<String>();
     for (CollectionBean bean : this.e) {
@@ -56,7 +56,7 @@ public class FontCollectionManager extends BaseCollectionManager {
       }
     }
     if (duplicates.size() > 0) {
-      throw new yy("duplicate_name");
+      throw new CompileException("duplicate_name");
     }
     String resName = paramProjectResourceBean.resName;
     String dataName = resName;
@@ -68,24 +68,24 @@ public class FontCollectionManager extends BaseCollectionManager {
     if (paramProjectResourceBean.savedPos == 1) {
       String srcPath = paramProjectResourceBean.resFullName;
       if (!this.c.e(srcPath)) {
-        throw new yy("file_no_exist");
+        throw new CompileException("file_no_exist");
       }
       try {
         this.c.f(this.b);
         this.c.a(srcPath, destPath);
       } catch (java.io.IOException e) {
-        throw new yy("fail_to_copy");
+        throw new CompileException("fail_to_copy");
       }
     } else {
-      String srcPath = wq.t() + java.io.File.separator + paramString + java.io.File.separator + paramProjectResourceBean.resFullName;
+      String srcPath = SketchwarePaths.t() + java.io.File.separator + paramString + java.io.File.separator + paramProjectResourceBean.resFullName;
       if (!this.c.e(srcPath)) {
-        throw new yy("file_no_exist");
+        throw new CompileException("file_no_exist");
       }
       try {
         this.c.f(this.b);
         this.c.a(srcPath, destPath);
       } catch (java.io.IOException e) {
-        throw new yy("fail_to_copy");
+        throw new CompileException("fail_to_copy");
       }
     }
     this.e.add(new CollectionBean(paramProjectResourceBean.resName, dataName));
@@ -121,14 +121,14 @@ public class FontCollectionManager extends BaseCollectionManager {
   
   public void b() {
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(wq.a());
+    stringBuilder.append(SketchwarePaths.a());
     stringBuilder.append(File.separator);
     stringBuilder.append("sound");
     stringBuilder.append(File.separator);
     stringBuilder.append("list");
     this.a = stringBuilder.toString();
     stringBuilder = new StringBuilder();
-    stringBuilder.append(wq.a());
+    stringBuilder.append(SketchwarePaths.a());
     stringBuilder.append(File.separator);
     stringBuilder.append("sound");
     stringBuilder.append(File.separator);

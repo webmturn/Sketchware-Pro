@@ -21,7 +21,7 @@ public class ClassInfo {
         return className;
     }
 
-    public boolean a(Gx gx) {
+    public boolean a(ClassInfo gx) {
         return a(gx.className);
     }
 
@@ -55,7 +55,7 @@ public class ClassInfo {
     /**
      * Checks if this type is assignable from the given type (i.e. this type or a parent in the hierarchy).
      */
-    public boolean isAssignableFrom(Gx gx) {
+    public boolean isAssignableFrom(ClassInfo gx) {
         return a(gx);
     }
 

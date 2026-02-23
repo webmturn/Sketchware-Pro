@@ -61,7 +61,7 @@ public class KeyStoreManager {
   
   public void a(String paramString1, String paramString2, int paramInt, String paramString3, String paramString4) throws Exception {
     byte[] arrayOfByte = a(paramString2, paramInt, paramString3, paramString4);
-    File file = new File(wq.i());
+    File file = new File(SketchwarePaths.i());
     if (!file.exists())
       file.mkdirs(); 
     (new EncryptedFileUtil()).a(paramString1, arrayOfByte);

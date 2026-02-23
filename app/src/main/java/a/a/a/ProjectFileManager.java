@@ -44,7 +44,7 @@ public class ProjectFileManager {
   }
   
   public void a() {
-    String str = wq.a(this.e);
+    String str = SketchwarePaths.a(this.e);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str);
     stringBuilder.append(File.separator);
@@ -289,7 +289,7 @@ public class ProjectFileManager {
   }
   
   public boolean g() {
-    String str1 = wq.a(this.e);
+    String str1 = SketchwarePaths.a(this.e);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str1);
     stringBuilder.append(File.separator);
@@ -300,7 +300,7 @@ public class ProjectFileManager {
   
   public void h() {
     f();
-    String str1 = wq.a(this.e);
+    String str1 = SketchwarePaths.a(this.e);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str1);
     stringBuilder.append(File.separator);
@@ -322,7 +322,7 @@ public class ProjectFileManager {
   
   public void i() {
     f();
-    String str1 = wq.b(this.e);
+    String str1 = SketchwarePaths.b(this.e);
     StringBuilder stringBuilder1 = new StringBuilder();
     stringBuilder1.append(str1);
     stringBuilder1.append(File.separator);
@@ -374,7 +374,7 @@ public class ProjectFileManager {
   }
   
   public void l() {
-    String str = wq.a(this.e);
+    String str = SketchwarePaths.a(this.e);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str);
     stringBuilder.append(File.separator);
@@ -383,7 +383,7 @@ public class ProjectFileManager {
   }
   
   public void m() {
-    String str = wq.b(this.e);
+    String str = SketchwarePaths.b(this.e);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str);
     stringBuilder.append(File.separator);

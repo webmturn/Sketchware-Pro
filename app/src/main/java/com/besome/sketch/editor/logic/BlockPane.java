@@ -1,9 +1,9 @@
 package com.besome.sketch.editor.logic;
 
-import a.a.a.Gx;
+import a.a.a.ClassInfo;
 import a.a.a.BlockView;
 import a.a.a.BaseBlockView;
-import a.a.a.mq;
+import a.a.a.ComponentTypeMapper;
 import a.a.a.ViewUtil;
 import android.content.Context;
 import android.graphics.Point;
@@ -331,15 +331,15 @@ public class BlockPane extends RelativeLayout {
     if (paramView instanceof BaseBlockView) {
       if (((BaseBlockView)paramView).c.equals("!"))
         return true; 
-      Gx gx1 = paramRs.getClassInfo();
+      ClassInfo gx1 = paramRs.getClassInfo();
       if (gx1 == null)
         return false; 
-      Gx gx2 = ((BaseBlockView)paramView).getClassInfo();
+      ClassInfo gx2 = ((BaseBlockView)paramView).getClassInfo();
       if (gx2 == null)
         return false; 
       if (gx1.a(gx2))
         return true; 
-      if (paramView instanceof BlockView && gx1.a(mq.b(((BlockView)paramView).ra)))
+      if (paramView instanceof BlockView && gx1.a(ComponentTypeMapper.b(((BlockView)paramView).ra)))
         return true; 
     } 
     return false;

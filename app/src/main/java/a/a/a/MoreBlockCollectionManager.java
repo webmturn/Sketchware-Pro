@@ -34,12 +34,12 @@ public class MoreBlockCollectionManager extends BaseCollectionManager {
   public MoreBlockCollectionBean a(String paramString) {
     for (CollectionBean collectionBean : this.e) {
       if (collectionBean.name.equals(paramString))
-        return new MoreBlockCollectionBean(collectionBean.name, collectionBean.reserved1, gC.a(this.g, collectionBean.data)); 
+        return new MoreBlockCollectionBean(collectionBean.name, collectionBean.reserved1, ProjectDataParser.a(this.g, collectionBean.data)); 
     } 
     return null;
   }
   
-  public void a(String paramString1, String paramString2, ArrayList<BlockBean> paramArrayList, boolean paramBoolean) throws yy {
+  public void a(String paramString1, String paramString2, ArrayList<BlockBean> paramArrayList, boolean paramBoolean) throws CompileException {
     if (this.e == null)
       a(); 
     if (this.g == null)
@@ -48,7 +48,7 @@ public class MoreBlockCollectionManager extends BaseCollectionManager {
     while (iterator.hasNext()) {
       if (!((CollectionBean)iterator.next()).name.equals(paramString1))
         continue; 
-      throw new yy("duplicate_name");
+      throw new CompileException("duplicate_name");
     } 
     StringBuilder stringBuilder = new StringBuilder();
     for (int bi = 0; bi < paramArrayList.size(); bi++) {
@@ -93,7 +93,7 @@ public class MoreBlockCollectionManager extends BaseCollectionManager {
   
   public void b() {
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(wq.a());
+    stringBuilder.append(SketchwarePaths.a());
     stringBuilder.append(File.separator);
     stringBuilder.append("more_block");
     stringBuilder.append(File.separator);
@@ -108,7 +108,7 @@ public class MoreBlockCollectionManager extends BaseCollectionManager {
       i(); 
     ArrayList<MoreBlockCollectionBean> arrayList = new ArrayList<>();
     for (CollectionBean collectionBean : this.e)
-      arrayList.add(new MoreBlockCollectionBean(collectionBean.name, collectionBean.reserved1, gC.a(this.g, collectionBean.data))); 
+      arrayList.add(new MoreBlockCollectionBean(collectionBean.name, collectionBean.reserved1, ProjectDataParser.a(this.g, collectionBean.data))); 
     return arrayList;
   }
   

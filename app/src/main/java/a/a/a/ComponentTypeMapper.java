@@ -13,28 +13,28 @@ public class ComponentTypeMapper {
     /**
      * @return A built class info ({@link ClassInfo} object)
      */
-    public static Gx a(String type, String typeName) {
+    public static ClassInfo a(String type, String typeName) {
         switch (type) {
             case "b":
-                return new Gx("boolean");
+                return new ClassInfo("boolean");
 
             case "d":
             case "n":
-                return new Gx("double");
+                return new ClassInfo("double");
 
             case "s":
                 if (typeName != null && (typeName.equalsIgnoreCase("inputOnly") ||
                         typeName.equals("inputCode") || typeName.equals("import"))) {
-                    return new Gx("Input");
+                    return new ClassInfo("Input");
                 } else {
-                    return new Gx("String");
+                    return new ClassInfo("String");
                 }
 
             case "a":
-                return new Gx("Map");
+                return new ClassInfo("Map");
 
             case "l":
-                return new Gx(switch (typeName) {
+                return new ClassInfo(switch (typeName) {
                     case "List Map" -> "ListMap";
                     case "List String" -> "ListString";
                     case "List Number" -> "ListInt";
@@ -42,11 +42,11 @@ public class ComponentTypeMapper {
                 });
 
             case "v":
-                return new Gx(typeName);
+                return new ClassInfo(typeName);
 
             case "p":
             case "m":
-                return new Gx(b(typeName));
+                return new ClassInfo(b(typeName));
 
             default:
                 return null;
@@ -96,8 +96,8 @@ public class ComponentTypeMapper {
     /**
      * @return A parameter class info ({@link ClassInfo}) list
      */
-    public static ArrayList<Gx> a(String spec) {
-        ArrayList<Gx> paramClass = new ArrayList<>();
+    public static ArrayList<ClassInfo> a(String spec) {
+        ArrayList<ClassInfo> paramClass = new ArrayList<>();
         ArrayList<String> specList = FormatUtil.c(spec);
         for (String params : specList) {
             if (params.charAt(0) == '%' && params.length() >= 2) {

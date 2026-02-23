@@ -41,14 +41,14 @@ public class ProjectDataStore {
   
   public Gson k;
   
-  public jq l;
+  public BuildConfig l;
   
   public ProjectDataStore(String paramString) {
     b();
     this.a = paramString;
     this.b = new EncryptedFileUtil();
     this.k = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
-    this.l = new jq();
+    this.l = new BuildConfig();
   }
   
   public static ArrayList<ViewBean> a(ArrayList<ViewBean> paramArrayList) {
@@ -154,7 +154,7 @@ public class ProjectDataStore {
   }
   
   public void a() {
-    String str1 = wq.a(this.a);
+    String str1 = SketchwarePaths.a(this.a);
     StringBuilder stringBuilder2 = new StringBuilder();
     stringBuilder2.append(str1);
     stringBuilder2.append(File.separator);
@@ -333,13 +333,13 @@ public class ProjectDataStore {
               int j = i - 1;
               if (j >= 0) {
                 BlockBean blockBean = arrayList2.get(j);
-                Gx gx = blockBean.getClassInfo();
+                ClassInfo gx = blockBean.getClassInfo();
                 if (gx != null && gx.b(paramViewBean.getClassInfo().a()) && blockBean.spec.equals(paramViewBean.id)) {
                   arrayList2.remove(j);
                   i = j;
                   continue;
                 } 
-                ArrayList<Gx> arrayList3 = blockBean.getParamClassInfo();
+                ArrayList<ClassInfo> arrayList3 = blockBean.getParamClassInfo();
                 i = j;
                 if (arrayList3 != null) {
                   i = j;
@@ -348,7 +348,7 @@ public class ProjectDataStore {
                     while (true) {
                       i = j;
                       if (b < arrayList3.size()) {
-                        Gx gx1 = arrayList3.get(b);
+                        ClassInfo gx1 = arrayList3.get(b);
                         if (gx1 != null && paramViewBean.getClassInfo().a(gx1) && ((String)blockBean.parameters.get(b)).equals(paramViewBean.id))
                           blockBean.parameters.set(b, ""); 
                         b++;
@@ -479,7 +479,7 @@ public class ProjectDataStore {
     ((ArrayList<ComponentBean>)this.h.get(paramString1)).add(new ComponentBean(paramInt, paramString2, paramString3));
   }
   
-  public void a(String paramString1, Gx paramGx, String paramString2, boolean paramBoolean) {
+  public void a(String paramString1, ClassInfo paramGx, String paramString2, boolean paramBoolean) {
     if (!this.d.containsKey(paramString1))
       return; 
     Map map = this.d.get(paramString1);
@@ -496,13 +496,13 @@ public class ProjectDataStore {
         int j = i - 1;
         if (j >= 0) {
           BlockBean blockBean = arrayList.get(j);
-          Gx gx = blockBean.getClassInfo();
+          ClassInfo gx = blockBean.getClassInfo();
           if (gx != null && gx.b(paramGx.a()) && blockBean.spec.equals(paramString2)) {
             arrayList.remove(j);
             i = j;
             continue;
           } 
-          ArrayList<Gx> arrayList1 = blockBean.getParamClassInfo();
+          ArrayList<ClassInfo> arrayList1 = blockBean.getParamClassInfo();
           i = j;
           if (arrayList1 != null) {
             i = j;
@@ -511,7 +511,7 @@ public class ProjectDataStore {
               while (true) {
                 i = j;
                 if (b < arrayList1.size()) {
-                  Gx gx1 = arrayList1.get(b);
+                  ClassInfo gx1 = arrayList1.get(b);
                   if (gx1 != null && paramGx.a(gx1) && ((String)blockBean.parameters.get(b)).equals(paramString2))
                     blockBean.parameters.set(b, ""); 
                   b++;
@@ -944,13 +944,13 @@ public class ProjectDataStore {
       if (((String)entry.getKey()).equals(paramString3))
         continue; 
       for (BlockBean blockBean : (ArrayList<BlockBean>)entry.getValue()) {
-        Gx gx = blockBean.getClassInfo();
+        ClassInfo gx = blockBean.getClassInfo();
         if (gx != null && gx.b() && blockBean.spec.equals(paramString2))
           return true; 
-        ArrayList<Gx> arrayList = blockBean.getParamClassInfo();
+        ArrayList<ClassInfo> arrayList = blockBean.getParamClassInfo();
         if (arrayList != null && arrayList.size() > 0)
           for (int b = 0; b < arrayList.size(); b++) {
-            Gx gx1 = arrayList.get(b);
+            ClassInfo gx1 = arrayList.get(b);
             if (gx1 != null && gx1.b() && ((String)blockBean.parameters.get(b)).equals(paramString2))
               return true; 
           }  
@@ -1022,7 +1022,7 @@ public class ProjectDataStore {
   }
   
   public boolean c() {
-    String str2 = wq.a(this.a);
+    String str2 = SketchwarePaths.a(this.a);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str2);
     stringBuilder.append(File.separator);
@@ -1039,13 +1039,13 @@ public class ProjectDataStore {
       if (((String)entry.getKey()).equals(paramString3))
         continue; 
       for (BlockBean blockBean : (ArrayList<BlockBean>)entry.getValue()) {
-        Gx gx = blockBean.getClassInfo();
+        ClassInfo gx = blockBean.getClassInfo();
         if (gx != null && gx.c() && blockBean.spec.equals(paramString2))
           return true; 
-        ArrayList<Gx> arrayList = blockBean.getParamClassInfo();
+        ArrayList<ClassInfo> arrayList = blockBean.getParamClassInfo();
         if (arrayList != null && arrayList.size() > 0)
           for (int b = 0; b < arrayList.size(); b++) {
-            Gx gx1 = arrayList.get(b);
+            ClassInfo gx1 = arrayList.get(b);
             if (gx1 != null && gx1.c() && ((String)blockBean.parameters.get(b)).equals(paramString2))
               return true; 
           }  
@@ -1146,7 +1146,7 @@ public class ProjectDataStore {
   }
   
   public boolean d() {
-    String str2 = wq.a(this.a);
+    String str2 = SketchwarePaths.a(this.a);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str2);
     stringBuilder.append(File.separator);
@@ -1185,7 +1185,7 @@ public class ProjectDataStore {
   }
   
   public void e() {
-    String str2 = wq.b(this.a);
+    String str2 = SketchwarePaths.b(this.a);
     StringBuilder stringBuilder1 = new StringBuilder();
     stringBuilder1.append(str2);
     stringBuilder1.append(File.separator);
@@ -1244,7 +1244,7 @@ public class ProjectDataStore {
   }
   
   public void f() {
-    String str1 = wq.a(this.a);
+    String str1 = SketchwarePaths.a(this.a);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str1);
     stringBuilder.append(File.separator);
@@ -1318,7 +1318,7 @@ public class ProjectDataStore {
   }
   
   public void g() {
-    String str2 = wq.b(this.a);
+    String str2 = SketchwarePaths.b(this.a);
     StringBuilder stringBuilder1 = new StringBuilder();
     stringBuilder1.append(str2);
     stringBuilder1.append(File.separator);
@@ -1379,7 +1379,7 @@ public class ProjectDataStore {
   }
   
   public void h() {
-    String str2 = wq.a(this.a);
+    String str2 = SketchwarePaths.a(this.a);
     StringBuilder stringBuilder1 = new StringBuilder();
     stringBuilder1.append(str2);
     stringBuilder1.append(File.separator);
@@ -1423,32 +1423,32 @@ public class ProjectDataStore {
     if (paramString2.length() <= 0)
       return; 
     try {
-      gC gC = new gC(paramString1);
-      String str = gC.b();
-      gC.a a = gC.a();
-      switch (dC.a[a.ordinal()]) {
+      ProjectDataParser ProjectDataParser = new ProjectDataParser(paramString1);
+      String str = ProjectDataParser.b();
+      ProjectDataParser.a a = ProjectDataParser.a();
+      switch (ScreenOrientationConstants.a[a.ordinal()]) {
         default:
           return;
         case 8:
           if (!this.d.containsKey(str)) {
             this.d.put(str, new HashMap<String, ArrayList<BlockBean>>());
           } 
-          this.d.get(str).put(gC.c(), (ArrayList<BlockBean>)gC.a(paramString2));
+          this.d.get(str).put(ProjectDataParser.c(), (ArrayList<BlockBean>)ProjectDataParser.a(paramString2));
           break;
         case 7:
-          this.g.put(str, (ArrayList<Pair<String, String>>)gC.a(paramString2));
+          this.g.put(str, (ArrayList<Pair<String, String>>)ProjectDataParser.a(paramString2));
           break;
         case 6:
-          this.i.put(str, (ArrayList<EventBean>)gC.a(paramString2));
+          this.i.put(str, (ArrayList<EventBean>)ProjectDataParser.a(paramString2));
           break;
         case 5:
-          this.h.put(str, (ArrayList<ComponentBean>)gC.a(paramString2));
+          this.h.put(str, (ArrayList<ComponentBean>)ProjectDataParser.a(paramString2));
           break;
         case 4:
-          this.f.put(str, (ArrayList<Pair<Integer, String>>)gC.a(paramString2));
+          this.f.put(str, (ArrayList<Pair<Integer, String>>)ProjectDataParser.a(paramString2));
           break;
         case 3:
-          this.e.put(str, (ArrayList<Pair<Integer, String>>)gC.a(paramString2));
+          this.e.put(str, (ArrayList<Pair<Integer, String>>)ProjectDataParser.a(paramString2));
           break;
       } 
     } catch (Exception exception) {
@@ -1461,7 +1461,7 @@ public class ProjectDataStore {
   }
   
   public void j() {
-    String str = wq.b(this.a);
+    String str = SketchwarePaths.b(this.a);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str);
     stringBuilder.append(File.separator);
@@ -1477,14 +1477,14 @@ public class ProjectDataStore {
   
   public void j(String paramString1, String paramString2) {
     try {
-      gC gC = new gC(paramString1);
-      String str = gC.b();
-      gC.a a = gC.a();
-      int i = dC.a[a.ordinal()];
+      ProjectDataParser ProjectDataParser = new ProjectDataParser(paramString1);
+      String str = ProjectDataParser.b();
+      ProjectDataParser.a a = ProjectDataParser.a();
+      int i = ScreenOrientationConstants.a[a.ordinal()];
       if (i == 1) {
-        this.c.put(str, (ArrayList<ViewBean>)gC.a(paramString2));
+        this.c.put(str, (ArrayList<ViewBean>)ProjectDataParser.a(paramString2));
       } else if (i == 2) {
-        this.j.put(str, (ViewBean)gC.a(paramString2));
+        this.j.put(str, (ViewBean)ProjectDataParser.a(paramString2));
       }
     } catch (Exception exception) {
       exception.printStackTrace();
@@ -1496,7 +1496,7 @@ public class ProjectDataStore {
   }
   
   public void k() {
-    String str = wq.a(this.a);
+    String str = SketchwarePaths.a(this.a);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str);
     stringBuilder.append(File.separator);

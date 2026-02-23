@@ -176,12 +176,12 @@ public class ProjectDataParser {
       int i = str.indexOf(".xml") + 4;
       this.b = str.substring(0, i);
       if (paramString.length() == i) {
-        this.d = gC.a.a;
+        this.d = ProjectDataParser.a.a;
       } else {
         paramString = paramString.substring(i);
         if (paramString.charAt(0) == '_') {
           if (paramString.substring(1).equals("fab")) {
-            this.d = gC.a.b;
+            this.d = ProjectDataParser.a.b;
           } else {
             throw new Exception("invalid key : Unknown type string");
           } 
@@ -225,22 +225,22 @@ public class ProjectDataParser {
                 if (i != 2) {
                   if (i != 3) {
                     if (i != 4) {
-                      this.d = gC.a.h;
+                      this.d = ProjectDataParser.a.h;
                       this.c = paramString;
                     } else {
-                      this.d = gC.a.g;
+                      this.d = ProjectDataParser.a.g;
                     } 
                   } else {
-                    this.d = gC.a.f;
+                    this.d = ProjectDataParser.a.f;
                   } 
                 } else {
-                  this.d = gC.a.e;
+                  this.d = ProjectDataParser.a.e;
                 } 
               } else {
-                this.d = gC.a.d;
+                this.d = ProjectDataParser.a.d;
               } 
             } else {
-              this.d = gC.a.c;
+              this.d = ProjectDataParser.a.c;
             } 
             return;
           } 

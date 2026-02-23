@@ -9,7 +9,7 @@ import com.google.gson.annotations.Expose;
 
 import java.util.HashMap;
 
-import a.a.a.Gx;
+import a.a.a.ClassInfo;
 import a.a.a.ReflectiveToString;
 import mod.agus.jcoderz.beans.ViewBeans;
 import pro.sketchware.R;
@@ -72,7 +72,7 @@ public class ViewBean extends ReflectiveToString implements Parcelable {
     public int checked;
     @Expose
     public int choiceMode;
-    public Gx classInfo;
+    public ClassInfo classInfo;
     @Expose
     public int clickable;
     @Expose
@@ -102,7 +102,7 @@ public class ViewBean extends ReflectiveToString implements Parcelable {
     public String name;
     @Expose
     public String parent;
-    public Gx parentClassInfo;
+    public ClassInfo parentClassInfo;
     @Expose
     public int parentType;
     @Expose
@@ -296,7 +296,7 @@ public class ViewBean extends ReflectiveToString implements Parcelable {
         };
     }
 
-    public Gx buildClassInfo(int type) {
+    public ClassInfo buildClassInfo(int type) {
         String name = switch (type) {
             case VIEW_TYPE_LAYOUT_LINEAR -> "LinearLayout";
             case VIEW_TYPE_LAYOUT_RELATIVE -> "RelativeLayout";
@@ -319,7 +319,7 @@ public class ViewBean extends ReflectiveToString implements Parcelable {
             case VIEW_TYPE_WIDGET_MAPVIEW -> "MapView";
             default -> ViewBeans.buildClassInfo(type);
         };
-        return new Gx(name);
+        return new ClassInfo(name);
     }
 
     public void clearClassInfo() {
@@ -379,14 +379,14 @@ public class ViewBean extends ReflectiveToString implements Parcelable {
         return 0;
     }
 
-    public Gx getClassInfo() {
+    public ClassInfo getClassInfo() {
         if (classInfo == null) {
             classInfo = buildClassInfo(type);
         }
         return classInfo;
     }
 
-    public Gx getParentClassInfo() {
+    public ClassInfo getParentClassInfo() {
         if (parentType == -1) {
             return null;
         }

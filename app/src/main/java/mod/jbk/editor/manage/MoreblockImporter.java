@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import a.a.a.Gx;
+import a.a.a.ClassInfo;
 import a.a.a.ImageCollectionManager;
 import a.a.a.SoundCollectionManager;
 import a.a.a.FontCollectionManager;
@@ -109,10 +109,10 @@ public class MoreblockImporter {
                         break;
                 }
             }
-            ArrayList<Gx> paramClassInfo = next.getParamClassInfo();
+            ArrayList<ClassInfo> paramClassInfo = next.getParamClassInfo();
             if (!paramClassInfo.isEmpty()) {
                 for (int i = 0; i < paramClassInfo.size(); i++) {
-                    Gx gx = paramClassInfo.get(i);
+                    ClassInfo gx = paramClassInfo.get(i);
                     String str = next.parameters.get(i);
                     if (!str.isEmpty() && str.charAt(0) != '@') {
                         if (gx.isExactType("boolean.SelectBoolean")) {

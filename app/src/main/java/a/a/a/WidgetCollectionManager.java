@@ -35,7 +35,7 @@ public class WidgetCollectionManager extends BaseCollectionManager {
   public WidgetCollectionBean a(String paramString) {
     for (CollectionBean collectionBean : this.e) {
       if (collectionBean.name.equals(paramString))
-        return new WidgetCollectionBean(collectionBean.name, gC.b(this.g, collectionBean.data)); 
+        return new WidgetCollectionBean(collectionBean.name, ProjectDataParser.b(this.g, collectionBean.data)); 
     } 
     return null;
   }
@@ -51,7 +51,7 @@ public class WidgetCollectionManager extends BaseCollectionManager {
       e(); 
   }
   
-  public void a(String paramString, ArrayList<ViewBean> paramArrayList, boolean paramBoolean) throws yy {
+  public void a(String paramString, ArrayList<ViewBean> paramArrayList, boolean paramBoolean) throws CompileException {
     if (this.e == null)
       a(); 
     if (this.g == null)
@@ -60,7 +60,7 @@ public class WidgetCollectionManager extends BaseCollectionManager {
     while (iterator.hasNext()) {
       if (!((CollectionBean)iterator.next()).name.equals(paramString))
         continue; 
-      throw new yy("duplicate_name");
+      throw new CompileException("duplicate_name");
     } 
     StringBuilder stringBuilder = new StringBuilder();
     for (int vi = 0; vi < paramArrayList.size(); vi++) {
@@ -94,14 +94,14 @@ public class WidgetCollectionManager extends BaseCollectionManager {
   
   public void b() {
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(wq.a());
+    stringBuilder.append(SketchwarePaths.a());
     stringBuilder.append(File.separator);
     stringBuilder.append("widget");
     stringBuilder.append(File.separator);
     stringBuilder.append("list");
     this.a = stringBuilder.toString();
     stringBuilder = new StringBuilder();
-    stringBuilder.append(wq.a());
+    stringBuilder.append(SketchwarePaths.a());
     stringBuilder.append(File.separator);
     stringBuilder.append("widget");
     stringBuilder.append(File.separator);
@@ -138,7 +138,7 @@ public class WidgetCollectionManager extends BaseCollectionManager {
       i(); 
     ArrayList<WidgetCollectionBean> arrayList = new ArrayList<>();
     for (CollectionBean collectionBean : this.e)
-      arrayList.add(new WidgetCollectionBean(collectionBean.name, gC.b(this.g, collectionBean.data))); 
+      arrayList.add(new WidgetCollectionBean(collectionBean.name, ProjectDataParser.b(this.g, collectionBean.data))); 
     return arrayList;
   }
   

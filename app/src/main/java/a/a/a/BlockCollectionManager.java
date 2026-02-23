@@ -34,7 +34,7 @@ public class BlockCollectionManager extends BaseCollectionManager {
   public BlockCollectionBean a(String paramString) {
     for (CollectionBean collectionBean : this.e) {
       if (collectionBean.name.equals(paramString))
-        return new BlockCollectionBean(collectionBean.name, gC.a(this.g, collectionBean.data)); 
+        return new BlockCollectionBean(collectionBean.name, ProjectDataParser.a(this.g, collectionBean.data)); 
     } 
     return null;
   }
@@ -50,7 +50,7 @@ public class BlockCollectionManager extends BaseCollectionManager {
       e(); 
   }
   
-  public void a(String paramString, ArrayList<BlockBean> paramArrayList, boolean paramBoolean) throws yy {
+  public void a(String paramString, ArrayList<BlockBean> paramArrayList, boolean paramBoolean) throws CompileException {
     if (this.e == null)
       a(); 
     if (this.g == null)
@@ -59,7 +59,7 @@ public class BlockCollectionManager extends BaseCollectionManager {
     while (iterator.hasNext()) {
       if (!((CollectionBean)iterator.next()).name.equals(paramString))
         continue; 
-      throw new yy("duplicate_name");
+      throw new CompileException("duplicate_name");
     } 
     StringBuilder stringBuilder = new StringBuilder();
     for (int bi = 0; bi < paramArrayList.size(); bi++) {
@@ -93,14 +93,14 @@ public class BlockCollectionManager extends BaseCollectionManager {
   
   public void b() {
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(wq.a());
+    stringBuilder.append(SketchwarePaths.a());
     stringBuilder.append(File.separator);
     stringBuilder.append("block");
     stringBuilder.append(File.separator);
     stringBuilder.append("list");
     this.a = stringBuilder.toString();
     stringBuilder = new StringBuilder();
-    stringBuilder.append(wq.a());
+    stringBuilder.append(SketchwarePaths.a());
     stringBuilder.append(File.separator);
     stringBuilder.append("block");
     stringBuilder.append(File.separator);
@@ -115,7 +115,7 @@ public class BlockCollectionManager extends BaseCollectionManager {
       i(); 
     ArrayList<BlockCollectionBean> arrayList = new ArrayList<>();
     for (CollectionBean collectionBean : this.e)
-      arrayList.add(new BlockCollectionBean(collectionBean.name, gC.a(this.g, collectionBean.data))); 
+      arrayList.add(new BlockCollectionBean(collectionBean.name, ProjectDataParser.a(this.g, collectionBean.data))); 
     return arrayList;
   }
   
