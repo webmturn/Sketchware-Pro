@@ -6,9 +6,9 @@ import android.view.MotionEvent;
 import android.widget.ScrollView;
 
 public class CustomScrollView extends ScrollView {
-  public boolean a = true;
+  public boolean scrollEnabled = true;
   
-  public boolean b = true;
+  public boolean useScroll = true;
   
   public CustomScrollView(Context paramContext) {
     super(paramContext);
@@ -19,22 +19,22 @@ public class CustomScrollView extends ScrollView {
   }
   
   public void a() {
-    this.a = false;
+    this.scrollEnabled = false;
   }
   
   public void b() {
-    this.a = true;
+    this.scrollEnabled = true;
   }
   
   public boolean onInterceptTouchEvent(MotionEvent paramMotionEvent) {
-    return (this.b && this.a) ? super.onInterceptTouchEvent(paramMotionEvent) : false;
+    return (this.useScroll && this.scrollEnabled) ? super.onInterceptTouchEvent(paramMotionEvent) : false;
   }
   
   public boolean onTouchEvent(MotionEvent paramMotionEvent) {
-    return (this.b && this.a) ? super.onTouchEvent(paramMotionEvent) : false;
+    return (this.useScroll && this.scrollEnabled) ? super.onTouchEvent(paramMotionEvent) : false;
   }
   
   public void setUseScroll(boolean paramBoolean) {
-    this.b = paramBoolean;
+    this.useScroll = paramBoolean;
   }
 }

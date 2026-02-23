@@ -25,8 +25,8 @@ public class ItemVerticalScrollView extends FrameLayout implements ItemView, Scr
     private boolean isSelected = false;
     private boolean isFixed = false;
     private Paint paint;
-    private float e = -1.0F;
-    private boolean f = true;
+    private float lastMotionY = -1.0F;
+    private boolean scrollEnabled = true;
 
     public ItemVerticalScrollView(Context context) {
         super(context);
@@ -219,7 +219,7 @@ public class ItemVerticalScrollView extends FrameLayout implements ItemView, Scr
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent motionEvent) {
-        if (!f) {
+        if (!scrollEnabled) {
             return false;
         } else if (getChildCount() <= 0) {
             return false;
@@ -230,12 +230,12 @@ public class ItemVerticalScrollView extends FrameLayout implements ItemView, Scr
             if (var3 != 0) {
                 if (var3 != 1) {
                     if (var3 == 2) {
-                        if (e < 0.0F) {
-                            e = motionEventY;
+                        if (lastMotionY < 0.0F) {
+                            lastMotionY = motionEventY;
                         }
 
-                        var3 = (int) (e - motionEventY);
-                        e = motionEventY;
+                        var3 = (int) (lastMotionY - motionEventY);
+                        lastMotionY = motionEventY;
                         if (var3 <= 0) {
                             if (getScrollY() <= 0) {
                                 var3 = 0;
@@ -256,10 +256,10 @@ public class ItemVerticalScrollView extends FrameLayout implements ItemView, Scr
                         }
                     }
                 } else {
-                    e = -1.0F;
+                    lastMotionY = -1.0F;
                 }
             } else {
-                e = motionEventY;
+                lastMotionY = motionEventY;
             }
 
             return false;
@@ -323,6 +323,6 @@ public class ItemVerticalScrollView extends FrameLayout implements ItemView, Scr
     }
 
     public void setScrollEnabled(boolean isScrollEnabled) {
-        f = isScrollEnabled;
+        scrollEnabled = isScrollEnabled;
     }
 }
