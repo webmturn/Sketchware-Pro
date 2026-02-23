@@ -45,8 +45,8 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
     public TimerTask I;
     public ResourceNameValidator M;
     public ArrayList<ProjectResourceBean> N;
-    public String t;
-    public boolean u;
+    public String scId;
+    public boolean isEditing;
     public Timer H = new Timer();
     public Uri K;
     public boolean L;
@@ -100,7 +100,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
             return;
         }
         if (id == binding.selectFile.getId()) {
-            if (!u) {
+            if (!isEditing) {
                 binding.selectFile.setEnabled(false);
                 p();
             }
@@ -134,10 +134,10 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
         b(getString(R.string.common_word_cancel));
         Intent intent = getIntent();
         N = intent.getParcelableArrayListExtra("sounds");
-        t = intent.getStringExtra("sc_id");
+        scId = intent.getStringExtra("sc_id");
         O = intent.getParcelableExtra("edit_target");
         if (O != null) {
-            u = true;
+            isEditing = true;
         }
         binding.layoutControl.setVisibility(View.GONE);
         binding.tiInput.setHint(R.string.design_manager_sound_hint_enter_sound_name);
@@ -171,7 +171,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
         binding.selectFile.setOnClickListener(this);
         dialogOkButton.setOnClickListener(this);
         dialogCancelButton.setOnClickListener(this);
-        if (u) {
+        if (isEditing) {
             e(getString(R.string.design_manager_sound_title_edit_sound_name));
             M = new ResourceNameValidator(this, binding.tiInput, BlockConstants.b, getResourceNames(), O.resName);
             binding.edInput.setText(O.resName);
@@ -203,7 +203,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
 
     private void r() {
         if (a(M)) {
-            if (!u) {
+            if (!isEditing) {
                 String obj = Helper.getText(binding.edInput);
                 String a = UriPathResolver.resolve(this, K);
                 if (a == null) {
@@ -213,7 +213,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
                 projectResourceBean.savedPos = 1;
                 projectResourceBean.isNew = true;
                 try {
-                    Qp.g().a(t, projectResourceBean);
+                    Qp.g().a(scId, projectResourceBean);
                     SketchToast.toast(this, getApplicationContext().getString(R.string.design_manager_message_add_complete), 1).show();
                 } catch (Exception e) {
                     // the bytecode's lying
@@ -384,7 +384,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
 
     public boolean a(ResourceNameValidator wb) {
         if (wb.isValid()) {
-            if ((!L || K == null) && !u) {
+            if ((!L || K == null) && !isEditing) {
                 binding.selectFile.startAnimation(AnimationUtils.loadAnimation(this, R.anim.ani_1));
                 return false;
             }

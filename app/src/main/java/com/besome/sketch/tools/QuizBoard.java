@@ -23,9 +23,9 @@ import pro.sketchware.databinding.QuizBoardBinding;
 
 public class QuizBoard extends LinearLayout implements View.OnClickListener {
 
-    private ArrayList<QuizBean> q;
+    private ArrayList<QuizBean> quizList;
     private QuizBean quizBean;
-    private a s;
+    private a countdownTimer;
     private QuizBoardBinding quizBinding;
 
     public QuizBoard(Context context) {
@@ -70,9 +70,9 @@ public class QuizBoard extends LinearLayout implements View.OnClickListener {
     }
 
     public void a() {
-        if (s != null) {
-            s.cancel();
-            s = null;
+        if (countdownTimer != null) {
+            countdownTimer.cancel();
+            countdownTimer = null;
         }
     }
 
@@ -82,12 +82,12 @@ public class QuizBoard extends LinearLayout implements View.OnClickListener {
     }
 
     public void b() {
-        if (q == null || q.isEmpty()) {
-            q = CompileQuizManager.a();
+        if (quizList == null || quizList.isEmpty()) {
+            quizList = CompileQuizManager.a();
         }
 
-        int var1 = new Random().nextInt(q.size());
-        setData(q.remove(var1));
+        int var1 = new Random().nextInt(quizList.size());
+        setData(quizList.remove(var1));
         e();
     }
 
@@ -129,14 +129,14 @@ public class QuizBoard extends LinearLayout implements View.OnClickListener {
     }
 
     public final void e() {
-        a var1 = s;
+        a var1 = countdownTimer;
         if (var1 != null) {
             var1.cancel();
         }
 
-        s = null;
+        countdownTimer = null;
         var1 = new a(15000L, 250L);
-        s = var1;
+        countdownTimer = var1;
         var1.start();
     }
 
