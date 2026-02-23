@@ -20,30 +20,30 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class ViewFilesAdapter extends BaseFragment {
-  public RecyclerView f;
+  public RecyclerView recyclerView;
   
-  public String g;
+  public String projectId;
   
-  public ArrayList<ProjectFileBean> h;
+  public ArrayList<ProjectFileBean> projectFiles;
   
-  public a i = null;
+  public a adapter = null;
   
-  public Boolean j = Boolean.valueOf(false);
+  public Boolean isSelectionMode = Boolean.valueOf(false);
   
-  public TextView k;
+  public TextView emptyText;
   
-  public int[] l = new int[19];
+  public int[] viewCounters = new int[19];
   
   public final String a(int paramInt, String paramString) {
     String str1 = SketchwarePaths.b(paramInt);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str1);
-    int[] arrayOfInt = this.l;
+    int[] arrayOfInt = this.viewCounters;
     int i = arrayOfInt[paramInt] + 1;
     arrayOfInt[paramInt] = i;
     stringBuilder.append(i);
     String str2 = stringBuilder.toString();
-    ArrayList arrayList = ProjectDataManager.a(this.g).d(paramString);
+    ArrayList arrayList = ProjectDataManager.a(this.projectId).d(paramString);
     paramString = str2;
     while (true) {
       int found = 0;
@@ -63,7 +63,7 @@ public class ViewFilesAdapter extends BaseFragment {
         return paramString; 
       StringBuilder stringBuilder1 = new StringBuilder();
       stringBuilder1.append(str1);
-      int[] arrayOfInt1 = this.l;
+      int[] arrayOfInt1 = this.viewCounters;
       i = arrayOfInt1[paramInt] + 1;
       arrayOfInt1[paramInt] = i;
       stringBuilder1.append(i);
@@ -84,84 +84,84 @@ public class ViewFilesAdapter extends BaseFragment {
   }
   
   public void a(ProjectFileBean paramProjectFileBean) {
-    this.h.add(paramProjectFileBean);
-    this.i.notifyDataSetChanged();
+    this.projectFiles.add(paramProjectFileBean);
+    this.adapter.notifyDataSetChanged();
   }
   
   public void a(String paramString) {
     boolean found = false;
-    for (ProjectFileBean bean : this.h) {
+    for (ProjectFileBean bean : this.projectFiles) {
       if (bean.fileType == 2 && bean.fileName.equals(paramString)) {
         found = true;
         break;
       }
     }
     if (!found) {
-      this.h.add(new ProjectFileBean(2, paramString));
-      this.i.notifyDataSetChanged();
+      this.projectFiles.add(new ProjectFileBean(2, paramString));
+      this.adapter.notifyDataSetChanged();
     }
   }
   
   public void a(boolean paramBoolean) {
-    this.j = Boolean.valueOf(paramBoolean);
+    this.isSelectionMode = Boolean.valueOf(paramBoolean);
     e();
-    this.i.notifyDataSetChanged();
+    this.adapter.notifyDataSetChanged();
   }
   
   public void b(String paramString) {
-    for (ProjectFileBean projectFileBean : this.h) {
+    for (ProjectFileBean projectFileBean : this.projectFiles) {
       if (projectFileBean.fileType == 2 && projectFileBean.fileName.equals(paramString)) {
-        this.h.remove(projectFileBean);
+        this.projectFiles.remove(projectFileBean);
         break;
       } 
     } 
-    this.i.notifyDataSetChanged();
+    this.adapter.notifyDataSetChanged();
   }
   
   public ArrayList<ProjectFileBean> c() {
-    return this.h;
+    return this.projectFiles;
   }
   
   public void d() {
-    ArrayList<ProjectFileBean> arrayList = ProjectDataManager.b(this.g).c();
+    ArrayList<ProjectFileBean> arrayList = ProjectDataManager.b(this.projectId).c();
     if (arrayList == null)
       return; 
     for (ProjectFileBean projectFileBean : arrayList)
-      this.h.add(projectFileBean); 
+      this.projectFiles.add(projectFileBean); 
   }
   
   public final void e() {
-    Iterator<ProjectFileBean> iterator = this.h.iterator();
+    Iterator<ProjectFileBean> iterator = this.projectFiles.iterator();
     while (iterator.hasNext())
       ((SelectableBean)iterator.next()).isSelected = false; 
   }
   
   public void f() {
-    int i = this.h.size();
+    int i = this.projectFiles.size();
     while (true) {
       int j = i - 1;
       if (j >= 0) {
         i = j;
-        if (((SelectableBean)this.h.get(j)).isSelected) {
-          this.h.remove(j);
+        if (((SelectableBean)this.projectFiles.get(j)).isSelected) {
+          this.projectFiles.remove(j);
           i = j;
         } 
         continue;
       } 
-      this.i.notifyDataSetChanged();
+      this.adapter.notifyDataSetChanged();
       return;
     } 
   }
   
   public void g() {
-    ArrayList<ProjectFileBean> arrayList = this.h;
+    ArrayList<ProjectFileBean> arrayList = this.projectFiles;
     if (arrayList != null)
       if (arrayList.size() == 0) {
-        this.k.setVisibility(View.VISIBLE);
-        this.f.setVisibility(View.GONE);
+        this.emptyText.setVisibility(View.VISIBLE);
+        this.recyclerView.setVisibility(View.GONE);
       } else {
-        this.k.setVisibility(View.GONE);
-        this.f.setVisibility(View.VISIBLE);
+        this.emptyText.setVisibility(View.GONE);
+        this.recyclerView.setVisibility(View.VISIBLE);
       }  
   }
   
@@ -170,55 +170,55 @@ public class ViewFilesAdapter extends BaseFragment {
     if (paramBundle == null) {
       d();
     } else {
-      this.g = paramBundle.getString("sc_id");
-      this.h = paramBundle.getParcelableArrayList("custom_views");
+      this.projectId = paramBundle.getString("sc_id");
+      this.projectFiles = paramBundle.getParcelableArrayList("custom_views");
     } 
-    this.f.getAdapter().notifyDataSetChanged();
+    this.recyclerView.getAdapter().notifyDataSetChanged();
     g();
   }
   
   public void onActivityResult(int paramInt1, int paramInt2, Intent paramIntent) {
     if ((paramInt1 == 277 || paramInt1 == 278) && paramInt2 == -1) {
-      ProjectFileBean projectFileBean = this.h.get(this.i.c);
-      ArrayList<ViewBean> arrayList2 = ProjectDataManager.a(this.g).d(projectFileBean.getXmlName());
+      ProjectFileBean projectFileBean = this.projectFiles.get(this.adapter.c);
+      ArrayList<ViewBean> arrayList2 = ProjectDataManager.a(this.projectId).d(projectFileBean.getXmlName());
       for (paramInt2 = arrayList2.size() - 1; paramInt2 >= 0; paramInt2--) {
         ViewBean viewBean = arrayList2.get(paramInt2);
-        ProjectDataManager.a(this.g).a(projectFileBean, viewBean);
+        ProjectDataManager.a(this.projectId).a(projectFileBean, viewBean);
       } 
       ArrayList<ViewBean> arrayList1 = a(((ProjectFileBean)paramIntent.getParcelableExtra("preset_data")).presetName, paramInt1);
-      ProjectDataManager.a(this.g);
+      ProjectDataManager.a(this.projectId);
       for (ViewBean viewBean : ProjectDataStore.a(arrayList1)) {
         viewBean.id = a(viewBean.type, projectFileBean.getXmlName());
-        ProjectDataManager.a(this.g).a(projectFileBean.getXmlName(), viewBean);
+        ProjectDataManager.a(this.projectId).a(projectFileBean.getXmlName(), viewBean);
         if (viewBean.type == 3 && projectFileBean.fileType == 0)
-          ProjectDataManager.a(this.g).a(projectFileBean.getJavaName(), 1, viewBean.type, viewBean.id, "onClick"); 
+          ProjectDataManager.a(this.projectId).a(projectFileBean.getJavaName(), 1, viewBean.type, viewBean.id, "onClick"); 
       } 
-      a a1 = this.i;
+      a a1 = this.adapter;
       a1.notifyItemChanged(a1.c);
     } 
   }
   
   public View onCreateView(LayoutInflater paramLayoutInflater, ViewGroup paramViewGroup, Bundle paramBundle) {
     ViewGroup viewGroup = (ViewGroup)paramLayoutInflater.inflate(R.layout.fr_manage_view_list, paramViewGroup, false);
-    this.h = new ArrayList<ProjectFileBean>();
-    this.f = (RecyclerView)viewGroup.findViewById(R.id.list_activities);
-    this.f.setHasFixedSize(true);
-    this.f.setLayoutManager((RecyclerView.LayoutManager)new LinearLayoutManager(getContext()));
-    this.i = new a(this, this.f);
-    this.f.setAdapter(this.i);
+    this.projectFiles = new ArrayList<ProjectFileBean>();
+    this.recyclerView = (RecyclerView)viewGroup.findViewById(R.id.list_activities);
+    this.recyclerView.setHasFixedSize(true);
+    this.recyclerView.setLayoutManager((RecyclerView.LayoutManager)new LinearLayoutManager(getContext()));
+    this.adapter = new a(this, this.recyclerView);
+    this.recyclerView.setAdapter(this.adapter);
     if (paramBundle == null) {
-      this.g = requireActivity().getIntent().getStringExtra("sc_id");
+      this.projectId = requireActivity().getIntent().getStringExtra("sc_id");
     } else {
-      this.g = paramBundle.getString("sc_id");
+      this.projectId = paramBundle.getString("sc_id");
     } 
-    this.k = (TextView)viewGroup.findViewById(R.id.tv_guide);
-    this.k.setText(StringResource.b().a((Context)requireActivity(), R.string.design_manager_view_description_guide_create_custom_view));
+    this.emptyText = (TextView)viewGroup.findViewById(R.id.tv_guide);
+    this.emptyText.setText(StringResource.b().a((Context)requireActivity(), R.string.design_manager_view_description_guide_create_custom_view));
     return (View)viewGroup;
   }
   
   public void onSaveInstanceState(Bundle paramBundle) {
-    paramBundle.putString("sc_id", this.g);
-    paramBundle.putParcelableArrayList("custom_views", this.h);
+    paramBundle.putString("sc_id", this.projectId);
+    paramBundle.putParcelableArrayList("custom_views", this.projectFiles);
     super.onSaveInstanceState(paramBundle);
   }
   
@@ -234,18 +234,18 @@ public class ViewFilesAdapter extends BaseFragment {
     }
     
     public int getItemCount() {
-      return (this.d.h != null) ? this.d.h.size() : 0;
+      return (this.d.projectFiles != null) ? this.d.projectFiles.size() : 0;
     }
     
     public void onBindViewHolder(ViewHolder param1a, int param1Int) {
-      if (this.d.j.booleanValue()) {
+      if (this.d.isSelectionMode.booleanValue()) {
         param1a.x.setVisibility(View.VISIBLE);
         param1a.u.setVisibility(View.GONE);
       } else {
         param1a.x.setVisibility(View.GONE);
         param1a.u.setVisibility(View.VISIBLE);
       } 
-      ProjectFileBean projectFileBean = this.d.h.get(param1Int);
+      ProjectFileBean projectFileBean = this.d.projectFiles.get(param1Int);
       param1a.u.setImageResource(R.drawable.activity_preset_1);
       param1a.t.setChecked(((SelectableBean)projectFileBean).isSelected);
       param1Int = projectFileBean.fileType;

@@ -17,10 +17,10 @@ public class ViewFileClickListener implements View.OnClickListener {
   public void onClick(View paramView) {
     ViewFilesAdapter.a.ViewHolder a1 = this.b;
     a1.z.c = a1.getLayoutPosition();
-    if (this.b.z.d.j.booleanValue()) {
+    if (this.b.z.d.isSelectionMode.booleanValue()) {
       CheckBox checkBox = this.b.t;
       checkBox.setChecked(checkBox.isChecked() ^ true);
-      ((SelectableBean)this.b.z.d.h.get(this.b.z.c)).isSelected = this.b.t.isChecked();
+      ((SelectableBean)this.b.z.d.projectFiles.get(this.b.z.c)).isSelected = this.b.t.isChecked();
       ViewFilesAdapter.a a2 = this.b.z;
       a2.notifyItemChanged(a2.c);
     } 

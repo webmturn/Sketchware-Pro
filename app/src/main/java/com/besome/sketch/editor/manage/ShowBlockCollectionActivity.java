@@ -52,7 +52,7 @@ public class ShowBlockCollectionActivity extends BaseAppCompatActivity implement
             int blockId = (Integer) block.getTag();
 
             blockIdsWithBlocks.put(blockId, block);
-            pane.g = Math.max(pane.g, blockId + 1);
+            pane.nextBlockId = Math.max(pane.nextBlockId, blockId + 1);
             pane.a(block, 10, 10);
 
             if (isFirstBlock) {

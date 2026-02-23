@@ -204,7 +204,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 BlockView b2 = b(next);
                 createdBlocks.add(b2);
                 blockIdsAndBlocks.put((Integer) b2.getTag(), b2);
-                o.g = Math.max(o.g, (Integer) b2.getTag() + 1);
+                o.nextBlockId = Math.max(o.nextBlockId, (Integer) b2.getTag() + 1);
             }
 
             runOnUiThread(() -> {
@@ -596,8 +596,8 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
         for (BlockBean next2 : arrayList2) {
             if (Integer.parseInt(next2.id) >= 99000000) {
-                hashMap.put(Integer.valueOf(next2.id), o.g);
-                o.g = o.g + 1;
+                hashMap.put(Integer.valueOf(next2.id), o.nextBlockId);
+                o.nextBlockId = o.nextBlockId + 1;
             } else {
                 hashMap.put(Integer.valueOf(next2.id), Integer.valueOf(next2.id));
             }

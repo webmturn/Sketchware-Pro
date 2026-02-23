@@ -21,7 +21,7 @@ public class ViewFileLongClickListener implements View.OnLongClickListener {
     a1.z.c = a1.getLayoutPosition();
     CheckBox checkBox = this.b.t;
     checkBox.setChecked(checkBox.isChecked() ^ true);
-    ((SelectableBean)this.b.z.d.h.get(this.b.z.c)).isSelected = this.b.t.isChecked();
+    ((SelectableBean)this.b.z.d.projectFiles.get(this.b.z.c)).isSelected = this.b.t.isChecked();
     return true;
   }
 }

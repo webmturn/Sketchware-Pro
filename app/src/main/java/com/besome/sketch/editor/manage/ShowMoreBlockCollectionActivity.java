@@ -51,7 +51,7 @@ public class ShowMoreBlockCollectionActivity extends BaseAppCompatActivity imple
             int blockId = (Integer) block.getTag();
             hashMap.put(blockId, block);
 
-            pane.g = Math.max(pane.g, blockId + 1);
+            pane.nextBlockId = Math.max(pane.nextBlockId, blockId + 1);
             pane.a(block, 0, 0);
 
             if (isFirstBlock) {

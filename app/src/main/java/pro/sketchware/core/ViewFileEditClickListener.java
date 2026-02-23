@@ -23,7 +23,7 @@ public class ViewFileEditClickListener implements View.OnClickListener {
     ViewFilesAdapter.a.ViewHolder a1 = this.b;
     a1.z.c = a1.getLayoutPosition();
     Intent intent = new Intent((Context)this.b.z.d.getActivity(), PresetSettingActivity.class);
-    if (((ProjectFileBean)this.b.z.d.h.get(this.b.z.c)).fileType == 1) {
+    if (((ProjectFileBean)this.b.z.d.projectFiles.get(this.b.z.c)).fileType == 1) {
       c = 'ĕ';
     } else {
       c = 'Ė';
