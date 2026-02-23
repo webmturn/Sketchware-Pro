@@ -126,9 +126,9 @@ public class PropertyStringSelectorItem extends RelativeLayout implements View.O
         radioGroupContent = view.findViewById(R.id.rg_content);
 
         String[] items = switch (key) {
-            case "property_ad_size" -> SketchwareConstants.k;
-            case "property_indeterminate" -> SketchwareConstants.l;
-            case "property_scale_type" -> SketchwareConstants.j;
+            case "property_ad_size" -> SketchwareConstants.AD_SIZES;
+            case "property_indeterminate" -> SketchwareConstants.BOOLEAN_OPTIONS;
+            case "property_scale_type" -> SketchwareConstants.IMAGE_SCALE_TYPES;
             default -> null;
         };
 

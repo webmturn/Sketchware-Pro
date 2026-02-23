@@ -385,60 +385,60 @@ public class ColorPickerDialog extends PopupWindow {
             colorList.add(new ColorBean("#FFF6F6F6", "colors.xml", "#212121", R.drawable.checked_grey_32));
         if (hasMaterialColors)
             colorList.add(new ColorBean("#FFF6F6F6", "Material 3 Colors", "#212121", R.drawable.checked_grey_32));
-        colorList.add(SketchwareConstants.p[0]);
-        colorList.add(SketchwareConstants.q[0]);
-        colorList.add(SketchwareConstants.r[0]);
-        colorList.add(SketchwareConstants.s[0]);
-        colorList.add(SketchwareConstants.t[0]);
-        colorList.add(SketchwareConstants.u[0]);
-        colorList.add(SketchwareConstants.v[0]);
-        colorList.add(SketchwareConstants.w[0]);
-        colorList.add(SketchwareConstants.x[0]);
-        colorList.add(SketchwareConstants.y[0]);
-        colorList.add(SketchwareConstants.z[0]);
-        colorList.add(SketchwareConstants.A[0]);
-        colorList.add(SketchwareConstants.B[0]);
-        colorList.add(SketchwareConstants.C[0]);
-        colorList.add(SketchwareConstants.D[0]);
-        colorList.add(SketchwareConstants.E[0]);
-        colorList.add(SketchwareConstants.F[0]);
-        colorList.add(SketchwareConstants.G[0]);
-        colorList.add(SketchwareConstants.H[0]);
-        colorList.add(SketchwareConstants.I[0]);
-        colorList.add(SketchwareConstants.J[0]);
+        colorList.add(SketchwareConstants.COLOR_RED[0]);
+        colorList.add(SketchwareConstants.COLOR_PINK[0]);
+        colorList.add(SketchwareConstants.COLOR_PURPLE[0]);
+        colorList.add(SketchwareConstants.COLOR_DEEP_PURPLE[0]);
+        colorList.add(SketchwareConstants.COLOR_INDIGO[0]);
+        colorList.add(SketchwareConstants.COLOR_BLUE[0]);
+        colorList.add(SketchwareConstants.COLOR_LIGHT_BLUE[0]);
+        colorList.add(SketchwareConstants.COLOR_CYAN[0]);
+        colorList.add(SketchwareConstants.COLOR_TEAL[0]);
+        colorList.add(SketchwareConstants.COLOR_GREEN[0]);
+        colorList.add(SketchwareConstants.COLOR_LIGHT_GREEN[0]);
+        colorList.add(SketchwareConstants.COLOR_LIME[0]);
+        colorList.add(SketchwareConstants.COLOR_YELLOW[0]);
+        colorList.add(SketchwareConstants.COLOR_AMBER[0]);
+        colorList.add(SketchwareConstants.COLOR_ORANGE[0]);
+        colorList.add(SketchwareConstants.COLOR_DEEP_ORANGE[0]);
+        colorList.add(SketchwareConstants.COLOR_BROWN[0]);
+        colorList.add(SketchwareConstants.COLOR_GREY[0]);
+        colorList.add(SketchwareConstants.COLOR_BLUE_GREY[0]);
+        colorList.add(SketchwareConstants.COLOR_BLACK[0]);
+        colorList.add(SketchwareConstants.COLOR_WHITE[0]);
         colorGroups.add(getSavedColorBeans());
         if (sc_id != null)
-            colorGroups.add(SketchwareConstants.p);
+            colorGroups.add(SketchwareConstants.COLOR_RED);
         if (hasMaterialColors)
-            colorGroups.add(SketchwareConstants.p);
-        colorGroups.add(SketchwareConstants.p);
-        colorGroups.add(SketchwareConstants.q);
-        colorGroups.add(SketchwareConstants.r);
-        colorGroups.add(SketchwareConstants.s);
-        colorGroups.add(SketchwareConstants.t);
-        colorGroups.add(SketchwareConstants.u);
-        colorGroups.add(SketchwareConstants.v);
-        colorGroups.add(SketchwareConstants.w);
-        colorGroups.add(SketchwareConstants.x);
-        colorGroups.add(SketchwareConstants.y);
-        colorGroups.add(SketchwareConstants.z);
-        colorGroups.add(SketchwareConstants.A);
-        colorGroups.add(SketchwareConstants.B);
-        colorGroups.add(SketchwareConstants.C);
-        colorGroups.add(SketchwareConstants.D);
-        colorGroups.add(SketchwareConstants.E);
-        colorGroups.add(SketchwareConstants.F);
-        colorGroups.add(SketchwareConstants.G);
-        colorGroups.add(SketchwareConstants.H);
-        colorGroups.add(SketchwareConstants.I);
-        colorGroups.add(SketchwareConstants.J);
+            colorGroups.add(SketchwareConstants.COLOR_RED);
+        colorGroups.add(SketchwareConstants.COLOR_RED);
+        colorGroups.add(SketchwareConstants.COLOR_PINK);
+        colorGroups.add(SketchwareConstants.COLOR_PURPLE);
+        colorGroups.add(SketchwareConstants.COLOR_DEEP_PURPLE);
+        colorGroups.add(SketchwareConstants.COLOR_INDIGO);
+        colorGroups.add(SketchwareConstants.COLOR_BLUE);
+        colorGroups.add(SketchwareConstants.COLOR_LIGHT_BLUE);
+        colorGroups.add(SketchwareConstants.COLOR_CYAN);
+        colorGroups.add(SketchwareConstants.COLOR_TEAL);
+        colorGroups.add(SketchwareConstants.COLOR_GREEN);
+        colorGroups.add(SketchwareConstants.COLOR_LIGHT_GREEN);
+        colorGroups.add(SketchwareConstants.COLOR_LIME);
+        colorGroups.add(SketchwareConstants.COLOR_YELLOW);
+        colorGroups.add(SketchwareConstants.COLOR_AMBER);
+        colorGroups.add(SketchwareConstants.COLOR_ORANGE);
+        colorGroups.add(SketchwareConstants.COLOR_DEEP_ORANGE);
+        colorGroups.add(SketchwareConstants.COLOR_BROWN);
+        colorGroups.add(SketchwareConstants.COLOR_GREY);
+        colorGroups.add(SketchwareConstants.COLOR_BLUE_GREY);
+        colorGroups.add(SketchwareConstants.COLOR_BLACK);
+        colorGroups.add(SketchwareConstants.COLOR_WHITE);
         if (isColorTransparent) {
-            colorList.add(SketchwareConstants.K[0]);
-            colorGroups.add(SketchwareConstants.K);
+            colorList.add(SketchwareConstants.COLOR_TRANSPARENT[0]);
+            colorGroups.add(SketchwareConstants.COLOR_TRANSPARENT);
         }
         if (isColorNone) {
-            colorList.add(SketchwareConstants.L[0]);
-            colorGroups.add(SketchwareConstants.L);
+            colorList.add(SketchwareConstants.COLOR_NONE[0]);
+            colorGroups.add(SketchwareConstants.COLOR_NONE);
         }
     }
 
