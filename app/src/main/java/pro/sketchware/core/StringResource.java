@@ -12,36 +12,36 @@ import javax.crypto.IllegalBlockSizeException;
 import mod.agus.jcoderz.editor.event.ManageEvent;
 
 public class StringResource {
-  public static StringResource a;
+  public static StringResource instance;
   
-  public HashMap<String, String> b;
+  public HashMap<String, String> blockTranslations;
   
-  public HashMap<String, String> c;
+  public HashMap<String, String> eventTranslations;
   
-  public String d = SketchwarePaths.l();
+  public String translationDir = SketchwarePaths.l();
   
-  public boolean e;
+  public boolean isLoaded;
   
-  public final String f = "block";
+  public final String BLOCK_PREFIX = "block";
   
-  public final String g = "root_spec";
+  public final String ROOT_SPEC_PREFIX = "root_spec";
   
   public StringResource() {
-    if (this.b == null)
-      this.b = new HashMap<String, String>(); 
-    if (this.c == null)
-      this.c = new HashMap<String, String>(); 
+    if (this.blockTranslations == null)
+      this.blockTranslations = new HashMap<String, String>(); 
+    if (this.eventTranslations == null)
+      this.eventTranslations = new HashMap<String, String>(); 
   }
   
   public static StringResource b() {
-    if (a == null) {
+    if (instance == null) {
       synchronized (StringResource.class) {
-        if (a == null) {
-          a = new StringResource();
+        if (instance == null) {
+          instance = new StringResource();
         }
       }
     }
-    return a;
+    return instance;
   }
   
   public String a(Context paramContext, int paramInt) {
@@ -53,17 +53,17 @@ public class StringResource {
   }
   
   public String a(Context paramContext, String paramString) {
-    if (this.b == null)
-      this.b = new HashMap<String, String>(); 
-    if (this.b.isEmpty()) {
-      this.e = false;
-      this.b = b(this.d);
+    if (this.blockTranslations == null)
+      this.blockTranslations = new HashMap<String, String>(); 
+    if (this.blockTranslations.isEmpty()) {
+      this.isLoaded = false;
+      this.blockTranslations = b(this.translationDir);
     } 
-    if (this.c == null)
-      this.c = new HashMap<String, String>(); 
-    if (this.c.isEmpty())
+    if (this.eventTranslations == null)
+      this.eventTranslations = new HashMap<String, String>(); 
+    if (this.eventTranslations.isEmpty())
       a(paramContext); 
-    paramString = this.c.get(paramString);
+    paramString = this.eventTranslations.get(paramString);
     String str = paramString;
     if (paramString == null)
       str = ""; 
@@ -71,17 +71,17 @@ public class StringResource {
   }
   
   public String a(Context paramContext, String paramString1, String paramString2) {
-    if (this.b == null)
-      this.b = new HashMap<String, String>(); 
-    boolean bool = this.b.isEmpty();
+    if (this.blockTranslations == null)
+      this.blockTranslations = new HashMap<String, String>(); 
+    boolean bool = this.blockTranslations.isEmpty();
     byte b = 0;
     if (bool) {
-      this.e = false;
-      this.b = b(this.d);
+      this.isLoaded = false;
+      this.blockTranslations = b(this.translationDir);
     } 
-    if (this.c == null)
-      this.c = new HashMap<String, String>(); 
-    if (this.c.isEmpty())
+    if (this.eventTranslations == null)
+      this.eventTranslations = new HashMap<String, String>(); 
+    if (this.eventTranslations.isEmpty())
       a(paramContext); 
     switch (paramString2.hashCode()) {
       default:
@@ -298,7 +298,7 @@ public class StringResource {
     } 
     switch (b) {
       default:
-        String result = this.c.get(paramString2);
+        String result = this.eventTranslations.get(paramString2);
         if (result == null)
           result = ManageEvent.i(paramString1, paramString2); 
         return result;
@@ -346,7 +346,7 @@ public class StringResource {
       case 41:
         break;
     } 
-    String str = this.c.get(paramString2);
+    String str = this.eventTranslations.get(paramString2);
     paramString2 = str;
     if (str == null)
       paramString2 = ""; 
@@ -361,21 +361,21 @@ public class StringResource {
   
   public String a(Context paramContext, String paramString, ArrayList<String> paramArrayList) {
     int bodyCount = paramArrayList.size() > 1 ? paramArrayList.size() - 1 : 0;
-    if (this.b == null)
-      this.b = new HashMap<String, String>();
-    if (this.b.isEmpty()) {
-      this.e = false;
-      this.b = b(this.d);
+    if (this.blockTranslations == null)
+      this.blockTranslations = new HashMap<String, String>();
+    if (this.blockTranslations.isEmpty()) {
+      this.isLoaded = false;
+      this.blockTranslations = b(this.translationDir);
     }
     StringBuilder result = new StringBuilder(1024);
     String headKey = paramString + "_head";
     String tailKey = paramString + "_tail";
     boolean useTranslation = false;
-    if (this.b != null && this.b.containsKey(headKey) && this.b.containsKey(tailKey)) {
+    if (this.blockTranslations != null && this.blockTranslations.containsKey(headKey) && this.blockTranslations.containsKey(tailKey)) {
       useTranslation = true;
       for (int i = 0; i < bodyCount; i++) {
         String bk = paramString + "_body_" + (i + 1);
-        if (!this.b.containsKey(bk)) {
+        if (!this.blockTranslations.containsKey(bk)) {
           useTranslation = false;
           break;
         }
@@ -383,7 +383,7 @@ public class StringResource {
     }
     String headStr;
     if (useTranslation) {
-      headStr = (String) this.b.get(headKey);
+      headStr = (String) this.blockTranslations.get(headKey);
     } else {
       try {
         headStr = paramContext.getResources().getString(
@@ -404,7 +404,7 @@ public class StringResource {
       String bodyKey = paramString + "_body_" + bodyIdx;
       String bodyStr;
       if (useTranslation) {
-        bodyStr = (String) this.b.get(bodyKey);
+        bodyStr = (String) this.blockTranslations.get(bodyKey);
       } else {
         try {
           bodyStr = paramContext.getResources().getString(
@@ -421,7 +421,7 @@ public class StringResource {
     }
     String tailStr;
     if (useTranslation) {
-      tailStr = (String) this.b.get(tailKey);
+      tailStr = (String) this.blockTranslations.get(tailKey);
     } else {
       try {
         tailStr = paramContext.getResources().getString(
@@ -438,14 +438,14 @@ public class StringResource {
   
   public String a(Resources paramResources, int paramInt) {
     String str = paramResources.getResourceEntryName(paramInt);
-    if (this.b == null)
-      this.b = new HashMap<String, String>(); 
+    if (this.blockTranslations == null)
+      this.blockTranslations = new HashMap<String, String>(); 
     try {
-      if (this.b.isEmpty()) {
-        this.e = false;
-        this.b = b(this.d);
+      if (this.blockTranslations.isEmpty()) {
+        this.isLoaded = false;
+        this.blockTranslations = b(this.translationDir);
       } 
-      return (this.b.containsKey(str) && this.b.get(str) != null && ((String)this.b.get(str)).length() > 0) ? ((String)this.b.get(str)).replaceAll("\\\\\\'", "'").replaceAll("\\\\\\\"", "\"").replaceAll("\\\\n", "\\\n") : paramResources.getString(paramInt);
+      return (this.blockTranslations.containsKey(str) && this.blockTranslations.get(str) != null && ((String)this.blockTranslations.get(str)).length() > 0) ? ((String)this.blockTranslations.get(str)).replaceAll("\\\\\\'", "'").replaceAll("\\\\\\\"", "\"").replaceAll("\\\\n", "\\\n") : paramResources.getString(paramInt);
     } catch (Exception exception) {
       return paramResources.getString(paramInt);
     } 
@@ -453,17 +453,17 @@ public class StringResource {
   
   public String a(Resources paramResources, int paramInt, Object... paramVarArgs) {
     String str = paramResources.getResourceEntryName(paramInt);
-    if (this.b == null)
-      this.b = new HashMap<String, String>(); 
-    boolean bool = this.b.isEmpty();
+    if (this.blockTranslations == null)
+      this.blockTranslations = new HashMap<String, String>(); 
+    boolean bool = this.blockTranslations.isEmpty();
     byte b = 0;
     if (bool) {
-      this.e = false;
-      this.b = b(this.d);
+      this.isLoaded = false;
+      this.blockTranslations = b(this.translationDir);
     } 
     try {
-      if (this.b.containsKey(str) && this.b.get(str) != null && ((String)this.b.get(str)).length() > 0) {
-        String object = ((String)this.b.get(str)).replaceAll("\\\\\\'", "'").replaceAll("\\\\\\\"", "\"").replaceAll("\\\\n", "\\\n");
+      if (this.blockTranslations.containsKey(str) && this.blockTranslations.get(str) != null && ((String)this.blockTranslations.get(str)).length() > 0) {
+        String object = ((String)this.blockTranslations.get(str)).replaceAll("\\\\\\'", "'").replaceAll("\\\\\\\"", "\"").replaceAll("\\\\n", "\\\n");
         int i = paramVarArgs.length;
         int j = 0;
         while (b < i) {
@@ -517,9 +517,9 @@ public class StringResource {
         }
         eventType = parser.next();
       }
-      this.e = true;
+      this.isLoaded = true;
     } catch (Exception ex) {
-      this.e = false;
+      this.isLoaded = false;
     } finally {
       try { if (fis != null) fis.close(); } catch (Exception ignored) {}
       try { if (isr != null) isr.close(); } catch (Exception ignored) {}
@@ -543,9 +543,9 @@ public class StringResource {
         }
         eventType = parser.next();
       }
-      this.e = true;
+      this.isLoaded = true;
     } catch (Exception ex) {
-      this.e = false;
+      this.isLoaded = false;
     } finally {
       try { if (bis != null) bis.close(); } catch (Exception ignored) {}
       try { if (isr != null) isr.close(); } catch (Exception ignored) {}
@@ -554,20 +554,20 @@ public class StringResource {
   }
   
   public void a() {
-    HashMap<String, String> hashMap = this.b;
+    HashMap<String, String> hashMap = this.blockTranslations;
     if (hashMap != null) {
       hashMap.clear();
-      this.b = null;
+      this.blockTranslations = null;
     } 
-    hashMap = this.c;
+    hashMap = this.eventTranslations;
     if (hashMap != null) {
       hashMap.clear();
-      this.c = null;
+      this.eventTranslations = null;
     } 
   }
   
   public void a(Context paramContext) {
-    this.c = new HashMap<String, String>();
+    this.eventTranslations = new HashMap<String, String>();
     c(paramContext, "initializeLogic");
     c(paramContext, "onBackPressed");
     c(paramContext, "onPostCreate");
@@ -971,19 +971,19 @@ public class StringResource {
     stringBuilder.append(BlockSpecRegistry.d(paramString));
     String str = stringBuilder.toString();
     ArrayList<String> arrayList = BlockSpecRegistry.a(paramString);
-    this.c.put(paramString, a(paramContext, str, arrayList));
+    this.eventTranslations.put(paramString, a(paramContext, str, arrayList));
   }
   
   public boolean b(Context paramContext) {
     boolean bool;
-    if (this.b == null)
-      this.b = new HashMap<String, String>(); 
-    HashMap<String, String> hashMap = this.b;
+    if (this.blockTranslations == null)
+      this.blockTranslations = new HashMap<String, String>(); 
+    HashMap<String, String> hashMap = this.blockTranslations;
     if (hashMap != null)
       hashMap.clear(); 
-    this.b = b(this.d);
+    this.blockTranslations = b(this.translationDir);
     a(paramContext);
-    if (!this.b.isEmpty() && this.e) {
+    if (!this.blockTranslations.isEmpty() && this.isLoaded) {
       bool = true;
     } else {
       bool = false;
@@ -997,6 +997,6 @@ public class StringResource {
     stringBuilder.append(BlockSpecRegistry.c(paramString));
     String str = stringBuilder.toString();
     ArrayList<String> arrayList = BlockSpecRegistry.b(paramString);
-    this.c.put(paramString, a(paramContext, str, arrayList));
+    this.eventTranslations.put(paramString, a(paramContext, str, arrayList));
   }
 }

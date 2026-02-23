@@ -12,13 +12,13 @@ import java.util.ArrayList;
 public class ProjectDataParser {
   public final String TAG = "dataParser";
   
-  public String b;
+  public String fileName;
   
-  public String c;
+  public String eventKey;
   
-  public a d;
+  public a dataType;
   
-  public Gson e = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
+  public Gson gson = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
   
   public ProjectDataParser(String paramString) throws Exception {
     try {
@@ -68,15 +68,15 @@ public class ProjectDataParser {
   }
   
   public a a() {
-    return this.d;
+    return this.dataType;
   }
   
   public <T> T a(String paramString) {
-    switch (KeyboardSettingConstants.VALUES[this.d.ordinal()]) {
+    switch (KeyboardSettingConstants.VALUES[this.dataType.ordinal()]) {
       default:
         return null;
       case 8:
-        return (T)a(this.e, paramString);
+        return (T)a(this.gson, paramString);
       case 7:
         return (T)e(paramString);
       case 6:
@@ -92,11 +92,11 @@ public class ProjectDataParser {
       case 1:
         break;
     } 
-    return (T)b(this.e, paramString);
+    return (T)b(this.gson, paramString);
   }
   
   public String b() {
-    return this.b;
+    return this.fileName;
   }
   
   public ArrayList<ComponentBean> b(String paramString) {
@@ -108,7 +108,7 @@ public class ProjectDataParser {
       while ((line = reader.readLine()) != null) {
         if (line.trim().length() <= 0) continue;
         if (line.trim().charAt(0) != '{') continue;
-        ComponentBean bean = this.e.fromJson(line, ComponentBean.class);
+        ComponentBean bean = this.gson.fromJson(line, ComponentBean.class);
         bean.initValue();
         result.add(bean);
       }
@@ -121,7 +121,7 @@ public class ProjectDataParser {
   }
   
   public String c() {
-    return this.c;
+    return this.eventKey;
   }
   
   public ArrayList<EventBean> c(String paramString) {
@@ -133,7 +133,7 @@ public class ProjectDataParser {
       while ((line = reader.readLine()) != null) {
         if (line.trim().length() <= 0) continue;
         if (line.charAt(0) != '{') continue;
-        EventBean bean = this.e.fromJson(line, EventBean.class);
+        EventBean bean = this.gson.fromJson(line, EventBean.class);
         bean.initValue();
         result.add(bean);
       }
@@ -146,7 +146,7 @@ public class ProjectDataParser {
   }
   
   public ViewBean d(String paramString) {
-    return (paramString.trim().length() <= 0 || paramString.trim().charAt(0) != '{') ? new ViewBean("_fab", 16) : (ViewBean)this.e.fromJson(paramString, ViewBean.class);
+    return (paramString.trim().length() <= 0 || paramString.trim().charAt(0) != '{') ? new ViewBean("_fab", 16) : (ViewBean)this.gson.fromJson(paramString, ViewBean.class);
   }
   
   public ArrayList<Pair<String, String>> e(String paramString) {
@@ -174,14 +174,14 @@ public class ProjectDataParser {
     String str = paramString.trim();
     if (str.contains(".xml")) {
       int i = str.indexOf(".xml") + 4;
-      this.b = str.substring(0, i);
+      this.fileName = str.substring(0, i);
       if (paramString.length() == i) {
-        this.d = ProjectDataParser.a.a;
+        this.dataType = ProjectDataParser.a.a;
       } else {
         paramString = paramString.substring(i);
         if (paramString.charAt(0) == '_') {
           if (paramString.substring(1).equals("fab")) {
-            this.d = ProjectDataParser.a.b;
+            this.dataType = ProjectDataParser.a.b;
           } else {
             throw new Exception("invalid key : Unknown type string");
           } 
@@ -192,7 +192,7 @@ public class ProjectDataParser {
     } else {
       if (str.contains(".java")) {
         int i = str.indexOf(".java") + 5;
-        this.b = str.substring(0, i);
+        this.fileName = str.substring(0, i);
         if (str.length() != i) {
           paramString = str.substring(i);
           if (paramString.charAt(0) == '_') {
@@ -225,22 +225,22 @@ public class ProjectDataParser {
                 if (i != 2) {
                   if (i != 3) {
                     if (i != 4) {
-                      this.d = ProjectDataParser.a.h;
-                      this.c = paramString;
+                      this.dataType = ProjectDataParser.a.h;
+                      this.eventKey = paramString;
                     } else {
-                      this.d = ProjectDataParser.a.g;
+                      this.dataType = ProjectDataParser.a.g;
                     } 
                   } else {
-                    this.d = ProjectDataParser.a.f;
+                    this.dataType = ProjectDataParser.a.f;
                   } 
                 } else {
-                  this.d = ProjectDataParser.a.e;
+                  this.dataType = ProjectDataParser.a.e;
                 } 
               } else {
-                this.d = ProjectDataParser.a.d;
+                this.dataType = ProjectDataParser.a.d;
               } 
             } else {
-              this.d = ProjectDataParser.a.c;
+              this.dataType = ProjectDataParser.a.c;
             } 
             return;
           } 

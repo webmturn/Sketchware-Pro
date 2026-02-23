@@ -29,9 +29,9 @@ public class ImageCollectionManager extends BaseCollectionManager {
   }
   
   public void a(ProjectResourceBean paramProjectResourceBean, String paramString, boolean paramBoolean) {
-    int i = this.e.size();
+    int i = this.collections.size();
     while (--i >= 0) {
-      CollectionBean collectionBean = this.e.get(i);
+      CollectionBean collectionBean = this.collections.get(i);
       if (collectionBean.name.equals(paramProjectResourceBean.resName)) {
         collectionBean.name = paramString;
         break;
@@ -46,9 +46,9 @@ public class ImageCollectionManager extends BaseCollectionManager {
   }
   
   public void a(String paramString, ProjectResourceBean paramProjectResourceBean, boolean paramBoolean) throws CompileException {
-    if (this.e == null) a();
+    if (this.collections == null) a();
     ArrayList<String> duplicates = new ArrayList<String>();
-    for (CollectionBean bean : this.e) {
+    for (CollectionBean bean : this.collections) {
       if (bean.name.equals(paramProjectResourceBean.resName)) {
         duplicates.add(bean.name);
       }
@@ -62,47 +62,47 @@ public class ImageCollectionManager extends BaseCollectionManager {
       String ext = paramProjectResourceBean.resFullName.substring(paramProjectResourceBean.resFullName.lastIndexOf('.'));
       dataName = resName + ext;
     }
-    String destPath = this.b + java.io.File.separator + dataName;
+    String destPath = this.dataDirPath + java.io.File.separator + dataName;
     if (paramProjectResourceBean.savedPos == 1) {
       String srcPath = paramProjectResourceBean.resFullName;
-      if (!this.c.e(srcPath)) {
+      if (!this.fileUtil.e(srcPath)) {
         throw new CompileException("file_no_exist");
       }
       try {
-        this.c.f(this.b);
-        this.c.a(srcPath, destPath);
+        this.fileUtil.f(this.dataDirPath);
+        this.fileUtil.a(srcPath, destPath);
       } catch (java.io.IOException e) {
         throw new CompileException("fail_to_copy");
       }
     } else {
       String srcPath = SketchwarePaths.d() + java.io.File.separator + paramString + java.io.File.separator + paramProjectResourceBean.resFullName;
-      if (!this.c.e(srcPath)) {
+      if (!this.fileUtil.e(srcPath)) {
         throw new CompileException("file_no_exist");
       }
       try {
-        this.c.f(this.b);
-        this.c.a(srcPath, destPath);
+        this.fileUtil.f(this.dataDirPath);
+        this.fileUtil.a(srcPath, destPath);
       } catch (java.io.IOException e) {
         throw new CompileException("fail_to_copy");
       }
     }
-    this.e.add(new CollectionBean(paramProjectResourceBean.resName, dataName));
+    this.collections.add(new CollectionBean(paramProjectResourceBean.resName, dataName));
     if (paramBoolean) e();
   }
   
   public void a(String paramString, boolean paramBoolean) {
-    int i = this.e.size();
+    int i = this.collections.size();
     while (true) {
       int j = i - 1;
       if (j >= 0) {
-        CollectionBean collectionBean = this.e.get(j);
+        CollectionBean collectionBean = this.collections.get(j);
         i = j;
         if (collectionBean.name.equals(paramString)) {
-          this.e.remove(j);
+          this.collections.remove(j);
           String str = collectionBean.data;
-          EncryptedFileUtil EncryptedFileUtil = this.c;
+          EncryptedFileUtil EncryptedFileUtil = this.fileUtil;
           StringBuilder stringBuilder = new StringBuilder();
-          stringBuilder.append(this.b);
+          stringBuilder.append(this.dataDirPath);
           stringBuilder.append(File.separator);
           stringBuilder.append(str);
           EncryptedFileUtil.c(stringBuilder.toString());
@@ -123,14 +123,14 @@ public class ImageCollectionManager extends BaseCollectionManager {
     stringBuilder.append("font");
     stringBuilder.append(File.separator);
     stringBuilder.append("list");
-    this.a = stringBuilder.toString();
+    this.collectionFilePath = stringBuilder.toString();
     stringBuilder = new StringBuilder();
     stringBuilder.append(SketchwarePaths.a());
     stringBuilder.append(File.separator);
     stringBuilder.append("font");
     stringBuilder.append(File.separator);
     stringBuilder.append("data");
-    this.b = stringBuilder.toString();
+    this.dataDirPath = stringBuilder.toString();
   }
   
   public boolean b(String paramString) {
@@ -148,10 +148,10 @@ public class ImageCollectionManager extends BaseCollectionManager {
   }
   
   public ArrayList<ProjectResourceBean> f() {
-    if (this.e == null)
+    if (this.collections == null)
       a(); 
     ArrayList<ProjectResourceBean> arrayList = new ArrayList<>();
-    for (CollectionBean collectionBean : this.e)
+    for (CollectionBean collectionBean : this.collections)
       arrayList.add(new ProjectResourceBean(ProjectResourceBean.PROJECT_RES_TYPE_FILE, collectionBean.name, collectionBean.data)); 
     return arrayList;
   }

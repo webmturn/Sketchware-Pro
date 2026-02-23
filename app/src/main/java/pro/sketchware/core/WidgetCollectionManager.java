@@ -33,7 +33,7 @@ public class WidgetCollectionManager extends BaseCollectionManager {
   }
   
   public WidgetCollectionBean a(String paramString) {
-    for (CollectionBean collectionBean : this.e) {
+    for (CollectionBean collectionBean : this.collections) {
       if (collectionBean.name.equals(paramString))
         return new WidgetCollectionBean(collectionBean.name, ProjectDataParser.b(this.g, collectionBean.data)); 
     } 
@@ -41,7 +41,7 @@ public class WidgetCollectionManager extends BaseCollectionManager {
   }
   
   public void a(String paramString1, String paramString2, boolean paramBoolean) {
-    for (CollectionBean collectionBean : this.e) {
+    for (CollectionBean collectionBean : this.collections) {
       if (collectionBean.name.equals(paramString1)) {
         collectionBean.name = paramString2;
         break;
@@ -52,11 +52,11 @@ public class WidgetCollectionManager extends BaseCollectionManager {
   }
   
   public void a(String paramString, ArrayList<ViewBean> paramArrayList, boolean paramBoolean) throws CompileException {
-    if (this.e == null)
+    if (this.collections == null)
       a(); 
     if (this.g == null)
       i(); 
-    Iterator<CollectionBean> iterator = this.e.iterator();
+    Iterator<CollectionBean> iterator = this.collections.iterator();
     while (iterator.hasNext()) {
       if (!((CollectionBean)iterator.next()).name.equals(paramString))
         continue; 
@@ -69,19 +69,19 @@ public class WidgetCollectionManager extends BaseCollectionManager {
       stringBuilder.append("\n");
     }
     String str = stringBuilder.toString();
-    this.e.add(new CollectionBean(paramString, str));
+    this.collections.add(new CollectionBean(paramString, str));
     if (paramBoolean)
       e(); 
   }
   
   public void a(String paramString, boolean paramBoolean) {
-    int i = this.e.size();
+    int i = this.collections.size();
     while (true) {
       int j = i - 1;
       if (j >= 0) {
         i = j;
-        if (((CollectionBean)this.e.get(j)).name.equals(paramString)) {
-          this.e.remove(j);
+        if (((CollectionBean)this.collections.get(j)).name.equals(paramString)) {
+          this.collections.remove(j);
           break;
         } 
         continue;
@@ -99,29 +99,29 @@ public class WidgetCollectionManager extends BaseCollectionManager {
     stringBuilder.append("widget");
     stringBuilder.append(File.separator);
     stringBuilder.append("list");
-    this.a = stringBuilder.toString();
+    this.collectionFilePath = stringBuilder.toString();
     stringBuilder = new StringBuilder();
     stringBuilder.append(SketchwarePaths.a());
     stringBuilder.append(File.separator);
     stringBuilder.append("widget");
     stringBuilder.append(File.separator);
     stringBuilder.append("data");
-    this.b = stringBuilder.toString();
+    this.dataDirPath = stringBuilder.toString();
   }
   
   public void c() {
-    this.e = new ArrayList<CollectionBean>();
+    this.collections = new ArrayList<CollectionBean>();
     BufferedReader bufferedReader = null;
     try {
-      if (this.c.e(this.a)) {
-        String str = this.c.g(this.a);
+      if (this.fileUtil.e(this.collectionFilePath)) {
+        String str = this.fileUtil.g(this.collectionFilePath);
         bufferedReader = new BufferedReader(new StringReader(str));
         String line;
         while ((line = bufferedReader.readLine()) != null) {
           if (line.length() <= 0)
             continue; 
-          CollectionBean collectionBean = (CollectionBean)this.d.fromJson(line, CollectionBean.class);
-          this.e.add(collectionBean);
+          CollectionBean collectionBean = (CollectionBean)this.gson.fromJson(line, CollectionBean.class);
+          this.collections.add(collectionBean);
         }
       }
     } catch (IOException iOException) {
@@ -132,21 +132,21 @@ public class WidgetCollectionManager extends BaseCollectionManager {
   }
   
   public ArrayList<WidgetCollectionBean> f() {
-    if (this.e == null)
+    if (this.collections == null)
       a(); 
     if (this.g == null)
       i(); 
     ArrayList<WidgetCollectionBean> arrayList = new ArrayList<>();
-    for (CollectionBean collectionBean : this.e)
+    for (CollectionBean collectionBean : this.collections)
       arrayList.add(new WidgetCollectionBean(collectionBean.name, ProjectDataParser.b(this.g, collectionBean.data))); 
     return arrayList;
   }
   
   public ArrayList<String> g() {
-    if (this.e == null)
+    if (this.collections == null)
       a(); 
     ArrayList<String> arrayList = new ArrayList<>();
-    Iterator<CollectionBean> iterator = this.e.iterator();
+    Iterator<CollectionBean> iterator = this.collections.iterator();
     while (iterator.hasNext())
       arrayList.add(((CollectionBean)iterator.next()).name); 
     return arrayList;

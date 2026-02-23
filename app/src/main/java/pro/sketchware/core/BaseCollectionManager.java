@@ -7,15 +7,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public abstract class BaseCollectionManager {
-  public String a;
+  public String collectionFilePath;
   
-  public String b;
+  public String dataDirPath;
   
-  public EncryptedFileUtil c;
+  public EncryptedFileUtil fileUtil;
   
-  public Gson d;
+  public Gson gson;
   
-  public ArrayList<CollectionBean> e;
+  public ArrayList<CollectionBean> collections;
   
   public BaseCollectionManager() {
     a();
@@ -23,26 +23,26 @@ public abstract class BaseCollectionManager {
   
   public void a() {
     b();
-    this.c = new EncryptedFileUtil();
-    this.d = (new GsonBuilder()).create();
+    this.fileUtil = new EncryptedFileUtil();
+    this.gson = (new GsonBuilder()).create();
     c();
   }
   
   public abstract void b();
   
   public void c() {
-    this.e = new ArrayList<CollectionBean>();
+    this.collections = new ArrayList<CollectionBean>();
     java.io.BufferedReader reader = null;
     try {
-      String content = this.c.g(this.a);
+      String content = this.fileUtil.g(this.collectionFilePath);
       reader = new java.io.BufferedReader(new java.io.StringReader(content));
       String line;
       while ((line = reader.readLine()) != null) {
         if (line.length() <= 0) continue;
-        CollectionBean bean = this.d.fromJson(line, CollectionBean.class);
-        String path = this.b + java.io.File.separator + bean.data;
-        if (this.c.e(path)) {
-          this.e.add(bean);
+        CollectionBean bean = this.gson.fromJson(line, CollectionBean.class);
+        String path = this.dataDirPath + java.io.File.separator + bean.data;
+        if (this.fileUtil.e(path)) {
+          this.collections.add(bean);
         }
       }
     } catch (java.io.IOException e) {
@@ -53,24 +53,24 @@ public abstract class BaseCollectionManager {
   }
   
   public void d() {
-    ArrayList<CollectionBean> arrayList = this.e;
+    ArrayList<CollectionBean> arrayList = this.collections;
     if (arrayList != null) {
       arrayList.clear();
-      this.e = null;
+      this.collections = null;
     } 
   }
   
   public void e() {
-    if (this.e == null)
+    if (this.collections == null)
       return; 
     StringBuilder stringBuilder = new StringBuilder(1024);
-    for (CollectionBean collectionBean : this.e) {
-      stringBuilder.append(this.d.toJson(collectionBean));
+    for (CollectionBean collectionBean : this.collections) {
+      stringBuilder.append(this.gson.toJson(collectionBean));
       stringBuilder.append("\n");
     } 
     try {
-      this.c.b(this.a);
-      this.c.b(this.a, stringBuilder.toString());
+      this.fileUtil.b(this.collectionFilePath);
+      this.fileUtil.b(this.collectionFilePath, stringBuilder.toString());
     } catch (Exception exception) {
       exception.printStackTrace();
     } 

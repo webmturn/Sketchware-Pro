@@ -32,7 +32,7 @@ public class BlockCollectionManager extends BaseCollectionManager {
   }
   
   public BlockCollectionBean a(String paramString) {
-    for (CollectionBean collectionBean : this.e) {
+    for (CollectionBean collectionBean : this.collections) {
       if (collectionBean.name.equals(paramString))
         return new BlockCollectionBean(collectionBean.name, ProjectDataParser.a(this.g, collectionBean.data)); 
     } 
@@ -40,7 +40,7 @@ public class BlockCollectionManager extends BaseCollectionManager {
   }
   
   public void a(String paramString1, String paramString2, boolean paramBoolean) {
-    for (CollectionBean collectionBean : this.e) {
+    for (CollectionBean collectionBean : this.collections) {
       if (collectionBean.name.equals(paramString1)) {
         collectionBean.name = paramString2;
         break;
@@ -51,11 +51,11 @@ public class BlockCollectionManager extends BaseCollectionManager {
   }
   
   public void a(String paramString, ArrayList<BlockBean> paramArrayList, boolean paramBoolean) throws CompileException {
-    if (this.e == null)
+    if (this.collections == null)
       a(); 
     if (this.g == null)
       i(); 
-    Iterator<CollectionBean> iterator = this.e.iterator();
+    Iterator<CollectionBean> iterator = this.collections.iterator();
     while (iterator.hasNext()) {
       if (!((CollectionBean)iterator.next()).name.equals(paramString))
         continue; 
@@ -68,19 +68,19 @@ public class BlockCollectionManager extends BaseCollectionManager {
       stringBuilder.append("\n");
     }
     String str = stringBuilder.toString();
-    this.e.add(new CollectionBean(paramString, str));
+    this.collections.add(new CollectionBean(paramString, str));
     if (paramBoolean)
       e(); 
   }
   
   public void a(String paramString, boolean paramBoolean) {
-    int i = this.e.size();
+    int i = this.collections.size();
     while (true) {
       int j = i - 1;
       if (j >= 0) {
         i = j;
-        if (((CollectionBean)this.e.get(j)).name.equals(paramString)) {
-          this.e.remove(j);
+        if (((CollectionBean)this.collections.get(j)).name.equals(paramString)) {
+          this.collections.remove(j);
           break;
         } 
         continue;
@@ -98,32 +98,32 @@ public class BlockCollectionManager extends BaseCollectionManager {
     stringBuilder.append("block");
     stringBuilder.append(File.separator);
     stringBuilder.append("list");
-    this.a = stringBuilder.toString();
+    this.collectionFilePath = stringBuilder.toString();
     stringBuilder = new StringBuilder();
     stringBuilder.append(SketchwarePaths.a());
     stringBuilder.append(File.separator);
     stringBuilder.append("block");
     stringBuilder.append(File.separator);
     stringBuilder.append("data");
-    this.b = stringBuilder.toString();
+    this.dataDirPath = stringBuilder.toString();
   }
   
   public ArrayList<BlockCollectionBean> f() {
-    if (this.e == null)
+    if (this.collections == null)
       a(); 
     if (this.g == null)
       i(); 
     ArrayList<BlockCollectionBean> arrayList = new ArrayList<>();
-    for (CollectionBean collectionBean : this.e)
+    for (CollectionBean collectionBean : this.collections)
       arrayList.add(new BlockCollectionBean(collectionBean.name, ProjectDataParser.a(this.g, collectionBean.data))); 
     return arrayList;
   }
   
   public ArrayList<String> g() {
-    if (this.e == null)
+    if (this.collections == null)
       a(); 
     ArrayList<String> arrayList = new ArrayList<>();
-    Iterator<CollectionBean> iterator = this.e.iterator();
+    Iterator<CollectionBean> iterator = this.collections.iterator();
     while (iterator.hasNext())
       arrayList.add(((CollectionBean)iterator.next()).name); 
     return arrayList;
