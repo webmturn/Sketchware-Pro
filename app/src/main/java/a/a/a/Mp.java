@@ -61,15 +61,13 @@ public class Mp extends Lp {
         continue; 
       throw new yy("duplicate_name");
     } 
-    Iterator<BlockBean> blockIterator = paramArrayList.iterator();
     StringBuilder stringBuilder = new StringBuilder();
-    String str;
-    for (str = ""; blockIterator.hasNext(); str = stringBuilder.toString()) {
-      BlockBean blockBean = blockIterator.next();
-      stringBuilder.append(str);
+    for (int bi = 0; bi < paramArrayList.size(); bi++) {
+      BlockBean blockBean = paramArrayList.get(bi);
       stringBuilder.append(this.g.toJson(blockBean));
       stringBuilder.append("\n");
-    } 
+    }
+    String str = stringBuilder.toString();
     this.e.add(new CollectionBean(paramString, str));
     if (paramBoolean)
       e(); 

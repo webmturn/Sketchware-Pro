@@ -195,62 +195,71 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 runOnUiThread(() -> e(X));
             }
 
-            boolean needToFindRoot = true;
+            ArrayList<Rs> createdBlocks = new ArrayList<>();
             HashMap<Integer, Rs> blockIdsAndBlocks = new HashMap<>();
             for (BlockBean next : eventBlocks) {
                 if (eventName.equals("onTextChanged") && next.opCode.equals("getArg") && next.spec.equals("text")) {
                     next.spec = "charSeq";
                 }
                 Rs b2 = b(next);
+                createdBlocks.add(b2);
                 blockIdsAndBlocks.put((Integer) b2.getTag(), b2);
                 o.g = Math.max(o.g, (Integer) b2.getTag() + 1);
-                runOnUiThread(() -> {
+            }
+
+            runOnUiThread(() -> {
+                android.util.Log.d("BlockLoad", "UI batch START blocks=" + createdBlocks.size());
+                long t0 = System.currentTimeMillis();
+                for (int idx = 0; idx < createdBlocks.size(); idx++) {
+                    Rs b2 = createdBlocks.get(idx);
                     o.a(b2, 0, 0);
                     b2.setOnTouchListener(this);
-                });
-                if (needToFindRoot) {
-                    runOnUiThread(() -> o.getRoot().b(b2));
-                    needToFindRoot = false;
+                    if (idx == 0) {
+                        o.getRoot().b(b2);
+                    }
                 }
-            }
-            for (BlockBean next2 : eventBlocks) {
-                Rs block = blockIdsAndBlocks.get(Integer.valueOf(next2.id));
-                if (block != null) {
-                    Rs subStack1RootBlock;
-                    if (next2.subStack1 >= 0 && (subStack1RootBlock = blockIdsAndBlocks.get(next2.subStack1)) != null) {
-                        runOnUiThread(() -> block.e(subStack1RootBlock));
-                    }
-                    Rs subStack2RootBlock;
-                    if (next2.subStack2 >= 0 && (subStack2RootBlock = blockIdsAndBlocks.get(next2.subStack2)) != null) {
-                        runOnUiThread(() -> block.f(subStack2RootBlock));
-                    }
-                    Rs nextBlock;
-                    if (next2.nextBlock >= 0 && (nextBlock = blockIdsAndBlocks.get(next2.nextBlock)) != null) {
-                        runOnUiThread(() -> block.b(nextBlock));
-                    }
-                    for (int i = 0; i < next2.parameters.size(); i++) {
-                        String parameter = next2.parameters.get(i);
-                        if (parameter != null && !parameter.isEmpty()) {
-                            if (parameter.charAt(0) == '@') {
-                                Rs parameterBlock = blockIdsAndBlocks.get(Integer.valueOf(parameter.substring(1)));
-                                if (parameterBlock != null) {
-                                    int finalI = i;
-                                    runOnUiThread(() -> block.a((Ts) block.V.get(finalI), parameterBlock));
+                long t1 = System.currentTimeMillis();
+                android.util.Log.d("BlockLoad", "UI addView done: " + (t1 - t0) + "ms");
+
+                for (BlockBean next2 : eventBlocks) {
+                    Rs block = blockIdsAndBlocks.get(Integer.valueOf(next2.id));
+                    if (block != null) {
+                        Rs subStack1RootBlock;
+                        if (next2.subStack1 >= 0 && (subStack1RootBlock = blockIdsAndBlocks.get(next2.subStack1)) != null) {
+                            block.e(subStack1RootBlock);
+                        }
+                        Rs subStack2RootBlock;
+                        if (next2.subStack2 >= 0 && (subStack2RootBlock = blockIdsAndBlocks.get(next2.subStack2)) != null) {
+                            block.f(subStack2RootBlock);
+                        }
+                        Rs nextBlock;
+                        if (next2.nextBlock >= 0 && (nextBlock = blockIdsAndBlocks.get(next2.nextBlock)) != null) {
+                            block.b(nextBlock);
+                        }
+                        for (int i = 0; i < next2.parameters.size(); i++) {
+                            String parameter = next2.parameters.get(i);
+                            if (parameter != null && !parameter.isEmpty()) {
+                                if (parameter.charAt(0) == '@') {
+                                    Rs parameterBlock = blockIdsAndBlocks.get(Integer.valueOf(parameter.substring(1)));
+                                    if (parameterBlock != null) {
+                                        block.a((Ts) block.V.get(i), parameterBlock);
+                                    }
+                                } else {
+                                    ((Ss) block.V.get(i)).setArgValue(parameter);
                                 }
-                            } else {
-                                int finalI = i;
-                                runOnUiThread(() -> {
-                                    ((Ss) block.V.get(finalI)).setArgValue(parameter);
-                                    block.m();
-                                });
                             }
                         }
                     }
                 }
-            }
-            runOnUiThread(() -> {
+                long t2 = System.currentTimeMillis();
+                android.util.Log.d("BlockLoad", "UI connect done: " + (t2 - t1) + "ms");
+
                 o.getRoot().k();
+                long t3 = System.currentTimeMillis();
+                android.util.Log.d("BlockLoad", "UI k() done: " + (t3 - t2) + "ms");
                 o.b();
+                long t4 = System.currentTimeMillis();
+                android.util.Log.d("BlockLoad", "UI b() done: " + (t4 - t3) + "ms total=" + (t4 - t0) + "ms");
             });
         }
     }
@@ -2011,7 +2020,10 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
         String e1 = title;
 
+        long pc0 = System.currentTimeMillis();
         o.a(e1, eventName);
+        long pc1 = System.currentTimeMillis();
+        android.util.Log.d("BlockLoad", "PC rootBlock: " + (pc1 - pc0) + "ms");
 
         ArrayList<String> spec = FB.c(e1);
         int blockId = 0;
@@ -2028,15 +2040,28 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 }
             }
         }
+        long pc2 = System.currentTimeMillis();
+        android.util.Log.d("BlockLoad", "PC varBlocks: " + (pc2 - pc1) + "ms");
 
         o.getRoot().k();
+        long pc3 = System.currentTimeMillis();
+        android.util.Log.d("BlockLoad", "PC rootK: " + (pc3 - pc2) + "ms");
+
         g(getResources().getConfiguration().orientation);
+        long pc4 = System.currentTimeMillis();
+        android.util.Log.d("BlockLoad", "PC orient: " + (pc4 - pc3) + "ms");
+
         a(0, 0xffee7d16);
+        long pc5 = System.currentTimeMillis();
+        android.util.Log.d("BlockLoad", "PC palette: " + (pc5 - pc4) + "ms");
 
         LoadEventBlocksTask loadEventBlocksTask = new LoadEventBlocksTask(this);
         loadEventBlocksTask.execute();
+        long pc6 = System.currentTimeMillis();
+        android.util.Log.d("BlockLoad", "PC taskExec: " + (pc6 - pc5) + "ms");
 
         z();
+        android.util.Log.d("BlockLoad", "PC z(): " + (System.currentTimeMillis() - pc6) + "ms total=" + (System.currentTimeMillis() - pc0) + "ms");
     }
 
     @Override

@@ -1,9 +1,15 @@
 package a.a.a;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class lq {
+  private static final HashMap<String, ArrayList<String>> cacheA = new HashMap<>();
+  private static final HashMap<String, ArrayList<String>> cacheB = new HashMap<>();
+  private static final HashMap<String, String> cacheC = new HashMap<>();
+  private static final HashMap<String, String> cacheD = new HashMap<>();
   public static ArrayList<String> a(String paramString) {
+    if (cacheA.containsKey(paramString)) return cacheA.get(paramString);
     short s = -1;
     ArrayList<String> arrayList2 = new ArrayList<>();
     switch (paramString.hashCode()) {
@@ -3100,10 +3106,12 @@ public class lq {
       case 270:
         break;
     } 
+    cacheA.put(paramString, arrayList1);
     return arrayList1;
   }
   
   public static ArrayList<String> b(String paramString) {
+    if (cacheB.containsKey(paramString)) return cacheB.get(paramString);
     byte b = -1;
     ArrayList<String> arrayList = new ArrayList<>();
     switch (paramString.hashCode()) {
@@ -3527,10 +3535,18 @@ public class lq {
         arrayList.add("%b.isChecked");
         break;
     } 
+    cacheB.put(paramString, arrayList);
     return arrayList;
   }
   
   public static String c(String paramString) {
+    if (cacheC.containsKey(paramString)) return cacheC.get(paramString);
+    String resultC = computeC(paramString);
+    cacheC.put(paramString, resultC);
+    return resultC;
+  }
+
+  private static String computeC(String paramString) {
     byte b = -1;
     switch (paramString.hashCode()) {
       default:
@@ -3951,6 +3967,8 @@ public class lq {
   }
   
   public static String d(String paramString) {
+    if (cacheD.containsKey(paramString)) return cacheD.get(paramString);
+    String originalKey = paramString;
     int i = paramString.hashCode();
     String str = "false";
     switch (i) {
@@ -6539,6 +6557,7 @@ public class lq {
       case 42:
         break;
     } 
+    cacheD.put(originalKey, paramString);
     return paramString;
   }
 }

@@ -62,15 +62,13 @@ public class Rp extends Lp {
         continue; 
       throw new yy("duplicate_name");
     } 
-    Iterator<ViewBean> viewIterator = paramArrayList.iterator();
     StringBuilder stringBuilder = new StringBuilder();
-    String str;
-    for (str = ""; viewIterator.hasNext(); str = stringBuilder.toString()) {
-      ViewBean viewBean = viewIterator.next();
-      stringBuilder.append(str);
+    for (int vi = 0; vi < paramArrayList.size(); vi++) {
+      ViewBean viewBean = paramArrayList.get(vi);
       stringBuilder.append(this.g.toJson(viewBean));
       stringBuilder.append("\n");
-    } 
+    }
+    String str = stringBuilder.toString();
     this.e.add(new CollectionBean(paramString, str));
     if (paramBoolean)
       e(); 

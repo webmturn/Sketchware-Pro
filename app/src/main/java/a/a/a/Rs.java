@@ -100,12 +100,15 @@ public class Rs extends Ts {
   }
   
   public final void a(Rs paramRs) {
+    if (paramRs == this) return;
     if (b() && -1 == this.ia) {
       e(paramRs);
     } else {
       Rs rs = h();
-      rs.ha = ((Integer)paramRs.getTag()).intValue();
-      paramRs.E = rs;
+      if (rs != paramRs) {
+        rs.ha = ((Integer)paramRs.getTag()).intValue();
+        paramRs.E = rs;
+      }
     } 
   }
   
@@ -177,12 +180,13 @@ public class Rs extends Ts {
   }
   
   public void b(Rs paramRs) {
+    if (paramRs == this) return;
     View view = this.pa.findViewWithTag(Integer.valueOf(this.ha));
     if (view != null)
       ((Rs)view).E = null; 
     paramRs.E = this;
     this.ha = ((Integer)paramRs.getTag()).intValue();
-    if (view != null)
+    if (view != null && view != paramRs)
       paramRs.a((Rs)view); 
   }
   
@@ -193,6 +197,7 @@ public class Rs extends Ts {
   }
   
   public void d(Rs paramRs) {
+    if (paramRs == this) return;
     paramRs.setX(getX() - this.j);
     paramRs.setY(getY() - f());
     this.E = paramRs;
@@ -200,22 +205,24 @@ public class Rs extends Ts {
   }
   
   public void e(Rs paramRs) {
+    if (paramRs == this) return;
     View view = this.pa.findViewWithTag(Integer.valueOf(this.ia));
     if (view != null)
       ((Rs)view).E = null; 
     paramRs.E = this;
     this.ia = ((Integer)paramRs.getTag()).intValue();
-    if (view != null)
+    if (view != null && view != paramRs)
       paramRs.a((Rs)view); 
   }
   
   public void f(Rs paramRs) {
+    if (paramRs == this) return;
     View view = this.pa.findViewWithTag(Integer.valueOf(this.ja));
     if (view != null)
       ((Rs)view).E = null; 
     paramRs.E = this;
     this.ja = ((Integer)paramRs.getTag()).intValue();
-    if (view != null)
+    if (view != null && view != paramRs)
       paramRs.a((Rs)view); 
   }
   
@@ -246,6 +253,7 @@ public class Rs extends Ts {
   public ArrayList<Rs> getAllChildren() {
     ArrayList<Rs> arrayList = new ArrayList<>();
     Rs rs = this;
+    int limit = 200;
     while (true) {
       arrayList.add(rs);
       for (View view : rs.ka) {
@@ -254,17 +262,25 @@ public class Rs extends Ts {
       } 
       if (rs.b()) {
         int j = rs.ia;
-        if (j != -1)
-          arrayList.addAll(((Rs)this.pa.findViewWithTag(Integer.valueOf(j))).getAllChildren()); 
+        if (j != -1) {
+          Rs sub = (Rs)this.pa.findViewWithTag(Integer.valueOf(j));
+          if (sub != null && sub != this)
+            arrayList.addAll(sub.getAllChildren()); 
+        }
       } 
       if (rs.c()) {
         int j = rs.ja;
-        if (j != -1)
-          arrayList.addAll(((Rs)this.pa.findViewWithTag(Integer.valueOf(j))).getAllChildren()); 
+        if (j != -1) {
+          Rs sub = (Rs)this.pa.findViewWithTag(Integer.valueOf(j));
+          if (sub != null && sub != this)
+            arrayList.addAll(sub.getAllChildren()); 
+        }
       } 
       int i = rs.ha;
-      if (i != -1) {
-        rs = (Rs)this.pa.findViewWithTag(Integer.valueOf(i));
+      if (i != -1 && --limit > 0) {
+        Rs next = (Rs)this.pa.findViewWithTag(Integer.valueOf(i));
+        if (next == null || next == this) return arrayList;
+        rs = next;
         continue;
       } 
       return arrayList;
@@ -292,11 +308,12 @@ public class Rs extends Ts {
   }
   
   public int getDepth() {
-    byte b = 0;
+    int b = 0;
     Rs rs = this;
+    int limit = 500;
     while (true) {
       rs = rs.E;
-      if (rs != null) {
+      if (rs != null && --limit > 0) {
         b++;
         continue;
       } 
@@ -306,23 +323,28 @@ public class Rs extends Ts {
   public int getHeightSum() {
     int i = 0;
     Rs rs = this;
+    int limit = 200;
     while (true) {
       int j = i;
       if (i != 0)
         j = i - this.h; 
       i = j + rs.getTotalHeight();
       j = rs.ha;
-      if (j != -1) {
-        rs = (Rs)this.pa.findViewWithTag(Integer.valueOf(j));
+      if (j != -1 && --limit > 0) {
+        Rs next = (Rs)this.pa.findViewWithTag(Integer.valueOf(j));
+        if (next == null || next == this) break;
+        rs = next;
         continue;
       } 
       return i;
-    } 
+    }
+    return i;
   }
   
   public int getWidthSum() {
     int i = 0;
     Rs rs = this;
+    int limit = 200;
     while (true) {
       i = Math.max(i, rs.getW());
       int j = i;
@@ -330,8 +352,11 @@ public class Rs extends Ts {
         int k = rs.ia;
         j = i;
         if (k != -1) {
-          j = this.j;
-          j = Math.max(i, ((Rs)this.pa.findViewWithTag(Integer.valueOf(k))).getWidthSum() + j);
+          Rs sub1 = (Rs)this.pa.findViewWithTag(Integer.valueOf(k));
+          if (sub1 != null) {
+            j = this.j;
+            j = Math.max(i, sub1.getWidthSum() + j);
+          }
         } 
       } 
       i = j;
@@ -339,25 +364,34 @@ public class Rs extends Ts {
         int k = rs.ja;
         i = j;
         if (k != -1) {
-          i = this.j;
-          i = Math.max(j, ((Rs)this.pa.findViewWithTag(Integer.valueOf(k))).getWidthSum() + i);
+          Rs sub2 = (Rs)this.pa.findViewWithTag(Integer.valueOf(k));
+          if (sub2 != null) {
+            i = this.j;
+            i = Math.max(j, sub2.getWidthSum() + i);
+          }
         } 
       } 
       j = rs.ha;
-      if (j != -1) {
-        rs = (Rs)this.pa.findViewWithTag(Integer.valueOf(j));
+      if (j != -1 && --limit > 0) {
+        Rs next = (Rs)this.pa.findViewWithTag(Integer.valueOf(j));
+        if (next == null || next == this) break;
+        rs = next;
         continue;
       } 
       return i;
-    } 
+    }
+    return i;
   }
   
   public Rs h() {
     Rs rs = this;
+    int limit = 200;
     while (true) {
       int i = rs.ha;
-      if (i != -1) {
-        rs = (Rs)this.pa.findViewWithTag(Integer.valueOf(i));
+      if (i != -1 && --limit > 0) {
+        Rs next = (Rs)this.pa.findViewWithTag(Integer.valueOf(i));
+        if (next == null || next == this) return rs;
+        rs = next;
         continue;
       } 
       return rs;
@@ -383,6 +417,25 @@ public class Rs extends Ts {
   }
   
   public void k() {
+    Rs current = this;
+    int limit = 1000;
+    while (current != null && --limit > 0) {
+      current.kSingle();
+      int next = current.ha;
+      if (next > -1) {
+        Rs nextRs = (Rs) current.pa.findViewWithTag(Integer.valueOf(next));
+        if (nextRs == null || nextRs == this) break;
+        nextRs.setX(current.getX());
+        nextRs.setY(current.getY() + (float) current.d());
+        nextRs.bringToFront();
+        current = nextRs;
+      } else {
+        current = null;
+      }
+    }
+  }
+
+  private void kSingle() {
     bringToFront();
     int xOffset = this.w;
     for (int idx = 0; idx < this.ka.size(); idx++) {
@@ -439,36 +492,32 @@ public class Rs extends Ts {
       int sub1 = this.ia;
       if (sub1 > -1) {
         Rs sub1Rs = (Rs) this.pa.findViewWithTag(Integer.valueOf(sub1));
-        sub1Rs.setX(getX() + (float) this.j);
-        sub1Rs.setY(getY() + (float) f());
-        sub1Rs.bringToFront();
-        sub1Rs.k();
-        ss1Height = sub1Rs.getHeightSum();
+        if (sub1Rs != null) {
+          sub1Rs.setX(getX() + (float) this.j);
+          sub1Rs.setY(getY() + (float) f());
+          sub1Rs.bringToFront();
+          sub1Rs.k();
+          ss1Height = sub1Rs.getHeightSum();
+        }
       }
       setSubstack1Height(ss1Height);
       int ss2Height = this.i;
       int sub2 = this.ja;
       if (sub2 > -1) {
         Rs sub2Rs = (Rs) this.pa.findViewWithTag(Integer.valueOf(sub2));
-        sub2Rs.setX(getX() + (float) this.j);
-        sub2Rs.setY(getY() + (float) g());
-        sub2Rs.bringToFront();
-        sub2Rs.k();
-        ss2Height = sub2Rs.getHeightSum();
-        if (sub2Rs.h().ga) {
-          ss2Height += this.h;
+        if (sub2Rs != null) {
+          sub2Rs.setX(getX() + (float) this.j);
+          sub2Rs.setY(getY() + (float) g());
+          sub2Rs.bringToFront();
+          sub2Rs.k();
+          ss2Height = sub2Rs.getHeightSum();
+          if (sub2Rs.h().ga) {
+            ss2Height += this.h;
+          }
         }
       }
       setSubstack2Height(ss2Height);
       j();
-    }
-    int next = this.ha;
-    if (next > -1) {
-      Rs nextRs = (Rs) this.pa.findViewWithTag(Integer.valueOf(next));
-      nextRs.setX(getX());
-      nextRs.setY(getY() + (float) d());
-      nextRs.bringToFront();
-      nextRs.k();
     }
   }
   
@@ -555,9 +604,15 @@ public class Rs extends Ts {
   public void m() {
     Rs rs2;
     Rs rs1 = this;
+    int count = 0;
     do {
       rs1.n();
       rs2 = rs1.E;
+      count++;
+      if (count > 500) {
+        android.util.Log.e("Rs", "m() infinite loop detected! count=" + count + " tag=" + rs1.getTag() + " E.tag=" + (rs2 != null ? rs2.getTag() : "null"));
+        break;
+      }
       rs1 = rs2;
     } while (rs2 != null);
   }
@@ -606,7 +661,8 @@ public class Rs extends Ts {
   
   public void o() {
     Rs rs = this;
-    while (rs != null) {
+    int limit = 200;
+    while (rs != null && --limit > 0) {
       Iterator<View> iterator = rs.V.iterator();
       int i = 0;
       while (iterator.hasNext()) {
@@ -626,9 +682,10 @@ public class Rs extends Ts {
   
   public Rs p() {
     Rs rs = this;
+    int limit = 200;
     while (true) {
       Rs rs1 = rs.E;
-      if (rs1 != null) {
+      if (rs1 != null && --limit > 0) {
         rs = rs1;
         continue;
       } 

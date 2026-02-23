@@ -560,21 +560,15 @@ public class eC {
         ArrayList arrayList = (ArrayList)entry.getValue();
         if (arrayList == null || arrayList.size() <= 0)
           continue; 
-        Iterator<Pair> iterator = arrayList.iterator();
-        String str;
         StringBuilder stringBuilder1 = new StringBuilder();
- 
-        for (str = ""; iterator.hasNext(); str = stringBuilder1.toString()) {
- 
-          Pair pair = iterator.next();
- 
-          stringBuilder1 = new StringBuilder();
-          stringBuilder1.append(str);
+        for (int vi = 0; vi < arrayList.size(); vi++) {
+          Pair pair = (Pair) arrayList.get(vi);
           stringBuilder1.append(pair.first);
           stringBuilder1.append(":");
           stringBuilder1.append((String)pair.second);
           stringBuilder1.append("\n");
-        } 
+        }
+        String str = stringBuilder1.toString();
         paramStringBuffer.append("@");
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append((String)entry.getKey());
@@ -591,21 +585,15 @@ public class eC {
         ArrayList arrayList = (ArrayList)entry.getValue();
         if (arrayList == null || arrayList.size() <= 0)
           continue; 
-        Iterator<Pair> iterator = arrayList.iterator();
-        String str;
         StringBuilder stringBuilder1 = new StringBuilder();
- 
-        for (str = ""; iterator.hasNext(); str = stringBuilder1.toString()) {
- 
-          Pair pair = iterator.next();
- 
-          stringBuilder1 = new StringBuilder();
-          stringBuilder1.append(str);
+        for (int li = 0; li < arrayList.size(); li++) {
+          Pair pair = (Pair) arrayList.get(li);
           stringBuilder1.append(pair.first);
           stringBuilder1.append(":");
           stringBuilder1.append((String)pair.second);
           stringBuilder1.append("\n");
-        } 
+        }
+        String str = stringBuilder1.toString();
         paramStringBuffer.append("@");
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append((String)entry.getKey());
@@ -622,21 +610,15 @@ public class eC {
         ArrayList arrayList = (ArrayList)entry.getValue();
         if (arrayList == null || arrayList.size() <= 0)
           continue; 
-        Iterator<Pair> iterator = arrayList.iterator();
-        String str;
         StringBuilder stringBuilder1 = new StringBuilder();
- 
-        for (str = ""; iterator.hasNext(); str = stringBuilder1.toString()) {
- 
-          Pair pair = iterator.next();
- 
-          stringBuilder1 = new StringBuilder();
-          stringBuilder1.append(str);
+        for (int fi = 0; fi < arrayList.size(); fi++) {
+          Pair pair = (Pair) arrayList.get(fi);
           stringBuilder1.append((String)pair.first);
           stringBuilder1.append(":");
           stringBuilder1.append((String)pair.second);
           stringBuilder1.append("\n");
-        } 
+        }
+        String str = stringBuilder1.toString();
         paramStringBuffer.append("@");
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append((String)entry.getKey());
@@ -653,17 +635,14 @@ public class eC {
         ArrayList arrayList = (ArrayList)entry.getValue();
         if (arrayList == null || arrayList.size() <= 0)
           continue; 
-        Iterator<ComponentBean> iterator = arrayList.iterator();
-        String str;
         StringBuilder stringBuilder1 = new StringBuilder();
-        for (str = ""; iterator.hasNext(); str = stringBuilder1.toString()) {
-          ComponentBean componentBean = iterator.next();
+        for (int ci = 0; ci < arrayList.size(); ci++) {
+          ComponentBean componentBean = (ComponentBean) arrayList.get(ci);
           componentBean.clearClassInfo();
-          stringBuilder1 = new StringBuilder();
-          stringBuilder1.append(str);
           stringBuilder1.append(this.k.toJson(componentBean));
           stringBuilder1.append("\n");
-        } 
+        }
+        String str = stringBuilder1.toString();
         paramStringBuffer.append("@");
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append((String)entry.getKey());
@@ -680,14 +659,13 @@ public class eC {
         ArrayList arrayList = (ArrayList)entry.getValue();
         if (arrayList == null || arrayList.size() <= 0)
           continue; 
-        Iterator<EventBean> iterator = arrayList.iterator();
         StringBuilder stringBuilder1 = new StringBuilder();
-        for (String str = ""; iterator.hasNext(); str = stringBuilder1.toString()) {
-          EventBean eventBean = iterator.next();
-          stringBuilder1.append(str);
+        for (int ei = 0; ei < arrayList.size(); ei++) {
+          EventBean eventBean = (EventBean) arrayList.get(ei);
           stringBuilder1.append(this.k.toJson(eventBean));
           stringBuilder1.append("\n");
-        } 
+        }
+        String str = stringBuilder1.toString();
         paramStringBuffer.append("@");
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append((String)entry.getKey());
@@ -709,15 +687,13 @@ public class eC {
           ArrayList arrayList = (ArrayList)entry1.getValue();
           if (arrayList == null || arrayList.size() <= 0)
             continue; 
-          Iterator<BlockBean> iterator = arrayList.iterator();
           StringBuilder stringBuilder1 = new StringBuilder();
-          String str1;
-          for (str1 = ""; iterator.hasNext(); str1 = stringBuilder1.toString()) {
-            BlockBean blockBean = iterator.next();
-            stringBuilder1.append(str1);
+          for (int bi = 0; bi < arrayList.size(); bi++) {
+            BlockBean blockBean = (BlockBean) arrayList.get(bi);
             stringBuilder1.append(this.k.toJson(blockBean));
             stringBuilder1.append("\n");
-          } 
+          }
+          String str1 = stringBuilder1.toString();
           paramStringBuffer.append("@");
           StringBuilder stringBuilder = new StringBuilder();
           stringBuilder.append(str);

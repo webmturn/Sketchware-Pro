@@ -33,7 +33,7 @@ public class FirebasePreviewView extends LinearLayout implements nv {
         AnimationUtil.fadeSlideIn(this, 600, 200, null);
 
         binding.layoutSwitch.setOnClickListener(v -> {
-            if (binding.libSwitch.isChecked() || !firebaseLibraryBean.data.isEmpty()) {
+            if (binding.libSwitch.isChecked() || (firebaseLibraryBean.data != null && !firebaseLibraryBean.data.isEmpty())) {
                 binding.libSwitch.setChecked(!binding.libSwitch.isChecked());
                 if ("Y".equals(firebaseLibraryBean.useYn) && !binding.libSwitch.isChecked()) {
                     configureLibraryDialog();
@@ -90,6 +90,6 @@ public class FirebasePreviewView extends LinearLayout implements nv {
         binding.tvAppId.setText(firebaseLibraryBean.reserved1);
         binding.tvApiKey.setText(firebaseLibraryBean.reserved2);
         binding.tvStorageUrl.setText(firebaseLibraryBean.reserved3);
-        binding.libSwitch.setChecked(firebaseLibraryBean.useYn.equals("Y"));
+        binding.libSwitch.setChecked("Y".equals(firebaseLibraryBean.useYn));
     }
 }

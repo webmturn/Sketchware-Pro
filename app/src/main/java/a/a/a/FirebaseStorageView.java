@@ -29,14 +29,14 @@ public class FirebaseStorageView extends LinearLayout implements nv {
     public void a(ProjectLibraryBean libraryBean) {
         String var2 = binding.edInputStorageUrl.getText().toString().trim();
         if (!var2.isEmpty()) {
-            libraryBean.reserved3 = var2;
-            if (var2.startsWith("gs://")) {
-                libraryBean.reserved3 = var2.replaceFirst("gs://", "");
+            String cleaned = var2;
+            if (cleaned.startsWith("gs://")) {
+                cleaned = cleaned.substring(5);
             }
-
-            if (var2.endsWith("/")) {
-                libraryBean.reserved3 = var2.substring(0, var2.lastIndexOf("/"));
+            if (cleaned.endsWith("/")) {
+                cleaned = cleaned.substring(0, cleaned.length() - 1);
             }
+            libraryBean.reserved3 = cleaned;
         }
 
     }
