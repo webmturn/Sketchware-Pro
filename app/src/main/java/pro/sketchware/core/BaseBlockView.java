@@ -10,157 +10,157 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 public class BaseBlockView extends RelativeLayout {
-  public int A;
+  public int blockHeight;
   
-  public int B;
+  public int contentHeight;
   
-  public int C;
+  public int innerHeight;
   
-  public float D;
+  public float density;
   
-  public BlockView E;
+  public BlockView parentBlock;
   
-  public int F;
+  public int baseWidth;
   
-  public int G;
+  public int textHeight;
   
-  public int H;
+  public int paramSpacing;
   
-  public int I;
+  public int paramPadding;
   
-  public int J;
+  public int paramMargin;
   
-  public boolean K;
+  public boolean drawShadow;
   
-  public boolean L;
+  public boolean drawReflection;
   
-  public Paint M;
+  public Paint shadowPaint;
   
-  public Paint N;
+  public Paint outlinePaint;
   
-  public Paint O;
+  public Paint reflectionPaint;
   
-  public int P;
+  public int outlineStrokeWidth;
   
-  public int Q;
+  public int reflectionStrokeWidth;
   
-  public int R;
+  public int defaultBlockColor;
   
-  public ClassInfo S;
+  public ClassInfo classInfo;
   
-  public Context a;
+  public Context context;
   
-  public String b;
+  public String blockType;
   
-  public String c;
+  public String componentType;
   
-  public int d;
+  public int shapeType;
   
-  public int e;
+  public int blockColor;
   
-  public Paint f;
+  public Paint fillPaint;
   
-  public boolean g;
+  public boolean isEditable;
   
-  public int h;
+  public int borderWidth;
   
-  public int i;
+  public int minHeight;
   
-  public int j;
+  public int cornerRadius;
   
-  public int k;
+  public int notchWidth;
   
-  public int l;
+  public int notchDepth;
   
-  public int m;
+  public int topPadding;
   
-  public int n;
+  public int bottomPadding;
   
-  public int o;
+  public int connectorOffset;
   
-  public int p;
+  public int connectorStart;
   
-  public int q;
+  public int connectorEnd;
   
-  public int r;
+  public int connectorEndOffset;
   
-  public int s;
+  public int connectorWidth;
   
-  public int t;
+  public int defaultMinWidth;
   
-  public int u;
+  public int topSpacing;
   
-  public int v;
+  public int bottomSpacing;
   
-  public int w;
+  public int leftIndent;
   
-  public int x;
+  public int rightIndent;
   
-  public int y;
+  public int shadowOffset;
   
-  public int z;
+  public int blockWidth;
   
   public BaseBlockView(Context paramContext, String paramString1, String paramString2, boolean paramBoolean) {
     super(paramContext);
-    this.h = 3;
-    this.i = 12;
-    this.j = 15;
-    this.k = 3;
-    this.l = 2;
-    this.m = 15;
-    this.n = 15;
-    this.o = 15;
-    this.p = this.o + this.h;
-    this.q = this.p + 10;
-    this.r = this.q + this.h;
-    this.s = 6;
-    this.t = 60;
-    this.u = 2;
-    this.v = 2;
-    this.w = 3;
-    this.x = 0;
-    this.y = 2;
-    this.B = this.i;
-    this.C = this.i;
-    this.E = null;
-    this.F = 100;
-    this.G = 14;
-    this.H = 15;
-    this.I = 6;
-    this.J = 4;
-    this.K = false;
-    this.L = false;
-    this.P = 1;
-    this.Q = 1;
-    this.R = 805306368;
-    this.S = null;
-    this.a = paramContext;
-    this.b = paramString1;
+    this.borderWidth = 3;
+    this.minHeight = 12;
+    this.cornerRadius = 15;
+    this.notchWidth = 3;
+    this.notchDepth = 2;
+    this.topPadding = 15;
+    this.bottomPadding = 15;
+    this.connectorOffset = 15;
+    this.connectorStart = this.connectorOffset + this.borderWidth;
+    this.connectorEnd = this.connectorStart + 10;
+    this.connectorEndOffset = this.connectorEnd + this.borderWidth;
+    this.connectorWidth = 6;
+    this.defaultMinWidth = 60;
+    this.topSpacing = 2;
+    this.bottomSpacing = 2;
+    this.leftIndent = 3;
+    this.rightIndent = 0;
+    this.shadowOffset = 2;
+    this.contentHeight = this.minHeight;
+    this.innerHeight = this.minHeight;
+    this.parentBlock = null;
+    this.baseWidth = 100;
+    this.textHeight = 14;
+    this.paramSpacing = 15;
+    this.paramPadding = 6;
+    this.paramMargin = 4;
+    this.drawShadow = false;
+    this.drawReflection = false;
+    this.outlineStrokeWidth = 1;
+    this.reflectionStrokeWidth = 1;
+    this.defaultBlockColor = 805306368;
+    this.classInfo = null;
+    this.context = paramContext;
+    this.blockType = paramString1;
     if (paramString2 != null && paramString2.indexOf(".") > 0) {
-      this.c = paramString2.substring(0, paramString2.indexOf("."));
+      this.componentType = paramString2.substring(0, paramString2.indexOf("."));
     } else {
-      this.c = paramString2;
+      this.componentType = paramString2;
     }
     a();
-    String type = this.b;
+    String type = this.blockType;
     switch (type) {
-      case " ": this.u = 4; this.d = 4; break;
-      case "b": this.w = 8; this.x = 5; this.d = 2; break;
-      case "d": this.d = 3; this.w = 4; break;
-      case "n": this.d = 3; break;
-      case "c": this.u = 4; this.d = 10; break;
-      case "e": this.u = 4; this.d = 12; break;
-      case "f": this.u = 4; this.d = 5; break;
-      case "h": this.u = 8; this.d = 7; break;
-      case "m": this.d = 9; break;
+      case " ": this.topSpacing = 4; this.shapeType = 4; break;
+      case "b": this.leftIndent = 8; this.rightIndent = 5; this.shapeType = 2; break;
+      case "d": this.shapeType = 3; this.leftIndent = 4; break;
+      case "n": this.shapeType = 3; break;
+      case "c": this.topSpacing = 4; this.shapeType = 10; break;
+      case "e": this.topSpacing = 4; this.shapeType = 12; break;
+      case "f": this.topSpacing = 4; this.shapeType = 5; break;
+      case "h": this.topSpacing = 8; this.shapeType = 7; break;
+      case "m": this.shapeType = 9; break;
       case "s":
       case "v":
       case "p":
       case "l":
-      case "a": this.d = 1; break;
+      case "a": this.shapeType = 1; break;
     }
-    this.e = this.R;
-    this.g = paramBoolean;
+    this.blockColor = this.defaultBlockColor;
+    this.isEditable = paramBoolean;
     setWillNotDraw(false);
     a(paramContext);
   }
@@ -170,201 +170,201 @@ public class BaseBlockView extends RelativeLayout {
   }
   
   private float[] getBooleanReflections() {
-    int i = this.A / 2;
-    int j = this.P;
+    int i = this.blockHeight / 2;
+    int j = this.outlineStrokeWidth;
     float f1 = (j / 2 + 0);
     float f2 = i;
-    return new float[] { f1, f2, f2, (j / 2 + 0), f2, (j / 2 + 0), (this.z - i), (j / 2 + 0) };
+    return new float[] { f1, f2, f2, (j / 2 + 0), f2, (j / 2 + 0), (this.blockWidth - i), (j / 2 + 0) };
   }
   
   private float[] getBooleanShadows() {
-    int i = this.A;
+    int i = this.blockHeight;
     int j = i / 2;
-    int k = this.z;
-    int m = this.P;
+    int k = this.blockWidth;
+    int m = this.outlineStrokeWidth;
     float f1 = (k - m / 2);
     float f2 = j;
     return new float[] { f1, f2, (k - j), (i - m / 2), (k - j), (i - m / 2), f2, (i - m / 2) };
   }
   
   private float[] getNumberBottomShadows() {
-    int i = this.A;
+    int i = this.blockHeight;
     int j = i / 2;
-    float f = (this.z - j);
-    int k = this.P;
+    float f = (this.blockWidth - j);
+    int k = this.outlineStrokeWidth;
     return new float[] { f, (i - k / 2), j, (i - k / 2) };
   }
   
   private float[] getNumberTopReflections() {
-    int i = this.A / 2;
+    int i = this.blockHeight / 2;
     float f = i;
-    int j = this.P;
-    return new float[] { f, (j / 2 + 0), (this.z - i), (j / 2 + 0) };
+    int j = this.outlineStrokeWidth;
+    return new float[] { f, (j / 2 + 0), (this.blockWidth - i), (j / 2 + 0) };
   }
   
   private float[] getRectReflections() {
-    int i = this.P;
-    return new float[] { 0.0F, (i / 2 + 0), (this.z - i / 2), (i / 2 + 0), (i / 2 + 0), 0.0F, (i / 2 + 0), (this.A - i / 2) };
+    int i = this.outlineStrokeWidth;
+    return new float[] { 0.0F, (i / 2 + 0), (this.blockWidth - i / 2), (i / 2 + 0), (i / 2 + 0), 0.0F, (i / 2 + 0), (this.blockHeight - i / 2) };
   }
   
   private float[] getRectShadows() {
-    int i = this.z;
-    int j = this.P;
+    int i = this.blockWidth;
+    int j = this.outlineStrokeWidth;
     float f1 = (i - j / 2);
     float f2 = (i - j / 2);
-    int k = this.A;
+    int k = this.blockHeight;
     return new float[] { f1, 0.0F, f2, (k - j / 2), (i - j / 2), (k - j / 2), 0.0F, (k - j / 2) };
   }
   
   public void a() {
-    this.S = ComponentTypeMapper.a(this.b, this.c);
+    this.classInfo = ComponentTypeMapper.a(this.blockType, this.componentType);
   }
   
   public void a(float paramFloat1, float paramFloat2, boolean paramBoolean) {
-    if (this.d == 9) {
-      this.z = (int)paramFloat1 + this.H;
+    if (this.shapeType == 9) {
+      this.blockWidth = (int)paramFloat1 + this.paramSpacing;
     } else {
-      this.z = (int)paramFloat1;
+      this.blockWidth = (int)paramFloat1;
     } 
-    this.A = (int)paramFloat2;
+    this.blockHeight = (int)paramFloat2;
     if (paramBoolean)
       e(); 
   }
   
   public void a(BaseBlockView paramTs, boolean paramBoolean1, boolean paramBoolean2, int paramInt) {
-    this.e = -16777216;
-    this.d = paramTs.d;
-    this.z = paramTs.z;
-    this.A = paramTs.A;
-    this.B = paramTs.B;
-    this.C = paramTs.C;
+    this.blockColor = -16777216;
+    this.shapeType = paramTs.shapeType;
+    this.blockWidth = paramTs.blockWidth;
+    this.blockHeight = paramTs.blockHeight;
+    this.contentHeight = paramTs.contentHeight;
+    this.innerHeight = paramTs.innerHeight;
     if (!paramBoolean1)
       if (paramBoolean2) {
-        this.d = 4;
-        this.A = (int)(this.D * 6.0F);
+        this.shapeType = 4;
+        this.blockHeight = (int)(this.density * 6.0F);
       } else if (paramInt > 0) {
-        this.B = paramInt - this.h;
+        this.contentHeight = paramInt - this.borderWidth;
       }  
     e();
   }
   
   public final void a(Context paramContext) {
-    this.D = ViewUtil.a(paramContext, 1.0F);
-    float f1 = this.h;
-    float f2 = this.D;
-    this.h = (int)(f1 * f2);
-    this.i = (int)(this.i * f2);
-    this.j = (int)(this.j * f2);
-    this.m = (int)(this.m * f2);
-    this.n = (int)(this.n * f2);
-    this.k = (int)(this.k * f2);
-    this.l = (int)(this.l * f2);
-    this.o = (int)(this.o * f2);
-    this.p = (int)(this.p * f2);
-    this.q = (int)(this.q * f2);
-    this.r = (int)(this.r * f2);
-    this.s = (int)(this.s * f2);
-    this.t = (int)(this.t * f2);
-    this.B = (int)(this.B * f2);
-    this.C = (int)(this.C * f2);
-    this.w = (int)(this.w * f2);
-    this.u = (int)(this.u * f2);
-    this.x = (int)(this.x * f2);
-    this.v = (int)(this.v * f2);
-    this.y = (int)(this.y * f2);
-    this.F = (int)(this.F * f2);
-    this.G = (int)(this.G * f2);
-    this.I = (int)(this.I * f2);
-    this.J = (int)(this.J * f2);
-    this.H = (int)(this.H * f2);
-    this.P = (int)(this.P * f2);
-    this.Q = (int)(this.Q * f2);
-    if (this.P < 2)
-      this.P = 2; 
-    if (this.Q < 2)
-      this.Q = 2; 
-    this.f = new Paint();
-    if (!this.g) {
-      this.K = true;
-      this.L = true;
+    this.density = ViewUtil.a(paramContext, 1.0F);
+    float f1 = this.borderWidth;
+    float f2 = this.density;
+    this.borderWidth = (int)(f1 * f2);
+    this.minHeight = (int)(this.minHeight * f2);
+    this.cornerRadius = (int)(this.cornerRadius * f2);
+    this.topPadding = (int)(this.topPadding * f2);
+    this.bottomPadding = (int)(this.bottomPadding * f2);
+    this.notchWidth = (int)(this.notchWidth * f2);
+    this.notchDepth = (int)(this.notchDepth * f2);
+    this.connectorOffset = (int)(this.connectorOffset * f2);
+    this.connectorStart = (int)(this.connectorStart * f2);
+    this.connectorEnd = (int)(this.connectorEnd * f2);
+    this.connectorEndOffset = (int)(this.connectorEndOffset * f2);
+    this.connectorWidth = (int)(this.connectorWidth * f2);
+    this.defaultMinWidth = (int)(this.defaultMinWidth * f2);
+    this.contentHeight = (int)(this.contentHeight * f2);
+    this.innerHeight = (int)(this.innerHeight * f2);
+    this.leftIndent = (int)(this.leftIndent * f2);
+    this.topSpacing = (int)(this.topSpacing * f2);
+    this.rightIndent = (int)(this.rightIndent * f2);
+    this.bottomSpacing = (int)(this.bottomSpacing * f2);
+    this.shadowOffset = (int)(this.shadowOffset * f2);
+    this.baseWidth = (int)(this.baseWidth * f2);
+    this.textHeight = (int)(this.textHeight * f2);
+    this.paramPadding = (int)(this.paramPadding * f2);
+    this.paramMargin = (int)(this.paramMargin * f2);
+    this.paramSpacing = (int)(this.paramSpacing * f2);
+    this.outlineStrokeWidth = (int)(this.outlineStrokeWidth * f2);
+    this.reflectionStrokeWidth = (int)(this.reflectionStrokeWidth * f2);
+    if (this.outlineStrokeWidth < 2)
+      this.outlineStrokeWidth = 2; 
+    if (this.reflectionStrokeWidth < 2)
+      this.reflectionStrokeWidth = 2; 
+    this.fillPaint = new Paint();
+    if (!this.isEditable) {
+      this.drawShadow = true;
+      this.drawReflection = true;
     } 
-    this.M = new Paint();
-    this.M.setColor(-536870912);
-    this.M.setStrokeWidth(this.P);
-    this.N = new Paint();
-    this.N.setColor(-1610612736);
-    this.N.setStyle(Paint.Style.STROKE);
-    this.N.setStrokeWidth(this.P);
-    this.O = new Paint();
-    this.O.setColor(-1593835521);
-    this.O.setStyle(Paint.Style.STROKE);
-    this.O.setStrokeWidth(this.Q);
+    this.shadowPaint = new Paint();
+    this.shadowPaint.setColor(-536870912);
+    this.shadowPaint.setStrokeWidth(this.outlineStrokeWidth);
+    this.outlinePaint = new Paint();
+    this.outlinePaint.setColor(-1610612736);
+    this.outlinePaint.setStyle(Paint.Style.STROKE);
+    this.outlinePaint.setStrokeWidth(this.outlineStrokeWidth);
+    this.reflectionPaint = new Paint();
+    this.reflectionPaint.setColor(-1593835521);
+    this.reflectionPaint.setStyle(Paint.Style.STROKE);
+    this.reflectionPaint.setStrokeWidth(this.reflectionStrokeWidth);
     setLayerType(1, null);
-    a(this.F, (this.G + this.u + this.v), false);
+    a(this.baseWidth, (this.textHeight + this.topSpacing + this.bottomSpacing), false);
   }
   
   public final void a(Canvas paramCanvas) {
     Path path = new Path();
-    int i = this.A;
+    int i = this.blockHeight;
     int j = i / 2;
     float f = j;
     path.moveTo(f, i);
     path.lineTo(0.0F, f);
     path.lineTo(f, 0.0F);
-    path.lineTo((this.z - j), 0.0F);
-    path.lineTo(this.z, f);
-    path.lineTo((this.z - j), this.A);
-    paramCanvas.drawPath(path, this.f);
-    if (this.K)
-      paramCanvas.drawLines(getBooleanShadows(), this.N); 
-    if (this.L)
-      paramCanvas.drawLines(getBooleanReflections(), this.O); 
+    path.lineTo((this.blockWidth - j), 0.0F);
+    path.lineTo(this.blockWidth, f);
+    path.lineTo((this.blockWidth - j), this.blockHeight);
+    paramCanvas.drawPath(path, this.fillPaint);
+    if (this.drawShadow)
+      paramCanvas.drawLines(getBooleanShadows(), this.outlinePaint); 
+    if (this.drawReflection)
+      paramCanvas.drawLines(getBooleanReflections(), this.reflectionPaint); 
   }
   
   public final void a(Path paramPath) {
-    paramPath.moveTo(0.0F, this.k);
-    paramPath.lineTo(this.k, 0.0F);
-    paramPath.lineTo(this.o, 0.0F);
-    paramPath.lineTo(this.p, this.h);
-    paramPath.lineTo(this.q, this.h);
-    paramPath.lineTo(this.r, 0.0F);
-    paramPath.lineTo((this.z - this.k), 0.0F);
-    paramPath.lineTo(this.z, this.k);
+    paramPath.moveTo(0.0F, this.notchWidth);
+    paramPath.lineTo(this.notchWidth, 0.0F);
+    paramPath.lineTo(this.connectorOffset, 0.0F);
+    paramPath.lineTo(this.connectorStart, this.borderWidth);
+    paramPath.lineTo(this.connectorEnd, this.borderWidth);
+    paramPath.lineTo(this.connectorEndOffset, 0.0F);
+    paramPath.lineTo((this.blockWidth - this.notchWidth), 0.0F);
+    paramPath.lineTo(this.blockWidth, this.notchWidth);
   }
   
   public final void a(Path paramPath, int paramInt) {
-    paramPath.lineTo(this.j, (paramInt - this.l));
-    float f1 = (this.j + this.l);
+    paramPath.lineTo(this.cornerRadius, (paramInt - this.notchDepth));
+    float f1 = (this.cornerRadius + this.notchDepth);
     float f2 = paramInt;
     paramPath.lineTo(f1, f2);
-    paramPath.lineTo((this.z - this.k), f2);
-    paramPath.lineTo(this.z, (paramInt + this.k));
+    paramPath.lineTo((this.blockWidth - this.notchWidth), f2);
+    paramPath.lineTo(this.blockWidth, (paramInt + this.notchWidth));
   }
   
   public final void a(Path paramPath, int paramInt1, boolean paramBoolean, int paramInt2) {
-    paramPath.lineTo(this.z, (paramInt1 - this.k));
-    float f1 = (this.z - this.k);
+    paramPath.lineTo(this.blockWidth, (paramInt1 - this.notchWidth));
+    float f1 = (this.blockWidth - this.notchWidth);
     float f2 = paramInt1;
     paramPath.lineTo(f1, f2);
     if (paramBoolean) {
-      paramPath.lineTo((this.r + paramInt2), f2);
-      paramPath.lineTo((this.q + paramInt2), (this.h + paramInt1));
-      paramPath.lineTo((this.p + paramInt2), (this.h + paramInt1));
-      paramPath.lineTo((this.o + paramInt2), f2);
+      paramPath.lineTo((this.connectorEndOffset + paramInt2), f2);
+      paramPath.lineTo((this.connectorEnd + paramInt2), (this.borderWidth + paramInt1));
+      paramPath.lineTo((this.connectorStart + paramInt2), (this.borderWidth + paramInt1));
+      paramPath.lineTo((this.connectorOffset + paramInt2), f2);
     } 
     if (paramInt2 > 0) {
-      paramPath.lineTo((this.l + paramInt2), f2);
-      paramPath.lineTo(paramInt2, (paramInt1 + this.l));
+      paramPath.lineTo((this.notchDepth + paramInt2), f2);
+      paramPath.lineTo(paramInt2, (paramInt1 + this.notchDepth));
     } else {
-      paramPath.lineTo((paramInt2 + this.k), f2);
-      paramPath.lineTo(0.0F, (paramInt1 - this.k));
+      paramPath.lineTo((paramInt2 + this.notchWidth), f2);
+      paramPath.lineTo(0.0F, (paramInt1 - this.notchWidth));
     } 
   }
   
   public final float[] a(int paramInt) {
-    int i = this.P;
+    int i = this.outlineStrokeWidth;
     float f1 = (i / 2 + 0);
-    int j = this.k;
+    int j = this.notchWidth;
     float f2 = (paramInt - j);
     float f3 = (i / 2 + 0);
     float f4 = j;
@@ -374,28 +374,28 @@ public class BaseBlockView extends RelativeLayout {
     float f8 = (i / 2 + 0);
     float f9 = j;
     float f10 = (i / 2 + 0);
-    float f11 = this.o;
+    float f11 = this.connectorOffset;
     float f12 = (i / 2 + 0);
-    float f13 = this.p;
-    paramInt = this.h;
+    float f13 = this.connectorStart;
+    paramInt = this.borderWidth;
     float f14 = (i / 2 + paramInt);
-    int k = this.q;
+    int k = this.connectorEnd;
     float f15 = k;
     float f16 = (i / 2 + paramInt);
     float f17 = k;
     float f18 = (paramInt + i / 2);
-    paramInt = this.r;
+    paramInt = this.connectorEndOffset;
     return new float[] { 
         f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, 
         f11, f12, f13, f14, f15, f16, f17, f18, paramInt, (i / 2 + 0), 
-        paramInt, (i / 2 + 0), (this.z - j), (i / 2 + 0) };
+        paramInt, (i / 2 + 0), (this.blockWidth - j), (i / 2 + 0) };
   }
   
   public final float[] a(int paramInt1, int paramInt2) {
-    int i = this.j;
-    int j = this.l;
+    int i = this.cornerRadius;
+    int j = this.notchDepth;
     float f = (i + j);
-    int k = this.P;
+    int k = this.outlineStrokeWidth;
     return new float[] { f, (paramInt1 - k / 2), (i - k / 2), (paramInt1 + j), (i - k / 2), (paramInt1 + j), (i - k / 2), (paramInt2 - j) };
   }
   
@@ -406,39 +406,39 @@ public class BaseBlockView extends RelativeLayout {
     } else {
       arrayOfFloat = new float[8];
     } 
-    int i = this.z;
+    int i = this.blockWidth;
     arrayOfFloat[0] = i;
-    int j = this.k;
-    int k = this.P;
+    int j = this.notchWidth;
+    int k = this.outlineStrokeWidth;
     arrayOfFloat[1] = (paramInt1 - j - k / 2);
     arrayOfFloat[2] = (i - j);
     arrayOfFloat[3] = (paramInt1 - k / 2);
     if (paramBoolean) {
       arrayOfFloat[4] = (i - j);
       arrayOfFloat[5] = (paramInt1 - k / 2);
-      i = this.r;
+      i = this.connectorEndOffset;
       arrayOfFloat[6] = (paramInt2 + i);
       arrayOfFloat[7] = (paramInt1 - k / 2);
       arrayOfFloat[8] = (i + paramInt2);
       arrayOfFloat[9] = (paramInt1 - k / 2);
-      int m = this.q;
+      int m = this.connectorEnd;
       arrayOfFloat[10] = (paramInt2 + m);
-      i = this.h;
+      i = this.borderWidth;
       arrayOfFloat[11] = (paramInt1 + i - k / 2);
       arrayOfFloat[12] = (m + paramInt2);
       arrayOfFloat[13] = (paramInt1 + i - k / 2);
-      m = this.p;
+      m = this.connectorStart;
       arrayOfFloat[14] = (paramInt2 + m);
       arrayOfFloat[15] = (paramInt1 + i - k / 2);
       arrayOfFloat[16] = (m + paramInt2);
       arrayOfFloat[17] = (i + paramInt1 - k / 2);
-      i = this.o;
+      i = this.connectorOffset;
       arrayOfFloat[18] = (paramInt2 + i);
       arrayOfFloat[19] = (paramInt1 - k / 2);
       if (paramInt2 > 0) {
         arrayOfFloat[20] = (i + paramInt2);
         arrayOfFloat[21] = (paramInt1 - k / 2);
-        arrayOfFloat[22] = (paramInt2 + this.l);
+        arrayOfFloat[22] = (paramInt2 + this.notchDepth);
         arrayOfFloat[23] = (paramInt1 - k / 2);
       } else {
         arrayOfFloat[20] = (i + paramInt2);
@@ -449,7 +449,7 @@ public class BaseBlockView extends RelativeLayout {
     } else if (paramInt2 > 0) {
       arrayOfFloat[4] = (i - j);
       arrayOfFloat[5] = (paramInt1 - k / 2);
-      arrayOfFloat[6] = (paramInt2 + this.l);
+      arrayOfFloat[6] = (paramInt2 + this.notchDepth);
       arrayOfFloat[7] = (paramInt1 - k / 2);
     } else {
       arrayOfFloat[4] = (i - j);
@@ -464,8 +464,8 @@ public class BaseBlockView extends RelativeLayout {
     boolean bool2;
     Path path = new Path();
     a(path);
-    int i = this.A;
-    int j = this.d;
+    int i = this.blockHeight;
+    int j = this.shapeType;
     boolean bool1 = true;
     if (j != 5) {
       bool2 = true;
@@ -473,24 +473,24 @@ public class BaseBlockView extends RelativeLayout {
       bool2 = false;
     } 
     a(path, i, bool2, 0);
-    paramCanvas.drawPath(path, this.f);
-    if (this.K) {
-      paramCanvas.drawLines(b(0, this.A), this.N);
-      i = this.A;
-      if (this.d != 5) {
+    paramCanvas.drawPath(path, this.fillPaint);
+    if (this.drawShadow) {
+      paramCanvas.drawLines(b(0, this.blockHeight), this.outlinePaint);
+      i = this.blockHeight;
+      if (this.shapeType != 5) {
         bool2 = bool1;
       } else {
         bool2 = false;
       } 
-      paramCanvas.drawLines(a(i, bool2, 0), this.N);
+      paramCanvas.drawLines(a(i, bool2, 0), this.outlinePaint);
     } 
-    if (this.L)
-      paramCanvas.drawLines(a(this.A), this.O); 
+    if (this.drawReflection)
+      paramCanvas.drawLines(a(this.blockHeight), this.reflectionPaint); 
   }
   
   public boolean b() {
     boolean bool;
-    if (this.d >= 10) {
+    if (this.shapeType >= 10) {
       bool = true;
     } else {
       bool = false;
@@ -499,32 +499,32 @@ public class BaseBlockView extends RelativeLayout {
   }
   
   public final float[] b(int paramInt1, int paramInt2) {
-    int i = this.z;
-    int j = this.P;
+    int i = this.blockWidth;
+    int j = this.outlineStrokeWidth;
     float f = (i - j / 2);
-    int k = this.k;
+    int k = this.notchWidth;
     return new float[] { f, (paramInt1 + k), (i - j / 2), (paramInt2 - k) };
   }
   
   public final void c(Canvas paramCanvas) {
-    paramCanvas.drawRect(new Rect(0, 0, this.z, this.A), this.f);
+    paramCanvas.drawRect(new Rect(0, 0, this.blockWidth, this.blockHeight), this.fillPaint);
     Path path = new Path();
-    int i = this.z;
-    int j = this.J;
+    int i = this.blockWidth;
+    int j = this.paramMargin;
     path.moveTo((i - j), j);
-    j = this.z;
-    i = this.J;
-    int k = this.I;
+    j = this.blockWidth;
+    i = this.paramMargin;
+    int k = this.paramPadding;
     path.lineTo((j - i - k / 2), (i + k));
-    j = this.z;
-    i = this.J;
-    path.lineTo((j - i - this.I), i);
-    paramCanvas.drawPath(path, this.M);
+    j = this.blockWidth;
+    i = this.paramMargin;
+    path.lineTo((j - i - this.paramPadding), i);
+    paramCanvas.drawPath(path, this.shadowPaint);
   }
   
   public boolean c() {
     boolean bool;
-    if (this.d == 12) {
+    if (this.shapeType == 12) {
       bool = true;
     } else {
       bool = false;
@@ -533,26 +533,26 @@ public class BaseBlockView extends RelativeLayout {
   }
   
   public final float[] c(int paramInt1, int paramInt2) {
-    float f = (paramInt2 + this.l);
-    paramInt2 = this.P;
-    return new float[] { f, (paramInt2 / 2 + paramInt1), (this.z - this.k), (paramInt1 + paramInt2 / 2) };
+    float f = (paramInt2 + this.notchDepth);
+    paramInt2 = this.outlineStrokeWidth;
+    return new float[] { f, (paramInt2 / 2 + paramInt1), (this.blockWidth - this.notchWidth), (paramInt1 + paramInt2 / 2) };
   }
   
   public int d() {
-    return getTotalHeight() - this.h;
+    return getTotalHeight() - this.borderWidth;
   }
   
   public final void d(Canvas paramCanvas) {
     Path path = new Path();
-    path.moveTo(0.0F, this.s);
-    path.arcTo(new RectF(0.0F, 0.0F, this.t, (this.s * 2)), 180.0F, 180.0F);
-    path.lineTo((this.z - this.k), this.s);
-    path.lineTo(this.z, (this.s + this.k));
-    a(path, this.A, true, 0);
-    paramCanvas.drawPath(path, this.f);
-    if (this.K) {
-      paramCanvas.drawLines(b(this.s, this.A), this.N);
-      paramCanvas.drawLines(a(this.A, true, 0), this.N);
+    path.moveTo(0.0F, this.connectorWidth);
+    path.arcTo(new RectF(0.0F, 0.0F, this.defaultMinWidth, (this.connectorWidth * 2)), 180.0F, 180.0F);
+    path.lineTo((this.blockWidth - this.notchWidth), this.connectorWidth);
+    path.lineTo(this.blockWidth, (this.connectorWidth + this.notchWidth));
+    a(path, this.blockHeight, true, 0);
+    paramCanvas.drawPath(path, this.fillPaint);
+    if (this.drawShadow) {
+      paramCanvas.drawLines(b(this.connectorWidth, this.blockHeight), this.outlinePaint);
+      paramCanvas.drawLines(a(this.blockHeight, true, 0), this.outlinePaint);
     } 
   }
   
@@ -562,164 +562,164 @@ public class BaseBlockView extends RelativeLayout {
   
   public final void e(Canvas paramCanvas) {
     Path path = new Path();
-    int i = this.A;
-    int j = this.B;
-    int k = this.h;
+    int i = this.blockHeight;
+    int j = this.contentHeight;
+    int k = this.borderWidth;
     i = i + j - k;
-    k = this.n + i + this.C - k;
+    k = this.bottomPadding + i + this.innerHeight - k;
     a(path);
-    a(path, this.A, true, this.j);
+    a(path, this.blockHeight, true, this.cornerRadius);
     a(path, i);
-    a(path, this.n + i, true, this.j);
+    a(path, this.bottomPadding + i, true, this.cornerRadius);
     a(path, k);
-    a(path, this.m + k, true, 0);
-    paramCanvas.drawPath(path, this.f);
-    if (this.K) {
-      paramCanvas.drawLines(b(0, this.A), this.N);
-      paramCanvas.drawLines(a(this.A, true, this.j), this.N);
-      paramCanvas.drawLines(a(this.A, i), this.N);
-      paramCanvas.drawLines(b(i, this.n + i), this.N);
-      paramCanvas.drawLines(a(this.n + i, true, this.j), this.N);
-      paramCanvas.drawLines(a(this.n + i, k), this.N);
-      paramCanvas.drawLines(b(k, this.m + k), this.N);
-      paramCanvas.drawLines(a(this.m + k, true, 0), this.N);
+    a(path, this.topPadding + k, true, 0);
+    paramCanvas.drawPath(path, this.fillPaint);
+    if (this.drawShadow) {
+      paramCanvas.drawLines(b(0, this.blockHeight), this.outlinePaint);
+      paramCanvas.drawLines(a(this.blockHeight, true, this.cornerRadius), this.outlinePaint);
+      paramCanvas.drawLines(a(this.blockHeight, i), this.outlinePaint);
+      paramCanvas.drawLines(b(i, this.bottomPadding + i), this.outlinePaint);
+      paramCanvas.drawLines(a(this.bottomPadding + i, true, this.cornerRadius), this.outlinePaint);
+      paramCanvas.drawLines(a(this.bottomPadding + i, k), this.outlinePaint);
+      paramCanvas.drawLines(b(k, this.topPadding + k), this.outlinePaint);
+      paramCanvas.drawLines(a(this.topPadding + k, true, 0), this.outlinePaint);
     } 
-    if (this.L) {
-      paramCanvas.drawLines(a(this.m + k), this.O);
-      paramCanvas.drawLines(c(i, this.j), this.O);
-      paramCanvas.drawLines(c(k, this.j), this.O);
+    if (this.drawReflection) {
+      paramCanvas.drawLines(a(this.topPadding + k), this.reflectionPaint);
+      paramCanvas.drawLines(c(i, this.cornerRadius), this.reflectionPaint);
+      paramCanvas.drawLines(c(k, this.cornerRadius), this.reflectionPaint);
     } 
   }
   
   public int f() {
-    return this.A;
+    return this.blockHeight;
   }
   
   public final void f(Canvas paramCanvas) {
     boolean bool2;
     Path path = new Path();
-    int i = this.A + this.B - this.h;
+    int i = this.blockHeight + this.contentHeight - this.borderWidth;
     a(path);
-    int j = this.A;
-    int k = this.j;
+    int j = this.blockHeight;
+    int k = this.cornerRadius;
     boolean bool1 = true;
     a(path, j, true, k);
     a(path, i);
-    j = this.m;
-    if (this.d == 10) {
+    j = this.topPadding;
+    if (this.shapeType == 10) {
       bool2 = true;
     } else {
       bool2 = false;
     } 
     a(path, j + i, bool2, 0);
-    paramCanvas.drawPath(path, this.f);
-    if (this.K) {
-      paramCanvas.drawLines(b(0, this.A), this.N);
-      paramCanvas.drawLines(a(this.A, true, this.j), this.N);
-      paramCanvas.drawLines(a(this.A, i), this.N);
-      paramCanvas.drawLines(b(i, this.m + i), this.N);
-      j = this.m;
-      if (this.d == 10) {
+    paramCanvas.drawPath(path, this.fillPaint);
+    if (this.drawShadow) {
+      paramCanvas.drawLines(b(0, this.blockHeight), this.outlinePaint);
+      paramCanvas.drawLines(a(this.blockHeight, true, this.cornerRadius), this.outlinePaint);
+      paramCanvas.drawLines(a(this.blockHeight, i), this.outlinePaint);
+      paramCanvas.drawLines(b(i, this.topPadding + i), this.outlinePaint);
+      j = this.topPadding;
+      if (this.shapeType == 10) {
         bool2 = bool1;
       } else {
         bool2 = false;
       } 
-      paramCanvas.drawLines(a(j + i, bool2, 0), this.N);
+      paramCanvas.drawLines(a(j + i, bool2, 0), this.outlinePaint);
     } 
-    if (this.L) {
-      paramCanvas.drawLines(a(this.m + i), this.O);
-      paramCanvas.drawLines(c(i, this.j), this.O);
+    if (this.drawReflection) {
+      paramCanvas.drawLines(a(this.topPadding + i), this.reflectionPaint);
+      paramCanvas.drawLines(c(i, this.cornerRadius), this.reflectionPaint);
     } 
   }
   
   public int g() {
-    return this.A + this.B + this.n - this.h;
+    return this.blockHeight + this.contentHeight + this.bottomPadding - this.borderWidth;
   }
   
   public final void g(Canvas paramCanvas) {
     Path path = new Path();
-    int i = this.A;
+    int i = this.blockHeight;
     int j = i / 2;
     path.moveTo(j, i);
-    i = this.A;
+    i = this.blockHeight;
     path.arcTo(new RectF(0.0F, 0.0F, i, i), 90.0F, 180.0F);
-    path.lineTo((this.z - j), 0.0F);
-    j = this.z;
-    i = this.A;
+    path.lineTo((this.blockWidth - j), 0.0F);
+    j = this.blockWidth;
+    i = this.blockHeight;
     path.arcTo(new RectF((j - i), 0.0F, j, i), 270.0F, 180.0F);
-    paramCanvas.drawPath(path, this.f);
-    if (this.K) {
-      i = this.z;
-      j = this.A;
+    paramCanvas.drawPath(path, this.fillPaint);
+    if (this.drawShadow) {
+      i = this.blockWidth;
+      j = this.blockHeight;
       float f = (i - j);
-      int k = this.P;
-      paramCanvas.drawArc(new RectF(f, 0.0F, (i - k / 2), (j - k / 2)), 330.0F, 120.0F, false, this.N);
-      paramCanvas.drawLines(getNumberBottomShadows(), this.N);
-      i = this.P;
+      int k = this.outlineStrokeWidth;
+      paramCanvas.drawArc(new RectF(f, 0.0F, (i - k / 2), (j - k / 2)), 330.0F, 120.0F, false, this.outlinePaint);
+      paramCanvas.drawLines(getNumberBottomShadows(), this.outlinePaint);
+      i = this.outlineStrokeWidth;
       f = (i / 2 + 0);
-      j = this.A;
-      paramCanvas.drawArc(new RectF(f, 0.0F, j, (j - i / 2)), 90.0F, 30.0F, false, this.N);
+      j = this.blockHeight;
+      paramCanvas.drawArc(new RectF(f, 0.0F, j, (j - i / 2)), 90.0F, 30.0F, false, this.outlinePaint);
     } 
-    if (this.L) {
-      j = this.P;
+    if (this.drawReflection) {
+      j = this.outlineStrokeWidth;
       float f1 = (j / 2 + 0);
       float f2 = (j / 2 + 0);
-      j = this.A;
-      paramCanvas.drawArc(new RectF(f1, f2, j, j), 150.0F, 120.0F, false, this.O);
-      paramCanvas.drawLines(getNumberTopReflections(), this.O);
-      i = this.z;
-      j = this.A;
+      j = this.blockHeight;
+      paramCanvas.drawArc(new RectF(f1, f2, j, j), 150.0F, 120.0F, false, this.reflectionPaint);
+      paramCanvas.drawLines(getNumberTopReflections(), this.reflectionPaint);
+      i = this.blockWidth;
+      j = this.blockHeight;
       f1 = (i - j);
-      int k = this.P;
-      paramCanvas.drawArc(new RectF(f1, (k / 2 + 0), (i - k / 2), j), 270.0F, 30.0F, false, this.O);
+      int k = this.outlineStrokeWidth;
+      paramCanvas.drawArc(new RectF(f1, (k / 2 + 0), (i - k / 2), j), 270.0F, 30.0F, false, this.reflectionPaint);
     } 
   }
   
   public ClassInfo getClassInfo() {
-    if (this.S == null)
+    if (this.classInfo == null)
       a(); 
-    return this.S;
+    return this.classInfo;
   }
   
   public int getTopH() {
-    return this.A;
+    return this.blockHeight;
   }
   
   public int getTotalHeight() {
-    int i = this.A;
+    int i = this.blockHeight;
     int k = i;
     if (b())
-      k = i + this.n + this.B - this.h; 
+      k = i + this.bottomPadding + this.contentHeight - this.borderWidth; 
     i = k;
     if (c())
-      i = k + this.m + this.C - this.h; 
-    int j = this.d;
+      i = k + this.topPadding + this.innerHeight - this.borderWidth; 
+    int j = this.shapeType;
     if (j != 4 && j != 7 && j != 10) {
       k = i;
-      return (j == 12) ? (i + this.h) : k;
+      return (j == 12) ? (i + this.borderWidth) : k;
     } 
-    return i + this.h;
+    return i + this.borderWidth;
   }
   
   public int getTotalWidth() {
-    return this.z;
+    return this.blockWidth;
   }
   
   public int getW() {
-    return this.z;
+    return this.blockWidth;
   }
   
   public final void h(Canvas paramCanvas) {
-    paramCanvas.drawRect(new Rect(0, 0, this.z, this.A), this.f);
-    if (this.K)
-      paramCanvas.drawLines(getRectShadows(), this.N); 
-    if (this.L)
-      paramCanvas.drawLines(getRectReflections(), this.O); 
+    paramCanvas.drawRect(new Rect(0, 0, this.blockWidth, this.blockHeight), this.fillPaint);
+    if (this.drawShadow)
+      paramCanvas.drawLines(getRectShadows(), this.outlinePaint); 
+    if (this.drawReflection)
+      paramCanvas.drawLines(getRectReflections(), this.reflectionPaint); 
   }
   
   public void onDraw(Canvas paramCanvas) {
-    this.f.setColor(this.e);
-    switch (this.d) {
+    this.fillPaint.setColor(this.blockColor);
+    switch (this.shapeType) {
       case 12:
         e(paramCanvas);
         break;
@@ -755,14 +755,14 @@ public class BaseBlockView extends RelativeLayout {
   }
   
   public void setSubstack1Height(int paramInt) {
-    paramInt = Math.max(paramInt, this.i);
-    if (paramInt != this.B)
-      this.B = paramInt; 
+    paramInt = Math.max(paramInt, this.minHeight);
+    if (paramInt != this.contentHeight)
+      this.contentHeight = paramInt; 
   }
   
   public void setSubstack2Height(int paramInt) {
-    paramInt = Math.max(paramInt, this.i);
-    if (paramInt != this.C)
-      this.C = paramInt; 
+    paramInt = Math.max(paramInt, this.minHeight);
+    if (paramInt != this.innerHeight)
+      this.innerHeight = paramInt; 
   }
 }

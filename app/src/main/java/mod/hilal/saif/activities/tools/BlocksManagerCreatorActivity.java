@@ -461,7 +461,7 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
         var blockType = specId.equalsIgnoreCase("regular") ? " " : specId;
         try {
             var block = new BlockView(this, -1, Helper.getText(binding.spec), blockType, Helper.getText(binding.name));
-            block.e = PropertiesUtil.isHexColor(color) ? PropertiesUtil.parseColor(color) : Color.parseColor("#F0F0F0");
+            block.blockColor = PropertiesUtil.isHexColor(color) ? PropertiesUtil.parseColor(color) : Color.parseColor("#F0F0F0");
             binding.blockArea.addView(block);
         } catch (Exception e) {
             var block = new TextView(this);

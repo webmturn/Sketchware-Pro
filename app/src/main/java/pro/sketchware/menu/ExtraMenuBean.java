@@ -122,7 +122,7 @@ public class ExtraMenuBean {
     }
 
     public void defineMenuSelector(FieldBlockView ss) {
-        String menuType = ss.b;
+        String menuType = ss.blockType;
         String menuName = ss.getMenuName();
 
         switch (menuType) {

@@ -112,7 +112,7 @@ public class PaletteBlock extends LinearLayout {
             a(message, getColor(context, isDarkThemeEnabled(context) ? R.attr.colorSurfaceContainerHigh : R.attr.colorSurfaceInverse));
         }
         BaseBlockView blockView = a("", type, opCode);
-        blockView.e = 0xFFBDBDBD;
+        blockView.blockColor = 0xFFBDBDBD;
         blockView.setTag(opCode);
     }
 

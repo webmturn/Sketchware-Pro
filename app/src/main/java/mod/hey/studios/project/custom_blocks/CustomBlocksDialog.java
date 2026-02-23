@@ -287,7 +287,7 @@ public class CustomBlocksDialog {
                 blockBean.typeName,
                 blockBean.opCode
         );
-        block.e = blockBean.color;
+        block.blockColor = blockBean.color;
         return block;
     }
 

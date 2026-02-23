@@ -46,7 +46,7 @@ public class BlockPane extends RelativeLayout {
       Context context = getContext();
       int i = this.nextBlockId;
       this.nextBlockId = i + 1;
-      rs = new BlockView(context, i, paramRs.T, ((BaseBlockView)paramRs).b, ((BaseBlockView)paramRs).c, paramRs.U);
+      rs = new BlockView(context, i, paramRs.T, ((BaseBlockView)paramRs).blockType, ((BaseBlockView)paramRs).componentType, paramRs.U);
     } 
     rs.pa = this;
     addView((View)rs);
@@ -71,7 +71,7 @@ public class BlockPane extends RelativeLayout {
       return rs;
     } 
     if (paramRs.fa) {
-      ((BaseBlockView)arrayOfObject[1]).E.a((BaseBlockView)arrayOfObject[1], rs);
+      ((BaseBlockView)arrayOfObject[1]).parentBlock.a((BaseBlockView)arrayOfObject[1], rs);
     } else {
       paramRs = (BlockView)arrayOfObject[1];
       paramInt1 = ((Integer)arrayOfObject[2]).intValue();
@@ -223,14 +223,14 @@ public class BlockPane extends RelativeLayout {
       if (paramRs.b() && (!paramBoolean || paramRs.ia == -1)) {
         int[] arrayOfInt = new int[2];
         paramRs.getLocationOnScreen(arrayOfInt);
-        arrayOfInt[0] = arrayOfInt[0] + ((BaseBlockView)paramRs).j;
+        arrayOfInt[0] = arrayOfInt[0] + ((BaseBlockView)paramRs).cornerRadius;
         arrayOfInt[1] = arrayOfInt[1] + paramRs.f();
         a(arrayOfInt, (View)paramRs, 2);
       } 
       if (paramRs.c() && (!paramBoolean || paramRs.ja == -1)) {
         int[] arrayOfInt = new int[2];
         paramRs.getLocationOnScreen(arrayOfInt);
-        arrayOfInt[0] = arrayOfInt[0] + ((BaseBlockView)paramRs).j;
+        arrayOfInt[0] = arrayOfInt[0] + ((BaseBlockView)paramRs).cornerRadius;
         arrayOfInt[1] = arrayOfInt[1] + paramRs.g();
         a(arrayOfInt, (View)paramRs, 3);
       } 
@@ -264,7 +264,7 @@ public class BlockPane extends RelativeLayout {
       BlockView rs1 = (BlockView)findViewWithTag(Integer.valueOf(paramBlockBean.id));
       if (rs1 == null)
         return; 
-      BlockView rs2 = ((BaseBlockView)rs1).E;
+      BlockView rs2 = ((BaseBlockView)rs1).parentBlock;
       if (rs1 != rs2) {
         c(rs1);
         removeView((View)rs1);
@@ -295,7 +295,7 @@ public class BlockPane extends RelativeLayout {
       View view = getChildAt(b);
       if (view instanceof BlockView) {
         BlockView rs = (BlockView)view;
-        if (rs.getVisibility() != 8 && ((BaseBlockView)rs).E == null)
+        if (rs.getVisibility() != 8 && ((BaseBlockView)rs).parentBlock == null)
           if (paramBoolean3) {
             a(rs, paramString);
           } else if (!rs.fa) {
@@ -309,7 +309,7 @@ public class BlockPane extends RelativeLayout {
             if (paramBoolean2 && !rs.ea) {
               int[] arrayOfInt = new int[2];
               rs.getLocationOnScreen(arrayOfInt);
-              arrayOfInt[0] = arrayOfInt[0] - ((BaseBlockView)rs).j;
+              arrayOfInt[0] = arrayOfInt[0] - ((BaseBlockView)rs).cornerRadius;
               arrayOfInt[1] = arrayOfInt[1] - paramInt2 - i;
               a(arrayOfInt, (View)rs, 4);
             } 
@@ -329,7 +329,7 @@ public class BlockPane extends RelativeLayout {
     if (!paramRs.fa)
       return true; 
     if (paramView instanceof BaseBlockView) {
-      if (((BaseBlockView)paramView).c.equals("!"))
+      if (((BaseBlockView)paramView).componentType.equals("!"))
         return true; 
       ClassInfo gx1 = paramRs.getClassInfo();
       if (gx1 == null)
@@ -356,7 +356,7 @@ public class BlockPane extends RelativeLayout {
       int n = k;
       if (view instanceof BlockView) {
         BlockView rs = (BlockView)view;
-        if (rs.E == null) {
+        if (rs.parentBlock == null) {
           float f = view.getX();
           m = Math.max((int)(f + rs.getWidthSum()) + 150, j);
           n = Math.max((int)(view.getY() + rs.getHeightSum()) + 150, k);
@@ -592,12 +592,12 @@ public class BlockPane extends RelativeLayout {
   }
   
   public void c(BlockView paramRs) {
-    BlockView rs = ((BaseBlockView)paramRs).E;
+    BlockView rs = ((BaseBlockView)paramRs).parentBlock;
     if (rs == null)
       return; 
     if (rs != null) {
       rs.g(paramRs);
-      ((BaseBlockView)paramRs).E = null;
+      ((BaseBlockView)paramRs).parentBlock = null;
     } 
   }
   
@@ -819,13 +819,13 @@ public class BlockPane extends RelativeLayout {
     if (view instanceof BlockView) {
       BlockView rs = (BlockView) view;
       if (rs.fa) {
-        result = ((Integer) rs.E.getTag()).intValue();
+        result = ((Integer) rs.parentBlock.getTag()).intValue();
       } else {
         result = ((Integer) ((BlockView) target[1]).getTag()).intValue();
       }
     }
     if (view instanceof pro.sketchware.core.FieldBlockView) {
-      result = ((Integer) ((pro.sketchware.core.FieldBlockView) view).E.getTag()).intValue();
+      result = ((Integer) ((pro.sketchware.core.FieldBlockView) view).parentBlock.getTag()).intValue();
     }
     return result;
   }

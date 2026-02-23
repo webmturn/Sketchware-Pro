@@ -79,12 +79,12 @@ public class BlockView extends BaseBlockView {
   }
   
   public final TextView a(String paramString) {
-    TextView textView = new TextView(this.a);
+    TextView textView = new TextView(this.context);
     String text = paramString;
     if (this.U.equals("getVar") || this.U.equals("getArg")) {
-      String prefix = this.c;
+      String prefix = this.componentType;
       if (prefix != null && prefix.length() > 0) {
-        text = this.c + " : " + paramString;
+        text = this.componentType + " : " + paramString;
       }
     }
     textView.setText(text);
@@ -93,7 +93,7 @@ public class BlockView extends BaseBlockView {
     textView.setGravity(16);
     textView.setTextColor(-1);
     textView.setTypeface(null, 1);
-    android.widget.RelativeLayout.LayoutParams lp = new android.widget.RelativeLayout.LayoutParams(-2, this.G);
+    android.widget.RelativeLayout.LayoutParams lp = new android.widget.RelativeLayout.LayoutParams(-2, this.textHeight);
     lp.setMargins(0, 0, 0, 0);
     textView.setLayoutParams(lp);
     return textView;
@@ -107,7 +107,7 @@ public class BlockView extends BaseBlockView {
       BlockView rs = h();
       if (rs != paramRs) {
         rs.ha = ((Integer)paramRs.getTag()).intValue();
-        paramRs.E = rs;
+        paramRs.parentBlock = rs;
       }
     } 
   }
@@ -121,18 +121,18 @@ public class BlockView extends BaseBlockView {
       paramRs.qa = oldRs.qa;
       paramRs.ra = oldRs.ra;
     } else if (paramTs instanceof FieldBlockView) {
-      paramRs.qa = paramTs.b;
-      paramRs.ra = paramTs.c;
+      paramRs.qa = paramTs.blockType;
+      paramRs.ra = paramTs.componentType;
     }
     if (!isRs) {
       removeView(paramTs);
     }
     this.ka.set(index, paramRs);
-    paramRs.E = this;
+    paramRs.parentBlock = this;
     i();
     o();
     if (paramTs != paramRs && isRs) {
-      ((BlockView) paramTs).E = null;
+      ((BlockView) paramTs).parentBlock = null;
       paramTs.setX(getX() + getWidthSum() + 10.0f);
       paramTs.setY(getY() + 5.0f);
       ((BlockView) paramTs).k();
@@ -146,7 +146,7 @@ public class BlockView extends BaseBlockView {
     for (int b = 0; b < arrayList.size(); b++) {
       View view = b(arrayList.get(b), paramInt);
       if (view instanceof BaseBlockView)
-        ((BaseBlockView)view).E = this; 
+        ((BaseBlockView)view).parentBlock = this; 
       this.ka.add(view);
       if (view instanceof FieldBlockView) {
         paramString = arrayList.get(b);
@@ -163,16 +163,16 @@ public class BlockView extends BaseBlockView {
     if (paramString.length() >= 2 && paramString.charAt(0) == '%') {
       int type = paramString.charAt(1);
       if (type == 98) {
-        return new FieldBlockView(this.a, "b", "");
+        return new FieldBlockView(this.context, "b", "");
       } else if (type == 100) {
-        return new FieldBlockView(this.a, "d", "");
+        return new FieldBlockView(this.context, "d", "");
       } else if (type == 109) {
-        return new FieldBlockView(this.a, "m", paramString.substring(3));
+        return new FieldBlockView(this.context, "m", paramString.substring(3));
       } else if (type == 115) {
         String str = "";
         if (paramString.length() > 2)
           str = paramString.substring(3);
-        return new FieldBlockView(this.a, "s", str);
+        return new FieldBlockView(this.context, "s", str);
       }
       return a(FormatUtil.d(paramString));
     }
@@ -183,8 +183,8 @@ public class BlockView extends BaseBlockView {
     if (paramRs == this) return;
     View view = this.pa.findViewWithTag(Integer.valueOf(this.ha));
     if (view != null)
-      ((BlockView)view).E = null; 
-    paramRs.E = this;
+      ((BlockView)view).parentBlock = null; 
+    paramRs.parentBlock = this;
     this.ha = ((Integer)paramRs.getTag()).intValue();
     if (view != null && view != paramRs)
       paramRs.a((BlockView)view); 
@@ -192,15 +192,15 @@ public class BlockView extends BaseBlockView {
   
   public void c(BlockView paramRs) {
     paramRs.setX(getX());
-    paramRs.setY(getY() - paramRs.getHeightSum() + this.h);
+    paramRs.setY(getY() - paramRs.getHeightSum() + this.borderWidth);
     paramRs.h().b(this);
   }
   
   public void d(BlockView paramRs) {
     if (paramRs == this) return;
-    paramRs.setX(getX() - this.j);
+    paramRs.setX(getX() - this.cornerRadius);
     paramRs.setY(getY() - f());
-    this.E = paramRs;
+    this.parentBlock = paramRs;
     paramRs.ia = ((Integer)getTag()).intValue();
   }
   
@@ -208,8 +208,8 @@ public class BlockView extends BaseBlockView {
     if (paramRs == this) return;
     View view = this.pa.findViewWithTag(Integer.valueOf(this.ia));
     if (view != null)
-      ((BlockView)view).E = null; 
-    paramRs.E = this;
+      ((BlockView)view).parentBlock = null; 
+    paramRs.parentBlock = this;
     this.ia = ((Integer)paramRs.getTag()).intValue();
     if (view != null && view != paramRs)
       paramRs.a((BlockView)view); 
@@ -219,8 +219,8 @@ public class BlockView extends BaseBlockView {
     if (paramRs == this) return;
     View view = this.pa.findViewWithTag(Integer.valueOf(this.ja));
     if (view != null)
-      ((BlockView)view).E = null; 
-    paramRs.E = this;
+      ((BlockView)view).parentBlock = null; 
+    paramRs.parentBlock = this;
     this.ja = ((Integer)paramRs.getTag()).intValue();
     if (view != null && view != paramRs)
       paramRs.a((BlockView)view); 
@@ -239,9 +239,9 @@ public class BlockView extends BaseBlockView {
         return; 
       paramRs.qa = "";
       paramRs.ra = "";
-      View view = b(this.la.get(i), this.e);
+      View view = b(this.la.get(i), this.blockColor);
       if (view instanceof BaseBlockView)
-        ((BaseBlockView)view).E = this; 
+        ((BaseBlockView)view).parentBlock = this; 
       this.ka.set(i, view);
       addView(view);
       i();
@@ -288,8 +288,8 @@ public class BlockView extends BaseBlockView {
   }
   
   public BlockBean getBean() {
-    BlockBean blockBean = new BlockBean(getTag().toString(), this.T, this.b, this.c, this.U);
-    blockBean.color = this.e;
+    BlockBean blockBean = new BlockBean(getTag().toString(), this.T, this.blockType, this.componentType, this.U);
+    blockBean.color = this.blockColor;
     for (View view : this.V) {
       if (view instanceof FieldBlockView) {
         blockBean.parameters.add(((FieldBlockView) view).getArgValue().toString());
@@ -312,7 +312,7 @@ public class BlockView extends BaseBlockView {
     BlockView rs = this;
     int limit = 500;
     while (true) {
-      rs = rs.E;
+      rs = rs.parentBlock;
       if (rs != null && --limit > 0) {
         b++;
         continue;
@@ -327,7 +327,7 @@ public class BlockView extends BaseBlockView {
     while (true) {
       int j = i;
       if (i != 0)
-        j = i - this.h; 
+        j = i - this.borderWidth; 
       i = j + rs.getTotalHeight();
       j = rs.ha;
       if (j != -1 && --limit > 0) {
@@ -354,7 +354,7 @@ public class BlockView extends BaseBlockView {
         if (k != -1) {
           BlockView sub1 = (BlockView)this.pa.findViewWithTag(Integer.valueOf(k));
           if (sub1 != null) {
-            j = this.j;
+            j = this.cornerRadius;
             j = Math.max(i, sub1.getWidthSum() + j);
           }
         } 
@@ -366,7 +366,7 @@ public class BlockView extends BaseBlockView {
         if (k != -1) {
           BlockView sub2 = (BlockView)this.pa.findViewWithTag(Integer.valueOf(k));
           if (sub2 != null) {
-            i = this.j;
+            i = this.cornerRadius;
             i = Math.max(j, sub2.getWidthSum() + i);
           }
         } 
@@ -411,8 +411,8 @@ public class BlockView extends BaseBlockView {
     TextView textView = this.ma;
     if (textView != null) {
       textView.bringToFront();
-      this.ma.setX(this.w);
-      this.ma.setY((g() - this.n));
+      this.ma.setX(this.leftIndent);
+      this.ma.setY((g() - this.bottomPadding));
     } 
   }
   
@@ -437,7 +437,7 @@ public class BlockView extends BaseBlockView {
 
   private void kSingle() {
     bringToFront();
-    int xOffset = this.w;
+    int xOffset = this.leftIndent;
     for (int idx = 0; idx < this.ka.size(); idx++) {
       View child = (View) this.ka.get(idx);
       child.bringToFront();
@@ -464,36 +464,36 @@ public class BlockView extends BaseBlockView {
       xOffset += childWidth + this.da;
       if (isRs) {
         BlockView childRs = (BlockView) child;
-        child.setY(getY() + (float) this.u + (float) ((this.na - childRs.na - 1) * this.y));
+        child.setY(getY() + (float) this.topSpacing + (float) ((this.na - childRs.na - 1) * this.shadowOffset));
         childRs.k();
       } else {
-        child.setY((float) (this.u + this.na * this.y));
+        child.setY((float) (this.topSpacing + this.na * this.shadowOffset));
       }
     }
     int w = xOffset;
-    if (this.b.equals("b") || this.b.equals("d") || this.b.equals("s") || this.b.equals("a")) {
+    if (this.blockType.equals("b") || this.blockType.equals("d") || this.blockType.equals("s") || this.blockType.equals("a")) {
       w = Math.max(xOffset, this.W);
     }
     int w2 = w;
-    if (this.b.equals(" ") || this.b.equals("") || this.b.equals("f")) {
+    if (this.blockType.equals(" ") || this.blockType.equals("") || this.blockType.equals("f")) {
       w2 = Math.max(w, this.aa);
     }
     int w3 = w2;
-    if (this.b.equals("c") || this.b.equals("e")) {
+    if (this.blockType.equals("c") || this.blockType.equals("e")) {
       w3 = Math.max(w2, this.ca);
     }
     int w4 = w3;
-    if (this.b.equals("h")) {
+    if (this.blockType.equals("h")) {
       w4 = Math.max(w3, this.ba);
     }
-    a((float) (this.x + w4), (float) (this.u + this.G + this.na * this.y * 2 + this.v), true);
+    a((float) (this.rightIndent + w4), (float) (this.topSpacing + this.textHeight + this.na * this.shadowOffset * 2 + this.bottomSpacing), true);
     if (b()) {
-      int ss1Height = this.i;
+      int ss1Height = this.minHeight;
       int sub1 = this.ia;
       if (sub1 > -1) {
         BlockView sub1Rs = (BlockView) this.pa.findViewWithTag(Integer.valueOf(sub1));
         if (sub1Rs != null) {
-          sub1Rs.setX(getX() + (float) this.j);
+          sub1Rs.setX(getX() + (float) this.cornerRadius);
           sub1Rs.setY(getY() + (float) f());
           sub1Rs.bringToFront();
           sub1Rs.k();
@@ -501,18 +501,18 @@ public class BlockView extends BaseBlockView {
         }
       }
       setSubstack1Height(ss1Height);
-      int ss2Height = this.i;
+      int ss2Height = this.minHeight;
       int sub2 = this.ja;
       if (sub2 > -1) {
         BlockView sub2Rs = (BlockView) this.pa.findViewWithTag(Integer.valueOf(sub2));
         if (sub2Rs != null) {
-          sub2Rs.setX(getX() + (float) this.j);
+          sub2Rs.setX(getX() + (float) this.cornerRadius);
           sub2Rs.setY(getY() + (float) g());
           sub2Rs.bringToFront();
           sub2Rs.k();
           ss2Height = sub2Rs.getHeightSum();
           if (sub2Rs.h().ga) {
-            ss2Height += this.h;
+            ss2Height += this.borderWidth;
           }
         }
       }
@@ -523,13 +523,13 @@ public class BlockView extends BaseBlockView {
   
   public void l() {
     setDrawingCacheEnabled(false);
-    float scale = this.D;
+    float scale = this.density;
     this.W = (int) (this.W * scale);
     this.aa = (int) (this.aa * scale);
     this.ba = (int) (this.ba * scale);
     this.ca = (int) (this.ca * scale);
     this.da = (int) (this.da * scale);
-    String type = this.b;
+    String type = this.blockType;
     byte typeNum = 0;
     if (type.equals("b")) { typeNum = 1; }
     else if (type.equals("s")) { typeNum = 2; }
@@ -557,7 +557,7 @@ public class BlockView extends BaseBlockView {
       default:
         break;
     }
-    int color = BlockColorMapper.a(this.U, this.b);
+    int color = BlockColorMapper.a(this.U, this.blockType);
     if (!this.ea && !this.U.equals("definedFunc") && !this.U.equals("getVar")
         && !this.U.equals("getResStr") && !this.U.equals("getArg") && color != -7711273) {
       this.T = StringResource.b().a(getContext(), this.U);
@@ -584,11 +584,11 @@ public class BlockView extends BaseBlockView {
       if (!this.U.equals("definedFunc") && !this.U.equals("getVar")
           && !this.U.equals("getResStr") && !this.U.equals("getArg")) {
         if (blockColor != 0) {
-          this.e = blockColor;
+          this.blockColor = blockColor;
           return;
         }
         if (paletteColor != 0) {
-          this.e = paletteColor;
+          this.blockColor = paletteColor;
           return;
         }
       }
@@ -598,7 +598,7 @@ public class BlockView extends BaseBlockView {
       }
       setSpec(this.T);
     }
-    this.e = color;
+    this.blockColor = color;
   }
   
   public void m() {
@@ -607,7 +607,7 @@ public class BlockView extends BaseBlockView {
     int count = 0;
     do {
       rs1.n();
-      rs2 = rs1.E;
+      rs2 = rs1.parentBlock;
       count++;
       if (count > 500) {
         android.util.Log.e("BlockView", "m() infinite loop detected! count=" + count + " tag=" + rs1.getTag() + " E.tag=" + (rs2 != null ? rs2.getTag() : "null"));
@@ -618,7 +618,7 @@ public class BlockView extends BaseBlockView {
   }
   
   public void n() {
-    int xOffset = this.w;
+    int xOffset = this.leftIndent;
     for (int idx = 0; idx < this.ka.size(); idx++) {
       View child = (View) this.ka.get(idx);
       int childWidth;
@@ -636,27 +636,27 @@ public class BlockView extends BaseBlockView {
       xOffset += childWidth + this.da;
     }
     int w = xOffset;
-    if (this.b.equals("b") || this.b.equals("d") || this.b.equals("s") || this.b.equals("a")) {
+    if (this.blockType.equals("b") || this.blockType.equals("d") || this.blockType.equals("s") || this.blockType.equals("a")) {
       w = Math.max(xOffset, this.W);
     }
     int w2 = w;
-    if (this.b.equals(" ") || this.b.equals("") || this.b.equals("o")) {
+    if (this.blockType.equals(" ") || this.blockType.equals("") || this.blockType.equals("o")) {
       w2 = Math.max(w, this.aa);
     }
     int w3 = w2;
-    if (this.b.equals("c") || this.b.equals("e")) {
+    if (this.blockType.equals("c") || this.blockType.equals("e")) {
       w3 = Math.max(w2, this.ca);
     }
     int w4 = w3;
-    if (this.b.equals("h")) {
+    if (this.blockType.equals("h")) {
       w4 = Math.max(w3, this.ba);
     }
     int finalW = w4;
     TextView label = this.ma;
     if (label != null) {
-      finalW = Math.max(w4, label.getWidth() + this.w + 2);
+      finalW = Math.max(w4, label.getWidth() + this.leftIndent + 2);
     }
-    a((float) (this.x + finalW), (float) (this.u + this.G + this.na * this.y * 2 + this.v), false);
+    a((float) (this.rightIndent + finalW), (float) (this.topSpacing + this.textHeight + this.na * this.shadowOffset * 2 + this.bottomSpacing), false);
   }
   
   public void o() {
@@ -673,7 +673,7 @@ public class BlockView extends BaseBlockView {
       rs.na = i;
       rs.n();
       if (rs.fa) {
-        rs = rs.E;
+        rs = rs.parentBlock;
         continue;
       } 
       break;
@@ -684,7 +684,7 @@ public class BlockView extends BaseBlockView {
     BlockView rs = this;
     int limit = 200;
     while (true) {
-      BlockView rs1 = rs.E;
+      BlockView rs1 = rs.parentBlock;
       if (rs1 != null && --limit > 0) {
         rs = rs1;
         continue;
@@ -700,16 +700,16 @@ public class BlockView extends BaseBlockView {
   public void setSpec(String paramString) {
     this.T = paramString;
     removeAllViews();
-    a(this.T, this.e);
+    a(this.T, this.blockColor);
     Iterator<View> iterator = this.ka.iterator();
     while (true) {
       if (!iterator.hasNext()) {
         i();
-        if (this.b.equals("e") && this.U.equals("ifElse")) {
+        if (this.blockType.equals("e") && this.U.equals("ifElse")) {
           this.ma = a(StringResource.b().a(getContext(), "else"));
           addView((View)this.ma);
         } 
-        if (this.b.equals("e") && !this.spec2.equals("")) {
+        if (this.blockType.equals("e") && !this.spec2.equals("")) {
           this.ma = a(this.spec2);
           addView((View)this.ma);
         } 

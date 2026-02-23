@@ -21,14 +21,14 @@ public class DefinitionBlockView extends BlockView {
   }
   
   private TextView createLabel(String paramString) {
-    TextView textView = new TextView(((BaseBlockView)this).a);
-    String str1 = ((BaseBlockView)this).c;
+    TextView textView = new TextView(((BaseBlockView)this).context);
+    String str1 = ((BaseBlockView)this).componentType;
     String str2 = paramString;
     if (str1 != null) {
       str2 = paramString;
       if (str1.length() > 0) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(((BaseBlockView)this).c);
+        stringBuilder.append(((BaseBlockView)this).componentType);
         stringBuilder.append(" : ");
         stringBuilder.append(paramString);
         str2 = stringBuilder.toString();
@@ -40,7 +40,7 @@ public class DefinitionBlockView extends BlockView {
     textView.setGravity(16);
     textView.setTextColor(-1);
     textView.setTypeface(null, 1);
-    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-2, ((BaseBlockView)this).G);
+    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-2, ((BaseBlockView)this).textHeight);
     layoutParams.setMargins(0, 0, 0, 0);
     textView.setLayoutParams((ViewGroup.LayoutParams)layoutParams);
     return textView;
@@ -57,20 +57,20 @@ public class DefinitionBlockView extends BlockView {
   }
   
   public void k() {
-    this.ta.setX((float) this.w);
-    this.ta.setY((float) this.u);
+    this.ta.setX((float) this.leftIndent);
+    this.ta.setY((float) this.topSpacing);
     int[] textSize = b(this.ta);
     int textWidth = textSize[0];
     int textHeight = textSize[1];
-    int width = this.w + textWidth + this.x;
-    int yPos = this.u;
-    int height = this.G;
-    int vPad = this.v;
-    String spec = this.c;
+    int width = this.leftIndent + textWidth + this.rightIndent;
+    int yPos = this.topSpacing;
+    int height = this.textHeight;
+    int vPad = this.bottomSpacing;
+    String spec = this.componentType;
     if (spec != null && spec.length() > 0) {
-      width = (int) (width + this.D * 8.0f);
+      width = (int) (width + this.density * 8.0f);
     }
-    String type = this.b;
+    String type = this.blockType;
     if (type.equals("b") || type.equals("d") || type.equals("s") || type.equals("a")) {
       width = Math.max(width, this.W);
     }
@@ -80,7 +80,7 @@ public class DefinitionBlockView extends BlockView {
     if (type.equals("c") || type.equals("e")) {
       width = Math.max(width, this.ca);
     }
-    int totalHeight = Math.max(yPos + height + vPad, this.u + textHeight + this.v);
+    int totalHeight = Math.max(yPos + height + vPad, this.topSpacing + textHeight + this.bottomSpacing);
     a((float) width, (float) totalHeight, true);
   }
   
@@ -88,13 +88,13 @@ public class DefinitionBlockView extends BlockView {
     byte b = 0;
     setDrawingCacheEnabled(false);
     float f1 = this.W;
-    float f2 = ((BaseBlockView)this).D;
+    float f2 = ((BaseBlockView)this).density;
     this.W = (int)(f1 * f2);
     this.aa = (int)(this.aa * f2);
     this.ba = (int)(this.ba * f2);
     this.ca = (int)(this.ca * f2);
     this.da = (int)(this.da * f2);
-    String str = ((BaseBlockView)this).b;
+    String str = ((BaseBlockView)this).blockType;
     int i = str.hashCode();
     if (i != 32) {
       if (i != 104) {
@@ -182,7 +182,7 @@ public class DefinitionBlockView extends BlockView {
       } 
       this.ta = createLabel(this.T);
       addView((View)this.ta);
-      ((BaseBlockView)this).e = getResources().getColor(pro.sketchware.R.color.scolor_red_02);
+      ((BaseBlockView)this).blockColor = getResources().getColor(pro.sketchware.R.color.scolor_red_02);
       k();
       return;
     } 
@@ -205,7 +205,7 @@ public class DefinitionBlockView extends BlockView {
     } 
     this.ta = createLabel(this.T);
     addView((View)this.ta);
-    ((BaseBlockView)this).e = getResources().getColor(pro.sketchware.R.color.scolor_red_02);
+    ((BaseBlockView)this).blockColor = getResources().getColor(pro.sketchware.R.color.scolor_red_02);
     k();
   }
 }

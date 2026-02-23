@@ -75,7 +75,7 @@ public class ViewDummy extends RelativeLayout {
     }
 
     public void a(BlockView rs) {
-        switch (rs.b) {
+        switch (rs.blockType) {
             case "b":
                 img_dummy.setImageResource(R.drawable.selected_block_boolean);
                 break;

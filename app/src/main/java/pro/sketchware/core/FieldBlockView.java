@@ -33,46 +33,46 @@ public class FieldBlockView extends BaseBlockView {
   }
   
   private void initSs(Context paramContext) {
-    String type = this.b;
+    String type = this.blockType;
     switch (type) {
       case "b":
-        this.e = 1342177280;
+        this.blockColor = 1342177280;
         this.aa = 25;
         break;
       case "d":
-        this.e = -657931;
+        this.blockColor = -657931;
         break;
       case "n":
-        this.e = -3155748;
+        this.blockColor = -3155748;
         break;
       case "s":
-        this.e = -1;
+        this.blockColor = -1;
         break;
       case "m":
-        this.e = 805306368;
+        this.blockColor = 805306368;
         break;
     }
-    float scale = this.D;
+    float scale = this.density;
     this.aa = (int) (this.aa * scale);
     this.ba = (int) (this.ba * scale);
     this.ca = (int) (this.ca * scale);
     this.da = this.ca;
-    if (this.b.equals("m") && a(this.c).length() >= 0) {
-      this.W = b(this.c);
+    if (this.blockType.equals("m") && a(this.componentType).length() >= 0) {
+      this.W = b(this.componentType);
       addView(this.W);
       this.da = getDropdownTypeWidth();
     }
-    if (this.b.equals("m") || this.b.equals("d") || this.b.equals("n") || this.b.equals("s")) {
+    if (this.blockType.equals("m") || this.blockType.equals("d") || this.blockType.equals("n") || this.blockType.equals("s")) {
       this.V = c("");
       addView(this.V);
     }
-    a((float) (this.aa + this.da), (float) this.G, false);
+    a((float) (this.aa + this.da), (float) this.textHeight, false);
   }
   
   private int getDropdownTypeWidth() {
     Rect rect = new Rect();
     TextPaint textPaint = this.W.getPaint();
-    String str = a(this.c);
+    String str = a(this.componentType);
     textPaint.getTextBounds(str, 0, str.length(), rect);
     return rect.width() + this.ca * 2;
   }
@@ -101,7 +101,7 @@ public class FieldBlockView extends BaseBlockView {
     textView.setText(a(paramString));
     textView.setTextSize(8.0F);
     textView.setTypeface(null, 1);
-    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-2, this.G);
+    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-2, this.textHeight);
     int i = this.ca;
     layoutParams.setMargins(i, 0, i, 0);
     textView.setPadding(0, 0, 0, 0);
@@ -117,14 +117,14 @@ public class FieldBlockView extends BaseBlockView {
     TextView textView = new TextView(this.T);
     textView.setText(paramString);
     textView.setTextSize(9.0F);
-    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(this.aa, this.G);
+    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(this.aa, this.textHeight);
     layoutParams.setMargins(this.da, 0, this.ea, 0);
     textView.setPadding(0, 0, 0, 0);
     textView.setLayoutParams((ViewGroup.LayoutParams)layoutParams);
     textView.setBackgroundColor(0);
     textView.setSingleLine();
     textView.setGravity(17);
-    if (!this.b.equals("m")) {
+    if (!this.blockType.equals("m")) {
       textView.setTextColor(-268435456);
     } else {
       textView.setTextColor(-251658241);
@@ -133,20 +133,20 @@ public class FieldBlockView extends BaseBlockView {
   }
   
   public Object getArgValue() {
-    return (this.b.equals("d") || this.b.equals("m") || this.b.equals("s")) ? this.V.getText() : this.U;
+    return (this.blockType.equals("d") || this.blockType.equals("m") || this.blockType.equals("s")) ? this.V.getText() : this.U;
   }
   
   public String getMenuName() {
-    return this.c;
+    return this.componentType;
   }
   
   public void setArgValue(Object paramObject) {
     this.U = paramObject;
-    if (this.b.equals("d") || this.b.equals("m") || this.b.equals("s")) {
+    if (this.blockType.equals("d") || this.blockType.equals("m") || this.blockType.equals("s")) {
       this.V.setText(paramObject.toString());
       int i = Math.max(this.aa, getLabelWidth());
       (this.V.getLayoutParams()).width = i;
-      a((i + this.da), this.G, true);
+      a((i + this.da), this.textHeight, true);
     } 
   }
 }

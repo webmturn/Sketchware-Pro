@@ -681,7 +681,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         y = -1;
         x = 0;
         int[] iArr = new int[2];
-        BlockView rs2 = rs.E;
+        BlockView rs2 = rs.parentBlock;
         if (rs2 != null) {
             w = rs2;
             if (savedBlockBean.isEmpty()) {
@@ -714,12 +714,12 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public void a(FieldBlockView ss, Object obj) {
-        BlockBean clone = ss.E.getBean().clone();
+        BlockBean clone = ss.parentBlock.getBean().clone();
         ss.setArgValue(obj);
-        ss.E.m();
-        ss.E.p().k();
-        ss.E.pa.b();
-        BlockHistoryManager.getInstance(scId).recordUpdate(s(), clone, ss.E.getBean().clone());
+        ss.parentBlock.m();
+        ss.parentBlock.p().k();
+        ss.parentBlock.pa.b();
+        BlockHistoryManager.getInstance(scId).recordUpdate(s(), clone, ss.parentBlock.getBean().clone());
         refreshOptionsMenu();
     }
 
@@ -860,10 +860,10 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                             }
 
                             if (!parameter.isEmpty()) {
-                                if (ss.b.equals("m")) {
+                                if (ss.blockType.equals("m")) {
                                     ProjectDataStore ProjectDataStore = ProjectDataManager.getProjectDataManager(scId);
 
-                                    switch (ss.c) {
+                                    switch (ss.componentType) {
                                         case "varInt":
                                             ProjectDataStore.f(javaName, ExtraMenuBean.VARIABLE_TYPE_NUMBER, parameter);
                                             break;
@@ -1128,7 +1128,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                                             break;
 
                                         default:
-                                            extraPaletteBlock.e(ss.c, parameter);
+                                            extraPaletteBlock.e(ss.componentType, parameter);
                                     }
                                 }
                             }
@@ -2192,7 +2192,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                         if (x == 5) {
                             w.a((BaseBlockView) w.V.get(y), rs2);
                         }
-                        rs2.E = w;
+                        rs2.parentBlock = w;
                         w.p().k();
                     } else {
                         rs2.p().k();
@@ -2259,7 +2259,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     if (x == 5) {
                         w.a((BaseBlockView) w.V.get(y), rs7);
                     }
-                    rs7.E = w;
+                    rs7.parentBlock = w;
                     w.p().k();
                 } else {
                     rs7.p().k();
@@ -2287,7 +2287,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     if (x == 5) {
                         w.a((BaseBlockView) w.V.get(y), rs10);
                     }
-                    rs10.E = w;
+                    rs10.parentBlock = w;
                     w.p().k();
                 } else {
                     // somehow the blocks is moving to the last position
