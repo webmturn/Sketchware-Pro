@@ -22,11 +22,11 @@ public class KotlinCompilerUtil {
      * or not.
      */
     public static boolean areAnyKtFilesPresent(ProjectBuilder bui) {
-        return areAnyKtFilesPresent(bui.ProjectFilePaths);
+        return areAnyKtFilesPresent(bui.projectFilePaths);
     }
 
-    public static boolean areAnyKtFilesPresent(ProjectFilePaths ProjectFilePaths) {
-        return getFilesToCompile(ProjectFilePaths).stream()
+    public static boolean areAnyKtFilesPresent(ProjectFilePaths projectFilePaths) {
+        return getFilesToCompile(projectFilePaths).stream()
                 .anyMatch(it -> it.getName().endsWith(".kt"));
     }
 

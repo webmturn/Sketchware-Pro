@@ -644,16 +644,16 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
                     }
 
                     publishProgress(Helper.getResString(R.string.build_progress_aligning_apk));
-                    builder.runZipalign(builder.ProjectFilePaths.unsignedUnalignedApkPath, builder.ProjectFilePaths.unsignedAlignedApkPath);
+                    builder.runZipalign(builder.projectFilePaths.unsignedUnalignedApkPath, builder.projectFilePaths.unsignedAlignedApkPath);
                     if (canceled) {
                         cancel(true);
                         return;
                     }
 
                     publishProgress(Helper.getResString(R.string.build_progress_signing_apk));
-                    String outputLocation = getCorrectResultFilename(builder.ProjectFilePaths.releaseApkPath);
+                    String outputLocation = getCorrectResultFilename(builder.projectFilePaths.releaseApkPath);
                     if (signWithTestkey) {
-                        TestkeySignBridge.signWithTestkey(builder.ProjectFilePaths.unsignedAlignedApkPath, outputLocation);
+                        TestkeySignBridge.signWithTestkey(builder.projectFilePaths.unsignedAlignedApkPath, outputLocation);
                     } else if (isResultJarSigningEnabled()) {
                         Security.addProvider(new BouncyCastleProvider());
                         CustomKeySigner.signZip(
@@ -663,11 +663,11 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
                                 signingAliasName,
                                 signingAliasPassword,
                                 signingAlgorithm,
-                                builder.ProjectFilePaths.unsignedAlignedApkPath,
+                                builder.projectFilePaths.unsignedAlignedApkPath,
                                 outputLocation
                         );
                     } else {
-                        FileUtil.copyFile(builder.ProjectFilePaths.unsignedAlignedApkPath, outputLocation);
+                        FileUtil.copyFile(builder.projectFilePaths.unsignedAlignedApkPath, outputLocation);
                     }
                 }
             } catch (Throwable throwable) {

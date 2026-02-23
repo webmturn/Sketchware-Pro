@@ -1245,9 +1245,9 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                     dialog.setPositiveButton(R.string.common_word_dismiss, null);
                     dialog.show();
                 });
-            } catch (SimpleException SimpleException) {
+            } catch (SimpleException simpleException) {
                 isBuildFinished = true;
-                activity.indicateCompileErrorOccurred(SimpleException.getMessage());
+                activity.indicateCompileErrorOccurred(simpleException.getMessage());
             } catch (Throwable tr) {
                 isBuildFinished = true;
                 LogUtil.e("DesignActivity$BuildTask", "Failed to build project", tr);

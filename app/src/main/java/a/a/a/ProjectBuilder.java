@@ -89,7 +89,7 @@ public class ProjectBuilder {
     private final File aapt2Binary;
     private final Context context;
     public BuildSettings build_settings;
-    public ProjectFilePaths ProjectFilePaths;
+    public ProjectFilePaths projectFilePaths;
     public FilePathUtil fpu;
     public ManageLocalLibrary mll;
     public BuiltInLibraryManager builtInLibraryManager;
@@ -131,7 +131,7 @@ public class ProjectBuilder {
         aapt2Binary = new File(context.getCacheDir(), "aapt2");
         build_settings = new BuildSettings(yqVar.sc_id);
         this.context = context;
-        ProjectFilePaths = yqVar;
+        projectFilePaths = yqVar;
         fpu = new FilePathUtil();
         mll = new ManageLocalLibrary(yqVar.sc_id);
         builtInLibraryManager = new BuiltInLibraryManager(yqVar.sc_id);
@@ -198,14 +198,14 @@ public class ProjectBuilder {
                 .equals(ProjectSettings.SETTING_GENERIC_VALUE_FALSE)) {
             return;
         }
-        File outputDirectory = new File(ProjectFilePaths.javaFilesPath + File.separator + ProjectFilePaths.packageName.replace(".", File.separator) + File.separator + "databinding");
+        File outputDirectory = new File(projectFilePaths.javaFilesPath + File.separator + projectFilePaths.packageName.replace(".", File.separator) + File.separator + "databinding");
         outputDirectory.mkdirs();
 
-        List<File> layouts = FileUtil.listFiles(ProjectFilePaths.layoutFilesPath, "xml").stream()
+        List<File> layouts = FileUtil.listFiles(projectFilePaths.layoutFilesPath, "xml").stream()
                 .map(File::new)
                 .collect(Collectors.toList());
 
-        ViewBindingBuilder builder = new ViewBindingBuilder(layouts, outputDirectory, ProjectFilePaths.packageName);
+        ViewBindingBuilder builder = new ViewBindingBuilder(layouts, outputDirectory, projectFilePaths.packageName);
 
         builder.generateBindings();
     }
@@ -227,7 +227,7 @@ public class ProjectBuilder {
      * @throws Exception Thrown if the compiler had any problems compiling
      */
     public void createDexFilesFromClasses() throws Exception {
-        FileUtil.makeDir(ProjectFilePaths.binDirectoryPath + File.separator + "dex");
+        FileUtil.makeDir(projectFilePaths.binDirectoryPath + File.separator + "dex");
         if (proguard.isShrinkingEnabled() && proguard.isR8Enabled()) return;
 
         if (isD8Enabled()) {
@@ -245,8 +245,8 @@ public class ProjectBuilder {
                     "--debug",
                     "--verbose",
                     "--multi-dex",
-                    "--output=" + ProjectFilePaths.binDirectoryPath + File.separator + "dex",
-                    proguard.isShrinkingEnabled() ? ProjectFilePaths.proguardClassesPath : ProjectFilePaths.compiledClassesPath
+                    "--output=" + projectFilePaths.binDirectoryPath + File.separator + "dex",
+                    proguard.isShrinkingEnabled() ? projectFilePaths.proguardClassesPath : projectFilePaths.compiledClassesPath
             );
 
             try {
@@ -274,7 +274,7 @@ public class ProjectBuilder {
          * Add ProjectFilePaths#u (.sketchware/mysc/xxx/bin/classes) if it exists
          * since there might be compiled Kotlin files for ecj to use classpath as.
          */
-        KotlinCompilerBridge.maybeAddKotlinFilesToClasspath(classpath, ProjectFilePaths);
+        KotlinCompilerBridge.maybeAddKotlinFilesToClasspath(classpath, projectFilePaths);
 
         /* Add android.jar */
         classpath.append(androidJarPath);
@@ -314,7 +314,7 @@ public class ProjectBuilder {
         }
 
         /* Add JARs from project's classpath */
-        String path = FileUtil.getExternalStorageDir() + "/.sketchware/data/" + ProjectFilePaths.sc_id + "/files/classpath/";
+        String path = FileUtil.getExternalStorageDir() + "/.sketchware/data/" + projectFilePaths.sc_id + "/files/classpath/";
         ArrayList<String> jars = FileUtil.listFiles(path, "jar");
         classpath.append(":").append(TextUtils.join(":", jars));
 
@@ -350,7 +350,7 @@ public class ProjectBuilder {
                 }
             }
 
-            if (!classpathPart.equals(ProjectFilePaths.compiledClassesPath)) {
+            if (!classpathPart.equals(projectFilePaths.compiledClassesPath)) {
                 classpath.append(classpathPart).append(':');
             }
         }
@@ -552,27 +552,27 @@ public class ProjectBuilder {
                 args.add("-deprecation");
             }
             args.add("-d");
-            args.add(ProjectFilePaths.compiledClassesPath);
+            args.add(projectFilePaths.compiledClassesPath);
             args.add("-cp");
             args.add(getClasspath());
             args.add("-proc:none");
-            args.add(ProjectFilePaths.javaFilesPath);
-            args.add(ProjectFilePaths.rJavaDirectoryPath);
-            String pathJava = fpu.getPathJava(ProjectFilePaths.sc_id);
+            args.add(projectFilePaths.javaFilesPath);
+            args.add(projectFilePaths.rJavaDirectoryPath);
+            String pathJava = fpu.getPathJava(projectFilePaths.sc_id);
             if (FileUtil.isExistFile(pathJava)) {
                 args.add(pathJava);
             }
-            String pathBroadcast = fpu.getPathBroadcast(ProjectFilePaths.sc_id);
+            String pathBroadcast = fpu.getPathBroadcast(projectFilePaths.sc_id);
             if (FileUtil.isExistFile(pathBroadcast)) {
                 args.add(pathBroadcast);
             }
-            String pathService = fpu.getPathService(ProjectFilePaths.sc_id);
+            String pathService = fpu.getPathService(projectFilePaths.sc_id);
             if (FileUtil.isExistFile(pathService)) {
                 args.add(pathService);
             }
 
             /* Avoid "package ;" line in that file causing issues while compiling */
-            File rJavaFileWithoutPackage = new File(ProjectFilePaths.rJavaDirectoryPath, "R.java");
+            File rJavaFileWithoutPackage = new File(projectFilePaths.rJavaDirectoryPath, "R.java");
             if (rJavaFileWithoutPackage.exists() && !rJavaFileWithoutPackage.delete()) {
                 LogUtil.w(TAG, "Failed to delete file " + rJavaFileWithoutPackage.getAbsolutePath());
             }
@@ -594,9 +594,9 @@ public class ProjectBuilder {
     }
 
     public void buildApk() throws SketchwareException {
-        String firstDexPath = dexesToAddButNotMerge.isEmpty() ? ProjectFilePaths.classesDexPath : dexesToAddButNotMerge.remove(0).getAbsolutePath();
+        String firstDexPath = dexesToAddButNotMerge.isEmpty() ? projectFilePaths.classesDexPath : dexesToAddButNotMerge.remove(0).getAbsolutePath();
         try {
-            ApkBuilder apkBuilder = new ApkBuilder(new File(ProjectFilePaths.unsignedUnalignedApkPath), new File(ProjectFilePaths.resourcesApkPath), new File(firstDexPath), null, null, System.out);
+            ApkBuilder apkBuilder = new ApkBuilder(new File(projectFilePaths.unsignedUnalignedApkPath), new File(projectFilePaths.resourcesApkPath), new File(firstDexPath), null, null, System.out);
 
             for (BuiltInLibrary library : builtInLibraryManager.getLibraries()) {
                 apkBuilder.addResourcesFromJar(BuiltInLibraries.getLibraryClassesJarPath(library.getName()));
@@ -609,7 +609,7 @@ public class ProjectBuilder {
             }
 
             /* Add project's native libraries */
-            File nativeLibrariesDirectory = new File(fpu.getPathNativelibs(ProjectFilePaths.sc_id));
+            File nativeLibrariesDirectory = new File(fpu.getPathNativelibs(projectFilePaths.sc_id));
             if (nativeLibrariesDirectory.exists()) {
                 apkBuilder.addNativeLibraries(nativeLibrariesDirectory);
             }
@@ -620,7 +620,7 @@ public class ProjectBuilder {
             }
 
             if (dexesToAddButNotMerge.isEmpty()) {
-                List<String> dexFiles = FileUtil.listFiles(ProjectFilePaths.binDirectoryPath, "dex");
+                List<String> dexFiles = FileUtil.listFiles(projectFilePaths.binDirectoryPath, "dex");
                 for (String dexFile : dexFiles) {
                     if (!Uri.fromFile(new File(dexFile)).getLastPathSegment().equals("classes.dex")) {
                         apkBuilder.addFile(new File(dexFile), Uri.parse(dexFile).getLastPathSegment());
@@ -717,14 +717,14 @@ public class ProjectBuilder {
             }
         }
 
-        for (String file : FileUtil.listFiles(ProjectFilePaths.binDirectoryPath + File.separator + "dex", "dex")) {
+        for (String file : FileUtil.listFiles(projectFilePaths.binDirectoryPath + File.separator + "dex", "dex")) {
             dexes.add(new File(file));
         }
 
         LogUtil.d(TAG, "Will merge these " + dexes.size() + " DEX files to classes.dex: " + dexes);
 
-        if (settings.getMinSdkVersion() < 21 || !ProjectFilePaths.buildConfig.isDebugBuild) {
-            dexLibraries(new File(ProjectFilePaths.binDirectoryPath), dexes);
+        if (settings.getMinSdkVersion() < 21 || !projectFilePaths.buildConfig.isDebugBuild) {
+            dexLibraries(new File(projectFilePaths.binDirectoryPath), dexes);
             LogUtil.d(TAG, "Merging DEX files took " + (System.currentTimeMillis() - savedTimeMillis) + " ms");
         } else {
             dexesToAddButNotMerge = dexes;
@@ -760,42 +760,42 @@ public class ProjectBuilder {
      * and extracts them, if needed. Also initializes used built-in libraries.
      */
     public void buildBuiltInLibraryInformation() {
-        if (ProjectFilePaths.buildConfig.g) {
+        if (projectFilePaths.buildConfig.g) {
             builtInLibraryManager.addLibrary(BuiltInLibraries.ANDROIDX_APPCOMPAT);
             builtInLibraryManager.addLibrary(BuiltInLibraries.ANDROIDX_COORDINATORLAYOUT);
             builtInLibraryManager.addLibrary(BuiltInLibraries.MATERIAL);
         }
-        if (ProjectFilePaths.buildConfig.isFirebaseEnabled) {
+        if (projectFilePaths.buildConfig.isFirebaseEnabled) {
             builtInLibraryManager.addLibrary(BuiltInLibraries.FIREBASE_COMMON);
         }
-        if (ProjectFilePaths.buildConfig.isFirebaseAuthUsed) {
+        if (projectFilePaths.buildConfig.isFirebaseAuthUsed) {
             builtInLibraryManager.addLibrary(BuiltInLibraries.FIREBASE_AUTH);
         }
-        if (ProjectFilePaths.buildConfig.isFirebaseDatabaseUsed) {
+        if (projectFilePaths.buildConfig.isFirebaseDatabaseUsed) {
             builtInLibraryManager.addLibrary(BuiltInLibraries.FIREBASE_DATABASE);
         }
-        if (ProjectFilePaths.buildConfig.isFirebaseStorageUsed) {
+        if (projectFilePaths.buildConfig.isFirebaseStorageUsed) {
             builtInLibraryManager.addLibrary(BuiltInLibraries.FIREBASE_STORAGE);
         }
-        if (ProjectFilePaths.buildConfig.isMapUsed) {
+        if (projectFilePaths.buildConfig.isMapUsed) {
             builtInLibraryManager.addLibrary(BuiltInLibraries.PLAY_SERVICES_MAPS);
         }
-        if (ProjectFilePaths.buildConfig.isAdMobEnabled) {
+        if (projectFilePaths.buildConfig.isAdMobEnabled) {
             builtInLibraryManager.addLibrary(BuiltInLibraries.PLAY_SERVICES_ADS);
         }
-        if (ProjectFilePaths.buildConfig.isGsonUsed) {
+        if (projectFilePaths.buildConfig.isGsonUsed) {
             builtInLibraryManager.addLibrary(BuiltInLibraries.GSON);
         }
-        if (ProjectFilePaths.buildConfig.isGlideUsed) {
+        if (projectFilePaths.buildConfig.isGlideUsed) {
             builtInLibraryManager.addLibrary(BuiltInLibraries.GLIDE);
         }
-        if (ProjectFilePaths.buildConfig.isHttp3Used) {
+        if (projectFilePaths.buildConfig.isHttp3Used) {
             builtInLibraryManager.addLibrary(BuiltInLibraries.OKHTTP_ANDROID);
         }
 
         KotlinCompilerBridge.maybeAddKotlinBuiltInLibraryDependenciesIfPossible(this, builtInLibraryManager);
 
-        ExtLibSelected.addUsedDependencies(ProjectFilePaths.buildConfig.x, builtInLibraryManager);
+        ExtLibSelected.addUsedDependencies(projectFilePaths.buildConfig.x, builtInLibraryManager);
     }
 
     public BuiltInLibraryManager getBuiltInLibraryManager() {
@@ -808,7 +808,7 @@ public class ProjectBuilder {
      * This method uses apksigner, but kellinwood's zipsigner as fallback.
      */
     public void signDebugApk() throws GeneralSecurityException, IOException, ClassNotFoundException, IllegalAccessException, InstantiationException {
-        TestkeySignBridge.signWithTestkey(ProjectFilePaths.unsignedUnalignedApkPath, ProjectFilePaths.finalToInstallApkPath);
+        TestkeySignBridge.signWithTestkey(projectFilePaths.unsignedUnalignedApkPath, projectFilePaths.finalToInstallApkPath);
     }
 
     private void mergeDexes(File target, List<Dex> dexes) throws IOException {
@@ -837,9 +837,9 @@ public class ProjectBuilder {
      * @param args List of arguments to add R.java rules to.
      */
     private void proguardAddRjavaRules(List<String> args) {
-        FileUtil.writeFile(ProjectFilePaths.proguardAutoGeneratedExclusions, getRJavaRules());
+        FileUtil.writeFile(projectFilePaths.proguardAutoGeneratedExclusions, getRJavaRules());
         args.add("-include");
-        args.add(ProjectFilePaths.proguardAutoGeneratedExclusions);
+        args.add(projectFilePaths.proguardAutoGeneratedExclusions);
     }
 
     private String getRJavaRules() {
@@ -862,7 +862,7 @@ public class ProjectBuilder {
             }
         }
         sb.append("\n");
-        sb.append("-keep class ").append(ProjectFilePaths.packageName).append(".R { *; }").append('\n');
+        sb.append("-keep class ").append(projectFilePaths.packageName).append(".R { *; }").append('\n');
         return sb.toString();
     }
 
@@ -871,7 +871,7 @@ public class ProjectBuilder {
 
         ArrayList<String> config = new ArrayList<>();
         config.add(ProguardHandler.ANDROID_PROGUARD_RULES_PATH);
-        config.add(ProjectFilePaths.proguardAaptRules);
+        config.add(projectFilePaths.proguardAaptRules);
         config.add(proguard.getCustomProguardRules());
         var rules = new ArrayList<>(Arrays.asList(getRJavaRules().split("\n")));
         for (BuiltInLibrary library : builtInLibraryManager.getLibraries()) {
@@ -882,7 +882,7 @@ public class ProjectBuilder {
         }
         config.addAll(mll.getPgRules());
         ArrayList<String> jars = new ArrayList<>();
-        jars.add(ProjectFilePaths.compiledClassesPath + ".jar");
+        jars.add(projectFilePaths.compiledClassesPath + ".jar");
 
         for (HashMap<String, Object> hashMap : mll.list) {
             String obj = hashMap.get("name").toString();
@@ -891,8 +891,8 @@ public class ProjectBuilder {
             }
         }
         try {
-            JarBuilder.INSTANCE.generateJar(new File(ProjectFilePaths.compiledClassesPath));
-            new R8Compiler(rules, config.toArray(new String[0]), getProguardClasspath().split(":"), jars.toArray(new String[0]), settings.getMinSdkVersion(), ProjectFilePaths).compile();
+            JarBuilder.INSTANCE.generateJar(new File(projectFilePaths.compiledClassesPath));
+            new R8Compiler(rules, config.toArray(new String[0]), getProguardClasspath().split(":"), jars.toArray(new String[0]), settings.getMinSdkVersion(), projectFilePaths).compile();
         } catch (Exception e) {
             throw new IOException(e);
         }
@@ -910,7 +910,7 @@ public class ProjectBuilder {
 
         /* Include ProGuard rules generated by AAPT2 */
         args.add("-include");
-        args.add(ProjectFilePaths.proguardAaptRules);
+        args.add(projectFilePaths.proguardAaptRules);
 
         /* Include custom ProGuard rules */
         args.add("-include");
@@ -927,7 +927,7 @@ public class ProjectBuilder {
 
         /* Include compiled Java classes (?) IT SAYS -in*jar*s, so why include .class es? */
         args.add("-injars");
-        args.add(ProjectFilePaths.compiledClassesPath);
+        args.add(projectFilePaths.compiledClassesPath);
 
         for (HashMap<String, Object> hashMap : mll.list) {
             String obj = hashMap.get("name").toString();
@@ -939,14 +939,14 @@ public class ProjectBuilder {
         args.add("-libraryjars");
         args.add(getProguardClasspath());
         args.add("-outjars");
-        args.add(ProjectFilePaths.proguardClassesPath);
+        args.add(projectFilePaths.proguardClassesPath);
         if (proguard.isDebugFilesEnabled()) {
             args.add("-printseeds");
-            args.add(ProjectFilePaths.proguardSeedsPath);
+            args.add(projectFilePaths.proguardSeedsPath);
             args.add("-printusage");
-            args.add(ProjectFilePaths.proguardUsagePath);
+            args.add(projectFilePaths.proguardUsagePath);
             args.add("-printmapping");
-            args.add(ProjectFilePaths.proguardMappingPath);
+            args.add(projectFilePaths.proguardMappingPath);
         }
         LogUtil.d(TAG, "About to run ProGuard with these arguments: " + args);
 
@@ -974,7 +974,7 @@ public class ProjectBuilder {
 
     public void runStringfog() {
         try {
-            StringFogMappingPrinter stringFogMappingPrinter = new StringFogMappingPrinter(new File(ProjectFilePaths.binDirectoryPath,
+            StringFogMappingPrinter stringFogMappingPrinter = new StringFogMappingPrinter(new File(projectFilePaths.binDirectoryPath,
                     "stringFogMapping.txt"));
             StringFogClassInjector stringFogClassInjector = new StringFogClassInjector(new String[0],
                     "UTF-8",
@@ -983,8 +983,8 @@ public class ProjectBuilder {
                     stringFogMappingPrinter);
             stringFogMappingPrinter.startMappingOutput();
             stringFogMappingPrinter.ouputInfo("UTF-8", "com.github.megatronking.stringfog.xor.StringFogImpl");
-            stringFogClassInjector.doFog2ClassInDir(new File(ProjectFilePaths.compiledClassesPath));
-            ZipUtil.extractAssetZip(context, "stringfog/stringfog.zip", ProjectFilePaths.compiledClassesPath);
+            stringFogClassInjector.doFog2ClassInDir(new File(projectFilePaths.compiledClassesPath));
+            ZipUtil.extractAssetZip(context, "stringfog/stringfog.zip", projectFilePaths.compiledClassesPath);
         } catch (Exception e) {
             LogUtil.e("StringFog", "Failed to run StringFog", e);
         }

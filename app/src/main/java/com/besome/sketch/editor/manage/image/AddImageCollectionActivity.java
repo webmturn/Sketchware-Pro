@@ -323,8 +323,8 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
             } catch (Exception e) {
                 // the bytecode's lying
                 // noinspection ConstantValue
-                if (e instanceof CompileException CompileException) {
-                    var messageId = switch (CompileException.getMessage()) {
+                if (e instanceof CompileException compileException) {
+                    var messageId = switch (compileException.getMessage()) {
                         case "fail_to_copy" -> R.string.collection_failed_to_copy;
                         case "file_no_exist" -> R.string.collection_no_exist_file;
                         case "duplicate_name" -> R.string.collection_duplicated_name;
@@ -332,7 +332,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
                     };
                     var message = messageId != 0 ? activity.getString(messageId) : "";
 
-                    var a = CompileException.a();
+                    var a = compileException.a();
                     if (a != null && !a.isEmpty()) {
                         var names = "";
                         for (String name : a) {

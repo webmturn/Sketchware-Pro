@@ -50,11 +50,11 @@ public class LayoutGenerator {
     private XmlBuilder collapsingToolbarLayout = null;
     private boolean excludeAppCompat;
 
-    public LayoutGenerator(BuildConfig BuildConfig, ProjectFileBean projectFileBean) {
-        buildConfig = BuildConfig;
+    public LayoutGenerator(BuildConfig buildConfig, ProjectFileBean projectFileBean) {
+        this.buildConfig = buildConfig;
         projectFile = projectFileBean;
-        rootManager = new InjectRootLayoutManager(BuildConfig.sc_id);
-        aci = new AppCompatInjection(BuildConfig, projectFileBean);
+        rootManager = new InjectRootLayoutManager(buildConfig.sc_id);
+        aci = new AppCompatInjection(buildConfig, projectFileBean);
     }
 
     public static String formatColor(int color) {

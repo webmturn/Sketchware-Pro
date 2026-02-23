@@ -65,7 +65,7 @@ public class ColorPickerDialog extends PopupWindow {
     private DB colorPref;
     private boolean hasMaterialColors;
     private Material3LibraryManager material3LibraryManager;
-    private ProjectFilePaths ProjectFilePaths;
+    private ProjectFilePaths projectFilePaths;
     private ColorsEditorManager colorsEditorManager;
 
     public ColorPickerDialog(Activity activity, int var3, boolean isTransparentColor, boolean isNoneColor) {
@@ -78,8 +78,8 @@ public class ColorPickerDialog extends PopupWindow {
         super(activity);
         binding = ColorPickerBinding.inflate(activity.getLayoutInflater());
         sc_id = scId;
-        ProjectFilePaths = new ProjectFilePaths(activity, sc_id);
-        ProjectFilePaths.initializeMetadata(ProjectDataManager.getLibraryManager(sc_id), ProjectDataManager.getFileManager(sc_id), ProjectDataManager.getProjectDataManager(sc_id), a.a.a.ProjectFilePaths.ExportType.SOURCE_CODE_VIEWING);
+        projectFilePaths = new ProjectFilePaths(activity, sc_id);
+        projectFilePaths.initializeMetadata(ProjectDataManager.getLibraryManager(sc_id), ProjectDataManager.getFileManager(sc_id), ProjectDataManager.getProjectDataManager(sc_id), a.a.a.ProjectFilePaths.ExportType.SOURCE_CODE_VIEWING);
         material3LibraryManager = new Material3LibraryManager(scId);
         colorsEditorManager = new ColorsEditorManager();
         hasMaterialColors = true;
@@ -567,14 +567,14 @@ public class ColorPickerDialog extends PopupWindow {
     }
 
     private void initializeResColors() {
-        if (sc_id == null || ProjectFilePaths == null)
+        if (sc_id == null || projectFilePaths == null)
             return;
         String fileNightPath = SketchwarePaths.getDataPath(sc_id) + "/files/resource/values-night/colors.xml";
 
         ArrayList<ColorModel> colorList = new ArrayList<>();
         ArrayList<ColorModel> colorNightList = new ArrayList<>();
 
-        colorsEditorManager.parseColorsXML(colorList, ProjectFilePaths.getXMLColor());
+        colorsEditorManager.parseColorsXML(colorList, projectFilePaths.getXMLColor());
         colorsEditorManager.parseColorsXML(colorNightList, FileUtil.readFileIfExist(fileNightPath));
 
         HashMap<String, String> nightColorsMap = new HashMap<>();

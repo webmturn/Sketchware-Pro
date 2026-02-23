@@ -17,7 +17,7 @@ import mod.pranav.viewbinding.ViewBindingBuilder;
 public class EventCodeGenerator {
 
     private final ProjectFileBean projectFileBean;
-    private final BuildConfig BuildConfig;
+    private final BuildConfig buildConfig;
     private final ArrayList<Event> viewEvents = new ArrayList<>();
     private final ArrayList<Event> componentEvents = new ArrayList<>();
     private final ArrayList<ActivityEvent> activityEvents = new ArrayList<>();
@@ -31,7 +31,7 @@ public class EventCodeGenerator {
     public String l = "";
 
     public EventCodeGenerator(BuildConfig logicHolder, ProjectFileBean projectFileBean, eC eC) {
-        BuildConfig = logicHolder;
+        buildConfig = logicHolder;
         this.projectFileBean = projectFileBean;
 
         ProjectSettings projectSettings = new ProjectSettings(logicHolder.sc_id);
@@ -135,7 +135,7 @@ public class EventCodeGenerator {
         for (EventBean eventBean : events) {
             ArrayList<BlockBean> eventLogicBlocks = logicBlocks.get(eventBean.targetId + "_" + eventBean.eventName);
             String eventLogic = (eventLogicBlocks == null || eventLogicBlocks.isEmpty()) ? "" :
-                    new BlockInterpreter(projectFileBean.getActivityName(), BuildConfig, eventLogicBlocks, isViewBindingEnabled).interpretBlocks();
+                    new BlockInterpreter(projectFileBean.getActivityName(), buildConfig, eventLogicBlocks, isViewBindingEnabled).interpretBlocks();
 
             switch (eventBean.eventType) {
                 case EventBean.EVENT_TYPE_VIEW:

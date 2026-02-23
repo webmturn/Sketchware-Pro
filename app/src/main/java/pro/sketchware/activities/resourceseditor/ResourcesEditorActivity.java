@@ -52,7 +52,7 @@ import pro.sketchware.utility.UI;
 public class ResourcesEditorActivity extends BaseAppCompatActivity {
 
     private final String variantFullNameStarts = "values-";
-    public ProjectFilePaths ProjectFilePaths;
+    public ProjectFilePaths projectFilePaths;
     public boolean isComingFromSrcCodeEditor;
     public String sc_id;
     public String variant;
@@ -107,8 +107,8 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
     private void initializeManagers() {
         sc_id = getIntent().getStringExtra("sc_id");
 
-        ProjectFilePaths = new ProjectFilePaths(getApplicationContext(), sc_id);
-        ProjectFilePaths.initializeMetadata(ProjectDataManager.getLibraryManager(sc_id), ProjectDataManager.getFileManager(sc_id), ProjectDataManager.getProjectDataManager(sc_id));
+        projectFilePaths = new ProjectFilePaths(getApplicationContext(), sc_id);
+        projectFilePaths.initializeMetadata(ProjectDataManager.getLibraryManager(sc_id), ProjectDataManager.getFileManager(sc_id), ProjectDataManager.getProjectDataManager(sc_id));
     }
 
     private void initializeEditors() {
@@ -402,7 +402,7 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
 
     private void updateProjectMetadata() {
         if (variant.isEmpty()) {
-            HashMap<String, Object> metadata = ProjectFilePaths.metadata;
+            HashMap<String, Object> metadata = projectFilePaths.metadata;
 
             for (ColorModel color : colorsEditor.colorList) {
                 if (colorsEditor.defaultColors.containsKey(color.getColorName())) {

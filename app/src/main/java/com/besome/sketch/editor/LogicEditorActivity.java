@@ -2490,9 +2490,9 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public void showSourceCode() {
-        ProjectFilePaths ProjectFilePaths = new ProjectFilePaths(this, scId);
-        ProjectFilePaths.initializeMetadata(ProjectDataManager.getLibraryManager(scId), ProjectDataManager.getFileManager(scId), ProjectDataManager.getProjectDataManager(scId));
-        String code = new BlockInterpreter(M.getActivityName(), ProjectFilePaths.buildConfig, o.getBlocks(), isViewBindingEnabled).interpretBlocks();
+        ProjectFilePaths projectFilePaths = new ProjectFilePaths(this, scId);
+        projectFilePaths.initializeMetadata(ProjectDataManager.getLibraryManager(scId), ProjectDataManager.getFileManager(scId), ProjectDataManager.getProjectDataManager(scId));
+        String code = new BlockInterpreter(M.getActivityName(), projectFilePaths.buildConfig, o.getBlocks(), isViewBindingEnabled).interpretBlocks();
         var intent = new Intent(this, CodeViewerActivity.class);
         intent.putExtra("code", code);
         intent.putExtra("sc_id", scId);

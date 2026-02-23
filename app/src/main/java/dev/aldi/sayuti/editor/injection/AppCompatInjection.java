@@ -26,8 +26,8 @@ public class AppCompatInjection {
     private final String sc_id;
     private final ProjectFileBean projectFile;
 
-    public AppCompatInjection(BuildConfig BuildConfig, ProjectFileBean projectFileBean) {
-        sc_id = BuildConfig.sc_id;
+    public AppCompatInjection(BuildConfig buildConfig, ProjectFileBean projectFileBean) {
+        sc_id = buildConfig.sc_id;
         projectFile = projectFileBean;
     }
 

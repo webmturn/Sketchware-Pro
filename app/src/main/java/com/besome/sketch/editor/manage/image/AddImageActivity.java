@@ -424,8 +424,8 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
             } catch (Exception e) {
                 // the bytecode's lying
                 // noinspection ConstantValue
-                if (e instanceof CompileException CompileException) {
-                    var errorMessage = CompileException.getMessage();
+                if (e instanceof CompileException compileException) {
+                    var errorMessage = compileException.getMessage();
                     var code = switch (errorMessage) {
                         case "fail_to_copy" -> R.string.collection_failed_to_copy;
                         case "file_no_exist" -> R.string.collection_no_exist_file;
@@ -434,7 +434,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
                     };
                     var message = code != 0 ? activity.getString(code) : null;
 
-                    var a = CompileException.a();
+                    var a = compileException.a();
                     if (a != null && !a.isEmpty()) {
                         var names = "";
                         for (String name : a) {

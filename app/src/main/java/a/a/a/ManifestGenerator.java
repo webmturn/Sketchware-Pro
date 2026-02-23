@@ -45,11 +45,11 @@ public class ManifestGenerator {
     private String packageName;
     private final Set<String> addedPermissions = new HashSet<>();
 
-    public ManifestGenerator(BuildConfig BuildConfig, ArrayList<ProjectFileBean> projectFileBeans, BuiltInLibraryManager builtInLibraryManager) {
-        c = BuildConfig;
+    public ManifestGenerator(BuildConfig buildConfig, ArrayList<ProjectFileBean> projectFileBeans, BuiltInLibraryManager builtInLibraryManager) {
+        c = buildConfig;
         b = projectFileBeans;
         this.builtInLibraryManager = builtInLibraryManager;
-        buildSettings = new BuildSettings(BuildConfig.sc_id);
+        buildSettings = new BuildSettings(buildConfig.sc_id);
         frc = new FileResConfig(c.sc_id);
         a.addAttribute("xmlns", "android", "http://schemas.android.com/apk/res/android");
     }
