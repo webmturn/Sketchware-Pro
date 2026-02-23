@@ -88,10 +88,10 @@ public class ProjectBuilder {
 
     private final File aapt2Binary;
     private final Context context;
-    public BuildSettings build_settings;
+    public BuildSettings buildSettings;
     public ProjectFilePaths projectFilePaths;
-    public FilePathUtil fpu;
-    public ManageLocalLibrary mll;
+    public FilePathUtil filePathUtil;
+    public ManageLocalLibrary localLibraryManager;
     public BuiltInLibraryManager builtInLibraryManager;
     public String androidJarPath;
     public ProguardHandler proguard;
@@ -129,14 +129,14 @@ public class ProjectBuilder {
         }
 
         aapt2Binary = new File(context.getCacheDir(), "aapt2");
-        build_settings = new BuildSettings(yqVar.sc_id);
+        buildSettings = new BuildSettings(yqVar.sc_id);
         this.context = context;
         projectFilePaths = yqVar;
-        fpu = new FilePathUtil();
-        mll = new ManageLocalLibrary(yqVar.sc_id);
+        filePathUtil = new FilePathUtil();
+        localLibraryManager = new ManageLocalLibrary(yqVar.sc_id);
         builtInLibraryManager = new BuiltInLibraryManager(yqVar.sc_id);
         File defaultAndroidJar = new File(BuiltInLibraries.EXTRACTED_COMPILE_ASSETS_PATH, "android.jar");
-        androidJarPath = build_settings.getValue(BuildSettings.SETTING_ANDROID_JAR_PATH, defaultAndroidJar.getAbsolutePath());
+        androidJarPath = buildSettings.getValue(BuildSettings.SETTING_ANDROID_JAR_PATH, defaultAndroidJar.getAbsolutePath());
         proguard = new ProguardHandler(yqVar.sc_id);
         settings = new ProjectSettings(yqVar.sc_id);
     }
@@ -211,7 +211,7 @@ public class ProjectBuilder {
     }
 
     public boolean isD8Enabled() {
-        return build_settings.getValue(
+        return buildSettings.getValue(
                 BuildSettings.SETTING_DEXER,
                 BuildSettings.SETTING_DEXER_DX
         ).equals(BuildSettings.SETTING_DEXER_D8);
@@ -280,7 +280,7 @@ public class ProjectBuilder {
         classpath.append(androidJarPath);
 
         /* Add HTTP legacy files if wanted */
-        if (!build_settings.getValue(BuildSettings.SETTING_NO_HTTP_LEGACY,
+        if (!buildSettings.getValue(BuildSettings.SETTING_NO_HTTP_LEGACY,
                 BuildSettings.SETTING_GENERIC_VALUE_FALSE).equals(BuildSettings.SETTING_GENERIC_VALUE_TRUE)) {
             classpath.append(":").append(BuiltInLibraries.getLibraryClassesJarPathString(BuiltInLibraries.HTTP_LEGACY_ANDROID));
         }
@@ -294,7 +294,7 @@ public class ProjectBuilder {
          * Add lambda helper classes
          * Since all versions above java 7 supports lambdas, this should work
          */
-        if (!build_settings.getValue(BuildSettings.SETTING_JAVA_VERSION,
+        if (!buildSettings.getValue(BuildSettings.SETTING_JAVA_VERSION,
                         BuildSettings.SETTING_JAVA_VERSION_1_7)
                 .equals(BuildSettings.SETTING_JAVA_VERSION_1_7)) {
             classpath.append(":").append(new File(BuiltInLibraries.EXTRACTED_COMPILE_ASSETS_PATH, "core-lambda-stubs.jar").getAbsolutePath());
@@ -306,11 +306,11 @@ public class ProjectBuilder {
         }
 
         /* Add local libraries to the classpath */
-        classpath.append(mll.getJarLocalLibrary());
+        classpath.append(localLibraryManager.getJarLocalLibrary());
 
         /* Append user's custom classpath */
-        if (!build_settings.getValue(BuildSettings.SETTING_CLASSPATH, "").isEmpty()) {
-            classpath.append(":").append(build_settings.getValue(BuildSettings.SETTING_CLASSPATH, ""));
+        if (!buildSettings.getValue(BuildSettings.SETTING_CLASSPATH, "").isEmpty()) {
+            classpath.append(":").append(buildSettings.getValue(BuildSettings.SETTING_CLASSPATH, ""));
         }
 
         /* Add JARs from project's classpath */
@@ -327,7 +327,7 @@ public class ProjectBuilder {
     public String getProguardClasspath() {
         Collection<String> localLibraryJarsWithFullModeOn = new LinkedList<>();
 
-        for (HashMap<String, Object> localLibrary : mll.list) {
+        for (HashMap<String, Object> localLibrary : localLibraryManager.list) {
             Object nameObject = localLibrary.get("name");
             Object jarPathObject = localLibrary.get("jarPath");
 
@@ -501,7 +501,7 @@ public class ProjectBuilder {
                 extraPackages.append(library.getPackageName()).append(":");
             }
         }
-        return extraPackages + mll.getPackageNameLocalLibrary();
+        return extraPackages + localLibraryManager.getPackageNameLocalLibrary();
     }
 
     /**
@@ -544,10 +544,10 @@ public class ProjectBuilder {
              PrintWriter errWriter = new PrintWriter(errOutputStream)) {
 
             ArrayList<String> args = new ArrayList<>();
-            args.add("-" + build_settings.getValue(BuildSettings.SETTING_JAVA_VERSION,
+            args.add("-" + buildSettings.getValue(BuildSettings.SETTING_JAVA_VERSION,
                     BuildSettings.SETTING_JAVA_VERSION_1_7));
             args.add("-nowarn");
-            if (!build_settings.getValue(BuildSettings.SETTING_NO_WARNINGS,
+            if (!buildSettings.getValue(BuildSettings.SETTING_NO_WARNINGS,
                     BuildSettings.SETTING_GENERIC_VALUE_TRUE).equals(BuildSettings.SETTING_GENERIC_VALUE_TRUE)) {
                 args.add("-deprecation");
             }
@@ -558,15 +558,15 @@ public class ProjectBuilder {
             args.add("-proc:none");
             args.add(projectFilePaths.javaFilesPath);
             args.add(projectFilePaths.rJavaDirectoryPath);
-            String pathJava = fpu.getPathJava(projectFilePaths.sc_id);
+            String pathJava = filePathUtil.getPathJava(projectFilePaths.sc_id);
             if (FileUtil.isExistFile(pathJava)) {
                 args.add(pathJava);
             }
-            String pathBroadcast = fpu.getPathBroadcast(projectFilePaths.sc_id);
+            String pathBroadcast = filePathUtil.getPathBroadcast(projectFilePaths.sc_id);
             if (FileUtil.isExistFile(pathBroadcast)) {
                 args.add(pathBroadcast);
             }
-            String pathService = fpu.getPathService(projectFilePaths.sc_id);
+            String pathService = filePathUtil.getPathService(projectFilePaths.sc_id);
             if (FileUtil.isExistFile(pathService)) {
                 args.add(pathService);
             }
@@ -602,20 +602,20 @@ public class ProjectBuilder {
                 apkBuilder.addResourcesFromJar(BuiltInLibraries.getLibraryClassesJarPath(library.getName()));
             }
 
-            for (String jarPath : mll.getJarLocalLibrary().split(":")) {
+            for (String jarPath : localLibraryManager.getJarLocalLibrary().split(":")) {
                 if (!jarPath.trim().isEmpty()) {
                     apkBuilder.addResourcesFromJar(new File(jarPath));
                 }
             }
 
             /* Add project's native libraries */
-            File nativeLibrariesDirectory = new File(fpu.getPathNativelibs(projectFilePaths.sc_id));
+            File nativeLibrariesDirectory = new File(filePathUtil.getPathNativelibs(projectFilePaths.sc_id));
             if (nativeLibrariesDirectory.exists()) {
                 apkBuilder.addNativeLibraries(nativeLibrariesDirectory);
             }
 
             /* Add Local libraries' native libraries */
-            for (String nativeLibraryDirectory : mll.getNativeLibs()) {
+            for (String nativeLibraryDirectory : localLibraryManager.getNativeLibs()) {
                 apkBuilder.addNativeLibraries(new File(nativeLibraryDirectory));
             }
 
@@ -669,7 +669,7 @@ public class ProjectBuilder {
         }
 
         /* Add HTTP legacy files if wanted */
-        if (!build_settings.getValue(BuildSettings.SETTING_NO_HTTP_LEGACY, ProjectSettings.SETTING_GENERIC_VALUE_FALSE)
+        if (!buildSettings.getValue(BuildSettings.SETTING_NO_HTTP_LEGACY, ProjectSettings.SETTING_GENERIC_VALUE_FALSE)
                 .equals(ProjectSettings.SETTING_GENERIC_VALUE_TRUE)) {
             dexes.add(BuiltInLibraries.getLibraryDexFile(BuiltInLibraries.HTTP_LEGACY_ANDROID));
         }
@@ -680,7 +680,7 @@ public class ProjectBuilder {
         }
 
         /* Add local libraries' main DEX files */
-        ArrayList<HashMap<String, Object>> list = mll.list;
+        ArrayList<HashMap<String, Object>> list = localLibraryManager.list;
         for (int i1 = 0, listSize = list.size(); i1 < listSize; i1++) {
             HashMap<String, Object> localLibrary = list.get(i1);
             Object localLibraryName = localLibrary.get("name");
@@ -852,7 +852,7 @@ public class ProjectBuilder {
                 sb.append(".** { *; }");
             }
         }
-        for (HashMap<String, Object> hashMap : mll.list) {
+        for (HashMap<String, Object> hashMap : localLibraryManager.list) {
             String obj = hashMap.get("name").toString();
             if (hashMap.containsKey("packageName") && !proguard.libIsProguardFMEnabled(obj)) {
                 sb.append("\n");
@@ -880,11 +880,11 @@ public class ProjectBuilder {
                 config.add(f.getAbsolutePath());
             }
         }
-        config.addAll(mll.getPgRules());
+        config.addAll(localLibraryManager.getPgRules());
         ArrayList<String> jars = new ArrayList<>();
         jars.add(projectFilePaths.compiledClassesPath + ".jar");
 
-        for (HashMap<String, Object> hashMap : mll.list) {
+        for (HashMap<String, Object> hashMap : localLibraryManager.list) {
             String obj = hashMap.get("name").toString();
             if (hashMap.containsKey("jarPath") && proguard.libIsProguardFMEnabled(obj)) {
                 jars.add(hashMap.get("jarPath").toString());
@@ -920,7 +920,7 @@ public class ProjectBuilder {
         proguardAddRjavaRules(args);
 
         /* Include local libraries' ProGuard rules */
-        for (String rule : mll.getPgRules()) {
+        for (String rule : localLibraryManager.getPgRules()) {
             args.add("-include");
             args.add(rule);
         }
@@ -929,7 +929,7 @@ public class ProjectBuilder {
         args.add("-injars");
         args.add(projectFilePaths.compiledClassesPath);
 
-        for (HashMap<String, Object> hashMap : mll.list) {
+        for (HashMap<String, Object> hashMap : localLibraryManager.list) {
             String obj = hashMap.get("name").toString();
             if (hashMap.containsKey("jarPath") && proguard.libIsProguardFMEnabled(obj)) {
                 args.add("-injars");

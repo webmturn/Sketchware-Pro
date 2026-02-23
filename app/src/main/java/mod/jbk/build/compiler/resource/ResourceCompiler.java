@@ -171,7 +171,7 @@ public class ResourceCompiler {
             args.add((versionName == null || versionName.isEmpty()) ? "1.0" : versionName);
 
             args.add("-I");
-            String customAndroidSdk = buildHelper.build_settings.getValue(BuildSettings.SETTING_ANDROID_JAR_PATH, "");
+            String customAndroidSdk = buildHelper.buildSettings.getValue(BuildSettings.SETTING_ANDROID_JAR_PATH, "");
             if (customAndroidSdk.isEmpty()) {
                 args.add(buildHelper.androidJarPath);
             } else {
@@ -185,7 +185,7 @@ public class ResourceCompiler {
             args.add(buildHelper.projectFilePaths.assetsPath);
 
             /* Add imported assets */
-            String importedAssetsPath = buildHelper.fpu.getPathAssets(buildHelper.projectFilePaths.sc_id);
+            String importedAssetsPath = buildHelper.filePathUtil.getPathAssets(buildHelper.projectFilePaths.sc_id);
             if (FileUtil.isExistFile(importedAssetsPath)) {
                 args.add("-A");
                 args.add(importedAssetsPath);
@@ -305,10 +305,10 @@ public class ResourceCompiler {
         }
 
         private void compileLocalLibraryResources(String outputPath) throws SimpleException, MissingFileException {
-            int localLibrariesCount = buildHelper.mll.getResLocalLibrary().size();
+            int localLibrariesCount = buildHelper.localLibraryManager.getResLocalLibrary().size();
             LogUtil.d(TAG + ":cLLR", "About to compile " + localLibrariesCount
                     + " local " + (localLibrariesCount == 1 ? "library" : "libraries"));
-            for (String localLibraryResDirectory : buildHelper.mll.getResLocalLibrary()) {
+            for (String localLibraryResDirectory : buildHelper.localLibraryManager.getResLocalLibrary()) {
                 File localLibraryDirectory = new File(localLibraryResDirectory).getParentFile();
                 if (localLibraryDirectory != null) {
                     compilingAssertDirectoryExists(localLibraryResDirectory);
@@ -381,13 +381,13 @@ public class ResourceCompiler {
         }
 
         private void compileImportedResources(String outputPath) throws SimpleException {
-            if (FileUtil.isExistFile(buildHelper.fpu.getPathResource(buildHelper.projectFilePaths.sc_id))
-                    && new File(buildHelper.fpu.getPathResource(buildHelper.projectFilePaths.sc_id)).length() != 0) {
+            if (FileUtil.isExistFile(buildHelper.filePathUtil.getPathResource(buildHelper.projectFilePaths.sc_id))
+                    && new File(buildHelper.filePathUtil.getPathResource(buildHelper.projectFilePaths.sc_id)).length() != 0) {
                 ArrayList<String> commands = new ArrayList<>();
                 commands.add(aapt2.getAbsolutePath());
                 commands.add("compile");
                 commands.add("--dir");
-                commands.add(buildHelper.fpu.getPathResource(buildHelper.projectFilePaths.sc_id));
+                commands.add(buildHelper.filePathUtil.getPathResource(buildHelper.projectFilePaths.sc_id));
                 commands.add("-o");
                 commands.add(outputPath + File.separator + "project-imported.zip");
                 LogUtil.d(TAG + ":cIR", "Now executing: " + commands);
