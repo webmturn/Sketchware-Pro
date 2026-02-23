@@ -140,9 +140,9 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     private CustomViewPager viewPager;
     private CoordinatorLayout coordinatorLayout;
     private DrawerLayout drawer;
-    private ProjectFilePaths q;
-    private DB r;
-    private DB t;
+    private ProjectFilePaths projectFilePaths;
+    private DB prefP1;
+    private DB prefP12;
     private Menu bottomMenu;
     private PopupMenu bottomPopupMenu;
     private MaterialButton btnRun;
@@ -359,7 +359,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         if (!ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_ROOT_AUTO_INSTALL_PROJECTS)) {
             requestPackageInstallerInstall();
         } else {
-            File apkUri = new File(q.finalToInstallApkPath);
+            File apkUri = new File(projectFilePaths.finalToInstallApkPath);
             long length = apkUri.length();
             Shell.getShell(shell -> {
                 if (shell.isRoot()) {
@@ -370,7 +370,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                         if (result.isSuccess()) {
                             SketchwareUtil.toast(Helper.getResString(R.string.design_toast_package_installed));
                             if (ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_ROOT_AUTO_OPEN_AFTER_INSTALLING)) {
-                                Intent launcher = getPackageManager().getLaunchIntentForPackage(q.packageName);
+                                Intent launcher = getPackageManager().getLaunchIntentForPackage(projectFilePaths.packageName);
                                 if (launcher != null) {
                                     startActivity(launcher);
                                 } else {
@@ -394,7 +394,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     private void requestPackageInstallerInstall() {
         try {
             Intent intent = new Intent(Intent.ACTION_VIEW);
-            Uri apkUri = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".provider", new File(q.finalToInstallApkPath));
+            Uri apkUri = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".provider", new File(projectFilePaths.finalToInstallApkPath));
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
@@ -436,7 +436,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                     if (currentTabNumber > 0) {
                         currentTabNumber--;
                         viewPager.setCurrentItem(currentTabNumber);
-                    } else if (t.c("P12I2")) {
+                    } else if (prefP12.c("P12I2")) {
                         k();
                         saveChangesAndCloseProject();
                     } else {
@@ -456,8 +456,8 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             sc_id = savedInstanceState.getString("sc_id");
         }
 
-        r = new DB(getApplicationContext(), "P1");
-        t = new DB(getApplicationContext(), "P12");
+        prefP1 = new DB(getApplicationContext(), "P1");
+        prefP12 = new DB(getApplicationContext(), "P12");
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setSubtitle(sc_id);
@@ -499,7 +499,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         bottomMenu.add(Menu.NONE, 2, Menu.NONE, Helper.getResString(R.string.design_menu_clean_temp)).setVisible(false).setOnMenuItemClickListener(item -> {
             backgroundExecutor.execute(() -> {
                 try {
-                    FileUtil.deleteFile(q.projectMyscPath);
+                    FileUtil.deleteFile(projectFilePaths.projectMyscPath);
                     updateBottomMenu();
                     runOnUiThread(() -> SketchwareUtil.toast(Helper.getResString(R.string.design_toast_clean_temp_done)));
                 } catch (Exception e) {
@@ -517,13 +517,13 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             return true;
         });
         bottomMenu.add(Menu.NONE, 4, Menu.NONE, Helper.getResString(R.string.design_menu_install_apk)).setVisible(false).setOnMenuItemClickListener(item -> {
-            if (FileUtil.isExistFile(q.finalToInstallApkPath)) {
+            if (FileUtil.isExistFile(projectFilePaths.finalToInstallApkPath)) {
                 installBuiltApk();
             } else SketchwareUtil.toast(Helper.getResString(R.string.design_error_apk_not_exist));
             return true;
         });
         bottomMenu.add(Menu.NONE, 6, Menu.NONE, Helper.getResString(R.string.design_menu_show_signatures)).setVisible(false).setOnMenuItemClickListener(item -> {
-            ApkSignatures apkSignatures = new ApkSignatures(this, q.finalToInstallApkPath);
+            ApkSignatures apkSignatures = new ApkSignatures(this, projectFilePaths.finalToInstallApkPath);
             apkSignatures.showSignaturesDialog();
             return true;
         });
@@ -599,8 +599,8 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     }
 
     private boolean isDebugApkExists() {
-        if (q != null) {
-            return FileUtil.isExistFile(q.finalToInstallApkPath);
+        if (projectFilePaths != null) {
+            return FileUtil.isExistFile(projectFilePaths.finalToInstallApkPath);
         }
         return false;
     }
@@ -608,7 +608,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     private void updateBottomMenu() {
         if (bottomMenu != null) {
             handler.post(() -> {
-                bottomMenu.findItem(2).setVisible(q != null && FileUtil.isExistFile(q.projectMyscPath));
+                bottomMenu.findItem(2).setVisible(projectFilePaths != null && FileUtil.isExistFile(projectFilePaths.projectMyscPath));
                 var isDebugApkExists = isDebugApkExists();
                 bottomMenu.findItem(4).setVisible(isDebugApkExists);
                 bottomMenu.findItem(6).setVisible(isDebugApkExists);
@@ -659,7 +659,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
 
         HashMap<String, Object> projectInfo = ProjectListManager.getProjectById(sc_id);
         getSupportActionBar().setTitle(yB.c(projectInfo, "my_ws_name"));
-        q = new ProjectFilePaths(getApplicationContext(), SketchwarePaths.getMyscPath(sc_id), projectInfo);
+        projectFilePaths = new ProjectFilePaths(getApplicationContext(), SketchwarePaths.getMyscPath(sc_id), projectInfo);
 
         try {
             ProjectLoader projectLoader = new ProjectLoader(this, savedInstanceState);
@@ -872,7 +872,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             try {
                 String filename = Helper.getText(fileName);
                 // var ProjectFilePaths = new ProjectFilePaths(getApplicationContext(), sc_id);
-                var xmlGenerator = new LayoutGenerator(q.buildConfig, projectFile);
+                var xmlGenerator = new LayoutGenerator(projectFilePaths.buildConfig, projectFile);
                 var projectDataManager = ProjectDataManager.getProjectDataManager(sc_id);
                 var viewBeans = projectDataManager.d(filename);
                 var viewFab = projectDataManager.h(filename);
@@ -942,7 +942,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
      * Opens {@link ManageJavaActivity}.
      */
     void toJavaManager() {
-        launchActivity(ManageJavaActivity.class, null, new Pair<>("pkgName", q.packageName));
+        launchActivity(ManageJavaActivity.class, null, new Pair<>("pkgName", projectFilePaths.packageName));
     }
 
     /**
@@ -1097,7 +1097,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
 
             activity.runOnUiThread(() -> {
                 updateRunButton(true);
-                activity.r.a("P1I10", true);
+                activity.prefP1.a("P1I10", true);
                 activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
                 maybeShowNotification();
@@ -1109,7 +1109,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             if (activity == null) return;
 
             try {
-                var q = activity.q;
+                var q = activity.projectFilePaths;
                 var sc_id = DesignActivity.sc_id;
                 onProgress("Deleting temporary files...", 1);
                 FileUtil.deleteFile(q.projectMyscPath);
