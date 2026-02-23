@@ -49,88 +49,88 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
     private final FilePathUtil fpu = new FilePathUtil();
     private final Map<String, View> imageCache = new HashMap<>();
 
-    public String a;
-    public String b;
-    public String c;
-    public boolean d;
-    public TextView e;
-    public TextView f;
-    public ImageView g;
-    public ImageView h;
-    public RadioGroup i;
-    public LinearLayout j;
-    public View k;
-    public View l;
-    public int m;
-    public PropertyChangedCallback n;
+    public String scId;
+    public String key;
+    public String value;
+    public boolean useDefaultImage;
+    public TextView nameTextView;
+    public TextView valueTextView;
+    public ImageView imagePreview;
+    public ImageView iconView;
+    public RadioGroup radioGroup;
+    public LinearLayout containerLayout;
+    public View propertyItemView;
+    public View propertyMenuItemView;
+    public int iconResId;
+    public PropertyChangedCallback propertyChangedCallback;
 
     public PropertyResourceItem(Context context, boolean z, String str, boolean z2) {
         super(context);
-        d = false;
-        a = str;
+        useDefaultImage = false;
+        scId = str;
         svgUtils = new SvgUtils(context);
         svgUtils.initImageLoader();
         a(context, z, z2);
     }
 
     public String getKey() {
-        return b;
+        return key;
     }
 
     public void setKey(String str) {
-        b = str;
+        key = str;
         int identifier = getResources().getIdentifier(str, "string", getContext().getPackageName());
         if (identifier > 0) {
-            e.setText(getResources().getString(identifier));
-            if ("property_image".equals(b)) {
-                m = R.drawable.ic_mtrl_image;
-            } else if ("property_background_resource".equals(b)) {
-                m = R.drawable.ic_mtrl_background_dots;
+            nameTextView.setText(getResources().getString(identifier));
+            if ("property_image".equals(key)) {
+                iconResId = R.drawable.ic_mtrl_image;
+            } else if ("property_background_resource".equals(key)) {
+                iconResId = R.drawable.ic_mtrl_background_dots;
             }
-            if (l.getVisibility() == VISIBLE) {
-                ((ImageView) findViewById(R.id.img_icon)).setImageResource(m);
+            if (propertyMenuItemView.getVisibility() == VISIBLE) {
+                ((ImageView) findViewById(R.id.img_icon)).setImageResource(iconResId);
                 ((TextView) findViewById(R.id.tv_title)).setText(getContext().getString(identifier));
             } else {
-                h.setImageResource(m);
+                iconView.setImageResource(iconResId);
             }
         }
     }
 
     public String getValue() {
-        return c;
+        return value;
     }
 
     public void setValue(String str) {
         Uri fromFile;
         if (str != null && !str.equalsIgnoreCase("NONE")) {
-            c = str;
-            f.setText(str);
-            if (ProjectDataManager.getResourceManager(a).h(str) == ProjectResourceBean.PROJECT_RES_TYPE_RESOURCE) {
-                g.setImageResource(getContext().getResources().getIdentifier(str, "drawable", getContext().getPackageName()));
+            value = str;
+            valueTextView.setText(str);
+            if (ProjectDataManager.getResourceManager(scId).h(str) == ProjectResourceBean.PROJECT_RES_TYPE_RESOURCE) {
+                imagePreview.setImageResource(getContext().getResources().getIdentifier(str, "drawable", getContext().getPackageName()));
                 return;
             } else if (str.equals("default_image")) {
-                g.setImageResource(getContext().getResources().getIdentifier(str, "drawable", getContext().getPackageName()));
+                imagePreview.setImageResource(getContext().getResources().getIdentifier(str, "drawable", getContext().getPackageName()));
                 return;
             } else {
-                File file = new File(ProjectDataManager.getResourceManager(a).f(str));
+                File file = new File(ProjectDataManager.getResourceManager(scId).f(str));
                 if (file.exists()) {
                     Context context = getContext();
                     fromFile = FileProvider.getUriForFile(context, getContext().getPackageName() + ".provider", file);
                     if (file.getAbsolutePath().endsWith(".xml")) {
-                        svgUtils.loadImage(g, fpu.getSvgFullPath(a, str));
+                        svgUtils.loadImage(imagePreview, fpu.getSvgFullPath(scId, str));
                         return;
                     }
-                    Glide.with(getContext()).load(fromFile).signature(kC.n()).error(R.drawable.ic_remove_grey600_24dp).into(g);
+                    Glide.with(getContext()).load(fromFile).signature(kC.n()).error(R.drawable.ic_remove_grey600_24dp).into(imagePreview);
                     return;
                 }
-                g.setImageResource(getContext().getResources().getIdentifier(str, "drawable", getContext().getPackageName()));
+                imagePreview.setImageResource(getContext().getResources().getIdentifier(str, "drawable", getContext().getPackageName()));
                 return;
             }
         }
-        c = str;
-        f.setText(getContext().getString(R.string.color_none));
-        g.setImageDrawable(null);
-        g.setBackgroundColor(Color.WHITE);
+        value = str;
+        valueTextView.setText(getContext().getString(R.string.color_none));
+        imagePreview.setImageDrawable(null);
+        imagePreview.setBackgroundColor(Color.WHITE);
     }
 
     @Override
@@ -141,43 +141,43 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
         a();
     }
 
-    public void setOnPropertyValueChangeListener(PropertyChangedCallback propertyChangedCallback) {
-        n = propertyChangedCallback;
+    public void setOnPropertyValueChangeListener(PropertyChangedCallback callback) {
+        propertyChangedCallback = callback;
     }
 
-    public void setOrientationItem(int i) {
-        if (i == 0) {
-            k.setVisibility(GONE);
-            l.setVisibility(VISIBLE);
-            k.setOnClickListener(null);
-            l.setOnClickListener(this);
+    public void setOrientationItem(int orientation) {
+        if (orientation == 0) {
+            propertyItemView.setVisibility(GONE);
+            propertyMenuItemView.setVisibility(VISIBLE);
+            propertyItemView.setOnClickListener(null);
+            propertyMenuItemView.setOnClickListener(this);
         } else {
-            k.setVisibility(VISIBLE);
-            l.setVisibility(GONE);
-            k.setOnClickListener(this);
-            l.setOnClickListener(null);
+            propertyItemView.setVisibility(VISIBLE);
+            propertyMenuItemView.setVisibility(GONE);
+            propertyItemView.setOnClickListener(this);
+            propertyMenuItemView.setOnClickListener(null);
         }
     }
 
     public final void a(Context context, boolean z, boolean z2) {
         wB.a(context, this, R.layout.property_resource_item);
-        e = findViewById(R.id.tv_name);
-        f = findViewById(R.id.tv_value);
-        g = findViewById(R.id.view_image);
-        h = findViewById(R.id.img_left_icon);
-        k = findViewById(R.id.property_item);
-        l = findViewById(R.id.property_menu_item);
-        d = z2;
+        nameTextView = findViewById(R.id.tv_name);
+        valueTextView = findViewById(R.id.tv_value);
+        imagePreview = findViewById(R.id.view_image);
+        iconView = findViewById(R.id.img_left_icon);
+        propertyItemView = findViewById(R.id.property_item);
+        propertyMenuItemView = findViewById(R.id.property_menu_item);
+        useDefaultImage = z2;
     }
 
     public final void a() {
         SearchWithRecyclerViewBinding binding = SearchWithRecyclerViewBinding.inflate(LayoutInflater.from(getContext()));
 
-        ArrayList<String> images = ProjectDataManager.getResourceManager(a).m();
+        ArrayList<String> images = ProjectDataManager.getResourceManager(scId).m();
         images.addAll(new VectorDrawableLoader().getVectorDrawables(DesignActivity.sc_id));
-        images.add(0, d ? "default_image" : "NONE");
+        images.add(0, useDefaultImage ? "default_image" : "NONE");
 
-        ImagePickerAdapter adapter = new ImagePickerAdapter(images, c);
+        ImagePickerAdapter adapter = new ImagePickerAdapter(images, value);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerView.setAdapter(adapter);
 
@@ -190,15 +190,15 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
         });
 
         new MaterialAlertDialogBuilder(getContext())
-                .setTitle(Helper.getText(e))
-                .setIcon(m)
+                .setTitle(Helper.getText(nameTextView))
+                .setIcon(iconResId)
                 .setView(binding.getRoot())
                 .setPositiveButton(R.string.common_word_select, (v, which) -> {
                     String selected = adapter.getSelected();
                     if (!selected.isEmpty()) {
                         setValue(selected);
-                        if (n != null) {
-                            n.a(b, selected);
+                        if (propertyChangedCallback != null) {
+                            propertyChangedCallback.a(key, selected);
                         }
                     }
                 })
@@ -288,11 +288,11 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
             if ("default_image".equals(image)) {
                 imageView.setImageResource(getResources().getIdentifier(image, "drawable", getContext().getPackageName()));
             } else {
-                File file = new File(ProjectDataManager.getResourceManager(a).f(image));
+                File file = new File(ProjectDataManager.getResourceManager(scId).f(image));
                 if (file.exists()) {
                     Uri uri = FileProvider.getUriForFile(getContext(), getContext().getPackageName() + ".provider", file);
                     if (file.getAbsolutePath().endsWith(".xml")) {
-                        svgUtils.loadImage(imageView, fpu.getSvgFullPath(a, image));
+                        svgUtils.loadImage(imageView, fpu.getSvgFullPath(scId, image));
                     } else {
                         Glide.with(getContext())
                                 .load(uri)
