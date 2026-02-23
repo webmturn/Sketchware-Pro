@@ -345,10 +345,10 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
         editText.setLines(1);
         editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
-        UniqueNameValidator DateTimeUtil = new UniqueNameValidator(requireContext(), a2.findViewById(R.id.ti_input), Pp.h().g());
+        UniqueNameValidator nameValidator = new UniqueNameValidator(requireContext(), a2.findViewById(R.id.ti_input), Pp.h().g());
         aBVar.setView(a2);
         aBVar.setPositiveButton(R.string.common_word_save, (v, which) -> {
-            if (DateTimeUtil.isValid()) {
+            if (nameValidator.isValid()) {
                 saveMoreBlockToCollection(Helper.getText(editText), moreBlocks.get(moreBlockPosition));
                 mB.a(requireContext(), editText);
                 v.dismiss();

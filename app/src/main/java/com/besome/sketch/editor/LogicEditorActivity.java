@@ -324,10 +324,10 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         View a2 = wB.a(this, R.layout.logic_popup_add_list);
         RadioGroup radioGroup = a2.findViewById(R.id.rg_type);
         TextInputEditText editText = a2.findViewById(R.id.ed_input);
-        IdentifierValidator zB = new IdentifierValidator(getContext(), a2.findViewById(R.id.ti_input), BlockConstants.b, BlockConstants.a(), ProjectDataManager.getProjectDataManager(scId).a(M));
+        IdentifierValidator listNameValidator = new IdentifierValidator(getContext(), a2.findViewById(R.id.ti_input), BlockConstants.b, BlockConstants.a(), ProjectDataManager.getProjectDataManager(scId).a(M));
         dialog.setView(a2);
         dialog.setPositiveButton(R.string.common_word_add, (v, which) -> {
-            if (zB.isValid()) {
+            if (listNameValidator.isValid()) {
                 int i = 1;
                 int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
                 if (checkedRadioButtonId != R.id.rb_int) {
@@ -1319,10 +1319,10 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         editText.setLines(1);
         editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
-        UniqueNameValidator nB = new UniqueNameValidator(this, a2.findViewById(R.id.ti_input), Mp.h().g());
+        UniqueNameValidator blockNameValidator = new UniqueNameValidator(this, a2.findViewById(R.id.ti_input), Mp.h().g());
         dialog.setView(a2);
         dialog.setPositiveButton(R.string.common_word_save, (v, which) -> {
-            if (nB.isValid()) {
+            if (blockNameValidator.isValid()) {
                 a(Helper.getText(editText), rs);
                 v.dismiss();
             }
