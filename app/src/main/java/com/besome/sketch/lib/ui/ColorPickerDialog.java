@@ -59,9 +59,9 @@ public class ColorPickerDialog extends PopupWindow {
     private b colorPickerCallback;
     private materialColorAttr materialColorAttr;
     private ColorInputValidator colorValidator;
-    private int k;
-    private int l;
-    private int m = -1;
+    private int selectedGroupIndex;
+    private int currentGroupIndex;
+    private int selectedColorIndex = -1;
     private DB colorPref;
     private boolean hasMaterialColors;
     private Material3LibraryManager material3LibraryManager;
@@ -121,14 +121,14 @@ public class ColorPickerDialog extends PopupWindow {
         initializeAttrsList();
 
         if (color.equals("NONE")) {
-            k = colorGroups.size() - 1;
-            l = k;
-            m = 0;
+            selectedGroupIndex = colorGroups.size() - 1;
+            currentGroupIndex = selectedGroupIndex;
+            selectedColorIndex = 0;
         }
         if (color.equals("TRANSPARENT")) {
-            k = colorGroups.size() - 2;
-            l = k;
-            m = 0;
+            selectedGroupIndex = colorGroups.size() - 2;
+            currentGroupIndex = selectedGroupIndex;
+            selectedColorIndex = 0;
         } else if (color.startsWith("#")) {
             int colorInt = Color.parseColor(color);
             for (int groupIndex = 0; groupIndex < colorGroups.size(); ++groupIndex) {
@@ -136,37 +136,37 @@ public class ColorPickerDialog extends PopupWindow {
 
                 for (int colorIndex = 0; colorIndex < colorBeans.length; ++colorIndex) {
                     if (colorBeans[colorIndex].colorCode == colorInt) {
-                        k = groupIndex;
-                        l = groupIndex;
-                        m = colorIndex;
+                        selectedGroupIndex = groupIndex;
+                        currentGroupIndex = groupIndex;
+                        selectedColorIndex = colorIndex;
                         break;
                     }
                 }
             }
         } else if (color.startsWith("@color/")) {
-            k = 1;
-            l = 1;
+            selectedGroupIndex = 1;
+            currentGroupIndex = 1;
             for (int i = 0; i < resColors.size(); i++) {
                 ResColor resColor = resColors.get(i);
                 if (("@color/" + resColor.colorName()).equals(color)) {
-                    m = i;
+                    selectedColorIndex = i;
                     break;
                 }
             }
-            binding.colorList.setAdapter(new resColorsAdapter(resColors, m));
-            binding.colorList.post(() -> binding.colorList.scrollToPosition(m));
+            binding.colorList.setAdapter(new resColorsAdapter(resColors, selectedColorIndex));
+            binding.colorList.post(() -> binding.colorList.scrollToPosition(selectedColorIndex));
         } else if (color.startsWith("?")) {
-            k = 2;
-            l = 2;
+            selectedGroupIndex = 2;
+            currentGroupIndex = 2;
             for (int i = 0; i < attributes.size(); i++) {
                 Attribute attribute = attributes.get(i);
                 if (("?" + attribute.name()).equals(color) || ("?attr/" + attribute.name()).equals(color)) {
-                    m = i;
+                    selectedColorIndex = i;
                     break;
                 }
             }
-            binding.colorList.setAdapter(new AttrAdapter(attributes, m));
-            binding.colorList.post(() -> binding.colorList.scrollToPosition(m));
+            binding.colorList.setAdapter(new AttrAdapter(attributes, selectedColorIndex));
+            binding.colorList.post(() -> binding.colorList.scrollToPosition(selectedColorIndex));
         }
         super.setBackgroundDrawable(null);
         super.setAnimationStyle(android.R.style.Animation_Dialog);
@@ -183,14 +183,14 @@ public class ColorPickerDialog extends PopupWindow {
         binding.colorList.setItemAnimator(new DefaultItemAnimator());
 
         binding.fab.setOnClickListener(view -> {
-            if (sc_id != null && l == 2) {
+            if (sc_id != null && currentGroupIndex == 2) {
                 showCustomAttrCreatorDialog();
             } else {
                 showCustomColorCreatorDialog();
             }
         });
 
-        binding.colorList.getAdapter().notifyItemChanged(m);
+        binding.colorList.getAdapter().notifyItemChanged(selectedColorIndex);
         binding.layoutColorTitle.removeAllViews();
 
         for (int j = 0; j < colorList.size(); ++j) {
@@ -198,7 +198,7 @@ public class ColorPickerDialog extends PopupWindow {
             ColorBean colorBean = colorList.get(j);
             int finalJ = j;
             colorGroupItem.tvColorName.setOnClickListener(v -> {
-                l = finalJ;
+                currentGroupIndex = finalJ;
                 if (finalJ == 0 && colorGroups.get(finalJ).length == 0) {
                     SketchToast.warning(activity, activity.getString(R.string.picker_color_custom_color_not_found), 1).show();
                     return;
@@ -223,7 +223,7 @@ public class ColorPickerDialog extends PopupWindow {
             colorGroupItem.tvColorName.setTextColor(colorBean.displayNameColor);
             colorGroupItem.tvColorName.setBackgroundColor(colorBean.colorCode);
             binding.layoutColorTitle.addView(colorGroupItem);
-            if (j == k) {
+            if (j == selectedGroupIndex) {
                 colorGroupItem.imgColorSelector.setImageResource(colorBean.icon);
                 colorGroupItem.imgColorSelector.setVisibility(View.VISIBLE);
             } else {
@@ -493,10 +493,10 @@ public class ColorPickerDialog extends PopupWindow {
     }
 
     private void smoothScrollToCurrentItem() {
-        if (k < binding.layoutColorTitle.getChildCount()) {
-            View childView = binding.layoutColorTitle.getChildAt(k);
+        if (selectedGroupIndex < binding.layoutColorTitle.getChildCount()) {
+            View childView = binding.layoutColorTitle.getChildAt(selectedGroupIndex);
             binding.layoutHsvColor.smoothScrollTo((int) childView.getX(), 0);
-            binding.colorList.scrollToPosition(m);
+            binding.colorList.scrollToPosition(selectedColorIndex);
         }
     }
 
@@ -509,15 +509,15 @@ public class ColorPickerDialog extends PopupWindow {
             colorPref.a("P24I1", (Object) colorsToSave);
             colorGroups.set(0, getSavedColorBeans());
             notifyChanges();
-            k = 0;
+            selectedGroupIndex = 0;
             smoothScrollToCurrentItem();
         }
     }
 
     private void notifyChanges() {
-        l = 0;
-        k = 0;
-        m = 0;
+        currentGroupIndex = 0;
+        selectedGroupIndex = 0;
+        selectedColorIndex = 0;
         binding.colorList.getAdapter().notifyDataSetChanged();
     }
 
@@ -629,28 +629,28 @@ public class ColorPickerDialog extends PopupWindow {
 
         @Override
         public int getItemCount() {
-            return colorGroups.get(l).length;
+            return colorGroups.get(currentGroupIndex).length;
         }
 
         @Override
         public void onBindViewHolder(ColorViewHolder holder, int position) {
-            ColorBean colorBean = ((ColorBean[]) colorGroups.get(l))[position];
+            ColorBean colorBean = ((ColorBean[]) colorGroups.get(currentGroupIndex))[position];
 
-            holder.tvColorCode.setText(colorBean.getColorCode(l == 0));
+            holder.tvColorCode.setText(colorBean.getColorCode(currentGroupIndex == 0));
             if (position == 0) {
-                holder.tvColorName.setText(((ColorBean[]) colorGroups.get(l))[0].colorName);
+                holder.tvColorName.setText(((ColorBean[]) colorGroups.get(currentGroupIndex))[0].colorName);
             } else {
                 holder.tvColorName.setText("");
             }
-            if (l == 1 && sc_id != null) {
-                holder.tvColorName.setText(((ColorBean[]) colorGroups.get(l))[position].colorName);
+            if (currentGroupIndex == 1 && sc_id != null) {
+                holder.tvColorName.setText(((ColorBean[]) colorGroups.get(currentGroupIndex))[position].colorName);
             }
 
-            holder.tvColorCode.setTextColor(((ColorBean[]) colorGroups.get(l))[position].displayNameColor);
-            holder.tvColorName.setTextColor(((ColorBean[]) colorGroups.get(l))[position].displayNameColor);
-            holder.layoutColorItem.setBackgroundColor(((ColorBean[]) colorGroups.get(l))[position].colorCode);
-            if (position == m && l == k) {
-                holder.imgSelector.setImageResource(((ColorBean[]) colorGroups.get(l))[position].icon);
+            holder.tvColorCode.setTextColor(((ColorBean[]) colorGroups.get(currentGroupIndex))[position].displayNameColor);
+            holder.tvColorName.setTextColor(((ColorBean[]) colorGroups.get(currentGroupIndex))[position].displayNameColor);
+            holder.layoutColorItem.setBackgroundColor(((ColorBean[]) colorGroups.get(currentGroupIndex))[position].colorCode);
+            if (position == selectedColorIndex && currentGroupIndex == selectedGroupIndex) {
+                holder.imgSelector.setImageResource(((ColorBean[]) colorGroups.get(currentGroupIndex))[position].icon);
                 holder.imgSelector.setVisibility(View.VISIBLE);
             } else {
                 holder.imgSelector.setVisibility(View.GONE);
@@ -683,7 +683,7 @@ public class ColorPickerDialog extends PopupWindow {
                             colorPickerCallback.a(0);
                         } else if (Helper.getText(tvColorCode).equals("NONE")) {
                             colorPickerCallback.a(0xffffff);
-                        } else if (l == 1 && sc_id != null) {
+                        } else if (currentGroupIndex == 1 && sc_id != null) {
                             colorPickerCallback.a((String) tvColorName.getText(), Color.parseColor(Helper.getText(tvColorCode)));
                         } else {
                             colorPickerCallback.a(Color.parseColor(Helper.getText(tvColorCode)));
@@ -692,7 +692,7 @@ public class ColorPickerDialog extends PopupWindow {
                     dismiss();
                 });
                 itemView.setOnLongClickListener(v -> {
-                    if (l == 0) showColorRemoveDialog(Helper.getText(tvColorCode));
+                    if (currentGroupIndex == 0) showColorRemoveDialog(Helper.getText(tvColorCode));
                     return false;
                 });
             }
