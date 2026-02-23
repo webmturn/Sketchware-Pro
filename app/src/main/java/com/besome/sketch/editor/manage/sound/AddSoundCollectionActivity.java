@@ -76,7 +76,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
         return arrayList;
     }
 
-    private void o() {
+    private void pausePlayback() {
         if (G == null || !G.isPlaying()) return;
         H.cancel();
         G.pause();
@@ -92,17 +92,17 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
             return;
         }
         if (id == R.id.common_dialog_ok_button) {
-            r();
+            saveSound();
             return;
         }
         if (id == binding.play.getId()) {
-            q();
+            togglePlayback();
             return;
         }
         if (id == binding.selectFile.getId()) {
             if (!isEditing) {
                 binding.selectFile.setEnabled(false);
-                p();
+                pickSoundFile();
             }
         }
     }
@@ -160,7 +160,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
                 if (G != null) {
                     G.seekTo(seekBar.getProgress() * 100);
                     if (G.isPlaying()) {
-                        s();
+                        startProgressTimer();
                         return;
                     }
                     return;
@@ -175,33 +175,33 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
             e(getString(R.string.design_manager_sound_title_edit_sound_name));
             M = new ResourceNameValidator(this, binding.tiInput, BlockConstants.RESERVED_KEYWORDS, getResourceNames(), O.resName);
             binding.edInput.setText(O.resName);
-            f(a(O));
+            loadSoundFromPath(a(O));
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        o();
+        pausePlayback();
     }
 
-    private void p() {
+    private void pickSoundFile() {
         Intent intent = new Intent("android.intent.action.GET_CONTENT", MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.setType("audio/*");
         soundPickerLauncher.launch(Intent.createChooser(intent, getString(R.string.common_word_choose)));
     }
 
-    private void q() {
+    private void togglePlayback() {
         if (G.isPlaying()) {
-            o();
+            pausePlayback();
             return;
         }
         G.start();
-        s();
+        startProgressTimer();
         binding.play.setImageResource(R.drawable.ic_pause_circle_outline_black_36dp);
     }
 
-    private void r() {
+    private void saveSound() {
         if (a(M)) {
             if (!isEditing) {
                 String obj = Helper.getText(binding.edInput);
@@ -240,7 +240,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
         }
     }
 
-    private void s() {
+    private void startProgressTimer() {
         H = new Timer();
         I = new TimerTask() {
             @Override
@@ -263,7 +263,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
         return SketchwarePaths.getCollectionPath() + File.separator + "sound" + File.separator + "data" + File.separator + O.resFullName;
     }
 
-    private void f(String str) {
+    private void loadSoundFromPath(String str) {
         try {
             if (G != null) {
                 if (I != null) {
@@ -284,7 +284,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
                 int duration = mediaPlayer.getDuration() / 100;
                 binding.fileLength.setText(String.format("%02d : %02d", duration / 60, duration % 60));
                 G.start();
-                s();
+                startProgressTimer();
             });
             G.setOnCompletionListener(mediaPlayer -> {
                 H.cancel();
@@ -328,7 +328,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
                 binding.fileLength.setText(String.format("%02d : %02d", duration / 60, duration % 60));
                 binding.fileName.setText(a.substring(a.lastIndexOf("/") + 1));
                 mediaPlayer.start();
-                s();
+                startProgressTimer();
             });
             G.setOnCompletionListener(mediaPlayer -> {
                 H.cancel();

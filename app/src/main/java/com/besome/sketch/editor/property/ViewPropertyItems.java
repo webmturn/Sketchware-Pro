@@ -102,10 +102,10 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
             case "property_text" -> b(property, bean.text.text);
             case "property_text_size" -> c(property, bean.text.textSize);
             case "property_text_style" -> c(property, bean.text.textType);
-            case "property_text_color" -> r(property, bean.text.resTextColor, bean.text.textColor);
+            case "property_text_color" -> addColorProperty(property, bean.text.resTextColor, bean.text.textColor);
             case "property_hint" -> b(property, bean.text.hint);
-            case "property_hint_color" -> r(property, bean.text.resHintColor, bean.text.hintColor);
-            case "property_single_line" -> e(property, bean.text.singleLine);
+            case "property_hint_color" -> addColorProperty(property, bean.text.resHintColor, bean.text.hintColor);
+            case "property_single_line" -> addSwitchProperty(property, bean.text.singleLine);
             case "property_lines" -> b(property, String.valueOf(bean.text.line));
             case "property_input_type" -> c(property, bean.text.inputType);
             case "property_ime_option" -> c(property, bean.text.imeOption);
@@ -114,8 +114,8 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
             case "property_background_resource" ->
                     b(property, bean.layout.backgroundResource, false);
             case "property_background_color" ->
-                    r(property, bean.layout.backgroundResColor, bean.layout.backgroundColor);
-            case "property_enabled" -> e(property, bean.enabled);
+                    addColorProperty(property, bean.layout.backgroundResColor, bean.layout.backgroundColor);
+            case "property_enabled" -> addSwitchProperty(property, bean.enabled);
             case "property_rotate" -> b(property, String.valueOf(bean.image.rotate));
             case "property_alpha" -> b(property, String.valueOf(bean.alpha));
             case "property_translation_x" -> b(property, String.valueOf(bean.translationX));
@@ -125,7 +125,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
             case "property_spinner_mode" -> c(property, bean.spinnerMode);
             case "property_divider_height" -> d(property, bean.dividerHeight);
             case "property_custom_view_listview" -> a(property, bean.customView);
-            case "property_checked" -> e(property, bean.checked);
+            case "property_checked" -> addSwitchProperty(property, bean.checked);
             case "property_max" -> b(property, String.valueOf(bean.max));
             case "property_progress" -> b(property, String.valueOf(bean.progress));
             case "property_first_day_of_week" -> c(property, bean.firstDayOfWeek);
@@ -177,7 +177,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
         addView(indentItem);
     }
 
-    private void r(String name, String value, int value2) {
+    private void addColorProperty(String name, String value, int value2) {
         PropertyColorItem colorItem = (PropertyColorItem) f.get(name);
         if (colorItem == null) {
             colorItem = new PropertyColorItem(getContext(), !b, sc_id);
@@ -492,7 +492,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
         }
     }
 
-    private void e(String key, int value) {
+    private void addSwitchProperty(String key, int value) {
         PropertySwitchSingleLineItem switchSingleLineItem = (PropertySwitchSingleLineItem) f.get(key);
         boolean isEnabled = false;
         if (switchSingleLineItem == null) {

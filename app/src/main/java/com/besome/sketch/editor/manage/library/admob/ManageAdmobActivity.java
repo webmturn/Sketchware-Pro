@@ -100,7 +100,7 @@ public class ManageAdmobActivity extends BaseAppCompatActivity implements View.O
         }
     }
 
-    private void n() {
+    private void openAdmobConsole() {
         if (GB.h(getApplicationContext())) {
             try {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -119,7 +119,7 @@ public class ManageAdmobActivity extends BaseAppCompatActivity implements View.O
         }
     }
 
-    private void o() {
+    private void openAdmobDocs() {
         try {
             A.a("P1I16", true);
             Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -156,7 +156,7 @@ public class ManageAdmobActivity extends BaseAppCompatActivity implements View.O
         if (!mB.a()) {
             int id = v.getId();
             if (id == binding.btnConsole.getId()) {
-                n();
+                openAdmobConsole();
             } else if (id == binding.layoutSwitch.getId()) {
                 if (!binding.libSwitch.isChecked()) {
                     binding.libSwitch.setChecked(true);
@@ -241,7 +241,7 @@ public class ManageAdmobActivity extends BaseAppCompatActivity implements View.O
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.menu_admob_help) {
-            o();
+            openAdmobDocs();
         } else if (itemId == R.id.menu_admob_settings) {
             toAdmobActivity();
         }
