@@ -535,7 +535,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
                 ProjectListManager.updateProject(sc_id, data);
                 updateProjectResourcesContents(data);
             } else {
-                data.put("my_sc_reg_dt", new DateTimeUtil().a("yyyyMMddHHmmss"));
+                data.put("my_sc_reg_dt", new DateTimeUtil().formatCurrentTime("yyyyMMddHHmmss"));
                 data.put("custom_icon", projectHasCustomIcon);
                 data.put("isIconAdaptive", isIconAdaptive);
                 data.put("sc_ver_code", Helper.getText(binding.verCode));

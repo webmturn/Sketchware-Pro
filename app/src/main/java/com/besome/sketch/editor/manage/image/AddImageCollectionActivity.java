@@ -273,7 +273,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
 
     private void setImageFromUri(Uri uri) {
         String filePath;
-        if (uri != null && (filePath = UriPathResolver.a(this, uri)) != null) {
+        if (uri != null && (filePath = UriPathResolver.resolve(this, uri)) != null) {
             setImageFromFile(filePath);
         }
     }

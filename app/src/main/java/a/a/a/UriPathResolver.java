@@ -5,22 +5,22 @@ import android.net.Uri;
 import android.util.Log;
 
 public final class UriPathResolver {
-  public static String a(Context paramContext, Uri paramUri) {
+  public static String resolve(Context paramContext, Uri paramUri) {
     String result = null;
     if (android.provider.DocumentsContract.isDocumentUri(paramContext, paramUri)) {
-      if (b(paramUri)) {
+      if (isExternalStorageDocument(paramUri)) {
         String[] split = android.provider.DocumentsContract.getDocumentId(paramUri).split(":");
         if ("primary".equalsIgnoreCase(split[0])) {
           result = android.os.Environment.getExternalStorageDirectory() + "/" + split[1];
         }
-      } else if (a(paramUri)) {
+      } else if (isDownloadsDocument(paramUri)) {
         String docId = android.provider.DocumentsContract.getDocumentId(paramUri);
         if (!android.text.TextUtils.isEmpty(docId) && docId.startsWith("raw:")) {
           return docId.replaceFirst("raw:", "");
         }
-        result = a(paramContext, android.content.ContentUris.withAppendedId(
+        result = queryDataColumn(paramContext, android.content.ContentUris.withAppendedId(
             Uri.parse("content://downloads/public_downloads"), Long.valueOf(docId).longValue()), null, null);
-      } else if (c(paramUri)) {
+      } else if (isMediaDocument(paramUri)) {
         String[] split = android.provider.DocumentsContract.getDocumentId(paramUri).split(":");
         String type = split[0];
         Uri contentUri = null;
@@ -31,10 +31,10 @@ public final class UriPathResolver {
         } else if ("audio".equals(type)) {
           contentUri = android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         }
-        result = a(paramContext, contentUri, "_id=?", new String[]{split[1]});
+        result = queryDataColumn(paramContext, contentUri, "_id=?", new String[]{split[1]});
       }
     } else if ("content".equalsIgnoreCase(paramUri.getScheme())) {
-      result = a(paramContext, paramUri, null, null);
+      result = queryDataColumn(paramContext, paramUri, null, null);
     } else if ("file".equalsIgnoreCase(paramUri.getScheme())) {
       result = paramUri.getPath();
     }
@@ -49,7 +49,7 @@ public final class UriPathResolver {
     return null;
   }
   
-  public static String a(Context paramContext, Uri paramUri, String paramString, String[] paramArrayOfString) {
+  public static String queryDataColumn(Context paramContext, Uri paramUri, String paramString, String[] paramArrayOfString) {
     android.database.Cursor cursor = null;
     try {
       cursor = paramContext.getContentResolver().query(paramUri, new String[]{"_data"}, paramString, paramArrayOfString, null);
@@ -65,15 +65,15 @@ public final class UriPathResolver {
     return null;
   }
   
-  public static boolean a(Uri paramUri) {
+  public static boolean isDownloadsDocument(Uri paramUri) {
     return "com.android.providers.downloads.documents".equals(paramUri.getAuthority());
   }
   
-  public static boolean b(Uri paramUri) {
+  public static boolean isExternalStorageDocument(Uri paramUri) {
     return "com.android.externalstorage.documents".equals(paramUri.getAuthority());
   }
   
-  public static boolean c(Uri paramUri) {
+  public static boolean isMediaDocument(Uri paramUri) {
     return "com.android.providers.media.documents".equals(paramUri.getAuthority());
   }
 }

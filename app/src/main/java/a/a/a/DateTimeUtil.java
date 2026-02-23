@@ -7,15 +7,15 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 public class DateTimeUtil {
-  public long a() {
+  public long currentTimeMillis() {
     return (new Date()).getTime();
   }
   
-  public String a(long paramLong, String paramString) {
+  public String formatTimestamp(long paramLong, String paramString) {
     return (new SimpleDateFormat(paramString, Locale.ENGLISH)).format(new Date(paramLong));
   }
   
-  public String a(String paramString) {
+  public String formatCurrentTime(String paramString) {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(paramString);
     try {
       Date date = new Date();
@@ -25,7 +25,7 @@ public class DateTimeUtil {
     } 
   }
   
-  public String a(String paramString1, String paramString2) {
+  public String convertTimezone(String paramString1, String paramString2) {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(paramString2);
     try {
       long l1 = simpleDateFormat.parse(paramString1).getTime();
@@ -38,7 +38,7 @@ public class DateTimeUtil {
     return paramString1;
   }
   
-  public String a(String paramString1, String paramString2, String paramString3) {
+  public String reformatDate(String paramString1, String paramString2, String paramString3) {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(paramString2);
     try {
       long l1 = simpleDateFormat.parse(paramString1).getTime();
@@ -52,7 +52,7 @@ public class DateTimeUtil {
     return paramString1;
   }
   
-  public long b(String paramString1, String paramString2) {
+  public long parseToMillis(String paramString1, String paramString2) {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(paramString2, Locale.ENGLISH);
     try {
       return simpleDateFormat.parse(paramString1).getTime();
@@ -61,7 +61,7 @@ public class DateTimeUtil {
     } 
   }
   
-  public String b(String paramString) {
+  public String formatCurrentTimeGmt(String paramString) {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(paramString);
     simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
     try {

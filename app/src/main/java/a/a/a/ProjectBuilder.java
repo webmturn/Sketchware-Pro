@@ -984,7 +984,7 @@ public class ProjectBuilder {
             stringFogMappingPrinter.startMappingOutput();
             stringFogMappingPrinter.ouputInfo("UTF-8", "com.github.megatronking.stringfog.xor.StringFogImpl");
             stringFogClassInjector.doFog2ClassInDir(new File(ProjectFilePaths.compiledClassesPath));
-            ZipUtil.a(context, "stringfog/stringfog.zip", ProjectFilePaths.compiledClassesPath);
+            ZipUtil.extractAssetZip(context, "stringfog/stringfog.zip", ProjectFilePaths.compiledClassesPath);
         } catch (Exception e) {
             LogUtil.e("StringFog", "Failed to run StringFog", e);
         }

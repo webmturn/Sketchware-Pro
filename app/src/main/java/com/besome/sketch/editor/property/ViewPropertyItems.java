@@ -48,7 +48,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
 
     public ViewPropertyItems(Context var1) {
         super(var1);
-        RecentHistoryManager.a().a(var1);
+        RecentHistoryManager.getInstance().initialize(var1);
     }
 
     private void setupViews() {
@@ -229,7 +229,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     public void a(String scId, ViewBean bean) {
         sc_id = scId;
         c = bean;
-        RecentHistoryManager.a().b(c.getClassInfo().getClassName());
+        RecentHistoryManager.getInstance().loadFromDatabase(c.getClassInfo().getClassName());
         removeAllViews();
         if (bean.id.equals("_fab")) {
             b(bean);
@@ -250,12 +250,12 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
 
     @Override
     public void a(String var1, Object var2) {
-        RecentHistoryManager.a().a(c.getClassInfo().getClassName(), var1);
+        RecentHistoryManager.getInstance().addRecentItem(c.getClassInfo().getClassName(), var1);
         if (d != null) {
             ViewBean cloned = c.clone();
             i(c);
             if (!b) {
-                ViewHistoryManager.c(sc_id).a(e.getXmlName(), cloned, c.clone());
+                ViewHistoryManager.getInstance(sc_id).recordUpdate(e.getXmlName(), cloned, c.clone());
                 d.a(c);
             }
         }
@@ -300,7 +300,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     }
 
     public void save() {
-        RecentHistoryManager.a().b();
+        RecentHistoryManager.getInstance().saveToDatabase();
     }
 
     private void b(ViewBean bean) {
@@ -482,7 +482,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
         params.gravity = Gravity.LEFT;
         setLayoutParams(params);
         setGravity(Gravity.LEFT);
-        ArrayList<String> items = RecentHistoryManager.a().a(bean.getClassInfo().getClassName());
+        ArrayList<String> items = RecentHistoryManager.getInstance().getRecentItems(bean.getClassInfo().getClassName());
         if (items == null) {
             setupViews();
         } else {

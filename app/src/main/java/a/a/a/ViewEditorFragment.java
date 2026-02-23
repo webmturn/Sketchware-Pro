@@ -321,7 +321,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
 
     private void onRedo() {
         if (!isDragging) {
-            HistoryViewBean historyViewBean = ViewHistoryManager.c(sc_id).h(projectFileBean.getXmlName());
+            HistoryViewBean historyViewBean = ViewHistoryManager.getInstance(sc_id).redo(projectFileBean.getXmlName());
             if (historyViewBean != null) {
                 int actionType = historyViewBean.getActionType();
                 if (actionType == HistoryViewBean.ACTION_TYPE_ADD) {
@@ -387,7 +387,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
 
     private void onUndo() {
         if (!isDragging) {
-            HistoryViewBean historyViewBean = ViewHistoryManager.c(sc_id).i(projectFileBean.getXmlName());
+            HistoryViewBean historyViewBean = ViewHistoryManager.getInstance(sc_id).undo(projectFileBean.getXmlName());
             if (historyViewBean != null) {
                 int actionType = historyViewBean.getActionType();
                 if (actionType == HistoryViewBean.ACTION_TYPE_ADD) {
@@ -449,8 +449,8 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
         menu.findItem(R.id.menu_view_redo).setEnabled(false);
         menu.findItem(R.id.menu_view_undo).setEnabled(false);
         if (projectFileBean != null) {
-            menu.findItem(R.id.menu_view_redo).setEnabled(ViewHistoryManager.c(sc_id).f(projectFileBean.getXmlName()));
-            menu.findItem(R.id.menu_view_undo).setEnabled(ViewHistoryManager.c(sc_id).g(projectFileBean.getXmlName()));
+            menu.findItem(R.id.menu_view_redo).setEnabled(ViewHistoryManager.getInstance(sc_id).canRedo(projectFileBean.getXmlName()));
+            menu.findItem(R.id.menu_view_undo).setEnabled(ViewHistoryManager.getInstance(sc_id).canUndo(projectFileBean.getXmlName()));
         }
     }
 

@@ -258,12 +258,12 @@ public class ViewCodeEditorActivity extends BaseAppCompatActivity {
             rootLayoutManager.set(filename, InjectRootLayoutManager.toRoot(root));
             HistoryViewBean bean = new HistoryViewBean();
             bean.actionOverride(parsedLayout, ProjectDataManager.getProjectDataManager(sc_id).d(filename));
-            var viewHistoryMgr = ViewHistoryManager.c(sc_id);
-            if (!viewHistoryMgr.c.containsKey(filename)) {
-                viewHistoryMgr.e(filename);
+            var viewHistoryMgr = ViewHistoryManager.getInstance(sc_id);
+            if (!viewHistoryMgr.historyMap.containsKey(filename)) {
+                viewHistoryMgr.initHistory(filename);
             }
-            viewHistoryMgr.a(filename);
-            viewHistoryMgr.a(filename, bean);
+            viewHistoryMgr.trimFutureHistory(filename);
+            viewHistoryMgr.addHistoryEntry(filename, bean);
             // Replace the view beans with the parsed layout
             ProjectDataManager.getProjectDataManager(sc_id).c.put(filename, parsedLayout);
             setResult(RESULT_OK);

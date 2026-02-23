@@ -121,7 +121,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
                             return;
                         }
                         K = data;
-                        if (UriPathResolver.a(this, K) == null) {
+                        if (UriPathResolver.resolve(this, K) == null) {
                             return;
                         }
                         a(data);
@@ -205,7 +205,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
         if (a(M)) {
             if (!u) {
                 String obj = Helper.getText(binding.edInput);
-                String a = UriPathResolver.a(this, K);
+                String a = UriPathResolver.resolve(this, K);
                 if (a == null) {
                     return;
                 }
@@ -304,7 +304,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
     }
 
     private void a(Uri uri) {
-        String a = UriPathResolver.a(this, uri);
+        String a = UriPathResolver.resolve(this, uri);
         K = uri;
         try {
             if (G != null) {
@@ -339,7 +339,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
             G.setDataSource(this, uri);
             G.prepare();
             L = true;
-            a(UriPathResolver.a(this, K), binding.imgAlbum);
+            a(UriPathResolver.resolve(this, K), binding.imgAlbum);
             binding.layoutControl.setVisibility(View.VISIBLE);
             binding.layoutGuide.setVisibility(View.GONE);
             try {

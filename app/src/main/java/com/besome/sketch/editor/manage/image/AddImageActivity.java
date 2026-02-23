@@ -315,7 +315,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
 
     private void setImageFromUri(Uri uri) {
         String filePath;
-        if (uri != null && (filePath = UriPathResolver.a(this, uri)) != null) {
+        if (uri != null && (filePath = UriPathResolver.resolve(this, uri)) != null) {
             setImageFromFile(filePath);
         }
     }
@@ -402,7 +402,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
                     while (i < activity.pickedImageUris.size()) {
                         var uri = activity.pickedImageUris.get(i);
                         var imageName = Helper.getText(activity.ed_input_edittext).trim() + "_" + ++i;
-                        var imageFilePath = UriPathResolver.a(activity.getApplicationContext(), uri);
+                        var imageFilePath = UriPathResolver.resolve(activity.getApplicationContext(), uri);
                         if (imageFilePath == null) {
                             return;
                         }

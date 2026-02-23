@@ -72,7 +72,7 @@ public class ProjectDataParser {
   }
   
   public <T> T a(String paramString) {
-    switch (KeyboardSettingConstants.a[this.d.ordinal()]) {
+    switch (KeyboardSettingConstants.VALUES[this.d.ordinal()]) {
       default:
         return null;
       case 8:

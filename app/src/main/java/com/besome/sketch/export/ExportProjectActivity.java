@@ -182,7 +182,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
             iCVar.i();
 
             /* Extract project type template */
-            project_metadata.extractAssetsToRes(getApplicationContext(), SketchwarePaths.getResourceZipPath(VersionCodeValidator.a(sc_id) ? "600" : sc_id));
+            project_metadata.extractAssetsToRes(getApplicationContext(), SketchwarePaths.getResourceZipPath(VersionCodeValidator.isValid(sc_id) ? "600" : sc_id));
 
             /* Start generating project files */
             ProjectBuilder builder = new ProjectBuilder(this, project_metadata);
@@ -246,7 +246,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
             }
             toExclude.add("DebugActivity.java");
 
-            new ZipUtil().a(exportedSourcesZipPath, toCompress, toExclude);
+            new ZipUtil().createZipFile(exportedSourcesZipPath, toCompress, toExclude);
             project_metadata.prepareBuildDirectories();
             runOnUiThread(() -> initializeAfterExportedSourceViews(exportedFilename));
         } catch (Exception e) {

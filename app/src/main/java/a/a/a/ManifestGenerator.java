@@ -555,7 +555,7 @@ public class ManifestGenerator {
                     }
                 }
                 if (!AndroidManifestInjector.isActivityKeyboardUsed(activityTag, c.sc_id, projectFileBean.getJavaName())) {
-                    String keyboardSetting = ActivityConfigConstants.a(projectFileBean.keyboardSetting);
+                    String keyboardSetting = ActivityConfigConstants.getKeyboardSettingName(projectFileBean.keyboardSetting);
                     if (!keyboardSetting.isEmpty()) {
                         activityTag.addAttribute("android", "windowSoftInputMode", keyboardSetting);
                     }

@@ -126,7 +126,7 @@ public class PropertyActivity extends BaseAppCompatActivity implements PropertyC
             viewBean = ProjectDataManager.getProjectDataManager(sc_id).c(projectFileBean.getXmlName(), this.viewBean.preId);
         }
 
-        ViewHistoryManager.c(sc_id).a(projectFileBean.getXmlName(), viewBean.clone(), this.viewBean);
+        ViewHistoryManager.getInstance(sc_id).recordUpdate(projectFileBean.getXmlName(), viewBean.clone(), this.viewBean);
         viewBean.copy(this.viewBean);
         Intent var2 = new Intent();
         var2.putExtra("view_id", this.viewBean.id);

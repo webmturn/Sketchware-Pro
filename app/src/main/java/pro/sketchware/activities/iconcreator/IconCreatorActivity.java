@@ -153,7 +153,7 @@ public class IconCreatorActivity extends BaseAppCompatActivity {
                     }
                     Uri uri = result.getData().getData();
                     if (result.getResultCode() == RESULT_OK && uri != null) {
-                        iconFilePath = UriPathResolver.a(getApplicationContext(), uri);
+                        iconFilePath = UriPathResolver.resolve(getApplicationContext(), uri);
                         appIconBitmap = null;
                         Bitmap bitmap = BitmapUtil.a(iconFilePath, 96, 96);
                         try {
@@ -192,7 +192,7 @@ public class IconCreatorActivity extends BaseAppCompatActivity {
                     }
                     Uri uri = result.getData().getData();
                     if (result.getResultCode() == RESULT_OK && uri != null) {
-                        setAppIcoTexture(UriPathResolver.a(getApplicationContext(), uri));
+                        setAppIcoTexture(UriPathResolver.resolve(getApplicationContext(), uri));
                     }
                 });
         binding = ActivityIconCreatorBinding.inflate(getLayoutInflater());

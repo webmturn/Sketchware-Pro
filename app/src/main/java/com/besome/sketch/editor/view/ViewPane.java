@@ -465,7 +465,7 @@ public class ViewPane extends RelativeLayout {
                 } else {
                     String backgroundRes = resourcesManager.f(viewBean.layout.backgroundResource);
                     if (backgroundRes.endsWith(".9.png")) {
-                        Bitmap decodedBitmap = NinePatchDecoder.a(backgroundRes);
+                        Bitmap decodedBitmap = NinePatchDecoder.decodeFile(backgroundRes);
                         byte[] ninePatchChunk = decodedBitmap.getNinePatchChunk();
                         if (NinePatch.isNinePatchChunk(ninePatchChunk)) {
                             view.setBackground(new NinePatchDrawable(getResources(), decodedBitmap, ninePatchChunk, new Rect(), null));

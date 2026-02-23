@@ -590,7 +590,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
 
     public void b(ArrayList<ViewBean> arrayList, boolean z) {
         if (z) {
-            ViewHistoryManager.c(a).b(projectFileBean.getXmlName(), arrayList);
+            ViewHistoryManager.getInstance(a).recordRemove(projectFileBean.getXmlName(), arrayList);
             if (historyChangeListener != null) {
                 historyChangeListener.onCallback();
             }
@@ -726,7 +726,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
 
     public ItemView b(ViewBean viewBean, boolean z) {
         if (z) {
-            ViewHistoryManager.c(a).b(projectFileBean.getXmlName(), viewBean);
+            ViewHistoryManager.getInstance(a).recordMove(projectFileBean.getXmlName(), viewBean);
             if (historyChangeListener != null) {
                 historyChangeListener.onCallback();
             }
@@ -998,7 +998,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
 
     public ItemView a(ArrayList<ViewBean> arrayList, boolean z) {
         if (z) {
-            ViewHistoryManager.c(a).a(projectFileBean.getXmlName(), arrayList);
+            ViewHistoryManager.getInstance(a).recordAddMultiple(projectFileBean.getXmlName(), arrayList);
             if (historyChangeListener != null) {
                 historyChangeListener.onCallback();
             }
@@ -1016,7 +1016,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
 
     public ItemView a(ViewBean viewBean, boolean isInHistory) {
         if (isInHistory) {
-            ViewHistoryManager.c(a).a(projectFileBean.getXmlName(), viewBean);
+            ViewHistoryManager.getInstance(a).recordAdd(projectFileBean.getXmlName(), viewBean);
             if (historyChangeListener != null) {
                 historyChangeListener.onCallback();
             }

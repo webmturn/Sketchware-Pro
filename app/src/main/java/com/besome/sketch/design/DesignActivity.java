@@ -230,8 +230,8 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         ProjectDataManager.getFileManager(sc_id, haveSavedState);
         kC var2 = ProjectDataManager.getResourceManager(sc_id, haveSavedState);
         ProjectDataManager.getLibraryManager(sc_id, haveSavedState);
-        ViewHistoryManager.c(sc_id);
-        BlockHistoryManager.d(sc_id);
+        ViewHistoryManager.getInstance(sc_id);
+        BlockHistoryManager.getInstance(sc_id);
         if (!haveSavedState) {
             var2.f();
             var2.g();
@@ -340,8 +340,8 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     @Override
     public void finish() {
         ProjectDataManager.clearAll();
-        ViewHistoryManager.a();
-        BlockHistoryManager.a();
+        ViewHistoryManager.clearInstance();
+        BlockHistoryManager.clearInstance();
         setResult(RESULT_CANCELED, getIntent());
         super.finish();
     }

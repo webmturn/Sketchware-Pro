@@ -585,7 +585,7 @@ public class BuiltInLibraries {
             /* Create the directories */
             fileUtil.f(dexsDirectoryPath);
             /* Extract dexs.zip to dexs/ */
-            try { new ZipUtil().a(dexsArchivePath, dexsDirectoryPath); } catch (java.io.FileNotFoundException e) { throw new RuntimeException(e); }
+            try { new ZipUtil().extractZipFile(dexsArchivePath, dexsDirectoryPath); } catch (java.io.FileNotFoundException e) { throw new RuntimeException(e); }
         }
         if (ProjectBuilder.hasFileChanged(baseAssetsPath + libsArchiveName, libsArchivePath)) {
             for (BuildProgressReceiver receiver : progressReceivers) {
@@ -596,7 +596,7 @@ public class BuiltInLibraries {
             /* Create the directories */
             fileUtil.f(libsDirectoryPath);
             /* Extract libs.zip to libs/ */
-            try { new ZipUtil().a(libsArchivePath, libsDirectoryPath); } catch (java.io.FileNotFoundException e) { throw new RuntimeException(e); }
+            try { new ZipUtil().extractZipFile(libsArchivePath, libsDirectoryPath); } catch (java.io.FileNotFoundException e) { throw new RuntimeException(e); }
         }
         maybeExtractCoreLambdaStubsJar();
         if (ProjectBuilder.hasFileChanged(baseAssetsPath + testkeyArchiveName, testkeyArchivePath)) {
@@ -608,7 +608,7 @@ public class BuiltInLibraries {
             /* Create the directories */
             fileUtil.f(testkeyDirectoryPath);
             /* Extract testkey.zip to testkey/ */
-            try { new ZipUtil().a(testkeyArchivePath, testkeyDirectoryPath); } catch (java.io.FileNotFoundException e) { throw new RuntimeException(e); }
+            try { new ZipUtil().extractZipFile(testkeyArchivePath, testkeyDirectoryPath); } catch (java.io.FileNotFoundException e) { throw new RuntimeException(e); }
         }
     }
 
@@ -622,7 +622,7 @@ public class BuiltInLibraries {
             /* Delete android.jar */
             new oB().c(EXTRACTED_COMPILE_ASSETS_PATH.getAbsolutePath() + File.separator + "android.jar");
             /* Extract android.jar.zip to android.jar */
-            try { new ZipUtil().a(androidJarPath, EXTRACTED_COMPILE_ASSETS_PATH.getAbsolutePath()); } catch (java.io.FileNotFoundException e) { throw new RuntimeException(e); }
+            try { new ZipUtil().extractZipFile(androidJarPath, EXTRACTED_COMPILE_ASSETS_PATH.getAbsolutePath()); } catch (java.io.FileNotFoundException e) { throw new RuntimeException(e); }
         }
     }
 

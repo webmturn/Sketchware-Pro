@@ -310,7 +310,7 @@ public class ProjectFilePaths {
      */
     public void extractAssetsToRes(Context context, String str) {
         try {
-            ZipUtil.a(context, str, resDirectoryPath);
+            ZipUtil.extractAssetZip(context, str, resDirectoryPath);
         } catch (Exception e2) {
             Log.e("ProjectFilePaths", e2.getMessage(), e2);
         }

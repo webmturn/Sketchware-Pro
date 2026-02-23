@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.zip.ZipOutputStream;
 
 public class ZipUtil {
-  public static void a(Context paramContext, String paramString1, String paramString2) {
+  public static void extractAssetZip(Context paramContext, String paramString1, String paramString2) {
     byte[] buf = new byte[1024];
     String destDir = paramString2;
     if (!destDir.endsWith(File.separator)) {
@@ -61,17 +61,17 @@ public class ZipUtil {
     }
   }
   
-  public int a(String paramString, File paramFile, ZipOutputStream paramZipOutputStream, ArrayList<String> paramArrayList) {
+  public int addDirectoryToZip(String paramString, File paramFile, ZipOutputStream paramZipOutputStream, ArrayList<String> paramArrayList) {
     File[] files = paramFile.listFiles();
     if (files == null) return 0;
     if (files.length == 0) {
       String absPath = paramFile.getAbsolutePath();
-      a(paramString, absPath.substring(paramString.length(), absPath.length()), paramZipOutputStream);
+      addFileToZip(paramString, absPath.substring(paramString.length(), absPath.length()), paramZipOutputStream);
     }
     int count = 0;
     for (File file : files) {
       if (file.isDirectory()) {
-        a(paramString, file, paramZipOutputStream, paramArrayList);
+        addDirectoryToZip(paramString, file, paramZipOutputStream, paramArrayList);
       }
       if (file.isFile()) {
         String absPath = file.getAbsolutePath();
@@ -83,7 +83,7 @@ public class ZipUtil {
             break;
           }
         }
-        if (!excluded && a(paramString, relPath, paramZipOutputStream)) {
+        if (!excluded && addFileToZip(paramString, relPath, paramZipOutputStream)) {
           count++;
         }
       }
@@ -91,7 +91,7 @@ public class ZipUtil {
     return count;
   }
   
-  public void a(InputStream paramInputStream, String paramString) {
+  public void extractZipStream(InputStream paramInputStream, String paramString) {
     byte[] buf = new byte[1024];
     String destDir = paramString;
     if (!destDir.endsWith(File.separator)) {
@@ -139,11 +139,11 @@ public class ZipUtil {
     }
   }
   
-  public void a(String paramString1, String paramString2) throws java.io.FileNotFoundException {
-    a(new FileInputStream(paramString1), paramString2);
+  public void extractZipFile(String paramString1, String paramString2) throws java.io.FileNotFoundException {
+    extractZipStream(new FileInputStream(paramString1), paramString2);
   }
   
-  public void a(String paramString, ArrayList<String> paramArrayList1, ArrayList<String> paramArrayList2) {
+  public void createZipFile(String paramString, ArrayList<String> paramArrayList1, ArrayList<String> paramArrayList2) {
     FileOutputStream fos = null;
     ZipOutputStream zos = null;
     try {
@@ -152,7 +152,7 @@ public class ZipUtil {
       Iterator<String> iterator = paramArrayList1.iterator();
       while (iterator.hasNext()) {
         String path = iterator.next();
-        a(path, new File(path), zos, paramArrayList2);
+        addDirectoryToZip(path, new File(path), zos, paramArrayList2);
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -162,7 +162,7 @@ public class ZipUtil {
     }
   }
   
-  public boolean a(String paramString1, String paramString2, ZipOutputStream paramZipOutputStream) {
+  public boolean addFileToZip(String paramString1, String paramString2, ZipOutputStream paramZipOutputStream) {
     File file = new File(paramString1 + paramString2);
     if (!file.isFile()) {
       try { if (paramZipOutputStream != null) paramZipOutputStream.closeEntry(); } catch (IOException e) { e.printStackTrace(); }
@@ -189,7 +189,7 @@ public class ZipUtil {
     return true;
   }
   
-  public byte[] a(String paramString) {
+  public byte[] readFileToBytes(String paramString) {
     ByteArrayOutputStream baos = null;
     try {
       baos = new ByteArrayOutputStream();

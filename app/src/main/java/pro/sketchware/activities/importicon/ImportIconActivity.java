@@ -109,7 +109,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
     }
 
     private void extractIcons() {
-        ZipUtil.a(this, "icons" + File.separator + "icon_pack.zip", SketchwarePaths.getExtractedIconPackStoreLocation());
+        ZipUtil.extractAssetZip(this, "icons" + File.separator + "icon_pack.zip", SketchwarePaths.getExtractedIconPackStoreLocation());
     }
 
     @Override
