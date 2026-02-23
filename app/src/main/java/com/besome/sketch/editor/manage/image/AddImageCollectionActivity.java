@@ -164,8 +164,8 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
         img_rotate.setOnClickListener(this);
         img_vertical.setOnClickListener(this);
         img_horizontal.setOnClickListener(this);
-        r.setOnClickListener(this);
-        s.setOnClickListener(this);
+        dialogOkButton.setOnClickListener(this);
+        dialogCancelButton.setOnClickListener(this);
         z = false;
         imageRotationDegrees = 0;
         imageScaleY = 1;

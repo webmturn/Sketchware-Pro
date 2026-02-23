@@ -180,8 +180,8 @@ public class AddSoundActivity extends BaseDialogActivity implements View.OnClick
             }
         });
         selectFile.setOnClickListener(this);
-        r.setOnClickListener(this);
-        s.setOnClickListener(this);
+        dialogOkButton.setOnClickListener(this);
+        dialogCancelButton.setOnClickListener(this);
         if (requestCode == 270) {
             e(getString(R.string.design_manager_sound_title_edit_sound));
             ProjectResourceBean projectResourceBean = intent.getParcelableExtra("project_resource");

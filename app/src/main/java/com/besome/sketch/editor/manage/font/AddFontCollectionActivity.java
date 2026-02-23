@@ -47,8 +47,8 @@ public class AddFontCollectionActivity extends BaseDialogActivity implements Vie
         binding.addToCollectionCheckbox.setVisibility(View.GONE);
         binding.buttonsHolder.setVisibility(View.GONE);
         binding.fontPreviewView.setVisibility(View.VISIBLE);
-        r.setOnClickListener(this);
-        s.setOnClickListener(this);
+        dialogOkButton.setOnClickListener(this);
+        dialogCancelButton.setOnClickListener(this);
         fontValidator = new FontNameValidator(this, binding.tiInput, BlockConstants.b, getExistingFontNames());
         fontValidator = new FontNameValidator(this, binding.tiInput, BlockConstants.b, getExistingFontNames(), projectResourceBean.resName);
         binding.edInput.setText(projectResourceBean.resName);

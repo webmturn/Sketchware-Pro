@@ -174,8 +174,8 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
         img_rotate.setOnClickListener(this);
         img_vertical.setOnClickListener(this);
         img_horizontal.setOnClickListener(this);
-        r.setOnClickListener(this);
-        s.setOnClickListener(this);
+        dialogOkButton.setOnClickListener(this);
+        dialogCancelButton.setOnClickListener(this);
         B = false;
         imageRotationDegrees = 0;
         imageScaleY = 1;

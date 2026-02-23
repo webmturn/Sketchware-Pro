@@ -94,8 +94,8 @@ public class AddFontActivity extends BaseDialogActivity implements View.OnClickL
         }
         binding.selectFile.setOnClickListener(this);
         binding.clearInput.setOnClickListener(v -> binding.edInput.setText(""));
-        r.setOnClickListener(this);
-        s.setOnClickListener(this);
+        dialogOkButton.setOnClickListener(this);
+        dialogCancelButton.setOnClickListener(this);
 
         fontNameValidator = new FontNameValidator(this, binding.tiInput, BlockConstants.b, intent.getStringArrayListExtra("font_names"));
         if (intent.getIntExtra("request_code", -1) == 272) {

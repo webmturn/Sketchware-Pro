@@ -112,8 +112,8 @@ public class PresetSettingActivity extends BaseDialogActivity implements View.On
 
         d(Helper.getResString(R.string.common_word_import));
         b(Helper.getResString(R.string.common_word_cancel));
-        r.setOnClickListener(this);
-        s.setOnClickListener(this);
+        dialogOkButton.setOnClickListener(this);
+        dialogCancelButton.setOnClickListener(this);
         applyPresetData(presets.get(index).presetName);
     }
 }

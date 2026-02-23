@@ -23,8 +23,8 @@ public class BaseDialogActivity extends BaseAppCompatActivity {
     public TextView dialogTitle;
     public ImageView dialogIcon;
     public TextView dialogDefaultButton;
-    public TextView r; // dialogPositiveButton
-    public TextView s; // dialogNegativeButton
+    public TextView dialogOkButton;
+    public TextView dialogCancelButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,8 +46,8 @@ public class BaseDialogActivity extends BaseAppCompatActivity {
         dialogTitle = findViewById(R.id.common_dialog_tv_title);
         dialogTitleView = findViewById(R.id.common_dialog_title_layout);
         dialogDefaultButton = findViewById(R.id.common_dialog_default_button);
-        r = findViewById(R.id.common_dialog_ok_button);
-        s = findViewById(R.id.common_dialog_cancel_button);
+        dialogOkButton = findViewById(R.id.common_dialog_ok_button);
+        dialogCancelButton = findViewById(R.id.common_dialog_cancel_button);
         dialogContainerView.setOnClickListener(v -> {
             if (!mB.a()) {
                 finish();
@@ -74,7 +74,7 @@ public class BaseDialogActivity extends BaseAppCompatActivity {
     }
 
     public void b(String cancelText) {
-        s.setText(cancelText);
+        dialogCancelButton.setText(cancelText);
     }
 
     public void c(String defaultText) {
@@ -82,7 +82,7 @@ public class BaseDialogActivity extends BaseAppCompatActivity {
     }
 
     public void d(String okText) {
-        r.setText(okText);
+        dialogOkButton.setText(okText);
     }
 
     public void e(String title) {
