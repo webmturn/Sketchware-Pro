@@ -17,8 +17,8 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
-import a.a.a.mB;
-import a.a.a.wB;
+import a.a.a.UIHelper;
+import a.a.a.ViewUtil;
 import pro.sketchware.R;
 
 public class BaseBottomSheetDialogActivity extends BaseAppCompatActivity {
@@ -81,7 +81,7 @@ public class BaseBottomSheetDialogActivity extends BaseAppCompatActivity {
         });
 
         dialogContainerView.setOnClickListener(v -> {
-            if (!mB.a()) {
+            if (!UIHelper.a()) {
                 finish();
             }
         });
@@ -90,13 +90,13 @@ public class BaseBottomSheetDialogActivity extends BaseAppCompatActivity {
 
     @Override
     public void setContentView(int layoutResID) {
-        wB.a(this, dialogContentView, layoutResID);
+        ViewUtil.a(this, dialogContentView, layoutResID);
     }
 
     public void a(boolean var1) {
         if (var1) {
             dialogContainerView.setOnClickListener(v -> {
-                if (!mB.a()) {
+                if (!UIHelper.a()) {
                     finish();
                 }
             });

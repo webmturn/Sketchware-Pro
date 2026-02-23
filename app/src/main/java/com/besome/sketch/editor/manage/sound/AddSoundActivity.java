@@ -33,7 +33,7 @@ import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import a.a.a.Qp;
+import a.a.a.FontCollectionManager;
 import a.a.a.ResourceNameValidator;
 import a.a.a.SketchToast;
 import a.a.a.BlockConstants;
@@ -218,7 +218,7 @@ public class AddSoundActivity extends BaseDialogActivity implements View.OnClick
                         projectResourceBean.isNew = true;
                         if (addToCollection.isChecked()) {
                             try {
-                                Qp.g().a(sc_id, projectResourceBean);
+                                FontCollectionManager.g().a(sc_id, projectResourceBean);
                             } catch (Exception e) {
                                 // The bytecode is lying. Checked exceptions suck.
                                 //noinspection ConstantConditions

@@ -16,7 +16,7 @@ import com.besome.sketch.beans.ViewBean;
 import com.besome.sketch.editor.view.ItemView;
 import com.besome.sketch.editor.view.ScrollContainer;
 
-import a.a.a.wB;
+import a.a.a.ViewUtil;
 
 public class ItemHorizontalScrollView extends FrameLayout implements ItemView, ScrollContainer {
 
@@ -35,10 +35,10 @@ public class ItemHorizontalScrollView extends FrameLayout implements ItemView, S
 
     private void initialize(Context context) {
         setDrawingCacheEnabled(true);
-        setMinimumWidth((int) wB.a(context, 32.0f));
-        setMinimumHeight((int) wB.a(context, 32.0f));
+        setMinimumWidth((int) ViewUtil.a(context, 32.0f));
+        setMinimumHeight((int) ViewUtil.a(context, 32.0f));
         drawPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        drawPaint.setStrokeWidth(wB.a(getContext(), 2.0f));
+        drawPaint.setStrokeWidth(ViewUtil.a(getContext(), 2.0f));
     }
 
     @Override
@@ -235,7 +235,7 @@ public class ItemHorizontalScrollView extends FrameLayout implements ItemView, S
 
     @Override
     public void setPadding(int paddingLeft, int paddingTop, int paddingRight, int paddingBottom) {
-        super.setPadding((int) wB.a(getContext(), (float) paddingLeft), (int) wB.a(getContext(), (float) paddingTop), (int) wB.a(getContext(), (float) paddingRight), (int) wB.a(getContext(), (float) paddingBottom));
+        super.setPadding((int) ViewUtil.a(getContext(), (float) paddingLeft), (int) ViewUtil.a(getContext(), (float) paddingTop), (int) ViewUtil.a(getContext(), (float) paddingRight), (int) ViewUtil.a(getContext(), (float) paddingBottom));
     }
 
     public void setScrollEnabled(boolean isEnabled) {

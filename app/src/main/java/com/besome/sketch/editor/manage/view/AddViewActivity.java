@@ -25,7 +25,7 @@ import a.a.a.ActivityNameValidator;
 import a.a.a.SketchToast;
 import a.a.a.PresetLayoutFactory;
 import a.a.a.BlockConstants;
-import a.a.a.wB;
+import a.a.a.ViewUtil;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageScreenActivityAddTempBinding;
@@ -397,7 +397,7 @@ public class AddViewActivity extends BaseAppCompatActivity {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup var1, int var2) {
-            View var3 = wB.a(var1.getContext(), R.layout.manage_screen_activity_add_feature_item);
+            View var3 = ViewUtil.a(var1.getContext(), R.layout.manage_screen_activity_add_feature_item);
             var3.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             return new ViewHolder(var3);
         }

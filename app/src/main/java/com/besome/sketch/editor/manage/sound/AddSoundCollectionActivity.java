@@ -27,7 +27,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import a.a.a.UriPathResolver;
-import a.a.a.Qp;
+import a.a.a.FontCollectionManager;
 import a.a.a.ResourceNameValidator;
 import a.a.a.SketchToast;
 import a.a.a.BlockConstants;
@@ -213,7 +213,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
                 projectResourceBean.savedPos = 1;
                 projectResourceBean.isNew = true;
                 try {
-                    Qp.g().a(scId, projectResourceBean);
+                    FontCollectionManager.g().a(scId, projectResourceBean);
                     SketchToast.toast(this, getApplicationContext().getString(R.string.design_manager_message_add_complete), 1).show();
                 } catch (Exception e) {
                     // the bytecode's lying
@@ -233,7 +233,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
                     }
                 }
             } else {
-                Qp.g().a(O, Helper.getText(binding.edInput), true);
+                FontCollectionManager.g().a(O, Helper.getText(binding.edInput), true);
                 SketchToast.toast(this, getApplicationContext().getString(R.string.design_manager_message_edit_complete), 1).show();
             }
             finish();

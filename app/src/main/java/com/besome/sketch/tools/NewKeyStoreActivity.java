@@ -20,8 +20,8 @@ import a.a.a.LowercaseNameValidator;
 import a.a.a.LengthRangeValidator;
 import a.a.a.VariableNameValidator;
 import a.a.a.SketchToast;
-import a.a.a.iI;
-import a.a.a.mB;
+import a.a.a.KeyStoreManager;
+import a.a.a.UIHelper;
 import a.a.a.SketchwarePaths;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
@@ -34,7 +34,7 @@ public class NewKeyStoreActivity extends BaseAppCompatActivity implements OnClic
     private LowercaseNameValidator countryValidator;
     private LowercaseNameValidator commonNameValidator;
     private LowercaseNameValidator organizationalUnitValidator;
-    private iI E;
+    private KeyStoreManager E;
     private EditText alias;
     private EditText password;
     private EditText passwordConfirm;
@@ -59,7 +59,7 @@ public class NewKeyStoreActivity extends BaseAppCompatActivity implements OnClic
         }
 
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_close), (v, which) -> {
-            if (!mB.a()) {
+            if (!UIHelper.a()) {
                 v.dismiss();
                 if (success) {
                     Intent intent = new Intent();
@@ -125,7 +125,7 @@ public class NewKeyStoreActivity extends BaseAppCompatActivity implements OnClic
 
     @Override
     public void onClick(View v) {
-        if (!mB.a()) {
+        if (!UIHelper.a()) {
             int id = v.getId();
             if (id == R.id.btn_keystore_cancel) {
                 finish();
@@ -151,7 +151,7 @@ public class NewKeyStoreActivity extends BaseAppCompatActivity implements OnClic
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         toolbar.setNavigationOnClickListener(Helper.getBackPressedClickListener(this));
-        E = new iI();
+        E = new KeyStoreManager();
 
 
         Button var2 = findViewById(R.id.btn_keystore_save);

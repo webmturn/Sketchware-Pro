@@ -184,7 +184,7 @@ public class ProjectFilePaths {
     public final String importedSoundsPath;
     public final HashMap<String, Object> metadata;
     private final Material3LibraryManager material3LibraryManager;
-    private final oB fileUtil;
+    private final EncryptedFileUtil fileUtil;
     private final Context context;
     public BuildConfig buildConfig;
     public boolean generateDataBindingClasses;
@@ -199,24 +199,24 @@ public class ProjectFilePaths {
         this.context = context;
         this.metadata = metadata;
         buildConfig = new BuildConfig();
-        sc_id = yB.c(metadata, "sc_id");
+        sc_id = MapValueHelper.c(metadata, "sc_id");
         material3LibraryManager = new Material3LibraryManager(sc_id);
         buildConfig.sc_id = sc_id;
         projectMyscPath = myscFolderPath.endsWith(File.separator) ? myscFolderPath : myscFolderPath + File.separator;
-        packageName = yB.c(metadata, "my_sc_pkg_name");
-        projectName = yB.c(metadata, "my_ws_name");
-        applicationName = yB.c(metadata, "my_app_name");
-        versionCode = yB.c(metadata, "sc_ver_code");
-        versionName = yB.c(metadata, "sc_ver_name");
+        packageName = MapValueHelper.c(metadata, "my_sc_pkg_name");
+        projectName = MapValueHelper.c(metadata, "my_ws_name");
+        applicationName = MapValueHelper.c(metadata, "my_app_name");
+        versionCode = MapValueHelper.c(metadata, "sc_ver_code");
+        versionName = MapValueHelper.c(metadata, "sc_ver_name");
 
-        colorAccent = yB.a(metadata, ProjectFile.COLOR_ACCENT, getDefaultColor(ProjectFile.COLOR_ACCENT));
-        colorPrimary = yB.a(metadata, ProjectFile.COLOR_PRIMARY, getDefaultColor(ProjectFile.COLOR_PRIMARY));
-        colorPrimaryDark = yB.a(metadata, ProjectFile.COLOR_PRIMARY_DARK, getDefaultColor(ProjectFile.COLOR_PRIMARY_DARK));
-        colorControlHighlight = yB.a(metadata, ProjectFile.COLOR_CONTROL_HIGHLIGHT, getDefaultColor(ProjectFile.COLOR_CONTROL_HIGHLIGHT));
-        colorControlNormal = yB.a(metadata, ProjectFile.COLOR_CONTROL_NORMAL, getDefaultColor(ProjectFile.COLOR_CONTROL_NORMAL));
+        colorAccent = MapValueHelper.a(metadata, ProjectFile.COLOR_ACCENT, getDefaultColor(ProjectFile.COLOR_ACCENT));
+        colorPrimary = MapValueHelper.a(metadata, ProjectFile.COLOR_PRIMARY, getDefaultColor(ProjectFile.COLOR_PRIMARY));
+        colorPrimaryDark = MapValueHelper.a(metadata, ProjectFile.COLOR_PRIMARY_DARK, getDefaultColor(ProjectFile.COLOR_PRIMARY_DARK));
+        colorControlHighlight = MapValueHelper.a(metadata, ProjectFile.COLOR_CONTROL_HIGHLIGHT, getDefaultColor(ProjectFile.COLOR_CONTROL_HIGHLIGHT));
+        colorControlNormal = MapValueHelper.a(metadata, ProjectFile.COLOR_CONTROL_NORMAL, getDefaultColor(ProjectFile.COLOR_CONTROL_NORMAL));
 
         projectSettings = new ProjectSettings(sc_id);
-        fileUtil = new oB(true);
+        fileUtil = new EncryptedFileUtil(true);
         packageNameAsFolders = packageName.replaceAll("\\.", File.separator);
         binDirectoryPath = projectMyscPath + "bin";
         compiledClassesPath = binDirectoryPath + File.separator + "classes";
@@ -477,11 +477,11 @@ public class ProjectFilePaths {
     /**
      * Initialize project metadata
      */
-    public void initializeMetadata(iC projectLibraryManager, hC projectFileManager, eC projectDataManager) {
+    public void initializeMetadata(LibraryManager projectLibraryManager, ProjectFileManager projectFileManager, ProjectDataStore projectDataManager) {
         initializeMetadata(projectLibraryManager, projectFileManager, projectDataManager, ExportType.DEBUG_APP);
     }
 
-    public void initializeMetadata(iC projectLibraryManager, hC projectFileManager, eC projectDataManager, ExportType exportingType) {
+    public void initializeMetadata(LibraryManager projectLibraryManager, ProjectFileManager projectFileManager, ProjectDataStore projectDataManager, ExportType exportingType) {
         ProjectLibraryBean adMob = projectLibraryManager.b();
         ProjectLibraryBean appCompat = projectLibraryManager.c();
         ProjectLibraryBean firebase = projectLibraryManager.d();
@@ -517,7 +517,7 @@ public class ProjectFilePaths {
             buildConfig.setupGoogleMap(googleMaps);
         }
         for (ProjectFileBean customView : projectFileManager.c()) {
-            for (ViewBean viewBean : eC.a(projectDataManager.d(customView.getXmlName()))) {
+            for (ViewBean viewBean : ProjectDataStore.a(projectDataManager.d(customView.getXmlName()))) {
                 var classNameParts = viewBean.convert.split("\\.");
                 var className = classNameParts[classNameParts.length - 1];
                 switch (className) {
@@ -590,7 +590,7 @@ public class ProjectFilePaths {
                 }
             }
 
-            for (ViewBean view : eC.a(projectDataManager.d(activity.getXmlName()))) {
+            for (ViewBean view : ProjectDataStore.a(projectDataManager.d(activity.getXmlName()))) {
                 var classNameParts = view.convert.split("\\.");
                 var className = classNameParts[classNameParts.length - 1];
                 switch (className) {
@@ -681,7 +681,7 @@ public class ProjectFilePaths {
     /**
      * Generates the project's files, such as layouts, Java files, but also build.gradle and secrets.xml.
      */
-    public void generateProjectFiles(hC projectFileManager, eC projectDataManger, iC projectLibraryManager, BuiltInLibraryManager builtInLibraryManager) {
+    public void generateProjectFiles(ProjectFileManager projectFileManager, ProjectDataStore projectDataManger, LibraryManager projectLibraryManager, BuiltInLibraryManager builtInLibraryManager) {
         ArrayList<SrcCodeBean> srcCodeBeans = generateSourceCodeBeans(projectFileManager, projectDataManger, builtInLibraryManager);
         if (buildConfig.isFileProviderUsed) {
             XmlBuilder pathsTag = new XmlBuilder("paths");
@@ -736,7 +736,7 @@ public class ProjectFilePaths {
     /**
      * Get source code files that are viewable in SrcCodeViewer
      */
-    public ArrayList<SrcCodeBean> generateSourceCodeBeans(hC projectFileManager, eC projectDataManager, BuiltInLibraryManager builtInLibraryManager) {
+    public ArrayList<SrcCodeBean> generateSourceCodeBeans(ProjectFileManager projectFileManager, ProjectDataStore projectDataManager, BuiltInLibraryManager builtInLibraryManager) {
         generateDebugFiles(SketchApplication.getContext());
         CommandBlock.x();
 
@@ -779,7 +779,7 @@ public class ProjectFilePaths {
         for (ProjectFileBean layout : regularLayouts) {
             String xmlName = layout.getXmlName();
             LayoutGenerator ox = new LayoutGenerator(buildConfig, layout);
-            ox.setViews(eC.a(projectDataManager.d(xmlName)), projectDataManager.h(xmlName));
+            ox.setViews(ProjectDataStore.a(projectDataManager.d(xmlName)), projectDataManager.h(xmlName));
             var ogFile = new File(layoutDir + xmlName);
             if (!layoutFiles.contains(ogFile)) {
                 srcCodeBeans.add(new SrcCodeBean(xmlName, CommandBlock.applyCommands(xmlName, ox.toXmlString())));
@@ -800,7 +800,7 @@ public class ProjectFilePaths {
         for (ProjectFileBean customViewFile : customViewFiles) {
             String xmlName = customViewFile.getXmlName();
             LayoutGenerator ox = new LayoutGenerator(buildConfig, customViewFile);
-            ox.setViews(eC.a(projectDataManager.d(xmlName)));
+            ox.setViews(ProjectDataStore.a(projectDataManager.d(xmlName)));
             var ogFile = new File(layoutDir + xmlName);
             if (!layoutFiles.contains(ogFile)) {
                 srcCodeBeans.add(new SrcCodeBean(xmlName, CommandBlock.applyCommands(xmlName, ox.toXmlString())));
@@ -875,7 +875,7 @@ public class ProjectFilePaths {
      *
      * @return The file's code or an empty String if not found
      */
-    public String getFileSrc(String filename, hC projectFileManager, eC projectDataManager, iC projectLibraryManager) {
+    public String getFileSrc(String filename, ProjectFileManager projectFileManager, ProjectDataStore projectDataManager, LibraryManager projectLibraryManager) {
         initializeMetadata(projectLibraryManager, projectFileManager, projectDataManager);
         CommandBlock.x();
         boolean isJavaFile = filename.endsWith(".java");
@@ -924,7 +924,7 @@ public class ProjectFilePaths {
                     return new ActivityCodeGenerator(buildConfig, file, projectDataManager).generateCode(isAndroidStudioExport, sc_id);
                 } else if (isXmlFile) {
                     LayoutGenerator xmlGenerator = new LayoutGenerator(buildConfig, file);
-                    xmlGenerator.setViews(eC.a(projectDataManager.d(filename)), projectDataManager.h(filename));
+                    xmlGenerator.setViews(ProjectDataStore.a(projectDataManager.d(filename)), projectDataManager.h(filename));
                     return CommandBlock.applyCommands(filename, xmlGenerator.toXmlString());
                 }
             }

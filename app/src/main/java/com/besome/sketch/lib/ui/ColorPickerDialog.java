@@ -26,8 +26,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import a.a.a.DB;
-import a.a.a.GB;
+import a.a.a.SharedPrefsHelper;
+import a.a.a.DeviceUtil;
 import a.a.a.SketchToast;
 import a.a.a.ProjectDataManager;
 import a.a.a.SketchwareConstants;
@@ -62,7 +62,7 @@ public class ColorPickerDialog extends PopupWindow {
     private int selectedGroupIndex;
     private int currentGroupIndex;
     private int selectedColorIndex = -1;
-    private DB colorPref;
+    private SharedPrefsHelper colorPref;
     private boolean hasMaterialColors;
     private Material3LibraryManager material3LibraryManager;
     private ProjectFilePaths projectFilePaths;
@@ -115,7 +115,7 @@ public class ColorPickerDialog extends PopupWindow {
 
     public void initialize(Activity activity, String color, boolean isTransparentColor, boolean isNoneColor) {
         this.activity = activity;
-        colorPref = new DB(activity, "P24");
+        colorPref = new SharedPrefsHelper(activity, "P24");
         initializeColorData(isTransparentColor, isNoneColor);
         initializeResColors();
         initializeAttrsList();
@@ -173,7 +173,7 @@ public class ColorPickerDialog extends PopupWindow {
         super.setFocusable(true);
         super.setOutsideTouchable(true);
         super.setContentView(binding.getRoot());
-        int[] widthAndHeight = GB.c(activity);
+        int[] widthAndHeight = DeviceUtil.c(activity);
         super.setWidth(widthAndHeight[0]);
         super.setHeight(widthAndHeight[1]);
         binding.colorList.setHasFixedSize(true);

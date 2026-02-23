@@ -8,7 +8,7 @@ import com.besome.sketch.editor.manage.library.firebase.FirebaseActivity;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageLibraryFirebaseStorageUrlSettingsBinding;
 
-public class FirebaseStorageView extends LinearLayout implements nv {
+public class FirebaseStorageView extends LinearLayout implements LibraryConfigView {
 
     private final ManageLibraryFirebaseStorageUrlSettingsBinding binding;
 
@@ -22,7 +22,7 @@ public class FirebaseStorageView extends LinearLayout implements nv {
 
     @Override
     public void a() {
-        mB.a(getContext(), binding.edInputStorageUrl);
+        UIHelper.a(getContext(), binding.edInputStorageUrl);
     }
 
     @Override

@@ -10,8 +10,8 @@ import android.widget.TextView;
 import com.google.android.material.materialswitch.MaterialSwitch;
 
 import a.a.a.PropertyChangedCallback;
-import a.a.a.mB;
-import a.a.a.wB;
+import a.a.a.UIHelper;
+import a.a.a.ViewUtil;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 
@@ -34,7 +34,7 @@ public class PropertySwitchSingleLineItem extends LinearLayout implements View.O
     }
 
     private void initialize(Context context, boolean z) {
-        wB.a(context, this, R.layout.property_switch_item_singleline);
+        ViewUtil.a(context, this, R.layout.property_switch_item_singleline);
         tvName = findViewById(R.id.tv_name);
         switchValue = findViewById(R.id.switch_value);
         imgLeftIcon = findViewById(R.id.img_left_icon);
@@ -51,7 +51,7 @@ public class PropertySwitchSingleLineItem extends LinearLayout implements View.O
     }
 
     public void setKey(String key) {
-        mB.a(this);
+        UIHelper.a(this);
         this.key = key;
         int identifier = getResources().getIdentifier(key, "string", getContext().getPackageName());
         if (identifier > 0) {

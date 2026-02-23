@@ -34,13 +34,13 @@ public abstract class PermissionFragment extends BaseFragment {
     public abstract void onPermissionDenied();
 
     public void showPermissionDialog(int var1) {
-        if (!Sp.a) {
+        if (!ThrottleTimer.a) {
             MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(super.a);
             dialog.setTitle(R.string.common_message_permission_title_storage);
             dialog.setIcon(R.drawable.break_warning_96_red);
             dialog.setMessage(R.string.common_message_permission_storage);
             dialog.setPositiveButton(R.string.common_word_ok, (view, which) -> {
-                if (!mB.a()) {
+                if (!UIHelper.a()) {
                     requestPermissions(new String[]{"android.permission.WRITE_EXTERNAL_STORAGE",
                             "android.permission.READ_EXTERNAL_STORAGE"}, var1);
                     view.dismiss();
@@ -50,24 +50,24 @@ public abstract class PermissionFragment extends BaseFragment {
                 onPermissionDenied();
                 view.dismiss();
             });
-            dialog.setOnDismissListener(dialog1 -> Sp.a = false);
+            dialog.setOnDismissListener(dialog1 -> ThrottleTimer.a = false);
             dialog.setCancelable(false);
             dialog.create().setCanceledOnTouchOutside(false);
             dialog.show();
-            Sp.a = true;
+            ThrottleTimer.a = true;
         }
     }
 
     public abstract void onSettingsDenied();
 
     public void showSettingsDialog(int var1) {
-        if (!Sp.a) {
+        if (!ThrottleTimer.a) {
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(super.a);
             builder.setTitle(R.string.common_message_permission_title_storage);
             builder.setIcon(R.drawable.break_warning_96_red);
             builder.setMessage(R.string.common_message_permission_storage1);
             builder.setPositiveButton(R.string.common_word_settings, (view, which) -> {
-                if (!mB.a()) {
+                if (!UIHelper.a()) {
                     openAppSettings(var1);
                     view.dismiss();
                 }
@@ -76,13 +76,13 @@ public abstract class PermissionFragment extends BaseFragment {
                 onSettingsDenied();
                 view.dismiss();
             });
-            builder.setOnDismissListener(dialog1 -> Sp.a = false);
+            builder.setOnDismissListener(dialog1 -> ThrottleTimer.a = false);
             builder.setCancelable(false);
 
             var dialog = builder.create();
             dialog.setCanceledOnTouchOutside(false);
             dialog.show();
-            Sp.a = true;
+            ThrottleTimer.a = true;
         }
     }
 

@@ -10,8 +10,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import a.a.a.mB;
-import a.a.a.wB;
+import a.a.a.UIHelper;
+import a.a.a.ViewUtil;
 import pro.sketchware.R;
 
 public class BaseDialogActivity extends BaseAppCompatActivity {
@@ -49,7 +49,7 @@ public class BaseDialogActivity extends BaseAppCompatActivity {
         dialogOkButton = findViewById(R.id.common_dialog_ok_button);
         dialogCancelButton = findViewById(R.id.common_dialog_cancel_button);
         dialogContainerView.setOnClickListener(v -> {
-            if (!mB.a()) {
+            if (!UIHelper.a()) {
                 finish();
             }
         });
@@ -58,13 +58,13 @@ public class BaseDialogActivity extends BaseAppCompatActivity {
 
     @Override
     public void setContentView(int layoutResID) {
-        wB.a(this, dialogContentView, layoutResID);
+        ViewUtil.a(this, dialogContentView, layoutResID);
     }
 
     public void a(boolean var1) {
         if (var1) {
             dialogContainerView.setOnClickListener(v -> {
-                if (!mB.a()) {
+                if (!UIHelper.a()) {
                     finish();
                 }
             });

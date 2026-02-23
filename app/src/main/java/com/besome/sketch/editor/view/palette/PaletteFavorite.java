@@ -11,7 +11,7 @@ import com.besome.sketch.lib.ui.CustomScrollView;
 import java.util.ArrayList;
 
 import a.a.a.WidgetPaletteIcon;
-import a.a.a.wB;
+import a.a.a.ViewUtil;
 import pro.sketchware.R;
 
 public class PaletteFavorite extends LinearLayout {
@@ -39,7 +39,7 @@ public class PaletteFavorite extends LinearLayout {
     }
 
     private void initialize(Context context) {
-        wB.a(context, this, R.layout.palette_favorite);
+        ViewUtil.a(context, this, R.layout.palette_favorite);
         collectionWidgets = findViewById(R.id.widget);
         scrollView = findViewById(R.id.scv);
     }

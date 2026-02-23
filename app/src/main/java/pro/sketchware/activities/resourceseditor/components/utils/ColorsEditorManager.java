@@ -31,7 +31,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import a.a.a.ProjectListManager;
 import a.a.a.SketchwarePaths;
-import a.a.a.yB;
+import a.a.a.MapValueHelper;
 import pro.sketchware.R;
 import pro.sketchware.SketchApplication;
 import pro.sketchware.activities.resourceseditor.components.models.ColorModel;
@@ -207,7 +207,7 @@ public class ColorsEditorManager {
 
                 if (!missingKeys.isEmpty()) {
                     for (String missingColor : missingKeys) {
-                        String colorHex = String.format("#%06X", yB.a(metadata, defaultColors.get(missingColor), getDefaultColor(defaultColors.get(missingColor))) & 0xffffff);
+                        String colorHex = String.format("#%06X", MapValueHelper.a(metadata, defaultColors.get(missingColor), getDefaultColor(defaultColors.get(missingColor))) & 0xffffff);
                         ColorModel missingColorModel = new ColorModel(missingColor, colorHex);
                         colorOrderList.add(missingColorModel);
                         hasChanges = true;

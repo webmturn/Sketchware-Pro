@@ -37,7 +37,7 @@ import java.util.List;
 
 import a.a.a.BaseAsyncTask;
 import a.a.a.ProjectDataManager;
-import a.a.a.mB;
+import a.a.a.UIHelper;
 import dev.aldi.sayuti.editor.manage.ManageLocalLibraryActivity;
 import mod.hey.studios.activity.managers.nativelib.ManageNativelibsActivity;
 import mod.hey.studios.util.Helper;
@@ -216,7 +216,7 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
 
     @Override
     public void onClick(View v) {
-        if (!mB.a()) {
+        if (!UIHelper.a()) {
             Object tag = v.getTag();
 
             if (tag != null) {

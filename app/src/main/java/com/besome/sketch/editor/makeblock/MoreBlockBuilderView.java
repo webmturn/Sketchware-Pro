@@ -17,12 +17,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
-import a.a.a.Rs;
+import a.a.a.BlockView;
 import a.a.a.IdentifierValidator;
 import a.a.a.SketchToast;
-import a.a.a.mB;
+import a.a.a.UIHelper;
 import a.a.a.BlockConstants;
-import a.a.a.wB;
+import a.a.a.ViewUtil;
 import mod.hey.studios.moreblock.MoreblockValidator;
 import mod.hey.studios.moreblock.ReturnMoreblockManager;
 import mod.hey.studios.util.Helper;
@@ -42,7 +42,7 @@ public class MoreBlockBuilderView extends LinearLayout {
     private IdentifierValidator variableNameValidator;
     private IdentifierValidator labelTextValidator;
     private MoreblockValidator blockNameValidator;
-    private Rs block;
+    private BlockView block;
 
     private MakeBlockLayoutBinding binding;
 
@@ -73,7 +73,7 @@ public class MoreBlockBuilderView extends LinearLayout {
         });
 
         binding.addVariable.setOnClickListener(view -> {
-            if (!mB.a()) {
+            if (!UIHelper.a()) {
                 if (variableNameValidator.isValid() && blockNameValidator.isValid()) {
                     Pair<String, String> variableSpec = addVariable.getSelectedItem();
                     String variableType = variableSpec.first;
@@ -131,7 +131,7 @@ public class MoreBlockBuilderView extends LinearLayout {
             }
         });
         binding.addLabel.setOnClickListener(v -> {
-            if (!mB.a()) {
+            if (!UIHelper.a()) {
                 if (labelTextValidator.isValid() && blockNameValidator.isValid()) {
                     variablesSpecAndNamePair.add(new Pair<>("t", Helper.getText(binding.edLabel)));
                     updateBlockPreview(binding.blockArea, binding.removeArea, block, Helper.getText(binding.edName), variablesSpecAndNamePair);
@@ -139,11 +139,11 @@ public class MoreBlockBuilderView extends LinearLayout {
                 }
             }
         });
-        block = new Rs(activity, 0, "", " ", "definedFunc");
+        block = new BlockView(activity, 0, "", " ", "definedFunc");
         binding.blockArea.addView(block);
     }
 
-    private void updateBlockPreview(ViewGroup blockArea, ViewGroup removeArea, Rs rs, String blockName, ArrayList<Pair<String, String>> variables) {
+    private void updateBlockPreview(ViewGroup blockArea, ViewGroup removeArea, BlockView rs, String blockName, ArrayList<Pair<String, String>> variables) {
         blockArea.removeAllViews();
         blockArea.addView(rs);
 
@@ -190,18 +190,18 @@ public class MoreBlockBuilderView extends LinearLayout {
                 Rect rect = new Rect();
                 textView.getPaint().getTextBounds(Helper.getText(textView), 0, textView.getText().length(), rect);
                 width = rect.width();
-            } else if (view instanceof Rs) {
-                width = ((Rs) view).getWidthSum();
+            } else if (view instanceof BlockView) {
+                width = ((BlockView) view).getWidthSum();
             } else {
                 width = 0;
             }
 
-            width += (int) wB.a(activity, 4.0f);
+            width += (int) ViewUtil.a(activity, 4.0f);
 
             ImageView removeIcon = new ImageView(activity);
             removeIcon.setImageResource(R.drawable.ic_remove_grey600_24dp);
             removeIcon.setScaleType(ScaleType.CENTER_INSIDE);
-            removeIcon.setPadding(0, (int) wB.a(activity, 4.0F), 0, (int) wB.a(activity, 4.0F));
+            removeIcon.setPadding(0, (int) ViewUtil.a(activity, 4.0F), 0, (int) ViewUtil.a(activity, 4.0F));
             removeIcon.setLayoutParams(new LayoutParams(width, ViewGroup.LayoutParams.MATCH_PARENT));
             removeArea.addView(removeIcon);
             if (i == 0 && binding.edName.getText().length() > 0) {
@@ -261,7 +261,7 @@ public class MoreBlockBuilderView extends LinearLayout {
 
     private void refresh(String type) {
         type = ReturnMoreblockManager.getPreviewType(type);
-        Rs var2 = new Rs(activity, 0, "", type, "definedFunc");
+        BlockView var2 = new BlockView(activity, 0, "", type, "definedFunc");
         block = var2;
         updateBlockPreview(binding.blockArea, binding.removeArea, var2, Helper.getText(binding.edName), variablesSpecAndNamePair);
     }

@@ -21,12 +21,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import a.a.a.GB;
+import a.a.a.DeviceUtil;
 import a.a.a.LengthRangeValidator;
 import a.a.a.IdentifierValidator;
 import a.a.a.SketchToast;
 import a.a.a.ProjectDataManager;
-import a.a.a.mB;
+import a.a.a.UIHelper;
 import a.a.a.BlockConstants;
 import mod.hey.studios.util.Helper;
 import mod.hilal.saif.components.ComponentsHandler;
@@ -90,7 +90,7 @@ public class InnerAddComponentBottomSheet extends BottomSheetDialogFragment {
                 break;
 
             case ComponentBean.COMPONENT_TYPE_GYROSCOPE:
-                if (!GB.b(getContext(), Sensor.TYPE_GYROSCOPE)) {
+                if (!DeviceUtil.b(getContext(), Sensor.TYPE_GYROSCOPE)) {
                     binding.cardWarning.setVisibility(View.VISIBLE);
                     binding.warning.setText(Helper.getResString(R.string.message_device_not_support));
                 }
@@ -124,7 +124,7 @@ public class InnerAddComponentBottomSheet extends BottomSheetDialogFragment {
         componentMimeTypeValidator = new LengthRangeValidator(getContext(), binding.tiInputFilePicker, 1, 50);
 
         binding.btnReadDocs.setOnClickListener(v -> {
-            if (!mB.a()) {
+            if (!UIHelper.a()) {
                 String componentDocsUrlByTypeName = ComponentBean.getComponentDocsUrlByTypeName(componentBean.type);
                 if (componentDocsUrlByTypeName.isEmpty()) {
                     SketchToast.toast(getContext(), Helper.getResString(R.string.component_add_message_docs_updated_soon), SketchToast.TOAST_NORMAL).show();
@@ -150,7 +150,7 @@ public class InnerAddComponentBottomSheet extends BottomSheetDialogFragment {
             protected void onDebouncedClick(View v) {
                 if (checks() && getContext() != null) {
                     SketchToast.toast(requireContext(), Helper.getResString(R.string.component_message_component_block_added), SketchToast.TOAST_WARNING).show();
-                    mB.a(requireContext(), binding.edInput);
+                    UIHelper.a(requireContext(), binding.edInput);
                     onSaveClickListener.onSaveClick(InnerAddComponentBottomSheet.this);
                 }
             }
@@ -269,7 +269,7 @@ public class InnerAddComponentBottomSheet extends BottomSheetDialogFragment {
         dialog.setTitle(Helper.getResString(R.string.title_compatible_chrome_browser));
         dialog.setMessage(Helper.getResString(R.string.message_compatible_chrome_brower));
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_ok), (v, which) -> {
-            if (!mB.a()) {
+            if (!UIHelper.a()) {
                 try {
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setData(Uri.parse("market://details?id=com.android.chrome"));

@@ -12,7 +12,7 @@ import java.util.Optional;
 
 import a.a.a.ZipUtil;
 import a.a.a.ProjectBuilder;
-import a.a.a.oB;
+import a.a.a.EncryptedFileUtil;
 import pro.sketchware.SketchApplication;
 
 public class BuiltInLibraries {
@@ -572,7 +572,7 @@ public class BuiltInLibraries {
         String testkeyDirectoryPath = new File(BuiltInLibraries.EXTRACTED_COMPILE_ASSETS_PATH, "testkey").getAbsolutePath();
 
         String baseAssetsPath = "libs" + File.separator;
-        oB fileUtil = new oB(false);
+        EncryptedFileUtil fileUtil = new EncryptedFileUtil(false);
 
         maybeExtractAndroidJar(progressReceivers);
 
@@ -620,7 +620,7 @@ public class BuiltInLibraries {
                 receiver.onProgress("Extracting built-in android.jar...", 7);
             }
             /* Delete android.jar */
-            new oB().c(EXTRACTED_COMPILE_ASSETS_PATH.getAbsolutePath() + File.separator + "android.jar");
+            new EncryptedFileUtil().c(EXTRACTED_COMPILE_ASSETS_PATH.getAbsolutePath() + File.separator + "android.jar");
             /* Extract android.jar.zip to android.jar */
             try { new ZipUtil().extractZipFile(androidJarPath, EXTRACTED_COMPILE_ASSETS_PATH.getAbsolutePath()); } catch (java.io.FileNotFoundException e) { throw new RuntimeException(e); }
         }

@@ -11,8 +11,8 @@ import android.widget.TextView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import a.a.a.PropertyChangedCallback;
-import a.a.a.mB;
-import a.a.a.wB;
+import a.a.a.UIHelper;
+import a.a.a.ViewUtil;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.lib.validator.MinMaxInputValidator;
@@ -67,7 +67,7 @@ public class PropertySizeItem extends RelativeLayout implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        if (!mB.a()) {
+        if (!UIHelper.a()) {
             if (key.equals("property_divider_height")) {
                 showDialog();
             }
@@ -94,7 +94,7 @@ public class PropertySizeItem extends RelativeLayout implements View.OnClickList
 
     private void initialize(Context context, boolean z) {
         this.context = context;
-        wB.a(context, this, R.layout.property_input_item);
+        ViewUtil.a(context, this, R.layout.property_input_item);
         tvName = findViewById(R.id.tv_name);
         tvValue = findViewById(R.id.tv_value);
         imgLeftIcon = findViewById(R.id.img_left_icon);
@@ -110,7 +110,7 @@ public class PropertySizeItem extends RelativeLayout implements View.OnClickList
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(getContext());
         dialog.setTitle(Helper.getText(tvName));
         dialog.setIcon(icon);
-        View view = wB.a(getContext(), R.layout.property_popup_input_size);
+        View view = ViewUtil.a(getContext(), R.layout.property_popup_input_size);
         EditText input = view.findViewById(R.id.et_input);
         MinMaxInputValidator validator = new MinMaxInputValidator(context, view.findViewById(R.id.ti_input), 0, 999);
         validator.setText(String.valueOf(value));

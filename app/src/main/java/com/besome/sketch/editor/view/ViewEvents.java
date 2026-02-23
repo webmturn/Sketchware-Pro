@@ -23,7 +23,7 @@ import a.a.a.EventSelectedCallback;
 import a.a.a.SketchToast;
 import a.a.a.ProjectDataManager;
 import a.a.a.EventRegistry;
-import a.a.a.wB;
+import a.a.a.ViewUtil;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.EventGridItemBinding;
@@ -46,7 +46,7 @@ public class ViewEvents extends LinearLayout {
     }
 
     private void initialize(Context context) {
-        wB.a(context, this, R.layout.view_events);
+        ViewUtil.a(context, this, R.layout.view_events);
         RecyclerView eventsList = findViewById(R.id.list_events);
         eventsList.setHasFixedSize(true);
         eventsList.setAdapter(eventAdapter);

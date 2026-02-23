@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import a.a.a.ProjectDataManager;
-import a.a.a.oB;
+import a.a.a.EncryptedFileUtil;
 import a.a.a.BaseFragment;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
@@ -46,7 +46,7 @@ public class ImportFontFragment extends BaseFragment implements MenuProvider {
     public String sc_id;
     public boolean isSelecting = false;
     public String dirPath = "";
-    public oB oB;
+    public EncryptedFileUtil EncryptedFileUtil;
     public ArrayList<ProjectResourceBean> projectResourceBeans;
     private FrManageFontListBinding binding;
     private FontAdapter adapter;
@@ -147,7 +147,7 @@ public class ImportFontFragment extends BaseFragment implements MenuProvider {
             if (resourceBean.isNew) {
                 try {
                     importFont(resourceBean.resFullName, getResourceFilePath(resourceBean));
-                    oB.c(resourceBean.resFullName);
+                    EncryptedFileUtil.c(resourceBean.resFullName);
                 } catch (Exception e) {
                     Log.e("ImportFontFragment", "Failed to import font: " + resourceBean.resFullName, e);
                 }
@@ -212,8 +212,8 @@ public class ImportFontFragment extends BaseFragment implements MenuProvider {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        oB = new oB();
-        oB.f(dirPath);
+        EncryptedFileUtil = new EncryptedFileUtil();
+        EncryptedFileUtil.f(dirPath);
         projectResourceBeans = new ArrayList<>();
         if (savedInstanceState == null) {
             sc_id = requireActivity().getIntent().getStringExtra("sc_id");

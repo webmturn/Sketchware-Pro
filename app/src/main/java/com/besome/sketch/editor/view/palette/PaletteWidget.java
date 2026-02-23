@@ -15,7 +15,7 @@ import com.google.android.material.color.MaterialColors;
 
 import java.util.HashMap;
 
-import a.a.a.wB;
+import a.a.a.ViewUtil;
 import dev.aldi.sayuti.editor.view.palette.IconBadgeView;
 import dev.aldi.sayuti.editor.view.palette.IconBottomNavigationView;
 import dev.aldi.sayuti.editor.view.palette.IconCardView;
@@ -151,7 +151,7 @@ public class PaletteWidget extends LinearLayout {
     }
 
     private void initialize(Context context) {
-        wB.a(context, this, R.layout.palette_widget);
+        ViewUtil.a(context, this, R.layout.palette_widget);
         layoutContainer = findViewById(R.id.layout);
         widgetsContainer = findViewById(R.id.widget);
         titleLayouts = findViewById(R.id.tv_layout);

@@ -9,12 +9,12 @@ import java.util.Comparator;
 import java.util.HashMap;
 
 public class ProjectListManager {
-    public static DB a;
+    public static SharedPrefsHelper a;
 
     public static ArrayList<HashMap<String, Object>> listProjects() {
         String str = "project";
         ArrayList<HashMap<String, Object>> arrayList = new ArrayList<>();
-        oB oBVar = new oB();
+        EncryptedFileUtil oBVar = new EncryptedFileUtil();
         File[] listFiles = new File(SketchwarePaths.getProjectListBasePath()).listFiles();
         if (listFiles == null) {
             return arrayList;
@@ -23,8 +23,8 @@ public class ProjectListManager {
             try {
                 if (new File(file, str).exists()) {
                     String path = file.getAbsolutePath() + File.separator + str;
-                    HashMap<String, Object> a = vB.a(oBVar.a(oBVar.h(path)));
-                    if (yB.c(a, "sc_id").equals(file.getName())) {
+                    HashMap<String, Object> a = GsonMapHelper.a(oBVar.a(oBVar.h(path)));
+                    if (MapValueHelper.c(a, "sc_id").equals(file.getName())) {
                         arrayList.add(a);
                     }
                 }
@@ -37,7 +37,7 @@ public class ProjectListManager {
 
     public static HashMap<String, Object> getProjectByPackageName(String str) {
         for (HashMap<String, Object> stringObjectHashMap : listProjects()) {
-            if (yB.c(stringObjectHashMap, "my_sc_pkg_name").equals(str) && yB.b(stringObjectHashMap, "proj_type") == 1) {
+            if (MapValueHelper.c(stringObjectHashMap, "my_sc_pkg_name").equals(str) && MapValueHelper.b(stringObjectHashMap, "proj_type") == 1) {
                 return stringObjectHashMap;
             }
         }
@@ -47,7 +47,7 @@ public class ProjectListManager {
     public static void deleteProject(Context context, String str) {
         File file = new File(SketchwarePaths.getProjectListPath(str));
         if (file.exists()) {
-            oB oBVar = new oB();
+            EncryptedFileUtil oBVar = new EncryptedFileUtil();
             oBVar.a(file);
             oBVar.b(SketchwarePaths.getMyscPath(str));
             StringBuilder stringBuilder = new StringBuilder();
@@ -75,25 +75,25 @@ public class ProjectListManager {
             stringBuilder = new StringBuilder();
             stringBuilder.append("D01_");
             stringBuilder.append(str);
-            new DB(context, stringBuilder.toString()).a();
+            new SharedPrefsHelper(context, stringBuilder.toString()).a();
             stringBuilder = new StringBuilder();
             stringBuilder.append("D02_");
             stringBuilder.append(str);
-            new DB(context, stringBuilder.toString()).a();
+            new SharedPrefsHelper(context, stringBuilder.toString()).a();
             stringBuilder = new StringBuilder();
             stringBuilder.append("D03_");
             stringBuilder.append(str);
-            new DB(context, stringBuilder.toString()).a();
+            new SharedPrefsHelper(context, stringBuilder.toString()).a();
             stringBuilder = new StringBuilder();
             stringBuilder.append("D04_");
             stringBuilder.append(str);
-            new DB(context, stringBuilder.toString()).a();
+            new SharedPrefsHelper(context, stringBuilder.toString()).a();
         }
     }
 
     public static void initializeDb(Context context, boolean z) {
         if (a == null) {
-            a = new DB(context, "P15");
+            a = new SharedPrefsHelper(context, "P15");
         }
     }
 
@@ -104,8 +104,8 @@ public class ProjectListManager {
         }
         str = SketchwarePaths.getProjectListPath(str);
         str = str + File.separator + "project";
-        String a = vB.a(hashMap);
-        oB oBVar = new oB();
+        String a = GsonMapHelper.a(hashMap);
+        EncryptedFileUtil oBVar = new EncryptedFileUtil();
         try {
             oBVar.a(str, oBVar.d(a));
         } catch (Throwable e) {
@@ -116,14 +116,14 @@ public class ProjectListManager {
     public static String getNextProjectId() {
         int parseInt = Integer.parseInt("600") + 1;
         for (HashMap<String, Object> stringObjectHashMap : listProjects()) {
-            parseInt = Math.max(parseInt, Integer.parseInt(yB.c(stringObjectHashMap, "sc_id")) + 1);
+            parseInt = Math.max(parseInt, Integer.parseInt(MapValueHelper.c(stringObjectHashMap, "sc_id")) + 1);
         }
         return String.valueOf(parseInt);
     }
 
     public static HashMap<String, Object> getProjectById(String str) {
         Throwable e;
-        oB oBVar = new oB();
+        EncryptedFileUtil oBVar = new EncryptedFileUtil();
         HashMap<String, Object> hashMap = null;
         try {
             String c = SketchwarePaths.getProjectListPath(str);
@@ -131,9 +131,9 @@ public class ProjectListManager {
                 return null;
             }
             String path = c + File.separator + "project";
-            HashMap<String, Object> a = vB.a(oBVar.a(oBVar.h(path)));
+            HashMap<String, Object> a = GsonMapHelper.a(oBVar.a(oBVar.h(path)));
             try {
-                return !yB.c(a, "sc_id").equals(str) ? null : a;
+                return !MapValueHelper.c(a, "sc_id").equals(str) ? null : a;
             } catch (Exception e2) {
                 e = e2;
                 hashMap = a;
@@ -151,10 +151,10 @@ public class ProjectListManager {
         File file = new File(SketchwarePaths.getProjectListPath(str));
         if (file.exists()) {
             String path = file + File.separator + "project";
-            oB fileUtil = new oB();
+            EncryptedFileUtil fileUtil = new EncryptedFileUtil();
             try {
-                HashMap<String, Object> a = vB.a(fileUtil.a(fileUtil.h(path)));
-                if (yB.c(a, "sc_id").equals(str)) {
+                HashMap<String, Object> a = GsonMapHelper.a(fileUtil.a(fileUtil.h(path)));
+                if (MapValueHelper.c(a, "sc_id").equals(str)) {
                     if (hashMap.containsKey("isIconAdaptive")) {
                         a.put("isIconAdaptive", hashMap.get("isIconAdaptive"));
                     }
@@ -172,7 +172,7 @@ public class ProjectListManager {
                     a.put("color_primary_dark", hashMap.get("color_primary_dark"));
                     a.put("color_control_highlight", hashMap.get("color_control_highlight"));
                     a.put("color_control_normal", hashMap.get("color_control_normal"));
-                    fileUtil.a(path, fileUtil.d(vB.a(a)));
+                    fileUtil.a(path, fileUtil.d(GsonMapHelper.a(a)));
                 }
             } catch (Throwable e) {
                 Log.e("ProjectListManager", e.getMessage(), e);
@@ -185,7 +185,7 @@ public class ProjectListManager {
         ArrayList<Integer> projectIndices = new ArrayList<>();
 
         for (HashMap<String, Object> stringObjectHashMap : var0) {
-            String workspaceName = yB.c(stringObjectHashMap, "my_ws_name");
+            String workspaceName = MapValueHelper.c(stringObjectHashMap, "my_ws_name");
             if (workspaceName.equals("NewProject")) {
                 projectIndices.add(1);
             } else if (workspaceName.indexOf("NewProject") == 0) {

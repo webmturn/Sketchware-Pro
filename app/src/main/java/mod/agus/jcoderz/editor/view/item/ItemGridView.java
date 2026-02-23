@@ -14,7 +14,7 @@ import com.besome.sketch.editor.view.ItemView;
 
 import java.util.ArrayList;
 
-import a.a.a.wB;
+import a.a.a.ViewUtil;
 
 public class ItemGridView extends GridView implements ItemView {
 
@@ -27,9 +27,9 @@ public class ItemGridView extends GridView implements ItemView {
 
     public ItemGridView(Context context) {
         super(context);
-        paddingFactor = (int) wB.a(context, 1.0f);
+        paddingFactor = (int) ViewUtil.a(context, 1.0f);
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setStrokeWidth(wB.a(getContext(), 2.0f));
+        paint.setStrokeWidth(ViewUtil.a(getContext(), 2.0f));
         rect = new Rect();
         setDrawingCacheEnabled(true);
         setNumColumns(3);

@@ -22,8 +22,8 @@ import com.besome.sketch.beans.ProjectResourceBean;
 import java.io.File;
 import java.util.ArrayList;
 
-import a.a.a.Np;
-import a.a.a.oB;
+import a.a.a.ImageCollectionManager;
+import a.a.a.EncryptedFileUtil;
 import a.a.a.BaseFragment;
 import a.a.a.SketchwarePaths;
 import mod.hey.studios.util.Helper;
@@ -65,7 +65,7 @@ public class FontManagerFragment extends BaseFragment {
     }
 
     public void loadProjectResources() {
-        projectResourceBeans = Np.g().f();
+        projectResourceBeans = ImageCollectionManager.g().f();
         adapter.notifyDataSetChanged();
 
         if (projectResourceBeans.isEmpty()) {
@@ -143,7 +143,7 @@ public class FontManagerFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        new oB().f(dirPath);
+        new EncryptedFileUtil().f(dirPath);
 
         if (savedInstanceState == null) {
             sc_id = requireActivity().getIntent().getStringExtra("sc_id");
@@ -173,7 +173,7 @@ public class FontManagerFragment extends BaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Np.g().d();
+        ImageCollectionManager.g().d();
     }
 
     @Override

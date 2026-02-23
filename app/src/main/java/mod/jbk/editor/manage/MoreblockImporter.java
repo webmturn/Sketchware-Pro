@@ -22,17 +22,17 @@ import java.util.LinkedList;
 import java.util.List;
 
 import a.a.a.Gx;
-import a.a.a.Np;
-import a.a.a.Op;
-import a.a.a.Qp;
+import a.a.a.ImageCollectionManager;
+import a.a.a.SoundCollectionManager;
+import a.a.a.FontCollectionManager;
 import a.a.a.IdentifierValidator;
 import a.a.a.SketchToast;
-import a.a.a.eC;
+import a.a.a.ProjectDataStore;
 import a.a.a.ProjectDataManager;
-import a.a.a.mB;
-import a.a.a.oB;
+import a.a.a.UIHelper;
+import a.a.a.EncryptedFileUtil;
 import a.a.a.BlockConstants;
-import a.a.a.wB;
+import a.a.a.ViewUtil;
 import a.a.a.SketchwarePaths;
 import mod.hey.studios.moreblock.ReturnMoreblockManager;
 import mod.hey.studios.util.Helper;
@@ -44,7 +44,7 @@ public class MoreblockImporter {
     private final ProjectFileBean projectActivity;
     private final String activityJavaName;
 
-    private final oB fileUtil = new oB();
+    private final EncryptedFileUtil fileUtil = new EncryptedFileUtil();
 
     private ArrayList<Pair<Integer, String>> toBeAddedVariables;
     private ArrayList<Pair<Integer, String>> toBeAddedLists;
@@ -165,12 +165,12 @@ public class MoreblockImporter {
         aBVar.setMessage(R.string.logic_more_block_desc_add_variable_resource);
         aBVar.setPositiveButton(R.string.common_word_continue, (v, which) -> {
             for (Pair<Integer, String> pair : toBeAddedVariables) {
-                eC eC = ProjectDataManager.getProjectDataManager(sc_id);
-                eC.c(activityJavaName, pair.first, pair.second);
+                ProjectDataStore ProjectDataStore = ProjectDataManager.getProjectDataManager(sc_id);
+                ProjectDataStore.c(activityJavaName, pair.first, pair.second);
             }
             for (Pair<Integer, String> pair : toBeAddedLists) {
-                eC eC = ProjectDataManager.getProjectDataManager(sc_id);
-                eC.b(activityJavaName, pair.first, pair.second);
+                ProjectDataStore ProjectDataStore = ProjectDataManager.getProjectDataManager(sc_id);
+                ProjectDataStore.b(activityJavaName, pair.first, pair.second);
             }
             for (ProjectResourceBean bean : toBeAddedImages) {
                 copyImageFromCollectionsToProject(bean.resName);
@@ -193,7 +193,7 @@ public class MoreblockImporter {
         dialog.setTitle(R.string.logic_more_block_title_change_block_name);
         dialog.setIcon(R.drawable.more_block_96dp);
 
-        View customView = wB.a(activity, R.layout.property_popup_save_to_favorite);
+        View customView = ViewUtil.a(activity, R.layout.property_popup_save_to_favorite);
         ((TextView) customView.findViewById(R.id.tv_favorites_guide)).setText(R.string.logic_more_block_desc_change_block_name);
         EditText newName = customView.findViewById(R.id.ed_input);
         newName.setPrivateImeOptions("defaultInputmode=english;");
@@ -214,20 +214,20 @@ public class MoreblockImporter {
                 moreBlock.spec = Helper.getText(newName) + moreBlock.spec.substring(moreBlockName.length());
 
                 handleVariables(moreBlock);
-                mB.a(activity, newName);
+                UIHelper.a(activity, newName);
                 v.dismiss();
             }
         });
         dialog.setNegativeButton(R.string.common_word_cancel, (v, which) -> {
-            mB.a(activity, newName);
+            UIHelper.a(activity, newName);
             v.dismiss();
         });
         dialog.show();
     }
 
     private void copyImageFromCollectionsToProject(String imageName) {
-        if (Op.g().b(imageName)) {
-            ProjectResourceBean image = Op.g().a(imageName);
+        if (SoundCollectionManager.g().b(imageName)) {
+            ProjectResourceBean image = SoundCollectionManager.g().a(imageName);
             try {
                 fileUtil.a(SketchwarePaths.getCollectionPath() + File.separator + "image" + File.separator + "data" + File.separator + image.resFullName, SketchwarePaths.getImagesPath() + File.separator + sc_id + File.separator + image.resFullName);
                 ProjectDataManager.getResourceManager(sc_id).b.add(image);
@@ -238,8 +238,8 @@ public class MoreblockImporter {
     }
 
     private void copySoundFromCollectionsToProject(String soundName) {
-        if (Qp.g().b(soundName)) {
-            ProjectResourceBean a2 = Qp.g().a(soundName);
+        if (FontCollectionManager.g().b(soundName)) {
+            ProjectResourceBean a2 = FontCollectionManager.g().a(soundName);
             try {
                 fileUtil.a(SketchwarePaths.getCollectionPath() + File.separator + "sound" + File.separator + "data" + File.separator + a2.resFullName, SketchwarePaths.getSoundsPath() + File.separator + sc_id + File.separator + a2.resFullName);
                 ProjectDataManager.getResourceManager(sc_id).c.add(a2);
@@ -250,8 +250,8 @@ public class MoreblockImporter {
     }
 
     private void copyFontFromCollectionsToProject(String fontName) {
-        if (Np.g().b(fontName)) {
-            ProjectResourceBean font = Np.g().a(fontName);
+        if (ImageCollectionManager.g().b(fontName)) {
+            ProjectResourceBean font = ImageCollectionManager.g().a(fontName);
             try {
                 fileUtil.a(SketchwarePaths.getCollectionPath() + File.separator + "font" + File.separator + "data" + File.separator + font.resFullName, SketchwarePaths.getFontsResourcePath() + File.separator + sc_id + File.separator + font.resFullName);
                 ProjectDataManager.getResourceManager(sc_id).d.add(font);
@@ -313,7 +313,7 @@ public class MoreblockImporter {
                 return;
             }
         }
-        ProjectResourceBean sound = Qp.g().a(soundName);
+        ProjectResourceBean sound = FontCollectionManager.g().a(soundName);
         if (sound != null) {
             boolean alreadyToBeAdded = false;
             for (ProjectResourceBean toBeAddedSound : toBeAddedSounds) {
@@ -337,7 +337,7 @@ public class MoreblockImporter {
                 return;
             }
         }
-        ProjectResourceBean font = Np.g().a(fontName);
+        ProjectResourceBean font = ImageCollectionManager.g().a(fontName);
         if (font != null) {
             boolean alreadyToBeAdded = false;
             for (ProjectResourceBean toBeAddedFont : toBeAddedFonts) {
@@ -361,7 +361,7 @@ public class MoreblockImporter {
                 return;
             }
         }
-        ProjectResourceBean image = Op.g().a(imageName);
+        ProjectResourceBean image = SoundCollectionManager.g().a(imageName);
         if (image != null) {
             boolean alreadyToBeAdded = false;
             for (ProjectResourceBean toBeAddedImage : toBeAddedImages) {

@@ -28,8 +28,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import a.a.a.PropertyChangedCallback;
-import a.a.a.mB;
-import a.a.a.wB;
+import a.a.a.UIHelper;
+import a.a.a.ViewUtil;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.PropertyInputItemBinding;
@@ -89,7 +89,7 @@ public class PropertyAttributesItem extends LinearLayout implements View.OnClick
     }
 
     private void initialize(Context context, boolean z) {
-        wB.a(context, this, R.layout.property_input_item);
+        ViewUtil.a(context, this, R.layout.property_input_item);
         tvName = findViewById(R.id.tv_name);
         tvValue = findViewById(R.id.tv_value);
         imgLeftIcon = findViewById(R.id.img_left_icon);
@@ -106,7 +106,7 @@ public class PropertyAttributesItem extends LinearLayout implements View.OnClick
     }
 
     public void setKey(String key) {
-        mB.a(this);
+        UIHelper.a(this);
         this.key = key;
         int identifier = getResources().getIdentifier(key, "string", getContext().getPackageName());
         if (identifier > 0) {

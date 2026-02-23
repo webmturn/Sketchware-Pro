@@ -16,7 +16,7 @@ import com.besome.sketch.beans.QuizBean;
 import java.util.ArrayList;
 import java.util.Random;
 
-import a.a.a.mB;
+import a.a.a.UIHelper;
 import a.a.a.CompileQuizManager;
 import pro.sketchware.R;
 import pro.sketchware.databinding.QuizBoardBinding;
@@ -40,8 +40,8 @@ public class QuizBoard extends LinearLayout implements View.OnClickListener {
             quizBinding.layoutAnswerOx.setVisibility(View.VISIBLE);
             quizBinding.imgAnswerO.setVisibility(View.VISIBLE);
             quizBinding.imgAnswerX.setVisibility(View.VISIBLE);
-            mB.a(quizBinding.imgAnswerO, 1);
-            mB.a(quizBinding.imgAnswerX, 1);
+            UIHelper.a(quizBinding.imgAnswerO, 1);
+            UIHelper.a(quizBinding.imgAnswerX, 1);
             quizBinding.imgAnswerO.setOnClickListener(this);
             quizBinding.imgAnswerX.setOnClickListener(this);
             quizBinding.layoutAnswerAb.setVisibility(View.GONE);
@@ -109,12 +109,12 @@ public class QuizBoard extends LinearLayout implements View.OnClickListener {
 
     private void setXOResult(int answer) {
         if (answer == QUIZ_TRUE) {
-            mB.a(quizBinding.imgAnswerO, 1);
-            mB.a(quizBinding.imgAnswerX, 0);
+            UIHelper.a(quizBinding.imgAnswerO, 1);
+            UIHelper.a(quizBinding.imgAnswerX, 0);
             quizBinding.imgAnswerX.setVisibility(View.GONE);
         } else {
-            mB.a(quizBinding.imgAnswerO, 0);
-            mB.a(quizBinding.imgAnswerX, 1);
+            UIHelper.a(quizBinding.imgAnswerO, 0);
+            UIHelper.a(quizBinding.imgAnswerX, 1);
             quizBinding.imgAnswerO.setVisibility(View.GONE);
         }
         quizBinding.separator.setVisibility(View.GONE);
@@ -164,7 +164,7 @@ public class QuizBoard extends LinearLayout implements View.OnClickListener {
 
     @Override
     public void onClick(View var1) {
-        if (!mB.a()) {
+        if (!UIHelper.a()) {
             a();
             int id = var1.getId();
             if (id == R.id.img_answer_o || id == R.id.img_answer_x || id == R.id.view_answer_a || id == R.id.view_answer_b) {

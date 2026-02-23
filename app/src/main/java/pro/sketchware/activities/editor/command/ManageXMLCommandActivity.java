@@ -33,9 +33,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import a.a.a.ActivityCodeGenerator;
-import a.a.a.hC;
+import a.a.a.ProjectFileManager;
 import a.a.a.ProjectDataManager;
-import a.a.a.mB;
+import a.a.a.UIHelper;
 import a.a.a.SketchwarePaths;
 import a.a.a.ProjectFilePaths;
 import io.github.rosemoe.sora.widget.CodeEditor;
@@ -104,7 +104,7 @@ public class ManageXMLCommandActivity extends BaseAppCompatActivity {
         UI.addSystemWindowInsetToPadding(binding.list, false, false, false, true);
         binding.toolbar.setNavigationOnClickListener(
                 v -> {
-                    if (!mB.a()) {
+                    if (!UIHelper.a()) {
                         getOnBackPressedDispatcher().onBackPressed();
                     }
                 });
@@ -115,7 +115,7 @@ public class ManageXMLCommandActivity extends BaseAppCompatActivity {
             sc_id = savedInstanceState.getString("sc_id");
         }
         commandPath = SketchwarePaths.getDataPath(sc_id) + "/command";
-        hC projectFile = ProjectDataManager.getFileManager(sc_id);
+        ProjectFileManager projectFile = ProjectDataManager.getFileManager(sc_id);
         xmlFiles = new ArrayList<>(projectFile.e());
         xmlFiles.addAll(
                 Arrays.asList("strings.xml", "colors.xml", "styles.xml", "AndroidManifest.xml"));

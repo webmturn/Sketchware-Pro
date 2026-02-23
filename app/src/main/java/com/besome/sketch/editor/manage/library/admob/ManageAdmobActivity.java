@@ -30,10 +30,10 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 
-import a.a.a.DB;
-import a.a.a.GB;
+import a.a.a.SharedPrefsHelper;
+import a.a.a.DeviceUtil;
 import a.a.a.SketchToast;
-import a.a.a.mB;
+import a.a.a.UIHelper;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageLibraryManageAdmobBinding;
@@ -43,7 +43,7 @@ public class ManageAdmobActivity extends BaseAppCompatActivity implements View.O
     private static final int REQUEST_CODE_ENABLE_ADMOB = 8001;
     private static final int REQUEST_CODE_ADMOB_SETTINGS = 8002;
     private ActivityResultLauncher<Intent> admobActivityLauncher;
-    private DB A;
+    private SharedPrefsHelper A;
     private TestDeviceAdapter testDeviceAdapter;
     private ArrayList<AdTestDeviceBean> testDeviceList = new ArrayList<>();
     private ProjectLibraryBean admobLibraryBean;
@@ -101,7 +101,7 @@ public class ManageAdmobActivity extends BaseAppCompatActivity implements View.O
     }
 
     private void openAdmobConsole() {
-        if (GB.h(getApplicationContext())) {
+        if (DeviceUtil.h(getApplicationContext())) {
             try {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -153,7 +153,7 @@ public class ManageAdmobActivity extends BaseAppCompatActivity implements View.O
 
     @Override
     public void onClick(View v) {
-        if (!mB.a()) {
+        if (!UIHelper.a()) {
             int id = v.getId();
             if (id == binding.btnConsole.getId()) {
                 openAdmobConsole();
@@ -206,7 +206,7 @@ public class ManageAdmobActivity extends BaseAppCompatActivity implements View.O
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         binding.toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
 
-        A = new DB(getApplicationContext(), "P1");
+        A = new SharedPrefsHelper(getApplicationContext(), "P1");
         admobLibraryBean = getIntent().getParcelableExtra("admob");
         binding.tvEnable.setText(Helper.getResString(R.string.design_library_settings_title_enabled));
         binding.tvTitleBanner.setText(Helper.getResString(R.string.design_library_admob_title_banner));
@@ -262,7 +262,7 @@ public class ManageAdmobActivity extends BaseAppCompatActivity implements View.O
         dialog.setMessage(Helper.getResString(R.string.design_library_admob_dialog_description_confirm_uncheck));
         dialog.setCancelable(false);
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_delete), (v, which) -> {
-            if (!mB.a()) {
+            if (!UIHelper.a()) {
                 admobLibraryBean.useYn = "N";
                 binding.libSwitch.setChecked(false);
                 v.dismiss();
@@ -278,7 +278,7 @@ public class ManageAdmobActivity extends BaseAppCompatActivity implements View.O
         dialog.setTitle(Helper.getResString(R.string.title_compatible_chrome_browser));
         dialog.setMessage(Helper.getResString(R.string.message_compatible_chrome_brower));
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_ok), (v, which) -> {
-            if (!mB.a()) {
+            if (!UIHelper.a()) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse("market://details?id=com.android.chrome"));
                 startActivity(intent);

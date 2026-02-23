@@ -40,8 +40,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
-import a.a.a.DB;
-import a.a.a.GB;
+import a.a.a.SharedPrefsHelper;
+import a.a.a.DeviceUtil;
 import mod.hey.studios.project.backup.BackupFactory;
 import mod.hey.studios.project.backup.BackupRestoreManager;
 import mod.hey.studios.util.Helper;
@@ -63,7 +63,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
     private static final String PROJECTS_FRAGMENT_TAG = "projects_fragment";
     private static final String PROJECTS_STORE_FRAGMENT_TAG = "projects_store_fragment";
     private ActionBarDrawerToggle drawerToggle;
-    private DB u;
+    private SharedPrefsHelper u;
     private Snackbar storageAccessDenied;
     private MainBinding binding;
     private final OnBackPressedCallback closeDrawer = new OnBackPressedCallback(true) {
@@ -172,7 +172,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
         binding.statusBarOverlapper.setMinimumHeight(UI.getStatusBarHeight(this));
         UI.addSystemWindowInsetToPadding(binding.appbar, true, false, true, false);
 
-        u = new DB(getApplicationContext(), "U1");
+        u = new SharedPrefsHelper(getApplicationContext(), "U1");
         int u1I0 = u.a("U1I0", -1);
         long u1I1 = u.e("U1I1");
         if (u1I1 <= 0) {
@@ -399,7 +399,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
     public void onResume() {
         super.onResume();
         /* Check if the device is running low on storage space */
-        long freeMegabytes = GB.c();
+        long freeMegabytes = DeviceUtil.c();
         if (freeMegabytes < 100 && freeMegabytes > 0) {
             showNoticeNotEnoughFreeStorageSpace();
         }

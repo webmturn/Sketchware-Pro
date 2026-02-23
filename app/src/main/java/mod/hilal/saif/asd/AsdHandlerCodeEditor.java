@@ -6,7 +6,7 @@ import android.view.View;
 
 import com.besome.sketch.editor.LogicEditorActivity;
 
-import a.a.a.Ss;
+import a.a.a.FieldBlockView;
 import io.github.rosemoe.sora.widget.CodeEditor;
 
 public class AsdHandlerCodeEditor implements View.OnClickListener {
@@ -15,9 +15,9 @@ public class AsdHandlerCodeEditor implements View.OnClickListener {
     private final AsdDialog asdDialog;
     private final LogicEditorActivity logicEditorActivity;
     private final CodeEditor codeEditor;
-    private final Ss ss;
+    private final FieldBlockView ss;
 
-    public AsdHandlerCodeEditor(LogicEditorActivity logicEditorActivity, boolean enteringNumber, Ss ss, AsdDialog asdDialog, CodeEditor codeEditor) {
+    public AsdHandlerCodeEditor(LogicEditorActivity logicEditorActivity, boolean enteringNumber, FieldBlockView ss, AsdDialog asdDialog, CodeEditor codeEditor) {
         this.logicEditorActivity = logicEditorActivity;
         this.enteringNumber = enteringNumber;
         this.ss = ss;

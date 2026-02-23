@@ -9,7 +9,7 @@ import androidx.appcompat.widget.AppCompatCheckBox;
 import com.besome.sketch.beans.ViewBean;
 import com.besome.sketch.editor.view.ItemView;
 
-import a.a.a.wB;
+import a.a.a.ViewUtil;
 
 public class ItemCheckBox extends AppCompatCheckBox implements ItemView {
 
@@ -29,7 +29,7 @@ public class ItemCheckBox extends AppCompatCheckBox implements ItemView {
     }
 
     public void initialize(Context context) {
-        dip = wB.a(context, 1.0f);
+        dip = ViewUtil.a(context, 1.0f);
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(0x9599d5d0);
         setDrawingCacheEnabled(true);

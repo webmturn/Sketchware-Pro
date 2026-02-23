@@ -10,7 +10,7 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import java.util.ArrayList;
 
 import a.a.a.ProjectDataManager;
-import a.a.a.mB;
+import a.a.a.UIHelper;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ActivityLayoutPreviewBinding;
@@ -37,7 +37,7 @@ public class LayoutPreviewActivity extends BaseAppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         toolbar.setNavigationOnClickListener(v -> {
-            if (!mB.a()) {
+            if (!UIHelper.a()) {
                 getOnBackPressedDispatcher().onBackPressed();
             }
         });

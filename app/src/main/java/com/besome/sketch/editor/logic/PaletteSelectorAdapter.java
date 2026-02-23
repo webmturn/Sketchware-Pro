@@ -15,8 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-import a.a.a.Vs;
-import a.a.a.wB;
+import a.a.a.BlockSizeListener;
+import a.a.a.ViewUtil;
 import pro.sketchware.R;
 import pro.sketchware.databinding.PaletteSelectorItemBinding;
 
@@ -25,10 +25,10 @@ public class PaletteSelectorAdapter extends RecyclerView.Adapter<PaletteSelector
     private final PaletteSelector paletteSelector;
     private final List<paletteSelectorRecord> paletteList = new ArrayList<>();
     private final Context context;
-    private final Vs onBlockCategorySelectListener;
+    private final BlockSizeListener onBlockCategorySelectListener;
     private int selectedPosition = -1;
 
-    public PaletteSelectorAdapter(PaletteSelector paletteSelector, Vs onBlockCategorySelectListener) {
+    public PaletteSelectorAdapter(PaletteSelector paletteSelector, BlockSizeListener onBlockCategorySelectListener) {
         this.paletteSelector = paletteSelector;
         context = paletteSelector.getContext();
         this.onBlockCategorySelectListener = onBlockCategorySelectListener;
@@ -67,7 +67,7 @@ public class PaletteSelectorAdapter extends RecyclerView.Adapter<PaletteSelector
                 position == selectedPosition ?
                         isColorLight(color) ? getColor(context, R.attr.colorOnSurface) : getColor(context, R.attr.colorOnSurfaceInverse)
                         : getColor(context, R.attr.colorOnSurface));
-        holder.binding.bg.getLayoutParams().width = position == selectedPosition ? ViewGroup.LayoutParams.MATCH_PARENT : (int) wB.a(context, 4f);
+        holder.binding.bg.getLayoutParams().width = position == selectedPosition ? ViewGroup.LayoutParams.MATCH_PARENT : (int) ViewUtil.a(context, 4f);
 
         holder.itemView.setOnClickListener(v -> {
             selectedPosition = holder.getAbsoluteAdapterPosition();

@@ -159,7 +159,7 @@ public class ProjectBuilder {
     public static boolean hasFileChanged(String fileInAssets, String targetFile) {
         long length;
         File compareToFile = new File(targetFile);
-        oB fileUtil = new oB();
+        EncryptedFileUtil fileUtil = new EncryptedFileUtil();
         long lengthOfFileInAssets = fileUtil.a(SketchApplication.getContext(), fileInAssets);
         if (compareToFile.exists()) {
             length = compareToFile.length();

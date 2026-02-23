@@ -15,7 +15,7 @@ import com.besome.sketch.beans.ViewBean;
 import com.besome.sketch.editor.view.ItemView;
 import com.besome.sketch.editor.view.ScrollContainer;
 
-import a.a.a.wB;
+import a.a.a.ViewUtil;
 
 public class ItemVerticalScrollView extends FrameLayout implements ItemView, ScrollContainer {
 
@@ -106,10 +106,10 @@ public class ItemVerticalScrollView extends FrameLayout implements ItemView, Scr
 
     private void initialize(Context var1) {
         setDrawingCacheEnabled(true);
-        setMinimumWidth((int) wB.a(var1, 32.0F));
-        setMinimumHeight((int) wB.a(var1, 32.0F));
+        setMinimumWidth((int) ViewUtil.a(var1, 32.0F));
+        setMinimumHeight((int) ViewUtil.a(var1, 32.0F));
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setStrokeWidth(wB.a(getContext(), 2.0F));
+        paint.setStrokeWidth(ViewUtil.a(getContext(), 2.0F));
     }
 
     private boolean a(View view, int var2, int var3) {
@@ -319,7 +319,7 @@ public class ItemVerticalScrollView extends FrameLayout implements ItemView, Scr
 
     @Override
     public void setPadding(int left, int top, int right, int bottom) {
-        super.setPadding((int) wB.a(getContext(), (float) left), (int) wB.a(getContext(), (float) top), (int) wB.a(getContext(), (float) right), (int) wB.a(getContext(), (float) bottom));
+        super.setPadding((int) ViewUtil.a(getContext(), (float) left), (int) ViewUtil.a(getContext(), (float) top), (int) ViewUtil.a(getContext(), (float) right), (int) ViewUtil.a(getContext(), (float) bottom));
     }
 
     public void setScrollEnabled(boolean isScrollEnabled) {

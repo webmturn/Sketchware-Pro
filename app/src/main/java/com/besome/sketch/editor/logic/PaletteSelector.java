@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-import a.a.a.Vs;
+import a.a.a.BlockSizeListener;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.PalettesSearchDialogBinding;
@@ -58,7 +58,7 @@ public class PaletteSelector extends RecyclerView {
         this.context = context;
     }
 
-    private void initialize(Vs onBlockCategorySelectListener) {
+    private void initialize(BlockSizeListener onBlockCategorySelectListener) {
         paletteAdapter = new PaletteSelectorAdapter(this, onBlockCategorySelectListener);
         setAdapter(paletteAdapter);
 
@@ -141,7 +141,7 @@ public class PaletteSelector extends RecyclerView {
         });
     }
 
-    public void setOnBlockCategorySelectListener(Vs listener) {
+    public void setOnBlockCategorySelectListener(BlockSizeListener listener) {
         initialize(listener);
     }
 

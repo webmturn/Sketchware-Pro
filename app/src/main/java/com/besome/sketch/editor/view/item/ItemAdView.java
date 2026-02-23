@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import com.besome.sketch.beans.ViewBean;
 import com.besome.sketch.editor.view.ItemView;
 
-import a.a.a.wB;
+import a.a.a.ViewUtil;
 import pro.sketchware.R;
 
 public class ItemAdView extends LinearLayout implements ItemView {
@@ -30,7 +30,7 @@ public class ItemAdView extends LinearLayout implements ItemView {
     }
 
     private void initialize(Context context) {
-        dip = wB.a(context, 1.0F);
+        dip = ViewUtil.a(context, 1.0F);
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(0x9599d5d0);
         setDrawingCacheEnabled(true);

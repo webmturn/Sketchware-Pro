@@ -27,9 +27,9 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 
 import java.util.ArrayList;
 
-import a.a.a.QB;
+import a.a.a.XmlNameValidator;
 import a.a.a.SketchToast;
-import a.a.a.mB;
+import a.a.a.UIHelper;
 import a.a.a.BlockConstants;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
@@ -43,7 +43,7 @@ public class ManageImageImportActivity extends BaseAppCompatActivity implements 
     private ArrayList<ProjectResourceBean> projectImages;
     private ArrayList<ProjectResourceBean> selectedCollections;
     private int selectedItem = 0;
-    private QB nameValidator;
+    private XmlNameValidator nameValidator;
 
     private ArrayList<String> getReservedSelectedCollectionNames() {
         ArrayList<String> names = new ArrayList<>();
@@ -92,7 +92,7 @@ public class ManageImageImportActivity extends BaseAppCompatActivity implements 
 
     @Override
     public void onClick(View v) {
-        if (!mB.a()) {
+        if (!UIHelper.a()) {
             int id = v.getId();
             if (id != R.id.btn_decide) {
                 if (id != R.id.img_backbtn) {
@@ -166,7 +166,7 @@ public class ManageImageImportActivity extends BaseAppCompatActivity implements 
         ed_input_edittext.setText(selectedCollections.get(0).resName);
         ed_input_edittext.setPrivateImeOptions("defaultInputmode=english;");
         ed_input.setHint(getString(R.string.design_manager_image_hint_enter_image_name));
-        nameValidator = new QB(getApplicationContext(), ed_input.getTextInputLayout(), BlockConstants.RESERVED_KEYWORDS, getReservedProjectImageNames(), getReservedSelectedCollectionNames());
+        nameValidator = new XmlNameValidator(getApplicationContext(), ed_input.getTextInputLayout(), BlockConstants.RESERVED_KEYWORDS, getReservedProjectImageNames(), getReservedSelectedCollectionNames());
         chk_samename = findViewById(R.id.chk_samename);
         chk_samename.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
@@ -289,7 +289,7 @@ public class ManageImageImportActivity extends BaseAppCompatActivity implements 
                 img = itemView.findViewById(R.id.img);
                 tv_name = itemView.findViewById(R.id.tv_name);
                 img.setOnClickListener(v -> {
-                    if (!mB.a()) {
+                    if (!UIHelper.a()) {
                         selectedItem = getLayoutPosition();
                         showPreview(selectedItem);
                         tv_currentnum.setText(String.valueOf(selectedItem + 1));

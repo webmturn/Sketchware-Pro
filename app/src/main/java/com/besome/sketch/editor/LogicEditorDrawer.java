@@ -15,8 +15,8 @@ import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;
 
-import a.a.a.Us;
-import a.a.a.wB;
+import a.a.a.DefinitionBlockView;
+import a.a.a.ViewUtil;
 import mod.hey.studios.util.Helper;
 import mod.hilal.saif.activities.tools.AppSettings;
 import pro.sketchware.R;
@@ -45,7 +45,7 @@ public class LogicEditorDrawer extends LinearLayout {
     }
 
     private void initialize(Context context) {
-        wB.a(context, this, R.layout.logic_editor_drawer);
+        ViewUtil.a(context, this, R.layout.logic_editor_drawer);
         ((TextView) findViewById(R.id.tv_block_collection)).setText(Helper.getResString(R.string.logic_editor_title_block_collection));
         favorite = findViewById(R.id.layout_favorite);
         scrollView = findViewById(R.id.scv);
@@ -63,10 +63,10 @@ public class LogicEditorDrawer extends LinearLayout {
     }
 
     public View a(String str, ArrayList<BlockBean> arrayList) {
-        Us collectionBlock = null;
+        DefinitionBlockView collectionBlock = null;
         if (!arrayList.isEmpty()) {
             BlockBean blockBean = arrayList.get(0);
-            collectionBlock = new Us(getContext(), blockBean.type, blockBean.typeName, blockBean.opCode, str, arrayList);
+            collectionBlock = new DefinitionBlockView(getContext(), blockBean.type, blockBean.typeName, blockBean.opCode, str, arrayList);
             favorite.addView(collectionBlock);
             View view = new View(getContext());
             view.setLayoutParams(new LinearLayout.LayoutParams(
@@ -81,7 +81,7 @@ public class LogicEditorDrawer extends LinearLayout {
     public void a(String str) {
         for (int i = 0; i < favorite.getChildCount(); i++) {
             View childAt = favorite.getChildAt(i);
-            if ((childAt instanceof Us) && ((Us) childAt).T.equals(str)) {
+            if ((childAt instanceof DefinitionBlockView) && ((DefinitionBlockView) childAt).T.equals(str)) {
                 favorite.removeViewAt(i + 1);
                 favorite.removeViewAt(i);
             }

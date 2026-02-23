@@ -11,9 +11,9 @@ import android.widget.TextView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import a.a.a.PropertyChangedCallback;
-import a.a.a.mB;
+import a.a.a.UIHelper;
 import a.a.a.SketchwareConstants;
-import a.a.a.wB;
+import a.a.a.ViewUtil;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.PropertyPopupMeasurementBinding;
@@ -83,7 +83,7 @@ public class PropertyMeasureItem extends RelativeLayout implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        if (!mB.a()) {
+        if (!UIHelper.a()) {
             showDialog();
         }
     }
@@ -113,7 +113,7 @@ public class PropertyMeasureItem extends RelativeLayout implements View.OnClickL
     }
 
     private void initialize(Context context, boolean z) {
-        wB.a(context, this, R.layout.property_selector_item);
+        ViewUtil.a(context, this, R.layout.property_selector_item);
         tvName = findViewById(R.id.tv_name);
         tvValue = findViewById(R.id.tv_value);
         imgLeftIcon = findViewById(R.id.img_left_icon);

@@ -26,11 +26,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-import a.a.a.DB;
+import a.a.a.SharedPrefsHelper;
 import a.a.a.ProjectListManager;
-import a.a.a.mB;
+import a.a.a.UIHelper;
 import a.a.a.SketchwarePaths;
-import a.a.a.yB;
+import a.a.a.MapValueHelper;
 import mod.hey.studios.project.ProjectSettingsDialog;
 import mod.hey.studios.project.backup.BackupRestoreManager;
 import mod.hey.studios.util.Helper;
@@ -42,7 +42,7 @@ import pro.sketchware.databinding.MyprojectsItemBinding;
 public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.ProjectViewHolder> {
     private final ProjectsFragment projectsFragment;
     private final Activity activity;
-    private final DB preference;
+    private final SharedPrefsHelper preference;
     private List<HashMap<String, Object>> shownProjects = new ArrayList<>();
     private List<HashMap<String, Object>> allProjects;
 
@@ -50,7 +50,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
         this.projectsFragment = projectsFragment;
         activity = projectsFragment.requireActivity();
         this.allProjects = allProjects;
-        preference = new DB(activity, "project");
+        preference = new SharedPrefsHelper(activity, "project");
 
     }
 
@@ -81,8 +81,8 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
 
             @Override
             public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-                String oldScId = yB.c(shownProjects.get(oldItemPosition), "sc_id");
-                String newScId = yB.c(newProjects.get(newItemPosition), "sc_id");
+                String oldScId = MapValueHelper.c(shownProjects.get(oldItemPosition), "sc_id");
+                String newScId = MapValueHelper.c(newProjects.get(newItemPosition), "sc_id");
                 return oldScId.equalsIgnoreCase(newScId);
             }
 
@@ -91,12 +91,12 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
                 HashMap<String, Object> oldMap = shownProjects.get(oldItemPosition);
                 HashMap<String, Object> newMap = newProjects.get(newItemPosition);
                 for (String key : Arrays.asList("my_app_name", "my_ws_name", "sc_ver_name", "sc_ver_code", "my_sc_pkg_name")) {
-                    if (!yB.c(oldMap, key).equals(yB.c(newMap, key))) {
+                    if (!MapValueHelper.c(oldMap, key).equals(MapValueHelper.c(newMap, key))) {
                         return false;
                     }
                 }
-                boolean oldCustomIcon = yB.a(oldMap, "custom_icon");
-                boolean newCustomIcon = yB.a(newMap, "custom_icon");
+                boolean oldCustomIcon = MapValueHelper.a(oldMap, "custom_icon");
+                boolean newCustomIcon = MapValueHelper.a(newMap, "custom_icon");
                 return oldCustomIcon == newCustomIcon;
             }
         }, true);
@@ -113,7 +113,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
     private boolean matchesQuery(HashMap<String, Object> projectMap, String searchQuery) {
         searchQuery = searchQuery.toLowerCase();
         for (String key : Arrays.asList("sc_id", "my_ws_name", "my_app_name", "my_sc_pkg_name")) {
-            if (yB.c(projectMap, key).toLowerCase().contains(searchQuery)) {
+            if (MapValueHelper.c(projectMap, key).toLowerCase().contains(searchQuery)) {
                 return true;
             }
         }
@@ -137,22 +137,22 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
     public void onBindViewHolder(@NonNull ProjectViewHolder holder, int position) {
         holder.itemView.setBackgroundResource(getShapedBackgroundForList(shownProjects, position));
         HashMap<String, Object> projectMap = shownProjects.get(position);
-        String scId = yB.c(projectMap, "sc_id");
+        String scId = MapValueHelper.c(projectMap, "sc_id");
 
         holder.binding.imgIcon.setImageResource(R.drawable.default_icon);
 
-        if (yB.c(projectMap, "sc_ver_code").isEmpty()) {
+        if (MapValueHelper.c(projectMap, "sc_ver_code").isEmpty()) {
             projectMap.put("sc_ver_code", "1");
             projectMap.put("sc_ver_name", "1.0");
             ProjectListManager.updateProject(scId, projectMap);
         }
 
-        if (yB.b(projectMap, "sketchware_ver") <= 0) {
+        if (MapValueHelper.b(projectMap, "sketchware_ver") <= 0) {
             projectMap.put("sketchware_ver", 61);
             ProjectListManager.updateProject(scId, projectMap);
         }
 
-        if (yB.a(projectMap, "custom_icon")) {
+        if (MapValueHelper.a(projectMap, "custom_icon")) {
             String iconFolder = SketchwarePaths.getIconsPath() + File.separator + scId;
             File iconFile = new File(iconFolder, "icon.png");
             if (iconFile.exists()) {
@@ -172,22 +172,22 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
 
         }
 
-        String version = " - " + yB.c(projectMap, "sc_ver_name") + " (" + yB.c(projectMap, "sc_ver_code") + ")";
-        holder.binding.appName.setText(yB.c(projectMap, "my_ws_name") + version);
-        holder.binding.projectName.setText(yB.c(projectMap, "my_app_name"));
-        holder.binding.packageName.setText(yB.c(projectMap, "my_sc_pkg_name"));
+        String version = " - " + MapValueHelper.c(projectMap, "sc_ver_name") + " (" + MapValueHelper.c(projectMap, "sc_ver_code") + ")";
+        holder.binding.appName.setText(MapValueHelper.c(projectMap, "my_ws_name") + version);
+        holder.binding.projectName.setText(MapValueHelper.c(projectMap, "my_app_name"));
+        holder.binding.packageName.setText(MapValueHelper.c(projectMap, "my_sc_pkg_name"));
         holder.binding.tvPublished.setVisibility(View.VISIBLE);
         holder.binding.tvPublished.setText(scId);
         holder.itemView.setTag("custom");
 
         holder.binding.getRoot().setOnClickListener(v -> {
-            if (!mB.a()) {
+            if (!UIHelper.a()) {
                 projectsFragment.toDesignActivity(scId);
             }
         });
 
         View.OnClickListener showProjectSettingsDialog = v -> {
-            mB.a(v);
+            UIHelper.a(v);
             int currentPosition = holder.getAbsoluteAdapterPosition();
             if (currentPosition != RecyclerView.NO_POSITION) {
                 showProjectOptionsBottomSheet(projectMap, currentPosition);
@@ -213,7 +213,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
         LoadingDialog progressDialog = new LoadingDialog(activity);
         progressDialog.show();
 
-        String scId = yB.c(projectMap, "sc_id");
+        String scId = MapValueHelper.c(projectMap, "sc_id");
         new Thread(() -> {
             try {
                 ProjectListManager.deleteProject(activity, scId);
@@ -233,26 +233,26 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
     private void toProjectSettingOrRequestPermission(HashMap<String, Object> project, int index) {
         Intent intent = new Intent(activity, MyProjectSettingActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        intent.putExtra("sc_id", yB.c(project, "sc_id"));
+        intent.putExtra("sc_id", MapValueHelper.c(project, "sc_id"));
         intent.putExtra("is_update", true);
         intent.putExtra("index", index);
         projectsFragment.openProjectSettings.launch(intent);
     }
 
     private void showProjectSettingDialog(HashMap<String, Object> project) {
-        new ProjectSettingsDialog(activity, yB.c(project, "sc_id")).show();
+        new ProjectSettingsDialog(activity, MapValueHelper.c(project, "sc_id")).show();
     }
 
     private void backupProject(HashMap<String, Object> project) {
-        String scId = yB.c(project, "sc_id");
-        String appName = yB.c(project, "my_ws_name");
+        String scId = MapValueHelper.c(project, "sc_id");
+        String appName = MapValueHelper.c(project, "my_ws_name");
         new BackupRestoreManager(activity).backup(scId, appName);
     }
 
     private void toExportProjectActivity(HashMap<String, Object> project) {
         Intent intent = new Intent(activity, ExportProjectActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        intent.putExtra("sc_id", yB.c(project, "sc_id"));
+        intent.putExtra("sc_id", MapValueHelper.c(project, "sc_id"));
         activity.startActivity(intent);
     }
 
@@ -260,13 +260,13 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
         if (isPinned(projectMap)) {
             preference.a("pinnedProject", "-1", true);
         } else {
-            preference.a("pinnedProject", yB.c(projectMap, "sc_id"), true);
+            preference.a("pinnedProject", MapValueHelper.c(projectMap, "sc_id"), true);
         }
         projectsFragment.refreshProjectsList();
     }
 
     private boolean isPinned(HashMap<String, Object> projectMap) {
-        return Objects.equals(yB.c(projectMap, "sc_id"), preference.a("pinnedProject", "-1"));
+        return Objects.equals(MapValueHelper.c(projectMap, "sc_id"), preference.a("pinnedProject", "-1"));
     }
 
     private void showProjectOptionsBottomSheet(HashMap<String, Object> projectMap, int position) {
@@ -274,8 +274,8 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
         BottomSheetProjectOptionsBinding binding = BottomSheetProjectOptionsBinding.inflate(LayoutInflater.from(activity));
         projectOptionsBSD.setContentView(binding.getRoot());
 
-        binding.title.setText(yB.c(projectMap, "my_ws_name"));
-        binding.tvProjectId.setText(yB.c(projectMap, "sc_id"));
+        binding.title.setText(MapValueHelper.c(projectMap, "my_ws_name"));
+        binding.tvProjectId.setText(MapValueHelper.c(projectMap, "sc_id"));
 
         binding.projectSettings.setOnClickListener(v -> {
             toProjectSettingOrRequestPermission(projectMap, position);
@@ -307,7 +307,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
             MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(activity);
             dialog.setIcon(R.drawable.icon_delete);
             dialog.setTitle(Helper.getResString(R.string.delete_project_dialog_title));
-            dialog.setMessage(Helper.getResString(R.string.delete_project_dialog_message).replace("%1$s", yB.c(projectMap, "my_app_name")));
+            dialog.setMessage(Helper.getResString(R.string.delete_project_dialog_message).replace("%1$s", MapValueHelper.c(projectMap, "my_app_name")));
             dialog.setPositiveButton(Helper.getResString(R.string.common_word_delete), (v1, which) -> {
                 deleteProject(projectMap, position);
                 v1.dismiss();

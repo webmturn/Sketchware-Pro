@@ -32,9 +32,9 @@ import java.util.Map;
 
 import a.a.a.PropertyChangedCallback;
 import a.a.a.ProjectDataManager;
-import a.a.a.kC;
-import a.a.a.mB;
-import a.a.a.wB;
+import a.a.a.ResourceManager;
+import a.a.a.UIHelper;
+import a.a.a.ViewUtil;
 import mod.bobur.VectorDrawableLoader;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
@@ -120,7 +120,7 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
                         svgUtils.loadImage(imagePreview, fpu.getSvgFullPath(scId, str));
                         return;
                     }
-                    Glide.with(getContext()).load(fromFile).signature(kC.n()).error(R.drawable.ic_remove_grey600_24dp).into(imagePreview);
+                    Glide.with(getContext()).load(fromFile).signature(ResourceManager.n()).error(R.drawable.ic_remove_grey600_24dp).into(imagePreview);
                     return;
                 }
                 imagePreview.setImageResource(getContext().getResources().getIdentifier(str, "drawable", getContext().getPackageName()));
@@ -135,7 +135,7 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
 
     @Override
     public void onClick(View view) {
-        if (mB.a()) {
+        if (UIHelper.a()) {
             return;
         }
         a();
@@ -160,7 +160,7 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
     }
 
     public final void a(Context context, boolean z, boolean z2) {
-        wB.a(context, this, R.layout.property_resource_item);
+        ViewUtil.a(context, this, R.layout.property_resource_item);
         nameTextView = findViewById(R.id.tv_name);
         valueTextView = findViewById(R.id.tv_value);
         imagePreview = findViewById(R.id.view_image);
@@ -279,7 +279,7 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
 
     private View setImageViewContent(String image) {
         ImageView imageView = new ImageView(getContext());
-        int size = (int) (48 * wB.a(getContext(), 1f));
+        int size = (int) (48 * ViewUtil.a(getContext(), 1f));
         imageView.setLayoutParams(new LinearLayout.LayoutParams(size, size));
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         imageView.setBackgroundResource(R.drawable.bg_outline);
@@ -296,7 +296,7 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
                     } else {
                         Glide.with(getContext())
                                 .load(uri)
-                                .signature(kC.n())
+                                .signature(ResourceManager.n())
                                 .error(R.drawable.ic_remove_grey600_24dp)
                                 .into(imageView);
                     }

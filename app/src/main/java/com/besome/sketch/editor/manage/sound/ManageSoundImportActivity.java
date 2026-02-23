@@ -31,15 +31,15 @@ import com.bumptech.glide.Glide;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import a.a.a.QB;
+import a.a.a.XmlNameValidator;
 import a.a.a.SketchToast;
-import a.a.a.mB;
+import a.a.a.UIHelper;
 import a.a.a.BlockConstants;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 
 public class ManageSoundImportActivity extends BaseAppCompatActivity implements View.OnClickListener {
-    private QB nameValidator;
+    private XmlNameValidator nameValidator;
     private boolean mediaPlayerIsPrepared;
     private ImageView img_album;
     private ImageView img_play;
@@ -98,7 +98,7 @@ public class ManageSoundImportActivity extends BaseAppCompatActivity implements 
 
     @Override
     public void onClick(View v) {
-        if (!mB.a()) {
+        if (!UIHelper.a()) {
             int id = v.getId();
             if (id == R.id.btn_decide) {
                 String name = Helper.getText(ed_input_edittext);
@@ -182,7 +182,7 @@ public class ManageSoundImportActivity extends BaseAppCompatActivity implements 
         ed_input_edittext.setText(selectedCollections.get(0).resName);
         ed_input_edittext.setPrivateImeOptions("defaultInputmode=english;");
         ed_input.setHint(getString(R.string.design_manager_sound_hint_enter_sound_name));
-        nameValidator = new QB(getApplicationContext(), ed_input.getTextInputLayout(), BlockConstants.RESERVED_KEYWORDS, getReservedProjectSoundNames(), getReservedSelectedCollectionNames());
+        nameValidator = new XmlNameValidator(getApplicationContext(), ed_input.getTextInputLayout(), BlockConstants.RESERVED_KEYWORDS, getReservedProjectSoundNames(), getReservedSelectedCollectionNames());
         chk_samename = findViewById(R.id.chk_samename);
         chk_samename.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
@@ -358,7 +358,7 @@ public class ManageSoundImportActivity extends BaseAppCompatActivity implements 
                 img = itemView.findViewById(R.id.img);
                 tv_name = itemView.findViewById(R.id.tv_name);
                 img.setOnClickListener(v -> {
-                    if (!mB.a()) {
+                    if (!UIHelper.a()) {
                         pausePlayback();
                         selectedItem = getLayoutPosition();
                         showPreview(selectedItem);

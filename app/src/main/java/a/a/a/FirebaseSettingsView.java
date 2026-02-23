@@ -9,7 +9,7 @@ import com.besome.sketch.editor.manage.library.firebase.FirebaseActivity;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageLibraryFirebaseProjectSettingsBinding;
 
-public class FirebaseSettingsView extends LinearLayout implements nv {
+public class FirebaseSettingsView extends LinearLayout implements LibraryConfigView {
 
     private final ManageLibraryFirebaseProjectSettingsBinding binding;
 

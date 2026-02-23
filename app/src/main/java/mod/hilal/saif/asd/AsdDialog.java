@@ -15,7 +15,7 @@ import android.view.Window;
 import com.besome.sketch.editor.LogicEditorActivity;
 
 import a.a.a.ComponentCodeGenerator;
-import a.a.a.Ss;
+import a.a.a.FieldBlockView;
 import io.github.rosemoe.sora.widget.component.EditorAutoCompletion;
 import mod.hey.studios.code.SrcCodeEditor;
 import mod.hey.studios.util.Helper;
@@ -121,7 +121,7 @@ public class AsdDialog extends Dialog implements DialogInterface.OnDismissListen
         act = null;
     }
 
-    public void setOnSaveClickListener(LogicEditorActivity logicEditorActivity, boolean z, Ss ss, AsdDialog asdDialog) {
+    public void setOnSaveClickListener(LogicEditorActivity logicEditorActivity, boolean z, FieldBlockView ss, AsdDialog asdDialog) {
         binding.btnSave.setOnClickListener(new AsdHandlerCodeEditor(logicEditorActivity, z, ss, asdDialog, binding.editor));
     }
 

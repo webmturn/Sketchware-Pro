@@ -17,9 +17,9 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import java.lang.ref.WeakReference;
 
 import a.a.a.BaseAsyncTask;
-import a.a.a.Qp;
+import a.a.a.FontCollectionManager;
 import a.a.a.SoundImportFragment;
-import a.a.a.mB;
+import a.a.a.UIHelper;
 import a.a.a.SoundListFragment;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageSoundBinding;
@@ -70,7 +70,7 @@ public class ManageSoundActivity extends BaseAppCompatActivity implements ViewPa
         setContentView(binding.getRoot());
 
         binding.toolbar.setNavigationOnClickListener(v -> {
-            if (!mB.a()) {
+            if (!UIHelper.a()) {
                 getOnBackPressedDispatcher().onBackPressed();
             }
         });
@@ -125,7 +125,7 @@ public class ManageSoundActivity extends BaseAppCompatActivity implements ViewPa
             activity.h();
             activity.setResult(RESULT_OK);
             activity.finish();
-            Qp.g().d();
+            FontCollectionManager.g().d();
         }
 
         @Override

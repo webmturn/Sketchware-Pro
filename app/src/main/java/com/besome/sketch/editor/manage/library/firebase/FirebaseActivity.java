@@ -23,14 +23,14 @@ import com.besome.sketch.beans.ProjectLibraryBean;
 import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import a.a.a.GB;
+import a.a.a.DeviceUtil;
 import a.a.a.SketchToast;
-import a.a.a.iC;
+import a.a.a.LibraryManager;
 import a.a.a.FirebasePreviewView;
 import a.a.a.FirebaseSettingsView;
-import a.a.a.mB;
+import a.a.a.UIHelper;
 import a.a.a.FirebaseStorageView;
-import a.a.a.nv;
+import a.a.a.LibraryConfigView;
 import mod.hey.studios.util.Helper;
 import mod.jbk.editor.manage.library.LibrarySettingsImporter;
 import pro.sketchware.R;
@@ -41,7 +41,7 @@ public class FirebaseActivity extends BaseAppCompatActivity implements View.OnCl
     private static final int STEP_3 = 2;
     private String[] stepTitles;
     private String[] stepDescriptions;
-    private nv step;
+    private LibraryConfigView step;
     private ProjectLibraryBean firebaseSettings;
     private String sc_id;
     private int stepNumber = STEP_1;
@@ -104,7 +104,7 @@ public class FirebaseActivity extends BaseAppCompatActivity implements View.OnCl
     private void openDocumentation() {
         String docUrl = step.getDocUrl();
         if (!docUrl.isEmpty()) {
-            if (GB.h(getApplicationContext())) {
+            if (DeviceUtil.h(getApplicationContext())) {
                 try {
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -124,7 +124,7 @@ public class FirebaseActivity extends BaseAppCompatActivity implements View.OnCl
     }
 
     private void openFirebaseConsole() {
-        if (GB.h(getApplicationContext())) {
+        if (DeviceUtil.h(getApplicationContext())) {
             try {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -145,7 +145,7 @@ public class FirebaseActivity extends BaseAppCompatActivity implements View.OnCl
 
     @Override
     public void onClick(View v) {
-        if (!mB.a()) {
+        if (!UIHelper.a()) {
             int id = v.getId();
             if (id == R.id.btn_open_doc) {
                 openDocumentation();
@@ -156,7 +156,7 @@ public class FirebaseActivity extends BaseAppCompatActivity implements View.OnCl
             } else if (id == R.id.tv_nextbtn) {
                 onNextPressed();
             } else if (id == R.id.btn_import) {
-                LibrarySettingsImporter importer = new LibrarySettingsImporter(sc_id, iC::d);
+                LibrarySettingsImporter importer = new LibrarySettingsImporter(sc_id, LibraryManager::d);
                 importer.addOnProjectSelectedListener(settings -> {
                     firebaseSettings = settings;
                     stepNumber = STEP_3;
@@ -271,7 +271,7 @@ public class FirebaseActivity extends BaseAppCompatActivity implements View.OnCl
         dialog.setTitle(R.string.title_compatible_chrome_browser);
         dialog.setMessage(R.string.message_compatible_chrome_brower);
         dialog.setPositiveButton(R.string.common_word_ok, (v, which) -> {
-            if (!mB.a()) {
+            if (!UIHelper.a()) {
                 try {
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setData(Uri.parse("market://details?id=com.android.chrome"));

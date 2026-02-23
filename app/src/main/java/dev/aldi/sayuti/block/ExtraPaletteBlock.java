@@ -81,11 +81,11 @@ public class ExtraPaletteBlock {
             }
         }
         if (eventName.equals("onBindCustomView")) {
-            var eC = ProjectDataManager.getProjectDataManager(sc_id);
-            var view = eC.c(xmlName, logicEditor.id);
+            var ProjectDataStore = ProjectDataManager.getProjectDataManager(sc_id);
+            var view = ProjectDataStore.c(xmlName, logicEditor.id);
             if (view == null) {
                 // in case the View's in a Drawer
-                view = eC.c("_drawer_" + xmlName, logicEditor.id);
+                view = ProjectDataStore.c("_drawer_" + xmlName, logicEditor.id);
             }
             String customView = view.customView;
             if (customView != null && !customView.isEmpty()) {
@@ -105,7 +105,7 @@ public class ExtraPaletteBlock {
     }
 
     /*
-     * ExtraPaletteBlock#f(Ss) moved to mod.w3wide.menu.ExtraMenuBean#defineMenuSelector(Ss)
+     * ExtraPaletteBlock#f(FieldBlockView) moved to mod.w3wide.menu.ExtraMenuBean#defineMenuSelector(FieldBlockView)
      * for better block menu selections and to add new stuff easily.
      */
 
@@ -248,11 +248,11 @@ public class ExtraPaletteBlock {
     private void blockCustomViews() {
         if (eventName.equals("onBindCustomView")) {
             String viewId = logicEditor.id;
-            var eC = ProjectDataManager.getProjectDataManager(sc_id);
-            ViewBean viewBean = eC.c(xmlName, viewId);
+            var ProjectDataStore = ProjectDataManager.getProjectDataManager(sc_id);
+            ViewBean viewBean = ProjectDataStore.c(xmlName, viewId);
             if (viewBean == null) {
                 // Event is of a Drawer View
-                viewBean = eC.c("_drawer_" + xmlName, viewId);
+                viewBean = ProjectDataStore.c("_drawer_" + xmlName, viewId);
             }
             String viewBeanCustomView = viewBean.customView;
             if (viewBeanCustomView != null && !viewBeanCustomView.isEmpty()) {

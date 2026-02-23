@@ -9,8 +9,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import a.a.a.Rs;
-import a.a.a.wB;
+import a.a.a.BlockView;
+import a.a.a.ViewUtil;
 import pro.sketchware.R;
 
 public class ViewDummy extends RelativeLayout {
@@ -38,7 +38,7 @@ public class ViewDummy extends RelativeLayout {
     }
 
     public final void initialize(Context context) {
-        wB.a(context, this, R.layout.dummy);
+        ViewUtil.a(context, this, R.layout.dummy);
         img_notallowed = findViewById(R.id.img_notallowed);
         img_dummy = findViewById(R.id.img_dummy);
         layout_dummy = findViewById(R.id.layout_dummy);
@@ -74,7 +74,7 @@ public class ViewDummy extends RelativeLayout {
         return bitmap;
     }
 
-    public void a(Rs rs) {
+    public void a(BlockView rs) {
         switch (rs.b) {
             case "b":
                 img_dummy.setImageResource(R.drawable.selected_block_boolean);

@@ -2,10 +2,10 @@ package a.a.a;
 
 public class ProjectDataManager {
 
-    public static eC a;
-    public static hC b;
-    public static kC c;
-    public static iC d;
+    public static ProjectDataStore a;
+    public static ProjectFileManager b;
+    public static ResourceManager c;
+    public static LibraryManager d;
 
     public static void a() {
         a = null;
@@ -34,24 +34,24 @@ public class ProjectDataManager {
         c = null;
     }
 
-    public static synchronized hC b(String str) {
+    public static synchronized ProjectFileManager b(String str) {
         return b(str, true);
     }
 
-    public static synchronized iC c(String str) {
+    public static synchronized LibraryManager c(String str) {
         return c(str, true);
     }
 
-    public static synchronized kC d(String str) {
+    public static synchronized ResourceManager d(String str) {
         return d(str, true);
     }
 
-    public static synchronized hC b(String str, boolean z) {
+    public static synchronized ProjectFileManager b(String str, boolean z) {
         if (b != null && !str.equals(b.e)) {
             c();
         }
         if (b == null) {
-            b = new hC(str);
+            b = new ProjectFileManager(str);
             if (!z) {
                 b.i();
             } else if (b.g()) {
@@ -63,12 +63,12 @@ public class ProjectDataManager {
         return b;
     }
 
-    public static synchronized iC c(String str, boolean z) {
+    public static synchronized LibraryManager c(String str, boolean z) {
         if (d != null && !str.equals(d.a)) {
             d();
         }
         if (d == null) {
-            d = new iC(str);
+            d = new LibraryManager(str);
             if (!z) {
                 d.i();
             } else if (d.g()) {
@@ -80,12 +80,12 @@ public class ProjectDataManager {
         return d;
     }
 
-    public static synchronized kC d(String str, boolean z) {
+    public static synchronized ResourceManager d(String str, boolean z) {
         if (c != null && !str.equals(c.i)) {
             e();
         }
         if (c == null) {
-            c = new kC(str);
+            c = new ResourceManager(str);
             if (!z) {
                 c.s();
             } else if (c.q()) {
@@ -97,16 +97,16 @@ public class ProjectDataManager {
         return c;
     }
 
-    public static synchronized eC a(String str) {
+    public static synchronized ProjectDataStore a(String str) {
         return a(str, true);
     }
 
-    public static synchronized eC a(String str, boolean z) {
+    public static synchronized ProjectDataStore a(String str, boolean z) {
         if (a != null && !str.equals(a.a)) {
             b();
         }
         if (a == null) {
-            a = new eC(str);
+            a = new ProjectDataStore(str);
             if (!z) {
                 a.g();
                 a.e();
@@ -133,63 +133,63 @@ public class ProjectDataManager {
         a();
     }
 
-    /** Saves and closes the project data manager (eC). */
+    /** Saves and closes the project data manager (ProjectDataStore). */
     public static void closeDataManager() {
         b();
     }
 
-    /** Saves and closes the project file manager (hC). */
+    /** Saves and closes the project file manager (ProjectFileManager). */
     public static void closeFileManager() {
         c();
     }
 
-    /** Saves and closes the library manager (iC). */
+    /** Saves and closes the library manager (LibraryManager). */
     public static void closeLibraryManager() {
         d();
     }
 
-    /** Saves and closes the resource manager (kC). */
+    /** Saves and closes the resource manager (ResourceManager). */
     public static void closeResourceManager() {
         e();
     }
 
-    /** Gets or creates the project data manager (eC) for the given project. */
-    public static synchronized eC getProjectDataManager(String sc_id) {
+    /** Gets or creates the project data manager (ProjectDataStore) for the given project. */
+    public static synchronized ProjectDataStore getProjectDataManager(String sc_id) {
         return a(sc_id);
     }
 
-    /** Gets or creates the project data manager (eC) with load option. */
-    public static synchronized eC getProjectDataManager(String sc_id, boolean load) {
+    /** Gets or creates the project data manager (ProjectDataStore) with load option. */
+    public static synchronized ProjectDataStore getProjectDataManager(String sc_id, boolean load) {
         return a(sc_id, load);
     }
 
-    /** Gets or creates the project file manager (hC) for the given project. */
-    public static synchronized hC getFileManager(String sc_id) {
+    /** Gets or creates the project file manager (ProjectFileManager) for the given project. */
+    public static synchronized ProjectFileManager getFileManager(String sc_id) {
         return b(sc_id);
     }
 
-    /** Gets or creates the project file manager (hC) with load option. */
-    public static synchronized hC getFileManager(String sc_id, boolean load) {
+    /** Gets or creates the project file manager (ProjectFileManager) with load option. */
+    public static synchronized ProjectFileManager getFileManager(String sc_id, boolean load) {
         return b(sc_id, load);
     }
 
-    /** Gets or creates the library manager (iC) for the given project. */
-    public static synchronized iC getLibraryManager(String sc_id) {
+    /** Gets or creates the library manager (LibraryManager) for the given project. */
+    public static synchronized LibraryManager getLibraryManager(String sc_id) {
         return c(sc_id);
     }
 
-    /** Gets or creates the library manager (iC) with load option. */
-    public static synchronized iC getLibraryManager(String sc_id, boolean load) {
+    /** Gets or creates the library manager (LibraryManager) with load option. */
+    public static synchronized LibraryManager getLibraryManager(String sc_id, boolean load) {
         return c(sc_id, load);
     }
 
-    /** Gets or creates the resource manager (kC) for the given project. */
-    public static synchronized kC getResourceManager(String sc_id) {
+    /** Gets or creates the resource manager (ResourceManager) for the given project. */
+    public static synchronized ResourceManager getResourceManager(String sc_id) {
         return d(sc_id);
     }
 
-    /** Gets or creates the resource manager (kC) with load option. */
-    public static synchronized kC getResourceManager(String sc_id, boolean load) {
+    /** Gets or creates the resource manager (ResourceManager) with load option. */
+    public static synchronized ResourceManager getResourceManager(String sc_id, boolean load) {
         return d(sc_id, load);
     }
 }

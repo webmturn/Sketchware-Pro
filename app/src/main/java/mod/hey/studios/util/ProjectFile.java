@@ -4,7 +4,7 @@ import android.graphics.Color;
 import android.os.Build;
 
 import a.a.a.ProjectListManager;
-import a.a.a.yB;
+import a.a.a.MapValueHelper;
 import pro.sketchware.SketchApplication;
 
 public class ProjectFile {
@@ -15,12 +15,12 @@ public class ProjectFile {
     public static final String COLOR_CONTROL_NORMAL = "color_control_normal";
 
     public static int getColor(String sc_id, String color) {
-        return yB.a(ProjectListManager.getProjectById(sc_id), color, getDefaultColor(color));
+        return MapValueHelper.a(ProjectListManager.getProjectById(sc_id), color, getDefaultColor(color));
         /*
         Old in-progress by Mike?
         HashMap<String, Object> hashMap = ProjectListManager.getProjectById(sc_id);
 
-        return 0;//yB.a(hashMap, color, getDefaultColor(color));
+        return 0;//MapValueHelper.a(hashMap, color, getDefaultColor(color));
         */
     }
 

@@ -18,8 +18,8 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import java.lang.ref.WeakReference;
 
 import a.a.a.BaseAsyncTask;
-import a.a.a.Np;
-import a.a.a.mB;
+import a.a.a.ImageCollectionManager;
+import a.a.a.UIHelper;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageFontBinding;
@@ -60,7 +60,7 @@ public class ManageFontActivity extends BaseAppCompatActivity {
         }
 
         binding.toolbar.setNavigationOnClickListener(v -> {
-            if (!mB.a()) {
+            if (!UIHelper.a()) {
                 getOnBackPressedDispatcher().onBackPressed();
             }
         });
@@ -131,7 +131,7 @@ public class ManageFontActivity extends BaseAppCompatActivity {
             activity.h();
             activity.setResult(RESULT_OK);
             activity.finish();
-            Np.g().d();
+            ImageCollectionManager.g().d();
         }
 
         @Override

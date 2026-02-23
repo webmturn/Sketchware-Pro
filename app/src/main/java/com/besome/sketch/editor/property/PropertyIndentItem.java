@@ -13,8 +13,8 @@ import android.widget.TextView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import a.a.a.PropertyChangedCallback;
-import a.a.a.mB;
-import a.a.a.wB;
+import a.a.a.UIHelper;
+import a.a.a.ViewUtil;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.PropertyPopupInputIndentBinding;
@@ -87,7 +87,7 @@ public class PropertyIndentItem extends RelativeLayout implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        if (!mB.a()) {
+        if (!UIHelper.a()) {
             switch (key) {
                 case "property_padding":
                 case "property_margin":
@@ -117,7 +117,7 @@ public class PropertyIndentItem extends RelativeLayout implements View.OnClickLi
 
     private void initialize(Context context, boolean z) {
         this.context = context;
-        wB.a(context, this, R.layout.property_input_item);
+        ViewUtil.a(context, this, R.layout.property_input_item);
         tvName = findViewById(R.id.tv_name);
         tvValue = findViewById(R.id.tv_value);
         imgLeftIcon = findViewById(R.id.img_left_icon);

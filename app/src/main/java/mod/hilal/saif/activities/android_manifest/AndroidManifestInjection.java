@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Objects;
 
 import a.a.a.ProjectDataManager;
-import a.a.a.wB;
+import a.a.a.ViewUtil;
 import a.a.a.ProjectFilePaths;
 import mod.hey.studios.code.SrcCodeEditor;
 import mod.hey.studios.util.Helper;
@@ -161,7 +161,7 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setIcon(R.drawable.ic_mtrl_lifecycle);
         dialog.setTitle(Helper.getResString(R.string.change_launcher_activity_dialog_title));
-        View view = wB.a(this, R.layout.dialog_add_custom_activity);
+        View view = ViewUtil.a(this, R.layout.dialog_add_custom_activity);
 
         TextInputEditText activity_name_input = view.findViewById(R.id.activity_name_input);
 
@@ -185,7 +185,7 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setIcon(R.drawable.ic_mtrl_add);
         dialog.setTitle(Helper.getResString(R.string.common_word_add_activtiy));
-        View inflate = wB.a(this, R.layout.dialog_add_custom_activity);
+        View inflate = ViewUtil.a(this, R.layout.dialog_add_custom_activity);
 
         TextInputEditText activity_name_input = inflate.findViewById(R.id.activity_name_input);
 

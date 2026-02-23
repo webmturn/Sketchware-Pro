@@ -10,7 +10,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import com.besome.sketch.beans.ViewBean;
 import com.besome.sketch.editor.view.ItemView;
 
-import a.a.a.wB;
+import a.a.a.ViewUtil;
 import pro.sketchware.R;
 
 public class ItemSignInButton extends AppCompatButton implements ItemView {
@@ -27,7 +27,7 @@ public class ItemSignInButton extends AppCompatButton implements ItemView {
     public ItemSignInButton(Context context) {
         super(context);
         this.context = context;
-        dip = wB.a(context, 1.0f);
+        dip = ViewUtil.a(context, 1.0f);
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(0x9599d5d0);
         rect = new Rect();

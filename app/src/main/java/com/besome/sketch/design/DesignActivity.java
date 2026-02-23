@@ -76,8 +76,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import a.a.a.DB;
-import a.a.a.GB;
+import a.a.a.SharedPrefsHelper;
+import a.a.a.DeviceUtil;
 import a.a.a.LayoutGenerator;
 import a.a.a.ProjectBuilder;
 import a.a.a.ViewEditorFragment;
@@ -85,14 +85,14 @@ import a.a.a.SketchToast;
 import a.a.a.BlockHistoryManager;
 import a.a.a.ComponentListFragment;
 import a.a.a.ViewHistoryManager;
-import a.a.a.eC;
+import a.a.a.ProjectDataStore;
 import a.a.a.ProjectDataManager;
-import a.a.a.kC;
+import a.a.a.ResourceManager;
 import a.a.a.ProjectListManager;
-import a.a.a.mB;
+import a.a.a.UIHelper;
 import a.a.a.EventListFragment;
 import a.a.a.SketchwarePaths;
-import a.a.a.yB;
+import a.a.a.MapValueHelper;
 import a.a.a.ProjectFilePaths;
 import a.a.a.SimpleException;
 import dev.chrisbanes.insetter.Insetter;
@@ -141,8 +141,8 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     private CoordinatorLayout coordinatorLayout;
     private DrawerLayout drawer;
     private ProjectFilePaths projectFilePaths;
-    private DB prefP1;
-    private DB prefP12;
+    private SharedPrefsHelper prefP1;
+    private SharedPrefsHelper prefP12;
     private Menu bottomMenu;
     private PopupMenu bottomPopupMenu;
     private MaterialButton btnRun;
@@ -219,7 +219,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     private void saveVersionCodeInformationToProject() {
         HashMap<String, Object> projectMetadata = ProjectListManager.getProjectById(sc_id);
         if (projectMetadata != null) {
-            projectMetadata.put("sketchware_ver", GB.d(getApplicationContext()));
+            projectMetadata.put("sketchware_ver", DeviceUtil.d(getApplicationContext()));
             ProjectListManager.updateProject(sc_id, projectMetadata);
         }
     }
@@ -228,7 +228,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         projectFile = getDefaultProjectFile();
         ProjectDataManager.getProjectDataManager(sc_id, haveSavedState);
         ProjectDataManager.getFileManager(sc_id, haveSavedState);
-        kC var2 = ProjectDataManager.getResourceManager(sc_id, haveSavedState);
+        ResourceManager var2 = ProjectDataManager.getResourceManager(sc_id, haveSavedState);
         ProjectDataManager.getLibraryManager(sc_id, haveSavedState);
         ViewHistoryManager.getInstance(sc_id);
         BlockHistoryManager.getInstance(sc_id);
@@ -325,7 +325,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         new CompileErrorSaver(sc_id).writeLogsToFile(error);
         Snackbar snackbar = Snackbar.make(coordinatorLayout, Helper.getResString(R.string.snackbar_show_compile_log), Snackbar.LENGTH_INDEFINITE);
         snackbar.setAction(Helper.getResString(R.string.common_word_show), v -> {
-            if (!mB.a()) {
+            if (!UIHelper.a()) {
                 snackbar.dismiss();
                 Intent intent = new Intent(getApplicationContext(), CompileLogActivity.class);
                 intent.putExtra("error", error);
@@ -456,8 +456,8 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             sc_id = savedInstanceState.getString("sc_id");
         }
 
-        prefP1 = new DB(getApplicationContext(), "P1");
-        prefP12 = new DB(getApplicationContext(), "P12");
+        prefP1 = new SharedPrefsHelper(getApplicationContext(), "P1");
+        prefP12 = new SharedPrefsHelper(getApplicationContext(), "P12");
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setSubtitle(sc_id);
@@ -658,7 +658,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         k();
 
         HashMap<String, Object> projectInfo = ProjectListManager.getProjectById(sc_id);
-        getSupportActionBar().setTitle(yB.c(projectInfo, "my_ws_name"));
+        getSupportActionBar().setTitle(MapValueHelper.c(projectInfo, "my_ws_name"));
         projectFilePaths = new ProjectFilePaths(getApplicationContext(), SketchwarePaths.getMyscPath(sc_id), projectInfo);
 
         try {
@@ -679,7 +679,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             finish();
         }
 
-        long freeMegabytes = GB.c();
+        long freeMegabytes = DeviceUtil.c();
         if (freeMegabytes < 100L && freeMegabytes > 0L) {
             warnAboutInsufficientStorageSpace();
         }
@@ -719,7 +719,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         dialog.setIcon(R.drawable.ic_mtrl_exit);
         dialog.setMessage(Helper.getResString(R.string.design_quit_message_confirm_save));
         dialog.setPositiveButton(Helper.getResString(R.string.design_quit_button_save_and_exit), (v, which) -> {
-            if (!mB.a()) {
+            if (!UIHelper.a()) {
                 v.dismiss();
                 try {
                     saveChangesAndCloseProject();
@@ -730,7 +730,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             }
         });
         dialog.setNegativeButton(Helper.getResString(R.string.common_word_exit), (v, which) -> {
-            if (!mB.a()) {
+            if (!UIHelper.a()) {
                 v.dismiss();
                 try {
                     k();
@@ -765,7 +765,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         dialog.setTitle(Helper.getResString(R.string.design_restore_data_title));
         dialog.setMessage(Helper.getResString(R.string.design_restore_data_message_confirm));
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_restore), (v, which) -> {
-            if (!mB.a()) {
+            if (!UIHelper.a()) {
                 boolean g = ProjectDataManager.getLibraryManager(sc_id).g();
                 boolean g2 = ProjectDataManager.getFileManager(sc_id).g();
                 boolean q = ProjectDataManager.getResourceManager(sc_id).q();
@@ -838,7 +838,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         var dialog = new MaterialAlertDialogBuilder(this).create();
         dialog.setTitle(R.string.design_file_selector_title_java);
         dialog.setIcon(R.drawable.ic_mtrl_java);
-        View customView = a.a.a.wB.a(this, R.layout.file_selector_popup_select_java);
+        View customView = a.a.a.ViewUtil.a(this, R.layout.file_selector_popup_select_java);
         RecyclerView recyclerView = customView.findViewById(R.id.file_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL, false));
         var adapter = new JavaFileAdapter(sc_id);
@@ -877,7 +877,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 var viewBeans = projectDataManager.d(filename);
                 var viewFab = projectDataManager.h(filename);
                 xmlGenerator.setExcludeAppCompat(true);
-                xmlGenerator.setViews(eC.a(viewBeans), viewFab);
+                xmlGenerator.setViews(ProjectDataStore.a(viewBeans), viewFab);
                 String content = xmlGenerator.toXmlString();
                 runOnUiThread(() -> {
                     if (isFinishing()) return;
@@ -1117,9 +1117,9 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 q.createBuildDirectories(activity.getApplicationContext());
                 q.deleteValuesV21Directory();
                 q.extractAssetsToRes(activity.getApplicationContext(), SketchwarePaths.getResourceZipPath("600"));
-                if (yB.a(ProjectListManager.getProjectById(sc_id), "custom_icon")) {
+                if (MapValueHelper.a(ProjectListManager.getProjectById(sc_id), "custom_icon")) {
                     q.copyMipmapFolder(SketchwarePaths.getIconsPath() + File.separator + sc_id + File.separator + "mipmaps");
-                    if (yB.a(ProjectListManager.getProjectById(sc_id), "isIconAdaptive", false)) {
+                    if (MapValueHelper.a(ProjectListManager.getProjectById(sc_id), "isIconAdaptive", false)) {
                         q.createLauncherIconXml("""
                                 <?xml version="1.0" encoding="utf-8"?>
                                 <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android" >
@@ -1133,12 +1133,12 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 }
 
                 onProgress("Generating source code...", 2);
-                kC kC = ProjectDataManager.getResourceManager(sc_id);
-                kC.b(q.resDirectoryPath + File.separator + "drawable-xhdpi");
-                kC = ProjectDataManager.getResourceManager(sc_id);
-                kC.c(q.resDirectoryPath + File.separator + "raw");
-                kC = ProjectDataManager.getResourceManager(sc_id);
-                kC.a(q.assetsPath + File.separator + "fonts");
+                ResourceManager ResourceManager = ProjectDataManager.getResourceManager(sc_id);
+                ResourceManager.b(q.resDirectoryPath + File.separator + "drawable-xhdpi");
+                ResourceManager = ProjectDataManager.getResourceManager(sc_id);
+                ResourceManager.c(q.resDirectoryPath + File.separator + "raw");
+                ResourceManager = ProjectDataManager.getResourceManager(sc_id);
+                ResourceManager.a(q.assetsPath + File.separator + "fonts");
 
                 ProjectBuilder builder = new ProjectBuilder(this, activity.getApplicationContext(), q);
 
@@ -1507,7 +1507,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         private void doInBackground() {
             DesignActivity activity = getActivity();
             if (activity != null) {
-                eC ecInstance = ProjectDataManager.getProjectDataManager(sc_id);
+                ProjectDataStore ecInstance = ProjectDataManager.getProjectDataManager(sc_id);
                 synchronized (ecInstance) {
                     ecInstance.k();
                 }

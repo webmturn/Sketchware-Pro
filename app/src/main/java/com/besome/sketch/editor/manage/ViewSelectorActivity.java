@@ -20,10 +20,10 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 
 import java.util.ArrayList;
 
-import a.a.a.eC;
-import a.a.a.hC;
+import a.a.a.ProjectDataStore;
+import a.a.a.ProjectFileManager;
 import a.a.a.ProjectDataManager;
-import a.a.a.mB;
+import a.a.a.UIHelper;
 import a.a.a.PresetLayoutFactory;
 import a.a.a.SketchwarePaths;
 import pro.sketchware.R;
@@ -218,7 +218,7 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
             }
         });
         binding.createNewView.setOnClickListener(v -> {
-            if (!mB.a()) {
+            if (!UIHelper.a()) {
                 if (selectedTab == TAB_ACTIVITY) {
                     Intent intent = new Intent(getApplicationContext(), AddViewActivity.class);
                     intent.putStringArrayListExtra("screen_names", getScreenNames());
@@ -249,7 +249,7 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
 
     private void a(ProjectFileBean projectFile, ArrayList<ViewBean> presetViews) {
         ProjectDataManager.getProjectDataManager(sc_id);
-        for (ViewBean view : eC.a(presetViews)) {
+        for (ViewBean view : ProjectDataStore.a(presetViews)) {
             view.id = a(view.type, projectFile.getXmlName());
             ProjectDataManager.getProjectDataManager(sc_id).a(projectFile.getXmlName(), view);
             if (view.type == ViewBean.VIEW_TYPE_WIDGET_BUTTON
@@ -266,7 +266,7 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
         }
         ArrayList<ViewBean> a = a(presetData.presetName, requestCode);
         ProjectDataManager.getProjectDataManager(sc_id);
-        for (ViewBean view : eC.a(a)) {
+        for (ViewBean view : ProjectDataStore.a(a)) {
             view.id = a(view.type, projectFile.getXmlName());
             ProjectDataManager.getProjectDataManager(sc_id).a(projectFile.getXmlName(), view);
             if (view.type == ViewBean.VIEW_TYPE_WIDGET_BUTTON
@@ -377,10 +377,10 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
         @Override
         public int getItemCount() {
             binding.emptyMessage.setVisibility(View.GONE);
-            hC hC = ProjectDataManager.getFileManager(sc_id);
+            ProjectFileManager ProjectFileManager = ProjectDataManager.getFileManager(sc_id);
             ArrayList<ProjectFileBean> list = switch (selectedTab) {
-                case TAB_ACTIVITY -> hC.b();
-                case TAB_CUSTOM_VIEW -> hC.c();
+                case TAB_ACTIVITY -> ProjectFileManager.b();
+                case TAB_CUSTOM_VIEW -> ProjectFileManager.c();
                 default -> null;
             };
             int size = list != null ? list.size() : 0;
@@ -397,12 +397,12 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
                 super(binding.getRoot());
                 itemBinding = binding;
                 itemBinding.cardView.setOnClickListener(v -> {
-                    if (!mB.a()) {
+                    if (!UIHelper.a()) {
                         selectedItem = getLayoutPosition();
-                        hC hC = ProjectDataManager.getFileManager(sc_id);
+                        ProjectFileManager ProjectFileManager = ProjectDataManager.getFileManager(sc_id);
                         ArrayList<ProjectFileBean> list = switch (selectedTab) {
-                            case TAB_ACTIVITY -> hC.b();
-                            case TAB_CUSTOM_VIEW -> hC.c();
+                            case TAB_ACTIVITY -> ProjectFileManager.b();
+                            case TAB_CUSTOM_VIEW -> ProjectFileManager.c();
                             default -> null;
                         };
                         if (list != null) {
@@ -415,7 +415,7 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
                     }
                 });
                 itemBinding.actionContainer.setOnClickListener(v -> {
-                    if (selectedTab == TAB_ACTIVITY && !mB.a()) {
+                    if (selectedTab == TAB_ACTIVITY && !UIHelper.a()) {
                         selectedItem = getLayoutPosition();
                         Intent intent = new Intent(getApplicationContext(), AddViewActivity.class);
                         intent.putExtra("project_file", ProjectDataManager.getFileManager(sc_id).b().get(getLayoutPosition()));
@@ -424,7 +424,7 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
                     }
                 });
                 itemBinding.imgPresetSetting.setOnClickListener(v -> {
-                    if (!mB.a()) {
+                    if (!UIHelper.a()) {
                         selectedItem = getLayoutPosition();
                         int requestCode = a(ProjectDataManager.getFileManager(sc_id).b().get(getLayoutPosition()));
                         Intent intent = new Intent(getApplicationContext(), PresetSettingActivity.class);

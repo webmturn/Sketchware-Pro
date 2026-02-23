@@ -15,11 +15,11 @@ import com.besome.sketch.beans.ProjectLibraryBean;
 import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import a.a.a.GB;
+import a.a.a.DeviceUtil;
 import a.a.a.LibrarySettingsView;
 import a.a.a.SketchToast;
-import a.a.a.iC;
-import a.a.a.mB;
+import a.a.a.LibraryManager;
+import a.a.a.UIHelper;
 import mod.hey.studios.util.Helper;
 import mod.jbk.editor.manage.library.LibrarySettingsImporter;
 import pro.sketchware.R;
@@ -138,7 +138,7 @@ public class AdmobActivity extends BaseAppCompatActivity implements View.OnClick
         } else if (id == binding.tvPrevbtn.getId()) {
             getOnBackPressedDispatcher().onBackPressed();
         } else if (id == binding.btnImport.getId()) {
-            LibrarySettingsImporter importer = new LibrarySettingsImporter(sc_id, iC::b);
+            LibrarySettingsImporter importer = new LibrarySettingsImporter(sc_id, LibraryManager::b);
             importer.addOnProjectSelectedListener(settings -> {
                 adMobSettings = settings;
                 stepPosition = 0;
@@ -153,7 +153,7 @@ public class AdmobActivity extends BaseAppCompatActivity implements View.OnClick
     }
 
     private void goToConsole() {
-        if (GB.h(this)) {
+        if (DeviceUtil.h(this)) {
             try {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -236,7 +236,7 @@ public class AdmobActivity extends BaseAppCompatActivity implements View.OnClick
 
     private void goToDocumentation() {
         if (!step.getDocUrl().isEmpty()) {
-            if (GB.h(this)) {
+            if (DeviceUtil.h(this)) {
                 try {
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -261,7 +261,7 @@ public class AdmobActivity extends BaseAppCompatActivity implements View.OnClick
         dialog.setTitle(Helper.getResString(R.string.title_compatible_chrome_browser));
         dialog.setMessage(Helper.getResString(R.string.message_compatible_chrome_brower));
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_ok), (v, which) -> {
-            if (!mB.a()) {
+            if (!UIHelper.a()) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse("market://details?id=com.android.chrome"));
                 startActivity(intent);

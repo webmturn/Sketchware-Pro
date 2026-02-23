@@ -41,7 +41,7 @@ import java.util.Map;
 import a.a.a.PropertyChangedCallback;
 import a.a.a.ViewHistoryManager;
 import a.a.a.ProjectDataManager;
-import a.a.a.mB;
+import a.a.a.UIHelper;
 import a.a.a.UserExperienceLevel;
 import mod.hey.studios.project.ProjectSettings;
 import mod.hey.studios.util.Helper;
@@ -325,7 +325,7 @@ public class PropertyActivity extends BaseAppCompatActivity implements PropertyC
 
             @Override
             public void onClick(View var1) {
-                if (!mB.a()) {
+                if (!UIHelper.a()) {
                     if (getLayoutPosition() != -1) {
                         if (getLayoutPosition() != layoutPosition) {
                             notifyItemChanged(layoutPosition);

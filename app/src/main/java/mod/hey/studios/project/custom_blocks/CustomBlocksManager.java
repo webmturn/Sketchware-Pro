@@ -16,8 +16,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-import a.a.a.eC;
-import a.a.a.hC;
+import a.a.a.ProjectDataStore;
+import a.a.a.ProjectFileManager;
 import a.a.a.ProjectDataManager;
 import a.a.a.BlockColorMapper;
 import dev.aldi.sayuti.block.ExtraBlockFile;
@@ -87,8 +87,8 @@ public class CustomBlocksManager {
 
         ArrayList<String> usedBlocks = new ArrayList<>();
 
-        hC hc = ProjectDataManager.getFileManager(sc_id);
-        eC ec = ProjectDataManager.getProjectDataManager(sc_id);
+        ProjectFileManager hc = ProjectDataManager.getFileManager(sc_id);
+        ProjectDataStore ec = ProjectDataManager.getProjectDataManager(sc_id);
 
         for (ProjectFileBean bean : hc.b()) {
             for (Map.Entry<String, ArrayList<BlockBean>> entry : ec.b(bean.getJavaName()).entrySet()) {
@@ -178,8 +178,8 @@ import com.besome.sketch.beans.ProjectFileBean;
 import java.util.Map;
 import com.besome.sketch.beans.BlockBean;
 import a.a.a.BlockColorMapper;
-import a.a.a.hC;
-import a.a.a.eC;
+import a.a.a.ProjectFileManager;
+import a.a.a.ProjectDataStore;
 import a.a.a.ProjectDataManager;
 import mod.hey.studios.editor.manage.block.v2.BlockLoader;
 import mod.hey.studios.editor.manage.block.ExtraBlockInfo;
@@ -208,8 +208,8 @@ public class CustomBlocksManager {
 
         ArrayList<String> usedBlocks = new ArrayList<>();
 
-        hC hc = ProjectDataManager.getFileManager(sc_id);
-        eC ec = ProjectDataManager.getProjectDataManager(sc_id);
+        ProjectFileManager hc = ProjectDataManager.getFileManager(sc_id);
+        ProjectDataStore ec = ProjectDataManager.getProjectDataManager(sc_id);
 
         for (ProjectFileBean bean : hc.b())
         {

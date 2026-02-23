@@ -113,7 +113,7 @@ public class SoundListFragment extends BaseFragment implements MenuProvider {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        new oB().f(dirPath);
+        new EncryptedFileUtil().f(dirPath);
         sounds = new ArrayList<>();
         if (savedInstanceState == null) {
             sc_id = requireActivity().getIntent().getStringExtra("sc_id");
@@ -155,7 +155,7 @@ public class SoundListFragment extends BaseFragment implements MenuProvider {
         actBinding.btnDelete.setOnClickListener(view -> {
             if (sounds.isEmpty()) {
                 SketchwareUtil.toast(Helper.getResString(R.string.common_message_no_item_delete));
-            } else if (!mB.a() && isSelecting) {
+            } else if (!UIHelper.a() && isSelecting) {
                 for (int i = sounds.size() - 1; i >= 0; i--) {
                     ProjectResourceBean projectResourceBean = sounds.get(i);
                     projectResourceBean.curSoundPosition = 0;
@@ -175,7 +175,7 @@ public class SoundListFragment extends BaseFragment implements MenuProvider {
         adapter = new Adapter(binding.soundList);
         binding.soundList.setAdapter(adapter);
         actBinding.fab.setOnClickListener(v -> {
-            if (!mB.a()) {
+            if (!UIHelper.a()) {
                 setSelecting(false);
                 addSound();
             }
@@ -408,7 +408,7 @@ public class SoundListFragment extends BaseFragment implements MenuProvider {
                 binding.chkSelect.setVisibility(View.GONE);
 
                 binding.imgPlay.setOnClickListener(v -> {
-                    if (!mB.a()) {
+                    if (!UIHelper.a()) {
                         lastSelectedSound = getLayoutPosition();
                         if (!isSelecting) {
                             soundPlayer.onPlayPressed(lastSelectedSound);
@@ -417,7 +417,7 @@ public class SoundListFragment extends BaseFragment implements MenuProvider {
                 });
 
                 binding.layoutItem.setOnClickListener(v -> {
-                    if (!mB.a()) {
+                    if (!UIHelper.a()) {
                         lastSelectedSound = getLayoutPosition();
                     }
                     if (isSelecting) {

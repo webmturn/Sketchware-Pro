@@ -14,9 +14,9 @@ import android.widget.TextView;
 
 import com.google.android.material.card.MaterialCardView;
 
-import a.a.a.Rs;
-import a.a.a.Ts;
-import a.a.a.wB;
+import a.a.a.BlockView;
+import a.a.a.BaseBlockView;
+import a.a.a.ViewUtil;
 import pro.sketchware.R;
 import pro.sketchware.databinding.PaletteBlockBinding;
 
@@ -39,25 +39,25 @@ public class PaletteBlock extends LinearLayout {
     private void initialize(Context context) {
         this.context = context;
         binding = PaletteBlockBinding.inflate(LayoutInflater.from(context), this, true);
-        density = wB.a(context, 1.0F);
+        density = ViewUtil.a(context, 1.0F);
     }
 
-    public Ts a(String var1, String var2, String var3) {
+    public BaseBlockView a(String var1, String var2, String var3) {
         View view = new View(context);
         view.setLayoutParams(getLayoutParams(8.0F));
         binding.blockBuilder.addView(view);
-        Rs blockView = new Rs(context, -1, var1, var2, var3);
+        BlockView blockView = new BlockView(context, -1, var1, var2, var3);
         blockView.setContentDescription(generateContentDescription(var3));
         blockView.setBlockType(1);
         binding.blockBuilder.addView(blockView);
         return blockView;
     }
 
-    public Ts a(String var1, String var2, String var3, String var4) {
+    public BaseBlockView a(String var1, String var2, String var3, String var4) {
         View view = new View(context);
         view.setLayoutParams(getLayoutParams(8.0F));
         binding.blockBuilder.addView(view);
-        Rs blockView = new Rs(context, -1, var1, var2, var3, var4);
+        BlockView blockView = new BlockView(context, -1, var1, var2, var3, var4);
         blockView.setContentDescription(generateContentDescription(var4));
         blockView.setBlockType(1);
         binding.blockBuilder.addView(blockView);
@@ -111,7 +111,7 @@ public class PaletteBlock extends LinearLayout {
         if (message != null && !message.isEmpty()) {
             a(message, getColor(context, isDarkThemeEnabled(context) ? R.attr.colorSurfaceContainerHigh : R.attr.colorSurfaceInverse));
         }
-        Ts blockView = a("", type, opCode);
+        BaseBlockView blockView = a("", type, opCode);
         blockView.e = 0xFFBDBDBD;
         blockView.setTag(opCode);
     }

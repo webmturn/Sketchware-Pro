@@ -12,7 +12,7 @@ import pro.sketchware.R;
 import pro.sketchware.databinding.ManageLibraryFirebasePreviewBinding;
 import pro.sketchware.utility.SketchwareUtil;
 
-public class FirebasePreviewView extends LinearLayout implements nv {
+public class FirebasePreviewView extends LinearLayout implements LibraryConfigView {
 
     private final FirebaseActivity activity;
     private final ManageLibraryFirebasePreviewBinding binding;

@@ -37,16 +37,16 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import a.a.a.GB;
+import a.a.a.DeviceUtil;
 import a.a.a.BaseAsyncTask;
 import a.a.a.VariableNameValidator;
 import a.a.a.ProjectListManager;
-import a.a.a.mB;
+import a.a.a.UIHelper;
 import a.a.a.DateTimeUtil;
-import a.a.a.oB;
-import a.a.a.wB;
+import a.a.a.EncryptedFileUtil;
+import a.a.a.ViewUtil;
 import a.a.a.SketchwarePaths;
-import a.a.a.yB;
+import a.a.a.MapValueHelper;
 import mod.hey.studios.project.ProjectSettings;
 import mod.hey.studios.util.Helper;
 import mod.hey.studios.util.ProjectFile;
@@ -156,7 +156,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
             colorView.color.setBackgroundColor(Color.WHITE);
             binding.layoutThemeColors.addView(colorView);
             colorView.setOnClickListener(v -> {
-                if (!mB.a()) {
+                if (!UIHelper.a()) {
                     pickColor(v, (Integer) v.getTag());
                 }
             });
@@ -165,21 +165,21 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
             /* Set the dialog's title & save button label */
             binding.toolbar.setTitle(R.string.project_settings_title);
             HashMap<String, Object> metadata = ProjectListManager.getProjectById(sc_id);
-            binding.etPackageName.setText(yB.c(metadata, "my_sc_pkg_name"));
-            binding.etProjectName.setText(yB.c(metadata, "my_ws_name"));
-            binding.etAppName.setText(yB.c(metadata, "my_app_name"));
+            binding.etPackageName.setText(MapValueHelper.c(metadata, "my_sc_pkg_name"));
+            binding.etProjectName.setText(MapValueHelper.c(metadata, "my_ws_name"));
+            binding.etAppName.setText(MapValueHelper.c(metadata, "my_app_name"));
             binding.okButton.setText(getString(R.string.project_save_changes));
-            projectVersionCode = parseInt(yB.c(metadata, "sc_ver_code"), 1);
-            parseVersion(yB.c(metadata, "sc_ver_name"));
-            binding.verCode.setText(yB.c(metadata, "sc_ver_code"));
-            binding.verName.setText(yB.c(metadata, "sc_ver_name"));
-            projectHasCustomIcon = yB.a(metadata, "custom_icon");
+            projectVersionCode = parseInt(MapValueHelper.c(metadata, "sc_ver_code"), 1);
+            parseVersion(MapValueHelper.c(metadata, "sc_ver_name"));
+            binding.verCode.setText(MapValueHelper.c(metadata, "sc_ver_code"));
+            binding.verName.setText(MapValueHelper.c(metadata, "sc_ver_name"));
+            projectHasCustomIcon = MapValueHelper.a(metadata, "custom_icon");
             if (projectHasCustomIcon) {
                 binding.appIcon.setImageURI(FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".provider", getCustomIcon()));
             }
 
             for (int i = 0; i < themeColorKeys.length; i++) {
-                projectThemeColors[i] = yB.a(metadata, themeColorKeys[i], projectThemeColors[i]);
+                projectThemeColors[i] = MapValueHelper.a(metadata, themeColorKeys[i], projectThemeColors[i]);
             }
         } else {
             /* Set the dialog's title & create button label */
@@ -223,7 +223,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
             intent.putExtra("sc_id", sc_id);
             openIconCreator.launch(intent);
         } else if (id == R.id.ok_button) {
-            mB.a(v);
+            UIHelper.a(v);
             if (isInputValid()) {
                 new SaveProjectAsyncTask(getApplicationContext()).execute();
                 if (icon != null) saveBitmapTo(icon, getCustomIconPath());
@@ -258,7 +258,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
     public void onStart() {
         super.onStart();
 
-        oB oBVar = new oB();
+        EncryptedFileUtil oBVar = new EncryptedFileUtil();
         oBVar.f(SketchwarePaths.getIconsPath() + File.separator + sc_id);
         oBVar.f(SketchwarePaths.getImagesPath() + File.separator + sc_id);
         oBVar.f(SketchwarePaths.getSoundsPath() + File.separator + sc_id);
@@ -277,7 +277,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setIcon(R.drawable.numbers_48);
         dialog.setTitle(Helper.getResString(R.string.myprojects_settings_version_control_title));
-        View view = wB.a(getApplicationContext(), R.layout.property_popup_version_control);
+        View view = ViewUtil.a(getApplicationContext(), R.layout.property_popup_version_control);
         ((TextView) view.findViewById(R.id.tv_code)).setText(Helper.getResString(R.string.myprojects_settings_version_control_title_code));
         ((TextView) view.findViewById(R.id.tv_name)).setText(Helper.getResString(R.string.myprojects_settings_version_control_title_name));
 
@@ -338,7 +338,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
             }
         });
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_save), (v, which) -> {
-            if (!mB.a()) {
+            if (!UIHelper.a()) {
                 binding.verCode.setText(String.valueOf(versionCodePicker.getValue()));
                 binding.verName.setText(projectNewVersionNameFirstPart + "." + projectNewVersionNameSecondPart);
                 v.dismiss();
@@ -491,7 +491,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
 
         private void initialize(Context context, int tag) {
             setTag(tag);
-            wB.a(context, this, R.layout.myproject_color);
+            ViewUtil.a(context, this, R.layout.myproject_color);
             color = findViewById(R.id.color);
             name = findViewById(R.id.name);
         }
@@ -528,7 +528,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
                 data.put("isIconAdaptive", isIconAdaptive);
                 data.put("sc_ver_code", Helper.getText(binding.verCode));
                 data.put("sc_ver_name", Helper.getText(binding.verName));
-                data.put("sketchware_ver", GB.d(getApplicationContext()));
+                data.put("sketchware_ver", DeviceUtil.d(getApplicationContext()));
                 for (int i = 0; i < themeColorKeys.length; i++) {
                     data.put(themeColorKeys[i], projectThemeColors[i]);
                 }
@@ -540,14 +540,14 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
                 data.put("isIconAdaptive", isIconAdaptive);
                 data.put("sc_ver_code", Helper.getText(binding.verCode));
                 data.put("sc_ver_name", Helper.getText(binding.verName));
-                data.put("sketchware_ver", GB.d(getApplicationContext()));
+                data.put("sketchware_ver", DeviceUtil.d(getApplicationContext()));
                 for (int i = 0; i < themeColorKeys.length; i++) {
                     data.put(themeColorKeys[i], projectThemeColors[i]);
                 }
                 ProjectListManager.saveProject(sc_id, data);
                 updateProjectResourcesContents(data);
                 SketchwarePaths.clearPreferenceData(getApplicationContext(), sc_id);
-                new oB().b(SketchwarePaths.getDataPath(sc_id));
+                new EncryptedFileUtil().b(SketchwarePaths.getDataPath(sc_id));
                 ProjectSettings projectSettings = new ProjectSettings(sc_id);
                 projectSettings.setValue(ProjectSettings.SETTING_NEW_XML_COMMAND, ProjectSettings.SETTING_GENERIC_VALUE_TRUE);
                 projectSettings.setValue(ProjectSettings.SETTING_ENABLE_VIEWBINDING, ProjectSettings.SETTING_GENERIC_VALUE_TRUE);

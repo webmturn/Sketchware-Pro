@@ -46,19 +46,19 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import a.a.a.DB;
-import a.a.a.GB;
+import a.a.a.SharedPrefsHelper;
+import a.a.a.DeviceUtil;
 import a.a.a.ViewEditorCallback;
-import a.a.a.Op;
-import a.a.a.Rp;
+import a.a.a.SoundCollectionManager;
+import a.a.a.WidgetCollectionManager;
 import a.a.a.SimpleCallback;
 import a.a.a.SketchToast;
 import a.a.a.ViewHistoryManager;
 import a.a.a.BuildCallback;
 import a.a.a.ProjectDataManager;
-import a.a.a.oB;
+import a.a.a.EncryptedFileUtil;
 import a.a.a.WidgetPaletteIcon;
-import a.a.a.wB;
+import a.a.a.ViewUtil;
 import a.a.a.SketchwarePaths;
 import mod.agus.jcoderz.beans.ViewBeans;
 import mod.hey.studios.util.ProjectFile;
@@ -370,15 +370,15 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
                 viewPane.resetView(false);
                 if (currentTouchedView instanceof WidgetPaletteIcon uyVar) {
                     ArrayList<ViewBean> arrayList = new ArrayList<>();
-                    oB oBVar = new oB();
+                    EncryptedFileUtil oBVar = new EncryptedFileUtil();
                     boolean areImagesAdded = false;
                     for (int i3 = 0; i3 < uyVar.getData().size(); i3++) {
                         ViewBean viewBean = uyVar.getData().get(i3);
                         arrayList.add(viewBean.clone());
                         String backgroundResource = viewBean.layout.backgroundResource;
                         String resName = viewBean.image.resName;
-                        if (!ProjectDataManager.getResourceManager(a).l(backgroundResource) && Op.g().b(backgroundResource)) {
-                            ProjectResourceBean a2 = Op.g().a(backgroundResource);
+                        if (!ProjectDataManager.getResourceManager(a).l(backgroundResource) && SoundCollectionManager.g().b(backgroundResource)) {
+                            ProjectResourceBean a2 = SoundCollectionManager.g().a(backgroundResource);
                             try {
                                 oBVar.a(SketchwarePaths.getCollectionPath() + File.separator + "image" + File.separator + "data" + File.separator + a2.resFullName, SketchwarePaths.getImagesPath() + File.separator + a + File.separator + a2.resFullName);
                             } catch (Exception e) {
@@ -387,8 +387,8 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
                             ProjectDataManager.getResourceManager(a).b.add(a2);
                             areImagesAdded = true;
                         }
-                        if (!ProjectDataManager.getResourceManager(a).l(resName) && Op.g().b(resName)) {
-                            ProjectResourceBean a3 = Op.g().a(resName);
+                        if (!ProjectDataManager.getResourceManager(a).l(resName) && SoundCollectionManager.g().b(resName)) {
+                            ProjectResourceBean a3 = SoundCollectionManager.g().a(resName);
                             try {
                                 oBVar.a(SketchwarePaths.getCollectionPath() + File.separator + "image" + File.separator + "data" + File.separator + a3.resFullName, SketchwarePaths.getImagesPath() + File.separator + a + File.separator + a3.resFullName);
                             } catch (Exception e2) {
@@ -500,7 +500,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
     }
 
     private void initialize(Context context) {
-        wB.a(context, this, R.layout.view_editor);
+        ViewUtil.a(context, this, R.layout.view_editor);
 
         paletteWidget = findViewById(R.id.palette_widget);
         paletteFavorite = findViewById(R.id.palette_favorite);
@@ -516,7 +516,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         findViewById(R.id.btn_editproperties).setOnClickListener(this);
         findViewById(R.id.img_close).setOnClickListener(this);
 
-        dip = wB.a(context, 1.0f);
+        dip = ViewUtil.a(context, 1.0f);
         defaultIconWidth = (int) (defaultIconWidth * dip);
         defaultIconHeight = (int) (defaultIconHeight * dip);
         displayWidth = getResources().getDisplayMetrics().widthPixels;
@@ -574,7 +574,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         shape.addView(viewPane);
 
         vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-        useVibrate = new DB(context, "P12").a("P12I0", true);
+        useVibrate = new SharedPrefsHelper(context, "P12").a("P12I0", true);
         minDist = ViewConfiguration.get(context).getScaledTouchSlop();
 
         paletteWidget.cardView.setOnClickListener(view -> widgetsCreatorManager.showWidgetsCreatorDialog(-1));
@@ -776,8 +776,8 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         dialog.setIcon(R.drawable.ic_mtrl_delete);
         dialog.setMessage(getString(R.string.view_widget_favorites_delete_message));
         dialog.setPositiveButton(getString(R.string.common_word_delete), (v, which) -> {
-            Rp.h().a(str, true);
-            setFavoriteData(Rp.h().f());
+            WidgetCollectionManager.h().a(str, true);
+            setFavoriteData(WidgetCollectionManager.h().f());
             v.dismiss();
         });
         dialog.setNegativeButton(getString(R.string.common_word_cancel), null);
@@ -872,8 +872,8 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         boolean isLandscapeMode = displayWidth > displayHeight;
         int var4 = (int) (dip * (!isLandscapeMode ? 12.0F : 24.0F));
         int var5 = (int) (dip * (!isLandscapeMode ? 20.0F : 10.0F));
-        int statusBarHeight = GB.f(getContext());
-        int toolBarHeight = GB.a(getContext());
+        int statusBarHeight = DeviceUtil.f(getContext());
+        int toolBarHeight = DeviceUtil.a(getContext());
         int var9 = displayWidth - (int) (120.0F * dip);
         int var8 = displayHeight - statusBarHeight - toolBarHeight - (int) (dip * 48.0F) - (int) (dip * 48.0F);
         if (screenType == 0 && da) {
@@ -1120,7 +1120,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         public PaletteGroupItem(Context context) {
             super(context);
 
-            wB.a(context, this, R.layout.palette_group_item);
+            ViewUtil.a(context, this, R.layout.palette_group_item);
             imgGroup = findViewById(R.id.img_group);
         }
 

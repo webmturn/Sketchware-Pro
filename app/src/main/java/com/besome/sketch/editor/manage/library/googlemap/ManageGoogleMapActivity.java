@@ -19,10 +19,10 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.materialswitch.MaterialSwitch;
 
-import a.a.a.GB;
+import a.a.a.DeviceUtil;
 import a.a.a.SketchToast;
-import a.a.a.iC;
-import a.a.a.mB;
+import a.a.a.LibraryManager;
+import a.a.a.UIHelper;
 import mod.hey.studios.util.Helper;
 import mod.jbk.editor.manage.library.LibrarySettingsImporter;
 import pro.sketchware.R;
@@ -34,7 +34,7 @@ public class ManageGoogleMapActivity extends BaseAppCompatActivity implements Vi
     private ProjectLibraryBean googleMapLibraryBean;
 
     private void openDoc() {
-        if (GB.h(getApplicationContext())) {
+        if (DeviceUtil.h(getApplicationContext())) {
             try {
                 Uri documentationUrl = Uri.parse("https://developers.google.com/maps/documentation/android-sdk/signup");
                 Intent openDocIntent = new Intent(Intent.ACTION_VIEW);
@@ -59,7 +59,7 @@ public class ManageGoogleMapActivity extends BaseAppCompatActivity implements Vi
         dialog.setTitle(Helper.getResString(R.string.title_compatible_chrome_browser));
         dialog.setMessage(Helper.getResString(R.string.message_compatible_chrome_brower));
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_ok), (v, which) -> {
-            if (!mB.a()) {
+            if (!UIHelper.a()) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse("market://details?id=com.android.chrome"));
                 startActivity(intent);
@@ -75,7 +75,7 @@ public class ManageGoogleMapActivity extends BaseAppCompatActivity implements Vi
         int id = v.getId();
 
         if (id == R.id.btn_import) {
-            LibrarySettingsImporter importer = new LibrarySettingsImporter(sc_id, iC::e);
+            LibrarySettingsImporter importer = new LibrarySettingsImporter(sc_id, LibraryManager::e);
             importer.addOnProjectSelectedListener(settings -> {
                 googleMapLibraryBean = settings;
                 configure();

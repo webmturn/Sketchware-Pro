@@ -20,7 +20,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.File;
 
-import a.a.a.GB;
+import a.a.a.DeviceUtil;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.utility.SketchwareUtil;
@@ -65,7 +65,7 @@ public class CollectErrorActivity extends BaseAppCompatActivity {
 
                 String deviceInfo = "Sketchware Pro " + info.versionName + " (" + info.versionCode + ")\n"
                         + "base.apk size: " + Formatter.formatFileSize(this, fileSizeInBytes) + " (" + fileSizeInBytes + " B)\n"
-                        + "Locale: " + GB.g(getApplicationContext()) + "\n"
+                        + "Locale: " + DeviceUtil.g(getApplicationContext()) + "\n"
                         + "SDK version: " + Build.VERSION.SDK_INT + "\n"
                         + "Brand: " + Build.BRAND + "\n"
                         + "Manufacturer: " + Build.MANUFACTURER + "\n"

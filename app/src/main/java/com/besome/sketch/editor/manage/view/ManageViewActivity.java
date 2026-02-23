@@ -40,11 +40,11 @@ import a.a.a.SketchwareException;
 import a.a.a.ViewFilesFragment;
 import a.a.a.BaseAsyncTask;
 import a.a.a.SketchToast;
-import a.a.a.eC;
+import a.a.a.ProjectDataStore;
 import a.a.a.ProjectDataManager;
-import a.a.a.mB;
+import a.a.a.UIHelper;
 import a.a.a.SketchwarePaths;
-import a.a.a.xw;
+import a.a.a.ViewFilesAdapter;
 import pro.sketchware.R;
 
 public class ManageViewActivity extends BaseAppCompatActivity implements OnClickListener, ViewPager.OnPageChangeListener {
@@ -62,7 +62,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
     private boolean selecting = false;
     private String isAppCompatEnabled = "N";
     private ViewFilesFragment activitiesFragment;
-    private xw customViewsFragment;
+    private ViewFilesAdapter customViewsFragment;
     private ViewPager viewPager;
     private String sc_id;
 
@@ -120,7 +120,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
 
     public final void a(ProjectFileBean var1, ArrayList<ViewBean> var2) {
         ProjectDataManager.getProjectDataManager(sc_id);
-        for (ViewBean viewBean : eC.a(var2)) {
+        for (ViewBean viewBean : ProjectDataStore.a(var2)) {
             viewBean.id = a(viewBean.type, var1.getXmlName());
             ProjectDataManager.getProjectDataManager(sc_id).a(var1.getXmlName(), viewBean);
             if (viewBean.type == ViewBean.VIEW_TYPE_WIDGET_BUTTON && var1.fileType == ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY) {
@@ -194,7 +194,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
 
     @Override
     public void onClick(View v) {
-        if (!mB.a()) {
+        if (!UIHelper.a()) {
             int viewId = v.getId();
             if (viewId == R.id.btn_cancel) {
                 if (selecting) {
@@ -400,7 +400,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
             Fragment var3 = (Fragment) super.instantiateItem(container, position);
             if (position != 0) {
-                customViewsFragment = (xw) var3;
+                customViewsFragment = (ViewFilesAdapter) var3;
             } else {
                 activitiesFragment = (ViewFilesFragment) var3;
             }
@@ -411,7 +411,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
         @Override
         @NonNull
         public Fragment getItem(int position) {
-            return position != 0 ? new xw() : new ViewFilesFragment();
+            return position != 0 ? new ViewFilesAdapter() : new ViewFilesFragment();
         }
     }
 }

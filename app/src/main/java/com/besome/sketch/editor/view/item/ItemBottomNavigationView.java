@@ -13,7 +13,7 @@ import com.besome.sketch.beans.ViewBean;
 import com.besome.sketch.editor.view.ItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import a.a.a.wB;
+import a.a.a.ViewUtil;
 import pro.sketchware.R;
 
 public class ItemBottomNavigationView extends BottomNavigationView implements ItemView {
@@ -27,7 +27,7 @@ public class ItemBottomNavigationView extends BottomNavigationView implements It
 
     public ItemBottomNavigationView(Context context) {
         super(context);
-        dip = wB.a(context, 1.0f);
+        dip = ViewUtil.a(context, 1.0f);
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(0x9599d5d0);
         rect = new Rect();

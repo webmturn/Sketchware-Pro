@@ -1,10 +1,10 @@
 package com.besome.sketch.editor.logic;
 
 import a.a.a.Gx;
-import a.a.a.Rs;
-import a.a.a.Ts;
+import a.a.a.BlockView;
+import a.a.a.BaseBlockView;
 import a.a.a.mq;
-import a.a.a.wB;
+import a.a.a.ViewUtil;
 import android.content.Context;
 import android.graphics.Point;
 import android.view.View;
@@ -18,9 +18,9 @@ public class BlockPane extends RelativeLayout {
   
   public int[] b = new int[2];
   
-  public Ts c;
+  public BaseBlockView c;
   
-  public Rs d;
+  public BlockView d;
   
   public ArrayList<Object[]> e = new ArrayList();
   
@@ -28,25 +28,25 @@ public class BlockPane extends RelativeLayout {
   
   public int g = 10;
   
-  public float h = wB.a(getContext(), 1.0F);
+  public float h = ViewUtil.a(getContext(), 1.0F);
   
   public BlockPane(Context paramContext) {
     super(paramContext);
     a(paramContext);
   }
   
-  public Rs a(int paramInt) {
-    return (Rs)findViewWithTag(Integer.valueOf(paramInt));
+  public BlockView a(int paramInt) {
+    return (BlockView)findViewWithTag(Integer.valueOf(paramInt));
   }
   
-  public Rs a(Rs paramRs, int paramInt1, int paramInt2) {
+  public BlockView a(BlockView paramRs, int paramInt1, int paramInt2) {
     getLocationOnScreen(this.b);
-    Rs rs = paramRs;
+    BlockView rs = paramRs;
     if (paramRs.getBlockType() == 1) {
       Context context = getContext();
       int i = this.g;
       this.g = i + 1;
-      rs = new Rs(context, i, paramRs.T, ((Ts)paramRs).b, ((Ts)paramRs).c, paramRs.U);
+      rs = new BlockView(context, i, paramRs.T, ((BaseBlockView)paramRs).b, ((BaseBlockView)paramRs).c, paramRs.U);
     } 
     rs.pa = this;
     addView((View)rs);
@@ -55,8 +55,8 @@ public class BlockPane extends RelativeLayout {
     return rs;
   }
   
-  public Rs a(Rs paramRs, int paramInt1, int paramInt2, boolean paramBoolean) {
-    Rs rs;
+  public BlockView a(BlockView paramRs, int paramInt1, int paramInt2, boolean paramBoolean) {
+    BlockView rs;
     if (!paramBoolean) {
       rs = a(paramRs, paramInt1, paramInt2);
     } else {
@@ -71,9 +71,9 @@ public class BlockPane extends RelativeLayout {
       return rs;
     } 
     if (paramRs.fa) {
-      ((Ts)arrayOfObject[1]).E.a((Ts)arrayOfObject[1], rs);
+      ((BaseBlockView)arrayOfObject[1]).E.a((BaseBlockView)arrayOfObject[1], rs);
     } else {
-      paramRs = (Rs)arrayOfObject[1];
+      paramRs = (BlockView)arrayOfObject[1];
       paramInt1 = ((Integer)arrayOfObject[2]).intValue();
       if (paramInt1 != 0) {
         if (paramInt1 != 1) {
@@ -99,19 +99,19 @@ public class BlockPane extends RelativeLayout {
     return rs;
   }
   
-  public Rs a(String paramString) {
-    return (Rs)findViewWithTag(Integer.valueOf(paramString));
+  public BlockView a(String paramString) {
+    return (BlockView)findViewWithTag(Integer.valueOf(paramString));
   }
   
   public final void a() {
     if (this.c == null)
-      this.c = new Ts(this.a, " ", true); 
+      this.c = new BaseBlockView(this.a, " ", true); 
     this.c.a(10.0F, 10.0F, false);
     addView((View)this.c);
     d();
   }
   
-  public void a(Rs paramRs) {
+  public void a(BlockView paramRs) {
     boolean bool;
     boolean bool1 = (paramRs.h()).ga;
     if (paramRs.b() && -1 == paramRs.ia) {
@@ -124,40 +124,40 @@ public class BlockPane extends RelativeLayout {
     this.f = null;
   }
   
-  public void a(Rs paramRs, int paramInt) {
+  public void a(BlockView paramRs, int paramInt) {
     java.util.HashSet<Integer> visited = new java.util.HashSet<>();
     while (paramRs != null) {
       Integer tag = (Integer) paramRs.getTag();
       if (!visited.add(tag)) break;
       paramRs.setVisibility(paramInt);
       for (View view : paramRs.V) {
-        if (view instanceof Rs)
-          a((Rs)view, paramInt); 
+        if (view instanceof BlockView)
+          a((BlockView)view, paramInt); 
       } 
       if (paramRs.b()) {
         int j = paramRs.ia;
         if (j != -1 && !visited.contains(j)) {
-          Rs sub = (Rs)findViewWithTag(Integer.valueOf(j));
+          BlockView sub = (BlockView)findViewWithTag(Integer.valueOf(j));
           if (sub != null) a(sub, paramInt);
         }
       } 
       if (paramRs.c()) {
         int j = paramRs.ja;
         if (j != -1 && !visited.contains(j)) {
-          Rs sub = (Rs)findViewWithTag(Integer.valueOf(j));
+          BlockView sub = (BlockView)findViewWithTag(Integer.valueOf(j));
           if (sub != null) a(sub, paramInt);
         }
       } 
       int i = paramRs.ha;
       if (i != -1) {
-        paramRs = (Rs)findViewWithTag(Integer.valueOf(i));
+        paramRs = (BlockView)findViewWithTag(Integer.valueOf(i));
       } else {
         paramRs = null;
       }
     } 
   }
   
-  public final void a(Rs paramRs, String paramString) {
+  public final void a(BlockView paramRs, String paramString) {
     java.util.HashSet<Integer> visited = new java.util.HashSet<>();
     while (paramRs != null) {
       Integer tag = (Integer) paramRs.getTag();
@@ -165,35 +165,35 @@ public class BlockPane extends RelativeLayout {
       if (!paramRs.ea)
         for (int b = 0; b < paramRs.V.size(); b++) {
           View view = paramRs.V.get(b);
-          boolean bool = view instanceof Rs;
-          if ((bool || view instanceof a.a.a.Ss) && (!bool || !view.getTag().toString().equals(paramString))) {
+          boolean bool = view instanceof BlockView;
+          if ((bool || view instanceof a.a.a.FieldBlockView) && (!bool || !view.getTag().toString().equals(paramString))) {
             int[] arrayOfInt = new int[2];
             view.getLocationOnScreen(arrayOfInt);
             a(arrayOfInt, view, 0);
             if (bool)
-              a((Rs)view, paramString); 
+              a((BlockView)view, paramString); 
           } 
         }  
       int i = paramRs.ia;
       if (i != -1 && !visited.contains(i)) {
-        Rs sub = (Rs)findViewWithTag(Integer.valueOf(i));
+        BlockView sub = (BlockView)findViewWithTag(Integer.valueOf(i));
         if (sub != null) a(sub, paramString);
       }
       i = paramRs.ja;
       if (i != -1 && !visited.contains(i)) {
-        Rs sub = (Rs)findViewWithTag(Integer.valueOf(i));
+        BlockView sub = (BlockView)findViewWithTag(Integer.valueOf(i));
         if (sub != null) a(sub, paramString);
       }
       i = paramRs.ha;
       if (i != -1) {
-        paramRs = (Rs)findViewWithTag(Integer.valueOf(i));
+        paramRs = (BlockView)findViewWithTag(Integer.valueOf(i));
       } else {
         paramRs = null;
       }
     } 
   }
   
-  public void a(Rs paramRs, ArrayList<BlockBean> paramArrayList) {
+  public void a(BlockView paramRs, ArrayList<BlockBean> paramArrayList) {
     if (paramArrayList.size() <= 0) {
       a(paramRs);
       return;
@@ -209,7 +209,7 @@ public class BlockPane extends RelativeLayout {
     this.f = null;
   }
   
-  public final void a(Rs paramRs, boolean paramBoolean) {
+  public final void a(BlockView paramRs, boolean paramBoolean) {
     java.util.HashSet<Integer> visited = new java.util.HashSet<>();
     while (paramRs != null && paramRs.getVisibility() != 8) {
       Integer tag = (Integer) paramRs.getTag();
@@ -223,30 +223,30 @@ public class BlockPane extends RelativeLayout {
       if (paramRs.b() && (!paramBoolean || paramRs.ia == -1)) {
         int[] arrayOfInt = new int[2];
         paramRs.getLocationOnScreen(arrayOfInt);
-        arrayOfInt[0] = arrayOfInt[0] + ((Ts)paramRs).j;
+        arrayOfInt[0] = arrayOfInt[0] + ((BaseBlockView)paramRs).j;
         arrayOfInt[1] = arrayOfInt[1] + paramRs.f();
         a(arrayOfInt, (View)paramRs, 2);
       } 
       if (paramRs.c() && (!paramBoolean || paramRs.ja == -1)) {
         int[] arrayOfInt = new int[2];
         paramRs.getLocationOnScreen(arrayOfInt);
-        arrayOfInt[0] = arrayOfInt[0] + ((Ts)paramRs).j;
+        arrayOfInt[0] = arrayOfInt[0] + ((BaseBlockView)paramRs).j;
         arrayOfInt[1] = arrayOfInt[1] + paramRs.g();
         a(arrayOfInt, (View)paramRs, 3);
       } 
       int i = paramRs.ia;
       if (i != -1 && !visited.contains(i)) {
-        Rs sub = (Rs)findViewWithTag(Integer.valueOf(i));
+        BlockView sub = (BlockView)findViewWithTag(Integer.valueOf(i));
         if (sub != null) a(sub, paramBoolean);
       }
       i = paramRs.ja;
       if (i != -1 && !visited.contains(i)) {
-        Rs sub = (Rs)findViewWithTag(Integer.valueOf(i));
+        BlockView sub = (BlockView)findViewWithTag(Integer.valueOf(i));
         if (sub != null) a(sub, paramBoolean);
       }
       i = paramRs.ha;
       if (i != -1) {
-        paramRs = (Rs)findViewWithTag(Integer.valueOf(i));
+        paramRs = (BlockView)findViewWithTag(Integer.valueOf(i));
         continue;
       } 
       break;
@@ -261,10 +261,10 @@ public class BlockPane extends RelativeLayout {
   public void a(BlockBean paramBlockBean, boolean paramBoolean) {
     String str = paramBlockBean.id;
     if (str != null && !str.equals("") && !paramBlockBean.id.equals("0")) {
-      Rs rs1 = (Rs)findViewWithTag(Integer.valueOf(paramBlockBean.id));
+      BlockView rs1 = (BlockView)findViewWithTag(Integer.valueOf(paramBlockBean.id));
       if (rs1 == null)
         return; 
-      Rs rs2 = ((Ts)rs1).E;
+      BlockView rs2 = ((BaseBlockView)rs1).E;
       if (rs1 != rs2) {
         c(rs1);
         removeView((View)rs1);
@@ -277,11 +277,11 @@ public class BlockPane extends RelativeLayout {
   }
   
   public void a(String paramString1, String paramString2) {
-    this.d = new Rs(getContext(), 0, paramString1, "h", paramString2);
-    Rs rs = this.d;
+    this.d = new BlockView(getContext(), 0, paramString1, "h", paramString2);
+    BlockView rs = this.d;
     rs.pa = this;
     addView((View)rs);
-    float f = wB.a(getContext(), 1.0F);
+    float f = ViewUtil.a(getContext(), 1.0F);
     rs = this.d;
     f *= 8.0F;
     rs.setX(f);
@@ -293,9 +293,9 @@ public class BlockPane extends RelativeLayout {
     int i = (int)(this.h * 3.0F);
     for (int b = 0; b < getChildCount(); b++) {
       View view = getChildAt(b);
-      if (view instanceof Rs) {
-        Rs rs = (Rs)view;
-        if (rs.getVisibility() != 8 && ((Ts)rs).E == null)
+      if (view instanceof BlockView) {
+        BlockView rs = (BlockView)view;
+        if (rs.getVisibility() != 8 && ((BaseBlockView)rs).E == null)
           if (paramBoolean3) {
             a(rs, paramString);
           } else if (!rs.fa) {
@@ -309,7 +309,7 @@ public class BlockPane extends RelativeLayout {
             if (paramBoolean2 && !rs.ea) {
               int[] arrayOfInt = new int[2];
               rs.getLocationOnScreen(arrayOfInt);
-              arrayOfInt[0] = arrayOfInt[0] - ((Ts)rs).j;
+              arrayOfInt[0] = arrayOfInt[0] - ((BaseBlockView)rs).j;
               arrayOfInt[1] = arrayOfInt[1] - paramInt2 - i;
               a(arrayOfInt, (View)rs, 4);
             } 
@@ -325,21 +325,21 @@ public class BlockPane extends RelativeLayout {
     this.e.add(new Object[] { paramArrayOfint, paramView, Integer.valueOf(paramInt) });
   }
   
-  public final boolean a(Rs paramRs, View paramView) {
+  public final boolean a(BlockView paramRs, View paramView) {
     if (!paramRs.fa)
       return true; 
-    if (paramView instanceof Ts) {
-      if (((Ts)paramView).c.equals("!"))
+    if (paramView instanceof BaseBlockView) {
+      if (((BaseBlockView)paramView).c.equals("!"))
         return true; 
       Gx gx1 = paramRs.getClassInfo();
       if (gx1 == null)
         return false; 
-      Gx gx2 = ((Ts)paramView).getClassInfo();
+      Gx gx2 = ((BaseBlockView)paramView).getClassInfo();
       if (gx2 == null)
         return false; 
       if (gx1.a(gx2))
         return true; 
-      if (paramView instanceof Rs && gx1.a(mq.b(((Rs)paramView).ra)))
+      if (paramView instanceof BlockView && gx1.a(mq.b(((BlockView)paramView).ra)))
         return true; 
     } 
     return false;
@@ -354,8 +354,8 @@ public class BlockPane extends RelativeLayout {
       View view = getChildAt(b);
       int m = j;
       int n = k;
-      if (view instanceof Rs) {
-        Rs rs = (Rs)view;
+      if (view instanceof BlockView) {
+        BlockView rs = (BlockView)view;
         if (rs.E == null) {
           float f = view.getX();
           m = Math.max((int)(f + rs.getWidthSum()) + 150, j);
@@ -370,9 +370,9 @@ public class BlockPane extends RelativeLayout {
     (getLayoutParams()).height = k;
   }
   
-  public void b(Rs paramRs) {
+  public void b(BlockView paramRs) {
     c(paramRs);
-    Iterator<Rs> iterator = paramRs.getAllChildren().iterator();
+    Iterator<BlockView> iterator = paramRs.getAllChildren().iterator();
     while (iterator.hasNext())
       removeView((View)iterator.next()); 
   }
@@ -381,9 +381,9 @@ public class BlockPane extends RelativeLayout {
     int i = getChildCount();
     for (int b = 0; b < i; b++) {
       View view = getChildAt(b);
-      if (view instanceof Rs) {
+      if (view instanceof BlockView) {
         byte b1 = -1;
-        BlockBean blockBean = ((Rs)view).getBean();
+        BlockBean blockBean = ((BlockView)view).getBean();
         String str = blockBean.opCode;
         switch (str.hashCode()) {
           default:
@@ -556,7 +556,7 @@ public class BlockPane extends RelativeLayout {
     return false;
   }
   
-  public Object[] b(Rs paramRs, int paramInt1, int paramInt2) {
+  public Object[] b(BlockView paramRs, int paramInt1, int paramInt2) {
     byte b;
     Object[] arrayOfObject = null;
     if (paramRs.fa) {
@@ -591,17 +591,17 @@ public class BlockPane extends RelativeLayout {
     this.f = null;
   }
   
-  public void c(Rs paramRs) {
-    Rs rs = ((Ts)paramRs).E;
+  public void c(BlockView paramRs) {
+    BlockView rs = ((BaseBlockView)paramRs).E;
     if (rs == null)
       return; 
     if (rs != null) {
       rs.g(paramRs);
-      ((Ts)paramRs).E = null;
+      ((BaseBlockView)paramRs).E = null;
     } 
   }
   
-  public void c(Rs paramRs, int paramInt1, int paramInt2) {
+  public void c(BlockView paramRs, int paramInt1, int paramInt2) {
     getLocationOnScreen(this.b);
     this.f = b(paramRs, paramInt1, paramInt2);
     boolean bool = paramRs.b();
@@ -609,17 +609,17 @@ public class BlockPane extends RelativeLayout {
     if (bool && -1 == paramRs.ia) {
       Object[] arrayOfObject1 = this.f;
       if (arrayOfObject1 != null) {
-        Rs rs = (Rs)arrayOfObject1[1];
+        BlockView rs = (BlockView)arrayOfObject1[1];
         paramInt1 = ((Integer)arrayOfObject1[2]).intValue();
         if (paramInt1 != 0) {
           if (paramInt1 != 2) {
             if (paramInt1 == 3)
-              rs = (Rs)findViewWithTag(Integer.valueOf(rs.ja)); 
+              rs = (BlockView)findViewWithTag(Integer.valueOf(rs.ja)); 
           } else {
-            rs = (Rs)findViewWithTag(Integer.valueOf(rs.ia));
+            rs = (BlockView)findViewWithTag(Integer.valueOf(rs.ia));
           } 
         } else {
-          rs = (Rs)findViewWithTag(Integer.valueOf(rs.ha));
+          rs = (BlockView)findViewWithTag(Integer.valueOf(rs.ha));
         } 
       } 
     } 
@@ -632,20 +632,20 @@ public class BlockPane extends RelativeLayout {
       this.c.bringToFront();
       this.c.setVisibility(0);
       if (paramRs.fa) {
-        if (view instanceof Rs)
-          this.c.a((Ts)view, true, false, 0); 
-        if (view instanceof a.a.a.Ss)
-          this.c.a((Ts)view, true, false, 0); 
+        if (view instanceof BlockView)
+          this.c.a((BaseBlockView)view, true, false, 0); 
+        if (view instanceof a.a.a.FieldBlockView)
+          this.c.a((BaseBlockView)view, true, false, 0); 
       } else {
         paramInt2 = ((Integer)this.f[2]).intValue();
         if (paramInt2 == 4) {
-          paramInt1 = ((Rs)view).getHeightSum();
+          paramInt1 = ((BlockView)view).getHeightSum();
         } else {
           paramInt1 = 0;
         } 
         if (paramInt2 == 1 || paramInt2 == 4)
           bool1 = false; 
-        this.c.a((Ts)paramRs, false, bool1, paramInt1);
+        this.c.a((BaseBlockView)paramRs, false, bool1, paramInt1);
       } 
     } else {
       d();
@@ -656,9 +656,9 @@ public class BlockPane extends RelativeLayout {
     int i = getChildCount();
     for (int b = 0; b < i; b++) {
       View view = getChildAt(b);
-      if (view instanceof Rs) {
+      if (view instanceof BlockView) {
         byte b1 = -1;
-        BlockBean blockBean = ((Rs)view).getBean();
+        BlockBean blockBean = ((BlockView)view).getBean();
         String str = blockBean.opCode;
         switch (str.hashCode()) {
           default:
@@ -816,27 +816,27 @@ public class BlockPane extends RelativeLayout {
     if (type != 0 && type != 2 && type != 3 && type != 5) return result;
     if (target[1] == null) return result;
     View view = (View) target[1];
-    if (view instanceof Rs) {
-      Rs rs = (Rs) view;
+    if (view instanceof BlockView) {
+      BlockView rs = (BlockView) view;
       if (rs.fa) {
         result = ((Integer) rs.E.getTag()).intValue();
       } else {
-        result = ((Integer) ((Rs) target[1]).getTag()).intValue();
+        result = ((Integer) ((BlockView) target[1]).getTag()).intValue();
       }
     }
-    if (view instanceof a.a.a.Ss) {
-      result = ((Integer) ((a.a.a.Ss) view).E.getTag()).intValue();
+    if (view instanceof a.a.a.FieldBlockView) {
+      result = ((Integer) ((a.a.a.FieldBlockView) view).E.getTag()).intValue();
     }
     return result;
   }
   
   public ArrayList<BlockBean> getBlocks() {
     ArrayList<BlockBean> arrayList = new ArrayList();
-    Rs rs = (Rs)findViewWithTag(Integer.valueOf(this.d.ha));
+    BlockView rs = (BlockView)findViewWithTag(Integer.valueOf(this.d.ha));
     if (rs != null) {
-      Iterator<Rs> iterator = rs.getAllChildren().iterator();
+      Iterator<BlockView> iterator = rs.getAllChildren().iterator();
       while (iterator.hasNext())
-        arrayList.add(((Rs)iterator.next()).getBean()); 
+        arrayList.add(((BlockView)iterator.next()).getBean()); 
     } 
     return arrayList;
   }
@@ -845,7 +845,7 @@ public class BlockPane extends RelativeLayout {
     return this.f;
   }
   
-  public Rs getRoot() {
+  public BlockView getRoot() {
     return this.d;
   }
 }

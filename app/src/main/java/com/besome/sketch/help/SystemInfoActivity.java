@@ -11,8 +11,8 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import com.besome.sketch.lib.ui.PropertyOneLineItem;
 import com.besome.sketch.lib.ui.PropertyTwoLineItem;
 
-import a.a.a.GB;
-import a.a.a.mB;
+import a.a.a.DeviceUtil;
+import a.a.a.UIHelper;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ActivitySystemInfoBinding;
@@ -47,7 +47,7 @@ public class SystemInfoActivity extends BaseAppCompatActivity {
 
     private void addAndroidVersionNameInfo() {
         addInfo(1, Helper.getResString(R.string.system_information_title_android_version),
-                GB.b() + "(" + VERSION.RELEASE + ")");
+                DeviceUtil.b() + "(" + VERSION.RELEASE + ")");
     }
 
     private void addApiLevelInfo() {
@@ -61,7 +61,7 @@ public class SystemInfoActivity extends BaseAppCompatActivity {
         propertyOneLineItem.setName(Helper.getResString(R.string.system_information_developer_options));
         binding.content.addView(propertyOneLineItem);
         propertyOneLineItem.setOnClickListener(v -> {
-            if (!mB.a()) {
+            if (!UIHelper.a()) {
                 try {
                     Intent intent = new Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS);
                     startActivity(intent);
@@ -74,7 +74,7 @@ public class SystemInfoActivity extends BaseAppCompatActivity {
     }
 
     private void addScreenDpiInfo() {
-        float[] dpiXY = GB.b(this);
+        float[] dpiXY = DeviceUtil.b(this);
         addInfo(3, Helper.getResString(R.string.system_information_dpi), String.valueOf(dpiXY[0]));
     }
 
@@ -83,7 +83,7 @@ public class SystemInfoActivity extends BaseAppCompatActivity {
     }
 
     private void addScreenResolutionInfo() {
-        int[] widthHeight = GB.c(this);
+        int[] widthHeight = DeviceUtil.c(this);
         addInfo(2, Helper.getResString(R.string.system_information_system_resolution),
                 widthHeight[0] + " x " + widthHeight[1]);
     }

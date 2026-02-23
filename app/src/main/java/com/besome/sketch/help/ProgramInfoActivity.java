@@ -12,10 +12,10 @@ import com.besome.sketch.lib.ui.PropertyOneLineItem;
 import com.besome.sketch.lib.ui.PropertyTwoLineItem;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import a.a.a.GB;
+import a.a.a.DeviceUtil;
 import a.a.a.SketchToast;
-import a.a.a.mB;
-import a.a.a.wB;
+import a.a.a.UIHelper;
+import a.a.a.ViewUtil;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ProgramInfoBinding;
@@ -81,13 +81,13 @@ public class ProgramInfoActivity extends BaseAppCompatActivity {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(Helper.getResString(R.string.program_information_reset_system_title));
         dialog.setIcon(R.drawable.rollback_96);
-        View rootView = wB.a(this, R.layout.all_init_popup);
+        View rootView = ViewUtil.a(this, R.layout.all_init_popup);
         RadioGroup radioGroup = rootView.findViewById(R.id.rg_type);
         ((RadioButton) rootView.findViewById(R.id.rb_all)).setText(Helper.getResString(R.string.program_information_reset_system_title_all_settings_data));
         ((RadioButton) rootView.findViewById(R.id.rb_only_config)).setText(Helper.getResString(R.string.program_information_reset_system_title_all_settings));
         dialog.setView(rootView);
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_yes), (v, which) -> {
-            if (!mB.a()) {
+            if (!UIHelper.a()) {
                 int buttonId = radioGroup.getCheckedRadioButtonId();
                 boolean resetOnlySettings = buttonId != R.id.rb_all;
                 v.dismiss();
@@ -100,14 +100,14 @@ public class ProgramInfoActivity extends BaseAppCompatActivity {
     }
 
     private void handleItem(View v) {
-        if (!mB.a()) {
+        if (!UIHelper.a()) {
             int key;
             if (v instanceof PropertyOneLineItem) {
                 key = ((PropertyOneLineItem) v).getKey();
                 switch (key) {
                     case ITEM_SYSTEM_INFORMATION -> toSystemInfoActivity();
                     case ITEM_OPEN_SOURCE_LICENSES -> {
-                        if (!GB.h(getApplicationContext())) {
+                        if (!DeviceUtil.h(getApplicationContext())) {
                             SketchToast.toast(getApplicationContext(), Helper.getResString(R.string.common_message_check_network), SketchToast.TOAST_NORMAL).show();
                         } else {
                             toLicenseActivity();
@@ -138,7 +138,7 @@ public class ProgramInfoActivity extends BaseAppCompatActivity {
         setContentView(binding.getRoot());
 
         binding.toolbar.setNavigationOnClickListener(Helper.getBackPressedClickListener(this));
-        binding.appVersion.setText(GB.e(getApplicationContext()));
+        binding.appVersion.setText(DeviceUtil.e(getApplicationContext()));
         binding.btnReset.setOnClickListener(this::resetDialog);
         binding.btnUpgrade.setOnClickListener(v -> {
             try {

@@ -74,18 +74,18 @@ public class SketchwarePaths {
     }
 
     public static void a(Context context, String preferenceName) {
-        DB dataP17 = new DB(context, "P17_" + preferenceName);
-        DB dataP18 = new DB(context, "P18_" + preferenceName);
-        DB dataP13 = new DB(context, "P13_" + preferenceName);
-        DB dataP14 = new DB(context, "P14_" + preferenceName);
+        SharedPrefsHelper dataP17 = new SharedPrefsHelper(context, "P17_" + preferenceName);
+        SharedPrefsHelper dataP18 = new SharedPrefsHelper(context, "P18_" + preferenceName);
+        SharedPrefsHelper dataP13 = new SharedPrefsHelper(context, "P13_" + preferenceName);
+        SharedPrefsHelper dataP14 = new SharedPrefsHelper(context, "P14_" + preferenceName);
         dataP17.a();
         dataP18.a();
         dataP13.a();
         dataP14.a();
-        DB dataD03 = new DB(context, "D03_" + preferenceName);
-        DB dataD04 = new DB(context, "D04_" + preferenceName);
-        DB dataD01 = new DB(context, "D01_" + preferenceName);
-        DB dataD02 = new DB(context, "D02_" + preferenceName);
+        SharedPrefsHelper dataD03 = new SharedPrefsHelper(context, "D03_" + preferenceName);
+        SharedPrefsHelper dataD04 = new SharedPrefsHelper(context, "D04_" + preferenceName);
+        SharedPrefsHelper dataD01 = new SharedPrefsHelper(context, "D01_" + preferenceName);
+        SharedPrefsHelper dataD02 = new SharedPrefsHelper(context, "D02_" + preferenceName);
         dataD03.a();
         dataD04.a();
         dataD01.a();

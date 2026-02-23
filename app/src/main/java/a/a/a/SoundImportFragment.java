@@ -57,7 +57,7 @@ public class SoundImportFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        oB fileUtil = new oB();
+        EncryptedFileUtil fileUtil = new EncryptedFileUtil();
         // create dirs if they don't exist
         fileUtil.f(dirPath);
         if (savedInstanceState == null) {
@@ -87,7 +87,7 @@ public class SoundImportFragment extends BaseFragment {
         binding.soundList.setAdapter(adapter);
         binding.tvGuide.setText(R.string.design_manager_sound_description_guide_add_sound);
         actBinding.btnImport.setOnClickListener(view -> {
-            if (!mB.a()) {
+            if (!UIHelper.a()) {
                 stopPlayback();
                 ArrayList<ProjectResourceBean> arrayList = new ArrayList<>();
                 for (ProjectResourceBean next : sounds) {
@@ -120,7 +120,7 @@ public class SoundImportFragment extends BaseFragment {
     }
 
     public void loadProjectSounds() {
-        sounds = Qp.g().f();
+        sounds = FontCollectionManager.g().f();
         adapter.notifyDataSetChanged();
         showOrHideNoSoundsText();
     }
@@ -220,7 +220,7 @@ public class SoundImportFragment extends BaseFragment {
                 this.binding = binding;
 
                 binding.imgPlay.setOnClickListener(v -> {
-                    if (!mB.a()) {
+                    if (!UIHelper.a()) {
                         soundPlayer.onPlayPressed(getLayoutPosition());
                     }
                 });

@@ -19,8 +19,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.util.ArrayList;
 
 import a.a.a.BlockColorMapper;
-import a.a.a.mB;
-import a.a.a.wB;
+import a.a.a.UIHelper;
+import a.a.a.ViewUtil;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.VarTypeItemBinding;
@@ -126,7 +126,7 @@ public class VariableItemView extends LinearLayout {
     }
 
     private void initialize(Activity activity) {
-        wB.a(activity, this, R.layout.var_type_spinner);
+        ViewUtil.a(activity, this, R.layout.var_type_spinner);
         tvPreview = findViewById(R.id.tv_preview);
         variableItems = new ArrayList<>();
         viewsVariableList = new ArrayList<>();
@@ -137,7 +137,7 @@ public class VariableItemView extends LinearLayout {
         setPreview(variableItems.get(0));
 
         findViewById(R.id.container).setOnClickListener(view -> {
-            if (!mB.a()) {
+            if (!UIHelper.a()) {
                 showVarTypeSelectorDialog(activity);
             }
         });

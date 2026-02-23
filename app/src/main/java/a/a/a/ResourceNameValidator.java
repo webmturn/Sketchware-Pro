@@ -41,25 +41,25 @@ public class ResourceNameValidator extends BaseValidator {
     String str = paramCharSequence.toString().trim();
     if (str.length() < 3) {
       this.textInputLayout.setErrorEnabled(true);
-      this.textInputLayout.setError(xB.b().a(this.context, R.string.invalid_value_min_lenth, new Object[] { Integer.valueOf(3) }));
+      this.textInputLayout.setError(StringResource.b().a(this.context, R.string.invalid_value_min_lenth, new Object[] { Integer.valueOf(3) }));
       this.valid = false;
       return;
     } 
     if (str.length() > 70) {
       this.textInputLayout.setErrorEnabled(true);
-      this.textInputLayout.setError(xB.b().a(this.context, R.string.invalid_value_max_lenth, new Object[] { Integer.valueOf(70) }));
+      this.textInputLayout.setError(StringResource.b().a(this.context, R.string.invalid_value_max_lenth, new Object[] { Integer.valueOf(70) }));
       this.valid = false;
       return;
     } 
     if (str.equals("default_image") || "NONE".toLowerCase().equals(str.toLowerCase())) {
       this.textInputLayout.setErrorEnabled(true);
-      this.textInputLayout.setError(xB.b().a(this.context, R.string.common_message_name_unavailable));
+      this.textInputLayout.setError(StringResource.b().a(this.context, R.string.common_message_name_unavailable));
       this.valid = false;
       return;
     } 
     if (!str.equals(this.currentName) && this.existingNames.indexOf(str) >= 0) {
       this.textInputLayout.setErrorEnabled(true);
-      this.textInputLayout.setError(xB.b().a(this.context, R.string.common_message_name_unavailable));
+      this.textInputLayout.setError(StringResource.b().a(this.context, R.string.common_message_name_unavailable));
       this.valid = false;
       return;
     } 
@@ -81,13 +81,13 @@ public class ResourceNameValidator extends BaseValidator {
     } 
     if (paramInt1 != 0) {
       this.textInputLayout.setErrorEnabled(true);
-      this.textInputLayout.setError(xB.b().a(this.context, R.string.logic_editor_message_reserved_keywords));
+      this.textInputLayout.setError(StringResource.b().a(this.context, R.string.logic_editor_message_reserved_keywords));
       this.valid = false;
       return;
     } 
     if (!Character.isLetter(paramCharSequence.charAt(0))) {
       this.textInputLayout.setErrorEnabled(true);
-      this.textInputLayout.setError(xB.b().a(this.context, R.string.logic_editor_message_variable_name_must_start_letter));
+      this.textInputLayout.setError(StringResource.b().a(this.context, R.string.logic_editor_message_variable_name_must_start_letter));
       this.valid = false;
       return;
     } 
@@ -96,7 +96,7 @@ public class ResourceNameValidator extends BaseValidator {
       this.valid = true;
     } else {
       this.textInputLayout.setErrorEnabled(true);
-      this.textInputLayout.setError(xB.b().a(this.context, R.string.invalid_value_rule_4));
+      this.textInputLayout.setError(StringResource.b().a(this.context, R.string.invalid_value_rule_4));
       this.valid = false;
     } 
   }

@@ -13,7 +13,7 @@ import com.besome.sketch.lib.base.BaseDialogActivity;
 import java.io.File;
 import java.util.ArrayList;
 
-import a.a.a.Np;
+import a.a.a.ImageCollectionManager;
 import a.a.a.SketchToast;
 import a.a.a.BlockConstants;
 import a.a.a.SketchwarePaths;
@@ -80,7 +80,7 @@ public class AddFontCollectionActivity extends BaseDialogActivity implements Vie
 
     public final void saveFont() {
         if (fontValidator.isValid()) {
-            Np.g().a(projectResourceBean, Helper.getText(binding.edInput), true);
+            ImageCollectionManager.g().a(projectResourceBean, Helper.getText(binding.edInput), true);
             SketchToast.toast(this, getString(R.string.design_manager_message_edit_complete), 1).show();
             finish();
         }

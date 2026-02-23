@@ -121,7 +121,7 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        if (!mB.a() && v.getId() == R.id.fab) {
+        if (!UIHelper.a() && v.getId() == R.id.fab) {
             Intent intent = new Intent(requireActivity().getApplicationContext(), AddEventActivity.class);
             intent.putExtra("sc_id", sc_id);
             intent.putExtra("project_file", currentActivity);
@@ -338,31 +338,31 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
         MaterialAlertDialogBuilder aBVar = new MaterialAlertDialogBuilder(requireActivity());
         aBVar.setTitle(R.string.logic_more_block_favorites_save_title);
         aBVar.setIcon(R.drawable.ic_bookmark_red_48dp);
-        View a2 = wB.a(requireContext(), R.layout.property_popup_save_to_favorite);
+        View a2 = ViewUtil.a(requireContext(), R.layout.property_popup_save_to_favorite);
         ((TextView) a2.findViewById(R.id.tv_favorites_guide)).setText(R.string.logic_more_block_favorites_save_guide);
         EditText editText = a2.findViewById(R.id.ed_input);
         editText.setPrivateImeOptions("defaultInputmode=english;");
         editText.setLines(1);
         editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
-        UniqueNameValidator nameValidator = new UniqueNameValidator(requireContext(), a2.findViewById(R.id.ti_input), Pp.h().g());
+        UniqueNameValidator nameValidator = new UniqueNameValidator(requireContext(), a2.findViewById(R.id.ti_input), MoreBlockCollectionManager.h().g());
         aBVar.setView(a2);
         aBVar.setPositiveButton(R.string.common_word_save, (v, which) -> {
             if (nameValidator.isValid()) {
                 saveMoreBlockToCollection(Helper.getText(editText), moreBlocks.get(moreBlockPosition));
-                mB.a(requireContext(), editText);
+                UIHelper.a(requireContext(), editText);
                 v.dismiss();
             }
         });
         aBVar.setNegativeButton(R.string.common_word_cancel, (v, which) -> {
-            mB.a(requireContext(), editText);
+            UIHelper.a(requireContext(), editText);
             v.dismiss();
         });
         aBVar.show();
     }
 
     private void resetEvent(EventBean event) {
-        eC a2 = ProjectDataManager.getProjectDataManager(sc_id);
+        ProjectDataStore a2 = ProjectDataManager.getProjectDataManager(sc_id);
         String javaName = currentActivity.getJavaName();
         a2.a(javaName, event.targetId + "_" + event.eventName, new ArrayList<>());
         SketchToast.toast(requireContext(), getString(R.string.common_message_complete_reset), 0).show();
@@ -374,7 +374,7 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
     }
 
     private void showImportMoreBlockFromCollectionsDialog() {
-        ArrayList<MoreBlockCollectionBean> moreBlocksInCollections = Pp.h().f();
+        ArrayList<MoreBlockCollectionBean> moreBlocksInCollections = MoreBlockCollectionManager.h().f();
         new MoreblockImporterDialog(requireActivity(), moreBlocksInCollections, this).show();
     }
 
@@ -404,7 +404,7 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
 
     private void saveMoreBlockToCollection(String moreBlockName, EventBean moreBlock) {
         String b2 = ProjectDataManager.getProjectDataManager(sc_id).b(currentActivity.getJavaName(), moreBlock.targetId);
-        eC a2 = ProjectDataManager.getProjectDataManager(sc_id);
+        ProjectDataStore a2 = ProjectDataManager.getProjectDataManager(sc_id);
         String javaName = currentActivity.getJavaName();
         ArrayList<BlockBean> moreBlockBlocks = a2.a(javaName, moreBlock.targetId + "_" + moreBlock.eventName);
 
@@ -418,20 +418,20 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
                     String parameter = next.parameters.get(i);
 
                     if (gx.isExactType("resource") || gx.isExactType("resource_bg")) {
-                        if (ProjectDataManager.getResourceManager(sc_id).l(parameter) && !Op.g().b(parameter)) {
-                            try { Op.g().a(sc_id, ProjectDataManager.getResourceManager(sc_id).g(parameter)); } catch (CompileException ignored) {}
+                        if (ProjectDataManager.getResourceManager(sc_id).l(parameter) && !SoundCollectionManager.g().b(parameter)) {
+                            try { SoundCollectionManager.g().a(sc_id, ProjectDataManager.getResourceManager(sc_id).g(parameter)); } catch (CompileException ignored) {}
                         }
                     } else if (gx.isExactType("sound")) {
-                        if (ProjectDataManager.getResourceManager(sc_id).m(parameter) && !Qp.g().b(parameter)) {
+                        if (ProjectDataManager.getResourceManager(sc_id).m(parameter) && !FontCollectionManager.g().b(parameter)) {
                             try {
-                                Qp.g().a(sc_id, ProjectDataManager.getResourceManager(sc_id).j(parameter));
+                                FontCollectionManager.g().a(sc_id, ProjectDataManager.getResourceManager(sc_id).j(parameter));
                             } catch (Exception unused) {
                                 failedToAddResourceToCollections = true;
                             }
                         }
                     } else if (gx.isExactType("font")) {
-                        if (ProjectDataManager.getResourceManager(sc_id).k(parameter) && !Np.g().b(parameter)) {
-                            try { Np.g().a(sc_id, ProjectDataManager.getResourceManager(sc_id).e(parameter)); } catch (CompileException ignored) {}
+                        if (ProjectDataManager.getResourceManager(sc_id).k(parameter) && !ImageCollectionManager.g().b(parameter)) {
+                            try { ImageCollectionManager.g().a(sc_id, ProjectDataManager.getResourceManager(sc_id).e(parameter)); } catch (CompileException ignored) {}
                         }
                     }
                 }
@@ -446,7 +446,7 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
             }
         }
         try {
-            Pp.h().a(moreBlockName, b2, moreBlockBlocks, true);
+            MoreBlockCollectionManager.h().a(moreBlockName, b2, moreBlockBlocks, true);
         } catch (Exception unused2) {
             SketchToast.warning(requireContext(), getString(R.string.common_error_failed_to_save), 0).show();
         }
@@ -650,7 +650,7 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
                 optionContainer = itemView.findViewById(R.id.event_option_layout);
                 optionsLayout = itemView.findViewById(R.id.event_option);
                 optionsLayout.setButtonOnClickListener(v -> {
-                    if (!mB.a()) {
+                    if (!UIHelper.a()) {
                         EventBean eventBean = getActiveList().get(getLayoutPosition());
                         if (v instanceof CollapsibleButton button) {
                             setAnimateNextTransformation(true);
@@ -694,7 +694,7 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
                 });
                 onDoneInitializingViews();
                 root.setOnClickListener(v -> {
-                    if (!mB.a()) {
+                    if (!UIHelper.a()) {
                         EventBean eventBean = getActiveList().get(getLayoutPosition());
                         openEvent(eventBean.targetId, eventBean.eventName, Helper.getText(description));
                     }

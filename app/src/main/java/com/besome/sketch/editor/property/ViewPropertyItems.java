@@ -31,7 +31,7 @@ import a.a.a.PropertyChangedCallback;
 import a.a.a.ViewBeanCallback;
 import a.a.a.ViewHistoryManager;
 import a.a.a.ProjectDataManager;
-import a.a.a.mB;
+import a.a.a.UIHelper;
 import a.a.a.EventRegistry;
 import mod.hey.studios.project.ProjectSettings;
 import mod.pranav.viewbinding.ViewBindingBuilder;
@@ -992,7 +992,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
 
     @Override
     public void onClick(View v) {
-        if (!mB.a() && !isEditMode) {
+        if (!UIHelper.a() && !isEditMode) {
             ((PropertyActivity) getContext()).p();
         }
     }

@@ -33,15 +33,15 @@ import java.util.HashMap;
 import a.a.a.ZipUtil;
 import a.a.a.BaseAsyncTask;
 import a.a.a.ProjectBuilder;
-import a.a.a.eC;
-import a.a.a.hC;
-import a.a.a.iC;
-import a.a.a.kC;
+import a.a.a.ProjectDataStore;
+import a.a.a.ProjectFileManager;
+import a.a.a.LibraryManager;
+import a.a.a.ResourceManager;
 import a.a.a.ProjectListManager;
-import a.a.a.oB;
+import a.a.a.EncryptedFileUtil;
 import a.a.a.SketchwarePaths;
 import a.a.a.VersionCodeValidator;
-import a.a.a.yB;
+import a.a.a.MapValueHelper;
 import a.a.a.ProjectFilePaths;
 import kellinwood.security.zipsigner.ZipSigner;
 import kellinwood.security.zipsigner.optional.CustomKeySigner;
@@ -64,7 +64,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
 
     private final ExecutorService backgroundExecutor = Executors.newSingleThreadExecutor();
 
-    private final oB file_utility = new oB();
+    private final EncryptedFileUtil file_utility = new EncryptedFileUtil();
     /**
      * /sketchware/signed_apk
      */
@@ -171,10 +171,10 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
         try {
             FileUtil.deleteFile(project_metadata.projectMyscPath);
 
-            hC hCVar = new hC(sc_id);
-            kC kCVar = new kC(sc_id);
-            eC eCVar = new eC(sc_id);
-            iC iCVar = new iC(sc_id);
+            ProjectFileManager hCVar = new ProjectFileManager(sc_id);
+            ResourceManager kCVar = new ResourceManager(sc_id);
+            ProjectDataStore eCVar = new ProjectDataStore(sc_id);
+            LibraryManager iCVar = new LibraryManager(sc_id);
             hCVar.i();
             kCVar.s();
             eCVar.g();
@@ -189,9 +189,9 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
             project_metadata.initializeMetadata(iCVar, hCVar, eCVar, ProjectFilePaths.ExportType.ANDROID_STUDIO);
             builder.buildBuiltInLibraryInformation();
             project_metadata.generateProjectFiles(hCVar, eCVar, iCVar, builder.getBuiltInLibraryManager());
-            if (yB.a(ProjectListManager.getProjectById(sc_id), "custom_icon")) {
+            if (MapValueHelper.a(ProjectListManager.getProjectById(sc_id), "custom_icon")) {
                 project_metadata.copyMipmapFolder(SketchwarePaths.getIconsPath() + File.separator + sc_id + File.separator + "mipmaps");
-                if (yB.a(ProjectListManager.getProjectById(sc_id), "isIconAdaptive", false)) {
+                if (MapValueHelper.a(ProjectListManager.getProjectById(sc_id), "isIconAdaptive", false)) {
                     project_metadata.createLauncherIconXml("""
                             <?xml version="1.0" encoding="utf-8"?>
                             <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android" >
@@ -233,7 +233,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
 
             ArrayList<String> toCompress = new ArrayList<>();
             toCompress.add(project_metadata.projectMyscPath);
-            String exportedFilename = yB.c(sc_metadata, "my_ws_name") + ".zip";
+            String exportedFilename = MapValueHelper.c(sc_metadata, "my_ws_name") + ".zip";
 
             String exportedSourcesZipPath = SketchwarePaths.getSketchwarePath() + File.separator + "export_src" + File.separator + exportedFilename;
             if (file_utility.e(exportedSourcesZipPath)) {
@@ -463,16 +463,16 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
                 FileUtil.deleteFile(project_metadata.projectMyscPath);
 
                 publishProgress(Helper.getResString(R.string.design_run_title_ready_to_build));
-                oB oBVar = new oB();
+                EncryptedFileUtil oBVar = new EncryptedFileUtil();
                 /* Check if /Internal storage/sketchware/signed_apk/ exists */
                 if (!oBVar.e(SketchwarePaths.getSignedApkPath())) {
                     /* Doesn't exist yet, let's create it */
                     oBVar.f(SketchwarePaths.getSignedApkPath());
                 }
-                hC hCVar = new hC(sc_id);
-                kC kCVar = new kC(sc_id);
-                eC eCVar = new eC(sc_id);
-                iC iCVar = new iC(sc_id);
+                ProjectFileManager hCVar = new ProjectFileManager(sc_id);
+                ResourceManager kCVar = new ResourceManager(sc_id);
+                ProjectDataStore eCVar = new ProjectDataStore(sc_id);
+                LibraryManager iCVar = new LibraryManager(sc_id);
                 hCVar.i();
                 kCVar.s();
                 eCVar.g();
@@ -498,9 +498,9 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
                     cancel(true);
                     return;
                 }
-                if (yB.a(ProjectListManager.getProjectById(sc_id), "custom_icon")) {
+                if (MapValueHelper.a(ProjectListManager.getProjectById(sc_id), "custom_icon")) {
                     project_metadata.copyMipmapFolder(SketchwarePaths.getIconsPath() + File.separator + sc_id + File.separator + "mipmaps");
-                    if (yB.a(ProjectListManager.getProjectById(sc_id), "isIconAdaptive", false)) {
+                    if (MapValueHelper.a(ProjectListManager.getProjectById(sc_id), "isIconAdaptive", false)) {
                         project_metadata.createLauncherIconXml("""
                                 <?xml version="1.0" encoding="utf-8"?>
                                 <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android" >

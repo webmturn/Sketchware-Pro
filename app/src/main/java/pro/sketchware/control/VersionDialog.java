@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import com.besome.sketch.projects.MyProjectSettingActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import a.a.a.mB;
+import a.a.a.UIHelper;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.DialogAdvancedVersionControlBinding;
@@ -57,7 +57,7 @@ public class VersionDialog {
                 binding.versionName1.setError(Helper.getResString(R.string.version_error_invalid_name));
             }
 
-            if (!mB.a() && validVerCode && validVerName) {
+            if (!UIHelper.a() && validVerCode && validVerName) {
                 activity.binding.verCode.setText(verCode);
                 activity.binding.verName.setText(!verNamePostfix.isEmpty() ? verName + " " + verNamePostfix : verName);
                 v.dismiss();

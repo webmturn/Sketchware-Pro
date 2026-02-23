@@ -16,7 +16,7 @@ import androidx.annotation.Nullable;
 
 import java.util.List;
 
-import a.a.a.wB;
+import a.a.a.ViewUtil;
 import pro.sketchware.R;
 
 public abstract class CollapsibleLayout<T extends View> extends FrameLayout {
@@ -40,7 +40,7 @@ public abstract class CollapsibleLayout<T extends View> extends FrameLayout {
     }
 
     private void initialize(Context context) {
-        wB.a(context, this, R.layout.fr_logic_list_item_buttons);
+        ViewUtil.a(context, this, R.layout.fr_logic_list_item_buttons);
         projectButtons = findViewById(R.id.project_buttons);
         confirmLayout = findViewById(R.id.confirm_layout);
         confirmYes = findViewById(R.id.confirm_yes);

@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import a.a.a.wB;
+import a.a.a.ViewUtil;
 import pro.sketchware.R;
 
 public class PropertyTwoLineItem extends RelativeLayout {
@@ -19,7 +19,7 @@ public class PropertyTwoLineItem extends RelativeLayout {
     }
 
     public final void a(Context context) {
-        wB.a(context, this, R.layout.program_info_two_line_item);
+        ViewUtil.a(context, this, R.layout.program_info_two_line_item);
         tvName = findViewById(R.id.tv_name);
         tvDesc = findViewById(R.id.tv_desc);
         divider = findViewById(R.id.layout_divider);

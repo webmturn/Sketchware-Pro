@@ -15,9 +15,9 @@ import android.widget.Toast;
 import com.besome.sketch.beans.ProjectResourceBean;
 import com.besome.sketch.lib.base.BaseDialogActivity;
 
-import a.a.a.Np;
+import a.a.a.ImageCollectionManager;
 import a.a.a.SketchToast;
-import a.a.a.mB;
+import a.a.a.UIHelper;
 import a.a.a.BlockConstants;
 import a.a.a.CompileException;
 import mod.hey.studios.util.Helper;
@@ -108,7 +108,7 @@ public class AddFontActivity extends BaseDialogActivity implements View.OnClickL
             binding.clearInput.setVisibility(str.isEmpty() ? View.GONE : View.VISIBLE);
         });
         binding.selectFile.setOnClickListener(view -> {
-            if (!mB.a()) {
+            if (!UIHelper.a()) {
                 Intent intent1 = new Intent(Intent.ACTION_GET_CONTENT);
                 intent1.setType("*/*");
                 fontPickerLauncher.launch(Intent.createChooser(intent1, Helper.getResString(R.string.common_word_choose)));
@@ -126,7 +126,7 @@ public class AddFontActivity extends BaseDialogActivity implements View.OnClickL
 
             if (binding.addToCollectionCheckbox.isChecked()) {
                 try {
-                    Np.g().a(sc_id, resourceBean);
+                    ImageCollectionManager.g().a(sc_id, resourceBean);
                 } catch (Exception e) {
                     Log.e("AddFontActivity", "Failed to add font to collection", e);
                     // Well, (parts of) the bytecode's lying, CompileException can be thrown.

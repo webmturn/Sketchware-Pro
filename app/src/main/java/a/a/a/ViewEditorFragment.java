@@ -67,7 +67,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
         viewProperty.setOnPropertyListener(new ViewEditorCallback() {
             @Override
             public void a() {
-                viewEditor.setFavoriteData(Rp.h().f());
+                viewEditor.setFavoriteData(WidgetCollectionManager.h().f());
             }
 
             @Override
@@ -137,7 +137,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
             }
         });
         viewEditor.setOnHistoryChangeListener(this::invalidateOptionsMenu);
-        viewEditor.setFavoriteData(Rp.h().f());
+        viewEditor.setFavoriteData(WidgetCollectionManager.h().f());
     }
 
     public void initialize(ProjectFileBean projectFileBean) {
@@ -180,7 +180,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
 
     public void loadViews(ArrayList<ViewBean> viewBeans) {
         viewEditor.h();
-        viewEditor.a(eC.a(viewBeans));
+        viewEditor.a(ProjectDataStore.a(viewBeans));
     }
 
     public void togglePropertyView(boolean var1) {
@@ -309,7 +309,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
 
         if (hidePropertyViewAnimator == null) {
             if (getActivity() == null) return;
-            hidePropertyViewAnimator = ObjectAnimator.ofFloat(viewProperty, View.TRANSLATION_Y, wB.a(requireActivity(), (float) viewProperty.getHeight()));
+            hidePropertyViewAnimator = ObjectAnimator.ofFloat(viewProperty, View.TRANSLATION_Y, ViewUtil.a(requireActivity(), (float) viewProperty.getHeight()));
             hidePropertyViewAnimator.setDuration(300L);
             hidePropertyViewAnimator.setInterpolator(new DecelerateInterpolator());
         }
@@ -372,7 +372,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
     }
 
     public void refreshFavorites() {
-        viewEditor.setFavoriteData(Rp.h().f());
+        viewEditor.setFavoriteData(WidgetCollectionManager.h().f());
     }
 
     private void invalidateOptionsMenu() {
@@ -433,7 +433,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
     }
 
     public void updatePropertyViews() {
-        ArrayList<ViewBean> viewBeanArrayList = eC.a(ProjectDataManager.getProjectDataManager(sc_id).d(projectFileBean.getXmlName()));
+        ArrayList<ViewBean> viewBeanArrayList = ProjectDataStore.a(ProjectDataManager.getProjectDataManager(sc_id).d(projectFileBean.getXmlName()));
         ViewBean viewBean;
         if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB)) {
             viewBean = ProjectDataManager.getProjectDataManager(sc_id).h(projectFileBean.getXmlName());

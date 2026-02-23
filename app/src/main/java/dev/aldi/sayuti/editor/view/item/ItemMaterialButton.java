@@ -10,7 +10,7 @@ import com.besome.sketch.beans.ViewBean;
 import com.besome.sketch.editor.view.ItemView;
 import com.google.android.material.button.MaterialButton;
 
-import a.a.a.wB;
+import a.a.a.ViewUtil;
 
 public class ItemMaterialButton extends MaterialButton implements ItemView {
 
@@ -24,7 +24,7 @@ public class ItemMaterialButton extends MaterialButton implements ItemView {
 
     public ItemMaterialButton(Context context) {
         super(context);
-        paddingFactor = wB.a(context, 1.0f);
+        paddingFactor = ViewUtil.a(context, 1.0f);
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(0x9599d5d0);
         rect = new Rect();

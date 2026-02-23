@@ -15,13 +15,13 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 
 import java.util.ArrayList;
 
-import a.a.a.GB;
+import a.a.a.DeviceUtil;
 import a.a.a.UniqueNameValidator;
-import a.a.a.Op;
-import a.a.a.Rp;
+import a.a.a.SoundCollectionManager;
+import a.a.a.WidgetCollectionManager;
 import a.a.a.SketchToast;
-import a.a.a.kC;
-import a.a.a.mB;
+import a.a.a.ResourceManager;
+import a.a.a.UIHelper;
 import a.a.a.SketchwarePaths;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
@@ -52,7 +52,7 @@ public class ShowWidgetCollectionActivity extends BaseAppCompatActivity implemen
     private void setActionContainerHeight() {
         binding.layoutButton.measure(0, 0);
         binding.scrollView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                getResources().getDisplayMetrics().heightPixels - GB.a(getApplicationContext()) - GB.f(getApplicationContext()) - binding.layoutButton.getMeasuredHeight()));
+                getResources().getDisplayMetrics().heightPixels - DeviceUtil.a(getApplicationContext()) - DeviceUtil.f(getApplicationContext()) - binding.layoutButton.getMeasuredHeight()));
         binding.scrollView.requestLayout();
     }
 
@@ -62,7 +62,7 @@ public class ShowWidgetCollectionActivity extends BaseAppCompatActivity implemen
         if (id == R.id.img_back) {
             getOnBackPressedDispatcher().onBackPressed();
         } else if (id == R.id.save_button && widgetNameValidator.isValid()) {
-            Rp.h().a(widgetName, Helper.getText(widgetNameInput), true);
+            WidgetCollectionManager.h().a(widgetName, Helper.getText(widgetNameInput), true);
             SketchToast.toast(getApplicationContext(), getString(R.string.design_manager_message_edit_complete), SketchToast.TOAST_NORMAL).show();
             finish();
         }
@@ -85,7 +85,7 @@ public class ShowWidgetCollectionActivity extends BaseAppCompatActivity implemen
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
         binding.toolbar.setNavigationOnClickListener(v -> {
-            if (!mB.a()) {
+            if (!UIHelper.a()) {
                 getOnBackPressedDispatcher().onBackPressed();
             }
         });
@@ -94,21 +94,21 @@ public class ShowWidgetCollectionActivity extends BaseAppCompatActivity implemen
         String sc_id = getIntent().getStringExtra("sc_id");
         binding.pane.initialize(sc_id, true);
         binding.pane.setVerticalScrollBarEnabled(true);
-        kC kCVar = new kC("", SketchwarePaths.getCollectionPath() + "/image/data/", "", "");
-        kCVar.b(Op.g().f());
+        ResourceManager kCVar = new ResourceManager("", SketchwarePaths.getCollectionPath() + "/image/data/", "", "");
+        kCVar.b(SoundCollectionManager.g().f());
         binding.pane.setResourceManager(kCVar);
         widgetNameInput = binding.edInput.getEditText();
         widgetNameInput.setPrivateImeOptions("defaultInputmode=english;");
         widgetNameInput.setText(widgetName);
         binding.edInput.setHint(getString(R.string.design_manager_widget_hint_enter_widget_name));
         binding.saveButton.setOnClickListener(this);
-        widgetNameValidator = new UniqueNameValidator(this, binding.edInput.getTextInputLayout(), Rp.h().g());
+        widgetNameValidator = new UniqueNameValidator(this, binding.edInput.getTextInputLayout(), WidgetCollectionManager.h().g());
     }
 
     @Override
     public void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        loadViews(Rp.h().a(widgetName).widgets);
+        loadViews(WidgetCollectionManager.h().a(widgetName).widgets);
         setActionContainerHeight();
     }
 

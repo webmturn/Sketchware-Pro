@@ -53,7 +53,7 @@ public class ComponentListFragment extends BaseFragment implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        if (!mB.a() && v.getId() == binding.fab.getId()) {
+        if (!UIHelper.a() && v.getId() == binding.fab.getId()) {
             AddComponentBottomSheet addComponentBottomSheet = AddComponentBottomSheet.newInstance(sc_id, projectFile, () -> refreshData());
             addComponentBottomSheet.show(getParentFragmentManager(), null);
         }
@@ -261,7 +261,7 @@ public class ComponentListFragment extends BaseFragment implements View.OnClickL
                                     new LinearLayout.LayoutParams(
                                             ViewGroup.LayoutParams.WRAP_CONTENT,
                                             ViewGroup.LayoutParams.WRAP_CONTENT);
-                            layoutParams.setMargins(0, 0, (int) wB.a(requireContext(), 4.0f), 0);
+                            layoutParams.setMargins(0, 0, (int) ViewUtil.a(requireContext(), 4.0f), 0);
                             previewBinding.getRoot().setLayoutParams(layoutParams);
                             previewBinding.icon.setImageResource(EventRegistry.getEventIconResource(event.eventName));
                             previewBinding.iconBg.setBackgroundResource(
@@ -278,7 +278,7 @@ public class ComponentListFragment extends BaseFragment implements View.OnClickL
                                 new LinearLayout.LayoutParams(
                                         ViewGroup.LayoutParams.WRAP_CONTENT,
                                         ViewGroup.LayoutParams.WRAP_CONTENT);
-                        layoutParams2.setMargins(0, 0, (int) wB.a(requireContext(), 4.0f), 0);
+                        layoutParams2.setMargins(0, 0, (int) ViewUtil.a(requireContext(), 4.0f), 0);
                         previewBinding.getRoot().setLayoutParams(layoutParams2);
                         previewBinding.icon.setImageResource(EventRegistry.getEventIconResource(eventName));
                         ColorMatrix colorMatrix = new ColorMatrix();
@@ -382,7 +382,7 @@ public class ComponentListFragment extends BaseFragment implements View.OnClickL
                     holder.button.getName().setText(event.eventName);
                     holder.button.getIcon().setImageResource(EventRegistry.getEventIconResource(event.eventName));
                     holder.button.setClickListener(v -> {
-                        if (!mB.a()) {
+                        if (!UIHelper.a()) {
                             openEvent(event.targetId, event.eventName, event.eventName);
                         }
                     });
@@ -425,7 +425,7 @@ public class ComponentListFragment extends BaseFragment implements View.OnClickL
                     holder.button.getName().setText(eventName);
                     holder.button.getIcon().setImageResource(EventRegistry.getEventIconResource(eventName));
                     holder.button.setClickListener(v -> {
-                        if (!mB.a()) {
+                        if (!UIHelper.a()) {
                             var component = components.get(getLayoutPosition());
                             var event = new EventBean(EventBean.EVENT_TYPE_COMPONENT, component.type, component.componentId, eventName);
                             ProjectDataManager.getProjectDataManager(sc_id).a(projectFile.getJavaName(), event);

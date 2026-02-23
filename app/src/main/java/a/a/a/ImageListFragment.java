@@ -116,7 +116,7 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
             } else {
                 editedImage = data.getParcelableExtra("image");
             }
-            kC.z();
+            ResourceManager.z();
             for (ProjectResourceBean image : images) {
                 if (image.resName.equals(editedImage.resName)) {
                     image.copy(editedImage);
@@ -292,7 +292,7 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
             images = savedInstanceState.getParcelableArrayList("images");
         }
         // mkdirs
-        new oB().f(projectImagesDirectory);
+        new EncryptedFileUtil().f(projectImagesDirectory);
         adapter.notifyDataSetChanged();
         updateGuideVisibility();
     }
@@ -346,7 +346,7 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
             setSelectionMode(false);
             showAddImageDialog();
         });
-        kC.z();
+        ResourceManager.z();
         return binding.getRoot();
     }
 
@@ -529,7 +529,7 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
                             }
                         })
                         .centerCrop()
-                        .signature(kC.n())
+                        .signature(ResourceManager.n())
                         .error(R.drawable.ic_remove_grey600_24dp)
                         .into(holder.binding.img);
             }

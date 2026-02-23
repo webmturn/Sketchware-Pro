@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import a.a.a.eC;
+import a.a.a.ProjectDataStore;
 import a.a.a.ProjectDataManager;
 import mod.hilal.saif.activities.tools.ConfigActivity;
 
@@ -18,7 +18,7 @@ public class ExtraBlocks {
     private final String eventName;
     private final String javaName;
     private final LogicEditorActivity logicEditor;
-    private final eC projectDataManager;
+    private final ProjectDataStore projectDataManager;
 
     public ExtraBlocks(LogicEditorActivity logicEditor) {
         eventName = logicEditor.eventName;

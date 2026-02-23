@@ -30,25 +30,25 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import a.a.a.iC;
+import a.a.a.LibraryManager;
 import a.a.a.ProjectListManager;
-import a.a.a.mB;
-import a.a.a.wB;
+import a.a.a.UIHelper;
+import a.a.a.ViewUtil;
 import a.a.a.SketchwarePaths;
-import a.a.a.yB;
+import a.a.a.MapValueHelper;
 import pro.sketchware.R;
 
 public class LibrarySettingsImporter {
     private static final ProjectComparator PROJECT_COMPARATOR = new ProjectComparator();
 
     private final String sc_id;
-    private final Function<iC, ProjectLibraryBean> getLibrarySettings;
+    private final Function<LibraryManager, ProjectLibraryBean> getLibrarySettings;
     private final Set<Consumer<ProjectLibraryBean>> onProjectSelectedListeners = new HashSet<>();
     private Activity activity;
     private ProjectAdapter adapter;
     private List<? extends Map<String, Object>> projects;
 
-    public LibrarySettingsImporter(String sc_id, Function<iC, ProjectLibraryBean> getLibrarySettings) {
+    public LibrarySettingsImporter(String sc_id, Function<LibraryManager, ProjectLibraryBean> getLibrarySettings) {
         this.sc_id = sc_id;
         this.getLibrarySettings = getLibrarySettings;
     }
@@ -62,7 +62,7 @@ public class LibrarySettingsImporter {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(activity);
         dialog.setTitle(R.string.design_library_title_select_project);
         dialog.setIcon(R.drawable.widget_firebase);
-        LinearLayout root = (LinearLayout) wB.a(activity, R.layout.manage_library_popup_project_selector);
+        LinearLayout root = (LinearLayout) ViewUtil.a(activity, R.layout.manage_library_popup_project_selector);
         LottieAnimationView animationView = root.findViewById(R.id.animation_view);
         RecyclerView recyclerView = root.findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(null));
@@ -84,7 +84,7 @@ public class LibrarySettingsImporter {
         }).start();
         dialog.setView(root);
         dialog.setPositiveButton(R.string.common_word_select, (v, which) -> {
-            if (!mB.a()) {
+            if (!UIHelper.a()) {
                 if (adapter.selectedProjectIndex >= 0) {
                     var settings = (ProjectLibraryBean) projects.get(adapter.selectedProjectIndex).get("settings");
                     for (var listener : onProjectSelectedListeners) {
@@ -101,9 +101,9 @@ public class LibrarySettingsImporter {
     private void loadProjects() {
         projects = ProjectListManager.listProjects().stream()
                 .filter(project -> {
-                    var projectSc_id = yB.c(project, "sc_id");
+                    var projectSc_id = MapValueHelper.c(project, "sc_id");
                     if (!sc_id.equals(projectSc_id)) {
-                        var projectLibraryHandler = new iC(projectSc_id);
+                        var projectLibraryHandler = new LibraryManager(projectSc_id);
                         projectLibraryHandler.i();
                         var settings = getLibrarySettings.apply(projectLibraryHandler);
                         if (settings.useYn.equals("Y")) {
@@ -128,8 +128,8 @@ public class LibrarySettingsImporter {
         @Override
         public void onBindViewHolder(@NonNull ProjectAdapter.ViewHolder viewHolder, int position) {
             Map<String, Object> projectMap = projects.get(position);
-            String sc_id = yB.c(projectMap, "sc_id");
-            if (yB.a(projectMap, "custom_icon")) {
+            String sc_id = MapValueHelper.c(projectMap, "sc_id");
+            if (MapValueHelper.a(projectMap, "custom_icon")) {
                 String iconPath = SketchwarePaths.getIconsPath() + File.separator + sc_id;
                 Uri iconUri;
                 iconUri = FileProvider.getUriForFile(activity.getApplicationContext(), activity.getPackageName() + ".provider", new File(iconPath, "icon.png"));
@@ -138,11 +138,11 @@ public class LibrarySettingsImporter {
                 viewHolder.imgIcon.setImageResource(R.drawable.default_icon);
             }
 
-            viewHolder.appName.setText(yB.c(projectMap, "my_app_name"));
-            viewHolder.projectName.setText(yB.c(projectMap, "my_ws_name"));
-            viewHolder.pkgName.setText(yB.c(projectMap, "my_sc_pkg_name"));
-            viewHolder.projectVersion.setText(String.format("%s(%s)", yB.c(projectMap, "sc_ver_name"), yB.c(projectMap, "sc_ver_code")));
-            viewHolder.imgSelected.setVisibility(yB.a(projectMap, "selected") ? View.VISIBLE : View.GONE);
+            viewHolder.appName.setText(MapValueHelper.c(projectMap, "my_app_name"));
+            viewHolder.projectName.setText(MapValueHelper.c(projectMap, "my_ws_name"));
+            viewHolder.pkgName.setText(MapValueHelper.c(projectMap, "my_sc_pkg_name"));
+            viewHolder.projectVersion.setText(String.format("%s(%s)", MapValueHelper.c(projectMap, "sc_ver_name"), MapValueHelper.c(projectMap, "sc_ver_code")));
+            viewHolder.imgSelected.setVisibility(MapValueHelper.a(projectMap, "selected") ? View.VISIBLE : View.GONE);
         }
 
         @Override
@@ -174,7 +174,7 @@ public class LibrarySettingsImporter {
 
             @Override
             public void onClick(View v) {
-                if (!mB.a() && v.getId() == R.id.project_layout) {
+                if (!UIHelper.a() && v.getId() == R.id.project_layout) {
                     selectedProjectIndex = getLayoutPosition();
                     selectProject(selectedProjectIndex);
                 }

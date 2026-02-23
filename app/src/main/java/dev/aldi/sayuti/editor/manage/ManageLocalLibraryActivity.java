@@ -41,7 +41,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import a.a.a.BaseAsyncTask;
-import a.a.a.mB;
+import a.a.a.UIHelper;
 import mod.hey.studios.build.BuildSettings;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
@@ -160,7 +160,7 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
         binding.searchList.setAdapter(searchAdapter);
 
         binding.searchBar.setNavigationOnClickListener(v -> {
-            if (!mB.a()) {
+            if (!UIHelper.a()) {
                 getOnBackPressedDispatcher().onBackPressed();
             }
         });

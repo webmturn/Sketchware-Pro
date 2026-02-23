@@ -30,11 +30,11 @@ import java.util.ArrayList;
 import a.a.a.SketchwareException;
 import a.a.a.UriPathResolver;
 import a.a.a.BaseAsyncTask;
-import a.a.a.Op;
-import a.a.a.PB;
+import a.a.a.SoundCollectionManager;
+import a.a.a.FileNameValidator;
 import a.a.a.SketchToast;
 import a.a.a.BitmapUtil;
-import a.a.a.oB;
+import a.a.a.EncryptedFileUtil;
 import a.a.a.BlockConstants;
 import a.a.a.CompileException;
 import mod.hey.studios.util.Helper;
@@ -47,7 +47,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
     private TextView tv_add_photo;
     private ImageView preview;
     private ArrayList<Uri> pickedImageUris;
-    private PB O;
+    private FileNameValidator O;
     private EditText ed_input_edittext;
     private EasyDeleteEditText ed_input;
     private ImageView tv_desc;
@@ -166,7 +166,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
         ed_input_edittext = ed_input.getEditText();
         ed_input_edittext.setPrivateImeOptions("defaultInputmode=english;");
         ed_input.setHint(getString(R.string.design_manager_image_hint_enter_image_name));
-        O = new PB(this, ed_input.getTextInputLayout(), BlockConstants.RESERVED_KEYWORDS, getReservedImageNames());
+        O = new FileNameValidator(this, ed_input.getTextInputLayout(), BlockConstants.RESERVED_KEYWORDS, getReservedImageNames());
         O.a(1);
         chk_collection.setText(R.string.design_manager_title_add_to_collection);
         tv_add_photo.setText(R.string.design_manager_image_title_add_image);
@@ -180,7 +180,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
         imageRotationDegrees = 0;
         imageScaleY = 1;
         imageScaleX = 1;
-        new oB().f(dir_path); // java.io.File.mkdirs
+        new EncryptedFileUtil().f(dir_path); // java.io.File.mkdirs
         images = new ArrayList<>();
     }
 
@@ -193,7 +193,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
             imageRotationDegrees = image.rotate;
             imageScaleX = image.flipHorizontal;
             imageScaleY = image.flipVertical;
-            O = new PB(this, ed_input.getTextInputLayout(), BlockConstants.RESERVED_KEYWORDS, getReservedImageNames(), image.resName);
+            O = new FileNameValidator(this, ed_input.getTextInputLayout(), BlockConstants.RESERVED_KEYWORDS, getReservedImageNames(), image.resName);
             O.a(1);
             ed_input_edittext.setText(image.resName);
             ed_input_edittext.setEnabled(false);
@@ -302,7 +302,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
         }
     }
 
-    private boolean a(PB pb) {
+    private boolean a(FileNameValidator pb) {
         if (!pb.isValid()) {
             return false;
         }
@@ -378,7 +378,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
                         image.flipVertical = activity.imageScaleY;
                         image.flipHorizontal = activity.imageScaleX;
                         if (activity.chk_collection.isChecked()) {
-                            Op.g().a(activity.sc_id, image);
+                            SoundCollectionManager.g().a(activity.sc_id, image);
                         }
                         activity.images.add(image);
                     } else if (!activity.B) {
@@ -416,7 +416,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
                         toAdd.add(image);
                     }
                     if (activity.chk_collection.isChecked()) {
-                        Op.g().a(activity.sc_id, toAdd, true);
+                        SoundCollectionManager.g().a(activity.sc_id, toAdd, true);
                     }
                     activity.multipleImagesPicked = false;
                     activity.images.addAll(toAdd);

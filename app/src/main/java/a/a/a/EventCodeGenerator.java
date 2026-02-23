@@ -30,23 +30,23 @@ public class EventCodeGenerator {
     public String k = "";
     public String l = "";
 
-    public EventCodeGenerator(BuildConfig logicHolder, ProjectFileBean projectFileBean, eC eC) {
+    public EventCodeGenerator(BuildConfig logicHolder, ProjectFileBean projectFileBean, ProjectDataStore ProjectDataStore) {
         buildConfig = logicHolder;
         this.projectFileBean = projectFileBean;
 
         ProjectSettings projectSettings = new ProjectSettings(logicHolder.sc_id);
         isViewBindingEnabled = projectSettings.getValue(ProjectSettings.SETTING_ENABLE_VIEWBINDING, "false").equals("true");
 
-        ArrayList<ViewBean> views = new ArrayList<>(eC.d(projectFileBean.getXmlName()));
+        ArrayList<ViewBean> views = new ArrayList<>(ProjectDataStore.d(projectFileBean.getXmlName()));
         if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB)) {
-            ViewBean fab = eC.h(projectFileBean.getXmlName());
+            ViewBean fab = ProjectDataStore.h(projectFileBean.getXmlName());
             views.add(fab);
         }
         for (ViewBean view : views) {
             viewEvents.add(new Event(this, isViewBindingEnabled ? "binding." + ViewBindingBuilder.generateParameterFromId(view.id) : view.id, view.getClassInfo(), isViewBindingEnabled));
         }
 
-        ArrayList<ComponentBean> components = eC.e(projectFileBean.getJavaName());
+        ArrayList<ComponentBean> components = ProjectDataStore.e(projectFileBean.getJavaName());
         for (ComponentBean componentBean : components) {
             int type = componentBean.type;
             if (type == ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH || type == ComponentBean.COMPONENT_TYPE_INTERSTITIAL_AD) {
@@ -57,13 +57,13 @@ public class EventCodeGenerator {
         }
 
         if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)) {
-            ArrayList<ViewBean> drawerViews = eC.d(projectFileBean.getDrawerXmlName());
+            ArrayList<ViewBean> drawerViews = ProjectDataStore.d(projectFileBean.getDrawerXmlName());
             for (ViewBean view : drawerViews) {
                 drawerViewEvents.add(new Event(this, isViewBindingEnabled ? "binding.drawer." + ViewBindingBuilder.generateParameterFromId(view.id) : "_drawer_" + view.id, view.getClassInfo(), isViewBindingEnabled));
             }
         }
 
-        processEvents(eC.g(projectFileBean.getJavaName()), eC.b(projectFileBean.getJavaName()));
+        processEvents(ProjectDataStore.g(projectFileBean.getJavaName()), ProjectDataStore.b(projectFileBean.getJavaName()));
     }
 
     public String getOnActivityResultSwitchCases() {

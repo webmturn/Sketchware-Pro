@@ -16,7 +16,7 @@ public class ClassInfo {
         return className;
     }
 
-    // keeping this method, because it's used in a.a.a.eC
+    // keeping this method, because it's used in a.a.a.ProjectDataStore
     public String a() {
         return className;
     }

@@ -37,7 +37,7 @@ public class ActivityCodeGenerator {
     private final PermissionManager permissionManager;
     private final String packageName;
     private final ProjectFileBean projectFileBean;
-    private final eC projectDataManager;
+    private final ProjectDataStore projectDataManager;
     private final BuildConfig buildConfig;
     private final LayoutGenerator ox;
     private final Boolean isViewBindingEnabled;
@@ -86,7 +86,7 @@ public class ActivityCodeGenerator {
     private String onCreateEventCode = "";
     private Material3LibraryManager materialLibraryManager;
 
-    public ActivityCodeGenerator(BuildConfig jqVar, ProjectFileBean projectFileBean, eC eCVar) {
+    public ActivityCodeGenerator(BuildConfig jqVar, ProjectFileBean projectFileBean, ProjectDataStore eCVar) {
         packageName = jqVar.packageName;
         this.projectFileBean = projectFileBean;
         projectDataManager = eCVar;

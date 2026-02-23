@@ -29,11 +29,11 @@ import java.util.ArrayList;
 import a.a.a.SketchwareException;
 import a.a.a.UriPathResolver;
 import a.a.a.BaseAsyncTask;
-import a.a.a.Op;
-import a.a.a.PB;
+import a.a.a.SoundCollectionManager;
+import a.a.a.FileNameValidator;
 import a.a.a.SketchToast;
 import a.a.a.BitmapUtil;
-import a.a.a.mB;
+import a.a.a.UIHelper;
 import a.a.a.BlockConstants;
 import a.a.a.SketchwarePaths;
 import a.a.a.CompileException;
@@ -46,7 +46,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
 
     private TextView tv_add_photo;
     private ImageView preview;
-    private PB imageNameValidator;
+    private FileNameValidator imageNameValidator;
     private EditText ed_input_edittext;
     private EasyDeleteEditText ed_input;
     private ImageView tv_desc;
@@ -89,7 +89,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
 
     @Override
     public void onClick(View v) {
-        if (!mB.a()) {
+        if (!UIHelper.a()) {
             int id = v.getId();
             if (id == R.id.cancel_button) {
                 setResult(RESULT_CANCELED);
@@ -157,7 +157,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
         ed_input_edittext = ed_input.getEditText();
         ed_input_edittext.setPrivateImeOptions("defaultInputmode=english;");
         ed_input.setHint(getString(R.string.design_manager_image_hint_enter_image_name));
-        imageNameValidator = new PB(this, ed_input.getTextInputLayout(), BlockConstants.RESERVED_KEYWORDS, getReservedImageNames());
+        imageNameValidator = new FileNameValidator(this, ed_input.getTextInputLayout(), BlockConstants.RESERVED_KEYWORDS, getReservedImageNames());
         imageNameValidator.a(1);
         tv_add_photo.setText(R.string.design_manager_image_title_add_image);
         preview.setOnClickListener(this);
@@ -178,7 +178,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
         if (editing) {
             editTarget.isEdited = true;
             e(getString(R.string.design_manager_image_title_edit_image_name));
-            imageNameValidator = new PB(this, ed_input.getTextInputLayout(), BlockConstants.RESERVED_KEYWORDS, getReservedImageNames(), editTarget.resName);
+            imageNameValidator = new FileNameValidator(this, ed_input.getTextInputLayout(), BlockConstants.RESERVED_KEYWORDS, getReservedImageNames(), editTarget.resName);
             imageNameValidator.a(1);
             ed_input_edittext.setText(editTarget.resName);
             chk_collection.setVisibility(View.GONE);
@@ -231,7 +231,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
         }
     }
 
-    private boolean a(PB validator) {
+    private boolean a(FileNameValidator validator) {
         if (!validator.isValid()) {
             return false;
         }
@@ -316,9 +316,9 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
                     image.rotate = activity.imageRotationDegrees;
                     image.flipVertical = activity.imageScaleY;
                     image.flipHorizontal = activity.imageScaleX;
-                    Op.g().a(activity.sc_id, image);
+                    SoundCollectionManager.g().a(activity.sc_id, image);
                 } else {
-                    Op.g().a(activity.editTarget, Helper.getText(activity.ed_input_edittext), false);
+                    SoundCollectionManager.g().a(activity.editTarget, Helper.getText(activity.ed_input_edittext), false);
                 }
             } catch (Exception e) {
                 // the bytecode's lying

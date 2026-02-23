@@ -14,8 +14,8 @@ import com.besome.sketch.lib.ui.ColorPickerDialog;
 import java.util.Objects;
 
 import a.a.a.PropertyChangedCallback;
-import a.a.a.mB;
-import a.a.a.wB;
+import a.a.a.UIHelper;
+import a.a.a.ViewUtil;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 
@@ -102,7 +102,7 @@ public class PropertyColorItem extends RelativeLayout implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        if (!mB.a()) {
+        if (!UIHelper.a()) {
             showColorPicker(v);
         }
     }
@@ -127,7 +127,7 @@ public class PropertyColorItem extends RelativeLayout implements View.OnClickLis
 
     private void initialize(Context context, boolean z) {
         this.context = context;
-        wB.a(context, this, R.layout.property_color_item);
+        ViewUtil.a(context, this, R.layout.property_color_item);
         tvName = findViewById(R.id.tv_name);
         tvValue = findViewById(R.id.tv_value);
         viewColor = findViewById(R.id.view_color);

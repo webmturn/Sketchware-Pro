@@ -30,8 +30,8 @@ import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import a.a.a.DB;
-import a.a.a.GB;
+import a.a.a.SharedPrefsHelper;
+import a.a.a.DeviceUtil;
 import a.a.a.SketchToast;
 import dev.pranav.filepicker.FilePickerCallback;
 import dev.pranav.filepicker.FilePickerDialogFragment;
@@ -51,7 +51,7 @@ public class ManageFirebaseActivity extends BaseAppCompatActivity implements Vie
     private TextView tvAppId;
     private TextView tvApiKey;
     private TextView tvStorageUrl;
-    private DB s = null;
+    private SharedPrefsHelper s = null;
     private ProjectLibraryBean firebaseLibraryBean;
     private final ActivityResultLauncher<Intent> openSettings = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         if (result.getResultCode() == Activity.RESULT_OK) {
@@ -68,7 +68,7 @@ public class ManageFirebaseActivity extends BaseAppCompatActivity implements Vie
     }
 
     private void goToConsole() {
-        if (GB.h(getApplicationContext())) {
+        if (DeviceUtil.h(getApplicationContext())) {
             try {
                 Uri consoleUrl = Uri.parse("https://console.firebase.google.com");
                 Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -179,7 +179,7 @@ public class ManageFirebaseActivity extends BaseAppCompatActivity implements Vie
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
 
-        s = new DB(getApplicationContext(), "P1");
+        s = new SharedPrefsHelper(getApplicationContext(), "P1");
         firebaseLibraryBean = getIntent().getParcelableExtra("firebase");
         sc_id = savedInstanceState != null ? savedInstanceState.getString("sc_id") : getIntent().getStringExtra("sc_id");
         LinearLayout switchLayout = findViewById(R.id.layout_switch);

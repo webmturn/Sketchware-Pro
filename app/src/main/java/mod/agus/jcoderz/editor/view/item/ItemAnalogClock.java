@@ -9,7 +9,7 @@ import android.widget.AnalogClock;
 import com.besome.sketch.beans.ViewBean;
 import com.besome.sketch.editor.view.ItemView;
 
-import a.a.a.wB;
+import a.a.a.ViewUtil;
 
 @Deprecated
 public class ItemAnalogClock extends AnalogClock implements ItemView {
@@ -24,7 +24,7 @@ public class ItemAnalogClock extends AnalogClock implements ItemView {
     @Deprecated
     public ItemAnalogClock(Context context) {
         super(context);
-        paddingFactor = (int) wB.a(context, 1.0f);
+        paddingFactor = (int) ViewUtil.a(context, 1.0f);
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(0x9599d5d0);
         rect = new Rect();

@@ -26,7 +26,7 @@ import a.a.a.LengthRangeValidator;
 import a.a.a.LibrarySettingsView;
 import a.a.a.SketchToast;
 import a.a.a.AnimationUtil;
-import a.a.a.wB;
+import a.a.a.ViewUtil;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 
@@ -48,7 +48,7 @@ public class AddAdUnitStepView extends LinearLayout implements LibrarySettingsVi
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(getContext());
         dialog.setTitle(Helper.getResString(R.string.design_library_admob_dialog_add_adunit_title));
         dialog.setIcon(R.drawable.ic_mtrl_add);
-        View rootView = wB.a(getContext(), R.layout.manage_library_setting_admob_adunit_add);
+        View rootView = ViewUtil.a(getContext(), R.layout.manage_library_setting_admob_adunit_add);
 
         TextInputLayout tiName = rootView.findViewById(R.id.ti_name);
         tiName.setHint(Helper.getResString(R.string.design_library_admob_dialog_add_adunit_hint_adunit_name));
@@ -95,7 +95,7 @@ public class AddAdUnitStepView extends LinearLayout implements LibrarySettingsVi
     }
 
     private void initialize(Context context) {
-        wB.a(context, this, R.layout.manage_library_admob_listing);
+        ViewUtil.a(context, this, R.layout.manage_library_admob_listing);
         AnimationUtil.fadeSlideIn(this, 600, 200, null);
         findViewById(R.id.layout_manual_add_ad_unit).setOnClickListener(this);
         tvWarning = findViewById(R.id.tv_warning);

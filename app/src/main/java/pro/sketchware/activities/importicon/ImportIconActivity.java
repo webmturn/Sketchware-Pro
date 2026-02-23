@@ -45,8 +45,8 @@ import java.util.stream.Stream;
 import a.a.a.ZipUtil;
 import a.a.a.BaseAsyncTask;
 import a.a.a.ResourceNameValidator;
-import a.a.a.mB;
-import a.a.a.oB;
+import a.a.a.UIHelper;
+import a.a.a.EncryptedFileUtil;
 import a.a.a.BlockConstants;
 import a.a.a.SketchwarePaths;
 import mod.hey.studios.util.Helper;
@@ -105,7 +105,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
     }
 
     private boolean doExtractedIconsExist() {
-        return new oB().e(SketchwarePaths.getExtractedIconPackStoreLocation());
+        return new EncryptedFileUtil().e(SketchwarePaths.getExtractedIconPackStoreLocation());
     }
 
     private void extractIcons() {
@@ -136,7 +136,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         toolbar.setNavigationOnClickListener(v -> {
-            if (!mB.a()) {
+            if (!UIHelper.a()) {
                 getOnBackPressedDispatcher().onBackPressed();
             }
         });
@@ -421,7 +421,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
 
     @Override
     public void onIconSelected(int position) {
-        if (!mB.a()) {
+        if (!UIHelper.a()) {
             selectedIconPosition = position;
             setIconName(position);
             showSaveDialog(position);

@@ -125,7 +125,7 @@ public class ViewFilesFragment extends BaseFragment {
         }
 
         ArrayList<ViewBean> var6 = getPresetViews(var1.presetName);
-        for (ViewBean viewBean : eC.a(var6)) {
+        for (ViewBean viewBean : ProjectDataStore.a(var6)) {
             viewBean.id = generateWidgetId(viewBean.type, projectFileBean.getXmlName());
             ProjectDataManager.getProjectDataManager(sc_id).a(projectFileBean.getXmlName(), viewBean);
             if (viewBean.type == 3 && projectFileBean.fileType == 0) {
@@ -310,7 +310,7 @@ public class ViewFilesFragment extends BaseFragment {
                 this.binding = binding;
 
                 binding.viewItem.setOnClickListener(view -> {
-                    if (!mB.a()) {
+                    if (!UIHelper.a()) {
                         layoutPosition = getLayoutPosition();
                         ProjectFileBean projectFileBean = activitiesFiles.get(layoutPosition);
 
@@ -344,7 +344,7 @@ public class ViewFilesFragment extends BaseFragment {
                 });
 
                 binding.imgPresetSetting.setOnClickListener(view -> {
-                    if (!mB.a()) {
+                    if (!UIHelper.a()) {
                         layoutPosition = getLayoutPosition();
                         Intent intent = new Intent(getContext(), PresetSettingActivity.class);
                         intent.putExtra("request_code", REQUEST_CODE_PRESET_ACTIVITY);

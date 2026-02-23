@@ -13,7 +13,7 @@ import com.besome.sketch.editor.view.ItemView;
 import com.besome.sketch.editor.view.ScrollContainer;
 import com.google.android.material.card.MaterialCardView;
 
-import a.a.a.wB;
+import a.a.a.ViewUtil;
 
 public class ItemCardView extends MaterialCardView implements ItemView, ScrollContainer {
 
@@ -41,8 +41,8 @@ public class ItemCardView extends MaterialCardView implements ItemView, ScrollCo
 
     private void initialize(Context context) {
         setDrawingCacheEnabled(true);
-        setMinimumWidth((int) wB.a(context, 32.0f));
-        setMinimumHeight((int) wB.a(context, 32.0f));
+        setMinimumWidth((int) ViewUtil.a(context, 32.0f));
+        setMinimumHeight((int) ViewUtil.a(context, 32.0f));
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     }
 
@@ -124,9 +124,9 @@ public class ItemCardView extends MaterialCardView implements ItemView, ScrollCo
 
     @Override
     public void setContentPadding(int left, int top, int right, int bottom) {
-        super.setContentPadding((int) wB.a(getContext(), (float) left),
-                (int) wB.a(getContext(), (float) top),
-                (int) wB.a(getContext(), (float) right),
-                (int) wB.a(getContext(), (float) bottom));
+        super.setContentPadding((int) ViewUtil.a(getContext(), (float) left),
+                (int) ViewUtil.a(getContext(), (float) top),
+                (int) ViewUtil.a(getContext(), (float) right),
+                (int) ViewUtil.a(getContext(), (float) bottom));
     }
 }

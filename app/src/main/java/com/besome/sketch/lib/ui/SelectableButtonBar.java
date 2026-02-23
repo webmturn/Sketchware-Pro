@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import a.a.a.IntCallback;
-import a.a.a.wB;
+import a.a.a.ViewUtil;
 import pro.sketchware.R;
 
 public class SelectableButtonBar extends LinearLayout {
@@ -117,7 +117,7 @@ public class SelectableButtonBar extends LinearLayout {
             this.key = key;
             setOrientation(LinearLayout.HORIZONTAL);
             setGravity(Gravity.CENTER);
-            int padding = (int) wB.a(getContext(), 4.0F);
+            int padding = (int) ViewUtil.a(getContext(), 4.0F);
             setPadding(padding, padding, padding, padding);
             textView = new TextView(context);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(

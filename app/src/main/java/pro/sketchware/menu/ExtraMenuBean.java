@@ -28,11 +28,11 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import a.a.a.Ss;
-import a.a.a.eC;
+import a.a.a.FieldBlockView;
+import a.a.a.ProjectDataStore;
 import a.a.a.ProjectDataManager;
 import a.a.a.BlockConstants;
-import a.a.a.wB;
+import a.a.a.ViewUtil;
 import dev.pranav.filepicker.FilePickerCallback;
 import dev.pranav.filepicker.FilePickerDialogFragment;
 import dev.pranav.filepicker.FilePickerOptions;
@@ -73,7 +73,7 @@ public class ExtraMenuBean {
     private final FileResConfig frc;
     private final LogicEditorActivity logicEditor;
     private final FilePickerOptions mOptions = new FilePickerOptions();
-    private final eC projectDataManager;
+    private final ProjectDataStore projectDataManager;
     private final String sc_id;
     private final String javaName;
 
@@ -113,7 +113,7 @@ public class ExtraMenuBean {
         });
     }
 
-    private void codeMenu(Ss menu) {
+    private void codeMenu(FieldBlockView menu) {
         AsdDialog asdDialog = new AsdDialog(logicEditor);
         asdDialog.setContent(menu.getArgValue().toString());
         asdDialog.show();
@@ -121,7 +121,7 @@ public class ExtraMenuBean {
         asdDialog.setOnCancelClickListener(asdDialog);
     }
 
-    public void defineMenuSelector(Ss ss) {
+    public void defineMenuSelector(FieldBlockView ss) {
         String menuType = ss.b;
         String menuName = ss.getMenuName();
 
@@ -238,10 +238,10 @@ public class ExtraMenuBean {
     }
 
     @SuppressLint("SetTextI18n")
-    private void defaultMenus(Ss menu) {
+    private void defaultMenus(FieldBlockView menu) {
         String menuName = menu.getMenuName();
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(logicEditor);
-        View rootView = wB.a(logicEditor, R.layout.property_popup_selector_single);
+        View rootView = ViewUtil.a(logicEditor, R.layout.property_popup_selector_single);
         ViewGroup viewGroup = rootView.findViewById(R.id.rg_content);
         ArrayList<String> menus = new ArrayList<>();
         String title;
@@ -733,13 +733,13 @@ public class ExtraMenuBean {
         return projectDataManager.b(javaName, type);
     }
 
-    private void asdDialog(Ss ss, String message) {
+    private void asdDialog(FieldBlockView ss, String message) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(logicEditor);
         dialog.setTitle(R.string.logic_editor_title_enter_string_value);
 
         if (!isEmpty(message)) dialog.setMessage(message);
 
-        View root = wB.a(logicEditor, R.layout.property_popup_input_text);
+        View root = ViewUtil.a(logicEditor, R.layout.property_popup_input_text);
         EditText edittext = root.findViewById(R.id.ed_input);
         edittext.setImeOptions(EditorInfo.IME_ACTION_NONE);
 
@@ -769,7 +769,7 @@ public class ExtraMenuBean {
         dialog.show();
     }
 
-    private void pathSelectorMenu(Ss ss) {
+    private void pathSelectorMenu(FieldBlockView ss) {
         String menuName = ss.getMenuName();
         ArrayList<String> markedPath = new ArrayList<>();
 

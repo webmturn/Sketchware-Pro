@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.besome.sketch.beans.ProjectLibraryBean;
 import com.google.android.material.divider.MaterialDivider;
 
-import a.a.a.wB;
+import a.a.a.ViewUtil;
 import pro.sketchware.R;
 import pro.sketchware.utility.ThemeUtils;
 
@@ -27,7 +27,7 @@ public class LibraryItemView extends FrameLayout {
         super(context);
         this.context = context;
 
-        wB.a(context, this, R.layout.manage_library_base_item);
+        ViewUtil.a(context, this, R.layout.manage_library_base_item);
         container = findViewById(R.id.container);
         icon = findViewById(R.id.lib_icon);
         title = findViewById(R.id.lib_title);

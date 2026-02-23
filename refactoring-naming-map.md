@@ -1,9 +1,8 @@
 # a.a.a Package Refactoring - Class Naming Map
 
 ## Constraints
-- `eC`, `hC`, `kC`, `iC`, `oB`, `vB`, `yB`, `mB`, `nv`, `DB`, `GB`, `Sp`, `By`, `Vs`, `Ts` etc. are in JAR files (`a.a.a-important-classes.jar` / `a.a.a-notimportant-classes.jar`) and **CANNOT be renamed**
+- All a.a.a classes are now source code (no JAR constraints remain)
 - All renamed classes stay in `a.a.a` package for now (package rename is a separate phase)
-- 685 import references across 236 files need updating per rename
 
 ## Naming Map
 
@@ -161,22 +160,74 @@
 | `nA` | `ReflectiveToString` | `Rs` | toString via reflection |
 | `yy` | `CompileException` | `Mp`-`Rp` | Exception with error list |
 
-### Phase 8 - Confirmed JAR Classes (cannot rename, newly discovered)
-| Current | Role | Why |
-|---------|------|-----|
-| `xB` | StringResourceManager | In JAR (references wq) |
-| `Lp` | BaseCollectionManager | In JAR (parent of Mp-Rp) |
-| `Mp` | BlockCollectionManager | In JAR (references wq) |
-| `Np` | SoundCollectionManager | In JAR (references wq) |
-| `Op` | ImageCollectionManager | In JAR (references wq) |
-| `Pp` | MoreBlockCollectionManager | In JAR (references wq) |
-| `Qp` | FontCollectionManager | In JAR (references wq) |
-| `Rp` | WidgetCollectionManager | In JAR (references wq) |
-| `iI` | KeyStoreManager | In JAR (references wq) |
-| `hI` | KeyStoreOutputStream | In JAR (instantiated by iI) |
+### Phase 9 - Previously "JAR constrained" classes (now all source code) ✅
+
+#### Interfaces & Small Utilities
+| Old | New Name | Role |
+|-----|----------|------|
+| `Vs` | `BlockSizeListener` | Block size change callback |
+| `nv` | `LibraryConfigView` | Library config view interface |
+| `Sp` | `ThrottleTimer` | 30-second cooldown tracker |
+| `uB` | `HashMapTypeToken` | Gson TypeToken for HashMap |
+| `vB` | `GsonMapHelper` | HashMap↔JSON serialization |
+| `yB` | `MapValueHelper` | Safe map value getters |
+
+#### Medium Utilities
+| Old | New Name | Role |
+|-----|----------|------|
+| `DB` | `SharedPrefsHelper` | SharedPreferences wrapper |
+| `mB` | `UIHelper` | UI interaction utilities |
+| `wB` | `ViewUtil` | dp conversion, layout inflation |
+| `GB` | `DeviceUtil` | Device info utilities |
+| `PB` | `ResourceNameValidator` | Resource name validation |
+| `QB` | `XmlNameValidator` | XML name validation |
+| `oB` | `EncryptedFileUtil` | Encrypted file I/O |
+
+#### Collection Managers
+| Old | New Name | Role |
+|-----|----------|------|
+| `Lp` | `BaseCollectionManager` | Abstract base for collection managers |
+| `Mp` | `BlockCollectionManager` | Block collection manager |
+| `Np` | `ImageCollectionManager` | Image resource collection manager |
+| `Op` | `SoundCollectionManager` | Sound resource collection manager |
+| `Pp` | `MoreBlockCollectionManager` | MoreBlock collection manager |
+| `Qp` | `FontCollectionManager` | Font collection manager |
+| `Rp` | `WidgetCollectionManager` | Widget collection manager |
+
+#### View File Helpers
+| Old | New Name | Role |
+|-----|----------|------|
+| `tw` | `ViewFileScrollListener` | Scroll listener for view files |
+| `uw` | `ViewFileClickListener` | Click listener for view files |
+| `vw` | `ViewFileLongClickListener` | Long-click listener for view files |
+| `ww` | `ViewFileEditClickListener` | Edit click listener for view files |
+
+#### Data Classes
+| Old | New Name | Role |
+|-----|----------|------|
+| `hC` | `ProjectFileManager` | Project file bean management |
+| `iC` | `LibraryManager` | Library bean management |
+| `kC` | `ResourceManager` | Project resource management |
+| `xB` | `StringResource` | String resource loader |
+| `xw` | `ViewFilesAdapter` | View files list adapter |
+| `iI` | `KeyStoreManager` | Keystore/certificate management |
+| `hI` | `KeyStoreOutputStream` | Output stream for keystore |
+
+#### Block View Classes
+| Old | New Name | Role |
+|-----|----------|------|
+| `Ts` | `BaseBlockView` | Base block view (RelativeLayout) |
+| `Ss` | `FieldBlockView` | Field/parameter block view |
+| `Rs` | `BlockView` | Main block view |
+| `Us` | `DefinitionBlockView` | Definition/header block view |
+
+#### Core Class
+| Old | New Name | Role |
+|-----|----------|------|
+| `eC` | `ProjectDataStore` | Core project data holder (views, blocks, events, components) |
 
 ## Refactoring Priority Order
-1. **Phase 1 - Small utilities** ✅: `wB`→ViewUtil (reverted), `gB`→AnimationUtil, `bB`→SketchToast, `aB`→SketchDialog, `ay`→SimpleCallback, `Jp`→BuiltInLibrary, `uy`→WidgetPaletteIcon
+1. **Phase 1 - Small utilities** ✅: `wB`→ViewUtil, `gB`→AnimationUtil, `bB`→SketchToast, `aB`→SketchDialog, `ay`→SimpleCallback, `Jp`→BuiltInLibrary, `uy`→WidgetPaletteIcon
 2. **Phase 2 - Validators** ✅: `NB`→UniqueNameValidator, `RB`→LowercaseNameValidator, `SB`→LengthRangeValidator, `VB`→VariableNameValidator, `YB`→ActivityNameValidator, `ZB`→IdentifierValidator
 3. **Phase 3 - Fragments** ✅: `qA`→BaseFragment, `DA`→PermissionFragment, `Fw`→ViewFilesFragment, `br`→ComponentListFragment, `fu`→ImageCollectionFragment, `ow`→SoundListFragment, `pu`→ImageListFragment, `rs`→EventListFragment, `Yv`→SoundImportFragment
 4. **Phase 4 - Firebase views** ✅: `kv`→FirebasePreviewView, `lv`→FirebaseSettingsView, `mv`→FirebaseStorageView
@@ -185,21 +236,7 @@
 7. **Phase 7 - Registries** ✅: `kq`→BlockColorMapper, `mq`→ComponentTypeMapper, `oq`→EventRegistry, `sq`→SketchwareConstants, `tq`→CompileQuizManager, `uq`→BlockConstants
 8. **Phase 8a - Freely renamable** ✅: 22 classes renamed
 9. **Phase 8b - JAR wrapper renames** ✅: 10 classes renamed with wrappers
+10. **Phase 9 - Previously "JAR constrained"** ✅: 38 classes renamed (all confirmed as source code)
 
-## Cannot Rename (JAR constrained)
-- **In JARs (original)**: `eC`, `hC`, `kC`, `iC`, `oB`, `vB`, `yB`, `mB`, `nv`, `DB`, `GB`, `Sp`, `Vs`, `Ts`, `Ss`, `Rs`, `Us`, `PB`, `QB`, `xw`
-- **In JARs (Phase 8 discovery)**: `xB`, `Lp`, `Mp`, `Np`, `Op`, `Pp`, `Qp`, `Rp`, `iI`, `hI`
-- **Referenced by JAR** (cannot rename without wrapper): `tw`, `uw`, `vw`, `ww`, `jB`
-- **Must keep name for JAR compat**: `wB` (GB JAR calls wB.a())
-
-## JAR Wrapper Classes (for binary compatibility)
-- `qA` extends `BaseFragment` (for xw JAR)
-- `jC` extends `ProjectDataManager` (for xw JAR)
-- `jq` extends `BuildConfig` (for eC JAR)
-- `kq` extends `BlockColorMapper` (for Rs, Ss JARs)
-- `mq` extends `ComponentTypeMapper` (for Ts, BlockPane JARs)
-- `wq` extends `SketchwarePaths` (for multiple JARs)
-- `kv` extends `FirebasePreviewView` (for jv JAR)
-- `Gx` extends `ClassInfo` (for eC, Ts, BlockPane JARs - must remain concrete type in bean classes)
-- `MB` extends `BaseValidator` (for OB, PB, QB, WB JARs)
-- `wB`: fully reverted (GB JAR calls wB.a())
+## All Obfuscated Names Resolved
+No remaining obfuscated class names in `a.a.a` package.

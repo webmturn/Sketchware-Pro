@@ -20,12 +20,12 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import a.a.a.GB;
+import a.a.a.DeviceUtil;
 import a.a.a.UniqueNameValidator;
-import a.a.a.Pp;
-import a.a.a.Rs;
-import a.a.a.Ss;
-import a.a.a.Ts;
+import a.a.a.MoreBlockCollectionManager;
+import a.a.a.BlockView;
+import a.a.a.FieldBlockView;
+import a.a.a.BaseBlockView;
 import a.a.a.SketchToast;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.BlockUtil;
@@ -43,11 +43,11 @@ public class ShowMoreBlockCollectionActivity extends BaseAppCompatActivity imple
     private ManageCollectionShowBlockBinding binding;
 
     private void addBlocks(ArrayList<BlockBean> blockBeans) {
-        HashMap<Integer, Rs> hashMap = new HashMap<>();
+        HashMap<Integer, BlockView> hashMap = new HashMap<>();
 
         boolean isFirstBlock = true;
         for (BlockBean blockBean : blockBeans) {
-            Rs block = getBlock(blockBean);
+            BlockView block = getBlock(blockBean);
             int blockId = (Integer) block.getTag();
             hashMap.put(blockId, block);
 
@@ -61,23 +61,23 @@ public class ShowMoreBlockCollectionActivity extends BaseAppCompatActivity imple
         }
 
         for (BlockBean blockBean : blockBeans) {
-            Rs block = hashMap.get(Integer.valueOf(blockBean.id));
+            BlockView block = hashMap.get(Integer.valueOf(blockBean.id));
 
             if (block != null) {
                 int subStack1Id = blockBean.subStack1;
-                Rs subStack1;
+                BlockView subStack1;
                 if (subStack1Id >= 0 && (subStack1 = hashMap.get(subStack1Id)) != null) {
                     block.e(subStack1);
                 }
 
                 int subStack2Id = blockBean.subStack2;
-                Rs subStack2;
+                BlockView subStack2;
                 if (subStack2Id >= 0 && (subStack2 = hashMap.get(subStack2Id)) != null) {
                     block.f(subStack2);
                 }
 
                 int nextBlockId = blockBean.nextBlock;
-                Rs nextBlock;
+                BlockView nextBlock;
                 if (nextBlockId >= 0 && (nextBlock = hashMap.get(nextBlockId)) != null) {
                     block.b(nextBlock);
                 }
@@ -88,12 +88,12 @@ public class ShowMoreBlockCollectionActivity extends BaseAppCompatActivity imple
 
                     if (parameter != null && !parameter.isEmpty()) {
                         if (parameter.charAt(0) == '@') {
-                            Rs parameterBlock = hashMap.get(Integer.valueOf(parameter.substring(1)));
+                            BlockView parameterBlock = hashMap.get(Integer.valueOf(parameter.substring(1)));
                             if (parameterBlock != null) {
-                                block.a((Ts) block.V.get(i), parameterBlock);
+                                block.a((BaseBlockView) block.V.get(i), parameterBlock);
                             }
                         } else {
-                            ((Ss) block.V.get(i)).setArgValue(parameter);
+                            ((FieldBlockView) block.V.get(i)).setArgValue(parameter);
                             block.m();
                         }
                     }
@@ -116,14 +116,14 @@ public class ShowMoreBlockCollectionActivity extends BaseAppCompatActivity imple
         binding.layoutButton.measure(0, 0);
         binding.editor.setLayoutParams(new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                ((height - GB.a((Context) this)) - GB.f(this)) - binding.layoutButton.getMeasuredHeight()));
+                ((height - DeviceUtil.a((Context) this)) - DeviceUtil.f(this)) - binding.layoutButton.getMeasuredHeight()));
         binding.editor.requestLayout();
     }
 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.save_button && moreBlockNameValidator.isValid()) {
-            Pp.h().a(moreBlockName, Helper.getText(moreBlockNameEditorText), true);
+            MoreBlockCollectionManager.h().a(moreBlockName, Helper.getText(moreBlockNameEditorText), true);
             SketchToast.toast(getApplicationContext(), Helper.getResString(R.string.design_manager_message_edit_complete), SketchToast.TOAST_NORMAL).show();
             finish();
         }
@@ -158,7 +158,7 @@ public class ShowMoreBlockCollectionActivity extends BaseAppCompatActivity imple
 
         binding.saveButton.setText(Helper.getResString(R.string.common_word_save));
         binding.saveButton.setOnClickListener(this);
-        moreBlockNameValidator = new UniqueNameValidator(this, binding.edInput.getTextInputLayout(), Pp.h().g());
+        moreBlockNameValidator = new UniqueNameValidator(this, binding.edInput.getTextInputLayout(), MoreBlockCollectionManager.h().g());
     }
 
     @Override
@@ -171,7 +171,7 @@ public class ShowMoreBlockCollectionActivity extends BaseAppCompatActivity imple
     public void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
-        MoreBlockCollectionBean moreBlock = Pp.h().a(moreBlockName);
+        MoreBlockCollectionBean moreBlock = MoreBlockCollectionManager.h().a(moreBlockName);
         if (moreBlock != null) {
             addHeaderBlock(moreBlock.spec);
             addBlocks(moreBlock.blocks);
@@ -182,8 +182,8 @@ public class ShowMoreBlockCollectionActivity extends BaseAppCompatActivity imple
         }
     }
 
-    private Rs getBlock(BlockBean blockBean) {
-        return new Rs(this, Integer.parseInt(blockBean.id), blockBean.spec, blockBean.type, blockBean.typeName, blockBean.opCode);
+    private BlockView getBlock(BlockBean blockBean) {
+        return new BlockView(this, Integer.parseInt(blockBean.id), blockBean.spec, blockBean.type, blockBean.typeName, blockBean.opCode);
     }
 
     @Override

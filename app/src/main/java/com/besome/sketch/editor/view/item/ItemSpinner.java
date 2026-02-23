@@ -11,7 +11,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 import com.besome.sketch.beans.ViewBean;
 import com.besome.sketch.editor.view.ItemView;
 
-import a.a.a.wB;
+import a.a.a.ViewUtil;
 
 public class ItemSpinner extends AppCompatTextView implements ItemView {
 
@@ -34,7 +34,7 @@ public class ItemSpinner extends AppCompatTextView implements ItemView {
         setGravity(Gravity.CENTER);
         setTypeface(null, Typeface.BOLD);
         setText("Spinner");
-        dip = wB.a(context, 1.0f);
+        dip = ViewUtil.a(context, 1.0f);
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(0x9599d5d0);
         setDrawingCacheEnabled(true);

@@ -73,11 +73,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import a.a.a.ClassInfo;
-import a.a.a.kC;
+import a.a.a.ResourceManager;
 import a.a.a.ProjectListManager;
-import a.a.a.wB;
+import a.a.a.ViewUtil;
 import a.a.a.SketchwarePaths;
-import a.a.a.yB;
+import a.a.a.MapValueHelper;
 import a.a.a.NinePatchDecoder;
 import dev.aldi.sayuti.editor.view.item.ItemBadgeView;
 import dev.aldi.sayuti.editor.view.item.ItemCircleImageView;
@@ -124,7 +124,7 @@ public class ViewPane extends RelativeLayout {
     private ArrayList<ViewInfo> viewInfos = new ArrayList<>();
     private ViewInfo viewInfo;
     private TextView highlightedTextView;
-    private kC resourcesManager;
+    private ResourceManager resourcesManager;
     private String sc_id;
     private SvgUtils svgUtils;
     private ColorsEditorManager colorsEditorManager;
@@ -148,7 +148,7 @@ public class ViewPane extends RelativeLayout {
         }
     }
 
-    public void setResourceManager(kC resourcesManager) {
+    public void setResourceManager(ResourceManager resourcesManager) {
         this.resourcesManager = resourcesManager;
     }
 
@@ -359,10 +359,10 @@ public class ViewPane extends RelativeLayout {
             LayoutParams layoutParams = new LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParams.leftMargin = (int) wB.a(getContext(), (float) viewBean.layout.marginLeft);
-            layoutParams.topMargin = (int) wB.a(getContext(), (float) viewBean.layout.marginTop);
-            layoutParams.rightMargin = (int) wB.a(getContext(), (float) viewBean.layout.marginRight);
-            layoutParams.bottomMargin = (int) wB.a(getContext(), (float) viewBean.layout.marginBottom);
+            layoutParams.leftMargin = (int) ViewUtil.a(getContext(), (float) viewBean.layout.marginLeft);
+            layoutParams.topMargin = (int) ViewUtil.a(getContext(), (float) viewBean.layout.marginTop);
+            layoutParams.rightMargin = (int) ViewUtil.a(getContext(), (float) viewBean.layout.marginRight);
+            layoutParams.bottomMargin = (int) ViewUtil.a(getContext(), (float) viewBean.layout.marginBottom);
             int layoutGravity = viewBean.layout.layoutGravity;
             if ((layoutGravity & Gravity.LEFT) == Gravity.LEFT) {
                 layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
@@ -443,8 +443,8 @@ public class ViewPane extends RelativeLayout {
             }
             view.setRotation(viewBean.image.rotate);
             view.setAlpha(viewBean.alpha);
-            view.setTranslationX(wB.a(getContext(), viewBean.translationX));
-            view.setTranslationY(wB.a(getContext(), viewBean.translationY));
+            view.setTranslationX(ViewUtil.a(getContext(), viewBean.translationX));
+            view.setTranslationY(ViewUtil.a(getContext(), viewBean.translationY));
             view.setScaleX(viewBean.scaleX);
             view.setScaleY(viewBean.scaleY);
             view.setVisibility(View.VISIBLE);
@@ -453,8 +453,8 @@ public class ViewPane extends RelativeLayout {
         updateLayout(view, viewBean);
         view.setRotation(viewBean.image.rotate);
         view.setAlpha(viewBean.alpha);
-        view.setTranslationX(wB.a(getContext(), viewBean.translationX));
-        view.setTranslationY(wB.a(getContext(), viewBean.translationY));
+        view.setTranslationX(ViewUtil.a(getContext(), viewBean.translationX));
+        view.setTranslationY(ViewUtil.a(getContext(), viewBean.translationY));
         view.setScaleX(viewBean.scaleX);
         view.setScaleY(viewBean.scaleY);
         String backgroundResource = viewBean.layout.backgroundResource;
@@ -1031,16 +1031,16 @@ public class ViewPane extends RelativeLayout {
         int width = layoutBean.width;
         int height = layoutBean.height;
         if (width > 0) {
-            width = (int) wB.a(getContext(), (float) viewBean.layout.width);
+            width = (int) ViewUtil.a(getContext(), (float) viewBean.layout.width);
         }
         if (height > 0) {
-            height = (int) wB.a(getContext(), (float) viewBean.layout.height);
+            height = (int) ViewUtil.a(getContext(), (float) viewBean.layout.height);
         }
 
-        int leftMargin = (int) wB.a(getContext(), (float) viewBean.layout.marginLeft);
-        int topMargin = (int) wB.a(getContext(), (float) viewBean.layout.marginTop);
-        int rightMargin = (int) wB.a(getContext(), (float) viewBean.layout.marginRight);
-        int bottomMargin = (int) wB.a(getContext(), (float) viewBean.layout.marginBottom);
+        int leftMargin = (int) ViewUtil.a(getContext(), (float) viewBean.layout.marginLeft);
+        int topMargin = (int) ViewUtil.a(getContext(), (float) viewBean.layout.marginTop);
+        int rightMargin = (int) ViewUtil.a(getContext(), (float) viewBean.layout.marginRight);
+        int bottomMargin = (int) ViewUtil.a(getContext(), (float) viewBean.layout.marginBottom);
 
         if (viewBean.layout.backgroundResColor == null) {
             view.setBackgroundColor(viewBean.layout.backgroundColor);
@@ -1313,7 +1313,7 @@ public class ViewPane extends RelativeLayout {
         stringsEditorManager.convertXmlStringsToListMap(FileUtil.readFileIfExist(filePath), stringsListMap);
 
         if (key.equals("@string/app_name") && !stringsEditorManager.isXmlStringsExist(stringsListMap, "app_name")) {
-            return yB.c(ProjectListManager.getProjectById(sc_id), "my_app_name");
+            return MapValueHelper.c(ProjectListManager.getProjectById(sc_id), "my_app_name");
         }
 
         for (HashMap<String, Object> map : stringsListMap) {

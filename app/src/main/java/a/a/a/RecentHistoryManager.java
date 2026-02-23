@@ -12,11 +12,11 @@ public class RecentHistoryManager {
   
   public HashMap<String, ArrayList<String>> recentMap;
   
-  public DB database;
+  public SharedPrefsHelper database;
   
   public static RecentHistoryManager getInstance() {
     if (instance == null) {
-      synchronized (xB.class) {
+      synchronized (StringResource.class) {
         if (instance == null) {
           instance = new RecentHistoryManager();
         }
@@ -34,7 +34,7 @@ public class RecentHistoryManager {
       this.recentMap = new HashMap<String, ArrayList<String>>(); 
     this.recentMap.clear();
     if (this.database == null)
-      this.database = new DB(paramContext, "P26"); 
+      this.database = new SharedPrefsHelper(paramContext, "P26"); 
   }
   
   public void addRecentItem(String paramString1, String paramString2) {

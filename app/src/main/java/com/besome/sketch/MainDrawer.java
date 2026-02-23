@@ -23,7 +23,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import pro.sketchware.activities.main.activities.MainActivity;
 
-import a.a.a.mB;
+import a.a.a.UIHelper;
 import dev.chrisbanes.insetter.Insetter;
 import dev.chrisbanes.insetter.Side;
 import mod.hilal.saif.activities.tools.AppSettings;
@@ -68,7 +68,7 @@ public class MainDrawer extends NavigationView {
     }
 
     private void initializeSocialLinks(@IdRes int id) {
-        if (!mB.a()) {
+        if (!UIHelper.a()) {
             @StringRes int url = -1;
             if (id == R.id.social_discord) {
                 url = R.string.link_discord_invite;

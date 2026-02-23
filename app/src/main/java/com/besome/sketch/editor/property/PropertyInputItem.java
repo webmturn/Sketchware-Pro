@@ -56,10 +56,10 @@ import a.a.a.NumberRangeValidator;
 import a.a.a.LengthRangeValidator;
 import a.a.a.jC;
 import a.a.a.ProjectListManager;
-import a.a.a.mB;
+import a.a.a.UIHelper;
 import a.a.a.BlockConstants;
-import a.a.a.wB;
-import a.a.a.yB;
+import a.a.a.ViewUtil;
+import a.a.a.MapValueHelper;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.activities.resourceseditor.components.utils.StringsEditorManager;
@@ -166,7 +166,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        if (!mB.a()) {
+        if (!UIHelper.a()) {
             switch (key) {
                 case "property_id" -> showViewIdDialog();
                 case "property_text", "property_hint" -> showTextInputDialog(9999, false);
@@ -465,7 +465,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
 
     private void initialize(Context context, boolean z) {
         this.context = context;
-        wB.a(context, this, R.layout.property_input_item);
+        ViewUtil.a(context, this, R.layout.property_input_item);
         tvName = findViewById(R.id.tv_name);
         tvValue = findViewById(R.id.tv_value);
         imgLeftIcon = findViewById(R.id.img_left_icon);
@@ -616,7 +616,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
                 filePath != null) {
             HashMap<String, Object> map = new HashMap<>();
             map.put("key", "app_name");
-            map.put("text", yB.c(ProjectListManager.getProjectById(sc_id), "my_app_name"));
+            map.put("text", MapValueHelper.c(ProjectListManager.getProjectById(sc_id), "my_app_name"));
             stringsListMap.add(0, map);
         }
     }

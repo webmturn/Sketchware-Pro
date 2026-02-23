@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.StringRes;
 
-import a.a.a.wB;
+import a.a.a.ViewUtil;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 
@@ -42,7 +42,7 @@ public class CollapsibleButton extends LinearLayout {
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.weight = 1.0f;
         setLayoutParams(layoutParams);
-        wB.a(context, this, R.layout.fr_logic_list_item_button);
+        ViewUtil.a(context, this, R.layout.fr_logic_list_item_button);
         icon = findViewById(R.id.icon);
         label = findViewById(R.id.name);
     }

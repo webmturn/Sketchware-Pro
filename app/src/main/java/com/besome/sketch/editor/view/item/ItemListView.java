@@ -13,7 +13,7 @@ import com.besome.sketch.editor.view.ItemView;
 
 import java.util.ArrayList;
 
-import a.a.a.wB;
+import a.a.a.ViewUtil;
 
 public class ItemListView extends ListView implements ItemView {
 
@@ -36,9 +36,9 @@ public class ItemListView extends ListView implements ItemView {
     }
 
     public void initialize(Context context) {
-        dip = wB.a(context, 1.0f);
+        dip = ViewUtil.a(context, 1.0f);
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setStrokeWidth(wB.a(getContext(), 2.0f));
+        paint.setStrokeWidth(ViewUtil.a(getContext(), 2.0f));
         setDrawingCacheEnabled(true);
         exampleData.add("List item 1");
         exampleData.add("List item 2");

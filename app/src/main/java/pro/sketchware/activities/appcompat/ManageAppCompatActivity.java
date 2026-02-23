@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Objects;
 
 import a.a.a.ProjectDataManager;
-import a.a.a.mB;
+import a.a.a.UIHelper;
 import dev.aldi.sayuti.editor.injection.AppCompatInjection;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
@@ -68,7 +68,7 @@ public class ManageAppCompatActivity extends BaseAppCompatActivity {
         UI.addSystemWindowInsetToPadding(binding.list, false, false, false, true);
         binding.toolbar.setNavigationOnClickListener(
                 v -> {
-                    if (!mB.a()) {
+                    if (!UIHelper.a()) {
                         getOnBackPressedDispatcher().onBackPressed();
                     }
                 });

@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import a.a.a.eC;
+import a.a.a.ProjectDataStore;
 import a.a.a.ProjectDataManager;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
@@ -165,12 +165,12 @@ public class StringsAdapter extends RecyclerView.Adapter<StringsAdapter.ViewHold
         }
 
         String projectScId = sc_id;
-        eC projectDataManager = ProjectDataManager.getProjectDataManager(projectScId);
+        ProjectDataStore projectDataManager = ProjectDataManager.getProjectDataManager(projectScId);
 
         return isStringUsedInJavaFiles(projectScId, projectDataManager, key) || isStringUsedInXmlFiles(projectScId, projectDataManager, key);
     }
 
-    private boolean isStringUsedInJavaFiles(String projectScId, eC projectDataManager, String key) {
+    private boolean isStringUsedInJavaFiles(String projectScId, ProjectDataStore projectDataManager, String key) {
         for (String javaFileName : getAllJavaFileNames(projectScId)) {
             for (Map.Entry<String, ArrayList<BlockBean>> entry : projectDataManager.b(javaFileName).entrySet()) {
                 for (BlockBean block : entry.getValue()) {
@@ -183,7 +183,7 @@ public class StringsAdapter extends RecyclerView.Adapter<StringsAdapter.ViewHold
         return false;
     }
 
-    private boolean isStringUsedInXmlFiles(String projectScId, eC projectDataManager, String key) {
+    private boolean isStringUsedInXmlFiles(String projectScId, ProjectDataStore projectDataManager, String key) {
         for (String xmlFileName : getAllXmlFileNames(projectScId)) {
             for (ViewBean view : projectDataManager.d(xmlFileName)) {
                 if (view.text.text.equals("@string/" + key) || view.text.hint.equals("@string/" + key)) {

@@ -11,8 +11,8 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import a.a.a.Ss;
-import a.a.a.eC;
+import a.a.a.FieldBlockView;
+import a.a.a.ProjectDataStore;
 import a.a.a.ProjectDataManager;
 import a.a.a.BlockConstants;
 import a.a.a.SketchwarePaths;
@@ -25,7 +25,7 @@ import pro.sketchware.utility.FileUtil;
 public class DefaultExtraMenuBean {
 
     private final LogicEditorActivity logicEditor;
-    private final eC projectDataManager;
+    private final ProjectDataStore projectDataManager;
     private final String sc_id;
 
     public DefaultExtraMenuBean(LogicEditorActivity logicEditor) {
@@ -57,7 +57,7 @@ public class DefaultExtraMenuBean {
         };
     }
 
-    public Pair<String, ArrayList<String>> getMenu(Ss menu) {
+    public Pair<String, ArrayList<String>> getMenu(FieldBlockView menu) {
         var javaName = logicEditor.M.getJavaName();
         var menuName = menu.getMenuName();
         ArrayList<String> menus = new ArrayList<>();

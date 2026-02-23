@@ -40,7 +40,7 @@ import java.util.concurrent.Executors;
 import java.util.stream.IntStream;
 
 import a.a.a.PermissionFragment;
-import a.a.a.DB;
+import a.a.a.SharedPrefsHelper;
 import a.a.a.ProjectListManager;
 import dev.chrisbanes.insetter.Insetter;
 import mod.hey.studios.project.ProjectTracker;
@@ -70,7 +70,7 @@ public class ProjectsFragment extends PermissionFragment {
             }
         }
     });
-    private DB preference;
+    private SharedPrefsHelper preference;
     private SearchView projectsSearchView;
     private MenuProvider menuProvider;
 
@@ -142,7 +142,7 @@ public class ProjectsFragment extends PermissionFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         executorService = Executors.newSingleThreadExecutor();
-        preference = new DB(requireContext(), "project");
+        preference = new SharedPrefsHelper(requireContext(), "project");
 
         ExtendedFloatingActionButton fab = requireActivity().findViewById(R.id.create_new_project);
         fab.setOnClickListener((v) -> toProjectSettingsActivity());
