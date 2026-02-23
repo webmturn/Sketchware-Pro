@@ -355,7 +355,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
                     viewBean.copy(movedData);
                     viewEditor.a(viewEditor.b(viewBean, false), false);
                 } else if (actionType == HistoryViewBean.ACTION_TYPE_OVERRIDE) {
-                    ProjectDataManager.getProjectDataManager(sc_id).c.put(projectFileBean.getXmlName(), historyViewBean.getAddedData());
+                    ProjectDataManager.getProjectDataManager(sc_id).viewMap.put(projectFileBean.getXmlName(), historyViewBean.getAddedData());
                     refreshAllViews();
                 }
             }
@@ -424,7 +424,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
                     viewBean.preParentType = movedData.parentType;
                     viewEditor.a(viewEditor.b(viewBean, false), false);
                 } else if (actionType == HistoryViewBean.ACTION_TYPE_OVERRIDE) {
-                    ProjectDataManager.getProjectDataManager(sc_id).c.put(projectFileBean.getXmlName(), historyViewBean.getRemovedData());
+                    ProjectDataManager.getProjectDataManager(sc_id).viewMap.put(projectFileBean.getXmlName(), historyViewBean.getRemovedData());
                     refreshAllViews();
                 }
             }

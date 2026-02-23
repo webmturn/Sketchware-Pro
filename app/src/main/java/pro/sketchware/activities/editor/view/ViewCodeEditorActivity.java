@@ -265,7 +265,7 @@ public class ViewCodeEditorActivity extends BaseAppCompatActivity {
             viewHistoryMgr.trimFutureHistory(filename);
             viewHistoryMgr.addHistoryEntry(filename, bean);
             // Replace the view beans with the parsed layout
-            ProjectDataManager.getProjectDataManager(sc_id).c.put(filename, parsedLayout);
+            ProjectDataManager.getProjectDataManager(sc_id).viewMap.put(filename, parsedLayout);
             setResult(RESULT_OK);
         } catch (Exception e) {
             SketchwareUtil.toastError(e.toString());

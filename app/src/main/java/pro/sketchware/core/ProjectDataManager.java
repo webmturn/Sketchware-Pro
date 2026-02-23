@@ -102,7 +102,7 @@ public class ProjectDataManager {
     }
 
     public static synchronized ProjectDataStore a(String str, boolean z) {
-        if (a != null && !str.equals(a.a)) {
+        if (a != null && !str.equals(a.projectId)) {
             b();
         }
         if (a == null) {
