@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 
-import a.a.a.ReflectiveToString;
+import pro.sketchware.core.ReflectiveToString;
 
 public class HistoryBlockBean extends ReflectiveToString {
     public static final int ACTION_TYPE_ADD = 0;

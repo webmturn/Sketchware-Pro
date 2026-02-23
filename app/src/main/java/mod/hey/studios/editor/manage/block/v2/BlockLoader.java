@@ -193,7 +193,7 @@ public class BlockLoader {
     }
 
     /**
-     * Still used in {@link a.a.a.BlockView}, so it must exist (for now).
+     * Still used in {@link pro.sketchware.core.BlockView}, so it must exist (for now).
      */
     public static void log(String message) {
         LogUtil.d("BlockLoader", message);

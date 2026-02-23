@@ -16,11 +16,11 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 
 import java.lang.ref.WeakReference;
 
-import a.a.a.BaseAsyncTask;
-import a.a.a.FontCollectionManager;
-import a.a.a.SoundImportFragment;
-import a.a.a.UIHelper;
-import a.a.a.SoundListFragment;
+import pro.sketchware.core.BaseAsyncTask;
+import pro.sketchware.core.FontCollectionManager;
+import pro.sketchware.core.SoundImportFragment;
+import pro.sketchware.core.UIHelper;
+import pro.sketchware.core.SoundListFragment;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageSoundBinding;
 

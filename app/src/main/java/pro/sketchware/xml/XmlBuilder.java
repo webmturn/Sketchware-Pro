@@ -2,7 +2,7 @@ package pro.sketchware.xml;
 
 import java.util.ArrayList;
 
-import a.a.a.ActivityCodeGenerator;
+import pro.sketchware.core.ActivityCodeGenerator;
 
 public class XmlBuilder {
 

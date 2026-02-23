@@ -19,11 +19,11 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 
 import java.lang.ref.WeakReference;
 
-import a.a.a.BaseAsyncTask;
-import a.a.a.SoundCollectionManager;
-import a.a.a.ImageCollectionFragment;
-import a.a.a.UIHelper;
-import a.a.a.ImageListFragment;
+import pro.sketchware.core.BaseAsyncTask;
+import pro.sketchware.core.SoundCollectionManager;
+import pro.sketchware.core.ImageCollectionFragment;
+import pro.sketchware.core.UIHelper;
+import pro.sketchware.core.ImageListFragment;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageImageBinding;
 

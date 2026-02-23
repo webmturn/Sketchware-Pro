@@ -32,12 +32,12 @@ import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import a.a.a.ActivityCodeGenerator;
-import a.a.a.ProjectFileManager;
-import a.a.a.ProjectDataManager;
-import a.a.a.UIHelper;
-import a.a.a.SketchwarePaths;
-import a.a.a.ProjectFilePaths;
+import pro.sketchware.core.ActivityCodeGenerator;
+import pro.sketchware.core.ProjectFileManager;
+import pro.sketchware.core.ProjectDataManager;
+import pro.sketchware.core.UIHelper;
+import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.ProjectFilePaths;
 import io.github.rosemoe.sora.widget.CodeEditor;
 import io.github.rosemoe.sora.widget.component.Magnifier;
 import mod.hey.studios.project.ProjectSettings;

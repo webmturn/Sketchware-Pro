@@ -2,7 +2,7 @@ package dev.aldi.sayuti.editor.injection;
 
 import java.util.ArrayList;
 
-import a.a.a.BuildConfig;
+import pro.sketchware.core.BuildConfig;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.xml.XmlBuilder;
 

@@ -16,8 +16,8 @@ import com.besome.sketch.beans.ProjectFileBean;
 import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import a.a.a.ProjectDataManager;
-import a.a.a.UIHelper;
+import pro.sketchware.core.ProjectDataManager;
+import pro.sketchware.core.UIHelper;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 

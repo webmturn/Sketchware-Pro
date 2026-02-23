@@ -20,7 +20,7 @@ import com.besome.sketch.editor.view.ItemView;
 import java.util.ArrayList;
 import java.util.List;
 
-import a.a.a.ViewUtil;
+import pro.sketchware.core.ViewUtil;
 import pro.sketchware.utility.PropertiesUtil;
 
 public class ItemRecyclerView extends RecyclerView implements ItemView, EditorListItem {

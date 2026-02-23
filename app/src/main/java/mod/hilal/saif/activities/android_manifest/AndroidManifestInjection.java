@@ -26,9 +26,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-import a.a.a.ProjectDataManager;
-import a.a.a.ViewUtil;
-import a.a.a.ProjectFilePaths;
+import pro.sketchware.core.ProjectDataManager;
+import pro.sketchware.core.ViewUtil;
+import pro.sketchware.core.ProjectFilePaths;
 import mod.hey.studios.code.SrcCodeEditor;
 import mod.hey.studios.util.Helper;
 import mod.hilal.saif.android_manifest.AndroidManifestInjector;

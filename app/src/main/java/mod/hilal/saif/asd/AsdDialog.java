@@ -14,8 +14,8 @@ import android.view.Window;
 
 import com.besome.sketch.editor.LogicEditorActivity;
 
-import a.a.a.ComponentCodeGenerator;
-import a.a.a.FieldBlockView;
+import pro.sketchware.core.ComponentCodeGenerator;
+import pro.sketchware.core.FieldBlockView;
 import io.github.rosemoe.sora.widget.component.EditorAutoCompletion;
 import mod.hey.studios.code.SrcCodeEditor;
 import mod.hey.studios.util.Helper;

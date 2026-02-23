@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 import com.besome.sketch.beans.ViewBean;
 import com.besome.sketch.editor.view.ItemView;
 
-import a.a.a.ViewUtil;
+import pro.sketchware.core.ViewUtil;
 import pro.sketchware.R;
 
 public class ItemProgressBar extends LinearLayout implements ItemView {

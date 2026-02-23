@@ -9,9 +9,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import a.a.a.BuiltInLibrary;
-import a.a.a.ProjectBuilder;
-import a.a.a.SimpleException;
+import pro.sketchware.core.BuiltInLibrary;
+import pro.sketchware.core.ProjectBuilder;
+import pro.sketchware.core.SimpleException;
 import mod.agus.jcoderz.editor.manage.library.locallibrary.ManageLocalLibrary;
 import mod.hey.studios.build.BuildSettings;
 import mod.hey.studios.project.ProjectSettings;
@@ -249,7 +249,7 @@ public class ResourceCompiler {
             args.add("--java");
             args.add(buildHelper.projectFilePaths.rJavaDirectoryPath);
 
-            /* Output AAPT2's generated ProGuard rules to a.a.a.ProjectFilePaths.aapt_rules */
+            /* Output AAPT2's generated ProGuard rules to pro.sketchware.core.ProjectFilePaths.aapt_rules */
             args.add("--proguard");
             args.add(buildHelper.projectFilePaths.proguardAaptRules);
 
@@ -265,7 +265,7 @@ public class ResourceCompiler {
                 args.add(extraPackages);
             }
 
-            /* Output the APK only with resources to a.a.a.ProjectFilePaths.C */
+            /* Output the APK only with resources to pro.sketchware.core.ProjectFilePaths.C */
             args.add("-o");
             args.add(buildHelper.projectFilePaths.resourcesApkPath);
 

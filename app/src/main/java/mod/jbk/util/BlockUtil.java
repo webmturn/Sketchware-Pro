@@ -5,10 +5,10 @@ import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 
-import a.a.a.FormatUtil;
-import a.a.a.BlockView;
-import a.a.a.BaseBlockView;
-import a.a.a.BlockColorMapper;
+import pro.sketchware.core.FormatUtil;
+import pro.sketchware.core.BlockView;
+import pro.sketchware.core.BaseBlockView;
+import pro.sketchware.core.BlockColorMapper;
 import mod.hey.studios.moreblock.ReturnMoreblockManager;
 
 public class BlockUtil {

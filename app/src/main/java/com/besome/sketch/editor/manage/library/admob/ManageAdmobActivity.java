@@ -30,10 +30,10 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 
-import a.a.a.SharedPrefsHelper;
-import a.a.a.DeviceUtil;
-import a.a.a.SketchToast;
-import a.a.a.UIHelper;
+import pro.sketchware.core.SharedPrefsHelper;
+import pro.sketchware.core.DeviceUtil;
+import pro.sketchware.core.SketchToast;
+import pro.sketchware.core.UIHelper;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageLibraryManageAdmobBinding;

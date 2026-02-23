@@ -30,12 +30,12 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import a.a.a.LibraryManager;
-import a.a.a.ProjectListManager;
-import a.a.a.UIHelper;
-import a.a.a.ViewUtil;
-import a.a.a.SketchwarePaths;
-import a.a.a.MapValueHelper;
+import pro.sketchware.core.LibraryManager;
+import pro.sketchware.core.ProjectListManager;
+import pro.sketchware.core.UIHelper;
+import pro.sketchware.core.ViewUtil;
+import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.MapValueHelper;
 import pro.sketchware.R;
 
 public class LibrarySettingsImporter {

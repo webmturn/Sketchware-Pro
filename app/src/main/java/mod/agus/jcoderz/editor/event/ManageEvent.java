@@ -2,8 +2,8 @@ package mod.agus.jcoderz.editor.event;
 
 import java.util.ArrayList;
 
-import a.a.a.ClassInfo;
-import a.a.a.ComponentCodeGenerator;
+import pro.sketchware.core.ClassInfo;
+import pro.sketchware.core.ComponentCodeGenerator;
 import mod.hilal.saif.events.EventsHandler;
 import pro.sketchware.R;
 import pro.sketchware.blocks.generator.components.analyzers.BlockReturnAnalyzer;
@@ -11,7 +11,7 @@ import pro.sketchware.blocks.generator.components.analyzers.BlockReturnAnalyzer;
 public class ManageEvent {
 
     /**
-     * Used in {@link a.a.a.oq#getEventsForClass(ClassInfo)} to retrieve extra Events of Components.
+     * Used in {@link pro.sketchware.core.oq#getEventsForClass(ClassInfo)} to retrieve extra Events of Components.
      */
     public static void addExtraEvents(ClassInfo gx, ArrayList<String> events) {
         if (gx.matchesType("RatingBar")) {
@@ -76,7 +76,7 @@ public class ManageEvent {
     }
 
     /**
-     * Used in {@link a.a.a.oq#getListenersForClass(ClassInfo)}
+     * Used in {@link pro.sketchware.core.oq#getListenersForClass(ClassInfo)}
      * to get extra listeners for Components and Widgets.
      */
     public static void addExtraListeners(ClassInfo gx, ArrayList<String> listeners) {
@@ -156,7 +156,7 @@ public class ManageEvent {
     }
 
     /**
-     * Used in {@link a.a.a.oq#getEventsForListener(String)} to get extra listeners' Events.
+     * Used in {@link pro.sketchware.core.oq#getEventsForListener(String)} to get extra listeners' Events.
      */
     public static void addEventsForListener(String eventName, ArrayList<String> list) {
         switch (eventName) {
@@ -663,7 +663,7 @@ public class ManageEvent {
     }
 
     /**
-     * @return Code of extra listeners, used in {@link a.a.a.ComponentCodeGenerator#getListenerCode(String, String, String)}
+     * @return Code of extra listeners, used in {@link pro.sketchware.core.ComponentCodeGenerator#getListenerCode(String, String, String)}
      */
     public static String g(String listenerName, String targetId, String listenerLogic) {
         return switch (listenerName) {

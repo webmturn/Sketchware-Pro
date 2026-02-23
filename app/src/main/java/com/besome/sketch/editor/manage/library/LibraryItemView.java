@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.besome.sketch.beans.ProjectLibraryBean;
 import com.google.android.material.divider.MaterialDivider;
 
-import a.a.a.ViewUtil;
+import pro.sketchware.core.ViewUtil;
 import pro.sketchware.R;
 import pro.sketchware.utility.ThemeUtils;
 

@@ -6,7 +6,7 @@ import android.text.util.Linkify;
 
 import com.besome.sketch.lib.base.BaseAppCompatActivity;
 
-import a.a.a.EncryptedFileUtil;
+import pro.sketchware.core.EncryptedFileUtil;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.databinding.ActivityOssLibrariesBinding;
 

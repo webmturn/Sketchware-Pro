@@ -10,8 +10,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import a.a.a.UIHelper;
-import a.a.a.ViewUtil;
+import pro.sketchware.core.UIHelper;
+import pro.sketchware.core.ViewUtil;
 import pro.sketchware.R;
 
 public class BaseDialogActivity extends BaseAppCompatActivity {

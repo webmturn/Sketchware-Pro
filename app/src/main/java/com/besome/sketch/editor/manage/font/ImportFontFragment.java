@@ -29,9 +29,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-import a.a.a.ProjectDataManager;
-import a.a.a.EncryptedFileUtil;
-import a.a.a.BaseFragment;
+import pro.sketchware.core.ProjectDataManager;
+import pro.sketchware.core.EncryptedFileUtil;
+import pro.sketchware.core.BaseFragment;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.FrManageFontListBinding;

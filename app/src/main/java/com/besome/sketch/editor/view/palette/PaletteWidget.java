@@ -15,7 +15,7 @@ import com.google.android.material.color.MaterialColors;
 
 import java.util.HashMap;
 
-import a.a.a.ViewUtil;
+import pro.sketchware.core.ViewUtil;
 import dev.aldi.sayuti.editor.view.palette.IconBadgeView;
 import dev.aldi.sayuti.editor.view.palette.IconBottomNavigationView;
 import dev.aldi.sayuti.editor.view.palette.IconCardView;

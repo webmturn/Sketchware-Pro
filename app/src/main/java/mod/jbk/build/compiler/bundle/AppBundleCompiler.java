@@ -19,9 +19,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import a.a.a.ProjectBuilder;
-import a.a.a.ProjectFilePaths;
-import a.a.a.SimpleException;
+import pro.sketchware.core.ProjectBuilder;
+import pro.sketchware.core.ProjectFilePaths;
+import pro.sketchware.core.SimpleException;
 import mod.agus.jcoderz.editor.manage.library.locallibrary.ManageLocalLibrary;
 import mod.jbk.build.BuiltInLibraries;
 import mod.jbk.util.LogUtil;

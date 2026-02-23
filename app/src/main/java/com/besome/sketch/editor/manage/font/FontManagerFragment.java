@@ -22,10 +22,10 @@ import com.besome.sketch.beans.ProjectResourceBean;
 import java.io.File;
 import java.util.ArrayList;
 
-import a.a.a.ImageCollectionManager;
-import a.a.a.EncryptedFileUtil;
-import a.a.a.BaseFragment;
-import a.a.a.SketchwarePaths;
+import pro.sketchware.core.ImageCollectionManager;
+import pro.sketchware.core.EncryptedFileUtil;
+import pro.sketchware.core.BaseFragment;
+import pro.sketchware.core.SketchwarePaths;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.FrManageFontListBinding;

@@ -10,9 +10,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import a.a.a.ZipUtil;
-import a.a.a.ProjectBuilder;
-import a.a.a.EncryptedFileUtil;
+import pro.sketchware.core.ZipUtil;
+import pro.sketchware.core.ProjectBuilder;
+import pro.sketchware.core.EncryptedFileUtil;
 import pro.sketchware.SketchApplication;
 
 public class BuiltInLibraries {
@@ -515,7 +515,7 @@ public class BuiltInLibraries {
      * @throws IllegalArgumentException Thrown if the specified library doesn't have any assets.
      */
     public static File getLibraryAssets(String libraryName) {
-        a.a.a.BuiltInLibrary library = new a.a.a.BuiltInLibrary(libraryName);
+        pro.sketchware.core.BuiltInLibrary library = new pro.sketchware.core.BuiltInLibrary(libraryName);
 
         if (library.hasAssets()) {
             return new File(EXTRACTED_BUILT_IN_LIBRARIES_PATH, libraryName + File.separator + "assets");
@@ -532,7 +532,7 @@ public class BuiltInLibraries {
     }
 
     public static File getLibraryResources(String libraryName) {
-        a.a.a.BuiltInLibrary library = new a.a.a.BuiltInLibrary(libraryName);
+        pro.sketchware.core.BuiltInLibrary library = new pro.sketchware.core.BuiltInLibrary(libraryName);
 
         if (library.hasResources()) {
             return new File(EXTRACTED_BUILT_IN_LIBRARIES_PATH, libraryName + File.separator + "res");

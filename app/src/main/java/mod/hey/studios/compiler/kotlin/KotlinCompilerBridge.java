@@ -2,8 +2,8 @@ package mod.hey.studios.compiler.kotlin;
 
 import java.io.File;
 
-import a.a.a.ProjectBuilder;
-import a.a.a.ProjectFilePaths;
+import pro.sketchware.core.ProjectBuilder;
+import pro.sketchware.core.ProjectFilePaths;
 import mod.jbk.build.BuildProgressReceiver;
 import mod.jbk.build.BuiltInLibraries;
 import pro.sketchware.util.library.BuiltInLibraryManager;

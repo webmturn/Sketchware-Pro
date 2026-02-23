@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Objects;
 
 
-import a.a.a.MapValueHelper;
+import pro.sketchware.core.MapValueHelper;
 
 public class ProjectComparator implements Comparator<HashMap<String, Object>> {
 

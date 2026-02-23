@@ -11,7 +11,7 @@ import com.besome.sketch.beans.ViewBean;
 import com.besome.sketch.editor.view.ItemView;
 import com.besome.sketch.editor.view.ScrollContainer;
 
-import a.a.a.ViewUtil;
+import pro.sketchware.core.ViewUtil;
 
 public class ItemLinearLayout extends LinearLayout implements ItemView, ScrollContainer {
 

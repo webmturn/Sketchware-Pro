@@ -8,7 +8,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Locale;
 
-import a.a.a.BaseValidator;
+import pro.sketchware.core.BaseValidator;
 
 public class MinMaxInputValidator extends BaseValidator {
     public int minValue;

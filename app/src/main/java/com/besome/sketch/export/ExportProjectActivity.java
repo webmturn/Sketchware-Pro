@@ -30,19 +30,19 @@ import java.util.concurrent.Executors;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import a.a.a.ZipUtil;
-import a.a.a.BaseAsyncTask;
-import a.a.a.ProjectBuilder;
-import a.a.a.ProjectDataStore;
-import a.a.a.ProjectFileManager;
-import a.a.a.LibraryManager;
-import a.a.a.ResourceManager;
-import a.a.a.ProjectListManager;
-import a.a.a.EncryptedFileUtil;
-import a.a.a.SketchwarePaths;
-import a.a.a.VersionCodeValidator;
-import a.a.a.MapValueHelper;
-import a.a.a.ProjectFilePaths;
+import pro.sketchware.core.ZipUtil;
+import pro.sketchware.core.BaseAsyncTask;
+import pro.sketchware.core.ProjectBuilder;
+import pro.sketchware.core.ProjectDataStore;
+import pro.sketchware.core.ProjectFileManager;
+import pro.sketchware.core.LibraryManager;
+import pro.sketchware.core.ResourceManager;
+import pro.sketchware.core.ProjectListManager;
+import pro.sketchware.core.EncryptedFileUtil;
+import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.VersionCodeValidator;
+import pro.sketchware.core.MapValueHelper;
+import pro.sketchware.core.ProjectFilePaths;
 import kellinwood.security.zipsigner.ZipSigner;
 import kellinwood.security.zipsigner.optional.CustomKeySigner;
 import kellinwood.security.zipsigner.optional.LoadKeystoreException;
@@ -445,9 +445,9 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
         }
 
         /**
-         * a.a.a.BaseAsyncTask's doWork() - runs in background thread
+         * pro.sketchware.core.BaseAsyncTask's doWork() - runs in background thread
          */
-        @Override // a.a.a.BaseAsyncTask
+        @Override // pro.sketchware.core.BaseAsyncTask
         public void doWork() {
             if (canceled) {
                 cancel(true);
@@ -736,9 +736,9 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
         }
 
         /**
-         * a.a.a.BaseAsyncTask's onSuccess() - called on the UI thread after successful doWork()
+         * pro.sketchware.core.BaseAsyncTask's onSuccess() - called on the UI thread after successful doWork()
          */
-        @Override // a.a.a.BaseAsyncTask
+        @Override // pro.sketchware.core.BaseAsyncTask
         public void onSuccess() {
             var act = activity.get();
             if (act == null) return;
@@ -762,10 +762,10 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
         }
 
         /**
-         * Called by a.a.a.BaseAsyncTask if doWork() returned a non-empty String,
+         * Called by pro.sketchware.core.BaseAsyncTask if doWork() returned a non-empty String,
          * ergo, an error occurred.
          */
-        @Override // a.a.a.BaseAsyncTask
+        @Override // pro.sketchware.core.BaseAsyncTask
         public void onError(String str) {
             var act = activity.get();
             if (act == null) return;

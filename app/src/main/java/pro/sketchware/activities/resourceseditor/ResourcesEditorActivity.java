@@ -27,10 +27,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import a.a.a.ProjectDataManager;
-import a.a.a.ProjectListManager;
-import a.a.a.SketchwarePaths;
-import a.a.a.ProjectFilePaths;
+import pro.sketchware.core.ProjectDataManager;
+import pro.sketchware.core.ProjectListManager;
+import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.ProjectFilePaths;
 import mod.hey.studios.code.SrcCodeEditor;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;

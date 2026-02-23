@@ -24,11 +24,11 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-import a.a.a.UniqueNameValidator;
-import a.a.a.LibrarySettingsView;
-import a.a.a.SketchToast;
-import a.a.a.AnimationUtil;
-import a.a.a.ViewUtil;
+import pro.sketchware.core.UniqueNameValidator;
+import pro.sketchware.core.LibrarySettingsView;
+import pro.sketchware.core.SketchToast;
+import pro.sketchware.core.AnimationUtil;
+import pro.sketchware.core.ViewUtil;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 

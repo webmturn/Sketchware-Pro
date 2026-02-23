@@ -10,7 +10,7 @@ import com.google.gson.reflect.TypeToken;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import a.a.a.SketchwarePaths;
+import pro.sketchware.core.SketchwarePaths;
 import pro.sketchware.tools.ViewBeanFactory;
 import pro.sketchware.tools.ViewBeanParser;
 import pro.sketchware.utility.FileUtil;

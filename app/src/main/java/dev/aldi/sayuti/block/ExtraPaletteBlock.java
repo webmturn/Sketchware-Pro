@@ -17,10 +17,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
-import a.a.a.LayoutGenerator;
-import a.a.a.ProjectDataManager;
-import a.a.a.BuildConfig;
-import a.a.a.BlockColorMapper;
+import pro.sketchware.core.LayoutGenerator;
+import pro.sketchware.core.ProjectDataManager;
+import pro.sketchware.core.BuildConfig;
+import pro.sketchware.core.BlockColorMapper;
 import mod.agus.jcoderz.beans.ViewBeans;
 import mod.hey.studios.editor.view.IdGenerator;
 import mod.hey.studios.util.Helper;

@@ -26,11 +26,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-import a.a.a.SharedPrefsHelper;
-import a.a.a.ProjectListManager;
-import a.a.a.UIHelper;
-import a.a.a.SketchwarePaths;
-import a.a.a.MapValueHelper;
+import pro.sketchware.core.SharedPrefsHelper;
+import pro.sketchware.core.ProjectListManager;
+import pro.sketchware.core.UIHelper;
+import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.MapValueHelper;
 import mod.hey.studios.project.ProjectSettingsDialog;
 import mod.hey.studios.project.backup.BackupRestoreManager;
 import mod.hey.studios.util.Helper;

@@ -30,8 +30,8 @@ import android.widget.ScrollView;
 import java.util.List;
 import java.util.regex.Matcher;
 
-import a.a.a.ComponentCodeGenerator;
-import a.a.a.ViewUtil;
+import pro.sketchware.core.ComponentCodeGenerator;
+import pro.sketchware.core.ViewUtil;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.utility.SketchwareUtil;

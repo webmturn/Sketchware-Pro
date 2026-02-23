@@ -5,7 +5,7 @@ import org.json.JSONArray;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import a.a.a.EventCodeGenerator;
+import pro.sketchware.core.EventCodeGenerator;
 import pro.sketchware.utility.FileUtil;
 
 public class ComponentExtraCode {

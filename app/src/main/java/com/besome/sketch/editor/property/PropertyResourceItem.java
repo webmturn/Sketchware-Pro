@@ -30,11 +30,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import a.a.a.PropertyChangedCallback;
-import a.a.a.ProjectDataManager;
-import a.a.a.ResourceManager;
-import a.a.a.UIHelper;
-import a.a.a.ViewUtil;
+import pro.sketchware.core.PropertyChangedCallback;
+import pro.sketchware.core.ProjectDataManager;
+import pro.sketchware.core.ResourceManager;
+import pro.sketchware.core.UIHelper;
+import pro.sketchware.core.ViewUtil;
 import mod.bobur.VectorDrawableLoader;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;

@@ -1,6 +1,6 @@
 package com.besome.sketch.beans;
 
-import a.a.a.ReflectiveToString;
+import pro.sketchware.core.ReflectiveToString;
 
 public class SelectableBean extends ReflectiveToString {
     public static final int SAVED_POS_ETC = 2;

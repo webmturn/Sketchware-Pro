@@ -27,16 +27,16 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-import a.a.a.SketchwareException;
-import a.a.a.UriPathResolver;
-import a.a.a.BaseAsyncTask;
-import a.a.a.SoundCollectionManager;
-import a.a.a.FileNameValidator;
-import a.a.a.SketchToast;
-import a.a.a.BitmapUtil;
-import a.a.a.EncryptedFileUtil;
-import a.a.a.BlockConstants;
-import a.a.a.CompileException;
+import pro.sketchware.core.SketchwareException;
+import pro.sketchware.core.UriPathResolver;
+import pro.sketchware.core.BaseAsyncTask;
+import pro.sketchware.core.SoundCollectionManager;
+import pro.sketchware.core.FileNameValidator;
+import pro.sketchware.core.SketchToast;
+import pro.sketchware.core.BitmapUtil;
+import pro.sketchware.core.EncryptedFileUtil;
+import pro.sketchware.core.BlockConstants;
+import pro.sketchware.core.CompileException;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 

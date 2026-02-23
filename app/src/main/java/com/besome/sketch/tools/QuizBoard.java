@@ -16,8 +16,8 @@ import com.besome.sketch.beans.QuizBean;
 import java.util.ArrayList;
 import java.util.Random;
 
-import a.a.a.UIHelper;
-import a.a.a.CompileQuizManager;
+import pro.sketchware.core.UIHelper;
+import pro.sketchware.core.CompileQuizManager;
 import pro.sketchware.R;
 import pro.sketchware.databinding.QuizBoardBinding;
 

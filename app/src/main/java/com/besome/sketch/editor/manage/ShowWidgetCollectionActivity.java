@@ -15,14 +15,14 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 
 import java.util.ArrayList;
 
-import a.a.a.DeviceUtil;
-import a.a.a.UniqueNameValidator;
-import a.a.a.SoundCollectionManager;
-import a.a.a.WidgetCollectionManager;
-import a.a.a.SketchToast;
-import a.a.a.ResourceManager;
-import a.a.a.UIHelper;
-import a.a.a.SketchwarePaths;
+import pro.sketchware.core.DeviceUtil;
+import pro.sketchware.core.UniqueNameValidator;
+import pro.sketchware.core.SoundCollectionManager;
+import pro.sketchware.core.WidgetCollectionManager;
+import pro.sketchware.core.SketchToast;
+import pro.sketchware.core.ResourceManager;
+import pro.sketchware.core.UIHelper;
+import pro.sketchware.core.SketchwarePaths;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageCollectionShowWidgetBinding;

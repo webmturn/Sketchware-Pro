@@ -41,7 +41,7 @@ public class ViewBeanFactory {
     public void applyAttributes(Map<String, String> attributes) {
         Map<String, String> injectAttributes = new LinkedHashMap<>();
         // Skip processing if the convert type is "include,"
-        // because a.a.a.Ox doesn't generate all the attributes below.
+        // because pro.sketchware.core.Ox doesn't generate all the attributes below.
         // Instead, the `inject` property will handle the attributes.
         if ("include".equals(bean.convert)) {
             StringBuilder injectProperty = new StringBuilder();

@@ -1,6 +1,6 @@
 package com.besome.sketch.beans;
 
-import a.a.a.ReflectiveToString;
+import pro.sketchware.core.ReflectiveToString;
 
 public class HistoryBean extends ReflectiveToString {
     public static final int ACTION_TYPE_ADD = 0;

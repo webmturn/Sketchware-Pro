@@ -5,8 +5,8 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 
-import a.a.a.ProjectDataStore;
-import a.a.a.ProjectDataManager;
+import pro.sketchware.core.ProjectDataStore;
+import pro.sketchware.core.ProjectDataManager;
 import pro.sketchware.R;
 
 public class EventBean extends CollapsibleBean implements Parcelable {

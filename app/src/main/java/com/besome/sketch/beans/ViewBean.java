@@ -9,8 +9,8 @@ import com.google.gson.annotations.Expose;
 
 import java.util.HashMap;
 
-import a.a.a.ClassInfo;
-import a.a.a.ReflectiveToString;
+import pro.sketchware.core.ClassInfo;
+import pro.sketchware.core.ReflectiveToString;
 import mod.agus.jcoderz.beans.ViewBeans;
 import pro.sketchware.R;
 

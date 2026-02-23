@@ -16,10 +16,10 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 
-import a.a.a.LibrarySettingsView;
-import a.a.a.SketchToast;
-import a.a.a.AnimationUtil;
-import a.a.a.ViewUtil;
+import pro.sketchware.core.LibrarySettingsView;
+import pro.sketchware.core.SketchToast;
+import pro.sketchware.core.AnimationUtil;
+import pro.sketchware.core.ViewUtil;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 

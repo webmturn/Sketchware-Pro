@@ -1,6 +1,6 @@
 package mod.pranav.build
 
-import a.a.a.ProjectFilePaths
+import pro.sketchware.core.ProjectFilePaths
 import com.android.tools.r8.CompilationMode
 import com.android.tools.r8.OutputMode
 import com.android.tools.r8.R8

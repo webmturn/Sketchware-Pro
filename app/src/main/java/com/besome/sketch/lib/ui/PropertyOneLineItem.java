@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import a.a.a.ViewUtil;
+import pro.sketchware.core.ViewUtil;
 import pro.sketchware.R;
 
 public class PropertyOneLineItem extends RelativeLayout {

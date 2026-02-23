@@ -13,10 +13,10 @@ import com.besome.sketch.lib.base.BaseDialogActivity;
 import java.io.File;
 import java.util.ArrayList;
 
-import a.a.a.ImageCollectionManager;
-import a.a.a.SketchToast;
-import a.a.a.BlockConstants;
-import a.a.a.SketchwarePaths;
+import pro.sketchware.core.ImageCollectionManager;
+import pro.sketchware.core.SketchToast;
+import pro.sketchware.core.BlockConstants;
+import pro.sketchware.core.SketchwarePaths;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageFontAddBinding;

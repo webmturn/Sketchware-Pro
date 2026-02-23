@@ -12,7 +12,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 import com.besome.sketch.beans.ViewBean;
 import com.besome.sketch.editor.view.ItemView;
 
-import a.a.a.ViewUtil;
+import pro.sketchware.core.ViewUtil;
 
 public class ItemViewPager extends AppCompatTextView implements ItemView {
 

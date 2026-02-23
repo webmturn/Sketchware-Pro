@@ -40,8 +40,8 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import a.a.a.ProjectListManager;
-import a.a.a.MapValueHelper;
+import pro.sketchware.core.ProjectListManager;
+import pro.sketchware.core.MapValueHelper;
 import mod.hey.studios.editor.manage.block.ExtraBlockInfo;
 import mod.hey.studios.editor.manage.block.v2.BlockLoader;
 import mod.hey.studios.project.custom_blocks.CustomBlocksManager;
@@ -56,7 +56,7 @@ public class BackupFactory {
     public static final String DEF_PATH = ".sketchware/backups/";
 
     // WARNING: These crypto constants are part of the original Sketchware project file format.
-    // Do NOT change them â€” doing so will break reading/writing of all existing project files
+    // Do NOT change them â€?doing so will break reading/writing of all existing project files
     // and backups, as well as compatibility with other Sketchware variants.
     // The key == IV pattern is a known weakness but is required for format compatibility.
     private static final String CIPHER_ALGORITHM = "AES/CBC/PKCS5Padding";

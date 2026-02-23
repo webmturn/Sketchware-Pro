@@ -12,10 +12,10 @@ import com.besome.sketch.lib.ui.PropertyOneLineItem;
 import com.besome.sketch.lib.ui.PropertyTwoLineItem;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import a.a.a.DeviceUtil;
-import a.a.a.SketchToast;
-import a.a.a.UIHelper;
-import a.a.a.ViewUtil;
+import pro.sketchware.core.DeviceUtil;
+import pro.sketchware.core.SketchToast;
+import pro.sketchware.core.UIHelper;
+import pro.sketchware.core.ViewUtil;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ProgramInfoBinding;

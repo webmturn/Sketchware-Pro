@@ -36,15 +36,15 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import a.a.a.SketchwareException;
-import a.a.a.ViewFilesFragment;
-import a.a.a.BaseAsyncTask;
-import a.a.a.SketchToast;
-import a.a.a.ProjectDataStore;
-import a.a.a.ProjectDataManager;
-import a.a.a.UIHelper;
-import a.a.a.SketchwarePaths;
-import a.a.a.ViewFilesAdapter;
+import pro.sketchware.core.SketchwareException;
+import pro.sketchware.core.ViewFilesFragment;
+import pro.sketchware.core.BaseAsyncTask;
+import pro.sketchware.core.SketchToast;
+import pro.sketchware.core.ProjectDataStore;
+import pro.sketchware.core.ProjectDataManager;
+import pro.sketchware.core.UIHelper;
+import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.ViewFilesAdapter;
 import pro.sketchware.R;
 
 public class ManageViewActivity extends BaseAppCompatActivity implements OnClickListener, ViewPager.OnPageChangeListener {

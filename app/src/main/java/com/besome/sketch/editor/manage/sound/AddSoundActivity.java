@@ -33,11 +33,11 @@ import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import a.a.a.FontCollectionManager;
-import a.a.a.ResourceNameValidator;
-import a.a.a.SketchToast;
-import a.a.a.BlockConstants;
-import a.a.a.CompileException;
+import pro.sketchware.core.FontCollectionManager;
+import pro.sketchware.core.ResourceNameValidator;
+import pro.sketchware.core.SketchToast;
+import pro.sketchware.core.BlockConstants;
+import pro.sketchware.core.CompileException;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;
 import pro.sketchware.R;

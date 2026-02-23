@@ -37,8 +37,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import a.a.a.SketchwarePaths;
-import a.a.a.ViewEditorFragment;
+import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.ViewEditorFragment;
 import dev.pranav.filepicker.FilePickerCallback;
 import dev.pranav.filepicker.FilePickerDialogFragment;
 import dev.pranav.filepicker.FilePickerOptions;

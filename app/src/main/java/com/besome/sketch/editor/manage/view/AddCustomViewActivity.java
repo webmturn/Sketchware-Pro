@@ -17,10 +17,10 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import a.a.a.ActivityNameValidator;
-import a.a.a.SketchToast;
-import a.a.a.PresetLayoutFactory;
-import a.a.a.BlockConstants;
+import pro.sketchware.core.ActivityNameValidator;
+import pro.sketchware.core.SketchToast;
+import pro.sketchware.core.PresetLayoutFactory;
+import pro.sketchware.core.BlockConstants;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 

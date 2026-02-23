@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import a.a.a.ClassInfo;
-import a.a.a.EventRegistry;
+import pro.sketchware.core.ClassInfo;
+import pro.sketchware.core.EventRegistry;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;
 import mod.jbk.util.OldResourceIdMapper;

@@ -24,8 +24,8 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 
-import a.a.a.BaseAsyncTask;
-import a.a.a.ProjectListManager;
+import pro.sketchware.core.BaseAsyncTask;
+import pro.sketchware.core.ProjectListManager;
 import dev.chrisbanes.insetter.Insetter;
 import pro.sketchware.dialogs.ProgressDialog;
 

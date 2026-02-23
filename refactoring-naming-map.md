@@ -1,8 +1,9 @@
-# a.a.a Package Refactoring - Class Naming Map
+# pro.sketchware.core Package Refactoring - Class Naming Map
 
-## Constraints
-- All a.a.a classes are now source code (no JAR constraints remain)
-- All renamed classes stay in `a.a.a` package for now (package rename is a separate phase)
+## Package History
+- Original obfuscated package: `a.a.a`
+- Renamed to: `pro.sketchware.core`
+- All classes are source code (no JAR constraints)
 
 ## Naming Map
 

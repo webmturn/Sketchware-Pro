@@ -13,7 +13,7 @@ import com.besome.sketch.editor.view.ItemView;
 import com.besome.sketch.editor.view.ScrollContainer;
 import com.google.android.material.card.MaterialCardView;
 
-import a.a.a.ViewUtil;
+import pro.sketchware.core.ViewUtil;
 
 public class ItemCardView extends MaterialCardView implements ItemView, ScrollContainer {
 

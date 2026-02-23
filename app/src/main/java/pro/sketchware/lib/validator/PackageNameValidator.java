@@ -6,8 +6,8 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.regex.Pattern;
 
-import a.a.a.BaseValidator;
-import a.a.a.BlockConstants;
+import pro.sketchware.core.BaseValidator;
+import pro.sketchware.core.BlockConstants;
 import pro.sketchware.R;
 
 public class PackageNameValidator extends BaseValidator {

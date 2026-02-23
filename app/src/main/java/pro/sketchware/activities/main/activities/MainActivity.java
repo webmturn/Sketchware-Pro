@@ -40,8 +40,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
-import a.a.a.SharedPrefsHelper;
-import a.a.a.DeviceUtil;
+import pro.sketchware.core.SharedPrefsHelper;
+import pro.sketchware.core.DeviceUtil;
 import mod.hey.studios.project.backup.BackupFactory;
 import mod.hey.studios.project.backup.BackupRestoreManager;
 import mod.hey.studios.util.Helper;

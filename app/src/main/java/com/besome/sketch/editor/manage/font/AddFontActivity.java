@@ -15,11 +15,11 @@ import android.widget.Toast;
 import com.besome.sketch.beans.ProjectResourceBean;
 import com.besome.sketch.lib.base.BaseDialogActivity;
 
-import a.a.a.ImageCollectionManager;
-import a.a.a.SketchToast;
-import a.a.a.UIHelper;
-import a.a.a.BlockConstants;
-import a.a.a.CompileException;
+import pro.sketchware.core.ImageCollectionManager;
+import pro.sketchware.core.SketchToast;
+import pro.sketchware.core.UIHelper;
+import pro.sketchware.core.BlockConstants;
+import pro.sketchware.core.CompileException;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;
 import pro.sketchware.R;

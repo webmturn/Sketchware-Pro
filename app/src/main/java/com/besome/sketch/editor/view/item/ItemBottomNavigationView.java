@@ -13,7 +13,7 @@ import com.besome.sketch.beans.ViewBean;
 import com.besome.sketch.editor.view.ItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import a.a.a.ViewUtil;
+import pro.sketchware.core.ViewUtil;
 import pro.sketchware.R;
 
 public class ItemBottomNavigationView extends BottomNavigationView implements ItemView {

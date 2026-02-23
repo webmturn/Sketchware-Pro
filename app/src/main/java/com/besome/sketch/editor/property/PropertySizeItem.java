@@ -10,9 +10,9 @@ import android.widget.TextView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import a.a.a.PropertyChangedCallback;
-import a.a.a.UIHelper;
-import a.a.a.ViewUtil;
+import pro.sketchware.core.PropertyChangedCallback;
+import pro.sketchware.core.UIHelper;
+import pro.sketchware.core.ViewUtil;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.lib.validator.MinMaxInputValidator;

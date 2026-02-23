@@ -1,6 +1,6 @@
 package mod.hey.studios.compiler.kotlin
 
-import a.a.a.ProjectBuilder
+import pro.sketchware.core.ProjectBuilder
 import mod.hey.studios.build.BuildSettings
 import mod.hey.studios.compiler.kotlin.KotlinCompilerUtil.*
 import mod.jbk.util.LogUtil

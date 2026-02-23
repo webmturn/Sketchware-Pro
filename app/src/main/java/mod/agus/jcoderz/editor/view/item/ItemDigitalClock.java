@@ -9,7 +9,7 @@ import android.widget.DigitalClock;
 import com.besome.sketch.beans.ViewBean;
 import com.besome.sketch.editor.view.ItemView;
 
-import a.a.a.ViewUtil;
+import pro.sketchware.core.ViewUtil;
 
 @Deprecated
 public class ItemDigitalClock extends DigitalClock implements ItemView {

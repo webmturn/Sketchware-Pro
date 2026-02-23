@@ -6,7 +6,7 @@ import android.widget.ImageView;
 
 import com.google.gson.annotations.Expose;
 
-import a.a.a.ReflectiveToString;
+import pro.sketchware.core.ReflectiveToString;
 
 public class ImageBean extends ReflectiveToString implements Parcelable {
     public static final Parcelable.Creator<ImageBean> CREATOR = new Parcelable.Creator<>() {

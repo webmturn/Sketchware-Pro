@@ -19,8 +19,8 @@ import com.besome.sketch.beans.ViewBean;
 import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import a.a.a.ViewHistoryManager;
-import a.a.a.ProjectDataManager;
+import pro.sketchware.core.ViewHistoryManager;
+import pro.sketchware.core.ProjectDataManager;
 import io.github.rosemoe.sora.widget.CodeEditor;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;

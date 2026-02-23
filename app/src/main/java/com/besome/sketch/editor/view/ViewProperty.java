@@ -30,18 +30,18 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 
-import a.a.a.ViewEditorCallback;
-import a.a.a.FileSelectedCallback;
-import a.a.a.PropertyChangedCallback;
-import a.a.a.ViewBeanCallback;
-import a.a.a.UniqueNameValidator;
-import a.a.a.SoundCollectionManager;
-import a.a.a.EventSelectedCallback;
-import a.a.a.WidgetCollectionManager;
-import a.a.a.SketchToast;
-import a.a.a.ProjectDataManager;
-import a.a.a.UIHelper;
-import a.a.a.ViewUtil;
+import pro.sketchware.core.ViewEditorCallback;
+import pro.sketchware.core.FileSelectedCallback;
+import pro.sketchware.core.PropertyChangedCallback;
+import pro.sketchware.core.ViewBeanCallback;
+import pro.sketchware.core.UniqueNameValidator;
+import pro.sketchware.core.SoundCollectionManager;
+import pro.sketchware.core.EventSelectedCallback;
+import pro.sketchware.core.WidgetCollectionManager;
+import pro.sketchware.core.SketchToast;
+import pro.sketchware.core.ProjectDataManager;
+import pro.sketchware.core.UIHelper;
+import pro.sketchware.core.ViewUtil;
 import mod.hey.studios.project.ProjectSettings;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
@@ -212,7 +212,7 @@ public class ViewProperty extends LinearLayout implements PropertyChangedCallbac
                         }
                     }
                 }
-                try { WidgetCollectionManager.h().a(widgetName, viewBeans, true); } catch (a.a.a.CompileException ignored) {}
+                try { WidgetCollectionManager.h().a(widgetName, viewBeans, true); } catch (pro.sketchware.core.CompileException ignored) {}
                 if (propertyListener != null) {
                     propertyListener.a();
                 }

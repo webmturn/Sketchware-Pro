@@ -1,10 +1,10 @@
 package com.besome.sketch.editor.logic;
 
-import a.a.a.ClassInfo;
-import a.a.a.BlockView;
-import a.a.a.BaseBlockView;
-import a.a.a.ComponentTypeMapper;
-import a.a.a.ViewUtil;
+import pro.sketchware.core.ClassInfo;
+import pro.sketchware.core.BlockView;
+import pro.sketchware.core.BaseBlockView;
+import pro.sketchware.core.ComponentTypeMapper;
+import pro.sketchware.core.ViewUtil;
 import android.content.Context;
 import android.graphics.Point;
 import android.view.View;
@@ -166,7 +166,7 @@ public class BlockPane extends RelativeLayout {
         for (int b = 0; b < paramRs.V.size(); b++) {
           View view = paramRs.V.get(b);
           boolean bool = view instanceof BlockView;
-          if ((bool || view instanceof a.a.a.FieldBlockView) && (!bool || !view.getTag().toString().equals(paramString))) {
+          if ((bool || view instanceof pro.sketchware.core.FieldBlockView) && (!bool || !view.getTag().toString().equals(paramString))) {
             int[] arrayOfInt = new int[2];
             view.getLocationOnScreen(arrayOfInt);
             a(arrayOfInt, view, 0);
@@ -634,7 +634,7 @@ public class BlockPane extends RelativeLayout {
       if (paramRs.fa) {
         if (view instanceof BlockView)
           this.c.a((BaseBlockView)view, true, false, 0); 
-        if (view instanceof a.a.a.FieldBlockView)
+        if (view instanceof pro.sketchware.core.FieldBlockView)
           this.c.a((BaseBlockView)view, true, false, 0); 
       } else {
         paramInt2 = ((Integer)this.f[2]).intValue();
@@ -824,8 +824,8 @@ public class BlockPane extends RelativeLayout {
         result = ((Integer) ((BlockView) target[1]).getTag()).intValue();
       }
     }
-    if (view instanceof a.a.a.FieldBlockView) {
-      result = ((Integer) ((a.a.a.FieldBlockView) view).E.getTag()).intValue();
+    if (view instanceof pro.sketchware.core.FieldBlockView) {
+      result = ((Integer) ((pro.sketchware.core.FieldBlockView) view).E.getTag()).intValue();
     }
     return result;
   }

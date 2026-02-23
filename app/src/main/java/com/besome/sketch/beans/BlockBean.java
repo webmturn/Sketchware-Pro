@@ -9,8 +9,8 @@ import com.google.gson.annotations.Expose;
 
 import java.util.ArrayList;
 
-import a.a.a.ClassInfo;
-import a.a.a.ComponentTypeMapper;
+import pro.sketchware.core.ClassInfo;
+import pro.sketchware.core.ComponentTypeMapper;
 
 public class BlockBean extends SelectableBean implements Parcelable {
     public static final Parcelable.Creator<BlockBean> CREATOR = new Parcelable.Creator<>() {

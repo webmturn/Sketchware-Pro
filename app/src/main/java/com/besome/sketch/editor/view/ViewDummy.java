@@ -9,8 +9,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import a.a.a.BlockView;
-import a.a.a.ViewUtil;
+import pro.sketchware.core.BlockView;
+import pro.sketchware.core.ViewUtil;
 import pro.sketchware.R;
 
 public class ViewDummy extends RelativeLayout {

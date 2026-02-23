@@ -9,8 +9,8 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 
 import java.util.ArrayList;
 
-import a.a.a.ProjectDataManager;
-import a.a.a.UIHelper;
+import pro.sketchware.core.ProjectDataManager;
+import pro.sketchware.core.UIHelper;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ActivityLayoutPreviewBinding;

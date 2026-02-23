@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.DrawableRes;
 
-import a.a.a.ViewUtil;
+import pro.sketchware.core.ViewUtil;
 import pro.sketchware.R;
 
 public class MyProjectButton extends LinearLayout {

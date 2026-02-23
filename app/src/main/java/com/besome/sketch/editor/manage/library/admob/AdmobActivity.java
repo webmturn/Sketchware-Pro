@@ -15,11 +15,11 @@ import com.besome.sketch.beans.ProjectLibraryBean;
 import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import a.a.a.DeviceUtil;
-import a.a.a.LibrarySettingsView;
-import a.a.a.SketchToast;
-import a.a.a.LibraryManager;
-import a.a.a.UIHelper;
+import pro.sketchware.core.DeviceUtil;
+import pro.sketchware.core.LibrarySettingsView;
+import pro.sketchware.core.SketchToast;
+import pro.sketchware.core.LibraryManager;
+import pro.sketchware.core.UIHelper;
 import mod.hey.studios.util.Helper;
 import mod.jbk.editor.manage.library.LibrarySettingsImporter;
 import pro.sketchware.R;

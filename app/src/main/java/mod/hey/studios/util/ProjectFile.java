@@ -3,8 +3,8 @@ package mod.hey.studios.util;
 import android.graphics.Color;
 import android.os.Build;
 
-import a.a.a.ProjectListManager;
-import a.a.a.MapValueHelper;
+import pro.sketchware.core.ProjectListManager;
+import pro.sketchware.core.MapValueHelper;
 import pro.sketchware.SketchApplication;
 
 public class ProjectFile {

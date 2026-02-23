@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import a.a.a.BaseValidator;
+import pro.sketchware.core.BaseValidator;
 import pro.sketchware.R;
 
 public class VariableModifierValidator extends BaseValidator {

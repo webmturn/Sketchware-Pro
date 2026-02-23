@@ -14,9 +14,9 @@ import android.widget.TextView;
 
 import com.google.android.material.card.MaterialCardView;
 
-import a.a.a.BlockView;
-import a.a.a.BaseBlockView;
-import a.a.a.ViewUtil;
+import pro.sketchware.core.BlockView;
+import pro.sketchware.core.BaseBlockView;
+import pro.sketchware.core.ViewUtil;
 import pro.sketchware.R;
 import pro.sketchware.databinding.PaletteBlockBinding;
 

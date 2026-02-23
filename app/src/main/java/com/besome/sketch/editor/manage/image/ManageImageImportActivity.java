@@ -27,10 +27,10 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 
 import java.util.ArrayList;
 
-import a.a.a.XmlNameValidator;
-import a.a.a.SketchToast;
-import a.a.a.UIHelper;
-import a.a.a.BlockConstants;
+import pro.sketchware.core.XmlNameValidator;
+import pro.sketchware.core.SketchToast;
+import pro.sketchware.core.UIHelper;
+import pro.sketchware.core.BlockConstants;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 

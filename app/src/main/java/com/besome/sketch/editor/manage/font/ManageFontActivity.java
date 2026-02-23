@@ -17,9 +17,9 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 
 import java.lang.ref.WeakReference;
 
-import a.a.a.BaseAsyncTask;
-import a.a.a.ImageCollectionManager;
-import a.a.a.UIHelper;
+import pro.sketchware.core.BaseAsyncTask;
+import pro.sketchware.core.ImageCollectionManager;
+import pro.sketchware.core.UIHelper;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageFontBinding;

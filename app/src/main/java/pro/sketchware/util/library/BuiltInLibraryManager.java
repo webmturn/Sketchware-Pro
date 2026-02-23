@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import a.a.a.BuiltInLibrary;
-import a.a.a.ProjectBuilder;
+import pro.sketchware.core.BuiltInLibrary;
+import pro.sketchware.core.ProjectBuilder;
 import mod.jbk.build.BuiltInLibraries;
 import mod.jbk.editor.manage.library.ExcludeBuiltInLibrariesActivity;
 

@@ -38,11 +38,11 @@ import com.besome.sketch.lib.ui.CustomScrollView;
 import java.util.ArrayList;
 import java.util.Map;
 
-import a.a.a.PropertyChangedCallback;
-import a.a.a.ViewHistoryManager;
-import a.a.a.ProjectDataManager;
-import a.a.a.UIHelper;
-import a.a.a.UserExperienceLevel;
+import pro.sketchware.core.PropertyChangedCallback;
+import pro.sketchware.core.ViewHistoryManager;
+import pro.sketchware.core.ProjectDataManager;
+import pro.sketchware.core.UIHelper;
+import pro.sketchware.core.UserExperienceLevel;
 import mod.hey.studios.project.ProjectSettings;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;

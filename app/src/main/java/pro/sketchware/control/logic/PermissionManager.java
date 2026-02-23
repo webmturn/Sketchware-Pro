@@ -5,9 +5,9 @@ import com.besome.sketch.beans.BlockBean;
 import java.util.ArrayList;
 import java.util.Map.Entry;
 
-import a.a.a.ActivityCodeGenerator;
-import a.a.a.ProjectDataManager;
-import a.a.a.BuildConfig;
+import pro.sketchware.core.ActivityCodeGenerator;
+import pro.sketchware.core.ProjectDataManager;
+import pro.sketchware.core.BuildConfig;
 
 public class PermissionManager {
 
