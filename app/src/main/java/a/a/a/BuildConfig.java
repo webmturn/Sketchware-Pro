@@ -122,7 +122,7 @@ public class BuildConfig {
      * If the built-in library AppCompat (contains the Jetpack AppCompat artefacts and
      * Material Design Components) is enabled.
      */
-    public boolean g = false;
+    public boolean isAppCompatEnabled = false;
 
     /**
      * If the built-in library Firebase is enabled.
@@ -184,7 +184,7 @@ public class BuildConfig {
     /**
      * Permissions of the whole project, stored as bitfield.
      */
-    public int q = 0;
+    public int permissions = 0;
 
     /**
      * Configured ad unit ID for banner ads. Set to demo ad unit provided by Google by default.
@@ -208,8 +208,8 @@ public class BuildConfig {
     /**
      * Device IDs registered as Test Devices for the current project.
      */
-    public ArrayList<String> t = new ArrayList<>();
-    public boolean u = false;
+    public ArrayList<String> testDeviceIds = new ArrayList<>();
+    public boolean isFileProviderUsed = false;
 
     /**
      * (Most likely) the Google Maps API key associated with the project.
@@ -220,11 +220,11 @@ public class BuildConfig {
      * Map containing permissions of Activities. Activity name = {@link String},
      * Permissions container = {@link a}.
      */
-    public HashMap<String, a> w = new HashMap<>();
+    public HashMap<String, a> activityPermissions = new HashMap<>();
     public ConstVarComponent x = new ConstVarComponent();
 
     public boolean hasPermissions() {
-        return q == 0;
+        return permissions == 0;
     }
 
     public void b() {
@@ -234,14 +234,14 @@ public class BuildConfig {
      * @return True if the permission was registered on the project.
      */
     public boolean hasPermission(int permission) {
-        return (q & permission) == permission;
+        return (permissions & permission) == permission;
     }
 
     /**
      * Registers a permission for the entire project.
      */
     public void addPermission(int permission) {
-        q = permission | q;
+        permissions = permission | permissions;
     }
 
     /**
@@ -258,10 +258,10 @@ public class BuildConfig {
      * Registers a permission for an Activity.
      */
     public void addPermission(String activityName, int permission) {
-        if (!w.containsKey(activityName)) {
-            w.put(activityName, new a());
+        if (!activityPermissions.containsKey(activityName)) {
+            activityPermissions.put(activityName, new a());
         }
-        w.get(activityName).a(permission);
+        activityPermissions.get(activityName).a(permission);
         addPermission(permission);
     }
 
@@ -271,17 +271,17 @@ public class BuildConfig {
     }
 
     public a a(String activityName) {
-        if (!w.containsKey(activityName)) {
-            w.put(activityName, new a());
+        if (!activityPermissions.containsKey(activityName)) {
+            activityPermissions.put(activityName, new a());
         }
-        return w.get(activityName);
+        return activityPermissions.get(activityName);
     }
 
     public void setupAdmob(ProjectLibraryBean projectLibraryBean) {
         ArrayList<AdTestDeviceBean> testDevices;
         if (!(projectLibraryBean == null || (testDevices = projectLibraryBean.testDevices) == null || testDevices.size() <= 0)) {
             for (AdTestDeviceBean adTestDeviceBean : projectLibraryBean.testDevices) {
-                t.add(adTestDeviceBean.deviceId);
+                testDeviceIds.add(adTestDeviceBean.deviceId);
             }
         }
         String reserved1;
@@ -316,7 +316,7 @@ public class BuildConfig {
         /**
          * The permissions bitfield.
          */
-        public int c = 0;
+        public int permissions = 0;
 
         /** Adds a permission to this activity's permissions. */
         public void addPermission(int permission) {
@@ -334,11 +334,11 @@ public class BuildConfig {
         }
 
         public void a(int i) {
-            c = i | c;
+            permissions = i | permissions;
         }
 
         public boolean b(int i) {
-            return (c & i) == i;
+            return (permissions & i) == i;
         }
 
         /**

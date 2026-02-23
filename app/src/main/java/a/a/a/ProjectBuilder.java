@@ -760,7 +760,7 @@ public class ProjectBuilder {
      * and extracts them, if needed. Also initializes used built-in libraries.
      */
     public void buildBuiltInLibraryInformation() {
-        if (projectFilePaths.buildConfig.g) {
+        if (projectFilePaths.buildConfig.isAppCompatEnabled) {
             builtInLibraryManager.addLibrary(BuiltInLibraries.ANDROIDX_APPCOMPAT);
             builtInLibraryManager.addLibrary(BuiltInLibraries.ANDROIDX_COORDINATORLAYOUT);
             builtInLibraryManager.addLibrary(BuiltInLibraries.MATERIAL);

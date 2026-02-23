@@ -532,7 +532,7 @@ public class ManifestGenerator {
                     activityTag.addAttribute("android", "supportsPictureInPicture", "true");
                 }
                 if (!AndroidManifestInjector.isActivityThemeUsed(activityTag, buildConfig.sc_id, projectFileBean.getJavaName())) {
-                    if (buildConfig.g) {
+                    if (buildConfig.isAppCompatEnabled) {
                         if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FULLSCREEN)) {
                             activityTag.addAttribute("android", "theme", "@style/AppTheme.FullScreen");
                         }
@@ -627,7 +627,7 @@ public class ManifestGenerator {
         if (buildConfig.isFirebaseEnabled) {
             writeFirebaseMetaData(applicationTag);
         }
-        if (buildConfig.u) {
+        if (buildConfig.isFileProviderUsed) {
             writeFileProvider(applicationTag);
         }
         if (buildConfig.isAdMobEnabled && !isEmpty(buildConfig.appId)) {

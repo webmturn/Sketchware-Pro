@@ -856,7 +856,7 @@ public class BlockInterpreter {
                 opcode = String.format("%s.setMaxDate((long)(%s));", params.get(0), params.get(1));
                 break;
             case "adViewLoadAd":
-                opcode = String.format("%s.loadAd(new AdRequest.Builder()%s.build());", params.get(0), buildConfig.t.stream().map(device -> ".addTestDevice(\"" + device + "\")\n").collect(Collectors.joining()));
+                opcode = String.format("%s.loadAd(new AdRequest.Builder()%s.build());", params.get(0), buildConfig.testDeviceIds.stream().map(device -> ".addTestDevice(\"" + device + "\")\n").collect(Collectors.joining()));
                 break;
             case "mapViewSetMapType":
                 opcode = String.format("_%s_controller.setMapType(GoogleMap.%s);", params.get(0), params.get(1));
@@ -1394,7 +1394,7 @@ public class BlockInterpreter {
 
             case "locationManagerRequestLocationUpdates":
                 String locationRequest = "%s.requestLocationUpdates(LocationManager.%s, %s, %s, _%s_location_listener);";
-                if (buildConfig.g) {
+                if (buildConfig.isAppCompatEnabled) {
                     opcode = String.format("if (ContextCompat.checkSelfPermission(%s.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {\n" + locationRequest + "\n}", activityName, params.get(0), params.get(1), params.get(2), params.get(3), params.get(0));
                 } else {
                     opcode = String.format("if (Build.VERSION.SDK_INT >= 23) {\nif (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {\n" + locationRequest + "\n}\n}\nelse {\n" + locationRequest + "\n}", params.get(0), params.get(1), params.get(2), params.get(3), params.get(0), params.get(0), params.get(1), params.get(2), params.get(3), params.get(0));

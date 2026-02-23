@@ -502,7 +502,7 @@ public class ProjectFilePaths {
             buildConfig.addPermission(BuildConfig.PERMISSION_ACCESS_NETWORK_STATE);
         }
         if (appCompat.useYn.equals(ProjectLibraryBean.LIB_USE_Y)) {
-            buildConfig.g = true;
+            buildConfig.isAppCompatEnabled = true;
         }
         if (adMob.useYn.equals(ProjectLibraryBean.LIB_USE_Y)) {
             buildConfig.isAdMobEnabled = true;
@@ -539,8 +539,8 @@ public class ProjectFilePaths {
             for (ComponentBean component : projectDataManager.e(activity.getJavaName())) {
                 switch (component.type) {
                     case ComponentBean.COMPONENT_TYPE_CAMERA, 35 -> {
-                        buildConfig.g = true;
-                        buildConfig.u = true;
+                        buildConfig.isAppCompatEnabled = true;
+                        buildConfig.isFileProviderUsed = true;
                         buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_CAMERA);
                         buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_READ_EXTERNAL_STORAGE);
                         buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_WRITE_EXTERNAL_STORAGE);
@@ -683,7 +683,7 @@ public class ProjectFilePaths {
      */
     public void generateProjectFiles(hC projectFileManager, eC projectDataManger, iC projectLibraryManager, BuiltInLibraryManager builtInLibraryManager) {
         ArrayList<SrcCodeBean> srcCodeBeans = generateSourceCodeBeans(projectFileManager, projectDataManger, builtInLibraryManager);
-        if (buildConfig.u) {
+        if (buildConfig.isFileProviderUsed) {
             XmlBuilder pathsTag = new XmlBuilder("paths");
             pathsTag.addAttribute("xmlns", "android", "http://schemas.android.com/apk/res/android");
             XmlBuilder externalPathTag = new XmlBuilder("external-path");
@@ -977,7 +977,7 @@ public class ProjectFilePaths {
             stylesFileBuilder.addItemToStyle("AppTheme.DebugActivity", "windowActionBar", "true");
             stylesFileBuilder.addItemToStyle("AppTheme.DebugActivity", "windowNoTitle", "false");
             return CommandBlock.applyCommands("styles.xml", stylesFileBuilder.toCode());
-        } else if (buildConfig.g) {
+        } else if (buildConfig.isAppCompatEnabled) {
             boolean useNewMaterialComponentsTheme = projectSettings.getValue(ProjectSettings.SETTING_ENABLE_BRIDGELESS_THEMES,
                     BuildSettings.SETTING_GENERIC_VALUE_FALSE).equals(BuildSettings.SETTING_GENERIC_VALUE_TRUE);
             XmlBuilderHelper stylesFileBuilder = new XmlBuilderHelper();

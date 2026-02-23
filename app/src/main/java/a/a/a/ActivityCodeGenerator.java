@@ -201,7 +201,7 @@ public class ActivityCodeGenerator {
                 addImport("com.google.android.gms.ads.RequestConfiguration");
         }
 
-        if (buildConfig.g) {
+        if (buildConfig.isAppCompatEnabled) {
             addImport("androidx.fragment.app.Fragment");
             addImport("androidx.fragment.app.FragmentManager");
             addImport("androidx.fragment.app.DialogFragment");
@@ -214,7 +214,7 @@ public class ActivityCodeGenerator {
             addImport("android.app.DialogFragment");
         }
         if (permissionManager.hasNewPermission() || buildConfig.getActivityPermissions(projectFileBean.getActivityName()).needsRuntimePermissions()) {
-            if (buildConfig.g) {
+            if (buildConfig.isAppCompatEnabled) {
                 addImport("androidx.core.content.ContextCompat");
                 addImport("androidx.core.app.ActivityCompat");
             }
@@ -238,7 +238,7 @@ public class ActivityCodeGenerator {
         sb.append(EOL);
 
         sb.append("public class ").append(projectFileBean.getActivityName()).append(" extends ");
-        if (buildConfig.g) {
+        if (buildConfig.isAppCompatEnabled) {
             if (isBottomDialogFragment) {
                 sb.append("BottomSheetDialogFragment");
             } else if (isDialogFragment) {
@@ -336,7 +336,7 @@ public class ActivityCodeGenerator {
         sb.append(EOL);
         String bindingName = ViewBindingBuilder.generateFileNameForLayout(projectFileBean.fileName);
         if (isFragment) {
-            if (buildConfig.g) {
+            if (buildConfig.isAppCompatEnabled) {
                 sb.append("@NonNull").append(EOL);
                 sb.append("@Override").append(EOL);
                 sb.append("public View onCreateView(@NonNull LayoutInflater _inflater, " +
@@ -391,7 +391,7 @@ public class ActivityCodeGenerator {
 
             if (buildConfig.isDebugBuild) {
                 StringBuilder testDevicesListCode = new StringBuilder("List<String> testDeviceIds = Arrays.asList(");
-                ArrayList<String> testDevices = buildConfig.t;
+                ArrayList<String> testDevices = buildConfig.testDeviceIds;
                 for (int j = 0, testDevicesSize = testDevices.size(); j < testDevicesSize; j++) {
                     String testDeviceId = testDevices.get(j);
 
@@ -412,7 +412,7 @@ public class ActivityCodeGenerator {
 
         if (!isFragment) {
             // Adds initializeLogic() call too, don't worry
-            sb.append(permissionManager.writePermission(buildConfig.g, buildConfig.getActivityPermissions(projectFileBean.getActivityName()).c));
+            sb.append(permissionManager.writePermission(buildConfig.isAppCompatEnabled, buildConfig.getActivityPermissions(projectFileBean.getActivityName()).permissions));
         } else {
             sb.append("initializeLogic();").append(EOL);
             if (isViewBindingEnabled) {
@@ -600,7 +600,7 @@ public class ActivityCodeGenerator {
                     .replaceAll(".setLayoutManager\\(new LinearLayoutManager\\(this", ".setLayoutManager(new LinearLayoutManager(getContext()")
                     .replaceAll("getLayoutInflater\\(\\)", "getActivity().getLayoutInflater()")
                     .replaceAll("getSupportFragmentManager\\(\\)", "getActivity().getSupportFragmentManager()");
-        } else if (buildConfig.g) {
+        } else if (buildConfig.isAppCompatEnabled) {
             code = code.replaceAll("getFragmentManager", "getSupportFragmentManager");
         }
 
@@ -724,7 +724,7 @@ public class ActivityCodeGenerator {
     }
 
     private void handleAppCompat() {
-        if (buildConfig.g) {
+        if (buildConfig.isAppCompatEnabled) {
             addImport("androidx.appcompat.app.AppCompatActivity");
             addImport("androidx.annotation.*");
         } else {
@@ -734,7 +734,7 @@ public class ActivityCodeGenerator {
             fields.add("private " + ViewBindingBuilder.generateFileNameForLayout(projectFileBean.fileName) + " binding;");
         }
 
-        if (buildConfig.g) {
+        if (buildConfig.isAppCompatEnabled) {
             if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_TOOLBAR) && !projectFileBean.fileName.contains("_fragment")) {
                 addImport(
                         (materialLibraryManager.isMaterial3Enabled()) ? "com.google.android.material.appbar.MaterialToolbar" : "androidx.appcompat.widget.Toolbar"

@@ -87,7 +87,7 @@ public class ComponentCodeGenerator {
                 .append("implementation fileTree(dir: 'libs', include: ['*.jar'])\r\n");
 
         List<BuiltInLibraries.BuiltInLibrary> excludedLibraries = ExcludeBuiltInLibrariesActivity.getExcludedLibraries(metadata.sc_id);
-        if (isLibraryNotExcluded(BuiltInLibraries.ANDROIDX_APPCOMPAT, excludedLibraries) && metadata.g) {
+        if (isLibraryNotExcluded(BuiltInLibraries.ANDROIDX_APPCOMPAT, excludedLibraries) && metadata.isAppCompatEnabled) {
             content.append("""
                     implementation 'androidx.appcompat:appcompat:1.7.1'\r
                     implementation 'com.google.android.material:material:1.12.0'\r

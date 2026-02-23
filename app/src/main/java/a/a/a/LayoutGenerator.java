@@ -112,7 +112,7 @@ public class LayoutGenerator {
                 writeWidget(nx, viewBean);
             }
         }
-        if (!excludeAppCompat && buildConfig.g) {
+        if (!excludeAppCompat && buildConfig.isAppCompatEnabled) {
             if (projectFile.fileType == ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY) {
                 if (projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_TOOLBAR)) {
                     if (!root.getAttributes().containsKey("app:layout_behavior")) {
@@ -443,7 +443,7 @@ public class LayoutGenerator {
         }
 
         if (widgetTag.c().equals("CollapsingToolbarLayout")
-                && buildConfig.g
+                && buildConfig.isAppCompatEnabled
                 && projectFile.fileType == ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY) {
             if (projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_TOOLBAR)) {
                 if (collapsingToolbarLayout == null) {
