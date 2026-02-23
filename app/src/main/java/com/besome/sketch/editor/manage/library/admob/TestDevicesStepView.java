@@ -25,14 +25,14 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import a.a.a.UniqueNameValidator;
-import a.a.a.Uu;
+import a.a.a.LibrarySettingsView;
 import a.a.a.SketchToast;
 import a.a.a.AnimationUtil;
 import a.a.a.wB;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 
-public class TestDevicesStepView extends LinearLayout implements Uu, View.OnClickListener {
+public class TestDevicesStepView extends LinearLayout implements LibrarySettingsView, View.OnClickListener {
     private TestDeviceAdapter adapter;
     private ArrayList<AdTestDeviceBean> testDevices;
 

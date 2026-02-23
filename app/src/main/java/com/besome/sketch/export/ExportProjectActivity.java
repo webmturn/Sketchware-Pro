@@ -30,7 +30,7 @@ import java.util.concurrent.Executors;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import a.a.a.KB;
+import a.a.a.ZipUtil;
 import a.a.a.BaseAsyncTask;
 import a.a.a.ProjectBuilder;
 import a.a.a.eC;
@@ -40,7 +40,7 @@ import a.a.a.kC;
 import a.a.a.ProjectListManager;
 import a.a.a.oB;
 import a.a.a.SketchwarePaths;
-import a.a.a.xq;
+import a.a.a.VersionCodeValidator;
 import a.a.a.yB;
 import a.a.a.ProjectFilePaths;
 import kellinwood.security.zipsigner.ZipSigner;
@@ -182,7 +182,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
             iCVar.i();
 
             /* Extract project type template */
-            project_metadata.extractAssetsToRes(getApplicationContext(), SketchwarePaths.getResourceZipPath(xq.a(sc_id) ? "600" : sc_id));
+            project_metadata.extractAssetsToRes(getApplicationContext(), SketchwarePaths.getResourceZipPath(VersionCodeValidator.a(sc_id) ? "600" : sc_id));
 
             /* Start generating project files */
             ProjectBuilder builder = new ProjectBuilder(this, project_metadata);
@@ -246,7 +246,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
             }
             toExclude.add("DebugActivity.java");
 
-            new KB().a(exportedSourcesZipPath, toCompress, toExclude);
+            new ZipUtil().a(exportedSourcesZipPath, toCompress, toExclude);
             project_metadata.prepareBuildDirectories();
             runOnUiThread(() -> initializeAfterExportedSourceViews(exportedFilename));
         } catch (Exception e) {

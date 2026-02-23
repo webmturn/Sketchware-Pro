@@ -1,5 +1,5 @@
 package a.a.a;
 
-public interface Jw {
+public interface FileSelectedCallback {
   void a(String paramString);
 }

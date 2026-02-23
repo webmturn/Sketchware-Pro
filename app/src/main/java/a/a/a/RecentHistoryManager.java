@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-public class Cx {
-  public static Cx a;
+public class RecentHistoryManager {
+  public static RecentHistoryManager a;
   
   public static int b = 10;
   
@@ -14,11 +14,11 @@ public class Cx {
   
   public DB d;
   
-  public static Cx a() {
+  public static RecentHistoryManager a() {
     if (a == null) {
       synchronized (xB.class) {
         if (a == null) {
-          a = new Cx();
+          a = new RecentHistoryManager();
         }
       }
     }

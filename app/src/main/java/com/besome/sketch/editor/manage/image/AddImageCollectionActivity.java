@@ -27,7 +27,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import a.a.a.SketchwareException;
-import a.a.a.HB;
+import a.a.a.UriPathResolver;
 import a.a.a.BaseAsyncTask;
 import a.a.a.Op;
 import a.a.a.PB;
@@ -273,7 +273,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
 
     private void setImageFromUri(Uri uri) {
         String filePath;
-        if (uri != null && (filePath = HB.a(this, uri)) != null) {
+        if (uri != null && (filePath = UriPathResolver.a(this, uri)) != null) {
             setImageFromFile(filePath);
         }
     }

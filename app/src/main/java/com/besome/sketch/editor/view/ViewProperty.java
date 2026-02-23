@@ -30,13 +30,13 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 
-import a.a.a.Iw;
-import a.a.a.Jw;
-import a.a.a.Kw;
-import a.a.a.Lw;
+import a.a.a.ViewEditorCallback;
+import a.a.a.FileSelectedCallback;
+import a.a.a.PropertyChangedCallback;
+import a.a.a.ViewBeanCallback;
 import a.a.a.UniqueNameValidator;
 import a.a.a.Op;
-import a.a.a.Qs;
+import a.a.a.EventSelectedCallback;
 import a.a.a.Rp;
 import a.a.a.SketchToast;
 import a.a.a.ProjectDataManager;
@@ -46,7 +46,7 @@ import mod.hey.studios.project.ProjectSettings;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 
-public class ViewProperty extends LinearLayout implements Kw {
+public class ViewProperty extends LinearLayout implements PropertyChangedCallback {
 
     private Context context;
     private final ArrayList<ViewBean> projectActivityViews = new ArrayList<>();
@@ -54,14 +54,14 @@ public class ViewProperty extends LinearLayout implements Kw {
     private ProjectFileBean projectFile;
     private Spinner spnWidget;
     private ViewIdsAdapter idsAdapter;
-    private Jw propertyTargetChangeListener = null;
+    private FileSelectedCallback propertyTargetChangeListener = null;
     private LinearLayout layoutPropertySeeAll;
     private ViewPropertyItems viewPropertyItems;
     private SeeAllPropertiesFloatingItem seeAll;
     private View propertyLayout;
     private ViewEvents viewEvent;
-    private Iw propertyListener = null;
-    private Lw propertyValueChangedListener;
+    private ViewEditorCallback propertyListener = null;
+    private ViewBeanCallback propertyValueChangedListener;
     private onPropertyDeleted onPropertyDeletedListener;
     private LinearLayout layoutPropertyGroup;
     private int selectedGroupId;
@@ -93,19 +93,19 @@ public class ViewProperty extends LinearLayout implements Kw {
         onPropertyDeletedListener = onPropertyDeleted;
     }
 
-    public void setOnEventClickListener(Qs onEventClickListener) {
+    public void setOnEventClickListener(EventSelectedCallback onEventClickListener) {
         viewEvent.setOnEventClickListener(onEventClickListener);
     }
 
-    public void setOnPropertyListener(Iw onPropertyListener) {
+    public void setOnPropertyListener(ViewEditorCallback onPropertyListener) {
         propertyListener = onPropertyListener;
     }
 
-    public void setOnPropertyTargetChangeListener(Jw onPropertyTargetChangeListener) {
+    public void setOnPropertyTargetChangeListener(FileSelectedCallback onPropertyTargetChangeListener) {
         propertyTargetChangeListener = onPropertyTargetChangeListener;
     }
 
-    public void setOnPropertyValueChangedListener(Lw onPropertyValueChangedListener) {
+    public void setOnPropertyValueChangedListener(ViewBeanCallback onPropertyValueChangedListener) {
         propertyValueChangedListener = onPropertyValueChangedListener;
         viewPropertyItems.setOnPropertyValueChangedListener(viewBean -> {
             if (propertyValueChangedListener != null) {

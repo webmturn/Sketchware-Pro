@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class cC {
-  public static cC a;
+public class ViewHistoryManager {
+  public static ViewHistoryManager a;
   
   public Map<String, Integer> b;
   
@@ -15,14 +15,14 @@ public class cC {
   
   public String d;
   
-  public cC(String paramString) {
+  public ViewHistoryManager(String paramString) {
     this.d = paramString;
     this.c = new HashMap<String, ArrayList<HistoryViewBean>>();
     this.b = new HashMap<String, Integer>();
   }
   
   public static void a() {
-    cC cC1 = a;
+    ViewHistoryManager cC1 = a;
     if (cC1 != null) {
       cC1.d = "";
       cC1.c = null;
@@ -31,11 +31,11 @@ public class cC {
     a = null;
   }
   
-  public static cC c(String paramString) {
+  public static ViewHistoryManager c(String paramString) {
     if (a == null) {
-      synchronized (cC.class) {
+      synchronized (ViewHistoryManager.class) {
         if (a == null || !a.d.equals(paramString)) {
-          a = new cC(paramString);
+          a = new ViewHistoryManager(paramString);
         }
       }
     }

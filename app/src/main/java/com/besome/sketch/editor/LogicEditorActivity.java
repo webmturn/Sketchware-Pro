@@ -99,7 +99,7 @@ import a.a.a.Ts;
 import a.a.a.Us;
 import a.a.a.Vs;
 import a.a.a.IdentifierValidator;
-import a.a.a.bC;
+import a.a.a.BlockHistoryManager;
 import a.a.a.eC;
 import a.a.a.ProjectDataManager;
 import a.a.a.BuildConfig;
@@ -266,7 +266,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
     private void redo() {
         if (!isDragged) {
-            HistoryBlockBean historyBlockBean = bC.d(scId).i(s());
+            HistoryBlockBean historyBlockBean = BlockHistoryManager.d(scId).i(s());
             if (historyBlockBean != null) {
                 int actionType = historyBlockBean.getActionType();
                 if (actionType == HistoryBlockBean.ACTION_TYPE_ADD) {
@@ -324,10 +324,10 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         View a2 = wB.a(this, R.layout.logic_popup_add_list);
         RadioGroup radioGroup = a2.findViewById(R.id.rg_type);
         TextInputEditText editText = a2.findViewById(R.id.ed_input);
-        IdentifierValidator zb = new IdentifierValidator(getContext(), a2.findViewById(R.id.ti_input), BlockConstants.b, BlockConstants.a(), ProjectDataManager.getProjectDataManager(scId).a(M));
+        IdentifierValidator NinePatchDecoder = new IdentifierValidator(getContext(), a2.findViewById(R.id.ti_input), BlockConstants.b, BlockConstants.a(), ProjectDataManager.getProjectDataManager(scId).a(M));
         dialog.setView(a2);
         dialog.setPositiveButton(R.string.common_word_add, (v, which) -> {
-            if (zb.b()) {
+            if (NinePatchDecoder.b()) {
                 int i = 1;
                 int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
                 if (checkedRadioButtonId != R.id.rb_int) {
@@ -462,7 +462,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
     private void undo() {
         if (!isDragged) {
-            HistoryBlockBean history = bC.d(scId).j(s());
+            HistoryBlockBean history = BlockHistoryManager.d(scId).j(s());
             if (history != null) {
                 int actionType = history.getActionType();
                 if (actionType == HistoryBlockBean.ACTION_TYPE_ADD) {
@@ -719,7 +719,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         ss.E.m();
         ss.E.p().k();
         ss.E.pa.b();
-        bC.d(scId).a(s(), clone, ss.E.getBean().clone());
+        BlockHistoryManager.d(scId).a(s(), clone, ss.E.getBean().clone());
         refreshOptionsMenu();
     }
 
@@ -1319,10 +1319,10 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         editText.setLines(1);
         editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
-        UniqueNameValidator nb = new UniqueNameValidator(this, a2.findViewById(R.id.ti_input), Mp.h().g());
+        UniqueNameValidator DateTimeUtil = new UniqueNameValidator(this, a2.findViewById(R.id.ti_input), Mp.h().g());
         dialog.setView(a2);
         dialog.setPositiveButton(R.string.common_word_save, (v, which) -> {
-            if (nb.b()) {
+            if (DateTimeUtil.b()) {
                 a(Helper.getText(editText), rs);
                 v.dismiss();
             }
@@ -1609,7 +1609,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
     @Override
     public void finish() {
-        bC.d(scId).b(s());
+        BlockHistoryManager.d(scId).b(s());
         super.finish();
     }
 
@@ -1983,8 +1983,8 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.logic_menu, menu);
-        menu.findItem(R.id.menu_logic_redo).setEnabled(M != null && bC.d(scId).g(s()));
-        menu.findItem(R.id.menu_logic_undo).setEnabled(M != null && bC.d(scId).h(s()));
+        menu.findItem(R.id.menu_logic_redo).setEnabled(M != null && BlockHistoryManager.d(scId).g(s()));
+        menu.findItem(R.id.menu_logic_undo).setEnabled(M != null && BlockHistoryManager.d(scId).h(s()));
         return true;
     }
 
@@ -2239,7 +2239,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     }
                     int[] oLocationOnScreen = new int[2];
                     o.getLocationOnScreen(oLocationOnScreen);
-                    bC.d(scId).b(s(), arrayList, ((int) s) - oLocationOnScreen[0], ((int) t) - oLocationOnScreen[1], blockBean2, blockBean3);
+                    BlockHistoryManager.d(scId).b(s(), arrayList, ((int) s) - oLocationOnScreen[0], ((int) t) - oLocationOnScreen[1], blockBean2, blockBean3);
                     refreshOptionsMenu();
                 }
             } else if (logicTopMenu.isFavoriteActive) {
@@ -2330,7 +2330,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 ArrayList<BlockBean> a3 = a(arrayList2, width, a2, true);
                 int[] oLocationOnScreen = new int[2];
                 o.getLocationOnScreen(oLocationOnScreen);
-                bC.d(scId).a(s(), a3, width - oLocationOnScreen[0], a2 - oLocationOnScreen[1], null, null);
+                BlockHistoryManager.d(scId).a(s(), a3, width - oLocationOnScreen[0], a2 - oLocationOnScreen[1], null, null);
                 refreshOptionsMenu();
             } else if (v instanceof Rs rs13) {
                 dummy.a(this.v);
@@ -2344,7 +2344,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     }
                     int[] locationOnScreen = new int[2];
                     o.getLocationOnScreen(locationOnScreen);
-                    bC.d(scId).a(s(), a4.getBean().clone(), this.v[0] - locationOnScreen[0], this.v[1] - locationOnScreen[1], clone3, blockBean3);
+                    BlockHistoryManager.d(scId).a(s(), a4.getBean().clone(), this.v[0] - locationOnScreen[0], this.v[1] - locationOnScreen[1], clone3, blockBean3);
                     if (clone3 != null) {
                         clone3.print();
                     }
@@ -2365,7 +2365,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                         }
                         int[] locationOnScreen = new int[2];
                         o.getLocationOnScreen(locationOnScreen);
-                        bC.d(scId).a(s(), a5, this.v[0] - locationOnScreen[0], this.v[1] - locationOnScreen[1], clone5, blockBean3);
+                        BlockHistoryManager.d(scId).a(s(), a5, this.v[0] - locationOnScreen[0], this.v[1] - locationOnScreen[1], clone5, blockBean3);
                     }
                     o.c();
                 } else {
@@ -2408,7 +2408,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                         o.getLocationOnScreen(locationOnScreen);
                         int x = locationOnScreen[0];
                         int y = locationOnScreen[1];
-                        bC.d(scId).a(s(), arrayList3, arrayList4, ((int) s) - x, ((int) t) - y, this.v[0] - x, this.v[1] - y, blockBean, clone7, clone6, blockBean3);
+                        BlockHistoryManager.d(scId).a(s(), arrayList3, arrayList4, ((int) s) - x, ((int) t) - y, this.v[0] - x, this.v[1] - y, blockBean, clone7, clone6, blockBean3);
                     }
                     o.c();
                 }
@@ -2486,7 +2486,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public final String s() {
-        return bC.a(M.getJavaName(), id, eventName);
+        return BlockHistoryManager.a(M.getJavaName(), id, eventName);
     }
 
     public void showSourceCode() {

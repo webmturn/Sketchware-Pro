@@ -17,7 +17,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 
-import a.a.a.Kw;
+import a.a.a.PropertyChangedCallback;
 import a.a.a.mB;
 import a.a.a.wB;
 import mod.hey.studios.util.Helper;
@@ -35,7 +35,7 @@ public class PropertyCustomViewItem extends RelativeLayout implements View.OnCli
     private int f;
     private View propertyItem;
     private View propertyMenuItem;
-    private Kw propertyValueChangeListener;
+    private PropertyChangedCallback propertyValueChangeListener;
     private ArrayList<ProjectFileBean> customViews;
 
     public PropertyCustomViewItem(Context context, boolean idk) {
@@ -153,7 +153,7 @@ public class PropertyCustomViewItem extends RelativeLayout implements View.OnCli
         customViews = customView;
     }
 
-    public void setOnPropertyValueChangeListener(Kw var1) {
+    public void setOnPropertyValueChangeListener(PropertyChangedCallback var1) {
         propertyValueChangeListener = var1;
     }
 

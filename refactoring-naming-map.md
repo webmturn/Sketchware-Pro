@@ -102,7 +102,80 @@
 |---------|--------------|------|------|
 | `Jp` | `BuiltInLibrary` | Represents a bundled library with metadata | 2KB |
 
-## Refactoring Priority Order (All Phases Complete ✅)
+### Phase 8a - Freely Renamable (no JAR references, 23 classes)
+
+#### Utilities
+| Current | Proposed Name | Role | Size |
+|---------|--------------|------|------|
+| `zB` | `NinePatchDecoder` | Decodes bitmaps with NinePatch chunk handling | 8KB |
+| `HB` | `UriPathResolver` | Converts content/document URIs to file paths | 3KB |
+| `KB` | `ZipUtil` | Extract ZIP from assets, create ZIP files | 9KB |
+| `nB` | `DateTimeUtil` | Date/time formatting utilities | 3KB |
+
+#### Data Managers / History
+| Current | Proposed Name | Role | Size |
+|---------|--------------|------|------|
+| `bC` | `BlockHistoryManager` | Undo/redo history for BlockBeans | 7KB |
+| `cC` | `ViewHistoryManager` | Undo/redo history for ViewBeans | 6KB |
+| `fC` | `KeyboardSettingConstants` | Static int array {1..8} | <1KB |
+
+#### Block/Logic
+| Current | Proposed Name | Role | Size |
+|---------|--------------|------|------|
+| `vq` | `ActivityConfigConstants` | Theme names, orientation names, keyboard modes | 1KB |
+| `xq` | `VersionCodeValidator` | Validates version code range (200-600) | 1KB |
+
+#### Interfaces
+| Current | Proposed Name | Role | Size |
+|---------|--------------|------|------|
+| `Iw` | `ViewEditorCallback` | View editor refresh + view selection callback | <1KB |
+| `Jw` | `FileSelectedCallback` | Single string (filename) callback | <1KB |
+| `Kw` | `PropertyChangedCallback` | Key-value property change callback | <1KB |
+| `Lw` | `ViewBeanCallback` | ViewBean selection callback | <1KB |
+| `Qs` | `EventSelectedCallback` | EventBean selection callback | <1KB |
+| `Uu` | `LibrarySettingsView` | Library settings view interface (setData, isValid, getDocUrl) | <1KB |
+| `by` | `ProjectFileSelectedCallback` | int + ProjectFileBean callback | <1KB |
+| `cy` | `BuildCallback` | Build progress callback (start, progress, complete) | <1KB |
+| `ty` | `ScrollableContainer` | Scroll enable/disable interface | <1KB |
+| `YA` | `IntCallback` | Simple int callback | <1KB |
+
+#### Other
+| Current | Proposed Name | Role | Size |
+|---------|--------------|------|------|
+| `Cx` | `RecentHistoryManager` | Manages recent items per category (max 10, stored in DB P26) | 4KB |
+| `jv` | `FirebaseClickListenerLegacy` | Legacy no-op click listener for FirebasePreviewView | <1KB |
+| `ro` | `UserExperienceLevel` | Loads user experience level from DB U1 | 1KB |
+| `zy` | `SimpleException` | Simple exception wrapper | <1KB |
+
+### Phase 8b - Need JAR Wrapper (referenced by JAR classes, 10 classes)
+| Current | Proposed Name | Referenced by JAR | Role |
+|---------|--------------|-------------------|------|
+| `FB` | `FormatUtil` | `Rs` | Hex conversion, file size formatting, clipboard |
+| `iB` | `BitmapUtil` | `Op` | Bitmap sample size, EXIF rotation |
+| `uB` | `HashMapTypeToken` | `vB` | Gson TypeToken<HashMap<String, Object>> |
+| `jB` | `ViewEnableRunnable` | `mB` | Runnable that re-enables a View |
+| `dC` | `ScreenOrientationConstants` | `eC` | Static int array {1..8} |
+| `gC` | `ProjectDataParser` | `eC`, `Mp`, `Pp`, `Rp` | Parses project data JSON |
+| `lq` | `BlockSpecRegistry` | `xB` | Maps block opcode → params/returns (260KB) |
+| `rq` | `PresetLayoutFactory` | `xw` | Creates preset ViewBean layouts |
+| `nA` | `ReflectiveToString` | `Rs` | toString via reflection |
+| `yy` | `CompileException` | `Mp`-`Rp` | Exception with error list |
+
+### Phase 8 - Confirmed JAR Classes (cannot rename, newly discovered)
+| Current | Role | Why |
+|---------|------|-----|
+| `xB` | StringResourceManager | In JAR (references wq) |
+| `Lp` | BaseCollectionManager | In JAR (parent of Mp-Rp) |
+| `Mp` | BlockCollectionManager | In JAR (references wq) |
+| `Np` | SoundCollectionManager | In JAR (references wq) |
+| `Op` | ImageCollectionManager | In JAR (references wq) |
+| `Pp` | MoreBlockCollectionManager | In JAR (references wq) |
+| `Qp` | FontCollectionManager | In JAR (references wq) |
+| `Rp` | WidgetCollectionManager | In JAR (references wq) |
+| `iI` | KeyStoreManager | In JAR (references wq) |
+| `hI` | KeyStoreOutputStream | In JAR (instantiated by iI) |
+
+## Refactoring Priority Order
 1. **Phase 1 - Small utilities** ✅: `wB`→ViewUtil (reverted), `gB`→AnimationUtil, `bB`→SketchToast, `aB`→SketchDialog, `ay`→SimpleCallback, `Jp`→BuiltInLibrary, `uy`→WidgetPaletteIcon
 2. **Phase 2 - Validators** ✅: `NB`→UniqueNameValidator, `RB`→LowercaseNameValidator, `SB`→LengthRangeValidator, `VB`→VariableNameValidator, `YB`→ActivityNameValidator, `ZB`→IdentifierValidator
 3. **Phase 3 - Fragments** ✅: `qA`→BaseFragment, `DA`→PermissionFragment, `Fw`→ViewFilesFragment, `br`→ComponentListFragment, `fu`→ImageCollectionFragment, `ow`→SoundListFragment, `pu`→ImageListFragment, `rs`→EventListFragment, `Yv`→SoundImportFragment
@@ -110,6 +183,13 @@
 5. **Phase 5 - Data/Logic** ✅: `jC`→ProjectDataManager, `jq`→BuildConfig, `lC`→ProjectListManager, `wq`→SketchwarePaths, `yq`→ProjectFilePaths, `MA`→BaseAsyncTask
 6. **Phase 6 - Code generators** ✅: `Fx`→BlockInterpreter, `Gx`→ClassInfo, `Hx`→EventCodeGenerator, `Ix`→ManifestGenerator, `Jx`→ActivityCodeGenerator, `Lx`→ComponentCodeGenerator, `Ox`→LayoutGenerator
 7. **Phase 7 - Registries** ✅: `kq`→BlockColorMapper, `mq`→ComponentTypeMapper, `oq`→EventRegistry, `sq`→SketchwareConstants, `tq`→CompileQuizManager, `uq`→BlockConstants
+8. **Phase 8 - Remaining classes** 🔄: utilities, data managers, collection managers, interfaces, other
+
+## Cannot Rename (JAR constrained)
+- **In JARs (original)**: `eC`, `hC`, `kC`, `iC`, `oB`, `vB`, `yB`, `mB`, `nv`, `DB`, `GB`, `Sp`, `Vs`, `Ts`, `Ss`, `Rs`, `Us`, `PB`, `QB`, `xw`
+- **In JARs (Phase 8 discovery)**: `xB`, `Lp`, `Mp`, `Np`, `Op`, `Pp`, `Qp`, `Rp`, `iI`, `hI`
+- **Referenced by JAR** (cannot rename without wrapper): `tw`, `uw`, `vw`, `ww`, `jB`
+- **Must keep name for JAR compat**: `wB` (GB JAR calls wB.a())
 
 ## JAR Wrapper Classes (for binary compatibility)
 - `qA` extends `BaseFragment` (for xw JAR)

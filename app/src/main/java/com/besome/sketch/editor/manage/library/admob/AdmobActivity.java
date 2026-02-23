@@ -16,7 +16,7 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import a.a.a.GB;
-import a.a.a.Uu;
+import a.a.a.LibrarySettingsView;
 import a.a.a.SketchToast;
 import a.a.a.iC;
 import a.a.a.mB;
@@ -29,7 +29,7 @@ public class AdmobActivity extends BaseAppCompatActivity implements View.OnClick
     private String[] stepTitles;
     private String[] stepDescriptions;
     private int stepPosition = 0;
-    private Uu step;
+    private LibrarySettingsView step;
     private ProjectLibraryBean adMobSettings;
     private String sc_id;
     private ManageLibraryAdmobBinding binding;

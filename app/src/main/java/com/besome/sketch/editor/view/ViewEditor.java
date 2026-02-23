@@ -48,13 +48,13 @@ import java.util.HashMap;
 
 import a.a.a.DB;
 import a.a.a.GB;
-import a.a.a.Iw;
+import a.a.a.ViewEditorCallback;
 import a.a.a.Op;
 import a.a.a.Rp;
 import a.a.a.SimpleCallback;
 import a.a.a.SketchToast;
-import a.a.a.cC;
-import a.a.a.cy;
+import a.a.a.ViewHistoryManager;
+import a.a.a.BuildCallback;
 import a.a.a.ProjectDataManager;
 import a.a.a.oB;
 import a.a.a.WidgetPaletteIcon;
@@ -83,8 +83,8 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
     private int defaultIconWidth = 50;
     private int defaultIconHeight = 30;
     private boolean useVibrate;
-    private cy widgetSelectedListener;
-    private Iw propertyClickListener;
+    private BuildCallback widgetSelectedListener;
+    private ViewEditorCallback propertyClickListener;
     private DraggingListener draggingListener;
     private SimpleCallback historyChangeListener;
     private ProjectFileBean projectFileBean;
@@ -479,11 +479,11 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         historyChangeListener = ayVar;
     }
 
-    public void setOnPropertyClickListener(Iw iw) {
-        propertyClickListener = iw;
+    public void setOnPropertyClickListener(ViewEditorCallback viewEditorCallback) {
+        propertyClickListener = viewEditorCallback;
     }
 
-    public void setOnWidgetSelectedListener(cy cyVar) {
+    public void setOnWidgetSelectedListener(BuildCallback cyVar) {
         widgetSelectedListener = cyVar;
     }
 
@@ -590,7 +590,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
 
     public void b(ArrayList<ViewBean> arrayList, boolean z) {
         if (z) {
-            cC.c(a).b(projectFileBean.getXmlName(), arrayList);
+            ViewHistoryManager.c(a).b(projectFileBean.getXmlName(), arrayList);
             if (historyChangeListener != null) {
                 historyChangeListener.onCallback();
             }
@@ -726,7 +726,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
 
     public ItemView b(ViewBean viewBean, boolean z) {
         if (z) {
-            cC.c(a).b(projectFileBean.getXmlName(), viewBean);
+            ViewHistoryManager.c(a).b(projectFileBean.getXmlName(), viewBean);
             if (historyChangeListener != null) {
                 historyChangeListener.onCallback();
             }
@@ -998,7 +998,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
 
     public ItemView a(ArrayList<ViewBean> arrayList, boolean z) {
         if (z) {
-            cC.c(a).a(projectFileBean.getXmlName(), arrayList);
+            ViewHistoryManager.c(a).a(projectFileBean.getXmlName(), arrayList);
             if (historyChangeListener != null) {
                 historyChangeListener.onCallback();
             }
@@ -1016,7 +1016,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
 
     public ItemView a(ViewBean viewBean, boolean isInHistory) {
         if (isInHistory) {
-            cC.c(a).a(projectFileBean.getXmlName(), viewBean);
+            ViewHistoryManager.c(a).a(projectFileBean.getXmlName(), viewBean);
             if (historyChangeListener != null) {
                 historyChangeListener.onCallback();
             }

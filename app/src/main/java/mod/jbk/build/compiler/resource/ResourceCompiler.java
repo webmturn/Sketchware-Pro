@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 import a.a.a.BuiltInLibrary;
 import a.a.a.ProjectBuilder;
-import a.a.a.zy;
+import a.a.a.SimpleException;
 import mod.agus.jcoderz.editor.manage.library.locallibrary.ManageLocalLibrary;
 import mod.hey.studios.build.BuildSettings;
 import mod.hey.studios.project.ProjectSettings;
@@ -49,7 +49,7 @@ public class ResourceCompiler {
         this.builder = builder;
     }
 
-    public void compile() throws IOException, zy, MissingFileException {
+    public void compile() throws IOException, SimpleException, MissingFileException {
         Compiler resourceCompiler;
         resourceCompiler = new Aapt2Compiler(builder, aaptFile, willBuildAppBundle);
 
@@ -70,7 +70,7 @@ public class ResourceCompiler {
         /**
          * Compile a project's resources fully.
          */
-        void compile() throws zy, MissingFileException;
+        void compile() throws SimpleException, MissingFileException;
 
         /**
          * Set a progress listener to compiling.
@@ -112,7 +112,7 @@ public class ResourceCompiler {
         }
 
         @Override
-        public void compile() throws zy, MissingFileException {
+        public void compile() throws SimpleException, MissingFileException {
             String outputPath = buildHelper.ProjectFilePaths.binDirectoryPath + File.separator + "res";
             emptyOrCreateDirectory(outputPath);
 
@@ -140,9 +140,9 @@ public class ResourceCompiler {
         /**
          * Links the project's resources using AAPT2.
          *
-         * @throws zy Thrown to be caught by DesignActivity to show an error Snackbar.
+         * @throws SimpleException Thrown to be caught by DesignActivity to show an error Snackbar.
          */
-        public void link() throws zy, MissingFileException {
+        public void link() throws SimpleException, MissingFileException {
             String resourcesPath = buildHelper.ProjectFilePaths.binDirectoryPath + File.separator + "res";
             if (progressListener != null)
                 progressListener.onProgressUpdate("Linking resources with AAPT2...", 10);
@@ -274,11 +274,11 @@ public class ResourceCompiler {
             executor.setCommands(args);
             if (!executor.execute().isEmpty()) {
                 LogUtil.e(TAG + ":l", executor.getLog());
-                throw new zy(executor.getLog());
+                throw new SimpleException(executor.getLog());
             }
         }
 
-        private void compileProjectResources(String outputPath) throws zy, MissingFileException {
+        private void compileProjectResources(String outputPath) throws SimpleException, MissingFileException {
             compilingAssertDirectoryExists(buildHelper.ProjectFilePaths.resDirectoryPath);
 
             ArrayList<String> commands = new ArrayList<>();
@@ -293,7 +293,7 @@ public class ResourceCompiler {
             executor.setCommands(commands);
             if (!executor.execute().isEmpty()) {
                 LogUtil.e(TAG, executor.getLog());
-                throw new zy(executor.getLog());
+                throw new SimpleException(executor.getLog());
             }
         }
 
@@ -304,7 +304,7 @@ public class ResourceCompiler {
             FileUtil.makeDir(path);
         }
 
-        private void compileLocalLibraryResources(String outputPath) throws zy, MissingFileException {
+        private void compileLocalLibraryResources(String outputPath) throws SimpleException, MissingFileException {
             int localLibrariesCount = buildHelper.mll.getResLocalLibrary().size();
             LogUtil.d(TAG + ":cLLR", "About to compile " + localLibrariesCount
                     + " local " + (localLibrariesCount == 1 ? "library" : "libraries"));
@@ -326,13 +326,13 @@ public class ResourceCompiler {
                     executor.setCommands(commands);
                     if (!executor.execute().isEmpty()) {
                         LogUtil.e(TAG, executor.getLog());
-                        throw new zy(executor.getLog());
+                        throw new SimpleException(executor.getLog());
                     }
                 }
             }
         }
 
-        private void compileBuiltInLibraryResources() throws zy, MissingFileException {
+        private void compileBuiltInLibraryResources() throws SimpleException, MissingFileException {
             compiledBuiltInLibraryResourcesDirectory.mkdirs();
             for (BuiltInLibrary builtInLibrary : buildHelper.builtInLibraryManager.getLibraries()) {
                 if (builtInLibrary.hasResources()) {
@@ -355,7 +355,7 @@ public class ResourceCompiler {
                         executor.setCommands(commands);
                         if (!executor.execute().isEmpty()) {
                             LogUtil.e(TAG + ":cBILR", executor.getLog());
-                            throw new zy(executor.getLog());
+                            throw new SimpleException(executor.getLog());
                         }
                     } else {
                         LogUtil.d(TAG + ":cBILR", "Skipped resource recompilation for built-in library " + builtInLibrary.getName());
@@ -380,7 +380,7 @@ public class ResourceCompiler {
             return true;
         }
 
-        private void compileImportedResources(String outputPath) throws zy {
+        private void compileImportedResources(String outputPath) throws SimpleException {
             if (FileUtil.isExistFile(buildHelper.fpu.getPathResource(buildHelper.ProjectFilePaths.sc_id))
                     && new File(buildHelper.fpu.getPathResource(buildHelper.ProjectFilePaths.sc_id)).length() != 0) {
                 ArrayList<String> commands = new ArrayList<>();
@@ -395,7 +395,7 @@ public class ResourceCompiler {
                 executor.setCommands(commands);
                 if (!executor.execute().isEmpty()) {
                     LogUtil.e(TAG, executor.getLog());
-                    throw new zy(executor.getLog());
+                    throw new SimpleException(executor.getLog());
                 }
             }
         }

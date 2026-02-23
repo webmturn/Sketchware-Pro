@@ -64,7 +64,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
         widgetsCreatorManager = new WidgetsCreatorManager(this);
         viewEditor.widgetsCreatorManager = widgetsCreatorManager;
         viewProperty = requireActivity().findViewById(R.id.view_property);
-        viewProperty.setOnPropertyListener(new Iw() {
+        viewProperty.setOnPropertyListener(new ViewEditorCallback() {
             @Override
             public void a() {
                 viewEditor.setFavoriteData(Rp.h().f());
@@ -89,7 +89,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
         });
         viewProperty.setOnEventClickListener(eventBean -> toLogicEditorActivity(eventBean.targetId, eventBean.eventName, eventBean.eventName));
         viewProperty.setOnPropertyTargetChangeListener(viewEditor::updateSelection);
-        viewEditor.setOnWidgetSelectedListener(new cy() {
+        viewEditor.setOnWidgetSelectedListener(new BuildCallback() {
             @Override
             public void a() {
                 updatePropertyViews();
@@ -321,7 +321,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
 
     private void onRedo() {
         if (!isDragging) {
-            HistoryViewBean historyViewBean = cC.c(sc_id).h(projectFileBean.getXmlName());
+            HistoryViewBean historyViewBean = ViewHistoryManager.c(sc_id).h(projectFileBean.getXmlName());
             if (historyViewBean != null) {
                 int actionType = historyViewBean.getActionType();
                 if (actionType == HistoryViewBean.ACTION_TYPE_ADD) {
@@ -387,7 +387,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
 
     private void onUndo() {
         if (!isDragging) {
-            HistoryViewBean historyViewBean = cC.c(sc_id).i(projectFileBean.getXmlName());
+            HistoryViewBean historyViewBean = ViewHistoryManager.c(sc_id).i(projectFileBean.getXmlName());
             if (historyViewBean != null) {
                 int actionType = historyViewBean.getActionType();
                 if (actionType == HistoryViewBean.ACTION_TYPE_ADD) {
@@ -449,8 +449,8 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
         menu.findItem(R.id.menu_view_redo).setEnabled(false);
         menu.findItem(R.id.menu_view_undo).setEnabled(false);
         if (projectFileBean != null) {
-            menu.findItem(R.id.menu_view_redo).setEnabled(cC.c(sc_id).f(projectFileBean.getXmlName()));
-            menu.findItem(R.id.menu_view_undo).setEnabled(cC.c(sc_id).g(projectFileBean.getXmlName()));
+            menu.findItem(R.id.menu_view_redo).setEnabled(ViewHistoryManager.c(sc_id).f(projectFileBean.getXmlName()));
+            menu.findItem(R.id.menu_view_undo).setEnabled(ViewHistoryManager.c(sc_id).g(projectFileBean.getXmlName()));
         }
     }
 

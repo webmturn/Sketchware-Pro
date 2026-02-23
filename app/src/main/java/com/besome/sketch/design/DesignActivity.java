@@ -82,9 +82,9 @@ import a.a.a.LayoutGenerator;
 import a.a.a.ProjectBuilder;
 import a.a.a.ViewEditorFragment;
 import a.a.a.SketchToast;
-import a.a.a.bC;
+import a.a.a.BlockHistoryManager;
 import a.a.a.ComponentListFragment;
-import a.a.a.cC;
+import a.a.a.ViewHistoryManager;
 import a.a.a.eC;
 import a.a.a.ProjectDataManager;
 import a.a.a.kC;
@@ -94,7 +94,7 @@ import a.a.a.EventListFragment;
 import a.a.a.SketchwarePaths;
 import a.a.a.yB;
 import a.a.a.ProjectFilePaths;
-import a.a.a.zy;
+import a.a.a.SimpleException;
 import dev.chrisbanes.insetter.Insetter;
 import mod.agus.jcoderz.editor.manage.permission.ManagePermissionActivity;
 import mod.agus.jcoderz.editor.manage.resource.ManageResourceActivity;
@@ -230,8 +230,8 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         ProjectDataManager.getFileManager(sc_id, haveSavedState);
         kC var2 = ProjectDataManager.getResourceManager(sc_id, haveSavedState);
         ProjectDataManager.getLibraryManager(sc_id, haveSavedState);
-        cC.c(sc_id);
-        bC.d(sc_id);
+        ViewHistoryManager.c(sc_id);
+        BlockHistoryManager.d(sc_id);
         if (!haveSavedState) {
             var2.f();
             var2.g();
@@ -340,8 +340,8 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     @Override
     public void finish() {
         ProjectDataManager.clearAll();
-        cC.a();
-        bC.a();
+        ViewHistoryManager.a();
+        BlockHistoryManager.a();
         setResult(RESULT_CANCELED, getIntent());
         super.finish();
     }
@@ -1245,9 +1245,9 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                     dialog.setPositiveButton(R.string.common_word_dismiss, null);
                     dialog.show();
                 });
-            } catch (zy zy) {
+            } catch (SimpleException SimpleException) {
                 isBuildFinished = true;
-                activity.indicateCompileErrorOccurred(zy.getMessage());
+                activity.indicateCompileErrorOccurred(SimpleException.getMessage());
             } catch (Throwable tr) {
                 isBuildFinished = true;
                 LogUtil.e("DesignActivity$BuildTask", "Failed to build project", tr);

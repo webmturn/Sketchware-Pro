@@ -19,7 +19,7 @@ import com.besome.sketch.beans.ViewBean;
 import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import a.a.a.cC;
+import a.a.a.ViewHistoryManager;
 import a.a.a.ProjectDataManager;
 import io.github.rosemoe.sora.widget.CodeEditor;
 import mod.hey.studios.util.Helper;
@@ -258,12 +258,12 @@ public class ViewCodeEditorActivity extends BaseAppCompatActivity {
             rootLayoutManager.set(filename, InjectRootLayoutManager.toRoot(root));
             HistoryViewBean bean = new HistoryViewBean();
             bean.actionOverride(parsedLayout, ProjectDataManager.getProjectDataManager(sc_id).d(filename));
-            var cc = cC.c(sc_id);
-            if (!cc.c.containsKey(filename)) {
-                cc.e(filename);
+            var viewHistoryMgr = ViewHistoryManager.c(sc_id);
+            if (!viewHistoryMgr.c.containsKey(filename)) {
+                viewHistoryMgr.e(filename);
             }
-            cc.a(filename);
-            cc.a(filename, bean);
+            viewHistoryMgr.a(filename);
+            viewHistoryMgr.a(filename, bean);
             // Replace the view beans with the parsed layout
             ProjectDataManager.getProjectDataManager(sc_id).c.put(filename, parsedLayout);
             setResult(RESULT_OK);

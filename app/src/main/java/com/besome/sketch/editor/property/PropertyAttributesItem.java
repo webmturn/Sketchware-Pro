@@ -27,7 +27,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import a.a.a.Kw;
+import a.a.a.PropertyChangedCallback;
 import a.a.a.mB;
 import a.a.a.wB;
 import mod.hey.studios.util.Helper;
@@ -79,7 +79,7 @@ public class PropertyAttributesItem extends LinearLayout implements View.OnClick
     private View propertyItem;
     private View propertyMenuItem;
     private ImageView imgLeftIcon;
-    private Kw valueChangeListener;
+    private PropertyChangedCallback valueChangeListener;
     private ViewBean bean;
     private List<String> ids = new ArrayList<>();
 
@@ -148,7 +148,7 @@ public class PropertyAttributesItem extends LinearLayout implements View.OnClick
         this.ids = ids;
     }
 
-    public void setOnPropertyValueChangeListener(Kw onPropertyValueChangeListener) {
+    public void setOnPropertyValueChangeListener(PropertyChangedCallback onPropertyValueChangeListener) {
         valueChangeListener = onPropertyValueChangeListener;
     }
 

@@ -24,12 +24,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
-import a.a.a.Cx;
+import a.a.a.RecentHistoryManager;
 import a.a.a.ClassInfo;
 import a.a.a.Gx;
-import a.a.a.Kw;
-import a.a.a.Lw;
-import a.a.a.cC;
+import a.a.a.PropertyChangedCallback;
+import a.a.a.ViewBeanCallback;
+import a.a.a.ViewHistoryManager;
 import a.a.a.ProjectDataManager;
 import a.a.a.mB;
 import a.a.a.EventRegistry;
@@ -37,18 +37,18 @@ import mod.hey.studios.project.ProjectSettings;
 import mod.pranav.viewbinding.ViewBindingBuilder;
 import pro.sketchware.R;
 
-public class ViewPropertyItems extends LinearLayout implements Kw, View.OnClickListener {
+public class ViewPropertyItems extends LinearLayout implements PropertyChangedCallback, View.OnClickListener {
     private final boolean b = false;
     private final HashMap<String, View> f = new HashMap<>();
     private String sc_id;
     private ViewBean c;
-    private Lw d;
+    private ViewBeanCallback d;
     private ProjectFileBean e;
     private ProjectSettings settings;
 
     public ViewPropertyItems(Context var1) {
         super(var1);
-        Cx.a().a(var1);
+        RecentHistoryManager.a().a(var1);
     }
 
     private void setupViews() {
@@ -229,7 +229,7 @@ public class ViewPropertyItems extends LinearLayout implements Kw, View.OnClickL
     public void a(String scId, ViewBean bean) {
         sc_id = scId;
         c = bean;
-        Cx.a().b(c.getClassInfo().getClassName());
+        RecentHistoryManager.a().b(c.getClassInfo().getClassName());
         removeAllViews();
         if (bean.id.equals("_fab")) {
             b(bean);
@@ -250,12 +250,12 @@ public class ViewPropertyItems extends LinearLayout implements Kw, View.OnClickL
 
     @Override
     public void a(String var1, Object var2) {
-        Cx.a().a(c.getClassInfo().getClassName(), var1);
+        RecentHistoryManager.a().a(c.getClassInfo().getClassName(), var1);
         if (d != null) {
             ViewBean cloned = c.clone();
             i(c);
             if (!b) {
-                cC.c(sc_id).a(e.getXmlName(), cloned, c.clone());
+                ViewHistoryManager.c(sc_id).a(e.getXmlName(), cloned, c.clone());
                 d.a(c);
             }
         }
@@ -300,7 +300,7 @@ public class ViewPropertyItems extends LinearLayout implements Kw, View.OnClickL
     }
 
     public void save() {
-        Cx.a().b();
+        RecentHistoryManager.a().b();
     }
 
     private void b(ViewBean bean) {
@@ -482,7 +482,7 @@ public class ViewPropertyItems extends LinearLayout implements Kw, View.OnClickL
         params.gravity = Gravity.LEFT;
         setLayoutParams(params);
         setGravity(Gravity.LEFT);
-        ArrayList<String> items = Cx.a().a(bean.getClassInfo().getClassName());
+        ArrayList<String> items = RecentHistoryManager.a().a(bean.getClassInfo().getClassName());
         if (items == null) {
             setupViews();
         } else {
@@ -982,7 +982,7 @@ public class ViewPropertyItems extends LinearLayout implements Kw, View.OnClickL
         this.settings = settings;
     }
 
-    public void setOnPropertyValueChangedListener(Lw listener) {
+    public void setOnPropertyValueChangedListener(ViewBeanCallback listener) {
         d = listener;
     }
 

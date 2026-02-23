@@ -38,16 +38,16 @@ import com.besome.sketch.lib.ui.CustomScrollView;
 import java.util.ArrayList;
 import java.util.Map;
 
-import a.a.a.Kw;
-import a.a.a.cC;
+import a.a.a.PropertyChangedCallback;
+import a.a.a.ViewHistoryManager;
 import a.a.a.ProjectDataManager;
 import a.a.a.mB;
-import a.a.a.ro;
+import a.a.a.UserExperienceLevel;
 import mod.hey.studios.project.ProjectSettings;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 
-public class PropertyActivity extends BaseAppCompatActivity implements Kw {
+public class PropertyActivity extends BaseAppCompatActivity implements PropertyChangedCallback {
 
     private ActivityResultLauncher<Intent> imageManagerLauncher;
     private final ArrayList<Integer> propertyGroups = new ArrayList<>();
@@ -126,7 +126,7 @@ public class PropertyActivity extends BaseAppCompatActivity implements Kw {
             viewBean = ProjectDataManager.getProjectDataManager(sc_id).c(projectFileBean.getXmlName(), this.viewBean.preId);
         }
 
-        cC.c(sc_id).a(projectFileBean.getXmlName(), viewBean.clone(), this.viewBean);
+        ViewHistoryManager.c(sc_id).a(projectFileBean.getXmlName(), viewBean.clone(), this.viewBean);
         viewBean.copy(this.viewBean);
         Intent var2 = new Intent();
         var2.putExtra("view_id", this.viewBean.id);
@@ -168,7 +168,7 @@ public class PropertyActivity extends BaseAppCompatActivity implements Kw {
             finish();
         }
 
-        ro w = new ro(getApplicationContext());
+        UserExperienceLevel w = new UserExperienceLevel(getApplicationContext());
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

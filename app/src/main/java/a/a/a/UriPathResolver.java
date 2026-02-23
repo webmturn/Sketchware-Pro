@@ -4,7 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
-public final class HB {
+public final class UriPathResolver {
   public static String a(Context paramContext, Uri paramUri) {
     String result = null;
     if (android.provider.DocumentsContract.isDocumentUri(paramContext, paramUri)) {

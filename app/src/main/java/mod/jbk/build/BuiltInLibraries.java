@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import a.a.a.KB;
+import a.a.a.ZipUtil;
 import a.a.a.ProjectBuilder;
 import a.a.a.oB;
 import pro.sketchware.SketchApplication;
@@ -585,7 +585,7 @@ public class BuiltInLibraries {
             /* Create the directories */
             fileUtil.f(dexsDirectoryPath);
             /* Extract dexs.zip to dexs/ */
-            try { new KB().a(dexsArchivePath, dexsDirectoryPath); } catch (java.io.FileNotFoundException e) { throw new RuntimeException(e); }
+            try { new ZipUtil().a(dexsArchivePath, dexsDirectoryPath); } catch (java.io.FileNotFoundException e) { throw new RuntimeException(e); }
         }
         if (ProjectBuilder.hasFileChanged(baseAssetsPath + libsArchiveName, libsArchivePath)) {
             for (BuildProgressReceiver receiver : progressReceivers) {
@@ -596,7 +596,7 @@ public class BuiltInLibraries {
             /* Create the directories */
             fileUtil.f(libsDirectoryPath);
             /* Extract libs.zip to libs/ */
-            try { new KB().a(libsArchivePath, libsDirectoryPath); } catch (java.io.FileNotFoundException e) { throw new RuntimeException(e); }
+            try { new ZipUtil().a(libsArchivePath, libsDirectoryPath); } catch (java.io.FileNotFoundException e) { throw new RuntimeException(e); }
         }
         maybeExtractCoreLambdaStubsJar();
         if (ProjectBuilder.hasFileChanged(baseAssetsPath + testkeyArchiveName, testkeyArchivePath)) {
@@ -608,7 +608,7 @@ public class BuiltInLibraries {
             /* Create the directories */
             fileUtil.f(testkeyDirectoryPath);
             /* Extract testkey.zip to testkey/ */
-            try { new KB().a(testkeyArchivePath, testkeyDirectoryPath); } catch (java.io.FileNotFoundException e) { throw new RuntimeException(e); }
+            try { new ZipUtil().a(testkeyArchivePath, testkeyDirectoryPath); } catch (java.io.FileNotFoundException e) { throw new RuntimeException(e); }
         }
     }
 
@@ -622,7 +622,7 @@ public class BuiltInLibraries {
             /* Delete android.jar */
             new oB().c(EXTRACTED_COMPILE_ASSETS_PATH.getAbsolutePath() + File.separator + "android.jar");
             /* Extract android.jar.zip to android.jar */
-            try { new KB().a(androidJarPath, EXTRACTED_COMPILE_ASSETS_PATH.getAbsolutePath()); } catch (java.io.FileNotFoundException e) { throw new RuntimeException(e); }
+            try { new ZipUtil().a(androidJarPath, EXTRACTED_COMPILE_ASSETS_PATH.getAbsolutePath()); } catch (java.io.FileNotFoundException e) { throw new RuntimeException(e); }
         }
     }
 

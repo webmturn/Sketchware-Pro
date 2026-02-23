@@ -1,6 +1,6 @@
 package a.a.a;
 
-public interface ty {
+public interface ScrollableContainer {
   void a();
   
   void setChildScrollEnabled(boolean paramBoolean);

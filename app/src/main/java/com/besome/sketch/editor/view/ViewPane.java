@@ -78,7 +78,7 @@ import a.a.a.ProjectListManager;
 import a.a.a.wB;
 import a.a.a.SketchwarePaths;
 import a.a.a.yB;
-import a.a.a.zB;
+import a.a.a.NinePatchDecoder;
 import dev.aldi.sayuti.editor.view.item.ItemBadgeView;
 import dev.aldi.sayuti.editor.view.item.ItemCircleImageView;
 import dev.aldi.sayuti.editor.view.item.ItemCodeView;
@@ -465,7 +465,7 @@ public class ViewPane extends RelativeLayout {
                 } else {
                     String backgroundRes = resourcesManager.f(viewBean.layout.backgroundResource);
                     if (backgroundRes.endsWith(".9.png")) {
-                        Bitmap decodedBitmap = zB.a(backgroundRes);
+                        Bitmap decodedBitmap = NinePatchDecoder.a(backgroundRes);
                         byte[] ninePatchChunk = decodedBitmap.getNinePatchChunk();
                         if (NinePatch.isNinePatchChunk(ninePatchChunk)) {
                             view.setBackground(new NinePatchDrawable(getResources(), decodedBitmap, ninePatchChunk, new Rect(), null));

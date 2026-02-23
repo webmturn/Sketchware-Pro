@@ -2,14 +2,14 @@ package a.a.a;
 
 import android.content.Context;
 
-public class ro {
+public class UserExperienceLevel {
   public DB a;
   
   public int b;
   
   public int c;
   
-  public ro(Context paramContext) {
+  public UserExperienceLevel(Context paramContext) {
     this.a = new DB(paramContext, "U1");
     this.b = this.a.d("U1I0");
     int i = this.b;

@@ -40,7 +40,7 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Objects;
 
-import a.a.a.HB;
+import a.a.a.UriPathResolver;
 import a.a.a.iB;
 import a.a.a.SketchwarePaths;
 import mod.hey.studios.util.Helper;
@@ -153,7 +153,7 @@ public class IconCreatorActivity extends BaseAppCompatActivity {
                     }
                     Uri uri = result.getData().getData();
                     if (result.getResultCode() == RESULT_OK && uri != null) {
-                        iconFilePath = HB.a(getApplicationContext(), uri);
+                        iconFilePath = UriPathResolver.a(getApplicationContext(), uri);
                         appIconBitmap = null;
                         Bitmap bitmap = iB.a(iconFilePath, 96, 96);
                         try {
@@ -192,7 +192,7 @@ public class IconCreatorActivity extends BaseAppCompatActivity {
                     }
                     Uri uri = result.getData().getData();
                     if (result.getResultCode() == RESULT_OK && uri != null) {
-                        setAppIcoTexture(HB.a(getApplicationContext(), uri));
+                        setAppIcoTexture(UriPathResolver.a(getApplicationContext(), uri));
                     }
                 });
         binding = ActivityIconCreatorBinding.inflate(getLayoutInflater());

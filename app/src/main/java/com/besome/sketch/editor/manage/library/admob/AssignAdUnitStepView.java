@@ -16,14 +16,14 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 
-import a.a.a.Uu;
+import a.a.a.LibrarySettingsView;
 import a.a.a.SketchToast;
 import a.a.a.AnimationUtil;
 import a.a.a.wB;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 
-public class AssignAdUnitStepView extends LinearLayout implements Uu, OnClickListener {
+public class AssignAdUnitStepView extends LinearLayout implements LibrarySettingsView, OnClickListener {
     private final ArrayList<String> adUnits = new ArrayList<>();
     private String bannerAdUnitId = "";
     private TextView bannerAdName;

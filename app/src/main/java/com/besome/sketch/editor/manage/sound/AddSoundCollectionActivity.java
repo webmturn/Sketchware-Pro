@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import a.a.a.HB;
+import a.a.a.UriPathResolver;
 import a.a.a.Qp;
 import a.a.a.ResourceNameValidator;
 import a.a.a.SketchToast;
@@ -121,7 +121,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
                             return;
                         }
                         K = data;
-                        if (HB.a(this, K) == null) {
+                        if (UriPathResolver.a(this, K) == null) {
                             return;
                         }
                         a(data);
@@ -205,7 +205,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
         if (a(M)) {
             if (!u) {
                 String obj = Helper.getText(binding.edInput);
-                String a = HB.a(this, K);
+                String a = UriPathResolver.a(this, K);
                 if (a == null) {
                     return;
                 }
@@ -304,7 +304,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
     }
 
     private void a(Uri uri) {
-        String a = HB.a(this, uri);
+        String a = UriPathResolver.a(this, uri);
         K = uri;
         try {
             if (G != null) {
@@ -339,7 +339,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
             G.setDataSource(this, uri);
             G.prepare();
             L = true;
-            a(HB.a(this, K), binding.imgAlbum);
+            a(UriPathResolver.a(this, K), binding.imgAlbum);
             binding.layoutControl.setVisibility(View.VISIBLE);
             binding.layoutGuide.setVisibility(View.GONE);
             try {

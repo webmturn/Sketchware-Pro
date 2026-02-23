@@ -21,7 +21,7 @@ import java.util.zip.ZipOutputStream;
 
 import a.a.a.ProjectBuilder;
 import a.a.a.ProjectFilePaths;
-import a.a.a.zy;
+import a.a.a.SimpleException;
 import mod.agus.jcoderz.editor.manage.library.locallibrary.ManageLocalLibrary;
 import mod.jbk.build.BuiltInLibraries;
 import mod.jbk.util.LogUtil;
@@ -59,7 +59,7 @@ public class AppBundleCompiler {
         return new File(projectMetadata.binDirectoryPath, projectMetadata.projectName + ".aab");
     }
 
-    public void buildBundle() throws zy {
+    public void buildBundle() throws SimpleException {
         long savedTimeMillis = System.currentTimeMillis();
 
         LogUtil.d(TAG, "About to run BuildBundleCommand");
@@ -88,7 +88,7 @@ public class AppBundleCompiler {
             LogUtil.d(TAG, "Now running " + command);
             command.execute();
         } catch (Exception e) {
-            throw new zy("Failed to build bundle: " + e.getMessage());
+            throw new SimpleException("Failed to build bundle: " + e.getMessage());
         }
         LogUtil.d(TAG, "Building app bundle took " + (System.currentTimeMillis() - savedTimeMillis) + " ms");
     }

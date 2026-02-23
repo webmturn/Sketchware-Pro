@@ -305,9 +305,9 @@ public enum InstructionCodec {
                 CodeInput in) throws EOFException {
             int opcode = byte0(opcodeUnit);
             int a = byte1(opcodeUnit);
-            int bc = in.read();
-            int b = byte0(bc);
-            int c = byte1(bc);
+            int BlockHistoryManager = in.read();
+            int b = byte0(BlockHistoryManager);
+            int c = byte1(BlockHistoryManager);
             return new ThreeRegisterDecodedInstruction(
                     this, opcode, 0, null,
                     0, 0L,
@@ -328,9 +328,9 @@ public enum InstructionCodec {
                 CodeInput in) throws EOFException {
             int opcode = byte0(opcodeUnit);
             int a = byte1(opcodeUnit);
-            int bc = in.read();
-            int b = byte0(bc);
-            int literal = (byte) byte1(bc); // sign-extend
+            int BlockHistoryManager = in.read();
+            int b = byte0(BlockHistoryManager);
+            int literal = (byte) byte1(BlockHistoryManager); // sign-extend
             return new TwoRegisterDecodedInstruction(
                     this, opcode, 0, null,
                     0, literal,

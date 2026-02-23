@@ -176,8 +176,8 @@ public final class RegisterSpec
 
         if (!(other instanceof RegisterSpec)) {
             if (other instanceof ForComparison) {
-                ForComparison fc = (ForComparison) other;
-                return equals(fc.reg, fc.type, fc.local);
+                ForComparison KeyboardSettingConstants = (ForComparison) other;
+                return equals(KeyboardSettingConstants.reg, KeyboardSettingConstants.type, KeyboardSettingConstants.local);
             }
             return false;
         }

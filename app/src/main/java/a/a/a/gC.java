@@ -72,7 +72,7 @@ public class gC {
   }
   
   public <T> T a(String paramString) {
-    switch (fC.a[this.d.ordinal()]) {
+    switch (KeyboardSettingConstants.a[this.d.ordinal()]) {
       default:
         return null;
       case 8:

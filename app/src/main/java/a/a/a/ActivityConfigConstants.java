@@ -1,6 +1,6 @@
 package a.a.a;
 
-public class vq {
+public class ActivityConfigConstants {
   public static final String[] a = new String[] { "Default", "NoActionBar", "FullScreen" };
   
   public static final String[] b = new String[] { "Portrait", "Landscape", "Both" };

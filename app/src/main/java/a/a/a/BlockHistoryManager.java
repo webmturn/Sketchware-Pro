@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class bC {
-  public static bC a;
+public class BlockHistoryManager {
+  public static BlockHistoryManager a;
   
   public Map<String, Integer> b;
   
@@ -15,7 +15,7 @@ public class bC {
   
   public String d;
   
-  public bC(String paramString) {
+  public BlockHistoryManager(String paramString) {
     this.d = paramString;
     this.c = new HashMap<String, ArrayList<HistoryBlockBean>>();
     this.b = new HashMap<String, Integer>();
@@ -32,7 +32,7 @@ public class bC {
   }
   
   public static void a() {
-    bC bC1 = a;
+    BlockHistoryManager bC1 = a;
     if (bC1 != null) {
       bC1.d = "";
       bC1.c = null;
@@ -41,11 +41,11 @@ public class bC {
     a = null;
   }
   
-  public static bC d(String paramString) {
+  public static BlockHistoryManager d(String paramString) {
     if (a == null) {
-      synchronized (bC.class) {
+      synchronized (BlockHistoryManager.class) {
         if (a == null || !a.d.equals(paramString)) {
-          a = new bC(paramString);
+          a = new BlockHistoryManager(paramString);
         }
       }
     }

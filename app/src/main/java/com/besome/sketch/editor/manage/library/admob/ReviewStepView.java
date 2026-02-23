@@ -17,7 +17,7 @@ import androidx.viewbinding.ViewBinding;
 import com.besome.sketch.beans.AdTestDeviceBean;
 import com.besome.sketch.beans.ProjectLibraryBean;
 
-import a.a.a.Uu;
+import a.a.a.LibrarySettingsView;
 import a.a.a.AnimationUtil;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
@@ -25,7 +25,7 @@ import pro.sketchware.databinding.ManageLibraryAdmobPreviewBinding;
 import pro.sketchware.databinding.ManageLibrarySettingAdmobTestDeviceItemBinding;
 import pro.sketchware.lib.base.BaseViewBindingAdapter;
 
-public class ReviewStepView extends LinearLayout implements Uu {
+public class ReviewStepView extends LinearLayout implements LibrarySettingsView {
 
     private TestDevicesAdapter adapter;
     private ManageLibraryAdmobPreviewBinding binding;

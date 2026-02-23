@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class nB {
+public class DateTimeUtil {
   public long a() {
     return (new Date()).getTime();
   }

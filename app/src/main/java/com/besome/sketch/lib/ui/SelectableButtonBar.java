@@ -11,7 +11,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import a.a.a.YA;
+import a.a.a.IntCallback;
 import a.a.a.wB;
 import pro.sketchware.R;
 
@@ -19,7 +19,7 @@ public class SelectableButtonBar extends LinearLayout {
 
     private final List<Integer> keys = new ArrayList<>();
     private final List<String> values = new ArrayList<>();
-    private YA selectionListener;
+    private IntCallback selectionListener;
     private int selectedItemIndex;
 
     public SelectableButtonBar(Context context) {
@@ -64,11 +64,11 @@ public class SelectableButtonBar extends LinearLayout {
         return selectableButton;
     }
 
-    public YA getListener() {
+    public IntCallback getListener() {
         return selectionListener;
     }
 
-    public void setListener(YA var1) {
+    public void setListener(IntCallback var1) {
         selectionListener = var1;
     }
 

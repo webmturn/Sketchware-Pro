@@ -4,10 +4,10 @@ import android.view.View;
 
 // Legacy click listener for Firebase checkbox toggle.
 // Functionality now handled directly in FirebasePreviewView.initialize().
-public class jv implements View.OnClickListener {
+public class FirebaseClickListenerLegacy implements View.OnClickListener {
   public final FirebasePreviewView a;
   
-  public jv(FirebasePreviewView param) {
+  public FirebaseClickListenerLegacy(FirebasePreviewView param) {
     this.a = param;
   }
   

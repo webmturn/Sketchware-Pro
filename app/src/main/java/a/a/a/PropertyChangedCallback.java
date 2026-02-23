@@ -1,5 +1,5 @@
 package a.a.a;
 
-public interface Kw {
+public interface PropertyChangedCallback {
   void a(String paramString, Object paramObject);
 }

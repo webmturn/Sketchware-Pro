@@ -14,7 +14,7 @@ import com.besome.sketch.ctrls.ViewIdSpinnerItem;
 
 import java.util.ArrayList;
 
-import a.a.a.Jw;
+import a.a.a.FileSelectedCallback;
 import a.a.a.wB;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
@@ -23,7 +23,7 @@ public class ViewProperties extends RelativeLayout implements AdapterView.OnItem
 
     private final ArrayList<String> viewsIdList = new ArrayList<>();
     private SpinnerItemAdapter spinnerItemAdapter;
-    private Jw propertyTargetChangeListener = null;
+    private FileSelectedCallback propertyTargetChangeListener = null;
 
     public ViewProperties(Context context) {
         super(context);
@@ -35,7 +35,7 @@ public class ViewProperties extends RelativeLayout implements AdapterView.OnItem
         initialize(context);
     }
 
-    public void setOnPropertyTargetChangeListener(Jw onPropertyTargetChangeListener) {
+    public void setOnPropertyTargetChangeListener(FileSelectedCallback onPropertyTargetChangeListener) {
         propertyTargetChangeListener = onPropertyTargetChangeListener;
     }
 

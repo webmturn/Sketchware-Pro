@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import a.a.a.Kw;
+import a.a.a.PropertyChangedCallback;
 import a.a.a.mB;
 import a.a.a.wB;
 import mod.hey.studios.util.Helper;
@@ -47,7 +47,7 @@ public class PropertyIndentItem extends RelativeLayout implements View.OnClickLi
     private int icon;
     private TextView tvName;
     private TextView tvValue;
-    private Kw valueChangeListener;
+    private PropertyChangedCallback valueChangeListener;
 
     public PropertyIndentItem(Context context, boolean z) {
         super(context);
@@ -97,7 +97,7 @@ public class PropertyIndentItem extends RelativeLayout implements View.OnClickLi
         }
     }
 
-    public void setOnPropertyValueChangeListener(Kw onPropertyValueChangeListener) {
+    public void setOnPropertyValueChangeListener(PropertyChangedCallback onPropertyValueChangeListener) {
         valueChangeListener = onPropertyValueChangeListener;
     }
 

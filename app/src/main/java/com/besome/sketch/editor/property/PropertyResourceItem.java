@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import a.a.a.Kw;
+import a.a.a.PropertyChangedCallback;
 import a.a.a.ProjectDataManager;
 import a.a.a.kC;
 import a.a.a.mB;
@@ -62,7 +62,7 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
     public View k;
     public View l;
     public int m;
-    public Kw n;
+    public PropertyChangedCallback n;
 
     public PropertyResourceItem(Context context, boolean z, String str, boolean z2) {
         super(context);
@@ -141,8 +141,8 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
         a();
     }
 
-    public void setOnPropertyValueChangeListener(Kw kw) {
-        n = kw;
+    public void setOnPropertyValueChangeListener(PropertyChangedCallback propertyChangedCallback) {
+        n = propertyChangedCallback;
     }
 
     public void setOrientationItem(int i) {

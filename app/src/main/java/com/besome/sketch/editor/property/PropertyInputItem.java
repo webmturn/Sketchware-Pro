@@ -51,7 +51,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import a.a.a.ActivityCodeGenerator;
-import a.a.a.Kw;
+import a.a.a.PropertyChangedCallback;
 import a.a.a.NumberRangeValidator;
 import a.a.a.LengthRangeValidator;
 import a.a.a.jC;
@@ -89,7 +89,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
     private View propertyMenuItem;
     private String sc_id;
     private ProjectFileBean projectFileBean;
-    private Kw valueChangeListener;
+    private PropertyChangedCallback valueChangeListener;
     private List<String> keysList = new ArrayList<>();
     private ViewBean bean;
 
@@ -445,7 +445,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
         };
     }
 
-    public void setOnPropertyValueChangeListener(Kw onPropertyValueChangeListener) {
+    public void setOnPropertyValueChangeListener(PropertyChangedCallback onPropertyValueChangeListener) {
         valueChangeListener = onPropertyValueChangeListener;
     }
 

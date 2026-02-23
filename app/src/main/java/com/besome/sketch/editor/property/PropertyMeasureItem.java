@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import a.a.a.Kw;
+import a.a.a.PropertyChangedCallback;
 import a.a.a.mB;
 import a.a.a.SketchwareConstants;
 import a.a.a.wB;
@@ -29,7 +29,7 @@ public class PropertyMeasureItem extends RelativeLayout implements View.OnClickL
     private ImageView imgLeftIcon;
     private View propertyItem;
     private View propertyMenuItem;
-    private Kw valueChangeListener;
+    private PropertyChangedCallback valueChangeListener;
     private boolean isWrapContent = true;
     private boolean isCustomValue = true;
     private int imgLeftIconDrawableResId;
@@ -94,7 +94,7 @@ public class PropertyMeasureItem extends RelativeLayout implements View.OnClickL
         isCustomValue = (itemEnabled & 4) == 4;
     }
 
-    public void setOnPropertyValueChangeListener(Kw onPropertyValueChangeListener) {
+    public void setOnPropertyValueChangeListener(PropertyChangedCallback onPropertyValueChangeListener) {
         valueChangeListener = onPropertyValueChangeListener;
     }
 

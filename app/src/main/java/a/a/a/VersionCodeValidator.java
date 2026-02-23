@@ -1,6 +1,6 @@
 package a.a.a;
 
-public class xq {
+public class VersionCodeValidator {
   public static boolean a(String paramString) {
     return true;
   }

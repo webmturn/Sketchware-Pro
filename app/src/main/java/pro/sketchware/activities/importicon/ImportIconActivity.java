@@ -42,7 +42,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import a.a.a.KB;
+import a.a.a.ZipUtil;
 import a.a.a.BaseAsyncTask;
 import a.a.a.ResourceNameValidator;
 import a.a.a.mB;
@@ -109,7 +109,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
     }
 
     private void extractIcons() {
-        KB.a(this, "icons" + File.separator + "icon_pack.zip", SketchwarePaths.getExtractedIconPackStoreLocation());
+        ZipUtil.a(this, "icons" + File.separator + "icon_pack.zip", SketchwarePaths.getExtractedIconPackStoreLocation());
     }
 
     @Override

@@ -1,6 +1,6 @@
 package a.a.a;
 
-public interface cy {
+public interface BuildCallback {
   void a();
   
   void a(String paramString);

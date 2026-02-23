@@ -28,7 +28,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import a.a.a.SketchwareException;
-import a.a.a.HB;
+import a.a.a.UriPathResolver;
 import a.a.a.BaseAsyncTask;
 import a.a.a.Op;
 import a.a.a.PB;
@@ -315,7 +315,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
 
     private void setImageFromUri(Uri uri) {
         String filePath;
-        if (uri != null && (filePath = HB.a(this, uri)) != null) {
+        if (uri != null && (filePath = UriPathResolver.a(this, uri)) != null) {
             setImageFromFile(filePath);
         }
     }
@@ -402,7 +402,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
                     while (i < activity.pickedImageUris.size()) {
                         var uri = activity.pickedImageUris.get(i);
                         var imageName = Helper.getText(activity.ed_input_edittext).trim() + "_" + ++i;
-                        var imageFilePath = HB.a(activity.getApplicationContext(), uri);
+                        var imageFilePath = UriPathResolver.a(activity.getApplicationContext(), uri);
                         if (imageFilePath == null) {
                             return;
                         }

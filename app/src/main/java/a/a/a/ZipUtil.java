@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.zip.ZipOutputStream;
 
-public class KB {
+public class ZipUtil {
   public static void a(Context paramContext, String paramString1, String paramString2) {
     byte[] buf = new byte[1024];
     String destDir = paramString2;

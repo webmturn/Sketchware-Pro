@@ -9,7 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 
-public class zB {
+public class NinePatchDecoder {
   public static Bitmap a(InputStream paramInputStream) throws Exception {
     Field field;
     Bitmap bitmap = BitmapFactory.decodeStream(paramInputStream);

@@ -1,5 +1,5 @@
 package a.a.a;
 
-public interface YA {
+public interface IntCallback {
   void a(int paramInt);
 }

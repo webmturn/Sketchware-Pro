@@ -2,7 +2,7 @@ package a.a.a;
 
 import com.besome.sketch.beans.ProjectLibraryBean;
 
-public interface Uu {
+public interface LibrarySettingsView {
   void a(ProjectLibraryBean paramProjectLibraryBean);
   
   String getDocUrl();

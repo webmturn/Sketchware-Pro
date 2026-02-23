@@ -507,7 +507,7 @@ public class ProjectBuilder {
     /**
      * Run Eclipse Compiler to compile Java files.
      */
-    public void compileJavaCode() throws zy, IOException {
+    public void compileJavaCode() throws SimpleException, IOException {
         long savedTimeMillis = System.currentTimeMillis();
 
         class EclipseOutOutputStream extends OutputStream {
@@ -588,7 +588,7 @@ public class ProjectBuilder {
                 LogUtil.d(TAG, "Compiling Java files took " + (System.currentTimeMillis() - savedTimeMillis) + " ms");
             } else {
                 LogUtil.e(TAG, "Failed to compile Java files");
-                throw new zy(errOutputStream.getOut());
+                throw new SimpleException(errOutputStream.getOut());
             }
         }
     }
@@ -984,7 +984,7 @@ public class ProjectBuilder {
             stringFogMappingPrinter.startMappingOutput();
             stringFogMappingPrinter.ouputInfo("UTF-8", "com.github.megatronking.stringfog.xor.StringFogImpl");
             stringFogClassInjector.doFog2ClassInDir(new File(ProjectFilePaths.compiledClassesPath));
-            KB.a(context, "stringfog/stringfog.zip", ProjectFilePaths.compiledClassesPath);
+            ZipUtil.a(context, "stringfog/stringfog.zip", ProjectFilePaths.compiledClassesPath);
         } catch (Exception e) {
             LogUtil.e("StringFog", "Failed to run StringFog", e);
         }

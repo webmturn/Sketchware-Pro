@@ -19,7 +19,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 
-import a.a.a.Qs;
+import a.a.a.EventSelectedCallback;
 import a.a.a.SketchToast;
 import a.a.a.ProjectDataManager;
 import a.a.a.EventRegistry;
@@ -34,7 +34,7 @@ public class ViewEvents extends LinearLayout {
 
     private String sc_id;
     private ProjectFileBean projectFileBean;
-    private Qs onEventClickListener;
+    private EventSelectedCallback onEventClickListener;
 
     public ViewEvents(Context context) {
         this(context, null);
@@ -53,7 +53,7 @@ public class ViewEvents extends LinearLayout {
         eventsList.setItemAnimator(new DefaultItemAnimator());
     }
 
-    public void setOnEventClickListener(Qs listener) {
+    public void setOnEventClickListener(EventSelectedCallback listener) {
         onEventClickListener = listener;
     }
 

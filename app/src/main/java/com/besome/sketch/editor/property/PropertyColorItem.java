@@ -13,7 +13,7 @@ import com.besome.sketch.lib.ui.ColorPickerDialog;
 
 import java.util.Objects;
 
-import a.a.a.Kw;
+import a.a.a.PropertyChangedCallback;
 import a.a.a.mB;
 import a.a.a.wB;
 import mod.hey.studios.util.Helper;
@@ -33,7 +33,7 @@ public class PropertyColorItem extends RelativeLayout implements View.OnClickLis
     private ImageView imgLeftIcon;
     private View propertyItem;
     private View propertyMenuItem;
-    private Kw valueChangeListener;
+    private PropertyChangedCallback valueChangeListener;
 
     public PropertyColorItem(Context context, boolean z) {
         super(context);
@@ -107,7 +107,7 @@ public class PropertyColorItem extends RelativeLayout implements View.OnClickLis
         }
     }
 
-    public void setOnPropertyValueChangeListener(Kw onPropertyValueChangeListener) {
+    public void setOnPropertyValueChangeListener(PropertyChangedCallback onPropertyValueChangeListener) {
         valueChangeListener = onPropertyValueChangeListener;
     }
 

@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.google.android.material.materialswitch.MaterialSwitch;
 
-import a.a.a.Kw;
+import a.a.a.PropertyChangedCallback;
 import a.a.a.mB;
 import a.a.a.wB;
 import mod.hey.studios.util.Helper;
@@ -26,7 +26,7 @@ public class PropertySwitchSingleLineItem extends LinearLayout implements View.O
     private int icon;
     private View propertyItem;
     private View propertyMenuItem;
-    private Kw valueChangeListener;
+    private PropertyChangedCallback valueChangeListener;
 
     public PropertySwitchSingleLineItem(Context context, boolean z) {
         super(context);
@@ -98,7 +98,7 @@ public class PropertySwitchSingleLineItem extends LinearLayout implements View.O
         }
     }
 
-    public void setOnPropertyValueChangeListener(Kw onPropertyValueChangeListener) {
+    public void setOnPropertyValueChangeListener(PropertyChangedCallback onPropertyValueChangeListener) {
         valueChangeListener = onPropertyValueChangeListener;
     }
 
