@@ -24,7 +24,7 @@ import a.a.a.eC;
 import a.a.a.hC;
 import a.a.a.ProjectDataManager;
 import a.a.a.mB;
-import a.a.a.rq;
+import a.a.a.PresetLayoutFactory;
 import a.a.a.SketchwarePaths;
 import pro.sketchware.R;
 import pro.sketchware.databinding.FileSelectorPopupSelectXmlActivityItemBinding;
@@ -279,9 +279,9 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
     private ArrayList<ViewBean> a(String presetName, int requestCode) {
         ArrayList<ViewBean> views = new ArrayList<>();
         return switch (requestCode) {
-            case 276 -> rq.f(presetName);
-            case 277 -> rq.b(presetName);
-            case 278 -> rq.d(presetName);
+            case 276 -> PresetLayoutFactory.f(presetName);
+            case 277 -> PresetLayoutFactory.b(presetName);
+            case 278 -> PresetLayoutFactory.d(presetName);
             default -> views;
         };
     }

@@ -37,7 +37,7 @@ import a.a.a.Qp;
 import a.a.a.ResourceNameValidator;
 import a.a.a.SketchToast;
 import a.a.a.BlockConstants;
-import a.a.a.yy;
+import a.a.a.CompileException;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;
 import pro.sketchware.R;
@@ -222,7 +222,7 @@ public class AddSoundActivity extends BaseDialogActivity implements View.OnClick
                             } catch (Exception e) {
                                 // The bytecode is lying. Checked exceptions suck.
                                 //noinspection ConstantConditions
-                                if (e instanceof yy) {
+                                if (e instanceof CompileException) {
                                     String message = e.getMessage();
 
                                     switch (message) {

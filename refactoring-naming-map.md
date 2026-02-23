@@ -147,12 +147,12 @@
 | `ro` | `UserExperienceLevel` | Loads user experience level from DB U1 | 1KB |
 | `zy` | `SimpleException` | Simple exception wrapper | <1KB |
 
-### Phase 8b - Need JAR Wrapper (referenced by JAR classes, 10 classes)
+### Phase 8b - JAR Wrapper Renames ✅ (9 classes, commit effa2547d)
 | Current | Proposed Name | Referenced by JAR | Role |
 |---------|--------------|-------------------|------|
 | `FB` | `FormatUtil` | `Rs` | Hex conversion, file size formatting, clipboard |
 | `iB` | `BitmapUtil` | `Op` | Bitmap sample size, EXIF rotation |
-| `uB` | `HashMapTypeToken` | `vB` | Gson TypeToken<HashMap<String, Object>> |
+| `uB` | ~~HashMapTypeToken~~ REVERTED | `vB` | Gson TypeToken requires direct subclass, wrapper breaks it |
 | `jB` | `ViewEnableRunnable` | `mB` | Runnable that re-enables a View |
 | `dC` | `ScreenOrientationConstants` | `eC` | Static int array {1..8} |
 | `gC` | `ProjectDataParser` | `eC`, `Mp`, `Pp`, `Rp` | Parses project data JSON |
@@ -183,7 +183,8 @@
 5. **Phase 5 - Data/Logic** ✅: `jC`→ProjectDataManager, `jq`→BuildConfig, `lC`→ProjectListManager, `wq`→SketchwarePaths, `yq`→ProjectFilePaths, `MA`→BaseAsyncTask
 6. **Phase 6 - Code generators** ✅: `Fx`→BlockInterpreter, `Gx`→ClassInfo, `Hx`→EventCodeGenerator, `Ix`→ManifestGenerator, `Jx`→ActivityCodeGenerator, `Lx`→ComponentCodeGenerator, `Ox`→LayoutGenerator
 7. **Phase 7 - Registries** ✅: `kq`→BlockColorMapper, `mq`→ComponentTypeMapper, `oq`→EventRegistry, `sq`→SketchwareConstants, `tq`→CompileQuizManager, `uq`→BlockConstants
-8. **Phase 8 - Remaining classes** 🔄: utilities, data managers, collection managers, interfaces, other
+8. **Phase 8a - Freely renamable** ✅: 22 classes renamed
+9. **Phase 8b - JAR wrapper renames** ✅: 10 classes renamed with wrappers
 
 ## Cannot Rename (JAR constrained)
 - **In JARs (original)**: `eC`, `hC`, `kC`, `iC`, `oB`, `vB`, `yB`, `mB`, `nv`, `DB`, `GB`, `Sp`, `Vs`, `Ts`, `Ss`, `Rs`, `Us`, `PB`, `QB`, `xw`

@@ -1,5 +1,7 @@
 package a.a.a;
 
-public class dC {
-  public static final int[] a = {1, 2, 3, 4, 5, 6, 7, 8};
-}
+/**
+ * Thin wrapper kept for binary compatibility with JAR classes that reference dC.
+ * @see ScreenOrientationConstants
+ */
+public class dC extends ScreenOrientationConstants {}

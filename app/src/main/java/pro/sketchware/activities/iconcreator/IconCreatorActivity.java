@@ -41,7 +41,7 @@ import java.util.HashMap;
 import java.util.Objects;
 
 import a.a.a.UriPathResolver;
-import a.a.a.iB;
+import a.a.a.BitmapUtil;
 import a.a.a.SketchwarePaths;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
@@ -155,10 +155,10 @@ public class IconCreatorActivity extends BaseAppCompatActivity {
                     if (result.getResultCode() == RESULT_OK && uri != null) {
                         iconFilePath = UriPathResolver.a(getApplicationContext(), uri);
                         appIconBitmap = null;
-                        Bitmap bitmap = iB.a(iconFilePath, 96, 96);
+                        Bitmap bitmap = BitmapUtil.a(iconFilePath, 96, 96);
                         try {
                             int attributeInt = new ExifInterface(iconFilePath).getAttributeInt("Orientation", -1);
-                            Bitmap newBitmap = iB.a(bitmap, attributeInt != 3 ? attributeInt != 6 ? attributeInt != 8 ? 0 : 270 : 90 : 180);
+                            Bitmap newBitmap = BitmapUtil.a(bitmap, attributeInt != 3 ? attributeInt != 6 ? attributeInt != 8 ? 0 : 270 : 90 : 180);
                             BitmapDrawable bd = new BitmapDrawable(getResources(), newBitmap);
                             binding.appIcoImg.setBackground(bd);
                         } catch (Exception e) {
@@ -400,10 +400,10 @@ public class IconCreatorActivity extends BaseAppCompatActivity {
 
     private void setAppIcoTexture(String texturesFilePath) {
         this.texturesFilePath = texturesFilePath;
-        Bitmap bitmap = iB.a(texturesFilePath, 96, 96);
+        Bitmap bitmap = BitmapUtil.a(texturesFilePath, 96, 96);
         try {
             int attributeInt = new ExifInterface(texturesFilePath).getAttributeInt("Orientation", -1);
-            Bitmap newBitmap = iB.a(bitmap, attributeInt != 3 ? attributeInt != 6 ? attributeInt != 8 ? 0 : 270 : 90 : 180);
+            Bitmap newBitmap = BitmapUtil.a(bitmap, attributeInt != 3 ? attributeInt != 6 ? attributeInt != 8 ? 0 : 270 : 90 : 180);
             binding.appIcoTexture.setPattern(newBitmap);
             selectedTextureType = 3;
         } catch (Exception e) {

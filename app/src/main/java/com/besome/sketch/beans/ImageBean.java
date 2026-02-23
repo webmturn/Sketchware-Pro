@@ -6,9 +6,9 @@ import android.widget.ImageView;
 
 import com.google.gson.annotations.Expose;
 
-import a.a.a.nA;
+import a.a.a.ReflectiveToString;
 
-public class ImageBean extends nA implements Parcelable {
+public class ImageBean extends ReflectiveToString implements Parcelable {
     public static final Parcelable.Creator<ImageBean> CREATOR = new Parcelable.Creator<>() {
         @Override
         public ImageBean createFromParcel(Parcel source) {

@@ -80,7 +80,7 @@ public class ViewFilesFragment extends BaseFragment {
     }
 
     public final ArrayList<ViewBean> getPresetViews(String var1) {
-        return rq.f(var1);
+        return PresetLayoutFactory.f(var1);
     }
 
     public void addProjectFile(ProjectFileBean var1) {

@@ -12,7 +12,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 
-import a.a.a.rq;
+import a.a.a.PresetLayoutFactory;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 
@@ -27,9 +27,9 @@ public class PresetSettingActivity extends BaseDialogActivity implements View.On
 
     private void applyPresetData(String presetName) {
         int resDrawable = switch (requestCode) {
-            case 276 -> rq.e(presetName);
-            case AddCustomViewActivity.REQ_CD_PRESET_ACTIVITY -> rq.a(presetName);
-            case 278 -> rq.c(presetName);
+            case 276 -> PresetLayoutFactory.e(presetName);
+            case AddCustomViewActivity.REQ_CD_PRESET_ACTIVITY -> PresetLayoutFactory.a(presetName);
+            case 278 -> PresetLayoutFactory.c(presetName);
             default -> -1;
         };
 
@@ -103,11 +103,11 @@ public class PresetSettingActivity extends BaseDialogActivity implements View.On
         activity = findViewById(R.id.img_activity);
         activityName = findViewById(R.id.tv_activity_name);
         if (requestCode == 276) {
-            presets = rq.d();
+            presets = PresetLayoutFactory.d();
         } else if (requestCode == AddCustomViewActivity.REQ_CD_PRESET_ACTIVITY) {
-            presets = rq.b();
+            presets = PresetLayoutFactory.b();
         } else {
-            presets = rq.c();
+            presets = PresetLayoutFactory.c();
         }
 
         d(Helper.getResString(R.string.common_word_import));

@@ -32,7 +32,7 @@ import a.a.a.ResourceNameValidator;
 import a.a.a.SketchToast;
 import a.a.a.BlockConstants;
 import a.a.a.SketchwarePaths;
-import a.a.a.yy;
+import a.a.a.CompileException;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageSoundAddBinding;
@@ -218,7 +218,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
                 } catch (Exception e) {
                     // the bytecode's lying
                     // noinspection ConstantValue
-                    if (e instanceof yy) {
+                    if (e instanceof CompileException) {
                         var messageId = switch (e.getMessage()) {
                             case "duplicate_name" -> R.string.collection_duplicated_name;
                             case "file_no_exist" -> R.string.collection_no_exist_file;

@@ -1,16 +1,16 @@
 package com.besome.sketch.beans;
 
-import a.a.a.nA;
+import a.a.a.ReflectiveToString;
 
-public class HistoryBean extends nA {
+public class HistoryBean extends ReflectiveToString {
     public static final int ACTION_TYPE_ADD = 0;
     public static final int ACTION_TYPE_REMOVE = 2;
     public static final int ACTION_TYPE_UPDATE = 1;
     public int actionType;
-    public nA currentData;
-    public nA prevData;
+    public ReflectiveToString currentData;
+    public ReflectiveToString prevData;
 
-    public HistoryBean(int i, nA nAVar, nA nAVar2) {
+    public HistoryBean(int i, ReflectiveToString nAVar, ReflectiveToString nAVar2) {
         actionType = i;
         prevData = nAVar;
         currentData = nAVar2;
@@ -20,11 +20,11 @@ public class HistoryBean extends nA {
         return actionType;
     }
 
-    public nA getCurrentData() {
+    public ReflectiveToString getCurrentData() {
         return currentData;
     }
 
-    public nA getPrevData() {
+    public ReflectiveToString getPrevData() {
         return prevData;
     }
 }

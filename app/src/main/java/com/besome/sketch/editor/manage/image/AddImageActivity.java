@@ -33,10 +33,10 @@ import a.a.a.BaseAsyncTask;
 import a.a.a.Op;
 import a.a.a.PB;
 import a.a.a.SketchToast;
-import a.a.a.iB;
+import a.a.a.BitmapUtil;
 import a.a.a.oB;
 import a.a.a.BlockConstants;
-import a.a.a.yy;
+import a.a.a.CompileException;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 
@@ -216,7 +216,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
     }
 
     private void refreshPreview() {
-        preview.setImageBitmap(iB.a(iB.a(iB.a(imageFilePath, 1024, 1024), imageExifOrientation), imageRotationDegrees, imageScaleX, imageScaleY));
+        preview.setImageBitmap(BitmapUtil.a(BitmapUtil.a(BitmapUtil.a(imageFilePath, 1024, 1024), imageExifOrientation), imageRotationDegrees, imageScaleX, imageScaleY));
     }
 
     private void save() {
@@ -254,7 +254,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
 
     private void setImageFromFile(String path) {
         imageFilePath = path;
-        preview.setImageBitmap(iB.a(path, 1024, 1024));
+        preview.setImageBitmap(BitmapUtil.a(path, 1024, 1024));
         int indexOfFilenameExtension = path.lastIndexOf(".");
         if (path.endsWith(".9.png")) {
             indexOfFilenameExtension = path.lastIndexOf(".9.png");
@@ -263,7 +263,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
             ed_input_edittext.setText(path.substring(path.lastIndexOf("/") + 1, indexOfFilenameExtension));
         }
         try {
-            imageExifOrientation = iB.a(path);
+            imageExifOrientation = BitmapUtil.a(path);
             refreshPreview();
         } catch (Exception e) {
             Log.e("AddImageActivity", e.getMessage(), e);
@@ -410,7 +410,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
                                 imageName, imageFilePath);
                         image.savedPos = 1;
                         image.isNew = true;
-                        image.rotate = iB.a(imageFilePath);
+                        image.rotate = BitmapUtil.a(imageFilePath);
                         image.flipVertical = 1;
                         image.flipHorizontal = 1;
                         toAdd.add(image);
@@ -424,8 +424,8 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
             } catch (Exception e) {
                 // the bytecode's lying
                 // noinspection ConstantValue
-                if (e instanceof yy yy) {
-                    var errorMessage = yy.getMessage();
+                if (e instanceof CompileException CompileException) {
+                    var errorMessage = CompileException.getMessage();
                     var code = switch (errorMessage) {
                         case "fail_to_copy" -> R.string.collection_failed_to_copy;
                         case "file_no_exist" -> R.string.collection_no_exist_file;
@@ -434,7 +434,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
                     };
                     var message = code != 0 ? activity.getString(code) : null;
 
-                    var a = yy.a();
+                    var a = CompileException.a();
                     if (a != null && !a.isEmpty()) {
                         var names = "";
                         for (String name : a) {

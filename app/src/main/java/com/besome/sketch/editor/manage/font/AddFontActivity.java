@@ -19,7 +19,7 @@ import a.a.a.Np;
 import a.a.a.SketchToast;
 import a.a.a.mB;
 import a.a.a.BlockConstants;
-import a.a.a.yy;
+import a.a.a.CompileException;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;
 import pro.sketchware.R;
@@ -129,9 +129,9 @@ public class AddFontActivity extends BaseDialogActivity implements View.OnClickL
                     Np.g().a(sc_id, resourceBean);
                 } catch (Exception e) {
                     Log.e("AddFontActivity", "Failed to add font to collection", e);
-                    // Well, (parts of) the bytecode's lying, yy can be thrown.
+                    // Well, (parts of) the bytecode's lying, CompileException can be thrown.
                     //noinspection ConstantConditions
-                    if (e instanceof yy) {
+                    if (e instanceof CompileException) {
                         switch (e.getMessage()) {
                             case "duplicate_name" ->
                                     SketchToast.warning(this, Helper.getResString(R.string.collection_duplicated_name), Toast.LENGTH_LONG).show();

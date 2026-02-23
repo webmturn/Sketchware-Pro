@@ -1,8 +1,8 @@
 package com.besome.sketch.beans;
 
-import a.a.a.nA;
+import a.a.a.ReflectiveToString;
 
-public class CollapsibleBean extends nA {
+public class CollapsibleBean extends ReflectiveToString {
     public int buttonPressed = -1;
     public boolean isCollapsed = true;
     public boolean isConfirmation = false;

@@ -3,9 +3,9 @@ package com.besome.sketch.beans;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import a.a.a.nA;
+import a.a.a.ReflectiveToString;
 
-public class SelectableItemBean extends nA implements Parcelable {
+public class SelectableItemBean extends ReflectiveToString implements Parcelable {
     public static final Parcelable.Creator<SelectableItemBean> CREATOR = new Parcelable.Creator<>() {
         @Override
         public SelectableItemBean createFromParcel(Parcel source) {

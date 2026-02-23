@@ -1,8 +1,8 @@
 package com.besome.sketch.beans;
 
-import a.a.a.nA;
+import a.a.a.ReflectiveToString;
 
-public class QuizBean extends nA {
+public class QuizBean extends ReflectiveToString {
     public static final int QUIZ_TYPE_ANSWER = 2;
     public static final int QUIZ_TYPE_OX = 1;
 

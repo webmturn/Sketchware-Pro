@@ -85,7 +85,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 import a.a.a.DB;
-import a.a.a.FB;
+import a.a.a.FormatUtil;
 import a.a.a.BlockInterpreter;
 import a.a.a.GB;
 import a.a.a.BaseAsyncTask;
@@ -2025,7 +2025,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         long pc1 = System.currentTimeMillis();
         android.util.Log.d("BlockLoad", "PC rootBlock: " + (pc1 - pc0) + "ms");
 
-        ArrayList<String> spec = FB.c(e1);
+        ArrayList<String> spec = FormatUtil.c(e1);
         int blockId = 0;
         for (int i = 0; i < spec.size(); i++) {
             String specBit = spec.get(i);

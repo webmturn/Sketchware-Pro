@@ -212,7 +212,7 @@ public class ViewProperty extends LinearLayout implements PropertyChangedCallbac
                         }
                     }
                 }
-                try { Rp.h().a(widgetName, viewBeans, true); } catch (a.a.a.yy ignored) {}
+                try { Rp.h().a(widgetName, viewBeans, true); } catch (a.a.a.CompileException ignored) {}
                 if (propertyListener != null) {
                     propertyListener.a();
                 }

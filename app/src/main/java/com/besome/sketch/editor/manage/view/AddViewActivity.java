@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 import a.a.a.ActivityNameValidator;
 import a.a.a.SketchToast;
-import a.a.a.rq;
+import a.a.a.PresetLayoutFactory;
 import a.a.a.BlockConstants;
 import a.a.a.wB;
 import mod.hey.studios.util.Helper;
@@ -156,7 +156,7 @@ public class AddViewActivity extends BaseAppCompatActivity {
     }
 
     private ArrayList<ViewBean> getPresetData(String presetName) {
-        return rq.f(presetName);
+        return PresetLayoutFactory.f(presetName);
     }
 
     private void initItem(int featureOptions) {

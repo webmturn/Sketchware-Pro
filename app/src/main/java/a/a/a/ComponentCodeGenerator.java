@@ -720,7 +720,7 @@ public class ComponentCodeGenerator {
     public static String getMoreBlockCode(String moreBlockName, String moreBlockSpec, String moreBlockLogic) {
         String code = "public " + ReturnMoreblockManager.getMbTypeCode(moreBlockName) + " _" +
                 ReturnMoreblockManager.getMbName(moreBlockName) + "(";
-        ArrayList<String> parameterSpecs = FB.c(moreBlockSpec);
+        ArrayList<String> parameterSpecs = FormatUtil.c(moreBlockSpec);
         boolean isFirstParameter = true;
 
         for (String parameterSpec : parameterSpecs) {

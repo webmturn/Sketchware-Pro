@@ -32,11 +32,11 @@ import a.a.a.BaseAsyncTask;
 import a.a.a.Op;
 import a.a.a.PB;
 import a.a.a.SketchToast;
-import a.a.a.iB;
+import a.a.a.BitmapUtil;
 import a.a.a.mB;
 import a.a.a.BlockConstants;
 import a.a.a.SketchwarePaths;
-import a.a.a.yy;
+import a.a.a.CompileException;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 
@@ -208,7 +208,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
     }
 
     private void refreshPreview() {
-        preview.setImageBitmap(iB.a(iB.a(iB.a(imageFilePath, 1024, 1024), imageExifOrientation), imageRotationDegrees, imageScaleX, imageScaleY));
+        preview.setImageBitmap(BitmapUtil.a(BitmapUtil.a(BitmapUtil.a(imageFilePath, 1024, 1024), imageExifOrientation), imageRotationDegrees, imageScaleX, imageScaleY));
     }
 
     private void save() {
@@ -244,7 +244,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
 
     private void setImageFromFile(String path) {
         imageFilePath = path;
-        preview.setImageBitmap(iB.a(path, 1024, 1024));
+        preview.setImageBitmap(BitmapUtil.a(path, 1024, 1024));
         int indexOfFilenameExtension = path.lastIndexOf(".");
         if (path.endsWith(".9.png")) {
             indexOfFilenameExtension = path.lastIndexOf(".9.png");
@@ -253,7 +253,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
             ed_input_edittext.setText(path.substring(path.lastIndexOf("/") + 1, indexOfFilenameExtension));
         }
         try {
-            imageExifOrientation = iB.a(path);
+            imageExifOrientation = BitmapUtil.a(path);
             refreshPreview();
         } catch (Exception e) {
             Log.e("AddImageCollectionActivity", e.getMessage(), e);
@@ -323,8 +323,8 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
             } catch (Exception e) {
                 // the bytecode's lying
                 // noinspection ConstantValue
-                if (e instanceof yy yy) {
-                    var messageId = switch (yy.getMessage()) {
+                if (e instanceof CompileException CompileException) {
+                    var messageId = switch (CompileException.getMessage()) {
                         case "fail_to_copy" -> R.string.collection_failed_to_copy;
                         case "file_no_exist" -> R.string.collection_no_exist_file;
                         case "duplicate_name" -> R.string.collection_duplicated_name;
@@ -332,7 +332,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
                     };
                     var message = messageId != 0 ? activity.getString(messageId) : "";
 
-                    var a = yy.a();
+                    var a = CompileException.a();
                     if (a != null && !a.isEmpty()) {
                         var names = "";
                         for (String name : a) {

@@ -4,9 +4,9 @@ import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 
-import a.a.a.nA;
+import a.a.a.ReflectiveToString;
 
-public class ViewHistoryBean extends nA {
+public class ViewHistoryBean extends ReflectiveToString {
     public static final int ACTION_TYPE_ADD = 0;
     public static final int ACTION_TYPE_MOVE = 3;
     public static final int ACTION_TYPE_REMOVE = 2;

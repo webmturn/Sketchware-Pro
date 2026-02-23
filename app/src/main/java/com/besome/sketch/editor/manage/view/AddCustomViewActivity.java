@@ -19,7 +19,7 @@ import java.util.Objects;
 
 import a.a.a.ActivityNameValidator;
 import a.a.a.SketchToast;
-import a.a.a.rq;
+import a.a.a.PresetLayoutFactory;
 import a.a.a.BlockConstants;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
@@ -86,6 +86,6 @@ public class AddCustomViewActivity extends BaseDialogActivity implements View.On
     }
 
     private ArrayList<ViewBean> getPresetData(String presetName) {
-        return rq.b(presetName);
+        return PresetLayoutFactory.b(presetName);
     }
 }

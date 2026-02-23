@@ -5,7 +5,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 
-import a.a.a.FB;
+import a.a.a.FormatUtil;
 import a.a.a.Rs;
 import a.a.a.Ts;
 import a.a.a.BlockColorMapper;
@@ -25,7 +25,7 @@ public class BlockUtil {
      */
     public static void loadPreviewBlockVariables(ViewGroup blockArea, Rs previewBlock, String spec) {
         int id = 0;
-        for (var specPart : FB.c(spec)) {
+        for (var specPart : FormatUtil.c(spec)) {
             if (specPart.charAt(0) != '%') {
                 continue;
             }

@@ -10,11 +10,11 @@ import com.google.gson.annotations.Expose;
 import java.util.HashMap;
 
 import a.a.a.Gx;
-import a.a.a.nA;
+import a.a.a.ReflectiveToString;
 import mod.agus.jcoderz.beans.ViewBeans;
 import pro.sketchware.R;
 
-public class ViewBean extends nA implements Parcelable {
+public class ViewBean extends ReflectiveToString implements Parcelable {
     public static final Parcelable.Creator<ViewBean> CREATOR = new Parcelable.Creator<>() {
         @Override
         public ViewBean createFromParcel(Parcel source) {
