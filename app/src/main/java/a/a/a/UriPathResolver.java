@@ -4,6 +4,11 @@ import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 public final class UriPathResolver {
   public static String resolve(Context paramContext, Uri paramUri) {
     String result = null;
@@ -44,9 +49,32 @@ public final class UriPathResolver {
       } catch (Exception e) {
         return null;
       }
-      return result;
+      if (new File(result).canRead()) {
+        return result;
+      }
     }
-    return null;
+    return copyUriToCache(paramContext, paramUri);
+  }
+  
+  public static String copyUriToCache(Context context, Uri uri) {
+    try (InputStream is = context.getContentResolver().openInputStream(uri)) {
+      if (is == null) return null;
+      String fileName = "uri_" + uri.getLastPathSegment();
+      if (fileName.length() > 80) fileName = fileName.substring(fileName.length() - 80);
+      fileName = fileName.replaceAll("[^a-zA-Z0-9._-]", "_");
+      File cacheFile = new File(context.getCacheDir(), fileName);
+      try (OutputStream os = new FileOutputStream(cacheFile)) {
+        byte[] buf = new byte[4096];
+        int len;
+        while ((len = is.read(buf)) > 0) {
+          os.write(buf, 0, len);
+        }
+      }
+      return cacheFile.getAbsolutePath();
+    } catch (Exception e) {
+      Log.e("UriPathResolver", "copyUriToCache failed: " + uri, e);
+      return null;
+    }
   }
   
   public static String queryDataColumn(Context paramContext, Uri paramUri, String paramString, String[] paramArrayOfString) {

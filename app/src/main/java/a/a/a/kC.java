@@ -32,7 +32,10 @@ public class kC {
   public Gson j;
   
   public kC(String paramString) {
-    this(paramString, "", "", "");
+    this(paramString,
+        wq.g() + File.separator + paramString,
+        wq.t() + File.separator + paramString,
+        wq.d() + File.separator + paramString);
   }
   
   public kC(String paramString1, String paramString2, String paramString3, String paramString4) {
