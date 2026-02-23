@@ -34,24 +34,24 @@ import pro.sketchware.xml.XmlBuilder;
 
 public class ManifestGenerator {
     private final BuiltInLibraryManager builtInLibraryManager;
-    public XmlBuilder a = new XmlBuilder("manifest");
-    public ArrayList<ProjectFileBean> b;
+    public XmlBuilder manifestXml = new XmlBuilder("manifest");
+    public ArrayList<ProjectFileBean> projectFiles;
     public BuildSettings buildSettings;
-    public BuildConfig c;
-    public FilePathUtil fpu = new FilePathUtil();
-    public FileResConfig frc;
+    public BuildConfig buildConfig;
+    public FilePathUtil filePathUtil = new FilePathUtil();
+    public FileResConfig fileResConfig;
     public ProjectSettings settings;
     private boolean targetsSdkVersion31OrHigher = false;
     private String packageName;
     private final Set<String> addedPermissions = new HashSet<>();
 
     public ManifestGenerator(BuildConfig buildConfig, ArrayList<ProjectFileBean> projectFileBeans, BuiltInLibraryManager builtInLibraryManager) {
-        c = buildConfig;
-        b = projectFileBeans;
+        this.buildConfig = buildConfig;
+        projectFiles = projectFileBeans;
         this.builtInLibraryManager = builtInLibraryManager;
         buildSettings = new BuildSettings(buildConfig.sc_id);
-        frc = new FileResConfig(c.sc_id);
-        a.addAttribute("xmlns", "android", "http://schemas.android.com/apk/res/android");
+        fileResConfig = new FileResConfig(this.buildConfig.sc_id);
+        manifestXml.addAttribute("xmlns", "android", "http://schemas.android.com/apk/res/android");
     }
 
     /**
@@ -61,7 +61,7 @@ public class ManifestGenerator {
      */
     private void writeFileProvider(XmlBuilder applicationTag) {
         XmlBuilder providerTag = new XmlBuilder("provider");
-        providerTag.addAttribute("android", "authorities", c.packageName + ".provider");
+        providerTag.addAttribute("android", "authorities", buildConfig.packageName + ".provider");
         providerTag.addAttribute("android", "name", "androidx.core.content.FileProvider");
         providerTag.addAttribute("android", "exported", "false");
         providerTag.addAttribute("android", "grantUriPermissions", "true");
@@ -96,32 +96,32 @@ public class ManifestGenerator {
     private void writeFirebaseMetaData(XmlBuilder applicationTag) {
         XmlBuilder providerTag = new XmlBuilder("provider");
         providerTag.addAttribute("android", "name", "com.google.firebase.provider.FirebaseInitProvider");
-        providerTag.addAttribute("android", "authorities", c.packageName + ".firebaseinitprovider");
+        providerTag.addAttribute("android", "authorities", buildConfig.packageName + ".firebaseinitprovider");
         providerTag.addAttribute("android", "exported", "false");
         providerTag.addAttribute("android", "initOrder", "100");
         applicationTag.addChildNode(providerTag);
         XmlBuilder serviceTag = new XmlBuilder("service");
         serviceTag.addAttribute("android", "name", "com.google.firebase.components.ComponentDiscoveryService");
         serviceTag.addAttribute("android", "exported", "false");
-        if (c.isFirebaseAuthUsed) {
+        if (buildConfig.isFirebaseAuthUsed) {
             XmlBuilder metadataTag = new XmlBuilder("meta-data");
             metadataTag.addAttribute("android", "name", "com.google.firebase.components:com.google.firebase.auth.FirebaseAuthRegistrar");
             metadataTag.addAttribute("android", "value", "com.google.firebase.components.ComponentRegistrar");
             serviceTag.addChildNode(metadataTag);
         }
-        if (c.isFirebaseDatabaseUsed) {
+        if (buildConfig.isFirebaseDatabaseUsed) {
             XmlBuilder metadataTag = new XmlBuilder("meta-data");
             metadataTag.addAttribute("android", "name", "com.google.firebase.components:com.google.firebase.database.DatabaseRegistrar");
             metadataTag.addAttribute("android", "value", "com.google.firebase.components.ComponentRegistrar");
             serviceTag.addChildNode(metadataTag);
         }
-        if (c.isFirebaseStorageUsed) {
+        if (buildConfig.isFirebaseStorageUsed) {
             XmlBuilder metadataTag = new XmlBuilder("meta-data");
             metadataTag.addAttribute("android", "name", "com.google.firebase.components:com.google.firebase.storage.StorageRegistrar");
             metadataTag.addAttribute("android", "value", "com.google.firebase.components.ComponentRegistrar");
             serviceTag.addChildNode(metadataTag);
         }
-        if (c.x.isFCMUsed) {
+        if (buildConfig.x.isFCMUsed) {
             XmlBuilder metadataTag = new XmlBuilder("meta-data");
             metadataTag.addAttribute("android", "name", "com.google.firebase.components:com.google.firebase.iid.Registrar");
             metadataTag.addAttribute("android", "value", "com.google.firebase.components.ComponentRegistrar");
@@ -190,7 +190,7 @@ public class ManifestGenerator {
     private void writeAdmobAppId(XmlBuilder applicationTag) {
         XmlBuilder metadataTag = new XmlBuilder("meta-data");
         metadataTag.addAttribute("android", "name", "com.google.android.gms.ads.APPLICATION_ID");
-        metadataTag.addAttribute("android", "value", c.appId);
+        metadataTag.addAttribute("android", "value", buildConfig.appId);
         applicationTag.addChildNode(metadataTag);
     }
 
@@ -225,7 +225,7 @@ public class ManifestGenerator {
         if (initializers.stream().anyMatch(initializer -> initializer.first)) {
             XmlBuilder initializationProvider = new XmlBuilder("provider");
             initializationProvider.addAttribute("android", "name", "androidx.startup.InitializationProvider");
-            initializationProvider.addAttribute("android", "authorities", c.packageName + ".androidx-startup");
+            initializationProvider.addAttribute("android", "authorities", buildConfig.packageName + ".androidx-startup");
             initializationProvider.addAttribute("android", "exported", "false");
             for (var pair : initializers) {
                 if (pair.first) {
@@ -404,66 +404,66 @@ public class ManifestGenerator {
         }
         boolean addRequestLegacyExternalStorage = targetSdkVersion >= 28;
 
-        a.addAttribute("", "package", c.packageName);
+        manifestXml.addAttribute("", "package", buildConfig.packageName);
 
-        if (!c.hasPermissions()) {
-            if (c.hasPermission(BuildConfig.PERMISSION_CALL_PHONE)) {
-                writePermission(a, Manifest.permission.CALL_PHONE);
+        if (!buildConfig.hasPermissions()) {
+            if (buildConfig.hasPermission(BuildConfig.PERMISSION_CALL_PHONE)) {
+                writePermission(manifestXml, Manifest.permission.CALL_PHONE);
             }
-            if (c.hasPermission(BuildConfig.PERMISSION_INTERNET)) {
-                writePermission(a, Manifest.permission.INTERNET);
+            if (buildConfig.hasPermission(BuildConfig.PERMISSION_INTERNET)) {
+                writePermission(manifestXml, Manifest.permission.INTERNET);
             }
-            if (c.hasPermission(BuildConfig.PERMISSION_VIBRATE)) {
-                writePermission(a, Manifest.permission.VIBRATE);
+            if (buildConfig.hasPermission(BuildConfig.PERMISSION_VIBRATE)) {
+                writePermission(manifestXml, Manifest.permission.VIBRATE);
             }
-            if (c.hasPermission(BuildConfig.PERMISSION_ACCESS_NETWORK_STATE)) {
-                writePermission(a, Manifest.permission.ACCESS_NETWORK_STATE);
+            if (buildConfig.hasPermission(BuildConfig.PERMISSION_ACCESS_NETWORK_STATE)) {
+                writePermission(manifestXml, Manifest.permission.ACCESS_NETWORK_STATE);
             }
-            if (c.hasPermission(BuildConfig.PERMISSION_CAMERA)) {
-                writePermission(a, Manifest.permission.CAMERA);
+            if (buildConfig.hasPermission(BuildConfig.PERMISSION_CAMERA)) {
+                writePermission(manifestXml, Manifest.permission.CAMERA);
             }
-            if (c.hasPermission(BuildConfig.PERMISSION_READ_EXTERNAL_STORAGE)) {
-                writePermission(a, Manifest.permission.READ_EXTERNAL_STORAGE);
+            if (buildConfig.hasPermission(BuildConfig.PERMISSION_READ_EXTERNAL_STORAGE)) {
+                writePermission(manifestXml, Manifest.permission.READ_EXTERNAL_STORAGE);
             }
-            if (c.hasPermission(BuildConfig.PERMISSION_WRITE_EXTERNAL_STORAGE)) {
-                writePermission(a, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            if (buildConfig.hasPermission(BuildConfig.PERMISSION_WRITE_EXTERNAL_STORAGE)) {
+                writePermission(manifestXml, Manifest.permission.WRITE_EXTERNAL_STORAGE);
             }
-            if (c.hasPermission(BuildConfig.PERMISSION_RECORD_AUDIO)) {
-                writePermission(a, Manifest.permission.RECORD_AUDIO);
+            if (buildConfig.hasPermission(BuildConfig.PERMISSION_RECORD_AUDIO)) {
+                writePermission(manifestXml, Manifest.permission.RECORD_AUDIO);
             }
-            if (c.hasPermission(BuildConfig.PERMISSION_BLUETOOTH)) {
-                writePermission(a, Manifest.permission.BLUETOOTH);
+            if (buildConfig.hasPermission(BuildConfig.PERMISSION_BLUETOOTH)) {
+                writePermission(manifestXml, Manifest.permission.BLUETOOTH);
             }
-            if (c.hasPermission(BuildConfig.PERMISSION_BLUETOOTH_ADMIN)) {
-                writePermission(a, Manifest.permission.BLUETOOTH_ADMIN);
+            if (buildConfig.hasPermission(BuildConfig.PERMISSION_BLUETOOTH_ADMIN)) {
+                writePermission(manifestXml, Manifest.permission.BLUETOOTH_ADMIN);
             }
-            if (c.hasPermission(BuildConfig.PERMISSION_ACCESS_FINE_LOCATION)) {
-                writePermission(a, Manifest.permission.ACCESS_FINE_LOCATION);
-            }
-        }
-        if (FileUtil.isExistFile(fpu.getPathPermission(c.sc_id))) {
-            for (String s : frc.getPermissionList()) {
-                writePermission(a, s);
+            if (buildConfig.hasPermission(BuildConfig.PERMISSION_ACCESS_FINE_LOCATION)) {
+                writePermission(manifestXml, Manifest.permission.ACCESS_FINE_LOCATION);
             }
         }
-        if (c.isAdMobEnabled) {
-            writePermission(a, "com.google.android.gms.permission.AD_ID");
+        if (FileUtil.isExistFile(filePathUtil.getPathPermission(buildConfig.sc_id))) {
+            for (String s : fileResConfig.getPermissionList()) {
+                writePermission(manifestXml, s);
+            }
+        }
+        if (buildConfig.isAdMobEnabled) {
+            writePermission(manifestXml, "com.google.android.gms.permission.AD_ID");
         }
         if (builtInLibraryManager.containsLibrary(BuiltInLibraries.ANDROIDX_WORK_RUNTIME)) {
-            writePermission(a, "android.permission.WAKE_LOCK");
-            writePermission(a, "android.permission.ACCESS_NETWORK_STATE");
-            writePermission(a, "android.permission.RECEIVE_BOOT_COMPLETED");
-            writePermission(a, "android.permission.FOREGROUND_SERVICE");
+            writePermission(manifestXml, "android.permission.WAKE_LOCK");
+            writePermission(manifestXml, "android.permission.ACCESS_NETWORK_STATE");
+            writePermission(manifestXml, "android.permission.RECEIVE_BOOT_COMPLETED");
+            writePermission(manifestXml, "android.permission.FOREGROUND_SERVICE");
         }
-        if (c.x.isFCMUsed) {
-            writePermission(a, Manifest.permission.WAKE_LOCK);
-            writePermission(a, "com.google.android.c2dm.permission.RECEIVE");
+        if (buildConfig.x.isFCMUsed) {
+            writePermission(manifestXml, Manifest.permission.WAKE_LOCK);
+            writePermission(manifestXml, "com.google.android.c2dm.permission.RECEIVE");
         }
-        AndroidManifestInjector.getP(a, c.sc_id);
+        AndroidManifestInjector.getP(manifestXml, buildConfig.sc_id);
 
-        if (c.isAdMobEnabled || c.isTextToSpeechUsed || c.isSpeechToTextUsed) {
+        if (buildConfig.isAdMobEnabled || buildConfig.isTextToSpeechUsed || buildConfig.isSpeechToTextUsed) {
             XmlBuilder queries = new XmlBuilder("queries");
-            if (c.isAdMobEnabled) {
+            if (buildConfig.isAdMobEnabled) {
                 XmlBuilder forBrowserContent = new XmlBuilder("intent");
                 {
                     XmlBuilder action = new XmlBuilder("action");
@@ -485,21 +485,21 @@ public class ManifestGenerator {
                 }
                 queries.addChildNode(forCustomTabsService);
             }
-            if (c.isTextToSpeechUsed && targetSdkVersion >= 30) {
+            if (buildConfig.isTextToSpeechUsed && targetSdkVersion >= 30) {
                 XmlBuilder intent = new XmlBuilder("intent");
                 XmlBuilder action = new XmlBuilder("action");
                 action.addAttribute("android", "name", "android.intent.action.TTS_SERVICE");
                 intent.addChildNode(action);
                 queries.addChildNode(intent);
             }
-            if (c.isSpeechToTextUsed && targetSdkVersion >= 30) {
+            if (buildConfig.isSpeechToTextUsed && targetSdkVersion >= 30) {
                 XmlBuilder intent = new XmlBuilder("intent");
                 XmlBuilder action = new XmlBuilder("action");
                 action.addAttribute("android", "name", "android.speech.RecognitionService");
                 intent.addChildNode(action);
                 queries.addChildNode(intent);
             }
-            a.addChildNode(queries);
+            manifestXml.addChildNode(queries);
         }
 
         XmlBuilder applicationTag = new XmlBuilder("application");
@@ -516,23 +516,23 @@ public class ManifestGenerator {
                 .equals(BuildSettings.SETTING_GENERIC_VALUE_TRUE)) {
             applicationTag.addAttribute("android", "usesCleartextTraffic", "true");
         }
-        AndroidManifestInjector.getAppAttrs(applicationTag, c.sc_id);
+        AndroidManifestInjector.getAppAttrs(applicationTag, buildConfig.sc_id);
 
         boolean hasDebugActivity = false;
-        for (ProjectFileBean projectFileBean : b) {
+        for (ProjectFileBean projectFileBean : projectFiles) {
             if (!projectFileBean.fileName.contains("_fragment")) {
                 XmlBuilder activityTag = new XmlBuilder("activity");
 
                 String javaName = projectFileBean.getJavaName();
                 activityTag.addAttribute("android", "name", "." + javaName.substring(0, javaName.indexOf(".java")));
 
-                if (!AndroidManifestInjector.getActivityAttrs(activityTag, c.sc_id, projectFileBean.getJavaName())) {
+                if (!AndroidManifestInjector.getActivityAttrs(activityTag, buildConfig.sc_id, projectFileBean.getJavaName())) {
                     activityTag.addAttribute("android", "configChanges", "orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout");
                     activityTag.addAttribute("android", "hardwareAccelerated", "true");
                     activityTag.addAttribute("android", "supportsPictureInPicture", "true");
                 }
-                if (!AndroidManifestInjector.isActivityThemeUsed(activityTag, c.sc_id, projectFileBean.getJavaName())) {
-                    if (c.g) {
+                if (!AndroidManifestInjector.isActivityThemeUsed(activityTag, buildConfig.sc_id, projectFileBean.getJavaName())) {
+                    if (buildConfig.g) {
                         if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FULLSCREEN)) {
                             activityTag.addAttribute("android", "theme", "@style/AppTheme.FullScreen");
                         }
@@ -546,7 +546,7 @@ public class ManifestGenerator {
                         activityTag.addAttribute("android", "theme", "@style/NoActionBar");
                     }
                 }
-                if (!AndroidManifestInjector.isActivityOrientationUsed(activityTag, c.sc_id, projectFileBean.getJavaName())) {
+                if (!AndroidManifestInjector.isActivityOrientationUsed(activityTag, buildConfig.sc_id, projectFileBean.getJavaName())) {
                     int orientation = projectFileBean.orientation;
                     if (orientation == ProjectFileBean.ORIENTATION_PORTRAIT) {
                         activityTag.addAttribute("android", "screenOrientation", "portrait");
@@ -554,13 +554,13 @@ public class ManifestGenerator {
                         activityTag.addAttribute("android", "screenOrientation", "landscape");
                     }
                 }
-                if (!AndroidManifestInjector.isActivityKeyboardUsed(activityTag, c.sc_id, projectFileBean.getJavaName())) {
+                if (!AndroidManifestInjector.isActivityKeyboardUsed(activityTag, buildConfig.sc_id, projectFileBean.getJavaName())) {
                     String keyboardSetting = ActivityConfigConstants.getKeyboardSettingName(projectFileBean.keyboardSetting);
                     if (!keyboardSetting.isEmpty()) {
                         activityTag.addAttribute("android", "windowSoftInputMode", keyboardSetting);
                     }
                 }
-                if (projectFileBean.fileName.equals(AndroidManifestInjector.getLauncherActivity(c.sc_id))) {
+                if (projectFileBean.fileName.equals(AndroidManifestInjector.getLauncherActivity(buildConfig.sc_id))) {
                     XmlBuilder intentFilterTag = new XmlBuilder("intent-filter");
                     XmlBuilder actionTag = new XmlBuilder("action");
                     actionTag.addAttribute("android", "name", Intent.ACTION_MAIN);
@@ -568,7 +568,7 @@ public class ManifestGenerator {
                     XmlBuilder categoryTag = new XmlBuilder("category");
                     categoryTag.addAttribute("android", "name", Intent.CATEGORY_LAUNCHER);
                     intentFilterTag.addChildNode(categoryTag);
-                    if (targetsSdkVersion31OrHigher && !AndroidManifestInjector.isActivityExportedUsed(c.sc_id, javaName)) {
+                    if (targetsSdkVersion31OrHigher && !AndroidManifestInjector.isActivityExportedUsed(buildConfig.sc_id, javaName)) {
                         activityTag.addAttribute("android", "exported", "true");
                     }
                     activityTag.addChildNode(intentFilterTag);
@@ -587,7 +587,7 @@ public class ManifestGenerator {
             activityTag.addAttribute("android", "theme", "@style/AppTheme.DebugActivity");
             applicationTag.addChildNode(activityTag);
         }
-        if (c.isAdMobEnabled) {
+        if (buildConfig.isAdMobEnabled) {
             XmlBuilder activityTag = new XmlBuilder("activity");
             activityTag.addAttribute("android", "name", "com.google.android.gms.ads.AdActivity");
             activityTag.addAttribute("android", "configChanges", "keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize");
@@ -597,7 +597,7 @@ public class ManifestGenerator {
 
             XmlBuilder initProvider = new XmlBuilder("provider");
             initProvider.addAttribute("android", "name", "com.google.android.gms.ads.MobileAdsInitProvider");
-            initProvider.addAttribute("android", "authorities", c.packageName + ".mobileadsinitprovider");
+            initProvider.addAttribute("android", "authorities", buildConfig.packageName + ".mobileadsinitprovider");
             initProvider.addAttribute("android", "exported", "false");
             initProvider.addAttribute("android", "initOrder", "100");
             applicationTag.addChildNode(initProvider);
@@ -621,30 +621,30 @@ public class ManifestGenerator {
         if (builtInLibraryManager.containsLibrary(BuiltInLibraries.ANDROIDX_WORK_RUNTIME)) {
             writeAndroidxWorkRuntimeTags(applicationTag);
         }
-        if (c.isFirebaseEnabled || c.isAdMobEnabled || c.isMapUsed) {
+        if (buildConfig.isFirebaseEnabled || buildConfig.isAdMobEnabled || buildConfig.isMapUsed) {
             writeGMSVersion(applicationTag);
         }
-        if (c.isFirebaseEnabled) {
+        if (buildConfig.isFirebaseEnabled) {
             writeFirebaseMetaData(applicationTag);
         }
-        if (c.u) {
+        if (buildConfig.u) {
             writeFileProvider(applicationTag);
         }
-        if (c.isAdMobEnabled && !isEmpty(c.appId)) {
+        if (buildConfig.isAdMobEnabled && !isEmpty(buildConfig.appId)) {
             writeAdmobAppId(applicationTag);
         }
-        if (c.isMapUsed) {
+        if (buildConfig.isMapUsed) {
             writeGoogleMapMetaData(applicationTag);
         }
-        if (c.x.isFCMUsed) {
+        if (buildConfig.x.isFCMUsed) {
             EditorManifest.writeDefFCM(applicationTag);
         }
-        if (c.x.isFBGoogleUsed) {
+        if (buildConfig.x.isFBGoogleUsed) {
             EditorManifest.manifestFBGoogleLogin(applicationTag);
         }
-        if (FileUtil.isExistFile(fpu.getManifestJava(c.sc_id))) {
+        if (FileUtil.isExistFile(filePathUtil.getManifestJava(buildConfig.sc_id))) {
             ArrayList<HashMap<String, Object>> activityAttrs = getActivityAttrs();
-            for (String activityName : frc.getJavaManifestList()) {
+            for (String activityName : fileResConfig.getJavaManifestList()) {
                 writeJava(applicationTag, activityName, activityAttrs);
             }
         }
@@ -652,20 +652,20 @@ public class ManifestGenerator {
                 .equals(BuildSettings.SETTING_GENERIC_VALUE_FALSE)) {
             writeLegacyLibrary(applicationTag);
         }
-        if (FileUtil.isExistFile(fpu.getManifestService(c.sc_id))) {
-            for (String serviceName : frc.getServiceManifestList()) {
+        if (FileUtil.isExistFile(filePathUtil.getManifestService(buildConfig.sc_id))) {
+            for (String serviceName : fileResConfig.getServiceManifestList()) {
                 writeService(applicationTag, serviceName);
             }
         }
-        if (FileUtil.isExistFile(fpu.getManifestBroadcast(c.sc_id))) {
-            for (String receiverName : frc.getBroadcastManifestList()) {
+        if (FileUtil.isExistFile(filePathUtil.getManifestBroadcast(buildConfig.sc_id))) {
+            for (String receiverName : fileResConfig.getBroadcastManifestList()) {
                 writeBroadcast(applicationTag, receiverName);
             }
         }
-        a.addChildNode(applicationTag);
+        manifestXml.addChildNode(applicationTag);
         // Needed, as crashing on my SM-A526B with Android 12 / One UI 4.1 / firmware build A526BFXXS1CVD1 otherwise
         //noinspection RegExpRedundantEscape
-        return AndroidManifestInjector.mHolder(a.toCode(), c.sc_id).replaceAll("\\$\\{applicationId\\}", packageName);
+        return AndroidManifestInjector.mHolder(manifestXml.toCode(), buildConfig.sc_id).replaceAll("\\$\\{applicationId\\}", packageName);
     }
 
     private void writeJava(XmlBuilder applicationTag, String activityName, ArrayList<HashMap<String, Object>> activityAttrs) {
@@ -700,7 +700,7 @@ public class ManifestGenerator {
     }
 
     private ArrayList<HashMap<String, Object>> getActivityAttrs() {
-        String activityAttributesPath = FileUtil.getExternalStorageDir().concat("/.sketchware/data/").concat(c.sc_id).concat("/Injection/androidmanifest/attributes.json");
+        String activityAttributesPath = FileUtil.getExternalStorageDir().concat("/.sketchware/data/").concat(buildConfig.sc_id).concat("/Injection/androidmanifest/attributes.json");
         if (FileUtil.isExistFile(activityAttributesPath)) {
             try {
                 return new Gson().fromJson(FileUtil.readFile(activityAttributesPath), Helper.TYPE_MAP_LIST);
