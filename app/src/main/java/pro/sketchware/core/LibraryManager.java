@@ -8,39 +8,39 @@ import java.io.File;
 import java.io.StringReader;
 
 public class LibraryManager {
-  public String a;
+  public String projectId;
   
-  public EncryptedFileUtil b;
+  public EncryptedFileUtil fileUtil;
   
-  public ProjectLibraryBean c;
+  public ProjectLibraryBean firebaseDB;
   
-  public ProjectLibraryBean d;
+  public ProjectLibraryBean compat;
   
-  public ProjectLibraryBean e;
+  public ProjectLibraryBean admob;
   
-  public ProjectLibraryBean f;
+  public ProjectLibraryBean googleMap;
   
-  public Gson g;
+  public Gson gson;
   
   public LibraryManager(String paramString) {
-    this.a = paramString;
-    this.b = new EncryptedFileUtil();
-    this.g = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
+    this.projectId = paramString;
+    this.fileUtil = new EncryptedFileUtil();
+    this.gson = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
     f();
   }
   
   public void a() {
-    String str = SketchwarePaths.a(this.a);
+    String str = SketchwarePaths.a(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str);
     stringBuilder.append(File.separator);
     stringBuilder.append("library");
     str = stringBuilder.toString();
-    this.b.c(str);
+    this.fileUtil.c(str);
   }
   
   public void a(ProjectLibraryBean paramProjectLibraryBean) {
-    this.e = paramProjectLibraryBean;
+    this.admob = paramProjectLibraryBean;
   }
   
   public void a(BufferedReader paramBufferedReader) throws java.io.IOException {
@@ -68,14 +68,14 @@ public class LibraryManager {
         } 
         if (str.length() > 0)
           a(str, stringBuffer.toString()); 
-        if (this.c == null)
-          this.c = new ProjectLibraryBean(0); 
-        if (this.d == null)
-          this.d = new ProjectLibraryBean(1); 
-        if (this.e == null)
-          this.e = new ProjectLibraryBean(2); 
-        if (this.f == null)
-          this.f = new ProjectLibraryBean(3); 
+        if (this.firebaseDB == null)
+          this.firebaseDB = new ProjectLibraryBean(0); 
+        if (this.compat == null)
+          this.compat = new ProjectLibraryBean(1); 
+        if (this.admob == null)
+          this.admob = new ProjectLibraryBean(2); 
+        if (this.googleMap == null)
+          this.googleMap = new ProjectLibraryBean(3); 
         return;
       } 
     } catch (Exception exception) {
@@ -87,8 +87,8 @@ public class LibraryManager {
     StringBuffer stringBuffer = new StringBuffer();
     a(stringBuffer);
     try {
-      byte[] arrayOfByte = this.b.d(stringBuffer.toString());
-      this.b.a(paramString, arrayOfByte);
+      byte[] arrayOfByte = this.fileUtil.d(stringBuffer.toString());
+      this.fileUtil.a(paramString, arrayOfByte);
     } catch (Exception exception) {
       exception.printStackTrace();
     } 
@@ -100,15 +100,15 @@ public class LibraryManager {
     BufferedReader bufferedReader = null;
     try {
       bufferedReader = new BufferedReader(new StringReader(paramString2));
-      ProjectLibraryBean bean = this.g.fromJson(paramString2, ProjectLibraryBean.class);
+      ProjectLibraryBean bean = this.gson.fromJson(paramString2, ProjectLibraryBean.class);
       if (paramString1.equals("firebaseDB")) {
-        this.c = bean;
+        this.firebaseDB = bean;
       } else if (paramString1.equals("compat")) {
-        this.d = bean;
+        this.compat = bean;
       } else if (paramString1.equals("admob")) {
-        this.e = bean;
+        this.admob = bean;
       } else if (paramString1.equals("googleMap")) {
-        this.f = bean;
+        this.googleMap = bean;
       }
     } catch (Exception exception) {
       exception.printStackTrace();
@@ -118,84 +118,84 @@ public class LibraryManager {
   }
   
   public final void a(StringBuffer paramStringBuffer) {
-    if (this.c != null) {
+    if (this.firebaseDB != null) {
       paramStringBuffer.append("@");
       paramStringBuffer.append("firebaseDB");
       paramStringBuffer.append("\n");
-      paramStringBuffer.append(this.g.toJson(this.c, ProjectLibraryBean.class));
+      paramStringBuffer.append(this.gson.toJson(this.firebaseDB, ProjectLibraryBean.class));
       paramStringBuffer.append("\n");
     } 
-    if (this.d != null) {
+    if (this.compat != null) {
       paramStringBuffer.append("@");
       paramStringBuffer.append("compat");
       paramStringBuffer.append("\n");
-      paramStringBuffer.append(this.g.toJson(this.d, ProjectLibraryBean.class));
+      paramStringBuffer.append(this.gson.toJson(this.compat, ProjectLibraryBean.class));
       paramStringBuffer.append("\n");
     } 
-    if (this.e != null) {
+    if (this.admob != null) {
       paramStringBuffer.append("@");
       paramStringBuffer.append("admob");
       paramStringBuffer.append("\n");
-      paramStringBuffer.append(this.g.toJson(this.e, ProjectLibraryBean.class));
+      paramStringBuffer.append(this.gson.toJson(this.admob, ProjectLibraryBean.class));
       paramStringBuffer.append("\n");
     } 
-    if (this.f != null) {
+    if (this.googleMap != null) {
       paramStringBuffer.append("@");
       paramStringBuffer.append("googleMap");
       paramStringBuffer.append("\n");
-      paramStringBuffer.append(this.g.toJson(this.f, ProjectLibraryBean.class));
+      paramStringBuffer.append(this.gson.toJson(this.googleMap, ProjectLibraryBean.class));
       paramStringBuffer.append("\n");
     } 
   }
   
   public ProjectLibraryBean b() {
-    return this.e;
+    return this.admob;
   }
   
   public void b(ProjectLibraryBean paramProjectLibraryBean) {
-    this.d = paramProjectLibraryBean;
+    this.compat = paramProjectLibraryBean;
   }
   
   public ProjectLibraryBean c() {
-    return this.d;
+    return this.compat;
   }
   
   public void c(ProjectLibraryBean paramProjectLibraryBean) {
-    this.c = paramProjectLibraryBean;
+    this.firebaseDB = paramProjectLibraryBean;
   }
   
   public ProjectLibraryBean d() {
-    return this.c;
+    return this.firebaseDB;
   }
   
   public void d(ProjectLibraryBean paramProjectLibraryBean) {
-    this.f = paramProjectLibraryBean;
+    this.googleMap = paramProjectLibraryBean;
   }
   
   public ProjectLibraryBean e() {
-    return this.f;
+    return this.googleMap;
   }
   
   public final void f() {
-    this.c = new ProjectLibraryBean(0);
-    this.d = new ProjectLibraryBean(1);
-    this.e = new ProjectLibraryBean(2);
-    this.f = new ProjectLibraryBean(3);
+    this.firebaseDB = new ProjectLibraryBean(0);
+    this.compat = new ProjectLibraryBean(1);
+    this.admob = new ProjectLibraryBean(2);
+    this.googleMap = new ProjectLibraryBean(3);
   }
   
   public boolean g() {
-    String str1 = SketchwarePaths.a(this.a);
+    String str1 = SketchwarePaths.a(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str1);
     stringBuilder.append(File.separator);
     stringBuilder.append("library");
     String str2 = stringBuilder.toString();
-    return this.b.e(str2);
+    return this.fileUtil.e(str2);
   }
   
   public void h() {
     f();
-    String str1 = SketchwarePaths.a(this.a);
+    String str1 = SketchwarePaths.a(this.projectId);
     StringBuilder stringBuilder1 = new StringBuilder();
     stringBuilder1.append(str1);
     stringBuilder1.append(File.separator);
@@ -203,8 +203,8 @@ public class LibraryManager {
     str1 = stringBuilder1.toString();
     BufferedReader bufferedReader = null;
     try {
-      byte[] arrayOfByte = this.b.h(str1);
-      String str = this.b.a(arrayOfByte);
+      byte[] arrayOfByte = this.fileUtil.h(str1);
+      String str = this.fileUtil.a(arrayOfByte);
       bufferedReader = new BufferedReader(new StringReader(str));
       a(bufferedReader);
     } catch (Exception exception) {
@@ -216,18 +216,18 @@ public class LibraryManager {
   
   public void i() {
     f();
-    String str1 = SketchwarePaths.b(this.a);
+    String str1 = SketchwarePaths.b(this.projectId);
     StringBuilder stringBuilder1 = new StringBuilder();
     stringBuilder1.append(str1);
     stringBuilder1.append(File.separator);
     stringBuilder1.append("library");
     str1 = stringBuilder1.toString();
-    if (!this.b.e(str1))
+    if (!this.fileUtil.e(str1))
       return; 
     BufferedReader bufferedReader = null;
     try {
-      byte[] arrayOfByte = this.b.h(str1);
-      String str = this.b.a(arrayOfByte);
+      byte[] arrayOfByte = this.fileUtil.h(str1);
+      String str = this.fileUtil.a(arrayOfByte);
       bufferedReader = new BufferedReader(new StringReader(str));
       a(bufferedReader);
     } catch (Exception exception) {
@@ -238,12 +238,12 @@ public class LibraryManager {
   }
   
   public void j() {
-    this.a = "";
+    this.projectId = "";
     f();
   }
   
   public void k() {
-    String str = SketchwarePaths.a(this.a);
+    String str = SketchwarePaths.a(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str);
     stringBuilder.append(File.separator);
@@ -252,7 +252,7 @@ public class LibraryManager {
   }
   
   public void l() {
-    String str = SketchwarePaths.b(this.a);
+    String str = SketchwarePaths.b(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str);
     stringBuilder.append(File.separator);

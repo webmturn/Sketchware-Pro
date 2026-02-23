@@ -610,7 +610,7 @@ public class ExtraMenuBean {
             case "AdUnit":
                 dialog.setIcon(R.drawable.unit_96);
                 title = "Select an Ad Unit";
-                for (AdUnitBean bean : ProjectDataManager.getLibraryManager(sc_id).e.adUnits) {
+                for (AdUnitBean bean : ProjectDataManager.getLibraryManager(sc_id).admob.adUnits) {
                     menus.add(bean.id);
                 }
                 break;
@@ -618,7 +618,7 @@ public class ExtraMenuBean {
             case "TestDevice":
                 dialog.setIcon(R.drawable.ic_test_device_48dp);
                 title = "Select a Test device";
-                for (AdTestDeviceBean testDevice : ProjectDataManager.getLibraryManager(sc_id).e.testDevices) {
+                for (AdTestDeviceBean testDevice : ProjectDataManager.getLibraryManager(sc_id).admob.testDevices) {
                     menus.add(testDevice.deviceId);
                 }
                 break;

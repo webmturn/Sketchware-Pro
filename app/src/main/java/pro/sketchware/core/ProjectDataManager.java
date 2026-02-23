@@ -64,7 +64,7 @@ public class ProjectDataManager {
     }
 
     public static synchronized LibraryManager c(String str, boolean z) {
-        if (d != null && !str.equals(d.a)) {
+        if (d != null && !str.equals(d.projectId)) {
             d();
         }
         if (d == null) {
