@@ -22,30 +22,30 @@ public class SketchwarePaths {
     public static final String[] M = {"F83085529A75E7A8CEDD64013B1A374B", "90C443DFAB7F23424DE7E079787466CD", "F83085529A75E7A8CEDD64013B1A374B", "C99E5B3F179203AE2749F8F9B5A7493A", "100EFD7391FF1BEE4A1E2F960A1B8AF2"};
     public static final String[] N = {"1486507718310013_1788685811425534", "1486507718310013_1804931006467681", "1486507718310013_1805009746459807", "1486507718310013_1805001526460629", "1486507718310013_1805273579766757", "1486507718310013_1805397669754348", "1486507718310013_1805436593083789", "1486507718310013_1805666736394108", "1486507718310013_1805724186388363", "1486507718310013_1809233042704144"};
     public static final String[] O = {"255022168522663_266931247331755", "255022168522663_268282677196612", "255022168522663_268283823863164", "255022168522663_266575314034015", "255022168522663_279474749410738"};
-    public static final String a = ".sketchware" + File.separator + "libs";
-    public static final String b = ".sketchware" + File.separator + "mysc";
-    public static final String c = ".sketchware" + File.separator + "mysc" + File.separator + "list";
-    public static final String d = ".sketchware" + File.separator + "data";
-    public static final String e = ".sketchware" + File.separator + "bak";
-    public static final String f = ".sketchware" + File.separator + "temp" + File.separator + "images";
-    public static final String g = ".sketchware" + File.separator + "temp" + File.separator + "sounds";
-    public static final String h = ".sketchware" + File.separator + "temp" + File.separator + "fonts";
-    public static final String i = ".sketchware" + File.separator + "temp" + File.separator + "proj";
-    public static final String j = ".sketchware" + File.separator + "temp" + File.separator + "data";
-    public static final String l = ".sketchware" + File.separator + "resources";
-    public static final String m = ".sketchware" + File.separator + "resources" + File.separator + "icons";
-    public static final String n = ".sketchware" + File.separator + "resources" + File.separator + "images";
-    public static final String o = ".sketchware" + File.separator + "resources" + File.separator + "sounds";
-    public static final String p = ".sketchware" + File.separator + "resources" + File.separator + "fonts";
-    public static final String r = ".sketchware" + File.separator + "download" + File.separator + "apk";
-    public static final String s = ".sketchware" + File.separator + "download" + File.separator + "data";
-    public static final String t = ".sketchware" + File.separator + "tutorial" + File.separator + "images";
-    public static final String u = ".sketchware" + File.separator + "tutorial" + File.separator + "sounds";
-    public static final String v = ".sketchware" + File.separator + "tutorial" + File.separator + "fonts";
-    public static final String w = ".sketchware" + File.separator + "tutorial" + File.separator + "proj";
-    public static final String x = ".sketchware" + File.separator + "collection";
-    public static final String y = "sketchware" + File.separator + "localization";
-    public static final String z = "sketchware" + File.separator + "localization" + File.separator + "strings.xml";
+    public static final String LIBS_PATH = ".sketchware" + File.separator + "libs";
+    public static final String MYSC_PATH = ".sketchware" + File.separator + "mysc";
+    public static final String MYSC_LIST_PATH = ".sketchware" + File.separator + "mysc" + File.separator + "list";
+    public static final String DATA_PATH = ".sketchware" + File.separator + "data";
+    public static final String BACKUP_PATH = ".sketchware" + File.separator + "bak";
+    public static final String TEMP_IMAGES_PATH = ".sketchware" + File.separator + "temp" + File.separator + "images";
+    public static final String TEMP_SOUNDS_PATH = ".sketchware" + File.separator + "temp" + File.separator + "sounds";
+    public static final String TEMP_FONTS_PATH = ".sketchware" + File.separator + "temp" + File.separator + "fonts";
+    public static final String TEMP_PROJ_PATH = ".sketchware" + File.separator + "temp" + File.separator + "proj";
+    public static final String TEMP_DATA_PATH = ".sketchware" + File.separator + "temp" + File.separator + "data";
+    public static final String RESOURCES_PATH = ".sketchware" + File.separator + "resources";
+    public static final String RESOURCES_ICONS_PATH = ".sketchware" + File.separator + "resources" + File.separator + "icons";
+    public static final String RESOURCES_IMAGES_PATH = ".sketchware" + File.separator + "resources" + File.separator + "images";
+    public static final String RESOURCES_SOUNDS_PATH = ".sketchware" + File.separator + "resources" + File.separator + "sounds";
+    public static final String RESOURCES_FONTS_PATH = ".sketchware" + File.separator + "resources" + File.separator + "fonts";
+    public static final String DOWNLOAD_APK_PATH = ".sketchware" + File.separator + "download" + File.separator + "apk";
+    public static final String DOWNLOAD_DATA_PATH = ".sketchware" + File.separator + "download" + File.separator + "data";
+    public static final String TUTORIAL_IMAGES_PATH = ".sketchware" + File.separator + "tutorial" + File.separator + "images";
+    public static final String TUTORIAL_SOUNDS_PATH = ".sketchware" + File.separator + "tutorial" + File.separator + "sounds";
+    public static final String TUTORIAL_FONTS_PATH = ".sketchware" + File.separator + "tutorial" + File.separator + "fonts";
+    public static final String TUTORIAL_PROJ_PATH = ".sketchware" + File.separator + "tutorial" + File.separator + "proj";
+    public static final String COLLECTION_PATH = ".sketchware" + File.separator + "collection";
+    public static final String LOCALIZATION_PATH = "sketchware" + File.separator + "localization";
+    public static final String LOCALIZATION_STRINGS_PATH = "sketchware" + File.separator + "localization" + File.separator + "strings.xml";
 
     public static final String EXTRA_SYSTEM_DATA = ".sketchware" + File.separator + "data" + File.separator + "system";
     public static final String CUSTOM_COMPONENT_FILE = EXTRA_SYSTEM_DATA + File.separator + "component.json";
@@ -56,7 +56,7 @@ public class SketchwarePaths {
     }
 
     public static String a() {
-        return getAbsolutePathOf(x);
+        return getAbsolutePathOf(COLLECTION_PATH);
     }
 
     public static String a(int type) {
@@ -70,7 +70,7 @@ public class SketchwarePaths {
     }
 
     public static String a(String sc_id) {
-        return getAbsolutePathOf(e + File.separator + sc_id);
+        return getAbsolutePathOf(BACKUP_PATH + File.separator + sc_id);
     }
 
     public static void a(Context context, String preferenceName) {
@@ -93,7 +93,7 @@ public class SketchwarePaths {
     }
 
     public static String b() {
-        return getAbsolutePathOf(s);
+        return getAbsolutePathOf(DOWNLOAD_DATA_PATH);
     }
 
     public static String b(int type) {
@@ -152,7 +152,7 @@ public class SketchwarePaths {
     }
 
     public static String b(String sc_id) {
-        return getAbsolutePathOf(d + File.separator + sc_id);
+        return getAbsolutePathOf(DATA_PATH + File.separator + sc_id);
     }
 
     public static String c() {
@@ -160,19 +160,19 @@ public class SketchwarePaths {
     }
 
     public static String c(String sc_id) {
-        return getAbsolutePathOf(c + File.separator + sc_id);
+        return getAbsolutePathOf(MYSC_LIST_PATH + File.separator + sc_id);
     }
 
     public static String d() {
-        return getAbsolutePathOf(p);
+        return getAbsolutePathOf(RESOURCES_FONTS_PATH);
     }
 
     public static String d(String sc_id) {
-        return getAbsolutePathOf(b + File.separator + sc_id);
+        return getAbsolutePathOf(MYSC_PATH + File.separator + sc_id);
     }
 
     public static String e() {
-        return getAbsolutePathOf(m);
+        return getAbsolutePathOf(RESOURCES_ICONS_PATH);
     }
 
     public static String e(String sc_id) {
@@ -184,7 +184,7 @@ public class SketchwarePaths {
     }
 
     public static String g() {
-        return getAbsolutePathOf(n);
+        return getAbsolutePathOf(RESOURCES_IMAGES_PATH);
     }
 
     public static String h() {
@@ -201,11 +201,11 @@ public class SketchwarePaths {
     }
 
     public static String k() {
-        return getAbsolutePathOf(y);
+        return getAbsolutePathOf(LOCALIZATION_PATH);
     }
 
     public static String l() {
-        return getAbsolutePathOf(z);
+        return getAbsolutePathOf(LOCALIZATION_STRINGS_PATH);
     }
 
     public static String m() {
@@ -213,7 +213,7 @@ public class SketchwarePaths {
     }
 
     public static String n() {
-        return getAbsolutePathOf(c);
+        return getAbsolutePathOf(MYSC_LIST_PATH);
     }
 
     public static String o() {
@@ -229,7 +229,7 @@ public class SketchwarePaths {
     }
 
     public static String r() {
-        return getAbsolutePathOf(a);
+        return getAbsolutePathOf(LIBS_PATH);
     }
 
     public static String s() {
@@ -237,19 +237,19 @@ public class SketchwarePaths {
     }
 
     public static String t() {
-        return getAbsolutePathOf(o);
+        return getAbsolutePathOf(RESOURCES_SOUNDS_PATH);
     }
 
     public static String u() {
-        return getAbsolutePathOf(h);
+        return getAbsolutePathOf(TEMP_FONTS_PATH);
     }
 
     public static String v() {
-        return getAbsolutePathOf(f);
+        return getAbsolutePathOf(TEMP_IMAGES_PATH);
     }
 
     public static String w() {
-        return getAbsolutePathOf(g);
+        return getAbsolutePathOf(TEMP_SOUNDS_PATH);
     }
 
     public static String x() {
