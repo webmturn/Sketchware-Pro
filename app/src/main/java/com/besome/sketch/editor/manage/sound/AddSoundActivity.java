@@ -368,7 +368,7 @@ public class AddSoundActivity extends BaseDialogActivity implements View.OnClick
     }
 
     private boolean isSoundValid(ResourceNameValidator wb) {
-        if (!wb.b()) {
+        if (!wb.isValid()) {
             return false;
         }
         if (isSoundPlayable && soundUri != null) {

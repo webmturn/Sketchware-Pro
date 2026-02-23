@@ -383,7 +383,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
     }
 
     public boolean a(ResourceNameValidator wb) {
-        if (wb.b()) {
+        if (wb.isValid()) {
             if ((!L || K == null) && !u) {
                 binding.selectFile.startAnimation(AnimationUtils.loadAnimation(this, R.anim.ani_1));
                 return false;

@@ -101,7 +101,7 @@ public class ManageFontImportActivity extends BaseAppCompatActivity implements V
     }
 
     private boolean isNameValid() {
-        return nameValidator.b();
+        return nameValidator.isValid();
     }
 
     @Override

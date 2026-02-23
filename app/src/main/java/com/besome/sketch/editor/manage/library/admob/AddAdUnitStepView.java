@@ -63,9 +63,9 @@ public class AddAdUnitStepView extends LinearLayout implements LibrarySettingsVi
         edName.setPrivateImeOptions("defaultInputmode=english;");
         dialog.setView(rootView);
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_add), (v, which) -> {
-            if (!nameValidator.b()) {
+            if (!nameValidator.isValid()) {
                 edName.requestFocus();
-            } else if (!adUnitValidator.b()) {
+            } else if (!adUnitValidator.isValid()) {
                 edAdUnitId.requestFocus();
             } else {
                 String name = Helper.getText(edName);

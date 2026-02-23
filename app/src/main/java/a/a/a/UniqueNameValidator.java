@@ -21,12 +21,12 @@ public class UniqueNameValidator extends BaseValidator {
     public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
         String inputValue = charSequence.toString();
         if (preDefNames.contains(inputValue)) {
-            b.setErrorEnabled(true);
-            b.setError(a.getString(R.string.common_message_name_unavailable));
-            d = false;
+            textInputLayout.setErrorEnabled(true);
+            textInputLayout.setError(context.getString(R.string.common_message_name_unavailable));
+            valid = false;
         } else {
-            b.setErrorEnabled(false);
-            d = true;
+            textInputLayout.setErrorEnabled(false);
+            valid = true;
         }
     }
 }

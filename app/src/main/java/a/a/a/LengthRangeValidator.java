@@ -20,27 +20,27 @@ public class LengthRangeValidator extends BaseValidator {
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         if (s.toString().trim().length() < min) {
-            b.setErrorEnabled(true);
-            if (e == 0) {
-                b.setError(a.getString(R.string.invalid_value_min_lenth, min));
+            textInputLayout.setErrorEnabled(true);
+            if (customErrorResId == 0) {
+                textInputLayout.setError(context.getString(R.string.invalid_value_min_lenth, min));
             } else {
-                b.setError(a.getString(e, min));
+                textInputLayout.setError(context.getString(customErrorResId, min));
             }
 
-            d = false;
+            valid = false;
         } else {
             if (s.toString().trim().length() > max) {
-                b.setErrorEnabled(true);
-                if (e == 0) {
-                    b.setError(a.getString(R.string.invalid_value_max_lenth, max));
+                textInputLayout.setErrorEnabled(true);
+                if (customErrorResId == 0) {
+                    textInputLayout.setError(context.getString(R.string.invalid_value_max_lenth, max));
                 } else {
-                    b.setError(a.getString(e, max));
+                    textInputLayout.setError(context.getString(customErrorResId, max));
                 }
 
-                d = false;
+                valid = false;
             } else {
-                b.setErrorEnabled(false);
-                d = true;
+                textInputLayout.setErrorEnabled(false);
+                valid = true;
             }
 
         }

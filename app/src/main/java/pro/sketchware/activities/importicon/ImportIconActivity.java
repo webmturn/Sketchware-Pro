@@ -387,7 +387,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
         dialog.setOnShowListener(dialogInterface -> {
             Button positiveButton = ((AlertDialog) dialogInterface).getButton(DialogInterface.BUTTON_POSITIVE);
             positiveButton.setOnClickListener(view -> {
-                if (iconNameValidator.b() && selectedIconPosition >= 0) {
+                if (iconNameValidator.isValid() && selectedIconPosition >= 0) {
                     String resFullname = adapter.getCurrentList().get(selectedIconPosition).second + File.separator + selected_icon_type + ".svg";
                     Intent intent = new Intent();
                     intent.putExtra("iconName", Helper.getText(dialogBinding.inputText));

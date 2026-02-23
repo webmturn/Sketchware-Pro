@@ -114,7 +114,7 @@ public class TestDevicesStepView extends LinearLayout implements LibrarySettings
         edDeviceId.setPrivateImeOptions("defaultInputmode=english;");
         dialog.setView(content);
         dialog.setPositiveButton(R.string.common_word_add, (v, which) -> {
-            if (validator.b()) {
+            if (validator.isValid()) {
                 String deviceId = Helper.getText(edDeviceId);
                 testDevices.add(new AdTestDeviceBean(deviceId));
                 adapter.notifyItemInserted(testDevices.size() - 1);

@@ -488,10 +488,10 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
 
         binding.edInput.setSingleLine();
         PropertyNameValidator validator = new PropertyNameValidator(context, binding.tiInput, BlockConstants.b, BlockConstants.a(), jC.a(sc_id).a(projectFileBean), value);
-        validator.a(value);
+        validator.setText(value);
         dialog.setView(binding.getRoot());
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_save), (v, which) -> {
-            if (validator.b()) {
+            if (validator.isValid()) {
                 setValue(Helper.getText(binding.edInput));
                 if (valueChangeListener != null) valueChangeListener.a(key, value);
                 v.dismiss();
@@ -534,7 +534,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
             setupAutoCompleteTextView(binding.edTiAutoCompleteInput);
         }
 
-        lengthValidator.a(value);
+        lengthValidator.setText(value);
         dialog.setView(binding.getRoot());
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_save), (v, which) ->
                 handleSave(lengthValidator, binding.edInput, binding.edTiAutoCompleteInput, binding.tiAutoCompleteInput, isInject, v));
@@ -582,7 +582,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
     private void handleSave(LengthRangeValidator lengthValidator, EditText input,
                             MaterialAutoCompleteTextView autoCompleteTextView, TextInputLayout textAutoCompleteInput,
                             boolean isInject, DialogInterface dialog) {
-        if (lengthValidator.b() && textAutoCompleteInput.getError() == null) {
+        if (lengthValidator.isValid() && textAutoCompleteInput.getError() == null) {
             if (isInject) {
                 setValue(Helper.getText(input));
             } else {
@@ -663,7 +663,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
 
         dialog.setView(binding.getRoot());
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_save), (v, which) -> {
-            if (validator.b()) {
+            if (validator.isValid()) {
                 setValue(Helper.getText(binding.edInput));
                 if (valueChangeListener != null) valueChangeListener.a(key, value);
                 v.dismiss();
@@ -686,10 +686,10 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
         binding.tiInput.setVisibility(View.GONE);
         binding.tiAutoCompleteInput.setVisibility(View.VISIBLE);
         LengthRangeValidator lengthValidator = new LengthRangeValidator(context, binding.tiInput, 0, 99);
-        lengthValidator.a(value);
+        lengthValidator.setText(value);
         dialog.setView(binding.getRoot());
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_save), (v, which) -> {
-            if (lengthValidator.b()) {
+            if (lengthValidator.isValid()) {
                 setValue(Helper.getText(input));
                 if (valueChangeListener != null) valueChangeListener.a(key, value);
                 v.dismiss();

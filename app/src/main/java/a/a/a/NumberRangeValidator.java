@@ -27,27 +27,27 @@ public class NumberRangeValidator extends BaseValidator {
   public void onTextChanged(CharSequence paramCharSequence, int paramInt1, int paramInt2, int paramInt3) {
     String str = paramCharSequence.toString().trim();
     if (str.isEmpty()) {
-      this.d = false;
+      this.valid = false;
       return;
     }
     try {
       int i = Integer.parseInt(str);
       if (i < this.f) {
-        this.b.setErrorEnabled(true);
-        this.b.setError(xB.b().a(this.a, R.string.invalid_value_min_lenth, new Object[] { Integer.valueOf(this.f) }));
-        this.d = false;
+        this.textInputLayout.setErrorEnabled(true);
+        this.textInputLayout.setError(xB.b().a(this.context, R.string.invalid_value_min_lenth, new Object[] { Integer.valueOf(this.f) }));
+        this.valid = false;
       } else if (i > this.g) {
-        this.b.setErrorEnabled(true);
-        this.b.setError(xB.b().a(this.a, R.string.invalid_value_max_lenth, new Object[] { Integer.valueOf(this.g) }));
-        this.d = false;
+        this.textInputLayout.setErrorEnabled(true);
+        this.textInputLayout.setError(xB.b().a(this.context, R.string.invalid_value_max_lenth, new Object[] { Integer.valueOf(this.g) }));
+        this.valid = false;
       } else {
-        this.b.setErrorEnabled(false);
-        this.d = true;
+        this.textInputLayout.setErrorEnabled(false);
+        this.valid = true;
       }
     } catch (NumberFormatException numberFormatException) {
-      this.b.setErrorEnabled(true);
-      this.b.setError(xB.b().a(this.a, R.string.logic_editor_message_variable_name_must_start_letter));
-      this.d = false;
+      this.textInputLayout.setErrorEnabled(true);
+      this.textInputLayout.setError(xB.b().a(this.context, R.string.logic_editor_message_variable_name_must_start_letter));
+      this.valid = false;
     }
   }
 }

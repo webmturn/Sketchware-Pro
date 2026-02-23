@@ -19,16 +19,16 @@ public class LowercaseNameValidator extends BaseValidator {
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         if (s.toString().trim().length() == 0) {
-            b.setErrorEnabled(true);
-            b.setError(a.getString(R.string.invalid_value_min_lenth, 1));
-            d = false;
+            textInputLayout.setErrorEnabled(true);
+            textInputLayout.setError(context.getString(R.string.invalid_value_min_lenth, 1));
+            valid = false;
         } else if (NAME_PATTERN.matcher(s.toString()).matches()) {
-            b.setErrorEnabled(false);
-            d = true;
+            textInputLayout.setErrorEnabled(false);
+            valid = true;
         } else {
-            b.setErrorEnabled(true);
-            b.setError(a.getString(R.string.invalid_value_rule_4));
-            d = false;
+            textInputLayout.setErrorEnabled(true);
+            textInputLayout.setError(context.getString(R.string.invalid_value_rule_4));
+            valid = false;
         }
 
     }

@@ -122,7 +122,7 @@ public class ShowMoreBlockCollectionActivity extends BaseAppCompatActivity imple
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.save_button && moreBlockNameValidator.b()) {
+        if (v.getId() == R.id.save_button && moreBlockNameValidator.isValid()) {
             Pp.h().a(moreBlockName, Helper.getText(moreBlockNameEditorText), true);
             SketchToast.toast(getApplicationContext(), Helper.getResString(R.string.design_manager_message_edit_complete), SketchToast.TOAST_NORMAL).show();
             finish();

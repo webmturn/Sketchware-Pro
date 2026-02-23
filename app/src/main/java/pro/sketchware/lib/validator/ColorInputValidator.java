@@ -28,28 +28,28 @@ public class ColorInputValidator extends BaseValidator {
             hexCode = hexCode.substring(1);
         }
         if (hexCode.length() > 8) {
-            b.setErrorEnabled(true);
-            b.setError(a.getString(R.string.invalid_value_max_lenth, 8));
-            d = false;
+            textInputLayout.setErrorEnabled(true);
+            textInputLayout.setError(context.getString(R.string.invalid_value_max_lenth, 8));
+            valid = false;
         } else {
             if (hexPattern.matcher(hexCode).matches()) {
                 try {
                     hexCode = String.format("#%8s", hexCode).replaceAll(" ", "F");
                     colorPreview.setBackgroundColor(Color.parseColor(hexCode));
                 } catch (IllegalArgumentException var5) {
-                    b.setErrorEnabled(true);
-                    b.setError(a.getString(R.string.invalid_value_format));
-                    d = false;
+                    textInputLayout.setErrorEnabled(true);
+                    textInputLayout.setError(context.getString(R.string.invalid_value_format));
+                    valid = false;
                     colorPreview.setBackgroundColor(0xfff6f6f6);
                 }
 
-                b.setErrorEnabled(false);
-                d = true;
+                textInputLayout.setErrorEnabled(false);
+                valid = true;
             } else {
-                b.setErrorEnabled(true);
-                b.setError(a.getString(R.string.invalid_value_format));
+                textInputLayout.setErrorEnabled(true);
+                textInputLayout.setError(context.getString(R.string.invalid_value_format));
                 colorPreview.setBackgroundColor(0xfff6f6f6);
-                d = false;
+                valid = false;
             }
 
         }

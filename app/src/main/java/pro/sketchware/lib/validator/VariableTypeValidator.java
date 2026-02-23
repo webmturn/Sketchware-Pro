@@ -27,43 +27,38 @@ public class VariableTypeValidator extends BaseValidator {
         String reconsInput = String.join(" ", words);
 
         if (!variableType.equals(reconsInput)) {
-            b.setError(b.getContext().getString(R.string.error_extra_spaces_not_allowed));
-            d = false;
+            textInputLayout.setError(textInputLayout.getContext().getString(R.string.error_extra_spaces_not_allowed));
+            valid = false;
             return;
         }
 
         if (!TextUtils.isEmpty(charSequence)) {
             if (!Character.isLetter(charSequence.charAt(0))) {
-                b.setError(b.getContext().getString(R.string.error_type_must_start_letter));
-                d = false;
+                textInputLayout.setError(textInputLayout.getContext().getString(R.string.error_type_must_start_letter));
+                valid = false;
                 return;
             }
         }
 
         if (!isValidAngleBracket(variableType)) {
-            b.setError(b.getContext().getString(R.string.error_angle_bracket_not_matched));
-            d = false;
+            textInputLayout.setError(textInputLayout.getContext().getString(R.string.error_angle_bracket_not_matched));
+            valid = false;
             return;
         }
 
         if (!isValidBoxBracket(variableType)) {
-            b.setError(b.getContext().getString(R.string.error_box_bracket_not_matched));
-            d = false;
+            textInputLayout.setError(textInputLayout.getContext().getString(R.string.error_box_bracket_not_matched));
+            valid = false;
             return;
         }
 
         if (!PATTERN_TYPE.matcher(variableType).matches()) {
-            b.setError(b.getContext().getString(R.string.error_invalid_variable_type));
-            d = false;
+            textInputLayout.setError(textInputLayout.getContext().getString(R.string.error_invalid_variable_type));
+            valid = false;
             return;
         }
-        b.setError(null);
-        b.setError(null);
-        d = true;
-    }
-
-    public boolean isValid() {
-        return b();
+        textInputLayout.setError(null);
+        valid = true;
     }
 
     private boolean isValidBracket(String _input, char _openingBracket, char _closingBracket) {

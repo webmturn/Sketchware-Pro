@@ -93,7 +93,7 @@ public class ManageSoundImportActivity extends BaseAppCompatActivity implements 
     }
 
     private boolean isNameValid() {
-        return nameValidator.b();
+        return nameValidator.isValid();
     }
 
     @Override

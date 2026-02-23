@@ -156,13 +156,13 @@ public class PropertyIndentItem extends RelativeLayout implements View.OnClickLi
         MinMaxInputValidator ti_top = new MinMaxInputValidator(context, binding.tiTop, 0, 999);
         MinMaxInputValidator ti_bottom = new MinMaxInputValidator(context, binding.tiBottom, 0, 999);
 
-        ti_left.a(String.valueOf(j));
-        ti_top.a(String.valueOf(k));
-        ti_right.a(String.valueOf(l));
-        ti_bottom.a(String.valueOf(m));
+        ti_left.setText(String.valueOf(j));
+        ti_top.setText(String.valueOf(k));
+        ti_right.setText(String.valueOf(l));
+        ti_bottom.setText(String.valueOf(m));
 
         if (j == k && k == l && l == m) { // All sides are equal
-            ti_all.a(String.valueOf(j));
+            ti_all.setText(String.valueOf(j));
             binding.chkPtyAll.setChecked(true);
         } else {
             binding.individualPaddingView.setVisibility(VISIBLE);
@@ -196,10 +196,10 @@ public class PropertyIndentItem extends RelativeLayout implements View.OnClickLi
 
             @Override
             public void afterTextChanged(Editable s) {
-                ti_left.a(Helper.getText(binding.etAll));
-                ti_top.a(Helper.getText(binding.etAll));
-                ti_right.a(Helper.getText(binding.etAll));
-                ti_bottom.a(Helper.getText(binding.etAll));
+                ti_left.setText(Helper.getText(binding.etAll));
+                ti_top.setText(Helper.getText(binding.etAll));
+                ti_right.setText(Helper.getText(binding.etAll));
+                ti_bottom.setText(Helper.getText(binding.etAll));
             }
         });
 
@@ -218,7 +218,7 @@ public class PropertyIndentItem extends RelativeLayout implements View.OnClickLi
         dialog.setView(view);
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_save), (v, which) -> {
             if (binding.chkPtyAll.isChecked()) {
-                if (ti_all.b() && ti_left.b() && ti_right.b() && ti_top.b() && ti_bottom.b()) {
+                if (ti_all.isValid() && ti_left.isValid() && ti_right.isValid() && ti_top.isValid() && ti_bottom.isValid()) {
                     int left = Integer.parseInt(Helper.getText(binding.etLeft));
                     int top = Integer.parseInt(Helper.getText(binding.etTop));
                     int right = Integer.parseInt(Helper.getText(binding.etRight));
@@ -229,7 +229,7 @@ public class PropertyIndentItem extends RelativeLayout implements View.OnClickLi
                         v.dismiss();
                     }
                 }
-            } else if (ti_left.b() && ti_right.b() && ti_top.b() && ti_bottom.b()) {
+            } else if (ti_left.isValid() && ti_right.isValid() && ti_top.isValid() && ti_bottom.isValid()) {
                 int left = Integer.parseInt(Helper.getText(binding.etLeft));
                 int top = Integer.parseInt(Helper.getText(binding.etTop));
                 int right = Integer.parseInt(Helper.getText(binding.etRight));

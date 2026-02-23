@@ -75,7 +75,7 @@ public class NewKeyStoreActivity extends BaseAppCompatActivity implements OnClic
     }
 
     private void save() {
-        if (passwordValidator.b() && passwordConfirmValidator.b()) {
+        if (passwordValidator.isValid() && passwordConfirmValidator.isValid()) {
             String text = Helper.getText(password);
             if (!text.equals(Helper.getText(passwordConfirm))) {
                 SketchToast.warning(getApplicationContext(), Helper.getResString(R.string.myprojects_sign_apk_incorrect_password), 0).show();
@@ -84,19 +84,19 @@ public class NewKeyStoreActivity extends BaseAppCompatActivity implements OnClic
                 return;
             }
 
-            if (!aliasValidator.b()) return;
+            if (!aliasValidator.isValid()) return;
 
-            if (!commonNameValidator.b()) return;
+            if (!commonNameValidator.isValid()) return;
 
-            if (!organizationalUnitValidator.b()) return;
+            if (!organizationalUnitValidator.isValid()) return;
 
-            if (!organizationValidator.b()) return;
+            if (!organizationValidator.isValid()) return;
 
-            if (!localityValidator.b()) return;
+            if (!localityValidator.isValid()) return;
 
-            if (!stateValidator.b()) return;
+            if (!stateValidator.isValid()) return;
 
-            if (!countryValidator.b()) return;
+            if (!countryValidator.isValid()) return;
 
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append("CN=");

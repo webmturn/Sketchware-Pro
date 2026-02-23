@@ -21,14 +21,14 @@ public class VersionNamePostfixValidator extends BaseValidator {
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         String se = s.toString();
         if (VERSION_NAME_POSTFIX_PATTERN.matcher(se).matches()) {
-            b.setError(null);
-            d = true;
+            textInputLayout.setError(null);
+            valid = true;
         } else if (se.contains(" ")) {
-            b.setError(b.getContext().getString(R.string.error_no_spaces_allowed));
-            d = false;
+            textInputLayout.setError(textInputLayout.getContext().getString(R.string.error_no_spaces_allowed));
+            valid = false;
         } else {
-            b.setError(b.getContext().getString(R.string.error_only_letters_numbers_special));
-            d = false;
+            textInputLayout.setError(textInputLayout.getContext().getString(R.string.error_only_letters_numbers_special));
+            valid = false;
         }
     }
 }

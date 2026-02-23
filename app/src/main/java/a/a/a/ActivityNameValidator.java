@@ -32,46 +32,46 @@ public class ActivityNameValidator extends BaseValidator {
     @Override
     public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
         if (charSequence.toString().trim().length() < 3) {
-            b.setErrorEnabled(true);
-            b.setError(a.getString(R.string.invalid_value_min_lenth, 3));
-            d = false;
+            textInputLayout.setErrorEnabled(true);
+            textInputLayout.setError(context.getString(R.string.invalid_value_min_lenth, 3));
+            valid = false;
             return;
         }
         if (charSequence.toString().trim().length() > 100) {
-            b.setErrorEnabled(true);
-            b.setError(a.getString(R.string.invalid_value_max_lenth, 100));
-            d = false;
+            textInputLayout.setErrorEnabled(true);
+            textInputLayout.setError(context.getString(R.string.invalid_value_max_lenth, 100));
+            valid = false;
             return;
         }
         String str = originalName;
         if (str != null && !str.isEmpty() && charSequence.toString().equals(originalName)) {
-            b.setErrorEnabled(false);
-            d = true;
+            textInputLayout.setErrorEnabled(false);
+            valid = true;
             return;
         }
         for (String reservedName : reservedNames) {
             if (charSequence.toString().equals(reservedName)) {
-                b.setErrorEnabled(true);
-                b.setError(a.getString(R.string.logic_editor_message_reserved_keywords));
-                d = false;
+                textInputLayout.setErrorEnabled(true);
+                textInputLayout.setError(context.getString(R.string.logic_editor_message_reserved_keywords));
+                valid = false;
                 return;
             }
         }
         if ("main".equals(charSequence.toString()) || existingNames.contains(charSequence.toString())) {
-            b.setErrorEnabled(true);
-            b.setError(a.getString(R.string.common_message_name_unavailable));
-            d = false;
+            textInputLayout.setErrorEnabled(true);
+            textInputLayout.setError(context.getString(R.string.common_message_name_unavailable));
+            valid = false;
         } else if (!Character.isLetter(charSequence.charAt(0))) {
-            b.setErrorEnabled(true);
-            b.setError(a.getString(R.string.logic_editor_message_variable_name_must_start_letter));
-            d = false;
+            textInputLayout.setErrorEnabled(true);
+            textInputLayout.setError(context.getString(R.string.logic_editor_message_variable_name_must_start_letter));
+            valid = false;
         } else if (ActivityNameValidator.namePattern.matcher(charSequence.toString()).matches()) {
-            b.setErrorEnabled(false);
-            d = true;
+            textInputLayout.setErrorEnabled(false);
+            valid = true;
         } else {
-            b.setErrorEnabled(true);
-            b.setError(a.getString(R.string.invalid_value_rule_4));
-            d = false;
+            textInputLayout.setErrorEnabled(true);
+            textInputLayout.setError(context.getString(R.string.invalid_value_rule_4));
+            valid = false;
         }
     }
 }

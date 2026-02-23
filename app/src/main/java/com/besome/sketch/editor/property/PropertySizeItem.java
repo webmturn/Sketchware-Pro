@@ -113,10 +113,10 @@ public class PropertySizeItem extends RelativeLayout implements View.OnClickList
         View view = wB.a(getContext(), R.layout.property_popup_input_size);
         EditText input = view.findViewById(R.id.et_input);
         MinMaxInputValidator validator = new MinMaxInputValidator(context, view.findViewById(R.id.ti_input), 0, 999);
-        validator.a(String.valueOf(value));
+        validator.setText(String.valueOf(value));
         dialog.setView(view);
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_save), (v, which) -> {
-            if (validator.b()) {
+            if (validator.isValid()) {
                 setValue(Integer.parseInt(Helper.getText(input)));
                 if (valueChangeListener != null) {
                     valueChangeListener.a(key, value);

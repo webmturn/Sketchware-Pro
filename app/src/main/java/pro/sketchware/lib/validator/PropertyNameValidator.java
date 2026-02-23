@@ -33,55 +33,55 @@ public class PropertyNameValidator extends BaseValidator {
     public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
         String trimmedLowerName = charSequence.toString().trim().toLowerCase();
         if (trimmedLowerName.length() < 1) {
-            b.setErrorEnabled(true);
-            b.setError(a.getString(R.string.invalid_value_min_lenth, 1));
-            d = false;
+            textInputLayout.setErrorEnabled(true);
+            textInputLayout.setError(context.getString(R.string.invalid_value_min_lenth, 1));
+            valid = false;
             return;
         }
         if (trimmedLowerName.length() > 100) {
-            b.setErrorEnabled(true);
-            b.setError(a.getString(R.string.invalid_value_max_lenth, 100));
-            d = false;
+            textInputLayout.setErrorEnabled(true);
+            textInputLayout.setError(context.getString(R.string.invalid_value_max_lenth, 100));
+            valid = false;
             return;
         }
         if (value != null && value.length() > 0 && trimmedLowerName.equals(value.toLowerCase())) {
-            b.setErrorEnabled(false);
-            d = true;
+            textInputLayout.setErrorEnabled(false);
+            valid = true;
             return;
         }
         if (fileNames.contains(trimmedLowerName)) {
-            b.setErrorEnabled(true);
-            b.setError(a.getString(R.string.common_message_name_unavailable));
-            d = false;
+            textInputLayout.setErrorEnabled(true);
+            textInputLayout.setError(context.getString(R.string.common_message_name_unavailable));
+            valid = false;
             return;
         }
         for (String reservedMethodName : reservedMethodNames) {
             if (trimmedLowerName.equals(reservedMethodName)) {
-                b.setErrorEnabled(true);
-                b.setError(a.getString(R.string.common_message_name_unavailable));
-                d = false;
+                textInputLayout.setErrorEnabled(true);
+                textInputLayout.setError(context.getString(R.string.common_message_name_unavailable));
+                valid = false;
                 return;
             }
         }
         for (String reservedName : reservedNames) {
             if (trimmedLowerName.equals(reservedName)) {
-                b.setErrorEnabled(true);
-                b.setError(a.getString(R.string.logic_editor_message_reserved_keywords));
-                d = false;
+                textInputLayout.setErrorEnabled(true);
+                textInputLayout.setError(context.getString(R.string.logic_editor_message_reserved_keywords));
+                valid = false;
                 return;
             }
         }
         if (!Character.isLetter(trimmedLowerName.charAt(0))) {
-            b.setErrorEnabled(true);
-            b.setError(a.getString(R.string.logic_editor_message_variable_name_must_start_letter));
-            d = false;
+            textInputLayout.setErrorEnabled(true);
+            textInputLayout.setError(context.getString(R.string.logic_editor_message_variable_name_must_start_letter));
+            valid = false;
         } else if (pattern.matcher(charSequence).matches()) {
-            b.setErrorEnabled(false);
-            d = true;
+            textInputLayout.setErrorEnabled(false);
+            valid = true;
         } else {
-            b.setErrorEnabled(true);
-            b.setError(a.getString(R.string.invalid_value_rule_3));
-            d = false;
+            textInputLayout.setErrorEnabled(true);
+            textInputLayout.setError(context.getString(R.string.invalid_value_rule_3));
+            valid = false;
         }
     }
 }

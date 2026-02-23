@@ -31,7 +31,7 @@ public class QB extends BaseValidator {
   
   public void a(int paramInt) {
     this.j = paramInt;
-    b(a());
+    b(getText());
   }
   
   public void a(ArrayList<String> paramArrayList) {
@@ -41,34 +41,34 @@ public class QB extends BaseValidator {
   public final void b(String paramString) {
     String str = "";
     if (paramString.length() < 3) {
-      this.b.setErrorEnabled(true);
-      this.b.setError(xB.b().a(this.a, R.string.invalid_value_min_lenth, new Object[] { Integer.valueOf(3) }));
-      this.d = false;
+      this.textInputLayout.setErrorEnabled(true);
+      this.textInputLayout.setError(xB.b().a(this.context, R.string.invalid_value_min_lenth, new Object[] { Integer.valueOf(3) }));
+      this.valid = false;
       return;
     } 
     if (paramString.length() > 70) {
-      this.b.setErrorEnabled(true);
-      this.b.setError(xB.b().a(this.a, R.string.invalid_value_max_lenth, new Object[] { Integer.valueOf(70) }));
-      this.d = false;
+      this.textInputLayout.setErrorEnabled(true);
+      this.textInputLayout.setError(xB.b().a(this.context, R.string.invalid_value_max_lenth, new Object[] { Integer.valueOf(70) }));
+      this.valid = false;
       return;
     } 
     if (paramString.equals("default_image") || "NONE".toLowerCase().equals(paramString.toLowerCase())) {
-      this.b.setErrorEnabled(true);
-      this.b.setError(xB.b().a(this.a, R.string.common_message_name_unavailable));
-      this.d = false;
+      this.textInputLayout.setErrorEnabled(true);
+      this.textInputLayout.setError(xB.b().a(this.context, R.string.common_message_name_unavailable));
+      this.valid = false;
       return;
     } 
     if (this.j == 1) {
       if (!paramString.equals(this.i) && this.g.indexOf(paramString) >= 0) {
-        this.b.setErrorEnabled(true);
-        this.b.setError(xB.b().a(this.a, R.string.common_message_name_unavailable));
-        this.d = false;
+        this.textInputLayout.setErrorEnabled(true);
+        this.textInputLayout.setError(xB.b().a(this.context, R.string.common_message_name_unavailable));
+        this.valid = false;
         return;
       } 
       if (!paramString.equals(this.i) && this.h.indexOf(paramString) >= 0) {
-        this.b.setErrorEnabled(true);
-        this.b.setError(xB.b().a(this.a, R.string.common_message_name_unavailable));
-        this.d = false;
+        this.textInputLayout.setErrorEnabled(true);
+        this.textInputLayout.setError(xB.b().a(this.context, R.string.common_message_name_unavailable));
+        this.valid = false;
         return;
       } 
     } else {
@@ -86,8 +86,8 @@ public class QB extends BaseValidator {
           arrayList2.add(str1); 
       } 
       if (arrayList2.size() > 0) {
-        this.b.setErrorEnabled(true);
-        String str1 = xB.b().a(this.a, R.string.common_message_name_unavailable);
+        this.textInputLayout.setErrorEnabled(true);
+        String str1 = xB.b().a(this.context, R.string.common_message_name_unavailable);
         Iterator<String> iterator = arrayList2.iterator();
         paramString = "";
         while (iterator.hasNext()) {
@@ -104,14 +104,13 @@ public class QB extends BaseValidator {
           stringBuilder1.append(str3);
           str = stringBuilder1.toString();
         } 
-        TextInputLayout textInputLayout = this.b;
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(str1);
         stringBuilder.append("\n[");
         stringBuilder.append(str);
         stringBuilder.append("]");
-        textInputLayout.setError(stringBuilder.toString());
-        this.d = false;
+        this.textInputLayout.setError(stringBuilder.toString());
+        this.valid = false;
         return;
       } 
     } 
@@ -131,24 +130,24 @@ public class QB extends BaseValidator {
       break;
     } 
     if (b != 0) {
-      this.b.setErrorEnabled(true);
-      this.b.setError(xB.b().a(this.a, R.string.logic_editor_message_reserved_keywords));
-      this.d = false;
+      this.textInputLayout.setErrorEnabled(true);
+      this.textInputLayout.setError(xB.b().a(this.context, R.string.logic_editor_message_reserved_keywords));
+      this.valid = false;
       return;
     } 
     if (!Character.isLetter(paramString.charAt(0))) {
-      this.b.setErrorEnabled(true);
-      this.b.setError(xB.b().a(this.a, R.string.logic_editor_message_variable_name_must_start_letter));
-      this.d = false;
+      this.textInputLayout.setErrorEnabled(true);
+      this.textInputLayout.setError(xB.b().a(this.context, R.string.logic_editor_message_variable_name_must_start_letter));
+      this.valid = false;
       return;
     } 
     if (this.k.matcher(paramString).matches()) {
-      this.b.setErrorEnabled(false);
-      this.d = true;
+      this.textInputLayout.setErrorEnabled(false);
+      this.valid = true;
     } else {
-      this.b.setErrorEnabled(true);
-      this.b.setError(xB.b().a(this.a, R.string.invalid_value_rule_4));
-      this.d = false;
+      this.textInputLayout.setErrorEnabled(true);
+      this.textInputLayout.setError(xB.b().a(this.context, R.string.invalid_value_rule_4));
+      this.valid = false;
     } 
   }
   

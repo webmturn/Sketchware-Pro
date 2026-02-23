@@ -115,7 +115,7 @@ public class LogicClickListener implements View.OnClickListener {
 
             boolean isValidModifier = modifiersValidator.isValid() || variableModifier.isEmpty();
             boolean isValidType = varTypeValidator.isValid();
-            boolean isValidName = validator.b();
+            boolean isValidName = validator.isValid();
 
             if (!isValidModifier) {
                 binding.modifierLayout.requestFocus();
@@ -255,7 +255,7 @@ public class LogicClickListener implements View.OnClickListener {
                 }
             }
 
-            if (validType && validName && validator.b()) {
+            if (validType && validName && validator.isValid()) {
                 logicEditor.a(4, variableType + " " + variableName + " = new ArrayList<>()");
                 v.dismiss();
             }

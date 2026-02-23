@@ -138,7 +138,7 @@ public class PropertyMeasureItem extends RelativeLayout implements View.OnClickL
         binding.rgWidthHeight.setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId == R.id.rb_directinput) {
                 binding.directInput.setVisibility(VISIBLE);
-                minMaxInputValidator.a(Helper.getText(binding.edInput));
+                minMaxInputValidator.setText(Helper.getText(binding.edInput));
             } else {
                 binding.directInput.setVisibility(GONE);
             }
@@ -147,7 +147,7 @@ public class PropertyMeasureItem extends RelativeLayout implements View.OnClickL
         if (measureValue >= 0) {
             if (isCustomValue) {
                 binding.rgWidthHeight.check(R.id.rb_directinput);
-                minMaxInputValidator.a(String.valueOf(measureValue));
+                minMaxInputValidator.setText(String.valueOf(measureValue));
                 binding.directInput.setVisibility(VISIBLE);
             } else {
                 binding.rgWidthHeight.check(R.id.rb_wrapcontent);
@@ -170,7 +170,7 @@ public class PropertyMeasureItem extends RelativeLayout implements View.OnClickL
                 setValue(LayoutParams.MATCH_PARENT);
             } else if (checkedRadioButtonId == R.id.rb_wrapcontent) {
                 setValue(LayoutParams.WRAP_CONTENT);
-            } else if (minMaxInputValidator.b()) {
+            } else if (minMaxInputValidator.isValid()) {
                 setValue(Integer.parseInt(Helper.getText(binding.edInput)));
             } else {
                 return;

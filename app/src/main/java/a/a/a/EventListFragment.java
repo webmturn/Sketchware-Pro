@@ -348,7 +348,7 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
         UniqueNameValidator DateTimeUtil = new UniqueNameValidator(requireContext(), a2.findViewById(R.id.ti_input), Pp.h().g());
         aBVar.setView(a2);
         aBVar.setPositiveButton(R.string.common_word_save, (v, which) -> {
-            if (DateTimeUtil.b()) {
+            if (DateTimeUtil.isValid()) {
                 saveMoreBlockToCollection(Helper.getText(editText), moreBlocks.get(moreBlockPosition));
                 mB.a(requireContext(), editText);
                 v.dismiss();

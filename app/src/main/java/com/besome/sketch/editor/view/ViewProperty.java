@@ -190,7 +190,7 @@ public class ViewProperty extends LinearLayout implements PropertyChangedCallbac
         UniqueNameValidator validator = new UniqueNameValidator(getContext(), view.findViewById(R.id.ti_input), Rp.h().g());
         dialog.setView(view);
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_save), (v, which) -> {
-            if (!mB.a() && validator.b()) {
+            if (!mB.a() && validator.isValid()) {
                 String widgetName = Helper.getText(editText);
                 ArrayList<ViewBean> viewBeans = ProjectDataManager.getProjectDataManager(sc_id).b(projectFile.getXmlName(), projectActivityViews.get(idsAdapter.getSelectedItemPosition()));
                 for (ViewBean viewBean : viewBeans) {

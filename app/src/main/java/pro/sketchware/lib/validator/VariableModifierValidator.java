@@ -28,8 +28,8 @@ public class VariableModifierValidator extends BaseValidator {
         String reconsInput = String.join(" ", words);
 
         if (!input.equals(reconsInput)) {
-            b.setError(b.getContext().getString(R.string.error_extra_spaces_words_not_allowed));
-            d = false;
+            textInputLayout.setError(textInputLayout.getContext().getString(R.string.error_extra_spaces_words_not_allowed));
+            valid = false;
             return;
         }
         Set<String> usedModifiers = new HashSet<>();
@@ -37,33 +37,30 @@ public class VariableModifierValidator extends BaseValidator {
 
         for (String word : words) {
             if (!PATTERN_MODIFIER.matcher(word).matches()) {
-                b.setError(b.getContext().getString(R.string.error_invalid_modifier_format, word));
-                d = false;
+                textInputLayout.setError(textInputLayout.getContext().getString(R.string.error_invalid_modifier_format, word));
+                valid = false;
                 return;
             }
             if (!usedModifiers.add(word)) {
-                b.setError(b.getContext().getString(R.string.error_duplicate_modifier_format, word));
-                d = false;
+                textInputLayout.setError(textInputLayout.getContext().getString(R.string.error_duplicate_modifier_format, word));
+                valid = false;
                 return;
             }
             if (isAccessModifier(word)) {
                 if (hasAccessModifier) {
-                    b.setError(b.getContext().getString(R.string.error_access_modifier_only_one));
-                    d = false;
+                    textInputLayout.setError(textInputLayout.getContext().getString(R.string.error_access_modifier_only_one));
+                    valid = false;
                     return;
                 }
                 hasAccessModifier = true;
             }
         }
-        b.setError(null);
-        d = true;
+        textInputLayout.setError(null);
+        valid = true;
     }
 
     private boolean isAccessModifier(String word) {
         return word.equals("public") || word.equals("protected") || word.equals("private");
     }
 
-    public boolean isValid() {
-        return b();
-    }
 }

@@ -66,7 +66,7 @@ public class MoreBlockBuilderView extends LinearLayout {
         binding.edName.addTextChangedListener(new BaseTextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.toString().isEmpty() || blockNameValidator.b()) {
+                if (s.toString().isEmpty() || blockNameValidator.isValid()) {
                     updateBlockPreview(binding.blockArea, binding.removeArea, block, s.toString(), variablesSpecAndNamePair);
                 }
             }
@@ -74,7 +74,7 @@ public class MoreBlockBuilderView extends LinearLayout {
 
         binding.addVariable.setOnClickListener(view -> {
             if (!mB.a()) {
-                if (variableNameValidator.b() && blockNameValidator.b()) {
+                if (variableNameValidator.isValid() && blockNameValidator.isValid()) {
                     Pair<String, String> variableSpec = addVariable.getSelectedItem();
                     String variableType = variableSpec.first;
                     String fullSpec = variableType;
@@ -132,7 +132,7 @@ public class MoreBlockBuilderView extends LinearLayout {
         });
         binding.addLabel.setOnClickListener(v -> {
             if (!mB.a()) {
-                if (labelTextValidator.b() && blockNameValidator.b()) {
+                if (labelTextValidator.isValid() && blockNameValidator.isValid()) {
                     variablesSpecAndNamePair.add(new Pair<>("t", Helper.getText(binding.edLabel)));
                     updateBlockPreview(binding.blockArea, binding.removeArea, block, Helper.getText(binding.edName), variablesSpecAndNamePair);
                     binding.edLabel.setText("");
@@ -238,7 +238,7 @@ public class MoreBlockBuilderView extends LinearLayout {
     }
 
     public boolean b() {
-        if (!Helper.getText(binding.edName).isEmpty() && blockNameValidator.b()) {
+        if (!Helper.getText(binding.edName).isEmpty() && blockNameValidator.isValid()) {
             return true;
         } else {
             SketchToast.warning(getContext(), Helper.getResString(R.string.logic_editor_message_name_requied), Toast.LENGTH_SHORT).show();

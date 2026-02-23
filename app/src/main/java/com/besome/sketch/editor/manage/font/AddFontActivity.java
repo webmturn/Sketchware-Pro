@@ -169,7 +169,7 @@ public class AddFontActivity extends BaseDialogActivity implements View.OnClickL
     }
 
     private boolean isFontValid(FontNameValidator wb) {
-        if (wb != null && !wb.b()) {
+        if (wb != null && !wb.isValid()) {
             return false;
         }
         return validFontPicked && fontUri != null;

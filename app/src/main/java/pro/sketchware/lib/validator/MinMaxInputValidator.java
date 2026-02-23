@@ -18,9 +18,9 @@ public class MinMaxInputValidator extends BaseValidator {
         super(context, textInputLayout);
         this.minValue = minValue;
         this.maxValue = maxValue;
-        c = textInputLayout.getEditText();
-        c.setFilters(new InputFilter[]{this});
-        c.addTextChangedListener(this);
+        editText = textInputLayout.getEditText();
+        editText.setFilters(new InputFilter[]{this});
+        editText.addTextChangedListener(this);
     }
 
     @Override
@@ -31,21 +31,21 @@ public class MinMaxInputValidator extends BaseValidator {
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         String inputString = s.toString();
         if (inputString.isEmpty()) {
-            b.setError(String.format(Locale.US, "%d ~ %d", minValue, maxValue));
-            d = false;
+            textInputLayout.setError(String.format(Locale.US, "%d ~ %d", minValue, maxValue));
+            valid = false;
         } else {
             try {
                 int inputNumber = Integer.parseInt(inputString);
                 if (inputNumber >= minValue && inputNumber <= maxValue) {
-                    b.setError(null);
-                    d = true;
+                    textInputLayout.setError(null);
+                    valid = true;
                 } else {
-                    b.setError(String.format(Locale.US, "%d ~ %d", minValue, maxValue));
-                    d = false;
+                    textInputLayout.setError(String.format(Locale.US, "%d ~ %d", minValue, maxValue));
+                    valid = false;
                 }
             } catch (NumberFormatException e) {
-                b.setError(String.format(Locale.US, "%d ~ %d", minValue, maxValue));
-                d = false;
+                textInputLayout.setError(String.format(Locale.US, "%d ~ %d", minValue, maxValue));
+                valid = false;
             }
         }
     }

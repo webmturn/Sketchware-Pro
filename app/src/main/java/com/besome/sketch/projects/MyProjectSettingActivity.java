@@ -415,7 +415,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
     }
 
     private boolean isInputValid() {
-        return projectPackageNameValidator.b() && projectNameValidator.b() && projectAppNameValidator.b();
+        return projectPackageNameValidator.isValid() && projectNameValidator.isValid() && projectAppNameValidator.isValid();
     }
 
     private void showPackageNameChangeWarning() {

@@ -79,7 +79,7 @@ public class AddFontCollectionActivity extends BaseDialogActivity implements Vie
     }
 
     public final void saveFont() {
-        if (fontValidator.b()) {
+        if (fontValidator.isValid()) {
             Np.g().a(projectResourceBean, Helper.getText(binding.edInput), true);
             SketchToast.toast(this, getString(R.string.design_manager_message_edit_complete), 1).show();
             finish();

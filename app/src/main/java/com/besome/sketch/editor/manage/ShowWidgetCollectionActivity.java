@@ -61,7 +61,7 @@ public class ShowWidgetCollectionActivity extends BaseAppCompatActivity implemen
         int id = v.getId();
         if (id == R.id.img_back) {
             getOnBackPressedDispatcher().onBackPressed();
-        } else if (id == R.id.save_button && widgetNameValidator.b()) {
+        } else if (id == R.id.save_button && widgetNameValidator.isValid()) {
             Rp.h().a(widgetName, Helper.getText(widgetNameInput), true);
             SketchToast.toast(getApplicationContext(), getString(R.string.design_manager_message_edit_complete), SketchToast.TOAST_NORMAL).show();
             finish();

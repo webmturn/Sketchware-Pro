@@ -194,12 +194,12 @@ public class InnerAddComponentBottomSheet extends BottomSheetDialogFragment {
     private boolean checks() {
         int componentType = componentBean.type;
         String componentId = Helper.getText(binding.edInput);
-        if (!componentNameValidator.b()) {
+        if (!componentNameValidator.isValid()) {
             return false;
         }
         switch (componentType) {
             case ComponentBean.COMPONENT_TYPE_SHAREDPREF:
-                if (!componentFileNameValidator.b()) {
+                if (!componentFileNameValidator.isValid()) {
                     return false;
                 }
                 ProjectDataManager.getProjectDataManager(scId).a(projectFileBean.getJavaName(), componentType, componentId, Helper.getText(binding.edInputFilename));
@@ -207,7 +207,7 @@ public class InnerAddComponentBottomSheet extends BottomSheetDialogFragment {
 
             case ComponentBean.COMPONENT_TYPE_FIREBASE:
             case ComponentBean.COMPONENT_TYPE_FIREBASE_STORAGE:
-                if (!componentFirebasePathValidator.b()) {
+                if (!componentFirebasePathValidator.isValid()) {
                     return false;
                 }
                 if (ProjectDataManager.getLibraryManager(scId).d().useYn.equals(ProjectLibraryBean.LIB_USE_N)) {
@@ -247,7 +247,7 @@ public class InnerAddComponentBottomSheet extends BottomSheetDialogFragment {
                 break;
 
             case ComponentBean.COMPONENT_TYPE_FILE_PICKER:
-                if (Helper.getText(binding.edInputFilePicker).isEmpty() || !componentMimeTypeValidator.b()) {
+                if (Helper.getText(binding.edInputFilePicker).isEmpty() || !componentMimeTypeValidator.isValid()) {
                     return false;
                 }
                 ProjectDataManager.getProjectDataManager(scId).a(projectFileBean.getJavaName(), componentType, componentId, Helper.getText(binding.edInputFilePicker));

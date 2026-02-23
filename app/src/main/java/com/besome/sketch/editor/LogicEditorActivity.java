@@ -327,7 +327,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         IdentifierValidator zB = new IdentifierValidator(getContext(), a2.findViewById(R.id.ti_input), BlockConstants.b, BlockConstants.a(), ProjectDataManager.getProjectDataManager(scId).a(M));
         dialog.setView(a2);
         dialog.setPositiveButton(R.string.common_word_add, (v, which) -> {
-            if (zB.b()) {
+            if (zB.isValid()) {
                 int i = 1;
                 int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
                 if (checkedRadioButtonId != R.id.rb_int) {
@@ -367,7 +367,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 }
             }
 
-            if (nameValidator.b()) {
+            if (nameValidator.isValid()) {
                 b(variableType, Helper.getText(editText));
                 v.dismiss();
             }
@@ -1322,7 +1322,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         UniqueNameValidator nB = new UniqueNameValidator(this, a2.findViewById(R.id.ti_input), Mp.h().g());
         dialog.setView(a2);
         dialog.setPositiveButton(R.string.common_word_save, (v, which) -> {
-            if (nB.b()) {
+            if (nB.isValid()) {
                 a(Helper.getText(editText), rs);
                 v.dismiss();
             }

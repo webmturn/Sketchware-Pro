@@ -19,24 +19,24 @@ public class VariableNameValidator extends BaseValidator {
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         if (s.toString().trim().length() == 0) {
-            b.setErrorEnabled(true);
-            b.setError(a.getString(R.string.invalid_value_min_lenth, 1));
-            d = false;
+            textInputLayout.setErrorEnabled(true);
+            textInputLayout.setError(context.getString(R.string.invalid_value_min_lenth, 1));
+            valid = false;
         } else if (s.toString().trim().length() > 20) {
-            b.setErrorEnabled(true);
-            b.setError(a.getString(R.string.invalid_value_max_lenth, 20));
-            d = false;
+            textInputLayout.setErrorEnabled(true);
+            textInputLayout.setError(context.getString(R.string.invalid_value_max_lenth, 20));
+            valid = false;
         } else if (!Character.isLetter(s.charAt(0))) {
-            b.setErrorEnabled(true);
-            b.setError(a.getString(R.string.logic_editor_message_variable_name_must_start_letter));
-            d = false;
+            textInputLayout.setErrorEnabled(true);
+            textInputLayout.setError(context.getString(R.string.logic_editor_message_variable_name_must_start_letter));
+            valid = false;
         } else if (PATTERN.matcher(s.toString()).matches()) {
-            b.setErrorEnabled(false);
-            d = true;
+            textInputLayout.setErrorEnabled(false);
+            valid = true;
         } else {
-            b.setErrorEnabled(true);
-            b.setError(a.getString(R.string.invalid_value_rule_3));
-            d = false;
+            textInputLayout.setErrorEnabled(true);
+            textInputLayout.setError(context.getString(R.string.invalid_value_rule_3));
+            valid = false;
         }
     }
 }

@@ -102,7 +102,7 @@ public class AddViewActivity extends BaseAppCompatActivity {
     }
 
     private boolean isValid(ActivityNameValidator validator) {
-        return validator.b();
+        return validator.isValid();
     }
 
     private void slideOutHorizontally(View view, String direction) {

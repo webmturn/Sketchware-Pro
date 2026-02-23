@@ -21,31 +21,31 @@ public class PackageNameValidator extends BaseValidator {
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         if (s.toString().trim().length() > 50) {
-            b.setErrorEnabled(true);
-            if (e == 0) {
-                b.setError(a.getString(R.string.invalid_value_max_lenth, 50));
+            textInputLayout.setErrorEnabled(true);
+            if (customErrorResId == 0) {
+                textInputLayout.setError(context.getString(R.string.invalid_value_max_lenth, 50));
             } else {
                 //what ???
-                b.setError(a.getString(e, 50));
+                textInputLayout.setError(context.getString(customErrorResId, 50));
             }
-            d = false;
+            valid = false;
             return;
         }
-        b.setErrorEnabled(false);
-        d = true;
+        textInputLayout.setErrorEnabled(false);
+        valid = true;
         if (!packagePattern.matcher(s.toString()).matches()) {
-            b.setErrorEnabled(true);
-            b.setError(a.getString(R.string.invalid_value_rule_2));
-            d = false;
+            textInputLayout.setErrorEnabled(true);
+            textInputLayout.setError(context.getString(R.string.invalid_value_rule_2));
+            valid = false;
         } else {
             if (!s.toString().contains(".")) {
-                b.setErrorEnabled(true);
-                b.setError(a.getString(R.string.myprojects_settings_message_contain_dot));
-                d = false;
+                textInputLayout.setErrorEnabled(true);
+                textInputLayout.setError(context.getString(R.string.myprojects_settings_message_contain_dot));
+                valid = false;
                 return;
             }
-            b.setErrorEnabled(false);
-            d = true;
+            textInputLayout.setErrorEnabled(false);
+            valid = true;
         }
         boolean containsReservedWord = false;
         for (String packagePart : s.toString().split("\\.")) {
@@ -64,9 +64,9 @@ public class PackageNameValidator extends BaseValidator {
             }
         }
         if (containsReservedWord) {
-            b.setErrorEnabled(true);
-            b.setError(a.getString(R.string.logic_editor_message_reserved_keywords));
-            d = false;
+            textInputLayout.setErrorEnabled(true);
+            textInputLayout.setError(context.getString(R.string.logic_editor_message_reserved_keywords));
+            valid = false;
         }
     }
 }

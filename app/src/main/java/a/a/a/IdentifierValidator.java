@@ -31,65 +31,65 @@ public class IdentifierValidator extends BaseValidator {
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         if (s.toString().trim().isEmpty()) {
-            b.setErrorEnabled(true);
-            b.setError(a.getString(R.string.invalid_value_min_lenth, 1));
-            d = false;
+            textInputLayout.setErrorEnabled(true);
+            textInputLayout.setError(context.getString(R.string.invalid_value_min_lenth, 1));
+            valid = false;
             return;
         }
         if (s.toString().trim().length() > 100) {
-            b.setErrorEnabled(true);
-            b.setError(a.getString(R.string.invalid_value_max_lenth, 100));
-            d = false;
+            textInputLayout.setErrorEnabled(true);
+            textInputLayout.setError(context.getString(R.string.invalid_value_max_lenth, 100));
+            valid = false;
             return;
         }
         String previousValidName = lastValidName;
         if (previousValidName != null && !previousValidName.isEmpty() && s.toString().equals(lastValidName)) {
-            b.setError(null);
-            b.setErrorEnabled(false);
-            d = true;
+            textInputLayout.setError(null);
+            textInputLayout.setErrorEnabled(false);
+            valid = true;
             return;
         }
         if (excludedNames.contains(s.toString())) {
-            b.setErrorEnabled(true);
-            b.setError(a.getString(R.string.common_message_name_unavailable));
-            d = false;
+            textInputLayout.setErrorEnabled(true);
+            textInputLayout.setError(context.getString(R.string.common_message_name_unavailable));
+            valid = false;
             return;
         }
         for (String reservedName : reservedNames) {
             if (s.toString().equals(reservedName)) {
-                b.setErrorEnabled(true);
-                b.setError(a.getString(R.string.common_message_name_unavailable));
-                d = false;
+                textInputLayout.setErrorEnabled(true);
+                textInputLayout.setError(context.getString(R.string.common_message_name_unavailable));
+                valid = false;
                 return;
             }
         }
         for (String restrictedName : restrictedNames) {
             if (s.toString().equals(restrictedName)) {
-                b.setErrorEnabled(true);
-                b.setError(a.getString(R.string.logic_editor_message_reserved_keywords));
-                d = false;
+                textInputLayout.setErrorEnabled(true);
+                textInputLayout.setError(context.getString(R.string.logic_editor_message_reserved_keywords));
+                valid = false;
                 return;
             }
         }
         if (!Character.isLetter(s.charAt(0))) {
-            b.setErrorEnabled(true);
-            b.setError(a.getString(R.string.logic_editor_message_variable_name_must_start_letter));
-            d = false;
+            textInputLayout.setErrorEnabled(true);
+            textInputLayout.setError(context.getString(R.string.logic_editor_message_variable_name_must_start_letter));
+            valid = false;
             return;
         }
         if (validNamePattern.matcher(s.toString()).matches()) {
-            b.setError(null);
-            b.setErrorEnabled(false);
-            d = true;
+            textInputLayout.setError(null);
+            textInputLayout.setErrorEnabled(false);
+            valid = true;
         } else {
-            b.setErrorEnabled(true);
-            b.setError(a.getString(R.string.invalid_value_rule_3));
-            d = false;
+            textInputLayout.setErrorEnabled(true);
+            textInputLayout.setError(context.getString(R.string.invalid_value_rule_3));
+            valid = false;
         }
         if (s.toString().trim().isEmpty()) {
-            b.setErrorEnabled(true);
-            b.setError(a.getString(R.string.invalid_value_min_lenth, 1));
-            d = false;
+            textInputLayout.setErrorEnabled(true);
+            textInputLayout.setError(context.getString(R.string.invalid_value_min_lenth, 1));
+            valid = false;
         }
     }
 }

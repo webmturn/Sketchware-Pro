@@ -63,7 +63,7 @@ public class AddCustomViewActivity extends BaseDialogActivity implements View.On
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.common_dialog_ok_button) {
-            if (!viewNameValidator.b()) {
+            if (!viewNameValidator.isValid()) {
                 return;
             }
 

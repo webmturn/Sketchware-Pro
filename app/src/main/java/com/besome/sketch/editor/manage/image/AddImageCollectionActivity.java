@@ -232,7 +232,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
     }
 
     private boolean a(PB validator) {
-        if (!validator.b()) {
+        if (!validator.isValid()) {
             return false;
         }
         if (z || imageFilePath != null) {

@@ -13,27 +13,27 @@ import mod.hey.studios.util.Helper;
 
 public abstract class BaseValidator implements TextWatcher, InputFilter {
 
-    public Context a;
-    public TextInputLayout b;
-    public EditText c;
-    public boolean d;
-    public int e;
+    public Context context;
+    public TextInputLayout textInputLayout;
+    public EditText editText;
+    public boolean valid;
+    public int customErrorResId;
 
     public BaseValidator(Context context, TextInputLayout textInputLayout) {
-        a = context;
-        b = textInputLayout;
-        c = textInputLayout.getEditText();
-        c.setFilters(new InputFilter[]{this});
-        c.addTextChangedListener(this);
+        this.context = context;
+        this.textInputLayout = textInputLayout;
+        editText = textInputLayout.getEditText();
+        editText.setFilters(new InputFilter[]{this});
+        editText.addTextChangedListener(this);
     }
 
-    public String a() {
-        return Helper.getText(c);
+    public String getText() {
+        return Helper.getText(editText);
     }
 
-    public void a(String str) {
-        d = true;
-        c.setText(str);
+    public void setText(String str) {
+        valid = true;
+        editText.setText(str);
     }
 
     @Override
@@ -48,14 +48,14 @@ public abstract class BaseValidator implements TextWatcher, InputFilter {
     @Override
     public void afterTextChanged(Editable editable) {
         if (editable.toString().isEmpty()) {
-            b.setError(null);
-            b.setErrorEnabled(false);
+            textInputLayout.setError(null);
+            textInputLayout.setErrorEnabled(false);
         }
     }
 
-    public boolean b() {
-        if (!d) c.requestFocus();
-        return d;
+    public boolean isValid() {
+        if (!valid) editText.requestFocus();
+        return valid;
     }
 
     @Override

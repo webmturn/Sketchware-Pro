@@ -303,7 +303,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
     }
 
     private boolean a(PB pb) {
-        if (!pb.b()) {
+        if (!pb.isValid()) {
             return false;
         }
         if (B || imageFilePath != null) {

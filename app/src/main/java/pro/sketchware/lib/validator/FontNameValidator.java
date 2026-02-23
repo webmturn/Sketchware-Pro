@@ -37,11 +37,11 @@ public class FontNameValidator extends BaseValidator {
         int msgRes;
         String trim = charSequence.toString().trim();
         if (trim.length() < 3) {
-            a2 = a.getString(R.string.invalid_value_min_lenth, 3);
+            a2 = context.getString(R.string.invalid_value_min_lenth, 3);
         } else if (trim.length() > 70) {
-            a2 = a.getString(R.string.invalid_value_max_lenth, 70);
+            a2 = context.getString(R.string.invalid_value_max_lenth, 70);
         } else if (trim.equals("default_image") || "NONE".equalsIgnoreCase(trim) || (!trim.equals(h) && (fontNames != null && fontNames.contains(trim)))) {
-            a2 = a.getString(R.string.common_message_name_unavailable);
+            a2 = context.getString(R.string.common_message_name_unavailable);
         } else {
             int count = 0;
             while (true) {
@@ -53,20 +53,20 @@ public class FontNameValidator extends BaseValidator {
                     count++;
                 } else if (Character.isLetter(charSequence.charAt(0))) {
                     if (pattern.matcher(charSequence.toString()).matches()) {
-                        b.setError(null);
-                        d = true;
+                        textInputLayout.setError(null);
+                        valid = true;
                         return;
                     }
-                    b.setError(a.getString(R.string.invalid_value_rule_4));
-                    d = false;
+                    textInputLayout.setError(context.getString(R.string.invalid_value_rule_4));
+                    valid = false;
                     return;
                 } else {
                     msgRes = R.string.logic_editor_message_variable_name_must_start_letter;
                 }
             }
-            a2 = a.getString(msgRes);
+            a2 = context.getString(msgRes);
         }
-        b.setError(a2);
-        d = false;
+        textInputLayout.setError(a2);
+        valid = false;
     }
 }

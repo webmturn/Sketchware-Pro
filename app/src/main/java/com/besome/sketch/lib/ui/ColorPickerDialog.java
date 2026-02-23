@@ -265,7 +265,7 @@ public class ColorPickerDialog extends PopupWindow {
                 .setTitle(Helper.getResString(R.string.save_to_collection))
                 .setView(dialogBinding.getRoot())
                 .setPositiveButton(Helper.getResString(R.string.common_word_save), (dialog, which) -> {
-                    if (colorValidator.b()) {
+                    if (colorValidator.isValid()) {
                         String customColor = Helper.getText(dialogBinding.etCustomColor);
                         if (customColor.startsWith("#")) {
                             customColor = customColor.substring(1);
