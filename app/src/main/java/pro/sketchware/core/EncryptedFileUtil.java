@@ -13,14 +13,14 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class EncryptedFileUtil {
-  public boolean a = false;
+  public boolean encryptionEnabled = false;
   
   public EncryptedFileUtil() {
     this(false);
   }
   
   public EncryptedFileUtil(boolean paramBoolean) {
-    this.a = paramBoolean;
+    this.encryptionEnabled = paramBoolean;
   }
   
   public long a(Context paramContext, String paramString) {
@@ -73,7 +73,7 @@ public class EncryptedFileUtil {
       while ((len = is.read(buf)) > 0) {
         fos.write(buf, 0, len);
       }
-      if (this.a) {
+      if (this.encryptionEnabled) {
         Log.d(getClass().getSimpleName(), "assetFile =>" + paramString2 + " copy success.");
       }
     } catch (IOException e) {
@@ -116,14 +116,14 @@ public class EncryptedFileUtil {
             a(file); 
           if (file.isFile())
             if (file.delete()) {
-              if (this.a) {
+              if (this.encryptionEnabled) {
                 String str = EncryptedFileUtil.class.getSimpleName();
                 StringBuilder stringBuilder = new StringBuilder();
                 stringBuilder.append("Delete file success.");
                 stringBuilder.append(file.getAbsolutePath());
                 Log.d(str, stringBuilder.toString());
               } 
-            } else if (this.a) {
+            } else if (this.encryptionEnabled) {
               String str = EncryptedFileUtil.class.getSimpleName();
               StringBuilder stringBuilder = new StringBuilder();
               stringBuilder.append("Delete file failed.");
@@ -149,7 +149,7 @@ public class EncryptedFileUtil {
       fis = new FileInputStream(paramString1);
       fos = new FileOutputStream(paramString2, false);
       byte[] buf = new byte[1024];
-      if (this.a) {
+      if (this.encryptionEnabled) {
         Log.d(getClass().getSimpleName(), "src=" + paramString1 + ",dest=" + paramString2);
       }
       int len;

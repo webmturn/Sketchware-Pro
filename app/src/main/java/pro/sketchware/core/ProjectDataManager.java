@@ -2,36 +2,36 @@ package pro.sketchware.core;
 
 public class ProjectDataManager {
 
-    public static ProjectDataStore a;
-    public static ProjectFileManager b;
-    public static ResourceManager c;
-    public static LibraryManager d;
+    public static ProjectDataStore projectDataStore;
+    public static ProjectFileManager projectFileManager;
+    public static ResourceManager resourceManager;
+    public static LibraryManager libraryManager;
 
     public static void a() {
-        a = null;
-        b = null;
-        c = null;
-        d = null;
+        projectDataStore = null;
+        projectFileManager = null;
+        resourceManager = null;
+        libraryManager = null;
     }
 
     public static void b() {
-        a.i();
-        a = null;
+        projectDataStore.i();
+        projectDataStore = null;
     }
 
     public static void c() {
-        b.k();
-        b = null;
+        projectFileManager.k();
+        projectFileManager = null;
     }
 
     public static void d() {
-        d.j();
-        d = null;
+        libraryManager.j();
+        libraryManager = null;
     }
 
     public static void e() {
-        c.t();
-        c = null;
+        resourceManager.t();
+        resourceManager = null;
     }
 
     public static synchronized ProjectFileManager b(String str) {
@@ -47,54 +47,54 @@ public class ProjectDataManager {
     }
 
     public static synchronized ProjectFileManager b(String str, boolean z) {
-        if (b != null && !str.equals(b.projectId)) {
+        if (projectFileManager != null && !str.equals(projectFileManager.projectId)) {
             c();
         }
-        if (b == null) {
-            b = new ProjectFileManager(str);
+        if (projectFileManager == null) {
+            projectFileManager = new ProjectFileManager(str);
             if (!z) {
-                b.i();
-            } else if (b.g()) {
-                b.h();
+                projectFileManager.i();
+            } else if (projectFileManager.g()) {
+                projectFileManager.h();
             } else {
-                b.i();
+                projectFileManager.i();
             }
         }
-        return b;
+        return projectFileManager;
     }
 
     public static synchronized LibraryManager c(String str, boolean z) {
-        if (d != null && !str.equals(d.projectId)) {
+        if (libraryManager != null && !str.equals(libraryManager.projectId)) {
             d();
         }
-        if (d == null) {
-            d = new LibraryManager(str);
+        if (libraryManager == null) {
+            libraryManager = new LibraryManager(str);
             if (!z) {
-                d.i();
-            } else if (d.g()) {
-                d.h();
+                libraryManager.i();
+            } else if (libraryManager.g()) {
+                libraryManager.h();
             } else {
-                d.i();
+                libraryManager.i();
             }
         }
-        return d;
+        return libraryManager;
     }
 
     public static synchronized ResourceManager d(String str, boolean z) {
-        if (c != null && !str.equals(c.projectId)) {
+        if (resourceManager != null && !str.equals(resourceManager.projectId)) {
             e();
         }
-        if (c == null) {
-            c = new ResourceManager(str);
+        if (resourceManager == null) {
+            resourceManager = new ResourceManager(str);
             if (!z) {
-                c.s();
-            } else if (c.q()) {
-                c.r();
+                resourceManager.s();
+            } else if (resourceManager.q()) {
+                resourceManager.r();
             } else {
-                c.s();
+                resourceManager.s();
             }
         }
-        return c;
+        return resourceManager;
     }
 
     public static synchronized ProjectDataStore a(String str) {
@@ -102,28 +102,28 @@ public class ProjectDataManager {
     }
 
     public static synchronized ProjectDataStore a(String str, boolean z) {
-        if (a != null && !str.equals(a.projectId)) {
+        if (projectDataStore != null && !str.equals(projectDataStore.projectId)) {
             b();
         }
-        if (a == null) {
-            a = new ProjectDataStore(str);
+        if (projectDataStore == null) {
+            projectDataStore = new ProjectDataStore(str);
             if (!z) {
-                a.g();
-                a.e();
+                projectDataStore.g();
+                projectDataStore.e();
             } else {
-                if (a.d()) {
-                    a.h();
+                if (projectDataStore.d()) {
+                    projectDataStore.h();
                 } else {
-                    a.g();
+                    projectDataStore.g();
                 }
-                if (a.c()) {
-                    a.f();
+                if (projectDataStore.c()) {
+                    projectDataStore.f();
                 } else {
-                    a.e();
+                    projectDataStore.e();
                 }
             }
         }
-        return a;
+        return projectDataStore;
     }
 
     // ===== Descriptive aliases (originals kept for JAR compatibility) =====
