@@ -213,6 +213,7 @@ public class ClassPathOpener {
         }
 
         File[] files = dir.listFiles();
+        if (files == null) return false;
         int len = files.length;
         boolean any = false;
 

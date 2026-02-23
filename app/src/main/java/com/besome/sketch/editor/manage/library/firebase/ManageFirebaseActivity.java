@@ -55,8 +55,9 @@ public class ManageFirebaseActivity extends BaseAppCompatActivity implements Vie
     private ProjectLibraryBean firebaseLibraryBean;
     private final ActivityResultLauncher<Intent> openSettings = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         if (result.getResultCode() == Activity.RESULT_OK) {
-            assert result.getData() != null;
-            initializeLibrary(result.getData().getParcelableExtra("firebase"));
+            var data = result.getData();
+            if (data == null) return;
+            initializeLibrary(data.getParcelableExtra("firebase"));
         }
     });
     private String sc_id;

@@ -349,7 +349,11 @@ public class AddSoundActivity extends BaseDialogActivity implements View.OnClick
             if (editingSound) {
                 mediaMetadataRetriever.setDataSource(soundUri.getPath());
             } else {
-                mediaMetadataRetriever.setDataSource(getContentResolver().openFileDescriptor(soundUri, "r").getFileDescriptor());
+                try (var pfd = getContentResolver().openFileDescriptor(soundUri, "r")) {
+                    if (pfd != null) {
+                        mediaMetadataRetriever.setDataSource(pfd.getFileDescriptor());
+                    }
+                }
             }
             if (mediaMetadataRetriever.getEmbeddedPicture() != null) {
                 Glide.with(this).load(mediaMetadataRetriever.getEmbeddedPicture()).centerCrop().into(albumCover);
@@ -358,8 +362,9 @@ public class AddSoundActivity extends BaseDialogActivity implements View.OnClick
             }
         } catch (IllegalArgumentException e) {
             Glide.with(this).load(R.drawable.default_album_art_200dp).centerCrop().into(albumCover);
+        } finally {
+            mediaMetadataRetriever.release();
         }
-        mediaMetadataRetriever.release();
     }
 
     private boolean isSoundValid(ResourceNameValidator wb) {

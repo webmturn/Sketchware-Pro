@@ -135,8 +135,8 @@ public class ViewFilesFragment extends BaseFragment {
     }
 
     public void loadProjectFiles() {
-        sc_id = getActivity().getIntent().getStringExtra("sc_id");
-        isAppCompatUsed = getActivity().getIntent().getStringExtra("compatUseYn");
+        sc_id = requireActivity().getIntent().getStringExtra("sc_id");
+        isAppCompatUsed = requireActivity().getIntent().getStringExtra("compatUseYn");
         ArrayList<ProjectFileBean> projectFiles = ProjectDataManager.getFileManager(sc_id).b();
         if (projectFiles != null) {
             boolean isMainActivityFile = false;

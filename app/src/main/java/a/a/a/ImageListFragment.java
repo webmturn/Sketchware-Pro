@@ -73,7 +73,7 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
     private final ActivityResultLauncher<Intent> openImportIconActivity = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         if (result.getResultCode() == Activity.RESULT_OK) {
             var data = result.getData();
-            assert data != null;
+            if (data == null) return;
             ProjectResourceBean icon = new ProjectResourceBean(
                     ProjectResourceBean.PROJECT_RES_TYPE_FILE,
                     data.getStringExtra("iconName"), data.getStringExtra("iconPath")
@@ -91,12 +91,13 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
     });
     private final ActivityResultLauncher<Intent> showAddImageDialog = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         if (result.getResultCode() == Activity.RESULT_OK) {
-            assert result.getData() != null;
+            var data = result.getData();
+            if (data == null) return;
             ArrayList<ProjectResourceBean> addedImages;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                addedImages = result.getData().getParcelableArrayListExtra("images", ProjectResourceBean.class);
+                addedImages = data.getParcelableArrayListExtra("images", ProjectResourceBean.class);
             } else {
-                addedImages = result.getData().getParcelableArrayListExtra("images");
+                addedImages = data.getParcelableArrayListExtra("images");
             }
             images.addAll(addedImages);
             adapter.notifyItemRangeInserted(images.size() - addedImages.size(), addedImages.size());
@@ -107,12 +108,13 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
     });
     private final ActivityResultLauncher<Intent> showImageDetailsDialog = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         if (result.getResultCode() == Activity.RESULT_OK) {
-            assert result.getData() != null;
+            var data = result.getData();
+            if (data == null) return;
             ProjectResourceBean editedImage;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                editedImage = result.getData().getParcelableExtra("image", ProjectResourceBean.class);
+                editedImage = data.getParcelableExtra("image", ProjectResourceBean.class);
             } else {
-                editedImage = result.getData().getParcelableExtra("image");
+                editedImage = data.getParcelableExtra("image");
             }
             kC.z();
             for (ProjectResourceBean image : images) {

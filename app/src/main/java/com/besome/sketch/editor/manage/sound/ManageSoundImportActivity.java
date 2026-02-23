@@ -5,8 +5,8 @@ import android.util.Log;
 import androidx.activity.OnBackPressedCallback;
 import android.content.Intent;
 import android.graphics.Color;
-import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
+import mod.jbk.util.AudioMetadata;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -263,7 +263,7 @@ public class ManageSoundImportActivity extends BaseAppCompatActivity implements 
 
     private void showPreview(int i) {
         mediaPlayer = new MediaPlayer();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mediaPlayer.setAudioAttributes(AudioMetadata.MEDIA_PLAYER_AUDIO_ATTRIBUTES);
         mediaPlayer.setOnPreparedListener(mp -> {
             mediaPlayerIsPrepared = true;
             img_play.setImageResource(R.drawable.ic_play_circle_outline_black_36dp);

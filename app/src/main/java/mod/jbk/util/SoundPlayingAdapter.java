@@ -172,8 +172,12 @@ public abstract class SoundPlayingAdapter<VH extends SoundPlayingAdapter.ViewHol
                 nowPlayingPosition = -1;
             }
 
-            if (mediaPlayer != null && mediaPlayer.isPlaying()) {
-                mediaPlayer.pause();
+            if (mediaPlayer != null) {
+                if (mediaPlayer.isPlaying()) {
+                    mediaPlayer.pause();
+                }
+                mediaPlayer.release();
+                mediaPlayer = null;
             }
         }
 

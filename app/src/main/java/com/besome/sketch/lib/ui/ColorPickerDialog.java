@@ -345,8 +345,9 @@ public class ColorPickerDialog extends PopupWindow {
                 String attrsToSave = savedAttrs + "," + attributeName;
                 colorPref.a("P24I2", (Object) attrsToSave);
                 attributes.add(new Attribute(attributeName, savedAttrs.isEmpty() ? "Custom" : null));
-                assert binding.colorList.getAdapter() != null;
-                binding.colorList.getAdapter().notifyItemInserted(attributes.size());
+                if (binding.colorList.getAdapter() != null) {
+                    binding.colorList.getAdapter().notifyItemInserted(attributes.size());
+                }
                 binding.colorList.smoothScrollToPosition(attributes.size());
                 dialog.dismiss();
             } else {

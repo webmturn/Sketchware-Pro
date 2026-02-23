@@ -207,12 +207,12 @@ public class xw extends qA {
     this.i = new a(this, this.f);
     this.f.setAdapter(this.i);
     if (paramBundle == null) {
-      this.g = getActivity().getIntent().getStringExtra("sc_id");
+      this.g = requireActivity().getIntent().getStringExtra("sc_id");
     } else {
       this.g = paramBundle.getString("sc_id");
     } 
     this.k = (TextView)viewGroup.findViewById(R.id.tv_guide);
-    this.k.setText(xB.b().a((Context)getActivity(), R.string.design_manager_view_description_guide_create_custom_view));
+    this.k.setText(xB.b().a((Context)requireActivity(), R.string.design_manager_view_description_guide_create_custom_view));
     return (View)viewGroup;
   }
   

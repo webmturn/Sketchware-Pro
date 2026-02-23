@@ -351,7 +351,7 @@ public class xB {
     if (str == null)
       paramString2 = ""; 
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(a((Context)null, R.string.root_spec_common_when));
+    stringBuilder.append(a(paramContext, R.string.root_spec_common_when));
     stringBuilder.append(" ");
     stringBuilder.append(paramString1);
     stringBuilder.append(" ");

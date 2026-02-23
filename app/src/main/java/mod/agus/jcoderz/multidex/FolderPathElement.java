@@ -51,7 +51,9 @@ class FolderPathElement implements ClassPathElement {
     }
 
     private void collect(File folder, String prefix, ArrayList<String> result) {
-        for (File file : folder.listFiles()) {
+        File[] children = folder.listFiles();
+        if (children == null) return;
+        for (File file : children) {
             if (file.isDirectory()) {
                 collect(file, prefix + SEPARATOR_CHAR + file.getName(), result);
             } else {

@@ -27,7 +27,11 @@ public class VersionDialog {
         dialog.setIcon(R.drawable.numbers_48);
         dialog.setTitle(R.string.version_control_title);
 
-        binding.versionCode.setText(String.valueOf(Integer.parseInt(Helper.getText(activity.binding.verCode))));
+        try {
+            binding.versionCode.setText(String.valueOf(Integer.parseInt(Helper.getText(activity.binding.verCode))));
+        } catch (NumberFormatException e) {
+            binding.versionCode.setText(Helper.getText(activity.binding.verCode));
+        }
         binding.versionName1.setText(Helper.getText(activity.binding.verName).split(" ")[0]);
         if (Helper.getText(activity.binding.verName).split(" ").length > 1)
             binding.versionName2.setText(Helper.getText(activity.binding.verName).split(" ")[1]);

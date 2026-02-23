@@ -182,8 +182,9 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     });
     public final ActivityResultLauncher<Intent> changeOpenFile = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         if (result.getResultCode() == Activity.RESULT_OK) {
-            assert result.getData() != null;
-            projectFile = result.getData().getParcelableExtra("project_file");
+            var data = result.getData();
+            if (data == null) return;
+            projectFile = data.getParcelableExtra("project_file");
             refresh();
         }
     });

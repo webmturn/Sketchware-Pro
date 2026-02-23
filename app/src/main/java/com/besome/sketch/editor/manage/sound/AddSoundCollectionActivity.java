@@ -6,6 +6,7 @@ import android.content.Intent;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import android.media.MediaMetadataRetriever;
+import mod.jbk.util.AudioMetadata;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -271,9 +272,10 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
                 if (G.isPlaying()) {
                     G.stop();
                 }
+                G.release();
             }
             G = new MediaPlayer();
-            G.setAudioStreamType(3);
+            G.setAudioAttributes(AudioMetadata.MEDIA_PLAYER_AUDIO_ATTRIBUTES);
             G.setOnPreparedListener(mediaPlayer -> {
                 binding.play.setImageResource(R.drawable.ic_pause_circle_outline_black_36dp);
                 binding.play.setEnabled(true);
@@ -312,9 +314,10 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
                 if (G.isPlaying()) {
                     G.stop();
                 }
+                G.release();
             }
             G = new MediaPlayer();
-            G.setAudioStreamType(3);
+            G.setAudioAttributes(AudioMetadata.MEDIA_PLAYER_AUDIO_ATTRIBUTES);
             G.setOnPreparedListener(mediaPlayer -> {
                 if (a == null) return;
                 binding.play.setImageResource(R.drawable.ic_pause_circle_outline_black_36dp);
@@ -368,10 +371,14 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
             } else {
                 imageView.setImageResource(R.drawable.default_album_art_200dp);
             }
-            mediaMetadataRetriever.release();
         } catch (Exception e) {
             Log.w("AddSoundCollectionActivity", "Failed to extract album art from audio file: " + str, e);
             imageView.setImageResource(R.drawable.default_album_art_200dp);
+        } finally {
+            try {
+                mediaMetadataRetriever.release();
+            } catch (Exception ignored) {
+            }
         }
     }
 

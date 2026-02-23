@@ -26,10 +26,9 @@ public class zB {
   }
   
   public static Bitmap a(String paramString) throws Exception {
-    FileInputStream fileInputStream = new FileInputStream(paramString);
-    Bitmap bitmap = a(fileInputStream);
-    fileInputStream.close();
-    return bitmap;
+    try (FileInputStream fileInputStream = new FileInputStream(paramString)) {
+      return a(fileInputStream);
+    }
   }
   
   public static void a(Bitmap paramBitmap, byte[] paramArrayOfbyte) {

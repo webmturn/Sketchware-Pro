@@ -74,9 +74,9 @@ public class KeyStoreFileManager {
         KeyStore ks = null;
         try {
             ks = new JksKeyStore();
-            FileInputStream fis = new FileInputStream( keystorePath);
-            ks.load( fis, password);
-            fis.close();
+            try (FileInputStream fis = new FileInputStream(keystorePath)) {
+                ks.load(fis, password);
+            }
             return ks;
         } catch (LoadKeystoreException x) {
             // This type of exception is thrown when the keystore is a JKS keystore, but the file is malformed
@@ -86,9 +86,9 @@ public class KeyStoreFileManager {
             // logger.warning( x.getMessage(), x);
             try {
                 ks = KeyStore.getInstance("bks", getProvider());
-                FileInputStream fis = new FileInputStream( keystorePath);
-                ks.load( fis, password);
-                fis.close();
+                try (FileInputStream fis = new FileInputStream(keystorePath)) {
+                    ks.load(fis, password);
+                }
                 return ks;
             } catch (Exception e) {
                 throw new RuntimeException("Failed to load keystore: " + e.getMessage(), e);
@@ -118,10 +118,10 @@ public class KeyStoreFileManager {
                 // I've had some trouble saving new verisons of the keystore file in which the file becomes empty/corrupt.
                 // Saving the new version to a new file and creating a backup of the old version.
                 File tmpFile = File.createTempFile( keystoreFile.getName(), null, keystoreFile.getParentFile());
-                FileOutputStream fos = new FileOutputStream( tmpFile);
-                ks.store(fos, password);
-                fos.flush();
-                fos.close();
+                try (FileOutputStream fos = new FileOutputStream(tmpFile)) {
+                    ks.store(fos, password);
+                    fos.flush();
+                }
                 /* create a backup of the previous version
                 int i = 1;
                 File backup = new File( keystorePath + "." + i + ".bak");
@@ -133,9 +133,9 @@ public class KeyStoreFileManager {
                 */
                 renameTo(tmpFile, keystoreFile);
             } else {
-                FileOutputStream fos = new FileOutputStream( keystorePath);
-                ks.store(fos, password);
-                fos.close();
+                try (FileOutputStream fos = new FileOutputStream(keystorePath)) {
+                    ks.store(fos, password);
+                }
             }
         } catch (Exception x) {
             try {
