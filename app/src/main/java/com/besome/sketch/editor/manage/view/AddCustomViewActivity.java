@@ -54,7 +54,7 @@ public class AddCustomViewActivity extends BaseDialogActivity implements View.On
         ((TextInputLayout) findViewById(R.id.ti_input)).setHint(Helper.getResString(R.string.design_manager_view_hint_enter_view_name));
         TextView description = findViewById(R.id.tv_desc);
         description.setText(Helper.getResString(R.string.design_manager_view_description_guide_use_custom_view));
-        viewNameValidator = new ActivityNameValidator(this, findViewById(R.id.ti_input), BlockConstants.b, alreadyInUseNames);
+        viewNameValidator = new ActivityNameValidator(this, findViewById(R.id.ti_input), BlockConstants.RESERVED_KEYWORDS, alreadyInUseNames);
         super.dialogOkButton.setOnClickListener(this);
         super.dialogCancelButton.setOnClickListener(this);
     }

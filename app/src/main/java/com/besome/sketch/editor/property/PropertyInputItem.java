@@ -487,7 +487,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
         binding.tiInput.setHint(String.format(Helper.getResString(R.string.property_enter_value), "widget ID"));
 
         binding.edInput.setSingleLine();
-        PropertyNameValidator validator = new PropertyNameValidator(context, binding.tiInput, BlockConstants.b, BlockConstants.a(), jC.a(sc_id).a(projectFileBean), value);
+        PropertyNameValidator validator = new PropertyNameValidator(context, binding.tiInput, BlockConstants.RESERVED_KEYWORDS, BlockConstants.COMPONENT_TYPES, jC.a(sc_id).a(projectFileBean), value);
         validator.setText(value);
         dialog.setView(binding.getRoot());
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_save), (v, which) -> {

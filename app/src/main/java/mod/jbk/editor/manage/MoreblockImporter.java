@@ -206,7 +206,7 @@ public class MoreblockImporter {
             moreBlockNamesWithoutReturnTypes.add(ReturnMoreblockManager.getMbName(moreBlockName));
         }
 
-        IdentifierValidator validator = new IdentifierValidator(activity, customView.findViewById(R.id.ti_input), BlockConstants.b, BlockConstants.a(), new ArrayList<>(moreBlockNamesWithoutReturnTypes));
+        IdentifierValidator validator = new IdentifierValidator(activity, customView.findViewById(R.id.ti_input), BlockConstants.RESERVED_KEYWORDS, BlockConstants.COMPONENT_TYPES, new ArrayList<>(moreBlockNamesWithoutReturnTypes));
         dialog.setView(customView);
         dialog.setPositiveButton(R.string.common_word_save, (v, which) -> {
             if (validator.isValid()) {

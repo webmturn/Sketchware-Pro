@@ -118,7 +118,7 @@ public class InnerAddComponentBottomSheet extends BottomSheetDialogFragment {
 
         binding.tiInputFilePicker.setEndIconOnClickListener(v -> showFilePickerMimeTypeSelectionDialog());
 
-        componentNameValidator = new IdentifierValidator(getContext(), binding.tiInput, BlockConstants.b, BlockConstants.a(), ProjectDataManager.getProjectDataManager(scId).a(projectFileBean));
+        componentNameValidator = new IdentifierValidator(getContext(), binding.tiInput, BlockConstants.RESERVED_KEYWORDS, BlockConstants.COMPONENT_TYPES, ProjectDataManager.getProjectDataManager(scId).a(projectFileBean));
         componentFileNameValidator = new LengthRangeValidator(getContext(), binding.tiInputFilename, 1, 20);
         componentFirebasePathValidator = new LengthRangeValidator(getContext(), binding.tiInputFirebasePath, 0, 100);
         componentMimeTypeValidator = new LengthRangeValidator(getContext(), binding.tiInputFilePicker, 1, 50);

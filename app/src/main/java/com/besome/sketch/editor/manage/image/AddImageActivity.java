@@ -166,7 +166,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
         ed_input_edittext = ed_input.getEditText();
         ed_input_edittext.setPrivateImeOptions("defaultInputmode=english;");
         ed_input.setHint(getString(R.string.design_manager_image_hint_enter_image_name));
-        O = new PB(this, ed_input.getTextInputLayout(), BlockConstants.b, getReservedImageNames());
+        O = new PB(this, ed_input.getTextInputLayout(), BlockConstants.RESERVED_KEYWORDS, getReservedImageNames());
         O.a(1);
         chk_collection.setText(R.string.design_manager_title_add_to_collection);
         tv_add_photo.setText(R.string.design_manager_image_title_add_image);
@@ -193,7 +193,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
             imageRotationDegrees = image.rotate;
             imageScaleX = image.flipHorizontal;
             imageScaleY = image.flipVertical;
-            O = new PB(this, ed_input.getTextInputLayout(), BlockConstants.b, getReservedImageNames(), image.resName);
+            O = new PB(this, ed_input.getTextInputLayout(), BlockConstants.RESERVED_KEYWORDS, getReservedImageNames(), image.resName);
             O.a(1);
             ed_input_edittext.setText(image.resName);
             ed_input_edittext.setEnabled(false);

@@ -141,7 +141,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
         }
         binding.layoutControl.setVisibility(View.GONE);
         binding.tiInput.setHint(R.string.design_manager_sound_hint_enter_sound_name);
-        M = new ResourceNameValidator(this, binding.tiInput, BlockConstants.b, getResourceNames());
+        M = new ResourceNameValidator(this, binding.tiInput, BlockConstants.RESERVED_KEYWORDS, getResourceNames());
         binding.play.setEnabled(false);
         binding.play.setOnClickListener(this);
         binding.seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -173,7 +173,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
         dialogCancelButton.setOnClickListener(this);
         if (isEditing) {
             e(getString(R.string.design_manager_sound_title_edit_sound_name));
-            M = new ResourceNameValidator(this, binding.tiInput, BlockConstants.b, getResourceNames(), O.resName);
+            M = new ResourceNameValidator(this, binding.tiInput, BlockConstants.RESERVED_KEYWORDS, getResourceNames(), O.resName);
             binding.edInput.setText(O.resName);
             f(a(O));
         }

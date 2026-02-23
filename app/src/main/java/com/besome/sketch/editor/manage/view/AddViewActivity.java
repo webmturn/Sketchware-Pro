@@ -282,7 +282,7 @@ public class AddViewActivity extends BaseAppCompatActivity {
     }
 
     private void handleEditModeInitialization() {
-        nameValidator = new ActivityNameValidator(getApplicationContext(), binding.tiName, BlockConstants.b, new ArrayList<>(), projectFileBean.fileName);
+        nameValidator = new ActivityNameValidator(getApplicationContext(), binding.tiName, BlockConstants.RESERVED_KEYWORDS, new ArrayList<>(), projectFileBean.fileName);
         binding.edName.setText(projectFileBean.fileName);
         binding.edName.setEnabled(false);
         binding.edName.setBackgroundResource(R.color.transparent);
@@ -305,7 +305,7 @@ public class AddViewActivity extends BaseAppCompatActivity {
     private void handleCreateModeInitialization() {
         featureToolbar = true;
         featureStatusBar = true;
-        nameValidator = new ActivityNameValidator(getApplicationContext(), binding.tiName, BlockConstants.b, screenNames);
+        nameValidator = new ActivityNameValidator(getApplicationContext(), binding.tiName, BlockConstants.RESERVED_KEYWORDS, screenNames);
     }
 
 

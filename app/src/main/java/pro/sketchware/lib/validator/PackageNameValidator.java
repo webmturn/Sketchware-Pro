@@ -49,7 +49,7 @@ public class PackageNameValidator extends BaseValidator {
         }
         boolean containsReservedWord = false;
         for (String packagePart : s.toString().split("\\.")) {
-            String[] reservedWords = BlockConstants.b;
+            String[] reservedWords = BlockConstants.RESERVED_KEYWORDS;
             int length = reservedWords.length;
             int reservedWordIndex = 0;
             while (true) {

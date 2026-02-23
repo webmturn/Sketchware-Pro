@@ -406,7 +406,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
 
         svgUtils.loadImage(dialogBinding.icon, adapter.getCurrentList().get(iconPosition).second + File.separator + selected_icon_type + ".svg");
         dialogBinding.icon.setColorFilter(selected_color, PorterDuff.Mode.SRC_IN);
-        iconNameValidator = new ResourceNameValidator(getApplicationContext(), dialogBinding.textInputLayout, BlockConstants.b, alreadyAddedImageNames);
+        iconNameValidator = new ResourceNameValidator(getApplicationContext(), dialogBinding.textInputLayout, BlockConstants.RESERVED_KEYWORDS, alreadyAddedImageNames);
         dialogBinding.licenceInfo.setOnClickListener(v -> {
             Uri webpage = Uri.parse("https://www.apache.org/licenses/LICENSE-2.0.txt");
             Intent intent = new Intent(Intent.ACTION_VIEW, webpage);

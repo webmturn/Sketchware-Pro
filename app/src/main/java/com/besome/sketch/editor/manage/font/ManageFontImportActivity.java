@@ -170,7 +170,7 @@ public class ManageFontImportActivity extends BaseAppCompatActivity implements V
         r.setText(selectedCollection.get(0).resName);
         r.setPrivateImeOptions("defaultInputmode=english;");
         binding.edInput.setHint(getString(R.string.design_manager_font_hint_enter_font_name));
-        nameValidator = new QB(getApplicationContext(), binding.edInput.getTextInputLayout(), BlockConstants.b, getReservedProjectImageNames(), getReservedSelectedCollectionNames());
+        nameValidator = new QB(getApplicationContext(), binding.edInput.getTextInputLayout(), BlockConstants.RESERVED_KEYWORDS, getReservedProjectImageNames(), getReservedSelectedCollectionNames());
         binding.chkSamename.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 nameValidator.c(null);

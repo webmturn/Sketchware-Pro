@@ -324,7 +324,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         View a2 = wB.a(this, R.layout.logic_popup_add_list);
         RadioGroup radioGroup = a2.findViewById(R.id.rg_type);
         TextInputEditText editText = a2.findViewById(R.id.ed_input);
-        IdentifierValidator listNameValidator = new IdentifierValidator(getContext(), a2.findViewById(R.id.ti_input), BlockConstants.b, BlockConstants.a(), ProjectDataManager.getProjectDataManager(scId).a(M));
+        IdentifierValidator listNameValidator = new IdentifierValidator(getContext(), a2.findViewById(R.id.ti_input), BlockConstants.RESERVED_KEYWORDS, BlockConstants.COMPONENT_TYPES, ProjectDataManager.getProjectDataManager(scId).a(M));
         dialog.setView(a2);
         dialog.setPositiveButton(R.string.common_word_add, (v, which) -> {
             if (listNameValidator.isValid()) {
@@ -353,7 +353,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         View customView = wB.a(this, R.layout.logic_popup_add_variable);
         RadioGroup radioGroup = customView.findViewById(R.id.rg_type);
         TextInputEditText editText = customView.findViewById(R.id.ed_input);
-        IdentifierValidator nameValidator = new IdentifierValidator(getContext(), customView.findViewById(R.id.ti_input), BlockConstants.b, BlockConstants.a(), ProjectDataManager.getProjectDataManager(scId).a(M));
+        IdentifierValidator nameValidator = new IdentifierValidator(getContext(), customView.findViewById(R.id.ti_input), BlockConstants.RESERVED_KEYWORDS, BlockConstants.COMPONENT_TYPES, ProjectDataManager.getProjectDataManager(scId).a(M));
         dialog.setView(customView);
         dialog.setPositiveButton(R.string.common_word_add, (v, which) -> {
             int variableType = 1;

@@ -610,7 +610,7 @@ public class ProjectFilePaths {
                     switch (block.opCode) {
                         case "intentSetAction":
                             // If an Intent setAction (ACTION_CALL) block is used
-                            if (block.parameters.get(1).equals(BlockConstants.c[1])) {
+                            if (block.parameters.get(1).equals(BlockConstants.INTENT_ACTIONS[1])) {
                                 buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_CALL_PHONE);
                             }
                             break;

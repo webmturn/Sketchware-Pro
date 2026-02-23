@@ -104,7 +104,7 @@ public class LogicClickListener implements View.OnClickListener {
         VariableTypeValidator varTypeValidator = new VariableTypeValidator(getContext(), binding.typeLayout);
         binding.type.addTextChangedListener(varTypeValidator);
 
-        IdentifierValidator validator = new IdentifierValidator(getContext(), binding.nameLayout, BlockConstants.b, BlockConstants.a(), projectDataManager.a(projectFile));
+        IdentifierValidator validator = new IdentifierValidator(getContext(), binding.nameLayout, BlockConstants.RESERVED_KEYWORDS, BlockConstants.COMPONENT_TYPES, projectDataManager.a(projectFile));
 
         dialog.setView(binding.getRoot());
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_add), (v, which) -> {
@@ -224,7 +224,7 @@ public class LogicClickListener implements View.OnClickListener {
 
         AddCustomListBinding listBinding = AddCustomListBinding.inflate(logicEditor.getLayoutInflater());
 
-        IdentifierValidator validator = new IdentifierValidator(getContext(), listBinding.nameLayout, BlockConstants.b, BlockConstants.a(), projectDataManager.a(projectFile));
+        IdentifierValidator validator = new IdentifierValidator(getContext(), listBinding.nameLayout, BlockConstants.RESERVED_KEYWORDS, BlockConstants.COMPONENT_TYPES, projectDataManager.a(projectFile));
 
         dialog.setView(listBinding.getRoot());
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_add), (v, which) -> {

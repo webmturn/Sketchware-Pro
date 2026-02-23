@@ -152,7 +152,7 @@ public class AddSoundActivity extends BaseDialogActivity implements View.OnClick
         nowPlayingContainer.setVisibility(View.GONE);
         TextInputLayout soundInputLayout = findViewById(R.id.ti_input);
         soundName = findViewById(R.id.ed_input);
-        soundNameValidator = new ResourceNameValidator(this, soundInputLayout, BlockConstants.b, existingSoundNames);
+        soundNameValidator = new ResourceNameValidator(this, soundInputLayout, BlockConstants.RESERVED_KEYWORDS, existingSoundNames);
         playPause.setEnabled(false);
         playPause.setOnClickListener(this);
         nowPlayingProgressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -185,7 +185,7 @@ public class AddSoundActivity extends BaseDialogActivity implements View.OnClick
         if (requestCode == 270) {
             e(getString(R.string.design_manager_sound_title_edit_sound));
             ProjectResourceBean projectResourceBean = intent.getParcelableExtra("project_resource");
-            soundNameValidator = new ResourceNameValidator(this, soundInputLayout, BlockConstants.b, new ArrayList<>());
+            soundNameValidator = new ResourceNameValidator(this, soundInputLayout, BlockConstants.RESERVED_KEYWORDS, new ArrayList<>());
             soundName.setText(projectResourceBean.resName);
             soundName.setEnabled(false);
             addToCollection.setEnabled(false);

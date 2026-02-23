@@ -301,12 +301,12 @@ public class ExtraMenuBean {
 
             case "intentAction":
                 title = logicEditor.getString(R.string.logic_editor_title_select_component_intent_action);
-                menus = new ArrayList<>(Arrays.asList(BlockConstants.b()));
+                menus = new ArrayList<>(Arrays.asList(BlockConstants.INTENT_ACTIONS));
                 break;
 
             case "intentFlags":
                 title = logicEditor.getString(R.string.logic_editor_title_select_component_intent_flags);
-                menus = new ArrayList<>(Arrays.asList(BlockConstants.c()));
+                menus = new ArrayList<>(Arrays.asList(BlockConstants.INTENT_FLAGS));
                 break;
 
             case "calendar":
@@ -316,7 +316,7 @@ public class ExtraMenuBean {
 
             case "calendarField":
                 title = logicEditor.getString(R.string.logic_editor_title_select_component_calendar_field);
-                menus = new ArrayList<>(Arrays.asList(BlockConstants.e));
+                menus = new ArrayList<>(Arrays.asList(BlockConstants.CALENDAR_FIELDS));
                 break;
 
             case "vibrator":
@@ -366,27 +366,27 @@ public class ExtraMenuBean {
 
             case "aniRepeatMode":
                 title = logicEditor.getString(R.string.logic_editor_title_select_animator_repeat_mode);
-                menus = new ArrayList<>(Arrays.asList(BlockConstants.j));
+                menus = new ArrayList<>(Arrays.asList(BlockConstants.REPEAT_MODES));
                 break;
 
             case "aniInterpolator":
                 title = logicEditor.getString(R.string.logic_editor_title_select_animator_interpolator);
-                menus = new ArrayList<>(Arrays.asList(BlockConstants.k));
+                menus = new ArrayList<>(Arrays.asList(BlockConstants.INTERPOLATOR_TYPES));
                 break;
 
             case "visible":
                 title = logicEditor.getString(R.string.logic_editor_title_select_visibility);
-                menus = new ArrayList<>(Arrays.asList(BlockConstants.g));
+                menus = new ArrayList<>(Arrays.asList(BlockConstants.VISIBILITY_OPTIONS));
                 break;
 
             case "cacheMode":
                 title = logicEditor.getString(R.string.logic_editor_title_select_cache_mode);
-                menus = new ArrayList<>(Arrays.asList(BlockConstants.h));
+                menus = new ArrayList<>(Arrays.asList(BlockConstants.CACHE_MODES));
                 break;
 
             case "animatorproperty":
                 title = logicEditor.getString(R.string.logic_editor_title_select_animator_target_property);
-                menus = new ArrayList<>(Arrays.asList(BlockConstants.i));
+                menus = new ArrayList<>(Arrays.asList(BlockConstants.ANIMATION_PROPERTIES));
                 break;
 
             case "gyroscope":
@@ -411,7 +411,7 @@ public class ExtraMenuBean {
 
             case "directoryType":
                 title = logicEditor.getString(R.string.logic_editor_title_select_directory_type);
-                menus = new ArrayList<>(Arrays.asList(BlockConstants.l));
+                menus = new ArrayList<>(Arrays.asList(BlockConstants.STORAGE_DIRECTORIES));
                 break;
 
             case "requestnetwork":
@@ -421,12 +421,12 @@ public class ExtraMenuBean {
 
             case "method":
                 title = logicEditor.getString(R.string.logic_editor_title_request_network_method);
-                menus = new ArrayList<>(Arrays.asList(BlockConstants.n));
+                menus = new ArrayList<>(Arrays.asList(BlockConstants.HTTP_METHODS));
                 break;
 
             case "requestType":
                 title = logicEditor.getString(R.string.logic_editor_title_request_network_request_type);
-                menus = new ArrayList<>(Arrays.asList(BlockConstants.o));
+                menus = new ArrayList<>(Arrays.asList(BlockConstants.REQUEST_TYPES));
                 break;
 
             case "texttospeech":
@@ -501,17 +501,17 @@ public class ExtraMenuBean {
 
             case "providerType":
                 title = logicEditor.getString(R.string.logic_editor_title_location_manager_provider_type);
-                menus = new ArrayList<>(Arrays.asList(BlockConstants.p));
+                menus = new ArrayList<>(Arrays.asList(BlockConstants.LOCATION_PROVIDERS));
                 break;
 
             case "mapType":
                 title = logicEditor.getString(R.string.logic_editor_title_mapview_map_type);
-                menus = new ArrayList<>(Arrays.asList(BlockConstants.q));
+                menus = new ArrayList<>(Arrays.asList(BlockConstants.MAP_TYPES));
                 break;
 
             case "markerColor":
                 title = logicEditor.getString(R.string.logic_editor_title_mapview_marker_color);
-                menus = new ArrayList<>(Arrays.asList(BlockConstants.r));
+                menus = new ArrayList<>(Arrays.asList(BlockConstants.MARKER_HUES));
                 break;
 
             case "service":
