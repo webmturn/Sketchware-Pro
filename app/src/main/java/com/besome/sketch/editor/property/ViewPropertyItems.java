@@ -41,9 +41,9 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     private final boolean b = false;
     private final HashMap<String, View> f = new HashMap<>();
     private String sc_id;
-    private ViewBean c;
-    private ViewBeanCallback d;
-    private ProjectFileBean e;
+    private ViewBean viewBean;
+    private ViewBeanCallback viewBeanCallback;
+    private ProjectFileBean projectFile;
     private ProjectSettings settings;
 
     public ViewPropertyItems(Context var1) {
@@ -228,8 +228,8 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
 
     public void a(String scId, ViewBean bean) {
         sc_id = scId;
-        c = bean;
-        RecentHistoryManager.getInstance().loadFromDatabase(c.getClassInfo().getClassName());
+        viewBean = bean;
+        RecentHistoryManager.getInstance().loadFromDatabase(viewBean.getClassInfo().getClassName());
         removeAllViews();
         if (bean.id.equals("_fab")) {
             b(bean);
@@ -250,13 +250,13 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
 
     @Override
     public void a(String var1, Object var2) {
-        RecentHistoryManager.getInstance().addRecentItem(c.getClassInfo().getClassName(), var1);
-        if (d != null) {
-            ViewBean cloned = c.clone();
-            i(c);
+        RecentHistoryManager.getInstance().addRecentItem(viewBean.getClassInfo().getClassName(), var1);
+        if (viewBeanCallback != null) {
+            ViewBean cloned = viewBean.clone();
+            i(viewBean);
             if (!b) {
-                ViewHistoryManager.getInstance(sc_id).recordUpdate(e.getXmlName(), cloned, c.clone());
-                d.a(c);
+                ViewHistoryManager.getInstance(sc_id).recordUpdate(projectFile.getXmlName(), cloned, viewBean.clone());
+                viewBeanCallback.a(viewBean);
             }
         }
     }
@@ -283,7 +283,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
             inputItem = new PropertyInputItem(getContext(), !z);
             inputItem.setOrientationItem(getOrientation());
             inputItem.setTypeView(typeView);
-            inputItem.a(sc_id, e);
+            inputItem.a(sc_id, projectFile);
             inputItem.setKey(key);
             inputItem.setValue(value);
             inputItem.setTag(key);
@@ -291,10 +291,10 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
             f.put(key, inputItem);
         } else {
             inputItem.setTypeView(typeView);
-            inputItem.a(sc_id, e);
+            inputItem.a(sc_id, projectFile);
             inputItem.setValue(value);
         }
-        inputItem.setBean(c);
+        inputItem.setBean(viewBean);
 
         addView(inputItem);
     }
@@ -475,7 +475,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     }
 
     public void e(ViewBean bean) {
-        c = bean;
+        viewBean = bean;
         removeAllViews();
         LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
@@ -519,10 +519,10 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     }
 
     private void setupAttributes(String key, HashMap<String, String> value) {
-        ArrayList<ViewBean> viewBeans = ProjectDataManager.getProjectDataManager(sc_id).d(e.getXmlName());
+        ArrayList<ViewBean> viewBeans = ProjectDataManager.getProjectDataManager(sc_id).d(projectFile.getXmlName());
         List<String> ids = new ArrayList<>();
         for (ViewBean bean : viewBeans) {
-            if (!bean.id.equals(c.id) && bean.parent.equals(c.parent)) {
+            if (!bean.id.equals(viewBean.id) && bean.parent.equals(viewBean.parent)) {
                 ids.add(bean.id);
             }
         }
@@ -538,7 +538,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
         } else {
             item.setValue(value);
         }
-        item.setBean(c);
+        item.setBean(viewBean);
         item.setBeans(viewBeans);
         item.setAvailableIds(ids);
 
@@ -786,16 +786,16 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
             } else if (view instanceof PropertyIndentItem indentItem) {
                 if (indentItem.getKey().equals("property_margin")) {
                     LayoutBean layout = bean.layout;
-                    layout.marginLeft = indentItem.j;
-                    layout.marginTop = indentItem.k;
-                    layout.marginRight = indentItem.l;
-                    layout.marginBottom = indentItem.m;
+                    layout.marginLeft = indentItem.left;
+                    layout.marginTop = indentItem.top;
+                    layout.marginRight = indentItem.right;
+                    layout.marginBottom = indentItem.bottom;
                 } else if (indentItem.getKey().equals("property_padding")) {
                     LayoutBean layout = bean.layout;
-                    layout.paddingLeft = indentItem.j;
-                    layout.paddingTop = indentItem.k;
-                    layout.paddingRight = indentItem.l;
-                    layout.paddingBottom = indentItem.m;
+                    layout.paddingLeft = indentItem.left;
+                    layout.paddingTop = indentItem.top;
+                    layout.paddingRight = indentItem.right;
+                    layout.paddingBottom = indentItem.bottom;
                 }
             } else if (view instanceof PropertyGravityItem gravityItem) {
                 if (gravityItem.getKey().equals("property_gravity")) {
@@ -822,20 +822,20 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
 
         if (!bean.id.equals(bean.preId)) {
             boolean viewBinding = settings.getValue(ProjectSettings.SETTING_ENABLE_VIEWBINDING, "false").equals("true");
-            for (ViewBean viewBean : ProjectDataManager.getProjectDataManager(sc_id).d(e.getXmlName())) {
+            for (ViewBean viewBean : ProjectDataManager.getProjectDataManager(sc_id).d(projectFile.getXmlName())) {
                 if (viewBean.parent.equals(bean.preId)) {
                     viewBean.parent = bean.id;
                 }
             }
 
-            if (e.fileType == ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY) {
-                for (EventBean eventBean : ProjectDataManager.getProjectDataManager(sc_id).g(e.getJavaName())) {
+            if (projectFile.fileType == ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY) {
+                for (EventBean eventBean : ProjectDataManager.getProjectDataManager(sc_id).g(projectFile.getJavaName())) {
                     if (eventBean.targetId.equals(bean.preId)) {
                         eventBean.targetId = bean.id;
                     }
                 }
 
-                HashMap<String, ArrayList<BlockBean>> beanMap = ProjectDataManager.getProjectDataManager(sc_id).b(e.getJavaName());
+                HashMap<String, ArrayList<BlockBean>> beanMap = ProjectDataManager.getProjectDataManager(sc_id).b(projectFile.getJavaName());
 
                 for (String events : EventRegistry.getEventsForClass(bean.getClassInfo())) {
                     StringBuilder eventBodyBuilder = new StringBuilder();
@@ -858,7 +858,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
                     events.add("onCreate_initializeLogic");
                 }
 
-                for (Pair<String, String> moreblocks : ProjectDataManager.getProjectDataManager(sc_id).i(e.getJavaName())) {
+                for (Pair<String, String> moreblocks : ProjectDataManager.getProjectDataManager(sc_id).i(projectFile.getJavaName())) {
                     String key = moreblocks.first +
                             "_" +
                             "moreBlock";
@@ -867,7 +867,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
                     }
                 }
 
-                for (EventBean eventBean : ProjectDataManager.getProjectDataManager(sc_id).g(e.getJavaName())) {
+                for (EventBean eventBean : ProjectDataManager.getProjectDataManager(sc_id).g(projectFile.getJavaName())) {
                     if (!eventBean.eventName.equals("onBindCustomView")) {
                         String eventKey = eventBean.getEventKey();
                         if (beanMap.containsKey(eventKey)) {
@@ -902,7 +902,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
 
                 for (ProjectFileBean projectFileBean : ProjectDataManager.getFileManager(sc_id).b()) {
                     for (ViewBean viewBean : ProjectDataManager.getProjectDataManager(sc_id).f(projectFileBean.getXmlName())) {
-                        if (viewBean.customView.equals(e.fileName)) {
+                        if (viewBean.customView.equals(projectFile.fileName)) {
                             String javaName = projectFileBean.getJavaName();
                             String key = viewBean.id +
                                     "_" +
@@ -937,19 +937,19 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
         }
 
         if (bean.type == ViewBean.VIEW_TYPE_WIDGET_LISTVIEW) {
-            ViewBean viewBean = ProjectDataManager.getProjectDataManager(sc_id).c(e.getXmlName(), bean.preId);
+            ViewBean viewBean = ProjectDataManager.getProjectDataManager(sc_id).c(projectFile.getXmlName(), bean.preId);
             String custom = bean.customView;
             if (custom != null && viewBean != null) {
                 String customView = viewBean.customView;
                 if (customView != null && !customView.equals(custom)) {
-                    ArrayList<EventBean> eventBeans = ProjectDataManager.getProjectDataManager(sc_id).g(e.getJavaName());
+                    ArrayList<EventBean> eventBeans = ProjectDataManager.getProjectDataManager(sc_id).g(projectFile.getJavaName());
                     int size = eventBeans.size();
 
                     while (true) {
                         childCount = size - 1;
                         if (childCount < 0) {
                             if (bean.customView.isEmpty() || bean.customView.equals("none")) {
-                                Iterator<Entry<String, ArrayList<BlockBean>>> blocks = ProjectDataManager.getProjectDataManager(sc_id).b(e.getJavaName()).entrySet().iterator();
+                                Iterator<Entry<String, ArrayList<BlockBean>>> blocks = ProjectDataManager.getProjectDataManager(sc_id).b(projectFile.getJavaName()).entrySet().iterator();
 
                                 while (blocks.hasNext()) {
                                     for (BlockBean blockBean : blocks.next().getValue()) {
@@ -967,7 +967,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
                         if (eventBean.targetId.equals(bean.id)) {
                             if (eventBean.eventName.equals("onBindCustomView")) {
                                 eventBeans.remove(eventBean);
-                                HashMap<String, ArrayList<BlockBean>> blocks = ProjectDataManager.getProjectDataManager(sc_id).b(e.getJavaName());
+                                HashMap<String, ArrayList<BlockBean>> blocks = ProjectDataManager.getProjectDataManager(sc_id).b(projectFile.getJavaName());
                                 blocks.remove(eventBean.getEventKey());
                             }
                         }
@@ -983,11 +983,11 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     }
 
     public void setOnPropertyValueChangedListener(ViewBeanCallback listener) {
-        d = listener;
+        viewBeanCallback = listener;
     }
 
     public void setProjectFileBean(ProjectFileBean fileBean) {
-        e = fileBean;
+        projectFile = fileBean;
     }
 
     @Override

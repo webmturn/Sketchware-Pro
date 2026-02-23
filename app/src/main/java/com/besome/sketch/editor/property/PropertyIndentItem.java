@@ -26,19 +26,19 @@ public class PropertyIndentItem extends RelativeLayout implements View.OnClickLi
     /**
      * Left margin in dp
      */
-    public int j;
+    public int left;
     /**
      * Top margin in dp
      */
-    public int k;
+    public int top;
     /**
      * Right margin in dp
      */
-    public int l;
+    public int right;
     /**
      * Bottom margin in dp
      */
-    public int m;
+    public int bottom;
     private Context context;
     private String key = "";
     private View propertyItem;
@@ -130,11 +130,11 @@ public class PropertyIndentItem extends RelativeLayout implements View.OnClickLi
     }
 
     public void a(int left, int top, int right, int bottom) {
-        j = left;
-        k = top;
-        l = right;
-        m = bottom;
-        tvValue.setText(getContext().getString(R.string.property_indent_format, j, k, l, m));
+        this.left = left;
+        this.top = top;
+        this.right = right;
+        this.bottom = bottom;
+        tvValue.setText(getContext().getString(R.string.property_indent_format, this.left, this.top, this.right, this.bottom));
     }
 
     private void showDialog() {
@@ -156,13 +156,13 @@ public class PropertyIndentItem extends RelativeLayout implements View.OnClickLi
         MinMaxInputValidator ti_top = new MinMaxInputValidator(context, binding.tiTop, 0, 999);
         MinMaxInputValidator ti_bottom = new MinMaxInputValidator(context, binding.tiBottom, 0, 999);
 
-        ti_left.setText(String.valueOf(j));
-        ti_top.setText(String.valueOf(k));
-        ti_right.setText(String.valueOf(l));
-        ti_bottom.setText(String.valueOf(m));
+        ti_left.setText(String.valueOf(left));
+        ti_top.setText(String.valueOf(top));
+        ti_right.setText(String.valueOf(right));
+        ti_bottom.setText(String.valueOf(bottom));
 
-        if (j == k && k == l && l == m) { // All sides are equal
-            ti_all.setText(String.valueOf(j));
+        if (left == top && top == right && right == bottom) { // All sides are equal
+            ti_all.setText(String.valueOf(left));
             binding.chkPtyAll.setChecked(true);
         } else {
             binding.individualPaddingView.setVisibility(VISIBLE);
