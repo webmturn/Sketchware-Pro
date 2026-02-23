@@ -36,9 +36,9 @@ public class ViewFilesFragment extends BaseFragment {
     private static final int REQUEST_CODE_ADD_VIEW_ACTIVITY = 265;
     private ActivityResultLauncher<Intent> addViewLauncher;
     private ActivityResultLauncher<Intent> presetLauncher;
-    private final int[] m = new int[19];
+    private final int[] widgetIdCounters = new int[19];
     private RecyclerView activitiesList;
-    private Boolean k = false;
+    private Boolean isSelectionMode = false;
     private TextView tvGuide;
     private ProjectFilesAdapter projectFilesAdapter = null;
     private String sc_id;
@@ -49,7 +49,7 @@ public class ViewFilesFragment extends BaseFragment {
         String baseName = SketchwarePaths.getWidgetTypeName(beanType);
         StringBuilder nameBuilder = new StringBuilder();
         nameBuilder.append(baseName);
-        int[] nameCounters = m;
+        int[] nameCounters = widgetIdCounters;
         int counter = nameCounters[beanType] + 1;
         nameCounters[beanType] = counter;
         nameBuilder.append(counter);
@@ -89,7 +89,7 @@ public class ViewFilesFragment extends BaseFragment {
     }
 
     public void setSelectionMode(boolean var1) {
-        k = var1;
+        isSelectionMode = var1;
         clearSelection();
         projectFilesAdapter.notifyDataSetChanged();
     }
@@ -281,8 +281,8 @@ public class ViewFilesFragment extends BaseFragment {
 
             // Displaying selection state
             viewHolder.binding.chkSelect.setChecked(projectFileBean.isSelected);
-            viewHolder.binding.chkSelect.setVisibility(position == 0 ? View.GONE : k ? View.VISIBLE : View.GONE);
-            viewHolder.binding.imgActivity.setVisibility(k && position != 0 ? View.GONE : View.VISIBLE);
+            viewHolder.binding.chkSelect.setVisibility(position == 0 ? View.GONE : isSelectionMode ? View.VISIBLE : View.GONE);
+            viewHolder.binding.imgActivity.setVisibility(isSelectionMode && position != 0 ? View.GONE : View.VISIBLE);
 
             viewHolder.binding.imgActivity.setImageResource(getImageResByOptions(projectFileBean.options));
             viewHolder.binding.tvScreenName.setText(projectFileBean.getXmlName());
@@ -314,7 +314,7 @@ public class ViewFilesFragment extends BaseFragment {
                         layoutPosition = getLayoutPosition();
                         ProjectFileBean projectFileBean = activitiesFiles.get(layoutPosition);
 
-                        if (k) {
+                        if (isSelectionMode) {
                             if (layoutPosition != 0) {
                                 projectFileBean.isSelected = !projectFileBean.isSelected;
                                 binding.chkSelect.setChecked(projectFileBean.isSelected);
