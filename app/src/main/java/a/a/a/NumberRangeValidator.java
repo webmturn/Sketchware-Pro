@@ -10,14 +10,14 @@ import pro.sketchware.R;
  * Originally named OB, renamed to avoid Windows case collision with oB (FileUtil).
  */
 public class NumberRangeValidator extends BaseValidator {
-  public int f;
+  public int minValue;
   
-  public int g;
+  public int maxValue;
   
   public NumberRangeValidator(Context paramContext, TextInputLayout paramTextInputLayout, int paramInt1, int paramInt2) {
     super(paramContext, paramTextInputLayout);
-    this.f = paramInt1;
-    this.g = paramInt2;
+    this.minValue = paramInt1;
+    this.maxValue = paramInt2;
   }
   
   public CharSequence filter(CharSequence paramCharSequence, int paramInt1, int paramInt2, Spanned paramSpanned, int paramInt3, int paramInt4) {
@@ -32,13 +32,13 @@ public class NumberRangeValidator extends BaseValidator {
     }
     try {
       int i = Integer.parseInt(str);
-      if (i < this.f) {
+      if (i < this.minValue) {
         this.textInputLayout.setErrorEnabled(true);
-        this.textInputLayout.setError(xB.b().a(this.context, R.string.invalid_value_min_lenth, new Object[] { Integer.valueOf(this.f) }));
+        this.textInputLayout.setError(xB.b().a(this.context, R.string.invalid_value_min_lenth, new Object[] { Integer.valueOf(this.minValue) }));
         this.valid = false;
-      } else if (i > this.g) {
+      } else if (i > this.maxValue) {
         this.textInputLayout.setErrorEnabled(true);
-        this.textInputLayout.setError(xB.b().a(this.context, R.string.invalid_value_max_lenth, new Object[] { Integer.valueOf(this.g) }));
+        this.textInputLayout.setError(xB.b().a(this.context, R.string.invalid_value_max_lenth, new Object[] { Integer.valueOf(this.maxValue) }));
         this.valid = false;
       } else {
         this.textInputLayout.setErrorEnabled(false);

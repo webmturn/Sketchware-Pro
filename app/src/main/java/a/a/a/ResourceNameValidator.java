@@ -12,25 +12,25 @@ import pro.sketchware.R;
  * Originally named WB, renamed to avoid Windows case collision with wB (ViewUtil).
  */
 public class ResourceNameValidator extends BaseValidator {
-  public String[] f;
+  public String[] reservedNames;
   
-  public ArrayList<String> g;
+  public ArrayList<String> existingNames;
   
-  public String h;
+  public String currentName;
   
-  public Pattern i = Pattern.compile("^[a-z][a-z0-9_]*");
+  public Pattern namePattern = Pattern.compile("^[a-z][a-z0-9_]*");
   
   public ResourceNameValidator(Context paramContext, TextInputLayout paramTextInputLayout, String[] paramArrayOfString, ArrayList<String> paramArrayList) {
     super(paramContext, paramTextInputLayout);
-    this.f = paramArrayOfString;
-    this.g = paramArrayList;
+    this.reservedNames = paramArrayOfString;
+    this.existingNames = paramArrayList;
   }
   
   public ResourceNameValidator(Context paramContext, TextInputLayout paramTextInputLayout, String[] paramArrayOfString, ArrayList<String> paramArrayList, String paramString) {
     super(paramContext, paramTextInputLayout);
-    this.f = paramArrayOfString;
-    this.g = paramArrayList;
-    this.h = paramString;
+    this.reservedNames = paramArrayOfString;
+    this.existingNames = paramArrayList;
+    this.currentName = paramString;
   }
   
   public CharSequence filter(CharSequence paramCharSequence, int paramInt1, int paramInt2, Spanned paramSpanned, int paramInt3, int paramInt4) {
@@ -57,13 +57,13 @@ public class ResourceNameValidator extends BaseValidator {
       this.valid = false;
       return;
     } 
-    if (!str.equals(this.h) && this.g.indexOf(str) >= 0) {
+    if (!str.equals(this.currentName) && this.existingNames.indexOf(str) >= 0) {
       this.textInputLayout.setErrorEnabled(true);
       this.textInputLayout.setError(xB.b().a(this.context, R.string.common_message_name_unavailable));
       this.valid = false;
       return;
     } 
-    String[] arrayOfString = this.f;
+    String[] arrayOfString = this.reservedNames;
     paramInt2 = arrayOfString.length;
     paramInt1 = 0;
     while (true) {
@@ -91,7 +91,7 @@ public class ResourceNameValidator extends BaseValidator {
       this.valid = false;
       return;
     } 
-    if (this.i.matcher(paramCharSequence.toString()).matches()) {
+    if (this.namePattern.matcher(paramCharSequence.toString()).matches()) {
       this.textInputLayout.setErrorEnabled(false);
       this.valid = true;
     } else {
