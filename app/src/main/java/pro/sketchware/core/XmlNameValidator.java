@@ -9,33 +9,33 @@ import java.util.regex.Pattern;
 import pro.sketchware.R;
 
 public class XmlNameValidator extends BaseValidator {
-  public String[] f;
+  public String[] reservedNames;
   
-  public ArrayList<String> g;
+  public ArrayList<String> xmlNames;
   
-  public ArrayList<String> h;
+  public ArrayList<String> javaNames;
   
-  public String i;
+  public String currentName;
   
-  public int j;
+  public int batchCount;
   
-  public Pattern k = Pattern.compile("^[a-z][a-z0-9_]*");
+  public Pattern namePattern = Pattern.compile("^[a-z][a-z0-9_]*");
   
   public XmlNameValidator(Context paramContext, TextInputLayout paramTextInputLayout, String[] paramArrayOfString, ArrayList<String> paramArrayList1, ArrayList<String> paramArrayList2) {
     super(paramContext, paramTextInputLayout);
-    this.f = paramArrayOfString;
-    this.g = paramArrayList1;
-    this.h = paramArrayList2;
-    this.j = 1;
+    this.reservedNames = paramArrayOfString;
+    this.xmlNames = paramArrayList1;
+    this.javaNames = paramArrayList2;
+    this.batchCount = 1;
   }
   
   public void a(int paramInt) {
-    this.j = paramInt;
+    this.batchCount = paramInt;
     b(getText());
   }
   
   public void a(ArrayList<String> paramArrayList) {
-    this.h = paramArrayList;
+    this.javaNames = paramArrayList;
   }
   
   public final void b(String paramString) {
@@ -58,14 +58,14 @@ public class XmlNameValidator extends BaseValidator {
       this.valid = false;
       return;
     } 
-    if (this.j == 1) {
-      if (!paramString.equals(this.i) && this.g.indexOf(paramString) >= 0) {
+    if (this.batchCount == 1) {
+      if (!paramString.equals(this.currentName) && this.xmlNames.indexOf(paramString) >= 0) {
         this.textInputLayout.setErrorEnabled(true);
         this.textInputLayout.setError(StringResource.b().a(this.context, R.string.common_message_name_unavailable));
         this.valid = false;
         return;
       } 
-      if (!paramString.equals(this.i) && this.h.indexOf(paramString) >= 0) {
+      if (!paramString.equals(this.currentName) && this.javaNames.indexOf(paramString) >= 0) {
         this.textInputLayout.setErrorEnabled(true);
         this.textInputLayout.setError(StringResource.b().a(this.context, R.string.common_message_name_unavailable));
         this.valid = false;
@@ -73,7 +73,7 @@ public class XmlNameValidator extends BaseValidator {
       } 
     } else {
       ArrayList<String> arrayList1 = new ArrayList<>();
-      for (int b1 = 1; b1 <= this.j; b1++) {
+      for (int b1 = 1; b1 <= this.batchCount; b1++) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(paramString);
         stringBuilder.append("_");
@@ -82,7 +82,7 @@ public class XmlNameValidator extends BaseValidator {
       } 
       ArrayList<String> arrayList2 = new ArrayList<>();
       for (String str1 : arrayList1) {
-        if (this.g.indexOf(str1) >= 0)
+        if (this.xmlNames.indexOf(str1) >= 0)
           arrayList2.add(str1); 
       } 
       if (arrayList2.size() > 0) {
@@ -114,7 +114,7 @@ public class XmlNameValidator extends BaseValidator {
         return;
       } 
     } 
-    String[] arrayOfString = this.f;
+    String[] arrayOfString = this.reservedNames;
     int i = arrayOfString.length;
     int b = 0;
     while (true) {
@@ -141,7 +141,7 @@ public class XmlNameValidator extends BaseValidator {
       this.valid = false;
       return;
     } 
-    if (this.k.matcher(paramString).matches()) {
+    if (this.namePattern.matcher(paramString).matches()) {
       this.textInputLayout.setErrorEnabled(false);
       this.valid = true;
     } else {
@@ -152,7 +152,7 @@ public class XmlNameValidator extends BaseValidator {
   }
   
   public void c(String paramString) {
-    this.i = paramString;
+    this.currentName = paramString;
   }
   
   public CharSequence filter(CharSequence paramCharSequence, int paramInt1, int paramInt2, Spanned paramSpanned, int paramInt3, int paramInt4) {

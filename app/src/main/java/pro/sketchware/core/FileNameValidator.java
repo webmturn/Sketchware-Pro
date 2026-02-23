@@ -9,33 +9,33 @@ import java.util.regex.Pattern;
 import pro.sketchware.R;
 
 public class FileNameValidator extends BaseValidator {
-  public String[] f;
+  public String[] reservedNames;
   
-  public ArrayList<String> g;
+  public ArrayList<String> existingNames;
   
-  public String h;
+  public String currentName;
   
-  public int i;
+  public int batchCount;
   
-  public Pattern j = Pattern.compile("^[a-z][a-z0-9_]*");
+  public Pattern namePattern = Pattern.compile("^[a-z][a-z0-9_]*");
   
   public FileNameValidator(Context paramContext, TextInputLayout paramTextInputLayout, String[] paramArrayOfString, ArrayList<String> paramArrayList) {
     super(paramContext, paramTextInputLayout);
-    this.f = paramArrayOfString;
-    this.g = paramArrayList;
-    this.i = 1;
+    this.reservedNames = paramArrayOfString;
+    this.existingNames = paramArrayList;
+    this.batchCount = 1;
   }
   
   public FileNameValidator(Context paramContext, TextInputLayout paramTextInputLayout, String[] paramArrayOfString, ArrayList<String> paramArrayList, String paramString) {
     super(paramContext, paramTextInputLayout);
-    this.f = paramArrayOfString;
-    this.g = paramArrayList;
-    this.h = paramString;
-    this.i = 1;
+    this.reservedNames = paramArrayOfString;
+    this.existingNames = paramArrayList;
+    this.currentName = paramString;
+    this.batchCount = 1;
   }
   
   public void a(int paramInt) {
-    this.i = paramInt;
+    this.batchCount = paramInt;
     if (getText().length() > 0)
       b(getText()); 
   }
@@ -60,8 +60,8 @@ public class FileNameValidator extends BaseValidator {
       this.valid = false;
       return;
     } 
-    if (this.i == 1) {
-      if (!paramString.equals(this.h) && this.g.indexOf(paramString) >= 0) {
+    if (this.batchCount == 1) {
+      if (!paramString.equals(this.currentName) && this.existingNames.indexOf(paramString) >= 0) {
         this.textInputLayout.setErrorEnabled(true);
         this.textInputLayout.setError(StringResource.b().a(this.context, R.string.common_message_name_unavailable));
         this.valid = false;
@@ -69,7 +69,7 @@ public class FileNameValidator extends BaseValidator {
       } 
     } else {
       ArrayList<String> arrayList1 = new ArrayList<>();
-      for (int b1 = 1; b1 <= this.i; b1++) {
+      for (int b1 = 1; b1 <= this.batchCount; b1++) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(paramString);
         stringBuilder.append("_");
@@ -78,7 +78,7 @@ public class FileNameValidator extends BaseValidator {
       } 
       ArrayList<String> arrayList2 = new ArrayList<>();
       for (String str1 : arrayList1) {
-        if (this.g.indexOf(str1) >= 0)
+        if (this.existingNames.indexOf(str1) >= 0)
           arrayList2.add(str1); 
       } 
       if (arrayList2.size() > 0) {
@@ -110,7 +110,7 @@ public class FileNameValidator extends BaseValidator {
         return;
       } 
     } 
-    String[] arrayOfString = this.f;
+    String[] arrayOfString = this.reservedNames;
     int i = arrayOfString.length;
     int b = 0;
     while (true) {
@@ -137,7 +137,7 @@ public class FileNameValidator extends BaseValidator {
       this.valid = false;
       return;
     } 
-    if (this.j.matcher(paramString).matches()) {
+    if (this.namePattern.matcher(paramString).matches()) {
       this.textInputLayout.setErrorEnabled(false);
       this.valid = true;
     } else {
