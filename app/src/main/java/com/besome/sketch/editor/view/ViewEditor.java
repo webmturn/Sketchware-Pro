@@ -384,7 +384,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
                             } catch (Exception e) {
                                 LogUtil.e("ViewEditor", "", e);
                             }
-                            ProjectDataManager.getResourceManager(a).b.add(a2);
+                            ProjectDataManager.getResourceManager(a).images.add(a2);
                             areImagesAdded = true;
                         }
                         if (!ProjectDataManager.getResourceManager(a).l(resName) && SoundCollectionManager.g().b(resName)) {
@@ -394,7 +394,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
                             } catch (Exception e2) {
                                 LogUtil.e("ViewEditor", "", e2);
                             }
-                            ProjectDataManager.getResourceManager(a).b.add(a3);
+                            ProjectDataManager.getResourceManager(a).images.add(a3);
                             areImagesAdded = true;
                         }
                     }

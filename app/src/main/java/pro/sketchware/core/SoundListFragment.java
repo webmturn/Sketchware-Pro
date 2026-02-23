@@ -118,7 +118,7 @@ public class SoundListFragment extends BaseFragment implements MenuProvider {
         if (savedInstanceState == null) {
             sc_id = requireActivity().getIntent().getStringExtra("sc_id");
             dirPath = ProjectDataManager.getResourceManager(sc_id).o();
-            ArrayList<ProjectResourceBean> arrayList = ProjectDataManager.getResourceManager(sc_id).c;
+            ArrayList<ProjectResourceBean> arrayList = ProjectDataManager.getResourceManager(sc_id).sounds;
             if (arrayList != null) {
                 for (ProjectResourceBean projectResourceBean : arrayList) {
                     sounds.add(projectResourceBean.clone());

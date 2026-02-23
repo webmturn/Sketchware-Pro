@@ -218,7 +218,7 @@ public class ImportFontFragment extends BaseFragment implements MenuProvider {
         if (savedInstanceState == null) {
             sc_id = requireActivity().getIntent().getStringExtra("sc_id");
             dirPath = ProjectDataManager.getResourceManager(sc_id).j();
-            ArrayList<ProjectResourceBean> resourceBeans = ProjectDataManager.getResourceManager(sc_id).d;
+            ArrayList<ProjectResourceBean> resourceBeans = ProjectDataManager.getResourceManager(sc_id).fonts;
             if (resourceBeans != null) {
                 projectResourceBeans.addAll(resourceBeans);
             }

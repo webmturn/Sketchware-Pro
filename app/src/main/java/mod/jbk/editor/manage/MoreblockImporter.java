@@ -230,7 +230,7 @@ public class MoreblockImporter {
             ProjectResourceBean image = SoundCollectionManager.g().a(imageName);
             try {
                 fileUtil.a(SketchwarePaths.getCollectionPath() + File.separator + "image" + File.separator + "data" + File.separator + image.resFullName, SketchwarePaths.getImagesPath() + File.separator + sc_id + File.separator + image.resFullName);
-                ProjectDataManager.getResourceManager(sc_id).b.add(image);
+                ProjectDataManager.getResourceManager(sc_id).images.add(image);
             } catch (Exception e) {
                 Log.e("MoreblockImporter", e.getMessage(), e);
             }
@@ -242,7 +242,7 @@ public class MoreblockImporter {
             ProjectResourceBean a2 = FontCollectionManager.g().a(soundName);
             try {
                 fileUtil.a(SketchwarePaths.getCollectionPath() + File.separator + "sound" + File.separator + "data" + File.separator + a2.resFullName, SketchwarePaths.getSoundsPath() + File.separator + sc_id + File.separator + a2.resFullName);
-                ProjectDataManager.getResourceManager(sc_id).c.add(a2);
+                ProjectDataManager.getResourceManager(sc_id).sounds.add(a2);
             } catch (Exception e) {
                 Log.e("MoreblockImporter", e.getMessage(), e);
             }
@@ -254,7 +254,7 @@ public class MoreblockImporter {
             ProjectResourceBean font = ImageCollectionManager.g().a(fontName);
             try {
                 fileUtil.a(SketchwarePaths.getCollectionPath() + File.separator + "font" + File.separator + "data" + File.separator + font.resFullName, SketchwarePaths.getFontsResourcePath() + File.separator + sc_id + File.separator + font.resFullName);
-                ProjectDataManager.getResourceManager(sc_id).d.add(font);
+                ProjectDataManager.getResourceManager(sc_id).fonts.add(font);
             } catch (Exception e) {
                 Log.e("MoreblockImporter", e.getMessage(), e);
             }

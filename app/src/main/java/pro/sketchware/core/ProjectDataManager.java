@@ -81,7 +81,7 @@ public class ProjectDataManager {
     }
 
     public static synchronized ResourceManager d(String str, boolean z) {
-        if (c != null && !str.equals(c.i)) {
+        if (c != null && !str.equals(c.projectId)) {
             e();
         }
         if (c == null) {
