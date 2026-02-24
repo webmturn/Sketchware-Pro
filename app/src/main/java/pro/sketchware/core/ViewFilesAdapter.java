@@ -185,9 +185,9 @@ public class ViewFilesAdapter extends BaseFragment {
         ViewBean viewBean = arrayList2.get(end);
         ProjectDataManager.getProjectDataManager(this.projectId).removeView(projectFileBean, viewBean);
       } 
-      ArrayList<ViewBean> arrayList1 = getPresetViews(((ProjectFileBean)resultIntent.getParcelableExtra("preset_data")).presetName, start);
+      ArrayList<ViewBean> existingViews = getPresetViews(((ProjectFileBean)resultIntent.getParcelableExtra("preset_data")).presetName, start);
       ProjectDataManager.getProjectDataManager(this.projectId);
-      for (ViewBean viewBean : ProjectDataStore.getSortedRootViews(arrayList1)) {
+      for (ViewBean viewBean : ProjectDataStore.getSortedRootViews(existingViews)) {
         viewBean.id = generateUniqueViewId(viewBean.type, projectFileBean.getXmlName());
         ProjectDataManager.getProjectDataManager(this.projectId).addView(projectFileBean.getXmlName(), viewBean);
         if (viewBean.type == 3 && projectFileBean.fileType == 0)

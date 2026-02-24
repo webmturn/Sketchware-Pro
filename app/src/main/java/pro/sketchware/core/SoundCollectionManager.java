@@ -103,7 +103,7 @@ public class SoundCollectionManager extends BaseCollectionManager {
       } 
     } 
     if (arrayList.size() <= 0) {
-      ArrayList<String> arrayList1 = new ArrayList<>();
+      ArrayList<String> failedNames = new ArrayList<>();
       for (ProjectResourceBean projectResourceBean : list) {
         String str;
         if (((SelectableBean)projectResourceBean).savedPos == 0) {
@@ -118,11 +118,11 @@ public class SoundCollectionManager extends BaseCollectionManager {
           str = projectResourceBean.resFullName;
         } 
         if (!this.fileUtil.exists(str))
-          arrayList1.add(projectResourceBean.resName); 
+          failedNames.add(projectResourceBean.resName); 
       } 
-      if (arrayList1.size() <= 0) {
-        arrayList1 = new ArrayList<String>();
-        ArrayList<String> arrayList2 = new ArrayList<>();
+      if (failedNames.size() <= 0) {
+        failedNames = new ArrayList<String>();
+        ArrayList<String> processedPaths = new ArrayList<>();
         for (ProjectResourceBean projectResourceBean : list) {
           String sourcePath;
           String fileName = projectResourceBean.resName;
@@ -156,19 +156,19 @@ public class SoundCollectionManager extends BaseCollectionManager {
           try {
             this.fileUtil.mkdirs(this.dataDirPath);
             BitmapUtil.processAndSaveBitmap(sourcePath, destPath, projectResourceBean.rotate, projectResourceBean.flipHorizontal, projectResourceBean.flipVertical);
-            ArrayList<CollectionBean> arrayList3 = this.collections;
+            ArrayList<CollectionBean> collectionsList = this.collections;
             CollectionBean collectionBean = new CollectionBean(projectResourceBean.resName, fileName);
-            arrayList3.add(collectionBean);
-            arrayList2.add(destPath);
+            collectionsList.add(collectionBean);
+            processedPaths.add(destPath);
           } catch (Exception iOException) {
-            arrayList1.add(projectResourceBean.resName);
+            failedNames.add(projectResourceBean.resName);
           } 
         } 
-        if (arrayList1.size() > 0) {
+        if (failedNames.size() > 0) {
           CompileException yy2 = new CompileException("fail_to_copy");
-          yy2.setErrorDetails(arrayList1);
-          if (arrayList2.size() > 0)
-            for (String str : arrayList2)
+          yy2.setErrorDetails(failedNames);
+          if (processedPaths.size() > 0)
+            for (String str : processedPaths)
               this.fileUtil.deleteFileByPath(str);  
           throw yy2;
         } 
@@ -177,7 +177,7 @@ public class SoundCollectionManager extends BaseCollectionManager {
         return;
       } 
       CompileException yy1 = new CompileException("file_no_exist");
-      yy1.setErrorDetails(arrayList1);
+      yy1.setErrorDetails(failedNames);
       throw yy1;
     } 
     CompileException CompileException = new CompileException("duplicate_name");

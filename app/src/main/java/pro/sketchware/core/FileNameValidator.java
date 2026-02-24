@@ -68,23 +68,23 @@ public class FileNameValidator extends BaseValidator {
         return;
       } 
     } else {
-      ArrayList<String> arrayList1 = new ArrayList<>();
+      ArrayList<String> candidateNames = new ArrayList<>();
       for (int b1 = 1; b1 <= this.batchCount; b1++) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(str);
         stringBuilder.append("_");
         stringBuilder.append(b1);
-        arrayList1.add(stringBuilder.toString());
+        candidateNames.add(stringBuilder.toString());
       } 
-      ArrayList<String> arrayList2 = new ArrayList<>();
-      for (String candidateName : arrayList1) {
+      ArrayList<String> conflictNames = new ArrayList<>();
+      for (String candidateName : candidateNames) {
         if (this.existingNames.indexOf(candidateName) >= 0)
-          arrayList2.add(candidateName); 
+          conflictNames.add(candidateName); 
       } 
-      if (arrayList2.size() > 0) {
+      if (conflictNames.size() > 0) {
         this.textInputLayout.setErrorEnabled(true);
         String errorMessage = StringResource.getInstance().getTranslatedString(this.context, R.string.common_message_name_unavailable);
-        Iterator<String> iterator = arrayList2.iterator();
+        Iterator<String> iterator = conflictNames.iterator();
         str = "";
         while (iterator.hasNext()) {
           String conflictName = iterator.next();

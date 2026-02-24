@@ -39,16 +39,16 @@ public class RecentHistoryManager {
   
   public void addRecentItem(String key, String value) {
     ArrayList<String> arrayList1 = this.recentMap.get(key);
-    ArrayList<String> arrayList2 = arrayList1;
+    ArrayList<String> historyList = arrayList1;
     if (arrayList1 == null) {
-      arrayList2 = new ArrayList<>();
-      this.recentMap.put(key, arrayList2);
+      historyList = new ArrayList<>();
+      this.recentMap.put(key, historyList);
     } 
-    if (arrayList2.contains(value))
-      arrayList2.remove(value); 
-    arrayList2.add(0, value);
-    if (arrayList2.size() > maxItems)
-      arrayList2.remove(arrayList2.size() - 1); 
+    if (historyList.contains(value))
+      historyList.remove(value); 
+    historyList.add(0, value);
+    if (historyList.size() > maxItems)
+      historyList.remove(historyList.size() - 1); 
   }
   
   public void saveToDatabase() {
