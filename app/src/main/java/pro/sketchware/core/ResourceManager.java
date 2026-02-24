@@ -69,7 +69,7 @@ public class ResourceManager {
   
   public void parseResourceData(BufferedReader reader) throws java.io.IOException {
     StringBuffer stringBuffer = new StringBuffer();
-    String str = "";
+    String sectionName = "";
     while (true) {
       String line = reader.readLine();
       if (line != null) {
@@ -77,11 +77,11 @@ public class ResourceManager {
           continue; 
         if (line.charAt(0) == '@') {
           StringBuffer tempBuffer = stringBuffer;
-          if (str.length() > 0) {
-            parseResourceSection(str, stringBuffer.toString());
+          if (sectionName.length() > 0) {
+            parseResourceSection(sectionName, stringBuffer.toString());
             tempBuffer = new StringBuffer();
           } 
-          str = line.substring(1);
+          sectionName = line.substring(1);
           stringBuffer = tempBuffer;
           continue;
         } 
@@ -89,8 +89,8 @@ public class ResourceManager {
         stringBuffer.append("\n");
         continue;
       } 
-      if (str.length() > 0)
-        parseResourceSection(str, stringBuffer.toString()); 
+      if (sectionName.length() > 0)
+        parseResourceSection(sectionName, stringBuffer.toString()); 
       return;
     } 
   }
@@ -311,12 +311,12 @@ public class ResourceManager {
   }
   
   public void backupFonts() {
-    String str = SketchwarePaths.getTempFontsPath();
+    String tempPath = SketchwarePaths.getTempFontsPath();
     try {
-      this.fileUtil.deleteDirectoryByPath(str);
+      this.fileUtil.deleteDirectoryByPath(tempPath);
       EncryptedFileUtil oB1 = this.fileUtil;
       File file1 = new File(this.fontDirPath);
-      File file2 = new File(str);
+      File file2 = new File(tempPath);
       oB1.copyDirectory(file1, file2);
     } catch (Exception exception) {
       exception.printStackTrace();
@@ -339,12 +339,12 @@ public class ResourceManager {
   }
   
   public void backupImages() {
-    String str = SketchwarePaths.getTempImagesPath();
+    String tempPath = SketchwarePaths.getTempImagesPath();
     try {
-      this.fileUtil.deleteDirectoryByPath(str);
+      this.fileUtil.deleteDirectoryByPath(tempPath);
       EncryptedFileUtil oB1 = this.fileUtil;
       File file1 = new File(this.imageDirPath);
-      File file2 = new File(str);
+      File file2 = new File(tempPath);
       oB1.copyDirectory(file1, file2);
     } catch (Exception exception) {
       exception.printStackTrace();
@@ -360,12 +360,12 @@ public class ResourceManager {
   }
   
   public void backupSounds() {
-    String str = SketchwarePaths.getTempSoundsPath();
+    String tempPath = SketchwarePaths.getTempSoundsPath();
     try {
-      this.fileUtil.deleteDirectoryByPath(str);
+      this.fileUtil.deleteDirectoryByPath(tempPath);
       EncryptedFileUtil oB1 = this.fileUtil;
       File file1 = new File(this.soundDirPath);
-      File file2 = new File(str);
+      File file2 = new File(tempPath);
       oB1.copyDirectory(file1, file2);
     } catch (Exception exception) {
       exception.printStackTrace();
@@ -411,13 +411,13 @@ public class ResourceManager {
   }
   
   public void deleteBackup() {
-    String str = SketchwarePaths.getBackupPath(this.projectId);
+    String backupPath = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(str);
+    stringBuilder.append(backupPath);
     stringBuilder.append(File.separator);
     stringBuilder.append("resource");
-    str = stringBuilder.toString();
-    this.fileUtil.deleteFileByPath(str);
+    backupPath = stringBuilder.toString();
+    this.fileUtil.deleteFileByPath(backupPath);
   }
   
   public ProjectResourceBean getSoundBean(String name) {
@@ -492,13 +492,13 @@ public class ResourceManager {
   }
   
   public boolean hasBackup() {
-    String str = SketchwarePaths.getBackupPath(this.projectId);
+    String backupPath = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(str);
+    stringBuilder.append(backupPath);
     stringBuilder.append(File.separator);
     stringBuilder.append("resource");
-    str = stringBuilder.toString();
-    return this.fileUtil.exists(str);
+    backupPath = stringBuilder.toString();
+    return this.fileUtil.exists(backupPath);
   }
   
   public void loadFromBackup() {
@@ -514,8 +514,8 @@ public class ResourceManager {
     BufferedReader bufferedReader = null;
     try {
       byte[] bytes = this.fileUtil.readFileBytes(resourcePath);
-      String str = this.fileUtil.decryptToString(bytes);
-      bufferedReader = new BufferedReader(new StringReader(str));
+      String decryptedData = this.fileUtil.decryptToString(bytes);
+      bufferedReader = new BufferedReader(new StringReader(decryptedData));
       parseResourceData(bufferedReader);
     } catch (Exception exception) {
       exception.printStackTrace();
@@ -539,8 +539,8 @@ public class ResourceManager {
     BufferedReader bufferedReader = null;
     try {
       byte[] bytes = this.fileUtil.readFileBytes(dataPath);
-      String str = this.fileUtil.decryptToString(bytes);
-      bufferedReader = new BufferedReader(new StringReader(str));
+      String decryptedData = this.fileUtil.decryptToString(bytes);
+      bufferedReader = new BufferedReader(new StringReader(decryptedData));
       parseResourceData(bufferedReader);
     } catch (Exception exception) {
       exception.printStackTrace();
@@ -560,13 +560,13 @@ public class ResourceManager {
   }
   
   public void restoreFontsFromTemp() {
-    String str = SketchwarePaths.getTempFontsPath();
+    String tempPath = SketchwarePaths.getTempFontsPath();
     try {
       EncryptedFileUtil oB1 = this.fileUtil;
       File file2 = new File(this.fontDirPath);
       oB1.deleteDirectory(file2);
       oB1 = this.fileUtil;
-      file2 = new File(str);
+      file2 = new File(tempPath);
       File file1 = new File(this.fontDirPath);
       oB1.copyDirectory(file2, file1);
     } catch (Exception exception) {
@@ -575,13 +575,13 @@ public class ResourceManager {
   }
   
   public void restoreImagesFromTemp() {
-    String str = SketchwarePaths.getTempImagesPath();
+    String tempPath = SketchwarePaths.getTempImagesPath();
     try {
       EncryptedFileUtil oB1 = this.fileUtil;
       File file2 = new File(this.imageDirPath);
       oB1.deleteDirectory(file2);
       oB1 = this.fileUtil;
-      file2 = new File(str);
+      file2 = new File(tempPath);
       File file1 = new File(this.imageDirPath);
       oB1.copyDirectory(file2, file1);
     } catch (Exception exception) {
@@ -590,13 +590,13 @@ public class ResourceManager {
   }
   
   public void restoreSoundsFromTemp() {
-    String str = SketchwarePaths.getTempSoundsPath();
+    String tempPath = SketchwarePaths.getTempSoundsPath();
     try {
       EncryptedFileUtil oB1 = this.fileUtil;
       File file2 = new File(this.soundDirPath);
       oB1.deleteDirectory(file2);
       oB1 = this.fileUtil;
-      file2 = new File(str);
+      file2 = new File(tempPath);
       File file1 = new File(this.soundDirPath);
       oB1.copyDirectory(file2, file1);
     } catch (Exception exception) {
@@ -623,17 +623,17 @@ public class ResourceManager {
   }
   
   public void saveToBackup() {
-    String str = SketchwarePaths.getBackupPath(this.projectId);
+    String backupPath = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(str);
+    stringBuilder.append(backupPath);
     stringBuilder.append(File.separator);
     stringBuilder.append("resource");
-    str = stringBuilder.toString();
+    backupPath = stringBuilder.toString();
     StringBuffer stringBuffer = new StringBuffer();
     serializeResources(stringBuffer);
     try {
       byte[] bytes = this.fileUtil.encryptString(stringBuffer.toString());
-      this.fileUtil.writeBytes(str, bytes);
+      this.fileUtil.writeBytes(backupPath, bytes);
     } catch (Exception exception) {
       exception.printStackTrace();
     } 
