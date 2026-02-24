@@ -44,7 +44,7 @@ public class ViewDummy extends RelativeLayout {
         layout_dummy = findViewById(R.id.layout_dummy);
     }
 
-    public void b(View view) {
+    public void captureViewBitmap(View view) {
         Bitmap bitmap = createBitmapOfView(view);
         view.getLocationOnScreen(sourceLocation);
         img_dummy.setImageBitmap(bitmap);
@@ -74,7 +74,7 @@ public class ViewDummy extends RelativeLayout {
         return bitmap;
     }
 
-    public void a(BlockView rs) {
+    public void setBlockTypeImage(BlockView rs) {
         switch (rs.blockType) {
             case "b":
                 img_dummy.setImageResource(R.drawable.selected_block_boolean);
@@ -103,7 +103,7 @@ public class ViewDummy extends RelativeLayout {
         rs.getLocationOnScreen(sourceLocation);
     }
 
-    public void a(View view, float f, float f2, float f3, float f4, float f5, float f6) {
+    public void updateDummyPosition(View view, float f, float f2, float f3, float f4, float f5, float f6) {
         if (layout_dummy.getVisibility() != View.VISIBLE) {
             setDummyVisibility(View.VISIBLE);
         }
@@ -112,11 +112,11 @@ public class ViewDummy extends RelativeLayout {
         layout_dummy.setY((sourceLocation[1] - dummyLocation[1]) + f2 - f4 + f6);
     }
 
-    public void a(View view, float f, float f2, float f3, float f4) {
-        a(view, f, f2, f3, f4, 0.0f, 0.0f);
+    public void updateDummyPosition(View view, float f, float f2, float f3, float f4) {
+        updateDummyPosition(view, f, f2, f3, f4, 0.0f, 0.0f);
     }
 
-    public void a(int[] iArr) {
+    public void getDummyLocation(int[] iArr) {
         img_dummy.getLocationOnScreen(iArr);
     }
 }

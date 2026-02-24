@@ -2121,7 +2121,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             handler.removeCallbacks(longPressed);
             float rawX = event.getRawX();
             float rawY = event.getRawY();
-            dummy.a(v, rawX - s, rawY - t, posInitX - s, posInitY - t, S, T);
+            dummy.updateDummyPosition(v, rawX - s, rawY - t, posInitX - s, posInitY - t, S, T);
             if (hitTestIconDelete(event.getRawX(), event.getRawY())) {
                 dummy.setAllow(true);
                 activeIconDelete(true);
@@ -2152,7 +2152,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 return true;
             }
             setDetailActive(false);
-            dummy.a(this.v);
+            dummy.getDummyLocation(this.v);
             if (viewLogicEditor.hitTest(this.v[0], this.v[1])) {
                 dummy.setAllow(true);
                 o.updateDragPreview((BlockView) v, this.v[0], this.v[1]);
@@ -2334,7 +2334,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 BlockHistoryManager.getInstance(scId).recordAddMultiple(buildHistoryKey(), a3, width - oLocationOnScreen[0], a2 - oLocationOnScreen[1], null, null);
                 refreshOptionsMenu();
             } else if (v instanceof BlockView rs13) {
-                dummy.a(this.v);
+                dummy.getDummyLocation(this.v);
                 if (rs13.getBlockType() == 1) {
                     int addTargetId = o.getAddTargetId();
                     BlockBean clone3 = addTargetId >= 0 ? o.findBlockById(addTargetId).getBean().clone() : null;
@@ -2458,24 +2458,24 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 trackDragSource((BlockView) currentTouchedView);
                 toggleLayoutVisibility(true);
                 toggleTopMenuVisibility(true);
-                dummy.a((BlockView) currentTouchedView);
+                dummy.setBlockTypeImage((BlockView) currentTouchedView);
                 o.setBlockTreeVisibility((BlockView) currentTouchedView, 8);
                 o.detachFromParent((BlockView) currentTouchedView);
                 o.computeSnapPoints((BlockView) currentTouchedView);
             } else if (((BlockView) currentTouchedView).getBlockType() == 2) {
                 toggleLayoutVisibility(false);
                 toggleTopMenuVisibility(true);
-                dummy.a((BlockView) currentTouchedView);
+                dummy.setBlockTypeImage((BlockView) currentTouchedView);
                 o.computeSnapPointsForBlocks((BlockView) currentTouchedView, ((DefinitionBlockView) currentTouchedView).getData());
             } else {
-                dummy.a((BlockView) currentTouchedView);
+                dummy.setBlockTypeImage((BlockView) currentTouchedView);
                 o.computeSnapPoints((BlockView) currentTouchedView);
             }
 
             float a = posInitX - s;
             float b = posInitY - t;
-            dummy.a(currentTouchedView, a, b, a, b, S, T);
-            dummy.a(v);
+            dummy.updateDummyPosition(currentTouchedView, a, b, a, b, S, T);
+            dummy.getDummyLocation(v);
             if (viewLogicEditor.hitTest(v[0], v[1])) {
                 dummy.setAllow(true);
                 o.updateDragPreview((BlockView) currentTouchedView, v[0], v[1]);

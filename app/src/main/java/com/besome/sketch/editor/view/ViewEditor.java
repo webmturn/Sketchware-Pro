@@ -319,7 +319,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
                 return true;
             } else {
                 handler.removeCallbacks(longPressRunnable);
-                dummyView.a(view, motionEvent.getRawX(), motionEvent.getRawY(), posInitX, posInitY);
+                dummyView.updateDummyPosition(view, motionEvent.getRawX(), motionEvent.getRawY(), posInitX, posInitY);
                 if (hitTestIconDelete(motionEvent.getRawX(), motionEvent.getRawY())) {
                     dummyView.setAllow(true);
                     updateDeleteIcon(true, currentTouchedView instanceof IconCustomWidget);
@@ -692,11 +692,11 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         if (draggingListener != null) draggingListener.onDragStarted();
         if (useVibrate) vibrator.vibrate(100L);
         isDragged = true;
-        dummyView.b(currentTouchedView);
+        dummyView.captureViewBitmap(currentTouchedView);
         dummyView.bringToFront();
         clearSelection();
-        dummyView.a(currentTouchedView, posInitX, posInitY, posInitX, posInitY);
-        dummyView.a(posDummy);
+        dummyView.updateDummyPosition(currentTouchedView, posInitX, posInitY, posInitX, posInitY);
+        dummyView.getDummyLocation(posDummy);
         if (isViewAnIconBase(currentTouchedView)) {
             if (currentTouchedView instanceof WidgetPaletteIcon || currentTouchedView instanceof IconCustomWidget) {
                 showDeleteView(true, currentTouchedView instanceof IconCustomWidget);
