@@ -187,10 +187,10 @@ public class ProjectDataStore {
         if (viewBean.type == 9 || viewBean.type == 10 || viewBean.type == 25 || viewBean.type == 48 || viewBean.type == 31) {
           String customViewName = viewBean.customView;
           if (customViewName != null && customViewName.length() > 0 && !viewBean.customView.equals("none")) {
-            Iterator iterator = fileManager.getCustomViews().iterator();
+            Iterator customViewIterator = fileManager.getCustomViews().iterator();
             boolean found = false;
-            while (iterator.hasNext()) {
-              if (((ProjectFileBean)iterator.next()).fileName.equals(viewBean.customView))
+            while (customViewIterator.hasNext()) {
+              if (((ProjectFileBean)customViewIterator.next()).fileName.equals(viewBean.customView))
                 found = true; 
             } 
             if (!found)
@@ -253,9 +253,9 @@ public class ProjectDataStore {
         blockKeysToRemove.add(key);
         continue;
       } 
-      Iterator iterator = ((HashMap)entry.getValue()).entrySet().iterator();
-      while (iterator.hasNext()) {
-        label128: for (BlockBean blockBean : (ArrayList<BlockBean>)((Map.Entry)iterator.next()).getValue()) {
+      Iterator blockSectionIterator = ((HashMap)entry.getValue()).entrySet().iterator();
+      while (blockSectionIterator.hasNext()) {
+        label128: for (BlockBean blockBean : (ArrayList<BlockBean>)((Map.Entry)blockSectionIterator.next()).getValue()) {
           if (blockBean.opCode.equals("intentSetScreen")) {
             Iterator<ProjectFileBean> activityIterator = fileManager.getActivities().iterator();
             while (activityIterator.hasNext()) {
@@ -273,9 +273,9 @@ public class ProjectDataStore {
   
   public void syncFonts(ResourceManager resourceManager) {
     ArrayList fontNames = resourceManager.getFontNames();
-    Iterator iterator = this.blockMap.entrySet().iterator();
-    while (iterator.hasNext()) {
-      Iterator innerIterator = ((HashMap)((Map.Entry)iterator.next()).getValue()).entrySet().iterator();
+    Iterator fileEntryIterator = this.blockMap.entrySet().iterator();
+    while (fileEntryIterator.hasNext()) {
+      Iterator innerIterator = ((HashMap)((Map.Entry)fileEntryIterator.next()).getValue()).entrySet().iterator();
       while (innerIterator.hasNext()) {
         for (BlockBean blockBean : (ArrayList<BlockBean>)((Map.Entry<String, ArrayList<BlockBean>>)innerIterator.next()).getValue()) {
           if ("setTypeface".equals(blockBean.opCode) && fontNames.indexOf(blockBean.parameters.get(1)) < 0)
@@ -373,9 +373,9 @@ public class ProjectDataStore {
   public void removeAdmobComponents(ProjectLibraryBean libraryBean) {
     if (libraryBean.useYn.equals("Y"))
       return; 
-    Iterator iterator = this.componentMap.entrySet().iterator();
-    while (iterator.hasNext()) {
-      String key = (String)((Map.Entry)iterator.next()).getKey();
+    Iterator componentEntryIterator = this.componentMap.entrySet().iterator();
+    while (componentEntryIterator.hasNext()) {
+      String key = (String)((Map.Entry)componentEntryIterator.next()).getKey();
       removeComponentsByType(key, 6);
       removeComponentsByType(key, 12);
       removeComponentsByType(key, 14);
@@ -397,9 +397,9 @@ public class ProjectDataStore {
           removeView(projectFileBean, viewBean); 
       } 
     } 
-    Iterator iterator = this.componentMap.entrySet().iterator();
-    while (iterator.hasNext())
-      removeComponentsByType((String)((Map.Entry)iterator.next()).getKey(), 13); 
+    Iterator componentEntryIterator = this.componentMap.entrySet().iterator();
+    while (componentEntryIterator.hasNext())
+      removeComponentsByType((String)((Map.Entry)componentEntryIterator.next()).getKey(), 13); 
   }
   
   public void readLogicData(BufferedReader reader) throws java.io.IOException {
@@ -793,9 +793,9 @@ public class ProjectDataStore {
     } 
     Iterator blockEntryIterator = this.blockMap.entrySet().iterator();
     while (blockEntryIterator.hasNext()) {
-      Iterator iterator = ((HashMap)((Map.Entry)blockEntryIterator.next()).getValue()).entrySet().iterator();
-      while (iterator.hasNext()) {
-        for (BlockBean blockBean : (ArrayList<BlockBean>)((Map.Entry)iterator.next()).getValue()) {
+      Iterator blockSectionIterator = ((HashMap)((Map.Entry)blockEntryIterator.next()).getValue()).entrySet().iterator();
+      while (blockSectionIterator.hasNext()) {
+        for (BlockBean blockBean : (ArrayList<BlockBean>)((Map.Entry)blockSectionIterator.next()).getValue()) {
           if ("setImage".equals(blockBean.opCode)) {
             if (imageNames.indexOf(blockBean.parameters.get(1)) < 0)
               blockBean.parameters.set(1, "default_image"); 
@@ -978,9 +978,9 @@ public class ProjectDataStore {
     ArrayList listVars = this.listMap.get(fileName);
     if (listVars == null)
       return listNames; 
-    Iterator iterator = listVars.iterator();
-    while (iterator.hasNext())
-      listNames.add((String)((Pair)iterator.next()).second); 
+    Iterator listVarIterator = listVars.iterator();
+    while (listVarIterator.hasNext())
+      listNames.add((String)((Pair)listVarIterator.next()).second); 
     return listNames;
   }
   
@@ -1000,9 +1000,9 @@ public class ProjectDataStore {
   
   public void syncSounds(ResourceManager resourceManager) {
     ArrayList soundNames = resourceManager.getSoundNames();
-    Iterator iterator = this.blockMap.entrySet().iterator();
-    while (iterator.hasNext()) {
-      Iterator innerIterator = ((HashMap)((Map.Entry)iterator.next()).getValue()).entrySet().iterator();
+    Iterator fileEntryIterator = this.blockMap.entrySet().iterator();
+    while (fileEntryIterator.hasNext()) {
+      Iterator innerIterator = ((HashMap)((Map.Entry)fileEntryIterator.next()).getValue()).entrySet().iterator();
       while (innerIterator.hasNext()) {
         for (BlockBean blockBean : (ArrayList<BlockBean>)((Map.Entry)innerIterator.next()).getValue()) {
           if (blockBean.opCode.equals("mediaplayerCreate") && soundNames.indexOf(blockBean.parameters.get(1)) < 0)
@@ -1267,9 +1267,9 @@ public class ProjectDataStore {
     ArrayList components = this.componentMap.get(fileName);
     if (components == null)
       return false; 
-    Iterator iterator = components.iterator();
-    while (iterator.hasNext()) {
-      if (((ComponentBean)iterator.next()).type == index)
+    Iterator componentIterator = components.iterator();
+    while (componentIterator.hasNext()) {
+      if (((ComponentBean)componentIterator.next()).type == index)
         return true; 
     } 
     return false;
@@ -1402,9 +1402,9 @@ public class ProjectDataStore {
     ArrayList views = this.viewMap.get(fileName);
     if (views == null)
       return false; 
-    Iterator iterator = views.iterator();
-    while (iterator.hasNext()) {
-      if (((ViewBean)iterator.next()).id.equals(data))
+    Iterator viewIterator = views.iterator();
+    while (viewIterator.hasNext()) {
+      if (((ViewBean)viewIterator.next()).id.equals(data))
         return true; 
     } 
     return false;
@@ -1685,9 +1685,9 @@ public class ProjectDataStore {
     ArrayList views = this.viewMap.get(fileName);
     boolean hasType = false;
     if (views != null) {
-      Iterator iterator = views.iterator();
-      while (iterator.hasNext()) {
-        if (((ViewBean)iterator.next()).type == index) {
+      Iterator viewIterator = views.iterator();
+      while (viewIterator.hasNext()) {
+        if (((ViewBean)viewIterator.next()).type == index) {
           hasType = true;
           break;
         } 

@@ -784,8 +784,8 @@ public class ExtraMenuBean {
             path = String.format(NATIVE_PATH, sc_id);
             markedPath.add(0, path + ss.getArgValue().toString());
         }
-        String[] strArr = path.split("/");
-        String splitter = strArr[strArr.length - 1];
+        String[] pathSegments = path.split("/");
+        String splitter = pathSegments[pathSegments.length - 1];
         mOptions.setInitialDirectory(path);
         FilePickerCallback callback = new FilePickerCallback() {
             @Override

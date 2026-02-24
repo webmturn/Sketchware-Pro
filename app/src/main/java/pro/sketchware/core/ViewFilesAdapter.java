@@ -47,11 +47,11 @@ public class ViewFilesAdapter extends BaseFragment {
     xmlName = candidateId;
     while (true) {
       int found = 0;
-      Iterator iterator = existingViews.iterator();
+      Iterator viewIterator = existingViews.iterator();
       while (true) {
         i = found;
-        if (iterator.hasNext()) {
-          if (xmlName.equals(((ViewBean)iterator.next()).id)) {
+        if (viewIterator.hasNext()) {
+          if (xmlName.equals(((ViewBean)viewIterator.next()).id)) {
             i = 1;
             break;
           } 
