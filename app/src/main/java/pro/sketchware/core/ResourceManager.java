@@ -96,8 +96,8 @@ public class ResourceManager {
   }
   
   public void copyFontsToDir(String destDir) {
-    ArrayList<ProjectResourceBean> arrayList = this.fonts;
-    if (arrayList != null && arrayList.size() > 0) {
+    ArrayList<ProjectResourceBean> fontsList = this.fonts;
+    if (fontsList != null && fontsList.size() > 0) {
       File file = new File(destDir);
       if (!file.exists())
         file.mkdirs(); 
@@ -192,8 +192,8 @@ public class ResourceManager {
   }
   
   public void copyImagesToDir(String destDir) {
-    ArrayList<ProjectResourceBean> arrayList = this.images;
-    if (arrayList != null && arrayList.size() > 0) {
+    ArrayList<ProjectResourceBean> imagesList = this.images;
+    if (imagesList != null && imagesList.size() > 0) {
       File file = new File(destDir);
       if (!file.exists())
         file.mkdirs(); 
@@ -240,8 +240,8 @@ public class ResourceManager {
   }
   
   public void copySoundsToDir(String destDir) {
-    ArrayList<ProjectResourceBean> arrayList = this.sounds;
-    if (arrayList != null && arrayList.size() > 0) {
+    ArrayList<ProjectResourceBean> soundsList = this.sounds;
+    if (soundsList != null && soundsList.size() > 0) {
       File file = new File(destDir);
       if (!file.exists())
         file.mkdirs(); 
@@ -270,8 +270,8 @@ public class ResourceManager {
   }
   
   public String getFontPath(String name) {
-    ArrayList<ProjectResourceBean> arrayList = this.fonts;
-    if (arrayList != null && arrayList.size() > 0)
+    ArrayList<ProjectResourceBean> fontsList = this.fonts;
+    if (fontsList != null && fontsList.size() > 0)
       for (ProjectResourceBean projectResourceBean : this.fonts) {
         if (projectResourceBean.resName.equals(name)) {
           StringBuilder pathBuilder = new StringBuilder();
@@ -323,8 +323,8 @@ public class ResourceManager {
   }
   
   public String getImagePath(String name) {
-    ArrayList<ProjectResourceBean> arrayList = this.images;
-    if (arrayList != null && arrayList.size() > 0)
+    ArrayList<ProjectResourceBean> imagesList = this.images;
+    if (imagesList != null && imagesList.size() > 0)
       for (ProjectResourceBean projectResourceBean : this.images) {
         if (projectResourceBean.resName.equals(name)) {
           StringBuilder pathBuilder = new StringBuilder();
@@ -370,8 +370,8 @@ public class ResourceManager {
   }
   
   public int getImageResType(String name) {
-    ArrayList<ProjectResourceBean> arrayList = this.images;
-    if (arrayList != null && arrayList.size() > 0)
+    ArrayList<ProjectResourceBean> imagesList = this.images;
+    if (imagesList != null && imagesList.size() > 0)
       for (ProjectResourceBean projectResourceBean : this.images) {
         if (projectResourceBean.resName.equals(name))
           return projectResourceBean.resType; 
@@ -393,8 +393,8 @@ public class ResourceManager {
   }
   
   public String getSoundPath(String name) {
-    ArrayList<ProjectResourceBean> arrayList = this.sounds;
-    if (arrayList != null && arrayList.size() > 0)
+    ArrayList<ProjectResourceBean> soundsList = this.sounds;
+    if (soundsList != null && soundsList.size() > 0)
       for (ProjectResourceBean projectResourceBean : this.sounds) {
         if (projectResourceBean.resName.equals(name)) {
           StringBuilder pathBuilder = new StringBuilder();
@@ -430,11 +430,11 @@ public class ResourceManager {
   }
   
   public ArrayList<String> getFontNames() {
-    ArrayList<String> arrayList = new ArrayList<>();
+    ArrayList<String> fontNames = new ArrayList<>();
     Iterator<ProjectResourceBean> iterator = this.fonts.iterator();
     while (iterator.hasNext())
-      arrayList.add(((ProjectResourceBean)iterator.next()).resName); 
-    return arrayList;
+      fontNames.add(((ProjectResourceBean)iterator.next()).resName); 
+    return fontNames;
   }
   
   public boolean hasFont(String name) {
@@ -460,11 +460,11 @@ public class ResourceManager {
   }
   
   public ArrayList<String> getImageNames() {
-    ArrayList<String> arrayList = new ArrayList<>();
+    ArrayList<String> imageNames = new ArrayList<>();
     Iterator<ProjectResourceBean> iterator = this.images.iterator();
     while (iterator.hasNext())
-      arrayList.add(((ProjectResourceBean)iterator.next()).resName); 
-    return arrayList;
+      imageNames.add(((ProjectResourceBean)iterator.next()).resName); 
+    return imageNames;
   }
   
   public boolean hasSound(String name) {
@@ -481,11 +481,11 @@ public class ResourceManager {
   }
   
   public ArrayList<String> getSoundNames() {
-    ArrayList<String> arrayList = new ArrayList<>();
+    ArrayList<String> soundNames = new ArrayList<>();
     Iterator<ProjectResourceBean> iterator = this.sounds.iterator();
     while (iterator.hasNext())
-      arrayList.add(((ProjectResourceBean)iterator.next()).resName); 
-    return arrayList;
+      soundNames.add(((ProjectResourceBean)iterator.next()).resName); 
+    return soundNames;
   }
   
   public boolean hasBackup() {
