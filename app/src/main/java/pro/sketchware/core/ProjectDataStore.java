@@ -155,17 +155,17 @@ public class ProjectDataStore {
   
   public void deleteBackupFiles() {
     String backupDir = SketchwarePaths.getBackupPath(this.projectId);
-    StringBuilder stringBuilder2 = new StringBuilder();
-    stringBuilder2.append(backupDir);
-    stringBuilder2.append(File.separator);
-    stringBuilder2.append("view");
-    String viewPath = stringBuilder2.toString();
+    StringBuilder viewPathBuilder = new StringBuilder();
+    viewPathBuilder.append(backupDir);
+    viewPathBuilder.append(File.separator);
+    viewPathBuilder.append("view");
+    String viewPath = viewPathBuilder.toString();
     this.fileUtil.deleteFileByPath(viewPath);
-    StringBuilder stringBuilder1 = new StringBuilder();
-    stringBuilder1.append(backupDir);
-    stringBuilder1.append(File.separator);
-    stringBuilder1.append("logic");
-    String logicPath = stringBuilder1.toString();
+    StringBuilder contentBuilder = new StringBuilder();
+    contentBuilder.append(backupDir);
+    contentBuilder.append(File.separator);
+    contentBuilder.append("logic");
+    String logicPath = contentBuilder.toString();
     this.fileUtil.deleteFileByPath(logicPath);
   }
   
@@ -560,15 +560,15 @@ public class ProjectDataStore {
         ArrayList arrayList = (ArrayList)entry.getValue();
         if (arrayList == null || arrayList.size() <= 0)
           continue; 
-        StringBuilder stringBuilder1 = new StringBuilder();
+        StringBuilder contentBuilder = new StringBuilder();
         for (int vi = 0; vi < arrayList.size(); vi++) {
           Pair pair = (Pair) arrayList.get(vi);
-          stringBuilder1.append(pair.first);
-          stringBuilder1.append(":");
-          stringBuilder1.append((String)pair.second);
-          stringBuilder1.append("\n");
+          contentBuilder.append(pair.first);
+          contentBuilder.append(":");
+          contentBuilder.append((String)pair.second);
+          contentBuilder.append("\n");
         }
-        String str = stringBuilder1.toString();
+        String str = contentBuilder.toString();
         buffer.append("@");
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append((String)entry.getKey());
@@ -585,15 +585,15 @@ public class ProjectDataStore {
         ArrayList arrayList = (ArrayList)entry.getValue();
         if (arrayList == null || arrayList.size() <= 0)
           continue; 
-        StringBuilder stringBuilder1 = new StringBuilder();
+        StringBuilder contentBuilder = new StringBuilder();
         for (int li = 0; li < arrayList.size(); li++) {
           Pair pair = (Pair) arrayList.get(li);
-          stringBuilder1.append(pair.first);
-          stringBuilder1.append(":");
-          stringBuilder1.append((String)pair.second);
-          stringBuilder1.append("\n");
+          contentBuilder.append(pair.first);
+          contentBuilder.append(":");
+          contentBuilder.append((String)pair.second);
+          contentBuilder.append("\n");
         }
-        String str = stringBuilder1.toString();
+        String str = contentBuilder.toString();
         buffer.append("@");
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append((String)entry.getKey());
@@ -610,15 +610,15 @@ public class ProjectDataStore {
         ArrayList arrayList = (ArrayList)entry.getValue();
         if (arrayList == null || arrayList.size() <= 0)
           continue; 
-        StringBuilder stringBuilder1 = new StringBuilder();
+        StringBuilder contentBuilder = new StringBuilder();
         for (int fi = 0; fi < arrayList.size(); fi++) {
           Pair pair = (Pair) arrayList.get(fi);
-          stringBuilder1.append((String)pair.first);
-          stringBuilder1.append(":");
-          stringBuilder1.append((String)pair.second);
-          stringBuilder1.append("\n");
+          contentBuilder.append((String)pair.first);
+          contentBuilder.append(":");
+          contentBuilder.append((String)pair.second);
+          contentBuilder.append("\n");
         }
-        String str = stringBuilder1.toString();
+        String str = contentBuilder.toString();
         buffer.append("@");
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append((String)entry.getKey());
@@ -635,14 +635,14 @@ public class ProjectDataStore {
         ArrayList arrayList = (ArrayList)entry.getValue();
         if (arrayList == null || arrayList.size() <= 0)
           continue; 
-        StringBuilder stringBuilder1 = new StringBuilder();
+        StringBuilder contentBuilder = new StringBuilder();
         for (int ci = 0; ci < arrayList.size(); ci++) {
           ComponentBean componentBean = (ComponentBean) arrayList.get(ci);
           componentBean.clearClassInfo();
-          stringBuilder1.append(this.gson.toJson(componentBean));
-          stringBuilder1.append("\n");
+          contentBuilder.append(this.gson.toJson(componentBean));
+          contentBuilder.append("\n");
         }
-        String str = stringBuilder1.toString();
+        String str = contentBuilder.toString();
         buffer.append("@");
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append((String)entry.getKey());
@@ -659,13 +659,13 @@ public class ProjectDataStore {
         ArrayList arrayList = (ArrayList)entry.getValue();
         if (arrayList == null || arrayList.size() <= 0)
           continue; 
-        StringBuilder stringBuilder1 = new StringBuilder();
+        StringBuilder contentBuilder = new StringBuilder();
         for (int ei = 0; ei < arrayList.size(); ei++) {
           EventBean eventBean = (EventBean) arrayList.get(ei);
-          stringBuilder1.append(this.gson.toJson(eventBean));
-          stringBuilder1.append("\n");
+          contentBuilder.append(this.gson.toJson(eventBean));
+          contentBuilder.append("\n");
         }
-        String str = stringBuilder1.toString();
+        String str = contentBuilder.toString();
         buffer.append("@");
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append((String)entry.getKey());
@@ -673,7 +673,7 @@ public class ProjectDataStore {
         stringBuilder.append("events");
         buffer.append(stringBuilder.toString());
         buffer.append("\n");
-        buffer.append(stringBuilder1.toString());
+        buffer.append(contentBuilder.toString());
         buffer.append("\n");
       }  
     HashMap<String, HashMap<String, ArrayList<BlockBean>>> hashMap = this.blockMap;
@@ -687,13 +687,13 @@ public class ProjectDataStore {
           ArrayList arrayList = (ArrayList)entry1.getValue();
           if (arrayList == null || arrayList.size() <= 0)
             continue; 
-          StringBuilder stringBuilder1 = new StringBuilder();
+          StringBuilder contentBuilder = new StringBuilder();
           for (int bi = 0; bi < arrayList.size(); bi++) {
             BlockBean blockBean = (BlockBean) arrayList.get(bi);
-            stringBuilder1.append(this.gson.toJson(blockBean));
-            stringBuilder1.append("\n");
+            contentBuilder.append(this.gson.toJson(blockBean));
+            contentBuilder.append("\n");
           }
-          String blockJson = stringBuilder1.toString();
+          String blockJson = contentBuilder.toString();
           buffer.append("@");
           StringBuilder stringBuilder = new StringBuilder();
           stringBuilder.append(str);
@@ -1186,11 +1186,11 @@ public class ProjectDataStore {
   
   public void loadLogicFromData() {
     String dataPath = SketchwarePaths.getDataPath(this.projectId);
-    StringBuilder stringBuilder1 = new StringBuilder();
-    stringBuilder1.append(dataPath);
-    stringBuilder1.append(File.separator);
-    stringBuilder1.append("logic");
-    dataPath = stringBuilder1.toString();
+    StringBuilder contentBuilder = new StringBuilder();
+    contentBuilder.append(dataPath);
+    contentBuilder.append(File.separator);
+    contentBuilder.append("logic");
+    dataPath = contentBuilder.toString();
     if (!this.fileUtil.exists(dataPath))
       return; 
     BufferedReader bufferedReader = null;
@@ -1319,11 +1319,11 @@ public class ProjectDataStore {
   
   public void loadViewFromData() {
     String dataPath = SketchwarePaths.getDataPath(this.projectId);
-    StringBuilder stringBuilder1 = new StringBuilder();
-    stringBuilder1.append(dataPath);
-    stringBuilder1.append(File.separator);
-    stringBuilder1.append("view");
-    dataPath = stringBuilder1.toString();
+    StringBuilder contentBuilder = new StringBuilder();
+    contentBuilder.append(dataPath);
+    contentBuilder.append(File.separator);
+    contentBuilder.append("view");
+    dataPath = contentBuilder.toString();
     if (!this.fileUtil.exists(dataPath))
       return; 
     BufferedReader bufferedReader = null;
@@ -1380,11 +1380,11 @@ public class ProjectDataStore {
   
   public void loadViewFromBackup() {
     String viewPath = SketchwarePaths.getBackupPath(this.projectId);
-    StringBuilder stringBuilder1 = new StringBuilder();
-    stringBuilder1.append(viewPath);
-    stringBuilder1.append(File.separator);
-    stringBuilder1.append("view");
-    viewPath = stringBuilder1.toString();
+    StringBuilder contentBuilder = new StringBuilder();
+    contentBuilder.append(viewPath);
+    contentBuilder.append(File.separator);
+    contentBuilder.append("view");
+    viewPath = contentBuilder.toString();
     BufferedReader bufferedReader = null;
     try {
       byte[] bytes = this.fileUtil.readFileBytes(viewPath);
@@ -1645,11 +1645,11 @@ public class ProjectDataStore {
     stringBuilder.append("moreBlock");
     if (hashMap.containsKey(stringBuilder.toString())) {
       hashMap = this.blockMap.get(fileName);
-      StringBuilder stringBuilder1 = new StringBuilder();
-      stringBuilder1.append(data);
-      stringBuilder1.append("_");
-      stringBuilder1.append("moreBlock");
-      hashMap.remove(stringBuilder1.toString());
+      StringBuilder contentBuilder = new StringBuilder();
+      contentBuilder.append(data);
+      contentBuilder.append("_");
+      contentBuilder.append("moreBlock");
+      hashMap.remove(contentBuilder.toString());
     } 
   }
   
