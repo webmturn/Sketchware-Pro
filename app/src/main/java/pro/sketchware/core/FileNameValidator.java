@@ -44,26 +44,26 @@ public class FileNameValidator extends BaseValidator {
     String str = "";
     if (paramString.length() < 3) {
       this.textInputLayout.setErrorEnabled(true);
-      this.textInputLayout.setError(StringResource.b().a(this.context, R.string.invalid_value_min_lenth, new Object[] { Integer.valueOf(3) }));
+      this.textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(this.context, R.string.invalid_value_min_lenth, new Object[] { Integer.valueOf(3) }));
       this.valid = false;
       return;
     } 
     if (paramString.length() > 70) {
       this.textInputLayout.setErrorEnabled(true);
-      this.textInputLayout.setError(StringResource.b().a(this.context, R.string.invalid_value_max_lenth, new Object[] { Integer.valueOf(70) }));
+      this.textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(this.context, R.string.invalid_value_max_lenth, new Object[] { Integer.valueOf(70) }));
       this.valid = false;
       return;
     } 
     if (paramString.equals("default_image") || "NONE".toLowerCase().equals(paramString.toLowerCase())) {
       this.textInputLayout.setErrorEnabled(true);
-      this.textInputLayout.setError(StringResource.b().a(this.context, R.string.common_message_name_unavailable));
+      this.textInputLayout.setError(StringResource.getInstance().getTranslatedString(this.context, R.string.common_message_name_unavailable));
       this.valid = false;
       return;
     } 
     if (this.batchCount == 1) {
       if (!paramString.equals(this.currentName) && this.existingNames.indexOf(paramString) >= 0) {
         this.textInputLayout.setErrorEnabled(true);
-        this.textInputLayout.setError(StringResource.b().a(this.context, R.string.common_message_name_unavailable));
+        this.textInputLayout.setError(StringResource.getInstance().getTranslatedString(this.context, R.string.common_message_name_unavailable));
         this.valid = false;
         return;
       } 
@@ -83,7 +83,7 @@ public class FileNameValidator extends BaseValidator {
       } 
       if (arrayList2.size() > 0) {
         this.textInputLayout.setErrorEnabled(true);
-        String str1 = StringResource.b().a(this.context, R.string.common_message_name_unavailable);
+        String str1 = StringResource.getInstance().getTranslatedString(this.context, R.string.common_message_name_unavailable);
         Iterator<String> iterator = arrayList2.iterator();
         paramString = "";
         while (iterator.hasNext()) {
@@ -127,13 +127,13 @@ public class FileNameValidator extends BaseValidator {
     } 
     if (b != 0) {
       this.textInputLayout.setErrorEnabled(true);
-      this.textInputLayout.setError(StringResource.b().a(this.context, R.string.logic_editor_message_reserved_keywords));
+      this.textInputLayout.setError(StringResource.getInstance().getTranslatedString(this.context, R.string.logic_editor_message_reserved_keywords));
       this.valid = false;
       return;
     } 
     if (!Character.isLetter(paramString.charAt(0))) {
       this.textInputLayout.setErrorEnabled(true);
-      this.textInputLayout.setError(StringResource.b().a(this.context, R.string.logic_editor_message_variable_name_must_start_letter));
+      this.textInputLayout.setError(StringResource.getInstance().getTranslatedString(this.context, R.string.logic_editor_message_variable_name_must_start_letter));
       this.valid = false;
       return;
     } 
@@ -142,7 +142,7 @@ public class FileNameValidator extends BaseValidator {
       this.valid = true;
     } else {
       this.textInputLayout.setErrorEnabled(true);
-      this.textInputLayout.setError(StringResource.b().a(this.context, R.string.invalid_value_rule_4));
+      this.textInputLayout.setError(StringResource.getInstance().getTranslatedString(this.context, R.string.invalid_value_rule_4));
       this.valid = false;
     } 
   }

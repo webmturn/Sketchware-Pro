@@ -34,11 +34,11 @@ public class NumberRangeValidator extends BaseValidator {
       int i = Integer.parseInt(str);
       if (i < this.minValue) {
         this.textInputLayout.setErrorEnabled(true);
-        this.textInputLayout.setError(StringResource.b().a(this.context, R.string.invalid_value_min_lenth, new Object[] { Integer.valueOf(this.minValue) }));
+        this.textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(this.context, R.string.invalid_value_min_lenth, new Object[] { Integer.valueOf(this.minValue) }));
         this.valid = false;
       } else if (i > this.maxValue) {
         this.textInputLayout.setErrorEnabled(true);
-        this.textInputLayout.setError(StringResource.b().a(this.context, R.string.invalid_value_max_lenth, new Object[] { Integer.valueOf(this.maxValue) }));
+        this.textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(this.context, R.string.invalid_value_max_lenth, new Object[] { Integer.valueOf(this.maxValue) }));
         this.valid = false;
       } else {
         this.textInputLayout.setErrorEnabled(false);
@@ -46,7 +46,7 @@ public class NumberRangeValidator extends BaseValidator {
       }
     } catch (NumberFormatException numberFormatException) {
       this.textInputLayout.setErrorEnabled(true);
-      this.textInputLayout.setError(StringResource.b().a(this.context, R.string.logic_editor_message_variable_name_must_start_letter));
+      this.textInputLayout.setError(StringResource.getInstance().getTranslatedString(this.context, R.string.logic_editor_message_variable_name_must_start_letter));
       this.valid = false;
     }
   }

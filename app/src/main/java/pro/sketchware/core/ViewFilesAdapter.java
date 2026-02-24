@@ -212,7 +212,7 @@ public class ViewFilesAdapter extends BaseFragment {
       this.projectId = paramBundle.getString("sc_id");
     } 
     this.emptyText = (TextView)viewGroup.findViewById(R.id.tv_guide);
-    this.emptyText.setText(StringResource.b().a((Context)requireActivity(), R.string.design_manager_view_description_guide_create_custom_view));
+    this.emptyText.setText(StringResource.getInstance().getTranslatedString((Context)requireActivity(), R.string.design_manager_view_description_guide_create_custom_view));
     return (View)viewGroup;
   }
   

@@ -560,7 +560,7 @@ public class BlockView extends BaseBlockView {
     int color = BlockColorMapper.getBlockColor(this.opCode, this.blockType);
     if (!this.ea && !this.opCode.equals("definedFunc") && !this.opCode.equals("getVar")
         && !this.opCode.equals("getResStr") && !this.opCode.equals("getArg") && color != -7711273) {
-      this.spec = StringResource.b().a(getContext(), this.opCode);
+      this.spec = StringResource.getInstance().getEventTranslation(getContext(), this.opCode);
     }
     if (color == -7711273) {
       mod.hey.studios.editor.manage.block.ExtraBlockInfo info = mod.hey.studios.editor.manage.block.v2.BlockLoader.getBlockInfo(this.opCode);
@@ -706,7 +706,7 @@ public class BlockView extends BaseBlockView {
       if (!iterator.hasNext()) {
         i();
         if (this.blockType.equals("e") && this.opCode.equals("ifElse")) {
-          this.ma = a(StringResource.b().a(getContext(), "else"));
+          this.ma = a(StringResource.getInstance().getEventTranslation(getContext(), "else"));
           addView((View)this.ma);
         } 
         if (this.blockType.equals("e") && !this.spec2.equals("")) {
