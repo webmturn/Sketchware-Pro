@@ -1302,10 +1302,10 @@ public class ProjectDataStore {
         if (blockBean.opCode.equals("definedFunc")) {
           int i = blockBean.spec.indexOf(" ");
           str = blockBean.spec;
-          String str1 = str;
+          String funcName = str;
           if (i > 0)
-            str1 = str.substring(0, i); 
-          if (str1.equals(data))
+            funcName = str.substring(0, i); 
+          if (funcName.equals(data))
             return true; 
         } 
       } 
@@ -1318,17 +1318,17 @@ public class ProjectDataStore {
   }
   
   public void loadViewFromData() {
-    String str2 = SketchwarePaths.getDataPath(this.projectId);
+    String dataPath = SketchwarePaths.getDataPath(this.projectId);
     StringBuilder stringBuilder1 = new StringBuilder();
-    stringBuilder1.append(str2);
+    stringBuilder1.append(dataPath);
     stringBuilder1.append(File.separator);
     stringBuilder1.append("view");
-    str2 = stringBuilder1.toString();
-    if (!this.fileUtil.exists(str2))
+    dataPath = stringBuilder1.toString();
+    if (!this.fileUtil.exists(dataPath))
       return; 
     BufferedReader bufferedReader = null;
     try {
-      byte[] bytes = this.fileUtil.readFileBytes(str2);
+      byte[] bytes = this.fileUtil.readFileBytes(dataPath);
       String str = this.fileUtil.decryptToString(bytes);
       bufferedReader = new BufferedReader(new StringReader(str));
       readViewData(bufferedReader);
@@ -1379,15 +1379,15 @@ public class ProjectDataStore {
   }
   
   public void loadViewFromBackup() {
-    String str2 = SketchwarePaths.getBackupPath(this.projectId);
+    String viewPath = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder1 = new StringBuilder();
-    stringBuilder1.append(str2);
+    stringBuilder1.append(viewPath);
     stringBuilder1.append(File.separator);
     stringBuilder1.append("view");
-    str2 = stringBuilder1.toString();
+    viewPath = stringBuilder1.toString();
     BufferedReader bufferedReader = null;
     try {
-      byte[] bytes = this.fileUtil.readFileBytes(str2);
+      byte[] bytes = this.fileUtil.readFileBytes(viewPath);
       String str = this.fileUtil.decryptToString(bytes);
       bufferedReader = new BufferedReader(new StringReader(str));
       readViewData(bufferedReader);
