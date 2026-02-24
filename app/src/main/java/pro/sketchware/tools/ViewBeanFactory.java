@@ -763,9 +763,9 @@ public class ViewBeanFactory {
         return String.valueOf(flag);
     }
 
-    private boolean hasDimensionSuffix(String str) {
+    private boolean hasDimensionSuffix(String value) {
         String pattern = "^(\\d+(\\.\\d+)?)(dp|sp|px|pt|in|mm)$";
-        return str.matches(pattern);
+        return value.matches(pattern);
     }
 
     private String resolveDimenSize(String value) {

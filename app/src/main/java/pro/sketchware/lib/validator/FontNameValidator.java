@@ -23,12 +23,12 @@ public class FontNameValidator extends BaseValidator {
         fontNames = arrayList;
     }
 
-    public FontNameValidator(Context context, TextInputLayout textInputLayout, String[] strArr, ArrayList<String> arrayList, String str) {
+    public FontNameValidator(Context context, TextInputLayout textInputLayout, String[] reservedKeywordsArr, ArrayList<String> fontNameList, String currentName) {
         super(context, textInputLayout);
         pattern = Pattern.compile("^[a-z][a-z0-9_]*");
-        reservedKeywords = strArr;
-        fontNames = arrayList;
-        editingName = str;
+        reservedKeywords = reservedKeywordsArr;
+        fontNames = fontNameList;
+        editingName = currentName;
     }
 
     @Override

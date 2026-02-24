@@ -543,12 +543,12 @@ public class WidgetsCreatorManager {
         return -1;
     }
 
-    private boolean isClassEmpty(String str) {
+    private boolean isClassEmpty(String className) {
         if (!widgetConfigurationsList.isEmpty()) {
             for (HashMap<String, Object> map : widgetConfigurationsList) {
                 if (map.containsKey("Class")) {
                     String classNameValue = (String) map.get("Class");
-                    if (Objects.requireNonNull(classNameValue).equals(str)) {
+                    if (Objects.requireNonNull(classNameValue).equals(className)) {
                         return false;
                     }
                 }

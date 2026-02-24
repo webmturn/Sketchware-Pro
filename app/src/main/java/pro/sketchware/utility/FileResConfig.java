@@ -36,9 +36,9 @@ public class FileResConfig {
         }
     }
 
-    public ArrayList<String> getNativelibsFile(String str) {
+    public ArrayList<String> getNativelibsFile(String dirPath) {
         listFileNativeLibs.clear();
-        FileUtil.listDir(str, listFileNativeLibs);
+        FileUtil.listDir(dirPath, listFileNativeLibs);
         return listFileNativeLibs;
     }
 
@@ -51,9 +51,9 @@ public class FileResConfig {
      *
      * @return The listed files
      */
-    private ArrayList<String> listDir(String path, ArrayList<String> existing_list) {
+    private ArrayList<String> listDir(String dirPath, ArrayList<String> existing_list) {
         existing_list.clear();
-        FileUtil.listDir(path, existing_list);
+        FileUtil.listDir(dirPath, existing_list);
         return existing_list;
     }
 
@@ -65,8 +65,8 @@ public class FileResConfig {
         return listDir(new FilePathUtil().getPathAssets(numProj), listFileAssets);
     }
 
-    public ArrayList<String> getResourceFile(String str) {
-        return listDir(str, listFileResource);
+    public ArrayList<String> getResourceFile(String dirPath) {
+        return listDir(dirPath, listFileResource);
     }
 
     public ArrayList<String> getPermissionList() {

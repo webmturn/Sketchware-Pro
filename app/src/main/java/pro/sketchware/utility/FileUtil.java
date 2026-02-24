@@ -109,8 +109,8 @@ public class FileUtil {
         }
     }
 
-    public static boolean renameFile(String str, String str2) {
-        return new File(str).renameTo(new File(str2));
+    public static boolean renameFile(String oldPath, String newPath) {
+        return new File(oldPath).renameTo(new File(newPath));
     }
 
     /**
@@ -198,11 +198,11 @@ public class FileUtil {
         return sb.toString();
     }
 
-    public static void writeFile(String path, String str) {
+    public static void writeFile(String path, String content) {
         createNewFileIfNotPresent(path);
 
         try (FileWriter fileWriter = new FileWriter(path, false)) {
-            fileWriter.write(str);
+            fileWriter.write(content);
             fileWriter.flush();
         } catch (IOException e) {
             Log.e("FileUtil", e.getMessage(), e);
@@ -532,22 +532,23 @@ public class FileUtil {
         }
     }
 
-    public static Bitmap getScaledBitmap(String str, int i) {
-        int i2;
-        Bitmap decodeFile = BitmapFactory.decodeFile(str);
+    public static Bitmap getScaledBitmap(String filePath, int maxSize) {
+        int scaledWidth;
+        Bitmap decodeFile = BitmapFactory.decodeFile(filePath);
         if (decodeFile == null) {
             return null;
         }
         int width = decodeFile.getWidth();
         int height = decodeFile.getHeight();
+        int scaledHeight = maxSize;
         if (width > height) {
-            int i3 = i * height / width;
-            i2 = i;
-            i = i3;
+            int i3 = maxSize * height / width;
+            scaledWidth = maxSize;
+            scaledHeight = i3;
         } else {
-            i2 = width * i / height;
+            scaledWidth = width * maxSize / height;
         }
-        Bitmap scaled = Bitmap.createScaledBitmap(decodeFile, i2, i, true);
+        Bitmap scaled = Bitmap.createScaledBitmap(decodeFile, scaledWidth, scaledHeight, true);
         if (scaled != decodeFile) {
             decodeFile.recycle();
         }

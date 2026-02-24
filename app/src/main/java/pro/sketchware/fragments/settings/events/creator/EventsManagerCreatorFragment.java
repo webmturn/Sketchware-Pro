@@ -198,17 +198,17 @@ public class EventsManagerCreatorFragment extends BaseFragment {
         getParentFragmentManager().popBackStack();
     }
 
-    private int figureP(String str) {
+    private int figureP(String eventName) {
         String concat = FileUtil.getExternalStorageDir().concat("/.sketchware/data/system/events.json");
         if (FileUtil.isExistFile(concat)) {
-            ArrayList<HashMap<String, Object>> arrayList;
+            ArrayList<HashMap<String, Object>> eventsList;
             try {
-                arrayList = getGson().fromJson(FileUtil.readFile(concat), Helper.TYPE_MAP_LIST);
+                eventsList = getGson().fromJson(FileUtil.readFile(concat), Helper.TYPE_MAP_LIST);
             } catch (JsonSyntaxException e) {
                 return 0;
             }
-            for (int i = 0; i < arrayList.size(); i++) {
-                if (str.equals(arrayList.get(i).get("name"))) {
+            for (int i = 0; i < eventsList.size(); i++) {
+                if (eventName.equals(eventsList.get(i).get("name"))) {
                     return i;
                 }
             }
