@@ -25,8 +25,8 @@ public class RecentHistoryManager {
     return instance;
   }
   
-  public ArrayList<String> getRecentItems(String str) {
-    return this.recentMap.get(str);
+  public ArrayList<String> getRecentItems(String category) {
+    return this.recentMap.get(category);
   }
   
   public void initialize(Context context) {
@@ -67,16 +67,16 @@ public class RecentHistoryManager {
     } 
   }
   
-  public void loadFromDatabase(String str) {
-    if ((ArrayList)this.recentMap.get(str) == null) {
-      String[] parts = this.database.getStringDefault(str).split(",");
+  public void loadFromDatabase(String category) {
+    if ((ArrayList)this.recentMap.get(category) == null) {
+      String[] parts = this.database.getStringDefault(category).split(",");
       int i = parts.length;
       while (true) {
         int j = i - 1;
         if (j >= 0) {
           i = j;
           if (!parts[j].isEmpty()) {
-            addRecentItem(str, parts[j]);
+            addRecentItem(category, parts[j]);
             i = j;
           } 
           continue;
