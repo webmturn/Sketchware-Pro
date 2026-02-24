@@ -176,18 +176,18 @@ public class ProjectFileManager {
     buffer.append("@");
     buffer.append("activity");
     buffer.append("\n");
-    ArrayList<ProjectFileBean> arrayList = this.activities;
-    if (arrayList != null)
-      for (ProjectFileBean projectFileBean : arrayList) {
+    ArrayList<ProjectFileBean> activitiesList = this.activities;
+    if (activitiesList != null)
+      for (ProjectFileBean projectFileBean : activitiesList) {
         buffer.append(this.gson.toJson(projectFileBean, ProjectFileBean.class));
         buffer.append("\n");
       }  
     buffer.append("@");
     buffer.append("customview");
     buffer.append("\n");
-    arrayList = this.customViews;
-    if (arrayList != null)
-      for (ProjectFileBean projectFileBean : arrayList) {
+    ArrayList<ProjectFileBean> customViewsList = this.customViews;
+    if (customViewsList != null)
+      for (ProjectFileBean projectFileBean : customViewsList) {
         buffer.append(this.gson.toJson(projectFileBean, ProjectFileBean.class));
         buffer.append("\n");
       }  
@@ -202,9 +202,9 @@ public class ProjectFileManager {
       if (projectFileBean.getXmlName().equals(xmlName))
         return projectFileBean; 
     } 
-    ArrayList<ProjectFileBean> arrayList = this.customViews;
-    if (arrayList != null)
-      for (ProjectFileBean projectFileBean : arrayList) {
+    ArrayList<ProjectFileBean> customViewsList = this.customViews;
+    if (customViewsList != null)
+      for (ProjectFileBean projectFileBean : customViewsList) {
         if (projectFileBean.getXmlName().equals(xmlName))
           return projectFileBean; 
       }  
@@ -357,11 +357,11 @@ public class ProjectFileManager {
         this.javaNames.add(projectFileBean.getJavaName());
       } 
     } 
-    ArrayList<ProjectFileBean> arrayList = this.customViews;
-    if (arrayList != null)
-      for (ProjectFileBean projectFileBean : arrayList) {
-        int i = projectFileBean.fileType;
-        if (i == 1 || i == 2)
+    ArrayList<ProjectFileBean> customViewsList = this.customViews;
+    if (customViewsList != null)
+      for (ProjectFileBean projectFileBean : customViewsList) {
+        int fileType = projectFileBean.fileType;
+        if (fileType == 1 || fileType == 2)
           this.xmlNames.add(projectFileBean.getXmlName()); 
       }  
   }

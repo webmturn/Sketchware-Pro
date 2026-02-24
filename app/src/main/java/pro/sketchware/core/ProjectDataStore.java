@@ -488,17 +488,17 @@ public class ProjectDataStore {
     label44: for (Map.Entry<String, ArrayList<BlockBean>> entry : ((Map<String, ArrayList<BlockBean>>)blockEntryMap).entrySet()) {
       if (flag && ((String)entry.getKey()).substring(((String)entry.getKey()).lastIndexOf("_") + 1).equals("onBindCustomView"))
         continue; 
-      ArrayList<BlockBean> arrayList = (ArrayList)entry.getValue();
-      if (arrayList == null || arrayList.size() <= 0)
+      ArrayList<BlockBean> blockBeans = (ArrayList)entry.getValue();
+      if (blockBeans == null || blockBeans.size() <= 0)
         continue; 
-      int i = arrayList.size();
+      int i = blockBeans.size();
       label42: while (true) {
         int j = i - 1;
         if (j >= 0) {
-          BlockBean blockBean = arrayList.get(j);
+          BlockBean blockBean = blockBeans.get(j);
           ClassInfo gx = blockBean.getClassInfo();
           if (gx != null && gx.isExactType(classInfo.getClassName()) && blockBean.spec.equals(data)) {
-            arrayList.remove(j);
+            blockBeans.remove(j);
             i = j;
             continue;
           } 
