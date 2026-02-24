@@ -17,7 +17,7 @@ public class MoreblockValidator extends BaseValidator {
     private final ArrayList<String> registeredVariables;
     private final Pattern j = Pattern.compile("^[a-zA-Z]\\w*(?:\\[[\\w\\[\\],<>?| ]*])?$");
     private String[] eventNames;
-    private String i;
+    private String currentName;
 
     public MoreblockValidator(Context context, TextInputLayout textInputLayout, String[] reservedKeywords, String[] eventNames, ArrayList<String> registeredVariables) {
         super(context, textInputLayout);
@@ -41,7 +41,7 @@ public class MoreblockValidator extends BaseValidator {
             textInputLayout.setError(context.getString(R.string.invalid_value_max_lenth, 60));
             valid = false;
         } else {
-            if (i != null && !i.isEmpty() && name.equals(i)) {
+            if (currentName != null && !currentName.isEmpty() && name.equals(currentName)) {
                 textInputLayout.setError(null);
                 valid = true;
             } else if (registeredVariables.contains(name)) {

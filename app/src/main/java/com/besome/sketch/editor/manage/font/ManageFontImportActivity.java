@@ -34,7 +34,7 @@ import pro.sketchware.databinding.ManageFontImportBinding;
 @SuppressLint("NotifyDataSetChanged")
 public class ManageFontImportActivity extends BaseAppCompatActivity implements View.OnClickListener {
 
-    private EditText r;
+    private EditText nameInput;
     private ItemAdapter itemAdapter;
     private ArrayList<ProjectResourceBean> projectFonts;
     private ArrayList<ProjectResourceBean> selectedCollection;
@@ -108,10 +108,10 @@ public class ManageFontImportActivity extends BaseAppCompatActivity implements V
     public void onClick(View v) {
         int id = v.getId();
         if (id == binding.btnDecide.getId()) {
-            String resName = Helper.getText(r);
+            String resName = Helper.getText(nameInput);
             if (!isNameValid()) {
                 ProjectResourceBean font = selectedCollection.get(selectedItem);
-                r.setText(font.resName);
+                nameInput.setText(font.resName);
             } else {
                 if (!binding.chkSamename.isChecked()) {
                     ProjectResourceBean resourceBean = selectedCollection.get(selectedItem);
@@ -166,9 +166,9 @@ public class ManageFontImportActivity extends BaseAppCompatActivity implements V
         selectedCollection = getIntent().getParcelableArrayListExtra("selected_collections");
         binding.tvCurrentnum.setText(String.valueOf(1));
         binding.tvTotalnum.setText(String.valueOf(selectedCollection.size()));
-        r = binding.edInput.getEditText();
-        r.setText(selectedCollection.get(0).resName);
-        r.setPrivateImeOptions("defaultInputmode=english;");
+        nameInput = binding.edInput.getEditText();
+        nameInput.setText(selectedCollection.get(0).resName);
+        nameInput.setPrivateImeOptions("defaultInputmode=english;");
         binding.edInput.setHint(getString(R.string.design_manager_font_hint_enter_font_name));
         nameValidator = new XmlNameValidator(getApplicationContext(), binding.edInput.getTextInputLayout(), BlockConstants.RESERVED_KEYWORDS, getReservedProjectImageNames(), getReservedSelectedCollectionNames());
         binding.chkSamename.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -275,7 +275,7 @@ public class ManageFontImportActivity extends BaseAppCompatActivity implements V
                         selectedItem = getLayoutPosition();
                         showPreview(selectedItem);
                         binding.tvCurrentnum.setText(String.valueOf(getLayoutPosition() + 1));
-                        r.setText(selectedCollection.get(getLayoutPosition()).resName);
+                        nameInput.setText(selectedCollection.get(getLayoutPosition()).resName);
                         if (binding.chkSamename.isChecked()) {
                             nameValidator.setCurrentName(null);
                             nameValidator.setBatchCount(selectedCollection.size());

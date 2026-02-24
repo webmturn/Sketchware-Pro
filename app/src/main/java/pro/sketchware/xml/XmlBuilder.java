@@ -10,7 +10,7 @@ public class XmlBuilder {
     private final boolean d;
     private final String rootElementName;
     private final ArrayList<AttributeBuilder> attributes;
-    private String g;
+    private String newlineIndent;
     private int indentationLevel;
     private String nodeValue;
 
@@ -70,7 +70,7 @@ public class XmlBuilder {
             } else {
                 resultCode.append("\r\n");
                 resultCode.append(addIndent(1));
-                g = "\r\n" + addIndent(1);
+                newlineIndent = "\r\n" + addIndent(1);
             }
             resultCode.append(attr.toCode());
         }
@@ -132,7 +132,7 @@ public class XmlBuilder {
             if (namespace != null && !namespace.isEmpty()) {
                 return namespace + ":" + attr + "=" + "\"" + value + "\"";
             } else if (attr == null || attr.length() <= 0) {
-                return value.replaceAll("\n", g);
+                return value.replaceAll("\n", newlineIndent);
             } else {
                 return attr + "=" + "\"" + value + "\"";
             }

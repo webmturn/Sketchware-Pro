@@ -47,7 +47,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
     private TextView tv_add_photo;
     private ImageView preview;
     private ArrayList<Uri> pickedImageUris;
-    private FileNameValidator O;
+    private FileNameValidator nameValidator;
     private EditText ed_input_edittext;
     private EasyDeleteEditText ed_input;
     private ImageView tv_desc;
@@ -118,23 +118,23 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
                                 B = true;
                                 multipleImagesPicked = false;
                                 setImageFromUri(data.getData());
-                                if (O != null) {
-                                    O.setBatchCount(1);
+                                if (nameValidator != null) {
+                                    nameValidator.setBatchCount(1);
                                 }
                             } else {
                                 ClipData clipData = data.getClipData();
-                                if (clipData.getItemCount() == 1) {
+                                if (clipData.getItemCount() <= 1) {
                                     B = true;
                                     multipleImagesPicked = false;
                                     setImageFromUri(clipData.getItemAt(0).getUri());
-                                    if (O != null) {
-                                        O.setBatchCount(1);
+                                    if (nameValidator != null) {
+                                        nameValidator.setBatchCount(1);
                                     }
                                 } else {
                                     handleImagePickClipData(clipData);
                                     multipleImagesPicked = true;
-                                    if (O != null) {
-                                        O.setBatchCount(clipData.getItemCount());
+                                    if (nameValidator != null) {
+                                        nameValidator.setBatchCount(clipData.getItemCount());
                                     }
                                 }
                             }
@@ -166,8 +166,8 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
         ed_input_edittext = ed_input.getEditText();
         ed_input_edittext.setPrivateImeOptions("defaultInputmode=english;");
         ed_input.setHint(getString(R.string.design_manager_image_hint_enter_image_name));
-        O = new FileNameValidator(this, ed_input.getTextInputLayout(), BlockConstants.RESERVED_KEYWORDS, getReservedImageNames());
-        O.setBatchCount(1);
+        nameValidator = new FileNameValidator(this, ed_input.getTextInputLayout(), BlockConstants.RESERVED_KEYWORDS, getReservedImageNames());
+        nameValidator.setBatchCount(1);
         chk_collection.setText(R.string.design_manager_title_add_to_collection);
         tv_add_photo.setText(R.string.design_manager_image_title_add_image);
         preview.setOnClickListener(this);
@@ -193,8 +193,8 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
             imageRotationDegrees = image.rotate;
             imageScaleX = image.flipHorizontal;
             imageScaleY = image.flipVertical;
-            O = new FileNameValidator(this, ed_input.getTextInputLayout(), BlockConstants.RESERVED_KEYWORDS, getReservedImageNames(), image.resName);
-            O.setBatchCount(1);
+            nameValidator = new FileNameValidator(this, ed_input.getTextInputLayout(), BlockConstants.RESERVED_KEYWORDS, getReservedImageNames(), image.resName);
+            nameValidator.setBatchCount(1);
             ed_input_edittext.setText(image.resName);
             ed_input_edittext.setEnabled(false);
             chk_collection.setEnabled(false);
@@ -220,7 +220,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
     }
 
     private void save() {
-        if (validateAndCheckFile(O)) {
+        if (validateAndCheckFile(nameValidator)) {
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 showLoadingDialog();
                 new SaveAsyncTask(this).execute();

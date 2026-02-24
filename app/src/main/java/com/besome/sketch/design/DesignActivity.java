@@ -135,7 +135,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
     private ImageView xmlLayoutOrientation;
-    private boolean B;
+    private boolean isRestoringData;
     private int currentTabNumber;
     private CustomViewPager viewPager;
     private CoordinatorLayout coordinatorLayout;
@@ -693,7 +693,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             finish();
         }
 
-        if (!B) {
+        if (!isRestoringData) {
             UnsavedChangesSaver unsavedChangesSaver = new UnsavedChangesSaver(this);
             unsavedChangesSaver.execute();
         }
@@ -759,7 +759,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     }
 
     private void askIfToRestoreOldUnsavedProjectData() {
-        B = true;
+        isRestoringData = true;
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setIcon(R.drawable.ic_mtrl_history);
         dialog.setTitle(Helper.getResString(R.string.design_restore_data_title));
@@ -798,12 +798,12 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                     ProjectDataManager.getProjectDataManager(sc_id).syncFonts(ProjectDataManager.getResourceManager(sc_id));
                 }
                 refresh();
-                B = false;
+                isRestoringData = false;
                 v.dismiss();
             }
         });
         dialog.setNegativeButton(Helper.getResString(R.string.common_word_no), (v, which) -> {
-            B = false;
+            isRestoringData = false;
             v.dismiss();
         });
         dialog.setCancelable(false);

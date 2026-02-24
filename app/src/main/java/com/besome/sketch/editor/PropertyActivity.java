@@ -54,7 +54,7 @@ public class PropertyActivity extends BaseAppCompatActivity implements PropertyC
     private ProjectFileBean projectFileBean;
     private ViewBean viewBean;
     private ViewPropertyItems propertyItems;
-    private boolean p;
+    private boolean isImageEdited;
     private String sc_id;
     private int layoutPosition;
 
@@ -93,12 +93,12 @@ public class PropertyActivity extends BaseAppCompatActivity implements PropertyC
             for (ViewBean bean : ProjectDataManager.getProjectDataManager(sc_id).getViews(fileName)) {
                 if (bean.type == 6 && !var1.contains(bean.image.resName)) {
                     bean.image.resName = "default_image";
-                    p = true;
+                    isImageEdited = true;
                 }
 
                 if (!var1.contains(bean.layout.backgroundResource)) {
                     bean.layout.backgroundResource = null;
-                    p = true;
+                    isImageEdited = true;
                 }
             }
         }
@@ -130,7 +130,7 @@ public class PropertyActivity extends BaseAppCompatActivity implements PropertyC
         viewBean.copy(this.viewBean);
         Intent var2 = new Intent();
         var2.putExtra("view_id", this.viewBean.id);
-        var2.putExtra("is_edit_image", p);
+        var2.putExtra("is_edit_image", isImageEdited);
         var2.putExtra("bean", viewBean);
         setResult(RESULT_OK, var2);
         finish();

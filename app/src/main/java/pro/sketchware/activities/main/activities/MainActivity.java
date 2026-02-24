@@ -63,7 +63,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
     private static final String PROJECTS_FRAGMENT_TAG = "projects_fragment";
     private static final String PROJECTS_STORE_FRAGMENT_TAG = "projects_store_fragment";
     private ActionBarDrawerToggle drawerToggle;
-    private SharedPrefsHelper u;
+    private SharedPrefsHelper sharedPrefs;
     private Snackbar storageAccessDenied;
     private MainBinding binding;
     private final OnBackPressedCallback closeDrawer = new OnBackPressedCallback(true) {
@@ -131,7 +131,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
 
                 case 113:
                     if (data != null && data.getBooleanExtra("not_show_popup_anymore", false)) {
-                        u.put("U1I2", (Object) false);
+                        sharedPrefs.put("U1I2", (Object) false);
                     }
                     break;
 
@@ -172,14 +172,14 @@ public class MainActivity extends BasePermissionAppCompatActivity {
         binding.statusBarOverlapper.setMinimumHeight(UI.getStatusBarHeight(this));
         UI.addSystemWindowInsetToPadding(binding.appbar, true, false, true, false);
 
-        u = new SharedPrefsHelper(getApplicationContext(), "U1");
-        int u1I0 = u.getInt("U1I0", -1);
-        long u1I1 = u.getLong("U1I1");
+        sharedPrefs = new SharedPrefsHelper(getApplicationContext(), "U1");
+        int u1I0 = sharedPrefs.getInt("U1I0", -1);
+        long u1I1 = sharedPrefs.getLong("U1I1");
         if (u1I1 <= 0) {
-            u.put("U1I1", System.currentTimeMillis());
+            sharedPrefs.put("U1I1", System.currentTimeMillis());
         }
         if (System.currentTimeMillis() - u1I1 > /* (a day) */ 1000 * 60 * 60 * 24) {
-            u.put("U1I0", Integer.valueOf(u1I0 + 1));
+            sharedPrefs.put("U1I0", Integer.valueOf(u1I0 + 1));
         }
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);

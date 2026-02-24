@@ -43,7 +43,7 @@ public class ManageAdmobActivity extends BaseAppCompatActivity implements View.O
     private static final int REQUEST_CODE_ENABLE_ADMOB = 8001;
     private static final int REQUEST_CODE_ADMOB_SETTINGS = 8002;
     private ActivityResultLauncher<Intent> admobActivityLauncher;
-    private SharedPrefsHelper A;
+    private SharedPrefsHelper sharedPrefs;
     private TestDeviceAdapter testDeviceAdapter;
     private ArrayList<AdTestDeviceBean> testDeviceList = new ArrayList<>();
     private ProjectLibraryBean admobLibraryBean;
@@ -121,7 +121,7 @@ public class ManageAdmobActivity extends BaseAppCompatActivity implements View.O
 
     private void openAdmobDocs() {
         try {
-            A.put("P1I16", true);
+            sharedPrefs.put("P1I16", true);
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.setData(Uri.parse("https://docs.sketchware.io/docs/admob-getting-started.html"));
@@ -206,7 +206,7 @@ public class ManageAdmobActivity extends BaseAppCompatActivity implements View.O
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         binding.toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
 
-        A = new SharedPrefsHelper(getApplicationContext(), "P1");
+        sharedPrefs = new SharedPrefsHelper(getApplicationContext(), "P1");
         admobLibraryBean = getIntent().getParcelableExtra("admob");
         binding.tvEnable.setText(Helper.getResString(R.string.design_library_settings_title_enabled));
         binding.tvTitleBanner.setText(Helper.getResString(R.string.design_library_admob_title_banner));

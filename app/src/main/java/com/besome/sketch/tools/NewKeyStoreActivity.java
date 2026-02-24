@@ -34,7 +34,7 @@ public class NewKeyStoreActivity extends BaseAppCompatActivity implements OnClic
     private LowercaseNameValidator countryValidator;
     private LowercaseNameValidator commonNameValidator;
     private LowercaseNameValidator organizationalUnitValidator;
-    private KeyStoreManager E;
+    private KeyStoreManager keyStoreManager;
     private EditText alias;
     private EditText password;
     private EditText passwordConfirm;
@@ -113,7 +113,7 @@ public class NewKeyStoreActivity extends BaseAppCompatActivity implements OnClic
             stringBuilder.append(Helper.getText(country));
 
             try {
-                E.generateAndSaveKeyStore(SketchwarePaths.getKeystoreFilePath(), stringBuilder.toString(), validityInYears, Helper.getText(alias), text);
+                keyStoreManager.generateAndSaveKeyStore(SketchwarePaths.getKeystoreFilePath(), stringBuilder.toString(), validityInYears, Helper.getText(alias), text);
                 showDoneDialog(true, text);
             } catch (Exception e) {
                 Log.e("NewKeyStoreActivity", e.getMessage(), e);
@@ -151,7 +151,7 @@ public class NewKeyStoreActivity extends BaseAppCompatActivity implements OnClic
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         toolbar.setNavigationOnClickListener(Helper.getBackPressedClickListener(this));
-        E = new KeyStoreManager();
+        keyStoreManager = new KeyStoreManager();
 
 
         Button var2 = findViewById(R.id.btn_keystore_save);
