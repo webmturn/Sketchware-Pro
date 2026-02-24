@@ -11,44 +11,44 @@ import pro.sketchware.R;
 
 public class ReturnMoreblockManager {
 
-    public static String getLogicEditorTitle(String str) {
-        return str.replaceAll("\\[.*]", " (returns " + getMbTypeList(str) + ")");
+    public static String getLogicEditorTitle(String spec) {
+        return spec.replaceAll("\\[.*]", " (returns " + getMbTypeList(spec) + ")");
     }
 
-    public static String getMbEnd(String str) {
-        if (str.equals(" ")) {
+    public static String getMbEnd(String spec) {
+        if (spec.equals(" ")) {
             return ";";
         } else {
             return "";
         }
     }
 
-    public static String getMbName(String str) {
-        String name = str;
+    public static String getMbName(String spec) {
+        String name = spec;
 
-        if (str.contains("[") && str.contains("]")) {
-            name = str.replaceAll("\\[.*]", "");
+        if (spec.contains("[") && spec.contains("]")) {
+            name = spec.replaceAll("\\[.*]", "");
         }
 
         return name;
     }
 
-    public static String getMbType(String str) {
+    public static String getMbType(String spec) {
         try {
-            if (!str.contains("]") || !str.contains("[")) return "void";
+            if (!spec.contains("]") || !spec.contains("[")) return "void";
 
-            return str.substring(str.indexOf("[") + 1, str.lastIndexOf("]"));
+            return spec.substring(spec.indexOf("[") + 1, spec.lastIndexOf("]"));
         } catch (StringIndexOutOfBoundsException e) {
             return "void";
         }
     }
 
-    public static String getMbTypeList(String str) {
+    public static String getMbTypeList(String spec) {
         try {
-            if (!str.contains("]") || !str.contains("["))
+            if (!spec.contains("]") || !spec.contains("["))
                 return "void";
 
-            String substring = str.substring(str.indexOf("[") + 1, str.lastIndexOf("]"));
+            String substring = spec.substring(spec.indexOf("[") + 1, spec.lastIndexOf("]"));
             if (substring.contains("|")) {
                 substring = substring.split("\\|")[1];
             }
@@ -59,11 +59,11 @@ public class ReturnMoreblockManager {
         }
     }
 
-    public static String getMbTypeCode(String str) {
+    public static String getMbTypeCode(String spec) {
         try {
-            if (!str.contains("]") || !str.contains("[")) return "void";
+            if (!spec.contains("]") || !spec.contains("[")) return "void";
 
-            String substring = str.substring(str.indexOf("[") + 1, str.lastIndexOf("]"));
+            String substring = spec.substring(spec.indexOf("[") + 1, spec.lastIndexOf("]"));
             if (substring.contains("|")) {
                 String[] split = substring.split("\\|");
 

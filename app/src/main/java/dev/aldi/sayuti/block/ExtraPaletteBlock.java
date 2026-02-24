@@ -67,13 +67,13 @@ public class ExtraPaletteBlock {
         clickListener = new LogicClickListener(logicEditor);
     }
 
-    private boolean isWidgetUsed(String str) {
+    private boolean isWidgetUsed(String widgetType) {
         if (ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_SHOW_EVERY_SINGLE_BLOCK)) {
             return true;
         }
 
-        if (mapSave.containsKey(str)) {
-            Object strValueInMapSave = mapSave.get(str);
+        if (mapSave.containsKey(widgetType)) {
+            Object strValueInMapSave = mapSave.get(widgetType);
             if (strValueInMapSave instanceof Boolean) {
                 return (boolean) strValueInMapSave;
             } else {
@@ -90,17 +90,17 @@ public class ExtraPaletteBlock {
             String customView = view.customView;
             if (customView != null && !customView.isEmpty()) {
                 for (ViewBean viewBean : ProjectDataManager.getProjectDataManager(sc_id).getViews(ProjectFileBean.getXmlName(customView))) {
-                    if (viewBean.getClassInfo().matchesType(str)) {
-                        mapSave.put(str, true);
+                    if (viewBean.getClassInfo().matchesType(widgetType)) {
+                        mapSave.put(widgetType, true);
                         return true;
                     }
                 }
             }
-        } else if (ProjectDataManager.getProjectDataManager(sc_id).hasViewMatchingType(xmlName, str)) {
-            mapSave.put(str, true);
+        } else if (ProjectDataManager.getProjectDataManager(sc_id).hasViewMatchingType(xmlName, widgetType)) {
+            mapSave.put(widgetType, true);
             return true;
         }
-        mapSave.put(str, false);
+        mapSave.put(widgetType, false);
         return false;
     }
 
@@ -109,41 +109,41 @@ public class ExtraPaletteBlock {
      * for better block menu selections and to add new stuff easily.
      */
 
-    public boolean hasExtraComponent(String str, String str2) {
-        return switch (str) {
+    public boolean hasExtraComponent(String componentType, String componentName) {
+        return switch (componentType) {
             case "circleimageview" ->
-                    ProjectDataManager.getProjectDataManager(sc_id).hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_WIDGET_CIRCLEIMAGEVIEW, str2);
-            case "asynctask" -> ProjectDataManager.getProjectDataManager(sc_id).hasComponent(javaName, 36, str2);
-            case "otpview" -> ProjectDataManager.getProjectDataManager(sc_id).hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_WIDGET_OTPVIEW, str2);
+                    ProjectDataManager.getProjectDataManager(sc_id).hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_WIDGET_CIRCLEIMAGEVIEW, componentName);
+            case "asynctask" -> ProjectDataManager.getProjectDataManager(sc_id).hasComponent(javaName, 36, componentName);
+            case "otpview" -> ProjectDataManager.getProjectDataManager(sc_id).hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_WIDGET_OTPVIEW, componentName);
             case "lottie" ->
-                    ProjectDataManager.getProjectDataManager(sc_id).hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_WIDGET_LOTTIEANIMATIONVIEW, str2);
+                    ProjectDataManager.getProjectDataManager(sc_id).hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_WIDGET_LOTTIEANIMATIONVIEW, componentName);
             case "phoneauth" ->
-                    ProjectDataManager.getProjectDataManager(sc_id).hasComponent(javaName, ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH_PHONE, str2);
-            case "codeview" -> ProjectDataManager.getProjectDataManager(sc_id).hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_WIDGET_CODEVIEW, str2);
+                    ProjectDataManager.getProjectDataManager(sc_id).hasComponent(javaName, ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH_PHONE, componentName);
+            case "codeview" -> ProjectDataManager.getProjectDataManager(sc_id).hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_WIDGET_CODEVIEW, componentName);
             case "recyclerview" ->
-                    ProjectDataManager.getProjectDataManager(sc_id).hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_WIDGET_RECYCLERVIEW, str2);
+                    ProjectDataManager.getProjectDataManager(sc_id).hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_WIDGET_RECYCLERVIEW, componentName);
             case "googlelogin" ->
-                    ProjectDataManager.getProjectDataManager(sc_id).hasComponent(javaName, ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH_GOOGLE_LOGIN, str2);
+                    ProjectDataManager.getProjectDataManager(sc_id).hasComponent(javaName, ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH_GOOGLE_LOGIN, componentName);
             case "youtubeview" ->
-                    ProjectDataManager.getProjectDataManager(sc_id).hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_WIDGET_YOUTUBEPLAYERVIEW, str2);
+                    ProjectDataManager.getProjectDataManager(sc_id).hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_WIDGET_YOUTUBEPLAYERVIEW, componentName);
             case "signinbutton" ->
-                    ProjectDataManager.getProjectDataManager(sc_id).hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_WIDGET_SIGNINBUTTON, str2);
-            case "cardview" -> ProjectDataManager.getProjectDataManager(sc_id).hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_LAYOUT_CARDVIEW, str2);
+                    ProjectDataManager.getProjectDataManager(sc_id).hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_WIDGET_SIGNINBUTTON, componentName);
+            case "cardview" -> ProjectDataManager.getProjectDataManager(sc_id).hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_LAYOUT_CARDVIEW, componentName);
             case "radiogroup" ->
-                    ProjectDataManager.getProjectDataManager(sc_id).hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_LAYOUT_RADIOGROUP, str2);
+                    ProjectDataManager.getProjectDataManager(sc_id).hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_LAYOUT_RADIOGROUP, componentName);
             case "textinputlayout" ->
-                    ProjectDataManager.getProjectDataManager(sc_id).hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_LAYOUT_TEXTINPUTLAYOUT, str2);
+                    ProjectDataManager.getProjectDataManager(sc_id).hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_LAYOUT_TEXTINPUTLAYOUT, componentName);
             case "collapsingtoolbar" ->
-                    ProjectDataManager.getProjectDataManager(sc_id).hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_LAYOUT_COLLAPSINGTOOLBARLAYOUT, str2);
+                    ProjectDataManager.getProjectDataManager(sc_id).hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_LAYOUT_COLLAPSINGTOOLBARLAYOUT, componentName);
             case "cloudmessage" ->
-                    ProjectDataManager.getProjectDataManager(sc_id).hasComponent(javaName, ComponentBean.COMPONENT_TYPE_FIREBASE_CLOUD_MESSAGE, str2);
+                    ProjectDataManager.getProjectDataManager(sc_id).hasComponent(javaName, ComponentBean.COMPONENT_TYPE_FIREBASE_CLOUD_MESSAGE, componentName);
             case "datepicker" ->
-                    ProjectDataManager.getProjectDataManager(sc_id).hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_WIDGET_DATEPICKER, str2);
-            case "customVar" -> ProjectDataManager.getProjectDataManager(sc_id).hasVariable(xmlName, 5, str2);
+                    ProjectDataManager.getProjectDataManager(sc_id).hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_WIDGET_DATEPICKER, componentName);
+            case "customVar" -> ProjectDataManager.getProjectDataManager(sc_id).hasVariable(xmlName, 5, componentName);
             case "timepicker" ->
-                    ProjectDataManager.getProjectDataManager(sc_id).hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_WIDGET_TIMEPICKER, str2);
+                    ProjectDataManager.getProjectDataManager(sc_id).hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_WIDGET_TIMEPICKER, componentName);
             case "swiperefreshlayout" ->
-                    ProjectDataManager.getProjectDataManager(sc_id).hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_LAYOUT_SWIPEREFRESHLAYOUT, str2);
+                    ProjectDataManager.getProjectDataManager(sc_id).hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_LAYOUT_SWIPEREFRESHLAYOUT, componentName);
             default -> true;
         };
     }
