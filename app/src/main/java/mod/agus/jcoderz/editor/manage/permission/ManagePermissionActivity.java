@@ -29,7 +29,7 @@ import pro.sketchware.utility.FileUtil;
 
 public class ManagePermissionActivity extends BaseAppCompatActivity {
     private PermissionsAdapter adapter;
-    private ArrayList<String> arrayList;
+    private ArrayList<String> permissions;
     private ArrayList<String> filteredList;
     private FileResConfig frc;
     private String numProj;
@@ -89,7 +89,7 @@ public class ManagePermissionActivity extends BaseAppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         binding.recyclerView.setLayoutManager(layoutManager);
 
-        arrayList = new ArrayList<>();
+        permissions = new ArrayList<>();
         filteredList = new ArrayList<>();
         adapter = new PermissionsAdapter(filteredList);
         binding.recyclerView.setAdapter(adapter);
@@ -107,10 +107,10 @@ public class ManagePermissionActivity extends BaseAppCompatActivity {
     }
 
     private void loadAndSortData() {
-        arrayList = ListPermission.getPermissions();
-        sortList(arrayList);
+        permissions = ListPermission.getPermissions();
+        sortList(permissions);
         filteredList.clear();
-        filteredList.addAll(arrayList);
+        filteredList.addAll(permissions);
         adapter.notifyDataSetChanged();
     }
 
@@ -123,7 +123,7 @@ public class ManagePermissionActivity extends BaseAppCompatActivity {
         String lowerCaseQuery = query.toLowerCase();
         ArrayList<String> filtered = new ArrayList<>();
 
-        for (String item : arrayList) {
+        for (String item : permissions) {
             if (item.toLowerCase().contains(lowerCaseQuery)) {
                 filtered.add(item);
             }
@@ -177,7 +177,7 @@ public class ManagePermissionActivity extends BaseAppCompatActivity {
                     frc.listFilePermission.remove(permission);
                 }
                 binding.getRoot().postDelayed(() -> {
-                    sortList(arrayList);
+                    sortList(permissions);
                     filterList(Objects.requireNonNull(binding.searchInput.getText()).toString());
                 }, 500);
             });

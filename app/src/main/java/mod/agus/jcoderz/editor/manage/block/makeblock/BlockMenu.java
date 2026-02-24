@@ -44,10 +44,10 @@ public class BlockMenu {
     }
 
     private static String[] jsonarrayToArr(JSONArray jSONArray) throws JSONException {
-        String[] strArr = new String[jSONArray.length()];
+        String[] items = new String[jSONArray.length()];
         for (int i = 0; i < jSONArray.length(); i++) {
-            strArr[i] = jSONArray.getString(i);
+            items[i] = jSONArray.getString(i);
         }
-        return strArr;
+        return items;
     }
 }

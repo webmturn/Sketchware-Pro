@@ -314,16 +314,16 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
         if (fromAndroidManifest) {
             String filePath = FileUtil.getExternalStorageDir() + "/.sketchware/data/" + scId + "/Injection/androidmanifest/activities_components.json";
             if (FileUtil.isExistFile(filePath)) {
-                ArrayList<HashMap<String, Object>> arrayList;
+                ArrayList<HashMap<String, Object>> activityComponents;
                 try {
-                    arrayList = getGson()
+                    activityComponents = getGson()
                             .fromJson(FileUtil.readFile(filePath), Helper.TYPE_MAP_LIST);
                 } catch (JsonSyntaxException e) {
-                    arrayList = new ArrayList<>();
+                    activityComponents = new ArrayList<>();
                 }
-                for (int i = 0; i < arrayList.size(); i++) {
-                    if (arrayList.get(i).get("name").equals(activityName)) {
-                        beforeContent = (String) arrayList.get(i).get("value");
+                for (int i = 0; i < activityComponents.size(); i++) {
+                    if (activityComponents.get(i).get("name").equals(activityName)) {
+                        beforeContent = (String) activityComponents.get(i).get("value");
                     }
                 }
             }
@@ -384,12 +384,12 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
                 activitiesComponents.add(map);
                 FileUtil.writeFile(filePath, getGson().toJson(activitiesComponents));
             } else {
-                ArrayList<HashMap<String, Object>> arrayList = new ArrayList<>();
+                ArrayList<HashMap<String, Object>> newComponentsList = new ArrayList<>();
                 HashMap<String, Object> map = new HashMap<>();
                 map.put("name", activityName);
                 map.put("value", beforeContent);
-                arrayList.add(map);
-                FileUtil.writeFile(filePath, getGson().toJson(arrayList));
+                newComponentsList.add(map);
+                FileUtil.writeFile(filePath, getGson().toJson(newComponentsList));
             }
         } else FileUtil.writeFile(getIntent().getStringExtra("content"), beforeContent);
 
