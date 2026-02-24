@@ -242,10 +242,10 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                                 if (parameter.charAt(0) == '@') {
                                     BlockView parameterBlock = blockIdsAndBlocks.get(Integer.valueOf(parameter.substring(1)));
                                     if (parameterBlock != null) {
-                                        block.a((BaseBlockView) block.V.get(i), parameterBlock);
+                                        block.a((BaseBlockView) block.childViews.get(i), parameterBlock);
                                     }
                                 } else {
-                                    ((FieldBlockView) block.V.get(i)).setArgValue(parameter);
+                                    ((FieldBlockView) block.childViews.get(i)).setArgValue(parameter);
                                 }
                             }
                         }
@@ -698,14 +698,14 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             x = 2;
         } else if (w.ja == (Integer) rs.getTag()) {
             x = 3;
-        } else if (w.V.contains(rs)) {
+        } else if (w.childViews.contains(rs)) {
             x = 5;
-            y = w.V.indexOf(rs);
+            y = w.childViews.indexOf(rs);
         }
     }
 
     public void a(BlockView rs, float f, float f2) {
-        for (View next : rs.V) {
+        for (View next : rs.childViews) {
             if ((next instanceof FieldBlockView) && next.getX() < f && next.getX() + next.getWidth() > f && next.getY() < f2 && next.getY() + next.getHeight() > f2) {
                 new ExtraMenuBean(this).defineMenuSelector((FieldBlockView) next);
                 return;
@@ -839,11 +839,11 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                         if (blockId > 0) {
                             BlockView parameterBlock = o.a(blockId);
                             if (parameterBlock != null) {
-                                block.a((BaseBlockView) block.V.get(i), parameterBlock);
+                                block.a((BaseBlockView) block.childViews.get(i), parameterBlock);
                             }
                         }
                     } else {
-                        if (block.V.get(i) instanceof FieldBlockView ss) {
+                        if (block.childViews.get(i) instanceof FieldBlockView ss) {
                             String javaName = M.getJavaName();
                             String xmlName = M.getXmlName();
                             if (eventName.equals("onBindCustomView")) {
@@ -2034,7 +2034,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 if (block != null) {
                     block.setBlockType(1);
                     o.addView(block);
-                    o.getRoot().a((BaseBlockView) o.getRoot().V.get(blockId), block);
+                    o.getRoot().a((BaseBlockView) o.getRoot().childViews.get(blockId), block);
                     block.setOnTouchListener(this);
                     blockId++;
                 }
@@ -2190,7 +2190,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                             w.ja = (Integer) v.getTag();
                         }
                         if (x == 5) {
-                            w.a((BaseBlockView) w.V.get(y), rs2);
+                            w.a((BaseBlockView) w.childViews.get(y), rs2);
                         }
                         rs2.parentBlock = w;
                         w.p().k();
@@ -2203,7 +2203,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 BlockView rs5 = (BlockView) v;
                 if (rs5.getBlockType() == 2) {
                     g(true);
-                    n(rs5.T);
+                    n(rs5.spec);
                 } else {
                     activeIconDelete(false);
                     int id;
@@ -2257,7 +2257,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                         w.ja = (Integer) v.getTag();
                     }
                     if (x == 5) {
-                        w.a((BaseBlockView) w.V.get(y), rs7);
+                        w.a((BaseBlockView) w.childViews.get(y), rs7);
                     }
                     rs7.parentBlock = w;
                     w.p().k();
@@ -2268,7 +2268,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             } else if (logicTopMenu.isDetailActive) {
                 c(false);
                 if (v instanceof DefinitionBlockView) {
-                    o(((DefinitionBlockView) v).T);
+                    o(((DefinitionBlockView) v).spec);
                 }
             } else if (logicTopMenu.isCopyActive) {
                 a(false);
@@ -2285,7 +2285,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                         w.ja = (Integer) v.getTag();
                     }
                     if (x == 5) {
-                        w.a((BaseBlockView) w.V.get(y), rs10);
+                        w.a((BaseBlockView) w.childViews.get(y), rs10);
                     }
                     rs10.parentBlock = w;
                     w.p().k();

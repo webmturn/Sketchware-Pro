@@ -18,9 +18,9 @@ import pro.sketchware.R;
 
 public class BaseFragment extends Fragment {
 
-    public Activity a;
+    public Activity activity;
     @Deprecated
-    public Context b;
+    public Context appContext;
 
     public BaseFragment() {
     }
@@ -46,8 +46,8 @@ public class BaseFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        a = getActivity();
-        b = a.getApplicationContext();
+        activity = getActivity();
+        appContext = activity.getApplicationContext();
         setEnterTransition(new MaterialSharedAxis(MaterialSharedAxis.X, true));
         setReturnTransition(new MaterialSharedAxis(MaterialSharedAxis.X, false));
         setExitTransition(new MaterialSharedAxis(MaterialSharedAxis.X, true));

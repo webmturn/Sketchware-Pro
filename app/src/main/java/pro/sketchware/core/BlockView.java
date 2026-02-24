@@ -10,13 +10,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class BlockView extends BaseBlockView {
-  public String T;
+  public String spec;
   
-  public String U;
+  public String opCode;
   
-  public ArrayList<View> V;
+  public ArrayList<View> childViews;
   
-  public int W = 30;
+  public int minBlockWidth = 30;
   
   public int aa = 50;
   
@@ -59,16 +59,16 @@ public class BlockView extends BaseBlockView {
   public BlockView(Context paramContext, int paramInt, String paramString1, String paramString2, String paramString3) {
     super(paramContext, paramString2, false);
     setTag(Integer.valueOf(paramInt));
-    this.T = paramString1;
-    this.U = paramString3;
+    this.spec = paramString1;
+    this.opCode = paramString3;
     l();
   }
   
   public BlockView(Context paramContext, int paramInt, String paramString1, String paramString2, String paramString3, String paramString4) {
     super(paramContext, paramString2, paramString3, false);
     setTag(Integer.valueOf(paramInt));
-    this.T = paramString1;
-    this.U = paramString4;
+    this.spec = paramString1;
+    this.opCode = paramString4;
     l();
   }
   
@@ -81,7 +81,7 @@ public class BlockView extends BaseBlockView {
   public final TextView a(String paramString) {
     TextView textView = new TextView(this.context);
     String text = paramString;
-    if (this.U.equals("getVar") || this.U.equals("getArg")) {
+    if (this.opCode.equals("getVar") || this.opCode.equals("getArg")) {
       String prefix = this.componentType;
       if (prefix != null && prefix.length() > 0) {
         text = this.componentType + " : " + paramString;
@@ -288,9 +288,9 @@ public class BlockView extends BaseBlockView {
   }
   
   public BlockBean getBean() {
-    BlockBean blockBean = new BlockBean(getTag().toString(), this.T, this.blockType, this.componentType, this.U);
+    BlockBean blockBean = new BlockBean(getTag().toString(), this.spec, this.blockType, this.componentType, this.opCode);
     blockBean.color = this.blockColor;
-    for (View view : this.V) {
+    for (View view : this.childViews) {
       if (view instanceof FieldBlockView) {
         blockBean.parameters.add(((FieldBlockView) view).getArgValue().toString());
       } else if (view instanceof BlockView) {
@@ -399,11 +399,11 @@ public class BlockView extends BaseBlockView {
   }
   
   public final void i() {
-    this.V = new ArrayList<View>();
+    this.childViews = new ArrayList<View>();
     for (int b = 0; b < this.ka.size(); b++) {
       View view = this.ka.get(b);
       if (view instanceof BlockView || view instanceof FieldBlockView)
-        this.V.add(view); 
+        this.childViews.add(view); 
     } 
   }
   
@@ -472,7 +472,7 @@ public class BlockView extends BaseBlockView {
     }
     int w = xOffset;
     if (this.blockType.equals("b") || this.blockType.equals("d") || this.blockType.equals("s") || this.blockType.equals("a")) {
-      w = Math.max(xOffset, this.W);
+      w = Math.max(xOffset, this.minBlockWidth);
     }
     int w2 = w;
     if (this.blockType.equals(" ") || this.blockType.equals("") || this.blockType.equals("f")) {
@@ -524,7 +524,7 @@ public class BlockView extends BaseBlockView {
   public void l() {
     setDrawingCacheEnabled(false);
     float scale = this.density;
-    this.W = (int) (this.W * scale);
+    this.minBlockWidth = (int) (this.minBlockWidth * scale);
     this.aa = (int) (this.aa * scale);
     this.ba = (int) (this.ba * scale);
     this.ca = (int) (this.ca * scale);
@@ -557,32 +557,32 @@ public class BlockView extends BaseBlockView {
       default:
         break;
     }
-    int color = BlockColorMapper.a(this.U, this.blockType);
-    if (!this.ea && !this.U.equals("definedFunc") && !this.U.equals("getVar")
-        && !this.U.equals("getResStr") && !this.U.equals("getArg") && color != -7711273) {
-      this.T = StringResource.b().a(getContext(), this.U);
+    int color = BlockColorMapper.a(this.opCode, this.blockType);
+    if (!this.ea && !this.opCode.equals("definedFunc") && !this.opCode.equals("getVar")
+        && !this.opCode.equals("getResStr") && !this.opCode.equals("getArg") && color != -7711273) {
+      this.spec = StringResource.b().a(getContext(), this.opCode);
     }
     if (color == -7711273) {
-      mod.hey.studios.editor.manage.block.ExtraBlockInfo info = mod.hey.studios.editor.manage.block.v2.BlockLoader.getBlockInfo(this.U);
+      mod.hey.studios.editor.manage.block.ExtraBlockInfo info = mod.hey.studios.editor.manage.block.v2.BlockLoader.getBlockInfo(this.opCode);
       mod.hey.studios.editor.manage.block.ExtraBlockInfo blockInfo = info;
       if (mod.hey.studios.project.ProjectTracker.SC_ID != null && info.isMissing
           && !mod.hey.studios.project.ProjectTracker.SC_ID.equals("")) {
         blockInfo = mod.hey.studios.editor.manage.block.v2.BlockLoader.getBlockFromProject(
-            mod.hey.studios.project.ProjectTracker.SC_ID, this.U);
+            mod.hey.studios.project.ProjectTracker.SC_ID, this.opCode);
         android.util.Log.d("BlockView", "BlockView:returned block: " + new com.google.gson.Gson().toJson(blockInfo));
       }
       this.spec2 = blockInfo.getSpec2();
-      if (this.T.equals("")) {
-        this.T = blockInfo.getSpec();
+      if (this.spec.equals("")) {
+        this.spec = blockInfo.getSpec();
       }
-      if (this.T.equals("")) {
-        this.T = this.U;
+      if (this.spec.equals("")) {
+        this.spec = this.opCode;
       }
-      setSpec(this.T);
+      setSpec(this.spec);
       int blockColor = blockInfo.getColor();
       int paletteColor = blockInfo.getPaletteColor();
-      if (!this.U.equals("definedFunc") && !this.U.equals("getVar")
-          && !this.U.equals("getResStr") && !this.U.equals("getArg")) {
+      if (!this.opCode.equals("definedFunc") && !this.opCode.equals("getVar")
+          && !this.opCode.equals("getResStr") && !this.opCode.equals("getArg")) {
         if (blockColor != 0) {
           this.blockColor = blockColor;
           return;
@@ -593,10 +593,10 @@ public class BlockView extends BaseBlockView {
         }
       }
     } else {
-      if (this.T.equals("")) {
-        this.T = this.U;
+      if (this.spec.equals("")) {
+        this.spec = this.opCode;
       }
-      setSpec(this.T);
+      setSpec(this.spec);
     }
     this.blockColor = color;
   }
@@ -637,7 +637,7 @@ public class BlockView extends BaseBlockView {
     }
     int w = xOffset;
     if (this.blockType.equals("b") || this.blockType.equals("d") || this.blockType.equals("s") || this.blockType.equals("a")) {
-      w = Math.max(xOffset, this.W);
+      w = Math.max(xOffset, this.minBlockWidth);
     }
     int w2 = w;
     if (this.blockType.equals(" ") || this.blockType.equals("") || this.blockType.equals("o")) {
@@ -663,7 +663,7 @@ public class BlockView extends BaseBlockView {
     BlockView rs = this;
     int limit = 200;
     while (rs != null && --limit > 0) {
-      Iterator<View> iterator = rs.V.iterator();
+      Iterator<View> iterator = rs.childViews.iterator();
       int i = 0;
       while (iterator.hasNext()) {
         View view = iterator.next();
@@ -698,14 +698,14 @@ public class BlockView extends BaseBlockView {
   }
   
   public void setSpec(String paramString) {
-    this.T = paramString;
+    this.spec = paramString;
     removeAllViews();
-    a(this.T, this.blockColor);
+    a(this.spec, this.blockColor);
     Iterator<View> iterator = this.ka.iterator();
     while (true) {
       if (!iterator.hasNext()) {
         i();
-        if (this.blockType.equals("e") && this.U.equals("ifElse")) {
+        if (this.blockType.equals("e") && this.opCode.equals("ifElse")) {
           this.ma = a(StringResource.b().a(getContext(), "else"));
           addView((View)this.ma);
         } 

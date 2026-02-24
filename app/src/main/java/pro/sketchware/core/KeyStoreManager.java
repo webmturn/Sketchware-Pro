@@ -26,17 +26,17 @@ import org.spongycastle.jce.provider.BouncyCastleProvider;
 import org.spongycastle.x509.X509V3CertificateGenerator;
 
 public class KeyStoreManager {
-  public KeyStore a;
+  public KeyStore keyStore;
   
-  public ByteBuffer b;
+  public ByteBuffer keyBuffer;
   
   public KeyStoreManager() {
     Security.addProvider((Provider)new BouncyCastleProvider());
-    this.a = (KeyStore)new JksKeyStore();
+    this.keyStore = (KeyStore)new JksKeyStore();
   }
   
   public String a() throws Exception {
-    Enumeration<String> enumeration = this.a.aliases();
+    Enumeration<String> enumeration = this.keyStore.aliases();
     return enumeration.hasMoreElements() ? enumeration.nextElement() : "";
   }
   
@@ -44,7 +44,7 @@ public class KeyStoreManager {
     if (paramInputStream == null)
       return; 
     try {
-      this.a.load(paramInputStream, paramString.toCharArray());
+      this.keyStore.load(paramInputStream, paramString.toCharArray());
     } catch (Exception exception) {
       exception.printStackTrace();
       throw new Exception(exception.getMessage());
@@ -68,13 +68,13 @@ public class KeyStoreManager {
   }
   
   public final byte[] a(String paramString) throws Exception {
-    if (this.a == null)
+    if (this.keyStore == null)
       return null; 
-    this.b = ByteBuffer.allocate(8192);
+    this.keyBuffer = ByteBuffer.allocate(8192);
     KeyStoreOutputStream hI = new KeyStoreOutputStream(this);
-    this.a.store(hI, paramString.toCharArray());
-    byte[] arrayOfByte = new byte[this.b.position()];
-    System.arraycopy(this.b.array(), 0, arrayOfByte, 0, this.b.position());
+    this.keyStore.store(hI, paramString.toCharArray());
+    byte[] arrayOfByte = new byte[this.keyBuffer.position()];
+    System.arraycopy(this.keyBuffer.array(), 0, arrayOfByte, 0, this.keyBuffer.position());
     int i = arrayOfByte.length;
     paramString = "";
     for (int b = 0; b < i; b++) {
@@ -110,9 +110,9 @@ public class KeyStoreManager {
       x509V3CertificateGenerator.setSignatureAlgorithm("MD5WithRSAEncryption");
       X509Certificate x509Certificate = x509V3CertificateGenerator.generateX509Certificate(keyPair.getPrivate());
       JksKeyStore jksKeyStore = new JksKeyStore();
-      this.a = (KeyStore)jksKeyStore;
-      this.a.load(null, paramString3.toCharArray());
-      this.a.setKeyEntry(paramString2, keyPair.getPrivate(), paramString3.toCharArray(), new Certificate[] { x509Certificate });
+      this.keyStore = (KeyStore)jksKeyStore;
+      this.keyStore.load(null, paramString3.toCharArray());
+      this.keyStore.setKeyEntry(paramString2, keyPair.getPrivate(), paramString3.toCharArray(), new Certificate[] { x509Certificate });
       return a(paramString3);
     } catch (LoadKeystoreException loadKeystoreException) {
       Log.e("ERROR", "Failed to access keystore. incorrect passward");
@@ -126,7 +126,7 @@ public class KeyStoreManager {
     ZipSigner zipSigner = new ZipSigner();
     zipSigner.issueLoadingCertAndKeysProgressEvent();
     String str = a();
-    zipSigner.setKeys("custom", (X509Certificate)this.a.getCertificate(str), (PrivateKey)this.a.getKey(str, paramString.toCharArray()), "SHA1WITHRSA", null);
+    zipSigner.setKeys("custom", (X509Certificate)this.keyStore.getCertificate(str), (PrivateKey)this.keyStore.getKey(str, paramString.toCharArray()), "SHA1WITHRSA", null);
     return zipSigner;
   }
 }

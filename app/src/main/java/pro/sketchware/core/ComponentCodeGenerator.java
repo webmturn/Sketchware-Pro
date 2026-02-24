@@ -130,7 +130,7 @@ public class ComponentCodeGenerator {
             content.append("implementation 'com.squareup.okhttp3:okhttp:4.12.0'\r\n");
         }
 
-        ConstVarComponent extraMetadata = metadata.x;
+        ConstVarComponent extraMetadata = metadata.constVarComponent;
         if (isLibraryNotExcluded(BuiltInLibraries.CIRCLEIMAGEVIEW, excludedLibraries) && extraMetadata.isCircleImageViewUsed) {
             content.append("implementation 'de.hdodenhof:circleimageview:3.1.0'\r\n");
         }

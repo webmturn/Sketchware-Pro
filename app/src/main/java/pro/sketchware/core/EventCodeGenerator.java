@@ -27,8 +27,8 @@ public class EventCodeGenerator {
     private final ArrayList<String> imports = new ArrayList<>();
     private final HashMap<String, String> activityLifecycleEvents = new HashMap<>();
     private final Boolean isViewBindingEnabled;
-    public String k = "";
-    public String l = "";
+    public String eventLogic = "";
+    public String eventListenerCode = "";
 
     public EventCodeGenerator(BuildConfig logicHolder, ProjectFileBean projectFileBean, ProjectDataStore ProjectDataStore) {
         buildConfig = logicHolder;

@@ -46,7 +46,7 @@ public class BlockPane extends RelativeLayout {
       Context context = getContext();
       int i = this.nextBlockId;
       this.nextBlockId = i + 1;
-      rs = new BlockView(context, i, paramRs.T, ((BaseBlockView)paramRs).blockType, ((BaseBlockView)paramRs).componentType, paramRs.U);
+      rs = new BlockView(context, i, paramRs.spec, ((BaseBlockView)paramRs).blockType, ((BaseBlockView)paramRs).componentType, paramRs.opCode);
     } 
     rs.pa = this;
     addView((View)rs);
@@ -130,7 +130,7 @@ public class BlockPane extends RelativeLayout {
       Integer tag = (Integer) paramRs.getTag();
       if (!visited.add(tag)) break;
       paramRs.setVisibility(paramInt);
-      for (View view : paramRs.V) {
+      for (View view : paramRs.childViews) {
         if (view instanceof BlockView)
           a((BlockView)view, paramInt); 
       } 
@@ -163,8 +163,8 @@ public class BlockPane extends RelativeLayout {
       Integer tag = (Integer) paramRs.getTag();
       if (!visited.add(tag)) break;
       if (!paramRs.ea)
-        for (int b = 0; b < paramRs.V.size(); b++) {
-          View view = paramRs.V.get(b);
+        for (int b = 0; b < paramRs.childViews.size(); b++) {
+          View view = paramRs.childViews.get(b);
           boolean bool = view instanceof BlockView;
           if ((bool || view instanceof pro.sketchware.core.FieldBlockView) && (!bool || !view.getTag().toString().equals(paramString))) {
             int[] arrayOfInt = new int[2];

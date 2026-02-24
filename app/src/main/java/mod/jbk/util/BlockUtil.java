@@ -33,7 +33,7 @@ public class BlockUtil {
             var variable = getVariableBlock(blockArea.getContext(), id + 1, specPart, "getVar");
             if (variable != null) {
                 blockArea.addView(variable);
-                previewBlock.a((BaseBlockView) previewBlock.V.get(id), variable);
+                previewBlock.a((BaseBlockView) previewBlock.childViews.get(id), variable);
                 id++;
             }
         }

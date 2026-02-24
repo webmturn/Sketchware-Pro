@@ -5,21 +5,21 @@ import android.content.SharedPreferences;
 import java.util.HashMap;
 
 public class SharedPrefsHelper {
-  public SharedPreferences a;
+  public SharedPreferences prefs;
   
-  public SharedPreferences.Editor b;
+  public SharedPreferences.Editor editor;
   
   public SharedPrefsHelper(Context paramContext, String paramString) {
-    this.a = paramContext.getSharedPreferences(paramString, 0);
-    this.b = this.a.edit();
+    this.prefs = paramContext.getSharedPreferences(paramString, 0);
+    this.editor = this.prefs.edit();
   }
   
   public int a(String paramString, int paramInt) {
-    return this.a.getInt(paramString, paramInt);
+    return this.prefs.getInt(paramString, paramInt);
   }
   
   public String a(String paramString1, String paramString2) {
-    return this.a.getString(paramString1, paramString2);
+    return this.prefs.getString(paramString1, paramString2);
   }
   
   public void a(String paramString, Object paramObject) {
@@ -28,16 +28,16 @@ public class SharedPrefsHelper {
   
   public void a(String paramString, Object paramObject, boolean paramBoolean) {
     if (paramObject instanceof String) {
-      this.b.putString(paramString, (String)paramObject);
+      this.editor.putString(paramString, (String)paramObject);
     } else if (paramObject instanceof Integer) {
-      this.b.putInt(paramString, ((Integer)paramObject).intValue());
+      this.editor.putInt(paramString, ((Integer)paramObject).intValue());
     } else if (paramObject instanceof Long) {
-      this.b.putLong(paramString, ((Long)paramObject).longValue());
+      this.editor.putLong(paramString, ((Long)paramObject).longValue());
     } else if (paramObject instanceof Boolean) {
-      this.b.putBoolean(paramString, ((Boolean)paramObject).booleanValue());
+      this.editor.putBoolean(paramString, ((Boolean)paramObject).booleanValue());
     } 
     if (paramBoolean)
-      this.b.commit(); 
+      this.editor.commit(); 
   }
   
   public void a(String paramString, HashMap<String, Object> paramHashMap) {
@@ -45,31 +45,31 @@ public class SharedPrefsHelper {
   }
   
   public boolean a() {
-    this.b.clear();
-    return this.b.commit();
+    this.editor.clear();
+    return this.editor.commit();
   }
   
   public boolean a(String paramString) {
-    this.b.remove(paramString);
-    return this.b.commit();
+    this.editor.remove(paramString);
+    return this.editor.commit();
   }
   
   public boolean a(String paramString, boolean paramBoolean) {
-    return this.a.getBoolean(paramString, paramBoolean);
+    return this.prefs.getBoolean(paramString, paramBoolean);
   }
   
   public boolean b() {
-    return this.b.commit();
+    return this.editor.commit();
   }
   
   public boolean b(String paramString) {
-    return this.a.contains(paramString);
+    return this.prefs.contains(paramString);
   }
   
   public HashMap<String, Object> c() {
     HashMap<Object, Object> hashMap;
     try {
-      hashMap = (HashMap)this.a.getAll();
+      hashMap = (HashMap)this.prefs.getAll();
     } catch (Exception exception) {
       hashMap = new HashMap<Object, Object>();
     } 
@@ -77,7 +77,7 @@ public class SharedPrefsHelper {
   }
   
   public boolean c(String paramString) {
-    return this.a.getBoolean(paramString, false);
+    return this.prefs.getBoolean(paramString, false);
   }
   
   public int d(String paramString) {
@@ -85,7 +85,7 @@ public class SharedPrefsHelper {
   }
   
   public long e(String paramString) {
-    return this.a.getLong(paramString, 0L);
+    return this.prefs.getLong(paramString, 0L);
   }
   
   public String f(String paramString) {

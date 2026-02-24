@@ -248,7 +248,7 @@ public class MoreBlockBuilderView extends LinearLayout {
 
     public Pair<String, String> getBlockInformation() {
         String var1 = Helper.getText(binding.edName).trim();
-        return new Pair<>(ReturnMoreblockManager.injectMbType(var1, var1, getType()), ReturnMoreblockManager.injectMbType(block.T, var1, getType()));
+        return new Pair<>(ReturnMoreblockManager.injectMbType(var1, var1, getType()), ReturnMoreblockManager.injectMbType(block.spec, var1, getType()));
     }
 
     private String getType() {

@@ -81,7 +81,7 @@ public class LogicEditorDrawer extends LinearLayout {
     public void a(String str) {
         for (int i = 0; i < favorite.getChildCount(); i++) {
             View childAt = favorite.getChildAt(i);
-            if ((childAt instanceof DefinitionBlockView) && ((DefinitionBlockView) childAt).T.equals(str)) {
+            if ((childAt instanceof DefinitionBlockView) && ((DefinitionBlockView) childAt).spec.equals(str)) {
                 favorite.removeViewAt(i + 1);
                 favorite.removeViewAt(i);
             }

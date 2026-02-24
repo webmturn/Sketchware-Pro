@@ -496,7 +496,7 @@ public class ActivityCodeGenerator {
         }
         sb.append("}").append(EOL);
 
-        String agusComponentsOnActivityResultCode = getBillingResponseCode(buildConfig.x);
+        String agusComponentsOnActivityResultCode = getBillingResponseCode(buildConfig.constVarComponent);
         String onActivityResultLogic = activityResult();
         String onActivityResultSwitchLogic = eventManager.getOnActivityResultSwitchCases();
         if (!agusComponentsOnActivityResultCode.isEmpty() || !onActivityResultLogic.isEmpty() || !onActivityResultSwitchLogic.isEmpty()) {
@@ -538,13 +538,13 @@ public class ActivityCodeGenerator {
                 eventManager.addLifecycleEvent("onDestroy", "AdView", next.id);
             }
         }
-        if (!eventManager.k.isEmpty()) {
+        if (!eventManager.eventLogic.isEmpty()) {
             sb.append(EOL);
-            sb.append(eventManager.k).append(EOL);
+            sb.append(eventManager.eventLogic).append(EOL);
         }
-        if (!eventManager.l.isEmpty()) {
+        if (!eventManager.eventListenerCode.isEmpty()) {
             sb.append(EOL);
-            sb.append(eventManager.l);
+            sb.append(eventManager.eventListenerCode);
             sb.append(EOL);
         }
 

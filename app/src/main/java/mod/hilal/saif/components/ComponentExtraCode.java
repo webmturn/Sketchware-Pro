@@ -21,24 +21,24 @@ public class ComponentExtraCode {
     public void s(String str) {
         // Aldi's original Components
         if (str.contains("DatePickerFragment")) {
-            hx.l = str;
+            hx.eventListenerCode = str;
             return;
         }
         if (str.contains("FragmentStatePagerAdapter")) {
-            String temp = hx.k;
+            String temp = hx.eventLogic;
             if (temp.isEmpty()) {
-                hx.k = str;
+                hx.eventLogic = str;
             } else {
-                hx.k = temp.concat("\r\n\r\n").concat(str);
+                hx.eventLogic = temp.concat("\r\n\r\n").concat(str);
             }
             return;
         }
         if (str.contains("extends AsyncTask<String, Integer, String>")) {
-            String temp = hx.k;
+            String temp = hx.eventLogic;
             if (temp.isEmpty()) {
-                hx.k = str;
+                hx.eventLogic = str;
             } else {
-                hx.k = temp.concat("\r\n\r\n").concat(str);
+                hx.eventLogic = temp.concat("\r\n\r\n").concat(str);
             }
             return;
         }
@@ -55,12 +55,12 @@ public class ComponentExtraCode {
                         if (!arr.getJSONObject(i).isNull("s") && str.contains(f)) {
                             String q = arr.getJSONObject(i).getString("s");
                             if (q.equals("true")) {
-                                String temp = hx.k;
+                                String temp = hx.eventLogic;
                                 if (temp.isEmpty()) {
-                                    hx.k = str.replace(f, "");
+                                    hx.eventLogic = str.replace(f, "");
                                     return;
                                 } else {
-                                    hx.k = temp.concat("\r\n\r\n").concat(str.replace(f, ""));
+                                    hx.eventLogic = temp.concat("\r\n\r\n").concat(str.replace(f, ""));
                                     return;
                                 }
                             }

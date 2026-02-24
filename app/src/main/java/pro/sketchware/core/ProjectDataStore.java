@@ -875,7 +875,7 @@ public class ProjectDataStore {
     arrayList.remove(paramComponentBean);
     m(paramString, paramComponentBean.componentId);
     a(paramString, paramComponentBean.getClassInfo(), paramComponentBean.componentId, false);
-    this.buildConfig.x.handleDeleteComponent(paramComponentBean.componentId);
+    this.buildConfig.constVarComponent.handleDeleteComponent(paramComponentBean.componentId);
   }
   
   public final void b(StringBuffer paramStringBuffer) {

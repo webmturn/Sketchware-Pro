@@ -121,7 +121,7 @@ public class ManifestGenerator {
             metadataTag.addAttribute("android", "value", "com.google.firebase.components.ComponentRegistrar");
             serviceTag.addChildNode(metadataTag);
         }
-        if (buildConfig.x.isFCMUsed) {
+        if (buildConfig.constVarComponent.isFCMUsed) {
             XmlBuilder metadataTag = new XmlBuilder("meta-data");
             metadataTag.addAttribute("android", "name", "com.google.firebase.components:com.google.firebase.iid.Registrar");
             metadataTag.addAttribute("android", "value", "com.google.firebase.components.ComponentRegistrar");
@@ -455,7 +455,7 @@ public class ManifestGenerator {
             writePermission(manifestXml, "android.permission.RECEIVE_BOOT_COMPLETED");
             writePermission(manifestXml, "android.permission.FOREGROUND_SERVICE");
         }
-        if (buildConfig.x.isFCMUsed) {
+        if (buildConfig.constVarComponent.isFCMUsed) {
             writePermission(manifestXml, Manifest.permission.WAKE_LOCK);
             writePermission(manifestXml, "com.google.android.c2dm.permission.RECEIVE");
         }
@@ -636,10 +636,10 @@ public class ManifestGenerator {
         if (buildConfig.isMapUsed) {
             writeGoogleMapMetaData(applicationTag);
         }
-        if (buildConfig.x.isFCMUsed) {
+        if (buildConfig.constVarComponent.isFCMUsed) {
             EditorManifest.writeDefFCM(applicationTag);
         }
-        if (buildConfig.x.isFBGoogleUsed) {
+        if (buildConfig.constVarComponent.isFBGoogleUsed) {
             EditorManifest.manifestFBGoogleLogin(applicationTag);
         }
         if (FileUtil.isExistFile(filePathUtil.getManifestJava(buildConfig.sc_id))) {

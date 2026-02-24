@@ -795,7 +795,7 @@ public class ProjectBuilder {
 
         KotlinCompilerBridge.maybeAddKotlinBuiltInLibraryDependenciesIfPossible(this, builtInLibraryManager);
 
-        ExtLibSelected.addUsedDependencies(projectFilePaths.buildConfig.x, builtInLibraryManager);
+        ExtLibSelected.addUsedDependencies(projectFilePaths.buildConfig.constVarComponent, builtInLibraryManager);
     }
 
     public BuiltInLibraryManager getBuiltInLibraryManager() {

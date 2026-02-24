@@ -8,13 +8,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class FieldBlockView extends BaseBlockView {
-  public Context T;
+  public Context fieldContext;
   
-  public Object U = "";
+  public Object argValue = "";
   
-  public TextView V;
+  public TextView labelView;
   
-  public TextView W;
+  public TextView dropdownLabel;
   
   public int aa = 20;
   
@@ -28,7 +28,7 @@ public class FieldBlockView extends BaseBlockView {
   
   public FieldBlockView(Context paramContext, String paramString1, String paramString2) {
     super(paramContext, paramString1, paramString2, true);
-    this.T = paramContext;
+    this.fieldContext = paramContext;
     initSs(paramContext);
   }
   
@@ -58,20 +58,20 @@ public class FieldBlockView extends BaseBlockView {
     this.ca = (int) (this.ca * scale);
     this.da = this.ca;
     if (this.blockType.equals("m") && a(this.componentType).length() >= 0) {
-      this.W = b(this.componentType);
-      addView(this.W);
+      this.dropdownLabel = b(this.componentType);
+      addView(this.dropdownLabel);
       this.da = getDropdownTypeWidth();
     }
     if (this.blockType.equals("m") || this.blockType.equals("d") || this.blockType.equals("n") || this.blockType.equals("s")) {
-      this.V = c("");
-      addView(this.V);
+      this.labelView = c("");
+      addView(this.labelView);
     }
     a((float) (this.aa + this.da), (float) this.textHeight, false);
   }
   
   private int getDropdownTypeWidth() {
     Rect rect = new Rect();
-    TextPaint textPaint = this.W.getPaint();
+    TextPaint textPaint = this.dropdownLabel.getPaint();
     String str = a(this.componentType);
     textPaint.getTextBounds(str, 0, str.length(), rect);
     return rect.width() + this.ca * 2;
@@ -79,7 +79,7 @@ public class FieldBlockView extends BaseBlockView {
   
   private int getLabelWidth() {
     Rect rect = new Rect();
-    this.V.getPaint().getTextBounds(this.V.getText().toString(), 0, this.V.getText().length(), rect);
+    this.labelView.getPaint().getTextBounds(this.labelView.getText().toString(), 0, this.labelView.getText().length(), rect);
     return rect.width() + this.ba;
   }
   
@@ -97,7 +97,7 @@ public class FieldBlockView extends BaseBlockView {
   }
   
   public final TextView b(String paramString) {
-    TextView textView = new TextView(this.T);
+    TextView textView = new TextView(this.fieldContext);
     textView.setText(a(paramString));
     textView.setTextSize(8.0F);
     textView.setTypeface(null, 1);
@@ -114,7 +114,7 @@ public class FieldBlockView extends BaseBlockView {
   }
   
   public final TextView c(String paramString) {
-    TextView textView = new TextView(this.T);
+    TextView textView = new TextView(this.fieldContext);
     textView.setText(paramString);
     textView.setTextSize(9.0F);
     RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(this.aa, this.textHeight);
@@ -133,7 +133,7 @@ public class FieldBlockView extends BaseBlockView {
   }
   
   public Object getArgValue() {
-    return (this.blockType.equals("d") || this.blockType.equals("m") || this.blockType.equals("s")) ? this.V.getText() : this.U;
+    return (this.blockType.equals("d") || this.blockType.equals("m") || this.blockType.equals("s")) ? this.labelView.getText() : this.argValue;
   }
   
   public String getMenuName() {
@@ -141,11 +141,11 @@ public class FieldBlockView extends BaseBlockView {
   }
   
   public void setArgValue(Object paramObject) {
-    this.U = paramObject;
+    this.argValue = paramObject;
     if (this.blockType.equals("d") || this.blockType.equals("m") || this.blockType.equals("s")) {
-      this.V.setText(paramObject.toString());
+      this.labelView.setText(paramObject.toString());
       int i = Math.max(this.aa, getLabelWidth());
-      (this.V.getLayoutParams()).width = i;
+      (this.labelView.getLayoutParams()).width = i;
       a((i + this.da), this.textHeight, true);
     } 
   }

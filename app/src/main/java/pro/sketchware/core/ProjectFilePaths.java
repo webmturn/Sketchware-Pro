@@ -521,14 +521,14 @@ public class ProjectFilePaths {
                 var classNameParts = viewBean.convert.split("\\.");
                 var className = classNameParts[classNameParts.length - 1];
                 switch (className) {
-                    case "CircleImageView" -> buildConfig.x.isCircleImageViewUsed = true;
-                    case "CodeView" -> buildConfig.x.isCodeViewUsed = true;
-                    case "LottieAnimationView" -> buildConfig.x.isLottieUsed = true;
-                    case "OTPView" -> buildConfig.x.isOTPViewUsed = true;
-                    case "PatternLockView" -> buildConfig.x.isPatternLockViewUsed = true;
-                    case "WaveSideBar" -> buildConfig.x.isWaveSideBarUsed = true;
-                    case "YouTubePlayerView" -> buildConfig.x.isYoutubePlayerUsed = true;
-                    case "SwipeRefreshLayout" -> buildConfig.x.isSwipeRefreshLayoutUsed = true;
+                    case "CircleImageView" -> buildConfig.constVarComponent.isCircleImageViewUsed = true;
+                    case "CodeView" -> buildConfig.constVarComponent.isCodeViewUsed = true;
+                    case "LottieAnimationView" -> buildConfig.constVarComponent.isLottieUsed = true;
+                    case "OTPView" -> buildConfig.constVarComponent.isOTPViewUsed = true;
+                    case "PatternLockView" -> buildConfig.constVarComponent.isPatternLockViewUsed = true;
+                    case "WaveSideBar" -> buildConfig.constVarComponent.isWaveSideBarUsed = true;
+                    case "YouTubePlayerView" -> buildConfig.constVarComponent.isYoutubePlayerUsed = true;
+                    case "SwipeRefreshLayout" -> buildConfig.constVarComponent.isSwipeRefreshLayoutUsed = true;
                 }
             }
         }
@@ -582,9 +582,9 @@ public class ProjectFilePaths {
                     case ComponentBean.COMPONENT_TYPE_LOCATION_MANAGER ->
                             buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_ACCESS_FINE_LOCATION);
                     case ComponentBean.COMPONENT_TYPE_FIREBASE_CLOUD_MESSAGE ->
-                            buildConfig.x.isFCMUsed = true;
+                            buildConfig.constVarComponent.isFCMUsed = true;
                     case ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH_GOOGLE_LOGIN ->
-                            buildConfig.x.isFBGoogleUsed = true;
+                            buildConfig.constVarComponent.isFBGoogleUsed = true;
                     default -> {
                     }
                 }
@@ -594,14 +594,14 @@ public class ProjectFilePaths {
                 var classNameParts = view.convert.split("\\.");
                 var className = classNameParts[classNameParts.length - 1];
                 switch (className) {
-                    case "CircleImageView" -> buildConfig.x.isCircleImageViewUsed = true;
-                    case "CodeView" -> buildConfig.x.isCodeViewUsed = true;
-                    case "LottieAnimationView" -> buildConfig.x.isLottieUsed = true;
-                    case "OTPView" -> buildConfig.x.isOTPViewUsed = true;
-                    case "PatternLockView" -> buildConfig.x.isPatternLockViewUsed = true;
-                    case "WaveSideBar" -> buildConfig.x.isWaveSideBarUsed = true;
-                    case "YouTubePlayerView" -> buildConfig.x.isYoutubePlayerUsed = true;
-                    case "SwipeRefreshLayout" -> buildConfig.x.isSwipeRefreshLayoutUsed = true;
+                    case "CircleImageView" -> buildConfig.constVarComponent.isCircleImageViewUsed = true;
+                    case "CodeView" -> buildConfig.constVarComponent.isCodeViewUsed = true;
+                    case "LottieAnimationView" -> buildConfig.constVarComponent.isLottieUsed = true;
+                    case "OTPView" -> buildConfig.constVarComponent.isOTPViewUsed = true;
+                    case "PatternLockView" -> buildConfig.constVarComponent.isPatternLockViewUsed = true;
+                    case "WaveSideBar" -> buildConfig.constVarComponent.isWaveSideBarUsed = true;
+                    case "YouTubePlayerView" -> buildConfig.constVarComponent.isYoutubePlayerUsed = true;
+                    case "SwipeRefreshLayout" -> buildConfig.constVarComponent.isSwipeRefreshLayoutUsed = true;
                 }
             }
 

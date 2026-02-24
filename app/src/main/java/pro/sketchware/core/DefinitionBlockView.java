@@ -72,7 +72,7 @@ public class DefinitionBlockView extends BlockView {
     }
     String type = this.blockType;
     if (type.equals("b") || type.equals("d") || type.equals("s") || type.equals("a")) {
-      width = Math.max(width, this.W);
+      width = Math.max(width, this.minBlockWidth);
     }
     if (type.equals(" ") || type.equals("") || type.equals("o")) {
       width = Math.max(width, this.aa);
@@ -87,9 +87,9 @@ public class DefinitionBlockView extends BlockView {
   public void l() {
     byte b = 0;
     setDrawingCacheEnabled(false);
-    float f1 = this.W;
+    float f1 = this.minBlockWidth;
     float f2 = ((BaseBlockView)this).density;
-    this.W = (int)(f1 * f2);
+    this.minBlockWidth = (int)(f1 * f2);
     this.aa = (int)(this.aa * f2);
     this.ba = (int)(this.ba * f2);
     this.ca = (int)(this.ca * f2);
@@ -180,7 +180,7 @@ public class DefinitionBlockView extends BlockView {
           this.fa = true;
           break;
       } 
-      this.ta = createLabel(this.T);
+      this.ta = createLabel(this.spec);
       addView((View)this.ta);
       ((BaseBlockView)this).blockColor = getResources().getColor(pro.sketchware.R.color.scolor_red_02);
       k();
@@ -203,7 +203,7 @@ public class DefinitionBlockView extends BlockView {
         this.fa = true;
         break;
     } 
-    this.ta = createLabel(this.T);
+    this.ta = createLabel(this.spec);
     addView((View)this.ta);
     ((BaseBlockView)this).blockColor = getResources().getColor(pro.sketchware.R.color.scolor_red_02);
     k();

@@ -221,7 +221,7 @@ public class BuildConfig {
      * Permissions container = {@link a}.
      */
     public HashMap<String, a> activityPermissions = new HashMap<>();
-    public ConstVarComponent x = new ConstVarComponent();
+    public ConstVarComponent constVarComponent = new ConstVarComponent();
 
     public boolean hasPermissions() {
         return permissions == 0;

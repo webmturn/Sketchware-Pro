@@ -35,7 +35,7 @@ public abstract class PermissionFragment extends BaseFragment {
 
     public void showPermissionDialog(int var1) {
         if (!ThrottleTimer.a) {
-            MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(super.a);
+            MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(super.activity);
             dialog.setTitle(R.string.common_message_permission_title_storage);
             dialog.setIcon(R.drawable.break_warning_96_red);
             dialog.setMessage(R.string.common_message_permission_storage);
@@ -62,7 +62,7 @@ public abstract class PermissionFragment extends BaseFragment {
 
     public void showSettingsDialog(int var1) {
         if (!ThrottleTimer.a) {
-            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(super.a);
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(super.activity);
             builder.setTitle(R.string.common_message_permission_title_storage);
             builder.setIcon(R.drawable.break_warning_96_red);
             builder.setMessage(R.string.common_message_permission_storage1);

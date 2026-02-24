@@ -90,10 +90,10 @@ public class ShowMoreBlockCollectionActivity extends BaseAppCompatActivity imple
                         if (parameter.charAt(0) == '@') {
                             BlockView parameterBlock = hashMap.get(Integer.valueOf(parameter.substring(1)));
                             if (parameterBlock != null) {
-                                block.a((BaseBlockView) block.V.get(i), parameterBlock);
+                                block.a((BaseBlockView) block.childViews.get(i), parameterBlock);
                             }
                         } else {
-                            ((FieldBlockView) block.V.get(i)).setArgValue(parameter);
+                            ((FieldBlockView) block.childViews.get(i)).setArgValue(parameter);
                             block.m();
                         }
                     }
