@@ -39,7 +39,7 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
     private ActivityResultLauncher<Intent> addCustomViewLauncher;
     private ActivityResultLauncher<Intent> presetLauncher;
     private int lastPresetRequestCode;
-    private final int[] x = new int[19];
+    private final int[] widgetTypeCounts = new int[19];
     private final int TAB_ACTIVITY = ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY;
     private final int TAB_CUSTOM_VIEW = ProjectFileBean.PROJECT_FILE_TYPE_CUSTOM_VIEW;
     private ViewSelectorAdapter viewSelectorAdapter;
@@ -290,8 +290,8 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
         String b = SketchwarePaths.getWidgetTypeName(viewType);
         StringBuilder sb = new StringBuilder();
         sb.append(b);
-        int i2 = x[viewType] + 1;
-        x[viewType] = i2;
+        int i2 = widgetTypeCounts[viewType] + 1;
+        widgetTypeCounts[viewType] = i2;
         sb.append(i2);
         String sb2 = sb.toString();
         ArrayList<ViewBean> d = ProjectDataManager.getProjectDataManager(sc_id).getViews(xmlName);
@@ -308,8 +308,8 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
             }
             sb = new StringBuilder();
             sb.append(b);
-            i2 = x[viewType] + 1;
-            x[viewType] = i2;
+            i2 = widgetTypeCounts[viewType] + 1;
+            widgetTypeCounts[viewType] = i2;
             sb.append(i2);
             sb2 = sb.toString();
         }

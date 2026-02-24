@@ -55,7 +55,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
 
     private ActivityResultLauncher<Intent> addViewLauncher;
 
-    private final int[] x = new int[19];
+    private final int[] widgetTypeCounts = new int[19];
     // signature mustn't be changed: used in La/a/a/Bw;->a(Landroidx/recyclerview/widget/RecyclerView;II)V, La/a/a/tw;->a(Landroidx/recyclerview/widget/RecyclerView;II)V
     public FloatingActionButton s;
     private MaterialCardView actionButtonsContainer;
@@ -70,7 +70,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
         String var3 = SketchwarePaths.getWidgetTypeName(var1);
         StringBuilder var4 = new StringBuilder();
         var4.append(var3);
-        int[] var5 = x;
+        int[] var5 = widgetTypeCounts;
         int var6 = var5[var1] + 1;
         var5[var1] = var6;
         var4.append(var6);
@@ -101,7 +101,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
 
             StringBuilder var8 = new StringBuilder();
             var8.append(var3);
-            int[] var11 = x;
+            int[] var11 = widgetTypeCounts;
             var6 = var11[var1] + 1;
             var11[var1] = var6;
             var8.append(var6);

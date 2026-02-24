@@ -19,7 +19,7 @@ import pro.sketchware.core.ViewUtil;
 
 public class ItemVerticalScrollView extends FrameLayout implements ItemView, ScrollContainer {
 
-    private final Rect g = new Rect();
+    private final Rect tempRect = new Rect();
     private final Rect rect = new Rect();
     private ViewBean viewBean;
     private boolean isSelected = false;
@@ -113,9 +113,9 @@ public class ItemVerticalScrollView extends FrameLayout implements ItemView, Scr
     }
 
     private boolean isViewVisible(View view, int var2, int var3) {
-        view.getDrawingRect(g);
-        offsetDescendantRectToMyCoords(view, g);
-        return g.bottom + var2 >= getScrollY() && g.top - var2 <= getScrollY() + var3;
+        view.getDrawingRect(tempRect);
+        offsetDescendantRectToMyCoords(view, tempRect);
+        return tempRect.bottom + var2 >= getScrollY() && tempRect.top - var2 <= getScrollY() + var3;
     }
 
     @Override
@@ -287,9 +287,9 @@ public class ItemVerticalScrollView extends FrameLayout implements ItemView, Scr
         super.onSizeChanged(width, height, oldWidth, oldHeight);
         View focusedView = findFocus();
         if (focusedView != null && this != focusedView && isViewVisible(focusedView, 0, oldHeight)) {
-            focusedView.getDrawingRect(g);
-            offsetDescendantRectToMyCoords(focusedView, g);
-            scrollByIfNeeded(computeScrollDelta(g));
+            focusedView.getDrawingRect(tempRect);
+            offsetDescendantRectToMyCoords(focusedView, tempRect);
+            scrollByIfNeeded(computeScrollDelta(tempRect));
         }
     }
 

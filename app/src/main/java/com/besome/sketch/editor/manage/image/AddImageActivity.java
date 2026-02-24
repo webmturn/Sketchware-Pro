@@ -58,7 +58,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
     private LinearLayout layout_img_inform = null;
     private LinearLayout layout_img_modify = null;
     private TextView tv_imgcnt = null;
-    private boolean B = false;
+    private boolean isImagePicked = false;
     private String imageFilePath = null;
     private int imageRotationDegrees = 0;
     private int imageExifOrientation = 0;
@@ -115,7 +115,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
                             imageScaleY = 1;
                             imageScaleX = 1;
                             if (data.getClipData() == null) {
-                                B = true;
+                                isImagePicked = true;
                                 multipleImagesPicked = false;
                                 setImageFromUri(data.getData());
                                 if (nameValidator != null) {
@@ -124,7 +124,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
                             } else {
                                 ClipData clipData = data.getClipData();
                                 if (clipData.getItemCount() <= 1) {
-                                    B = true;
+                                    isImagePicked = true;
                                     multipleImagesPicked = false;
                                     setImageFromUri(clipData.getItemAt(0).getUri());
                                     if (nameValidator != null) {
@@ -176,7 +176,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
         img_horizontal.setOnClickListener(this);
         dialogOkButton.setOnClickListener(this);
         dialogCancelButton.setOnClickListener(this);
-        B = false;
+        isImagePicked = false;
         imageRotationDegrees = 0;
         imageScaleY = 1;
         imageScaleX = 1;
@@ -306,7 +306,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
         if (!pb.isValid()) {
             return false;
         }
-        if (B || imageFilePath != null) {
+        if (isImagePicked || imageFilePath != null) {
             return true;
         }
         tv_desc.startAnimation(AnimationUtils.loadAnimation(this, R.anim.ani_1));
@@ -381,7 +381,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
                             SoundCollectionManager.getInstance().addResource(activity.sc_id, image);
                         }
                         activity.images.add(image);
-                    } else if (!activity.B) {
+                    } else if (!activity.isImagePicked) {
                         var image = activity.image;
                         image.rotate = activity.imageRotationDegrees;
                         image.flipHorizontal = activity.imageScaleX;

@@ -120,7 +120,7 @@ public class ViewPane extends RelativeLayout {
     private final FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
     private Context context;
     private ViewGroup rootLayout;
-    private int b = 99;
+    private int viewIdCounter = 99;
     private ArrayList<ViewInfo> viewInfos = new ArrayList<>();
     private ViewInfo viewInfo;
     private TextView highlightedTextView;
@@ -319,7 +319,7 @@ public class ViewPane extends RelativeLayout {
             case ViewBeans.VIEW_TYPE_WIDGET_RECYCLERVIEW -> new ItemRecyclerView(context);
             default -> getUnknownItemView(viewBean);
         };
-        item.setId(++b);
+        item.setId(++viewIdCounter);
         item.setTag(viewBean.id);
         ((ItemView) item).setBean(viewBean);
         updateItemView(item, viewBean);

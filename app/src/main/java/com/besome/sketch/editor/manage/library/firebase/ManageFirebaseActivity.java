@@ -51,7 +51,7 @@ public class ManageFirebaseActivity extends BaseAppCompatActivity implements Vie
     private TextView tvAppId;
     private TextView tvApiKey;
     private TextView tvStorageUrl;
-    private SharedPrefsHelper s = null;
+    private SharedPrefsHelper sharedPrefsHelper = null;
     private ProjectLibraryBean firebaseLibraryBean;
     private final ActivityResultLauncher<Intent> openSettings = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         if (result.getResultCode() == Activity.RESULT_OK) {
@@ -86,7 +86,7 @@ public class ManageFirebaseActivity extends BaseAppCompatActivity implements Vie
 
     private void openDoc() {
         try {
-            s.put("P1I15", true);
+            sharedPrefsHelper.put("P1I15", true);
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.setData(Uri.parse("https://sketchware-pro.vercel.app/docs/components/Firebase/connect-to-firebase"));
@@ -179,7 +179,7 @@ public class ManageFirebaseActivity extends BaseAppCompatActivity implements Vie
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
 
-        s = new SharedPrefsHelper(getApplicationContext(), "P1");
+        sharedPrefsHelper = new SharedPrefsHelper(getApplicationContext(), "P1");
         firebaseLibraryBean = getIntent().getParcelableExtra("firebase");
         sc_id = savedInstanceState != null ? savedInstanceState.getString("sc_id") : getIntent().getStringExtra("sc_id");
         LinearLayout switchLayout = findViewById(R.id.layout_switch);

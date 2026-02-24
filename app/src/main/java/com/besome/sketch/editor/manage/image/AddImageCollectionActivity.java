@@ -56,7 +56,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
     private LinearLayout layout_img_inform = null;
     private LinearLayout layout_img_modify = null;
     private TextView tv_imgcnt = null;
-    private boolean z = false;
+    private boolean isImagePicked = false;
     private String imageFilePath = null;
     private int imageRotationDegrees = 0;
     private int imageExifOrientation = 0;
@@ -124,7 +124,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
                             imageRotationDegrees = 0;
                             imageScaleY = 1;
                             imageScaleX = 1;
-                            z = true;
+                            isImagePicked = true;
                             setImageFromUri(result.getData().getData());
                             if (imageNameValidator != null) {
                                 imageNameValidator.setBatchCount(1);
@@ -166,7 +166,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
         img_horizontal.setOnClickListener(this);
         dialogOkButton.setOnClickListener(this);
         dialogCancelButton.setOnClickListener(this);
-        z = false;
+        isImagePicked = false;
         imageRotationDegrees = 0;
         imageScaleY = 1;
         imageScaleX = 1;
@@ -235,7 +235,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
         if (!validator.isValid()) {
             return false;
         }
-        if (z || imageFilePath != null) {
+        if (isImagePicked || imageFilePath != null) {
             return true;
         }
         tv_desc.startAnimation(AnimationUtils.loadAnimation(this, R.anim.ani_1));
