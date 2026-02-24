@@ -106,7 +106,7 @@ public class TestDevicesStepView extends LinearLayout implements LibrarySettings
         dialog.setIcon(R.drawable.ic_mtrl_add);
         View content = ViewUtil.inflateLayout(getContext(), R.layout.manage_library_setting_admob_test_device_add);
         EditText edDeviceId = content.findViewById(R.id.ed_device_id);
-        ((TextInputLayout) content.findViewById(R.id.ti_device_id)).setHint(getContext().getString(R.string.design_library_admob_dialog_set_test_device_hint_device_id));
+        ((TextInputLayout) content.findViewById(R.id.ti_device_id)).setHint(Helper.getResString(R.string.design_library_admob_dialog_set_test_device_hint_device_id));
         UniqueNameValidator validator = new UniqueNameValidator(getContext(), content.findViewById(R.id.ti_device_id), testDevices.stream()
                 .map(AdTestDeviceBean::getDeviceId)
                 .collect(Collectors.toCollection(ArrayList::new)));
@@ -135,7 +135,7 @@ public class TestDevicesStepView extends LinearLayout implements LibrarySettings
         dialog.setPositiveButton(R.string.common_word_delete, (v, which) -> {
             testDevices.remove(index);
             adapter.notifyItemRemoved(index);
-            SketchToast.toast(getContext(), getContext().getString(R.string.common_message_complete_delete), 0).show();
+            SketchToast.toast(getContext(), Helper.getResString(R.string.common_message_complete_delete), 0).show();
             v.dismiss();
         });
         dialog.setNegativeButton(R.string.common_word_cancel, null);

@@ -1,5 +1,7 @@
 package com.besome.sketch.editor.manage.image;
 
+
+import mod.hey.studios.util.Helper;
 import androidx.activity.OnBackPressedCallback;
 import android.app.Activity;
 import android.content.Context;
@@ -171,8 +173,8 @@ public class ManageImageActivity extends BaseAppCompatActivity implements ViewPa
         public PagerAdapter(FragmentManager manager) {
             super(manager);
             labels = new String[2];
-            labels[0] = getString(R.string.design_manager_tab_title_this_project);
-            labels[1] = getString(R.string.design_manager_tab_title_my_collection);
+            labels[0] = Helper.getResString(R.string.design_manager_tab_title_this_project);
+            labels[1] = Helper.getResString(R.string.design_manager_tab_title_my_collection);
         }
 
         @Override

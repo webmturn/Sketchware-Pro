@@ -154,7 +154,7 @@ public class MoreblockImporter {
 
         ProjectDataManager.getProjectDataManager(sc_id).addMoreBlock(activityJavaName, moreBlockName, moreBlock.spec);
         ProjectDataManager.getProjectDataManager(sc_id).putBlocks(activityJavaName, moreBlockName + "_moreBlock", moreBlock.blocks);
-        SketchToast.toast(activity, activity.getString(R.string.common_message_complete_save), 0).show();
+        SketchToast.toast(activity, Helper.getResString(R.string.common_message_complete_save), 0).show();
         callback.onImportComplete();
     }
 

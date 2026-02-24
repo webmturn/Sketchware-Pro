@@ -1,5 +1,7 @@
 package pro.sketchware.core;
 
+
+import mod.hey.studios.util.Helper;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -36,7 +38,7 @@ public abstract class BaseAsyncTask extends AsyncTask<Void, String, String> {
             }
             Context context = getContext();
             if (context != null) {
-                return context.getString(R.string.common_error_an_error_occurred) + "[" + e.getMessage() + "]";
+                return Helper.getResString(R.string.common_error_an_error_occurred) + "[" + e.getMessage() + "]";
             }
             return "An error occurred[" + e.getMessage() + "]";
         }

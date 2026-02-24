@@ -1,6 +1,8 @@
 package pro.sketchware.core;
 
 
+import mod.hey.studios.util.Helper;
+
 import android.util.Log;
 import android.util.Pair;
 
@@ -284,7 +286,7 @@ public class BlockInterpreter {
                 opcode = bean.spec;
                 break;
             case "getResStr":
-                opcode = "getString(R.string." + bean.spec + ")";
+                opcode = "Helper.getResString(R.string." + bean.spec + ")";
                 break;
             case "setVarBoolean", "setVarInt", "setVarString":
                 opcode = String.format("%s = %s;", params.get(0), params.get(1));

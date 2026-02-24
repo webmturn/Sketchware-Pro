@@ -91,11 +91,11 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
 
     public static String getCategoryName(Context context, int i) {
         return switch (i) {
-            case 0 -> context.getString(R.string.common_word_activity);
-            case 1 -> context.getString(R.string.common_word_view);
-            case 2 -> context.getString(R.string.common_word_component);
-            case 3 -> context.getString(R.string.common_word_drawer);
-            case 4 -> context.getString(R.string.common_word_moreblock);
+            case 0 -> Helper.getResString(R.string.common_word_activity);
+            case 1 -> Helper.getResString(R.string.common_word_view);
+            case 2 -> Helper.getResString(R.string.common_word_component);
+            case 3 -> Helper.getResString(R.string.common_word_drawer);
+            case 4 -> Helper.getResString(R.string.common_word_moreblock);
             default -> "";
         };
     }
@@ -216,10 +216,10 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
 
     private void deleteMoreBlock(EventBean moreBlock, int position) {
         if (ProjectDataManager.getProjectDataManager(sc_id).isMoreBlockUsed(currentActivity.getJavaName(), moreBlock.targetId)) {
-            SketchToast.warning(requireContext(), getString(R.string.logic_editor_message_currently_used_block), 0).show();
+            SketchToast.warning(requireContext(), Helper.getResString(R.string.logic_editor_message_currently_used_block), 0).show();
         } else {
             ProjectDataManager.getProjectDataManager(sc_id).removeMoreBlock(currentActivity.getJavaName(), moreBlock.targetId);
-            SketchToast.toast(requireContext(), getString(R.string.common_message_complete_delete), 0).show();
+            SketchToast.toast(requireContext(), Helper.getResString(R.string.common_message_complete_delete), 0).show();
             events.get(getPaletteIndex()).remove(position);
             eventAdapter.refreshAfterDelete();
         }
@@ -365,7 +365,7 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
         ProjectDataStore a2 = ProjectDataManager.getProjectDataManager(sc_id);
         String javaName = currentActivity.getJavaName();
         a2.putBlocks(javaName, event.targetId + "_" + event.eventName, new ArrayList<>());
-        SketchToast.toast(requireContext(), getString(R.string.common_message_complete_reset), 0).show();
+        SketchToast.toast(requireContext(), Helper.getResString(R.string.common_message_complete_reset), 0).show();
     }
 
     @Override
@@ -380,7 +380,7 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
 
     private void deleteEvent(EventBean event, int position) {
         EventBean.deleteEvent(sc_id, event, currentActivity);
-        SketchToast.toast(requireContext(), getString(R.string.common_message_complete_delete), 0).show();
+        SketchToast.toast(requireContext(), Helper.getResString(R.string.common_message_complete_delete), 0).show();
         events.get(getPaletteIndex()).remove(position);
         eventAdapter.refreshAfterDelete();
     }
@@ -440,15 +440,15 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
         }
         if (hasAnyBlocks) {
             if (failedToAddResourceToCollections) {
-                SketchToast.warning(requireContext(), getString(R.string.logic_more_block_message_missed_resource_exist), 0).show();
+                SketchToast.warning(requireContext(), Helper.getResString(R.string.logic_more_block_message_missed_resource_exist), 0).show();
             } else {
-                SketchToast.toast(requireContext(), getString(R.string.logic_more_block_message_resource_added), 0).show();
+                SketchToast.toast(requireContext(), Helper.getResString(R.string.logic_more_block_message_resource_added), 0).show();
             }
         }
         try {
             MoreBlockCollectionManager.getInstance().addMoreBlock(moreBlockName, b2, moreBlockBlocks, true);
         } catch (Exception unused2) {
-            SketchToast.warning(requireContext(), getString(R.string.common_error_failed_to_save), 0).show();
+            SketchToast.warning(requireContext(), Helper.getResString(R.string.common_error_failed_to_save), 0).show();
         }
     }
 

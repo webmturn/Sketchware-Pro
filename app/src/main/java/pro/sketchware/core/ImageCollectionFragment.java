@@ -1,5 +1,7 @@
 package pro.sketchware.core;
 
+
+import mod.hey.studios.util.Helper;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -112,7 +114,7 @@ public class ImageCollectionFragment extends BaseFragment implements View.OnClic
             }
         }
         if (count > 0) {
-            btnImport.setText(getString(R.string.common_word_import_count, count).toUpperCase());
+            btnImport.setText(Helper.getResString(R.string.common_word_import_count, count).toUpperCase());
             layoutBtnImport.setVisibility(View.VISIBLE);
         } else {
             layoutBtnImport.setVisibility(View.GONE);

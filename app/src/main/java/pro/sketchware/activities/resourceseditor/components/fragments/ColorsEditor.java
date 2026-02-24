@@ -181,7 +181,7 @@ public class ColorsEditor extends Fragment {
             public void afterTextChanged(Editable s) {
                 String value = s.toString();
                 if (value.startsWith("#") && !PropertiesUtil.isHexColor(value)) {
-                    dialogBinding.colorValueInputLayout.setError(getString(R.string.error_invalid_hex_color_caps));
+                    dialogBinding.colorValueInputLayout.setError(Helper.getResString(R.string.error_invalid_hex_color_caps));
                     return;
                 }
                 dialogBinding.colorValueInput.setError(null);
@@ -269,7 +269,7 @@ public class ColorsEditor extends Fragment {
             });
         }
 
-        dialog.setNegativeButton(getString(R.string.cancel), null);
+        dialog.setNegativeButton(Helper.getResString(R.string.cancel), null);
         dialog.setView(dialogBinding.getRoot());
         dialog.show();
     }

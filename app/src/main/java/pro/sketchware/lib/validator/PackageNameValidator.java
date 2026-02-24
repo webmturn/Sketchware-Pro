@@ -1,5 +1,7 @@
 package pro.sketchware.lib.validator;
 
+
+import mod.hey.studios.util.Helper;
 import android.content.Context;
 
 import com.google.android.material.textfield.TextInputLayout;
@@ -23,7 +25,7 @@ public class PackageNameValidator extends BaseValidator {
         if (s.toString().trim().length() > 50) {
             textInputLayout.setErrorEnabled(true);
             if (customErrorResId == 0) {
-                textInputLayout.setError(context.getString(R.string.invalid_value_max_lenth, 50));
+                textInputLayout.setError(Helper.getResString(R.string.invalid_value_max_lenth, 50));
             } else {
                 //what ???
                 textInputLayout.setError(context.getString(customErrorResId, 50));
@@ -35,12 +37,12 @@ public class PackageNameValidator extends BaseValidator {
         valid = true;
         if (!packagePattern.matcher(s.toString()).matches()) {
             textInputLayout.setErrorEnabled(true);
-            textInputLayout.setError(context.getString(R.string.invalid_value_rule_2));
+            textInputLayout.setError(Helper.getResString(R.string.invalid_value_rule_2));
             valid = false;
         } else {
             if (!s.toString().contains(".")) {
                 textInputLayout.setErrorEnabled(true);
-                textInputLayout.setError(context.getString(R.string.myprojects_settings_message_contain_dot));
+                textInputLayout.setError(Helper.getResString(R.string.myprojects_settings_message_contain_dot));
                 valid = false;
                 return;
             }
@@ -65,7 +67,7 @@ public class PackageNameValidator extends BaseValidator {
         }
         if (containsReservedWord) {
             textInputLayout.setErrorEnabled(true);
-            textInputLayout.setError(context.getString(R.string.logic_editor_message_reserved_keywords));
+            textInputLayout.setError(Helper.getResString(R.string.logic_editor_message_reserved_keywords));
             valid = false;
         }
     }

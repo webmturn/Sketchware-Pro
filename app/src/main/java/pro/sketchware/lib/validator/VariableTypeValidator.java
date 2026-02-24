@@ -1,5 +1,7 @@
 package pro.sketchware.lib.validator;
 
+
+import mod.hey.studios.util.Helper;
 import android.content.Context;
 import android.text.TextUtils;
 
@@ -27,33 +29,33 @@ public class VariableTypeValidator extends BaseValidator {
         String reconsInput = String.join(" ", words);
 
         if (!variableType.equals(reconsInput)) {
-            textInputLayout.setError(textInputLayout.getContext().getString(R.string.error_extra_spaces_not_allowed));
+            textInputLayout.setError(Helper.getResString(R.string.error_extra_spaces_not_allowed));
             valid = false;
             return;
         }
 
         if (!TextUtils.isEmpty(input)) {
             if (!Character.isLetter(input.charAt(0))) {
-                textInputLayout.setError(textInputLayout.getContext().getString(R.string.error_type_must_start_letter));
+                textInputLayout.setError(Helper.getResString(R.string.error_type_must_start_letter));
                 valid = false;
                 return;
             }
         }
 
         if (!isValidAngleBracket(variableType)) {
-            textInputLayout.setError(textInputLayout.getContext().getString(R.string.error_angle_bracket_not_matched));
+            textInputLayout.setError(Helper.getResString(R.string.error_angle_bracket_not_matched));
             valid = false;
             return;
         }
 
         if (!isValidBoxBracket(variableType)) {
-            textInputLayout.setError(textInputLayout.getContext().getString(R.string.error_box_bracket_not_matched));
+            textInputLayout.setError(Helper.getResString(R.string.error_box_bracket_not_matched));
             valid = false;
             return;
         }
 
         if (!PATTERN_TYPE.matcher(variableType).matches()) {
-            textInputLayout.setError(textInputLayout.getContext().getString(R.string.error_invalid_variable_type));
+            textInputLayout.setError(Helper.getResString(R.string.error_invalid_variable_type));
             valid = false;
             return;
         }

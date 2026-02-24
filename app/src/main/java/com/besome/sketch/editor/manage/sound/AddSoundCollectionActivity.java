@@ -127,11 +127,11 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
                         loadSoundFromUri(data);
                     }
                 });
-        setDialogTitle(getString(R.string.design_manager_sound_title_add_sound));
+        setDialogTitle(Helper.getResString(R.string.design_manager_sound_title_add_sound));
         binding = ManageSoundAddBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        setOkButtonText(getString(R.string.common_word_save));
-        setCancelButtonText(getString(R.string.common_word_cancel));
+        setOkButtonText(Helper.getResString(R.string.common_word_save));
+        setCancelButtonText(Helper.getResString(R.string.common_word_cancel));
         Intent intent = getIntent();
         existingSounds = intent.getParcelableArrayListExtra("sounds");
         scId = intent.getStringExtra("sc_id");
@@ -172,7 +172,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
         dialogOkButton.setOnClickListener(this);
         dialogCancelButton.setOnClickListener(this);
         if (isEditing) {
-            setDialogTitle(getString(R.string.design_manager_sound_title_edit_sound_name));
+            setDialogTitle(Helper.getResString(R.string.design_manager_sound_title_edit_sound_name));
             nameValidator = new ResourceNameValidator(this, binding.tiInput, BlockConstants.RESERVED_KEYWORDS, getResourceNames(), editTarget.resName);
             binding.edInput.setText(editTarget.resName);
             loadSoundFromPath(getResourceFilePath(editTarget));
@@ -188,7 +188,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
     private void pickSoundFile() {
         Intent intent = new Intent("android.intent.action.GET_CONTENT", MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.setType("audio/*");
-        soundPickerLauncher.launch(Intent.createChooser(intent, getString(R.string.common_word_choose)));
+        soundPickerLauncher.launch(Intent.createChooser(intent, Helper.getResString(R.string.common_word_choose)));
     }
 
     private void togglePlayback() {
@@ -214,7 +214,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
                 projectResourceBean.isNew = true;
                 try {
                     FontCollectionManager.getInstance().addResource(scId, projectResourceBean);
-                    SketchToast.toast(this, getApplicationContext().getString(R.string.design_manager_message_add_complete), 1).show();
+                    SketchToast.toast(this, Helper.getResString(R.string.design_manager_message_add_complete), 1).show();
                 } catch (Exception e) {
                     // the bytecode's lying
                     // noinspection ConstantValue
@@ -234,7 +234,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
                 }
             } else {
                 FontCollectionManager.getInstance().renameResource(editTarget, Helper.getText(binding.edInput), true);
-                SketchToast.toast(this, getApplicationContext().getString(R.string.design_manager_message_edit_complete), 1).show();
+                SketchToast.toast(this, Helper.getResString(R.string.design_manager_message_edit_complete), 1).show();
             }
             finish();
         }

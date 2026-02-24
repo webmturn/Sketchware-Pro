@@ -1,5 +1,7 @@
 package pro.sketchware.lib.validator;
 
+
+import mod.hey.studios.util.Helper;
 import android.content.Context;
 
 import com.google.android.material.textfield.TextInputLayout;
@@ -37,11 +39,11 @@ public class FontNameValidator extends BaseValidator {
         int msgRes;
         String trim = input.toString().trim();
         if (trim.length() < 3) {
-            errorMessage = context.getString(R.string.invalid_value_min_lenth, 3);
+            errorMessage = Helper.getResString(R.string.invalid_value_min_lenth, 3);
         } else if (trim.length() > 70) {
-            errorMessage = context.getString(R.string.invalid_value_max_lenth, 70);
+            errorMessage = Helper.getResString(R.string.invalid_value_max_lenth, 70);
         } else if (trim.equals("default_image") || "NONE".equalsIgnoreCase(trim) || (!trim.equals(editingName) && (fontNames != null && fontNames.contains(trim)))) {
-            errorMessage = context.getString(R.string.common_message_name_unavailable);
+            errorMessage = Helper.getResString(R.string.common_message_name_unavailable);
         } else {
             int keywordIndex = 0;
             while (true) {
@@ -57,7 +59,7 @@ public class FontNameValidator extends BaseValidator {
                         valid = true;
                         return;
                     }
-                    textInputLayout.setError(context.getString(R.string.invalid_value_rule_4));
+                    textInputLayout.setError(Helper.getResString(R.string.invalid_value_rule_4));
                     valid = false;
                     return;
                 } else {

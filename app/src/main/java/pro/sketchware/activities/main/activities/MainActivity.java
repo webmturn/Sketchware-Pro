@@ -364,10 +364,10 @@ public class MainActivity extends BasePermissionAppCompatActivity {
     @NonNull
     private BottomSheetDialogView getBottomSheetDialogView() {
         BottomSheetDialogView bottomSheetDialog = new BottomSheetDialogView(this);
-        bottomSheetDialog.setTitle(getString(R.string.main_major_changes_title));
-        bottomSheetDialog.setDescription(getString(R.string.main_major_changes_desc));
+        bottomSheetDialog.setTitle(Helper.getResString(R.string.main_major_changes_title));
+        bottomSheetDialog.setDescription(Helper.getResString(R.string.main_major_changes_desc));
 
-        bottomSheetDialog.setPositiveButton(getString(R.string.common_word_view_changes), (dialog, which) -> {
+        bottomSheetDialog.setPositiveButton(Helper.getResString(R.string.common_word_view_changes), (dialog, which) -> {
             ConfigActivity.setSetting(ConfigActivity.SETTING_CRITICAL_UPDATE_REMINDER, true);
             Intent launcher = new Intent(this, AboutActivity.class);
             launcher.putExtra("select", "changelog");
@@ -426,7 +426,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
                 MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
                 dialog.setIcon(R.drawable.ic_expire_48dp);
                 dialog.setTitle(R.string.main_storage_access_title);
-                dialog.setMessage(getString(R.string.main_storage_access_message));
+                dialog.setMessage(Helper.getResString(R.string.main_storage_access_message));
                 dialog.setPositiveButton(Helper.getResString(R.string.common_word_settings), (v, which) -> {
                     FileUtil.requestAllFilesAccessPermission(this);
                     v.dismiss();

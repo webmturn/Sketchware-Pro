@@ -1,5 +1,7 @@
 package pro.sketchware.core;
 
+
+import mod.hey.studios.util.Helper;
 import android.content.Context;
 
 import com.google.android.material.textfield.TextInputLayout;
@@ -22,7 +24,7 @@ public class UniqueNameValidator extends BaseValidator {
         String inputValue = input.toString();
         if (preDefNames.contains(inputValue)) {
             textInputLayout.setErrorEnabled(true);
-            textInputLayout.setError(context.getString(R.string.common_message_name_unavailable));
+            textInputLayout.setError(Helper.getResString(R.string.common_message_name_unavailable));
             valid = false;
         } else {
             textInputLayout.setErrorEnabled(false);

@@ -78,7 +78,7 @@ public class ManageSoundImportActivity extends BaseAppCompatActivity implements 
             }
         }
         if (!duplicateNames.isEmpty()) {
-            String message = getString(R.string.common_message_name_unavailable);
+            String message = Helper.getResString(R.string.common_message_name_unavailable);
             String names = "";
             for (String duplicateName : duplicateNames) {
                 if (!names.isEmpty()) {
@@ -165,7 +165,7 @@ public class ManageSoundImportActivity extends BaseAppCompatActivity implements 
         tv_currentnum = findViewById(R.id.tv_currentnum);
         TextView tv_totalnum = findViewById(R.id.tv_totalnum);
         TextView tv_sendbtn = findViewById(R.id.tv_sendbtn);
-        tv_sendbtn.setText(getString(R.string.common_word_import).toUpperCase());
+        tv_sendbtn.setText(Helper.getResString(R.string.common_word_import).toUpperCase());
         tv_sendbtn.setOnClickListener(this);
         TextView tv_samename = findViewById(R.id.tv_samename);
         tv_samename.setText(R.string.design_manager_sound_title_apply_same_naming);
@@ -181,7 +181,7 @@ public class ManageSoundImportActivity extends BaseAppCompatActivity implements 
         ed_input_edittext = ed_input.getEditText();
         ed_input_edittext.setText(selectedCollections.get(0).resName);
         ed_input_edittext.setPrivateImeOptions("defaultInputmode=english;");
-        ed_input.setHint(getString(R.string.design_manager_sound_hint_enter_sound_name));
+        ed_input.setHint(Helper.getResString(R.string.design_manager_sound_hint_enter_sound_name));
         nameValidator = new XmlNameValidator(getApplicationContext(), ed_input.getTextInputLayout(), BlockConstants.RESERVED_KEYWORDS, getReservedProjectSoundNames(), getReservedSelectedCollectionNames());
         chk_samename = findViewById(R.id.chk_samename);
         chk_samename.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -194,7 +194,7 @@ public class ManageSoundImportActivity extends BaseAppCompatActivity implements 
             }
         });
         Button btn_decide = findViewById(R.id.btn_decide);
-        btn_decide.setText(getString(R.string.design_manager_change_name_button));
+        btn_decide.setText(Helper.getResString(R.string.design_manager_change_name_button));
         btn_decide.setOnClickListener(this);
         img_album = findViewById(R.id.img_album);
         img_play = findViewById(R.id.img_play);
@@ -245,9 +245,9 @@ public class ManageSoundImportActivity extends BaseAppCompatActivity implements 
             }
         }
         if (!duplicateCollections.isEmpty()) {
-            SketchToast.warning(getApplicationContext(), getString(R.string.design_manager_message_collection_name_conflict), SketchToast.TOAST_WARNING).show();
+            SketchToast.warning(getApplicationContext(), Helper.getResString(R.string.design_manager_message_collection_name_conflict), SketchToast.TOAST_WARNING).show();
         } else {
-            SketchToast.toast(getApplicationContext(), getString(R.string.design_manager_message_collection_name_no_conflict), SketchToast.TOAST_NORMAL).show();
+            SketchToast.toast(getApplicationContext(), Helper.getResString(R.string.design_manager_message_collection_name_no_conflict), SketchToast.TOAST_NORMAL).show();
         }
         selectedCollections = new ArrayList<>();
         selectedCollections.addAll(duplicateCollections);

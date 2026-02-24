@@ -303,9 +303,9 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
                             binding.tiInput.setError(null);
                         } else {
                             if (key.equals("property_scale_x") || key.equals("property_scale_y")) {
-                                binding.tiInput.setError(getContext().getString(R.string.error_value_min_01));
+                                binding.tiInput.setError(Helper.getResString(R.string.error_value_min_01));
                             } else {
-                                binding.tiInput.setError(getContext().getString(R.string.error_value_min_0));
+                                binding.tiInput.setError(Helper.getResString(R.string.error_value_min_0));
                             }
                         }
                     } else if (key.equals("property_progress") && bean != null) {
@@ -325,7 +325,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
                         }
                     }
                 } catch (NumberFormatException e) {
-                    binding.tiInput.setError(getContext().getString(R.string.error_invalid_value));
+                    binding.tiInput.setError(Helper.getResString(R.string.error_invalid_value));
                 }
             }
         });
@@ -389,11 +389,11 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
                     binding.sliderSection.setVisibility(View.GONE);
                     binding.tiInput.setVisibility(View.VISIBLE);
                     binding.edInput.requestFocus();
-                    customButton.setText(getContext().getString(R.string.property_slider));
+                    customButton.setText(Helper.getResString(R.string.property_slider));
                 } else {
                     binding.sliderSection.setVisibility(View.VISIBLE);
                     binding.tiInput.setVisibility(View.GONE);
-                    customButton.setText(getContext().getString(R.string.common_word_custom));
+                    customButton.setText(Helper.getResString(R.string.common_word_custom));
                 }
             });
 
@@ -948,7 +948,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
         var input = binding.edTiAutoCompleteInput;
         binding.tiInput.setVisibility(View.GONE);
         binding.tiAutoCompleteInput.setVisibility(View.VISIBLE);
-        binding.tiAutoCompleteInput.setHint(getContext().getString(R.string.property_hint_enter_new_attr));
+        binding.tiAutoCompleteInput.setHint(Helper.getResString(R.string.property_hint_enter_new_attr));
         input.setAdapter(
                 new ArrayAdapter<>(
                         getContext(),

@@ -62,21 +62,21 @@ public class ProjectPreviewActivity extends BaseAppCompatActivity {
         }
 
         if (project.getIsEditorChoice().equals("1")) {
-            addChip(getString(R.string.store_editors_choice));
+            addChip(Helper.getResString(R.string.store_editors_choice));
         }
 
         if (project.getIsVerified().equals("1")) {
-            addChip(getString(R.string.store_verified));
+            addChip(Helper.getResString(R.string.store_verified));
         }
 
         addChip(project.getCategory());
 
-        binding.downloads.setText(getString(R.string.store_downloads_format, project.getDownloads()));
-        binding.filesize.setText(getString(R.string.store_size_format, project.getProjectSize()));
+        binding.downloads.setText(Helper.getResString(R.string.store_downloads_format, project.getDownloads()));
+        binding.filesize.setText(Helper.getResString(R.string.store_size_format, project.getProjectSize()));
         try {
-            binding.timestamp.setText(getString(R.string.store_released_format, DateFormat.getDateInstance().format(new Date(Long.parseLong(project.getPublishedTimestamp())))));
+            binding.timestamp.setText(Helper.getResString(R.string.store_released_format, DateFormat.getDateInstance().format(new Date(Long.parseLong(project.getPublishedTimestamp())))));
         } catch (NumberFormatException e) {
-            binding.timestamp.setText(getString(R.string.store_released_format, project.getPublishedTimestamp()));
+            binding.timestamp.setText(Helper.getResString(R.string.store_released_format, project.getPublishedTimestamp()));
         }
         binding.btnComments.setOnClickListener(v -> openCommentsSheet());
         binding.btnDownload.setOnClickListener(v -> SketchwareUtil.toastError(Helper.getResString(R.string.error_downloading_unavailable)));

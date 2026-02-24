@@ -116,9 +116,9 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
 
     private void handleFab() {
         if (isInMainDirectory()) {
-            binding.showOptionsButton.setText(getString(R.string.nativelib_new_folder));
+            binding.showOptionsButton.setText(Helper.getResString(R.string.nativelib_new_folder));
         } else {
-            binding.showOptionsButton.setText(getString(R.string.nativelib_import_library));
+            binding.showOptionsButton.setText(Helper.getResString(R.string.nativelib_import_library));
         }
     }
 
@@ -178,7 +178,7 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
                 .create();
 
         dialogBinding.chipGroupTypes.setVisibility(View.GONE);
-        textInputLayout.setHint(getString(R.string.nativelib_hint_folder_name));
+        textInputLayout.setHint(Helper.getResString(R.string.nativelib_hint_folder_name));
 
         inputText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -202,7 +202,7 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
                 String name = Helper.getText(inputText);
 
                 if (name.isEmpty()) {
-                    textInputLayout.setError(getString(R.string.error_invalid_folder_name));
+                    textInputLayout.setError(Helper.getResString(R.string.error_invalid_folder_name));
                     return;
                 }
                 textInputLayout.setError(null);
@@ -210,7 +210,7 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
                 String path = fpu.getPathNativelibs(numProj) + "/" + name;
 
                 if (FileUtil.isExistFile(path)) {
-                    textInputLayout.setError(getString(R.string.error_folder_already_exists));
+                    textInputLayout.setError(Helper.getResString(R.string.error_folder_already_exists));
                     return;
                 }
                 textInputLayout.setError(null);

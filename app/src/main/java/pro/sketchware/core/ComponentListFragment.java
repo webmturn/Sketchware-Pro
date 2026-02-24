@@ -1,5 +1,7 @@
 package pro.sketchware.core;
 
+
+import mod.hey.studios.util.Helper;
 import android.content.Intent;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
@@ -429,7 +431,7 @@ public class ComponentListFragment extends BaseFragment implements View.OnClickL
                             var component = components.get(getLayoutPosition());
                             var event = new EventBean(EventBean.EVENT_TYPE_COMPONENT, component.type, component.componentId, eventName);
                             ProjectDataManager.getProjectDataManager(sc_id).addEventBean(projectFile.getJavaName(), event);
-                            SketchToast.toast(requireContext(), requireContext().getString(R.string.event_message_new_event), 0).show();
+                            SketchToast.toast(requireContext(), Helper.getResString(R.string.event_message_new_event), 0).show();
                             holder.button.onEventAdded();
                             if (listener != null) {
                                 listener.onEventClick(event);

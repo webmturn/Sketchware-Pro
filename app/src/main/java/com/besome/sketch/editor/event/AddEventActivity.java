@@ -1,5 +1,7 @@
 package com.besome.sketch.editor.event;
 
+
+import mod.hey.studios.util.Helper;
 import android.animation.Animator;
 import android.content.Intent;
 import android.os.Bundle;
@@ -251,9 +253,9 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
                             ProjectDataManager.getProjectDataManager(sc_id).addEventBean(projectFile.getJavaName(), eventBean);
                         }
                         if (eventsToAdd.size() == 1) {
-                            SketchToast.toast(getApplicationContext(), getApplicationContext().getString(R.string.event_message_new_event), SketchToast.TOAST_NORMAL).show();
+                            SketchToast.toast(getApplicationContext(), Helper.getResString(R.string.event_message_new_event), SketchToast.TOAST_NORMAL).show();
                         } else if (eventsToAdd.size() > 1) {
-                            SketchToast.toast(getApplicationContext(), getApplicationContext().getString(R.string.event_message_new_events), SketchToast.TOAST_NORMAL).show();
+                            SketchToast.toast(getApplicationContext(), Helper.getResString(R.string.event_message_new_events), SketchToast.TOAST_NORMAL).show();
                         }
                         ProjectDataManager.getProjectDataManager(sc_id).saveAllBackup();
                         setResult(RESULT_OK);
@@ -372,7 +374,7 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
             holder.img_icon.setImageResource(EventBean.getEventIconResource(event.eventType, event.targetType));
             int eventType = event.eventType;
             if (eventType == EventBean.EVENT_TYPE_ACTIVITY) {
-                holder.tv_target_type.setText(getString(R.string.event_type_activity));
+                holder.tv_target_type.setText(Helper.getResString(R.string.event_type_activity));
                 holder.events_preview.setVisibility(View.GONE);
             } else if (eventType == EventBean.EVENT_TYPE_VIEW) {
                 holder.tv_target_type.setText(ViewBean.getViewTypeName(event.targetType));

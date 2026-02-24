@@ -1,5 +1,7 @@
 package pro.sketchware.core;
 
+
+import mod.hey.studios.util.Helper;
 import android.content.Context;
 
 import com.google.android.material.textfield.TextInputLayout;
@@ -32,13 +34,13 @@ public class IdentifierValidator extends BaseValidator {
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         if (s.toString().trim().isEmpty()) {
             textInputLayout.setErrorEnabled(true);
-            textInputLayout.setError(context.getString(R.string.invalid_value_min_lenth, 1));
+            textInputLayout.setError(Helper.getResString(R.string.invalid_value_min_lenth, 1));
             valid = false;
             return;
         }
         if (s.toString().trim().length() > 100) {
             textInputLayout.setErrorEnabled(true);
-            textInputLayout.setError(context.getString(R.string.invalid_value_max_lenth, 100));
+            textInputLayout.setError(Helper.getResString(R.string.invalid_value_max_lenth, 100));
             valid = false;
             return;
         }
@@ -51,14 +53,14 @@ public class IdentifierValidator extends BaseValidator {
         }
         if (excludedNames.contains(s.toString())) {
             textInputLayout.setErrorEnabled(true);
-            textInputLayout.setError(context.getString(R.string.common_message_name_unavailable));
+            textInputLayout.setError(Helper.getResString(R.string.common_message_name_unavailable));
             valid = false;
             return;
         }
         for (String reservedName : reservedNames) {
             if (s.toString().equals(reservedName)) {
                 textInputLayout.setErrorEnabled(true);
-                textInputLayout.setError(context.getString(R.string.common_message_name_unavailable));
+                textInputLayout.setError(Helper.getResString(R.string.common_message_name_unavailable));
                 valid = false;
                 return;
             }
@@ -66,14 +68,14 @@ public class IdentifierValidator extends BaseValidator {
         for (String restrictedName : restrictedNames) {
             if (s.toString().equals(restrictedName)) {
                 textInputLayout.setErrorEnabled(true);
-                textInputLayout.setError(context.getString(R.string.logic_editor_message_reserved_keywords));
+                textInputLayout.setError(Helper.getResString(R.string.logic_editor_message_reserved_keywords));
                 valid = false;
                 return;
             }
         }
         if (!Character.isLetter(s.charAt(0))) {
             textInputLayout.setErrorEnabled(true);
-            textInputLayout.setError(context.getString(R.string.logic_editor_message_variable_name_must_start_letter));
+            textInputLayout.setError(Helper.getResString(R.string.logic_editor_message_variable_name_must_start_letter));
             valid = false;
             return;
         }
@@ -83,12 +85,12 @@ public class IdentifierValidator extends BaseValidator {
             valid = true;
         } else {
             textInputLayout.setErrorEnabled(true);
-            textInputLayout.setError(context.getString(R.string.invalid_value_rule_3));
+            textInputLayout.setError(Helper.getResString(R.string.invalid_value_rule_3));
             valid = false;
         }
         if (s.toString().trim().isEmpty()) {
             textInputLayout.setErrorEnabled(true);
-            textInputLayout.setError(context.getString(R.string.invalid_value_min_lenth, 1));
+            textInputLayout.setError(Helper.getResString(R.string.invalid_value_min_lenth, 1));
             valid = false;
         }
     }

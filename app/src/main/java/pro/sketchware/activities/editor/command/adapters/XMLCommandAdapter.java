@@ -1,5 +1,7 @@
 package pro.sketchware.activities.editor.command.adapters;
 
+
+import mod.hey.studios.util.Helper;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,7 +75,7 @@ public class XMLCommandAdapter
                     CommandBlock.getInputName(
                             item.get("input") != null ? item.get("input").toString() : ""));
             binding.tvName.setSingleLine(true);
-            binding.tvValue.setText(binding.getRoot().getContext().getString(R.string.xml_cmd_reference_format, item.get("reference").toString()));
+            binding.tvValue.setText(Helper.getResString(R.string.xml_cmd_reference_format, item.get("reference").toString()));
             binding.tvValue.setSingleLine(true);
             binding.imgLeftIcon.setImageResource(R.drawable.ic_mtrl_code);
             binding.getRoot()

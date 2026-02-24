@@ -713,9 +713,9 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
     }
 
-    public void setFieldValue(FieldBlockView ss, Object obj) {
+    public void setFieldValue(FieldBlockView ss, Object value) {
         BlockBean clone = ss.parentBlock.getBean().clone();
-        ss.setArgValue(obj);
+        ss.setArgValue(value);
         ss.parentBlock.recalculateToRoot();
         ss.parentBlock.getRootBlock().layoutChain();
         ss.parentBlock.blockPane.updatePaneSize();
@@ -1336,7 +1336,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.logic_editor_title_enter_string_value);
         View a2 = ViewUtil.inflateLayout(this, R.layout.property_popup_input_text);
-        ((TextInputLayout) a2.findViewById(R.id.ti_input)).setHint(getString(R.string.property_hint_enter_value));
+        ((TextInputLayout) a2.findViewById(R.id.ti_input)).setHint(Helper.getResString(R.string.property_hint_enter_value));
         EditText editText = a2.findViewById(R.id.ed_input);
         editText.setSingleLine(true);
         editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS);
@@ -1377,7 +1377,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         linearLayout.addView(name);
         TextView preview = new TextView(this);
         preview.setLayoutParams(layoutParams);
-        preview.setText(getString(R.string.font_preview));
+        preview.setText(Helper.getResString(R.string.font_preview));
 
         Typeface typeface;
         if (fontName.equalsIgnoreCase("default_font")) {
@@ -1389,7 +1389,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 crashlytics.log("Loading font preview");
                 crashlytics.recordException(e);
                 typeface = Typeface.DEFAULT;
-                preview.setText(getString(R.string.font_load_failed));
+                preview.setText(Helper.getResString(R.string.font_load_failed));
             }
         }
 
@@ -1480,9 +1480,9 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.logic_editor_title_enter_data_value);
         View a2 = ViewUtil.inflateLayout(this, R.layout.property_popup_input_intent_data);
-        ((TextView) a2.findViewById(R.id.tv_desc_intent_usage)).setText(getString(R.string.property_description_component_intent_usage));
+        ((TextView) a2.findViewById(R.id.tv_desc_intent_usage)).setText(Helper.getResString(R.string.property_description_component_intent_usage));
         EditText editText = a2.findViewById(R.id.ed_input);
-        ((TextInputLayout) a2.findViewById(R.id.ti_input)).setHint(getString(R.string.property_hint_enter_value));
+        ((TextInputLayout) a2.findViewById(R.id.ti_input)).setHint(Helper.getResString(R.string.property_hint_enter_value));
         editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         editText.setText(ss.getArgValue().toString());
         dialog.setView(a2);
@@ -2013,7 +2013,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
         String title;
         if (eventName.equals("moreBlock")) {
-            title = getString(R.string.root_spec_common_define) + " " + ReturnMoreblockManager.getLogicEditorTitle(ProjectDataManager.getProjectDataManager(scId).getMoreBlockSpec(projectFile.getJavaName(), id));
+            title = Helper.getResString(R.string.root_spec_common_define) + " " + ReturnMoreblockManager.getLogicEditorTitle(ProjectDataManager.getProjectDataManager(scId).getMoreBlockSpec(projectFile.getJavaName(), id));
         } else if (id.equals("_fab")) {
             title = StringResource.getInstance().getRootSpecTranslation(getContext(), "fab", eventName);
         } else {

@@ -26,8 +26,8 @@ public class MoreblockValidator extends BaseValidator {
         this.registeredVariables = registeredVariables;
     }
 
-    public void setReservedNames(String[] strArr) {
-        eventNames = strArr;
+    public void setReservedNames(String[] reservedNames) {
+        eventNames = reservedNames;
     }
 
     @Override
@@ -35,17 +35,17 @@ public class MoreblockValidator extends BaseValidator {
         String name = charSequence.toString();
         int trimmedLength = name.trim().length();
         if (trimmedLength < 1) {
-            textInputLayout.setError(context.getString(R.string.invalid_value_min_lenth, 1));
+            textInputLayout.setError(Helper.getResString(R.string.invalid_value_min_lenth, 1));
             valid = false;
         } else if (name.length() > 60) {
-            textInputLayout.setError(context.getString(R.string.invalid_value_max_lenth, 60));
+            textInputLayout.setError(Helper.getResString(R.string.invalid_value_max_lenth, 60));
             valid = false;
         } else {
             if (currentName != null && !currentName.isEmpty() && name.equals(currentName)) {
                 textInputLayout.setError(null);
                 valid = true;
             } else if (registeredVariables.contains(name)) {
-                textInputLayout.setError(context.getString(R.string.common_message_name_unavailable, 0));
+                textInputLayout.setError(Helper.getResString(R.string.common_message_name_unavailable, 0));
                 valid = false;
             } else {
                 boolean isEventName = false;
@@ -83,7 +83,7 @@ public class MoreblockValidator extends BaseValidator {
                         valid = false;
                     }
                     if (name.trim().isEmpty()) {
-                        textInputLayout.setError(context.getString(R.string.invalid_value_min_lenth, 1));
+                        textInputLayout.setError(Helper.getResString(R.string.invalid_value_min_lenth, 1));
                         valid = false;
                     }
                 }

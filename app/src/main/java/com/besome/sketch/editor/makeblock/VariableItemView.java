@@ -50,15 +50,15 @@ public class VariableItemView extends LinearLayout {
     private String getTypeName(String type, String name) {
         switch (type) {
             case "b":
-                type = getContext().getString(R.string.logic_variable_type_boolean);
+                type = Helper.getResString(R.string.logic_variable_type_boolean);
                 break;
 
             case "d":
-                type = getContext().getString(R.string.logic_variable_type_number);
+                type = Helper.getResString(R.string.logic_variable_type_number);
                 break;
 
             case "s":
-                type = getContext().getString(R.string.logic_variable_type_string);
+                type = Helper.getResString(R.string.logic_variable_type_string);
                 break;
 
             default:
@@ -67,31 +67,31 @@ public class VariableItemView extends LinearLayout {
 
         switch (name) {
             case "varInt":
-                type = getContext().getString(R.string.logic_variable_type_number);
+                type = Helper.getResString(R.string.logic_variable_type_number);
                 break;
 
             case "varBool":
-                type = getContext().getString(R.string.logic_variable_type_boolean);
+                type = Helper.getResString(R.string.logic_variable_type_boolean);
                 break;
 
             case "varStr":
-                type = getContext().getString(R.string.logic_variable_type_string);
+                type = Helper.getResString(R.string.logic_variable_type_string);
                 break;
 
             case "varMap":
-                type = getContext().getString(R.string.logic_variable_type_map);
+                type = Helper.getResString(R.string.logic_variable_type_map);
                 break;
 
             case "listInt":
-                type = getContext().getString(R.string.logic_variable_type_list_number);
+                type = Helper.getResString(R.string.logic_variable_type_list_number);
                 break;
 
             case "listStr":
-                type = getContext().getString(R.string.logic_variable_type_list_string);
+                type = Helper.getResString(R.string.logic_variable_type_list_string);
                 break;
 
             case "listMap":
-                type = getContext().getString(R.string.logic_variable_type_list_map);
+                type = Helper.getResString(R.string.logic_variable_type_list_map);
                 break;
 
             default:

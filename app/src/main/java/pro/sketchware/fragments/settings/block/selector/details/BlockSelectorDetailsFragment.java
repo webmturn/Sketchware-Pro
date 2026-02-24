@@ -123,7 +123,7 @@ public class BlockSelectorDetailsFragment extends BaseFragment {
 
     private void showCreateEditDialog(boolean isEdit, int indexA) {
         DialogAddCustomActivityBinding dialogBinding = DialogAddCustomActivityBinding.inflate(LayoutInflater.from(requireContext()));
-        dialogBinding.activityNameInputLayout.setHint(getString(R.string.selector_hint_name));
+        dialogBinding.activityNameInputLayout.setHint(Helper.getResString(R.string.selector_hint_name));
         if (isEdit) {
             dialogBinding.activityNameInput.setText(selectors.get(index).getData().get(indexA));
         }
@@ -165,7 +165,7 @@ public class BlockSelectorDetailsFragment extends BaseFragment {
         dialogBinding.delete.setOnClickListener(v -> {
             dialog.dismiss();
             showConfirmationDialog(
-                    getString(R.string.selector_message_delete_item),
+                    Helper.getResString(R.string.selector_message_delete_item),
                     confirmDialog -> {
                         selectors.get(index).getData().remove(indexA);
                         saveAll();

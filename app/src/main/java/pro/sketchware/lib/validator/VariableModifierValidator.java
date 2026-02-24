@@ -1,5 +1,7 @@
 package pro.sketchware.lib.validator;
 
+
+import mod.hey.studios.util.Helper;
 import android.content.Context;
 
 import com.google.android.material.textfield.TextInputLayout;
@@ -28,7 +30,7 @@ public class VariableModifierValidator extends BaseValidator {
         String reconsInput = String.join(" ", words);
 
         if (!input.equals(reconsInput)) {
-            textInputLayout.setError(textInputLayout.getContext().getString(R.string.error_extra_spaces_words_not_allowed));
+            textInputLayout.setError(Helper.getResString(R.string.error_extra_spaces_words_not_allowed));
             valid = false;
             return;
         }
@@ -37,18 +39,18 @@ public class VariableModifierValidator extends BaseValidator {
 
         for (String word : words) {
             if (!PATTERN_MODIFIER.matcher(word).matches()) {
-                textInputLayout.setError(textInputLayout.getContext().getString(R.string.error_invalid_modifier_format, word));
+                textInputLayout.setError(Helper.getResString(R.string.error_invalid_modifier_format, word));
                 valid = false;
                 return;
             }
             if (!usedModifiers.add(word)) {
-                textInputLayout.setError(textInputLayout.getContext().getString(R.string.error_duplicate_modifier_format, word));
+                textInputLayout.setError(Helper.getResString(R.string.error_duplicate_modifier_format, word));
                 valid = false;
                 return;
             }
             if (isAccessModifier(word)) {
                 if (hasAccessModifier) {
-                    textInputLayout.setError(textInputLayout.getContext().getString(R.string.error_access_modifier_only_one));
+                    textInputLayout.setError(Helper.getResString(R.string.error_access_modifier_only_one));
                     valid = false;
                     return;
                 }

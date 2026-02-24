@@ -117,7 +117,7 @@ public class PropertyAttributesItem extends LinearLayout implements View.OnClick
                 ((TextView) findViewById(R.id.tv_title)).setText(Helper.getResString(identifier));
                 return;
             }
-            tvValue.setText(getContext().getString(R.string.property_configure_parent_attrs));
+            tvValue.setText(Helper.getResString(R.string.property_configure_parent_attrs));
             imgLeftIcon.setImageResource(icon);
         }
     }

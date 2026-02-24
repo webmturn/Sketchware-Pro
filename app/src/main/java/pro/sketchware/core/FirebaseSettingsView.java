@@ -1,5 +1,7 @@
 package pro.sketchware.core;
 
+
+import mod.hey.studios.util.Helper;
 import android.content.Context;
 import android.widget.LinearLayout;
 
@@ -38,7 +40,7 @@ public class FirebaseSettingsView extends LinearLayout implements LibraryConfigV
     }
 
     public void showInputRequiredToast() {
-        SketchToast.toast(getContext(), getContext().getString(R.string.design_library_firebase_message_not_input_text), 1).show();
+        SketchToast.toast(getContext(), Helper.getResString(R.string.design_library_firebase_message_not_input_text), 1).show();
     }
 
     @Override

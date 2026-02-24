@@ -280,7 +280,7 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
         var inputText = dialogBinding.inputText;
         var renameOccurrencesCheckBox = dialogBinding.renameOccurrencesCheckBox;
 
-        var dialog = new MaterialAlertDialogBuilder(this).setTitle(getString(R.string.common_word_rename) + " " + filesAdapter.getFileName(position)).setView(dialogBinding.getRoot()).setNegativeButton(R.string.common_word_cancel, (dialogInterface, i) -> dialogInterface.dismiss()).setPositiveButton(R.string.common_word_rename, (dialogInterface, i) -> {
+        var dialog = new MaterialAlertDialogBuilder(this).setTitle(Helper.getResString(R.string.common_word_rename) + " " + filesAdapter.getFileName(position)).setView(dialogBinding.getRoot()).setNegativeButton(R.string.common_word_cancel, (dialogInterface, i) -> dialogInterface.dismiss()).setPositiveButton(R.string.common_word_rename, (dialogInterface, i) -> {
             if (!Helper.getText(inputText).isEmpty()) {
                 if (!filesAdapter.isFolder(position)) {
                     if (frc.getJavaManifestList().contains(filesAdapter.getFullName(position))) {
@@ -309,7 +309,7 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
 
         if (!isFolder) {
             renameOccurrencesCheckBox.setVisibility(View.VISIBLE);
-            renameOccurrencesCheckBox.setText(getString(R.string.java_rename_occurrences_format, filesAdapter.getFileNameWoExt(position)));
+            renameOccurrencesCheckBox.setText(Helper.getResString(R.string.java_rename_occurrences_format, filesAdapter.getFileNameWoExt(position)));
         }
         dialog.show();
 
@@ -320,7 +320,7 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
     private void showDeleteDialog(int position) {
         boolean isInManifest = frc.getJavaManifestList().contains(filesAdapter.getFullName(position));
 
-        new MaterialAlertDialogBuilder(this).setTitle(getString(R.string.common_word_delete) + " " + filesAdapter.getFileName(position) + "?").setMessage(getString(R.string.delete_confirm_format, getString(filesAdapter.isFolder(position) ? R.string.common_word_folder : R.string.common_word_file), isInManifest ? getString(R.string.java_delete_manifest_warning) : "")).setPositiveButton(R.string.common_word_delete, (dialog, which) -> {
+        new MaterialAlertDialogBuilder(this).setTitle(Helper.getResString(R.string.common_word_delete) + " " + filesAdapter.getFileName(position) + "?").setMessage(Helper.getResString(R.string.delete_confirm_format, getString(filesAdapter.isFolder(position) ? R.string.common_word_folder : R.string.common_word_file), isInManifest ? Helper.getResString(R.string.java_delete_manifest_warning) : "")).setPositiveButton(R.string.common_word_delete, (dialog, which) -> {
             if (!filesAdapter.isFolder(position) && isInManifest) {
                 frc.getJavaManifestList().remove(filesAdapter.getFullName(position));
                 FileUtil.writeFile(fpu.getManifestJava(sc_id), new Gson().toJson(frc.listJavaManifest));

@@ -1,5 +1,7 @@
 package com.besome.sketch.editor.manage.sound;
 
+
+import mod.hey.studios.util.Helper;
 import androidx.activity.OnBackPressedCallback;
 import android.os.Bundle;
 import android.os.Handler;
@@ -149,8 +151,8 @@ public class ManageSoundActivity extends BaseAppCompatActivity implements ViewPa
         public PagerAdapter(FragmentManager fragmentManager) {
             super(fragmentManager);
             titles = new String[TAB_COUNT];
-            titles[0] = getString(R.string.design_manager_tab_title_this_project);
-            titles[1] = getString(R.string.design_manager_tab_title_my_collection);
+            titles[0] = Helper.getResString(R.string.design_manager_tab_title_this_project);
+            titles[1] = Helper.getResString(R.string.design_manager_tab_title_my_collection);
         }
 
         @Override

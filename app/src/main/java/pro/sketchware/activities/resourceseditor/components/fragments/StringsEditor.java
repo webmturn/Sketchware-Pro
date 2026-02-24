@@ -159,7 +159,7 @@ public class StringsEditor extends Fragment {
             addString(key, value, Objects.requireNonNull(binding.stringHeaderInput.getText()).toString().trim());
             updateNoContentLayout();
         });
-        dialog.setNegativeButton(getString(R.string.cancel), null);
+        dialog.setNegativeButton(Helper.getResString(R.string.cancel), null);
         dialog.setView(binding.getRoot());
         dialog.show();
     }

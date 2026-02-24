@@ -1,5 +1,7 @@
 package com.besome.sketch.editor.manage.view;
 
+
+import mod.hey.studios.util.Helper;
 import static pro.sketchware.utility.SketchwareUtil.dpToPx;
 
 import android.content.Intent;
@@ -203,7 +205,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
                     setSelectionMode(false);
                     activitiesFragment.updateGuideVisibility();
                     customViewsFragment.updateEmptyState();
-                    SketchToast.toast(getApplicationContext(), getString(R.string.common_message_complete_delete), SketchToast.TOAST_WARNING).show();
+                    SketchToast.toast(getApplicationContext(), Helper.getResString(R.string.common_message_complete_delete), SketchToast.TOAST_WARNING).show();
                     fab.show();
                 }
             } else if (viewId == R.id.fab) {
@@ -363,11 +365,11 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
             var activity = this.activity.get();
             if (activity == null) return;
             try {
-                publishProgress(activity.getString(R.string.common_message_progress));
+                publishProgress(Helper.getResString(R.string.common_message_progress));
                 activity.saveAndSyncFiles();
             } catch (Exception e) {
                 Log.e("ManageViewActivity", e.getMessage(), e);
-                throw new SketchwareException(activity.getString(R.string.common_error_unknown));
+                throw new SketchwareException(Helper.getResString(R.string.common_error_unknown));
             }
         }
 
@@ -378,7 +380,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
 
         public ViewPagerAdapter(FragmentManager fragmentManager) {
             super(fragmentManager);
-            tabTitles = new String[]{getString(R.string.common_word_view), getString(R.string.common_word_custom_view)};
+            tabTitles = new String[]{Helper.getResString(R.string.common_word_view), Helper.getResString(R.string.common_word_custom_view)};
         }
 
         @Override

@@ -1,5 +1,7 @@
 package pro.sketchware.core;
 
+
+import mod.hey.studios.util.Helper;
 import android.content.Context;
 
 import com.google.android.material.textfield.TextInputLayout;
@@ -20,22 +22,22 @@ public class VariableNameValidator extends BaseValidator {
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         if (s.toString().trim().length() == 0) {
             textInputLayout.setErrorEnabled(true);
-            textInputLayout.setError(context.getString(R.string.invalid_value_min_lenth, 1));
+            textInputLayout.setError(Helper.getResString(R.string.invalid_value_min_lenth, 1));
             valid = false;
         } else if (s.toString().trim().length() > 20) {
             textInputLayout.setErrorEnabled(true);
-            textInputLayout.setError(context.getString(R.string.invalid_value_max_lenth, 20));
+            textInputLayout.setError(Helper.getResString(R.string.invalid_value_max_lenth, 20));
             valid = false;
         } else if (!Character.isLetter(s.charAt(0))) {
             textInputLayout.setErrorEnabled(true);
-            textInputLayout.setError(context.getString(R.string.logic_editor_message_variable_name_must_start_letter));
+            textInputLayout.setError(Helper.getResString(R.string.logic_editor_message_variable_name_must_start_letter));
             valid = false;
         } else if (PATTERN.matcher(s.toString()).matches()) {
             textInputLayout.setErrorEnabled(false);
             valid = true;
         } else {
             textInputLayout.setErrorEnabled(true);
-            textInputLayout.setError(context.getString(R.string.invalid_value_rule_3));
+            textInputLayout.setError(Helper.getResString(R.string.invalid_value_rule_3));
             valid = false;
         }
     }

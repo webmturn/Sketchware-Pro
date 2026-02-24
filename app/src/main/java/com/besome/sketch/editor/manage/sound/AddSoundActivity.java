@@ -86,7 +86,7 @@ public class AddSoundActivity extends BaseDialogActivity implements View.OnClick
     private void pickSound() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("audio/*");
-        soundPickerLauncher.launch(Intent.createChooser(intent, getString(R.string.common_word_choose)));
+        soundPickerLauncher.launch(Intent.createChooser(intent, Helper.getResString(R.string.common_word_choose)));
     }
 
     private void playOrPause() {
@@ -130,9 +130,9 @@ public class AddSoundActivity extends BaseDialogActivity implements View.OnClick
                     }
                 });
         setContentView(R.layout.manage_sound_add);
-        setDialogTitle(getString(R.string.design_manager_sound_title_add_sound));
-        setOkButtonText(getString(R.string.common_word_save));
-        setCancelButtonText(getString(R.string.common_word_cancel));
+        setDialogTitle(Helper.getResString(R.string.design_manager_sound_title_add_sound));
+        setOkButtonText(Helper.getResString(R.string.common_word_save));
+        setCancelButtonText(Helper.getResString(R.string.common_word_cancel));
 
         Intent intent = getIntent();
         ArrayList<String> existingSoundNames = intent.getStringArrayListExtra("sound_names");
@@ -183,7 +183,7 @@ public class AddSoundActivity extends BaseDialogActivity implements View.OnClick
         dialogOkButton.setOnClickListener(this);
         dialogCancelButton.setOnClickListener(this);
         if (requestCode == 270) {
-            setDialogTitle(getString(R.string.design_manager_sound_title_edit_sound));
+            setDialogTitle(Helper.getResString(R.string.design_manager_sound_title_edit_sound));
             ProjectResourceBean projectResourceBean = intent.getParcelableExtra("project_resource");
             soundNameValidator = new ResourceNameValidator(this, soundInputLayout, BlockConstants.RESERVED_KEYWORDS, new ArrayList<>());
             soundName.setText(projectResourceBean.resName);
@@ -227,15 +227,15 @@ public class AddSoundActivity extends BaseDialogActivity implements View.OnClick
 
                                     switch (message) {
                                         case "duplicate_name":
-                                            SketchToast.warning(this, getString(R.string.collection_duplicated_name), 1).show();
+                                            SketchToast.warning(this, Helper.getResString(R.string.collection_duplicated_name), 1).show();
                                             break;
 
                                         case "file_no_exist":
-                                            SketchToast.warning(this, getString(R.string.collection_no_exist_file), 1).show();
+                                            SketchToast.warning(this, Helper.getResString(R.string.collection_no_exist_file), 1).show();
                                             break;
 
                                         case "fail_to_copy":
-                                            SketchToast.warning(this, getString(R.string.collection_failed_to_copy), 1).show();
+                                            SketchToast.warning(this, Helper.getResString(R.string.collection_failed_to_copy), 1).show();
                                             break;
 
                                         default:

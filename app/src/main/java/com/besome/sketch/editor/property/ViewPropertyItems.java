@@ -1,5 +1,7 @@
 package com.besome.sketch.editor.property;
 
+
+import mod.hey.studios.util.Helper;
 import com.besome.sketch.editor.PropertyActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -67,7 +69,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
 
     private void addMarginAndGravityProperties(ViewBean bean) {
         if (getOrientation() == LinearLayout.VERTICAL) {
-            addSubheader(getContext().getString(R.string.property_header_layout));
+            addSubheader(Helper.getResString(R.string.property_header_layout));
         }
 
         addPropertyForBean(bean, "property_margin");
@@ -358,7 +360,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
 
     private void addImageTransformSection(ViewBean bean) {
         if (getOrientation() == LinearLayout.VERTICAL) {
-            addClickableSubheader(getContext().getString(R.string.property_header_image), this);
+            addClickableSubheader(Helper.getResString(R.string.property_header_image), this);
         }
 
         addPropertyForBean(bean, "property_image");
@@ -406,7 +408,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
 
     public void addLayoutProperties(ViewBean bean) {
         if (getOrientation() == LinearLayout.VERTICAL) {
-            addSubheader(getContext().getString(R.string.property_header_layout));
+            addSubheader(Helper.getResString(R.string.property_header_layout));
         }
 
         ClassInfo classInfo = bean.getClassInfo();
@@ -620,7 +622,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
         ClassInfo classInfo = bean.getClassInfo();
         if (classInfo.matchesType("TextView")) {
             if (getOrientation() == LinearLayout.VERTICAL) {
-                addSubheader(getContext().getString(R.string.property_header_text));
+                addSubheader(Helper.getResString(R.string.property_header_text));
             }
 
             addPropertyForBean(bean, "property_text");
@@ -653,11 +655,11 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
         ClassInfo classInfo = bean.getClassInfo();
         if (getOrientation() == LinearLayout.VERTICAL) {
             if (classInfo.matchesType("ImageView")) {
-                addClickableSubheader(getContext().getString(R.string.property_header_image), this);
+                addClickableSubheader(Helper.getResString(R.string.property_header_image), this);
                 addPropertyForBean(bean, "property_image");
                 addPropertyForBean(bean, "property_scale_type");
             } else {
-                addSubheader(getContext().getString(R.string.property_header_image));
+                addSubheader(Helper.getResString(R.string.property_header_image));
             }
         } else if (classInfo.matchesType("ImageView")) {
             addPropertyForBean(bean, "property_image");

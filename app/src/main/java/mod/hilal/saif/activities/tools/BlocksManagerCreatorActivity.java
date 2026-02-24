@@ -98,7 +98,7 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
                     binding.nameLayout.setErrorEnabled(false);
                     binding.save.setEnabled(true);
                 } else if (!mode.equals("edit")) {
-                    binding.nameLayout.setError(getString(R.string.error_block_name_in_use));
+                    binding.nameLayout.setError(Helper.getResString(R.string.error_block_name_in_use));
                     binding.nameLayout.setErrorEnabled(true);
                     binding.save.setEnabled(false);
                 } else {
@@ -106,7 +106,7 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
                     Object blockNameObject = savedBlocksListBlock.get("name");
 
                     if (!string.equals(blockNameObject)) {
-                        binding.nameLayout.setError(getString(R.string.error_block_name_in_use));
+                        binding.nameLayout.setError(Helper.getResString(R.string.error_block_name_in_use));
                         binding.nameLayout.setErrorEnabled(true);
                         binding.save.setEnabled(false);
                     }
@@ -178,7 +178,7 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!PropertiesUtil.isHexColor(s.toString())) {
-                    binding.colourLayout.setError(getString(R.string.error_invalid_hex_color_short));
+                    binding.colourLayout.setError(Helper.getResString(R.string.error_invalid_hex_color_short));
                     binding.colourLayout.setErrorEnabled(true);
                 } else {
                     binding.colourLayout.setError(null);
@@ -191,12 +191,12 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
         binding.cancel.setOnClickListener(Helper.getBackPressedClickListener(this));
         binding.save.setOnClickListener(v -> {
             if (!PropertiesUtil.isHexColor(Helper.getText(binding.colour))) {
-                SketchwareUtil.showMessage(getApplicationContext(), getString(R.string.error_invalid_hex_color_toast));
+                SketchwareUtil.showMessage(getApplicationContext(), Helper.getResString(R.string.error_invalid_hex_color_toast));
                 return;
             }
             Matcher matcher = PARAM_PATTERN.matcher(Helper.getText(binding.spec));
             if (matcher.find()) {
-                SketchwareUtil.showMessage(getApplicationContext(), getString(R.string.error_invalid_block_params));
+                SketchwareUtil.showMessage(getApplicationContext(), Helper.getResString(R.string.error_invalid_block_params));
                 return;
             }
             if (Helper.getText(binding.type).isEmpty()) {
@@ -358,7 +358,7 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
         if (nameObject instanceof String) {
             binding.name.setText((String) nameObject);
         } else {
-            binding.nameLayout.setError(getString(R.string.error_invalid_name_data));
+            binding.nameLayout.setError(Helper.getResString(R.string.error_invalid_name_data));
             binding.nameLayout.setErrorEnabled(true);
         }
 
@@ -366,12 +366,12 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
         if (typeObject instanceof String typeString) {
 
             if (typeString.equals(" ")) {
-                binding.type.setText(getString(R.string.block_type_regular));
+                binding.type.setText(Helper.getResString(R.string.block_type_regular));
             } else {
                 binding.type.setText(typeString);
             }
         } else {
-            binding.typeLayout.setError(getString(R.string.error_invalid_type_data));
+            binding.typeLayout.setError(Helper.getResString(R.string.error_invalid_type_data));
             binding.typeLayout.setErrorEnabled(true);
         }
 
@@ -380,7 +380,7 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
             if (typeName instanceof String) {
                 binding.typename.setText((String) typeName);
             } else {
-                binding.typenameLayout.setError(getString(R.string.error_invalid_typename_data));
+                binding.typenameLayout.setError(Helper.getResString(R.string.error_invalid_typename_data));
                 binding.typenameLayout.setErrorEnabled(true);
             }
         }
@@ -389,7 +389,7 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
         if (specObject instanceof String) {
             binding.spec.setText((String) specObject);
         } else {
-            binding.specLayout.setError(getString(R.string.error_invalid_spec_data));
+            binding.specLayout.setError(Helper.getResString(R.string.error_invalid_spec_data));
             binding.specLayout.setErrorEnabled(true);
         }
 
@@ -398,7 +398,7 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
             if (spec2Object instanceof String) {
                 binding.spec2.setText((String) spec2Object);
             } else {
-                binding.spec2Layout.setError(getString(R.string.error_invalid_spec2_data));
+                binding.spec2Layout.setError(Helper.getResString(R.string.error_invalid_spec2_data));
                 binding.spec2Layout.setErrorEnabled(true);
             }
         }
@@ -408,7 +408,7 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
             if (importsObject instanceof String) {
                 binding.customImport.setText((String) importsObject);
             } else {
-                binding.customImportLayout.setError(getString(R.string.error_invalid_imports_data));
+                binding.customImportLayout.setError(Helper.getResString(R.string.error_invalid_imports_data));
                 binding.customImportLayout.setErrorEnabled(true);
             }
         }
@@ -418,7 +418,7 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
             if (colorObject instanceof String) {
                 binding.colour.setText((String) colorObject);
             } else {
-                binding.colourLayout.setError(getString(R.string.error_invalid_color_data));
+                binding.colourLayout.setError(Helper.getResString(R.string.error_invalid_color_data));
                 binding.colourLayout.setErrorEnabled(true);
             }
         } else {

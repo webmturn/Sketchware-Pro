@@ -128,7 +128,7 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
             }
         }
         value = resName;
-        valueTextView.setText(getContext().getString(R.string.color_none));
+        valueTextView.setText(Helper.getResString(R.string.color_none));
         imagePreview.setImageDrawable(null);
         imagePreview.setBackgroundColor(Color.WHITE);
     }

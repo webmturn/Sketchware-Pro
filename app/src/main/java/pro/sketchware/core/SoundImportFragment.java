@@ -1,5 +1,7 @@
 package pro.sketchware.core;
 
+
+import mod.hey.studios.util.Helper;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -48,7 +50,7 @@ public class SoundImportFragment extends BaseFragment {
     private void updateImportSoundsText() {
         int selectedSounds = (int) sounds.stream().filter(projectResourceBean -> projectResourceBean.isSelected).count();
         if (selectedSounds > 0) {
-            actBinding.btnImport.setText(getString(R.string.common_word_import_count, selectedSounds));
+            actBinding.btnImport.setText(Helper.getResString(R.string.common_word_import_count, selectedSounds));
             actBinding.layoutBtnImport.setVisibility(View.VISIBLE);
         } else {
             actBinding.layoutBtnImport.setVisibility(View.GONE);

@@ -58,7 +58,7 @@ public class FirebaseActivity extends BaseAppCompatActivity implements View.OnCl
             step.onSave();
         }
 
-        getSupportActionBar().setSubtitle(stepNumber == STEP_3 ? getString(R.string.common_word_review) : getString(R.string.common_word_step, stepNumber + 1));
+        getSupportActionBar().setSubtitle(stepNumber == STEP_3 ? Helper.getResString(R.string.common_word_review) : Helper.getResString(R.string.common_word_step, stepNumber + 1));
         tv_step_title.setText(stepTitles[stepNumber]);
         tv_step_desc.setText(stepDescriptions[stepNumber]);
 
@@ -118,7 +118,7 @@ public class FirebaseActivity extends BaseAppCompatActivity implements View.OnCl
                     showGetChromeDialog();
                 }
             } else {
-                SketchToast.toast(getApplicationContext(), getString(R.string.common_message_check_network), SketchToast.TOAST_NORMAL).show();
+                SketchToast.toast(getApplicationContext(), Helper.getResString(R.string.common_message_check_network), SketchToast.TOAST_NORMAL).show();
             }
         }
     }
@@ -138,7 +138,7 @@ public class FirebaseActivity extends BaseAppCompatActivity implements View.OnCl
                 showGetChromeDialog();
             }
         } else {
-            SketchToast.toast(getApplicationContext(), getString(R.string.common_message_check_network), SketchToast.TOAST_NORMAL).show();
+            SketchToast.toast(getApplicationContext(), Helper.getResString(R.string.common_message_check_network), SketchToast.TOAST_NORMAL).show();
         }
     }
 
@@ -207,12 +207,12 @@ public class FirebaseActivity extends BaseAppCompatActivity implements View.OnCl
         } else {
             sc_id = getIntent().getStringExtra("sc_id");
         }
-        String titleStep1 = getString(R.string.design_library_firebase_setting_step1_title);
-        String titleStep2 = getString(R.string.design_library_firebase_setting_step2_title);
-        String titleStep3 = getString(R.string.design_library_firebase_setting_step3_title);
-        String descriptionStep1 = getString(R.string.design_library_firebase_setting_step1_desc);
-        String descriptionStep2 = getString(R.string.design_library_firebase_setting_step2_desc);
-        String descriptionStep3 = getString(R.string.design_library_firebase_setting_step3_desc);
+        String titleStep1 = Helper.getResString(R.string.design_library_firebase_setting_step1_title);
+        String titleStep2 = Helper.getResString(R.string.design_library_firebase_setting_step2_title);
+        String titleStep3 = Helper.getResString(R.string.design_library_firebase_setting_step3_title);
+        String descriptionStep1 = Helper.getResString(R.string.design_library_firebase_setting_step1_desc);
+        String descriptionStep2 = Helper.getResString(R.string.design_library_firebase_setting_step2_desc);
+        String descriptionStep3 = Helper.getResString(R.string.design_library_firebase_setting_step3_desc);
         stepTitles = new String[]{titleStep1, titleStep2, titleStep3};
         stepDescriptions = new String[]{descriptionStep1, descriptionStep2, descriptionStep3};
 

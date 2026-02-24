@@ -264,7 +264,7 @@ public class AddViewActivity extends BaseAppCompatActivity {
         Intent intent = new Intent();
         intent.putExtra("project_file", projectFileBean);
         setResult(RESULT_OK, intent);
-        SketchToast.toast(getApplicationContext(), getString(R.string.design_manager_message_edit_complete, new Object[0]), SketchToast.TOAST_NORMAL).show();
+        SketchToast.toast(getApplicationContext(), Helper.getResString(R.string.design_manager_message_edit_complete, new Object[0]), SketchToast.TOAST_NORMAL).show();
         finish();
     }
 
@@ -277,7 +277,7 @@ public class AddViewActivity extends BaseAppCompatActivity {
             intent.putExtra("preset_views", getPresetData(presetName));
         }
         setResult(RESULT_OK, intent);
-        SketchToast.toast(getApplicationContext(), getString(R.string.design_manager_message_add_complete, new Object[0]), SketchToast.TOAST_NORMAL).show();
+        SketchToast.toast(getApplicationContext(), Helper.getResString(R.string.design_manager_message_add_complete, new Object[0]), SketchToast.TOAST_NORMAL).show();
         finish();
     }
 

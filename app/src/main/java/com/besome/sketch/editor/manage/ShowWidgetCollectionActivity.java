@@ -63,7 +63,7 @@ public class ShowWidgetCollectionActivity extends BaseAppCompatActivity implemen
             getOnBackPressedDispatcher().onBackPressed();
         } else if (id == R.id.save_button && widgetNameValidator.isValid()) {
             WidgetCollectionManager.getInstance().renameWidget(widgetName, Helper.getText(widgetNameInput), true);
-            SketchToast.toast(getApplicationContext(), getString(R.string.design_manager_message_edit_complete), SketchToast.TOAST_NORMAL).show();
+            SketchToast.toast(getApplicationContext(), Helper.getResString(R.string.design_manager_message_edit_complete), SketchToast.TOAST_NORMAL).show();
             finish();
         }
     }
@@ -100,7 +100,7 @@ public class ShowWidgetCollectionActivity extends BaseAppCompatActivity implemen
         widgetNameInput = binding.edInput.getEditText();
         widgetNameInput.setPrivateImeOptions("defaultInputmode=english;");
         widgetNameInput.setText(widgetName);
-        binding.edInput.setHint(getString(R.string.design_manager_widget_hint_enter_widget_name));
+        binding.edInput.setHint(Helper.getResString(R.string.design_manager_widget_hint_enter_widget_name));
         binding.saveButton.setOnClickListener(this);
         widgetNameValidator = new UniqueNameValidator(this, binding.edInput.getTextInputLayout(), WidgetCollectionManager.getInstance().getWidgetNames());
     }

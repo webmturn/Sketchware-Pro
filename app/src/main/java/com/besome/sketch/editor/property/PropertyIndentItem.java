@@ -134,7 +134,7 @@ public class PropertyIndentItem extends RelativeLayout implements View.OnClickLi
         this.top = top;
         this.right = right;
         this.bottom = bottom;
-        tvValue.setText(getContext().getString(R.string.property_indent_format, this.left, this.top, this.right, this.bottom));
+        tvValue.setText(Helper.getResString(R.string.property_indent_format, this.left, this.top, this.right, this.bottom));
     }
 
     private void showDialog() {

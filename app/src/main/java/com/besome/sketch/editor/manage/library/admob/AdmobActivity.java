@@ -39,7 +39,7 @@ public class AdmobActivity extends BaseAppCompatActivity implements View.OnClick
             binding.tvToptitle.setText(Helper.getResString(R.string.common_word_review));
             binding.tvNextbtn.setText(Helper.getResString(R.string.common_word_save));
         } else {
-            binding.tvToptitle.setText(getString(R.string.common_word_step, position + 1));
+            binding.tvToptitle.setText(Helper.getResString(R.string.common_word_step, position + 1));
             binding.tvNextbtn.setText(Helper.getResString(R.string.common_word_next));
         }
 

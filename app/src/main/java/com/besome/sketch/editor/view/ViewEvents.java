@@ -90,7 +90,7 @@ public class ViewEvents extends LinearLayout {
             eventBean.isSelected = true;
             ProjectDataManager.getProjectDataManager(sc_id).addEventBean(projectFileBean.getJavaName(), eventBean);
             eventAdapter.notifyItemChanged(eventPosition);
-            SketchToast.toast(getContext(), getContext().getString(R.string.event_message_new_event), 0).show();
+            SketchToast.toast(getContext(), Helper.getResString(R.string.event_message_new_event), 0).show();
         }
         if (onEventClickListener != null) {
             onEventClickListener.onEventSelected(eventBean);
@@ -143,7 +143,7 @@ public class ViewEvents extends LinearLayout {
                         dialog.setPositiveButton(Helper.getResString(R.string.common_word_delete), (view, which) -> {
                             view.dismiss();
                             EventBean.deleteEvent(sc_id, event, projectFileBean);
-                            SketchToast.toast(getContext(), getContext().getString(R.string.common_message_complete_delete), 0).show();
+                            SketchToast.toast(getContext(), Helper.getResString(R.string.common_message_complete_delete), 0).show();
                             event.isSelected = false;
                             eventAdapter.notifyItemChanged(position);
                         });

@@ -123,7 +123,7 @@ public class ManageAssetsActivity extends BaseAppCompatActivity {
         var dialog = new MaterialAlertDialogBuilder(this)
                 .setView(dialogBinding.getRoot())
                 .setTitle(R.string.manager_create_new_title)
-                .setMessage(getString(R.string.create_file_extension_hint))
+                .setMessage(Helper.getResString(R.string.create_file_extension_hint))
                 .setNegativeButton(R.string.common_word_cancel, (dialogInterface, i) -> dialogInterface.dismiss())
                 .setPositiveButton(R.string.common_word_create, null)
                 .create();
@@ -217,7 +217,7 @@ public class ManageAssetsActivity extends BaseAppCompatActivity {
     private void showDeleteDialog(int position) {
         new MaterialAlertDialogBuilder(this)
                 .setTitle(String.format(Helper.getResString(R.string.manager_delete_title), assetsAdapter.getFileName(position)))
-                .setMessage(getString(R.string.delete_confirm_format,
+                .setMessage(Helper.getResString(R.string.delete_confirm_format,
                         getString(assetsAdapter.isFolder(position) ? R.string.common_word_folder : R.string.common_word_file), ""))
                 .setPositiveButton(R.string.common_word_delete, (dialog, which) -> {
                     FileUtil.deleteFile(assetsAdapter.getItem(position));

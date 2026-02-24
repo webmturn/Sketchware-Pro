@@ -177,8 +177,8 @@ public class AppSettings extends BaseAppCompatActivity {
                                         startActivity(intent);
                                     }
                                     case 1 -> new MaterialAlertDialogBuilder(AppSettings.this)
-                                            .setTitle(String.format(Helper.getResString(R.string.app_settings_delete_confirm_title), getString(R.string.common_word_file)))
-                                            .setMessage(String.format(Helper.getResString(R.string.app_settings_delete_confirm_msg), getString(R.string.common_word_file)))
+                                            .setTitle(String.format(Helper.getResString(R.string.app_settings_delete_confirm_title), Helper.getResString(R.string.common_word_file)))
+                                            .setMessage(String.format(Helper.getResString(R.string.app_settings_delete_confirm_msg), Helper.getResString(R.string.common_word_file)))
                                             .setPositiveButton(R.string.common_word_delete, (deleteDialog, pressedButton) ->
                                                     FileUtil.deleteFile(files.get(0).getAbsolutePath()))
                                             .setNegativeButton(R.string.common_word_cancel, null)
@@ -232,7 +232,7 @@ public class AppSettings extends BaseAppCompatActivity {
                 MaterialAlertDialogBuilder confirmOverwrite = new MaterialAlertDialogBuilder(this);
                 confirmOverwrite.setIcon(R.drawable.color_save_as_new_96);
                 confirmOverwrite.setTitle(R.string.app_settings_file_exists_title);
-                confirmOverwrite.setMessage(getString(R.string.overwrite_apk_format, output_apk_file_name));
+                confirmOverwrite.setMessage(Helper.getResString(R.string.overwrite_apk_format, output_apk_file_name));
 
                 confirmOverwrite.setNegativeButton(Helper.getResString(R.string.common_word_cancel), null);
                 confirmOverwrite.setPositiveButton(R.string.common_word_overwrite, (view, which1) -> {
@@ -264,7 +264,7 @@ public class AppSettings extends BaseAppCompatActivity {
         scroll_view.addView(tv_log);
         layout_quiz.addView(scroll_view);
 
-        tv_progress.setText(getString(R.string.signing_apk_progress));
+        tv_progress.setText(Helper.getResString(R.string.signing_apk_progress));
 
         AlertDialog building_dialog = new MaterialAlertDialogBuilder(this)
                 .setView(building_root)
@@ -290,12 +290,12 @@ public class AppSettings extends BaseAppCompatActivity {
                                         Uri.fromFile(new File(outputApkPath)).getLastPathSegment()),
                                 Toast.LENGTH_LONG);
                     } else {
-                        tv_progress.setText(getString(R.string.signing_error_occurred));
+                        tv_progress.setText(Helper.getResString(R.string.signing_error_occurred));
                     }
                 });
             } catch (Exception e) {
                 android.util.Log.e("AppSettings", "Failed to sign APK", e);
-                runOnUiThread(() -> tv_progress.setText(getString(R.string.signing_failed_format, e.getMessage())));
+                runOnUiThread(() -> tv_progress.setText(Helper.getResString(R.string.signing_failed_format, e.getMessage())));
             }
         }).start();
 

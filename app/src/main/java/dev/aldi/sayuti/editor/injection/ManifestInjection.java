@@ -14,9 +14,9 @@ public class ManifestInjection {
     public String replace;
     public String value;
 
-    public ManifestInjection(BuildConfig buildConfig, ArrayList arrayList) {
+    public ManifestInjection(BuildConfig buildConfig, ArrayList injections) {
         this.buildConfig = buildConfig;
-        arr = arrayList;
+        arr = injections;
     }
 
     public void injectManifestAttributes(XmlBuilder nx, String fileName, String activityName) {

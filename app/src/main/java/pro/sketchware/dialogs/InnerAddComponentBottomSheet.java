@@ -173,10 +173,10 @@ public class InnerAddComponentBottomSheet extends BottomSheetDialogFragment {
 
         List<String> mimeTypes = Arrays.asList("*/*", "image/*", "audio/*", "text/*");
         List<String> mimeTypeLabels = Arrays.asList(
-                getString(R.string.component_file_picker_title_select_mime_type_all_files),
-                getString(R.string.component_file_picker_title_select_mime_type_image_files),
-                getString(R.string.component_file_picker_title_select_mime_type_audio_files),
-                getString(R.string.component_file_picker_title_select_mime_type_text_files)
+                Helper.getResString(R.string.component_file_picker_title_select_mime_type_all_files),
+                Helper.getResString(R.string.component_file_picker_title_select_mime_type_image_files),
+                Helper.getResString(R.string.component_file_picker_title_select_mime_type_audio_files),
+                Helper.getResString(R.string.component_file_picker_title_select_mime_type_text_files)
         );
 
         new MaterialAlertDialogBuilder(getContext())

@@ -132,8 +132,8 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
                         }
                     }
                 });
-        setDialogTitle(getString(R.string.design_manager_image_title_add_image));
-        setOkButtonText(getString(R.string.common_word_save));
+        setDialogTitle(Helper.getResString(R.string.design_manager_image_title_add_image));
+        setOkButtonText(Helper.getResString(R.string.common_word_save));
         setContentView(R.layout.manage_image_add);
         Intent intent = getIntent();
         images = intent.getParcelableArrayListExtra("images");
@@ -156,7 +156,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
         ed_input = findViewById(R.id.ed_input);
         ed_input_edittext = ed_input.getEditText();
         ed_input_edittext.setPrivateImeOptions("defaultInputmode=english;");
-        ed_input.setHint(getString(R.string.design_manager_image_hint_enter_image_name));
+        ed_input.setHint(Helper.getResString(R.string.design_manager_image_hint_enter_image_name));
         imageNameValidator = new FileNameValidator(this, ed_input.getTextInputLayout(), BlockConstants.RESERVED_KEYWORDS, getReservedImageNames());
         imageNameValidator.setBatchCount(1);
         tv_add_photo.setText(R.string.design_manager_image_title_add_image);
@@ -177,7 +177,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
         super.onPostCreate(savedInstanceState);
         if (editing) {
             editTarget.isEdited = true;
-            setDialogTitle(getString(R.string.design_manager_image_title_edit_image_name));
+            setDialogTitle(Helper.getResString(R.string.design_manager_image_title_edit_image_name));
             imageNameValidator = new FileNameValidator(this, ed_input.getTextInputLayout(), BlockConstants.RESERVED_KEYWORDS, getReservedImageNames(), editTarget.resName);
             imageNameValidator.setBatchCount(1);
             ed_input_edittext.setText(editTarget.resName);
@@ -201,9 +201,9 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
         try {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             intent.setType("image/*");
-            imagePickerLauncher.launch(Intent.createChooser(intent, getString(R.string.common_word_choose)));
+            imagePickerLauncher.launch(Intent.createChooser(intent, Helper.getResString(R.string.common_word_choose)));
         } catch (ActivityNotFoundException unused) {
-            SketchToast.warning(this, getString(R.string.common_error_activity_not_found), SketchToast.TOAST_NORMAL).show();
+            SketchToast.warning(this, Helper.getResString(R.string.common_error_activity_not_found), SketchToast.TOAST_NORMAL).show();
         }
     }
 

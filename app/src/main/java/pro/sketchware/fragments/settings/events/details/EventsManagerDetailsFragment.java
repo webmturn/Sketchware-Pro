@@ -195,7 +195,7 @@ public class EventsManagerDetailsFragment extends BaseFragment {
 
             holder.binding.eventTitle.setText((String) item.get("name"));
             if ("".equals(dataArray.get(position).get("var"))) {
-                holder.binding.eventSubtitle.setText(getString(R.string.events_activity_event));
+                holder.binding.eventSubtitle.setText(Helper.getResString(R.string.events_activity_event));
             } else {
                 holder.binding.eventSubtitle.setText((String) dataArray.get(position).get("var"));
             }

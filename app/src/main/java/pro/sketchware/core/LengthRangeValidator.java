@@ -1,5 +1,7 @@
 package pro.sketchware.core;
 
+
+import mod.hey.studios.util.Helper;
 import android.content.Context;
 
 import com.google.android.material.textfield.TextInputLayout;
@@ -22,7 +24,7 @@ public class LengthRangeValidator extends BaseValidator {
         if (s.toString().trim().length() < min) {
             textInputLayout.setErrorEnabled(true);
             if (customErrorResId == 0) {
-                textInputLayout.setError(context.getString(R.string.invalid_value_min_lenth, min));
+                textInputLayout.setError(Helper.getResString(R.string.invalid_value_min_lenth, min));
             } else {
                 textInputLayout.setError(context.getString(customErrorResId, min));
             }
@@ -32,7 +34,7 @@ public class LengthRangeValidator extends BaseValidator {
             if (s.toString().trim().length() > max) {
                 textInputLayout.setErrorEnabled(true);
                 if (customErrorResId == 0) {
-                    textInputLayout.setError(context.getString(R.string.invalid_value_max_lenth, max));
+                    textInputLayout.setError(Helper.getResString(R.string.invalid_value_max_lenth, max));
                 } else {
                     textInputLayout.setError(context.getString(customErrorResId, max));
                 }

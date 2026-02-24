@@ -35,9 +35,9 @@ public class AddFontCollectionActivity extends BaseDialogActivity implements Vie
         binding = ManageFontAddBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setDialogTitle(getString(R.string.design_manager_font_title_edit_font_name));
-        setOkButtonText(getString(R.string.common_word_save));
-        setCancelButtonText(getString(R.string.common_word_cancel));
+        setDialogTitle(Helper.getResString(R.string.design_manager_font_title_edit_font_name));
+        setOkButtonText(Helper.getResString(R.string.common_word_save));
+        setCancelButtonText(Helper.getResString(R.string.common_word_cancel));
 
         Intent intent = getIntent();
         projectResourceBeanArrayList = intent.getParcelableArrayListExtra("fonts");
@@ -81,7 +81,7 @@ public class AddFontCollectionActivity extends BaseDialogActivity implements Vie
     public final void saveFont() {
         if (fontValidator.isValid()) {
             ImageCollectionManager.getInstance().renameResource(projectResourceBean, Helper.getText(binding.edInput), true);
-            SketchToast.toast(this, getString(R.string.design_manager_message_edit_complete), 1).show();
+            SketchToast.toast(this, Helper.getResString(R.string.design_manager_message_edit_complete), 1).show();
             finish();
         }
     }

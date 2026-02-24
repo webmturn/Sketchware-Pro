@@ -141,8 +141,8 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
                         }
                     }
                 });
-        setDialogTitle(getString(R.string.design_manager_image_title_add_image));
-        setOkButtonText(getString(R.string.common_word_save));
+        setDialogTitle(Helper.getResString(R.string.design_manager_image_title_add_image));
+        setOkButtonText(Helper.getResString(R.string.common_word_save));
         setContentView(R.layout.manage_image_add);
         Intent intent = getIntent();
         existingImages = intent.getParcelableArrayListExtra("images");
@@ -165,7 +165,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
         ed_input = findViewById(R.id.ed_input);
         ed_input_edittext = ed_input.getEditText();
         ed_input_edittext.setPrivateImeOptions("defaultInputmode=english;");
-        ed_input.setHint(getString(R.string.design_manager_image_hint_enter_image_name));
+        ed_input.setHint(Helper.getResString(R.string.design_manager_image_hint_enter_image_name));
         nameValidator = new FileNameValidator(this, ed_input.getTextInputLayout(), BlockConstants.RESERVED_KEYWORDS, getReservedImageNames());
         nameValidator.setBatchCount(1);
         chk_collection.setText(R.string.design_manager_title_add_to_collection);
@@ -189,7 +189,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
         super.onPostCreate(bundle);
         if (editing) {
             image.isEdited = true;
-            setDialogTitle(getString(R.string.design_manager_image_title_edit_image));
+            setDialogTitle(Helper.getResString(R.string.design_manager_image_title_edit_image));
             imageRotationDegrees = image.rotate;
             imageScaleX = image.flipHorizontal;
             imageScaleY = image.flipVertical;
@@ -246,9 +246,9 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
             if (allowMultiple) {
                 intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
             }
-            imagePickerLauncher.launch(Intent.createChooser(intent, getString(R.string.common_word_choose)));
+            imagePickerLauncher.launch(Intent.createChooser(intent, Helper.getResString(R.string.common_word_choose)));
         } catch (ActivityNotFoundException unused) {
-            SketchToast.warning(this, getString(R.string.common_error_activity_not_found), SketchToast.TOAST_NORMAL).show();
+            SketchToast.warning(this, Helper.getResString(R.string.common_error_activity_not_found), SketchToast.TOAST_NORMAL).show();
         }
     }
 

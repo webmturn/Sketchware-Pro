@@ -1,5 +1,7 @@
 package pro.sketchware.core;
 
+
+import mod.hey.studios.util.Helper;
 import android.content.Context;
 
 import com.google.android.material.textfield.TextInputLayout;
@@ -33,13 +35,13 @@ public class ActivityNameValidator extends BaseValidator {
     public void onTextChanged(CharSequence input, int start, int before, int count) {
         if (input.toString().trim().length() < 3) {
             textInputLayout.setErrorEnabled(true);
-            textInputLayout.setError(context.getString(R.string.invalid_value_min_lenth, 3));
+            textInputLayout.setError(Helper.getResString(R.string.invalid_value_min_lenth, 3));
             valid = false;
             return;
         }
         if (input.toString().trim().length() > 100) {
             textInputLayout.setErrorEnabled(true);
-            textInputLayout.setError(context.getString(R.string.invalid_value_max_lenth, 100));
+            textInputLayout.setError(Helper.getResString(R.string.invalid_value_max_lenth, 100));
             valid = false;
             return;
         }
@@ -52,25 +54,25 @@ public class ActivityNameValidator extends BaseValidator {
         for (String reservedName : reservedNames) {
             if (input.toString().equals(reservedName)) {
                 textInputLayout.setErrorEnabled(true);
-                textInputLayout.setError(context.getString(R.string.logic_editor_message_reserved_keywords));
+                textInputLayout.setError(Helper.getResString(R.string.logic_editor_message_reserved_keywords));
                 valid = false;
                 return;
             }
         }
         if ("main".equals(input.toString()) || existingNames.contains(input.toString())) {
             textInputLayout.setErrorEnabled(true);
-            textInputLayout.setError(context.getString(R.string.common_message_name_unavailable));
+            textInputLayout.setError(Helper.getResString(R.string.common_message_name_unavailable));
             valid = false;
         } else if (!Character.isLetter(input.charAt(0))) {
             textInputLayout.setErrorEnabled(true);
-            textInputLayout.setError(context.getString(R.string.logic_editor_message_variable_name_must_start_letter));
+            textInputLayout.setError(Helper.getResString(R.string.logic_editor_message_variable_name_must_start_letter));
             valid = false;
         } else if (ActivityNameValidator.namePattern.matcher(input.toString()).matches()) {
             textInputLayout.setErrorEnabled(false);
             valid = true;
         } else {
             textInputLayout.setErrorEnabled(true);
-            textInputLayout.setError(context.getString(R.string.invalid_value_rule_4));
+            textInputLayout.setError(Helper.getResString(R.string.invalid_value_rule_4));
             valid = false;
         }
     }

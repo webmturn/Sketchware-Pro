@@ -168,7 +168,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
             binding.etPackageName.setText(MapValueHelper.getString(metadata, "my_sc_pkg_name"));
             binding.etProjectName.setText(MapValueHelper.getString(metadata, "my_ws_name"));
             binding.etAppName.setText(MapValueHelper.getString(metadata, "my_app_name"));
-            binding.okButton.setText(getString(R.string.project_save_changes));
+            binding.okButton.setText(Helper.getResString(R.string.project_save_changes));
             projectVersionCode = parseInt(MapValueHelper.getString(metadata, "sc_ver_code"), 1);
             parseVersion(MapValueHelper.getString(metadata, "sc_ver_name"));
             binding.verCode.setText(MapValueHelper.getString(metadata, "sc_ver_code"));

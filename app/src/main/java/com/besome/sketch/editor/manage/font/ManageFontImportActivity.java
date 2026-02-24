@@ -92,7 +92,7 @@ public class ManageFontImportActivity extends BaseAppCompatActivity implements V
                 names += name;
             }
 
-            SketchToast.toast(getApplicationContext(), getString(R.string.common_message_name_unavailable)
+            SketchToast.toast(getApplicationContext(), Helper.getResString(R.string.common_message_name_unavailable)
                     + "\n[" + names + "]", SketchToast.TOAST_WARNING).show();
             return true;
         } else {
@@ -155,9 +155,9 @@ public class ManageFontImportActivity extends BaseAppCompatActivity implements V
         binding = ManageFontImportBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         binding.imgBackbtn.setOnClickListener(this);
-        binding.tvSendbtn.setText(getString(R.string.common_word_import).toUpperCase());
+        binding.tvSendbtn.setText(Helper.getResString(R.string.common_word_import).toUpperCase());
         binding.tvSendbtn.setOnClickListener(this);
-        binding.tvSamename.setText(getString(R.string.design_manager_font_title_apply_same_naming));
+        binding.tvSamename.setText(Helper.getResString(R.string.design_manager_font_title_apply_same_naming));
         itemAdapter = new ItemAdapter();
         binding.recyclerList.setHasFixedSize(true);
         binding.recyclerList.setAdapter(itemAdapter);
@@ -169,7 +169,7 @@ public class ManageFontImportActivity extends BaseAppCompatActivity implements V
         nameInput = binding.edInput.getEditText();
         nameInput.setText(selectedCollection.get(0).resName);
         nameInput.setPrivateImeOptions("defaultInputmode=english;");
-        binding.edInput.setHint(getString(R.string.design_manager_font_hint_enter_font_name));
+        binding.edInput.setHint(Helper.getResString(R.string.design_manager_font_hint_enter_font_name));
         nameValidator = new XmlNameValidator(getApplicationContext(), binding.edInput.getTextInputLayout(), BlockConstants.RESERVED_KEYWORDS, getReservedProjectImageNames(), getReservedSelectedCollectionNames());
         binding.chkSamename.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
@@ -215,9 +215,9 @@ public class ManageFontImportActivity extends BaseAppCompatActivity implements V
         }
 
         if (!duplicateCollections.isEmpty()) {
-            SketchToast.warning(getApplicationContext(), getString(R.string.design_manager_message_collection_name_conflict), 1).show();
+            SketchToast.warning(getApplicationContext(), Helper.getResString(R.string.design_manager_message_collection_name_conflict), 1).show();
         } else {
-            SketchToast.toast(getApplicationContext(), getString(R.string.design_manager_message_collection_name_no_conflict), 0).show();
+            SketchToast.toast(getApplicationContext(), Helper.getResString(R.string.design_manager_message_collection_name_no_conflict), 0).show();
         }
 
         selectedCollection = new ArrayList<>();

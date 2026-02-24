@@ -311,7 +311,7 @@ public class BlocksManager extends BaseAppCompatActivity {
         }
 
         binding.paletteRecycler.setAdapter(new PaletteAdapter(pallet_listmap));
-        binding.recycleSub.setText(getString(R.string.blocks_count_format, (long) getN(-1)));
+        binding.recycleSub.setText(Helper.getResString(R.string.blocks_count_format, (long) getN(-1)));
         refreshCount();
     }
 
@@ -329,9 +329,9 @@ public class BlocksManager extends BaseAppCompatActivity {
 
     private void refreshCount() {
         if (pallet_listmap.isEmpty()) {
-            binding.paletteCount.setText(getString(R.string.blocks_no_palettes));
+            binding.paletteCount.setText(Helper.getResString(R.string.blocks_no_palettes));
         } else {
-            binding.paletteCount.setText(getString(R.string.blocks_palette_count_format, pallet_listmap.size()));
+            binding.paletteCount.setText(Helper.getResString(R.string.blocks_palette_count_format, pallet_listmap.size()));
         }
     }
 
@@ -346,7 +346,7 @@ public class BlocksManager extends BaseAppCompatActivity {
         view.setOnLongClickListener(v -> {
             new MaterialAlertDialogBuilder(this)
                     .setTitle(R.string.blocks_recycle_bin_title)
-                    .setMessage(getString(R.string.blocks_recycle_bin_confirm))
+                    .setMessage(Helper.getResString(R.string.blocks_recycle_bin_confirm))
                     .setPositiveButton(R.string.common_word_empty, (dialog, which) -> emptyRecyclebin())
                     .setNegativeButton(R.string.common_word_cancel, null)
                     .show();
@@ -585,10 +585,10 @@ public class BlocksManager extends BaseAppCompatActivity {
 
             holder.itemView.setVisibility(View.VISIBLE);
             holder.itemBinding.title.setText(Objects.requireNonNull(pallet_listmap.get(position).get("name")).toString());
-            holder.itemBinding.sub.setText(getString(R.string.blocks_count_format, (long) getN(position + 9)));
+            holder.itemBinding.sub.setText(Helper.getResString(R.string.blocks_count_format, (long) getN(position + 9)));
             holder.itemBinding.color.setBackgroundColor(backgroundColor);
             holder.itemBinding.dragHandler.setVisibility(View.VISIBLE);
-            binding.recycleSub.setText(getString(R.string.blocks_count_format, (long) getN(-1)));
+            binding.recycleSub.setText(Helper.getResString(R.string.blocks_count_format, (long) getN(-1)));
 
             holder.itemBinding.backgroundCard.setOnLongClickListener(v -> {
                 PopupMenu popup = new PopupMenu(BlocksManager.this, holder.itemBinding.color);

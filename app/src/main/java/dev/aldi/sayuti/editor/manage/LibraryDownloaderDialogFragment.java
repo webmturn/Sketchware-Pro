@@ -134,14 +134,14 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
     private void initDownloadFlow() {
         dependencyName = Helper.getText(binding.dependencyInput);
         if (dependencyName.isEmpty()) {
-            binding.dependencyInputLayout.setError(getString(R.string.error_enter_dependency));
+            binding.dependencyInputLayout.setError(Helper.getResString(R.string.error_enter_dependency));
             binding.dependencyInputLayout.setErrorEnabled(true);
             return;
         }
 
         var parts = dependencyName.split(":");
         if (parts.length != 3) {
-            binding.dependencyInputLayout.setError(getString(R.string.error_invalid_dependency_format));
+            binding.dependencyInputLayout.setError(Helper.getResString(R.string.error_invalid_dependency_format));
             binding.dependencyInputLayout.setErrorEnabled(true);
             return;
         }
@@ -221,7 +221,7 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
                 public void onVersionNotFound(@NonNull Artifact dep) {
                     handler.post(() -> {
                         DependencyDownloadItem item = findOrCreateDependencyItem(dep);
-                        item.setError(getString(R.string.error_version_not_available));
+                        item.setError(Helper.getResString(R.string.error_version_not_available));
                         dependencyAdapter.updateDependency(item);
                     });
                 }
@@ -230,7 +230,7 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
                 public void onDependenciesNotFound(@NonNull Artifact dep) {
                     handler.post(() -> {
                         DependencyDownloadItem item = findOrCreateDependencyItem(dep);
-                        item.setError(getString(R.string.error_dependencies_not_found));
+                        item.setError(Helper.getResString(R.string.error_dependencies_not_found));
                         dependencyAdapter.updateDependency(item);
                     });
                 }
@@ -239,7 +239,7 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
                 public void onInvalidScope(@NonNull Artifact dep, @NonNull String scope) {
                     handler.post(() -> {
                         DependencyDownloadItem item = findOrCreateDependencyItem(dep);
-                        item.setError(getString(R.string.error_invalid_scope_format, scope));
+                        item.setError(Helper.getResString(R.string.error_invalid_scope_format, scope));
                         dependencyAdapter.updateDependency(item);
                     });
                 }
@@ -248,7 +248,7 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
                 public void invalidPackaging(@NonNull Artifact dep) {
                     handler.post(() -> {
                         DependencyDownloadItem item = findOrCreateDependencyItem(dep);
-                        item.setError(getString(R.string.error_invalid_packaging));
+                        item.setError(Helper.getResString(R.string.error_invalid_packaging));
                         dependencyAdapter.updateDependency(item);
                     });
                 }
@@ -298,7 +298,7 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
                 public void dexingFailed(@NonNull Artifact dependency, @NonNull Exception e) {
                     handler.post(() -> {
                         DependencyDownloadItem item = findOrCreateDependencyItem(dependency);
-                        item.setError(getString(R.string.error_dexing_failed_format, e.getMessage()));
+                        item.setError(Helper.getResString(R.string.error_dexing_failed_format, e.getMessage()));
                         dependencyAdapter.updateDependency(item);
                         setDownloadState(false);
                         SketchwareUtil.showAnErrorOccurredDialog(getActivity(),

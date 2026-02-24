@@ -155,7 +155,7 @@ public class StylesEditor extends Fragment {
             adapter.notifyItemInserted(notifyPosition);
             updateNoContentLayout();
         });
-        dialog.setNegativeButton(getString(R.string.cancel), null);
+        dialog.setNegativeButton(Helper.getResString(R.string.cancel), null);
         dialog.setView(binding.getRoot());
         dialog.show();
     }
@@ -206,7 +206,7 @@ public class StylesEditor extends Fragment {
                 .setNegativeButton(R.string.common_word_cancel, null)
                 .create()
                 .show());
-        dialog.setNegativeButton(getString(R.string.cancel), null);
+        dialog.setNegativeButton(Helper.getResString(R.string.cancel), null);
         dialog.setView(binding.getRoot());
         dialog.show();
     }
@@ -288,7 +288,7 @@ public class StylesEditor extends Fragment {
             hasUnsavedChanges = true;
         });
 
-        dialog.setNegativeButton(getString(R.string.cancel), null);
+        dialog.setNegativeButton(Helper.getResString(R.string.cancel), null);
         dialog.setView(binding.getRoot());
         dialog.show();
     }

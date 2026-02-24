@@ -159,7 +159,7 @@ public class EventsManagerCreatorFragment extends BaseFragment {
             return;
         }
         if (!OldResourceIdMapper.isValidIconId(Helper.getText(binding.eventsCreatorIcon))) {
-            binding.eventsCreatorIconTil.setError(getString(R.string.error_invalid_icon_id));
+            binding.eventsCreatorIconTil.setError(Helper.getResString(R.string.error_invalid_icon_id));
             binding.eventsCreatorIcon.requestFocus();
             return;
         }

@@ -200,11 +200,11 @@ public class ColorPickerDialog extends PopupWindow {
             colorGroupItem.tvColorName.setOnClickListener(v -> {
                 currentGroupIndex = finalJ;
                 if (finalJ == 0 && colorGroups.get(finalJ).length == 0) {
-                    SketchToast.warning(activity, activity.getString(R.string.picker_color_custom_color_not_found), 1).show();
+                    SketchToast.warning(activity, Helper.getResString(R.string.picker_color_custom_color_not_found), 1).show();
                     return;
                 }
                 if (finalJ == 1 && colorGroups.get(finalJ).length == 0) {
-                    SketchToast.warning(activity, activity.getString(R.string.picker_color_xml_is_empty), 1).show();
+                    SketchToast.warning(activity, Helper.getResString(R.string.picker_color_xml_is_empty), 1).show();
                     return;
                 }
                 if (sc_id != null && finalJ == 2 && !material3LibraryManager.isMaterial3Enabled()) {
@@ -503,7 +503,7 @@ public class ColorPickerDialog extends PopupWindow {
     private void savePickedColor(String color) {
         String savedColors = colorPref.getStringDefault("P24I1");
         if (savedColors.contains(color)) {
-            SketchToast.warning(activity, activity.getString(R.string.picker_color_already_exist), 0).show();
+            SketchToast.warning(activity, Helper.getResString(R.string.picker_color_already_exist), 0).show();
         } else {
             String colorsToSave = color + "," + savedColors;
             colorPref.put("P24I1", (Object) colorsToSave);

@@ -1,5 +1,7 @@
 package pro.sketchware.core;
 
+
+import mod.hey.studios.util.Helper;
 import android.content.Context;
 
 import com.google.android.material.textfield.TextInputLayout;
@@ -20,14 +22,14 @@ public class LowercaseNameValidator extends BaseValidator {
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         if (s.toString().trim().length() == 0) {
             textInputLayout.setErrorEnabled(true);
-            textInputLayout.setError(context.getString(R.string.invalid_value_min_lenth, 1));
+            textInputLayout.setError(Helper.getResString(R.string.invalid_value_min_lenth, 1));
             valid = false;
         } else if (NAME_PATTERN.matcher(s.toString()).matches()) {
             textInputLayout.setErrorEnabled(false);
             valid = true;
         } else {
             textInputLayout.setErrorEnabled(true);
-            textInputLayout.setError(context.getString(R.string.invalid_value_rule_4));
+            textInputLayout.setError(Helper.getResString(R.string.invalid_value_rule_4));
             valid = false;
         }
 

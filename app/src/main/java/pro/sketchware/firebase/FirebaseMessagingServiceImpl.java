@@ -1,5 +1,7 @@
 package pro.sketchware.firebase;
 
+
+import mod.hey.studios.util.Helper;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -52,7 +54,7 @@ public class FirebaseMessagingServiceImpl extends FirebaseMessagingService {
 
         // Since android Oreo notification channel is needed.
         NotificationChannel channel = new NotificationChannel(channelId,
-                getString(R.string.notification_channel_firebase),
+                Helper.getResString(R.string.notification_channel_firebase),
                 NotificationManager.IMPORTANCE_HIGH);
         notificationManager.createNotificationChannel(channel);
 

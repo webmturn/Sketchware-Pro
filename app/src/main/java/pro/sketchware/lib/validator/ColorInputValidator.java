@@ -1,5 +1,7 @@
 package pro.sketchware.lib.validator;
 
+
+import mod.hey.studios.util.Helper;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.View;
@@ -29,7 +31,7 @@ public class ColorInputValidator extends BaseValidator {
         }
         if (hexCode.length() > 8) {
             textInputLayout.setErrorEnabled(true);
-            textInputLayout.setError(context.getString(R.string.invalid_value_max_lenth, 8));
+            textInputLayout.setError(Helper.getResString(R.string.invalid_value_max_lenth, 8));
             valid = false;
         } else {
             if (hexPattern.matcher(hexCode).matches()) {
@@ -38,7 +40,7 @@ public class ColorInputValidator extends BaseValidator {
                     colorPreview.setBackgroundColor(Color.parseColor(hexCode));
                 } catch (IllegalArgumentException var5) {
                     textInputLayout.setErrorEnabled(true);
-                    textInputLayout.setError(context.getString(R.string.invalid_value_format));
+                    textInputLayout.setError(Helper.getResString(R.string.invalid_value_format));
                     valid = false;
                     colorPreview.setBackgroundColor(0xfff6f6f6);
                 }
@@ -47,7 +49,7 @@ public class ColorInputValidator extends BaseValidator {
                 valid = true;
             } else {
                 textInputLayout.setErrorEnabled(true);
-                textInputLayout.setError(context.getString(R.string.invalid_value_format));
+                textInputLayout.setError(Helper.getResString(R.string.invalid_value_format));
                 colorPreview.setBackgroundColor(0xfff6f6f6);
                 valid = false;
             }

@@ -1,5 +1,7 @@
 package pro.sketchware.core;
 
+
+import mod.hey.studios.util.Helper;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -86,7 +88,7 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
             addNewColorFilterInfo(selectedColorHex, selectedColor, images.size());
 
             addImage(icon);
-            SketchToast.toast(requireActivity(), getString(R.string.design_manager_message_add_complete), SketchToast.TOAST_NORMAL).show();
+            SketchToast.toast(requireActivity(), Helper.getResString(R.string.design_manager_message_add_complete), SketchToast.TOAST_NORMAL).show();
         }
     });
     private final ActivityResultLauncher<Intent> showAddImageDialog = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -103,7 +105,7 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
             adapter.notifyItemRangeInserted(images.size() - addedImages.size(), addedImages.size());
             updateGuideVisibility();
             ((ManageImageActivity) requireActivity()).getCollectionFragment().refreshData();
-            SketchToast.toast(requireActivity(), getString(R.string.design_manager_message_add_complete), SketchToast.TOAST_NORMAL).show();
+            SketchToast.toast(requireActivity(), Helper.getResString(R.string.design_manager_message_add_complete), SketchToast.TOAST_NORMAL).show();
         }
     });
     private final ActivityResultLauncher<Intent> showImageDetailsDialog = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -126,7 +128,7 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
             }
             updateGuideVisibility();
             ((ManageImageActivity) requireActivity()).getCollectionFragment().refreshData();
-            SketchToast.toast(requireActivity(), getString(R.string.design_manager_message_edit_complete), SketchToast.TOAST_NORMAL).show();
+            SketchToast.toast(requireActivity(), Helper.getResString(R.string.design_manager_message_edit_complete), SketchToast.TOAST_NORMAL).show();
         }
     });
 
@@ -331,7 +333,7 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
                 deleteSelected();
                 setSelectionMode(false);
                 updateGuideVisibility();
-                SketchToast.toast(requireActivity(), getString(R.string.common_message_complete_delete), SketchToast.TOAST_WARNING).show();
+                SketchToast.toast(requireActivity(), Helper.getResString(R.string.common_message_complete_delete), SketchToast.TOAST_WARNING).show();
                 fab.show();
             }
         });
@@ -408,10 +410,10 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
         }
         addImages(imagesToAdd);
         if (!duplicateNames.isEmpty()) {
-            SketchToast.toast(requireActivity(), getString(R.string.common_message_name_unavailable) + "\n" +
+            SketchToast.toast(requireActivity(), Helper.getResString(R.string.common_message_name_unavailable) + "\n" +
                     "[" + String.join(", ", duplicateNames) + "]", SketchToast.TOAST_WARNING).show();
         } else {
-            SketchToast.toast(requireActivity(), getString(R.string.design_manager_message_import_complete), SketchToast.TOAST_WARNING).show();
+            SketchToast.toast(requireActivity(), Helper.getResString(R.string.design_manager_message_import_complete), SketchToast.TOAST_WARNING).show();
         }
         adapter.notifyDataSetChanged();
         updateGuideVisibility();

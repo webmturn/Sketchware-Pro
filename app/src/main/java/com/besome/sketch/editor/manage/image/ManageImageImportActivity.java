@@ -81,7 +81,7 @@ public class ManageImageImportActivity extends BaseAppCompatActivity implements 
             }
             names = names + name;
         }
-        SketchToast.toast(getApplicationContext(), getString(R.string.common_message_name_unavailable)
+        SketchToast.toast(getApplicationContext(), Helper.getResString(R.string.common_message_name_unavailable)
                 + "\n[" + names + "]", SketchToast.TOAST_WARNING).show();
         return true;
     }
@@ -148,10 +148,10 @@ public class ManageImageImportActivity extends BaseAppCompatActivity implements 
         tv_currentnum = findViewById(R.id.tv_currentnum);
         TextView tv_totalnum = findViewById(R.id.tv_totalnum);
         TextView tv_sendbtn = findViewById(R.id.tv_sendbtn);
-        tv_sendbtn.setText(getString(R.string.common_word_import).toUpperCase());
+        tv_sendbtn.setText(Helper.getResString(R.string.common_word_import).toUpperCase());
         tv_sendbtn.setOnClickListener(this);
         TextView tv_samename = findViewById(R.id.tv_samename);
-        tv_samename.setText(getString(R.string.design_manager_image_title_apply_same_naming));
+        tv_samename.setText(Helper.getResString(R.string.design_manager_image_title_apply_same_naming));
         adapter = new ItemAdapter();
         RecyclerView recycler_list = findViewById(R.id.recycler_list);
         recycler_list.setAdapter(adapter);
@@ -165,7 +165,7 @@ public class ManageImageImportActivity extends BaseAppCompatActivity implements 
         ed_input_edittext = ed_input.getEditText();
         ed_input_edittext.setText(selectedCollections.get(0).resName);
         ed_input_edittext.setPrivateImeOptions("defaultInputmode=english;");
-        ed_input.setHint(getString(R.string.design_manager_image_hint_enter_image_name));
+        ed_input.setHint(Helper.getResString(R.string.design_manager_image_hint_enter_image_name));
         nameValidator = new XmlNameValidator(getApplicationContext(), ed_input.getTextInputLayout(), BlockConstants.RESERVED_KEYWORDS, getReservedProjectImageNames(), getReservedSelectedCollectionNames());
         chk_samename = findViewById(R.id.chk_samename);
         chk_samename.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -212,9 +212,9 @@ public class ManageImageImportActivity extends BaseAppCompatActivity implements 
             }
         }
         if (!duplicateCollections.isEmpty()) {
-            SketchToast.warning(getApplicationContext(), getString(R.string.design_manager_message_collection_name_conflict), SketchToast.TOAST_WARNING).show();
+            SketchToast.warning(getApplicationContext(), Helper.getResString(R.string.design_manager_message_collection_name_conflict), SketchToast.TOAST_WARNING).show();
         } else {
-            SketchToast.toast(getApplicationContext(), getString(R.string.design_manager_message_collection_name_no_conflict), SketchToast.TOAST_NORMAL).show();
+            SketchToast.toast(getApplicationContext(), Helper.getResString(R.string.design_manager_message_collection_name_no_conflict), SketchToast.TOAST_NORMAL).show();
         }
         selectedCollections = new ArrayList<>();
         selectedCollections.addAll(duplicateCollections);
