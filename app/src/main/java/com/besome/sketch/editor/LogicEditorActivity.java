@@ -1213,7 +1213,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
         try {
             BlockCollectionManager.getInstance().addBlock(str, arrayList2, true);
-            O.a(str, arrayList2).setOnTouchListener(this);
+            O.addBlockCollection(str, arrayList2).setOnTouchListener(this);
         } catch (Exception e) {
             crashlytics.recordException(e);
         }
@@ -1821,7 +1821,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         dialog.setMessage(R.string.logic_block_favorites_delete_message);
         dialog.setPositiveButton(R.string.common_word_delete, (v, which) -> {
             BlockCollectionManager.getInstance().removeBlock(str, true);
-            O.a(str);
+            O.removeBlockCollection(str);
             v.dismiss();
         });
         dialog.setNegativeButton(R.string.common_word_cancel, null);
@@ -2522,9 +2522,9 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public void loadBlockCollections() {
-        O.a();
+        O.clearAllBlocks();
         for (BlockCollectionBean next : BlockCollectionManager.getInstance().getBlocks()) {
-            O.a(next.name, next.blocks).setOnTouchListener(this);
+            O.addBlockCollection(next.name, next.blocks).setOnTouchListener(this);
         }
     }
 

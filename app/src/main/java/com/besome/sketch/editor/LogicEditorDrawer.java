@@ -58,11 +58,11 @@ public class LogicEditorDrawer extends LinearLayout {
         });
     }
 
-    public void a() {
+    public void clearAllBlocks() {
         favorite.removeAllViews();
     }
 
-    public View a(String str, ArrayList<BlockBean> arrayList) {
+    public View addBlockCollection(String str, ArrayList<BlockBean> arrayList) {
         DefinitionBlockView collectionBlock = null;
         if (!arrayList.isEmpty()) {
             BlockBean blockBean = arrayList.get(0);
@@ -78,7 +78,7 @@ public class LogicEditorDrawer extends LinearLayout {
         return collectionBlock;
     }
 
-    public void a(String str) {
+    public void removeBlockCollection(String str) {
         for (int i = 0; i < favorite.getChildCount(); i++) {
             View childAt = favorite.getChildAt(i);
             if ((childAt instanceof DefinitionBlockView) && ((DefinitionBlockView) childAt).spec.equals(str)) {
