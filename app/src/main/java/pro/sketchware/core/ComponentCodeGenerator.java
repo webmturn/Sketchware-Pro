@@ -3241,9 +3241,9 @@ public class ComponentCodeGenerator {
         return trimmed.startsWith("<?xml") || trimmed.startsWith("<") && trimmed.contains(">");
     }
 
-    public static void appendIndent(StringBuilder stringBuilder, int indentSize) {
+    public static void appendIndent(StringBuilder builder, int indentSize) {
         for (int i = 0; i < indentSize; ++i) {
-            stringBuilder.append('\t');
+            builder.append('\t');
         }
     }
 

@@ -88,7 +88,7 @@ public class EncryptedFileUtil {
   }
   
   public void copyDirectory(File srcFile, File destFile) throws IOException {
-    StringBuilder stringBuilder;
+    StringBuilder errorBuilder;
     if (srcFile.isDirectory()) {
       if (destFile.exists() || destFile.mkdirs()) {
         String[] parts = srcFile.list();
@@ -97,10 +97,10 @@ public class EncryptedFileUtil {
             copyDirectory(new File(srcFile, parts[b]), new File(destFile, parts[b]));  
         return;
       } 
-      stringBuilder = new StringBuilder();
-      stringBuilder.append("Cannot create dir ");
-      stringBuilder.append(destFile.getAbsolutePath());
-      throw new IOException(stringBuilder.toString());
+      errorBuilder = new StringBuilder();
+      errorBuilder.append("Cannot create dir ");
+      errorBuilder.append(destFile.getAbsolutePath());
+      throw new IOException(errorBuilder.toString());
     } 
     copyFile(srcFile.getAbsolutePath(), destFile.getAbsolutePath());
   }
