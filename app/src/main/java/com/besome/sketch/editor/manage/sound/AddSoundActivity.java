@@ -130,9 +130,9 @@ public class AddSoundActivity extends BaseDialogActivity implements View.OnClick
                     }
                 });
         setContentView(R.layout.manage_sound_add);
-        e(getString(R.string.design_manager_sound_title_add_sound));
-        d(getString(R.string.common_word_save));
-        b(getString(R.string.common_word_cancel));
+        setDialogTitle(getString(R.string.design_manager_sound_title_add_sound));
+        setOkButtonText(getString(R.string.common_word_save));
+        setCancelButtonText(getString(R.string.common_word_cancel));
 
         Intent intent = getIntent();
         ArrayList<String> existingSoundNames = intent.getStringArrayListExtra("sound_names");
@@ -183,7 +183,7 @@ public class AddSoundActivity extends BaseDialogActivity implements View.OnClick
         dialogOkButton.setOnClickListener(this);
         dialogCancelButton.setOnClickListener(this);
         if (requestCode == 270) {
-            e(getString(R.string.design_manager_sound_title_edit_sound));
+            setDialogTitle(getString(R.string.design_manager_sound_title_edit_sound));
             ProjectResourceBean projectResourceBean = intent.getParcelableExtra("project_resource");
             soundNameValidator = new ResourceNameValidator(this, soundInputLayout, BlockConstants.RESERVED_KEYWORDS, new ArrayList<>());
             soundName.setText(projectResourceBean.resName);

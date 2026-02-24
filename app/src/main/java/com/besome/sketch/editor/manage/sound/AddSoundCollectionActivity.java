@@ -127,11 +127,11 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
                         a(data);
                     }
                 });
-        e(getString(R.string.design_manager_sound_title_add_sound));
+        setDialogTitle(getString(R.string.design_manager_sound_title_add_sound));
         binding = ManageSoundAddBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        d(getString(R.string.common_word_save));
-        b(getString(R.string.common_word_cancel));
+        setOkButtonText(getString(R.string.common_word_save));
+        setCancelButtonText(getString(R.string.common_word_cancel));
         Intent intent = getIntent();
         N = intent.getParcelableArrayListExtra("sounds");
         scId = intent.getStringExtra("sc_id");
@@ -172,7 +172,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
         dialogOkButton.setOnClickListener(this);
         dialogCancelButton.setOnClickListener(this);
         if (isEditing) {
-            e(getString(R.string.design_manager_sound_title_edit_sound_name));
+            setDialogTitle(getString(R.string.design_manager_sound_title_edit_sound_name));
             M = new ResourceNameValidator(this, binding.tiInput, BlockConstants.RESERVED_KEYWORDS, getResourceNames(), O.resName);
             binding.edInput.setText(O.resName);
             loadSoundFromPath(a(O));

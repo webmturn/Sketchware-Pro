@@ -90,7 +90,7 @@ public class PresetSettingActivity extends BaseDialogActivity implements View.On
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.manage_screen_activity_add_view_preset_setting);
-        e(Helper.getResString(R.string.preset_setting_title));
+        setDialogTitle(Helper.getResString(R.string.preset_setting_title));
         requestCode = getIntent().getIntExtra("request_code", -1);
         if (getIntent().hasExtra("edit_mode")) {
             inEditMode = true;
@@ -110,8 +110,8 @@ public class PresetSettingActivity extends BaseDialogActivity implements View.On
             presets = PresetLayoutFactory.getDrawerPresets();
         }
 
-        d(Helper.getResString(R.string.common_word_import));
-        b(Helper.getResString(R.string.common_word_cancel));
+        setOkButtonText(Helper.getResString(R.string.common_word_import));
+        setCancelButtonText(Helper.getResString(R.string.common_word_cancel));
         dialogOkButton.setOnClickListener(this);
         dialogCancelButton.setOnClickListener(this);
         applyPresetData(presets.get(index).presetName);

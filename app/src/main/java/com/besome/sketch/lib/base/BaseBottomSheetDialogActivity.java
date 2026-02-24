@@ -93,7 +93,7 @@ public class BaseBottomSheetDialogActivity extends BaseAppCompatActivity {
         ViewUtil.inflateLayoutInto(this, dialogContentView, layoutResID);
     }
 
-    public void a(boolean var1) {
+    public void setDismissOnOutsideClick(boolean var1) {
         if (var1) {
             dialogContainerView.setOnClickListener(v -> {
                 if (!UIHelper.isClickThrottled()) {
@@ -105,32 +105,32 @@ public class BaseBottomSheetDialogActivity extends BaseAppCompatActivity {
         dialogContainerView.setOnClickListener(null);
     }
 
-    public void b(String cancelText) {
+    public void setCancelButtonText(String cancelText) {
         dialogCancelButton.setText(cancelText);
     }
 
-    public void c(String defaultText) {
+    public void setDefaultButtonText(String defaultText) {
         dialogDefaultButton.setText(defaultText);
     }
 
-    public void d(String okText) {
+    public void setOkButtonText(String okText) {
         dialogOkButton.setText(okText);
     }
 
-    public void e(String title) {
+    public void setDialogTitle(String title) {
         dialogTitle.setText(title);
     }
 
-    public void f(int iconResId) {
+    public void setDialogIcon(int iconResId) {
         dialogIcon.setImageResource(iconResId);
         dialogIcon.setVisibility(View.VISIBLE);
     }
 
-    public void l() {
+    public void hideButtons() {
         dialogButtonsView.setVisibility(View.GONE);
     }
 
-    public void m() {
+    public void hideTitleView() {
         dialogTitleView.setVisibility(View.GONE);
     }
 

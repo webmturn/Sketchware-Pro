@@ -44,10 +44,10 @@ public class AddCustomViewActivity extends BaseDialogActivity implements View.On
                     }
                 });
         setContentView(R.layout.manage_screen_custom_view_add);
-        e(Helper.getResString(R.string.design_manager_view_title_add_custom_view));
-        f(R.drawable.ic_mtrl_add);
-        d(Helper.getResString(R.string.common_word_add));
-        b(Helper.getResString(R.string.common_word_cancel));
+        setDialogTitle(Helper.getResString(R.string.design_manager_view_title_add_custom_view));
+        setDialogIcon(R.drawable.ic_mtrl_add);
+        setOkButtonText(Helper.getResString(R.string.common_word_add));
+        setCancelButtonText(Helper.getResString(R.string.common_word_cancel));
 
         ArrayList<String> alreadyInUseNames = getIntent().getStringArrayListExtra("screen_names");
         customViewName = findViewById(R.id.ed_input);

@@ -132,8 +132,8 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
                         }
                     }
                 });
-        e(getString(R.string.design_manager_image_title_add_image));
-        d(getString(R.string.common_word_save));
+        setDialogTitle(getString(R.string.design_manager_image_title_add_image));
+        setOkButtonText(getString(R.string.common_word_save));
         setContentView(R.layout.manage_image_add);
         Intent intent = getIntent();
         images = intent.getParcelableArrayListExtra("images");
@@ -177,7 +177,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
         super.onPostCreate(savedInstanceState);
         if (editing) {
             editTarget.isEdited = true;
-            e(getString(R.string.design_manager_image_title_edit_image_name));
+            setDialogTitle(getString(R.string.design_manager_image_title_edit_image_name));
             imageNameValidator = new FileNameValidator(this, ed_input.getTextInputLayout(), BlockConstants.RESERVED_KEYWORDS, getReservedImageNames(), editTarget.resName);
             imageNameValidator.setBatchCount(1);
             ed_input_edittext.setText(editTarget.resName);

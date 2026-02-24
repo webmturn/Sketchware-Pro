@@ -141,8 +141,8 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
                         }
                     }
                 });
-        e(getString(R.string.design_manager_image_title_add_image));
-        d(getString(R.string.common_word_save));
+        setDialogTitle(getString(R.string.design_manager_image_title_add_image));
+        setOkButtonText(getString(R.string.common_word_save));
         setContentView(R.layout.manage_image_add);
         Intent intent = getIntent();
         existingImages = intent.getParcelableArrayListExtra("images");
@@ -189,7 +189,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
         super.onPostCreate(bundle);
         if (editing) {
             image.isEdited = true;
-            e(getString(R.string.design_manager_image_title_edit_image));
+            setDialogTitle(getString(R.string.design_manager_image_title_edit_image));
             imageRotationDegrees = image.rotate;
             imageScaleX = image.flipHorizontal;
             imageScaleY = image.flipVertical;

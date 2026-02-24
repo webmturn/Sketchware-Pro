@@ -80,9 +80,9 @@ public class AddFontActivity extends BaseDialogActivity implements View.OnClickL
                     }
                 });
         binding = ManageFontAddBinding.inflate(getLayoutInflater());
-        e(Helper.getResString(R.string.design_manager_font_title_add_font));
-        d(Helper.getResString(R.string.common_word_save));
-        b(Helper.getResString(R.string.common_word_cancel));
+        setDialogTitle(Helper.getResString(R.string.design_manager_font_title_add_font));
+        setOkButtonText(Helper.getResString(R.string.common_word_save));
+        setCancelButtonText(Helper.getResString(R.string.common_word_cancel));
         setContentView(binding.getRoot());
 
         Intent intent = getIntent();
@@ -99,7 +99,7 @@ public class AddFontActivity extends BaseDialogActivity implements View.OnClickL
 
         fontNameValidator = new FontNameValidator(this, binding.tiInput, BlockConstants.RESERVED_KEYWORDS, intent.getStringArrayListExtra("font_names"));
         if (intent.getIntExtra("request_code", -1) == 272) {
-            e(Helper.getResString(R.string.design_manager_font_title_edit_font));
+            setDialogTitle(Helper.getResString(R.string.design_manager_font_title_edit_font));
             binding.edInput.setText(((ProjectResourceBean) intent.getParcelableExtra("resource_bean")).resName);
             binding.addToCollectionCheckbox.setEnabled(false);
         }
