@@ -145,23 +145,23 @@ public class ExtraBlocks {
 
     public void eventBlocks() {
         if (eventName.equals("onCreateOptionsMenu")) {
-            logicEditor.a("Menu Item", 0xff555555);
-            logicEditor.a(" ", "menuItemSetVisible");
-            logicEditor.a(" ", "menuItemSetEnabled");
-            logicEditor.a("v", "menuFindItem");
+            logicEditor.addPaletteCategory("Menu Item", 0xff555555);
+            logicEditor.createPaletteBlock(" ", "menuItemSetVisible");
+            logicEditor.createPaletteBlock(" ", "menuItemSetEnabled");
+            logicEditor.createPaletteBlock("v", "menuFindItem");
         }
     }
 
     public void fileBlocks() {
         if (isCustomVarUsed("File")) {
-            logicEditor.a("File Blocks", 0xff555555);
-            logicEditor.a("b", "fileCanExecute");
-            logicEditor.a("b", "fileCanRead");
-            logicEditor.a("b", "fileCanWrite");
-            logicEditor.a("s", "fileGetName");
-            logicEditor.a("s", "fileGetParent");
-            logicEditor.a("s", "fileGetPath");
-            logicEditor.a("b", "fileIsHidden");
+            logicEditor.addPaletteCategory("File Blocks", 0xff555555);
+            logicEditor.createPaletteBlock("b", "fileCanExecute");
+            logicEditor.createPaletteBlock("b", "fileCanRead");
+            logicEditor.createPaletteBlock("b", "fileCanWrite");
+            logicEditor.createPaletteBlock("s", "fileGetName");
+            logicEditor.createPaletteBlock("s", "fileGetParent");
+            logicEditor.createPaletteBlock("s", "fileGetPath");
+            logicEditor.createPaletteBlock("b", "fileIsHidden");
         }
     }
 }

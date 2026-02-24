@@ -151,7 +151,7 @@ public class LogicClickListener implements View.OnClickListener {
             if (!variableInitializer.isEmpty()) {
                 variable += " = " + variableInitializer;
             }
-            logicEditor.b(6, variable.trim());
+            logicEditor.addVariable(6, variable.trim());
             v.dismiss();
         });
         dialog.setNegativeButton(Helper.getResString(R.string.common_word_cancel), null);
@@ -256,7 +256,7 @@ public class LogicClickListener implements View.OnClickListener {
             }
 
             if (validType && validName && validator.isValid()) {
-                logicEditor.a(4, variableType + " " + variableName + " = new ArrayList<>()");
+                logicEditor.addListVariable(4, variableType + " " + variableName + " = new ArrayList<>()");
                 v.dismiss();
             }
         });

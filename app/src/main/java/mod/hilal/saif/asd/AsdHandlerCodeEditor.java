@@ -41,7 +41,7 @@ public class AsdHandlerCodeEditor implements View.OnClickListener {
         } else if (!content.isEmpty() && content.charAt(0) == '@') {
             content = " " + content;
         }
-        logicEditorActivity.a(ss, content);
+        logicEditorActivity.setFieldValue(ss, content);
         asdDialog.dismiss();
     }
 }

@@ -73,7 +73,7 @@ public class PaletteSelectorAdapter extends RecyclerView.Adapter<PaletteSelector
             selectedPosition = holder.getAbsoluteAdapterPosition();
             notifyDataSetChanged();
             if (onBlockCategorySelectListener != null) {
-                onBlockCategorySelectListener.a(id, color);
+                onBlockCategorySelectListener.onBlockSizeChanged(id, color);
             }
         });
     }
@@ -90,7 +90,7 @@ public class PaletteSelectorAdapter extends RecyclerView.Adapter<PaletteSelector
                 selectedPosition = i;
                 notifyDataSetChanged();
                 if (onBlockCategorySelectListener != null) {
-                    onBlockCategorySelectListener.a(paletteId, paletteList.get(i).color());
+                    onBlockCategorySelectListener.onBlockSizeChanged(paletteId, paletteList.get(i).color());
                 }
                 break;
             }
@@ -102,7 +102,7 @@ public class PaletteSelectorAdapter extends RecyclerView.Adapter<PaletteSelector
             selectedPosition = pos;
             notifyDataSetChanged();
             if (onBlockCategorySelectListener != null) {
-                onBlockCategorySelectListener.a(paletteList.get(pos).index(), paletteList.get(pos).color());
+                onBlockCategorySelectListener.onBlockSizeChanged(paletteList.get(pos).index(), paletteList.get(pos).color());
             }
         }
     }

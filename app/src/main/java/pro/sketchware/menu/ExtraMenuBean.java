@@ -127,17 +127,17 @@ public class ExtraMenuBean {
 
         switch (menuType) {
             case "d":
-                logicEditor.a(ss, true);
+                logicEditor.showNumberOrStringInput(ss, true);
                 break;
 
             case "s":
                 switch (menuName) {
                     case "intentData":
-                        logicEditor.e(ss);
+                        logicEditor.showIntentDataInput(ss);
                         return;
 
                     case "url":
-                        logicEditor.c(ss);
+                        logicEditor.showStringInput(ss);
                         return;
 
                     case "inputCode":
@@ -164,19 +164,19 @@ public class ExtraMenuBean {
                         return;
 
                     case "sound":
-                        logicEditor.h(ss);
+                        logicEditor.showSoundPicker(ss);
                         return;
 
                     case "font":
-                        logicEditor.d(ss);
+                        logicEditor.showFontPicker(ss);
                         return;
 
                     case "typeface":
-                        logicEditor.i(ss);
+                        logicEditor.showTypefaceSelector(ss);
                         return;
 
                     case "color":
-                        logicEditor.b(ss);
+                        logicEditor.showColorPicker(ss);
                         return;
 
                     case "view":
@@ -222,7 +222,7 @@ public class ExtraMenuBean {
                     case "codeview":
                     case "datepicker":
                     case "timepicker":
-                        logicEditor.f(ss);
+                        logicEditor.showViewSelector(ss);
                         return;
 
                     case "Assets":
@@ -535,7 +535,7 @@ public class ExtraMenuBean {
                     activityMenu.add(projectFileBean.getActivityName());
                 }
                 for (String activity : activityMenu) {
-                    viewGroup.addView(logicEditor.e(activity));
+                    viewGroup.addView(logicEditor.createRadioButton(activity));
                 }
                 activityMenu = new ArrayList<>();
                 if (FileUtil.isExistFile(fpu.getManifestJava(sc_id))) {
@@ -552,7 +552,7 @@ public class ExtraMenuBean {
                         viewGroup.addView(txt);
                     }
                     for (String activity : activityMenu) {
-                        viewGroup.addView(logicEditor.e(activity));
+                        viewGroup.addView(logicEditor.createRadioButton(activity));
                     }
                 }
                 setupSearchView(rootView, viewGroup);
@@ -685,7 +685,7 @@ public class ExtraMenuBean {
         }
 
         for (String menuArg : menus) {
-            viewGroup.addView(logicEditor.e(menuArg));
+            viewGroup.addView(logicEditor.createRadioButton(menuArg));
         }
         setupSearchView(rootView, viewGroup);
         for (int i = 0; i < viewGroup.getChildCount(); i++) {
@@ -703,7 +703,7 @@ public class ExtraMenuBean {
             for (int i = 0; i < viewGroup.getChildCount(); i++) {
                 if (viewGroup.getChildAt(i) instanceof RadioButton rb) {
                     if (rb.isChecked()) {
-                        logicEditor.a(menu, Helper.getText(rb));
+                        logicEditor.setFieldValue(menu, Helper.getText(rb));
                     }
                 }
             }
@@ -754,7 +754,7 @@ public class ExtraMenuBean {
             if (!content.isEmpty() && content.charAt(0) == '@') {
                 content = " " + content;
             }
-            logicEditor.a(ss, content);
+            logicEditor.setFieldValue(ss, content);
             v.dismiss();
         });
         dialog.setNegativeButton(R.string.common_word_cancel, null);
@@ -791,7 +791,7 @@ public class ExtraMenuBean {
             @Override
             public void onFileSelected(File file) {
                 String[] parts = file.getAbsolutePath().split(splitter, 2);
-                logicEditor.a(ss, parts.length > 1 ? parts[1] : "");
+                logicEditor.setFieldValue(ss, parts.length > 1 ? parts[1] : "");
             }
         };
         FilePickerDialogFragment fpd = new FilePickerDialogFragment(mOptions, callback);

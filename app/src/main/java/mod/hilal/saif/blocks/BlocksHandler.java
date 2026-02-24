@@ -2611,51 +2611,51 @@ public class BlocksHandler {
             boolean isIntUsed,
             boolean isStrUsed,
             boolean isMapUsed) {
-        logicEditorActivity.a("Blocks", getTitleBgColor(logicEditorActivity));
+        logicEditorActivity.addPaletteCategory("Blocks", getTitleBgColor(logicEditorActivity));
         if (showAll() || isBoolUsed) {
-            logicEditorActivity.a(" ", "setVarBoolean");
+            logicEditorActivity.createPaletteBlock(" ", "setVarBoolean");
         }
         if (showAll() || isIntUsed) {
-            logicEditorActivity.a(" ", "setVarInt");
-            logicEditorActivity.a(" ", "increaseInt");
-            logicEditorActivity.a(" ", "decreaseInt");
+            logicEditorActivity.createPaletteBlock(" ", "setVarInt");
+            logicEditorActivity.createPaletteBlock(" ", "increaseInt");
+            logicEditorActivity.createPaletteBlock(" ", "decreaseInt");
         }
         if (showAll() || isStrUsed) {
-            logicEditorActivity.a(" ", "setVarString");
+            logicEditorActivity.createPaletteBlock(" ", "setVarString");
         }
         if (showAll() || isMapUsed) {
-            logicEditorActivity.a(" ", "mapCreateNew");
-            logicEditorActivity.a("Map put values", getTitleBgColor(logicEditorActivity));
-            logicEditorActivity.a(" ", "mapPut");
+            logicEditorActivity.createPaletteBlock(" ", "mapCreateNew");
+            logicEditorActivity.addPaletteCategory("Map put values", getTitleBgColor(logicEditorActivity));
+            logicEditorActivity.createPaletteBlock(" ", "mapPut");
         }
         if (showBuiltIn() && (showAll() || isMapUsed)) {
-            logicEditorActivity.a(" ", "hashmapPutNumber");
-            logicEditorActivity.a(" ", "hashmapPutNumber2");
-            logicEditorActivity.a(" ", "hashmapPutBoolean");
-            logicEditorActivity.a(" ", "hashmapPutMap");
-            logicEditorActivity.a(" ", "hashmapPutListstr");
-            logicEditorActivity.a(" ", "hashmapPutListmap");
+            logicEditorActivity.createPaletteBlock(" ", "hashmapPutNumber");
+            logicEditorActivity.createPaletteBlock(" ", "hashmapPutNumber2");
+            logicEditorActivity.createPaletteBlock(" ", "hashmapPutBoolean");
+            logicEditorActivity.createPaletteBlock(" ", "hashmapPutMap");
+            logicEditorActivity.createPaletteBlock(" ", "hashmapPutListstr");
+            logicEditorActivity.createPaletteBlock(" ", "hashmapPutListmap");
         }
         if (showAll() || isMapUsed) {
-            logicEditorActivity.a("Map get values", getTitleBgColor(logicEditorActivity));
-            logicEditorActivity.a("s", "mapGet");
+            logicEditorActivity.addPaletteCategory("Map get values", getTitleBgColor(logicEditorActivity));
+            logicEditorActivity.createPaletteBlock("s", "mapGet");
         }
         if (showBuiltIn() && (showAll() || isMapUsed)) {
-            logicEditorActivity.a("d", "hashmapGetNumber");
-            logicEditorActivity.a("b", "hashmapGetBoolean");
-            logicEditorActivity.a("a", "hashmapGetMap");
-            logicEditorActivity.a("", "l", "List String", "hashmapListstr");
-            logicEditorActivity.a("", "l", "List Map", "hashmapGetListmap");
+            logicEditorActivity.createPaletteBlock("d", "hashmapGetNumber");
+            logicEditorActivity.createPaletteBlock("b", "hashmapGetBoolean");
+            logicEditorActivity.createPaletteBlock("a", "hashmapGetMap");
+            logicEditorActivity.createPaletteBlockWithComponent("", "l", "List String", "hashmapListstr");
+            logicEditorActivity.createPaletteBlockWithComponent("", "l", "List Map", "hashmapGetListmap");
         }
         if (showAll() || isMapUsed) {
-            logicEditorActivity.a("Map general", getTitleBgColor(logicEditorActivity));
-            logicEditorActivity.a("b", "mapIsEmpty");
-            logicEditorActivity.a("b", "mapContainKey");
-            logicEditorActivity.a("b", "mapContainValue");
-            logicEditorActivity.a("d", "mapSize");
-            logicEditorActivity.a(" ", "mapRemoveKey");
-            logicEditorActivity.a(" ", "mapClear");
-            logicEditorActivity.a(" ", "mapGetAllKeys");
+            logicEditorActivity.addPaletteCategory("Map general", getTitleBgColor(logicEditorActivity));
+            logicEditorActivity.createPaletteBlock("b", "mapIsEmpty");
+            logicEditorActivity.createPaletteBlock("b", "mapContainKey");
+            logicEditorActivity.createPaletteBlock("b", "mapContainValue");
+            logicEditorActivity.createPaletteBlock("d", "mapSize");
+            logicEditorActivity.createPaletteBlock(" ", "mapRemoveKey");
+            logicEditorActivity.createPaletteBlock(" ", "mapClear");
+            logicEditorActivity.createPaletteBlock(" ", "mapGetAllKeys");
         }
     }
 
@@ -2668,51 +2668,51 @@ public class BlocksHandler {
         boolean inOnBindCustomViewEvent = eventName.equals("onBindCustomView");
         boolean inOnFilesPickedEvent = eventName.equals("onFilesPicked");
         if (showAll() || isListNumUsed) {
-            logicEditorActivity.a("List Number", getTitleBgColor(logicEditorActivity));
-            logicEditorActivity.a("b", "containListInt");
-            logicEditorActivity.a("d", "getAtListInt");
-            logicEditorActivity.a("d", "indexListInt");
-            logicEditorActivity.a(" ", "addListInt");
-            logicEditorActivity.a(" ", "insertListInt");
+            logicEditorActivity.addPaletteCategory("List Number", getTitleBgColor(logicEditorActivity));
+            logicEditorActivity.createPaletteBlock("b", "containListInt");
+            logicEditorActivity.createPaletteBlock("d", "getAtListInt");
+            logicEditorActivity.createPaletteBlock("d", "indexListInt");
+            logicEditorActivity.createPaletteBlock(" ", "addListInt");
+            logicEditorActivity.createPaletteBlock(" ", "insertListInt");
         }
         if (showBuiltIn() && (showAll() || isListNumUsed)) {
-            logicEditorActivity.a(" ", "setAtPosListnum");
+            logicEditorActivity.createPaletteBlock(" ", "setAtPosListnum");
         }
         if (showBuiltIn() && (showAll() || isListNumUsed)) {
-            logicEditorActivity.a(" ", "sortListnum");
+            logicEditorActivity.createPaletteBlock(" ", "sortListnum");
         }
         if (showAll() || isListStrUsed || inOnFilesPickedEvent) {
-            logicEditorActivity.a("List String", getTitleBgColor(logicEditorActivity));
-            logicEditorActivity.a("b", "containListStr");
-            logicEditorActivity.a("d", "indexListStr");
-            logicEditorActivity.a("s", "getAtListStr");
-            logicEditorActivity.a(" ", "addListStr");
-            logicEditorActivity.a(" ", "insertListStr");
+            logicEditorActivity.addPaletteCategory("List String", getTitleBgColor(logicEditorActivity));
+            logicEditorActivity.createPaletteBlock("b", "containListStr");
+            logicEditorActivity.createPaletteBlock("d", "indexListStr");
+            logicEditorActivity.createPaletteBlock("s", "getAtListStr");
+            logicEditorActivity.createPaletteBlock(" ", "addListStr");
+            logicEditorActivity.createPaletteBlock(" ", "insertListStr");
         }
         if (showBuiltIn() && (showAll() || isListStrUsed)) {
-            logicEditorActivity.a(" ", "setAtPosListstr");
+            logicEditorActivity.createPaletteBlock(" ", "setAtPosListstr");
         }
         if (showAll() || isListStrUsed) {
-            logicEditorActivity.a(" ", "sortList");
+            logicEditorActivity.createPaletteBlock(" ", "sortList");
         }
         if (showAll() || isListMapUsed || inOnBindCustomViewEvent) {
-            logicEditorActivity.a("List Map", getTitleBgColor(logicEditorActivity));
-            logicEditorActivity.a("b", "containListMap");
-            logicEditorActivity.a("s", "getAtListMap");
+            logicEditorActivity.addPaletteCategory("List Map", getTitleBgColor(logicEditorActivity));
+            logicEditorActivity.createPaletteBlock("b", "containListMap");
+            logicEditorActivity.createPaletteBlock("s", "getAtListMap");
             if (showBuiltIn()) {
-                logicEditorActivity.a("a", "getMapAtPosListmap");
+                logicEditorActivity.createPaletteBlock("a", "getMapAtPosListmap");
             }
-            logicEditorActivity.a(" ", "addListMap");
-            logicEditorActivity.a(" ", "insertListMap");
-            logicEditorActivity.a(" ", "setListMap");
-            logicEditorActivity.a(" ", "setMapAtPosListmap");
+            logicEditorActivity.createPaletteBlock(" ", "addListMap");
+            logicEditorActivity.createPaletteBlock(" ", "insertListMap");
+            logicEditorActivity.createPaletteBlock(" ", "setListMap");
+            logicEditorActivity.createPaletteBlock(" ", "setMapAtPosListmap");
         }
         if (showAll() || isListMapUsed) {
-            logicEditorActivity.a(" ", "addMapToList");
-            logicEditorActivity.a(" ", "insertMapToList");
-            logicEditorActivity.a(" ", "getMapInList");
-            logicEditorActivity.a(" ", "deleteMapFromListmap");
-            logicEditorActivity.a(" ", "sortListmap");
+            logicEditorActivity.createPaletteBlock(" ", "addMapToList");
+            logicEditorActivity.createPaletteBlock(" ", "insertMapToList");
+            logicEditorActivity.createPaletteBlock(" ", "getMapInList");
+            logicEditorActivity.createPaletteBlock(" ", "deleteMapFromListmap");
+            logicEditorActivity.createPaletteBlock(" ", "sortListmap");
         }
         if (showAll()
                 || isListMapUsed
@@ -2720,115 +2720,115 @@ public class BlocksHandler {
                 || isListNumUsed
                 || inOnBindCustomViewEvent
                 || inOnFilesPickedEvent) {
-            logicEditorActivity.a("General", getTitleBgColor(logicEditorActivity));
-            logicEditorActivity.a(" ", "listAddAll");
-            logicEditorActivity.a("d", "lengthList");
-            logicEditorActivity.a(" ", "deleteList");
-            logicEditorActivity.a(" ", "clearList");
-            logicEditorActivity.a(" ", "reverseList");
+            logicEditorActivity.addPaletteCategory("General", getTitleBgColor(logicEditorActivity));
+            logicEditorActivity.createPaletteBlock(" ", "listAddAll");
+            logicEditorActivity.createPaletteBlock("d", "lengthList");
+            logicEditorActivity.createPaletteBlock(" ", "deleteList");
+            logicEditorActivity.createPaletteBlock(" ", "clearList");
+            logicEditorActivity.createPaletteBlock(" ", "reverseList");
             if (showBuiltIn()) {
-                logicEditorActivity.a(" ", "shuffleList");
-                logicEditorActivity.a(" ", "swapInList");
+                logicEditorActivity.createPaletteBlock(" ", "shuffleList");
+                logicEditorActivity.createPaletteBlock(" ", "swapInList");
             }
         }
     }
 
     public static void primaryBlocksC(LogicEditorActivity logicEditorActivity) {
-        logicEditorActivity.a("c", "repeat");
+        logicEditorActivity.createPaletteBlock("c", "repeat");
         if (showBuiltIn()) {
-            logicEditorActivity.a("c", "repeatKnownNum");
-            logicEditorActivity.a("c", "RepeatKnownNumDescending");
+            logicEditorActivity.createPaletteBlock("c", "repeatKnownNum");
+            logicEditorActivity.createPaletteBlock("c", "RepeatKnownNumDescending");
         }
-        logicEditorActivity.a("c", "forever");
+        logicEditorActivity.createPaletteBlock("c", "forever");
         if (showBuiltIn()) {
-            logicEditorActivity.a("c", "whileLoop");
+            logicEditorActivity.createPaletteBlock("c", "whileLoop");
         }
-        logicEditorActivity.a("c", "if");
-        logicEditorActivity.a("e", "ifElse");
+        logicEditorActivity.createPaletteBlock("c", "if");
+        logicEditorActivity.createPaletteBlock("e", "ifElse");
         if (showBuiltIn()) {
-            logicEditorActivity.a("b", "instanceOfOperator");
-            logicEditorActivity.a("b", "isEmpty");
-            logicEditorActivity.a("c", "switchStr");
-            logicEditorActivity.a(" ", "caseStrAnd");
-            logicEditorActivity.a("c", "caseStr");
-            logicEditorActivity.a("c", "switchNum");
-            logicEditorActivity.a(" ", "caseNumAnd");
-            logicEditorActivity.a("c", "caseNum");
-            logicEditorActivity.a("c", "defaultSwitch");
-            logicEditorActivity.a("e", "tryCatch");
-            logicEditorActivity.a("s", "ternaryString");
-            logicEditorActivity.a("d", "ternaryNumber");
-            logicEditorActivity.a("f", "returnString");
-            logicEditorActivity.a("f", "returnNumber");
-            logicEditorActivity.a("f", "returnBoolean");
-            logicEditorActivity.a("f", "returnMap");
-            logicEditorActivity.a("f", "returnListStr");
-            logicEditorActivity.a("f", "returnListMap");
-            logicEditorActivity.a("f", "returnView");
-            logicEditorActivity.a("f", "break");
-            logicEditorActivity.a("f", "continue");
+            logicEditorActivity.createPaletteBlock("b", "instanceOfOperator");
+            logicEditorActivity.createPaletteBlock("b", "isEmpty");
+            logicEditorActivity.createPaletteBlock("c", "switchStr");
+            logicEditorActivity.createPaletteBlock(" ", "caseStrAnd");
+            logicEditorActivity.createPaletteBlock("c", "caseStr");
+            logicEditorActivity.createPaletteBlock("c", "switchNum");
+            logicEditorActivity.createPaletteBlock(" ", "caseNumAnd");
+            logicEditorActivity.createPaletteBlock("c", "caseNum");
+            logicEditorActivity.createPaletteBlock("c", "defaultSwitch");
+            logicEditorActivity.createPaletteBlock("e", "tryCatch");
+            logicEditorActivity.createPaletteBlock("s", "ternaryString");
+            logicEditorActivity.createPaletteBlock("d", "ternaryNumber");
+            logicEditorActivity.createPaletteBlock("f", "returnString");
+            logicEditorActivity.createPaletteBlock("f", "returnNumber");
+            logicEditorActivity.createPaletteBlock("f", "returnBoolean");
+            logicEditorActivity.createPaletteBlock("f", "returnMap");
+            logicEditorActivity.createPaletteBlock("f", "returnListStr");
+            logicEditorActivity.createPaletteBlock("f", "returnListMap");
+            logicEditorActivity.createPaletteBlock("f", "returnView");
+            logicEditorActivity.createPaletteBlock("f", "break");
+            logicEditorActivity.createPaletteBlock("f", "continue");
         }
     }
 
     public static void primaryBlocksD(LogicEditorActivity logicEditorActivity) {
-        logicEditorActivity.a("b", "true");
-        logicEditorActivity.a("b", "false");
-        logicEditorActivity.a("b", "<");
-        logicEditorActivity.a("b", "=");
-        logicEditorActivity.a("b", ">");
-        logicEditorActivity.a("b", "&&");
-        logicEditorActivity.a("b", "||");
-        logicEditorActivity.a("b", "not");
-        logicEditorActivity.a("d", "+");
-        logicEditorActivity.a("d", "-");
-        logicEditorActivity.a("d", "*");
-        logicEditorActivity.a("d", "/");
-        logicEditorActivity.a("d", "%");
-        logicEditorActivity.a("d", "random");
-        logicEditorActivity.a("d", "stringLength");
-        logicEditorActivity.a("s", "stringJoin");
-        logicEditorActivity.a("d", "stringIndex");
-        logicEditorActivity.a("d", "stringLastIndex");
-        logicEditorActivity.a("s", "stringSub");
+        logicEditorActivity.createPaletteBlock("b", "true");
+        logicEditorActivity.createPaletteBlock("b", "false");
+        logicEditorActivity.createPaletteBlock("b", "<");
+        logicEditorActivity.createPaletteBlock("b", "=");
+        logicEditorActivity.createPaletteBlock("b", ">");
+        logicEditorActivity.createPaletteBlock("b", "&&");
+        logicEditorActivity.createPaletteBlock("b", "||");
+        logicEditorActivity.createPaletteBlock("b", "not");
+        logicEditorActivity.createPaletteBlock("d", "+");
+        logicEditorActivity.createPaletteBlock("d", "-");
+        logicEditorActivity.createPaletteBlock("d", "*");
+        logicEditorActivity.createPaletteBlock("d", "/");
+        logicEditorActivity.createPaletteBlock("d", "%");
+        logicEditorActivity.createPaletteBlock("d", "random");
+        logicEditorActivity.createPaletteBlock("d", "stringLength");
+        logicEditorActivity.createPaletteBlock("s", "stringJoin");
+        logicEditorActivity.createPaletteBlock("d", "stringIndex");
+        logicEditorActivity.createPaletteBlock("d", "stringLastIndex");
+        logicEditorActivity.createPaletteBlock("s", "stringSub");
         if (showBuiltIn()) {
-            logicEditorActivity.a("s", "stringSubSingle");
+            logicEditorActivity.createPaletteBlock("s", "stringSubSingle");
         }
-        logicEditorActivity.a("b", "stringEquals");
-        logicEditorActivity.a("b", "stringContains");
+        logicEditorActivity.createPaletteBlock("b", "stringEquals");
+        logicEditorActivity.createPaletteBlock("b", "stringContains");
         if (showBuiltIn()) {
-            logicEditorActivity.a("b", "stringMatches");
+            logicEditorActivity.createPaletteBlock("b", "stringMatches");
         }
-        logicEditorActivity.a("s", "stringReplace");
+        logicEditorActivity.createPaletteBlock("s", "stringReplace");
         if (showBuiltIn()) {
-            logicEditorActivity.a("s", "stringReplaceFirst");
-            logicEditorActivity.a("s", "stringReplaceAll");
-            logicEditorActivity.a("s", "reverse");
-            logicEditorActivity.a("s", "html");
+            logicEditorActivity.createPaletteBlock("s", "stringReplaceFirst");
+            logicEditorActivity.createPaletteBlock("s", "stringReplaceAll");
+            logicEditorActivity.createPaletteBlock("s", "reverse");
+            logicEditorActivity.createPaletteBlock("s", "html");
         }
-        logicEditorActivity.a("s", "trim");
-        logicEditorActivity.a("s", "toUpperCase");
-        logicEditorActivity.a("s", "toLowerCase");
-        logicEditorActivity.a("d", "toNumber");
-        logicEditorActivity.a("d", "strParseInteger");
-        logicEditorActivity.a("d", "toHashCode");
-        logicEditorActivity.a("s", "toString");
-        logicEditorActivity.a("s", "toStringWithDecimal");
-        logicEditorActivity.a("s", "toStringFormat");
-        logicEditorActivity.a(" ", "strToMap");
-        logicEditorActivity.a("s", "mapToStr");
-        logicEditorActivity.a(" ", "strToListMap");
-        logicEditorActivity.a("s", "listMapToStr");
+        logicEditorActivity.createPaletteBlock("s", "trim");
+        logicEditorActivity.createPaletteBlock("s", "toUpperCase");
+        logicEditorActivity.createPaletteBlock("s", "toLowerCase");
+        logicEditorActivity.createPaletteBlock("d", "toNumber");
+        logicEditorActivity.createPaletteBlock("d", "strParseInteger");
+        logicEditorActivity.createPaletteBlock("d", "toHashCode");
+        logicEditorActivity.createPaletteBlock("s", "toString");
+        logicEditorActivity.createPaletteBlock("s", "toStringWithDecimal");
+        logicEditorActivity.createPaletteBlock("s", "toStringFormat");
+        logicEditorActivity.createPaletteBlock(" ", "strToMap");
+        logicEditorActivity.createPaletteBlock("s", "mapToStr");
+        logicEditorActivity.createPaletteBlock(" ", "strToListMap");
+        logicEditorActivity.createPaletteBlock("s", "listMapToStr");
         if (showBuiltIn()) {
-            logicEditorActivity.a(" ", "GsonStringToListString");
-            logicEditorActivity.a(" ", "GsonStringToListNumber");
-            logicEditorActivity.a("s", "GsonListTojsonString");
-            logicEditorActivity.a(" ", "stringSplitToList");
+            logicEditorActivity.createPaletteBlock(" ", "GsonStringToListString");
+            logicEditorActivity.createPaletteBlock(" ", "GsonStringToListNumber");
+            logicEditorActivity.createPaletteBlock("s", "GsonListTojsonString");
+            logicEditorActivity.createPaletteBlock(" ", "stringSplitToList");
         }
-        logicEditorActivity.a("add source directly", getTitleBgColor(logicEditorActivity));
-        logicEditorActivity.a(" ", "addSourceDirectly");
-        logicEditorActivity.a("b", "asdBoolean");
-        logicEditorActivity.a("d", "asdNumber");
-        logicEditorActivity.a("s", "asdString");
+        logicEditorActivity.addPaletteCategory("add source directly", getTitleBgColor(logicEditorActivity));
+        logicEditorActivity.createPaletteBlock(" ", "addSourceDirectly");
+        logicEditorActivity.createPaletteBlock("b", "asdBoolean");
+        logicEditorActivity.createPaletteBlock("d", "asdNumber");
+        logicEditorActivity.createPaletteBlock("s", "asdString");
     }
 
     private static @ColorInt int getTitleBgColor(LogicEditorActivity logicEditorActivity) {

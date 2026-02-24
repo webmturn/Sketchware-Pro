@@ -192,7 +192,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         ArrayList<BlockBean> eventBlocks = ProjectDataManager.getProjectDataManager(scId).getBlocks(M.getJavaName(), id + "_" + eventName);
         if (eventBlocks != null) {
             if (eventBlocks.isEmpty()) {
-                runOnUiThread(() -> e(X));
+                runOnUiThread(() -> togglePaletteVisibility(X));
             }
 
             ArrayList<BlockView> createdBlocks = new ArrayList<>();
@@ -201,7 +201,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 if (eventName.equals("onTextChanged") && next.opCode.equals("getArg") && next.spec.equals("text")) {
                     next.spec = "charSeq";
                 }
-                BlockView b2 = b(next);
+                BlockView b2 = createBlockView(next);
                 createdBlocks.add(b2);
                 blockIdsAndBlocks.put((Integer) b2.getTag(), b2);
                 o.nextBlockId = Math.max(o.nextBlockId, (Integer) b2.getTag() + 1);
@@ -272,12 +272,12 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 if (actionType == HistoryBlockBean.ACTION_TYPE_ADD) {
                     int[] locationOnScreen = new int[2];
                     o.getLocationOnScreen(locationOnScreen);
-                    a(historyBlockBean.getAddedData(), historyBlockBean.getCurrentX() + locationOnScreen[0], historyBlockBean.getCurrentY() + locationOnScreen[1], true);
+                    addBlockBeans(historyBlockBean.getAddedData(), historyBlockBean.getCurrentX() + locationOnScreen[0], historyBlockBean.getCurrentY() + locationOnScreen[1], true);
                     if (historyBlockBean.getCurrentParentData() != null) {
-                        a(historyBlockBean.getCurrentParentData(), true);
+                        connectBlock(historyBlockBean.getCurrentParentData(), true);
                     }
                 } else if (actionType == HistoryBlockBean.ACTION_TYPE_UPDATE) {
-                    a(historyBlockBean.getCurrentUpdateData(), true);
+                    connectBlock(historyBlockBean.getCurrentUpdateData(), true);
                 } else if (actionType == HistoryBlockBean.ACTION_TYPE_REMOVE) {
                     ArrayList<BlockBean> removedData = historyBlockBean.getRemovedData();
 
@@ -285,7 +285,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                         o.removeBlock(removedData.get(i), false);
                     }
                     if (historyBlockBean.getCurrentParentData() != null) {
-                        a(historyBlockBean.getCurrentParentData(), true);
+                        connectBlock(historyBlockBean.getCurrentParentData(), true);
                     }
                 } else if (actionType == HistoryBlockBean.ACTION_TYPE_MOVE) {
                     for (BlockBean afterMoveData : historyBlockBean.getAfterMoveData()) {
@@ -294,13 +294,13 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
                     int[] locationOnScreen = new int[2];
                     o.getLocationOnScreen(locationOnScreen);
-                    a(historyBlockBean.getAfterMoveData(), historyBlockBean.getCurrentX() + locationOnScreen[0], historyBlockBean.getCurrentY() + locationOnScreen[1], true);
+                    addBlockBeans(historyBlockBean.getAfterMoveData(), historyBlockBean.getCurrentX() + locationOnScreen[0], historyBlockBean.getCurrentY() + locationOnScreen[1], true);
                     if (historyBlockBean.getCurrentParentData() != null) {
-                        a(historyBlockBean.getCurrentParentData(), true);
+                        connectBlock(historyBlockBean.getCurrentParentData(), true);
                     }
 
                     if (historyBlockBean.getCurrentOriginalParent() != null) {
-                        a(historyBlockBean.getCurrentOriginalParent(), true);
+                        connectBlock(historyBlockBean.getCurrentOriginalParent(), true);
                     }
                 }
             }
@@ -338,7 +338,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     }
                 }
 
-                a(i, Helper.getText(editText));
+                addListVariable(i, Helper.getText(editText));
                 v.dismiss();
             }
         });
@@ -368,7 +368,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             }
 
             if (nameValidator.isValid()) {
-                b(variableType, Helper.getText(editText));
+                addVariable(variableType, Helper.getText(editText));
                 v.dismiss();
             }
         });
@@ -394,7 +394,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         View a2 = ViewUtil.inflateLayout(this, R.layout.property_popup_selector_single);
         ViewGroup viewGroup = a2.findViewById(R.id.rg_content);
         for (Pair<Integer, String> list : ProjectDataManager.getProjectDataManager(scId).getListVariables(M.getJavaName())) {
-            viewGroup.addView(e(list.second));
+            viewGroup.addView(createRadioButton(list.second));
         }
         dialog.setView(a2);
         dialog.setPositiveButton(R.string.common_word_remove, (v, which) -> {
@@ -425,7 +425,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         View a2 = ViewUtil.inflateLayout(this, R.layout.property_popup_selector_single);
         ViewGroup viewGroup = a2.findViewById(R.id.rg_content);
         for (Pair<Integer, String> next : ProjectDataManager.getProjectDataManager(scId).getVariables(M.getJavaName())) {
-            RadioButton e = e(next.second);
+            RadioButton e = createRadioButton(next.second);
             e.setTag(next.first);
             viewGroup.addView(e);
         }
@@ -473,17 +473,17 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
                     if (history.getPrevParentData() != null) {
                         history.getPrevParentData().print();
-                        a(history.getPrevParentData(), true);
+                        connectBlock(history.getPrevParentData(), true);
                     }
                 } else if (actionType == HistoryBlockBean.ACTION_TYPE_UPDATE) {
-                    a(history.getPrevUpdateData(), true);
+                    connectBlock(history.getPrevUpdateData(), true);
                 } else if (actionType == HistoryBlockBean.ACTION_TYPE_REMOVE) {
                     int[] oLocationOnScreen = new int[2];
                     o.getLocationOnScreen(oLocationOnScreen);
-                    a(history.getRemovedData(), history.getCurrentX() + oLocationOnScreen[0], history.getCurrentY() + oLocationOnScreen[1], true);
+                    addBlockBeans(history.getRemovedData(), history.getCurrentX() + oLocationOnScreen[0], history.getCurrentY() + oLocationOnScreen[1], true);
 
                     if (history.getPrevParentData() != null) {
-                        a(history.getPrevParentData(), true);
+                        connectBlock(history.getPrevParentData(), true);
                     }
                 } else if (actionType == HistoryBlockBean.ACTION_TYPE_MOVE) {
                     for (BlockBean beforeMoveBlock : history.getBeforeMoveData()) {
@@ -492,13 +492,13 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
                     int[] oLocationOnScreen = new int[2];
                     o.getLocationOnScreen(oLocationOnScreen);
-                    a(history.getBeforeMoveData(), history.getPrevX() + oLocationOnScreen[0], history.getPrevY() + oLocationOnScreen[1], true);
+                    addBlockBeans(history.getBeforeMoveData(), history.getPrevX() + oLocationOnScreen[0], history.getPrevY() + oLocationOnScreen[1], true);
 
                     if (history.getPrevParentData() != null) {
-                        a(history.getPrevParentData(), true);
+                        connectBlock(history.getPrevParentData(), true);
                     }
                     if (history.getPrevOriginalParent() != null) {
-                        a(history.getPrevOriginalParent(), true);
+                        connectBlock(history.getPrevOriginalParent(), true);
                     }
                 }
             }
@@ -507,7 +507,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
     }
 
-    public BlockView a(BlockView rs, int i, int i2, boolean z) {
+    public BlockView dropBlockOnPane(BlockView rs, int i, int i2, boolean z) {
         BlockView a2 = o.dropBlock(rs, i, i2, z);
         if (!z) {
             a2.setOnTouchListener(this);
@@ -519,7 +519,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         m.addDeprecatedBlock(message, type, opCode);
     }
 
-    public View a(String str, String str2) {
+    public View createPaletteBlock(String str, String str2) {
         BaseBlockView a2 = m.a("", str, str2);
         a2.setTag(str2);
         a2.setClickable(true);
@@ -527,7 +527,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         return a2;
     }
 
-    public final View a(String str, String str2, String str3) {
+    public final View createPaletteBlockWithSpec(String str, String str2, String str3) {
         BaseBlockView a2 = m.a(str, str2, str3);
         a2.setTag(str3);
         a2.setClickable(true);
@@ -535,7 +535,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         return a2;
     }
 
-    public final View a(String str, String str2, String str3, String str4) {
+    public final View createPaletteBlockWithComponent(String str, String str2, String str3, String str4) {
         BaseBlockView a2 = m.a(str, str2, str3, str4);
         a2.setTag(str4);
         a2.setClickable(true);
@@ -586,7 +586,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         return imageView;
     }
 
-    public final ArrayList<BlockBean> a(ArrayList<BlockBean> arrayList, int i, int i2, boolean z) {
+    public final ArrayList<BlockBean> addBlockBeans(ArrayList<BlockBean> arrayList, int i, int i2, boolean z) {
         HashMap<Integer, Integer> hashMap = new HashMap<>();
         ArrayList<BlockBean> arrayList2 = new ArrayList<>();
         for (BlockBean next : arrayList) {
@@ -609,7 +609,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 break;
             }
             BlockBean blockBean = arrayList2.get(size);
-            if (!a(blockBean)) {
+            if (!isBlockValid(blockBean)) {
                 arrayList2.remove(size);
                 hashMap.remove(Integer.valueOf(blockBean.id));
             }
@@ -646,7 +646,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         for (int j = 0; j < arrayList2.size(); j++) {
             BlockBean blockBean = arrayList2.get(j);
             if (blockBean.id != null && !blockBean.id.isEmpty()) {
-                BlockView block = b(blockBean);
+                BlockView block = createBlockView(blockBean);
                 if (j == 0) {
                     firstBlock = block;
                 }
@@ -656,7 +656,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
         for (BlockBean block : arrayList2) {
             if (block.id != null && !block.id.isEmpty()) {
-                a(block, false);
+                connectBlock(block, false);
             }
         }
         if (firstBlock != null && z) {
@@ -667,16 +667,16 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     @Override
-    public void a(int i, int i2) {
+    public void onBlockSizeChanged(int i, int i2) {
         extraPaletteBlock.setBlock(i, i2);
     }
 
-    public void a(int i, String str) {
+    public void addListVariable(int i, String str) {
         ProjectDataManager.getProjectDataManager(scId).addListVariable(M.getJavaName(), i, str);
-        a(1, 0xffcc5b22);
+        onBlockSizeChanged(1, 0xffcc5b22);
     }
 
-    public void a(BlockView rs) {
+    public void trackDragSource(BlockView rs) {
         w = null;
         y = -1;
         x = 0;
@@ -704,7 +704,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
     }
 
-    public void a(BlockView rs, float f, float f2) {
+    public void handleBlockFieldClick(BlockView rs, float f, float f2) {
         for (View next : rs.childViews) {
             if ((next instanceof FieldBlockView) && next.getX() < f && next.getX() + next.getWidth() > f && next.getY() < f2 && next.getY() + next.getHeight() > f2) {
                 new ExtraMenuBean(this).defineMenuSelector((FieldBlockView) next);
@@ -713,7 +713,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
     }
 
-    public void a(FieldBlockView ss, Object obj) {
+    public void setFieldValue(FieldBlockView ss, Object obj) {
         BlockBean clone = ss.parentBlock.getBean().clone();
         ss.setArgValue(obj);
         ss.parentBlock.recalculateToRoot();
@@ -770,7 +770,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         dialog.setPositiveButton(R.string.common_word_save, (v, which) -> {
             String selectedImg = selectedImage.get();
             if (!selectedImg.isEmpty()) {
-                a(ss, selectedImage.get());
+                setFieldValue(ss, selectedImage.get());
             }
         });
 
@@ -779,7 +779,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         dialog.show();
     }
 
-    public void a(FieldBlockView ss, boolean z) {
+    public void showNumberOrStringInput(FieldBlockView ss, boolean z) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(z ? R.string.logic_editor_title_enter_number_value : R.string.logic_editor_title_enter_string_value);
         View a2 = ViewUtil.inflateLayout(this, R.layout.property_popup_input_text);
@@ -817,14 +817,14 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 text = "";
             }
 
-            a(ss, text);
+            setFieldValue(ss, text);
             v.dismiss();
         });
         dialog.setNegativeButton(R.string.common_word_cancel, null);
         dialog.show();
     }
 
-    public void a(BlockBean blockBean, boolean z) {
+    public void connectBlock(BlockBean blockBean, boolean z) {
         BlockView block = o.findBlockByString(blockBean.id);
         if (block != null) {
             block.ia = -1;
@@ -1173,11 +1173,11 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
     }
 
-    public void a(String str, int i) {
+    public void addPaletteCategory(String str, int i) {
         m.a(str, i);
     }
 
-    public void a(String str, BlockView rs) {
+    public void saveBlockToCollection(String str, BlockView rs) {
         ArrayList<String> arrayList;
         ArrayList<BlockView> allChildren = rs.getAllChildren();
         ArrayList<BlockBean> arrayList2 = new ArrayList<>();
@@ -1219,15 +1219,15 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
     }
 
-    public void a(boolean z) {
+    public void setCopyActive(boolean z) {
         logicTopMenu.setCopyActive(z);
     }
 
-    public final boolean a(float f, float f2) {
+    public final boolean hitTestCopy(float f, float f2) {
         return logicTopMenu.isInsideCopyArea(f, f2);
     }
 
-    public final boolean a(BlockBean blockBean) {
+    public final boolean isBlockValid(BlockBean blockBean) {
         if (blockBean.opCode.equals("getArg")) {
             return true;
         }
@@ -1244,7 +1244,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         return true;
     }
 
-    public BlockView b(BlockBean blockBean) {
+    public BlockView createBlockView(BlockBean blockBean) {
         return new BlockView(this, Integer.parseInt(blockBean.id), blockBean.spec, blockBean.type, blockBean.typeName, blockBean.opCode);
     }
 
@@ -1258,44 +1258,44 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         return radioButton;
     }
 
-    public void b(int i, String str) {
+    public void addVariable(int i, String str) {
         ProjectDataManager.getProjectDataManager(scId).addVariable(M.getJavaName(), i, str);
-        a(0, 0xffee7d16);
+        onBlockSizeChanged(0, 0xffee7d16);
     }
 
-    public void b(BlockView rs) {
+    public void deleteBlock(BlockView rs) {
         o.removeBlockTree(rs);
     }
 
-    public void b(FieldBlockView ss) {
+    public void showColorPicker(FieldBlockView ss) {
         ColorPickerDialog colorPickerDialog = new ColorPickerDialog(this, (ss.getArgValue() == null || ss.getArgValue().toString().isEmpty()) ? "Color.TRANSPARENT" : ss.getArgValue().toString().replace("0xFF", "#"), true, false, scId);
         colorPickerDialog.a(new ColorPickerDialog.b() {
             @Override
             public void a(int var1) {
                 if (var1 == 0) {
-                    LogicEditorActivity.this.a(ss, "Color.TRANSPARENT");
+                    LogicEditorActivity.this.setFieldValue(ss, "Color.TRANSPARENT");
                 } else {
-                    LogicEditorActivity.this.a(ss, String.format("0x%08X", var1 & (Color.WHITE)));
+                    LogicEditorActivity.this.setFieldValue(ss, String.format("0x%08X", var1 & (Color.WHITE)));
                 }
             }
 
             @Override
             public void a(String var1, int var2) {
-                LogicEditorActivity.this.a(ss, "R.color." + var1);
+                LogicEditorActivity.this.setFieldValue(ss, "R.color." + var1);
             }
         });
-        colorPickerDialog.materialColorAttr((attr, attrColor) -> a(ss, "R.attr." + attr));
+        colorPickerDialog.materialColorAttr((attr, attrColor) -> setFieldValue(ss, "R.attr." + attr));
         colorPickerDialog.showAtLocation(ss, Gravity.CENTER, 0, 0);
     }
 
-    public void b(String str, String tag) {
+    public void addPaletteLabel(String str, String tag) {
         TextView textView = m.a(str);
         textView.setTag(tag);
         textView.setSoundEffectsEnabled(true);
         textView.setOnClickListener(this);
     }
 
-    public void b(String str, String tag, View.OnClickListener onClickListener) {
+    public void addPaletteLabelWithListener(String str, String tag, View.OnClickListener onClickListener) {
         TextView textView = m.a(str);
         textView.setTag(tag);
         textView.setSoundEffectsEnabled(true);
@@ -1310,7 +1310,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         return logicTopMenu.isInsideDeleteArea(f, f2);
     }
 
-    public void c(BlockView rs) {
+    public void showSaveToFavorites(BlockView rs) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.logic_block_favorites_save_title);
         View a2 = ViewUtil.inflateLayout(this, R.layout.property_popup_save_to_favorite);
@@ -1324,7 +1324,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         dialog.setView(a2);
         dialog.setPositiveButton(R.string.common_word_save, (v, which) -> {
             if (blockNameValidator.isValid()) {
-                a(Helper.getText(editText), rs);
+                saveBlockToCollection(Helper.getText(editText), rs);
                 v.dismiss();
             }
         });
@@ -1332,7 +1332,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         dialog.show();
     }
 
-    public void c(FieldBlockView ss) {
+    public void showStringInput(FieldBlockView ss) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.logic_editor_title_enter_string_value);
         View a2 = ViewUtil.inflateLayout(this, R.layout.property_popup_input_text);
@@ -1344,23 +1344,23 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         editText.setText(ss.getArgValue().toString());
         dialog.setView(a2);
         dialog.setPositiveButton(R.string.common_word_save, (v, which) -> {
-            a(ss, Helper.getText(editText));
+            setFieldValue(ss, Helper.getText(editText));
             v.dismiss();
         });
         dialog.setNegativeButton(R.string.common_word_cancel, null);
         dialog.show();
     }
 
-    public void c(String str, String str2) {
+    public void addMoreBlock(String str, String str2) {
         ProjectDataManager.getProjectDataManager(scId).addMoreBlock(M.getJavaName(), str, str2);
-        a(8, 0xff8a55d7);
+        onBlockSizeChanged(8, 0xff8a55d7);
     }
 
-    public void c(boolean z) {
+    public void setDetailActive(boolean z) {
         logicTopMenu.setDetailActive(z);
     }
 
-    public final boolean c(float f, float f2) {
+    public final boolean hitTestDetail(float f, float f2) {
         return logicTopMenu.isInsideDetailArea(f, f2);
     }
 
@@ -1398,7 +1398,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         return linearLayout;
     }
 
-    public RadioButton d(String type, String id) {
+    public RadioButton createViewRadioButton(String type, String id) {
         if (isViewBindingEnabled) {
             id = ViewBindingBuilder.generateParameterFromId(id);
         }
@@ -1411,7 +1411,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         return radioButton;
     }
 
-    public void d(FieldBlockView ss) {
+    public void showFontPicker(FieldBlockView ss) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.logic_editor_title_select_font);
 
@@ -1436,7 +1436,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             for (int i = 0; i < radioGroup.getChildCount(); i++) {
                 RadioButton radioButton = (RadioButton) radioGroup.getChildAt(i);
                 if (radioButton.isChecked()) {
-                    a(ss, radioButton.getTag());
+                    setFieldValue(ss, radioButton.getTag());
                     break;
                 }
             }
@@ -1446,15 +1446,15 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         dialog.show();
     }
 
-    public void d(boolean z) {
+    public void setFavoriteActive(boolean z) {
         logicTopMenu.setFavoriteActive(z);
     }
 
-    public final boolean d(float f, float f2) {
+    public final boolean hitTestFavorite(float f, float f2) {
         return logicTopMenu.isInsideFavoriteArea(f, f2);
     }
 
-    public final RadioButton e(String str) {
+    public final RadioButton createRadioButton(String str) {
         RadioButton radioButton = new RadioButton(this);
         radioButton.setText(str);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -1476,7 +1476,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         return checkBox;
     }
 
-    public void e(FieldBlockView ss) {
+    public void showIntentDataInput(FieldBlockView ss) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.logic_editor_title_enter_data_value);
         View a2 = ViewUtil.inflateLayout(this, R.layout.property_popup_input_intent_data);
@@ -1487,17 +1487,17 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         editText.setText(ss.getArgValue().toString());
         dialog.setView(a2);
         dialog.setPositiveButton(R.string.common_word_save, (v, which) -> {
-            a(ss, Helper.getText(editText));
+            setFieldValue(ss, Helper.getText(editText));
             v.dismiss();
         });
         dialog.setNegativeButton(R.string.common_word_cancel, null);
         dialog.show();
     }
 
-    public void e(boolean z) {
+    public void togglePaletteVisibility(boolean z) {
         ObjectAnimator objectAnimator;
         if (!W) {
-            h(getResources().getConfiguration().orientation);
+            setupPaletteAnimators(getResources().getConfiguration().orientation);
         }
         if (X == z) {
             return;
@@ -1505,16 +1505,16 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         X = z;
         cancelPaletteAnimations();
         if (z) {
-            g(false);
+            toggleDrawerVisibility(false);
             objectAnimator = U;
         } else {
             objectAnimator = V;
         }
         objectAnimator.start();
-        f(getResources().getConfiguration().orientation);
+        layoutEditorForOrientation(getResources().getConfiguration().orientation);
     }
 
-    public void f(int i) {
+    public void layoutEditorForOrientation(int i) {
         LinearLayout.LayoutParams layoutParams;
         int a2;
         int i2 = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -1538,7 +1538,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         viewLogicEditor.requestLayout();
     }
 
-    public void f(FieldBlockView ss) {
+    public void showViewSelector(FieldBlockView ss) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         View customView = ViewUtil.inflateLayout(this, R.layout.property_popup_selector_single);
         ViewGroup viewGroup = customView.findViewById(R.id.rg_content);
@@ -1565,7 +1565,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 if (!toNotAdd.contains("android:id")) {
                     String classInfo = ss.getClassInfo().getClassName();
                     if ((classInfo.equals("CheckBox") && viewBean.getClassInfo().matchesType("CompoundButton")) || viewBean.getClassInfo().matchesType(classInfo)) {
-                        viewGroup.addView(d(typeName, viewBean.id));
+                        viewGroup.addView(createViewRadioButton(typeName, viewBean.id));
                     }
                 }
                 ExtraMenuBean.setupSearchView(customView, viewGroup);
@@ -1594,7 +1594,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             for (int i = 0; i < viewGroup.getChildCount(); i++) {
                 RadioButton radioButton = (RadioButton) viewGroup.getChildAt(i);
                 if (radioButton.isChecked()) {
-                    a(ss, radioButton.getTag());
+                    setFieldValue(ss, radioButton.getTag());
                     break;
                 }
             }
@@ -1604,7 +1604,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         dialog.show();
     }
 
-    public void f(boolean z) {
+    public void toggleLayoutVisibility(boolean z) {
         logicTopMenu.toggleLayoutVisibility(z);
     }
 
@@ -1618,7 +1618,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         return this;
     }
 
-    public void g(int i) {
+    public void handleOrientationChange(int i) {
         RelativeLayout.LayoutParams layoutParams;
         int orientation;
         if (2 == i) {
@@ -1647,11 +1647,11 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
         J.setOrientation(orientation);
         J.setLayoutParams(layoutParams);
-        h(i);
-        f(i);
+        setupPaletteAnimators(i);
+        layoutEditorForOrientation(i);
     }
 
-    public void g(boolean z) {
+    public void toggleDrawerVisibility(boolean z) {
         if (!ha) {
             initDrawerAnimators();
         }
@@ -1662,7 +1662,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
     }
 
-    public void h(int i) {
+    public void setupPaletteAnimators(int i) {
         boolean var2 = X;
         if (i == 2) {
             if (!var2) {
@@ -1696,7 +1696,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         W = true;
     }
 
-    public void h(FieldBlockView ss) {
+    public void showSoundPicker(FieldBlockView ss) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.logic_editor_title_select_sound);
 
@@ -1716,7 +1716,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         });
 
         for (String soundName : ProjectDataManager.getResourceManager(scId).getSoundNames()) {
-            RadioButton sound = e(soundName);
+            RadioButton sound = createRadioButton(soundName);
             radioGroup.addView(sound);
             if (soundName.equals(ss.getArgValue())) {
                 sound.setChecked(true);
@@ -1726,14 +1726,14 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         dialog.setView(customView);
         dialog.setPositiveButton(R.string.common_word_select, (v, which) -> {
             RadioButton checkedRadioButton = radioGroup.findViewById(radioGroup.getCheckedRadioButtonId());
-            a(ss, Helper.getText(checkedRadioButton));
+            setFieldValue(ss, Helper.getText(checkedRadioButton));
             v.dismiss();
         });
         dialog.setNegativeButton(R.string.common_word_cancel, null);
         dialog.show();
     }
 
-    public void h(boolean z) {
+    public void toggleTopMenuVisibility(boolean z) {
         logicTopMenu.setDeleteActive(false);
         logicTopMenu.setCopyActive(false);
         logicTopMenu.setFavoriteActive(false);
@@ -1749,13 +1749,13 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         (z ? ba : ca).start();
     }
 
-    public void i(FieldBlockView ss) {
+    public void showTypefaceSelector(FieldBlockView ss) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.logic_editor_title_select_typeface);
         View a3 = ViewUtil.inflateLayout(this, R.layout.property_popup_selector_single);
         RadioGroup radioGroup = a3.findViewById(R.id.rg_content);
         for (Pair<Integer, String> pair : SketchwareConstants.getPropertyPairs("property_text_style")) {
-            RadioButton e = e(pair.second);
+            RadioButton e = createRadioButton(pair.second);
             radioGroup.addView(e);
             if (pair.second.equals(ss.getArgValue())) {
                 e.setChecked(true);
@@ -1767,7 +1767,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             for (int i = 0; i < childCount; i++) {
                 RadioButton radioButton = (RadioButton) radioGroup.getChildAt(i);
                 if (radioButton.isChecked()) {
-                    a(ss, Helper.getText(radioButton));
+                    setFieldValue(ss, Helper.getText(radioButton));
                     break;
                 }
             }
@@ -1789,7 +1789,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
     public void removeListVariable(String str) {
         ProjectDataManager.getProjectDataManager(scId).removeListVariable(M.getJavaName(), str);
-        a(1, 0xffcc5b22);
+        onBlockSizeChanged(1, 0xffcc5b22);
     }
 
     public void cancelTopMenuAnimations() {
@@ -1803,7 +1803,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
     public void removeVariable(String str) {
         ProjectDataManager.getProjectDataManager(scId).removeVariable(M.getJavaName(), str);
-        a(0, 0xffee7d16);
+        onBlockSizeChanged(0, 0xffee7d16);
     }
 
     public void cancelPaletteAnimations() {
@@ -1844,7 +1844,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == 224) {
-                a(7, 0xff2ca5e2);
+                onBlockSizeChanged(7, 0xff2ca5e2);
             }
         }
     }
@@ -1871,7 +1871,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     makeBlockLauncher.launch(intent);
                 } else if (tag.equals("componentAdd")) {
-                    AddComponentBottomSheet addComponentBottomSheet = AddComponentBottomSheet.newInstance(scId, M, () -> a(7, 0xff2ca5e2));
+                    AddComponentBottomSheet addComponentBottomSheet = AddComponentBottomSheet.newInstance(scId, M, () -> onBlockSizeChanged(7, 0xff2ca5e2));
                     addComponentBottomSheet.show(getSupportFragmentManager(), null);
                 } else if (tag.equals("blockImport")) {
                     showMoreBlockImporter();
@@ -1891,7 +1891,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     @Override
     public void onConfigurationChanged(@NonNull Configuration configuration) {
         super.onConfigurationChanged(configuration);
-        g(configuration.orientation);
+        handleOrientationChange(configuration.orientation);
     }
 
     @Override
@@ -1901,11 +1901,11 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             @Override
             public void handleOnBackPressed() {
                 if (ia) {
-                    g(false);
+                    toggleDrawerVisibility(false);
                     return;
                 }
                 if (X) {
-                    e(false);
+                    togglePaletteVisibility(false);
                     return;
                 }
                 k();
@@ -1924,7 +1924,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         makeBlockLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                        c(result.getData().getStringExtra("block_name"), result.getData().getStringExtra("block_spec"));
+                        addMoreBlock(result.getData().getStringExtra("block_name"), result.getData().getStringExtra("block_spec"));
                     }
                 });
         setContentView(R.layout.logic_editor);
@@ -1972,7 +1972,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         J = findViewById(R.id.layout_palette);
         K = findViewById(R.id.area_palette);
         openBlocksMenuButton = findViewById(R.id.fab_toggle_palette);
-        openBlocksMenuButton.setOnClickListener(v -> e(!X));
+        openBlocksMenuButton.setOnClickListener(v -> togglePaletteVisibility(!X));
         logicTopMenu = findViewById(R.id.top_menu);
         O = findViewById(R.id.right_drawer);
         findViewById(R.id.search_header).setOnClickListener(v -> paletteSelector.showSearchDialog());
@@ -1994,8 +1994,8 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         int itemId = menuItem.getItemId();
 
         if (itemId == R.id.menu_block_helper) {
-            e(false);
-            g(!ia);
+            togglePaletteVisibility(false);
+            toggleDrawerVisibility(!ia);
         } else if (itemId == R.id.menu_logic_redo) {
             redo();
         } else if (itemId == R.id.menu_logic_undo) {
@@ -2048,11 +2048,11 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         long pc3 = System.currentTimeMillis();
         android.util.Log.d("BlockLoad", "PC rootK: " + (pc3 - pc2) + "ms");
 
-        g(getResources().getConfiguration().orientation);
+        handleOrientationChange(getResources().getConfiguration().orientation);
         long pc4 = System.currentTimeMillis();
         android.util.Log.d("BlockLoad", "PC orient: " + (pc4 - pc3) + "ms");
 
-        a(0, 0xffee7d16);
+        onBlockSizeChanged(0, 0xffee7d16);
         long pc5 = System.currentTimeMillis();
         android.util.Log.d("BlockLoad", "PC palette: " + (pc5 - pc4) + "ms");
 
@@ -2089,7 +2089,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
     @Override
     public void onSelected(MoreBlockCollectionBean moreBlockCollectionBean) {
-        new MoreblockImporter(this, scId, M).importMoreblock(moreBlockCollectionBean, () -> a(8, 0xff8a55d7));
+        new MoreblockImporter(this, scId, M).importMoreblock(moreBlockCollectionBean, () -> onBlockSizeChanged(8, 0xff8a55d7));
     }
 
     @Override
@@ -2125,33 +2125,33 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             if (hitTestIconDelete(event.getRawX(), event.getRawY())) {
                 dummy.setAllow(true);
                 activeIconDelete(true);
-                a(false);
-                d(false);
-                c(false);
+                setCopyActive(false);
+                setFavoriteActive(false);
+                setDetailActive(false);
                 return true;
             }
             activeIconDelete(false);
-            if (a(event.getRawX(), event.getRawY())) {
+            if (hitTestCopy(event.getRawX(), event.getRawY())) {
                 dummy.setAllow(true);
-                a(true);
-                d(false);
-                c(false);
+                setCopyActive(true);
+                setFavoriteActive(false);
+                setDetailActive(false);
                 return true;
             }
-            a(false);
-            if (d(event.getRawX(), event.getRawY())) {
+            setCopyActive(false);
+            if (hitTestFavorite(event.getRawX(), event.getRawY())) {
                 dummy.setAllow(true);
-                d(true);
-                c(false);
+                setFavoriteActive(true);
+                setDetailActive(false);
                 return true;
             }
-            d(false);
-            if (c(event.getRawX(), event.getRawY())) {
+            setFavoriteActive(false);
+            if (hitTestDetail(event.getRawX(), event.getRawY())) {
                 dummy.setAllow(true);
-                c(true);
+                setDetailActive(true);
                 return true;
             }
-            c(false);
+            setDetailActive(false);
             dummy.a(this.v);
             if (viewLogicEditor.hitTest(this.v[0], this.v[1])) {
                 dummy.setAllow(true);
@@ -2167,7 +2167,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             if (!isDragged) {
                 if (v instanceof BlockView rs) {
                     if (rs.getBlockType() == 0) {
-                        a(rs, event.getX(), event.getY());
+                        handleBlockFieldClick(rs, event.getX(), event.getY());
                     }
                 }
                 return false;
@@ -2203,7 +2203,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             } else if (logicTopMenu.isDeleteActive) {
                 BlockView rs5 = (BlockView) v;
                 if (rs5.getBlockType() == 2) {
-                    g(true);
+                    toggleDrawerVisibility(true);
                     showDeleteFavoriteDialog(rs5.spec);
                 } else {
                     activeIconDelete(false);
@@ -2233,7 +2233,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     for (BlockView allChild : rs5.getAllChildren()) {
                         arrayList.add(allChild.getBean().clone());
                     }
-                    b(rs5);
+                    deleteBlock(rs5);
                     BlockBean blockBean3 = null;
                     if (w != null) {
                         blockBean3 = w.getBean().clone();
@@ -2244,7 +2244,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     refreshOptionsMenu();
                 }
             } else if (logicTopMenu.isFavoriteActive) {
-                d(false);
+                setFavoriteActive(false);
                 BlockView rs7 = (BlockView) v;
                 o.setBlockTreeVisibility(rs7, 0);
                 if (w != null) {
@@ -2265,14 +2265,14 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 } else {
                     rs7.getRootBlock().layoutChain();
                 }
-                c(rs7);
+                showSaveToFavorites(rs7);
             } else if (logicTopMenu.isDetailActive) {
-                c(false);
+                setDetailActive(false);
                 if (v instanceof DefinitionBlockView) {
                     showBlockCollection(((DefinitionBlockView) v).spec);
                 }
             } else if (logicTopMenu.isCopyActive) {
-                a(false);
+                setCopyActive(false);
                 BlockView rs10 = (BlockView) v;
                 o.setBlockTreeVisibility(rs10, 0);
                 if (w != null) {
@@ -2328,7 +2328,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 viewLogicEditor.getLocationOnScreen(nLocationOnScreen);
                 int width = nLocationOnScreen[0] + (viewLogicEditor.getWidth() / 2);
                 int a2 = nLocationOnScreen[1] + ((int) ViewUtil.dpToPx(getContext(), 4.0f));
-                ArrayList<BlockBean> a3 = a(arrayList2, width, a2, true);
+                ArrayList<BlockBean> a3 = addBlockBeans(arrayList2, width, a2, true);
                 int[] oLocationOnScreen = new int[2];
                 o.getLocationOnScreen(oLocationOnScreen);
                 BlockHistoryManager.getInstance(scId).recordAddMultiple(buildHistoryKey(), a3, width - oLocationOnScreen[0], a2 - oLocationOnScreen[1], null, null);
@@ -2338,7 +2338,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 if (rs13.getBlockType() == 1) {
                     int addTargetId = o.getAddTargetId();
                     BlockBean clone3 = addTargetId >= 0 ? o.findBlockById(addTargetId).getBean().clone() : null;
-                    BlockView a4 = a(rs13, this.v[0], this.v[1], false);
+                    BlockView a4 = dropBlockOnPane(rs13, this.v[0], this.v[1], false);
                     BlockBean blockBean3 = null;
                     if (addTargetId >= 0) {
                         blockBean3 = o.findBlockById(addTargetId).getBean().clone();
@@ -2356,10 +2356,10 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     int addTargetId2 = o.getAddTargetId();
                     BlockBean clone5 = addTargetId2 >= 0 ? o.findBlockById(addTargetId2).getBean().clone() : null;
                     ArrayList<BlockBean> data = ((DefinitionBlockView) v).getData();
-                    ArrayList<BlockBean> a5 = a(data, this.v[0], this.v[1], true);
+                    ArrayList<BlockBean> a5 = addBlockBeans(data, this.v[0], this.v[1], true);
                     if (!a5.isEmpty()) {
                         BlockView a6 = o.findBlockByString(a5.get(0).id);
-                        a(a6, this.v[0], this.v[1], true);
+                        dropBlockOnPane(a6, this.v[0], this.v[1], true);
                         BlockBean blockBean3 = null;
                         if (addTargetId2 >= 0) {
                             blockBean3 = o.findBlockById(addTargetId2).getBean().clone();
@@ -2394,7 +2394,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     for (BlockView rs : allChildren3) {
                         arrayList3.add(rs.getBean().clone());
                     }
-                    a(rs13, this.v[0], this.v[1], true);
+                    dropBlockOnPane(rs13, this.v[0], this.v[1], true);
                     ArrayList<BlockBean> arrayList4 = new ArrayList<>();
                     for (BlockView rs : allChildren3) {
                         arrayList4.add(rs.getBean().clone());
@@ -2417,7 +2417,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 o.clearSnapState();
             }
             dummy.setAllow(false);
-            h(false);
+            toggleTopMenuVisibility(false);
             isDragged = false;
             return true;
         } else if (actionMasked == MotionEvent.ACTION_CANCEL) {
@@ -2446,7 +2446,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             viewLogicEditor.setScrollEnabled(false);
             O.setDragEnabled(false);
             if (ia) {
-                g(false);
+                toggleDrawerVisibility(false);
             }
 
             if (G) {
@@ -2455,16 +2455,16 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
             isDragged = true;
             if (((BlockView) currentTouchedView).getBlockType() == 0) {
-                a((BlockView) currentTouchedView);
-                f(true);
-                h(true);
+                trackDragSource((BlockView) currentTouchedView);
+                toggleLayoutVisibility(true);
+                toggleTopMenuVisibility(true);
                 dummy.a((BlockView) currentTouchedView);
                 o.setBlockTreeVisibility((BlockView) currentTouchedView, 8);
                 o.detachFromParent((BlockView) currentTouchedView);
                 o.computeSnapPoints((BlockView) currentTouchedView);
             } else if (((BlockView) currentTouchedView).getBlockType() == 2) {
-                f(false);
-                h(true);
+                toggleLayoutVisibility(false);
+                toggleTopMenuVisibility(true);
                 dummy.a((BlockView) currentTouchedView);
                 o.computeSnapPointsForBlocks((BlockView) currentTouchedView, ((DefinitionBlockView) currentTouchedView).getData());
             } else {

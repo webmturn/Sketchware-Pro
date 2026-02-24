@@ -121,9 +121,9 @@ public class ReturnMoreblockManager {
 
             if (moreblockChar.contains("|")) {
                 String[] split = moreblockChar.split("\\|");
-                logicEditorActivity.a(getMbName(str), split[0], split[1], "definedFunc").setTag(getMbName(str));
+                logicEditorActivity.createPaletteBlockWithComponent(getMbName(str), split[0], split[1], "definedFunc").setTag(getMbName(str));
             } else {
-                logicEditorActivity.a(getMbName(str), moreblockChar, "definedFunc").setTag(getMbName(str));
+                logicEditorActivity.createPaletteBlockWithSpec(getMbName(str), moreblockChar, "definedFunc").setTag(getMbName(str));
             }
         }
     }
