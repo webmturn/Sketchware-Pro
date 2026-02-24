@@ -738,7 +738,7 @@ public class ProjectFilePaths {
      */
     public ArrayList<SrcCodeBean> generateSourceCodeBeans(ProjectFileManager projectFileManager, ProjectDataStore projectDataManager, BuiltInLibraryManager builtInLibraryManager) {
         generateDebugFiles(SketchApplication.getContext());
-        CommandBlock.x();
+        CommandBlock.clearTempCommands();
 
         String javaDir = FileUtil.getExternalStorageDir() + "/.sketchware/data/" + sc_id + "/files/java/";
         String layoutDir = FileUtil.getExternalStorageDir() + "/.sketchware/data/" + sc_id + "/files/resource/layout/";
@@ -862,7 +862,7 @@ public class ProjectFilePaths {
         srcCodeBeans.add(new SrcCodeBean("styles.xml", getXMLStyle()));
         srcCodeBeans.add(new SrcCodeBean("colors.xml", getXMLColor()));
         srcCodeBeans.add(new SrcCodeBean("strings.xml", getXMLString()));
-        CommandBlock.x();
+        CommandBlock.clearTempCommands();
         return srcCodeBeans;
     }
 
@@ -877,7 +877,7 @@ public class ProjectFilePaths {
      */
     public String getFileSrc(String filename, ProjectFileManager projectFileManager, ProjectDataStore projectDataManager, LibraryManager projectLibraryManager) {
         initializeMetadata(projectLibraryManager, projectFileManager, projectDataManager);
-        CommandBlock.x();
+        CommandBlock.clearTempCommands();
         boolean isJavaFile = filename.endsWith(".java");
         boolean isXmlFile = filename.endsWith(".xml");
         boolean isManifestFile = filename.equals("AndroidManifest.xml");

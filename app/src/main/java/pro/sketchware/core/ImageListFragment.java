@@ -144,7 +144,7 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
         }
     }
 
-    public ArrayList<ProjectResourceBean> d() {
+    public ArrayList<ProjectResourceBean> getImages() {
         return images;
     }
 

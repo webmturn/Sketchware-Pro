@@ -77,7 +77,7 @@ public class ManageXMLCommandActivity extends BaseAppCompatActivity {
         var projectFileManager = ProjectDataManager.getFileManager(sc_id);
         var projectDataManager = ProjectDataManager.getProjectDataManager(sc_id);
         projectFilePaths.initializeMetadata(projectLibraryManager, projectFileManager, projectDataManager);
-        CommandBlock.x();
+        CommandBlock.clearTempCommands();
         ArrayList<ProjectFileBean> files = new ArrayList<>(projectFileManager.getActivities());
         files.addAll(new ArrayList<>(projectFileManager.getCustomViews()));
         for (ProjectFileBean file : files) {
@@ -86,7 +86,7 @@ public class ManageXMLCommandActivity extends BaseAppCompatActivity {
         String commandPath = FileUtil.getExternalStorageDir().concat("/.sketchware/temp/commands");
         if (FileUtil.isExistFile(commandPath)) {
             FileUtil.copyFile(commandPath, path);
-            CommandBlock.x();
+            CommandBlock.clearTempCommands();
         } else {
             FileUtil.writeFile(path, "[]");
         }

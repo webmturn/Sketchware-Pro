@@ -70,7 +70,7 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
         scId = str;
         svgUtils = new SvgUtils(context);
         svgUtils.initImageLoader();
-        a(context, z, z2);
+        initializeLayout(context, z, z2);
     }
 
     public String getKey() {
@@ -138,7 +138,7 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
         if (UIHelper.isClickThrottled()) {
             return;
         }
-        a();
+        showImagePicker();
     }
 
     public void setOnPropertyValueChangeListener(PropertyChangedCallback callback) {
@@ -159,7 +159,7 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
         }
     }
 
-    public final void a(Context context, boolean z, boolean z2) {
+    public final void initializeLayout(Context context, boolean z, boolean z2) {
         ViewUtil.inflateLayoutInto(context, this, R.layout.property_resource_item);
         nameTextView = findViewById(R.id.tv_name);
         valueTextView = findViewById(R.id.tv_value);
@@ -170,7 +170,7 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
         useDefaultImage = z2;
     }
 
-    public final void a() {
+    public final void showImagePicker() {
         SearchWithRecyclerViewBinding binding = SearchWithRecyclerViewBinding.inflate(LayoutInflater.from(getContext()));
 
         ArrayList<String> images = ProjectDataManager.getResourceManager(scId).getImageNames();

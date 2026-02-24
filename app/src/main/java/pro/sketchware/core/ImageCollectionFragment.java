@@ -96,7 +96,7 @@ public class ImageCollectionFragment extends BaseFragment implements View.OnClic
         }
         if (!selectedCollections.isEmpty()) {
             Intent intent = new Intent(requireActivity(), ManageImageImportActivity.class);
-            intent.putParcelableArrayListExtra("project_images", ((ManageImageActivity) requireActivity()).getProjectImagesFragment().d());
+            intent.putParcelableArrayListExtra("project_images", ((ManageImageActivity) requireActivity()).getProjectImagesFragment().getImages());
             intent.putParcelableArrayListExtra("selected_collections", selectedCollections);
             openImageImportDetails.launch(intent);
         }

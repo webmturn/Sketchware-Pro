@@ -57,13 +57,13 @@ public class FieldBlockView extends BaseBlockView {
     this.ba = (int) (this.ba * scale);
     this.ca = (int) (this.ca * scale);
     this.da = this.ca;
-    if (this.blockType.equals("m") && a(this.componentType).length() >= 0) {
-      this.dropdownLabel = b(this.componentType);
+    if (this.blockType.equals("m") && getComponentLabel(this.componentType).length() >= 0) {
+      this.dropdownLabel = createLabelTextView(this.componentType);
       addView(this.dropdownLabel);
       this.da = getDropdownTypeWidth();
     }
     if (this.blockType.equals("m") || this.blockType.equals("d") || this.blockType.equals("n") || this.blockType.equals("s")) {
-      this.labelView = c("");
+      this.labelView = createValueTextView("");
       addView(this.labelView);
     }
     setBlockSize((float) (this.aa + this.da), (float) this.textHeight, false);
@@ -72,7 +72,7 @@ public class FieldBlockView extends BaseBlockView {
   private int getDropdownTypeWidth() {
     Rect rect = new Rect();
     TextPaint textPaint = this.dropdownLabel.getPaint();
-    String str = a(this.componentType);
+    String str = getComponentLabel(this.componentType);
     textPaint.getTextBounds(str, 0, str.length(), rect);
     return rect.width() + this.ca * 2;
   }
@@ -83,7 +83,7 @@ public class FieldBlockView extends BaseBlockView {
     return rect.width() + this.ba;
   }
   
-  public final String a(String paramString) {
+  public final String getComponentLabel(String paramString) {
     String str1 = "";
     String str2 = BlockColorMapper.getComponentDisplayName(paramString);
     paramString = str2;
@@ -96,9 +96,9 @@ public class FieldBlockView extends BaseBlockView {
     return str1;
   }
   
-  public final TextView b(String paramString) {
+  public final TextView createLabelTextView(String paramString) {
     TextView textView = new TextView(this.fieldContext);
-    textView.setText(a(paramString));
+    textView.setText(getComponentLabel(paramString));
     textView.setTextSize(8.0F);
     textView.setTypeface(null, 1);
     RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-2, this.textHeight);
@@ -113,7 +113,7 @@ public class FieldBlockView extends BaseBlockView {
     return textView;
   }
   
-  public final TextView c(String paramString) {
+  public final TextView createValueTextView(String paramString) {
     TextView textView = new TextView(this.fieldContext);
     textView.setText(paramString);
     textView.setTextSize(9.0F);

@@ -18,7 +18,7 @@ import pro.sketchware.R;
 import pro.sketchware.activities.main.activities.MainActivity;
 
 public class DataResetter {
-    public static void a(Context context, boolean resetOnlySettings) {
+    public static void resetData(Context context, boolean resetOnlySettings) {
         new SharedPrefsHelper(context, "P2").clearAll();
         new SharedPrefsHelper(context, "P3").clearAll();
         new SharedPrefsHelper(context, "P1").clearAll();

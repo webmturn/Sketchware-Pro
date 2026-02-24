@@ -46,7 +46,7 @@ public class DefinitionBlockView extends BlockView {
     return textView;
   }
   
-  public final int[] b(TextView paramTextView) {
+  public final int[] measureTextBounds(TextView paramTextView) {
     Rect rect = new Rect();
     paramTextView.getPaint().getTextBounds(paramTextView.getText().toString(), 0, paramTextView.getText().length(), rect);
     return new int[] { rect.width(), rect.height() };
@@ -59,7 +59,7 @@ public class DefinitionBlockView extends BlockView {
   public void calculateBlockLayout() {
     this.ta.setX((float) this.leftIndent);
     this.ta.setY((float) this.topSpacing);
-    int[] textSize = b(this.ta);
+    int[] textSize = measureTextBounds(this.ta);
     int textWidth = textSize[0];
     int textHeight = textSize[1];
     int width = this.leftIndent + textWidth + this.rightIndent;

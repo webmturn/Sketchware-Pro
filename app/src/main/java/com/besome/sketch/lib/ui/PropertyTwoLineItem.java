@@ -15,10 +15,10 @@ public class PropertyTwoLineItem extends RelativeLayout {
 
     public PropertyTwoLineItem(Context context) {
         super(context);
-        a(context);
+        initializeLayout(context);
     }
 
-    public final void a(Context context) {
+    public final void initializeLayout(Context context) {
         ViewUtil.inflateLayoutInto(context, this, R.layout.program_info_two_line_item);
         tvName = findViewById(R.id.tv_name);
         tvDesc = findViewById(R.id.tv_desc);

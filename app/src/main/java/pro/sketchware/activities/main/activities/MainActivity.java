@@ -159,7 +159,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
         programInfoLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                        DataResetter.a(this, result.getData().getBooleanExtra("onlyConfig", true));
+                        DataResetter.resetData(this, result.getData().getBooleanExtra("onlyConfig", true));
                     }
                 });
         enableEdgeToEdgeNoContrast();

@@ -40,7 +40,7 @@ public class CommandBlock {
                     //writeLog("element : " + i);
                     if (getInputName((String) data.get(i).get("input")).equals(fileName)) {
                         //writeLog("element : " + i + " > find a target !!");
-                        str = N(str, data.get(i));
+                        str = processCommand(str, data.get(i));
                         //writeLog("element : " + i + " > N is done :l");
                     }
                 }
@@ -55,7 +55,7 @@ public class CommandBlock {
         }
     }
 
-    private static String N(String c, HashMap<String, Object> map) {
+    private static String processCommand(String c, HashMap<String, Object> map) {
         ArrayList<String> a = new ArrayList<>(Arrays.asList(c.split("\n")));
         String res = "";
         String reference = (String) map.get("reference");
@@ -264,7 +264,7 @@ public class CommandBlock {
         FileUtil.writeFile(path, new Gson().toJson(data));
     }
 
-    public static void x() {
+    public static void clearTempCommands() {
         String path = FileUtil.getExternalStorageDir().concat("/.sketchware/temp/commands");
         if (FileUtil.isExistFile(path)) {
             FileUtil.deleteFile(path);

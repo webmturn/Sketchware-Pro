@@ -198,7 +198,7 @@ public class ItemHorizontalScrollView extends FrameLayout implements ItemView, S
     public void onSizeChanged(int newWidth, int newHeight, int oldWidth, int oldHeight) {
         super.onSizeChanged(newWidth, newHeight, oldWidth, oldHeight);
         View focusedView = findFocus();
-        if (focusedView == null || this == focusedView || !a(focusedView, getRight() - getLeft())) {
+        if (focusedView == null || this == focusedView || !isViewVisibleInScroll(focusedView, getRight() - getLeft())) {
             return;
         }
         focusedView.getDrawingRect(rect);
@@ -254,7 +254,7 @@ public class ItemHorizontalScrollView extends FrameLayout implements ItemView, S
         }
     }
 
-    public final boolean a(View view, int index) {
+    public final boolean isViewVisibleInScroll(View view, int index) {
         view.getDrawingRect(rect);
         offsetDescendantRectToMyCoords(view, rect);
         return rect.right + index >= getScrollX() && rect.left - index <= getScrollX() + getWidth();

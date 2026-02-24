@@ -236,7 +236,7 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
     /**
      * Adds a specified amount of tabs.
      */
-    public static void a(StringBuilder code, int tabAmount) {
+    public static void appendTabs(StringBuilder code, int tabAmount) {
         for (int i = 0; i < tabAmount; ++i) {
             code.append('\t');
         }
