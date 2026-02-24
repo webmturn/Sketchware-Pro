@@ -7,9 +7,9 @@ public class MoreBlockCollectionBean extends SelectableBean {
     public String name;
     public String spec;
 
-    public MoreBlockCollectionBean(String str, String str2, ArrayList<BlockBean> arrayList) {
-        name = str;
-        spec = str2;
-        blocks = arrayList;
+    public MoreBlockCollectionBean(String name, String spec, ArrayList<BlockBean> blocks) {
+        this.name = name;
+        this.spec = spec;
+        this.blocks = blocks;
     }
 }

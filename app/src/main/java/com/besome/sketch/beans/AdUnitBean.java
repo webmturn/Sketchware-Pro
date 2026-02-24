@@ -29,9 +29,9 @@ public class AdUnitBean implements Parcelable {
         this("", "");
     }
 
-    public AdUnitBean(String str, String str2) {
-        id = str;
-        name = str2;
+    public AdUnitBean(String id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     public AdUnitBean(Parcel parcel) {
