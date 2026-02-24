@@ -48,21 +48,21 @@ public class LibraryManager {
       StringBuffer stringBuffer = new StringBuffer();
       String str = "";
       while (true) {
-        String str1 = reader.readLine();
-        if (str1 != null) {
-          if (str1.length() <= 0)
+        String line = reader.readLine();
+        if (line != null) {
+          if (line.length() <= 0)
             continue; 
-          if (str1.charAt(0) == '@') {
+          if (line.charAt(0) == '@') {
             StringBuffer stringBuffer1 = stringBuffer;
             if (str.length() > 0) {
               parseLibrarySection(str, stringBuffer.toString());
               stringBuffer1 = new StringBuffer();
             } 
-            str = str1.substring(1);
+            str = line.substring(1);
             stringBuffer = stringBuffer1;
             continue;
           } 
-          stringBuffer.append(str1);
+          stringBuffer.append(line);
           stringBuffer.append("\n");
           continue;
         } 
@@ -184,26 +184,26 @@ public class LibraryManager {
   }
   
   public boolean hasBackup() {
-    String str1 = SketchwarePaths.getBackupPath(this.projectId);
+    String backupDir = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(str1);
+    stringBuilder.append(backupDir);
     stringBuilder.append(File.separator);
     stringBuilder.append("library");
-    String str2 = stringBuilder.toString();
-    return this.fileUtil.exists(str2);
+    String libraryPath = stringBuilder.toString();
+    return this.fileUtil.exists(libraryPath);
   }
   
   public void loadFromBackup() {
     initializeDefaults();
-    String str1 = SketchwarePaths.getBackupPath(this.projectId);
+    String basePath = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder1 = new StringBuilder();
-    stringBuilder1.append(str1);
+    stringBuilder1.append(basePath);
     stringBuilder1.append(File.separator);
     stringBuilder1.append("library");
-    str1 = stringBuilder1.toString();
+    basePath = stringBuilder1.toString();
     BufferedReader bufferedReader = null;
     try {
-      byte[] bytes = this.fileUtil.readFileBytes(str1);
+      byte[] bytes = this.fileUtil.readFileBytes(basePath);
       String str = this.fileUtil.decryptToString(bytes);
       bufferedReader = new BufferedReader(new StringReader(str));
       parseLibraryData(bufferedReader);
@@ -216,17 +216,17 @@ public class LibraryManager {
   
   public void loadFromData() {
     initializeDefaults();
-    String str1 = SketchwarePaths.getDataPath(this.projectId);
+    String dataPath = SketchwarePaths.getDataPath(this.projectId);
     StringBuilder stringBuilder1 = new StringBuilder();
-    stringBuilder1.append(str1);
+    stringBuilder1.append(dataPath);
     stringBuilder1.append(File.separator);
     stringBuilder1.append("library");
-    str1 = stringBuilder1.toString();
-    if (!this.fileUtil.exists(str1))
+    dataPath = stringBuilder1.toString();
+    if (!this.fileUtil.exists(dataPath))
       return; 
     BufferedReader bufferedReader = null;
     try {
-      byte[] bytes = this.fileUtil.readFileBytes(str1);
+      byte[] bytes = this.fileUtil.readFileBytes(dataPath);
       String str = this.fileUtil.decryptToString(bytes);
       bufferedReader = new BufferedReader(new StringReader(str));
       parseLibraryData(bufferedReader);
