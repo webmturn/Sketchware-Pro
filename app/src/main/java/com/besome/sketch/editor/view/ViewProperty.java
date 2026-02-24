@@ -136,13 +136,13 @@ public class ViewProperty extends LinearLayout implements PropertyChangedCallbac
         }
     }
 
-    public void d() {
+    public void saveProperties() {
         if (viewPropertyItems != null) {
             viewPropertyItems.save();
         }
     }
 
-    public void e() {
+    public void refreshPropertyGroups() {
         for (int i = 0; i < layoutPropertyGroup.getChildCount(); i++) {
             GroupItem item = (GroupItem) layoutPropertyGroup.getChildAt(i);
 
@@ -161,7 +161,7 @@ public class ViewProperty extends LinearLayout implements PropertyChangedCallbac
                 layoutPropertySeeAll.setVisibility(VISIBLE);
                 viewPropertyItems.setProjectFileBean(projectFile);
                 viewPropertyItems.initializeProperties(sc_id, viewBean);
-                a(viewBean);
+                updateSeeAllView(viewBean);
                 viewEvent.setVisibility(GONE);
             } else if (selectedGroupId == 1) {
                 propertyLayout.setVisibility(VISIBLE);
@@ -322,16 +322,16 @@ public class ViewProperty extends LinearLayout implements PropertyChangedCallbac
             imgDelete.setVisibility(VISIBLE);
         }
         viewPropertyItems.setProjectFileBean(projectFile);
-        e();
+        refreshPropertyGroups();
     }
 
-    public void a(String sc_id, ProjectFileBean projectFileBean) {
+    public void initialize(String sc_id, ProjectFileBean projectFileBean) {
         this.sc_id = sc_id;
         projectFile = projectFileBean;
         viewPropertyItems.setProjectSettings(new ProjectSettings(sc_id));
     }
 
-    public void a(String str) {
+    public void selectWidgetById(String str) {
         for (int i = 0; i < projectActivityViews.size(); i++) {
             if (projectActivityViews.get(i).id.equals(str)) {
                 spnWidget.setSelection(i);
@@ -362,7 +362,7 @@ public class ViewProperty extends LinearLayout implements PropertyChangedCallbac
         layoutPropertyGroup.addView(group);
     }
 
-    private void a(ViewBean viewBean) {
+    private void updateSeeAllView(ViewBean viewBean) {
         if (seeAll == null) {
             seeAll = new SeeAllPropertiesFloatingItem(getContext());
             seeAll.configure(R.drawable.color_more_96, R.string.common_word_see_all);
@@ -454,7 +454,7 @@ public class ViewProperty extends LinearLayout implements PropertyChangedCallbac
         @Override
         public void onClick(View view) {
             selectedGroupId = (Integer) view.getTag();
-            e();
+            refreshPropertyGroups();
         }
 
         private void configure(int id, int labelResId) {

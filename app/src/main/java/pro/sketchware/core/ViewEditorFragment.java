@@ -77,7 +77,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
         });
         viewProperty.setOnPropertyValueChangedListener(viewBean -> {
             refreshView(viewBean.id);
-            viewProperty.e();
+            viewProperty.refreshPropertyGroups();
             invalidateOptionsMenu();
         });
         viewProperty.setOnPropertyDeleted(viewBean -> {
@@ -93,21 +93,21 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
             @Override
             public void onSelectionChanged() {
                 updatePropertyViews();
-                viewProperty.e();
+                viewProperty.refreshPropertyGroups();
             }
 
             @Override
             public void onViewSelected(String viewId) {
                 updatePropertyViews();
-                viewProperty.a(viewId);
+                viewProperty.selectWidgetById(viewId);
             }
 
             @Override
             public void onViewSelectedWithProperty(boolean var1, String viewId) {
                 if (!viewId.isEmpty()) {
                     updatePropertyViews();
-                    viewProperty.a(viewId);
-                    viewProperty.e();
+                    viewProperty.selectWidgetById(viewId);
+                    viewProperty.refreshPropertyGroups();
                 }
 
                 ViewEditorFragment.this.togglePropertyView(var1);
@@ -145,7 +145,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
         isFabEnabled = projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB);
         viewEditor.initialize(sc_id, projectFileBean);
         viewEditor.refreshResourceManager();
-        viewProperty.a(sc_id, this.projectFileBean);
+        viewProperty.initialize(sc_id, this.projectFileBean);
         setupPalette();
         refreshAllViews();
         invalidateOptionsMenu();
@@ -164,7 +164,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
             viewBean = ProjectDataManager.getProjectDataManager(sc_id).getViewBean(projectFileBean.getXmlName(), viewId);
         }
         updateViewDisplay(viewBean);
-        viewProperty.e();
+        viewProperty.refreshPropertyGroups();
     }
 
     private void toLogicEditorActivity(String eventId, String eventName, String eventName2) {
@@ -529,7 +529,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
     public void onStop() {
         super.onStop();
         if (viewProperty != null) {
-            viewProperty.d();
+            viewProperty.saveProperties();
         }
     }
 }
