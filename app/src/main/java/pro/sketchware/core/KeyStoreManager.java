@@ -40,11 +40,11 @@ public class KeyStoreManager {
     return enumeration.hasMoreElements() ? enumeration.nextElement() : "";
   }
   
-  public void loadKeyStore(InputStream paramInputStream, String paramString) throws Exception {
+  public void loadKeyStore(InputStream paramInputStream, String str) throws Exception {
     if (paramInputStream == null)
       return; 
     try {
-      this.keyStore.load(paramInputStream, paramString.toCharArray());
+      this.keyStore.load(paramInputStream, str.toCharArray());
     } catch (Exception exception) {
       exception.printStackTrace();
       throw new Exception(exception.getMessage());
@@ -55,45 +55,45 @@ public class KeyStoreManager {
     }
   }
   
-  public void loadKeyStoreFromFile(String paramString1, String paramString2) throws Exception {
-    loadKeyStore(new FileInputStream(new File(paramString1)), paramString2);
+  public void loadKeyStoreFromFile(String key, String value) throws Exception {
+    loadKeyStore(new FileInputStream(new File(key)), value);
   }
   
-  public void generateAndSaveKeyStore(String paramString1, String paramString2, int paramInt, String paramString3, String paramString4) throws Exception {
-    byte[] arrayOfByte = generateKeyPair(paramString2, paramInt, paramString3, paramString4);
+  public void generateAndSaveKeyStore(String key, String value, int index, String extra, String tag) throws Exception {
+    byte[] arrayOfByte = generateKeyPair(value, index, extra, tag);
     File file = new File(SketchwarePaths.getKeystoreDirPath());
     if (!file.exists())
       file.mkdirs(); 
-    (new EncryptedFileUtil()).writeBytes(paramString1, arrayOfByte);
+    (new EncryptedFileUtil()).writeBytes(key, arrayOfByte);
   }
   
-  public final byte[] exportKeyStore(String paramString) throws Exception {
+  public final byte[] exportKeyStore(String str) throws Exception {
     if (this.keyStore == null)
       return null; 
     this.keyBuffer = ByteBuffer.allocate(8192);
     KeyStoreOutputStream hI = new KeyStoreOutputStream(this);
-    this.keyStore.store(hI, paramString.toCharArray());
+    this.keyStore.store(hI, str.toCharArray());
     byte[] arrayOfByte = new byte[this.keyBuffer.position()];
     System.arraycopy(this.keyBuffer.array(), 0, arrayOfByte, 0, this.keyBuffer.position());
     int i = arrayOfByte.length;
-    paramString = "";
+    str = "";
     for (int b = 0; b < i; b++) {
       byte b1 = arrayOfByte[b];
       StringBuilder stringBuilder = new StringBuilder();
-      stringBuilder.append(paramString);
+      stringBuilder.append(str);
       stringBuilder.append(String.format("%02X", new Object[] { Byte.valueOf(b1) }));
-      paramString = stringBuilder.toString();
+      str = stringBuilder.toString();
     } 
     return arrayOfByte;
   }
   
-  public byte[] generateKeyPair(String paramString1, int paramInt, String paramString2, String paramString3) throws Exception {
+  public byte[] generateKeyPair(String key, int index, String value, String extra) throws Exception {
     try {
       KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
       keyPairGenerator.initialize(1024, SecureRandom.getInstance("SHA1PRNG"));
       KeyPair keyPair = keyPairGenerator.generateKeyPair();
       X509V3CertificateGenerator x509V3CertificateGenerator = new X509V3CertificateGenerator();
-      X509Principal x509Principal = new X509Principal(paramString1);
+      X509Principal x509Principal = new X509Principal(key);
       SecureRandom secureRandom = new SecureRandom();
       int i = secureRandom.nextInt();
       int j = i;
@@ -103,7 +103,7 @@ public class KeyStoreManager {
       x509V3CertificateGenerator.setIssuerDN((X509Name)x509Principal);
       Date date = new Date(System.currentTimeMillis());
       x509V3CertificateGenerator.setNotBefore(date);
-      date = new Date(System.currentTimeMillis() + paramInt * 31536000000L);
+      date = new Date(System.currentTimeMillis() + index * 31536000000L);
       x509V3CertificateGenerator.setNotAfter(date);
       x509V3CertificateGenerator.setSubjectDN((X509Name)x509Principal);
       x509V3CertificateGenerator.setPublicKey(keyPair.getPublic());
@@ -111,9 +111,9 @@ public class KeyStoreManager {
       X509Certificate x509Certificate = x509V3CertificateGenerator.generateX509Certificate(keyPair.getPrivate());
       JksKeyStore jksKeyStore = new JksKeyStore();
       this.keyStore = (KeyStore)jksKeyStore;
-      this.keyStore.load(null, paramString3.toCharArray());
-      this.keyStore.setKeyEntry(paramString2, keyPair.getPrivate(), paramString3.toCharArray(), new Certificate[] { x509Certificate });
-      return exportKeyStore(paramString3);
+      this.keyStore.load(null, extra.toCharArray());
+      this.keyStore.setKeyEntry(value, keyPair.getPrivate(), extra.toCharArray(), new Certificate[] { x509Certificate });
+      return exportKeyStore(extra);
     } catch (LoadKeystoreException loadKeystoreException) {
       Log.e("ERROR", "Failed to access keystore. incorrect passward");
       throw loadKeystoreException;
@@ -122,11 +122,11 @@ public class KeyStoreManager {
     } 
   }
   
-  public ZipSigner createZipSigner(String paramString) throws Exception {
+  public ZipSigner createZipSigner(String input) throws Exception {
     ZipSigner zipSigner = new ZipSigner();
     zipSigner.issueLoadingCertAndKeysProgressEvent();
     String str = getFirstAlias();
-    zipSigner.setKeys("custom", (X509Certificate)this.keyStore.getCertificate(str), (PrivateKey)this.keyStore.getKey(str, paramString.toCharArray()), "SHA1WITHRSA", null);
+    zipSigner.setKeys("custom", (X509Certificate)this.keyStore.getCertificate(str), (PrivateKey)this.keyStore.getKey(str, str.toCharArray()), "SHA1WITHRSA", null);
     return zipSigner;
   }
 }

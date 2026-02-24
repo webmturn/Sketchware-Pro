@@ -6,19 +6,19 @@ import android.graphics.Matrix;
 import android.media.ExifInterface;
 
 public class BitmapUtil {
-  public static int calculateSampleSize(BitmapFactory.Options paramOptions, int paramInt1, int paramInt2) {
+  public static int calculateSampleSize(BitmapFactory.Options paramOptions, int x, int y) {
     int i = paramOptions.outWidth;
     int j = paramOptions.outHeight;
     int k = 1;
     int m = 1;
-    if (j > paramInt2 || i > paramInt1) {
+    if (j > y || i > x) {
       j /= 2;
       i /= 2;
       while (true) {
         k = m;
-        if (j / m >= paramInt2) {
+        if (j / m >= y) {
           k = m;
-          if (i / m >= paramInt1) {
+          if (i / m >= x) {
             m *= 2;
             continue;
           } 
@@ -29,8 +29,8 @@ public class BitmapUtil {
     return k;
   }
   
-  public static int getExifRotation(String paramString) throws java.io.IOException {
-    int i = (new ExifInterface(paramString)).getAttributeInt("Orientation", -1);
+  public static int getExifRotation(String str) throws java.io.IOException {
+    int i = (new ExifInterface(str)).getAttributeInt("Orientation", -1);
     if (i != 3) {
       if (i != 6) {
         if (i != 8) {
@@ -47,39 +47,39 @@ public class BitmapUtil {
     return i;
   }
   
-  public static Bitmap rotateBitmap(Bitmap paramBitmap, int paramInt) {
+  public static Bitmap rotateBitmap(Bitmap paramBitmap, int index) {
     Matrix matrix = new Matrix();
-    matrix.postRotate(paramInt);
+    matrix.postRotate(index);
     return Bitmap.createBitmap(paramBitmap, 0, 0, paramBitmap.getWidth(), paramBitmap.getHeight(), matrix, false);
   }
   
-  public static Bitmap scaleAndRotateBitmap(Bitmap paramBitmap, int paramInt1, int paramInt2, int paramInt3) {
+  public static Bitmap scaleAndRotateBitmap(Bitmap paramBitmap, int x, int y, int paramInt3) {
     Matrix matrix = new Matrix();
-    matrix.setScale(paramInt2, paramInt3);
-    matrix.postRotate(paramInt1);
+    matrix.setScale(y, paramInt3);
+    matrix.postRotate(x);
     return Bitmap.createBitmap(paramBitmap, 0, 0, paramBitmap.getWidth(), paramBitmap.getHeight(), matrix, false);
   }
   
-  public static Bitmap decodeWithSampleSize(String paramString, int paramInt) {
+  public static Bitmap decodeWithSampleSize(String str, int index) {
     BitmapFactory.Options options = new BitmapFactory.Options();
-    options.inSampleSize = paramInt;
-    return BitmapFactory.decodeFile(paramString, options);
+    options.inSampleSize = index;
+    return BitmapFactory.decodeFile(str, options);
   }
   
-  public static Bitmap decodeSampledBitmap(String paramString, int paramInt1, int paramInt2) {
+  public static Bitmap decodeSampledBitmap(String str, int x, int y) {
     BitmapFactory.Options options = new BitmapFactory.Options();
     options.inJustDecodeBounds = true;
-    BitmapFactory.decodeFile(paramString, options);
-    options.inSampleSize = calculateSampleSize(options, paramInt1, paramInt2);
+    BitmapFactory.decodeFile(str, options);
+    options.inSampleSize = calculateSampleSize(options, x, y);
     options.inJustDecodeBounds = false;
-    return BitmapFactory.decodeFile(paramString, options);
+    return BitmapFactory.decodeFile(str, options);
   }
   
-  public static void processAndSaveBitmap(String paramString1, String paramString2, int paramInt1, int paramInt2, int paramInt3) {
-    Bitmap bitmap = decodeSampledBitmap(paramString1, 512, 512);
+  public static void processAndSaveBitmap(String key, String value, int x, int y, int paramInt3) {
+    Bitmap bitmap = decodeSampledBitmap(key, 512, 512);
     int rotation = 0;
     try {
-      rotation = getExifRotation(paramString1);
+      rotation = getExifRotation(key);
     } catch (java.io.IOException e) {
       e.printStackTrace();
     }
@@ -87,10 +87,10 @@ public class BitmapUtil {
     if (rotation > 0) {
       rotated = rotateBitmap(bitmap, rotation);
     }
-    Bitmap result = scaleAndRotateBitmap(rotated, paramInt1, paramInt2, paramInt3);
+    Bitmap result = scaleAndRotateBitmap(rotated, x, y, paramInt3);
     java.io.FileOutputStream fos = null;
     try {
-      fos = new java.io.FileOutputStream(new java.io.File(paramString2));
+      fos = new java.io.FileOutputStream(new java.io.File(value));
       result.compress(Bitmap.CompressFormat.PNG, 100, fos);
       fos.flush();
       result.recycle();

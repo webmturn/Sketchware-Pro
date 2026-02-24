@@ -19,49 +19,49 @@ public class FileNameValidator extends BaseValidator {
   
   public Pattern namePattern = Pattern.compile("^[a-z][a-z0-9_]*");
   
-  public FileNameValidator(Context paramContext, TextInputLayout paramTextInputLayout, String[] paramArrayOfString, ArrayList<String> paramArrayList) {
-    super(paramContext, paramTextInputLayout);
+  public FileNameValidator(Context context, TextInputLayout paramTextInputLayout, String[] paramArrayOfString, ArrayList<String> list) {
+    super(context, paramTextInputLayout);
     this.reservedNames = paramArrayOfString;
-    this.existingNames = paramArrayList;
+    this.existingNames = list;
     this.batchCount = 1;
   }
   
-  public FileNameValidator(Context paramContext, TextInputLayout paramTextInputLayout, String[] paramArrayOfString, ArrayList<String> paramArrayList, String paramString) {
-    super(paramContext, paramTextInputLayout);
+  public FileNameValidator(Context context, TextInputLayout paramTextInputLayout, String[] paramArrayOfString, ArrayList<String> list, String str) {
+    super(context, paramTextInputLayout);
     this.reservedNames = paramArrayOfString;
-    this.existingNames = paramArrayList;
-    this.currentName = paramString;
+    this.existingNames = list;
+    this.currentName = str;
     this.batchCount = 1;
   }
   
-  public void setBatchCount(int paramInt) {
-    this.batchCount = paramInt;
+  public void setBatchCount(int index) {
+    this.batchCount = index;
     if (getText().length() > 0)
       validate(getText()); 
   }
   
-  public final void validate(String paramString) {
+  public final void validate(String input) {
     String str = "";
-    if (paramString.length() < 3) {
+    if (str.length() < 3) {
       this.textInputLayout.setErrorEnabled(true);
       this.textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(this.context, R.string.invalid_value_min_lenth, new Object[] { Integer.valueOf(3) }));
       this.valid = false;
       return;
     } 
-    if (paramString.length() > 70) {
+    if (str.length() > 70) {
       this.textInputLayout.setErrorEnabled(true);
       this.textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(this.context, R.string.invalid_value_max_lenth, new Object[] { Integer.valueOf(70) }));
       this.valid = false;
       return;
     } 
-    if (paramString.equals("default_image") || "NONE".toLowerCase().equals(paramString.toLowerCase())) {
+    if (str.equals("default_image") || "NONE".toLowerCase().equals(str.toLowerCase())) {
       this.textInputLayout.setErrorEnabled(true);
       this.textInputLayout.setError(StringResource.getInstance().getTranslatedString(this.context, R.string.common_message_name_unavailable));
       this.valid = false;
       return;
     } 
     if (this.batchCount == 1) {
-      if (!paramString.equals(this.currentName) && this.existingNames.indexOf(paramString) >= 0) {
+      if (!str.equals(this.currentName) && this.existingNames.indexOf(str) >= 0) {
         this.textInputLayout.setErrorEnabled(true);
         this.textInputLayout.setError(StringResource.getInstance().getTranslatedString(this.context, R.string.common_message_name_unavailable));
         this.valid = false;
@@ -71,7 +71,7 @@ public class FileNameValidator extends BaseValidator {
       ArrayList<String> arrayList1 = new ArrayList<>();
       for (int b1 = 1; b1 <= this.batchCount; b1++) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(paramString);
+        stringBuilder.append(str);
         stringBuilder.append("_");
         stringBuilder.append(b1);
         arrayList1.add(stringBuilder.toString());
@@ -85,13 +85,13 @@ public class FileNameValidator extends BaseValidator {
         this.textInputLayout.setErrorEnabled(true);
         String str1 = StringResource.getInstance().getTranslatedString(this.context, R.string.common_message_name_unavailable);
         Iterator<String> iterator = arrayList2.iterator();
-        paramString = "";
+        str = "";
         while (iterator.hasNext()) {
           String str3 = iterator.next();
-          String str2 = paramString;
-          if (paramString.length() > 0) {
+          String str2 = str;
+          if (str.length() > 0) {
             StringBuilder stringBuilder2 = new StringBuilder();
-            stringBuilder2.append(paramString);
+            stringBuilder2.append(str);
             stringBuilder2.append(", ");
             str2 = stringBuilder2.toString();
           } 
@@ -115,7 +115,7 @@ public class FileNameValidator extends BaseValidator {
     int b = 0;
     while (true) {
       if (b < i) {
-        if (paramString.equals(arrayOfString[b])) {
+        if (str.equals(arrayOfString[b])) {
           b = 1;
           break;
         } 
@@ -131,13 +131,13 @@ public class FileNameValidator extends BaseValidator {
       this.valid = false;
       return;
     } 
-    if (!Character.isLetter(paramString.charAt(0))) {
+    if (!Character.isLetter(str.charAt(0))) {
       this.textInputLayout.setErrorEnabled(true);
       this.textInputLayout.setError(StringResource.getInstance().getTranslatedString(this.context, R.string.logic_editor_message_variable_name_must_start_letter));
       this.valid = false;
       return;
     } 
-    if (this.namePattern.matcher(paramString).matches()) {
+    if (this.namePattern.matcher(str).matches()) {
       this.textInputLayout.setErrorEnabled(false);
       this.valid = true;
     } else {
@@ -147,11 +147,11 @@ public class FileNameValidator extends BaseValidator {
     } 
   }
   
-  public CharSequence filter(CharSequence paramCharSequence, int paramInt1, int paramInt2, Spanned paramSpanned, int paramInt3, int paramInt4) {
+  public CharSequence filter(CharSequence paramCharSequence, int x, int y, Spanned paramSpanned, int paramInt3, int paramInt4) {
     return null;
   }
   
-  public void onTextChanged(CharSequence paramCharSequence, int paramInt1, int paramInt2, int paramInt3) {
+  public void onTextChanged(CharSequence paramCharSequence, int x, int y, int paramInt3) {
     validate(paramCharSequence.toString().trim());
   }
 }

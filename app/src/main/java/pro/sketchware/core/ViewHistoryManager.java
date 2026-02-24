@@ -82,9 +82,9 @@ public class ViewHistoryManager {
     addHistoryEntry(key, historyViewBean);
   }
   
-  public void recordAddMultiple(String key, ArrayList<ViewBean> paramArrayList) {
+  public void recordAddMultiple(String key, ArrayList<ViewBean> list) {
     HistoryViewBean historyViewBean = new HistoryViewBean();
-    historyViewBean.actionAdd(paramArrayList);
+    historyViewBean.actionAdd(list);
     if (!this.historyMap.containsKey(key))
       initHistory(key); 
     trimFutureHistory(key);
@@ -109,9 +109,9 @@ public class ViewHistoryManager {
     addHistoryEntry(key, historyViewBean);
   }
   
-  public void recordRemove(String key, ArrayList<ViewBean> paramArrayList) {
+  public void recordRemove(String key, ArrayList<ViewBean> list) {
     HistoryViewBean historyViewBean = new HistoryViewBean();
-    historyViewBean.actionRemove(paramArrayList);
+    historyViewBean.actionRemove(list);
     if (!this.historyMap.containsKey(key))
       initHistory(key); 
     trimFutureHistory(key);

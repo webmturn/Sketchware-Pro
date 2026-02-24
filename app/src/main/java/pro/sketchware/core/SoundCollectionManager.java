@@ -22,32 +22,32 @@ public class SoundCollectionManager extends BaseCollectionManager {
     return instance;
   }
   
-  public ProjectResourceBean getResourceByName(String paramString) {
+  public ProjectResourceBean getResourceByName(String str) {
     for (ProjectResourceBean projectResourceBean : getResources()) {
-      if (projectResourceBean.resName.equals(paramString))
+      if (projectResourceBean.resName.equals(str))
         return projectResourceBean; 
     } 
     return null;
   }
   
-  public void renameResource(ProjectResourceBean paramProjectResourceBean, String paramString, boolean paramBoolean) {
+  public void renameResource(ProjectResourceBean paramProjectResourceBean, String str, boolean flag) {
     int i = this.collections.size();
     while (--i >= 0) {
       CollectionBean collectionBean = this.collections.get(i);
       if (collectionBean.name.equals(paramProjectResourceBean.resName)) {
-        collectionBean.name = paramString;
+        collectionBean.name = str;
         break;
       } 
     } 
-    if (paramBoolean)
+    if (flag)
       saveCollections(); 
   }
   
-  public void addResource(String paramString, ProjectResourceBean paramProjectResourceBean) throws CompileException {
-    addResource(paramString, paramProjectResourceBean, true);
+  public void addResource(String str, ProjectResourceBean paramProjectResourceBean) throws CompileException {
+    addResource(str, paramProjectResourceBean, true);
   }
   
-  public void addResource(String paramString, ProjectResourceBean paramProjectResourceBean, boolean paramBoolean) throws CompileException {
+  public void addResource(String str, ProjectResourceBean paramProjectResourceBean, boolean flag) throws CompileException {
     if (this.collections == null) initialize();
     ArrayList<String> duplicates = new ArrayList<String>();
     for (CollectionBean bean : this.collections) {
@@ -77,7 +77,7 @@ public class SoundCollectionManager extends BaseCollectionManager {
         throw new CompileException("fail_to_copy");
       }
     } else {
-      String srcPath = SketchwarePaths.getImagesPath() + java.io.File.separator + paramString + java.io.File.separator + paramProjectResourceBean.resFullName;
+      String srcPath = SketchwarePaths.getImagesPath() + java.io.File.separator + str + java.io.File.separator + paramProjectResourceBean.resFullName;
       if (!this.fileUtil.exists(srcPath)) {
         throw new CompileException("file_no_exist");
       }
@@ -89,28 +89,28 @@ public class SoundCollectionManager extends BaseCollectionManager {
       }
     }
     this.collections.add(new CollectionBean(paramProjectResourceBean.resName, dataName));
-    if (paramBoolean) saveCollections();
+    if (flag) saveCollections();
   }
   
-  public void addResources(String paramString, ArrayList<ProjectResourceBean> paramArrayList, boolean paramBoolean) throws CompileException {
+  public void addResources(String input, ArrayList<ProjectResourceBean> list, boolean flag) throws CompileException {
     if (this.collections == null)
       initialize(); 
     ArrayList<String> arrayList = new ArrayList<>();
     for (CollectionBean collectionBean : this.collections) {
-      for (ProjectResourceBean projectResourceBean : paramArrayList) {
+      for (ProjectResourceBean projectResourceBean : list) {
         if (collectionBean.name.equals(projectResourceBean.resName))
           arrayList.add(collectionBean.name); 
       } 
     } 
     if (arrayList.size() <= 0) {
       ArrayList<String> arrayList1 = new ArrayList<>();
-      for (ProjectResourceBean projectResourceBean : paramArrayList) {
+      for (ProjectResourceBean projectResourceBean : list) {
         String str;
         if (((SelectableBean)projectResourceBean).savedPos == 0) {
           StringBuilder stringBuilder = new StringBuilder();
           stringBuilder.append(SketchwarePaths.getImagesPath());
           stringBuilder.append(File.separator);
-          stringBuilder.append(paramString);
+          stringBuilder.append(input);
           stringBuilder.append(File.separator);
           stringBuilder.append(projectResourceBean.resFullName);
           str = stringBuilder.toString();
@@ -123,7 +123,7 @@ public class SoundCollectionManager extends BaseCollectionManager {
       if (arrayList1.size() <= 0) {
         arrayList1 = new ArrayList<String>();
         ArrayList<String> arrayList2 = new ArrayList<>();
-        for (ProjectResourceBean projectResourceBean : paramArrayList) {
+        for (ProjectResourceBean projectResourceBean : list) {
           String str2;
           String str1 = projectResourceBean.resName;
           if (projectResourceBean.isNinePatch()) {
@@ -141,7 +141,7 @@ public class SoundCollectionManager extends BaseCollectionManager {
             StringBuilder stringBuilder1 = new StringBuilder();
             stringBuilder1.append(SketchwarePaths.getImagesPath());
             stringBuilder1.append(File.separator);
-            stringBuilder1.append(paramString);
+            stringBuilder1.append(input);
             stringBuilder1.append(File.separator);
             stringBuilder1.append(projectResourceBean.resFullName);
             str2 = stringBuilder1.toString();
@@ -172,7 +172,7 @@ public class SoundCollectionManager extends BaseCollectionManager {
               this.fileUtil.deleteFileByPath(str);  
           throw yy2;
         } 
-        if (paramBoolean)
+        if (flag)
           saveCollections(); 
         return;
       } 
@@ -185,14 +185,14 @@ public class SoundCollectionManager extends BaseCollectionManager {
     throw CompileException;
   }
   
-  public void removeResource(String paramString, boolean paramBoolean) {
+  public void removeResource(String input, boolean flag) {
     int i = this.collections.size();
     while (true) {
       int j = i - 1;
       if (j >= 0) {
         CollectionBean collectionBean = this.collections.get(j);
         i = j;
-        if (collectionBean.name.equals(paramString)) {
+        if (collectionBean.name.equals(input)) {
           String str = collectionBean.data;
           StringBuilder stringBuilder = new StringBuilder();
           stringBuilder.append(this.dataDirPath);
@@ -205,7 +205,7 @@ public class SoundCollectionManager extends BaseCollectionManager {
         } 
         continue;
       } 
-      if (paramBoolean)
+      if (flag)
         saveCollections(); 
       return;
     } 
@@ -228,10 +228,10 @@ public class SoundCollectionManager extends BaseCollectionManager {
     this.dataDirPath = stringBuilder.toString();
   }
   
-  public boolean hasResource(String paramString) {
+  public boolean hasResource(String str) {
     Iterator<ProjectResourceBean> iterator = getResources().iterator();
     while (iterator.hasNext()) {
-      if (((ProjectResourceBean)iterator.next()).resName.equals(paramString))
+      if (((ProjectResourceBean)iterator.next()).resName.equals(str))
         return true; 
     } 
     return false;

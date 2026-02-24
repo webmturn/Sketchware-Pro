@@ -25,28 +25,28 @@ public class RecentHistoryManager {
     return instance;
   }
   
-  public ArrayList<String> getRecentItems(String paramString) {
-    return this.recentMap.get(paramString);
+  public ArrayList<String> getRecentItems(String str) {
+    return this.recentMap.get(str);
   }
   
-  public void initialize(Context paramContext) {
+  public void initialize(Context context) {
     if (this.recentMap == null)
       this.recentMap = new HashMap<String, ArrayList<String>>(); 
     this.recentMap.clear();
     if (this.database == null)
-      this.database = new SharedPrefsHelper(paramContext, "P26"); 
+      this.database = new SharedPrefsHelper(context, "P26"); 
   }
   
-  public void addRecentItem(String paramString1, String paramString2) {
-    ArrayList<String> arrayList1 = this.recentMap.get(paramString1);
+  public void addRecentItem(String key, String value) {
+    ArrayList<String> arrayList1 = this.recentMap.get(key);
     ArrayList<String> arrayList2 = arrayList1;
     if (arrayList1 == null) {
       arrayList2 = new ArrayList<>();
-      this.recentMap.put(paramString1, arrayList2);
+      this.recentMap.put(key, arrayList2);
     } 
-    if (arrayList2.contains(paramString2))
-      arrayList2.remove(paramString2); 
-    arrayList2.add(0, paramString2);
+    if (arrayList2.contains(value))
+      arrayList2.remove(value); 
+    arrayList2.add(0, value);
     if (arrayList2.size() > maxItems)
       arrayList2.remove(arrayList2.size() - 1); 
   }
@@ -67,16 +67,16 @@ public class RecentHistoryManager {
     } 
   }
   
-  public void loadFromDatabase(String paramString) {
-    if ((ArrayList)this.recentMap.get(paramString) == null) {
-      String[] arrayOfString = this.database.getStringDefault(paramString).split(",");
+  public void loadFromDatabase(String str) {
+    if ((ArrayList)this.recentMap.get(str) == null) {
+      String[] arrayOfString = this.database.getStringDefault(str).split(",");
       int i = arrayOfString.length;
       while (true) {
         int j = i - 1;
         if (j >= 0) {
           i = j;
           if (!arrayOfString[j].isEmpty()) {
-            addRecentItem(paramString, arrayOfString[j]);
+            addRecentItem(str, arrayOfString[j]);
             i = j;
           } 
           continue;

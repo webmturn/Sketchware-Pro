@@ -32,55 +32,55 @@ public class WidgetCollectionManager extends BaseCollectionManager {
     return instance;
   }
   
-  public WidgetCollectionBean getWidgetByName(String paramString) {
+  public WidgetCollectionBean getWidgetByName(String str) {
     for (CollectionBean collectionBean : this.collections) {
-      if (collectionBean.name.equals(paramString))
+      if (collectionBean.name.equals(str))
         return new WidgetCollectionBean(collectionBean.name, ProjectDataParser.parseViewBeans(this.widgetGson, collectionBean.data)); 
     } 
     return null;
   }
   
-  public void renameWidget(String paramString1, String paramString2, boolean paramBoolean) {
+  public void renameWidget(String key, String value, boolean flag) {
     for (CollectionBean collectionBean : this.collections) {
-      if (collectionBean.name.equals(paramString1)) {
-        collectionBean.name = paramString2;
+      if (collectionBean.name.equals(key)) {
+        collectionBean.name = value;
         break;
       } 
     } 
-    if (paramBoolean)
+    if (flag)
       saveCollections(); 
   }
   
-  public void addWidget(String paramString, ArrayList<ViewBean> paramArrayList, boolean paramBoolean) throws CompileException {
+  public void addWidget(String input, ArrayList<ViewBean> list, boolean flag) throws CompileException {
     if (this.collections == null)
       initialize(); 
     if (this.widgetGson == null)
       initializeGson(); 
     Iterator<CollectionBean> iterator = this.collections.iterator();
     while (iterator.hasNext()) {
-      if (!((CollectionBean)iterator.next()).name.equals(paramString))
+      if (!((CollectionBean)iterator.next()).name.equals(input))
         continue; 
       throw new CompileException("duplicate_name");
     } 
     StringBuilder stringBuilder = new StringBuilder();
-    for (int vi = 0; vi < paramArrayList.size(); vi++) {
-      ViewBean viewBean = paramArrayList.get(vi);
+    for (int vi = 0; vi < list.size(); vi++) {
+      ViewBean viewBean = list.get(vi);
       stringBuilder.append(this.widgetGson.toJson(viewBean));
       stringBuilder.append("\n");
     }
     String str = stringBuilder.toString();
-    this.collections.add(new CollectionBean(paramString, str));
-    if (paramBoolean)
+    this.collections.add(new CollectionBean(str, str));
+    if (flag)
       saveCollections(); 
   }
   
-  public void removeWidget(String paramString, boolean paramBoolean) {
+  public void removeWidget(String str, boolean flag) {
     int i = this.collections.size();
     while (true) {
       int j = i - 1;
       if (j >= 0) {
         i = j;
-        if (((CollectionBean)this.collections.get(j)).name.equals(paramString)) {
+        if (((CollectionBean)this.collections.get(j)).name.equals(str)) {
           this.collections.remove(j);
           break;
         } 
@@ -88,7 +88,7 @@ public class WidgetCollectionManager extends BaseCollectionManager {
       } 
       break;
     } 
-    if (paramBoolean)
+    if (flag)
       saveCollections(); 
   }
   

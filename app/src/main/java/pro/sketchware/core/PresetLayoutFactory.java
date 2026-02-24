@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import pro.sketchware.R;
 
 public class PresetLayoutFactory {
-  public static int getListItemPresetIcon(String paramString) {
+  public static int getListItemPresetIcon(String str) {
     byte b;
-    if (paramString.hashCode() == 1424216003 && paramString.equals("Basic List Item")) {
+    if (str.hashCode() == 1424216003 && str.equals("Basic List Item")) {
       b = 0;
     } else {
       b = -1;
@@ -38,9 +38,9 @@ public class PresetLayoutFactory {
     return arrayList;
   }
   
-  public static ArrayList<ViewBean> getListItemPresetViews(String paramString) {
+  public static ArrayList<ViewBean> getListItemPresetViews(String str) {
     byte b;
-    if (paramString.hashCode() == 1424216003 && paramString.equals("Basic List Item")) {
+    if (str.hashCode() == 1424216003 && str.equals("Basic List Item")) {
       b = 0;
     } else {
       b = -1;
@@ -48,9 +48,9 @@ public class PresetLayoutFactory {
     return (b != 0) ? new ArrayList<ViewBean>() : createBasicListItemViews();
   }
   
-  public static int getDrawerPresetIcon(String paramString) {
+  public static int getDrawerPresetIcon(String str) {
     byte b;
-    if (paramString.hashCode() == 920477027 && paramString.equals("Basic Drawer")) {
+    if (str.hashCode() == 920477027 && str.equals("Basic Drawer")) {
       b = 0;
     } else {
       b = -1;
@@ -72,9 +72,9 @@ public class PresetLayoutFactory {
     return arrayList;
   }
   
-  public static ArrayList<ViewBean> getDrawerPresetViews(String paramString) {
+  public static ArrayList<ViewBean> getDrawerPresetViews(String str) {
     byte b;
-    if (paramString.hashCode() == 920477027 && paramString.equals("Basic Drawer")) {
+    if (str.hashCode() == 920477027 && str.equals("Basic Drawer")) {
       b = 0;
     } else {
       b = -1;
@@ -82,8 +82,8 @@ public class PresetLayoutFactory {
     return (b != 0) ? new ArrayList<ViewBean>() : createBasicDrawerViews();
   }
   
-  public static int getActivityPresetIcon(String paramString) {
-    switch (paramString) {
+  public static int getActivityPresetIcon(String str) {
+    switch (str) {
       case "Empty Activity":
         return R.drawable.activity_preset_4;
       case "Basic Activity":
@@ -102,8 +102,8 @@ public class PresetLayoutFactory {
     return new ArrayList<ViewBean>();
   }
   
-  public static ArrayList<ViewBean> getActivityPresetViews(String paramString) {
-    switch (paramString) {
+  public static ArrayList<ViewBean> getActivityPresetViews(String str) {
+    switch (str) {
       case "Empty Activity":
         return createEmptyActivityViews();
       case "Basic Activity":

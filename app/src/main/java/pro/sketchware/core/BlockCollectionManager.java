@@ -31,55 +31,55 @@ public class BlockCollectionManager extends BaseCollectionManager {
     return instance;
   }
   
-  public BlockCollectionBean getBlockByName(String paramString) {
+  public BlockCollectionBean getBlockByName(String str) {
     for (CollectionBean collectionBean : this.collections) {
-      if (collectionBean.name.equals(paramString))
+      if (collectionBean.name.equals(str))
         return new BlockCollectionBean(collectionBean.name, ProjectDataParser.parseBlockBeans(this.blockGson, collectionBean.data)); 
     } 
     return null;
   }
   
-  public void renameBlock(String paramString1, String paramString2, boolean paramBoolean) {
+  public void renameBlock(String key, String value, boolean flag) {
     for (CollectionBean collectionBean : this.collections) {
-      if (collectionBean.name.equals(paramString1)) {
-        collectionBean.name = paramString2;
+      if (collectionBean.name.equals(key)) {
+        collectionBean.name = value;
         break;
       } 
     } 
-    if (paramBoolean)
+    if (flag)
       saveCollections(); 
   }
   
-  public void addBlock(String paramString, ArrayList<BlockBean> paramArrayList, boolean paramBoolean) throws CompileException {
+  public void addBlock(String input, ArrayList<BlockBean> list, boolean flag) throws CompileException {
     if (this.collections == null)
       initialize(); 
     if (this.blockGson == null)
       initializeGson(); 
     Iterator<CollectionBean> iterator = this.collections.iterator();
     while (iterator.hasNext()) {
-      if (!((CollectionBean)iterator.next()).name.equals(paramString))
+      if (!((CollectionBean)iterator.next()).name.equals(input))
         continue; 
       throw new CompileException("duplicate_name");
     } 
     StringBuilder stringBuilder = new StringBuilder();
-    for (int bi = 0; bi < paramArrayList.size(); bi++) {
-      BlockBean blockBean = paramArrayList.get(bi);
+    for (int bi = 0; bi < list.size(); bi++) {
+      BlockBean blockBean = list.get(bi);
       stringBuilder.append(this.blockGson.toJson(blockBean));
       stringBuilder.append("\n");
     }
     String str = stringBuilder.toString();
-    this.collections.add(new CollectionBean(paramString, str));
-    if (paramBoolean)
+    this.collections.add(new CollectionBean(str, str));
+    if (flag)
       saveCollections(); 
   }
   
-  public void removeBlock(String paramString, boolean paramBoolean) {
+  public void removeBlock(String str, boolean flag) {
     int i = this.collections.size();
     while (true) {
       int j = i - 1;
       if (j >= 0) {
         i = j;
-        if (((CollectionBean)this.collections.get(j)).name.equals(paramString)) {
+        if (((CollectionBean)this.collections.get(j)).name.equals(str)) {
           this.collections.remove(j);
           break;
         } 
@@ -87,7 +87,7 @@ public class BlockCollectionManager extends BaseCollectionManager {
       } 
       break;
     } 
-    if (paramBoolean)
+    if (flag)
       saveCollections(); 
   }
   

@@ -3,31 +3,31 @@ package pro.sketchware.core;
 import java.util.Map;
 
 public class MapValueHelper {
-  public static int get(Map<String, Object> paramMap, String paramString, int paramInt) {
-    Object object = get(paramMap, paramString, Integer.valueOf(paramInt));
-    return (object instanceof Integer) ? ((Integer)get(paramMap, paramString, Integer.valueOf(paramInt))).intValue() : ((object instanceof Double) ? ((Double)get(paramMap, paramString, Integer.valueOf(paramInt))).intValue() : paramInt);
+  public static int get(Map<String, Object> paramMap, String str, int index) {
+    Object object = get(paramMap, str, Integer.valueOf(index));
+    return (object instanceof Integer) ? ((Integer)get(paramMap, str, Integer.valueOf(index))).intValue() : ((object instanceof Double) ? ((Double)get(paramMap, str, Integer.valueOf(index))).intValue() : index);
   }
   
-  public static Object get(Map<String, Object> paramMap, String paramString, Object paramObject) {
+  public static Object get(Map<String, Object> paramMap, String str, Object paramObject) {
     if (paramMap == null)
       return paramObject; 
-    Object result = paramMap.get(paramString);
+    Object result = paramMap.get(str);
     return (result == null) ? paramObject : result;
   }
   
-  public static boolean get(Map<String, Object> paramMap, String paramString) {
-    return ((Boolean)get(paramMap, paramString, Boolean.valueOf(false))).booleanValue();
+  public static boolean get(Map<String, Object> paramMap, String str) {
+    return ((Boolean)get(paramMap, str, Boolean.valueOf(false))).booleanValue();
   }
   
-  public static boolean get(Map<String, Object> paramMap, String paramString, boolean paramBoolean) {
-    return ((Boolean)get(paramMap, paramString, Boolean.valueOf(paramBoolean))).booleanValue();
+  public static boolean get(Map<String, Object> paramMap, String str, boolean flag) {
+    return ((Boolean)get(paramMap, str, Boolean.valueOf(flag))).booleanValue();
   }
   
-  public static int getInt(Map<String, Object> paramMap, String paramString) {
-    return get(paramMap, paramString, -1);
+  public static int getInt(Map<String, Object> paramMap, String str) {
+    return get(paramMap, str, -1);
   }
   
-  public static String getString(Map<String, Object> paramMap, String paramString) {
-    return (String)get(paramMap, paramString, "");
+  public static String getString(Map<String, Object> paramMap, String str) {
+    return (String)get(paramMap, str, "");
   }
 }

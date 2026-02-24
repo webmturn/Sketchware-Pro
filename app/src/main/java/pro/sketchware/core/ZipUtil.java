@@ -12,9 +12,9 @@ import java.util.Iterator;
 import java.util.zip.ZipOutputStream;
 
 public class ZipUtil {
-  public static void extractAssetZip(Context paramContext, String paramString1, String paramString2) {
+  public static void extractAssetZip(Context context, String key, String value) {
     byte[] buf = new byte[1024];
-    String destDir = paramString2;
+    String destDir = value;
     if (!destDir.endsWith(File.separator)) {
       destDir = destDir + File.separator;
     }
@@ -25,7 +25,7 @@ public class ZipUtil {
     java.io.BufferedInputStream bis = null;
     java.util.zip.ZipInputStream zis = null;
     try {
-      bis = new java.io.BufferedInputStream(paramContext.getAssets().open(paramString1));
+      bis = new java.io.BufferedInputStream(context.getAssets().open(key));
       zis = new java.util.zip.ZipInputStream(bis);
       java.util.zip.ZipEntry entry;
       while ((entry = zis.getNextEntry()) != null) {
@@ -61,29 +61,29 @@ public class ZipUtil {
     }
   }
   
-  public int addDirectoryToZip(String paramString, File paramFile, ZipOutputStream paramZipOutputStream, ArrayList<String> paramArrayList) {
+  public int addDirectoryToZip(String str, File paramFile, ZipOutputStream paramZipOutputStream, ArrayList<String> list) {
     File[] files = paramFile.listFiles();
     if (files == null) return 0;
     if (files.length == 0) {
       String absPath = paramFile.getAbsolutePath();
-      addFileToZip(paramString, absPath.substring(paramString.length(), absPath.length()), paramZipOutputStream);
+      addFileToZip(str, absPath.substring(str.length(), absPath.length()), paramZipOutputStream);
     }
     int count = 0;
     for (File file : files) {
       if (file.isDirectory()) {
-        addDirectoryToZip(paramString, file, paramZipOutputStream, paramArrayList);
+        addDirectoryToZip(str, file, paramZipOutputStream, list);
       }
       if (file.isFile()) {
         String absPath = file.getAbsolutePath();
-        String relPath = absPath.substring(paramString.length(), absPath.length());
+        String relPath = absPath.substring(str.length(), absPath.length());
         boolean excluded = false;
-        for (String exclude : paramArrayList) {
+        for (String exclude : list) {
           if (absPath.contains(exclude)) {
             excluded = true;
             break;
           }
         }
-        if (!excluded && addFileToZip(paramString, relPath, paramZipOutputStream)) {
+        if (!excluded && addFileToZip(str, relPath, paramZipOutputStream)) {
           count++;
         }
       }
@@ -91,9 +91,9 @@ public class ZipUtil {
     return count;
   }
   
-  public void extractZipStream(InputStream paramInputStream, String paramString) {
+  public void extractZipStream(InputStream paramInputStream, String str) {
     byte[] buf = new byte[1024];
-    String destDir = paramString;
+    String destDir = str;
     if (!destDir.endsWith(File.separator)) {
       destDir = destDir + File.separator;
     }
@@ -139,15 +139,15 @@ public class ZipUtil {
     }
   }
   
-  public void extractZipFile(String paramString1, String paramString2) throws java.io.FileNotFoundException {
-    extractZipStream(new FileInputStream(paramString1), paramString2);
+  public void extractZipFile(String key, String value) throws java.io.FileNotFoundException {
+    extractZipStream(new FileInputStream(key), value);
   }
   
-  public void createZipFile(String paramString, ArrayList<String> paramArrayList1, ArrayList<String> paramArrayList2) {
+  public void createZipFile(String str, ArrayList<String> paramArrayList1, ArrayList<String> paramArrayList2) {
     FileOutputStream fos = null;
     ZipOutputStream zos = null;
     try {
-      fos = new FileOutputStream(paramString);
+      fos = new FileOutputStream(str);
       zos = new ZipOutputStream(fos);
       Iterator<String> iterator = paramArrayList1.iterator();
       while (iterator.hasNext()) {
@@ -162,8 +162,8 @@ public class ZipUtil {
     }
   }
   
-  public boolean addFileToZip(String paramString1, String paramString2, ZipOutputStream paramZipOutputStream) {
-    File file = new File(paramString1 + paramString2);
+  public boolean addFileToZip(String key, String value, ZipOutputStream paramZipOutputStream) {
+    File file = new File(key + value);
     if (!file.isFile()) {
       try { if (paramZipOutputStream != null) paramZipOutputStream.closeEntry(); } catch (IOException e) { e.printStackTrace(); }
       return false;
@@ -173,7 +173,7 @@ public class ZipUtil {
     try {
       fis = new FileInputStream(file);
       bis = new java.io.BufferedInputStream(fis);
-      java.util.zip.ZipEntry entry = new java.util.zip.ZipEntry(paramString2);
+      java.util.zip.ZipEntry entry = new java.util.zip.ZipEntry(value);
       paramZipOutputStream.putNextEntry(entry);
       byte[] buf = new byte[1024];
       int len;
@@ -189,11 +189,11 @@ public class ZipUtil {
     return true;
   }
   
-  public byte[] readFileToBytes(String paramString) {
+  public byte[] readFileToBytes(String str) {
     ByteArrayOutputStream baos = null;
     try {
       baos = new ByteArrayOutputStream();
-      FileInputStream fis = new FileInputStream(new File(paramString));
+      FileInputStream fis = new FileInputStream(new File(str));
       byte[] buf = new byte[1024];
       int len;
       while ((len = fis.read(buf)) > 0) {

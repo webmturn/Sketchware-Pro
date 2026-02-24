@@ -11,12 +11,12 @@ public class DateTimeUtil {
     return (new Date()).getTime();
   }
   
-  public String formatTimestamp(long paramLong, String paramString) {
-    return (new SimpleDateFormat(paramString, Locale.ENGLISH)).format(new Date(paramLong));
+  public String formatTimestamp(long paramLong, String str) {
+    return (new SimpleDateFormat(str, Locale.ENGLISH)).format(new Date(paramLong));
   }
   
-  public String formatCurrentTime(String paramString) {
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(paramString);
+  public String formatCurrentTime(String str) {
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(str);
     try {
       Date date = new Date();
       return simpleDateFormat.format(date);
@@ -25,44 +25,44 @@ public class DateTimeUtil {
     } 
   }
   
-  public String convertTimezone(String paramString1, String paramString2) {
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(paramString2);
+  public String convertTimezone(String key, String value) {
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(value);
     try {
-      long l1 = simpleDateFormat.parse(paramString1).getTime();
+      long l1 = simpleDateFormat.parse(key).getTime();
       long l2 = TimeZone.getDefault().getOffset(l1);
       Date date = new Date();
       date.setTime(l1 + l2);
       String str = simpleDateFormat.format(date);
-      paramString1 = str;
+      key = str;
     } catch (Exception exception) {}
-    return paramString1;
+    return key;
   }
   
-  public String reformatDate(String paramString1, String paramString2, String paramString3) {
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(paramString2);
+  public String reformatDate(String key, String value, String extra) {
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(value);
     try {
-      long l1 = simpleDateFormat.parse(paramString1).getTime();
+      long l1 = simpleDateFormat.parse(key).getTime();
       long l2 = TimeZone.getDefault().getOffset(l1);
       Date date = new Date();
       date.setTime(l1 + l2);
-      simpleDateFormat = new SimpleDateFormat(paramString3);
+      simpleDateFormat = new SimpleDateFormat(extra);
       String str = simpleDateFormat.format(date);
-      paramString1 = str;
+      key = str;
     } catch (Exception exception) {}
-    return paramString1;
+    return key;
   }
   
-  public long parseToMillis(String paramString1, String paramString2) {
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(paramString2, Locale.ENGLISH);
+  public long parseToMillis(String key, String value) {
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(value, Locale.ENGLISH);
     try {
-      return simpleDateFormat.parse(paramString1).getTime();
+      return simpleDateFormat.parse(key).getTime();
     } catch (ParseException parseException) {
       return 0L;
     } 
   }
   
-  public String formatCurrentTimeGmt(String paramString) {
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(paramString);
+  public String formatCurrentTimeGmt(String str) {
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(str);
     simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
     try {
       Date date = new Date();

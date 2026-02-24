@@ -26,13 +26,13 @@ public class FieldBlockView extends BaseBlockView {
   
   public int isDefinitionBlock = 0;
   
-  public FieldBlockView(Context paramContext, String paramString1, String paramString2) {
-    super(paramContext, paramString1, paramString2, true);
-    this.fieldContext = paramContext;
-    initSs(paramContext);
+  public FieldBlockView(Context context, String key, String value) {
+    super(context, key, value, true);
+    this.fieldContext = context;
+    initSs(context);
   }
   
-  private void initSs(Context paramContext) {
+  private void initSs(Context context) {
     String type = this.blockType;
     switch (type) {
       case "b":
@@ -83,10 +83,10 @@ public class FieldBlockView extends BaseBlockView {
     return rect.width() + this.minHatWidth;
   }
   
-  public final String getComponentLabel(String paramString) {
+  public final String getComponentLabel(String str) {
     String str1 = "";
-    String str2 = BlockColorMapper.getComponentDisplayName(paramString);
-    paramString = str2;
+    String str2 = BlockColorMapper.getComponentDisplayName(str);
+    str = str2;
     if (str2.length() > 0) {
       StringBuilder stringBuilder = new StringBuilder();
       stringBuilder.append(str2);
@@ -96,9 +96,9 @@ public class FieldBlockView extends BaseBlockView {
     return str1;
   }
   
-  public final TextView createLabelTextView(String paramString) {
+  public final TextView createLabelTextView(String str) {
     TextView textView = new TextView(this.fieldContext);
-    textView.setText(getComponentLabel(paramString));
+    textView.setText(getComponentLabel(str));
     textView.setTextSize(8.0F);
     textView.setTypeface(null, 1);
     RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-2, this.textHeight);
@@ -113,9 +113,9 @@ public class FieldBlockView extends BaseBlockView {
     return textView;
   }
   
-  public final TextView createValueTextView(String paramString) {
+  public final TextView createValueTextView(String str) {
     TextView textView = new TextView(this.fieldContext);
-    textView.setText(paramString);
+    textView.setText(str);
     textView.setTextSize(9.0F);
     RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(this.minSimpleWidth, this.textHeight);
     layoutParams.setMargins(this.paramSpacing, 0, this.isDefinitionBlock, 0);

@@ -20,32 +20,32 @@ public class ImageCollectionManager extends BaseCollectionManager {
     return instance;
   }
   
-  public ProjectResourceBean getResourceByName(String paramString) {
+  public ProjectResourceBean getResourceByName(String str) {
     for (ProjectResourceBean projectResourceBean : getResources()) {
-      if (projectResourceBean.resName.equals(paramString))
+      if (projectResourceBean.resName.equals(str))
         return projectResourceBean; 
     } 
     return null;
   }
   
-  public void renameResource(ProjectResourceBean paramProjectResourceBean, String paramString, boolean paramBoolean) {
+  public void renameResource(ProjectResourceBean paramProjectResourceBean, String str, boolean flag) {
     int i = this.collections.size();
     while (--i >= 0) {
       CollectionBean collectionBean = this.collections.get(i);
       if (collectionBean.name.equals(paramProjectResourceBean.resName)) {
-        collectionBean.name = paramString;
+        collectionBean.name = str;
         break;
       } 
     } 
-    if (paramBoolean)
+    if (flag)
       saveCollections(); 
   }
   
-  public void addResource(String paramString, ProjectResourceBean paramProjectResourceBean) throws CompileException {
-    addResource(paramString, paramProjectResourceBean, true);
+  public void addResource(String str, ProjectResourceBean paramProjectResourceBean) throws CompileException {
+    addResource(str, paramProjectResourceBean, true);
   }
   
-  public void addResource(String paramString, ProjectResourceBean paramProjectResourceBean, boolean paramBoolean) throws CompileException {
+  public void addResource(String str, ProjectResourceBean paramProjectResourceBean, boolean flag) throws CompileException {
     if (this.collections == null) initialize();
     ArrayList<String> duplicates = new ArrayList<String>();
     for (CollectionBean bean : this.collections) {
@@ -75,7 +75,7 @@ public class ImageCollectionManager extends BaseCollectionManager {
         throw new CompileException("fail_to_copy");
       }
     } else {
-      String srcPath = SketchwarePaths.getFontsResourcePath() + java.io.File.separator + paramString + java.io.File.separator + paramProjectResourceBean.resFullName;
+      String srcPath = SketchwarePaths.getFontsResourcePath() + java.io.File.separator + str + java.io.File.separator + paramProjectResourceBean.resFullName;
       if (!this.fileUtil.exists(srcPath)) {
         throw new CompileException("file_no_exist");
       }
@@ -87,17 +87,17 @@ public class ImageCollectionManager extends BaseCollectionManager {
       }
     }
     this.collections.add(new CollectionBean(paramProjectResourceBean.resName, dataName));
-    if (paramBoolean) saveCollections();
+    if (flag) saveCollections();
   }
   
-  public void removeResource(String paramString, boolean paramBoolean) {
+  public void removeResource(String input, boolean flag) {
     int i = this.collections.size();
     while (true) {
       int j = i - 1;
       if (j >= 0) {
         CollectionBean collectionBean = this.collections.get(j);
         i = j;
-        if (collectionBean.name.equals(paramString)) {
+        if (collectionBean.name.equals(input)) {
           this.collections.remove(j);
           String str = collectionBean.data;
           EncryptedFileUtil EncryptedFileUtil = this.fileUtil;
@@ -112,7 +112,7 @@ public class ImageCollectionManager extends BaseCollectionManager {
       } 
       break;
     } 
-    if (paramBoolean)
+    if (flag)
       saveCollections(); 
   }
   
@@ -133,10 +133,10 @@ public class ImageCollectionManager extends BaseCollectionManager {
     this.dataDirPath = stringBuilder.toString();
   }
   
-  public boolean hasResource(String paramString) {
+  public boolean hasResource(String str) {
     Iterator<ProjectResourceBean> iterator = getResources().iterator();
     while (iterator.hasNext()) {
-      if (((ProjectResourceBean)iterator.next()).resName.equals(paramString))
+      if (((ProjectResourceBean)iterator.next()).resName.equals(str))
         return true; 
     } 
     return false;
