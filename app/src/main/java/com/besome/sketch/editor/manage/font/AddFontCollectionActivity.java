@@ -60,12 +60,12 @@ public class AddFontCollectionActivity extends BaseDialogActivity implements Vie
     }
 
     public final ArrayList<String> getExistingFontNames() {
-        ArrayList<String> arrayList = new ArrayList<>();
-        arrayList.add("app_icon");
+        ArrayList<String> fontNames = new ArrayList<>();
+        fontNames.add("app_icon");
         for (ProjectResourceBean projectResourceBean : projectResourceBeanArrayList) {
-            arrayList.add(projectResourceBean.resName);
+            fontNames.add(projectResourceBean.resName);
         }
-        return arrayList;
+        return fontNames;
     }
 
     @Override

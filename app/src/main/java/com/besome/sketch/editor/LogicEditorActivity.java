@@ -1178,7 +1178,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public void saveBlockToCollection(String str, BlockView rs) {
-        ArrayList<String> arrayList;
+        ArrayList<String> paramsList;
         ArrayList<BlockView> allChildren = rs.getAllChildren();
         ArrayList<BlockBean> collectionBlocks = new ArrayList<>();
         for (BlockView child : allChildren) {
@@ -1201,13 +1201,13 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             blockBean.parameters.clear();
             for (String next : bean.parameters) {
                 if (next.length() <= 1 || next.charAt(0) != '@') {
-                    arrayList = blockBean.parameters;
+                    paramsList = blockBean.parameters;
                 } else {
                     String format = String.format("99%06d", Integer.valueOf(next.substring(1)));
-                    arrayList = blockBean.parameters;
+                    paramsList = blockBean.parameters;
                     next = '@' + format;
                 }
-                arrayList.add(next);
+                paramsList.add(next);
             }
             collectionBlocks.add(blockBean);
         }
@@ -2229,9 +2229,9 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     } else {
                         blockBean2 = null;
                     }
-                    ArrayList<BlockBean> arrayList = new ArrayList<>();
+                    ArrayList<BlockBean> removedBlocks = new ArrayList<>();
                     for (BlockView allChild : rs5.getAllChildren()) {
-                        arrayList.add(allChild.getBean().clone());
+                        removedBlocks.add(allChild.getBean().clone());
                     }
                     deleteBlock(rs5);
                     BlockBean blockBean3 = null;
@@ -2240,7 +2240,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     }
                     int[] oLocationOnScreen = new int[2];
                     blockPane.getLocationOnScreen(oLocationOnScreen);
-                    BlockHistoryManager.getInstance(scId).recordRemove(buildHistoryKey(), arrayList, ((int) touchOriginX) - oLocationOnScreen[0], ((int) touchOriginY) - oLocationOnScreen[1], blockBean2, blockBean3);
+                    BlockHistoryManager.getInstance(scId).recordRemove(buildHistoryKey(), removedBlocks, ((int) touchOriginX) - oLocationOnScreen[0], ((int) touchOriginY) - oLocationOnScreen[1], blockBean2, blockBean3);
                     refreshOptionsMenu();
                 }
             } else if (logicTopMenu.isFavoriteActive) {

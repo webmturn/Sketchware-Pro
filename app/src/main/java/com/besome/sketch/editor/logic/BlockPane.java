@@ -831,14 +831,14 @@ public class BlockPane extends RelativeLayout {
   }
   
   public ArrayList<BlockBean> getBlocks() {
-    ArrayList<BlockBean> arrayList = new ArrayList();
+    ArrayList<BlockBean> blocks = new ArrayList();
     BlockView rs = (BlockView)findViewWithTag(Integer.valueOf(this.dragBlock.nextBlock));
     if (rs != null) {
       Iterator<BlockView> iterator = rs.getAllChildren().iterator();
       while (iterator.hasNext())
-        arrayList.add(((BlockView)iterator.next()).getBean()); 
+        blocks.add(((BlockView)iterator.next()).getBean()); 
     } 
-    return arrayList;
+    return blocks;
   }
   
   public Object[] getNearestTarget() {

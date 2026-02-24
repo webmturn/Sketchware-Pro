@@ -68,12 +68,12 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
     }
 
     private ArrayList<String> getResourceNames() {
-        ArrayList<String> arrayList = new ArrayList<>();
-        arrayList.add("app_icon");
+        ArrayList<String> resourceNames = new ArrayList<>();
+        resourceNames.add("app_icon");
         for (ProjectResourceBean projectResourceBean : existingSounds) {
-            arrayList.add(projectResourceBean.resName);
+            resourceNames.add(projectResourceBean.resName);
         }
-        return arrayList;
+        return resourceNames;
     }
 
     private void pausePlayback() {

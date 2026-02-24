@@ -369,18 +369,18 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
                 }
                 viewPane.resetView(false);
                 if (currentTouchedView instanceof WidgetPaletteIcon uyVar) {
-                    ArrayList<ViewBean> arrayList = new ArrayList<>();
-                    EncryptedFileUtil oBVar = new EncryptedFileUtil();
+                    ArrayList<ViewBean> widgetViews = new ArrayList<>();
+                    EncryptedFileUtil fileUtil = new EncryptedFileUtil();
                     boolean areImagesAdded = false;
                     for (int i3 = 0; i3 < uyVar.getData().size(); i3++) {
                         ViewBean viewBean = uyVar.getData().get(i3);
-                        arrayList.add(viewBean.clone());
+                        widgetViews.add(viewBean.clone());
                         String backgroundResource = viewBean.layout.backgroundResource;
                         String resName = viewBean.image.resName;
                         if (!ProjectDataManager.getResourceManager(scId).hasImage(backgroundResource) && SoundCollectionManager.getInstance().hasResource(backgroundResource)) {
                             ProjectResourceBean a2 = SoundCollectionManager.getInstance().getResourceByName(backgroundResource);
                             try {
-                                oBVar.copyFile(SketchwarePaths.getCollectionPath() + File.separator + "image" + File.separator + "data" + File.separator + a2.resFullName, SketchwarePaths.getImagesPath() + File.separator + scId + File.separator + a2.resFullName);
+                                fileUtil.copyFile(SketchwarePaths.getCollectionPath() + File.separator + "image" + File.separator + "data" + File.separator + a2.resFullName, SketchwarePaths.getImagesPath() + File.separator + scId + File.separator + a2.resFullName);
                             } catch (Exception e) {
                                 LogUtil.e("ViewEditor", "", e);
                             }
@@ -390,7 +390,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
                         if (!ProjectDataManager.getResourceManager(scId).hasImage(resName) && SoundCollectionManager.getInstance().hasResource(resName)) {
                             ProjectResourceBean a3 = SoundCollectionManager.getInstance().getResourceByName(resName);
                             try {
-                                oBVar.copyFile(SketchwarePaths.getCollectionPath() + File.separator + "image" + File.separator + "data" + File.separator + a3.resFullName, SketchwarePaths.getImagesPath() + File.separator + scId + File.separator + a3.resFullName);
+                                fileUtil.copyFile(SketchwarePaths.getCollectionPath() + File.separator + "image" + File.separator + "data" + File.separator + a3.resFullName, SketchwarePaths.getImagesPath() + File.separator + scId + File.separator + a3.resFullName);
                             } catch (Exception e2) {
                                 LogUtil.e("ViewEditor", "", e2);
                             }
@@ -401,22 +401,22 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
                     if (areImagesAdded) {
                         SketchToast.toast(getContext(), getString(R.string.view_widget_favorites_image_auto_added), SketchToast.TOAST_NORMAL).show();
                     }
-                    if (!arrayList.isEmpty()) {
+                    if (!widgetViews.isEmpty()) {
                         HashMap<String, String> idMappings = new HashMap<>();
-                        viewPane.updateViewBeanProperties(arrayList.get(0), (int) motionEvent.getRawX(), (int) motionEvent.getRawY());
-                        for (ViewBean next : arrayList) {
+                        viewPane.updateViewBeanProperties(widgetViews.get(0), (int) motionEvent.getRawX(), (int) motionEvent.getRawY());
+                        for (ViewBean next : widgetViews) {
                             if (ProjectDataManager.getProjectDataManager(scId).hasView(projectFileBean.getXmlName(), next.id)) {
                                 idMappings.put(next.id, generateWidgetId(next));
                             } else {
                                 idMappings.put(next.id, next.id);
                             }
                             next.id = idMappings.get(next.id);
-                            if (arrayList.indexOf(next) != 0 && (str = next.parent) != null && !str.isEmpty()) {
+                            if (widgetViews.indexOf(next) != 0 && (str = next.parent) != null && !str.isEmpty()) {
                                 next.parent = idMappings.get(next.parent);
                             }
                             ProjectDataManager.getProjectDataManager(scId).addView(xmlName, next);
                         }
-                        setSelectedItem(addViews(arrayList, true), true);
+                        setSelectedItem(addViews(widgetViews, true), true);
                     }
                 } else if (currentTouchedView instanceof IconBase icon) {
                     ViewBean bean = icon.getBean();
