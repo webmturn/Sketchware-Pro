@@ -9,19 +9,12 @@ import pro.sketchware.SketchApplication;
 
 public class SketchwarePaths {
 
-    public static final String A = "sketchware" + File.separator + "localization" + File.separator + "strings_provided.xml";
-    public static final String B = "sketchware" + File.separator + "signed_apk";
-    public static final String C = "sketchware" + File.separator + "keystore";
-    public static final String D = "sketchware" + File.separator + "keystore" + File.separator + "release_key.jks";
-    public static final String E = "sketchware" + File.separator + "service_account";
-    public static final String F = ".sketchware" + File.separator + "upload";
-    public static final String[] G = {"subs_year_01", "subs_50_year_01", "subs_30_year_01", "subs_20_year_01", "subs_month_06", "subs_month_03", "subs_month_01", "subs_50_month_01", "subs_30_month_01", "subs_20_month_01"};
-    public static final long[] H = {32140800000L, 32140800000L, 32140800000L, 32140800000L, 16070400000L, 8035200000L, 2678400000L, 2678400000L, 2678400000L, 2678400000L};
-    public static final String[] I = {"subs_month_01", "subs_year_01"};
-    public static final String[] L = {"subs_20_month_01", "subs_20_year_01"};
-    public static final String[] M = {"F83085529A75E7A8CEDD64013B1A374B", "90C443DFAB7F23424DE7E079787466CD", "F83085529A75E7A8CEDD64013B1A374B", "C99E5B3F179203AE2749F8F9B5A7493A", "100EFD7391FF1BEE4A1E2F960A1B8AF2"};
-    public static final String[] N = {"1486507718310013_1788685811425534", "1486507718310013_1804931006467681", "1486507718310013_1805009746459807", "1486507718310013_1805001526460629", "1486507718310013_1805273579766757", "1486507718310013_1805397669754348", "1486507718310013_1805436593083789", "1486507718310013_1805666736394108", "1486507718310013_1805724186388363", "1486507718310013_1809233042704144"};
-    public static final String[] O = {"255022168522663_266931247331755", "255022168522663_268282677196612", "255022168522663_268283823863164", "255022168522663_266575314034015", "255022168522663_279474749410738"};
+    public static final String PROVIDED_STRINGS_PATH = "sketchware" + File.separator + "localization" + File.separator + "strings_provided.xml";
+    public static final String SIGNED_APK_PATH = "sketchware" + File.separator + "signed_apk";
+    public static final String KEYSTORE_DIR_PATH = "sketchware" + File.separator + "keystore";
+    public static final String KEYSTORE_FILE_PATH = "sketchware" + File.separator + "keystore" + File.separator + "release_key.jks";
+    public static final String SERVICE_ACCOUNT_PATH = "sketchware" + File.separator + "service_account";
+    public static final String UPLOAD_PATH = ".sketchware" + File.separator + "upload";
     public static final String LIBS_PATH = ".sketchware" + File.separator + "libs";
     public static final String MYSC_PATH = ".sketchware" + File.separator + "mysc";
     public static final String MYSC_LIST_PATH = ".sketchware" + File.separator + "mysc" + File.separator + "list";
@@ -193,11 +186,11 @@ public class SketchwarePaths {
 
     @Deprecated
     public static String getKeystoreDirPath() {
-        return getAbsolutePathOf(C);
+        return getAbsolutePathOf(KEYSTORE_DIR_PATH);
     }
 
     public static String getKeystoreFilePath() {
-        return getAbsolutePathOf(D);
+        return getAbsolutePathOf(KEYSTORE_FILE_PATH);
     }
 
     public static String getLocalizationPath() {
@@ -209,7 +202,7 @@ public class SketchwarePaths {
     }
 
     public static String getProvidedStringsPath() {
-        return getAbsolutePathOf(A);
+        return getAbsolutePathOf(PROVIDED_STRINGS_PATH);
     }
 
     public static String getProjectListBasePath() {
@@ -217,11 +210,11 @@ public class SketchwarePaths {
     }
 
     public static String getSignedApkPath() {
-        return getAbsolutePathOf(B);
+        return getAbsolutePathOf(SIGNED_APK_PATH);
     }
 
     public static String getServiceAccountPath() {
-        return getAbsolutePathOf(E);
+        return getAbsolutePathOf(SERVICE_ACCOUNT_PATH);
     }
 
     public static String getSketchwareRootPath() {
@@ -253,7 +246,7 @@ public class SketchwarePaths {
     }
 
     public static String getUploadPath() {
-        return getAbsolutePathOf(F);
+        return getAbsolutePathOf(UPLOAD_PATH);
     }
 
 
