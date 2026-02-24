@@ -154,9 +154,9 @@ public class BlockBean extends SelectableBean implements Parcelable {
             return false;
         }
         for (int i = 0; i < parameters.size(); i++) {
-            String str4 = parameters.get(i);
-            String str5 = other.parameters.get(i);
-            if (!(str4 == null || str4.equals(str5))) {
+            String thisParam = parameters.get(i);
+            String otherParam = other.parameters.get(i);
+            if (!(thisParam == null || thisParam.equals(otherParam))) {
                 return false;
             }
         }

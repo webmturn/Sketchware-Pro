@@ -80,11 +80,11 @@ public class ManageSoundImportActivity extends BaseAppCompatActivity implements 
         if (!duplicateNames.isEmpty()) {
             String message = getString(R.string.common_message_name_unavailable);
             String names = "";
-            for (String str2 : duplicateNames) {
+            for (String duplicateName : duplicateNames) {
                 if (!names.isEmpty()) {
                     names = names + ", ";
                 }
-                names = names + str2;
+                names = names + duplicateName;
             }
             SketchToast.toast(getApplicationContext(), message + "\n[" + names + "]", SketchToast.TOAST_WARNING).show();
             return true;

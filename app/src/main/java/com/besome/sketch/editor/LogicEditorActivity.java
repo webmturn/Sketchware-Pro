@@ -519,25 +519,25 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         paletteBlock.addDeprecatedBlock(message, type, opCode);
     }
 
-    public View createPaletteBlock(String str, String str2) {
-        BaseBlockView a2 = paletteBlock.addBlock("", str, str2);
-        a2.setTag(str2);
+    public View createPaletteBlock(String spec, String opCode) {
+        BaseBlockView a2 = paletteBlock.addBlock("", spec, opCode);
+        a2.setTag(opCode);
         a2.setClickable(true);
         a2.setOnTouchListener(this);
         return a2;
     }
 
-    public final View createPaletteBlockWithSpec(String str, String str2, String str3) {
-        BaseBlockView a2 = paletteBlock.addBlock(str, str2, str3);
-        a2.setTag(str3);
+    public final View createPaletteBlockWithSpec(String type, String spec, String opCode) {
+        BaseBlockView a2 = paletteBlock.addBlock(type, spec, opCode);
+        a2.setTag(opCode);
         a2.setClickable(true);
         a2.setOnTouchListener(this);
         return a2;
     }
 
-    public final View createPaletteBlockWithComponent(String str, String str2, String str3, String str4) {
-        BaseBlockView a2 = paletteBlock.addBlock(str, str2, str3, str4);
-        a2.setTag(str4);
+    public final View createPaletteBlockWithComponent(String type, String spec, String opCode, String componentType) {
+        BaseBlockView a2 = paletteBlock.addBlock(type, spec, opCode, componentType);
+        a2.setTag(componentType);
         a2.setClickable(true);
         a2.setOnTouchListener(this);
         return a2;
@@ -1351,8 +1351,8 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         dialog.show();
     }
 
-    public void addMoreBlock(String str, String str2) {
-        ProjectDataManager.getProjectDataManager(scId).addMoreBlock(projectFile.getJavaName(), str, str2);
+    public void addMoreBlock(String name, String spec) {
+        ProjectDataManager.getProjectDataManager(scId).addMoreBlock(projectFile.getJavaName(), name, spec);
         onBlockSizeChanged(8, 0xff8a55d7);
     }
 

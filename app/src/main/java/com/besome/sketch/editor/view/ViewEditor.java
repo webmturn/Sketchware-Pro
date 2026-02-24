@@ -938,20 +938,20 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         widget.setOnTouchListener(this);
     }
 
-    public void extraWidgetLayout(String str, String str2) {
-        View extraWidgetLayout = paletteWidget.extraWidgetLayout(str, str2);
+    public void extraWidgetLayout(String tag, String name) {
+        View extraWidgetLayout = paletteWidget.extraWidgetLayout(tag, name);
         extraWidgetLayout.setClickable(true);
         extraWidgetLayout.setOnTouchListener(this);
     }
 
-    public void addWidget(PaletteWidget.WidgetType bVar, String str, String str2, String str3) {
-        View widget = paletteWidget.addWidget(bVar, str, str2, str3);
+    public void addWidget(PaletteWidget.WidgetType bVar, String tag, String text, String resourceName) {
+        View widget = paletteWidget.addWidget(bVar, tag, text, resourceName);
         widget.setClickable(true);
         widget.setOnTouchListener(this);
     }
 
-    public void extraWidget(String str, String str2, String str3) {
-        View extraWidget = paletteWidget.extraWidget(str, str2, str3);
+    public void extraWidget(String tag, String title, String name) {
+        View extraWidget = paletteWidget.extraWidget(tag, title, name);
         extraWidget.setClickable(true);
         extraWidget.setOnTouchListener(this);
     }
