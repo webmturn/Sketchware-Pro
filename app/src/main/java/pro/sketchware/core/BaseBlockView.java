@@ -461,28 +461,23 @@ public class BaseBlockView extends RelativeLayout {
   }
   
   public final void drawStatementShape(Canvas canvas) {
-    boolean bool2;
+    boolean hasBottomNotch;
     Path path = new Path();
     drawTopPath(path);
     int i = this.blockHeight;
     int j = this.shapeType;
-    boolean bool1 = true;
     if (j != 5) {
-      bool2 = true;
+      hasBottomNotch = true;
     } else {
-      bool2 = false;
+      hasBottomNotch = false;
     } 
-    drawBottomPath(path, i, bool2, 0);
+    drawBottomPath(path, i, hasBottomNotch, 0);
     canvas.drawPath(path, this.fillPaint);
     if (this.drawShadow) {
       canvas.drawLines(getRightSideShadowLines(0, this.blockHeight), this.outlinePaint);
       i = this.blockHeight;
-      if (this.shapeType != 5) {
-        bool2 = bool1;
-      } else {
-        bool2 = false;
-      } 
-      canvas.drawLines(getBottomShadowLines(i, bool2, 0), this.outlinePaint);
+      hasBottomNotch = (this.shapeType != 5);
+      canvas.drawLines(getBottomShadowLines(i, hasBottomNotch, 0), this.outlinePaint);
     } 
     if (this.drawReflection)
       canvas.drawLines(getTopReflectionLines(this.blockHeight), this.reflectionPaint); 
@@ -596,22 +591,21 @@ public class BaseBlockView extends RelativeLayout {
   }
   
   public final void drawSingleSubstackShape(Canvas canvas) {
-    boolean bool2;
+    boolean isEndCap;
     Path path = new Path();
     int i = this.blockHeight + this.contentHeight - this.borderWidth;
     drawTopPath(path);
     int j = this.blockHeight;
     int k = this.cornerRadius;
-    boolean bool1 = true;
     drawBottomPath(path, j, true, k);
     drawSubstackBottomPath(path, i);
     j = this.topPadding;
     if (this.shapeType == 10) {
-      bool2 = true;
+      isEndCap = true;
     } else {
-      bool2 = false;
+      isEndCap = false;
     } 
-    drawBottomPath(path, j + i, bool2, 0);
+    drawBottomPath(path, j + i, isEndCap, 0);
     canvas.drawPath(path, this.fillPaint);
     if (this.drawShadow) {
       canvas.drawLines(getRightSideShadowLines(0, this.blockHeight), this.outlinePaint);
@@ -619,12 +613,8 @@ public class BaseBlockView extends RelativeLayout {
       canvas.drawLines(getLeftSideShadowLines(this.blockHeight, i), this.outlinePaint);
       canvas.drawLines(getRightSideShadowLines(i, this.topPadding + i), this.outlinePaint);
       j = this.topPadding;
-      if (this.shapeType == 10) {
-        bool2 = bool1;
-      } else {
-        bool2 = false;
-      } 
-      canvas.drawLines(getBottomShadowLines(j + i, bool2, 0), this.outlinePaint);
+      isEndCap = (this.shapeType == 10);
+      canvas.drawLines(getBottomShadowLines(j + i, isEndCap, 0), this.outlinePaint);
     } 
     if (this.drawReflection) {
       canvas.drawLines(getTopReflectionLines(this.topPadding + i), this.reflectionPaint);
