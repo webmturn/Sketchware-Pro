@@ -15,8 +15,8 @@ public class BlockHistoryManager {
   
   public String scId;
   
-  public BlockHistoryManager(String str) {
-    this.scId = str;
+  public BlockHistoryManager(String scId) {
+    this.scId = scId;
     this.historyMap = new HashMap<String, ArrayList<HistoryBlockBean>>();
     this.positionMap = new HashMap<String, Integer>();
   }
@@ -41,133 +41,133 @@ public class BlockHistoryManager {
     instance = null;
   }
   
-  public static BlockHistoryManager getInstance(String str) {
+  public static BlockHistoryManager getInstance(String scId) {
     if (instance == null) {
       synchronized (BlockHistoryManager.class) {
-        if (instance == null || !instance.scId.equals(str)) {
-          instance = new BlockHistoryManager(str);
+        if (instance == null || !instance.scId.equals(scId)) {
+          instance = new BlockHistoryManager(scId);
         }
       }
     }
     return instance;
   }
   
-  public final void trimFutureHistory(String str) {
-    if (!this.positionMap.containsKey(str))
+  public final void trimFutureHistory(String historyKey) {
+    if (!this.positionMap.containsKey(historyKey))
       return; 
-    ArrayList arrayList = this.historyMap.get(str);
-    int i = ((Integer)this.positionMap.get(str)).intValue();
+    ArrayList arrayList = this.historyMap.get(historyKey);
+    int i = ((Integer)this.positionMap.get(historyKey)).intValue();
     if (arrayList == null)
       return; 
     for (int j = arrayList.size(); j > i; j--)
       arrayList.remove(j - 1); 
   }
   
-  public void recordAdd(String str, BlockBean blockBean1, int start, int end, BlockBean blockBean2, BlockBean blockBean3) {
+  public void recordAdd(String historyKey, BlockBean blockBean1, int start, int end, BlockBean blockBean2, BlockBean blockBean3) {
     ArrayList<BlockBean> arrayList = new ArrayList<>();
     arrayList.add(blockBean1);
-    recordAddMultiple(str, arrayList, start, end, blockBean2, blockBean3);
+    recordAddMultiple(historyKey, arrayList, start, end, blockBean2, blockBean3);
   }
   
-  public void recordUpdate(String str, BlockBean blockBean1, BlockBean blockBean2) {
+  public void recordUpdate(String historyKey, BlockBean blockBean1, BlockBean blockBean2) {
     if (blockBean1.isEqual(blockBean2))
       return; 
     HistoryBlockBean historyBlockBean = new HistoryBlockBean();
     historyBlockBean.actionUpdate(blockBean1, blockBean2);
-    if (!this.historyMap.containsKey(str))
-      initHistory(str); 
-    trimFutureHistory(str);
-    addHistoryEntry(str, historyBlockBean);
+    if (!this.historyMap.containsKey(historyKey))
+      initHistory(historyKey); 
+    trimFutureHistory(historyKey);
+    addHistoryEntry(historyKey, historyBlockBean);
   }
   
-  public final void addHistoryEntry(String str, HistoryBlockBean historyBlockBean) {
-    if (!this.historyMap.containsKey(str))
-      initHistory(str); 
-    ArrayList<HistoryBlockBean> arrayList = this.historyMap.get(str);
+  public final void addHistoryEntry(String historyKey, HistoryBlockBean historyBlockBean) {
+    if (!this.historyMap.containsKey(historyKey))
+      initHistory(historyKey); 
+    ArrayList<HistoryBlockBean> arrayList = this.historyMap.get(historyKey);
     arrayList.add(historyBlockBean);
     if (arrayList.size() > 50) {
       arrayList.remove(0);
     } else {
-      incrementPosition(str);
+      incrementPosition(historyKey);
     } 
   }
   
-  public void recordAddMultiple(String str, ArrayList<BlockBean> list, int start, int end, BlockBean blockBean1, BlockBean blockBean2) {
+  public void recordAddMultiple(String historyKey, ArrayList<BlockBean> list, int start, int end, BlockBean blockBean1, BlockBean blockBean2) {
     HistoryBlockBean historyBlockBean = new HistoryBlockBean();
     historyBlockBean.actionAdd(list, start, end, blockBean1, blockBean2);
-    if (!this.historyMap.containsKey(str))
-      initHistory(str); 
-    trimFutureHistory(str);
-    addHistoryEntry(str, historyBlockBean);
+    if (!this.historyMap.containsKey(historyKey))
+      initHistory(historyKey); 
+    trimFutureHistory(historyKey);
+    addHistoryEntry(historyKey, historyBlockBean);
   }
   
-  public void recordMove(String str, ArrayList<BlockBean> list1, ArrayList<BlockBean> list2, int start, int end, int width, int height, BlockBean blockBean1, BlockBean blockBean2, BlockBean blockBean3, BlockBean blockBean4) {
+  public void recordMove(String historyKey, ArrayList<BlockBean> list1, ArrayList<BlockBean> list2, int start, int end, int width, int height, BlockBean blockBean1, BlockBean blockBean2, BlockBean blockBean3, BlockBean blockBean4) {
     HistoryBlockBean historyBlockBean = new HistoryBlockBean();
     historyBlockBean.actionMove(list1, list2, start, end, width, height, blockBean1, blockBean2, blockBean3, blockBean4);
-    if (!this.historyMap.containsKey(str))
-      initHistory(str); 
-    trimFutureHistory(str);
-    addHistoryEntry(str, historyBlockBean);
+    if (!this.historyMap.containsKey(historyKey))
+      initHistory(historyKey); 
+    trimFutureHistory(historyKey);
+    addHistoryEntry(historyKey, historyBlockBean);
   }
   
-  public void removeHistory(String str) {
-    if (this.historyMap.containsKey(str)) {
-      this.historyMap.remove(str);
-      this.positionMap.remove(str);
+  public void removeHistory(String historyKey) {
+    if (this.historyMap.containsKey(historyKey)) {
+      this.historyMap.remove(historyKey);
+      this.positionMap.remove(historyKey);
     } 
   }
   
-  public void recordRemove(String str, ArrayList<BlockBean> list, int start, int end, BlockBean blockBean1, BlockBean blockBean2) {
+  public void recordRemove(String historyKey, ArrayList<BlockBean> list, int start, int end, BlockBean blockBean1, BlockBean blockBean2) {
     HistoryBlockBean historyBlockBean = new HistoryBlockBean();
     historyBlockBean.actionRemove(list, start, end, blockBean1, blockBean2);
-    if (!this.historyMap.containsKey(str))
-      initHistory(str); 
-    trimFutureHistory(str);
-    addHistoryEntry(str, historyBlockBean);
+    if (!this.historyMap.containsKey(historyKey))
+      initHistory(historyKey); 
+    trimFutureHistory(historyKey);
+    addHistoryEntry(historyKey, historyBlockBean);
   }
   
-  public final void decrementPosition(String str) {
-    if (!this.positionMap.containsKey(str))
-      initHistory(str); 
-    int i = ((Integer)this.positionMap.get(str)).intValue();
+  public final void decrementPosition(String historyKey) {
+    if (!this.positionMap.containsKey(historyKey))
+      initHistory(historyKey); 
+    int i = ((Integer)this.positionMap.get(historyKey)).intValue();
     if (i == 0)
       return; 
-    this.positionMap.put(str, Integer.valueOf(i - 1));
+    this.positionMap.put(historyKey, Integer.valueOf(i - 1));
   }
   
-  public final void incrementPosition(String str) {
-    if (!this.positionMap.containsKey(str))
-      initHistory(str); 
-    int i = ((Integer)this.positionMap.get(str)).intValue();
-    this.positionMap.put(str, Integer.valueOf(i + 1));
+  public final void incrementPosition(String historyKey) {
+    if (!this.positionMap.containsKey(historyKey))
+      initHistory(historyKey); 
+    int i = ((Integer)this.positionMap.get(historyKey)).intValue();
+    this.positionMap.put(historyKey, Integer.valueOf(i + 1));
   }
   
-  public void initHistory(String str) {
-    this.historyMap.put(str, new ArrayList<HistoryBlockBean>());
-    this.positionMap.put(str, Integer.valueOf(0));
+  public void initHistory(String historyKey) {
+    this.historyMap.put(historyKey, new ArrayList<HistoryBlockBean>());
+    this.positionMap.put(historyKey, Integer.valueOf(0));
   }
   
-  public boolean canRedo(String str) {
-    return !this.positionMap.containsKey(str) ? false : ((((Integer)this.positionMap.get(str)).intValue() < ((ArrayList)this.historyMap.get(str)).size()));
+  public boolean canRedo(String historyKey) {
+    return !this.positionMap.containsKey(historyKey) ? false : ((((Integer)this.positionMap.get(historyKey)).intValue() < ((ArrayList)this.historyMap.get(historyKey)).size()));
   }
   
-  public boolean canUndo(String str) {
-    return !this.positionMap.containsKey(str) ? false : ((((Integer)this.positionMap.get(str)).intValue() > 0));
+  public boolean canUndo(String historyKey) {
+    return !this.positionMap.containsKey(historyKey) ? false : ((((Integer)this.positionMap.get(historyKey)).intValue() > 0));
   }
   
-  public HistoryBlockBean redo(String str) {
-    if (!canRedo(str))
+  public HistoryBlockBean redo(String historyKey) {
+    if (!canRedo(historyKey))
       return null; 
-    int i = ((Integer)this.positionMap.get(str)).intValue();
-    incrementPosition(str);
-    return ((HistoryBlockBean)((ArrayList<HistoryBlockBean>)this.historyMap.get(str)).get(i - 1 + 1)).clone();
+    int i = ((Integer)this.positionMap.get(historyKey)).intValue();
+    incrementPosition(historyKey);
+    return ((HistoryBlockBean)((ArrayList<HistoryBlockBean>)this.historyMap.get(historyKey)).get(i - 1 + 1)).clone();
   }
   
-  public HistoryBlockBean undo(String str) {
-    if (!canUndo(str))
+  public HistoryBlockBean undo(String historyKey) {
+    if (!canUndo(historyKey))
       return null; 
-    int i = ((Integer)this.positionMap.get(str)).intValue();
-    decrementPosition(str);
-    return ((HistoryBlockBean)((ArrayList<HistoryBlockBean>)this.historyMap.get(str)).get(i - 1)).clone();
+    int i = ((Integer)this.positionMap.get(historyKey)).intValue();
+    decrementPosition(historyKey);
+    return ((HistoryBlockBean)((ArrayList<HistoryBlockBean>)this.historyMap.get(historyKey)).get(i - 1)).clone();
   }
 }
