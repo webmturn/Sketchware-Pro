@@ -16,11 +16,6 @@ public class ClassInfo {
         return className;
     }
 
-    // keeping this method, because it's used in pro.sketchware.core.ProjectDataStore
-    public String a() {
-        return className;
-    }
-
     public boolean isAssignableFrom(ClassInfo gx) {
         return matchesType(gx.className);
     }

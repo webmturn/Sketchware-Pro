@@ -334,7 +334,7 @@ public class ProjectDataStore {
               if (j >= 0) {
                 BlockBean blockBean = arrayList2.get(j);
                 ClassInfo gx = blockBean.getClassInfo();
-                if (gx != null && gx.isExactType(paramViewBean.getClassInfo().a()) && blockBean.spec.equals(paramViewBean.id)) {
+                if (gx != null && gx.isExactType(paramViewBean.getClassInfo().getClassName()) && blockBean.spec.equals(paramViewBean.id)) {
                   arrayList2.remove(j);
                   i = j;
                   continue;
@@ -497,7 +497,7 @@ public class ProjectDataStore {
         if (j >= 0) {
           BlockBean blockBean = arrayList.get(j);
           ClassInfo gx = blockBean.getClassInfo();
-          if (gx != null && gx.isExactType(paramGx.a()) && blockBean.spec.equals(paramString2)) {
+          if (gx != null && gx.isExactType(paramGx.getClassName()) && blockBean.spec.equals(paramString2)) {
             arrayList.remove(j);
             i = j;
             continue;
