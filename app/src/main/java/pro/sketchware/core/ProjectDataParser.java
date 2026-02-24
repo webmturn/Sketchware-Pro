@@ -20,20 +20,20 @@ public class ProjectDataParser {
   
   public Gson gson = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
   
-  public ProjectDataParser(String str) throws Exception {
+  public ProjectDataParser(String key) throws Exception {
     try {
-      parseKey(str);
+      parseKey(key);
       return;
     } catch (Exception exception) {
       throw exception;
     } 
   }
   
-  public static ArrayList<BlockBean> parseBlockBeans(Gson gson, String str) {
+  public static ArrayList<BlockBean> parseBlockBeans(Gson gson, String data) {
     ArrayList<BlockBean> result = new ArrayList<>();
     java.io.BufferedReader reader = null;
     try {
-      reader = new java.io.BufferedReader(new java.io.StringReader(str));
+      reader = new java.io.BufferedReader(new java.io.StringReader(data));
       String line;
       while ((line = reader.readLine()) != null) {
         if (line.trim().length() <= 0) continue;
@@ -48,11 +48,11 @@ public class ProjectDataParser {
     return result;
   }
   
-  public static ArrayList<ViewBean> parseViewBeans(Gson gson, String str) {
+  public static ArrayList<ViewBean> parseViewBeans(Gson gson, String data) {
     ArrayList<ViewBean> result = new ArrayList<>();
     java.io.BufferedReader reader = null;
     try {
-      reader = new java.io.BufferedReader(new java.io.StringReader(str));
+      reader = new java.io.BufferedReader(new java.io.StringReader(data));
       String line;
       while ((line = reader.readLine()) != null) {
         if (line.trim().length() <= 0) continue;
@@ -71,39 +71,39 @@ public class ProjectDataParser {
     return this.dataType;
   }
   
-  public <T> T parseData(String str) {
+  public <T> T parseData(String data) {
     switch (KeyboardSettingConstants.VALUES[this.dataType.ordinal()]) {
       default:
         return null;
       case 8:
-        return (T)parseBlockBeans(this.gson, str);
+        return (T)parseBlockBeans(this.gson, data);
       case 7:
-        return (T)parseMoreBlockFunctions(str);
+        return (T)parseMoreBlockFunctions(data);
       case 6:
-        return (T)parseEventBeans(str);
+        return (T)parseEventBeans(data);
       case 5:
-        return (T)parseComponentBeans(str);
+        return (T)parseComponentBeans(data);
       case 4:
-        return (T)parseListVariables(str);
+        return (T)parseListVariables(data);
       case 3:
-        return (T)parseVariables(str);
+        return (T)parseVariables(data);
       case 2:
-        return (T)parseFabViewBean(str);
+        return (T)parseFabViewBean(data);
       case 1:
         break;
     } 
-    return (T)parseViewBeans(this.gson, str);
+    return (T)parseViewBeans(this.gson, data);
   }
   
   public String getFileName() {
     return this.fileName;
   }
   
-  public ArrayList<ComponentBean> parseComponentBeans(String str) {
+  public ArrayList<ComponentBean> parseComponentBeans(String data) {
     ArrayList<ComponentBean> result = new ArrayList<>();
     java.io.BufferedReader reader = null;
     try {
-      reader = new java.io.BufferedReader(new java.io.StringReader(str));
+      reader = new java.io.BufferedReader(new java.io.StringReader(data));
       String line;
       while ((line = reader.readLine()) != null) {
         if (line.trim().length() <= 0) continue;
@@ -124,11 +124,11 @@ public class ProjectDataParser {
     return this.eventKey;
   }
   
-  public ArrayList<EventBean> parseEventBeans(String str) {
+  public ArrayList<EventBean> parseEventBeans(String data) {
     ArrayList<EventBean> result = new ArrayList<>();
     java.io.BufferedReader reader = null;
     try {
-      reader = new java.io.BufferedReader(new java.io.StringReader(str));
+      reader = new java.io.BufferedReader(new java.io.StringReader(data));
       String line;
       while ((line = reader.readLine()) != null) {
         if (line.trim().length() <= 0) continue;
@@ -145,15 +145,15 @@ public class ProjectDataParser {
     return result;
   }
   
-  public ViewBean parseFabViewBean(String str) {
-    return (str.trim().length() <= 0 || str.trim().charAt(0) != '{') ? new ViewBean("_fab", 16) : (ViewBean)this.gson.fromJson(str, ViewBean.class);
+  public ViewBean parseFabViewBean(String data) {
+    return (data.trim().length() <= 0 || data.trim().charAt(0) != '{') ? new ViewBean("_fab", 16) : (ViewBean)this.gson.fromJson(data, ViewBean.class);
   }
   
-  public ArrayList<Pair<String, String>> parseMoreBlockFunctions(String str) {
+  public ArrayList<Pair<String, String>> parseMoreBlockFunctions(String data) {
     ArrayList<Pair<String, String>> result = new ArrayList<>();
     java.io.BufferedReader reader = null;
     try {
-      reader = new java.io.BufferedReader(new java.io.StringReader(str));
+      reader = new java.io.BufferedReader(new java.io.StringReader(data));
       String line;
       while ((line = reader.readLine()) != null) {
         if (line.trim().length() <= 0) continue;
@@ -252,11 +252,11 @@ public class ProjectDataParser {
     } 
   }
   
-  public ArrayList<Pair<Integer, String>> parseListVariables(String str) {
+  public ArrayList<Pair<Integer, String>> parseListVariables(String data) {
     ArrayList<Pair<Integer, String>> result = new ArrayList<>();
     java.io.BufferedReader reader = null;
     try {
-      reader = new java.io.BufferedReader(new java.io.StringReader(str));
+      reader = new java.io.BufferedReader(new java.io.StringReader(data));
       String line;
       while ((line = reader.readLine()) != null) {
         if (line.trim().length() <= 0) continue;
@@ -273,11 +273,11 @@ public class ProjectDataParser {
     return result;
   }
   
-  public ArrayList<Pair<Integer, String>> parseVariables(String str) {
+  public ArrayList<Pair<Integer, String>> parseVariables(String data) {
     ArrayList<Pair<Integer, String>> result = new ArrayList<>();
     java.io.BufferedReader reader = null;
     try {
-      reader = new java.io.BufferedReader(new java.io.StringReader(str));
+      reader = new java.io.BufferedReader(new java.io.StringReader(data));
       String line;
       while ((line = reader.readLine()) != null) {
         if (line.trim().length() <= 0) continue;
