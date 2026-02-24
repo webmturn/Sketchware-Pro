@@ -95,14 +95,14 @@ public class SoundCollectionManager extends BaseCollectionManager {
   public void addResources(String input, ArrayList<ProjectResourceBean> list, boolean flag) throws CompileException {
     if (this.collections == null)
       initialize(); 
-    ArrayList<String> arrayList = new ArrayList<>();
+    ArrayList<String> duplicateNames = new ArrayList<>();
     for (CollectionBean collectionBean : this.collections) {
       for (ProjectResourceBean projectResourceBean : list) {
         if (collectionBean.name.equals(projectResourceBean.resName))
-          arrayList.add(collectionBean.name); 
+          duplicateNames.add(collectionBean.name); 
       } 
     } 
-    if (arrayList.size() <= 0) {
+    if (duplicateNames.size() <= 0) {
       ArrayList<String> failedNames = new ArrayList<>();
       for (ProjectResourceBean projectResourceBean : list) {
         String resolvedPath;
@@ -181,7 +181,7 @@ public class SoundCollectionManager extends BaseCollectionManager {
       throw yy1;
     } 
     CompileException CompileException = new CompileException("duplicate_name");
-    CompileException.setErrorDetails(arrayList);
+    CompileException.setErrorDetails(duplicateNames);
     throw CompileException;
   }
   
@@ -245,9 +245,9 @@ public class SoundCollectionManager extends BaseCollectionManager {
   public ArrayList<ProjectResourceBean> getResources() {
     if (this.collections == null)
       initialize(); 
-    ArrayList<ProjectResourceBean> arrayList = new ArrayList<>();
+    ArrayList<ProjectResourceBean> resources = new ArrayList<>();
     for (CollectionBean collectionBean : this.collections)
-      arrayList.add(new ProjectResourceBean(ProjectResourceBean.PROJECT_RES_TYPE_FILE, collectionBean.name, collectionBean.data)); 
-    return arrayList;
+      resources.add(new ProjectResourceBean(ProjectResourceBean.PROJECT_RES_TYPE_FILE, collectionBean.name, collectionBean.data)); 
+    return resources;
   }
 }

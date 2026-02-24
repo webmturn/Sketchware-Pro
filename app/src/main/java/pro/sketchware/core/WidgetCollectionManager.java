@@ -136,20 +136,20 @@ public class WidgetCollectionManager extends BaseCollectionManager {
       initialize(); 
     if (this.widgetGson == null)
       initializeGson(); 
-    ArrayList<WidgetCollectionBean> arrayList = new ArrayList<>();
+    ArrayList<WidgetCollectionBean> widgetCollections = new ArrayList<>();
     for (CollectionBean collectionBean : this.collections)
-      arrayList.add(new WidgetCollectionBean(collectionBean.name, ProjectDataParser.parseViewBeans(this.widgetGson, collectionBean.data))); 
-    return arrayList;
+      widgetCollections.add(new WidgetCollectionBean(collectionBean.name, ProjectDataParser.parseViewBeans(this.widgetGson, collectionBean.data))); 
+    return widgetCollections;
   }
   
   public ArrayList<String> getWidgetNames() {
     if (this.collections == null)
       initialize(); 
-    ArrayList<String> arrayList = new ArrayList<>();
+    ArrayList<String> widgetNames = new ArrayList<>();
     Iterator<CollectionBean> iterator = this.collections.iterator();
     while (iterator.hasNext())
-      arrayList.add(((CollectionBean)iterator.next()).name); 
-    return arrayList;
+      widgetNames.add(((CollectionBean)iterator.next()).name); 
+    return widgetNames;
   }
   
   public final void initializeGson() {

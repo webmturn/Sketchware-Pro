@@ -106,20 +106,20 @@ public class MoreBlockCollectionManager extends BaseCollectionManager {
       initialize(); 
     if (this.moreBlockGson == null)
       initializeGson(); 
-    ArrayList<MoreBlockCollectionBean> arrayList = new ArrayList<>();
+    ArrayList<MoreBlockCollectionBean> moreBlockCollections = new ArrayList<>();
     for (CollectionBean collectionBean : this.collections)
-      arrayList.add(new MoreBlockCollectionBean(collectionBean.name, collectionBean.reserved1, ProjectDataParser.parseBlockBeans(this.moreBlockGson, collectionBean.data))); 
-    return arrayList;
+      moreBlockCollections.add(new MoreBlockCollectionBean(collectionBean.name, collectionBean.reserved1, ProjectDataParser.parseBlockBeans(this.moreBlockGson, collectionBean.data))); 
+    return moreBlockCollections;
   }
   
   public ArrayList<String> getMoreBlockNames() {
     if (this.collections == null)
       initialize(); 
-    ArrayList<String> arrayList = new ArrayList<>();
+    ArrayList<String> moreBlockNames = new ArrayList<>();
     Iterator<CollectionBean> iterator = this.collections.iterator();
     while (iterator.hasNext())
-      arrayList.add(((CollectionBean)iterator.next()).name); 
-    return arrayList;
+      moreBlockNames.add(((CollectionBean)iterator.next()).name); 
+    return moreBlockNames;
   }
   
   public final void initializeGson() {

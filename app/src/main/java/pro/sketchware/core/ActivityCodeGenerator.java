@@ -162,8 +162,8 @@ public class ActivityCodeGenerator {
             return "";
         }
 
-        ArrayList<String> arrayList = param.get("OnResultBillingResponse");
-        return "if (!" + arrayList.get(0) + ".handleActivityResult(_requestCode, _resultCode, _data))";
+        ArrayList<String> billingParams = param.get("OnResultBillingResponse");
+        return "if (!" + billingParams.get(0) + ".handleActivityResult(_requestCode, _resultCode, _data))";
     }
 
     /**

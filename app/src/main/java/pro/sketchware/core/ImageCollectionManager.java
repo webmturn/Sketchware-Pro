@@ -150,9 +150,9 @@ public class ImageCollectionManager extends BaseCollectionManager {
   public ArrayList<ProjectResourceBean> getResources() {
     if (this.collections == null)
       initialize(); 
-    ArrayList<ProjectResourceBean> arrayList = new ArrayList<>();
+    ArrayList<ProjectResourceBean> resources = new ArrayList<>();
     for (CollectionBean collectionBean : this.collections)
-      arrayList.add(new ProjectResourceBean(ProjectResourceBean.PROJECT_RES_TYPE_FILE, collectionBean.name, collectionBean.data)); 
-    return arrayList;
+      resources.add(new ProjectResourceBean(ProjectResourceBean.PROJECT_RES_TYPE_FILE, collectionBean.name, collectionBean.data)); 
+    return resources;
   }
 }
