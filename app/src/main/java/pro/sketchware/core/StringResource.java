@@ -554,14 +554,14 @@ public class StringResource {
   }
   
   public void clearTranslations() {
-    HashMap<String, String> hashMap = this.blockTranslations;
-    if (hashMap != null) {
-      hashMap.clear();
+    HashMap<String, String> tempBlockTranslations = this.blockTranslations;
+    if (tempBlockTranslations != null) {
+      tempBlockTranslations.clear();
       this.blockTranslations = null;
     } 
-    hashMap = this.eventTranslations;
-    if (hashMap != null) {
-      hashMap.clear();
+    HashMap<String, String> tempEventTranslations = this.eventTranslations;
+    if (tempEventTranslations != null) {
+      tempEventTranslations.clear();
       this.eventTranslations = null;
     } 
   }
@@ -953,16 +953,16 @@ public class StringResource {
   }
   
   public HashMap<String, String> loadTranslationsFromFile(String filePath) {
-    HashMap<String, String> hashMap;
-    HashMap<Object, Object> emptyMap = new HashMap<Object, Object>();
+    HashMap<String, String> translations;
+    HashMap<Object, Object> fallback = new HashMap<Object, Object>();
     if (!(new File(filePath)).exists())
-      return (HashMap)emptyMap; 
+      return (HashMap)fallback; 
     try {
-      hashMap = parseXmlTranslations(filePath);
+      translations = parseXmlTranslations(filePath);
     } catch (Exception exception) {
-      hashMap = (HashMap)emptyMap;
+      translations = (HashMap)fallback;
     } 
-    return hashMap;
+    return translations;
   }
   
   public void loadBlockTranslation(Context context, String blockName) {
@@ -978,9 +978,9 @@ public class StringResource {
     boolean loadedSuccessfully;
     if (this.blockTranslations == null)
       this.blockTranslations = new HashMap<String, String>(); 
-    HashMap<String, String> hashMap = this.blockTranslations;
-    if (hashMap != null)
-      hashMap.clear(); 
+    HashMap<String, String> tempTranslations = this.blockTranslations;
+    if (tempTranslations != null)
+      tempTranslations.clear(); 
     this.blockTranslations = loadTranslationsFromFile(this.translationDir);
     loadEventTranslations(context);
     if (!this.blockTranslations.isEmpty() && this.isLoaded) {

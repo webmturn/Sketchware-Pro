@@ -67,13 +67,13 @@ public class SharedPrefsHelper {
   }
   
   public HashMap<String, Object> getAll() {
-    HashMap<Object, Object> hashMap;
+    HashMap<Object, Object> result;
     try {
-      hashMap = (HashMap)this.prefs.getAll();
+      result = (HashMap)this.prefs.getAll();
     } catch (Exception exception) {
-      hashMap = new HashMap<Object, Object>();
+      result = new HashMap<Object, Object>();
     } 
-    return (HashMap)hashMap;
+    return (HashMap)result;
   }
   
   public boolean getBooleanDefault(String value) {
