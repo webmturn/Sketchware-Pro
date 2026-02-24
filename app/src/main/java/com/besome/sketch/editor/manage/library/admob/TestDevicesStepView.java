@@ -85,10 +85,10 @@ public class TestDevicesStepView extends LinearLayout implements LibrarySettings
         projectLibraryBean.testDevices = testDevices;
     }
 
-    private String computeMd5Hash(String str) {
+    private String computeMd5Hash(String input) {
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("MD5");
-            messageDigest.update(str.getBytes());
+            messageDigest.update(input.getBytes());
             byte[] digest = messageDigest.digest();
             StringBuilder stringBuffer = new StringBuilder();
             for (byte b : digest) {

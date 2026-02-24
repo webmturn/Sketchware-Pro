@@ -279,9 +279,9 @@ public class ManageSoundImportActivity extends BaseAppCompatActivity implements 
         }
     }
 
-    private boolean isNameInUseByProjectSound(String str) {
+    private boolean isNameInUseByProjectSound(String soundName) {
         for (ProjectResourceBean projectSound : projectSounds) {
-            if (projectSound.resName.equals(str)) {
+            if (projectSound.resName.equals(soundName)) {
                 return true;
             }
         }

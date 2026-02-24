@@ -27,8 +27,8 @@ public class AdTestDeviceBean implements Parcelable {
         this("");
     }
 
-    public AdTestDeviceBean(String str) {
-        deviceId = str;
+    public AdTestDeviceBean(String id) {
+        deviceId = id;
     }
 
     public AdTestDeviceBean(Parcel parcel) {

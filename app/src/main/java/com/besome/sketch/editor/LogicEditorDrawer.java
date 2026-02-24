@@ -62,11 +62,11 @@ public class LogicEditorDrawer extends LinearLayout {
         favorite.removeAllViews();
     }
 
-    public View addBlockCollection(String str, ArrayList<BlockBean> arrayList) {
+    public View addBlockCollection(String collectionName, ArrayList<BlockBean> blocks) {
         DefinitionBlockView collectionBlock = null;
-        if (!arrayList.isEmpty()) {
-            BlockBean blockBean = arrayList.get(0);
-            collectionBlock = new DefinitionBlockView(getContext(), blockBean.type, blockBean.typeName, blockBean.opCode, str, arrayList);
+        if (!blocks.isEmpty()) {
+            BlockBean blockBean = blocks.get(0);
+            collectionBlock = new DefinitionBlockView(getContext(), blockBean.type, blockBean.typeName, blockBean.opCode, collectionName, blocks);
             favorite.addView(collectionBlock);
             View view = new View(getContext());
             view.setLayoutParams(new LinearLayout.LayoutParams(
@@ -78,10 +78,10 @@ public class LogicEditorDrawer extends LinearLayout {
         return collectionBlock;
     }
 
-    public void removeBlockCollection(String str) {
+    public void removeBlockCollection(String collectionName) {
         for (int i = 0; i < favorite.getChildCount(); i++) {
             View childAt = favorite.getChildAt(i);
-            if ((childAt instanceof DefinitionBlockView) && ((DefinitionBlockView) childAt).spec.equals(str)) {
+            if ((childAt instanceof DefinitionBlockView) && ((DefinitionBlockView) childAt).spec.equals(collectionName)) {
                 favorite.removeViewAt(i + 1);
                 favorite.removeViewAt(i);
             }

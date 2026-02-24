@@ -263,7 +263,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
         return SketchwarePaths.getCollectionPath() + File.separator + "sound" + File.separator + "data" + File.separator + editTarget.resFullName;
     }
 
-    private void loadSoundFromPath(String str) {
+    private void loadSoundFromPath(String soundPath) {
         try {
             if (mediaPlayer != null) {
                 if (progressTask != null) {
@@ -292,10 +292,10 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
                 binding.seek.setProgress(0);
                 binding.currentTime.setText("00 : 00");
             });
-            mediaPlayer.setDataSource(this, Uri.parse(str));
+            mediaPlayer.setDataSource(this, Uri.parse(soundPath));
             mediaPlayer.prepare();
             soundLoaded = true;
-            loadAlbumArt(str, binding.imgAlbum);
+            loadAlbumArt(soundPath, binding.imgAlbum);
             binding.layoutControl.setVisibility(View.VISIBLE);
             binding.layoutGuide.setVisibility(View.GONE);
         } catch (Exception e) {
@@ -362,17 +362,17 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
         }
     }
 
-    private void loadAlbumArt(String str, ImageView imageView) {
+    private void loadAlbumArt(String audioPath, ImageView imageView) {
         MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
         try {
-            mediaMetadataRetriever.setDataSource(str);
+            mediaMetadataRetriever.setDataSource(audioPath);
             if (mediaMetadataRetriever.getEmbeddedPicture() != null) {
                 Glide.with(this).load(mediaMetadataRetriever.getEmbeddedPicture()).centerCrop().into(imageView);
             } else {
                 imageView.setImageResource(R.drawable.default_album_art_200dp);
             }
         } catch (Exception e) {
-            Log.w("AddSoundCollectionActivity", "Failed to extract album art from audio file: " + str, e);
+            Log.w("AddSoundCollectionActivity", "Failed to extract album art from audio file: " + audioPath, e);
             imageView.setImageResource(R.drawable.default_album_art_200dp);
         } finally {
             try {
