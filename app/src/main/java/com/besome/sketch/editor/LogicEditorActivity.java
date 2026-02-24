@@ -135,7 +135,7 @@ import pro.sketchware.utility.SvgUtils;
 public class LogicEditorActivity extends BaseAppCompatActivity implements View.OnClickListener, BlockSizeListener, View.OnTouchListener, MoreblockImporterDialog.CallBack {
 
     private final Handler handler = new Handler(Looper.getMainLooper());
-    private final int[] v = new int[2];
+    private final int[] locationBuffer = new int[2];
     private final FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
     public ProjectFileBean projectFile;
     public PaletteBlock paletteBlock;
@@ -144,11 +144,11 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     public String id = "";
     public String eventName = "";
     private Vibrator vibrator;
-    private LinearLayout J, K;
+    private LinearLayout paletteLayout, paletteArea;
     private FloatingActionButton openBlocksMenuButton;
     private LogicTopMenu logicTopMenu;
     private LogicEditorDrawer editorDrawer;
-    private ObjectAnimator U, V, ba, ca, fa, ga;
+    private ObjectAnimator paletteShowAnimator, paletteHideAnimator, topMenuShowAnimator, topMenuHideAnimator, drawerShowAnimator, drawerHideAnimator;
     private ExtraPaletteBlock extraPaletteBlock;
     private ViewLogicEditor viewLogicEditor;
     private ViewDummy dummy;
@@ -156,11 +156,11 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     private ActivityResultLauncher<Intent> openResourcesEditor;
     private ActivityResultLauncher<Intent> makeBlockLauncher;
     private BlockView dragSourceParent;
-    private float posInitY, posInitX, s, t;
-    private int minDist, S, x, y;
-    private int T = -30;
+    private float posInitY, posInitX, touchOriginX, touchOriginY;
+    private int minDist, dummyOffsetX, dragConnectionType, dragParameterIndex;
+    private int dummyOffsetY = -30;
     private View currentTouchedView;
-    private boolean G, isDragged, W, X, da, ea, ha, ia;
+    private boolean isVibrationEnabled, isDragged, paletteAnimatorsInitialized, isPaletteVisible, topMenuAnimatorsInitialized, isTopMenuVisible, drawerAnimatorsInitialized, isDrawerVisible;
     private ArrayList<BlockBean> savedBlockBean = new ArrayList<>();
     private final Runnable longPressed = this::startDragMode;
     private Boolean isViewBindingEnabled;
@@ -192,7 +192,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         ArrayList<BlockBean> eventBlocks = ProjectDataManager.getProjectDataManager(scId).getBlocks(projectFile.getJavaName(), id + "_" + eventName);
         if (eventBlocks != null) {
             if (eventBlocks.isEmpty()) {
-                runOnUiThread(() -> togglePaletteVisibility(X));
+                runOnUiThread(() -> togglePaletteVisibility(isPaletteVisible));
             }
 
             ArrayList<BlockView> createdBlocks = new ArrayList<>();
@@ -678,8 +678,8 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
     public void trackDragSource(BlockView rs) {
         dragSourceParent = null;
-        y = -1;
-        x = 0;
+        dragParameterIndex = -1;
+        dragConnectionType = 0;
         int[] iArr = new int[2];
         BlockView rs2 = rs.parentBlock;
         if (rs2 != null) {
@@ -693,14 +693,14 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             return;
         }
         if (rs3.ha == (Integer) rs.getTag()) {
-            x = 0;
+            dragConnectionType = 0;
         } else if (dragSourceParent.ia == (Integer) rs.getTag()) {
-            x = 2;
+            dragConnectionType = 2;
         } else if (dragSourceParent.ja == (Integer) rs.getTag()) {
-            x = 3;
+            dragConnectionType = 3;
         } else if (dragSourceParent.childViews.contains(rs)) {
-            x = 5;
-            y = dragSourceParent.childViews.indexOf(rs);
+            dragConnectionType = 5;
+            dragParameterIndex = dragSourceParent.childViews.indexOf(rs);
         }
     }
 
@@ -1496,19 +1496,19 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
     public void togglePaletteVisibility(boolean z) {
         ObjectAnimator objectAnimator;
-        if (!W) {
+        if (!paletteAnimatorsInitialized) {
             setupPaletteAnimators(getResources().getConfiguration().orientation);
         }
-        if (X == z) {
+        if (isPaletteVisible == z) {
             return;
         }
-        X = z;
+        isPaletteVisible = z;
         cancelPaletteAnimations();
         if (z) {
             toggleDrawerVisibility(false);
-            objectAnimator = U;
+            objectAnimator = paletteShowAnimator;
         } else {
-            objectAnimator = V;
+            objectAnimator = paletteHideAnimator;
         }
         objectAnimator.start();
         layoutEditorForOrientation(getResources().getConfiguration().orientation);
@@ -1518,7 +1518,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         LinearLayout.LayoutParams layoutParams;
         int a2;
         int i2 = ViewGroup.LayoutParams.MATCH_PARENT;
-        if (X) {
+        if (isPaletteVisible) {
             int width = getResources().getDisplayMetrics().widthPixels;
             int height = getResources().getDisplayMetrics().heightPixels;
             if (width <= height) {
@@ -1528,7 +1528,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 i2 = width - ((int) ViewUtil.dpToPx(this, 320.0f));
                 a2 = ViewGroup.LayoutParams.MATCH_PARENT;
             } else {
-                a2 = viewLogicEditor.getHeight() - K.getHeight();
+                a2 = viewLogicEditor.getHeight() - paletteArea.getHeight();
             }
             layoutParams = new LinearLayout.LayoutParams(i2, a2);
         } else {
@@ -1622,7 +1622,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         RelativeLayout.LayoutParams layoutParams;
         int orientation;
         if (2 == i) {
-            K.setLayoutParams(new LinearLayout.LayoutParams((int) ViewUtil.dpToPx(this, 320.0f), ViewGroup.LayoutParams.MATCH_PARENT));
+            paletteArea.setLayoutParams(new LinearLayout.LayoutParams((int) ViewUtil.dpToPx(this, 320.0f), ViewGroup.LayoutParams.MATCH_PARENT));
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.gravity = Gravity.CENTER | Gravity.BOTTOM;
             int dimension = (int) getResources().getDimension(R.dimen.action_button_margin);
@@ -1634,7 +1634,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             layoutParams.topMargin = DeviceUtil.getToolbarHeight(getContext());
             orientation = LinearLayout.HORIZONTAL;
         } else {
-            K.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) ViewUtil.dpToPx(this, 240.0f)));
+            paletteArea.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) ViewUtil.dpToPx(this, 240.0f)));
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.gravity = Gravity.CENTER | Gravity.RIGHT;
             int dimension2 = (int) getResources().getDimension(R.dimen.action_button_margin);
@@ -1645,55 +1645,55 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
             orientation = LinearLayout.VERTICAL;
         }
-        J.setOrientation(orientation);
-        J.setLayoutParams(layoutParams);
+        paletteLayout.setOrientation(orientation);
+        paletteLayout.setLayoutParams(layoutParams);
         setupPaletteAnimators(i);
         layoutEditorForOrientation(i);
     }
 
     public void toggleDrawerVisibility(boolean z) {
-        if (!ha) {
+        if (!drawerAnimatorsInitialized) {
             initDrawerAnimators();
         }
-        if (ia != z) {
-            ia = z;
+        if (isDrawerVisible != z) {
+            isDrawerVisible = z;
             cancelDrawerAnimations();
-            (z ? fa : ga).start();
+            (z ? drawerShowAnimator : drawerHideAnimator).start();
         }
     }
 
     public void setupPaletteAnimators(int i) {
-        boolean var2 = X;
+        boolean var2 = isPaletteVisible;
         if (i == 2) {
             if (!var2) {
-                J.setTranslationX(ViewUtil.dpToPx(this, 320.0F));
+                paletteLayout.setTranslationX(ViewUtil.dpToPx(this, 320.0F));
             } else {
-                J.setTranslationX(0.0F);
+                paletteLayout.setTranslationX(0.0F);
             }
-            J.setTranslationY(0.0F);
+            paletteLayout.setTranslationY(0.0F);
         } else {
             if (!var2) {
-                J.setTranslationX(0.0F);
-                J.setTranslationY(ViewUtil.dpToPx(this, 240.0F));
+                paletteLayout.setTranslationX(0.0F);
+                paletteLayout.setTranslationY(ViewUtil.dpToPx(this, 240.0F));
             } else {
-                J.setTranslationX(0.0F);
-                J.setTranslationY(0.0F);
+                paletteLayout.setTranslationX(0.0F);
+                paletteLayout.setTranslationY(0.0F);
             }
         }
 
         if (i == 2) {
-            U = ObjectAnimator.ofFloat(J, View.TRANSLATION_X, 0.0F);
-            V = ObjectAnimator.ofFloat(J, View.TRANSLATION_X, ViewUtil.dpToPx(this, 320.0F));
+            paletteShowAnimator = ObjectAnimator.ofFloat(paletteLayout, View.TRANSLATION_X, 0.0F);
+            paletteHideAnimator = ObjectAnimator.ofFloat(paletteLayout, View.TRANSLATION_X, ViewUtil.dpToPx(this, 320.0F));
         } else {
-            U = ObjectAnimator.ofFloat(J, View.TRANSLATION_Y, 0.0F);
-            V = ObjectAnimator.ofFloat(J, View.TRANSLATION_Y, ViewUtil.dpToPx(this, 240.0F));
+            paletteShowAnimator = ObjectAnimator.ofFloat(paletteLayout, View.TRANSLATION_Y, 0.0F);
+            paletteHideAnimator = ObjectAnimator.ofFloat(paletteLayout, View.TRANSLATION_Y, ViewUtil.dpToPx(this, 240.0F));
         }
 
-        U.setDuration(500L);
-        U.setInterpolator(new DecelerateInterpolator());
-        V.setDuration(300L);
-        V.setInterpolator(new DecelerateInterpolator());
-        W = true;
+        paletteShowAnimator.setDuration(500L);
+        paletteShowAnimator.setInterpolator(new DecelerateInterpolator());
+        paletteHideAnimator.setDuration(300L);
+        paletteHideAnimator.setInterpolator(new DecelerateInterpolator());
+        paletteAnimatorsInitialized = true;
     }
 
     public void showSoundPicker(FieldBlockView ss) {
@@ -1738,15 +1738,15 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         logicTopMenu.setCopyActive(false);
         logicTopMenu.setFavoriteActive(false);
         logicTopMenu.setDetailActive(false);
-        if (!da) {
+        if (!topMenuAnimatorsInitialized) {
             initTopMenuAnimators();
         }
-        if (ea == z) {
+        if (isTopMenuVisible == z) {
             return;
         }
-        ea = z;
+        isTopMenuVisible = z;
         cancelTopMenuAnimations();
-        (z ? ba : ca).start();
+        (z ? topMenuShowAnimator : topMenuHideAnimator).start();
     }
 
     public void showTypefaceSelector(FieldBlockView ss) {
@@ -1779,11 +1779,11 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public void cancelDrawerAnimations() {
-        if (fa.isRunning()) {
-            fa.cancel();
+        if (drawerShowAnimator.isRunning()) {
+            drawerShowAnimator.cancel();
         }
-        if (ga.isRunning()) {
-            ga.cancel();
+        if (drawerHideAnimator.isRunning()) {
+            drawerHideAnimator.cancel();
         }
     }
 
@@ -1793,11 +1793,11 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public void cancelTopMenuAnimations() {
-        if (ba.isRunning()) {
-            ba.cancel();
+        if (topMenuShowAnimator.isRunning()) {
+            topMenuShowAnimator.cancel();
         }
-        if (ca.isRunning()) {
-            ca.cancel();
+        if (topMenuHideAnimator.isRunning()) {
+            topMenuHideAnimator.cancel();
         }
     }
 
@@ -1807,11 +1807,11 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public void cancelPaletteAnimations() {
-        if (U.isRunning()) {
-            U.cancel();
+        if (paletteShowAnimator.isRunning()) {
+            paletteShowAnimator.cancel();
         }
-        if (V.isRunning()) {
-            V.cancel();
+        if (paletteHideAnimator.isRunning()) {
+            paletteHideAnimator.cancel();
         }
     }
 
@@ -1900,11 +1900,11 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if (ia) {
+                if (isDrawerVisible) {
                     toggleDrawerVisibility(false);
                     return;
                 }
-                if (X) {
+                if (isPaletteVisible) {
                     togglePaletteVisibility(false);
                     return;
                 }
@@ -1949,7 +1949,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
         isViewBindingEnabled = new ProjectSettings(scId).getValue(ProjectSettings.SETTING_ENABLE_VIEWBINDING, "false").equals("true");
         projectFile = (ProjectFileBean) parcelable;
-        T = (int) ViewUtil.dpToPx(getContext(), (float) T);
+        dummyOffsetY = (int) ViewUtil.dpToPx(getContext(), (float) dummyOffsetY);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(v -> {
@@ -1957,7 +1957,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 getOnBackPressedDispatcher().onBackPressed();
             }
         });
-        G = new SharedPrefsHelper(getContext(), "P12").getBoolean("P12I0", true);
+        isVibrationEnabled = new SharedPrefsHelper(getContext(), "P12").getBoolean("P12I0", true);
         minDist = ViewConfiguration.get(getContext()).getScaledTouchSlop();
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         String eventText = getIntent().getStringExtra("event_text");
@@ -1969,10 +1969,10 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         dummy = findViewById(R.id.dummy);
         viewLogicEditor = findViewById(R.id.editor);
         blockPane = viewLogicEditor.getBlockPane();
-        J = findViewById(R.id.layout_palette);
-        K = findViewById(R.id.area_palette);
+        paletteLayout = findViewById(R.id.layout_palette);
+        paletteArea = findViewById(R.id.area_palette);
         openBlocksMenuButton = findViewById(R.id.fab_toggle_palette);
-        openBlocksMenuButton.setOnClickListener(v -> togglePaletteVisibility(!X));
+        openBlocksMenuButton.setOnClickListener(v -> togglePaletteVisibility(!isPaletteVisible));
         logicTopMenu = findViewById(R.id.top_menu);
         editorDrawer = findViewById(R.id.right_drawer);
         findViewById(R.id.search_header).setOnClickListener(v -> paletteSelector.showSearchDialog());
@@ -1995,7 +1995,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
         if (itemId == R.id.menu_block_helper) {
             togglePaletteVisibility(false);
-            toggleDrawerVisibility(!ia);
+            toggleDrawerVisibility(!isDrawerVisible);
         } else if (itemId == R.id.menu_logic_redo) {
             redo();
         } else if (itemId == R.id.menu_logic_undo) {
@@ -2103,8 +2103,8 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             handler.postDelayed(longPressed, ViewConfiguration.getLongPressTimeout() / 2);
             int[] locationOnScreen = new int[2];
             v.getLocationOnScreen(locationOnScreen);
-            s = locationOnScreen[0];
-            t = locationOnScreen[1];
+            touchOriginX = locationOnScreen[0];
+            touchOriginY = locationOnScreen[1];
             posInitX = event.getRawX();
             posInitY = event.getRawY();
             currentTouchedView = v;
@@ -2112,7 +2112,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
         if (actionMasked == MotionEvent.ACTION_MOVE) {
             if (!isDragged) {
-                if (Math.abs(posInitX - s - event.getX()) >= minDist || Math.abs(posInitY - t - event.getY()) >= minDist) {
+                if (Math.abs(posInitX - touchOriginX - event.getX()) >= minDist || Math.abs(posInitY - touchOriginY - event.getY()) >= minDist) {
                     currentTouchedView = null;
                     handler.removeCallbacks(longPressed);
                 }
@@ -2121,7 +2121,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             handler.removeCallbacks(longPressed);
             float rawX = event.getRawX();
             float rawY = event.getRawY();
-            dummy.updateDummyPosition(v, rawX - s, rawY - t, posInitX - s, posInitY - t, S, T);
+            dummy.updateDummyPosition(v, rawX - touchOriginX, rawY - touchOriginY, posInitX - touchOriginX, posInitY - touchOriginY, dummyOffsetX, dummyOffsetY);
             if (hitTestIconDelete(event.getRawX(), event.getRawY())) {
                 dummy.setAllow(true);
                 activeIconDelete(true);
@@ -2152,10 +2152,10 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 return true;
             }
             setDetailActive(false);
-            dummy.getDummyLocation(this.v);
-            if (viewLogicEditor.hitTest(this.v[0], this.v[1])) {
+            dummy.getDummyLocation(this.locationBuffer);
+            if (viewLogicEditor.hitTest(this.locationBuffer[0], this.locationBuffer[1])) {
                 dummy.setAllow(true);
-                blockPane.updateDragPreview((BlockView) v, this.v[0], this.v[1]);
+                blockPane.updateDragPreview((BlockView) currentTouchedView, this.locationBuffer[0], this.locationBuffer[1]);
             } else {
                 dummy.setAllow(false);
                 blockPane.hideActiveBlock();
@@ -2181,17 +2181,17 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 if (rs2.getBlockType() == 0) {
                     blockPane.setBlockTreeVisibility(rs2, 0);
                     if (dragSourceParent != null) {
-                        if (x == 0) {
+                        if (dragConnectionType == 0) {
                             dragSourceParent.ha = (Integer) v.getTag();
                         }
-                        if (x == 2) {
+                        if (dragConnectionType == 2) {
                             dragSourceParent.ia = (Integer) v.getTag();
                         }
-                        if (x == 3) {
+                        if (dragConnectionType == 3) {
                             dragSourceParent.ja = (Integer) v.getTag();
                         }
-                        if (x == 5) {
-                            dragSourceParent.replaceParameter((BaseBlockView) dragSourceParent.childViews.get(y), rs2);
+                        if (dragConnectionType == 5) {
+                            dragSourceParent.replaceParameter((BaseBlockView) dragSourceParent.childViews.get(dragParameterIndex), rs2);
                         }
                         rs2.parentBlock = dragSourceParent;
                         dragSourceParent.getRootBlock().layoutChain();
@@ -2216,14 +2216,14 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     BlockBean blockBean2;
                     if (dragSourceParent != null && id != -1) {
                         BlockBean clone = dragSourceParent.getBean().clone();
-                        if (x == 0) {
+                        if (dragConnectionType == 0) {
                             clone.nextBlock = id;
-                        } else if (x == 2) {
+                        } else if (dragConnectionType == 2) {
                             clone.subStack1 = id;
-                        } else if (x == 3) {
+                        } else if (dragConnectionType == 3) {
                             clone.subStack2 = id;
-                        } else if (x == 5) {
-                            clone.parameters.set(y, "@" + id);
+                        } else if (dragConnectionType == 5) {
+                            clone.parameters.set(dragParameterIndex, "@" + id);
                         }
                         blockBean2 = clone;
                     } else {
@@ -2240,7 +2240,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     }
                     int[] oLocationOnScreen = new int[2];
                     blockPane.getLocationOnScreen(oLocationOnScreen);
-                    BlockHistoryManager.getInstance(scId).recordRemove(buildHistoryKey(), arrayList, ((int) s) - oLocationOnScreen[0], ((int) t) - oLocationOnScreen[1], blockBean2, blockBean3);
+                    BlockHistoryManager.getInstance(scId).recordRemove(buildHistoryKey(), arrayList, ((int) touchOriginX) - oLocationOnScreen[0], ((int) touchOriginY) - oLocationOnScreen[1], blockBean2, blockBean3);
                     refreshOptionsMenu();
                 }
             } else if (logicTopMenu.isFavoriteActive) {
@@ -2248,17 +2248,17 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 BlockView rs7 = (BlockView) v;
                 blockPane.setBlockTreeVisibility(rs7, 0);
                 if (dragSourceParent != null) {
-                    if (x == 0) {
+                    if (dragConnectionType == 0) {
                         dragSourceParent.ha = (Integer) v.getTag();
                     }
-                    if (x == 2) {
+                    if (dragConnectionType == 2) {
                         dragSourceParent.ia = (Integer) v.getTag();
                     }
-                    if (x == 3) {
+                    if (dragConnectionType == 3) {
                         dragSourceParent.ja = (Integer) v.getTag();
                     }
-                    if (x == 5) {
-                        dragSourceParent.replaceParameter((BaseBlockView) dragSourceParent.childViews.get(y), rs7);
+                    if (dragConnectionType == 5) {
+                        dragSourceParent.replaceParameter((BaseBlockView) dragSourceParent.childViews.get(dragParameterIndex), rs7);
                     }
                     rs7.parentBlock = dragSourceParent;
                     dragSourceParent.getRootBlock().layoutChain();
@@ -2276,17 +2276,17 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 BlockView rs10 = (BlockView) v;
                 blockPane.setBlockTreeVisibility(rs10, 0);
                 if (dragSourceParent != null) {
-                    if (x == 0) {
+                    if (dragConnectionType == 0) {
                         dragSourceParent.ha = (Integer) v.getTag();
                     }
-                    if (x == 2) {
+                    if (dragConnectionType == 2) {
                         dragSourceParent.ia = (Integer) v.getTag();
                     }
-                    if (x == 3) {
+                    if (dragConnectionType == 3) {
                         dragSourceParent.ja = (Integer) v.getTag();
                     }
-                    if (x == 5) {
-                        dragSourceParent.replaceParameter((BaseBlockView) dragSourceParent.childViews.get(y), rs10);
+                    if (dragConnectionType == 5) {
+                        dragSourceParent.replaceParameter((BaseBlockView) dragSourceParent.childViews.get(dragParameterIndex), rs10);
                     }
                     rs10.parentBlock = dragSourceParent;
                     dragSourceParent.getRootBlock().layoutChain();
@@ -2334,18 +2334,18 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 BlockHistoryManager.getInstance(scId).recordAddMultiple(buildHistoryKey(), a3, width - oLocationOnScreen[0], a2 - oLocationOnScreen[1], null, null);
                 refreshOptionsMenu();
             } else if (v instanceof BlockView rs13) {
-                dummy.getDummyLocation(this.v);
+                dummy.getDummyLocation(this.locationBuffer);
                 if (rs13.getBlockType() == 1) {
                     int addTargetId = blockPane.getAddTargetId();
                     BlockBean clone3 = addTargetId >= 0 ? blockPane.findBlockById(addTargetId).getBean().clone() : null;
-                    BlockView a4 = dropBlockOnPane(rs13, this.v[0], this.v[1], false);
+                    BlockView a4 = dropBlockOnPane(rs13, this.locationBuffer[0], this.locationBuffer[1], false);
                     BlockBean blockBean3 = null;
                     if (addTargetId >= 0) {
                         blockBean3 = blockPane.findBlockById(addTargetId).getBean().clone();
                     }
                     int[] locationOnScreen = new int[2];
                     blockPane.getLocationOnScreen(locationOnScreen);
-                    BlockHistoryManager.getInstance(scId).recordAdd(buildHistoryKey(), a4.getBean().clone(), this.v[0] - locationOnScreen[0], this.v[1] - locationOnScreen[1], clone3, blockBean3);
+                    BlockHistoryManager.getInstance(scId).recordAdd(buildHistoryKey(), a4.getBean().clone(), this.locationBuffer[0] - locationOnScreen[0], this.locationBuffer[1] - locationOnScreen[1], clone3, blockBean3);
                     if (clone3 != null) {
                         clone3.print();
                     }
@@ -2356,17 +2356,17 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     int addTargetId2 = blockPane.getAddTargetId();
                     BlockBean clone5 = addTargetId2 >= 0 ? blockPane.findBlockById(addTargetId2).getBean().clone() : null;
                     ArrayList<BlockBean> data = ((DefinitionBlockView) v).getData();
-                    ArrayList<BlockBean> a5 = addBlockBeans(data, this.v[0], this.v[1], true);
+                    ArrayList<BlockBean> a5 = addBlockBeans(data, this.locationBuffer[0], this.locationBuffer[1], true);
                     if (!a5.isEmpty()) {
                         BlockView a6 = blockPane.findBlockByString(a5.get(0).id);
-                        dropBlockOnPane(a6, this.v[0], this.v[1], true);
+                        dropBlockOnPane(a6, this.locationBuffer[0], this.locationBuffer[1], true);
                         BlockBean blockBean3 = null;
                         if (addTargetId2 >= 0) {
                             blockBean3 = blockPane.findBlockById(addTargetId2).getBean().clone();
                         }
                         int[] locationOnScreen = new int[2];
                         blockPane.getLocationOnScreen(locationOnScreen);
-                        BlockHistoryManager.getInstance(scId).recordAddMultiple(buildHistoryKey(), a5, this.v[0] - locationOnScreen[0], this.v[1] - locationOnScreen[1], clone5, blockBean3);
+                        BlockHistoryManager.getInstance(scId).recordAddMultiple(buildHistoryKey(), a5, this.locationBuffer[0] - locationOnScreen[0], this.locationBuffer[1] - locationOnScreen[1], clone5, blockBean3);
                     }
                     blockPane.clearSnapState();
                 } else {
@@ -2375,14 +2375,14 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     BlockBean blockBean;
                     if (dragSourceParent != null) {
                         blockBean = dragSourceParent.getBean().clone();
-                        if (x == 0) {
+                        if (dragConnectionType == 0) {
                             blockBean.nextBlock = id;
-                        } else if (x == 2) {
+                        } else if (dragConnectionType == 2) {
                             blockBean.subStack1 = id;
-                        } else if (x == 3) {
+                        } else if (dragConnectionType == 3) {
                             blockBean.subStack2 = id;
-                        } else if (x == 5) {
-                            blockBean.parameters.set(y, "@" + id);
+                        } else if (dragConnectionType == 5) {
+                            blockBean.parameters.set(dragParameterIndex, "@" + id);
                         }
                     } else {
                         blockBean = null;
@@ -2394,7 +2394,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     for (BlockView rs : allChildren3) {
                         arrayList3.add(rs.getBean().clone());
                     }
-                    dropBlockOnPane(rs13, this.v[0], this.v[1], true);
+                    dropBlockOnPane(rs13, this.locationBuffer[0], this.locationBuffer[1], true);
                     ArrayList<BlockBean> arrayList4 = new ArrayList<>();
                     for (BlockView rs : allChildren3) {
                         arrayList4.add(rs.getBean().clone());
@@ -2409,7 +2409,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                         blockPane.getLocationOnScreen(locationOnScreen);
                         int x = locationOnScreen[0];
                         int y = locationOnScreen[1];
-                        BlockHistoryManager.getInstance(scId).recordMove(buildHistoryKey(), arrayList3, arrayList4, ((int) s) - x, ((int) t) - y, this.v[0] - x, this.v[1] - y, blockBean, clone7, clone6, blockBean3);
+                        BlockHistoryManager.getInstance(scId).recordMove(buildHistoryKey(), arrayList3, arrayList4, ((int) touchOriginX) - x, ((int) touchOriginY) - y, this.locationBuffer[0] - x, this.locationBuffer[1] - y, blockBean, clone7, clone6, blockBean3);
                     }
                     blockPane.clearSnapState();
                 }
@@ -2445,11 +2445,11 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             paletteBlock.setDragEnabled(false);
             viewLogicEditor.setScrollEnabled(false);
             editorDrawer.setDragEnabled(false);
-            if (ia) {
+            if (isDrawerVisible) {
                 toggleDrawerVisibility(false);
             }
 
-            if (G) {
+            if (isVibrationEnabled) {
                 vibrator.vibrate(100L);
             }
 
@@ -2472,13 +2472,13 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 blockPane.computeSnapPoints((BlockView) currentTouchedView);
             }
 
-            float a = posInitX - s;
-            float b = posInitY - t;
-            dummy.updateDummyPosition(currentTouchedView, a, b, a, b, S, T);
-            dummy.getDummyLocation(v);
-            if (viewLogicEditor.hitTest(v[0], v[1])) {
+            float a = posInitX - touchOriginX;
+            float b = posInitY - touchOriginY;
+            dummy.updateDummyPosition(currentTouchedView, a, b, a, b, dummyOffsetX, dummyOffsetY);
+            dummy.getDummyLocation(locationBuffer);
+            if (viewLogicEditor.hitTest(locationBuffer[0], locationBuffer[1])) {
                 dummy.setAllow(true);
-                blockPane.updateDragPreview((BlockView) currentTouchedView, v[0], v[1]);
+                blockPane.updateDragPreview((BlockView) currentTouchedView, locationBuffer[0], locationBuffer[1]);
             } else {
                 dummy.setAllow(false);
                 blockPane.hideActiveBlock();
@@ -2502,23 +2502,23 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public void initDrawerAnimators() {
-        fa = ObjectAnimator.ofFloat(editorDrawer, View.TRANSLATION_X, 0.0f);
-        fa.setDuration(500L);
-        fa.setInterpolator(new DecelerateInterpolator());
-        ga = ObjectAnimator.ofFloat(editorDrawer, View.TRANSLATION_X, editorDrawer.getHeight());
-        ga.setDuration(300L);
-        ga.setInterpolator(new DecelerateInterpolator());
-        ha = true;
+        drawerShowAnimator = ObjectAnimator.ofFloat(editorDrawer, View.TRANSLATION_X, 0.0f);
+        drawerShowAnimator.setDuration(500L);
+        drawerShowAnimator.setInterpolator(new DecelerateInterpolator());
+        drawerHideAnimator = ObjectAnimator.ofFloat(editorDrawer, View.TRANSLATION_X, editorDrawer.getHeight());
+        drawerHideAnimator.setDuration(300L);
+        drawerHideAnimator.setInterpolator(new DecelerateInterpolator());
+        drawerAnimatorsInitialized = true;
     }
 
     public void initTopMenuAnimators() {
-        ba = ObjectAnimator.ofFloat(logicTopMenu, View.TRANSLATION_Y, 0.0f);
-        ba.setDuration(500L);
-        ba.setInterpolator(new DecelerateInterpolator());
-        ca = ObjectAnimator.ofFloat(logicTopMenu, View.TRANSLATION_Y, logicTopMenu.getHeight() * (-1));
-        ca.setDuration(300L);
-        ca.setInterpolator(new DecelerateInterpolator());
-        da = true;
+        topMenuShowAnimator = ObjectAnimator.ofFloat(logicTopMenu, View.TRANSLATION_Y, 0.0f);
+        topMenuShowAnimator.setDuration(500L);
+        topMenuShowAnimator.setInterpolator(new DecelerateInterpolator());
+        topMenuHideAnimator = ObjectAnimator.ofFloat(logicTopMenu, View.TRANSLATION_Y, logicTopMenu.getHeight() * (-1));
+        topMenuHideAnimator.setDuration(300L);
+        topMenuHideAnimator.setInterpolator(new DecelerateInterpolator());
+        topMenuAnimatorsInitialized = true;
     }
 
     public void loadBlockCollections() {
