@@ -100,28 +100,28 @@ public class LogicEditorScrollView extends FrameLayout {
             if (lastPosY < 0.0f) {
                 lastPosY = y;
             }
-            int i2 = (int) (lastPosX - x);
-            int i3 = (int) (lastPosY - y);
+            int deltaX = (int) (lastPosX - x);
+            int deltaY = (int) (lastPosY - y);
             lastPosX = x;
             lastPosY = y;
-            if (i2 <= 0) {
+            if (deltaX <= 0) {
                 if (getScrollX() <= 0) {
-                    i2 = 0;
+                    deltaX = 0;
                 }
-                min = Math.max(-getScrollX(), i2);
+                min = Math.max(-getScrollX(), deltaX);
             } else {
                 int right = ((child.getRight() - getScrollX()) - getWidth()) - getPaddingRight();
-                min = right > 0 ? Math.min(right, i2) : 0;
+                min = right > 0 ? Math.min(right, deltaX) : 0;
             }
-            if (i3 <= 0) {
+            if (deltaY <= 0) {
                 if (getScrollY() <= 0) {
-                    i3 = 0;
+                    deltaY = 0;
                 }
-                i = Math.max(-getScrollY(), i3);
+                i = Math.max(-getScrollY(), deltaY);
             } else {
                 int bottom = ((child.getBottom() - getScrollY()) - getHeight()) - getPaddingBottom();
                 if (bottom > 0) {
-                    i = Math.min(bottom, i3);
+                    i = Math.min(bottom, deltaY);
                 }
             }
             if (min != 0 || i != 0) {

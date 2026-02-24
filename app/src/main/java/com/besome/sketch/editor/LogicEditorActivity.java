@@ -1186,17 +1186,17 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             BlockBean bean = child.getBean();
             blockBean.copy(bean);
             blockBean.id = String.format("99%06d", Integer.valueOf(bean.id));
-            int i = bean.subStack1;
-            if (i > 0) {
-                blockBean.subStack1 = i + 99000000;
+            int subStack1Val = bean.subStack1;
+            if (subStack1Val > 0) {
+                blockBean.subStack1 = subStack1Val + 99000000;
             }
-            int i2 = bean.subStack2;
-            if (i2 > 0) {
-                blockBean.subStack2 = i2 + 99000000;
+            int subStack2Val = bean.subStack2;
+            if (subStack2Val > 0) {
+                blockBean.subStack2 = subStack2Val + 99000000;
             }
-            int i3 = bean.nextBlock;
-            if (i3 > 0) {
-                blockBean.nextBlock = i3 + 99000000;
+            int nextBlockVal = bean.nextBlock;
+            if (nextBlockVal > 0) {
+                blockBean.nextBlock = nextBlockVal + 99000000;
             }
             blockBean.parameters.clear();
             for (String next : bean.parameters) {
@@ -1516,8 +1516,8 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
     public void layoutEditorForOrientation(int i) {
         LinearLayout.LayoutParams layoutParams;
-        int a2;
-        int i2 = ViewGroup.LayoutParams.MATCH_PARENT;
+        int editorHeight;
+        int editorWidth = ViewGroup.LayoutParams.MATCH_PARENT;
         if (isPaletteVisible) {
             int width = getResources().getDisplayMetrics().widthPixels;
             int height = getResources().getDisplayMetrics().heightPixels;
@@ -1525,12 +1525,12 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 width = height;
             }
             if (2 == i) {
-                i2 = width - ((int) ViewUtil.dpToPx(this, 320.0f));
-                a2 = ViewGroup.LayoutParams.MATCH_PARENT;
+                editorWidth = width - ((int) ViewUtil.dpToPx(this, 320.0f));
+                editorHeight = ViewGroup.LayoutParams.MATCH_PARENT;
             } else {
-                a2 = viewLogicEditor.getHeight() - paletteArea.getHeight();
+                editorHeight = viewLogicEditor.getHeight() - paletteArea.getHeight();
             }
-            layoutParams = new LinearLayout.LayoutParams(i2, a2);
+            layoutParams = new LinearLayout.LayoutParams(editorWidth, editorHeight);
         } else {
             layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         }
