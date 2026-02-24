@@ -117,15 +117,15 @@ public class ProjectDataStore {
     String xmlName = fileBean.getXmlName();
     String javaName = fileBean.getJavaName();
     ArrayList<Object> arrayList = new ArrayList<>();
-    Iterator<Pair<Integer, String>> iterator1 = getVariables(javaName).iterator();
-    while (iterator1.hasNext())
-      arrayList.add(((Pair)iterator1.next()).second); 
-    iterator1 = getListVariables(javaName).iterator();
-    while (iterator1.hasNext())
-      arrayList.add(((Pair)iterator1.next()).second); 
-    iterator1 = (Iterator)getMoreBlocks(javaName).iterator();
-    while (iterator1.hasNext())
-      arrayList.add(((Pair)iterator1.next()).first); 
+    Iterator<Pair<Integer, String>> innerIterator = getVariables(javaName).iterator();
+    while (innerIterator.hasNext())
+      arrayList.add(((Pair)innerIterator.next()).second); 
+    innerIterator = getListVariables(javaName).iterator();
+    while (innerIterator.hasNext())
+      arrayList.add(((Pair)innerIterator.next()).second); 
+    innerIterator = (Iterator)getMoreBlocks(javaName).iterator();
+    while (innerIterator.hasNext())
+      arrayList.add(((Pair)innerIterator.next()).first); 
     Iterator<ViewBean> iterator = getViews(xmlName).iterator();
     while (iterator.hasNext())
       arrayList.add(((ViewBean)iterator.next()).id); 
@@ -202,45 +202,45 @@ public class ProjectDataStore {
     for (String str : viewKeysToRemove)
       this.viewMap.remove(str); 
     ArrayList<String> varKeysToRemove = new ArrayList<>();
-    Iterator<Map.Entry<String, ArrayList<Pair<Integer, String>>>> iterator4 = this.variableMap.entrySet().iterator();
-    while (iterator4.hasNext()) {
-      String str = (String)((Map.Entry)iterator4.next()).getKey();
+    Iterator<Map.Entry<String, ArrayList<Pair<Integer, String>>>> varEntryIterator = this.variableMap.entrySet().iterator();
+    while (varEntryIterator.hasNext()) {
+      String str = (String)((Map.Entry)varEntryIterator.next()).getKey();
       if (!paramhC.hasJavaName(str))
         varKeysToRemove.add(str); 
     } 
     for (String str : varKeysToRemove)
       this.variableMap.remove(str); 
     ArrayList<String> keysToRemove = new ArrayList<>();
-    Iterator iterator3 = this.listMap.entrySet().iterator();
-    while (iterator3.hasNext()) {
-      String str = (String)((Map.Entry)iterator3.next()).getKey();
+    Iterator listEntryIterator = this.listMap.entrySet().iterator();
+    while (listEntryIterator.hasNext()) {
+      String str = (String)((Map.Entry)listEntryIterator.next()).getKey();
       if (!paramhC.hasJavaName(str))
         keysToRemove.add(str); 
     } 
     for (String str : keysToRemove)
       this.listMap.remove(str); 
     keysToRemove = new ArrayList<String>();
-    Iterator iterator1 = this.moreBlockMap.entrySet().iterator();
-    while (iterator1.hasNext()) {
-      String str = (String)((Map.Entry)iterator1.next()).getKey();
+    Iterator innerIterator = this.moreBlockMap.entrySet().iterator();
+    while (innerIterator.hasNext()) {
+      String str = (String)((Map.Entry)innerIterator.next()).getKey();
       if (!paramhC.hasJavaName(str))
         keysToRemove.add(str); 
     } 
     for (String str : keysToRemove)
       this.moreBlockMap.remove(str); 
     ArrayList<String> compKeysToRemove = new ArrayList<>();
-    Iterator<Map.Entry<String, ArrayList<ComponentBean>>> iterator5 = this.componentMap.entrySet().iterator();
-    while (iterator5.hasNext()) {
-      String str = (String)((Map.Entry)iterator5.next()).getKey();
+    Iterator<Map.Entry<String, ArrayList<ComponentBean>>> compEntryIterator = this.componentMap.entrySet().iterator();
+    while (compEntryIterator.hasNext()) {
+      String str = (String)((Map.Entry)compEntryIterator.next()).getKey();
       if (!paramhC.hasJavaName(str))
         compKeysToRemove.add(str); 
     } 
     for (String str : compKeysToRemove)
       this.componentMap.remove(str); 
     ArrayList<String> eventKeysToRemove = new ArrayList<>();
-    Iterator iterator2 = this.eventMap.entrySet().iterator();
-    while (iterator2.hasNext()) {
-      String str = (String)((Map.Entry)iterator2.next()).getKey();
+    Iterator blockEntryIterator = this.eventMap.entrySet().iterator();
+    while (blockEntryIterator.hasNext()) {
+      String str = (String)((Map.Entry)blockEntryIterator.next()).getKey();
       if (!paramhC.hasJavaName(str))
         eventKeysToRemove.add(str); 
     } 
@@ -257,9 +257,9 @@ public class ProjectDataStore {
       while (iterator.hasNext()) {
         label128: for (BlockBean blockBean : (ArrayList<BlockBean>)((Map.Entry)iterator.next()).getValue()) {
           if (blockBean.opCode.equals("intentSetScreen")) {
-            Iterator<ProjectFileBean> iterator6 = paramhC.getActivities().iterator();
-            while (iterator6.hasNext()) {
-              if (((ProjectFileBean)iterator6.next()).getActivityName().equals(blockBean.parameters.get(1)))
+            Iterator<ProjectFileBean> activityIterator = paramhC.getActivities().iterator();
+            while (activityIterator.hasNext()) {
+              if (((ProjectFileBean)activityIterator.next()).getActivityName().equals(blockBean.parameters.get(1)))
                 continue label128; 
             } 
             blockBean.parameters.set(1, "");
@@ -275,9 +275,9 @@ public class ProjectDataStore {
     ArrayList arrayList = paramkC.getFontNames();
     Iterator iterator = this.blockMap.entrySet().iterator();
     while (iterator.hasNext()) {
-      Iterator iterator1 = ((HashMap)((Map.Entry)iterator.next()).getValue()).entrySet().iterator();
-      while (iterator1.hasNext()) {
-        for (BlockBean blockBean : (ArrayList<BlockBean>)((Map.Entry<String, ArrayList<BlockBean>>)iterator1.next()).getValue()) {
+      Iterator innerIterator = ((HashMap)((Map.Entry)iterator.next()).getValue()).entrySet().iterator();
+      while (innerIterator.hasNext()) {
+        for (BlockBean blockBean : (ArrayList<BlockBean>)((Map.Entry<String, ArrayList<BlockBean>>)innerIterator.next()).getValue()) {
           if ("setTypeface".equals(blockBean.opCode) && arrayList.indexOf(blockBean.parameters.get(1)) < 0)
             blockBean.parameters.set(1, "default_font"); 
         } 
@@ -776,24 +776,24 @@ public class ProjectDataStore {
   
   public void syncImages(ResourceManager paramkC) {
     ArrayList arrayList = paramkC.getImageNames();
-    Iterator iterator1 = this.viewMap.entrySet().iterator();
-    while (iterator1.hasNext()) {
-      for (ViewBean viewBean : (ArrayList<ViewBean>)((Map.Entry)iterator1.next()).getValue()) {
+    Iterator innerIterator = this.viewMap.entrySet().iterator();
+    while (innerIterator.hasNext()) {
+      for (ViewBean viewBean : (ArrayList<ViewBean>)((Map.Entry)innerIterator.next()).getValue()) {
         if (arrayList.indexOf(viewBean.layout.backgroundResource) < 0)
           viewBean.layout.backgroundResource = null; 
         if (arrayList.indexOf(viewBean.image.resName) < 0)
           viewBean.image.resName = "default_image"; 
       } 
     } 
-    iterator1 = this.fabMap.entrySet().iterator();
-    while (iterator1.hasNext()) {
-      ViewBean viewBean = (ViewBean)((Map.Entry)iterator1.next()).getValue();
+    innerIterator = this.fabMap.entrySet().iterator();
+    while (innerIterator.hasNext()) {
+      ViewBean viewBean = (ViewBean)((Map.Entry)innerIterator.next()).getValue();
       if (arrayList.indexOf(viewBean.image.resName) < 0)
         viewBean.image.resName = "NONE"; 
     } 
-    Iterator iterator2 = this.blockMap.entrySet().iterator();
-    while (iterator2.hasNext()) {
-      Iterator iterator = ((HashMap)((Map.Entry)iterator2.next()).getValue()).entrySet().iterator();
+    Iterator blockEntryIterator = this.blockMap.entrySet().iterator();
+    while (blockEntryIterator.hasNext()) {
+      Iterator iterator = ((HashMap)((Map.Entry)blockEntryIterator.next()).getValue()).entrySet().iterator();
       while (iterator.hasNext()) {
         for (BlockBean blockBean : (ArrayList<BlockBean>)((Map.Entry)iterator.next()).getValue()) {
           if ("setImage".equals(blockBean.opCode)) {
@@ -1002,9 +1002,9 @@ public class ProjectDataStore {
     ArrayList arrayList = paramkC.getSoundNames();
     Iterator iterator = this.blockMap.entrySet().iterator();
     while (iterator.hasNext()) {
-      Iterator iterator1 = ((HashMap)((Map.Entry)iterator.next()).getValue()).entrySet().iterator();
-      while (iterator1.hasNext()) {
-        for (BlockBean blockBean : (ArrayList<BlockBean>)((Map.Entry)iterator1.next()).getValue()) {
+      Iterator innerIterator = ((HashMap)((Map.Entry)iterator.next()).getValue()).entrySet().iterator();
+      while (innerIterator.hasNext()) {
+        for (BlockBean blockBean : (ArrayList<BlockBean>)((Map.Entry)innerIterator.next()).getValue()) {
           if (blockBean.opCode.equals("mediaplayerCreate") && arrayList.indexOf(blockBean.parameters.get(1)) < 0)
             blockBean.parameters.set(1, ""); 
           if (blockBean.opCode.equals("soundpoolLoad") && arrayList.indexOf(blockBean.parameters.get(1)) < 0)
