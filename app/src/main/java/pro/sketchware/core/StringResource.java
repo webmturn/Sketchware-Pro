@@ -44,15 +44,15 @@ public class StringResource {
     return instance;
   }
   
-  public String getTranslatedString(Context paramContext, int paramInt) {
-    return getTranslatedStringFromRes(paramContext.getResources(), paramInt);
+  public String getTranslatedString(Context context, int resId) {
+    return getTranslatedStringFromRes(context.getResources(), resId);
   }
   
-  public String getTranslatedStringFormatted(Context paramContext, int paramInt, Object... paramVarArgs) {
-    return getTranslatedStringFormattedFromRes(paramContext.getResources(), paramInt, paramVarArgs);
+  public String getTranslatedStringFormatted(Context context, int resId, Object... formatArgs) {
+    return getTranslatedStringFormattedFromRes(context.getResources(), resId, formatArgs);
   }
   
-  public String getEventTranslation(Context paramContext, String paramString) {
+  public String getEventTranslation(Context context, String eventKey) {
     if (this.blockTranslations == null)
       this.blockTranslations = new HashMap<String, String>(); 
     if (this.blockTranslations.isEmpty()) {
@@ -62,15 +62,15 @@ public class StringResource {
     if (this.eventTranslations == null)
       this.eventTranslations = new HashMap<String, String>(); 
     if (this.eventTranslations.isEmpty())
-      loadEventTranslations(paramContext); 
-    paramString = this.eventTranslations.get(paramString);
-    String str = paramString;
-    if (paramString == null)
+      loadEventTranslations(context); 
+    eventKey = this.eventTranslations.get(eventKey);
+    String str = eventKey;
+    if (eventKey == null)
       str = ""; 
     return str;
   }
   
-  public String getRootSpecTranslation(Context paramContext, String paramString1, String paramString2) {
+  public String getRootSpecTranslation(Context context, String blockType, String eventName) {
     if (this.blockTranslations == null)
       this.blockTranslations = new HashMap<String, String>(); 
     boolean bool = this.blockTranslations.isEmpty();
@@ -82,225 +82,225 @@ public class StringResource {
     if (this.eventTranslations == null)
       this.eventTranslations = new HashMap<String, String>(); 
     if (this.eventTranslations.isEmpty())
-      loadEventTranslations(paramContext); 
-    switch (paramString2.hashCode()) {
+      loadEventTranslations(context); 
+    switch (eventName.hashCode()) {
       default:
         b = -1;
         break;
       case 2087273080:
-        if (paramString2.equals("onFilesPicked")) {
+        if (eventName.equals("onFilesPicked")) {
           b = 28;
           break;
         } 
       case 1979400473:
-        if (paramString2.equals("onItemLongClicked")) {
+        if (eventName.equals("onItemLongClicked")) {
           b = 4;
           break;
         } 
       case 1803231982:
-        if (paramString2.equals("onMarkerClicked")) {
+        if (eventName.equals("onMarkerClicked")) {
           b = 40;
           break;
         } 
       case 1757061906:
-        if (paramString2.equals("onFilesPickedCancel")) {
+        if (eventName.equals("onFilesPickedCancel")) {
           b = 29;
           break;
         } 
       case 1710477203:
-        if (paramString2.equals("onPageStarted")) {
+        if (eventName.equals("onPageStarted")) {
           b = 6;
           break;
         } 
       case 1586033095:
-        if (paramString2.equals("onStopTrackingTouch")) {
+        if (eventName.equals("onStopTrackingTouch")) {
           b = 10;
           break;
         } 
       case 1395209852:
-        if (paramString2.equals("onDownloadSuccess")) {
+        if (eventName.equals("onDownloadSuccess")) {
           b = 23;
           break;
         } 
       case 1348605570:
-        if (paramString2.equals("onPictureTakenCancel")) {
+        if (eventName.equals("onPictureTakenCancel")) {
           b = 27;
           break;
         } 
       case 1348442836:
-        if (paramString2.equals("onDownloadProgress")) {
+        if (eventName.equals("onDownloadProgress")) {
           b = 21;
           break;
         } 
       case 1170737640:
-        if (paramString2.equals("onPictureTaken")) {
+        if (eventName.equals("onPictureTaken")) {
           b = 26;
           break;
         } 
       case 805710389:
-        if (paramString2.equals("onItemClicked")) {
+        if (eventName.equals("onItemClicked")) {
           b = 3;
           break;
         } 
       case 694589214:
-        if (paramString2.equals("onSpeechResult")) {
+        if (eventName.equals("onSpeechResult")) {
           b = 32;
           break;
         } 
       case 445802034:
-        if (paramString2.equals("onCancelled")) {
+        if (eventName.equals("onCancelled")) {
           b = 19;
           break;
         } 
       case 378110312:
-        if (paramString2.equals("onTextChanged")) {
+        if (eventName.equals("onTextChanged")) {
           b = 5;
           break;
         } 
       case 372583555:
-        if (paramString2.equals("onChildAdded")) {
+        if (eventName.equals("onChildAdded")) {
           b = 16;
           break;
         } 
       case 264008033:
-        if (paramString2.equals("onDataSent")) {
+        if (eventName.equals("onDataSent")) {
           b = 36;
           break;
         } 
       case 249705131:
-        if (paramString2.equals("onFailure")) {
+        if (eventName.equals("onFailure")) {
           b = 25;
           break;
         } 
       case 162093458:
-        if (paramString2.equals("onBindCustomView")) {
+        if (eventName.equals("onBindCustomView")) {
           b = 14;
           break;
         } 
       case 136827711:
-        if (paramString2.equals("onAnimationCancel")) {
+        if (eventName.equals("onAnimationCancel")) {
           b = 13;
           break;
         } 
       case 80616227:
-        if (paramString2.equals("onUploadSuccess")) {
+        if (eventName.equals("onUploadSuccess")) {
           b = 22;
           break;
         } 
       case -376002870:
-        if (paramString2.equals("onErrorResponse")) {
+        if (eventName.equals("onErrorResponse")) {
           b = 31;
           break;
         } 
       case -484536541:
-        if (paramString2.equals("onChildRemoved")) {
+        if (eventName.equals("onChildRemoved")) {
           b = 18;
           break;
         } 
       case -505277536:
-        if (paramString2.equals("onPageFinished")) {
+        if (eventName.equals("onPageFinished")) {
           b = 7;
           break;
         } 
       case -507667891:
-        if (paramString2.equals("onItemSelected")) {
+        if (eventName.equals("onItemSelected")) {
           b = 2;
           break;
         } 
       case -584901992:
-        if (paramString2.equals("onCheckedChange")) {
+        if (eventName.equals("onCheckedChange")) {
           b = 1;
           break;
         } 
       case -609996822:
-        if (paramString2.equals("onConnected")) {
+        if (eventName.equals("onConnected")) {
           b = 34;
           break;
         } 
       case -672992515:
-        if (paramString2.equals("onAnimationStart")) {
+        if (eventName.equals("onAnimationStart")) {
           b = 11;
           break;
         } 
       case -719893013:
-        if (paramString2.equals("onConnectionError")) {
+        if (eventName.equals("onConnectionError")) {
           b = 37;
           break;
         } 
       case -732782352:
-        if (paramString2.equals("onConnectionStopped")) {
+        if (eventName.equals("onConnectionStopped")) {
           b = 38;
           break;
         } 
       case -749253875:
-        if (paramString2.equals("onUploadProgress")) {
+        if (eventName.equals("onUploadProgress")) {
           b = 20;
           break;
         } 
       case -821066400:
-        if (paramString2.equals("onLocationChanged")) {
+        if (eventName.equals("onLocationChanged")) {
           b = 41;
           break;
         } 
       case -837428873:
-        if (paramString2.equals("onChildChanged")) {
+        if (eventName.equals("onChildChanged")) {
           b = 17;
           break;
         } 
       case -891988931:
-        if (paramString2.equals("onDateChange")) {
+        if (eventName.equals("onDateChange")) {
           b = 15;
           break;
         } 
       case -1153785290:
-        if (paramString2.equals("onAnimationEnd")) {
+        if (eventName.equals("onAnimationEnd")) {
           b = 12;
           break;
         } 
       case -1215328199:
-        if (paramString2.equals("onDeleteSuccess")) {
+        if (eventName.equals("onDeleteSuccess")) {
           b = 24;
           break;
         } 
       case -1351902487:
-        if (paramString2.equals("onClick"))
+        if (eventName.equals("onClick"))
           break; 
       case -1358405466:
-        if (paramString2.equals("onMapReady")) {
+        if (eventName.equals("onMapReady")) {
           b = 39;
           break;
         } 
       case -1779618840:
-        if (paramString2.equals("onProgressChanged")) {
+        if (eventName.equals("onProgressChanged")) {
           b = 8;
           break;
         } 
       case -1809154262:
-        if (paramString2.equals("onDataReceived")) {
+        if (eventName.equals("onDataReceived")) {
           b = 35;
           break;
         } 
       case -1865337024:
-        if (paramString2.equals("onResponse")) {
+        if (eventName.equals("onResponse")) {
           b = 30;
           break;
         } 
       case -2067423513:
-        if (paramString2.equals("onSpeechError")) {
+        if (eventName.equals("onSpeechError")) {
           b = 33;
           break;
         } 
       case -2117913147:
-        if (paramString2.equals("onStartTrackingTouch")) {
+        if (eventName.equals("onStartTrackingTouch")) {
           b = 9;
           break;
         } 
     } 
     switch (b) {
       default:
-        String result = this.eventTranslations.get(paramString2);
+        String result = this.eventTranslations.get(eventName);
         if (result == null)
-          result = ManageEvent.getExtraEventSpec(paramString1, paramString2); 
+          result = ManageEvent.getExtraEventSpec(blockType, eventName); 
         return result;
       case 0:
       case 1:
@@ -346,21 +346,21 @@ public class StringResource {
       case 41:
         break;
     } 
-    String str = this.eventTranslations.get(paramString2);
-    paramString2 = str;
+    String str = this.eventTranslations.get(eventName);
+    eventName = str;
     if (str == null)
-      paramString2 = ""; 
+      eventName = ""; 
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(getTranslatedString(paramContext, R.string.root_spec_common_when));
+    stringBuilder.append(getTranslatedString(context, R.string.root_spec_common_when));
     stringBuilder.append(" ");
-    stringBuilder.append(paramString1);
+    stringBuilder.append(blockType);
     stringBuilder.append(" ");
-    stringBuilder.append(paramString2);
+    stringBuilder.append(eventName);
     return stringBuilder.toString();
   }
   
-  public String getBlockTranslation(Context paramContext, String paramString, ArrayList<String> paramArrayList) {
-    int bodyCount = paramArrayList.size() > 1 ? paramArrayList.size() - 1 : 0;
+  public String getBlockTranslation(Context context, String blockKeyPrefix, ArrayList<String> specParts) {
+    int bodyCount = specParts.size() > 1 ? specParts.size() - 1 : 0;
     if (this.blockTranslations == null)
       this.blockTranslations = new HashMap<String, String>();
     if (this.blockTranslations.isEmpty()) {
@@ -368,13 +368,13 @@ public class StringResource {
       this.blockTranslations = loadTranslationsFromFile(this.translationDir);
     }
     StringBuilder result = new StringBuilder(1024);
-    String headKey = paramString + "_head";
-    String tailKey = paramString + "_tail";
+    String headKey = blockKeyPrefix + "_head";
+    String tailKey = blockKeyPrefix + "_tail";
     boolean useTranslation = false;
     if (this.blockTranslations != null && this.blockTranslations.containsKey(headKey) && this.blockTranslations.containsKey(tailKey)) {
       useTranslation = true;
       for (int i = 0; i < bodyCount; i++) {
-        String bk = paramString + "_body_" + (i + 1);
+        String bk = blockKeyPrefix + "_body_" + (i + 1);
         if (!this.blockTranslations.containsKey(bk)) {
           useTranslation = false;
           break;
@@ -386,8 +386,8 @@ public class StringResource {
       headStr = (String) this.blockTranslations.get(headKey);
     } else {
       try {
-        headStr = paramContext.getResources().getString(
-            paramContext.getResources().getIdentifier(headKey, "string", paramContext.getPackageName()));
+        headStr = context.getResources().getString(
+            context.getResources().getIdentifier(headKey, "string", context.getPackageName()));
       } catch (Exception e) {
         headStr = "";
       }
@@ -395,20 +395,20 @@ public class StringResource {
     if (headStr == null) headStr = "";
     result.append(headStr);
     int bodyIdx = 0;
-    if (paramArrayList.size() > 0) {
+    if (specParts.size() > 0) {
       if (result.length() > 0) result.append(" ");
-      result.append((String) paramArrayList.get(0));
+      result.append((String) specParts.get(0));
     }
     while (bodyIdx < bodyCount) {
       bodyIdx++;
-      String bodyKey = paramString + "_body_" + bodyIdx;
+      String bodyKey = blockKeyPrefix + "_body_" + bodyIdx;
       String bodyStr;
       if (useTranslation) {
         bodyStr = (String) this.blockTranslations.get(bodyKey);
       } else {
         try {
-          bodyStr = paramContext.getResources().getString(
-              paramContext.getResources().getIdentifier(bodyKey, "string", paramContext.getPackageName()));
+          bodyStr = context.getResources().getString(
+              context.getResources().getIdentifier(bodyKey, "string", context.getPackageName()));
         } catch (Exception e) {
           bodyStr = "";
         }
@@ -417,15 +417,15 @@ public class StringResource {
       if (bodyStr.length() > 0) result.append(" ");
       result.append(bodyStr);
       if (result.length() > 0) result.append(" ");
-      result.append((String) paramArrayList.get(bodyIdx));
+      result.append((String) specParts.get(bodyIdx));
     }
     String tailStr;
     if (useTranslation) {
       tailStr = (String) this.blockTranslations.get(tailKey);
     } else {
       try {
-        tailStr = paramContext.getResources().getString(
-            paramContext.getResources().getIdentifier(tailKey, "string", paramContext.getPackageName()));
+        tailStr = context.getResources().getString(
+            context.getResources().getIdentifier(tailKey, "string", context.getPackageName()));
       } catch (Exception e) {
         tailStr = "";
       }
@@ -436,8 +436,8 @@ public class StringResource {
     return result.toString();
   }
   
-  public String getTranslatedStringFromRes(Resources paramResources, int paramInt) {
-    String str = paramResources.getResourceEntryName(paramInt);
+  public String getTranslatedStringFromRes(Resources resources, int resId) {
+    String str = resources.getResourceEntryName(resId);
     if (this.blockTranslations == null)
       this.blockTranslations = new HashMap<String, String>(); 
     try {
@@ -445,14 +445,14 @@ public class StringResource {
         this.isLoaded = false;
         this.blockTranslations = loadTranslationsFromFile(this.translationDir);
       } 
-      return (this.blockTranslations.containsKey(str) && this.blockTranslations.get(str) != null && ((String)this.blockTranslations.get(str)).length() > 0) ? ((String)this.blockTranslations.get(str)).replaceAll("\\\\\\'", "'").replaceAll("\\\\\\\"", "\"").replaceAll("\\\\n", "\\\n") : paramResources.getString(paramInt);
+      return (this.blockTranslations.containsKey(str) && this.blockTranslations.get(str) != null && ((String)this.blockTranslations.get(str)).length() > 0) ? ((String)this.blockTranslations.get(str)).replaceAll("\\\\\\'", "'").replaceAll("\\\\\\\"", "\"").replaceAll("\\\\n", "\\\n") : resources.getString(resId);
     } catch (Exception exception) {
-      return paramResources.getString(paramInt);
+      return resources.getString(resId);
     } 
   }
   
-  public String getTranslatedStringFormattedFromRes(Resources paramResources, int paramInt, Object... paramVarArgs) {
-    String str = paramResources.getResourceEntryName(paramInt);
+  public String getTranslatedStringFormattedFromRes(Resources resources, int resId, Object... formatArgs) {
+    String str = resources.getResourceEntryName(resId);
     if (this.blockTranslations == null)
       this.blockTranslations = new HashMap<String, String>(); 
     boolean bool = this.blockTranslations.isEmpty();
@@ -464,10 +464,10 @@ public class StringResource {
     try {
       if (this.blockTranslations.containsKey(str) && this.blockTranslations.get(str) != null && ((String)this.blockTranslations.get(str)).length() > 0) {
         String object = ((String)this.blockTranslations.get(str)).replaceAll("\\\\\\'", "'").replaceAll("\\\\\\\"", "\"").replaceAll("\\\\n", "\\\n");
-        int i = paramVarArgs.length;
+        int i = formatArgs.length;
         int j = 0;
         while (b < i) {
-          Object object1 = paramVarArgs[b];
+          Object object1 = formatArgs[b];
           int k = j;
           String object2 = object;
           if (object.contains("%")) {
@@ -482,7 +482,7 @@ public class StringResource {
           j = k;
           object = (String)object2;
         } 
-        if (j == paramVarArgs.length) {
+        if (j == formatArgs.length) {
           bool = object.contains("%");
           if (!bool)
             return (String)object; 
@@ -495,19 +495,19 @@ public class StringResource {
       stringBuilder.append(")");
       Log.e("ERROR", stringBuilder.toString(), exception);
     } 
-    return paramResources.getString(paramInt, paramVarArgs);
+    return resources.getString(resId, formatArgs);
   }
   
-  public final HashMap<String, String> parseXmlTranslations(String paramString) {
+  public final HashMap<String, String> parseXmlTranslations(String filePath) {
     HashMap<String, String> result = new HashMap<String, String>();
-    if (!new java.io.File(paramString).exists()) {
+    if (!new java.io.File(filePath).exists()) {
       return result;
     }
     java.io.FileInputStream fis = null;
     java.io.InputStreamReader isr = null;
     try {
       org.xmlpull.v1.XmlPullParser parser = org.xmlpull.v1.XmlPullParserFactory.newInstance().newPullParser();
-      fis = new java.io.FileInputStream(paramString);
+      fis = new java.io.FileInputStream(filePath);
       isr = new java.io.InputStreamReader(fis, "UTF-8");
       parser.setInput(isr);
       int eventType = parser.getEventType();
@@ -566,415 +566,415 @@ public class StringResource {
     } 
   }
   
-  public void loadEventTranslations(Context paramContext) {
+  public void loadEventTranslations(Context context) {
     this.eventTranslations = new HashMap<String, String>();
-    loadEventSpecTranslation(paramContext, "initializeLogic");
-    loadEventSpecTranslation(paramContext, "onBackPressed");
-    loadEventSpecTranslation(paramContext, "onPostCreate");
-    loadEventSpecTranslation(paramContext, "onStart");
-    loadEventSpecTranslation(paramContext, "onStop");
-    loadEventSpecTranslation(paramContext, "onDestroy");
-    loadEventSpecTranslation(paramContext, "onResume");
-    loadEventSpecTranslation(paramContext, "onPause");
-    loadEventSpecTranslation(paramContext, "moreBlock");
-    loadEventSpecTranslation(paramContext, "onClick");
-    loadEventSpecTranslation(paramContext, "onCheckedChange");
-    loadEventSpecTranslation(paramContext, "onItemSelected");
-    loadEventSpecTranslation(paramContext, "onItemClicked");
-    loadEventSpecTranslation(paramContext, "onItemLongClicked");
-    loadEventSpecTranslation(paramContext, "onTextChanged");
-    loadEventSpecTranslation(paramContext, "onPageStarted");
-    loadEventSpecTranslation(paramContext, "onPageFinished");
-    loadEventSpecTranslation(paramContext, "onProgressChanged");
-    loadEventSpecTranslation(paramContext, "onStartTrackingTouch");
-    loadEventSpecTranslation(paramContext, "onStopTrackingTouch");
-    loadEventSpecTranslation(paramContext, "onAnimationStart");
-    loadEventSpecTranslation(paramContext, "onAnimationEnd");
-    loadEventSpecTranslation(paramContext, "onAnimationCancel");
-    loadEventSpecTranslation(paramContext, "onBindCustomView");
-    loadEventSpecTranslation(paramContext, "onDateChange");
-    loadEventSpecTranslation(paramContext, "onChildAdded");
-    loadEventSpecTranslation(paramContext, "onChildChanged");
-    loadEventSpecTranslation(paramContext, "onChildRemoved");
-    loadEventSpecTranslation(paramContext, "onCancelled");
-    loadEventSpecTranslation(paramContext, "onSensorChanged");
-    loadEventSpecTranslation(paramContext, "onCreateUserComplete");
-    loadEventSpecTranslation(paramContext, "onSignInUserComplete");
-    loadEventSpecTranslation(paramContext, "onResetPasswordEmailSent");
-    loadEventSpecTranslation(paramContext, "onUploadProgress");
-    loadEventSpecTranslation(paramContext, "onDownloadProgress");
-    loadEventSpecTranslation(paramContext, "onUploadSuccess");
-    loadEventSpecTranslation(paramContext, "onDownloadSuccess");
-    loadEventSpecTranslation(paramContext, "onDeleteSuccess");
-    loadEventSpecTranslation(paramContext, "onFailure");
-    loadEventSpecTranslation(paramContext, "onPictureTaken");
-    loadEventSpecTranslation(paramContext, "onPictureTakenCancel");
-    loadEventSpecTranslation(paramContext, "onFilesPicked");
-    loadEventSpecTranslation(paramContext, "onFilesPickedCancel");
-    loadEventSpecTranslation(paramContext, "onAdLoaded");
-    loadEventSpecTranslation(paramContext, "onAdFailedToLoad");
-    loadEventSpecTranslation(paramContext, "onAdOpened");
-    loadEventSpecTranslation(paramContext, "onAdClosed");
-    loadEventSpecTranslation(paramContext, "onResponse");
-    loadEventSpecTranslation(paramContext, "onErrorResponse");
-    loadEventSpecTranslation(paramContext, "onSpeechResult");
-    loadEventSpecTranslation(paramContext, "onSpeechError");
-    loadEventSpecTranslation(paramContext, "onConnected");
-    loadEventSpecTranslation(paramContext, "onDataReceived");
-    loadEventSpecTranslation(paramContext, "onDataSent");
-    loadEventSpecTranslation(paramContext, "onConnectionError");
-    loadEventSpecTranslation(paramContext, "onConnectionStopped");
-    loadEventSpecTranslation(paramContext, "onMapReady");
-    loadEventSpecTranslation(paramContext, "onMarkerClicked");
-    loadEventSpecTranslation(paramContext, "onLocationChanged");
-    loadBlockTranslation(paramContext, "viewOnClick");
-    loadBlockTranslation(paramContext, "setVarBoolean");
-    loadBlockTranslation(paramContext, "setVarInt");
-    loadBlockTranslation(paramContext, "increaseInt");
-    loadBlockTranslation(paramContext, "decreaseInt");
-    loadBlockTranslation(paramContext, "setVarString");
-    loadBlockTranslation(paramContext, "mapCreateNew");
-    loadBlockTranslation(paramContext, "mapPut");
-    loadBlockTranslation(paramContext, "mapGet");
-    loadBlockTranslation(paramContext, "mapContainKey");
-    loadBlockTranslation(paramContext, "mapRemoveKey");
-    loadBlockTranslation(paramContext, "mapSize");
-    loadBlockTranslation(paramContext, "mapClear");
-    loadBlockTranslation(paramContext, "mapIsEmpty");
-    loadBlockTranslation(paramContext, "mapGetAllKeys");
-    loadBlockTranslation(paramContext, "addListInt");
-    loadBlockTranslation(paramContext, "insertListInt");
-    loadBlockTranslation(paramContext, "deleteList");
-    loadBlockTranslation(paramContext, "getAtListInt");
-    loadBlockTranslation(paramContext, "indexListInt");
-    loadBlockTranslation(paramContext, "lengthList");
-    loadBlockTranslation(paramContext, "containListInt");
-    loadBlockTranslation(paramContext, "clearList");
-    loadBlockTranslation(paramContext, "addListStr");
-    loadBlockTranslation(paramContext, "insertListStr");
-    loadBlockTranslation(paramContext, "getAtListStr");
-    loadBlockTranslation(paramContext, "indexListStr");
-    loadBlockTranslation(paramContext, "containListStr");
-    loadBlockTranslation(paramContext, "addListMap");
-    loadBlockTranslation(paramContext, "insertListMap");
-    loadBlockTranslation(paramContext, "getAtListMap");
-    loadBlockTranslation(paramContext, "setListMap");
-    loadBlockTranslation(paramContext, "containListMap");
-    loadBlockTranslation(paramContext, "addMapToList");
-    loadBlockTranslation(paramContext, "insertMapToList");
-    loadBlockTranslation(paramContext, "getMapInList");
-    loadBlockTranslation(paramContext, "repeat");
-    loadBlockTranslation(paramContext, "forever");
-    loadBlockTranslation(paramContext, "break");
-    loadBlockTranslation(paramContext, "if");
-    loadBlockTranslation(paramContext, "ifElse");
-    loadBlockTranslation(paramContext, "else");
-    loadBlockTranslation(paramContext, "true");
-    loadBlockTranslation(paramContext, "false");
-    loadBlockTranslation(paramContext, "<");
-    loadBlockTranslation(paramContext, "=");
-    loadBlockTranslation(paramContext, ">");
-    loadBlockTranslation(paramContext, "&&");
-    loadBlockTranslation(paramContext, "||");
-    loadBlockTranslation(paramContext, "not");
-    loadBlockTranslation(paramContext, "+");
-    loadBlockTranslation(paramContext, "-");
-    loadBlockTranslation(paramContext, "*");
-    loadBlockTranslation(paramContext, "/");
-    loadBlockTranslation(paramContext, "%");
-    loadBlockTranslation(paramContext, "random");
-    loadBlockTranslation(paramContext, "stringLength");
-    loadBlockTranslation(paramContext, "stringJoin");
-    loadBlockTranslation(paramContext, "stringIndex");
-    loadBlockTranslation(paramContext, "stringLastIndex");
-    loadBlockTranslation(paramContext, "stringSub");
-    loadBlockTranslation(paramContext, "stringEquals");
-    loadBlockTranslation(paramContext, "stringContains");
-    loadBlockTranslation(paramContext, "stringReplace");
-    loadBlockTranslation(paramContext, "stringReplaceFirst");
-    loadBlockTranslation(paramContext, "stringReplaceAll");
-    loadBlockTranslation(paramContext, "toNumber");
-    loadBlockTranslation(paramContext, "trim");
-    loadBlockTranslation(paramContext, "toUpperCase");
-    loadBlockTranslation(paramContext, "toLowerCase");
-    loadBlockTranslation(paramContext, "toString");
-    loadBlockTranslation(paramContext, "toStringWithDecimal");
-    loadBlockTranslation(paramContext, "toStringFormat");
-    loadBlockTranslation(paramContext, "addSourceDirectly");
-    loadBlockTranslation(paramContext, "mapToStr");
-    loadBlockTranslation(paramContext, "strToMap");
-    loadBlockTranslation(paramContext, "listMapToStr");
-    loadBlockTranslation(paramContext, "strToListMap");
-    loadBlockTranslation(paramContext, "mathGetDip");
-    loadBlockTranslation(paramContext, "mathGetDisplayWidth");
-    loadBlockTranslation(paramContext, "mathGetDisplayHeight");
-    loadBlockTranslation(paramContext, "mathPi");
-    loadBlockTranslation(paramContext, "mathE");
-    loadBlockTranslation(paramContext, "mathPow");
-    loadBlockTranslation(paramContext, "mathMin");
-    loadBlockTranslation(paramContext, "mathMax");
-    loadBlockTranslation(paramContext, "mathSqrt");
-    loadBlockTranslation(paramContext, "mathAbs");
-    loadBlockTranslation(paramContext, "mathRound");
-    loadBlockTranslation(paramContext, "mathCeil");
-    loadBlockTranslation(paramContext, "mathFloor");
-    loadBlockTranslation(paramContext, "mathSin");
-    loadBlockTranslation(paramContext, "mathCos");
-    loadBlockTranslation(paramContext, "mathTan");
-    loadBlockTranslation(paramContext, "mathAsin");
-    loadBlockTranslation(paramContext, "mathAcos");
-    loadBlockTranslation(paramContext, "mathAtan");
-    loadBlockTranslation(paramContext, "mathExp");
-    loadBlockTranslation(paramContext, "mathLog");
-    loadBlockTranslation(paramContext, "mathLog10");
-    loadBlockTranslation(paramContext, "mathToRadian");
-    loadBlockTranslation(paramContext, "mathToDegree");
-    loadBlockTranslation(paramContext, "isDrawerOpen");
-    loadBlockTranslation(paramContext, "openDrawer");
-    loadBlockTranslation(paramContext, "closeDrawer");
-    loadBlockTranslation(paramContext, "viewOnClick");
-    loadBlockTranslation(paramContext, "setEnable");
-    loadBlockTranslation(paramContext, "getEnable");
-    loadBlockTranslation(paramContext, "setVisible");
-    loadBlockTranslation(paramContext, "setClickable");
-    loadBlockTranslation(paramContext, "setText");
-    loadBlockTranslation(paramContext, "setTypeface");
-    loadBlockTranslation(paramContext, "getText");
-    loadBlockTranslation(paramContext, "setBgColor");
-    loadBlockTranslation(paramContext, "setBgResource");
-    loadBlockTranslation(paramContext, "setTextColor");
-    loadBlockTranslation(paramContext, "setHint");
-    loadBlockTranslation(paramContext, "setHintTextColor");
-    loadBlockTranslation(paramContext, "setImage");
-    loadBlockTranslation(paramContext, "setColorFilter");
-    loadBlockTranslation(paramContext, "requestFocus");
-    loadBlockTranslation(paramContext, "setRotate");
-    loadBlockTranslation(paramContext, "getRotate");
-    loadBlockTranslation(paramContext, "setAlpha");
-    loadBlockTranslation(paramContext, "getAlpha");
-    loadBlockTranslation(paramContext, "setTranslationX");
-    loadBlockTranslation(paramContext, "getTranslationX");
-    loadBlockTranslation(paramContext, "setTranslationY");
-    loadBlockTranslation(paramContext, "getTranslationY");
-    loadBlockTranslation(paramContext, "setScaleX");
-    loadBlockTranslation(paramContext, "getScaleX");
-    loadBlockTranslation(paramContext, "setScaleY");
-    loadBlockTranslation(paramContext, "getScaleY");
-    loadBlockTranslation(paramContext, "getLocationX");
-    loadBlockTranslation(paramContext, "getLocationY");
-    loadBlockTranslation(paramContext, "setChecked");
-    loadBlockTranslation(paramContext, "getChecked");
-    loadBlockTranslation(paramContext, "setThumbResource");
-    loadBlockTranslation(paramContext, "setTrackResource");
-    loadBlockTranslation(paramContext, "listSetData");
-    loadBlockTranslation(paramContext, "listSetCustomViewData");
-    loadBlockTranslation(paramContext, "listRefresh");
-    loadBlockTranslation(paramContext, "listSetItemChecked");
-    loadBlockTranslation(paramContext, "listGetCheckedPosition");
-    loadBlockTranslation(paramContext, "listGetCheckedPositions");
-    loadBlockTranslation(paramContext, "listGetCheckedCount");
-    loadBlockTranslation(paramContext, "listSmoothScrollTo");
-    loadBlockTranslation(paramContext, "spnSetData");
-    loadBlockTranslation(paramContext, "spnRefresh");
-    loadBlockTranslation(paramContext, "spnSetSelection");
-    loadBlockTranslation(paramContext, "spnGetSelection");
-    loadBlockTranslation(paramContext, "webViewLoadUrl");
-    loadBlockTranslation(paramContext, "webViewGetUrl");
-    loadBlockTranslation(paramContext, "webViewSetCacheMode");
-    loadBlockTranslation(paramContext, "webViewCanGoBack");
-    loadBlockTranslation(paramContext, "webViewCanGoForward");
-    loadBlockTranslation(paramContext, "webViewGoBack");
-    loadBlockTranslation(paramContext, "webViewGoForward");
-    loadBlockTranslation(paramContext, "webViewClearCache");
-    loadBlockTranslation(paramContext, "webViewClearHistory");
-    loadBlockTranslation(paramContext, "webViewStopLoading");
-    loadBlockTranslation(paramContext, "webViewZoomIn");
-    loadBlockTranslation(paramContext, "webViewZoomOut");
-    loadBlockTranslation(paramContext, "calendarViewGetDate");
-    loadBlockTranslation(paramContext, "calendarViewSetDate");
-    loadBlockTranslation(paramContext, "calendarViewSetMinDate");
-    loadBlockTranslation(paramContext, "calnedarViewSetMaxDate");
-    loadBlockTranslation(paramContext, "adViewLoadAd");
-    loadBlockTranslation(paramContext, "mapViewSetMapType");
-    loadBlockTranslation(paramContext, "mapViewMoveCamera");
-    loadBlockTranslation(paramContext, "mapViewZoomTo");
-    loadBlockTranslation(paramContext, "mapViewZoomIn");
-    loadBlockTranslation(paramContext, "mapViewZoomOut");
-    loadBlockTranslation(paramContext, "mapViewAddMarker");
-    loadBlockTranslation(paramContext, "mapViewSetMarkerInfo");
-    loadBlockTranslation(paramContext, "mapViewSetMarkerPosition");
-    loadBlockTranslation(paramContext, "mapViewSetMarkerColor");
-    loadBlockTranslation(paramContext, "mapViewSetMarkerIcon");
-    loadBlockTranslation(paramContext, "mapViewSetMarkerVisible");
-    loadBlockTranslation(paramContext, "intentSetAction");
-    loadBlockTranslation(paramContext, "intentSetData");
-    loadBlockTranslation(paramContext, "intentSetScreen");
-    loadBlockTranslation(paramContext, "intentPutExtra");
-    loadBlockTranslation(paramContext, "intentSetFlags");
-    loadBlockTranslation(paramContext, "startActivity");
-    loadBlockTranslation(paramContext, "intentGetString");
-    loadBlockTranslation(paramContext, "finishActivity");
-    loadBlockTranslation(paramContext, "fileGetData");
-    loadBlockTranslation(paramContext, "fileSetData");
-    loadBlockTranslation(paramContext, "fileRemoveData");
-    loadBlockTranslation(paramContext, "calendarGetNow");
-    loadBlockTranslation(paramContext, "calendarAdd");
-    loadBlockTranslation(paramContext, "calendarSet");
-    loadBlockTranslation(paramContext, "calendarFormat");
-    loadBlockTranslation(paramContext, "calendarDiff");
-    loadBlockTranslation(paramContext, "calendarGetTime");
-    loadBlockTranslation(paramContext, "calendarSetTime");
-    loadBlockTranslation(paramContext, "vibratorAction");
-    loadBlockTranslation(paramContext, "timerAfter");
-    loadBlockTranslation(paramContext, "timerEvery");
-    loadBlockTranslation(paramContext, "timerCancel");
-    loadBlockTranslation(paramContext, "dialogSetTitle");
-    loadBlockTranslation(paramContext, "dialogSetMessage");
-    loadBlockTranslation(paramContext, "dialogOkButton");
-    loadBlockTranslation(paramContext, "dialogCancelButton");
-    loadBlockTranslation(paramContext, "dialogNeutralButton");
-    loadBlockTranslation(paramContext, "dialogShow");
-    loadBlockTranslation(paramContext, "dialogDismiss");
-    loadBlockTranslation(paramContext, "mediaplayerCreate");
-    loadBlockTranslation(paramContext, "mediaplayerStart");
-    loadBlockTranslation(paramContext, "mediaplayerPause");
-    loadBlockTranslation(paramContext, "mediaplayerSeek");
-    loadBlockTranslation(paramContext, "mediaplayerGetCurrent");
-    loadBlockTranslation(paramContext, "mediaplayerGetDuration");
-    loadBlockTranslation(paramContext, "mediaplayerIsPlaying");
-    loadBlockTranslation(paramContext, "mediaplayerSetLooping");
-    loadBlockTranslation(paramContext, "mediaplayerIsLooping");
-    loadBlockTranslation(paramContext, "mediaplayerReset");
-    loadBlockTranslation(paramContext, "mediaplayerRelease");
-    loadBlockTranslation(paramContext, "soundpoolCreate");
-    loadBlockTranslation(paramContext, "soundpoolLoad");
-    loadBlockTranslation(paramContext, "soundpoolStreamPlay");
-    loadBlockTranslation(paramContext, "soundpoolStreamStop");
-    loadBlockTranslation(paramContext, "objectanimatorSetTarget");
-    loadBlockTranslation(paramContext, "objectanimatorSetProperty");
-    loadBlockTranslation(paramContext, "objectanimatorSetValue");
-    loadBlockTranslation(paramContext, "objectanimatorSetFromTo");
-    loadBlockTranslation(paramContext, "objectanimatorSetDuration");
-    loadBlockTranslation(paramContext, "objectanimatorSetRepeatMode");
-    loadBlockTranslation(paramContext, "objectanimatorSetRepeatCount");
-    loadBlockTranslation(paramContext, "objectanimatorSetInterpolator");
-    loadBlockTranslation(paramContext, "objectanimatorStart");
-    loadBlockTranslation(paramContext, "objectanimatorCancel");
-    loadBlockTranslation(paramContext, "objectanimatorIsRunning");
-    loadBlockTranslation(paramContext, "firebaseAdd");
-    loadBlockTranslation(paramContext, "firebasePush");
-    loadBlockTranslation(paramContext, "firebaseGetPushKey");
-    loadBlockTranslation(paramContext, "firebaseDelete");
-    loadBlockTranslation(paramContext, "firebaseGetChildren");
-    loadBlockTranslation(paramContext, "firebaseauthCreateUser");
-    loadBlockTranslation(paramContext, "firebaseauthSignInUser");
-    loadBlockTranslation(paramContext, "firebaseauthSignInAnonymously");
-    loadBlockTranslation(paramContext, "firebaseauthIsLoggedIn");
-    loadBlockTranslation(paramContext, "firebaseauthGetCurrentUser");
-    loadBlockTranslation(paramContext, "firebaseauthGetUid");
-    loadBlockTranslation(paramContext, "firebaseauthResetPassword");
-    loadBlockTranslation(paramContext, "firebaseauthSignOutUser");
-    loadBlockTranslation(paramContext, "firebaseStartListen");
-    loadBlockTranslation(paramContext, "firebaseStopListen");
-    loadBlockTranslation(paramContext, "gyroscopeStartListen");
-    loadBlockTranslation(paramContext, "gyroscopeStopListen");
-    loadBlockTranslation(paramContext, "interstitialadCreate");
-    loadBlockTranslation(paramContext, "interstitialadLoadAd");
-    loadBlockTranslation(paramContext, "interstitialadShow");
-    loadBlockTranslation(paramContext, "firebasestorageUploadFile");
-    loadBlockTranslation(paramContext, "firebasestorageDownloadFile");
-    loadBlockTranslation(paramContext, "firebasestorageDelete");
-    loadBlockTranslation(paramContext, "camerastarttakepicture");
-    loadBlockTranslation(paramContext, "filepickerstartpickfiles");
-    loadBlockTranslation(paramContext, "requestnetworkSetParams");
-    loadBlockTranslation(paramContext, "requestnetworkSetHeaders");
-    loadBlockTranslation(paramContext, "requestnetworkStartRequestNetwork");
-    loadBlockTranslation(paramContext, "fileutildelete");
-    loadBlockTranslation(paramContext, "fileutilcopy");
-    loadBlockTranslation(paramContext, "fileutilwrite");
-    loadBlockTranslation(paramContext, "fileutilread");
-    loadBlockTranslation(paramContext, "fileutilmove");
-    loadBlockTranslation(paramContext, "fileutilisexist");
-    loadBlockTranslation(paramContext, "fileutilmakedir");
-    loadBlockTranslation(paramContext, "fileutillistdir");
-    loadBlockTranslation(paramContext, "fileutilisdir");
-    loadBlockTranslation(paramContext, "fileutilisfile");
-    loadBlockTranslation(paramContext, "fileutillength");
-    loadBlockTranslation(paramContext, "fileutilStartsWith");
-    loadBlockTranslation(paramContext, "fileutilEndsWith");
-    loadBlockTranslation(paramContext, "fileutilGetLastSegmentPath");
-    loadBlockTranslation(paramContext, "doToast");
-    loadBlockTranslation(paramContext, "copyToClipboard");
-    loadBlockTranslation(paramContext, "setTitle");
-    loadBlockTranslation(paramContext, "seekBarGetMax");
-    loadBlockTranslation(paramContext, "seekBarGetProgress");
-    loadBlockTranslation(paramContext, "seekBarSetMax");
-    loadBlockTranslation(paramContext, "seekBarSetProgress");
-    loadBlockTranslation(paramContext, "getExternalStorageDir");
-    loadBlockTranslation(paramContext, "getPackageDataDir");
-    loadBlockTranslation(paramContext, "getPublicDir");
-    loadBlockTranslation(paramContext, "resizeBitmapFileRetainRatio");
-    loadBlockTranslation(paramContext, "resizeBitmapFileToSquare");
-    loadBlockTranslation(paramContext, "resizeBitmapFileToCircle");
-    loadBlockTranslation(paramContext, "resizeBitmapFileWithRoundedBorder");
-    loadBlockTranslation(paramContext, "cropBitmapFileFromCenter");
-    loadBlockTranslation(paramContext, "rotateBitmapFile");
-    loadBlockTranslation(paramContext, "scaleBitmapFile");
-    loadBlockTranslation(paramContext, "skewBitmapFile");
-    loadBlockTranslation(paramContext, "setBitmapFileColorFilter");
-    loadBlockTranslation(paramContext, "setBitmapFileBrightness");
-    loadBlockTranslation(paramContext, "setBitmapFileContrast");
-    loadBlockTranslation(paramContext, "setImageFilePath");
-    loadBlockTranslation(paramContext, "setImageUrl");
-    loadBlockTranslation(paramContext, "getJpegRotate");
-    loadBlockTranslation(paramContext, "progressBarSetIndeterminate");
-    loadBlockTranslation(paramContext, "textToSpeechSetPitch");
-    loadBlockTranslation(paramContext, "textToSpeechSetSpeechRate");
-    loadBlockTranslation(paramContext, "textToSpeechSpeak");
-    loadBlockTranslation(paramContext, "textToSpeechIsSpeaking");
-    loadBlockTranslation(paramContext, "textToSpeechStop");
-    loadBlockTranslation(paramContext, "textToSpeechShutdown");
-    loadBlockTranslation(paramContext, "speechToTextStartListening");
-    loadBlockTranslation(paramContext, "speechToTextStopListening");
-    loadBlockTranslation(paramContext, "speechToTextShutdown");
-    loadBlockTranslation(paramContext, "bluetoothConnectReadyConnection");
-    loadBlockTranslation(paramContext, "bluetoothConnectReadyConnectionToUuid");
-    loadBlockTranslation(paramContext, "bluetoothConnectStartConnection");
-    loadBlockTranslation(paramContext, "bluetoothConnectStartConnectionToUuid");
-    loadBlockTranslation(paramContext, "bluetoothConnectStopConnection");
-    loadBlockTranslation(paramContext, "bluetoothConnectSendData");
-    loadBlockTranslation(paramContext, "bluetoothConnectIsBluetoothEnabled");
-    loadBlockTranslation(paramContext, "bluetoothConnectIsBluetoothActivated");
-    loadBlockTranslation(paramContext, "bluetoothConnectActivateBluetooth");
-    loadBlockTranslation(paramContext, "bluetoothConnectGetPairedDevices");
-    loadBlockTranslation(paramContext, "bluetoothConnectGetRandomUuid");
-    loadBlockTranslation(paramContext, "locationManagerRequestLocationUpdates");
-    loadBlockTranslation(paramContext, "locationManagerRemoveUpdates");
+    loadEventSpecTranslation(context, "initializeLogic");
+    loadEventSpecTranslation(context, "onBackPressed");
+    loadEventSpecTranslation(context, "onPostCreate");
+    loadEventSpecTranslation(context, "onStart");
+    loadEventSpecTranslation(context, "onStop");
+    loadEventSpecTranslation(context, "onDestroy");
+    loadEventSpecTranslation(context, "onResume");
+    loadEventSpecTranslation(context, "onPause");
+    loadEventSpecTranslation(context, "moreBlock");
+    loadEventSpecTranslation(context, "onClick");
+    loadEventSpecTranslation(context, "onCheckedChange");
+    loadEventSpecTranslation(context, "onItemSelected");
+    loadEventSpecTranslation(context, "onItemClicked");
+    loadEventSpecTranslation(context, "onItemLongClicked");
+    loadEventSpecTranslation(context, "onTextChanged");
+    loadEventSpecTranslation(context, "onPageStarted");
+    loadEventSpecTranslation(context, "onPageFinished");
+    loadEventSpecTranslation(context, "onProgressChanged");
+    loadEventSpecTranslation(context, "onStartTrackingTouch");
+    loadEventSpecTranslation(context, "onStopTrackingTouch");
+    loadEventSpecTranslation(context, "onAnimationStart");
+    loadEventSpecTranslation(context, "onAnimationEnd");
+    loadEventSpecTranslation(context, "onAnimationCancel");
+    loadEventSpecTranslation(context, "onBindCustomView");
+    loadEventSpecTranslation(context, "onDateChange");
+    loadEventSpecTranslation(context, "onChildAdded");
+    loadEventSpecTranslation(context, "onChildChanged");
+    loadEventSpecTranslation(context, "onChildRemoved");
+    loadEventSpecTranslation(context, "onCancelled");
+    loadEventSpecTranslation(context, "onSensorChanged");
+    loadEventSpecTranslation(context, "onCreateUserComplete");
+    loadEventSpecTranslation(context, "onSignInUserComplete");
+    loadEventSpecTranslation(context, "onResetPasswordEmailSent");
+    loadEventSpecTranslation(context, "onUploadProgress");
+    loadEventSpecTranslation(context, "onDownloadProgress");
+    loadEventSpecTranslation(context, "onUploadSuccess");
+    loadEventSpecTranslation(context, "onDownloadSuccess");
+    loadEventSpecTranslation(context, "onDeleteSuccess");
+    loadEventSpecTranslation(context, "onFailure");
+    loadEventSpecTranslation(context, "onPictureTaken");
+    loadEventSpecTranslation(context, "onPictureTakenCancel");
+    loadEventSpecTranslation(context, "onFilesPicked");
+    loadEventSpecTranslation(context, "onFilesPickedCancel");
+    loadEventSpecTranslation(context, "onAdLoaded");
+    loadEventSpecTranslation(context, "onAdFailedToLoad");
+    loadEventSpecTranslation(context, "onAdOpened");
+    loadEventSpecTranslation(context, "onAdClosed");
+    loadEventSpecTranslation(context, "onResponse");
+    loadEventSpecTranslation(context, "onErrorResponse");
+    loadEventSpecTranslation(context, "onSpeechResult");
+    loadEventSpecTranslation(context, "onSpeechError");
+    loadEventSpecTranslation(context, "onConnected");
+    loadEventSpecTranslation(context, "onDataReceived");
+    loadEventSpecTranslation(context, "onDataSent");
+    loadEventSpecTranslation(context, "onConnectionError");
+    loadEventSpecTranslation(context, "onConnectionStopped");
+    loadEventSpecTranslation(context, "onMapReady");
+    loadEventSpecTranslation(context, "onMarkerClicked");
+    loadEventSpecTranslation(context, "onLocationChanged");
+    loadBlockTranslation(context, "viewOnClick");
+    loadBlockTranslation(context, "setVarBoolean");
+    loadBlockTranslation(context, "setVarInt");
+    loadBlockTranslation(context, "increaseInt");
+    loadBlockTranslation(context, "decreaseInt");
+    loadBlockTranslation(context, "setVarString");
+    loadBlockTranslation(context, "mapCreateNew");
+    loadBlockTranslation(context, "mapPut");
+    loadBlockTranslation(context, "mapGet");
+    loadBlockTranslation(context, "mapContainKey");
+    loadBlockTranslation(context, "mapRemoveKey");
+    loadBlockTranslation(context, "mapSize");
+    loadBlockTranslation(context, "mapClear");
+    loadBlockTranslation(context, "mapIsEmpty");
+    loadBlockTranslation(context, "mapGetAllKeys");
+    loadBlockTranslation(context, "addListInt");
+    loadBlockTranslation(context, "insertListInt");
+    loadBlockTranslation(context, "deleteList");
+    loadBlockTranslation(context, "getAtListInt");
+    loadBlockTranslation(context, "indexListInt");
+    loadBlockTranslation(context, "lengthList");
+    loadBlockTranslation(context, "containListInt");
+    loadBlockTranslation(context, "clearList");
+    loadBlockTranslation(context, "addListStr");
+    loadBlockTranslation(context, "insertListStr");
+    loadBlockTranslation(context, "getAtListStr");
+    loadBlockTranslation(context, "indexListStr");
+    loadBlockTranslation(context, "containListStr");
+    loadBlockTranslation(context, "addListMap");
+    loadBlockTranslation(context, "insertListMap");
+    loadBlockTranslation(context, "getAtListMap");
+    loadBlockTranslation(context, "setListMap");
+    loadBlockTranslation(context, "containListMap");
+    loadBlockTranslation(context, "addMapToList");
+    loadBlockTranslation(context, "insertMapToList");
+    loadBlockTranslation(context, "getMapInList");
+    loadBlockTranslation(context, "repeat");
+    loadBlockTranslation(context, "forever");
+    loadBlockTranslation(context, "break");
+    loadBlockTranslation(context, "if");
+    loadBlockTranslation(context, "ifElse");
+    loadBlockTranslation(context, "else");
+    loadBlockTranslation(context, "true");
+    loadBlockTranslation(context, "false");
+    loadBlockTranslation(context, "<");
+    loadBlockTranslation(context, "=");
+    loadBlockTranslation(context, ">");
+    loadBlockTranslation(context, "&&");
+    loadBlockTranslation(context, "||");
+    loadBlockTranslation(context, "not");
+    loadBlockTranslation(context, "+");
+    loadBlockTranslation(context, "-");
+    loadBlockTranslation(context, "*");
+    loadBlockTranslation(context, "/");
+    loadBlockTranslation(context, "%");
+    loadBlockTranslation(context, "random");
+    loadBlockTranslation(context, "stringLength");
+    loadBlockTranslation(context, "stringJoin");
+    loadBlockTranslation(context, "stringIndex");
+    loadBlockTranslation(context, "stringLastIndex");
+    loadBlockTranslation(context, "stringSub");
+    loadBlockTranslation(context, "stringEquals");
+    loadBlockTranslation(context, "stringContains");
+    loadBlockTranslation(context, "stringReplace");
+    loadBlockTranslation(context, "stringReplaceFirst");
+    loadBlockTranslation(context, "stringReplaceAll");
+    loadBlockTranslation(context, "toNumber");
+    loadBlockTranslation(context, "trim");
+    loadBlockTranslation(context, "toUpperCase");
+    loadBlockTranslation(context, "toLowerCase");
+    loadBlockTranslation(context, "toString");
+    loadBlockTranslation(context, "toStringWithDecimal");
+    loadBlockTranslation(context, "toStringFormat");
+    loadBlockTranslation(context, "addSourceDirectly");
+    loadBlockTranslation(context, "mapToStr");
+    loadBlockTranslation(context, "strToMap");
+    loadBlockTranslation(context, "listMapToStr");
+    loadBlockTranslation(context, "strToListMap");
+    loadBlockTranslation(context, "mathGetDip");
+    loadBlockTranslation(context, "mathGetDisplayWidth");
+    loadBlockTranslation(context, "mathGetDisplayHeight");
+    loadBlockTranslation(context, "mathPi");
+    loadBlockTranslation(context, "mathE");
+    loadBlockTranslation(context, "mathPow");
+    loadBlockTranslation(context, "mathMin");
+    loadBlockTranslation(context, "mathMax");
+    loadBlockTranslation(context, "mathSqrt");
+    loadBlockTranslation(context, "mathAbs");
+    loadBlockTranslation(context, "mathRound");
+    loadBlockTranslation(context, "mathCeil");
+    loadBlockTranslation(context, "mathFloor");
+    loadBlockTranslation(context, "mathSin");
+    loadBlockTranslation(context, "mathCos");
+    loadBlockTranslation(context, "mathTan");
+    loadBlockTranslation(context, "mathAsin");
+    loadBlockTranslation(context, "mathAcos");
+    loadBlockTranslation(context, "mathAtan");
+    loadBlockTranslation(context, "mathExp");
+    loadBlockTranslation(context, "mathLog");
+    loadBlockTranslation(context, "mathLog10");
+    loadBlockTranslation(context, "mathToRadian");
+    loadBlockTranslation(context, "mathToDegree");
+    loadBlockTranslation(context, "isDrawerOpen");
+    loadBlockTranslation(context, "openDrawer");
+    loadBlockTranslation(context, "closeDrawer");
+    loadBlockTranslation(context, "viewOnClick");
+    loadBlockTranslation(context, "setEnable");
+    loadBlockTranslation(context, "getEnable");
+    loadBlockTranslation(context, "setVisible");
+    loadBlockTranslation(context, "setClickable");
+    loadBlockTranslation(context, "setText");
+    loadBlockTranslation(context, "setTypeface");
+    loadBlockTranslation(context, "getText");
+    loadBlockTranslation(context, "setBgColor");
+    loadBlockTranslation(context, "setBgResource");
+    loadBlockTranslation(context, "setTextColor");
+    loadBlockTranslation(context, "setHint");
+    loadBlockTranslation(context, "setHintTextColor");
+    loadBlockTranslation(context, "setImage");
+    loadBlockTranslation(context, "setColorFilter");
+    loadBlockTranslation(context, "requestFocus");
+    loadBlockTranslation(context, "setRotate");
+    loadBlockTranslation(context, "getRotate");
+    loadBlockTranslation(context, "setAlpha");
+    loadBlockTranslation(context, "getAlpha");
+    loadBlockTranslation(context, "setTranslationX");
+    loadBlockTranslation(context, "getTranslationX");
+    loadBlockTranslation(context, "setTranslationY");
+    loadBlockTranslation(context, "getTranslationY");
+    loadBlockTranslation(context, "setScaleX");
+    loadBlockTranslation(context, "getScaleX");
+    loadBlockTranslation(context, "setScaleY");
+    loadBlockTranslation(context, "getScaleY");
+    loadBlockTranslation(context, "getLocationX");
+    loadBlockTranslation(context, "getLocationY");
+    loadBlockTranslation(context, "setChecked");
+    loadBlockTranslation(context, "getChecked");
+    loadBlockTranslation(context, "setThumbResource");
+    loadBlockTranslation(context, "setTrackResource");
+    loadBlockTranslation(context, "listSetData");
+    loadBlockTranslation(context, "listSetCustomViewData");
+    loadBlockTranslation(context, "listRefresh");
+    loadBlockTranslation(context, "listSetItemChecked");
+    loadBlockTranslation(context, "listGetCheckedPosition");
+    loadBlockTranslation(context, "listGetCheckedPositions");
+    loadBlockTranslation(context, "listGetCheckedCount");
+    loadBlockTranslation(context, "listSmoothScrollTo");
+    loadBlockTranslation(context, "spnSetData");
+    loadBlockTranslation(context, "spnRefresh");
+    loadBlockTranslation(context, "spnSetSelection");
+    loadBlockTranslation(context, "spnGetSelection");
+    loadBlockTranslation(context, "webViewLoadUrl");
+    loadBlockTranslation(context, "webViewGetUrl");
+    loadBlockTranslation(context, "webViewSetCacheMode");
+    loadBlockTranslation(context, "webViewCanGoBack");
+    loadBlockTranslation(context, "webViewCanGoForward");
+    loadBlockTranslation(context, "webViewGoBack");
+    loadBlockTranslation(context, "webViewGoForward");
+    loadBlockTranslation(context, "webViewClearCache");
+    loadBlockTranslation(context, "webViewClearHistory");
+    loadBlockTranslation(context, "webViewStopLoading");
+    loadBlockTranslation(context, "webViewZoomIn");
+    loadBlockTranslation(context, "webViewZoomOut");
+    loadBlockTranslation(context, "calendarViewGetDate");
+    loadBlockTranslation(context, "calendarViewSetDate");
+    loadBlockTranslation(context, "calendarViewSetMinDate");
+    loadBlockTranslation(context, "calnedarViewSetMaxDate");
+    loadBlockTranslation(context, "adViewLoadAd");
+    loadBlockTranslation(context, "mapViewSetMapType");
+    loadBlockTranslation(context, "mapViewMoveCamera");
+    loadBlockTranslation(context, "mapViewZoomTo");
+    loadBlockTranslation(context, "mapViewZoomIn");
+    loadBlockTranslation(context, "mapViewZoomOut");
+    loadBlockTranslation(context, "mapViewAddMarker");
+    loadBlockTranslation(context, "mapViewSetMarkerInfo");
+    loadBlockTranslation(context, "mapViewSetMarkerPosition");
+    loadBlockTranslation(context, "mapViewSetMarkerColor");
+    loadBlockTranslation(context, "mapViewSetMarkerIcon");
+    loadBlockTranslation(context, "mapViewSetMarkerVisible");
+    loadBlockTranslation(context, "intentSetAction");
+    loadBlockTranslation(context, "intentSetData");
+    loadBlockTranslation(context, "intentSetScreen");
+    loadBlockTranslation(context, "intentPutExtra");
+    loadBlockTranslation(context, "intentSetFlags");
+    loadBlockTranslation(context, "startActivity");
+    loadBlockTranslation(context, "intentGetString");
+    loadBlockTranslation(context, "finishActivity");
+    loadBlockTranslation(context, "fileGetData");
+    loadBlockTranslation(context, "fileSetData");
+    loadBlockTranslation(context, "fileRemoveData");
+    loadBlockTranslation(context, "calendarGetNow");
+    loadBlockTranslation(context, "calendarAdd");
+    loadBlockTranslation(context, "calendarSet");
+    loadBlockTranslation(context, "calendarFormat");
+    loadBlockTranslation(context, "calendarDiff");
+    loadBlockTranslation(context, "calendarGetTime");
+    loadBlockTranslation(context, "calendarSetTime");
+    loadBlockTranslation(context, "vibratorAction");
+    loadBlockTranslation(context, "timerAfter");
+    loadBlockTranslation(context, "timerEvery");
+    loadBlockTranslation(context, "timerCancel");
+    loadBlockTranslation(context, "dialogSetTitle");
+    loadBlockTranslation(context, "dialogSetMessage");
+    loadBlockTranslation(context, "dialogOkButton");
+    loadBlockTranslation(context, "dialogCancelButton");
+    loadBlockTranslation(context, "dialogNeutralButton");
+    loadBlockTranslation(context, "dialogShow");
+    loadBlockTranslation(context, "dialogDismiss");
+    loadBlockTranslation(context, "mediaplayerCreate");
+    loadBlockTranslation(context, "mediaplayerStart");
+    loadBlockTranslation(context, "mediaplayerPause");
+    loadBlockTranslation(context, "mediaplayerSeek");
+    loadBlockTranslation(context, "mediaplayerGetCurrent");
+    loadBlockTranslation(context, "mediaplayerGetDuration");
+    loadBlockTranslation(context, "mediaplayerIsPlaying");
+    loadBlockTranslation(context, "mediaplayerSetLooping");
+    loadBlockTranslation(context, "mediaplayerIsLooping");
+    loadBlockTranslation(context, "mediaplayerReset");
+    loadBlockTranslation(context, "mediaplayerRelease");
+    loadBlockTranslation(context, "soundpoolCreate");
+    loadBlockTranslation(context, "soundpoolLoad");
+    loadBlockTranslation(context, "soundpoolStreamPlay");
+    loadBlockTranslation(context, "soundpoolStreamStop");
+    loadBlockTranslation(context, "objectanimatorSetTarget");
+    loadBlockTranslation(context, "objectanimatorSetProperty");
+    loadBlockTranslation(context, "objectanimatorSetValue");
+    loadBlockTranslation(context, "objectanimatorSetFromTo");
+    loadBlockTranslation(context, "objectanimatorSetDuration");
+    loadBlockTranslation(context, "objectanimatorSetRepeatMode");
+    loadBlockTranslation(context, "objectanimatorSetRepeatCount");
+    loadBlockTranslation(context, "objectanimatorSetInterpolator");
+    loadBlockTranslation(context, "objectanimatorStart");
+    loadBlockTranslation(context, "objectanimatorCancel");
+    loadBlockTranslation(context, "objectanimatorIsRunning");
+    loadBlockTranslation(context, "firebaseAdd");
+    loadBlockTranslation(context, "firebasePush");
+    loadBlockTranslation(context, "firebaseGetPushKey");
+    loadBlockTranslation(context, "firebaseDelete");
+    loadBlockTranslation(context, "firebaseGetChildren");
+    loadBlockTranslation(context, "firebaseauthCreateUser");
+    loadBlockTranslation(context, "firebaseauthSignInUser");
+    loadBlockTranslation(context, "firebaseauthSignInAnonymously");
+    loadBlockTranslation(context, "firebaseauthIsLoggedIn");
+    loadBlockTranslation(context, "firebaseauthGetCurrentUser");
+    loadBlockTranslation(context, "firebaseauthGetUid");
+    loadBlockTranslation(context, "firebaseauthResetPassword");
+    loadBlockTranslation(context, "firebaseauthSignOutUser");
+    loadBlockTranslation(context, "firebaseStartListen");
+    loadBlockTranslation(context, "firebaseStopListen");
+    loadBlockTranslation(context, "gyroscopeStartListen");
+    loadBlockTranslation(context, "gyroscopeStopListen");
+    loadBlockTranslation(context, "interstitialadCreate");
+    loadBlockTranslation(context, "interstitialadLoadAd");
+    loadBlockTranslation(context, "interstitialadShow");
+    loadBlockTranslation(context, "firebasestorageUploadFile");
+    loadBlockTranslation(context, "firebasestorageDownloadFile");
+    loadBlockTranslation(context, "firebasestorageDelete");
+    loadBlockTranslation(context, "camerastarttakepicture");
+    loadBlockTranslation(context, "filepickerstartpickfiles");
+    loadBlockTranslation(context, "requestnetworkSetParams");
+    loadBlockTranslation(context, "requestnetworkSetHeaders");
+    loadBlockTranslation(context, "requestnetworkStartRequestNetwork");
+    loadBlockTranslation(context, "fileutildelete");
+    loadBlockTranslation(context, "fileutilcopy");
+    loadBlockTranslation(context, "fileutilwrite");
+    loadBlockTranslation(context, "fileutilread");
+    loadBlockTranslation(context, "fileutilmove");
+    loadBlockTranslation(context, "fileutilisexist");
+    loadBlockTranslation(context, "fileutilmakedir");
+    loadBlockTranslation(context, "fileutillistdir");
+    loadBlockTranslation(context, "fileutilisdir");
+    loadBlockTranslation(context, "fileutilisfile");
+    loadBlockTranslation(context, "fileutillength");
+    loadBlockTranslation(context, "fileutilStartsWith");
+    loadBlockTranslation(context, "fileutilEndsWith");
+    loadBlockTranslation(context, "fileutilGetLastSegmentPath");
+    loadBlockTranslation(context, "doToast");
+    loadBlockTranslation(context, "copyToClipboard");
+    loadBlockTranslation(context, "setTitle");
+    loadBlockTranslation(context, "seekBarGetMax");
+    loadBlockTranslation(context, "seekBarGetProgress");
+    loadBlockTranslation(context, "seekBarSetMax");
+    loadBlockTranslation(context, "seekBarSetProgress");
+    loadBlockTranslation(context, "getExternalStorageDir");
+    loadBlockTranslation(context, "getPackageDataDir");
+    loadBlockTranslation(context, "getPublicDir");
+    loadBlockTranslation(context, "resizeBitmapFileRetainRatio");
+    loadBlockTranslation(context, "resizeBitmapFileToSquare");
+    loadBlockTranslation(context, "resizeBitmapFileToCircle");
+    loadBlockTranslation(context, "resizeBitmapFileWithRoundedBorder");
+    loadBlockTranslation(context, "cropBitmapFileFromCenter");
+    loadBlockTranslation(context, "rotateBitmapFile");
+    loadBlockTranslation(context, "scaleBitmapFile");
+    loadBlockTranslation(context, "skewBitmapFile");
+    loadBlockTranslation(context, "setBitmapFileColorFilter");
+    loadBlockTranslation(context, "setBitmapFileBrightness");
+    loadBlockTranslation(context, "setBitmapFileContrast");
+    loadBlockTranslation(context, "setImageFilePath");
+    loadBlockTranslation(context, "setImageUrl");
+    loadBlockTranslation(context, "getJpegRotate");
+    loadBlockTranslation(context, "progressBarSetIndeterminate");
+    loadBlockTranslation(context, "textToSpeechSetPitch");
+    loadBlockTranslation(context, "textToSpeechSetSpeechRate");
+    loadBlockTranslation(context, "textToSpeechSpeak");
+    loadBlockTranslation(context, "textToSpeechIsSpeaking");
+    loadBlockTranslation(context, "textToSpeechStop");
+    loadBlockTranslation(context, "textToSpeechShutdown");
+    loadBlockTranslation(context, "speechToTextStartListening");
+    loadBlockTranslation(context, "speechToTextStopListening");
+    loadBlockTranslation(context, "speechToTextShutdown");
+    loadBlockTranslation(context, "bluetoothConnectReadyConnection");
+    loadBlockTranslation(context, "bluetoothConnectReadyConnectionToUuid");
+    loadBlockTranslation(context, "bluetoothConnectStartConnection");
+    loadBlockTranslation(context, "bluetoothConnectStartConnectionToUuid");
+    loadBlockTranslation(context, "bluetoothConnectStopConnection");
+    loadBlockTranslation(context, "bluetoothConnectSendData");
+    loadBlockTranslation(context, "bluetoothConnectIsBluetoothEnabled");
+    loadBlockTranslation(context, "bluetoothConnectIsBluetoothActivated");
+    loadBlockTranslation(context, "bluetoothConnectActivateBluetooth");
+    loadBlockTranslation(context, "bluetoothConnectGetPairedDevices");
+    loadBlockTranslation(context, "bluetoothConnectGetRandomUuid");
+    loadBlockTranslation(context, "locationManagerRequestLocationUpdates");
+    loadBlockTranslation(context, "locationManagerRemoveUpdates");
   }
   
-  public HashMap<String, String> loadTranslationsFromFile(String paramString) {
+  public HashMap<String, String> loadTranslationsFromFile(String filePath) {
     HashMap<String, String> hashMap;
     HashMap<Object, Object> hashMap1 = new HashMap<Object, Object>();
-    if (!(new File(paramString)).exists())
+    if (!(new File(filePath)).exists())
       return (HashMap)hashMap1; 
     try {
-      hashMap = parseXmlTranslations(paramString);
+      hashMap = parseXmlTranslations(filePath);
     } catch (Exception exception) {
       hashMap = (HashMap)hashMap1;
     } 
     return hashMap;
   }
   
-  public void loadBlockTranslation(Context paramContext, String paramString) {
+  public void loadBlockTranslation(Context context, String blockName) {
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append("block_");
-    stringBuilder.append(BlockSpecRegistry.getBlockSpec(paramString));
+    stringBuilder.append(BlockSpecRegistry.getBlockSpec(blockName));
     String str = stringBuilder.toString();
-    ArrayList<String> arrayList = BlockSpecRegistry.getBlockParams(paramString);
-    this.eventTranslations.put(paramString, getBlockTranslation(paramContext, str, arrayList));
+    ArrayList<String> arrayList = BlockSpecRegistry.getBlockParams(blockName);
+    this.eventTranslations.put(blockName, getBlockTranslation(context, str, arrayList));
   }
   
-  public boolean reloadTranslations(Context paramContext) {
+  public boolean reloadTranslations(Context context) {
     boolean bool;
     if (this.blockTranslations == null)
       this.blockTranslations = new HashMap<String, String>(); 
@@ -982,7 +982,7 @@ public class StringResource {
     if (hashMap != null)
       hashMap.clear(); 
     this.blockTranslations = loadTranslationsFromFile(this.translationDir);
-    loadEventTranslations(paramContext);
+    loadEventTranslations(context);
     if (!this.blockTranslations.isEmpty() && this.isLoaded) {
       bool = true;
     } else {
@@ -991,12 +991,12 @@ public class StringResource {
     return bool;
   }
   
-  public void loadEventSpecTranslation(Context paramContext, String paramString) {
+  public void loadEventSpecTranslation(Context context, String eventName) {
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append("root_spec_");
-    stringBuilder.append(BlockSpecRegistry.getEventSpec(paramString));
+    stringBuilder.append(BlockSpecRegistry.getEventSpec(eventName));
     String str = stringBuilder.toString();
-    ArrayList<String> arrayList = BlockSpecRegistry.getBlockMenuItems(paramString);
-    this.eventTranslations.put(paramString, getBlockTranslation(paramContext, str, arrayList));
+    ArrayList<String> arrayList = BlockSpecRegistry.getBlockMenuItems(eventName);
+    this.eventTranslations.put(eventName, getBlockTranslation(context, str, arrayList));
   }
 }
