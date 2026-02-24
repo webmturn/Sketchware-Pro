@@ -64,17 +64,17 @@ public class BlockPane extends RelativeLayout {
       blockView.setY((end - this.locationBuffer[1] - getPaddingTop()));
       rs = blockView;
     } 
-    Object[] arrayOfObject = this.currentSnapPoint;
-    if (arrayOfObject == null) {
+    Object[] objects = this.currentSnapPoint;
+    if (objects == null) {
       rs.getRootBlock().layoutChain();
       updatePaneSize();
       return rs;
     } 
     if (blockView.isParameter) {
-      ((BaseBlockView)arrayOfObject[1]).parentBlock.replaceParameter((BaseBlockView)arrayOfObject[1], rs);
+      ((BaseBlockView)objects[1]).parentBlock.replaceParameter((BaseBlockView)objects[1], rs);
     } else {
-      blockView = (BlockView)arrayOfObject[1];
-      start = ((Integer)arrayOfObject[2]).intValue();
+      blockView = (BlockView)objects[1];
+      start = ((Integer)objects[2]).intValue();
       if (start != 0) {
         if (start != 1) {
           if (start != 2) {
@@ -558,7 +558,7 @@ public class BlockPane extends RelativeLayout {
   
   public Object[] findNearestSnapPoint(BlockView blockView, int start, int end) {
     byte b;
-    Object[] arrayOfObject = null;
+    Object[] objects = null;
     if (blockView.isParameter) {
       b = 40;
     } else {
@@ -569,20 +569,20 @@ public class BlockPane extends RelativeLayout {
     start = 0;
     end = i;
     while (start < this.blockSnapPoints.size()) {
-      Object[] arrayOfObject1 = this.blockSnapPoints.get(start);
-      int[] intValues = (int[])arrayOfObject1[0];
+      Object[] objects1 = this.blockSnapPoints.get(start);
+      int[] intValues = (int[])objects1[0];
       int dx = point2.x - intValues[0];
       int dy = point2.y - intValues[1];
       int j = Math.abs(dx / 2) + Math.abs(dy);
       if (j < end && j < b) {
-        if (isCompatibleBlock(blockView, (View)arrayOfObject1[1])) {
-          arrayOfObject = arrayOfObject1;
+        if (isCompatibleBlock(blockView, (View)objects1[1])) {
+          objects = objects1;
           end = j;
         } 
       } 
       start++;
     } 
-    return arrayOfObject;
+    return objects;
   }
   
   public void clearSnapState() {
@@ -607,10 +607,10 @@ public class BlockPane extends RelativeLayout {
     boolean bool = blockView.hasSubstack();
     boolean bool1 = true;
     if (bool && -1 == blockView.subStack1) {
-      Object[] arrayOfObject1 = this.currentSnapPoint;
-      if (arrayOfObject1 != null) {
-        BlockView rs = (BlockView)arrayOfObject1[1];
-        start = ((Integer)arrayOfObject1[2]).intValue();
+      Object[] objects1 = this.currentSnapPoint;
+      if (objects1 != null) {
+        BlockView rs = (BlockView)objects1[1];
+        start = ((Integer)objects1[2]).intValue();
         if (start != 0) {
           if (start != 2) {
             if (start == 3)
@@ -623,10 +623,10 @@ public class BlockPane extends RelativeLayout {
         } 
       } 
     } 
-    Object[] arrayOfObject = this.currentSnapPoint;
-    if (arrayOfObject != null) {
-      int[] intValues = (int[])arrayOfObject[0];
-      View view = (View)arrayOfObject[1];
+    Object[] objects = this.currentSnapPoint;
+    if (objects != null) {
+      int[] intValues = (int[])objects[0];
+      View view = (View)objects[1];
       this.activeBlock.setX((intValues[0] - this.locationBuffer[0]));
       this.activeBlock.setY((intValues[1] - this.locationBuffer[1]));
       this.activeBlock.bringToFront();

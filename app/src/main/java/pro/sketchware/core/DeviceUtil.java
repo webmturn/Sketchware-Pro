@@ -56,12 +56,12 @@ public class DeviceUtil {
   }
   
   public static String getAndroidVersionName() {
-    Field[] arrayOfField = Build.VERSION_CODES.class.getFields();
-    int i = arrayOfField.length;
+    Field[] fields = Build.VERSION_CODES.class.getFields();
+    int i = fields.length;
     int b = 0;
     while (true) {
       if (b < i) {
-        Field field = arrayOfField[b];
+        Field field = fields[b];
         String str = field.getName();
         try {
           int j = field.getInt(null);
@@ -107,10 +107,10 @@ public class DeviceUtil {
   
   public static ArrayList<String> getGoogleAccounts(Context context) {
     ArrayList<String> arrayList = new ArrayList<>();
-    Account[] arrayOfAccount = AccountManager.get(context).getAccountsByType("com.google");
-    for (int b = 0; b < arrayOfAccount.length; b++) {
-      if ((arrayOfAccount[b]).type.equals("com.google"))
-        arrayList.add((arrayOfAccount[b]).name); 
+    Account[] accounts = AccountManager.get(context).getAccountsByType("com.google");
+    for (int b = 0; b < accounts.length; b++) {
+      if ((accounts[b]).type.equals("com.google"))
+        arrayList.add((accounts[b]).name); 
     } 
     return arrayList;
   }
