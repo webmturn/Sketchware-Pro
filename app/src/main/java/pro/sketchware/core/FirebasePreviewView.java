@@ -26,7 +26,7 @@ public class FirebasePreviewView extends LinearLayout implements LibraryConfigVi
     }
 
     @Override
-    public void a() {
+    public void onSave() {
     }
 
     private void initialize() {
@@ -65,7 +65,7 @@ public class FirebasePreviewView extends LinearLayout implements LibraryConfigVi
     }
 
     @Override
-    public void a(ProjectLibraryBean mProjectLibraryBean) {
+    public void saveToBean(ProjectLibraryBean mProjectLibraryBean) {
         firebaseLibraryBean = mProjectLibraryBean;
         if (binding.libSwitch.isChecked()) {
             firebaseLibraryBean.useYn = "Y";

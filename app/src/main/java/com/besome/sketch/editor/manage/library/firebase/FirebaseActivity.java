@@ -55,7 +55,7 @@ public class FirebaseActivity extends BaseAppCompatActivity implements View.OnCl
 
     private void setStep(int stepNumber) {
         if (step != null) {
-            step.a();
+            step.onSave();
         }
 
         getSupportActionBar().setSubtitle(stepNumber == STEP_3 ? getString(R.string.common_word_review) : getString(R.string.common_word_step, stepNumber + 1));
@@ -89,7 +89,7 @@ public class FirebaseActivity extends BaseAppCompatActivity implements View.OnCl
 
     private void onNextPressed() {
         if (step.isValid()) {
-            step.a(firebaseSettings);
+            step.saveToBean(firebaseSettings);
             if (stepNumber < STEP_3) {
                 setStep(++stepNumber);
             } else {

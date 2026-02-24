@@ -20,7 +20,7 @@ public class FirebaseSettingsView extends LinearLayout implements LibraryConfigV
     }
 
     @Override
-    public void a() {
+    public void onSave() {
     }
 
     private void initialize(Context context) {
@@ -31,13 +31,13 @@ public class FirebaseSettingsView extends LinearLayout implements LibraryConfigV
     }
 
     @Override
-    public void a(ProjectLibraryBean libraryBean) {
+    public void saveToBean(ProjectLibraryBean libraryBean) {
         libraryBean.data = binding.edInputProjectId.getText().toString().trim();
         libraryBean.reserved1 = binding.edInputAppId.getText().toString().trim();
         libraryBean.reserved2 = binding.edInputApiKey.getText().toString().trim();
     }
 
-    public void b() {
+    public void showInputRequiredToast() {
         SketchToast.toast(getContext(), getContext().getString(R.string.design_library_firebase_message_not_input_text), 1).show();
     }
 
@@ -50,15 +50,15 @@ public class FirebaseSettingsView extends LinearLayout implements LibraryConfigV
     public boolean isValid() {
         if (binding.edInputProjectId.getText().toString().trim().length() == 0) {
             binding.edInputProjectId.requestFocus();
-            b();
+            showInputRequiredToast();
             return false;
         } else if (binding.edInputAppId.getText().toString().trim().length() == 0) {
             binding.edInputAppId.requestFocus();
-            b();
+            showInputRequiredToast();
             return false;
         } else if (binding.edInputApiKey.getText().toString().trim().length() == 0) {
             binding.edInputApiKey.requestFocus();
-            b();
+            showInputRequiredToast();
             return false;
         } else {
             return true;
