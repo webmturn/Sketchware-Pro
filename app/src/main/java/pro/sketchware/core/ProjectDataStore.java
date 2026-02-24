@@ -52,50 +52,50 @@ public class ProjectDataStore {
   }
   
   public static ArrayList<ViewBean> getSortedRootViews(ArrayList<ViewBean> list) {
-    ArrayList<ViewBean> arrayList = new ArrayList<>();
+    ArrayList<ViewBean> sortedViews = new ArrayList<>();
     for (ViewBean viewBean : list) {
       if (viewBean.parent.equals("root"))
-        arrayList.add(viewBean); 
+        sortedViews.add(viewBean); 
     } 
-    int j = arrayList.size();
+    int j = sortedViews.size();
     int i;
     int m = 0;
     for (i = 0; i < j - 1; i++) {
       for (int k = 0; k < j - i - 1; k = m) {
-        int n = ((ViewBean)arrayList.get(k)).index;
+        int n = ((ViewBean)sortedViews.get(k)).index;
         m = k + 1;
-        if (n > ((ViewBean)arrayList.get(m)).index) {
-          ViewBean viewBean = arrayList.get(k);
-          arrayList.set(k, arrayList.get(m));
-          arrayList.set(m, viewBean);
+        if (n > ((ViewBean)sortedViews.get(m)).index) {
+          ViewBean viewBean = sortedViews.get(k);
+          sortedViews.set(k, sortedViews.get(m));
+          sortedViews.set(m, viewBean);
         } 
       } 
     } 
     for (ViewBean viewBean : list) {
       i = viewBean.type;
       if ((i == 2 || i == 1 || i == 36 || i == 37 || i == 38 || i == 39 || i == 40 || i == 0 || i == 12) && viewBean.parent.equals("root"))
-        arrayList.addAll(getChildViews(list, viewBean)); 
+        sortedViews.addAll(getChildViews(list, viewBean)); 
     } 
-    return arrayList;
+    return sortedViews;
   }
   
   public static ArrayList<ViewBean> getChildViews(ArrayList<ViewBean> list, ViewBean parentBean) {
-    ArrayList<ViewBean> arrayList = new ArrayList<>();
+    ArrayList<ViewBean> childViews = new ArrayList<>();
     for (ViewBean viewBean : list) {
       if (viewBean.parent.equals(parentBean.id))
-        arrayList.add(viewBean); 
+        childViews.add(viewBean); 
     } 
-    int j = arrayList.size();
+    int j = childViews.size();
     int i;
     int m = 0;
     for (i = 0; i < j - 1; i++) {
       for (int k = 0; k < j - i - 1; k = m) {
-        int n = ((ViewBean)arrayList.get(k)).index;
+        int n = ((ViewBean)childViews.get(k)).index;
         m = k + 1;
-        if (n > ((ViewBean)arrayList.get(m)).index) {
-          ViewBean tempBean = arrayList.get(k);
-          arrayList.set(k, arrayList.get(m));
-          arrayList.set(m, tempBean);
+        if (n > ((ViewBean)childViews.get(m)).index) {
+          ViewBean tempBean = childViews.get(k);
+          childViews.set(k, childViews.get(m));
+          childViews.set(m, tempBean);
         } 
       } 
     } 
@@ -103,10 +103,10 @@ public class ProjectDataStore {
       if (viewBean.parent.equals(parentBean.id)) {
         i = viewBean.type;
         if (i == 0 || i == 2 || i == 1 || i == 36 || i == 37 || i == 38 || i == 39 || i == 40 || i == 12)
-          arrayList.addAll(getChildViews(list, viewBean)); 
+          childViews.addAll(getChildViews(list, viewBean)); 
       } 
     } 
-    return arrayList;
+    return childViews;
   }
   
   public ComponentBean getComponent(String fileName, int index) {
@@ -116,34 +116,34 @@ public class ProjectDataStore {
   public ArrayList<String> getAllIdentifiers(ProjectFileBean fileBean) {
     String xmlName = fileBean.getXmlName();
     String javaName = fileBean.getJavaName();
-    ArrayList<Object> arrayList = new ArrayList<>();
+    ArrayList<Object> identifiers = new ArrayList<>();
     Iterator<Pair<Integer, String>> innerIterator = getVariables(javaName).iterator();
     while (innerIterator.hasNext())
-      arrayList.add(((Pair)innerIterator.next()).second); 
+      identifiers.add(((Pair)innerIterator.next()).second); 
     innerIterator = getListVariables(javaName).iterator();
     while (innerIterator.hasNext())
-      arrayList.add(((Pair)innerIterator.next()).second); 
+      identifiers.add(((Pair)innerIterator.next()).second); 
     innerIterator = (Iterator)getMoreBlocks(javaName).iterator();
     while (innerIterator.hasNext())
-      arrayList.add(((Pair)innerIterator.next()).first); 
+      identifiers.add(((Pair)innerIterator.next()).first); 
     Iterator<ViewBean> iterator = getViews(xmlName).iterator();
     while (iterator.hasNext())
-      arrayList.add(((ViewBean)iterator.next()).id); 
+      identifiers.add(((ViewBean)iterator.next()).id); 
     Iterator iteratorComp = getComponents(javaName).iterator();
     while (iteratorComp.hasNext())
-      arrayList.add(((ComponentBean)iteratorComp.next()).componentId); 
-    return (ArrayList)arrayList;
+      identifiers.add(((ComponentBean)iteratorComp.next()).componentId); 
+    return (ArrayList)identifiers;
   }
   
   public ArrayList<EventBean> getComponentEvents(String fileName, ComponentBean componentBean) {
     if (!this.eventMap.containsKey(fileName))
       return new ArrayList<EventBean>(); 
-    ArrayList<EventBean> arrayList = new ArrayList<>();
+    ArrayList<EventBean> filteredEvents = new ArrayList<>();
     for (EventBean eventBean : this.eventMap.get(fileName)) {
       if (eventBean.targetType == componentBean.type && eventBean.targetId.equals(componentBean.componentId))
-        arrayList.add(eventBean); 
+        filteredEvents.add(eventBean); 
     } 
-    return arrayList;
+    return filteredEvents;
   }
   
   public ArrayList<BlockBean> getBlocks(String fileName, String data) {
@@ -272,13 +272,13 @@ public class ProjectDataStore {
   }
   
   public void syncFonts(ResourceManager resourceManager) {
-    ArrayList arrayList = resourceManager.getFontNames();
+    ArrayList fontNames = resourceManager.getFontNames();
     Iterator iterator = this.blockMap.entrySet().iterator();
     while (iterator.hasNext()) {
       Iterator innerIterator = ((HashMap)((Map.Entry)iterator.next()).getValue()).entrySet().iterator();
       while (innerIterator.hasNext()) {
         for (BlockBean blockBean : (ArrayList<BlockBean>)((Map.Entry<String, ArrayList<BlockBean>>)innerIterator.next()).getValue()) {
-          if ("setTypeface".equals(blockBean.opCode) && arrayList.indexOf(blockBean.parameters.get(1)) < 0)
+          if ("setTypeface".equals(blockBean.opCode) && fontNames.indexOf(blockBean.parameters.get(1)) < 0)
             blockBean.parameters.set(1, "default_font"); 
         } 
       } 
@@ -288,14 +288,14 @@ public class ProjectDataStore {
   public void removeView(ProjectFileBean fileBean, ViewBean targetBean) {
     if (!this.viewMap.containsKey(fileBean.getXmlName()))
       return; 
-    ArrayList arrayList = this.viewMap.get(fileBean.getXmlName());
-    int i = arrayList.size();
+    ArrayList views = this.viewMap.get(fileBean.getXmlName());
+    int i = views.size();
     while (true) {
       int j = i - 1;
       if (j >= 0) {
         i = j;
-        if (((ViewBean)arrayList.get(j)).id.equals(targetBean.id)) {
-          arrayList.remove(j);
+        if (((ViewBean)views.get(j)).id.equals(targetBean.id)) {
+          views.remove(j);
           break;
         } 
         continue;
@@ -557,12 +557,12 @@ public class ProjectDataStore {
     HashMap<String, ArrayList<Pair<Integer, String>>> tempVarMap = this.variableMap;
     if (tempVarMap != null && tempVarMap.size() > 0)
       for (Map.Entry<String, ArrayList<Pair<Integer, String>>> entry : this.variableMap.entrySet()) {
-        ArrayList arrayList = (ArrayList)entry.getValue();
-        if (arrayList == null || arrayList.size() <= 0)
+        ArrayList variables = (ArrayList)entry.getValue();
+        if (variables == null || variables.size() <= 0)
           continue; 
         StringBuilder contentBuilder = new StringBuilder();
-        for (int vi = 0; vi < arrayList.size(); vi++) {
-          Pair pair = (Pair) arrayList.get(vi);
+        for (int vi = 0; vi < variables.size(); vi++) {
+          Pair pair = (Pair) variables.get(vi);
           contentBuilder.append(pair.first);
           contentBuilder.append(":");
           contentBuilder.append((String)pair.second);
@@ -582,12 +582,12 @@ public class ProjectDataStore {
     tempVarMap = this.listMap;
     if (tempVarMap != null && tempVarMap.size() > 0)
       for (Map.Entry<String, ArrayList<Pair<Integer, String>>> entry : this.listMap.entrySet()) {
-        ArrayList arrayList = (ArrayList)entry.getValue();
-        if (arrayList == null || arrayList.size() <= 0)
+        ArrayList listEntries = (ArrayList)entry.getValue();
+        if (listEntries == null || listEntries.size() <= 0)
           continue; 
         StringBuilder contentBuilder = new StringBuilder();
-        for (int li = 0; li < arrayList.size(); li++) {
-          Pair pair = (Pair) arrayList.get(li);
+        for (int li = 0; li < listEntries.size(); li++) {
+          Pair pair = (Pair) listEntries.get(li);
           contentBuilder.append(pair.first);
           contentBuilder.append(":");
           contentBuilder.append((String)pair.second);
@@ -607,12 +607,12 @@ public class ProjectDataStore {
     HashMap<String, ArrayList<Pair<String, String>>> tempMoreBlockMap = this.moreBlockMap;
     if (tempMoreBlockMap != null && tempMoreBlockMap.size() > 0)
       for (Map.Entry<String, ArrayList<Pair<String, String>>> entry : this.moreBlockMap.entrySet()) {
-        ArrayList arrayList = (ArrayList)entry.getValue();
-        if (arrayList == null || arrayList.size() <= 0)
+        ArrayList moreBlocks = (ArrayList)entry.getValue();
+        if (moreBlocks == null || moreBlocks.size() <= 0)
           continue; 
         StringBuilder contentBuilder = new StringBuilder();
-        for (int fi = 0; fi < arrayList.size(); fi++) {
-          Pair pair = (Pair) arrayList.get(fi);
+        for (int fi = 0; fi < moreBlocks.size(); fi++) {
+          Pair pair = (Pair) moreBlocks.get(fi);
           contentBuilder.append((String)pair.first);
           contentBuilder.append(":");
           contentBuilder.append((String)pair.second);
@@ -632,12 +632,12 @@ public class ProjectDataStore {
     HashMap<String, ArrayList<ComponentBean>> tempCompMap = this.componentMap;
     if (tempCompMap != null && tempCompMap.size() > 0)
       for (Map.Entry<String, ArrayList<ComponentBean>> entry : this.componentMap.entrySet()) {
-        ArrayList arrayList = (ArrayList)entry.getValue();
-        if (arrayList == null || arrayList.size() <= 0)
+        ArrayList components = (ArrayList)entry.getValue();
+        if (components == null || components.size() <= 0)
           continue; 
         StringBuilder contentBuilder = new StringBuilder();
-        for (int ci = 0; ci < arrayList.size(); ci++) {
-          ComponentBean componentBean = (ComponentBean) arrayList.get(ci);
+        for (int ci = 0; ci < components.size(); ci++) {
+          ComponentBean componentBean = (ComponentBean) components.get(ci);
           componentBean.clearClassInfo();
           contentBuilder.append(this.gson.toJson(componentBean));
           contentBuilder.append("\n");
@@ -656,12 +656,12 @@ public class ProjectDataStore {
     HashMap<String, ArrayList<EventBean>> tempEventMap = this.eventMap;
     if (tempEventMap != null && tempEventMap.size() > 0)
       for (Map.Entry<String, ArrayList<EventBean>> entry : this.eventMap.entrySet()) {
-        ArrayList arrayList = (ArrayList)entry.getValue();
-        if (arrayList == null || arrayList.size() <= 0)
+        ArrayList events = (ArrayList)entry.getValue();
+        if (events == null || events.size() <= 0)
           continue; 
         StringBuilder contentBuilder = new StringBuilder();
-        for (int ei = 0; ei < arrayList.size(); ei++) {
-          EventBean eventBean = (EventBean) arrayList.get(ei);
+        for (int ei = 0; ei < events.size(); ei++) {
+          EventBean eventBean = (EventBean) events.get(ei);
           contentBuilder.append(this.gson.toJson(eventBean));
           contentBuilder.append("\n");
         }
@@ -684,12 +684,12 @@ public class ProjectDataStore {
         if (blockEntryMap == null || blockEntryMap.size() <= 0)
           continue; 
         for (Map.Entry<String, ArrayList<BlockBean>> entry1 : ((HashMap<String, ArrayList<BlockBean>>)blockEntryMap).entrySet()) {
-          ArrayList arrayList = (ArrayList)entry1.getValue();
-          if (arrayList == null || arrayList.size() <= 0)
+          ArrayList blocks = (ArrayList)entry1.getValue();
+          if (blocks == null || blocks.size() <= 0)
             continue; 
           StringBuilder contentBuilder = new StringBuilder();
-          for (int bi = 0; bi < arrayList.size(); bi++) {
-            BlockBean blockBean = (BlockBean) arrayList.get(bi);
+          for (int bi = 0; bi < blocks.size(); bi++) {
+            BlockBean blockBean = (BlockBean) blocks.get(bi);
             contentBuilder.append(this.gson.toJson(blockBean));
             contentBuilder.append("\n");
           }
@@ -710,10 +710,10 @@ public class ProjectDataStore {
   public String getMoreBlockSpec(String fileName, String data) {
     if (!this.moreBlockMap.containsKey(fileName))
       return ""; 
-    ArrayList arrayList = this.moreBlockMap.get(fileName);
-    if (arrayList == null)
+    ArrayList moreBlocks = this.moreBlockMap.get(fileName);
+    if (moreBlocks == null)
       return ""; 
-    for (Pair pair : (ArrayList<Pair>)arrayList) {
+    for (Pair pair : (ArrayList<Pair>)moreBlocks) {
       if (((String)pair.first).equals(data))
         return (String)pair.second; 
     } 
@@ -724,10 +724,10 @@ public class ProjectDataStore {
     ArrayList<String> componentIds = new ArrayList<>();
     if (!this.componentMap.containsKey(fileName))
       return componentIds; 
-    ArrayList arrayList = this.componentMap.get(fileName);
-    if (arrayList == null)
+    ArrayList components = this.componentMap.get(fileName);
+    if (components == null)
       return componentIds; 
-    for (ComponentBean componentBean : (ArrayList<ComponentBean>)arrayList) {
+    for (ComponentBean componentBean : (ArrayList<ComponentBean>)components) {
       if (componentBean.type == index)
         componentIds.add(componentBean.componentId); 
     } 
@@ -735,10 +735,10 @@ public class ProjectDataStore {
   }
   
   public ArrayList<ViewBean> getViewWithChildren(String fileName, ViewBean viewBean) {
-    ArrayList<ViewBean> arrayList = new ArrayList<>();
-    arrayList.add(viewBean);
-    arrayList.addAll(getChildViews(this.viewMap.get(fileName), viewBean));
-    return arrayList;
+    ArrayList<ViewBean> result = new ArrayList<>();
+    result.add(viewBean);
+    result.addAll(getChildViews(this.viewMap.get(fileName), viewBean));
+    return result;
   }
   
   public HashMap<String, ArrayList<BlockBean>> getBlockMap(String fileName) {
@@ -775,20 +775,20 @@ public class ProjectDataStore {
   }
   
   public void syncImages(ResourceManager resourceManager) {
-    ArrayList arrayList = resourceManager.getImageNames();
+    ArrayList imageNames = resourceManager.getImageNames();
     Iterator innerIterator = this.viewMap.entrySet().iterator();
     while (innerIterator.hasNext()) {
       for (ViewBean viewBean : (ArrayList<ViewBean>)((Map.Entry)innerIterator.next()).getValue()) {
-        if (arrayList.indexOf(viewBean.layout.backgroundResource) < 0)
+        if (imageNames.indexOf(viewBean.layout.backgroundResource) < 0)
           viewBean.layout.backgroundResource = null; 
-        if (arrayList.indexOf(viewBean.image.resName) < 0)
+        if (imageNames.indexOf(viewBean.image.resName) < 0)
           viewBean.image.resName = "default_image"; 
       } 
     } 
     innerIterator = this.fabMap.entrySet().iterator();
     while (innerIterator.hasNext()) {
       ViewBean viewBean = (ViewBean)((Map.Entry)innerIterator.next()).getValue();
-      if (arrayList.indexOf(viewBean.image.resName) < 0)
+      if (imageNames.indexOf(viewBean.image.resName) < 0)
         viewBean.image.resName = "NONE"; 
     } 
     Iterator blockEntryIterator = this.blockMap.entrySet().iterator();
@@ -797,11 +797,11 @@ public class ProjectDataStore {
       while (iterator.hasNext()) {
         for (BlockBean blockBean : (ArrayList<BlockBean>)((Map.Entry)iterator.next()).getValue()) {
           if ("setImage".equals(blockBean.opCode)) {
-            if (arrayList.indexOf(blockBean.parameters.get(1)) < 0)
+            if (imageNames.indexOf(blockBean.parameters.get(1)) < 0)
               blockBean.parameters.set(1, "default_image"); 
             continue;
           } 
-          if ("setBgResource".equals(blockBean.opCode) && arrayList.indexOf(blockBean.parameters.get(1)) < 0)
+          if ("setBgResource".equals(blockBean.opCode) && imageNames.indexOf(blockBean.parameters.get(1)) < 0)
             blockBean.parameters.set(1, "NONE"); 
         } 
       } 
@@ -869,10 +869,10 @@ public class ProjectDataStore {
   public void removeComponent(String fileName, ComponentBean componentBean) {
     if (!this.componentMap.containsKey(fileName))
       return; 
-    ArrayList arrayList = this.componentMap.get(fileName);
-    if (arrayList.indexOf(componentBean) < 0)
+    ArrayList components = this.componentMap.get(fileName);
+    if (components.indexOf(componentBean) < 0)
       return; 
-    arrayList.remove(componentBean);
+    components.remove(componentBean);
     removeEventsByTarget(fileName, componentBean.componentId);
     removeBlockReferences(fileName, componentBean.getClassInfo(), componentBean.componentId, false);
     this.buildConfig.constVarComponent.handleDeleteComponent(componentBean.componentId);
@@ -883,8 +883,8 @@ public class ProjectDataStore {
     if (tempEventMap != null && tempEventMap.size() > 0)
       for (Map.Entry<String, ArrayList<ViewBean>> entry : this.viewMap.entrySet()) {
         String viewContent;
-        ArrayList arrayList = (ArrayList)entry.getValue();
-        if (arrayList == null || arrayList.size() <= 0)
+        ArrayList viewBeans = (ArrayList)entry.getValue();
+        if (viewBeans == null || viewBeans.size() <= 0)
           continue; 
         ArrayList<ViewBean> sortedViews = getSortedRootViews((ArrayList<ViewBean>)entry.getValue());
         if (sortedViews != null && sortedViews.size() > 0) {
@@ -947,10 +947,10 @@ public class ProjectDataStore {
         ClassInfo gx = blockBean.getClassInfo();
         if (gx != null && gx.isList() && blockBean.spec.equals(data))
           return true; 
-        ArrayList<ClassInfo> arrayList = blockBean.getParamClassInfo();
-        if (arrayList != null && arrayList.size() > 0)
-          for (int b = 0; b < arrayList.size(); b++) {
-            ClassInfo gx1 = arrayList.get(b);
+        ArrayList<ClassInfo> paramClassInfos = blockBean.getParamClassInfo();
+        if (paramClassInfos != null && paramClassInfos.size() > 0)
+          for (int b = 0; b < paramClassInfos.size(); b++) {
+            ClassInfo gx1 = paramClassInfos.get(b);
             if (gx1 != null && gx1.isList() && ((String)blockBean.parameters.get(b)).equals(data))
               return true; 
           }  
@@ -960,11 +960,11 @@ public class ProjectDataStore {
   }
   
   public ViewBean getViewBean(String fileName, String data) {
-    ArrayList<ViewBean> arrayList = this.viewMap.get(fileName);
-    if (arrayList == null)
+    ArrayList<ViewBean> views = this.viewMap.get(fileName);
+    if (views == null)
       return null; 
-    for (int b = 0; b < arrayList.size(); b++) {
-      ViewBean viewBean = arrayList.get(b);
+    for (int b = 0; b < views.size(); b++) {
+      ViewBean viewBean = views.get(b);
       if (data.equals(viewBean.id))
         return viewBean; 
     } 
@@ -975,10 +975,10 @@ public class ProjectDataStore {
     ArrayList<String> listNames = new ArrayList<>();
     if (!this.listMap.containsKey(fileName))
       return listNames; 
-    ArrayList arrayList = this.listMap.get(fileName);
-    if (arrayList == null)
+    ArrayList listVars = this.listMap.get(fileName);
+    if (listVars == null)
       return listNames; 
-    Iterator iterator = arrayList.iterator();
+    Iterator iterator = listVars.iterator();
     while (iterator.hasNext())
       listNames.add((String)((Pair)iterator.next()).second); 
     return listNames;
@@ -988,10 +988,10 @@ public class ProjectDataStore {
     ArrayList<ComponentBean> filteredComponents = new ArrayList<>();
     if (!this.componentMap.containsKey(fileName))
       return filteredComponents; 
-    ArrayList arrayList = this.componentMap.get(fileName);
-    if (arrayList == null)
+    ArrayList components = this.componentMap.get(fileName);
+    if (components == null)
       return filteredComponents; 
-    for (ComponentBean componentBean : (ArrayList<ComponentBean>)arrayList) {
+    for (ComponentBean componentBean : (ArrayList<ComponentBean>)components) {
       if (componentBean.type == index)
         filteredComponents.add(componentBean); 
     } 
@@ -999,15 +999,15 @@ public class ProjectDataStore {
   }
   
   public void syncSounds(ResourceManager resourceManager) {
-    ArrayList arrayList = resourceManager.getSoundNames();
+    ArrayList soundNames = resourceManager.getSoundNames();
     Iterator iterator = this.blockMap.entrySet().iterator();
     while (iterator.hasNext()) {
       Iterator innerIterator = ((HashMap)((Map.Entry)iterator.next()).getValue()).entrySet().iterator();
       while (innerIterator.hasNext()) {
         for (BlockBean blockBean : (ArrayList<BlockBean>)((Map.Entry)innerIterator.next()).getValue()) {
-          if (blockBean.opCode.equals("mediaplayerCreate") && arrayList.indexOf(blockBean.parameters.get(1)) < 0)
+          if (blockBean.opCode.equals("mediaplayerCreate") && soundNames.indexOf(blockBean.parameters.get(1)) < 0)
             blockBean.parameters.set(1, ""); 
-          if (blockBean.opCode.equals("soundpoolLoad") && arrayList.indexOf(blockBean.parameters.get(1)) < 0)
+          if (blockBean.opCode.equals("soundpoolLoad") && soundNames.indexOf(blockBean.parameters.get(1)) < 0)
             blockBean.parameters.set(1, ""); 
         } 
       } 
@@ -1042,10 +1042,10 @@ public class ProjectDataStore {
         ClassInfo gx = blockBean.getClassInfo();
         if (gx != null && gx.isVariable() && blockBean.spec.equals(data))
           return true; 
-        ArrayList<ClassInfo> arrayList = blockBean.getParamClassInfo();
-        if (arrayList != null && arrayList.size() > 0)
-          for (int b = 0; b < arrayList.size(); b++) {
-            ClassInfo gx1 = arrayList.get(b);
+        ArrayList<ClassInfo> paramClassInfos = blockBean.getParamClassInfo();
+        if (paramClassInfos != null && paramClassInfos.size() > 0)
+          for (int b = 0; b < paramClassInfos.size(); b++) {
+            ClassInfo gx1 = paramClassInfos.get(b);
             if (gx1 != null && gx1.isVariable() && ((String)blockBean.parameters.get(b)).equals(data))
               return true; 
           }  
@@ -1066,10 +1066,10 @@ public class ProjectDataStore {
     ArrayList<String> filteredNames = new ArrayList<>();
     if (!this.listMap.containsKey(fileName))
       return filteredNames; 
-    ArrayList arrayList = this.listMap.get(fileName);
-    if (arrayList == null)
+    ArrayList listVars = this.listMap.get(fileName);
+    if (listVars == null)
       return filteredNames; 
-    for (Pair pair : (ArrayList<Pair>)arrayList) {
+    for (Pair pair : (ArrayList<Pair>)listVars) {
       if (((Integer)pair.first).intValue() == index)
         filteredNames.add((String)pair.second); 
     } 
@@ -1078,10 +1078,10 @@ public class ProjectDataStore {
   
   public ArrayList<Pair<Integer, String>> getViewsByType(String fileName, String data) {
     ArrayList<Pair<Integer, String>> filteredViews = new ArrayList<>();
-    ArrayList arrayList = this.viewMap.get(fileName);
-    if (arrayList == null)
+    ArrayList viewBeans = this.viewMap.get(fileName);
+    if (viewBeans == null)
       return filteredViews; 
-    for (ViewBean viewBean : (ArrayList<ViewBean>)arrayList) {
+    for (ViewBean viewBean : (ArrayList<ViewBean>)viewBeans) {
       Pair<Integer, String> pair;
       if (data.equals("CheckBox")) {
         if (viewBean.getClassInfo().matchesType("CompoundButton")) {
@@ -1102,19 +1102,19 @@ public class ProjectDataStore {
   public void removeEvent(String fileName, String data, String extra) {
     if (!this.eventMap.containsKey(fileName))
       return; 
-    ArrayList<EventBean> arrayList = this.eventMap.get(fileName);
-    if (arrayList == null)
+    ArrayList<EventBean> events = this.eventMap.get(fileName);
+    if (events == null)
       return; 
-    int i = arrayList.size();
+    int i = events.size();
     while (true) {
       int j = i - 1;
       if (j >= 0) {
-        EventBean eventBean = arrayList.get(j);
+        EventBean eventBean = events.get(j);
         i = j;
         if (eventBean.targetId.equals(data)) {
           i = j;
           if (extra.equals(eventBean.eventName)) {
-            arrayList.remove(eventBean);
+            events.remove(eventBean);
             HashMap<String, HashMap<String, ArrayList<BlockBean>>> hashMap = this.blockMap;
             i = j;
             if (hashMap != null) {
@@ -1156,10 +1156,10 @@ public class ProjectDataStore {
   }
   
   public boolean hasComponent(String fileName, int index, String data) {
-    ArrayList arrayList = this.componentMap.get(fileName);
-    if (arrayList == null)
+    ArrayList components = this.componentMap.get(fileName);
+    if (components == null)
       return false; 
-    for (ComponentBean componentBean : (ArrayList<ComponentBean>)arrayList) {
+    for (ComponentBean componentBean : (ArrayList<ComponentBean>)components) {
       if (componentBean.type == index && componentBean.componentId.equals(data))
         return true; 
     } 
@@ -1174,10 +1174,10 @@ public class ProjectDataStore {
     ArrayList<String> varNames = new ArrayList<>();
     if (!this.variableMap.containsKey(fileName))
       return varNames; 
-    ArrayList arrayList = this.variableMap.get(fileName);
-    if (arrayList == null)
+    ArrayList varEntries = this.variableMap.get(fileName);
+    if (varEntries == null)
       return varNames; 
-    for (Pair pair : (ArrayList<Pair>)arrayList) {
+    for (Pair pair : (ArrayList<Pair>)varEntries) {
       if (((Integer)pair.first).intValue() == index)
         varNames.add((String)pair.second); 
     } 
@@ -1207,10 +1207,10 @@ public class ProjectDataStore {
   }
   
   public boolean hasListVariable(String fileName, int index, String data) {
-    ArrayList arrayList = this.listMap.get(fileName);
-    if (arrayList == null)
+    ArrayList listVars = this.listMap.get(fileName);
+    if (listVars == null)
       return false; 
-    for (Pair pair : (ArrayList<Pair>)arrayList) {
+    for (Pair pair : (ArrayList<Pair>)listVars) {
       if (((Integer)pair.first).intValue() == index && ((String)pair.second).equals(data))
         return true; 
     } 
@@ -1218,10 +1218,10 @@ public class ProjectDataStore {
   }
   
   public boolean hasCompoundButtonView(String fileName, String data) {
-    ArrayList arrayList = this.viewMap.get(fileName);
-    if (arrayList == null)
+    ArrayList views = this.viewMap.get(fileName);
+    if (views == null)
       return false; 
-    for (ViewBean viewBean : (ArrayList<ViewBean>)arrayList) {
+    for (ViewBean viewBean : (ArrayList<ViewBean>)views) {
       if (viewBean.getClassInfo().matchesType("CompoundButton") && viewBean.id.equals(data))
         return true; 
     } 
@@ -1230,10 +1230,10 @@ public class ProjectDataStore {
   
   public ArrayList<ViewBean> getCustomViewBeans(String input) {
     ArrayList<ViewBean> customViews = new ArrayList<>();
-    ArrayList arrayList = this.viewMap.get(input);
-    if (arrayList == null)
+    ArrayList viewBeans = this.viewMap.get(input);
+    if (viewBeans == null)
       return customViews; 
-    for (ViewBean viewBean : (ArrayList<ViewBean>)arrayList) {
+    for (ViewBean viewBean : (ArrayList<ViewBean>)viewBeans) {
       if (viewBean.type == 9 || viewBean.type == 10 || viewBean.type == 25 || viewBean.type == 48 || viewBean.type == 31) {
         String customViewName = viewBean.customView;
         if (customViewName != null && customViewName.length() > 0 && !viewBean.customView.equals("none"))
@@ -1541,17 +1541,17 @@ public class ProjectDataStore {
   public void removeViewEventsByTarget(String fileName, String data) {
     if (!this.eventMap.containsKey(fileName))
       return; 
-    ArrayList<EventBean> arrayList = this.eventMap.get(fileName);
-    int i = arrayList.size();
+    ArrayList<EventBean> events = this.eventMap.get(fileName);
+    int i = events.size();
     while (true) {
       int j = i - 1;
       if (j >= 0) {
-        EventBean eventBean = arrayList.get(j);
+        EventBean eventBean = events.get(j);
         i = j;
         if (eventBean.eventType == 4) {
           i = j;
           if (eventBean.targetId.equals(data)) {
-            arrayList.remove(j);
+            events.remove(j);
             i = j;
           } 
         } 
@@ -1575,17 +1575,17 @@ public class ProjectDataStore {
   public void removeEventsByTarget(String fileName, String data) {
     if (!this.eventMap.containsKey(fileName))
       return; 
-    ArrayList<EventBean> arrayList = this.eventMap.get(fileName);
-    if (arrayList == null)
+    ArrayList<EventBean> events = this.eventMap.get(fileName);
+    if (events == null)
       return; 
-    int i = arrayList.size();
+    int i = events.size();
     while (true) {
       int j = i - 1;
       if (j >= 0) {
-        EventBean eventBean = arrayList.get(j);
+        EventBean eventBean = events.get(j);
         i = j;
         if (eventBean.targetId.equals(data)) {
-          arrayList.remove(eventBean);
+          events.remove(eventBean);
           HashMap<String, HashMap<String, ArrayList<BlockBean>>> hashMap = this.blockMap;
           i = j;
           if (hashMap != null) {
