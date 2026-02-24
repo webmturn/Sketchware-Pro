@@ -144,7 +144,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
         this.projectFileBean = projectFileBean;
         isFabEnabled = projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB);
         viewEditor.initialize(sc_id, projectFileBean);
-        viewEditor.h();
+        viewEditor.refreshResourceManager();
         viewProperty.a(sc_id, this.projectFileBean);
         setupPalette();
         refreshAllViews();
@@ -179,8 +179,8 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
     }
 
     public void loadViews(ArrayList<ViewBean> viewBeans) {
-        viewEditor.h();
-        viewEditor.a(ProjectDataStore.getSortedRootViews(viewBeans));
+        viewEditor.refreshResourceManager();
+        viewEditor.loadViews(ProjectDataStore.getSortedRootViews(viewBeans));
     }
 
     public void togglePropertyView(boolean var1) {
@@ -217,7 +217,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
     }
 
     public void updateViewDisplay(ViewBean var1) {
-        viewEditor.e(var1);
+        viewEditor.selectView(var1);
     }
 
     public void showHidePropertyView(boolean shouldShow) {
@@ -328,7 +328,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
                     for (ViewBean viewBean : historyViewBean.getAddedData()) {
                         ProjectDataManager.getProjectDataManager(sc_id).addView(projectFileBean.getXmlName(), viewBean);
                     }
-                    viewEditor.a(viewEditor.a(historyViewBean.getAddedData(), false), false);
+                    viewEditor.setSelectedItem(viewEditor.addViews(historyViewBean.getAddedData(), false), false);
                 } else if (actionType == HistoryViewBean.ACTION_TYPE_UPDATE) {
                     ViewBean prevUpdateData = historyViewBean.getPrevUpdateData();
                     ViewBean currentUpdateData = historyViewBean.getCurrentUpdateData();
@@ -342,18 +342,18 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
                         ProjectDataManager.getProjectDataManager(sc_id).getViewBean(projectFileBean.getXmlName(), prevUpdateData.id).copy(currentUpdateData);
                     }
 
-                    viewEditor.a(viewEditor.e(currentUpdateData), false);
+                    viewEditor.setSelectedItem(viewEditor.selectView(currentUpdateData), false);
                 } else if (actionType == HistoryViewBean.ACTION_TYPE_REMOVE) {
                     for (ViewBean viewBean : historyViewBean.getRemovedData()) {
                         ProjectDataManager.getProjectDataManager(sc_id).removeView(projectFileBean, viewBean);
                     }
-                    viewEditor.b(historyViewBean.getRemovedData(), false);
-                    viewEditor.i();
+                    viewEditor.removeViews(historyViewBean.getRemovedData(), false);
+                    viewEditor.clearSelection();
                 } else if (actionType == HistoryViewBean.ACTION_TYPE_MOVE) {
                     ViewBean movedData = historyViewBean.getMovedData();
                     ViewBean viewBean = ProjectDataManager.getProjectDataManager(sc_id).getViewBean(projectFileBean.getXmlName(), movedData.id);
                     viewBean.copy(movedData);
-                    viewEditor.a(viewEditor.b(viewBean, false), false);
+                    viewEditor.setSelectedItem(viewEditor.moveView(viewBean, false), false);
                 } else if (actionType == HistoryViewBean.ACTION_TYPE_OVERRIDE) {
                     ProjectDataManager.getProjectDataManager(sc_id).viewMap.put(projectFileBean.getXmlName(), historyViewBean.getAddedData());
                     refreshAllViews();
@@ -382,7 +382,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
     }
 
     public void clearViewEditor() {
-        viewEditor.j();
+        viewEditor.resetViewPane();
     }
 
     private void onUndo() {
@@ -394,8 +394,8 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
                     for (ViewBean view : historyViewBean.getAddedData()) {
                         ProjectDataManager.getProjectDataManager(sc_id).removeView(projectFileBean, view);
                     }
-                    viewEditor.b(historyViewBean.getAddedData(), false);
-                    viewEditor.i();
+                    viewEditor.removeViews(historyViewBean.getAddedData(), false);
+                    viewEditor.clearSelection();
                 } else if (actionType == HistoryViewBean.ACTION_TYPE_UPDATE) {
                     ViewBean prevUpdateData = historyViewBean.getPrevUpdateData();
                     ViewBean currentUpdateData = historyViewBean.getCurrentUpdateData();
@@ -407,12 +407,12 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
                     } else {
                         ProjectDataManager.getProjectDataManager(sc_id).getViewBean(projectFileBean.getXmlName(), currentUpdateData.id).copy(prevUpdateData);
                     }
-                    viewEditor.a(viewEditor.e(prevUpdateData), false);
+                    viewEditor.setSelectedItem(viewEditor.selectView(prevUpdateData), false);
                 } else if (actionType == HistoryViewBean.ACTION_TYPE_REMOVE) {
                     for (ViewBean view : historyViewBean.getRemovedData()) {
                         ProjectDataManager.getProjectDataManager(sc_id).addView(projectFileBean.getXmlName(), view);
                     }
-                    viewEditor.a(viewEditor.a(historyViewBean.getRemovedData(), false), false);
+                    viewEditor.setSelectedItem(viewEditor.addViews(historyViewBean.getRemovedData(), false), false);
                 } else if (actionType == HistoryViewBean.ACTION_TYPE_MOVE) {
                     ViewBean movedData = historyViewBean.getMovedData();
                     ViewBean viewBean = ProjectDataManager.getProjectDataManager(sc_id).getViewBean(projectFileBean.getXmlName(), movedData.id);
@@ -422,7 +422,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
                     viewBean.preParent = movedData.parent;
                     viewBean.parentType = movedData.preParentType;
                     viewBean.preParentType = movedData.parentType;
-                    viewEditor.a(viewEditor.b(viewBean, false), false);
+                    viewEditor.setSelectedItem(viewEditor.moveView(viewBean, false), false);
                 } else if (actionType == HistoryViewBean.ACTION_TYPE_OVERRIDE) {
                     ProjectDataManager.getProjectDataManager(sc_id).viewMap.put(projectFileBean.getXmlName(), historyViewBean.getRemovedData());
                     refreshAllViews();

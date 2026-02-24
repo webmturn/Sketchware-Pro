@@ -121,7 +121,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
     private int colorCoolGreenContainer;
     private int colorCoolGreen;
     private int colorError;
-    private final Runnable longPressRunnable = this::e;
+    private final Runnable longPressRunnable = this::handleDragStart;
     private int colorErrorContainer;
 
     public ViewEditor(Context context) {
@@ -190,11 +190,11 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         return projectFileBean;
     }
 
-    public void h() {
+    public void refreshResourceManager() {
         viewPane.setResourceManager(ProjectDataManager.getResourceManager(a));
     }
 
-    public void i() {
+    public void clearSelection() {
         if (selectedItem != null) {
             selectedItem.setSelection(false);
             selectedItem = null;
@@ -202,18 +202,18 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         if (widgetSelectedListener != null) widgetSelectedListener.onViewSelectedWithProperty(false, "");
     }
 
-    public void j() {
+    public void resetViewPane() {
         viewPane.updateRootLayout(a, projectFileBean.getXmlName());
         viewPane.clearViewPane();
-        l();
-        i();
+        resetItemCounters();
+        clearSelection();
     }
 
     public void removeFab() {
         viewPane.removeFabView();
     }
 
-    public void l() {
+    public void resetItemCounters() {
         countItems = new int[99];
     }
 
@@ -265,7 +265,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
     @Override
     public void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        if (isLayoutChanged) a();
+        if (isLayoutChanged) updateLayoutPreview();
     }
 
     @Override
@@ -277,7 +277,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         }
         if (view == viewPane) {
             if (actionMasked == MotionEvent.ACTION_DOWN) {
-                i();
+                clearSelection();
                 currentTouchedView = null;
             }
             return true;
@@ -302,7 +302,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
                     if (draggingListener != null) {
                         draggingListener.onDragEnded();
                     }
-                    b(false, false);
+                    showDeleteView(false, false);
                     dummyView.setDummyVisibility(View.GONE);
                     viewPane.clearViews();
                     handler.removeCallbacks(longPressRunnable);
@@ -342,7 +342,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
             }
         } else if (!isDragged) {
             if (currentTouchedView instanceof ItemView sy) {
-                a(sy, true);
+                setSelectedItem(sy, true);
             }
             if (draggingListener != null) {
                 draggingListener.onDragEnded();
@@ -416,7 +416,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
                             }
                             ProjectDataManager.getProjectDataManager(a).addView(b, next);
                         }
-                        a(a(arrayList, true), true);
+                        setSelectedItem(addViews(arrayList, true), true);
                     }
                 } else if (currentTouchedView instanceof IconBase icon) {
                     ViewBean bean = icon.getBean();
@@ -426,11 +426,11 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
                     if (bean.type == 3 && projectFileBean.fileType == ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY) {
                         ProjectDataManager.getProjectDataManager(a).addEvent(projectFileBean.getJavaName(), 1, bean.type, bean.id, "onClick");
                     }
-                    a(a(bean, true), true);
+                    setSelectedItem(addView(bean, true), true);
                 } else if (currentTouchedView instanceof ItemView sy) {
                     ViewBean bean = sy.getBean();
                     viewPane.updateViewBeanProperties(bean, (int) motionEvent.getRawX(), (int) motionEvent.getRawY());
-                    a(b(bean, true), true);
+                    setSelectedItem(moveView(bean, true), true);
                 }
             } else {
                 if (currentTouchedView instanceof ItemView) {
@@ -442,7 +442,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
             if (draggingListener != null) {
                 draggingListener.onDragEnded();
             }
-            b(false, false);
+            showDeleteView(false, false);
             dummyView.setDummyVisibility(View.GONE);
             currentTouchedView = null;
             viewPane.clearViews();
@@ -457,7 +457,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         for (int size = b2.size() - 1; size >= 0; size--) {
             ProjectDataManager.getProjectDataManager(a).removeView(projectFileBean, b2.get(size));
         }
-        b(b2, true);
+        removeViews(b2, true);
     }
 
     public void setFavoriteData(ArrayList<WidgetCollectionBean> arrayList) {
@@ -588,7 +588,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         initialDeleteViewUi();
     }
 
-    public void b(ArrayList<ViewBean> arrayList, boolean z) {
+    public void removeViews(ArrayList<ViewBean> arrayList, boolean z) {
         if (z) {
             ViewHistoryManager.getInstance(a).recordRemove(projectFileBean.getXmlName(), arrayList);
             if (historyChangeListener != null) {
@@ -601,7 +601,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
             if (size < 0) {
                 return;
             }
-            d(arrayList.get(size));
+            removeView(arrayList.get(size));
         }
     }
 
@@ -614,18 +614,18 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         paletteWidget.removeWidgets();
     }
 
-    public ItemView e(ViewBean viewBean) {
+    public ItemView selectView(ViewBean viewBean) {
         ItemView g = viewPane.g(viewBean);
         widgetSelectedListener.onSelectionChanged();
         widgetSelectedListener.onViewSelected(viewBean.id);
         return g;
     }
 
-    public void d(ViewBean viewBean) {
+    public void removeView(ViewBean viewBean) {
         viewPane.removeView(viewBean);
     }
 
-    private void e() {
+    private void handleDragStart() {
         if (currentTouchedView == null) return;
         if (isViewAnIconBase(currentTouchedView)) {
             boolean isAppCompatEnabled = ProjectDataManager.getLibraryManager(a).getCompat().isEnabled();
@@ -694,20 +694,20 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         isDragged = true;
         dummyView.b(currentTouchedView);
         dummyView.bringToFront();
-        i();
+        clearSelection();
         dummyView.a(currentTouchedView, posInitX, posInitY, posInitX, posInitY);
         dummyView.a(posDummy);
         if (isViewAnIconBase(currentTouchedView)) {
             if (currentTouchedView instanceof WidgetPaletteIcon || currentTouchedView instanceof IconCustomWidget) {
-                b(true, currentTouchedView instanceof IconCustomWidget);
+                showDeleteView(true, currentTouchedView instanceof IconCustomWidget);
                 viewPane.addRootLayout(null);
             } else {
-                b(false, false);
+                showDeleteView(false, false);
                 viewPane.addRootLayout(null);
             }
         } else {
             currentTouchedView.setVisibility(View.GONE);
-            b(true, currentTouchedView instanceof IconCustomWidget);
+            showDeleteView(true, currentTouchedView instanceof IconCustomWidget);
             viewPane.addRootLayout(((ItemView) currentTouchedView).getBean());
         }
         if (hitTestToPane(posInitX, posInitY)) {
@@ -724,7 +724,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         viewPane.resetView(true);
     }
 
-    public ItemView b(ViewBean viewBean, boolean z) {
+    public ItemView moveView(ViewBean viewBean, boolean z) {
         if (z) {
             ViewHistoryManager.getInstance(a).recordMove(projectFileBean.getXmlName(), viewBean);
             if (historyChangeListener != null) {
@@ -799,7 +799,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         toolbar.setBackgroundColor(ProjectFile.getColor(str, ProjectFile.COLOR_PRIMARY));
     }
 
-    private void b(boolean z, boolean isCustomWidget) {
+    private void showDeleteView(boolean z, boolean isCustomWidget) {
         if (isCustomWidget) {
             deleteIcon.setImageDrawable(AppCompatResources.getDrawable(getContext(), R.drawable.ic_mtrl_edit));
             deleteText.setText(getContext().getString(R.string.editor_drag_to_actions));
@@ -862,7 +862,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         selectedItem = itemView;
     }
 
-    private void a() {
+    private void updateLayoutPreview() {
         toolbar.setVisibility(S ? View.VISIBLE : View.GONE);
         bgStatus.setVisibility(T ? View.GONE : View.VISIBLE);
 
@@ -996,7 +996,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         }
     }
 
-    public ItemView a(ArrayList<ViewBean> arrayList, boolean z) {
+    public ItemView addViews(ArrayList<ViewBean> arrayList, boolean z) {
         if (z) {
             ViewHistoryManager.getInstance(a).recordAddMultiple(projectFileBean.getXmlName(), arrayList);
             if (historyChangeListener != null) {
@@ -1014,7 +1014,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         return syVar;
     }
 
-    public ItemView a(ViewBean viewBean, boolean isInHistory) {
+    public ItemView addView(ViewBean viewBean, boolean isInHistory) {
         if (isInHistory) {
             ViewHistoryManager.getInstance(a).recordAdd(projectFileBean.getXmlName(), viewBean);
             if (historyChangeListener != null) {
@@ -1024,7 +1024,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         return createAndAddView(viewBean);
     }
 
-    public void a(ArrayList<ViewBean> arrayList) {
+    public void loadViews(ArrayList<ViewBean> arrayList) {
         if (arrayList == null || arrayList.isEmpty()) {
             return;
         }
@@ -1037,7 +1037,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         viewPane.addFab(viewBean).setOnTouchListener(this);
     }
 
-    public void a(ItemView syVar, boolean z) {
+    public void setSelectedItem(ItemView syVar, boolean z) {
         if (selectedItem != null) {
             selectedItem.setSelection(false);
         }
