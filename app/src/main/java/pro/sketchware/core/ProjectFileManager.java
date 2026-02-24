@@ -44,13 +44,13 @@ public class ProjectFileManager {
   }
   
   public void deleteBackup() {
-    String str = SketchwarePaths.getBackupPath(this.projectId);
+    String backupPath = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(str);
+    stringBuilder.append(backupPath);
     stringBuilder.append(File.separator);
     stringBuilder.append("file");
-    str = stringBuilder.toString();
-    this.fileUtil.deleteFileByPath(str);
+    backupPath = stringBuilder.toString();
+    this.fileUtil.deleteFileByPath(backupPath);
   }
   
   public void addFile(int index, String fileName) {
@@ -87,7 +87,7 @@ public class ProjectFileManager {
   
   public void parseFileData(BufferedReader reader) throws java.io.IOException {
     StringBuffer stringBuffer = new StringBuffer();
-    String str = "";
+    String sectionName = "";
     while (true) {
       String line = reader.readLine();
       if (line != null) {
@@ -95,11 +95,11 @@ public class ProjectFileManager {
           continue; 
         if (line.charAt(0) == '@') {
           StringBuffer tempBuffer = stringBuffer;
-          if (str.length() > 0) {
-            parseFileSection(str, stringBuffer.toString());
+          if (sectionName.length() > 0) {
+            parseFileSection(sectionName, stringBuffer.toString());
             tempBuffer = new StringBuffer();
           } 
-          str = line.substring(1);
+          sectionName = line.substring(1);
           stringBuffer = tempBuffer;
           continue;
         } 
@@ -107,8 +107,8 @@ public class ProjectFileManager {
         stringBuffer.append("\n");
         continue;
       } 
-      if (str.length() > 0)
-        parseFileSection(str, stringBuffer.toString()); 
+      if (sectionName.length() > 0)
+        parseFileSection(sectionName, stringBuffer.toString()); 
       refreshNameLists();
       return;
     } 
@@ -128,10 +128,10 @@ public class ProjectFileManager {
         ProjectFileBean projectFileBean1 = (ProjectFileBean)this.gson.fromJson(value, ProjectFileBean.class);
         projectFileBean1.setOptionsByTheme();
         if (projectFileBean1.fileName.equals("main")) {
-          String str = null;
+          String found = null;
           Iterator<ProjectFileBean> iterator = this.activities.iterator();
           while (true) {
-            value = str;
+            value = found;
             if (iterator.hasNext()) {
               projectFileBean = iterator.next();
               if (projectFileBean.fileName.equals("main"))
@@ -156,18 +156,18 @@ public class ProjectFileManager {
       if (value.length() <= 0)
         return; 
       this.customViews = new ArrayList<ProjectFileBean>();
-      String str = value;
+      String remaining = value;
       while (true) {
-        int i = str.indexOf("\n");
-        if (i < 0 || str.charAt(0) != '{')
+        int i = remaining.indexOf("\n");
+        if (i < 0 || remaining.charAt(0) != '{')
           break; 
-        key = str.substring(0, i);
+        key = remaining.substring(0, i);
         ProjectFileBean projectFileBean1 = (ProjectFileBean)this.gson.fromJson(key, ProjectFileBean.class);
         projectFileBean1.setOptionsByTheme();
         this.customViews.add(projectFileBean1);
-        if (i >= str.length() - 1)
+        if (i >= remaining.length() - 1)
           break; 
-        str = str.substring(i + 1);
+        remaining = remaining.substring(i + 1);
       } 
     } 
   }
@@ -309,8 +309,8 @@ public class ProjectFileManager {
     BufferedReader bufferedReader = null;
     try {
       byte[] bytes = this.fileUtil.readFileBytes(filePath);
-      String str = this.fileUtil.decryptToString(bytes);
-      bufferedReader = new BufferedReader(new StringReader(str));
+      String decryptedData = this.fileUtil.decryptToString(bytes);
+      bufferedReader = new BufferedReader(new StringReader(decryptedData));
       parseFileData(bufferedReader);
     } catch (Exception exception) {
       exception.printStackTrace();
@@ -333,8 +333,8 @@ public class ProjectFileManager {
     BufferedReader bufferedReader = null;
     try {
       byte[] bytes = this.fileUtil.readFileBytes(dataPath);
-      String str = this.fileUtil.decryptToString(bytes);
-      bufferedReader = new BufferedReader(new StringReader(str));
+      String decryptedData = this.fileUtil.decryptToString(bytes);
+      bufferedReader = new BufferedReader(new StringReader(decryptedData));
       parseFileData(bufferedReader);
     } catch (Exception exception) {
       exception.printStackTrace();
@@ -374,18 +374,18 @@ public class ProjectFileManager {
   }
   
   public void saveToBackup() {
-    String str = SketchwarePaths.getBackupPath(this.projectId);
+    String basePath = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(str);
+    stringBuilder.append(basePath);
     stringBuilder.append(File.separator);
     stringBuilder.append("file");
     writeToFile(stringBuilder.toString());
   }
   
   public void saveToData() {
-    String str = SketchwarePaths.getDataPath(this.projectId);
+    String basePath = SketchwarePaths.getDataPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(str);
+    stringBuilder.append(basePath);
     stringBuilder.append(File.separator);
     stringBuilder.append("file");
     writeToFile(stringBuilder.toString());
