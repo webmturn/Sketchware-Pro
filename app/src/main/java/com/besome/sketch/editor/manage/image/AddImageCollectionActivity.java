@@ -214,7 +214,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
     private void save() {
         if (a(imageNameValidator)) {
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                k();
+                showLoadingDialog();
                 new SaveAsyncTask(this).execute();
             }, 500L);
         }
@@ -288,7 +288,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
         public SaveAsyncTask(AddImageCollectionActivity activity) {
             super(activity.getApplicationContext());
             this.activity = new WeakReference<>(activity);
-            activity.a(this);
+            activity.addTask(this);
         }
 
         @Override
@@ -298,7 +298,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
             SketchToast.toast(activity.getApplicationContext(), activity.getString(
                     activity.editing ? R.string.design_manager_message_edit_complete :
                             R.string.design_manager_message_add_complete), SketchToast.TOAST_NORMAL).show();
-            activity.h();
+            activity.dismissLoadingDialog();
             activity.finish();
         }
 
@@ -354,7 +354,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
         public void onError(String str) {
             var activity = this.activity.get();
             if (activity == null) return;
-            activity.h();
+            activity.dismissLoadingDialog();
         }
     }
 }

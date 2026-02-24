@@ -156,7 +156,7 @@ public class ManageSoundImportActivity extends BaseAppCompatActivity implements 
                 finish();
             }
         });
-        if (!super.j()) {
+        if (!super.isStoragePermissionGranted()) {
             finish();
         }
         setContentView(R.layout.manage_sound_import);
@@ -227,7 +227,7 @@ public class ManageSoundImportActivity extends BaseAppCompatActivity implements 
     @Override
     public void onResume() {
         super.onResume();
-        if (!super.j()) {
+        if (!super.isStoragePermissionGranted()) {
             finish();
         }
     }

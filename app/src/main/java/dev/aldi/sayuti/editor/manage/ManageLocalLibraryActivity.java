@@ -173,11 +173,11 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
                 binding.contextualToolbar.setTitle(String.valueOf(getSelectedLocalLibrariesCount()));
                 return true;
             } else if (id == R.id.action_delete_selected_local_libraries) {
-                k();
+                showLoadingDialog();
                 executorService.execute(() -> {
                     deleteSelectedLocalLibraries(scId, adapter.getLocalLibraries(), projectUsedLibs);
                     runOnUiThread(() -> {
-                        h();
+                        dismissLoadingDialog();
                         SketchwareUtil.toast(Helper.getResString(R.string.toast_deleted_successfully));
                         adapter.isSelectionModeEnabled = false;
                         adapter.notifyDataSetChanged();
@@ -239,7 +239,7 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
     }
 
     private void runLoadLocalLibrariesTask() {
-        k();
+        showLoadingDialog();
         new Handler(Looper.getMainLooper()).postDelayed(() -> new LoadLocalLibrariesTask(this).execute(), 500L);
     }
 
@@ -330,14 +330,14 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
         public void onSuccess() {
             var act = activity.get();
             if (act == null) return;
-            act.h();
+            act.dismissLoadingDialog();
         }
 
         @Override
         public void onError(String idk) {
             var act = activity.get();
             if (act == null) return;
-            act.h();
+            act.dismissLoadingDialog();
         }
 
         @Override

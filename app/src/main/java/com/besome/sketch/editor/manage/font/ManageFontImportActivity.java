@@ -149,7 +149,7 @@ public class ManageFontImportActivity extends BaseAppCompatActivity implements V
                 finish();
             }
         });
-        if (!super.j()) {
+        if (!super.isStoragePermissionGranted()) {
             finish();
         }
         binding = ManageFontImportBinding.inflate(getLayoutInflater());
@@ -196,7 +196,7 @@ public class ManageFontImportActivity extends BaseAppCompatActivity implements V
     @Override
     public void onResume() {
         super.onResume();
-        if (!super.j()) {
+        if (!super.isStoragePermissionGranted()) {
             finish();
         }
     }

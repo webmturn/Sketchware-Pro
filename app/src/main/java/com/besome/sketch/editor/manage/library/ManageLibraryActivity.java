@@ -264,12 +264,12 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                k();
+                showLoadingDialog();
                 try {
                     new Handler(Looper.getMainLooper()).postDelayed(() -> new SaveLibraryTask(ManageLibraryActivity.this).execute(), 500L);
                 } catch (Exception e) {
                     Log.e("ManageLibraryActivity", e.getMessage(), e);
-                    h();
+                    dismissLoadingDialog();
                 }
             }
         });
@@ -448,7 +448,7 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
         public void onSuccess() {
             var act = activity.get();
             if (act == null) return;
-            act.h();
+            act.dismissLoadingDialog();
             Intent intent = new Intent();
             intent.putExtra("sc_id", act.sc_id);
             intent.putExtra("firebase", act.firebaseLibraryBean);
@@ -463,7 +463,7 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
         public void onError(String idk) {
             var act = activity.get();
             if (act == null) return;
-            act.h();
+            act.dismissLoadingDialog();
         }
 
         @Override

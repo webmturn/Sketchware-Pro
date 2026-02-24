@@ -40,11 +40,6 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
     private LoadingDialog lottieDialog;
     private ArrayList<BaseAsyncTask> taskList;
 
-    @Deprecated
-    public void a(BaseAsyncTask var1) {
-        addTask(var1);
-    }
-
     public void addTask(BaseAsyncTask task) {
         taskList.add(task);
     }
@@ -98,45 +93,10 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
         return ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == 0 && ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == 0;
     }
 
-    @Deprecated
-    public boolean j() {
-        return isStoragePermissionGranted();
-    }
-
     public void showLoadingDialog() {
         if (lottieDialog != null && !lottieDialog.isShowing() && !isFinishing()) {
             lottieDialog.show();
         }
-    }
-
-    @Deprecated
-    public void k() {
-        showLoadingDialog();
-    }
-
-    @Deprecated
-    public void h() {
-        dismissLoadingDialog();
-    }
-
-    @Deprecated
-    public void g() {
-        cancelAllTasks();
-    }
-
-    @Deprecated
-    public void i() {
-        dismissProgressDialog();
-    }
-
-    @Deprecated
-    public void a(OnCancelListener cancelListener) {
-        showProgressDialogWithCancel(cancelListener);
-    }
-
-    @Deprecated
-    public void a(String message) {
-        setProgressMessage(message);
     }
 
     @Override

@@ -321,7 +321,7 @@ public class ManageXMLCommandActivity extends BaseAppCompatActivity {
     }
 
     private void showSourceCode(String filename) {
-        k();
+        showLoadingDialog();
         executorService
                 .execute(
                         () -> {
@@ -342,7 +342,7 @@ public class ManageXMLCommandActivity extends BaseAppCompatActivity {
                             runOnUiThread(
                                     () -> {
                                         if (isFinishing()) return;
-                                        h();
+                                        dismissLoadingDialog();
 
                                         CodeEditor editor = new CodeEditor(this);
                                         editor.setTypefaceText(Typeface.MONOSPACE);
@@ -402,14 +402,14 @@ public class ManageXMLCommandActivity extends BaseAppCompatActivity {
                                 ProjectSettings.SETTING_GENERIC_VALUE_FALSE));
         if (newXMLCommand) {
             if (!FileUtil.isExistFile(commandPath)) {
-                k();
+                showLoadingDialog();
                 executorService
                         .execute(
                                 () -> {
                                     fetchXMLCommand(this, sc_id);
                                     runOnUiThread(
                                             () -> {
-                                                h();
+                                                dismissLoadingDialog();
                                                 fetchCommand();
                                             });
                                 });

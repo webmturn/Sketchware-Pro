@@ -234,12 +234,12 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
                 if (selecting) {
                     a(false);
                 } else {
-                    k();
+                    showLoadingDialog();
                     try {
                         new Handler(Looper.getMainLooper()).postDelayed(() -> new SaveViewAsyncTask(ManageViewActivity.this).execute(), 500L);
                     } catch (Exception e) {
                         Log.e("ManageViewActivity", e.getMessage(), e);
-                        h();
+                        dismissLoadingDialog();
                     }
                 }
             }
@@ -350,7 +350,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
         public void onSuccess() {
             var activity = this.activity.get();
             if (activity == null) return;
-            activity.h();
+            activity.dismissLoadingDialog();
             activity.setResult(RESULT_OK);
             activity.finish();
         }
@@ -359,7 +359,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
         public void onError(String var1) {
             var activity = this.activity.get();
             if (activity == null) return;
-            activity.h();
+            activity.dismissLoadingDialog();
         }
 
         @Override

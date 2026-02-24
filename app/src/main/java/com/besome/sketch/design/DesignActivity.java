@@ -410,13 +410,13 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     }
 
     private void saveChangesAndCloseProject() {
-        k();
+        showLoadingDialog();
         SaveChangesProjectCloser saveChangesProjectCloser = new SaveChangesProjectCloser(this);
         saveChangesProjectCloser.execute();
     }
 
     private void saveProject() {
-        k();
+        showLoadingDialog();
         ProjectSaver projectSaver = new ProjectSaver(this);
         projectSaver.execute();
     }
@@ -437,7 +437,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                         currentTabNumber--;
                         viewPager.setCurrentItem(currentTabNumber);
                     } else if (prefP12.getBooleanDefault("P12I2")) {
-                        k();
+                        showLoadingDialog();
                         saveChangesAndCloseProject();
                     } else {
                         showSaveBeforeQuittingDialog();
@@ -655,7 +655,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     @Override
     public void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        k();
+        showLoadingDialog();
 
         HashMap<String, Object> projectInfo = ProjectListManager.getProjectById(sc_id);
         getSupportActionBar().setTitle(MapValueHelper.getString(projectInfo, "my_ws_name"));
@@ -725,7 +725,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                     saveChangesAndCloseProject();
                 } catch (Exception e) {
                     crashlytics.recordException(e);
-                    h();
+                    dismissLoadingDialog();
                 }
             }
         });
@@ -733,12 +733,12 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             if (!UIHelper.isClickThrottled()) {
                 v.dismiss();
                 try {
-                    k();
+                    showLoadingDialog();
                     DiscardChangesProjectCloser discardChangesProjectCloser = new DiscardChangesProjectCloser(this);
                     discardChangesProjectCloser.execute();
                 } catch (Exception e) {
                     crashlytics.recordException(e);
-                    h();
+                    dismissLoadingDialog();
                 }
             }
         });
@@ -812,14 +812,14 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
 
     private void showCurrentActivitySrcCode() {
         if (projectFile == null) return;
-        k();
+        showLoadingDialog();
         backgroundExecutor.execute(() -> {
             try {
                 var filename = Helper.getText(fileName);
                 var code = new ProjectFilePaths(getApplicationContext(), sc_id).getFileSrc(filename, ProjectDataManager.getFileManager(sc_id), ProjectDataManager.getProjectDataManager(sc_id), ProjectDataManager.getLibraryManager(sc_id));
                 runOnUiThread(() -> {
                     if (isFinishing()) return;
-                    h();
+                    dismissLoadingDialog();
                     if (code.isEmpty()) {
                         SketchwareUtil.toast(Helper.getResString(R.string.design_error_generate_source));
                         return;
@@ -829,7 +829,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 });
             } catch (Exception e) {
                 Log.e("DesignActivity", "Failed to generate source code", e);
-                runOnUiThread(() -> { h(); SketchwareUtil.toast(Helper.getResString(R.string.design_error_generate_source)); });
+                runOnUiThread(() -> { dismissLoadingDialog(); SketchwareUtil.toast(Helper.getResString(R.string.design_error_generate_source)); });
             }
         });
     }
@@ -867,7 +867,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
      */
     void toViewCodeEditor() {
         if (projectFile == null) return;
-        k();
+        showLoadingDialog();
         backgroundExecutor.execute(() -> {
             try {
                 String filename = Helper.getText(fileName);
@@ -881,12 +881,12 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 String content = xmlGenerator.toXmlString();
                 runOnUiThread(() -> {
                     if (isFinishing()) return;
-                    h();
+                    dismissLoadingDialog();
                     launchActivity(ViewCodeEditorActivity.class, openViewCodeEditor, new Pair<>("title", filename), new Pair<>("content", content));
                 });
             } catch (Exception e) {
                 Log.e("DesignActivity", "Failed to generate view code", e);
-                runOnUiThread(() -> { h(); SketchwareUtil.toast(Helper.getResString(R.string.design_error_generate_code)); });
+                runOnUiThread(() -> { dismissLoadingDialog(); SketchwareUtil.toast(Helper.getResString(R.string.design_error_generate_code)); });
             }
         });
     }
@@ -1385,7 +1385,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         }
 
         public void execute() {
-            getActivity().k();
+            getActivity().showLoadingDialog();
             new Thread(this::doInBackground).start();
         }
 
@@ -1396,7 +1396,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 activity.runOnUiThread(() -> {
                     activity.updateBottomMenu();
                     activity.refresh();
-                    activity.h();
+                    activity.dismissLoadingDialog();
                     if (savedInstanceState == null) {
                         activity.checkForUnsavedProjectData();
                     }
@@ -1412,7 +1412,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         }
 
         public void execute() {
-            getActivity().k();
+            getActivity().showLoadingDialog();
             new Thread(this::doInBackground).start();
         }
 
@@ -1424,7 +1424,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 ProjectDataManager.getResourceManager(sc_id).restoreSoundsFromTemp();
                 ProjectDataManager.getResourceManager(sc_id).restoreFontsFromTemp();
                 activity.runOnUiThread(() -> {
-                    activity.h();
+                    activity.dismissLoadingDialog();
                     activity.finish();
                 });
             }
@@ -1438,7 +1438,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         }
 
         public void execute() {
-            getActivity().k();
+            getActivity().showLoadingDialog();
             new Thread(this::doInBackground).start();
         }
 
@@ -1454,7 +1454,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 activity.runOnUiThread(() -> {
                     SketchToast.toast(activity.getApplicationContext(), Helper.getResString(R.string.common_message_complete_save), SketchToast.TOAST_NORMAL).show();
                     activity.saveVersionCodeInformationToProject();
-                    activity.h();
+                    activity.dismissLoadingDialog();
                     ProjectDataManager.getResourceManager(sc_id).backupImages();
                     ProjectDataManager.getResourceManager(sc_id).backupSounds();
                     ProjectDataManager.getResourceManager(sc_id).backupFonts();
@@ -1470,7 +1470,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         }
 
         public void execute() {
-            getActivity().k();
+            getActivity().showLoadingDialog();
             new Thread(this::doInBackground).start();
         }
 
@@ -1487,7 +1487,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 activity.runOnUiThread(() -> {
                     SketchToast.toast(activity.getApplicationContext(), Helper.getResString(R.string.common_message_complete_save), SketchToast.TOAST_NORMAL).show();
                     activity.saveVersionCodeInformationToProject();
-                    activity.h();
+                    activity.dismissLoadingDialog();
                     activity.finish();
                 });
             }

@@ -439,7 +439,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
             // Register as AsyncTask with dialog to Activity
             exportProjectActivity.addTask(this);
             // Make a simple ProgressDialog show and set its OnCancelListener
-            exportProjectActivity.a((DialogInterface.OnCancelListener) this);
+            exportProjectActivity.showProgressDialogWithCancel((DialogInterface.OnCancelListener) this);
             // Allow user to use back button
             exportProjectActivity.progressDialog.setCancelable(false);
         }
@@ -692,7 +692,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
             if (act == null) return;
             if (!act.progressDialog.isCancelable()) {
                 act.progressDialog.setCancelable(true);
-                act.a((DialogInterface.OnCancelListener) this);
+                act.showProgressDialogWithCancel((DialogInterface.OnCancelListener) this);
                 publishProgress(Helper.getResString(R.string.build_progress_canceling));
                 canceled = true;
             }
@@ -706,7 +706,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
             if (act == null) return;
             act.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             // Dismiss the ProgressDialog
-            act.i();
+            act.dismissProgressDialog();
             act.sign_apk_output_stage.setVisibility(View.GONE);
             LottieAnimationView loading_sign_apk = this.loading_sign_apk.get();
             if (loading_sign_apk != null) {
@@ -732,7 +732,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
             // Update the ProgressDialog's text
             var act = activity.get();
             if (act == null) return;
-            act.a(strArr[0]);
+            act.setProgressMessage(strArr[0]);
         }
 
         /**
@@ -744,7 +744,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
             if (act == null) return;
             act.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             // Dismiss the ProgressDialog
-            act.i();
+            act.dismissProgressDialog();
 
             if (new File(getCorrectResultFilename(project_metadata.releaseApkPath)).exists()) {
                 act.f(getCorrectResultFilename(project_metadata.projectName + "_release.apk"));
@@ -771,7 +771,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
             if (act == null) return;
             act.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             // Dismiss the ProgressDialog
-            act.i();
+            act.dismissProgressDialog();
             SketchwareUtil.showAnErrorOccurredDialog(act, str);
             act.sign_apk_output_stage.setVisibility(View.GONE);
             LottieAnimationView loading_sign_apk = this.loading_sign_apk.get();

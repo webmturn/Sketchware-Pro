@@ -222,7 +222,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
     private void save() {
         if (a(O)) {
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                k();
+                showLoadingDialog();
                 new SaveAsyncTask(this).execute();
             }, 500L);
         }
@@ -343,14 +343,14 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
         public SaveAsyncTask(AddImageActivity activity) {
             super(activity.getApplicationContext());
             this.activity = new WeakReference<>(activity);
-            activity.a(this);
+            activity.addTask(this);
         }
 
         @Override
         public void onSuccess() {
             var activity = this.activity.get();
             if (activity == null) return;
-            activity.h();
+            activity.dismissLoadingDialog();
             Intent intent = new Intent();
             intent.putExtra("sc_id", activity.sc_id);
             if (activity.editing) {
@@ -456,7 +456,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
         public void onError(String str) {
             var activity = this.activity.get();
             if (activity == null) return;
-            activity.h();
+            activity.dismissLoadingDialog();
         }
     }
 }

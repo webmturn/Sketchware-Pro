@@ -51,13 +51,13 @@ public class ManageSoundActivity extends BaseAppCompatActivity implements ViewPa
                 } else if (collectionSounds.isSelecting()) {
                     collectionSounds.resetSelection();
                 } else {
-                    k();
+                    showLoadingDialog();
                     try {
                         projectSounds.stopPlayback();
                         collectionSounds.stopPlayback();
                         new Handler(Looper.getMainLooper()).postDelayed(() -> new SaveAsyncTask(ManageSoundActivity.this).execute(), 500L);
                     } catch (Exception e) {
-                        h();
+                        dismissLoadingDialog();
                     }
                 }
             }
@@ -122,7 +122,7 @@ public class ManageSoundActivity extends BaseAppCompatActivity implements ViewPa
         public void onSuccess() {
             var activity = activityWeakReference.get();
             if (activity == null) return;
-            activity.h();
+            activity.dismissLoadingDialog();
             activity.setResult(RESULT_OK);
             activity.finish();
             FontCollectionManager.getInstance().clearCollections();
@@ -139,7 +139,7 @@ public class ManageSoundActivity extends BaseAppCompatActivity implements ViewPa
         public void onError(String str) {
             var activity = activityWeakReference.get();
             if (activity == null) return;
-            activity.h();
+            activity.dismissLoadingDialog();
         }
     }
 

@@ -77,7 +77,7 @@ public class SrcViewerActivity extends BaseAppCompatActivity {
             }
         });
 
-        k(); // show loading
+        showLoadingDialog(); // show loading
 
         backgroundExecutor.execute(() -> {
             try {
@@ -102,7 +102,7 @@ public class SrcViewerActivity extends BaseAppCompatActivity {
                             }
                         }
                         binding.editor.setText(sourceCodeBeans.get(binding.filesListSpinner.getSelectedItemPosition()).source);
-                        h(); // hide loading
+                        dismissLoadingDialog(); // hide loading
                     }
                 });
             } catch (Exception e) {

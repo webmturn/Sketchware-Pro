@@ -148,11 +148,11 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
     }
 
     private void startBackgroundTask() {
-        k();
+        showLoadingDialog();
 
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             loadDataInBackground();
-            h();
+            dismissLoadingDialog();
         }, 1000);
     }
 

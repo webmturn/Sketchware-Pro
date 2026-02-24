@@ -42,11 +42,11 @@ public class ManageFontActivity extends BaseAppCompatActivity {
                 } else if (collectionFontsFragment.isSelecting()) {
                     collectionFontsFragment.resetSelection();
                 } else {
-                    k();
+                    showLoadingDialog();
                     try {
                         new Handler(Looper.getMainLooper()).postDelayed(() -> new SaveAsyncTask(ManageFontActivity.this).execute(), 500L);
                     } catch (Exception e) {
-                        h();
+                        dismissLoadingDialog();
                     }
                 }
             }
@@ -128,7 +128,7 @@ public class ManageFontActivity extends BaseAppCompatActivity {
         public void onSuccess() {
             var activity = activityWeakReference.get();
             if (activity == null) return;
-            activity.h();
+            activity.dismissLoadingDialog();
             activity.setResult(RESULT_OK);
             activity.finish();
             ImageCollectionManager.getInstance().clearCollections();
@@ -145,7 +145,7 @@ public class ManageFontActivity extends BaseAppCompatActivity {
         public void onError(String str) {
             var activity = activityWeakReference.get();
             if (activity == null) return;
-            activity.h();
+            activity.dismissLoadingDialog();
         }
     }
 

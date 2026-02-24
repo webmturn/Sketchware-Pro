@@ -164,7 +164,7 @@ public class PropertyActivity extends BaseAppCompatActivity implements PropertyC
         CustomScrollView scrollView = findViewById(R.id.scroll_view);
         RecyclerView propertyGroupList = findViewById(R.id.property_group_list);
 
-        if (!j()) {
+        if (!isStoragePermissionGranted()) {
             finish();
         }
 
@@ -232,7 +232,7 @@ public class PropertyActivity extends BaseAppCompatActivity implements PropertyC
     @Override
     public void onResume() {
         super.onResume();
-        if (!j()) {
+        if (!isStoragePermissionGranted()) {
             finish();
         }
     }

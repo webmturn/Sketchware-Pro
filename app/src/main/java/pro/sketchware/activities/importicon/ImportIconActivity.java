@@ -147,7 +147,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
         binding.imageList.setLayoutManager(new GridLayoutManager(getBaseContext(), getGridLayoutColumnCount()));
         adapter = new IconAdapter(this, selected_icon_type, selected_color, this);
         binding.imageList.setAdapter(adapter);
-        k();
+        showLoadingDialog();
 
         binding.filterIconsButton.setOnClickListener(v -> showFilterDialog());
 
@@ -441,7 +441,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
         public void onSuccess() {
             var activity = this.activity.get();
             if (activity == null) return;
-            activity.h();
+            activity.dismissLoadingDialog();
             activity.setIconColor();
         }
 
@@ -458,7 +458,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
         public void onError(String str) {
             var activity = this.activity.get();
             if (activity == null) return;
-            activity.h();
+            activity.dismissLoadingDialog();
         }
 
     }
@@ -470,14 +470,14 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
             super(activity);
             this.activity = new WeakReference<>(activity);
             activity.addTask(this);
-            activity.k();
+            activity.showLoadingDialog();
         }
 
         @Override
         public void onSuccess() {
             var activity = this.activity.get();
             if (activity == null) return;
-            activity.h();
+            activity.dismissLoadingDialog();
             activity.selectedIconPosition = -1;
         }
 
@@ -497,7 +497,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
         public void onError(String str) {
             var activity = this.activity.get();
             if (activity == null) return;
-            activity.h();
+            activity.dismissLoadingDialog();
         }
     }
 }

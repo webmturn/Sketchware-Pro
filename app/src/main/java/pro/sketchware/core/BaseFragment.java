@@ -27,7 +27,7 @@ public class BaseFragment extends Fragment {
 
     public void dismissProgressDialog() {
         if (getActivity() instanceof BaseAppCompatActivity) {
-            ((BaseAppCompatActivity) getActivity()).h();
+            ((BaseAppCompatActivity) getActivity()).dismissLoadingDialog();
         }
     }
 
@@ -39,7 +39,7 @@ public class BaseFragment extends Fragment {
 
     public void showProgressDialog() {
         if (getActivity() instanceof BaseAppCompatActivity) {
-            ((BaseAppCompatActivity) getActivity()).k();
+            ((BaseAppCompatActivity) getActivity()).showLoadingDialog();
         }
     }
 

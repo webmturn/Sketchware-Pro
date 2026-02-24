@@ -70,7 +70,7 @@ public class ManageImageActivity extends BaseAppCompatActivity implements ViewPa
                     collectionImagesFragment.unselectAll();
                     binding.layoutBtnImport.setVisibility(View.GONE);
                 } else {
-                    k();
+                    showLoadingDialog();
                     new Handler(Looper.getMainLooper()).postDelayed(() -> new SaveImagesAsyncTask(ManageImageActivity.this).execute(), 500L);
                 }
             }
@@ -137,14 +137,14 @@ public class ManageImageActivity extends BaseAppCompatActivity implements ViewPa
         public SaveImagesAsyncTask(ManageImageActivity activity) {
             super(activity);
             this.activity = new WeakReference<>(activity);
-            activity.a(this);
+            activity.addTask(this);
         }
 
         @Override
         public void onSuccess() {
             var activity = this.activity.get();
             if (activity == null) return;
-            activity.h();
+            activity.dismissLoadingDialog();
             activity.setResult(Activity.RESULT_OK);
             activity.finish();
             SoundCollectionManager.getInstance().clearCollections();
@@ -161,7 +161,7 @@ public class ManageImageActivity extends BaseAppCompatActivity implements ViewPa
         public void onError(String str) {
             var activity = this.activity.get();
             if (activity == null) return;
-            activity.h();
+            activity.dismissLoadingDialog();
         }
     }
 

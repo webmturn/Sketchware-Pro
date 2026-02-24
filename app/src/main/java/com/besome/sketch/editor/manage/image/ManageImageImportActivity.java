@@ -139,7 +139,7 @@ public class ManageImageImportActivity extends BaseAppCompatActivity implements 
                 finish();
             }
         });
-        if (!super.j()) {
+        if (!super.isStoragePermissionGranted()) {
             finish();
         }
         setContentView(R.layout.manage_image_import);
@@ -194,7 +194,7 @@ public class ManageImageImportActivity extends BaseAppCompatActivity implements 
     @Override
     public void onResume() {
         super.onResume();
-        if (!super.j()) {
+        if (!super.isStoragePermissionGranted()) {
             finish();
         }
     }

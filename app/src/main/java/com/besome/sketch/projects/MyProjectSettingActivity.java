@@ -502,12 +502,12 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
         public SaveProjectAsyncTask(Context context) {
             super(context);
             addTask(this);
-            k();
+            showLoadingDialog();
         }
 
         @Override
         public void onSuccess() {
-            h();
+            dismissLoadingDialog();
             Intent intent = getIntent();
             intent.putExtra("sc_id", sc_id);
             intent.putExtra("is_new", !updatingExistingProject);
@@ -589,7 +589,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
 
         @Override
         public void onError(String str) {
-            h();
+            dismissLoadingDialog();
         }
 
     }

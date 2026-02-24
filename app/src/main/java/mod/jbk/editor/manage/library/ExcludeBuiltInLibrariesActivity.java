@@ -159,7 +159,7 @@ public class ExcludeBuiltInLibrariesActivity extends BaseAppCompatActivity {
                 if (config != null && config.first.equals(isExcludingEnabled) && config.second.equals(excludedLibraries)) {
                     finish();
                 } else {
-                    k();
+                    showLoadingDialog();
                     try {
                         new Handler(Looper.myLooper()).postDelayed(() ->
                                 new SaveConfigTask(ExcludeBuiltInLibrariesActivity.this).execute(), 500);
@@ -227,7 +227,7 @@ public class ExcludeBuiltInLibrariesActivity extends BaseAppCompatActivity {
 
     private void onSaveError(String errorMessage) {
         SketchwareUtil.toastError(errorMessage);
-        h();
+        dismissLoadingDialog();
     }
 
     @Override
@@ -348,14 +348,14 @@ public class ExcludeBuiltInLibrariesActivity extends BaseAppCompatActivity {
         public SaveConfigTask(ExcludeBuiltInLibrariesActivity activity) {
             super(activity);
             this.activity = new WeakReference<>(activity);
-            activity.a(this);
+            activity.addTask(this);
         }
 
         @Override
         public void onSuccess() {
             var act = activity.get();
             if (act == null) return;
-            act.h();
+            act.dismissLoadingDialog();
             act.setResult(RESULT_OK);
             act.finish();
         }

@@ -1908,7 +1908,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     togglePaletteVisibility(false);
                     return;
                 }
-                k();
+                showLoadingDialog();
                 if (!isTopMenuEnabled()) {
                     return;
                 }
@@ -2541,7 +2541,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         public void onSuccess() {
             var act = activity.get();
             if (act == null) return;
-            act.h();
+            act.dismissLoadingDialog();
             act.finish();
         }
 
@@ -2550,7 +2550,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             Toast.makeText(getContext(), R.string.common_error_failed_to_save, Toast.LENGTH_SHORT).show();
             var act = activity.get();
             if (act == null) return;
-            act.h();
+            act.dismissLoadingDialog();
         }
 
         @Override
@@ -2570,7 +2570,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
 
         public void execute() {
-            getActivity().k();
+            getActivity().showLoadingDialog();
             new Thread(this::doInBackground).start();
         }
 
@@ -2578,7 +2578,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             LogicEditorActivity activity = getActivity();
             if (activity != null) {
                 activity.loadEventBlocks();
-                activity.runOnUiThread(activity::h);
+                activity.runOnUiThread(activity::dismissLoadingDialog);
             }
         }
 
