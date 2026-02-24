@@ -124,7 +124,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
                         if (UriPathResolver.resolve(this, K) == null) {
                             return;
                         }
-                        a(data);
+                        loadSoundFromUri(data);
                     }
                 });
         setDialogTitle(getString(R.string.design_manager_sound_title_add_sound));
@@ -175,7 +175,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
             setDialogTitle(getString(R.string.design_manager_sound_title_edit_sound_name));
             M = new ResourceNameValidator(this, binding.tiInput, BlockConstants.RESERVED_KEYWORDS, getResourceNames(), O.resName);
             binding.edInput.setText(O.resName);
-            loadSoundFromPath(a(O));
+            loadSoundFromPath(getResourceFilePath(O));
         }
     }
 
@@ -259,7 +259,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
         H.schedule(I, 100L, 100L);
     }
 
-    private String a(ProjectResourceBean projectResourceBean) {
+    private String getResourceFilePath(ProjectResourceBean projectResourceBean) {
         return SketchwarePaths.getCollectionPath() + File.separator + "sound" + File.separator + "data" + File.separator + O.resFullName;
     }
 
@@ -295,7 +295,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
             G.setDataSource(this, Uri.parse(str));
             G.prepare();
             L = true;
-            a(str, binding.imgAlbum);
+            loadAlbumArt(str, binding.imgAlbum);
             binding.layoutControl.setVisibility(View.VISIBLE);
             binding.layoutGuide.setVisibility(View.GONE);
         } catch (Exception e) {
@@ -303,7 +303,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
         }
     }
 
-    private void a(Uri uri) {
+    private void loadSoundFromUri(Uri uri) {
         String a = UriPathResolver.resolve(this, uri);
         K = uri;
         try {
@@ -339,7 +339,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
             G.setDataSource(this, uri);
             G.prepare();
             L = true;
-            a(UriPathResolver.resolve(this, K), binding.imgAlbum);
+            loadAlbumArt(UriPathResolver.resolve(this, K), binding.imgAlbum);
             binding.layoutControl.setVisibility(View.VISIBLE);
             binding.layoutGuide.setVisibility(View.GONE);
             try {
@@ -362,7 +362,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
         }
     }
 
-    private void a(String str, ImageView imageView) {
+    private void loadAlbumArt(String str, ImageView imageView) {
         MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
         try {
             mediaMetadataRetriever.setDataSource(str);
