@@ -33,7 +33,7 @@ public class ItemVerticalScrollView extends FrameLayout implements ItemView, Scr
         initialize(context);
     }
 
-    private int a(Rect rect) {
+    private int computeScrollDelta(Rect rect) {
         int var2 = getChildCount();
         byte var3 = 0;
         if (var2 == 0) {
@@ -98,7 +98,7 @@ public class ItemVerticalScrollView extends FrameLayout implements ItemView, Scr
 
     }
 
-    private void a(int position) {
+    private void scrollByIfNeeded(int position) {
         if (position != 0) {
             scrollBy(0, position);
         }
@@ -112,7 +112,7 @@ public class ItemVerticalScrollView extends FrameLayout implements ItemView, Scr
         paint.setStrokeWidth(ViewUtil.dpToPx(getContext(), 2.0F));
     }
 
-    private boolean a(View view, int var2, int var3) {
+    private boolean isViewVisible(View view, int var2, int var3) {
         view.getDrawingRect(g);
         offsetDescendantRectToMyCoords(view, g);
         return g.bottom + var2 >= getScrollY() && g.top - var2 <= getScrollY() + var3;
@@ -286,10 +286,10 @@ public class ItemVerticalScrollView extends FrameLayout implements ItemView, Scr
     public void onSizeChanged(int width, int height, int oldWidth, int oldHeight) {
         super.onSizeChanged(width, height, oldWidth, oldHeight);
         View focusedView = findFocus();
-        if (focusedView != null && this != focusedView && a(focusedView, 0, oldHeight)) {
+        if (focusedView != null && this != focusedView && isViewVisible(focusedView, 0, oldHeight)) {
             focusedView.getDrawingRect(g);
             offsetDescendantRectToMyCoords(focusedView, g);
-            a(a(g));
+            scrollByIfNeeded(computeScrollDelta(g));
         }
     }
 
