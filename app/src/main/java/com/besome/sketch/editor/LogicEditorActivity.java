@@ -162,7 +162,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     private View currentTouchedView;
     private boolean G, isDragged, W, X, da, ea, ha, ia;
     private ArrayList<BlockBean> savedBlockBean = new ArrayList<>();
-    private final Runnable longPressed = this::r;
+    private final Runnable longPressed = this::startDragMode;
     private Boolean isViewBindingEnabled;
 
     private SvgUtils svgUtils;
@@ -266,7 +266,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
     private void redo() {
         if (!isDragged) {
-            HistoryBlockBean historyBlockBean = BlockHistoryManager.getInstance(scId).redo(s());
+            HistoryBlockBean historyBlockBean = BlockHistoryManager.getInstance(scId).redo(buildHistoryKey());
             if (historyBlockBean != null) {
                 int actionType = historyBlockBean.getActionType();
                 if (actionType == HistoryBlockBean.ACTION_TYPE_ADD) {
@@ -405,7 +405,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 if (radioButton.isChecked()) {
                     if (!o.hasListReference(Helper.getText(radioButton))) {
                         if (!ProjectDataManager.getProjectDataManager(scId).isListUsedInBlocks(M.getJavaName(), Helper.getText(radioButton), id + "_" + eventName)) {
-                            l(Helper.getText(radioButton));
+                            removeListVariable(Helper.getText(radioButton));
                         }
                     }
                     Toast.makeText(getContext(), R.string.logic_editor_message_currently_used_list, Toast.LENGTH_SHORT).show();
@@ -438,7 +438,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 if (radioButton.isChecked()) {
                     if (!o.hasMapReference(Helper.getText(radioButton))) {
                         if (!ProjectDataManager.getProjectDataManager(scId).isVariableUsedInBlocks(M.getJavaName(), Helper.getText(radioButton), id + "_" + eventName)) {
-                            m(Helper.getText(radioButton));
+                            removeVariable(Helper.getText(radioButton));
                         }
                     }
                     Toast.makeText(getContext(), R.string.logic_editor_message_currently_used_variable, Toast.LENGTH_SHORT).show();
@@ -462,7 +462,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
     private void undo() {
         if (!isDragged) {
-            HistoryBlockBean history = BlockHistoryManager.getInstance(scId).undo(s());
+            HistoryBlockBean history = BlockHistoryManager.getInstance(scId).undo(buildHistoryKey());
             if (history != null) {
                 int actionType = history.getActionType();
                 if (actionType == HistoryBlockBean.ACTION_TYPE_ADD) {
@@ -719,7 +719,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         ss.parentBlock.recalculateToRoot();
         ss.parentBlock.getRootBlock().layoutChain();
         ss.parentBlock.pa.updatePaneSize();
-        BlockHistoryManager.getInstance(scId).recordUpdate(s(), clone, ss.parentBlock.getBean().clone());
+        BlockHistoryManager.getInstance(scId).recordUpdate(buildHistoryKey(), clone, ss.parentBlock.getBean().clone());
         refreshOptionsMenu();
     }
 
@@ -1503,7 +1503,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             return;
         }
         X = z;
-        n();
+        cancelPaletteAnimations();
         if (z) {
             g(false);
             objectAnimator = U;
@@ -1610,7 +1610,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
     @Override
     public void finish() {
-        BlockHistoryManager.getInstance(scId).removeHistory(s());
+        BlockHistoryManager.getInstance(scId).removeHistory(buildHistoryKey());
         super.finish();
     }
 
@@ -1653,11 +1653,11 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
     public void g(boolean z) {
         if (!ha) {
-            t();
+            initDrawerAnimators();
         }
         if (ia != z) {
             ia = z;
-            l();
+            cancelDrawerAnimations();
             (z ? fa : ga).start();
         }
     }
@@ -1739,13 +1739,13 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         logicTopMenu.setFavoriteActive(false);
         logicTopMenu.setDetailActive(false);
         if (!da) {
-            x();
+            initTopMenuAnimators();
         }
         if (ea == z) {
             return;
         }
         ea = z;
-        m();
+        cancelTopMenuAnimations();
         (z ? ba : ca).start();
     }
 
@@ -1778,7 +1778,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         dialog.show();
     }
 
-    public void l() {
+    public void cancelDrawerAnimations() {
         if (fa.isRunning()) {
             fa.cancel();
         }
@@ -1787,12 +1787,12 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
     }
 
-    public void l(String str) {
+    public void removeListVariable(String str) {
         ProjectDataManager.getProjectDataManager(scId).removeListVariable(M.getJavaName(), str);
         a(1, 0xffcc5b22);
     }
 
-    public void m() {
+    public void cancelTopMenuAnimations() {
         if (ba.isRunning()) {
             ba.cancel();
         }
@@ -1801,12 +1801,12 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
     }
 
-    public void m(String str) {
+    public void removeVariable(String str) {
         ProjectDataManager.getProjectDataManager(scId).removeVariable(M.getJavaName(), str);
         a(0, 0xffee7d16);
     }
 
-    public void n() {
+    public void cancelPaletteAnimations() {
         if (U.isRunning()) {
             U.cancel();
         }
@@ -1815,7 +1815,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
     }
 
-    public void n(String str) {
+    public void showDeleteFavoriteDialog(String str) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.logic_block_favorites_delete_title);
         dialog.setMessage(R.string.logic_block_favorites_delete_message);
@@ -1828,13 +1828,13 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         dialog.show();
     }
 
-    public void o(String str) {
+    public void showBlockCollection(String str) {
         Intent intent = new Intent(getContext(), ShowBlockCollectionActivity.class);
         intent.putExtra("block_name", str);
         startActivity(intent);
     }
 
-    public boolean o() {
+    public boolean isDrawerEnabled() {
         return true;
     }
 
@@ -1909,7 +1909,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     return;
                 }
                 k();
-                if (!p()) {
+                if (!isTopMenuEnabled()) {
                     return;
                 }
                 saveProject();
@@ -1984,8 +1984,8 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.logic_menu, menu);
-        menu.findItem(R.id.menu_logic_redo).setEnabled(M != null && BlockHistoryManager.getInstance(scId).canRedo(s()));
-        menu.findItem(R.id.menu_logic_undo).setEnabled(M != null && BlockHistoryManager.getInstance(scId).canUndo(s()));
+        menu.findItem(R.id.menu_logic_redo).setEnabled(M != null && BlockHistoryManager.getInstance(scId).canRedo(buildHistoryKey()));
+        menu.findItem(R.id.menu_logic_undo).setEnabled(M != null && BlockHistoryManager.getInstance(scId).canUndo(buildHistoryKey()));
         return true;
     }
 
@@ -2061,7 +2061,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         long pc6 = System.currentTimeMillis();
         android.util.Log.d("BlockLoad", "PC taskExec: " + (pc6 - pc5) + "ms");
 
-        z();
+        loadBlockCollections();
         android.util.Log.d("BlockLoad", "PC z(): " + (System.currentTimeMillis() - pc6) + "ms total=" + (System.currentTimeMillis() - pc0) + "ms");
     }
 
@@ -2199,12 +2199,12 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                         rs2.getRootBlock().layoutChain();
                     }
                 }
-                q();
+                onBlockDropped();
             } else if (logicTopMenu.isDeleteActive) {
                 BlockView rs5 = (BlockView) v;
                 if (rs5.getBlockType() == 2) {
                     g(true);
-                    n(rs5.spec);
+                    showDeleteFavoriteDialog(rs5.spec);
                 } else {
                     activeIconDelete(false);
                     int id;
@@ -2240,7 +2240,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     }
                     int[] oLocationOnScreen = new int[2];
                     o.getLocationOnScreen(oLocationOnScreen);
-                    BlockHistoryManager.getInstance(scId).recordRemove(s(), arrayList, ((int) s) - oLocationOnScreen[0], ((int) t) - oLocationOnScreen[1], blockBean2, blockBean3);
+                    BlockHistoryManager.getInstance(scId).recordRemove(buildHistoryKey(), arrayList, ((int) s) - oLocationOnScreen[0], ((int) t) - oLocationOnScreen[1], blockBean2, blockBean3);
                     refreshOptionsMenu();
                 }
             } else if (logicTopMenu.isFavoriteActive) {
@@ -2269,7 +2269,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             } else if (logicTopMenu.isDetailActive) {
                 c(false);
                 if (v instanceof DefinitionBlockView) {
-                    o(((DefinitionBlockView) v).spec);
+                    showBlockCollection(((DefinitionBlockView) v).spec);
                 }
             } else if (logicTopMenu.isCopyActive) {
                 a(false);
@@ -2331,7 +2331,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 ArrayList<BlockBean> a3 = a(arrayList2, width, a2, true);
                 int[] oLocationOnScreen = new int[2];
                 o.getLocationOnScreen(oLocationOnScreen);
-                BlockHistoryManager.getInstance(scId).recordAddMultiple(s(), a3, width - oLocationOnScreen[0], a2 - oLocationOnScreen[1], null, null);
+                BlockHistoryManager.getInstance(scId).recordAddMultiple(buildHistoryKey(), a3, width - oLocationOnScreen[0], a2 - oLocationOnScreen[1], null, null);
                 refreshOptionsMenu();
             } else if (v instanceof BlockView rs13) {
                 dummy.a(this.v);
@@ -2345,7 +2345,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     }
                     int[] locationOnScreen = new int[2];
                     o.getLocationOnScreen(locationOnScreen);
-                    BlockHistoryManager.getInstance(scId).recordAdd(s(), a4.getBean().clone(), this.v[0] - locationOnScreen[0], this.v[1] - locationOnScreen[1], clone3, blockBean3);
+                    BlockHistoryManager.getInstance(scId).recordAdd(buildHistoryKey(), a4.getBean().clone(), this.v[0] - locationOnScreen[0], this.v[1] - locationOnScreen[1], clone3, blockBean3);
                     if (clone3 != null) {
                         clone3.print();
                     }
@@ -2366,7 +2366,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                         }
                         int[] locationOnScreen = new int[2];
                         o.getLocationOnScreen(locationOnScreen);
-                        BlockHistoryManager.getInstance(scId).recordAddMultiple(s(), a5, this.v[0] - locationOnScreen[0], this.v[1] - locationOnScreen[1], clone5, blockBean3);
+                        BlockHistoryManager.getInstance(scId).recordAddMultiple(buildHistoryKey(), a5, this.v[0] - locationOnScreen[0], this.v[1] - locationOnScreen[1], clone5, blockBean3);
                     }
                     o.clearSnapState();
                 } else {
@@ -2409,7 +2409,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                         o.getLocationOnScreen(locationOnScreen);
                         int x = locationOnScreen[0];
                         int y = locationOnScreen[1];
-                        BlockHistoryManager.getInstance(scId).recordMove(s(), arrayList3, arrayList4, ((int) s) - x, ((int) t) - y, this.v[0] - x, this.v[1] - y, blockBean, clone7, clone6, blockBean3);
+                        BlockHistoryManager.getInstance(scId).recordMove(buildHistoryKey(), arrayList3, arrayList4, ((int) s) - x, ((int) t) - y, this.v[0] - x, this.v[1] - y, blockBean, clone7, clone6, blockBean3);
                     }
                     o.clearSnapState();
                 }
@@ -2433,14 +2433,14 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
     }
 
-    public boolean p() {
+    public boolean isTopMenuEnabled() {
         return true;
     }
 
-    public void q() {
+    public void onBlockDropped() {
     }
 
-    private void r() {
+    private void startDragMode() {
         if (currentTouchedView != null) {
             m.setDragEnabled(false);
             viewLogicEditor.setScrollEnabled(false);
@@ -2486,7 +2486,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
     }
 
-    public final String s() {
+    public final String buildHistoryKey() {
         return BlockHistoryManager.buildKey(M.getJavaName(), id, eventName);
     }
 
@@ -2501,7 +2501,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         startActivity(intent);
     }
 
-    public void t() {
+    public void initDrawerAnimators() {
         fa = ObjectAnimator.ofFloat(O, View.TRANSLATION_X, 0.0f);
         fa.setDuration(500L);
         fa.setInterpolator(new DecelerateInterpolator());
@@ -2511,7 +2511,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         ha = true;
     }
 
-    public void x() {
+    public void initTopMenuAnimators() {
         ba = ObjectAnimator.ofFloat(logicTopMenu, View.TRANSLATION_Y, 0.0f);
         ba.setDuration(500L);
         ba.setInterpolator(new DecelerateInterpolator());
@@ -2521,7 +2521,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         da = true;
     }
 
-    public void z() {
+    public void loadBlockCollections() {
         O.a();
         for (BlockCollectionBean next : BlockCollectionManager.getInstance().getBlocks()) {
             O.a(next.name, next.blocks).setOnTouchListener(this);

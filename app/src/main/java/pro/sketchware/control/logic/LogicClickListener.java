@@ -209,7 +209,7 @@ public class LogicClickListener implements View.OnClickListener {
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_remove), (v, which) -> {
             for (Item item : data) {
                 if (item.type == Item.TYPE_ITEM && item.isChecked) {
-                    logicEditor.m(item.text);
+                    logicEditor.removeVariable(item.text);
                 }
             }
             v.dismiss();
@@ -302,7 +302,7 @@ public class LogicClickListener implements View.OnClickListener {
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_remove), (v, which) -> {
             for (Item item : data) {
                 if (item.type == Item.TYPE_ITEM && item.isChecked) {
-                    logicEditor.l(item.text);
+                    logicEditor.removeListVariable(item.text);
                 }
             }
             v.dismiss();
