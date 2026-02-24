@@ -51,9 +51,9 @@ public class ProjectDataStore {
     this.buildConfig = new BuildConfig();
   }
   
-  public static ArrayList<ViewBean> getSortedRootViews(ArrayList<ViewBean> paramArrayList) {
+  public static ArrayList<ViewBean> getSortedRootViews(ArrayList<ViewBean> list) {
     ArrayList<ViewBean> arrayList = new ArrayList<>();
-    for (ViewBean viewBean : paramArrayList) {
+    for (ViewBean viewBean : list) {
       if (viewBean.parent.equals("root"))
         arrayList.add(viewBean); 
     } 
@@ -71,17 +71,17 @@ public class ProjectDataStore {
         } 
       } 
     } 
-    for (ViewBean viewBean : paramArrayList) {
+    for (ViewBean viewBean : list) {
       i = viewBean.type;
       if ((i == 2 || i == 1 || i == 36 || i == 37 || i == 38 || i == 39 || i == 40 || i == 0 || i == 12) && viewBean.parent.equals("root"))
-        arrayList.addAll(getChildViews(paramArrayList, viewBean)); 
+        arrayList.addAll(getChildViews(list, viewBean)); 
     } 
     return arrayList;
   }
   
-  public static ArrayList<ViewBean> getChildViews(ArrayList<ViewBean> paramArrayList, ViewBean paramViewBean) {
+  public static ArrayList<ViewBean> getChildViews(ArrayList<ViewBean> list, ViewBean paramViewBean) {
     ArrayList<ViewBean> arrayList = new ArrayList<>();
-    for (ViewBean viewBean : paramArrayList) {
+    for (ViewBean viewBean : list) {
       if (viewBean.parent.equals(paramViewBean.id))
         arrayList.add(viewBean); 
     } 
@@ -99,11 +99,11 @@ public class ProjectDataStore {
         } 
       } 
     } 
-    for (ViewBean viewBean : paramArrayList) {
+    for (ViewBean viewBean : list) {
       if (viewBean.parent.equals(paramViewBean.id)) {
         i = viewBean.type;
         if (i == 0 || i == 2 || i == 1 || i == 36 || i == 37 || i == 38 || i == 39 || i == 40 || i == 12)
-          arrayList.addAll(getChildViews(paramArrayList, viewBean)); 
+          arrayList.addAll(getChildViews(list, viewBean)); 
       } 
     } 
     return arrayList;
@@ -146,11 +146,11 @@ public class ProjectDataStore {
     return arrayList;
   }
   
-  public ArrayList<BlockBean> getBlocks(String paramString1, String paramString2) {
-    if (!this.blockMap.containsKey(paramString1))
+  public ArrayList<BlockBean> getBlocks(String fileName, String data) {
+    if (!this.blockMap.containsKey(fileName))
       return new ArrayList<BlockBean>(); 
-    Map map = this.blockMap.get(paramString1);
-    return (map == null) ? new ArrayList<BlockBean>() : (!map.containsKey(paramString2) ? new ArrayList<BlockBean>() : (ArrayList<BlockBean>)map.get(paramString2));
+    Map map = this.blockMap.get(fileName);
+    return (map == null) ? new ArrayList<BlockBean>() : (!map.containsKey(data) ? new ArrayList<BlockBean>() : (ArrayList<BlockBean>)map.get(data));
   }
   
   public void deleteBackupFiles() {
@@ -461,28 +461,28 @@ public class ProjectDataStore {
     this.fabMap.put(paramString, viewBean);
   }
   
-  public void addEvent(String paramString1, int paramInt1, int paramInt2, String paramString2, String paramString3) {
-    if (!this.eventMap.containsKey(paramString1))
-      this.eventMap.put(paramString1, new ArrayList<EventBean>()); 
-    ((ArrayList<EventBean>)this.eventMap.get(paramString1)).add(new EventBean(paramInt1, paramInt2, paramString2, paramString3));
+  public void addEvent(String fileName, int paramInt1, int paramInt2, String data, String paramString3) {
+    if (!this.eventMap.containsKey(fileName))
+      this.eventMap.put(fileName, new ArrayList<EventBean>()); 
+    ((ArrayList<EventBean>)this.eventMap.get(fileName)).add(new EventBean(paramInt1, paramInt2, data, paramString3));
   }
   
-  public void addComponent(String paramString1, int paramInt, String paramString2) {
-    if (!this.componentMap.containsKey(paramString1))
-      this.componentMap.put(paramString1, new ArrayList<ComponentBean>()); 
-    ((ArrayList<ComponentBean>)this.componentMap.get(paramString1)).add(new ComponentBean(paramInt, paramString2));
+  public void addComponent(String fileName, int paramInt, String data) {
+    if (!this.componentMap.containsKey(fileName))
+      this.componentMap.put(fileName, new ArrayList<ComponentBean>()); 
+    ((ArrayList<ComponentBean>)this.componentMap.get(fileName)).add(new ComponentBean(paramInt, data));
   }
   
-  public void addComponentWithParam(String paramString1, int paramInt, String paramString2, String paramString3) {
-    if (!this.componentMap.containsKey(paramString1))
-      this.componentMap.put(paramString1, new ArrayList<ComponentBean>()); 
-    ((ArrayList<ComponentBean>)this.componentMap.get(paramString1)).add(new ComponentBean(paramInt, paramString2, paramString3));
+  public void addComponentWithParam(String fileName, int paramInt, String data, String paramString3) {
+    if (!this.componentMap.containsKey(fileName))
+      this.componentMap.put(fileName, new ArrayList<ComponentBean>()); 
+    ((ArrayList<ComponentBean>)this.componentMap.get(fileName)).add(new ComponentBean(paramInt, data, paramString3));
   }
   
-  public void removeBlockReferences(String paramString1, ClassInfo paramGx, String paramString2, boolean paramBoolean) {
-    if (!this.blockMap.containsKey(paramString1))
+  public void removeBlockReferences(String fileName, ClassInfo paramGx, String data, boolean paramBoolean) {
+    if (!this.blockMap.containsKey(fileName))
       return; 
-    Map map = this.blockMap.get(paramString1);
+    Map map = this.blockMap.get(fileName);
     if (map == null)
       return; 
     label44: for (Map.Entry<String, ArrayList<BlockBean>> entry : ((Map<String, ArrayList<BlockBean>>)map).entrySet()) {
@@ -497,7 +497,7 @@ public class ProjectDataStore {
         if (j >= 0) {
           BlockBean blockBean = arrayList.get(j);
           ClassInfo gx = blockBean.getClassInfo();
-          if (gx != null && gx.isExactType(paramGx.getClassName()) && blockBean.spec.equals(paramString2)) {
+          if (gx != null && gx.isExactType(paramGx.getClassName()) && blockBean.spec.equals(data)) {
             arrayList.remove(j);
             i = j;
             continue;
@@ -512,7 +512,7 @@ public class ProjectDataStore {
                 i = j;
                 if (b < arrayList1.size()) {
                   ClassInfo gx1 = arrayList1.get(b);
-                  if (gx1 != null && paramGx.isAssignableFrom(gx1) && ((String)blockBean.parameters.get(b)).equals(paramString2))
+                  if (gx1 != null && paramGx.isAssignableFrom(gx1) && ((String)blockBean.parameters.get(b)).equals(data))
                     blockBean.parameters.set(b, ""); 
                   b++;
                   continue;
@@ -540,17 +540,17 @@ public class ProjectDataStore {
     ((ArrayList<ViewBean>)this.viewMap.get(paramString)).add(paramViewBean);
   }
   
-  public void addMoreBlock(String paramString1, String paramString2, String paramString3) {
-    Pair pair = new Pair(paramString2, paramString3);
-    if (!this.moreBlockMap.containsKey(paramString1))
-      this.moreBlockMap.put(paramString1, new ArrayList<Pair<String, String>>()); 
-    ((ArrayList)this.moreBlockMap.get(paramString1)).add(pair);
+  public void addMoreBlock(String fileName, String data, String paramString3) {
+    Pair pair = new Pair(data, paramString3);
+    if (!this.moreBlockMap.containsKey(fileName))
+      this.moreBlockMap.put(fileName, new ArrayList<Pair<String, String>>()); 
+    ((ArrayList)this.moreBlockMap.get(fileName)).add(pair);
   }
   
-  public void putBlocks(String paramString1, String paramString2, ArrayList<BlockBean> paramArrayList) {
-    if (!this.blockMap.containsKey(paramString1))
-      this.blockMap.put(paramString1, new HashMap<String, ArrayList<BlockBean>>()); 
-    ((Map<String, ArrayList<BlockBean>>)this.blockMap.get(paramString1)).put(paramString2, paramArrayList);
+  public void putBlocks(String fileName, String data, ArrayList<BlockBean> list) {
+    if (!this.blockMap.containsKey(fileName))
+      this.blockMap.put(fileName, new HashMap<String, ArrayList<BlockBean>>()); 
+    ((Map<String, ArrayList<BlockBean>>)this.blockMap.get(fileName)).put(data, list);
   }
   
   public final void serializeLogicData(StringBuffer paramStringBuffer) {
@@ -707,14 +707,14 @@ public class ProjectDataStore {
       }  
   }
   
-  public String getMoreBlockSpec(String paramString1, String paramString2) {
-    if (!this.moreBlockMap.containsKey(paramString1))
+  public String getMoreBlockSpec(String fileName, String data) {
+    if (!this.moreBlockMap.containsKey(fileName))
       return ""; 
-    ArrayList arrayList = this.moreBlockMap.get(paramString1);
+    ArrayList arrayList = this.moreBlockMap.get(fileName);
     if (arrayList == null)
       return ""; 
     for (Pair pair : (ArrayList<Pair>)arrayList) {
-      if (((String)pair.first).equals(paramString2))
+      if (((String)pair.first).equals(data))
         return (String)pair.second; 
     } 
     return "";
@@ -859,11 +859,11 @@ public class ProjectDataStore {
     } 
   }
   
-  public void addListVariable(String paramString1, int paramInt, String paramString2) {
-    Pair pair = new Pair(Integer.valueOf(paramInt), paramString2);
-    if (!this.listMap.containsKey(paramString1))
-      this.listMap.put(paramString1, new ArrayList<Pair<Integer, String>>()); 
-    ((ArrayList)this.listMap.get(paramString1)).add(pair);
+  public void addListVariable(String fileName, int paramInt, String data) {
+    Pair pair = new Pair(Integer.valueOf(paramInt), data);
+    if (!this.listMap.containsKey(fileName))
+      this.listMap.put(fileName, new ArrayList<Pair<Integer, String>>()); 
+    ((ArrayList)this.listMap.get(fileName)).add(pair);
   }
   
   public void removeComponent(String paramString, ComponentBean paramComponentBean) {
@@ -936,8 +936,8 @@ public class ProjectDataStore {
       }  
   }
   
-  public boolean isListUsedInBlocks(String paramString1, String paramString2, String paramString3) {
-    Map map = this.blockMap.get(paramString1);
+  public boolean isListUsedInBlocks(String fileName, String data, String paramString3) {
+    Map map = this.blockMap.get(fileName);
     if (map == null)
       return false; 
     for (Map.Entry<String, ArrayList<BlockBean>> entry : ((Map<String, ArrayList<BlockBean>>)map).entrySet()) {
@@ -945,13 +945,13 @@ public class ProjectDataStore {
         continue; 
       for (BlockBean blockBean : (ArrayList<BlockBean>)entry.getValue()) {
         ClassInfo gx = blockBean.getClassInfo();
-        if (gx != null && gx.isList() && blockBean.spec.equals(paramString2))
+        if (gx != null && gx.isList() && blockBean.spec.equals(data))
           return true; 
         ArrayList<ClassInfo> arrayList = blockBean.getParamClassInfo();
         if (arrayList != null && arrayList.size() > 0)
           for (int b = 0; b < arrayList.size(); b++) {
             ClassInfo gx1 = arrayList.get(b);
-            if (gx1 != null && gx1.isList() && ((String)blockBean.parameters.get(b)).equals(paramString2))
+            if (gx1 != null && gx1.isList() && ((String)blockBean.parameters.get(b)).equals(data))
               return true; 
           }  
       } 
@@ -959,13 +959,13 @@ public class ProjectDataStore {
     return false;
   }
   
-  public ViewBean getViewBean(String paramString1, String paramString2) {
-    ArrayList<ViewBean> arrayList = this.viewMap.get(paramString1);
+  public ViewBean getViewBean(String fileName, String data) {
+    ArrayList<ViewBean> arrayList = this.viewMap.get(fileName);
     if (arrayList == null)
       return null; 
     for (int b = 0; b < arrayList.size(); b++) {
       ViewBean viewBean = arrayList.get(b);
-      if (paramString2.equals(viewBean.id))
+      if (data.equals(viewBean.id))
         return viewBean; 
     } 
     return null;
@@ -1014,11 +1014,11 @@ public class ProjectDataStore {
     } 
   }
   
-  public void addVariable(String paramString1, int paramInt, String paramString2) {
-    Pair pair = new Pair(Integer.valueOf(paramInt), paramString2);
-    if (!this.variableMap.containsKey(paramString1))
-      this.variableMap.put(paramString1, new ArrayList<Pair<Integer, String>>()); 
-    ((ArrayList)this.variableMap.get(paramString1)).add(pair);
+  public void addVariable(String fileName, int paramInt, String data) {
+    Pair pair = new Pair(Integer.valueOf(paramInt), data);
+    if (!this.variableMap.containsKey(fileName))
+      this.variableMap.put(fileName, new ArrayList<Pair<Integer, String>>()); 
+    ((ArrayList)this.variableMap.get(fileName)).add(pair);
   }
   
   public boolean hasLogicBackup() {
@@ -1031,8 +1031,8 @@ public class ProjectDataStore {
     return this.fileUtil.exists(str1);
   }
   
-  public boolean isVariableUsedInBlocks(String paramString1, String paramString2, String paramString3) {
-    Map map = this.blockMap.get(paramString1);
+  public boolean isVariableUsedInBlocks(String fileName, String data, String paramString3) {
+    Map map = this.blockMap.get(fileName);
     if (map == null)
       return false; 
     for (Map.Entry<String, ArrayList<BlockBean>> entry : ((Map<String, ArrayList<BlockBean>>)map).entrySet()) {
@@ -1040,13 +1040,13 @@ public class ProjectDataStore {
         continue; 
       for (BlockBean blockBean : (ArrayList<BlockBean>)entry.getValue()) {
         ClassInfo gx = blockBean.getClassInfo();
-        if (gx != null && gx.isVariable() && blockBean.spec.equals(paramString2))
+        if (gx != null && gx.isVariable() && blockBean.spec.equals(data))
           return true; 
         ArrayList<ClassInfo> arrayList = blockBean.getParamClassInfo();
         if (arrayList != null && arrayList.size() > 0)
           for (int b = 0; b < arrayList.size(); b++) {
             ClassInfo gx1 = arrayList.get(b);
-            if (gx1 != null && gx1.isVariable() && ((String)blockBean.parameters.get(b)).equals(paramString2))
+            if (gx1 != null && gx1.isVariable() && ((String)blockBean.parameters.get(b)).equals(data))
               return true; 
           }  
       } 
@@ -1076,20 +1076,20 @@ public class ProjectDataStore {
     return arrayList1;
   }
   
-  public ArrayList<Pair<Integer, String>> getViewsByType(String paramString1, String paramString2) {
+  public ArrayList<Pair<Integer, String>> getViewsByType(String fileName, String data) {
     ArrayList<Pair<Integer, String>> arrayList1 = new ArrayList<>();
-    ArrayList arrayList = this.viewMap.get(paramString1);
+    ArrayList arrayList = this.viewMap.get(fileName);
     if (arrayList == null)
       return arrayList1; 
     for (ViewBean viewBean : (ArrayList<ViewBean>)arrayList) {
       Pair<Integer, String> pair;
-      if (paramString2.equals("CheckBox")) {
+      if (data.equals("CheckBox")) {
         if (viewBean.getClassInfo().matchesType("CompoundButton")) {
           pair = new Pair(Integer.valueOf(viewBean.type), viewBean.id);
         } else {
           continue;
         } 
-      } else if (viewBean.getClassInfo().matchesType(paramString2)) {
+      } else if (viewBean.getClassInfo().matchesType(data)) {
         pair = new Pair(Integer.valueOf(viewBean.type), viewBean.id);
       } else {
         continue;
@@ -1099,10 +1099,10 @@ public class ProjectDataStore {
     return arrayList1;
   }
   
-  public void removeEvent(String paramString1, String paramString2, String paramString3) {
-    if (!this.eventMap.containsKey(paramString1))
+  public void removeEvent(String fileName, String data, String paramString3) {
+    if (!this.eventMap.containsKey(fileName))
       return; 
-    ArrayList<EventBean> arrayList = this.eventMap.get(paramString1);
+    ArrayList<EventBean> arrayList = this.eventMap.get(fileName);
     if (arrayList == null)
       return; 
     int i = arrayList.size();
@@ -1111,7 +1111,7 @@ public class ProjectDataStore {
       if (j >= 0) {
         EventBean eventBean = arrayList.get(j);
         i = j;
-        if (eventBean.targetId.equals(paramString2)) {
+        if (eventBean.targetId.equals(data)) {
           i = j;
           if (paramString3.equals(eventBean.eventName)) {
             arrayList.remove(eventBean);
@@ -1119,15 +1119,15 @@ public class ProjectDataStore {
             i = j;
             if (hashMap != null) {
               i = j;
-              if (hashMap.get(paramString1) != null) {
-                HashMap hashMap1 = this.blockMap.get(paramString1);
+              if (hashMap.get(fileName) != null) {
+                HashMap hashMap1 = this.blockMap.get(fileName);
                 StringBuilder stringBuilder = new StringBuilder();
                 stringBuilder.append(eventBean.targetId);
                 stringBuilder.append("_");
                 stringBuilder.append(eventBean.eventName);
                 i = j;
                 if (hashMap1.containsKey(stringBuilder.toString())) {
-                  hashMap1 = this.blockMap.get(paramString1);
+                  hashMap1 = this.blockMap.get(fileName);
                   stringBuilder = new StringBuilder();
                   stringBuilder.append(eventBean.targetId);
                   stringBuilder.append("_");
@@ -1155,12 +1155,12 @@ public class ProjectDataStore {
     return this.fileUtil.exists(str1);
   }
   
-  public boolean hasComponent(String paramString1, int paramInt, String paramString2) {
-    ArrayList arrayList = this.componentMap.get(paramString1);
+  public boolean hasComponent(String fileName, int paramInt, String data) {
+    ArrayList arrayList = this.componentMap.get(fileName);
     if (arrayList == null)
       return false; 
     for (ComponentBean componentBean : (ArrayList<ComponentBean>)arrayList) {
-      if (componentBean.type == paramInt && componentBean.componentId.equals(paramString2))
+      if (componentBean.type == paramInt && componentBean.componentId.equals(data))
         return true; 
     } 
     return false;
@@ -1206,23 +1206,23 @@ public class ProjectDataStore {
     }
   }
   
-  public boolean hasListVariable(String paramString1, int paramInt, String paramString2) {
-    ArrayList arrayList = this.listMap.get(paramString1);
+  public boolean hasListVariable(String fileName, int paramInt, String data) {
+    ArrayList arrayList = this.listMap.get(fileName);
     if (arrayList == null)
       return false; 
     for (Pair pair : (ArrayList<Pair>)arrayList) {
-      if (((Integer)pair.first).intValue() == paramInt && ((String)pair.second).equals(paramString2))
+      if (((Integer)pair.first).intValue() == paramInt && ((String)pair.second).equals(data))
         return true; 
     } 
     return false;
   }
   
-  public boolean hasCompoundButtonView(String paramString1, String paramString2) {
-    ArrayList arrayList = this.viewMap.get(paramString1);
+  public boolean hasCompoundButtonView(String fileName, String data) {
+    ArrayList arrayList = this.viewMap.get(fileName);
     if (arrayList == null)
       return false; 
     for (ViewBean viewBean : (ArrayList<ViewBean>)arrayList) {
-      if (viewBean.getClassInfo().matchesType("CompoundButton") && viewBean.id.equals(paramString2))
+      if (viewBean.getClassInfo().matchesType("CompoundButton") && viewBean.id.equals(data))
         return true; 
     } 
     return false;
@@ -1275,25 +1275,25 @@ public class ProjectDataStore {
     return false;
   }
   
-  public boolean hasVariable(String paramString1, int paramInt, String paramString2) {
-    ArrayList arrayList = this.variableMap.get(paramString1);
+  public boolean hasVariable(String fileName, int paramInt, String data) {
+    ArrayList arrayList = this.variableMap.get(fileName);
     if (arrayList == null)
       return false; 
     for (Pair pair : (ArrayList<Pair>)arrayList) {
-      if (((Integer)pair.first).intValue() == paramInt && ((String)pair.second).equals(paramString2))
+      if (((Integer)pair.first).intValue() == paramInt && ((String)pair.second).equals(data))
         return true; 
     } 
     return false;
   }
   
-  public boolean isMoreBlockUsed(String paramString1, String paramString2) {
-    Map map = this.blockMap.get(paramString1);
+  public boolean isMoreBlockUsed(String fileName, String data) {
+    Map map = this.blockMap.get(fileName);
     if (map == null)
       return false; 
     for (Map.Entry<String, ArrayList<BlockBean>> entry : ((Map<String, ArrayList<BlockBean>>)map).entrySet()) {
       String str = (String)entry.getKey();
       StringBuilder stringBuilder = new StringBuilder();
-      stringBuilder.append(paramString2);
+      stringBuilder.append(data);
       stringBuilder.append("_");
       stringBuilder.append("moreBlock");
       if (str.equals(stringBuilder.toString()))
@@ -1305,7 +1305,7 @@ public class ProjectDataStore {
           String str1 = str;
           if (i > 0)
             str1 = str.substring(0, i); 
-          if (str1.equals(paramString2))
+          if (str1.equals(data))
             return true; 
         } 
       } 
@@ -1350,23 +1350,23 @@ public class ProjectDataStore {
     } 
   }
   
-  public boolean hasViewOfType(String paramString1, int paramInt, String paramString2) {
-    ArrayList arrayList = this.viewMap.get(paramString1);
+  public boolean hasViewOfType(String fileName, int paramInt, String data) {
+    ArrayList arrayList = this.viewMap.get(fileName);
     if (arrayList == null)
       return false; 
     for (ViewBean viewBean : (ArrayList<ViewBean>)arrayList) {
-      if (viewBean.type == paramInt && viewBean.id.equals(paramString2))
+      if (viewBean.type == paramInt && viewBean.id.equals(data))
         return true; 
     } 
     return false;
   }
   
-  public boolean hasTextView(String paramString1, String paramString2) {
-    ArrayList arrayList = this.viewMap.get(paramString1);
+  public boolean hasTextView(String fileName, String data) {
+    ArrayList arrayList = this.viewMap.get(fileName);
     if (arrayList == null)
       return false; 
     for (ViewBean viewBean : (ArrayList<ViewBean>)arrayList) {
-      if (viewBean.getClassInfo().matchesType("TextView") && viewBean.id.equals(paramString2))
+      if (viewBean.getClassInfo().matchesType("TextView") && viewBean.id.equals(data))
         return true; 
     } 
     return false;
@@ -1398,13 +1398,13 @@ public class ProjectDataStore {
     }
   }
   
-  public boolean hasView(String paramString1, String paramString2) {
-    ArrayList arrayList = this.viewMap.get(paramString1);
+  public boolean hasView(String fileName, String data) {
+    ArrayList arrayList = this.viewMap.get(fileName);
     if (arrayList == null)
       return false; 
     Iterator iterator = arrayList.iterator();
     while (iterator.hasNext()) {
-      if (((ViewBean)iterator.next()).id.equals(paramString2))
+      if (((ViewBean)iterator.next()).id.equals(data))
         return true; 
     } 
     return false;
@@ -1419,11 +1419,11 @@ public class ProjectDataStore {
     clearAllData();
   }
   
-  public void parseLogicSection(String paramString1, String paramString2) {
-    if (paramString2.length() <= 0)
+  public void parseLogicSection(String fileName, String data) {
+    if (data.length() <= 0)
       return; 
     try {
-      ProjectDataParser ProjectDataParser = new ProjectDataParser(paramString1);
+      ProjectDataParser ProjectDataParser = new ProjectDataParser(fileName);
       String str = ProjectDataParser.getFileName();
       ProjectDataParser.DataType dataType = ProjectDataParser.getDataType();
       switch (ScreenOrientationConstants.ORIENTATION_VALUES[dataType.ordinal()]) {
@@ -1433,22 +1433,22 @@ public class ProjectDataStore {
           if (!this.blockMap.containsKey(str)) {
             this.blockMap.put(str, new HashMap<String, ArrayList<BlockBean>>());
           } 
-          this.blockMap.get(str).put(ProjectDataParser.getEventKey(), (ArrayList<BlockBean>)ProjectDataParser.parseData(paramString2));
+          this.blockMap.get(str).put(ProjectDataParser.getEventKey(), (ArrayList<BlockBean>)ProjectDataParser.parseData(data));
           break;
         case 7:
-          this.moreBlockMap.put(str, (ArrayList<Pair<String, String>>)ProjectDataParser.parseData(paramString2));
+          this.moreBlockMap.put(str, (ArrayList<Pair<String, String>>)ProjectDataParser.parseData(data));
           break;
         case 6:
-          this.eventMap.put(str, (ArrayList<EventBean>)ProjectDataParser.parseData(paramString2));
+          this.eventMap.put(str, (ArrayList<EventBean>)ProjectDataParser.parseData(data));
           break;
         case 5:
-          this.componentMap.put(str, (ArrayList<ComponentBean>)ProjectDataParser.parseData(paramString2));
+          this.componentMap.put(str, (ArrayList<ComponentBean>)ProjectDataParser.parseData(data));
           break;
         case 4:
-          this.listMap.put(str, (ArrayList<Pair<Integer, String>>)ProjectDataParser.parseData(paramString2));
+          this.listMap.put(str, (ArrayList<Pair<Integer, String>>)ProjectDataParser.parseData(data));
           break;
         case 3:
-          this.variableMap.put(str, (ArrayList<Pair<Integer, String>>)ProjectDataParser.parseData(paramString2));
+          this.variableMap.put(str, (ArrayList<Pair<Integer, String>>)ProjectDataParser.parseData(data));
           break;
       } 
     } catch (Exception exception) {
@@ -1475,16 +1475,16 @@ public class ProjectDataStore {
     deleteBackupFiles();
   }
   
-  public void parseViewSection(String paramString1, String paramString2) {
+  public void parseViewSection(String fileName, String data) {
     try {
-      ProjectDataParser ProjectDataParser = new ProjectDataParser(paramString1);
+      ProjectDataParser ProjectDataParser = new ProjectDataParser(fileName);
       String str = ProjectDataParser.getFileName();
       ProjectDataParser.DataType dataType = ProjectDataParser.getDataType();
       int i = ScreenOrientationConstants.ORIENTATION_VALUES[dataType.ordinal()];
       if (i == 1) {
-        this.viewMap.put(str, (ArrayList<ViewBean>)ProjectDataParser.parseData(paramString2));
+        this.viewMap.put(str, (ArrayList<ViewBean>)ProjectDataParser.parseData(data));
       } else if (i == 2) {
-        this.fabMap.put(str, (ViewBean)ProjectDataParser.parseData(paramString2));
+        this.fabMap.put(str, (ViewBean)ProjectDataParser.parseData(data));
       }
     } catch (Exception exception) {
       exception.printStackTrace();
@@ -1509,14 +1509,14 @@ public class ProjectDataStore {
     saveLogicFile(stringBuilder.toString());
   }
   
-  public void removeBlockEntry(String paramString1, String paramString2) {
-    if (!this.blockMap.containsKey(paramString1))
+  public void removeBlockEntry(String fileName, String data) {
+    if (!this.blockMap.containsKey(fileName))
       return; 
-    Map map = this.blockMap.get(paramString1);
+    Map map = this.blockMap.get(fileName);
     if (map == null)
       return; 
-    if (map.containsKey(paramString2))
-      map.remove(paramString2); 
+    if (map.containsKey(data))
+      map.remove(data); 
   }
   
   public void removeViewTypeEvents(String paramString) {
@@ -1538,10 +1538,10 @@ public class ProjectDataStore {
     } 
   }
   
-  public void removeViewEventsByTarget(String paramString1, String paramString2) {
-    if (!this.eventMap.containsKey(paramString1))
+  public void removeViewEventsByTarget(String fileName, String data) {
+    if (!this.eventMap.containsKey(fileName))
       return; 
-    ArrayList<EventBean> arrayList = this.eventMap.get(paramString1);
+    ArrayList<EventBean> arrayList = this.eventMap.get(fileName);
     int i = arrayList.size();
     while (true) {
       int j = i - 1;
@@ -1550,7 +1550,7 @@ public class ProjectDataStore {
         i = j;
         if (eventBean.eventType == 4) {
           i = j;
-          if (eventBean.targetId.equals(paramString2)) {
+          if (eventBean.targetId.equals(data)) {
             arrayList.remove(j);
             i = j;
           } 
@@ -1572,10 +1572,10 @@ public class ProjectDataStore {
     } 
   }
   
-  public void removeEventsByTarget(String paramString1, String paramString2) {
-    if (!this.eventMap.containsKey(paramString1))
+  public void removeEventsByTarget(String fileName, String data) {
+    if (!this.eventMap.containsKey(fileName))
       return; 
-    ArrayList<EventBean> arrayList = this.eventMap.get(paramString1);
+    ArrayList<EventBean> arrayList = this.eventMap.get(fileName);
     if (arrayList == null)
       return; 
     int i = arrayList.size();
@@ -1584,21 +1584,21 @@ public class ProjectDataStore {
       if (j >= 0) {
         EventBean eventBean = arrayList.get(j);
         i = j;
-        if (eventBean.targetId.equals(paramString2)) {
+        if (eventBean.targetId.equals(data)) {
           arrayList.remove(eventBean);
           HashMap<String, HashMap<String, ArrayList<BlockBean>>> hashMap = this.blockMap;
           i = j;
           if (hashMap != null) {
             i = j;
-            if (hashMap.get(paramString1) != null) {
-              HashMap hashMap1 = this.blockMap.get(paramString1);
+            if (hashMap.get(fileName) != null) {
+              HashMap hashMap1 = this.blockMap.get(fileName);
               StringBuilder stringBuilder = new StringBuilder();
               stringBuilder.append(eventBean.targetId);
               stringBuilder.append("_");
               stringBuilder.append(eventBean.eventName);
               i = j;
               if (hashMap1.containsKey(stringBuilder.toString())) {
-                hashMap1 = this.blockMap.get(paramString1);
+                hashMap1 = this.blockMap.get(fileName);
                 stringBuilder = new StringBuilder();
                 stringBuilder.append(eventBean.targetId);
                 stringBuilder.append("_");
@@ -1626,55 +1626,55 @@ public class ProjectDataStore {
     } 
   }
   
-  public void removeMoreBlock(String paramString1, String paramString2) {
-    if (!this.moreBlockMap.containsKey(paramString1))
+  public void removeMoreBlock(String fileName, String data) {
+    if (!this.moreBlockMap.containsKey(fileName))
       return; 
-    ArrayList arrayList = this.moreBlockMap.get(paramString1);
+    ArrayList arrayList = this.moreBlockMap.get(fileName);
     if (arrayList == null)
       return; 
     for (Pair pair : (ArrayList<Pair>)arrayList) {
-      if (((String)pair.first).equals(paramString2)) {
+      if (((String)pair.first).equals(data)) {
         arrayList.remove(pair);
         break;
       } 
     } 
-    HashMap hashMap = this.blockMap.get(paramString1);
+    HashMap hashMap = this.blockMap.get(fileName);
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(paramString2);
+    stringBuilder.append(data);
     stringBuilder.append("_");
     stringBuilder.append("moreBlock");
     if (hashMap.containsKey(stringBuilder.toString())) {
-      hashMap = this.blockMap.get(paramString1);
+      hashMap = this.blockMap.get(fileName);
       StringBuilder stringBuilder1 = new StringBuilder();
-      stringBuilder1.append(paramString2);
+      stringBuilder1.append(data);
       stringBuilder1.append("_");
       stringBuilder1.append("moreBlock");
       hashMap.remove(stringBuilder1.toString());
     } 
   }
   
-  public void removeListVariable(String paramString1, String paramString2) {
-    if (!this.listMap.containsKey(paramString1))
+  public void removeListVariable(String fileName, String data) {
+    if (!this.listMap.containsKey(fileName))
       return; 
-    ArrayList arrayList = this.listMap.get(paramString1);
+    ArrayList arrayList = this.listMap.get(fileName);
     if (arrayList == null)
       return; 
     for (Pair pair : (ArrayList<Pair>)arrayList) {
-      if (((String)pair.second).equals(paramString2)) {
+      if (((String)pair.second).equals(data)) {
         arrayList.remove(pair);
         break;
       } 
     } 
   }
   
-  public void removeVariable(String paramString1, String paramString2) {
-    if (!this.variableMap.containsKey(paramString1))
+  public void removeVariable(String fileName, String data) {
+    if (!this.variableMap.containsKey(fileName))
       return; 
-    ArrayList arrayList = this.variableMap.get(paramString1);
+    ArrayList arrayList = this.variableMap.get(fileName);
     if (arrayList == null)
       return; 
     for (Pair pair : (ArrayList<Pair>)arrayList) {
-      if (((String)pair.second).equals(paramString2)) {
+      if (((String)pair.second).equals(data)) {
         arrayList.remove(pair);
         break;
       } 
@@ -1696,13 +1696,13 @@ public class ProjectDataStore {
     return bool;
   }
   
-  public boolean hasViewMatchingType(String paramString1, String paramString2) {
-    ArrayList arrayList = this.viewMap.get(paramString1);
+  public boolean hasViewMatchingType(String fileName, String data) {
+    ArrayList arrayList = this.viewMap.get(fileName);
     boolean bool = false;
     if (arrayList != null) {
       Iterator<ViewBean> iterator = arrayList.iterator();
       while (iterator.hasNext()) {
-        if (((ViewBean)iterator.next()).getClassInfo().matchesType(paramString2)) {
+        if (((ViewBean)iterator.next()).getClassInfo().matchesType(data)) {
           bool = true;
           break;
         } 

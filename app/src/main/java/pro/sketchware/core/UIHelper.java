@@ -19,66 +19,66 @@ import android.widget.ImageView;
 public class UIHelper {
   public static long lastClickTime;
   
-  public static SpannableStringBuilder createSpannable(Context paramContext, String paramString) {
-    return new SpannableStringBuilder(paramString);
+  public static SpannableStringBuilder createSpannable(Context context, String text) {
+    return new SpannableStringBuilder(text);
   }
   
-  public static void hideKeyboard(Context paramContext, EditText paramEditText) {
-    ((InputMethodManager)paramContext.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(paramEditText.getWindowToken(), 0);
+  public static void hideKeyboard(Context context, EditText editText) {
+    ((InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(editText.getWindowToken(), 0);
   }
   
-  public static void disableTemporarily(View paramView) {
-    paramView.setEnabled(false);
-    (new Handler(Looper.getMainLooper())).postDelayed(new ViewEnableRunnable(paramView), 100L);
+  public static void disableTemporarily(View view) {
+    view.setEnabled(false);
+    (new Handler(Looper.getMainLooper())).postDelayed(new ViewEnableRunnable(view), 100L);
   }
   
-  public static void expandView(View paramView, int paramInt, Animation.AnimationListener paramAnimationListener) {
-    paramView.measure(-1, -2);
-    int targetHeight = paramView.getMeasuredHeight();
-    (paramView.getLayoutParams()).height = 1;
-    paramView.setVisibility(View.VISIBLE);
+  public static void expandView(View view, int duration, Animation.AnimationListener listener) {
+    view.measure(-1, -2);
+    int targetHeight = view.getMeasuredHeight();
+    (view.getLayoutParams()).height = 1;
+    view.setVisibility(View.VISIBLE);
     Animation expandAnim = new Animation() {
       @Override
       protected void applyTransformation(float interpolatedTime, Transformation t) {
-        paramView.getLayoutParams().height = interpolatedTime == 1
+        view.getLayoutParams().height = interpolatedTime == 1
             ? ViewGroup.LayoutParams.WRAP_CONTENT
             : (int)(targetHeight * interpolatedTime);
-        paramView.requestLayout();
+        view.requestLayout();
       }
       @Override
       public boolean willChangeBounds() { return true; }
     };
-    if (paramAnimationListener != null)
-      expandAnim.setAnimationListener(paramAnimationListener);
-    expandAnim.setDuration((long)((int)(targetHeight / (paramView.getContext().getResources().getDisplayMetrics()).density)) * paramInt);
-    paramView.startAnimation(expandAnim);
+    if (listener != null)
+      expandAnim.setAnimationListener(listener);
+    expandAnim.setDuration((long)((int)(targetHeight / (view.getContext().getResources().getDisplayMetrics()).density)) * duration);
+    view.startAnimation(expandAnim);
   }
   
-  public static void collapseView(View paramView, Animation.AnimationListener paramAnimationListener) {
-    int initialHeight = paramView.getMeasuredHeight();
+  public static void collapseView(View view, Animation.AnimationListener listener) {
+    int initialHeight = view.getMeasuredHeight();
     Animation collapseAnim = new Animation() {
       @Override
       protected void applyTransformation(float interpolatedTime, Transformation t) {
         if (interpolatedTime == 1) {
-          paramView.setVisibility(View.GONE);
+          view.setVisibility(View.GONE);
         } else {
-          paramView.getLayoutParams().height = initialHeight - (int)(initialHeight * interpolatedTime);
-          paramView.requestLayout();
+          view.getLayoutParams().height = initialHeight - (int)(initialHeight * interpolatedTime);
+          view.requestLayout();
         }
       }
       @Override
       public boolean willChangeBounds() { return true; }
     };
-    if (paramAnimationListener != null)
-      collapseAnim.setAnimationListener(paramAnimationListener);
-    collapseAnim.setDuration((int)(initialHeight / (paramView.getContext().getResources().getDisplayMetrics()).density));
-    paramView.startAnimation(collapseAnim);
+    if (listener != null)
+      collapseAnim.setAnimationListener(listener);
+    collapseAnim.setDuration((int)(initialHeight / (view.getContext().getResources().getDisplayMetrics()).density));
+    view.startAnimation(collapseAnim);
   }
   
-  public static void setSaturation(ImageView paramImageView, int paramInt) {
+  public static void setSaturation(ImageView imageView, int saturation) {
     ColorMatrix colorMatrix = new ColorMatrix();
-    colorMatrix.setSaturation(paramInt);
-    paramImageView.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
+    colorMatrix.setSaturation(saturation);
+    imageView.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
   }
   
   public static boolean isClickThrottled() {
@@ -88,11 +88,11 @@ public class UIHelper {
     return false;
   }
   
-  public static SpannableStringBuilder createSpannableAlt(Context paramContext, String paramString) {
-    return new SpannableStringBuilder(paramString);
+  public static SpannableStringBuilder createSpannableAlt(Context context, String text) {
+    return new SpannableStringBuilder(text);
   }
   
-  public static void expandViewDefault(View paramView, Animation.AnimationListener paramAnimationListener) {
-    expandView(paramView, 1, paramAnimationListener);
+  public static void expandViewDefault(View view, Animation.AnimationListener listener) {
+    expandView(view, 1, listener);
   }
 }

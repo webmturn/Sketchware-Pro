@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class DeviceUtil {
-  public static int getToolbarHeight(Context paramContext) {
-    return (int)ViewUtil.dpToPx(paramContext, 48.0F);
+  public static int getToolbarHeight(Context context) {
+    return (int)ViewUtil.dpToPx(context, 48.0F);
   }
   
   public static String getCpuAbi() {
@@ -36,18 +36,18 @@ public class DeviceUtil {
     return str;
   }
   
-  public static void updateBadgeCount(Context paramContext, int paramInt) {
-    String str = paramContext.getPackageManager().getLaunchIntentForPackage(paramContext.getPackageName()).getComponent().getClassName();
+  public static void updateBadgeCount(Context context, int count) {
+    String str = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName()).getComponent().getClassName();
     Intent intent = new Intent("android.intent.action.BADGE_COUNT_UPDATE");
-    intent.putExtra("badge_count", paramInt);
-    intent.putExtra("badge_count_package_name", paramContext.getPackageName());
+    intent.putExtra("badge_count", count);
+    intent.putExtra("badge_count_package_name", context.getPackageName());
     intent.putExtra("badge_count_class_name", str);
-    paramContext.sendBroadcast(intent);
+    context.sendBroadcast(intent);
   }
   
-  public static boolean isGooglePlayAvailable(Activity paramActivity) {
+  public static boolean isGooglePlayAvailable(Activity activity) {
     GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
-    int i = googleApiAvailability.isGooglePlayServicesAvailable((Context)paramActivity);
+    int i = googleApiAvailability.isGooglePlayServicesAvailable((Context)activity);
     if (i != 0) {
       googleApiAvailability.isUserResolvableError(i);
       return false;
@@ -76,13 +76,13 @@ public class DeviceUtil {
     } 
   }
   
-  public static String getDeviceId(Context paramContext) {
+  public static String getDeviceId(Context context) {
     return "";
   }
   
-  public static boolean hasSensor(Context paramContext, int paramInt) {
+  public static boolean hasSensor(Context context, int sensorType) {
     boolean bool;
-    if (((SensorManager)paramContext.getSystemService(Context.SENSOR_SERVICE)).getDefaultSensor(paramInt) != null) {
+    if (((SensorManager)context.getSystemService(Context.SENSOR_SERVICE)).getDefaultSensor(sensorType) != null) {
       bool = true;
     } else {
       bool = false;
@@ -90,9 +90,9 @@ public class DeviceUtil {
     return bool;
   }
   
-  public static float[] getScreenDpi(Activity paramActivity) {
+  public static float[] getScreenDpi(Activity activity) {
     DisplayMetrics displayMetrics = new DisplayMetrics();
-    paramActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+    activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
     return new float[] { displayMetrics.xdpi, displayMetrics.ydpi };
   }
   
@@ -105,9 +105,9 @@ public class DeviceUtil {
     } 
   }
   
-  public static ArrayList<String> getGoogleAccounts(Context paramContext) {
+  public static ArrayList<String> getGoogleAccounts(Context context) {
     ArrayList<String> arrayList = new ArrayList<>();
-    Account[] arrayOfAccount = AccountManager.get(paramContext).getAccountsByType("com.google");
+    Account[] arrayOfAccount = AccountManager.get(context).getAccountsByType("com.google");
     for (int b = 0; b < arrayOfAccount.length; b++) {
       if ((arrayOfAccount[b]).type.equals("com.google"))
         arrayList.add((arrayOfAccount[b]).name); 
@@ -115,17 +115,17 @@ public class DeviceUtil {
     return arrayList;
   }
   
-  public static int[] getScreenResolution(Activity paramActivity) {
+  public static int[] getScreenResolution(Activity activity) {
     DisplayMetrics displayMetrics = new DisplayMetrics();
-    paramActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+    activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
     return new int[] { displayMetrics.widthPixels, displayMetrics.heightPixels };
   }
   
-  public static int getVersionCode(Context paramContext) {
+  public static int getVersionCode(Context context) {
     int i = 0;
     try {
-      String str = paramContext.getPackageName();
-      int j = (paramContext.getPackageManager().getPackageInfo(str, 0)).versionCode;
+      String str = context.getPackageName();
+      int j = (context.getPackageManager().getPackageInfo(str, 0)).versionCode;
       i = j;
     } catch (android.content.pm.PackageManager.NameNotFoundException nameNotFoundException) {
       nameNotFoundException.printStackTrace();
@@ -133,11 +133,11 @@ public class DeviceUtil {
     return i;
   }
   
-  public static String getVersionName(Context paramContext) {
+  public static String getVersionName(Context context) {
     String str;
     try {
-      String str1 = paramContext.getPackageName();
-      str = (paramContext.getPackageManager().getPackageInfo(str1, 0)).versionName;
+      String str1 = context.getPackageName();
+      str = (context.getPackageManager().getPackageInfo(str1, 0)).versionName;
     } catch (android.content.pm.PackageManager.NameNotFoundException nameNotFoundException) {
       nameNotFoundException.printStackTrace();
       str = "";
@@ -145,32 +145,32 @@ public class DeviceUtil {
     return str;
   }
   
-  public static int getStatusBarHeight(Context paramContext) {
-    int i = paramContext.getResources().getIdentifier("status_bar_height", "dimen", "android");
+  public static int getStatusBarHeight(Context context) {
+    int i = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
     if (i > 0) {
-      i = paramContext.getResources().getDimensionPixelSize(i);
+      i = context.getResources().getDimensionPixelSize(i);
     } else {
       i = 0;
     } 
     return i;
   }
   
-  public static Locale getLocale(Context paramContext) {
+  public static Locale getLocale(Context context) {
     Locale locale;
     if (Build.VERSION.SDK_INT >= 24) {
-      locale = paramContext.getResources().getConfiguration().getLocales().get(0);
+      locale = context.getResources().getConfiguration().getLocales().get(0);
     } else {
-      locale = (paramContext.getResources().getConfiguration()).locale;
+      locale = (context.getResources().getConfiguration()).locale;
     } 
     return locale;
   }
   
-  public static boolean isNetworkAvailable(Context paramContext) {
+  public static boolean isNetworkAvailable(Context context) {
     int[] arrayOfInt = new int[2];
     arrayOfInt[0] = 0;
     arrayOfInt[1] = 1;
     try {
-      ConnectivityManager connectivityManager = (ConnectivityManager)paramContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+      ConnectivityManager connectivityManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
       int i = arrayOfInt.length;
       for (int b = 0; b < i; b++) {
         int j = arrayOfInt[b];

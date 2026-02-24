@@ -34,13 +34,13 @@ public class ViewFilesAdapter extends BaseFragment {
   
   public int[] viewCounters = new int[19];
   
-  public final String generateUniqueViewId(int paramInt, String paramString) {
-    String str1 = SketchwarePaths.getWidgetTypeName(paramInt);
+  public final String generateUniqueViewId(int position, String paramString) {
+    String str1 = SketchwarePaths.getWidgetTypeName(position);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str1);
     int[] arrayOfInt = this.viewCounters;
-    int i = arrayOfInt[paramInt] + 1;
-    arrayOfInt[paramInt] = i;
+    int i = arrayOfInt[position] + 1;
+    arrayOfInt[position] = i;
     stringBuilder.append(i);
     String str2 = stringBuilder.toString();
     ArrayList arrayList = ProjectDataManager.getProjectDataManager(this.projectId).getViews(paramString);
@@ -64,18 +64,18 @@ public class ViewFilesAdapter extends BaseFragment {
       StringBuilder stringBuilder1 = new StringBuilder();
       stringBuilder1.append(str1);
       int[] arrayOfInt1 = this.viewCounters;
-      i = arrayOfInt1[paramInt] + 1;
-      arrayOfInt1[paramInt] = i;
+      i = arrayOfInt1[position] + 1;
+      arrayOfInt1[position] = i;
       stringBuilder1.append(i);
       paramString = stringBuilder1.toString(); // Fix: assign generated string back to paramString
     } 
   }
   
-  public final ArrayList<ViewBean> getPresetViews(String paramString, int paramInt) {
+  public final ArrayList<ViewBean> getPresetViews(String paramString, int position) {
     ArrayList<ViewBean> arrayList;
-    if (paramInt == 277) {
+    if (position == 277) {
       arrayList = PresetLayoutFactory.getListItemPresetViews(paramString);
-    } else if (paramInt == 278) {
+    } else if (position == 278) {
       arrayList = PresetLayoutFactory.getDrawerPresetViews(paramString);
     } else {
       arrayList = new ArrayList<>();
@@ -165,19 +165,19 @@ public class ViewFilesAdapter extends BaseFragment {
       }  
   }
   
-  public void onActivityCreated(Bundle paramBundle) {
-    super.onActivityCreated(paramBundle);
-    if (paramBundle == null) {
+  public void onActivityCreated(Bundle savedInstanceState) {
+    super.onActivityCreated(savedInstanceState);
+    if (savedInstanceState == null) {
       loadCustomViews();
     } else {
-      this.projectId = paramBundle.getString("sc_id");
-      this.projectFiles = paramBundle.getParcelableArrayList("custom_views");
+      this.projectId = savedInstanceState.getString("sc_id");
+      this.projectFiles = savedInstanceState.getParcelableArrayList("custom_views");
     } 
     this.recyclerView.getAdapter().notifyDataSetChanged();
     updateEmptyState();
   }
   
-  public void onActivityResult(int paramInt1, int paramInt2, Intent paramIntent) {
+  public void onActivityResult(int paramInt1, int paramInt2, Intent resultIntent) {
     if ((paramInt1 == 277 || paramInt1 == 278) && paramInt2 == -1) {
       ProjectFileBean projectFileBean = this.projectFiles.get(this.adapter.selectedPosition);
       ArrayList<ViewBean> arrayList2 = ProjectDataManager.getProjectDataManager(this.projectId).getViews(projectFileBean.getXmlName());
@@ -185,7 +185,7 @@ public class ViewFilesAdapter extends BaseFragment {
         ViewBean viewBean = arrayList2.get(paramInt2);
         ProjectDataManager.getProjectDataManager(this.projectId).removeView(projectFileBean, viewBean);
       } 
-      ArrayList<ViewBean> arrayList1 = getPresetViews(((ProjectFileBean)paramIntent.getParcelableExtra("preset_data")).presetName, paramInt1);
+      ArrayList<ViewBean> arrayList1 = getPresetViews(((ProjectFileBean)resultIntent.getParcelableExtra("preset_data")).presetName, paramInt1);
       ProjectDataManager.getProjectDataManager(this.projectId);
       for (ViewBean viewBean : ProjectDataStore.getSortedRootViews(arrayList1)) {
         viewBean.id = generateUniqueViewId(viewBean.type, projectFileBean.getXmlName());
@@ -198,28 +198,28 @@ public class ViewFilesAdapter extends BaseFragment {
     } 
   }
   
-  public View onCreateView(LayoutInflater paramLayoutInflater, ViewGroup paramViewGroup, Bundle paramBundle) {
-    ViewGroup viewGroup = (ViewGroup)paramLayoutInflater.inflate(R.layout.fr_manage_view_list, paramViewGroup, false);
+  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    ViewGroup viewGroup = (ViewGroup)inflater.inflate(R.layout.fr_manage_view_list, container, false);
     this.projectFiles = new ArrayList<ProjectFileBean>();
     this.recyclerView = (RecyclerView)viewGroup.findViewById(R.id.list_activities);
     this.recyclerView.setHasFixedSize(true);
     this.recyclerView.setLayoutManager((RecyclerView.LayoutManager)new LinearLayoutManager(getContext()));
     this.adapter = new FileListAdapter(this, this.recyclerView);
     this.recyclerView.setAdapter(this.adapter);
-    if (paramBundle == null) {
+    if (savedInstanceState == null) {
       this.projectId = requireActivity().getIntent().getStringExtra("sc_id");
     } else {
-      this.projectId = paramBundle.getString("sc_id");
+      this.projectId = savedInstanceState.getString("sc_id");
     } 
     this.emptyText = (TextView)viewGroup.findViewById(R.id.tv_guide);
     this.emptyText.setText(StringResource.getInstance().getTranslatedString((Context)requireActivity(), R.string.design_manager_view_description_guide_create_custom_view));
     return (View)viewGroup;
   }
   
-  public void onSaveInstanceState(Bundle paramBundle) {
-    paramBundle.putString("sc_id", this.projectId);
-    paramBundle.putParcelableArrayList("custom_views", this.projectFiles);
-    super.onSaveInstanceState(paramBundle);
+  public void onSaveInstanceState(Bundle savedInstanceState) {
+    savedInstanceState.putString("sc_id", this.projectId);
+    savedInstanceState.putParcelableArrayList("custom_views", this.projectFiles);
+    super.onSaveInstanceState(savedInstanceState);
   }
   
   public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHolder> {

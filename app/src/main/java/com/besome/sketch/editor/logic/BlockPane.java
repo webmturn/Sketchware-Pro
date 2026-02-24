@@ -30,13 +30,13 @@ public class BlockPane extends RelativeLayout {
   
   public float densityScale = ViewUtil.dpToPx(getContext(), 1.0F);
   
-  public BlockPane(Context paramContext) {
-    super(paramContext);
-    init(paramContext);
+  public BlockPane(Context context) {
+    super(context);
+    init(context);
   }
   
-  public BlockView findBlockById(int paramInt) {
-    return (BlockView)findViewWithTag(Integer.valueOf(paramInt));
+  public BlockView findBlockById(int position) {
+    return (BlockView)findViewWithTag(Integer.valueOf(position));
   }
   
   public BlockView addBlock(BlockView paramRs, int paramInt1, int paramInt2) {
@@ -55,9 +55,9 @@ public class BlockPane extends RelativeLayout {
     return rs;
   }
   
-  public BlockView dropBlock(BlockView paramRs, int paramInt1, int paramInt2, boolean paramBoolean) {
+  public BlockView dropBlock(BlockView paramRs, int paramInt1, int paramInt2, boolean enabled) {
     BlockView rs;
-    if (!paramBoolean) {
+    if (!enabled) {
       rs = addBlock(paramRs, paramInt1, paramInt2);
     } else {
       paramRs.setX((paramInt1 - this.locationBuffer[0] - getPaddingLeft()));
@@ -124,28 +124,28 @@ public class BlockPane extends RelativeLayout {
     this.currentSnapPoint = null;
   }
   
-  public void setBlockTreeVisibility(BlockView paramRs, int paramInt) {
+  public void setBlockTreeVisibility(BlockView paramRs, int position) {
     java.util.HashSet<Integer> visited = new java.util.HashSet<>();
     while (paramRs != null) {
       Integer tag = (Integer) paramRs.getTag();
       if (!visited.add(tag)) break;
-      paramRs.setVisibility(paramInt);
+      paramRs.setVisibility(position);
       for (View view : paramRs.childViews) {
         if (view instanceof BlockView)
-          setBlockTreeVisibility((BlockView)view, paramInt); 
+          setBlockTreeVisibility((BlockView)view, position); 
       } 
       if (paramRs.hasSubstack()) {
         int j = paramRs.subStack1;
         if (j != -1 && !visited.contains(j)) {
           BlockView sub = (BlockView)findViewWithTag(Integer.valueOf(j));
-          if (sub != null) setBlockTreeVisibility(sub, paramInt);
+          if (sub != null) setBlockTreeVisibility(sub, position);
         }
       } 
       if (paramRs.hasDoubleSubstack()) {
         int j = paramRs.subStack2;
         if (j != -1 && !visited.contains(j)) {
           BlockView sub = (BlockView)findViewWithTag(Integer.valueOf(j));
-          if (sub != null) setBlockTreeVisibility(sub, paramInt);
+          if (sub != null) setBlockTreeVisibility(sub, position);
         }
       } 
       int i = paramRs.nextBlock;
@@ -209,25 +209,25 @@ public class BlockPane extends RelativeLayout {
     this.currentSnapPoint = null;
   }
   
-  public final void collectSnapPoints(BlockView paramRs, boolean paramBoolean) {
+  public final void collectSnapPoints(BlockView paramRs, boolean enabled) {
     java.util.HashSet<Integer> visited = new java.util.HashSet<>();
     while (paramRs != null && paramRs.getVisibility() != 8) {
       Integer tag = (Integer) paramRs.getTag();
       if (!visited.add(tag)) break;
-      if (!paramRs.hasEndCap && (!paramBoolean || -1 == paramRs.nextBlock)) {
+      if (!paramRs.hasEndCap && (!enabled || -1 == paramRs.nextBlock)) {
         int[] arrayOfInt = new int[2];
         paramRs.getLocationOnScreen(arrayOfInt);
         arrayOfInt[1] = arrayOfInt[1] + paramRs.getContentBottom();
         addSnapPoint(arrayOfInt, (View)paramRs, 0);
       } 
-      if (paramRs.hasSubstack() && (!paramBoolean || paramRs.subStack1 == -1)) {
+      if (paramRs.hasSubstack() && (!enabled || paramRs.subStack1 == -1)) {
         int[] arrayOfInt = new int[2];
         paramRs.getLocationOnScreen(arrayOfInt);
         arrayOfInt[0] = arrayOfInt[0] + ((BaseBlockView)paramRs).cornerRadius;
         arrayOfInt[1] = arrayOfInt[1] + paramRs.getBlockHeight();
         addSnapPoint(arrayOfInt, (View)paramRs, 2);
       } 
-      if (paramRs.hasDoubleSubstack() && (!paramBoolean || paramRs.subStack2 == -1)) {
+      if (paramRs.hasDoubleSubstack() && (!enabled || paramRs.subStack2 == -1)) {
         int[] arrayOfInt = new int[2];
         paramRs.getLocationOnScreen(arrayOfInt);
         arrayOfInt[0] = arrayOfInt[0] + ((BaseBlockView)paramRs).cornerRadius;
@@ -237,12 +237,12 @@ public class BlockPane extends RelativeLayout {
       int i = paramRs.subStack1;
       if (i != -1 && !visited.contains(i)) {
         BlockView sub = (BlockView)findViewWithTag(Integer.valueOf(i));
-        if (sub != null) collectSnapPoints(sub, paramBoolean);
+        if (sub != null) collectSnapPoints(sub, enabled);
       }
       i = paramRs.subStack2;
       if (i != -1 && !visited.contains(i)) {
         BlockView sub = (BlockView)findViewWithTag(Integer.valueOf(i));
-        if (sub != null) collectSnapPoints(sub, paramBoolean);
+        if (sub != null) collectSnapPoints(sub, enabled);
       }
       i = paramRs.nextBlock;
       if (i != -1) {
@@ -253,12 +253,12 @@ public class BlockPane extends RelativeLayout {
     } 
   }
   
-  public final void init(Context paramContext) {
-    this.context = paramContext;
+  public final void init(Context context) {
+    this.context = context;
     initActiveBlock();
   }
   
-  public void removeBlock(BlockBean paramBlockBean, boolean paramBoolean) {
+  public void removeBlock(BlockBean paramBlockBean, boolean enabled) {
     String str = paramBlockBean.id;
     if (str != null && !str.equals("") && !paramBlockBean.id.equals("0")) {
       BlockView rs1 = (BlockView)findViewWithTag(Integer.valueOf(paramBlockBean.id));
@@ -271,7 +271,7 @@ public class BlockPane extends RelativeLayout {
       } else {
         removeView((View)rs1);
       } 
-      if (paramBoolean && rs2 != null)
+      if (enabled && rs2 != null)
         rs2.getRootBlock().layoutChain(); 
     } 
   }
@@ -321,25 +321,25 @@ public class BlockPane extends RelativeLayout {
     } 
   }
   
-  public final void addSnapPoint(int[] paramArrayOfint, View paramView, int paramInt) {
-    this.blockSnapPoints.add(new Object[] { paramArrayOfint, paramView, Integer.valueOf(paramInt) });
+  public final void addSnapPoint(int[] paramArrayOfint, View view, int position) {
+    this.blockSnapPoints.add(new Object[] { paramArrayOfint, view, Integer.valueOf(position) });
   }
   
-  public final boolean isCompatibleBlock(BlockView paramRs, View paramView) {
+  public final boolean isCompatibleBlock(BlockView paramRs, View view) {
     if (!paramRs.isParameter)
       return true; 
-    if (paramView instanceof BaseBlockView) {
-      if (((BaseBlockView)paramView).componentType.equals("!"))
+    if (view instanceof BaseBlockView) {
+      if (((BaseBlockView)view).componentType.equals("!"))
         return true; 
       ClassInfo gx1 = paramRs.getClassInfo();
       if (gx1 == null)
         return false; 
-      ClassInfo gx2 = ((BaseBlockView)paramView).getClassInfo();
+      ClassInfo gx2 = ((BaseBlockView)view).getClassInfo();
       if (gx2 == null)
         return false; 
       if (gx1.isAssignableFrom(gx2))
         return true; 
-      if (paramView instanceof BlockView && gx1.matchesType(ComponentTypeMapper.getInternalTypeName(((BlockView)paramView).componentTypeStr)))
+      if (view instanceof BlockView && gx1.matchesType(ComponentTypeMapper.getInternalTypeName(((BlockView)view).componentTypeStr)))
         return true; 
     } 
     return false;

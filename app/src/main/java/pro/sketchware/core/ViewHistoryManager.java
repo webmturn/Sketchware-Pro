@@ -15,8 +15,8 @@ public class ViewHistoryManager {
   
   public String scId;
   
-  public ViewHistoryManager(String paramString) {
-    this.scId = paramString;
+  public ViewHistoryManager(String key) {
+    this.scId = key;
     this.historyMap = new HashMap<String, ArrayList<HistoryViewBean>>();
     this.positionMap = new HashMap<String, Integer>();
   }
@@ -31,126 +31,126 @@ public class ViewHistoryManager {
     instance = null;
   }
   
-  public static ViewHistoryManager getInstance(String paramString) {
+  public static ViewHistoryManager getInstance(String key) {
     if (instance == null) {
       synchronized (ViewHistoryManager.class) {
-        if (instance == null || !instance.scId.equals(paramString)) {
-          instance = new ViewHistoryManager(paramString);
+        if (instance == null || !instance.scId.equals(key)) {
+          instance = new ViewHistoryManager(key);
         }
       }
     }
     return instance;
   }
   
-  public final void trimFutureHistory(String paramString) {
-    if (!this.positionMap.containsKey(paramString))
+  public final void trimFutureHistory(String key) {
+    if (!this.positionMap.containsKey(key))
       return; 
-    ArrayList arrayList = this.historyMap.get(paramString);
-    int i = ((Integer)this.positionMap.get(paramString)).intValue();
+    ArrayList arrayList = this.historyMap.get(key);
+    int i = ((Integer)this.positionMap.get(key)).intValue();
     if (arrayList == null)
       return; 
     for (int j = arrayList.size(); j > i; j--)
       arrayList.remove(j - 1); 
   }
   
-  public final void addHistoryEntry(String paramString, HistoryViewBean paramHistoryViewBean) {
-    if (!this.historyMap.containsKey(paramString))
-      initHistory(paramString); 
-    ArrayList<HistoryViewBean> arrayList = this.historyMap.get(paramString);
+  public final void addHistoryEntry(String key, HistoryViewBean paramHistoryViewBean) {
+    if (!this.historyMap.containsKey(key))
+      initHistory(key); 
+    ArrayList<HistoryViewBean> arrayList = this.historyMap.get(key);
     arrayList.add(paramHistoryViewBean);
     if (arrayList.size() > 50) {
       arrayList.remove(0);
     } else {
-      incrementPosition(paramString);
+      incrementPosition(key);
     } 
   }
   
-  public void recordAdd(String paramString, ViewBean paramViewBean) {
+  public void recordAdd(String key, ViewBean paramViewBean) {
     ArrayList<ViewBean> arrayList = new ArrayList<>();
     arrayList.add(paramViewBean);
-    recordAddMultiple(paramString, arrayList);
+    recordAddMultiple(key, arrayList);
   }
   
-  public void recordUpdate(String paramString, ViewBean paramViewBean1, ViewBean paramViewBean2) {
+  public void recordUpdate(String key, ViewBean paramViewBean1, ViewBean paramViewBean2) {
     if (paramViewBean1.isEqual(paramViewBean2))
       return; 
     HistoryViewBean historyViewBean = new HistoryViewBean();
     historyViewBean.actionUpdate(paramViewBean1, paramViewBean2);
-    if (!this.historyMap.containsKey(paramString))
-      initHistory(paramString); 
-    trimFutureHistory(paramString);
-    addHistoryEntry(paramString, historyViewBean);
+    if (!this.historyMap.containsKey(key))
+      initHistory(key); 
+    trimFutureHistory(key);
+    addHistoryEntry(key, historyViewBean);
   }
   
-  public void recordAddMultiple(String paramString, ArrayList<ViewBean> paramArrayList) {
+  public void recordAddMultiple(String key, ArrayList<ViewBean> paramArrayList) {
     HistoryViewBean historyViewBean = new HistoryViewBean();
     historyViewBean.actionAdd(paramArrayList);
-    if (!this.historyMap.containsKey(paramString))
-      initHistory(paramString); 
-    trimFutureHistory(paramString);
-    addHistoryEntry(paramString, historyViewBean);
+    if (!this.historyMap.containsKey(key))
+      initHistory(key); 
+    trimFutureHistory(key);
+    addHistoryEntry(key, historyViewBean);
   }
   
-  public final void decrementPosition(String paramString) {
-    if (!this.positionMap.containsKey(paramString))
-      initHistory(paramString); 
-    int i = ((Integer)this.positionMap.get(paramString)).intValue();
+  public final void decrementPosition(String key) {
+    if (!this.positionMap.containsKey(key))
+      initHistory(key); 
+    int i = ((Integer)this.positionMap.get(key)).intValue();
     if (i == 0)
       return; 
-    this.positionMap.put(paramString, Integer.valueOf(i - 1));
+    this.positionMap.put(key, Integer.valueOf(i - 1));
   }
   
-  public void recordMove(String paramString, ViewBean paramViewBean) {
+  public void recordMove(String key, ViewBean paramViewBean) {
     HistoryViewBean historyViewBean = new HistoryViewBean();
     historyViewBean.actionMove(paramViewBean);
-    if (!this.historyMap.containsKey(paramString))
-      initHistory(paramString); 
-    trimFutureHistory(paramString);
-    addHistoryEntry(paramString, historyViewBean);
+    if (!this.historyMap.containsKey(key))
+      initHistory(key); 
+    trimFutureHistory(key);
+    addHistoryEntry(key, historyViewBean);
   }
   
-  public void recordRemove(String paramString, ArrayList<ViewBean> paramArrayList) {
+  public void recordRemove(String key, ArrayList<ViewBean> paramArrayList) {
     HistoryViewBean historyViewBean = new HistoryViewBean();
     historyViewBean.actionRemove(paramArrayList);
-    if (!this.historyMap.containsKey(paramString))
-      initHistory(paramString); 
-    trimFutureHistory(paramString);
-    addHistoryEntry(paramString, historyViewBean);
+    if (!this.historyMap.containsKey(key))
+      initHistory(key); 
+    trimFutureHistory(key);
+    addHistoryEntry(key, historyViewBean);
   }
   
-  public final void incrementPosition(String paramString) {
-    if (!this.positionMap.containsKey(paramString))
-      initHistory(paramString); 
-    int i = ((Integer)this.positionMap.get(paramString)).intValue();
-    this.positionMap.put(paramString, Integer.valueOf(i + 1));
+  public final void incrementPosition(String key) {
+    if (!this.positionMap.containsKey(key))
+      initHistory(key); 
+    int i = ((Integer)this.positionMap.get(key)).intValue();
+    this.positionMap.put(key, Integer.valueOf(i + 1));
   }
   
-  public void initHistory(String paramString) {
-    this.historyMap.put(paramString, new ArrayList<HistoryViewBean>());
-    this.positionMap.put(paramString, Integer.valueOf(0));
+  public void initHistory(String key) {
+    this.historyMap.put(key, new ArrayList<HistoryViewBean>());
+    this.positionMap.put(key, Integer.valueOf(0));
   }
   
-  public boolean canRedo(String paramString) {
-    return !this.positionMap.containsKey(paramString) ? false : ((((Integer)this.positionMap.get(paramString)).intValue() < ((ArrayList)this.historyMap.get(paramString)).size()));
+  public boolean canRedo(String key) {
+    return !this.positionMap.containsKey(key) ? false : ((((Integer)this.positionMap.get(key)).intValue() < ((ArrayList)this.historyMap.get(key)).size()));
   }
   
-  public boolean canUndo(String paramString) {
-    return !this.positionMap.containsKey(paramString) ? false : ((((Integer)this.positionMap.get(paramString)).intValue() > 0));
+  public boolean canUndo(String key) {
+    return !this.positionMap.containsKey(key) ? false : ((((Integer)this.positionMap.get(key)).intValue() > 0));
   }
   
-  public HistoryViewBean redo(String paramString) {
-    if (!canRedo(paramString))
+  public HistoryViewBean redo(String key) {
+    if (!canRedo(key))
       return null; 
-    int i = ((Integer)this.positionMap.get(paramString)).intValue();
-    incrementPosition(paramString);
-    return ((HistoryViewBean)((ArrayList<HistoryViewBean>)this.historyMap.get(paramString)).get(i - 1 + 1)).clone();
+    int i = ((Integer)this.positionMap.get(key)).intValue();
+    incrementPosition(key);
+    return ((HistoryViewBean)((ArrayList<HistoryViewBean>)this.historyMap.get(key)).get(i - 1 + 1)).clone();
   }
   
-  public HistoryViewBean undo(String paramString) {
-    if (!canUndo(paramString))
+  public HistoryViewBean undo(String key) {
+    if (!canUndo(key))
       return null; 
-    int i = ((Integer)this.positionMap.get(paramString)).intValue();
-    decrementPosition(paramString);
-    return ((HistoryViewBean)((ArrayList<HistoryViewBean>)this.historyMap.get(paramString)).get(i - 1)).clone();
+    int i = ((Integer)this.positionMap.get(key)).intValue();
+    decrementPosition(key);
+    return ((HistoryViewBean)((ArrayList<HistoryViewBean>)this.historyMap.get(key)).get(i - 1)).clone();
   }
 }
