@@ -178,9 +178,9 @@ public class ProjectDataStore {
     } 
     ArrayList<String> viewKeysToRemove = new ArrayList<>();
     for (Map.Entry<String, ArrayList<ViewBean>> entry : this.viewMap.entrySet()) {
-      String str = (String)entry.getKey();
-      if (!fileManager.hasXmlName(str)) {
-        viewKeysToRemove.add(str);
+      String key = (String)entry.getKey();
+      if (!fileManager.hasXmlName(key)) {
+        viewKeysToRemove.add(key);
         continue;
       } 
       for (ViewBean viewBean : entry.getValue()) {
@@ -199,58 +199,58 @@ public class ProjectDataStore {
         } 
       } 
     } 
-    for (String str : viewKeysToRemove)
-      this.viewMap.remove(str); 
+    for (String key : viewKeysToRemove)
+      this.viewMap.remove(key); 
     ArrayList<String> varKeysToRemove = new ArrayList<>();
     Iterator<Map.Entry<String, ArrayList<Pair<Integer, String>>>> varEntryIterator = this.variableMap.entrySet().iterator();
     while (varEntryIterator.hasNext()) {
-      String str = (String)((Map.Entry)varEntryIterator.next()).getKey();
-      if (!fileManager.hasJavaName(str))
-        varKeysToRemove.add(str); 
+      String key = (String)((Map.Entry)varEntryIterator.next()).getKey();
+      if (!fileManager.hasJavaName(key))
+        varKeysToRemove.add(key); 
     } 
-    for (String str : varKeysToRemove)
-      this.variableMap.remove(str); 
+    for (String key : varKeysToRemove)
+      this.variableMap.remove(key); 
     ArrayList<String> keysToRemove = new ArrayList<>();
     Iterator listEntryIterator = this.listMap.entrySet().iterator();
     while (listEntryIterator.hasNext()) {
-      String str = (String)((Map.Entry)listEntryIterator.next()).getKey();
-      if (!fileManager.hasJavaName(str))
-        keysToRemove.add(str); 
+      String key = (String)((Map.Entry)listEntryIterator.next()).getKey();
+      if (!fileManager.hasJavaName(key))
+        keysToRemove.add(key); 
     } 
-    for (String str : keysToRemove)
-      this.listMap.remove(str); 
+    for (String key : keysToRemove)
+      this.listMap.remove(key); 
     keysToRemove = new ArrayList<String>();
     Iterator innerIterator = this.moreBlockMap.entrySet().iterator();
     while (innerIterator.hasNext()) {
-      String str = (String)((Map.Entry)innerIterator.next()).getKey();
-      if (!fileManager.hasJavaName(str))
-        keysToRemove.add(str); 
+      String key = (String)((Map.Entry)innerIterator.next()).getKey();
+      if (!fileManager.hasJavaName(key))
+        keysToRemove.add(key); 
     } 
-    for (String str : keysToRemove)
-      this.moreBlockMap.remove(str); 
+    for (String key : keysToRemove)
+      this.moreBlockMap.remove(key); 
     ArrayList<String> compKeysToRemove = new ArrayList<>();
     Iterator<Map.Entry<String, ArrayList<ComponentBean>>> compEntryIterator = this.componentMap.entrySet().iterator();
     while (compEntryIterator.hasNext()) {
-      String str = (String)((Map.Entry)compEntryIterator.next()).getKey();
-      if (!fileManager.hasJavaName(str))
-        compKeysToRemove.add(str); 
+      String key = (String)((Map.Entry)compEntryIterator.next()).getKey();
+      if (!fileManager.hasJavaName(key))
+        compKeysToRemove.add(key); 
     } 
-    for (String str : compKeysToRemove)
-      this.componentMap.remove(str); 
+    for (String key : compKeysToRemove)
+      this.componentMap.remove(key); 
     ArrayList<String> eventKeysToRemove = new ArrayList<>();
     Iterator blockEntryIterator = this.eventMap.entrySet().iterator();
     while (blockEntryIterator.hasNext()) {
-      String str = (String)((Map.Entry)blockEntryIterator.next()).getKey();
-      if (!fileManager.hasJavaName(str))
-        eventKeysToRemove.add(str); 
+      String key = (String)((Map.Entry)blockEntryIterator.next()).getKey();
+      if (!fileManager.hasJavaName(key))
+        eventKeysToRemove.add(key); 
     } 
-    for (String str : eventKeysToRemove)
-      this.eventMap.remove(str); 
+    for (String key : eventKeysToRemove)
+      this.eventMap.remove(key); 
     ArrayList<String> blockKeysToRemove = new ArrayList<>();
     for (Map.Entry<String, HashMap<String, ArrayList<BlockBean>>> entry : this.blockMap.entrySet()) {
-      String str = (String)entry.getKey();
-      if (!fileManager.hasJavaName(str)) {
-        blockKeysToRemove.add(str);
+      String key = (String)entry.getKey();
+      if (!fileManager.hasJavaName(key)) {
+        blockKeysToRemove.add(key);
         continue;
       } 
       Iterator iterator = ((HashMap)entry.getValue()).entrySet().iterator();
@@ -375,10 +375,10 @@ public class ProjectDataStore {
       return; 
     Iterator iterator = this.componentMap.entrySet().iterator();
     while (iterator.hasNext()) {
-      String str = (String)((Map.Entry)iterator.next()).getKey();
-      removeComponentsByType(str, 6);
-      removeComponentsByType(str, 12);
-      removeComponentsByType(str, 14);
+      String key = (String)((Map.Entry)iterator.next()).getKey();
+      removeComponentsByType(key, 6);
+      removeComponentsByType(key, 12);
+      removeComponentsByType(key, 14);
     } 
   }
   
@@ -422,7 +422,7 @@ public class ProjectDataStore {
     if (hashMap != null)
       hashMap.clear(); 
     StringBuffer stringBuffer = new StringBuffer();
-    String str = "";
+    String sectionName = "";
     while (true) {
       String line = reader.readLine();
       if (line != null) {
@@ -430,11 +430,11 @@ public class ProjectDataStore {
           continue; 
         if (line.charAt(0) == '@') {
           StringBuffer tempBuffer = stringBuffer;
-          if (str.length() > 0) {
-            parseLogicSection(str, stringBuffer.toString());
+          if (sectionName.length() > 0) {
+            parseLogicSection(sectionName, stringBuffer.toString());
             tempBuffer = new StringBuffer();
           } 
-          str = line.substring(1);
+          sectionName = line.substring(1);
           stringBuffer = tempBuffer;
           continue;
         } 
@@ -442,8 +442,8 @@ public class ProjectDataStore {
         stringBuffer.append("\n");
         continue;
       } 
-      if (str.length() > 0 && stringBuffer.length() > 0)
-        parseLogicSection(str, stringBuffer.toString()); 
+      if (sectionName.length() > 0 && stringBuffer.length() > 0)
+        parseLogicSection(sectionName, stringBuffer.toString()); 
       return;
     } 
   }
@@ -568,7 +568,7 @@ public class ProjectDataStore {
           contentBuilder.append((String)pair.second);
           contentBuilder.append("\n");
         }
-        String str = contentBuilder.toString();
+        String content = contentBuilder.toString();
         buffer.append("@");
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append((String)entry.getKey());
@@ -576,7 +576,7 @@ public class ProjectDataStore {
         stringBuilder.append("var");
         buffer.append(stringBuilder.toString());
         buffer.append("\n");
-        buffer.append(str);
+        buffer.append(content);
         buffer.append("\n");
       }  
     tempVarMap = this.listMap;
@@ -593,7 +593,7 @@ public class ProjectDataStore {
           contentBuilder.append((String)pair.second);
           contentBuilder.append("\n");
         }
-        String str = contentBuilder.toString();
+        String content = contentBuilder.toString();
         buffer.append("@");
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append((String)entry.getKey());
@@ -601,7 +601,7 @@ public class ProjectDataStore {
         stringBuilder.append("list");
         buffer.append(stringBuilder.toString());
         buffer.append("\n");
-        buffer.append(str);
+        buffer.append(content);
         buffer.append("\n");
       }  
     HashMap<String, ArrayList<Pair<String, String>>> tempMoreBlockMap = this.moreBlockMap;
@@ -618,7 +618,7 @@ public class ProjectDataStore {
           contentBuilder.append((String)pair.second);
           contentBuilder.append("\n");
         }
-        String str = contentBuilder.toString();
+        String content = contentBuilder.toString();
         buffer.append("@");
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append((String)entry.getKey());
@@ -626,7 +626,7 @@ public class ProjectDataStore {
         stringBuilder.append("func");
         buffer.append(stringBuilder.toString());
         buffer.append("\n");
-        buffer.append(str);
+        buffer.append(content);
         buffer.append("\n");
       }  
     HashMap<String, ArrayList<ComponentBean>> tempCompMap = this.componentMap;
@@ -642,7 +642,7 @@ public class ProjectDataStore {
           contentBuilder.append(this.gson.toJson(componentBean));
           contentBuilder.append("\n");
         }
-        String str = contentBuilder.toString();
+        String content = contentBuilder.toString();
         buffer.append("@");
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append((String)entry.getKey());
@@ -650,7 +650,7 @@ public class ProjectDataStore {
         stringBuilder.append("components");
         buffer.append(stringBuilder.toString());
         buffer.append("\n");
-        buffer.append(str);
+        buffer.append(content);
         buffer.append("\n");
       }  
     HashMap<String, ArrayList<EventBean>> tempEventMap = this.eventMap;
@@ -665,7 +665,7 @@ public class ProjectDataStore {
           contentBuilder.append(this.gson.toJson(eventBean));
           contentBuilder.append("\n");
         }
-        String str = contentBuilder.toString();
+        String content = contentBuilder.toString();
         buffer.append("@");
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append((String)entry.getKey());
@@ -679,7 +679,7 @@ public class ProjectDataStore {
     HashMap<String, HashMap<String, ArrayList<BlockBean>>> hashMap = this.blockMap;
     if (hashMap != null && hashMap.size() > 0)
       for (Map.Entry<String, HashMap<String, ArrayList<BlockBean>>> entry : this.blockMap.entrySet()) {
-        String str = (String)entry.getKey();
+        String key = (String)entry.getKey();
         HashMap blockEntryMap = (HashMap)entry.getValue();
         if (blockEntryMap == null || blockEntryMap.size() <= 0)
           continue; 
@@ -696,7 +696,7 @@ public class ProjectDataStore {
           String blockJson = contentBuilder.toString();
           buffer.append("@");
           StringBuilder stringBuilder = new StringBuilder();
-          stringBuilder.append(str);
+          stringBuilder.append(key);
           stringBuilder.append("_");
           stringBuilder.append((String)entry1.getKey());
           buffer.append(stringBuilder.toString());
@@ -833,7 +833,7 @@ public class ProjectDataStore {
     if (hashMap != null)
       hashMap.clear(); 
     StringBuffer stringBuffer = new StringBuffer();
-    String str = "";
+    String sectionName = "";
     while (true) {
       String line = reader.readLine();
       if (line != null) {
@@ -841,11 +841,11 @@ public class ProjectDataStore {
           continue; 
         if (line.charAt(0) == '@') {
           StringBuffer tempBuffer = stringBuffer;
-          if (str.length() > 0) {
-            parseViewSection(str, stringBuffer.toString());
+          if (sectionName.length() > 0) {
+            parseViewSection(sectionName, stringBuffer.toString());
             tempBuffer = new StringBuffer();
           } 
-          str = line.substring(1);
+          sectionName = line.substring(1);
           stringBuffer = tempBuffer;
           continue;
         } 
@@ -853,8 +853,8 @@ public class ProjectDataStore {
         stringBuffer.append("\n");
         continue;
       } 
-      if (str.length() > 0 && stringBuffer.length() > 0)
-        parseViewSection(str, stringBuffer.toString()); 
+      if (sectionName.length() > 0 && stringBuffer.length() > 0)
+        parseViewSection(sectionName, stringBuffer.toString()); 
       return;
     } 
   }
@@ -882,7 +882,7 @@ public class ProjectDataStore {
     HashMap<String, ArrayList<ViewBean>> tempEventMap = this.viewMap;
     if (tempEventMap != null && tempEventMap.size() > 0)
       for (Map.Entry<String, ArrayList<ViewBean>> entry : this.viewMap.entrySet()) {
-        String str;
+        String viewContent;
         ArrayList arrayList = (ArrayList)entry.getValue();
         if (arrayList == null || arrayList.size() <= 0)
           continue; 
@@ -891,7 +891,7 @@ public class ProjectDataStore {
           int b = 0;
           String viewJson = "";
           while (true) {
-            str = viewJson;
+            viewContent = viewJson;
             if (b < sortedViews.size()) {
               ViewBean viewBean = sortedViews.get(b);
               viewBean.clearClassInfo();
@@ -906,12 +906,12 @@ public class ProjectDataStore {
             break;
           } 
         } else {
-          str = "";
+          viewContent = "";
         } 
         buffer.append("@");
         buffer.append((String)entry.getKey());
         buffer.append("\n");
-        buffer.append(str);
+        buffer.append(viewContent);
         buffer.append("\n");
       }  
     HashMap<String, ViewBean> hashMap = this.fabMap;
@@ -924,14 +924,14 @@ public class ProjectDataStore {
         stringBuilder.append("");
         stringBuilder.append(this.gson.toJson(viewBean));
         stringBuilder.append("\n");
-        String str = stringBuilder.toString();
+        String content = stringBuilder.toString();
         buffer.append("@");
         stringBuilder = new StringBuilder();
         stringBuilder.append((String)entry.getKey());
         stringBuilder.append("_fab");
         buffer.append(stringBuilder.toString());
         buffer.append("\n");
-        buffer.append(str);
+        buffer.append(content);
         buffer.append("\n");
       }  
   }
@@ -1196,8 +1196,8 @@ public class ProjectDataStore {
     BufferedReader bufferedReader = null;
     try {
       byte[] bytes = this.fileUtil.readFileBytes(dataPath);
-      String str = this.fileUtil.decryptToString(bytes);
-      bufferedReader = new BufferedReader(new StringReader(str));
+      String decryptedData = this.fileUtil.decryptToString(bytes);
+      bufferedReader = new BufferedReader(new StringReader(decryptedData));
       readLogicData(bufferedReader);
     } catch (Exception exception) {
       exception.printStackTrace();
@@ -1235,8 +1235,8 @@ public class ProjectDataStore {
       return customViews; 
     for (ViewBean viewBean : (ArrayList<ViewBean>)arrayList) {
       if (viewBean.type == 9 || viewBean.type == 10 || viewBean.type == 25 || viewBean.type == 48 || viewBean.type == 31) {
-        String str = viewBean.customView;
-        if (str != null && str.length() > 0 && !viewBean.customView.equals("none"))
+        String customViewName = viewBean.customView;
+        if (customViewName != null && customViewName.length() > 0 && !viewBean.customView.equals("none"))
           customViews.add(viewBean); 
       } 
     } 
@@ -1253,8 +1253,8 @@ public class ProjectDataStore {
     BufferedReader bufferedReader = null;
     try {
       byte[] bytes = this.fileUtil.readFileBytes(logicPath);
-      String str = this.fileUtil.decryptToString(bytes);
-      bufferedReader = new BufferedReader(new StringReader(str));
+      String decryptedData = this.fileUtil.decryptToString(bytes);
+      bufferedReader = new BufferedReader(new StringReader(decryptedData));
       readLogicData(bufferedReader);
     } catch (Exception exception) {
       exception.printStackTrace();
@@ -1291,20 +1291,20 @@ public class ProjectDataStore {
     if (map == null)
       return false; 
     for (Map.Entry<String, ArrayList<BlockBean>> entry : ((Map<String, ArrayList<BlockBean>>)map).entrySet()) {
-      String str = (String)entry.getKey();
+      String entryKey = (String)entry.getKey();
       StringBuilder stringBuilder = new StringBuilder();
       stringBuilder.append(data);
       stringBuilder.append("_");
       stringBuilder.append("moreBlock");
-      if (str.equals(stringBuilder.toString()))
+      if (entryKey.equals(stringBuilder.toString()))
         continue; 
       for (BlockBean blockBean : (ArrayList<BlockBean>)entry.getValue()) {
         if (blockBean.opCode.equals("definedFunc")) {
           int i = blockBean.spec.indexOf(" ");
-          str = blockBean.spec;
-          String funcName = str;
+          String specStr = blockBean.spec;
+          String funcName = specStr;
           if (i > 0)
-            funcName = str.substring(0, i); 
+            funcName = specStr.substring(0, i); 
           if (funcName.equals(data))
             return true; 
         } 
@@ -1329,8 +1329,8 @@ public class ProjectDataStore {
     BufferedReader bufferedReader = null;
     try {
       byte[] bytes = this.fileUtil.readFileBytes(dataPath);
-      String str = this.fileUtil.decryptToString(bytes);
-      bufferedReader = new BufferedReader(new StringReader(str));
+      String decryptedData = this.fileUtil.decryptToString(bytes);
+      bufferedReader = new BufferedReader(new StringReader(decryptedData));
       readViewData(bufferedReader);
     } catch (Exception exception) {
       exception.printStackTrace();
@@ -1388,8 +1388,8 @@ public class ProjectDataStore {
     BufferedReader bufferedReader = null;
     try {
       byte[] bytes = this.fileUtil.readFileBytes(viewPath);
-      String str = this.fileUtil.decryptToString(bytes);
-      bufferedReader = new BufferedReader(new StringReader(str));
+      String decryptedData = this.fileUtil.decryptToString(bytes);
+      bufferedReader = new BufferedReader(new StringReader(decryptedData));
       readViewData(bufferedReader);
     } catch (Exception exception) {
       exception.printStackTrace();
@@ -1461,14 +1461,14 @@ public class ProjectDataStore {
   }
   
   public void saveAllData() {
-    String str = SketchwarePaths.getDataPath(this.projectId);
+    String basePath = SketchwarePaths.getDataPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(str);
+    stringBuilder.append(basePath);
     stringBuilder.append(File.separator);
     stringBuilder.append("view");
     saveViewFile(stringBuilder.toString());
     stringBuilder = new StringBuilder();
-    stringBuilder.append(str);
+    stringBuilder.append(basePath);
     stringBuilder.append(File.separator);
     stringBuilder.append("logic");
     saveLogicFile(stringBuilder.toString());
@@ -1478,13 +1478,13 @@ public class ProjectDataStore {
   public void parseViewSection(String fileName, String data) {
     try {
       ProjectDataParser ProjectDataParser = new ProjectDataParser(fileName);
-      String str = ProjectDataParser.getFileName();
+      String parsedFileName = ProjectDataParser.getFileName();
       ProjectDataParser.DataType dataType = ProjectDataParser.getDataType();
       int i = ScreenOrientationConstants.ORIENTATION_VALUES[dataType.ordinal()];
       if (i == 1) {
-        this.viewMap.put(str, (ArrayList<ViewBean>)ProjectDataParser.parseData(data));
+        this.viewMap.put(parsedFileName, (ArrayList<ViewBean>)ProjectDataParser.parseData(data));
       } else if (i == 2) {
-        this.fabMap.put(str, (ViewBean)ProjectDataParser.parseData(data));
+        this.fabMap.put(parsedFileName, (ViewBean)ProjectDataParser.parseData(data));
       }
     } catch (Exception exception) {
       exception.printStackTrace();
@@ -1496,14 +1496,14 @@ public class ProjectDataStore {
   }
   
   public void saveAllBackup() {
-    String str = SketchwarePaths.getBackupPath(this.projectId);
+    String basePath = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(str);
+    stringBuilder.append(basePath);
     stringBuilder.append(File.separator);
     stringBuilder.append("view");
     saveViewFile(stringBuilder.toString());
     stringBuilder = new StringBuilder();
-    stringBuilder.append(str);
+    stringBuilder.append(basePath);
     stringBuilder.append(File.separator);
     stringBuilder.append("logic");
     saveLogicFile(stringBuilder.toString());
