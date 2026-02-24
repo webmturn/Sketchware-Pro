@@ -26,9 +26,9 @@ public class DeviceUtil {
   public static String getCpuAbi() {
     String str = "";
     if (Build.VERSION.SDK_INT >= 21) {
-      String[] arrayOfString = Build.SUPPORTED_ABIS;
-      if (arrayOfString != null && arrayOfString.length > 0) {
-        str = arrayOfString[0];
+      String[] parts = Build.SUPPORTED_ABIS;
+      if (parts != null && parts.length > 0) {
+        str = parts[0];
       } 
     } else {
       str = Build.CPU_ABI;
@@ -166,14 +166,14 @@ public class DeviceUtil {
   }
   
   public static boolean isNetworkAvailable(Context context) {
-    int[] arrayOfInt = new int[2];
-    arrayOfInt[0] = 0;
-    arrayOfInt[1] = 1;
+    int[] intValues = new int[2];
+    intValues[0] = 0;
+    intValues[1] = 1;
     try {
       ConnectivityManager connectivityManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
-      int i = arrayOfInt.length;
+      int i = intValues.length;
       for (int b = 0; b < i; b++) {
-        int j = arrayOfInt[b];
+        int j = intValues[b];
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         if (networkInfo != null) {
           int k = networkInfo.getType();

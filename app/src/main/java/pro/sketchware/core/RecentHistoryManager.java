@@ -69,14 +69,14 @@ public class RecentHistoryManager {
   
   public void loadFromDatabase(String str) {
     if ((ArrayList)this.recentMap.get(str) == null) {
-      String[] arrayOfString = this.database.getStringDefault(str).split(",");
-      int i = arrayOfString.length;
+      String[] parts = this.database.getStringDefault(str).split(",");
+      int i = parts.length;
       while (true) {
         int j = i - 1;
         if (j >= 0) {
           i = j;
-          if (!arrayOfString[j].isEmpty()) {
-            addRecentItem(str, arrayOfString[j]);
+          if (!parts[j].isEmpty()) {
+            addRecentItem(str, parts[j]);
             i = j;
           } 
           continue;

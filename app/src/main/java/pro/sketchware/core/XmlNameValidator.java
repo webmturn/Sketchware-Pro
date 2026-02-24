@@ -114,12 +114,12 @@ public class XmlNameValidator extends BaseValidator {
         return;
       } 
     } 
-    String[] arrayOfString = this.reservedNames;
-    int i = arrayOfString.length;
+    String[] parts = this.reservedNames;
+    int i = parts.length;
     int b = 0;
     while (true) {
       if (b < i) {
-        if (value.equals(arrayOfString[b])) {
+        if (value.equals(parts[b])) {
           b = 1;
           break;
         } 

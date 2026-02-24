@@ -38,9 +38,9 @@ public class ViewFilesAdapter extends BaseFragment {
     String str1 = SketchwarePaths.getWidgetTypeName(position);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str1);
-    int[] arrayOfInt = this.viewCounters;
-    int i = arrayOfInt[position] + 1;
-    arrayOfInt[position] = i;
+    int[] intValues = this.viewCounters;
+    int i = intValues[position] + 1;
+    intValues[position] = i;
     stringBuilder.append(i);
     String str2 = stringBuilder.toString();
     ArrayList arrayList = ProjectDataManager.getProjectDataManager(this.projectId).getViews(str);

@@ -400,64 +400,64 @@ public class BaseBlockView extends RelativeLayout {
   }
   
   public final float[] getBottomShadowLines(int start, boolean flag, int end) {
-    float[] arrayOfFloat;
+    float[] floatValues;
     if (flag) {
-      arrayOfFloat = new float[24];
+      floatValues = new float[24];
     } else {
-      arrayOfFloat = new float[8];
+      floatValues = new float[8];
     } 
     int i = this.blockWidth;
-    arrayOfFloat[0] = i;
+    floatValues[0] = i;
     int j = this.notchWidth;
     int k = this.outlineStrokeWidth;
-    arrayOfFloat[1] = (start - j - k / 2);
-    arrayOfFloat[2] = (i - j);
-    arrayOfFloat[3] = (start - k / 2);
+    floatValues[1] = (start - j - k / 2);
+    floatValues[2] = (i - j);
+    floatValues[3] = (start - k / 2);
     if (flag) {
-      arrayOfFloat[4] = (i - j);
-      arrayOfFloat[5] = (start - k / 2);
+      floatValues[4] = (i - j);
+      floatValues[5] = (start - k / 2);
       i = this.connectorEndOffset;
-      arrayOfFloat[6] = (end + i);
-      arrayOfFloat[7] = (start - k / 2);
-      arrayOfFloat[8] = (i + end);
-      arrayOfFloat[9] = (start - k / 2);
+      floatValues[6] = (end + i);
+      floatValues[7] = (start - k / 2);
+      floatValues[8] = (i + end);
+      floatValues[9] = (start - k / 2);
       int m = this.connectorEnd;
-      arrayOfFloat[10] = (end + m);
+      floatValues[10] = (end + m);
       i = this.borderWidth;
-      arrayOfFloat[11] = (start + i - k / 2);
-      arrayOfFloat[12] = (m + end);
-      arrayOfFloat[13] = (start + i - k / 2);
+      floatValues[11] = (start + i - k / 2);
+      floatValues[12] = (m + end);
+      floatValues[13] = (start + i - k / 2);
       m = this.connectorStart;
-      arrayOfFloat[14] = (end + m);
-      arrayOfFloat[15] = (start + i - k / 2);
-      arrayOfFloat[16] = (m + end);
-      arrayOfFloat[17] = (i + start - k / 2);
+      floatValues[14] = (end + m);
+      floatValues[15] = (start + i - k / 2);
+      floatValues[16] = (m + end);
+      floatValues[17] = (i + start - k / 2);
       i = this.connectorOffset;
-      arrayOfFloat[18] = (end + i);
-      arrayOfFloat[19] = (start - k / 2);
+      floatValues[18] = (end + i);
+      floatValues[19] = (start - k / 2);
       if (end > 0) {
-        arrayOfFloat[20] = (i + end);
-        arrayOfFloat[21] = (start - k / 2);
-        arrayOfFloat[22] = (end + this.notchDepth);
-        arrayOfFloat[23] = (start - k / 2);
+        floatValues[20] = (i + end);
+        floatValues[21] = (start - k / 2);
+        floatValues[22] = (end + this.notchDepth);
+        floatValues[23] = (start - k / 2);
       } else {
-        arrayOfFloat[20] = (i + end);
-        arrayOfFloat[21] = (start - k / 2);
-        arrayOfFloat[22] = (end + j);
-        arrayOfFloat[23] = (start - k / 2);
+        floatValues[20] = (i + end);
+        floatValues[21] = (start - k / 2);
+        floatValues[22] = (end + j);
+        floatValues[23] = (start - k / 2);
       } 
     } else if (end > 0) {
-      arrayOfFloat[4] = (i - j);
-      arrayOfFloat[5] = (start - k / 2);
-      arrayOfFloat[6] = (end + this.notchDepth);
-      arrayOfFloat[7] = (start - k / 2);
+      floatValues[4] = (i - j);
+      floatValues[5] = (start - k / 2);
+      floatValues[6] = (end + this.notchDepth);
+      floatValues[7] = (start - k / 2);
     } else {
-      arrayOfFloat[4] = (i - j);
-      arrayOfFloat[5] = (start - k / 2);
-      arrayOfFloat[6] = (end + j);
-      arrayOfFloat[7] = (start - k / 2);
+      floatValues[4] = (i - j);
+      floatValues[5] = (start - k / 2);
+      floatValues[6] = (end + j);
+      floatValues[7] = (start - k / 2);
     } 
-    return arrayOfFloat;
+    return floatValues;
   }
   
   public final void drawStatementShape(Canvas canvas) {

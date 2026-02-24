@@ -63,12 +63,12 @@ public class ResourceNameValidator extends BaseValidator {
       this.valid = false;
       return;
     } 
-    String[] arrayOfString = this.reservedNames;
-    y = arrayOfString.length;
+    String[] parts = this.reservedNames;
+    y = parts.length;
     x = 0;
     while (true) {
       if (x < y) {
-        str = arrayOfString[x];
+        str = parts[x];
         if (text.toString().equals(str)) {
           x = 1;
           break;

@@ -32,33 +32,33 @@ public class NinePatchDecoder {
   }
   
   public static void extractPadding(Bitmap bitmap, byte[] data) {
-    int[] arrayOfInt = new int[bitmap.getWidth() - 2];
-    bitmap.getPixels(arrayOfInt, 0, arrayOfInt.length, 1, bitmap.getHeight() - 1, arrayOfInt.length, 1);
+    int[] intValues = new int[bitmap.getWidth() - 2];
+    bitmap.getPixels(intValues, 0, intValues.length, 1, bitmap.getHeight() - 1, intValues.length, 1);
     boolean bool = false;
     int i;
-    for (i = 0; i < arrayOfInt.length; i++) {
-      if (-16777216 == arrayOfInt[i]) {
+    for (i = 0; i < intValues.length; i++) {
+      if (-16777216 == intValues[i]) {
         putIntLE(data, 12, i);
         break;
       } 
     } 
-    for (i = arrayOfInt.length - 1; i >= 0; i--) {
-      if (-16777216 == arrayOfInt[i]) {
-        putIntLE(data, 16, arrayOfInt.length - i - 2);
+    for (i = intValues.length - 1; i >= 0; i--) {
+      if (-16777216 == intValues[i]) {
+        putIntLE(data, 16, intValues.length - i - 2);
         break;
       } 
     } 
-    arrayOfInt = new int[bitmap.getHeight() - 2];
-    bitmap.getPixels(arrayOfInt, 0, 1, bitmap.getWidth() - 1, 0, 1, arrayOfInt.length);
-    for (i = 0; i < arrayOfInt.length; i++) {
-      if (-16777216 == arrayOfInt[i]) {
+    intValues = new int[bitmap.getHeight() - 2];
+    bitmap.getPixels(intValues, 0, 1, bitmap.getWidth() - 1, 0, 1, intValues.length);
+    for (i = 0; i < intValues.length; i++) {
+      if (-16777216 == intValues[i]) {
         putIntLE(data, 20, i);
         break;
       } 
     } 
-    for (i = arrayOfInt.length - 1; i >= 0; i--) {
-      if (-16777216 == arrayOfInt[i]) {
-        putIntLE(data, 24, arrayOfInt.length - i - 2);
+    for (i = intValues.length - 1; i >= 0; i--) {
+      if (-16777216 == intValues[i]) {
+        putIntLE(data, 24, intValues.length - i - 2);
         break;
       } 
     } 
@@ -88,29 +88,29 @@ public class NinePatchDecoder {
     for (k = 0; k < 32; k++)
       byteArrayOutputStream.write(0); 
     k = i - 2;
-    int[] arrayOfInt = new int[k];
-    bitmap.getPixels(arrayOfInt, 0, i, 1, 0, k, 1);
-    if (arrayOfInt[0] == -16777216) {
+    int[] intValues = new int[k];
+    bitmap.getPixels(intValues, 0, i, 1, 0, k, 1);
+    if (intValues[0] == -16777216) {
       m = 1;
     } else {
       m = 0;
     } 
-    if (arrayOfInt[arrayOfInt.length - 1] == -16777216) {
+    if (intValues[intValues.length - 1] == -16777216) {
       n = 1;
     } else {
       n = 0;
     } 
-    int i1 = arrayOfInt.length;
+    int i1 = intValues.length;
     i = 0;
     int i2 = 0;
     int i7 = 0;
     for (k = 0; i < i1; k = i7) {
       int i6 = i2;
       i7 = k;
-      if (i2 != arrayOfInt[i]) {
+      if (i2 != intValues[i]) {
         i7 = k + 1;
         writeIntLE(byteArrayOutputStream, i);
-        i1 = arrayOfInt[i];
+        i1 = intValues[i];
       } 
       i++;
       i2 = i6;
@@ -118,7 +118,7 @@ public class NinePatchDecoder {
     i = k;
     if (n != 0) {
       i = k + 1;
-      writeIntLE(byteArrayOutputStream, arrayOfInt.length);
+      writeIntLE(byteArrayOutputStream, intValues.length);
     } 
     int i4 = i + 1;
     k = i4;
@@ -128,28 +128,28 @@ public class NinePatchDecoder {
     if (n != 0)
       m1 = k - 1; 
     k = j - 2;
-    arrayOfInt = new int[k];
-    bitmap.getPixels(arrayOfInt, 0, 1, 0, 1, 1, k);
-    if (arrayOfInt[0] == -16777216) {
+    intValues = new int[k];
+    bitmap.getPixels(intValues, 0, 1, 0, 1, 1, k);
+    if (intValues[0] == -16777216) {
       i4 = 1;
     } else {
       i4 = 0;
     } 
-    if (arrayOfInt[arrayOfInt.length - 1] == -16777216) {
+    if (intValues[intValues.length - 1] == -16777216) {
       n = 1;
     } else {
       n = 0;
     } 
-    int i5 = arrayOfInt.length;
+    int i5 = intValues.length;
     int i3 = 0;
     j = 0;
     for (k = 0; i3 < i5; k = i2) {
       i1 = j;
       i2 = k;
-      if (j != arrayOfInt[i3]) {
+      if (j != intValues[i3]) {
         i2 = k + 1;
         writeIntLE(byteArrayOutputStream, i3);
-        i1 = arrayOfInt[i3];
+        i1 = intValues[i3];
       } 
       i3++;
       j = i1;
@@ -157,7 +157,7 @@ public class NinePatchDecoder {
     i3 = k;
     if (n != 0) {
       i3 = k + 1;
-      writeIntLE(byteArrayOutputStream, arrayOfInt.length);
+      writeIntLE(byteArrayOutputStream, intValues.length);
     } 
     i2 = i3 + 1;
     k = i2;

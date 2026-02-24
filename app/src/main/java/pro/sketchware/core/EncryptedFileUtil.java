@@ -91,10 +91,10 @@ public class EncryptedFileUtil {
     StringBuilder stringBuilder;
     if (srcFile.isDirectory()) {
       if (destFile.exists() || destFile.mkdirs()) {
-        String[] arrayOfString = srcFile.list();
-        if (arrayOfString != null)
-          for (int b = 0; b < arrayOfString.length; b++)
-            copyDirectory(new File(srcFile, arrayOfString[b]), new File(destFile, arrayOfString[b]));  
+        String[] parts = srcFile.list();
+        if (parts != null)
+          for (int b = 0; b < parts.length; b++)
+            copyDirectory(new File(srcFile, parts[b]), new File(destFile, parts[b]));  
         return;
       } 
       stringBuilder = new StringBuilder();
@@ -107,11 +107,11 @@ public class EncryptedFileUtil {
   
   public void deleteRecursive(File dir, boolean flag) {
     if (dir.exists()) {
-      File[] arrayOfFile = dir.listFiles();
-      if (arrayOfFile != null) {
-        int i = arrayOfFile.length;
+      File[] files = dir.listFiles();
+      if (files != null) {
+        int i = files.length;
         for (int b = 0; b < i; b++) {
-          File file = arrayOfFile[b];
+          File file = files[b];
           if (file.isDirectory())
             deleteDirectory(file); 
           if (file.isFile())

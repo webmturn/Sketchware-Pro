@@ -1714,8 +1714,8 @@ public class ProjectDataStore {
   public final String getSimpleClassName(String input) {
     String str = input;
     if (str.contains(".")) {
-      String[] arrayOfString = str.split("\\.");
-      str = arrayOfString[arrayOfString.length - 1];
+      String[] parts = str.split("\\.");
+      str = parts[parts.length - 1];
     } 
     return str;
   }
