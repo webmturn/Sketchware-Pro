@@ -202,7 +202,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
     }
 
     private void saveSound() {
-        if (a(M)) {
+        if (validateAndCheckFile(M)) {
             if (!isEditing) {
                 String obj = Helper.getText(binding.edInput);
                 String a = UriPathResolver.resolve(this, K);
@@ -382,7 +382,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
         }
     }
 
-    public boolean a(ResourceNameValidator wb) {
+    public boolean validateAndCheckFile(ResourceNameValidator wb) {
         if (wb.isValid()) {
             if ((!L || K == null) && !isEditing) {
                 binding.selectFile.startAnimation(AnimationUtils.loadAnimation(this, R.anim.ani_1));
