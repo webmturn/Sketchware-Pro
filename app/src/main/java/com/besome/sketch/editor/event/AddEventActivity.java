@@ -47,7 +47,7 @@ import pro.sketchware.databinding.LogicPopupAddEventBinding;
 public class AddEventActivity extends BaseAppCompatActivity implements View.OnClickListener {
     private ArrayList<EventBean> addableDrawerViewEvents;
     private ArrayList<EventBean> eventsToAdd;
-    private boolean C;
+    private boolean isPreviewCollapsed;
     private int categoryIndex;
     private MoreBlockBuilderView moreBlockView;
     private String sc_id;
@@ -70,8 +70,8 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
     }
 
     private void toggleEventsPreview() {
-        if (eventsToAdd.isEmpty() && !C) {
-            C = true;
+        if (eventsToAdd.isEmpty() && !isPreviewCollapsed) {
+            isPreviewCollapsed = true;
             AnimationUtil.rotate(binding.eventsPreview, 300, new Animator.AnimatorListener() {
                 @Override
                 public void onAnimationStart(@NonNull Animator animation) {
@@ -90,8 +90,8 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
                 public void onAnimationRepeat(@NonNull Animator animation) {
                 }
             });
-        } else if (!eventsToAdd.isEmpty() && C) {
-            C = false;
+        } else if (!eventsToAdd.isEmpty() && isPreviewCollapsed) {
+            isPreviewCollapsed = false;
             binding.eventsPreview.setVisibility(View.VISIBLE);
             AnimationUtil.expandView(binding.eventsPreview, 300, null);
         }
@@ -314,7 +314,7 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
         eventsToAddAdapter = new EventsToAddAdapter();
         binding.eventsPreview.setLayoutManager(new LinearLayoutManager(getApplicationContext(), RecyclerView.HORIZONTAL, false));
         binding.eventsPreview.setAdapter(eventsToAddAdapter);
-        C = true;
+        isPreviewCollapsed = true;
         binding.eventsPreview.setVisibility(View.GONE);
         binding.emptyMessage.setVisibility(View.GONE);
         eventsToAdd = new ArrayList<>();
@@ -348,14 +348,14 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
     private class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
         private final ArrayList<EventBean> events = new ArrayList<>();
         private int lastSelectedEvent = -1;
-        private boolean e;
+        private boolean isBindingInProgress;
 
         public EventAdapter() {
         }
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            e = true;
+            isBindingInProgress = true;
             holder.events_preview.removeAllViews();
             holder.events_preview.setVisibility(View.VISIBLE);
             EventBean event = categories.get(categoryAdapter.lastSelectedCategory).get(position);
@@ -390,7 +390,7 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
             }
             holder.tv_event_name.setText(EventRegistry.getEventName(event.eventName));
             holder.checkbox.setChecked(event.isSelected);
-            e = false;
+            isBindingInProgress = false;
         }
 
         @Override
@@ -446,7 +446,7 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
                             toggleEventsPreview();
                             eventsToAddAdapter.notifyItemInserted(eventsToAddAdapter.getItemCount());
                         }
-                        if (!e) {
+                        if (!isBindingInProgress) {
                             notifyItemChanged(lastSelectedEvent);
                         }
                     }
@@ -465,7 +465,7 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
                         eventsToAddAdapter.notifyItemRemoved(eventsToAddAdapter.getItemCount());
                         toggleEventsPreview();
                     }
-                    if (!e) {
+                    if (!isBindingInProgress) {
                         notifyItemChanged(lastSelectedEvent);
                     }
                 });
