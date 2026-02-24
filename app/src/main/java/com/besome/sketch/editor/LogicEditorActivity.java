@@ -1029,28 +1029,28 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
                                         case "resource_bg":
                                         case "resource":
-                                            for (String str : ProjectDataManager.getResourceManager(scId).getImageNames()) {
+                                            for (String imageName : ProjectDataManager.getResourceManager(scId).getImageNames()) {
                                                 // Like this in vanilla Sketchware. Don't ask me why.
                                                 //noinspection StatementWithEmptyBody
-                                                if (parameter.equals(str)) {
+                                                if (parameter.equals(imageName)) {
                                                 }
                                             }
                                             break;
 
                                         case "activity":
-                                            for (String str : ProjectDataManager.getFileManager(scId).getJavaNames()) {
+                                            for (String activityName : ProjectDataManager.getFileManager(scId).getJavaNames()) {
                                                 // Like this in vanilla Sketchware. Don't ask me why.
                                                 //noinspection StatementWithEmptyBody
-                                                if (parameter.equals(str.substring(str.indexOf(".java")))) {
+                                                if (parameter.equals(activityName.substring(activityName.indexOf(".java")))) {
                                                 }
                                             }
                                             break;
 
                                         case "sound":
-                                            for (String str : ProjectDataManager.getResourceManager(scId).getSoundNames()) {
+                                            for (String soundName : ProjectDataManager.getResourceManager(scId).getSoundNames()) {
                                                 // Like this in vanilla Sketchware. Don't ask me why.
                                                 //noinspection StatementWithEmptyBody
-                                                if (parameter.equals(str)) {
+                                                if (parameter.equals(soundName)) {
                                                 }
                                             }
                                             break;
