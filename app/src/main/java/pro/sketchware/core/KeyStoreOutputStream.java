@@ -5,8 +5,8 @@ import java.io.OutputStream;
 public class KeyStoreOutputStream extends OutputStream {
   public final KeyStoreManager keyStoreManager;
   
-  public KeyStoreOutputStream(KeyStoreManager paramiI) {
-    this.keyStoreManager = paramiI;
+  public KeyStoreOutputStream(KeyStoreManager keyStoreManager) {
+    this.keyStoreManager = keyStoreManager;
   }
   
   public void write(int value) {

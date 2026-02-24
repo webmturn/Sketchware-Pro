@@ -169,8 +169,8 @@ public class ProjectDataStore {
     this.fileUtil.deleteFileByPath(logicPath);
   }
   
-  public void syncWithFileManager(ProjectFileManager paramhC) {
-    for (ProjectFileBean projectFileBean : paramhC.getActivities()) {
+  public void syncWithFileManager(ProjectFileManager fileManager) {
+    for (ProjectFileBean projectFileBean : fileManager.getActivities()) {
       if (!projectFileBean.hasActivityOption(8))
         removeFab(projectFileBean); 
       if (!projectFileBean.hasActivityOption(4))
@@ -179,7 +179,7 @@ public class ProjectDataStore {
     ArrayList<String> viewKeysToRemove = new ArrayList<>();
     for (Map.Entry<String, ArrayList<ViewBean>> entry : this.viewMap.entrySet()) {
       String str = (String)entry.getKey();
-      if (!paramhC.hasXmlName(str)) {
+      if (!fileManager.hasXmlName(str)) {
         viewKeysToRemove.add(str);
         continue;
       } 
@@ -187,7 +187,7 @@ public class ProjectDataStore {
         if (viewBean.type == 9 || viewBean.type == 10 || viewBean.type == 25 || viewBean.type == 48 || viewBean.type == 31) {
           String customViewName = viewBean.customView;
           if (customViewName != null && customViewName.length() > 0 && !viewBean.customView.equals("none")) {
-            Iterator iterator = paramhC.getCustomViews().iterator();
+            Iterator iterator = fileManager.getCustomViews().iterator();
             boolean bool = false;
             while (iterator.hasNext()) {
               if (((ProjectFileBean)iterator.next()).fileName.equals(viewBean.customView))
@@ -205,7 +205,7 @@ public class ProjectDataStore {
     Iterator<Map.Entry<String, ArrayList<Pair<Integer, String>>>> varEntryIterator = this.variableMap.entrySet().iterator();
     while (varEntryIterator.hasNext()) {
       String str = (String)((Map.Entry)varEntryIterator.next()).getKey();
-      if (!paramhC.hasJavaName(str))
+      if (!fileManager.hasJavaName(str))
         varKeysToRemove.add(str); 
     } 
     for (String str : varKeysToRemove)
@@ -214,7 +214,7 @@ public class ProjectDataStore {
     Iterator listEntryIterator = this.listMap.entrySet().iterator();
     while (listEntryIterator.hasNext()) {
       String str = (String)((Map.Entry)listEntryIterator.next()).getKey();
-      if (!paramhC.hasJavaName(str))
+      if (!fileManager.hasJavaName(str))
         keysToRemove.add(str); 
     } 
     for (String str : keysToRemove)
@@ -223,7 +223,7 @@ public class ProjectDataStore {
     Iterator innerIterator = this.moreBlockMap.entrySet().iterator();
     while (innerIterator.hasNext()) {
       String str = (String)((Map.Entry)innerIterator.next()).getKey();
-      if (!paramhC.hasJavaName(str))
+      if (!fileManager.hasJavaName(str))
         keysToRemove.add(str); 
     } 
     for (String str : keysToRemove)
@@ -232,7 +232,7 @@ public class ProjectDataStore {
     Iterator<Map.Entry<String, ArrayList<ComponentBean>>> compEntryIterator = this.componentMap.entrySet().iterator();
     while (compEntryIterator.hasNext()) {
       String str = (String)((Map.Entry)compEntryIterator.next()).getKey();
-      if (!paramhC.hasJavaName(str))
+      if (!fileManager.hasJavaName(str))
         compKeysToRemove.add(str); 
     } 
     for (String str : compKeysToRemove)
@@ -241,7 +241,7 @@ public class ProjectDataStore {
     Iterator blockEntryIterator = this.eventMap.entrySet().iterator();
     while (blockEntryIterator.hasNext()) {
       String str = (String)((Map.Entry)blockEntryIterator.next()).getKey();
-      if (!paramhC.hasJavaName(str))
+      if (!fileManager.hasJavaName(str))
         eventKeysToRemove.add(str); 
     } 
     for (String str : eventKeysToRemove)
@@ -249,7 +249,7 @@ public class ProjectDataStore {
     ArrayList<String> blockKeysToRemove = new ArrayList<>();
     for (Map.Entry<String, HashMap<String, ArrayList<BlockBean>>> entry : this.blockMap.entrySet()) {
       String str = (String)entry.getKey();
-      if (!paramhC.hasJavaName(str)) {
+      if (!fileManager.hasJavaName(str)) {
         blockKeysToRemove.add(str);
         continue;
       } 
@@ -257,7 +257,7 @@ public class ProjectDataStore {
       while (iterator.hasNext()) {
         label128: for (BlockBean blockBean : (ArrayList<BlockBean>)((Map.Entry)iterator.next()).getValue()) {
           if (blockBean.opCode.equals("intentSetScreen")) {
-            Iterator<ProjectFileBean> activityIterator = paramhC.getActivities().iterator();
+            Iterator<ProjectFileBean> activityIterator = fileManager.getActivities().iterator();
             while (activityIterator.hasNext()) {
               if (((ProjectFileBean)activityIterator.next()).getActivityName().equals(blockBean.parameters.get(1)))
                 continue label128; 
@@ -271,8 +271,8 @@ public class ProjectDataStore {
       this.blockMap.remove(str); 
   }
   
-  public void syncFonts(ResourceManager paramkC) {
-    ArrayList arrayList = paramkC.getFontNames();
+  public void syncFonts(ResourceManager resourceManager) {
+    ArrayList arrayList = resourceManager.getFontNames();
     Iterator iterator = this.blockMap.entrySet().iterator();
     while (iterator.hasNext()) {
       Iterator innerIterator = ((HashMap)((Map.Entry)iterator.next()).getValue()).entrySet().iterator();
@@ -382,16 +382,16 @@ public class ProjectDataStore {
     } 
   }
   
-  public void removeFirebaseViews(ProjectLibraryBean libraryBean, ProjectFileManager paramhC) {
+  public void removeFirebaseViews(ProjectLibraryBean libraryBean, ProjectFileManager fileManager) {
     if (libraryBean.useYn.equals("Y"))
       return; 
-    for (ProjectFileBean projectFileBean : paramhC.getActivities()) {
+    for (ProjectFileBean projectFileBean : fileManager.getActivities()) {
       for (ViewBean viewBean : getViews(projectFileBean.getXmlName())) {
         if (viewBean.type == 17)
           removeView(projectFileBean, viewBean); 
       } 
     } 
-    for (ProjectFileBean projectFileBean : paramhC.getCustomViews()) {
+    for (ProjectFileBean projectFileBean : fileManager.getCustomViews()) {
       for (ViewBean viewBean : getViews(projectFileBean.getXmlName())) {
         if (viewBean.type == 17)
           removeView(projectFileBean, viewBean); 
@@ -774,8 +774,8 @@ public class ProjectDataStore {
     this.fabMap = new HashMap<String, ViewBean>();
   }
   
-  public void syncImages(ResourceManager paramkC) {
-    ArrayList arrayList = paramkC.getImageNames();
+  public void syncImages(ResourceManager resourceManager) {
+    ArrayList arrayList = resourceManager.getImageNames();
     Iterator innerIterator = this.viewMap.entrySet().iterator();
     while (innerIterator.hasNext()) {
       for (ViewBean viewBean : (ArrayList<ViewBean>)((Map.Entry)innerIterator.next()).getValue()) {
@@ -814,10 +814,10 @@ public class ProjectDataStore {
     removeEventsByTarget(fileBean.getJavaName(), "_fab");
   }
   
-  public void removeMapViews(ProjectLibraryBean libraryBean, ProjectFileManager paramhC) {
+  public void removeMapViews(ProjectLibraryBean libraryBean, ProjectFileManager fileManager) {
     if (libraryBean.useYn.equals("Y"))
       return; 
-    for (ProjectFileBean projectFileBean : paramhC.getActivities()) {
+    for (ProjectFileBean projectFileBean : fileManager.getActivities()) {
       for (ViewBean viewBean : getViews(projectFileBean.getXmlName())) {
         if (viewBean.type == 18)
           removeView(projectFileBean, viewBean); 
@@ -998,8 +998,8 @@ public class ProjectDataStore {
     return filteredComponents;
   }
   
-  public void syncSounds(ResourceManager paramkC) {
-    ArrayList arrayList = paramkC.getSoundNames();
+  public void syncSounds(ResourceManager resourceManager) {
+    ArrayList arrayList = resourceManager.getSoundNames();
     Iterator iterator = this.blockMap.entrySet().iterator();
     while (iterator.hasNext()) {
       Iterator innerIterator = ((HashMap)((Map.Entry)iterator.next()).getValue()).entrySet().iterator();

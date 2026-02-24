@@ -8,9 +8,9 @@ public class ViewFileScrollListener extends RecyclerView.OnScrollListener {
   
   public final ViewFilesAdapter.FileListAdapter innerAdapter;
   
-  public ViewFileScrollListener(ViewFilesAdapter.FileListAdapter parama, ViewFilesAdapter paramxw) {
-    this.filesAdapter = paramxw;
-    this.innerAdapter = parama;
+  public ViewFileScrollListener(ViewFilesAdapter.FileListAdapter fileListAdapter, ViewFilesAdapter viewFilesAdapter) {
+    this.filesAdapter = viewFilesAdapter;
+    this.innerAdapter = fileListAdapter;
   }
   
   public void onScrolled(RecyclerView recyclerView, int x, int y) {

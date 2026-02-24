@@ -62,8 +62,8 @@ public class ProjectFileManager {
     } 
   }
   
-  public void syncWithLibrary(LibraryManager paramiC) {
-    ProjectLibraryBean projectLibraryBean = paramiC.getCompat();
+  public void syncWithLibrary(LibraryManager libraryManager) {
+    ProjectLibraryBean projectLibraryBean = libraryManager.getCompat();
     if (projectLibraryBean != null && projectLibraryBean.useYn.equals("Y"))
       return; 
     for (ProjectFileBean projectFileBean : this.activities) {
