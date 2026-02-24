@@ -25,8 +25,8 @@ public class PropertySubheader extends RelativeLayout {
         imgAdd = findViewById(R.id.img_add);
     }
 
-    public void setHeaderName(String str) {
-        tvName.setText(str);
+    public void setHeaderName(String headerName) {
+        tvName.setText(headerName);
     }
 
     @Override

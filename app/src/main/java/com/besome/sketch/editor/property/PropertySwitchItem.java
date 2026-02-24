@@ -55,12 +55,12 @@ public class PropertySwitchItem extends RelativeLayout implements View.OnClickLi
         setValue(!value);
     }
 
-    public void setDesc(String str) {
-        tvDesc.setText(str);
+    public void setDesc(String description) {
+        tvDesc.setText(description);
     }
 
-    public void setName(String str) {
-        tvName.setText(str);
+    public void setName(String name) {
+        tvName.setText(name);
     }
 
     public void setSwitchChangedListener(CompoundButton.OnCheckedChangeListener onCheckedChangeListener) {

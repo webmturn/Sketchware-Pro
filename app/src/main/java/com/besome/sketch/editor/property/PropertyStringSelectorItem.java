@@ -168,11 +168,11 @@ public class PropertyStringSelectorItem extends RelativeLayout implements View.O
         dialog.show();
     }
 
-    private RadioButton getOption(String str) {
+    private RadioButton getOption(String optionText) {
         RadioButton radioButton = new RadioButton(getContext());
         radioButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12.0f);
-        radioButton.setText(str);
-        radioButton.setTag(str);
+        radioButton.setText(optionText);
+        radioButton.setTag(optionText);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);

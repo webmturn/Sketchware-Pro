@@ -277,10 +277,10 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
         addView(propertyCustomViewItem);
     }
 
-    private void addInputProperty(String key, String value, boolean z, String typeView) {
+    private void addInputProperty(String key, String value, boolean isMenuMode, String typeView) {
         PropertyInputItem inputItem = (PropertyInputItem) propertyViewCache.get(key);
         if (inputItem == null) {
-            inputItem = new PropertyInputItem(getContext(), !z);
+            inputItem = new PropertyInputItem(getContext(), !isMenuMode);
             inputItem.setOrientationItem(getOrientation());
             inputItem.setTypeView(typeView);
             inputItem.setProjectData(sc_id, projectFile);
@@ -340,10 +340,10 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
         addInputProperty(key, value, isEditMode, viewType);
     }
 
-    private void addResourceProperty(String key, String value, boolean z) {
+    private void addResourceProperty(String key, String value, boolean useDefaultImage) {
         PropertyResourceItem drawableItem = (PropertyResourceItem) propertyViewCache.get(key);
         if (drawableItem == null) {
-            drawableItem = new PropertyResourceItem(getContext(), !isEditMode, sc_id, z);
+            drawableItem = new PropertyResourceItem(getContext(), !isEditMode, sc_id, useDefaultImage);
             drawableItem.setOrientationItem(getOrientation());
             drawableItem.setKey(key);
             drawableItem.setValue(value);

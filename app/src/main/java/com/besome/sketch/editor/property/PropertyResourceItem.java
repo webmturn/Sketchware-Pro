@@ -64,22 +64,22 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
     public int iconResId;
     public PropertyChangedCallback propertyChangedCallback;
 
-    public PropertyResourceItem(Context context, boolean z, String str, boolean z2) {
+    public PropertyResourceItem(Context context, boolean useAttrs, String projectId, boolean useDefault) {
         super(context);
         useDefaultImage = false;
-        scId = str;
+        scId = projectId;
         svgUtils = new SvgUtils(context);
         svgUtils.initImageLoader();
-        initializeLayout(context, z, z2);
+        initializeLayout(context, useAttrs, useDefault);
     }
 
     public String getKey() {
         return key;
     }
 
-    public void setKey(String str) {
-        key = str;
-        int identifier = getResources().getIdentifier(str, "string", getContext().getPackageName());
+    public void setKey(String propertyKey) {
+        key = propertyKey;
+        int identifier = getResources().getIdentifier(propertyKey, "string", getContext().getPackageName());
         if (identifier > 0) {
             nameTextView.setText(getResources().getString(identifier));
             if ("property_image".equals(key)) {
@@ -100,34 +100,34 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
         return value;
     }
 
-    public void setValue(String str) {
+    public void setValue(String resName) {
         Uri fromFile;
-        if (str != null && !str.equalsIgnoreCase("NONE")) {
-            value = str;
-            valueTextView.setText(str);
-            if (ProjectDataManager.getResourceManager(scId).getImageResType(str) == ProjectResourceBean.PROJECT_RES_TYPE_RESOURCE) {
-                imagePreview.setImageResource(getContext().getResources().getIdentifier(str, "drawable", getContext().getPackageName()));
+        if (resName != null && !resName.equalsIgnoreCase("NONE")) {
+            value = resName;
+            valueTextView.setText(resName);
+            if (ProjectDataManager.getResourceManager(scId).getImageResType(resName) == ProjectResourceBean.PROJECT_RES_TYPE_RESOURCE) {
+                imagePreview.setImageResource(getContext().getResources().getIdentifier(resName, "drawable", getContext().getPackageName()));
                 return;
-            } else if (str.equals("default_image")) {
-                imagePreview.setImageResource(getContext().getResources().getIdentifier(str, "drawable", getContext().getPackageName()));
+            } else if (resName.equals("default_image")) {
+                imagePreview.setImageResource(getContext().getResources().getIdentifier(resName, "drawable", getContext().getPackageName()));
                 return;
             } else {
-                File file = new File(ProjectDataManager.getResourceManager(scId).getImagePath(str));
+                File file = new File(ProjectDataManager.getResourceManager(scId).getImagePath(resName));
                 if (file.exists()) {
                     Context context = getContext();
                     fromFile = FileProvider.getUriForFile(context, getContext().getPackageName() + ".provider", file);
                     if (file.getAbsolutePath().endsWith(".xml")) {
-                        svgUtils.loadImage(imagePreview, fpu.getSvgFullPath(scId, str));
+                        svgUtils.loadImage(imagePreview, fpu.getSvgFullPath(scId, resName));
                         return;
                     }
                     Glide.with(getContext()).load(fromFile).signature(ResourceManager.getCacheSignature()).error(R.drawable.ic_remove_grey600_24dp).into(imagePreview);
                     return;
                 }
-                imagePreview.setImageResource(getContext().getResources().getIdentifier(str, "drawable", getContext().getPackageName()));
+                imagePreview.setImageResource(getContext().getResources().getIdentifier(resName, "drawable", getContext().getPackageName()));
                 return;
             }
         }
-        value = str;
+        value = resName;
         valueTextView.setText(getContext().getString(R.string.color_none));
         imagePreview.setImageDrawable(null);
         imagePreview.setBackgroundColor(Color.WHITE);
@@ -159,7 +159,7 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
         }
     }
 
-    public final void initializeLayout(Context context, boolean z, boolean z2) {
+    public final void initializeLayout(Context context, boolean useAttrs, boolean useDefault) {
         ViewUtil.inflateLayoutInto(context, this, R.layout.property_resource_item);
         nameTextView = findViewById(R.id.tv_name);
         valueTextView = findViewById(R.id.tv_value);
@@ -167,7 +167,7 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
         iconView = findViewById(R.id.img_left_icon);
         propertyItemView = findViewById(R.id.property_item);
         propertyMenuItemView = findViewById(R.id.property_menu_item);
-        useDefaultImage = z2;
+        useDefaultImage = useDefault;
     }
 
     public final void showImagePicker() {

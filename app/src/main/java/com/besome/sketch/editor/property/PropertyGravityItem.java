@@ -40,9 +40,9 @@ public class PropertyGravityItem extends RelativeLayout implements View.OnClickL
         return key;
     }
 
-    public void setKey(String str) {
-        key = str;
-        int identifier = getResources().getIdentifier(str, "string", getContext().getPackageName());
+    public void setKey(String propertyKey) {
+        key = propertyKey;
+        int identifier = getResources().getIdentifier(propertyKey, "string", getContext().getPackageName());
         if (identifier > 0) {
             tvName.setText(Helper.getResString(identifier));
             icon = R.drawable.ic_mtrl_center;
