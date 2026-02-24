@@ -149,8 +149,8 @@ public class ProjectDataStore {
   public ArrayList<BlockBean> getBlocks(String fileName, String data) {
     if (!this.blockMap.containsKey(fileName))
       return new ArrayList<BlockBean>(); 
-    Map map = this.blockMap.get(fileName);
-    return (map == null) ? new ArrayList<BlockBean>() : (!map.containsKey(data) ? new ArrayList<BlockBean>() : (ArrayList<BlockBean>)map.get(data));
+    Map blockEntryMap = this.blockMap.get(fileName);
+    return (blockEntryMap == null) ? new ArrayList<BlockBean>() : (!blockEntryMap.containsKey(data) ? new ArrayList<BlockBean>() : (ArrayList<BlockBean>)blockEntryMap.get(data));
   }
   
   public void deleteBackupFiles() {
@@ -323,9 +323,9 @@ public class ProjectDataStore {
       } 
       label70: for (Pair viewPair : customViewPairs) {
         if (this.blockMap.containsKey(viewPair.first)) {
-          Map map = this.blockMap.get(viewPair.first);
-          if (map.containsKey(viewPair.second)) {
-            ArrayList<BlockBean> blockBeans = (ArrayList)map.get(viewPair.second);
+          Map blockEntryMap = this.blockMap.get(viewPair.first);
+          if (blockEntryMap.containsKey(viewPair.second)) {
+            ArrayList<BlockBean> blockBeans = (ArrayList)blockEntryMap.get(viewPair.second);
             if (blockBeans == null || blockBeans.size() <= 0)
               continue; 
             i = blockBeans.size();
@@ -482,10 +482,10 @@ public class ProjectDataStore {
   public void removeBlockReferences(String fileName, ClassInfo classInfo, String data, boolean flag) {
     if (!this.blockMap.containsKey(fileName))
       return; 
-    Map map = this.blockMap.get(fileName);
-    if (map == null)
+    Map blockEntryMap = this.blockMap.get(fileName);
+    if (blockEntryMap == null)
       return; 
-    label44: for (Map.Entry<String, ArrayList<BlockBean>> entry : ((Map<String, ArrayList<BlockBean>>)map).entrySet()) {
+    label44: for (Map.Entry<String, ArrayList<BlockBean>> entry : ((Map<String, ArrayList<BlockBean>>)blockEntryMap).entrySet()) {
       if (flag && ((String)entry.getKey()).substring(((String)entry.getKey()).lastIndexOf("_") + 1).equals("onBindCustomView"))
         continue; 
       ArrayList<BlockBean> arrayList = (ArrayList)entry.getValue();
@@ -937,10 +937,10 @@ public class ProjectDataStore {
   }
   
   public boolean isListUsedInBlocks(String fileName, String data, String extra) {
-    Map map = this.blockMap.get(fileName);
-    if (map == null)
+    Map blockEntryMap = this.blockMap.get(fileName);
+    if (blockEntryMap == null)
       return false; 
-    for (Map.Entry<String, ArrayList<BlockBean>> entry : ((Map<String, ArrayList<BlockBean>>)map).entrySet()) {
+    for (Map.Entry<String, ArrayList<BlockBean>> entry : ((Map<String, ArrayList<BlockBean>>)blockEntryMap).entrySet()) {
       if (((String)entry.getKey()).equals(extra))
         continue; 
       for (BlockBean blockBean : (ArrayList<BlockBean>)entry.getValue()) {
@@ -1032,10 +1032,10 @@ public class ProjectDataStore {
   }
   
   public boolean isVariableUsedInBlocks(String fileName, String data, String extra) {
-    Map map = this.blockMap.get(fileName);
-    if (map == null)
+    Map blockEntryMap = this.blockMap.get(fileName);
+    if (blockEntryMap == null)
       return false; 
-    for (Map.Entry<String, ArrayList<BlockBean>> entry : ((Map<String, ArrayList<BlockBean>>)map).entrySet()) {
+    for (Map.Entry<String, ArrayList<BlockBean>> entry : ((Map<String, ArrayList<BlockBean>>)blockEntryMap).entrySet()) {
       if (((String)entry.getKey()).equals(extra))
         continue; 
       for (BlockBean blockBean : (ArrayList<BlockBean>)entry.getValue()) {
@@ -1287,10 +1287,10 @@ public class ProjectDataStore {
   }
   
   public boolean isMoreBlockUsed(String fileName, String data) {
-    Map map = this.blockMap.get(fileName);
-    if (map == null)
+    Map blockEntryMap = this.blockMap.get(fileName);
+    if (blockEntryMap == null)
       return false; 
-    for (Map.Entry<String, ArrayList<BlockBean>> entry : ((Map<String, ArrayList<BlockBean>>)map).entrySet()) {
+    for (Map.Entry<String, ArrayList<BlockBean>> entry : ((Map<String, ArrayList<BlockBean>>)blockEntryMap).entrySet()) {
       String entryKey = (String)entry.getKey();
       StringBuilder keyBuilder = new StringBuilder();
       keyBuilder.append(data);
@@ -1512,11 +1512,11 @@ public class ProjectDataStore {
   public void removeBlockEntry(String fileName, String data) {
     if (!this.blockMap.containsKey(fileName))
       return; 
-    Map map = this.blockMap.get(fileName);
-    if (map == null)
+    Map blockEntryMap = this.blockMap.get(fileName);
+    if (blockEntryMap == null)
       return; 
-    if (map.containsKey(data))
-      map.remove(data); 
+    if (blockEntryMap.containsKey(data))
+      blockEntryMap.remove(data); 
   }
   
   public void removeViewTypeEvents(String fileName) {
