@@ -60,13 +60,13 @@ public class FormatUtil {
   }
   
   public static String bytesToHex(byte[] data) {
-    StringBuffer stringBuffer = new StringBuffer(data.length * 2);
+    StringBuffer hexBuffer = new StringBuffer(data.length * 2);
     for (int b = 0; b < data.length; b++) {
       if ((data[b] & 0xFF) < 16)
-        stringBuffer.append("0"); 
-      stringBuffer.append(Long.toString((data[b] & 0xFF), 16));
+        hexBuffer.append("0"); 
+      hexBuffer.append(Long.toString((data[b] & 0xFF), 16));
     } 
-    return stringBuffer.toString();
+    return hexBuffer.toString();
   }
   
   public static void copyToClipboard(Context context, String key, String value) {

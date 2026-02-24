@@ -421,7 +421,7 @@ public class ProjectDataStore {
     HashMap<String, HashMap<String, ArrayList<BlockBean>>> hashMap = this.blockMap;
     if (hashMap != null)
       hashMap.clear(); 
-    StringBuffer stringBuffer = new StringBuffer();
+    StringBuffer contentBuffer = new StringBuffer();
     String sectionName = "";
     while (true) {
       String line = reader.readLine();
@@ -429,21 +429,21 @@ public class ProjectDataStore {
         if (line.length() <= 0)
           continue; 
         if (line.charAt(0) == '@') {
-          StringBuffer tempBuffer = stringBuffer;
+          StringBuffer tempBuffer = contentBuffer;
           if (sectionName.length() > 0) {
-            parseLogicSection(sectionName, stringBuffer.toString());
+            parseLogicSection(sectionName, contentBuffer.toString());
             tempBuffer = new StringBuffer();
           } 
           sectionName = line.substring(1);
-          stringBuffer = tempBuffer;
+          contentBuffer = tempBuffer;
           continue;
         } 
-        stringBuffer.append(line);
-        stringBuffer.append("\n");
+        contentBuffer.append(line);
+        contentBuffer.append("\n");
         continue;
       } 
-      if (sectionName.length() > 0 && stringBuffer.length() > 0)
-        parseLogicSection(sectionName, stringBuffer.toString()); 
+      if (sectionName.length() > 0 && contentBuffer.length() > 0)
+        parseLogicSection(sectionName, contentBuffer.toString()); 
       return;
     } 
   }
@@ -832,7 +832,7 @@ public class ProjectDataStore {
     HashMap<String, ViewBean> hashMap = this.fabMap;
     if (hashMap != null)
       hashMap.clear(); 
-    StringBuffer stringBuffer = new StringBuffer();
+    StringBuffer contentBuffer = new StringBuffer();
     String sectionName = "";
     while (true) {
       String line = reader.readLine();
@@ -840,21 +840,21 @@ public class ProjectDataStore {
         if (line.length() <= 0)
           continue; 
         if (line.charAt(0) == '@') {
-          StringBuffer tempBuffer = stringBuffer;
+          StringBuffer tempBuffer = contentBuffer;
           if (sectionName.length() > 0) {
-            parseViewSection(sectionName, stringBuffer.toString());
+            parseViewSection(sectionName, contentBuffer.toString());
             tempBuffer = new StringBuffer();
           } 
           sectionName = line.substring(1);
-          stringBuffer = tempBuffer;
+          contentBuffer = tempBuffer;
           continue;
         } 
-        stringBuffer.append(line);
-        stringBuffer.append("\n");
+        contentBuffer.append(line);
+        contentBuffer.append("\n");
         continue;
       } 
-      if (sectionName.length() > 0 && stringBuffer.length() > 0)
-        parseViewSection(sectionName, stringBuffer.toString()); 
+      if (sectionName.length() > 0 && contentBuffer.length() > 0)
+        parseViewSection(sectionName, contentBuffer.toString()); 
       return;
     } 
   }
@@ -1562,10 +1562,10 @@ public class ProjectDataStore {
   }
   
   public final void saveLogicFile(String filePath) {
-    StringBuffer stringBuffer = new StringBuffer();
-    serializeLogicData(stringBuffer);
+    StringBuffer contentBuffer = new StringBuffer();
+    serializeLogicData(contentBuffer);
     try {
-      byte[] bytes = this.fileUtil.encryptString(stringBuffer.toString());
+      byte[] bytes = this.fileUtil.encryptString(contentBuffer.toString());
       this.fileUtil.writeBytes(filePath, bytes);
     } catch (Exception exception) {
       exception.printStackTrace();
@@ -1616,10 +1616,10 @@ public class ProjectDataStore {
   }
   
   public final void saveViewFile(String filePath) {
-    StringBuffer stringBuffer = new StringBuffer();
-    serializeViewData(stringBuffer);
+    StringBuffer contentBuffer = new StringBuffer();
+    serializeViewData(contentBuffer);
     try {
-      byte[] bytes = this.fileUtil.encryptString(stringBuffer.toString());
+      byte[] bytes = this.fileUtil.encryptString(contentBuffer.toString());
       this.fileUtil.writeBytes(filePath, bytes);
     } catch (Exception exception) {
       exception.printStackTrace();

@@ -5,20 +5,20 @@ import java.lang.reflect.Modifier;
 
 public class ReflectiveToString {
   public String toString(ReflectiveToString reflectiveToString) {
-    StringBuffer stringBuffer = new StringBuffer();
-    stringBuffer.append("[");
+    StringBuffer resultBuffer = new StringBuffer();
+    resultBuffer.append("[");
     for (Field field : reflectiveToString.getClass().getFields()) {
       if (!Modifier.isStatic(field.getModifiers()) && Modifier.isPublic(field.getModifiers()))
         try {
-          stringBuffer.append(field.getName());
-          stringBuffer.append("=");
-          stringBuffer.append(field.get(reflectiveToString));
-          stringBuffer.append(",");
+          resultBuffer.append(field.getName());
+          resultBuffer.append("=");
+          resultBuffer.append(field.get(reflectiveToString));
+          resultBuffer.append(",");
         } catch (Exception exception) {
           exception.printStackTrace();
         }  
     } 
-    stringBuffer.append("]");
-    return stringBuffer.toString();
+    resultBuffer.append("]");
+    return resultBuffer.toString();
   }
 }

@@ -86,7 +86,7 @@ public class ProjectFileManager {
   }
   
   public void parseFileData(BufferedReader reader) throws java.io.IOException {
-    StringBuffer stringBuffer = new StringBuffer();
+    StringBuffer contentBuffer = new StringBuffer();
     String sectionName = "";
     while (true) {
       String line = reader.readLine();
@@ -94,21 +94,21 @@ public class ProjectFileManager {
         if (line.length() <= 0)
           continue; 
         if (line.charAt(0) == '@') {
-          StringBuffer tempBuffer = stringBuffer;
+          StringBuffer tempBuffer = contentBuffer;
           if (sectionName.length() > 0) {
-            parseFileSection(sectionName, stringBuffer.toString());
+            parseFileSection(sectionName, contentBuffer.toString());
             tempBuffer = new StringBuffer();
           } 
           sectionName = line.substring(1);
-          stringBuffer = tempBuffer;
+          contentBuffer = tempBuffer;
           continue;
         } 
-        stringBuffer.append(line);
-        stringBuffer.append("\n");
+        contentBuffer.append(line);
+        contentBuffer.append("\n");
         continue;
       } 
       if (sectionName.length() > 0)
-        parseFileSection(sectionName, stringBuffer.toString()); 
+        parseFileSection(sectionName, contentBuffer.toString()); 
       refreshNameLists();
       return;
     } 
@@ -272,10 +272,10 @@ public class ProjectFileManager {
   }
   
   public final void writeToFile(String filePath) {
-    StringBuffer stringBuffer = new StringBuffer();
-    serializeFiles(stringBuffer);
+    StringBuffer contentBuffer = new StringBuffer();
+    serializeFiles(contentBuffer);
     try {
-      byte[] bytes = this.fileUtil.encryptString(stringBuffer.toString());
+      byte[] bytes = this.fileUtil.encryptString(contentBuffer.toString());
       this.fileUtil.writeBytes(filePath, bytes);
     } catch (Exception exception) {
       exception.printStackTrace();

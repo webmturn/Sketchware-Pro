@@ -45,7 +45,7 @@ public class LibraryManager {
   
   public void parseLibraryData(BufferedReader reader) throws java.io.IOException {
     try {
-      StringBuffer stringBuffer = new StringBuffer();
+      StringBuffer contentBuffer = new StringBuffer();
       String sectionName = "";
       while (true) {
         String line = reader.readLine();
@@ -53,21 +53,21 @@ public class LibraryManager {
           if (line.length() <= 0)
             continue; 
           if (line.charAt(0) == '@') {
-            StringBuffer tempBuffer = stringBuffer;
+            StringBuffer tempBuffer = contentBuffer;
             if (sectionName.length() > 0) {
-              parseLibrarySection(sectionName, stringBuffer.toString());
+              parseLibrarySection(sectionName, contentBuffer.toString());
               tempBuffer = new StringBuffer();
             } 
             sectionName = line.substring(1);
-            stringBuffer = tempBuffer;
+            contentBuffer = tempBuffer;
             continue;
           } 
-          stringBuffer.append(line);
-          stringBuffer.append("\n");
+          contentBuffer.append(line);
+          contentBuffer.append("\n");
           continue;
         } 
         if (sectionName.length() > 0)
-          parseLibrarySection(sectionName, stringBuffer.toString()); 
+          parseLibrarySection(sectionName, contentBuffer.toString()); 
         if (this.firebaseDB == null)
           this.firebaseDB = new ProjectLibraryBean(0); 
         if (this.compat == null)
@@ -84,10 +84,10 @@ public class LibraryManager {
   }
   
   public final void writeToFile(String value) {
-    StringBuffer stringBuffer = new StringBuffer();
-    serializeLibraries(stringBuffer);
+    StringBuffer contentBuffer = new StringBuffer();
+    serializeLibraries(contentBuffer);
     try {
-      byte[] bytes = this.fileUtil.encryptString(stringBuffer.toString());
+      byte[] bytes = this.fileUtil.encryptString(contentBuffer.toString());
       this.fileUtil.writeBytes(value, bytes);
     } catch (Exception exception) {
       exception.printStackTrace();

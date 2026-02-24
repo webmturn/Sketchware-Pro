@@ -68,7 +68,7 @@ public class ResourceManager {
   }
   
   public void parseResourceData(BufferedReader reader) throws java.io.IOException {
-    StringBuffer stringBuffer = new StringBuffer();
+    StringBuffer contentBuffer = new StringBuffer();
     String sectionName = "";
     while (true) {
       String line = reader.readLine();
@@ -76,21 +76,21 @@ public class ResourceManager {
         if (line.length() <= 0)
           continue; 
         if (line.charAt(0) == '@') {
-          StringBuffer tempBuffer = stringBuffer;
+          StringBuffer tempBuffer = contentBuffer;
           if (sectionName.length() > 0) {
-            parseResourceSection(sectionName, stringBuffer.toString());
+            parseResourceSection(sectionName, contentBuffer.toString());
             tempBuffer = new StringBuffer();
           } 
           sectionName = line.substring(1);
-          stringBuffer = tempBuffer;
+          contentBuffer = tempBuffer;
           continue;
         } 
-        stringBuffer.append(line);
-        stringBuffer.append("\n");
+        contentBuffer.append(line);
+        contentBuffer.append("\n");
         continue;
       } 
       if (sectionName.length() > 0)
-        parseResourceSection(sectionName, stringBuffer.toString()); 
+        parseResourceSection(sectionName, contentBuffer.toString()); 
       return;
     } 
   }
@@ -611,10 +611,10 @@ public class ResourceManager {
     pathBuilder.append(File.separator);
     pathBuilder.append("resource");
     String resourcePath = pathBuilder.toString();
-    StringBuffer stringBuffer = new StringBuffer();
-    serializeResources(stringBuffer);
+    StringBuffer contentBuffer = new StringBuffer();
+    serializeResources(contentBuffer);
     try {
-      byte[] bytes = this.fileUtil.encryptString(stringBuffer.toString());
+      byte[] bytes = this.fileUtil.encryptString(contentBuffer.toString());
       this.fileUtil.writeBytes(resourcePath, bytes);
     } catch (Exception exception) {
       exception.printStackTrace();
@@ -629,10 +629,10 @@ public class ResourceManager {
     pathBuilder.append(File.separator);
     pathBuilder.append("resource");
     backupPath = pathBuilder.toString();
-    StringBuffer stringBuffer = new StringBuffer();
-    serializeResources(stringBuffer);
+    StringBuffer contentBuffer = new StringBuffer();
+    serializeResources(contentBuffer);
     try {
-      byte[] bytes = this.fileUtil.encryptString(stringBuffer.toString());
+      byte[] bytes = this.fileUtil.encryptString(contentBuffer.toString());
       this.fileUtil.writeBytes(backupPath, bytes);
     } catch (Exception exception) {
       exception.printStackTrace();
