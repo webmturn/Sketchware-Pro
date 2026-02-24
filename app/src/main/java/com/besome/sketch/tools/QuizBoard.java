@@ -83,7 +83,7 @@ public class QuizBoard extends LinearLayout implements View.OnClickListener {
 
     public void b() {
         if (quizList == null || quizList.isEmpty()) {
-            quizList = CompileQuizManager.a();
+            quizList = CompileQuizManager.getQuizQuestions();
         }
 
         int var1 = new Random().nextInt(quizList.size());

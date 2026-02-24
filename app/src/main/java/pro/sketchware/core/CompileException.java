@@ -9,11 +9,11 @@ public class CompileException extends Exception {
     super(paramString);
   }
   
-  public ArrayList<String> a() {
+  public ArrayList<String> getErrorDetails() {
     return this.errorDetails;
   }
   
-  public void a(ArrayList<String> paramArrayList) {
+  public void setErrorDetails(ArrayList<String> paramArrayList) {
     this.errorDetails = paramArrayList;
   }
 }

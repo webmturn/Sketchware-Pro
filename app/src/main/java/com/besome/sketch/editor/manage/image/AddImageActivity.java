@@ -434,7 +434,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
                     };
                     var message = code != 0 ? activity.getString(code) : null;
 
-                    var a = compileException.a();
+                    var a = compileException.getErrorDetails();
                     if (a != null && !a.isEmpty()) {
                         var names = "";
                         for (String name : a) {

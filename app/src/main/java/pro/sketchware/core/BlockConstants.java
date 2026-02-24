@@ -336,15 +336,15 @@ public class BlockConstants {
             "java.sql.*"
     };
 
-    public static String[] a() {
+    public static String[] getReservedMethodNames() {
         return RESERVED_METHOD_NAMES;
     }
 
-    public static String[] b() {
+    public static String[] getIntentActions() {
         return INTENT_ACTIONS;
     }
 
-    public static String[] c() {
+    public static String[] getIntentFlags() {
         return INTENT_FLAGS;
     }
 }

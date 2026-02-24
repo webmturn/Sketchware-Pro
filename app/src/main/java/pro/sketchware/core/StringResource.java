@@ -968,9 +968,9 @@ public class StringResource {
   public void b(Context paramContext, String paramString) {
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append("block_");
-    stringBuilder.append(BlockSpecRegistry.d(paramString));
+    stringBuilder.append(BlockSpecRegistry.getBlockSpec(paramString));
     String str = stringBuilder.toString();
-    ArrayList<String> arrayList = BlockSpecRegistry.a(paramString);
+    ArrayList<String> arrayList = BlockSpecRegistry.getBlockParams(paramString);
     this.eventTranslations.put(paramString, a(paramContext, str, arrayList));
   }
   
@@ -994,9 +994,9 @@ public class StringResource {
   public void c(Context paramContext, String paramString) {
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append("root_spec_");
-    stringBuilder.append(BlockSpecRegistry.c(paramString));
+    stringBuilder.append(BlockSpecRegistry.getEventSpec(paramString));
     String str = stringBuilder.toString();
-    ArrayList<String> arrayList = BlockSpecRegistry.b(paramString);
+    ArrayList<String> arrayList = BlockSpecRegistry.getBlockMenuItems(paramString);
     this.eventTranslations.put(paramString, a(paramContext, str, arrayList));
   }
 }

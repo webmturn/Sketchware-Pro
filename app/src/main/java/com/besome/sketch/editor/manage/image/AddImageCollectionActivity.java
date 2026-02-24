@@ -332,7 +332,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
                     };
                     var message = messageId != 0 ? activity.getString(messageId) : "";
 
-                    var a = compileException.a();
+                    var a = compileException.getErrorDetails();
                     if (a != null && !a.isEmpty()) {
                         var names = "";
                         for (String name : a) {

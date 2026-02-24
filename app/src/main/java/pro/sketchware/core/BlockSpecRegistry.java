@@ -8,7 +8,7 @@ public class BlockSpecRegistry {
   private static final HashMap<String, ArrayList<String>> cacheB = new HashMap<>();
   private static final HashMap<String, String> cacheC = new HashMap<>();
   private static final HashMap<String, String> cacheD = new HashMap<>();
-  public static ArrayList<String> a(String paramString) {
+  public static ArrayList<String> getBlockParams(String paramString) {
     if (cacheA.containsKey(paramString)) return cacheA.get(paramString);
     short s = -1;
     ArrayList<String> arrayList2 = new ArrayList<>();
@@ -3110,7 +3110,7 @@ public class BlockSpecRegistry {
     return arrayList1;
   }
   
-  public static ArrayList<String> b(String paramString) {
+  public static ArrayList<String> getBlockMenuItems(String paramString) {
     if (cacheB.containsKey(paramString)) return cacheB.get(paramString);
     byte b = -1;
     ArrayList<String> arrayList = new ArrayList<>();
@@ -3539,7 +3539,7 @@ public class BlockSpecRegistry {
     return arrayList;
   }
   
-  public static String c(String paramString) {
+  public static String getEventSpec(String paramString) {
     if (cacheC.containsKey(paramString)) return cacheC.get(paramString);
     String resultC = computeC(paramString);
     cacheC.put(paramString, resultC);
@@ -3966,7 +3966,7 @@ public class BlockSpecRegistry {
     return "initialize";
   }
   
-  public static String d(String paramString) {
+  public static String getBlockSpec(String paramString) {
     if (cacheD.containsKey(paramString)) return cacheD.get(paramString);
     String originalKey = paramString;
     int i = paramString.hashCode();

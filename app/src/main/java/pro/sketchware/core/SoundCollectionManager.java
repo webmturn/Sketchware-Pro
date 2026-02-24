@@ -166,7 +166,7 @@ public class SoundCollectionManager extends BaseCollectionManager {
         } 
         if (arrayList1.size() > 0) {
           CompileException yy2 = new CompileException("fail_to_copy");
-          yy2.a(arrayList1);
+          yy2.setErrorDetails(arrayList1);
           if (arrayList2.size() > 0)
             for (String str : arrayList2)
               this.fileUtil.c(str);  
@@ -177,11 +177,11 @@ public class SoundCollectionManager extends BaseCollectionManager {
         return;
       } 
       CompileException yy1 = new CompileException("file_no_exist");
-      yy1.a(arrayList1);
+      yy1.setErrorDetails(arrayList1);
       throw yy1;
     } 
     CompileException CompileException = new CompileException("duplicate_name");
-    CompileException.a(arrayList);
+    CompileException.setErrorDetails(arrayList);
     throw CompileException;
   }
   
