@@ -7,7 +7,7 @@ import pro.sketchware.core.ActivityCodeGenerator;
 public class XmlBuilder {
 
     private final ArrayList<XmlBuilder> childNodes;
-    private final boolean d;
+    private final boolean isInlineAttributes;
     private final String rootElementName;
     private final ArrayList<AttributeBuilder> attributes;
     private String newlineIndent;
@@ -19,7 +19,7 @@ public class XmlBuilder {
     }
 
     public XmlBuilder(String rootElementName, boolean z) {
-        d = z;
+        isInlineAttributes = z;
         this.rootElementName = rootElementName;
         indentationLevel = 0;
         attributes = new ArrayList<>();
@@ -65,7 +65,7 @@ public class XmlBuilder {
         resultCode.append("<");
         resultCode.append(rootElementName);
         for (AttributeBuilder attr : attributes) {
-            if (attributes.size() <= 1 || d) {
+            if (attributes.size() <= 1 || isInlineAttributes) {
                 resultCode.append(" ");
             } else {
                 resultCode.append("\r\n");
