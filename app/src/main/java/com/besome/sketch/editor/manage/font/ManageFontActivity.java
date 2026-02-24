@@ -142,7 +142,7 @@ public class ManageFontActivity extends BaseAppCompatActivity {
         }
 
         @Override
-        public void onError(String str) {
+        public void onError(String errorMessage) {
             var activity = activityWeakReference.get();
             if (activity == null) return;
             activity.dismissLoadingDialog();

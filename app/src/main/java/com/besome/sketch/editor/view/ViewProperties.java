@@ -67,9 +67,9 @@ public class ViewProperties extends RelativeLayout implements AdapterView.OnItem
         private final ArrayList<String> data;
         private int layoutPosition;
 
-        public SpinnerItemAdapter(Context context, ArrayList<String> arrayList) {
+        public SpinnerItemAdapter(Context context, ArrayList<String> items) {
             this.context = context;
-            data = arrayList;
+            data = items;
         }
 
         public void setLayoutPosition(int position) {
@@ -102,7 +102,7 @@ public class ViewProperties extends RelativeLayout implements AdapterView.OnItem
             return createSpinnerItemView(position, convertView, parent, false);
         }
 
-        private ViewIdSpinnerItem createSpinnerItemView(int position, View convertView, ViewGroup parent, boolean z) {
+        private ViewIdSpinnerItem createSpinnerItemView(int position, View convertView, ViewGroup parent, boolean isDropDown) {
             ViewIdSpinnerItem viewIdSpinnerItem;
             if (convertView != null) {
                 viewIdSpinnerItem = (ViewIdSpinnerItem) convertView;
@@ -110,7 +110,7 @@ public class ViewProperties extends RelativeLayout implements AdapterView.OnItem
                 viewIdSpinnerItem = new ViewIdSpinnerItem(context);
                 viewIdSpinnerItem.setTextSize(R.dimen.text_size_body_small);
             }
-            viewIdSpinnerItem.setData(0, data.get(position), z);
+            viewIdSpinnerItem.setData(0, data.get(position), isDropDown);
             viewIdSpinnerItem.setTextStyle(false, 0xff404040, 0xff404040);
             return viewIdSpinnerItem;
         }

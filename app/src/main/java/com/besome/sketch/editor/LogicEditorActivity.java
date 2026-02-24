@@ -2546,7 +2546,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
 
         @Override
-        public void onError(String str) {
+        public void onError(String errorMessage) {
             Toast.makeText(getContext(), R.string.common_error_failed_to_save, Toast.LENGTH_SHORT).show();
             var act = activity.get();
             if (act == null) return;

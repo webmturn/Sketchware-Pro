@@ -588,7 +588,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
         }
 
         @Override
-        public void onError(String str) {
+        public void onError(String errorMessage) {
             dismissLoadingDialog();
         }
 

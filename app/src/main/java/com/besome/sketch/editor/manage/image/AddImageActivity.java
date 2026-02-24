@@ -453,7 +453,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
         }
 
         @Override
-        public void onError(String str) {
+        public void onError(String errorMessage) {
             var activity = this.activity.get();
             if (activity == null) return;
             activity.dismissLoadingDialog();

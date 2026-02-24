@@ -351,7 +351,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
         }
 
         @Override
-        public void onError(String str) {
+        public void onError(String errorMessage) {
             var activity = this.activity.get();
             if (activity == null) return;
             activity.dismissLoadingDialog();
