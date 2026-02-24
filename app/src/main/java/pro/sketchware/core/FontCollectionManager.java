@@ -103,11 +103,11 @@ public class FontCollectionManager extends BaseCollectionManager {
         i = j;
         if (collectionBean.name.equals(input)) {
           this.collections.remove(j);
-          StringBuilder stringBuilder = new StringBuilder();
-          stringBuilder.append(this.dataDirPath);
-          stringBuilder.append(File.separator);
-          stringBuilder.append(collectionBean.data);
-          String filePath = stringBuilder.toString();
+          StringBuilder pathBuilder = new StringBuilder();
+          pathBuilder.append(this.dataDirPath);
+          pathBuilder.append(File.separator);
+          pathBuilder.append(collectionBean.data);
+          String filePath = pathBuilder.toString();
           this.fileUtil.deleteFileByPath(filePath);
           break;
         } 
@@ -120,20 +120,20 @@ public class FontCollectionManager extends BaseCollectionManager {
   }
   
   public void initializePaths() {
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(SketchwarePaths.getCollectionPath());
-    stringBuilder.append(File.separator);
-    stringBuilder.append("sound");
-    stringBuilder.append(File.separator);
-    stringBuilder.append("list");
-    this.collectionFilePath = stringBuilder.toString();
-    stringBuilder = new StringBuilder();
-    stringBuilder.append(SketchwarePaths.getCollectionPath());
-    stringBuilder.append(File.separator);
-    stringBuilder.append("sound");
-    stringBuilder.append(File.separator);
-    stringBuilder.append("data");
-    this.dataDirPath = stringBuilder.toString();
+    StringBuilder pathBuilder = new StringBuilder();
+    pathBuilder.append(SketchwarePaths.getCollectionPath());
+    pathBuilder.append(File.separator);
+    pathBuilder.append("sound");
+    pathBuilder.append(File.separator);
+    pathBuilder.append("list");
+    this.collectionFilePath = pathBuilder.toString();
+    pathBuilder = new StringBuilder();
+    pathBuilder.append(SketchwarePaths.getCollectionPath());
+    pathBuilder.append(File.separator);
+    pathBuilder.append("sound");
+    pathBuilder.append(File.separator);
+    pathBuilder.append("data");
+    this.dataDirPath = pathBuilder.toString();
   }
   
   public boolean hasResource(String name) {

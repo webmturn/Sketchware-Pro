@@ -36,13 +36,13 @@ public class ViewFilesAdapter extends BaseFragment {
   
   public final String generateUniqueViewId(int position, String xmlName) {
     String prefix = SketchwarePaths.getWidgetTypeName(position);
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(prefix);
+    StringBuilder idBuilder = new StringBuilder();
+    idBuilder.append(prefix);
     int[] intValues = this.viewCounters;
     int i = intValues[position] + 1;
     intValues[position] = i;
-    stringBuilder.append(i);
-    String candidateId = stringBuilder.toString();
+    idBuilder.append(i);
+    String candidateId = idBuilder.toString();
     ArrayList existingViews = ProjectDataManager.getProjectDataManager(this.projectId).getViews(xmlName);
     xmlName = candidateId;
     while (true) {

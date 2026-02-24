@@ -50,13 +50,13 @@ public class MoreBlockCollectionManager extends BaseCollectionManager {
         continue; 
       throw new CompileException("duplicate_name");
     } 
-    StringBuilder stringBuilder = new StringBuilder();
+    StringBuilder contentBuilder = new StringBuilder();
     for (int bi = 0; bi < list.size(); bi++) {
       BlockBean blockBean = list.get(bi);
-      stringBuilder.append(this.moreBlockGson.toJson(blockBean));
-      stringBuilder.append("\n");
+      contentBuilder.append(this.moreBlockGson.toJson(blockBean));
+      contentBuilder.append("\n");
     }
-    String serializedData = stringBuilder.toString();
+    String serializedData = contentBuilder.toString();
     this.collections.add(new CollectionBean(key, serializedData, value));
     if (flag)
       saveCollections(); 
@@ -92,13 +92,13 @@ public class MoreBlockCollectionManager extends BaseCollectionManager {
   }
   
   public void initializePaths() {
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(SketchwarePaths.getCollectionPath());
-    stringBuilder.append(File.separator);
-    stringBuilder.append("more_block");
-    stringBuilder.append(File.separator);
-    stringBuilder.append("list");
-    this.collectionFilePath = stringBuilder.toString();
+    StringBuilder pathBuilder = new StringBuilder();
+    pathBuilder.append(SketchwarePaths.getCollectionPath());
+    pathBuilder.append(File.separator);
+    pathBuilder.append("more_block");
+    pathBuilder.append(File.separator);
+    pathBuilder.append("list");
+    this.collectionFilePath = pathBuilder.toString();
   }
   
   public ArrayList<MoreBlockCollectionBean> getMoreBlocks() {

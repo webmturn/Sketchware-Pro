@@ -70,11 +70,11 @@ public class FileNameValidator extends BaseValidator {
     } else {
       ArrayList<String> candidateNames = new ArrayList<>();
       for (int b1 = 1; b1 <= this.batchCount; b1++) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(conflictList);
-        stringBuilder.append("_");
-        stringBuilder.append(b1);
-        candidateNames.add(stringBuilder.toString());
+        StringBuilder candidateBuilder = new StringBuilder();
+        candidateBuilder.append(conflictList);
+        candidateBuilder.append("_");
+        candidateBuilder.append(b1);
+        candidateNames.add(candidateBuilder.toString());
       } 
       ArrayList<String> conflictNames = new ArrayList<>();
       for (String candidateName : candidateNames) {
@@ -100,12 +100,12 @@ public class FileNameValidator extends BaseValidator {
           nameBuilder.append(conflictName);
           conflictList = nameBuilder.toString();
         } 
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(errorMessage);
-        stringBuilder.append("\n[");
-        stringBuilder.append(conflictList);
-        stringBuilder.append("]");
-        this.textInputLayout.setError(stringBuilder.toString());
+        StringBuilder errorBuilder = new StringBuilder();
+        errorBuilder.append(errorMessage);
+        errorBuilder.append("\n[");
+        errorBuilder.append(conflictList);
+        errorBuilder.append("]");
+        this.textInputLayout.setError(errorBuilder.toString());
         this.valid = false;
         return;
       } 

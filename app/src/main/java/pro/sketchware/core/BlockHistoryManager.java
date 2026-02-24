@@ -22,13 +22,13 @@ public class BlockHistoryManager {
   }
   
   public static String buildKey(String key, String value, String extra) {
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(key);
-    stringBuilder.append("_");
-    stringBuilder.append(value);
-    stringBuilder.append("_");
-    stringBuilder.append(extra);
-    return stringBuilder.toString();
+    StringBuilder keyBuilder = new StringBuilder();
+    keyBuilder.append(key);
+    keyBuilder.append("_");
+    keyBuilder.append(value);
+    keyBuilder.append("_");
+    keyBuilder.append(extra);
+    return keyBuilder.toString();
   }
   
   public static void clearInstance() {

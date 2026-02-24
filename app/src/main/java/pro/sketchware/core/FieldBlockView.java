@@ -88,10 +88,10 @@ public class FieldBlockView extends BaseBlockView {
     String displayName = BlockColorMapper.getComponentDisplayName(componentId);
     componentId = displayName;
     if (displayName.length() > 0) {
-      StringBuilder stringBuilder = new StringBuilder();
-      stringBuilder.append(displayName);
-      stringBuilder.append(" : ");
-      prefix = stringBuilder.toString();
+      StringBuilder prefixBuilder = new StringBuilder();
+      prefixBuilder.append(displayName);
+      prefixBuilder.append(" : ");
+      prefix = prefixBuilder.toString();
     } 
     return prefix;
   }

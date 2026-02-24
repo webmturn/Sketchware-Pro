@@ -57,11 +57,11 @@ public class RecentHistoryManager {
     while (iterator.hasNext()) {
       String key = iterator.next();
       for (String item : this.recentMap.get(key)) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(result);
-        stringBuilder.append(item);
-        stringBuilder.append(",");
-        result = stringBuilder.toString();
+        StringBuilder entryBuilder = new StringBuilder();
+        entryBuilder.append(result);
+        entryBuilder.append(item);
+        entryBuilder.append(",");
+        result = entryBuilder.toString();
       } 
       this.database.put(key, result);
     } 

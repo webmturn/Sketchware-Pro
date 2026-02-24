@@ -27,11 +27,11 @@ public class DefinitionBlockView extends BlockView {
     if (compType != null) {
       labelText = input;
       if (compType.length() > 0) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(((BaseBlockView)this).componentType);
-        stringBuilder.append(" : ");
-        stringBuilder.append(input);
-        labelText = stringBuilder.toString();
+        StringBuilder labelBuilder = new StringBuilder();
+        labelBuilder.append(((BaseBlockView)this).componentType);
+        labelBuilder.append(" : ");
+        labelBuilder.append(input);
+        labelText = labelBuilder.toString();
       } 
     } 
     textView.setText(labelText);

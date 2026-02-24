@@ -101,11 +101,11 @@ public class ImageCollectionManager extends BaseCollectionManager {
           this.collections.remove(j);
           String dataFileName = collectionBean.data;
           EncryptedFileUtil EncryptedFileUtil = this.fileUtil;
-          StringBuilder stringBuilder = new StringBuilder();
-          stringBuilder.append(this.dataDirPath);
-          stringBuilder.append(File.separator);
-          stringBuilder.append(dataFileName);
-          EncryptedFileUtil.deleteFileByPath(stringBuilder.toString());
+          StringBuilder pathBuilder = new StringBuilder();
+          pathBuilder.append(this.dataDirPath);
+          pathBuilder.append(File.separator);
+          pathBuilder.append(dataFileName);
+          EncryptedFileUtil.deleteFileByPath(pathBuilder.toString());
           break;
         } 
         continue;
@@ -117,20 +117,20 @@ public class ImageCollectionManager extends BaseCollectionManager {
   }
   
   public void initializePaths() {
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(SketchwarePaths.getCollectionPath());
-    stringBuilder.append(File.separator);
-    stringBuilder.append("font");
-    stringBuilder.append(File.separator);
-    stringBuilder.append("list");
-    this.collectionFilePath = stringBuilder.toString();
-    stringBuilder = new StringBuilder();
-    stringBuilder.append(SketchwarePaths.getCollectionPath());
-    stringBuilder.append(File.separator);
-    stringBuilder.append("font");
-    stringBuilder.append(File.separator);
-    stringBuilder.append("data");
-    this.dataDirPath = stringBuilder.toString();
+    StringBuilder pathBuilder = new StringBuilder();
+    pathBuilder.append(SketchwarePaths.getCollectionPath());
+    pathBuilder.append(File.separator);
+    pathBuilder.append("font");
+    pathBuilder.append(File.separator);
+    pathBuilder.append("list");
+    this.collectionFilePath = pathBuilder.toString();
+    pathBuilder = new StringBuilder();
+    pathBuilder.append(SketchwarePaths.getCollectionPath());
+    pathBuilder.append(File.separator);
+    pathBuilder.append("font");
+    pathBuilder.append(File.separator);
+    pathBuilder.append("data");
+    this.dataDirPath = pathBuilder.toString();
   }
   
   public boolean hasResource(String name) {

@@ -79,10 +79,10 @@ public class KeyStoreManager {
     String hexStr = "";
     for (int b = 0; b < i; b++) {
       byte b1 = bytes[b];
-      StringBuilder stringBuilder = new StringBuilder();
-      stringBuilder.append(hexStr);
-      stringBuilder.append(String.format("%02X", new Object[] { Byte.valueOf(b1) }));
-      hexStr = stringBuilder.toString();
+      StringBuilder hexBuilder = new StringBuilder();
+      hexBuilder.append(hexStr);
+      hexBuilder.append(String.format("%02X", new Object[] { Byte.valueOf(b1) }));
+      hexStr = hexBuilder.toString();
     } 
     return bytes;
   }

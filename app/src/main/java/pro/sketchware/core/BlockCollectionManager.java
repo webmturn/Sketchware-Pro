@@ -61,13 +61,13 @@ public class BlockCollectionManager extends BaseCollectionManager {
         continue; 
       throw new CompileException("duplicate_name");
     } 
-    StringBuilder stringBuilder = new StringBuilder();
+    StringBuilder contentBuilder = new StringBuilder();
     for (int bi = 0; bi < list.size(); bi++) {
       BlockBean blockBean = list.get(bi);
-      stringBuilder.append(this.blockGson.toJson(blockBean));
-      stringBuilder.append("\n");
+      contentBuilder.append(this.blockGson.toJson(blockBean));
+      contentBuilder.append("\n");
     }
-    String serializedData = stringBuilder.toString();
+    String serializedData = contentBuilder.toString();
     this.collections.add(new CollectionBean(serializedData, serializedData));
     if (flag)
       saveCollections(); 
@@ -92,20 +92,20 @@ public class BlockCollectionManager extends BaseCollectionManager {
   }
   
   public void initializePaths() {
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(SketchwarePaths.getCollectionPath());
-    stringBuilder.append(File.separator);
-    stringBuilder.append("block");
-    stringBuilder.append(File.separator);
-    stringBuilder.append("list");
-    this.collectionFilePath = stringBuilder.toString();
-    stringBuilder = new StringBuilder();
-    stringBuilder.append(SketchwarePaths.getCollectionPath());
-    stringBuilder.append(File.separator);
-    stringBuilder.append("block");
-    stringBuilder.append(File.separator);
-    stringBuilder.append("data");
-    this.dataDirPath = stringBuilder.toString();
+    StringBuilder pathBuilder = new StringBuilder();
+    pathBuilder.append(SketchwarePaths.getCollectionPath());
+    pathBuilder.append(File.separator);
+    pathBuilder.append("block");
+    pathBuilder.append(File.separator);
+    pathBuilder.append("list");
+    this.collectionFilePath = pathBuilder.toString();
+    pathBuilder = new StringBuilder();
+    pathBuilder.append(SketchwarePaths.getCollectionPath());
+    pathBuilder.append(File.separator);
+    pathBuilder.append("block");
+    pathBuilder.append(File.separator);
+    pathBuilder.append("data");
+    this.dataDirPath = pathBuilder.toString();
   }
   
   public ArrayList<BlockCollectionBean> getBlocks() {

@@ -62,13 +62,13 @@ public class WidgetCollectionManager extends BaseCollectionManager {
         continue; 
       throw new CompileException("duplicate_name");
     } 
-    StringBuilder stringBuilder = new StringBuilder();
+    StringBuilder contentBuilder = new StringBuilder();
     for (int vi = 0; vi < list.size(); vi++) {
       ViewBean viewBean = list.get(vi);
-      stringBuilder.append(this.widgetGson.toJson(viewBean));
-      stringBuilder.append("\n");
+      contentBuilder.append(this.widgetGson.toJson(viewBean));
+      contentBuilder.append("\n");
     }
-    String serializedData = stringBuilder.toString();
+    String serializedData = contentBuilder.toString();
     this.collections.add(new CollectionBean(serializedData, serializedData));
     if (flag)
       saveCollections(); 
@@ -93,20 +93,20 @@ public class WidgetCollectionManager extends BaseCollectionManager {
   }
   
   public void initializePaths() {
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(SketchwarePaths.getCollectionPath());
-    stringBuilder.append(File.separator);
-    stringBuilder.append("widget");
-    stringBuilder.append(File.separator);
-    stringBuilder.append("list");
-    this.collectionFilePath = stringBuilder.toString();
-    stringBuilder = new StringBuilder();
-    stringBuilder.append(SketchwarePaths.getCollectionPath());
-    stringBuilder.append(File.separator);
-    stringBuilder.append("widget");
-    stringBuilder.append(File.separator);
-    stringBuilder.append("data");
-    this.dataDirPath = stringBuilder.toString();
+    StringBuilder pathBuilder = new StringBuilder();
+    pathBuilder.append(SketchwarePaths.getCollectionPath());
+    pathBuilder.append(File.separator);
+    pathBuilder.append("widget");
+    pathBuilder.append(File.separator);
+    pathBuilder.append("list");
+    this.collectionFilePath = pathBuilder.toString();
+    pathBuilder = new StringBuilder();
+    pathBuilder.append(SketchwarePaths.getCollectionPath());
+    pathBuilder.append(File.separator);
+    pathBuilder.append("widget");
+    pathBuilder.append(File.separator);
+    pathBuilder.append("data");
+    this.dataDirPath = pathBuilder.toString();
   }
   
   public void loadCollections() {
