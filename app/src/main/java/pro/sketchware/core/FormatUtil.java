@@ -128,30 +128,30 @@ public class FormatUtil {
     ArrayList<String> arrayList = new ArrayList<>();
     StringScanner scanner = new StringScanner(value);
     while (!scanner.isAtEnd()) {
-      String str = scanner.nextToken();
-      if (str.length() > 0)
-        arrayList.add(str); 
+      String token = scanner.nextToken();
+      if (token.length() > 0)
+        arrayList.add(token); 
     } 
     return arrayList;
   }
   
   public static String unescapeString(String value) {
-    String str = "";
+    String result = "";
     for (int b = 0; b < value.length(); b++) {
       char c = value.charAt(b);
       if (c == '\\') {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(str);
+        stringBuilder.append(result);
         stringBuilder.append(value.charAt(++b));
-        str = stringBuilder.toString();
+        result = stringBuilder.toString();
       } else {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(str);
+        stringBuilder.append(result);
         stringBuilder.append(c);
-        str = stringBuilder.toString();
+        result = stringBuilder.toString();
       } 
     } 
-    return str;
+    return result;
   }
   
   public static class StringScanner {
@@ -177,7 +177,7 @@ public class FormatUtil {
     public String nextToken() {
       skipSpaces();
       boolean atEnd = isAtEnd();
-      String str = "";
+      String token = "";
       if (atEnd)
         return ""; 
       boolean hasPercent = false;
@@ -186,9 +186,9 @@ public class FormatUtil {
         char c = this.input.charAt(this.position);
         if (c == '\\') {
           StringBuilder escapeBuilder = new StringBuilder();
-          escapeBuilder.append(str);
+          escapeBuilder.append(token);
           escapeBuilder.append(c + this.input.charAt(this.position + 1));
-          str = escapeBuilder.toString();
+          token = escapeBuilder.toString();
           this.position += 2;
           continue;
         } 
@@ -200,12 +200,12 @@ public class FormatUtil {
         if (hasPercent && (c == '?' || c == '-'))
           break; 
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(str);
+        stringBuilder.append(token);
         stringBuilder.append(c);
-        str = stringBuilder.toString();
+        token = stringBuilder.toString();
         this.position++;
       } 
-      return str;
+      return token;
     }
     
     public void skipSpaces() {
