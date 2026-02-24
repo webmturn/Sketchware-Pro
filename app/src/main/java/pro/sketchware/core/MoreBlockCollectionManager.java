@@ -31,9 +31,9 @@ public class MoreBlockCollectionManager extends BaseCollectionManager {
     return instance;
   }
   
-  public MoreBlockCollectionBean getMoreBlockByName(String str) {
+  public MoreBlockCollectionBean getMoreBlockByName(String name) {
     for (CollectionBean collectionBean : this.collections) {
-      if (collectionBean.name.equals(str))
+      if (collectionBean.name.equals(name))
         return new MoreBlockCollectionBean(collectionBean.name, collectionBean.reserved1, ProjectDataParser.parseBlockBeans(this.moreBlockGson, collectionBean.data)); 
     } 
     return null;
@@ -73,13 +73,13 @@ public class MoreBlockCollectionManager extends BaseCollectionManager {
       saveCollections(); 
   }
   
-  public void removeMoreBlock(String str, boolean flag) {
+  public void removeMoreBlock(String name, boolean flag) {
     int i = this.collections.size();
     while (true) {
       int j = i - 1;
       if (j >= 0) {
         i = j;
-        if (((CollectionBean)this.collections.get(j)).name.equals(str)) {
+        if (((CollectionBean)this.collections.get(j)).name.equals(name)) {
           this.collections.remove(j);
           break;
         } 

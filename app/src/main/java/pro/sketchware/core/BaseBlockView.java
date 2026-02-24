@@ -165,8 +165,8 @@ public class BaseBlockView extends RelativeLayout {
     initDensityAndPaints(context);
   }
   
-  public BaseBlockView(Context context, String str, boolean flag) {
-    this(context, str, "", flag);
+  public BaseBlockView(Context context, String blockType, boolean flag) {
+    this(context, blockType, "", flag);
   }
   
   private float[] getBooleanReflections() {

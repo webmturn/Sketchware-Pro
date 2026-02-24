@@ -308,9 +308,9 @@ public class ProjectFilePaths {
     /**
      * Extracts a ZIP archive from assets to {@link ProjectFilePaths#resDirectoryPath}.
      */
-    public void extractAssetsToRes(Context context, String str) {
+    public void extractAssetsToRes(Context context, String assetZipName) {
         try {
-            ZipUtil.extractAssetZip(context, str, resDirectoryPath);
+            ZipUtil.extractAssetZip(context, assetZipName, resDirectoryPath);
         } catch (Exception e2) {
             Log.e("ProjectFilePaths", e2.getMessage(), e2);
         }

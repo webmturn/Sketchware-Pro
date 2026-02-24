@@ -31,9 +31,9 @@ public class BlockCollectionManager extends BaseCollectionManager {
     return instance;
   }
   
-  public BlockCollectionBean getBlockByName(String str) {
+  public BlockCollectionBean getBlockByName(String name) {
     for (CollectionBean collectionBean : this.collections) {
-      if (collectionBean.name.equals(str))
+      if (collectionBean.name.equals(name))
         return new BlockCollectionBean(collectionBean.name, ProjectDataParser.parseBlockBeans(this.blockGson, collectionBean.data)); 
     } 
     return null;
@@ -73,13 +73,13 @@ public class BlockCollectionManager extends BaseCollectionManager {
       saveCollections(); 
   }
   
-  public void removeBlock(String str, boolean flag) {
+  public void removeBlock(String name, boolean flag) {
     int i = this.collections.size();
     while (true) {
       int j = i - 1;
       if (j >= 0) {
         i = j;
-        if (((CollectionBean)this.collections.get(j)).name.equals(str)) {
+        if (((CollectionBean)this.collections.get(j)).name.equals(name)) {
           this.collections.remove(j);
           break;
         } 

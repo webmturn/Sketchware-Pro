@@ -71,12 +71,12 @@ public class ViewFilesAdapter extends BaseFragment {
     } 
   }
   
-  public final ArrayList<ViewBean> getPresetViews(String str, int position) {
+  public final ArrayList<ViewBean> getPresetViews(String fileName, int position) {
     ArrayList<ViewBean> arrayList;
     if (position == 277) {
-      arrayList = PresetLayoutFactory.getListItemPresetViews(str);
+      arrayList = PresetLayoutFactory.getListItemPresetViews(fileName);
     } else if (position == 278) {
-      arrayList = PresetLayoutFactory.getDrawerPresetViews(str);
+      arrayList = PresetLayoutFactory.getDrawerPresetViews(fileName);
     } else {
       arrayList = new ArrayList<>();
     }
@@ -88,16 +88,16 @@ public class ViewFilesAdapter extends BaseFragment {
     this.adapter.notifyDataSetChanged();
   }
   
-  public void addCustomView(String str) {
+  public void addCustomView(String fileName) {
     boolean found = false;
     for (ProjectFileBean bean : this.projectFiles) {
-      if (bean.fileType == 2 && bean.fileName.equals(str)) {
+      if (bean.fileType == 2 && bean.fileName.equals(fileName)) {
         found = true;
         break;
       }
     }
     if (!found) {
-      this.projectFiles.add(new ProjectFileBean(2, str));
+      this.projectFiles.add(new ProjectFileBean(2, fileName));
       this.adapter.notifyDataSetChanged();
     }
   }
@@ -108,9 +108,9 @@ public class ViewFilesAdapter extends BaseFragment {
     this.adapter.notifyDataSetChanged();
   }
   
-  public void removeCustomView(String str) {
+  public void removeCustomView(String fileName) {
     for (ProjectFileBean projectFileBean : this.projectFiles) {
-      if (projectFileBean.fileType == 2 && projectFileBean.fileName.equals(str)) {
+      if (projectFileBean.fileType == 2 && projectFileBean.fileName.equals(fileName)) {
         this.projectFiles.remove(projectFileBean);
         break;
       } 

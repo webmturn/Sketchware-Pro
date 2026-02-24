@@ -31,9 +31,9 @@ public abstract class BaseValidator implements TextWatcher, InputFilter {
         return Helper.getText(editText);
     }
 
-    public void setText(String str) {
+    public void setText(String text) {
         valid = true;
-        editText.setText(str);
+        editText.setText(text);
     }
 
     @Override

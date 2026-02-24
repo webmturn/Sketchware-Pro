@@ -70,9 +70,9 @@ public class LayoutGenerator {
     /**
      * @return The parameter String escaped properly for XML strings
      */
-    private String escapeXML(String str) {
-        CharBuffer buffer = CharBuffer.wrap(str);
-        StringBuilder result = new StringBuilder(str.length());
+    private String escapeXML(String input) {
+        CharBuffer buffer = CharBuffer.wrap(input);
+        StringBuilder result = new StringBuilder(input.length());
         while (buffer.hasRemaining()) {
             char got = buffer.get();
             switch (got) {

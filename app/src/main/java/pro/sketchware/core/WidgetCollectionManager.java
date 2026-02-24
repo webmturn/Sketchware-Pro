@@ -32,9 +32,9 @@ public class WidgetCollectionManager extends BaseCollectionManager {
     return instance;
   }
   
-  public WidgetCollectionBean getWidgetByName(String str) {
+  public WidgetCollectionBean getWidgetByName(String name) {
     for (CollectionBean collectionBean : this.collections) {
-      if (collectionBean.name.equals(str))
+      if (collectionBean.name.equals(name))
         return new WidgetCollectionBean(collectionBean.name, ProjectDataParser.parseViewBeans(this.widgetGson, collectionBean.data)); 
     } 
     return null;
@@ -74,13 +74,13 @@ public class WidgetCollectionManager extends BaseCollectionManager {
       saveCollections(); 
   }
   
-  public void removeWidget(String str, boolean flag) {
+  public void removeWidget(String name, boolean flag) {
     int i = this.collections.size();
     while (true) {
       int j = i - 1;
       if (j >= 0) {
         i = j;
-        if (((CollectionBean)this.collections.get(j)).name.equals(str)) {
+        if (((CollectionBean)this.collections.get(j)).name.equals(name)) {
           this.collections.remove(j);
           break;
         } 

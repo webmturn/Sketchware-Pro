@@ -40,11 +40,11 @@ public class KeyStoreManager {
     return enumeration.hasMoreElements() ? enumeration.nextElement() : "";
   }
   
-  public void loadKeyStore(InputStream inputStream, String str) throws Exception {
+  public void loadKeyStore(InputStream inputStream, String password) throws Exception {
     if (inputStream == null)
       return; 
     try {
-      this.keyStore.load(inputStream, str.toCharArray());
+      this.keyStore.load(inputStream, password.toCharArray());
     } catch (Exception exception) {
       exception.printStackTrace();
       throw new Exception(exception.getMessage());
@@ -67,22 +67,22 @@ public class KeyStoreManager {
     (new EncryptedFileUtil()).writeBytes(key, bytes);
   }
   
-  public final byte[] exportKeyStore(String str) throws Exception {
+  public final byte[] exportKeyStore(String password) throws Exception {
     if (this.keyStore == null)
       return null; 
     this.keyBuffer = ByteBuffer.allocate(8192);
     KeyStoreOutputStream hI = new KeyStoreOutputStream(this);
-    this.keyStore.store(hI, str.toCharArray());
+    this.keyStore.store(hI, password.toCharArray());
     byte[] bytes = new byte[this.keyBuffer.position()];
     System.arraycopy(this.keyBuffer.array(), 0, bytes, 0, this.keyBuffer.position());
     int i = bytes.length;
-    str = "";
+    String hexStr = "";
     for (int b = 0; b < i; b++) {
       byte b1 = bytes[b];
       StringBuilder stringBuilder = new StringBuilder();
-      stringBuilder.append(str);
+      stringBuilder.append(hexStr);
       stringBuilder.append(String.format("%02X", new Object[] { Byte.valueOf(b1) }));
-      str = stringBuilder.toString();
+      hexStr = stringBuilder.toString();
     } 
     return bytes;
   }

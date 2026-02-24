@@ -240,9 +240,9 @@ public class SoundListFragment extends BaseFragment implements MenuProvider {
         ProjectDataManager.getProjectDataManager(sc_id).saveAllBackup();
     }
 
-    private boolean isResourceUnavailable(String str) {
+    private boolean isResourceUnavailable(String name) {
         for (ProjectResourceBean projectResourceBean : sounds) {
-            if (projectResourceBean.resName.equals(str)) {
+            if (projectResourceBean.resName.equals(name)) {
                 return true;
             }
         }
@@ -307,8 +307,8 @@ public class SoundListFragment extends BaseFragment implements MenuProvider {
         updateNoSoundsTextVisibility();
     }
 
-    private String getFilePathFromName(String str) {
-        return dirPath + File.separator + str;
+    private String getFilePathFromName(String name) {
+        return dirPath + File.separator + name;
     }
 
     private String getFilePathFromResource(ProjectResourceBean projectResourceBean) {

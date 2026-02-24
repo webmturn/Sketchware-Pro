@@ -26,11 +26,11 @@ public class FileNameValidator extends BaseValidator {
     this.batchCount = 1;
   }
   
-  public FileNameValidator(Context context, TextInputLayout textInputLayout, String[] strings, ArrayList<String> list, String str) {
+  public FileNameValidator(Context context, TextInputLayout textInputLayout, String[] strings, ArrayList<String> list, String currentName) {
     super(context, textInputLayout);
     this.reservedNames = strings;
     this.existingNames = list;
-    this.currentName = str;
+    this.currentName = currentName;
     this.batchCount = 1;
   }
   

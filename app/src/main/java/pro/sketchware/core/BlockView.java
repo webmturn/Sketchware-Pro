@@ -78,13 +78,13 @@ public class BlockView extends BaseBlockView {
     return rect.width();
   }
   
-  public final TextView createLabel(String str) {
+  public final TextView createLabel(String label) {
     TextView textView = new TextView(this.context);
-    String text = str;
+    String text = label;
     if (this.opCode.equals("getVar") || this.opCode.equals("getArg")) {
       String prefix = this.componentType;
       if (prefix != null && prefix.length() > 0) {
-        text = this.componentType + " : " + str;
+        text = this.componentType + " : " + label;
       }
     }
     textView.setText(text);
@@ -697,8 +697,8 @@ public class BlockView extends BaseBlockView {
     this.blockTypeInt = index;
   }
   
-  public void setSpec(String str) {
-    this.spec = str;
+  public void setSpec(String spec) {
+    this.spec = spec;
     removeAllViews();
     parseSpec(this.spec, this.blockColor);
     Iterator<View> iterator = this.specViews.iterator();
