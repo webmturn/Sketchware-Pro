@@ -1629,39 +1629,39 @@ public class ProjectDataStore {
   public void removeMoreBlock(String fileName, String data) {
     if (!this.moreBlockMap.containsKey(fileName))
       return; 
-    ArrayList arrayList = this.moreBlockMap.get(fileName);
-    if (arrayList == null)
+    ArrayList moreBlocks = this.moreBlockMap.get(fileName);
+    if (moreBlocks == null)
       return; 
-    for (Pair pair : (ArrayList<Pair>)arrayList) {
+    for (Pair pair : (ArrayList<Pair>)moreBlocks) {
       if (((String)pair.first).equals(data)) {
-        arrayList.remove(pair);
+        moreBlocks.remove(pair);
         break;
       } 
     } 
-    HashMap hashMap = this.blockMap.get(fileName);
+    HashMap blockEntryMap = this.blockMap.get(fileName);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(data);
     stringBuilder.append("_");
     stringBuilder.append("moreBlock");
-    if (hashMap.containsKey(stringBuilder.toString())) {
-      hashMap = this.blockMap.get(fileName);
+    if (blockEntryMap.containsKey(stringBuilder.toString())) {
+      blockEntryMap = this.blockMap.get(fileName);
       StringBuilder contentBuilder = new StringBuilder();
       contentBuilder.append(data);
       contentBuilder.append("_");
       contentBuilder.append("moreBlock");
-      hashMap.remove(contentBuilder.toString());
+      blockEntryMap.remove(contentBuilder.toString());
     } 
   }
   
   public void removeListVariable(String fileName, String data) {
     if (!this.listMap.containsKey(fileName))
       return; 
-    ArrayList arrayList = this.listMap.get(fileName);
-    if (arrayList == null)
+    ArrayList listVars = this.listMap.get(fileName);
+    if (listVars == null)
       return; 
-    for (Pair pair : (ArrayList<Pair>)arrayList) {
+    for (Pair pair : (ArrayList<Pair>)listVars) {
       if (((String)pair.second).equals(data)) {
-        arrayList.remove(pair);
+        listVars.remove(pair);
         break;
       } 
     } 
@@ -1670,22 +1670,22 @@ public class ProjectDataStore {
   public void removeVariable(String fileName, String data) {
     if (!this.variableMap.containsKey(fileName))
       return; 
-    ArrayList arrayList = this.variableMap.get(fileName);
-    if (arrayList == null)
+    ArrayList varEntries = this.variableMap.get(fileName);
+    if (varEntries == null)
       return; 
-    for (Pair pair : (ArrayList<Pair>)arrayList) {
+    for (Pair pair : (ArrayList<Pair>)varEntries) {
       if (((String)pair.second).equals(data)) {
-        arrayList.remove(pair);
+        varEntries.remove(pair);
         break;
       } 
     } 
   }
   
   public boolean hasViewType(String fileName, int index) {
-    ArrayList arrayList = this.viewMap.get(fileName);
+    ArrayList views = this.viewMap.get(fileName);
     boolean hasType = false;
-    if (arrayList != null) {
-      Iterator iterator = arrayList.iterator();
+    if (views != null) {
+      Iterator iterator = views.iterator();
       while (iterator.hasNext()) {
         if (((ViewBean)iterator.next()).type == index) {
           hasType = true;
@@ -1697,10 +1697,10 @@ public class ProjectDataStore {
   }
   
   public boolean hasViewMatchingType(String fileName, String data) {
-    ArrayList arrayList = this.viewMap.get(fileName);
+    ArrayList views = this.viewMap.get(fileName);
     boolean hasMatch = false;
-    if (arrayList != null) {
-      Iterator<ViewBean> iterator = arrayList.iterator();
+    if (views != null) {
+      Iterator<ViewBean> iterator = views.iterator();
       while (iterator.hasNext()) {
         if (((ViewBean)iterator.next()).getClassInfo().matchesType(data)) {
           hasMatch = true;
