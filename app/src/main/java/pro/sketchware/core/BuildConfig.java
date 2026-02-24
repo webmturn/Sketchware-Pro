@@ -227,7 +227,7 @@ public class BuildConfig {
         return permissions == 0;
     }
 
-    public void b() {
+    public void reset() {
     }
 
     /**
@@ -261,16 +261,16 @@ public class BuildConfig {
         if (!activityPermissions.containsKey(activityName)) {
             activityPermissions.put(activityName, new a());
         }
-        activityPermissions.get(activityName).a(permission);
+        activityPermissions.get(activityName).addPermission(permission);
         addPermission(permission);
     }
 
     /** Returns the permissions object for the Activity. */
     public a getActivityPermissions(String activityName) {
-        return a(activityName);
+        return getOrCreateActivityPermissions(activityName);
     }
 
-    public a a(String activityName) {
+    public a getOrCreateActivityPermissions(String activityName) {
         if (!activityPermissions.containsKey(activityName)) {
             activityPermissions.put(activityName, new a());
         }
@@ -318,26 +318,11 @@ public class BuildConfig {
          */
         public int permissions = 0;
 
-        /** Adds a permission to this activity's permissions. */
-        public void addPermission(int permission) {
-            a(permission);
-        }
-
-        /** Checks if a permission is set. */
-        public boolean hasPermission(int permission) {
-            return b(permission);
-        }
-
-        /** Returns true if the Activity needs runtime permissions. */
-        public boolean needsRuntimePermissions() {
-            return a();
-        }
-
-        public void a(int i) {
+        public void addPermission(int i) {
             permissions = i | permissions;
         }
 
-        public boolean b(int i) {
+        public boolean hasPermission(int i) {
             return (permissions & i) == i;
         }
 
@@ -345,12 +330,12 @@ public class BuildConfig {
          * @return (Most likely) true if the Activity associated with this {@link a} object
          * will request any runtime permissions
          */
-        public boolean a() {
-            return b(PERMISSION_CALL_PHONE)
-                    || b(PERMISSION_READ_EXTERNAL_STORAGE) || b(PERMISSION_WRITE_EXTERNAL_STORAGE)
-                    || b(PERMISSION_CAMERA)
-                    || b(PERMISSION_RECORD_AUDIO)
-                    || b(PERMISSION_ACCESS_FINE_LOCATION);
+        public boolean needsRuntimePermissions() {
+            return hasPermission(PERMISSION_CALL_PHONE)
+                    || hasPermission(PERMISSION_READ_EXTERNAL_STORAGE) || hasPermission(PERMISSION_WRITE_EXTERNAL_STORAGE)
+                    || hasPermission(PERMISSION_CAMERA)
+                    || hasPermission(PERMISSION_RECORD_AUDIO)
+                    || hasPermission(PERMISSION_ACCESS_FINE_LOCATION);
         }
     }
 }

@@ -674,7 +674,7 @@ public class ProjectFilePaths {
                     }
                 }
             }
-            buildConfig.b();
+            buildConfig.reset();
         }
     }
 
