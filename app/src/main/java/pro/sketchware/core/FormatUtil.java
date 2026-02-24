@@ -176,11 +176,11 @@ public class FormatUtil {
     
     public String nextToken() {
       skipSpaces();
-      boolean bool = isAtEnd();
+      boolean atEnd = isAtEnd();
       String str = "";
-      if (bool)
+      if (atEnd)
         return ""; 
-      boolean bool1 = false;
+      boolean hasPercent = false;
       int i = this.position;
       while (this.position < this.input.length() && this.input.charAt(this.position) != ' ') {
         char c = this.input.charAt(this.position);
@@ -195,9 +195,9 @@ public class FormatUtil {
         if (c == '%') {
           if (this.position > i)
             break; 
-          bool1 = true;
+          hasPercent = true;
         } 
-        if (bool1 && (c == '?' || c == '-'))
+        if (hasPercent && (c == '?' || c == '-'))
           break; 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(str);

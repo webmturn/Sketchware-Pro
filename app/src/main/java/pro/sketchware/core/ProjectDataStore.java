@@ -429,13 +429,13 @@ public class ProjectDataStore {
         if (line.length() <= 0)
           continue; 
         if (line.charAt(0) == '@') {
-          StringBuffer stringBuffer1 = stringBuffer;
+          StringBuffer tempBuffer = stringBuffer;
           if (str.length() > 0) {
             parseLogicSection(str, stringBuffer.toString());
-            stringBuffer1 = new StringBuffer();
+            tempBuffer = new StringBuffer();
           } 
           str = line.substring(1);
-          stringBuffer = stringBuffer1;
+          stringBuffer = tempBuffer;
           continue;
         } 
         stringBuffer.append(line);
@@ -840,13 +840,13 @@ public class ProjectDataStore {
         if (line.length() <= 0)
           continue; 
         if (line.charAt(0) == '@') {
-          StringBuffer stringBuffer1 = stringBuffer;
+          StringBuffer tempBuffer = stringBuffer;
           if (str.length() > 0) {
             parseViewSection(str, stringBuffer.toString());
-            stringBuffer1 = new StringBuffer();
+            tempBuffer = new StringBuffer();
           } 
           str = line.substring(1);
-          stringBuffer = stringBuffer1;
+          stringBuffer = tempBuffer;
           continue;
         } 
         stringBuffer.append(line);

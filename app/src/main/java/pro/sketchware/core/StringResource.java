@@ -954,13 +954,13 @@ public class StringResource {
   
   public HashMap<String, String> loadTranslationsFromFile(String filePath) {
     HashMap<String, String> hashMap;
-    HashMap<Object, Object> hashMap1 = new HashMap<Object, Object>();
+    HashMap<Object, Object> emptyMap = new HashMap<Object, Object>();
     if (!(new File(filePath)).exists())
-      return (HashMap)hashMap1; 
+      return (HashMap)emptyMap; 
     try {
       hashMap = parseXmlTranslations(filePath);
     } catch (Exception exception) {
-      hashMap = (HashMap)hashMap1;
+      hashMap = (HashMap)emptyMap;
     } 
     return hashMap;
   }
