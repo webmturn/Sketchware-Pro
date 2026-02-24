@@ -15,12 +15,12 @@ public class ProjectFile {
     public static final String COLOR_CONTROL_NORMAL = "color_control_normal";
 
     public static int getColor(String sc_id, String color) {
-        return MapValueHelper.a(ProjectListManager.getProjectById(sc_id), color, getDefaultColor(color));
+        return MapValueHelper.get(ProjectListManager.getProjectById(sc_id), color, getDefaultColor(color));
         /*
         Old in-progress by Mike?
         HashMap<String, Object> hashMap = ProjectListManager.getProjectById(sc_id);
 
-        return 0;//MapValueHelper.a(hashMap, color, getDefaultColor(color));
+        return 0;//MapValueHelper.get(hashMap, color, getDefaultColor(color));
         */
     }
 

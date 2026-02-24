@@ -208,7 +208,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
     }
 
     private void refreshPreview() {
-        preview.setImageBitmap(BitmapUtil.a(BitmapUtil.a(BitmapUtil.a(imageFilePath, 1024, 1024), imageExifOrientation), imageRotationDegrees, imageScaleX, imageScaleY));
+        preview.setImageBitmap(BitmapUtil.scaleAndRotateBitmap(BitmapUtil.rotateBitmap(BitmapUtil.decodeSampledBitmap(imageFilePath, 1024, 1024), imageExifOrientation), imageRotationDegrees, imageScaleX, imageScaleY));
     }
 
     private void save() {
@@ -244,7 +244,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
 
     private void setImageFromFile(String path) {
         imageFilePath = path;
-        preview.setImageBitmap(BitmapUtil.a(path, 1024, 1024));
+        preview.setImageBitmap(BitmapUtil.decodeSampledBitmap(path, 1024, 1024));
         int indexOfFilenameExtension = path.lastIndexOf(".");
         if (path.endsWith(".9.png")) {
             indexOfFilenameExtension = path.lastIndexOf(".9.png");
@@ -253,7 +253,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
             ed_input_edittext.setText(path.substring(path.lastIndexOf("/") + 1, indexOfFilenameExtension));
         }
         try {
-            imageExifOrientation = BitmapUtil.a(path);
+            imageExifOrientation = BitmapUtil.getExifRotation(path);
             refreshPreview();
         } catch (Exception e) {
             Log.e("AddImageCollectionActivity", e.getMessage(), e);

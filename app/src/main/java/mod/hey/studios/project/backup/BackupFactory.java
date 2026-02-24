@@ -56,7 +56,7 @@ public class BackupFactory {
     public static final String DEF_PATH = ".sketchware/backups/";
 
     // WARNING: These crypto constants are part of the original Sketchware project file format.
-    // Do NOT change them â€?doing so will break reading/writing of all existing project files
+    // Do NOT change them ï¿½?doing so will break reading/writing of all existing project files
     // and backups, as well as compatibility with other Sketchware variants.
     // The key == IV pattern is a known weakness but is required for format compatibility.
     private static final String CIPHER_ALGORITHM = "AES/CBC/PKCS5Padding";
@@ -288,9 +288,9 @@ public class BackupFactory {
     public void backup(Context context, String project_name) {
         String customFileName = ConfigActivity.getBackupFileName();
 
-        String versionName = MapValueHelper.c(ProjectListManager.getProjectById(sc_id), "sc_ver_name");
-        String versionCode = MapValueHelper.c(ProjectListManager.getProjectById(sc_id), "sc_ver_code");
-        String pkgName = MapValueHelper.c(ProjectListManager.getProjectById(sc_id), "my_sc_pkg_name");
+        String versionName = MapValueHelper.getString(ProjectListManager.getProjectById(sc_id), "sc_ver_name");
+        String versionCode = MapValueHelper.getString(ProjectListManager.getProjectById(sc_id), "sc_ver_code");
+        String pkgName = MapValueHelper.getString(ProjectListManager.getProjectById(sc_id), "my_sc_pkg_name");
         String projectNameOnly = project_name.replace("_d", "").replace(File.separator, "");
         String finalFileName;
 

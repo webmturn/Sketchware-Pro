@@ -41,7 +41,7 @@ public class SharedPrefsHelper {
   }
   
   public void a(String paramString, HashMap<String, Object> paramHashMap) {
-    a(paramString, GsonMapHelper.a(paramHashMap));
+    a(paramString, GsonMapHelper.toJson(paramHashMap));
   }
   
   public boolean a() {
@@ -94,6 +94,6 @@ public class SharedPrefsHelper {
   
   public HashMap<String, Object> g(String paramString) {
     paramString = f(paramString);
-    return paramString.isEmpty() ? new HashMap<String, Object>() : GsonMapHelper.a(paramString);
+    return paramString.isEmpty() ? new HashMap<String, Object>() : GsonMapHelper.fromJson(paramString);
   }
 }

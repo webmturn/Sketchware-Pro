@@ -101,7 +101,7 @@ public class LibrarySettingsImporter {
     private void loadProjects() {
         projects = ProjectListManager.listProjects().stream()
                 .filter(project -> {
-                    var projectSc_id = MapValueHelper.c(project, "sc_id");
+                    var projectSc_id = MapValueHelper.getString(project, "sc_id");
                     if (!sc_id.equals(projectSc_id)) {
                         var projectLibraryHandler = new LibraryManager(projectSc_id);
                         projectLibraryHandler.i();
@@ -128,8 +128,8 @@ public class LibrarySettingsImporter {
         @Override
         public void onBindViewHolder(@NonNull ProjectAdapter.ViewHolder viewHolder, int position) {
             Map<String, Object> projectMap = projects.get(position);
-            String sc_id = MapValueHelper.c(projectMap, "sc_id");
-            if (MapValueHelper.a(projectMap, "custom_icon")) {
+            String sc_id = MapValueHelper.getString(projectMap, "sc_id");
+            if (MapValueHelper.get(projectMap, "custom_icon")) {
                 String iconPath = SketchwarePaths.getIconsPath() + File.separator + sc_id;
                 Uri iconUri;
                 iconUri = FileProvider.getUriForFile(activity.getApplicationContext(), activity.getPackageName() + ".provider", new File(iconPath, "icon.png"));
@@ -138,11 +138,11 @@ public class LibrarySettingsImporter {
                 viewHolder.imgIcon.setImageResource(R.drawable.default_icon);
             }
 
-            viewHolder.appName.setText(MapValueHelper.c(projectMap, "my_app_name"));
-            viewHolder.projectName.setText(MapValueHelper.c(projectMap, "my_ws_name"));
-            viewHolder.pkgName.setText(MapValueHelper.c(projectMap, "my_sc_pkg_name"));
-            viewHolder.projectVersion.setText(String.format("%s(%s)", MapValueHelper.c(projectMap, "sc_ver_name"), MapValueHelper.c(projectMap, "sc_ver_code")));
-            viewHolder.imgSelected.setVisibility(MapValueHelper.a(projectMap, "selected") ? View.VISIBLE : View.GONE);
+            viewHolder.appName.setText(MapValueHelper.getString(projectMap, "my_app_name"));
+            viewHolder.projectName.setText(MapValueHelper.getString(projectMap, "my_ws_name"));
+            viewHolder.pkgName.setText(MapValueHelper.getString(projectMap, "my_sc_pkg_name"));
+            viewHolder.projectVersion.setText(String.format("%s(%s)", MapValueHelper.getString(projectMap, "sc_ver_name"), MapValueHelper.getString(projectMap, "sc_ver_code")));
+            viewHolder.imgSelected.setVisibility(MapValueHelper.get(projectMap, "selected") ? View.VISIBLE : View.GONE);
         }
 
         @Override

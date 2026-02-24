@@ -658,7 +658,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         k();
 
         HashMap<String, Object> projectInfo = ProjectListManager.getProjectById(sc_id);
-        getSupportActionBar().setTitle(MapValueHelper.c(projectInfo, "my_ws_name"));
+        getSupportActionBar().setTitle(MapValueHelper.getString(projectInfo, "my_ws_name"));
         projectFilePaths = new ProjectFilePaths(getApplicationContext(), SketchwarePaths.getMyscPath(sc_id), projectInfo);
 
         try {
@@ -1117,9 +1117,9 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 q.createBuildDirectories(activity.getApplicationContext());
                 q.deleteValuesV21Directory();
                 q.extractAssetsToRes(activity.getApplicationContext(), SketchwarePaths.getResourceZipPath("600"));
-                if (MapValueHelper.a(ProjectListManager.getProjectById(sc_id), "custom_icon")) {
+                if (MapValueHelper.get(ProjectListManager.getProjectById(sc_id), "custom_icon")) {
                     q.copyMipmapFolder(SketchwarePaths.getIconsPath() + File.separator + sc_id + File.separator + "mipmaps");
-                    if (MapValueHelper.a(ProjectListManager.getProjectById(sc_id), "isIconAdaptive", false)) {
+                    if (MapValueHelper.get(ProjectListManager.getProjectById(sc_id), "isIconAdaptive", false)) {
                         q.createLauncherIconXml("""
                                 <?xml version="1.0" encoding="utf-8"?>
                                 <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android" >

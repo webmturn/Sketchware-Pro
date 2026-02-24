@@ -165,21 +165,21 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
             /* Set the dialog's title & save button label */
             binding.toolbar.setTitle(R.string.project_settings_title);
             HashMap<String, Object> metadata = ProjectListManager.getProjectById(sc_id);
-            binding.etPackageName.setText(MapValueHelper.c(metadata, "my_sc_pkg_name"));
-            binding.etProjectName.setText(MapValueHelper.c(metadata, "my_ws_name"));
-            binding.etAppName.setText(MapValueHelper.c(metadata, "my_app_name"));
+            binding.etPackageName.setText(MapValueHelper.getString(metadata, "my_sc_pkg_name"));
+            binding.etProjectName.setText(MapValueHelper.getString(metadata, "my_ws_name"));
+            binding.etAppName.setText(MapValueHelper.getString(metadata, "my_app_name"));
             binding.okButton.setText(getString(R.string.project_save_changes));
-            projectVersionCode = parseInt(MapValueHelper.c(metadata, "sc_ver_code"), 1);
-            parseVersion(MapValueHelper.c(metadata, "sc_ver_name"));
-            binding.verCode.setText(MapValueHelper.c(metadata, "sc_ver_code"));
-            binding.verName.setText(MapValueHelper.c(metadata, "sc_ver_name"));
-            projectHasCustomIcon = MapValueHelper.a(metadata, "custom_icon");
+            projectVersionCode = parseInt(MapValueHelper.getString(metadata, "sc_ver_code"), 1);
+            parseVersion(MapValueHelper.getString(metadata, "sc_ver_name"));
+            binding.verCode.setText(MapValueHelper.getString(metadata, "sc_ver_code"));
+            binding.verName.setText(MapValueHelper.getString(metadata, "sc_ver_name"));
+            projectHasCustomIcon = MapValueHelper.get(metadata, "custom_icon");
             if (projectHasCustomIcon) {
                 binding.appIcon.setImageURI(FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".provider", getCustomIcon()));
             }
 
             for (int i = 0; i < themeColorKeys.length; i++) {
-                projectThemeColors[i] = MapValueHelper.a(metadata, themeColorKeys[i], projectThemeColors[i]);
+                projectThemeColors[i] = MapValueHelper.get(metadata, themeColorKeys[i], projectThemeColors[i]);
             }
         } else {
             /* Set the dialog's title & create button label */

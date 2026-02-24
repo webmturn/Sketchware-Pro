@@ -616,7 +616,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
                 filePath != null) {
             HashMap<String, Object> map = new HashMap<>();
             map.put("key", "app_name");
-            map.put("text", MapValueHelper.c(ProjectListManager.getProjectById(sc_id), "my_app_name"));
+            map.put("text", MapValueHelper.getString(ProjectListManager.getProjectById(sc_id), "my_app_name"));
             stringsListMap.add(0, map);
         }
     }

@@ -189,9 +189,9 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
             project_metadata.initializeMetadata(iCVar, hCVar, eCVar, ProjectFilePaths.ExportType.ANDROID_STUDIO);
             builder.buildBuiltInLibraryInformation();
             project_metadata.generateProjectFiles(hCVar, eCVar, iCVar, builder.getBuiltInLibraryManager());
-            if (MapValueHelper.a(ProjectListManager.getProjectById(sc_id), "custom_icon")) {
+            if (MapValueHelper.get(ProjectListManager.getProjectById(sc_id), "custom_icon")) {
                 project_metadata.copyMipmapFolder(SketchwarePaths.getIconsPath() + File.separator + sc_id + File.separator + "mipmaps");
-                if (MapValueHelper.a(ProjectListManager.getProjectById(sc_id), "isIconAdaptive", false)) {
+                if (MapValueHelper.get(ProjectListManager.getProjectById(sc_id), "isIconAdaptive", false)) {
                     project_metadata.createLauncherIconXml("""
                             <?xml version="1.0" encoding="utf-8"?>
                             <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android" >
@@ -233,7 +233,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
 
             ArrayList<String> toCompress = new ArrayList<>();
             toCompress.add(project_metadata.projectMyscPath);
-            String exportedFilename = MapValueHelper.c(sc_metadata, "my_ws_name") + ".zip";
+            String exportedFilename = MapValueHelper.getString(sc_metadata, "my_ws_name") + ".zip";
 
             String exportedSourcesZipPath = SketchwarePaths.getSketchwarePath() + File.separator + "export_src" + File.separator + exportedFilename;
             if (file_utility.e(exportedSourcesZipPath)) {
@@ -498,9 +498,9 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
                     cancel(true);
                     return;
                 }
-                if (MapValueHelper.a(ProjectListManager.getProjectById(sc_id), "custom_icon")) {
+                if (MapValueHelper.get(ProjectListManager.getProjectById(sc_id), "custom_icon")) {
                     project_metadata.copyMipmapFolder(SketchwarePaths.getIconsPath() + File.separator + sc_id + File.separator + "mipmaps");
-                    if (MapValueHelper.a(ProjectListManager.getProjectById(sc_id), "isIconAdaptive", false)) {
+                    if (MapValueHelper.get(ProjectListManager.getProjectById(sc_id), "isIconAdaptive", false)) {
                         project_metadata.createLauncherIconXml("""
                                 <?xml version="1.0" encoding="utf-8"?>
                                 <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android" >

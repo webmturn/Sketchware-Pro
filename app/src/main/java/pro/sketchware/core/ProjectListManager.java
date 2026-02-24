@@ -23,8 +23,8 @@ public class ProjectListManager {
             try {
                 if (new File(file, str).exists()) {
                     String path = file.getAbsolutePath() + File.separator + str;
-                    HashMap<String, Object> a = GsonMapHelper.a(oBVar.a(oBVar.h(path)));
-                    if (MapValueHelper.c(a, "sc_id").equals(file.getName())) {
+                    HashMap<String, Object> a = GsonMapHelper.fromJson(oBVar.a(oBVar.h(path)));
+                    if (MapValueHelper.getString(a, "sc_id").equals(file.getName())) {
                         arrayList.add(a);
                     }
                 }
@@ -37,7 +37,7 @@ public class ProjectListManager {
 
     public static HashMap<String, Object> getProjectByPackageName(String str) {
         for (HashMap<String, Object> stringObjectHashMap : listProjects()) {
-            if (MapValueHelper.c(stringObjectHashMap, "my_sc_pkg_name").equals(str) && MapValueHelper.b(stringObjectHashMap, "proj_type") == 1) {
+            if (MapValueHelper.getString(stringObjectHashMap, "my_sc_pkg_name").equals(str) && MapValueHelper.getInt(stringObjectHashMap, "proj_type") == 1) {
                 return stringObjectHashMap;
             }
         }
@@ -104,7 +104,7 @@ public class ProjectListManager {
         }
         str = SketchwarePaths.getProjectListPath(str);
         str = str + File.separator + "project";
-        String a = GsonMapHelper.a(hashMap);
+        String a = GsonMapHelper.toJson(hashMap);
         EncryptedFileUtil oBVar = new EncryptedFileUtil();
         try {
             oBVar.a(str, oBVar.d(a));
@@ -116,7 +116,7 @@ public class ProjectListManager {
     public static String getNextProjectId() {
         int parseInt = Integer.parseInt("600") + 1;
         for (HashMap<String, Object> stringObjectHashMap : listProjects()) {
-            parseInt = Math.max(parseInt, Integer.parseInt(MapValueHelper.c(stringObjectHashMap, "sc_id")) + 1);
+            parseInt = Math.max(parseInt, Integer.parseInt(MapValueHelper.getString(stringObjectHashMap, "sc_id")) + 1);
         }
         return String.valueOf(parseInt);
     }
@@ -131,9 +131,9 @@ public class ProjectListManager {
                 return null;
             }
             String path = c + File.separator + "project";
-            HashMap<String, Object> a = GsonMapHelper.a(oBVar.a(oBVar.h(path)));
+            HashMap<String, Object> a = GsonMapHelper.fromJson(oBVar.a(oBVar.h(path)));
             try {
-                return !MapValueHelper.c(a, "sc_id").equals(str) ? null : a;
+                return !MapValueHelper.getString(a, "sc_id").equals(str) ? null : a;
             } catch (Exception e2) {
                 e = e2;
                 hashMap = a;
@@ -153,8 +153,8 @@ public class ProjectListManager {
             String path = file + File.separator + "project";
             EncryptedFileUtil fileUtil = new EncryptedFileUtil();
             try {
-                HashMap<String, Object> a = GsonMapHelper.a(fileUtil.a(fileUtil.h(path)));
-                if (MapValueHelper.c(a, "sc_id").equals(str)) {
+                HashMap<String, Object> a = GsonMapHelper.fromJson(fileUtil.a(fileUtil.h(path)));
+                if (MapValueHelper.getString(a, "sc_id").equals(str)) {
                     if (hashMap.containsKey("isIconAdaptive")) {
                         a.put("isIconAdaptive", hashMap.get("isIconAdaptive"));
                     }
@@ -172,7 +172,7 @@ public class ProjectListManager {
                     a.put("color_primary_dark", hashMap.get("color_primary_dark"));
                     a.put("color_control_highlight", hashMap.get("color_control_highlight"));
                     a.put("color_control_normal", hashMap.get("color_control_normal"));
-                    fileUtil.a(path, fileUtil.d(GsonMapHelper.a(a)));
+                    fileUtil.a(path, fileUtil.d(GsonMapHelper.toJson(a)));
                 }
             } catch (Throwable e) {
                 Log.e("ProjectListManager", e.getMessage(), e);
@@ -185,7 +185,7 @@ public class ProjectListManager {
         ArrayList<Integer> projectIndices = new ArrayList<>();
 
         for (HashMap<String, Object> stringObjectHashMap : var0) {
-            String workspaceName = MapValueHelper.c(stringObjectHashMap, "my_ws_name");
+            String workspaceName = MapValueHelper.getString(stringObjectHashMap, "my_ws_name");
             if (workspaceName.equals("NewProject")) {
                 projectIndices.add(1);
             } else if (workspaceName.indexOf("NewProject") == 0) {

@@ -216,7 +216,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
     }
 
     private void refreshPreview() {
-        preview.setImageBitmap(BitmapUtil.a(BitmapUtil.a(BitmapUtil.a(imageFilePath, 1024, 1024), imageExifOrientation), imageRotationDegrees, imageScaleX, imageScaleY));
+        preview.setImageBitmap(BitmapUtil.scaleAndRotateBitmap(BitmapUtil.rotateBitmap(BitmapUtil.decodeSampledBitmap(imageFilePath, 1024, 1024), imageExifOrientation), imageRotationDegrees, imageScaleX, imageScaleY));
     }
 
     private void save() {
@@ -254,7 +254,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
 
     private void setImageFromFile(String path) {
         imageFilePath = path;
-        preview.setImageBitmap(BitmapUtil.a(path, 1024, 1024));
+        preview.setImageBitmap(BitmapUtil.decodeSampledBitmap(path, 1024, 1024));
         int indexOfFilenameExtension = path.lastIndexOf(".");
         if (path.endsWith(".9.png")) {
             indexOfFilenameExtension = path.lastIndexOf(".9.png");
@@ -263,7 +263,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
             ed_input_edittext.setText(path.substring(path.lastIndexOf("/") + 1, indexOfFilenameExtension));
         }
         try {
-            imageExifOrientation = BitmapUtil.a(path);
+            imageExifOrientation = BitmapUtil.getExifRotation(path);
             refreshPreview();
         } catch (Exception e) {
             Log.e("AddImageActivity", e.getMessage(), e);
@@ -410,7 +410,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
                                 imageName, imageFilePath);
                         image.savedPos = 1;
                         image.isNew = true;
-                        image.rotate = BitmapUtil.a(imageFilePath);
+                        image.rotate = BitmapUtil.getExifRotation(imageFilePath);
                         image.flipVertical = 1;
                         image.flipHorizontal = 1;
                         toAdd.add(image);

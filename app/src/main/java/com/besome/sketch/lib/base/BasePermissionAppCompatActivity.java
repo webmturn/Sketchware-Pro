@@ -28,7 +28,7 @@ public abstract class BasePermissionAppCompatActivity extends BaseAppCompatActiv
     public abstract void h(int i);
 
     public void i(int i) {
-        if (!ThrottleTimer.a) {
+        if (!ThrottleTimer.isThrottled) {
             MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
             dialog.setTitle(Helper.getResString(R.string.common_message_permission_title_storage));
             dialog.setIcon(R.drawable.break_warning_96_red);
@@ -48,11 +48,11 @@ public abstract class BasePermissionAppCompatActivity extends BaseAppCompatActiv
                 l();
                 v.dismiss();
             });
-            dialog.setOnDismissListener(dialog1 -> ThrottleTimer.a = false);
+            dialog.setOnDismissListener(dialog1 -> ThrottleTimer.isThrottled = false);
             dialog.setCancelable(false);
             // dialog.setCanceledOnTouchOutside(false);
             dialog.show();
-            ThrottleTimer.a = true;
+            ThrottleTimer.isThrottled = true;
         }
     }
 
@@ -83,7 +83,7 @@ public abstract class BasePermissionAppCompatActivity extends BaseAppCompatActiv
     }
 
     public void j(int i) {
-        if (!ThrottleTimer.a) {
+        if (!ThrottleTimer.isThrottled) {
             MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
             dialog.setTitle(Helper.getResString(R.string.common_message_permission_title_storage));
             dialog.setIcon(R.drawable.break_warning_96_red);
@@ -98,11 +98,11 @@ public abstract class BasePermissionAppCompatActivity extends BaseAppCompatActiv
                 m();
                 v.dismiss();
             });
-            dialog.setOnDismissListener(dialog1 -> ThrottleTimer.a = false);
+            dialog.setOnDismissListener(dialog1 -> ThrottleTimer.isThrottled = false);
             dialog.setCancelable(false);
             // dialog.setCanceledOnTouchOutside(false);
             dialog.show();
-            ThrottleTimer.a = true;
+            ThrottleTimer.isThrottled = true;
         }
     }
 }

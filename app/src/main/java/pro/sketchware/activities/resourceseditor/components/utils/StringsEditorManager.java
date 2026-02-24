@@ -54,7 +54,7 @@ public class StringsEditorManager {
             if (isDefaultVariant && !hasAppNameKey) {
                 HashMap<String, Object> map = new HashMap<>();
                 map.put("key", "app_name");
-                map.put("text", MapValueHelper.c(ProjectListManager.getProjectById(sc_id), "my_app_name"));
+                map.put("text", MapValueHelper.getString(ProjectListManager.getProjectById(sc_id), "my_app_name"));
                 listMap.add(0, map);
                 XmlUtil.saveXml(SketchwarePaths.getDataPath(sc_id) + "/files/resource/values/strings.xml", convertListMapToXmlStrings(listMap, notesMap));
             }

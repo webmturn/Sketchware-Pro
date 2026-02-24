@@ -1,20 +1,20 @@
 package pro.sketchware.core;
 
 public class ThrottleTimer {
-  public static boolean a;
+  public static boolean isThrottled;
   
-  public static long[] b = new long[10];
+  public static long[] timestamps = new long[10];
   
-  public static long a(int paramInt) {
-    if (b == null)
-      b = new long[10]; 
-    return System.currentTimeMillis() - b[paramInt];
+  public static long getElapsedTime(int paramInt) {
+    if (timestamps == null)
+      timestamps = new long[10]; 
+    return System.currentTimeMillis() - timestamps[paramInt];
   }
   
-  public static boolean b(int paramInt) {
-    if (b == null)
-      b = new long[10]; 
-    long l = a(paramInt);
-    return (b[paramInt] == 0L || l > 30000L);
+  public static boolean isExpired(int paramInt) {
+    if (timestamps == null)
+      timestamps = new long[10]; 
+    long l = getElapsedTime(paramInt);
+    return (timestamps[paramInt] == 0L || l > 30000L);
   }
 }

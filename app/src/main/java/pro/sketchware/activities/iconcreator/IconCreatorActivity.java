@@ -155,10 +155,10 @@ public class IconCreatorActivity extends BaseAppCompatActivity {
                     if (result.getResultCode() == RESULT_OK && uri != null) {
                         iconFilePath = UriPathResolver.resolve(getApplicationContext(), uri);
                         appIconBitmap = null;
-                        Bitmap bitmap = BitmapUtil.a(iconFilePath, 96, 96);
+                        Bitmap bitmap = BitmapUtil.decodeSampledBitmap(iconFilePath, 96, 96);
                         try {
                             int attributeInt = new ExifInterface(iconFilePath).getAttributeInt("Orientation", -1);
-                            Bitmap newBitmap = BitmapUtil.a(bitmap, attributeInt != 3 ? attributeInt != 6 ? attributeInt != 8 ? 0 : 270 : 90 : 180);
+                            Bitmap newBitmap = BitmapUtil.rotateBitmap(bitmap, attributeInt != 3 ? attributeInt != 6 ? attributeInt != 8 ? 0 : 270 : 90 : 180);
                             BitmapDrawable bd = new BitmapDrawable(getResources(), newBitmap);
                             binding.appIcoImg.setBackground(bd);
                         } catch (Exception e) {
@@ -400,10 +400,10 @@ public class IconCreatorActivity extends BaseAppCompatActivity {
 
     private void setAppIcoTexture(String texturesFilePath) {
         this.texturesFilePath = texturesFilePath;
-        Bitmap bitmap = BitmapUtil.a(texturesFilePath, 96, 96);
+        Bitmap bitmap = BitmapUtil.decodeSampledBitmap(texturesFilePath, 96, 96);
         try {
             int attributeInt = new ExifInterface(texturesFilePath).getAttributeInt("Orientation", -1);
-            Bitmap newBitmap = BitmapUtil.a(bitmap, attributeInt != 3 ? attributeInt != 6 ? attributeInt != 8 ? 0 : 270 : 90 : 180);
+            Bitmap newBitmap = BitmapUtil.rotateBitmap(bitmap, attributeInt != 3 ? attributeInt != 6 ? attributeInt != 8 ? 0 : 270 : 90 : 180);
             binding.appIcoTexture.setPattern(newBitmap);
             selectedTextureType = 3;
         } catch (Exception e) {

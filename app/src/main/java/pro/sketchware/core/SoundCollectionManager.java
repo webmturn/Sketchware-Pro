@@ -72,7 +72,7 @@ public class SoundCollectionManager extends BaseCollectionManager {
       }
       try {
         this.fileUtil.f(this.dataDirPath);
-        BitmapUtil.a(srcPath, destPath, paramProjectResourceBean.rotate, paramProjectResourceBean.flipHorizontal, paramProjectResourceBean.flipVertical);
+        BitmapUtil.processAndSaveBitmap(srcPath, destPath, paramProjectResourceBean.rotate, paramProjectResourceBean.flipHorizontal, paramProjectResourceBean.flipVertical);
       } catch (Exception e) {
         throw new CompileException("fail_to_copy");
       }
@@ -155,7 +155,7 @@ public class SoundCollectionManager extends BaseCollectionManager {
           String str3 = stringBuilder.toString();
           try {
             this.fileUtil.f(this.dataDirPath);
-            BitmapUtil.a(str2, str3, projectResourceBean.rotate, projectResourceBean.flipHorizontal, projectResourceBean.flipVertical);
+            BitmapUtil.processAndSaveBitmap(str2, str3, projectResourceBean.rotate, projectResourceBean.flipHorizontal, projectResourceBean.flipVertical);
             ArrayList<CollectionBean> arrayList3 = this.collections;
             CollectionBean collectionBean = new CollectionBean(projectResourceBean.resName, str1);
             arrayList3.add(collectionBean);

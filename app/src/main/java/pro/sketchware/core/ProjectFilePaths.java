@@ -199,21 +199,21 @@ public class ProjectFilePaths {
         this.context = context;
         this.metadata = metadata;
         buildConfig = new BuildConfig();
-        sc_id = MapValueHelper.c(metadata, "sc_id");
+        sc_id = MapValueHelper.getString(metadata, "sc_id");
         material3LibraryManager = new Material3LibraryManager(sc_id);
         buildConfig.sc_id = sc_id;
         projectMyscPath = myscFolderPath.endsWith(File.separator) ? myscFolderPath : myscFolderPath + File.separator;
-        packageName = MapValueHelper.c(metadata, "my_sc_pkg_name");
-        projectName = MapValueHelper.c(metadata, "my_ws_name");
-        applicationName = MapValueHelper.c(metadata, "my_app_name");
-        versionCode = MapValueHelper.c(metadata, "sc_ver_code");
-        versionName = MapValueHelper.c(metadata, "sc_ver_name");
+        packageName = MapValueHelper.getString(metadata, "my_sc_pkg_name");
+        projectName = MapValueHelper.getString(metadata, "my_ws_name");
+        applicationName = MapValueHelper.getString(metadata, "my_app_name");
+        versionCode = MapValueHelper.getString(metadata, "sc_ver_code");
+        versionName = MapValueHelper.getString(metadata, "sc_ver_name");
 
-        colorAccent = MapValueHelper.a(metadata, ProjectFile.COLOR_ACCENT, getDefaultColor(ProjectFile.COLOR_ACCENT));
-        colorPrimary = MapValueHelper.a(metadata, ProjectFile.COLOR_PRIMARY, getDefaultColor(ProjectFile.COLOR_PRIMARY));
-        colorPrimaryDark = MapValueHelper.a(metadata, ProjectFile.COLOR_PRIMARY_DARK, getDefaultColor(ProjectFile.COLOR_PRIMARY_DARK));
-        colorControlHighlight = MapValueHelper.a(metadata, ProjectFile.COLOR_CONTROL_HIGHLIGHT, getDefaultColor(ProjectFile.COLOR_CONTROL_HIGHLIGHT));
-        colorControlNormal = MapValueHelper.a(metadata, ProjectFile.COLOR_CONTROL_NORMAL, getDefaultColor(ProjectFile.COLOR_CONTROL_NORMAL));
+        colorAccent = MapValueHelper.get(metadata, ProjectFile.COLOR_ACCENT, getDefaultColor(ProjectFile.COLOR_ACCENT));
+        colorPrimary = MapValueHelper.get(metadata, ProjectFile.COLOR_PRIMARY, getDefaultColor(ProjectFile.COLOR_PRIMARY));
+        colorPrimaryDark = MapValueHelper.get(metadata, ProjectFile.COLOR_PRIMARY_DARK, getDefaultColor(ProjectFile.COLOR_PRIMARY_DARK));
+        colorControlHighlight = MapValueHelper.get(metadata, ProjectFile.COLOR_CONTROL_HIGHLIGHT, getDefaultColor(ProjectFile.COLOR_CONTROL_HIGHLIGHT));
+        colorControlNormal = MapValueHelper.get(metadata, ProjectFile.COLOR_CONTROL_NORMAL, getDefaultColor(ProjectFile.COLOR_CONTROL_NORMAL));
 
         projectSettings = new ProjectSettings(sc_id);
         fileUtil = new EncryptedFileUtil(true);

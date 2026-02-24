@@ -37,7 +37,7 @@ public class DataResetter {
             oBVar.b(SketchwarePaths.getSketchwarePath());
 
             for (HashMap<String, Object> project : ProjectListManager.listProjects()) {
-                String sc_id = MapValueHelper.c(project, "sc_id");
+                String sc_id = MapValueHelper.getString(project, "sc_id");
                 new SharedPrefsHelper(context, "D01_" + sc_id).a();
                 new SharedPrefsHelper(context, "D02_" + sc_id).a();
                 new SharedPrefsHelper(context, "D03_" + sc_id).a();

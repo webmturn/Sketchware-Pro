@@ -34,7 +34,7 @@ public abstract class PermissionFragment extends BaseFragment {
     public abstract void onPermissionDenied();
 
     public void showPermissionDialog(int var1) {
-        if (!ThrottleTimer.a) {
+        if (!ThrottleTimer.isThrottled) {
             MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(super.activity);
             dialog.setTitle(R.string.common_message_permission_title_storage);
             dialog.setIcon(R.drawable.break_warning_96_red);
@@ -50,18 +50,18 @@ public abstract class PermissionFragment extends BaseFragment {
                 onPermissionDenied();
                 view.dismiss();
             });
-            dialog.setOnDismissListener(dialog1 -> ThrottleTimer.a = false);
+            dialog.setOnDismissListener(dialog1 -> ThrottleTimer.isThrottled = false);
             dialog.setCancelable(false);
             dialog.create().setCanceledOnTouchOutside(false);
             dialog.show();
-            ThrottleTimer.a = true;
+            ThrottleTimer.isThrottled = true;
         }
     }
 
     public abstract void onSettingsDenied();
 
     public void showSettingsDialog(int var1) {
-        if (!ThrottleTimer.a) {
+        if (!ThrottleTimer.isThrottled) {
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(super.activity);
             builder.setTitle(R.string.common_message_permission_title_storage);
             builder.setIcon(R.drawable.break_warning_96_red);
@@ -76,13 +76,13 @@ public abstract class PermissionFragment extends BaseFragment {
                 onSettingsDenied();
                 view.dismiss();
             });
-            builder.setOnDismissListener(dialog1 -> ThrottleTimer.a = false);
+            builder.setOnDismissListener(dialog1 -> ThrottleTimer.isThrottled = false);
             builder.setCancelable(false);
 
             var dialog = builder.create();
             dialog.setCanceledOnTouchOutside(false);
             dialog.show();
-            ThrottleTimer.a = true;
+            ThrottleTimer.isThrottled = true;
         }
     }
 

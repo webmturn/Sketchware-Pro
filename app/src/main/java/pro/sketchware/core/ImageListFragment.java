@@ -216,7 +216,7 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
                         colorHex = (colorHex != null) ? colorHex : "#FFFFFF";
                         svgUtils.convert(svgPath, projectImagesDirectory, colorHex);
                     } else {
-                        BitmapUtil.a(path, image.isNinePatch() ? str + ".9.png" : str + ".png", image.rotate, image.flipHorizontal, image.flipVertical);
+                        BitmapUtil.processAndSaveBitmap(path, image.isNinePatch() ? str + ".9.png" : str + ".png", image.rotate, image.flipHorizontal, image.flipVertical);
                     }
                 } catch (Exception e) {
                     Log.e("ImageListFragment", e.getMessage(), e);
@@ -520,7 +520,7 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
 
                             @Override
                             protected Bitmap transform(@NonNull BitmapPool pool, @NonNull Bitmap toTransform, int outWidth, int outHeight) {
-                                return BitmapUtil.a(toTransform, image.rotate, image.flipHorizontal, image.flipVertical);
+                                return BitmapUtil.scaleAndRotateBitmap(toTransform, image.rotate, image.flipHorizontal, image.flipVertical);
                             }
 
                             @Override

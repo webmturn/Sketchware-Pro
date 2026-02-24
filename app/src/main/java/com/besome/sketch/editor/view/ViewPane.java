@@ -1313,7 +1313,7 @@ public class ViewPane extends RelativeLayout {
         stringsEditorManager.convertXmlStringsToListMap(FileUtil.readFileIfExist(filePath), stringsListMap);
 
         if (key.equals("@string/app_name") && !stringsEditorManager.isXmlStringsExist(stringsListMap, "app_name")) {
-            return MapValueHelper.c(ProjectListManager.getProjectById(sc_id), "my_app_name");
+            return MapValueHelper.getString(ProjectListManager.getProjectById(sc_id), "my_app_name");
         }
 
         for (HashMap<String, Object> map : stringsListMap) {

@@ -207,7 +207,7 @@ public class ColorsEditorManager {
 
                 if (!missingKeys.isEmpty()) {
                     for (String missingColor : missingKeys) {
-                        String colorHex = String.format("#%06X", MapValueHelper.a(metadata, defaultColors.get(missingColor), getDefaultColor(defaultColors.get(missingColor))) & 0xffffff);
+                        String colorHex = String.format("#%06X", MapValueHelper.get(metadata, defaultColors.get(missingColor), getDefaultColor(defaultColors.get(missingColor))) & 0xffffff);
                         ColorModel missingColorModel = new ColorModel(missingColor, colorHex);
                         colorOrderList.add(missingColorModel);
                         hasChanges = true;
