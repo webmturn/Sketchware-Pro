@@ -81,13 +81,13 @@ public class DeviceUtil {
   }
   
   public static boolean hasSensor(Context context, int sensorType) {
-    boolean bool;
+    boolean sensorExists;
     if (((SensorManager)context.getSystemService(Context.SENSOR_SERVICE)).getDefaultSensor(sensorType) != null) {
-      bool = true;
+      sensorExists = true;
     } else {
-      bool = false;
+      sensorExists = false;
     } 
-    return bool;
+    return sensorExists;
   }
   
   public static float[] getScreenDpi(Activity activity) {

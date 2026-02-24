@@ -188,12 +188,12 @@ public class ProjectDataStore {
           String customViewName = viewBean.customView;
           if (customViewName != null && customViewName.length() > 0 && !viewBean.customView.equals("none")) {
             Iterator iterator = fileManager.getCustomViews().iterator();
-            boolean bool = false;
+            boolean found = false;
             while (iterator.hasNext()) {
               if (((ProjectFileBean)iterator.next()).fileName.equals(viewBean.customView))
-                bool = true; 
+                found = true; 
             } 
-            if (!bool)
+            if (!found)
               viewBean.customView = ""; 
           } 
         } 
@@ -1683,32 +1683,32 @@ public class ProjectDataStore {
   
   public boolean hasViewType(String str, int index) {
     ArrayList arrayList = this.viewMap.get(str);
-    boolean bool = false;
+    boolean hasType = false;
     if (arrayList != null) {
       Iterator iterator = arrayList.iterator();
       while (iterator.hasNext()) {
         if (((ViewBean)iterator.next()).type == index) {
-          bool = true;
+          hasType = true;
           break;
         } 
       } 
     } 
-    return bool;
+    return hasType;
   }
   
   public boolean hasViewMatchingType(String fileName, String data) {
     ArrayList arrayList = this.viewMap.get(fileName);
-    boolean bool = false;
+    boolean hasMatch = false;
     if (arrayList != null) {
       Iterator<ViewBean> iterator = arrayList.iterator();
       while (iterator.hasNext()) {
         if (((ViewBean)iterator.next()).getClassInfo().matchesType(data)) {
-          bool = true;
+          hasMatch = true;
           break;
         } 
       } 
     } 
-    return bool;
+    return hasMatch;
   }
   
   public final String getSimpleClassName(String input) {

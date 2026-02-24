@@ -73,9 +73,9 @@ public class StringResource {
   public String getRootSpecTranslation(Context context, String blockType, String eventName) {
     if (this.blockTranslations == null)
       this.blockTranslations = new HashMap<String, String>(); 
-    boolean bool = this.blockTranslations.isEmpty();
+    boolean isEmpty = this.blockTranslations.isEmpty();
     byte b = 0;
-    if (bool) {
+    if (isEmpty) {
       this.isLoaded = false;
       this.blockTranslations = loadTranslationsFromFile(this.translationDir);
     } 
@@ -455,9 +455,9 @@ public class StringResource {
     String str = resources.getResourceEntryName(resId);
     if (this.blockTranslations == null)
       this.blockTranslations = new HashMap<String, String>(); 
-    boolean bool = this.blockTranslations.isEmpty();
+    boolean isEmpty = this.blockTranslations.isEmpty();
     byte b = 0;
-    if (bool) {
+    if (isEmpty) {
       this.isLoaded = false;
       this.blockTranslations = loadTranslationsFromFile(this.translationDir);
     } 
@@ -483,8 +483,8 @@ public class StringResource {
           object = (String)object2;
         } 
         if (j == formatArgs.length) {
-          bool = object.contains("%");
-          if (!bool)
+          boolean hasPlaceholder = object.contains("%");
+          if (!hasPlaceholder)
             return (String)object; 
         } 
       } 
@@ -975,7 +975,7 @@ public class StringResource {
   }
   
   public boolean reloadTranslations(Context context) {
-    boolean bool;
+    boolean loadedSuccessfully;
     if (this.blockTranslations == null)
       this.blockTranslations = new HashMap<String, String>(); 
     HashMap<String, String> hashMap = this.blockTranslations;
@@ -984,11 +984,11 @@ public class StringResource {
     this.blockTranslations = loadTranslationsFromFile(this.translationDir);
     loadEventTranslations(context);
     if (!this.blockTranslations.isEmpty() && this.isLoaded) {
-      bool = true;
+      loadedSuccessfully = true;
     } else {
-      bool = false;
+      loadedSuccessfully = false;
     } 
-    return bool;
+    return loadedSuccessfully;
   }
   
   public void loadEventSpecTranslation(Context context, String eventName) {

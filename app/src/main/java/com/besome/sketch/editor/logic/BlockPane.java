@@ -165,12 +165,12 @@ public class BlockPane extends RelativeLayout {
       if (!blockView.isDefinitionBlock)
         for (int b = 0; b < blockView.childViews.size(); b++) {
           View view = blockView.childViews.get(b);
-          boolean bool = view instanceof BlockView;
-          if ((bool || view instanceof pro.sketchware.core.FieldBlockView) && (!bool || !view.getTag().toString().equals(str))) {
+          boolean isBlockView = view instanceof BlockView;
+          if ((isBlockView || view instanceof pro.sketchware.core.FieldBlockView) && (!isBlockView || !view.getTag().toString().equals(str))) {
             int[] intValues = new int[2];
             view.getLocationOnScreen(intValues);
             addSnapPoint(intValues, view, 0);
-            if (bool)
+            if (isBlockView)
               collectParameterSnapPoints((BlockView)view, str); 
           } 
         }  
@@ -299,7 +299,7 @@ public class BlockPane extends RelativeLayout {
           if (flag3) {
             collectParameterSnapPoints(rs, str);
           } else if (!rs.isParameter) {
-            boolean bool = true;
+            boolean enableChildren = true;
             if (!flag1 && !rs.isDefinitionBlock) {
               int[] intValues = new int[2];
               rs.getLocationOnScreen(intValues);
@@ -314,8 +314,8 @@ public class BlockPane extends RelativeLayout {
               addSnapPoint(intValues, (View)rs, 4);
             } 
             if (!flag1 || flag2)
-              bool = false; 
-            collectSnapPoints(rs, bool);
+              enableChildren = false; 
+            collectSnapPoints(rs, enableChildren);
           }  
       } 
     } 

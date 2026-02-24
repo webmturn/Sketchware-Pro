@@ -165,13 +165,13 @@ public class FormatUtil {
     }
     
     public boolean isAtEnd() {
-      boolean bool;
+      boolean result;
       if (this.position >= this.input.length()) {
-        bool = true;
+        result = true;
       } else {
-        bool = false;
+        result = false;
       } 
-      return bool;
+      return result;
     }
     
     public String nextToken() {

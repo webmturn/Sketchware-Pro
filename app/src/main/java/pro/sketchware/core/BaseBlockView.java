@@ -484,13 +484,13 @@ public class BaseBlockView extends RelativeLayout {
   }
   
   public boolean hasSubstack() {
-    boolean bool;
+    boolean result;
     if (this.shapeType >= 10) {
-      bool = true;
+      result = true;
     } else {
-      bool = false;
+      result = false;
     } 
-    return bool;
+    return result;
   }
   
   public final float[] getRightSideShadowLines(int start, int end) {
@@ -518,13 +518,13 @@ public class BaseBlockView extends RelativeLayout {
   }
   
   public boolean hasDoubleSubstack() {
-    boolean bool;
+    boolean result;
     if (this.shapeType == 12) {
-      bool = true;
+      result = true;
     } else {
-      bool = false;
+      result = false;
     } 
-    return bool;
+    return result;
   }
   
   public final float[] getSubstackReflectionLines(int start, int end) {
