@@ -64,10 +64,10 @@ public class StringResource {
     if (this.eventTranslations.isEmpty())
       loadEventTranslations(context); 
     eventKey = this.eventTranslations.get(eventKey);
-    String str = eventKey;
+    String translation = eventKey;
     if (eventKey == null)
-      str = ""; 
-    return str;
+      translation = ""; 
+    return translation;
   }
   
   public String getRootSpecTranslation(Context context, String blockType, String eventName) {
@@ -346,9 +346,9 @@ public class StringResource {
       case 41:
         break;
     } 
-    String str = this.eventTranslations.get(eventName);
-    eventName = str;
-    if (str == null)
+    String translation = this.eventTranslations.get(eventName);
+    eventName = translation;
+    if (translation == null)
       eventName = ""; 
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(getTranslatedString(context, R.string.root_spec_common_when));
@@ -437,7 +437,7 @@ public class StringResource {
   }
   
   public String getTranslatedStringFromRes(Resources resources, int resId) {
-    String str = resources.getResourceEntryName(resId);
+    String resEntryName = resources.getResourceEntryName(resId);
     if (this.blockTranslations == null)
       this.blockTranslations = new HashMap<String, String>(); 
     try {
@@ -445,14 +445,14 @@ public class StringResource {
         this.isLoaded = false;
         this.blockTranslations = loadTranslationsFromFile(this.translationDir);
       } 
-      return (this.blockTranslations.containsKey(str) && this.blockTranslations.get(str) != null && ((String)this.blockTranslations.get(str)).length() > 0) ? ((String)this.blockTranslations.get(str)).replaceAll("\\\\\\'", "'").replaceAll("\\\\\\\"", "\"").replaceAll("\\\\n", "\\\n") : resources.getString(resId);
+      return (this.blockTranslations.containsKey(resEntryName) && this.blockTranslations.get(resEntryName) != null && ((String)this.blockTranslations.get(resEntryName)).length() > 0) ? ((String)this.blockTranslations.get(resEntryName)).replaceAll("\\\\\\'", "'").replaceAll("\\\\\\\"", "\"").replaceAll("\\\\n", "\\\n") : resources.getString(resId);
     } catch (Exception exception) {
       return resources.getString(resId);
     } 
   }
   
   public String getTranslatedStringFormattedFromRes(Resources resources, int resId, Object... formatArgs) {
-    String str = resources.getResourceEntryName(resId);
+    String resEntryName = resources.getResourceEntryName(resId);
     if (this.blockTranslations == null)
       this.blockTranslations = new HashMap<String, String>(); 
     boolean isEmpty = this.blockTranslations.isEmpty();
@@ -462,8 +462,8 @@ public class StringResource {
       this.blockTranslations = loadTranslationsFromFile(this.translationDir);
     } 
     try {
-      if (this.blockTranslations.containsKey(str) && this.blockTranslations.get(str) != null && ((String)this.blockTranslations.get(str)).length() > 0) {
-        String object = ((String)this.blockTranslations.get(str)).replaceAll("\\\\\\'", "'").replaceAll("\\\\\\\"", "\"").replaceAll("\\\\n", "\\\n");
+      if (this.blockTranslations.containsKey(resEntryName) && this.blockTranslations.get(resEntryName) != null && ((String)this.blockTranslations.get(resEntryName)).length() > 0) {
+        String object = ((String)this.blockTranslations.get(resEntryName)).replaceAll("\\\\\\'", "'").replaceAll("\\\\\\\"", "\"").replaceAll("\\\\n", "\\\n");
         int i = formatArgs.length;
         int j = 0;
         while (b < i) {
@@ -491,7 +491,7 @@ public class StringResource {
     } catch (Exception exception) {
       StringBuilder stringBuilder = new StringBuilder();
       stringBuilder.append("Faild to load (");
-      stringBuilder.append(str);
+      stringBuilder.append(resEntryName);
       stringBuilder.append(")");
       Log.e("ERROR", stringBuilder.toString(), exception);
     } 
@@ -969,9 +969,9 @@ public class StringResource {
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append("block_");
     stringBuilder.append(BlockSpecRegistry.getBlockSpec(blockName));
-    String str = stringBuilder.toString();
+    String translationKey = stringBuilder.toString();
     ArrayList<String> arrayList = BlockSpecRegistry.getBlockParams(blockName);
-    this.eventTranslations.put(blockName, getBlockTranslation(context, str, arrayList));
+    this.eventTranslations.put(blockName, getBlockTranslation(context, translationKey, arrayList));
   }
   
   public boolean reloadTranslations(Context context) {
@@ -995,8 +995,8 @@ public class StringResource {
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append("root_spec_");
     stringBuilder.append(BlockSpecRegistry.getEventSpec(eventName));
-    String str = stringBuilder.toString();
+    String translationKey = stringBuilder.toString();
     ArrayList<String> arrayList = BlockSpecRegistry.getBlockMenuItems(eventName);
-    this.eventTranslations.put(eventName, getBlockTranslation(context, str, arrayList));
+    this.eventTranslations.put(eventName, getBlockTranslation(context, translationKey, arrayList));
   }
 }
