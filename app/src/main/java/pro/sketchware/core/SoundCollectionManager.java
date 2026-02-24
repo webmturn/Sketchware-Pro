@@ -124,18 +124,18 @@ public class SoundCollectionManager extends BaseCollectionManager {
         arrayList1 = new ArrayList<String>();
         ArrayList<String> arrayList2 = new ArrayList<>();
         for (ProjectResourceBean projectResourceBean : list) {
-          String str2;
-          String str1 = projectResourceBean.resName;
+          String sourcePath;
+          String fileName = projectResourceBean.resName;
           if (projectResourceBean.isNinePatch()) {
             StringBuilder stringBuilder1 = new StringBuilder();
-            stringBuilder1.append(str1);
+            stringBuilder1.append(fileName);
             stringBuilder1.append(".9.png");
-            str1 = stringBuilder1.toString();
+            fileName = stringBuilder1.toString();
           } else {
             StringBuilder stringBuilder1 = new StringBuilder();
-            stringBuilder1.append(str1);
+            stringBuilder1.append(fileName);
             stringBuilder1.append(".png");
-            str1 = stringBuilder1.toString();
+            fileName = stringBuilder1.toString();
           } 
           if (((SelectableBean)projectResourceBean).savedPos == 0) {
             StringBuilder stringBuilder1 = new StringBuilder();
@@ -144,22 +144,22 @@ public class SoundCollectionManager extends BaseCollectionManager {
             stringBuilder1.append(input);
             stringBuilder1.append(File.separator);
             stringBuilder1.append(projectResourceBean.resFullName);
-            str2 = stringBuilder1.toString();
+            sourcePath = stringBuilder1.toString();
           } else {
-            str2 = projectResourceBean.resFullName;
+            sourcePath = projectResourceBean.resFullName;
           } 
           StringBuilder stringBuilder = new StringBuilder();
           stringBuilder.append(this.dataDirPath);
           stringBuilder.append(File.separator);
-          stringBuilder.append(str1);
-          String str3 = stringBuilder.toString();
+          stringBuilder.append(fileName);
+          String destPath = stringBuilder.toString();
           try {
             this.fileUtil.mkdirs(this.dataDirPath);
-            BitmapUtil.processAndSaveBitmap(str2, str3, projectResourceBean.rotate, projectResourceBean.flipHorizontal, projectResourceBean.flipVertical);
+            BitmapUtil.processAndSaveBitmap(sourcePath, destPath, projectResourceBean.rotate, projectResourceBean.flipHorizontal, projectResourceBean.flipVertical);
             ArrayList<CollectionBean> arrayList3 = this.collections;
-            CollectionBean collectionBean = new CollectionBean(projectResourceBean.resName, str1);
+            CollectionBean collectionBean = new CollectionBean(projectResourceBean.resName, fileName);
             arrayList3.add(collectionBean);
-            arrayList2.add(str3);
+            arrayList2.add(destPath);
           } catch (Exception iOException) {
             arrayList1.add(projectResourceBean.resName);
           } 
