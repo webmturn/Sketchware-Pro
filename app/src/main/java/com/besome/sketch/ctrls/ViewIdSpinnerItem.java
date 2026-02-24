@@ -22,7 +22,7 @@ public class ViewIdSpinnerItem extends LinearLayout {
         binding = VarIdSpinnerItemBinding.inflate(LayoutInflater.from(context), this, true);
     }
 
-    public void a(int iconResId, String text, boolean isSelected) {
+    public void setData(int iconResId, String text, boolean isSelected) {
         if (isSelected) {
             binding.imgvSelected.setVisibility(View.VISIBLE);
         } else {
@@ -31,16 +31,16 @@ public class ViewIdSpinnerItem extends LinearLayout {
 
         if (text.charAt(0) == '_') {
             binding.name.setText(text.substring(1));
-            a(false, 0xffff5555, 0xfff8f820);
+            setTextStyle(false, 0xffff5555, 0xfff8f820);
         } else {
             binding.name.setText(text);
-            a(true, ContextCompat.getColor(getContext(), R.color.view_property_spinner_filter), ContextCompat.getColor(getContext(), R.color.view_property_spinner_filter));
+            setTextStyle(true, ContextCompat.getColor(getContext(), R.color.view_property_spinner_filter), ContextCompat.getColor(getContext(), R.color.view_property_spinner_filter));
         }
 
         binding.icon.setImageResource(iconResId);
     }
 
-    public void a(boolean notSelected, int color, int var3) {
+    public void setTextStyle(boolean notSelected, int color, int var3) {
         if (notSelected) {
             if (!isDropDown) color = var3;
             binding.name.setTextColor(color);

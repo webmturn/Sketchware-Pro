@@ -233,11 +233,11 @@ public class MoreBlockBuilderView extends LinearLayout {
 
     }
 
-    public boolean a() {
+    public boolean isEmpty() {
         return Helper.getText(binding.edName).isEmpty() && variablesSpecAndNamePair.isEmpty();
     }
 
-    public boolean b() {
+    public boolean isValid() {
         if (!Helper.getText(binding.edName).isEmpty() && blockNameValidator.isValid()) {
             return true;
         } else {

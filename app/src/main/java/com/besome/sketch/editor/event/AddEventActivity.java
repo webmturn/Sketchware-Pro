@@ -231,9 +231,9 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
         if (!UIHelper.isClickThrottled()) {
             int id = v.getId();
             if (id == R.id.add_button) {
-                if (!eventsToAdd.isEmpty() || !moreBlockView.a()) {
-                    if (!moreBlockView.a()) {
-                        if (!moreBlockView.b()) {
+                if (!eventsToAdd.isEmpty() || !moreBlockView.isEmpty()) {
+                    if (!moreBlockView.isEmpty()) {
+                        if (!moreBlockView.isValid()) {
                             eventAdapter.setEvents(categories.get(4));
                             categoryAdapter.lastSelectedCategory = 4;
                             binding.tvCategory.setText(EventListFragment.getCategoryName(getApplicationContext(), 4));

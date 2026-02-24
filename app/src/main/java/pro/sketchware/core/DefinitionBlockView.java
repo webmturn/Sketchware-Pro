@@ -56,7 +56,7 @@ public class DefinitionBlockView extends BlockView {
     return this.sa;
   }
   
-  public void k() {
+  public void calculateBlockLayout() {
     this.ta.setX((float) this.leftIndent);
     this.ta.setY((float) this.topSpacing);
     int[] textSize = b(this.ta);
@@ -84,7 +84,7 @@ public class DefinitionBlockView extends BlockView {
     setBlockSize((float) width, (float) totalHeight, true);
   }
   
-  public void l() {
+  public void initializeBlockDimensions() {
     byte b = 0;
     setDrawingCacheEnabled(false);
     float f1 = this.minBlockWidth;

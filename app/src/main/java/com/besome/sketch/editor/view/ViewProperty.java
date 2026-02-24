@@ -432,7 +432,7 @@ public class ViewProperty extends LinearLayout implements PropertyChangedCallbac
             item.setDropDown(isDropDownView);
 
             ViewBean view = views.get(position);
-            item.a(ViewBean.getViewTypeResId(view.type), view.id, isSelected);
+            item.setData(ViewBean.getViewTypeResId(view.type), view.id, isSelected);
             return item;
         }
     }

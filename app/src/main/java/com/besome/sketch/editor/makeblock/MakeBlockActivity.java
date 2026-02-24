@@ -49,7 +49,7 @@ public class MakeBlockActivity extends BaseAppCompatActivity {
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if (makeBlock.a()) {
+                if (makeBlock.isEmpty()) {
                     finish();
                 } else {
                     goBackDialog();
@@ -92,9 +92,9 @@ public class MakeBlockActivity extends BaseAppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem menuItem) {
         if (menuItem.getItemId() == R.id.moreblock_create) {
-            if (makeBlock.a()) return false;
+            if (makeBlock.isEmpty()) return false;
 
-            if (makeBlock.b()) {
+            if (makeBlock.isValid()) {
                 Intent intent = new Intent();
                 Pair<String, String> blockInformation = makeBlock.getBlockInformation();
                 intent.putExtra("block_name", blockInformation.first);

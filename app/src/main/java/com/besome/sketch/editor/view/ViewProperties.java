@@ -110,8 +110,8 @@ public class ViewProperties extends RelativeLayout implements AdapterView.OnItem
                 viewIdSpinnerItem = new ViewIdSpinnerItem(context);
                 viewIdSpinnerItem.setTextSize(R.dimen.text_size_body_small);
             }
-            viewIdSpinnerItem.a(0, data.get(position), z);
-            viewIdSpinnerItem.a(false, 0xff404040, 0xff404040);
+            viewIdSpinnerItem.setData(0, data.get(position), z);
+            viewIdSpinnerItem.setTextStyle(false, 0xff404040, 0xff404040);
             return viewIdSpinnerItem;
         }
     }
