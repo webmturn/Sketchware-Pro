@@ -972,30 +972,30 @@ public class ProjectDataStore {
   }
   
   public ArrayList<String> getListNames(String str) {
-    ArrayList<String> arrayList1 = new ArrayList<>();
+    ArrayList<String> listNames = new ArrayList<>();
     if (!this.listMap.containsKey(str))
-      return arrayList1; 
+      return listNames; 
     ArrayList arrayList = this.listMap.get(str);
     if (arrayList == null)
-      return arrayList1; 
+      return listNames; 
     Iterator iterator = arrayList.iterator();
     while (iterator.hasNext())
-      arrayList1.add((String)((Pair)iterator.next()).second); 
-    return arrayList1;
+      listNames.add((String)((Pair)iterator.next()).second); 
+    return listNames;
   }
   
   public ArrayList<ComponentBean> getComponentsByType(String str, int index) {
-    ArrayList<ComponentBean> arrayList1 = new ArrayList<>();
+    ArrayList<ComponentBean> filteredComponents = new ArrayList<>();
     if (!this.componentMap.containsKey(str))
-      return arrayList1; 
+      return filteredComponents; 
     ArrayList arrayList = this.componentMap.get(str);
     if (arrayList == null)
-      return arrayList1; 
+      return filteredComponents; 
     for (ComponentBean componentBean : (ArrayList<ComponentBean>)arrayList) {
       if (componentBean.type == index)
-        arrayList1.add(componentBean); 
+        filteredComponents.add(componentBean); 
     } 
-    return arrayList1;
+    return filteredComponents;
   }
   
   public void syncSounds(ResourceManager paramkC) {
@@ -1055,32 +1055,32 @@ public class ProjectDataStore {
   }
   
   public ArrayList<ViewBean> getViews(String str) {
-    ArrayList<ViewBean> arrayList2 = this.viewMap.get(str);
-    ArrayList<ViewBean> arrayList1 = arrayList2;
-    if (arrayList2 == null)
-      arrayList1 = new ArrayList<>(); 
-    return arrayList1;
+    ArrayList<ViewBean> views = this.viewMap.get(str);
+    ArrayList<ViewBean> result = views;
+    if (views == null)
+      result = new ArrayList<>(); 
+    return result;
   }
   
   public ArrayList<String> getListNamesByType(String str, int index) {
-    ArrayList<String> arrayList1 = new ArrayList<>();
+    ArrayList<String> filteredNames = new ArrayList<>();
     if (!this.listMap.containsKey(str))
-      return arrayList1; 
+      return filteredNames; 
     ArrayList arrayList = this.listMap.get(str);
     if (arrayList == null)
-      return arrayList1; 
+      return filteredNames; 
     for (Pair pair : (ArrayList<Pair>)arrayList) {
       if (((Integer)pair.first).intValue() == index)
-        arrayList1.add((String)pair.second); 
+        filteredNames.add((String)pair.second); 
     } 
-    return arrayList1;
+    return filteredNames;
   }
   
   public ArrayList<Pair<Integer, String>> getViewsByType(String fileName, String data) {
-    ArrayList<Pair<Integer, String>> arrayList1 = new ArrayList<>();
+    ArrayList<Pair<Integer, String>> filteredViews = new ArrayList<>();
     ArrayList arrayList = this.viewMap.get(fileName);
     if (arrayList == null)
-      return arrayList1; 
+      return filteredViews; 
     for (ViewBean viewBean : (ArrayList<ViewBean>)arrayList) {
       Pair<Integer, String> pair;
       if (data.equals("CheckBox")) {
@@ -1094,9 +1094,9 @@ public class ProjectDataStore {
       } else {
         continue;
       } 
-      arrayList1.add(pair);
+      filteredViews.add(pair);
     } 
-    return arrayList1;
+    return filteredViews;
   }
   
   public void removeEvent(String fileName, String data, String extra) {
@@ -1171,17 +1171,17 @@ public class ProjectDataStore {
   }
   
   public ArrayList<String> getVariableNamesByType(String str, int index) {
-    ArrayList<String> arrayList1 = new ArrayList<>();
+    ArrayList<String> varNames = new ArrayList<>();
     if (!this.variableMap.containsKey(str))
-      return arrayList1; 
+      return varNames; 
     ArrayList arrayList = this.variableMap.get(str);
     if (arrayList == null)
-      return arrayList1; 
+      return varNames; 
     for (Pair pair : (ArrayList<Pair>)arrayList) {
       if (((Integer)pair.first).intValue() == index)
-        arrayList1.add((String)pair.second); 
+        varNames.add((String)pair.second); 
     } 
-    return arrayList1;
+    return varNames;
   }
   
   public void loadLogicFromData() {
@@ -1229,18 +1229,18 @@ public class ProjectDataStore {
   }
   
   public ArrayList<ViewBean> getCustomViewBeans(String input) {
-    ArrayList<ViewBean> arrayList1 = new ArrayList<>();
+    ArrayList<ViewBean> customViews = new ArrayList<>();
     ArrayList arrayList = this.viewMap.get(input);
     if (arrayList == null)
-      return arrayList1; 
+      return customViews; 
     for (ViewBean viewBean : (ArrayList<ViewBean>)arrayList) {
       if (viewBean.type == 9 || viewBean.type == 10 || viewBean.type == 25 || viewBean.type == 48 || viewBean.type == 31) {
         String str = viewBean.customView;
         if (str != null && str.length() > 0 && !viewBean.customView.equals("none"))
-          arrayList1.add(viewBean); 
+          customViews.add(viewBean); 
       } 
     } 
-    return arrayList1;
+    return customViews;
   }
   
   public void loadLogicFromBackup() {
