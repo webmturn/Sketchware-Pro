@@ -80,11 +80,11 @@ public class BlockHistoryManager {
     addHistoryEntry(str, historyBlockBean);
   }
   
-  public final void addHistoryEntry(String str, HistoryBlockBean paramHistoryBlockBean) {
+  public final void addHistoryEntry(String str, HistoryBlockBean historyBlockBean) {
     if (!this.historyMap.containsKey(str))
       initHistory(str); 
     ArrayList<HistoryBlockBean> arrayList = this.historyMap.get(str);
-    arrayList.add(paramHistoryBlockBean);
+    arrayList.add(historyBlockBean);
     if (arrayList.size() > 50) {
       arrayList.remove(0);
     } else {

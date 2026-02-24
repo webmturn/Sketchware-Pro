@@ -6,9 +6,9 @@ import android.graphics.Matrix;
 import android.media.ExifInterface;
 
 public class BitmapUtil {
-  public static int calculateSampleSize(BitmapFactory.Options paramOptions, int x, int y) {
-    int i = paramOptions.outWidth;
-    int j = paramOptions.outHeight;
+  public static int calculateSampleSize(BitmapFactory.Options options, int x, int y) {
+    int i = options.outWidth;
+    int j = options.outHeight;
     int k = 1;
     int m = 1;
     if (j > y || i > x) {

@@ -11,8 +11,8 @@ public class DateTimeUtil {
     return (new Date()).getTime();
   }
   
-  public String formatTimestamp(long paramLong, String str) {
-    return (new SimpleDateFormat(str, Locale.ENGLISH)).format(new Date(paramLong));
+  public String formatTimestamp(long timeout, String str) {
+    return (new SimpleDateFormat(str, Locale.ENGLISH)).format(new Date(timeout));
   }
   
   public String formatCurrentTime(String str) {

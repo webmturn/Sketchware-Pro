@@ -53,11 +53,11 @@ public class ViewHistoryManager {
       arrayList.remove(j - 1); 
   }
   
-  public final void addHistoryEntry(String key, HistoryViewBean paramHistoryViewBean) {
+  public final void addHistoryEntry(String key, HistoryViewBean historyViewBean) {
     if (!this.historyMap.containsKey(key))
       initHistory(key); 
     ArrayList<HistoryViewBean> arrayList = this.historyMap.get(key);
-    arrayList.add(paramHistoryViewBean);
+    arrayList.add(historyViewBean);
     if (arrayList.size() > 50) {
       arrayList.remove(0);
     } else {
@@ -71,11 +71,11 @@ public class ViewHistoryManager {
     recordAddMultiple(key, arrayList);
   }
   
-  public void recordUpdate(String key, ViewBean paramViewBean1, ViewBean paramViewBean2) {
-    if (paramViewBean1.isEqual(paramViewBean2))
+  public void recordUpdate(String key, ViewBean viewBean1, ViewBean viewBean2) {
+    if (viewBean1.isEqual(viewBean2))
       return; 
     HistoryViewBean historyViewBean = new HistoryViewBean();
-    historyViewBean.actionUpdate(paramViewBean1, paramViewBean2);
+    historyViewBean.actionUpdate(viewBean1, viewBean2);
     if (!this.historyMap.containsKey(key))
       initHistory(key); 
     trimFutureHistory(key);

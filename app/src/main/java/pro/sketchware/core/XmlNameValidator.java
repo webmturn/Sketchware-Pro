@@ -155,7 +155,7 @@ public class XmlNameValidator extends BaseValidator {
     this.currentName = value;
   }
   
-  public CharSequence filter(CharSequence text, int x, int y, Spanned paramSpanned, int width, int height) {
+  public CharSequence filter(CharSequence text, int x, int y, Spanned spanned, int width, int height) {
     return null;
   }
   

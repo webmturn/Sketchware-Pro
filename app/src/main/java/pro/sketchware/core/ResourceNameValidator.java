@@ -33,7 +33,7 @@ public class ResourceNameValidator extends BaseValidator {
     this.currentName = input;
   }
   
-  public CharSequence filter(CharSequence text, int x, int y, Spanned paramSpanned, int width, int height) {
+  public CharSequence filter(CharSequence text, int x, int y, Spanned spanned, int width, int height) {
     return null;
   }
   

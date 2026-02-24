@@ -85,13 +85,13 @@ public class BlockInterpreter {
     }
 
     private boolean hasEmptySelectorParam(ArrayList<String> params, String spec) {
-        var matcher = PARAM_PATTERN.matcher(spec);
-        if (!matcher.find()) {
-            var paramMatcher = Pattern.compile("%[bdsm]").matcher(spec);
+        var paramMatcher = PARAM_PATTERN.matcher(spec);
+        if (!paramMatcher.find()) {
+            var matcher = Pattern.compile("%[bdsm]").matcher(spec);
             int count = 0;
             ArrayList<Integer> selectorParamPositions = new ArrayList<>();
-            while (paramMatcher.find()) {
-                String param = paramMatcher.group();
+            while (matcher.find()) {
+                String param = matcher.group();
                 if ("%m".equals(param)) {
                     selectorParamPositions.add(count);
                 }
@@ -199,9 +199,9 @@ public class BlockInterpreter {
         return params;
     }
 
-    private String getParamValue(String param, String paramType) {
-        boolean isWidgetParam = viewParamsTypes.contains(paramType);
-        boolean isColorParam = paramType.equals("%m.color");
+    private String getParamValue(String param, String type) {
+        boolean isWidgetParam = viewParamsTypes.contains(type);
+        boolean isColorParam = type.equals("%m.color");
 
         if (isWidgetParam) {
             String bindingStart = "binding.";
@@ -256,12 +256,12 @@ public class BlockInterpreter {
                         if (i > 0) opcode += ", ";
                         String param = getParamValue(params.get(i), paramsTypes.get(i));
                         if (param.isEmpty()) {
-                            ClassInfo paramInfo = bean.getParamClassInfo().get(i);
-                            if (paramInfo.isExactType("boolean")) {
+                            ClassInfo info = bean.getParamClassInfo().get(i);
+                            if (info.isExactType("boolean")) {
                                 opcode += "true";
-                            } else if (paramInfo.isExactType("double")) {
+                            } else if (info.isExactType("double")) {
                                 opcode += "0";
-                            } else if (paramInfo.isExactType("String")) {
+                            } else if (info.isExactType("String")) {
                                 hasStringParam = true;
                             }
                         } else {

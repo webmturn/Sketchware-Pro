@@ -14,8 +14,8 @@ public class DefinitionBlockView extends BlockView {
   
   public TextView definitionLabel;
   
-  public DefinitionBlockView(Context context, String key, String value, String extra, String paramString4, ArrayList<BlockBean> list) {
-    super(context, -1, paramString4, key, value, extra);
+  public DefinitionBlockView(Context context, String key, String value, String extra, String extra2, ArrayList<BlockBean> list) {
+    super(context, -1, extra2, key, value, extra);
     this.blockData = list;
     this.blockTypeInt = 2;
   }
