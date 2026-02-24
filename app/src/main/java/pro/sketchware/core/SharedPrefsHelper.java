@@ -40,8 +40,8 @@ public class SharedPrefsHelper {
       this.editor.commit(); 
   }
   
-  public void putMap(String value, HashMap<String, Object> hashMap) {
-    put(value, GsonMapHelper.toJson(hashMap));
+  public void putMap(String key, HashMap<String, Object> map) {
+    put(key, GsonMapHelper.toJson(map));
   }
   
   public boolean clearAll() {

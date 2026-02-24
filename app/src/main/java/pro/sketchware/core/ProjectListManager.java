@@ -97,14 +97,14 @@ public class ProjectListManager {
         }
     }
 
-    public static void saveProject(String projectId, HashMap<String, Object> hashMap) {
+    public static void saveProject(String projectId, HashMap<String, Object> projectData) {
         File file = new File(SketchwarePaths.getProjectListBasePath());
         if (!file.exists()) {
             file.mkdirs();
         }
         String path = SketchwarePaths.getProjectListPath(projectId);
         path = path + File.separator + "project";
-        String a = GsonMapHelper.toJson(hashMap);
+        String a = GsonMapHelper.toJson(projectData);
         EncryptedFileUtil oBVar = new EncryptedFileUtil();
         try {
             oBVar.writeBytes(path, oBVar.encryptString(a));
@@ -124,7 +124,7 @@ public class ProjectListManager {
     public static HashMap<String, Object> getProjectById(String projectId) {
         Throwable e;
         EncryptedFileUtil oBVar = new EncryptedFileUtil();
-        HashMap<String, Object> hashMap = null;
+        HashMap<String, Object> projectData = null;
         try {
             String c = SketchwarePaths.getProjectListPath(projectId);
             if (!new File(c).exists()) {
@@ -136,18 +136,18 @@ public class ProjectListManager {
                 return !MapValueHelper.getString(a, "sc_id").equals(projectId) ? null : a;
             } catch (Exception e2) {
                 e = e2;
-                hashMap = a;
+                projectData = a;
                 Log.e("ProjectListManager", e.getMessage(), e);
-                return hashMap;
+                return projectData;
             }
         } catch (Exception e3) {
             e = e3;
             Log.e("ProjectListManager", e.getMessage(), e);
-            return hashMap;
+            return projectData;
         }
     }
 
-    public static void updateProject(String projectId, HashMap<String, Object> hashMap) {
+    public static void updateProject(String projectId, HashMap<String, Object> projectData) {
         File file = new File(SketchwarePaths.getProjectListPath(projectId));
         if (file.exists()) {
             String path = file + File.separator + "project";
@@ -155,23 +155,23 @@ public class ProjectListManager {
             try {
                 HashMap<String, Object> a = GsonMapHelper.fromJson(fileUtil.decryptToString(fileUtil.readFileBytes(path)));
                 if (MapValueHelper.getString(a, "sc_id").equals(projectId)) {
-                    if (hashMap.containsKey("isIconAdaptive")) {
-                        a.put("isIconAdaptive", hashMap.get("isIconAdaptive"));
+                    if (projectData.containsKey("isIconAdaptive")) {
+                        a.put("isIconAdaptive", projectData.get("isIconAdaptive"));
                     }
-                    if (hashMap.containsKey("custom_icon")) {
-                        a.put("custom_icon", hashMap.get("custom_icon"));
+                    if (projectData.containsKey("custom_icon")) {
+                        a.put("custom_icon", projectData.get("custom_icon"));
                     }
-                    a.put("my_sc_pkg_name", hashMap.get("my_sc_pkg_name"));
-                    a.put("my_ws_name", hashMap.get("my_ws_name"));
-                    a.put("my_app_name", hashMap.get("my_app_name"));
-                    a.put("sc_ver_code", hashMap.get("sc_ver_code"));
-                    a.put("sc_ver_name", hashMap.get("sc_ver_name"));
-                    a.put("sketchware_ver", hashMap.get("sketchware_ver"));
-                    a.put("color_accent", hashMap.get("color_accent"));
-                    a.put("color_primary", hashMap.get("color_primary"));
-                    a.put("color_primary_dark", hashMap.get("color_primary_dark"));
-                    a.put("color_control_highlight", hashMap.get("color_control_highlight"));
-                    a.put("color_control_normal", hashMap.get("color_control_normal"));
+                    a.put("my_sc_pkg_name", projectData.get("my_sc_pkg_name"));
+                    a.put("my_ws_name", projectData.get("my_ws_name"));
+                    a.put("my_app_name", projectData.get("my_app_name"));
+                    a.put("sc_ver_code", projectData.get("sc_ver_code"));
+                    a.put("sc_ver_name", projectData.get("sc_ver_name"));
+                    a.put("sketchware_ver", projectData.get("sketchware_ver"));
+                    a.put("color_accent", projectData.get("color_accent"));
+                    a.put("color_primary", projectData.get("color_primary"));
+                    a.put("color_primary_dark", projectData.get("color_primary_dark"));
+                    a.put("color_control_highlight", projectData.get("color_control_highlight"));
+                    a.put("color_control_normal", projectData.get("color_control_normal"));
                     fileUtil.writeBytes(path, fileUtil.encryptString(GsonMapHelper.toJson(a)));
                 }
             } catch (Throwable e) {

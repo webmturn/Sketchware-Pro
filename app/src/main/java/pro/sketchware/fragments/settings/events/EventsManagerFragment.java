@@ -154,17 +154,17 @@ public class EventsManagerFragment extends BaseFragment {
                 .setPositiveButton(R.string.common_word_save, (di, i) -> {
                     String listenerName = Helper.getText(listenerBinding.listenerName);
                     if (!listenerName.isEmpty()) {
-                        HashMap<String, Object> hashMap = existingListener != null ? existingListener : new HashMap<>();
-                        hashMap.put("name", listenerName);
-                        hashMap.put("code", listenerBinding.listenerIsIndependentClassOrMethod.isChecked()
+                        HashMap<String, Object> listenerData = existingListener != null ? existingListener : new HashMap<>();
+                        listenerData.put("name", listenerName);
+                        listenerData.put("code", listenerBinding.listenerIsIndependentClassOrMethod.isChecked()
                                 ? "//" + listenerName + "\n" + Helper.getText(listenerBinding.listenerCode)
                                 : Helper.getText(listenerBinding.listenerCode));
-                        hashMap.put("s", listenerBinding.listenerIsIndependentClassOrMethod.isChecked() ? "true" : "false");
-                        hashMap.put("imports", Helper.getText(listenerBinding.listenerCustomImport));
+                        listenerData.put("s", listenerBinding.listenerIsIndependentClassOrMethod.isChecked() ? "true" : "false");
+                        listenerData.put("imports", Helper.getText(listenerBinding.listenerCustomImport));
                         if (position >= 0) {
-                            listMap.set(position, hashMap);
+                            listMap.set(position, listenerData);
                         } else {
-                            listMap.add(hashMap);
+                            listMap.add(listenerData);
                         }
                         addListenerItem();
                         di.dismiss();

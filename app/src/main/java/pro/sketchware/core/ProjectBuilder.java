@@ -852,12 +852,12 @@ public class ProjectBuilder {
                 sb.append(".** { *; }");
             }
         }
-        for (HashMap<String, Object> hashMap : localLibraryManager.list) {
-            String obj = hashMap.get("name").toString();
-            if (hashMap.containsKey("packageName") && !proguard.libIsProguardFMEnabled(obj)) {
+        for (HashMap<String, Object> libEntry : localLibraryManager.list) {
+            String obj = libEntry.get("name").toString();
+            if (libEntry.containsKey("packageName") && !proguard.libIsProguardFMEnabled(obj)) {
                 sb.append("\n");
                 sb.append("-keep class ");
-                sb.append(hashMap.get("packageName").toString());
+                sb.append(libEntry.get("packageName").toString());
                 sb.append(".** { *; }");
             }
         }
@@ -884,10 +884,10 @@ public class ProjectBuilder {
         ArrayList<String> jars = new ArrayList<>();
         jars.add(projectFilePaths.compiledClassesPath + ".jar");
 
-        for (HashMap<String, Object> hashMap : localLibraryManager.list) {
-            String obj = hashMap.get("name").toString();
-            if (hashMap.containsKey("jarPath") && proguard.libIsProguardFMEnabled(obj)) {
-                jars.add(hashMap.get("jarPath").toString());
+        for (HashMap<String, Object> libEntry : localLibraryManager.list) {
+            String obj = libEntry.get("name").toString();
+            if (libEntry.containsKey("jarPath") && proguard.libIsProguardFMEnabled(obj)) {
+                jars.add(libEntry.get("jarPath").toString());
             }
         }
         try {
@@ -929,11 +929,11 @@ public class ProjectBuilder {
         args.add("-injars");
         args.add(projectFilePaths.compiledClassesPath);
 
-        for (HashMap<String, Object> hashMap : localLibraryManager.list) {
-            String obj = hashMap.get("name").toString();
-            if (hashMap.containsKey("jarPath") && proguard.libIsProguardFMEnabled(obj)) {
+        for (HashMap<String, Object> libEntry : localLibraryManager.list) {
+            String obj = libEntry.get("name").toString();
+            if (libEntry.containsKey("jarPath") && proguard.libIsProguardFMEnabled(obj)) {
                 args.add("-injars");
-                args.add(hashMap.get("jarPath").toString());
+                args.add(libEntry.get("jarPath").toString());
             }
         }
         args.add("-libraryjars");

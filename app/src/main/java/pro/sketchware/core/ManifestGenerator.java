@@ -672,10 +672,10 @@ public class ManifestGenerator {
         XmlBuilder activityTag = new XmlBuilder("activity");
         boolean specifiedActivityName = false;
         boolean specifiedConfigChanges = false;
-        for (HashMap<String, Object> hashMap : activityAttrs) {
-            if (hashMap.containsKey("name") && hashMap.containsKey("value")) {
-                Object nameObject = hashMap.get("name");
-                Object valueObject = hashMap.get("value");
+        for (HashMap<String, Object> attrMap : activityAttrs) {
+            if (attrMap.containsKey("name") && attrMap.containsKey("value")) {
+                Object nameObject = attrMap.get("name");
+                Object valueObject = attrMap.get("value");
                 if (nameObject instanceof String && valueObject instanceof String) {
                     String name = nameObject.toString();
                     String value = valueObject.toString();

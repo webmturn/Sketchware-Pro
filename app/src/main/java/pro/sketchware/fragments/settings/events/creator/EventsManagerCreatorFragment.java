@@ -174,31 +174,31 @@ public class EventsManagerCreatorFragment extends BaseFragment {
         } else {
             arrayList = new ArrayList<>();
         }
-        HashMap<String, Object> hashMap = new HashMap<>();
+        HashMap<String, Object> eventData = new HashMap<>();
         if (isEdit) {
-            hashMap = arrayList.get(figureP(_name));
+            eventData = arrayList.get(figureP(_name));
         }
-        hashMap.put("name", Helper.getText(binding.eventsCreatorEventname));
-        hashMap.put("var", Helper.getText(binding.eventsCreatorVarname));
+        eventData.put("name", Helper.getText(binding.eventsCreatorEventname));
+        eventData.put("var", Helper.getText(binding.eventsCreatorVarname));
         if (isActivityEvent) {
-            hashMap.put("listener", "");
+            eventData.put("listener", "");
         } else {
-            hashMap.put("listener", lisName);
+            eventData.put("listener", lisName);
         }
-        hashMap.put("icon", Helper.getText(binding.eventsCreatorIcon));
-        hashMap.put("description", Helper.getText(binding.eventsCreatorDesc));
-        hashMap.put("parameters", Helper.getText(binding.eventsCreatorParams));
-        hashMap.put("code", Helper.getText(binding.eventsCreatorCode));
-        hashMap.put("headerSpec", Helper.getText(binding.eventsCreatorSpec));
+        eventData.put("icon", Helper.getText(binding.eventsCreatorIcon));
+        eventData.put("description", Helper.getText(binding.eventsCreatorDesc));
+        eventData.put("parameters", Helper.getText(binding.eventsCreatorParams));
+        eventData.put("code", Helper.getText(binding.eventsCreatorCode));
+        eventData.put("headerSpec", Helper.getText(binding.eventsCreatorSpec));
         if (!isEdit) {
-            arrayList.add(hashMap);
+            arrayList.add(eventData);
         }
         FileUtil.writeFile(concat, getGson().toJson(arrayList));
         SketchwareUtil.toast(Helper.getResString(R.string.common_word_saved));
         getParentFragmentManager().popBackStack();
     }
 
-    private int figureP(String eventName) {
+                 private int figureP(String eventName) {
         String concat = FileUtil.getExternalStorageDir().concat("/.sketchware/data/system/events.json");
         if (FileUtil.isExistFile(concat)) {
             ArrayList<HashMap<String, Object>> eventsList;
