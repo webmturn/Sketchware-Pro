@@ -1426,7 +1426,7 @@ public class ProjectDataStore {
       ProjectDataParser ProjectDataParser = new ProjectDataParser(paramString1);
       String str = ProjectDataParser.getFileName();
       ProjectDataParser.DataType dataType = ProjectDataParser.getDataType();
-      switch (ScreenOrientationConstants.a[dataType.ordinal()]) {
+      switch (ScreenOrientationConstants.ORIENTATION_VALUES[dataType.ordinal()]) {
         default:
           return;
         case 8:
@@ -1480,7 +1480,7 @@ public class ProjectDataStore {
       ProjectDataParser ProjectDataParser = new ProjectDataParser(paramString1);
       String str = ProjectDataParser.getFileName();
       ProjectDataParser.DataType dataType = ProjectDataParser.getDataType();
-      int i = ScreenOrientationConstants.a[dataType.ordinal()];
+      int i = ScreenOrientationConstants.ORIENTATION_VALUES[dataType.ordinal()];
       if (i == 1) {
         this.viewMap.put(str, (ArrayList<ViewBean>)ProjectDataParser.parseData(paramString2));
       } else if (i == 2) {
