@@ -14,16 +14,16 @@ public class ExtraBlockInfo {
         return name;
     }
 
-    public void setName(String str) {
-        name = str;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getCode() {
         return code;
     }
 
-    public void setCode(String str) {
-        code = str;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public int getColor() {
@@ -46,15 +46,15 @@ public class ExtraBlockInfo {
         return spec;
     }
 
-    public void setSpec(String str) {
-        spec = str;
+    public void setSpec(String spec) {
+        this.spec = spec;
     }
 
     public String getSpec2() {
         return spec2;
     }
 
-    public void setSpec2(String str) {
-        spec2 = str;
+    public void setSpec2(String spec2) {
+        this.spec2 = spec2;
     }
 }

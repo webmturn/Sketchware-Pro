@@ -1143,6 +1143,9 @@
     <string name="blocks_type_title">Block type</string>
     <string name="blocks_type_variable">Variable (v)</string>
     <string name="custom_blocks_none_used">You haven\'t used any custom blocks in this project</string>
+    <string name="custom_blocks_used_count">You have used %d custom block(s) in this project.</string>
+    <string name="custom_blocks_missing_one">There is one missing block</string>
+    <string name="custom_blocks_missing_multi">There are %d missing blocks</string>
     <string name="extra_block_error_invalid_block_name">Custom Block #%d of current palette has an invalid name data type</string>
     <string name="extra_block_error_invalid_block_palette">Custom Block #%d of current palette has an invalid block palette data type</string>
     <string name="extra_block_error_invalid_block_type">Custom Block #%d of current palette has an invalid block type data type</string>
@@ -1592,6 +1595,8 @@ Please click on Settings to allow permission for Storage. Without this permissio
     <string name="backup_title_options">Backup Options</string>
     <string name="backup_toast_restored">Restored successfully</string>
     <string name="backup_toast_restored_refresh">Restored successfully. Refresh to see the project</string>
+    <string name="backup_restore_local_libs_single">Looks like the backup file you selected contains some Local libraries. Do you want to copy them to your local_libs directory (if they do not already exist)?</string>
+    <string name="backup_restore_local_libs_multi">Looks like backup file %1$s (%2$d out of %3$d) contains some Local libraries. Do you want to copy them to your local_libs directory (if they do not already exist)?</string>
 
     <!-- ========== 组件系统 (Components) ========== -->
     <string name="component_add_docs_button_title_go_to_docs">Read Documentation</string>
@@ -1762,6 +1767,7 @@ ex)\"*/*\", \"image/*\", \"audio/*\", \"text/*\""</string>
     <string name="design_error_generate_code">Failed to generate code.</string>
     <string name="design_error_generate_source">Failed to generate source.</string>
     <string name="design_error_no_root_access">No root access granted. Continuing using default package install prompt.</string>
+    <string name="design_error_install_failed">Failed to install package, result code: %1$d. Logs are available in /Internal storage/.sketchware/debug.txt</string>
     <string name="design_file_selector_title_java">Available Java files</string>
     <string name="design_library_admob_button_goto_console">Open AdMob console</string>
     <string name="design_library_admob_button_goto_setting">Open AdMob setting</string>
@@ -2582,6 +2588,16 @@ Do you want to continue?"</string>
     <string name="resource_create_or_import">Create or import</string>
     <string name="resource_manager_no_list_body">You don\'t have any %s here yet, try creating one.</string>
     <string name="resource_manager_no_list_title">No %s here</string>
+    <string name="resource_type_themes">Themes</string>
+    <string name="resource_type_themes_lower">themes</string>
+    <string name="resource_type_styles">Styles</string>
+    <string name="resource_type_styles_lower">styles</string>
+    <string name="resource_type_strings">Strings</string>
+    <string name="resource_type_string_lower">string</string>
+    <string name="resource_type_color">Color</string>
+    <string name="resource_type_color_lower">color</string>
+    <string name="resource_type_arrays">Arrays</string>
+    <string name="resource_type_arrays_lower">arrays</string>
     <string name="resources_editor_unsaved_changes_message">You have unsaved changes in \"%s\"\nDo you want to save your changes before quitting?</string>
     <string name="resources_editor_unsaved_changes_message_variant_change">You have unsaved changes in \"%s\"\nDo you want to save your changes before changing the variant?</string>
     <string name="resources_manager_xml_important_note_message_colors">Changing primary colors will affect the app\'s visual theme, including buttons and highlights</string>
@@ -2612,6 +2628,8 @@ Do you want to continue?"</string>
     <string name="library_remove_warning_msg">This library \"%s\" is already used in your project, removing it may break your project. Do you want to continue removing it?</string>
     <string name="library_title_exclude">Exclude built-in libraries</string>
     <string name="library_title_select">Select built-in libraries</string>
+    <string name="library_default_description">Use custom Library versions</string>
+    <string name="library_excluded_count">%1$d/%2$d built-in libraries excluded</string>
     <string name="local_lib_error_invalid_assets">Invalid assets path of enabled Local library #%d</string>
     <string name="local_lib_error_invalid_config">Invalid Local library configuration found! Temporarily using none</string>
     <string name="local_lib_error_invalid_dex">Invalid DEX path of enabled Local library #%d</string>

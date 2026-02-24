@@ -93,8 +93,8 @@ public class AndroidManifestInjectionDetails extends BaseAppCompatActivity {
                 return;
             }
             for (HashMap<String, Object> item : data) {
-                String str = (String) item.get("name");
-                if (str.equals(constant)) {
+                String itemName = (String) item.get("name");
+                if (itemName.equals(constant)) {
                     listMap.add(item);
                 }
             }
@@ -104,13 +104,13 @@ public class AndroidManifestInjectionDetails extends BaseAppCompatActivity {
     }
 
     private void setToolbar() {
-        String str = switch (type) {
+        String title = switch (type) {
             case "all" -> Helper.getResString(R.string.manifest_attrs_all_activities);
             case "application" -> Helper.getResString(R.string.manifest_attrs_application);
             case "permission" -> Helper.getResString(R.string.manifest_attrs_permissions);
             default -> activityName;
         };
-        binding.toolbar.setTitle(str);
+        binding.toolbar.setTitle(title);
 
         binding.toolbar.setNavigationOnClickListener(Helper.getBackPressedClickListener(this));
 
@@ -181,8 +181,8 @@ public class AndroidManifestInjectionDetails extends BaseAppCompatActivity {
                 data = new ArrayList<>();
             }
             for (int i = data.size() - 1; i > -1; i--) {
-                String str = (String) data.get(i).get("name");
-                if (str.equals(constant)) {
+                String itemName = (String) data.get(i).get("name");
+                if (itemName.equals(constant)) {
                     data.remove(i);
                 }
             }
@@ -194,12 +194,12 @@ public class AndroidManifestInjectionDetails extends BaseAppCompatActivity {
         refreshList();
     }
 
-    private TextView newText(String str, float size, int color, int width, int height, float weight) {
+    private TextView newText(String text, float size, int color, int width, int height, float weight) {
         TextView temp_card = new TextView(this);
         temp_card.setLayoutParams(new LinearLayout.LayoutParams(width, height, weight));
         temp_card.setPadding((int) getDip(4), (int) getDip(4), (int) getDip(4), (int) getDip(4));
         temp_card.setTextColor(color);
-        temp_card.setText(str);
+        temp_card.setText(text);
         temp_card.setTextSize(size);
         return temp_card;
     }

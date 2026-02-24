@@ -139,15 +139,15 @@ public class ExcludeBuiltInLibrariesActivity extends BaseAppCompatActivity {
     }
 
     public static String getItemTitle() {
-        return "Exclude built-in libraries";
+        return Helper.getResString(R.string.library_title_exclude);
     }
 
     public static String getDefaultItemDescription() {
-        return "Use custom Library versions";
+        return Helper.getResString(R.string.library_default_description);
     }
 
     public static String getSelectedLibrariesItemDescription() {
-        return "%1$d/%2$d built-in libraries excluded";
+        return Helper.getResString(R.string.library_excluded_count);
     }
 
     @Override
@@ -202,7 +202,7 @@ public class ExcludeBuiltInLibrariesActivity extends BaseAppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(Menu.NONE, Menu.NONE, Menu.NONE, "Reset")
+        menu.add(Menu.NONE, Menu.NONE, Menu.NONE, R.string.common_word_reset)
                 .setIcon(AppCompatResources.getDrawable(this, R.drawable.history_24px))
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         return true;
@@ -211,7 +211,7 @@ public class ExcludeBuiltInLibrariesActivity extends BaseAppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem menuItem) {
         String title = menuItem.getTitle().toString();
-        if (title.equals("Reset")) {
+        if (title.equals(Helper.getResString(R.string.common_word_reset))) {
             showResetDialog();
         } else {
             return false;

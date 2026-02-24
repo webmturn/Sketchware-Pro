@@ -18,8 +18,8 @@ public class XmlBuilder {
         this(rootElementName, false);
     }
 
-    public XmlBuilder(String rootElementName, boolean z) {
-        isInlineAttributes = z;
+    public XmlBuilder(String rootElementName, boolean inlineAttributes) {
+        isInlineAttributes = inlineAttributes;
         this.rootElementName = rootElementName;
         indentationLevel = 0;
         attributes = new ArrayList<>();

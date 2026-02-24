@@ -121,8 +121,8 @@ public class AsdDialog extends Dialog implements DialogInterface.OnDismissListen
         act = null;
     }
 
-    public void setOnSaveClickListener(LogicEditorActivity logicEditorActivity, boolean z, FieldBlockView ss, AsdDialog asdDialog) {
-        binding.btnSave.setOnClickListener(new AsdHandlerCodeEditor(logicEditorActivity, z, ss, asdDialog, binding.editor));
+    public void setOnSaveClickListener(LogicEditorActivity logicEditorActivity, boolean enteringNumber, FieldBlockView ss, AsdDialog asdDialog) {
+        binding.btnSave.setOnClickListener(new AsdHandlerCodeEditor(logicEditorActivity, enteringNumber, ss, asdDialog, binding.editor));
     }
 
     public void setOnCancelClickListener(AsdDialog asdDialog) {

@@ -364,8 +364,8 @@ public class CodeEditorLayout extends LinearLayout implements TextWatcher {
         }
     }
 
-    private boolean strOnlyContainsSpaces(String str) {
-        char[] chars = str.toCharArray();
+    private boolean strOnlyContainsSpaces(String text) {
+        char[] chars = text.toCharArray();
 
         if (chars.length < 1) {
             return false;
@@ -379,8 +379,8 @@ public class CodeEditorLayout extends LinearLayout implements TextWatcher {
         return true;
     }
 
-    public void insert(String str) {
-        editText.getText().insert(editText.getSelectionStart(), str);
+    public void insert(String text) {
+        editText.getText().insert(editText.getSelectionStart(), text);
     }
 
     private String safeSubstring(String main, int start, int end) {

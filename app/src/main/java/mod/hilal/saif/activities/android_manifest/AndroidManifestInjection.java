@@ -311,7 +311,7 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
         SketchwareUtil.toast(Helper.getResString(R.string.toast_activity_removed));
     }
 
-    private void removeComponents(String str) {
+    private void removeComponents(String activityName) {
         String path = FileUtil.getExternalStorageDir().concat("/.sketchware/data/").concat(sc_id).concat("/Injection/androidmanifest/activities_components.json");
         ArrayList<HashMap<String, Object>> data;
         if (FileUtil.isExistFile(path)) {
@@ -322,7 +322,7 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
             }
             for (int i = data.size() - 1; i > -1; i--) {
                 String name = (String) data.get(i).get("name");
-                if (Objects.requireNonNull(name).equals(str)) {
+                if (Objects.requireNonNull(name).equals(activityName)) {
                     data.remove(i);
                     break;
                 }

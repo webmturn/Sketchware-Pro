@@ -50,9 +50,10 @@ public class BackupRestoreManager {
 
     public static String getRestoreIntegratedLocalLibrariesMessage(boolean restoringMultipleBackups, int currentRestoringIndex, int totalAmountOfBackups, String filename) {
         if (!restoringMultipleBackups) {
-            return "Looks like the backup file you selected contains some Local libraries. Do you want to copy them to your local_libs directory (if they do not already exist)?";
+            return Helper.getResString(R.string.backup_restore_local_libs_single);
         } else {
-            return "Looks like backup file " + filename + " (" + (currentRestoringIndex + 1) + " out of " + totalAmountOfBackups + ") contains some Local libraries. Do you want to copy them to your local_libs directory (if they do not already exist)?";
+            return String.format(Helper.getResString(R.string.backup_restore_local_libs_multi),
+                    filename, currentRestoringIndex + 1, totalAmountOfBackups);
         }
     }
 

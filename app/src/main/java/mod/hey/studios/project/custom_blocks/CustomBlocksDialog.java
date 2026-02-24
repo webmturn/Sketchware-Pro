@@ -71,12 +71,12 @@ public class CustomBlocksDialog {
 
                 context.runOnUiThread(() -> {
 
-                    String subtitle = "You have used " + customBlocks.size() + " custom block(s) in this project.";
+                    String subtitle = String.format(Helper.getResString(R.string.custom_blocks_used_count), customBlocks.size());
 
                     if (missingBlocks > 0) {
                         String errorMsg = (missingBlocks == 1)
-                                ? "There is one missing block"
-                                : "There are " + missingBlocks + " missing blocks";
+                                ? Helper.getResString(R.string.custom_blocks_missing_one)
+                                : String.format(Helper.getResString(R.string.custom_blocks_missing_multi), missingBlocks);
                         SketchwareUtil.toastError(errorMsg);
                     }
 

@@ -19,8 +19,8 @@ public class ManifestInjection {
         arr = arrayList;
     }
 
-    public void injectManifestAttributes(XmlBuilder nx, String str, String str2) {
-        path = FileUtil.getExternalStorageDir() + "/.sketchware/data/" + buildConfig.sc_id + "/injection/manifest/" + str;
+    public void injectManifestAttributes(XmlBuilder nx, String fileName, String activityName) {
+        path = FileUtil.getExternalStorageDir() + "/.sketchware/data/" + buildConfig.sc_id + "/injection/manifest/" + fileName;
         if (FileUtil.isExistFile(path)) {
             FileUtil.readFile(path).isEmpty();
         }

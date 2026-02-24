@@ -378,9 +378,8 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                                 }
                             }
                         } else {
-                            String sharedErrorMessage = "Failed to install package, result code: " + result.getCode() + ". ";
-                            SketchwareUtil.toastError(sharedErrorMessage + "Logs are available in /Internal storage/.sketchware/debug.txt", Toast.LENGTH_LONG);
-                            LogUtil.e("DesignActivity", sharedErrorMessage + "stdout: " + stdout + ", stderr: " + stderr);
+                            SketchwareUtil.toastError(String.format(Helper.getResString(R.string.design_error_install_failed), result.getCode()), Toast.LENGTH_LONG);
+                            LogUtil.e("DesignActivity", "Failed to install package, result code: " + result.getCode() + ". stdout: " + stdout + ", stderr: " + stderr);
                         }
                     });
                 } else {

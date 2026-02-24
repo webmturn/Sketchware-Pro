@@ -179,11 +179,11 @@ public class Helper {
         ArrayList<String> directories = new ArrayList<>();
         ArrayList<String> files = new ArrayList<>();
 
-        for (String str : paths) {
-            if (FileUtil.isDirectory(str)) {
-                directories.add(str);
+        for (String path : paths) {
+            if (FileUtil.isDirectory(path)) {
+                directories.add(path);
             } else {
-                files.add(str);
+                files.add(path);
             }
         }
 
@@ -207,7 +207,7 @@ public class Helper {
     }
 
     public interface BasicTextChangedListener {
-        void onTextChanged(String str);
+        void onTextChanged(String text);
     }
 
     /**
