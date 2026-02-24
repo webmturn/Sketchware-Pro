@@ -106,7 +106,7 @@ public class BlockPane extends RelativeLayout {
   public final void a() {
     if (this.activeBlock == null)
       this.activeBlock = new BaseBlockView(this.context, " ", true); 
-    this.activeBlock.a(10.0F, 10.0F, false);
+    this.activeBlock.setBlockSize(10.0F, 10.0F, false);
     addView((View)this.activeBlock);
     d();
   }
@@ -114,13 +114,13 @@ public class BlockPane extends RelativeLayout {
   public void a(BlockView paramRs) {
     boolean bool;
     boolean bool1 = (paramRs.h()).ga;
-    if (paramRs.b() && -1 == paramRs.ia) {
+    if (paramRs.hasSubstack() && -1 == paramRs.ia) {
       bool = true;
     } else {
       bool = false;
     } 
     boolean bool2 = paramRs.fa;
-    a(paramRs.getTag().toString(), bool1, bool, bool2, paramRs.getHeight(), paramRs.f());
+    a(paramRs.getTag().toString(), bool1, bool, bool2, paramRs.getHeight(), paramRs.getBlockHeight());
     this.currentSnapPoint = null;
   }
   
@@ -134,14 +134,14 @@ public class BlockPane extends RelativeLayout {
         if (view instanceof BlockView)
           a((BlockView)view, paramInt); 
       } 
-      if (paramRs.b()) {
+      if (paramRs.hasSubstack()) {
         int j = paramRs.ia;
         if (j != -1 && !visited.contains(j)) {
           BlockView sub = (BlockView)findViewWithTag(Integer.valueOf(j));
           if (sub != null) a(sub, paramInt);
         }
       } 
-      if (paramRs.c()) {
+      if (paramRs.hasDoubleSubstack()) {
         int j = paramRs.ja;
         if (j != -1 && !visited.contains(j)) {
           BlockView sub = (BlockView)findViewWithTag(Integer.valueOf(j));
@@ -205,7 +205,7 @@ public class BlockPane extends RelativeLayout {
         || "v".equals(firstType) || "p".equals(firstType) || "l".equals(firstType) || "a".equals(firstType);
     boolean endsWithF = "f".equals(last.type);
     boolean hasEmptySubStack = ("c".equals(first.type) || "e".equals(first.type)) && first.subStack1 <= 0;
-    a(first.id, endsWithF, hasEmptySubStack, isArgType, paramRs.getHeight(), paramRs.f());
+    a(first.id, endsWithF, hasEmptySubStack, isArgType, paramRs.getHeight(), paramRs.getBlockHeight());
     this.currentSnapPoint = null;
   }
   
@@ -217,21 +217,21 @@ public class BlockPane extends RelativeLayout {
       if (!paramRs.ga && (!paramBoolean || -1 == paramRs.ha)) {
         int[] arrayOfInt = new int[2];
         paramRs.getLocationOnScreen(arrayOfInt);
-        arrayOfInt[1] = arrayOfInt[1] + paramRs.d();
+        arrayOfInt[1] = arrayOfInt[1] + paramRs.getContentBottom();
         a(arrayOfInt, (View)paramRs, 0);
       } 
-      if (paramRs.b() && (!paramBoolean || paramRs.ia == -1)) {
+      if (paramRs.hasSubstack() && (!paramBoolean || paramRs.ia == -1)) {
         int[] arrayOfInt = new int[2];
         paramRs.getLocationOnScreen(arrayOfInt);
         arrayOfInt[0] = arrayOfInt[0] + ((BaseBlockView)paramRs).cornerRadius;
-        arrayOfInt[1] = arrayOfInt[1] + paramRs.f();
+        arrayOfInt[1] = arrayOfInt[1] + paramRs.getBlockHeight();
         a(arrayOfInt, (View)paramRs, 2);
       } 
-      if (paramRs.c() && (!paramBoolean || paramRs.ja == -1)) {
+      if (paramRs.hasDoubleSubstack() && (!paramBoolean || paramRs.ja == -1)) {
         int[] arrayOfInt = new int[2];
         paramRs.getLocationOnScreen(arrayOfInt);
         arrayOfInt[0] = arrayOfInt[0] + ((BaseBlockView)paramRs).cornerRadius;
-        arrayOfInt[1] = arrayOfInt[1] + paramRs.g();
+        arrayOfInt[1] = arrayOfInt[1] + paramRs.getSubstackBottom();
         a(arrayOfInt, (View)paramRs, 3);
       } 
       int i = paramRs.ia;
@@ -604,7 +604,7 @@ public class BlockPane extends RelativeLayout {
   public void c(BlockView paramRs, int paramInt1, int paramInt2) {
     getLocationOnScreen(this.locationBuffer);
     this.currentSnapPoint = b(paramRs, paramInt1, paramInt2);
-    boolean bool = paramRs.b();
+    boolean bool = paramRs.hasSubstack();
     boolean bool1 = true;
     if (bool && -1 == paramRs.ia) {
       Object[] arrayOfObject1 = this.currentSnapPoint;
@@ -633,9 +633,9 @@ public class BlockPane extends RelativeLayout {
       this.activeBlock.setVisibility(0);
       if (paramRs.fa) {
         if (view instanceof BlockView)
-          this.activeBlock.a((BaseBlockView)view, true, false, 0); 
+          this.activeBlock.copyBlockDimensions((BaseBlockView)view, true, false, 0); 
         if (view instanceof pro.sketchware.core.FieldBlockView)
-          this.activeBlock.a((BaseBlockView)view, true, false, 0); 
+          this.activeBlock.copyBlockDimensions((BaseBlockView)view, true, false, 0); 
       } else {
         paramInt2 = ((Integer)this.currentSnapPoint[2]).intValue();
         if (paramInt2 == 4) {
@@ -645,7 +645,7 @@ public class BlockPane extends RelativeLayout {
         } 
         if (paramInt2 == 1 || paramInt2 == 4)
           bool1 = false; 
-        this.activeBlock.a((BaseBlockView)paramRs, false, bool1, paramInt1);
+        this.activeBlock.copyBlockDimensions((BaseBlockView)paramRs, false, bool1, paramInt1);
       } 
     } else {
       d();

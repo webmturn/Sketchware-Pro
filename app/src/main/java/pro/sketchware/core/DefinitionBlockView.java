@@ -81,7 +81,7 @@ public class DefinitionBlockView extends BlockView {
       width = Math.max(width, this.ca);
     }
     int totalHeight = Math.max(yPos + height + vPad, this.topSpacing + textHeight + this.bottomSpacing);
-    a((float) width, (float) totalHeight, true);
+    setBlockSize((float) width, (float) totalHeight, true);
   }
   
   public void l() {

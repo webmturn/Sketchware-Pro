@@ -141,7 +141,7 @@ public class BaseBlockView extends RelativeLayout {
     } else {
       this.componentType = paramString2;
     }
-    a();
+    initClassInfo();
     String type = this.blockType;
     switch (type) {
       case " ": this.topSpacing = 4; this.shapeType = 4; break;
@@ -162,7 +162,7 @@ public class BaseBlockView extends RelativeLayout {
     this.blockColor = this.defaultBlockColor;
     this.isEditable = paramBoolean;
     setWillNotDraw(false);
-    a(paramContext);
+    initDensityAndPaints(paramContext);
   }
   
   public BaseBlockView(Context paramContext, String paramString, boolean paramBoolean) {
@@ -216,11 +216,11 @@ public class BaseBlockView extends RelativeLayout {
     return new float[] { f1, 0.0F, f2, (k - j / 2), (i - j / 2), (k - j / 2), 0.0F, (k - j / 2) };
   }
   
-  public void a() {
+  public void initClassInfo() {
     this.classInfo = ComponentTypeMapper.getClassInfo(this.blockType, this.componentType);
   }
   
-  public void a(float paramFloat1, float paramFloat2, boolean paramBoolean) {
+  public void setBlockSize(float paramFloat1, float paramFloat2, boolean paramBoolean) {
     if (this.shapeType == 9) {
       this.blockWidth = (int)paramFloat1 + this.paramSpacing;
     } else {
@@ -228,10 +228,10 @@ public class BaseBlockView extends RelativeLayout {
     } 
     this.blockHeight = (int)paramFloat2;
     if (paramBoolean)
-      e(); 
+      refreshLayout(); 
   }
   
-  public void a(BaseBlockView paramTs, boolean paramBoolean1, boolean paramBoolean2, int paramInt) {
+  public void copyBlockDimensions(BaseBlockView paramTs, boolean paramBoolean1, boolean paramBoolean2, int paramInt) {
     this.blockColor = -16777216;
     this.shapeType = paramTs.shapeType;
     this.blockWidth = paramTs.blockWidth;
@@ -245,10 +245,10 @@ public class BaseBlockView extends RelativeLayout {
       } else if (paramInt > 0) {
         this.contentHeight = paramInt - this.borderWidth;
       }  
-    e();
+    refreshLayout();
   }
   
-  public final void a(Context paramContext) {
+  public final void initDensityAndPaints(Context paramContext) {
     this.density = ViewUtil.dpToPx(paramContext, 1.0F);
     float f1 = this.borderWidth;
     float f2 = this.density;
@@ -300,10 +300,10 @@ public class BaseBlockView extends RelativeLayout {
     this.reflectionPaint.setStyle(Paint.Style.STROKE);
     this.reflectionPaint.setStrokeWidth(this.reflectionStrokeWidth);
     setLayerType(1, null);
-    a(this.baseWidth, (this.textHeight + this.topSpacing + this.bottomSpacing), false);
+    setBlockSize(this.baseWidth, (this.textHeight + this.topSpacing + this.bottomSpacing), false);
   }
   
-  public final void a(Canvas paramCanvas) {
+  public final void drawBooleanShape(Canvas paramCanvas) {
     Path path = new Path();
     int i = this.blockHeight;
     int j = i / 2;
@@ -321,7 +321,7 @@ public class BaseBlockView extends RelativeLayout {
       paramCanvas.drawLines(getBooleanReflections(), this.reflectionPaint); 
   }
   
-  public final void a(Path paramPath) {
+  public final void drawTopPath(Path paramPath) {
     paramPath.moveTo(0.0F, this.notchWidth);
     paramPath.lineTo(this.notchWidth, 0.0F);
     paramPath.lineTo(this.connectorOffset, 0.0F);
@@ -332,7 +332,7 @@ public class BaseBlockView extends RelativeLayout {
     paramPath.lineTo(this.blockWidth, this.notchWidth);
   }
   
-  public final void a(Path paramPath, int paramInt) {
+  public final void drawSubstackBottomPath(Path paramPath, int paramInt) {
     paramPath.lineTo(this.cornerRadius, (paramInt - this.notchDepth));
     float f1 = (this.cornerRadius + this.notchDepth);
     float f2 = paramInt;
@@ -341,7 +341,7 @@ public class BaseBlockView extends RelativeLayout {
     paramPath.lineTo(this.blockWidth, (paramInt + this.notchWidth));
   }
   
-  public final void a(Path paramPath, int paramInt1, boolean paramBoolean, int paramInt2) {
+  public final void drawBottomPath(Path paramPath, int paramInt1, boolean paramBoolean, int paramInt2) {
     paramPath.lineTo(this.blockWidth, (paramInt1 - this.notchWidth));
     float f1 = (this.blockWidth - this.notchWidth);
     float f2 = paramInt1;
@@ -361,7 +361,7 @@ public class BaseBlockView extends RelativeLayout {
     } 
   }
   
-  public final float[] a(int paramInt) {
+  public final float[] getTopReflectionLines(int paramInt) {
     int i = this.outlineStrokeWidth;
     float f1 = (i / 2 + 0);
     int j = this.notchWidth;
@@ -391,7 +391,7 @@ public class BaseBlockView extends RelativeLayout {
         paramInt, (i / 2 + 0), (this.blockWidth - j), (i / 2 + 0) };
   }
   
-  public final float[] a(int paramInt1, int paramInt2) {
+  public final float[] getLeftSideShadowLines(int paramInt1, int paramInt2) {
     int i = this.cornerRadius;
     int j = this.notchDepth;
     float f = (i + j);
@@ -399,7 +399,7 @@ public class BaseBlockView extends RelativeLayout {
     return new float[] { f, (paramInt1 - k / 2), (i - k / 2), (paramInt1 + j), (i - k / 2), (paramInt1 + j), (i - k / 2), (paramInt2 - j) };
   }
   
-  public final float[] a(int paramInt1, boolean paramBoolean, int paramInt2) {
+  public final float[] getBottomShadowLines(int paramInt1, boolean paramBoolean, int paramInt2) {
     float[] arrayOfFloat;
     if (paramBoolean) {
       arrayOfFloat = new float[24];
@@ -460,10 +460,10 @@ public class BaseBlockView extends RelativeLayout {
     return arrayOfFloat;
   }
   
-  public final void b(Canvas paramCanvas) {
+  public final void drawStatementShape(Canvas paramCanvas) {
     boolean bool2;
     Path path = new Path();
-    a(path);
+    drawTopPath(path);
     int i = this.blockHeight;
     int j = this.shapeType;
     boolean bool1 = true;
@@ -472,23 +472,23 @@ public class BaseBlockView extends RelativeLayout {
     } else {
       bool2 = false;
     } 
-    a(path, i, bool2, 0);
+    drawBottomPath(path, i, bool2, 0);
     paramCanvas.drawPath(path, this.fillPaint);
     if (this.drawShadow) {
-      paramCanvas.drawLines(b(0, this.blockHeight), this.outlinePaint);
+      paramCanvas.drawLines(getRightSideShadowLines(0, this.blockHeight), this.outlinePaint);
       i = this.blockHeight;
       if (this.shapeType != 5) {
         bool2 = bool1;
       } else {
         bool2 = false;
       } 
-      paramCanvas.drawLines(a(i, bool2, 0), this.outlinePaint);
+      paramCanvas.drawLines(getBottomShadowLines(i, bool2, 0), this.outlinePaint);
     } 
     if (this.drawReflection)
-      paramCanvas.drawLines(a(this.blockHeight), this.reflectionPaint); 
+      paramCanvas.drawLines(getTopReflectionLines(this.blockHeight), this.reflectionPaint); 
   }
   
-  public boolean b() {
+  public boolean hasSubstack() {
     boolean bool;
     if (this.shapeType >= 10) {
       bool = true;
@@ -498,7 +498,7 @@ public class BaseBlockView extends RelativeLayout {
     return bool;
   }
   
-  public final float[] b(int paramInt1, int paramInt2) {
+  public final float[] getRightSideShadowLines(int paramInt1, int paramInt2) {
     int i = this.blockWidth;
     int j = this.outlineStrokeWidth;
     float f = (i - j / 2);
@@ -506,7 +506,7 @@ public class BaseBlockView extends RelativeLayout {
     return new float[] { f, (paramInt1 + k), (i - j / 2), (paramInt2 - k) };
   }
   
-  public final void c(Canvas paramCanvas) {
+  public final void drawParameterShape(Canvas paramCanvas) {
     paramCanvas.drawRect(new Rect(0, 0, this.blockWidth, this.blockHeight), this.fillPaint);
     Path path = new Path();
     int i = this.blockWidth;
@@ -522,7 +522,7 @@ public class BaseBlockView extends RelativeLayout {
     paramCanvas.drawPath(path, this.shadowPaint);
   }
   
-  public boolean c() {
+  public boolean hasDoubleSubstack() {
     boolean bool;
     if (this.shapeType == 12) {
       bool = true;
@@ -532,111 +532,111 @@ public class BaseBlockView extends RelativeLayout {
     return bool;
   }
   
-  public final float[] c(int paramInt1, int paramInt2) {
+  public final float[] getSubstackReflectionLines(int paramInt1, int paramInt2) {
     float f = (paramInt2 + this.notchDepth);
     paramInt2 = this.outlineStrokeWidth;
     return new float[] { f, (paramInt2 / 2 + paramInt1), (this.blockWidth - this.notchWidth), (paramInt1 + paramInt2 / 2) };
   }
   
-  public int d() {
+  public int getContentBottom() {
     return getTotalHeight() - this.borderWidth;
   }
   
-  public final void d(Canvas paramCanvas) {
+  public final void drawHatShape(Canvas paramCanvas) {
     Path path = new Path();
     path.moveTo(0.0F, this.connectorWidth);
     path.arcTo(new RectF(0.0F, 0.0F, this.defaultMinWidth, (this.connectorWidth * 2)), 180.0F, 180.0F);
     path.lineTo((this.blockWidth - this.notchWidth), this.connectorWidth);
     path.lineTo(this.blockWidth, (this.connectorWidth + this.notchWidth));
-    a(path, this.blockHeight, true, 0);
+    drawBottomPath(path, this.blockHeight, true, 0);
     paramCanvas.drawPath(path, this.fillPaint);
     if (this.drawShadow) {
-      paramCanvas.drawLines(b(this.connectorWidth, this.blockHeight), this.outlinePaint);
-      paramCanvas.drawLines(a(this.blockHeight, true, 0), this.outlinePaint);
+      paramCanvas.drawLines(getRightSideShadowLines(this.connectorWidth, this.blockHeight), this.outlinePaint);
+      paramCanvas.drawLines(getBottomShadowLines(this.blockHeight, true, 0), this.outlinePaint);
     } 
   }
   
-  public void e() {
+  public void refreshLayout() {
     requestLayout();
   }
   
-  public final void e(Canvas paramCanvas) {
+  public final void drawDoubleSubstackShape(Canvas paramCanvas) {
     Path path = new Path();
     int i = this.blockHeight;
     int j = this.contentHeight;
     int k = this.borderWidth;
     i = i + j - k;
     k = this.bottomPadding + i + this.innerHeight - k;
-    a(path);
-    a(path, this.blockHeight, true, this.cornerRadius);
-    a(path, i);
-    a(path, this.bottomPadding + i, true, this.cornerRadius);
-    a(path, k);
-    a(path, this.topPadding + k, true, 0);
+    drawTopPath(path);
+    drawBottomPath(path, this.blockHeight, true, this.cornerRadius);
+    drawSubstackBottomPath(path, i);
+    drawBottomPath(path, this.bottomPadding + i, true, this.cornerRadius);
+    drawSubstackBottomPath(path, k);
+    drawBottomPath(path, this.topPadding + k, true, 0);
     paramCanvas.drawPath(path, this.fillPaint);
     if (this.drawShadow) {
-      paramCanvas.drawLines(b(0, this.blockHeight), this.outlinePaint);
-      paramCanvas.drawLines(a(this.blockHeight, true, this.cornerRadius), this.outlinePaint);
-      paramCanvas.drawLines(a(this.blockHeight, i), this.outlinePaint);
-      paramCanvas.drawLines(b(i, this.bottomPadding + i), this.outlinePaint);
-      paramCanvas.drawLines(a(this.bottomPadding + i, true, this.cornerRadius), this.outlinePaint);
-      paramCanvas.drawLines(a(this.bottomPadding + i, k), this.outlinePaint);
-      paramCanvas.drawLines(b(k, this.topPadding + k), this.outlinePaint);
-      paramCanvas.drawLines(a(this.topPadding + k, true, 0), this.outlinePaint);
+      paramCanvas.drawLines(getRightSideShadowLines(0, this.blockHeight), this.outlinePaint);
+      paramCanvas.drawLines(getBottomShadowLines(this.blockHeight, true, this.cornerRadius), this.outlinePaint);
+      paramCanvas.drawLines(getLeftSideShadowLines(this.blockHeight, i), this.outlinePaint);
+      paramCanvas.drawLines(getRightSideShadowLines(i, this.bottomPadding + i), this.outlinePaint);
+      paramCanvas.drawLines(getBottomShadowLines(this.bottomPadding + i, true, this.cornerRadius), this.outlinePaint);
+      paramCanvas.drawLines(getLeftSideShadowLines(this.bottomPadding + i, k), this.outlinePaint);
+      paramCanvas.drawLines(getRightSideShadowLines(k, this.topPadding + k), this.outlinePaint);
+      paramCanvas.drawLines(getBottomShadowLines(this.topPadding + k, true, 0), this.outlinePaint);
     } 
     if (this.drawReflection) {
-      paramCanvas.drawLines(a(this.topPadding + k), this.reflectionPaint);
-      paramCanvas.drawLines(c(i, this.cornerRadius), this.reflectionPaint);
-      paramCanvas.drawLines(c(k, this.cornerRadius), this.reflectionPaint);
+      paramCanvas.drawLines(getTopReflectionLines(this.topPadding + k), this.reflectionPaint);
+      paramCanvas.drawLines(getSubstackReflectionLines(i, this.cornerRadius), this.reflectionPaint);
+      paramCanvas.drawLines(getSubstackReflectionLines(k, this.cornerRadius), this.reflectionPaint);
     } 
   }
   
-  public int f() {
+  public int getBlockHeight() {
     return this.blockHeight;
   }
   
-  public final void f(Canvas paramCanvas) {
+  public final void drawSingleSubstackShape(Canvas paramCanvas) {
     boolean bool2;
     Path path = new Path();
     int i = this.blockHeight + this.contentHeight - this.borderWidth;
-    a(path);
+    drawTopPath(path);
     int j = this.blockHeight;
     int k = this.cornerRadius;
     boolean bool1 = true;
-    a(path, j, true, k);
-    a(path, i);
+    drawBottomPath(path, j, true, k);
+    drawSubstackBottomPath(path, i);
     j = this.topPadding;
     if (this.shapeType == 10) {
       bool2 = true;
     } else {
       bool2 = false;
     } 
-    a(path, j + i, bool2, 0);
+    drawBottomPath(path, j + i, bool2, 0);
     paramCanvas.drawPath(path, this.fillPaint);
     if (this.drawShadow) {
-      paramCanvas.drawLines(b(0, this.blockHeight), this.outlinePaint);
-      paramCanvas.drawLines(a(this.blockHeight, true, this.cornerRadius), this.outlinePaint);
-      paramCanvas.drawLines(a(this.blockHeight, i), this.outlinePaint);
-      paramCanvas.drawLines(b(i, this.topPadding + i), this.outlinePaint);
+      paramCanvas.drawLines(getRightSideShadowLines(0, this.blockHeight), this.outlinePaint);
+      paramCanvas.drawLines(getBottomShadowLines(this.blockHeight, true, this.cornerRadius), this.outlinePaint);
+      paramCanvas.drawLines(getLeftSideShadowLines(this.blockHeight, i), this.outlinePaint);
+      paramCanvas.drawLines(getRightSideShadowLines(i, this.topPadding + i), this.outlinePaint);
       j = this.topPadding;
       if (this.shapeType == 10) {
         bool2 = bool1;
       } else {
         bool2 = false;
       } 
-      paramCanvas.drawLines(a(j + i, bool2, 0), this.outlinePaint);
+      paramCanvas.drawLines(getBottomShadowLines(j + i, bool2, 0), this.outlinePaint);
     } 
     if (this.drawReflection) {
-      paramCanvas.drawLines(a(this.topPadding + i), this.reflectionPaint);
-      paramCanvas.drawLines(c(i, this.cornerRadius), this.reflectionPaint);
+      paramCanvas.drawLines(getTopReflectionLines(this.topPadding + i), this.reflectionPaint);
+      paramCanvas.drawLines(getSubstackReflectionLines(i, this.cornerRadius), this.reflectionPaint);
     } 
   }
   
-  public int g() {
+  public int getSubstackBottom() {
     return this.blockHeight + this.contentHeight + this.bottomPadding - this.borderWidth;
   }
   
-  public final void g(Canvas paramCanvas) {
+  public final void drawNumberShape(Canvas paramCanvas) {
     Path path = new Path();
     int i = this.blockHeight;
     int j = i / 2;
@@ -677,7 +677,7 @@ public class BaseBlockView extends RelativeLayout {
   
   public ClassInfo getClassInfo() {
     if (this.classInfo == null)
-      a(); 
+      initClassInfo(); 
     return this.classInfo;
   }
   
@@ -688,10 +688,10 @@ public class BaseBlockView extends RelativeLayout {
   public int getTotalHeight() {
     int i = this.blockHeight;
     int k = i;
-    if (b())
+    if (hasSubstack())
       k = i + this.bottomPadding + this.contentHeight - this.borderWidth; 
     i = k;
-    if (c())
+    if (hasDoubleSubstack())
       i = k + this.topPadding + this.innerHeight - this.borderWidth; 
     int j = this.shapeType;
     if (j != 4 && j != 7 && j != 10) {
@@ -709,7 +709,7 @@ public class BaseBlockView extends RelativeLayout {
     return this.blockWidth;
   }
   
-  public final void h(Canvas paramCanvas) {
+  public final void drawRectShape(Canvas paramCanvas) {
     paramCanvas.drawRect(new Rect(0, 0, this.blockWidth, this.blockHeight), this.fillPaint);
     if (this.drawShadow)
       paramCanvas.drawLines(getRectShadows(), this.outlinePaint); 
@@ -721,30 +721,30 @@ public class BaseBlockView extends RelativeLayout {
     this.fillPaint.setColor(this.blockColor);
     switch (this.shapeType) {
       case 12:
-        e(paramCanvas);
+        drawDoubleSubstackShape(paramCanvas);
         break;
       case 10:
       case 11:
-        f(paramCanvas);
+        drawSingleSubstackShape(paramCanvas);
         break;
       case 9:
-        c(paramCanvas);
+        drawParameterShape(paramCanvas);
         break;
       case 7:
-        d(paramCanvas);
+        drawHatShape(paramCanvas);
         break;
       case 4:
       case 5:
-        b(paramCanvas);
+        drawStatementShape(paramCanvas);
         break;
       case 3:
-        g(paramCanvas);
+        drawNumberShape(paramCanvas);
         break;
       case 2:
-        a(paramCanvas);
+        drawBooleanShape(paramCanvas);
         break;
       case 1:
-        h(paramCanvas);
+        drawRectShape(paramCanvas);
         break;
     } 
     super.onDraw(paramCanvas);

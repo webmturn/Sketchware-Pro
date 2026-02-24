@@ -66,7 +66,7 @@ public class FieldBlockView extends BaseBlockView {
       this.labelView = c("");
       addView(this.labelView);
     }
-    a((float) (this.aa + this.da), (float) this.textHeight, false);
+    setBlockSize((float) (this.aa + this.da), (float) this.textHeight, false);
   }
   
   private int getDropdownTypeWidth() {
@@ -146,7 +146,7 @@ public class FieldBlockView extends BaseBlockView {
       this.labelView.setText(paramObject.toString());
       int i = Math.max(this.aa, getLabelWidth());
       (this.labelView.getLayoutParams()).width = i;
-      a((i + this.da), this.textHeight, true);
+      setBlockSize((i + this.da), this.textHeight, true);
     } 
   }
 }

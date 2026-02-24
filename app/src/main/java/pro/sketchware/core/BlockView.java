@@ -101,7 +101,7 @@ public class BlockView extends BaseBlockView {
   
   public final void a(BlockView paramRs) {
     if (paramRs == this) return;
-    if (b() && -1 == this.ia) {
+    if (hasSubstack() && -1 == this.ia) {
       e(paramRs);
     } else {
       BlockView rs = h();
@@ -199,7 +199,7 @@ public class BlockView extends BaseBlockView {
   public void d(BlockView paramRs) {
     if (paramRs == this) return;
     paramRs.setX(getX() - this.cornerRadius);
-    paramRs.setY(getY() - f());
+    paramRs.setY(getY() - getBlockHeight());
     this.parentBlock = paramRs;
     paramRs.ia = ((Integer)getTag()).intValue();
   }
@@ -260,7 +260,7 @@ public class BlockView extends BaseBlockView {
         if (view instanceof BlockView)
           arrayList.addAll(((BlockView)view).getAllChildren()); 
       } 
-      if (rs.b()) {
+      if (rs.hasSubstack()) {
         int j = rs.ia;
         if (j != -1) {
           BlockView sub = (BlockView)this.pa.findViewWithTag(Integer.valueOf(j));
@@ -268,7 +268,7 @@ public class BlockView extends BaseBlockView {
             arrayList.addAll(sub.getAllChildren()); 
         }
       } 
-      if (rs.c()) {
+      if (rs.hasDoubleSubstack()) {
         int j = rs.ja;
         if (j != -1) {
           BlockView sub = (BlockView)this.pa.findViewWithTag(Integer.valueOf(j));
@@ -348,7 +348,7 @@ public class BlockView extends BaseBlockView {
     while (true) {
       i = Math.max(i, rs.getW());
       int j = i;
-      if (rs.b()) {
+      if (rs.hasSubstack()) {
         int k = rs.ia;
         j = i;
         if (k != -1) {
@@ -360,7 +360,7 @@ public class BlockView extends BaseBlockView {
         } 
       } 
       i = j;
-      if (rs.c()) {
+      if (rs.hasDoubleSubstack()) {
         int k = rs.ja;
         i = j;
         if (k != -1) {
@@ -412,7 +412,7 @@ public class BlockView extends BaseBlockView {
     if (textView != null) {
       textView.bringToFront();
       this.ma.setX(this.leftIndent);
-      this.ma.setY((g() - this.bottomPadding));
+      this.ma.setY((getSubstackBottom() - this.bottomPadding));
     } 
   }
   
@@ -426,7 +426,7 @@ public class BlockView extends BaseBlockView {
         BlockView nextRs = (BlockView) current.pa.findViewWithTag(Integer.valueOf(next));
         if (nextRs == null || nextRs == this) break;
         nextRs.setX(current.getX());
-        nextRs.setY(current.getY() + (float) current.d());
+        nextRs.setY(current.getY() + (float) current.getContentBottom());
         nextRs.bringToFront();
         current = nextRs;
       } else {
@@ -486,15 +486,15 @@ public class BlockView extends BaseBlockView {
     if (this.blockType.equals("h")) {
       w4 = Math.max(w3, this.ba);
     }
-    a((float) (this.rightIndent + w4), (float) (this.topSpacing + this.textHeight + this.na * this.shadowOffset * 2 + this.bottomSpacing), true);
-    if (b()) {
+    setBlockSize((float) (this.rightIndent + w4), (float) (this.topSpacing + this.textHeight + this.na * this.shadowOffset * 2 + this.bottomSpacing), true);
+    if (hasSubstack()) {
       int ss1Height = this.minHeight;
       int sub1 = this.ia;
       if (sub1 > -1) {
         BlockView sub1Rs = (BlockView) this.pa.findViewWithTag(Integer.valueOf(sub1));
         if (sub1Rs != null) {
           sub1Rs.setX(getX() + (float) this.cornerRadius);
-          sub1Rs.setY(getY() + (float) f());
+          sub1Rs.setY(getY() + (float) getBlockHeight());
           sub1Rs.bringToFront();
           sub1Rs.k();
           ss1Height = sub1Rs.getHeightSum();
@@ -507,7 +507,7 @@ public class BlockView extends BaseBlockView {
         BlockView sub2Rs = (BlockView) this.pa.findViewWithTag(Integer.valueOf(sub2));
         if (sub2Rs != null) {
           sub2Rs.setX(getX() + (float) this.cornerRadius);
-          sub2Rs.setY(getY() + (float) g());
+          sub2Rs.setY(getY() + (float) getSubstackBottom());
           sub2Rs.bringToFront();
           sub2Rs.k();
           ss2Height = sub2Rs.getHeightSum();
@@ -656,7 +656,7 @@ public class BlockView extends BaseBlockView {
     if (label != null) {
       finalW = Math.max(w4, label.getWidth() + this.leftIndent + 2);
     }
-    a((float) (this.rightIndent + finalW), (float) (this.topSpacing + this.textHeight + this.na * this.shadowOffset * 2 + this.bottomSpacing), false);
+    setBlockSize((float) (this.rightIndent + finalW), (float) (this.topSpacing + this.textHeight + this.na * this.shadowOffset * 2 + this.bottomSpacing), false);
   }
   
   public void o() {
