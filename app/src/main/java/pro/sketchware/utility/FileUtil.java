@@ -357,9 +357,9 @@ public class FileUtil {
         ArrayList<String> list = new ArrayList<>();
         ArrayList<String> files = new ArrayList<>();
         listDir(dir, files);
-        for (String str : files) {
-            if (str.endsWith(extension) && isFile(str)) {
-                list.add(str);
+        for (String filePath : files) {
+            if (filePath.endsWith(extension) && isFile(filePath)) {
+                list.add(filePath);
             }
         }
         return list;

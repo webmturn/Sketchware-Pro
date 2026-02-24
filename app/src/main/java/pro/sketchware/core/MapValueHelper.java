@@ -4,8 +4,8 @@ import java.util.Map;
 
 public class MapValueHelper {
   public static int get(Map<String, Object> map, String key, int index) {
-    Object object = get(map, key, Integer.valueOf(index));
-    return (object instanceof Integer) ? ((Integer)get(map, key, Integer.valueOf(index))).intValue() : ((object instanceof Double) ? ((Double)get(map, key, Integer.valueOf(index))).intValue() : index);
+    Object value = get(map, key, Integer.valueOf(index));
+    return (value instanceof Integer) ? ((Integer)get(map, key, Integer.valueOf(index))).intValue() : ((value instanceof Double) ? ((Double)get(map, key, Integer.valueOf(index))).intValue() : index);
   }
   
   public static Object get(Map<String, Object> map, String key, Object obj) {
