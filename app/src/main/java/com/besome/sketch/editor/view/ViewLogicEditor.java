@@ -42,7 +42,7 @@ public class ViewLogicEditor extends LogicEditorScrollView {
         if (isFirst) {
             blockPane.getLayoutParams().width = right - left;
             blockPane.getLayoutParams().height = bottom - top;
-            blockPane.b();
+            blockPane.updatePaneSize();
             isFirst = false;
         }
     }

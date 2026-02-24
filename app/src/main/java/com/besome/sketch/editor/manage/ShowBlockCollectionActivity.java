@@ -53,7 +53,7 @@ public class ShowBlockCollectionActivity extends BaseAppCompatActivity implement
 
             blockIdsWithBlocks.put(blockId, block);
             pane.nextBlockId = Math.max(pane.nextBlockId, blockId + 1);
-            pane.a(block, 10, 10);
+            pane.addBlock(block, 10, 10);
 
             if (isFirstBlock) {
                 firstBlock = block;
@@ -102,7 +102,7 @@ public class ShowBlockCollectionActivity extends BaseAppCompatActivity implement
             }
         }
         firstBlock.layoutChain();
-        pane.b();
+        pane.updatePaneSize();
     }
 
     private void resizeBottomViews() {

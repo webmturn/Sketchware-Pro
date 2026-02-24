@@ -32,14 +32,14 @@ public class BlockPane extends RelativeLayout {
   
   public BlockPane(Context paramContext) {
     super(paramContext);
-    a(paramContext);
+    init(paramContext);
   }
   
-  public BlockView a(int paramInt) {
+  public BlockView findBlockById(int paramInt) {
     return (BlockView)findViewWithTag(Integer.valueOf(paramInt));
   }
   
-  public BlockView a(BlockView paramRs, int paramInt1, int paramInt2) {
+  public BlockView addBlock(BlockView paramRs, int paramInt1, int paramInt2) {
     getLocationOnScreen(this.locationBuffer);
     BlockView rs = paramRs;
     if (paramRs.getBlockType() == 1) {
@@ -55,10 +55,10 @@ public class BlockPane extends RelativeLayout {
     return rs;
   }
   
-  public BlockView a(BlockView paramRs, int paramInt1, int paramInt2, boolean paramBoolean) {
+  public BlockView dropBlock(BlockView paramRs, int paramInt1, int paramInt2, boolean paramBoolean) {
     BlockView rs;
     if (!paramBoolean) {
-      rs = a(paramRs, paramInt1, paramInt2);
+      rs = addBlock(paramRs, paramInt1, paramInt2);
     } else {
       paramRs.setX((paramInt1 - this.locationBuffer[0] - getPaddingLeft()));
       paramRs.setY((paramInt2 - this.locationBuffer[1] - getPaddingTop()));
@@ -67,7 +67,7 @@ public class BlockPane extends RelativeLayout {
     Object[] arrayOfObject = this.currentSnapPoint;
     if (arrayOfObject == null) {
       rs.getRootBlock().layoutChain();
-      b();
+      updatePaneSize();
       return rs;
     } 
     if (paramRs.fa) {
@@ -95,23 +95,23 @@ public class BlockPane extends RelativeLayout {
       } 
     } 
     rs.getRootBlock().layoutChain();
-    b();
+    updatePaneSize();
     return rs;
   }
   
-  public BlockView a(String paramString) {
+  public BlockView findBlockByString(String paramString) {
     return (BlockView)findViewWithTag(Integer.valueOf(paramString));
   }
   
-  public final void a() {
+  public final void initActiveBlock() {
     if (this.activeBlock == null)
       this.activeBlock = new BaseBlockView(this.context, " ", true); 
     this.activeBlock.setBlockSize(10.0F, 10.0F, false);
     addView((View)this.activeBlock);
-    d();
+    hideActiveBlock();
   }
   
-  public void a(BlockView paramRs) {
+  public void computeSnapPoints(BlockView paramRs) {
     boolean bool;
     boolean bool1 = (paramRs.getLastInChain()).ga;
     if (paramRs.hasSubstack() && -1 == paramRs.ia) {
@@ -120,11 +120,11 @@ public class BlockPane extends RelativeLayout {
       bool = false;
     } 
     boolean bool2 = paramRs.fa;
-    a(paramRs.getTag().toString(), bool1, bool, bool2, paramRs.getHeight(), paramRs.getBlockHeight());
+    buildSnapPoints(paramRs.getTag().toString(), bool1, bool, bool2, paramRs.getHeight(), paramRs.getBlockHeight());
     this.currentSnapPoint = null;
   }
   
-  public void a(BlockView paramRs, int paramInt) {
+  public void setBlockTreeVisibility(BlockView paramRs, int paramInt) {
     java.util.HashSet<Integer> visited = new java.util.HashSet<>();
     while (paramRs != null) {
       Integer tag = (Integer) paramRs.getTag();
@@ -132,20 +132,20 @@ public class BlockPane extends RelativeLayout {
       paramRs.setVisibility(paramInt);
       for (View view : paramRs.childViews) {
         if (view instanceof BlockView)
-          a((BlockView)view, paramInt); 
+          setBlockTreeVisibility((BlockView)view, paramInt); 
       } 
       if (paramRs.hasSubstack()) {
         int j = paramRs.ia;
         if (j != -1 && !visited.contains(j)) {
           BlockView sub = (BlockView)findViewWithTag(Integer.valueOf(j));
-          if (sub != null) a(sub, paramInt);
+          if (sub != null) setBlockTreeVisibility(sub, paramInt);
         }
       } 
       if (paramRs.hasDoubleSubstack()) {
         int j = paramRs.ja;
         if (j != -1 && !visited.contains(j)) {
           BlockView sub = (BlockView)findViewWithTag(Integer.valueOf(j));
-          if (sub != null) a(sub, paramInt);
+          if (sub != null) setBlockTreeVisibility(sub, paramInt);
         }
       } 
       int i = paramRs.ha;
@@ -157,7 +157,7 @@ public class BlockPane extends RelativeLayout {
     } 
   }
   
-  public final void a(BlockView paramRs, String paramString) {
+  public final void collectParameterSnapPoints(BlockView paramRs, String paramString) {
     java.util.HashSet<Integer> visited = new java.util.HashSet<>();
     while (paramRs != null) {
       Integer tag = (Integer) paramRs.getTag();
@@ -169,20 +169,20 @@ public class BlockPane extends RelativeLayout {
           if ((bool || view instanceof pro.sketchware.core.FieldBlockView) && (!bool || !view.getTag().toString().equals(paramString))) {
             int[] arrayOfInt = new int[2];
             view.getLocationOnScreen(arrayOfInt);
-            a(arrayOfInt, view, 0);
+            addSnapPoint(arrayOfInt, view, 0);
             if (bool)
-              a((BlockView)view, paramString); 
+              collectParameterSnapPoints((BlockView)view, paramString); 
           } 
         }  
       int i = paramRs.ia;
       if (i != -1 && !visited.contains(i)) {
         BlockView sub = (BlockView)findViewWithTag(Integer.valueOf(i));
-        if (sub != null) a(sub, paramString);
+        if (sub != null) collectParameterSnapPoints(sub, paramString);
       }
       i = paramRs.ja;
       if (i != -1 && !visited.contains(i)) {
         BlockView sub = (BlockView)findViewWithTag(Integer.valueOf(i));
-        if (sub != null) a(sub, paramString);
+        if (sub != null) collectParameterSnapPoints(sub, paramString);
       }
       i = paramRs.ha;
       if (i != -1) {
@@ -193,9 +193,9 @@ public class BlockPane extends RelativeLayout {
     } 
   }
   
-  public void a(BlockView paramRs, ArrayList<BlockBean> paramArrayList) {
+  public void computeSnapPointsForBlocks(BlockView paramRs, ArrayList<BlockBean> paramArrayList) {
     if (paramArrayList.size() <= 0) {
-      a(paramRs);
+      computeSnapPoints(paramRs);
       return;
     }
     BlockBean first = paramArrayList.get(0);
@@ -205,11 +205,11 @@ public class BlockPane extends RelativeLayout {
         || "v".equals(firstType) || "p".equals(firstType) || "l".equals(firstType) || "a".equals(firstType);
     boolean endsWithF = "f".equals(last.type);
     boolean hasEmptySubStack = ("c".equals(first.type) || "e".equals(first.type)) && first.subStack1 <= 0;
-    a(first.id, endsWithF, hasEmptySubStack, isArgType, paramRs.getHeight(), paramRs.getBlockHeight());
+    buildSnapPoints(first.id, endsWithF, hasEmptySubStack, isArgType, paramRs.getHeight(), paramRs.getBlockHeight());
     this.currentSnapPoint = null;
   }
   
-  public final void a(BlockView paramRs, boolean paramBoolean) {
+  public final void collectSnapPoints(BlockView paramRs, boolean paramBoolean) {
     java.util.HashSet<Integer> visited = new java.util.HashSet<>();
     while (paramRs != null && paramRs.getVisibility() != 8) {
       Integer tag = (Integer) paramRs.getTag();
@@ -218,31 +218,31 @@ public class BlockPane extends RelativeLayout {
         int[] arrayOfInt = new int[2];
         paramRs.getLocationOnScreen(arrayOfInt);
         arrayOfInt[1] = arrayOfInt[1] + paramRs.getContentBottom();
-        a(arrayOfInt, (View)paramRs, 0);
+        addSnapPoint(arrayOfInt, (View)paramRs, 0);
       } 
       if (paramRs.hasSubstack() && (!paramBoolean || paramRs.ia == -1)) {
         int[] arrayOfInt = new int[2];
         paramRs.getLocationOnScreen(arrayOfInt);
         arrayOfInt[0] = arrayOfInt[0] + ((BaseBlockView)paramRs).cornerRadius;
         arrayOfInt[1] = arrayOfInt[1] + paramRs.getBlockHeight();
-        a(arrayOfInt, (View)paramRs, 2);
+        addSnapPoint(arrayOfInt, (View)paramRs, 2);
       } 
       if (paramRs.hasDoubleSubstack() && (!paramBoolean || paramRs.ja == -1)) {
         int[] arrayOfInt = new int[2];
         paramRs.getLocationOnScreen(arrayOfInt);
         arrayOfInt[0] = arrayOfInt[0] + ((BaseBlockView)paramRs).cornerRadius;
         arrayOfInt[1] = arrayOfInt[1] + paramRs.getSubstackBottom();
-        a(arrayOfInt, (View)paramRs, 3);
+        addSnapPoint(arrayOfInt, (View)paramRs, 3);
       } 
       int i = paramRs.ia;
       if (i != -1 && !visited.contains(i)) {
         BlockView sub = (BlockView)findViewWithTag(Integer.valueOf(i));
-        if (sub != null) a(sub, paramBoolean);
+        if (sub != null) collectSnapPoints(sub, paramBoolean);
       }
       i = paramRs.ja;
       if (i != -1 && !visited.contains(i)) {
         BlockView sub = (BlockView)findViewWithTag(Integer.valueOf(i));
-        if (sub != null) a(sub, paramBoolean);
+        if (sub != null) collectSnapPoints(sub, paramBoolean);
       }
       i = paramRs.ha;
       if (i != -1) {
@@ -253,12 +253,12 @@ public class BlockPane extends RelativeLayout {
     } 
   }
   
-  public final void a(Context paramContext) {
+  public final void init(Context paramContext) {
     this.context = paramContext;
-    a();
+    initActiveBlock();
   }
   
-  public void a(BlockBean paramBlockBean, boolean paramBoolean) {
+  public void removeBlock(BlockBean paramBlockBean, boolean paramBoolean) {
     String str = paramBlockBean.id;
     if (str != null && !str.equals("") && !paramBlockBean.id.equals("0")) {
       BlockView rs1 = (BlockView)findViewWithTag(Integer.valueOf(paramBlockBean.id));
@@ -266,7 +266,7 @@ public class BlockPane extends RelativeLayout {
         return; 
       BlockView rs2 = ((BaseBlockView)rs1).parentBlock;
       if (rs1 != rs2) {
-        c(rs1);
+        detachFromParent(rs1);
         removeView((View)rs1);
       } else {
         removeView((View)rs1);
@@ -276,7 +276,7 @@ public class BlockPane extends RelativeLayout {
     } 
   }
   
-  public void a(String paramString1, String paramString2) {
+  public void createHeaderBlock(String paramString1, String paramString2) {
     this.dragBlock = new BlockView(getContext(), 0, paramString1, "h", paramString2);
     BlockView rs = this.dragBlock;
     rs.pa = this;
@@ -288,7 +288,7 @@ public class BlockPane extends RelativeLayout {
     this.dragBlock.setY(f);
   }
   
-  public void a(String paramString, boolean paramBoolean1, boolean paramBoolean2, boolean paramBoolean3, int paramInt1, int paramInt2) {
+  public void buildSnapPoints(String paramString, boolean paramBoolean1, boolean paramBoolean2, boolean paramBoolean3, int paramInt1, int paramInt2) {
     this.blockSnapPoints = new ArrayList();
     int i = (int)(this.densityScale * 3.0F);
     for (int b = 0; b < getChildCount(); b++) {
@@ -297,35 +297,35 @@ public class BlockPane extends RelativeLayout {
         BlockView rs = (BlockView)view;
         if (rs.getVisibility() != 8 && ((BaseBlockView)rs).parentBlock == null)
           if (paramBoolean3) {
-            a(rs, paramString);
+            collectParameterSnapPoints(rs, paramString);
           } else if (!rs.fa) {
             boolean bool = true;
             if (!paramBoolean1 && !rs.ea) {
               int[] arrayOfInt = new int[2];
               rs.getLocationOnScreen(arrayOfInt);
               arrayOfInt[1] = arrayOfInt[1] - paramInt1 - i;
-              a(arrayOfInt, (View)rs, 1);
+              addSnapPoint(arrayOfInt, (View)rs, 1);
             } 
             if (paramBoolean2 && !rs.ea) {
               int[] arrayOfInt = new int[2];
               rs.getLocationOnScreen(arrayOfInt);
               arrayOfInt[0] = arrayOfInt[0] - ((BaseBlockView)rs).cornerRadius;
               arrayOfInt[1] = arrayOfInt[1] - paramInt2 - i;
-              a(arrayOfInt, (View)rs, 4);
+              addSnapPoint(arrayOfInt, (View)rs, 4);
             } 
             if (!paramBoolean1 || paramBoolean2)
               bool = false; 
-            a(rs, bool);
+            collectSnapPoints(rs, bool);
           }  
       } 
     } 
   }
   
-  public final void a(int[] paramArrayOfint, View paramView, int paramInt) {
+  public final void addSnapPoint(int[] paramArrayOfint, View paramView, int paramInt) {
     this.blockSnapPoints.add(new Object[] { paramArrayOfint, paramView, Integer.valueOf(paramInt) });
   }
   
-  public final boolean a(BlockView paramRs, View paramView) {
+  public final boolean isCompatibleBlock(BlockView paramRs, View paramView) {
     if (!paramRs.fa)
       return true; 
     if (paramView instanceof BaseBlockView) {
@@ -345,7 +345,7 @@ public class BlockPane extends RelativeLayout {
     return false;
   }
   
-  public void b() {
+  public void updatePaneSize() {
     int i = getChildCount();
     int j = (getLayoutParams()).width;
     int k = (getLayoutParams()).width;
@@ -370,14 +370,14 @@ public class BlockPane extends RelativeLayout {
     (getLayoutParams()).height = k;
   }
   
-  public void b(BlockView paramRs) {
-    c(paramRs);
+  public void removeBlockTree(BlockView paramRs) {
+    detachFromParent(paramRs);
     Iterator<BlockView> iterator = paramRs.getAllChildren().iterator();
     while (iterator.hasNext())
       removeView((View)iterator.next()); 
   }
   
-  public boolean b(String paramString) {
+  public boolean hasListReference(String paramString) {
     int i = getChildCount();
     for (int b = 0; b < i; b++) {
       View view = getChildAt(b);
@@ -556,7 +556,7 @@ public class BlockPane extends RelativeLayout {
     return false;
   }
   
-  public Object[] b(BlockView paramRs, int paramInt1, int paramInt2) {
+  public Object[] findNearestSnapPoint(BlockView paramRs, int paramInt1, int paramInt2) {
     byte b;
     Object[] arrayOfObject = null;
     if (paramRs.fa) {
@@ -575,7 +575,7 @@ public class BlockPane extends RelativeLayout {
       int dy = point2.y - arrayOfInt[1];
       int j = Math.abs(dx / 2) + Math.abs(dy);
       if (j < paramInt2 && j < b) {
-        if (a(paramRs, (View)arrayOfObject1[1])) {
+        if (isCompatibleBlock(paramRs, (View)arrayOfObject1[1])) {
           arrayOfObject = arrayOfObject1;
           paramInt2 = j;
         } 
@@ -585,13 +585,13 @@ public class BlockPane extends RelativeLayout {
     return arrayOfObject;
   }
   
-  public void c() {
-    d();
+  public void clearSnapState() {
+    hideActiveBlock();
     this.blockSnapPoints = new ArrayList();
     this.currentSnapPoint = null;
   }
   
-  public void c(BlockView paramRs) {
+  public void detachFromParent(BlockView paramRs) {
     BlockView rs = ((BaseBlockView)paramRs).parentBlock;
     if (rs == null)
       return; 
@@ -601,9 +601,9 @@ public class BlockPane extends RelativeLayout {
     } 
   }
   
-  public void c(BlockView paramRs, int paramInt1, int paramInt2) {
+  public void updateDragPreview(BlockView paramRs, int paramInt1, int paramInt2) {
     getLocationOnScreen(this.locationBuffer);
-    this.currentSnapPoint = b(paramRs, paramInt1, paramInt2);
+    this.currentSnapPoint = findNearestSnapPoint(paramRs, paramInt1, paramInt2);
     boolean bool = paramRs.hasSubstack();
     boolean bool1 = true;
     if (bool && -1 == paramRs.ia) {
@@ -648,11 +648,11 @@ public class BlockPane extends RelativeLayout {
         this.activeBlock.copyBlockDimensions((BaseBlockView)paramRs, false, bool1, paramInt1);
       } 
     } else {
-      d();
+      hideActiveBlock();
     } 
   }
   
-  public boolean c(String paramString) {
+  public boolean hasMapReference(String paramString) {
     int i = getChildCount();
     for (int b = 0; b < i; b++) {
       View view = getChildAt(b);
@@ -804,7 +804,7 @@ public class BlockPane extends RelativeLayout {
     return false;
   }
   
-  public void d() {
+  public void hideActiveBlock() {
     this.activeBlock.setVisibility(8);
   }
   

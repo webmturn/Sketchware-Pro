@@ -39,7 +39,7 @@ public class ViewBlockCollectionEditor extends LogicEditorScrollView {
         if (layoutParamsToBeSet) {
             blockPane.getLayoutParams().width = right - left;
             blockPane.getLayoutParams().height = bottom - top;
-            blockPane.b();
+            blockPane.updatePaneSize();
             layoutParamsToBeSet = false;
         }
     }

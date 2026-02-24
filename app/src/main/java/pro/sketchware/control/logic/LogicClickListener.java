@@ -172,7 +172,7 @@ public class LogicClickListener implements View.OnClickListener {
 
         List<Item> data = new LinkedList<>();
         RemoveAdapter adapter = new RemoveAdapter(logicEditor, data,
-                variableName -> logicEditor.o.c(variableName) || projectDataManager.isVariableUsedInBlocks(javaName, variableName, eventName));
+                variableName -> logicEditor.o.hasMapReference(variableName) || projectDataManager.isVariableUsedInBlocks(javaName, variableName, eventName));
         recyclerView.setAdapter(adapter);
 
         List<Pair<List<Integer>, String>> variableTypes = List.of(
@@ -278,7 +278,7 @@ public class LogicClickListener implements View.OnClickListener {
 
         List<Item> data = new LinkedList<>();
         RemoveAdapter adapter = new RemoveAdapter(logicEditor, data,
-                listName -> logicEditor.o.b(listName) || projectDataManager.isListUsedInBlocks(javaName, listName, eventName));
+                listName -> logicEditor.o.hasListReference(listName) || projectDataManager.isListUsedInBlocks(javaName, listName, eventName));
         recyclerView.setAdapter(adapter);
 
         List<Pair<Integer, String>> listTypes = List.of(

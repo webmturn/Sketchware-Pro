@@ -52,7 +52,7 @@ public class ShowMoreBlockCollectionActivity extends BaseAppCompatActivity imple
             hashMap.put(blockId, block);
 
             pane.nextBlockId = Math.max(pane.nextBlockId, blockId + 1);
-            pane.a(block, 0, 0);
+            pane.addBlock(block, 0, 0);
 
             if (isFirstBlock) {
                 pane.getRoot().setNextBlock(block);
@@ -101,11 +101,11 @@ public class ShowMoreBlockCollectionActivity extends BaseAppCompatActivity imple
             }
         }
         pane.getRoot().layoutChain();
-        pane.b();
+        pane.updatePaneSize();
     }
 
     private void addHeaderBlock(String spec) {
-        pane.a(spec, "moreBlock");
+        pane.createHeaderBlock(spec, "moreBlock");
         var header = pane.getRoot();
         BlockUtil.loadPreviewBlockVariables(pane, header, spec);
         header.layoutChain();
