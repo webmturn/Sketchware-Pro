@@ -292,7 +292,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
         dialogBinding.selectColour.setTextColor(PropertiesUtil.getContrastTextColor(selected_color));
         dialogBinding.selectColour.setOnClickListener(view -> {
             ColorPickerDialog colorPicker = new ColorPickerDialog(this, selected_color_hex, false, false, sc_id);
-            colorPicker.setColorPickerCallback(new ColorPickerDialog.b() {
+            colorPicker.setColorPickerCallback(new ColorPickerDialog.OnColorPickedListener() {
                 @Override
                 public void onColorPicked(int var1) {
                     selected_color = var1;

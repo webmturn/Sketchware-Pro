@@ -4,7 +4,7 @@ import android.widget.TextView;
 
 import com.besome.sketch.lib.ui.ColorPickerDialog;
 
-public class PCP implements ColorPickerDialog.b {
+public class PCP implements ColorPickerDialog.OnColorPickedListener {
 
     private final TextView toSetText;
 

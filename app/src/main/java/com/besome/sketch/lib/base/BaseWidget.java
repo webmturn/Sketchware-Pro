@@ -50,7 +50,7 @@ public class BaseWidget extends LinearLayout {
         return widgetType;
     }
 
-    public void setWidgetType(a widgetType) {
+    public void setWidgetType(WidgetCategory widgetType) {
         this.widgetType = widgetType.ordinal();
     }
 
@@ -63,7 +63,7 @@ public class BaseWidget extends LinearLayout {
         binding.tvWidget.setTextSize(sizeSp);
     }
 
-    public enum a {
+    public enum WidgetCategory {
         a,
         b
     }

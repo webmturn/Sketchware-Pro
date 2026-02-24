@@ -218,9 +218,9 @@ public class BuildConfig {
 
     /**
      * Map containing permissions of Activities. Activity name = {@link String},
-     * Permissions container = {@link a}.
+     * Permissions container = {@link ActivityConfig}.
      */
-    public HashMap<String, a> activityPermissions = new HashMap<>();
+    public HashMap<String, ActivityConfig> activityPermissions = new HashMap<>();
     public ConstVarComponent constVarComponent = new ConstVarComponent();
 
     public boolean hasPermissions() {
@@ -259,20 +259,20 @@ public class BuildConfig {
      */
     public void addPermission(String activityName, int permission) {
         if (!activityPermissions.containsKey(activityName)) {
-            activityPermissions.put(activityName, new a());
+            activityPermissions.put(activityName, new ActivityConfig());
         }
         activityPermissions.get(activityName).addPermission(permission);
         addPermission(permission);
     }
 
     /** Returns the permissions object for the Activity. */
-    public a getActivityPermissions(String activityName) {
+    public ActivityConfig getActivityPermissions(String activityName) {
         return getOrCreateActivityPermissions(activityName);
     }
 
-    public a getOrCreateActivityPermissions(String activityName) {
+    public ActivityConfig getOrCreateActivityPermissions(String activityName) {
         if (!activityPermissions.containsKey(activityName)) {
-            activityPermissions.put(activityName, new a());
+            activityPermissions.put(activityName, new ActivityConfig());
         }
         return activityPermissions.get(activityName);
     }
@@ -302,7 +302,7 @@ public class BuildConfig {
         }
     }
 
-    public static class a {
+    public static class ActivityConfig {
         /**
          * True if Activity contains a Drawer.
          */
@@ -327,7 +327,7 @@ public class BuildConfig {
         }
 
         /**
-         * @return (Most likely) true if the Activity associated with this {@link a} object
+         * @return (Most likely) true if the Activity associated with this {@link ActivityConfig} object
          * will request any runtime permissions
          */
         public boolean needsRuntimePermissions() {

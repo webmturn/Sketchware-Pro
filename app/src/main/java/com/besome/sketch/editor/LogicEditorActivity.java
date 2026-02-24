@@ -1269,7 +1269,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
     public void showColorPicker(FieldBlockView ss) {
         ColorPickerDialog colorPickerDialog = new ColorPickerDialog(this, (ss.getArgValue() == null || ss.getArgValue().toString().isEmpty()) ? "Color.TRANSPARENT" : ss.getArgValue().toString().replace("0xFF", "#"), true, false, scId);
-        colorPickerDialog.setColorPickerCallback(new ColorPickerDialog.b() {
+        colorPickerDialog.setColorPickerCallback(new ColorPickerDialog.OnColorPickedListener() {
             @Override
             public void onColorPicked(int var1) {
                 if (var1 == 0) {

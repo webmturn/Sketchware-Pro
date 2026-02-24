@@ -458,7 +458,7 @@ public class BlocksManager extends BaseAppCompatActivity {
 
         dialogBinding.openColorPalette.setOnClickListener(v1 -> {
             ColorPickerDialog colorPickerDialog = new ColorPickerDialog(this, 0xFFFFFFFF, false, false);
-            colorPickerDialog.setColorPickerCallback(new ColorPickerDialog.b() {
+            colorPickerDialog.setColorPickerCallback(new ColorPickerDialog.OnColorPickedListener() {
                 @Override
                 public void onColorPicked(int colorInt) {
                     dialogBinding.colorEditText.setText(String.format("%06X", colorInt & 0x00FFFFFF));

@@ -6,7 +6,7 @@ import android.view.MotionEvent;
 import android.widget.HorizontalScrollView;
 
 public class CustomHorizontalScrollView extends HorizontalScrollView {
-  public a scrollChangedListener;
+  public OnScrollChangedListener scrollChangedListener;
   
   public boolean scrollEnabled = true;
   
@@ -34,7 +34,7 @@ public class CustomHorizontalScrollView extends HorizontalScrollView {
   
   public void onScrollChanged(int paramInt1, int paramInt2, int paramInt3, int paramInt4) {
     super.onScrollChanged(paramInt1, paramInt2, paramInt3, paramInt4);
-    a a1 = this.scrollChangedListener;
+    OnScrollChangedListener a1 = this.scrollChangedListener;
     if (a1 != null)
       a1.onScrollChanged(paramInt1, paramInt2, paramInt3, paramInt4); 
   }
@@ -43,7 +43,7 @@ public class CustomHorizontalScrollView extends HorizontalScrollView {
     return (this.useScroll && this.scrollEnabled) ? super.onTouchEvent(paramMotionEvent) : false;
   }
   
-  public void setOnScrollChangedListener(a parama) {
+  public void setOnScrollChangedListener(OnScrollChangedListener parama) {
     this.scrollChangedListener = parama;
   }
   
@@ -51,7 +51,7 @@ public class CustomHorizontalScrollView extends HorizontalScrollView {
     this.useScroll = paramBoolean;
   }
   
-  public static interface a {
+  public static interface OnScrollChangedListener {
     void onScrollChanged(int param1Int1, int param1Int2, int param1Int3, int param1Int4);
   }
 }

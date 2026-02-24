@@ -149,7 +149,7 @@ public class PropertyColorItem extends RelativeLayout implements View.OnClickLis
             color = Objects.requireNonNullElseGet(resValue, () -> String.format("#%06X", value));
 
         ColorPickerDialog colorPicker = new ColorPickerDialog((Activity) context, color, key.equals("property_background_color"), true, sc_id);
-        colorPicker.setColorPickerCallback(new ColorPickerDialog.b() {
+        colorPicker.setColorPickerCallback(new ColorPickerDialog.OnColorPickedListener() {
             @Override
             public void onColorPicked(int var1) {
                 setValue(var1);

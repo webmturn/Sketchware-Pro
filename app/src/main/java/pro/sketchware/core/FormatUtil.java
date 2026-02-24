@@ -126,9 +126,9 @@ public class FormatUtil {
   
   public static ArrayList<String> parseBlockSpec(String paramString) {
     ArrayList<String> arrayList = new ArrayList<>();
-    a a = new a(paramString);
-    while (!a.isAtEnd()) {
-      String str = a.nextToken();
+    StringScanner scanner = new StringScanner(paramString);
+    while (!scanner.isAtEnd()) {
+      String str = scanner.nextToken();
       if (str.length() > 0)
         arrayList.add(str); 
     } 
@@ -154,12 +154,12 @@ public class FormatUtil {
     return str;
   }
   
-  public static class a {
+  public static class StringScanner {
     public String input;
     
     public int position;
     
-    public a(String param1String) {
+    public StringScanner(String param1String) {
       this.input = param1String;
       this.position = 0;
     }

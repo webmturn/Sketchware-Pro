@@ -26,7 +26,7 @@ public class ViewFilesAdapter extends BaseFragment {
   
   public ArrayList<ProjectFileBean> projectFiles;
   
-  public a adapter = null;
+  public FileListAdapter adapter = null;
   
   public Boolean isSelectionMode = Boolean.valueOf(false);
   
@@ -193,7 +193,7 @@ public class ViewFilesAdapter extends BaseFragment {
         if (viewBean.type == 3 && projectFileBean.fileType == 0)
           ProjectDataManager.getProjectDataManager(this.projectId).addEvent(projectFileBean.getJavaName(), 1, viewBean.type, viewBean.id, "onClick"); 
       } 
-      a a1 = this.adapter;
+      FileListAdapter a1 = this.adapter;
       a1.notifyItemChanged(a1.selectedPosition);
     } 
   }
@@ -204,7 +204,7 @@ public class ViewFilesAdapter extends BaseFragment {
     this.recyclerView = (RecyclerView)viewGroup.findViewById(R.id.list_activities);
     this.recyclerView.setHasFixedSize(true);
     this.recyclerView.setLayoutManager((RecyclerView.LayoutManager)new LinearLayoutManager(getContext()));
-    this.adapter = new a(this, this.recyclerView);
+    this.adapter = new FileListAdapter(this, this.recyclerView);
     this.recyclerView.setAdapter(this.adapter);
     if (paramBundle == null) {
       this.projectId = requireActivity().getIntent().getStringExtra("sc_id");
@@ -222,12 +222,12 @@ public class ViewFilesAdapter extends BaseFragment {
     super.onSaveInstanceState(paramBundle);
   }
   
-  public class a extends RecyclerView.Adapter<a.ViewHolder> {
+  public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHolder> {
     public int selectedPosition = -1;
     
     public final ViewFilesAdapter outerAdapter;
     
-    public a(ViewFilesAdapter this$0, RecyclerView param1RecyclerView) {
+    public FileListAdapter(ViewFilesAdapter this$0, RecyclerView param1RecyclerView) {
       this.outerAdapter = this$0;
       if (param1RecyclerView.getLayoutManager() instanceof LinearLayoutManager)
         param1RecyclerView.addOnScrollListener(new ViewFileScrollListener(this, this$0)); 
@@ -280,9 +280,9 @@ public class ViewFilesAdapter extends BaseFragment {
       
       public ImageView presetIcon;
       
-      public final ViewFilesAdapter.a adapterRef;
+      public final ViewFilesAdapter.FileListAdapter adapterRef;
       
-      public ViewHolder(ViewFilesAdapter.a this$0, View param2View) {
+      public ViewHolder(ViewFilesAdapter.FileListAdapter this$0, View param2View) {
         super(param2View);
         this.adapterRef = this$0;
         this.checkbox = (CheckBox)param2View.findViewById(R.id.chk_select);

@@ -932,7 +932,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         isLayoutChanged = false;
     }
 
-    public void addWidgetLayout(PaletteWidget.a aVar, String str) {
+    public void addWidgetLayout(PaletteWidget.LayoutType aVar, String str) {
         View widget = paletteWidget.addLayout(aVar, str);
         widget.setClickable(true);
         widget.setOnTouchListener(this);
@@ -944,7 +944,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         extraWidgetLayout.setOnTouchListener(this);
     }
 
-    public void addWidget(PaletteWidget.b bVar, String str, String str2, String str3) {
+    public void addWidget(PaletteWidget.WidgetType bVar, String str, String str2, String str3) {
         View widget = paletteWidget.addWidget(bVar, str, str2, str3);
         widget.setClickable(true);
         widget.setOnTouchListener(this);

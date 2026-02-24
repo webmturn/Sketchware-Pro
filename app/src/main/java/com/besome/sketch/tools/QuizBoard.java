@@ -25,7 +25,7 @@ public class QuizBoard extends LinearLayout implements View.OnClickListener {
 
     private ArrayList<QuizBean> quizList;
     private QuizBean quizBean;
-    private a countdownTimer;
+    private QuizCountDownTimer countdownTimer;
     private QuizBoardBinding quizBinding;
 
     public QuizBoard(Context context) {
@@ -129,13 +129,13 @@ public class QuizBoard extends LinearLayout implements View.OnClickListener {
     }
 
     public final void startTimer() {
-        a var1 = countdownTimer;
+        QuizCountDownTimer var1 = countdownTimer;
         if (var1 != null) {
             var1.cancel();
         }
 
         countdownTimer = null;
-        var1 = new a(15000L, 250L);
+        var1 = new QuizCountDownTimer(15000L, 250L);
         countdownTimer = var1;
         var1.start();
     }
@@ -176,8 +176,8 @@ public class QuizBoard extends LinearLayout implements View.OnClickListener {
         }
     }
 
-    public class a extends CountDownTimer {
-        public a(long var2, long var4) {
+    public class QuizCountDownTimer extends CountDownTimer {
+        public QuizCountDownTimer(long var2, long var4) {
             super(var2, var4);
         }
 

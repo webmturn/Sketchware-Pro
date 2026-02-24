@@ -97,7 +97,7 @@ public class PaletteWidget extends LinearLayout {
         }
     }
 
-    public View addLayout(PaletteWidget.a layoutType, String tag) {
+    public View addLayout(PaletteWidget.LayoutType layoutType, String tag) {
         LinearLayout layout = switch (layoutType) {
             case a -> new IconLinearHorizontal(getContext());
             case b -> new IconLinearVertical(getContext());
@@ -113,7 +113,7 @@ public class PaletteWidget extends LinearLayout {
         return layout;
     }
 
-    public View addWidget(PaletteWidget.b widgetType, String tag, String text, String resourceName) {
+    public View addWidget(PaletteWidget.WidgetType widgetType, String tag, String text, String resourceName) {
         IconBase iconBase;
         switch (widgetType) {
             case a -> iconBase = new IconButton(getContext());
@@ -258,14 +258,14 @@ public class PaletteWidget extends LinearLayout {
         titleWidgets.setVisibility(visibility);
     }
 
-    public enum a {
+    public enum LayoutType {
         a, //eLinearHorizontal
         b, //eLinearVertical
         c, //eScrollHorizontal
         d //eScrollVertical
     }
 
-    public enum b {
+    public enum WidgetType {
         a, //eButton
         b, //eTextView
         c, //eEditText

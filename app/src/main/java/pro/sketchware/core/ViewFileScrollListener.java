@@ -6,9 +6,9 @@ import com.besome.sketch.editor.manage.view.ManageViewActivity;
 public class ViewFileScrollListener extends RecyclerView.OnScrollListener {
   public final ViewFilesAdapter filesAdapter;
   
-  public final ViewFilesAdapter.a innerAdapter;
+  public final ViewFilesAdapter.FileListAdapter innerAdapter;
   
-  public ViewFileScrollListener(ViewFilesAdapter.a parama, ViewFilesAdapter paramxw) {
+  public ViewFileScrollListener(ViewFilesAdapter.FileListAdapter parama, ViewFilesAdapter paramxw) {
     this.filesAdapter = paramxw;
     this.innerAdapter = parama;
   }

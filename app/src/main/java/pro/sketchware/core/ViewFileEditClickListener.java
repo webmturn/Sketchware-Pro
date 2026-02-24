@@ -7,11 +7,11 @@ import com.besome.sketch.beans.ProjectFileBean;
 import com.besome.sketch.editor.manage.view.PresetSettingActivity;
 
 public class ViewFileEditClickListener implements View.OnClickListener {
-  public final ViewFilesAdapter.a a;
+  public final ViewFilesAdapter.FileListAdapter a;
   
-  public final ViewFilesAdapter.a.ViewHolder b;
+  public final ViewFilesAdapter.FileListAdapter.ViewHolder b;
   
-  public ViewFileEditClickListener(ViewFilesAdapter.a.ViewHolder parama, ViewFilesAdapter.a parama1) {
+  public ViewFileEditClickListener(ViewFilesAdapter.FileListAdapter.ViewHolder parama, ViewFilesAdapter.FileListAdapter parama1) {
     this.a = parama1;
     this.b = parama;
   }
@@ -20,7 +20,7 @@ public class ViewFileEditClickListener implements View.OnClickListener {
     char c;
     if (UIHelper.isClickThrottled())
       return; 
-    ViewFilesAdapter.a.ViewHolder a1 = this.b;
+    ViewFilesAdapter.FileListAdapter.ViewHolder a1 = this.b;
     a1.adapterRef.selectedPosition = a1.getLayoutPosition();
     Intent intent = new Intent((Context)this.b.adapterRef.outerAdapter.getActivity(), PresetSettingActivity.class);
     if (((ProjectFileBean)this.b.adapterRef.outerAdapter.projectFiles.get(this.b.adapterRef.selectedPosition)).fileType == 1) {

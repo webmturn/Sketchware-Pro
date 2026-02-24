@@ -242,7 +242,7 @@ public class ColorsEditor extends Fragment {
 
         dialogBinding.colorPreviewCard.setOnClickListener(v -> {
             ColorPickerDialog colorPicker = new ColorPickerDialog(activity, Objects.requireNonNull(dialogBinding.colorValueInput.getText()).toString(), false, false, activity.sc_id);
-            colorPicker.setColorPickerCallback(new ColorPickerDialog.b() {
+            colorPicker.setColorPickerCallback(new ColorPickerDialog.OnColorPickedListener() {
                 @Override
                 public void onColorPicked(int colorInt) {
                     String selectedColorHex = String.format("#%06X", colorInt & 0x00FFFFFF);

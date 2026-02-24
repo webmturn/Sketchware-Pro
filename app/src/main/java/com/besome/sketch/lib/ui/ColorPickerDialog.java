@@ -56,7 +56,7 @@ public class ColorPickerDialog extends PopupWindow {
     private final ColorsAdapter colorsAdapter = new ColorsAdapter();
     private Activity activity;
     private ArrayList<Attribute> attributes;
-    private b colorPickerCallback;
+    private OnColorPickedListener colorPickerCallback;
     private materialColorAttr materialColorAttr;
     private ColorInputValidator colorValidator;
     private int selectedGroupIndex;
@@ -105,7 +105,7 @@ public class ColorPickerDialog extends PopupWindow {
         dialog.show();
     }
 
-    public void setColorPickerCallback(b callback) {
+    public void setColorPickerCallback(OnColorPickedListener callback) {
         colorPickerCallback = callback;
     }
 
@@ -594,7 +594,7 @@ public class ColorPickerDialog extends PopupWindow {
         }
     }
 
-    public interface b {
+    public interface OnColorPickedListener {
         void onColorPicked(int var1);
 
         void onResourceColorPicked(String var1, int var2);

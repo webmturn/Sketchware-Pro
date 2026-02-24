@@ -414,7 +414,7 @@ public class IconCreatorActivity extends BaseAppCompatActivity {
     private void showColorPicker(View v, int r, int oldClr) {
         ColorPickerDialog colorPicker = new ColorPickerDialog(this, oldClr, true, false);
 
-        colorPicker.setColorPickerCallback(new ColorPickerDialog.b() {
+        colorPicker.setColorPickerCallback(new ColorPickerDialog.OnColorPickedListener() {
             @Override
             public void onColorPicked(int colorInt) {
                 switch (r) {

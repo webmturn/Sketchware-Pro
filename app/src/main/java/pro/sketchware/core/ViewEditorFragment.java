@@ -231,11 +231,11 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
     public void setupPalette() {
         viewEditor.removeWidgetsAndLayouts();
         viewEditor.setPaletteLayoutVisible(View.VISIBLE);
-        viewEditor.addWidgetLayout(PaletteWidget.a.a, "");
-        viewEditor.addWidgetLayout(PaletteWidget.a.b, "");
-        viewEditor.addWidget(PaletteWidget.b.b, "", "TextView", "TextView");
-        viewEditor.addWidgetLayout(PaletteWidget.a.c, "");
-        viewEditor.addWidgetLayout(PaletteWidget.a.d, "");
+        viewEditor.addWidgetLayout(PaletteWidget.LayoutType.a, "");
+        viewEditor.addWidgetLayout(PaletteWidget.LayoutType.b, "");
+        viewEditor.addWidget(PaletteWidget.WidgetType.b, "", "TextView", "TextView");
+        viewEditor.addWidgetLayout(PaletteWidget.LayoutType.c, "");
+        viewEditor.addWidgetLayout(PaletteWidget.LayoutType.d, "");
         viewEditor.extraWidgetLayout("", "RadioGroup");
         viewEditor.extraWidgetLayout("", "RelativeLayout");
         widgetsCreatorManager.addWidgetsByTitle("Layouts");
@@ -249,29 +249,29 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
         viewEditor.extraWidgetLayout("", "SwipeRefreshLayout");
         widgetsCreatorManager.addWidgetsByTitle("AndroidX");
 
-        viewEditor.addWidget(PaletteWidget.b.c, "", "EditText", "Edit Text");
+        viewEditor.addWidget(PaletteWidget.WidgetType.c, "", "EditText", "Edit Text");
         viewEditor.extraWidget("", "AutoCompleteTextView", "AutoCompleteTextView");
         viewEditor.extraWidget("", "MultiAutoCompleteTextView", "MultiAutoCompleteTextView");
-        viewEditor.addWidget(PaletteWidget.b.a, "", "Button", "Button");
+        viewEditor.addWidget(PaletteWidget.WidgetType.a, "", "Button", "Button");
         viewEditor.extraWidget("", "MaterialButton", "MaterialButton");
-        viewEditor.addWidget(PaletteWidget.b.d, "", "ImageView", "default_image");
+        viewEditor.addWidget(PaletteWidget.WidgetType.d, "", "ImageView", "default_image");
         viewEditor.extraWidget("", "CircleImageView", "default_image");
-        viewEditor.addWidget(PaletteWidget.b.g, "", "CheckBox", "CheckBox");
+        viewEditor.addWidget(PaletteWidget.WidgetType.g, "", "CheckBox", "CheckBox");
         viewEditor.extraWidget("", "RadioButton", "RadioButton");
-        viewEditor.addWidget(PaletteWidget.b.i, "", "Switch", "Switch");
-        viewEditor.addWidget(PaletteWidget.b.j, "", "SeekBar", "SeekBar");
-        viewEditor.addWidget(PaletteWidget.b.m, "", "ProgressBar", "ProgressBar");
+        viewEditor.addWidget(PaletteWidget.WidgetType.i, "", "Switch", "Switch");
+        viewEditor.addWidget(PaletteWidget.WidgetType.j, "", "SeekBar", "SeekBar");
+        viewEditor.addWidget(PaletteWidget.WidgetType.m, "", "ProgressBar", "ProgressBar");
         viewEditor.extraWidget("", "RatingBar", "RatingBar");
         viewEditor.extraWidget("", "SearchView", "SearchView");
         viewEditor.extraWidget("", "VideoView", "VideoView");
-        viewEditor.addWidget(PaletteWidget.b.h, "", "WebView", "WebView");
+        viewEditor.addWidget(PaletteWidget.WidgetType.h, "", "WebView", "WebView");
         widgetsCreatorManager.addWidgetsByTitle("Widgets");
 
         viewEditor.paletteWidget.extraTitle("List", 1);
-        viewEditor.addWidget(PaletteWidget.b.e, "", "ListView", "ListView");
+        viewEditor.addWidget(PaletteWidget.WidgetType.e, "", "ListView", "ListView");
         viewEditor.extraWidget("", "GridView", "GridView");
         viewEditor.extraWidget("", "RecyclerView", "RecyclerView");
-        viewEditor.addWidget(PaletteWidget.b.f, "", "Spinner", "Spinner");
+        viewEditor.addWidget(PaletteWidget.WidgetType.f, "", "Spinner", "Spinner");
         viewEditor.extraWidget("", "ViewPager", "ViewPager");
         widgetsCreatorManager.addWidgetsByTitle("List");
 
@@ -284,8 +284,8 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
         widgetsCreatorManager.addWidgetsByTitle("Library");
 
         viewEditor.paletteWidget.extraTitle("Google", 1);
-        viewEditor.addWidget(PaletteWidget.b.l, "", "AdView", "AdView");
-        viewEditor.addWidget(PaletteWidget.b.n, "", "MapView", "MapView");
+        viewEditor.addWidget(PaletteWidget.WidgetType.l, "", "AdView", "AdView");
+        viewEditor.addWidget(PaletteWidget.WidgetType.n, "", "MapView", "MapView");
         viewEditor.extraWidget("", "SignInButton", "SignInButton");
         viewEditor.extraWidget("", "YoutubePlayer", "YoutubePlayer");
         widgetsCreatorManager.addWidgetsByTitle("Google");
@@ -295,7 +295,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
         viewEditor.extraWidget("", "DigitalClock", "DigitalClock");
         viewEditor.extraWidget("", "TimePicker", "TimePicker");
         viewEditor.extraWidget("", "DatePicker", "DatePicker");
-        viewEditor.addWidget(PaletteWidget.b.k, "", "CalendarView", "CalendarView");
+        viewEditor.addWidget(PaletteWidget.WidgetType.k, "", "CalendarView", "CalendarView");
         widgetsCreatorManager.addWidgetsByTitle("Date & Time");
         widgetsCreatorManager.addExtraClasses();
     }
