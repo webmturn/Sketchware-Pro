@@ -15,7 +15,7 @@ public class MoreblockValidator extends BaseValidator {
 
     private final String[] reservedKeywords;
     private final ArrayList<String> registeredVariables;
-    private final Pattern j = Pattern.compile("^[a-zA-Z]\\w*(?:\\[[\\w\\[\\],<>?| ]*])?$");
+    private final Pattern identifierPattern = Pattern.compile("^[a-zA-Z]\\w*(?:\\[[\\w\\[\\],<>?| ]*])?$");
     private String[] eventNames;
     private String currentName;
 
@@ -75,7 +75,7 @@ public class MoreblockValidator extends BaseValidator {
                     textInputLayout.setError(Helper.getResString(R.string.logic_editor_message_variable_name_must_start_letter));
                     valid = false;
                 } else {
-                    if (j.matcher(name).matches()) {
+                    if (identifierPattern.matcher(name).matches()) {
                         textInputLayout.setError(null);
                         valid = true;
                     } else {
