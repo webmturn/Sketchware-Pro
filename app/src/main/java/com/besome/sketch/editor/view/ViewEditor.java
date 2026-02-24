@@ -26,6 +26,7 @@ import android.widget.TextView;
 import androidx.annotation.StringRes;
 import androidx.appcompat.content.res.AppCompatResources;
 
+import mod.hey.studios.util.Helper;
 import com.besome.sketch.beans.ProjectFileBean;
 import com.besome.sketch.beans.ProjectResourceBean;
 import com.besome.sketch.beans.ViewBean;
@@ -399,7 +400,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
                         }
                     }
                     if (areImagesAdded) {
-                        SketchToast.toast(getContext(), getString(R.string.view_widget_favorites_image_auto_added), SketchToast.TOAST_NORMAL).show();
+                        SketchToast.toast(getContext(), Helper.getResString(R.string.view_widget_favorites_image_auto_added), SketchToast.TOAST_NORMAL).show();
                     }
                     if (!widgetViews.isEmpty()) {
                         HashMap<String, String> idMappings = new HashMap<>();
@@ -639,7 +640,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
                     }
                 }
                 if (isAdViewUsed && !draggingListener.isAdmobEnabled()) {
-                    SketchToast.warning(getContext(), getString(R.string.design_library_guide_setup_first), SketchToast.TOAST_NORMAL).show();
+                    SketchToast.warning(getContext(), Helper.getResString(R.string.design_library_guide_setup_first), SketchToast.TOAST_NORMAL).show();
                     return;
                 }
 
@@ -651,7 +652,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
                     }
                 }
                 if (isMapViewUsed && !draggingListener.isGoogleMapEnabled()) {
-                    SketchToast.warning(getContext(), getString(R.string.design_library_guide_setup_first), SketchToast.TOAST_NORMAL).show();
+                    SketchToast.warning(getContext(), Helper.getResString(R.string.design_library_guide_setup_first), SketchToast.TOAST_NORMAL).show();
                     return;
                 }
                 boolean isAppCompatViewUsed = false;
@@ -673,17 +674,17 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
                 }
 
                 if (isAppCompatViewUsed && !isAppCompatEnabled) {
-                    SketchToast.warning(getContext(), getString(R.string.design_library_guide_setup_first), SketchToast.TOAST_NORMAL).show();
+                    SketchToast.warning(getContext(), Helper.getResString(R.string.design_library_guide_setup_first), SketchToast.TOAST_NORMAL).show();
                     return;
                 }
             } else if (currentTouchedView instanceof IconAdView && !draggingListener.isAdmobEnabled()) {
-                SketchToast.warning(getContext(), getString(R.string.design_library_guide_setup_first), SketchToast.TOAST_NORMAL).show();
+                SketchToast.warning(getContext(), Helper.getResString(R.string.design_library_guide_setup_first), SketchToast.TOAST_NORMAL).show();
                 return;
             } else if (currentTouchedView instanceof IconMapView && !draggingListener.isGoogleMapEnabled()) {
-                SketchToast.warning(getContext(), getString(R.string.design_library_guide_setup_first), SketchToast.TOAST_NORMAL).show();
+                SketchToast.warning(getContext(), Helper.getResString(R.string.design_library_guide_setup_first), SketchToast.TOAST_NORMAL).show();
                 return;
             } else if (currentTouchedView instanceof AndroidxOrMaterialView && !isAppCompatEnabled) {
-                SketchToast.warning(getContext(), getString(R.string.design_library_guide_setup_first), SketchToast.TOAST_NORMAL).show();
+                SketchToast.warning(getContext(), Helper.getResString(R.string.design_library_guide_setup_first), SketchToast.TOAST_NORMAL).show();
                 return;
             }
         }
@@ -772,15 +773,15 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
 
     private void deleteWidgetFromCollection(String widgetName) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(getContext());
-        dialog.setTitle(getString(R.string.view_widget_favorites_delete_title));
+        dialog.setTitle(Helper.getResString(R.string.view_widget_favorites_delete_title));
         dialog.setIcon(R.drawable.ic_mtrl_delete);
-        dialog.setMessage(getString(R.string.view_widget_favorites_delete_message));
-        dialog.setPositiveButton(getString(R.string.common_word_delete), (v, which) -> {
+        dialog.setMessage(Helper.getResString(R.string.view_widget_favorites_delete_message));
+        dialog.setPositiveButton(Helper.getResString(R.string.common_word_delete), (v, which) -> {
             WidgetCollectionManager.getInstance().removeWidget(widgetName, true);
             setFavoriteData(WidgetCollectionManager.getInstance().getWidgets());
             v.dismiss();
         });
-        dialog.setNegativeButton(getString(R.string.common_word_cancel), null);
+        dialog.setNegativeButton(Helper.getResString(R.string.common_word_cancel), null);
         dialog.show();
     }
 
@@ -802,10 +803,10 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
     private void showDeleteView(boolean show, boolean isCustomWidget) {
         if (isCustomWidget) {
             deleteIcon.setImageDrawable(AppCompatResources.getDrawable(getContext(), R.drawable.ic_mtrl_edit));
-            deleteText.setText(getContext().getString(R.string.editor_drag_to_actions));
+            deleteText.setText(Helper.getResString(R.string.editor_drag_to_actions));
         } else if (show) {
             deleteIcon.setImageDrawable(AppCompatResources.getDrawable(getContext(), R.drawable.ic_mtrl_delete));
-            deleteText.setText(getContext().getString(R.string.editor_drag_to_delete));
+            deleteText.setText(Helper.getResString(R.string.editor_drag_to_delete));
             setDeleteViewIconAndTextUi(false);
         }
         deleteView.bringToFront();

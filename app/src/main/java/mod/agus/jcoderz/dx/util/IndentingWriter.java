@@ -148,10 +148,10 @@ public final class IndentingWriter extends FilterWriter {
 
     /** {@inheritDoc} */
     @Override
-    public void write(String str, int off, int len) throws IOException {
+    public void write(String text, int off, int len) throws IOException {
         synchronized (lock) {
             while (len > 0) {
-                write(str.charAt(off));
+                write(text.charAt(off));
                 off++;
                 len--;
             }

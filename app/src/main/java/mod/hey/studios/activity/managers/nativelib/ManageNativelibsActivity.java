@@ -101,8 +101,8 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
         checkDir();
     }
 
-    private void handleAdapter(String str) {
-        ArrayList<String> nativelibsFile = frc.getNativelibsFile(str);
+    private void handleAdapter(String directoryPath) {
+        ArrayList<String> nativelibsFile = frc.getNativelibsFile(directoryPath);
         Helper.sortPaths(nativelibsFile);
         CustomAdapter adapter = new CustomAdapter(nativelibsFile);
         binding.filesListRecyclerView.setAdapter(adapter);

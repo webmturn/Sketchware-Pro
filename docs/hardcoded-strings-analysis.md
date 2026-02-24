@@ -2,7 +2,31 @@
 
 本文档详细记录了 Sketchware Pro 代码库中需要提取到 `strings.xml` 以支持国际化的硬编码英文字符串。
 
-## 统计概览
+## 最新状态 (2026-02-25)
+
+### 国际化架构
+
+项目使用自定义语言覆盖机制（`LanguageOverrideManager` + `Helper.getResString()`），而非 Android 原生 `values-xx/` 多语言目录。
+
+| 指标 | 数量 | 说明 |
+|------|------|------|
+| **strings.xml 已有条目** | **~3370+** | 包含本次新增的 16 条 |
+| **使用 Helper.getResString()** | **~1246 处 / 143 文件** | ✅ 支持语言覆盖 |
+| **使用 context.getString()** | **~355 处 / 82 文件** | ⚠️ 绕过覆盖机制 |
+| **翻译资源目录 (values-xx/)** | **0 个** | ❌ 无内置翻译 |
+
+### 已完成的提取工作
+
+| 批次 | 文件 | 提取数 | 新增字符串资源 |
+|------|------|--------|----------------|
+| 批次1 | 大量文件（历史提交） | ~800+ | 绝大部分对话框/按钮/菜单/Toast |
+| 批次2 (本次) | BackupRestoreManager | 2 | `backup_restore_local_libs_single/multi` |
+| 批次2 (本次) | CustomBlocksDialog | 3 | `custom_blocks_used_count/missing_one/missing_multi` |
+| 批次2 (本次) | ExcludeBuiltInLibrariesActivity | 5 | `library_default_description/excluded_count` + 菜单 |
+| 批次2 (本次) | DesignActivity | 1 | `design_error_install_failed` |
+| 批次2 (本次) | 5个资源编辑器 | 10 | `resource_type_*` (10个类型名) |
+
+## 原始统计概览（初始扫描时）
 
 | 类别 | 数量 |
 |------|------|
@@ -16,40 +40,43 @@
 | **已审查XML文件** | **90个** |
 | **扫描维度** | **19个** |
 
+> **注意**: 上述原始统计中的大部分高优先级项目已在历史提交中完成国际化。
+> 当前实际剩余的用户可见硬编码字符串主要集中在技术术语和内部标识符，不需要翻译。
+
 ---
 
 ## 一、UI组件与对话框
 
-### 1.1 对话框标题 (Dialog Titles)
+### 1.1 对话框标题 (Dialog Titles) — ✅ 全部已完成
 
-| 文件路径 | 行号 | 硬编码字符串 | 建议键名 |
-|----------|------|--------------|----------|
-| `mod/khaled/logcat/LogReaderActivity.java` | 130 | `"Filter by package name"` | `dialog_title_filter_package` |
-| `mod/jbk/editor/manage/library/ExcludeBuiltInLibrariesActivity.java` | 188 | `"Exclude built-in libraries"` | `dialog_title_exclude_libraries` |
-| `mod/jbk/editor/manage/library/ExcludeBuiltInLibrariesActivity.java` | 297 | `"Select built-in libraries"` | `dialog_title_select_libraries` |
-| `mod/hey/studios/project/backup/BackupRestoreManager.java` | 68 | `"Backup Options"` | `dialog_title_backup_options` |
-| `mod/hey/studios/project/backup/BackupRestoreManager.java` | 148 | `"Warning"` | `dialog_title_warning` |
-| `mod/hey/studios/project/backup/BackupRestoreManager.java` | 193 | `"Please wait"` | `dialog_title_please_wait` |
-| `mod/hey/studios/project/backup/BackupRestoreManager.java` | 249 | `"Please wait"` | `dialog_title_please_wait` |
-| `mod/hey/studios/moreblock/importer/MoreblockImporterDialog.java` | 39 | `"Select a more block"` | `dialog_title_select_moreblock` |
-| `mod/hey/studios/project/custom_blocks/CustomBlocksDialog.java` | 140 | `"Import Custom blocks to"` | `dialog_title_import_blocks` |
-| `mod/hey/studios/project/custom_blocks/CustomBlocksDialog.java` | 187 | `"Create a new palette"` | `dialog_title_create_palette` |
+| 文件路径 | 硬编码字符串 | 状态 |
+|----------|--------------|------|
+| `LogReaderActivity.java` | `"Filter by package name"` | ✅ `R.string.logcat_title_filter_package` |
+| `ExcludeBuiltInLibrariesActivity.java` | `"Exclude built-in libraries"` | ✅ `R.string.library_title_exclude` |
+| `ExcludeBuiltInLibrariesActivity.java` | `"Select built-in libraries"` | ✅ `R.string.library_title_select` |
+| `BackupRestoreManager.java` | `"Backup Options"` | ✅ `R.string.backup_title_options` |
+| `BackupRestoreManager.java` | `"Warning"` | ✅ `R.string.common_word_warning` |
+| `BackupRestoreManager.java` | `"Please wait"` | ✅ `R.string.common_word_please_wait` |
+| `MoreblockImporterDialog.java` | `"Select a more block"` | ✅ `R.string.logic_more_block_title_select` |
+| `CustomBlocksDialog.java` | `"Import Custom blocks to"` | ✅ `R.string.blocks_title_import_to` |
+| `CustomBlocksDialog.java` | `"Create a new palette"` | ✅ `R.string.blocks_title_create_palette` |
 
-### 1.2 对话框消息 (Dialog Messages)
+### 1.2 对话框消息 (Dialog Messages) — ✅ 全部已完成
 
-| 文件路径 | 行号 | 硬编码字符串 | 建议键名 |
-|----------|------|--------------|----------|
-| `mod/khaled/logcat/LogReaderActivity.java` | 131 | `"For multiple package names, separate them with a comma (,)."` | `dialog_msg_package_filter_hint` |
-| `mod/jbk/editor/manage/library/ExcludeBuiltInLibrariesActivity.java` | 281 | `"Reset excluded built-in libraries? This action cannot be undone."` | `dialog_msg_reset_libraries_confirm` |
-| `mod/hey/studios/project/backup/BackupRestoreManager.java` | 191 | `"Creating backup..."` | `dialog_msg_creating_backup` |
-| `mod/hey/studios/project/backup/BackupRestoreManager.java` | 247 | `"Restoring..."` | `dialog_msg_restoring` |
+| 文件路径 | 硬编码字符串 | 状态 |
+|----------|--------------|------|
+| `LogReaderActivity.java` | `"For multiple package names..."` | ✅ `R.string.logcat_msg_filter_hint` |
+| `ExcludeBuiltInLibrariesActivity.java` | `"Reset excluded built-in libraries?..."` | ✅ `R.string.library_msg_reset_confirm` |
+| `BackupRestoreManager.java` | `"Creating backup..."` | ✅ `R.string.backup_msg_creating` |
+| `BackupRestoreManager.java` | `"Restoring..."` | ✅ `R.string.backup_msg_restoring` |
+| `BackupRestoreManager.java` | Local libraries restore message (单/多) | ✅ `R.string.backup_restore_local_libs_single/multi` (本次) |
 
-### 1.3 按钮标签 (Button Labels)
+### 1.3 按钮标签 (Button Labels) — ✅ 全部已完成
 
-| 文件路径 | 行号 | 硬编码字符串 | 建议键名 |
-|----------|------|--------------|----------|
-| `mod/hey/studios/project/backup/BackupRestoreManager.java` | 151 | `"Copy"` | `button_copy` |
-| `mod/hey/studios/project/custom_blocks/CustomBlocksDialog.java` | 142 | `"Create new palette"` | `button_create_palette` |
+| 文件路径 | 硬编码字符串 | 状态 |
+|----------|--------------|------|
+| `BackupRestoreManager.java` | `"Copy"` | ✅ `R.string.backup_button_copy_libs` |
+| `CustomBlocksDialog.java` | `"Create new palette"` | ✅ `R.string.blocks_button_create_palette` |
 
 ---
 
@@ -507,38 +534,38 @@ res/values-ko/strings.xml     (韩语)
 
 ### 需要国际化的文件（按优先级排序）
 
-#### 高优先级（用户直接可见）
+#### 高优先级（用户直接可见） — ✅ 全部已完成
 
-| 序号 | 文件路径 | 硬编码数 |
-|------|----------|----------|
-| 1 | `export/ExportProjectActivity.java` | 7 |
-| 2 | `tools/CollectErrorActivity.java` | 2 |
-| 3 | `editor/view/ViewEvents.java` | 2 |
-| 4 | `mod/khaled/logcat/LogReaderActivity.java` | 2 |
-| 5 | `mod/hey/studios/project/backup/BackupRestoreManager.java` | 8 |
-| 6 | `mod/jbk/editor/manage/library/ExcludeBuiltInLibrariesActivity.java` | 3 |
-| 7 | `mod/hey/studios/project/custom_blocks/CustomBlocksDialog.java` | 3 |
+| 序号 | 文件路径 | 原硬编码数 | 状态 |
+|------|----------|----------|------|
+| 1 | `export/ExportProjectActivity.java` | 7 | ✅ 已国际化 |
+| 2 | `tools/CollectErrorActivity.java` | 2 | ✅ 已国际化 |
+| 3 | `editor/view/ViewEvents.java` | 2 | ✅ 已国际化 |
+| 4 | `mod/khaled/logcat/LogReaderActivity.java` | 2 | ✅ 已国际化 |
+| 5 | `mod/hey/studios/project/backup/BackupRestoreManager.java` | 8 | ✅ 已国际化（本次完成最后2处） |
+| 6 | `mod/jbk/editor/manage/library/ExcludeBuiltInLibrariesActivity.java` | 3 | ✅ 已国际化（本次完成） |
+| 7 | `mod/hey/studios/project/custom_blocks/CustomBlocksDialog.java` | 3 | ✅ 已国际化（本次完成） |
 
-#### 中优先级
+#### 中优先级 — ✅ 大部分已完成
 
-| 序号 | 文件路径 | 硬编码数 |
-|------|----------|----------|
-| 8 | `pro/sketchware/menu/DefaultExtraMenuBean.java` | 18 |
-| 9 | `dev/aldi/sayuti/block/ExtraPaletteBlock.java` | 15 |
-| 10 | `mod/hilal/saif/activities/tools/BlocksManagerDetailsActivity.java` | 15 |
-| 11 | `mod/hey/studios/code/SrcCodeEditor.java` | 14 |
-| 12 | `com/besome/sketch/projects/ThemeManager.java` | 13 |
-| 13 | `mod/hilal/saif/blocks/BlocksHandler.java` | 13 |
-| 14 | `mod/hey/studios/lib/code_editor/CodeEditorLayout.java` | 12 |
+| 序号 | 文件路径 | 原硬编码数 | 状态 |
+|------|----------|----------|------|
+| 8 | `pro/sketchware/menu/DefaultExtraMenuBean.java` | 18 | ✅ 已国际化 (41处getResString) |
+| 9 | `dev/aldi/sayuti/block/ExtraPaletteBlock.java` | 15 | ✅ 已国际化 (75处getResString) |
+| 10 | `mod/hilal/saif/activities/tools/BlocksManagerDetailsActivity.java` | 15 | ✅ 已国际化 (20处R.string) |
+| 11 | `mod/hey/studios/code/SrcCodeEditor.java` | 14 | ✅ 已国际化 (9处getResString) |
+| 12 | `com/besome/sketch/projects/ThemeManager.java` | 13 | ⚠️ 内部主题标识符 |
+| 13 | `mod/hilal/saif/blocks/BlocksHandler.java` | 13 | ⚠️ 块操作码/技术标识符 |
+| 14 | `mod/hey/studios/lib/code_editor/CodeEditorLayout.java` | 12 | ⚠️ 编辑器内部标识 |
 
-#### 低优先级（内部/调试）
+#### 低优先级（内部/调试） — 不需要翻译
 
-| 序号 | 文件路径 | 硬编码数 |
-|------|----------|----------|
-| 15 | `a/a/a/BlockColorMapper.java` | 9 |
-| 16 | `mod/hilal/saif/activities/tools/BlocksManager.java` | 6 |
-| 17 | `mod/hilal/saif/components/ComponentsHandler.java` | 6 |
-| 18 | `mod/hilal/saif/events/EventsHandler.java` | 6 |
+| 序号 | 文件路径 | 硬编码数 | 状态 |
+|------|----------|----------|------|
+| 15 | `pro/sketchware/core/BlockColorMapper.java` | 9 | ⏭️ 块操作码映射，技术标识符 |
+| 16 | `mod/hilal/saif/activities/tools/BlocksManager.java` | 6 | ✅ 已国际化 |
+| 17 | `mod/hilal/saif/components/ComponentsHandler.java` | 6 | ⏭️ 组件技术名称 |
+| 18 | `mod/hilal/saif/events/EventsHandler.java` | 6 | ⏭️ 事件技术名称 |
 
 ---
 

@@ -307,8 +307,8 @@ public class ManageEvent {
         }
     }
 
-    public static int getDrawableForEvent(String str) {
-        return switch (str) {
+    public static int getDrawableForEvent(String eventName) {
+        return switch (eventName) {
             case "onUpdateProfileComplete" -> R.drawable.ic_mtrl_user_edit;
             case "onEmailVerificationSent" -> R.drawable.ic_mtrl_sms_check;
             case "onDateChanged", "onDateSet" -> R.drawable.ic_mtrl_date_changed;
@@ -344,7 +344,7 @@ public class ManageEvent {
             case "onCompleteRegister" -> R.drawable.ic_mtrl_user_register_complete;
             case "onUpdatePasswordComplete" -> R.drawable.ic_mtrl_password;
             case "onUserEarnedReward" -> R.drawable.ic_mtrl_payment;
-            default -> EventsHandler.getIcon(str);
+            default -> EventsHandler.getIcon(eventName);
         };
     }
 

@@ -27,7 +27,7 @@ import pro.sketchware.utility.FileUtil;
 public class CommandBlock {
 
     public static String applyCommands(String fileName, String c) {
-        String str = c;
+        String result = c;
         String path = FileUtil.getExternalStorageDir().concat("/.sketchware/temp/commands");
         ArrayList<HashMap<String, Object>> data;
         try {
@@ -40,12 +40,12 @@ public class CommandBlock {
                     //writeLog("element : " + i);
                     if (getInputName((String) data.get(i).get("input")).equals(fileName)) {
                         //writeLog("element : " + i + " > find a target !!");
-                        str = processCommand(str, data.get(i));
+                        result = processCommand(result, data.get(i));
                         //writeLog("element : " + i + " > N is done :l");
                     }
                 }
                 //writeLog("process is succeeded");
-                return str;
+                return result;
             } else {
                 //writeLog("file isn't found :(");
                 return c;

@@ -117,8 +117,8 @@ public class StringsEditor extends Fragment {
     public void updateNoContentLayout() {
         if (listmap.isEmpty()) {
             binding.noContentLayout.setVisibility(View.VISIBLE);
-            binding.noContentTitle.setText(String.format(Helper.getResString(R.string.resource_manager_no_list_title), "Strings"));
-            binding.noContentBody.setText(String.format(Helper.getResString(R.string.resource_manager_no_list_body), "string"));
+            binding.noContentTitle.setText(String.format(Helper.getResString(R.string.resource_manager_no_list_title), Helper.getResString(R.string.resource_type_strings)));
+            binding.noContentBody.setText(String.format(Helper.getResString(R.string.resource_manager_no_list_body), Helper.getResString(R.string.resource_type_string_lower)));
         } else {
             binding.noContentLayout.setVisibility(View.GONE);
         }

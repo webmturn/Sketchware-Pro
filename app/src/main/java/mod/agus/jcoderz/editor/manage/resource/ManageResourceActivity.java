@@ -123,8 +123,8 @@ public class ManageResourceActivity extends BaseAppCompatActivity {
         checkDir();
     }
 
-    private void handleAdapter(String str) {
-        ArrayList<String> resourceFile = frc.getResourceFile(str);
+    private void handleAdapter(String resourceType) {
+        ArrayList<String> resourceFile = frc.getResourceFile(resourceType);
         //noinspection Java8ListSort
         Collections.sort(resourceFile, String.CASE_INSENSITIVE_ORDER);
         adapter = new CustomAdapter(resourceFile);

@@ -33,10 +33,10 @@ public class ExceptionWithContext extends RuntimeException {
      * was not.
      *
      * @param ex {@code non-null;} the exception to augment
-     * @param str {@code non-null;} context to add
+     * @param contextStr {@code non-null;} context to add
      * @return {@code non-null;} an appropriate instance
      */
-    public static ExceptionWithContext withContext(Throwable ex, String str) {
+    public static ExceptionWithContext withContext(Throwable ex, String contextStr) {
         ExceptionWithContext ewc;
 
         if (ex instanceof ExceptionWithContext) {
@@ -45,7 +45,7 @@ public class ExceptionWithContext extends RuntimeException {
             ewc = new ExceptionWithContext(ex);
         }
 
-        ewc.addContext(str);
+        ewc.addContext(contextStr);
         return ewc;
     }
 
@@ -104,15 +104,15 @@ public class ExceptionWithContext extends RuntimeException {
     /**
      * Adds a line of context to this instance.
      *
-     * @param str {@code non-null;} new context
+     * @param contextStr {@code non-null;} new context
      */
-    public void addContext(String str) {
-        if (str == null) {
-            throw new NullPointerException("str == null");
+    public void addContext(String contextStr) {
+        if (contextStr == null) {
+            throw new NullPointerException("contextStr == null");
         }
 
-        context.append(str);
-        if (!str.endsWith("\n")) {
+        context.append(contextStr);
+        if (!contextStr.endsWith("\n")) {
             context.append('\n');
         }
     }

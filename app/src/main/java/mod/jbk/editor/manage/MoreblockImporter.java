@@ -113,30 +113,30 @@ public class MoreblockImporter {
             if (!paramClassInfo.isEmpty()) {
                 for (int i = 0; i < paramClassInfo.size(); i++) {
                     ClassInfo gx = paramClassInfo.get(i);
-                    String str = next.parameters.get(i);
-                    if (!str.isEmpty() && str.charAt(0) != '@') {
+                    String paramValue = next.parameters.get(i);
+                    if (!paramValue.isEmpty() && paramValue.charAt(0) != '@') {
                         if (gx.isExactType("boolean.SelectBoolean")) {
-                            maybeAddVariable(0, str);
+                            maybeAddVariable(0, paramValue);
                         } else if (gx.isExactType("double.SelectDouble")) {
-                            maybeAddVariable(1, str);
+                            maybeAddVariable(1, paramValue);
                         } else if (gx.isExactType("String.SelectString")) {
-                            maybeAddVariable(2, str);
+                            maybeAddVariable(2, paramValue);
                         } else if (gx.isExactType("Map")) {
-                            maybeAddVariable(3, str);
+                            maybeAddVariable(3, paramValue);
                         } else if (gx.isExactType("ListInt")) {
-                            maybeAddList(1, str);
+                            maybeAddList(1, paramValue);
                         } else if (gx.isExactType("ListString")) {
-                            maybeAddList(2, str);
+                            maybeAddList(2, paramValue);
                         } else if (gx.isExactType("ListMap")) {
-                            maybeAddList(3, str);
+                            maybeAddList(3, paramValue);
                         } else if (!gx.isExactType("resource_bg") && !gx.isExactType("resource")) {
                             if (gx.isExactType("sound")) {
-                                maybeAddSound(str);
+                                maybeAddSound(paramValue);
                             } else if (gx.isExactType("font")) {
-                                maybeAddFont(str);
+                                maybeAddFont(paramValue);
                             }
                         } else {
-                            maybeAddImage(str);
+                            maybeAddImage(paramValue);
                         }
                     }
                 }

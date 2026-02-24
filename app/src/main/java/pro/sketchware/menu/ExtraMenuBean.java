@@ -247,42 +247,42 @@ public class ExtraMenuBean {
         String title;
         switch (menuName) {
             case "varInt":
-                title = logicEditor.getString(R.string.logic_editor_title_select_variable_number);
+                title = Helper.getResString(R.string.logic_editor_title_select_variable_number);
                 menus = getVarMenus(VARIABLE_TYPE_NUMBER);
                 break;
 
             case "varBool":
-                title = logicEditor.getString(R.string.logic_editor_title_select_variable_boolean);
+                title = Helper.getResString(R.string.logic_editor_title_select_variable_boolean);
                 menus = getVarMenus(VARIABLE_TYPE_BOOLEAN);
                 break;
 
             case "varStr":
-                title = logicEditor.getString(R.string.logic_editor_title_select_variable_string);
+                title = Helper.getResString(R.string.logic_editor_title_select_variable_string);
                 menus = getVarMenus(VARIABLE_TYPE_STRING);
                 break;
 
             case "varMap":
-                title = logicEditor.getString(R.string.logic_editor_title_select_variable_map);
+                title = Helper.getResString(R.string.logic_editor_title_select_variable_map);
                 menus = getVarMenus(VARIABLE_TYPE_MAP);
                 break;
 
             case "listInt":
-                title = logicEditor.getString(R.string.logic_editor_title_select_list_number);
+                title = Helper.getResString(R.string.logic_editor_title_select_list_number);
                 menus = getListMenus(LIST_TYPE_NUMBER);
                 break;
 
             case "listStr":
-                title = logicEditor.getString(R.string.logic_editor_title_select_list_string);
+                title = Helper.getResString(R.string.logic_editor_title_select_list_string);
                 menus = getListMenus(LIST_TYPE_STRING);
                 break;
 
             case "listMap":
-                title = logicEditor.getString(R.string.logic_editor_title_select_list_map);
+                title = Helper.getResString(R.string.logic_editor_title_select_list_map);
                 menus = getListMenus(LIST_TYPE_MAP);
                 break;
 
             case "list":
-                title = logicEditor.getString(R.string.logic_editor_title_select_list);
+                title = Helper.getResString(R.string.logic_editor_title_select_list);
                 for (String variable : projectDataManager.getListNames(javaName)) {
                     String variableName = CustomVariableUtil.getVariableName(variable);
                     menus.add(variableName != null ? variableName : variable);
@@ -290,192 +290,192 @@ public class ExtraMenuBean {
                 break;
 
             case "intent":
-                title = logicEditor.getString(R.string.logic_editor_title_select_component_intent);
+                title = Helper.getResString(R.string.logic_editor_title_select_component_intent);
                 menus = getComponentMenus(ComponentBean.COMPONENT_TYPE_INTENT);
                 break;
 
             case "file":
-                title = logicEditor.getString(R.string.logic_editor_title_select_component_file);
+                title = Helper.getResString(R.string.logic_editor_title_select_component_file);
                 menus = getComponentMenus(ComponentBean.COMPONENT_TYPE_SHAREDPREF);
                 break;
 
             case "intentAction":
-                title = logicEditor.getString(R.string.logic_editor_title_select_component_intent_action);
+                title = Helper.getResString(R.string.logic_editor_title_select_component_intent_action);
                 menus = new ArrayList<>(Arrays.asList(BlockConstants.INTENT_ACTIONS));
                 break;
 
             case "intentFlags":
-                title = logicEditor.getString(R.string.logic_editor_title_select_component_intent_flags);
+                title = Helper.getResString(R.string.logic_editor_title_select_component_intent_flags);
                 menus = new ArrayList<>(Arrays.asList(BlockConstants.INTENT_FLAGS));
                 break;
 
             case "calendar":
-                title = logicEditor.getString(R.string.logic_editor_title_select_component_calendar);
+                title = Helper.getResString(R.string.logic_editor_title_select_component_calendar);
                 menus = getComponentMenus(ComponentBean.COMPONENT_TYPE_CALENDAR);
                 break;
 
             case "calendarField":
-                title = logicEditor.getString(R.string.logic_editor_title_select_component_calendar_field);
+                title = Helper.getResString(R.string.logic_editor_title_select_component_calendar_field);
                 menus = new ArrayList<>(Arrays.asList(BlockConstants.CALENDAR_FIELDS));
                 break;
 
             case "vibrator":
-                title = logicEditor.getString(R.string.logic_editor_title_select_component_vibrator);
+                title = Helper.getResString(R.string.logic_editor_title_select_component_vibrator);
                 menus = getComponentMenus(ComponentBean.COMPONENT_TYPE_VIBRATOR);
                 break;
 
             case "timer":
-                title = logicEditor.getString(R.string.logic_editor_title_select_component_timer);
+                title = Helper.getResString(R.string.logic_editor_title_select_component_timer);
                 menus = getComponentMenus(ComponentBean.COMPONENT_TYPE_TIMERTASK);
                 break;
 
             case "firebase":
-                title = logicEditor.getString(R.string.logic_editor_title_select_component_firebase);
+                title = Helper.getResString(R.string.logic_editor_title_select_component_firebase);
                 menus = getComponentMenus(ComponentBean.COMPONENT_TYPE_FIREBASE);
                 break;
 
             case "firebaseauth":
-                title = logicEditor.getString(R.string.logic_editor_component_firebaseauth_title_select_firebase_auth);
+                title = Helper.getResString(R.string.logic_editor_component_firebaseauth_title_select_firebase_auth);
                 menus = getComponentMenus(ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH);
                 break;
 
             case "firebasestorage":
-                title = logicEditor.getString(R.string.logic_editor_title_select_component_firebasestorage);
+                title = Helper.getResString(R.string.logic_editor_title_select_component_firebasestorage);
                 menus = getComponentMenus(ComponentBean.COMPONENT_TYPE_FIREBASE_STORAGE);
                 break;
 
             case "dialog":
-                title = logicEditor.getString(R.string.logic_editor_title_select_component_dialog);
+                title = Helper.getResString(R.string.logic_editor_title_select_component_dialog);
                 menus = getComponentMenus(ComponentBean.COMPONENT_TYPE_DIALOG);
                 break;
 
             case "mediaplayer":
-                title = logicEditor.getString(R.string.logic_editor_title_select_component_mediaplayer);
+                title = Helper.getResString(R.string.logic_editor_title_select_component_mediaplayer);
                 menus = getComponentMenus(ComponentBean.COMPONENT_TYPE_MEDIAPLAYER);
                 break;
 
             case "soundpool":
-                title = logicEditor.getString(R.string.logic_editor_title_select_component_soundpool);
+                title = Helper.getResString(R.string.logic_editor_title_select_component_soundpool);
                 menus = getComponentMenus(ComponentBean.COMPONENT_TYPE_SOUNDPOOL);
                 break;
 
             case "objectanimator":
-                title = logicEditor.getString(R.string.logic_editor_title_select_component_objectanimator);
+                title = Helper.getResString(R.string.logic_editor_title_select_component_objectanimator);
                 menus = getComponentMenus(ComponentBean.COMPONENT_TYPE_OBJECTANIMATOR);
                 break;
 
             case "aniRepeatMode":
-                title = logicEditor.getString(R.string.logic_editor_title_select_animator_repeat_mode);
+                title = Helper.getResString(R.string.logic_editor_title_select_animator_repeat_mode);
                 menus = new ArrayList<>(Arrays.asList(BlockConstants.REPEAT_MODES));
                 break;
 
             case "aniInterpolator":
-                title = logicEditor.getString(R.string.logic_editor_title_select_animator_interpolator);
+                title = Helper.getResString(R.string.logic_editor_title_select_animator_interpolator);
                 menus = new ArrayList<>(Arrays.asList(BlockConstants.INTERPOLATOR_TYPES));
                 break;
 
             case "visible":
-                title = logicEditor.getString(R.string.logic_editor_title_select_visibility);
+                title = Helper.getResString(R.string.logic_editor_title_select_visibility);
                 menus = new ArrayList<>(Arrays.asList(BlockConstants.VISIBILITY_OPTIONS));
                 break;
 
             case "cacheMode":
-                title = logicEditor.getString(R.string.logic_editor_title_select_cache_mode);
+                title = Helper.getResString(R.string.logic_editor_title_select_cache_mode);
                 menus = new ArrayList<>(Arrays.asList(BlockConstants.CACHE_MODES));
                 break;
 
             case "animatorproperty":
-                title = logicEditor.getString(R.string.logic_editor_title_select_animator_target_property);
+                title = Helper.getResString(R.string.logic_editor_title_select_animator_target_property);
                 menus = new ArrayList<>(Arrays.asList(BlockConstants.ANIMATION_PROPERTIES));
                 break;
 
             case "gyroscope":
-                title = logicEditor.getString(R.string.logic_editor_title_select_component_gyroscope);
+                title = Helper.getResString(R.string.logic_editor_title_select_component_gyroscope);
                 menus = getComponentMenus(ComponentBean.COMPONENT_TYPE_GYROSCOPE);
                 break;
 
             case "interstitialad":
-                title = logicEditor.getString(R.string.logic_editor_title_select_component_interstitialad);
+                title = Helper.getResString(R.string.logic_editor_title_select_component_interstitialad);
                 menus = getComponentMenus(ComponentBean.COMPONENT_TYPE_INTERSTITIAL_AD);
                 break;
 
             case "camera":
-                title = logicEditor.getString(R.string.logic_editor_title_select_component_camera);
+                title = Helper.getResString(R.string.logic_editor_title_select_component_camera);
                 menus = getComponentMenus(ComponentBean.COMPONENT_TYPE_CAMERA);
                 break;
 
             case "filepicker":
-                title = logicEditor.getString(R.string.logic_editor_title_select_component_filepicker);
+                title = Helper.getResString(R.string.logic_editor_title_select_component_filepicker);
                 menus = getComponentMenus(ComponentBean.COMPONENT_TYPE_FILE_PICKER);
                 break;
 
             case "directoryType":
-                title = logicEditor.getString(R.string.logic_editor_title_select_directory_type);
+                title = Helper.getResString(R.string.logic_editor_title_select_directory_type);
                 menus = new ArrayList<>(Arrays.asList(BlockConstants.STORAGE_DIRECTORIES));
                 break;
 
             case "requestnetwork":
-                title = logicEditor.getString(R.string.logic_editor_title_select_component_request_network);
+                title = Helper.getResString(R.string.logic_editor_title_select_component_request_network);
                 menus = getComponentMenus(ComponentBean.COMPONENT_TYPE_REQUEST_NETWORK);
                 break;
 
             case "method":
-                title = logicEditor.getString(R.string.logic_editor_title_request_network_method);
+                title = Helper.getResString(R.string.logic_editor_title_request_network_method);
                 menus = new ArrayList<>(Arrays.asList(BlockConstants.HTTP_METHODS));
                 break;
 
             case "requestType":
-                title = logicEditor.getString(R.string.logic_editor_title_request_network_request_type);
+                title = Helper.getResString(R.string.logic_editor_title_request_network_request_type);
                 menus = new ArrayList<>(Arrays.asList(BlockConstants.REQUEST_TYPES));
                 break;
 
             case "texttospeech":
-                title = logicEditor.getString(R.string.logic_editor_title_select_component_text_to_speech);
+                title = Helper.getResString(R.string.logic_editor_title_select_component_text_to_speech);
                 menus = getComponentMenus(ComponentBean.COMPONENT_TYPE_TEXT_TO_SPEECH);
                 break;
 
             case "speechtotext":
-                title = logicEditor.getString(R.string.logic_editor_title_select_component_speech_to_text);
+                title = Helper.getResString(R.string.logic_editor_title_select_component_speech_to_text);
                 menus = getComponentMenus(ComponentBean.COMPONENT_TYPE_SPEECH_TO_TEXT);
                 break;
 
             case "bluetoothconnect":
-                title = logicEditor.getString(R.string.logic_editor_title_select_component_bluetooth_connect);
+                title = Helper.getResString(R.string.logic_editor_title_select_component_bluetooth_connect);
                 menus = getComponentMenus(ComponentBean.COMPONENT_TYPE_BLUETOOTH_CONNECT);
                 break;
 
             case "locationmanager":
-                title = logicEditor.getString(R.string.logic_editor_title_select_component_location_manager);
+                title = Helper.getResString(R.string.logic_editor_title_select_component_location_manager);
                 menus = getComponentMenus(ComponentBean.COMPONENT_TYPE_LOCATION_MANAGER);
                 break;
 
             case "videoad":
-                title = logicEditor.getString(R.string.logic_editor_title_select_component);
+                title = Helper.getResString(R.string.logic_editor_title_select_component);
                 menus = getComponentMenus(ComponentBean.COMPONENT_TYPE_REWARDED_VIDEO_AD);
                 break;
 
             case "progressdialog":
-                title = logicEditor.getString(R.string.logic_editor_title_select_component);
+                title = Helper.getResString(R.string.logic_editor_title_select_component);
                 menus = getComponentMenus(ComponentBean.COMPONENT_TYPE_PROGRESS_DIALOG);
                 break;
 
             case "datepickerdialog":
-                title = logicEditor.getString(R.string.logic_editor_title_select_component);
+                title = Helper.getResString(R.string.logic_editor_title_select_component);
                 menus = getComponentMenus(ComponentBean.COMPONENT_TYPE_DATE_PICKER_DIALOG);
                 break;
 
             case "asynctask":
-                title = logicEditor.getString(R.string.logic_editor_title_select_component);
+                title = Helper.getResString(R.string.logic_editor_title_select_component);
                 menus = getComponentMenus(36);
                 break;
 
             case "timepickerdialog":
-                title = logicEditor.getString(R.string.logic_editor_title_select_component);
+                title = Helper.getResString(R.string.logic_editor_title_select_component);
                 menus = getComponentMenus(ComponentBean.COMPONENT_TYPE_TIME_PICKER_DIALOG);
                 break;
 
             case "notification":
-                title = logicEditor.getString(R.string.logic_editor_title_select_component);
+                title = Helper.getResString(R.string.logic_editor_title_select_component);
                 menus = getComponentMenus(ComponentBean.COMPONENT_TYPE_NOTIFICATION);
                 break;
 
@@ -500,17 +500,17 @@ public class ExtraMenuBean {
                 break;
 
             case "providerType":
-                title = logicEditor.getString(R.string.logic_editor_title_location_manager_provider_type);
+                title = Helper.getResString(R.string.logic_editor_title_location_manager_provider_type);
                 menus = new ArrayList<>(Arrays.asList(BlockConstants.LOCATION_PROVIDERS));
                 break;
 
             case "mapType":
-                title = logicEditor.getString(R.string.logic_editor_title_mapview_map_type);
+                title = Helper.getResString(R.string.logic_editor_title_mapview_map_type);
                 menus = new ArrayList<>(Arrays.asList(BlockConstants.MAP_TYPES));
                 break;
 
             case "markerColor":
-                title = logicEditor.getString(R.string.logic_editor_title_mapview_marker_color);
+                title = Helper.getResString(R.string.logic_editor_title_mapview_marker_color);
                 menus = new ArrayList<>(Arrays.asList(BlockConstants.MARKER_HUES));
                 break;
 
@@ -530,7 +530,7 @@ public class ExtraMenuBean {
 
             case "activity":
                 ArrayList<String> activityMenu = new ArrayList<>();
-                title = logicEditor.getString(R.string.logic_editor_title_select_activity);
+                title = Helper.getResString(R.string.logic_editor_title_select_activity);
                 for (ProjectFileBean projectFileBean : ProjectDataManager.getFileManager(sc_id).getActivities()) {
                     activityMenu.add(projectFileBean.getActivityName());
                 }
@@ -546,7 +546,7 @@ public class ExtraMenuBean {
                     }
                     if (!activityMenu.isEmpty()) {
                         TextView txt = new TextView(logicEditor);
-                        txt.setText(logicEditor.getString(R.string.logic_custom_activities));
+                        txt.setText(Helper.getResString(R.string.logic_custom_activities));
                         txt.setPadding((int) getDip(2), (int) getDip(4), (int) getDip(4), (int) getDip(4));
                         txt.setTextSize(14f);
                         viewGroup.addView(txt);

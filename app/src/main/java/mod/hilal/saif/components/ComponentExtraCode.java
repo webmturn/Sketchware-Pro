@@ -18,27 +18,27 @@ public class ComponentExtraCode {
         eventCodeGenerator = h;
     }
 
-    public void appendListenerCode(String str) {
+    public void appendListenerCode(String listenerCode) {
         // Aldi's original Components
-        if (str.contains("DatePickerFragment")) {
-            eventCodeGenerator.eventListenerCode = str;
+        if (listenerCode.contains("DatePickerFragment")) {
+            eventCodeGenerator.eventListenerCode = listenerCode;
             return;
         }
-        if (str.contains("FragmentStatePagerAdapter")) {
+        if (listenerCode.contains("FragmentStatePagerAdapter")) {
             String temp = eventCodeGenerator.eventLogic;
             if (temp.isEmpty()) {
-                eventCodeGenerator.eventLogic = str;
+                eventCodeGenerator.eventLogic = listenerCode;
             } else {
-                eventCodeGenerator.eventLogic = temp.concat("\r\n\r\n").concat(str);
+                eventCodeGenerator.eventLogic = temp.concat("\r\n\r\n").concat(listenerCode);
             }
             return;
         }
-        if (str.contains("extends AsyncTask<String, Integer, String>")) {
+        if (listenerCode.contains("extends AsyncTask<String, Integer, String>")) {
             String temp = eventCodeGenerator.eventLogic;
             if (temp.isEmpty()) {
-                eventCodeGenerator.eventLogic = str;
+                eventCodeGenerator.eventLogic = listenerCode;
             } else {
-                eventCodeGenerator.eventLogic = temp.concat("\r\n\r\n").concat(str);
+                eventCodeGenerator.eventLogic = temp.concat("\r\n\r\n").concat(listenerCode);
             }
             return;
         }
@@ -52,15 +52,15 @@ public class ComponentExtraCode {
                     for (int i = 0; i < arr.length(); i++) {
                         String c = arr.getJSONObject(i).getString("code");
                         String f = getFirstLine(c);
-                        if (!arr.getJSONObject(i).isNull("s") && str.contains(f)) {
+                        if (!arr.getJSONObject(i).isNull("s") && listenerCode.contains(f)) {
                             String q = arr.getJSONObject(i).getString("s");
                             if (q.equals("true")) {
                                 String temp = eventCodeGenerator.eventLogic;
                                 if (temp.isEmpty()) {
-                                    eventCodeGenerator.eventLogic = str.replace(f, "");
+                                    eventCodeGenerator.eventLogic = listenerCode.replace(f, "");
                                     return;
                                 } else {
-                                    eventCodeGenerator.eventLogic = temp.concat("\r\n\r\n").concat(str.replace(f, ""));
+                                    eventCodeGenerator.eventLogic = temp.concat("\r\n\r\n").concat(listenerCode.replace(f, ""));
                                     return;
                                 }
                             }
@@ -69,20 +69,20 @@ public class ComponentExtraCode {
                 }
             }
         } catch (Exception e) {
-            if (listenerCodeBuilder.length() > 0 && !str.isEmpty()) {
+            if (listenerCodeBuilder.length() > 0 && !listenerCode.isEmpty()) {
                 listenerCodeBuilder.append("\r\n");
                 listenerCodeBuilder.append("\r\n");
-                listenerCodeBuilder.append(str);
+                listenerCodeBuilder.append(listenerCode);
             }
         }
 
 
         ///others
-        if (listenerCodeBuilder.length() > 0 && !str.isEmpty()) {
+        if (listenerCodeBuilder.length() > 0 && !listenerCode.isEmpty()) {
             listenerCodeBuilder.append("\r\n");
             listenerCodeBuilder.append("\r\n");
         }
-        listenerCodeBuilder.append(str);
+        listenerCodeBuilder.append(listenerCode);
     }
 
     public String getFirstLine(String con) {
