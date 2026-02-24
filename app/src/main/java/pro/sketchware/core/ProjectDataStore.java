@@ -114,22 +114,22 @@ public class ProjectDataStore {
   }
   
   public ArrayList<String> getAllIdentifiers(ProjectFileBean fileBean) {
-    String str1 = fileBean.getXmlName();
-    String str2 = fileBean.getJavaName();
+    String xmlName = fileBean.getXmlName();
+    String javaName = fileBean.getJavaName();
     ArrayList<Object> arrayList = new ArrayList<>();
-    Iterator<Pair<Integer, String>> iterator1 = getVariables(str2).iterator();
+    Iterator<Pair<Integer, String>> iterator1 = getVariables(javaName).iterator();
     while (iterator1.hasNext())
       arrayList.add(((Pair)iterator1.next()).second); 
-    iterator1 = getListVariables(str2).iterator();
+    iterator1 = getListVariables(javaName).iterator();
     while (iterator1.hasNext())
       arrayList.add(((Pair)iterator1.next()).second); 
-    iterator1 = (Iterator)getMoreBlocks(str2).iterator();
+    iterator1 = (Iterator)getMoreBlocks(javaName).iterator();
     while (iterator1.hasNext())
       arrayList.add(((Pair)iterator1.next()).first); 
-    Iterator<ViewBean> iterator = getViews(str1).iterator();
+    Iterator<ViewBean> iterator = getViews(xmlName).iterator();
     while (iterator.hasNext())
       arrayList.add(((ViewBean)iterator.next()).id); 
-    Iterator iteratorComp = getComponents(str2).iterator();
+    Iterator iteratorComp = getComponents(javaName).iterator();
     while (iteratorComp.hasNext())
       arrayList.add(((ComponentBean)iteratorComp.next()).componentId); 
     return (ArrayList)arrayList;
@@ -154,19 +154,19 @@ public class ProjectDataStore {
   }
   
   public void deleteBackupFiles() {
-    String str1 = SketchwarePaths.getBackupPath(this.projectId);
+    String backupDir = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder2 = new StringBuilder();
-    stringBuilder2.append(str1);
+    stringBuilder2.append(backupDir);
     stringBuilder2.append(File.separator);
     stringBuilder2.append("view");
-    String str2 = stringBuilder2.toString();
-    this.fileUtil.deleteFileByPath(str2);
+    String viewPath = stringBuilder2.toString();
+    this.fileUtil.deleteFileByPath(viewPath);
     StringBuilder stringBuilder1 = new StringBuilder();
-    stringBuilder1.append(str1);
+    stringBuilder1.append(backupDir);
     stringBuilder1.append(File.separator);
     stringBuilder1.append("logic");
-    str1 = stringBuilder1.toString();
-    this.fileUtil.deleteFileByPath(str1);
+    String logicPath = stringBuilder1.toString();
+    this.fileUtil.deleteFileByPath(logicPath);
   }
   
   public void syncWithFileManager(ProjectFileManager paramhC) {
@@ -185,8 +185,8 @@ public class ProjectDataStore {
       } 
       for (ViewBean viewBean : entry.getValue()) {
         if (viewBean.type == 9 || viewBean.type == 10 || viewBean.type == 25 || viewBean.type == 48 || viewBean.type == 31) {
-          String str1 = viewBean.customView;
-          if (str1 != null && str1.length() > 0 && !viewBean.customView.equals("none")) {
+          String customViewName = viewBean.customView;
+          if (customViewName != null && customViewName.length() > 0 && !viewBean.customView.equals("none")) {
             Iterator iterator = paramhC.getCustomViews().iterator();
             boolean bool = false;
             while (iterator.hasNext()) {
@@ -315,9 +315,9 @@ public class ProjectDataStore {
             stringBuilder.append(viewBean.id);
             stringBuilder.append("_");
             stringBuilder.append("onBindCustomView");
-            String str2 = stringBuilder.toString();
-            String str1 = (String)entry.getKey();
-            arrayList1.add(new Pair(ProjectFileBean.getJavaName(str1.substring(0, str1.lastIndexOf(".xml"))), str2));
+            String eventName = stringBuilder.toString();
+            String xmlKey = (String)entry.getKey();
+            arrayList1.add(new Pair(ProjectFileBean.getJavaName(xmlKey.substring(0, xmlKey.lastIndexOf(".xml"))), eventName));
           } 
         } 
       } 
@@ -424,21 +424,21 @@ public class ProjectDataStore {
     StringBuffer stringBuffer = new StringBuffer();
     String str = "";
     while (true) {
-      String str1 = reader.readLine();
-      if (str1 != null) {
-        if (str1.length() <= 0)
+      String line = reader.readLine();
+      if (line != null) {
+        if (line.length() <= 0)
           continue; 
-        if (str1.charAt(0) == '@') {
+        if (line.charAt(0) == '@') {
           StringBuffer stringBuffer1 = stringBuffer;
           if (str.length() > 0) {
             parseLogicSection(str, stringBuffer.toString());
             stringBuffer1 = new StringBuffer();
           } 
-          str = str1.substring(1);
+          str = line.substring(1);
           stringBuffer = stringBuffer1;
           continue;
         } 
-        stringBuffer.append(str1);
+        stringBuffer.append(line);
         stringBuffer.append("\n");
         continue;
       } 
@@ -693,7 +693,7 @@ public class ProjectDataStore {
             stringBuilder1.append(this.gson.toJson(blockBean));
             stringBuilder1.append("\n");
           }
-          String str1 = stringBuilder1.toString();
+          String blockJson = stringBuilder1.toString();
           buffer.append("@");
           StringBuilder stringBuilder = new StringBuilder();
           stringBuilder.append(str);
@@ -701,7 +701,7 @@ public class ProjectDataStore {
           stringBuilder.append((String)entry1.getKey());
           buffer.append(stringBuilder.toString());
           buffer.append("\n");
-          buffer.append(str1);
+          buffer.append(blockJson);
           buffer.append("\n");
         } 
       }  
@@ -835,21 +835,21 @@ public class ProjectDataStore {
     StringBuffer stringBuffer = new StringBuffer();
     String str = "";
     while (true) {
-      String str1 = reader.readLine();
-      if (str1 != null) {
-        if (str1.length() <= 0)
+      String line = reader.readLine();
+      if (line != null) {
+        if (line.length() <= 0)
           continue; 
-        if (str1.charAt(0) == '@') {
+        if (line.charAt(0) == '@') {
           StringBuffer stringBuffer1 = stringBuffer;
           if (str.length() > 0) {
             parseViewSection(str, stringBuffer.toString());
             stringBuffer1 = new StringBuffer();
           } 
-          str = str1.substring(1);
+          str = line.substring(1);
           stringBuffer = stringBuffer1;
           continue;
         } 
-        stringBuffer.append(str1);
+        stringBuffer.append(line);
         stringBuffer.append("\n");
         continue;
       } 
@@ -889,17 +889,17 @@ public class ProjectDataStore {
         ArrayList<ViewBean> arrayList1 = getSortedRootViews((ArrayList<ViewBean>)entry.getValue());
         if (arrayList1 != null && arrayList1.size() > 0) {
           int b = 0;
-          String str1 = "";
+          String viewJson = "";
           while (true) {
-            str = str1;
+            str = viewJson;
             if (b < arrayList1.size()) {
               ViewBean viewBean = arrayList1.get(b);
               viewBean.clearClassInfo();
               StringBuilder stringBuilder = new StringBuilder();
-              stringBuilder.append(str1);
+              stringBuilder.append(viewJson);
               stringBuilder.append(this.gson.toJson(viewBean));
               stringBuilder.append("\n");
-              str1 = stringBuilder.toString();
+              viewJson = stringBuilder.toString();
               b++;
               continue;
             } 
@@ -1022,13 +1022,13 @@ public class ProjectDataStore {
   }
   
   public boolean hasLogicBackup() {
-    String str2 = SketchwarePaths.getBackupPath(this.projectId);
+    String backupDir = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(str2);
+    stringBuilder.append(backupDir);
     stringBuilder.append(File.separator);
     stringBuilder.append("logic");
-    String str1 = stringBuilder.toString();
-    return this.fileUtil.exists(str1);
+    String logicPath = stringBuilder.toString();
+    return this.fileUtil.exists(logicPath);
   }
   
   public boolean isVariableUsedInBlocks(String fileName, String data, String extra) {
@@ -1146,13 +1146,13 @@ public class ProjectDataStore {
   }
   
   public boolean hasViewBackup() {
-    String str2 = SketchwarePaths.getBackupPath(this.projectId);
+    String backupDir = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(str2);
+    stringBuilder.append(backupDir);
     stringBuilder.append(File.separator);
     stringBuilder.append("view");
-    String str1 = stringBuilder.toString();
-    return this.fileUtil.exists(str1);
+    String viewPath = stringBuilder.toString();
+    return this.fileUtil.exists(viewPath);
   }
   
   public boolean hasComponent(String fileName, int index, String data) {
@@ -1185,17 +1185,17 @@ public class ProjectDataStore {
   }
   
   public void loadLogicFromData() {
-    String str2 = SketchwarePaths.getDataPath(this.projectId);
+    String dataPath = SketchwarePaths.getDataPath(this.projectId);
     StringBuilder stringBuilder1 = new StringBuilder();
-    stringBuilder1.append(str2);
+    stringBuilder1.append(dataPath);
     stringBuilder1.append(File.separator);
     stringBuilder1.append("logic");
-    str2 = stringBuilder1.toString();
-    if (!this.fileUtil.exists(str2))
+    dataPath = stringBuilder1.toString();
+    if (!this.fileUtil.exists(dataPath))
       return; 
     BufferedReader bufferedReader = null;
     try {
-      byte[] bytes = this.fileUtil.readFileBytes(str2);
+      byte[] bytes = this.fileUtil.readFileBytes(dataPath);
       String str = this.fileUtil.decryptToString(bytes);
       bufferedReader = new BufferedReader(new StringReader(str));
       readLogicData(bufferedReader);
@@ -1244,15 +1244,15 @@ public class ProjectDataStore {
   }
   
   public void loadLogicFromBackup() {
-    String str1 = SketchwarePaths.getBackupPath(this.projectId);
+    String backupDir = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(str1);
+    stringBuilder.append(backupDir);
     stringBuilder.append(File.separator);
     stringBuilder.append("logic");
-    String str2 = stringBuilder.toString();
+    String logicPath = stringBuilder.toString();
     BufferedReader bufferedReader = null;
     try {
-      byte[] bytes = this.fileUtil.readFileBytes(str2);
+      byte[] bytes = this.fileUtil.readFileBytes(logicPath);
       String str = this.fileUtil.decryptToString(bytes);
       bufferedReader = new BufferedReader(new StringReader(str));
       readLogicData(bufferedReader);
