@@ -86,7 +86,7 @@ public class ManageFirebaseActivity extends BaseAppCompatActivity implements Vie
 
     private void openDoc() {
         try {
-            s.a("P1I15", true);
+            s.put("P1I15", true);
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.setData(Uri.parse("https://sketchware-pro.vercel.app/docs/components/Firebase/connect-to-firebase"));

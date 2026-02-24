@@ -14,19 +14,19 @@ public class SharedPrefsHelper {
     this.editor = this.prefs.edit();
   }
   
-  public int a(String paramString, int paramInt) {
+  public int getInt(String paramString, int paramInt) {
     return this.prefs.getInt(paramString, paramInt);
   }
   
-  public String a(String paramString1, String paramString2) {
+  public String getString(String paramString1, String paramString2) {
     return this.prefs.getString(paramString1, paramString2);
   }
   
-  public void a(String paramString, Object paramObject) {
-    a(paramString, paramObject, true);
+  public void put(String paramString, Object paramObject) {
+    put(paramString, paramObject, true);
   }
   
-  public void a(String paramString, Object paramObject, boolean paramBoolean) {
+  public void put(String paramString, Object paramObject, boolean paramBoolean) {
     if (paramObject instanceof String) {
       this.editor.putString(paramString, (String)paramObject);
     } else if (paramObject instanceof Integer) {
@@ -40,33 +40,33 @@ public class SharedPrefsHelper {
       this.editor.commit(); 
   }
   
-  public void a(String paramString, HashMap<String, Object> paramHashMap) {
-    a(paramString, GsonMapHelper.toJson(paramHashMap));
+  public void putMap(String paramString, HashMap<String, Object> paramHashMap) {
+    put(paramString, GsonMapHelper.toJson(paramHashMap));
   }
   
-  public boolean a() {
+  public boolean clearAll() {
     this.editor.clear();
     return this.editor.commit();
   }
   
-  public boolean a(String paramString) {
+  public boolean remove(String paramString) {
     this.editor.remove(paramString);
     return this.editor.commit();
   }
   
-  public boolean a(String paramString, boolean paramBoolean) {
+  public boolean getBoolean(String paramString, boolean paramBoolean) {
     return this.prefs.getBoolean(paramString, paramBoolean);
   }
   
-  public boolean b() {
+  public boolean commit() {
     return this.editor.commit();
   }
   
-  public boolean b(String paramString) {
+  public boolean contains(String paramString) {
     return this.prefs.contains(paramString);
   }
   
-  public HashMap<String, Object> c() {
+  public HashMap<String, Object> getAll() {
     HashMap<Object, Object> hashMap;
     try {
       hashMap = (HashMap)this.prefs.getAll();
@@ -76,24 +76,24 @@ public class SharedPrefsHelper {
     return (HashMap)hashMap;
   }
   
-  public boolean c(String paramString) {
+  public boolean getBooleanDefault(String paramString) {
     return this.prefs.getBoolean(paramString, false);
   }
   
-  public int d(String paramString) {
-    return a(paramString, 0);
+  public int getIntDefault(String paramString) {
+    return getInt(paramString, 0);
   }
   
-  public long e(String paramString) {
+  public long getLong(String paramString) {
     return this.prefs.getLong(paramString, 0L);
   }
   
-  public String f(String paramString) {
-    return a(paramString, "");
+  public String getStringDefault(String paramString) {
+    return getString(paramString, "");
   }
   
-  public HashMap<String, Object> g(String paramString) {
-    paramString = f(paramString);
+  public HashMap<String, Object> getMap(String paramString) {
+    paramString = getStringDefault(paramString);
     return paramString.isEmpty() ? new HashMap<String, Object>() : GsonMapHelper.fromJson(paramString);
   }
 }

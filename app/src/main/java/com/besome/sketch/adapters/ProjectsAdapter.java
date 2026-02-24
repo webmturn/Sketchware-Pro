@@ -258,15 +258,15 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
 
     private void changePinState(HashMap<String, Object> projectMap) {
         if (isPinned(projectMap)) {
-            preference.a("pinnedProject", "-1", true);
+            preference.put("pinnedProject", "-1", true);
         } else {
-            preference.a("pinnedProject", MapValueHelper.getString(projectMap, "sc_id"), true);
+            preference.put("pinnedProject", MapValueHelper.getString(projectMap, "sc_id"), true);
         }
         projectsFragment.refreshProjectsList();
     }
 
     private boolean isPinned(HashMap<String, Object> projectMap) {
-        return Objects.equals(MapValueHelper.getString(projectMap, "sc_id"), preference.a("pinnedProject", "-1"));
+        return Objects.equals(MapValueHelper.getString(projectMap, "sc_id"), preference.getString("pinnedProject", "-1"));
     }
 
     private void showProjectOptionsBottomSheet(HashMap<String, Object> projectMap, int position) {

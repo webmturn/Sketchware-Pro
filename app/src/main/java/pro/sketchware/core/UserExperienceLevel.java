@@ -11,7 +11,7 @@ public class UserExperienceLevel {
   
   public UserExperienceLevel(Context paramContext) {
     this.database = new SharedPrefsHelper(paramContext, "U1");
-    this.level = this.database.d("U1I0");
+    this.level = this.database.getIntDefault("U1I0");
     int i = this.level;
     int j = i;
     if (i > 3)

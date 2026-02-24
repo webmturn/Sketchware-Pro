@@ -75,19 +75,19 @@ public class ProjectListManager {
             stringBuilder = new StringBuilder();
             stringBuilder.append("D01_");
             stringBuilder.append(str);
-            new SharedPrefsHelper(context, stringBuilder.toString()).a();
+            new SharedPrefsHelper(context, stringBuilder.toString()).clearAll();
             stringBuilder = new StringBuilder();
             stringBuilder.append("D02_");
             stringBuilder.append(str);
-            new SharedPrefsHelper(context, stringBuilder.toString()).a();
+            new SharedPrefsHelper(context, stringBuilder.toString()).clearAll();
             stringBuilder = new StringBuilder();
             stringBuilder.append("D03_");
             stringBuilder.append(str);
-            new SharedPrefsHelper(context, stringBuilder.toString()).a();
+            new SharedPrefsHelper(context, stringBuilder.toString()).clearAll();
             stringBuilder = new StringBuilder();
             stringBuilder.append("D04_");
             stringBuilder.append(str);
-            new SharedPrefsHelper(context, stringBuilder.toString()).a();
+            new SharedPrefsHelper(context, stringBuilder.toString()).clearAll();
         }
     }
 
@@ -220,10 +220,10 @@ public class ProjectListManager {
     }
 
     public static void syncAllProjects() {
-        for (String str : a.c().keySet()) {
-            saveProject(str, a.g(str));
+        for (String str : a.getAll().keySet()) {
+            saveProject(str, a.getMap(str));
         }
-        a.a();
+        a.clearAll();
     }
 
     private static class IntegerComparator implements Comparator<Integer> {

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class FormatUtil {
-  public static int a(char paramChar) {
+  public static int hexCharToInt(char paramChar) {
     if (paramChar >= '0' && paramChar <= '9')
       return paramChar - 48; 
     byte b = 65;
@@ -24,7 +24,7 @@ public class FormatUtil {
     return paramChar - b + 10;
   }
   
-  public static String a() {
+  public static String generateRandomId() {
     Random random = new Random();
     int i = random.nextInt(100000);
     while (true) {
@@ -36,7 +36,7 @@ public class FormatUtil {
     } 
   }
   
-  public static String a(int paramInt) {
+  public static String formatFileSize(int paramInt) {
     String str;
     if (paramInt < 0)
       return "0"; 
@@ -59,7 +59,7 @@ public class FormatUtil {
     return str;
   }
   
-  public static String a(byte[] paramArrayOfbyte) {
+  public static String bytesToHex(byte[] paramArrayOfbyte) {
     StringBuffer stringBuffer = new StringBuffer(paramArrayOfbyte.length * 2);
     for (int b = 0; b < paramArrayOfbyte.length; b++) {
       if ((paramArrayOfbyte[b] & 0xFF) < 16)
@@ -69,31 +69,31 @@ public class FormatUtil {
     return stringBuffer.toString();
   }
   
-  public static void a(Context paramContext, String paramString1, String paramString2) {
+  public static void copyToClipboard(Context paramContext, String paramString1, String paramString2) {
     ((ClipboardManager)paramContext.getSystemService(Context.CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText(paramString1, paramString2));
   }
   
-  public static byte[] a(String paramString) {
+  public static byte[] hexStringToBytes(String paramString) {
     int i = paramString.length();
     byte[] arrayOfByte = new byte[(i + 1) / 2];
     int j = 0;
     byte b = 1;
     if (i % 2 == 1) {
-      arrayOfByte[0] = (byte)a(paramString.charAt(0));
+      arrayOfByte[0] = (byte)hexCharToInt(paramString.charAt(0));
       j = 1;
     } else {
       b = 0;
     } 
     while (j < i) {
       int k = j + 1;
-      arrayOfByte[b] = (byte)(a(paramString.charAt(j)) << 4 | a(paramString.charAt(k)));
+      arrayOfByte[b] = (byte)(hexCharToInt(paramString.charAt(j)) << 4 | hexCharToInt(paramString.charAt(k)));
       b++;
       j = k + 1;
     } 
     return arrayOfByte;
   }
   
-  public static String b(int paramInt) {
+  public static String formatNumber(int paramInt) {
     String str;
     float f = paramInt;
     if (f >= 1000.0F && f < 1000000.0F) {
@@ -111,7 +111,7 @@ public class FormatUtil {
     return str;
   }
   
-  public static boolean b(String paramString) {
+  public static boolean isNumeric(String paramString) {
     try {
       Double.parseDouble(paramString);
       return true;
@@ -120,22 +120,22 @@ public class FormatUtil {
     } 
   }
   
-  public static String c(int paramInt) {
+  public static String formatWithCommas(int paramInt) {
     return (new DecimalFormat("#,###")).format(paramInt);
   }
   
-  public static ArrayList<String> c(String paramString) {
+  public static ArrayList<String> parseBlockSpec(String paramString) {
     ArrayList<String> arrayList = new ArrayList<>();
     a a = new a(paramString);
-    while (!a.a()) {
-      String str = a.b();
+    while (!a.isAtEnd()) {
+      String str = a.nextToken();
       if (str.length() > 0)
         arrayList.add(str); 
     } 
     return arrayList;
   }
   
-  public static String d(String paramString) {
+  public static String unescapeString(String paramString) {
     String str = "";
     for (int b = 0; b < paramString.length(); b++) {
       char c = paramString.charAt(b);
@@ -164,7 +164,7 @@ public class FormatUtil {
       this.position = 0;
     }
     
-    public boolean a() {
+    public boolean isAtEnd() {
       boolean bool;
       if (this.position >= this.input.length()) {
         bool = true;
@@ -174,9 +174,9 @@ public class FormatUtil {
       return bool;
     }
     
-    public String b() {
-      c();
-      boolean bool = a();
+    public String nextToken() {
+      skipSpaces();
+      boolean bool = isAtEnd();
       String str = "";
       if (bool)
         return ""; 
@@ -208,7 +208,7 @@ public class FormatUtil {
       return str;
     }
     
-    public void c() {
+    public void skipSpaces() {
       while (this.position < this.input.length() && this.input.charAt(this.position) == ' ')
         this.position++; 
     }

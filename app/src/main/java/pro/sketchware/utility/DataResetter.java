@@ -19,14 +19,14 @@ import pro.sketchware.activities.main.activities.MainActivity;
 
 public class DataResetter {
     public static void a(Context context, boolean resetOnlySettings) {
-        new SharedPrefsHelper(context, "P2").a();
-        new SharedPrefsHelper(context, "P3").a();
-        new SharedPrefsHelper(context, "P1").a();
-        new SharedPrefsHelper(context, "P12").a();
-        new SharedPrefsHelper(context, "P99").a();
-        new SharedPrefsHelper(context, "P25").a();
-        new SharedPrefsHelper(context, "P26").a();
-        new SharedPrefsHelper(context, "P16").a("P16I0");
+        new SharedPrefsHelper(context, "P2").clearAll();
+        new SharedPrefsHelper(context, "P3").clearAll();
+        new SharedPrefsHelper(context, "P1").clearAll();
+        new SharedPrefsHelper(context, "P12").clearAll();
+        new SharedPrefsHelper(context, "P99").clearAll();
+        new SharedPrefsHelper(context, "P25").clearAll();
+        new SharedPrefsHelper(context, "P26").clearAll();
+        new SharedPrefsHelper(context, "P16").remove("P16I0");
 
         EncryptedFileUtil oBVar = new EncryptedFileUtil();
         oBVar.b(SketchwarePaths.getLibsPath());
@@ -38,13 +38,13 @@ public class DataResetter {
 
             for (HashMap<String, Object> project : ProjectListManager.listProjects()) {
                 String sc_id = MapValueHelper.getString(project, "sc_id");
-                new SharedPrefsHelper(context, "D01_" + sc_id).a();
-                new SharedPrefsHelper(context, "D02_" + sc_id).a();
-                new SharedPrefsHelper(context, "D03_" + sc_id).a();
-                new SharedPrefsHelper(context, "D04_" + sc_id).a();
-                new SharedPrefsHelper(context, "D05_" + sc_id).a();
+                new SharedPrefsHelper(context, "D01_" + sc_id).clearAll();
+                new SharedPrefsHelper(context, "D02_" + sc_id).clearAll();
+                new SharedPrefsHelper(context, "D03_" + sc_id).clearAll();
+                new SharedPrefsHelper(context, "D04_" + sc_id).clearAll();
+                new SharedPrefsHelper(context, "D05_" + sc_id).clearAll();
             }
-            new SharedPrefsHelper(context, "P15").a();
+            new SharedPrefsHelper(context, "P15").clearAll();
         }
 
         SketchToast.toast(context, Helper.getResString(R.string.program_information_reset_system_complete_initialize), SketchToast.TOAST_NORMAL).show();

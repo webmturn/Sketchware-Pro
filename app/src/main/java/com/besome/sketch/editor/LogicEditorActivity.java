@@ -1956,7 +1956,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 getOnBackPressedDispatcher().onBackPressed();
             }
         });
-        G = new SharedPrefsHelper(getContext(), "P12").a("P12I0", true);
+        G = new SharedPrefsHelper(getContext(), "P12").getBoolean("P12I0", true);
         minDist = ViewConfiguration.get(getContext()).getScaledTouchSlop();
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         String eventText = getIntent().getStringExtra("event_text");
@@ -2025,7 +2025,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         long pc1 = System.currentTimeMillis();
         android.util.Log.d("BlockLoad", "PC rootBlock: " + (pc1 - pc0) + "ms");
 
-        ArrayList<String> spec = FormatUtil.c(e1);
+        ArrayList<String> spec = FormatUtil.parseBlockSpec(e1);
         int blockId = 0;
         for (int i = 0; i < spec.size(); i++) {
             String specBit = spec.get(i);

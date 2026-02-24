@@ -574,7 +574,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         shape.addView(viewPane);
 
         vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-        useVibrate = new SharedPrefsHelper(context, "P12").a("P12I0", true);
+        useVibrate = new SharedPrefsHelper(context, "P12").getBoolean("P12I0", true);
         minDist = ViewConfiguration.get(context).getScaledTouchSlop();
 
         paletteWidget.cardView.setOnClickListener(view -> widgetsCreatorManager.showWidgetsCreatorDialog(-1));

@@ -121,7 +121,7 @@ public class ManageAdmobActivity extends BaseAppCompatActivity implements View.O
 
     private void openAdmobDocs() {
         try {
-            A.a("P1I16", true);
+            A.put("P1I16", true);
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.setData(Uri.parse("https://docs.sketchware.io/docs/admob-getting-started.html"));

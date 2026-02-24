@@ -436,7 +436,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                     if (currentTabNumber > 0) {
                         currentTabNumber--;
                         viewPager.setCurrentItem(currentTabNumber);
-                    } else if (prefP12.c("P12I2")) {
+                    } else if (prefP12.getBooleanDefault("P12I2")) {
                         k();
                         saveChangesAndCloseProject();
                     } else {
@@ -1097,7 +1097,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
 
             activity.runOnUiThread(() -> {
                 updateRunButton(true);
-                activity.prefP1.a("P1I10", true);
+                activity.prefP1.put("P1I10", true);
                 activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
                 maybeShowNotification();

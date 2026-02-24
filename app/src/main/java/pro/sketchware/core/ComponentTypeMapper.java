@@ -98,7 +98,7 @@ public class ComponentTypeMapper {
      */
     public static ArrayList<ClassInfo> getParamClassInfoList(String spec) {
         ArrayList<ClassInfo> paramClass = new ArrayList<>();
-        ArrayList<String> specList = FormatUtil.c(spec);
+        ArrayList<String> specList = FormatUtil.parseBlockSpec(spec);
         for (String params : specList) {
             if (params.charAt(0) == '%' && params.length() >= 2) {
                 String type = String.valueOf(params.charAt(1));

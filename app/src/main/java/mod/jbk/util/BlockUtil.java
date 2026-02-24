@@ -25,7 +25,7 @@ public class BlockUtil {
      */
     public static void loadPreviewBlockVariables(ViewGroup blockArea, BlockView previewBlock, String spec) {
         int id = 0;
-        for (var specPart : FormatUtil.c(spec)) {
+        for (var specPart : FormatUtil.parseBlockSpec(spec)) {
             if (specPart.charAt(0) != '%') {
                 continue;
             }

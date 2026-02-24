@@ -225,7 +225,7 @@ public class ProjectsFragment extends PermissionFragment {
 
         executorService.execute(() -> {
             List<HashMap<String, Object>> loadedProjects = ProjectListManager.listProjects();
-            loadedProjects.sort(new ProjectComparator(preference.d("sortBy"),preference.a("pinnedProject", "-1")));
+            loadedProjects.sort(new ProjectComparator(preference.getIntDefault("sortBy"),preference.getString("pinnedProject", "-1")));
 
             DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new ProjectDiffCallback(projectsList, loadedProjects));
 
@@ -288,7 +288,7 @@ public class ProjectsFragment extends PermissionFragment {
         RadioButton sortOrderAsc = dialogBinding.sortOrderAsc;
         RadioButton sortOrderDesc = dialogBinding.sortOrderDesc;
 
-        int storedValue = preference.a("sortBy", ProjectComparator.DEFAULT);
+        int storedValue = preference.getInt("sortBy", ProjectComparator.DEFAULT);
         if ((storedValue & ProjectComparator.SORT_BY_NAME) == ProjectComparator.SORT_BY_NAME) {
             sortByName.setChecked(true);
         } else if ((storedValue & ProjectComparator.SORT_BY_ID) == ProjectComparator.SORT_BY_ID) {
@@ -315,7 +315,7 @@ public class ProjectsFragment extends PermissionFragment {
             if (sortOrderDesc.isChecked()) {
                 sortValue |= ProjectComparator.SORT_ORDER_DESCENDING;
             }
-            preference.a("sortBy", sortValue, true);
+            preference.put("sortBy", sortValue, true);
             v.dismiss();
             refreshProjectsList();
         });

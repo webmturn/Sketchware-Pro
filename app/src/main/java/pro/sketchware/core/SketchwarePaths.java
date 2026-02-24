@@ -78,18 +78,18 @@ public class SketchwarePaths {
         SharedPrefsHelper dataP18 = new SharedPrefsHelper(context, "P18_" + preferenceName);
         SharedPrefsHelper dataP13 = new SharedPrefsHelper(context, "P13_" + preferenceName);
         SharedPrefsHelper dataP14 = new SharedPrefsHelper(context, "P14_" + preferenceName);
-        dataP17.a();
-        dataP18.a();
-        dataP13.a();
-        dataP14.a();
+        dataP17.clearAll();
+        dataP18.clearAll();
+        dataP13.clearAll();
+        dataP14.clearAll();
         SharedPrefsHelper dataD03 = new SharedPrefsHelper(context, "D03_" + preferenceName);
         SharedPrefsHelper dataD04 = new SharedPrefsHelper(context, "D04_" + preferenceName);
         SharedPrefsHelper dataD01 = new SharedPrefsHelper(context, "D01_" + preferenceName);
         SharedPrefsHelper dataD02 = new SharedPrefsHelper(context, "D02_" + preferenceName);
-        dataD03.a();
-        dataD04.a();
-        dataD01.a();
-        dataD02.a();
+        dataD03.clearAll();
+        dataD04.clearAll();
+        dataD01.clearAll();
+        dataD02.clearAll();
     }
 
     public static String b() {

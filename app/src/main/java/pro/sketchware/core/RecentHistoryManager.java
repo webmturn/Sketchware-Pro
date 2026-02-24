@@ -63,13 +63,13 @@ public class RecentHistoryManager {
         stringBuilder.append(",");
         str = stringBuilder.toString();
       } 
-      this.database.a(str1, str);
+      this.database.put(str1, str);
     } 
   }
   
   public void loadFromDatabase(String paramString) {
     if ((ArrayList)this.recentMap.get(paramString) == null) {
-      String[] arrayOfString = this.database.f(paramString).split(",");
+      String[] arrayOfString = this.database.getStringDefault(paramString).split(",");
       int i = arrayOfString.length;
       while (true) {
         int j = i - 1;

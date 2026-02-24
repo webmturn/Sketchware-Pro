@@ -140,7 +140,7 @@ public class BlockView extends BaseBlockView {
   }
   
   public final void a(String paramString, int paramInt) {
-    ArrayList<String> arrayList = FormatUtil.c(paramString);
+    ArrayList<String> arrayList = FormatUtil.parseBlockSpec(paramString);
     this.ka = new ArrayList<View>();
     this.la = new ArrayList<String>();
     for (int b = 0; b < arrayList.size(); b++) {
@@ -174,9 +174,9 @@ public class BlockView extends BaseBlockView {
           str = paramString.substring(3);
         return new FieldBlockView(this.context, "s", str);
       }
-      return a(FormatUtil.d(paramString));
+      return a(FormatUtil.unescapeString(paramString));
     }
-    return a(FormatUtil.d(paramString));
+    return a(FormatUtil.unescapeString(paramString));
   }
   
   public void b(BlockView paramRs) {
