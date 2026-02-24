@@ -180,11 +180,11 @@ public class MoreBlockBuilderView extends LinearLayout {
         rs.layoutChain();
         removeArea.removeAllViews();
 
-        for (int i = 0; i < rs.ka.size(); ++i) {
-            View view = rs.ka.get(i);
+        for (int i = 0; i < rs.specViews.size(); ++i) {
+            View view = rs.specViews.get(i);
 
             int width;
-            if (rs.la.get(i).equals("label")) {
+            if (rs.specTypes.get(i).equals("label")) {
                 TextView textView = (TextView) view;
 
                 Rect rect = new Rect();

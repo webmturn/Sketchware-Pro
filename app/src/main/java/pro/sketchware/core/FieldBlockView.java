@@ -16,15 +16,15 @@ public class FieldBlockView extends BaseBlockView {
   
   public TextView dropdownLabel;
   
-  public int aa = 20;
+  public int minSimpleWidth = 20;
   
-  public int ba = 4;
+  public int minHatWidth = 4;
   
-  public int ca = 2;
+  public int minCWidth = 2;
   
-  public int da = 0;
+  public int paramSpacing = 0;
   
-  public int ea = 0;
+  public int isDefinitionBlock = 0;
   
   public FieldBlockView(Context paramContext, String paramString1, String paramString2) {
     super(paramContext, paramString1, paramString2, true);
@@ -37,7 +37,7 @@ public class FieldBlockView extends BaseBlockView {
     switch (type) {
       case "b":
         this.blockColor = 1342177280;
-        this.aa = 25;
+        this.minSimpleWidth = 25;
         break;
       case "d":
         this.blockColor = -657931;
@@ -53,20 +53,20 @@ public class FieldBlockView extends BaseBlockView {
         break;
     }
     float scale = this.density;
-    this.aa = (int) (this.aa * scale);
-    this.ba = (int) (this.ba * scale);
-    this.ca = (int) (this.ca * scale);
-    this.da = this.ca;
+    this.minSimpleWidth = (int) (this.minSimpleWidth * scale);
+    this.minHatWidth = (int) (this.minHatWidth * scale);
+    this.minCWidth = (int) (this.minCWidth * scale);
+    this.paramSpacing = this.minCWidth;
     if (this.blockType.equals("m") && getComponentLabel(this.componentType).length() >= 0) {
       this.dropdownLabel = createLabelTextView(this.componentType);
       addView(this.dropdownLabel);
-      this.da = getDropdownTypeWidth();
+      this.paramSpacing = getDropdownTypeWidth();
     }
     if (this.blockType.equals("m") || this.blockType.equals("d") || this.blockType.equals("n") || this.blockType.equals("s")) {
       this.labelView = createValueTextView("");
       addView(this.labelView);
     }
-    setBlockSize((float) (this.aa + this.da), (float) this.textHeight, false);
+    setBlockSize((float) (this.minSimpleWidth + this.paramSpacing), (float) this.textHeight, false);
   }
   
   private int getDropdownTypeWidth() {
@@ -74,13 +74,13 @@ public class FieldBlockView extends BaseBlockView {
     TextPaint textPaint = this.dropdownLabel.getPaint();
     String str = getComponentLabel(this.componentType);
     textPaint.getTextBounds(str, 0, str.length(), rect);
-    return rect.width() + this.ca * 2;
+    return rect.width() + this.minCWidth * 2;
   }
   
   private int getLabelWidth() {
     Rect rect = new Rect();
     this.labelView.getPaint().getTextBounds(this.labelView.getText().toString(), 0, this.labelView.getText().length(), rect);
-    return rect.width() + this.ba;
+    return rect.width() + this.minHatWidth;
   }
   
   public final String getComponentLabel(String paramString) {
@@ -102,7 +102,7 @@ public class FieldBlockView extends BaseBlockView {
     textView.setTextSize(8.0F);
     textView.setTypeface(null, 1);
     RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-2, this.textHeight);
-    int i = this.ca;
+    int i = this.minCWidth;
     layoutParams.setMargins(i, 0, i, 0);
     textView.setPadding(0, 0, 0, 0);
     textView.setLayoutParams((ViewGroup.LayoutParams)layoutParams);
@@ -117,8 +117,8 @@ public class FieldBlockView extends BaseBlockView {
     TextView textView = new TextView(this.fieldContext);
     textView.setText(paramString);
     textView.setTextSize(9.0F);
-    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(this.aa, this.textHeight);
-    layoutParams.setMargins(this.da, 0, this.ea, 0);
+    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(this.minSimpleWidth, this.textHeight);
+    layoutParams.setMargins(this.paramSpacing, 0, this.isDefinitionBlock, 0);
     textView.setPadding(0, 0, 0, 0);
     textView.setLayoutParams((ViewGroup.LayoutParams)layoutParams);
     textView.setBackgroundColor(0);
@@ -144,9 +144,9 @@ public class FieldBlockView extends BaseBlockView {
     this.argValue = paramObject;
     if (this.blockType.equals("d") || this.blockType.equals("m") || this.blockType.equals("s")) {
       this.labelView.setText(paramObject.toString());
-      int i = Math.max(this.aa, getLabelWidth());
+      int i = Math.max(this.minSimpleWidth, getLabelWidth());
       (this.labelView.getLayoutParams()).width = i;
-      setBlockSize((i + this.da), this.textHeight, true);
+      setBlockSize((i + this.paramSpacing), this.textHeight, true);
     } 
   }
 }

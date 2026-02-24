@@ -17,7 +17,7 @@ public class DefinitionBlockView extends BlockView {
   public DefinitionBlockView(Context paramContext, String paramString1, String paramString2, String paramString3, String paramString4, ArrayList<BlockBean> paramArrayList) {
     super(paramContext, -1, paramString4, paramString1, paramString2, paramString3);
     this.sa = paramArrayList;
-    this.oa = 2;
+    this.blockTypeInt = 2;
   }
   
   private TextView createDefinitionLabel(String paramString) {
@@ -75,10 +75,10 @@ public class DefinitionBlockView extends BlockView {
       width = Math.max(width, this.minBlockWidth);
     }
     if (type.equals(" ") || type.equals("") || type.equals("o")) {
-      width = Math.max(width, this.aa);
+      width = Math.max(width, this.minSimpleWidth);
     }
     if (type.equals("c") || type.equals("e")) {
-      width = Math.max(width, this.ca);
+      width = Math.max(width, this.minCWidth);
     }
     int totalHeight = Math.max(yPos + height + vPad, this.topSpacing + textHeight + this.bottomSpacing);
     setBlockSize((float) width, (float) totalHeight, true);
@@ -90,10 +90,10 @@ public class DefinitionBlockView extends BlockView {
     float f1 = this.minBlockWidth;
     float f2 = ((BaseBlockView)this).density;
     this.minBlockWidth = (int)(f1 * f2);
-    this.aa = (int)(this.aa * f2);
-    this.ba = (int)(this.ba * f2);
-    this.ca = (int)(this.ca * f2);
-    this.da = (int)(this.da * f2);
+    this.minSimpleWidth = (int)(this.minSimpleWidth * f2);
+    this.minHatWidth = (int)(this.minHatWidth * f2);
+    this.minCWidth = (int)(this.minCWidth * f2);
+    this.paramSpacing = (int)(this.paramSpacing * f2);
     String str = ((BaseBlockView)this).blockType;
     int i = str.hashCode();
     if (i != 32) {
@@ -165,10 +165,10 @@ public class DefinitionBlockView extends BlockView {
     } else if (str.equals(" ")) {
       switch (b) {
         case 11:
-          this.ea = true;
+          this.isDefinitionBlock = true;
           break;
         case 10:
-          this.ga = true;
+          this.hasEndCap = true;
           break;
         case 1:
         case 2:
@@ -177,7 +177,7 @@ public class DefinitionBlockView extends BlockView {
         case 5:
         case 6:
         case 7:
-          this.fa = true;
+          this.isParameter = true;
           break;
       } 
       this.ta = createDefinitionLabel(this.spec);
@@ -188,10 +188,10 @@ public class DefinitionBlockView extends BlockView {
     } 
     switch (b) {
       case 11:
-        this.ea = true;
+        this.isDefinitionBlock = true;
         break;
       case 10:
-        this.ga = true;
+        this.hasEndCap = true;
         break;
       case 1:
       case 2:
@@ -200,7 +200,7 @@ public class DefinitionBlockView extends BlockView {
       case 5:
       case 6:
       case 7:
-        this.fa = true;
+        this.isParameter = true;
         break;
     } 
     this.ta = createDefinitionLabel(this.spec);

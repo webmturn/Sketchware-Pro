@@ -692,11 +692,11 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         if (rs3 == null) {
             return;
         }
-        if (rs3.ha == (Integer) rs.getTag()) {
+        if (rs3.nextBlock == (Integer) rs.getTag()) {
             dragConnectionType = 0;
-        } else if (dragSourceParent.ia == (Integer) rs.getTag()) {
+        } else if (dragSourceParent.subStack1 == (Integer) rs.getTag()) {
             dragConnectionType = 2;
-        } else if (dragSourceParent.ja == (Integer) rs.getTag()) {
+        } else if (dragSourceParent.subStack2 == (Integer) rs.getTag()) {
             dragConnectionType = 3;
         } else if (dragSourceParent.childViews.contains(rs)) {
             dragConnectionType = 5;
@@ -718,7 +718,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         ss.setArgValue(obj);
         ss.parentBlock.recalculateToRoot();
         ss.parentBlock.getRootBlock().layoutChain();
-        ss.parentBlock.pa.updatePaneSize();
+        ss.parentBlock.blockPane.updatePaneSize();
         BlockHistoryManager.getInstance(scId).recordUpdate(buildHistoryKey(), clone, ss.parentBlock.getBean().clone());
         refreshOptionsMenu();
     }
@@ -827,9 +827,9 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     public void connectBlock(BlockBean blockBean, boolean z) {
         BlockView block = blockPane.findBlockByString(blockBean.id);
         if (block != null) {
-            block.ia = -1;
-            block.ja = -1;
-            block.ha = -1;
+            block.subStack1 = -1;
+            block.subStack2 = -1;
+            block.nextBlock = -1;
 
             for (int i = 0; i < blockBean.parameters.size(); i++) {
                 String parameter = blockBean.parameters.get(i);
@@ -2182,13 +2182,13 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     blockPane.setBlockTreeVisibility(rs2, 0);
                     if (dragSourceParent != null) {
                         if (dragConnectionType == 0) {
-                            dragSourceParent.ha = (Integer) v.getTag();
+                            dragSourceParent.nextBlock = (Integer) v.getTag();
                         }
                         if (dragConnectionType == 2) {
-                            dragSourceParent.ia = (Integer) v.getTag();
+                            dragSourceParent.subStack1 = (Integer) v.getTag();
                         }
                         if (dragConnectionType == 3) {
-                            dragSourceParent.ja = (Integer) v.getTag();
+                            dragSourceParent.subStack2 = (Integer) v.getTag();
                         }
                         if (dragConnectionType == 5) {
                             dragSourceParent.replaceParameter((BaseBlockView) dragSourceParent.childViews.get(dragParameterIndex), rs2);
@@ -2249,13 +2249,13 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 blockPane.setBlockTreeVisibility(rs7, 0);
                 if (dragSourceParent != null) {
                     if (dragConnectionType == 0) {
-                        dragSourceParent.ha = (Integer) v.getTag();
+                        dragSourceParent.nextBlock = (Integer) v.getTag();
                     }
                     if (dragConnectionType == 2) {
-                        dragSourceParent.ia = (Integer) v.getTag();
+                        dragSourceParent.subStack1 = (Integer) v.getTag();
                     }
                     if (dragConnectionType == 3) {
-                        dragSourceParent.ja = (Integer) v.getTag();
+                        dragSourceParent.subStack2 = (Integer) v.getTag();
                     }
                     if (dragConnectionType == 5) {
                         dragSourceParent.replaceParameter((BaseBlockView) dragSourceParent.childViews.get(dragParameterIndex), rs7);
@@ -2277,13 +2277,13 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 blockPane.setBlockTreeVisibility(rs10, 0);
                 if (dragSourceParent != null) {
                     if (dragConnectionType == 0) {
-                        dragSourceParent.ha = (Integer) v.getTag();
+                        dragSourceParent.nextBlock = (Integer) v.getTag();
                     }
                     if (dragConnectionType == 2) {
-                        dragSourceParent.ia = (Integer) v.getTag();
+                        dragSourceParent.subStack1 = (Integer) v.getTag();
                     }
                     if (dragConnectionType == 3) {
-                        dragSourceParent.ja = (Integer) v.getTag();
+                        dragSourceParent.subStack2 = (Integer) v.getTag();
                     }
                     if (dragConnectionType == 5) {
                         dragSourceParent.replaceParameter((BaseBlockView) dragSourceParent.childViews.get(dragParameterIndex), rs10);

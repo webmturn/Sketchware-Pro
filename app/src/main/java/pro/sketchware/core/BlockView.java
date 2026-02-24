@@ -18,41 +18,41 @@ public class BlockView extends BaseBlockView {
   
   public int minBlockWidth = 30;
   
-  public int aa = 50;
+  public int minSimpleWidth = 50;
   
-  public int ba = 90;
+  public int minHatWidth = 90;
   
-  public int ca = 90;
+  public int minCWidth = 90;
   
-  public int da = 4;
+  public int paramSpacing = 4;
   
-  public boolean ea = false;
+  public boolean isDefinitionBlock = false;
   
-  public boolean fa = false;
+  public boolean isParameter = false;
   
-  public boolean ga = false;
+  public boolean hasEndCap = false;
   
-  public int ha = -1;
+  public int nextBlock = -1;
   
-  public int ia = -1;
+  public int subStack1 = -1;
   
-  public int ja = -1;
+  public int subStack2 = -1;
   
-  public ArrayList<View> ka = new ArrayList<View>();
+  public ArrayList<View> specViews = new ArrayList<View>();
   
-  public ArrayList<String> la = new ArrayList<String>();
+  public ArrayList<String> specTypes = new ArrayList<String>();
   
-  public TextView ma = null;
+  public TextView elseLabel = null;
   
-  public int na = 0;
+  public int depth = 0;
   
-  public int oa = 0;
+  public int blockTypeInt = 0;
   
-  public BlockPane pa = null;
+  public BlockPane blockPane = null;
   
-  public String qa;
+  public String blockTypeStr;
   
-  public String ra;
+  public String componentTypeStr;
   
   private String spec2 = "";
   
@@ -101,33 +101,33 @@ public class BlockView extends BaseBlockView {
   
   public final void appendToChain(BlockView paramRs) {
     if (paramRs == this) return;
-    if (hasSubstack() && -1 == this.ia) {
+    if (hasSubstack() && -1 == this.subStack1) {
       setSubstack1Block(paramRs);
     } else {
       BlockView rs = getLastInChain();
       if (rs != paramRs) {
-        rs.ha = ((Integer)paramRs.getTag()).intValue();
+        rs.nextBlock = ((Integer)paramRs.getTag()).intValue();
         paramRs.parentBlock = rs;
       }
     } 
   }
   
   public void replaceParameter(BaseBlockView paramTs, BlockView paramRs) {
-    int index = this.ka.indexOf(paramTs);
+    int index = this.specViews.indexOf(paramTs);
     if (index < 0) return;
     boolean isRs = paramTs instanceof BlockView;
     if (isRs) {
       BlockView oldRs = (BlockView) paramTs;
-      paramRs.qa = oldRs.qa;
-      paramRs.ra = oldRs.ra;
+      paramRs.blockTypeStr = oldRs.blockTypeStr;
+      paramRs.componentTypeStr = oldRs.componentTypeStr;
     } else if (paramTs instanceof FieldBlockView) {
-      paramRs.qa = paramTs.blockType;
-      paramRs.ra = paramTs.componentType;
+      paramRs.blockTypeStr = paramTs.blockType;
+      paramRs.componentTypeStr = paramTs.componentType;
     }
     if (!isRs) {
       removeView(paramTs);
     }
-    this.ka.set(index, paramRs);
+    this.specViews.set(index, paramRs);
     paramRs.parentBlock = this;
     rebuildChildViews();
     recalculateDepthChain();
@@ -141,13 +141,13 @@ public class BlockView extends BaseBlockView {
   
   public final void parseSpec(String paramString, int paramInt) {
     ArrayList<String> arrayList = FormatUtil.parseBlockSpec(paramString);
-    this.ka = new ArrayList<View>();
-    this.la = new ArrayList<String>();
+    this.specViews = new ArrayList<View>();
+    this.specTypes = new ArrayList<String>();
     for (int b = 0; b < arrayList.size(); b++) {
       View view = createSpecView(arrayList.get(b), paramInt);
       if (view instanceof BaseBlockView)
         ((BaseBlockView)view).parentBlock = this; 
-      this.ka.add(view);
+      this.specViews.add(view);
       if (view instanceof FieldBlockView) {
         paramString = arrayList.get(b);
       } else {
@@ -155,7 +155,7 @@ public class BlockView extends BaseBlockView {
       } 
       if (view instanceof TextView)
         paramString = "label"; 
-      this.la.add(paramString);
+      this.specTypes.add(paramString);
     } 
   }
   
@@ -181,11 +181,11 @@ public class BlockView extends BaseBlockView {
   
   public void setNextBlock(BlockView paramRs) {
     if (paramRs == this) return;
-    View view = this.pa.findViewWithTag(Integer.valueOf(this.ha));
+    View view = this.blockPane.findViewWithTag(Integer.valueOf(this.nextBlock));
     if (view != null)
       ((BlockView)view).parentBlock = null; 
     paramRs.parentBlock = this;
-    this.ha = ((Integer)paramRs.getTag()).intValue();
+    this.nextBlock = ((Integer)paramRs.getTag()).intValue();
     if (view != null && view != paramRs)
       paramRs.appendToChain((BlockView)view); 
   }
@@ -201,48 +201,48 @@ public class BlockView extends BaseBlockView {
     paramRs.setX(getX() - this.cornerRadius);
     paramRs.setY(getY() - getBlockHeight());
     this.parentBlock = paramRs;
-    paramRs.ia = ((Integer)getTag()).intValue();
+    paramRs.subStack1 = ((Integer)getTag()).intValue();
   }
   
   public void setSubstack1Block(BlockView paramRs) {
     if (paramRs == this) return;
-    View view = this.pa.findViewWithTag(Integer.valueOf(this.ia));
+    View view = this.blockPane.findViewWithTag(Integer.valueOf(this.subStack1));
     if (view != null)
       ((BlockView)view).parentBlock = null; 
     paramRs.parentBlock = this;
-    this.ia = ((Integer)paramRs.getTag()).intValue();
+    this.subStack1 = ((Integer)paramRs.getTag()).intValue();
     if (view != null && view != paramRs)
       paramRs.appendToChain((BlockView)view); 
   }
   
   public void setSubstack2Block(BlockView paramRs) {
     if (paramRs == this) return;
-    View view = this.pa.findViewWithTag(Integer.valueOf(this.ja));
+    View view = this.blockPane.findViewWithTag(Integer.valueOf(this.subStack2));
     if (view != null)
       ((BlockView)view).parentBlock = null; 
     paramRs.parentBlock = this;
-    this.ja = ((Integer)paramRs.getTag()).intValue();
+    this.subStack2 = ((Integer)paramRs.getTag()).intValue();
     if (view != null && view != paramRs)
       paramRs.appendToChain((BlockView)view); 
   }
   
   public void detachBlock(BlockView paramRs) {
-    if (this.ha == ((Integer)paramRs.getTag()).intValue())
-      this.ha = -1; 
-    if (this.ia == ((Integer)paramRs.getTag()).intValue())
-      this.ia = -1; 
-    if (this.ja == ((Integer)paramRs.getTag()).intValue())
-      this.ja = -1; 
-    if (paramRs.fa) {
-      int i = this.ka.indexOf(paramRs);
+    if (this.nextBlock == ((Integer)paramRs.getTag()).intValue())
+      this.nextBlock = -1; 
+    if (this.subStack1 == ((Integer)paramRs.getTag()).intValue())
+      this.subStack1 = -1; 
+    if (this.subStack2 == ((Integer)paramRs.getTag()).intValue())
+      this.subStack2 = -1; 
+    if (paramRs.isParameter) {
+      int i = this.specViews.indexOf(paramRs);
       if (i < 0)
         return; 
-      paramRs.qa = "";
-      paramRs.ra = "";
-      View view = createSpecView(this.la.get(i), this.blockColor);
+      paramRs.blockTypeStr = "";
+      paramRs.componentTypeStr = "";
+      View view = createSpecView(this.specTypes.get(i), this.blockColor);
       if (view instanceof BaseBlockView)
         ((BaseBlockView)view).parentBlock = this; 
-      this.ka.set(i, view);
+      this.specViews.set(i, view);
       addView(view);
       rebuildChildViews();
       recalculateDepthChain();
@@ -256,29 +256,29 @@ public class BlockView extends BaseBlockView {
     int limit = 200;
     while (true) {
       arrayList.add(rs);
-      for (View view : rs.ka) {
+      for (View view : rs.specViews) {
         if (view instanceof BlockView)
           arrayList.addAll(((BlockView)view).getAllChildren()); 
       } 
       if (rs.hasSubstack()) {
-        int j = rs.ia;
+        int j = rs.subStack1;
         if (j != -1) {
-          BlockView sub = (BlockView)this.pa.findViewWithTag(Integer.valueOf(j));
+          BlockView sub = (BlockView)this.blockPane.findViewWithTag(Integer.valueOf(j));
           if (sub != null && sub != this)
             arrayList.addAll(sub.getAllChildren()); 
         }
       } 
       if (rs.hasDoubleSubstack()) {
-        int j = rs.ja;
+        int j = rs.subStack2;
         if (j != -1) {
-          BlockView sub = (BlockView)this.pa.findViewWithTag(Integer.valueOf(j));
+          BlockView sub = (BlockView)this.blockPane.findViewWithTag(Integer.valueOf(j));
           if (sub != null && sub != this)
             arrayList.addAll(sub.getAllChildren()); 
         }
       } 
-      int i = rs.ha;
+      int i = rs.nextBlock;
       if (i != -1 && --limit > 0) {
-        BlockView next = (BlockView)this.pa.findViewWithTag(Integer.valueOf(i));
+        BlockView next = (BlockView)this.blockPane.findViewWithTag(Integer.valueOf(i));
         if (next == null || next == this) return arrayList;
         rs = next;
         continue;
@@ -297,14 +297,14 @@ public class BlockView extends BaseBlockView {
         blockBean.parameters.add("@" + view.getTag().toString());
       }
     } 
-    blockBean.subStack1 = this.ia;
-    blockBean.subStack2 = this.ja;
-    blockBean.nextBlock = this.ha;
+    blockBean.subStack1 = this.subStack1;
+    blockBean.subStack2 = this.subStack2;
+    blockBean.nextBlock = this.nextBlock;
     return blockBean;
   }
   
   public int getBlockType() {
-    return this.oa;
+    return this.blockTypeInt;
   }
   
   public int getDepth() {
@@ -329,9 +329,9 @@ public class BlockView extends BaseBlockView {
       if (i != 0)
         j = i - this.borderWidth; 
       i = j + rs.getTotalHeight();
-      j = rs.ha;
+      j = rs.nextBlock;
       if (j != -1 && --limit > 0) {
-        BlockView next = (BlockView)this.pa.findViewWithTag(Integer.valueOf(j));
+        BlockView next = (BlockView)this.blockPane.findViewWithTag(Integer.valueOf(j));
         if (next == null || next == this) break;
         rs = next;
         continue;
@@ -349,10 +349,10 @@ public class BlockView extends BaseBlockView {
       i = Math.max(i, rs.getW());
       int j = i;
       if (rs.hasSubstack()) {
-        int k = rs.ia;
+        int k = rs.subStack1;
         j = i;
         if (k != -1) {
-          BlockView sub1 = (BlockView)this.pa.findViewWithTag(Integer.valueOf(k));
+          BlockView sub1 = (BlockView)this.blockPane.findViewWithTag(Integer.valueOf(k));
           if (sub1 != null) {
             j = this.cornerRadius;
             j = Math.max(i, sub1.getWidthSum() + j);
@@ -361,19 +361,19 @@ public class BlockView extends BaseBlockView {
       } 
       i = j;
       if (rs.hasDoubleSubstack()) {
-        int k = rs.ja;
+        int k = rs.subStack2;
         i = j;
         if (k != -1) {
-          BlockView sub2 = (BlockView)this.pa.findViewWithTag(Integer.valueOf(k));
+          BlockView sub2 = (BlockView)this.blockPane.findViewWithTag(Integer.valueOf(k));
           if (sub2 != null) {
             i = this.cornerRadius;
             i = Math.max(j, sub2.getWidthSum() + i);
           }
         } 
       } 
-      j = rs.ha;
+      j = rs.nextBlock;
       if (j != -1 && --limit > 0) {
-        BlockView next = (BlockView)this.pa.findViewWithTag(Integer.valueOf(j));
+        BlockView next = (BlockView)this.blockPane.findViewWithTag(Integer.valueOf(j));
         if (next == null || next == this) break;
         rs = next;
         continue;
@@ -387,9 +387,9 @@ public class BlockView extends BaseBlockView {
     BlockView rs = this;
     int limit = 200;
     while (true) {
-      int i = rs.ha;
+      int i = rs.nextBlock;
       if (i != -1 && --limit > 0) {
-        BlockView next = (BlockView)this.pa.findViewWithTag(Integer.valueOf(i));
+        BlockView next = (BlockView)this.blockPane.findViewWithTag(Integer.valueOf(i));
         if (next == null || next == this) return rs;
         rs = next;
         continue;
@@ -400,19 +400,19 @@ public class BlockView extends BaseBlockView {
   
   public final void rebuildChildViews() {
     this.childViews = new ArrayList<View>();
-    for (int b = 0; b < this.ka.size(); b++) {
-      View view = this.ka.get(b);
+    for (int b = 0; b < this.specViews.size(); b++) {
+      View view = this.specViews.get(b);
       if (view instanceof BlockView || view instanceof FieldBlockView)
         this.childViews.add(view); 
     } 
   }
   
   public final void positionElseLabel() {
-    TextView textView = this.ma;
+    TextView textView = this.elseLabel;
     if (textView != null) {
       textView.bringToFront();
-      this.ma.setX(this.leftIndent);
-      this.ma.setY((getSubstackBottom() - this.bottomPadding));
+      this.elseLabel.setX(this.leftIndent);
+      this.elseLabel.setY((getSubstackBottom() - this.bottomPadding));
     } 
   }
   
@@ -421,9 +421,9 @@ public class BlockView extends BaseBlockView {
     int limit = 1000;
     while (current != null && --limit > 0) {
       current.layoutSingle();
-      int next = current.ha;
+      int next = current.nextBlock;
       if (next > -1) {
-        BlockView nextRs = (BlockView) current.pa.findViewWithTag(Integer.valueOf(next));
+        BlockView nextRs = (BlockView) current.blockPane.findViewWithTag(Integer.valueOf(next));
         if (nextRs == null || nextRs == this) break;
         nextRs.setX(current.getX());
         nextRs.setY(current.getY() + (float) current.getContentBottom());
@@ -438,8 +438,8 @@ public class BlockView extends BaseBlockView {
   private void layoutSingle() {
     bringToFront();
     int xOffset = this.leftIndent;
-    for (int idx = 0; idx < this.ka.size(); idx++) {
-      View child = (View) this.ka.get(idx);
+    for (int idx = 0; idx < this.specViews.size(); idx++) {
+      View child = (View) this.specViews.get(idx);
       child.bringToFront();
       boolean isRs = child instanceof BlockView;
       float childX;
@@ -450,7 +450,7 @@ public class BlockView extends BaseBlockView {
       }
       child.setX(childX);
       int childWidth;
-      if (((String) this.la.get(idx)).equals("label")) {
+      if (((String) this.specTypes.get(idx)).equals("label")) {
         childWidth = getTextWidth((TextView) child);
       } else {
         childWidth = 0;
@@ -461,13 +461,13 @@ public class BlockView extends BaseBlockView {
       if (isRs) {
         childWidth = ((BlockView) child).getWidthSum();
       }
-      xOffset += childWidth + this.da;
+      xOffset += childWidth + this.paramSpacing;
       if (isRs) {
         BlockView childRs = (BlockView) child;
-        child.setY(getY() + (float) this.topSpacing + (float) ((this.na - childRs.na - 1) * this.shadowOffset));
+        child.setY(getY() + (float) this.topSpacing + (float) ((this.depth - childRs.depth - 1) * this.shadowOffset));
         childRs.layoutChain();
       } else {
-        child.setY((float) (this.topSpacing + this.na * this.shadowOffset));
+        child.setY((float) (this.topSpacing + this.depth * this.shadowOffset));
       }
     }
     int w = xOffset;
@@ -476,22 +476,22 @@ public class BlockView extends BaseBlockView {
     }
     int w2 = w;
     if (this.blockType.equals(" ") || this.blockType.equals("") || this.blockType.equals("f")) {
-      w2 = Math.max(w, this.aa);
+      w2 = Math.max(w, this.minSimpleWidth);
     }
     int w3 = w2;
     if (this.blockType.equals("c") || this.blockType.equals("e")) {
-      w3 = Math.max(w2, this.ca);
+      w3 = Math.max(w2, this.minCWidth);
     }
     int w4 = w3;
     if (this.blockType.equals("h")) {
-      w4 = Math.max(w3, this.ba);
+      w4 = Math.max(w3, this.minHatWidth);
     }
-    setBlockSize((float) (this.rightIndent + w4), (float) (this.topSpacing + this.textHeight + this.na * this.shadowOffset * 2 + this.bottomSpacing), true);
+    setBlockSize((float) (this.rightIndent + w4), (float) (this.topSpacing + this.textHeight + this.depth * this.shadowOffset * 2 + this.bottomSpacing), true);
     if (hasSubstack()) {
       int ss1Height = this.minHeight;
-      int sub1 = this.ia;
+      int sub1 = this.subStack1;
       if (sub1 > -1) {
-        BlockView sub1Rs = (BlockView) this.pa.findViewWithTag(Integer.valueOf(sub1));
+        BlockView sub1Rs = (BlockView) this.blockPane.findViewWithTag(Integer.valueOf(sub1));
         if (sub1Rs != null) {
           sub1Rs.setX(getX() + (float) this.cornerRadius);
           sub1Rs.setY(getY() + (float) getBlockHeight());
@@ -502,16 +502,16 @@ public class BlockView extends BaseBlockView {
       }
       setSubstack1Height(ss1Height);
       int ss2Height = this.minHeight;
-      int sub2 = this.ja;
+      int sub2 = this.subStack2;
       if (sub2 > -1) {
-        BlockView sub2Rs = (BlockView) this.pa.findViewWithTag(Integer.valueOf(sub2));
+        BlockView sub2Rs = (BlockView) this.blockPane.findViewWithTag(Integer.valueOf(sub2));
         if (sub2Rs != null) {
           sub2Rs.setX(getX() + (float) this.cornerRadius);
           sub2Rs.setY(getY() + (float) getSubstackBottom());
           sub2Rs.bringToFront();
           sub2Rs.layoutChain();
           ss2Height = sub2Rs.getHeightSum();
-          if (sub2Rs.getLastInChain().ga) {
+          if (sub2Rs.getLastInChain().hasEndCap) {
             ss2Height += this.borderWidth;
           }
         }
@@ -525,10 +525,10 @@ public class BlockView extends BaseBlockView {
     setDrawingCacheEnabled(false);
     float scale = this.density;
     this.minBlockWidth = (int) (this.minBlockWidth * scale);
-    this.aa = (int) (this.aa * scale);
-    this.ba = (int) (this.ba * scale);
-    this.ca = (int) (this.ca * scale);
-    this.da = (int) (this.da * scale);
+    this.minSimpleWidth = (int) (this.minSimpleWidth * scale);
+    this.minHatWidth = (int) (this.minHatWidth * scale);
+    this.minCWidth = (int) (this.minCWidth * scale);
+    this.paramSpacing = (int) (this.paramSpacing * scale);
     String type = this.blockType;
     byte typeNum = 0;
     if (type.equals("b")) { typeNum = 1; }
@@ -546,19 +546,19 @@ public class BlockView extends BaseBlockView {
     else { typeNum = -1; }
     switch (typeNum) {
       case 1: case 2: case 3: case 4: case 5: case 6: case 7:
-        this.fa = true;
+        this.isParameter = true;
         break;
       case 10:
-        this.ga = true;
+        this.hasEndCap = true;
         break;
       case 11:
-        this.ea = true;
+        this.isDefinitionBlock = true;
         break;
       default:
         break;
     }
     int color = BlockColorMapper.getBlockColor(this.opCode, this.blockType);
-    if (!this.ea && !this.opCode.equals("definedFunc") && !this.opCode.equals("getVar")
+    if (!this.isDefinitionBlock && !this.opCode.equals("definedFunc") && !this.opCode.equals("getVar")
         && !this.opCode.equals("getResStr") && !this.opCode.equals("getArg") && color != -7711273) {
       this.spec = StringResource.getInstance().getEventTranslation(getContext(), this.opCode);
     }
@@ -619,10 +619,10 @@ public class BlockView extends BaseBlockView {
   
   public void recalculateSize() {
     int xOffset = this.leftIndent;
-    for (int idx = 0; idx < this.ka.size(); idx++) {
-      View child = (View) this.ka.get(idx);
+    for (int idx = 0; idx < this.specViews.size(); idx++) {
+      View child = (View) this.specViews.get(idx);
       int childWidth;
-      if (((String) this.la.get(idx)).equals("label")) {
+      if (((String) this.specTypes.get(idx)).equals("label")) {
         childWidth = getTextWidth((TextView) child);
       } else {
         childWidth = 0;
@@ -633,7 +633,7 @@ public class BlockView extends BaseBlockView {
       if (child instanceof BlockView) {
         childWidth = ((BlockView) child).getWidthSum();
       }
-      xOffset += childWidth + this.da;
+      xOffset += childWidth + this.paramSpacing;
     }
     int w = xOffset;
     if (this.blockType.equals("b") || this.blockType.equals("d") || this.blockType.equals("s") || this.blockType.equals("a")) {
@@ -641,22 +641,22 @@ public class BlockView extends BaseBlockView {
     }
     int w2 = w;
     if (this.blockType.equals(" ") || this.blockType.equals("") || this.blockType.equals("o")) {
-      w2 = Math.max(w, this.aa);
+      w2 = Math.max(w, this.minSimpleWidth);
     }
     int w3 = w2;
     if (this.blockType.equals("c") || this.blockType.equals("e")) {
-      w3 = Math.max(w2, this.ca);
+      w3 = Math.max(w2, this.minCWidth);
     }
     int w4 = w3;
     if (this.blockType.equals("h")) {
-      w4 = Math.max(w3, this.ba);
+      w4 = Math.max(w3, this.minHatWidth);
     }
     int finalW = w4;
-    TextView label = this.ma;
+    TextView label = this.elseLabel;
     if (label != null) {
       finalW = Math.max(w4, label.getWidth() + this.leftIndent + 2);
     }
-    setBlockSize((float) (this.rightIndent + finalW), (float) (this.topSpacing + this.textHeight + this.na * this.shadowOffset * 2 + this.bottomSpacing), false);
+    setBlockSize((float) (this.rightIndent + finalW), (float) (this.topSpacing + this.textHeight + this.depth * this.shadowOffset * 2 + this.bottomSpacing), false);
   }
   
   public void recalculateDepthChain() {
@@ -668,11 +668,11 @@ public class BlockView extends BaseBlockView {
       while (iterator.hasNext()) {
         View view = iterator.next();
         if (view instanceof BlockView)
-          i = Math.max(i, ((BlockView)view).na + 1); 
+          i = Math.max(i, ((BlockView)view).depth + 1); 
       } 
-      rs.na = i;
+      rs.depth = i;
       rs.recalculateSize();
-      if (rs.fa) {
+      if (rs.isParameter) {
         rs = rs.parentBlock;
         continue;
       } 
@@ -694,24 +694,24 @@ public class BlockView extends BaseBlockView {
   }
   
   public void setBlockType(int paramInt) {
-    this.oa = paramInt;
+    this.blockTypeInt = paramInt;
   }
   
   public void setSpec(String paramString) {
     this.spec = paramString;
     removeAllViews();
     parseSpec(this.spec, this.blockColor);
-    Iterator<View> iterator = this.ka.iterator();
+    Iterator<View> iterator = this.specViews.iterator();
     while (true) {
       if (!iterator.hasNext()) {
         rebuildChildViews();
         if (this.blockType.equals("e") && this.opCode.equals("ifElse")) {
-          this.ma = createLabel(StringResource.getInstance().getEventTranslation(getContext(), "else"));
-          addView((View)this.ma);
+          this.elseLabel = createLabel(StringResource.getInstance().getEventTranslation(getContext(), "else"));
+          addView((View)this.elseLabel);
         } 
         if (this.blockType.equals("e") && !this.spec2.equals("")) {
-          this.ma = createLabel(this.spec2);
-          addView((View)this.ma);
+          this.elseLabel = createLabel(this.spec2);
+          addView((View)this.elseLabel);
         } 
         layoutChain();
         return;
