@@ -199,7 +199,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
             selectedItem.setSelection(false);
             selectedItem = null;
         }
-        if (widgetSelectedListener != null) widgetSelectedListener.a(false, "");
+        if (widgetSelectedListener != null) widgetSelectedListener.onViewSelectedWithProperty(false, "");
     }
 
     public void j() {
@@ -218,7 +218,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
     }
 
     private void showMoreProperties() {
-        if (propertyClickListener != null) propertyClickListener.a(b, selectedItem.getBean());
+        if (propertyClickListener != null) propertyClickListener.onPropertyRequested(b, selectedItem.getBean());
     }
 
     private void showPaletteFavorite() {
@@ -290,7 +290,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
                 return true;
             }
             if (isInsideItemScrollView(view) && draggingListener != null) {
-                draggingListener.b();
+                draggingListener.onDragStarted();
             }
             handler.postDelayed(longPressRunnable, ViewConfiguration.getLongPressTimeout() / 2);
             return true;
@@ -300,7 +300,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
                     paletteWidget.setScrollEnabled(true);
                     paletteFavorite.setScrollEnabled(true);
                     if (draggingListener != null) {
-                        draggingListener.d();
+                        draggingListener.onDragEnded();
                     }
                     b(false, false);
                     dummyView.setDummyVisibility(View.GONE);
@@ -345,7 +345,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
                 a(sy, true);
             }
             if (draggingListener != null) {
-                draggingListener.d();
+                draggingListener.onDragEnded();
             }
             dummyView.setDummyVisibility(View.GONE);
             currentTouchedView = null;
@@ -440,7 +440,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
             paletteWidget.setScrollEnabled(true);
             paletteFavorite.setScrollEnabled(true);
             if (draggingListener != null) {
-                draggingListener.d();
+                draggingListener.onDragEnded();
             }
             b(false, false);
             dummyView.setDummyVisibility(View.GONE);
@@ -616,8 +616,8 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
 
     public ItemView e(ViewBean viewBean) {
         ItemView g = viewPane.g(viewBean);
-        widgetSelectedListener.a();
-        widgetSelectedListener.a(viewBean.id);
+        widgetSelectedListener.onSelectionChanged();
+        widgetSelectedListener.onViewSelected(viewBean.id);
         return g;
     }
 
@@ -689,7 +689,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         }
         paletteWidget.setScrollEnabled(false);
         paletteFavorite.setScrollEnabled(false);
-        if (draggingListener != null) draggingListener.b();
+        if (draggingListener != null) draggingListener.onDragStarted();
         if (useVibrate) vibrator.vibrate(100L);
         isDragged = true;
         dummyView.b(currentTouchedView);
@@ -1044,7 +1044,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         selectedItem = syVar;
         selectedItem.setSelection(true);
         if (widgetSelectedListener != null) {
-            widgetSelectedListener.a(z, selectedItem.getBean().id);
+            widgetSelectedListener.onViewSelectedWithProperty(z, selectedItem.getBean().id);
         }
     }
 

@@ -1,9 +1,9 @@
 package pro.sketchware.core;
 
 public interface BuildCallback {
-  void a();
+  void onSelectionChanged();
   
-  void a(String paramString);
+  void onViewSelected(String paramString);
   
-  void a(boolean paramBoolean, String paramString);
+  void onViewSelectedWithProperty(boolean paramBoolean, String paramString);
 }

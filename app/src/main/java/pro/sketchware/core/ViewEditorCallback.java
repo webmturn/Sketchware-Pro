@@ -3,7 +3,7 @@ package pro.sketchware.core;
 import com.besome.sketch.beans.ViewBean;
 
 public interface ViewEditorCallback {
-  void a();
+  void onFavoritesChanged();
   
-  void a(String paramString, ViewBean paramViewBean);
+  void onPropertyRequested(String paramString, ViewBean paramViewBean);
 }

@@ -66,12 +66,12 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
         viewProperty = requireActivity().findViewById(R.id.view_property);
         viewProperty.setOnPropertyListener(new ViewEditorCallback() {
             @Override
-            public void a() {
+            public void onFavoritesChanged() {
                 viewEditor.setFavoriteData(WidgetCollectionManager.getInstance().getWidgets());
             }
 
             @Override
-            public void a(String s, ViewBean viewBean) {
+            public void onPropertyRequested(String s, ViewBean viewBean) {
                 openPropertyActivity(viewBean);
             }
         });
@@ -91,19 +91,19 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
         viewProperty.setOnPropertyTargetChangeListener(viewEditor::updateSelection);
         viewEditor.setOnWidgetSelectedListener(new BuildCallback() {
             @Override
-            public void a() {
+            public void onSelectionChanged() {
                 updatePropertyViews();
                 viewProperty.e();
             }
 
             @Override
-            public void a(String viewId) {
+            public void onViewSelected(String viewId) {
                 updatePropertyViews();
                 viewProperty.a(viewId);
             }
 
             @Override
-            public void a(boolean var1, String viewId) {
+            public void onViewSelectedWithProperty(boolean var1, String viewId) {
                 if (!viewId.isEmpty()) {
                     updatePropertyViews();
                     viewProperty.a(viewId);
@@ -120,7 +120,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
             }
 
             @Override
-            public void b() {
+            public void onDragStarted() {
                 isDragging = true;
                 ((DesignActivity) requireActivity()).setTouchEventEnabled(false);
             }
@@ -131,7 +131,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
             }
 
             @Override
-            public void d() {
+            public void onDragEnded() {
                 isDragging = false;
                 ((DesignActivity) requireActivity()).setTouchEventEnabled(true);
             }

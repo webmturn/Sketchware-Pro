@@ -214,7 +214,7 @@ public class ViewProperty extends LinearLayout implements PropertyChangedCallbac
                 }
                 try { WidgetCollectionManager.getInstance().addWidget(widgetName, viewBeans, true); } catch (pro.sketchware.core.CompileException ignored) {}
                 if (propertyListener != null) {
-                    propertyListener.a();
+                    propertyListener.onFavoritesChanged();
                 }
                 SketchToast.toast(getContext(), Helper.getResString(R.string.common_message_complete_save), SketchToast.TOAST_NORMAL).show();
                 v.dismiss();
@@ -483,7 +483,7 @@ public class ViewProperty extends LinearLayout implements PropertyChangedCallbac
         @Override
         public void onClick(View v) {
             if (propertyListener != null) {
-                propertyListener.a(projectFile.getXmlName(), viewBean);
+                propertyListener.onPropertyRequested(projectFile.getXmlName(), viewBean);
             }
         }
 
