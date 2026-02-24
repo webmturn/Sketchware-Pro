@@ -43,7 +43,7 @@ public class XmlBuilder {
     }
 
     public void addChildNode(XmlBuilder xmlBuilder) {
-        xmlBuilder.b(indentationLevel + 1);
+        xmlBuilder.setIndentationLevel(indentationLevel + 1);
         childNodes.add(xmlBuilder);
     }
 
@@ -103,11 +103,11 @@ public class XmlBuilder {
         return ActivityCodeGenerator.WIDGET_NAME_PATTERN.matcher(rootElementName).replaceAll("");
     }
 
-    private void b(int indentSize) {
+    private void setIndentationLevel(int indentSize) {
         indentationLevel = indentSize;
         if (childNodes != null) {
             for (XmlBuilder nx : childNodes) {
-                nx.b(indentSize + 1);
+                nx.setIndentationLevel(indentSize + 1);
             }
         }
     }

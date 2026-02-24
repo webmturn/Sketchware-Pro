@@ -31,7 +31,7 @@ public class EasyDeleteEditText extends RelativeLayout {
         initialize(context);
     }
 
-    private void a() {
+    private void updateDeleteButtonVisibility() {
         if (binding.easyEdInput.isEnabled() && binding.easyEdInput.hasFocus() && binding.easyEdInput.length() > 0) {
             binding.imgDelete.setVisibility(View.VISIBLE);
         } else {
@@ -48,11 +48,11 @@ public class EasyDeleteEditText extends RelativeLayout {
         binding.easyEdInput.addTextChangedListener(new BaseTextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                a();
+                updateDeleteButtonVisibility();
             }
         });
-        binding.easyEdInput.setOnFocusChangeListener((v, hasFocus) -> a());
-        a();
+        binding.easyEdInput.setOnFocusChangeListener((v, hasFocus) -> updateDeleteButtonVisibility());
+        updateDeleteButtonVisibility();
     }
 
     public EditText getEditText() {

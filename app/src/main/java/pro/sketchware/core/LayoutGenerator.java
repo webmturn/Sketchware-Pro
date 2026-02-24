@@ -411,7 +411,7 @@ public class LayoutGenerator {
                 widgetTag.addAttribute("app", "sidebar_text_color", formatColor(textColor & 0xffffff));
             }
         }
-        k(widgetTag, viewBean);
+        addCommonAttributes(widgetTag, viewBean);
         int parentViewType = viewBean.parentType;
         if (!viewBean.convert.equals("include")) {
             if (parentViewType == ViewBean.VIEW_TYPE_LAYOUT_LINEAR) {
@@ -492,7 +492,7 @@ public class LayoutGenerator {
         if (viewBean.id.equals("_fab")) {
             aci.inject(floatingActionButtonTag, "FloatingActionButton");
         }
-        k(floatingActionButtonTag, viewBean);
+        addCommonAttributes(floatingActionButtonTag, viewBean);
         nx.addChildNode(floatingActionButtonTag);
     }
 
@@ -846,7 +846,7 @@ public class LayoutGenerator {
         }
     }
 
-    private void k(XmlBuilder nx, ViewBean viewBean) {
+    private void addCommonAttributes(XmlBuilder nx, ViewBean viewBean) {
         var injectHandler = new InjectAttributeHandler(viewBean);
         Set<String> toNotAdd = readAttributesToReplace(viewBean);
         if (viewBean.enabled == 0 && !toNotAdd.contains("android:enabled") && !injectHandler.contains("enabled")) {

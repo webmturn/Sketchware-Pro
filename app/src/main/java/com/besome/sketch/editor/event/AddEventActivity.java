@@ -69,7 +69,7 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
         overridePendingTransition(R.anim.ani_fade_in, R.anim.ani_fade_out);
     }
 
-    private void l() {
+    private void toggleEventsPreview() {
         if (eventsToAdd.isEmpty() && !C) {
             C = true;
             AnimationUtil.rotate(binding.eventsPreview, 300, new Animator.AnimatorListener() {
@@ -438,12 +438,12 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
                         if (event.isSelected) {
                             event.isSelected = false;
                             eventsToAdd.remove(event);
-                            l();
+                            toggleEventsPreview();
                             eventsToAddAdapter.notifyItemRemoved(eventsToAddAdapter.getItemCount());
                         } else {
                             event.isSelected = true;
                             eventsToAdd.add(event);
-                            l();
+                            toggleEventsPreview();
                             eventsToAddAdapter.notifyItemInserted(eventsToAddAdapter.getItemCount());
                         }
                         if (!e) {
@@ -457,13 +457,13 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
                     if (!event.isSelected && isChecked) {
                         event.isSelected = true;
                         eventsToAdd.add(event);
-                        l();
+                        toggleEventsPreview();
                         eventsToAddAdapter.notifyItemInserted(eventsToAddAdapter.getItemCount());
                     } else if (event.isSelected && !isChecked) {
                         event.isSelected = false;
                         eventsToAdd.remove(event);
                         eventsToAddAdapter.notifyItemRemoved(eventsToAddAdapter.getItemCount());
-                        l();
+                        toggleEventsPreview();
                     }
                     if (!e) {
                         notifyItemChanged(lastSelectedEvent);

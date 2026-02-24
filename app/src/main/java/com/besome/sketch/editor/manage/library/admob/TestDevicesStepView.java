@@ -43,7 +43,7 @@ public class TestDevicesStepView extends LinearLayout implements LibrarySettings
     }
 
     private String getCurrentDeviceId() {
-        return a(Settings.Secure.getString(getContext().getContentResolver(), "android_id")).toUpperCase();
+        return computeMd5Hash(Settings.Secure.getString(getContext().getContentResolver(), "android_id")).toUpperCase();
     }
 
     @Override
@@ -85,7 +85,7 @@ public class TestDevicesStepView extends LinearLayout implements LibrarySettings
         projectLibraryBean.testDevices = testDevices;
     }
 
-    private String a(String str) {
+    private String computeMd5Hash(String str) {
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("MD5");
             messageDigest.update(str.getBytes());

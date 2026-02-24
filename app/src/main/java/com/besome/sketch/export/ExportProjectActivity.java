@@ -156,7 +156,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
     /**
      * Sets exported signed APK file path texts' content.
      */
-    private void f(String filePath) {
+    private void showSignedApkOutput(String filePath) {
         sign_apk_output_stage.setVisibility(View.VISIBLE);
         sign_apk_button.setVisibility(View.GONE);
         if (sign_apk_loading_anim.isAnimating()) {
@@ -747,7 +747,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
             act.dismissProgressDialog();
 
             if (new File(getCorrectResultFilename(project_metadata.releaseApkPath)).exists()) {
-                act.f(getCorrectResultFilename(project_metadata.projectName + "_release.apk"));
+                act.showSignedApkOutput(getCorrectResultFilename(project_metadata.projectName + "_release.apk"));
             }
 
             String aabFilename = getCorrectResultFilename(project_metadata.projectName + ".aab");

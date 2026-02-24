@@ -75,7 +75,7 @@ public class ManageFontImportActivity extends BaseAppCompatActivity implements V
         return names;
     }
 
-    private boolean n() {
+    private boolean hasDuplicateNames() {
         ArrayList<String> duplicateNames = new ArrayList<>();
         for (ProjectResourceBean font : selectedCollection) {
             if (font.isDuplicateCollection) {
@@ -131,7 +131,7 @@ public class ManageFontImportActivity extends BaseAppCompatActivity implements V
 
         } else if (id == binding.imgBackbtn.getId()) {
             getOnBackPressedDispatcher().onBackPressed();
-        } else if (id == binding.tvSendbtn.getId() && !n()) {
+        } else if (id == binding.tvSendbtn.getId() && !hasDuplicateNames()) {
             Intent intent = new Intent();
             intent.putParcelableArrayListExtra("results", selectedCollection);
             setResult(RESULT_OK, intent);

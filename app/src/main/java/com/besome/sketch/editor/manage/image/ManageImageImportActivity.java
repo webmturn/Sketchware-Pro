@@ -63,7 +63,7 @@ public class ManageImageImportActivity extends BaseAppCompatActivity implements 
         return names;
     }
 
-    private boolean n() {
+    private boolean hasDuplicateNames() {
         ArrayList<String> duplicateNames = new ArrayList<>();
         for (ProjectResourceBean selectedCollection : selectedCollections) {
             if (selectedCollection.isDuplicateCollection) {
@@ -96,7 +96,7 @@ public class ManageImageImportActivity extends BaseAppCompatActivity implements 
             int id = v.getId();
             if (id != R.id.btn_decide) {
                 if (id != R.id.img_backbtn) {
-                    if (id == R.id.tv_sendbtn && !n()) {
+                    if (id == R.id.tv_sendbtn && !hasDuplicateNames()) {
                         Intent intent = new Intent();
                         intent.putParcelableArrayListExtra("results", selectedCollections);
                         setResult(RESULT_OK, intent);
