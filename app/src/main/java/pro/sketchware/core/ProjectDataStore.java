@@ -1264,10 +1264,10 @@ public class ProjectDataStore {
   }
   
   public boolean hasComponentOfType(String fileName, int index) {
-    ArrayList arrayList = this.componentMap.get(fileName);
-    if (arrayList == null)
+    ArrayList components = this.componentMap.get(fileName);
+    if (components == null)
       return false; 
-    Iterator iterator = arrayList.iterator();
+    Iterator iterator = components.iterator();
     while (iterator.hasNext()) {
       if (((ComponentBean)iterator.next()).type == index)
         return true; 
@@ -1276,10 +1276,10 @@ public class ProjectDataStore {
   }
   
   public boolean hasVariable(String fileName, int index, String data) {
-    ArrayList arrayList = this.variableMap.get(fileName);
-    if (arrayList == null)
+    ArrayList varEntries = this.variableMap.get(fileName);
+    if (varEntries == null)
       return false; 
-    for (Pair pair : (ArrayList<Pair>)arrayList) {
+    for (Pair pair : (ArrayList<Pair>)varEntries) {
       if (((Integer)pair.first).intValue() == index && ((String)pair.second).equals(data))
         return true; 
     } 
@@ -1342,19 +1342,19 @@ public class ProjectDataStore {
   public void removeComponentsByType(String fileName, int index) {
     if (!this.componentMap.containsKey(fileName))
       return; 
-    ArrayList<ComponentBean> arrayList = getComponentsByType(fileName, index);
-    if (arrayList != null && arrayList.size() > 0) {
-      Iterator<ComponentBean> iterator = arrayList.iterator();
+    ArrayList<ComponentBean> components = getComponentsByType(fileName, index);
+    if (components != null && components.size() > 0) {
+      Iterator<ComponentBean> iterator = components.iterator();
       while (iterator.hasNext())
         removeComponent(fileName, iterator.next()); 
     } 
   }
   
   public boolean hasViewOfType(String fileName, int index, String data) {
-    ArrayList arrayList = this.viewMap.get(fileName);
-    if (arrayList == null)
+    ArrayList views = this.viewMap.get(fileName);
+    if (views == null)
       return false; 
-    for (ViewBean viewBean : (ArrayList<ViewBean>)arrayList) {
+    for (ViewBean viewBean : (ArrayList<ViewBean>)views) {
       if (viewBean.type == index && viewBean.id.equals(data))
         return true; 
     } 
@@ -1362,10 +1362,10 @@ public class ProjectDataStore {
   }
   
   public boolean hasTextView(String fileName, String data) {
-    ArrayList arrayList = this.viewMap.get(fileName);
-    if (arrayList == null)
+    ArrayList views = this.viewMap.get(fileName);
+    if (views == null)
       return false; 
-    for (ViewBean viewBean : (ArrayList<ViewBean>)arrayList) {
+    for (ViewBean viewBean : (ArrayList<ViewBean>)views) {
       if (viewBean.getClassInfo().matchesType("TextView") && viewBean.id.equals(data))
         return true; 
     } 
@@ -1399,10 +1399,10 @@ public class ProjectDataStore {
   }
   
   public boolean hasView(String fileName, String data) {
-    ArrayList arrayList = this.viewMap.get(fileName);
-    if (arrayList == null)
+    ArrayList views = this.viewMap.get(fileName);
+    if (views == null)
       return false; 
-    Iterator iterator = arrayList.iterator();
+    Iterator iterator = views.iterator();
     while (iterator.hasNext()) {
       if (((ViewBean)iterator.next()).id.equals(data))
         return true; 
@@ -1522,14 +1522,14 @@ public class ProjectDataStore {
   public void removeViewTypeEvents(String fileName) {
     if (!this.eventMap.containsKey(fileName))
       return; 
-    ArrayList arrayList = this.eventMap.get(fileName);
-    int i = arrayList.size();
+    ArrayList events = this.eventMap.get(fileName);
+    int i = events.size();
     while (true) {
       int j = i - 1;
       if (j >= 0) {
         i = j;
-        if (((EventBean)arrayList.get(j)).eventType == 4) {
-          arrayList.remove(j);
+        if (((EventBean)events.get(j)).eventType == 4) {
+          events.remove(j);
           i = j;
         } 
         continue;
