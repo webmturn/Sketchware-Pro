@@ -11,12 +11,12 @@ public class DateTimeUtil {
     return (new Date()).getTime();
   }
   
-  public String formatTimestamp(long timeout, String str) {
-    return (new SimpleDateFormat(str, Locale.ENGLISH)).format(new Date(timeout));
+  public String formatTimestamp(long timeout, String pattern) {
+    return (new SimpleDateFormat(pattern, Locale.ENGLISH)).format(new Date(timeout));
   }
   
-  public String formatCurrentTime(String str) {
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(str);
+  public String formatCurrentTime(String pattern) {
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
     try {
       Date date = new Date();
       return simpleDateFormat.format(date);
@@ -61,8 +61,8 @@ public class DateTimeUtil {
     } 
   }
   
-  public String formatCurrentTimeGmt(String str) {
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(str);
+  public String formatCurrentTimeGmt(String pattern) {
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
     simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
     try {
       Date date = new Date();
