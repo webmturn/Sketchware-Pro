@@ -77,7 +77,7 @@ public class SoundCollectionManager extends BaseCollectionManager {
         throw new CompileException("fail_to_copy");
       }
     } else {
-      String srcPath = SketchwarePaths.g() + java.io.File.separator + paramString + java.io.File.separator + paramProjectResourceBean.resFullName;
+      String srcPath = SketchwarePaths.getImagesPath() + java.io.File.separator + paramString + java.io.File.separator + paramProjectResourceBean.resFullName;
       if (!this.fileUtil.e(srcPath)) {
         throw new CompileException("file_no_exist");
       }
@@ -108,7 +108,7 @@ public class SoundCollectionManager extends BaseCollectionManager {
         String str;
         if (((SelectableBean)projectResourceBean).savedPos == 0) {
           StringBuilder stringBuilder = new StringBuilder();
-          stringBuilder.append(SketchwarePaths.g());
+          stringBuilder.append(SketchwarePaths.getImagesPath());
           stringBuilder.append(File.separator);
           stringBuilder.append(paramString);
           stringBuilder.append(File.separator);
@@ -139,7 +139,7 @@ public class SoundCollectionManager extends BaseCollectionManager {
           } 
           if (((SelectableBean)projectResourceBean).savedPos == 0) {
             StringBuilder stringBuilder1 = new StringBuilder();
-            stringBuilder1.append(SketchwarePaths.g());
+            stringBuilder1.append(SketchwarePaths.getImagesPath());
             stringBuilder1.append(File.separator);
             stringBuilder1.append(paramString);
             stringBuilder1.append(File.separator);
@@ -213,14 +213,14 @@ public class SoundCollectionManager extends BaseCollectionManager {
   
   public void b() {
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(SketchwarePaths.a());
+    stringBuilder.append(SketchwarePaths.getCollectionPath());
     stringBuilder.append(File.separator);
     stringBuilder.append("image");
     stringBuilder.append(File.separator);
     stringBuilder.append("list");
     this.collectionFilePath = stringBuilder.toString();
     stringBuilder = new StringBuilder();
-    stringBuilder.append(SketchwarePaths.a());
+    stringBuilder.append(SketchwarePaths.getCollectionPath());
     stringBuilder.append(File.separator);
     stringBuilder.append("image");
     stringBuilder.append(File.separator);

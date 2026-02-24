@@ -93,7 +93,7 @@ public class MoreBlockCollectionManager extends BaseCollectionManager {
   
   public void b() {
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(SketchwarePaths.a());
+    stringBuilder.append(SketchwarePaths.getCollectionPath());
     stringBuilder.append(File.separator);
     stringBuilder.append("more_block");
     stringBuilder.append(File.separator);

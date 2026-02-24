@@ -55,11 +55,11 @@ public class SketchwarePaths {
         return new File(Environment.getExternalStorageDirectory(), path).getAbsolutePath();
     }
 
-    public static String a() {
+    public static String getCollectionPath() {
         return getAbsolutePathOf(COLLECTION_PATH);
     }
 
-    public static String a(int type) {
+    public static String getSubscriptionLevel(int type) {
         return switch (type) {
             case 1 -> "SL-01";
             case 2 -> "SL-02";
@@ -69,11 +69,11 @@ public class SketchwarePaths {
         };
     }
 
-    public static String a(String sc_id) {
+    public static String getBackupPath(String sc_id) {
         return getAbsolutePathOf(BACKUP_PATH + File.separator + sc_id);
     }
 
-    public static void a(Context context, String preferenceName) {
+    public static void clearPreferenceData(Context context, String preferenceName) {
         SharedPrefsHelper dataP17 = new SharedPrefsHelper(context, "P17_" + preferenceName);
         SharedPrefsHelper dataP18 = new SharedPrefsHelper(context, "P18_" + preferenceName);
         SharedPrefsHelper dataP13 = new SharedPrefsHelper(context, "P13_" + preferenceName);
@@ -92,11 +92,11 @@ public class SketchwarePaths {
         dataD02.clearAll();
     }
 
-    public static String b() {
+    public static String getDownloadDataPath() {
         return getAbsolutePathOf(DOWNLOAD_DATA_PATH);
     }
 
-    public static String b(int type) {
+    public static String getWidgetTypeName(int type) {
         return switch (type) {
             case 0 -> "linear";
             case 1 -> "relativelayout";
@@ -151,31 +151,31 @@ public class SketchwarePaths {
         };
     }
 
-    public static String b(String sc_id) {
+    public static String getDataPath(String sc_id) {
         return getAbsolutePathOf(DATA_PATH + File.separator + sc_id);
     }
 
-    public static String c() {
+    public static String getDownloadPath() {
         return getAbsolutePathOf(".sketchware" + File.separator + "download");
     }
 
-    public static String c(String sc_id) {
+    public static String getProjectListPath(String sc_id) {
         return getAbsolutePathOf(MYSC_LIST_PATH + File.separator + sc_id);
     }
 
-    public static String d() {
+    public static String getFontsResourcePath() {
         return getAbsolutePathOf(RESOURCES_FONTS_PATH);
     }
 
-    public static String d(String sc_id) {
+    public static String getMyscPath(String sc_id) {
         return getAbsolutePathOf(MYSC_PATH + File.separator + sc_id);
     }
 
-    public static String e() {
+    public static String getIconsPath() {
         return getAbsolutePathOf(RESOURCES_ICONS_PATH);
     }
 
-    public static String e(String sc_id) {
+    public static String getResourceZipPath(String sc_id) {
         return "resource" + File.separator + sc_id + File.separator + "res.zip";
     }
 
@@ -183,180 +183,79 @@ public class SketchwarePaths {
         return new File(SketchApplication.getContext().getFilesDir(), "iconpack").getAbsolutePath();
     }
 
-    public static String g() {
+    public static String getImagesPath() {
         return getAbsolutePathOf(RESOURCES_IMAGES_PATH);
     }
 
-    public static String h() {
+    public static String getPublicKey() {
         return "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxqe7Fu3i3VfnKRSRRljTsMuk7Br0dXaFdGnMNCzMGLQ72PSTEAUo4sXs5+Utmdf9R2s2tZyArdnehk9+Q72F0XzEZGeVfgzfLky7ffuk04yxUye/FlXBun/s0F7g2496+PyfXCP9jIBdncvQ9kaT8Xn6F/j0s2TqS/6xlCD38eYgCVFyp1mld1vYhGCZBlQvXFVJAoKCzqN2QZVO5KarkyTQSGeudvV/UQsJgyHh5zTZKnla1VIVj1Wl3nBb//s2dsmFnAx3500Y/h//XHveLUS7BkP34AGGWPLuoyJruLNvrZ3uUNDnCgnW4+z8Ilaj2SwCTeqQvvw/suZdExs88QIDAQAB";
     }
 
     @Deprecated
-    public static String i() {
+    public static String getKeystoreDirPath() {
         return getAbsolutePathOf(C);
     }
 
-    public static String j() {
+    public static String getKeystoreFilePath() {
         return getAbsolutePathOf(D);
     }
 
-    public static String k() {
+    public static String getLocalizationPath() {
         return getAbsolutePathOf(LOCALIZATION_PATH);
     }
 
-    public static String l() {
+    public static String getLocalizationStringsPath() {
         return getAbsolutePathOf(LOCALIZATION_STRINGS_PATH);
     }
 
-    public static String m() {
+    public static String getProvidedStringsPath() {
         return getAbsolutePathOf(A);
     }
 
-    public static String n() {
+    public static String getProjectListBasePath() {
         return getAbsolutePathOf(MYSC_LIST_PATH);
     }
 
-    public static String o() {
+    public static String getSignedApkPath() {
         return getAbsolutePathOf(B);
     }
 
-    public static String p() {
+    public static String getServiceAccountPath() {
         return getAbsolutePathOf(E);
     }
 
-    public static String q() {
+    public static String getSketchwareRootPath() {
         return getAbsolutePathOf(".sketchware" + File.separator);
     }
 
-    public static String r() {
+    public static String getLibsPath() {
         return getAbsolutePathOf(LIBS_PATH);
     }
 
-    public static String s() {
+    public static String getSketchwarePath() {
         return getAbsolutePathOf("sketchware");
     }
 
-    public static String t() {
+    public static String getSoundsPath() {
         return getAbsolutePathOf(RESOURCES_SOUNDS_PATH);
     }
 
-    public static String u() {
+    public static String getTempFontsPath() {
         return getAbsolutePathOf(TEMP_FONTS_PATH);
     }
 
-    public static String v() {
+    public static String getTempImagesPath() {
         return getAbsolutePathOf(TEMP_IMAGES_PATH);
     }
 
-    public static String w() {
+    public static String getTempSoundsPath() {
         return getAbsolutePathOf(TEMP_SOUNDS_PATH);
     }
 
-    public static String x() {
+    public static String getUploadPath() {
         return getAbsolutePathOf(F);
     }
 
-    // ===== Descriptive aliases (originals kept for JAR compatibility) =====
-
-    /** Returns the absolute path to a project's data directory. */
-    public static String getDataPath(String sc_id) {
-        return b(sc_id);
-    }
-
-    /** Returns the widget type name for a given view type constant. */
-    public static String getWidgetTypeName(int type) {
-        return b(type);
-    }
-
-    /** Returns the absolute path to the download data directory. */
-    public static String getDownloadDataPath() {
-        return b();
-    }
-
-    /** Returns the absolute path to the icons resource directory. */
-    public static String getIconsPath() {
-        return e();
-    }
-
-    /** Returns the asset path for a project's resource ZIP. */
-    public static String getResourceZipPath(String sc_id) {
-        return e(sc_id);
-    }
-
-    /** Returns the absolute path to a project's backup directory. */
-    public static String getBackupPath(String sc_id) {
-        return a(sc_id);
-    }
-
-    /** Returns the absolute path to the collection directory. */
-    public static String getCollectionPath() {
-        return a();
-    }
-
-    /** Returns the absolute path to a project's mysc directory. */
-    public static String getMyscPath(String sc_id) {
-        return d(sc_id);
-    }
-
-    /** Returns the absolute path to the fonts resource directory. */
-    public static String getFontsResourcePath() {
-        return d();
-    }
-
-    /** Returns the absolute path to the images resource directory. */
-    public static String getImagesPath() {
-        return g();
-    }
-
-    /** Returns the absolute path to the project list directory for a project. */
-    public static String getProjectListPath(String sc_id) {
-        return c(sc_id);
-    }
-
-    /** Returns the absolute path to the download directory. */
-    public static String getDownloadPath() {
-        return c();
-    }
-
-    /** Returns the absolute path to the sounds resource directory. */
-    public static String getSoundsPath() {
-        return t();
-    }
-
-    /** Returns the absolute path to the signed APK directory. */
-    public static String getSignedApkPath() {
-        return o();
-    }
-
-    /** Returns the absolute path to the project list base directory. */
-    public static String getProjectListBasePath() {
-        return n();
-    }
-
-    /** Returns the absolute path to the keystore file. */
-    public static String getKeystoreFilePath() {
-        return j();
-    }
-
-    /** Returns the absolute path to the .sketchware root directory. */
-    public static String getSketchwareRootPath() {
-        return q();
-    }
-
-    /** Returns the absolute path to the sketchware directory (without dot). */
-    public static String getSketchwarePath() {
-        return s();
-    }
-
-    /** Returns the absolute path to the libs directory. */
-    public static String getLibsPath() {
-        return r();
-    }
-
-    /** Clears preference data for a project. */
-    public static void clearPreferenceData(Context context, String preferenceName) {
-        a(context, preferenceName);
-    }
 
     public static String getCustomComponent() {
         return getAbsolutePathOf(CUSTOM_COMPONENT_FILE);
@@ -366,11 +265,11 @@ public class SketchwarePaths {
         return getAbsolutePathOf(EXTRA_DATA_EXPORT);
     }
 
-    public static String y() {
+    public static String getEncryptionKey() {
         return "16011998";
     }
 
-    public static String[] z() {
+    public static String[] getCipherConfig() {
         return new String[]{"Blowfish", "Blowfish/CBC/PKCS5Padding"};
     }
 }

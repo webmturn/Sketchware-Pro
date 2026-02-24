@@ -154,7 +154,7 @@ public class ProjectDataStore {
   }
   
   public void a() {
-    String str1 = SketchwarePaths.a(this.projectId);
+    String str1 = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder2 = new StringBuilder();
     stringBuilder2.append(str1);
     stringBuilder2.append(File.separator);
@@ -1022,7 +1022,7 @@ public class ProjectDataStore {
   }
   
   public boolean c() {
-    String str2 = SketchwarePaths.a(this.projectId);
+    String str2 = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str2);
     stringBuilder.append(File.separator);
@@ -1146,7 +1146,7 @@ public class ProjectDataStore {
   }
   
   public boolean d() {
-    String str2 = SketchwarePaths.a(this.projectId);
+    String str2 = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str2);
     stringBuilder.append(File.separator);
@@ -1185,7 +1185,7 @@ public class ProjectDataStore {
   }
   
   public void e() {
-    String str2 = SketchwarePaths.b(this.projectId);
+    String str2 = SketchwarePaths.getDataPath(this.projectId);
     StringBuilder stringBuilder1 = new StringBuilder();
     stringBuilder1.append(str2);
     stringBuilder1.append(File.separator);
@@ -1244,7 +1244,7 @@ public class ProjectDataStore {
   }
   
   public void f() {
-    String str1 = SketchwarePaths.a(this.projectId);
+    String str1 = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str1);
     stringBuilder.append(File.separator);
@@ -1318,7 +1318,7 @@ public class ProjectDataStore {
   }
   
   public void g() {
-    String str2 = SketchwarePaths.b(this.projectId);
+    String str2 = SketchwarePaths.getDataPath(this.projectId);
     StringBuilder stringBuilder1 = new StringBuilder();
     stringBuilder1.append(str2);
     stringBuilder1.append(File.separator);
@@ -1379,7 +1379,7 @@ public class ProjectDataStore {
   }
   
   public void h() {
-    String str2 = SketchwarePaths.a(this.projectId);
+    String str2 = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder1 = new StringBuilder();
     stringBuilder1.append(str2);
     stringBuilder1.append(File.separator);
@@ -1461,7 +1461,7 @@ public class ProjectDataStore {
   }
   
   public void j() {
-    String str = SketchwarePaths.b(this.projectId);
+    String str = SketchwarePaths.getDataPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str);
     stringBuilder.append(File.separator);
@@ -1496,7 +1496,7 @@ public class ProjectDataStore {
   }
   
   public void k() {
-    String str = SketchwarePaths.a(this.projectId);
+    String str = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str);
     stringBuilder.append(File.separator);

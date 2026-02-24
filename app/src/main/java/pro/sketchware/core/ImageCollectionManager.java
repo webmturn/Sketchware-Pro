@@ -75,7 +75,7 @@ public class ImageCollectionManager extends BaseCollectionManager {
         throw new CompileException("fail_to_copy");
       }
     } else {
-      String srcPath = SketchwarePaths.d() + java.io.File.separator + paramString + java.io.File.separator + paramProjectResourceBean.resFullName;
+      String srcPath = SketchwarePaths.getFontsResourcePath() + java.io.File.separator + paramString + java.io.File.separator + paramProjectResourceBean.resFullName;
       if (!this.fileUtil.e(srcPath)) {
         throw new CompileException("file_no_exist");
       }
@@ -118,14 +118,14 @@ public class ImageCollectionManager extends BaseCollectionManager {
   
   public void b() {
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(SketchwarePaths.a());
+    stringBuilder.append(SketchwarePaths.getCollectionPath());
     stringBuilder.append(File.separator);
     stringBuilder.append("font");
     stringBuilder.append(File.separator);
     stringBuilder.append("list");
     this.collectionFilePath = stringBuilder.toString();
     stringBuilder = new StringBuilder();
-    stringBuilder.append(SketchwarePaths.a());
+    stringBuilder.append(SketchwarePaths.getCollectionPath());
     stringBuilder.append(File.separator);
     stringBuilder.append("font");
     stringBuilder.append(File.separator);

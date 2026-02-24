@@ -94,14 +94,14 @@ public class WidgetCollectionManager extends BaseCollectionManager {
   
   public void b() {
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(SketchwarePaths.a());
+    stringBuilder.append(SketchwarePaths.getCollectionPath());
     stringBuilder.append(File.separator);
     stringBuilder.append("widget");
     stringBuilder.append(File.separator);
     stringBuilder.append("list");
     this.collectionFilePath = stringBuilder.toString();
     stringBuilder = new StringBuilder();
-    stringBuilder.append(SketchwarePaths.a());
+    stringBuilder.append(SketchwarePaths.getCollectionPath());
     stringBuilder.append(File.separator);
     stringBuilder.append("widget");
     stringBuilder.append(File.separator);

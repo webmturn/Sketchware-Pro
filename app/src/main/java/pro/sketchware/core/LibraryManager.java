@@ -30,7 +30,7 @@ public class LibraryManager {
   }
   
   public void a() {
-    String str = SketchwarePaths.a(this.projectId);
+    String str = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str);
     stringBuilder.append(File.separator);
@@ -184,7 +184,7 @@ public class LibraryManager {
   }
   
   public boolean g() {
-    String str1 = SketchwarePaths.a(this.projectId);
+    String str1 = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str1);
     stringBuilder.append(File.separator);
@@ -195,7 +195,7 @@ public class LibraryManager {
   
   public void h() {
     f();
-    String str1 = SketchwarePaths.a(this.projectId);
+    String str1 = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder1 = new StringBuilder();
     stringBuilder1.append(str1);
     stringBuilder1.append(File.separator);
@@ -216,7 +216,7 @@ public class LibraryManager {
   
   public void i() {
     f();
-    String str1 = SketchwarePaths.b(this.projectId);
+    String str1 = SketchwarePaths.getDataPath(this.projectId);
     StringBuilder stringBuilder1 = new StringBuilder();
     stringBuilder1.append(str1);
     stringBuilder1.append(File.separator);
@@ -243,7 +243,7 @@ public class LibraryManager {
   }
   
   public void k() {
-    String str = SketchwarePaths.a(this.projectId);
+    String str = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str);
     stringBuilder.append(File.separator);
@@ -252,7 +252,7 @@ public class LibraryManager {
   }
   
   public void l() {
-    String str = SketchwarePaths.b(this.projectId);
+    String str = SketchwarePaths.getDataPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str);
     stringBuilder.append(File.separator);

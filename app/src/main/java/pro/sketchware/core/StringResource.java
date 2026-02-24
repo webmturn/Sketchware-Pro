@@ -18,7 +18,7 @@ public class StringResource {
   
   public HashMap<String, String> eventTranslations;
   
-  public String translationDir = SketchwarePaths.l();
+  public String translationDir = SketchwarePaths.getLocalizationStringsPath();
   
   public boolean isLoaded;
   

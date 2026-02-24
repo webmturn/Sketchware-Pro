@@ -33,9 +33,9 @@ public class ResourceManager {
   
   public ResourceManager(String paramString) {
     this(paramString,
-        SketchwarePaths.g() + File.separator + paramString,
-        SketchwarePaths.t() + File.separator + paramString,
-        SketchwarePaths.d() + File.separator + paramString);
+        SketchwarePaths.getImagesPath() + File.separator + paramString,
+        SketchwarePaths.getSoundsPath() + File.separator + paramString,
+        SketchwarePaths.getFontsResourcePath() + File.separator + paramString);
   }
   
   public ResourceManager(String paramString1, String paramString2, String paramString3, String paramString4) {
@@ -311,7 +311,7 @@ public class ResourceManager {
   }
   
   public void e() {
-    String str = SketchwarePaths.u();
+    String str = SketchwarePaths.getTempFontsPath();
     try {
       this.fileUtil.b(str);
       EncryptedFileUtil oB1 = this.fileUtil;
@@ -339,7 +339,7 @@ public class ResourceManager {
   }
   
   public void f() {
-    String str = SketchwarePaths.v();
+    String str = SketchwarePaths.getTempImagesPath();
     try {
       this.fileUtil.b(str);
       EncryptedFileUtil oB1 = this.fileUtil;
@@ -360,7 +360,7 @@ public class ResourceManager {
   }
   
   public void g() {
-    String str = SketchwarePaths.w();
+    String str = SketchwarePaths.getTempSoundsPath();
     try {
       this.fileUtil.b(str);
       EncryptedFileUtil oB1 = this.fileUtil;
@@ -383,9 +383,9 @@ public class ResourceManager {
   }
   
   public void h() {
-    String str1 = SketchwarePaths.v();
-    String str2 = SketchwarePaths.w();
-    String str3 = SketchwarePaths.u();
+    String str1 = SketchwarePaths.getTempImagesPath();
+    String str2 = SketchwarePaths.getTempSoundsPath();
+    String str3 = SketchwarePaths.getTempFontsPath();
     try {
       this.fileUtil.b(str1);
       this.fileUtil.b(str2);
@@ -411,7 +411,7 @@ public class ResourceManager {
   }
   
   public void i() {
-    String str = SketchwarePaths.a(this.projectId);
+    String str = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str);
     stringBuilder.append(File.separator);
@@ -492,7 +492,7 @@ public class ResourceManager {
   }
   
   public boolean q() {
-    String str = SketchwarePaths.a(this.projectId);
+    String str = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str);
     stringBuilder.append(File.separator);
@@ -505,7 +505,7 @@ public class ResourceManager {
     this.images = new ArrayList<ProjectResourceBean>();
     this.sounds = new ArrayList<ProjectResourceBean>();
     this.fonts = new ArrayList<ProjectResourceBean>();
-    String str1 = SketchwarePaths.a(this.projectId);
+    String str1 = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str1);
     stringBuilder.append(File.separator);
@@ -528,7 +528,7 @@ public class ResourceManager {
     this.images = new ArrayList<ProjectResourceBean>();
     this.sounds = new ArrayList<ProjectResourceBean>();
     this.fonts = new ArrayList<ProjectResourceBean>();
-    String str1 = SketchwarePaths.b(this.projectId);
+    String str1 = SketchwarePaths.getDataPath(this.projectId);
     StringBuilder stringBuilder1 = new StringBuilder();
     stringBuilder1.append(str1);
     stringBuilder1.append(File.separator);
@@ -560,7 +560,7 @@ public class ResourceManager {
   }
   
   public void u() {
-    String str = SketchwarePaths.u();
+    String str = SketchwarePaths.getTempFontsPath();
     try {
       EncryptedFileUtil oB1 = this.fileUtil;
       File file2 = new File(this.fontDirPath);
@@ -575,7 +575,7 @@ public class ResourceManager {
   }
   
   public void v() {
-    String str = SketchwarePaths.v();
+    String str = SketchwarePaths.getTempImagesPath();
     try {
       EncryptedFileUtil oB1 = this.fileUtil;
       File file2 = new File(this.imageDirPath);
@@ -590,7 +590,7 @@ public class ResourceManager {
   }
   
   public void w() {
-    String str = SketchwarePaths.w();
+    String str = SketchwarePaths.getTempSoundsPath();
     try {
       EncryptedFileUtil oB1 = this.fileUtil;
       File file2 = new File(this.soundDirPath);
@@ -605,7 +605,7 @@ public class ResourceManager {
   }
   
   public void x() {
-    String str1 = SketchwarePaths.b(this.projectId);
+    String str1 = SketchwarePaths.getDataPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str1);
     stringBuilder.append(File.separator);
@@ -623,7 +623,7 @@ public class ResourceManager {
   }
   
   public void y() {
-    String str = SketchwarePaths.a(this.projectId);
+    String str = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str);
     stringBuilder.append(File.separator);
