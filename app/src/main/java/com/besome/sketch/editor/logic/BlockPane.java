@@ -259,8 +259,8 @@ public class BlockPane extends RelativeLayout {
   }
   
   public void removeBlock(BlockBean blockBean, boolean enabled) {
-    String str = blockBean.id;
-    if (str != null && !str.equals("") && !blockBean.id.equals("0")) {
+    String blockId = blockBean.id;
+    if (blockId != null && !blockId.equals("") && !blockBean.id.equals("0")) {
       BlockView rs1 = (BlockView)findViewWithTag(Integer.valueOf(blockBean.id));
       if (rs1 == null)
         return; 
@@ -384,128 +384,128 @@ public class BlockPane extends RelativeLayout {
       if (view instanceof BlockView) {
         byte b1 = -1;
         BlockBean blockBean = ((BlockView)view).getBean();
-        String str = blockBean.opCode;
-        switch (str.hashCode()) {
+        String opCode = blockBean.opCode;
+        switch (opCode.hashCode()) {
           default:
             b1 = -1;
             break;
           case 2090189010:
-            if (str.equals("addListStr")) {
+            if (opCode.equals("addListStr")) {
               b1 = 8;
               break;
             } 
           case 2090182653:
-            if (str.equals("addListMap")) {
+            if (opCode.equals("addListMap")) {
               b1 = 20;
               break;
             } 
           case 2090179216:
-            if (str.equals("addListInt")) {
+            if (opCode.equals("addListInt")) {
               b1 = 7;
               break;
             } 
           case 1764351209:
-            if (str.equals("deleteList")) {
+            if (opCode.equals("deleteList")) {
               b1 = 13;
               break;
             } 
           case 1252547704:
-            if (str.equals("listMapToStr")) {
+            if (opCode.equals("listMapToStr")) {
               b1 = 6;
               break;
             } 
           case 1160674468:
-            if (str.equals("lengthList")) {
+            if (opCode.equals("lengthList")) {
               b1 = 1;
               break;
             } 
           case 762292097:
-            if (str.equals("indexListStr")) {
+            if (opCode.equals("indexListStr")) {
               b1 = 12;
               break;
             } 
           case 762282303:
-            if (str.equals("indexListInt")) {
+            if (opCode.equals("indexListInt")) {
               b1 = 11;
               break;
             } 
           case 389111867:
-            if (str.equals("spnSetData")) {
+            if (opCode.equals("spnSetData")) {
               b1 = 14;
               break;
             } 
           case 134874756:
-            if (str.equals("listSetCustomViewData")) {
+            if (opCode.equals("listSetCustomViewData")) {
               b1 = 16;
               break;
             } 
           case -96303809:
-            if (str.equals("containListStr")) {
+            if (opCode.equals("containListStr")) {
               b1 = 3;
               break;
             } 
           case -96310166:
-            if (str.equals("containListMap")) {
+            if (opCode.equals("containListMap")) {
               b1 = 4;
               break;
             } 
           case -96313603:
-            if (str.equals("containListInt")) {
+            if (opCode.equals("containListInt")) {
               b1 = 2;
               break;
             } 
           case -329552966:
-            if (str.equals("insertListStr")) {
+            if (opCode.equals("insertListStr")) {
               b1 = 19;
               break;
             } 
           case -329559323:
-            if (str.equals("insertListMap")) {
+            if (opCode.equals("insertListMap")) {
               b1 = 22;
               break;
             } 
           case -329562760:
-            if (str.equals("insertListInt")) {
+            if (opCode.equals("insertListInt")) {
               b1 = 18;
               break;
             } 
           case -733318734:
-            if (str.equals("strToListMap")) {
+            if (opCode.equals("strToListMap")) {
               b1 = 17;
               break;
             } 
           case -1139353316:
-            if (str.equals("setListMap")) {
+            if (opCode.equals("setListMap")) {
               b1 = 23;
               break;
             } 
           case -1249347599:
-            if (str.equals("getVar")) {
+            if (opCode.equals("getVar")) {
               b1 = 0;
               break;
             } 
           case -1271141237:
-            if (str.equals("clearList")) {
+            if (opCode.equals("clearList")) {
               b1 = 5;
               break;
             } 
           case -1384851894:
-            if (str.equals("getAtListStr")) {
+            if (opCode.equals("getAtListStr")) {
               b1 = 10;
               break;
             } 
           case -1384858251:
-            if (str.equals("getAtListMap")) {
+            if (opCode.equals("getAtListMap")) {
               b1 = 21;
               break;
             } 
           case -1384861688:
-            if (str.equals("getAtListInt")) {
+            if (opCode.equals("getAtListInt")) {
               b1 = 9;
               break;
             } 
           case -1998407506:
-            if (str.equals("listSetData")) {
+            if (opCode.equals("listSetData")) {
               b1 = 15;
               break;
             } 
@@ -659,108 +659,108 @@ public class BlockPane extends RelativeLayout {
       if (view instanceof BlockView) {
         byte b1 = -1;
         BlockBean blockBean = ((BlockView)view).getBean();
-        String str = blockBean.opCode;
-        switch (str.hashCode()) {
+        String opCode = blockBean.opCode;
+        switch (opCode.hashCode()) {
           default:
             b1 = -1;
             break;
           case 2090182653:
-            if (str.equals("addListMap")) {
+            if (opCode.equals("addListMap")) {
               b1 = 15;
               break;
             } 
           case 1775620400:
-            if (str.equals("strToMap")) {
+            if (opCode.equals("strToMap")) {
               b1 = 18;
               break;
             } 
           case 1431171391:
-            if (str.equals("mapRemoveKey")) {
+            if (opCode.equals("mapRemoveKey")) {
               b1 = 10;
               break;
             } 
           case 845089750:
-            if (str.equals("setVarString")) {
+            if (opCode.equals("setVarString")) {
               b1 = 3;
               break;
             } 
           case 836692861:
-            if (str.equals("mapSize")) {
+            if (opCode.equals("mapSize")) {
               b1 = 11;
               break;
             } 
           case 754442829:
-            if (str.equals("increaseInt")) {
+            if (opCode.equals("increaseInt")) {
               b1 = 4;
               break;
             } 
           case 747168008:
-            if (str.equals("mapCreateNew")) {
+            if (opCode.equals("mapCreateNew")) {
               b1 = 6;
               break;
             } 
           case 657721930:
-            if (str.equals("setVarInt")) {
+            if (opCode.equals("setVarInt")) {
               b1 = 2;
               break;
             } 
           case 463560551:
-            if (str.equals("mapContainKey")) {
+            if (opCode.equals("mapContainKey")) {
               b1 = 9;
               break;
             } 
           case 442768763:
-            if (str.equals("mapGetAllKeys")) {
+            if (opCode.equals("mapGetAllKeys")) {
               b1 = 14;
               break;
             } 
           case 168740282:
-            if (str.equals("mapToStr")) {
+            if (opCode.equals("mapToStr")) {
               b1 = 17;
               break;
             } 
           case 152967761:
-            if (str.equals("mapClear")) {
+            if (opCode.equals("mapClear")) {
               b1 = 12;
               break;
             } 
           case -329559323:
-            if (str.equals("insertListMap")) {
+            if (opCode.equals("insertListMap")) {
               b1 = 16;
               break;
             } 
           case -1081391085:
-            if (str.equals("mapPut")) {
+            if (opCode.equals("mapPut")) {
               b1 = 7;
               break;
             } 
           case -1081400230:
-            if (str.equals("mapGet")) {
+            if (opCode.equals("mapGet")) {
               b1 = 8;
               break;
             } 
           case -1249347599:
-            if (str.equals("getVar")) {
+            if (opCode.equals("getVar")) {
               b1 = 0;
               break;
             } 
           case -1377080719:
-            if (str.equals("decreaseInt")) {
+            if (opCode.equals("decreaseInt")) {
               b1 = 5;
               break;
             } 
           case -1384858251:
-            if (str.equals("getAtListMap")) {
+            if (opCode.equals("getAtListMap")) {
               b1 = 19;
               break;
             } 
           case -1920517885:
-            if (str.equals("setVarBoolean")) {
+            if (opCode.equals("setVarBoolean")) {
               b1 = 1;
               break;
             } 
           case -2120571577:
-            if (str.equals("mapIsEmpty")) {
+            if (opCode.equals("mapIsEmpty")) {
               b1 = 13;
               break;
             } 
