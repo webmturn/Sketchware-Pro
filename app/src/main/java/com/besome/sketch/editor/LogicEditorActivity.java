@@ -507,9 +507,9 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
     }
 
-    public BlockView dropBlockOnPane(BlockView rs, int i, int i2, boolean z) {
-        BlockView a2 = blockPane.dropBlock(rs, i, i2, z);
-        if (!z) {
+    public BlockView dropBlockOnPane(BlockView rs, int i, int i2, boolean isParameter) {
+        BlockView a2 = blockPane.dropBlock(rs, i, i2, isParameter);
+        if (!isParameter) {
             a2.setOnTouchListener(this);
         }
         return a2;
@@ -586,10 +586,10 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         return imageView;
     }
 
-    public final ArrayList<BlockBean> addBlockBeans(ArrayList<BlockBean> arrayList, int i, int i2, boolean z) {
+    public final ArrayList<BlockBean> addBlockBeans(ArrayList<BlockBean> blockBeans, int i, int i2, boolean layoutChain) {
         HashMap<Integer, Integer> idMapping = new HashMap<>();
         ArrayList<BlockBean> clonedBlocks = new ArrayList<>();
-        for (BlockBean next : arrayList) {
+        for (BlockBean next : blockBeans) {
             if (next.id != null && !next.id.isEmpty()) {
                 clonedBlocks.add(next.clone());
             }
@@ -659,7 +659,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 connectBlock(block, false);
             }
         }
-        if (firstBlock != null && z) {
+        if (firstBlock != null && layoutChain) {
             firstBlock.getRootBlock().layoutChain();
             blockPane.updatePaneSize();
         }
@@ -779,12 +779,12 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         dialog.show();
     }
 
-    public void showNumberOrStringInput(FieldBlockView ss, boolean z) {
+    public void showNumberOrStringInput(FieldBlockView ss, boolean isNumber) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
-        dialog.setTitle(z ? R.string.logic_editor_title_enter_number_value : R.string.logic_editor_title_enter_string_value);
+        dialog.setTitle(isNumber ? R.string.logic_editor_title_enter_number_value : R.string.logic_editor_title_enter_string_value);
         View a2 = ViewUtil.inflateLayout(this, R.layout.property_popup_input_text);
         EditText editText = a2.findViewById(R.id.ed_input);
-        if (z) {
+        if (isNumber) {
             editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
             editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
             editText.setMaxLines(1);
@@ -798,7 +798,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             String text = Helper.getText(editText);
             emptyStringSetter:
             {
-                if (z) {
+                if (isNumber) {
                     try {
                         double d = Double.parseDouble(text);
                         if (!Double.isNaN(d) && !Double.isInfinite(d)) {
@@ -824,7 +824,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         dialog.show();
     }
 
-    public void connectBlock(BlockBean blockBean, boolean z) {
+    public void connectBlock(BlockBean blockBean, boolean doLayout) {
         BlockView block = blockPane.findBlockByString(blockBean.id);
         if (block != null) {
             block.subStack1 = -1;
@@ -1166,7 +1166,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             }
 
             block.recalculateToRoot();
-            if (z) {
+            if (doLayout) {
                 block.getRootBlock().layoutChain();
                 blockPane.updatePaneSize();
             }
@@ -1219,8 +1219,8 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
     }
 
-    public void setCopyActive(boolean z) {
-        logicTopMenu.setCopyActive(z);
+    public void setCopyActive(boolean active) {
+        logicTopMenu.setCopyActive(active);
     }
 
     public final boolean hitTestCopy(float f, float f2) {
@@ -1356,8 +1356,8 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         onBlockSizeChanged(8, 0xff8a55d7);
     }
 
-    public void setDetailActive(boolean z) {
-        logicTopMenu.setDetailActive(z);
+    public void setDetailActive(boolean active) {
+        logicTopMenu.setDetailActive(active);
     }
 
     public final boolean hitTestDetail(float f, float f2) {
@@ -1446,8 +1446,8 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         dialog.show();
     }
 
-    public void setFavoriteActive(boolean z) {
-        logicTopMenu.setFavoriteActive(z);
+    public void setFavoriteActive(boolean active) {
+        logicTopMenu.setFavoriteActive(active);
     }
 
     public final boolean hitTestFavorite(float f, float f2) {
@@ -1494,17 +1494,17 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         dialog.show();
     }
 
-    public void togglePaletteVisibility(boolean z) {
+    public void togglePaletteVisibility(boolean visible) {
         ObjectAnimator objectAnimator;
         if (!paletteAnimatorsInitialized) {
             setupPaletteAnimators(getResources().getConfiguration().orientation);
         }
-        if (isPaletteVisible == z) {
+        if (isPaletteVisible == visible) {
             return;
         }
-        isPaletteVisible = z;
+        isPaletteVisible = visible;
         cancelPaletteAnimations();
-        if (z) {
+        if (visible) {
             toggleDrawerVisibility(false);
             objectAnimator = paletteShowAnimator;
         } else {
@@ -1604,8 +1604,8 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         dialog.show();
     }
 
-    public void toggleLayoutVisibility(boolean z) {
-        logicTopMenu.toggleLayoutVisibility(z);
+    public void toggleLayoutVisibility(boolean visible) {
+        logicTopMenu.toggleLayoutVisibility(visible);
     }
 
     @Override
@@ -1651,14 +1651,14 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         layoutEditorForOrientation(i);
     }
 
-    public void toggleDrawerVisibility(boolean z) {
+    public void toggleDrawerVisibility(boolean visible) {
         if (!drawerAnimatorsInitialized) {
             initDrawerAnimators();
         }
-        if (isDrawerVisible != z) {
-            isDrawerVisible = z;
+        if (isDrawerVisible != visible) {
+            isDrawerVisible = visible;
             cancelDrawerAnimations();
-            (z ? drawerShowAnimator : drawerHideAnimator).start();
+            (visible ? drawerShowAnimator : drawerHideAnimator).start();
         }
     }
 
@@ -1733,7 +1733,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         dialog.show();
     }
 
-    public void toggleTopMenuVisibility(boolean z) {
+    public void toggleTopMenuVisibility(boolean visible) {
         logicTopMenu.setDeleteActive(false);
         logicTopMenu.setCopyActive(false);
         logicTopMenu.setFavoriteActive(false);
@@ -1741,12 +1741,12 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         if (!topMenuAnimatorsInitialized) {
             initTopMenuAnimators();
         }
-        if (isTopMenuVisible == z) {
+        if (isTopMenuVisible == visible) {
             return;
         }
-        isTopMenuVisible = z;
+        isTopMenuVisible = visible;
         cancelTopMenuAnimations();
-        (z ? topMenuShowAnimator : topMenuHideAnimator).start();
+        (visible ? topMenuShowAnimator : topMenuHideAnimator).start();
     }
 
     public void showTypefaceSelector(FieldBlockView ss) {
