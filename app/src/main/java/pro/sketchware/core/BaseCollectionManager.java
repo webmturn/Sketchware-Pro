@@ -63,14 +63,14 @@ public abstract class BaseCollectionManager {
   public void saveCollections() {
     if (this.collections == null)
       return; 
-    StringBuilder stringBuilder = new StringBuilder(1024);
+    StringBuilder contentBuilder = new StringBuilder(1024);
     for (CollectionBean collectionBean : this.collections) {
-      stringBuilder.append(this.gson.toJson(collectionBean));
-      stringBuilder.append("\n");
+      contentBuilder.append(this.gson.toJson(collectionBean));
+      contentBuilder.append("\n");
     } 
     try {
       this.fileUtil.deleteFileByPath(this.collectionFilePath);
-      this.fileUtil.writeText(this.collectionFilePath, stringBuilder.toString());
+      this.fileUtil.writeText(this.collectionFilePath, contentBuilder.toString());
     } catch (Exception exception) {
       exception.printStackTrace();
     } 

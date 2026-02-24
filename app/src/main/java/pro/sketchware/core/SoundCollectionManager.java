@@ -107,13 +107,13 @@ public class SoundCollectionManager extends BaseCollectionManager {
       for (ProjectResourceBean projectResourceBean : list) {
         String resolvedPath;
         if (((SelectableBean)projectResourceBean).savedPos == 0) {
-          StringBuilder stringBuilder = new StringBuilder();
-          stringBuilder.append(SketchwarePaths.getImagesPath());
-          stringBuilder.append(File.separator);
-          stringBuilder.append(input);
-          stringBuilder.append(File.separator);
-          stringBuilder.append(projectResourceBean.resFullName);
-          resolvedPath = stringBuilder.toString();
+          StringBuilder pathBuilder = new StringBuilder();
+          pathBuilder.append(SketchwarePaths.getImagesPath());
+          pathBuilder.append(File.separator);
+          pathBuilder.append(input);
+          pathBuilder.append(File.separator);
+          pathBuilder.append(projectResourceBean.resFullName);
+          resolvedPath = pathBuilder.toString();
         } else {
           resolvedPath = projectResourceBean.resFullName;
         } 
@@ -148,11 +148,11 @@ public class SoundCollectionManager extends BaseCollectionManager {
           } else {
             sourcePath = projectResourceBean.resFullName;
           } 
-          StringBuilder stringBuilder = new StringBuilder();
-          stringBuilder.append(this.dataDirPath);
-          stringBuilder.append(File.separator);
-          stringBuilder.append(fileName);
-          String destPath = stringBuilder.toString();
+          StringBuilder pathBuilder = new StringBuilder();
+          pathBuilder.append(this.dataDirPath);
+          pathBuilder.append(File.separator);
+          pathBuilder.append(fileName);
+          String destPath = pathBuilder.toString();
           try {
             this.fileUtil.mkdirs(this.dataDirPath);
             BitmapUtil.processAndSaveBitmap(sourcePath, destPath, projectResourceBean.rotate, projectResourceBean.flipHorizontal, projectResourceBean.flipVertical);
@@ -194,11 +194,11 @@ public class SoundCollectionManager extends BaseCollectionManager {
         i = j;
         if (collectionBean.name.equals(input)) {
           String filePath = collectionBean.data;
-          StringBuilder stringBuilder = new StringBuilder();
-          stringBuilder.append(this.dataDirPath);
-          stringBuilder.append(File.separator);
-          stringBuilder.append(filePath);
-          filePath = stringBuilder.toString();
+          StringBuilder pathBuilder = new StringBuilder();
+          pathBuilder.append(this.dataDirPath);
+          pathBuilder.append(File.separator);
+          pathBuilder.append(filePath);
+          filePath = pathBuilder.toString();
           this.fileUtil.deleteFileByPath(filePath);
           this.collections.remove(j);
           i = j;
@@ -212,20 +212,20 @@ public class SoundCollectionManager extends BaseCollectionManager {
   }
   
   public void initializePaths() {
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(SketchwarePaths.getCollectionPath());
-    stringBuilder.append(File.separator);
-    stringBuilder.append("image");
-    stringBuilder.append(File.separator);
-    stringBuilder.append("list");
-    this.collectionFilePath = stringBuilder.toString();
-    stringBuilder = new StringBuilder();
-    stringBuilder.append(SketchwarePaths.getCollectionPath());
-    stringBuilder.append(File.separator);
-    stringBuilder.append("image");
-    stringBuilder.append(File.separator);
-    stringBuilder.append("data");
-    this.dataDirPath = stringBuilder.toString();
+    StringBuilder pathBuilder = new StringBuilder();
+    pathBuilder.append(SketchwarePaths.getCollectionPath());
+    pathBuilder.append(File.separator);
+    pathBuilder.append("image");
+    pathBuilder.append(File.separator);
+    pathBuilder.append("list");
+    this.collectionFilePath = pathBuilder.toString();
+    pathBuilder = new StringBuilder();
+    pathBuilder.append(SketchwarePaths.getCollectionPath());
+    pathBuilder.append(File.separator);
+    pathBuilder.append("image");
+    pathBuilder.append(File.separator);
+    pathBuilder.append("data");
+    this.dataDirPath = pathBuilder.toString();
   }
   
   public boolean hasResource(String name) {
