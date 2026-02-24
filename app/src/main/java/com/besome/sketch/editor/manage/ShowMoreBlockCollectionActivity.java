@@ -43,13 +43,13 @@ public class ShowMoreBlockCollectionActivity extends BaseAppCompatActivity imple
     private ManageCollectionShowBlockBinding binding;
 
     private void addBlocks(ArrayList<BlockBean> blockBeans) {
-        HashMap<Integer, BlockView> hashMap = new HashMap<>();
+        HashMap<Integer, BlockView> blockViewMap = new HashMap<>();
 
         boolean isFirstBlock = true;
         for (BlockBean blockBean : blockBeans) {
             BlockView block = getBlock(blockBean);
             int blockId = (Integer) block.getTag();
-            hashMap.put(blockId, block);
+            blockViewMap.put(blockId, block);
 
             pane.nextBlockId = Math.max(pane.nextBlockId, blockId + 1);
             pane.addBlock(block, 0, 0);
@@ -61,24 +61,24 @@ public class ShowMoreBlockCollectionActivity extends BaseAppCompatActivity imple
         }
 
         for (BlockBean blockBean : blockBeans) {
-            BlockView block = hashMap.get(Integer.valueOf(blockBean.id));
+            BlockView block = blockViewMap.get(Integer.valueOf(blockBean.id));
 
             if (block != null) {
                 int subStack1Id = blockBean.subStack1;
                 BlockView subStack1;
-                if (subStack1Id >= 0 && (subStack1 = hashMap.get(subStack1Id)) != null) {
+                if (subStack1Id >= 0 && (subStack1 = blockViewMap.get(subStack1Id)) != null) {
                     block.setSubstack1Block(subStack1);
                 }
 
                 int subStack2Id = blockBean.subStack2;
                 BlockView subStack2;
-                if (subStack2Id >= 0 && (subStack2 = hashMap.get(subStack2Id)) != null) {
+                if (subStack2Id >= 0 && (subStack2 = blockViewMap.get(subStack2Id)) != null) {
                     block.setSubstack2Block(subStack2);
                 }
 
                 int nextBlockId = blockBean.nextBlock;
                 BlockView nextBlock;
-                if (nextBlockId >= 0 && (nextBlock = hashMap.get(nextBlockId)) != null) {
+                if (nextBlockId >= 0 && (nextBlock = blockViewMap.get(nextBlockId)) != null) {
                     block.setNextBlock(nextBlock);
                 }
 
@@ -88,7 +88,7 @@ public class ShowMoreBlockCollectionActivity extends BaseAppCompatActivity imple
 
                     if (parameter != null && !parameter.isEmpty()) {
                         if (parameter.charAt(0) == '@') {
-                            BlockView parameterBlock = hashMap.get(Integer.valueOf(parameter.substring(1)));
+                            BlockView parameterBlock = blockViewMap.get(Integer.valueOf(parameter.substring(1)));
                             if (parameterBlock != null) {
                                 block.replaceParameter((BaseBlockView) block.childViews.get(i), parameterBlock);
                             }

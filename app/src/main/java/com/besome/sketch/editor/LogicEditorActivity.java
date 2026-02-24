@@ -587,7 +587,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public final ArrayList<BlockBean> addBlockBeans(ArrayList<BlockBean> arrayList, int i, int i2, boolean z) {
-        HashMap<Integer, Integer> hashMap = new HashMap<>();
+        HashMap<Integer, Integer> idMapping = new HashMap<>();
         ArrayList<BlockBean> clonedBlocks = new ArrayList<>();
         for (BlockBean next : arrayList) {
             if (next.id != null && !next.id.isEmpty()) {
@@ -596,10 +596,10 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
         for (BlockBean next2 : clonedBlocks) {
             if (Integer.parseInt(next2.id) >= 99000000) {
-                hashMap.put(Integer.valueOf(next2.id), blockPane.nextBlockId);
+                idMapping.put(Integer.valueOf(next2.id), blockPane.nextBlockId);
                 blockPane.nextBlockId = blockPane.nextBlockId + 1;
             } else {
-                hashMap.put(Integer.valueOf(next2.id), Integer.valueOf(next2.id));
+                idMapping.put(Integer.valueOf(next2.id), Integer.valueOf(next2.id));
             }
         }
         int size = clonedBlocks.size();
@@ -611,12 +611,12 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             BlockBean blockBean = clonedBlocks.get(size);
             if (!isBlockValid(blockBean)) {
                 clonedBlocks.remove(size);
-                hashMap.remove(Integer.valueOf(blockBean.id));
+                idMapping.remove(Integer.valueOf(blockBean.id));
             }
         }
         for (BlockBean block : clonedBlocks) {
-            if (hashMap.containsKey(Integer.valueOf(block.id))) {
-                block.id = String.valueOf(hashMap.get(Integer.valueOf(block.id)));
+            if (idMapping.containsKey(Integer.valueOf(block.id))) {
+                block.id = String.valueOf(idMapping.get(Integer.valueOf(block.id)));
             } else {
                 block.id = "";
             }
@@ -624,7 +624,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 String parameter = block.parameters.get(j);
                 if (parameter != null && !parameter.isEmpty() && parameter.charAt(0) == '@') {
                     int parameterId = Integer.parseInt(parameter.substring(1));
-                    int parameterAsBlockId = hashMap.containsKey(parameterId) ? hashMap.get(parameterId) : 0;
+                    int parameterAsBlockId = idMapping.containsKey(parameterId) ? idMapping.get(parameterId) : 0;
                     if (parameterAsBlockId >= 0) {
                         block.parameters.set(j, '@' + String.valueOf(parameterAsBlockId));
                     } else {
@@ -632,14 +632,14 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     }
                 }
             }
-            if (block.subStack1 >= 0 && hashMap.containsKey(block.subStack1)) {
-                block.subStack1 = hashMap.get(block.subStack1);
+            if (block.subStack1 >= 0 && idMapping.containsKey(block.subStack1)) {
+                block.subStack1 = idMapping.get(block.subStack1);
             }
-            if (block.subStack2 >= 0 && hashMap.containsKey(block.subStack2)) {
-                block.subStack2 = hashMap.get(block.subStack2);
+            if (block.subStack2 >= 0 && idMapping.containsKey(block.subStack2)) {
+                block.subStack2 = idMapping.get(block.subStack2);
             }
-            if (block.nextBlock >= 0 && hashMap.containsKey(block.nextBlock)) {
-                block.nextBlock = hashMap.get(block.nextBlock);
+            if (block.nextBlock >= 0 && idMapping.containsKey(block.nextBlock)) {
+                block.nextBlock = idMapping.get(block.nextBlock);
             }
         }
         BlockView firstBlock = null;

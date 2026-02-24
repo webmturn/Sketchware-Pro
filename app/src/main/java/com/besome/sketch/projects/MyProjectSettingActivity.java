@@ -258,11 +258,11 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
     public void onStart() {
         super.onStart();
 
-        EncryptedFileUtil oBVar = new EncryptedFileUtil();
-        oBVar.mkdirs(SketchwarePaths.getIconsPath() + File.separator + sc_id);
-        oBVar.mkdirs(SketchwarePaths.getImagesPath() + File.separator + sc_id);
-        oBVar.mkdirs(SketchwarePaths.getSoundsPath() + File.separator + sc_id);
-        oBVar.mkdirs(SketchwarePaths.getFontsResourcePath() + File.separator + sc_id);
+        EncryptedFileUtil fileUtil = new EncryptedFileUtil();
+        fileUtil.mkdirs(SketchwarePaths.getIconsPath() + File.separator + sc_id);
+        fileUtil.mkdirs(SketchwarePaths.getImagesPath() + File.separator + sc_id);
+        fileUtil.mkdirs(SketchwarePaths.getSoundsPath() + File.separator + sc_id);
+        fileUtil.mkdirs(SketchwarePaths.getFontsResourcePath() + File.separator + sc_id);
         File o = getCustomIcon();
         if (!o.exists()) {
             try {

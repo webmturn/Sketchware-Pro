@@ -463,11 +463,11 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
                 FileUtil.deleteFile(project_metadata.projectMyscPath);
 
                 publishProgress(Helper.getResString(R.string.design_run_title_ready_to_build));
-                EncryptedFileUtil oBVar = new EncryptedFileUtil();
+                EncryptedFileUtil fileUtil = new EncryptedFileUtil();
                 /* Check if /Internal storage/sketchware/signed_apk/ exists */
-                if (!oBVar.exists(SketchwarePaths.getSignedApkPath())) {
+                if (!fileUtil.exists(SketchwarePaths.getSignedApkPath())) {
                     /* Doesn't exist yet, let's create it */
-                    oBVar.mkdirs(SketchwarePaths.getSignedApkPath());
+                    fileUtil.mkdirs(SketchwarePaths.getSignedApkPath());
                 }
                 ProjectFileManager hCVar = new ProjectFileManager(sc_id);
                 ResourceManager kCVar = new ResourceManager(sc_id);
