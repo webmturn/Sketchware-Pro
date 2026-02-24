@@ -114,11 +114,11 @@ public class ProjectListManager {
     }
 
     public static String getNextProjectId() {
-        int parseInt = Integer.parseInt("600") + 1;
+        int nextId = Integer.parseInt("600") + 1;
         for (HashMap<String, Object> project : listProjects()) {
-            parseInt = Math.max(parseInt, Integer.parseInt(MapValueHelper.getString(project, "sc_id")) + 1);
+            nextId = Math.max(nextId, Integer.parseInt(MapValueHelper.getString(project, "sc_id")) + 1);
         }
-        return String.valueOf(parseInt);
+        return String.valueOf(nextId);
     }
 
     public static HashMap<String, Object> getProjectById(String projectId) {

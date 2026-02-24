@@ -314,10 +314,9 @@ public class ResourceManager {
     String tempPath = SketchwarePaths.getTempFontsPath();
     try {
       this.fileUtil.deleteDirectoryByPath(tempPath);
-      EncryptedFileUtil oB1 = this.fileUtil;
-      File file1 = new File(this.fontDirPath);
-      File file2 = new File(tempPath);
-      oB1.copyDirectory(file1, file2);
+      File sourceDir = new File(this.fontDirPath);
+      File destDir = new File(tempPath);
+      this.fileUtil.copyDirectory(sourceDir, destDir);
     } catch (Exception exception) {
       exception.printStackTrace();
     } 
@@ -342,10 +341,9 @@ public class ResourceManager {
     String tempPath = SketchwarePaths.getTempImagesPath();
     try {
       this.fileUtil.deleteDirectoryByPath(tempPath);
-      EncryptedFileUtil oB1 = this.fileUtil;
-      File file1 = new File(this.imageDirPath);
-      File file2 = new File(tempPath);
-      oB1.copyDirectory(file1, file2);
+      File sourceDir = new File(this.imageDirPath);
+      File destDir = new File(tempPath);
+      this.fileUtil.copyDirectory(sourceDir, destDir);
     } catch (Exception exception) {
       exception.printStackTrace();
     } 
@@ -363,10 +361,9 @@ public class ResourceManager {
     String tempPath = SketchwarePaths.getTempSoundsPath();
     try {
       this.fileUtil.deleteDirectoryByPath(tempPath);
-      EncryptedFileUtil oB1 = this.fileUtil;
-      File file1 = new File(this.soundDirPath);
-      File file2 = new File(tempPath);
-      oB1.copyDirectory(file1, file2);
+      File sourceDir = new File(this.soundDirPath);
+      File destDir = new File(tempPath);
+      this.fileUtil.copyDirectory(sourceDir, destDir);
     } catch (Exception exception) {
       exception.printStackTrace();
     } 
@@ -562,13 +559,10 @@ public class ResourceManager {
   public void restoreFontsFromTemp() {
     String tempPath = SketchwarePaths.getTempFontsPath();
     try {
-      EncryptedFileUtil oB1 = this.fileUtil;
-      File file2 = new File(this.fontDirPath);
-      oB1.deleteDirectory(file2);
-      oB1 = this.fileUtil;
-      file2 = new File(tempPath);
-      File file1 = new File(this.fontDirPath);
-      oB1.copyDirectory(file2, file1);
+      this.fileUtil.deleteDirectory(new File(this.fontDirPath));
+      File sourceDir = new File(tempPath);
+      File destDir = new File(this.fontDirPath);
+      this.fileUtil.copyDirectory(sourceDir, destDir);
     } catch (Exception exception) {
       exception.printStackTrace();
     } 
@@ -577,13 +571,10 @@ public class ResourceManager {
   public void restoreImagesFromTemp() {
     String tempPath = SketchwarePaths.getTempImagesPath();
     try {
-      EncryptedFileUtil oB1 = this.fileUtil;
-      File file2 = new File(this.imageDirPath);
-      oB1.deleteDirectory(file2);
-      oB1 = this.fileUtil;
-      file2 = new File(tempPath);
-      File file1 = new File(this.imageDirPath);
-      oB1.copyDirectory(file2, file1);
+      this.fileUtil.deleteDirectory(new File(this.imageDirPath));
+      File sourceDir = new File(tempPath);
+      File destDir = new File(this.imageDirPath);
+      this.fileUtil.copyDirectory(sourceDir, destDir);
     } catch (Exception exception) {
       exception.printStackTrace();
     } 
@@ -592,13 +583,10 @@ public class ResourceManager {
   public void restoreSoundsFromTemp() {
     String tempPath = SketchwarePaths.getTempSoundsPath();
     try {
-      EncryptedFileUtil oB1 = this.fileUtil;
-      File file2 = new File(this.soundDirPath);
-      oB1.deleteDirectory(file2);
-      oB1 = this.fileUtil;
-      file2 = new File(tempPath);
-      File file1 = new File(this.soundDirPath);
-      oB1.copyDirectory(file2, file1);
+      this.fileUtil.deleteDirectory(new File(this.soundDirPath));
+      File sourceDir = new File(tempPath);
+      File destDir = new File(this.soundDirPath);
+      this.fileUtil.copyDirectory(sourceDir, destDir);
     } catch (Exception exception) {
       exception.printStackTrace();
     } 

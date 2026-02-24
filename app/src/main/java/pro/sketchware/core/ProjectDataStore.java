@@ -676,8 +676,8 @@ public class ProjectDataStore {
         buffer.append(contentBuilder.toString());
         buffer.append("\n");
       }  
-    HashMap<String, HashMap<String, ArrayList<BlockBean>>> hashMap = this.blockMap;
-    if (hashMap != null && hashMap.size() > 0)
+    HashMap<String, HashMap<String, ArrayList<BlockBean>>> tempBlockMap = this.blockMap;
+    if (tempBlockMap != null && tempBlockMap.size() > 0)
       for (Map.Entry<String, HashMap<String, ArrayList<BlockBean>>> entry : this.blockMap.entrySet()) {
         String key = (String)entry.getKey();
         HashMap blockEntryMap = (HashMap)entry.getValue();
