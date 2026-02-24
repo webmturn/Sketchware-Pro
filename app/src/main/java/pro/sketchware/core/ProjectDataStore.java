@@ -311,11 +311,11 @@ public class ProjectDataStore {
       for (Map.Entry<String, ArrayList<ViewBean>> entry : this.viewMap.entrySet()) {
         for (ViewBean viewBean : entry.getValue()) {
           if ((viewBean.type == 9 || viewBean.type == 10 || viewBean.type == 25 || viewBean.type == 48 || viewBean.type == 31) && viewBean.customView.equals(fileBean.fileName)) {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append(viewBean.id);
-            stringBuilder.append("_");
-            stringBuilder.append("onBindCustomView");
-            String eventName = stringBuilder.toString();
+            StringBuilder eventKeyBuilder = new StringBuilder();
+            eventKeyBuilder.append(viewBean.id);
+            eventKeyBuilder.append("_");
+            eventKeyBuilder.append("onBindCustomView");
+            String eventName = eventKeyBuilder.toString();
             String xmlKey = (String)entry.getKey();
             customViewPairs.add(new Pair(ProjectFileBean.getJavaName(xmlKey.substring(0, xmlKey.lastIndexOf(".xml"))), eventName));
           } 
@@ -570,11 +570,11 @@ public class ProjectDataStore {
         }
         String content = contentBuilder.toString();
         buffer.append("@");
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append((String)entry.getKey());
-        stringBuilder.append("_");
-        stringBuilder.append("var");
-        buffer.append(stringBuilder.toString());
+        StringBuilder sectionKeyBuilder = new StringBuilder();
+        sectionKeyBuilder.append((String)entry.getKey());
+        sectionKeyBuilder.append("_");
+        sectionKeyBuilder.append("var");
+        buffer.append(sectionKeyBuilder.toString());
         buffer.append("\n");
         buffer.append(content);
         buffer.append("\n");
@@ -595,11 +595,11 @@ public class ProjectDataStore {
         }
         String content = contentBuilder.toString();
         buffer.append("@");
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append((String)entry.getKey());
-        stringBuilder.append("_");
-        stringBuilder.append("list");
-        buffer.append(stringBuilder.toString());
+        StringBuilder sectionKeyBuilder = new StringBuilder();
+        sectionKeyBuilder.append((String)entry.getKey());
+        sectionKeyBuilder.append("_");
+        sectionKeyBuilder.append("list");
+        buffer.append(sectionKeyBuilder.toString());
         buffer.append("\n");
         buffer.append(content);
         buffer.append("\n");
@@ -620,11 +620,11 @@ public class ProjectDataStore {
         }
         String content = contentBuilder.toString();
         buffer.append("@");
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append((String)entry.getKey());
-        stringBuilder.append("_");
-        stringBuilder.append("func");
-        buffer.append(stringBuilder.toString());
+        StringBuilder sectionKeyBuilder = new StringBuilder();
+        sectionKeyBuilder.append((String)entry.getKey());
+        sectionKeyBuilder.append("_");
+        sectionKeyBuilder.append("func");
+        buffer.append(sectionKeyBuilder.toString());
         buffer.append("\n");
         buffer.append(content);
         buffer.append("\n");
@@ -644,11 +644,11 @@ public class ProjectDataStore {
         }
         String content = contentBuilder.toString();
         buffer.append("@");
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append((String)entry.getKey());
-        stringBuilder.append("_");
-        stringBuilder.append("components");
-        buffer.append(stringBuilder.toString());
+        StringBuilder sectionKeyBuilder = new StringBuilder();
+        sectionKeyBuilder.append((String)entry.getKey());
+        sectionKeyBuilder.append("_");
+        sectionKeyBuilder.append("components");
+        buffer.append(sectionKeyBuilder.toString());
         buffer.append("\n");
         buffer.append(content);
         buffer.append("\n");
@@ -667,11 +667,11 @@ public class ProjectDataStore {
         }
         String content = contentBuilder.toString();
         buffer.append("@");
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append((String)entry.getKey());
-        stringBuilder.append("_");
-        stringBuilder.append("events");
-        buffer.append(stringBuilder.toString());
+        StringBuilder sectionKeyBuilder = new StringBuilder();
+        sectionKeyBuilder.append((String)entry.getKey());
+        sectionKeyBuilder.append("_");
+        sectionKeyBuilder.append("events");
+        buffer.append(sectionKeyBuilder.toString());
         buffer.append("\n");
         buffer.append(contentBuilder.toString());
         buffer.append("\n");
@@ -695,11 +695,11 @@ public class ProjectDataStore {
           }
           String blockJson = contentBuilder.toString();
           buffer.append("@");
-          StringBuilder stringBuilder = new StringBuilder();
-          stringBuilder.append(key);
-          stringBuilder.append("_");
-          stringBuilder.append((String)entry1.getKey());
-          buffer.append(stringBuilder.toString());
+          StringBuilder sectionKeyBuilder = new StringBuilder();
+          sectionKeyBuilder.append(key);
+          sectionKeyBuilder.append("_");
+          sectionKeyBuilder.append((String)entry1.getKey());
+          buffer.append(sectionKeyBuilder.toString());
           buffer.append("\n");
           buffer.append(blockJson);
           buffer.append("\n");
@@ -895,11 +895,11 @@ public class ProjectDataStore {
             if (b < sortedViews.size()) {
               ViewBean viewBean = sortedViews.get(b);
               viewBean.clearClassInfo();
-              StringBuilder stringBuilder = new StringBuilder();
-              stringBuilder.append(viewJson);
-              stringBuilder.append(this.gson.toJson(viewBean));
-              stringBuilder.append("\n");
-              viewJson = stringBuilder.toString();
+              StringBuilder viewJsonBuilder = new StringBuilder();
+              viewJsonBuilder.append(viewJson);
+              viewJsonBuilder.append(this.gson.toJson(viewBean));
+              viewJsonBuilder.append("\n");
+              viewJson = viewJsonBuilder.toString();
               b++;
               continue;
             } 
@@ -920,16 +920,16 @@ public class ProjectDataStore {
         ViewBean viewBean = (ViewBean)entry.getValue();
         if (viewBean == null)
           continue; 
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("");
-        stringBuilder.append(this.gson.toJson(viewBean));
-        stringBuilder.append("\n");
-        String content = stringBuilder.toString();
+        StringBuilder fabContentBuilder = new StringBuilder();
+        fabContentBuilder.append("");
+        fabContentBuilder.append(this.gson.toJson(viewBean));
+        fabContentBuilder.append("\n");
+        String content = fabContentBuilder.toString();
         buffer.append("@");
-        stringBuilder = new StringBuilder();
-        stringBuilder.append((String)entry.getKey());
-        stringBuilder.append("_fab");
-        buffer.append(stringBuilder.toString());
+        StringBuilder fabKeyBuilder = new StringBuilder();
+        fabKeyBuilder.append((String)entry.getKey());
+        fabKeyBuilder.append("_fab");
+        buffer.append(fabKeyBuilder.toString());
         buffer.append("\n");
         buffer.append(content);
         buffer.append("\n");
@@ -1023,11 +1023,11 @@ public class ProjectDataStore {
   
   public boolean hasLogicBackup() {
     String backupDir = SketchwarePaths.getBackupPath(this.projectId);
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(backupDir);
-    stringBuilder.append(File.separator);
-    stringBuilder.append("logic");
-    String logicPath = stringBuilder.toString();
+    StringBuilder pathBuilder = new StringBuilder();
+    pathBuilder.append(backupDir);
+    pathBuilder.append(File.separator);
+    pathBuilder.append("logic");
+    String logicPath = pathBuilder.toString();
     return this.fileUtil.exists(logicPath);
   }
   
@@ -1121,18 +1121,18 @@ public class ProjectDataStore {
               i = j;
               if (hashMap.get(fileName) != null) {
                 HashMap tempEventMap = this.blockMap.get(fileName);
-                StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder.append(eventBean.targetId);
-                stringBuilder.append("_");
-                stringBuilder.append(eventBean.eventName);
+                StringBuilder eventKeyBuilder = new StringBuilder();
+                eventKeyBuilder.append(eventBean.targetId);
+                eventKeyBuilder.append("_");
+                eventKeyBuilder.append(eventBean.eventName);
                 i = j;
-                if (tempEventMap.containsKey(stringBuilder.toString())) {
+                if (tempEventMap.containsKey(eventKeyBuilder.toString())) {
                   tempEventMap = this.blockMap.get(fileName);
-                  stringBuilder = new StringBuilder();
-                  stringBuilder.append(eventBean.targetId);
-                  stringBuilder.append("_");
-                  stringBuilder.append(eventBean.eventName);
-                  tempEventMap.remove(stringBuilder.toString());
+                  eventKeyBuilder = new StringBuilder();
+                  eventKeyBuilder.append(eventBean.targetId);
+                  eventKeyBuilder.append("_");
+                  eventKeyBuilder.append(eventBean.eventName);
+                  tempEventMap.remove(eventKeyBuilder.toString());
                   i = j;
                 } 
               } 
@@ -1147,11 +1147,11 @@ public class ProjectDataStore {
   
   public boolean hasViewBackup() {
     String backupDir = SketchwarePaths.getBackupPath(this.projectId);
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(backupDir);
-    stringBuilder.append(File.separator);
-    stringBuilder.append("view");
-    String viewPath = stringBuilder.toString();
+    StringBuilder pathBuilder = new StringBuilder();
+    pathBuilder.append(backupDir);
+    pathBuilder.append(File.separator);
+    pathBuilder.append("view");
+    String viewPath = pathBuilder.toString();
     return this.fileUtil.exists(viewPath);
   }
   
@@ -1245,11 +1245,11 @@ public class ProjectDataStore {
   
   public void loadLogicFromBackup() {
     String backupDir = SketchwarePaths.getBackupPath(this.projectId);
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(backupDir);
-    stringBuilder.append(File.separator);
-    stringBuilder.append("logic");
-    String logicPath = stringBuilder.toString();
+    StringBuilder pathBuilder = new StringBuilder();
+    pathBuilder.append(backupDir);
+    pathBuilder.append(File.separator);
+    pathBuilder.append("logic");
+    String logicPath = pathBuilder.toString();
     BufferedReader bufferedReader = null;
     try {
       byte[] bytes = this.fileUtil.readFileBytes(logicPath);
@@ -1292,11 +1292,11 @@ public class ProjectDataStore {
       return false; 
     for (Map.Entry<String, ArrayList<BlockBean>> entry : ((Map<String, ArrayList<BlockBean>>)map).entrySet()) {
       String entryKey = (String)entry.getKey();
-      StringBuilder stringBuilder = new StringBuilder();
-      stringBuilder.append(data);
-      stringBuilder.append("_");
-      stringBuilder.append("moreBlock");
-      if (entryKey.equals(stringBuilder.toString()))
+      StringBuilder keyBuilder = new StringBuilder();
+      keyBuilder.append(data);
+      keyBuilder.append("_");
+      keyBuilder.append("moreBlock");
+      if (entryKey.equals(keyBuilder.toString()))
         continue; 
       for (BlockBean blockBean : (ArrayList<BlockBean>)entry.getValue()) {
         if (blockBean.opCode.equals("definedFunc")) {
@@ -1462,16 +1462,16 @@ public class ProjectDataStore {
   
   public void saveAllData() {
     String basePath = SketchwarePaths.getDataPath(this.projectId);
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(basePath);
-    stringBuilder.append(File.separator);
-    stringBuilder.append("view");
-    saveViewFile(stringBuilder.toString());
-    stringBuilder = new StringBuilder();
-    stringBuilder.append(basePath);
-    stringBuilder.append(File.separator);
-    stringBuilder.append("logic");
-    saveLogicFile(stringBuilder.toString());
+    StringBuilder pathBuilder = new StringBuilder();
+    pathBuilder.append(basePath);
+    pathBuilder.append(File.separator);
+    pathBuilder.append("view");
+    saveViewFile(pathBuilder.toString());
+    pathBuilder = new StringBuilder();
+    pathBuilder.append(basePath);
+    pathBuilder.append(File.separator);
+    pathBuilder.append("logic");
+    saveLogicFile(pathBuilder.toString());
     deleteBackupFiles();
   }
   
@@ -1497,16 +1497,16 @@ public class ProjectDataStore {
   
   public void saveAllBackup() {
     String basePath = SketchwarePaths.getBackupPath(this.projectId);
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(basePath);
-    stringBuilder.append(File.separator);
-    stringBuilder.append("view");
-    saveViewFile(stringBuilder.toString());
-    stringBuilder = new StringBuilder();
-    stringBuilder.append(basePath);
-    stringBuilder.append(File.separator);
-    stringBuilder.append("logic");
-    saveLogicFile(stringBuilder.toString());
+    StringBuilder pathBuilder = new StringBuilder();
+    pathBuilder.append(basePath);
+    pathBuilder.append(File.separator);
+    pathBuilder.append("view");
+    saveViewFile(pathBuilder.toString());
+    pathBuilder = new StringBuilder();
+    pathBuilder.append(basePath);
+    pathBuilder.append(File.separator);
+    pathBuilder.append("logic");
+    saveLogicFile(pathBuilder.toString());
   }
   
   public void removeBlockEntry(String fileName, String data) {
@@ -1592,18 +1592,18 @@ public class ProjectDataStore {
             i = j;
             if (hashMap.get(fileName) != null) {
               HashMap tempEventMap = this.blockMap.get(fileName);
-              StringBuilder stringBuilder = new StringBuilder();
-              stringBuilder.append(eventBean.targetId);
-              stringBuilder.append("_");
-              stringBuilder.append(eventBean.eventName);
+              StringBuilder eventKeyBuilder = new StringBuilder();
+              eventKeyBuilder.append(eventBean.targetId);
+              eventKeyBuilder.append("_");
+              eventKeyBuilder.append(eventBean.eventName);
               i = j;
-              if (tempEventMap.containsKey(stringBuilder.toString())) {
+              if (tempEventMap.containsKey(eventKeyBuilder.toString())) {
                 tempEventMap = this.blockMap.get(fileName);
-                stringBuilder = new StringBuilder();
-                stringBuilder.append(eventBean.targetId);
-                stringBuilder.append("_");
-                stringBuilder.append(eventBean.eventName);
-                tempEventMap.remove(stringBuilder.toString());
+                eventKeyBuilder = new StringBuilder();
+                eventKeyBuilder.append(eventBean.targetId);
+                eventKeyBuilder.append("_");
+                eventKeyBuilder.append(eventBean.eventName);
+                tempEventMap.remove(eventKeyBuilder.toString());
                 i = j;
               } 
             } 
@@ -1639,11 +1639,11 @@ public class ProjectDataStore {
       } 
     } 
     HashMap blockEntryMap = this.blockMap.get(fileName);
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(data);
-    stringBuilder.append("_");
-    stringBuilder.append("moreBlock");
-    if (blockEntryMap.containsKey(stringBuilder.toString())) {
+    StringBuilder keyBuilder = new StringBuilder();
+    keyBuilder.append(data);
+    keyBuilder.append("_");
+    keyBuilder.append("moreBlock");
+    if (blockEntryMap.containsKey(keyBuilder.toString())) {
       blockEntryMap = this.blockMap.get(fileName);
       StringBuilder contentBuilder = new StringBuilder();
       contentBuilder.append(data);
