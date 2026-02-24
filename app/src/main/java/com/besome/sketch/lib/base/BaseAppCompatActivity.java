@@ -34,7 +34,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
     public FirebaseAnalytics mAnalytics;
 
     @Deprecated
-    public Context e;
+    public Context context;
     public Activity parent;
     protected ProgressDialog progressDialog;
     private LoadingDialog lottieDialog;
@@ -102,7 +102,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        e = getApplicationContext();
+        context = getApplicationContext();
         taskList = new ArrayList<>();
         lottieDialog = new LoadingDialog(this);
         ProjectListManager.initializeDb(getApplicationContext(), false);

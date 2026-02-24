@@ -9,7 +9,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 
 public class ProjectListManager {
-    public static SharedPrefsHelper a;
+    public static SharedPrefsHelper sharedPrefsHelper;
 
     public static ArrayList<HashMap<String, Object>> listProjects() {
         String str = "project";
@@ -92,8 +92,8 @@ public class ProjectListManager {
     }
 
     public static void initializeDb(Context context, boolean z) {
-        if (a == null) {
-            a = new SharedPrefsHelper(context, "P15");
+        if (sharedPrefsHelper == null) {
+            sharedPrefsHelper = new SharedPrefsHelper(context, "P15");
         }
     }
 
@@ -220,10 +220,10 @@ public class ProjectListManager {
     }
 
     public static void syncAllProjects() {
-        for (String str : a.getAll().keySet()) {
-            saveProject(str, a.getMap(str));
+        for (String str : sharedPrefsHelper.getAll().keySet()) {
+            saveProject(str, sharedPrefsHelper.getMap(str));
         }
-        a.clearAll();
+        sharedPrefsHelper.clearAll();
     }
 
     private static class IntegerComparator implements Comparator<Integer> {

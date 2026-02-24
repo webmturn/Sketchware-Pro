@@ -4,22 +4,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.besome.sketch.editor.manage.view.ManageViewActivity;
 
 public class ViewFileScrollListener extends RecyclerView.OnScrollListener {
-  public final ViewFilesAdapter a;
+  public final ViewFilesAdapter filesAdapter;
   
-  public final ViewFilesAdapter.a b;
+  public final ViewFilesAdapter.a innerAdapter;
   
   public ViewFileScrollListener(ViewFilesAdapter.a parama, ViewFilesAdapter paramxw) {
-    this.a = paramxw;
-    this.b = parama;
+    this.filesAdapter = paramxw;
+    this.innerAdapter = parama;
   }
   
   public void onScrolled(RecyclerView paramRecyclerView, int paramInt1, int paramInt2) {
     super.onScrolled(paramRecyclerView, paramInt1, paramInt2);
     if (paramInt2 > 2) {
-      if (((ManageViewActivity)this.b.outerAdapter.getActivity()).s.isEnabled())
-        ((ManageViewActivity)this.b.outerAdapter.getActivity()).s.hide(); 
-    } else if (paramInt2 < -2 && ((ManageViewActivity)this.b.outerAdapter.getActivity()).s.isEnabled()) {
-      ((ManageViewActivity)this.b.outerAdapter.getActivity()).s.show();
+      if (((ManageViewActivity)this.innerAdapter.outerAdapter.getActivity()).s.isEnabled())
+        ((ManageViewActivity)this.innerAdapter.outerAdapter.getActivity()).s.hide(); 
+    } else if (paramInt2 < -2 && ((ManageViewActivity)this.innerAdapter.outerAdapter.getActivity()).s.isEnabled()) {
+      ((ManageViewActivity)this.innerAdapter.outerAdapter.getActivity()).s.show();
     } 
   }
 }

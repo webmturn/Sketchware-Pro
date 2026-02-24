@@ -299,7 +299,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
 
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         viewPager = findViewById(R.id.view_pager);
-        viewPager.setAdapter(new ManageViewActivity.b(getSupportFragmentManager()));
+        viewPager.setAdapter(new ManageViewActivity.ViewPagerAdapter(getSupportFragmentManager()));
         viewPager.setOffscreenPageLimit(TAB_COUNT);
         viewPager.addOnPageChangeListener(this);
         tabLayout.setupWithViewPager(viewPager);
@@ -377,12 +377,12 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
 
     }
 
-    public class b extends FragmentPagerAdapter {
-        public String[] f;
+    public class ViewPagerAdapter extends FragmentPagerAdapter {
+        public String[] tabTitles;
 
-        public b(FragmentManager fragmentManager) {
+        public ViewPagerAdapter(FragmentManager fragmentManager) {
             super(fragmentManager);
-            f = new String[]{getString(R.string.common_word_view), getString(R.string.common_word_custom_view)};
+            tabTitles = new String[]{getString(R.string.common_word_view), getString(R.string.common_word_custom_view)};
         }
 
         @Override
@@ -392,7 +392,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return f[position];
+            return tabTitles[position];
         }
 
         @Override

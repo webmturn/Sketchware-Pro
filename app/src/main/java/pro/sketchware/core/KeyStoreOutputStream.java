@@ -3,13 +3,13 @@ package pro.sketchware.core;
 import java.io.OutputStream;
 
 public class KeyStoreOutputStream extends OutputStream {
-  public final KeyStoreManager a;
+  public final KeyStoreManager keyStoreManager;
   
   public KeyStoreOutputStream(KeyStoreManager paramiI) {
-    this.a = paramiI;
+    this.keyStoreManager = paramiI;
   }
   
   public void write(int paramInt) {
-    this.a.keyBuffer.put((byte)paramInt);
+    this.keyStoreManager.keyBuffer.put((byte)paramInt);
   }
 }

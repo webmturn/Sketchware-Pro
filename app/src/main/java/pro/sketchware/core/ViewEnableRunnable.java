@@ -3,13 +3,13 @@ package pro.sketchware.core;
 import android.view.View;
 
 public class ViewEnableRunnable implements Runnable {
-  public final View a;
+  public final View view;
   
   public ViewEnableRunnable(View paramView) {
-    this.a = paramView;
+    this.view = paramView;
   }
   
   public void run() {
-    this.a.setEnabled(true);
+    this.view.setEnabled(true);
   }
 }
