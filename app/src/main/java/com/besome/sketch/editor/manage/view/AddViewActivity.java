@@ -156,7 +156,7 @@ public class AddViewActivity extends BaseAppCompatActivity {
     }
 
     private ArrayList<ViewBean> getPresetData(String presetName) {
-        return PresetLayoutFactory.f(presetName);
+        return PresetLayoutFactory.getActivityPresetViews(presetName);
     }
 
     private void initItem(int featureOptions) {

@@ -74,9 +74,9 @@ public class ViewFilesAdapter extends BaseFragment {
   public final ArrayList<ViewBean> getPresetViews(String paramString, int paramInt) {
     ArrayList<ViewBean> arrayList;
     if (paramInt == 277) {
-      arrayList = PresetLayoutFactory.b(paramString);
+      arrayList = PresetLayoutFactory.getListItemPresetViews(paramString);
     } else if (paramInt == 278) {
-      arrayList = PresetLayoutFactory.d(paramString);
+      arrayList = PresetLayoutFactory.getDrawerPresetViews(paramString);
     } else {
       arrayList = new ArrayList<>();
     }

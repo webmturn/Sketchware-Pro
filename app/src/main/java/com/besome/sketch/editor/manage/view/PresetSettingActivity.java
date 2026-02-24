@@ -27,9 +27,9 @@ public class PresetSettingActivity extends BaseDialogActivity implements View.On
 
     private void applyPresetData(String presetName) {
         int resDrawable = switch (requestCode) {
-            case 276 -> PresetLayoutFactory.e(presetName);
-            case AddCustomViewActivity.REQ_CD_PRESET_ACTIVITY -> PresetLayoutFactory.a(presetName);
-            case 278 -> PresetLayoutFactory.c(presetName);
+            case 276 -> PresetLayoutFactory.getActivityPresetIcon(presetName);
+            case AddCustomViewActivity.REQ_CD_PRESET_ACTIVITY -> PresetLayoutFactory.getListItemPresetIcon(presetName);
+            case 278 -> PresetLayoutFactory.getDrawerPresetIcon(presetName);
             default -> -1;
         };
 
@@ -103,11 +103,11 @@ public class PresetSettingActivity extends BaseDialogActivity implements View.On
         activity = findViewById(R.id.img_activity);
         activityName = findViewById(R.id.tv_activity_name);
         if (requestCode == 276) {
-            presets = PresetLayoutFactory.d();
+            presets = PresetLayoutFactory.getActivityPresets();
         } else if (requestCode == AddCustomViewActivity.REQ_CD_PRESET_ACTIVITY) {
-            presets = PresetLayoutFactory.b();
+            presets = PresetLayoutFactory.getListItemPresets();
         } else {
-            presets = PresetLayoutFactory.c();
+            presets = PresetLayoutFactory.getDrawerPresets();
         }
 
         d(Helper.getResString(R.string.common_word_import));

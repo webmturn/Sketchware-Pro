@@ -279,9 +279,9 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
     private ArrayList<ViewBean> a(String presetName, int requestCode) {
         ArrayList<ViewBean> views = new ArrayList<>();
         return switch (requestCode) {
-            case 276 -> PresetLayoutFactory.f(presetName);
-            case 277 -> PresetLayoutFactory.b(presetName);
-            case 278 -> PresetLayoutFactory.d(presetName);
+            case 276 -> PresetLayoutFactory.getActivityPresetViews(presetName);
+            case 277 -> PresetLayoutFactory.getListItemPresetViews(presetName);
+            case 278 -> PresetLayoutFactory.getDrawerPresetViews(presetName);
             default -> views;
         };
     }

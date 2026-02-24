@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import pro.sketchware.R;
 
 public class PresetLayoutFactory {
-  public static int a(String paramString) {
+  public static int getListItemPresetIcon(String paramString) {
     byte b;
     if (paramString.hashCode() == 1424216003 && paramString.equals("Basic List Item")) {
       b = 0;
@@ -17,7 +17,7 @@ public class PresetLayoutFactory {
     return (b != 0) ? -1 : R.drawable.activity_preset_1;
   }
   
-  public static ViewBean a() {
+  public static ViewBean createDefaultTextView() {
     ViewBean viewBean = new ViewBean("textview1", 4);
     viewBean.parent = "root";
     viewBean.index = 0;
@@ -32,23 +32,23 @@ public class PresetLayoutFactory {
     return viewBean;
   }
   
-  public static ArrayList<ProjectFileBean> b() {
+  public static ArrayList<ProjectFileBean> getListItemPresets() {
     ArrayList<ProjectFileBean> arrayList = new ArrayList<>();
-    arrayList.add(i());
+    arrayList.add(createBasicListItemFile());
     return arrayList;
   }
   
-  public static ArrayList<ViewBean> b(String paramString) {
+  public static ArrayList<ViewBean> getListItemPresetViews(String paramString) {
     byte b;
     if (paramString.hashCode() == 1424216003 && paramString.equals("Basic List Item")) {
       b = 0;
     } else {
       b = -1;
     } 
-    return (b != 0) ? new ArrayList<ViewBean>() : j();
+    return (b != 0) ? new ArrayList<ViewBean>() : createBasicListItemViews();
   }
   
-  public static int c(String paramString) {
+  public static int getDrawerPresetIcon(String paramString) {
     byte b;
     if (paramString.hashCode() == 920477027 && paramString.equals("Basic Drawer")) {
       b = 0;
@@ -58,31 +58,31 @@ public class PresetLayoutFactory {
     return (b != 0) ? -1 : R.drawable.activity_preset_1;
   }
   
-  public static ArrayList<ProjectFileBean> c() {
+  public static ArrayList<ProjectFileBean> getDrawerPresets() {
     ArrayList<ProjectFileBean> arrayList = new ArrayList<>();
-    arrayList.add(g());
+    arrayList.add(createBasicDrawerFile());
     return arrayList;
   }
   
-  public static ArrayList<ProjectFileBean> d() {
+  public static ArrayList<ProjectFileBean> getActivityPresets() {
     ArrayList<ProjectFileBean> arrayList = new ArrayList<>();
-    arrayList.add(k());
-    arrayList.add(e());
-    arrayList.add(m());
+    arrayList.add(createEmptyActivityFile());
+    arrayList.add(createBasicActivityFile());
+    arrayList.add(createTextActivityFile());
     return arrayList;
   }
   
-  public static ArrayList<ViewBean> d(String paramString) {
+  public static ArrayList<ViewBean> getDrawerPresetViews(String paramString) {
     byte b;
     if (paramString.hashCode() == 920477027 && paramString.equals("Basic Drawer")) {
       b = 0;
     } else {
       b = -1;
     } 
-    return (b != 0) ? new ArrayList<ViewBean>() : h();
+    return (b != 0) ? new ArrayList<ViewBean>() : createBasicDrawerViews();
   }
   
-  public static int e(String paramString) {
+  public static int getActivityPresetIcon(String paramString) {
     switch (paramString) {
       case "Empty Activity":
         return R.drawable.activity_preset_4;
@@ -94,80 +94,80 @@ public class PresetLayoutFactory {
     }
   }
   
-  public static ProjectFileBean e() {
+  public static ProjectFileBean createBasicActivityFile() {
     return new ProjectFileBean(0, null, "Basic Activity", 0, 0, true, false, false, false);
   }
   
-  public static ArrayList<ViewBean> f() {
+  public static ArrayList<ViewBean> createBasicActivityViews() {
     return new ArrayList<ViewBean>();
   }
   
-  public static ArrayList<ViewBean> f(String paramString) {
+  public static ArrayList<ViewBean> getActivityPresetViews(String paramString) {
     switch (paramString) {
       case "Empty Activity":
-        return l();
+        return createEmptyActivityViews();
       case "Basic Activity":
-        return f();
+        return createBasicActivityViews();
       case "Text Activity":
-        return n();
+        return createTextActivityViews();
       default:
         return new ArrayList<ViewBean>();
     }
   }
   
-  public static ProjectFileBean g() {
+  public static ProjectFileBean createBasicDrawerFile() {
     return new ProjectFileBean(2, null, "Basic Drawer");
   }
   
-  public static ArrayList<ViewBean> h() {
+  public static ArrayList<ViewBean> createBasicDrawerViews() {
     ArrayList<ViewBean> arrayList = new ArrayList<>();
-    arrayList.add(a());
-    arrayList.add(a());
-    arrayList.add(a());
-    arrayList.add(a());
-    arrayList.add(a());
-    arrayList.add(a());
-    arrayList.add(a());
+    arrayList.add(createDefaultTextView());
+    arrayList.add(createDefaultTextView());
+    arrayList.add(createDefaultTextView());
+    arrayList.add(createDefaultTextView());
+    arrayList.add(createDefaultTextView());
+    arrayList.add(createDefaultTextView());
+    arrayList.add(createDefaultTextView());
     return arrayList;
   }
   
-  public static ProjectFileBean i() {
+  public static ProjectFileBean createBasicListItemFile() {
     return new ProjectFileBean(1, null, "Basic List Item");
   }
   
-  public static ArrayList<ViewBean> j() {
+  public static ArrayList<ViewBean> createBasicListItemViews() {
     ArrayList<ViewBean> arrayList = new ArrayList<>();
-    arrayList.add(a());
-    arrayList.add(a());
-    arrayList.add(a());
-    arrayList.add(a());
-    arrayList.add(a());
-    arrayList.add(a());
-    arrayList.add(a());
+    arrayList.add(createDefaultTextView());
+    arrayList.add(createDefaultTextView());
+    arrayList.add(createDefaultTextView());
+    arrayList.add(createDefaultTextView());
+    arrayList.add(createDefaultTextView());
+    arrayList.add(createDefaultTextView());
+    arrayList.add(createDefaultTextView());
     return arrayList;
   }
   
-  public static ProjectFileBean k() {
+  public static ProjectFileBean createEmptyActivityFile() {
     return new ProjectFileBean(0, null, "Empty Activity", 0, 0, false, true, false, false);
   }
   
-  public static ArrayList<ViewBean> l() {
+  public static ArrayList<ViewBean> createEmptyActivityViews() {
     return new ArrayList<ViewBean>();
   }
   
-  public static ProjectFileBean m() {
+  public static ProjectFileBean createTextActivityFile() {
     return new ProjectFileBean(0, null, "Text Activity", 0, 0, true, false, false, false);
   }
   
-  public static ArrayList<ViewBean> n() {
+  public static ArrayList<ViewBean> createTextActivityViews() {
     ArrayList<ViewBean> arrayList = new ArrayList<>();
-    arrayList.add(a());
-    arrayList.add(a());
-    arrayList.add(a());
-    arrayList.add(a());
-    arrayList.add(a());
-    arrayList.add(a());
-    arrayList.add(a());
+    arrayList.add(createDefaultTextView());
+    arrayList.add(createDefaultTextView());
+    arrayList.add(createDefaultTextView());
+    arrayList.add(createDefaultTextView());
+    arrayList.add(createDefaultTextView());
+    arrayList.add(createDefaultTextView());
+    arrayList.add(createDefaultTextView());
     return arrayList;
   }
 }

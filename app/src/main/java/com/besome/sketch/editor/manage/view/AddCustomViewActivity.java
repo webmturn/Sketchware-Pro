@@ -86,6 +86,6 @@ public class AddCustomViewActivity extends BaseDialogActivity implements View.On
     }
 
     private ArrayList<ViewBean> getPresetData(String presetName) {
-        return PresetLayoutFactory.b(presetName);
+        return PresetLayoutFactory.getListItemPresetViews(presetName);
     }
 }
