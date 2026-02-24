@@ -179,7 +179,7 @@ public class ViewFilesAdapter extends BaseFragment {
   
   public void onActivityResult(int paramInt1, int paramInt2, Intent paramIntent) {
     if ((paramInt1 == 277 || paramInt1 == 278) && paramInt2 == -1) {
-      ProjectFileBean projectFileBean = this.projectFiles.get(this.adapter.c);
+      ProjectFileBean projectFileBean = this.projectFiles.get(this.adapter.selectedPosition);
       ArrayList<ViewBean> arrayList2 = ProjectDataManager.a(this.projectId).d(projectFileBean.getXmlName());
       for (paramInt2 = arrayList2.size() - 1; paramInt2 >= 0; paramInt2--) {
         ViewBean viewBean = arrayList2.get(paramInt2);
@@ -194,7 +194,7 @@ public class ViewFilesAdapter extends BaseFragment {
           ProjectDataManager.a(this.projectId).a(projectFileBean.getJavaName(), 1, viewBean.type, viewBean.id, "onClick"); 
       } 
       a a1 = this.adapter;
-      a1.notifyItemChanged(a1.c);
+      a1.notifyItemChanged(a1.selectedPosition);
     } 
   }
   
@@ -223,44 +223,44 @@ public class ViewFilesAdapter extends BaseFragment {
   }
   
   public class a extends RecyclerView.Adapter<a.ViewHolder> {
-    public int c = -1;
+    public int selectedPosition = -1;
     
-    public final ViewFilesAdapter d;
+    public final ViewFilesAdapter outerAdapter;
     
     public a(ViewFilesAdapter this$0, RecyclerView param1RecyclerView) {
-      this.d = this$0;
+      this.outerAdapter = this$0;
       if (param1RecyclerView.getLayoutManager() instanceof LinearLayoutManager)
         param1RecyclerView.addOnScrollListener(new ViewFileScrollListener(this, this$0)); 
     }
     
     public int getItemCount() {
-      return (this.d.projectFiles != null) ? this.d.projectFiles.size() : 0;
+      return (this.outerAdapter.projectFiles != null) ? this.outerAdapter.projectFiles.size() : 0;
     }
     
     public void onBindViewHolder(ViewHolder param1a, int param1Int) {
-      if (this.d.isSelectionMode.booleanValue()) {
-        param1a.x.setVisibility(View.VISIBLE);
-        param1a.u.setVisibility(View.GONE);
+      if (this.outerAdapter.isSelectionMode.booleanValue()) {
+        param1a.deleteContainer.setVisibility(View.VISIBLE);
+        param1a.activityIcon.setVisibility(View.GONE);
       } else {
-        param1a.x.setVisibility(View.GONE);
-        param1a.u.setVisibility(View.VISIBLE);
+        param1a.deleteContainer.setVisibility(View.GONE);
+        param1a.activityIcon.setVisibility(View.VISIBLE);
       } 
-      ProjectFileBean projectFileBean = this.d.projectFiles.get(param1Int);
-      param1a.u.setImageResource(R.drawable.activity_preset_1);
-      param1a.t.setChecked(((SelectableBean)projectFileBean).isSelected);
+      ProjectFileBean projectFileBean = this.outerAdapter.projectFiles.get(param1Int);
+      param1a.activityIcon.setImageResource(R.drawable.activity_preset_1);
+      param1a.checkbox.setChecked(((SelectableBean)projectFileBean).isSelected);
       param1Int = projectFileBean.fileType;
       if (param1Int == 1) {
-        param1a.w.setText(projectFileBean.getXmlName());
+        param1a.screenName.setText(projectFileBean.getXmlName());
       } else if (param1Int == 2) {
-        param1a.t.setVisibility(View.GONE);
-        param1a.u.setImageResource(R.drawable.activity_0110);
-        param1a.w.setText(projectFileBean.fileName.substring(1));
+        param1a.checkbox.setVisibility(View.GONE);
+        param1a.activityIcon.setImageResource(R.drawable.activity_0110);
+        param1a.screenName.setText(projectFileBean.fileName.substring(1));
       } 
       if (((SelectableBean)projectFileBean).isSelected) {
-        param1a.v.setImageResource(R.drawable.ic_checkmark_green_48dp);
+        param1a.deleteIcon.setImageResource(R.drawable.ic_checkmark_green_48dp);
         return;
       } 
-      param1a.v.setImageResource(R.drawable.ic_trashcan_white_48dp);
+      param1a.deleteIcon.setImageResource(R.drawable.ic_trashcan_white_48dp);
     }
     
     public ViewHolder onCreateViewHolder(ViewGroup param1ViewGroup, int param1Int) {
@@ -268,33 +268,33 @@ public class ViewFilesAdapter extends BaseFragment {
     }
     
     public class ViewHolder extends RecyclerView.ViewHolder {
-      public CheckBox t;
+      public CheckBox checkbox;
       
-      public ImageView u;
+      public ImageView activityIcon;
       
-      public ImageView v;
+      public ImageView deleteIcon;
       
-      public TextView w;
+      public TextView screenName;
       
-      public LinearLayout x;
+      public LinearLayout deleteContainer;
       
-      public ImageView y;
+      public ImageView presetIcon;
       
-      public final ViewFilesAdapter.a z;
+      public final ViewFilesAdapter.a adapterRef;
       
       public ViewHolder(ViewFilesAdapter.a this$0, View param2View) {
         super(param2View);
-        this.z = this$0;
-        this.t = (CheckBox)param2View.findViewById(R.id.chk_select);
-        this.u = (ImageView)param2View.findViewById(R.id.img_activity);
-        this.w = (TextView)param2View.findViewById(R.id.tv_screen_name);
-        this.x = (LinearLayout)param2View.findViewById(R.id.delete_img_container);
-        this.v = (ImageView)param2View.findViewById(R.id.img_delete);
-        this.y = (ImageView)param2View.findViewById(R.id.img_preset_setting);
-        this.t.setVisibility(View.GONE);
+        this.adapterRef = this$0;
+        this.checkbox = (CheckBox)param2View.findViewById(R.id.chk_select);
+        this.activityIcon = (ImageView)param2View.findViewById(R.id.img_activity);
+        this.screenName = (TextView)param2View.findViewById(R.id.tv_screen_name);
+        this.deleteContainer = (LinearLayout)param2View.findViewById(R.id.delete_img_container);
+        this.deleteIcon = (ImageView)param2View.findViewById(R.id.img_delete);
+        this.presetIcon = (ImageView)param2View.findViewById(R.id.img_preset_setting);
+        this.checkbox.setVisibility(View.GONE);
         param2View.setOnClickListener(new ViewFileClickListener(this, this$0));
         param2View.setOnLongClickListener(new ViewFileLongClickListener(this, this$0));
-        this.y.setOnClickListener(new ViewFileEditClickListener(this, this$0));
+        this.presetIcon.setOnClickListener(new ViewFileEditClickListener(this, this$0));
       }
     }
   }

@@ -21,15 +21,15 @@ public class ViewFileEditClickListener implements View.OnClickListener {
     if (UIHelper.a())
       return; 
     ViewFilesAdapter.a.ViewHolder a1 = this.b;
-    a1.z.c = a1.getLayoutPosition();
-    Intent intent = new Intent((Context)this.b.z.d.getActivity(), PresetSettingActivity.class);
-    if (((ProjectFileBean)this.b.z.d.projectFiles.get(this.b.z.c)).fileType == 1) {
+    a1.adapterRef.selectedPosition = a1.getLayoutPosition();
+    Intent intent = new Intent((Context)this.b.adapterRef.outerAdapter.getActivity(), PresetSettingActivity.class);
+    if (((ProjectFileBean)this.b.adapterRef.outerAdapter.projectFiles.get(this.b.adapterRef.selectedPosition)).fileType == 1) {
       c = 'ĕ';
     } else {
       c = 'Ė';
     } 
     intent.putExtra("request_code", c);
     intent.putExtra("edit_mode", true);
-    this.b.z.d.startActivityForResult(intent, c);
+    this.b.adapterRef.outerAdapter.startActivityForResult(intent, c);
   }
 }

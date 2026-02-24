@@ -155,18 +155,18 @@ public class FormatUtil {
   }
   
   public static class a {
-    public String a;
+    public String input;
     
-    public int b;
+    public int position;
     
     public a(String param1String) {
-      this.a = param1String;
-      this.b = 0;
+      this.input = param1String;
+      this.position = 0;
     }
     
     public boolean a() {
       boolean bool;
-      if (this.b >= this.a.length()) {
+      if (this.position >= this.input.length()) {
         bool = true;
       } else {
         bool = false;
@@ -181,19 +181,19 @@ public class FormatUtil {
       if (bool)
         return ""; 
       boolean bool1 = false;
-      int i = this.b;
-      while (this.b < this.a.length() && this.a.charAt(this.b) != ' ') {
-        char c = this.a.charAt(this.b);
+      int i = this.position;
+      while (this.position < this.input.length() && this.input.charAt(this.position) != ' ') {
+        char c = this.input.charAt(this.position);
         if (c == '\\') {
           StringBuilder stringBuilder1 = new StringBuilder();
           stringBuilder1.append(str);
-          stringBuilder1.append(c + this.a.charAt(this.b + 1));
+          stringBuilder1.append(c + this.input.charAt(this.position + 1));
           str = stringBuilder1.toString();
-          this.b += 2;
+          this.position += 2;
           continue;
         } 
         if (c == '%') {
-          if (this.b > i)
+          if (this.position > i)
             break; 
           bool1 = true;
         } 
@@ -203,14 +203,14 @@ public class FormatUtil {
         stringBuilder.append(str);
         stringBuilder.append(c);
         str = stringBuilder.toString();
-        this.b++;
+        this.position++;
       } 
       return str;
     }
     
     public void c() {
-      while (this.b < this.a.length() && this.a.charAt(this.b) == ' ')
-        this.b++; 
+      while (this.position < this.input.length() && this.input.charAt(this.position) == ' ')
+        this.position++; 
     }
   }
 }

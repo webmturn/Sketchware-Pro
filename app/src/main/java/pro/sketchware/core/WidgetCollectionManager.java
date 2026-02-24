@@ -13,29 +13,29 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class WidgetCollectionManager extends BaseCollectionManager {
-  public static WidgetCollectionManager f;
+  public static WidgetCollectionManager instance;
   
-  public Gson g = null;
+  public Gson widgetGson = null;
   
   public WidgetCollectionManager() {
     i();
   }
   
   public static WidgetCollectionManager h() {
-    if (f == null) {
+    if (instance == null) {
       synchronized (WidgetCollectionManager.class) {
-        if (f == null) {
-          f = new WidgetCollectionManager();
+        if (instance == null) {
+          instance = new WidgetCollectionManager();
         }
       }
     }
-    return f;
+    return instance;
   }
   
   public WidgetCollectionBean a(String paramString) {
     for (CollectionBean collectionBean : this.collections) {
       if (collectionBean.name.equals(paramString))
-        return new WidgetCollectionBean(collectionBean.name, ProjectDataParser.b(this.g, collectionBean.data)); 
+        return new WidgetCollectionBean(collectionBean.name, ProjectDataParser.b(this.widgetGson, collectionBean.data)); 
     } 
     return null;
   }
@@ -54,7 +54,7 @@ public class WidgetCollectionManager extends BaseCollectionManager {
   public void a(String paramString, ArrayList<ViewBean> paramArrayList, boolean paramBoolean) throws CompileException {
     if (this.collections == null)
       a(); 
-    if (this.g == null)
+    if (this.widgetGson == null)
       i(); 
     Iterator<CollectionBean> iterator = this.collections.iterator();
     while (iterator.hasNext()) {
@@ -65,7 +65,7 @@ public class WidgetCollectionManager extends BaseCollectionManager {
     StringBuilder stringBuilder = new StringBuilder();
     for (int vi = 0; vi < paramArrayList.size(); vi++) {
       ViewBean viewBean = paramArrayList.get(vi);
-      stringBuilder.append(this.g.toJson(viewBean));
+      stringBuilder.append(this.widgetGson.toJson(viewBean));
       stringBuilder.append("\n");
     }
     String str = stringBuilder.toString();
@@ -134,11 +134,11 @@ public class WidgetCollectionManager extends BaseCollectionManager {
   public ArrayList<WidgetCollectionBean> f() {
     if (this.collections == null)
       a(); 
-    if (this.g == null)
+    if (this.widgetGson == null)
       i(); 
     ArrayList<WidgetCollectionBean> arrayList = new ArrayList<>();
     for (CollectionBean collectionBean : this.collections)
-      arrayList.add(new WidgetCollectionBean(collectionBean.name, ProjectDataParser.b(this.g, collectionBean.data))); 
+      arrayList.add(new WidgetCollectionBean(collectionBean.name, ProjectDataParser.b(this.widgetGson, collectionBean.data))); 
     return arrayList;
   }
   
@@ -153,6 +153,6 @@ public class WidgetCollectionManager extends BaseCollectionManager {
   }
   
   public final void i() {
-    this.g = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
+    this.widgetGson = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
   }
 }
