@@ -146,7 +146,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
         }
 
         activitiesFragment.setSelectionMode(selecting);
-        customViewsFragment.a(selecting);
+        customViewsFragment.setSelectionMode(selecting);
     }
 
     @Override
@@ -156,21 +156,21 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
 
     // signature mustn't be changed: used in La/a/a/ViewFilesFragment;->b(Lcom/besome/sketch/beans/ProjectFileBean;)V
     public void b(String var1) {
-        customViewsFragment.a(var1);
-        customViewsFragment.g();
+        customViewsFragment.addCustomView(var1);
+        customViewsFragment.updateEmptyState();
     }
 
     // signature mustn't be changed: used in La/a/a/ViewFilesFragment;->b(Lcom/besome/sketch/beans/ProjectFileBean;)V, La/a/a/ViewFilesFragment;->f()V
     public void c(String var1) {
-        customViewsFragment.b(var1);
-        customViewsFragment.g();
+        customViewsFragment.removeCustomView(var1);
+        customViewsFragment.updateEmptyState();
     }
 
     public ArrayList<String> l() {
         ArrayList<String> projectLayoutFiles = new ArrayList<>();
         projectLayoutFiles.add("debug");
         ArrayList<ProjectFileBean> activitiesFiles = activitiesFragment.getActivitiesFiles();
-        ArrayList<ProjectFileBean> customViewsFiles = customViewsFragment.c();
+        ArrayList<ProjectFileBean> customViewsFiles = customViewsFragment.getProjectFiles();
 
         for (ProjectFileBean projectFileBean : activitiesFiles) {
             projectLayoutFiles.add(projectFileBean.fileName);
@@ -185,7 +185,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
 
     public final void m() {
         ProjectDataManager.getFileManager(sc_id).setActivities(activitiesFragment.getActivitiesFiles());
-        ProjectDataManager.getFileManager(sc_id).setCustomViews(customViewsFragment.c());
+        ProjectDataManager.getFileManager(sc_id).setCustomViews(customViewsFragment.getProjectFiles());
         ProjectDataManager.getFileManager(sc_id).saveToBackup();
         ProjectDataManager.getFileManager(sc_id).refreshNameLists();
         ProjectDataManager.getProjectDataManager(sc_id).syncWithFileManager(ProjectDataManager.getFileManager(sc_id));
@@ -203,10 +203,10 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
             } else if (viewId == R.id.btn_delete) {
                 if (selecting) {
                     activitiesFragment.removeSelectedFiles();
-                    customViewsFragment.f();
+                    customViewsFragment.removeSelectedFiles();
                     a(false);
                     activitiesFragment.updateGuideVisibility();
-                    customViewsFragment.g();
+                    customViewsFragment.updateEmptyState();
                     SketchToast.toast(getApplicationContext(), getString(R.string.common_message_complete_delete), SketchToast.TOAST_WARNING).show();
                     s.show();
                 }
@@ -265,8 +265,8 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
                         } else {
                             projectFileBean = data.getParcelableExtra("project_file");
                             if (projectFileBean == null) return;
-                            customViewsFragment.a(projectFileBean);
-                            customViewsFragment.g();
+                            customViewsFragment.addProjectFile(projectFileBean);
+                            customViewsFragment.updateEmptyState();
                             if (data.hasExtra("preset_views")) {
                                 a(projectFileBean, data.getParcelableArrayListExtra("preset_views"));
                             }

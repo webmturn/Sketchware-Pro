@@ -34,7 +34,7 @@ public class ViewFilesAdapter extends BaseFragment {
   
   public int[] viewCounters = new int[19];
   
-  public final String a(int paramInt, String paramString) {
+  public final String generateUniqueViewId(int paramInt, String paramString) {
     String str1 = SketchwarePaths.getWidgetTypeName(paramInt);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str1);
@@ -71,7 +71,7 @@ public class ViewFilesAdapter extends BaseFragment {
     } 
   }
   
-  public final ArrayList<ViewBean> a(String paramString, int paramInt) {
+  public final ArrayList<ViewBean> getPresetViews(String paramString, int paramInt) {
     ArrayList<ViewBean> arrayList;
     if (paramInt == 277) {
       arrayList = PresetLayoutFactory.b(paramString);
@@ -83,12 +83,12 @@ public class ViewFilesAdapter extends BaseFragment {
     return arrayList;
   }
   
-  public void a(ProjectFileBean paramProjectFileBean) {
+  public void addProjectFile(ProjectFileBean paramProjectFileBean) {
     this.projectFiles.add(paramProjectFileBean);
     this.adapter.notifyDataSetChanged();
   }
   
-  public void a(String paramString) {
+  public void addCustomView(String paramString) {
     boolean found = false;
     for (ProjectFileBean bean : this.projectFiles) {
       if (bean.fileType == 2 && bean.fileName.equals(paramString)) {
@@ -102,13 +102,13 @@ public class ViewFilesAdapter extends BaseFragment {
     }
   }
   
-  public void a(boolean paramBoolean) {
+  public void setSelectionMode(boolean paramBoolean) {
     this.isSelectionMode = Boolean.valueOf(paramBoolean);
-    e();
+    deselectAll();
     this.adapter.notifyDataSetChanged();
   }
   
-  public void b(String paramString) {
+  public void removeCustomView(String paramString) {
     for (ProjectFileBean projectFileBean : this.projectFiles) {
       if (projectFileBean.fileType == 2 && projectFileBean.fileName.equals(paramString)) {
         this.projectFiles.remove(projectFileBean);
@@ -118,11 +118,11 @@ public class ViewFilesAdapter extends BaseFragment {
     this.adapter.notifyDataSetChanged();
   }
   
-  public ArrayList<ProjectFileBean> c() {
+  public ArrayList<ProjectFileBean> getProjectFiles() {
     return this.projectFiles;
   }
   
-  public void d() {
+  public void loadCustomViews() {
     ArrayList<ProjectFileBean> arrayList = ProjectDataManager.getFileManager(this.projectId).getCustomViews();
     if (arrayList == null)
       return; 
@@ -130,13 +130,13 @@ public class ViewFilesAdapter extends BaseFragment {
       this.projectFiles.add(projectFileBean); 
   }
   
-  public final void e() {
+  public final void deselectAll() {
     Iterator<ProjectFileBean> iterator = this.projectFiles.iterator();
     while (iterator.hasNext())
       ((SelectableBean)iterator.next()).isSelected = false; 
   }
   
-  public void f() {
+  public void removeSelectedFiles() {
     int i = this.projectFiles.size();
     while (true) {
       int j = i - 1;
@@ -153,7 +153,7 @@ public class ViewFilesAdapter extends BaseFragment {
     } 
   }
   
-  public void g() {
+  public void updateEmptyState() {
     ArrayList<ProjectFileBean> arrayList = this.projectFiles;
     if (arrayList != null)
       if (arrayList.size() == 0) {
@@ -168,13 +168,13 @@ public class ViewFilesAdapter extends BaseFragment {
   public void onActivityCreated(Bundle paramBundle) {
     super.onActivityCreated(paramBundle);
     if (paramBundle == null) {
-      d();
+      loadCustomViews();
     } else {
       this.projectId = paramBundle.getString("sc_id");
       this.projectFiles = paramBundle.getParcelableArrayList("custom_views");
     } 
     this.recyclerView.getAdapter().notifyDataSetChanged();
-    g();
+    updateEmptyState();
   }
   
   public void onActivityResult(int paramInt1, int paramInt2, Intent paramIntent) {
@@ -185,10 +185,10 @@ public class ViewFilesAdapter extends BaseFragment {
         ViewBean viewBean = arrayList2.get(paramInt2);
         ProjectDataManager.getProjectDataManager(this.projectId).removeView(projectFileBean, viewBean);
       } 
-      ArrayList<ViewBean> arrayList1 = a(((ProjectFileBean)paramIntent.getParcelableExtra("preset_data")).presetName, paramInt1);
+      ArrayList<ViewBean> arrayList1 = getPresetViews(((ProjectFileBean)paramIntent.getParcelableExtra("preset_data")).presetName, paramInt1);
       ProjectDataManager.getProjectDataManager(this.projectId);
       for (ViewBean viewBean : ProjectDataStore.getSortedRootViews(arrayList1)) {
-        viewBean.id = a(viewBean.type, projectFileBean.getXmlName());
+        viewBean.id = generateUniqueViewId(viewBean.type, projectFileBean.getXmlName());
         ProjectDataManager.getProjectDataManager(this.projectId).addView(projectFileBean.getXmlName(), viewBean);
         if (viewBean.type == 3 && projectFileBean.fileType == 0)
           ProjectDataManager.getProjectDataManager(this.projectId).addEvent(projectFileBean.getJavaName(), 1, viewBean.type, viewBean.id, "onClick"); 
