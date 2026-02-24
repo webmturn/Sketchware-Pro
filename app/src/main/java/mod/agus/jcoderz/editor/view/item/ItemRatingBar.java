@@ -46,8 +46,8 @@ public class ItemRatingBar extends AppCompatRatingBar implements ItemView {
     }
 
     @Override
-    public void setFixed(boolean z) {
-        isFixed = z;
+    public void setFixed(boolean fixed) {
+        isFixed = fixed;
     }
 
     public boolean getSelection() {
@@ -55,8 +55,8 @@ public class ItemRatingBar extends AppCompatRatingBar implements ItemView {
     }
 
     @Override
-    public void setSelection(boolean z) {
-        hasSelection = z;
+    public void setSelection(boolean selected) {
+        hasSelection = selected;
         invalidate();
     }
 

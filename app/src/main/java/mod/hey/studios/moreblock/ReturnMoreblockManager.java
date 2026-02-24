@@ -116,21 +116,21 @@ public class ReturnMoreblockManager {
 
     public static void listMoreblocks(Iterator<Pair<String, String>> it, LogicEditorActivity logicEditorActivity) {
         while (it.hasNext()) {
-            String str = it.next().second;
-            String moreblockChar = getMoreblockChar(str);
+            String spec = it.next().second;
+            String moreblockChar = getMoreblockChar(spec);
 
             if (moreblockChar.contains("|")) {
                 String[] split = moreblockChar.split("\\|");
-                logicEditorActivity.createPaletteBlockWithComponent(getMbName(str), split[0], split[1], "definedFunc").setTag(getMbName(str));
+                logicEditorActivity.createPaletteBlockWithComponent(getMbName(spec), split[0], split[1], "definedFunc").setTag(getMbName(spec));
             } else {
-                logicEditorActivity.createPaletteBlockWithSpec(getMbName(str), moreblockChar, "definedFunc").setTag(getMbName(str));
+                logicEditorActivity.createPaletteBlockWithSpec(getMbName(spec), moreblockChar, "definedFunc").setTag(getMbName(spec));
             }
         }
     }
 
-    public static String getMoreblockChar(String str) {
+    public static String getMoreblockChar(String spec) {
         String moreBlockChar;
-        String mbType = getMbType(str);
+        String mbType = getMbType(spec);
 
         if (mbType.equals("void")) {
             moreBlockChar = " ";
@@ -156,21 +156,21 @@ public class ReturnMoreblockManager {
         return splits[0];
     }
 
-    public static String injectMbType(String str, String str2, String str3) {
-        String result = str;
+    public static String injectMbType(String name, String mbName, String typeChar) {
+        String result = name;
 
-        if (!str3.equals(" ")) {
-            if (str3.contains("|")) {
-                result = injectToMbName(result, str2, str3);
+        if (!typeChar.equals(" ")) {
+            if (typeChar.contains("|")) {
+                result = injectToMbName(result, mbName, typeChar);
 
-            } else if (str3.equals("s")) {
-                result = injectToMbName(result, str2, "String");
+            } else if (typeChar.equals("s")) {
+                result = injectToMbName(result, mbName, "String");
 
-            } else if (str3.equals("d")) {
-                result = injectToMbName(result, str2, "double");
+            } else if (typeChar.equals("d")) {
+                result = injectToMbName(result, mbName, "double");
 
-            } else if (str3.equals("b")) {
-                result = injectToMbName(result, str2, "boolean");
+            } else if (typeChar.equals("b")) {
+                result = injectToMbName(result, mbName, "boolean");
             }
         }
 
@@ -178,22 +178,22 @@ public class ReturnMoreblockManager {
 
     }
 
-    public static String injectToMbName(String str, String str2, String str3) {
+    public static String injectToMbName(String name, String mbName, String typeName) {
         String replaceFirst;
 
-        if (str.equals(str2)) {
-            replaceFirst = str + "[" + str3 + "]";
+        if (name.equals(mbName)) {
+            replaceFirst = name + "[" + typeName + "]";
         } else {
-            replaceFirst = str.replaceFirst(str2, str2 + "[" + str3 + "]");
+            replaceFirst = name.replaceFirst(mbName, mbName + "[" + typeName + "]");
         }
 
         return replaceFirst;
     }
 
-    public static String getPreviewType(String str) {
-        if (str.contains("|")) return "a";
+    public static String getPreviewType(String typeChar) {
+        if (typeChar.contains("|")) return "a";
 
-        return str;
+        return typeChar;
     }
 
     public static String getMbNameWithTypeFromSpec(String spec) {
