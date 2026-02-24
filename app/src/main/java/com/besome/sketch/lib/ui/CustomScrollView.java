@@ -10,12 +10,12 @@ public class CustomScrollView extends ScrollView {
   
   public boolean useScroll = true;
   
-  public CustomScrollView(Context paramContext) {
-    super(paramContext);
+  public CustomScrollView(Context context) {
+    super(context);
   }
   
-  public CustomScrollView(Context paramContext, AttributeSet paramAttributeSet) {
-    super(paramContext, paramAttributeSet);
+  public CustomScrollView(Context context, AttributeSet attrs) {
+    super(context, attrs);
   }
   
   public void disableScroll() {
@@ -26,15 +26,15 @@ public class CustomScrollView extends ScrollView {
     this.scrollEnabled = true;
   }
   
-  public boolean onInterceptTouchEvent(MotionEvent paramMotionEvent) {
-    return (this.useScroll && this.scrollEnabled) ? super.onInterceptTouchEvent(paramMotionEvent) : false;
+  public boolean onInterceptTouchEvent(MotionEvent event) {
+    return (this.useScroll && this.scrollEnabled) ? super.onInterceptTouchEvent(event) : false;
   }
   
-  public boolean onTouchEvent(MotionEvent paramMotionEvent) {
-    return (this.useScroll && this.scrollEnabled) ? super.onTouchEvent(paramMotionEvent) : false;
+  public boolean onTouchEvent(MotionEvent event) {
+    return (this.useScroll && this.scrollEnabled) ? super.onTouchEvent(event) : false;
   }
   
-  public void setUseScroll(boolean paramBoolean) {
-    this.useScroll = paramBoolean;
+  public void setUseScroll(boolean flag) {
+    this.useScroll = flag;
   }
 }

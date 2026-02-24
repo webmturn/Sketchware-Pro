@@ -12,12 +12,12 @@ public class CustomHorizontalScrollView extends HorizontalScrollView {
   
   public boolean useScroll = true;
   
-  public CustomHorizontalScrollView(Context paramContext) {
-    super(paramContext);
+  public CustomHorizontalScrollView(Context context) {
+    super(context);
   }
   
-  public CustomHorizontalScrollView(Context paramContext, AttributeSet paramAttributeSet) {
-    super(paramContext, paramAttributeSet);
+  public CustomHorizontalScrollView(Context context, AttributeSet attrs) {
+    super(context, attrs);
   }
   
   public void disableScroll() {
@@ -28,30 +28,30 @@ public class CustomHorizontalScrollView extends HorizontalScrollView {
     this.scrollEnabled = true;
   }
   
-  public boolean onInterceptTouchEvent(MotionEvent paramMotionEvent) {
-    return (this.useScroll && this.scrollEnabled) ? super.onInterceptTouchEvent(paramMotionEvent) : false;
+  public boolean onInterceptTouchEvent(MotionEvent event) {
+    return (this.useScroll && this.scrollEnabled) ? super.onInterceptTouchEvent(event) : false;
   }
   
-  public void onScrollChanged(int paramInt1, int paramInt2, int paramInt3, int paramInt4) {
-    super.onScrollChanged(paramInt1, paramInt2, paramInt3, paramInt4);
+  public void onScrollChanged(int x, int y, int paramInt3, int paramInt4) {
+    super.onScrollChanged(x, y, paramInt3, paramInt4);
     OnScrollChangedListener a1 = this.scrollChangedListener;
     if (a1 != null)
-      a1.onScrollChanged(paramInt1, paramInt2, paramInt3, paramInt4); 
+      a1.onScrollChanged(x, y, paramInt3, paramInt4); 
   }
   
-  public boolean onTouchEvent(MotionEvent paramMotionEvent) {
-    return (this.useScroll && this.scrollEnabled) ? super.onTouchEvent(paramMotionEvent) : false;
+  public boolean onTouchEvent(MotionEvent event) {
+    return (this.useScroll && this.scrollEnabled) ? super.onTouchEvent(event) : false;
   }
   
   public void setOnScrollChangedListener(OnScrollChangedListener parama) {
     this.scrollChangedListener = parama;
   }
   
-  public void setUseScroll(boolean paramBoolean) {
-    this.useScroll = paramBoolean;
+  public void setUseScroll(boolean flag) {
+    this.useScroll = flag;
   }
   
   public static interface OnScrollChangedListener {
-    void onScrollChanged(int param1Int1, int param1Int2, int param1Int3, int param1Int4);
+    void onScrollChanged(int scrollX, int scrollY, int oldScrollX, int oldScrollY);
   }
 }

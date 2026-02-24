@@ -13,29 +13,29 @@ import android.util.AttributeSet;
 import androidx.appcompat.widget.AppCompatImageView;
 
 public class CircleImageView extends AppCompatImageView {
-  public CircleImageView(Context paramContext) {
-    super(paramContext);
+  public CircleImageView(Context context) {
+    super(context);
   }
   
-  public CircleImageView(Context paramContext, AttributeSet paramAttributeSet) {
-    super(paramContext, paramAttributeSet);
+  public CircleImageView(Context context, AttributeSet attrs) {
+    super(context, attrs);
   }
   
-  public Bitmap createCircleBitmap(Bitmap paramBitmap) {
-    Bitmap bitmap = Bitmap.createBitmap(paramBitmap.getWidth(), paramBitmap.getHeight(), Bitmap.Config.ARGB_8888);
+  public Bitmap createCircleBitmap(Bitmap sourceBitmap) {
+    Bitmap bitmap = Bitmap.createBitmap(sourceBitmap.getWidth(), sourceBitmap.getHeight(), Bitmap.Config.ARGB_8888);
     Canvas canvas = new Canvas(bitmap);
     Paint paint = new Paint();
-    Rect rect = new Rect(0, 0, paramBitmap.getWidth(), paramBitmap.getHeight());
+    Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
     paint.setAntiAlias(true);
     canvas.drawARGB(0, 0, 0, 0);
     paint.setColor(-16776961);
-    canvas.drawCircle((paramBitmap.getWidth() / 2), (paramBitmap.getHeight() / 2), (paramBitmap.getHeight() / 2), paint);
+    canvas.drawCircle((bitmap.getWidth() / 2), (bitmap.getHeight() / 2), (bitmap.getHeight() / 2), paint);
     paint.setXfermode((Xfermode)new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-    canvas.drawBitmap(paramBitmap, rect, rect, paint);
+    canvas.drawBitmap(bitmap, rect, rect, paint);
     return bitmap;
   }
   
-  public void onDraw(Canvas paramCanvas) {
+  public void onDraw(Canvas canvas) {
     BitmapDrawable bitmapDrawable = (BitmapDrawable)getDrawable();
     if (bitmapDrawable == null)
       return; 
@@ -46,7 +46,7 @@ public class CircleImageView extends AppCompatImageView {
       if (bitmap != null) {
         if (i != bitmap.getWidth() || j != bitmap.getHeight())
           bitmap = Bitmap.createScaledBitmap(bitmap, i, j, true); 
-        paramCanvas.drawBitmap(createCircleBitmap(bitmap), 0.0F, 0.0F, null);
+        canvas.drawBitmap(createCircleBitmap(bitmap), 0.0F, 0.0F, null);
       } 
     } 
   }

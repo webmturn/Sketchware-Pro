@@ -25,15 +25,15 @@ public class NinePatchDecoder {
     return bitmap;
   }
   
-  public static Bitmap decodeFile(String paramString) throws Exception {
-    try (FileInputStream fileInputStream = new FileInputStream(paramString)) {
+  public static Bitmap decodeFile(String input) throws Exception {
+    try (FileInputStream fileInputStream = new FileInputStream(input)) {
       return decode(fileInputStream);
     }
   }
   
-  public static void extractPadding(Bitmap paramBitmap, byte[] paramArrayOfbyte) {
-    int[] arrayOfInt = new int[paramBitmap.getWidth() - 2];
-    paramBitmap.getPixels(arrayOfInt, 0, arrayOfInt.length, 1, paramBitmap.getHeight() - 1, arrayOfInt.length, 1);
+  public static void extractPadding(Bitmap bitmap, byte[] paramArrayOfbyte) {
+    int[] arrayOfInt = new int[bitmap.getWidth() - 2];
+    bitmap.getPixels(arrayOfInt, 0, arrayOfInt.length, 1, bitmap.getHeight() - 1, arrayOfInt.length, 1);
     boolean bool = false;
     int i;
     for (i = 0; i < arrayOfInt.length; i++) {
@@ -48,8 +48,8 @@ public class NinePatchDecoder {
         break;
       } 
     } 
-    arrayOfInt = new int[paramBitmap.getHeight() - 2];
-    paramBitmap.getPixels(arrayOfInt, 0, 1, paramBitmap.getWidth() - 1, 0, 1, arrayOfInt.length);
+    arrayOfInt = new int[bitmap.getHeight() - 2];
+    bitmap.getPixels(arrayOfInt, 0, 1, bitmap.getWidth() - 1, 0, 1, arrayOfInt.length);
     for (i = 0; i < arrayOfInt.length; i++) {
       if (-16777216 == arrayOfInt[i]) {
         putIntLE(paramArrayOfbyte, 20, i);
@@ -64,32 +64,32 @@ public class NinePatchDecoder {
     } 
   }
   
-  public static void writeIntLE(OutputStream paramOutputStream, int paramInt) throws java.io.IOException {
-    paramOutputStream.write(paramInt >> 0 & 0xFF);
-    paramOutputStream.write(paramInt >> 8 & 0xFF);
-    paramOutputStream.write(paramInt >> 16 & 0xFF);
-    paramOutputStream.write(paramInt >> 24 & 0xFF);
+  public static void writeIntLE(OutputStream paramOutputStream, int value) throws java.io.IOException {
+    paramOutputStream.write(value >> 0 & 0xFF);
+    paramOutputStream.write(value >> 8 & 0xFF);
+    paramOutputStream.write(value >> 16 & 0xFF);
+    paramOutputStream.write(value >> 24 & 0xFF);
   }
   
-  public static void putIntLE(byte[] paramArrayOfbyte, int paramInt1, int paramInt2) {
-    paramArrayOfbyte[paramInt1 + 0] = (byte)(paramInt2 >> 0);
-    paramArrayOfbyte[paramInt1 + 1] = (byte)(paramInt2 >> 8);
-    paramArrayOfbyte[paramInt1 + 2] = (byte)(paramInt2 >> 16);
-    paramArrayOfbyte[paramInt1 + 3] = (byte)(paramInt2 >> 24);
+  public static void putIntLE(byte[] paramArrayOfbyte, int x, int y) {
+    paramArrayOfbyte[x + 0] = (byte)(y >> 0);
+    paramArrayOfbyte[x + 1] = (byte)(y >> 8);
+    paramArrayOfbyte[x + 2] = (byte)(y >> 16);
+    paramArrayOfbyte[x + 3] = (byte)(y >> 24);
   }
   
-  public static byte[] buildNinePatchChunk(Bitmap paramBitmap) throws java.io.IOException {
+  public static byte[] buildNinePatchChunk(Bitmap bitmap) throws java.io.IOException {
     int n;
     int m;
-    int i = paramBitmap.getWidth();
-    int j = paramBitmap.getHeight();
+    int i = bitmap.getWidth();
+    int j = bitmap.getHeight();
     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
     int k;
     for (k = 0; k < 32; k++)
       byteArrayOutputStream.write(0); 
     k = i - 2;
     int[] arrayOfInt = new int[k];
-    paramBitmap.getPixels(arrayOfInt, 0, i, 1, 0, k, 1);
+    bitmap.getPixels(arrayOfInt, 0, i, 1, 0, k, 1);
     if (arrayOfInt[0] == -16777216) {
       m = 1;
     } else {
@@ -129,7 +129,7 @@ public class NinePatchDecoder {
       m1 = k - 1; 
     k = j - 2;
     arrayOfInt = new int[k];
-    paramBitmap.getPixels(arrayOfInt, 0, 1, 0, 1, 1, k);
+    bitmap.getPixels(arrayOfInt, 0, 1, 0, 1, 1, k);
     if (arrayOfInt[0] == -16777216) {
       i4 = 1;
     } else {
@@ -179,7 +179,7 @@ public class NinePatchDecoder {
       arrayOfByte[1] = (byte)i;
       arrayOfByte[2] = (byte)i3;
       arrayOfByte[3] = (byte)n;
-      extractPadding(paramBitmap, arrayOfByte);
+      extractPadding(bitmap, arrayOfByte);
       return arrayOfByte;
     } 
   }

@@ -461,10 +461,10 @@ public class ProjectDataStore {
     this.fabMap.put(str, viewBean);
   }
   
-  public void addEvent(String fileName, int paramInt1, int paramInt2, String data, String paramString3) {
+  public void addEvent(String fileName, int x, int y, String data, String extra) {
     if (!this.eventMap.containsKey(fileName))
       this.eventMap.put(fileName, new ArrayList<EventBean>()); 
-    ((ArrayList<EventBean>)this.eventMap.get(fileName)).add(new EventBean(paramInt1, paramInt2, data, paramString3));
+    ((ArrayList<EventBean>)this.eventMap.get(fileName)).add(new EventBean(x, y, data, extra));
   }
   
   public void addComponent(String fileName, int index, String data) {
@@ -473,10 +473,10 @@ public class ProjectDataStore {
     ((ArrayList<ComponentBean>)this.componentMap.get(fileName)).add(new ComponentBean(index, data));
   }
   
-  public void addComponentWithParam(String fileName, int index, String data, String paramString3) {
+  public void addComponentWithParam(String fileName, int index, String data, String extra) {
     if (!this.componentMap.containsKey(fileName))
       this.componentMap.put(fileName, new ArrayList<ComponentBean>()); 
-    ((ArrayList<ComponentBean>)this.componentMap.get(fileName)).add(new ComponentBean(index, data, paramString3));
+    ((ArrayList<ComponentBean>)this.componentMap.get(fileName)).add(new ComponentBean(index, data, extra));
   }
   
   public void removeBlockReferences(String fileName, ClassInfo paramGx, String data, boolean flag) {
@@ -540,8 +540,8 @@ public class ProjectDataStore {
     ((ArrayList<ViewBean>)this.viewMap.get(str)).add(paramViewBean);
   }
   
-  public void addMoreBlock(String fileName, String data, String paramString3) {
-    Pair pair = new Pair(data, paramString3);
+  public void addMoreBlock(String fileName, String data, String extra) {
+    Pair pair = new Pair(data, extra);
     if (!this.moreBlockMap.containsKey(fileName))
       this.moreBlockMap.put(fileName, new ArrayList<Pair<String, String>>()); 
     ((ArrayList)this.moreBlockMap.get(fileName)).add(pair);
@@ -936,12 +936,12 @@ public class ProjectDataStore {
       }  
   }
   
-  public boolean isListUsedInBlocks(String fileName, String data, String paramString3) {
+  public boolean isListUsedInBlocks(String fileName, String data, String extra) {
     Map map = this.blockMap.get(fileName);
     if (map == null)
       return false; 
     for (Map.Entry<String, ArrayList<BlockBean>> entry : ((Map<String, ArrayList<BlockBean>>)map).entrySet()) {
-      if (((String)entry.getKey()).equals(paramString3))
+      if (((String)entry.getKey()).equals(extra))
         continue; 
       for (BlockBean blockBean : (ArrayList<BlockBean>)entry.getValue()) {
         ClassInfo gx = blockBean.getClassInfo();
@@ -1031,12 +1031,12 @@ public class ProjectDataStore {
     return this.fileUtil.exists(str1);
   }
   
-  public boolean isVariableUsedInBlocks(String fileName, String data, String paramString3) {
+  public boolean isVariableUsedInBlocks(String fileName, String data, String extra) {
     Map map = this.blockMap.get(fileName);
     if (map == null)
       return false; 
     for (Map.Entry<String, ArrayList<BlockBean>> entry : ((Map<String, ArrayList<BlockBean>>)map).entrySet()) {
-      if (((String)entry.getKey()).equals(paramString3))
+      if (((String)entry.getKey()).equals(extra))
         continue; 
       for (BlockBean blockBean : (ArrayList<BlockBean>)entry.getValue()) {
         ClassInfo gx = blockBean.getClassInfo();
@@ -1099,7 +1099,7 @@ public class ProjectDataStore {
     return arrayList1;
   }
   
-  public void removeEvent(String fileName, String data, String paramString3) {
+  public void removeEvent(String fileName, String data, String extra) {
     if (!this.eventMap.containsKey(fileName))
       return; 
     ArrayList<EventBean> arrayList = this.eventMap.get(fileName);
@@ -1113,7 +1113,7 @@ public class ProjectDataStore {
         i = j;
         if (eventBean.targetId.equals(data)) {
           i = j;
-          if (paramString3.equals(eventBean.eventName)) {
+          if (extra.equals(eventBean.eventName)) {
             arrayList.remove(eventBean);
             HashMap<String, HashMap<String, ArrayList<BlockBean>>> hashMap = this.blockMap;
             i = j;

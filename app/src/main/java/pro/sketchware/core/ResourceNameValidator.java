@@ -20,24 +20,24 @@ public class ResourceNameValidator extends BaseValidator {
   
   public Pattern namePattern = Pattern.compile("^[a-z][a-z0-9_]*");
   
-  public ResourceNameValidator(Context paramContext, TextInputLayout paramTextInputLayout, String[] paramArrayOfString, ArrayList<String> paramArrayList) {
-    super(paramContext, paramTextInputLayout);
+  public ResourceNameValidator(Context context, TextInputLayout paramTextInputLayout, String[] paramArrayOfString, ArrayList<String> list) {
+    super(context, paramTextInputLayout);
     this.reservedNames = paramArrayOfString;
-    this.existingNames = paramArrayList;
+    this.existingNames = list;
   }
   
-  public ResourceNameValidator(Context paramContext, TextInputLayout paramTextInputLayout, String[] paramArrayOfString, ArrayList<String> paramArrayList, String paramString) {
-    super(paramContext, paramTextInputLayout);
+  public ResourceNameValidator(Context context, TextInputLayout paramTextInputLayout, String[] paramArrayOfString, ArrayList<String> list, String input) {
+    super(context, paramTextInputLayout);
     this.reservedNames = paramArrayOfString;
-    this.existingNames = paramArrayList;
-    this.currentName = paramString;
+    this.existingNames = list;
+    this.currentName = input;
   }
   
-  public CharSequence filter(CharSequence paramCharSequence, int paramInt1, int paramInt2, Spanned paramSpanned, int paramInt3, int paramInt4) {
+  public CharSequence filter(CharSequence paramCharSequence, int x, int y, Spanned paramSpanned, int paramInt3, int paramInt4) {
     return null;
   }
   
-  public void onTextChanged(CharSequence paramCharSequence, int paramInt1, int paramInt2, int paramInt3) {
+  public void onTextChanged(CharSequence paramCharSequence, int x, int y, int paramInt3) {
     String str = paramCharSequence.toString().trim();
     if (str.length() < 3) {
       this.textInputLayout.setErrorEnabled(true);
@@ -64,22 +64,22 @@ public class ResourceNameValidator extends BaseValidator {
       return;
     } 
     String[] arrayOfString = this.reservedNames;
-    paramInt2 = arrayOfString.length;
-    paramInt1 = 0;
+    y = arrayOfString.length;
+    x = 0;
     while (true) {
-      if (paramInt1 < paramInt2) {
-        str = arrayOfString[paramInt1];
+      if (x < y) {
+        str = arrayOfString[x];
         if (paramCharSequence.toString().equals(str)) {
-          paramInt1 = 1;
+          x = 1;
           break;
         } 
-        paramInt1++;
+        x++;
         continue;
       } 
-      paramInt1 = 0;
+      x = 0;
       break;
     } 
-    if (paramInt1 != 0) {
+    if (x != 0) {
       this.textInputLayout.setErrorEnabled(true);
       this.textInputLayout.setError(StringResource.getInstance().getTranslatedString(this.context, R.string.logic_editor_message_reserved_keywords));
       this.valid = false;

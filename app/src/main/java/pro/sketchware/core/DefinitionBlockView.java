@@ -14,23 +14,23 @@ public class DefinitionBlockView extends BlockView {
   
   public TextView definitionLabel;
   
-  public DefinitionBlockView(Context paramContext, String paramString1, String paramString2, String paramString3, String paramString4, ArrayList<BlockBean> paramArrayList) {
-    super(paramContext, -1, paramString4, paramString1, paramString2, paramString3);
-    this.blockData = paramArrayList;
+  public DefinitionBlockView(Context context, String key, String value, String extra, String paramString4, ArrayList<BlockBean> list) {
+    super(context, -1, paramString4, key, value, extra);
+    this.blockData = list;
     this.blockTypeInt = 2;
   }
   
-  private TextView createDefinitionLabel(String paramString) {
+  private TextView createDefinitionLabel(String input) {
     TextView textView = new TextView(((BaseBlockView)this).context);
     String str1 = ((BaseBlockView)this).componentType;
-    String str2 = paramString;
+    String str2 = input;
     if (str1 != null) {
-      str2 = paramString;
+      str2 = input;
       if (str1.length() > 0) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(((BaseBlockView)this).componentType);
         stringBuilder.append(" : ");
-        stringBuilder.append(paramString);
+        stringBuilder.append(input);
         str2 = stringBuilder.toString();
       } 
     } 

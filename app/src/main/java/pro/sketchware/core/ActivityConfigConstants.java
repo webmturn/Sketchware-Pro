@@ -5,12 +5,12 @@ public class ActivityConfigConstants {
   
   public static final String[] ORIENTATION_OPTIONS = new String[] { "Portrait", "Landscape", "Both" };
   
-  public static String getKeyboardSettingName(int paramInt) {
+  public static String getKeyboardSettingName(int value) {
     String str;
-    paramInt &= 0xF;
-    if (paramInt == 1) {
+    value &= 0xF;
+    if (value == 1) {
       str = "stateVisible";
-    } else if (paramInt == 2) {
+    } else if (value == 2) {
       str = "stateHidden";
     } else {
       str = "";

@@ -10,9 +10,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public final class UriPathResolver {
-  public static String resolve(Context paramContext, Uri paramUri) {
+  public static String resolve(Context context, Uri paramUri) {
     String result = null;
-    if (android.provider.DocumentsContract.isDocumentUri(paramContext, paramUri)) {
+    if (android.provider.DocumentsContract.isDocumentUri(context, paramUri)) {
       if (isExternalStorageDocument(paramUri)) {
         String[] split = android.provider.DocumentsContract.getDocumentId(paramUri).split(":");
         if ("primary".equalsIgnoreCase(split[0])) {
@@ -23,7 +23,7 @@ public final class UriPathResolver {
         if (!android.text.TextUtils.isEmpty(docId) && docId.startsWith("raw:")) {
           return docId.replaceFirst("raw:", "");
         }
-        result = queryDataColumn(paramContext, android.content.ContentUris.withAppendedId(
+        result = queryDataColumn(context, android.content.ContentUris.withAppendedId(
             Uri.parse("content://downloads/public_downloads"), Long.valueOf(docId).longValue()), null, null);
       } else if (isMediaDocument(paramUri)) {
         String[] split = android.provider.DocumentsContract.getDocumentId(paramUri).split(":");
@@ -36,10 +36,10 @@ public final class UriPathResolver {
         } else if ("audio".equals(type)) {
           contentUri = android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         }
-        result = queryDataColumn(paramContext, contentUri, "_id=?", new String[]{split[1]});
+        result = queryDataColumn(context, contentUri, "_id=?", new String[]{split[1]});
       }
     } else if ("content".equalsIgnoreCase(paramUri.getScheme())) {
-      result = queryDataColumn(paramContext, paramUri, null, null);
+      result = queryDataColumn(context, paramUri, null, null);
     } else if ("file".equalsIgnoreCase(paramUri.getScheme())) {
       result = paramUri.getPath();
     }
@@ -53,7 +53,7 @@ public final class UriPathResolver {
         return result;
       }
     }
-    return copyUriToCache(paramContext, paramUri);
+    return copyUriToCache(context, paramUri);
   }
   
   public static String copyUriToCache(Context context, Uri uri) {
@@ -77,10 +77,10 @@ public final class UriPathResolver {
     }
   }
   
-  public static String queryDataColumn(Context paramContext, Uri paramUri, String paramString, String[] paramArrayOfString) {
+  public static String queryDataColumn(Context context, Uri paramUri, String input, String[] paramArrayOfString) {
     android.database.Cursor cursor = null;
     try {
-      cursor = paramContext.getContentResolver().query(paramUri, new String[]{"_data"}, paramString, paramArrayOfString, null);
+      cursor = context.getContentResolver().query(paramUri, new String[]{"_data"}, input, paramArrayOfString, null);
       if (cursor != null && cursor.moveToFirst()) {
         String result = cursor.getString(cursor.getColumnIndexOrThrow("_data"));
         return result;
