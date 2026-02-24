@@ -29,8 +29,8 @@ public class BitmapUtil {
     return k;
   }
   
-  public static int getExifRotation(String str) throws java.io.IOException {
-    int i = (new ExifInterface(str)).getAttributeInt("Orientation", -1);
+  public static int getExifRotation(String filePath) throws java.io.IOException {
+    int i = (new ExifInterface(filePath)).getAttributeInt("Orientation", -1);
     if (i != 3) {
       if (i != 6) {
         if (i != 8) {
@@ -60,19 +60,19 @@ public class BitmapUtil {
     return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, false);
   }
   
-  public static Bitmap decodeWithSampleSize(String str, int index) {
+  public static Bitmap decodeWithSampleSize(String filePath, int index) {
     BitmapFactory.Options options = new BitmapFactory.Options();
     options.inSampleSize = index;
-    return BitmapFactory.decodeFile(str, options);
+    return BitmapFactory.decodeFile(filePath, options);
   }
   
-  public static Bitmap decodeSampledBitmap(String str, int x, int y) {
+  public static Bitmap decodeSampledBitmap(String filePath, int x, int y) {
     BitmapFactory.Options options = new BitmapFactory.Options();
     options.inJustDecodeBounds = true;
-    BitmapFactory.decodeFile(str, options);
+    BitmapFactory.decodeFile(filePath, options);
     options.inSampleSize = calculateSampleSize(options, x, y);
     options.inJustDecodeBounds = false;
-    return BitmapFactory.decodeFile(str, options);
+    return BitmapFactory.decodeFile(filePath, options);
   }
   
   public static void processAndSaveBitmap(String key, String value, int x, int y, int width) {
