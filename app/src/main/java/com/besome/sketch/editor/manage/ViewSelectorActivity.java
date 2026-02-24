@@ -93,7 +93,7 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
                             ProjectDataManager.getFileManager(sc_id).addFile(2, projectFile.getDrawerName());
                         }
                         if (result.getData().hasExtra("preset_views")) {
-                            a(projectFile, result.getData().getParcelableArrayListExtra("preset_views"));
+                            addPresetViews(projectFile, result.getData().getParcelableArrayListExtra("preset_views"));
                         }
                         ProjectDataManager.getFileManager(sc_id).refreshNameLists();
                         ProjectDataManager.getFileManager(sc_id).saveToBackup();
@@ -133,7 +133,7 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
                         if (projectFile == null) return;
                         ProjectDataManager.getFileManager(sc_id).addProjectFile(projectFile);
                         if (result.getData().hasExtra("preset_views")) {
-                            a(projectFile, result.getData().getParcelableArrayListExtra("preset_views"));
+                            addPresetViews(projectFile, result.getData().getParcelableArrayListExtra("preset_views"));
                         }
                         ProjectDataManager.getFileManager(sc_id).refreshNameLists();
                         ProjectDataManager.getFileManager(sc_id).saveToBackup();
@@ -154,7 +154,7 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
                                     || presetData.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB)) {
                                 ProjectDataManager.getLibraryManager(sc_id).getCompat().useYn = "Y";
                             }
-                            a(presetData, activity, lastPresetRequestCode);
+                            replaceWithPresetViews(presetData, activity, lastPresetRequestCode);
                             ProjectDataManager.getFileManager(sc_id).refreshNameLists();
                             viewSelectorAdapter.notifyDataSetChanged();
                             Intent intent2 = new Intent();
@@ -162,7 +162,7 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
                             setResult(RESULT_OK, intent2);
                         } else {
                             ProjectFileBean customView = ProjectDataManager.getFileManager(sc_id).getCustomViews().get(viewSelectorAdapter.selectedItem);
-                            a(presetData, customView, lastPresetRequestCode);
+                            replaceWithPresetViews(presetData, customView, lastPresetRequestCode);
                             ProjectDataManager.getFileManager(sc_id).refreshNameLists();
                             viewSelectorAdapter.notifyDataSetChanged();
                             Intent intent3 = new Intent();
@@ -247,10 +247,10 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
         super.onSaveInstanceState(outState);
     }
 
-    private void a(ProjectFileBean projectFile, ArrayList<ViewBean> presetViews) {
+    private void addPresetViews(ProjectFileBean projectFile, ArrayList<ViewBean> presetViews) {
         ProjectDataManager.getProjectDataManager(sc_id);
         for (ViewBean view : ProjectDataStore.getSortedRootViews(presetViews)) {
-            view.id = a(view.type, projectFile.getXmlName());
+            view.id = generateUniqueViewId(view.type, projectFile.getXmlName());
             ProjectDataManager.getProjectDataManager(sc_id).addView(projectFile.getXmlName(), view);
             if (view.type == ViewBean.VIEW_TYPE_WIDGET_BUTTON
                     && projectFile.fileType == ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY) {
@@ -259,15 +259,15 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
         }
     }
 
-    private void a(ProjectFileBean presetData, ProjectFileBean projectFile, int requestCode) {
+    private void replaceWithPresetViews(ProjectFileBean presetData, ProjectFileBean projectFile, int requestCode) {
         ArrayList<ViewBean> d = ProjectDataManager.getProjectDataManager(sc_id).getViews(projectFile.getXmlName());
         for (int size = d.size() - 1; size >= 0; size--) {
             ProjectDataManager.getProjectDataManager(sc_id).removeView(projectFile, d.get(size));
         }
-        ArrayList<ViewBean> a = a(presetData.presetName, requestCode);
+        ArrayList<ViewBean> a = getPresetViews(presetData.presetName, requestCode);
         ProjectDataManager.getProjectDataManager(sc_id);
         for (ViewBean view : ProjectDataStore.getSortedRootViews(a)) {
-            view.id = a(view.type, projectFile.getXmlName());
+            view.id = generateUniqueViewId(view.type, projectFile.getXmlName());
             ProjectDataManager.getProjectDataManager(sc_id).addView(projectFile.getXmlName(), view);
             if (view.type == ViewBean.VIEW_TYPE_WIDGET_BUTTON
                     && projectFile.fileType == ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY) {
@@ -276,7 +276,7 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
         }
     }
 
-    private ArrayList<ViewBean> a(String presetName, int requestCode) {
+    private ArrayList<ViewBean> getPresetViews(String presetName, int requestCode) {
         ArrayList<ViewBean> views = new ArrayList<>();
         return switch (requestCode) {
             case 276 -> PresetLayoutFactory.getActivityPresetViews(presetName);
@@ -286,7 +286,7 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
         };
     }
 
-    private String a(int viewType, String xmlName) {
+    private String generateUniqueViewId(int viewType, String xmlName) {
         String b = SketchwarePaths.getWidgetTypeName(viewType);
         StringBuilder sb = new StringBuilder();
         sb.append(b);
@@ -315,7 +315,7 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
         }
     }
 
-    private int a(ProjectFileBean projectFileBean) {
+    private int getRequestCode(ProjectFileBean projectFileBean) {
         if (selectedTab == 0) {
             return 276;
         }
@@ -426,7 +426,7 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
                 itemBinding.imgPresetSetting.setOnClickListener(v -> {
                     if (!UIHelper.isClickThrottled()) {
                         selectedItem = getLayoutPosition();
-                        int requestCode = a(ProjectDataManager.getFileManager(sc_id).getActivities().get(getLayoutPosition()));
+                        int requestCode = getRequestCode(ProjectDataManager.getFileManager(sc_id).getActivities().get(getLayoutPosition()));
                         Intent intent = new Intent(getApplicationContext(), PresetSettingActivity.class);
                         intent.putExtra("request_code", requestCode);
                         intent.putExtra("edit_mode", true);
