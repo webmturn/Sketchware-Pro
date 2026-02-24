@@ -143,11 +143,11 @@ public class PaletteBlock extends LinearLayout {
 
     public void setDragEnabled(boolean dragEnabled) {
         if (dragEnabled) {
-            binding.scroll.b();
-            binding.scrollHorizontal.b();
+            binding.scroll.enableScroll();
+            binding.scrollHorizontal.enableScroll();
         } else {
-            binding.scroll.a();
-            binding.scrollHorizontal.a();
+            binding.scroll.disableScroll();
+            binding.scrollHorizontal.disableScroll();
         }
     }
 

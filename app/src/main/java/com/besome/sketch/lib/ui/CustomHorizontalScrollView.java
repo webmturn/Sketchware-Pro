@@ -20,11 +20,11 @@ public class CustomHorizontalScrollView extends HorizontalScrollView {
     super(paramContext, paramAttributeSet);
   }
   
-  public void a() {
+  public void disableScroll() {
     this.scrollEnabled = false;
   }
   
-  public void b() {
+  public void enableScroll() {
     this.scrollEnabled = true;
   }
   
@@ -36,7 +36,7 @@ public class CustomHorizontalScrollView extends HorizontalScrollView {
     super.onScrollChanged(paramInt1, paramInt2, paramInt3, paramInt4);
     a a1 = this.scrollChangedListener;
     if (a1 != null)
-      a1.a(paramInt1, paramInt2, paramInt3, paramInt4); 
+      a1.onScrollChanged(paramInt1, paramInt2, paramInt3, paramInt4); 
   }
   
   public boolean onTouchEvent(MotionEvent paramMotionEvent) {
@@ -52,6 +52,6 @@ public class CustomHorizontalScrollView extends HorizontalScrollView {
   }
   
   public static interface a {
-    void a(int param1Int1, int param1Int2, int param1Int3, int param1Int4);
+    void onScrollChanged(int param1Int1, int param1Int2, int param1Int3, int param1Int4);
   }
 }

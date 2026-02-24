@@ -247,9 +247,9 @@ public class PaletteWidget extends LinearLayout {
 
     public void setScrollEnabled(boolean scrollEnabled) {
         if (scrollEnabled) {
-            scrollView.b();
+            scrollView.enableScroll();
         } else {
-            scrollView.a();
+            scrollView.disableScroll();
         }
     }
 

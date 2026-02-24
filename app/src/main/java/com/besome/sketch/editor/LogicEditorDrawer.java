@@ -38,9 +38,9 @@ public class LogicEditorDrawer extends LinearLayout {
 
     public void setDragEnabled(boolean dragEnabled) {
         if (dragEnabled) {
-            scrollView.b();
+            scrollView.enableScroll();
         } else {
-            scrollView.a();
+            scrollView.disableScroll();
         }
     }
 

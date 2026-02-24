@@ -18,11 +18,11 @@ public class CustomScrollView extends ScrollView {
     super(paramContext, paramAttributeSet);
   }
   
-  public void a() {
+  public void disableScroll() {
     this.scrollEnabled = false;
   }
   
-  public void b() {
+  public void enableScroll() {
     this.scrollEnabled = true;
   }
   
