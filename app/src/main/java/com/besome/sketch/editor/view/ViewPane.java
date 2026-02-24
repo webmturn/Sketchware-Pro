@@ -205,8 +205,8 @@ public class ViewPane extends RelativeLayout {
         if (viewBean.id.charAt(0) == '_') {
             findViewWithTag = findViewWithTag(viewBean.id);
         }
-        String str = viewBean.preParent;
-        if (str != null && !str.isEmpty() && !viewBean.parent.equals(viewBean.preParent)) {
+        String preParent = viewBean.preParent;
+        if (preParent != null && !preParent.isEmpty() && !viewBean.parent.equals(viewBean.preParent)) {
             ViewGroup viewGroup = rootLayout.findViewWithTag(viewBean.preParent);
             viewGroup.removeView(findViewWithTag);
             ((ScrollContainer) viewGroup).reindexChildren();
@@ -353,7 +353,7 @@ public class ViewPane extends RelativeLayout {
 
     private void updateItemView(View view, ViewBean viewBean) {
         ImageBean imageBean;
-        String str;
+        String resName;
         var injectHandler = new InjectAttributeHandler(viewBean);
         if (viewBean.id.charAt(0) == '_') {
             LayoutParams layoutParams = new LayoutParams(
@@ -386,7 +386,7 @@ public class ViewPane extends RelativeLayout {
                 layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
             }
             view.setLayoutParams(layoutParams);
-            if (viewBean.getClassInfo().isExactType("FloatingActionButton") && (imageBean = viewBean.image) != null && (str = imageBean.resName) != null && !str.isEmpty()) {
+            if (viewBean.getClassInfo().isExactType("FloatingActionButton") && (imageBean = viewBean.image) != null && (resName = imageBean.resName) != null && !resName.isEmpty()) {
                 try {
                     crashlytics.log("ViewPane: trying to set image to FAB");
                     FloatingActionButton fab = (FloatingActionButton) view;
@@ -1262,11 +1262,11 @@ public class ViewPane extends RelativeLayout {
     }
 
     private void updateTextView(TextView textView, ViewBean viewBean) {
-        String str = viewBean.text.text;
-        if (str != null && str.contains("\\n")) {
-            str = viewBean.text.text.replaceAll("\\\\n", "\n");
+        String textContent = viewBean.text.text;
+        if (textContent != null && textContent.contains("\\n")) {
+            textContent = viewBean.text.text.replaceAll("\\\\n", "\n");
         }
-        textView.setText(str.startsWith(stringsStart) ? getXmlString(str) : str);
+        textView.setText(textContent.startsWith(stringsStart) ? getXmlString(textContent) : textContent);
         String textFont = new InjectAttributeHandler(viewBean).getAttributeValueOf("fontFamily");
         if (textFont != null && !textFont.isEmpty()) {
             if (textFont.startsWith("@font/")) {
@@ -1327,8 +1327,8 @@ public class ViewPane extends RelativeLayout {
     }
 
     private void updateEditText(EditText editText, ViewBean viewBean) {
-        String str = viewBean.text.hint;
-        editText.setHint(str.startsWith(stringsStart) ? getXmlString(str) : str);
+        String hintText = viewBean.text.hint;
+        editText.setHint(hintText.startsWith(stringsStart) ? getXmlString(hintText) : hintText);
         if (defaultHintColor == 0) {
             defaultHintColor = editText.getHintTextColors().getDefaultColor();
         }

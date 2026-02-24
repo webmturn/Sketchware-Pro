@@ -270,7 +270,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
-        String str;
+        String parentId;
         int actionMasked = motionEvent.getActionMasked();
         if (motionEvent.getPointerId(motionEvent.getActionIndex()) > 0) {
             return true;
@@ -411,7 +411,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
                                 idMappings.put(next.id, next.id);
                             }
                             next.id = idMappings.get(next.id);
-                            if (widgetViews.indexOf(next) != 0 && (str = next.parent) != null && !str.isEmpty()) {
+                            if (widgetViews.indexOf(next) != 0 && (parentId = next.parent) != null && !parentId.isEmpty()) {
                                 next.parent = idMappings.get(next.parent);
                             }
                             ProjectDataManager.getProjectDataManager(scId).addView(xmlName, next);
@@ -770,13 +770,13 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         return y < locationOnScreen[1] + viewPane.getHeight() * viewPane.getScaleY();
     }
 
-    private void deleteWidgetFromCollection(String str) {
+    private void deleteWidgetFromCollection(String widgetName) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(getContext());
         dialog.setTitle(getString(R.string.view_widget_favorites_delete_title));
         dialog.setIcon(R.drawable.ic_mtrl_delete);
         dialog.setMessage(getString(R.string.view_widget_favorites_delete_message));
         dialog.setPositiveButton(getString(R.string.common_word_delete), (v, which) -> {
-            WidgetCollectionManager.getInstance().removeWidget(str, true);
+            WidgetCollectionManager.getInstance().removeWidget(widgetName, true);
             setFavoriteData(WidgetCollectionManager.getInstance().getWidgets());
             v.dismiss();
         });
@@ -793,10 +793,10 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         if (animatorTranslateX.isRunning()) animatorTranslateX.cancel();
     }
 
-    private void setPreviewColors(String str) {
-        bgStatus.setBackgroundColor(ProjectFile.getColor(str, ProjectFile.COLOR_PRIMARY_DARK));
-        imgPhoneTopBg.setBackgroundColor(ProjectFile.getColor(str, ProjectFile.COLOR_PRIMARY_DARK));
-        toolbar.setBackgroundColor(ProjectFile.getColor(str, ProjectFile.COLOR_PRIMARY));
+    private void setPreviewColors(String scId) {
+        bgStatus.setBackgroundColor(ProjectFile.getColor(scId, ProjectFile.COLOR_PRIMARY_DARK));
+        imgPhoneTopBg.setBackgroundColor(ProjectFile.getColor(scId, ProjectFile.COLOR_PRIMARY_DARK));
+        toolbar.setBackgroundColor(ProjectFile.getColor(scId, ProjectFile.COLOR_PRIMARY));
     }
 
     private void showDeleteView(boolean z, boolean isCustomWidget) {
@@ -822,11 +822,11 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         }
     }
 
-    public void initialize(String str, ProjectFileBean projectFileBean) {
-        scId = str;
-        setPreviewColors(str);
+    public void initialize(String projectId, ProjectFileBean projectFileBean) {
+        scId = projectId;
+        setPreviewColors(projectId);
         if (viewPane != null) {
-            viewPane.initialize(str, false);
+            viewPane.initialize(projectId, false);
         }
         this.projectFileBean = projectFileBean;
         xmlName = projectFileBean.getXmlName();
@@ -840,7 +840,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
             hasToolbar = projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_TOOLBAR);
             isFullscreen = projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FULLSCREEN);
             if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB)) {
-                addFab(ProjectDataManager.getProjectDataManager(str).getFabView(projectFileBean.getXmlName()));
+                addFab(ProjectDataManager.getProjectDataManager(projectId).getFabView(projectFileBean.getXmlName()));
             }
         } else {
             hasToolbar = false;
@@ -932,8 +932,8 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         isLayoutChanged = false;
     }
 
-    public void addWidgetLayout(PaletteWidget.LayoutType aVar, String str) {
-        View widget = paletteWidget.addLayout(aVar, str);
+    public void addWidgetLayout(PaletteWidget.LayoutType aVar, String layoutName) {
+        View widget = paletteWidget.addLayout(aVar, layoutName);
         widget.setClickable(true);
         widget.setOnTouchListener(this);
     }
@@ -960,8 +960,8 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         return view instanceof IconBase;
     }
 
-    private void addFavoriteViews(String str, ArrayList<ViewBean> arrayList) {
-        View a2 = paletteFavorite.addWidgetCollection(str, arrayList);
+    private void addFavoriteViews(String collectionName, ArrayList<ViewBean> widgetBeans) {
+        View a2 = paletteFavorite.addWidgetCollection(collectionName, widgetBeans);
         a2.setClickable(true);
         a2.setOnTouchListener(this);
     }
