@@ -121,12 +121,11 @@ public class SelectableItemBean extends ReflectiveToString implements Parcelable
     }
 
     public SelectableItemBean(Parcel parcel) {
-        boolean z = false;
         isSelected = parcel.readInt() != 0;
         type = parcel.readInt();
         name = parcel.readString();
         desc = parcel.readString();
-        isNew = parcel.readInt() != 0 || z;
+        isNew = parcel.readInt() != 0;
         reserved1 = parcel.readInt();
         reserved2 = parcel.readInt();
         reserved3 = parcel.readInt();

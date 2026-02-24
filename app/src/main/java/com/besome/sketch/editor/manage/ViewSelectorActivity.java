@@ -296,14 +296,14 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
         String sb2 = sb.toString();
         ArrayList<ViewBean> d = ProjectDataManager.getProjectDataManager(sc_id).getViews(xmlName);
         while (true) {
-            boolean z = false;
+            boolean isDuplicate = false;
             for (ViewBean viewBean : d) {
                 if (sb2.equals(viewBean.id)) {
-                    z = true;
+                    isDuplicate = true;
                     break;
                 }
             }
-            if (!z) {
+            if (!isDuplicate) {
                 return sb2;
             }
             sb = new StringBuilder();

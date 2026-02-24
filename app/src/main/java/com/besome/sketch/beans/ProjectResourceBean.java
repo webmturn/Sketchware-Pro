@@ -55,7 +55,6 @@ public class ProjectResourceBean extends SelectableBean implements Parcelable {
         resType = parcel.readInt();
         resName = parcel.readString();
         resFullName = parcel.readString();
-        boolean z = true;
         isEdited = parcel.readInt() != 0;
         isDuplicateCollection = parcel.readInt() != 0;
         curSoundPosition = parcel.readInt();
@@ -64,7 +63,7 @@ public class ProjectResourceBean extends SelectableBean implements Parcelable {
         flipVertical = parcel.readInt();
         flipHorizontal = parcel.readInt();
         savedPos = parcel.readInt();
-        isNew = parcel.readInt() != 0 && z;
+        isNew = parcel.readInt() != 0;
     }
 
     public static Parcelable.Creator<ProjectResourceBean> getCreator() {

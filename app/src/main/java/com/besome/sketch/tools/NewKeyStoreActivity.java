@@ -98,22 +98,22 @@ public class NewKeyStoreActivity extends BaseAppCompatActivity implements OnClic
 
             if (!countryValidator.isValid()) return;
 
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append("CN=");
-            stringBuilder.append(Helper.getText(commonName));
-            stringBuilder.append("OU=");
-            stringBuilder.append(Helper.getText(organizationalUnit));
-            stringBuilder.append("O=");
-            stringBuilder.append(Helper.getText(organization));
-            stringBuilder.append("L=");
-            stringBuilder.append(Helper.getText(locality));
-            stringBuilder.append("ST=");
-            stringBuilder.append(Helper.getText(state));
-            stringBuilder.append("C=");
-            stringBuilder.append(Helper.getText(country));
+            StringBuilder dnBuilder = new StringBuilder();
+            dnBuilder.append("CN=");
+            dnBuilder.append(Helper.getText(commonName));
+            dnBuilder.append("OU=");
+            dnBuilder.append(Helper.getText(organizationalUnit));
+            dnBuilder.append("O=");
+            dnBuilder.append(Helper.getText(organization));
+            dnBuilder.append("L=");
+            dnBuilder.append(Helper.getText(locality));
+            dnBuilder.append("ST=");
+            dnBuilder.append(Helper.getText(state));
+            dnBuilder.append("C=");
+            dnBuilder.append(Helper.getText(country));
 
             try {
-                keyStoreManager.generateAndSaveKeyStore(SketchwarePaths.getKeystoreFilePath(), stringBuilder.toString(), validityInYears, Helper.getText(alias), text);
+                keyStoreManager.generateAndSaveKeyStore(SketchwarePaths.getKeystoreFilePath(), dnBuilder.toString(), validityInYears, Helper.getText(alias), text);
                 showDoneDialog(true, text);
             } catch (Exception e) {
                 Log.e("NewKeyStoreActivity", e.getMessage(), e);

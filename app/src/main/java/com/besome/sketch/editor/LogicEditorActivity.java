@@ -1233,13 +1233,13 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
         if (blockBean.opCode.equals("definedFunc")) {
             Iterator<Pair<String, String>> it = ProjectDataManager.getProjectDataManager(scId).getMoreBlocks(projectFile.getJavaName()).iterator();
-            boolean z = false;
+            boolean found = false;
             while (it.hasNext()) {
                 if (blockBean.spec.equals(ReturnMoreblockManager.getMbName(it.next().second))) {
-                    z = true;
+                    found = true;
                 }
             }
-            return z;
+            return found;
         }
         return true;
     }
