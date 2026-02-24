@@ -107,18 +107,18 @@ public class ExtraBlocks {
     }
 
     public boolean isVariableUsed(int varId) {
-        ArrayList<Pair<Integer, String>> arrayList = projectDataManager.getVariables(javaName);
+        ArrayList<Pair<Integer, String>> variables = projectDataManager.getVariables(javaName);
         ArrayList<Integer> variableList = new ArrayList<>();
-        for (Pair<Integer, String> intStrPair : arrayList) {
+        for (Pair<Integer, String> intStrPair : variables) {
             variableList.add(intStrPair.first);
         }
         return variableList.contains(varId);
     }
 
     public boolean isListUsed(int listId) {
-        ArrayList<Pair<Integer, String>> arrayList = projectDataManager.getListVariables(javaName);
+        ArrayList<Pair<Integer, String>> listVars = projectDataManager.getListVariables(javaName);
         ArrayList<Integer> listVar = new ArrayList<>();
-        for (Pair<Integer, String> intStrPair : arrayList) {
+        for (Pair<Integer, String> intStrPair : listVars) {
             listVar.add(intStrPair.first);
         }
         return listVar.contains(listId);
@@ -133,14 +133,14 @@ public class ExtraBlocks {
             return true;
         }
 
-        ArrayList<String> arrayList = new ArrayList<>();
+        ArrayList<String> varTypes = new ArrayList<>();
         for (String variableName : projectDataManager.getVariableNamesByType(javaName, 5)) {
             Matcher matcher = Pattern.compile("^(\\w+)[\\s]+(\\w+)").matcher(variableName);
             while (matcher.find()) {
-                arrayList.add(matcher.group(1));
+                varTypes.add(matcher.group(1));
             }
         }
-        return arrayList.contains(variable);
+        return varTypes.contains(variable);
     }
 
     public void eventBlocks() {
