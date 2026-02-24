@@ -43,9 +43,9 @@ public class ProjectDataStore {
   
   public BuildConfig buildConfig;
   
-  public ProjectDataStore(String str) {
+  public ProjectDataStore(String projectId) {
     clearAllData();
-    this.projectId = str;
+    this.projectId = projectId;
     this.fileUtil = new EncryptedFileUtil();
     this.gson = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
     this.buildConfig = new BuildConfig();
@@ -109,8 +109,8 @@ public class ProjectDataStore {
     return arrayList;
   }
   
-  public ComponentBean getComponent(String str, int index) {
-    return !this.componentMap.containsKey(str) ? null : ((ArrayList<ComponentBean>)this.componentMap.get(str)).get(index);
+  public ComponentBean getComponent(String fileName, int index) {
+    return !this.componentMap.containsKey(fileName) ? null : ((ArrayList<ComponentBean>)this.componentMap.get(fileName)).get(index);
   }
   
   public ArrayList<String> getAllIdentifiers(ProjectFileBean fileBean) {
@@ -135,11 +135,11 @@ public class ProjectDataStore {
     return (ArrayList)arrayList;
   }
   
-  public ArrayList<EventBean> getComponentEvents(String str, ComponentBean componentBean) {
-    if (!this.eventMap.containsKey(str))
+  public ArrayList<EventBean> getComponentEvents(String fileName, ComponentBean componentBean) {
+    if (!this.eventMap.containsKey(fileName))
       return new ArrayList<EventBean>(); 
     ArrayList<EventBean> arrayList = new ArrayList<>();
-    for (EventBean eventBean : this.eventMap.get(str)) {
+    for (EventBean eventBean : this.eventMap.get(fileName)) {
       if (eventBean.targetType == componentBean.type && eventBean.targetId.equals(componentBean.componentId))
         arrayList.add(eventBean); 
     } 
@@ -448,8 +448,8 @@ public class ProjectDataStore {
     } 
   }
   
-  public void initFab(String str) {
-    if (this.fabMap.containsKey(str))
+  public void initFab(String fileName) {
+    if (this.fabMap.containsKey(fileName))
       return; 
     ViewBean viewBean = new ViewBean("_fab", 16);
     LayoutBean layoutBean = viewBean.layout;
@@ -458,7 +458,7 @@ public class ProjectDataStore {
     layoutBean.marginRight = 16;
     layoutBean.marginBottom = 16;
     layoutBean.layoutGravity = 85;
-    this.fabMap.put(str, viewBean);
+    this.fabMap.put(fileName, viewBean);
   }
   
   public void addEvent(String fileName, int x, int y, String data, String extra) {
@@ -528,16 +528,16 @@ public class ProjectDataStore {
     } 
   }
   
-  public void addEventBean(String str, EventBean eventBean) {
-    if (!this.eventMap.containsKey(str))
-      this.eventMap.put(str, new ArrayList<EventBean>()); 
-    ((ArrayList<EventBean>)this.eventMap.get(str)).add(eventBean);
+  public void addEventBean(String fileName, EventBean eventBean) {
+    if (!this.eventMap.containsKey(fileName))
+      this.eventMap.put(fileName, new ArrayList<EventBean>()); 
+    ((ArrayList<EventBean>)this.eventMap.get(fileName)).add(eventBean);
   }
   
-  public void addView(String str, ViewBean viewBean) {
-    if (!this.viewMap.containsKey(str))
-      this.viewMap.put(str, new ArrayList<ViewBean>()); 
-    ((ArrayList<ViewBean>)this.viewMap.get(str)).add(viewBean);
+  public void addView(String fileName, ViewBean viewBean) {
+    if (!this.viewMap.containsKey(fileName))
+      this.viewMap.put(fileName, new ArrayList<ViewBean>()); 
+    ((ArrayList<ViewBean>)this.viewMap.get(fileName)).add(viewBean);
   }
   
   public void addMoreBlock(String fileName, String data, String extra) {
@@ -720,11 +720,11 @@ public class ProjectDataStore {
     return "";
   }
   
-  public ArrayList<String> getComponentIdsByType(String str, int index) {
+  public ArrayList<String> getComponentIdsByType(String fileName, int index) {
     ArrayList<String> componentIds = new ArrayList<>();
-    if (!this.componentMap.containsKey(str))
+    if (!this.componentMap.containsKey(fileName))
       return componentIds; 
-    ArrayList arrayList = this.componentMap.get(str);
+    ArrayList arrayList = this.componentMap.get(fileName);
     if (arrayList == null)
       return componentIds; 
     for (ComponentBean componentBean : (ArrayList<ComponentBean>)arrayList) {
@@ -734,15 +734,15 @@ public class ProjectDataStore {
     return componentIds;
   }
   
-  public ArrayList<ViewBean> getViewWithChildren(String str, ViewBean viewBean) {
+  public ArrayList<ViewBean> getViewWithChildren(String fileName, ViewBean viewBean) {
     ArrayList<ViewBean> arrayList = new ArrayList<>();
     arrayList.add(viewBean);
-    arrayList.addAll(getChildViews(this.viewMap.get(str), viewBean));
+    arrayList.addAll(getChildViews(this.viewMap.get(fileName), viewBean));
     return arrayList;
   }
   
-  public HashMap<String, ArrayList<BlockBean>> getBlockMap(String str) {
-    return !this.blockMap.containsKey(str) ? new HashMap<String, ArrayList<BlockBean>>() : this.blockMap.get(str);
+  public HashMap<String, ArrayList<BlockBean>> getBlockMap(String fileName) {
+    return !this.blockMap.containsKey(fileName) ? new HashMap<String, ArrayList<BlockBean>>() : this.blockMap.get(fileName);
   }
   
   public void clearAllData() {
@@ -866,15 +866,15 @@ public class ProjectDataStore {
     ((ArrayList)this.listMap.get(fileName)).add(pair);
   }
   
-  public void removeComponent(String str, ComponentBean componentBean) {
-    if (!this.componentMap.containsKey(str))
+  public void removeComponent(String fileName, ComponentBean componentBean) {
+    if (!this.componentMap.containsKey(fileName))
       return; 
-    ArrayList arrayList = this.componentMap.get(str);
+    ArrayList arrayList = this.componentMap.get(fileName);
     if (arrayList.indexOf(componentBean) < 0)
       return; 
     arrayList.remove(componentBean);
-    removeEventsByTarget(str, componentBean.componentId);
-    removeBlockReferences(str, componentBean.getClassInfo(), componentBean.componentId, false);
+    removeEventsByTarget(fileName, componentBean.componentId);
+    removeBlockReferences(fileName, componentBean.getClassInfo(), componentBean.componentId, false);
     this.buildConfig.constVarComponent.handleDeleteComponent(componentBean.componentId);
   }
   
@@ -971,11 +971,11 @@ public class ProjectDataStore {
     return null;
   }
   
-  public ArrayList<String> getListNames(String str) {
+  public ArrayList<String> getListNames(String fileName) {
     ArrayList<String> listNames = new ArrayList<>();
-    if (!this.listMap.containsKey(str))
+    if (!this.listMap.containsKey(fileName))
       return listNames; 
-    ArrayList arrayList = this.listMap.get(str);
+    ArrayList arrayList = this.listMap.get(fileName);
     if (arrayList == null)
       return listNames; 
     Iterator iterator = arrayList.iterator();
@@ -984,11 +984,11 @@ public class ProjectDataStore {
     return listNames;
   }
   
-  public ArrayList<ComponentBean> getComponentsByType(String str, int index) {
+  public ArrayList<ComponentBean> getComponentsByType(String fileName, int index) {
     ArrayList<ComponentBean> filteredComponents = new ArrayList<>();
-    if (!this.componentMap.containsKey(str))
+    if (!this.componentMap.containsKey(fileName))
       return filteredComponents; 
-    ArrayList arrayList = this.componentMap.get(str);
+    ArrayList arrayList = this.componentMap.get(fileName);
     if (arrayList == null)
       return filteredComponents; 
     for (ComponentBean componentBean : (ArrayList<ComponentBean>)arrayList) {
@@ -1054,19 +1054,19 @@ public class ProjectDataStore {
     return false;
   }
   
-  public ArrayList<ViewBean> getViews(String str) {
-    ArrayList<ViewBean> views = this.viewMap.get(str);
+  public ArrayList<ViewBean> getViews(String fileName) {
+    ArrayList<ViewBean> views = this.viewMap.get(fileName);
     ArrayList<ViewBean> result = views;
     if (views == null)
       result = new ArrayList<>(); 
     return result;
   }
   
-  public ArrayList<String> getListNamesByType(String str, int index) {
+  public ArrayList<String> getListNamesByType(String fileName, int index) {
     ArrayList<String> filteredNames = new ArrayList<>();
-    if (!this.listMap.containsKey(str))
+    if (!this.listMap.containsKey(fileName))
       return filteredNames; 
-    ArrayList arrayList = this.listMap.get(str);
+    ArrayList arrayList = this.listMap.get(fileName);
     if (arrayList == null)
       return filteredNames; 
     for (Pair pair : (ArrayList<Pair>)arrayList) {
@@ -1166,15 +1166,15 @@ public class ProjectDataStore {
     return false;
   }
   
-  public ArrayList<ComponentBean> getComponents(String str) {
-    return !this.componentMap.containsKey(str) ? new ArrayList<ComponentBean>() : this.componentMap.get(str);
+  public ArrayList<ComponentBean> getComponents(String fileName) {
+    return !this.componentMap.containsKey(fileName) ? new ArrayList<ComponentBean>() : this.componentMap.get(fileName);
   }
   
-  public ArrayList<String> getVariableNamesByType(String str, int index) {
+  public ArrayList<String> getVariableNamesByType(String fileName, int index) {
     ArrayList<String> varNames = new ArrayList<>();
-    if (!this.variableMap.containsKey(str))
+    if (!this.variableMap.containsKey(fileName))
       return varNames; 
-    ArrayList arrayList = this.variableMap.get(str);
+    ArrayList arrayList = this.variableMap.get(fileName);
     if (arrayList == null)
       return varNames; 
     for (Pair pair : (ArrayList<Pair>)arrayList) {
@@ -1263,8 +1263,8 @@ public class ProjectDataStore {
     }
   }
   
-  public boolean hasComponentOfType(String str, int index) {
-    ArrayList arrayList = this.componentMap.get(str);
+  public boolean hasComponentOfType(String fileName, int index) {
+    ArrayList arrayList = this.componentMap.get(fileName);
     if (arrayList == null)
       return false; 
     Iterator iterator = arrayList.iterator();
@@ -1313,8 +1313,8 @@ public class ProjectDataStore {
     return false;
   }
   
-  public ArrayList<EventBean> getEvents(String str) {
-    return !this.eventMap.containsKey(str) ? new ArrayList<EventBean>() : this.eventMap.get(str);
+  public ArrayList<EventBean> getEvents(String fileName) {
+    return !this.eventMap.containsKey(fileName) ? new ArrayList<EventBean>() : this.eventMap.get(fileName);
   }
   
   public void loadViewFromData() {
@@ -1339,14 +1339,14 @@ public class ProjectDataStore {
     }
   }
   
-  public void removeComponentsByType(String str, int index) {
-    if (!this.componentMap.containsKey(str))
+  public void removeComponentsByType(String fileName, int index) {
+    if (!this.componentMap.containsKey(fileName))
       return; 
-    ArrayList<ComponentBean> arrayList = getComponentsByType(str, index);
+    ArrayList<ComponentBean> arrayList = getComponentsByType(fileName, index);
     if (arrayList != null && arrayList.size() > 0) {
       Iterator<ComponentBean> iterator = arrayList.iterator();
       while (iterator.hasNext())
-        removeComponent(str, iterator.next()); 
+        removeComponent(fileName, iterator.next()); 
     } 
   }
   
@@ -1372,10 +1372,10 @@ public class ProjectDataStore {
     return false;
   }
   
-  public ViewBean getFabView(String str) {
-    if (!this.fabMap.containsKey(str))
-      initFab(str); 
-    return this.fabMap.get(str);
+  public ViewBean getFabView(String fileName) {
+    if (!this.fabMap.containsKey(fileName))
+      initFab(fileName); 
+    return this.fabMap.get(fileName);
   }
   
   public void loadViewFromBackup() {
@@ -1410,8 +1410,8 @@ public class ProjectDataStore {
     return false;
   }
   
-  public ArrayList<Pair<String, String>> getMoreBlocks(String str) {
-    return this.moreBlockMap.containsKey(str) ? this.moreBlockMap.get(str) : new ArrayList<Pair<String, String>>();
+  public ArrayList<Pair<String, String>> getMoreBlocks(String fileName) {
+    return this.moreBlockMap.containsKey(fileName) ? this.moreBlockMap.get(fileName) : new ArrayList<Pair<String, String>>();
   }
   
   public void resetProject() {
@@ -1456,8 +1456,8 @@ public class ProjectDataStore {
     } 
   }
   
-  public ArrayList<Pair<Integer, String>> getListVariables(String str) {
-    return this.listMap.containsKey(str) ? this.listMap.get(str) : new ArrayList<Pair<Integer, String>>();
+  public ArrayList<Pair<Integer, String>> getListVariables(String fileName) {
+    return this.listMap.containsKey(fileName) ? this.listMap.get(fileName) : new ArrayList<Pair<Integer, String>>();
   }
   
   public void saveAllData() {
@@ -1491,8 +1491,8 @@ public class ProjectDataStore {
     } 
   }
   
-  public ArrayList<Pair<Integer, String>> getVariables(String str) {
-    return this.variableMap.containsKey(str) ? this.variableMap.get(str) : new ArrayList<Pair<Integer, String>>();
+  public ArrayList<Pair<Integer, String>> getVariables(String fileName) {
+    return this.variableMap.containsKey(fileName) ? this.variableMap.get(fileName) : new ArrayList<Pair<Integer, String>>();
   }
   
   public void saveAllBackup() {
@@ -1519,10 +1519,10 @@ public class ProjectDataStore {
       map.remove(data); 
   }
   
-  public void removeViewTypeEvents(String str) {
-    if (!this.eventMap.containsKey(str))
+  public void removeViewTypeEvents(String fileName) {
+    if (!this.eventMap.containsKey(fileName))
       return; 
-    ArrayList arrayList = this.eventMap.get(str);
+    ArrayList arrayList = this.eventMap.get(fileName);
     int i = arrayList.size();
     while (true) {
       int j = i - 1;
@@ -1561,12 +1561,12 @@ public class ProjectDataStore {
     } 
   }
   
-  public final void saveLogicFile(String str) {
+  public final void saveLogicFile(String filePath) {
     StringBuffer stringBuffer = new StringBuffer();
     serializeLogicData(stringBuffer);
     try {
       byte[] bytes = this.fileUtil.encryptString(stringBuffer.toString());
-      this.fileUtil.writeBytes(str, bytes);
+      this.fileUtil.writeBytes(filePath, bytes);
     } catch (Exception exception) {
       exception.printStackTrace();
     } 
@@ -1615,12 +1615,12 @@ public class ProjectDataStore {
     } 
   }
   
-  public final void saveViewFile(String str) {
+  public final void saveViewFile(String filePath) {
     StringBuffer stringBuffer = new StringBuffer();
     serializeViewData(stringBuffer);
     try {
       byte[] bytes = this.fileUtil.encryptString(stringBuffer.toString());
-      this.fileUtil.writeBytes(str, bytes);
+      this.fileUtil.writeBytes(filePath, bytes);
     } catch (Exception exception) {
       exception.printStackTrace();
     } 
@@ -1681,8 +1681,8 @@ public class ProjectDataStore {
     } 
   }
   
-  public boolean hasViewType(String str, int index) {
-    ArrayList arrayList = this.viewMap.get(str);
+  public boolean hasViewType(String fileName, int index) {
+    ArrayList arrayList = this.viewMap.get(fileName);
     boolean hasType = false;
     if (arrayList != null) {
       Iterator iterator = arrayList.iterator();
