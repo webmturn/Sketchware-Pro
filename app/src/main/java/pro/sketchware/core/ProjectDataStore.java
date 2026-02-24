@@ -418,9 +418,9 @@ public class ProjectDataStore {
     HashMap<String, ArrayList<EventBean>> tempEventMap = this.eventMap;
     if (tempEventMap != null)
       tempEventMap.clear(); 
-    HashMap<String, HashMap<String, ArrayList<BlockBean>>> hashMap = this.blockMap;
-    if (hashMap != null)
-      hashMap.clear(); 
+    HashMap<String, HashMap<String, ArrayList<BlockBean>>> tempBlockMap = this.blockMap;
+    if (tempBlockMap != null)
+      tempBlockMap.clear(); 
     StringBuffer contentBuffer = new StringBuffer();
     String sectionName = "";
     while (true) {
@@ -761,9 +761,9 @@ public class ProjectDataStore {
     HashMap<String, ArrayList<ComponentBean>> tempEventMap = this.componentMap;
     if (tempEventMap != null)
       tempEventMap.clear(); 
-    HashMap<String, ArrayList<EventBean>> hashMap = this.eventMap;
-    if (hashMap != null)
-      hashMap.clear(); 
+    HashMap<String, ArrayList<EventBean>> tempEvtMap = this.eventMap;
+    if (tempEvtMap != null)
+      tempEvtMap.clear(); 
     this.viewMap = new HashMap<String, ArrayList<ViewBean>>();
     this.blockMap = new HashMap<String, HashMap<String, ArrayList<BlockBean>>>();
     this.variableMap = new HashMap<String, ArrayList<Pair<Integer, String>>>();
@@ -829,9 +829,9 @@ public class ProjectDataStore {
     HashMap<String, ArrayList<ViewBean>> tempEventMap = this.viewMap;
     if (tempEventMap != null)
       tempEventMap.clear(); 
-    HashMap<String, ViewBean> hashMap = this.fabMap;
-    if (hashMap != null)
-      hashMap.clear(); 
+    HashMap<String, ViewBean> tempFabMap = this.fabMap;
+    if (tempFabMap != null)
+      tempFabMap.clear(); 
     StringBuffer contentBuffer = new StringBuffer();
     String sectionName = "";
     while (true) {
@@ -914,8 +914,8 @@ public class ProjectDataStore {
         buffer.append(viewContent);
         buffer.append("\n");
       }  
-    HashMap<String, ViewBean> hashMap = this.fabMap;
-    if (hashMap != null && hashMap.size() > 0)
+    HashMap<String, ViewBean> tempFabMap = this.fabMap;
+    if (tempFabMap != null && tempFabMap.size() > 0)
       for (Map.Entry<String, ViewBean> entry : this.fabMap.entrySet()) {
         ViewBean viewBean = (ViewBean)entry.getValue();
         if (viewBean == null)
@@ -1115,11 +1115,11 @@ public class ProjectDataStore {
           i = j;
           if (extra.equals(eventBean.eventName)) {
             events.remove(eventBean);
-            HashMap<String, HashMap<String, ArrayList<BlockBean>>> hashMap = this.blockMap;
+            HashMap<String, HashMap<String, ArrayList<BlockBean>>> tempBlockMap = this.blockMap;
             i = j;
-            if (hashMap != null) {
+            if (tempBlockMap != null) {
               i = j;
-              if (hashMap.get(fileName) != null) {
+              if (tempBlockMap.get(fileName) != null) {
                 HashMap tempEventMap = this.blockMap.get(fileName);
                 StringBuilder eventKeyBuilder = new StringBuilder();
                 eventKeyBuilder.append(eventBean.targetId);
