@@ -22,20 +22,20 @@ public class SoundCollectionManager extends BaseCollectionManager {
     return instance;
   }
   
-  public ProjectResourceBean getResourceByName(String str) {
+  public ProjectResourceBean getResourceByName(String name) {
     for (ProjectResourceBean projectResourceBean : getResources()) {
-      if (projectResourceBean.resName.equals(str))
+      if (projectResourceBean.resName.equals(name))
         return projectResourceBean; 
     } 
     return null;
   }
   
-  public void renameResource(ProjectResourceBean resourceBean, String str, boolean flag) {
+  public void renameResource(ProjectResourceBean resourceBean, String newName, boolean flag) {
     int i = this.collections.size();
     while (--i >= 0) {
       CollectionBean collectionBean = this.collections.get(i);
       if (collectionBean.name.equals(resourceBean.resName)) {
-        collectionBean.name = str;
+        collectionBean.name = newName;
         break;
       } 
     } 
@@ -43,11 +43,11 @@ public class SoundCollectionManager extends BaseCollectionManager {
       saveCollections(); 
   }
   
-  public void addResource(String str, ProjectResourceBean resourceBean) throws CompileException {
-    addResource(str, resourceBean, true);
+  public void addResource(String sourcePath, ProjectResourceBean resourceBean) throws CompileException {
+    addResource(sourcePath, resourceBean, true);
   }
   
-  public void addResource(String str, ProjectResourceBean resourceBean, boolean flag) throws CompileException {
+  public void addResource(String sourcePath, ProjectResourceBean resourceBean, boolean flag) throws CompileException {
     if (this.collections == null) initialize();
     ArrayList<String> duplicates = new ArrayList<String>();
     for (CollectionBean bean : this.collections) {
@@ -77,7 +77,7 @@ public class SoundCollectionManager extends BaseCollectionManager {
         throw new CompileException("fail_to_copy");
       }
     } else {
-      String srcPath = SketchwarePaths.getImagesPath() + java.io.File.separator + str + java.io.File.separator + resourceBean.resFullName;
+      String srcPath = SketchwarePaths.getImagesPath() + java.io.File.separator + sourcePath + java.io.File.separator + resourceBean.resFullName;
       if (!this.fileUtil.exists(srcPath)) {
         throw new CompileException("file_no_exist");
       }
@@ -228,10 +228,10 @@ public class SoundCollectionManager extends BaseCollectionManager {
     this.dataDirPath = stringBuilder.toString();
   }
   
-  public boolean hasResource(String str) {
+  public boolean hasResource(String name) {
     Iterator<ProjectResourceBean> iterator = getResources().iterator();
     while (iterator.hasNext()) {
-      if (((ProjectResourceBean)iterator.next()).resName.equals(str))
+      if (((ProjectResourceBean)iterator.next()).resName.equals(name))
         return true; 
     } 
     return false;

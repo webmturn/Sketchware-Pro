@@ -35,58 +35,58 @@ public class ProjectListManager {
         return arrayList;
     }
 
-    public static HashMap<String, Object> getProjectByPackageName(String str) {
+    public static HashMap<String, Object> getProjectByPackageName(String packageName) {
         for (HashMap<String, Object> stringObjectHashMap : listProjects()) {
-            if (MapValueHelper.getString(stringObjectHashMap, "my_sc_pkg_name").equals(str) && MapValueHelper.getInt(stringObjectHashMap, "proj_type") == 1) {
+            if (MapValueHelper.getString(stringObjectHashMap, "my_sc_pkg_name").equals(packageName) && MapValueHelper.getInt(stringObjectHashMap, "proj_type") == 1) {
                 return stringObjectHashMap;
             }
         }
         return null;
     }
 
-    public static void deleteProject(Context context, String str) {
-        File file = new File(SketchwarePaths.getProjectListPath(str));
+    public static void deleteProject(Context context, String projectId) {
+        File file = new File(SketchwarePaths.getProjectListPath(projectId));
         if (file.exists()) {
             EncryptedFileUtil oBVar = new EncryptedFileUtil();
             oBVar.deleteDirectory(file);
-            oBVar.deleteDirectoryByPath(SketchwarePaths.getMyscPath(str));
+            oBVar.deleteDirectoryByPath(SketchwarePaths.getMyscPath(projectId));
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append(SketchwarePaths.getImagesPath());
             stringBuilder.append(File.separator);
-            stringBuilder.append(str);
+            stringBuilder.append(projectId);
             oBVar.deleteDirectoryByPath(stringBuilder.toString());
             stringBuilder = new StringBuilder();
             stringBuilder.append(SketchwarePaths.getSoundsPath());
             stringBuilder.append(File.separator);
-            stringBuilder.append(str);
+            stringBuilder.append(projectId);
             oBVar.deleteDirectoryByPath(stringBuilder.toString());
             stringBuilder = new StringBuilder();
             stringBuilder.append(SketchwarePaths.getFontsResourcePath());
             stringBuilder.append(File.separator);
-            stringBuilder.append(str);
+            stringBuilder.append(projectId);
             oBVar.deleteDirectoryByPath(stringBuilder.toString());
             stringBuilder = new StringBuilder();
             stringBuilder.append(SketchwarePaths.getIconsPath());
             stringBuilder.append(File.separator);
-            stringBuilder.append(str);
+            stringBuilder.append(projectId);
             oBVar.deleteDirectoryByPath(stringBuilder.toString());
-            oBVar.deleteDirectoryByPath(SketchwarePaths.getDataPath(str));
-            oBVar.deleteDirectoryByPath(SketchwarePaths.getBackupPath(str));
+            oBVar.deleteDirectoryByPath(SketchwarePaths.getDataPath(projectId));
+            oBVar.deleteDirectoryByPath(SketchwarePaths.getBackupPath(projectId));
             stringBuilder = new StringBuilder();
             stringBuilder.append("D01_");
-            stringBuilder.append(str);
+            stringBuilder.append(projectId);
             new SharedPrefsHelper(context, stringBuilder.toString()).clearAll();
             stringBuilder = new StringBuilder();
             stringBuilder.append("D02_");
-            stringBuilder.append(str);
+            stringBuilder.append(projectId);
             new SharedPrefsHelper(context, stringBuilder.toString()).clearAll();
             stringBuilder = new StringBuilder();
             stringBuilder.append("D03_");
-            stringBuilder.append(str);
+            stringBuilder.append(projectId);
             new SharedPrefsHelper(context, stringBuilder.toString()).clearAll();
             stringBuilder = new StringBuilder();
             stringBuilder.append("D04_");
-            stringBuilder.append(str);
+            stringBuilder.append(projectId);
             new SharedPrefsHelper(context, stringBuilder.toString()).clearAll();
         }
     }
@@ -97,17 +97,17 @@ public class ProjectListManager {
         }
     }
 
-    public static void saveProject(String str, HashMap<String, Object> hashMap) {
+    public static void saveProject(String projectId, HashMap<String, Object> hashMap) {
         File file = new File(SketchwarePaths.getProjectListBasePath());
         if (!file.exists()) {
             file.mkdirs();
         }
-        str = SketchwarePaths.getProjectListPath(str);
-        str = str + File.separator + "project";
+        String path = SketchwarePaths.getProjectListPath(projectId);
+        path = path + File.separator + "project";
         String a = GsonMapHelper.toJson(hashMap);
         EncryptedFileUtil oBVar = new EncryptedFileUtil();
         try {
-            oBVar.writeBytes(str, oBVar.encryptString(a));
+            oBVar.writeBytes(path, oBVar.encryptString(a));
         } catch (Throwable e) {
             Log.e("ProjectListManager", e.getMessage(), e);
         }
@@ -121,19 +121,19 @@ public class ProjectListManager {
         return String.valueOf(parseInt);
     }
 
-    public static HashMap<String, Object> getProjectById(String str) {
+    public static HashMap<String, Object> getProjectById(String projectId) {
         Throwable e;
         EncryptedFileUtil oBVar = new EncryptedFileUtil();
         HashMap<String, Object> hashMap = null;
         try {
-            String c = SketchwarePaths.getProjectListPath(str);
+            String c = SketchwarePaths.getProjectListPath(projectId);
             if (!new File(c).exists()) {
                 return null;
             }
             String path = c + File.separator + "project";
             HashMap<String, Object> a = GsonMapHelper.fromJson(oBVar.decryptToString(oBVar.readFileBytes(path)));
             try {
-                return !MapValueHelper.getString(a, "sc_id").equals(str) ? null : a;
+                return !MapValueHelper.getString(a, "sc_id").equals(projectId) ? null : a;
             } catch (Exception e2) {
                 e = e2;
                 hashMap = a;
@@ -147,14 +147,14 @@ public class ProjectListManager {
         }
     }
 
-    public static void updateProject(String str, HashMap<String, Object> hashMap) {
-        File file = new File(SketchwarePaths.getProjectListPath(str));
+    public static void updateProject(String projectId, HashMap<String, Object> hashMap) {
+        File file = new File(SketchwarePaths.getProjectListPath(projectId));
         if (file.exists()) {
             String path = file + File.separator + "project";
             EncryptedFileUtil fileUtil = new EncryptedFileUtil();
             try {
                 HashMap<String, Object> a = GsonMapHelper.fromJson(fileUtil.decryptToString(fileUtil.readFileBytes(path)));
-                if (MapValueHelper.getString(a, "sc_id").equals(str)) {
+                if (MapValueHelper.getString(a, "sc_id").equals(projectId)) {
                     if (hashMap.containsKey("isIconAdaptive")) {
                         a.put("isIconAdaptive", hashMap.get("isIconAdaptive"));
                     }
