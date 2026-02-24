@@ -227,10 +227,10 @@ public class ViewFilesAdapter extends BaseFragment {
     
     public final ViewFilesAdapter outerAdapter;
     
-    public FileListAdapter(ViewFilesAdapter this$0, RecyclerView param1RecyclerView) {
+    public FileListAdapter(ViewFilesAdapter this$0, RecyclerView recyclerView) {
       this.outerAdapter = this$0;
-      if (param1RecyclerView.getLayoutManager() instanceof LinearLayoutManager)
-        param1RecyclerView.addOnScrollListener(new ViewFileScrollListener(this, this$0)); 
+      if (recyclerView.getLayoutManager() instanceof LinearLayoutManager)
+        recyclerView.addOnScrollListener(new ViewFileScrollListener(this, this$0)); 
     }
     
     public int getItemCount() {
@@ -263,8 +263,8 @@ public class ViewFilesAdapter extends BaseFragment {
       holder.deleteIcon.setImageResource(R.drawable.ic_trashcan_white_48dp);
     }
     
-    public ViewHolder onCreateViewHolder(ViewGroup param1ViewGroup, int position) {
-      return new ViewHolder(this, LayoutInflater.from(param1ViewGroup.getContext()).inflate(R.layout.manage_view_custom_list_item, param1ViewGroup, false));
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int position) {
+      return new ViewHolder(this, LayoutInflater.from(parent.getContext()).inflate(R.layout.manage_view_custom_list_item, parent, false));
     }
     
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -282,18 +282,18 @@ public class ViewFilesAdapter extends BaseFragment {
       
       public final ViewFilesAdapter.FileListAdapter adapterRef;
       
-      public ViewHolder(ViewFilesAdapter.FileListAdapter this$0, View param2View) {
-        super(param2View);
+      public ViewHolder(ViewFilesAdapter.FileListAdapter this$0, View itemView) {
+        super(itemView);
         this.adapterRef = this$0;
-        this.checkbox = (CheckBox)param2View.findViewById(R.id.chk_select);
-        this.activityIcon = (ImageView)param2View.findViewById(R.id.img_activity);
-        this.screenName = (TextView)param2View.findViewById(R.id.tv_screen_name);
-        this.deleteContainer = (LinearLayout)param2View.findViewById(R.id.delete_img_container);
-        this.deleteIcon = (ImageView)param2View.findViewById(R.id.img_delete);
-        this.presetIcon = (ImageView)param2View.findViewById(R.id.img_preset_setting);
+        this.checkbox = (CheckBox)itemView.findViewById(R.id.chk_select);
+        this.activityIcon = (ImageView)itemView.findViewById(R.id.img_activity);
+        this.screenName = (TextView)itemView.findViewById(R.id.tv_screen_name);
+        this.deleteContainer = (LinearLayout)itemView.findViewById(R.id.delete_img_container);
+        this.deleteIcon = (ImageView)itemView.findViewById(R.id.img_delete);
+        this.presetIcon = (ImageView)itemView.findViewById(R.id.img_preset_setting);
         this.checkbox.setVisibility(View.GONE);
-        param2View.setOnClickListener(new ViewFileClickListener(this, this$0));
-        param2View.setOnLongClickListener(new ViewFileLongClickListener(this, this$0));
+        itemView.setOnClickListener(new ViewFileClickListener(this, this$0));
+        itemView.setOnLongClickListener(new ViewFileLongClickListener(this, this$0));
         this.presetIcon.setOnClickListener(new ViewFileEditClickListener(this, this$0));
       }
     }

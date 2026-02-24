@@ -159,8 +159,8 @@ public class FormatUtil {
     
     public int position;
     
-    public StringScanner(String param1String) {
-      this.input = param1String;
+    public StringScanner(String input) {
+      this.input = input;
       this.position = 0;
     }
     
