@@ -105,14 +105,14 @@ public class ProjectsFragment extends PermissionFragment {
     @Override
     public void onPermissionDenied() {
         if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).s();
+            ((MainActivity) getActivity()).showStorageAccessDeniedSnackbar();
         }
     }
 
     @Override
     public void onSettingsDenied() {
         if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).s();
+            ((MainActivity) getActivity()).showStorageAccessDeniedSnackbar();
         }
     }
 
@@ -219,7 +219,7 @@ public class ProjectsFragment extends PermissionFragment {
         // Don't load project list without having permissions
         if (!hasStoragePermission()) {
             if (binding.swipeRefresh.isRefreshing()) binding.swipeRefresh.setRefreshing(false);
-            ((MainActivity) requireActivity()).s(); // ask for permissions
+            ((MainActivity) requireActivity()).showStorageAccessDeniedSnackbar(); // ask for permissions
             return;
         }
 

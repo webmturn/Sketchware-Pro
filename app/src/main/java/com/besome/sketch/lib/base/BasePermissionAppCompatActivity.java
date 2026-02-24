@@ -15,19 +15,19 @@ import pro.sketchware.R;
 
 public abstract class BasePermissionAppCompatActivity extends BaseAppCompatActivity {
 
-    public boolean f(int i) {
+    public boolean checkStoragePermission(int i) {
         boolean j = isStoragePermissionGranted();
         if (!j) {
-            i(i);
+            showPermissionRequestDialog(i);
         }
         return j;
     }
 
-    public abstract void g(int i);
+    public abstract void onStoragePermissionGranted(int i);
 
-    public abstract void h(int i);
+    public abstract void onOpenSettings(int i);
 
-    public void i(int i) {
+    public void showPermissionRequestDialog(int i) {
         if (!ThrottleTimer.isThrottled) {
             MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
             dialog.setTitle(Helper.getResString(R.string.common_message_permission_title_storage));
@@ -45,7 +45,7 @@ public abstract class BasePermissionAppCompatActivity extends BaseAppCompatActiv
                 }
             });
             dialog.setNegativeButton(Helper.getResString(R.string.common_word_cancel), (v, which) -> {
-                l();
+                onPermissionCancelled();
                 v.dismiss();
             });
             dialog.setOnDismissListener(dialog1 -> ThrottleTimer.isThrottled = false);
@@ -63,9 +63,9 @@ public abstract class BasePermissionAppCompatActivity extends BaseAppCompatActiv
                 && ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == 0;
     }
 
-    public abstract void l();
+    public abstract void onPermissionCancelled();
 
-    public abstract void m();
+    public abstract void onPermissionDeniedCancelled();
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -73,16 +73,16 @@ public abstract class BasePermissionAppCompatActivity extends BaseAppCompatActiv
         for (String str : permissions) {
             if (Manifest.permission.WRITE_EXTERNAL_STORAGE.equals(str)) {
                 if (grantResults.length > 0 && grantResults[0] == 0 && grantResults[1] == 0) {
-                    g(requestCode);
+                    onStoragePermissionGranted(requestCode);
                 } else {
-                    j(requestCode);
+                    showPermissionDeniedDialog(requestCode);
                     return;
                 }
             }
         }
     }
 
-    public void j(int i) {
+    public void showPermissionDeniedDialog(int i) {
         if (!ThrottleTimer.isThrottled) {
             MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
             dialog.setTitle(Helper.getResString(R.string.common_message_permission_title_storage));
@@ -90,12 +90,12 @@ public abstract class BasePermissionAppCompatActivity extends BaseAppCompatActiv
             dialog.setMessage(Helper.getResString(R.string.common_message_permission_storage1));
             dialog.setPositiveButton(Helper.getResString(R.string.common_word_settings), (v, which) -> {
                 if (!UIHelper.isClickThrottled()) {
-                    h(i);
+                    onOpenSettings(i);
                     v.dismiss();
                 }
             });
             dialog.setNegativeButton(Helper.getResString(R.string.common_word_cancel), (v, which) -> {
-                m();
+                onPermissionDeniedCancelled();
                 v.dismiss();
             });
             dialog.setOnDismissListener(dialog1 -> ThrottleTimer.isThrottled = false);

@@ -89,7 +89,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
 
     @Override
     // onRequestPermissionsResult but for Storage access only, and only when granted
-    public void g(int i) {
+    public void onStoragePermissionGranted(int i) {
         if (i == 9501) {
             allFilesAccessCheck();
 
@@ -100,21 +100,21 @@ public class MainActivity extends BasePermissionAppCompatActivity {
     }
 
     @Override
-    public void h(int i) {
+    public void onOpenSettings(int i) {
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         intent.setData(Uri.parse("package:" + getApplicationContext().getPackageName()));
         startActivity(intent);
     }
 
     @Override
-    public void l() {
+    public void onPermissionCancelled() {
     }
 
     @Override
-    public void m() {
+    public void onPermissionDeniedCancelled() {
     }
 
-    public void n() {
+    public void refreshProjects() {
         if (activeFragment instanceof ProjectsFragment) {
             projectsFragment.refreshProjectsList();
         }
@@ -467,7 +467,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
         dialog.show();
     }
 
-    public void s() {
+    public void showStorageAccessDeniedSnackbar() {
         if (storageAccessDenied == null || !storageAccessDenied.isShown()) {
             storageAccessDenied = Snackbar.make(binding.layoutCoordinator, Helper.getResString(R.string.common_message_permission_denied), Snackbar.LENGTH_INDEFINITE);
             storageAccessDenied.setAction(Helper.getResString(R.string.common_word_settings), v -> {
