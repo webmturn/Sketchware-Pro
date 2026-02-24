@@ -16,13 +16,13 @@ public class ProjectDataParser {
   
   public String eventKey;
   
-  public a dataType;
+  public DataType dataType;
   
   public Gson gson = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
   
   public ProjectDataParser(String paramString) throws Exception {
     try {
-      f(paramString);
+      parseKey(paramString);
       return;
     } catch (Exception exception) {
       throw exception;
@@ -67,39 +67,39 @@ public class ProjectDataParser {
     return result;
   }
   
-  public a a() {
+  public DataType getDataType() {
     return this.dataType;
   }
   
-  public <T> T a(String paramString) {
+  public <T> T parseData(String paramString) {
     switch (KeyboardSettingConstants.VALUES[this.dataType.ordinal()]) {
       default:
         return null;
       case 8:
         return (T)parseBlockBeans(this.gson, paramString);
       case 7:
-        return (T)e(paramString);
+        return (T)parseMoreBlockFunctions(paramString);
       case 6:
-        return (T)c(paramString);
+        return (T)parseEventBeans(paramString);
       case 5:
-        return (T)b(paramString);
+        return (T)parseComponentBeans(paramString);
       case 4:
-        return (T)g(paramString);
+        return (T)parseListVariables(paramString);
       case 3:
-        return (T)h(paramString);
+        return (T)parseVariables(paramString);
       case 2:
-        return (T)d(paramString);
+        return (T)parseFabViewBean(paramString);
       case 1:
         break;
     } 
     return (T)parseViewBeans(this.gson, paramString);
   }
   
-  public String b() {
+  public String getFileName() {
     return this.fileName;
   }
   
-  public ArrayList<ComponentBean> b(String paramString) {
+  public ArrayList<ComponentBean> parseComponentBeans(String paramString) {
     ArrayList<ComponentBean> result = new ArrayList<>();
     java.io.BufferedReader reader = null;
     try {
@@ -120,11 +120,11 @@ public class ProjectDataParser {
     return result;
   }
   
-  public String c() {
+  public String getEventKey() {
     return this.eventKey;
   }
   
-  public ArrayList<EventBean> c(String paramString) {
+  public ArrayList<EventBean> parseEventBeans(String paramString) {
     ArrayList<EventBean> result = new ArrayList<>();
     java.io.BufferedReader reader = null;
     try {
@@ -145,11 +145,11 @@ public class ProjectDataParser {
     return result;
   }
   
-  public ViewBean d(String paramString) {
+  public ViewBean parseFabViewBean(String paramString) {
     return (paramString.trim().length() <= 0 || paramString.trim().charAt(0) != '{') ? new ViewBean("_fab", 16) : (ViewBean)this.gson.fromJson(paramString, ViewBean.class);
   }
   
-  public ArrayList<Pair<String, String>> e(String paramString) {
+  public ArrayList<Pair<String, String>> parseMoreBlockFunctions(String paramString) {
     ArrayList<Pair<String, String>> result = new ArrayList<>();
     java.io.BufferedReader reader = null;
     try {
@@ -170,18 +170,18 @@ public class ProjectDataParser {
     return result;
   }
   
-  public final void f(String paramString) throws Exception {
+  public final void parseKey(String paramString) throws Exception {
     String str = paramString.trim();
     if (str.contains(".xml")) {
       int i = str.indexOf(".xml") + 4;
       this.fileName = str.substring(0, i);
       if (paramString.length() == i) {
-        this.dataType = ProjectDataParser.a.a;
+        this.dataType = ProjectDataParser.DataType.VIEW;
       } else {
         paramString = paramString.substring(i);
         if (paramString.charAt(0) == '_') {
           if (paramString.substring(1).equals("fab")) {
-            this.dataType = ProjectDataParser.a.b;
+            this.dataType = ProjectDataParser.DataType.FAB;
           } else {
             throw new Exception("invalid key : Unknown type string");
           } 
@@ -225,22 +225,22 @@ public class ProjectDataParser {
                 if (i != 2) {
                   if (i != 3) {
                     if (i != 4) {
-                      this.dataType = ProjectDataParser.a.h;
+                      this.dataType = ProjectDataParser.DataType.EVENT_BLOCK;
                       this.eventKey = paramString;
                     } else {
-                      this.dataType = ProjectDataParser.a.g;
+                      this.dataType = ProjectDataParser.DataType.MORE_BLOCK;
                     } 
                   } else {
-                    this.dataType = ProjectDataParser.a.f;
+                    this.dataType = ProjectDataParser.DataType.EVENT;
                   } 
                 } else {
-                  this.dataType = ProjectDataParser.a.e;
+                  this.dataType = ProjectDataParser.DataType.COMPONENT;
                 } 
               } else {
-                this.dataType = ProjectDataParser.a.d;
+                this.dataType = ProjectDataParser.DataType.LIST;
               } 
             } else {
-              this.dataType = ProjectDataParser.a.c;
+              this.dataType = ProjectDataParser.DataType.VARIABLE;
             } 
             return;
           } 
@@ -252,7 +252,7 @@ public class ProjectDataParser {
     } 
   }
   
-  public ArrayList<Pair<Integer, String>> g(String paramString) {
+  public ArrayList<Pair<Integer, String>> parseListVariables(String paramString) {
     ArrayList<Pair<Integer, String>> result = new ArrayList<>();
     java.io.BufferedReader reader = null;
     try {
@@ -273,7 +273,7 @@ public class ProjectDataParser {
     return result;
   }
   
-  public ArrayList<Pair<Integer, String>> h(String paramString) {
+  public ArrayList<Pair<Integer, String>> parseVariables(String paramString) {
     ArrayList<Pair<Integer, String>> result = new ArrayList<>();
     java.io.BufferedReader reader = null;
     try {
@@ -294,9 +294,9 @@ public class ProjectDataParser {
     return result;
   }
   
-  public enum a {
-    a, b, c, d, e, f, g, h;
+  public enum DataType {
+    VIEW, FAB, VARIABLE, LIST, COMPONENT, EVENT, MORE_BLOCK, EVENT_BLOCK;
     
-    public static final a[] i = new a[] { a, b, c, d, e, f, g, h };
+    public static final DataType[] VALUES = new DataType[] { VIEW, FAB, VARIABLE, LIST, COMPONENT, EVENT, MORE_BLOCK, EVENT_BLOCK };
   }
 }

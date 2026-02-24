@@ -1424,31 +1424,31 @@ public class ProjectDataStore {
       return; 
     try {
       ProjectDataParser ProjectDataParser = new ProjectDataParser(paramString1);
-      String str = ProjectDataParser.b();
-      ProjectDataParser.a a = ProjectDataParser.a();
-      switch (ScreenOrientationConstants.a[a.ordinal()]) {
+      String str = ProjectDataParser.getFileName();
+      ProjectDataParser.DataType dataType = ProjectDataParser.getDataType();
+      switch (ScreenOrientationConstants.a[dataType.ordinal()]) {
         default:
           return;
         case 8:
           if (!this.blockMap.containsKey(str)) {
             this.blockMap.put(str, new HashMap<String, ArrayList<BlockBean>>());
           } 
-          this.blockMap.get(str).put(ProjectDataParser.c(), (ArrayList<BlockBean>)ProjectDataParser.a(paramString2));
+          this.blockMap.get(str).put(ProjectDataParser.getEventKey(), (ArrayList<BlockBean>)ProjectDataParser.parseData(paramString2));
           break;
         case 7:
-          this.moreBlockMap.put(str, (ArrayList<Pair<String, String>>)ProjectDataParser.a(paramString2));
+          this.moreBlockMap.put(str, (ArrayList<Pair<String, String>>)ProjectDataParser.parseData(paramString2));
           break;
         case 6:
-          this.eventMap.put(str, (ArrayList<EventBean>)ProjectDataParser.a(paramString2));
+          this.eventMap.put(str, (ArrayList<EventBean>)ProjectDataParser.parseData(paramString2));
           break;
         case 5:
-          this.componentMap.put(str, (ArrayList<ComponentBean>)ProjectDataParser.a(paramString2));
+          this.componentMap.put(str, (ArrayList<ComponentBean>)ProjectDataParser.parseData(paramString2));
           break;
         case 4:
-          this.listMap.put(str, (ArrayList<Pair<Integer, String>>)ProjectDataParser.a(paramString2));
+          this.listMap.put(str, (ArrayList<Pair<Integer, String>>)ProjectDataParser.parseData(paramString2));
           break;
         case 3:
-          this.variableMap.put(str, (ArrayList<Pair<Integer, String>>)ProjectDataParser.a(paramString2));
+          this.variableMap.put(str, (ArrayList<Pair<Integer, String>>)ProjectDataParser.parseData(paramString2));
           break;
       } 
     } catch (Exception exception) {
@@ -1478,13 +1478,13 @@ public class ProjectDataStore {
   public void parseViewSection(String paramString1, String paramString2) {
     try {
       ProjectDataParser ProjectDataParser = new ProjectDataParser(paramString1);
-      String str = ProjectDataParser.b();
-      ProjectDataParser.a a = ProjectDataParser.a();
-      int i = ScreenOrientationConstants.a[a.ordinal()];
+      String str = ProjectDataParser.getFileName();
+      ProjectDataParser.DataType dataType = ProjectDataParser.getDataType();
+      int i = ScreenOrientationConstants.a[dataType.ordinal()];
       if (i == 1) {
-        this.viewMap.put(str, (ArrayList<ViewBean>)ProjectDataParser.a(paramString2));
+        this.viewMap.put(str, (ArrayList<ViewBean>)ProjectDataParser.parseData(paramString2));
       } else if (i == 2) {
-        this.fabMap.put(str, (ViewBean)ProjectDataParser.a(paramString2));
+        this.fabMap.put(str, (ViewBean)ProjectDataParser.parseData(paramString2));
       }
     } catch (Exception exception) {
       exception.printStackTrace();
