@@ -119,7 +119,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
                                 multipleImagesPicked = false;
                                 setImageFromUri(data.getData());
                                 if (O != null) {
-                                    O.a(1);
+                                    O.setBatchCount(1);
                                 }
                             } else {
                                 ClipData clipData = data.getClipData();
@@ -128,13 +128,13 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
                                     multipleImagesPicked = false;
                                     setImageFromUri(clipData.getItemAt(0).getUri());
                                     if (O != null) {
-                                        O.a(1);
+                                        O.setBatchCount(1);
                                     }
                                 } else {
                                     handleImagePickClipData(clipData);
                                     multipleImagesPicked = true;
                                     if (O != null) {
-                                        O.a(clipData.getItemCount());
+                                        O.setBatchCount(clipData.getItemCount());
                                     }
                                 }
                             }
@@ -167,7 +167,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
         ed_input_edittext.setPrivateImeOptions("defaultInputmode=english;");
         ed_input.setHint(getString(R.string.design_manager_image_hint_enter_image_name));
         O = new FileNameValidator(this, ed_input.getTextInputLayout(), BlockConstants.RESERVED_KEYWORDS, getReservedImageNames());
-        O.a(1);
+        O.setBatchCount(1);
         chk_collection.setText(R.string.design_manager_title_add_to_collection);
         tv_add_photo.setText(R.string.design_manager_image_title_add_image);
         preview.setOnClickListener(this);
@@ -194,7 +194,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
             imageScaleX = image.flipHorizontal;
             imageScaleY = image.flipVertical;
             O = new FileNameValidator(this, ed_input.getTextInputLayout(), BlockConstants.RESERVED_KEYWORDS, getReservedImageNames(), image.resName);
-            O.a(1);
+            O.setBatchCount(1);
             ed_input_edittext.setText(image.resName);
             ed_input_edittext.setEnabled(false);
             chk_collection.setEnabled(false);

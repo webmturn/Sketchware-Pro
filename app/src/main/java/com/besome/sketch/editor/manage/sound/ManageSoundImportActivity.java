@@ -115,7 +115,7 @@ public class ManageSoundImportActivity extends BaseAppCompatActivity implements 
                         sound.resName = name;
                         sound.isDuplicateCollection = false;
                     }
-                    nameValidator.a(getReservedSelectedCollectionNames());
+                    nameValidator.setJavaNames(getReservedSelectedCollectionNames());
                     adapter.notifyDataSetChanged();
                 } else {
                     ed_input_edittext.setText(selectedCollections.get(selectedItem).resName);
@@ -186,11 +186,11 @@ public class ManageSoundImportActivity extends BaseAppCompatActivity implements 
         chk_samename = findViewById(R.id.chk_samename);
         chk_samename.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                nameValidator.c(null);
-                nameValidator.a(selectedCollections.size());
+                nameValidator.setCurrentName(null);
+                nameValidator.setBatchCount(selectedCollections.size());
             } else {
-                nameValidator.c(selectedCollections.get(selectedItem).resName);
-                nameValidator.a(1);
+                nameValidator.setCurrentName(selectedCollections.get(selectedItem).resName);
+                nameValidator.setBatchCount(1);
             }
         });
         Button btn_decide = findViewById(R.id.btn_decide);
@@ -365,11 +365,11 @@ public class ManageSoundImportActivity extends BaseAppCompatActivity implements 
                         tv_currentnum.setText(String.valueOf(selectedItem + 1));
                         ed_input_edittext.setText(selectedCollections.get(selectedItem).resName);
                         if (chk_samename.isChecked()) {
-                            nameValidator.c(null);
-                            nameValidator.a(selectedCollections.size());
+                            nameValidator.setCurrentName(null);
+                            nameValidator.setBatchCount(selectedCollections.size());
                         } else {
-                            nameValidator.c(selectedCollections.get(selectedItem).resName);
-                            nameValidator.a(1);
+                            nameValidator.setCurrentName(selectedCollections.get(selectedItem).resName);
+                            nameValidator.setBatchCount(1);
                         }
                         adapter.notifyDataSetChanged();
                     }

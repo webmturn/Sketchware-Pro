@@ -217,7 +217,7 @@ public class BaseBlockView extends RelativeLayout {
   }
   
   public void a() {
-    this.classInfo = ComponentTypeMapper.a(this.blockType, this.componentType);
+    this.classInfo = ComponentTypeMapper.getClassInfo(this.blockType, this.componentType);
   }
   
   public void a(float paramFloat1, float paramFloat2, boolean paramBoolean) {

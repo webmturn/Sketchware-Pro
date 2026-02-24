@@ -113,7 +113,7 @@ public class NewKeyStoreActivity extends BaseAppCompatActivity implements OnClic
             stringBuilder.append(Helper.getText(country));
 
             try {
-                E.a(SketchwarePaths.getKeystoreFilePath(), stringBuilder.toString(), validityInYears, Helper.getText(alias), text);
+                E.generateAndSaveKeyStore(SketchwarePaths.getKeystoreFilePath(), stringBuilder.toString(), validityInYears, Helper.getText(alias), text);
                 showDoneDialog(true, text);
             } catch (Exception e) {
                 Log.e("NewKeyStoreActivity", e.getMessage(), e);

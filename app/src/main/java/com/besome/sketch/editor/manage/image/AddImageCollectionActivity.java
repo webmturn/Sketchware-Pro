@@ -127,7 +127,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
                             z = true;
                             setImageFromUri(result.getData().getData());
                             if (imageNameValidator != null) {
-                                imageNameValidator.a(1);
+                                imageNameValidator.setBatchCount(1);
                             }
                         }
                     }
@@ -158,7 +158,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
         ed_input_edittext.setPrivateImeOptions("defaultInputmode=english;");
         ed_input.setHint(getString(R.string.design_manager_image_hint_enter_image_name));
         imageNameValidator = new FileNameValidator(this, ed_input.getTextInputLayout(), BlockConstants.RESERVED_KEYWORDS, getReservedImageNames());
-        imageNameValidator.a(1);
+        imageNameValidator.setBatchCount(1);
         tv_add_photo.setText(R.string.design_manager_image_title_add_image);
         preview.setOnClickListener(this);
         img_rotate.setOnClickListener(this);
@@ -179,7 +179,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
             editTarget.isEdited = true;
             e(getString(R.string.design_manager_image_title_edit_image_name));
             imageNameValidator = new FileNameValidator(this, ed_input.getTextInputLayout(), BlockConstants.RESERVED_KEYWORDS, getReservedImageNames(), editTarget.resName);
-            imageNameValidator.a(1);
+            imageNameValidator.setBatchCount(1);
             ed_input_edittext.setText(editTarget.resName);
             chk_collection.setVisibility(View.GONE);
             tv_add_photo.setVisibility(View.GONE);

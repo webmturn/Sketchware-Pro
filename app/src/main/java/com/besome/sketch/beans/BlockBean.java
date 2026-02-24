@@ -94,8 +94,8 @@ public class BlockBean extends SelectableBean implements Parcelable {
     }
 
     private void buildClassInfo() {
-        classInfo = ComponentTypeMapper.a(type, typeName);
-        paramClassInfo = ComponentTypeMapper.a(spec);
+        classInfo = ComponentTypeMapper.getClassInfo(type, typeName);
+        paramClassInfo = ComponentTypeMapper.getParamClassInfoList(spec);
     }
 
     public void copy(BlockBean other) {

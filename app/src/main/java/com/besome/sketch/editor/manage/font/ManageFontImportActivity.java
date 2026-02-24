@@ -125,7 +125,7 @@ public class ManageFontImportActivity extends BaseAppCompatActivity implements V
                         font.isDuplicateCollection = false;
                     }
                 }
-                nameValidator.a(getReservedSelectedCollectionNames());
+                nameValidator.setJavaNames(getReservedSelectedCollectionNames());
                 itemAdapter.notifyDataSetChanged();
             }
 
@@ -173,11 +173,11 @@ public class ManageFontImportActivity extends BaseAppCompatActivity implements V
         nameValidator = new XmlNameValidator(getApplicationContext(), binding.edInput.getTextInputLayout(), BlockConstants.RESERVED_KEYWORDS, getReservedProjectImageNames(), getReservedSelectedCollectionNames());
         binding.chkSamename.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                nameValidator.c(null);
-                nameValidator.a(selectedCollection.size());
+                nameValidator.setCurrentName(null);
+                nameValidator.setBatchCount(selectedCollection.size());
             } else {
-                nameValidator.c(selectedCollection.get(selectedItem).resName);
-                nameValidator.a(1);
+                nameValidator.setCurrentName(selectedCollection.get(selectedItem).resName);
+                nameValidator.setBatchCount(1);
             }
         });
         Button btnDecide = findViewById(R.id.btn_decide);
@@ -277,11 +277,11 @@ public class ManageFontImportActivity extends BaseAppCompatActivity implements V
                         binding.tvCurrentnum.setText(String.valueOf(getLayoutPosition() + 1));
                         r.setText(selectedCollection.get(getLayoutPosition()).resName);
                         if (binding.chkSamename.isChecked()) {
-                            nameValidator.c(null);
-                            nameValidator.a(selectedCollection.size());
+                            nameValidator.setCurrentName(null);
+                            nameValidator.setBatchCount(selectedCollection.size());
                         } else {
-                            nameValidator.c(selectedCollection.get(getLayoutPosition()).resName);
-                            nameValidator.a(1);
+                            nameValidator.setCurrentName(selectedCollection.get(getLayoutPosition()).resName);
+                            nameValidator.setBatchCount(1);
                         }
 
                         itemAdapter.notifyDataSetChanged();

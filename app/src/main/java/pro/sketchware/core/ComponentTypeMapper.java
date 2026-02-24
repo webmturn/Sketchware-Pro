@@ -13,7 +13,7 @@ public class ComponentTypeMapper {
     /**
      * @return A built class info ({@link ClassInfo} object)
      */
-    public static ClassInfo a(String type, String typeName) {
+    public static ClassInfo getClassInfo(String type, String typeName) {
         switch (type) {
             case "b":
                 return new ClassInfo("boolean");
@@ -46,7 +46,7 @@ public class ComponentTypeMapper {
 
             case "p":
             case "m":
-                return new ClassInfo(b(typeName));
+                return new ClassInfo(getInternalTypeName(typeName));
 
             default:
                 return null;
@@ -56,7 +56,7 @@ public class ComponentTypeMapper {
     /**
      * @return The Type name of a Component
      */
-    public static String a(int componentId) {
+    public static String getComponentTypeName(int componentId) {
         return switch (componentId) {
             case ComponentBean.COMPONENT_TYPE_INTENT -> "Intent";
             case ComponentBean.COMPONENT_TYPE_SHAREDPREF -> "SharedPreferences";
@@ -96,7 +96,7 @@ public class ComponentTypeMapper {
     /**
      * @return A parameter class info ({@link ClassInfo}) list
      */
-    public static ArrayList<ClassInfo> a(String spec) {
+    public static ArrayList<ClassInfo> getParamClassInfoList(String spec) {
         ArrayList<ClassInfo> paramClass = new ArrayList<>();
         ArrayList<String> specList = FormatUtil.c(spec);
         for (String params : specList) {
@@ -108,7 +108,7 @@ public class ComponentTypeMapper {
                 } else {
                     typeName = "";
                 }
-                paramClass.add(a(type, typeName));
+                paramClass.add(getClassInfo(type, typeName));
             }
         }
         return paramClass;
@@ -117,7 +117,7 @@ public class ComponentTypeMapper {
     /**
      * @return The internal type name of a List taken from its number
      */
-    public static String b(int type) {
+    public static String getListInternalName(int type) {
         return switch (type) {
             case 1 -> "ListInt";
             case 2 -> "ListString";
@@ -129,7 +129,7 @@ public class ComponentTypeMapper {
     /**
      * @return The internal type name of a variable(e.g. View, Component), from its type name(%m.typename), as displayed in the moreblock code.
      */
-    public static String b(String name) {
+    public static String getInternalTypeName(String name) {
         return switch (name) {
             case "intent", "Intent" -> "Intent";
             case "file", "File (Shared Preferences)" -> "SharedPreferences";
@@ -226,7 +226,7 @@ public class ComponentTypeMapper {
     /**
      * @return The Type name of the Variable taken from its ID
      */
-    public static String c(int type) {
+    public static String getVariableTypeName(int type) {
         return switch (type) {
             case 0 -> "boolean";
             case 1 -> "double";

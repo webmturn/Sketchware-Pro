@@ -29,16 +29,16 @@ public class XmlNameValidator extends BaseValidator {
     this.batchCount = 1;
   }
   
-  public void a(int paramInt) {
+  public void setBatchCount(int paramInt) {
     this.batchCount = paramInt;
-    b(getText());
+    validate(getText());
   }
   
-  public void a(ArrayList<String> paramArrayList) {
+  public void setJavaNames(ArrayList<String> paramArrayList) {
     this.javaNames = paramArrayList;
   }
   
-  public final void b(String paramString) {
+  public final void validate(String paramString) {
     String str = "";
     if (paramString.length() < 3) {
       this.textInputLayout.setErrorEnabled(true);
@@ -151,7 +151,7 @@ public class XmlNameValidator extends BaseValidator {
     } 
   }
   
-  public void c(String paramString) {
+  public void setCurrentName(String paramString) {
     this.currentName = paramString;
   }
   
@@ -160,6 +160,6 @@ public class XmlNameValidator extends BaseValidator {
   }
   
   public void onTextChanged(CharSequence paramCharSequence, int paramInt1, int paramInt2, int paramInt3) {
-    b(paramCharSequence.toString().trim());
+    validate(paramCharSequence.toString().trim());
   }
 }

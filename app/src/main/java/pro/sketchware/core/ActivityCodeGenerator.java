@@ -608,13 +608,13 @@ public class ActivityCodeGenerator {
     }
 
     private String getListDeclarationAndAddImports(int listType, String listName) {
-        String typeName = ComponentTypeMapper.b(listType);
+        String typeName = ComponentTypeMapper.getListInternalName(listType);
         addImports(ComponentTypeMapper.getImportsByTypeName(projectDataManager.projectId, typeName, null));
         return ComponentCodeGenerator.getFieldDeclaration(typeName, listName, ComponentCodeGenerator.AccessModifier.PRIVATE);
     }
 
     private String getComponentDeclarationAndAddImports(ComponentBean componentBean) {
-        String typeName = ComponentTypeMapper.a(componentBean.type);
+        String typeName = ComponentTypeMapper.getComponentTypeName(componentBean.type);
         addImports(ComponentTypeMapper.getImportsByTypeName(projectDataManager.projectId, typeName, null));
         return ComponentCodeGenerator.getFieldDeclaration(typeName, componentBean.componentId, ComponentCodeGenerator.AccessModifier.PRIVATE, componentBean.param1, componentBean.param2, componentBean.param3);
     }
@@ -632,7 +632,7 @@ public class ActivityCodeGenerator {
      * @return Definition line for a Variable
      */
     private String getVariableDeclarationAndAddImports(int variableType, String name) {
-        String variableTypeName = ComponentTypeMapper.c(variableType);
+        String variableTypeName = ComponentTypeMapper.getVariableTypeName(variableType);
         addImports(ComponentTypeMapper.getImportsByTypeName(projectDataManager.projectId, variableTypeName, null));
         return ComponentCodeGenerator.getFieldDeclaration(variableTypeName, name, ComponentCodeGenerator.AccessModifier.PRIVATE);
     }
@@ -720,7 +720,7 @@ public class ActivityCodeGenerator {
      * @see ComponentCodeGenerator#getComponentInitializerCode(String, String, String...)
      */
     private String getComponentBeanInitializer(ComponentBean componentBean) {
-        return ComponentCodeGenerator.getComponentInitializerCode(ComponentTypeMapper.a(componentBean.type), componentBean.componentId, componentBean.param1, componentBean.param2, componentBean.param3);
+        return ComponentCodeGenerator.getComponentInitializerCode(ComponentTypeMapper.getComponentTypeName(componentBean.type), componentBean.componentId, componentBean.param1, componentBean.param2, componentBean.param3);
     }
 
     private void handleAppCompat() {

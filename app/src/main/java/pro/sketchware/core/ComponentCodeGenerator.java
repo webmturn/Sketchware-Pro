@@ -764,7 +764,7 @@ public class ComponentCodeGenerator {
 
                             int lastIndexOfPeriod = parameterSpec.lastIndexOf(".");
                             code = str +
-                                    "final " + ComponentTypeMapper.e(ComponentTypeMapper.b(parameterSpec.substring(3, lastIndexOfPeriod))) + " _" +
+                                    "final " + ComponentTypeMapper.e(ComponentTypeMapper.getInternalTypeName(parameterSpec.substring(3, lastIndexOfPeriod))) + " _" +
                                     parameterSpec.substring(lastIndexOfPeriod + 1);
                             break;
                         } else {

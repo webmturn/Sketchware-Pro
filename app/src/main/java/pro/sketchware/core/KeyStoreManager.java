@@ -35,12 +35,12 @@ public class KeyStoreManager {
     this.keyStore = (KeyStore)new JksKeyStore();
   }
   
-  public String a() throws Exception {
+  public String getFirstAlias() throws Exception {
     Enumeration<String> enumeration = this.keyStore.aliases();
     return enumeration.hasMoreElements() ? enumeration.nextElement() : "";
   }
   
-  public void a(InputStream paramInputStream, String paramString) throws Exception {
+  public void loadKeyStore(InputStream paramInputStream, String paramString) throws Exception {
     if (paramInputStream == null)
       return; 
     try {
@@ -55,19 +55,19 @@ public class KeyStoreManager {
     }
   }
   
-  public void a(String paramString1, String paramString2) throws Exception {
-    a(new FileInputStream(new File(paramString1)), paramString2);
+  public void loadKeyStoreFromFile(String paramString1, String paramString2) throws Exception {
+    loadKeyStore(new FileInputStream(new File(paramString1)), paramString2);
   }
   
-  public void a(String paramString1, String paramString2, int paramInt, String paramString3, String paramString4) throws Exception {
-    byte[] arrayOfByte = a(paramString2, paramInt, paramString3, paramString4);
+  public void generateAndSaveKeyStore(String paramString1, String paramString2, int paramInt, String paramString3, String paramString4) throws Exception {
+    byte[] arrayOfByte = generateKeyPair(paramString2, paramInt, paramString3, paramString4);
     File file = new File(SketchwarePaths.i());
     if (!file.exists())
       file.mkdirs(); 
     (new EncryptedFileUtil()).a(paramString1, arrayOfByte);
   }
   
-  public final byte[] a(String paramString) throws Exception {
+  public final byte[] exportKeyStore(String paramString) throws Exception {
     if (this.keyStore == null)
       return null; 
     this.keyBuffer = ByteBuffer.allocate(8192);
@@ -87,7 +87,7 @@ public class KeyStoreManager {
     return arrayOfByte;
   }
   
-  public byte[] a(String paramString1, int paramInt, String paramString2, String paramString3) throws Exception {
+  public byte[] generateKeyPair(String paramString1, int paramInt, String paramString2, String paramString3) throws Exception {
     try {
       KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
       keyPairGenerator.initialize(1024, SecureRandom.getInstance("SHA1PRNG"));
@@ -113,7 +113,7 @@ public class KeyStoreManager {
       this.keyStore = (KeyStore)jksKeyStore;
       this.keyStore.load(null, paramString3.toCharArray());
       this.keyStore.setKeyEntry(paramString2, keyPair.getPrivate(), paramString3.toCharArray(), new Certificate[] { x509Certificate });
-      return a(paramString3);
+      return exportKeyStore(paramString3);
     } catch (LoadKeystoreException loadKeystoreException) {
       Log.e("ERROR", "Failed to access keystore. incorrect passward");
       throw loadKeystoreException;
@@ -122,10 +122,10 @@ public class KeyStoreManager {
     } 
   }
   
-  public ZipSigner b(String paramString) throws Exception {
+  public ZipSigner createZipSigner(String paramString) throws Exception {
     ZipSigner zipSigner = new ZipSigner();
     zipSigner.issueLoadingCertAndKeysProgressEvent();
-    String str = a();
+    String str = getFirstAlias();
     zipSigner.setKeys("custom", (X509Certificate)this.keyStore.getCertificate(str), (PrivateKey)this.keyStore.getKey(str, paramString.toCharArray()), "SHA1WITHRSA", null);
     return zipSigner;
   }

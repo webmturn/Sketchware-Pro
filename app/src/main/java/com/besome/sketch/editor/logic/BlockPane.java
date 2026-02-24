@@ -339,7 +339,7 @@ public class BlockPane extends RelativeLayout {
         return false; 
       if (gx1.a(gx2))
         return true; 
-      if (paramView instanceof BlockView && gx1.a(ComponentTypeMapper.b(((BlockView)paramView).ra)))
+      if (paramView instanceof BlockView && gx1.a(ComponentTypeMapper.getInternalTypeName(((BlockView)paramView).ra)))
         return true; 
     } 
     return false;

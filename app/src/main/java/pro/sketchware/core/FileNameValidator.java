@@ -34,13 +34,13 @@ public class FileNameValidator extends BaseValidator {
     this.batchCount = 1;
   }
   
-  public void a(int paramInt) {
+  public void setBatchCount(int paramInt) {
     this.batchCount = paramInt;
     if (getText().length() > 0)
-      b(getText()); 
+      validate(getText()); 
   }
   
-  public final void b(String paramString) {
+  public final void validate(String paramString) {
     String str = "";
     if (paramString.length() < 3) {
       this.textInputLayout.setErrorEnabled(true);
@@ -152,6 +152,6 @@ public class FileNameValidator extends BaseValidator {
   }
   
   public void onTextChanged(CharSequence paramCharSequence, int paramInt1, int paramInt2, int paramInt3) {
-    b(paramCharSequence.toString().trim());
+    validate(paramCharSequence.toString().trim());
   }
 }
