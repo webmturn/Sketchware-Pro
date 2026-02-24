@@ -13,12 +13,12 @@ public class PCP implements ColorPickerDialog.b {
     }
 
     @Override
-    public void a(int color) {
+    public void onColorPicked(int color) {
         toSetText.setText(String.format("#%08X", color));
     }
 
     @Override
-    public void a(String color, int i2) {
+    public void onResourceColorPicked(String color, int i2) {
         toSetText.setText(String.format("#%08X", color));
     }
 }

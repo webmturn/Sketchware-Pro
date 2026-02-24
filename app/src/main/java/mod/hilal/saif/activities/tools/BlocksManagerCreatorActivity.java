@@ -170,7 +170,7 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
 
         binding.openColorPalette.setOnClickListener(v -> {
             ColorPickerDialog colorPickerDialog = new ColorPickerDialog(this, 0, false, false);
-            colorPickerDialog.a(new PCP(binding.colour));
+            colorPickerDialog.setColorPickerCallback(new PCP(binding.colour));
             colorPickerDialog.showAtLocation(v, Gravity.CENTER, 0, 0);
         });
 

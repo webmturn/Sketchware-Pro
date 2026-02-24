@@ -105,7 +105,7 @@ public class ColorPickerDialog extends PopupWindow {
         dialog.show();
     }
 
-    public void a(b callback) {
+    public void setColorPickerCallback(b callback) {
         colorPickerCallback = callback;
     }
 
@@ -595,9 +595,9 @@ public class ColorPickerDialog extends PopupWindow {
     }
 
     public interface b {
-        void a(int var1);
+        void onColorPicked(int var1);
 
-        void a(String var1, int var2);
+        void onResourceColorPicked(String var1, int var2);
     }
 
     public interface materialColorAttr {
@@ -680,13 +680,13 @@ public class ColorPickerDialog extends PopupWindow {
                 itemView.setOnClickListener(v -> {
                     if (colorPickerCallback != null) {
                         if (Helper.getText(tvColorCode).equals("TRANSPARENT")) {
-                            colorPickerCallback.a(0);
+                            colorPickerCallback.onColorPicked(0);
                         } else if (Helper.getText(tvColorCode).equals("NONE")) {
-                            colorPickerCallback.a(0xffffff);
+                            colorPickerCallback.onColorPicked(0xffffff);
                         } else if (currentGroupIndex == 1 && sc_id != null) {
-                            colorPickerCallback.a((String) tvColorName.getText(), Color.parseColor(Helper.getText(tvColorCode)));
+                            colorPickerCallback.onResourceColorPicked((String) tvColorName.getText(), Color.parseColor(Helper.getText(tvColorCode)));
                         } else {
-                            colorPickerCallback.a(Color.parseColor(Helper.getText(tvColorCode)));
+                            colorPickerCallback.onColorPicked(Color.parseColor(Helper.getText(tvColorCode)));
                         }
                     }
                     dismiss();
@@ -804,7 +804,7 @@ public class ColorPickerDialog extends PopupWindow {
             holder.binding.checkedImg.setColorFilter(reversedColor);
 
             holder.binding.container.setOnClickListener(view -> {
-                colorPickerCallback.a(resColor.colorName(), resColor.colorValue());
+                colorPickerCallback.onResourceColorPicked(resColor.colorName(), resColor.colorValue());
                 dismiss();
             });
         }

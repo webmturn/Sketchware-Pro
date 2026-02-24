@@ -189,14 +189,14 @@ public class CustomBlocksDialog {
 
         binding.openColorPalette.setOnClickListener(v -> {
             ColorPickerDialog colorPicker = new ColorPickerDialog((Activity) context, 0, true, false);
-            colorPicker.a(new ColorPickerDialog.b() {
+            colorPicker.setColorPickerCallback(new ColorPickerDialog.b() {
                 @Override
-                public void a(int colorInt) {
+                public void onColorPicked(int colorInt) {
                     binding.colorEditText.setText(getHexColor(colorInt));
                 }
 
                 @Override
-                public void a(String var1, int var2) {
+                public void onResourceColorPicked(String var1, int var2) {
                 }
             });
             colorPicker.showAtLocation(binding.openColorPalette, Gravity.CENTER, 0, 0);

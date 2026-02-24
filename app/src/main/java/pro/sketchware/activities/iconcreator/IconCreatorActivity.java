@@ -414,9 +414,9 @@ public class IconCreatorActivity extends BaseAppCompatActivity {
     private void showColorPicker(View v, int r, int oldClr) {
         ColorPickerDialog colorPicker = new ColorPickerDialog(this, oldClr, true, false);
 
-        colorPicker.a(new ColorPickerDialog.b() {
+        colorPicker.setColorPickerCallback(new ColorPickerDialog.b() {
             @Override
-            public void a(int colorInt) {
+            public void onColorPicked(int colorInt) {
                 switch (r) {
                     case 0:
                         bgClr = colorInt;
@@ -464,7 +464,7 @@ public class IconCreatorActivity extends BaseAppCompatActivity {
             }
 
             @Override
-            public void a(String var1, int var2) {
+            public void onResourceColorPicked(String var1, int var2) {
             }
         });
         colorPicker.showAtLocation(v, Gravity.CENTER, 0, 0);

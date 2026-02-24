@@ -242,16 +242,16 @@ public class ColorsEditor extends Fragment {
 
         dialogBinding.colorPreviewCard.setOnClickListener(v -> {
             ColorPickerDialog colorPicker = new ColorPickerDialog(activity, Objects.requireNonNull(dialogBinding.colorValueInput.getText()).toString(), false, false, activity.sc_id);
-            colorPicker.a(new ColorPickerDialog.b() {
+            colorPicker.setColorPickerCallback(new ColorPickerDialog.b() {
                 @Override
-                public void a(int colorInt) {
+                public void onColorPicked(int colorInt) {
                     String selectedColorHex = String.format("#%06X", colorInt & 0x00FFFFFF);
                     dialogBinding.colorPreviewCard.setCardBackgroundColor(PropertiesUtil.parseColor(selectedColorHex));
                     dialogBinding.colorValueInput.setText(selectedColorHex);
                 }
 
                 @Override
-                public void a(String var1, int var2) {
+                public void onResourceColorPicked(String var1, int var2) {
                 }
             });
             colorPicker.materialColorAttr((attr, attrColor) -> dialogBinding.colorValueInput.setText("?" + attr));
