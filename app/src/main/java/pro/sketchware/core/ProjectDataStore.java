@@ -1424,31 +1424,31 @@ public class ProjectDataStore {
       return; 
     try {
       ProjectDataParser ProjectDataParser = new ProjectDataParser(fileName);
-      String str = ProjectDataParser.getFileName();
+      String parsedFileName = ProjectDataParser.getFileName();
       ProjectDataParser.DataType dataType = ProjectDataParser.getDataType();
       switch (ScreenOrientationConstants.ORIENTATION_VALUES[dataType.ordinal()]) {
         default:
           return;
         case 8:
-          if (!this.blockMap.containsKey(str)) {
-            this.blockMap.put(str, new HashMap<String, ArrayList<BlockBean>>());
+          if (!this.blockMap.containsKey(parsedFileName)) {
+            this.blockMap.put(parsedFileName, new HashMap<String, ArrayList<BlockBean>>());
           } 
-          this.blockMap.get(str).put(ProjectDataParser.getEventKey(), (ArrayList<BlockBean>)ProjectDataParser.parseData(data));
+          this.blockMap.get(parsedFileName).put(ProjectDataParser.getEventKey(), (ArrayList<BlockBean>)ProjectDataParser.parseData(data));
           break;
         case 7:
-          this.moreBlockMap.put(str, (ArrayList<Pair<String, String>>)ProjectDataParser.parseData(data));
+          this.moreBlockMap.put(parsedFileName, (ArrayList<Pair<String, String>>)ProjectDataParser.parseData(data));
           break;
         case 6:
-          this.eventMap.put(str, (ArrayList<EventBean>)ProjectDataParser.parseData(data));
+          this.eventMap.put(parsedFileName, (ArrayList<EventBean>)ProjectDataParser.parseData(data));
           break;
         case 5:
-          this.componentMap.put(str, (ArrayList<ComponentBean>)ProjectDataParser.parseData(data));
+          this.componentMap.put(parsedFileName, (ArrayList<ComponentBean>)ProjectDataParser.parseData(data));
           break;
         case 4:
-          this.listMap.put(str, (ArrayList<Pair<Integer, String>>)ProjectDataParser.parseData(data));
+          this.listMap.put(parsedFileName, (ArrayList<Pair<Integer, String>>)ProjectDataParser.parseData(data));
           break;
         case 3:
-          this.variableMap.put(str, (ArrayList<Pair<Integer, String>>)ProjectDataParser.parseData(data));
+          this.variableMap.put(parsedFileName, (ArrayList<Pair<Integer, String>>)ProjectDataParser.parseData(data));
           break;
       } 
     } catch (Exception exception) {
@@ -1712,11 +1712,11 @@ public class ProjectDataStore {
   }
   
   public final String getSimpleClassName(String input) {
-    String str = input;
-    if (str.contains(".")) {
-      String[] parts = str.split("\\.");
-      str = parts[parts.length - 1];
+    String simpleName = input;
+    if (simpleName.contains(".")) {
+      String[] parts = simpleName.split("\\.");
+      simpleName = parts[parts.length - 1];
     } 
-    return str;
+    return simpleName;
   }
 }

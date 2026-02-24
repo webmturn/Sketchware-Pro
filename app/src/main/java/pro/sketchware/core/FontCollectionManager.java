@@ -107,8 +107,8 @@ public class FontCollectionManager extends BaseCollectionManager {
           stringBuilder.append(this.dataDirPath);
           stringBuilder.append(File.separator);
           stringBuilder.append(collectionBean.data);
-          String str = stringBuilder.toString();
-          this.fileUtil.deleteFileByPath(str);
+          String filePath = stringBuilder.toString();
+          this.fileUtil.deleteFileByPath(filePath);
           break;
         } 
         continue;

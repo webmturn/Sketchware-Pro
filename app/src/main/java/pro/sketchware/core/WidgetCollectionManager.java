@@ -68,8 +68,8 @@ public class WidgetCollectionManager extends BaseCollectionManager {
       stringBuilder.append(this.widgetGson.toJson(viewBean));
       stringBuilder.append("\n");
     }
-    String str = stringBuilder.toString();
-    this.collections.add(new CollectionBean(str, str));
+    String serializedData = stringBuilder.toString();
+    this.collections.add(new CollectionBean(serializedData, serializedData));
     if (flag)
       saveCollections(); 
   }
@@ -114,8 +114,8 @@ public class WidgetCollectionManager extends BaseCollectionManager {
     BufferedReader bufferedReader = null;
     try {
       if (this.fileUtil.exists(this.collectionFilePath)) {
-        String str = this.fileUtil.readFile(this.collectionFilePath);
-        bufferedReader = new BufferedReader(new StringReader(str));
+        String fileContent = this.fileUtil.readFile(this.collectionFilePath);
+        bufferedReader = new BufferedReader(new StringReader(fileContent));
         String line;
         while ((line = bufferedReader.readLine()) != null) {
           if (line.length() <= 0)

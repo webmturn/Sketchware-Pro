@@ -67,8 +67,8 @@ public class BlockCollectionManager extends BaseCollectionManager {
       stringBuilder.append(this.blockGson.toJson(blockBean));
       stringBuilder.append("\n");
     }
-    String str = stringBuilder.toString();
-    this.collections.add(new CollectionBean(str, str));
+    String serializedData = stringBuilder.toString();
+    this.collections.add(new CollectionBean(serializedData, serializedData));
     if (flag)
       saveCollections(); 
   }

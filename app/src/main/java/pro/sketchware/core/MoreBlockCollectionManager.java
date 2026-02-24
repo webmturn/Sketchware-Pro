@@ -56,8 +56,8 @@ public class MoreBlockCollectionManager extends BaseCollectionManager {
       stringBuilder.append(this.moreBlockGson.toJson(blockBean));
       stringBuilder.append("\n");
     }
-    String str = stringBuilder.toString();
-    this.collections.add(new CollectionBean(key, str, value));
+    String serializedData = stringBuilder.toString();
+    this.collections.add(new CollectionBean(key, serializedData, value));
     if (flag)
       saveCollections(); 
   }
