@@ -229,8 +229,8 @@ public class SoundListFragment extends BaseFragment implements MenuProvider {
         for (int i = 0; i < sounds.size(); i++) {
             ProjectResourceBean projectResourceBean = sounds.get(i);
             if (projectResourceBean.isNew) {
-                String str = projectResourceBean.resFullName;
-                String substring = str.substring(str.lastIndexOf("."));
+                String fullName = projectResourceBean.resFullName;
+                String substring = fullName.substring(fullName.lastIndexOf("."));
                 sounds.set(i, new ProjectResourceBean(ProjectResourceBean.PROJECT_RES_TYPE_FILE, projectResourceBean.resName, projectResourceBean.resName + substring));
             }
         }
@@ -312,8 +312,8 @@ public class SoundListFragment extends BaseFragment implements MenuProvider {
     }
 
     private String getFilePathFromResource(ProjectResourceBean projectResourceBean) {
-        String str = projectResourceBean.resFullName;
-        String substring = str.substring(str.lastIndexOf("."));
+        String fullName = projectResourceBean.resFullName;
+        String substring = fullName.substring(fullName.lastIndexOf("."));
         return dirPath + File.separator + projectResourceBean.resName + substring;
     }
 

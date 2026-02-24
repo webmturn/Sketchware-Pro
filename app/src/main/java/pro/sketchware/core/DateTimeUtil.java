@@ -32,8 +32,8 @@ public class DateTimeUtil {
       long l2 = TimeZone.getDefault().getOffset(l1);
       Date date = new Date();
       date.setTime(l1 + l2);
-      String str = simpleDateFormat.format(date);
-      key = str;
+      String formatted = simpleDateFormat.format(date);
+      key = formatted;
     } catch (Exception exception) {}
     return key;
   }
@@ -46,8 +46,8 @@ public class DateTimeUtil {
       Date date = new Date();
       date.setTime(l1 + l2);
       simpleDateFormat = new SimpleDateFormat(extra);
-      String str = simpleDateFormat.format(date);
-      key = str;
+      String formatted = simpleDateFormat.format(date);
+      key = formatted;
     } catch (Exception exception) {}
     return key;
   }

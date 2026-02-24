@@ -117,18 +117,18 @@ public class EncryptedFileUtil {
           if (file.isFile())
             if (file.delete()) {
               if (this.encryptionEnabled) {
-                String str = EncryptedFileUtil.class.getSimpleName();
+                String tag = EncryptedFileUtil.class.getSimpleName();
                 StringBuilder stringBuilder = new StringBuilder();
                 stringBuilder.append("Delete file success.");
                 stringBuilder.append(file.getAbsolutePath());
-                Log.d(str, stringBuilder.toString());
+                Log.d(tag, stringBuilder.toString());
               } 
             } else if (this.encryptionEnabled) {
-              String str = EncryptedFileUtil.class.getSimpleName();
+              String tag = EncryptedFileUtil.class.getSimpleName();
               StringBuilder stringBuilder = new StringBuilder();
               stringBuilder.append("Delete file failed.");
               stringBuilder.append(file.getAbsolutePath());
-              Log.d(str, stringBuilder.toString());
+              Log.d(tag, stringBuilder.toString());
             }  
         } 
       } 
