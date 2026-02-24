@@ -16,7 +16,7 @@ public class CommonSpinnerItem extends LinearLayout {
         binding = CommonSpinnerItemBinding.inflate(LayoutInflater.from(context), this, true);
     }
 
-    public void a(String name, boolean isVisible) {
+    public void setData(String name, boolean isVisible) {
         binding.tvSpnName.setText(name);
         if (isVisible) {
             binding.imgvSelected.setVisibility(View.VISIBLE);

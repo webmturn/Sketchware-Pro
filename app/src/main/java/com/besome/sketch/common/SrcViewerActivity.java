@@ -167,7 +167,7 @@ public class SrcViewerActivity extends BaseAppCompatActivity {
         private View getCustomSpinnerView(int position, View view, boolean isCurrentlyViewingFile) {
             CommonSpinnerItem spinnerItem = view != null ? (CommonSpinnerItem) view :
                     new CommonSpinnerItem(SrcViewerActivity.this);
-            spinnerItem.a(sourceCodeBeans.get(position).srcFileName, isCurrentlyViewingFile);
+            spinnerItem.setData(sourceCodeBeans.get(position).srcFileName, isCurrentlyViewingFile);
             return spinnerItem;
         }
 

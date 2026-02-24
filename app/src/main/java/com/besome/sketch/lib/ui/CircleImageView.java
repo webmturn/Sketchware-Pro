@@ -21,7 +21,7 @@ public class CircleImageView extends AppCompatImageView {
     super(paramContext, paramAttributeSet);
   }
   
-  public Bitmap a(Bitmap paramBitmap) {
+  public Bitmap createCircleBitmap(Bitmap paramBitmap) {
     Bitmap bitmap = Bitmap.createBitmap(paramBitmap.getWidth(), paramBitmap.getHeight(), Bitmap.Config.ARGB_8888);
     Canvas canvas = new Canvas(bitmap);
     Paint paint = new Paint();
@@ -46,7 +46,7 @@ public class CircleImageView extends AppCompatImageView {
       if (bitmap != null) {
         if (i != bitmap.getWidth() || j != bitmap.getHeight())
           bitmap = Bitmap.createScaledBitmap(bitmap, i, j, true); 
-        paramCanvas.drawBitmap(a(bitmap), 0.0F, 0.0F, null);
+        paramCanvas.drawBitmap(createCircleBitmap(bitmap), 0.0F, 0.0F, null);
       } 
     } 
   }

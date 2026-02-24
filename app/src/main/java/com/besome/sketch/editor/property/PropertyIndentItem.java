@@ -129,7 +129,7 @@ public class PropertyIndentItem extends RelativeLayout implements View.OnClickLi
 //        }
     }
 
-    public void a(int left, int top, int right, int bottom) {
+    public void setIndent(int left, int top, int right, int bottom) {
         this.left = left;
         this.top = top;
         this.right = right;
@@ -223,7 +223,7 @@ public class PropertyIndentItem extends RelativeLayout implements View.OnClickLi
                     int top = Integer.parseInt(Helper.getText(binding.etTop));
                     int right = Integer.parseInt(Helper.getText(binding.etRight));
                     int bottom = Integer.parseInt(Helper.getText(binding.etBottom));
-                    a(left, top, right, bottom);
+                    setIndent(left, top, right, bottom);
                     if (valueChangeListener != null) {
                         valueChangeListener.onPropertyChanged(key, new int[]{left, top, right, bottom});
                         v.dismiss();
@@ -234,7 +234,7 @@ public class PropertyIndentItem extends RelativeLayout implements View.OnClickLi
                 int top = Integer.parseInt(Helper.getText(binding.etTop));
                 int right = Integer.parseInt(Helper.getText(binding.etRight));
                 int bottom = Integer.parseInt(Helper.getText(binding.etBottom));
-                a(left, top, right, bottom);
+                setIndent(left, top, right, bottom);
                 if (valueChangeListener != null) {
                     valueChangeListener.onPropertyChanged(key, new int[]{left, top, right, bottom});
                     v.dismiss();

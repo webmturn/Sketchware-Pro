@@ -166,12 +166,12 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
             indentItem = new PropertyIndentItem(getContext(), !isEditMode);
             indentItem.setOrientationItem(getOrientation());
             indentItem.setKey(key);
-            indentItem.a(left, top, right, bottom);
+            indentItem.setIndent(left, top, right, bottom);
             indentItem.setTag(key);
             indentItem.setOnPropertyValueChangeListener(this);
             propertyViewCache.put(key, indentItem);
         } else {
-            indentItem.a(left, top, right, bottom);
+            indentItem.setIndent(left, top, right, bottom);
         }
 
         addView(indentItem);
