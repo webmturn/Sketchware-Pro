@@ -12,7 +12,7 @@ public class ProjectListManager {
     public static SharedPrefsHelper sharedPrefsHelper;
 
     public static ArrayList<HashMap<String, Object>> listProjects() {
-        String str = "project";
+        String projectFileName = "project";
         ArrayList<HashMap<String, Object>> arrayList = new ArrayList<>();
         EncryptedFileUtil oBVar = new EncryptedFileUtil();
         File[] listFiles = new File(SketchwarePaths.getProjectListBasePath()).listFiles();
@@ -21,8 +21,8 @@ public class ProjectListManager {
         }
         for (File file : listFiles) {
             try {
-                if (new File(file, str).exists()) {
-                    String path = file.getAbsolutePath() + File.separator + str;
+                if (new File(file, projectFileName).exists()) {
+                    String path = file.getAbsolutePath() + File.separator + projectFileName;
                     HashMap<String, Object> a = GsonMapHelper.fromJson(oBVar.decryptToString(oBVar.readFileBytes(path)));
                     if (MapValueHelper.getString(a, "sc_id").equals(file.getName())) {
                         arrayList.add(a);

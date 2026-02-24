@@ -171,16 +171,16 @@ public class ProjectDataParser {
   }
   
   public final void parseKey(String rawKey) throws Exception {
-    String str = rawKey.trim();
-    if (str.contains(".xml")) {
-      int i = str.indexOf(".xml") + 4;
-      this.fileName = str.substring(0, i);
-      if (str.length() == i) {
+    String keyPart = rawKey.trim();
+    if (keyPart.contains(".xml")) {
+      int i = keyPart.indexOf(".xml") + 4;
+      this.fileName = keyPart.substring(0, i);
+      if (keyPart.length() == i) {
         this.dataType = ProjectDataParser.DataType.VIEW;
       } else {
-        str = str.substring(i);
-        if (str.charAt(0) == '_') {
-          if (str.substring(1).equals("fab")) {
+        keyPart = keyPart.substring(i);
+        if (keyPart.charAt(0) == '_') {
+          if (keyPart.substring(1).equals("fab")) {
             this.dataType = ProjectDataParser.DataType.FAB;
           } else {
             throw new Exception("invalid key : Unknown type string");
@@ -190,33 +190,33 @@ public class ProjectDataParser {
         } 
       } 
     } else {
-      if (str.contains(".java")) {
-        int i = str.indexOf(".java") + 5;
-        this.fileName = str.substring(0, i);
-        if (str.length() != i) {
-          str = str.substring(i);
-          if (str.charAt(0) == '_') {
-            str = str.substring(1);
+      if (keyPart.contains(".java")) {
+        int i = keyPart.indexOf(".java") + 5;
+        this.fileName = keyPart.substring(0, i);
+        if (keyPart.length() != i) {
+          keyPart = keyPart.substring(i);
+          if (keyPart.charAt(0) == '_') {
+            keyPart = keyPart.substring(1);
             i = -1;
-            switch (str.hashCode()) {
+            switch (keyPart.hashCode()) {
               case 3322014:
-                if (str.equals("list"))
+                if (keyPart.equals("list"))
                   i = 1; 
                 break;
               case 3154628:
-                if (str.equals("func"))
+                if (keyPart.equals("func"))
                   i = 4; 
                 break;
               case 116519:
-                if (str.equals("var"))
+                if (keyPart.equals("var"))
                   i = 0; 
                 break;
               case -447446250:
-                if (str.equals("components"))
+                if (keyPart.equals("components"))
                   i = 2; 
                 break;
               case -1291329255:
-                if (str.equals("events"))
+                if (keyPart.equals("events"))
                   i = 3; 
                 break;
             } 
@@ -226,7 +226,7 @@ public class ProjectDataParser {
                   if (i != 3) {
                     if (i != 4) {
                       this.dataType = ProjectDataParser.DataType.EVENT_BLOCK;
-                      this.eventKey = str;
+                      this.eventKey = keyPart;
                     } else {
                       this.dataType = ProjectDataParser.DataType.MORE_BLOCK;
                     } 

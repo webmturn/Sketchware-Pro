@@ -39,7 +39,7 @@ public class XmlNameValidator extends BaseValidator {
   }
   
   public final void validate(String value) {
-    String str = "";
+    String conflictList = "";
     if (value.length() < 3) {
       this.textInputLayout.setErrorEnabled(true);
       this.textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(this.context, R.string.invalid_value_min_lenth, new Object[] { Integer.valueOf(3) }));
@@ -102,12 +102,12 @@ public class XmlNameValidator extends BaseValidator {
           StringBuilder nameBuilder = new StringBuilder();
           nameBuilder.append(accumulated);
           nameBuilder.append(conflictName);
-          str = nameBuilder.toString();
+          conflictList = nameBuilder.toString();
         } 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(errorMessage);
         stringBuilder.append("\n[");
-        stringBuilder.append(str);
+        stringBuilder.append(conflictList);
         stringBuilder.append("]");
         this.textInputLayout.setError(stringBuilder.toString());
         this.valid = false;

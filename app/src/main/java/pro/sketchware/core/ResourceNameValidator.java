@@ -38,26 +38,26 @@ public class ResourceNameValidator extends BaseValidator {
   }
   
   public void onTextChanged(CharSequence text, int x, int y, int width) {
-    String str = text.toString().trim();
-    if (str.length() < 3) {
+    String input = text.toString().trim();
+    if (input.length() < 3) {
       this.textInputLayout.setErrorEnabled(true);
       this.textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(this.context, R.string.invalid_value_min_lenth, new Object[] { Integer.valueOf(3) }));
       this.valid = false;
       return;
     } 
-    if (str.length() > 70) {
+    if (input.length() > 70) {
       this.textInputLayout.setErrorEnabled(true);
       this.textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(this.context, R.string.invalid_value_max_lenth, new Object[] { Integer.valueOf(70) }));
       this.valid = false;
       return;
     } 
-    if (str.equals("default_image") || "NONE".toLowerCase().equals(str.toLowerCase())) {
+    if (input.equals("default_image") || "NONE".toLowerCase().equals(input.toLowerCase())) {
       this.textInputLayout.setErrorEnabled(true);
       this.textInputLayout.setError(StringResource.getInstance().getTranslatedString(this.context, R.string.common_message_name_unavailable));
       this.valid = false;
       return;
     } 
-    if (!str.equals(this.currentName) && this.existingNames.indexOf(str) >= 0) {
+    if (!input.equals(this.currentName) && this.existingNames.indexOf(input) >= 0) {
       this.textInputLayout.setErrorEnabled(true);
       this.textInputLayout.setError(StringResource.getInstance().getTranslatedString(this.context, R.string.common_message_name_unavailable));
       this.valid = false;
@@ -68,8 +68,8 @@ public class ResourceNameValidator extends BaseValidator {
     x = 0;
     while (true) {
       if (x < y) {
-        str = parts[x];
-        if (text.toString().equals(str)) {
+        String reservedName = parts[x];
+        if (text.toString().equals(reservedName)) {
           x = 1;
           break;
         } 

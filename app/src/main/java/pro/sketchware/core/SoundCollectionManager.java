@@ -193,13 +193,13 @@ public class SoundCollectionManager extends BaseCollectionManager {
         CollectionBean collectionBean = this.collections.get(j);
         i = j;
         if (collectionBean.name.equals(input)) {
-          String str = collectionBean.data;
+          String filePath = collectionBean.data;
           StringBuilder stringBuilder = new StringBuilder();
           stringBuilder.append(this.dataDirPath);
           stringBuilder.append(File.separator);
-          stringBuilder.append(str);
-          str = stringBuilder.toString();
-          this.fileUtil.deleteFileByPath(str);
+          stringBuilder.append(filePath);
+          filePath = stringBuilder.toString();
+          this.fileUtil.deleteFileByPath(filePath);
           this.collections.remove(j);
           i = j;
         } 

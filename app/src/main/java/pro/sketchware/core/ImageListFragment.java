@@ -206,7 +206,7 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
                     }
 
 
-                    String str = projectImagesDirectory + File.separator + image.resName;
+                    String imageBasePath = projectImagesDirectory + File.separator + image.resName;
                     Log.d("svg", "full name : " + image.resFullName);
                     if (image.resFullName.endsWith(".svg")) {
                         // convert the svg to vectors
@@ -216,7 +216,7 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
                         colorHex = (colorHex != null) ? colorHex : "#FFFFFF";
                         svgUtils.convert(svgPath, projectImagesDirectory, colorHex);
                     } else {
-                        BitmapUtil.processAndSaveBitmap(path, image.isNinePatch() ? str + ".9.png" : str + ".png", image.rotate, image.flipHorizontal, image.flipVertical);
+                        BitmapUtil.processAndSaveBitmap(path, image.isNinePatch() ? imageBasePath + ".9.png" : imageBasePath + ".png", image.rotate, image.flipHorizontal, image.flipVertical);
                     }
                 } catch (Exception e) {
                     Log.e("ImageListFragment", e.getMessage(), e);

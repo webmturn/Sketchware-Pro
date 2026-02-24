@@ -125,8 +125,8 @@ public class KeyStoreManager {
   public ZipSigner createZipSigner(String input) throws Exception {
     ZipSigner zipSigner = new ZipSigner();
     zipSigner.issueLoadingCertAndKeysProgressEvent();
-    String str = getFirstAlias();
-    zipSigner.setKeys("custom", (X509Certificate)this.keyStore.getCertificate(str), (PrivateKey)this.keyStore.getKey(str, str.toCharArray()), "SHA1WITHRSA", null);
+    String alias = getFirstAlias();
+    zipSigner.setKeys("custom", (X509Certificate)this.keyStore.getCertificate(alias), (PrivateKey)this.keyStore.getKey(alias, alias.toCharArray()), "SHA1WITHRSA", null);
     return zipSigner;
   }
 }

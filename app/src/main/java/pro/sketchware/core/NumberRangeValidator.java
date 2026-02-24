@@ -25,13 +25,13 @@ public class NumberRangeValidator extends BaseValidator {
   }
   
   public void onTextChanged(CharSequence text, int x, int y, int width) {
-    String str = text.toString().trim();
-    if (str.isEmpty()) {
+    String input = text.toString().trim();
+    if (input.isEmpty()) {
       this.valid = false;
       return;
     }
     try {
-      int i = Integer.parseInt(str);
+      int i = Integer.parseInt(input);
       if (i < this.minValue) {
         this.textInputLayout.setErrorEnabled(true);
         this.textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(this.context, R.string.invalid_value_min_lenth, new Object[] { Integer.valueOf(this.minValue) }));
