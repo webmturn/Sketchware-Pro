@@ -671,8 +671,8 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         extraPaletteBlock.setBlock(i, i2);
     }
 
-    public void addListVariable(int i, String str) {
-        ProjectDataManager.getProjectDataManager(scId).addListVariable(projectFile.getJavaName(), i, str);
+    public void addListVariable(int i, String variableName) {
+        ProjectDataManager.getProjectDataManager(scId).addListVariable(projectFile.getJavaName(), i, variableName);
         onBlockSizeChanged(1, 0xffcc5b22);
     }
 
@@ -723,9 +723,9 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         refreshOptionsMenu();
     }
 
-    public void pickImage(FieldBlockView ss, String str) {
-        boolean selectingBackgroundImage = "property_background_resource".equals(str);
-        boolean selectingImage = !selectingBackgroundImage && "property_image".equals(str);
+    public void pickImage(FieldBlockView ss, String propertyKey) {
+        boolean selectingBackgroundImage = "property_background_resource".equals(propertyKey);
+        boolean selectingImage = !selectingBackgroundImage && "property_image".equals(propertyKey);
         AtomicReference<String> selectedImage = new AtomicReference<>("");
 
         SearchWithRecyclerViewBinding binding = SearchWithRecyclerViewBinding.inflate(getLayoutInflater());
@@ -1173,11 +1173,11 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
     }
 
-    public void addPaletteCategory(String str, int i) {
-        paletteBlock.addCategoryHeader(str, i);
+    public void addPaletteCategory(String categoryName, int i) {
+        paletteBlock.addCategoryHeader(categoryName, i);
     }
 
-    public void saveBlockToCollection(String str, BlockView rs) {
+    public void saveBlockToCollection(String collectionName, BlockView rs) {
         ArrayList<String> paramsList;
         ArrayList<BlockView> allChildren = rs.getAllChildren();
         ArrayList<BlockBean> collectionBlocks = new ArrayList<>();
@@ -1212,8 +1212,8 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             collectionBlocks.add(blockBean);
         }
         try {
-            BlockCollectionManager.getInstance().addBlock(str, collectionBlocks, true);
-            editorDrawer.addBlockCollection(str, collectionBlocks).setOnTouchListener(this);
+            BlockCollectionManager.getInstance().addBlock(collectionName, collectionBlocks, true);
+            editorDrawer.addBlockCollection(collectionName, collectionBlocks).setOnTouchListener(this);
         } catch (Exception e) {
             crashlytics.recordException(e);
         }
@@ -1258,8 +1258,8 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         return radioButton;
     }
 
-    public void addVariable(int i, String str) {
-        ProjectDataManager.getProjectDataManager(scId).addVariable(projectFile.getJavaName(), i, str);
+    public void addVariable(int i, String variableName) {
+        ProjectDataManager.getProjectDataManager(scId).addVariable(projectFile.getJavaName(), i, variableName);
         onBlockSizeChanged(0, 0xffee7d16);
     }
 
@@ -1288,15 +1288,15 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         colorPickerDialog.showAtLocation(ss, Gravity.CENTER, 0, 0);
     }
 
-    public void addPaletteLabel(String str, String tag) {
-        TextView textView = paletteBlock.addActionLabel(str);
+    public void addPaletteLabel(String label, String tag) {
+        TextView textView = paletteBlock.addActionLabel(label);
         textView.setTag(tag);
         textView.setSoundEffectsEnabled(true);
         textView.setOnClickListener(this);
     }
 
-    public void addPaletteLabelWithListener(String str, String tag, View.OnClickListener onClickListener) {
-        TextView textView = paletteBlock.addActionLabel(str);
+    public void addPaletteLabelWithListener(String label, String tag, View.OnClickListener onClickListener) {
+        TextView textView = paletteBlock.addActionLabel(label);
         textView.setTag(tag);
         textView.setSoundEffectsEnabled(true);
         textView.setOnClickListener(onClickListener);
@@ -1454,9 +1454,9 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         return logicTopMenu.isInsideFavoriteArea(f, f2);
     }
 
-    public final RadioButton createRadioButton(String str) {
+    public final RadioButton createRadioButton(String text) {
         RadioButton radioButton = new RadioButton(this);
-        radioButton.setText(str);
+        radioButton.setText(text);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.topMargin = (int) ViewUtil.dpToPx(getContext(), 4.0f);
         layoutParams.bottomMargin = (int) ViewUtil.dpToPx(getContext(), 4.0f);
@@ -1465,9 +1465,9 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         return radioButton;
     }
 
-    public final CheckBox createCheckBox(String str) {
+    public final CheckBox createCheckBox(String text) {
         CheckBox checkBox = new CheckBox(this);
-        checkBox.setText(str);
+        checkBox.setText(text);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.topMargin = (int) ViewUtil.dpToPx(getContext(), 4.0f);
         layoutParams.bottomMargin = (int) ViewUtil.dpToPx(getContext(), 4.0f);
@@ -1787,8 +1787,8 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
     }
 
-    public void removeListVariable(String str) {
-        ProjectDataManager.getProjectDataManager(scId).removeListVariable(projectFile.getJavaName(), str);
+    public void removeListVariable(String variableName) {
+        ProjectDataManager.getProjectDataManager(scId).removeListVariable(projectFile.getJavaName(), variableName);
         onBlockSizeChanged(1, 0xffcc5b22);
     }
 
@@ -1801,8 +1801,8 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
     }
 
-    public void removeVariable(String str) {
-        ProjectDataManager.getProjectDataManager(scId).removeVariable(projectFile.getJavaName(), str);
+    public void removeVariable(String variableName) {
+        ProjectDataManager.getProjectDataManager(scId).removeVariable(projectFile.getJavaName(), variableName);
         onBlockSizeChanged(0, 0xffee7d16);
     }
 
@@ -1815,22 +1815,22 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
     }
 
-    public void showDeleteFavoriteDialog(String str) {
+    public void showDeleteFavoriteDialog(String blockName) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.logic_block_favorites_delete_title);
         dialog.setMessage(R.string.logic_block_favorites_delete_message);
         dialog.setPositiveButton(R.string.common_word_delete, (v, which) -> {
-            BlockCollectionManager.getInstance().removeBlock(str, true);
-            editorDrawer.removeBlockCollection(str);
+            BlockCollectionManager.getInstance().removeBlock(blockName, true);
+            editorDrawer.removeBlockCollection(blockName);
             v.dismiss();
         });
         dialog.setNegativeButton(R.string.common_word_cancel, null);
         dialog.show();
     }
 
-    public void showBlockCollection(String str) {
+    public void showBlockCollection(String blockName) {
         Intent intent = new Intent(getContext(), ShowBlockCollectionActivity.class);
-        intent.putExtra("block_name", str);
+        intent.putExtra("block_name", blockName);
         startActivity(intent);
     }
 
