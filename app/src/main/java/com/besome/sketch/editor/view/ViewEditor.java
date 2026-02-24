@@ -77,8 +77,8 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
     public WidgetsCreatorManager widgetsCreatorManager;
     private ObjectAnimator animatorTranslateX;
     private boolean isAnimating = false;
-    private boolean C = false;
-    private boolean D = false;
+    private boolean isPaletteVisible = false;
+    private boolean isDeleteActive = false;
     private ItemView selectedItem;
     private int defaultIconWidth = 50;
     private int defaultIconHeight = 30;
@@ -325,7 +325,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
                     updateDeleteIcon(true, currentTouchedView instanceof IconCustomWidget);
                     return true;
                 }
-                if (D) updateDeleteIcon(false, currentTouchedView instanceof IconCustomWidget);
+                if (isDeleteActive) updateDeleteIcon(false, currentTouchedView instanceof IconCustomWidget);
                 if (hitTestToPane(motionEvent.getRawX(), motionEvent.getRawY())) {
                     dummyView.setAllow(true);
                     boolean isNotIcon = !isViewAnIconBase(currentTouchedView);
@@ -355,15 +355,15 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         } else {
             lol:
             if (dummyView.getAllow()) {
-                if (D && currentTouchedView instanceof ItemView widget) {
+                if (isDeleteActive && currentTouchedView instanceof ItemView widget) {
                     deleteWidget(widget.getBean());
                     break lol;
                 }
-                if (D && currentTouchedView instanceof WidgetPaletteIcon collectionWidget) {
+                if (isDeleteActive && currentTouchedView instanceof WidgetPaletteIcon collectionWidget) {
                     deleteWidgetFromCollection(collectionWidget.getName());
                     break lol;
                 }
-                if (D && currentTouchedView instanceof IconCustomWidget) {
+                if (isDeleteActive && currentTouchedView instanceof IconCustomWidget) {
                     widgetsCreatorManager.showActionsDialog((int) view.getTag());
                     break lol;
                 }
@@ -812,8 +812,8 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         if (!isAnimating) {
             animateUpDown();
         }
-        if (C == z) return;
-        C = z;
+        if (isPaletteVisible == z) return;
+        isPaletteVisible = z;
         cancelAnimation();
         if (z) {
             animatorTranslateY.start();
@@ -1058,9 +1058,9 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
     }
 
     private void updateDeleteIcon(boolean z, boolean isCustomWidget) {
-        if (D == z) return;
-        D = z;
-        if (D) {
+        if (isDeleteActive == z) return;
+        isDeleteActive = z;
+        if (isDeleteActive) {
             setSelectedDeleteViewUi(isCustomWidget);
             shakeView(deleteView);
         } else {
@@ -1069,10 +1069,10 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         }
         if (isCustomWidget) {
             deleteIcon.setImageDrawable(AppCompatResources.getDrawable(getContext(), R.drawable.ic_mtrl_edit));
-            deleteText.setText(getString(D ? R.string.editor_release_to_actions : R.string.editor_drag_to_actions));
+            deleteText.setText(getString(isDeleteActive ? R.string.editor_release_to_actions : R.string.editor_drag_to_actions));
         } else {
             deleteIcon.setImageDrawable(AppCompatResources.getDrawable(getContext(), R.drawable.ic_mtrl_delete));
-            deleteText.setText(getString(D ? R.string.editor_release_to_delete : R.string.editor_drag_to_delete));
+            deleteText.setText(getString(isDeleteActive ? R.string.editor_release_to_delete : R.string.editor_drag_to_delete));
         }
     }
 
