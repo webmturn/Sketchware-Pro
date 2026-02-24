@@ -197,7 +197,7 @@ public class LayoutGenerator {
             if (backgroundColor != 0xffffff) {
                 if (backgroundColor != 0) {
                     int color = backgroundColor & 0xffffff;
-                    if (nx.c().equals("BottomAppBar")) {
+                    if (nx.getCleanRootElementName().equals("BottomAppBar")) {
                         if (!toNotAdd.contains("app:backgroundTint") && !injectHandler.contains("backgroundTint") && (backgroundResColor != null)) {
                             if (backgroundResColor.startsWith("?") || backgroundResColor.startsWith("@color/")) {
                                 nx.addAttribute("app", "backgroundTint", backgroundResColor);
@@ -217,11 +217,11 @@ public class LayoutGenerator {
                         } else if (!toNotAdd.contains("app:cardBackgroundColor") && !injectHandler.contains("cardBackgroundColor")) {
                             nx.addAttribute("app", "cardBackgroundColor", formatColor(color));
                         }
-                    } else if (nx.c().equals("MaterialButton")) {
+                    } else if (nx.getCleanRootElementName().equals("MaterialButton")) {
                         if (!toNotAdd.contains("app:backgroundTint") && !injectHandler.contains("backgroundTint")) {
                             nx.addAttribute("app", "backgroundTint", backgroundResColor == null ? formatColor(color) : backgroundResColor);
                         }
-                    } else if (nx.c().equals("CollapsingToolbarLayout")) {
+                    } else if (nx.getCleanRootElementName().equals("CollapsingToolbarLayout")) {
                         if (!toNotAdd.contains("app:contentScrim") && !injectHandler.contains("contentScrim") && backgroundResColor != null) {
                             if (backgroundResColor.startsWith("?") || backgroundResColor.startsWith("@color/")) {
                                 nx.addAttribute("app", "contentScrim", backgroundResColor);
@@ -242,11 +242,11 @@ public class LayoutGenerator {
                             nx.addAttribute("android", "background", formatColor(color));
                         }
                     }
-                } else if (nx.c().equals("BottomAppBar")) {
+                } else if (nx.getCleanRootElementName().equals("BottomAppBar")) {
                     if (!toNotAdd.contains("android:backgroundTint") && !injectHandler.contains("backgroundTint")) {
                         nx.addAttribute("android", "backgroundTint", "@android:color/transparent");
                     }
-                } else if (nx.c().equals("CollapsingToolbarLayout")) {
+                } else if (nx.getCleanRootElementName().equals("CollapsingToolbarLayout")) {
                     if (!toNotAdd.contains("app:contentScrim") && !injectHandler.contains("contentScrim")) {
                         nx.addAttribute("app", "contentScrim", "?attr/colorPrimary");
                     }
@@ -360,7 +360,7 @@ public class LayoutGenerator {
             }
         }
         if (viewBean.getClassInfo().matchesType("LinearLayout") &&
-                !widgetTag.c().matches("(BottomAppBar|NavigationView|Coordinator|Floating|Collaps|include)\\w*")) {
+                !widgetTag.getCleanRootElementName().matches("(BottomAppBar|NavigationView|Coordinator|Floating|Collaps|include)\\w*")) {
             if (!toNotAdd.contains("android:orientation") && !injectHandler.contains("orientation")) {
                 int orientation = viewBean.layout.orientation;
                 if (orientation == LinearLayout.HORIZONTAL) {
@@ -442,7 +442,7 @@ public class LayoutGenerator {
             });
         }
 
-        if (widgetTag.c().equals("CollapsingToolbarLayout")
+        if (widgetTag.getCleanRootElementName().equals("CollapsingToolbarLayout")
                 && buildConfig.isAppCompatEnabled
                 && projectFile.fileType == ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY) {
             if (projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_TOOLBAR)) {
@@ -548,7 +548,7 @@ public class LayoutGenerator {
         String resName = viewBean.image.resName;
         if (!resName.isEmpty() && !"NONE".equals(resName)) {
             String value = "@drawable/" + resName.toLowerCase();
-            if (nx.c().equals("FloatingActionButton")) {
+            if (nx.getCleanRootElementName().equals("FloatingActionButton")) {
                 if (!toNotAdd.contains("app:srcCompat") && !injectHandler.contains("srcCompat")) {
                     nx.addAttribute("app", "srcCompat", value);
                 }

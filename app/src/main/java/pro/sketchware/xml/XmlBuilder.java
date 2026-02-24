@@ -99,7 +99,7 @@ public class XmlBuilder {
         return resultCode.toString();
     }
 
-    public String c() {
+    public String getCleanRootElementName() {
         return ActivityCodeGenerator.WIDGET_NAME_PATTERN.matcher(rootElementName).replaceAll("");
     }
 
