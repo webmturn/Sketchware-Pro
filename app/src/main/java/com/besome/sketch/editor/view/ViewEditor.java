@@ -467,8 +467,8 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         }
     }
 
-    public void setIsAdLoaded(boolean z) {
-        isAdLoaded = z;
+    public void setIsAdLoaded(boolean loaded) {
+        isAdLoaded = loaded;
     }
 
     public void setOnDraggingListener(DraggingListener dragListener) {
@@ -588,20 +588,20 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         initialDeleteViewUi();
     }
 
-    public void removeViews(ArrayList<ViewBean> arrayList, boolean z) {
-        if (z) {
-            ViewHistoryManager.getInstance(scId).recordRemove(projectFileBean.getXmlName(), arrayList);
+    public void removeViews(ArrayList<ViewBean> views, boolean recordHistory) {
+        if (recordHistory) {
+            ViewHistoryManager.getInstance(scId).recordRemove(projectFileBean.getXmlName(), views);
             if (historyChangeListener != null) {
                 historyChangeListener.onCallback();
             }
         }
-        int size = arrayList.size();
+        int size = views.size();
         while (true) {
             size--;
             if (size < 0) {
                 return;
             }
-            removeView(arrayList.get(size));
+            removeView(views.get(size));
         }
     }
 
@@ -724,8 +724,8 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         viewPane.resetView(true);
     }
 
-    public ItemView moveView(ViewBean viewBean, boolean z) {
-        if (z) {
+    public ItemView moveView(ViewBean viewBean, boolean recordHistory) {
+        if (recordHistory) {
             ViewHistoryManager.getInstance(scId).recordMove(projectFileBean.getXmlName(), viewBean);
             if (historyChangeListener != null) {
                 historyChangeListener.onCallback();
@@ -799,11 +799,11 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         toolbar.setBackgroundColor(ProjectFile.getColor(scId, ProjectFile.COLOR_PRIMARY));
     }
 
-    private void showDeleteView(boolean z, boolean isCustomWidget) {
+    private void showDeleteView(boolean show, boolean isCustomWidget) {
         if (isCustomWidget) {
             deleteIcon.setImageDrawable(AppCompatResources.getDrawable(getContext(), R.drawable.ic_mtrl_edit));
             deleteText.setText(getContext().getString(R.string.editor_drag_to_actions));
-        } else if (z) {
+        } else if (show) {
             deleteIcon.setImageDrawable(AppCompatResources.getDrawable(getContext(), R.drawable.ic_mtrl_delete));
             deleteText.setText(getContext().getString(R.string.editor_drag_to_delete));
             setDeleteViewIconAndTextUi(false);
@@ -812,10 +812,10 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         if (!isAnimating) {
             animateUpDown();
         }
-        if (isPaletteVisible == z) return;
-        isPaletteVisible = z;
+        if (isPaletteVisible == show) return;
+        isPaletteVisible = show;
         cancelAnimation();
-        if (z) {
+        if (show) {
             animatorTranslateY.start();
         } else {
             animatorTranslateX.start();
@@ -996,16 +996,16 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         }
     }
 
-    public ItemView addViews(ArrayList<ViewBean> arrayList, boolean z) {
-        if (z) {
-            ViewHistoryManager.getInstance(scId).recordAddMultiple(projectFileBean.getXmlName(), arrayList);
+    public ItemView addViews(ArrayList<ViewBean> viewBeans, boolean recordHistory) {
+        if (recordHistory) {
+            ViewHistoryManager.getInstance(scId).recordAddMultiple(projectFileBean.getXmlName(), viewBeans);
             if (historyChangeListener != null) {
                 historyChangeListener.onCallback();
             }
         }
         ItemView syVar = null;
-        for (ViewBean view : arrayList) {
-            if (arrayList.indexOf(view) == 0) {
+        for (ViewBean view : viewBeans) {
+            if (viewBeans.indexOf(view) == 0) {
                 syVar = createAndAddView(view);
             } else {
                 createAndAddView(view);
@@ -1037,14 +1037,14 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         viewPane.addFab(viewBean).setOnTouchListener(this);
     }
 
-    public void setSelectedItem(ItemView syVar, boolean z) {
+    public void setSelectedItem(ItemView syVar, boolean showProperties) {
         if (selectedItem != null) {
             selectedItem.setSelection(false);
         }
         selectedItem = syVar;
         selectedItem.setSelection(true);
         if (widgetSelectedListener != null) {
-            widgetSelectedListener.onViewSelectedWithProperty(z, selectedItem.getBean().id);
+            widgetSelectedListener.onViewSelectedWithProperty(showProperties, selectedItem.getBean().id);
         }
     }
 
@@ -1057,9 +1057,9 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         return y < locationOnScreen[1] + deleteView.getHeight();
     }
 
-    private void updateDeleteIcon(boolean z, boolean isCustomWidget) {
-        if (isDeleteActive == z) return;
-        isDeleteActive = z;
+    private void updateDeleteIcon(boolean active, boolean isCustomWidget) {
+        if (isDeleteActive == active) return;
+        isDeleteActive = active;
         if (isDeleteActive) {
             setSelectedDeleteViewUi(isCustomWidget);
             shakeView(deleteView);
