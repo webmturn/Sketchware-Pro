@@ -82,7 +82,7 @@ public class ViewProperty extends LinearLayout implements PropertyChangedCallbac
     }
 
     @Override
-    public void a(String str, Object obj) {
+    public void onPropertyChanged(String str, Object obj) {
     }
 
     public interface onPropertyDeleted {

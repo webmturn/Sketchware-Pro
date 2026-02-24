@@ -119,7 +119,7 @@ public class PropertySizeItem extends RelativeLayout implements View.OnClickList
             if (validator.isValid()) {
                 setValue(Integer.parseInt(Helper.getText(input)));
                 if (valueChangeListener != null) {
-                    valueChangeListener.a(key, value);
+                    valueChangeListener.onPropertyChanged(key, value);
                 }
                 v.dismiss();
             }

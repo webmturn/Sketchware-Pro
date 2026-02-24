@@ -85,7 +85,7 @@ public class PropertyCustomViewItem extends RelativeLayout implements View.OnCli
                 }
             }
             if (propertyValueChangeListener != null) {
-                propertyValueChangeListener.a(key, value);
+                propertyValueChangeListener.onPropertyChanged(key, value);
             }
             v.dismiss();
         });

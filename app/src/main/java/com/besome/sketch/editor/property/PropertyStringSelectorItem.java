@@ -160,7 +160,7 @@ public class PropertyStringSelectorItem extends RelativeLayout implements View.O
                 counter++;
             }
             if (valueChangeListener != null) {
-                valueChangeListener.a(key, value);
+                valueChangeListener.onPropertyChanged(key, value);
             }
             v.dismiss();
         });

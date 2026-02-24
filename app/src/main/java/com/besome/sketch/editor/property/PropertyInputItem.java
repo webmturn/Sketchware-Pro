@@ -348,7 +348,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
             }
 
             if (valueChangeListener != null) {
-                valueChangeListener.a(key, value);
+                valueChangeListener.onPropertyChanged(key, value);
             }
 
             v.dismiss();
@@ -493,7 +493,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_save), (v, which) -> {
             if (validator.isValid()) {
                 setValue(Helper.getText(binding.edInput));
-                if (valueChangeListener != null) valueChangeListener.a(key, value);
+                if (valueChangeListener != null) valueChangeListener.onPropertyChanged(key, value);
                 v.dismiss();
             }
         });
@@ -600,7 +600,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
                     );
                     textAutoCompleteInput.setError(errorMessage);
                 } else {
-                    valueChangeListener.a(key, value);
+                    valueChangeListener.onPropertyChanged(key, value);
                     dialog.dismiss();
                 }
             }
@@ -665,7 +665,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_save), (v, which) -> {
             if (validator.isValid()) {
                 setValue(Helper.getText(binding.edInput));
-                if (valueChangeListener != null) valueChangeListener.a(key, value);
+                if (valueChangeListener != null) valueChangeListener.onPropertyChanged(key, value);
                 v.dismiss();
             }
         });
@@ -691,7 +691,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_save), (v, which) -> {
             if (lengthValidator.isValid()) {
                 setValue(Helper.getText(input));
-                if (valueChangeListener != null) valueChangeListener.a(key, value);
+                if (valueChangeListener != null) valueChangeListener.onPropertyChanged(key, value);
                 v.dismiss();
             }
         });
@@ -1049,7 +1049,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
                         .map(entry -> entry.getKey() + "=\"" + entry.getValue() + "\"")
                         .collect(Collectors.joining("\n"));
         setValue(result);
-        if (valueChangeListener != null) valueChangeListener.a(key, value);
+        if (valueChangeListener != null) valueChangeListener.onPropertyChanged(key, value);
     }
 
     private LinkedHashMap<String, String> readAttributes() {

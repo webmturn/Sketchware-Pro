@@ -61,7 +61,7 @@ public class PropertyActivity extends BaseAppCompatActivity implements PropertyC
     private LinearLayout content;
 
     @Override
-    public void a(String var1, Object var2) {
+    public void onPropertyChanged(String var1, Object var2) {
     }
 
     public void l() {

@@ -94,7 +94,7 @@ public class PropertySwitchSingleLineItem extends LinearLayout implements View.O
     public void onClick(View v) {
         setValue(!value);
         if (valueChangeListener != null) {
-            valueChangeListener.a(key, value);
+            valueChangeListener.onPropertyChanged(key, value);
         }
     }
 

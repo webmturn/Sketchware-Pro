@@ -154,7 +154,7 @@ public class PropertyColorItem extends RelativeLayout implements View.OnClickLis
             public void a(int var1) {
                 setValue(var1);
                 if (valueChangeListener != null) {
-                    valueChangeListener.a(key, value);
+                    valueChangeListener.onPropertyChanged(key, value);
                 }
             }
 
@@ -162,14 +162,14 @@ public class PropertyColorItem extends RelativeLayout implements View.OnClickLis
             public void a(String var1, int var2) {
                 setValue(var2, "@color/" + var1);
                 if (valueChangeListener != null) {
-                    valueChangeListener.a(key, value);
+                    valueChangeListener.onPropertyChanged(key, value);
                 }
             }
         });
         colorPicker.materialColorAttr((attr, attrColor) -> {
             setValue(attrColor, "?" + attr);
             if (valueChangeListener != null) {
-                valueChangeListener.a(key, value);
+                valueChangeListener.onPropertyChanged(key, value);
             }
         });
         colorPicker.showAtLocation(anchorView, Gravity.CENTER, 0, 0);

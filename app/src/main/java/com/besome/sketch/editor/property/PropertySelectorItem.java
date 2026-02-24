@@ -176,7 +176,7 @@ public class PropertySelectorItem extends RelativeLayout implements View.OnClick
                 }
             }
             if (valueChangeListener != null) {
-                valueChangeListener.a(key, value);
+                valueChangeListener.onPropertyChanged(key, value);
             }
             v.dismiss();
         });

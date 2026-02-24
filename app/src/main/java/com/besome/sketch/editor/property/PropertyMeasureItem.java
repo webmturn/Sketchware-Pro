@@ -176,7 +176,7 @@ public class PropertyMeasureItem extends RelativeLayout implements View.OnClickL
                 return;
             }
             if (valueChangeListener != null) {
-                valueChangeListener.a(key, measureValue);
+                valueChangeListener.onPropertyChanged(key, measureValue);
             }
             v.dismiss();
         });

@@ -200,7 +200,7 @@ public class PropertyAttributesItem extends LinearLayout implements View.OnClick
                                                 if (new CircularDependencyDetector(beans, bean).isLegalAttribute(id, attr)) {
                                                     value.put(attr, id);
                                                     if (valueChangeListener != null)
-                                                        valueChangeListener.a(key, value);
+                                                        valueChangeListener.onPropertyChanged(key, value);
                                                     adapter.submitList(new ArrayList<>(value.keySet()));
                                                 } else {
                                                     SketchwareUtil.toastError(Helper.getResString(R.string.error_circular_rel_layout));
@@ -211,7 +211,7 @@ public class PropertyAttributesItem extends LinearLayout implements View.OnClick
                                 } else {
                                     value.put(attr, "false");
                                     if (valueChangeListener != null)
-                                        valueChangeListener.a(key, value);
+                                        valueChangeListener.onPropertyChanged(key, value);
                                     adapter.submitList(new ArrayList<>(value.keySet()));
                                 }
                             })
@@ -290,7 +290,7 @@ public class PropertyAttributesItem extends LinearLayout implements View.OnClick
                                 value.put(attr, id);
                                 binding.tvValue.setText("@id/" + id);
                                 if (valueChangeListener != null)
-                                    valueChangeListener.a(key, value);
+                                    valueChangeListener.onPropertyChanged(key, value);
                             })
                             .setNegativeButton(R.string.common_word_cancel, (d, which) -> d.dismiss())
                             .show();
@@ -302,7 +302,7 @@ public class PropertyAttributesItem extends LinearLayout implements View.OnClick
                     dialog.setPositiveButton(R.string.common_word_yes, (view, which) -> {
                         value.remove(attr);
                         if (valueChangeListener != null)
-                            valueChangeListener.a(key, value);
+                            valueChangeListener.onPropertyChanged(key, value);
                         submitList(new ArrayList<>(value.keySet()));
                         view.dismiss();
                     });
@@ -329,7 +329,7 @@ public class PropertyAttributesItem extends LinearLayout implements View.OnClick
                 itemView.setOnClickListener(v -> {
                     binding.switchValue.setChecked(!binding.switchValue.isChecked());
                     value.put(attr, String.valueOf(binding.switchValue.isChecked()));
-                    if (valueChangeListener != null) valueChangeListener.a(key, value);
+                    if (valueChangeListener != null) valueChangeListener.onPropertyChanged(key, value);
                 });
                 itemView.setOnLongClickListener(v -> {
                     MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(getContext());
@@ -338,7 +338,7 @@ public class PropertyAttributesItem extends LinearLayout implements View.OnClick
                     dialog.setPositiveButton(R.string.common_word_yes, (view, which) -> {
                         value.remove(attr);
                         if (valueChangeListener != null)
-                            valueChangeListener.a(key, value);
+                            valueChangeListener.onPropertyChanged(key, value);
                         submitList(new ArrayList<>(value.keySet()));
                         view.dismiss();
                     });

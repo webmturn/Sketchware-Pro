@@ -146,7 +146,7 @@ public class PropertyStringPairSelectorItem extends RelativeLayout implements Vi
                 counter1++;
             }
             if (valueChangeListener != null) {
-                valueChangeListener.a(key, value);
+                valueChangeListener.onPropertyChanged(key, value);
             }
             v.dismiss();
         });

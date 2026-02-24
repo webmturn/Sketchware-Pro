@@ -178,7 +178,7 @@ public class PropertyGravityItem extends RelativeLayout implements View.OnClickL
             }
             setValue(value);
             if (valueChangeListener != null) {
-                valueChangeListener.a(key, gravityValue);
+                valueChangeListener.onPropertyChanged(key, gravityValue);
             }
             v.dismiss();
         });

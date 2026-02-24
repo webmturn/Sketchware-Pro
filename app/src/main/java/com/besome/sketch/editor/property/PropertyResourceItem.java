@@ -198,7 +198,7 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
                     if (!selected.isEmpty()) {
                         setValue(selected);
                         if (propertyChangedCallback != null) {
-                            propertyChangedCallback.a(key, selected);
+                            propertyChangedCallback.onPropertyChanged(key, selected);
                         }
                     }
                 })

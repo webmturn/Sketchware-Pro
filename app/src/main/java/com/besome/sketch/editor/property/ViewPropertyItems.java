@@ -249,7 +249,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     }
 
     @Override
-    public void a(String var1, Object var2) {
+    public void onPropertyChanged(String var1, Object var2) {
         RecentHistoryManager.getInstance().addRecentItem(viewBean.getClassInfo().getClassName(), var1);
         if (viewBeanCallback != null) {
             ViewBean cloned = viewBean.clone();

@@ -225,7 +225,7 @@ public class PropertyIndentItem extends RelativeLayout implements View.OnClickLi
                     int bottom = Integer.parseInt(Helper.getText(binding.etBottom));
                     a(left, top, right, bottom);
                     if (valueChangeListener != null) {
-                        valueChangeListener.a(key, new int[]{left, top, right, bottom});
+                        valueChangeListener.onPropertyChanged(key, new int[]{left, top, right, bottom});
                         v.dismiss();
                     }
                 }
@@ -236,7 +236,7 @@ public class PropertyIndentItem extends RelativeLayout implements View.OnClickLi
                 int bottom = Integer.parseInt(Helper.getText(binding.etBottom));
                 a(left, top, right, bottom);
                 if (valueChangeListener != null) {
-                    valueChangeListener.a(key, new int[]{left, top, right, bottom});
+                    valueChangeListener.onPropertyChanged(key, new int[]{left, top, right, bottom});
                     v.dismiss();
                 }
             }
