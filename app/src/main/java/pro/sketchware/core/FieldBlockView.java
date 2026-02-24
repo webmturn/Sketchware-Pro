@@ -83,10 +83,10 @@ public class FieldBlockView extends BaseBlockView {
     return rect.width() + this.minHatWidth;
   }
   
-  public final String getComponentLabel(String str) {
+  public final String getComponentLabel(String componentId) {
     String prefix = "";
-    String displayName = BlockColorMapper.getComponentDisplayName(str);
-    str = displayName;
+    String displayName = BlockColorMapper.getComponentDisplayName(componentId);
+    componentId = displayName;
     if (displayName.length() > 0) {
       StringBuilder stringBuilder = new StringBuilder();
       stringBuilder.append(displayName);
@@ -96,9 +96,9 @@ public class FieldBlockView extends BaseBlockView {
     return prefix;
   }
   
-  public final TextView createLabelTextView(String str) {
+  public final TextView createLabelTextView(String componentId) {
     TextView textView = new TextView(this.fieldContext);
-    textView.setText(getComponentLabel(str));
+    textView.setText(getComponentLabel(componentId));
     textView.setTextSize(8.0F);
     textView.setTypeface(null, 1);
     RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-2, this.textHeight);
@@ -113,9 +113,9 @@ public class FieldBlockView extends BaseBlockView {
     return textView;
   }
   
-  public final TextView createValueTextView(String str) {
+  public final TextView createValueTextView(String text) {
     TextView textView = new TextView(this.fieldContext);
-    textView.setText(str);
+    textView.setText(text);
     textView.setTextSize(9.0F);
     RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(this.minSimpleWidth, this.textHeight);
     layoutParams.setMargins(this.spacing, 0, this.isDefinitionBlock, 0);
