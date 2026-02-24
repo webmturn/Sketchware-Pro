@@ -200,7 +200,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
             chk_collection.setEnabled(false);
             tv_add_photo.setVisibility(View.GONE);
             if (image.savedPos == 0) {
-                setImageFromFile(a(image));
+                setImageFromFile(getResourceFilePath(image));
             } else {
                 setImageFromFile(image.resFullName);
             }
@@ -220,7 +220,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
     }
 
     private void save() {
-        if (a(O)) {
+        if (validateAndCheckFile(O)) {
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 showLoadingDialog();
                 new SaveAsyncTask(this).execute();
@@ -228,7 +228,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
         }
     }
 
-    private void s() {
+    private void showModifyLayout() {
         if (tv_desc != null) {
             tv_desc.setVisibility(View.INVISIBLE);
         }
@@ -268,7 +268,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
         } catch (Exception e) {
             Log.e("AddImageActivity", e.getMessage(), e);
         }
-        s();
+        showModifyLayout();
     }
 
     private void setImageRotation(int i) {
@@ -302,7 +302,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
         }
     }
 
-    private boolean a(FileNameValidator pb) {
+    private boolean validateAndCheckFile(FileNameValidator pb) {
         if (!pb.isValid()) {
             return false;
         }
@@ -333,7 +333,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
         }
     }
 
-    private String a(ProjectResourceBean projectResourceBean) {
+    private String getResourceFilePath(ProjectResourceBean projectResourceBean) {
         return dir_path + File.separator + projectResourceBean.resFullName;
     }
 

@@ -183,7 +183,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
             ed_input_edittext.setText(editTarget.resName);
             chk_collection.setVisibility(View.GONE);
             tv_add_photo.setVisibility(View.GONE);
-            setImageFromFile(a(editTarget));
+            setImageFromFile(getResourceFilePath(editTarget));
             layout_img_modify.setVisibility(View.GONE);
         }
     }
@@ -212,7 +212,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
     }
 
     private void save() {
-        if (a(imageNameValidator)) {
+        if (validateAndCheckFile(imageNameValidator)) {
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 showLoadingDialog();
                 new SaveAsyncTask(this).execute();
@@ -220,7 +220,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
         }
     }
 
-    private void t() {
+    private void showModifyLayout() {
         if (tv_desc != null) {
             tv_desc.setVisibility(View.INVISIBLE);
         }
@@ -231,7 +231,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
         }
     }
 
-    private boolean a(FileNameValidator validator) {
+    private boolean validateAndCheckFile(FileNameValidator validator) {
         if (!validator.isValid()) {
             return false;
         }
@@ -258,7 +258,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
         } catch (Exception e) {
             Log.e("AddImageCollectionActivity", e.getMessage(), e);
         }
-        t();
+        showModifyLayout();
     }
 
     private void setImageRotation(int degrees) {
@@ -278,7 +278,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
         }
     }
 
-    private String a(ProjectResourceBean projectResourceBean) {
+    private String getResourceFilePath(ProjectResourceBean projectResourceBean) {
         return SketchwarePaths.getCollectionPath() + File.separator + "image" + File.separator + "data" + File.separator + projectResourceBean.resFullName;
     }
 
