@@ -334,7 +334,7 @@ public class ProjectDataStore {
               if (j >= 0) {
                 BlockBean blockBean = arrayList2.get(j);
                 ClassInfo gx = blockBean.getClassInfo();
-                if (gx != null && gx.b(paramViewBean.getClassInfo().a()) && blockBean.spec.equals(paramViewBean.id)) {
+                if (gx != null && gx.isExactType(paramViewBean.getClassInfo().a()) && blockBean.spec.equals(paramViewBean.id)) {
                   arrayList2.remove(j);
                   i = j;
                   continue;
@@ -349,7 +349,7 @@ public class ProjectDataStore {
                       i = j;
                       if (b < arrayList3.size()) {
                         ClassInfo gx1 = arrayList3.get(b);
-                        if (gx1 != null && paramViewBean.getClassInfo().a(gx1) && ((String)blockBean.parameters.get(b)).equals(paramViewBean.id))
+                        if (gx1 != null && paramViewBean.getClassInfo().isAssignableFrom(gx1) && ((String)blockBean.parameters.get(b)).equals(paramViewBean.id))
                           blockBean.parameters.set(b, ""); 
                         b++;
                         continue;
@@ -497,7 +497,7 @@ public class ProjectDataStore {
         if (j >= 0) {
           BlockBean blockBean = arrayList.get(j);
           ClassInfo gx = blockBean.getClassInfo();
-          if (gx != null && gx.b(paramGx.a()) && blockBean.spec.equals(paramString2)) {
+          if (gx != null && gx.isExactType(paramGx.a()) && blockBean.spec.equals(paramString2)) {
             arrayList.remove(j);
             i = j;
             continue;
@@ -512,7 +512,7 @@ public class ProjectDataStore {
                 i = j;
                 if (b < arrayList1.size()) {
                   ClassInfo gx1 = arrayList1.get(b);
-                  if (gx1 != null && paramGx.a(gx1) && ((String)blockBean.parameters.get(b)).equals(paramString2))
+                  if (gx1 != null && paramGx.isAssignableFrom(gx1) && ((String)blockBean.parameters.get(b)).equals(paramString2))
                     blockBean.parameters.set(b, ""); 
                   b++;
                   continue;
@@ -945,13 +945,13 @@ public class ProjectDataStore {
         continue; 
       for (BlockBean blockBean : (ArrayList<BlockBean>)entry.getValue()) {
         ClassInfo gx = blockBean.getClassInfo();
-        if (gx != null && gx.b() && blockBean.spec.equals(paramString2))
+        if (gx != null && gx.isList() && blockBean.spec.equals(paramString2))
           return true; 
         ArrayList<ClassInfo> arrayList = blockBean.getParamClassInfo();
         if (arrayList != null && arrayList.size() > 0)
           for (int b = 0; b < arrayList.size(); b++) {
             ClassInfo gx1 = arrayList.get(b);
-            if (gx1 != null && gx1.b() && ((String)blockBean.parameters.get(b)).equals(paramString2))
+            if (gx1 != null && gx1.isList() && ((String)blockBean.parameters.get(b)).equals(paramString2))
               return true; 
           }  
       } 
@@ -1040,13 +1040,13 @@ public class ProjectDataStore {
         continue; 
       for (BlockBean blockBean : (ArrayList<BlockBean>)entry.getValue()) {
         ClassInfo gx = blockBean.getClassInfo();
-        if (gx != null && gx.c() && blockBean.spec.equals(paramString2))
+        if (gx != null && gx.isVariable() && blockBean.spec.equals(paramString2))
           return true; 
         ArrayList<ClassInfo> arrayList = blockBean.getParamClassInfo();
         if (arrayList != null && arrayList.size() > 0)
           for (int b = 0; b < arrayList.size(); b++) {
             ClassInfo gx1 = arrayList.get(b);
-            if (gx1 != null && gx1.c() && ((String)blockBean.parameters.get(b)).equals(paramString2))
+            if (gx1 != null && gx1.isVariable() && ((String)blockBean.parameters.get(b)).equals(paramString2))
               return true; 
           }  
       } 
@@ -1084,12 +1084,12 @@ public class ProjectDataStore {
     for (ViewBean viewBean : (ArrayList<ViewBean>)arrayList) {
       Pair<Integer, String> pair;
       if (paramString2.equals("CheckBox")) {
-        if (viewBean.getClassInfo().a("CompoundButton")) {
+        if (viewBean.getClassInfo().matchesType("CompoundButton")) {
           pair = new Pair(Integer.valueOf(viewBean.type), viewBean.id);
         } else {
           continue;
         } 
-      } else if (viewBean.getClassInfo().a(paramString2)) {
+      } else if (viewBean.getClassInfo().matchesType(paramString2)) {
         pair = new Pair(Integer.valueOf(viewBean.type), viewBean.id);
       } else {
         continue;
@@ -1222,7 +1222,7 @@ public class ProjectDataStore {
     if (arrayList == null)
       return false; 
     for (ViewBean viewBean : (ArrayList<ViewBean>)arrayList) {
-      if (viewBean.getClassInfo().a("CompoundButton") && viewBean.id.equals(paramString2))
+      if (viewBean.getClassInfo().matchesType("CompoundButton") && viewBean.id.equals(paramString2))
         return true; 
     } 
     return false;
@@ -1366,7 +1366,7 @@ public class ProjectDataStore {
     if (arrayList == null)
       return false; 
     for (ViewBean viewBean : (ArrayList<ViewBean>)arrayList) {
-      if (viewBean.getClassInfo().a("TextView") && viewBean.id.equals(paramString2))
+      if (viewBean.getClassInfo().matchesType("TextView") && viewBean.id.equals(paramString2))
         return true; 
     } 
     return false;
@@ -1702,7 +1702,7 @@ public class ProjectDataStore {
     if (arrayList != null) {
       Iterator<ViewBean> iterator = arrayList.iterator();
       while (iterator.hasNext()) {
-        if (((ViewBean)iterator.next()).getClassInfo().a(paramString2)) {
+        if (((ViewBean)iterator.next()).getClassInfo().matchesType(paramString2)) {
           bool = true;
           break;
         } 

@@ -21,11 +21,11 @@ public class ClassInfo {
         return className;
     }
 
-    public boolean a(ClassInfo gx) {
-        return a(gx.className);
+    public boolean isAssignableFrom(ClassInfo gx) {
+        return matchesType(gx.className);
     }
 
-    public boolean a(String classInfo) {
+    public boolean matchesType(String classInfo) {
         if (classInfo.equals("!") || classInfo.equals(className)) {
             return true;
         } else {
@@ -36,62 +36,20 @@ public class ClassInfo {
         }
     }
 
-    public boolean b() {
-        return a("List");
+    public boolean isList() {
+        return matchesType("List");
     }
 
-    public boolean b(String classInfo) {
+    public boolean isExactType(String classInfo) {
         return className.equals(classInfo);
     }
 
-    public boolean c() {
-        return a("Var");
-    }
-
-    public boolean d() {
-        return a("View");
-    }
-
-    /**
-     * Checks if this type is assignable from the given type (i.e. this type or a parent in the hierarchy).
-     */
-    public boolean isAssignableFrom(ClassInfo gx) {
-        return a(gx);
-    }
-
-    /**
-     * Checks if this class matches the given class name or is a parent type in the hierarchy.
-     */
-    public boolean matchesType(String typeName) {
-        return a(typeName);
-    }
-
-    /**
-     * @return true if this type is a List type (ListInt, ListString, ListMap, etc.)
-     */
-    public boolean isList() {
-        return b();
-    }
-
-    /**
-     * Checks if this class name exactly equals the given name.
-     */
-    public boolean isExactType(String typeName) {
-        return b(typeName);
-    }
-
-    /**
-     * @return true if this type is a variable type (boolean, double, String, Map)
-     */
     public boolean isVariable() {
-        return c();
+        return matchesType("Var");
     }
 
-    /**
-     * @return true if this type is a View type
-     */
     public boolean isView() {
-        return d();
+        return matchesType("View");
     }
 
     private void initializeClassPath() {

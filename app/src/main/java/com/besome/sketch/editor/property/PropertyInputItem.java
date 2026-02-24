@@ -860,7 +860,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
         if (bean != null) {
             var simpleName = getSimpleName(bean);
             var classInfo = bean.getClassInfo();
-            if (classInfo.b("CardView")) {
+            if (classInfo.isExactType("CardView")) {
                 attrs.add("app:cardBackgroundColor");
                 attrs.add("app:cardElevation");
                 attrs.add("app:cardCornerRadius");

@@ -257,11 +257,11 @@ public class BlockInterpreter {
                         String param = getParamValue(params.get(i), paramsTypes.get(i));
                         if (param.isEmpty()) {
                             ClassInfo paramInfo = bean.getParamClassInfo().get(i);
-                            if (paramInfo.b("boolean")) {
+                            if (paramInfo.isExactType("boolean")) {
                                 opcode += "true";
-                            } else if (paramInfo.b("double")) {
+                            } else if (paramInfo.isExactType("double")) {
                                 opcode += "0";
-                            } else if (paramInfo.b("String")) {
+                            } else if (paramInfo.isExactType("String")) {
                                 hasStringParam = true;
                             }
                         } else {
