@@ -274,11 +274,11 @@ public class ResourceManager {
     if (arrayList != null && arrayList.size() > 0)
       for (ProjectResourceBean projectResourceBean : this.fonts) {
         if (projectResourceBean.resName.equals(name)) {
-          StringBuilder stringBuilder = new StringBuilder();
-          stringBuilder.append(this.fontDirPath);
-          stringBuilder.append(File.separator);
-          stringBuilder.append(projectResourceBean.resFullName);
-          return stringBuilder.toString();
+          StringBuilder pathBuilder = new StringBuilder();
+          pathBuilder.append(this.fontDirPath);
+          pathBuilder.append(File.separator);
+          pathBuilder.append(projectResourceBean.resFullName);
+          return pathBuilder.toString();
         } 
       }  
     return "";
@@ -328,11 +328,11 @@ public class ResourceManager {
     if (arrayList != null && arrayList.size() > 0)
       for (ProjectResourceBean projectResourceBean : this.images) {
         if (projectResourceBean.resName.equals(name)) {
-          StringBuilder stringBuilder = new StringBuilder();
-          stringBuilder.append(this.imageDirPath);
-          stringBuilder.append(File.separator);
-          stringBuilder.append(projectResourceBean.resFullName);
-          return stringBuilder.toString();
+          StringBuilder pathBuilder = new StringBuilder();
+          pathBuilder.append(this.imageDirPath);
+          pathBuilder.append(File.separator);
+          pathBuilder.append(projectResourceBean.resFullName);
+          return pathBuilder.toString();
         } 
       }  
     return "";
@@ -400,11 +400,11 @@ public class ResourceManager {
     if (arrayList != null && arrayList.size() > 0)
       for (ProjectResourceBean projectResourceBean : this.sounds) {
         if (projectResourceBean.resName.equals(name)) {
-          StringBuilder stringBuilder = new StringBuilder();
-          stringBuilder.append(this.soundDirPath);
-          stringBuilder.append(File.separator);
-          stringBuilder.append(projectResourceBean.resFullName);
-          return stringBuilder.toString();
+          StringBuilder pathBuilder = new StringBuilder();
+          pathBuilder.append(this.soundDirPath);
+          pathBuilder.append(File.separator);
+          pathBuilder.append(projectResourceBean.resFullName);
+          return pathBuilder.toString();
         } 
       }  
     return "";
@@ -412,11 +412,11 @@ public class ResourceManager {
   
   public void deleteBackup() {
     String backupPath = SketchwarePaths.getBackupPath(this.projectId);
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(backupPath);
-    stringBuilder.append(File.separator);
-    stringBuilder.append("resource");
-    backupPath = stringBuilder.toString();
+    StringBuilder pathBuilder = new StringBuilder();
+    pathBuilder.append(backupPath);
+    pathBuilder.append(File.separator);
+    pathBuilder.append("resource");
+    backupPath = pathBuilder.toString();
     this.fileUtil.deleteFileByPath(backupPath);
   }
   
@@ -493,11 +493,11 @@ public class ResourceManager {
   
   public boolean hasBackup() {
     String backupPath = SketchwarePaths.getBackupPath(this.projectId);
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(backupPath);
-    stringBuilder.append(File.separator);
-    stringBuilder.append("resource");
-    backupPath = stringBuilder.toString();
+    StringBuilder pathBuilder = new StringBuilder();
+    pathBuilder.append(backupPath);
+    pathBuilder.append(File.separator);
+    pathBuilder.append("resource");
+    backupPath = pathBuilder.toString();
     return this.fileUtil.exists(backupPath);
   }
   
@@ -506,11 +506,11 @@ public class ResourceManager {
     this.sounds = new ArrayList<ProjectResourceBean>();
     this.fonts = new ArrayList<ProjectResourceBean>();
     String backupDir = SketchwarePaths.getBackupPath(this.projectId);
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(backupDir);
-    stringBuilder.append(File.separator);
-    stringBuilder.append("resource");
-    String resourcePath = stringBuilder.toString();
+    StringBuilder pathBuilder = new StringBuilder();
+    pathBuilder.append(backupDir);
+    pathBuilder.append(File.separator);
+    pathBuilder.append("resource");
+    String resourcePath = pathBuilder.toString();
     BufferedReader bufferedReader = null;
     try {
       byte[] bytes = this.fileUtil.readFileBytes(resourcePath);
@@ -606,11 +606,11 @@ public class ResourceManager {
   
   public void saveToData() {
     String dataDir = SketchwarePaths.getDataPath(this.projectId);
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(dataDir);
-    stringBuilder.append(File.separator);
-    stringBuilder.append("resource");
-    String resourcePath = stringBuilder.toString();
+    StringBuilder pathBuilder = new StringBuilder();
+    pathBuilder.append(dataDir);
+    pathBuilder.append(File.separator);
+    pathBuilder.append("resource");
+    String resourcePath = pathBuilder.toString();
     StringBuffer stringBuffer = new StringBuffer();
     serializeResources(stringBuffer);
     try {
@@ -624,11 +624,11 @@ public class ResourceManager {
   
   public void saveToBackup() {
     String backupPath = SketchwarePaths.getBackupPath(this.projectId);
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(backupPath);
-    stringBuilder.append(File.separator);
-    stringBuilder.append("resource");
-    backupPath = stringBuilder.toString();
+    StringBuilder pathBuilder = new StringBuilder();
+    pathBuilder.append(backupPath);
+    pathBuilder.append(File.separator);
+    pathBuilder.append("resource");
+    backupPath = pathBuilder.toString();
     StringBuffer stringBuffer = new StringBuffer();
     serializeResources(stringBuffer);
     try {

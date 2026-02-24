@@ -45,11 +45,11 @@ public class ProjectFileManager {
   
   public void deleteBackup() {
     String backupPath = SketchwarePaths.getBackupPath(this.projectId);
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(backupPath);
-    stringBuilder.append(File.separator);
-    stringBuilder.append("file");
-    backupPath = stringBuilder.toString();
+    StringBuilder pathBuilder = new StringBuilder();
+    pathBuilder.append(backupPath);
+    pathBuilder.append(File.separator);
+    pathBuilder.append("file");
+    backupPath = pathBuilder.toString();
     this.fileUtil.deleteFileByPath(backupPath);
   }
   
@@ -290,22 +290,22 @@ public class ProjectFileManager {
   
   public boolean hasBackup() {
     String backupDir = SketchwarePaths.getBackupPath(this.projectId);
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(backupDir);
-    stringBuilder.append(File.separator);
-    stringBuilder.append("file");
-    String filePath = stringBuilder.toString();
+    StringBuilder pathBuilder = new StringBuilder();
+    pathBuilder.append(backupDir);
+    pathBuilder.append(File.separator);
+    pathBuilder.append("file");
+    String filePath = pathBuilder.toString();
     return this.fileUtil.exists(filePath);
   }
   
   public void loadFromBackup() {
     initializeDefaults();
     String backupPath = SketchwarePaths.getBackupPath(this.projectId);
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(backupPath);
-    stringBuilder.append(File.separator);
-    stringBuilder.append("file");
-    String filePath = stringBuilder.toString();
+    StringBuilder pathBuilder = new StringBuilder();
+    pathBuilder.append(backupPath);
+    pathBuilder.append(File.separator);
+    pathBuilder.append("file");
+    String filePath = pathBuilder.toString();
     BufferedReader bufferedReader = null;
     try {
       byte[] bytes = this.fileUtil.readFileBytes(filePath);
@@ -375,20 +375,20 @@ public class ProjectFileManager {
   
   public void saveToBackup() {
     String basePath = SketchwarePaths.getBackupPath(this.projectId);
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(basePath);
-    stringBuilder.append(File.separator);
-    stringBuilder.append("file");
-    writeToFile(stringBuilder.toString());
+    StringBuilder pathBuilder = new StringBuilder();
+    pathBuilder.append(basePath);
+    pathBuilder.append(File.separator);
+    pathBuilder.append("file");
+    writeToFile(pathBuilder.toString());
   }
   
   public void saveToData() {
     String basePath = SketchwarePaths.getDataPath(this.projectId);
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(basePath);
-    stringBuilder.append(File.separator);
-    stringBuilder.append("file");
-    writeToFile(stringBuilder.toString());
+    StringBuilder pathBuilder = new StringBuilder();
+    pathBuilder.append(basePath);
+    pathBuilder.append(File.separator);
+    pathBuilder.append("file");
+    writeToFile(pathBuilder.toString());
     deleteBackup();
   }
 }

@@ -31,11 +31,11 @@ public class LibraryManager {
   
   public void deleteBackup() {
     String backupPath = SketchwarePaths.getBackupPath(this.projectId);
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(backupPath);
-    stringBuilder.append(File.separator);
-    stringBuilder.append("library");
-    backupPath = stringBuilder.toString();
+    StringBuilder pathBuilder = new StringBuilder();
+    pathBuilder.append(backupPath);
+    pathBuilder.append(File.separator);
+    pathBuilder.append("library");
+    backupPath = pathBuilder.toString();
     this.fileUtil.deleteFileByPath(backupPath);
   }
   
@@ -185,11 +185,11 @@ public class LibraryManager {
   
   public boolean hasBackup() {
     String backupDir = SketchwarePaths.getBackupPath(this.projectId);
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(backupDir);
-    stringBuilder.append(File.separator);
-    stringBuilder.append("library");
-    String libraryPath = stringBuilder.toString();
+    StringBuilder pathBuilder = new StringBuilder();
+    pathBuilder.append(backupDir);
+    pathBuilder.append(File.separator);
+    pathBuilder.append("library");
+    String libraryPath = pathBuilder.toString();
     return this.fileUtil.exists(libraryPath);
   }
   
@@ -244,20 +244,20 @@ public class LibraryManager {
   
   public void saveToBackup() {
     String basePath = SketchwarePaths.getBackupPath(this.projectId);
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(basePath);
-    stringBuilder.append(File.separator);
-    stringBuilder.append("library");
-    writeToFile(stringBuilder.toString());
+    StringBuilder pathBuilder = new StringBuilder();
+    pathBuilder.append(basePath);
+    pathBuilder.append(File.separator);
+    pathBuilder.append("library");
+    writeToFile(pathBuilder.toString());
   }
   
   public void saveToData() {
     String basePath = SketchwarePaths.getDataPath(this.projectId);
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(basePath);
-    stringBuilder.append(File.separator);
-    stringBuilder.append("library");
-    writeToFile(stringBuilder.toString());
+    StringBuilder pathBuilder = new StringBuilder();
+    pathBuilder.append(basePath);
+    pathBuilder.append(File.separator);
+    pathBuilder.append("library");
+    writeToFile(pathBuilder.toString());
     deleteBackup();
   }
 }

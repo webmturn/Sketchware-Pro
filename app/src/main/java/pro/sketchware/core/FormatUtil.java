@@ -15,10 +15,10 @@ public class FormatUtil {
     if (ch < 'A' || ch > 'F') {
       b = 97;
       if (ch < 'a' || ch > 'f') {
-        StringBuilder stringBuilder = new StringBuilder("invalid hex digit '");
-        stringBuilder.append(ch);
-        stringBuilder.append("'");
-        throw new IllegalArgumentException(stringBuilder.toString());
+        StringBuilder errorBuilder = new StringBuilder("invalid hex digit '");
+        errorBuilder.append(ch);
+        errorBuilder.append("'");
+        throw new IllegalArgumentException(errorBuilder.toString());
       } 
     } 
     return ch - b + 10;
@@ -51,10 +51,10 @@ public class FormatUtil {
       f /= 1.07374182E9F;
       formatted = (new DecimalFormat("#.#GB")).format(f);
     } else {
-      StringBuilder stringBuilder = new StringBuilder();
-      stringBuilder.append(String.valueOf(index));
-      stringBuilder.append("B");
-      formatted = stringBuilder.toString();
+      StringBuilder sizeBuilder = new StringBuilder();
+      sizeBuilder.append(String.valueOf(index));
+      sizeBuilder.append("B");
+      formatted = sizeBuilder.toString();
     } 
     return formatted;
   }
@@ -140,15 +140,15 @@ public class FormatUtil {
     for (int b = 0; b < value.length(); b++) {
       char c = value.charAt(b);
       if (c == '\\') {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(result);
-        stringBuilder.append(value.charAt(++b));
-        result = stringBuilder.toString();
+        StringBuilder charBuilder = new StringBuilder();
+        charBuilder.append(result);
+        charBuilder.append(value.charAt(++b));
+        result = charBuilder.toString();
       } else {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(result);
-        stringBuilder.append(c);
-        result = stringBuilder.toString();
+        StringBuilder charBuilder = new StringBuilder();
+        charBuilder.append(result);
+        charBuilder.append(c);
+        result = charBuilder.toString();
       } 
     } 
     return result;
@@ -199,10 +199,10 @@ public class FormatUtil {
         } 
         if (hasPercent && (c == '?' || c == '-'))
           break; 
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(token);
-        stringBuilder.append(c);
-        token = stringBuilder.toString();
+        StringBuilder tokenBuilder = new StringBuilder();
+        tokenBuilder.append(token);
+        tokenBuilder.append(c);
+        token = tokenBuilder.toString();
         this.position++;
       } 
       return token;

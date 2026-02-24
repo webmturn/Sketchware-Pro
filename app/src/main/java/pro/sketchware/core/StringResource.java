@@ -350,13 +350,13 @@ public class StringResource {
     eventName = translation;
     if (translation == null)
       eventName = ""; 
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(getTranslatedString(context, R.string.root_spec_common_when));
-    stringBuilder.append(" ");
-    stringBuilder.append(blockType);
-    stringBuilder.append(" ");
-    stringBuilder.append(eventName);
-    return stringBuilder.toString();
+    StringBuilder specBuilder = new StringBuilder();
+    specBuilder.append(getTranslatedString(context, R.string.root_spec_common_when));
+    specBuilder.append(" ");
+    specBuilder.append(blockType);
+    specBuilder.append(" ");
+    specBuilder.append(eventName);
+    return specBuilder.toString();
   }
   
   public String getBlockTranslation(Context context, String blockKeyPrefix, ArrayList<String> specParts) {
@@ -489,11 +489,11 @@ public class StringResource {
         } 
       } 
     } catch (Exception exception) {
-      StringBuilder stringBuilder = new StringBuilder();
-      stringBuilder.append("Faild to load (");
-      stringBuilder.append(resEntryName);
-      stringBuilder.append(")");
-      Log.e("ERROR", stringBuilder.toString(), exception);
+      StringBuilder errorBuilder = new StringBuilder();
+      errorBuilder.append("Faild to load (");
+      errorBuilder.append(resEntryName);
+      errorBuilder.append(")");
+      Log.e("ERROR", errorBuilder.toString(), exception);
     } 
     return resources.getString(resId, formatArgs);
   }
@@ -966,10 +966,10 @@ public class StringResource {
   }
   
   public void loadBlockTranslation(Context context, String blockName) {
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append("block_");
-    stringBuilder.append(BlockSpecRegistry.getBlockSpec(blockName));
-    String translationKey = stringBuilder.toString();
+    StringBuilder keyBuilder = new StringBuilder();
+    keyBuilder.append("block_");
+    keyBuilder.append(BlockSpecRegistry.getBlockSpec(blockName));
+    String translationKey = keyBuilder.toString();
     ArrayList<String> arrayList = BlockSpecRegistry.getBlockParams(blockName);
     this.eventTranslations.put(blockName, getBlockTranslation(context, translationKey, arrayList));
   }
@@ -992,10 +992,10 @@ public class StringResource {
   }
   
   public void loadEventSpecTranslation(Context context, String eventName) {
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append("root_spec_");
-    stringBuilder.append(BlockSpecRegistry.getEventSpec(eventName));
-    String translationKey = stringBuilder.toString();
+    StringBuilder keyBuilder = new StringBuilder();
+    keyBuilder.append("root_spec_");
+    keyBuilder.append(BlockSpecRegistry.getEventSpec(eventName));
+    String translationKey = keyBuilder.toString();
     ArrayList<String> arrayList = BlockSpecRegistry.getBlockMenuItems(eventName);
     this.eventTranslations.put(eventName, getBlockTranslation(context, translationKey, arrayList));
   }
