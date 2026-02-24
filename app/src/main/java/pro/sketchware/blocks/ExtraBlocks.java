@@ -23,7 +23,7 @@ public class ExtraBlocks {
     public ExtraBlocks(LogicEditorActivity logicEditor) {
         eventName = logicEditor.eventName;
         this.logicEditor = logicEditor;
-        javaName = logicEditor.M.getJavaName();
+        javaName = logicEditor.projectFile.getJavaName();
         projectDataManager = ProjectDataManager.getProjectDataManager(logicEditor.scId);
     }
 

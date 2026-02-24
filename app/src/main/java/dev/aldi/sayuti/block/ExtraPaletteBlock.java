@@ -56,7 +56,7 @@ public class ExtraPaletteBlock {
         logicEditor = logicEditorActivity;
         eventName = logicEditorActivity.eventName;
 
-        projectFile = logicEditor.M;
+        projectFile = logicEditor.projectFile;
         javaName = projectFile.getJavaName();
         xmlName = projectFile.getXmlName();
         sc_id = logicEditor.scId;
@@ -381,7 +381,7 @@ public class ExtraPaletteBlock {
 
     public void setBlock(int paletteId, int paletteColor) {
         // Remove previous palette's blocks
-        logicEditor.m.clearAll();
+        logicEditor.paletteBlock.clearAll();
 
         if (eventName.equals("Import")) {
             if (paletteId == 3) {

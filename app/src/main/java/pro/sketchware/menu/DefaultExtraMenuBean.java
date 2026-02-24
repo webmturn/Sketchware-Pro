@@ -58,7 +58,7 @@ public class DefaultExtraMenuBean {
     }
 
     public Pair<String, ArrayList<String>> getMenu(FieldBlockView menu) {
-        var javaName = logicEditor.M.getJavaName();
+        var javaName = logicEditor.projectFile.getJavaName();
         var menuName = menu.getMenuName();
         ArrayList<String> menus = new ArrayList<>();
         String title;

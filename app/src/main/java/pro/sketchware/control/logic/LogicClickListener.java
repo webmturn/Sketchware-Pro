@@ -53,9 +53,9 @@ public class LogicClickListener implements View.OnClickListener {
     public LogicClickListener(LogicEditorActivity logicEditor) {
         this.logicEditor = logicEditor;
         projectDataManager = ProjectDataManager.getProjectDataManager(logicEditor.scId);
-        projectFile = logicEditor.M;
+        projectFile = logicEditor.projectFile;
         eventName = logicEditor.id + "_" + logicEditor.eventName;
-        javaName = logicEditor.M.getJavaName();
+        javaName = logicEditor.projectFile.getJavaName();
     }
 
     private ArrayList<String> getUsedVariable(int type) {
@@ -172,7 +172,7 @@ public class LogicClickListener implements View.OnClickListener {
 
         List<Item> data = new LinkedList<>();
         RemoveAdapter adapter = new RemoveAdapter(logicEditor, data,
-                variableName -> logicEditor.o.hasMapReference(variableName) || projectDataManager.isVariableUsedInBlocks(javaName, variableName, eventName));
+                variableName -> logicEditor.blockPane.hasMapReference(variableName) || projectDataManager.isVariableUsedInBlocks(javaName, variableName, eventName));
         recyclerView.setAdapter(adapter);
 
         List<Pair<List<Integer>, String>> variableTypes = List.of(
@@ -278,7 +278,7 @@ public class LogicClickListener implements View.OnClickListener {
 
         List<Item> data = new LinkedList<>();
         RemoveAdapter adapter = new RemoveAdapter(logicEditor, data,
-                listName -> logicEditor.o.hasListReference(listName) || projectDataManager.isListUsedInBlocks(javaName, listName, eventName));
+                listName -> logicEditor.blockPane.hasListReference(listName) || projectDataManager.isListUsedInBlocks(javaName, listName, eventName));
         recyclerView.setAdapter(adapter);
 
         List<Pair<Integer, String>> listTypes = List.of(

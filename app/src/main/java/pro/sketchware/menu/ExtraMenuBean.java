@@ -84,7 +84,7 @@ public class ExtraMenuBean {
         frc = new FileResConfig(logicA.scId);
         defaultExtraMenu = new DefaultExtraMenuBean(logicA);
         projectDataManager = ProjectDataManager.getProjectDataManager(logicA.scId);
-        javaName = logicA.M.getJavaName();
+        javaName = logicA.projectFile.getJavaName();
     }
 
     public static void setupSearchView(View view, ViewGroup viewGroup) {
