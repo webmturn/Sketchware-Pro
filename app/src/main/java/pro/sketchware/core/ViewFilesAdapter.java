@@ -34,7 +34,7 @@ public class ViewFilesAdapter extends BaseFragment {
   
   public int[] viewCounters = new int[19];
   
-  public final String generateUniqueViewId(int position, String paramString) {
+  public final String generateUniqueViewId(int position, String str) {
     String str1 = SketchwarePaths.getWidgetTypeName(position);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str1);
@@ -43,15 +43,15 @@ public class ViewFilesAdapter extends BaseFragment {
     arrayOfInt[position] = i;
     stringBuilder.append(i);
     String str2 = stringBuilder.toString();
-    ArrayList arrayList = ProjectDataManager.getProjectDataManager(this.projectId).getViews(paramString);
-    paramString = str2;
+    ArrayList arrayList = ProjectDataManager.getProjectDataManager(this.projectId).getViews(str);
+    str = str2;
     while (true) {
       int found = 0;
       Iterator iterator = arrayList.iterator();
       while (true) {
         i = found;
         if (iterator.hasNext()) {
-          if (paramString.equals(((ViewBean)iterator.next()).id)) {
+          if (str.equals(((ViewBean)iterator.next()).id)) {
             i = 1;
             break;
           } 
@@ -60,23 +60,23 @@ public class ViewFilesAdapter extends BaseFragment {
         break;
       } 
       if (i == 0)
-        return paramString; 
+        return str; 
       StringBuilder stringBuilder1 = new StringBuilder();
       stringBuilder1.append(str1);
       int[] arrayOfInt1 = this.viewCounters;
       i = arrayOfInt1[position] + 1;
       arrayOfInt1[position] = i;
       stringBuilder1.append(i);
-      paramString = stringBuilder1.toString(); // Fix: assign generated string back to paramString
+      str = stringBuilder1.toString(); // Fix: assign generated string back to str
     } 
   }
   
-  public final ArrayList<ViewBean> getPresetViews(String paramString, int position) {
+  public final ArrayList<ViewBean> getPresetViews(String str, int position) {
     ArrayList<ViewBean> arrayList;
     if (position == 277) {
-      arrayList = PresetLayoutFactory.getListItemPresetViews(paramString);
+      arrayList = PresetLayoutFactory.getListItemPresetViews(str);
     } else if (position == 278) {
-      arrayList = PresetLayoutFactory.getDrawerPresetViews(paramString);
+      arrayList = PresetLayoutFactory.getDrawerPresetViews(str);
     } else {
       arrayList = new ArrayList<>();
     }
@@ -88,29 +88,29 @@ public class ViewFilesAdapter extends BaseFragment {
     this.adapter.notifyDataSetChanged();
   }
   
-  public void addCustomView(String paramString) {
+  public void addCustomView(String str) {
     boolean found = false;
     for (ProjectFileBean bean : this.projectFiles) {
-      if (bean.fileType == 2 && bean.fileName.equals(paramString)) {
+      if (bean.fileType == 2 && bean.fileName.equals(str)) {
         found = true;
         break;
       }
     }
     if (!found) {
-      this.projectFiles.add(new ProjectFileBean(2, paramString));
+      this.projectFiles.add(new ProjectFileBean(2, str));
       this.adapter.notifyDataSetChanged();
     }
   }
   
-  public void setSelectionMode(boolean paramBoolean) {
-    this.isSelectionMode = Boolean.valueOf(paramBoolean);
+  public void setSelectionMode(boolean flag) {
+    this.isSelectionMode = Boolean.valueOf(flag);
     deselectAll();
     this.adapter.notifyDataSetChanged();
   }
   
-  public void removeCustomView(String paramString) {
+  public void removeCustomView(String str) {
     for (ProjectFileBean projectFileBean : this.projectFiles) {
-      if (projectFileBean.fileType == 2 && projectFileBean.fileName.equals(paramString)) {
+      if (projectFileBean.fileType == 2 && projectFileBean.fileName.equals(str)) {
         this.projectFiles.remove(projectFileBean);
         break;
       } 
@@ -177,15 +177,15 @@ public class ViewFilesAdapter extends BaseFragment {
     updateEmptyState();
   }
   
-  public void onActivityResult(int paramInt1, int paramInt2, Intent resultIntent) {
-    if ((paramInt1 == 277 || paramInt1 == 278) && paramInt2 == -1) {
+  public void onActivityResult(int start, int end, Intent resultIntent) {
+    if ((start == 277 || start == 278) && end == -1) {
       ProjectFileBean projectFileBean = this.projectFiles.get(this.adapter.selectedPosition);
       ArrayList<ViewBean> arrayList2 = ProjectDataManager.getProjectDataManager(this.projectId).getViews(projectFileBean.getXmlName());
-      for (paramInt2 = arrayList2.size() - 1; paramInt2 >= 0; paramInt2--) {
-        ViewBean viewBean = arrayList2.get(paramInt2);
+      for (end = arrayList2.size() - 1; end >= 0; end--) {
+        ViewBean viewBean = arrayList2.get(end);
         ProjectDataManager.getProjectDataManager(this.projectId).removeView(projectFileBean, viewBean);
       } 
-      ArrayList<ViewBean> arrayList1 = getPresetViews(((ProjectFileBean)resultIntent.getParcelableExtra("preset_data")).presetName, paramInt1);
+      ArrayList<ViewBean> arrayList1 = getPresetViews(((ProjectFileBean)resultIntent.getParcelableExtra("preset_data")).presetName, start);
       ProjectDataManager.getProjectDataManager(this.projectId);
       for (ViewBean viewBean : ProjectDataStore.getSortedRootViews(arrayList1)) {
         viewBean.id = generateUniqueViewId(viewBean.type, projectFileBean.getXmlName());
@@ -237,33 +237,33 @@ public class ViewFilesAdapter extends BaseFragment {
       return (this.outerAdapter.projectFiles != null) ? this.outerAdapter.projectFiles.size() : 0;
     }
     
-    public void onBindViewHolder(ViewHolder param1a, int param1Int) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
       if (this.outerAdapter.isSelectionMode.booleanValue()) {
-        param1a.deleteContainer.setVisibility(View.VISIBLE);
-        param1a.activityIcon.setVisibility(View.GONE);
+        holder.deleteContainer.setVisibility(View.VISIBLE);
+        holder.activityIcon.setVisibility(View.GONE);
       } else {
-        param1a.deleteContainer.setVisibility(View.GONE);
-        param1a.activityIcon.setVisibility(View.VISIBLE);
+        holder.deleteContainer.setVisibility(View.GONE);
+        holder.activityIcon.setVisibility(View.VISIBLE);
       } 
-      ProjectFileBean projectFileBean = this.outerAdapter.projectFiles.get(param1Int);
-      param1a.activityIcon.setImageResource(R.drawable.activity_preset_1);
-      param1a.checkbox.setChecked(((SelectableBean)projectFileBean).isSelected);
-      param1Int = projectFileBean.fileType;
-      if (param1Int == 1) {
-        param1a.screenName.setText(projectFileBean.getXmlName());
-      } else if (param1Int == 2) {
-        param1a.checkbox.setVisibility(View.GONE);
-        param1a.activityIcon.setImageResource(R.drawable.activity_0110);
-        param1a.screenName.setText(projectFileBean.fileName.substring(1));
+      ProjectFileBean projectFileBean = this.outerAdapter.projectFiles.get(position);
+      holder.activityIcon.setImageResource(R.drawable.activity_preset_1);
+      holder.checkbox.setChecked(((SelectableBean)projectFileBean).isSelected);
+      position = projectFileBean.fileType;
+      if (position == 1) {
+        holder.screenName.setText(projectFileBean.getXmlName());
+      } else if (position == 2) {
+        holder.checkbox.setVisibility(View.GONE);
+        holder.activityIcon.setImageResource(R.drawable.activity_0110);
+        holder.screenName.setText(projectFileBean.fileName.substring(1));
       } 
       if (((SelectableBean)projectFileBean).isSelected) {
-        param1a.deleteIcon.setImageResource(R.drawable.ic_checkmark_green_48dp);
+        holder.deleteIcon.setImageResource(R.drawable.ic_checkmark_green_48dp);
         return;
       } 
-      param1a.deleteIcon.setImageResource(R.drawable.ic_trashcan_white_48dp);
+      holder.deleteIcon.setImageResource(R.drawable.ic_trashcan_white_48dp);
     }
     
-    public ViewHolder onCreateViewHolder(ViewGroup param1ViewGroup, int param1Int) {
+    public ViewHolder onCreateViewHolder(ViewGroup param1ViewGroup, int position) {
       return new ViewHolder(this, LayoutInflater.from(param1ViewGroup.getContext()).inflate(R.layout.manage_view_custom_list_item, param1ViewGroup, false));
     }
     

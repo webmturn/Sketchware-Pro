@@ -100,8 +100,8 @@ public class BaseBlockView extends RelativeLayout {
   
   public int blockWidth;
   
-  public BaseBlockView(Context paramContext, String paramString1, String paramString2, boolean paramBoolean) {
-    super(paramContext);
+  public BaseBlockView(Context context, String key, String value, boolean flag) {
+    super(context);
     this.borderWidth = 3;
     this.minHeight = 12;
     this.cornerRadius = 15;
@@ -134,12 +134,12 @@ public class BaseBlockView extends RelativeLayout {
     this.reflectionStrokeWidth = 1;
     this.defaultBlockColor = 805306368;
     this.classInfo = null;
-    this.context = paramContext;
-    this.blockType = paramString1;
-    if (paramString2 != null && paramString2.indexOf(".") > 0) {
-      this.componentType = paramString2.substring(0, paramString2.indexOf("."));
+    this.context = context;
+    this.blockType = key;
+    if (value != null && value.indexOf(".") > 0) {
+      this.componentType = value.substring(0, value.indexOf("."));
     } else {
-      this.componentType = paramString2;
+      this.componentType = value;
     }
     initClassInfo();
     String type = this.blockType;
@@ -160,13 +160,13 @@ public class BaseBlockView extends RelativeLayout {
       case "a": this.shapeType = 1; break;
     }
     this.blockColor = this.defaultBlockColor;
-    this.isEditable = paramBoolean;
+    this.isEditable = flag;
     setWillNotDraw(false);
-    initDensityAndPaints(paramContext);
+    initDensityAndPaints(context);
   }
   
-  public BaseBlockView(Context paramContext, String paramString, boolean paramBoolean) {
-    this(paramContext, paramString, "", paramBoolean);
+  public BaseBlockView(Context context, String str, boolean flag) {
+    this(context, str, "", flag);
   }
   
   private float[] getBooleanReflections() {
@@ -220,18 +220,18 @@ public class BaseBlockView extends RelativeLayout {
     this.classInfo = ComponentTypeMapper.getClassInfo(this.blockType, this.componentType);
   }
   
-  public void setBlockSize(float paramFloat1, float paramFloat2, boolean paramBoolean) {
+  public void setBlockSize(float paramFloat1, float paramFloat2, boolean flag) {
     if (this.shapeType == 9) {
       this.blockWidth = (int)paramFloat1 + this.paramSpacing;
     } else {
       this.blockWidth = (int)paramFloat1;
     } 
     this.blockHeight = (int)paramFloat2;
-    if (paramBoolean)
+    if (flag)
       refreshLayout(); 
   }
   
-  public void copyBlockDimensions(BaseBlockView paramTs, boolean paramBoolean1, boolean paramBoolean2, int paramInt) {
+  public void copyBlockDimensions(BaseBlockView paramTs, boolean paramBoolean1, boolean paramBoolean2, int index) {
     this.blockColor = -16777216;
     this.shapeType = paramTs.shapeType;
     this.blockWidth = paramTs.blockWidth;
@@ -242,14 +242,14 @@ public class BaseBlockView extends RelativeLayout {
       if (paramBoolean2) {
         this.shapeType = 4;
         this.blockHeight = (int)(this.density * 6.0F);
-      } else if (paramInt > 0) {
-        this.contentHeight = paramInt - this.borderWidth;
+      } else if (index > 0) {
+        this.contentHeight = index - this.borderWidth;
       }  
     refreshLayout();
   }
   
-  public final void initDensityAndPaints(Context paramContext) {
-    this.density = ViewUtil.dpToPx(paramContext, 1.0F);
+  public final void initDensityAndPaints(Context context) {
+    this.density = ViewUtil.dpToPx(context, 1.0F);
     float f1 = this.borderWidth;
     float f2 = this.density;
     this.borderWidth = (int)(f1 * f2);
@@ -332,40 +332,40 @@ public class BaseBlockView extends RelativeLayout {
     paramPath.lineTo(this.blockWidth, this.notchWidth);
   }
   
-  public final void drawSubstackBottomPath(Path paramPath, int paramInt) {
-    paramPath.lineTo(this.cornerRadius, (paramInt - this.notchDepth));
+  public final void drawSubstackBottomPath(Path paramPath, int index) {
+    paramPath.lineTo(this.cornerRadius, (index - this.notchDepth));
     float f1 = (this.cornerRadius + this.notchDepth);
-    float f2 = paramInt;
+    float f2 = index;
     paramPath.lineTo(f1, f2);
     paramPath.lineTo((this.blockWidth - this.notchWidth), f2);
-    paramPath.lineTo(this.blockWidth, (paramInt + this.notchWidth));
+    paramPath.lineTo(this.blockWidth, (index + this.notchWidth));
   }
   
-  public final void drawBottomPath(Path paramPath, int paramInt1, boolean paramBoolean, int paramInt2) {
-    paramPath.lineTo(this.blockWidth, (paramInt1 - this.notchWidth));
+  public final void drawBottomPath(Path paramPath, int start, boolean flag, int end) {
+    paramPath.lineTo(this.blockWidth, (start - this.notchWidth));
     float f1 = (this.blockWidth - this.notchWidth);
-    float f2 = paramInt1;
+    float f2 = start;
     paramPath.lineTo(f1, f2);
-    if (paramBoolean) {
-      paramPath.lineTo((this.connectorEndOffset + paramInt2), f2);
-      paramPath.lineTo((this.connectorEnd + paramInt2), (this.borderWidth + paramInt1));
-      paramPath.lineTo((this.connectorStart + paramInt2), (this.borderWidth + paramInt1));
-      paramPath.lineTo((this.connectorOffset + paramInt2), f2);
+    if (flag) {
+      paramPath.lineTo((this.connectorEndOffset + end), f2);
+      paramPath.lineTo((this.connectorEnd + end), (this.borderWidth + start));
+      paramPath.lineTo((this.connectorStart + end), (this.borderWidth + start));
+      paramPath.lineTo((this.connectorOffset + end), f2);
     } 
-    if (paramInt2 > 0) {
-      paramPath.lineTo((this.notchDepth + paramInt2), f2);
-      paramPath.lineTo(paramInt2, (paramInt1 + this.notchDepth));
+    if (end > 0) {
+      paramPath.lineTo((this.notchDepth + end), f2);
+      paramPath.lineTo(end, (start + this.notchDepth));
     } else {
-      paramPath.lineTo((paramInt2 + this.notchWidth), f2);
-      paramPath.lineTo(0.0F, (paramInt1 - this.notchWidth));
+      paramPath.lineTo((end + this.notchWidth), f2);
+      paramPath.lineTo(0.0F, (start - this.notchWidth));
     } 
   }
   
-  public final float[] getTopReflectionLines(int paramInt) {
+  public final float[] getTopReflectionLines(int index) {
     int i = this.outlineStrokeWidth;
     float f1 = (i / 2 + 0);
     int j = this.notchWidth;
-    float f2 = (paramInt - j);
+    float f2 = (index - j);
     float f3 = (i / 2 + 0);
     float f4 = j;
     float f5 = (i / 2 + 0);
@@ -377,31 +377,31 @@ public class BaseBlockView extends RelativeLayout {
     float f11 = this.connectorOffset;
     float f12 = (i / 2 + 0);
     float f13 = this.connectorStart;
-    paramInt = this.borderWidth;
-    float f14 = (i / 2 + paramInt);
+    index = this.borderWidth;
+    float f14 = (i / 2 + index);
     int k = this.connectorEnd;
     float f15 = k;
-    float f16 = (i / 2 + paramInt);
+    float f16 = (i / 2 + index);
     float f17 = k;
-    float f18 = (paramInt + i / 2);
-    paramInt = this.connectorEndOffset;
+    float f18 = (index + i / 2);
+    index = this.connectorEndOffset;
     return new float[] { 
         f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, 
-        f11, f12, f13, f14, f15, f16, f17, f18, paramInt, (i / 2 + 0), 
-        paramInt, (i / 2 + 0), (this.blockWidth - j), (i / 2 + 0) };
+        f11, f12, f13, f14, f15, f16, f17, f18, index, (i / 2 + 0), 
+        index, (i / 2 + 0), (this.blockWidth - j), (i / 2 + 0) };
   }
   
-  public final float[] getLeftSideShadowLines(int paramInt1, int paramInt2) {
+  public final float[] getLeftSideShadowLines(int start, int end) {
     int i = this.cornerRadius;
     int j = this.notchDepth;
     float f = (i + j);
     int k = this.outlineStrokeWidth;
-    return new float[] { f, (paramInt1 - k / 2), (i - k / 2), (paramInt1 + j), (i - k / 2), (paramInt1 + j), (i - k / 2), (paramInt2 - j) };
+    return new float[] { f, (start - k / 2), (i - k / 2), (start + j), (i - k / 2), (start + j), (i - k / 2), (end - j) };
   }
   
-  public final float[] getBottomShadowLines(int paramInt1, boolean paramBoolean, int paramInt2) {
+  public final float[] getBottomShadowLines(int start, boolean flag, int end) {
     float[] arrayOfFloat;
-    if (paramBoolean) {
+    if (flag) {
       arrayOfFloat = new float[24];
     } else {
       arrayOfFloat = new float[8];
@@ -410,52 +410,52 @@ public class BaseBlockView extends RelativeLayout {
     arrayOfFloat[0] = i;
     int j = this.notchWidth;
     int k = this.outlineStrokeWidth;
-    arrayOfFloat[1] = (paramInt1 - j - k / 2);
+    arrayOfFloat[1] = (start - j - k / 2);
     arrayOfFloat[2] = (i - j);
-    arrayOfFloat[3] = (paramInt1 - k / 2);
-    if (paramBoolean) {
+    arrayOfFloat[3] = (start - k / 2);
+    if (flag) {
       arrayOfFloat[4] = (i - j);
-      arrayOfFloat[5] = (paramInt1 - k / 2);
+      arrayOfFloat[5] = (start - k / 2);
       i = this.connectorEndOffset;
-      arrayOfFloat[6] = (paramInt2 + i);
-      arrayOfFloat[7] = (paramInt1 - k / 2);
-      arrayOfFloat[8] = (i + paramInt2);
-      arrayOfFloat[9] = (paramInt1 - k / 2);
+      arrayOfFloat[6] = (end + i);
+      arrayOfFloat[7] = (start - k / 2);
+      arrayOfFloat[8] = (i + end);
+      arrayOfFloat[9] = (start - k / 2);
       int m = this.connectorEnd;
-      arrayOfFloat[10] = (paramInt2 + m);
+      arrayOfFloat[10] = (end + m);
       i = this.borderWidth;
-      arrayOfFloat[11] = (paramInt1 + i - k / 2);
-      arrayOfFloat[12] = (m + paramInt2);
-      arrayOfFloat[13] = (paramInt1 + i - k / 2);
+      arrayOfFloat[11] = (start + i - k / 2);
+      arrayOfFloat[12] = (m + end);
+      arrayOfFloat[13] = (start + i - k / 2);
       m = this.connectorStart;
-      arrayOfFloat[14] = (paramInt2 + m);
-      arrayOfFloat[15] = (paramInt1 + i - k / 2);
-      arrayOfFloat[16] = (m + paramInt2);
-      arrayOfFloat[17] = (i + paramInt1 - k / 2);
+      arrayOfFloat[14] = (end + m);
+      arrayOfFloat[15] = (start + i - k / 2);
+      arrayOfFloat[16] = (m + end);
+      arrayOfFloat[17] = (i + start - k / 2);
       i = this.connectorOffset;
-      arrayOfFloat[18] = (paramInt2 + i);
-      arrayOfFloat[19] = (paramInt1 - k / 2);
-      if (paramInt2 > 0) {
-        arrayOfFloat[20] = (i + paramInt2);
-        arrayOfFloat[21] = (paramInt1 - k / 2);
-        arrayOfFloat[22] = (paramInt2 + this.notchDepth);
-        arrayOfFloat[23] = (paramInt1 - k / 2);
+      arrayOfFloat[18] = (end + i);
+      arrayOfFloat[19] = (start - k / 2);
+      if (end > 0) {
+        arrayOfFloat[20] = (i + end);
+        arrayOfFloat[21] = (start - k / 2);
+        arrayOfFloat[22] = (end + this.notchDepth);
+        arrayOfFloat[23] = (start - k / 2);
       } else {
-        arrayOfFloat[20] = (i + paramInt2);
-        arrayOfFloat[21] = (paramInt1 - k / 2);
-        arrayOfFloat[22] = (paramInt2 + j);
-        arrayOfFloat[23] = (paramInt1 - k / 2);
+        arrayOfFloat[20] = (i + end);
+        arrayOfFloat[21] = (start - k / 2);
+        arrayOfFloat[22] = (end + j);
+        arrayOfFloat[23] = (start - k / 2);
       } 
-    } else if (paramInt2 > 0) {
+    } else if (end > 0) {
       arrayOfFloat[4] = (i - j);
-      arrayOfFloat[5] = (paramInt1 - k / 2);
-      arrayOfFloat[6] = (paramInt2 + this.notchDepth);
-      arrayOfFloat[7] = (paramInt1 - k / 2);
+      arrayOfFloat[5] = (start - k / 2);
+      arrayOfFloat[6] = (end + this.notchDepth);
+      arrayOfFloat[7] = (start - k / 2);
     } else {
       arrayOfFloat[4] = (i - j);
-      arrayOfFloat[5] = (paramInt1 - k / 2);
-      arrayOfFloat[6] = (paramInt2 + j);
-      arrayOfFloat[7] = (paramInt1 - k / 2);
+      arrayOfFloat[5] = (start - k / 2);
+      arrayOfFloat[6] = (end + j);
+      arrayOfFloat[7] = (start - k / 2);
     } 
     return arrayOfFloat;
   }
@@ -498,12 +498,12 @@ public class BaseBlockView extends RelativeLayout {
     return bool;
   }
   
-  public final float[] getRightSideShadowLines(int paramInt1, int paramInt2) {
+  public final float[] getRightSideShadowLines(int start, int end) {
     int i = this.blockWidth;
     int j = this.outlineStrokeWidth;
     float f = (i - j / 2);
     int k = this.notchWidth;
-    return new float[] { f, (paramInt1 + k), (i - j / 2), (paramInt2 - k) };
+    return new float[] { f, (start + k), (i - j / 2), (end - k) };
   }
   
   public final void drawParameterShape(Canvas paramCanvas) {
@@ -532,10 +532,10 @@ public class BaseBlockView extends RelativeLayout {
     return bool;
   }
   
-  public final float[] getSubstackReflectionLines(int paramInt1, int paramInt2) {
-    float f = (paramInt2 + this.notchDepth);
-    paramInt2 = this.outlineStrokeWidth;
-    return new float[] { f, (paramInt2 / 2 + paramInt1), (this.blockWidth - this.notchWidth), (paramInt1 + paramInt2 / 2) };
+  public final float[] getSubstackReflectionLines(int start, int end) {
+    float f = (end + this.notchDepth);
+    end = this.outlineStrokeWidth;
+    return new float[] { f, (end / 2 + start), (this.blockWidth - this.notchWidth), (start + end / 2) };
   }
   
   public int getContentBottom() {
@@ -750,19 +750,19 @@ public class BaseBlockView extends RelativeLayout {
     super.onDraw(paramCanvas);
   }
   
-  public void onMeasure(int paramInt1, int paramInt2) {
+  public void onMeasure(int start, int end) {
     super.onMeasure(View.MeasureSpec.makeMeasureSpec(getTotalWidth(), 1073741824), View.MeasureSpec.makeMeasureSpec(getTotalHeight(), 1073741824));
   }
   
-  public void setSubstack1Height(int paramInt) {
-    paramInt = Math.max(paramInt, this.minHeight);
-    if (paramInt != this.contentHeight)
-      this.contentHeight = paramInt; 
+  public void setSubstack1Height(int index) {
+    index = Math.max(index, this.minHeight);
+    if (index != this.contentHeight)
+      this.contentHeight = index; 
   }
   
-  public void setSubstack2Height(int paramInt) {
-    paramInt = Math.max(paramInt, this.minHeight);
-    if (paramInt != this.innerHeight)
-      this.innerHeight = paramInt; 
+  public void setSubstack2Height(int index) {
+    index = Math.max(index, this.minHeight);
+    if (index != this.innerHeight)
+      this.innerHeight = index; 
   }
 }

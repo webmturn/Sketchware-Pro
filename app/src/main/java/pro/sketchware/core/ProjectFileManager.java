@@ -25,8 +25,8 @@ public class ProjectFileManager {
   
   public Gson gson;
   
-  public ProjectFileManager(String paramString) {
-    this.projectId = paramString;
+  public ProjectFileManager(String str) {
+    this.projectId = str;
     this.fileUtil = new EncryptedFileUtil();
     this.xmlNames = new ArrayList<String>();
     this.javaNames = new ArrayList<String>();
@@ -35,9 +35,9 @@ public class ProjectFileManager {
     refreshNameLists();
   }
   
-  public ProjectFileBean getActivityByJavaName(String paramString) {
+  public ProjectFileBean getActivityByJavaName(String str) {
     for (ProjectFileBean projectFileBean : this.activities) {
-      if (projectFileBean.getJavaName().equals(paramString))
+      if (projectFileBean.getJavaName().equals(str))
         return projectFileBean; 
     } 
     return null;
@@ -53,9 +53,9 @@ public class ProjectFileManager {
     this.fileUtil.deleteFileByPath(str);
   }
   
-  public void addFile(int paramInt, String paramString) {
-    ProjectFileBean projectFileBean = new ProjectFileBean(paramInt, paramString);
-    if (paramInt == 0) {
+  public void addFile(int index, String str) {
+    ProjectFileBean projectFileBean = new ProjectFileBean(index, str);
+    if (index == 0) {
       this.activities.add(projectFileBean);
     } else {
       this.customViews.add(projectFileBean);
@@ -114,24 +114,24 @@ public class ProjectFileManager {
     } 
   }
   
-  public void parseFileSection(String paramString1, String paramString2) {
+  public void parseFileSection(String key, String value) {
     ProjectFileBean projectFileBean = null;
-    if (paramString1.equals("activity")) {
-      paramString1 = paramString2;
-      if (paramString2.length() <= 0)
+    if (key.equals("activity")) {
+      key = value;
+      if (value.length() <= 0)
         return; 
       while (true) {
-        int i = paramString1.indexOf("\n");
-        if (i < 0 || paramString1.charAt(0) != '{')
+        int i = key.indexOf("\n");
+        if (i < 0 || key.charAt(0) != '{')
           break; 
-        paramString2 = paramString1.substring(0, i);
-        ProjectFileBean projectFileBean1 = (ProjectFileBean)this.gson.fromJson(paramString2, ProjectFileBean.class);
+        value = key.substring(0, i);
+        ProjectFileBean projectFileBean1 = (ProjectFileBean)this.gson.fromJson(value, ProjectFileBean.class);
         projectFileBean1.setOptionsByTheme();
         if (projectFileBean1.fileName.equals("main")) {
           String str = null;
           Iterator<ProjectFileBean> iterator = this.activities.iterator();
           while (true) {
-            paramString2 = str;
+            value = str;
             if (iterator.hasNext()) {
               projectFileBean = iterator.next();
               if (projectFileBean.fileName.equals("main"))
@@ -148,21 +148,21 @@ public class ProjectFileManager {
         } else {
           this.activities.add(projectFileBean1);
         } 
-        if (i >= paramString1.length() - 1)
+        if (i >= key.length() - 1)
           break; 
-        paramString1 = paramString1.substring(i + 1);
+        key = key.substring(i + 1);
       } 
-    } else if (paramString1.equals("customview")) {
-      if (paramString2.length() <= 0)
+    } else if (key.equals("customview")) {
+      if (value.length() <= 0)
         return; 
       this.customViews = new ArrayList<ProjectFileBean>();
-      String str = paramString2;
+      String str = value;
       while (true) {
         int i = str.indexOf("\n");
         if (i < 0 || str.charAt(0) != '{')
           break; 
-        paramString1 = str.substring(0, i);
-        ProjectFileBean projectFileBean1 = (ProjectFileBean)this.gson.fromJson(paramString1, ProjectFileBean.class);
+        key = str.substring(0, i);
+        ProjectFileBean projectFileBean1 = (ProjectFileBean)this.gson.fromJson(key, ProjectFileBean.class);
         projectFileBean1.setOptionsByTheme();
         this.customViews.add(projectFileBean1);
         if (i >= str.length() - 1)
@@ -193,19 +193,19 @@ public class ProjectFileManager {
       }  
   }
   
-  public void setActivities(ArrayList<ProjectFileBean> paramArrayList) {
-    this.activities = paramArrayList;
+  public void setActivities(ArrayList<ProjectFileBean> list) {
+    this.activities = list;
   }
   
-  public ProjectFileBean getFileByXmlName(String paramString) {
+  public ProjectFileBean getFileByXmlName(String str) {
     for (ProjectFileBean projectFileBean : this.activities) {
-      if (projectFileBean.getXmlName().equals(paramString))
+      if (projectFileBean.getXmlName().equals(str))
         return projectFileBean; 
     } 
     ArrayList<ProjectFileBean> arrayList = this.customViews;
     if (arrayList != null)
       for (ProjectFileBean projectFileBean : arrayList) {
-        if (projectFileBean.getXmlName().equals(paramString))
+        if (projectFileBean.getXmlName().equals(str))
           return projectFileBean; 
       }  
     return null;
@@ -217,17 +217,17 @@ public class ProjectFileManager {
     return this.activities;
   }
   
-  public void removeFile(int paramInt, String paramString) {
-    if (paramInt == 0) {
+  public void removeFile(int index, String str) {
+    if (index == 0) {
       for (ProjectFileBean projectFileBean : this.activities) {
-        if (projectFileBean.fileType == paramInt && projectFileBean.fileName.equals(paramString)) {
+        if (projectFileBean.fileType == index && projectFileBean.fileName.equals(str)) {
           this.activities.remove(projectFileBean);
           break;
         } 
       } 
     } else {
       for (ProjectFileBean projectFileBean : this.customViews) {
-        if (projectFileBean.fileType == paramInt && projectFileBean.fileName.equals(paramString)) {
+        if (projectFileBean.fileType == index && projectFileBean.fileName.equals(str)) {
           this.customViews.remove(projectFileBean);
           break;
         } 
@@ -235,8 +235,8 @@ public class ProjectFileManager {
     } 
   }
   
-  public void setCustomViews(ArrayList<ProjectFileBean> paramArrayList) {
-    this.customViews = paramArrayList;
+  public void setCustomViews(ArrayList<ProjectFileBean> list) {
+    this.customViews = list;
   }
   
   public ArrayList<ProjectFileBean> getCustomViews() {
@@ -245,10 +245,10 @@ public class ProjectFileManager {
     return this.customViews;
   }
   
-  public boolean hasJavaName(String paramString) {
+  public boolean hasJavaName(String str) {
     Iterator<String> iterator = this.javaNames.iterator();
     while (iterator.hasNext()) {
-      if (paramString.equals(iterator.next()))
+      if (str.equals(iterator.next()))
         return true; 
     } 
     return false;
@@ -258,10 +258,10 @@ public class ProjectFileManager {
     return this.javaNames;
   }
   
-  public boolean hasXmlName(String paramString) {
+  public boolean hasXmlName(String str) {
     Iterator<String> iterator = this.xmlNames.iterator();
     while (iterator.hasNext()) {
-      if (paramString.equals(iterator.next()))
+      if (str.equals(iterator.next()))
         return true; 
     } 
     return false;
@@ -271,12 +271,12 @@ public class ProjectFileManager {
     return this.xmlNames;
   }
   
-  public final void writeToFile(String paramString) {
+  public final void writeToFile(String str) {
     StringBuffer stringBuffer = new StringBuffer();
     serializeFiles(stringBuffer);
     try {
       byte[] arrayOfByte = this.fileUtil.encryptString(stringBuffer.toString());
-      this.fileUtil.writeBytes(paramString, arrayOfByte);
+      this.fileUtil.writeBytes(str, arrayOfByte);
     } catch (Exception exception) {
       exception.printStackTrace();
     } 

@@ -22,8 +22,8 @@ public class LibraryManager {
   
   public Gson gson;
   
-  public LibraryManager(String paramString) {
-    this.projectId = paramString;
+  public LibraryManager(String value) {
+    this.projectId = value;
     this.fileUtil = new EncryptedFileUtil();
     this.gson = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
     initializeDefaults();
@@ -83,31 +83,31 @@ public class LibraryManager {
     } 
   }
   
-  public final void writeToFile(String paramString) {
+  public final void writeToFile(String value) {
     StringBuffer stringBuffer = new StringBuffer();
     serializeLibraries(stringBuffer);
     try {
       byte[] arrayOfByte = this.fileUtil.encryptString(stringBuffer.toString());
-      this.fileUtil.writeBytes(paramString, arrayOfByte);
+      this.fileUtil.writeBytes(value, arrayOfByte);
     } catch (Exception exception) {
       exception.printStackTrace();
     } 
   }
   
-  public void parseLibrarySection(String paramString1, String paramString2) {
-    if (paramString2.length() <= 0)
+  public void parseLibrarySection(String key, String value) {
+    if (value.length() <= 0)
       return; 
     BufferedReader bufferedReader = null;
     try {
-      bufferedReader = new BufferedReader(new StringReader(paramString2));
-      ProjectLibraryBean bean = this.gson.fromJson(paramString2, ProjectLibraryBean.class);
-      if (paramString1.equals("firebaseDB")) {
+      bufferedReader = new BufferedReader(new StringReader(value));
+      ProjectLibraryBean bean = this.gson.fromJson(value, ProjectLibraryBean.class);
+      if (key.equals("firebaseDB")) {
         this.firebaseDB = bean;
-      } else if (paramString1.equals("compat")) {
+      } else if (key.equals("compat")) {
         this.compat = bean;
-      } else if (paramString1.equals("admob")) {
+      } else if (key.equals("admob")) {
         this.admob = bean;
-      } else if (paramString1.equals("googleMap")) {
+      } else if (key.equals("googleMap")) {
         this.googleMap = bean;
       }
     } catch (Exception exception) {

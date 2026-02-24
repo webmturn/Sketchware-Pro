@@ -21,51 +21,51 @@ public class XmlNameValidator extends BaseValidator {
   
   public Pattern namePattern = Pattern.compile("^[a-z][a-z0-9_]*");
   
-  public XmlNameValidator(Context paramContext, TextInputLayout paramTextInputLayout, String[] paramArrayOfString, ArrayList<String> paramArrayList1, ArrayList<String> paramArrayList2) {
-    super(paramContext, paramTextInputLayout);
+  public XmlNameValidator(Context context, TextInputLayout paramTextInputLayout, String[] paramArrayOfString, ArrayList<String> paramArrayList1, ArrayList<String> paramArrayList2) {
+    super(context, paramTextInputLayout);
     this.reservedNames = paramArrayOfString;
     this.xmlNames = paramArrayList1;
     this.javaNames = paramArrayList2;
     this.batchCount = 1;
   }
   
-  public void setBatchCount(int paramInt) {
-    this.batchCount = paramInt;
+  public void setBatchCount(int index) {
+    this.batchCount = index;
     validate(getText());
   }
   
-  public void setJavaNames(ArrayList<String> paramArrayList) {
-    this.javaNames = paramArrayList;
+  public void setJavaNames(ArrayList<String> list) {
+    this.javaNames = list;
   }
   
-  public final void validate(String paramString) {
+  public final void validate(String value) {
     String str = "";
-    if (paramString.length() < 3) {
+    if (value.length() < 3) {
       this.textInputLayout.setErrorEnabled(true);
       this.textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(this.context, R.string.invalid_value_min_lenth, new Object[] { Integer.valueOf(3) }));
       this.valid = false;
       return;
     } 
-    if (paramString.length() > 70) {
+    if (value.length() > 70) {
       this.textInputLayout.setErrorEnabled(true);
       this.textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(this.context, R.string.invalid_value_max_lenth, new Object[] { Integer.valueOf(70) }));
       this.valid = false;
       return;
     } 
-    if (paramString.equals("default_image") || "NONE".toLowerCase().equals(paramString.toLowerCase())) {
+    if (value.equals("default_image") || "NONE".toLowerCase().equals(value.toLowerCase())) {
       this.textInputLayout.setErrorEnabled(true);
       this.textInputLayout.setError(StringResource.getInstance().getTranslatedString(this.context, R.string.common_message_name_unavailable));
       this.valid = false;
       return;
     } 
     if (this.batchCount == 1) {
-      if (!paramString.equals(this.currentName) && this.xmlNames.indexOf(paramString) >= 0) {
+      if (!value.equals(this.currentName) && this.xmlNames.indexOf(value) >= 0) {
         this.textInputLayout.setErrorEnabled(true);
         this.textInputLayout.setError(StringResource.getInstance().getTranslatedString(this.context, R.string.common_message_name_unavailable));
         this.valid = false;
         return;
       } 
-      if (!paramString.equals(this.currentName) && this.javaNames.indexOf(paramString) >= 0) {
+      if (!value.equals(this.currentName) && this.javaNames.indexOf(value) >= 0) {
         this.textInputLayout.setErrorEnabled(true);
         this.textInputLayout.setError(StringResource.getInstance().getTranslatedString(this.context, R.string.common_message_name_unavailable));
         this.valid = false;
@@ -75,7 +75,7 @@ public class XmlNameValidator extends BaseValidator {
       ArrayList<String> arrayList1 = new ArrayList<>();
       for (int b1 = 1; b1 <= this.batchCount; b1++) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(paramString);
+        stringBuilder.append(value);
         stringBuilder.append("_");
         stringBuilder.append(b1);
         arrayList1.add(stringBuilder.toString());
@@ -89,13 +89,13 @@ public class XmlNameValidator extends BaseValidator {
         this.textInputLayout.setErrorEnabled(true);
         String str1 = StringResource.getInstance().getTranslatedString(this.context, R.string.common_message_name_unavailable);
         Iterator<String> iterator = arrayList2.iterator();
-        paramString = "";
+        value = "";
         while (iterator.hasNext()) {
           String str3 = iterator.next();
-          String str2 = paramString;
-          if (paramString.length() > 0) {
+          String str2 = value;
+          if (value.length() > 0) {
             StringBuilder stringBuilder2 = new StringBuilder();
-            stringBuilder2.append(paramString);
+            stringBuilder2.append(value);
             stringBuilder2.append(", ");
             str2 = stringBuilder2.toString();
           } 
@@ -119,7 +119,7 @@ public class XmlNameValidator extends BaseValidator {
     int b = 0;
     while (true) {
       if (b < i) {
-        if (paramString.equals(arrayOfString[b])) {
+        if (value.equals(arrayOfString[b])) {
           b = 1;
           break;
         } 
@@ -135,13 +135,13 @@ public class XmlNameValidator extends BaseValidator {
       this.valid = false;
       return;
     } 
-    if (!Character.isLetter(paramString.charAt(0))) {
+    if (!Character.isLetter(value.charAt(0))) {
       this.textInputLayout.setErrorEnabled(true);
       this.textInputLayout.setError(StringResource.getInstance().getTranslatedString(this.context, R.string.logic_editor_message_variable_name_must_start_letter));
       this.valid = false;
       return;
     } 
-    if (this.namePattern.matcher(paramString).matches()) {
+    if (this.namePattern.matcher(value).matches()) {
       this.textInputLayout.setErrorEnabled(false);
       this.valid = true;
     } else {
@@ -151,8 +151,8 @@ public class XmlNameValidator extends BaseValidator {
     } 
   }
   
-  public void setCurrentName(String paramString) {
-    this.currentName = paramString;
+  public void setCurrentName(String value) {
+    this.currentName = value;
   }
   
   public CharSequence filter(CharSequence paramCharSequence, int paramInt1, int paramInt2, Spanned paramSpanned, int paramInt3, int paramInt4) {

@@ -20,20 +20,20 @@ public class ProjectDataParser {
   
   public Gson gson = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
   
-  public ProjectDataParser(String paramString) throws Exception {
+  public ProjectDataParser(String str) throws Exception {
     try {
-      parseKey(paramString);
+      parseKey(str);
       return;
     } catch (Exception exception) {
       throw exception;
     } 
   }
   
-  public static ArrayList<BlockBean> parseBlockBeans(Gson paramGson, String paramString) {
+  public static ArrayList<BlockBean> parseBlockBeans(Gson paramGson, String str) {
     ArrayList<BlockBean> result = new ArrayList<>();
     java.io.BufferedReader reader = null;
     try {
-      reader = new java.io.BufferedReader(new java.io.StringReader(paramString));
+      reader = new java.io.BufferedReader(new java.io.StringReader(str));
       String line;
       while ((line = reader.readLine()) != null) {
         if (line.trim().length() <= 0) continue;
@@ -48,11 +48,11 @@ public class ProjectDataParser {
     return result;
   }
   
-  public static ArrayList<ViewBean> parseViewBeans(Gson paramGson, String paramString) {
+  public static ArrayList<ViewBean> parseViewBeans(Gson paramGson, String str) {
     ArrayList<ViewBean> result = new ArrayList<>();
     java.io.BufferedReader reader = null;
     try {
-      reader = new java.io.BufferedReader(new java.io.StringReader(paramString));
+      reader = new java.io.BufferedReader(new java.io.StringReader(str));
       String line;
       while ((line = reader.readLine()) != null) {
         if (line.trim().length() <= 0) continue;
@@ -71,39 +71,39 @@ public class ProjectDataParser {
     return this.dataType;
   }
   
-  public <T> T parseData(String paramString) {
+  public <T> T parseData(String str) {
     switch (KeyboardSettingConstants.VALUES[this.dataType.ordinal()]) {
       default:
         return null;
       case 8:
-        return (T)parseBlockBeans(this.gson, paramString);
+        return (T)parseBlockBeans(this.gson, str);
       case 7:
-        return (T)parseMoreBlockFunctions(paramString);
+        return (T)parseMoreBlockFunctions(str);
       case 6:
-        return (T)parseEventBeans(paramString);
+        return (T)parseEventBeans(str);
       case 5:
-        return (T)parseComponentBeans(paramString);
+        return (T)parseComponentBeans(str);
       case 4:
-        return (T)parseListVariables(paramString);
+        return (T)parseListVariables(str);
       case 3:
-        return (T)parseVariables(paramString);
+        return (T)parseVariables(str);
       case 2:
-        return (T)parseFabViewBean(paramString);
+        return (T)parseFabViewBean(str);
       case 1:
         break;
     } 
-    return (T)parseViewBeans(this.gson, paramString);
+    return (T)parseViewBeans(this.gson, str);
   }
   
   public String getFileName() {
     return this.fileName;
   }
   
-  public ArrayList<ComponentBean> parseComponentBeans(String paramString) {
+  public ArrayList<ComponentBean> parseComponentBeans(String str) {
     ArrayList<ComponentBean> result = new ArrayList<>();
     java.io.BufferedReader reader = null;
     try {
-      reader = new java.io.BufferedReader(new java.io.StringReader(paramString));
+      reader = new java.io.BufferedReader(new java.io.StringReader(str));
       String line;
       while ((line = reader.readLine()) != null) {
         if (line.trim().length() <= 0) continue;
@@ -124,11 +124,11 @@ public class ProjectDataParser {
     return this.eventKey;
   }
   
-  public ArrayList<EventBean> parseEventBeans(String paramString) {
+  public ArrayList<EventBean> parseEventBeans(String str) {
     ArrayList<EventBean> result = new ArrayList<>();
     java.io.BufferedReader reader = null;
     try {
-      reader = new java.io.BufferedReader(new java.io.StringReader(paramString));
+      reader = new java.io.BufferedReader(new java.io.StringReader(str));
       String line;
       while ((line = reader.readLine()) != null) {
         if (line.trim().length() <= 0) continue;
@@ -145,15 +145,15 @@ public class ProjectDataParser {
     return result;
   }
   
-  public ViewBean parseFabViewBean(String paramString) {
-    return (paramString.trim().length() <= 0 || paramString.trim().charAt(0) != '{') ? new ViewBean("_fab", 16) : (ViewBean)this.gson.fromJson(paramString, ViewBean.class);
+  public ViewBean parseFabViewBean(String str) {
+    return (str.trim().length() <= 0 || str.trim().charAt(0) != '{') ? new ViewBean("_fab", 16) : (ViewBean)this.gson.fromJson(str, ViewBean.class);
   }
   
-  public ArrayList<Pair<String, String>> parseMoreBlockFunctions(String paramString) {
+  public ArrayList<Pair<String, String>> parseMoreBlockFunctions(String str) {
     ArrayList<Pair<String, String>> result = new ArrayList<>();
     java.io.BufferedReader reader = null;
     try {
-      reader = new java.io.BufferedReader(new java.io.StringReader(paramString));
+      reader = new java.io.BufferedReader(new java.io.StringReader(str));
       String line;
       while ((line = reader.readLine()) != null) {
         if (line.trim().length() <= 0) continue;
@@ -170,17 +170,17 @@ public class ProjectDataParser {
     return result;
   }
   
-  public final void parseKey(String paramString) throws Exception {
-    String str = paramString.trim();
+  public final void parseKey(String rawKey) throws Exception {
+    String str = rawKey.trim();
     if (str.contains(".xml")) {
       int i = str.indexOf(".xml") + 4;
       this.fileName = str.substring(0, i);
-      if (paramString.length() == i) {
+      if (str.length() == i) {
         this.dataType = ProjectDataParser.DataType.VIEW;
       } else {
-        paramString = paramString.substring(i);
-        if (paramString.charAt(0) == '_') {
-          if (paramString.substring(1).equals("fab")) {
+        str = str.substring(i);
+        if (str.charAt(0) == '_') {
+          if (str.substring(1).equals("fab")) {
             this.dataType = ProjectDataParser.DataType.FAB;
           } else {
             throw new Exception("invalid key : Unknown type string");
@@ -194,29 +194,29 @@ public class ProjectDataParser {
         int i = str.indexOf(".java") + 5;
         this.fileName = str.substring(0, i);
         if (str.length() != i) {
-          paramString = str.substring(i);
-          if (paramString.charAt(0) == '_') {
-            paramString = paramString.substring(1);
+          str = str.substring(i);
+          if (str.charAt(0) == '_') {
+            str = str.substring(1);
             i = -1;
-            switch (paramString.hashCode()) {
+            switch (str.hashCode()) {
               case 3322014:
-                if (paramString.equals("list"))
+                if (str.equals("list"))
                   i = 1; 
                 break;
               case 3154628:
-                if (paramString.equals("func"))
+                if (str.equals("func"))
                   i = 4; 
                 break;
               case 116519:
-                if (paramString.equals("var"))
+                if (str.equals("var"))
                   i = 0; 
                 break;
               case -447446250:
-                if (paramString.equals("components"))
+                if (str.equals("components"))
                   i = 2; 
                 break;
               case -1291329255:
-                if (paramString.equals("events"))
+                if (str.equals("events"))
                   i = 3; 
                 break;
             } 
@@ -226,7 +226,7 @@ public class ProjectDataParser {
                   if (i != 3) {
                     if (i != 4) {
                       this.dataType = ProjectDataParser.DataType.EVENT_BLOCK;
-                      this.eventKey = paramString;
+                      this.eventKey = str;
                     } else {
                       this.dataType = ProjectDataParser.DataType.MORE_BLOCK;
                     } 
@@ -252,11 +252,11 @@ public class ProjectDataParser {
     } 
   }
   
-  public ArrayList<Pair<Integer, String>> parseListVariables(String paramString) {
+  public ArrayList<Pair<Integer, String>> parseListVariables(String str) {
     ArrayList<Pair<Integer, String>> result = new ArrayList<>();
     java.io.BufferedReader reader = null;
     try {
-      reader = new java.io.BufferedReader(new java.io.StringReader(paramString));
+      reader = new java.io.BufferedReader(new java.io.StringReader(str));
       String line;
       while ((line = reader.readLine()) != null) {
         if (line.trim().length() <= 0) continue;
@@ -273,11 +273,11 @@ public class ProjectDataParser {
     return result;
   }
   
-  public ArrayList<Pair<Integer, String>> parseVariables(String paramString) {
+  public ArrayList<Pair<Integer, String>> parseVariables(String str) {
     ArrayList<Pair<Integer, String>> result = new ArrayList<>();
     java.io.BufferedReader reader = null;
     try {
-      reader = new java.io.BufferedReader(new java.io.StringReader(paramString));
+      reader = new java.io.BufferedReader(new java.io.StringReader(str));
       String line;
       while ((line = reader.readLine()) != null) {
         if (line.trim().length() <= 0) continue;

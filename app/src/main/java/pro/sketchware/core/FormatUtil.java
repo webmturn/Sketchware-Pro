@@ -36,11 +36,11 @@ public class FormatUtil {
     } 
   }
   
-  public static String formatFileSize(int paramInt) {
+  public static String formatFileSize(int index) {
     String str;
-    if (paramInt < 0)
+    if (index < 0)
       return "0"; 
-    float f = paramInt;
+    float f = index;
     if (f >= 1024.0F && f < 1048576.0F) {
       f /= 1024.0F;
       str = (new DecimalFormat("#.#KB")).format(f);
@@ -52,7 +52,7 @@ public class FormatUtil {
       str = (new DecimalFormat("#.#GB")).format(f);
     } else {
       StringBuilder stringBuilder = new StringBuilder();
-      stringBuilder.append(String.valueOf(paramInt));
+      stringBuilder.append(String.valueOf(index));
       stringBuilder.append("B");
       str = stringBuilder.toString();
     } 
@@ -69,33 +69,33 @@ public class FormatUtil {
     return stringBuffer.toString();
   }
   
-  public static void copyToClipboard(Context paramContext, String paramString1, String paramString2) {
-    ((ClipboardManager)paramContext.getSystemService(Context.CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText(paramString1, paramString2));
+  public static void copyToClipboard(Context context, String key, String value) {
+    ((ClipboardManager)context.getSystemService(Context.CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText(key, value));
   }
   
-  public static byte[] hexStringToBytes(String paramString) {
-    int i = paramString.length();
+  public static byte[] hexStringToBytes(String value) {
+    int i = value.length();
     byte[] arrayOfByte = new byte[(i + 1) / 2];
     int j = 0;
     byte b = 1;
     if (i % 2 == 1) {
-      arrayOfByte[0] = (byte)hexCharToInt(paramString.charAt(0));
+      arrayOfByte[0] = (byte)hexCharToInt(value.charAt(0));
       j = 1;
     } else {
       b = 0;
     } 
     while (j < i) {
       int k = j + 1;
-      arrayOfByte[b] = (byte)(hexCharToInt(paramString.charAt(j)) << 4 | hexCharToInt(paramString.charAt(k)));
+      arrayOfByte[b] = (byte)(hexCharToInt(value.charAt(j)) << 4 | hexCharToInt(value.charAt(k)));
       b++;
       j = k + 1;
     } 
     return arrayOfByte;
   }
   
-  public static String formatNumber(int paramInt) {
+  public static String formatNumber(int index) {
     String str;
-    float f = paramInt;
+    float f = index;
     if (f >= 1000.0F && f < 1000000.0F) {
       f /= 1000.0F;
       str = (new DecimalFormat("#.#K")).format(f);
@@ -106,27 +106,27 @@ public class FormatUtil {
       f /= 1.0E9F;
       str = (new DecimalFormat("#.#G")).format(f);
     } else {
-      str = String.valueOf(paramInt);
+      str = String.valueOf(index);
     } 
     return str;
   }
   
-  public static boolean isNumeric(String paramString) {
+  public static boolean isNumeric(String value) {
     try {
-      Double.parseDouble(paramString);
+      Double.parseDouble(value);
       return true;
     } catch (NumberFormatException numberFormatException) {
       return false;
     } 
   }
   
-  public static String formatWithCommas(int paramInt) {
-    return (new DecimalFormat("#,###")).format(paramInt);
+  public static String formatWithCommas(int index) {
+    return (new DecimalFormat("#,###")).format(index);
   }
   
-  public static ArrayList<String> parseBlockSpec(String paramString) {
+  public static ArrayList<String> parseBlockSpec(String value) {
     ArrayList<String> arrayList = new ArrayList<>();
-    StringScanner scanner = new StringScanner(paramString);
+    StringScanner scanner = new StringScanner(value);
     while (!scanner.isAtEnd()) {
       String str = scanner.nextToken();
       if (str.length() > 0)
@@ -135,14 +135,14 @@ public class FormatUtil {
     return arrayList;
   }
   
-  public static String unescapeString(String paramString) {
+  public static String unescapeString(String value) {
     String str = "";
-    for (int b = 0; b < paramString.length(); b++) {
-      char c = paramString.charAt(b);
+    for (int b = 0; b < value.length(); b++) {
+      char c = value.charAt(b);
       if (c == '\\') {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(str);
-        stringBuilder.append(paramString.charAt(++b));
+        stringBuilder.append(value.charAt(++b));
         str = stringBuilder.toString();
       } else {
         StringBuilder stringBuilder = new StringBuilder();

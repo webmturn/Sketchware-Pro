@@ -56,19 +56,19 @@ public class BlockView extends BaseBlockView {
   
   private String spec2 = "";
   
-  public BlockView(Context paramContext, int paramInt, String paramString1, String paramString2, String paramString3) {
-    super(paramContext, paramString2, false);
-    setTag(Integer.valueOf(paramInt));
-    this.spec = paramString1;
-    this.opCode = paramString3;
+  public BlockView(Context context, int index, String key, String value, String extra) {
+    super(context, value, false);
+    setTag(Integer.valueOf(index));
+    this.spec = key;
+    this.opCode = extra;
     initBlock();
   }
   
-  public BlockView(Context paramContext, int paramInt, String paramString1, String paramString2, String paramString3, String paramString4) {
-    super(paramContext, paramString2, paramString3, false);
-    setTag(Integer.valueOf(paramInt));
-    this.spec = paramString1;
-    this.opCode = paramString4;
+  public BlockView(Context context, int index, String key, String value, String extra, String tag) {
+    super(context, value, extra, false);
+    setTag(Integer.valueOf(index));
+    this.spec = key;
+    this.opCode = tag;
     initBlock();
   }
   
@@ -78,13 +78,13 @@ public class BlockView extends BaseBlockView {
     return rect.width();
   }
   
-  public final TextView createLabel(String paramString) {
+  public final TextView createLabel(String str) {
     TextView textView = new TextView(this.context);
-    String text = paramString;
+    String text = str;
     if (this.opCode.equals("getVar") || this.opCode.equals("getArg")) {
       String prefix = this.componentType;
       if (prefix != null && prefix.length() > 0) {
-        text = this.componentType + " : " + paramString;
+        text = this.componentType + " : " + str;
       }
     }
     textView.setText(text);
@@ -139,44 +139,44 @@ public class BlockView extends BaseBlockView {
     }
   }
   
-  public final void parseSpec(String paramString, int paramInt) {
-    ArrayList<String> arrayList = FormatUtil.parseBlockSpec(paramString);
+  public final void parseSpec(String spec, int index) {
+    ArrayList<String> arrayList = FormatUtil.parseBlockSpec(spec);
     this.specViews = new ArrayList<View>();
     this.specTypes = new ArrayList<String>();
     for (int b = 0; b < arrayList.size(); b++) {
-      View view = createSpecView(arrayList.get(b), paramInt);
+      View view = createSpecView(arrayList.get(b), index);
       if (view instanceof BaseBlockView)
         ((BaseBlockView)view).parentBlock = this; 
       this.specViews.add(view);
       if (view instanceof FieldBlockView) {
-        paramString = arrayList.get(b);
+        spec = arrayList.get(b);
       } else {
-        paramString = "icon";
+        spec = "icon";
       } 
       if (view instanceof TextView)
-        paramString = "label"; 
-      this.specTypes.add(paramString);
+        spec = "label"; 
+      this.specTypes.add(spec);
     } 
   }
   
-  public final View createSpecView(String paramString, int paramInt) {
-    if (paramString.length() >= 2 && paramString.charAt(0) == '%') {
-      int type = paramString.charAt(1);
+  public final View createSpecView(String spec, int index) {
+    if (spec.length() >= 2 && spec.charAt(0) == '%') {
+      int type = spec.charAt(1);
       if (type == 98) {
         return new FieldBlockView(this.context, "b", "");
       } else if (type == 100) {
         return new FieldBlockView(this.context, "d", "");
       } else if (type == 109) {
-        return new FieldBlockView(this.context, "m", paramString.substring(3));
+        return new FieldBlockView(this.context, "m", spec.substring(3));
       } else if (type == 115) {
         String str = "";
-        if (paramString.length() > 2)
-          str = paramString.substring(3);
+        if (spec.length() > 2)
+          str = spec.substring(3);
         return new FieldBlockView(this.context, "s", str);
       }
-      return createLabel(FormatUtil.unescapeString(paramString));
+      return createLabel(FormatUtil.unescapeString(spec));
     }
-    return createLabel(FormatUtil.unescapeString(paramString));
+    return createLabel(FormatUtil.unescapeString(spec));
   }
   
   public void setNextBlock(BlockView paramRs) {
@@ -693,12 +693,12 @@ public class BlockView extends BaseBlockView {
     } 
   }
   
-  public void setBlockType(int paramInt) {
-    this.blockTypeInt = paramInt;
+  public void setBlockType(int index) {
+    this.blockTypeInt = index;
   }
   
-  public void setSpec(String paramString) {
-    this.spec = paramString;
+  public void setSpec(String str) {
+    this.spec = str;
     removeAllViews();
     parseSpec(this.spec, this.blockColor);
     Iterator<View> iterator = this.specViews.iterator();
