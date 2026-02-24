@@ -71,21 +71,21 @@ public class ResourceManager {
     StringBuffer stringBuffer = new StringBuffer();
     String str = "";
     while (true) {
-      String str1 = reader.readLine();
-      if (str1 != null) {
-        if (str1.length() <= 0)
+      String line = reader.readLine();
+      if (line != null) {
+        if (line.length() <= 0)
           continue; 
-        if (str1.charAt(0) == '@') {
+        if (line.charAt(0) == '@') {
           StringBuffer stringBuffer1 = stringBuffer;
           if (str.length() > 0) {
             parseResourceSection(str, stringBuffer.toString());
             stringBuffer1 = new StringBuffer();
           } 
-          str = str1.substring(1);
+          str = line.substring(1);
           stringBuffer = stringBuffer1;
           continue;
         } 
-        stringBuffer.append(str1);
+        stringBuffer.append(line);
         stringBuffer.append("\n");
         continue;
       } 
@@ -106,14 +106,14 @@ public class ResourceManager {
         stringBuilder1.append(this.fontDirPath);
         stringBuilder1.append(File.separator);
         stringBuilder1.append(projectResourceBean.resFullName.toLowerCase());
-        String str2 = stringBuilder1.toString();
+        String sourcePath = stringBuilder1.toString();
         StringBuilder stringBuilder2 = new StringBuilder();
         stringBuilder2.append(str);
         stringBuilder2.append(File.separator);
         stringBuilder2.append(projectResourceBean.resFullName.toLowerCase());
-        String str1 = stringBuilder2.toString();
+        String destPath = stringBuilder2.toString();
         try {
-          this.fileUtil.copyFile(str2, str1);
+          this.fileUtil.copyFile(sourcePath, destPath);
         } catch (Exception exception) {
           exception.printStackTrace();
         } 
@@ -202,14 +202,14 @@ public class ResourceManager {
         stringBuilder1.append(this.imageDirPath);
         stringBuilder1.append(File.separator);
         stringBuilder1.append(projectResourceBean.resFullName.toLowerCase());
-        String str2 = stringBuilder1.toString();
+        String sourcePath = stringBuilder1.toString();
         StringBuilder stringBuilder2 = new StringBuilder();
         stringBuilder2.append(str);
         stringBuilder2.append(File.separator);
         stringBuilder2.append(projectResourceBean.resFullName.toLowerCase());
-        String str1 = stringBuilder2.toString();
+        String destPath = stringBuilder2.toString();
         try {
-          this.fileUtil.copyFile(str2, str1);
+          this.fileUtil.copyFile(sourcePath, destPath);
         } catch (Exception exception) {
           exception.printStackTrace();
         } 
@@ -250,14 +250,14 @@ public class ResourceManager {
         stringBuilder1.append(this.soundDirPath);
         stringBuilder1.append(File.separator);
         stringBuilder1.append(projectResourceBean.resFullName.toLowerCase());
-        String str2 = stringBuilder1.toString();
+        String sourcePath = stringBuilder1.toString();
         StringBuilder stringBuilder2 = new StringBuilder();
         stringBuilder2.append(str);
         stringBuilder2.append(File.separator);
         stringBuilder2.append(projectResourceBean.resFullName.toLowerCase());
-        String str1 = stringBuilder2.toString();
+        String destPath = stringBuilder2.toString();
         try {
-          this.fileUtil.copyFile(str2, str1);
+          this.fileUtil.copyFile(sourcePath, destPath);
         } catch (Exception exception) {
           exception.printStackTrace();
         } 
@@ -383,13 +383,13 @@ public class ResourceManager {
   }
   
   public void deleteTempDirs() {
-    String str1 = SketchwarePaths.getTempImagesPath();
-    String str2 = SketchwarePaths.getTempSoundsPath();
-    String str3 = SketchwarePaths.getTempFontsPath();
+    String tempImagesPath = SketchwarePaths.getTempImagesPath();
+    String tempSoundsPath = SketchwarePaths.getTempSoundsPath();
+    String tempFontsPath = SketchwarePaths.getTempFontsPath();
     try {
-      this.fileUtil.deleteDirectoryByPath(str1);
-      this.fileUtil.deleteDirectoryByPath(str2);
-      this.fileUtil.deleteDirectoryByPath(str3);
+      this.fileUtil.deleteDirectoryByPath(tempImagesPath);
+      this.fileUtil.deleteDirectoryByPath(tempSoundsPath);
+      this.fileUtil.deleteDirectoryByPath(tempFontsPath);
     } catch (Exception exception) {
       exception.printStackTrace();
     } 
@@ -505,15 +505,15 @@ public class ResourceManager {
     this.images = new ArrayList<ProjectResourceBean>();
     this.sounds = new ArrayList<ProjectResourceBean>();
     this.fonts = new ArrayList<ProjectResourceBean>();
-    String str1 = SketchwarePaths.getBackupPath(this.projectId);
+    String backupDir = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(str1);
+    stringBuilder.append(backupDir);
     stringBuilder.append(File.separator);
     stringBuilder.append("resource");
-    String str2 = stringBuilder.toString();
+    String resourcePath = stringBuilder.toString();
     BufferedReader bufferedReader = null;
     try {
-      byte[] bytes = this.fileUtil.readFileBytes(str2);
+      byte[] bytes = this.fileUtil.readFileBytes(resourcePath);
       String str = this.fileUtil.decryptToString(bytes);
       bufferedReader = new BufferedReader(new StringReader(str));
       parseResourceData(bufferedReader);
@@ -528,17 +528,17 @@ public class ResourceManager {
     this.images = new ArrayList<ProjectResourceBean>();
     this.sounds = new ArrayList<ProjectResourceBean>();
     this.fonts = new ArrayList<ProjectResourceBean>();
-    String str1 = SketchwarePaths.getDataPath(this.projectId);
+    String dataPath = SketchwarePaths.getDataPath(this.projectId);
     StringBuilder stringBuilder1 = new StringBuilder();
-    stringBuilder1.append(str1);
+    stringBuilder1.append(dataPath);
     stringBuilder1.append(File.separator);
     stringBuilder1.append("resource");
-    str1 = stringBuilder1.toString();
-    if (!this.fileUtil.exists(str1))
+    dataPath = stringBuilder1.toString();
+    if (!this.fileUtil.exists(dataPath))
       return; 
     BufferedReader bufferedReader = null;
     try {
-      byte[] bytes = this.fileUtil.readFileBytes(str1);
+      byte[] bytes = this.fileUtil.readFileBytes(dataPath);
       String str = this.fileUtil.decryptToString(bytes);
       bufferedReader = new BufferedReader(new StringReader(str));
       parseResourceData(bufferedReader);
@@ -605,17 +605,17 @@ public class ResourceManager {
   }
   
   public void saveToData() {
-    String str1 = SketchwarePaths.getDataPath(this.projectId);
+    String dataDir = SketchwarePaths.getDataPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(str1);
+    stringBuilder.append(dataDir);
     stringBuilder.append(File.separator);
     stringBuilder.append("resource");
-    String str2 = stringBuilder.toString();
+    String resourcePath = stringBuilder.toString();
     StringBuffer stringBuffer = new StringBuffer();
     serializeResources(stringBuffer);
     try {
       byte[] bytes = this.fileUtil.encryptString(stringBuffer.toString());
-      this.fileUtil.writeBytes(str2, bytes);
+      this.fileUtil.writeBytes(resourcePath, bytes);
     } catch (Exception exception) {
       exception.printStackTrace();
     } 
