@@ -729,41 +729,41 @@ public class ComponentCodeGenerator {
                 char parameterType = parameterSpec.charAt(1);
                 switch (parameterType) {
                     case 'b':
-                        String str = code;
+                        String accumulated = code;
                         if (!isFirstParameter) {
-                            str += ", ";
+                            accumulated += ", ";
                         }
 
-                        code = str + "final boolean _" + parameterSpec.substring(3);
+                        code = accumulated + "final boolean _" + parameterSpec.substring(3);
                         break;
 
                     case 'd':
-                        str = code;
+                        accumulated = code;
                         if (!isFirstParameter) {
-                            str += ", ";
+                            accumulated += ", ";
                         }
 
-                        code = str + "final double _" + parameterSpec.substring(3);
+                        code = accumulated + "final double _" + parameterSpec.substring(3);
                         break;
 
                     case 's':
-                        str = code;
+                        accumulated = code;
                         if (!isFirstParameter) {
-                            str += ", ";
+                            accumulated += ", ";
                         }
 
-                        code = str + "final String _" + parameterSpec.substring(3);
+                        code = accumulated + "final String _" + parameterSpec.substring(3);
                         break;
 
                     default:
                         if (parameterType == 'm') {
-                            str = code;
+                            accumulated = code;
                             if (!isFirstParameter) {
-                                str += ", ";
+                                accumulated += ", ";
                             }
 
                             int lastIndexOfPeriod = parameterSpec.lastIndexOf(".");
-                            code = str +
+                            code = accumulated +
                                     "final " + ComponentTypeMapper.getActualTypeName(ComponentTypeMapper.getInternalTypeName(parameterSpec.substring(3, lastIndexOfPeriod))) + " _" +
                                     parameterSpec.substring(lastIndexOfPeriod + 1);
                             break;

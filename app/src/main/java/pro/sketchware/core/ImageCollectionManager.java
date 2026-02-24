@@ -99,12 +99,12 @@ public class ImageCollectionManager extends BaseCollectionManager {
         i = j;
         if (collectionBean.name.equals(input)) {
           this.collections.remove(j);
-          String str = collectionBean.data;
+          String dataFileName = collectionBean.data;
           EncryptedFileUtil EncryptedFileUtil = this.fileUtil;
           StringBuilder stringBuilder = new StringBuilder();
           stringBuilder.append(this.dataDirPath);
           stringBuilder.append(File.separator);
-          stringBuilder.append(str);
+          stringBuilder.append(dataFileName);
           EncryptedFileUtil.deleteFileByPath(stringBuilder.toString());
           break;
         } 

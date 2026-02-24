@@ -94,8 +94,8 @@ public class DefinitionBlockView extends BlockView {
     this.minHatWidth = (int)(this.minHatWidth * f2);
     this.minCWidth = (int)(this.minCWidth * f2);
     this.spacing = (int)(this.spacing * f2);
-    String str = ((BaseBlockView)this).blockType;
-    int i = str.hashCode();
+    String blockTypeCode = ((BaseBlockView)this).blockType;
+    int i = blockTypeCode.hashCode();
     if (i != 32) {
       if (i != 104) {
         if (i != 108) {
@@ -107,62 +107,62 @@ public class DefinitionBlockView extends BlockView {
                     b = -1;
                     break;
                   case 102:
-                    if (str.equals("f")) {
+                    if (blockTypeCode.equals("f")) {
                       b = 10;
                       break;
                     } 
                   case 101:
-                    if (str.equals("e")) {
+                    if (blockTypeCode.equals("e")) {
                       b = 9;
                       break;
                     } 
                   case 100:
-                    if (str.equals("d")) {
+                    if (blockTypeCode.equals("d")) {
                       b = 3;
                       break;
                     } 
                   case 99:
-                    if (str.equals("c")) {
+                    if (blockTypeCode.equals("c")) {
                       b = 8;
                       break;
                     } 
                   case 98:
-                    if (str.equals("b")) {
+                    if (blockTypeCode.equals("b")) {
                       b = 1;
                       break;
                     } 
                   case 97:
-                    if (str.equals("a")) {
+                    if (blockTypeCode.equals("a")) {
                       b = 7;
                       break;
                     } 
                 } 
-              } else if (str.equals("v")) {
+              } else if (blockTypeCode.equals("v")) {
                 b = 4;
               } else {
               
               } 
-            } else if (str.equals("s")) {
+            } else if (blockTypeCode.equals("s")) {
               b = 2;
             } else {
             
             } 
-          } else if (str.equals("p")) {
+          } else if (blockTypeCode.equals("p")) {
             b = 5;
           } else {
           
           } 
-        } else if (str.equals("l")) {
+        } else if (blockTypeCode.equals("l")) {
           b = 6;
         } else {
         
         } 
-      } else if (str.equals("h")) {
+      } else if (blockTypeCode.equals("h")) {
         b = 11;
       } else {
       
       } 
-    } else if (str.equals(" ")) {
+    } else if (blockTypeCode.equals(" ")) {
       switch (b) {
         case 11:
           this.isDefinitionBlock = true;

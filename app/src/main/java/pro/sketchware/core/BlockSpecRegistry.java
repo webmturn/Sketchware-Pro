@@ -3970,7 +3970,7 @@ public class BlockSpecRegistry {
     if (cacheD.containsKey(blockName)) return cacheD.get(blockName);
     String originalKey = blockName;
     int i = blockName.hashCode();
-    String str = "false";
+    String defaultValue = "false";
     switch (i) {
       default:
         i = -1;
@@ -5586,7 +5586,7 @@ public class BlockSpecRegistry {
           break;
         } 
     } 
-    blockName = str;
+    blockName = defaultValue;
     switch (i) {
       default:
         blockName = "";

@@ -41,27 +41,27 @@ public class FileNameValidator extends BaseValidator {
   }
   
   public final void validate(String input) {
-    String str = "";
-    if (str.length() < 3) {
+    String conflictList = "";
+    if (conflictList.length() < 3) {
       this.textInputLayout.setErrorEnabled(true);
       this.textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(this.context, R.string.invalid_value_min_lenth, new Object[] { Integer.valueOf(3) }));
       this.valid = false;
       return;
     } 
-    if (str.length() > 70) {
+    if (conflictList.length() > 70) {
       this.textInputLayout.setErrorEnabled(true);
       this.textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(this.context, R.string.invalid_value_max_lenth, new Object[] { Integer.valueOf(70) }));
       this.valid = false;
       return;
     } 
-    if (str.equals("default_image") || "NONE".toLowerCase().equals(str.toLowerCase())) {
+    if (conflictList.equals("default_image") || "NONE".toLowerCase().equals(conflictList.toLowerCase())) {
       this.textInputLayout.setErrorEnabled(true);
       this.textInputLayout.setError(StringResource.getInstance().getTranslatedString(this.context, R.string.common_message_name_unavailable));
       this.valid = false;
       return;
     } 
     if (this.batchCount == 1) {
-      if (!str.equals(this.currentName) && this.existingNames.indexOf(str) >= 0) {
+      if (!conflictList.equals(this.currentName) && this.existingNames.indexOf(conflictList) >= 0) {
         this.textInputLayout.setErrorEnabled(true);
         this.textInputLayout.setError(StringResource.getInstance().getTranslatedString(this.context, R.string.common_message_name_unavailable));
         this.valid = false;
@@ -71,7 +71,7 @@ public class FileNameValidator extends BaseValidator {
       ArrayList<String> candidateNames = new ArrayList<>();
       for (int b1 = 1; b1 <= this.batchCount; b1++) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(str);
+        stringBuilder.append(conflictList);
         stringBuilder.append("_");
         stringBuilder.append(b1);
         candidateNames.add(stringBuilder.toString());
@@ -85,25 +85,25 @@ public class FileNameValidator extends BaseValidator {
         this.textInputLayout.setErrorEnabled(true);
         String errorMessage = StringResource.getInstance().getTranslatedString(this.context, R.string.common_message_name_unavailable);
         Iterator<String> iterator = conflictNames.iterator();
-        str = "";
+        conflictList = "";
         while (iterator.hasNext()) {
           String conflictName = iterator.next();
-          String accumulated = str;
-          if (str.length() > 0) {
+          String accumulated = conflictList;
+          if (conflictList.length() > 0) {
             StringBuilder separatorBuilder = new StringBuilder();
-            separatorBuilder.append(str);
+            separatorBuilder.append(conflictList);
             separatorBuilder.append(", ");
             accumulated = separatorBuilder.toString();
           } 
           StringBuilder nameBuilder = new StringBuilder();
           nameBuilder.append(accumulated);
           nameBuilder.append(conflictName);
-          str = nameBuilder.toString();
+          conflictList = nameBuilder.toString();
         } 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(errorMessage);
         stringBuilder.append("\n[");
-        stringBuilder.append(str);
+        stringBuilder.append(conflictList);
         stringBuilder.append("]");
         this.textInputLayout.setError(stringBuilder.toString());
         this.valid = false;
@@ -115,7 +115,7 @@ public class FileNameValidator extends BaseValidator {
     int b = 0;
     while (true) {
       if (b < i) {
-        if (str.equals(parts[b])) {
+        if (conflictList.equals(parts[b])) {
           b = 1;
           break;
         } 
@@ -131,13 +131,13 @@ public class FileNameValidator extends BaseValidator {
       this.valid = false;
       return;
     } 
-    if (!Character.isLetter(str.charAt(0))) {
+    if (!Character.isLetter(conflictList.charAt(0))) {
       this.textInputLayout.setErrorEnabled(true);
       this.textInputLayout.setError(StringResource.getInstance().getTranslatedString(this.context, R.string.logic_editor_message_variable_name_must_start_letter));
       this.valid = false;
       return;
     } 
-    if (this.namePattern.matcher(str).matches()) {
+    if (this.namePattern.matcher(conflictList).matches()) {
       this.textInputLayout.setErrorEnabled(false);
       this.valid = true;
     } else {

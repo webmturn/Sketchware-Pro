@@ -72,8 +72,8 @@ public class FieldBlockView extends BaseBlockView {
   private int getDropdownTypeWidth() {
     Rect rect = new Rect();
     TextPaint textPaint = this.dropdownLabel.getPaint();
-    String str = getComponentLabel(this.componentType);
-    textPaint.getTextBounds(str, 0, str.length(), rect);
+    String labelText = getComponentLabel(this.componentType);
+    textPaint.getTextBounds(labelText, 0, labelText.length(), rect);
     return rect.width() + this.minCWidth * 2;
   }
   

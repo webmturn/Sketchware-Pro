@@ -169,10 +169,10 @@ public class BlockView extends BaseBlockView {
       } else if (type == 109) {
         return new FieldBlockView(this.context, "m", spec.substring(3));
       } else if (type == 115) {
-        String str = "";
+        String defaultValue = "";
         if (spec.length() > 2)
-          str = spec.substring(3);
-        return new FieldBlockView(this.context, "s", str);
+          defaultValue = spec.substring(3);
+        return new FieldBlockView(this.context, "s", defaultValue);
       }
       return createLabel(FormatUtil.unescapeString(spec));
     }

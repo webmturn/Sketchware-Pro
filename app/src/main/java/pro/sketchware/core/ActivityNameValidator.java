@@ -43,8 +43,8 @@ public class ActivityNameValidator extends BaseValidator {
             valid = false;
             return;
         }
-        String str = originalName;
-        if (str != null && !str.isEmpty() && charSequence.toString().equals(originalName)) {
+        String currentName = originalName;
+        if (currentName != null && !currentName.isEmpty() && charSequence.toString().equals(originalName)) {
             textInputLayout.setErrorEnabled(false);
             valid = true;
             return;
