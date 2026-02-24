@@ -25,8 +25,8 @@ public class ProjectFileManager {
   
   public Gson gson;
   
-  public ProjectFileManager(String str) {
-    this.projectId = str;
+  public ProjectFileManager(String projectId) {
+    this.projectId = projectId;
     this.fileUtil = new EncryptedFileUtil();
     this.xmlNames = new ArrayList<String>();
     this.javaNames = new ArrayList<String>();
@@ -35,9 +35,9 @@ public class ProjectFileManager {
     refreshNameLists();
   }
   
-  public ProjectFileBean getActivityByJavaName(String str) {
+  public ProjectFileBean getActivityByJavaName(String javaName) {
     for (ProjectFileBean projectFileBean : this.activities) {
-      if (projectFileBean.getJavaName().equals(str))
+      if (projectFileBean.getJavaName().equals(javaName))
         return projectFileBean; 
     } 
     return null;
@@ -53,8 +53,8 @@ public class ProjectFileManager {
     this.fileUtil.deleteFileByPath(str);
   }
   
-  public void addFile(int index, String str) {
-    ProjectFileBean projectFileBean = new ProjectFileBean(index, str);
+  public void addFile(int index, String fileName) {
+    ProjectFileBean projectFileBean = new ProjectFileBean(index, fileName);
     if (index == 0) {
       this.activities.add(projectFileBean);
     } else {
@@ -197,15 +197,15 @@ public class ProjectFileManager {
     this.activities = list;
   }
   
-  public ProjectFileBean getFileByXmlName(String str) {
+  public ProjectFileBean getFileByXmlName(String xmlName) {
     for (ProjectFileBean projectFileBean : this.activities) {
-      if (projectFileBean.getXmlName().equals(str))
+      if (projectFileBean.getXmlName().equals(xmlName))
         return projectFileBean; 
     } 
     ArrayList<ProjectFileBean> arrayList = this.customViews;
     if (arrayList != null)
       for (ProjectFileBean projectFileBean : arrayList) {
-        if (projectFileBean.getXmlName().equals(str))
+        if (projectFileBean.getXmlName().equals(xmlName))
           return projectFileBean; 
       }  
     return null;
@@ -217,17 +217,17 @@ public class ProjectFileManager {
     return this.activities;
   }
   
-  public void removeFile(int index, String str) {
+  public void removeFile(int index, String fileName) {
     if (index == 0) {
       for (ProjectFileBean projectFileBean : this.activities) {
-        if (projectFileBean.fileType == index && projectFileBean.fileName.equals(str)) {
+        if (projectFileBean.fileType == index && projectFileBean.fileName.equals(fileName)) {
           this.activities.remove(projectFileBean);
           break;
         } 
       } 
     } else {
       for (ProjectFileBean projectFileBean : this.customViews) {
-        if (projectFileBean.fileType == index && projectFileBean.fileName.equals(str)) {
+        if (projectFileBean.fileType == index && projectFileBean.fileName.equals(fileName)) {
           this.customViews.remove(projectFileBean);
           break;
         } 
@@ -245,10 +245,10 @@ public class ProjectFileManager {
     return this.customViews;
   }
   
-  public boolean hasJavaName(String str) {
+  public boolean hasJavaName(String javaName) {
     Iterator<String> iterator = this.javaNames.iterator();
     while (iterator.hasNext()) {
-      if (str.equals(iterator.next()))
+      if (javaName.equals(iterator.next()))
         return true; 
     } 
     return false;
@@ -258,10 +258,10 @@ public class ProjectFileManager {
     return this.javaNames;
   }
   
-  public boolean hasXmlName(String str) {
+  public boolean hasXmlName(String xmlName) {
     Iterator<String> iterator = this.xmlNames.iterator();
     while (iterator.hasNext()) {
-      if (str.equals(iterator.next()))
+      if (xmlName.equals(iterator.next()))
         return true; 
     } 
     return false;
@@ -271,12 +271,12 @@ public class ProjectFileManager {
     return this.xmlNames;
   }
   
-  public final void writeToFile(String str) {
+  public final void writeToFile(String filePath) {
     StringBuffer stringBuffer = new StringBuffer();
     serializeFiles(stringBuffer);
     try {
       byte[] bytes = this.fileUtil.encryptString(stringBuffer.toString());
-      this.fileUtil.writeBytes(str, bytes);
+      this.fileUtil.writeBytes(filePath, bytes);
     } catch (Exception exception) {
       exception.printStackTrace();
     } 
