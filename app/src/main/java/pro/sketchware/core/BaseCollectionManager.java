@@ -53,9 +53,9 @@ public abstract class BaseCollectionManager {
   }
   
   public void clearCollections() {
-    ArrayList<CollectionBean> arrayList = this.collections;
-    if (arrayList != null) {
-      arrayList.clear();
+    ArrayList<CollectionBean> collectionsList = this.collections;
+    if (collectionsList != null) {
+      collectionsList.clear();
       this.collections = null;
     } 
   }

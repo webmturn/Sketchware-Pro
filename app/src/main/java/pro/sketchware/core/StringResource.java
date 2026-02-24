@@ -970,8 +970,8 @@ public class StringResource {
     keyBuilder.append("block_");
     keyBuilder.append(BlockSpecRegistry.getBlockSpec(blockName));
     String translationKey = keyBuilder.toString();
-    ArrayList<String> arrayList = BlockSpecRegistry.getBlockParams(blockName);
-    this.eventTranslations.put(blockName, getBlockTranslation(context, translationKey, arrayList));
+    ArrayList<String> blockParams = BlockSpecRegistry.getBlockParams(blockName);
+    this.eventTranslations.put(blockName, getBlockTranslation(context, translationKey, blockParams));
   }
   
   public boolean reloadTranslations(Context context) {
@@ -996,7 +996,7 @@ public class StringResource {
     keyBuilder.append("root_spec_");
     keyBuilder.append(BlockSpecRegistry.getEventSpec(eventName));
     String translationKey = keyBuilder.toString();
-    ArrayList<String> arrayList = BlockSpecRegistry.getBlockMenuItems(eventName);
-    this.eventTranslations.put(eventName, getBlockTranslation(context, translationKey, arrayList));
+    ArrayList<String> menuItems = BlockSpecRegistry.getBlockMenuItems(eventName);
+    this.eventTranslations.put(eventName, getBlockTranslation(context, translationKey, menuItems));
   }
 }
