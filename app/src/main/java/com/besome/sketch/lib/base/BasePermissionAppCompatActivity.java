@@ -70,8 +70,8 @@ public abstract class BasePermissionAppCompatActivity extends BaseAppCompatActiv
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        for (String str : permissions) {
-            if (Manifest.permission.WRITE_EXTERNAL_STORAGE.equals(str)) {
+        for (String permission : permissions) {
+            if (Manifest.permission.WRITE_EXTERNAL_STORAGE.equals(permission)) {
                 if (grantResults.length > 0 && grantResults[0] == 0 && grantResults[1] == 0) {
                     onStoragePermissionGranted(requestCode);
                 } else {

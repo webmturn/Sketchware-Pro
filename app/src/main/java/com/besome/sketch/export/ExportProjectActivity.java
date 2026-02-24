@@ -766,13 +766,13 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
          * ergo, an error occurred.
          */
         @Override // pro.sketchware.core.BaseAsyncTask
-        public void onError(String str) {
+        public void onError(String errorMessage) {
             var act = activity.get();
             if (act == null) return;
             act.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             // Dismiss the ProgressDialog
             act.dismissProgressDialog();
-            SketchwareUtil.showAnErrorOccurredDialog(act, str);
+            SketchwareUtil.showAnErrorOccurredDialog(act, errorMessage);
             act.sign_apk_output_stage.setVisibility(View.GONE);
             LottieAnimationView loading_sign_apk = this.loading_sign_apk.get();
             if (loading_sign_apk != null) {

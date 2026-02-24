@@ -82,7 +82,7 @@ public class ViewProperty extends LinearLayout implements PropertyChangedCallbac
     }
 
     @Override
-    public void onPropertyChanged(String str, Object obj) {
+    public void onPropertyChanged(String key, Object value) {
     }
 
     public interface onPropertyDeleted {
@@ -331,9 +331,9 @@ public class ViewProperty extends LinearLayout implements PropertyChangedCallbac
         viewPropertyItems.setProjectSettings(new ProjectSettings(sc_id));
     }
 
-    public void selectWidgetById(String str) {
+    public void selectWidgetById(String widgetId) {
         for (int i = 0; i < projectActivityViews.size(); i++) {
-            if (projectActivityViews.get(i).id.equals(str)) {
+            if (projectActivityViews.get(i).id.equals(widgetId)) {
                 spnWidget.setSelection(i);
                 return;
             }
@@ -379,9 +379,9 @@ public class ViewProperty extends LinearLayout implements PropertyChangedCallbac
         private final ArrayList<ViewBean> views;
         private int selectedItemPosition;
 
-        public ViewIdsAdapter(Context context, ArrayList<ViewBean> arrayList) {
+        public ViewIdsAdapter(Context context, ArrayList<ViewBean> viewBeans) {
             this.context = context;
-            views = arrayList;
+            views = viewBeans;
         }
 
         private void setPosition(int position) {

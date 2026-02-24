@@ -646,13 +646,13 @@ public class ViewPane extends RelativeLayout {
         }
     }
 
-    public ItemView findItemViewByTag(String str) {
+    public ItemView findItemViewByTag(String tag) {
         View findViewWithTag = null;
-        if (str.charAt(0) == '_') {
-            findViewWithTag = findViewWithTag(str);
+        if (tag.charAt(0) == '_') {
+            findViewWithTag = findViewWithTag(tag);
         } else {
             if (rootLayout != null) {
-                findViewWithTag = rootLayout.findViewWithTag(str);
+                findViewWithTag = rootLayout.findViewWithTag(tag);
             }
         }
         if (findViewWithTag instanceof ItemView) {

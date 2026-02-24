@@ -45,8 +45,8 @@ public class LogicEditorScrollView extends FrameLayout {
         return scrollEnabled;
     }
 
-    public void setScrollEnabled(boolean z) {
-        scrollEnabled = z;
+    public void setScrollEnabled(boolean enabled) {
+        scrollEnabled = enabled;
     }
 
     @Override

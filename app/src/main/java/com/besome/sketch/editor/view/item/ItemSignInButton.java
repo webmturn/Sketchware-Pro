@@ -84,8 +84,8 @@ public class ItemSignInButton extends AppCompatButton implements ItemView {
     }
 
     @Override
-    public void setFixed(boolean z) {
-        hasFixed = z;
+    public void setFixed(boolean fixed) {
+        hasFixed = fixed;
     }
 
     public boolean getSelection() {
@@ -93,8 +93,8 @@ public class ItemSignInButton extends AppCompatButton implements ItemView {
     }
 
     @Override
-    public void setSelection(boolean z) {
-        hasSelection = z;
+    public void setSelection(boolean selected) {
+        hasSelection = selected;
         invalidate();
     }
 

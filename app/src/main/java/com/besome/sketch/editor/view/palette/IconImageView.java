@@ -32,7 +32,7 @@ public class IconImageView extends IconBase {
         return resourceName;
     }
 
-    public void setResourceName(String str) {
-        resourceName = str;
+    public void setResourceName(String name) {
+        resourceName = name;
     }
 }
