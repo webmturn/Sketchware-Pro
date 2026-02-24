@@ -38,9 +38,9 @@ public class RecentHistoryManager {
   }
   
   public void addRecentItem(String key, String value) {
-    ArrayList<String> arrayList1 = this.recentMap.get(key);
-    ArrayList<String> historyList = arrayList1;
-    if (arrayList1 == null) {
+    ArrayList<String> existingList = this.recentMap.get(key);
+    ArrayList<String> historyList = existingList;
+    if (existingList == null) {
       historyList = new ArrayList<>();
       this.recentMap.put(key, historyList);
     } 

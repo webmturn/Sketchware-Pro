@@ -180,9 +180,9 @@ public class ViewFilesAdapter extends BaseFragment {
   public void onActivityResult(int start, int end, Intent resultIntent) {
     if ((start == 277 || start == 278) && end == -1) {
       ProjectFileBean projectFileBean = this.projectFiles.get(this.adapter.selectedPosition);
-      ArrayList<ViewBean> arrayList2 = ProjectDataManager.getProjectDataManager(this.projectId).getViews(projectFileBean.getXmlName());
-      for (end = arrayList2.size() - 1; end >= 0; end--) {
-        ViewBean viewBean = arrayList2.get(end);
+      ArrayList<ViewBean> currentViews = ProjectDataManager.getProjectDataManager(this.projectId).getViews(projectFileBean.getXmlName());
+      for (end = currentViews.size() - 1; end >= 0; end--) {
+        ViewBean viewBean = currentViews.get(end);
         ProjectDataManager.getProjectDataManager(this.projectId).removeView(projectFileBean, viewBean);
       } 
       ArrayList<ViewBean> existingViews = getPresetViews(((ProjectFileBean)resultIntent.getParcelableExtra("preset_data")).presetName, start);
