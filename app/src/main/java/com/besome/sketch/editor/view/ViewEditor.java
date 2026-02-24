@@ -961,7 +961,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
     }
 
     private void addFavoriteViews(String str, ArrayList<ViewBean> arrayList) {
-        View a2 = paletteFavorite.a(str, arrayList);
+        View a2 = paletteFavorite.addWidgetCollection(str, arrayList);
         a2.setClickable(true);
         a2.setOnTouchListener(this);
     }

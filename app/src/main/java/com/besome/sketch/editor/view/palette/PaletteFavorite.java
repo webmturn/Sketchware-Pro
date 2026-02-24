@@ -28,7 +28,7 @@ public class PaletteFavorite extends LinearLayout {
         initialize(context);
     }
 
-    public View a(String name, ArrayList<ViewBean> viewBeans) {
+    public View addWidgetCollection(String name, ArrayList<ViewBean> viewBeans) {
         WidgetPaletteIcon favoriteWidget = new WidgetPaletteIcon(getContext(), name, viewBeans);
         collectionWidgets.addView(favoriteWidget);
         return favoriteWidget;

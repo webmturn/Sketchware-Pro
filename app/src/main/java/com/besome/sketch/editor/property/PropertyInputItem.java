@@ -501,7 +501,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
         dialog.show();
     }
 
-    public void a(String projectId, ProjectFileBean projectFileBean) {
+    public void setProjectData(String projectId, ProjectFileBean projectFileBean) {
         sc_id = projectId;
         this.projectFileBean = projectFileBean;
     }

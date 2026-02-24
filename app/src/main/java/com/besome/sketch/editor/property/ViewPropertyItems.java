@@ -283,7 +283,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
             inputItem = new PropertyInputItem(getContext(), !z);
             inputItem.setOrientationItem(getOrientation());
             inputItem.setTypeView(typeView);
-            inputItem.a(sc_id, projectFile);
+            inputItem.setProjectData(sc_id, projectFile);
             inputItem.setKey(key);
             inputItem.setValue(value);
             inputItem.setTag(key);
@@ -291,7 +291,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
             propertyViewCache.put(key, inputItem);
         } else {
             inputItem.setTypeView(typeView);
-            inputItem.a(sc_id, projectFile);
+            inputItem.setProjectData(sc_id, projectFile);
             inputItem.setValue(value);
         }
         inputItem.setBean(viewBean);
