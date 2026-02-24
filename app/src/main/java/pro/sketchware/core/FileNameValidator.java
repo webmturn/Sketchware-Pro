@@ -77,31 +77,31 @@ public class FileNameValidator extends BaseValidator {
         arrayList1.add(stringBuilder.toString());
       } 
       ArrayList<String> arrayList2 = new ArrayList<>();
-      for (String str1 : arrayList1) {
-        if (this.existingNames.indexOf(str1) >= 0)
-          arrayList2.add(str1); 
+      for (String candidateName : arrayList1) {
+        if (this.existingNames.indexOf(candidateName) >= 0)
+          arrayList2.add(candidateName); 
       } 
       if (arrayList2.size() > 0) {
         this.textInputLayout.setErrorEnabled(true);
-        String str1 = StringResource.getInstance().getTranslatedString(this.context, R.string.common_message_name_unavailable);
+        String errorMessage = StringResource.getInstance().getTranslatedString(this.context, R.string.common_message_name_unavailable);
         Iterator<String> iterator = arrayList2.iterator();
         str = "";
         while (iterator.hasNext()) {
-          String str3 = iterator.next();
-          String str2 = str;
+          String conflictName = iterator.next();
+          String accumulated = str;
           if (str.length() > 0) {
             StringBuilder stringBuilder2 = new StringBuilder();
             stringBuilder2.append(str);
             stringBuilder2.append(", ");
-            str2 = stringBuilder2.toString();
+            accumulated = stringBuilder2.toString();
           } 
           StringBuilder stringBuilder1 = new StringBuilder();
-          stringBuilder1.append(str2);
-          stringBuilder1.append(str3);
+          stringBuilder1.append(accumulated);
+          stringBuilder1.append(conflictName);
           str = stringBuilder1.toString();
         } 
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(str1);
+        stringBuilder.append(errorMessage);
         stringBuilder.append("\n[");
         stringBuilder.append(str);
         stringBuilder.append("]");

@@ -84,16 +84,16 @@ public class FieldBlockView extends BaseBlockView {
   }
   
   public final String getComponentLabel(String str) {
-    String str1 = "";
-    String str2 = BlockColorMapper.getComponentDisplayName(str);
-    str = str2;
-    if (str2.length() > 0) {
+    String prefix = "";
+    String displayName = BlockColorMapper.getComponentDisplayName(str);
+    str = displayName;
+    if (displayName.length() > 0) {
       StringBuilder stringBuilder = new StringBuilder();
-      stringBuilder.append(str2);
+      stringBuilder.append(displayName);
       stringBuilder.append(" : ");
-      str1 = stringBuilder.toString();
+      prefix = stringBuilder.toString();
     } 
-    return str1;
+    return prefix;
   }
   
   public final TextView createLabelTextView(String str) {

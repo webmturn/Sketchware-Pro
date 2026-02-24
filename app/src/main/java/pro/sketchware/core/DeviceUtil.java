@@ -122,27 +122,26 @@ public class DeviceUtil {
   }
   
   public static int getVersionCode(Context context) {
-    int i = 0;
+    int versionCode = 0;
     try {
-      String str = context.getPackageName();
-      int j = (context.getPackageManager().getPackageInfo(str, 0)).versionCode;
-      i = j;
+      String packageName = context.getPackageName();
+      versionCode = (context.getPackageManager().getPackageInfo(packageName, 0)).versionCode;
     } catch (android.content.pm.PackageManager.NameNotFoundException nameNotFoundException) {
       nameNotFoundException.printStackTrace();
     } 
-    return i;
+    return versionCode;
   }
   
   public static String getVersionName(Context context) {
-    String str;
+    String versionName;
     try {
-      String str1 = context.getPackageName();
-      str = (context.getPackageManager().getPackageInfo(str1, 0)).versionName;
+      String packageName = context.getPackageName();
+      versionName = (context.getPackageManager().getPackageInfo(packageName, 0)).versionName;
     } catch (android.content.pm.PackageManager.NameNotFoundException nameNotFoundException) {
       nameNotFoundException.printStackTrace();
-      str = "";
+      versionName = "";
     } 
-    return str;
+    return versionName;
   }
   
   public static int getStatusBarHeight(Context context) {

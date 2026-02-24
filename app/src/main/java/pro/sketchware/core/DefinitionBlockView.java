@@ -22,19 +22,19 @@ public class DefinitionBlockView extends BlockView {
   
   private TextView createDefinitionLabel(String input) {
     TextView textView = new TextView(((BaseBlockView)this).context);
-    String str1 = ((BaseBlockView)this).componentType;
-    String str2 = input;
-    if (str1 != null) {
-      str2 = input;
-      if (str1.length() > 0) {
+    String compType = ((BaseBlockView)this).componentType;
+    String labelText = input;
+    if (compType != null) {
+      labelText = input;
+      if (compType.length() > 0) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(((BaseBlockView)this).componentType);
         stringBuilder.append(" : ");
         stringBuilder.append(input);
-        str2 = stringBuilder.toString();
+        labelText = stringBuilder.toString();
       } 
     } 
-    textView.setText(str2);
+    textView.setText(labelText);
     textView.setTextSize(10.0F);
     textView.setPadding(0, 0, 0, 0);
     textView.setGravity(16);

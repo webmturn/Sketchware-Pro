@@ -34,24 +34,24 @@ public class ViewFilesAdapter extends BaseFragment {
   
   public int[] viewCounters = new int[19];
   
-  public final String generateUniqueViewId(int position, String str) {
-    String str1 = SketchwarePaths.getWidgetTypeName(position);
+  public final String generateUniqueViewId(int position, String xmlName) {
+    String prefix = SketchwarePaths.getWidgetTypeName(position);
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(str1);
+    stringBuilder.append(prefix);
     int[] intValues = this.viewCounters;
     int i = intValues[position] + 1;
     intValues[position] = i;
     stringBuilder.append(i);
-    String str2 = stringBuilder.toString();
-    ArrayList arrayList = ProjectDataManager.getProjectDataManager(this.projectId).getViews(str);
-    str = str2;
+    String candidateId = stringBuilder.toString();
+    ArrayList arrayList = ProjectDataManager.getProjectDataManager(this.projectId).getViews(xmlName);
+    xmlName = candidateId;
     while (true) {
       int found = 0;
       Iterator iterator = arrayList.iterator();
       while (true) {
         i = found;
         if (iterator.hasNext()) {
-          if (str.equals(((ViewBean)iterator.next()).id)) {
+          if (xmlName.equals(((ViewBean)iterator.next()).id)) {
             i = 1;
             break;
           } 
@@ -60,14 +60,14 @@ public class ViewFilesAdapter extends BaseFragment {
         break;
       } 
       if (i == 0)
-        return str; 
+        return xmlName; 
       StringBuilder stringBuilder1 = new StringBuilder();
-      stringBuilder1.append(str1);
+      stringBuilder1.append(prefix);
       int[] intValues1 = this.viewCounters;
       i = intValues1[position] + 1;
       intValues1[position] = i;
       stringBuilder1.append(i);
-      str = stringBuilder1.toString(); // Fix: assign generated string back to str
+      xmlName = stringBuilder1.toString();
     } 
   }
   

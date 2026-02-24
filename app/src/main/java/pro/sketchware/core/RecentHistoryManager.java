@@ -53,17 +53,17 @@ public class RecentHistoryManager {
   
   public void saveToDatabase() {
     Iterator<String> iterator = this.recentMap.keySet().iterator();
-    String str = "";
+    String result = "";
     while (iterator.hasNext()) {
-      String str1 = iterator.next();
-      for (String str2 : this.recentMap.get(str1)) {
+      String key = iterator.next();
+      for (String item : this.recentMap.get(key)) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(str);
-        stringBuilder.append(str2);
+        stringBuilder.append(result);
+        stringBuilder.append(item);
         stringBuilder.append(",");
-        str = stringBuilder.toString();
+        result = stringBuilder.toString();
       } 
-      this.database.put(str1, str);
+      this.database.put(key, result);
     } 
   }
   
