@@ -85,7 +85,7 @@ public class ManageImageActivity extends BaseAppCompatActivity implements ViewPa
         setSupportActionBar(binding.topAppBar);
         binding.topAppBar.setTitle(R.string.design_actionbar_title_manager_image);
         binding.topAppBar.setNavigationOnClickListener(v -> {
-            if (!UIHelper.a()) {
+            if (!UIHelper.isClickThrottled()) {
                 getOnBackPressedDispatcher().onBackPressed();
             }
         });

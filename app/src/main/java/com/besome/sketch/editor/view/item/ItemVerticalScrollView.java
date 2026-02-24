@@ -106,10 +106,10 @@ public class ItemVerticalScrollView extends FrameLayout implements ItemView, Scr
 
     private void initialize(Context var1) {
         setDrawingCacheEnabled(true);
-        setMinimumWidth((int) ViewUtil.a(var1, 32.0F));
-        setMinimumHeight((int) ViewUtil.a(var1, 32.0F));
+        setMinimumWidth((int) ViewUtil.dpToPx(var1, 32.0F));
+        setMinimumHeight((int) ViewUtil.dpToPx(var1, 32.0F));
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setStrokeWidth(ViewUtil.a(getContext(), 2.0F));
+        paint.setStrokeWidth(ViewUtil.dpToPx(getContext(), 2.0F));
     }
 
     private boolean a(View view, int var2, int var3) {
@@ -319,7 +319,7 @@ public class ItemVerticalScrollView extends FrameLayout implements ItemView, Scr
 
     @Override
     public void setPadding(int left, int top, int right, int bottom) {
-        super.setPadding((int) ViewUtil.a(getContext(), (float) left), (int) ViewUtil.a(getContext(), (float) top), (int) ViewUtil.a(getContext(), (float) right), (int) ViewUtil.a(getContext(), (float) bottom));
+        super.setPadding((int) ViewUtil.dpToPx(getContext(), (float) left), (int) ViewUtil.dpToPx(getContext(), (float) top), (int) ViewUtil.dpToPx(getContext(), (float) right), (int) ViewUtil.dpToPx(getContext(), (float) bottom));
     }
 
     public void setScrollEnabled(boolean isScrollEnabled) {

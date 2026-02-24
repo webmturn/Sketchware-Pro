@@ -161,7 +161,7 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setIcon(R.drawable.ic_mtrl_lifecycle);
         dialog.setTitle(Helper.getResString(R.string.change_launcher_activity_dialog_title));
-        View view = ViewUtil.a(this, R.layout.dialog_add_custom_activity);
+        View view = ViewUtil.inflateLayout(this, R.layout.dialog_add_custom_activity);
 
         TextInputEditText activity_name_input = view.findViewById(R.id.activity_name_input);
 
@@ -185,7 +185,7 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setIcon(R.drawable.ic_mtrl_add);
         dialog.setTitle(Helper.getResString(R.string.common_word_add_activtiy));
-        View inflate = ViewUtil.a(this, R.layout.dialog_add_custom_activity);
+        View inflate = ViewUtil.inflateLayout(this, R.layout.dialog_add_custom_activity);
 
         TextInputEditText activity_name_input = inflate.findViewById(R.id.activity_name_input);
 

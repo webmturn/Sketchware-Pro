@@ -23,7 +23,7 @@ public class ItemRadioButton extends AppCompatRadioButton implements ItemView {
 
     public ItemRadioButton(Context context) {
         super(context);
-        paddingFactor = (int) ViewUtil.a(context, 1.0f);
+        paddingFactor = (int) ViewUtil.dpToPx(context, 1.0f);
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(0x9599d5d0);
         rect = new Rect();

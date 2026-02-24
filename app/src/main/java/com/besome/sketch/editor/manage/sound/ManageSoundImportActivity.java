@@ -98,7 +98,7 @@ public class ManageSoundImportActivity extends BaseAppCompatActivity implements 
 
     @Override
     public void onClick(View v) {
-        if (!UIHelper.a()) {
+        if (!UIHelper.isClickThrottled()) {
             int id = v.getId();
             if (id == R.id.btn_decide) {
                 String name = Helper.getText(ed_input_edittext);
@@ -358,7 +358,7 @@ public class ManageSoundImportActivity extends BaseAppCompatActivity implements 
                 img = itemView.findViewById(R.id.img);
                 tv_name = itemView.findViewById(R.id.tv_name);
                 img.setOnClickListener(v -> {
-                    if (!UIHelper.a()) {
+                    if (!UIHelper.isClickThrottled()) {
                         pausePlayback();
                         selectedItem = getLayoutPosition();
                         showPreview(selectedItem);

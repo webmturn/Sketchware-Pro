@@ -124,7 +124,7 @@ public class InnerAddComponentBottomSheet extends BottomSheetDialogFragment {
         componentMimeTypeValidator = new LengthRangeValidator(getContext(), binding.tiInputFilePicker, 1, 50);
 
         binding.btnReadDocs.setOnClickListener(v -> {
-            if (!UIHelper.a()) {
+            if (!UIHelper.isClickThrottled()) {
                 String componentDocsUrlByTypeName = ComponentBean.getComponentDocsUrlByTypeName(componentBean.type);
                 if (componentDocsUrlByTypeName.isEmpty()) {
                     SketchToast.toast(getContext(), Helper.getResString(R.string.component_add_message_docs_updated_soon), SketchToast.TOAST_NORMAL).show();
@@ -150,7 +150,7 @@ public class InnerAddComponentBottomSheet extends BottomSheetDialogFragment {
             protected void onDebouncedClick(View v) {
                 if (checks() && getContext() != null) {
                     SketchToast.toast(requireContext(), Helper.getResString(R.string.component_message_component_block_added), SketchToast.TOAST_WARNING).show();
-                    UIHelper.a(requireContext(), binding.edInput);
+                    UIHelper.hideKeyboard(requireContext(), binding.edInput);
                     onSaveClickListener.onSaveClick(InnerAddComponentBottomSheet.this);
                 }
             }
@@ -269,7 +269,7 @@ public class InnerAddComponentBottomSheet extends BottomSheetDialogFragment {
         dialog.setTitle(Helper.getResString(R.string.title_compatible_chrome_browser));
         dialog.setMessage(Helper.getResString(R.string.message_compatible_chrome_brower));
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_ok), (v, which) -> {
-            if (!UIHelper.a()) {
+            if (!UIHelper.isClickThrottled()) {
                 try {
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setData(Uri.parse("market://details?id=com.android.chrome"));

@@ -359,10 +359,10 @@ public class ViewPane extends RelativeLayout {
             LayoutParams layoutParams = new LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParams.leftMargin = (int) ViewUtil.a(getContext(), (float) viewBean.layout.marginLeft);
-            layoutParams.topMargin = (int) ViewUtil.a(getContext(), (float) viewBean.layout.marginTop);
-            layoutParams.rightMargin = (int) ViewUtil.a(getContext(), (float) viewBean.layout.marginRight);
-            layoutParams.bottomMargin = (int) ViewUtil.a(getContext(), (float) viewBean.layout.marginBottom);
+            layoutParams.leftMargin = (int) ViewUtil.dpToPx(getContext(), (float) viewBean.layout.marginLeft);
+            layoutParams.topMargin = (int) ViewUtil.dpToPx(getContext(), (float) viewBean.layout.marginTop);
+            layoutParams.rightMargin = (int) ViewUtil.dpToPx(getContext(), (float) viewBean.layout.marginRight);
+            layoutParams.bottomMargin = (int) ViewUtil.dpToPx(getContext(), (float) viewBean.layout.marginBottom);
             int layoutGravity = viewBean.layout.layoutGravity;
             if ((layoutGravity & Gravity.LEFT) == Gravity.LEFT) {
                 layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
@@ -443,8 +443,8 @@ public class ViewPane extends RelativeLayout {
             }
             view.setRotation(viewBean.image.rotate);
             view.setAlpha(viewBean.alpha);
-            view.setTranslationX(ViewUtil.a(getContext(), viewBean.translationX));
-            view.setTranslationY(ViewUtil.a(getContext(), viewBean.translationY));
+            view.setTranslationX(ViewUtil.dpToPx(getContext(), viewBean.translationX));
+            view.setTranslationY(ViewUtil.dpToPx(getContext(), viewBean.translationY));
             view.setScaleX(viewBean.scaleX);
             view.setScaleY(viewBean.scaleY);
             view.setVisibility(View.VISIBLE);
@@ -453,8 +453,8 @@ public class ViewPane extends RelativeLayout {
         updateLayout(view, viewBean);
         view.setRotation(viewBean.image.rotate);
         view.setAlpha(viewBean.alpha);
-        view.setTranslationX(ViewUtil.a(getContext(), viewBean.translationX));
-        view.setTranslationY(ViewUtil.a(getContext(), viewBean.translationY));
+        view.setTranslationX(ViewUtil.dpToPx(getContext(), viewBean.translationX));
+        view.setTranslationY(ViewUtil.dpToPx(getContext(), viewBean.translationY));
         view.setScaleX(viewBean.scaleX);
         view.setScaleY(viewBean.scaleY);
         String backgroundResource = viewBean.layout.backgroundResource;
@@ -1031,16 +1031,16 @@ public class ViewPane extends RelativeLayout {
         int width = layoutBean.width;
         int height = layoutBean.height;
         if (width > 0) {
-            width = (int) ViewUtil.a(getContext(), (float) viewBean.layout.width);
+            width = (int) ViewUtil.dpToPx(getContext(), (float) viewBean.layout.width);
         }
         if (height > 0) {
-            height = (int) ViewUtil.a(getContext(), (float) viewBean.layout.height);
+            height = (int) ViewUtil.dpToPx(getContext(), (float) viewBean.layout.height);
         }
 
-        int leftMargin = (int) ViewUtil.a(getContext(), (float) viewBean.layout.marginLeft);
-        int topMargin = (int) ViewUtil.a(getContext(), (float) viewBean.layout.marginTop);
-        int rightMargin = (int) ViewUtil.a(getContext(), (float) viewBean.layout.marginRight);
-        int bottomMargin = (int) ViewUtil.a(getContext(), (float) viewBean.layout.marginBottom);
+        int leftMargin = (int) ViewUtil.dpToPx(getContext(), (float) viewBean.layout.marginLeft);
+        int topMargin = (int) ViewUtil.dpToPx(getContext(), (float) viewBean.layout.marginTop);
+        int rightMargin = (int) ViewUtil.dpToPx(getContext(), (float) viewBean.layout.marginRight);
+        int bottomMargin = (int) ViewUtil.dpToPx(getContext(), (float) viewBean.layout.marginBottom);
 
         if (viewBean.layout.backgroundResColor == null) {
             view.setBackgroundColor(viewBean.layout.backgroundColor);

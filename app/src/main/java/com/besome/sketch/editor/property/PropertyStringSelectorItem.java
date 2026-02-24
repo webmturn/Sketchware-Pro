@@ -82,7 +82,7 @@ public class PropertyStringSelectorItem extends RelativeLayout implements View.O
 
     @Override
     public void onClick(View v) {
-        if (!UIHelper.a()) {
+        if (!UIHelper.isClickThrottled()) {
             showDialog();
         }
     }
@@ -106,7 +106,7 @@ public class PropertyStringSelectorItem extends RelativeLayout implements View.O
     }
 
     private void initialize(Context context, boolean z) {
-        ViewUtil.a(context, this, R.layout.property_selector_item);
+        ViewUtil.inflateLayoutInto(context, this, R.layout.property_selector_item);
         tvName = findViewById(R.id.tv_name);
         tvValue = findViewById(R.id.tv_value);
         imgLeftIcon = findViewById(R.id.img_left_icon);
@@ -122,7 +122,7 @@ public class PropertyStringSelectorItem extends RelativeLayout implements View.O
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(getContext());
         dialog.setTitle(Helper.getText(tvName));
         dialog.setIcon(icon);
-        View view = ViewUtil.a(getContext(), R.layout.property_popup_selector_single);
+        View view = ViewUtil.inflateLayout(getContext(), R.layout.property_popup_selector_single);
         radioGroupContent = view.findViewById(R.id.rg_content);
 
         String[] items = switch (key) {
@@ -176,8 +176,8 @@ public class PropertyStringSelectorItem extends RelativeLayout implements View.O
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.topMargin = (int) ViewUtil.a(getContext(), 4.0f);
-        layoutParams.bottomMargin = (int) ViewUtil.a(getContext(), 4.0f);
+        layoutParams.topMargin = (int) ViewUtil.dpToPx(getContext(), 4.0f);
+        layoutParams.bottomMargin = (int) ViewUtil.dpToPx(getContext(), 4.0f);
         radioButton.setGravity(Gravity.CENTER | Gravity.LEFT);
         radioButton.setLayoutParams(layoutParams);
         return radioButton;

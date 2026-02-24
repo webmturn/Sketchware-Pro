@@ -70,7 +70,7 @@ public class TestDevicesStepView extends LinearLayout implements LibrarySettings
     }
 
     private void initialize(Context context) {
-        ViewUtil.a(context, this, R.layout.manage_library_admob_test_device);
+        ViewUtil.inflateLayoutInto(context, this, R.layout.manage_library_admob_test_device);
         AnimationUtil.fadeSlideIn(this, 600, 200, null);
         ((TextView) findViewById(R.id.tv_set_test_device)).setText(R.string.design_library_admob_button_set_test_device);
         findViewById(R.id.layout_set_test_device).setOnClickListener(this);
@@ -104,7 +104,7 @@ public class TestDevicesStepView extends LinearLayout implements LibrarySettings
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(getContext());
         dialog.setTitle(R.string.design_library_admob_dialog_set_test_device_title);
         dialog.setIcon(R.drawable.ic_mtrl_add);
-        View content = ViewUtil.a(getContext(), R.layout.manage_library_setting_admob_test_device_add);
+        View content = ViewUtil.inflateLayout(getContext(), R.layout.manage_library_setting_admob_test_device_add);
         EditText edDeviceId = content.findViewById(R.id.ed_device_id);
         ((TextInputLayout) content.findViewById(R.id.ti_device_id)).setHint(getContext().getString(R.string.design_library_admob_dialog_set_test_device_hint_device_id));
         UniqueNameValidator validator = new UniqueNameValidator(getContext(), content.findViewById(R.id.ti_device_id), testDevices.stream()

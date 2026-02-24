@@ -68,7 +68,7 @@ public class ManageAppCompatActivity extends BaseAppCompatActivity {
         UI.addSystemWindowInsetToPadding(binding.list, false, false, false, true);
         binding.toolbar.setNavigationOnClickListener(
                 v -> {
-                    if (!UIHelper.a()) {
+                    if (!UIHelper.isClickThrottled()) {
                         getOnBackPressedDispatcher().onBackPressed();
                     }
                 });

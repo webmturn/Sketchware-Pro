@@ -15,7 +15,7 @@ public class ColorGroupItem extends RelativeLayout {
 
     public ColorGroupItem(Context context) {
         super(context);
-        ViewUtil.a(context, this, R.layout.color_picker_grid_item);
+        ViewUtil.inflateLayoutInto(context, this, R.layout.color_picker_grid_item);
         tvColorName = findViewById(R.id.tv_color_name);
         imgColorSelector = findViewById(R.id.img_selector);
         setPadding(0, 0, 4, 0);

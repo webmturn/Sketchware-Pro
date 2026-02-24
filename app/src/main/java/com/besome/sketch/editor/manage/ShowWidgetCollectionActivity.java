@@ -85,7 +85,7 @@ public class ShowWidgetCollectionActivity extends BaseAppCompatActivity implemen
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
         binding.toolbar.setNavigationOnClickListener(v -> {
-            if (!UIHelper.a()) {
+            if (!UIHelper.isClickThrottled()) {
                 getOnBackPressedDispatcher().onBackPressed();
             }
         });

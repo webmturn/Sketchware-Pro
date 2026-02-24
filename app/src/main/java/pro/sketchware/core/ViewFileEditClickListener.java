@@ -18,7 +18,7 @@ public class ViewFileEditClickListener implements View.OnClickListener {
   
   public void onClick(View paramView) {
     char c;
-    if (UIHelper.a())
+    if (UIHelper.isClickThrottled())
       return; 
     ViewFilesAdapter.a.ViewHolder a1 = this.b;
     a1.adapterRef.selectedPosition = a1.getLayoutPosition();

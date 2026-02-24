@@ -40,7 +40,7 @@ public class ViewProperties extends RelativeLayout implements AdapterView.OnItem
     }
 
     private void initialize(Context context) {
-        ViewUtil.a(context, this, R.layout.view_properties);
+        ViewUtil.inflateLayoutInto(context, this, R.layout.view_properties);
         ((TextView) findViewById(R.id.btn_editproperties)).setText(Helper.getResString(R.string.design_button_properties));
         Spinner spinner = findViewById(R.id.spn_widget);
         spinnerItemAdapter = new SpinnerItemAdapter(context, viewsIdList);

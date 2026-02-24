@@ -222,7 +222,7 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
     }
 
     private void setSelectedIndex(int item) {
-        if (!UIHelper.a()) {
+        if (!UIHelper.isClickThrottled()) {
             if (item != -1 && item != currentItemId) {
                 if (currentItemId == 1) {
                     collectionAdapter.stopPlayback();
@@ -354,7 +354,7 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         toolbar.setNavigationOnClickListener(v -> {
-            if (!UIHelper.a()) {
+            if (!UIHelper.isClickThrottled()) {
                 getOnBackPressedDispatcher().onBackPressed();
             }
         });

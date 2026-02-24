@@ -28,7 +28,7 @@ public class BlockPane extends RelativeLayout {
   
   public int nextBlockId = 10;
   
-  public float densityScale = ViewUtil.a(getContext(), 1.0F);
+  public float densityScale = ViewUtil.dpToPx(getContext(), 1.0F);
   
   public BlockPane(Context paramContext) {
     super(paramContext);
@@ -281,7 +281,7 @@ public class BlockPane extends RelativeLayout {
     BlockView rs = this.dragBlock;
     rs.pa = this;
     addView((View)rs);
-    float f = ViewUtil.a(getContext(), 1.0F);
+    float f = ViewUtil.dpToPx(getContext(), 1.0F);
     rs = this.dragBlock;
     f *= 8.0F;
     rs.setX(f);

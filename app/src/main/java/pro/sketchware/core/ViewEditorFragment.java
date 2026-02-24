@@ -309,7 +309,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
 
         if (hidePropertyViewAnimator == null) {
             if (getActivity() == null) return;
-            hidePropertyViewAnimator = ObjectAnimator.ofFloat(viewProperty, View.TRANSLATION_Y, ViewUtil.a(requireActivity(), (float) viewProperty.getHeight()));
+            hidePropertyViewAnimator = ObjectAnimator.ofFloat(viewProperty, View.TRANSLATION_Y, ViewUtil.dpToPx(requireActivity(), (float) viewProperty.getHeight()));
             hidePropertyViewAnimator.setDuration(300L);
             hidePropertyViewAnimator.setInterpolator(new DecelerateInterpolator());
         }

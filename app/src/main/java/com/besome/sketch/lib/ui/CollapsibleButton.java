@@ -42,7 +42,7 @@ public class CollapsibleButton extends LinearLayout {
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.weight = 1.0f;
         setLayoutParams(layoutParams);
-        ViewUtil.a(context, this, R.layout.fr_logic_list_item_button);
+        ViewUtil.inflateLayoutInto(context, this, R.layout.fr_logic_list_item_button);
         icon = findViewById(R.id.icon);
         label = findViewById(R.id.name);
     }

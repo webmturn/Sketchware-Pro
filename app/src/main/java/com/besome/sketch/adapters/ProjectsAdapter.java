@@ -181,13 +181,13 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
         holder.itemView.setTag("custom");
 
         holder.binding.getRoot().setOnClickListener(v -> {
-            if (!UIHelper.a()) {
+            if (!UIHelper.isClickThrottled()) {
                 projectsFragment.toDesignActivity(scId);
             }
         });
 
         View.OnClickListener showProjectSettingsDialog = v -> {
-            UIHelper.a(v);
+            UIHelper.disableTemporarily(v);
             int currentPosition = holder.getAbsoluteAdapterPosition();
             if (currentPosition != RecyclerView.NO_POSITION) {
                 showProjectOptionsBottomSheet(projectMap, currentPosition);

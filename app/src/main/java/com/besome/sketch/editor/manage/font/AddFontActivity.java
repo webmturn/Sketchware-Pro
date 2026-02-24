@@ -108,7 +108,7 @@ public class AddFontActivity extends BaseDialogActivity implements View.OnClickL
             binding.clearInput.setVisibility(str.isEmpty() ? View.GONE : View.VISIBLE);
         });
         binding.selectFile.setOnClickListener(view -> {
-            if (!UIHelper.a()) {
+            if (!UIHelper.isClickThrottled()) {
                 Intent intent1 = new Intent(Intent.ACTION_GET_CONTENT);
                 intent1.setType("*/*");
                 fontPickerLauncher.launch(Intent.createChooser(intent1, Helper.getResString(R.string.common_word_choose)));

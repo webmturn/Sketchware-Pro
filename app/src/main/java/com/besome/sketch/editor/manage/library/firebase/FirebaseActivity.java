@@ -145,7 +145,7 @@ public class FirebaseActivity extends BaseAppCompatActivity implements View.OnCl
 
     @Override
     public void onClick(View v) {
-        if (!UIHelper.a()) {
+        if (!UIHelper.isClickThrottled()) {
             int id = v.getId();
             if (id == R.id.btn_open_doc) {
                 openDocumentation();
@@ -271,7 +271,7 @@ public class FirebaseActivity extends BaseAppCompatActivity implements View.OnCl
         dialog.setTitle(R.string.title_compatible_chrome_browser);
         dialog.setMessage(R.string.message_compatible_chrome_brower);
         dialog.setPositiveButton(R.string.common_word_ok, (v, which) -> {
-            if (!UIHelper.a()) {
+            if (!UIHelper.isClickThrottled()) {
                 try {
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setData(Uri.parse("market://details?id=com.android.chrome"));

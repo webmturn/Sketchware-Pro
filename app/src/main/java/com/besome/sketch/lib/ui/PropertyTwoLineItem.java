@@ -19,7 +19,7 @@ public class PropertyTwoLineItem extends RelativeLayout {
     }
 
     public final void a(Context context) {
-        ViewUtil.a(context, this, R.layout.program_info_two_line_item);
+        ViewUtil.inflateLayoutInto(context, this, R.layout.program_info_two_line_item);
         tvName = findViewById(R.id.tv_name);
         tvDesc = findViewById(R.id.tv_desc);
         divider = findViewById(R.id.layout_divider);

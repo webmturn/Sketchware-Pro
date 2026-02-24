@@ -81,7 +81,7 @@ public class BaseBottomSheetDialogActivity extends BaseAppCompatActivity {
         });
 
         dialogContainerView.setOnClickListener(v -> {
-            if (!UIHelper.a()) {
+            if (!UIHelper.isClickThrottled()) {
                 finish();
             }
         });
@@ -90,13 +90,13 @@ public class BaseBottomSheetDialogActivity extends BaseAppCompatActivity {
 
     @Override
     public void setContentView(int layoutResID) {
-        ViewUtil.a(this, dialogContentView, layoutResID);
+        ViewUtil.inflateLayoutInto(this, dialogContentView, layoutResID);
     }
 
     public void a(boolean var1) {
         if (var1) {
             dialogContainerView.setOnClickListener(v -> {
-                if (!UIHelper.a()) {
+                if (!UIHelper.isClickThrottled()) {
                     finish();
                 }
             });

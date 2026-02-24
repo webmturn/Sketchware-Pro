@@ -49,7 +49,7 @@ public class BaseDialogActivity extends BaseAppCompatActivity {
         dialogOkButton = findViewById(R.id.common_dialog_ok_button);
         dialogCancelButton = findViewById(R.id.common_dialog_cancel_button);
         dialogContainerView.setOnClickListener(v -> {
-            if (!UIHelper.a()) {
+            if (!UIHelper.isClickThrottled()) {
                 finish();
             }
         });
@@ -58,13 +58,13 @@ public class BaseDialogActivity extends BaseAppCompatActivity {
 
     @Override
     public void setContentView(int layoutResID) {
-        ViewUtil.a(this, dialogContentView, layoutResID);
+        ViewUtil.inflateLayoutInto(this, dialogContentView, layoutResID);
     }
 
     public void a(boolean var1) {
         if (var1) {
             dialogContainerView.setOnClickListener(v -> {
-                if (!UIHelper.a()) {
+                if (!UIHelper.isClickThrottled()) {
                     finish();
                 }
             });

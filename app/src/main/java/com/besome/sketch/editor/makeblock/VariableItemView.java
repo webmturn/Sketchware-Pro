@@ -126,7 +126,7 @@ public class VariableItemView extends LinearLayout {
     }
 
     private void initialize(Activity activity) {
-        ViewUtil.a(activity, this, R.layout.var_type_spinner);
+        ViewUtil.inflateLayoutInto(activity, this, R.layout.var_type_spinner);
         tvPreview = findViewById(R.id.tv_preview);
         variableItems = new ArrayList<>();
         viewsVariableList = new ArrayList<>();
@@ -137,7 +137,7 @@ public class VariableItemView extends LinearLayout {
         setPreview(variableItems.get(0));
 
         findViewById(R.id.container).setOnClickListener(view -> {
-            if (!UIHelper.a()) {
+            if (!UIHelper.isClickThrottled()) {
                 showVarTypeSelectorDialog(activity);
             }
         });

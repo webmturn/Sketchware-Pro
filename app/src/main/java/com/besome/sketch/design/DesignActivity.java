@@ -325,7 +325,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         new CompileErrorSaver(sc_id).writeLogsToFile(error);
         Snackbar snackbar = Snackbar.make(coordinatorLayout, Helper.getResString(R.string.snackbar_show_compile_log), Snackbar.LENGTH_INDEFINITE);
         snackbar.setAction(Helper.getResString(R.string.common_word_show), v -> {
-            if (!UIHelper.a()) {
+            if (!UIHelper.isClickThrottled()) {
                 snackbar.dismiss();
                 Intent intent = new Intent(getApplicationContext(), CompileLogActivity.class);
                 intent.putExtra("error", error);
@@ -719,7 +719,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         dialog.setIcon(R.drawable.ic_mtrl_exit);
         dialog.setMessage(Helper.getResString(R.string.design_quit_message_confirm_save));
         dialog.setPositiveButton(Helper.getResString(R.string.design_quit_button_save_and_exit), (v, which) -> {
-            if (!UIHelper.a()) {
+            if (!UIHelper.isClickThrottled()) {
                 v.dismiss();
                 try {
                     saveChangesAndCloseProject();
@@ -730,7 +730,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             }
         });
         dialog.setNegativeButton(Helper.getResString(R.string.common_word_exit), (v, which) -> {
-            if (!UIHelper.a()) {
+            if (!UIHelper.isClickThrottled()) {
                 v.dismiss();
                 try {
                     k();
@@ -765,7 +765,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         dialog.setTitle(Helper.getResString(R.string.design_restore_data_title));
         dialog.setMessage(Helper.getResString(R.string.design_restore_data_message_confirm));
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_restore), (v, which) -> {
-            if (!UIHelper.a()) {
+            if (!UIHelper.isClickThrottled()) {
                 boolean g = ProjectDataManager.getLibraryManager(sc_id).g();
                 boolean g2 = ProjectDataManager.getFileManager(sc_id).g();
                 boolean q = ProjectDataManager.getResourceManager(sc_id).q();
@@ -838,7 +838,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         var dialog = new MaterialAlertDialogBuilder(this).create();
         dialog.setTitle(R.string.design_file_selector_title_java);
         dialog.setIcon(R.drawable.ic_mtrl_java);
-        View customView = pro.sketchware.core.ViewUtil.a(this, R.layout.file_selector_popup_select_java);
+        View customView = pro.sketchware.core.ViewUtil.inflateLayout(this, R.layout.file_selector_popup_select_java);
         RecyclerView recyclerView = customView.findViewById(R.id.file_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL, false));
         var adapter = new JavaFileAdapter(sc_id);

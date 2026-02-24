@@ -102,7 +102,7 @@ public class PropertyColorItem extends RelativeLayout implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        if (!UIHelper.a()) {
+        if (!UIHelper.isClickThrottled()) {
             showColorPicker(v);
         }
     }
@@ -127,7 +127,7 @@ public class PropertyColorItem extends RelativeLayout implements View.OnClickLis
 
     private void initialize(Context context, boolean z) {
         this.context = context;
-        ViewUtil.a(context, this, R.layout.property_color_item);
+        ViewUtil.inflateLayoutInto(context, this, R.layout.property_color_item);
         tvName = findViewById(R.id.tv_name);
         tvValue = findViewById(R.id.tv_value);
         viewColor = findViewById(R.id.view_color);

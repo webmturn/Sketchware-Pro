@@ -60,7 +60,7 @@ public class ManageFontActivity extends BaseAppCompatActivity {
         }
 
         binding.toolbar.setNavigationOnClickListener(v -> {
-            if (!UIHelper.a()) {
+            if (!UIHelper.isClickThrottled()) {
                 getOnBackPressedDispatcher().onBackPressed();
             }
         });

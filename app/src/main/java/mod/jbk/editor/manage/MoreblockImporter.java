@@ -193,7 +193,7 @@ public class MoreblockImporter {
         dialog.setTitle(R.string.logic_more_block_title_change_block_name);
         dialog.setIcon(R.drawable.more_block_96dp);
 
-        View customView = ViewUtil.a(activity, R.layout.property_popup_save_to_favorite);
+        View customView = ViewUtil.inflateLayout(activity, R.layout.property_popup_save_to_favorite);
         ((TextView) customView.findViewById(R.id.tv_favorites_guide)).setText(R.string.logic_more_block_desc_change_block_name);
         EditText newName = customView.findViewById(R.id.ed_input);
         newName.setPrivateImeOptions("defaultInputmode=english;");
@@ -214,12 +214,12 @@ public class MoreblockImporter {
                 moreBlock.spec = Helper.getText(newName) + moreBlock.spec.substring(moreBlockName.length());
 
                 handleVariables(moreBlock);
-                UIHelper.a(activity, newName);
+                UIHelper.hideKeyboard(activity, newName);
                 v.dismiss();
             }
         });
         dialog.setNegativeButton(R.string.common_word_cancel, (v, which) -> {
-            UIHelper.a(activity, newName);
+            UIHelper.hideKeyboard(activity, newName);
             v.dismiss();
         });
         dialog.show();

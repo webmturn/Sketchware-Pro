@@ -10,15 +10,15 @@ import androidx.annotation.LayoutRes;
 
 public class ViewUtil {
 
-    public static float a(Context context, float value) {
+    public static float dpToPx(Context context, float value) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, context.getResources().getDisplayMetrics());
     }
 
-    public static View a(Context context, @LayoutRes int layoutRes) {
+    public static View inflateLayout(Context context, @LayoutRes int layoutRes) {
         return ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(layoutRes, null);
     }
 
-    public static View a(Context context, ViewGroup parent, @LayoutRes int layoutRes) {
+    public static View inflateLayoutInto(Context context, ViewGroup parent, @LayoutRes int layoutRes) {
         return ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(layoutRes, parent, true);
     }
 }

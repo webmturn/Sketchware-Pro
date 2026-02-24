@@ -45,7 +45,7 @@ public class LogicEditorDrawer extends LinearLayout {
     }
 
     private void initialize(Context context) {
-        ViewUtil.a(context, this, R.layout.logic_editor_drawer);
+        ViewUtil.inflateLayoutInto(context, this, R.layout.logic_editor_drawer);
         ((TextView) findViewById(R.id.tv_block_collection)).setText(Helper.getResString(R.string.logic_editor_title_block_collection));
         favorite = findViewById(R.id.layout_favorite);
         scrollView = findViewById(R.id.scv);

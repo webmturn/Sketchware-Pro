@@ -33,7 +33,7 @@ public class MakeBlockActivity extends BaseAppCompatActivity {
         dialog.setIcon(R.drawable.exit_96);
         dialog.setMessage(Helper.getResString(R.string.logic_editor_more_block_dialog_description_goback));
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_goback), (v, which) -> {
-            if (!UIHelper.a()) {
+            if (!UIHelper.isClickThrottled()) {
                 v.dismiss();
                 finish();
             }

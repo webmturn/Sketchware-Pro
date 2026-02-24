@@ -22,7 +22,7 @@ public class FirebaseStorageView extends LinearLayout implements LibraryConfigVi
 
     @Override
     public void a() {
-        UIHelper.a(getContext(), binding.edInputStorageUrl);
+        UIHelper.hideKeyboard(getContext(), binding.edInputStorageUrl);
     }
 
     @Override

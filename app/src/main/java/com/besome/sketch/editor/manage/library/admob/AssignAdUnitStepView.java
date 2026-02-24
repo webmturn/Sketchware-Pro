@@ -44,8 +44,8 @@ public class AssignAdUnitStepView extends LinearLayout implements LibrarySetting
         RadioButton radioButton = new RadioButton(getContext());
         radioButton.setText(text);
         LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.topMargin = (int) ViewUtil.a(getContext(), 4F);
-        layoutParams.bottomMargin = (int) ViewUtil.a(getContext(), 4F);
+        layoutParams.topMargin = (int) ViewUtil.dpToPx(getContext(), 4F);
+        layoutParams.bottomMargin = (int) ViewUtil.dpToPx(getContext(), 4F);
         radioButton.setGravity(Gravity.CENTER | Gravity.LEFT);
         radioButton.setLayoutParams(layoutParams);
         return radioButton;
@@ -53,7 +53,7 @@ public class AssignAdUnitStepView extends LinearLayout implements LibrarySetting
 
     private void setAdUnit(int position) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(getContext());
-        View rootView = ViewUtil.a(getContext(), R.layout.property_popup_selector_single);
+        View rootView = ViewUtil.inflateLayout(getContext(), R.layout.property_popup_selector_single);
         ViewGroup viewGroup = rootView.findViewById(R.id.rg_content);
         dialog.setTitle(Helper.getResString(R.string.design_library_admob_dialog_select_unit_title));
 
@@ -84,7 +84,7 @@ public class AssignAdUnitStepView extends LinearLayout implements LibrarySetting
 
     @SuppressLint("SetTextI18n")
     private void initialize(Context context) {
-        ViewUtil.a(context, this, R.layout.manage_library_admob_set_unit);
+        ViewUtil.inflateLayoutInto(context, this, R.layout.manage_library_admob_set_unit);
         AnimationUtil.fadeSlideIn(this, 600, 200, null);
         bannerAdName = findViewById(R.id.tv_banner_name);
         bannerAdUnitIdView = findViewById(R.id.tv_banner_id);

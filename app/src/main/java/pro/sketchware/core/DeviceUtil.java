@@ -20,7 +20,7 @@ import java.util.Locale;
 
 public class DeviceUtil {
   public static int getToolbarHeight(Context paramContext) {
-    return (int)ViewUtil.a(paramContext, 48.0F);
+    return (int)ViewUtil.dpToPx(paramContext, 48.0F);
   }
   
   public static String getCpuAbi() {

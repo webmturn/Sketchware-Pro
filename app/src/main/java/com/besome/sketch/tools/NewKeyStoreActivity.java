@@ -59,7 +59,7 @@ public class NewKeyStoreActivity extends BaseAppCompatActivity implements OnClic
         }
 
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_close), (v, which) -> {
-            if (!UIHelper.a()) {
+            if (!UIHelper.isClickThrottled()) {
                 v.dismiss();
                 if (success) {
                     Intent intent = new Intent();
@@ -125,7 +125,7 @@ public class NewKeyStoreActivity extends BaseAppCompatActivity implements OnClic
 
     @Override
     public void onClick(View v) {
-        if (!UIHelper.a()) {
+        if (!UIHelper.isClickThrottled()) {
             int id = v.getId();
             if (id == R.id.btn_keystore_cancel) {
                 finish();

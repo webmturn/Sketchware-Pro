@@ -19,7 +19,7 @@ public class PropertyOneLineItem extends RelativeLayout {
     }
 
     private void initialize(Context context) {
-        ViewUtil.a(context, this, R.layout.program_info_item);
+        ViewUtil.inflateLayoutInto(context, this, R.layout.program_info_item);
         tvName = findViewById(R.id.tv_name);
         divider = findViewById(R.id.layout_divider);
         setClickable(true);

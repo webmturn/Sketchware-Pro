@@ -87,7 +87,7 @@ public class PropertyIndentItem extends RelativeLayout implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        if (!UIHelper.a()) {
+        if (!UIHelper.isClickThrottled()) {
             switch (key) {
                 case "property_padding":
                 case "property_margin":
@@ -117,7 +117,7 @@ public class PropertyIndentItem extends RelativeLayout implements View.OnClickLi
 
     private void initialize(Context context, boolean z) {
         this.context = context;
-        ViewUtil.a(context, this, R.layout.property_input_item);
+        ViewUtil.inflateLayoutInto(context, this, R.layout.property_input_item);
         tvName = findViewById(R.id.tv_name);
         tvValue = findViewById(R.id.tv_value);
         imgLeftIcon = findViewById(R.id.img_left_icon);

@@ -34,7 +34,7 @@ public class ItemMapView extends AppCompatTextView implements ItemView {
         setGravity(Gravity.CENTER);
         setTypeface(null, Typeface.BOLD);
         setText("MapView");
-        dip = ViewUtil.a(context, 1.0f);
+        dip = ViewUtil.dpToPx(context, 1.0f);
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(0x9599d5d0);
         setDrawingCacheEnabled(true);

@@ -121,7 +121,7 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        if (!UIHelper.a() && v.getId() == R.id.fab) {
+        if (!UIHelper.isClickThrottled() && v.getId() == R.id.fab) {
             Intent intent = new Intent(requireActivity().getApplicationContext(), AddEventActivity.class);
             intent.putExtra("sc_id", sc_id);
             intent.putExtra("project_file", currentActivity);
@@ -338,7 +338,7 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
         MaterialAlertDialogBuilder aBVar = new MaterialAlertDialogBuilder(requireActivity());
         aBVar.setTitle(R.string.logic_more_block_favorites_save_title);
         aBVar.setIcon(R.drawable.ic_bookmark_red_48dp);
-        View a2 = ViewUtil.a(requireContext(), R.layout.property_popup_save_to_favorite);
+        View a2 = ViewUtil.inflateLayout(requireContext(), R.layout.property_popup_save_to_favorite);
         ((TextView) a2.findViewById(R.id.tv_favorites_guide)).setText(R.string.logic_more_block_favorites_save_guide);
         EditText editText = a2.findViewById(R.id.ed_input);
         editText.setPrivateImeOptions("defaultInputmode=english;");
@@ -350,12 +350,12 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
         aBVar.setPositiveButton(R.string.common_word_save, (v, which) -> {
             if (nameValidator.isValid()) {
                 saveMoreBlockToCollection(Helper.getText(editText), moreBlocks.get(moreBlockPosition));
-                UIHelper.a(requireContext(), editText);
+                UIHelper.hideKeyboard(requireContext(), editText);
                 v.dismiss();
             }
         });
         aBVar.setNegativeButton(R.string.common_word_cancel, (v, which) -> {
-            UIHelper.a(requireContext(), editText);
+            UIHelper.hideKeyboard(requireContext(), editText);
             v.dismiss();
         });
         aBVar.show();
@@ -650,7 +650,7 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
                 optionContainer = itemView.findViewById(R.id.event_option_layout);
                 optionsLayout = itemView.findViewById(R.id.event_option);
                 optionsLayout.setButtonOnClickListener(v -> {
-                    if (!UIHelper.a()) {
+                    if (!UIHelper.isClickThrottled()) {
                         EventBean eventBean = getActiveList().get(getLayoutPosition());
                         if (v instanceof CollapsibleButton button) {
                             setAnimateNextTransformation(true);
@@ -694,7 +694,7 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
                 });
                 onDoneInitializingViews();
                 root.setOnClickListener(v -> {
-                    if (!UIHelper.a()) {
+                    if (!UIHelper.isClickThrottled()) {
                         EventBean eventBean = getActiveList().get(getLayoutPosition());
                         openEvent(eventBean.targetId, eventBean.eventName, Helper.getText(description));
                     }

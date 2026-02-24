@@ -40,7 +40,7 @@ public abstract class PermissionFragment extends BaseFragment {
             dialog.setIcon(R.drawable.break_warning_96_red);
             dialog.setMessage(R.string.common_message_permission_storage);
             dialog.setPositiveButton(R.string.common_word_ok, (view, which) -> {
-                if (!UIHelper.a()) {
+                if (!UIHelper.isClickThrottled()) {
                     requestPermissions(new String[]{"android.permission.WRITE_EXTERNAL_STORAGE",
                             "android.permission.READ_EXTERNAL_STORAGE"}, var1);
                     view.dismiss();
@@ -67,7 +67,7 @@ public abstract class PermissionFragment extends BaseFragment {
             builder.setIcon(R.drawable.break_warning_96_red);
             builder.setMessage(R.string.common_message_permission_storage1);
             builder.setPositiveButton(R.string.common_word_settings, (view, which) -> {
-                if (!UIHelper.a()) {
+                if (!UIHelper.isClickThrottled()) {
                     openAppSettings(var1);
                     view.dismiss();
                 }

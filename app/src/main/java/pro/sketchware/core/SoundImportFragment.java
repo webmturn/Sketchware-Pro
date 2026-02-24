@@ -87,7 +87,7 @@ public class SoundImportFragment extends BaseFragment {
         binding.soundList.setAdapter(adapter);
         binding.tvGuide.setText(R.string.design_manager_sound_description_guide_add_sound);
         actBinding.btnImport.setOnClickListener(view -> {
-            if (!UIHelper.a()) {
+            if (!UIHelper.isClickThrottled()) {
                 stopPlayback();
                 ArrayList<ProjectResourceBean> arrayList = new ArrayList<>();
                 for (ProjectResourceBean next : sounds) {
@@ -220,7 +220,7 @@ public class SoundImportFragment extends BaseFragment {
                 this.binding = binding;
 
                 binding.imgPlay.setOnClickListener(v -> {
-                    if (!UIHelper.a()) {
+                    if (!UIHelper.isClickThrottled()) {
                         soundPlayer.onPlayPressed(getLayoutPosition());
                     }
                 });

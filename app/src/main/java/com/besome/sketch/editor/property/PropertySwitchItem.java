@@ -25,7 +25,7 @@ public class PropertySwitchItem extends RelativeLayout implements View.OnClickLi
     }
 
     private void initialize(Context context) {
-        ViewUtil.a(context, this, R.layout.property_switch_item);
+        ViewUtil.inflateLayoutInto(context, this, R.layout.property_switch_item);
         tvName = findViewById(R.id.tv_name);
         tvDesc = findViewById(R.id.tv_desc);
         switchValue = findViewById(R.id.switch_value);

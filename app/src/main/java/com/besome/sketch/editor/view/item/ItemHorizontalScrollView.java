@@ -35,10 +35,10 @@ public class ItemHorizontalScrollView extends FrameLayout implements ItemView, S
 
     private void initialize(Context context) {
         setDrawingCacheEnabled(true);
-        setMinimumWidth((int) ViewUtil.a(context, 32.0f));
-        setMinimumHeight((int) ViewUtil.a(context, 32.0f));
+        setMinimumWidth((int) ViewUtil.dpToPx(context, 32.0f));
+        setMinimumHeight((int) ViewUtil.dpToPx(context, 32.0f));
         drawPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        drawPaint.setStrokeWidth(ViewUtil.a(getContext(), 2.0f));
+        drawPaint.setStrokeWidth(ViewUtil.dpToPx(getContext(), 2.0f));
     }
 
     @Override
@@ -235,7 +235,7 @@ public class ItemHorizontalScrollView extends FrameLayout implements ItemView, S
 
     @Override
     public void setPadding(int paddingLeft, int paddingTop, int paddingRight, int paddingBottom) {
-        super.setPadding((int) ViewUtil.a(getContext(), (float) paddingLeft), (int) ViewUtil.a(getContext(), (float) paddingTop), (int) ViewUtil.a(getContext(), (float) paddingRight), (int) ViewUtil.a(getContext(), (float) paddingBottom));
+        super.setPadding((int) ViewUtil.dpToPx(getContext(), (float) paddingLeft), (int) ViewUtil.dpToPx(getContext(), (float) paddingTop), (int) ViewUtil.dpToPx(getContext(), (float) paddingRight), (int) ViewUtil.dpToPx(getContext(), (float) paddingBottom));
     }
 
     public void setScrollEnabled(boolean isEnabled) {

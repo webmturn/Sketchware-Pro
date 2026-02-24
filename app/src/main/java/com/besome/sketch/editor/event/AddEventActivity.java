@@ -228,7 +228,7 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
     @Override
     public void onClick(View v) {
         boolean finished = false;
-        if (!UIHelper.a()) {
+        if (!UIHelper.isClickThrottled()) {
             int id = v.getId();
             if (id == R.id.add_button) {
                 if (!eventsToAdd.isEmpty() || !moreBlockView.a()) {
@@ -361,8 +361,8 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
             EventBean event = categories.get(categoryAdapter.lastSelectedCategory).get(position);
             ImageView imageView = new ImageView(holder.itemView.getContext());
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParams.setMargins(0, 0, (int) ViewUtil.a(getApplicationContext(), 2.0f), 0);
-            int a = (int) ViewUtil.a(getApplicationContext(), 16.0f);
+            layoutParams.setMargins(0, 0, (int) ViewUtil.dpToPx(getApplicationContext(), 2.0f), 0);
+            int a = (int) ViewUtil.dpToPx(getApplicationContext(), 16.0f);
             layoutParams.width = a;
             layoutParams.height = a;
             imageView.setLayoutParams(layoutParams);
@@ -432,7 +432,7 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
                 tv_event_name = itemView.findViewById(R.id.tv_event_name);
                 checkbox = itemView.findViewById(R.id.checkbox);
                 itemView.setOnClickListener(v -> {
-                    if (!UIHelper.a()) {
+                    if (!UIHelper.isClickThrottled()) {
                         lastSelectedEvent = getLayoutPosition();
                         EventBean event = categories.get(categoryAdapter.lastSelectedCategory).get(lastSelectedEvent);
                         if (event.isSelected) {
@@ -489,7 +489,7 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
             } else {
                 holder.container.setBackgroundResource(R.drawable.border_top_corner_grey_no_stroke);
                 holder.img_icon.animate().scaleX(0.8f).scaleY(0.8f).alpha(0.6f).start();
-                holder.container.setTranslationY(ViewUtil.a(getApplicationContext(), 12.0f));
+                holder.container.setTranslationY(ViewUtil.dpToPx(getApplicationContext(), 12.0f));
             }
         }
 
@@ -497,8 +497,8 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
         @NonNull
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.fr_logic_list_category_icon_item, parent, false);
-            inflate.setLayoutParams(new RecyclerView.LayoutParams(parent.getMeasuredWidth() / getItemCount(), (int) ViewUtil.a(getApplicationContext(), 44.0f)));
-            inflate.setTranslationY(ViewUtil.a(getApplicationContext(), 12.0f));
+            inflate.setLayoutParams(new RecyclerView.LayoutParams(parent.getMeasuredWidth() / getItemCount(), (int) ViewUtil.dpToPx(getApplicationContext(), 44.0f)));
+            inflate.setTranslationY(ViewUtil.dpToPx(getApplicationContext(), 12.0f));
             inflate.findViewById(R.id.img_icon).setAlpha(0.6f);
             inflate.findViewById(R.id.img_icon).setScaleX(0.8f);
             inflate.findViewById(R.id.img_icon).setScaleY(0.8f);

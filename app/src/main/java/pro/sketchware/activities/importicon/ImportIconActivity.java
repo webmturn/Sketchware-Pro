@@ -136,7 +136,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         toolbar.setNavigationOnClickListener(v -> {
-            if (!UIHelper.a()) {
+            if (!UIHelper.isClickThrottled()) {
                 getOnBackPressedDispatcher().onBackPressed();
             }
         });
@@ -421,7 +421,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
 
     @Override
     public void onIconSelected(int position) {
-        if (!UIHelper.a()) {
+        if (!UIHelper.isClickThrottled()) {
             selectedIconPosition = position;
             setIconName(position);
             showSaveDialog(position);

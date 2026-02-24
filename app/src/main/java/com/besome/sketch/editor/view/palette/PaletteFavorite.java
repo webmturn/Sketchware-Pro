@@ -39,7 +39,7 @@ public class PaletteFavorite extends LinearLayout {
     }
 
     private void initialize(Context context) {
-        ViewUtil.a(context, this, R.layout.palette_favorite);
+        ViewUtil.inflateLayoutInto(context, this, R.layout.palette_favorite);
         collectionWidgets = findViewById(R.id.widget);
         scrollView = findViewById(R.id.scv);
     }

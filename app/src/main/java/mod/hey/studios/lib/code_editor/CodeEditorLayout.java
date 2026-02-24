@@ -260,7 +260,7 @@ public class CodeEditorLayout extends LinearLayout implements TextWatcher {
     }
 
     private void initialize(int res) {
-        View convertView = ViewUtil.a(context, this, res);
+        View convertView = ViewUtil.inflateLayoutInto(context, this, res);
 
         editText = convertView.findViewById(EDITTEXT_RES);
         scrollView = convertView.findViewById(SCROLLVIEW_RES);

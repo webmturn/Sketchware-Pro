@@ -216,7 +216,7 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
 
     @Override
     public void onClick(View v) {
-        if (!UIHelper.a()) {
+        if (!UIHelper.isClickThrottled()) {
             Object tag = v.getTag();
 
             if (tag != null) {

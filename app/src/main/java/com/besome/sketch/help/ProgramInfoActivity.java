@@ -81,13 +81,13 @@ public class ProgramInfoActivity extends BaseAppCompatActivity {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(Helper.getResString(R.string.program_information_reset_system_title));
         dialog.setIcon(R.drawable.rollback_96);
-        View rootView = ViewUtil.a(this, R.layout.all_init_popup);
+        View rootView = ViewUtil.inflateLayout(this, R.layout.all_init_popup);
         RadioGroup radioGroup = rootView.findViewById(R.id.rg_type);
         ((RadioButton) rootView.findViewById(R.id.rb_all)).setText(Helper.getResString(R.string.program_information_reset_system_title_all_settings_data));
         ((RadioButton) rootView.findViewById(R.id.rb_only_config)).setText(Helper.getResString(R.string.program_information_reset_system_title_all_settings));
         dialog.setView(rootView);
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_yes), (v, which) -> {
-            if (!UIHelper.a()) {
+            if (!UIHelper.isClickThrottled()) {
                 int buttonId = radioGroup.getCheckedRadioButtonId();
                 boolean resetOnlySettings = buttonId != R.id.rb_all;
                 v.dismiss();
@@ -100,7 +100,7 @@ public class ProgramInfoActivity extends BaseAppCompatActivity {
     }
 
     private void handleItem(View v) {
-        if (!UIHelper.a()) {
+        if (!UIHelper.isClickThrottled()) {
             int key;
             if (v instanceof PropertyOneLineItem) {
                 key = ((PropertyOneLineItem) v).getKey();

@@ -271,7 +271,7 @@ public class ManageFontImportActivity extends BaseAppCompatActivity implements V
                 img = itemView.findViewById(R.id.img);
                 tvName = itemView.findViewById(R.id.tv_name);
                 img.setOnClickListener(view -> {
-                    if (!UIHelper.a()) {
+                    if (!UIHelper.isClickThrottled()) {
                         selectedItem = getLayoutPosition();
                         showPreview(selectedItem);
                         binding.tvCurrentnum.setText(String.valueOf(getLayoutPosition() + 1));

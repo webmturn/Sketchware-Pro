@@ -70,7 +70,7 @@ public class ManageSoundActivity extends BaseAppCompatActivity implements ViewPa
         setContentView(binding.getRoot());
 
         binding.toolbar.setNavigationOnClickListener(v -> {
-            if (!UIHelper.a()) {
+            if (!UIHelper.isClickThrottled()) {
                 getOnBackPressedDispatcher().onBackPressed();
             }
         });

@@ -45,8 +45,8 @@ public class SketchToast {
             toast.setDuration(duration);
             toast.setGravity(
                     gravity,
-                    (int) ViewUtil.a(themedContext, xOffset),
-                    (int) ViewUtil.a(themedContext, yOffset)
+                    (int) ViewUtil.dpToPx(themedContext, xOffset),
+                    (int) ViewUtil.dpToPx(themedContext, yOffset)
             );
             toast.setView(binding.getRoot());
 

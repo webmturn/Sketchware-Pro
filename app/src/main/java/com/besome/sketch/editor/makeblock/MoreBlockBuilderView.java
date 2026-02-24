@@ -73,7 +73,7 @@ public class MoreBlockBuilderView extends LinearLayout {
         });
 
         binding.addVariable.setOnClickListener(view -> {
-            if (!UIHelper.a()) {
+            if (!UIHelper.isClickThrottled()) {
                 if (variableNameValidator.isValid() && blockNameValidator.isValid()) {
                     Pair<String, String> variableSpec = addVariable.getSelectedItem();
                     String variableType = variableSpec.first;
@@ -131,7 +131,7 @@ public class MoreBlockBuilderView extends LinearLayout {
             }
         });
         binding.addLabel.setOnClickListener(v -> {
-            if (!UIHelper.a()) {
+            if (!UIHelper.isClickThrottled()) {
                 if (labelTextValidator.isValid() && blockNameValidator.isValid()) {
                     variablesSpecAndNamePair.add(new Pair<>("t", Helper.getText(binding.edLabel)));
                     updateBlockPreview(binding.blockArea, binding.removeArea, block, Helper.getText(binding.edName), variablesSpecAndNamePair);
@@ -196,12 +196,12 @@ public class MoreBlockBuilderView extends LinearLayout {
                 width = 0;
             }
 
-            width += (int) ViewUtil.a(activity, 4.0f);
+            width += (int) ViewUtil.dpToPx(activity, 4.0f);
 
             ImageView removeIcon = new ImageView(activity);
             removeIcon.setImageResource(R.drawable.ic_remove_grey600_24dp);
             removeIcon.setScaleType(ScaleType.CENTER_INSIDE);
-            removeIcon.setPadding(0, (int) ViewUtil.a(activity, 4.0F), 0, (int) ViewUtil.a(activity, 4.0F));
+            removeIcon.setPadding(0, (int) ViewUtil.dpToPx(activity, 4.0F), 0, (int) ViewUtil.dpToPx(activity, 4.0F));
             removeIcon.setLayoutParams(new LayoutParams(width, ViewGroup.LayoutParams.MATCH_PARENT));
             removeArea.addView(removeIcon);
             if (i == 0 && binding.edName.getText().length() > 0) {

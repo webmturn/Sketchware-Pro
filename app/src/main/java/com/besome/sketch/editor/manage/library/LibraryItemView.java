@@ -27,7 +27,7 @@ public class LibraryItemView extends FrameLayout {
         super(context);
         this.context = context;
 
-        ViewUtil.a(context, this, R.layout.manage_library_base_item);
+        ViewUtil.inflateLayoutInto(context, this, R.layout.manage_library_base_item);
         container = findViewById(R.id.container);
         icon = findViewById(R.id.lib_icon);
         title = findViewById(R.id.lib_title);

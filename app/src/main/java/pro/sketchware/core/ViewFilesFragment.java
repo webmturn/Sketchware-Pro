@@ -310,7 +310,7 @@ public class ViewFilesFragment extends BaseFragment {
                 this.binding = binding;
 
                 binding.viewItem.setOnClickListener(view -> {
-                    if (!UIHelper.a()) {
+                    if (!UIHelper.isClickThrottled()) {
                         layoutPosition = getLayoutPosition();
                         ProjectFileBean projectFileBean = activitiesFiles.get(layoutPosition);
 
@@ -344,7 +344,7 @@ public class ViewFilesFragment extends BaseFragment {
                 });
 
                 binding.imgPresetSetting.setOnClickListener(view -> {
-                    if (!UIHelper.a()) {
+                    if (!UIHelper.isClickThrottled()) {
                         layoutPosition = getLayoutPosition();
                         Intent intent = new Intent(getContext(), PresetSettingActivity.class);
                         intent.putExtra("request_code", REQUEST_CODE_PRESET_ACTIVITY);

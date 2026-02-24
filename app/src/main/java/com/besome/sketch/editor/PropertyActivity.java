@@ -325,7 +325,7 @@ public class PropertyActivity extends BaseAppCompatActivity implements PropertyC
 
             @Override
             public void onClick(View var1) {
-                if (!UIHelper.a()) {
+                if (!UIHelper.isClickThrottled()) {
                     if (getLayoutPosition() != -1) {
                         if (getLayoutPosition() != layoutPosition) {
                             notifyItemChanged(layoutPosition);

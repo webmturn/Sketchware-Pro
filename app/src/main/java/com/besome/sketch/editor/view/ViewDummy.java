@@ -38,7 +38,7 @@ public class ViewDummy extends RelativeLayout {
     }
 
     public final void initialize(Context context) {
-        ViewUtil.a(context, this, R.layout.dummy);
+        ViewUtil.inflateLayoutInto(context, this, R.layout.dummy);
         img_notallowed = findViewById(R.id.img_notallowed);
         img_dummy = findViewById(R.id.img_dummy);
         layout_dummy = findViewById(R.id.layout_dummy);

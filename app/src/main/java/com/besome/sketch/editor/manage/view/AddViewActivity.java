@@ -397,7 +397,7 @@ public class AddViewActivity extends BaseAppCompatActivity {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup var1, int var2) {
-            View var3 = ViewUtil.a(var1.getContext(), R.layout.manage_screen_activity_add_feature_item);
+            View var3 = ViewUtil.inflateLayout(var1.getContext(), R.layout.manage_screen_activity_add_feature_item);
             var3.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             return new ViewHolder(var3);
         }

@@ -129,7 +129,7 @@ public class ImageCollectionFragment extends BaseFragment implements View.OnClic
 
     @Override
     public void onClick(View v) {
-        if (!UIHelper.a() && v.getId() == R.id.btn_import) {
+        if (!UIHelper.isClickThrottled() && v.getId() == R.id.btn_import) {
             layoutBtnImport.setVisibility(View.GONE);
             importImages();
         }

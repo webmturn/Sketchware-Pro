@@ -20,7 +20,7 @@ public class PropertySubheader extends RelativeLayout {
     }
 
     private void initialize(Context context) {
-        ViewUtil.a(context, this, R.layout.property_subheader);
+        ViewUtil.inflateLayoutInto(context, this, R.layout.property_subheader);
         tvName = findViewById(R.id.tv_name);
         imgAdd = findViewById(R.id.img_add);
     }

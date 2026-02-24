@@ -40,7 +40,7 @@ public abstract class CollapsibleLayout<T extends View> extends FrameLayout {
     }
 
     private void initialize(Context context) {
-        ViewUtil.a(context, this, R.layout.fr_logic_list_item_buttons);
+        ViewUtil.inflateLayoutInto(context, this, R.layout.fr_logic_list_item_buttons);
         projectButtons = findViewById(R.id.project_buttons);
         confirmLayout = findViewById(R.id.confirm_layout);
         confirmYes = findViewById(R.id.confirm_yes);

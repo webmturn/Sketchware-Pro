@@ -62,7 +62,7 @@ public class LibrarySettingsImporter {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(activity);
         dialog.setTitle(R.string.design_library_title_select_project);
         dialog.setIcon(R.drawable.widget_firebase);
-        LinearLayout root = (LinearLayout) ViewUtil.a(activity, R.layout.manage_library_popup_project_selector);
+        LinearLayout root = (LinearLayout) ViewUtil.inflateLayout(activity, R.layout.manage_library_popup_project_selector);
         LottieAnimationView animationView = root.findViewById(R.id.animation_view);
         RecyclerView recyclerView = root.findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(null));
@@ -84,7 +84,7 @@ public class LibrarySettingsImporter {
         }).start();
         dialog.setView(root);
         dialog.setPositiveButton(R.string.common_word_select, (v, which) -> {
-            if (!UIHelper.a()) {
+            if (!UIHelper.isClickThrottled()) {
                 if (adapter.selectedProjectIndex >= 0) {
                     var settings = (ProjectLibraryBean) projects.get(adapter.selectedProjectIndex).get("settings");
                     for (var listener : onProjectSelectedListeners) {
@@ -174,7 +174,7 @@ public class LibrarySettingsImporter {
 
             @Override
             public void onClick(View v) {
-                if (!UIHelper.a() && v.getId() == R.id.project_layout) {
+                if (!UIHelper.isClickThrottled() && v.getId() == R.id.project_layout) {
                     selectedProjectIndex = getLayoutPosition();
                     selectProject(selectedProjectIndex);
                 }

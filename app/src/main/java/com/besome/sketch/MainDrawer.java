@@ -68,7 +68,7 @@ public class MainDrawer extends NavigationView {
     }
 
     private void initializeSocialLinks(@IdRes int id) {
-        if (!UIHelper.a()) {
+        if (!UIHelper.isClickThrottled()) {
             @StringRes int url = -1;
             if (id == R.id.social_discord) {
                 url = R.string.link_discord_invite;

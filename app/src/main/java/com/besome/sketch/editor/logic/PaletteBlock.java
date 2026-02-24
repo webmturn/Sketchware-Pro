@@ -39,7 +39,7 @@ public class PaletteBlock extends LinearLayout {
     private void initialize(Context context) {
         this.context = context;
         binding = PaletteBlockBinding.inflate(LayoutInflater.from(context), this, true);
-        density = ViewUtil.a(context, 1.0F);
+        density = ViewUtil.dpToPx(context, 1.0F);
     }
 
     public BaseBlockView a(String var1, String var2, String var3) {

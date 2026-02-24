@@ -89,7 +89,7 @@ public class PropertyAttributesItem extends LinearLayout implements View.OnClick
     }
 
     private void initialize(Context context, boolean z) {
-        ViewUtil.a(context, this, R.layout.property_input_item);
+        ViewUtil.inflateLayoutInto(context, this, R.layout.property_input_item);
         tvName = findViewById(R.id.tv_name);
         tvValue = findViewById(R.id.tv_value);
         imgLeftIcon = findViewById(R.id.img_left_icon);
@@ -106,7 +106,7 @@ public class PropertyAttributesItem extends LinearLayout implements View.OnClick
     }
 
     public void setKey(String key) {
-        UIHelper.a(this);
+        UIHelper.disableTemporarily(this);
         this.key = key;
         int identifier = getResources().getIdentifier(key, "string", getContext().getPackageName());
         if (identifier > 0) {

@@ -249,7 +249,7 @@ public class BaseBlockView extends RelativeLayout {
   }
   
   public final void a(Context paramContext) {
-    this.density = ViewUtil.a(paramContext, 1.0F);
+    this.density = ViewUtil.dpToPx(paramContext, 1.0F);
     float f1 = this.borderWidth;
     float f2 = this.density;
     this.borderWidth = (int)(f1 * f2);

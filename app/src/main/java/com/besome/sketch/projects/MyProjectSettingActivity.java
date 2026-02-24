@@ -156,7 +156,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
             colorView.color.setBackgroundColor(Color.WHITE);
             binding.layoutThemeColors.addView(colorView);
             colorView.setOnClickListener(v -> {
-                if (!UIHelper.a()) {
+                if (!UIHelper.isClickThrottled()) {
                     pickColor(v, (Integer) v.getTag());
                 }
             });
@@ -223,7 +223,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
             intent.putExtra("sc_id", sc_id);
             openIconCreator.launch(intent);
         } else if (id == R.id.ok_button) {
-            UIHelper.a(v);
+            UIHelper.disableTemporarily(v);
             if (isInputValid()) {
                 new SaveProjectAsyncTask(getApplicationContext()).execute();
                 if (icon != null) saveBitmapTo(icon, getCustomIconPath());
@@ -277,7 +277,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setIcon(R.drawable.numbers_48);
         dialog.setTitle(Helper.getResString(R.string.myprojects_settings_version_control_title));
-        View view = ViewUtil.a(getApplicationContext(), R.layout.property_popup_version_control);
+        View view = ViewUtil.inflateLayout(getApplicationContext(), R.layout.property_popup_version_control);
         ((TextView) view.findViewById(R.id.tv_code)).setText(Helper.getResString(R.string.myprojects_settings_version_control_title_code));
         ((TextView) view.findViewById(R.id.tv_name)).setText(Helper.getResString(R.string.myprojects_settings_version_control_title_name));
 
@@ -338,7 +338,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
             }
         });
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_save), (v, which) -> {
-            if (!UIHelper.a()) {
+            if (!UIHelper.isClickThrottled()) {
                 binding.verCode.setText(String.valueOf(versionCodePicker.getValue()));
                 binding.verName.setText(projectNewVersionNameFirstPart + "." + projectNewVersionNameSecondPart);
                 v.dismiss();
@@ -491,7 +491,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
 
         private void initialize(Context context, int tag) {
             setTag(tag);
-            ViewUtil.a(context, this, R.layout.myproject_color);
+            ViewUtil.inflateLayoutInto(context, this, R.layout.myproject_color);
             color = findViewById(R.id.color);
             name = findViewById(R.id.name);
         }

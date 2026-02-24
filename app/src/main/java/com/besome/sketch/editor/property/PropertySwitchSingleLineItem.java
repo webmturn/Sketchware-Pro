@@ -34,7 +34,7 @@ public class PropertySwitchSingleLineItem extends LinearLayout implements View.O
     }
 
     private void initialize(Context context, boolean z) {
-        ViewUtil.a(context, this, R.layout.property_switch_item_singleline);
+        ViewUtil.inflateLayoutInto(context, this, R.layout.property_switch_item_singleline);
         tvName = findViewById(R.id.tv_name);
         switchValue = findViewById(R.id.switch_value);
         imgLeftIcon = findViewById(R.id.img_left_icon);
@@ -51,7 +51,7 @@ public class PropertySwitchSingleLineItem extends LinearLayout implements View.O
     }
 
     public void setKey(String key) {
-        UIHelper.a(this);
+        UIHelper.disableTemporarily(this);
         this.key = key;
         int identifier = getResources().getIdentifier(key, "string", getContext().getPackageName());
         if (identifier > 0) {

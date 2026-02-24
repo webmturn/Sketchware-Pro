@@ -46,7 +46,7 @@ public class ViewEvents extends LinearLayout {
     }
 
     private void initialize(Context context) {
-        ViewUtil.a(context, this, R.layout.view_events);
+        ViewUtil.inflateLayoutInto(context, this, R.layout.view_events);
         RecyclerView eventsList = findViewById(R.id.list_events);
         eventsList.setHasFixedSize(true);
         eventsList.setAdapter(eventAdapter);

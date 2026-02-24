@@ -36,9 +36,9 @@ public class ItemListView extends ListView implements ItemView {
     }
 
     public void initialize(Context context) {
-        dip = ViewUtil.a(context, 1.0f);
+        dip = ViewUtil.dpToPx(context, 1.0f);
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setStrokeWidth(ViewUtil.a(getContext(), 2.0f));
+        paint.setStrokeWidth(ViewUtil.dpToPx(getContext(), 2.0f));
         setDrawingCacheEnabled(true);
         exampleData.add("List item 1");
         exampleData.add("List item 2");

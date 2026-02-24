@@ -67,7 +67,7 @@ public class PropertySizeItem extends RelativeLayout implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        if (!UIHelper.a()) {
+        if (!UIHelper.isClickThrottled()) {
             if (key.equals("property_divider_height")) {
                 showDialog();
             }
@@ -94,7 +94,7 @@ public class PropertySizeItem extends RelativeLayout implements View.OnClickList
 
     private void initialize(Context context, boolean z) {
         this.context = context;
-        ViewUtil.a(context, this, R.layout.property_input_item);
+        ViewUtil.inflateLayoutInto(context, this, R.layout.property_input_item);
         tvName = findViewById(R.id.tv_name);
         tvValue = findViewById(R.id.tv_value);
         imgLeftIcon = findViewById(R.id.img_left_icon);
@@ -110,7 +110,7 @@ public class PropertySizeItem extends RelativeLayout implements View.OnClickList
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(getContext());
         dialog.setTitle(Helper.getText(tvName));
         dialog.setIcon(icon);
-        View view = ViewUtil.a(getContext(), R.layout.property_popup_input_size);
+        View view = ViewUtil.inflateLayout(getContext(), R.layout.property_popup_input_size);
         EditText input = view.findViewById(R.id.et_input);
         MinMaxInputValidator validator = new MinMaxInputValidator(context, view.findViewById(R.id.ti_input), 0, 999);
         validator.setText(String.valueOf(value));

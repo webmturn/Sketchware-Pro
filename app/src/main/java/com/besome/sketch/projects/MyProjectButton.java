@@ -40,7 +40,7 @@ public class MyProjectButton extends LinearLayout {
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 1.0f));
 
-        ViewUtil.a(context, this, R.layout.myproject_button);
+        ViewUtil.inflateLayoutInto(context, this, R.layout.myproject_button);
         icon = findViewById(R.id.icon);
         name = findViewById(R.id.name);
     }

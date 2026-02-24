@@ -61,7 +61,7 @@ public class SystemInfoActivity extends BaseAppCompatActivity {
         propertyOneLineItem.setName(Helper.getResString(R.string.system_information_developer_options));
         binding.content.addView(propertyOneLineItem);
         propertyOneLineItem.setOnClickListener(v -> {
-            if (!UIHelper.a()) {
+            if (!UIHelper.isClickThrottled()) {
                 try {
                     Intent intent = new Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS);
                     startActivity(intent);

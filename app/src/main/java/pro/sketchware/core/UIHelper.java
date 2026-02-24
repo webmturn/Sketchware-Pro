@@ -17,22 +17,22 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 public class UIHelper {
-  public static long a;
+  public static long lastClickTime;
   
-  public static SpannableStringBuilder a(Context paramContext, String paramString) {
+  public static SpannableStringBuilder createSpannable(Context paramContext, String paramString) {
     return new SpannableStringBuilder(paramString);
   }
   
-  public static void a(Context paramContext, EditText paramEditText) {
+  public static void hideKeyboard(Context paramContext, EditText paramEditText) {
     ((InputMethodManager)paramContext.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(paramEditText.getWindowToken(), 0);
   }
   
-  public static void a(View paramView) {
+  public static void disableTemporarily(View paramView) {
     paramView.setEnabled(false);
     (new Handler(Looper.getMainLooper())).postDelayed(new ViewEnableRunnable(paramView), 100L);
   }
   
-  public static void a(View paramView, int paramInt, Animation.AnimationListener paramAnimationListener) {
+  public static void expandView(View paramView, int paramInt, Animation.AnimationListener paramAnimationListener) {
     paramView.measure(-1, -2);
     int targetHeight = paramView.getMeasuredHeight();
     (paramView.getLayoutParams()).height = 1;
@@ -54,7 +54,7 @@ public class UIHelper {
     paramView.startAnimation(expandAnim);
   }
   
-  public static void a(View paramView, Animation.AnimationListener paramAnimationListener) {
+  public static void collapseView(View paramView, Animation.AnimationListener paramAnimationListener) {
     int initialHeight = paramView.getMeasuredHeight();
     Animation collapseAnim = new Animation() {
       @Override
@@ -75,24 +75,24 @@ public class UIHelper {
     paramView.startAnimation(collapseAnim);
   }
   
-  public static void a(ImageView paramImageView, int paramInt) {
+  public static void setSaturation(ImageView paramImageView, int paramInt) {
     ColorMatrix colorMatrix = new ColorMatrix();
     colorMatrix.setSaturation(paramInt);
     paramImageView.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
   }
   
-  public static boolean a() {
-    if (SystemClock.elapsedRealtime() - a < 100L)
+  public static boolean isClickThrottled() {
+    if (SystemClock.elapsedRealtime() - lastClickTime < 100L)
       return true; 
-    a = SystemClock.elapsedRealtime();
+    lastClickTime = SystemClock.elapsedRealtime();
     return false;
   }
   
-  public static SpannableStringBuilder b(Context paramContext, String paramString) {
+  public static SpannableStringBuilder createSpannableAlt(Context paramContext, String paramString) {
     return new SpannableStringBuilder(paramString);
   }
   
-  public static void b(View paramView, Animation.AnimationListener paramAnimationListener) {
-    a(paramView, 1, paramAnimationListener);
+  public static void expandViewDefault(View paramView, Animation.AnimationListener paramAnimationListener) {
+    expandView(paramView, 1, paramAnimationListener);
   }
 }

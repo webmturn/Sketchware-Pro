@@ -130,7 +130,7 @@ public class ViewProperty extends LinearLayout implements PropertyChangedCallbac
             showAllShower.setInterpolator(new DecelerateInterpolator());
         }
         if (showAllHider == null) {
-            showAllHider = ObjectAnimator.ofFloat(layoutPropertySeeAll, View.TRANSLATION_Y, ViewUtil.a(getContext(), 100.0f));
+            showAllHider = ObjectAnimator.ofFloat(layoutPropertySeeAll, View.TRANSLATION_Y, ViewUtil.dpToPx(getContext(), 100.0f));
             showAllHider.setDuration(200L);
             showAllHider.setInterpolator(new DecelerateInterpolator());
         }
@@ -179,7 +179,7 @@ public class ViewProperty extends LinearLayout implements PropertyChangedCallbac
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(getContext());
         dialog.setTitle(Helper.getResString(R.string.view_widget_favorites_save_title));
         dialog.setIcon(R.drawable.ic_bookmark_red_48dp);
-        View view = ViewUtil.a(getContext(), R.layout.property_popup_save_to_favorite);
+        View view = ViewUtil.inflateLayout(getContext(), R.layout.property_popup_save_to_favorite);
         ((TextView) view.findViewById(R.id.tv_favorites_guide)).setText(Helper.getResString(R.string.view_widget_favorites_save_guide_new));
         EditText editText = view.findViewById(R.id.ed_input);
         editText.setPrivateImeOptions("defaultInputmode=english;");
@@ -190,7 +190,7 @@ public class ViewProperty extends LinearLayout implements PropertyChangedCallbac
         UniqueNameValidator validator = new UniqueNameValidator(getContext(), view.findViewById(R.id.ti_input), WidgetCollectionManager.h().g());
         dialog.setView(view);
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_save), (v, which) -> {
-            if (!UIHelper.a() && validator.isValid()) {
+            if (!UIHelper.isClickThrottled() && validator.isValid()) {
                 String widgetName = Helper.getText(editText);
                 ArrayList<ViewBean> viewBeans = ProjectDataManager.getProjectDataManager(sc_id).b(projectFile.getXmlName(), projectActivityViews.get(idsAdapter.getSelectedItemPosition()));
                 for (ViewBean viewBean : viewBeans) {
@@ -239,7 +239,7 @@ public class ViewProperty extends LinearLayout implements PropertyChangedCallbac
 
     private void initialize(Context context) {
         this.context = context;
-        ViewUtil.a(context, this, R.layout.view_property);
+        ViewUtil.inflateLayoutInto(context, this, R.layout.view_property);
         layoutPropertyGroup = findViewById(R.id.layout_property_group);
         CustomHorizontalScrollView hcvProperty = findViewById(R.id.hcv_property);
         propertyLayout = findViewById(R.id.property_layout);
@@ -282,7 +282,7 @@ public class ViewProperty extends LinearLayout implements PropertyChangedCallbac
         });
         imgSave = findViewById(R.id.img_save);
         imgSave.setOnClickListener(v -> {
-            if (!UIHelper.a()) {
+            if (!UIHelper.isClickThrottled()) {
                 showSaveToCollectionDialog();
             }
         });
@@ -447,7 +447,7 @@ public class ViewProperty extends LinearLayout implements PropertyChangedCallbac
         }
 
         private void initialize(Context context) {
-            ViewUtil.a(context, this, R.layout.property_group_item);
+            ViewUtil.inflateLayoutInto(context, this, R.layout.property_group_item);
             title = findViewById(R.id.tv_title);
         }
 
@@ -474,7 +474,7 @@ public class ViewProperty extends LinearLayout implements PropertyChangedCallbac
         public SeeAllPropertiesFloatingItem(Context context) {
             super(context);
 
-            ViewUtil.a(context, this, R.layout.property_grid_item);
+            ViewUtil.inflateLayoutInto(context, this, R.layout.property_grid_item);
             propertyMenuItem = findViewById(R.id.property_menu_item);
             icon = findViewById(R.id.img_icon);
             title = findViewById(R.id.tv_title);

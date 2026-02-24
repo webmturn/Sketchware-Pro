@@ -99,7 +99,7 @@ public class PropertySelectorItem extends RelativeLayout implements View.OnClick
 
     @Override
     public void onClick(View v) {
-        if (!UIHelper.a()) {
+        if (!UIHelper.isClickThrottled()) {
             switch (key) {
                 case "property_orientation":
                 case "property_text_style":
@@ -133,7 +133,7 @@ public class PropertySelectorItem extends RelativeLayout implements View.OnClick
     }
 
     private void initialize(Context context, boolean z) {
-        ViewUtil.a(context, this, R.layout.property_selector_item);
+        ViewUtil.inflateLayoutInto(context, this, R.layout.property_selector_item);
         tvName = findViewById(R.id.tv_name);
         tvValue = findViewById(R.id.tv_value);
         imgLeftIcon = findViewById(R.id.img_left_icon);
@@ -149,7 +149,7 @@ public class PropertySelectorItem extends RelativeLayout implements View.OnClick
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(getContext());
         dialog.setTitle(Helper.getText(tvName));
         dialog.setIcon(icon);
-        View view = ViewUtil.a(getContext(), R.layout.property_popup_selector_single);
+        View view = ViewUtil.inflateLayout(getContext(), R.layout.property_popup_selector_single);
         radioGroupContent = view.findViewById(R.id.rg_content);
         TextView desc = view.findViewById(R.id.desc);
         if (key.equals("property_ime_option")) {
@@ -190,7 +190,7 @@ public class PropertySelectorItem extends RelativeLayout implements View.OnClick
         radioButton.setTag(pair.first);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                (int) (ViewUtil.a(getContext(), 1.0f) * 40.0f));
+                (int) (ViewUtil.dpToPx(getContext(), 1.0f) * 40.0f));
         radioButton.setGravity(Gravity.CENTER | Gravity.LEFT);
         radioButton.setLayoutParams(layoutParams);
         return radioButton;

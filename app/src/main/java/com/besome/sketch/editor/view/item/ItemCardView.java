@@ -41,8 +41,8 @@ public class ItemCardView extends MaterialCardView implements ItemView, ScrollCo
 
     private void initialize(Context context) {
         setDrawingCacheEnabled(true);
-        setMinimumWidth((int) ViewUtil.a(context, 32.0f));
-        setMinimumHeight((int) ViewUtil.a(context, 32.0f));
+        setMinimumWidth((int) ViewUtil.dpToPx(context, 32.0f));
+        setMinimumHeight((int) ViewUtil.dpToPx(context, 32.0f));
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     }
 
@@ -124,9 +124,9 @@ public class ItemCardView extends MaterialCardView implements ItemView, ScrollCo
 
     @Override
     public void setContentPadding(int left, int top, int right, int bottom) {
-        super.setContentPadding((int) ViewUtil.a(getContext(), (float) left),
-                (int) ViewUtil.a(getContext(), (float) top),
-                (int) ViewUtil.a(getContext(), (float) right),
-                (int) ViewUtil.a(getContext(), (float) bottom));
+        super.setContentPadding((int) ViewUtil.dpToPx(getContext(), (float) left),
+                (int) ViewUtil.dpToPx(getContext(), (float) top),
+                (int) ViewUtil.dpToPx(getContext(), (float) right),
+                (int) ViewUtil.dpToPx(getContext(), (float) bottom));
     }
 }

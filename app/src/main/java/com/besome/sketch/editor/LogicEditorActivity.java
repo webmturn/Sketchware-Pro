@@ -321,7 +321,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     public void showAddListDialog() {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.logic_editor_title_add_new_list);
-        View a2 = ViewUtil.a(this, R.layout.logic_popup_add_list);
+        View a2 = ViewUtil.inflateLayout(this, R.layout.logic_popup_add_list);
         RadioGroup radioGroup = a2.findViewById(R.id.rg_type);
         TextInputEditText editText = a2.findViewById(R.id.ed_input);
         IdentifierValidator listNameValidator = new IdentifierValidator(getContext(), a2.findViewById(R.id.ti_input), BlockConstants.RESERVED_KEYWORDS, BlockConstants.COMPONENT_TYPES, ProjectDataManager.getProjectDataManager(scId).a(M));
@@ -350,7 +350,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.logic_editor_title_add_new_variable);
 
-        View customView = ViewUtil.a(this, R.layout.logic_popup_add_variable);
+        View customView = ViewUtil.inflateLayout(this, R.layout.logic_popup_add_variable);
         RadioGroup radioGroup = customView.findViewById(R.id.rg_type);
         TextInputEditText editText = customView.findViewById(R.id.ed_input);
         IdentifierValidator nameValidator = new IdentifierValidator(getContext(), customView.findViewById(R.id.ti_input), BlockConstants.RESERVED_KEYWORDS, BlockConstants.COMPONENT_TYPES, ProjectDataManager.getProjectDataManager(scId).a(M));
@@ -391,7 +391,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     public void showRemoveListDialog() {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.logic_editor_title_remove_list);
-        View a2 = ViewUtil.a(this, R.layout.property_popup_selector_single);
+        View a2 = ViewUtil.inflateLayout(this, R.layout.property_popup_selector_single);
         ViewGroup viewGroup = a2.findViewById(R.id.rg_content);
         for (Pair<Integer, String> list : ProjectDataManager.getProjectDataManager(scId).j(M.getJavaName())) {
             viewGroup.addView(e(list.second));
@@ -422,7 +422,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     public void showRemoveVariableDialog() {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.logic_editor_title_remove_variable);
-        View a2 = ViewUtil.a(this, R.layout.property_popup_selector_single);
+        View a2 = ViewUtil.inflateLayout(this, R.layout.property_popup_selector_single);
         ViewGroup viewGroup = a2.findViewById(R.id.rg_content);
         for (Pair<Integer, String> next : ProjectDataManager.getProjectDataManager(scId).k(M.getJavaName())) {
             RadioButton e = e(next.second);
@@ -544,7 +544,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     private ImageView setImageViewContent(String name) {
-        float dp = ViewUtil.a(this, 1.0f);
+        float dp = ViewUtil.dpToPx(this, 1.0f);
         int size = (int) (dp * 48);
         ImageView imageView = new ImageView(this);
         imageView.setLayoutParams(new LinearLayout.LayoutParams(size, size));
@@ -782,7 +782,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     public void a(FieldBlockView ss, boolean z) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(z ? R.string.logic_editor_title_enter_number_value : R.string.logic_editor_title_enter_string_value);
-        View a2 = ViewUtil.a(this, R.layout.property_popup_input_text);
+        View a2 = ViewUtil.inflateLayout(this, R.layout.property_popup_input_text);
         EditText editText = a2.findViewById(R.id.ed_input);
         if (z) {
             editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
@@ -1251,7 +1251,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         RadioButton radioButton = new RadioButton(this);
         radioButton.setText("");
         radioButton.setTag(fontName);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, (int) (ViewUtil.a(this, 1.0f) * 60.0f));
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, (int) (ViewUtil.dpToPx(this, 1.0f) * 60.0f));
         radioButton.setGravity(Gravity.CENTER | Gravity.LEFT);
         radioButton.setLayoutParams(layoutParams);
         return radioButton;
@@ -1312,7 +1312,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     public void c(BlockView rs) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.logic_block_favorites_save_title);
-        View a2 = ViewUtil.a(this, R.layout.property_popup_save_to_favorite);
+        View a2 = ViewUtil.inflateLayout(this, R.layout.property_popup_save_to_favorite);
         ((TextView) a2.findViewById(R.id.tv_favorites_guide)).setText(R.string.logic_block_favorites_save_guide);
         EditText editText = a2.findViewById(R.id.ed_input);
         editText.setPrivateImeOptions("defaultInputmode=english;");
@@ -1334,7 +1334,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     public void c(FieldBlockView ss) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.logic_editor_title_enter_string_value);
-        View a2 = ViewUtil.a(this, R.layout.property_popup_input_text);
+        View a2 = ViewUtil.inflateLayout(this, R.layout.property_popup_input_text);
         ((TextInputLayout) a2.findViewById(R.id.ti_input)).setHint(getString(R.string.property_hint_enter_value));
         EditText editText = a2.findViewById(R.id.ed_input);
         editText.setSingleLine(true);
@@ -1365,7 +1365,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
     private LinearLayout getFontPreview(String fontName) {
         LinearLayout linearLayout = new LinearLayout(this);
-        linearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (ViewUtil.a(this, 1.0f) * 60.0f)));
+        linearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (ViewUtil.dpToPx(this, 1.0f) * 60.0f)));
         linearLayout.setGravity(Gravity.CENTER | Gravity.LEFT);
         linearLayout.setOrientation(LinearLayout.HORIZONTAL);
         TextView name = new TextView(this);
@@ -1404,7 +1404,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         RadioButton radioButton = new RadioButton(this);
         radioButton.setText(type + " : " + id);
         radioButton.setTag(id);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (ViewUtil.a(this, 1.0f) * 40.0f));
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (ViewUtil.dpToPx(this, 1.0f) * 40.0f));
         radioButton.setGravity(Gravity.CENTER | Gravity.LEFT);
         radioButton.setLayoutParams(layoutParams);
         return radioButton;
@@ -1414,7 +1414,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.logic_editor_title_select_font);
 
-        View customView = ViewUtil.a(this, R.layout.property_popup_selector_color);
+        View customView = ViewUtil.inflateLayout(this, R.layout.property_popup_selector_color);
         RadioGroup radioGroup = customView.findViewById(R.id.rg);
         LinearLayout linearLayout = customView.findViewById(R.id.content);
         ArrayList<String> fontNames = ProjectDataManager.getResourceManager(scId).k();
@@ -1457,8 +1457,8 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         RadioButton radioButton = new RadioButton(this);
         radioButton.setText(str);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.topMargin = (int) ViewUtil.a(getContext(), 4.0f);
-        layoutParams.bottomMargin = (int) ViewUtil.a(getContext(), 4.0f);
+        layoutParams.topMargin = (int) ViewUtil.dpToPx(getContext(), 4.0f);
+        layoutParams.bottomMargin = (int) ViewUtil.dpToPx(getContext(), 4.0f);
         radioButton.setGravity(Gravity.CENTER | Gravity.LEFT);
         radioButton.setLayoutParams(layoutParams);
         return radioButton;
@@ -1468,8 +1468,8 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         CheckBox checkBox = new CheckBox(this);
         checkBox.setText(str);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.topMargin = (int) ViewUtil.a(getContext(), 4.0f);
-        layoutParams.bottomMargin = (int) ViewUtil.a(getContext(), 4.0f);
+        layoutParams.topMargin = (int) ViewUtil.dpToPx(getContext(), 4.0f);
+        layoutParams.bottomMargin = (int) ViewUtil.dpToPx(getContext(), 4.0f);
         checkBox.setGravity(Gravity.CENTER | Gravity.LEFT);
         checkBox.setLayoutParams(layoutParams);
         return checkBox;
@@ -1478,7 +1478,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     public void e(FieldBlockView ss) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.logic_editor_title_enter_data_value);
-        View a2 = ViewUtil.a(this, R.layout.property_popup_input_intent_data);
+        View a2 = ViewUtil.inflateLayout(this, R.layout.property_popup_input_intent_data);
         ((TextView) a2.findViewById(R.id.tv_desc_intent_usage)).setText(getString(R.string.property_description_component_intent_usage));
         EditText editText = a2.findViewById(R.id.ed_input);
         ((TextInputLayout) a2.findViewById(R.id.ti_input)).setHint(getString(R.string.property_hint_enter_value));
@@ -1524,7 +1524,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 width = height;
             }
             if (2 == i) {
-                i2 = width - ((int) ViewUtil.a(this, 320.0f));
+                i2 = width - ((int) ViewUtil.dpToPx(this, 320.0f));
                 a2 = ViewGroup.LayoutParams.MATCH_PARENT;
             } else {
                 a2 = viewLogicEditor.getHeight() - K.getHeight();
@@ -1539,7 +1539,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
     public void f(FieldBlockView ss) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
-        View customView = ViewUtil.a(this, R.layout.property_popup_selector_single);
+        View customView = ViewUtil.inflateLayout(this, R.layout.property_popup_selector_single);
         ViewGroup viewGroup = customView.findViewById(R.id.rg_content);
         String xmlName = M.getXmlName();
 
@@ -1621,7 +1621,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         RelativeLayout.LayoutParams layoutParams;
         int orientation;
         if (2 == i) {
-            K.setLayoutParams(new LinearLayout.LayoutParams((int) ViewUtil.a(this, 320.0f), ViewGroup.LayoutParams.MATCH_PARENT));
+            K.setLayoutParams(new LinearLayout.LayoutParams((int) ViewUtil.dpToPx(this, 320.0f), ViewGroup.LayoutParams.MATCH_PARENT));
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.gravity = Gravity.CENTER | Gravity.BOTTOM;
             int dimension = (int) getResources().getDimension(R.dimen.action_button_margin);
@@ -1633,7 +1633,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             layoutParams.topMargin = DeviceUtil.getToolbarHeight(getContext());
             orientation = LinearLayout.HORIZONTAL;
         } else {
-            K.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) ViewUtil.a(this, 240.0f)));
+            K.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) ViewUtil.dpToPx(this, 240.0f)));
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.gravity = Gravity.CENTER | Gravity.RIGHT;
             int dimension2 = (int) getResources().getDimension(R.dimen.action_button_margin);
@@ -1665,7 +1665,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         boolean var2 = X;
         if (i == 2) {
             if (!var2) {
-                J.setTranslationX(ViewUtil.a(this, 320.0F));
+                J.setTranslationX(ViewUtil.dpToPx(this, 320.0F));
             } else {
                 J.setTranslationX(0.0F);
             }
@@ -1673,7 +1673,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         } else {
             if (!var2) {
                 J.setTranslationX(0.0F);
-                J.setTranslationY(ViewUtil.a(this, 240.0F));
+                J.setTranslationY(ViewUtil.dpToPx(this, 240.0F));
             } else {
                 J.setTranslationX(0.0F);
                 J.setTranslationY(0.0F);
@@ -1682,10 +1682,10 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
         if (i == 2) {
             U = ObjectAnimator.ofFloat(J, View.TRANSLATION_X, 0.0F);
-            V = ObjectAnimator.ofFloat(J, View.TRANSLATION_X, ViewUtil.a(this, 320.0F));
+            V = ObjectAnimator.ofFloat(J, View.TRANSLATION_X, ViewUtil.dpToPx(this, 320.0F));
         } else {
             U = ObjectAnimator.ofFloat(J, View.TRANSLATION_Y, 0.0F);
-            V = ObjectAnimator.ofFloat(J, View.TRANSLATION_Y, ViewUtil.a(this, 240.0F));
+            V = ObjectAnimator.ofFloat(J, View.TRANSLATION_Y, ViewUtil.dpToPx(this, 240.0F));
         }
 
         U.setDuration(500L);
@@ -1699,7 +1699,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.logic_editor_title_select_sound);
 
-        View customView = ViewUtil.a(this, R.layout.property_popup_selector_single);
+        View customView = ViewUtil.inflateLayout(this, R.layout.property_popup_selector_single);
         RadioGroup radioGroup = customView.findViewById(R.id.rg_content);
         SoundPool soundPool = new SoundPool.Builder()
                 .setMaxStreams(1)
@@ -1751,7 +1751,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     public void i(FieldBlockView ss) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.logic_editor_title_select_typeface);
-        View a3 = ViewUtil.a(this, R.layout.property_popup_selector_single);
+        View a3 = ViewUtil.inflateLayout(this, R.layout.property_popup_selector_single);
         RadioGroup radioGroup = a3.findViewById(R.id.rg_content);
         for (Pair<Integer, String> pair : SketchwareConstants.getPropertyPairs("property_text_style")) {
             RadioButton e = e(pair.second);
@@ -1850,7 +1850,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
     @Override
     public void onClick(View v) {
-        if (!UIHelper.a()) {
+        if (!UIHelper.isClickThrottled()) {
             Object tag = v.getTag();
             if (tag != null) {
                 if (tag.equals("variableAdd")) {
@@ -1948,11 +1948,11 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
         isViewBindingEnabled = new ProjectSettings(scId).getValue(ProjectSettings.SETTING_ENABLE_VIEWBINDING, "false").equals("true");
         M = (ProjectFileBean) parcelable;
-        T = (int) ViewUtil.a(getContext(), (float) T);
+        T = (int) ViewUtil.dpToPx(getContext(), (float) T);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(v -> {
-            if (!UIHelper.a()) {
+            if (!UIHelper.isClickThrottled()) {
                 getOnBackPressedDispatcher().onBackPressed();
             }
         });
@@ -2326,7 +2326,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 int[] nLocationOnScreen = new int[2];
                 viewLogicEditor.getLocationOnScreen(nLocationOnScreen);
                 int width = nLocationOnScreen[0] + (viewLogicEditor.getWidth() / 2);
-                int a2 = nLocationOnScreen[1] + ((int) ViewUtil.a(getContext(), 4.0f));
+                int a2 = nLocationOnScreen[1] + ((int) ViewUtil.dpToPx(getContext(), 4.0f));
                 ArrayList<BlockBean> a3 = a(arrayList2, width, a2, true);
                 int[] oLocationOnScreen = new int[2];
                 o.getLocationOnScreen(oLocationOnScreen);

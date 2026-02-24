@@ -66,7 +66,7 @@ public class PropertyGravityItem extends RelativeLayout implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        if (!UIHelper.a()) {
+        if (!UIHelper.isClickThrottled()) {
             switch (key) {
                 case "property_gravity":
                 case "property_layout_gravity":
@@ -95,7 +95,7 @@ public class PropertyGravityItem extends RelativeLayout implements View.OnClickL
     }
 
     private void initialize(Context context, boolean z) {
-        ViewUtil.a(context, this, R.layout.property_selector_item);
+        ViewUtil.inflateLayoutInto(context, this, R.layout.property_selector_item);
         tvName = findViewById(R.id.tv_name);
         tvValue = findViewById(R.id.tv_value);
         imgLeftIcon = findViewById(R.id.img_left_icon);
@@ -112,7 +112,7 @@ public class PropertyGravityItem extends RelativeLayout implements View.OnClickL
         dialog.setTitle(Helper.getText(tvName));
         dialog.setIcon(icon);
 
-        View view = ViewUtil.a(getContext(), R.layout.property_popup_selector_gravity);
+        View view = ViewUtil.inflateLayout(getContext(), R.layout.property_popup_selector_gravity);
         CheckBox chk_left = view.findViewById(R.id.chk_left);
         CheckBox chk_right = view.findViewById(R.id.chk_right);
         CheckBox chk_hcenter = view.findViewById(R.id.chk_hcenter);

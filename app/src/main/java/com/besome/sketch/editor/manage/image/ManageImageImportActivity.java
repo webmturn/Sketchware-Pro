@@ -92,7 +92,7 @@ public class ManageImageImportActivity extends BaseAppCompatActivity implements 
 
     @Override
     public void onClick(View v) {
-        if (!UIHelper.a()) {
+        if (!UIHelper.isClickThrottled()) {
             int id = v.getId();
             if (id != R.id.btn_decide) {
                 if (id != R.id.img_backbtn) {
@@ -289,7 +289,7 @@ public class ManageImageImportActivity extends BaseAppCompatActivity implements 
                 img = itemView.findViewById(R.id.img);
                 tv_name = itemView.findViewById(R.id.tv_name);
                 img.setOnClickListener(v -> {
-                    if (!UIHelper.a()) {
+                    if (!UIHelper.isClickThrottled()) {
                         selectedItem = getLayoutPosition();
                         showPreview(selectedItem);
                         tv_currentnum.setText(String.valueOf(selectedItem + 1));

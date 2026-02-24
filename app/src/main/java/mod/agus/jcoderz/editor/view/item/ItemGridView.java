@@ -27,9 +27,9 @@ public class ItemGridView extends GridView implements ItemView {
 
     public ItemGridView(Context context) {
         super(context);
-        paddingFactor = (int) ViewUtil.a(context, 1.0f);
+        paddingFactor = (int) ViewUtil.dpToPx(context, 1.0f);
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setStrokeWidth(ViewUtil.a(getContext(), 2.0f));
+        paint.setStrokeWidth(ViewUtil.dpToPx(getContext(), 2.0f));
         rect = new Rect();
         setDrawingCacheEnabled(true);
         setNumColumns(3);

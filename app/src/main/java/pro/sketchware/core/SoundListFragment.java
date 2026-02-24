@@ -155,7 +155,7 @@ public class SoundListFragment extends BaseFragment implements MenuProvider {
         actBinding.btnDelete.setOnClickListener(view -> {
             if (sounds.isEmpty()) {
                 SketchwareUtil.toast(Helper.getResString(R.string.common_message_no_item_delete));
-            } else if (!UIHelper.a() && isSelecting) {
+            } else if (!UIHelper.isClickThrottled() && isSelecting) {
                 for (int i = sounds.size() - 1; i >= 0; i--) {
                     ProjectResourceBean projectResourceBean = sounds.get(i);
                     projectResourceBean.curSoundPosition = 0;
@@ -175,7 +175,7 @@ public class SoundListFragment extends BaseFragment implements MenuProvider {
         adapter = new Adapter(binding.soundList);
         binding.soundList.setAdapter(adapter);
         actBinding.fab.setOnClickListener(v -> {
-            if (!UIHelper.a()) {
+            if (!UIHelper.isClickThrottled()) {
                 setSelecting(false);
                 addSound();
             }
@@ -408,7 +408,7 @@ public class SoundListFragment extends BaseFragment implements MenuProvider {
                 binding.chkSelect.setVisibility(View.GONE);
 
                 binding.imgPlay.setOnClickListener(v -> {
-                    if (!UIHelper.a()) {
+                    if (!UIHelper.isClickThrottled()) {
                         lastSelectedSound = getLayoutPosition();
                         if (!isSelecting) {
                             soundPlayer.onPlayPressed(lastSelectedSound);
@@ -417,7 +417,7 @@ public class SoundListFragment extends BaseFragment implements MenuProvider {
                 });
 
                 binding.layoutItem.setOnClickListener(v -> {
-                    if (!UIHelper.a()) {
+                    if (!UIHelper.isClickThrottled()) {
                         lastSelectedSound = getLayoutPosition();
                     }
                     if (isSelecting) {

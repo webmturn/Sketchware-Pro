@@ -151,7 +151,7 @@ public class PaletteWidget extends LinearLayout {
     }
 
     private void initialize(Context context) {
-        ViewUtil.a(context, this, R.layout.palette_widget);
+        ViewUtil.inflateLayoutInto(context, this, R.layout.palette_widget);
         layoutContainer = findViewById(R.id.layout);
         widgetsContainer = findViewById(R.id.widget);
         titleLayouts = findViewById(R.id.tv_layout);

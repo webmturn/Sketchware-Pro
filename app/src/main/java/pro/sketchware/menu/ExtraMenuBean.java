@@ -241,7 +241,7 @@ public class ExtraMenuBean {
     private void defaultMenus(FieldBlockView menu) {
         String menuName = menu.getMenuName();
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(logicEditor);
-        View rootView = ViewUtil.a(logicEditor, R.layout.property_popup_selector_single);
+        View rootView = ViewUtil.inflateLayout(logicEditor, R.layout.property_popup_selector_single);
         ViewGroup viewGroup = rootView.findViewById(R.id.rg_content);
         ArrayList<String> menus = new ArrayList<>();
         String title;
@@ -739,7 +739,7 @@ public class ExtraMenuBean {
 
         if (!isEmpty(message)) dialog.setMessage(message);
 
-        View root = ViewUtil.a(logicEditor, R.layout.property_popup_input_text);
+        View root = ViewUtil.inflateLayout(logicEditor, R.layout.property_popup_input_text);
         EditText edittext = root.findViewById(R.id.ed_input);
         edittext.setImeOptions(EditorInfo.IME_ACTION_NONE);
 

@@ -57,7 +57,7 @@ public class VersionDialog {
                 binding.versionName1.setError(Helper.getResString(R.string.version_error_invalid_name));
             }
 
-            if (!UIHelper.a() && validVerCode && validVerName) {
+            if (!UIHelper.isClickThrottled() && validVerCode && validVerName) {
                 activity.binding.verCode.setText(verCode);
                 activity.binding.verName.setText(!verNamePostfix.isEmpty() ? verName + " " + verNamePostfix : verName);
                 v.dismiss();

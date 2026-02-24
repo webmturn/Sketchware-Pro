@@ -36,11 +36,11 @@ public class ItemRecyclerView extends RecyclerView implements ItemView, EditorLi
 
     public ItemRecyclerView(Context context) {
         super(context);
-        setMinimumWidth((int) ViewUtil.a(context, 32.0F));
-        setMinimumHeight((int) ViewUtil.a(context, 32.0F));
-        dip = ViewUtil.a(context, 1.0f);
+        setMinimumWidth((int) ViewUtil.dpToPx(context, 32.0F));
+        setMinimumHeight((int) ViewUtil.dpToPx(context, 32.0F));
+        dip = ViewUtil.dpToPx(context, 1.0f);
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setStrokeWidth(ViewUtil.a(getContext(), 2.0f));
+        paint.setStrokeWidth(ViewUtil.dpToPx(getContext(), 2.0f));
         rect = new Rect();
         setDrawingCacheEnabled(true);
         setLayoutManager(new LinearLayoutManager(context));

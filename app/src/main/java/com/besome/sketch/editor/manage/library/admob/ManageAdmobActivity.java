@@ -153,7 +153,7 @@ public class ManageAdmobActivity extends BaseAppCompatActivity implements View.O
 
     @Override
     public void onClick(View v) {
-        if (!UIHelper.a()) {
+        if (!UIHelper.isClickThrottled()) {
             int id = v.getId();
             if (id == binding.btnConsole.getId()) {
                 openAdmobConsole();
@@ -262,7 +262,7 @@ public class ManageAdmobActivity extends BaseAppCompatActivity implements View.O
         dialog.setMessage(Helper.getResString(R.string.design_library_admob_dialog_description_confirm_uncheck));
         dialog.setCancelable(false);
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_delete), (v, which) -> {
-            if (!UIHelper.a()) {
+            if (!UIHelper.isClickThrottled()) {
                 admobLibraryBean.useYn = "N";
                 binding.libSwitch.setChecked(false);
                 v.dismiss();
@@ -278,7 +278,7 @@ public class ManageAdmobActivity extends BaseAppCompatActivity implements View.O
         dialog.setTitle(Helper.getResString(R.string.title_compatible_chrome_browser));
         dialog.setMessage(Helper.getResString(R.string.message_compatible_chrome_brower));
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_ok), (v, which) -> {
-            if (!UIHelper.a()) {
+            if (!UIHelper.isClickThrottled()) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse("market://details?id=com.android.chrome"));
                 startActivity(intent);

@@ -89,7 +89,7 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
 
     @Override
     public void onClick(View v) {
-        if (!UIHelper.a()) {
+        if (!UIHelper.isClickThrottled()) {
             int id = v.getId();
             if (id == R.id.cancel_button) {
                 setResult(RESULT_CANCELED);

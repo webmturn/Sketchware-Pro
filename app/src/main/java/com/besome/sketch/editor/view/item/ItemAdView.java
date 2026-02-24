@@ -30,7 +30,7 @@ public class ItemAdView extends LinearLayout implements ItemView {
     }
 
     private void initialize(Context context) {
-        dip = ViewUtil.a(context, 1.0F);
+        dip = ViewUtil.dpToPx(context, 1.0F);
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(0x9599d5d0);
         setDrawingCacheEnabled(true);

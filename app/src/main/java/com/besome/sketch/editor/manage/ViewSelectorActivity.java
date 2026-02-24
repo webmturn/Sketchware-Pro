@@ -218,7 +218,7 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
             }
         });
         binding.createNewView.setOnClickListener(v -> {
-            if (!UIHelper.a()) {
+            if (!UIHelper.isClickThrottled()) {
                 if (selectedTab == TAB_ACTIVITY) {
                     Intent intent = new Intent(getApplicationContext(), AddViewActivity.class);
                     intent.putStringArrayListExtra("screen_names", getScreenNames());
@@ -397,7 +397,7 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
                 super(binding.getRoot());
                 itemBinding = binding;
                 itemBinding.cardView.setOnClickListener(v -> {
-                    if (!UIHelper.a()) {
+                    if (!UIHelper.isClickThrottled()) {
                         selectedItem = getLayoutPosition();
                         ProjectFileManager ProjectFileManager = ProjectDataManager.getFileManager(sc_id);
                         ArrayList<ProjectFileBean> list = switch (selectedTab) {
@@ -415,7 +415,7 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
                     }
                 });
                 itemBinding.actionContainer.setOnClickListener(v -> {
-                    if (selectedTab == TAB_ACTIVITY && !UIHelper.a()) {
+                    if (selectedTab == TAB_ACTIVITY && !UIHelper.isClickThrottled()) {
                         selectedItem = getLayoutPosition();
                         Intent intent = new Intent(getApplicationContext(), AddViewActivity.class);
                         intent.putExtra("project_file", ProjectDataManager.getFileManager(sc_id).b().get(getLayoutPosition()));
@@ -424,7 +424,7 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
                     }
                 });
                 itemBinding.imgPresetSetting.setOnClickListener(v -> {
-                    if (!UIHelper.a()) {
+                    if (!UIHelper.isClickThrottled()) {
                         selectedItem = getLayoutPosition();
                         int requestCode = a(ProjectDataManager.getFileManager(sc_id).b().get(getLayoutPosition()));
                         Intent intent = new Intent(getApplicationContext(), PresetSettingActivity.class);

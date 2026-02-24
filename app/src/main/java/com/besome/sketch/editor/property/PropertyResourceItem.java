@@ -135,7 +135,7 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
 
     @Override
     public void onClick(View view) {
-        if (UIHelper.a()) {
+        if (UIHelper.isClickThrottled()) {
             return;
         }
         a();
@@ -160,7 +160,7 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
     }
 
     public final void a(Context context, boolean z, boolean z2) {
-        ViewUtil.a(context, this, R.layout.property_resource_item);
+        ViewUtil.inflateLayoutInto(context, this, R.layout.property_resource_item);
         nameTextView = findViewById(R.id.tv_name);
         valueTextView = findViewById(R.id.tv_value);
         imagePreview = findViewById(R.id.view_image);
@@ -279,7 +279,7 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
 
     private View setImageViewContent(String image) {
         ImageView imageView = new ImageView(getContext());
-        int size = (int) (48 * ViewUtil.a(getContext(), 1f));
+        int size = (int) (48 * ViewUtil.dpToPx(getContext(), 1f));
         imageView.setLayoutParams(new LinearLayout.LayoutParams(size, size));
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         imageView.setBackgroundResource(R.drawable.bg_outline);

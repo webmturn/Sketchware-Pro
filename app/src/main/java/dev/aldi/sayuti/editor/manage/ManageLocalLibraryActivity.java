@@ -160,7 +160,7 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
         binding.searchList.setAdapter(searchAdapter);
 
         binding.searchBar.setNavigationOnClickListener(v -> {
-            if (!UIHelper.a()) {
+            if (!UIHelper.isClickThrottled()) {
                 getOnBackPressedDispatcher().onBackPressed();
             }
         });

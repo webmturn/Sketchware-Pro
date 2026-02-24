@@ -194,7 +194,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
 
     @Override
     public void onClick(View v) {
-        if (!UIHelper.a()) {
+        if (!UIHelper.isClickThrottled()) {
             int viewId = v.getId();
             if (viewId == R.id.btn_cancel) {
                 if (selecting) {

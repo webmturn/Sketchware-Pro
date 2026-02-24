@@ -500,7 +500,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
     }
 
     private void initialize(Context context) {
-        ViewUtil.a(context, this, R.layout.view_editor);
+        ViewUtil.inflateLayoutInto(context, this, R.layout.view_editor);
 
         paletteWidget = findViewById(R.id.palette_widget);
         paletteFavorite = findViewById(R.id.palette_favorite);
@@ -516,7 +516,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         findViewById(R.id.btn_editproperties).setOnClickListener(this);
         findViewById(R.id.img_close).setOnClickListener(this);
 
-        dip = ViewUtil.a(context, 1.0f);
+        dip = ViewUtil.dpToPx(context, 1.0f);
         defaultIconWidth = (int) (defaultIconWidth * dip);
         defaultIconHeight = (int) (defaultIconHeight * dip);
         displayWidth = getResources().getDisplayMetrics().widthPixels;
@@ -1120,7 +1120,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         public PaletteGroupItem(Context context) {
             super(context);
 
-            ViewUtil.a(context, this, R.layout.palette_group_item);
+            ViewUtil.inflateLayoutInto(context, this, R.layout.palette_group_item);
             imgGroup = findViewById(R.id.img_group);
         }
 

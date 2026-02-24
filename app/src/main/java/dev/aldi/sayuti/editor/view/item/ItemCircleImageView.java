@@ -22,7 +22,7 @@ public class ItemCircleImageView extends CircleImageView implements ItemView {
 
     public ItemCircleImageView(Context context) {
         super(context);
-        paddingFactor = ViewUtil.a(context, 1.0f);
+        paddingFactor = ViewUtil.dpToPx(context, 1.0f);
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(0x9599d5d0);
         rect = new Rect();
