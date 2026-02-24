@@ -24,24 +24,24 @@ public class DeviceUtil {
   }
   
   public static String getCpuAbi() {
-    String str = "";
+    String abi = "";
     if (Build.VERSION.SDK_INT >= 21) {
       String[] parts = Build.SUPPORTED_ABIS;
       if (parts != null && parts.length > 0) {
-        str = parts[0];
+        abi = parts[0];
       } 
     } else {
-      str = Build.CPU_ABI;
+      abi = Build.CPU_ABI;
     } 
-    return str;
+    return abi;
   }
   
   public static void updateBadgeCount(Context context, int count) {
-    String str = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName()).getComponent().getClassName();
+    String className = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName()).getComponent().getClassName();
     Intent intent = new Intent("android.intent.action.BADGE_COUNT_UPDATE");
     intent.putExtra("badge_count", count);
     intent.putExtra("badge_count_package_name", context.getPackageName());
-    intent.putExtra("badge_count_class_name", str);
+    intent.putExtra("badge_count_class_name", className);
     context.sendBroadcast(intent);
   }
   
@@ -62,12 +62,12 @@ public class DeviceUtil {
     while (true) {
       if (b < i) {
         Field field = fields[b];
-        String str = field.getName();
+        String fieldName = field.getName();
         try {
           int j = field.getInt(null);
           int k = Build.VERSION.SDK_INT;
           if (j == k)
-            return str; 
+            return fieldName; 
           b++;
           continue;
         } catch (Exception exception) {}
