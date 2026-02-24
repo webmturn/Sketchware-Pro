@@ -151,11 +151,11 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
     private void initialize() {
         sc_id = requireActivity().getIntent().getStringExtra("sc_id");
         projectImagesDirectory = ProjectDataManager.getResourceManager(sc_id).getImageDirPath();
-        ArrayList<ProjectResourceBean> arrayList = ProjectDataManager.getResourceManager(sc_id).images;
+        ArrayList<ProjectResourceBean> imagesList = ProjectDataManager.getResourceManager(sc_id).images;
         svgUtils = new SvgUtils(requireContext());
         svgUtils.initImageLoader();
-        if (arrayList != null) {
-            for (ProjectResourceBean next : arrayList) {
+        if (imagesList != null) {
+            for (ProjectResourceBean next : imagesList) {
                 if (next.flipVertical == 0) {
                     next.flipVertical = 1;
                 }

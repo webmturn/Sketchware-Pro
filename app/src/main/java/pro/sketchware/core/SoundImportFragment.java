@@ -89,17 +89,17 @@ public class SoundImportFragment extends BaseFragment {
         actBinding.btnImport.setOnClickListener(view -> {
             if (!UIHelper.isClickThrottled()) {
                 stopPlayback();
-                ArrayList<ProjectResourceBean> arrayList = new ArrayList<>();
+                ArrayList<ProjectResourceBean> selectedSounds = new ArrayList<>();
                 for (ProjectResourceBean next : sounds) {
                     if (next.isSelected) {
-                        arrayList.add(new ProjectResourceBean(ProjectResourceBean.PROJECT_RES_TYPE_FILE, next.resName, SketchwarePaths.getCollectionPath() + File.separator + "sound" + File.separator + "data" + File.separator + next.resFullName));
+                        selectedSounds.add(new ProjectResourceBean(ProjectResourceBean.PROJECT_RES_TYPE_FILE, next.resName, SketchwarePaths.getCollectionPath() + File.separator + "sound" + File.separator + "data" + File.separator + next.resFullName));
                     }
                 }
-                if (!arrayList.isEmpty()) {
+                if (!selectedSounds.isEmpty()) {
                     ArrayList<ProjectResourceBean> d = ((ManageSoundActivity) requireActivity()).projectSounds.sounds;
                     Intent intent = new Intent(requireActivity(), ManageSoundImportActivity.class);
                     intent.putParcelableArrayListExtra("project_sounds", d);
-                    intent.putParcelableArrayListExtra("selected_collections", arrayList);
+                    intent.putParcelableArrayListExtra("selected_collections", selectedSounds);
                     importSoundsHandler.launch(intent);
                 }
                 resetSelection();

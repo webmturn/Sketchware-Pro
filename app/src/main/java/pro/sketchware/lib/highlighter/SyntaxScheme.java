@@ -48,35 +48,35 @@ public class SyntaxScheme {
     }
 
     public static ArrayList<SyntaxScheme> JAVA() {
-        ArrayList<SyntaxScheme> arrayList = new ArrayList<>();
+        ArrayList<SyntaxScheme> schemes = new ArrayList<>();
         boolean isDarkMode = ThemeUtils.isDarkThemeEnabled(SketchApplication.getContext());
 
-        arrayList.add(new SyntaxScheme(Pattern.compile(mJavaPattern[0] + mJavaPattern[1]), getColor(PRIMARY_COLOR_LIGHT, PRIMARY_COLOR_DARK, isDarkMode)));
-        arrayList.add(new SyntaxScheme(Pattern.compile(mJavaPattern[2] + mJavaPattern[3] + mJavaPattern[4]), getColor(SECONDARY_COLOR_LIGHT, SECONDARY_COLOR_DARK, isDarkMode)));
-        arrayList.add(new SyntaxScheme(Pattern.compile(mJavaPattern[5]), getColor(NUMBERS_COLOR_LIGHT, NUMBERS_COLOR_DARK, isDarkMode)));
-        arrayList.add(new SyntaxScheme(Pattern.compile(mJavaPattern[11]), getColor(NOT_WORD_COLOR_LIGHT, NOT_WORD_COLOR_DARK, isDarkMode)));
-        arrayList.add(new SyntaxScheme(Pattern.compile(mJavaPattern[6]), getColor(PRIMARY_COLOR_LIGHT, PRIMARY_COLOR_DARK, isDarkMode)));
-        arrayList.add(new SyntaxScheme(Pattern.compile(mJavaPattern[10]), getColor(VARIABLE_COLOR_LIGHT, VARIABLE_COLOR_DARK, isDarkMode)));
-        arrayList.add(new SyntaxScheme(Pattern.compile(mJavaPattern[7]), getColor("#9e880d", "#bbb529", isDarkMode)));
-        arrayList.add(new SyntaxScheme(Pattern.compile(mJavaPattern[8]), getColor(QUOTES_COLOR_LIGHT, QUOTES_COLOR_DARK, isDarkMode)));
-        arrayList.add(new SyntaxScheme(Pattern.compile(mJavaPattern[9]), getColor(COMMENTS_COLOR_LIGHT, COMMENTS_COLOR_DARK, isDarkMode)));
+        schemes.add(new SyntaxScheme(Pattern.compile(mJavaPattern[0] + mJavaPattern[1]), getColor(PRIMARY_COLOR_LIGHT, PRIMARY_COLOR_DARK, isDarkMode)));
+        schemes.add(new SyntaxScheme(Pattern.compile(mJavaPattern[2] + mJavaPattern[3] + mJavaPattern[4]), getColor(SECONDARY_COLOR_LIGHT, SECONDARY_COLOR_DARK, isDarkMode)));
+        schemes.add(new SyntaxScheme(Pattern.compile(mJavaPattern[5]), getColor(NUMBERS_COLOR_LIGHT, NUMBERS_COLOR_DARK, isDarkMode)));
+        schemes.add(new SyntaxScheme(Pattern.compile(mJavaPattern[11]), getColor(NOT_WORD_COLOR_LIGHT, NOT_WORD_COLOR_DARK, isDarkMode)));
+        schemes.add(new SyntaxScheme(Pattern.compile(mJavaPattern[6]), getColor(PRIMARY_COLOR_LIGHT, PRIMARY_COLOR_DARK, isDarkMode)));
+        schemes.add(new SyntaxScheme(Pattern.compile(mJavaPattern[10]), getColor(VARIABLE_COLOR_LIGHT, VARIABLE_COLOR_DARK, isDarkMode)));
+        schemes.add(new SyntaxScheme(Pattern.compile(mJavaPattern[7]), getColor("#9e880d", "#bbb529", isDarkMode)));
+        schemes.add(new SyntaxScheme(Pattern.compile(mJavaPattern[8]), getColor(QUOTES_COLOR_LIGHT, QUOTES_COLOR_DARK, isDarkMode)));
+        schemes.add(new SyntaxScheme(Pattern.compile(mJavaPattern[9]), getColor(COMMENTS_COLOR_LIGHT, COMMENTS_COLOR_DARK, isDarkMode)));
 
-        return arrayList;
+        return schemes;
     }
 
     public static ArrayList<SyntaxScheme> XML(Context context) {
-        ArrayList<SyntaxScheme> arrayList = new ArrayList<>();
+        ArrayList<SyntaxScheme> schemes = new ArrayList<>();
         boolean isDarkMode = ThemeUtils.isDarkThemeEnabled(context);
 
-        arrayList.add(new SyntaxScheme(Pattern.compile(mJavaPattern[0] + mJavaPattern[1]), getColor(PRIMARY_COLOR_LIGHT, PRIMARY_COLOR_DARK, isDarkMode)));
-        arrayList.add(new SyntaxScheme(Pattern.compile(mXmlPattern[2]), getColor(SECONDARY_COLOR_LIGHT, SECONDARY_COLOR_DARK, isDarkMode)));
-        arrayList.add(new SyntaxScheme(Pattern.compile(mXmlPattern[0]), getColor(VARIABLE_COLOR_LIGHT, VARIABLE_COLOR_DARK, isDarkMode)));
-        arrayList.add(new SyntaxScheme(Pattern.compile(mJavaPattern[11]), getColor(NOT_WORD_COLOR_LIGHT, NOT_WORD_COLOR_DARK, isDarkMode)));
-        arrayList.add(new SyntaxScheme(Pattern.compile(mXmlPattern[3]), getColor(SECONDARY_COLOR_LIGHT, SECONDARY_COLOR_DARK, isDarkMode)));
-        arrayList.add(new SyntaxScheme(Pattern.compile(mXmlPattern[1]), getColor(COMMENTS_COLOR_LIGHT, COMMENTS_COLOR_DARK, isDarkMode)));
-        arrayList.add(new SyntaxScheme(Pattern.compile(mJavaPattern[8]), getColor(QUOTES_COLOR_LIGHT, QUOTES_COLOR_DARK, isDarkMode)));
+        schemes.add(new SyntaxScheme(Pattern.compile(mJavaPattern[0] + mJavaPattern[1]), getColor(PRIMARY_COLOR_LIGHT, PRIMARY_COLOR_DARK, isDarkMode)));
+        schemes.add(new SyntaxScheme(Pattern.compile(mXmlPattern[2]), getColor(SECONDARY_COLOR_LIGHT, SECONDARY_COLOR_DARK, isDarkMode)));
+        schemes.add(new SyntaxScheme(Pattern.compile(mXmlPattern[0]), getColor(VARIABLE_COLOR_LIGHT, VARIABLE_COLOR_DARK, isDarkMode)));
+        schemes.add(new SyntaxScheme(Pattern.compile(mJavaPattern[11]), getColor(NOT_WORD_COLOR_LIGHT, NOT_WORD_COLOR_DARK, isDarkMode)));
+        schemes.add(new SyntaxScheme(Pattern.compile(mXmlPattern[3]), getColor(SECONDARY_COLOR_LIGHT, SECONDARY_COLOR_DARK, isDarkMode)));
+        schemes.add(new SyntaxScheme(Pattern.compile(mXmlPattern[1]), getColor(COMMENTS_COLOR_LIGHT, COMMENTS_COLOR_DARK, isDarkMode)));
+        schemes.add(new SyntaxScheme(Pattern.compile(mJavaPattern[8]), getColor(QUOTES_COLOR_LIGHT, QUOTES_COLOR_DARK, isDarkMode)));
 
-        return arrayList;
+        return schemes;
     }
 
     private static int getColor(String lightColor, String darkColor, boolean isDarkMode) {

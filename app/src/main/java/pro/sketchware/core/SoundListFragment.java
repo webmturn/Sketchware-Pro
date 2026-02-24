@@ -118,9 +118,9 @@ public class SoundListFragment extends BaseFragment implements MenuProvider {
         if (savedInstanceState == null) {
             sc_id = requireActivity().getIntent().getStringExtra("sc_id");
             dirPath = ProjectDataManager.getResourceManager(sc_id).getSoundDirPath();
-            ArrayList<ProjectResourceBean> arrayList = ProjectDataManager.getResourceManager(sc_id).sounds;
-            if (arrayList != null) {
-                for (ProjectResourceBean projectResourceBean : arrayList) {
+            ArrayList<ProjectResourceBean> soundsList = ProjectDataManager.getResourceManager(sc_id).sounds;
+            if (soundsList != null) {
+                for (ProjectResourceBean projectResourceBean : soundsList) {
                     sounds.add(projectResourceBean.clone());
                 }
             }
@@ -265,12 +265,12 @@ public class SoundListFragment extends BaseFragment implements MenuProvider {
     }
 
     private ArrayList<String> getSoundsNames() {
-        ArrayList<String> arrayList = new ArrayList<>();
-        arrayList.add("app_icon");
+        ArrayList<String> soundNames = new ArrayList<>();
+        soundNames.add("app_icon");
         for (ProjectResourceBean projectResourceBean : sounds) {
-            arrayList.add(projectResourceBean.resName);
+            soundNames.add(projectResourceBean.resName);
         }
-        return arrayList;
+        return soundNames;
     }
 
     public void handleImportedResources(ArrayList<ProjectResourceBean> resourceList) {

@@ -163,20 +163,20 @@ public class EventsManagerCreatorFragment extends BaseFragment {
             binding.eventsCreatorIcon.requestFocus();
             return;
         }
-        ArrayList<HashMap<String, Object>> arrayList;
+        ArrayList<HashMap<String, Object>> eventsList;
         String concat = FileUtil.getExternalStorageDir().concat("/.sketchware/data/system/events.json");
         if (FileUtil.isExistFile(concat)) {
             try {
-                arrayList = getGson().fromJson(FileUtil.readFile(concat), Helper.TYPE_MAP_LIST);
+                eventsList = getGson().fromJson(FileUtil.readFile(concat), Helper.TYPE_MAP_LIST);
             } catch (JsonSyntaxException e) {
-                arrayList = new ArrayList<>();
+                eventsList = new ArrayList<>();
             }
         } else {
-            arrayList = new ArrayList<>();
+            eventsList = new ArrayList<>();
         }
         HashMap<String, Object> eventData = new HashMap<>();
         if (isEdit) {
-            eventData = arrayList.get(figureP(_name));
+            eventData = eventsList.get(figureP(_name));
         }
         eventData.put("name", Helper.getText(binding.eventsCreatorEventname));
         eventData.put("var", Helper.getText(binding.eventsCreatorVarname));
@@ -191,9 +191,9 @@ public class EventsManagerCreatorFragment extends BaseFragment {
         eventData.put("code", Helper.getText(binding.eventsCreatorCode));
         eventData.put("headerSpec", Helper.getText(binding.eventsCreatorSpec));
         if (!isEdit) {
-            arrayList.add(eventData);
+            eventsList.add(eventData);
         }
-        FileUtil.writeFile(concat, getGson().toJson(arrayList));
+        FileUtil.writeFile(concat, getGson().toJson(eventsList));
         SketchwareUtil.toast(Helper.getResString(R.string.common_word_saved));
         getParentFragmentManager().popBackStack();
     }
