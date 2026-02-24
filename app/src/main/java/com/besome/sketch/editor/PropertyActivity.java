@@ -66,7 +66,7 @@ public class PropertyActivity extends BaseAppCompatActivity implements PropertyC
 
     public void l() {
         propertyItems.setProjectFileBean(projectFileBean);
-        propertyItems.a(sc_id, viewBean);
+        propertyItems.initializeProperties(sc_id, viewBean);
         content.addView(propertyItems);
     }
 
@@ -143,7 +143,7 @@ public class PropertyActivity extends BaseAppCompatActivity implements PropertyC
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                propertyItems.i(viewBean);
+                propertyItems.applyPropertyValues(viewBean);
                 o();
             }
         });
@@ -332,10 +332,10 @@ public class PropertyActivity extends BaseAppCompatActivity implements PropertyC
                             layoutPosition = getLayoutPosition();
                             notifyItemChanged(layoutPosition);
                             switch (propertyGroups.get(layoutPosition)) {
-                                case 1 -> propertyItems.d(viewBean);
-                                case 2 -> propertyItems.g(viewBean);
-                                case 3 -> propertyItems.h(viewBean);
-                                case 4 -> propertyItems.f(viewBean);
+                                case 1 -> propertyItems.addLayoutProperties(viewBean);
+                                case 2 -> propertyItems.addTextProperties(viewBean);
+                                case 3 -> propertyItems.addImageAndTransformProperties(viewBean);
+                                case 4 -> propertyItems.addInjectProperties(viewBean);
                             }
                         }
                     }

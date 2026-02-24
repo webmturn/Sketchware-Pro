@@ -160,12 +160,12 @@ public class ViewProperty extends LinearLayout implements PropertyChangedCallbac
                 propertyLayout.setVisibility(VISIBLE);
                 layoutPropertySeeAll.setVisibility(VISIBLE);
                 viewPropertyItems.setProjectFileBean(projectFile);
-                viewPropertyItems.a(sc_id, viewBean);
+                viewPropertyItems.initializeProperties(sc_id, viewBean);
                 a(viewBean);
                 viewEvent.setVisibility(GONE);
             } else if (selectedGroupId == 1) {
                 propertyLayout.setVisibility(VISIBLE);
-                viewPropertyItems.e(viewBean);
+                viewPropertyItems.setupRecentProperties(viewBean);
                 layoutPropertySeeAll.setVisibility(GONE);
             } else if (selectedGroupId == 2) {
                 propertyLayout.setVisibility(GONE);

@@ -226,7 +226,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
         addView(propertySubheader);
     }
 
-    public void a(String scId, ViewBean bean) {
+    public void initializeProperties(String scId, ViewBean bean) {
         sc_id = scId;
         viewBean = bean;
         RecentHistoryManager.getInstance().loadFromDatabase(viewBean.getClassInfo().getClassName());
@@ -238,10 +238,10 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
                 b("property_id", bean.id);
             }
 
-            f(bean);
-            d(bean);
-            g(bean);
-            h(bean);
+            addInjectProperties(bean);
+            addLayoutProperties(bean);
+            addTextProperties(bean);
+            addImageAndTransformProperties(bean);
             if (getOrientation() == LinearLayout.HORIZONTAL) {
                 b("property_id", bean.id);
             }
@@ -253,7 +253,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
         RecentHistoryManager.getInstance().addRecentItem(viewBean.getClassInfo().getClassName(), var1);
         if (viewBeanCallback != null) {
             ViewBean cloned = viewBean.clone();
-            i(viewBean);
+            applyPropertyValues(viewBean);
             if (!isEditMode) {
                 ViewHistoryManager.getInstance(sc_id).recordUpdate(projectFile.getXmlName(), cloned, viewBean.clone());
                 viewBeanCallback.a(viewBean);
@@ -404,7 +404,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
         addView(pairSelectorItem);
     }
 
-    public void d(ViewBean bean) {
+    public void addLayoutProperties(ViewBean bean) {
         if (getOrientation() == LinearLayout.VERTICAL) {
             a(getContext().getString(R.string.property_header_layout));
         }
@@ -474,7 +474,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
         addView(stringSelectorItem);
     }
 
-    public void e(ViewBean bean) {
+    public void setupRecentProperties(ViewBean bean) {
         viewBean = bean;
         removeAllViews();
         LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -545,7 +545,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
         addView(item);
     }
 
-    public void f(ViewBean bean) {
+    public void addInjectProperties(ViewBean bean) {
         if (!bean.id.equals("_fab")) {
             ClassInfo classInfo = bean.getClassInfo();
             a(bean, "property_inject");
@@ -616,7 +616,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
         }
     }
 
-    public void g(ViewBean bean) {
+    public void addTextProperties(ViewBean bean) {
         ClassInfo classInfo = bean.getClassInfo();
         if (classInfo.matchesType("TextView")) {
             if (getOrientation() == LinearLayout.VERTICAL) {
@@ -649,7 +649,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
         }
     }
 
-    public void h(ViewBean bean) {
+    public void addImageAndTransformProperties(ViewBean bean) {
         ClassInfo classInfo = bean.getClassInfo();
         if (getOrientation() == LinearLayout.VERTICAL) {
             if (classInfo.matchesType("ImageView")) {
@@ -686,7 +686,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
         a(bean, "property_scale_y");
     }
 
-    public void i(ViewBean bean) {
+    public void applyPropertyValues(ViewBean bean) {
         int childCount = getChildCount();
 
         for (int i = 0; i < childCount; ++i) {
