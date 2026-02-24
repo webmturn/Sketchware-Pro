@@ -403,21 +403,21 @@ public class ProjectDataStore {
   }
   
   public void readLogicData(BufferedReader reader) throws java.io.IOException {
-    HashMap<String, ArrayList<Pair<Integer, String>>> hashMap4 = this.variableMap;
-    if (hashMap4 != null)
-      hashMap4.clear(); 
-    hashMap4 = this.listMap;
-    if (hashMap4 != null)
-      hashMap4.clear(); 
-    HashMap<String, ArrayList<Pair<String, String>>> hashMap3 = this.moreBlockMap;
-    if (hashMap3 != null)
-      hashMap3.clear(); 
-    HashMap<String, ArrayList<ComponentBean>> hashMap2 = this.componentMap;
-    if (hashMap2 != null)
-      hashMap2.clear(); 
-    HashMap<String, ArrayList<EventBean>> hashMap1 = this.eventMap;
-    if (hashMap1 != null)
-      hashMap1.clear(); 
+    HashMap<String, ArrayList<Pair<Integer, String>>> tempVarMap = this.variableMap;
+    if (tempVarMap != null)
+      tempVarMap.clear(); 
+    tempVarMap = this.listMap;
+    if (tempVarMap != null)
+      tempVarMap.clear(); 
+    HashMap<String, ArrayList<Pair<String, String>>> tempMoreBlockMap = this.moreBlockMap;
+    if (tempMoreBlockMap != null)
+      tempMoreBlockMap.clear(); 
+    HashMap<String, ArrayList<ComponentBean>> tempCompMap = this.componentMap;
+    if (tempCompMap != null)
+      tempCompMap.clear(); 
+    HashMap<String, ArrayList<EventBean>> tempEventMap = this.eventMap;
+    if (tempEventMap != null)
+      tempEventMap.clear(); 
     HashMap<String, HashMap<String, ArrayList<BlockBean>>> hashMap = this.blockMap;
     if (hashMap != null)
       hashMap.clear(); 
@@ -554,8 +554,8 @@ public class ProjectDataStore {
   }
   
   public final void serializeLogicData(StringBuffer buffer) {
-    HashMap<String, ArrayList<Pair<Integer, String>>> hashMap4 = this.variableMap;
-    if (hashMap4 != null && hashMap4.size() > 0)
+    HashMap<String, ArrayList<Pair<Integer, String>>> tempVarMap = this.variableMap;
+    if (tempVarMap != null && tempVarMap.size() > 0)
       for (Map.Entry<String, ArrayList<Pair<Integer, String>>> entry : this.variableMap.entrySet()) {
         ArrayList arrayList = (ArrayList)entry.getValue();
         if (arrayList == null || arrayList.size() <= 0)
@@ -579,8 +579,8 @@ public class ProjectDataStore {
         buffer.append(str);
         buffer.append("\n");
       }  
-    hashMap4 = this.listMap;
-    if (hashMap4 != null && hashMap4.size() > 0)
+    tempVarMap = this.listMap;
+    if (tempVarMap != null && tempVarMap.size() > 0)
       for (Map.Entry<String, ArrayList<Pair<Integer, String>>> entry : this.listMap.entrySet()) {
         ArrayList arrayList = (ArrayList)entry.getValue();
         if (arrayList == null || arrayList.size() <= 0)
@@ -604,8 +604,8 @@ public class ProjectDataStore {
         buffer.append(str);
         buffer.append("\n");
       }  
-    HashMap<String, ArrayList<Pair<String, String>>> hashMap3 = this.moreBlockMap;
-    if (hashMap3 != null && hashMap3.size() > 0)
+    HashMap<String, ArrayList<Pair<String, String>>> tempMoreBlockMap = this.moreBlockMap;
+    if (tempMoreBlockMap != null && tempMoreBlockMap.size() > 0)
       for (Map.Entry<String, ArrayList<Pair<String, String>>> entry : this.moreBlockMap.entrySet()) {
         ArrayList arrayList = (ArrayList)entry.getValue();
         if (arrayList == null || arrayList.size() <= 0)
@@ -629,8 +629,8 @@ public class ProjectDataStore {
         buffer.append(str);
         buffer.append("\n");
       }  
-    HashMap<String, ArrayList<ComponentBean>> hashMap2 = this.componentMap;
-    if (hashMap2 != null && hashMap2.size() > 0)
+    HashMap<String, ArrayList<ComponentBean>> tempCompMap = this.componentMap;
+    if (tempCompMap != null && tempCompMap.size() > 0)
       for (Map.Entry<String, ArrayList<ComponentBean>> entry : this.componentMap.entrySet()) {
         ArrayList arrayList = (ArrayList)entry.getValue();
         if (arrayList == null || arrayList.size() <= 0)
@@ -653,8 +653,8 @@ public class ProjectDataStore {
         buffer.append(str);
         buffer.append("\n");
       }  
-    HashMap<String, ArrayList<EventBean>> hashMap1 = this.eventMap;
-    if (hashMap1 != null && hashMap1.size() > 0)
+    HashMap<String, ArrayList<EventBean>> tempEventMap = this.eventMap;
+    if (tempEventMap != null && tempEventMap.size() > 0)
       for (Map.Entry<String, ArrayList<EventBean>> entry : this.eventMap.entrySet()) {
         ArrayList arrayList = (ArrayList)entry.getValue();
         if (arrayList == null || arrayList.size() <= 0)
@@ -680,10 +680,10 @@ public class ProjectDataStore {
     if (hashMap != null && hashMap.size() > 0)
       for (Map.Entry<String, HashMap<String, ArrayList<BlockBean>>> entry : this.blockMap.entrySet()) {
         String str = (String)entry.getKey();
-        HashMap hashMap5 = (HashMap)entry.getValue();
-        if (hashMap5 == null || hashMap5.size() <= 0)
+        HashMap blockEntryMap = (HashMap)entry.getValue();
+        if (blockEntryMap == null || blockEntryMap.size() <= 0)
           continue; 
-        for (Map.Entry<String, ArrayList<BlockBean>> entry1 : ((HashMap<String, ArrayList<BlockBean>>)hashMap5).entrySet()) {
+        for (Map.Entry<String, ArrayList<BlockBean>> entry1 : ((HashMap<String, ArrayList<BlockBean>>)blockEntryMap).entrySet()) {
           ArrayList arrayList = (ArrayList)entry1.getValue();
           if (arrayList == null || arrayList.size() <= 0)
             continue; 
@@ -746,21 +746,21 @@ public class ProjectDataStore {
   }
   
   public void clearAllData() {
-    HashMap<String, ArrayList<ViewBean>> hashMap4 = this.viewMap;
-    if (hashMap4 != null)
-      hashMap4.clear(); 
-    HashMap<String, HashMap<String, ArrayList<BlockBean>>> hashMap3 = this.blockMap;
-    if (hashMap3 != null)
-      hashMap3.clear(); 
-    HashMap<String, ArrayList<Pair<Integer, String>>> hashMap2 = this.variableMap;
-    if (hashMap2 != null)
-      hashMap2.clear(); 
-    hashMap2 = this.listMap;
-    if (hashMap2 != null)
-      hashMap2.clear(); 
-    HashMap<String, ArrayList<ComponentBean>> hashMap1 = this.componentMap;
-    if (hashMap1 != null)
-      hashMap1.clear(); 
+    HashMap<String, ArrayList<ViewBean>> tempVarMap = this.viewMap;
+    if (tempVarMap != null)
+      tempVarMap.clear(); 
+    HashMap<String, HashMap<String, ArrayList<BlockBean>>> tempMoreBlockMap = this.blockMap;
+    if (tempMoreBlockMap != null)
+      tempMoreBlockMap.clear(); 
+    HashMap<String, ArrayList<Pair<Integer, String>>> tempCompMap = this.variableMap;
+    if (tempCompMap != null)
+      tempCompMap.clear(); 
+    tempCompMap = this.listMap;
+    if (tempCompMap != null)
+      tempCompMap.clear(); 
+    HashMap<String, ArrayList<ComponentBean>> tempEventMap = this.componentMap;
+    if (tempEventMap != null)
+      tempEventMap.clear(); 
     HashMap<String, ArrayList<EventBean>> hashMap = this.eventMap;
     if (hashMap != null)
       hashMap.clear(); 
@@ -826,9 +826,9 @@ public class ProjectDataStore {
   }
   
   public void readViewData(BufferedReader reader) throws java.io.IOException {
-    HashMap<String, ArrayList<ViewBean>> hashMap1 = this.viewMap;
-    if (hashMap1 != null)
-      hashMap1.clear(); 
+    HashMap<String, ArrayList<ViewBean>> tempEventMap = this.viewMap;
+    if (tempEventMap != null)
+      tempEventMap.clear(); 
     HashMap<String, ViewBean> hashMap = this.fabMap;
     if (hashMap != null)
       hashMap.clear(); 
@@ -879,8 +879,8 @@ public class ProjectDataStore {
   }
   
   public final void serializeViewData(StringBuffer buffer) {
-    HashMap<String, ArrayList<ViewBean>> hashMap1 = this.viewMap;
-    if (hashMap1 != null && hashMap1.size() > 0)
+    HashMap<String, ArrayList<ViewBean>> tempEventMap = this.viewMap;
+    if (tempEventMap != null && tempEventMap.size() > 0)
       for (Map.Entry<String, ArrayList<ViewBean>> entry : this.viewMap.entrySet()) {
         String str;
         ArrayList arrayList = (ArrayList)entry.getValue();
@@ -1120,19 +1120,19 @@ public class ProjectDataStore {
             if (hashMap != null) {
               i = j;
               if (hashMap.get(fileName) != null) {
-                HashMap hashMap1 = this.blockMap.get(fileName);
+                HashMap tempEventMap = this.blockMap.get(fileName);
                 StringBuilder stringBuilder = new StringBuilder();
                 stringBuilder.append(eventBean.targetId);
                 stringBuilder.append("_");
                 stringBuilder.append(eventBean.eventName);
                 i = j;
-                if (hashMap1.containsKey(stringBuilder.toString())) {
-                  hashMap1 = this.blockMap.get(fileName);
+                if (tempEventMap.containsKey(stringBuilder.toString())) {
+                  tempEventMap = this.blockMap.get(fileName);
                   stringBuilder = new StringBuilder();
                   stringBuilder.append(eventBean.targetId);
                   stringBuilder.append("_");
                   stringBuilder.append(eventBean.eventName);
-                  hashMap1.remove(stringBuilder.toString());
+                  tempEventMap.remove(stringBuilder.toString());
                   i = j;
                 } 
               } 
@@ -1591,19 +1591,19 @@ public class ProjectDataStore {
           if (hashMap != null) {
             i = j;
             if (hashMap.get(fileName) != null) {
-              HashMap hashMap1 = this.blockMap.get(fileName);
+              HashMap tempEventMap = this.blockMap.get(fileName);
               StringBuilder stringBuilder = new StringBuilder();
               stringBuilder.append(eventBean.targetId);
               stringBuilder.append("_");
               stringBuilder.append(eventBean.eventName);
               i = j;
-              if (hashMap1.containsKey(stringBuilder.toString())) {
-                hashMap1 = this.blockMap.get(fileName);
+              if (tempEventMap.containsKey(stringBuilder.toString())) {
+                tempEventMap = this.blockMap.get(fileName);
                 stringBuilder = new StringBuilder();
                 stringBuilder.append(eventBean.targetId);
                 stringBuilder.append("_");
                 stringBuilder.append(eventBean.eventName);
-                hashMap1.remove(stringBuilder.toString());
+                tempEventMap.remove(stringBuilder.toString());
                 i = j;
               } 
             } 
