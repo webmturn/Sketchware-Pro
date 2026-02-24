@@ -267,8 +267,8 @@ public class ProjectDataStore {
         } 
       } 
     } 
-    for (String str : blockKeysToRemove)
-      this.blockMap.remove(str); 
+    for (String key : blockKeysToRemove)
+      this.blockMap.remove(key); 
   }
   
   public void syncFonts(ResourceManager resourceManager) {

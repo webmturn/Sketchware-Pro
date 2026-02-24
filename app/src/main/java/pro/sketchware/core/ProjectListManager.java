@@ -220,8 +220,8 @@ public class ProjectListManager {
     }
 
     public static void syncAllProjects() {
-        for (String str : sharedPrefsHelper.getAll().keySet()) {
-            saveProject(str, sharedPrefsHelper.getMap(str));
+        for (String projectKey : sharedPrefsHelper.getAll().keySet()) {
+            saveProject(projectKey, sharedPrefsHelper.getMap(projectKey));
         }
         sharedPrefsHelper.clearAll();
     }

@@ -37,26 +37,26 @@ public class FormatUtil {
   }
   
   public static String formatFileSize(int index) {
-    String str;
+    String formatted;
     if (index < 0)
       return "0"; 
     float f = index;
     if (f >= 1024.0F && f < 1048576.0F) {
       f /= 1024.0F;
-      str = (new DecimalFormat("#.#KB")).format(f);
+      formatted = (new DecimalFormat("#.#KB")).format(f);
     } else if (f >= 1048576.0F && f < 1.07374182E9F) {
       f /= 1048576.0F;
-      str = (new DecimalFormat("#.#MB")).format(f);
+      formatted = (new DecimalFormat("#.#MB")).format(f);
     } else if (f >= 1.07374182E9F && f < 1.09951163E12F) {
       f /= 1.07374182E9F;
-      str = (new DecimalFormat("#.#GB")).format(f);
+      formatted = (new DecimalFormat("#.#GB")).format(f);
     } else {
       StringBuilder stringBuilder = new StringBuilder();
       stringBuilder.append(String.valueOf(index));
       stringBuilder.append("B");
-      str = stringBuilder.toString();
+      formatted = stringBuilder.toString();
     } 
-    return str;
+    return formatted;
   }
   
   public static String bytesToHex(byte[] data) {
@@ -94,21 +94,21 @@ public class FormatUtil {
   }
   
   public static String formatNumber(int index) {
-    String str;
+    String formatted;
     float f = index;
     if (f >= 1000.0F && f < 1000000.0F) {
       f /= 1000.0F;
-      str = (new DecimalFormat("#.#K")).format(f);
+      formatted = (new DecimalFormat("#.#K")).format(f);
     } else if (f >= 1000000.0F && f < 1.0E9F) {
       f /= 1000000.0F;
-      str = (new DecimalFormat("#.#M")).format(f);
+      formatted = (new DecimalFormat("#.#M")).format(f);
     } else if (f >= 1.0E9F && f < 1.0E12F) {
       f /= 1.0E9F;
-      str = (new DecimalFormat("#.#G")).format(f);
+      formatted = (new DecimalFormat("#.#G")).format(f);
     } else {
-      str = String.valueOf(index);
+      formatted = String.valueOf(index);
     } 
-    return str;
+    return formatted;
   }
   
   public static boolean isNumeric(String value) {

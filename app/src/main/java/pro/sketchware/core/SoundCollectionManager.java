@@ -105,7 +105,7 @@ public class SoundCollectionManager extends BaseCollectionManager {
     if (arrayList.size() <= 0) {
       ArrayList<String> failedNames = new ArrayList<>();
       for (ProjectResourceBean projectResourceBean : list) {
-        String str;
+        String resolvedPath;
         if (((SelectableBean)projectResourceBean).savedPos == 0) {
           StringBuilder stringBuilder = new StringBuilder();
           stringBuilder.append(SketchwarePaths.getImagesPath());
@@ -113,11 +113,11 @@ public class SoundCollectionManager extends BaseCollectionManager {
           stringBuilder.append(input);
           stringBuilder.append(File.separator);
           stringBuilder.append(projectResourceBean.resFullName);
-          str = stringBuilder.toString();
+          resolvedPath = stringBuilder.toString();
         } else {
-          str = projectResourceBean.resFullName;
+          resolvedPath = projectResourceBean.resFullName;
         } 
-        if (!this.fileUtil.exists(str))
+        if (!this.fileUtil.exists(resolvedPath))
           failedNames.add(projectResourceBean.resName); 
       } 
       if (failedNames.size() <= 0) {
@@ -168,8 +168,8 @@ public class SoundCollectionManager extends BaseCollectionManager {
           CompileException yy2 = new CompileException("fail_to_copy");
           yy2.setErrorDetails(failedNames);
           if (processedPaths.size() > 0)
-            for (String str : processedPaths)
-              this.fileUtil.deleteFileByPath(str);  
+            for (String path : processedPaths)
+              this.fileUtil.deleteFileByPath(path);  
           throw yy2;
         } 
         if (flag)
