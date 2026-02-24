@@ -1586,11 +1586,11 @@ public class ProjectDataStore {
         i = j;
         if (eventBean.targetId.equals(data)) {
           events.remove(eventBean);
-          HashMap<String, HashMap<String, ArrayList<BlockBean>>> hashMap = this.blockMap;
+          HashMap<String, HashMap<String, ArrayList<BlockBean>>> tempBlockMap = this.blockMap;
           i = j;
-          if (hashMap != null) {
+          if (tempBlockMap != null) {
             i = j;
-            if (hashMap.get(fileName) != null) {
+            if (tempBlockMap.get(fileName) != null) {
               HashMap tempEventMap = this.blockMap.get(fileName);
               StringBuilder eventKeyBuilder = new StringBuilder();
               eventKeyBuilder.append(eventBean.targetId);
