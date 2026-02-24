@@ -59,7 +59,7 @@ public class SoundImportFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         EncryptedFileUtil fileUtil = new EncryptedFileUtil();
         // create dirs if they don't exist
-        fileUtil.f(dirPath);
+        fileUtil.mkdirs(dirPath);
         if (savedInstanceState == null) {
             sc_id = requireActivity().getIntent().getStringExtra("sc_id");
             dirPath = requireActivity().getIntent().getStringExtra("dir_path");

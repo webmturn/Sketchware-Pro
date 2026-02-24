@@ -147,7 +147,7 @@ public class ImportFontFragment extends BaseFragment implements MenuProvider {
             if (resourceBean.isNew) {
                 try {
                     importFont(resourceBean.resFullName, getResourceFilePath(resourceBean));
-                    EncryptedFileUtil.c(resourceBean.resFullName);
+                    EncryptedFileUtil.deleteFileByPath(resourceBean.resFullName);
                 } catch (Exception e) {
                     Log.e("ImportFontFragment", "Failed to import font: " + resourceBean.resFullName, e);
                 }
@@ -213,7 +213,7 @@ public class ImportFontFragment extends BaseFragment implements MenuProvider {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         EncryptedFileUtil = new EncryptedFileUtil();
-        EncryptedFileUtil.f(dirPath);
+        EncryptedFileUtil.mkdirs(dirPath);
         projectResourceBeans = new ArrayList<>();
         if (savedInstanceState == null) {
             sc_id = requireActivity().getIntent().getStringExtra("sc_id");

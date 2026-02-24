@@ -21,7 +21,7 @@ public class LicenseActivity extends BaseAppCompatActivity {
 
         binding.toolbar.setNavigationOnClickListener(Helper.getBackPressedClickListener(this));
 
-        binding.licensesText.setText(new EncryptedFileUtil().b(getApplicationContext(), "oss.txt"));
+        binding.licensesText.setText(new EncryptedFileUtil().readAssetFile(getApplicationContext(), "oss.txt"));
         binding.licensesText.setAutoLinkMask(Linkify.WEB_URLS);
         binding.licensesText.setMovementMethod(LinkMovementMethod.getInstance());
     }

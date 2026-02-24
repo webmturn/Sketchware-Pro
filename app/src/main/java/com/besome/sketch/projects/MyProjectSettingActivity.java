@@ -259,10 +259,10 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
         super.onStart();
 
         EncryptedFileUtil oBVar = new EncryptedFileUtil();
-        oBVar.f(SketchwarePaths.getIconsPath() + File.separator + sc_id);
-        oBVar.f(SketchwarePaths.getImagesPath() + File.separator + sc_id);
-        oBVar.f(SketchwarePaths.getSoundsPath() + File.separator + sc_id);
-        oBVar.f(SketchwarePaths.getFontsResourcePath() + File.separator + sc_id);
+        oBVar.mkdirs(SketchwarePaths.getIconsPath() + File.separator + sc_id);
+        oBVar.mkdirs(SketchwarePaths.getImagesPath() + File.separator + sc_id);
+        oBVar.mkdirs(SketchwarePaths.getSoundsPath() + File.separator + sc_id);
+        oBVar.mkdirs(SketchwarePaths.getFontsResourcePath() + File.separator + sc_id);
         File o = getCustomIcon();
         if (!o.exists()) {
             try {
@@ -547,7 +547,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
                 ProjectListManager.saveProject(sc_id, data);
                 updateProjectResourcesContents(data);
                 SketchwarePaths.clearPreferenceData(getApplicationContext(), sc_id);
-                new EncryptedFileUtil().b(SketchwarePaths.getDataPath(sc_id));
+                new EncryptedFileUtil().deleteDirectoryByPath(SketchwarePaths.getDataPath(sc_id));
                 ProjectSettings projectSettings = new ProjectSettings(sc_id);
                 projectSettings.setValue(ProjectSettings.SETTING_NEW_XML_COMMAND, ProjectSettings.SETTING_GENERIC_VALUE_TRUE);
                 projectSettings.setValue(ProjectSettings.SETTING_ENABLE_VIEWBINDING, ProjectSettings.SETTING_GENERIC_VALUE_TRUE);

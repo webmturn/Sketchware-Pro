@@ -105,7 +105,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
     }
 
     private boolean doExtractedIconsExist() {
-        return new EncryptedFileUtil().e(SketchwarePaths.getExtractedIconPackStoreLocation());
+        return new EncryptedFileUtil().exists(SketchwarePaths.getExtractedIconPackStoreLocation());
     }
 
     private void extractIcons() {

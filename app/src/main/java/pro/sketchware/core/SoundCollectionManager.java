@@ -67,23 +67,23 @@ public class SoundCollectionManager extends BaseCollectionManager {
     String destPath = this.dataDirPath + java.io.File.separator + dataName;
     if (paramProjectResourceBean.savedPos == 1) {
       String srcPath = paramProjectResourceBean.resFullName;
-      if (!this.fileUtil.e(srcPath)) {
+      if (!this.fileUtil.exists(srcPath)) {
         throw new CompileException("file_no_exist");
       }
       try {
-        this.fileUtil.f(this.dataDirPath);
+        this.fileUtil.mkdirs(this.dataDirPath);
         BitmapUtil.processAndSaveBitmap(srcPath, destPath, paramProjectResourceBean.rotate, paramProjectResourceBean.flipHorizontal, paramProjectResourceBean.flipVertical);
       } catch (Exception e) {
         throw new CompileException("fail_to_copy");
       }
     } else {
       String srcPath = SketchwarePaths.getImagesPath() + java.io.File.separator + paramString + java.io.File.separator + paramProjectResourceBean.resFullName;
-      if (!this.fileUtil.e(srcPath)) {
+      if (!this.fileUtil.exists(srcPath)) {
         throw new CompileException("file_no_exist");
       }
       try {
-        this.fileUtil.f(this.dataDirPath);
-        this.fileUtil.a(srcPath, destPath);
+        this.fileUtil.mkdirs(this.dataDirPath);
+        this.fileUtil.copyFile(srcPath, destPath);
       } catch (Exception e) {
         throw new CompileException("fail_to_copy");
       }
@@ -117,7 +117,7 @@ public class SoundCollectionManager extends BaseCollectionManager {
         } else {
           str = projectResourceBean.resFullName;
         } 
-        if (!this.fileUtil.e(str))
+        if (!this.fileUtil.exists(str))
           arrayList1.add(projectResourceBean.resName); 
       } 
       if (arrayList1.size() <= 0) {
@@ -154,7 +154,7 @@ public class SoundCollectionManager extends BaseCollectionManager {
           stringBuilder.append(str1);
           String str3 = stringBuilder.toString();
           try {
-            this.fileUtil.f(this.dataDirPath);
+            this.fileUtil.mkdirs(this.dataDirPath);
             BitmapUtil.processAndSaveBitmap(str2, str3, projectResourceBean.rotate, projectResourceBean.flipHorizontal, projectResourceBean.flipVertical);
             ArrayList<CollectionBean> arrayList3 = this.collections;
             CollectionBean collectionBean = new CollectionBean(projectResourceBean.resName, str1);
@@ -169,7 +169,7 @@ public class SoundCollectionManager extends BaseCollectionManager {
           yy2.setErrorDetails(arrayList1);
           if (arrayList2.size() > 0)
             for (String str : arrayList2)
-              this.fileUtil.c(str);  
+              this.fileUtil.deleteFileByPath(str);  
           throw yy2;
         } 
         if (paramBoolean)
@@ -199,7 +199,7 @@ public class SoundCollectionManager extends BaseCollectionManager {
           stringBuilder.append(File.separator);
           stringBuilder.append(str);
           str = stringBuilder.toString();
-          this.fileUtil.c(str);
+          this.fileUtil.deleteFileByPath(str);
           this.collections.remove(j);
           i = j;
         } 

@@ -581,9 +581,9 @@ public class BuiltInLibraries {
                 receiver.onProgress("Extracting built-in libraries' DEX files...", 4);
             }
             /* Delete the directory */
-            fileUtil.b(dexsDirectoryPath);
+            fileUtil.deleteDirectoryByPath(dexsDirectoryPath);
             /* Create the directories */
-            fileUtil.f(dexsDirectoryPath);
+            fileUtil.mkdirs(dexsDirectoryPath);
             /* Extract dexs.zip to dexs/ */
             try { new ZipUtil().extractZipFile(dexsArchivePath, dexsDirectoryPath); } catch (java.io.FileNotFoundException e) { throw new RuntimeException(e); }
         }
@@ -592,9 +592,9 @@ public class BuiltInLibraries {
                 receiver.onProgress("Extracting built-in libraries' resources...", 5);
             }
             /* Delete the directory */
-            fileUtil.b(libsDirectoryPath);
+            fileUtil.deleteDirectoryByPath(libsDirectoryPath);
             /* Create the directories */
-            fileUtil.f(libsDirectoryPath);
+            fileUtil.mkdirs(libsDirectoryPath);
             /* Extract libs.zip to libs/ */
             try { new ZipUtil().extractZipFile(libsArchivePath, libsDirectoryPath); } catch (java.io.FileNotFoundException e) { throw new RuntimeException(e); }
         }
@@ -604,9 +604,9 @@ public class BuiltInLibraries {
                 receiver.onProgress("Extracting built-in signing keys...", 6);
             }
             /* Delete the directory */
-            fileUtil.b(testkeyDirectoryPath);
+            fileUtil.deleteDirectoryByPath(testkeyDirectoryPath);
             /* Create the directories */
-            fileUtil.f(testkeyDirectoryPath);
+            fileUtil.mkdirs(testkeyDirectoryPath);
             /* Extract testkey.zip to testkey/ */
             try { new ZipUtil().extractZipFile(testkeyArchivePath, testkeyDirectoryPath); } catch (java.io.FileNotFoundException e) { throw new RuntimeException(e); }
         }
@@ -620,7 +620,7 @@ public class BuiltInLibraries {
                 receiver.onProgress("Extracting built-in android.jar...", 7);
             }
             /* Delete android.jar */
-            new EncryptedFileUtil().c(EXTRACTED_COMPILE_ASSETS_PATH.getAbsolutePath() + File.separator + "android.jar");
+            new EncryptedFileUtil().deleteFileByPath(EXTRACTED_COMPILE_ASSETS_PATH.getAbsolutePath() + File.separator + "android.jar");
             /* Extract android.jar.zip to android.jar */
             try { new ZipUtil().extractZipFile(androidJarPath, EXTRACTED_COMPILE_ASSETS_PATH.getAbsolutePath()); } catch (java.io.FileNotFoundException e) { throw new RuntimeException(e); }
         }

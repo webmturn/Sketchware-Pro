@@ -180,7 +180,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
         imageRotationDegrees = 0;
         imageScaleY = 1;
         imageScaleX = 1;
-        new EncryptedFileUtil().f(dir_path); // java.io.File.mkdirs
+        new EncryptedFileUtil().mkdirs(dir_path); // java.io.File.mkdirs
         images = new ArrayList<>();
     }
 

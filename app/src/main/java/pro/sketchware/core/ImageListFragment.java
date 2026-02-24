@@ -292,7 +292,7 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
             images = savedInstanceState.getParcelableArrayList("images");
         }
         // mkdirs
-        new EncryptedFileUtil().f(projectImagesDirectory);
+        new EncryptedFileUtil().mkdirs(projectImagesDirectory);
         adapter.notifyDataSetChanged();
         updateGuideVisibility();
     }

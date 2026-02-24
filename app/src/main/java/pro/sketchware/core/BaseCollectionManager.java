@@ -34,14 +34,14 @@ public abstract class BaseCollectionManager {
     this.collections = new ArrayList<CollectionBean>();
     java.io.BufferedReader reader = null;
     try {
-      String content = this.fileUtil.g(this.collectionFilePath);
+      String content = this.fileUtil.readFile(this.collectionFilePath);
       reader = new java.io.BufferedReader(new java.io.StringReader(content));
       String line;
       while ((line = reader.readLine()) != null) {
         if (line.length() <= 0) continue;
         CollectionBean bean = this.gson.fromJson(line, CollectionBean.class);
         String path = this.dataDirPath + java.io.File.separator + bean.data;
-        if (this.fileUtil.e(path)) {
+        if (this.fileUtil.exists(path)) {
           this.collections.add(bean);
         }
       }
@@ -69,8 +69,8 @@ public abstract class BaseCollectionManager {
       stringBuilder.append("\n");
     } 
     try {
-      this.fileUtil.b(this.collectionFilePath);
-      this.fileUtil.b(this.collectionFilePath, stringBuilder.toString());
+      this.fileUtil.deleteFileByPath(this.collectionFilePath);
+      this.fileUtil.writeText(this.collectionFilePath, stringBuilder.toString());
     } catch (Exception exception) {
       exception.printStackTrace();
     } 

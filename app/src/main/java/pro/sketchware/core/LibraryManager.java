@@ -36,7 +36,7 @@ public class LibraryManager {
     stringBuilder.append(File.separator);
     stringBuilder.append("library");
     str = stringBuilder.toString();
-    this.fileUtil.c(str);
+    this.fileUtil.deleteFileByPath(str);
   }
   
   public void a(ProjectLibraryBean paramProjectLibraryBean) {
@@ -87,8 +87,8 @@ public class LibraryManager {
     StringBuffer stringBuffer = new StringBuffer();
     a(stringBuffer);
     try {
-      byte[] arrayOfByte = this.fileUtil.d(stringBuffer.toString());
-      this.fileUtil.a(paramString, arrayOfByte);
+      byte[] arrayOfByte = this.fileUtil.encryptString(stringBuffer.toString());
+      this.fileUtil.writeBytes(paramString, arrayOfByte);
     } catch (Exception exception) {
       exception.printStackTrace();
     } 
@@ -190,7 +190,7 @@ public class LibraryManager {
     stringBuilder.append(File.separator);
     stringBuilder.append("library");
     String str2 = stringBuilder.toString();
-    return this.fileUtil.e(str2);
+    return this.fileUtil.exists(str2);
   }
   
   public void h() {
@@ -203,8 +203,8 @@ public class LibraryManager {
     str1 = stringBuilder1.toString();
     BufferedReader bufferedReader = null;
     try {
-      byte[] arrayOfByte = this.fileUtil.h(str1);
-      String str = this.fileUtil.a(arrayOfByte);
+      byte[] arrayOfByte = this.fileUtil.readFileBytes(str1);
+      String str = this.fileUtil.decryptToString(arrayOfByte);
       bufferedReader = new BufferedReader(new StringReader(str));
       a(bufferedReader);
     } catch (Exception exception) {
@@ -222,12 +222,12 @@ public class LibraryManager {
     stringBuilder1.append(File.separator);
     stringBuilder1.append("library");
     str1 = stringBuilder1.toString();
-    if (!this.fileUtil.e(str1))
+    if (!this.fileUtil.exists(str1))
       return; 
     BufferedReader bufferedReader = null;
     try {
-      byte[] arrayOfByte = this.fileUtil.h(str1);
-      String str = this.fileUtil.a(arrayOfByte);
+      byte[] arrayOfByte = this.fileUtil.readFileBytes(str1);
+      String str = this.fileUtil.decryptToString(arrayOfByte);
       bufferedReader = new BufferedReader(new StringReader(str));
       a(bufferedReader);
     } catch (Exception exception) {

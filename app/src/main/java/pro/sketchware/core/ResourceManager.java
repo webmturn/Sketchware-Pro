@@ -113,7 +113,7 @@ public class ResourceManager {
         stringBuilder2.append(projectResourceBean.resFullName.toLowerCase());
         String str1 = stringBuilder2.toString();
         try {
-          this.fileUtil.a(str2, str1);
+          this.fileUtil.copyFile(str2, str1);
         } catch (Exception exception) {
           exception.printStackTrace();
         } 
@@ -209,7 +209,7 @@ public class ResourceManager {
         stringBuilder2.append(projectResourceBean.resFullName.toLowerCase());
         String str1 = stringBuilder2.toString();
         try {
-          this.fileUtil.a(str2, str1);
+          this.fileUtil.copyFile(str2, str1);
         } catch (Exception exception) {
           exception.printStackTrace();
         } 
@@ -257,7 +257,7 @@ public class ResourceManager {
         stringBuilder2.append(projectResourceBean.resFullName.toLowerCase());
         String str1 = stringBuilder2.toString();
         try {
-          this.fileUtil.a(str2, str1);
+          this.fileUtil.copyFile(str2, str1);
         } catch (Exception exception) {
           exception.printStackTrace();
         } 
@@ -313,11 +313,11 @@ public class ResourceManager {
   public void e() {
     String str = SketchwarePaths.getTempFontsPath();
     try {
-      this.fileUtil.b(str);
+      this.fileUtil.deleteDirectoryByPath(str);
       EncryptedFileUtil oB1 = this.fileUtil;
       File file1 = new File(this.fontDirPath);
       File file2 = new File(str);
-      oB1.a(file1, file2);
+      oB1.copyDirectory(file1, file2);
     } catch (Exception exception) {
       exception.printStackTrace();
     } 
@@ -341,11 +341,11 @@ public class ResourceManager {
   public void f() {
     String str = SketchwarePaths.getTempImagesPath();
     try {
-      this.fileUtil.b(str);
+      this.fileUtil.deleteDirectoryByPath(str);
       EncryptedFileUtil oB1 = this.fileUtil;
       File file1 = new File(this.imageDirPath);
       File file2 = new File(str);
-      oB1.a(file1, file2);
+      oB1.copyDirectory(file1, file2);
     } catch (Exception exception) {
       exception.printStackTrace();
     } 
@@ -362,11 +362,11 @@ public class ResourceManager {
   public void g() {
     String str = SketchwarePaths.getTempSoundsPath();
     try {
-      this.fileUtil.b(str);
+      this.fileUtil.deleteDirectoryByPath(str);
       EncryptedFileUtil oB1 = this.fileUtil;
       File file1 = new File(this.soundDirPath);
       File file2 = new File(str);
-      oB1.a(file1, file2);
+      oB1.copyDirectory(file1, file2);
     } catch (Exception exception) {
       exception.printStackTrace();
     } 
@@ -387,9 +387,9 @@ public class ResourceManager {
     String str2 = SketchwarePaths.getTempSoundsPath();
     String str3 = SketchwarePaths.getTempFontsPath();
     try {
-      this.fileUtil.b(str1);
-      this.fileUtil.b(str2);
-      this.fileUtil.b(str3);
+      this.fileUtil.deleteDirectoryByPath(str1);
+      this.fileUtil.deleteDirectoryByPath(str2);
+      this.fileUtil.deleteDirectoryByPath(str3);
     } catch (Exception exception) {
       exception.printStackTrace();
     } 
@@ -417,7 +417,7 @@ public class ResourceManager {
     stringBuilder.append(File.separator);
     stringBuilder.append("resource");
     str = stringBuilder.toString();
-    this.fileUtil.c(str);
+    this.fileUtil.deleteFileByPath(str);
   }
   
   public ProjectResourceBean j(String paramString) {
@@ -498,7 +498,7 @@ public class ResourceManager {
     stringBuilder.append(File.separator);
     stringBuilder.append("resource");
     str = stringBuilder.toString();
-    return this.fileUtil.e(str);
+    return this.fileUtil.exists(str);
   }
   
   public void r() {
@@ -513,8 +513,8 @@ public class ResourceManager {
     String str2 = stringBuilder.toString();
     BufferedReader bufferedReader = null;
     try {
-      byte[] arrayOfByte = this.fileUtil.h(str2);
-      String str = this.fileUtil.a(arrayOfByte);
+      byte[] arrayOfByte = this.fileUtil.readFileBytes(str2);
+      String str = this.fileUtil.decryptToString(arrayOfByte);
       bufferedReader = new BufferedReader(new StringReader(str));
       a(bufferedReader);
     } catch (Exception exception) {
@@ -534,12 +534,12 @@ public class ResourceManager {
     stringBuilder1.append(File.separator);
     stringBuilder1.append("resource");
     str1 = stringBuilder1.toString();
-    if (!this.fileUtil.e(str1))
+    if (!this.fileUtil.exists(str1))
       return; 
     BufferedReader bufferedReader = null;
     try {
-      byte[] arrayOfByte = this.fileUtil.h(str1);
-      String str = this.fileUtil.a(arrayOfByte);
+      byte[] arrayOfByte = this.fileUtil.readFileBytes(str1);
+      String str = this.fileUtil.decryptToString(arrayOfByte);
       bufferedReader = new BufferedReader(new StringReader(str));
       a(bufferedReader);
     } catch (Exception exception) {
@@ -564,11 +564,11 @@ public class ResourceManager {
     try {
       EncryptedFileUtil oB1 = this.fileUtil;
       File file2 = new File(this.fontDirPath);
-      oB1.a(file2);
+      oB1.deleteDirectory(file2);
       oB1 = this.fileUtil;
       file2 = new File(str);
       File file1 = new File(this.fontDirPath);
-      oB1.a(file2, file1);
+      oB1.copyDirectory(file2, file1);
     } catch (Exception exception) {
       exception.printStackTrace();
     } 
@@ -579,11 +579,11 @@ public class ResourceManager {
     try {
       EncryptedFileUtil oB1 = this.fileUtil;
       File file2 = new File(this.imageDirPath);
-      oB1.a(file2);
+      oB1.deleteDirectory(file2);
       oB1 = this.fileUtil;
       file2 = new File(str);
       File file1 = new File(this.imageDirPath);
-      oB1.a(file2, file1);
+      oB1.copyDirectory(file2, file1);
     } catch (Exception exception) {
       exception.printStackTrace();
     } 
@@ -594,11 +594,11 @@ public class ResourceManager {
     try {
       EncryptedFileUtil oB1 = this.fileUtil;
       File file2 = new File(this.soundDirPath);
-      oB1.a(file2);
+      oB1.deleteDirectory(file2);
       oB1 = this.fileUtil;
       file2 = new File(str);
       File file1 = new File(this.soundDirPath);
-      oB1.a(file2, file1);
+      oB1.copyDirectory(file2, file1);
     } catch (Exception exception) {
       exception.printStackTrace();
     } 
@@ -614,8 +614,8 @@ public class ResourceManager {
     StringBuffer stringBuffer = new StringBuffer();
     a(stringBuffer);
     try {
-      byte[] arrayOfByte = this.fileUtil.d(stringBuffer.toString());
-      this.fileUtil.a(str2, arrayOfByte);
+      byte[] arrayOfByte = this.fileUtil.encryptString(stringBuffer.toString());
+      this.fileUtil.writeBytes(str2, arrayOfByte);
     } catch (Exception exception) {
       exception.printStackTrace();
     } 
@@ -632,8 +632,8 @@ public class ResourceManager {
     StringBuffer stringBuffer = new StringBuffer();
     a(stringBuffer);
     try {
-      byte[] arrayOfByte = this.fileUtil.d(stringBuffer.toString());
-      this.fileUtil.a(str, arrayOfByte);
+      byte[] arrayOfByte = this.fileUtil.encryptString(stringBuffer.toString());
+      this.fileUtil.writeBytes(str, arrayOfByte);
     } catch (Exception exception) {
       exception.printStackTrace();
     } 

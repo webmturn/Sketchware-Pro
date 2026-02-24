@@ -250,7 +250,7 @@ public class ProjectFilePaths {
     public void deleteValuesV21Directory() {
         File file = new File(resDirectoryPath + File.separator + "values-v21");
         if (file.exists()) {
-            fileUtil.a(file);
+            fileUtil.deleteDirectory(file);
         }
     }
 
@@ -259,15 +259,15 @@ public class ProjectFilePaths {
      * {@link ProjectFilePaths#layoutFilesPath}, {@link ProjectFilePaths#importedSoundsPath}, {@link ProjectFilePaths#assetsPath}, and {@link ProjectFilePaths#fontsPath}.
      */
     public void createBuildDirectories(Context context) {
-        fileUtil.f(binDirectoryPath);
-        fileUtil.f(compiledClassesPath);
-        fileUtil.f(rJavaDirectoryPath);
-        fileUtil.f(javaFilesPath);
-        fileUtil.f(resDirectoryPath);
-        fileUtil.f(layoutFilesPath);
-        fileUtil.f(importedSoundsPath);
-        fileUtil.f(assetsPath);
-        fileUtil.f(fontsPath);
+        fileUtil.mkdirs(binDirectoryPath);
+        fileUtil.mkdirs(compiledClassesPath);
+        fileUtil.mkdirs(rJavaDirectoryPath);
+        fileUtil.mkdirs(javaFilesPath);
+        fileUtil.mkdirs(resDirectoryPath);
+        fileUtil.mkdirs(layoutFilesPath);
+        fileUtil.mkdirs(importedSoundsPath);
+        fileUtil.mkdirs(assetsPath);
+        fileUtil.mkdirs(fontsPath);
     }
 
     /**
@@ -275,9 +275,9 @@ public class ProjectFilePaths {
      * {@link ProjectFilePaths#binDirectoryPath}, {@link ProjectFilePaths#compiledClassesPath} and {@link ProjectFilePaths#rJavaDirectoryPath}.
      */
     public void prepareBuildDirectories() {
-        fileUtil.f(binDirectoryPath);
-        fileUtil.f(compiledClassesPath);
-        fileUtil.f(rJavaDirectoryPath);
+        fileUtil.mkdirs(binDirectoryPath);
+        fileUtil.mkdirs(compiledClassesPath);
+        fileUtil.mkdirs(rJavaDirectoryPath);
     }
 
     /**
@@ -285,20 +285,20 @@ public class ProjectFilePaths {
      * logs all files and folders which get deleted.
      */
     public void cleanBuildCache() {
-        fileUtil.b(binDirectoryPath);
-        fileUtil.b(rJavaDirectoryPath);
+        fileUtil.deleteDirectoryByPath(binDirectoryPath);
+        fileUtil.deleteDirectoryByPath(rJavaDirectoryPath);
     }
 
     /**
      * Generates top-level build.gradle, build.gradle for module ':app' and settings.gradle files.
      */
     public void generateGradleFiles() {
-        fileUtil.b(projectMyscPath + File.separator + "app" + File.separator + "build.gradle",
+        fileUtil.writeText(projectMyscPath + File.separator + "app" + File.separator + "build.gradle",
                 ComponentCodeGenerator.getBuildGradleString(VAR_DEFAULT_TARGET_SDK_VERSION, VAR_DEFAULT_MIN_SDK_VERSION, projectSettings.getValue(ProjectSettings.SETTING_TARGET_SDK_VERSION, String.valueOf(VAR_DEFAULT_TARGET_SDK_VERSION)), buildConfig, projectSettings.getValue(ProjectSettings.SETTING_ENABLE_VIEWBINDING, ProjectSettings.SETTING_GENERIC_VALUE_FALSE).equals(ProjectSettings.SETTING_GENERIC_VALUE_TRUE)));
-        fileUtil.b(projectMyscPath + File.separator + "settings.gradle", ComponentCodeGenerator.getSettingsGradle());
-        fileUtil.b(projectMyscPath + File.separator + "build.gradle", ComponentCodeGenerator.getTopLevelBuildGradle("8.12.0", "4.4.3"));
+        fileUtil.writeText(projectMyscPath + File.separator + "settings.gradle", ComponentCodeGenerator.getSettingsGradle());
+        fileUtil.writeText(projectMyscPath + File.separator + "build.gradle", ComponentCodeGenerator.getTopLevelBuildGradle("8.12.0", "4.4.3"));
 
-        fileUtil.b(projectMyscPath + File.separator + "gradle.properties", """
+        fileUtil.writeText(projectMyscPath + File.separator + "gradle.properties", """
                 android.enableR8.fullMode=false
                 android.enableJetifier=true
                 android.useAndroidX=true
@@ -321,7 +321,7 @@ public class ProjectFilePaths {
      */
     public void copyAppIcon(String iconPath) {
         try {
-            fileUtil.a(iconPath, resDirectoryPath + File.separator + "mipmap-xhdpi" + File.separator + "ic_launcher.png");
+            fileUtil.copyFile(iconPath, resDirectoryPath + File.separator + "mipmap-xhdpi" + File.separator + "ic_launcher.png");
         } catch (Exception e2) {
             Log.e("ProjectFilePaths", e2.getMessage(), e2);
         }
@@ -345,7 +345,7 @@ public class ProjectFilePaths {
 
     public void createLauncherIconXml(String content) {
         try {
-            fileUtil.b(resDirectoryPath + File.separator + "mipmap-anydpi-v26" + File.separator + "ic_launcher.xml", content);
+            fileUtil.writeText(resDirectoryPath + File.separator + "mipmap-anydpi-v26" + File.separator + "ic_launcher.xml", content);
         } catch (Exception e2) {
             Log.e("ProjectFilePaths", e2.getMessage(), e2);
         }
@@ -363,12 +363,12 @@ public class ProjectFilePaths {
 
         File debugActivityFile = new File(javaDir, "DebugActivity.java");
         if (!debugActivityFile.exists()) {
-            String debugActivityContent = fileUtil.b(
+            String debugActivityContent = fileUtil.readAssetFile(
                     context,
                     "debug" + File.separator + "DebugActivity.java"
             );
             debugActivityContent = PACKAGE_PLACEHOLDER_PATTERN.matcher(debugActivityContent).replaceAll(packageName);
-            fileUtil.b(javaFilesPath + File.separator + packageNameAsFolders + File.separator + "DebugActivity.java", debugActivityContent);
+            fileUtil.writeText(javaFilesPath + File.separator + packageNameAsFolders + File.separator + "DebugActivity.java", debugActivityContent);
         }
 
         String customApplicationClassName = new ProjectSettings(sc_id).getValue(
@@ -391,7 +391,7 @@ public class ProjectFilePaths {
 
         if (!targetApplicationFile.exists()) {
             boolean applyMultiDex = projectSettings.getMinSdkVersion() < 21;
-            String sketchApplicationFileContent = fileUtil.b(
+            String sketchApplicationFileContent = fileUtil.readAssetFile(
                     context,
                     "debug" + File.separator + "SketchApplication.java"
             );
@@ -429,7 +429,7 @@ public class ProjectFilePaths {
                         "import android.util.Log;", imports);
             }
 
-            fileUtil.b(javaFilesPath + File.separator
+            fileUtil.writeText(javaFilesPath + File.separator
                     + customClassPackageAsFolders + File.separator
                     + customClassSimpleName + ".java", sketchApplicationFileContent);
         }
@@ -437,7 +437,7 @@ public class ProjectFilePaths {
         if (logcatEnabled) {
             File sketchLoggerFile = new File(javaDir, "SketchLogger.java");
             if (!sketchLoggerFile.exists()) {
-                String sketchLoggerFileContent = fileUtil.b(
+                String sketchLoggerFileContent = fileUtil.readAssetFile(
                         context,
                         "debug" + File.separator + "SketchLogger.java"
                 );
@@ -448,7 +448,7 @@ public class ProjectFilePaths {
 
                 sketchLoggerFileContent = sketchLoggerFileContent.replace("<?class_name?>", customClassSimpleName);
 
-                fileUtil.b(javaFilesPath + File.separator + packageNameAsFolders + File.separator + "SketchLogger.java",
+                fileUtil.writeText(javaFilesPath + File.separator + packageNameAsFolders + File.separator + "SketchLogger.java",
                         sketchLoggerFileContent);
             }
         }
@@ -462,15 +462,15 @@ public class ProjectFilePaths {
      */
     public void writeProjectFile(String fileName, String fileContent) {
         if (fileName.endsWith("java")) {
-            fileUtil.b(javaFilesPath + File.separator + packageNameAsFolders + File.separator + fileName, fileContent);
+            fileUtil.writeText(javaFilesPath + File.separator + packageNameAsFolders + File.separator + fileName, fileContent);
         } else if (fileName.equals("AndroidManifest.xml")) {
-            fileUtil.b(androidManifestPath, fileContent);
+            fileUtil.writeText(androidManifestPath, fileContent);
         } else if (fileName.equals("colors.xml") || fileName.equals("styles.xml") || fileName.equals("strings.xml")) {
-            fileUtil.b(resDirectoryPath + File.separator + "values" + File.separator + fileName, fileContent);
+            fileUtil.writeText(resDirectoryPath + File.separator + "values" + File.separator + fileName, fileContent);
         } else if (fileName.equals("provider_paths.xml")) {
-            fileUtil.b(resDirectoryPath + File.separator + "xml" + File.separator + fileName, fileContent);
+            fileUtil.writeText(resDirectoryPath + File.separator + "xml" + File.separator + fileName, fileContent);
         } else {
-            fileUtil.b(layoutFilesPath + File.separator + fileName, fileContent);
+            fileUtil.writeText(layoutFilesPath + File.separator + fileName, fileContent);
         }
     }
 
@@ -727,7 +727,7 @@ public class ProjectFilePaths {
                 mx.addString("google_maps_key", projectLibraryManager.e().data, false);
             }
             String filePath = "values/secrets.xml";
-            fileUtil.b(resDirectoryPath + File.separator + filePath,
+            fileUtil.writeText(resDirectoryPath + File.separator + filePath,
                     CommandBlock.applyCommands(filePath, mx.toCode()));
         }
         generateGradleFiles();

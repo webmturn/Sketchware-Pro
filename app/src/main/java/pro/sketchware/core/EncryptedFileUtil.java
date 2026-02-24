@@ -23,7 +23,7 @@ public class EncryptedFileUtil {
     this.encryptionEnabled = paramBoolean;
   }
   
-  public long a(Context paramContext, String paramString) {
+  public long getAssetFileSize(Context paramContext, String paramString) {
     long l;
     InputStream inputStream1 = null;
     InputStream inputStream2 = null;
@@ -53,15 +53,15 @@ public class EncryptedFileUtil {
     return l;
   }
   
-  public String a(byte[] paramArrayOfbyte) throws Exception {
-    return new String(b(paramArrayOfbyte), "UTF-8");
+  public String decryptToString(byte[] paramArrayOfbyte) throws Exception {
+    return new String(decrypt(paramArrayOfbyte), "UTF-8");
   }
   
-  public void a(Context paramContext, String paramString1, String paramString2) {
+  public void copyAssetFile(Context paramContext, String paramString1, String paramString2) {
     android.content.res.AssetManager assets = paramContext.getAssets();
     int sepIdx = paramString2.lastIndexOf(File.separator);
     if (sepIdx > 0) {
-      f(paramString2.substring(0, sepIdx));
+      mkdirs(paramString2.substring(0, sepIdx));
     }
     java.io.InputStream is = null;
     java.io.FileOutputStream fos = null;
@@ -83,18 +83,18 @@ public class EncryptedFileUtil {
     }
   }
   
-  public void a(File paramFile) {
-    a(paramFile, true);
+  public void deleteDirectory(File paramFile) {
+    deleteRecursive(paramFile, true);
   }
   
-  public void a(File paramFile1, File paramFile2) throws IOException {
+  public void copyDirectory(File paramFile1, File paramFile2) throws IOException {
     StringBuilder stringBuilder;
     if (paramFile1.isDirectory()) {
       if (paramFile2.exists() || paramFile2.mkdirs()) {
         String[] arrayOfString = paramFile1.list();
         if (arrayOfString != null)
           for (int b = 0; b < arrayOfString.length; b++)
-            a(new File(paramFile1, arrayOfString[b]), new File(paramFile2, arrayOfString[b]));  
+            copyDirectory(new File(paramFile1, arrayOfString[b]), new File(paramFile2, arrayOfString[b]));  
         return;
       } 
       stringBuilder = new StringBuilder();
@@ -102,10 +102,10 @@ public class EncryptedFileUtil {
       stringBuilder.append(paramFile2.getAbsolutePath());
       throw new IOException(stringBuilder.toString());
     } 
-    a(paramFile1.getAbsolutePath(), paramFile2.getAbsolutePath());
+    copyFile(paramFile1.getAbsolutePath(), paramFile2.getAbsolutePath());
   }
   
-  public void a(File paramFile, boolean paramBoolean) {
+  public void deleteRecursive(File paramFile, boolean paramBoolean) {
     if (paramFile.exists()) {
       File[] arrayOfFile = paramFile.listFiles();
       if (arrayOfFile != null) {
@@ -113,7 +113,7 @@ public class EncryptedFileUtil {
         for (int b = 0; b < i; b++) {
           File file = arrayOfFile[b];
           if (file.isDirectory())
-            a(file); 
+            deleteDirectory(file); 
           if (file.isFile())
             if (file.delete()) {
               if (this.encryptionEnabled) {
@@ -137,12 +137,12 @@ public class EncryptedFileUtil {
     } 
   }
   
-  public void a(String paramString) {
-    b(paramString);
-    f(paramString);
+  public void recreateDirectory(String paramString) {
+    deleteDirectoryByPath(paramString);
+    mkdirs(paramString);
   }
   
-  public void a(String paramString1, String paramString2) throws IOException {
+  public void copyFile(String paramString1, String paramString2) throws IOException {
     FileInputStream fis = null;
     FileOutputStream fos = null;
     try {
@@ -162,14 +162,14 @@ public class EncryptedFileUtil {
     }
   }
   
-  public void a(String paramString, boolean paramBoolean) {
-    a(new File(paramString), paramBoolean);
+  public void deleteRecursiveByPath(String paramString, boolean paramBoolean) {
+    deleteRecursive(new File(paramString), paramBoolean);
   }
   
-  public void a(String paramString, byte[] paramArrayOfbyte) {
+  public void writeBytes(String paramString, byte[] paramArrayOfbyte) {
     int i = paramString.lastIndexOf(File.separator);
     if (i > 0)
-      f(paramString.substring(0, i)); 
+      mkdirs(paramString.substring(0, i)); 
     File file = new File(paramString);
     if (!file.exists())
       try { file.createNewFile(); } catch (IOException e) { e.printStackTrace(); } 
@@ -184,7 +184,7 @@ public class EncryptedFileUtil {
     }
   }
   
-  public String b(Context paramContext, String paramString) {
+  public String readAssetFile(Context paramContext, String paramString) {
     StringBuilder sb = new StringBuilder();
     java.io.BufferedReader reader = null;
     try {
@@ -203,18 +203,18 @@ public class EncryptedFileUtil {
     return sb.toString();
   }
   
-  public void b(File paramFile) {
+  public void deleteFile(File paramFile) {
     paramFile.delete();
   }
   
-  public void b(String paramString) {
-    a(paramString, true);
+  public void deleteDirectoryByPath(String paramString) {
+    deleteRecursiveByPath(paramString, true);
   }
   
-  public void b(String paramString1, String paramString2) {
+  public void writeText(String paramString1, String paramString2) {
     int i = paramString1.lastIndexOf(File.separator);
     if (i > 0)
-      f(paramString1.substring(0, i)); 
+      mkdirs(paramString1.substring(0, i)); 
     File file = new File(paramString1);
     if (!file.exists())
       try { file.createNewFile(); } catch (IOException e) { e.printStackTrace(); } 
@@ -229,14 +229,14 @@ public class EncryptedFileUtil {
     }
   }
   
-  public byte[] b(byte[] paramArrayOfbyte) throws Exception {
+  public byte[] decrypt(byte[] paramArrayOfbyte) throws Exception {
     Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
     byte[] arrayOfByte = "sketchwaresecure".getBytes();
     cipher.init(2, new SecretKeySpec(arrayOfByte, "AES"), new IvParameterSpec(arrayOfByte));
     return cipher.doFinal(paramArrayOfbyte);
   }
   
-  public String c(File paramFile) {
+  public String readFileContent(File paramFile) {
     StringBuilder sb = new StringBuilder();
     java.io.FileReader reader = null;
     try {
@@ -253,34 +253,34 @@ public class EncryptedFileUtil {
     return sb.toString();
   }
   
-  public void c(String paramString) {
-    b(new File(paramString));
+  public void deleteFileByPath(String paramString) {
+    deleteFile(new File(paramString));
   }
   
-  public byte[] c(byte[] paramArrayOfbyte) throws Exception {
+  public byte[] encrypt(byte[] paramArrayOfbyte) throws Exception {
     Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
     byte[] arrayOfByte = "sketchwaresecure".getBytes();
     cipher.init(1, new SecretKeySpec(arrayOfByte, "AES"), new IvParameterSpec(arrayOfByte));
     return cipher.doFinal(paramArrayOfbyte);
   }
   
-  public byte[] d(String paramString) throws Exception {
-    return c(paramString.getBytes("UTF-8"));
+  public byte[] encryptString(String paramString) throws Exception {
+    return encrypt(paramString.getBytes("UTF-8"));
   }
   
-  public boolean e(String paramString) {
+  public boolean exists(String paramString) {
     return (new File(paramString)).exists();
   }
   
-  public boolean f(String paramString) {
-    return !e(paramString) ? (new File(paramString)).mkdirs() : false;
+  public boolean mkdirs(String paramString) {
+    return !exists(paramString) ? (new File(paramString)).mkdirs() : false;
   }
   
-  public String g(String paramString) {
-    return c(new File(paramString));
+  public String readFile(String paramString) {
+    return readFileContent(new File(paramString));
   }
   
-  public byte[] h(String paramString) {
+  public byte[] readFileBytes(String paramString) {
     FileInputStream fis = null;
     try {
       fis = new FileInputStream(new File(paramString));

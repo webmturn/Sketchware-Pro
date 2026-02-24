@@ -380,7 +380,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
                         if (!ProjectDataManager.getResourceManager(a).l(backgroundResource) && SoundCollectionManager.g().b(backgroundResource)) {
                             ProjectResourceBean a2 = SoundCollectionManager.g().a(backgroundResource);
                             try {
-                                oBVar.a(SketchwarePaths.getCollectionPath() + File.separator + "image" + File.separator + "data" + File.separator + a2.resFullName, SketchwarePaths.getImagesPath() + File.separator + a + File.separator + a2.resFullName);
+                                oBVar.copyFile(SketchwarePaths.getCollectionPath() + File.separator + "image" + File.separator + "data" + File.separator + a2.resFullName, SketchwarePaths.getImagesPath() + File.separator + a + File.separator + a2.resFullName);
                             } catch (Exception e) {
                                 LogUtil.e("ViewEditor", "", e);
                             }
@@ -390,7 +390,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
                         if (!ProjectDataManager.getResourceManager(a).l(resName) && SoundCollectionManager.g().b(resName)) {
                             ProjectResourceBean a3 = SoundCollectionManager.g().a(resName);
                             try {
-                                oBVar.a(SketchwarePaths.getCollectionPath() + File.separator + "image" + File.separator + "data" + File.separator + a3.resFullName, SketchwarePaths.getImagesPath() + File.separator + a + File.separator + a3.resFullName);
+                                oBVar.copyFile(SketchwarePaths.getCollectionPath() + File.separator + "image" + File.separator + "data" + File.separator + a3.resFullName, SketchwarePaths.getImagesPath() + File.separator + a + File.separator + a3.resFullName);
                             } catch (Exception e2) {
                                 LogUtil.e("ViewEditor", "", e2);
                             }

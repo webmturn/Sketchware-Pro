@@ -143,7 +143,7 @@ public class FontManagerFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        new EncryptedFileUtil().f(dirPath);
+        new EncryptedFileUtil().mkdirs(dirPath);
 
         if (savedInstanceState == null) {
             sc_id = requireActivity().getIntent().getStringExtra("sc_id");

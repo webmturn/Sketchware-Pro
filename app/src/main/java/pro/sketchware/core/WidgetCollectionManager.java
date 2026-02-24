@@ -113,8 +113,8 @@ public class WidgetCollectionManager extends BaseCollectionManager {
     this.collections = new ArrayList<CollectionBean>();
     BufferedReader bufferedReader = null;
     try {
-      if (this.fileUtil.e(this.collectionFilePath)) {
-        String str = this.fileUtil.g(this.collectionFilePath);
+      if (this.fileUtil.exists(this.collectionFilePath)) {
+        String str = this.fileUtil.readFile(this.collectionFilePath);
         bufferedReader = new BufferedReader(new StringReader(str));
         String line;
         while ((line = bufferedReader.readLine()) != null) {

@@ -67,23 +67,23 @@ public class FontCollectionManager extends BaseCollectionManager {
     String destPath = this.dataDirPath + java.io.File.separator + dataName;
     if (paramProjectResourceBean.savedPos == 1) {
       String srcPath = paramProjectResourceBean.resFullName;
-      if (!this.fileUtil.e(srcPath)) {
+      if (!this.fileUtil.exists(srcPath)) {
         throw new CompileException("file_no_exist");
       }
       try {
-        this.fileUtil.f(this.dataDirPath);
-        this.fileUtil.a(srcPath, destPath);
+        this.fileUtil.mkdirs(this.dataDirPath);
+        this.fileUtil.copyFile(srcPath, destPath);
       } catch (java.io.IOException e) {
         throw new CompileException("fail_to_copy");
       }
     } else {
       String srcPath = SketchwarePaths.getSoundsPath() + java.io.File.separator + paramString + java.io.File.separator + paramProjectResourceBean.resFullName;
-      if (!this.fileUtil.e(srcPath)) {
+      if (!this.fileUtil.exists(srcPath)) {
         throw new CompileException("file_no_exist");
       }
       try {
-        this.fileUtil.f(this.dataDirPath);
-        this.fileUtil.a(srcPath, destPath);
+        this.fileUtil.mkdirs(this.dataDirPath);
+        this.fileUtil.copyFile(srcPath, destPath);
       } catch (java.io.IOException e) {
         throw new CompileException("fail_to_copy");
       }
@@ -108,7 +108,7 @@ public class FontCollectionManager extends BaseCollectionManager {
           stringBuilder.append(File.separator);
           stringBuilder.append(collectionBean.data);
           String str = stringBuilder.toString();
-          this.fileUtil.c(str);
+          this.fileUtil.deleteFileByPath(str);
           break;
         } 
         continue;

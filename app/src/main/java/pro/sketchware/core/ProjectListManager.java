@@ -23,7 +23,7 @@ public class ProjectListManager {
             try {
                 if (new File(file, str).exists()) {
                     String path = file.getAbsolutePath() + File.separator + str;
-                    HashMap<String, Object> a = GsonMapHelper.fromJson(oBVar.a(oBVar.h(path)));
+                    HashMap<String, Object> a = GsonMapHelper.fromJson(oBVar.decryptToString(oBVar.readFileBytes(path)));
                     if (MapValueHelper.getString(a, "sc_id").equals(file.getName())) {
                         arrayList.add(a);
                     }
@@ -48,30 +48,30 @@ public class ProjectListManager {
         File file = new File(SketchwarePaths.getProjectListPath(str));
         if (file.exists()) {
             EncryptedFileUtil oBVar = new EncryptedFileUtil();
-            oBVar.a(file);
-            oBVar.b(SketchwarePaths.getMyscPath(str));
+            oBVar.deleteDirectory(file);
+            oBVar.deleteDirectoryByPath(SketchwarePaths.getMyscPath(str));
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append(SketchwarePaths.getImagesPath());
             stringBuilder.append(File.separator);
             stringBuilder.append(str);
-            oBVar.b(stringBuilder.toString());
+            oBVar.deleteDirectoryByPath(stringBuilder.toString());
             stringBuilder = new StringBuilder();
             stringBuilder.append(SketchwarePaths.getSoundsPath());
             stringBuilder.append(File.separator);
             stringBuilder.append(str);
-            oBVar.b(stringBuilder.toString());
+            oBVar.deleteDirectoryByPath(stringBuilder.toString());
             stringBuilder = new StringBuilder();
             stringBuilder.append(SketchwarePaths.getFontsResourcePath());
             stringBuilder.append(File.separator);
             stringBuilder.append(str);
-            oBVar.b(stringBuilder.toString());
+            oBVar.deleteDirectoryByPath(stringBuilder.toString());
             stringBuilder = new StringBuilder();
             stringBuilder.append(SketchwarePaths.getIconsPath());
             stringBuilder.append(File.separator);
             stringBuilder.append(str);
-            oBVar.b(stringBuilder.toString());
-            oBVar.b(SketchwarePaths.getDataPath(str));
-            oBVar.b(SketchwarePaths.getBackupPath(str));
+            oBVar.deleteDirectoryByPath(stringBuilder.toString());
+            oBVar.deleteDirectoryByPath(SketchwarePaths.getDataPath(str));
+            oBVar.deleteDirectoryByPath(SketchwarePaths.getBackupPath(str));
             stringBuilder = new StringBuilder();
             stringBuilder.append("D01_");
             stringBuilder.append(str);
@@ -107,7 +107,7 @@ public class ProjectListManager {
         String a = GsonMapHelper.toJson(hashMap);
         EncryptedFileUtil oBVar = new EncryptedFileUtil();
         try {
-            oBVar.a(str, oBVar.d(a));
+            oBVar.writeBytes(str, oBVar.encryptString(a));
         } catch (Throwable e) {
             Log.e("ProjectListManager", e.getMessage(), e);
         }
@@ -131,7 +131,7 @@ public class ProjectListManager {
                 return null;
             }
             String path = c + File.separator + "project";
-            HashMap<String, Object> a = GsonMapHelper.fromJson(oBVar.a(oBVar.h(path)));
+            HashMap<String, Object> a = GsonMapHelper.fromJson(oBVar.decryptToString(oBVar.readFileBytes(path)));
             try {
                 return !MapValueHelper.getString(a, "sc_id").equals(str) ? null : a;
             } catch (Exception e2) {
@@ -153,7 +153,7 @@ public class ProjectListManager {
             String path = file + File.separator + "project";
             EncryptedFileUtil fileUtil = new EncryptedFileUtil();
             try {
-                HashMap<String, Object> a = GsonMapHelper.fromJson(fileUtil.a(fileUtil.h(path)));
+                HashMap<String, Object> a = GsonMapHelper.fromJson(fileUtil.decryptToString(fileUtil.readFileBytes(path)));
                 if (MapValueHelper.getString(a, "sc_id").equals(str)) {
                     if (hashMap.containsKey("isIconAdaptive")) {
                         a.put("isIconAdaptive", hashMap.get("isIconAdaptive"));
@@ -172,7 +172,7 @@ public class ProjectListManager {
                     a.put("color_primary_dark", hashMap.get("color_primary_dark"));
                     a.put("color_control_highlight", hashMap.get("color_control_highlight"));
                     a.put("color_control_normal", hashMap.get("color_control_normal"));
-                    fileUtil.a(path, fileUtil.d(GsonMapHelper.toJson(a)));
+                    fileUtil.writeBytes(path, fileUtil.encryptString(GsonMapHelper.toJson(a)));
                 }
             } catch (Throwable e) {
                 Log.e("ProjectListManager", e.getMessage(), e);

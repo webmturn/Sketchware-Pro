@@ -64,7 +64,7 @@ public class KeyStoreManager {
     File file = new File(SketchwarePaths.getKeystoreDirPath());
     if (!file.exists())
       file.mkdirs(); 
-    (new EncryptedFileUtil()).a(paramString1, arrayOfByte);
+    (new EncryptedFileUtil()).writeBytes(paramString1, arrayOfByte);
   }
   
   public final byte[] exportKeyStore(String paramString) throws Exception {

@@ -160,13 +160,13 @@ public class ProjectDataStore {
     stringBuilder2.append(File.separator);
     stringBuilder2.append("view");
     String str2 = stringBuilder2.toString();
-    this.fileUtil.c(str2);
+    this.fileUtil.deleteFileByPath(str2);
     StringBuilder stringBuilder1 = new StringBuilder();
     stringBuilder1.append(str1);
     stringBuilder1.append(File.separator);
     stringBuilder1.append("logic");
     str1 = stringBuilder1.toString();
-    this.fileUtil.c(str1);
+    this.fileUtil.deleteFileByPath(str1);
   }
   
   public void a(ProjectFileManager paramhC) {
@@ -1028,7 +1028,7 @@ public class ProjectDataStore {
     stringBuilder.append(File.separator);
     stringBuilder.append("logic");
     String str1 = stringBuilder.toString();
-    return this.fileUtil.e(str1);
+    return this.fileUtil.exists(str1);
   }
   
   public boolean c(String paramString1, String paramString2, String paramString3) {
@@ -1152,7 +1152,7 @@ public class ProjectDataStore {
     stringBuilder.append(File.separator);
     stringBuilder.append("view");
     String str1 = stringBuilder.toString();
-    return this.fileUtil.e(str1);
+    return this.fileUtil.exists(str1);
   }
   
   public boolean d(String paramString1, int paramInt, String paramString2) {
@@ -1191,12 +1191,12 @@ public class ProjectDataStore {
     stringBuilder1.append(File.separator);
     stringBuilder1.append("logic");
     str2 = stringBuilder1.toString();
-    if (!this.fileUtil.e(str2))
+    if (!this.fileUtil.exists(str2))
       return; 
     BufferedReader bufferedReader = null;
     try {
-      byte[] arrayOfByte = this.fileUtil.h(str2);
-      String str = this.fileUtil.a(arrayOfByte);
+      byte[] arrayOfByte = this.fileUtil.readFileBytes(str2);
+      String str = this.fileUtil.decryptToString(arrayOfByte);
       bufferedReader = new BufferedReader(new StringReader(str));
       a(bufferedReader);
     } catch (Exception exception) {
@@ -1252,8 +1252,8 @@ public class ProjectDataStore {
     String str2 = stringBuilder.toString();
     BufferedReader bufferedReader = null;
     try {
-      byte[] arrayOfByte = this.fileUtil.h(str2);
-      String str = this.fileUtil.a(arrayOfByte);
+      byte[] arrayOfByte = this.fileUtil.readFileBytes(str2);
+      String str = this.fileUtil.decryptToString(arrayOfByte);
       bufferedReader = new BufferedReader(new StringReader(str));
       a(bufferedReader);
     } catch (Exception exception) {
@@ -1324,12 +1324,12 @@ public class ProjectDataStore {
     stringBuilder1.append(File.separator);
     stringBuilder1.append("view");
     str2 = stringBuilder1.toString();
-    if (!this.fileUtil.e(str2))
+    if (!this.fileUtil.exists(str2))
       return; 
     BufferedReader bufferedReader = null;
     try {
-      byte[] arrayOfByte = this.fileUtil.h(str2);
-      String str = this.fileUtil.a(arrayOfByte);
+      byte[] arrayOfByte = this.fileUtil.readFileBytes(str2);
+      String str = this.fileUtil.decryptToString(arrayOfByte);
       bufferedReader = new BufferedReader(new StringReader(str));
       b(bufferedReader);
     } catch (Exception exception) {
@@ -1387,8 +1387,8 @@ public class ProjectDataStore {
     str2 = stringBuilder1.toString();
     BufferedReader bufferedReader = null;
     try {
-      byte[] arrayOfByte = this.fileUtil.h(str2);
-      String str = this.fileUtil.a(arrayOfByte);
+      byte[] arrayOfByte = this.fileUtil.readFileBytes(str2);
+      String str = this.fileUtil.decryptToString(arrayOfByte);
       bufferedReader = new BufferedReader(new StringReader(str));
       b(bufferedReader);
     } catch (Exception exception) {
@@ -1565,8 +1565,8 @@ public class ProjectDataStore {
     StringBuffer stringBuffer = new StringBuffer();
     a(stringBuffer);
     try {
-      byte[] arrayOfByte = this.fileUtil.d(stringBuffer.toString());
-      this.fileUtil.a(paramString, arrayOfByte);
+      byte[] arrayOfByte = this.fileUtil.encryptString(stringBuffer.toString());
+      this.fileUtil.writeBytes(paramString, arrayOfByte);
     } catch (Exception exception) {
       exception.printStackTrace();
     } 
@@ -1619,8 +1619,8 @@ public class ProjectDataStore {
     StringBuffer stringBuffer = new StringBuffer();
     b(stringBuffer);
     try {
-      byte[] arrayOfByte = this.fileUtil.d(stringBuffer.toString());
-      this.fileUtil.a(paramString, arrayOfByte);
+      byte[] arrayOfByte = this.fileUtil.encryptString(stringBuffer.toString());
+      this.fileUtil.writeBytes(paramString, arrayOfByte);
     } catch (Exception exception) {
       exception.printStackTrace();
     } 

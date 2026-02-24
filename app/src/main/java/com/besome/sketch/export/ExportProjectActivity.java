@@ -236,8 +236,8 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
             String exportedFilename = MapValueHelper.getString(sc_metadata, "my_ws_name") + ".zip";
 
             String exportedSourcesZipPath = SketchwarePaths.getSketchwarePath() + File.separator + "export_src" + File.separator + exportedFilename;
-            if (file_utility.e(exportedSourcesZipPath)) {
-                file_utility.c(exportedSourcesZipPath);
+            if (file_utility.exists(exportedSourcesZipPath)) {
+                file_utility.deleteFileByPath(exportedSourcesZipPath);
             }
 
             ArrayList<String> toExclude = new ArrayList<>();
@@ -383,8 +383,8 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
         export_src_full_path = SketchwarePaths.getSketchwarePath() + File.separator + "export_src";
 
         /* Check if they exist, if not, create them */
-        file_utility.f(signed_apk_full_path);
-        file_utility.f(export_src_full_path);
+        file_utility.mkdirs(signed_apk_full_path);
+        file_utility.mkdirs(export_src_full_path);
     }
 
     private void shareExportedSourceCode() {
@@ -465,9 +465,9 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
                 publishProgress(Helper.getResString(R.string.design_run_title_ready_to_build));
                 EncryptedFileUtil oBVar = new EncryptedFileUtil();
                 /* Check if /Internal storage/sketchware/signed_apk/ exists */
-                if (!oBVar.e(SketchwarePaths.getSignedApkPath())) {
+                if (!oBVar.exists(SketchwarePaths.getSignedApkPath())) {
                     /* Doesn't exist yet, let's create it */
-                    oBVar.f(SketchwarePaths.getSignedApkPath());
+                    oBVar.mkdirs(SketchwarePaths.getSignedApkPath());
                 }
                 ProjectFileManager hCVar = new ProjectFileManager(sc_id);
                 ResourceManager kCVar = new ResourceManager(sc_id);
