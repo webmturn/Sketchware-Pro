@@ -1128,7 +1128,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                                             break;
 
                                         default:
-                                            extraPaletteBlock.e(ss.componentType, parameter);
+                                            extraPaletteBlock.hasExtraComponent(ss.componentType, parameter);
                                     }
                                 }
                             }

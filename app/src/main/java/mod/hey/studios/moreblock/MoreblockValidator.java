@@ -26,7 +26,7 @@ public class MoreblockValidator extends BaseValidator {
         this.registeredVariables = registeredVariables;
     }
 
-    public void a(String[] strArr) {
+    public void setReservedNames(String[] strArr) {
         eventNames = strArr;
     }
 

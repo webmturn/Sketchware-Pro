@@ -109,7 +109,7 @@ public class ExtraPaletteBlock {
      * for better block menu selections and to add new stuff easily.
      */
 
-    public boolean e(String str, String str2) {
+    public boolean hasExtraComponent(String str, String str2) {
         return switch (str) {
             case "circleimageview" ->
                     ProjectDataManager.getProjectDataManager(sc_id).hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_WIDGET_CIRCLEIMAGEVIEW, str2);

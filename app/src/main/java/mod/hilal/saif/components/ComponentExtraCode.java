@@ -18,7 +18,7 @@ public class ComponentExtraCode {
         hx = h;
     }
 
-    public void s(String str) {
+    public void appendListenerCode(String str) {
         // Aldi's original Components
         if (str.contains("DatePickerFragment")) {
             hx.eventListenerCode = str;

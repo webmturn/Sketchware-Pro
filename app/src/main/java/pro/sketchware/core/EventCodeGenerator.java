@@ -217,7 +217,7 @@ public class EventCodeGenerator {
         StringBuilder sb = new StringBuilder(4096);
         ComponentExtraCode componentExtraCode = new ComponentExtraCode(this, sb);
         for (Event next : componentEvents) {
-            componentExtraCode.s(next.generateEvent());
+            componentExtraCode.appendListenerCode(next.generateEvent());
         }
         return sb.toString();
     }
