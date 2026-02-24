@@ -321,11 +321,11 @@ public class ProjectDataStore {
           } 
         } 
       } 
-      label70: for (Pair pair : customViewPairs) {
-        if (this.blockMap.containsKey(pair.first)) {
-          Map map = this.blockMap.get(pair.first);
-          if (map.containsKey(pair.second)) {
-            ArrayList<BlockBean> blockBeans = (ArrayList)map.get(pair.second);
+      label70: for (Pair viewPair : customViewPairs) {
+        if (this.blockMap.containsKey(viewPair.first)) {
+          Map map = this.blockMap.get(viewPair.first);
+          if (map.containsKey(viewPair.second)) {
+            ArrayList<BlockBean> blockBeans = (ArrayList)map.get(viewPair.second);
             if (blockBeans == null || blockBeans.size() <= 0)
               continue; 
             i = blockBeans.size();
@@ -541,10 +541,10 @@ public class ProjectDataStore {
   }
   
   public void addMoreBlock(String fileName, String data, String extra) {
-    Pair pair = new Pair(data, extra);
+    Pair moreBlockPair = new Pair(data, extra);
     if (!this.moreBlockMap.containsKey(fileName))
       this.moreBlockMap.put(fileName, new ArrayList<Pair<String, String>>()); 
-    ((ArrayList)this.moreBlockMap.get(fileName)).add(pair);
+    ((ArrayList)this.moreBlockMap.get(fileName)).add(moreBlockPair);
   }
   
   public void putBlocks(String fileName, String data, ArrayList<BlockBean> list) {
@@ -562,10 +562,10 @@ public class ProjectDataStore {
           continue; 
         StringBuilder contentBuilder = new StringBuilder();
         for (int vi = 0; vi < variables.size(); vi++) {
-          Pair pair = (Pair) variables.get(vi);
-          contentBuilder.append(pair.first);
+          Pair varEntry = (Pair) variables.get(vi);
+          contentBuilder.append(varEntry.first);
           contentBuilder.append(":");
-          contentBuilder.append((String)pair.second);
+          contentBuilder.append((String)varEntry.second);
           contentBuilder.append("\n");
         }
         String content = contentBuilder.toString();
@@ -587,10 +587,10 @@ public class ProjectDataStore {
           continue; 
         StringBuilder contentBuilder = new StringBuilder();
         for (int li = 0; li < listEntries.size(); li++) {
-          Pair pair = (Pair) listEntries.get(li);
-          contentBuilder.append(pair.first);
+          Pair listEntry = (Pair) listEntries.get(li);
+          contentBuilder.append(listEntry.first);
           contentBuilder.append(":");
-          contentBuilder.append((String)pair.second);
+          contentBuilder.append((String)listEntry.second);
           contentBuilder.append("\n");
         }
         String content = contentBuilder.toString();
@@ -612,10 +612,10 @@ public class ProjectDataStore {
           continue; 
         StringBuilder contentBuilder = new StringBuilder();
         for (int fi = 0; fi < moreBlocks.size(); fi++) {
-          Pair pair = (Pair) moreBlocks.get(fi);
-          contentBuilder.append((String)pair.first);
+          Pair moreBlockEntry = (Pair) moreBlocks.get(fi);
+          contentBuilder.append((String)moreBlockEntry.first);
           contentBuilder.append(":");
-          contentBuilder.append((String)pair.second);
+          contentBuilder.append((String)moreBlockEntry.second);
           contentBuilder.append("\n");
         }
         String content = contentBuilder.toString();
@@ -713,9 +713,9 @@ public class ProjectDataStore {
     ArrayList moreBlocks = this.moreBlockMap.get(fileName);
     if (moreBlocks == null)
       return ""; 
-    for (Pair pair : (ArrayList<Pair>)moreBlocks) {
-      if (((String)pair.first).equals(data))
-        return (String)pair.second; 
+    for (Pair moreBlockEntry : (ArrayList<Pair>)moreBlocks) {
+      if (((String)moreBlockEntry.first).equals(data))
+        return (String)moreBlockEntry.second; 
     } 
     return "";
   }
@@ -860,10 +860,10 @@ public class ProjectDataStore {
   }
   
   public void addListVariable(String fileName, int index, String data) {
-    Pair pair = new Pair(Integer.valueOf(index), data);
+    Pair listVarPair = new Pair(Integer.valueOf(index), data);
     if (!this.listMap.containsKey(fileName))
       this.listMap.put(fileName, new ArrayList<Pair<Integer, String>>()); 
-    ((ArrayList)this.listMap.get(fileName)).add(pair);
+    ((ArrayList)this.listMap.get(fileName)).add(listVarPair);
   }
   
   public void removeComponent(String fileName, ComponentBean componentBean) {
@@ -1015,10 +1015,10 @@ public class ProjectDataStore {
   }
   
   public void addVariable(String fileName, int index, String data) {
-    Pair pair = new Pair(Integer.valueOf(index), data);
+    Pair varPair = new Pair(Integer.valueOf(index), data);
     if (!this.variableMap.containsKey(fileName))
       this.variableMap.put(fileName, new ArrayList<Pair<Integer, String>>()); 
-    ((ArrayList)this.variableMap.get(fileName)).add(pair);
+    ((ArrayList)this.variableMap.get(fileName)).add(varPair);
   }
   
   public boolean hasLogicBackup() {
@@ -1069,9 +1069,9 @@ public class ProjectDataStore {
     ArrayList listVars = this.listMap.get(fileName);
     if (listVars == null)
       return filteredNames; 
-    for (Pair pair : (ArrayList<Pair>)listVars) {
-      if (((Integer)pair.first).intValue() == index)
-        filteredNames.add((String)pair.second); 
+    for (Pair listEntry : (ArrayList<Pair>)listVars) {
+      if (((Integer)listEntry.first).intValue() == index)
+        filteredNames.add((String)listEntry.second); 
     } 
     return filteredNames;
   }
@@ -1177,9 +1177,9 @@ public class ProjectDataStore {
     ArrayList varEntries = this.variableMap.get(fileName);
     if (varEntries == null)
       return varNames; 
-    for (Pair pair : (ArrayList<Pair>)varEntries) {
-      if (((Integer)pair.first).intValue() == index)
-        varNames.add((String)pair.second); 
+    for (Pair varEntry : (ArrayList<Pair>)varEntries) {
+      if (((Integer)varEntry.first).intValue() == index)
+        varNames.add((String)varEntry.second); 
     } 
     return varNames;
   }
@@ -1210,8 +1210,8 @@ public class ProjectDataStore {
     ArrayList listVars = this.listMap.get(fileName);
     if (listVars == null)
       return false; 
-    for (Pair pair : (ArrayList<Pair>)listVars) {
-      if (((Integer)pair.first).intValue() == index && ((String)pair.second).equals(data))
+    for (Pair listEntry : (ArrayList<Pair>)listVars) {
+      if (((Integer)listEntry.first).intValue() == index && ((String)listEntry.second).equals(data))
         return true; 
     } 
     return false;
@@ -1279,8 +1279,8 @@ public class ProjectDataStore {
     ArrayList varEntries = this.variableMap.get(fileName);
     if (varEntries == null)
       return false; 
-    for (Pair pair : (ArrayList<Pair>)varEntries) {
-      if (((Integer)pair.first).intValue() == index && ((String)pair.second).equals(data))
+    for (Pair varEntry : (ArrayList<Pair>)varEntries) {
+      if (((Integer)varEntry.first).intValue() == index && ((String)varEntry.second).equals(data))
         return true; 
     } 
     return false;
@@ -1632,9 +1632,9 @@ public class ProjectDataStore {
     ArrayList moreBlocks = this.moreBlockMap.get(fileName);
     if (moreBlocks == null)
       return; 
-    for (Pair pair : (ArrayList<Pair>)moreBlocks) {
-      if (((String)pair.first).equals(data)) {
-        moreBlocks.remove(pair);
+    for (Pair moreBlockEntry : (ArrayList<Pair>)moreBlocks) {
+      if (((String)moreBlockEntry.first).equals(data)) {
+        moreBlocks.remove(moreBlockEntry);
         break;
       } 
     } 
@@ -1659,9 +1659,9 @@ public class ProjectDataStore {
     ArrayList listVars = this.listMap.get(fileName);
     if (listVars == null)
       return; 
-    for (Pair pair : (ArrayList<Pair>)listVars) {
-      if (((String)pair.second).equals(data)) {
-        listVars.remove(pair);
+    for (Pair listEntry : (ArrayList<Pair>)listVars) {
+      if (((String)listEntry.second).equals(data)) {
+        listVars.remove(listEntry);
         break;
       } 
     } 
@@ -1673,9 +1673,9 @@ public class ProjectDataStore {
     ArrayList varEntries = this.variableMap.get(fileName);
     if (varEntries == null)
       return; 
-    for (Pair pair : (ArrayList<Pair>)varEntries) {
-      if (((String)pair.second).equals(data)) {
-        varEntries.remove(pair);
+    for (Pair varEntry : (ArrayList<Pair>)varEntries) {
+      if (((String)varEntry.second).equals(data)) {
+        varEntries.remove(varEntry);
         break;
       } 
     } 
