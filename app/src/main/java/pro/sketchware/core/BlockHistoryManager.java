@@ -64,9 +64,9 @@ public class BlockHistoryManager {
   }
   
   public void recordAdd(String historyKey, BlockBean blockBean1, int start, int end, BlockBean blockBean2, BlockBean blockBean3) {
-    ArrayList<BlockBean> arrayList = new ArrayList<>();
-    arrayList.add(blockBean1);
-    recordAddMultiple(historyKey, arrayList, start, end, blockBean2, blockBean3);
+    ArrayList<BlockBean> blockList = new ArrayList<>();
+    blockList.add(blockBean1);
+    recordAddMultiple(historyKey, blockList, start, end, blockBean2, blockBean3);
   }
   
   public void recordUpdate(String historyKey, BlockBean blockBean1, BlockBean blockBean2) {
@@ -83,10 +83,10 @@ public class BlockHistoryManager {
   public final void addHistoryEntry(String historyKey, HistoryBlockBean historyBlockBean) {
     if (!this.historyMap.containsKey(historyKey))
       initHistory(historyKey); 
-    ArrayList<HistoryBlockBean> arrayList = this.historyMap.get(historyKey);
-    arrayList.add(historyBlockBean);
-    if (arrayList.size() > 50) {
-      arrayList.remove(0);
+    ArrayList<HistoryBlockBean> historyEntries = this.historyMap.get(historyKey);
+    historyEntries.add(historyBlockBean);
+    if (historyEntries.size() > 50) {
+      historyEntries.remove(0);
     } else {
       incrementPosition(historyKey);
     } 

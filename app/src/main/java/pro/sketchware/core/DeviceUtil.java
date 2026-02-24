@@ -106,13 +106,13 @@ public class DeviceUtil {
   }
   
   public static ArrayList<String> getGoogleAccounts(Context context) {
-    ArrayList<String> arrayList = new ArrayList<>();
+    ArrayList<String> accountNames = new ArrayList<>();
     Account[] accounts = AccountManager.get(context).getAccountsByType("com.google");
     for (int b = 0; b < accounts.length; b++) {
       if ((accounts[b]).type.equals("com.google"))
-        arrayList.add((accounts[b]).name); 
+        accountNames.add((accounts[b]).name); 
     } 
-    return arrayList;
+    return accountNames;
   }
   
   public static int[] getScreenResolution(Activity activity) {

@@ -140,16 +140,16 @@ public class BlockView extends BaseBlockView {
   }
   
   public final void parseSpec(String spec, int index) {
-    ArrayList<String> arrayList = FormatUtil.parseBlockSpec(spec);
+    ArrayList<String> specTokens = FormatUtil.parseBlockSpec(spec);
     this.specViews = new ArrayList<View>();
     this.specTypes = new ArrayList<String>();
-    for (int b = 0; b < arrayList.size(); b++) {
-      View view = createSpecView(arrayList.get(b), index);
+    for (int b = 0; b < specTokens.size(); b++) {
+      View view = createSpecView(specTokens.get(b), index);
       if (view instanceof BaseBlockView)
         ((BaseBlockView)view).parentBlock = this; 
       this.specViews.add(view);
       if (view instanceof FieldBlockView) {
-        spec = arrayList.get(b);
+        spec = specTokens.get(b);
       } else {
         spec = "icon";
       } 
@@ -251,21 +251,21 @@ public class BlockView extends BaseBlockView {
   }
   
   public ArrayList<BlockView> getAllChildren() {
-    ArrayList<BlockView> arrayList = new ArrayList<>();
+    ArrayList<BlockView> children = new ArrayList<>();
     BlockView rs = this;
     int limit = 200;
     while (true) {
-      arrayList.add(rs);
+      children.add(rs);
       for (View view : rs.specViews) {
         if (view instanceof BlockView)
-          arrayList.addAll(((BlockView)view).getAllChildren()); 
+          children.addAll(((BlockView)view).getAllChildren()); 
       } 
       if (rs.hasSubstack()) {
         int j = rs.subStack1;
         if (j != -1) {
           BlockView sub = (BlockView)this.blockPane.findViewWithTag(Integer.valueOf(j));
           if (sub != null && sub != this)
-            arrayList.addAll(sub.getAllChildren()); 
+            children.addAll(sub.getAllChildren()); 
         }
       } 
       if (rs.hasDoubleSubstack()) {
@@ -273,17 +273,17 @@ public class BlockView extends BaseBlockView {
         if (j != -1) {
           BlockView sub = (BlockView)this.blockPane.findViewWithTag(Integer.valueOf(j));
           if (sub != null && sub != this)
-            arrayList.addAll(sub.getAllChildren()); 
+            children.addAll(sub.getAllChildren()); 
         }
       } 
       int i = rs.nextBlock;
       if (i != -1 && --limit > 0) {
         BlockView next = (BlockView)this.blockPane.findViewWithTag(Integer.valueOf(i));
-        if (next == null || next == this) return arrayList;
+        if (next == null || next == this) return children;
         rs = next;
         continue;
       } 
-      return arrayList;
+      return children;
     } 
   }
   

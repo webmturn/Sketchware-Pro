@@ -125,14 +125,14 @@ public class FormatUtil {
   }
   
   public static ArrayList<String> parseBlockSpec(String value) {
-    ArrayList<String> arrayList = new ArrayList<>();
+    ArrayList<String> tokens = new ArrayList<>();
     StringScanner scanner = new StringScanner(value);
     while (!scanner.isAtEnd()) {
       String token = scanner.nextToken();
       if (token.length() > 0)
-        arrayList.add(token); 
+        tokens.add(token); 
     } 
-    return arrayList;
+    return tokens;
   }
   
   public static String unescapeString(String value) {
