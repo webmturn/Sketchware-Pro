@@ -30,13 +30,13 @@ public class LibraryManager {
   }
   
   public void deleteBackup() {
-    String str = SketchwarePaths.getBackupPath(this.projectId);
+    String backupPath = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(str);
+    stringBuilder.append(backupPath);
     stringBuilder.append(File.separator);
     stringBuilder.append("library");
-    str = stringBuilder.toString();
-    this.fileUtil.deleteFileByPath(str);
+    backupPath = stringBuilder.toString();
+    this.fileUtil.deleteFileByPath(backupPath);
   }
   
   public void setAdmob(ProjectLibraryBean libraryBean) {
@@ -46,7 +46,7 @@ public class LibraryManager {
   public void parseLibraryData(BufferedReader reader) throws java.io.IOException {
     try {
       StringBuffer stringBuffer = new StringBuffer();
-      String str = "";
+      String sectionName = "";
       while (true) {
         String line = reader.readLine();
         if (line != null) {
@@ -54,11 +54,11 @@ public class LibraryManager {
             continue; 
           if (line.charAt(0) == '@') {
             StringBuffer tempBuffer = stringBuffer;
-            if (str.length() > 0) {
-              parseLibrarySection(str, stringBuffer.toString());
+            if (sectionName.length() > 0) {
+              parseLibrarySection(sectionName, stringBuffer.toString());
               tempBuffer = new StringBuffer();
             } 
-            str = line.substring(1);
+            sectionName = line.substring(1);
             stringBuffer = tempBuffer;
             continue;
           } 
@@ -66,8 +66,8 @@ public class LibraryManager {
           stringBuffer.append("\n");
           continue;
         } 
-        if (str.length() > 0)
-          parseLibrarySection(str, stringBuffer.toString()); 
+        if (sectionName.length() > 0)
+          parseLibrarySection(sectionName, stringBuffer.toString()); 
         if (this.firebaseDB == null)
           this.firebaseDB = new ProjectLibraryBean(0); 
         if (this.compat == null)
@@ -204,8 +204,8 @@ public class LibraryManager {
     BufferedReader bufferedReader = null;
     try {
       byte[] bytes = this.fileUtil.readFileBytes(basePath);
-      String str = this.fileUtil.decryptToString(bytes);
-      bufferedReader = new BufferedReader(new StringReader(str));
+      String decryptedData = this.fileUtil.decryptToString(bytes);
+      bufferedReader = new BufferedReader(new StringReader(decryptedData));
       parseLibraryData(bufferedReader);
     } catch (Exception exception) {
       exception.printStackTrace();
@@ -227,8 +227,8 @@ public class LibraryManager {
     BufferedReader bufferedReader = null;
     try {
       byte[] bytes = this.fileUtil.readFileBytes(dataPath);
-      String str = this.fileUtil.decryptToString(bytes);
-      bufferedReader = new BufferedReader(new StringReader(str));
+      String decryptedData = this.fileUtil.decryptToString(bytes);
+      bufferedReader = new BufferedReader(new StringReader(decryptedData));
       parseLibraryData(bufferedReader);
     } catch (Exception exception) {
       exception.printStackTrace();
@@ -243,18 +243,18 @@ public class LibraryManager {
   }
   
   public void saveToBackup() {
-    String str = SketchwarePaths.getBackupPath(this.projectId);
+    String basePath = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(str);
+    stringBuilder.append(basePath);
     stringBuilder.append(File.separator);
     stringBuilder.append("library");
     writeToFile(stringBuilder.toString());
   }
   
   public void saveToData() {
-    String str = SketchwarePaths.getDataPath(this.projectId);
+    String basePath = SketchwarePaths.getDataPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(str);
+    stringBuilder.append(basePath);
     stringBuilder.append(File.separator);
     stringBuilder.append("library");
     writeToFile(stringBuilder.toString());
