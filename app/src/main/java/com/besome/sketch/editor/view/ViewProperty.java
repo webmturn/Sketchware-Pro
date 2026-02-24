@@ -109,7 +109,7 @@ public class ViewProperty extends LinearLayout implements PropertyChangedCallbac
         propertyValueChangedListener = onPropertyValueChangedListener;
         viewPropertyItems.setOnPropertyValueChangedListener(viewBean -> {
             if (propertyValueChangedListener != null) {
-                propertyValueChangedListener.a(viewBean);
+                propertyValueChangedListener.onViewBeanChanged(viewBean);
             }
         });
     }
@@ -312,7 +312,7 @@ public class ViewProperty extends LinearLayout implements PropertyChangedCallbac
 
     private void selectView(ViewBean viewBean) {
         if (propertyTargetChangeListener != null) {
-            propertyTargetChangeListener.a(viewBean.id);
+            propertyTargetChangeListener.onFileSelected(viewBean.id);
         }
         if ("_fab".equals(viewBean.id)) {
             imgSave.setVisibility(GONE);

@@ -112,7 +112,7 @@ public class AdmobActivity extends BaseAppCompatActivity implements View.OnClick
 
     private void nextStep() {
         if (step.isValid()) {
-            step.a(adMobSettings);
+            step.saveToBean(adMobSettings);
             if (stepPosition < 4) {
                 showStep(++stepPosition);
             } else {

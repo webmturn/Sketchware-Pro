@@ -3,7 +3,7 @@ package pro.sketchware.core;
 import com.besome.sketch.beans.ProjectLibraryBean;
 
 public interface LibrarySettingsView {
-  void a(ProjectLibraryBean paramProjectLibraryBean);
+  void saveToBean(ProjectLibraryBean paramProjectLibraryBean);
   
   String getDocUrl();
   

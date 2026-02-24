@@ -256,7 +256,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
             applyPropertyValues(viewBean);
             if (!isEditMode) {
                 ViewHistoryManager.getInstance(sc_id).recordUpdate(projectFile.getXmlName(), cloned, viewBean.clone());
-                viewBeanCallback.a(viewBean);
+                viewBeanCallback.onViewBeanChanged(viewBean);
             }
         }
     }

@@ -53,7 +53,7 @@ public class ViewProperties extends RelativeLayout implements AdapterView.OnItem
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         spinnerItemAdapter.setLayoutPosition(position);
         if (propertyTargetChangeListener != null) {
-            propertyTargetChangeListener.a(viewsIdList.get(position));
+            propertyTargetChangeListener.onFileSelected(viewsIdList.get(position));
         }
     }
 

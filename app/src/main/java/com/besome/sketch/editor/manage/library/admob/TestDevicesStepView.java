@@ -81,7 +81,7 @@ public class TestDevicesStepView extends LinearLayout implements LibrarySettings
     }
 
     @Override
-    public void a(ProjectLibraryBean projectLibraryBean) {
+    public void saveToBean(ProjectLibraryBean projectLibraryBean) {
         projectLibraryBean.testDevices = testDevices;
     }
 

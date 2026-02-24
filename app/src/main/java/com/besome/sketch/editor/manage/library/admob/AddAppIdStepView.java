@@ -70,7 +70,7 @@ public class AddAppIdStepView extends LinearLayout implements LibrarySettingsVie
     }
 
     @Override
-    public void a(ProjectLibraryBean projectLibraryBean) {
+    public void saveToBean(ProjectLibraryBean projectLibraryBean) {
         projectLibraryBean.appId = appId;
     }
 

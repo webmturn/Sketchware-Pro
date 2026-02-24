@@ -3,5 +3,5 @@ package pro.sketchware.core;
 import com.besome.sketch.beans.ViewBean;
 
 public interface ViewBeanCallback {
-  void a(ViewBean paramViewBean);
+  void onViewBeanChanged(ViewBean paramViewBean);
 }

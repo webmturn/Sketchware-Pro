@@ -110,7 +110,7 @@ public class AddAdUnitStepView extends LinearLayout implements LibrarySettingsVi
     }
 
     @Override
-    public void a(ProjectLibraryBean projectLibraryBean) {
+    public void saveToBean(ProjectLibraryBean projectLibraryBean) {
         projectLibraryBean.adUnits = adUnitBeanArrayList;
     }
 

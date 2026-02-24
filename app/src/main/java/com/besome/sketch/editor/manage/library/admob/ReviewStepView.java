@@ -56,7 +56,7 @@ public class ReviewStepView extends LinearLayout implements LibrarySettingsView 
     }
 
     @Override
-    public void a(ProjectLibraryBean projectLibraryBean) {
+    public void saveToBean(ProjectLibraryBean projectLibraryBean) {
         if (binding.libSwitch.isChecked()) {
             projectLibraryBean.useYn = "Y";
         } else {

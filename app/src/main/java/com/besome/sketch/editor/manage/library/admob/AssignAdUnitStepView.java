@@ -110,7 +110,7 @@ public class AssignAdUnitStepView extends LinearLayout implements LibrarySetting
     }
 
     @Override
-    public void a(ProjectLibraryBean projectLibraryBean) {
+    public void saveToBean(ProjectLibraryBean projectLibraryBean) {
         projectLibraryBean.reserved1 = bannerAdUnitId;
         projectLibraryBean.reserved2 = interstitialAdUnitId;
         projectLibraryBean.reserved3 = rewardedAdUnitId;

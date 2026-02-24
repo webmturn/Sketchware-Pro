@@ -93,7 +93,7 @@ public class ViewEvents extends LinearLayout {
             SketchToast.toast(getContext(), getContext().getString(R.string.event_message_new_event), 0).show();
         }
         if (onEventClickListener != null) {
-            onEventClickListener.a(eventBean);
+            onEventClickListener.onEventSelected(eventBean);
         }
     }
 
