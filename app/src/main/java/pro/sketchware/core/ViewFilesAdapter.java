@@ -72,15 +72,15 @@ public class ViewFilesAdapter extends BaseFragment {
   }
   
   public final ArrayList<ViewBean> getPresetViews(String fileName, int position) {
-    ArrayList<ViewBean> arrayList;
+    ArrayList<ViewBean> presetViews;
     if (position == 277) {
-      arrayList = PresetLayoutFactory.getListItemPresetViews(fileName);
+      presetViews = PresetLayoutFactory.getListItemPresetViews(fileName);
     } else if (position == 278) {
-      arrayList = PresetLayoutFactory.getDrawerPresetViews(fileName);
+      presetViews = PresetLayoutFactory.getDrawerPresetViews(fileName);
     } else {
-      arrayList = new ArrayList<>();
+      presetViews = new ArrayList<>();
     }
-    return arrayList;
+    return presetViews;
   }
   
   public void addProjectFile(ProjectFileBean fileBean) {
@@ -123,10 +123,10 @@ public class ViewFilesAdapter extends BaseFragment {
   }
   
   public void loadCustomViews() {
-    ArrayList<ProjectFileBean> arrayList = ProjectDataManager.getFileManager(this.projectId).getCustomViews();
-    if (arrayList == null)
+    ArrayList<ProjectFileBean> customViews = ProjectDataManager.getFileManager(this.projectId).getCustomViews();
+    if (customViews == null)
       return; 
-    for (ProjectFileBean projectFileBean : arrayList)
+    for (ProjectFileBean projectFileBean : customViews)
       this.projectFiles.add(projectFileBean); 
   }
   
@@ -154,9 +154,9 @@ public class ViewFilesAdapter extends BaseFragment {
   }
   
   public void updateEmptyState() {
-    ArrayList<ProjectFileBean> arrayList = this.projectFiles;
-    if (arrayList != null)
-      if (arrayList.size() == 0) {
+    ArrayList<ProjectFileBean> filesList = this.projectFiles;
+    if (filesList != null)
+      if (filesList.size() == 0) {
         this.emptyText.setVisibility(View.VISIBLE);
         this.recyclerView.setVisibility(View.GONE);
       } else {
