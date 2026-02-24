@@ -28,13 +28,13 @@ public class DataResetter {
         new SharedPrefsHelper(context, "P26").clearAll();
         new SharedPrefsHelper(context, "P16").remove("P16I0");
 
-        EncryptedFileUtil oBVar = new EncryptedFileUtil();
-        oBVar.deleteDirectoryByPath(SketchwarePaths.getLibsPath());
-        oBVar.deleteDirectoryByPath(BuiltInLibraries.EXTRACTED_COMPILE_ASSETS_PATH.getAbsolutePath());
+        EncryptedFileUtil fileUtil = new EncryptedFileUtil();
+        fileUtil.deleteDirectoryByPath(SketchwarePaths.getLibsPath());
+        fileUtil.deleteDirectoryByPath(BuiltInLibraries.EXTRACTED_COMPILE_ASSETS_PATH.getAbsolutePath());
 
         if (!resetOnlySettings) {
-            oBVar.deleteDirectoryByPath(SketchwarePaths.getSketchwareRootPath());
-            oBVar.deleteDirectoryByPath(SketchwarePaths.getSketchwarePath());
+            fileUtil.deleteDirectoryByPath(SketchwarePaths.getSketchwareRootPath());
+            fileUtil.deleteDirectoryByPath(SketchwarePaths.getSketchwarePath());
 
             for (HashMap<String, Object> project : ProjectListManager.listProjects()) {
                 String sc_id = MapValueHelper.getString(project, "sc_id");
