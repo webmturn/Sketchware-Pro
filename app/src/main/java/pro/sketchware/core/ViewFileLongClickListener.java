@@ -16,7 +16,7 @@ public class ViewFileLongClickListener implements View.OnLongClickListener {
   }
   
   public boolean onLongClick(View paramView) {
-    ((ManageViewActivity)this.b.adapterRef.outerAdapter.getActivity()).a(true);
+    ((ManageViewActivity)this.b.adapterRef.outerAdapter.getActivity()).setSelectionMode(true);
     ViewFilesAdapter.FileListAdapter.ViewHolder a1 = this.b;
     a1.adapterRef.selectedPosition = a1.getLayoutPosition();
     CheckBox checkBox = this.b.checkbox;

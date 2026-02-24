@@ -56,8 +56,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
     private ActivityResultLauncher<Intent> addViewLauncher;
 
     private final int[] widgetTypeCounts = new int[19];
-    // signature mustn't be changed: used in La/a/a/Bw;->a(Landroidx/recyclerview/widget/RecyclerView;II)V, La/a/a/tw;->a(Landroidx/recyclerview/widget/RecyclerView;II)V
-    public FloatingActionButton s;
+    public FloatingActionButton fab;
     private MaterialCardView actionButtonsContainer;
     private boolean selecting = false;
     private String isAppCompatEnabled = "N";
@@ -66,7 +65,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
     private ViewPager viewPager;
     private String sc_id;
 
-    public final String a(int var1, String var2) {
+    public final String generateUniqueWidgetId(int var1, String var2) {
         String var3 = SketchwarePaths.getWidgetTypeName(var1);
         StringBuilder var4 = new StringBuilder();
         var4.append(var3);
@@ -115,13 +114,13 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
 
     @Override
     public void onPageScrolled(int var1, float var2, int var3) {
-        a(false);
+        setSelectionMode(false);
     }
 
-    public final void a(ProjectFileBean var1, ArrayList<ViewBean> var2) {
+    public final void addPresetViews(ProjectFileBean var1, ArrayList<ViewBean> var2) {
         ProjectDataManager.getProjectDataManager(sc_id);
         for (ViewBean viewBean : ProjectDataStore.getSortedRootViews(var2)) {
-            viewBean.id = a(viewBean.type, var1.getXmlName());
+            viewBean.id = generateUniqueWidgetId(viewBean.type, var1.getXmlName());
             ProjectDataManager.getProjectDataManager(sc_id).addView(var1.getXmlName(), viewBean);
             if (viewBean.type == ViewBean.VIEW_TYPE_WIDGET_BUTTON && var1.fileType == ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY) {
                 ProjectDataManager.getProjectDataManager(sc_id).addEvent(var1.getJavaName(), EventBean.EVENT_TYPE_VIEW, viewBean.type, viewBean.id, "onClick");
@@ -129,8 +128,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
         }
     }
 
-    // signature mustn't be changed: used in La/a/a/Dw;->onLongClick(Landroid/view/View;)Z, La/a/a/vw;->onLongClick(Landroid/view/View;)Z
-    public void a(boolean var1) {
+    public void setSelectionMode(boolean var1) {
         selecting = var1;
         invalidateOptionsMenu();
 
@@ -138,11 +136,11 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
             actionButtonsContainer.setVisibility(View.VISIBLE);
             actionButtonsContainer.post(() -> {
                 float offset = dpToPx(actionButtonsContainer.getHeight());
-                s.animate().translationY(offset).setDuration(200L).start();
+                fab.animate().translationY(offset).setDuration(200L).start();
             });
         } else {
             actionButtonsContainer.setVisibility(View.GONE);
-            s.animate().translationY(0.0F).setDuration(200L).start();
+            fab.animate().translationY(0.0F).setDuration(200L).start();
         }
 
         activitiesFragment.setSelectionMode(selecting);
@@ -151,17 +149,15 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
 
     @Override
     public void onPageSelected(int var1) {
-        s.show();
+        fab.show();
     }
 
-    // signature mustn't be changed: used in La/a/a/ViewFilesFragment;->b(Lcom/besome/sketch/beans/ProjectFileBean;)V
-    public void b(String var1) {
+    public void addCustomView(String var1) {
         customViewsFragment.addCustomView(var1);
         customViewsFragment.updateEmptyState();
     }
 
-    // signature mustn't be changed: used in La/a/a/ViewFilesFragment;->b(Lcom/besome/sketch/beans/ProjectFileBean;)V, La/a/a/ViewFilesFragment;->f()V
-    public void c(String var1) {
+    public void removeCustomView(String var1) {
         customViewsFragment.removeCustomView(var1);
         customViewsFragment.updateEmptyState();
     }
@@ -198,20 +194,20 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
             int viewId = v.getId();
             if (viewId == R.id.btn_cancel) {
                 if (selecting) {
-                    a(false);
+                    setSelectionMode(false);
                 }
             } else if (viewId == R.id.btn_delete) {
                 if (selecting) {
                     activitiesFragment.removeSelectedFiles();
                     customViewsFragment.removeSelectedFiles();
-                    a(false);
+                    setSelectionMode(false);
                     activitiesFragment.updateGuideVisibility();
                     customViewsFragment.updateEmptyState();
                     SketchToast.toast(getApplicationContext(), getString(R.string.common_message_complete_delete), SketchToast.TOAST_WARNING).show();
-                    s.show();
+                    fab.show();
                 }
             } else if (viewId == R.id.fab) {
-                a(false);
+                setSelectionMode(false);
 
                 boolean isActivitiesTab = viewPager.getCurrentItem() == 0;
                 Intent intent = new Intent(this, isActivitiesTab ? AddViewActivity.class : AddCustomViewActivity.class);
@@ -232,7 +228,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
             @Override
             public void handleOnBackPressed() {
                 if (selecting) {
-                    a(false);
+                    setSelectionMode(false);
                 } else {
                     showLoadingDialog();
                     try {
@@ -254,13 +250,13 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
                             if (projectFileBean == null) return;
                             activitiesFragment.addProjectFile(projectFileBean);
                             if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)) {
-                                b(projectFileBean.getDrawerName());
+                                addCustomView(projectFileBean.getDrawerName());
                             }
                             if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER) || projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB)) {
                                 ProjectDataManager.getLibraryManager(sc_id).getCompat().useYn = "Y";
                             }
                             if (data.hasExtra("preset_views")) {
-                                a(projectFileBean, data.getParcelableArrayListExtra("preset_views"));
+                                addPresetViews(projectFileBean, data.getParcelableArrayListExtra("preset_views"));
                             }
                         } else {
                             projectFileBean = data.getParcelableExtra("project_file");
@@ -268,7 +264,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
                             customViewsFragment.addProjectFile(projectFileBean);
                             customViewsFragment.updateEmptyState();
                             if (data.hasExtra("preset_views")) {
-                                a(projectFileBean, data.getParcelableArrayListExtra("preset_views"));
+                                addPresetViews(projectFileBean, data.getParcelableArrayListExtra("preset_views"));
                             }
                         }
                     }
@@ -303,8 +299,8 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
         viewPager.setOffscreenPageLimit(TAB_COUNT);
         viewPager.addOnPageChangeListener(this);
         tabLayout.setupWithViewPager(viewPager);
-        s = findViewById(R.id.fab);
-        s.setOnClickListener(this);
+        fab = findViewById(R.id.fab);
+        fab.setOnClickListener(this);
     }
 
     @Override
@@ -317,7 +313,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem menuItem) {
         if (menuItem.getItemId() == R.id.menu_screen_delete) {
-            a(!selecting);
+            setSelectionMode(!selecting);
         }
         return super.onOptionsItemSelected(menuItem);
     }

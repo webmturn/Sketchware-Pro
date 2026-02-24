@@ -102,9 +102,9 @@ public class ViewFilesFragment extends BaseFragment {
 
         String drawerName = ProjectFileBean.getDrawerName(newProjectFile.fileName);
         if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)) {
-            ((ManageViewActivity) getActivity()).b(drawerName);
+            ((ManageViewActivity) getActivity()).addCustomView(drawerName);
         } else {
-            ((ManageViewActivity) getActivity()).c(drawerName);
+            ((ManageViewActivity) getActivity()).removeCustomView(drawerName);
         }
 
         if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER) || projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB)) {
@@ -169,7 +169,7 @@ public class ViewFilesFragment extends BaseFragment {
                 if (projectFileBean.isSelected) {
                     activitiesFiles.remove(i);
                     if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)) {
-                        ((ManageViewActivity) getActivity()).c(ProjectFileBean.getDrawerName(projectFileBean.fileName));
+                        ((ManageViewActivity) getActivity()).removeCustomView(ProjectFileBean.getDrawerName(projectFileBean.fileName));
                     }
                 }
             } else {
@@ -259,11 +259,11 @@ public class ViewFilesFragment extends BaseFragment {
                     public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                         super.onScrolled(recyclerView, dx, dy);
                         if (dy > 2) {
-                            if (((ManageViewActivity) requireActivity()).s.isEnabled()) {
-                                ((ManageViewActivity) requireActivity()).s.hide();
+                            if (((ManageViewActivity) requireActivity()).fab.isEnabled()) {
+                                ((ManageViewActivity) requireActivity()).fab.hide();
                             }
-                        } else if (dy < -2 && ((ManageViewActivity) requireActivity()).s.isEnabled()) {
-                            ((ManageViewActivity) requireActivity()).s.show();
+                        } else if (dy < -2 && ((ManageViewActivity) requireActivity()).fab.isEnabled()) {
+                            ((ManageViewActivity) requireActivity()).fab.show();
                         }
                     }
                 });
@@ -334,7 +334,7 @@ public class ViewFilesFragment extends BaseFragment {
                         Toast.makeText(getContext(), Helper.getResString(R.string.error_main_activity_cannot_delete), Toast.LENGTH_SHORT).show();
                         return true;
                     }
-                    ((ManageViewActivity) getActivity()).a(true);
+                    ((ManageViewActivity) getActivity()).setSelectionMode(true);
                     layoutPosition = getLayoutPosition();
                     ProjectFileBean projectFileBean = activitiesFiles.get(layoutPosition);
                     projectFileBean.isSelected = !projectFileBean.isSelected;
