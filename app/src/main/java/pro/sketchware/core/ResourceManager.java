@@ -31,11 +31,11 @@ public class ResourceManager {
   
   public Gson gson;
   
-  public ResourceManager(String str) {
-    this(str,
-        SketchwarePaths.getImagesPath() + File.separator + str,
-        SketchwarePaths.getSoundsPath() + File.separator + str,
-        SketchwarePaths.getFontsResourcePath() + File.separator + str);
+  public ResourceManager(String projectId) {
+    this(projectId,
+        SketchwarePaths.getImagesPath() + File.separator + projectId,
+        SketchwarePaths.getSoundsPath() + File.separator + projectId,
+        SketchwarePaths.getFontsResourcePath() + File.separator + projectId);
   }
   
   public ResourceManager(String key, String value, String extra, String tag) {
@@ -95,10 +95,10 @@ public class ResourceManager {
     } 
   }
   
-  public void copyFontsToDir(String str) {
+  public void copyFontsToDir(String destDir) {
     ArrayList<ProjectResourceBean> arrayList = this.fonts;
     if (arrayList != null && arrayList.size() > 0) {
-      File file = new File(str);
+      File file = new File(destDir);
       if (!file.exists())
         file.mkdirs(); 
       for (ProjectResourceBean projectResourceBean : this.fonts) {
@@ -108,7 +108,7 @@ public class ResourceManager {
         sourceBuilder.append(projectResourceBean.resFullName.toLowerCase());
         String sourcePath = sourceBuilder.toString();
         StringBuilder destBuilder = new StringBuilder();
-        destBuilder.append(str);
+        destBuilder.append(destDir);
         destBuilder.append(File.separator);
         destBuilder.append(projectResourceBean.resFullName.toLowerCase());
         String destPath = destBuilder.toString();
@@ -191,10 +191,10 @@ public class ResourceManager {
     }
   }
   
-  public void copyImagesToDir(String str) {
+  public void copyImagesToDir(String destDir) {
     ArrayList<ProjectResourceBean> arrayList = this.images;
     if (arrayList != null && arrayList.size() > 0) {
-      File file = new File(str);
+      File file = new File(destDir);
       if (!file.exists())
         file.mkdirs(); 
       for (ProjectResourceBean projectResourceBean : this.images) {
@@ -204,7 +204,7 @@ public class ResourceManager {
         sourceBuilder.append(projectResourceBean.resFullName.toLowerCase());
         String sourcePath = sourceBuilder.toString();
         StringBuilder destBuilder = new StringBuilder();
-        destBuilder.append(str);
+        destBuilder.append(destDir);
         destBuilder.append(File.separator);
         destBuilder.append(projectResourceBean.resFullName.toLowerCase());
         String destPath = destBuilder.toString();
@@ -239,10 +239,10 @@ public class ResourceManager {
     }
   }
   
-  public void copySoundsToDir(String str) {
+  public void copySoundsToDir(String destDir) {
     ArrayList<ProjectResourceBean> arrayList = this.sounds;
     if (arrayList != null && arrayList.size() > 0) {
-      File file = new File(str);
+      File file = new File(destDir);
       if (!file.exists())
         file.mkdirs(); 
       for (ProjectResourceBean projectResourceBean : this.sounds) {
@@ -252,7 +252,7 @@ public class ResourceManager {
         sourceBuilder.append(projectResourceBean.resFullName.toLowerCase());
         String sourcePath = sourceBuilder.toString();
         StringBuilder destBuilder = new StringBuilder();
-        destBuilder.append(str);
+        destBuilder.append(destDir);
         destBuilder.append(File.separator);
         destBuilder.append(projectResourceBean.resFullName.toLowerCase());
         String destPath = destBuilder.toString();
@@ -269,11 +269,11 @@ public class ResourceManager {
     this.sounds = list;
   }
   
-  public String getFontPath(String str) {
+  public String getFontPath(String name) {
     ArrayList<ProjectResourceBean> arrayList = this.fonts;
     if (arrayList != null && arrayList.size() > 0)
       for (ProjectResourceBean projectResourceBean : this.fonts) {
-        if (projectResourceBean.resName.equals(str)) {
+        if (projectResourceBean.resName.equals(name)) {
           StringBuilder stringBuilder = new StringBuilder();
           stringBuilder.append(this.fontDirPath);
           stringBuilder.append(File.separator);
@@ -302,9 +302,9 @@ public class ResourceManager {
     }
   }
   
-  public ProjectResourceBean getFontBean(String str) {
+  public ProjectResourceBean getFontBean(String name) {
     for (ProjectResourceBean projectResourceBean : this.fonts) {
-      if (projectResourceBean.resName.equals(str))
+      if (projectResourceBean.resName.equals(name))
         return projectResourceBean; 
     } 
     return null;
@@ -323,11 +323,11 @@ public class ResourceManager {
     } 
   }
   
-  public String getImagePath(String str) {
+  public String getImagePath(String name) {
     ArrayList<ProjectResourceBean> arrayList = this.images;
     if (arrayList != null && arrayList.size() > 0)
       for (ProjectResourceBean projectResourceBean : this.images) {
-        if (projectResourceBean.resName.equals(str)) {
+        if (projectResourceBean.resName.equals(name)) {
           StringBuilder stringBuilder = new StringBuilder();
           stringBuilder.append(this.imageDirPath);
           stringBuilder.append(File.separator);
@@ -351,9 +351,9 @@ public class ResourceManager {
     } 
   }
   
-  public ProjectResourceBean getImageBean(String str) {
+  public ProjectResourceBean getImageBean(String name) {
     for (ProjectResourceBean projectResourceBean : this.images) {
-      if (projectResourceBean.resName.equals(str))
+      if (projectResourceBean.resName.equals(name))
         return projectResourceBean; 
     } 
     return null;
@@ -372,11 +372,11 @@ public class ResourceManager {
     } 
   }
   
-  public int getImageResType(String str) {
+  public int getImageResType(String name) {
     ArrayList<ProjectResourceBean> arrayList = this.images;
     if (arrayList != null && arrayList.size() > 0)
       for (ProjectResourceBean projectResourceBean : this.images) {
-        if (projectResourceBean.resName.equals(str))
+        if (projectResourceBean.resName.equals(name))
           return projectResourceBean.resType; 
       }  
     return -1;
@@ -395,11 +395,11 @@ public class ResourceManager {
     } 
   }
   
-  public String getSoundPath(String str) {
+  public String getSoundPath(String name) {
     ArrayList<ProjectResourceBean> arrayList = this.sounds;
     if (arrayList != null && arrayList.size() > 0)
       for (ProjectResourceBean projectResourceBean : this.sounds) {
-        if (projectResourceBean.resName.equals(str)) {
+        if (projectResourceBean.resName.equals(name)) {
           StringBuilder stringBuilder = new StringBuilder();
           stringBuilder.append(this.soundDirPath);
           stringBuilder.append(File.separator);
@@ -420,9 +420,9 @@ public class ResourceManager {
     this.fileUtil.deleteFileByPath(str);
   }
   
-  public ProjectResourceBean getSoundBean(String str) {
+  public ProjectResourceBean getSoundBean(String name) {
     for (ProjectResourceBean projectResourceBean : this.sounds) {
-      if (projectResourceBean.resName.equals(str))
+      if (projectResourceBean.resName.equals(name))
         return projectResourceBean; 
     } 
     return null;
@@ -440,10 +440,10 @@ public class ResourceManager {
     return arrayList;
   }
   
-  public boolean hasFont(String str) {
+  public boolean hasFont(String name) {
     Iterator<ProjectResourceBean> iterator = this.fonts.iterator();
     while (iterator.hasNext()) {
-      if (((ProjectResourceBean)iterator.next()).resName.equals(str))
+      if (((ProjectResourceBean)iterator.next()).resName.equals(name))
         return true; 
     } 
     return false;
@@ -453,10 +453,10 @@ public class ResourceManager {
     return this.imageDirPath;
   }
   
-  public boolean hasImage(String str) {
+  public boolean hasImage(String name) {
     Iterator<ProjectResourceBean> iterator = this.images.iterator();
     while (iterator.hasNext()) {
-      if (((ProjectResourceBean)iterator.next()).resName.equals(str))
+      if (((ProjectResourceBean)iterator.next()).resName.equals(name))
         return true; 
     } 
     return false;
@@ -470,10 +470,10 @@ public class ResourceManager {
     return arrayList;
   }
   
-  public boolean hasSound(String str) {
+  public boolean hasSound(String name) {
     Iterator<ProjectResourceBean> iterator = this.sounds.iterator();
     while (iterator.hasNext()) {
-      if (((ProjectResourceBean)iterator.next()).resName.equals(str))
+      if (((ProjectResourceBean)iterator.next()).resName.equals(name))
         return true; 
     } 
     return false;
