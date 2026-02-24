@@ -93,9 +93,9 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
     private List<String> keysList = new ArrayList<>();
     private ViewBean bean;
 
-    public PropertyInputItem(Context context, boolean z) {
+    public PropertyInputItem(Context context, boolean useAttrs) {
         super(context);
-        initialize(context, z);
+        initialize(context, useAttrs);
     }
 
     private void setIcon(ImageView imageView) {
@@ -463,7 +463,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
         }
     }
 
-    private void initialize(Context context, boolean z) {
+    private void initialize(Context context, boolean useAttrs) {
         this.context = context;
         ViewUtil.inflateLayoutInto(context, this, R.layout.property_input_item);
         tvName = findViewById(R.id.tv_name);

@@ -31,9 +31,9 @@ public class PropertyGravityItem extends RelativeLayout implements View.OnClickL
     private View propertyMenuItem;
     private PropertyChangedCallback valueChangeListener;
 
-    public PropertyGravityItem(Context context, boolean z) {
+    public PropertyGravityItem(Context context, boolean useAttrs) {
         super(context);
-        initialize(context, z);
+        initialize(context, useAttrs);
     }
 
     public String getKey() {
@@ -94,7 +94,7 @@ public class PropertyGravityItem extends RelativeLayout implements View.OnClickL
         }
     }
 
-    private void initialize(Context context, boolean z) {
+    private void initialize(Context context, boolean useAttrs) {
         ViewUtil.inflateLayoutInto(context, this, R.layout.property_selector_item);
         tvName = findViewById(R.id.tv_name);
         tvValue = findViewById(R.id.tv_value);

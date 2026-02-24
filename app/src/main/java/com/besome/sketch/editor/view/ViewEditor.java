@@ -460,9 +460,9 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         removeViews(b2, true);
     }
 
-    public void setFavoriteData(ArrayList<WidgetCollectionBean> arrayList) {
+    public void setFavoriteData(ArrayList<WidgetCollectionBean> collections) {
         clearCollectionWidget();
-        for (WidgetCollectionBean next : arrayList) {
+        for (WidgetCollectionBean next : collections) {
             addFavoriteViews(next.name, next.widgets);
         }
     }
@@ -971,9 +971,9 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         String b2 = !bean.isCustomWidget ? SketchwarePaths.getWidgetTypeName(type) : widgetsCreatorManager.generateCustomWidgetId(bean.convert);
         StringBuilder sb = new StringBuilder();
         sb.append(b2);
-        int i2 = countItems[type] + 1;
-        countItems[type] = i2;
-        sb.append(i2);
+        int counter = countItems[type] + 1;
+        countItems[type] = counter;
+        sb.append(counter);
         String sb2 = sb.toString();
         ArrayList<ViewBean> d = ProjectDataManager.getProjectDataManager(scId).getViews(xmlName);
         while (true) {
@@ -989,9 +989,9 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
             }
             StringBuilder sb3 = new StringBuilder();
             sb3.append(b2);
-            int i3 = countItems[type] + 1;
-            countItems[type] = i3;
-            sb3.append(i3);
+            counter = countItems[type] + 1;
+            countItems[type] = counter;
+            sb3.append(counter);
             sb2 = sb3.toString();
         }
     }
@@ -1024,11 +1024,11 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         return createAndAddView(viewBean);
     }
 
-    public void loadViews(ArrayList<ViewBean> arrayList) {
-        if (arrayList == null || arrayList.isEmpty()) {
+    public void loadViews(ArrayList<ViewBean> viewBeans) {
+        if (viewBeans == null || viewBeans.isEmpty()) {
             return;
         }
-        for (ViewBean view : arrayList) {
+        for (ViewBean view : viewBeans) {
             createAndAddView(view);
         }
     }

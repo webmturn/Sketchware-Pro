@@ -34,9 +34,9 @@ public class PropertyMeasureItem extends RelativeLayout implements View.OnClickL
     private boolean isCustomValue = true;
     private int imgLeftIconDrawableResId;
 
-    public PropertyMeasureItem(Context context, boolean z) {
+    public PropertyMeasureItem(Context context, boolean useAttrs) {
         super(context);
-        initialize(context, z);
+        initialize(context, useAttrs);
     }
 
     private void setIcon(ImageView imageView) {
@@ -112,7 +112,7 @@ public class PropertyMeasureItem extends RelativeLayout implements View.OnClickL
         }
     }
 
-    private void initialize(Context context, boolean z) {
+    private void initialize(Context context, boolean useAttrs) {
         ViewUtil.inflateLayoutInto(context, this, R.layout.property_selector_item);
         tvName = findViewById(R.id.tv_name);
         tvValue = findViewById(R.id.tv_value);

@@ -35,9 +35,9 @@ public class PropertyStringSelectorItem extends RelativeLayout implements View.O
     private ViewGroup radioGroupContent;
     private PropertyChangedCallback valueChangeListener;
 
-    public PropertyStringSelectorItem(Context context, boolean z) {
+    public PropertyStringSelectorItem(Context context, boolean useAttrs) {
         super(context);
-        initialize(context, z);
+        initialize(context, useAttrs);
     }
 
     public String getKey() {
@@ -105,7 +105,7 @@ public class PropertyStringSelectorItem extends RelativeLayout implements View.O
         }
     }
 
-    private void initialize(Context context, boolean z) {
+    private void initialize(Context context, boolean useAttrs) {
         ViewUtil.inflateLayoutInto(context, this, R.layout.property_selector_item);
         tvName = findViewById(R.id.tv_name);
         tvValue = findViewById(R.id.tv_value);

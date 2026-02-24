@@ -83,12 +83,12 @@ public class PropertyAttributesItem extends LinearLayout implements View.OnClick
     private ViewBean bean;
     private List<String> ids = new ArrayList<>();
 
-    public PropertyAttributesItem(Context context, boolean z) {
+    public PropertyAttributesItem(Context context, boolean useAttrs) {
         super(context);
-        initialize(context, z);
+        initialize(context, useAttrs);
     }
 
-    private void initialize(Context context, boolean z) {
+    private void initialize(Context context, boolean useAttrs) {
         ViewUtil.inflateLayoutInto(context, this, R.layout.property_input_item);
         tvName = findViewById(R.id.tv_name);
         tvValue = findViewById(R.id.tv_value);

@@ -35,15 +35,15 @@ public class PropertyColorItem extends RelativeLayout implements View.OnClickLis
     private View propertyMenuItem;
     private PropertyChangedCallback valueChangeListener;
 
-    public PropertyColorItem(Context context, boolean z) {
+    public PropertyColorItem(Context context, boolean useAttrs) {
         super(context);
-        initialize(context, z);
+        initialize(context, useAttrs);
     }
 
-    public PropertyColorItem(Context context, boolean z, String scId) {
+    public PropertyColorItem(Context context, boolean useAttrs, String scId) {
         super(context);
         sc_id = scId;
-        initialize(context, z);
+        initialize(context, useAttrs);
     }
 
     public String getKey() {
@@ -125,7 +125,7 @@ public class PropertyColorItem extends RelativeLayout implements View.OnClickLis
         }
     }
 
-    private void initialize(Context context, boolean z) {
+    private void initialize(Context context, boolean useAttrs) {
         this.context = context;
         ViewUtil.inflateLayoutInto(context, this, R.layout.property_color_item);
         tvName = findViewById(R.id.tv_name);

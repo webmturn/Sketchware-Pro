@@ -28,12 +28,12 @@ public class PropertySwitchSingleLineItem extends LinearLayout implements View.O
     private View propertyMenuItem;
     private PropertyChangedCallback valueChangeListener;
 
-    public PropertySwitchSingleLineItem(Context context, boolean z) {
+    public PropertySwitchSingleLineItem(Context context, boolean useAttrs) {
         super(context);
-        initialize(context, z);
+        initialize(context, useAttrs);
     }
 
-    private void initialize(Context context, boolean z) {
+    private void initialize(Context context, boolean useAttrs) {
         ViewUtil.inflateLayoutInto(context, this, R.layout.property_switch_item_singleline);
         tvName = findViewById(R.id.tv_name);
         switchValue = findViewById(R.id.switch_value);

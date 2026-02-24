@@ -31,9 +31,9 @@ public class PropertySizeItem extends RelativeLayout implements View.OnClickList
     private View propertyMenuItem;
     private PropertyChangedCallback valueChangeListener;
 
-    public PropertySizeItem(Context context, boolean z) {
+    public PropertySizeItem(Context context, boolean useAttrs) {
         super(context);
-        initialize(context, z);
+        initialize(context, useAttrs);
     }
 
     public String getKey() {
@@ -92,7 +92,7 @@ public class PropertySizeItem extends RelativeLayout implements View.OnClickList
         }
     }
 
-    private void initialize(Context context, boolean z) {
+    private void initialize(Context context, boolean useAttrs) {
         this.context = context;
         ViewUtil.inflateLayoutInto(context, this, R.layout.property_input_item);
         tvName = findViewById(R.id.tv_name);

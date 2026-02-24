@@ -49,9 +49,9 @@ public class PropertyIndentItem extends RelativeLayout implements View.OnClickLi
     private TextView tvValue;
     private PropertyChangedCallback valueChangeListener;
 
-    public PropertyIndentItem(Context context, boolean z) {
+    public PropertyIndentItem(Context context, boolean useAttrs) {
         super(context);
-        initialize(context, z);
+        initialize(context, useAttrs);
     }
 
     public String getKey() {
@@ -115,7 +115,7 @@ public class PropertyIndentItem extends RelativeLayout implements View.OnClickLi
         }
     }
 
-    private void initialize(Context context, boolean z) {
+    private void initialize(Context context, boolean useAttrs) {
         this.context = context;
         ViewUtil.inflateLayoutInto(context, this, R.layout.property_input_item);
         tvName = findViewById(R.id.tv_name);
