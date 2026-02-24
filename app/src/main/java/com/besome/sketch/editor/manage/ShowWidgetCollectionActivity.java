@@ -62,7 +62,7 @@ public class ShowWidgetCollectionActivity extends BaseAppCompatActivity implemen
         if (id == R.id.img_back) {
             getOnBackPressedDispatcher().onBackPressed();
         } else if (id == R.id.save_button && widgetNameValidator.isValid()) {
-            WidgetCollectionManager.h().a(widgetName, Helper.getText(widgetNameInput), true);
+            WidgetCollectionManager.getInstance().renameWidget(widgetName, Helper.getText(widgetNameInput), true);
             SketchToast.toast(getApplicationContext(), getString(R.string.design_manager_message_edit_complete), SketchToast.TOAST_NORMAL).show();
             finish();
         }
@@ -95,20 +95,20 @@ public class ShowWidgetCollectionActivity extends BaseAppCompatActivity implemen
         binding.pane.initialize(sc_id, true);
         binding.pane.setVerticalScrollBarEnabled(true);
         ResourceManager kCVar = new ResourceManager("", SketchwarePaths.getCollectionPath() + "/image/data/", "", "");
-        kCVar.b(SoundCollectionManager.g().f());
+        kCVar.setImages(SoundCollectionManager.getInstance().getResources());
         binding.pane.setResourceManager(kCVar);
         widgetNameInput = binding.edInput.getEditText();
         widgetNameInput.setPrivateImeOptions("defaultInputmode=english;");
         widgetNameInput.setText(widgetName);
         binding.edInput.setHint(getString(R.string.design_manager_widget_hint_enter_widget_name));
         binding.saveButton.setOnClickListener(this);
-        widgetNameValidator = new UniqueNameValidator(this, binding.edInput.getTextInputLayout(), WidgetCollectionManager.h().g());
+        widgetNameValidator = new UniqueNameValidator(this, binding.edInput.getTextInputLayout(), WidgetCollectionManager.getInstance().getWidgetNames());
     }
 
     @Override
     public void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        loadViews(WidgetCollectionManager.h().a(widgetName).widgets);
+        loadViews(WidgetCollectionManager.getInstance().getWidgetByName(widgetName).widgets);
         setActionContainerHeight();
     }
 

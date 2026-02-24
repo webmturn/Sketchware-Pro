@@ -18,19 +18,19 @@ public abstract class BaseCollectionManager {
   public ArrayList<CollectionBean> collections;
   
   public BaseCollectionManager() {
-    a();
+    initialize();
   }
   
-  public void a() {
-    b();
+  public void initialize() {
+    initializePaths();
     this.fileUtil = new EncryptedFileUtil();
     this.gson = (new GsonBuilder()).create();
-    c();
+    loadCollections();
   }
   
-  public abstract void b();
+  public abstract void initializePaths();
   
-  public void c() {
+  public void loadCollections() {
     this.collections = new ArrayList<CollectionBean>();
     java.io.BufferedReader reader = null;
     try {
@@ -52,7 +52,7 @@ public abstract class BaseCollectionManager {
     }
   }
   
-  public void d() {
+  public void clearCollections() {
     ArrayList<CollectionBean> arrayList = this.collections;
     if (arrayList != null) {
       arrayList.clear();
@@ -60,7 +60,7 @@ public abstract class BaseCollectionManager {
     } 
   }
   
-  public void e() {
+  public void saveCollections() {
     if (this.collections == null)
       return; 
     StringBuilder stringBuilder = new StringBuilder(1024);

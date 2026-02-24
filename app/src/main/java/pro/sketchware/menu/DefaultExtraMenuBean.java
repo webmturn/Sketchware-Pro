@@ -65,7 +65,7 @@ public class DefaultExtraMenuBean {
         Pair<String, String[]> menuPair = BlockMenu.getMenu(menuName);
         title = menuPair.first;
         menus = new ArrayList<>(Arrays.asList(menuPair.second));
-        for (String s : projectDataManager.e(javaName, 5)) {
+        for (String s : projectDataManager.getVariableNamesByType(javaName, 5)) {
             Matcher matcher2 = Pattern.compile("^(\\w+)[\\s]+(\\w+)").matcher(s);
             while (matcher2.find()) {
                 if (menuName.equals(matcher2.group(1))) {
@@ -74,7 +74,7 @@ public class DefaultExtraMenuBean {
                 }
             }
         }
-        for (String variable : projectDataManager.e(javaName, 6)) {
+        for (String variable : projectDataManager.getVariableNamesByType(javaName, 6)) {
             String variableType = CustomVariableUtil.getVariableType(variable);
             String variableName = CustomVariableUtil.getVariableName(variable);
             if (menuName.equals(variableType)) {
@@ -82,7 +82,7 @@ public class DefaultExtraMenuBean {
                 menus.add(variableName);
             }
         }
-        for (ComponentBean componentBean : projectDataManager.e(javaName)) {
+        for (ComponentBean componentBean : projectDataManager.getComponents(javaName)) {
             if (componentBean.type > 36
                     && menuName.equals(ComponentBean.getComponentTypeName(componentBean.type))) {
                 title = String.format(Helper.getResString(R.string.menu_select_component_format), ComponentBean.getComponentTypeName(componentBean.type));
@@ -111,7 +111,7 @@ public class DefaultExtraMenuBean {
                 String path = getPath(sc_id, menuName);
                 title = String.format(Helper.getResString(R.string.menu_select_format), menuName);
                 if (menuName.equals("layout")) {
-                    for (String name : ProjectDataManager.getFileManager(sc_id).e()) {
+                    for (String name : ProjectDataManager.getFileManager(sc_id).getXmlNames()) {
                         menus.add(name.substring(0, name.indexOf(".xml")));
                     }
                 }

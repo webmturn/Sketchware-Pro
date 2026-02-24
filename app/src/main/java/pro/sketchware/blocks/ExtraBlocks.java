@@ -107,7 +107,7 @@ public class ExtraBlocks {
     }
 
     public boolean isVariableUsed(int varId) {
-        ArrayList<Pair<Integer, String>> arrayList = projectDataManager.k(javaName);
+        ArrayList<Pair<Integer, String>> arrayList = projectDataManager.getVariables(javaName);
         ArrayList<Integer> variableList = new ArrayList<>();
         for (Pair<Integer, String> intStrPair : arrayList) {
             variableList.add(intStrPair.first);
@@ -116,7 +116,7 @@ public class ExtraBlocks {
     }
 
     public boolean isListUsed(int listId) {
-        ArrayList<Pair<Integer, String>> arrayList = projectDataManager.j(javaName);
+        ArrayList<Pair<Integer, String>> arrayList = projectDataManager.getListVariables(javaName);
         ArrayList<Integer> listVar = new ArrayList<>();
         for (Pair<Integer, String> intStrPair : arrayList) {
             listVar.add(intStrPair.first);
@@ -125,7 +125,7 @@ public class ExtraBlocks {
     }
 
     public boolean isComponentUsed(int componentId) {
-        return projectDataManager.f(javaName, componentId) || ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_SHOW_EVERY_SINGLE_BLOCK);
+        return projectDataManager.hasComponentOfType(javaName, componentId) || ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_SHOW_EVERY_SINGLE_BLOCK);
     }
 
     public boolean isCustomVarUsed(String variable) {
@@ -134,7 +134,7 @@ public class ExtraBlocks {
         }
 
         ArrayList<String> arrayList = new ArrayList<>();
-        for (String variableName : projectDataManager.e(javaName, 5)) {
+        for (String variableName : projectDataManager.getVariableNamesByType(javaName, 5)) {
             Matcher matcher = Pattern.compile("^(\\w+)[\\s]+(\\w+)").matcher(variableName);
             while (matcher.find()) {
                 arrayList.add(matcher.group(1));

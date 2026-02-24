@@ -378,7 +378,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
                         image.flipVertical = activity.imageScaleY;
                         image.flipHorizontal = activity.imageScaleX;
                         if (activity.chk_collection.isChecked()) {
-                            SoundCollectionManager.g().a(activity.sc_id, image);
+                            SoundCollectionManager.getInstance().addResource(activity.sc_id, image);
                         }
                         activity.images.add(image);
                     } else if (!activity.B) {
@@ -416,7 +416,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
                         toAdd.add(image);
                     }
                     if (activity.chk_collection.isChecked()) {
-                        SoundCollectionManager.g().a(activity.sc_id, toAdd, true);
+                        SoundCollectionManager.getInstance().addResources(activity.sc_id, toAdd, true);
                     }
                     activity.multipleImagesPicked = false;
                     activity.images.addAll(toAdd);

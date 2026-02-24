@@ -29,7 +29,7 @@ public class ProjectDataParser {
     } 
   }
   
-  public static ArrayList<BlockBean> a(Gson paramGson, String paramString) {
+  public static ArrayList<BlockBean> parseBlockBeans(Gson paramGson, String paramString) {
     ArrayList<BlockBean> result = new ArrayList<>();
     java.io.BufferedReader reader = null;
     try {
@@ -48,7 +48,7 @@ public class ProjectDataParser {
     return result;
   }
   
-  public static ArrayList<ViewBean> b(Gson paramGson, String paramString) {
+  public static ArrayList<ViewBean> parseViewBeans(Gson paramGson, String paramString) {
     ArrayList<ViewBean> result = new ArrayList<>();
     java.io.BufferedReader reader = null;
     try {
@@ -76,7 +76,7 @@ public class ProjectDataParser {
       default:
         return null;
       case 8:
-        return (T)a(this.gson, paramString);
+        return (T)parseBlockBeans(this.gson, paramString);
       case 7:
         return (T)e(paramString);
       case 6:
@@ -92,7 +92,7 @@ public class ProjectDataParser {
       case 1:
         break;
     } 
-    return (T)b(this.gson, paramString);
+    return (T)parseViewBeans(this.gson, paramString);
   }
   
   public String b() {

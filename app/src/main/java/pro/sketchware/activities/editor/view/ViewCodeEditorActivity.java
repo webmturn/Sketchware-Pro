@@ -97,8 +97,8 @@ public class ViewCodeEditorActivity extends BaseAppCompatActivity {
         }
         rootLayoutManager = new InjectRootLayoutManager(sc_id);
         String title = getIntent().getStringExtra("title");
-        projectFile = ProjectDataManager.getFileManager(sc_id).b(title);
-        projectLibrary = ProjectDataManager.getLibraryManager(sc_id).c();
+        projectFile = ProjectDataManager.getFileManager(sc_id).getFileByXmlName(title);
+        projectLibrary = ProjectDataManager.getLibraryManager(sc_id).getCompat();
         getOnBackPressedDispatcher().addCallback(this, onBackPressedCallback);
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setTitle(R.string.view_code_editor_title);
@@ -257,7 +257,7 @@ public class ViewCodeEditorActivity extends BaseAppCompatActivity {
             var root = parser.getRootAttributes();
             rootLayoutManager.set(filename, InjectRootLayoutManager.toRoot(root));
             HistoryViewBean bean = new HistoryViewBean();
-            bean.actionOverride(parsedLayout, ProjectDataManager.getProjectDataManager(sc_id).d(filename));
+            bean.actionOverride(parsedLayout, ProjectDataManager.getProjectDataManager(sc_id).getViews(filename));
             var viewHistoryMgr = ViewHistoryManager.getInstance(sc_id);
             if (!viewHistoryMgr.historyMap.containsKey(filename)) {
                 viewHistoryMgr.initHistory(filename);

@@ -21,7 +21,7 @@ public class Material3LibraryManager {
 
     public Material3LibraryManager(String sc_id) {
         isEditingState = false;
-        appCombatLibraryBean = ProjectDataManager.getLibraryManager(sc_id).c();
+        appCombatLibraryBean = ProjectDataManager.getLibraryManager(sc_id).getCompat();
         isAppCompatEnabled = appCombatLibraryBean.isEnabled();
         context = getContext();
     }
@@ -29,7 +29,7 @@ public class Material3LibraryManager {
     public Material3LibraryManager(Context context, String sc_id) {
         this.context = context;
         isEditingState = false;
-        appCombatLibraryBean = ProjectDataManager.getLibraryManager(sc_id).c();
+        appCombatLibraryBean = ProjectDataManager.getLibraryManager(sc_id).getCompat();
         isAppCompatEnabled = appCombatLibraryBean.isEnabled();
     }
 

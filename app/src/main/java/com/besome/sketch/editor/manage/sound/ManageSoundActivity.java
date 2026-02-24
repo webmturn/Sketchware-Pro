@@ -125,7 +125,7 @@ public class ManageSoundActivity extends BaseAppCompatActivity implements ViewPa
             activity.h();
             activity.setResult(RESULT_OK);
             activity.finish();
-            FontCollectionManager.g().d();
+            FontCollectionManager.getInstance().clearCollections();
         }
 
         @Override

@@ -172,7 +172,7 @@ public class StringsAdapter extends RecyclerView.Adapter<StringsAdapter.ViewHold
 
     private boolean isStringUsedInJavaFiles(String projectScId, ProjectDataStore projectDataManager, String key) {
         for (String javaFileName : getAllJavaFileNames(projectScId)) {
-            for (Map.Entry<String, ArrayList<BlockBean>> entry : projectDataManager.b(javaFileName).entrySet()) {
+            for (Map.Entry<String, ArrayList<BlockBean>> entry : projectDataManager.getBlockMap(javaFileName).entrySet()) {
                 for (BlockBean block : entry.getValue()) {
                     if (block.opCode.equals("getResStr") && block.spec.equals(key) || block.opCode.equals("getResString") && block.parameters.get(0).equals("R.string." + key)) {
                         return true;
@@ -185,7 +185,7 @@ public class StringsAdapter extends RecyclerView.Adapter<StringsAdapter.ViewHold
 
     private boolean isStringUsedInXmlFiles(String projectScId, ProjectDataStore projectDataManager, String key) {
         for (String xmlFileName : getAllXmlFileNames(projectScId)) {
-            for (ViewBean view : projectDataManager.d(xmlFileName)) {
+            for (ViewBean view : projectDataManager.getViews(xmlFileName)) {
                 if (view.text.text.equals("@string/" + key) || view.text.hint.equals("@string/" + key)) {
                     return true;
                 }

@@ -75,7 +75,7 @@ public class ManageGoogleMapActivity extends BaseAppCompatActivity implements Vi
         int id = v.getId();
 
         if (id == R.id.btn_import) {
-            LibrarySettingsImporter importer = new LibrarySettingsImporter(sc_id, LibraryManager::e);
+            LibrarySettingsImporter importer = new LibrarySettingsImporter(sc_id, LibraryManager::getGoogleMap);
             importer.addOnProjectSelectedListener(settings -> {
                 googleMapLibraryBean = settings;
                 configure();

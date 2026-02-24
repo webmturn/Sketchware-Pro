@@ -390,7 +390,7 @@ public class ViewPane extends RelativeLayout {
                 try {
                     crashlytics.log("ViewPane: trying to set image to FAB");
                     FloatingActionButton fab = (FloatingActionButton) view;
-                    if (resourcesManager.h(viewBean.image.resName) == ProjectResourceBean.PROJECT_RES_TYPE_RESOURCE) {
+                    if (resourcesManager.getImageResType(viewBean.image.resName) == ProjectResourceBean.PROJECT_RES_TYPE_RESOURCE) {
                         int resourceId = getContext().getResources().getIdentifier(viewBean.image.resName, "drawable", getContext().getPackageName());
                         if (resourceId != 0) {
                             fab.setImageResource(resourceId);
@@ -398,7 +398,7 @@ public class ViewPane extends RelativeLayout {
                     } else if (viewBean.image.resName.equals("default_image")) {
                         fab.setImageResource(R.drawable.default_image);
                     } else {
-                        String imagePath = resourcesManager.f(viewBean.image.resName);
+                        String imagePath = resourcesManager.getImagePath(viewBean.image.resName);
                         File imageFile = new File(imagePath);
 
                         if (imageFile.exists()) {
@@ -460,10 +460,10 @@ public class ViewPane extends RelativeLayout {
         String backgroundResource = viewBean.layout.backgroundResource;
         if (backgroundResource != null) {
             try {
-                if (resourcesManager.h(backgroundResource) == ProjectResourceBean.PROJECT_RES_TYPE_RESOURCE) {
+                if (resourcesManager.getImageResType(backgroundResource) == ProjectResourceBean.PROJECT_RES_TYPE_RESOURCE) {
                     view.setBackgroundResource(getContext().getResources().getIdentifier(viewBean.layout.backgroundResource, "drawable", getContext().getPackageName()));
                 } else {
-                    String backgroundRes = resourcesManager.f(viewBean.layout.backgroundResource);
+                    String backgroundRes = resourcesManager.getImagePath(viewBean.layout.backgroundResource);
                     if (backgroundRes.endsWith(".9.png")) {
                         Bitmap decodedBitmap = NinePatchDecoder.decodeFile(backgroundRes);
                         byte[] ninePatchChunk = decodedBitmap.getNinePatchChunk();
@@ -512,13 +512,13 @@ public class ViewPane extends RelativeLayout {
             updateEditText((EditText) view, viewBean);
         }
         if (classInfo.matchesType("ImageView")) {
-            if (resourcesManager.h(viewBean.image.resName) == ProjectResourceBean.PROJECT_RES_TYPE_RESOURCE) {
+            if (resourcesManager.getImageResType(viewBean.image.resName) == ProjectResourceBean.PROJECT_RES_TYPE_RESOURCE) {
                 ((ImageView) view).setImageResource(getContext().getResources().getIdentifier(viewBean.image.resName, "drawable", getContext().getPackageName()));
             } else if (viewBean.image.resName.equals("default_image")) {
                 ((ImageView) view).setImageResource(R.drawable.default_image);
             } else {
                 try {
-                    String imagelocation = resourcesManager.f(viewBean.image.resName);
+                    String imagelocation = resourcesManager.getImagePath(viewBean.image.resName);
                     File file = new File(imagelocation);
                     if (file.exists() && file.length() > 0) {
                         int round3 = Math.round(getResources().getDisplayMetrics().density / 2.0f);

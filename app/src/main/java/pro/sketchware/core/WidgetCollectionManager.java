@@ -18,10 +18,10 @@ public class WidgetCollectionManager extends BaseCollectionManager {
   public Gson widgetGson = null;
   
   public WidgetCollectionManager() {
-    i();
+    initializeGson();
   }
   
-  public static WidgetCollectionManager h() {
+  public static WidgetCollectionManager getInstance() {
     if (instance == null) {
       synchronized (WidgetCollectionManager.class) {
         if (instance == null) {
@@ -32,15 +32,15 @@ public class WidgetCollectionManager extends BaseCollectionManager {
     return instance;
   }
   
-  public WidgetCollectionBean a(String paramString) {
+  public WidgetCollectionBean getWidgetByName(String paramString) {
     for (CollectionBean collectionBean : this.collections) {
       if (collectionBean.name.equals(paramString))
-        return new WidgetCollectionBean(collectionBean.name, ProjectDataParser.b(this.widgetGson, collectionBean.data)); 
+        return new WidgetCollectionBean(collectionBean.name, ProjectDataParser.parseViewBeans(this.widgetGson, collectionBean.data)); 
     } 
     return null;
   }
   
-  public void a(String paramString1, String paramString2, boolean paramBoolean) {
+  public void renameWidget(String paramString1, String paramString2, boolean paramBoolean) {
     for (CollectionBean collectionBean : this.collections) {
       if (collectionBean.name.equals(paramString1)) {
         collectionBean.name = paramString2;
@@ -48,14 +48,14 @@ public class WidgetCollectionManager extends BaseCollectionManager {
       } 
     } 
     if (paramBoolean)
-      e(); 
+      saveCollections(); 
   }
   
-  public void a(String paramString, ArrayList<ViewBean> paramArrayList, boolean paramBoolean) throws CompileException {
+  public void addWidget(String paramString, ArrayList<ViewBean> paramArrayList, boolean paramBoolean) throws CompileException {
     if (this.collections == null)
-      a(); 
+      initialize(); 
     if (this.widgetGson == null)
-      i(); 
+      initializeGson(); 
     Iterator<CollectionBean> iterator = this.collections.iterator();
     while (iterator.hasNext()) {
       if (!((CollectionBean)iterator.next()).name.equals(paramString))
@@ -71,10 +71,10 @@ public class WidgetCollectionManager extends BaseCollectionManager {
     String str = stringBuilder.toString();
     this.collections.add(new CollectionBean(paramString, str));
     if (paramBoolean)
-      e(); 
+      saveCollections(); 
   }
   
-  public void a(String paramString, boolean paramBoolean) {
+  public void removeWidget(String paramString, boolean paramBoolean) {
     int i = this.collections.size();
     while (true) {
       int j = i - 1;
@@ -89,10 +89,10 @@ public class WidgetCollectionManager extends BaseCollectionManager {
       break;
     } 
     if (paramBoolean)
-      e(); 
+      saveCollections(); 
   }
   
-  public void b() {
+  public void initializePaths() {
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(SketchwarePaths.getCollectionPath());
     stringBuilder.append(File.separator);
@@ -109,7 +109,7 @@ public class WidgetCollectionManager extends BaseCollectionManager {
     this.dataDirPath = stringBuilder.toString();
   }
   
-  public void c() {
+  public void loadCollections() {
     this.collections = new ArrayList<CollectionBean>();
     BufferedReader bufferedReader = null;
     try {
@@ -131,20 +131,20 @@ public class WidgetCollectionManager extends BaseCollectionManager {
     }
   }
   
-  public ArrayList<WidgetCollectionBean> f() {
+  public ArrayList<WidgetCollectionBean> getWidgets() {
     if (this.collections == null)
-      a(); 
+      initialize(); 
     if (this.widgetGson == null)
-      i(); 
+      initializeGson(); 
     ArrayList<WidgetCollectionBean> arrayList = new ArrayList<>();
     for (CollectionBean collectionBean : this.collections)
-      arrayList.add(new WidgetCollectionBean(collectionBean.name, ProjectDataParser.b(this.widgetGson, collectionBean.data))); 
+      arrayList.add(new WidgetCollectionBean(collectionBean.name, ProjectDataParser.parseViewBeans(this.widgetGson, collectionBean.data))); 
     return arrayList;
   }
   
-  public ArrayList<String> g() {
+  public ArrayList<String> getWidgetNames() {
     if (this.collections == null)
-      a(); 
+      initialize(); 
     ArrayList<String> arrayList = new ArrayList<>();
     Iterator<CollectionBean> iterator = this.collections.iterator();
     while (iterator.hasNext())
@@ -152,7 +152,7 @@ public class WidgetCollectionManager extends BaseCollectionManager {
     return arrayList;
   }
   
-  public final void i() {
+  public final void initializeGson() {
     this.widgetGson = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
   }
 }

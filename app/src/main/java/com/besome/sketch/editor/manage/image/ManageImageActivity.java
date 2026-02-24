@@ -147,7 +147,7 @@ public class ManageImageActivity extends BaseAppCompatActivity implements ViewPa
             activity.h();
             activity.setResult(Activity.RESULT_OK);
             activity.finish();
-            SoundCollectionManager.g().d();
+            SoundCollectionManager.getInstance().clearCollections();
         }
 
         @Override

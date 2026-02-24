@@ -175,11 +175,11 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
             ResourceManager kCVar = new ResourceManager(sc_id);
             ProjectDataStore eCVar = new ProjectDataStore(sc_id);
             LibraryManager iCVar = new LibraryManager(sc_id);
-            hCVar.i();
-            kCVar.s();
-            eCVar.g();
-            eCVar.e();
-            iCVar.i();
+            hCVar.loadFromData();
+            kCVar.loadFromData();
+            eCVar.loadViewFromData();
+            eCVar.loadLogicFromData();
+            iCVar.loadFromData();
 
             /* Extract project type template */
             project_metadata.extractAssetsToRes(getApplicationContext(), SketchwarePaths.getResourceZipPath(VersionCodeValidator.isValid(sc_id) ? "600" : sc_id));
@@ -202,9 +202,9 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
                 }
             }
             project_metadata.deleteValuesV21Directory();
-            kCVar.b(project_metadata.resDirectoryPath + File.separator + "drawable-xhdpi");
-            kCVar.c(project_metadata.resDirectoryPath + File.separator + "raw");
-            kCVar.a(project_metadata.assetsPath + File.separator + "fonts");
+            kCVar.copyImagesToDir(project_metadata.resDirectoryPath + File.separator + "drawable-xhdpi");
+            kCVar.copySoundsToDir(project_metadata.resDirectoryPath + File.separator + "raw");
+            kCVar.copyFontsToDir(project_metadata.assetsPath + File.separator + "fonts");
             project_metadata.cleanBuildCache();
 
             /* It makes no sense that those methods aren't static */
@@ -473,11 +473,11 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
                 ResourceManager kCVar = new ResourceManager(sc_id);
                 ProjectDataStore eCVar = new ProjectDataStore(sc_id);
                 LibraryManager iCVar = new LibraryManager(sc_id);
-                hCVar.i();
-                kCVar.s();
-                eCVar.g();
-                eCVar.e();
-                iCVar.i();
+                hCVar.loadFromData();
+                kCVar.loadFromData();
+                eCVar.loadViewFromData();
+                eCVar.loadLogicFromData();
+                iCVar.loadFromData();
                 if (canceled) {
                     cancel(true);
                     return;
@@ -513,9 +513,9 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
                     }
                 }
                 project_metadata.deleteValuesV21Directory();
-                kCVar.b(project_metadata.resDirectoryPath + File.separator + "drawable-xhdpi");
-                kCVar.c(project_metadata.resDirectoryPath + File.separator + "raw");
-                kCVar.a(project_metadata.assetsPath + File.separator + "fonts");
+                kCVar.copyImagesToDir(project_metadata.resDirectoryPath + File.separator + "drawable-xhdpi");
+                kCVar.copySoundsToDir(project_metadata.resDirectoryPath + File.separator + "raw");
+                kCVar.copyFontsToDir(project_metadata.assetsPath + File.separator + "fonts");
 
                 builder = new ProjectBuilder(this, getContext(), project_metadata);
                 builder.setBuildAppBundle(buildingAppBundle);

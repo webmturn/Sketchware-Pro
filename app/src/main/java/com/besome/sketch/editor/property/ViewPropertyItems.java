@@ -272,7 +272,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
             propertyViewCache.put(key, propertyCustomViewItem);
         }
 
-        propertyCustomViewItem.setCustomView(ProjectDataManager.getFileManager(sc_id).c());
+        propertyCustomViewItem.setCustomView(ProjectDataManager.getFileManager(sc_id).getCustomViews());
         propertyCustomViewItem.setValue(value);
         addView(propertyCustomViewItem);
     }
@@ -519,7 +519,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     }
 
     private void setupAttributes(String key, HashMap<String, String> value) {
-        ArrayList<ViewBean> viewBeans = ProjectDataManager.getProjectDataManager(sc_id).d(projectFile.getXmlName());
+        ArrayList<ViewBean> viewBeans = ProjectDataManager.getProjectDataManager(sc_id).getViews(projectFile.getXmlName());
         List<String> ids = new ArrayList<>();
         for (ViewBean bean : viewBeans) {
             if (!bean.id.equals(viewBean.id) && bean.parent.equals(viewBean.parent)) {
@@ -822,20 +822,20 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
 
         if (!bean.id.equals(bean.preId)) {
             boolean viewBinding = settings.getValue(ProjectSettings.SETTING_ENABLE_VIEWBINDING, "false").equals("true");
-            for (ViewBean viewBean : ProjectDataManager.getProjectDataManager(sc_id).d(projectFile.getXmlName())) {
+            for (ViewBean viewBean : ProjectDataManager.getProjectDataManager(sc_id).getViews(projectFile.getXmlName())) {
                 if (viewBean.parent.equals(bean.preId)) {
                     viewBean.parent = bean.id;
                 }
             }
 
             if (projectFile.fileType == ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY) {
-                for (EventBean eventBean : ProjectDataManager.getProjectDataManager(sc_id).g(projectFile.getJavaName())) {
+                for (EventBean eventBean : ProjectDataManager.getProjectDataManager(sc_id).getEvents(projectFile.getJavaName())) {
                     if (eventBean.targetId.equals(bean.preId)) {
                         eventBean.targetId = bean.id;
                     }
                 }
 
-                HashMap<String, ArrayList<BlockBean>> beanMap = ProjectDataManager.getProjectDataManager(sc_id).b(projectFile.getJavaName());
+                HashMap<String, ArrayList<BlockBean>> beanMap = ProjectDataManager.getProjectDataManager(sc_id).getBlockMap(projectFile.getJavaName());
 
                 for (String events : EventRegistry.getEventsForClass(bean.getClassInfo())) {
                     StringBuilder eventBodyBuilder = new StringBuilder();
@@ -858,7 +858,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
                     events.add("onCreate_initializeLogic");
                 }
 
-                for (Pair<String, String> moreblocks : ProjectDataManager.getProjectDataManager(sc_id).i(projectFile.getJavaName())) {
+                for (Pair<String, String> moreblocks : ProjectDataManager.getProjectDataManager(sc_id).getMoreBlocks(projectFile.getJavaName())) {
                     String key = moreblocks.first +
                             "_" +
                             "moreBlock";
@@ -867,7 +867,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
                     }
                 }
 
-                for (EventBean eventBean : ProjectDataManager.getProjectDataManager(sc_id).g(projectFile.getJavaName())) {
+                for (EventBean eventBean : ProjectDataManager.getProjectDataManager(sc_id).getEvents(projectFile.getJavaName())) {
                     if (!eventBean.eventName.equals("onBindCustomView")) {
                         String eventKey = eventBean.getEventKey();
                         if (beanMap.containsKey(eventKey)) {
@@ -900,8 +900,8 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
             } else {
                 ArrayList<Pair<String, String>> viewBeanItems = new ArrayList<>();
 
-                for (ProjectFileBean projectFileBean : ProjectDataManager.getFileManager(sc_id).b()) {
-                    for (ViewBean viewBean : ProjectDataManager.getProjectDataManager(sc_id).f(projectFileBean.getXmlName())) {
+                for (ProjectFileBean projectFileBean : ProjectDataManager.getFileManager(sc_id).getActivities()) {
+                    for (ViewBean viewBean : ProjectDataManager.getProjectDataManager(sc_id).getCustomViewBeans(projectFileBean.getXmlName())) {
                         if (viewBean.customView.equals(projectFile.fileName)) {
                             String javaName = projectFileBean.getJavaName();
                             String key = viewBean.id +
@@ -913,7 +913,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
                 }
 
                 for (Pair<String, String> viewBean : viewBeanItems) {
-                    ArrayList<BlockBean> blockBeans = ProjectDataManager.getProjectDataManager(sc_id).b(viewBean.first).get(viewBean.second);
+                    ArrayList<BlockBean> blockBeans = ProjectDataManager.getProjectDataManager(sc_id).getBlockMap(viewBean.first).get(viewBean.second);
                     if (blockBeans != null) {
                         for (BlockBean blockBean : blockBeans) {
                             ClassInfo classInfo = blockBean.getClassInfo();
@@ -937,19 +937,19 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
         }
 
         if (bean.type == ViewBean.VIEW_TYPE_WIDGET_LISTVIEW) {
-            ViewBean viewBean = ProjectDataManager.getProjectDataManager(sc_id).c(projectFile.getXmlName(), bean.preId);
+            ViewBean viewBean = ProjectDataManager.getProjectDataManager(sc_id).getViewBean(projectFile.getXmlName(), bean.preId);
             String custom = bean.customView;
             if (custom != null && viewBean != null) {
                 String customView = viewBean.customView;
                 if (customView != null && !customView.equals(custom)) {
-                    ArrayList<EventBean> eventBeans = ProjectDataManager.getProjectDataManager(sc_id).g(projectFile.getJavaName());
+                    ArrayList<EventBean> eventBeans = ProjectDataManager.getProjectDataManager(sc_id).getEvents(projectFile.getJavaName());
                     int size = eventBeans.size();
 
                     while (true) {
                         childCount = size - 1;
                         if (childCount < 0) {
                             if (bean.customView.isEmpty() || bean.customView.equals("none")) {
-                                Iterator<Entry<String, ArrayList<BlockBean>>> blocks = ProjectDataManager.getProjectDataManager(sc_id).b(projectFile.getJavaName()).entrySet().iterator();
+                                Iterator<Entry<String, ArrayList<BlockBean>>> blocks = ProjectDataManager.getProjectDataManager(sc_id).getBlockMap(projectFile.getJavaName()).entrySet().iterator();
 
                                 while (blocks.hasNext()) {
                                     for (BlockBean blockBean : blocks.next().getValue()) {
@@ -967,7 +967,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
                         if (eventBean.targetId.equals(bean.id)) {
                             if (eventBean.eventName.equals("onBindCustomView")) {
                                 eventBeans.remove(eventBean);
-                                HashMap<String, ArrayList<BlockBean>> blocks = ProjectDataManager.getProjectDataManager(sc_id).b(projectFile.getJavaName());
+                                HashMap<String, ArrayList<BlockBean>> blocks = ProjectDataManager.getProjectDataManager(sc_id).getBlockMap(projectFile.getJavaName());
                                 blocks.remove(eventBean.getEventKey());
                             }
                         }

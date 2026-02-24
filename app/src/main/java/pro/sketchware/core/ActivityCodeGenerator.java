@@ -102,17 +102,17 @@ public class ActivityCodeGenerator {
     }
 
     public String activityResult() {
-        ArrayList<BlockBean> blocks = ProjectDataManager.getProjectDataManager(projectDataManager.projectId).a(projectFileBean.getJavaName(), "onActivityResult_onActivityResult");
+        ArrayList<BlockBean> blocks = ProjectDataManager.getProjectDataManager(projectDataManager.projectId).getBlocks(projectFileBean.getJavaName(), "onActivityResult_onActivityResult");
         return ComponentCodeGenerator.formatCode(new BlockInterpreter(projectFileBean.getActivityName(), buildConfig, blocks, isViewBindingEnabled).interpretBlocks(), false);
     }
 
     public String initializeLogic() {
-        ArrayList<BlockBean> blocks = ProjectDataManager.getProjectDataManager(projectDataManager.projectId).a(projectFileBean.getJavaName(), "initializeLogic_initializeLogic");
+        ArrayList<BlockBean> blocks = ProjectDataManager.getProjectDataManager(projectDataManager.projectId).getBlocks(projectFileBean.getJavaName(), "initializeLogic_initializeLogic");
         return ComponentCodeGenerator.formatCode(new BlockInterpreter(projectFileBean.getActivityName(), buildConfig, blocks, isViewBindingEnabled).interpretBlocks(), false);
     }
 
     private void extraVariables() {
-        for (Map.Entry<String, ArrayList<BlockBean>> blocks : ProjectDataManager.getProjectDataManager(projectDataManager.projectId).b(projectFileBean.getJavaName()).entrySet()) {
+        for (Map.Entry<String, ArrayList<BlockBean>> blocks : ProjectDataManager.getProjectDataManager(projectDataManager.projectId).getBlockMap(projectFileBean.getJavaName()).entrySet()) {
             for (BlockBean block : blocks.getValue()) {
                 switch (block.opCode) {
                     case "addCustomVariable":
@@ -523,7 +523,7 @@ public class ActivityCodeGenerator {
             eventManager.addLifecycleEvent("onBackPressed", "DrawerLayout", "_drawer");
         }
 
-        ArrayList<ViewBean> beans = projectDataManager.d(projectFileBean.getXmlName());
+        ArrayList<ViewBean> beans = projectDataManager.getViews(projectFileBean.getXmlName());
         for (ViewBean next : beans) {
             if (next.type == ViewBean.VIEW_TYPE_WIDGET_MAPVIEW) {
                 eventManager.addLifecycleEvent("onStart", "MapView", next.id);
@@ -843,7 +843,7 @@ public class ActivityCodeGenerator {
         addImport("java.util.regex.*");
         addImport("java.text.*");
         addImport("org.json.*");
-        onCreateEventCode = new BlockInterpreter(projectFileBean.getActivityName(), buildConfig, projectDataManager.a(projectFileBean.getJavaName(), "onCreate_initializeLogic"), isViewBindingEnabled).interpretBlocks();
+        onCreateEventCode = new BlockInterpreter(projectFileBean.getActivityName(), buildConfig, projectDataManager.getBlocks(projectFileBean.getJavaName(), "onCreate_initializeLogic"), isViewBindingEnabled).interpretBlocks();
     }
 
     private String getDrawerViewInitializer(ViewBean viewBean) {
@@ -855,20 +855,20 @@ public class ActivityCodeGenerator {
     }
 
     private void addAdapterCode() {
-        for (ViewBean viewBean : projectDataManager.f(projectFileBean.getXmlName())) {
+        for (ViewBean viewBean : projectDataManager.getCustomViewBeans(projectFileBean.getXmlName())) {
             String xmlName = ProjectFileBean.getXmlName(viewBean.customView);
             projectFileBean.getJavaName();
             String eventName = viewBean.id + "_onBindCustomView";
-            String adapterLogic = new BlockInterpreter(projectFileBean.getActivityName(), buildConfig, projectDataManager.a(projectFileBean.getJavaName(), eventName), isViewBindingEnabled).interpretBlocks();
+            String adapterLogic = new BlockInterpreter(projectFileBean.getActivityName(), buildConfig, projectDataManager.getBlocks(projectFileBean.getJavaName(), eventName), isViewBindingEnabled).interpretBlocks();
             String adapterCode;
             if (viewBean.type == ViewBeans.VIEW_TYPE_LAYOUT_VIEWPAGER) {
-                adapterCode = ComponentCodeGenerator.pagerAdapter(ox, viewBean.id, viewBean.customView, projectDataManager.d(xmlName), adapterLogic, isViewBindingEnabled);
+                adapterCode = ComponentCodeGenerator.pagerAdapter(ox, viewBean.id, viewBean.customView, projectDataManager.getViews(xmlName), adapterLogic, isViewBindingEnabled);
             } else if (viewBean.type == ViewBeans.VIEW_TYPE_WIDGET_RECYCLERVIEW) {
-                adapterCode = ComponentCodeGenerator.recyclerViewAdapter(ox, viewBean.id, viewBean.customView, projectDataManager.d(xmlName), adapterLogic, isViewBindingEnabled);
+                adapterCode = ComponentCodeGenerator.recyclerViewAdapter(ox, viewBean.id, viewBean.customView, projectDataManager.getViews(xmlName), adapterLogic, isViewBindingEnabled);
                 addImport("androidx.recyclerview.widget.LinearLayoutManager");
                 addImport("androidx.recyclerview.widget.RecyclerView");
             } else {
-                adapterCode = ComponentCodeGenerator.getListAdapterCode(ox, viewBean.id, viewBean.customView, projectDataManager.d(xmlName), adapterLogic, isViewBindingEnabled);
+                adapterCode = ComponentCodeGenerator.getListAdapterCode(ox, viewBean.id, viewBean.customView, projectDataManager.getViews(xmlName), adapterLogic, isViewBindingEnabled);
             }
             adapterClasses.add(adapterCode);
         }
@@ -887,11 +887,11 @@ public class ActivityCodeGenerator {
 
     private void addMoreBlockCodes() {
         String javaName = projectFileBean.getJavaName();
-        ArrayList<Pair<String, String>> pairs = projectDataManager.i(javaName);
+        ArrayList<Pair<String, String>> pairs = projectDataManager.getMoreBlocks(javaName);
         for (int index = 0, pairsSize = pairs.size(); index < pairsSize; index++) {
             Pair<String, String> next = pairs.get(index);
             String name = next.first + "_moreBlock";
-            String code = ComponentCodeGenerator.getMoreBlockCode(next.first, next.second, new BlockInterpreter(projectFileBean.getActivityName(), buildConfig, projectDataManager.a(javaName, name), isViewBindingEnabled).interpretBlocks());
+            String code = ComponentCodeGenerator.getMoreBlockCode(next.first, next.second, new BlockInterpreter(projectFileBean.getActivityName(), buildConfig, projectDataManager.getBlocks(javaName, name), isViewBindingEnabled).interpretBlocks());
             if (index < (pairsSize - 1)) {
                 moreBlocks.add(code);
             } else {
@@ -910,7 +910,7 @@ public class ActivityCodeGenerator {
      * Adds imports for blocks used in the currently generated Activity.
      */
     private void addImportsForBlocks() {
-        for (Map.Entry<String, ArrayList<BlockBean>> entry : projectDataManager.b(projectFileBean.getJavaName()).entrySet()) {
+        for (Map.Entry<String, ArrayList<BlockBean>> entry : projectDataManager.getBlockMap(projectFileBean.getJavaName()).entrySet()) {
             for (BlockBean blockBean : entry.getValue()) {
                 switch (blockBean.opCode) {
                     case "toStringWithDecimal":
@@ -982,7 +982,7 @@ public class ActivityCodeGenerator {
      * Handles the Activity's Drawer Views and Components
      */
     private void addDrawerComponentInitializer() {
-        ArrayList<ViewBean> viewBeans = projectDataManager.d(projectFileBean.getXmlName());
+        ArrayList<ViewBean> viewBeans = projectDataManager.getViews(projectFileBean.getXmlName());
         for (ViewBean viewBean : viewBeans) {
             if (!viewBean.convert.equals("include")) {
                 Set<String> toNotAdd = ox.readAttributesToReplace(viewBean);
@@ -993,7 +993,7 @@ public class ActivityCodeGenerator {
         }
         if (!isViewBindingEnabled) {
             if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)) {
-                ArrayList<ViewBean> drawerBeans = projectDataManager.d(projectFileBean.getDrawerXmlName());
+                ArrayList<ViewBean> drawerBeans = projectDataManager.getViews(projectFileBean.getDrawerXmlName());
                 for (ViewBean viewBean : drawerBeans) {
                     if (!viewBean.convert.equals("include")) {
                         Set<String> toNotAdd = ox.readAttributesToReplace(viewBean);
@@ -1004,7 +1004,7 @@ public class ActivityCodeGenerator {
                 }
             }
         }
-        ArrayList<ComponentBean> componentBeans = projectDataManager.e(projectFileBean.getJavaName());
+        ArrayList<ComponentBean> componentBeans = projectDataManager.getComponents(projectFileBean.getJavaName());
         for (ComponentBean componentBean : componentBeans) {
             componentInitializers.add(getComponentBeanInitializer(componentBean));
         }
@@ -1015,7 +1015,7 @@ public class ActivityCodeGenerator {
      */
     private void addRequestCodeConstants() {
         int startValue = 100;
-        for (ComponentBean next : projectDataManager.e(projectFileBean.getJavaName())) {
+        for (ComponentBean next : projectDataManager.getComponents(projectFileBean.getJavaName())) {
             switch (next.type) {
                 case ComponentBean.COMPONENT_TYPE_CAMERA:
                 case ComponentBean.COMPONENT_TYPE_FILE_PICKER:
@@ -1030,7 +1030,7 @@ public class ActivityCodeGenerator {
 
     private void addFieldsDeclaration() {
         String javaName = projectFileBean.getJavaName();
-        for (Pair<Integer, String> next : new ArrayList<>(projectDataManager.k(javaName))) {
+        for (Pair<Integer, String> next : new ArrayList<>(projectDataManager.getVariables(javaName))) {
             int variableId = next.first;
             String variableValue = next.second;
             if (variableId == 9) {
@@ -1041,10 +1041,10 @@ public class ActivityCodeGenerator {
                 fields.add(getVariableDeclarationAndAddImports(variableId, variableValue));
             }
         }
-        for (Pair<Integer, String> next2 : projectDataManager.j(javaName)) {
+        for (Pair<Integer, String> next2 : projectDataManager.getListVariables(javaName)) {
             lists.add(getListDeclarationAndAddImports(next2.first, next2.second));
         }
-        for (ViewBean viewBean : projectDataManager.d(projectFileBean.getXmlName())) {
+        for (ViewBean viewBean : projectDataManager.getViews(projectFileBean.getXmlName())) {
             if (!viewBean.convert.equals("include")) {
                 Set<String> toNotAdd = ox.readAttributesToReplace(viewBean);
                 if (!toNotAdd.contains("android:id")) {
@@ -1057,7 +1057,7 @@ public class ActivityCodeGenerator {
         }
 
         if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)) {
-            for (ViewBean viewBean : projectDataManager.d(projectFileBean.getDrawerXmlName())) {
+            for (ViewBean viewBean : projectDataManager.getViews(projectFileBean.getDrawerXmlName())) {
                 if (!viewBean.convert.equals("include")) {
                     Set<String> toNotAdd = ox.readAttributesToReplace(viewBean);
                     if (!toNotAdd.contains("android:id")) {
@@ -1069,7 +1069,7 @@ public class ActivityCodeGenerator {
                 }
             }
         }
-        ArrayList<ComponentBean> componentBeans = projectDataManager.e(javaName);
+        ArrayList<ComponentBean> componentBeans = projectDataManager.getComponents(javaName);
         for (ComponentBean bean : componentBeans) {
             components.add(getComponentDeclarationAndAddImports(bean));
         }

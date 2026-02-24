@@ -22,7 +22,7 @@ public class PermissionManager {
 
     private ArrayList<String> addedPermissions() {
         ArrayList<String> permList = new ArrayList<>();
-        for (Entry<String, ArrayList<BlockBean>> blocks : ProjectDataManager.getProjectDataManager(sc_id).b(javaName).entrySet()) {
+        for (Entry<String, ArrayList<BlockBean>> blocks : ProjectDataManager.getProjectDataManager(sc_id).getBlockMap(javaName).entrySet()) {
             for (BlockBean block : blocks.getValue()) {
                 if (block.opCode.equals("addPermission")) {
                     String firstParam = block.parameters.get(0);
@@ -55,7 +55,7 @@ public class PermissionManager {
     }
 
     private void removePermission(boolean isAppCompat, ArrayList<String> checkPerm, ArrayList<String> reqPerm) {
-        for (Entry<String, ArrayList<BlockBean>> blocks : ProjectDataManager.getProjectDataManager(sc_id).b(javaName).entrySet()) {
+        for (Entry<String, ArrayList<BlockBean>> blocks : ProjectDataManager.getProjectDataManager(sc_id).getBlockMap(javaName).entrySet()) {
             for (BlockBean block : blocks.getValue()) {
                 if (block.opCode.equals("removePermission") && !block.parameters.get(0).trim().isEmpty()) {
                     String permission = block.parameters.get(0).startsWith("Manifest") ? block.parameters.get(0) : ("Manifest.permission." + block.parameters.get(0));

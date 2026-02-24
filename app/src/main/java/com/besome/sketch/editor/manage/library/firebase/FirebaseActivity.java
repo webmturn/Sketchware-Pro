@@ -156,7 +156,7 @@ public class FirebaseActivity extends BaseAppCompatActivity implements View.OnCl
             } else if (id == R.id.tv_nextbtn) {
                 onNextPressed();
             } else if (id == R.id.btn_import) {
-                LibrarySettingsImporter importer = new LibrarySettingsImporter(sc_id, LibraryManager::d);
+                LibrarySettingsImporter importer = new LibrarySettingsImporter(sc_id, LibraryManager::getFirebaseDB);
                 importer.addOnProjectSelectedListener(settings -> {
                     firebaseSettings = settings;
                     stepNumber = STEP_3;

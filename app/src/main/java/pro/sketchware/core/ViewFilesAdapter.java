@@ -43,7 +43,7 @@ public class ViewFilesAdapter extends BaseFragment {
     arrayOfInt[paramInt] = i;
     stringBuilder.append(i);
     String str2 = stringBuilder.toString();
-    ArrayList arrayList = ProjectDataManager.a(this.projectId).d(paramString);
+    ArrayList arrayList = ProjectDataManager.getProjectDataManager(this.projectId).getViews(paramString);
     paramString = str2;
     while (true) {
       int found = 0;
@@ -123,7 +123,7 @@ public class ViewFilesAdapter extends BaseFragment {
   }
   
   public void d() {
-    ArrayList<ProjectFileBean> arrayList = ProjectDataManager.b(this.projectId).c();
+    ArrayList<ProjectFileBean> arrayList = ProjectDataManager.getFileManager(this.projectId).getCustomViews();
     if (arrayList == null)
       return; 
     for (ProjectFileBean projectFileBean : arrayList)
@@ -180,18 +180,18 @@ public class ViewFilesAdapter extends BaseFragment {
   public void onActivityResult(int paramInt1, int paramInt2, Intent paramIntent) {
     if ((paramInt1 == 277 || paramInt1 == 278) && paramInt2 == -1) {
       ProjectFileBean projectFileBean = this.projectFiles.get(this.adapter.selectedPosition);
-      ArrayList<ViewBean> arrayList2 = ProjectDataManager.a(this.projectId).d(projectFileBean.getXmlName());
+      ArrayList<ViewBean> arrayList2 = ProjectDataManager.getProjectDataManager(this.projectId).getViews(projectFileBean.getXmlName());
       for (paramInt2 = arrayList2.size() - 1; paramInt2 >= 0; paramInt2--) {
         ViewBean viewBean = arrayList2.get(paramInt2);
-        ProjectDataManager.a(this.projectId).a(projectFileBean, viewBean);
+        ProjectDataManager.getProjectDataManager(this.projectId).removeView(projectFileBean, viewBean);
       } 
       ArrayList<ViewBean> arrayList1 = a(((ProjectFileBean)paramIntent.getParcelableExtra("preset_data")).presetName, paramInt1);
-      ProjectDataManager.a(this.projectId);
-      for (ViewBean viewBean : ProjectDataStore.a(arrayList1)) {
+      ProjectDataManager.getProjectDataManager(this.projectId);
+      for (ViewBean viewBean : ProjectDataStore.getSortedRootViews(arrayList1)) {
         viewBean.id = a(viewBean.type, projectFileBean.getXmlName());
-        ProjectDataManager.a(this.projectId).a(projectFileBean.getXmlName(), viewBean);
+        ProjectDataManager.getProjectDataManager(this.projectId).addView(projectFileBean.getXmlName(), viewBean);
         if (viewBean.type == 3 && projectFileBean.fileType == 0)
-          ProjectDataManager.a(this.projectId).a(projectFileBean.getJavaName(), 1, viewBean.type, viewBean.id, "onClick"); 
+          ProjectDataManager.getProjectDataManager(this.projectId).addEvent(projectFileBean.getJavaName(), 1, viewBean.type, viewBean.id, "onClick"); 
       } 
       a a1 = this.adapter;
       a1.notifyItemChanged(a1.selectedPosition);

@@ -62,7 +62,7 @@ public class ImageCollectionFragment extends BaseFragment implements View.OnClic
     private MaterialCardView layoutBtnImport;
 
     public void refreshData() {
-        collectionImages = SoundCollectionManager.g().f();
+        collectionImages = SoundCollectionManager.getInstance().getResources();
         adapter.notifyDataSetChanged();
         updateGuideVisibility();
     }

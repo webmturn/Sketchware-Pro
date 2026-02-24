@@ -75,7 +75,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
         var5[var1] = var6;
         var4.append(var6);
         String var9 = var4.toString();
-        ArrayList<ViewBean> var12 = ProjectDataManager.getProjectDataManager(sc_id).d(var2);
+        ArrayList<ViewBean> var12 = ProjectDataManager.getProjectDataManager(sc_id).getViews(var2);
         var2 = var9;
 
         while (true) {
@@ -120,11 +120,11 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
 
     public final void a(ProjectFileBean var1, ArrayList<ViewBean> var2) {
         ProjectDataManager.getProjectDataManager(sc_id);
-        for (ViewBean viewBean : ProjectDataStore.a(var2)) {
+        for (ViewBean viewBean : ProjectDataStore.getSortedRootViews(var2)) {
             viewBean.id = a(viewBean.type, var1.getXmlName());
-            ProjectDataManager.getProjectDataManager(sc_id).a(var1.getXmlName(), viewBean);
+            ProjectDataManager.getProjectDataManager(sc_id).addView(var1.getXmlName(), viewBean);
             if (viewBean.type == ViewBean.VIEW_TYPE_WIDGET_BUTTON && var1.fileType == ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY) {
-                ProjectDataManager.getProjectDataManager(sc_id).a(var1.getJavaName(), EventBean.EVENT_TYPE_VIEW, viewBean.type, viewBean.id, "onClick");
+                ProjectDataManager.getProjectDataManager(sc_id).addEvent(var1.getJavaName(), EventBean.EVENT_TYPE_VIEW, viewBean.type, viewBean.id, "onClick");
             }
         }
     }
@@ -184,11 +184,11 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
     }
 
     public final void m() {
-        ProjectDataManager.getFileManager(sc_id).a(activitiesFragment.getActivitiesFiles());
-        ProjectDataManager.getFileManager(sc_id).b(customViewsFragment.c());
-        ProjectDataManager.getFileManager(sc_id).l();
-        ProjectDataManager.getFileManager(sc_id).j();
-        ProjectDataManager.getProjectDataManager(sc_id).a(ProjectDataManager.getFileManager(sc_id));
+        ProjectDataManager.getFileManager(sc_id).setActivities(activitiesFragment.getActivitiesFiles());
+        ProjectDataManager.getFileManager(sc_id).setCustomViews(customViewsFragment.c());
+        ProjectDataManager.getFileManager(sc_id).saveToBackup();
+        ProjectDataManager.getFileManager(sc_id).refreshNameLists();
+        ProjectDataManager.getProjectDataManager(sc_id).syncWithFileManager(ProjectDataManager.getFileManager(sc_id));
     }
 
 
@@ -257,7 +257,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
                                 b(projectFileBean.getDrawerName());
                             }
                             if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER) || projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB)) {
-                                ProjectDataManager.getLibraryManager(sc_id).c().useYn = "Y";
+                                ProjectDataManager.getLibraryManager(sc_id).getCompat().useYn = "Y";
                             }
                             if (data.hasExtra("preset_views")) {
                                 a(projectFileBean, data.getParcelableArrayListExtra("preset_views"));

@@ -123,7 +123,7 @@ public class ShowMoreBlockCollectionActivity extends BaseAppCompatActivity imple
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.save_button && moreBlockNameValidator.isValid()) {
-            MoreBlockCollectionManager.h().a(moreBlockName, Helper.getText(moreBlockNameEditorText), true);
+            MoreBlockCollectionManager.getInstance().renameMoreBlock(moreBlockName, Helper.getText(moreBlockNameEditorText), true);
             SketchToast.toast(getApplicationContext(), Helper.getResString(R.string.design_manager_message_edit_complete), SketchToast.TOAST_NORMAL).show();
             finish();
         }
@@ -158,7 +158,7 @@ public class ShowMoreBlockCollectionActivity extends BaseAppCompatActivity imple
 
         binding.saveButton.setText(Helper.getResString(R.string.common_word_save));
         binding.saveButton.setOnClickListener(this);
-        moreBlockNameValidator = new UniqueNameValidator(this, binding.edInput.getTextInputLayout(), MoreBlockCollectionManager.h().g());
+        moreBlockNameValidator = new UniqueNameValidator(this, binding.edInput.getTextInputLayout(), MoreBlockCollectionManager.getInstance().getMoreBlockNames());
     }
 
     @Override
@@ -171,7 +171,7 @@ public class ShowMoreBlockCollectionActivity extends BaseAppCompatActivity imple
     public void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
-        MoreBlockCollectionBean moreBlock = MoreBlockCollectionManager.h().a(moreBlockName);
+        MoreBlockCollectionBean moreBlock = MoreBlockCollectionManager.getInstance().getMoreBlockByName(moreBlockName);
         if (moreBlock != null) {
             addHeaderBlock(moreBlock.spec);
             addBlocks(moreBlock.blocks);

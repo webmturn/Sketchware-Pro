@@ -54,7 +54,7 @@ public class ViewFilesFragment extends BaseFragment {
         nameCounters[beanType] = counter;
         nameBuilder.append(counter);
         String newName = nameBuilder.toString();
-        ArrayList<ViewBean> viewBeans = ProjectDataManager.getProjectDataManager(sc_id).d(xmlName);
+        ArrayList<ViewBean> viewBeans = ProjectDataManager.getProjectDataManager(sc_id).getViews(xmlName);
         xmlName = newName;
 
         while (true) {
@@ -108,7 +108,7 @@ public class ViewFilesFragment extends BaseFragment {
         }
 
         if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER) || projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB)) {
-            ProjectDataManager.getLibraryManager(sc_id).c().useYn = "Y";
+            ProjectDataManager.getLibraryManager(sc_id).getCompat().useYn = "Y";
         }
     }
 
@@ -119,17 +119,17 @@ public class ViewFilesFragment extends BaseFragment {
     public final void applyPreset(ProjectFileBean var1) {
         ProjectFileBean projectFileBean = activitiesFiles.get(projectFilesAdapter.layoutPosition);
 
-        ArrayList<ViewBean> fileViewBeans = ProjectDataManager.getProjectDataManager(sc_id).d(projectFileBean.getXmlName());
+        ArrayList<ViewBean> fileViewBeans = ProjectDataManager.getProjectDataManager(sc_id).getViews(projectFileBean.getXmlName());
         for (int i = fileViewBeans.size() - 1; i >= 0; --i) {
-            ProjectDataManager.getProjectDataManager(sc_id).a(projectFileBean, fileViewBeans.get(i));
+            ProjectDataManager.getProjectDataManager(sc_id).removeView(projectFileBean, fileViewBeans.get(i));
         }
 
         ArrayList<ViewBean> var6 = getPresetViews(var1.presetName);
-        for (ViewBean viewBean : ProjectDataStore.a(var6)) {
+        for (ViewBean viewBean : ProjectDataStore.getSortedRootViews(var6)) {
             viewBean.id = generateWidgetId(viewBean.type, projectFileBean.getXmlName());
-            ProjectDataManager.getProjectDataManager(sc_id).a(projectFileBean.getXmlName(), viewBean);
+            ProjectDataManager.getProjectDataManager(sc_id).addView(projectFileBean.getXmlName(), viewBean);
             if (viewBean.type == 3 && projectFileBean.fileType == 0) {
-                ProjectDataManager.getProjectDataManager(sc_id).a(projectFileBean.getJavaName(), 1, viewBean.type, viewBean.id, "onClick");
+                ProjectDataManager.getProjectDataManager(sc_id).addEvent(projectFileBean.getJavaName(), 1, viewBean.type, viewBean.id, "onClick");
             }
         }
     }
@@ -137,7 +137,7 @@ public class ViewFilesFragment extends BaseFragment {
     public void loadProjectFiles() {
         sc_id = requireActivity().getIntent().getStringExtra("sc_id");
         isAppCompatUsed = requireActivity().getIntent().getStringExtra("compatUseYn");
-        ArrayList<ProjectFileBean> projectFiles = ProjectDataManager.getFileManager(sc_id).b();
+        ArrayList<ProjectFileBean> projectFiles = ProjectDataManager.getFileManager(sc_id).getActivities();
         if (projectFiles != null) {
             boolean isMainActivityFile = false;
             for (ProjectFileBean projectFileBean : projectFiles) {

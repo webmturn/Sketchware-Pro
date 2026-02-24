@@ -9,28 +9,28 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class SoundCollectionManager extends BaseCollectionManager {
-  public static SoundCollectionManager f;
+  public static SoundCollectionManager instance;
   
-  public static SoundCollectionManager g() {
-    if (f == null) {
+  public static SoundCollectionManager getInstance() {
+    if (instance == null) {
       synchronized (SoundCollectionManager.class) {
-        if (f == null) {
-          f = new SoundCollectionManager();
+        if (instance == null) {
+          instance = new SoundCollectionManager();
         }
       }
     }
-    return f;
+    return instance;
   }
   
-  public ProjectResourceBean a(String paramString) {
-    for (ProjectResourceBean projectResourceBean : f()) {
+  public ProjectResourceBean getResourceByName(String paramString) {
+    for (ProjectResourceBean projectResourceBean : getResources()) {
       if (projectResourceBean.resName.equals(paramString))
         return projectResourceBean; 
     } 
     return null;
   }
   
-  public void a(ProjectResourceBean paramProjectResourceBean, String paramString, boolean paramBoolean) {
+  public void renameResource(ProjectResourceBean paramProjectResourceBean, String paramString, boolean paramBoolean) {
     int i = this.collections.size();
     while (--i >= 0) {
       CollectionBean collectionBean = this.collections.get(i);
@@ -40,15 +40,15 @@ public class SoundCollectionManager extends BaseCollectionManager {
       } 
     } 
     if (paramBoolean)
-      e(); 
+      saveCollections(); 
   }
   
-  public void a(String paramString, ProjectResourceBean paramProjectResourceBean) throws CompileException {
-    a(paramString, paramProjectResourceBean, true);
+  public void addResource(String paramString, ProjectResourceBean paramProjectResourceBean) throws CompileException {
+    addResource(paramString, paramProjectResourceBean, true);
   }
   
-  public void a(String paramString, ProjectResourceBean paramProjectResourceBean, boolean paramBoolean) throws CompileException {
-    if (this.collections == null) a();
+  public void addResource(String paramString, ProjectResourceBean paramProjectResourceBean, boolean paramBoolean) throws CompileException {
+    if (this.collections == null) initialize();
     ArrayList<String> duplicates = new ArrayList<String>();
     for (CollectionBean bean : this.collections) {
       if (bean.name.equals(paramProjectResourceBean.resName)) {
@@ -89,12 +89,12 @@ public class SoundCollectionManager extends BaseCollectionManager {
       }
     }
     this.collections.add(new CollectionBean(paramProjectResourceBean.resName, dataName));
-    if (paramBoolean) e();
+    if (paramBoolean) saveCollections();
   }
   
-  public void a(String paramString, ArrayList<ProjectResourceBean> paramArrayList, boolean paramBoolean) throws CompileException {
+  public void addResources(String paramString, ArrayList<ProjectResourceBean> paramArrayList, boolean paramBoolean) throws CompileException {
     if (this.collections == null)
-      a(); 
+      initialize(); 
     ArrayList<String> arrayList = new ArrayList<>();
     for (CollectionBean collectionBean : this.collections) {
       for (ProjectResourceBean projectResourceBean : paramArrayList) {
@@ -173,7 +173,7 @@ public class SoundCollectionManager extends BaseCollectionManager {
           throw yy2;
         } 
         if (paramBoolean)
-          e(); 
+          saveCollections(); 
         return;
       } 
       CompileException yy1 = new CompileException("file_no_exist");
@@ -185,7 +185,7 @@ public class SoundCollectionManager extends BaseCollectionManager {
     throw CompileException;
   }
   
-  public void a(String paramString, boolean paramBoolean) {
+  public void removeResource(String paramString, boolean paramBoolean) {
     int i = this.collections.size();
     while (true) {
       int j = i - 1;
@@ -206,12 +206,12 @@ public class SoundCollectionManager extends BaseCollectionManager {
         continue;
       } 
       if (paramBoolean)
-        e(); 
+        saveCollections(); 
       return;
     } 
   }
   
-  public void b() {
+  public void initializePaths() {
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(SketchwarePaths.getCollectionPath());
     stringBuilder.append(File.separator);
@@ -228,8 +228,8 @@ public class SoundCollectionManager extends BaseCollectionManager {
     this.dataDirPath = stringBuilder.toString();
   }
   
-  public boolean b(String paramString) {
-    Iterator<ProjectResourceBean> iterator = f().iterator();
+  public boolean hasResource(String paramString) {
+    Iterator<ProjectResourceBean> iterator = getResources().iterator();
     while (iterator.hasNext()) {
       if (((ProjectResourceBean)iterator.next()).resName.equals(paramString))
         return true; 
@@ -237,14 +237,14 @@ public class SoundCollectionManager extends BaseCollectionManager {
     return false;
   }
   
-  public void d() {
-    super.d();
-    f = null;
+  public void clearCollections() {
+    super.clearCollections();
+    instance = null;
   }
   
-  public ArrayList<ProjectResourceBean> f() {
+  public ArrayList<ProjectResourceBean> getResources() {
     if (this.collections == null)
-      a(); 
+      initialize(); 
     ArrayList<ProjectResourceBean> arrayList = new ArrayList<>();
     for (CollectionBean collectionBean : this.collections)
       arrayList.add(new ProjectResourceBean(ProjectResourceBean.PROJECT_RES_TYPE_FILE, collectionBean.name, collectionBean.data)); 

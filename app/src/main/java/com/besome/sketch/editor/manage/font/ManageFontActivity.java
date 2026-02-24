@@ -131,7 +131,7 @@ public class ManageFontActivity extends BaseAppCompatActivity {
             activity.h();
             activity.setResult(RESULT_OK);
             activity.finish();
-            ImageCollectionManager.g().d();
+            ImageCollectionManager.getInstance().clearCollections();
         }
 
         @Override

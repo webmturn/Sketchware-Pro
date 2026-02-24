@@ -235,8 +235,8 @@ public class ManageAppCompatActivity extends BaseAppCompatActivity {
     }
 
     private void initializeProjectBean() {
-        projectFile = ProjectDataManager.getFileManager(sc_id).b(filename);
-        projectLibrary = ProjectDataManager.getLibraryManager(sc_id).c();
+        projectFile = ProjectDataManager.getFileManager(sc_id).getFileByXmlName(filename);
+        projectLibrary = ProjectDataManager.getLibraryManager(sc_id).getCompat();
     }
 
     private void resetData() {

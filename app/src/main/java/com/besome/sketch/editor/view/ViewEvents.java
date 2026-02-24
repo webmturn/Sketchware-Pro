@@ -64,7 +64,7 @@ public class ViewEvents extends LinearLayout {
         String[] viewEvents = EventRegistry.getEventsForClass(viewBean.getClassInfo());
         events.clear();
 
-        ArrayList<EventBean> alreadyAddedEvents = ProjectDataManager.getProjectDataManager(sc_id).g(projectFileBean.getJavaName());
+        ArrayList<EventBean> alreadyAddedEvents = ProjectDataManager.getProjectDataManager(sc_id).getEvents(projectFileBean.getJavaName());
         for (String event : viewEvents) {
             boolean eventAlreadyInActivity = false;
             for (EventBean bean : alreadyAddedEvents) {
@@ -88,7 +88,7 @@ public class ViewEvents extends LinearLayout {
         EventBean eventBean = events.get(eventPosition);
         if (!eventBean.isSelected) {
             eventBean.isSelected = true;
-            ProjectDataManager.getProjectDataManager(sc_id).a(projectFileBean.getJavaName(), eventBean);
+            ProjectDataManager.getProjectDataManager(sc_id).addEventBean(projectFileBean.getJavaName(), eventBean);
             eventAdapter.notifyItemChanged(eventPosition);
             SketchToast.toast(getContext(), getContext().getString(R.string.event_message_new_event), 0).show();
         }

@@ -187,32 +187,32 @@ public class ViewProperty extends LinearLayout implements PropertyChangedCallbac
         editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
 
-        UniqueNameValidator validator = new UniqueNameValidator(getContext(), view.findViewById(R.id.ti_input), WidgetCollectionManager.h().g());
+        UniqueNameValidator validator = new UniqueNameValidator(getContext(), view.findViewById(R.id.ti_input), WidgetCollectionManager.getInstance().getWidgetNames());
         dialog.setView(view);
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_save), (v, which) -> {
             if (!UIHelper.isClickThrottled() && validator.isValid()) {
                 String widgetName = Helper.getText(editText);
-                ArrayList<ViewBean> viewBeans = ProjectDataManager.getProjectDataManager(sc_id).b(projectFile.getXmlName(), projectActivityViews.get(idsAdapter.getSelectedItemPosition()));
+                ArrayList<ViewBean> viewBeans = ProjectDataManager.getProjectDataManager(sc_id).getViewWithChildren(projectFile.getXmlName(), projectActivityViews.get(idsAdapter.getSelectedItemPosition()));
                 for (ViewBean viewBean : viewBeans) {
                     String backgroundResource = viewBean.layout.backgroundResource;
                     String resName = viewBean.image.resName;
-                    if (backgroundResource != null && !backgroundResource.equals("NONE") && ProjectDataManager.getResourceManager(sc_id).l(backgroundResource) && !SoundCollectionManager.g().b(backgroundResource)) {
+                    if (backgroundResource != null && !backgroundResource.equals("NONE") && ProjectDataManager.getResourceManager(sc_id).hasImage(backgroundResource) && !SoundCollectionManager.getInstance().hasResource(backgroundResource)) {
                         try {
-                            SoundCollectionManager.g().a(sc_id, ProjectDataManager.getResourceManager(sc_id).g(backgroundResource));
+                            SoundCollectionManager.getInstance().addResource(sc_id, ProjectDataManager.getResourceManager(sc_id).getImageBean(backgroundResource));
                         } catch (Exception e) {
                             Log.e("ViewProperty", e.getMessage(), e);
                             SketchToast.warning(getContext(), e.getMessage(), SketchToast.TOAST_NORMAL).show();
                         }
                     }
-                    if (resName != null && !resName.equals("default_image") && !resName.equals("NONE") && ProjectDataManager.getResourceManager(sc_id).l(resName) && !SoundCollectionManager.g().b(resName)) {
+                    if (resName != null && !resName.equals("default_image") && !resName.equals("NONE") && ProjectDataManager.getResourceManager(sc_id).hasImage(resName) && !SoundCollectionManager.getInstance().hasResource(resName)) {
                         try {
-                            SoundCollectionManager.g().a(sc_id, ProjectDataManager.getResourceManager(sc_id).g(resName));
+                            SoundCollectionManager.getInstance().addResource(sc_id, ProjectDataManager.getResourceManager(sc_id).getImageBean(resName));
                         } catch (Exception e) {
                             SketchToast.warning(getContext(), e.getMessage(), SketchToast.TOAST_NORMAL).show();
                         }
                     }
                 }
-                try { WidgetCollectionManager.h().a(widgetName, viewBeans, true); } catch (pro.sketchware.core.CompileException ignored) {}
+                try { WidgetCollectionManager.getInstance().addWidget(widgetName, viewBeans, true); } catch (pro.sketchware.core.CompileException ignored) {}
                 if (propertyListener != null) {
                     propertyListener.a();
                 }

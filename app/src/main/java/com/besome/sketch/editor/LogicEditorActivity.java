@@ -170,7 +170,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
     public static ArrayList<String> getAllJavaFileNames(String projectScId) {
         ArrayList<String> javaFileNames = new ArrayList<>();
-        for (ProjectFileBean projectFile : ProjectDataManager.getFileManager(projectScId).b()) {
+        for (ProjectFileBean projectFile : ProjectDataManager.getFileManager(projectScId).getActivities()) {
             javaFileNames.add(projectFile.getJavaName());
         }
         return javaFileNames;
@@ -178,7 +178,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
     public static ArrayList<String> getAllXmlFileNames(String projectScId) {
         ArrayList<String> xmlFileNames = new ArrayList<>();
-        for (ProjectFileBean projectFile : ProjectDataManager.getFileManager(projectScId).b()) {
+        for (ProjectFileBean projectFile : ProjectDataManager.getFileManager(projectScId).getActivities()) {
             String xmlName = projectFile.getXmlName();
             if (xmlName != null && !xmlName.isEmpty()) {
                 xmlFileNames.add(xmlName);
@@ -189,7 +189,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
     private void loadEventBlocks() {
         crashlytics.log("Loading event blocks");
-        ArrayList<BlockBean> eventBlocks = ProjectDataManager.getProjectDataManager(scId).a(M.getJavaName(), id + "_" + eventName);
+        ArrayList<BlockBean> eventBlocks = ProjectDataManager.getProjectDataManager(scId).getBlocks(M.getJavaName(), id + "_" + eventName);
         if (eventBlocks != null) {
             if (eventBlocks.isEmpty()) {
                 runOnUiThread(() -> e(X));
@@ -315,7 +315,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     public void saveBlocks() {
         ProjectDataStore a2 = ProjectDataManager.getProjectDataManager(scId);
         String javaName = M.getJavaName();
-        a2.a(javaName, id + "_" + eventName, o.getBlocks());
+        a2.putBlocks(javaName, id + "_" + eventName, o.getBlocks());
     }
 
     public void showAddListDialog() {
@@ -324,7 +324,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         View a2 = ViewUtil.inflateLayout(this, R.layout.logic_popup_add_list);
         RadioGroup radioGroup = a2.findViewById(R.id.rg_type);
         TextInputEditText editText = a2.findViewById(R.id.ed_input);
-        IdentifierValidator listNameValidator = new IdentifierValidator(getContext(), a2.findViewById(R.id.ti_input), BlockConstants.RESERVED_KEYWORDS, BlockConstants.COMPONENT_TYPES, ProjectDataManager.getProjectDataManager(scId).a(M));
+        IdentifierValidator listNameValidator = new IdentifierValidator(getContext(), a2.findViewById(R.id.ti_input), BlockConstants.RESERVED_KEYWORDS, BlockConstants.COMPONENT_TYPES, ProjectDataManager.getProjectDataManager(scId).getAllIdentifiers(M));
         dialog.setView(a2);
         dialog.setPositiveButton(R.string.common_word_add, (v, which) -> {
             if (listNameValidator.isValid()) {
@@ -353,7 +353,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         View customView = ViewUtil.inflateLayout(this, R.layout.logic_popup_add_variable);
         RadioGroup radioGroup = customView.findViewById(R.id.rg_type);
         TextInputEditText editText = customView.findViewById(R.id.ed_input);
-        IdentifierValidator nameValidator = new IdentifierValidator(getContext(), customView.findViewById(R.id.ti_input), BlockConstants.RESERVED_KEYWORDS, BlockConstants.COMPONENT_TYPES, ProjectDataManager.getProjectDataManager(scId).a(M));
+        IdentifierValidator nameValidator = new IdentifierValidator(getContext(), customView.findViewById(R.id.ti_input), BlockConstants.RESERVED_KEYWORDS, BlockConstants.COMPONENT_TYPES, ProjectDataManager.getProjectDataManager(scId).getAllIdentifiers(M));
         dialog.setView(customView);
         dialog.setPositiveButton(R.string.common_word_add, (v, which) -> {
             int variableType = 1;
@@ -384,7 +384,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public void showMoreBlockImporter() {
-        ArrayList<MoreBlockCollectionBean> moreBlocks = MoreBlockCollectionManager.h().f();
+        ArrayList<MoreBlockCollectionBean> moreBlocks = MoreBlockCollectionManager.getInstance().getMoreBlocks();
         new MoreblockImporterDialog(this, moreBlocks, this).show();
     }
 
@@ -393,7 +393,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         dialog.setTitle(R.string.logic_editor_title_remove_list);
         View a2 = ViewUtil.inflateLayout(this, R.layout.property_popup_selector_single);
         ViewGroup viewGroup = a2.findViewById(R.id.rg_content);
-        for (Pair<Integer, String> list : ProjectDataManager.getProjectDataManager(scId).j(M.getJavaName())) {
+        for (Pair<Integer, String> list : ProjectDataManager.getProjectDataManager(scId).getListVariables(M.getJavaName())) {
             viewGroup.addView(e(list.second));
         }
         dialog.setView(a2);
@@ -404,7 +404,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 RadioButton radioButton = (RadioButton) viewGroup.getChildAt(i);
                 if (radioButton.isChecked()) {
                     if (!o.b(Helper.getText(radioButton))) {
-                        if (!ProjectDataManager.getProjectDataManager(scId).b(M.getJavaName(), Helper.getText(radioButton), id + "_" + eventName)) {
+                        if (!ProjectDataManager.getProjectDataManager(scId).isListUsedInBlocks(M.getJavaName(), Helper.getText(radioButton), id + "_" + eventName)) {
                             l(Helper.getText(radioButton));
                         }
                     }
@@ -424,7 +424,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         dialog.setTitle(R.string.logic_editor_title_remove_variable);
         View a2 = ViewUtil.inflateLayout(this, R.layout.property_popup_selector_single);
         ViewGroup viewGroup = a2.findViewById(R.id.rg_content);
-        for (Pair<Integer, String> next : ProjectDataManager.getProjectDataManager(scId).k(M.getJavaName())) {
+        for (Pair<Integer, String> next : ProjectDataManager.getProjectDataManager(scId).getVariables(M.getJavaName())) {
             RadioButton e = e(next.second);
             e.setTag(next.first);
             viewGroup.addView(e);
@@ -437,7 +437,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 RadioButton radioButton = (RadioButton) viewGroup.getChildAt(i);
                 if (radioButton.isChecked()) {
                     if (!o.c(Helper.getText(radioButton))) {
-                        if (!ProjectDataManager.getProjectDataManager(scId).c(M.getJavaName(), Helper.getText(radioButton), id + "_" + eventName)) {
+                        if (!ProjectDataManager.getProjectDataManager(scId).isVariableUsedInBlocks(M.getJavaName(), Helper.getText(radioButton), id + "_" + eventName)) {
                             m(Helper.getText(radioButton));
                         }
                     }
@@ -561,7 +561,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             return imageView;
         }
 
-        File imageFile = new File(ProjectDataManager.getResourceManager(scId).f(name));
+        File imageFile = new File(ProjectDataManager.getResourceManager(scId).getImagePath(name));
         if (imageFile.exists()) {
             String path = imageFile.getAbsolutePath();
             Uri uri = FileProvider.getUriForFile(this, getPackageName() + ".provider", imageFile);
@@ -571,7 +571,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             } else {
                 Glide.with(this)
                         .load(uri)
-                        .signature(ResourceManager.n())
+                        .signature(ResourceManager.getCacheSignature())
                         .error(R.drawable.ic_remove_grey600_24dp)
                         .into(imageView);
             }
@@ -672,7 +672,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public void a(int i, String str) {
-        ProjectDataManager.getProjectDataManager(scId).b(M.getJavaName(), i, str);
+        ProjectDataManager.getProjectDataManager(scId).addListVariable(M.getJavaName(), i, str);
         a(1, 0xffcc5b22);
     }
 
@@ -739,7 +739,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        ArrayList<String> images = ProjectDataManager.getResourceManager(scId).m();
+        ArrayList<String> images = ProjectDataManager.getResourceManager(scId).getImageNames();
         images.addAll(new VectorDrawableLoader().getVectorDrawables(DesignActivity.sc_id));
         if (selectingImage) {
             images.add(0, "default_image");
@@ -848,10 +848,10 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                             String xmlName = M.getXmlName();
                             if (eventName.equals("onBindCustomView")) {
                                 var ProjectDataStore = ProjectDataManager.getProjectDataManager(scId);
-                                var view = ProjectDataStore.c(xmlName, id);
+                                var view = ProjectDataStore.getViewBean(xmlName, id);
                                 if (view == null) {
                                     // Event is of a Drawer View
-                                    view = ProjectDataStore.c("_drawer_" + xmlName, id);
+                                    view = ProjectDataStore.getViewBean("_drawer_" + xmlName, id);
                                 }
                                 String customView = view.customView;
                                 if (customView != null) {
@@ -865,171 +865,171 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
                                     switch (ss.componentType) {
                                         case "varInt":
-                                            ProjectDataStore.f(javaName, ExtraMenuBean.VARIABLE_TYPE_NUMBER, parameter);
+                                            ProjectDataStore.hasVariable(javaName, ExtraMenuBean.VARIABLE_TYPE_NUMBER, parameter);
                                             break;
 
                                         case "varBool":
-                                            ProjectDataStore.f(javaName, ExtraMenuBean.VARIABLE_TYPE_BOOLEAN, parameter);
+                                            ProjectDataStore.hasVariable(javaName, ExtraMenuBean.VARIABLE_TYPE_BOOLEAN, parameter);
                                             break;
 
                                         case "varStr":
-                                            ProjectDataStore.f(javaName, ExtraMenuBean.VARIABLE_TYPE_STRING, parameter);
+                                            ProjectDataStore.hasVariable(javaName, ExtraMenuBean.VARIABLE_TYPE_STRING, parameter);
                                             break;
 
                                         case "listInt":
-                                            ProjectDataStore.e(javaName, ExtraMenuBean.LIST_TYPE_NUMBER, parameter);
+                                            ProjectDataStore.hasListVariable(javaName, ExtraMenuBean.LIST_TYPE_NUMBER, parameter);
                                             break;
 
                                         case "listStr":
-                                            ProjectDataStore.e(javaName, ExtraMenuBean.LIST_TYPE_STRING, parameter);
+                                            ProjectDataStore.hasListVariable(javaName, ExtraMenuBean.LIST_TYPE_STRING, parameter);
                                             break;
 
                                         case "listMap":
-                                            ProjectDataStore.e(javaName, ExtraMenuBean.LIST_TYPE_MAP, parameter);
+                                            ProjectDataStore.hasListVariable(javaName, ExtraMenuBean.LIST_TYPE_MAP, parameter);
                                             break;
 
                                         case "list":
-                                            boolean b = ProjectDataStore.e(javaName, ExtraMenuBean.LIST_TYPE_NUMBER, parameter);
+                                            boolean b = ProjectDataStore.hasListVariable(javaName, ExtraMenuBean.LIST_TYPE_NUMBER, parameter);
                                             if (!b) {
-                                                b = ProjectDataStore.e(javaName, ExtraMenuBean.LIST_TYPE_STRING, parameter);
+                                                b = ProjectDataStore.hasListVariable(javaName, ExtraMenuBean.LIST_TYPE_STRING, parameter);
                                             }
 
                                             if (!b) {
-                                                ProjectDataStore.e(javaName, ExtraMenuBean.LIST_TYPE_MAP, parameter);
+                                                ProjectDataStore.hasListVariable(javaName, ExtraMenuBean.LIST_TYPE_MAP, parameter);
                                             }
                                             break;
 
                                         case "view":
-                                            ProjectDataStore.h(xmlName, parameter);
+                                            ProjectDataStore.hasView(xmlName, parameter);
                                             break;
 
                                         case "textview":
-                                            ProjectDataStore.g(xmlName, parameter);
+                                            ProjectDataStore.hasTextView(xmlName, parameter);
                                             break;
 
                                         case "checkbox":
-                                            ProjectDataStore.e(xmlName, parameter);
+                                            ProjectDataStore.hasCompoundButtonView(xmlName, parameter);
                                             break;
 
                                         case "imageview":
-                                            ProjectDataStore.g(xmlName, ViewBean.VIEW_TYPE_WIDGET_IMAGEVIEW, parameter);
+                                            ProjectDataStore.hasViewOfType(xmlName, ViewBean.VIEW_TYPE_WIDGET_IMAGEVIEW, parameter);
                                             break;
 
                                         case "seekbar":
-                                            ProjectDataStore.g(xmlName, ViewBean.VIEW_TYPE_WIDGET_SEEKBAR, parameter);
+                                            ProjectDataStore.hasViewOfType(xmlName, ViewBean.VIEW_TYPE_WIDGET_SEEKBAR, parameter);
                                             break;
 
                                         case "calendarview":
-                                            ProjectDataStore.g(xmlName, ViewBean.VIEW_TYPE_WIDGET_CALENDARVIEW, parameter);
+                                            ProjectDataStore.hasViewOfType(xmlName, ViewBean.VIEW_TYPE_WIDGET_CALENDARVIEW, parameter);
                                             break;
 
                                         case "adview":
-                                            ProjectDataStore.g(xmlName, ViewBean.VIEW_TYPE_WIDGET_ADVIEW, parameter);
+                                            ProjectDataStore.hasViewOfType(xmlName, ViewBean.VIEW_TYPE_WIDGET_ADVIEW, parameter);
                                             break;
 
                                         case "listview":
-                                            ProjectDataStore.g(xmlName, ViewBean.VIEW_TYPE_WIDGET_LISTVIEW, parameter);
+                                            ProjectDataStore.hasViewOfType(xmlName, ViewBean.VIEW_TYPE_WIDGET_LISTVIEW, parameter);
                                             break;
 
                                         case "spinner":
-                                            ProjectDataStore.g(xmlName, ViewBean.VIEW_TYPE_WIDGET_SPINNER, parameter);
+                                            ProjectDataStore.hasViewOfType(xmlName, ViewBean.VIEW_TYPE_WIDGET_SPINNER, parameter);
                                             break;
 
                                         case "webview":
-                                            ProjectDataStore.g(xmlName, ViewBean.VIEW_TYPE_WIDGET_WEBVIEW, parameter);
+                                            ProjectDataStore.hasViewOfType(xmlName, ViewBean.VIEW_TYPE_WIDGET_WEBVIEW, parameter);
                                             break;
 
                                         case "switch":
-                                            ProjectDataStore.g(xmlName, ViewBean.VIEW_TYPE_WIDGET_SWITCH, parameter);
+                                            ProjectDataStore.hasViewOfType(xmlName, ViewBean.VIEW_TYPE_WIDGET_SWITCH, parameter);
                                             break;
 
                                         case "progressbar":
-                                            ProjectDataStore.g(xmlName, ViewBean.VIEW_TYPE_WIDGET_PROGRESSBAR, parameter);
+                                            ProjectDataStore.hasViewOfType(xmlName, ViewBean.VIEW_TYPE_WIDGET_PROGRESSBAR, parameter);
                                             break;
 
                                         case "mapview":
-                                            ProjectDataStore.g(xmlName, ViewBean.VIEW_TYPE_WIDGET_MAPVIEW, parameter);
+                                            ProjectDataStore.hasViewOfType(xmlName, ViewBean.VIEW_TYPE_WIDGET_MAPVIEW, parameter);
                                             break;
 
                                         case "intent":
-                                            ProjectDataStore.d(javaName, ComponentBean.COMPONENT_TYPE_INTENT, parameter);
+                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_INTENT, parameter);
                                             break;
 
                                         case "file":
-                                            ProjectDataStore.d(javaName, ComponentBean.COMPONENT_TYPE_SHAREDPREF, parameter);
+                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_SHAREDPREF, parameter);
                                             break;
 
                                         case "calendar":
-                                            ProjectDataStore.d(javaName, ComponentBean.COMPONENT_TYPE_CALENDAR, parameter);
+                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_CALENDAR, parameter);
                                             break;
 
                                         case "timer":
-                                            ProjectDataStore.d(javaName, ComponentBean.COMPONENT_TYPE_TIMERTASK, parameter);
+                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_TIMERTASK, parameter);
                                             break;
 
                                         case "vibrator":
-                                            ProjectDataStore.d(javaName, ComponentBean.COMPONENT_TYPE_VIBRATOR, parameter);
+                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_VIBRATOR, parameter);
                                             break;
 
                                         case "dialog":
-                                            ProjectDataStore.d(javaName, ComponentBean.COMPONENT_TYPE_DIALOG, parameter);
+                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_DIALOG, parameter);
                                             break;
 
                                         case "mediaplayer":
-                                            ProjectDataStore.d(javaName, ComponentBean.COMPONENT_TYPE_MEDIAPLAYER, parameter);
+                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_MEDIAPLAYER, parameter);
                                             break;
 
                                         case "soundpool":
-                                            ProjectDataStore.d(javaName, ComponentBean.COMPONENT_TYPE_SOUNDPOOL, parameter);
+                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_SOUNDPOOL, parameter);
                                             break;
 
                                         case "objectanimator":
-                                            ProjectDataStore.d(javaName, ComponentBean.COMPONENT_TYPE_OBJECTANIMATOR, parameter);
+                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_OBJECTANIMATOR, parameter);
                                             break;
 
                                         case "firebase":
-                                            ProjectDataStore.d(javaName, ComponentBean.COMPONENT_TYPE_FIREBASE, parameter);
+                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_FIREBASE, parameter);
                                             break;
 
                                         case "firebaseauth":
-                                            ProjectDataStore.d(javaName, ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH, parameter);
+                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH, parameter);
                                             break;
 
                                         case "firebasestorage":
-                                            ProjectDataStore.d(javaName, ComponentBean.COMPONENT_TYPE_FIREBASE_STORAGE, parameter);
+                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_FIREBASE_STORAGE, parameter);
                                             break;
 
                                         case "gyroscope":
-                                            ProjectDataStore.d(javaName, ComponentBean.COMPONENT_TYPE_GYROSCOPE, parameter);
+                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_GYROSCOPE, parameter);
                                             break;
 
                                         case "interstitialad":
-                                            ProjectDataStore.d(javaName, ComponentBean.COMPONENT_TYPE_INTERSTITIAL_AD, parameter);
+                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_INTERSTITIAL_AD, parameter);
                                             break;
 
                                         case "requestnetwork":
-                                            ProjectDataStore.d(javaName, ComponentBean.COMPONENT_TYPE_REQUEST_NETWORK, parameter);
+                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_REQUEST_NETWORK, parameter);
                                             break;
 
                                         case "texttospeech":
-                                            ProjectDataStore.d(javaName, ComponentBean.COMPONENT_TYPE_TEXT_TO_SPEECH, parameter);
+                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_TEXT_TO_SPEECH, parameter);
                                             break;
 
                                         case "speechtotext":
-                                            ProjectDataStore.d(javaName, ComponentBean.COMPONENT_TYPE_SPEECH_TO_TEXT, parameter);
+                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_SPEECH_TO_TEXT, parameter);
                                             break;
 
                                         case "bluetoothconnect":
-                                            ProjectDataStore.d(javaName, ComponentBean.COMPONENT_TYPE_BLUETOOTH_CONNECT, parameter);
+                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_BLUETOOTH_CONNECT, parameter);
                                             break;
 
                                         case "locationmanager":
-                                            ProjectDataStore.d(javaName, ComponentBean.COMPONENT_TYPE_LOCATION_MANAGER, parameter);
+                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_LOCATION_MANAGER, parameter);
                                             break;
 
                                         case "resource_bg":
                                         case "resource":
-                                            for (String str : ProjectDataManager.getResourceManager(scId).m()) {
+                                            for (String str : ProjectDataManager.getResourceManager(scId).getImageNames()) {
                                                 // Like this in vanilla Sketchware. Don't ask me why.
                                                 //noinspection StatementWithEmptyBody
                                                 if (parameter.equals(str)) {
@@ -1038,7 +1038,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                                             break;
 
                                         case "activity":
-                                            for (String str : ProjectDataManager.getFileManager(scId).d()) {
+                                            for (String str : ProjectDataManager.getFileManager(scId).getJavaNames()) {
                                                 // Like this in vanilla Sketchware. Don't ask me why.
                                                 //noinspection StatementWithEmptyBody
                                                 if (parameter.equals(str.substring(str.indexOf(".java")))) {
@@ -1047,7 +1047,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                                             break;
 
                                         case "sound":
-                                            for (String str : ProjectDataManager.getResourceManager(scId).p()) {
+                                            for (String str : ProjectDataManager.getResourceManager(scId).getSoundNames()) {
                                                 // Like this in vanilla Sketchware. Don't ask me why.
                                                 //noinspection StatementWithEmptyBody
                                                 if (parameter.equals(str)) {
@@ -1056,75 +1056,75 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                                             break;
 
                                         case "videoad":
-                                            ProjectDataStore.d(xmlName, ComponentBean.COMPONENT_TYPE_REWARDED_VIDEO_AD, parameter);
+                                            ProjectDataStore.hasComponent(xmlName, ComponentBean.COMPONENT_TYPE_REWARDED_VIDEO_AD, parameter);
                                             break;
 
                                         case "progressdialog":
-                                            ProjectDataStore.d(xmlName, ComponentBean.COMPONENT_TYPE_PROGRESS_DIALOG, parameter);
+                                            ProjectDataStore.hasComponent(xmlName, ComponentBean.COMPONENT_TYPE_PROGRESS_DIALOG, parameter);
                                             break;
 
                                         case "datepickerdialog":
-                                            ProjectDataStore.d(xmlName, ComponentBean.COMPONENT_TYPE_DATE_PICKER_DIALOG, parameter);
+                                            ProjectDataStore.hasComponent(xmlName, ComponentBean.COMPONENT_TYPE_DATE_PICKER_DIALOG, parameter);
                                             break;
 
                                         case "timepickerdialog":
-                                            ProjectDataStore.d(xmlName, ComponentBean.COMPONENT_TYPE_TIME_PICKER_DIALOG, parameter);
+                                            ProjectDataStore.hasComponent(xmlName, ComponentBean.COMPONENT_TYPE_TIME_PICKER_DIALOG, parameter);
                                             break;
 
                                         case "notification":
-                                            ProjectDataStore.d(xmlName, ComponentBean.COMPONENT_TYPE_NOTIFICATION, parameter);
+                                            ProjectDataStore.hasComponent(xmlName, ComponentBean.COMPONENT_TYPE_NOTIFICATION, parameter);
                                             break;
 
                                         case "radiobutton":
-                                            ProjectDataStore.g(xmlName, 19, parameter);
+                                            ProjectDataStore.hasViewOfType(xmlName, 19, parameter);
                                             break;
 
                                         case "ratingbar":
-                                            ProjectDataStore.g(xmlName, 20, parameter);
+                                            ProjectDataStore.hasViewOfType(xmlName, 20, parameter);
                                             break;
 
                                         case "videoview":
-                                            ProjectDataStore.g(xmlName, 21, parameter);
+                                            ProjectDataStore.hasViewOfType(xmlName, 21, parameter);
                                             break;
 
                                         case "searchview":
-                                            ProjectDataStore.g(xmlName, 22, parameter);
+                                            ProjectDataStore.hasViewOfType(xmlName, 22, parameter);
                                             break;
 
                                         case "actv":
-                                            ProjectDataStore.g(xmlName, 23, parameter);
+                                            ProjectDataStore.hasViewOfType(xmlName, 23, parameter);
                                             break;
 
                                         case "mactv":
-                                            ProjectDataStore.g(xmlName, 24, parameter);
+                                            ProjectDataStore.hasViewOfType(xmlName, 24, parameter);
                                             break;
 
                                         case "gridview":
-                                            ProjectDataStore.g(xmlName, 25, parameter);
+                                            ProjectDataStore.hasViewOfType(xmlName, 25, parameter);
                                             break;
 
                                         case "tablayout":
-                                            ProjectDataStore.g(xmlName, 30, parameter);
+                                            ProjectDataStore.hasViewOfType(xmlName, 30, parameter);
                                             break;
 
                                         case "viewpager":
-                                            ProjectDataStore.g(xmlName, 31, parameter);
+                                            ProjectDataStore.hasViewOfType(xmlName, 31, parameter);
                                             break;
 
                                         case "bottomnavigation":
-                                            ProjectDataStore.g(xmlName, 32, parameter);
+                                            ProjectDataStore.hasViewOfType(xmlName, 32, parameter);
                                             break;
 
                                         case "badgeview":
-                                            ProjectDataStore.g(xmlName, 33, parameter);
+                                            ProjectDataStore.hasViewOfType(xmlName, 33, parameter);
                                             break;
 
                                         case "patternview":
-                                            ProjectDataStore.g(xmlName, 34, parameter);
+                                            ProjectDataStore.hasViewOfType(xmlName, 34, parameter);
                                             break;
 
                                         case "sidebar":
-                                            ProjectDataStore.g(xmlName, 35, parameter);
+                                            ProjectDataStore.hasViewOfType(xmlName, 35, parameter);
                                             break;
 
                                         default:
@@ -1211,7 +1211,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             arrayList2.add(blockBean);
         }
         try {
-            BlockCollectionManager.h().a(str, arrayList2, true);
+            BlockCollectionManager.getInstance().addBlock(str, arrayList2, true);
             O.a(str, arrayList2).setOnTouchListener(this);
         } catch (Exception e) {
             crashlytics.recordException(e);
@@ -1231,7 +1231,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             return true;
         }
         if (blockBean.opCode.equals("definedFunc")) {
-            Iterator<Pair<String, String>> it = ProjectDataManager.getProjectDataManager(scId).i(M.getJavaName()).iterator();
+            Iterator<Pair<String, String>> it = ProjectDataManager.getProjectDataManager(scId).getMoreBlocks(M.getJavaName()).iterator();
             boolean z = false;
             while (it.hasNext()) {
                 if (blockBean.spec.equals(ReturnMoreblockManager.getMbName(it.next().second))) {
@@ -1258,7 +1258,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public void b(int i, String str) {
-        ProjectDataManager.getProjectDataManager(scId).c(M.getJavaName(), i, str);
+        ProjectDataManager.getProjectDataManager(scId).addVariable(M.getJavaName(), i, str);
         a(0, 0xffee7d16);
     }
 
@@ -1319,7 +1319,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         editText.setLines(1);
         editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
-        UniqueNameValidator blockNameValidator = new UniqueNameValidator(this, a2.findViewById(R.id.ti_input), BlockCollectionManager.h().g());
+        UniqueNameValidator blockNameValidator = new UniqueNameValidator(this, a2.findViewById(R.id.ti_input), BlockCollectionManager.getInstance().getBlockNames());
         dialog.setView(a2);
         dialog.setPositiveButton(R.string.common_word_save, (v, which) -> {
             if (blockNameValidator.isValid()) {
@@ -1351,7 +1351,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public void c(String str, String str2) {
-        ProjectDataManager.getProjectDataManager(scId).a(M.getJavaName(), str, str2);
+        ProjectDataManager.getProjectDataManager(scId).addMoreBlock(M.getJavaName(), str, str2);
         a(8, 0xff8a55d7);
     }
 
@@ -1383,7 +1383,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             typeface = Typeface.DEFAULT;
         } else {
             try {
-                typeface = Typeface.createFromFile(ProjectDataManager.getResourceManager(scId).d(fontName));
+                typeface = Typeface.createFromFile(ProjectDataManager.getResourceManager(scId).getFontPath(fontName));
             } catch (RuntimeException e) {
                 crashlytics.log("Loading font preview");
                 crashlytics.recordException(e);
@@ -1417,7 +1417,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         View customView = ViewUtil.inflateLayout(this, R.layout.property_popup_selector_color);
         RadioGroup radioGroup = customView.findViewById(R.id.rg);
         LinearLayout linearLayout = customView.findViewById(R.id.content);
-        ArrayList<String> fontNames = ProjectDataManager.getResourceManager(scId).k();
+        ArrayList<String> fontNames = ProjectDataManager.getResourceManager(scId).getFontNames();
         fontNames.add(0, "default_font");
         for (String fontName : fontNames) {
             RadioButton font = getFontRadioButton(fontName);
@@ -1545,9 +1545,9 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
         if (eventName.equals("onBindCustomView")) {
             var ProjectDataStore = ProjectDataManager.getProjectDataManager(scId);
-            var view = ProjectDataStore.c(xmlName, id);
+            var view = ProjectDataStore.getViewBean(xmlName, id);
             if (view == null) {
-                view = ProjectDataStore.c("_drawer_" + xmlName, id);
+                view = ProjectDataStore.getViewBean("_drawer_" + xmlName, id);
             }
             if (view != null && view.customView != null) {
                 xmlName = ProjectFileBean.getXmlName(view.customView);
@@ -1555,7 +1555,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
 
         dialog.setTitle(R.string.logic_editor_title_select_view);
-        ArrayList<ViewBean> views = ProjectDataManager.getProjectDataManager(scId).d(xmlName);
+        ArrayList<ViewBean> views = ProjectDataManager.getProjectDataManager(scId).getViews(xmlName);
         for (ViewBean viewBean : views) {
             String convert = viewBean.convert;
             String typeName = convert.isEmpty() ? ViewBean.getViewTypeName(viewBean.type) : IdGenerator.getLastPath(convert);
@@ -1714,13 +1714,13 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             }
         });
 
-        for (String soundName : ProjectDataManager.getResourceManager(scId).p()) {
+        for (String soundName : ProjectDataManager.getResourceManager(scId).getSoundNames()) {
             RadioButton sound = e(soundName);
             radioGroup.addView(sound);
             if (soundName.equals(ss.getArgValue())) {
                 sound.setChecked(true);
             }
-            sound.setOnClickListener(v -> soundPool.load(ProjectDataManager.getResourceManager(scId).i(Helper.getText(sound)), 1));
+            sound.setOnClickListener(v -> soundPool.load(ProjectDataManager.getResourceManager(scId).getSoundPath(Helper.getText(sound)), 1));
         }
         dialog.setView(customView);
         dialog.setPositiveButton(R.string.common_word_select, (v, which) -> {
@@ -1787,7 +1787,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public void l(String str) {
-        ProjectDataManager.getProjectDataManager(scId).o(M.getJavaName(), str);
+        ProjectDataManager.getProjectDataManager(scId).removeListVariable(M.getJavaName(), str);
         a(1, 0xffcc5b22);
     }
 
@@ -1801,7 +1801,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public void m(String str) {
-        ProjectDataManager.getProjectDataManager(scId).p(M.getJavaName(), str);
+        ProjectDataManager.getProjectDataManager(scId).removeVariable(M.getJavaName(), str);
         a(0, 0xffee7d16);
     }
 
@@ -1819,7 +1819,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         dialog.setTitle(R.string.logic_block_favorites_delete_title);
         dialog.setMessage(R.string.logic_block_favorites_delete_message);
         dialog.setPositiveButton(R.string.common_word_delete, (v, which) -> {
-            BlockCollectionManager.h().a(str, true);
+            BlockCollectionManager.getInstance().removeBlock(str, true);
             O.a(str);
             v.dismiss();
         });
@@ -2012,7 +2012,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
         String title;
         if (eventName.equals("moreBlock")) {
-            title = getString(R.string.root_spec_common_define) + " " + ReturnMoreblockManager.getLogicEditorTitle(ProjectDataManager.getProjectDataManager(scId).b(M.getJavaName(), id));
+            title = getString(R.string.root_spec_common_define) + " " + ReturnMoreblockManager.getLogicEditorTitle(ProjectDataManager.getProjectDataManager(scId).getMoreBlockSpec(M.getJavaName(), id));
         } else if (id.equals("_fab")) {
             title = StringResource.getInstance().getRootSpecTranslation(getContext(), "fab", eventName);
         } else {
@@ -2082,8 +2082,8 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         ArrayList<BlockBean> blocks = o.getBlocks();
         ProjectDataStore a2 = ProjectDataManager.getProjectDataManager(scId);
         String javaName = M.getJavaName();
-        a2.a(javaName, id + "_" + eventName, blocks);
-        ProjectDataManager.getProjectDataManager(scId).k();
+        a2.putBlocks(javaName, id + "_" + eventName, blocks);
+        ProjectDataManager.getProjectDataManager(scId).saveAllBackup();
     }
 
     @Override
@@ -2522,7 +2522,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
     public void z() {
         O.a();
-        for (BlockCollectionBean next : BlockCollectionManager.h().f()) {
+        for (BlockCollectionBean next : BlockCollectionManager.getInstance().getBlocks()) {
             O.a(next.name, next.blocks).setOnTouchListener(this);
         }
     }

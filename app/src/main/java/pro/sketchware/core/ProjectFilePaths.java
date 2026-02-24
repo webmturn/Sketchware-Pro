@@ -482,10 +482,10 @@ public class ProjectFilePaths {
     }
 
     public void initializeMetadata(LibraryManager projectLibraryManager, ProjectFileManager projectFileManager, ProjectDataStore projectDataManager, ExportType exportingType) {
-        ProjectLibraryBean adMob = projectLibraryManager.b();
-        ProjectLibraryBean appCompat = projectLibraryManager.c();
-        ProjectLibraryBean firebase = projectLibraryManager.d();
-        ProjectLibraryBean googleMaps = projectLibraryManager.e();
+        ProjectLibraryBean adMob = projectLibraryManager.getAdmob();
+        ProjectLibraryBean appCompat = projectLibraryManager.getCompat();
+        ProjectLibraryBean firebase = projectLibraryManager.getFirebaseDB();
+        ProjectLibraryBean googleMaps = projectLibraryManager.getGoogleMap();
         this.exportingType = exportingType;
         buildConfig = new BuildConfig();
         buildConfig.packageName = packageName;
@@ -516,8 +516,8 @@ public class ProjectFilePaths {
             buildConfig.addPermission(BuildConfig.PERMISSION_ACCESS_NETWORK_STATE);
             buildConfig.setupGoogleMap(googleMaps);
         }
-        for (ProjectFileBean customView : projectFileManager.c()) {
-            for (ViewBean viewBean : ProjectDataStore.a(projectDataManager.d(customView.getXmlName()))) {
+        for (ProjectFileBean customView : projectFileManager.getCustomViews()) {
+            for (ViewBean viewBean : ProjectDataStore.getSortedRootViews(projectDataManager.getViews(customView.getXmlName()))) {
                 var classNameParts = viewBean.convert.split("\\.");
                 var className = classNameParts[classNameParts.length - 1];
                 switch (className) {
@@ -532,11 +532,11 @@ public class ProjectFilePaths {
                 }
             }
         }
-        for (ProjectFileBean activity : projectFileManager.b()) {
+        for (ProjectFileBean activity : projectFileManager.getActivities()) {
             if (activity.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)) {
                 buildConfig.getActivityPermissions(activity.getActivityName()).hasDrawer = true;
             }
-            for (ComponentBean component : projectDataManager.e(activity.getJavaName())) {
+            for (ComponentBean component : projectDataManager.getComponents(activity.getJavaName())) {
                 switch (component.type) {
                     case ComponentBean.COMPONENT_TYPE_CAMERA, 35 -> {
                         buildConfig.isAppCompatEnabled = true;
@@ -590,7 +590,7 @@ public class ProjectFilePaths {
                 }
             }
 
-            for (ViewBean view : ProjectDataStore.a(projectDataManager.d(activity.getXmlName()))) {
+            for (ViewBean view : ProjectDataStore.getSortedRootViews(projectDataManager.getViews(activity.getXmlName()))) {
                 var classNameParts = view.convert.split("\\.");
                 var className = classNameParts[classNameParts.length - 1];
                 switch (className) {
@@ -605,7 +605,7 @@ public class ProjectFilePaths {
                 }
             }
 
-            for (Map.Entry<String, ArrayList<BlockBean>> entry : projectDataManager.b(activity.getJavaName()).entrySet()) {
+            for (Map.Entry<String, ArrayList<BlockBean>> entry : projectDataManager.getBlockMap(activity.getJavaName()).entrySet()) {
                 for (BlockBean block : entry.getValue()) {
                     switch (block.opCode) {
                         case "intentSetAction":
@@ -698,7 +698,7 @@ public class ProjectFilePaths {
             writeProjectFile(bean.srcFileName, bean.source);
         }
         if (buildConfig.isFirebaseEnabled || buildConfig.isAdMobEnabled || buildConfig.isMapUsed) {
-            ProjectLibraryBean firebaseLibrary = projectLibraryManager.d();
+            ProjectLibraryBean firebaseLibrary = projectLibraryManager.getFirebaseDB();
             XmlBuilderHelper mx = new XmlBuilderHelper();
             mx.addInteger("google_play_services_version", 12451000);
             if (buildConfig.isFirebaseEnabled) {
@@ -724,7 +724,7 @@ public class ProjectFilePaths {
             }
             if (buildConfig.isMapUsed) {
                 // if p3 is false, then "translatable="false" will be added
-                mx.addString("google_maps_key", projectLibraryManager.e().data, false);
+                mx.addString("google_maps_key", projectLibraryManager.getGoogleMap().data, false);
             }
             String filePath = "values/secrets.xml";
             fileUtil.writeText(resDirectoryPath + File.separator + filePath,
@@ -758,7 +758,7 @@ public class ProjectFilePaths {
         // Generate Activities unless a custom version of it exists already
         // at /Internal storage/.sketchware/data/<sc_id>/files/java/
         ArrayList<SrcCodeBean> srcCodeBeans = new ArrayList<>();
-        for (ProjectFileBean activity : projectFileManager.b()) {
+        for (ProjectFileBean activity : projectFileManager.getActivities()) {
             if (!javaFiles.contains(new File(javaDir + activity.getJavaName()))) {
                 srcCodeBeans.add(new SrcCodeBean(activity.getJavaName(),
                         new ActivityCodeGenerator(buildConfig, activity, projectDataManager).generateCode(isAndroidStudioExport, sc_id)));
@@ -775,11 +775,11 @@ public class ProjectFilePaths {
 
         // Generate layouts unless a custom version of it exists already
         // at /Internal storage/.sketchware/data/<sc_id>/files/resource/layout/
-        ArrayList<ProjectFileBean> regularLayouts = projectFileManager.b();
+        ArrayList<ProjectFileBean> regularLayouts = projectFileManager.getActivities();
         for (ProjectFileBean layout : regularLayouts) {
             String xmlName = layout.getXmlName();
             LayoutGenerator ox = new LayoutGenerator(buildConfig, layout);
-            ox.setViews(ProjectDataStore.a(projectDataManager.d(xmlName)), projectDataManager.h(xmlName));
+            ox.setViews(ProjectDataStore.getSortedRootViews(projectDataManager.getViews(xmlName)), projectDataManager.getFabView(xmlName));
             var ogFile = new File(layoutDir + xmlName);
             if (!layoutFiles.contains(ogFile)) {
                 srcCodeBeans.add(new SrcCodeBean(xmlName, CommandBlock.applyCommands(xmlName, ox.toXmlString())));
@@ -796,11 +796,11 @@ public class ProjectFilePaths {
             }
         }
 
-        ArrayList<ProjectFileBean> customViewFiles = projectFileManager.c();
+        ArrayList<ProjectFileBean> customViewFiles = projectFileManager.getCustomViews();
         for (ProjectFileBean customViewFile : customViewFiles) {
             String xmlName = customViewFile.getXmlName();
             LayoutGenerator ox = new LayoutGenerator(buildConfig, customViewFile);
-            ox.setViews(ProjectDataStore.a(projectDataManager.d(xmlName)));
+            ox.setViews(ProjectDataStore.getSortedRootViews(projectDataManager.getViews(xmlName)));
             var ogFile = new File(layoutDir + xmlName);
             if (!layoutFiles.contains(ogFile)) {
                 srcCodeBeans.add(new SrcCodeBean(xmlName, CommandBlock.applyCommands(xmlName, ox.toXmlString())));
@@ -817,7 +817,7 @@ public class ProjectFilePaths {
             }
         }
 
-        ManifestGenerator ix = new ManifestGenerator(buildConfig, projectFileManager.b(), builtInLibraryManager);
+        ManifestGenerator ix = new ManifestGenerator(buildConfig, projectFileManager.getActivities(), builtInLibraryManager);
         ix.setYq(this);
 
         // Make generated classes viewable
@@ -881,8 +881,8 @@ public class ProjectFilePaths {
         boolean isJavaFile = filename.endsWith(".java");
         boolean isXmlFile = filename.endsWith(".xml");
         boolean isManifestFile = filename.equals("AndroidManifest.xml");
-        ArrayList<ProjectFileBean> files = new ArrayList<>(projectFileManager.b());
-        files.addAll(new ArrayList<>(projectFileManager.c()));
+        ArrayList<ProjectFileBean> files = new ArrayList<>(projectFileManager.getActivities());
+        files.addAll(new ArrayList<>(projectFileManager.getCustomViews()));
         if (isXmlFile) {
             var path = SketchwarePaths.getDataPath(sc_id) + "/command";
             var newXMLCommand = Boolean.parseBoolean(projectSettings.getValue(ProjectSettings.SETTING_NEW_XML_COMMAND, ProjectSettings.SETTING_GENERIC_VALUE_FALSE));
@@ -913,7 +913,7 @@ public class ProjectFilePaths {
         if (isManifestFile) {
             ProjectBuilder builder = new ProjectBuilder(SketchApplication.getContext(), this);
             builder.buildBuiltInLibraryInformation();
-            ManifestGenerator ix = new ManifestGenerator(buildConfig, projectFileManager.b(), builder.getBuiltInLibraryManager());
+            ManifestGenerator ix = new ManifestGenerator(buildConfig, projectFileManager.getActivities(), builder.getBuiltInLibraryManager());
             ix.setYq(this);
             return CommandBlock.applyCommands("AndroidManifest.xml", ix.generateManifest());
         }
@@ -924,7 +924,7 @@ public class ProjectFilePaths {
                     return new ActivityCodeGenerator(buildConfig, file, projectDataManager).generateCode(isAndroidStudioExport, sc_id);
                 } else if (isXmlFile) {
                     LayoutGenerator xmlGenerator = new LayoutGenerator(buildConfig, file);
-                    xmlGenerator.setViews(ProjectDataStore.a(projectDataManager.d(filename)), projectDataManager.h(filename));
+                    xmlGenerator.setViews(ProjectDataStore.getSortedRootViews(projectDataManager.getViews(filename)), projectDataManager.getFabView(filename));
                     return CommandBlock.applyCommands(filename, xmlGenerator.toXmlString());
                 }
             }

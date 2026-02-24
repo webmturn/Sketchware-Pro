@@ -117,7 +117,7 @@ public class SoundListFragment extends BaseFragment implements MenuProvider {
         sounds = new ArrayList<>();
         if (savedInstanceState == null) {
             sc_id = requireActivity().getIntent().getStringExtra("sc_id");
-            dirPath = ProjectDataManager.getResourceManager(sc_id).o();
+            dirPath = ProjectDataManager.getResourceManager(sc_id).getSoundDirPath();
             ArrayList<ProjectResourceBean> arrayList = ProjectDataManager.getResourceManager(sc_id).sounds;
             if (arrayList != null) {
                 for (ProjectResourceBean projectResourceBean : arrayList) {
@@ -234,10 +234,10 @@ public class SoundListFragment extends BaseFragment implements MenuProvider {
                 sounds.set(i, new ProjectResourceBean(ProjectResourceBean.PROJECT_RES_TYPE_FILE, projectResourceBean.resName, projectResourceBean.resName + substring));
             }
         }
-        ProjectDataManager.getResourceManager(sc_id).c(sounds);
-        ProjectDataManager.getResourceManager(sc_id).y();
-        ProjectDataManager.getProjectDataManager(sc_id).c(ProjectDataManager.getResourceManager(sc_id));
-        ProjectDataManager.getProjectDataManager(sc_id).k();
+        ProjectDataManager.getResourceManager(sc_id).setSounds(sounds);
+        ProjectDataManager.getResourceManager(sc_id).saveToBackup();
+        ProjectDataManager.getProjectDataManager(sc_id).syncSounds(ProjectDataManager.getResourceManager(sc_id));
+        ProjectDataManager.getProjectDataManager(sc_id).saveAllBackup();
     }
 
     private boolean isResourceUnavailable(String str) {

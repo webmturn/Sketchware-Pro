@@ -17,10 +17,10 @@ public class BlockCollectionManager extends BaseCollectionManager {
   public Gson blockGson = null;
   
   public BlockCollectionManager() {
-    i();
+    initializeGson();
   }
   
-  public static BlockCollectionManager h() {
+  public static BlockCollectionManager getInstance() {
     if (instance == null) {
       synchronized (BlockCollectionManager.class) {
         if (instance == null) {
@@ -31,15 +31,15 @@ public class BlockCollectionManager extends BaseCollectionManager {
     return instance;
   }
   
-  public BlockCollectionBean a(String paramString) {
+  public BlockCollectionBean getBlockByName(String paramString) {
     for (CollectionBean collectionBean : this.collections) {
       if (collectionBean.name.equals(paramString))
-        return new BlockCollectionBean(collectionBean.name, ProjectDataParser.a(this.blockGson, collectionBean.data)); 
+        return new BlockCollectionBean(collectionBean.name, ProjectDataParser.parseBlockBeans(this.blockGson, collectionBean.data)); 
     } 
     return null;
   }
   
-  public void a(String paramString1, String paramString2, boolean paramBoolean) {
+  public void renameBlock(String paramString1, String paramString2, boolean paramBoolean) {
     for (CollectionBean collectionBean : this.collections) {
       if (collectionBean.name.equals(paramString1)) {
         collectionBean.name = paramString2;
@@ -47,14 +47,14 @@ public class BlockCollectionManager extends BaseCollectionManager {
       } 
     } 
     if (paramBoolean)
-      e(); 
+      saveCollections(); 
   }
   
-  public void a(String paramString, ArrayList<BlockBean> paramArrayList, boolean paramBoolean) throws CompileException {
+  public void addBlock(String paramString, ArrayList<BlockBean> paramArrayList, boolean paramBoolean) throws CompileException {
     if (this.collections == null)
-      a(); 
+      initialize(); 
     if (this.blockGson == null)
-      i(); 
+      initializeGson(); 
     Iterator<CollectionBean> iterator = this.collections.iterator();
     while (iterator.hasNext()) {
       if (!((CollectionBean)iterator.next()).name.equals(paramString))
@@ -70,10 +70,10 @@ public class BlockCollectionManager extends BaseCollectionManager {
     String str = stringBuilder.toString();
     this.collections.add(new CollectionBean(paramString, str));
     if (paramBoolean)
-      e(); 
+      saveCollections(); 
   }
   
-  public void a(String paramString, boolean paramBoolean) {
+  public void removeBlock(String paramString, boolean paramBoolean) {
     int i = this.collections.size();
     while (true) {
       int j = i - 1;
@@ -88,10 +88,10 @@ public class BlockCollectionManager extends BaseCollectionManager {
       break;
     } 
     if (paramBoolean)
-      e(); 
+      saveCollections(); 
   }
   
-  public void b() {
+  public void initializePaths() {
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(SketchwarePaths.getCollectionPath());
     stringBuilder.append(File.separator);
@@ -108,20 +108,20 @@ public class BlockCollectionManager extends BaseCollectionManager {
     this.dataDirPath = stringBuilder.toString();
   }
   
-  public ArrayList<BlockCollectionBean> f() {
+  public ArrayList<BlockCollectionBean> getBlocks() {
     if (this.collections == null)
-      a(); 
+      initialize(); 
     if (this.blockGson == null)
-      i(); 
+      initializeGson(); 
     ArrayList<BlockCollectionBean> arrayList = new ArrayList<>();
     for (CollectionBean collectionBean : this.collections)
-      arrayList.add(new BlockCollectionBean(collectionBean.name, ProjectDataParser.a(this.blockGson, collectionBean.data))); 
+      arrayList.add(new BlockCollectionBean(collectionBean.name, ProjectDataParser.parseBlockBeans(this.blockGson, collectionBean.data))); 
     return arrayList;
   }
   
-  public ArrayList<String> g() {
+  public ArrayList<String> getBlockNames() {
     if (this.collections == null)
-      a(); 
+      initialize(); 
     ArrayList<String> arrayList = new ArrayList<>();
     Iterator<CollectionBean> iterator = this.collections.iterator();
     while (iterator.hasNext())
@@ -129,7 +129,7 @@ public class BlockCollectionManager extends BaseCollectionManager {
     return arrayList;
   }
   
-  public final void i() {
+  public final void initializeGson() {
     this.blockGson = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
   }
 }

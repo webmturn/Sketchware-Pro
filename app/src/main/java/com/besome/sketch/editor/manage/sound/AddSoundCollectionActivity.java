@@ -213,7 +213,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
                 projectResourceBean.savedPos = 1;
                 projectResourceBean.isNew = true;
                 try {
-                    FontCollectionManager.g().a(scId, projectResourceBean);
+                    FontCollectionManager.getInstance().addResource(scId, projectResourceBean);
                     SketchToast.toast(this, getApplicationContext().getString(R.string.design_manager_message_add_complete), 1).show();
                 } catch (Exception e) {
                     // the bytecode's lying
@@ -233,7 +233,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
                     }
                 }
             } else {
-                FontCollectionManager.g().a(O, Helper.getText(binding.edInput), true);
+                FontCollectionManager.getInstance().renameResource(O, Helper.getText(binding.edInput), true);
                 SketchToast.toast(this, getApplicationContext().getString(R.string.design_manager_message_edit_complete), 1).show();
             }
             finish();

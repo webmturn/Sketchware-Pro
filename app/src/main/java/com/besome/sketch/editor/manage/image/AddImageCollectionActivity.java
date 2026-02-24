@@ -316,9 +316,9 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
                     image.rotate = activity.imageRotationDegrees;
                     image.flipVertical = activity.imageScaleY;
                     image.flipHorizontal = activity.imageScaleX;
-                    SoundCollectionManager.g().a(activity.sc_id, image);
+                    SoundCollectionManager.getInstance().addResource(activity.sc_id, image);
                 } else {
-                    SoundCollectionManager.g().a(activity.editTarget, Helper.getText(activity.ed_input_edittext), false);
+                    SoundCollectionManager.getInstance().renameResource(activity.editTarget, Helper.getText(activity.ed_input_edittext), false);
                 }
             } catch (Exception e) {
                 // the bytecode's lying

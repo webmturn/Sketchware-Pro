@@ -43,7 +43,7 @@ public class ResourceManager {
     this.soundDirPath = paramString3;
     this.fontDirPath = paramString4;
     this.projectId = paramString1;
-    z();
+    refreshCacheSignature();
     this.fileUtil = new EncryptedFileUtil(false);
     this.images = new ArrayList<ProjectResourceBean>();
     this.sounds = new ArrayList<ProjectResourceBean>();
@@ -51,23 +51,23 @@ public class ResourceManager {
     this.gson = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
   }
   
-  public static StringSignature n() {
+  public static StringSignature getCacheSignature() {
     if (cacheSignature == null)
-      z(); 
+      refreshCacheSignature(); 
     return cacheSignature;
   }
   
-  public static void z() {
+  public static void refreshCacheSignature() {
     cacheSignature = new StringSignature(String.valueOf(System.currentTimeMillis()));
   }
   
-  public void a() {
-    c();
-    d();
-    b();
+  public void cleanupAllResources() {
+    cleanupUnusedImages();
+    cleanupUnusedSounds();
+    cleanupUnusedFonts();
   }
   
-  public void a(BufferedReader paramBufferedReader) throws java.io.IOException {
+  public void parseResourceData(BufferedReader paramBufferedReader) throws java.io.IOException {
     StringBuffer stringBuffer = new StringBuffer();
     String str = "";
     while (true) {
@@ -78,7 +78,7 @@ public class ResourceManager {
         if (str1.charAt(0) == '@') {
           StringBuffer stringBuffer1 = stringBuffer;
           if (str.length() > 0) {
-            a(str, stringBuffer.toString());
+            parseResourceSection(str, stringBuffer.toString());
             stringBuffer1 = new StringBuffer();
           } 
           str = str1.substring(1);
@@ -90,12 +90,12 @@ public class ResourceManager {
         continue;
       } 
       if (str.length() > 0)
-        a(str, stringBuffer.toString()); 
+        parseResourceSection(str, stringBuffer.toString()); 
       return;
     } 
   }
   
-  public void a(String paramString) {
+  public void copyFontsToDir(String paramString) {
     ArrayList<ProjectResourceBean> arrayList = this.fonts;
     if (arrayList != null && arrayList.size() > 0) {
       File file = new File(paramString);
@@ -121,7 +121,7 @@ public class ResourceManager {
     } 
   }
   
-  public void a(String paramString1, String paramString2) {
+  public void parseResourceSection(String paramString1, String paramString2) {
     if (paramString2.trim().length() <= 0) return;
     java.io.BufferedReader reader = null;
     try {
@@ -145,7 +145,7 @@ public class ResourceManager {
     }
   }
   
-  public final void a(StringBuffer paramStringBuffer) {
+  public final void serializeResources(StringBuffer paramStringBuffer) {
     paramStringBuffer.append("@");
     paramStringBuffer.append("images");
     paramStringBuffer.append("\n");
@@ -169,11 +169,11 @@ public class ResourceManager {
     } 
   }
   
-  public void a(ArrayList<ProjectResourceBean> paramArrayList) {
+  public void setFonts(ArrayList<ProjectResourceBean> paramArrayList) {
     this.fonts = paramArrayList;
   }
   
-  public void b() {
+  public void cleanupUnusedFonts() {
     File[] files = new File(this.fontDirPath).listFiles();
     if (files == null || files.length <= 0) return;
     for (File file : files) {
@@ -191,7 +191,7 @@ public class ResourceManager {
     }
   }
   
-  public void b(String paramString) {
+  public void copyImagesToDir(String paramString) {
     ArrayList<ProjectResourceBean> arrayList = this.images;
     if (arrayList != null && arrayList.size() > 0) {
       File file = new File(paramString);
@@ -217,11 +217,11 @@ public class ResourceManager {
     } 
   }
   
-  public void b(ArrayList<ProjectResourceBean> paramArrayList) {
+  public void setImages(ArrayList<ProjectResourceBean> paramArrayList) {
     this.images = paramArrayList;
   }
   
-  public void c() {
+  public void cleanupUnusedImages() {
     File[] files = new File(this.imageDirPath).listFiles();
     if (files == null || files.length <= 0) return;
     for (File file : files) {
@@ -239,7 +239,7 @@ public class ResourceManager {
     }
   }
   
-  public void c(String paramString) {
+  public void copySoundsToDir(String paramString) {
     ArrayList<ProjectResourceBean> arrayList = this.sounds;
     if (arrayList != null && arrayList.size() > 0) {
       File file = new File(paramString);
@@ -265,11 +265,11 @@ public class ResourceManager {
     } 
   }
   
-  public void c(ArrayList<ProjectResourceBean> paramArrayList) {
+  public void setSounds(ArrayList<ProjectResourceBean> paramArrayList) {
     this.sounds = paramArrayList;
   }
   
-  public String d(String paramString) {
+  public String getFontPath(String paramString) {
     ArrayList<ProjectResourceBean> arrayList = this.fonts;
     if (arrayList != null && arrayList.size() > 0)
       for (ProjectResourceBean projectResourceBean : this.fonts) {
@@ -284,7 +284,7 @@ public class ResourceManager {
     return "";
   }
   
-  public void d() {
+  public void cleanupUnusedSounds() {
     File[] files = new File(this.soundDirPath).listFiles();
     if (files == null || files.length <= 0) return;
     for (File file : files) {
@@ -302,7 +302,7 @@ public class ResourceManager {
     }
   }
   
-  public ProjectResourceBean e(String paramString) {
+  public ProjectResourceBean getFontBean(String paramString) {
     for (ProjectResourceBean projectResourceBean : this.fonts) {
       if (projectResourceBean.resName.equals(paramString))
         return projectResourceBean; 
@@ -310,7 +310,7 @@ public class ResourceManager {
     return null;
   }
   
-  public void e() {
+  public void backupFonts() {
     String str = SketchwarePaths.getTempFontsPath();
     try {
       this.fileUtil.deleteDirectoryByPath(str);
@@ -323,7 +323,7 @@ public class ResourceManager {
     } 
   }
   
-  public String f(String paramString) {
+  public String getImagePath(String paramString) {
     ArrayList<ProjectResourceBean> arrayList = this.images;
     if (arrayList != null && arrayList.size() > 0)
       for (ProjectResourceBean projectResourceBean : this.images) {
@@ -338,7 +338,7 @@ public class ResourceManager {
     return "";
   }
   
-  public void f() {
+  public void backupImages() {
     String str = SketchwarePaths.getTempImagesPath();
     try {
       this.fileUtil.deleteDirectoryByPath(str);
@@ -351,7 +351,7 @@ public class ResourceManager {
     } 
   }
   
-  public ProjectResourceBean g(String paramString) {
+  public ProjectResourceBean getImageBean(String paramString) {
     for (ProjectResourceBean projectResourceBean : this.images) {
       if (projectResourceBean.resName.equals(paramString))
         return projectResourceBean; 
@@ -359,7 +359,7 @@ public class ResourceManager {
     return null;
   }
   
-  public void g() {
+  public void backupSounds() {
     String str = SketchwarePaths.getTempSoundsPath();
     try {
       this.fileUtil.deleteDirectoryByPath(str);
@@ -372,7 +372,7 @@ public class ResourceManager {
     } 
   }
   
-  public int h(String paramString) {
+  public int getImageResType(String paramString) {
     ArrayList<ProjectResourceBean> arrayList = this.images;
     if (arrayList != null && arrayList.size() > 0)
       for (ProjectResourceBean projectResourceBean : this.images) {
@@ -382,7 +382,7 @@ public class ResourceManager {
     return -1;
   }
   
-  public void h() {
+  public void deleteTempDirs() {
     String str1 = SketchwarePaths.getTempImagesPath();
     String str2 = SketchwarePaths.getTempSoundsPath();
     String str3 = SketchwarePaths.getTempFontsPath();
@@ -395,7 +395,7 @@ public class ResourceManager {
     } 
   }
   
-  public String i(String paramString) {
+  public String getSoundPath(String paramString) {
     ArrayList<ProjectResourceBean> arrayList = this.sounds;
     if (arrayList != null && arrayList.size() > 0)
       for (ProjectResourceBean projectResourceBean : this.sounds) {
@@ -410,7 +410,7 @@ public class ResourceManager {
     return "";
   }
   
-  public void i() {
+  public void deleteBackup() {
     String str = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str);
@@ -420,7 +420,7 @@ public class ResourceManager {
     this.fileUtil.deleteFileByPath(str);
   }
   
-  public ProjectResourceBean j(String paramString) {
+  public ProjectResourceBean getSoundBean(String paramString) {
     for (ProjectResourceBean projectResourceBean : this.sounds) {
       if (projectResourceBean.resName.equals(paramString))
         return projectResourceBean; 
@@ -428,11 +428,11 @@ public class ResourceManager {
     return null;
   }
   
-  public String j() {
+  public String getFontDirPath() {
     return this.fontDirPath;
   }
   
-  public ArrayList<String> k() {
+  public ArrayList<String> getFontNames() {
     ArrayList<String> arrayList = new ArrayList<>();
     Iterator<ProjectResourceBean> iterator = this.fonts.iterator();
     while (iterator.hasNext())
@@ -440,7 +440,7 @@ public class ResourceManager {
     return arrayList;
   }
   
-  public boolean k(String paramString) {
+  public boolean hasFont(String paramString) {
     Iterator<ProjectResourceBean> iterator = this.fonts.iterator();
     while (iterator.hasNext()) {
       if (((ProjectResourceBean)iterator.next()).resName.equals(paramString))
@@ -449,11 +449,11 @@ public class ResourceManager {
     return false;
   }
   
-  public String l() {
+  public String getImageDirPath() {
     return this.imageDirPath;
   }
   
-  public boolean l(String paramString) {
+  public boolean hasImage(String paramString) {
     Iterator<ProjectResourceBean> iterator = this.images.iterator();
     while (iterator.hasNext()) {
       if (((ProjectResourceBean)iterator.next()).resName.equals(paramString))
@@ -462,7 +462,7 @@ public class ResourceManager {
     return false;
   }
   
-  public ArrayList<String> m() {
+  public ArrayList<String> getImageNames() {
     ArrayList<String> arrayList = new ArrayList<>();
     Iterator<ProjectResourceBean> iterator = this.images.iterator();
     while (iterator.hasNext())
@@ -470,7 +470,7 @@ public class ResourceManager {
     return arrayList;
   }
   
-  public boolean m(String paramString) {
+  public boolean hasSound(String paramString) {
     Iterator<ProjectResourceBean> iterator = this.sounds.iterator();
     while (iterator.hasNext()) {
       if (((ProjectResourceBean)iterator.next()).resName.equals(paramString))
@@ -479,11 +479,11 @@ public class ResourceManager {
     return false;
   }
   
-  public String o() {
+  public String getSoundDirPath() {
     return this.soundDirPath;
   }
   
-  public ArrayList<String> p() {
+  public ArrayList<String> getSoundNames() {
     ArrayList<String> arrayList = new ArrayList<>();
     Iterator<ProjectResourceBean> iterator = this.sounds.iterator();
     while (iterator.hasNext())
@@ -491,7 +491,7 @@ public class ResourceManager {
     return arrayList;
   }
   
-  public boolean q() {
+  public boolean hasBackup() {
     String str = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str);
@@ -501,7 +501,7 @@ public class ResourceManager {
     return this.fileUtil.exists(str);
   }
   
-  public void r() {
+  public void loadFromBackup() {
     this.images = new ArrayList<ProjectResourceBean>();
     this.sounds = new ArrayList<ProjectResourceBean>();
     this.fonts = new ArrayList<ProjectResourceBean>();
@@ -516,7 +516,7 @@ public class ResourceManager {
       byte[] arrayOfByte = this.fileUtil.readFileBytes(str2);
       String str = this.fileUtil.decryptToString(arrayOfByte);
       bufferedReader = new BufferedReader(new StringReader(str));
-      a(bufferedReader);
+      parseResourceData(bufferedReader);
     } catch (Exception exception) {
       exception.printStackTrace();
     } finally {
@@ -524,7 +524,7 @@ public class ResourceManager {
     }
   }
   
-  public void s() {
+  public void loadFromData() {
     this.images = new ArrayList<ProjectResourceBean>();
     this.sounds = new ArrayList<ProjectResourceBean>();
     this.fonts = new ArrayList<ProjectResourceBean>();
@@ -541,7 +541,7 @@ public class ResourceManager {
       byte[] arrayOfByte = this.fileUtil.readFileBytes(str1);
       String str = this.fileUtil.decryptToString(arrayOfByte);
       bufferedReader = new BufferedReader(new StringReader(str));
-      a(bufferedReader);
+      parseResourceData(bufferedReader);
     } catch (Exception exception) {
       exception.printStackTrace();
     } finally {
@@ -549,7 +549,7 @@ public class ResourceManager {
     }
   }
   
-  public void t() {
+  public void resetAll() {
     this.projectId = "";
     this.imageDirPath = "";
     this.soundDirPath = "";
@@ -559,7 +559,7 @@ public class ResourceManager {
     this.fonts = new ArrayList<ProjectResourceBean>();
   }
   
-  public void u() {
+  public void restoreFontsFromTemp() {
     String str = SketchwarePaths.getTempFontsPath();
     try {
       EncryptedFileUtil oB1 = this.fileUtil;
@@ -574,7 +574,7 @@ public class ResourceManager {
     } 
   }
   
-  public void v() {
+  public void restoreImagesFromTemp() {
     String str = SketchwarePaths.getTempImagesPath();
     try {
       EncryptedFileUtil oB1 = this.fileUtil;
@@ -589,7 +589,7 @@ public class ResourceManager {
     } 
   }
   
-  public void w() {
+  public void restoreSoundsFromTemp() {
     String str = SketchwarePaths.getTempSoundsPath();
     try {
       EncryptedFileUtil oB1 = this.fileUtil;
@@ -604,7 +604,7 @@ public class ResourceManager {
     } 
   }
   
-  public void x() {
+  public void saveToData() {
     String str1 = SketchwarePaths.getDataPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str1);
@@ -612,17 +612,17 @@ public class ResourceManager {
     stringBuilder.append("resource");
     String str2 = stringBuilder.toString();
     StringBuffer stringBuffer = new StringBuffer();
-    a(stringBuffer);
+    serializeResources(stringBuffer);
     try {
       byte[] arrayOfByte = this.fileUtil.encryptString(stringBuffer.toString());
       this.fileUtil.writeBytes(str2, arrayOfByte);
     } catch (Exception exception) {
       exception.printStackTrace();
     } 
-    i();
+    deleteBackup();
   }
   
-  public void y() {
+  public void saveToBackup() {
     String str = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str);
@@ -630,7 +630,7 @@ public class ResourceManager {
     stringBuilder.append("resource");
     str = stringBuilder.toString();
     StringBuffer stringBuffer = new StringBuffer();
-    a(stringBuffer);
+    serializeResources(stringBuffer);
     try {
       byte[] arrayOfByte = this.fileUtil.encryptString(stringBuffer.toString());
       this.fileUtil.writeBytes(str, arrayOfByte);

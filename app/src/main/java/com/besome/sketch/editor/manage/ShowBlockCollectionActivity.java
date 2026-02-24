@@ -117,7 +117,7 @@ public class ShowBlockCollectionActivity extends BaseAppCompatActivity implement
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.save_button && blockNameValidator.isValid()) {
-            BlockCollectionManager.h().a(blockName, Helper.getText(blockNameEditorText), true);
+            BlockCollectionManager.getInstance().renameBlock(blockName, Helper.getText(blockNameEditorText), true);
             SketchToast.toast(getApplicationContext(), Helper.getResString(R.string.design_manager_message_edit_complete), SketchToast.TOAST_NORMAL).show();
             finish();
         }
@@ -151,7 +151,7 @@ public class ShowBlockCollectionActivity extends BaseAppCompatActivity implement
 
         binding.saveButton.setText(Helper.getResString(R.string.common_word_save));
         binding.saveButton.setOnClickListener(this);
-        blockNameValidator = new UniqueNameValidator(this, binding.edInput.getTextInputLayout(), BlockCollectionManager.h().g());
+        blockNameValidator = new UniqueNameValidator(this, binding.edInput.getTextInputLayout(), BlockCollectionManager.getInstance().getBlockNames());
     }
 
     @Override
@@ -164,7 +164,7 @@ public class ShowBlockCollectionActivity extends BaseAppCompatActivity implement
     public void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
-        BlockCollectionBean block = BlockCollectionManager.h().a(blockName);
+        BlockCollectionBean block = BlockCollectionManager.getInstance().getBlockByName(blockName);
         if (block != null) {
             addBlocks(block.blocks);
             resizeBottomViews();

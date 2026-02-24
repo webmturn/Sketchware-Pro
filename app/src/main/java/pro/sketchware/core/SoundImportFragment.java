@@ -120,7 +120,7 @@ public class SoundImportFragment extends BaseFragment {
     }
 
     public void loadProjectSounds() {
-        sounds = FontCollectionManager.g().f();
+        sounds = FontCollectionManager.getInstance().getResources();
         adapter.notifyDataSetChanged();
         showOrHideNoSoundsText();
     }

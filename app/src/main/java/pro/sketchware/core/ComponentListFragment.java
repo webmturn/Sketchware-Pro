@@ -46,7 +46,7 @@ public class ComponentListFragment extends BaseFragment implements View.OnClickL
 
     public void refreshData() {
         if (projectFile != null && adapter != null) {
-            components = ProjectDataManager.getProjectDataManager(sc_id).e(projectFile.getJavaName());
+            components = ProjectDataManager.getProjectDataManager(sc_id).getComponents(projectFile.getJavaName());
             adapter.notifyDataSetChanged();
         }
     }
@@ -79,7 +79,7 @@ public class ComponentListFragment extends BaseFragment implements View.OnClickL
 
     public void unselectAll() {
         if (projectFile != null) {
-            for (ComponentBean component : ProjectDataManager.getProjectDataManager(sc_id).e(projectFile.getJavaName())) {
+            for (ComponentBean component : ProjectDataManager.getProjectDataManager(sc_id).getComponents(projectFile.getJavaName())) {
                 component.initValue();
             }
             adapter.notifyDataSetChanged();
@@ -157,7 +157,7 @@ public class ComponentListFragment extends BaseFragment implements View.OnClickL
                 binding.componentOption.setButtonOnClickListener(v -> {
                     int lastSelectedItem = getLayoutPosition();
                     ComponentBean bean =
-                            ProjectDataManager.getProjectDataManager(sc_id).a(projectFile.getJavaName(), lastSelectedItem);
+                            ProjectDataManager.getProjectDataManager(sc_id).getComponent(projectFile.getJavaName(), lastSelectedItem);
                     if (v instanceof CollapsibleButton) {
                         bean.isConfirmation = true;
                         setAnimateNextTransformation(true);
@@ -169,7 +169,7 @@ public class ComponentListFragment extends BaseFragment implements View.OnClickL
                             setAnimateNextTransformation(true);
                             notifyItemChanged(lastSelectedItem);
                         } else if (id == R.id.confirm_yes) {
-                            ProjectDataManager.getProjectDataManager(sc_id).b(projectFile.getJavaName(), bean);
+                            ProjectDataManager.getProjectDataManager(sc_id).removeComponent(projectFile.getJavaName(), bean);
                             bean.isConfirmation = false;
                             notifyItemRemoved(lastSelectedItem);
                             notifyItemRangeChanged(lastSelectedItem, getItemCount());
@@ -219,7 +219,7 @@ public class ComponentListFragment extends BaseFragment implements View.OnClickL
                 }
 
                 ArrayList<EventBean> addedEvents =
-                        ProjectDataManager.getProjectDataManager(sc_id).a(projectFile.getJavaName(), componentBean);
+                        ProjectDataManager.getProjectDataManager(sc_id).getComponentEvents(projectFile.getJavaName(), componentBean);
                 ArrayList<String> availableEvents =
                         new ArrayList<>(Arrays.asList(EventRegistry.getComponentEventsForClass(componentBean.getClassInfo())));
 
@@ -428,7 +428,7 @@ public class ComponentListFragment extends BaseFragment implements View.OnClickL
                         if (!UIHelper.isClickThrottled()) {
                             var component = components.get(getLayoutPosition());
                             var event = new EventBean(EventBean.EVENT_TYPE_COMPONENT, component.type, component.componentId, eventName);
-                            ProjectDataManager.getProjectDataManager(sc_id).a(projectFile.getJavaName(), event);
+                            ProjectDataManager.getProjectDataManager(sc_id).addEventBean(projectFile.getJavaName(), event);
                             SketchToast.toast(requireContext(), requireContext().getString(R.string.event_message_new_event), 0).show();
                             holder.button.onEventAdded();
                             if (listener != null) {

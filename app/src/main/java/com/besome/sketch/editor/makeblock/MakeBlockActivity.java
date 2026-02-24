@@ -77,7 +77,7 @@ public class MakeBlockActivity extends BaseAppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         toolbar.setNavigationOnClickListener(Helper.getBackPressedClickListener(this));
         makeBlock = new MoreBlockBuilderView(this);
-        makeBlock.setFuncNameValidator(ProjectDataManager.getProjectDataManager(sc_id).a(project));
+        makeBlock.setFuncNameValidator(ProjectDataManager.getProjectDataManager(sc_id).getAllIdentifiers(project));
         LinearLayout makeBlock = findViewById(R.id.makeblock_view);
         makeBlock.addView(this.makeBlock);
     }

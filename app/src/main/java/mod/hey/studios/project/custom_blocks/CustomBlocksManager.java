@@ -90,8 +90,8 @@ public class CustomBlocksManager {
         ProjectFileManager hc = ProjectDataManager.getFileManager(sc_id);
         ProjectDataStore ec = ProjectDataManager.getProjectDataManager(sc_id);
 
-        for (ProjectFileBean bean : hc.b()) {
-            for (Map.Entry<String, ArrayList<BlockBean>> entry : ec.b(bean.getJavaName()).entrySet()) {
+        for (ProjectFileBean bean : hc.getActivities()) {
+            for (Map.Entry<String, ArrayList<BlockBean>> entry : ec.getBlockMap(bean.getJavaName()).entrySet()) {
                 for (BlockBean block : entry.getValue()) {
                     if (!(block.opCode.equals("definedFunc")
                             || block.opCode.equals("getVar")

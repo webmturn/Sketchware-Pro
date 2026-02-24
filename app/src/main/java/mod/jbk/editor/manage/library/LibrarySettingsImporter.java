@@ -104,7 +104,7 @@ public class LibrarySettingsImporter {
                     var projectSc_id = MapValueHelper.getString(project, "sc_id");
                     if (!sc_id.equals(projectSc_id)) {
                         var projectLibraryHandler = new LibraryManager(projectSc_id);
-                        projectLibraryHandler.i();
+                        projectLibraryHandler.loadFromData();
                         var settings = getLibrarySettings.apply(projectLibraryHandler);
                         if (settings.useYn.equals("Y")) {
                             project.put("settings", settings);

@@ -283,7 +283,7 @@ public class ExtraMenuBean {
 
             case "list":
                 title = logicEditor.getString(R.string.logic_editor_title_select_list);
-                for (String variable : projectDataManager.c(javaName)) {
+                for (String variable : projectDataManager.getListNames(javaName)) {
                     String variableName = CustomVariableUtil.getVariableName(variable);
                     menus.add(variableName != null ? variableName : variable);
                 }
@@ -531,7 +531,7 @@ public class ExtraMenuBean {
             case "activity":
                 ArrayList<String> activityMenu = new ArrayList<>();
                 title = logicEditor.getString(R.string.logic_editor_title_select_activity);
-                for (ProjectFileBean projectFileBean : ProjectDataManager.getFileManager(sc_id).b()) {
+                for (ProjectFileBean projectFileBean : ProjectDataManager.getFileManager(sc_id).getActivities()) {
                     activityMenu.add(projectFileBean.getActivityName());
                 }
                 for (String activity : activityMenu) {
@@ -560,7 +560,7 @@ public class ExtraMenuBean {
 
             case "customViews":
                 title = "Select a Custom View";
-                for (ProjectFileBean projectFileBean : ProjectDataManager.getFileManager(sc_id).c()) {
+                for (ProjectFileBean projectFileBean : ProjectDataManager.getFileManager(sc_id).getCustomViews()) {
                     menus.add(projectFileBean.fileName);
                 }
                 break;
@@ -650,7 +650,7 @@ public class ExtraMenuBean {
 
             case "Variable":
                 title = "Select a Variable";
-                for (Pair<Integer, String> integerStringPair : projectDataManager.k(javaName)) {
+                for (Pair<Integer, String> integerStringPair : projectDataManager.getVariables(javaName)) {
                     String variable = integerStringPair.second;
                     String variableName = CustomVariableUtil.getVariableName(variable);
                     menus.add(variableName != null ? variableName : variable);
@@ -659,20 +659,20 @@ public class ExtraMenuBean {
 
             case "Component":
                 title = "Select a Component";
-                for (ComponentBean componentBean : projectDataManager.e(javaName)) {
+                for (ComponentBean componentBean : projectDataManager.getComponents(javaName)) {
                     menus.add(componentBean.componentId);
                 }
                 break;
 
             case "CustomVar":
                 title = "Select a Custom Variable";
-                for (String s : projectDataManager.e(javaName, 5)) {
+                for (String s : projectDataManager.getVariableNamesByType(javaName, 5)) {
                     Matcher matcher = Pattern.compile("^(\\w+)[\\s]+(\\w+)").matcher(s);
                     while (matcher.find()) {
                         menus.add(matcher.group(2));
                     }
                 }
-                for (String variable : projectDataManager.e(javaName, 6)) {
+                for (String variable : projectDataManager.getVariableNamesByType(javaName, 6)) {
                     String variableName = CustomVariableUtil.getVariableName(variable);
                     menus.add(variableName != null ? variableName : variable);
                 }
@@ -722,15 +722,15 @@ public class ExtraMenuBean {
     }
 
     private ArrayList<String> getVarMenus(int type) {
-        return projectDataManager.e(javaName, type);
+        return projectDataManager.getVariableNamesByType(javaName, type);
     }
 
     private ArrayList<String> getListMenus(int type) {
-        return projectDataManager.d(javaName, type);
+        return projectDataManager.getListNamesByType(javaName, type);
     }
 
     private ArrayList<String> getComponentMenus(int type) {
-        return projectDataManager.b(javaName, type);
+        return projectDataManager.getComponentIdsByType(javaName, type);
     }
 
     private void asdDialog(FieldBlockView ss, String message) {

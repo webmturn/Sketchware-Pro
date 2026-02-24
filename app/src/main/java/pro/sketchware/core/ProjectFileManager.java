@@ -31,11 +31,11 @@ public class ProjectFileManager {
     this.xmlNames = new ArrayList<String>();
     this.javaNames = new ArrayList<String>();
     this.gson = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
-    f();
-    j();
+    initializeDefaults();
+    refreshNameLists();
   }
   
-  public ProjectFileBean a(String paramString) {
+  public ProjectFileBean getActivityByJavaName(String paramString) {
     for (ProjectFileBean projectFileBean : this.activities) {
       if (projectFileBean.getJavaName().equals(paramString))
         return projectFileBean; 
@@ -43,7 +43,7 @@ public class ProjectFileManager {
     return null;
   }
   
-  public void a() {
+  public void deleteBackup() {
     String str = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str);
@@ -53,7 +53,7 @@ public class ProjectFileManager {
     this.fileUtil.deleteFileByPath(str);
   }
   
-  public void a(int paramInt, String paramString) {
+  public void addFile(int paramInt, String paramString) {
     ProjectFileBean projectFileBean = new ProjectFileBean(paramInt, paramString);
     if (paramInt == 0) {
       this.activities.add(projectFileBean);
@@ -62,22 +62,22 @@ public class ProjectFileManager {
     } 
   }
   
-  public void a(LibraryManager paramiC) {
-    ProjectLibraryBean projectLibraryBean = paramiC.c();
+  public void syncWithLibrary(LibraryManager paramiC) {
+    ProjectLibraryBean projectLibraryBean = paramiC.getCompat();
     if (projectLibraryBean != null && projectLibraryBean.useYn.equals("Y"))
       return; 
     for (ProjectFileBean projectFileBean : this.activities) {
       if (projectFileBean.hasActivityOption(4)) {
-        b(2, projectFileBean.getDrawerName());
+        removeFile(2, projectFileBean.getDrawerName());
         projectFileBean.setActivityOptions(1);
       } 
       if (projectFileBean.hasActivityOption(8))
         projectFileBean.setActivityOptions(1); 
     } 
-    j();
+    refreshNameLists();
   }
   
-  public void a(ProjectFileBean paramProjectFileBean) {
+  public void addProjectFile(ProjectFileBean paramProjectFileBean) {
     if (paramProjectFileBean.fileType == 0) {
       this.activities.add(paramProjectFileBean);
     } else {
@@ -85,7 +85,7 @@ public class ProjectFileManager {
     } 
   }
   
-  public void a(BufferedReader paramBufferedReader) throws java.io.IOException {
+  public void parseFileData(BufferedReader paramBufferedReader) throws java.io.IOException {
     StringBuffer stringBuffer = new StringBuffer();
     String str = "";
     while (true) {
@@ -96,7 +96,7 @@ public class ProjectFileManager {
         if (str1.charAt(0) == '@') {
           StringBuffer stringBuffer1 = stringBuffer;
           if (str.length() > 0) {
-            a(str, stringBuffer.toString());
+            parseFileSection(str, stringBuffer.toString());
             stringBuffer1 = new StringBuffer();
           } 
           str = str1.substring(1);
@@ -108,13 +108,13 @@ public class ProjectFileManager {
         continue;
       } 
       if (str.length() > 0)
-        a(str, stringBuffer.toString()); 
-      j();
+        parseFileSection(str, stringBuffer.toString()); 
+      refreshNameLists();
       return;
     } 
   }
   
-  public void a(String paramString1, String paramString2) {
+  public void parseFileSection(String paramString1, String paramString2) {
     ProjectFileBean projectFileBean = null;
     if (paramString1.equals("activity")) {
       paramString1 = paramString2;
@@ -172,7 +172,7 @@ public class ProjectFileManager {
     } 
   }
   
-  public final void a(StringBuffer paramStringBuffer) {
+  public final void serializeFiles(StringBuffer paramStringBuffer) {
     paramStringBuffer.append("@");
     paramStringBuffer.append("activity");
     paramStringBuffer.append("\n");
@@ -193,11 +193,11 @@ public class ProjectFileManager {
       }  
   }
   
-  public void a(ArrayList<ProjectFileBean> paramArrayList) {
+  public void setActivities(ArrayList<ProjectFileBean> paramArrayList) {
     this.activities = paramArrayList;
   }
   
-  public ProjectFileBean b(String paramString) {
+  public ProjectFileBean getFileByXmlName(String paramString) {
     for (ProjectFileBean projectFileBean : this.activities) {
       if (projectFileBean.getXmlName().equals(paramString))
         return projectFileBean; 
@@ -211,13 +211,13 @@ public class ProjectFileManager {
     return null;
   }
   
-  public ArrayList<ProjectFileBean> b() {
+  public ArrayList<ProjectFileBean> getActivities() {
     if (this.activities == null)
       this.activities = new ArrayList<ProjectFileBean>(); 
     return this.activities;
   }
   
-  public void b(int paramInt, String paramString) {
+  public void removeFile(int paramInt, String paramString) {
     if (paramInt == 0) {
       for (ProjectFileBean projectFileBean : this.activities) {
         if (projectFileBean.fileType == paramInt && projectFileBean.fileName.equals(paramString)) {
@@ -235,17 +235,17 @@ public class ProjectFileManager {
     } 
   }
   
-  public void b(ArrayList<ProjectFileBean> paramArrayList) {
+  public void setCustomViews(ArrayList<ProjectFileBean> paramArrayList) {
     this.customViews = paramArrayList;
   }
   
-  public ArrayList<ProjectFileBean> c() {
+  public ArrayList<ProjectFileBean> getCustomViews() {
     if (this.customViews == null)
       this.customViews = new ArrayList<ProjectFileBean>(); 
     return this.customViews;
   }
   
-  public boolean c(String paramString) {
+  public boolean hasJavaName(String paramString) {
     Iterator<String> iterator = this.javaNames.iterator();
     while (iterator.hasNext()) {
       if (paramString.equals(iterator.next()))
@@ -254,11 +254,11 @@ public class ProjectFileManager {
     return false;
   }
   
-  public ArrayList<String> d() {
+  public ArrayList<String> getJavaNames() {
     return this.javaNames;
   }
   
-  public boolean d(String paramString) {
+  public boolean hasXmlName(String paramString) {
     Iterator<String> iterator = this.xmlNames.iterator();
     while (iterator.hasNext()) {
       if (paramString.equals(iterator.next()))
@@ -267,13 +267,13 @@ public class ProjectFileManager {
     return false;
   }
   
-  public ArrayList<String> e() {
+  public ArrayList<String> getXmlNames() {
     return this.xmlNames;
   }
   
-  public final void e(String paramString) {
+  public final void writeToFile(String paramString) {
     StringBuffer stringBuffer = new StringBuffer();
-    a(stringBuffer);
+    serializeFiles(stringBuffer);
     try {
       byte[] arrayOfByte = this.fileUtil.encryptString(stringBuffer.toString());
       this.fileUtil.writeBytes(paramString, arrayOfByte);
@@ -282,13 +282,13 @@ public class ProjectFileManager {
     } 
   }
   
-  public final void f() {
+  public final void initializeDefaults() {
     this.activities = new ArrayList<ProjectFileBean>();
     this.customViews = new ArrayList<ProjectFileBean>();
-    a(0, "main");
+    addFile(0, "main");
   }
   
-  public boolean g() {
+  public boolean hasBackup() {
     String str1 = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str1);
@@ -298,8 +298,8 @@ public class ProjectFileManager {
     return this.fileUtil.exists(str2);
   }
   
-  public void h() {
-    f();
+  public void loadFromBackup() {
+    initializeDefaults();
     String str1 = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str1);
@@ -311,17 +311,17 @@ public class ProjectFileManager {
       byte[] arrayOfByte = this.fileUtil.readFileBytes(str2);
       String str = this.fileUtil.decryptToString(arrayOfByte);
       bufferedReader = new BufferedReader(new StringReader(str));
-      a(bufferedReader);
+      parseFileData(bufferedReader);
     } catch (Exception exception) {
       exception.printStackTrace();
     } finally {
       if (bufferedReader != null) try { bufferedReader.close(); } catch (Exception e) {}
     }
-    j();
+    refreshNameLists();
   }
   
-  public void i() {
-    f();
+  public void loadFromData() {
+    initializeDefaults();
     String str1 = SketchwarePaths.getDataPath(this.projectId);
     StringBuilder stringBuilder1 = new StringBuilder();
     stringBuilder1.append(str1);
@@ -335,7 +335,7 @@ public class ProjectFileManager {
       byte[] arrayOfByte = this.fileUtil.readFileBytes(str1);
       String str = this.fileUtil.decryptToString(arrayOfByte);
       bufferedReader = new BufferedReader(new StringReader(str));
-      a(bufferedReader);
+      parseFileData(bufferedReader);
     } catch (Exception exception) {
       exception.printStackTrace();
     } finally {
@@ -343,7 +343,7 @@ public class ProjectFileManager {
     }
   }
   
-  public void j() {
+  public void refreshNameLists() {
     this.xmlNames.clear();
     this.javaNames.clear();
     for (ProjectFileBean projectFileBean : this.activities) {
@@ -366,29 +366,29 @@ public class ProjectFileManager {
       }  
   }
   
-  public void k() {
+  public void resetAll() {
     this.projectId = "";
     this.xmlNames = new ArrayList<String>();
     this.javaNames = new ArrayList<String>();
-    f();
+    initializeDefaults();
   }
   
-  public void l() {
+  public void saveToBackup() {
     String str = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str);
     stringBuilder.append(File.separator);
     stringBuilder.append("file");
-    e(stringBuilder.toString());
+    writeToFile(stringBuilder.toString());
   }
   
-  public void m() {
+  public void saveToData() {
     String str = SketchwarePaths.getDataPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str);
     stringBuilder.append(File.separator);
     stringBuilder.append("file");
-    e(stringBuilder.toString());
-    a();
+    writeToFile(stringBuilder.toString());
+    deleteBackup();
   }
 }

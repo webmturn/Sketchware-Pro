@@ -218,7 +218,7 @@ public class AddSoundActivity extends BaseDialogActivity implements View.OnClick
                         projectResourceBean.isNew = true;
                         if (addToCollection.isChecked()) {
                             try {
-                                FontCollectionManager.g().a(sc_id, projectResourceBean);
+                                FontCollectionManager.getInstance().addResource(sc_id, projectResourceBean);
                             } catch (Exception e) {
                                 // The bytecode is lying. Checked exceptions suck.
                                 //noinspection ConstantConditions

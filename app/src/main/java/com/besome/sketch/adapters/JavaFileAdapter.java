@@ -28,7 +28,7 @@ public class JavaFileAdapter extends RecyclerView.Adapter<JavaFileAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.bind(ProjectDataManager.getFileManager(sc_id).b().get(position));
+        holder.bind(ProjectDataManager.getFileManager(sc_id).getActivities().get(position));
     }
 
     @Override
@@ -40,7 +40,7 @@ public class JavaFileAdapter extends RecyclerView.Adapter<JavaFileAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return ProjectDataManager.getFileManager(sc_id).b().size();
+        return ProjectDataManager.getFileManager(sc_id).getActivities().size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

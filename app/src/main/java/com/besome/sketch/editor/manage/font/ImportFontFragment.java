@@ -168,10 +168,10 @@ public class ImportFontFragment extends BaseFragment implements MenuProvider {
             }
         }
 
-        ProjectDataManager.getResourceManager(sc_id).a(projectResourceBeans);
-        ProjectDataManager.getResourceManager(sc_id).y();
-        ProjectDataManager.getProjectDataManager(sc_id).a(ProjectDataManager.getResourceManager(sc_id));
-        ProjectDataManager.getProjectDataManager(sc_id).k();
+        ProjectDataManager.getResourceManager(sc_id).setFonts(projectResourceBeans);
+        ProjectDataManager.getResourceManager(sc_id).saveToBackup();
+        ProjectDataManager.getProjectDataManager(sc_id).syncFonts(ProjectDataManager.getResourceManager(sc_id));
+        ProjectDataManager.getProjectDataManager(sc_id).saveAllBackup();
     }
 
     public final void toggleEmptyStateVisibility() {
@@ -217,7 +217,7 @@ public class ImportFontFragment extends BaseFragment implements MenuProvider {
         projectResourceBeans = new ArrayList<>();
         if (savedInstanceState == null) {
             sc_id = requireActivity().getIntent().getStringExtra("sc_id");
-            dirPath = ProjectDataManager.getResourceManager(sc_id).j();
+            dirPath = ProjectDataManager.getResourceManager(sc_id).getFontDirPath();
             ArrayList<ProjectResourceBean> resourceBeans = ProjectDataManager.getResourceManager(sc_id).fonts;
             if (resourceBeans != null) {
                 projectResourceBeans.addAll(resourceBeans);

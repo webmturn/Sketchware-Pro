@@ -67,7 +67,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
         viewProperty.setOnPropertyListener(new ViewEditorCallback() {
             @Override
             public void a() {
-                viewEditor.setFavoriteData(WidgetCollectionManager.h().f());
+                viewEditor.setFavoriteData(WidgetCollectionManager.getInstance().getWidgets());
             }
 
             @Override
@@ -116,7 +116,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
         viewEditor.setOnDraggingListener(new DraggingListener() {
             @Override
             public boolean isAdmobEnabled() {
-                return ProjectDataManager.getLibraryManager(sc_id).b().isEnabled();
+                return ProjectDataManager.getLibraryManager(sc_id).getAdmob().isEnabled();
             }
 
             @Override
@@ -127,7 +127,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
 
             @Override
             public boolean isGoogleMapEnabled() {
-                return ProjectDataManager.getLibraryManager(sc_id).e().isEnabled();
+                return ProjectDataManager.getLibraryManager(sc_id).getGoogleMap().isEnabled();
             }
 
             @Override
@@ -137,7 +137,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
             }
         });
         viewEditor.setOnHistoryChangeListener(this::invalidateOptionsMenu);
-        viewEditor.setFavoriteData(WidgetCollectionManager.h().f());
+        viewEditor.setFavoriteData(WidgetCollectionManager.getInstance().getWidgets());
     }
 
     public void initialize(ProjectFileBean projectFileBean) {
@@ -159,9 +159,9 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
     private void refreshView(String viewId) {
         ViewBean viewBean;
         if (viewId.equals("_fab")) {
-            viewBean = ProjectDataManager.getProjectDataManager(sc_id).h(projectFileBean.getXmlName());
+            viewBean = ProjectDataManager.getProjectDataManager(sc_id).getFabView(projectFileBean.getXmlName());
         } else {
-            viewBean = ProjectDataManager.getProjectDataManager(sc_id).c(projectFileBean.getXmlName(), viewId);
+            viewBean = ProjectDataManager.getProjectDataManager(sc_id).getViewBean(projectFileBean.getXmlName(), viewId);
         }
         updateViewDisplay(viewBean);
         viewProperty.e();
@@ -180,7 +180,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
 
     public void loadViews(ArrayList<ViewBean> viewBeans) {
         viewEditor.h();
-        viewEditor.a(ProjectDataStore.a(viewBeans));
+        viewEditor.a(ProjectDataStore.getSortedRootViews(viewBeans));
     }
 
     public void togglePropertyView(boolean var1) {
@@ -326,7 +326,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
                 int actionType = historyViewBean.getActionType();
                 if (actionType == HistoryViewBean.ACTION_TYPE_ADD) {
                     for (ViewBean viewBean : historyViewBean.getAddedData()) {
-                        ProjectDataManager.getProjectDataManager(sc_id).a(projectFileBean.getXmlName(), viewBean);
+                        ProjectDataManager.getProjectDataManager(sc_id).addView(projectFileBean.getXmlName(), viewBean);
                     }
                     viewEditor.a(viewEditor.a(historyViewBean.getAddedData(), false), false);
                 } else if (actionType == HistoryViewBean.ACTION_TYPE_UPDATE) {
@@ -337,21 +337,21 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
                     }
 
                     if (currentUpdateData.id.equals("_fab")) {
-                        ProjectDataManager.getProjectDataManager(sc_id).h(projectFileBean.getXmlName()).copy(currentUpdateData);
+                        ProjectDataManager.getProjectDataManager(sc_id).getFabView(projectFileBean.getXmlName()).copy(currentUpdateData);
                     } else {
-                        ProjectDataManager.getProjectDataManager(sc_id).c(projectFileBean.getXmlName(), prevUpdateData.id).copy(currentUpdateData);
+                        ProjectDataManager.getProjectDataManager(sc_id).getViewBean(projectFileBean.getXmlName(), prevUpdateData.id).copy(currentUpdateData);
                     }
 
                     viewEditor.a(viewEditor.e(currentUpdateData), false);
                 } else if (actionType == HistoryViewBean.ACTION_TYPE_REMOVE) {
                     for (ViewBean viewBean : historyViewBean.getRemovedData()) {
-                        ProjectDataManager.getProjectDataManager(sc_id).a(projectFileBean, viewBean);
+                        ProjectDataManager.getProjectDataManager(sc_id).removeView(projectFileBean, viewBean);
                     }
                     viewEditor.b(historyViewBean.getRemovedData(), false);
                     viewEditor.i();
                 } else if (actionType == HistoryViewBean.ACTION_TYPE_MOVE) {
                     ViewBean movedData = historyViewBean.getMovedData();
-                    ViewBean viewBean = ProjectDataManager.getProjectDataManager(sc_id).c(projectFileBean.getXmlName(), movedData.id);
+                    ViewBean viewBean = ProjectDataManager.getProjectDataManager(sc_id).getViewBean(projectFileBean.getXmlName(), movedData.id);
                     viewBean.copy(movedData);
                     viewEditor.a(viewEditor.b(viewBean, false), false);
                 } else if (actionType == HistoryViewBean.ACTION_TYPE_OVERRIDE) {
@@ -366,13 +366,13 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
     public void refreshAllViews() {
         invalidateOptionsMenu();
         if (projectFileBean != null) {
-            clearAndLoadViews(ProjectDataManager.getProjectDataManager(sc_id).d(projectFileBean.getXmlName()));
-            updateFab(ProjectDataManager.getProjectDataManager(sc_id).h(projectFileBean.getXmlName()));
+            clearAndLoadViews(ProjectDataManager.getProjectDataManager(sc_id).getViews(projectFileBean.getXmlName()));
+            updateFab(ProjectDataManager.getProjectDataManager(sc_id).getFabView(projectFileBean.getXmlName()));
         }
     }
 
     public void refreshFavorites() {
-        viewEditor.setFavoriteData(WidgetCollectionManager.h().f());
+        viewEditor.setFavoriteData(WidgetCollectionManager.getInstance().getWidgets());
     }
 
     private void invalidateOptionsMenu() {
@@ -392,7 +392,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
                 int actionType = historyViewBean.getActionType();
                 if (actionType == HistoryViewBean.ACTION_TYPE_ADD) {
                     for (ViewBean view : historyViewBean.getAddedData()) {
-                        ProjectDataManager.getProjectDataManager(sc_id).a(projectFileBean, view);
+                        ProjectDataManager.getProjectDataManager(sc_id).removeView(projectFileBean, view);
                     }
                     viewEditor.b(historyViewBean.getAddedData(), false);
                     viewEditor.i();
@@ -403,19 +403,19 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
                         prevUpdateData.preId = currentUpdateData.id;
                     }
                     if (currentUpdateData.id.equals("_fab")) {
-                        ProjectDataManager.getProjectDataManager(sc_id).h(projectFileBean.getXmlName()).copy(prevUpdateData);
+                        ProjectDataManager.getProjectDataManager(sc_id).getFabView(projectFileBean.getXmlName()).copy(prevUpdateData);
                     } else {
-                        ProjectDataManager.getProjectDataManager(sc_id).c(projectFileBean.getXmlName(), currentUpdateData.id).copy(prevUpdateData);
+                        ProjectDataManager.getProjectDataManager(sc_id).getViewBean(projectFileBean.getXmlName(), currentUpdateData.id).copy(prevUpdateData);
                     }
                     viewEditor.a(viewEditor.e(prevUpdateData), false);
                 } else if (actionType == HistoryViewBean.ACTION_TYPE_REMOVE) {
                     for (ViewBean view : historyViewBean.getRemovedData()) {
-                        ProjectDataManager.getProjectDataManager(sc_id).a(projectFileBean.getXmlName(), view);
+                        ProjectDataManager.getProjectDataManager(sc_id).addView(projectFileBean.getXmlName(), view);
                     }
                     viewEditor.a(viewEditor.a(historyViewBean.getRemovedData(), false), false);
                 } else if (actionType == HistoryViewBean.ACTION_TYPE_MOVE) {
                     ViewBean movedData = historyViewBean.getMovedData();
-                    ViewBean viewBean = ProjectDataManager.getProjectDataManager(sc_id).c(projectFileBean.getXmlName(), movedData.id);
+                    ViewBean viewBean = ProjectDataManager.getProjectDataManager(sc_id).getViewBean(projectFileBean.getXmlName(), movedData.id);
                     viewBean.preIndex = movedData.index;
                     viewBean.index = movedData.preIndex;
                     viewBean.parent = movedData.preParent;
@@ -433,10 +433,10 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
     }
 
     public void updatePropertyViews() {
-        ArrayList<ViewBean> viewBeanArrayList = ProjectDataStore.a(ProjectDataManager.getProjectDataManager(sc_id).d(projectFileBean.getXmlName()));
+        ArrayList<ViewBean> viewBeanArrayList = ProjectDataStore.getSortedRootViews(ProjectDataManager.getProjectDataManager(sc_id).getViews(projectFileBean.getXmlName()));
         ViewBean viewBean;
         if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB)) {
-            viewBean = ProjectDataManager.getProjectDataManager(sc_id).h(projectFileBean.getXmlName());
+            viewBean = ProjectDataManager.getProjectDataManager(sc_id).getFabView(projectFileBean.getXmlName());
         } else {
             viewBean = null;
         }
@@ -495,11 +495,11 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
                     }
                     Intent data = result.getData();
                     if (data != null && data.getBooleanExtra("is_edit_image", false)) {
-                        for (ViewBean viewBean : ProjectDataManager.getProjectDataManager(sc_id).d(projectFileBean.getXmlName())) {
+                        for (ViewBean viewBean : ProjectDataManager.getProjectDataManager(sc_id).getViews(projectFileBean.getXmlName())) {
                             updateViewDisplay(viewBean);
                         }
                         if (isFabEnabled) {
-                            updateViewDisplay(ProjectDataManager.getProjectDataManager(sc_id).h(projectFileBean.getXmlName()));
+                            updateViewDisplay(ProjectDataManager.getProjectDataManager(sc_id).getFabView(projectFileBean.getXmlName()));
                         }
                     }
                     invalidateOptionsMenu();

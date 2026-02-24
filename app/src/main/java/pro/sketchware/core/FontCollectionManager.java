@@ -7,30 +7,30 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class FontCollectionManager extends BaseCollectionManager {
-  public static FontCollectionManager f;
+  public static FontCollectionManager instance;
   
-  public static FontCollectionManager g() {
-    if (f == null) {
+  public static FontCollectionManager getInstance() {
+    if (instance == null) {
       synchronized (FontCollectionManager.class) {
-        if (f == null) {
-          f = new FontCollectionManager();
+        if (instance == null) {
+          instance = new FontCollectionManager();
         }
       }
     }
-    return f;
+    return instance;
   }
   
-  public ProjectResourceBean a(String paramString) {
-    for (ProjectResourceBean projectResourceBean : f()) {
+  public ProjectResourceBean getResourceByName(String paramString) {
+    for (ProjectResourceBean projectResourceBean : getResources()) {
       if (projectResourceBean.resName.equals(paramString))
         return projectResourceBean; 
     } 
     return null;
   }
   
-  public void a(ProjectResourceBean paramProjectResourceBean, String paramString, boolean paramBoolean) {
+  public void renameResource(ProjectResourceBean paramProjectResourceBean, String paramString, boolean paramBoolean) {
     if (this.collections == null)
-      a(); 
+      initialize(); 
     int i = this.collections.size();
     while (--i >= 0) {
       CollectionBean collectionBean = this.collections.get(i);
@@ -40,15 +40,15 @@ public class FontCollectionManager extends BaseCollectionManager {
       } 
     } 
     if (paramBoolean)
-      e(); 
+      saveCollections(); 
   }
   
-  public void a(String paramString, ProjectResourceBean paramProjectResourceBean) throws CompileException {
-    a(paramString, paramProjectResourceBean, true);
+  public void addResource(String paramString, ProjectResourceBean paramProjectResourceBean) throws CompileException {
+    addResource(paramString, paramProjectResourceBean, true);
   }
   
-  public void a(String paramString, ProjectResourceBean paramProjectResourceBean, boolean paramBoolean) throws CompileException {
-    if (this.collections == null) a();
+  public void addResource(String paramString, ProjectResourceBean paramProjectResourceBean, boolean paramBoolean) throws CompileException {
+    if (this.collections == null) initialize();
     ArrayList<String> duplicates = new ArrayList<String>();
     for (CollectionBean bean : this.collections) {
       if (bean.name.equals(paramProjectResourceBean.resName)) {
@@ -89,12 +89,12 @@ public class FontCollectionManager extends BaseCollectionManager {
       }
     }
     this.collections.add(new CollectionBean(paramProjectResourceBean.resName, dataName));
-    if (paramBoolean) e();
+    if (paramBoolean) saveCollections();
   }
   
-  public void a(String paramString, boolean paramBoolean) {
+  public void removeResource(String paramString, boolean paramBoolean) {
     if (this.collections == null)
-      a(); 
+      initialize(); 
     int i = this.collections.size();
     while (true) {
       int j = i - 1;
@@ -116,10 +116,10 @@ public class FontCollectionManager extends BaseCollectionManager {
       break;
     } 
     if (paramBoolean)
-      e(); 
+      saveCollections(); 
   }
   
-  public void b() {
+  public void initializePaths() {
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(SketchwarePaths.getCollectionPath());
     stringBuilder.append(File.separator);
@@ -136,8 +136,8 @@ public class FontCollectionManager extends BaseCollectionManager {
     this.dataDirPath = stringBuilder.toString();
   }
   
-  public boolean b(String paramString) {
-    Iterator<ProjectResourceBean> iterator = f().iterator();
+  public boolean hasResource(String paramString) {
+    Iterator<ProjectResourceBean> iterator = getResources().iterator();
     while (iterator.hasNext()) {
       if (((ProjectResourceBean)iterator.next()).resName.equals(paramString))
         return true; 
@@ -145,14 +145,14 @@ public class FontCollectionManager extends BaseCollectionManager {
     return false;
   }
   
-  public void d() {
-    super.d();
-    f = null;
+  public void clearCollections() {
+    super.clearCollections();
+    instance = null;
   }
   
-  public ArrayList<ProjectResourceBean> f() {
+  public ArrayList<ProjectResourceBean> getResources() {
     if (this.collections == null)
-      a(); 
+      initialize(); 
     ArrayList<ProjectResourceBean> arrayList = new ArrayList<>();
     for (CollectionBean collectionBean : this.collections)
       arrayList.add(new ProjectResourceBean(ProjectResourceBean.PROJECT_RES_TYPE_FILE, collectionBean.name, collectionBean.data)); 

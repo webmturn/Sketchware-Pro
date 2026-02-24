@@ -65,7 +65,7 @@ public class FontManagerFragment extends BaseFragment {
     }
 
     public void loadProjectResources() {
-        projectResourceBeans = ImageCollectionManager.g().f();
+        projectResourceBeans = ImageCollectionManager.getInstance().getResources();
         adapter.notifyDataSetChanged();
 
         if (projectResourceBeans.isEmpty()) {
@@ -173,7 +173,7 @@ public class FontManagerFragment extends BaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        ImageCollectionManager.g().d();
+        ImageCollectionManager.getInstance().clearCollections();
     }
 
     @Override

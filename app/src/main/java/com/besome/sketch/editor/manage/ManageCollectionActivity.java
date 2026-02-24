@@ -183,7 +183,7 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
     }
 
     private void openWidgetDetails(int position) {
-        String widgetName = WidgetCollectionManager.h().g().get(position);
+        String widgetName = WidgetCollectionManager.getInstance().getWidgetNames().get(position);
         Intent intent = new Intent(getApplicationContext(), ShowWidgetCollectionActivity.class);
         intent.putExtra("sc_id", sc_id);
         intent.putExtra("widget_name", widgetName);
@@ -191,14 +191,14 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
     }
 
     private void openBlockDetails(int position) {
-        String blockName = BlockCollectionManager.h().g().get(position);
+        String blockName = BlockCollectionManager.getInstance().getBlockNames().get(position);
         Intent intent = new Intent(getApplicationContext(), ShowBlockCollectionActivity.class);
         intent.putExtra("block_name", blockName);
         blockLauncher.launch(intent);
     }
 
     private void openMoreBlockDetails(int position) {
-        String blockName = MoreBlockCollectionManager.h().g().get(position);
+        String blockName = MoreBlockCollectionManager.getInstance().getMoreBlockNames().get(position);
         Intent intent = new Intent(getApplicationContext(), ShowMoreBlockCollectionActivity.class);
         intent.putExtra("block_name", blockName);
         moreBlockLauncher.launch(intent);
@@ -263,28 +263,28 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
                 case 0 -> {
                     for (ProjectResourceBean bean : images) {
                         if (bean.isSelected) {
-                            SoundCollectionManager.g().a(bean.resName, false);
+                            SoundCollectionManager.getInstance().removeResource(bean.resName, false);
                         }
                     }
-                    SoundCollectionManager.g().e();
+                    SoundCollectionManager.getInstance().saveCollections();
                     loadImages();
                 }
                 case 1 -> {
                     for (ProjectResourceBean bean : sounds) {
                         if (bean.isSelected) {
-                            FontCollectionManager.g().a(bean.resName, false);
+                            FontCollectionManager.getInstance().removeResource(bean.resName, false);
                         }
                     }
-                    FontCollectionManager.g().e();
+                    FontCollectionManager.getInstance().saveCollections();
                     loadSounds();
                 }
                 case 2 -> {
                     for (ProjectResourceBean bean : fonts) {
                         if (bean.isSelected) {
-                            ImageCollectionManager.g().a(bean.resName, false);
+                            ImageCollectionManager.getInstance().removeResource(bean.resName, false);
                         }
                     }
-                    ImageCollectionManager.g().e();
+                    ImageCollectionManager.getInstance().saveCollections();
                     loadFonts();
                 }
                 case 3 -> {
@@ -294,28 +294,28 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
                                 hasDeletedWidget = true;
                             }
 
-                            WidgetCollectionManager.h().a(bean.name, false);
+                            WidgetCollectionManager.getInstance().removeWidget(bean.name, false);
                         }
                     }
-                    WidgetCollectionManager.h().e();
+                    WidgetCollectionManager.getInstance().saveCollections();
                     loadWidgets();
                 }
                 case 4 -> {
                     for (BlockCollectionBean bean : blocks) {
                         if (bean.isSelected) {
-                            BlockCollectionManager.h().a(bean.name, false);
+                            BlockCollectionManager.getInstance().removeBlock(bean.name, false);
                         }
                     }
-                    BlockCollectionManager.h().e();
+                    BlockCollectionManager.getInstance().saveCollections();
                     loadBlocks();
                 }
                 default -> {
                     for (MoreBlockCollectionBean bean : moreBlocks) {
                         if (bean.isSelected) {
-                            MoreBlockCollectionManager.h().a(bean.name, false);
+                            MoreBlockCollectionManager.getInstance().removeMoreBlock(bean.name, false);
                         }
                     }
-                    MoreBlockCollectionManager.h().e();
+                    MoreBlockCollectionManager.getInstance().saveCollections();
                     loadMoreBlocks();
                 }
             }
@@ -491,12 +491,12 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
     }
 
     private void loadAllCollectionItems() {
-        images = SoundCollectionManager.g().f();
-        sounds = FontCollectionManager.g().f();
-        fonts = ImageCollectionManager.g().f();
-        widgets = WidgetCollectionManager.h().f();
-        blocks = BlockCollectionManager.h().f();
-        moreBlocks = MoreBlockCollectionManager.h().f();
+        images = SoundCollectionManager.getInstance().getResources();
+        sounds = FontCollectionManager.getInstance().getResources();
+        fonts = ImageCollectionManager.getInstance().getResources();
+        widgets = WidgetCollectionManager.getInstance().getWidgets();
+        blocks = BlockCollectionManager.getInstance().getBlocks();
+        moreBlocks = MoreBlockCollectionManager.getInstance().getMoreBlocks();
 
         if (currentItemId == -1) {
             collectionAdapter.currentViewType = 0;
@@ -511,7 +511,7 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
     }
 
     private void loadImages() {
-        images = SoundCollectionManager.g().f();
+        images = SoundCollectionManager.getInstance().getResources();
         if (currentItemId == 0) {
             collectionAdapter.setData(images);
             collectionAdapter.currentViewType = 0;
@@ -521,7 +521,7 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
     }
 
     private void loadSounds() {
-        sounds = FontCollectionManager.g().f();
+        sounds = FontCollectionManager.getInstance().getResources();
         if (currentItemId == 1) {
             collectionAdapter.setData(sounds);
             collectionAdapter.currentViewType = 1;
@@ -531,7 +531,7 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
     }
 
     private void loadFonts() {
-        fonts = ImageCollectionManager.g().f();
+        fonts = ImageCollectionManager.getInstance().getResources();
         if (currentItemId == 2) {
             collectionAdapter.setData(fonts);
             collectionAdapter.currentViewType = 2;
@@ -541,7 +541,7 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
     }
 
     private void loadWidgets() {
-        widgets = WidgetCollectionManager.h().f();
+        widgets = WidgetCollectionManager.getInstance().getWidgets();
         if (currentItemId == 3) {
             collectionAdapter.setData(widgets);
             collectionAdapter.currentViewType = 3;
@@ -551,7 +551,7 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
     }
 
     private void loadBlocks() {
-        blocks = BlockCollectionManager.h().f();
+        blocks = BlockCollectionManager.getInstance().getBlocks();
         if (currentItemId == 4) {
             collectionAdapter.setData(blocks);
             collectionAdapter.currentViewType = 4;
@@ -561,7 +561,7 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
     }
 
     private void loadMoreBlocks() {
-        moreBlocks = MoreBlockCollectionManager.h().f();
+        moreBlocks = MoreBlockCollectionManager.getInstance().getMoreBlocks();
         if (currentItemId == 5) {
             collectionAdapter.setData(moreBlocks);
             collectionAdapter.currentViewType = 5;

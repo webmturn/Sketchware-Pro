@@ -138,7 +138,7 @@ public class AdmobActivity extends BaseAppCompatActivity implements View.OnClick
         } else if (id == binding.tvPrevbtn.getId()) {
             getOnBackPressedDispatcher().onBackPressed();
         } else if (id == binding.btnImport.getId()) {
-            LibrarySettingsImporter importer = new LibrarySettingsImporter(sc_id, LibraryManager::b);
+            LibrarySettingsImporter importer = new LibrarySettingsImporter(sc_id, LibraryManager::getAdmob);
             importer.addOnProjectSelectedListener(settings -> {
                 adMobSettings = settings;
                 stepPosition = 0;

@@ -78,8 +78,8 @@ public class ManageXMLCommandActivity extends BaseAppCompatActivity {
         var projectDataManager = ProjectDataManager.getProjectDataManager(sc_id);
         projectFilePaths.initializeMetadata(projectLibraryManager, projectFileManager, projectDataManager);
         CommandBlock.x();
-        ArrayList<ProjectFileBean> files = new ArrayList<>(projectFileManager.b());
-        files.addAll(new ArrayList<>(projectFileManager.c()));
+        ArrayList<ProjectFileBean> files = new ArrayList<>(projectFileManager.getActivities());
+        files.addAll(new ArrayList<>(projectFileManager.getCustomViews()));
         for (ProjectFileBean file : files) {
             CommandBlock.CBForXml(new ActivityCodeGenerator(projectFilePaths.buildConfig, file, projectDataManager).generateCode(false, sc_id));
         }
@@ -116,7 +116,7 @@ public class ManageXMLCommandActivity extends BaseAppCompatActivity {
         }
         commandPath = SketchwarePaths.getDataPath(sc_id) + "/command";
         ProjectFileManager projectFile = ProjectDataManager.getFileManager(sc_id);
-        xmlFiles = new ArrayList<>(projectFile.e());
+        xmlFiles = new ArrayList<>(projectFile.getXmlNames());
         xmlFiles.addAll(
                 Arrays.asList("strings.xml", "colors.xml", "styles.xml", "AndroidManifest.xml"));
         settings = new ProjectSettings(sc_id);

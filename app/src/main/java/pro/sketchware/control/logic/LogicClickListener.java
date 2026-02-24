@@ -59,11 +59,11 @@ public class LogicClickListener implements View.OnClickListener {
     }
 
     private ArrayList<String> getUsedVariable(int type) {
-        return projectDataManager.e(projectFile.getJavaName(), type);
+        return projectDataManager.getVariableNamesByType(projectFile.getJavaName(), type);
     }
 
     private ArrayList<String> getUsedList(int type) {
-        return projectDataManager.d(projectFile.getJavaName(), type);
+        return projectDataManager.getListNamesByType(projectFile.getJavaName(), type);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class LogicClickListener implements View.OnClickListener {
         VariableTypeValidator varTypeValidator = new VariableTypeValidator(getContext(), binding.typeLayout);
         binding.type.addTextChangedListener(varTypeValidator);
 
-        IdentifierValidator validator = new IdentifierValidator(getContext(), binding.nameLayout, BlockConstants.RESERVED_KEYWORDS, BlockConstants.COMPONENT_TYPES, projectDataManager.a(projectFile));
+        IdentifierValidator validator = new IdentifierValidator(getContext(), binding.nameLayout, BlockConstants.RESERVED_KEYWORDS, BlockConstants.COMPONENT_TYPES, projectDataManager.getAllIdentifiers(projectFile));
 
         dialog.setView(binding.getRoot());
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_add), (v, which) -> {
@@ -172,7 +172,7 @@ public class LogicClickListener implements View.OnClickListener {
 
         List<Item> data = new LinkedList<>();
         RemoveAdapter adapter = new RemoveAdapter(logicEditor, data,
-                variableName -> logicEditor.o.c(variableName) || projectDataManager.c(javaName, variableName, eventName));
+                variableName -> logicEditor.o.c(variableName) || projectDataManager.isVariableUsedInBlocks(javaName, variableName, eventName));
         recyclerView.setAdapter(adapter);
 
         List<Pair<List<Integer>, String>> variableTypes = List.of(
@@ -224,7 +224,7 @@ public class LogicClickListener implements View.OnClickListener {
 
         AddCustomListBinding listBinding = AddCustomListBinding.inflate(logicEditor.getLayoutInflater());
 
-        IdentifierValidator validator = new IdentifierValidator(getContext(), listBinding.nameLayout, BlockConstants.RESERVED_KEYWORDS, BlockConstants.COMPONENT_TYPES, projectDataManager.a(projectFile));
+        IdentifierValidator validator = new IdentifierValidator(getContext(), listBinding.nameLayout, BlockConstants.RESERVED_KEYWORDS, BlockConstants.COMPONENT_TYPES, projectDataManager.getAllIdentifiers(projectFile));
 
         dialog.setView(listBinding.getRoot());
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_add), (v, which) -> {
@@ -278,7 +278,7 @@ public class LogicClickListener implements View.OnClickListener {
 
         List<Item> data = new LinkedList<>();
         RemoveAdapter adapter = new RemoveAdapter(logicEditor, data,
-                listName -> logicEditor.o.b(listName) || projectDataManager.b(javaName, listName, eventName));
+                listName -> logicEditor.o.b(listName) || projectDataManager.isListUsedInBlocks(javaName, listName, eventName));
         recyclerView.setAdapter(adapter);
 
         List<Pair<Integer, String>> listTypes = List.of(

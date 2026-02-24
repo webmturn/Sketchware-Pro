@@ -116,7 +116,7 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
             } else {
                 editedImage = data.getParcelableExtra("image");
             }
-            ResourceManager.z();
+            ResourceManager.refreshCacheSignature();
             for (ProjectResourceBean image : images) {
                 if (image.resName.equals(editedImage.resName)) {
                     image.copy(editedImage);
@@ -150,7 +150,7 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
 
     private void initialize() {
         sc_id = requireActivity().getIntent().getStringExtra("sc_id");
-        projectImagesDirectory = ProjectDataManager.getResourceManager(sc_id).l();
+        projectImagesDirectory = ProjectDataManager.getResourceManager(sc_id).getImageDirPath();
         ArrayList<ProjectResourceBean> arrayList = ProjectDataManager.getResourceManager(sc_id).images;
         svgUtils = new SvgUtils(requireContext());
         svgUtils.initImageLoader();
@@ -246,13 +246,13 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
                 ));
             }
         }
-        ProjectDataManager.getResourceManager(sc_id).b(images);
-        ProjectDataManager.getResourceManager(sc_id).y();
+        ProjectDataManager.getResourceManager(sc_id).setImages(images);
+        ProjectDataManager.getResourceManager(sc_id).saveToBackup();
 
         // This method is replaces not exist images to default_image, I removed it because it changes vector images to default_images
         // ProjectDataManager.getProjectDataManager(sc_id).b(ProjectDataManager.getResourceManager(sc_id));
 
-        ProjectDataManager.getProjectDataManager(sc_id).k();
+        ProjectDataManager.getProjectDataManager(sc_id).saveAllBackup();
     }
 
     private void updateGuideVisibility() {
@@ -346,7 +346,7 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
             setSelectionMode(false);
             showAddImageDialog();
         });
-        ResourceManager.z();
+        ResourceManager.refreshCacheSignature();
         return binding.getRoot();
     }
 
@@ -529,7 +529,7 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
                             }
                         })
                         .centerCrop()
-                        .signature(ResourceManager.n())
+                        .signature(ResourceManager.getCacheSignature())
                         .error(R.drawable.ic_remove_grey600_24dp)
                         .into(holder.binding.img);
             }

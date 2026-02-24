@@ -233,14 +233,14 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         ViewHistoryManager.getInstance(sc_id);
         BlockHistoryManager.getInstance(sc_id);
         if (!haveSavedState) {
-            var2.f();
-            var2.g();
-            var2.e();
+            var2.backupImages();
+            var2.backupSounds();
+            var2.backupFonts();
         }
     }
 
     private ProjectFileBean getDefaultProjectFile() {
-        return ProjectDataManager.getFileManager(sc_id).b(ProjectFileBean.DEFAULT_XML_NAME);
+        return ProjectDataManager.getFileManager(sc_id).getFileByXmlName(ProjectFileBean.DEFAULT_XML_NAME);
     }
 
     private void refreshFileSelector() {
@@ -256,13 +256,13 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         }
 
         if (viewPager.getCurrentItem() == 0) {
-            if (!ProjectFileBean.DEFAULT_XML_NAME.equals(xmlFileName) && ProjectDataManager.getFileManager(sc_id).b(xmlFileName) == null) {
+            if (!ProjectFileBean.DEFAULT_XML_NAME.equals(xmlFileName) && ProjectDataManager.getFileManager(sc_id).getFileByXmlName(xmlFileName) == null) {
                 projectFile = getDefaultProjectFile();
                 xmlFileName = ProjectFileBean.DEFAULT_XML_NAME;
             }
             fileName.setText(xmlFileName);
         } else {
-            if (!ProjectFileBean.DEFAULT_JAVA_NAME.equals(currentJavaFileName) && ProjectDataManager.getFileManager(sc_id).a(currentJavaFileName) == null) {
+            if (!ProjectFileBean.DEFAULT_JAVA_NAME.equals(currentJavaFileName) && ProjectDataManager.getFileManager(sc_id).getActivityByJavaName(currentJavaFileName) == null) {
                 projectFile = getDefaultProjectFile();
                 currentJavaFileName = ProjectFileBean.DEFAULT_JAVA_NAME;
             }
@@ -347,7 +347,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     }
 
     private void checkForUnsavedProjectData() {
-        if (ProjectDataManager.getLibraryManager(sc_id).g() || ProjectDataManager.getFileManager(sc_id).g() || ProjectDataManager.getResourceManager(sc_id).q() || ProjectDataManager.getProjectDataManager(sc_id).d() || ProjectDataManager.getProjectDataManager(sc_id).c()) {
+        if (ProjectDataManager.getLibraryManager(sc_id).hasBackup() || ProjectDataManager.getFileManager(sc_id).hasBackup() || ProjectDataManager.getResourceManager(sc_id).hasBackup() || ProjectDataManager.getProjectDataManager(sc_id).hasViewBackup() || ProjectDataManager.getProjectDataManager(sc_id).hasLogicBackup()) {
             askIfToRestoreOldUnsavedProjectData();
         }
     }
@@ -766,36 +766,36 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         dialog.setMessage(Helper.getResString(R.string.design_restore_data_message_confirm));
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_restore), (v, which) -> {
             if (!UIHelper.isClickThrottled()) {
-                boolean g = ProjectDataManager.getLibraryManager(sc_id).g();
-                boolean g2 = ProjectDataManager.getFileManager(sc_id).g();
-                boolean q = ProjectDataManager.getResourceManager(sc_id).q();
-                boolean d = ProjectDataManager.getProjectDataManager(sc_id).d();
-                boolean c = ProjectDataManager.getProjectDataManager(sc_id).c();
+                boolean g = ProjectDataManager.getLibraryManager(sc_id).hasBackup();
+                boolean g2 = ProjectDataManager.getFileManager(sc_id).hasBackup();
+                boolean q = ProjectDataManager.getResourceManager(sc_id).hasBackup();
+                boolean d = ProjectDataManager.getProjectDataManager(sc_id).hasViewBackup();
+                boolean c = ProjectDataManager.getProjectDataManager(sc_id).hasLogicBackup();
                 if (g) {
-                    ProjectDataManager.getLibraryManager(sc_id).h();
+                    ProjectDataManager.getLibraryManager(sc_id).loadFromBackup();
                 }
                 if (g2) {
-                    ProjectDataManager.getFileManager(sc_id).h();
+                    ProjectDataManager.getFileManager(sc_id).loadFromBackup();
                 }
                 if (q) {
-                    ProjectDataManager.getResourceManager(sc_id).r();
+                    ProjectDataManager.getResourceManager(sc_id).loadFromBackup();
                 }
                 if (d) {
-                    ProjectDataManager.getProjectDataManager(sc_id).h();
+                    ProjectDataManager.getProjectDataManager(sc_id).loadViewFromBackup();
                 }
                 if (c) {
-                    ProjectDataManager.getProjectDataManager(sc_id).f();
+                    ProjectDataManager.getProjectDataManager(sc_id).loadLogicFromBackup();
                 }
                 if (g) {
-                    ProjectDataManager.getFileManager(sc_id).a(ProjectDataManager.getLibraryManager(sc_id));
-                    ProjectDataManager.getProjectDataManager(sc_id).a(ProjectDataManager.getLibraryManager(sc_id).d());
+                    ProjectDataManager.getFileManager(sc_id).syncWithLibrary(ProjectDataManager.getLibraryManager(sc_id));
+                    ProjectDataManager.getProjectDataManager(sc_id).removeAdmobComponents(ProjectDataManager.getLibraryManager(sc_id).getFirebaseDB());
                 }
                 if (g2 || g) {
-                    ProjectDataManager.getProjectDataManager(sc_id).a(ProjectDataManager.getFileManager(sc_id));
+                    ProjectDataManager.getProjectDataManager(sc_id).syncWithFileManager(ProjectDataManager.getFileManager(sc_id));
                 }
                 if (q) {
-                    ProjectDataManager.getProjectDataManager(sc_id).c(ProjectDataManager.getResourceManager(sc_id));
-                    ProjectDataManager.getProjectDataManager(sc_id).a(ProjectDataManager.getResourceManager(sc_id));
+                    ProjectDataManager.getProjectDataManager(sc_id).syncSounds(ProjectDataManager.getResourceManager(sc_id));
+                    ProjectDataManager.getProjectDataManager(sc_id).syncFonts(ProjectDataManager.getResourceManager(sc_id));
                 }
                 refresh();
                 B = false;
@@ -874,10 +874,10 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 // var ProjectFilePaths = new ProjectFilePaths(getApplicationContext(), sc_id);
                 var xmlGenerator = new LayoutGenerator(projectFilePaths.buildConfig, projectFile);
                 var projectDataManager = ProjectDataManager.getProjectDataManager(sc_id);
-                var viewBeans = projectDataManager.d(filename);
-                var viewFab = projectDataManager.h(filename);
+                var viewBeans = projectDataManager.getViews(filename);
+                var viewFab = projectDataManager.getFabView(filename);
                 xmlGenerator.setExcludeAppCompat(true);
-                xmlGenerator.setViews(ProjectDataStore.a(viewBeans), viewFab);
+                xmlGenerator.setViews(ProjectDataStore.getSortedRootViews(viewBeans), viewFab);
                 String content = xmlGenerator.toXmlString();
                 runOnUiThread(() -> {
                     if (isFinishing()) return;
@@ -1134,11 +1134,11 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
 
                 onProgress("Generating source code...", 2);
                 ResourceManager ResourceManager = ProjectDataManager.getResourceManager(sc_id);
-                ResourceManager.b(q.resDirectoryPath + File.separator + "drawable-xhdpi");
+                ResourceManager.copyImagesToDir(q.resDirectoryPath + File.separator + "drawable-xhdpi");
                 ResourceManager = ProjectDataManager.getResourceManager(sc_id);
-                ResourceManager.c(q.resDirectoryPath + File.separator + "raw");
+                ResourceManager.copySoundsToDir(q.resDirectoryPath + File.separator + "raw");
                 ResourceManager = ProjectDataManager.getResourceManager(sc_id);
-                ResourceManager.a(q.assetsPath + File.separator + "fonts");
+                ResourceManager.copyFontsToDir(q.assetsPath + File.separator + "fonts");
 
                 ProjectBuilder builder = new ProjectBuilder(this, activity.getApplicationContext(), q);
 
@@ -1420,9 +1420,9 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             DesignActivity activity = getActivity();
             if (activity != null) {
                 var sc_id = DesignActivity.sc_id;
-                ProjectDataManager.getResourceManager(sc_id).v();
-                ProjectDataManager.getResourceManager(sc_id).w();
-                ProjectDataManager.getResourceManager(sc_id).u();
+                ProjectDataManager.getResourceManager(sc_id).restoreImagesFromTemp();
+                ProjectDataManager.getResourceManager(sc_id).restoreSoundsFromTemp();
+                ProjectDataManager.getResourceManager(sc_id).restoreFontsFromTemp();
                 activity.runOnUiThread(() -> {
                     activity.h();
                     activity.finish();
@@ -1446,18 +1446,18 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             DesignActivity activity = getActivity();
             if (activity != null) {
                 var sc_id = DesignActivity.sc_id;
-                ProjectDataManager.getResourceManager(sc_id).a();
-                ProjectDataManager.getFileManager(sc_id).m();
-                ProjectDataManager.getProjectDataManager(sc_id).j();
-                ProjectDataManager.getResourceManager(sc_id).x();
-                ProjectDataManager.getLibraryManager(sc_id).l();
+                ProjectDataManager.getResourceManager(sc_id).cleanupAllResources();
+                ProjectDataManager.getFileManager(sc_id).saveToData();
+                ProjectDataManager.getProjectDataManager(sc_id).saveAllData();
+                ProjectDataManager.getResourceManager(sc_id).saveToData();
+                ProjectDataManager.getLibraryManager(sc_id).saveToData();
                 activity.runOnUiThread(() -> {
                     SketchToast.toast(activity.getApplicationContext(), Helper.getResString(R.string.common_message_complete_save), SketchToast.TOAST_NORMAL).show();
                     activity.saveVersionCodeInformationToProject();
                     activity.h();
-                    ProjectDataManager.getResourceManager(sc_id).f();
-                    ProjectDataManager.getResourceManager(sc_id).g();
-                    ProjectDataManager.getResourceManager(sc_id).e();
+                    ProjectDataManager.getResourceManager(sc_id).backupImages();
+                    ProjectDataManager.getResourceManager(sc_id).backupSounds();
+                    ProjectDataManager.getResourceManager(sc_id).backupFonts();
                 });
             }
         }
@@ -1478,12 +1478,12 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             DesignActivity activity = getActivity();
             if (activity != null) {
                 var sc_id = DesignActivity.sc_id;
-                ProjectDataManager.getResourceManager(sc_id).a();
-                ProjectDataManager.getFileManager(sc_id).m();
-                ProjectDataManager.getProjectDataManager(sc_id).j();
-                ProjectDataManager.getResourceManager(sc_id).x();
-                ProjectDataManager.getLibraryManager(sc_id).l();
-                ProjectDataManager.getResourceManager(sc_id).h();
+                ProjectDataManager.getResourceManager(sc_id).cleanupAllResources();
+                ProjectDataManager.getFileManager(sc_id).saveToData();
+                ProjectDataManager.getProjectDataManager(sc_id).saveAllData();
+                ProjectDataManager.getResourceManager(sc_id).saveToData();
+                ProjectDataManager.getLibraryManager(sc_id).saveToData();
+                ProjectDataManager.getResourceManager(sc_id).deleteTempDirs();
                 activity.runOnUiThread(() -> {
                     SketchToast.toast(activity.getApplicationContext(), Helper.getResString(R.string.common_message_complete_save), SketchToast.TOAST_NORMAL).show();
                     activity.saveVersionCodeInformationToProject();
@@ -1509,7 +1509,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             if (activity != null) {
                 ProjectDataStore ecInstance = ProjectDataManager.getProjectDataManager(sc_id);
                 synchronized (ecInstance) {
-                    ecInstance.k();
+                    ecInstance.saveAllBackup();
                 }
             }
         }

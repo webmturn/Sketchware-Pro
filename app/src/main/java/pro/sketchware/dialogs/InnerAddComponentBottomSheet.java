@@ -118,7 +118,7 @@ public class InnerAddComponentBottomSheet extends BottomSheetDialogFragment {
 
         binding.tiInputFilePicker.setEndIconOnClickListener(v -> showFilePickerMimeTypeSelectionDialog());
 
-        componentNameValidator = new IdentifierValidator(getContext(), binding.tiInput, BlockConstants.RESERVED_KEYWORDS, BlockConstants.COMPONENT_TYPES, ProjectDataManager.getProjectDataManager(scId).a(projectFileBean));
+        componentNameValidator = new IdentifierValidator(getContext(), binding.tiInput, BlockConstants.RESERVED_KEYWORDS, BlockConstants.COMPONENT_TYPES, ProjectDataManager.getProjectDataManager(scId).getAllIdentifiers(projectFileBean));
         componentFileNameValidator = new LengthRangeValidator(getContext(), binding.tiInputFilename, 1, 20);
         componentFirebasePathValidator = new LengthRangeValidator(getContext(), binding.tiInputFirebasePath, 0, 100);
         componentMimeTypeValidator = new LengthRangeValidator(getContext(), binding.tiInputFilePicker, 1, 50);
@@ -202,7 +202,7 @@ public class InnerAddComponentBottomSheet extends BottomSheetDialogFragment {
                 if (!componentFileNameValidator.isValid()) {
                     return false;
                 }
-                ProjectDataManager.getProjectDataManager(scId).a(projectFileBean.getJavaName(), componentType, componentId, Helper.getText(binding.edInputFilename));
+                ProjectDataManager.getProjectDataManager(scId).addComponentWithParam(projectFileBean.getJavaName(), componentType, componentId, Helper.getText(binding.edInputFilename));
                 break;
 
             case ComponentBean.COMPONENT_TYPE_FIREBASE:
@@ -210,53 +210,53 @@ public class InnerAddComponentBottomSheet extends BottomSheetDialogFragment {
                 if (!componentFirebasePathValidator.isValid()) {
                     return false;
                 }
-                if (ProjectDataManager.getLibraryManager(scId).d().useYn.equals(ProjectLibraryBean.LIB_USE_N)) {
+                if (ProjectDataManager.getLibraryManager(scId).getFirebaseDB().useYn.equals(ProjectLibraryBean.LIB_USE_N)) {
                     SketchToast.warning(getContext(), Helper.getResString(R.string.design_library_guide_setup_first), SketchToast.TOAST_WARNING).show();
                     return false;
                 }
-                ProjectDataManager.getProjectDataManager(scId).a(projectFileBean.getJavaName(), componentType, componentId, Helper.getText(binding.edInputFirebasePath));
+                ProjectDataManager.getProjectDataManager(scId).addComponentWithParam(projectFileBean.getJavaName(), componentType, componentId, Helper.getText(binding.edInputFirebasePath));
                 break;
 
             case ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH:
-                if (ProjectDataManager.getLibraryManager(scId).d().useYn.equals(ProjectLibraryBean.LIB_USE_N)) {
+                if (ProjectDataManager.getLibraryManager(scId).getFirebaseDB().useYn.equals(ProjectLibraryBean.LIB_USE_N)) {
                     SketchToast.warning(getContext(), Helper.getResString(R.string.design_library_guide_setup_first), SketchToast.TOAST_WARNING).show();
                     return false;
-                } else if (ProjectDataManager.getLibraryManager(scId).d().reserved2.trim().isEmpty()) {
+                } else if (ProjectDataManager.getLibraryManager(scId).getFirebaseDB().reserved2.trim().isEmpty()) {
                     SketchToast.warning(getContext(), Helper.getResString(R.string.design_library_firebase_guide_setup_first), SketchToast.TOAST_WARNING).show();
                     return false;
                 } else {
-                    ProjectDataManager.getProjectDataManager(scId).a(projectFileBean.getJavaName(), componentType, componentId, Helper.getText(binding.edInputFirebasePath));
+                    ProjectDataManager.getProjectDataManager(scId).addComponentWithParam(projectFileBean.getJavaName(), componentType, componentId, Helper.getText(binding.edInputFirebasePath));
                 }
                 break;
 
             case ComponentBean.COMPONENT_TYPE_FRAGMENT_ADAPTER:
-                if (ProjectDataManager.getLibraryManager(scId).c().useYn.equals(ProjectLibraryBean.LIB_USE_N)) {
+                if (ProjectDataManager.getLibraryManager(scId).getCompat().useYn.equals(ProjectLibraryBean.LIB_USE_N)) {
                     SketchToast.warning(getContext(), Helper.getResString(R.string.design_library_guide_setup_first), SketchToast.TOAST_WARNING).show();
                     return false;
                 }
-                ProjectDataManager.getProjectDataManager(scId).a(projectFileBean.getJavaName(), componentType, componentId);
+                ProjectDataManager.getProjectDataManager(scId).addComponent(projectFileBean.getJavaName(), componentType, componentId);
                 break;
 
             case ComponentBean.COMPONENT_TYPE_INTERSTITIAL_AD:
             case ComponentBean.COMPONENT_TYPE_REWARDED_VIDEO_AD:
-                if (ProjectDataManager.getLibraryManager(scId).b().useYn.equals(ProjectLibraryBean.LIB_USE_N)) {
+                if (ProjectDataManager.getLibraryManager(scId).getAdmob().useYn.equals(ProjectLibraryBean.LIB_USE_N)) {
                     SketchToast.warning(getContext(), Helper.getResString(R.string.design_library_admob_component_setup_first), SketchToast.TOAST_WARNING).show();
                     return false;
                 }
-                ProjectDataManager.getProjectDataManager(scId).a(projectFileBean.getJavaName(), componentType, componentId);
+                ProjectDataManager.getProjectDataManager(scId).addComponent(projectFileBean.getJavaName(), componentType, componentId);
                 break;
 
             case ComponentBean.COMPONENT_TYPE_FILE_PICKER:
                 if (Helper.getText(binding.edInputFilePicker).isEmpty() || !componentMimeTypeValidator.isValid()) {
                     return false;
                 }
-                ProjectDataManager.getProjectDataManager(scId).a(projectFileBean.getJavaName(), componentType, componentId, Helper.getText(binding.edInputFilePicker));
+                ProjectDataManager.getProjectDataManager(scId).addComponentWithParam(projectFileBean.getJavaName(), componentType, componentId, Helper.getText(binding.edInputFilePicker));
                 break;
 
             default:
-                ProjectDataManager.getProjectDataManager(scId).a(projectFileBean.getJavaName(), componentType, componentId);
+                ProjectDataManager.getProjectDataManager(scId).addComponent(projectFileBean.getJavaName(), componentType, componentId);
         }
-        ProjectDataManager.getProjectDataManager(scId).k();
+        ProjectDataManager.getProjectDataManager(scId).saveAllBackup();
         return true;
     }
 

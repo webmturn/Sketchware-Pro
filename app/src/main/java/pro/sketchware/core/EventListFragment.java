@@ -163,7 +163,7 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
             componentEvents.clear();
             activityEvents.clear();
             drawerViewEvents.clear();
-            for (Pair<String, String> moreBlock : ProjectDataManager.getProjectDataManager(sc_id).i(currentActivity.getJavaName())) {
+            for (Pair<String, String> moreBlock : ProjectDataManager.getProjectDataManager(sc_id).getMoreBlocks(currentActivity.getJavaName())) {
                 EventBean eventBean = new EventBean(EventBean.EVENT_TYPE_ETC, -1, moreBlock.first, "moreBlock");
                 eventBean.initValue();
                 moreBlocks.add(eventBean);
@@ -171,7 +171,7 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
             EventBean eventBean2 = new EventBean(EventBean.EVENT_TYPE_ACTIVITY, -1, "onCreate", "initializeLogic");
             eventBean2.initValue();
             activityEvents.add(eventBean2);
-            for (EventBean eventBean : ProjectDataManager.getProjectDataManager(sc_id).g(currentActivity.getJavaName())) {
+            for (EventBean eventBean : ProjectDataManager.getProjectDataManager(sc_id).getEvents(currentActivity.getJavaName())) {
                 eventBean.initValue();
                 int i = eventBean.eventType;
                 if (i == EventBean.EVENT_TYPE_VIEW) {
@@ -215,10 +215,10 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
     }
 
     private void deleteMoreBlock(EventBean moreBlock, int position) {
-        if (ProjectDataManager.getProjectDataManager(sc_id).f(currentActivity.getJavaName(), moreBlock.targetId)) {
+        if (ProjectDataManager.getProjectDataManager(sc_id).isMoreBlockUsed(currentActivity.getJavaName(), moreBlock.targetId)) {
             SketchToast.warning(requireContext(), getString(R.string.logic_editor_message_currently_used_block), 0).show();
         } else {
-            ProjectDataManager.getProjectDataManager(sc_id).n(currentActivity.getJavaName(), moreBlock.targetId);
+            ProjectDataManager.getProjectDataManager(sc_id).removeMoreBlock(currentActivity.getJavaName(), moreBlock.targetId);
             SketchToast.toast(requireContext(), getString(R.string.common_message_complete_delete), 0).show();
             events.get(getPaletteIndex()).remove(position);
             eventAdapter.refreshAfterDelete();
@@ -345,7 +345,7 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
         editText.setLines(1);
         editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
-        UniqueNameValidator nameValidator = new UniqueNameValidator(requireContext(), a2.findViewById(R.id.ti_input), MoreBlockCollectionManager.h().g());
+        UniqueNameValidator nameValidator = new UniqueNameValidator(requireContext(), a2.findViewById(R.id.ti_input), MoreBlockCollectionManager.getInstance().getMoreBlockNames());
         aBVar.setView(a2);
         aBVar.setPositiveButton(R.string.common_word_save, (v, which) -> {
             if (nameValidator.isValid()) {
@@ -364,7 +364,7 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
     private void resetEvent(EventBean event) {
         ProjectDataStore a2 = ProjectDataManager.getProjectDataManager(sc_id);
         String javaName = currentActivity.getJavaName();
-        a2.a(javaName, event.targetId + "_" + event.eventName, new ArrayList<>());
+        a2.putBlocks(javaName, event.targetId + "_" + event.eventName, new ArrayList<>());
         SketchToast.toast(requireContext(), getString(R.string.common_message_complete_reset), 0).show();
     }
 
@@ -374,7 +374,7 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
     }
 
     private void showImportMoreBlockFromCollectionsDialog() {
-        ArrayList<MoreBlockCollectionBean> moreBlocksInCollections = MoreBlockCollectionManager.h().f();
+        ArrayList<MoreBlockCollectionBean> moreBlocksInCollections = MoreBlockCollectionManager.getInstance().getMoreBlocks();
         new MoreblockImporterDialog(requireActivity(), moreBlocksInCollections, this).show();
     }
 
@@ -403,10 +403,10 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
     }
 
     private void saveMoreBlockToCollection(String moreBlockName, EventBean moreBlock) {
-        String b2 = ProjectDataManager.getProjectDataManager(sc_id).b(currentActivity.getJavaName(), moreBlock.targetId);
+        String b2 = ProjectDataManager.getProjectDataManager(sc_id).getMoreBlockSpec(currentActivity.getJavaName(), moreBlock.targetId);
         ProjectDataStore a2 = ProjectDataManager.getProjectDataManager(sc_id);
         String javaName = currentActivity.getJavaName();
-        ArrayList<BlockBean> moreBlockBlocks = a2.a(javaName, moreBlock.targetId + "_" + moreBlock.eventName);
+        ArrayList<BlockBean> moreBlockBlocks = a2.getBlocks(javaName, moreBlock.targetId + "_" + moreBlock.eventName);
 
         boolean hasAnyBlocks = false;
         boolean failedToAddResourceToCollections = false;
@@ -418,20 +418,20 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
                     String parameter = next.parameters.get(i);
 
                     if (gx.isExactType("resource") || gx.isExactType("resource_bg")) {
-                        if (ProjectDataManager.getResourceManager(sc_id).l(parameter) && !SoundCollectionManager.g().b(parameter)) {
-                            try { SoundCollectionManager.g().a(sc_id, ProjectDataManager.getResourceManager(sc_id).g(parameter)); } catch (CompileException ignored) {}
+                        if (ProjectDataManager.getResourceManager(sc_id).hasImage(parameter) && !SoundCollectionManager.getInstance().hasResource(parameter)) {
+                            try { SoundCollectionManager.getInstance().addResource(sc_id, ProjectDataManager.getResourceManager(sc_id).getImageBean(parameter)); } catch (CompileException ignored) {}
                         }
                     } else if (gx.isExactType("sound")) {
-                        if (ProjectDataManager.getResourceManager(sc_id).m(parameter) && !FontCollectionManager.g().b(parameter)) {
+                        if (ProjectDataManager.getResourceManager(sc_id).hasSound(parameter) && !FontCollectionManager.getInstance().hasResource(parameter)) {
                             try {
-                                FontCollectionManager.g().a(sc_id, ProjectDataManager.getResourceManager(sc_id).j(parameter));
+                                FontCollectionManager.getInstance().addResource(sc_id, ProjectDataManager.getResourceManager(sc_id).getSoundBean(parameter));
                             } catch (Exception unused) {
                                 failedToAddResourceToCollections = true;
                             }
                         }
                     } else if (gx.isExactType("font")) {
-                        if (ProjectDataManager.getResourceManager(sc_id).k(parameter) && !ImageCollectionManager.g().b(parameter)) {
-                            try { ImageCollectionManager.g().a(sc_id, ProjectDataManager.getResourceManager(sc_id).e(parameter)); } catch (CompileException ignored) {}
+                        if (ProjectDataManager.getResourceManager(sc_id).hasFont(parameter) && !ImageCollectionManager.getInstance().hasResource(parameter)) {
+                            try { ImageCollectionManager.getInstance().addResource(sc_id, ProjectDataManager.getResourceManager(sc_id).getFontBean(parameter)); } catch (CompileException ignored) {}
                         }
                     }
                 }
@@ -446,7 +446,7 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
             }
         }
         try {
-            MoreBlockCollectionManager.h().a(moreBlockName, b2, moreBlockBlocks, true);
+            MoreBlockCollectionManager.getInstance().addMoreBlock(moreBlockName, b2, moreBlockBlocks, true);
         } catch (Exception unused2) {
             SketchToast.warning(requireContext(), getString(R.string.common_error_failed_to_save), 0).show();
         }

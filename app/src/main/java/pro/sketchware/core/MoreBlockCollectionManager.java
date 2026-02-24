@@ -17,10 +17,10 @@ public class MoreBlockCollectionManager extends BaseCollectionManager {
   public Gson moreBlockGson = null;
   
   public MoreBlockCollectionManager() {
-    i();
+    initializeGson();
   }
   
-  public static MoreBlockCollectionManager h() {
+  public static MoreBlockCollectionManager getInstance() {
     if (instance == null) {
       synchronized (MoreBlockCollectionManager.class) {
         if (instance == null) {
@@ -31,19 +31,19 @@ public class MoreBlockCollectionManager extends BaseCollectionManager {
     return instance;
   }
   
-  public MoreBlockCollectionBean a(String paramString) {
+  public MoreBlockCollectionBean getMoreBlockByName(String paramString) {
     for (CollectionBean collectionBean : this.collections) {
       if (collectionBean.name.equals(paramString))
-        return new MoreBlockCollectionBean(collectionBean.name, collectionBean.reserved1, ProjectDataParser.a(this.moreBlockGson, collectionBean.data)); 
+        return new MoreBlockCollectionBean(collectionBean.name, collectionBean.reserved1, ProjectDataParser.parseBlockBeans(this.moreBlockGson, collectionBean.data)); 
     } 
     return null;
   }
   
-  public void a(String paramString1, String paramString2, ArrayList<BlockBean> paramArrayList, boolean paramBoolean) throws CompileException {
+  public void addMoreBlock(String paramString1, String paramString2, ArrayList<BlockBean> paramArrayList, boolean paramBoolean) throws CompileException {
     if (this.collections == null)
-      a(); 
+      initialize(); 
     if (this.moreBlockGson == null)
-      i(); 
+      initializeGson(); 
     Iterator<CollectionBean> iterator = this.collections.iterator();
     while (iterator.hasNext()) {
       if (!((CollectionBean)iterator.next()).name.equals(paramString1))
@@ -59,10 +59,10 @@ public class MoreBlockCollectionManager extends BaseCollectionManager {
     String str = stringBuilder.toString();
     this.collections.add(new CollectionBean(paramString1, str, paramString2));
     if (paramBoolean)
-      e(); 
+      saveCollections(); 
   }
   
-  public void a(String paramString1, String paramString2, boolean paramBoolean) {
+  public void renameMoreBlock(String paramString1, String paramString2, boolean paramBoolean) {
     for (CollectionBean collectionBean : this.collections) {
       if (collectionBean.name.equals(paramString1)) {
         collectionBean.name = paramString2;
@@ -70,10 +70,10 @@ public class MoreBlockCollectionManager extends BaseCollectionManager {
       } 
     } 
     if (paramBoolean)
-      e(); 
+      saveCollections(); 
   }
   
-  public void a(String paramString, boolean paramBoolean) {
+  public void removeMoreBlock(String paramString, boolean paramBoolean) {
     int i = this.collections.size();
     while (true) {
       int j = i - 1;
@@ -88,10 +88,10 @@ public class MoreBlockCollectionManager extends BaseCollectionManager {
       break;
     } 
     if (paramBoolean)
-      e(); 
+      saveCollections(); 
   }
   
-  public void b() {
+  public void initializePaths() {
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(SketchwarePaths.getCollectionPath());
     stringBuilder.append(File.separator);
@@ -101,20 +101,20 @@ public class MoreBlockCollectionManager extends BaseCollectionManager {
     this.collectionFilePath = stringBuilder.toString();
   }
   
-  public ArrayList<MoreBlockCollectionBean> f() {
+  public ArrayList<MoreBlockCollectionBean> getMoreBlocks() {
     if (this.collections == null)
-      a(); 
+      initialize(); 
     if (this.moreBlockGson == null)
-      i(); 
+      initializeGson(); 
     ArrayList<MoreBlockCollectionBean> arrayList = new ArrayList<>();
     for (CollectionBean collectionBean : this.collections)
-      arrayList.add(new MoreBlockCollectionBean(collectionBean.name, collectionBean.reserved1, ProjectDataParser.a(this.moreBlockGson, collectionBean.data))); 
+      arrayList.add(new MoreBlockCollectionBean(collectionBean.name, collectionBean.reserved1, ProjectDataParser.parseBlockBeans(this.moreBlockGson, collectionBean.data))); 
     return arrayList;
   }
   
-  public ArrayList<String> g() {
+  public ArrayList<String> getMoreBlockNames() {
     if (this.collections == null)
-      a(); 
+      initialize(); 
     ArrayList<String> arrayList = new ArrayList<>();
     Iterator<CollectionBean> iterator = this.collections.iterator();
     while (iterator.hasNext())
@@ -122,7 +122,7 @@ public class MoreBlockCollectionManager extends BaseCollectionManager {
     return arrayList;
   }
   
-  public final void i() {
+  public final void initializeGson() {
     this.moreBlockGson = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
   }
 }

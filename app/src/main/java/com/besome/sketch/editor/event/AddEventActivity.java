@@ -107,7 +107,7 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
 
         for (var activityEvent : EventRegistry.getAllActivityEvents()) {
             boolean exists = false;
-            for (var existingEvent : ProjectDataManager.getProjectDataManager(sc_id).g(projectFile.getJavaName())) {
+            for (var existingEvent : ProjectDataManager.getProjectDataManager(sc_id).getEvents(projectFile.getJavaName())) {
                 if (existingEvent.eventType == EventBean.EVENT_TYPE_ACTIVITY
                         && activityEvent.equals(existingEvent.eventName)) {
                     exists = true;
@@ -119,8 +119,8 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
                 addableActivityEvents.add(new EventBean(EventBean.EVENT_TYPE_ACTIVITY, 0, activityEvent, activityEvent));
             }
         }
-        ArrayList<ViewBean> views = ProjectDataManager.getProjectDataManager(sc_id).d(projectFile.getXmlName());
-        ArrayList<ComponentBean> components = ProjectDataManager.getProjectDataManager(sc_id).e(projectFile.getJavaName());
+        ArrayList<ViewBean> views = ProjectDataManager.getProjectDataManager(sc_id).getViews(projectFile.getXmlName());
+        ArrayList<ComponentBean> components = ProjectDataManager.getProjectDataManager(sc_id).getComponents(projectFile.getJavaName());
         if (views != null) {
             for (ViewBean view : views) {
                 Set<String> toNotAdd = new LayoutGenerator(new BuildConfig(), projectFile).readAttributesToReplace(view);
@@ -131,7 +131,7 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
                         exists = true;
                     } else {
                         exists = false;
-                        for (var existingEvent : ProjectDataManager.getProjectDataManager(sc_id).g(projectFile.getJavaName())) {
+                        for (var existingEvent : ProjectDataManager.getProjectDataManager(sc_id).getEvents(projectFile.getJavaName())) {
                             if (existingEvent.eventType == EventBean.EVENT_TYPE_VIEW
                                     && view.id.equals(existingEvent.targetId)
                                     && viewEvent.equals(existingEvent.eventName)) {
@@ -151,7 +151,7 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
             for (ComponentBean component : components) {
                 for (String componentEvent : EventRegistry.getComponentEventsForClass(component.getClassInfo())) {
                     boolean exists = false;
-                    for (var existingEvent : ProjectDataManager.getProjectDataManager(sc_id).g(projectFile.getJavaName())) {
+                    for (var existingEvent : ProjectDataManager.getProjectDataManager(sc_id).getEvents(projectFile.getJavaName())) {
                         if (existingEvent.eventType == EventBean.EVENT_TYPE_COMPONENT
                                 && component.componentId.equals(existingEvent.targetId)
                                 && componentEvent.equals(existingEvent.eventName)) {
@@ -166,10 +166,10 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
             }
         }
         ViewBean fab;
-        if (projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB) && (fab = ProjectDataManager.getProjectDataManager(sc_id).h(projectFile.getXmlName())) != null) {
+        if (projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB) && (fab = ProjectDataManager.getProjectDataManager(sc_id).getFabView(projectFile.getXmlName())) != null) {
             for (String fabEvent : EventRegistry.getEventsForClass(fab.getClassInfo())) {
                 boolean exists = false;
-                for (var existingFabEvent : ProjectDataManager.getProjectDataManager(sc_id).g(projectFile.getJavaName())) {
+                for (var existingFabEvent : ProjectDataManager.getProjectDataManager(sc_id).getEvents(projectFile.getJavaName())) {
                     if (existingFabEvent.eventType == EventBean.EVENT_TYPE_VIEW
                             && fab.id.equals(existingFabEvent.targetId)
                             && fabEvent.equals(existingFabEvent.eventName)) {
@@ -183,13 +183,13 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
             }
         }
         if (projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)) {
-            ArrayList<ViewBean> drawerViews = ProjectDataManager.getProjectDataManager(sc_id).d(projectFile.getDrawerXmlName());
+            ArrayList<ViewBean> drawerViews = ProjectDataManager.getProjectDataManager(sc_id).getViews(projectFile.getDrawerXmlName());
             if (drawerViews != null) {
                 for (ViewBean drawerView : drawerViews) {
                     Set<String> toNotAdd = new LayoutGenerator(new BuildConfig(), projectFile).readAttributesToReplace(drawerView);
                     for (String drawerViewEvent : EventRegistry.getEventsForClass(drawerView.getClassInfo())) {
                         boolean exists = false;
-                        for (var existingEvent : ProjectDataManager.getProjectDataManager(sc_id).g(projectFile.getJavaName())) {
+                        for (var existingEvent : ProjectDataManager.getProjectDataManager(sc_id).getEvents(projectFile.getJavaName())) {
                             if (existingEvent.eventType == EventBean.EVENT_TYPE_DRAWER_VIEW
                                     && drawerView.id.equals(existingEvent.targetId)
                                     && drawerViewEvent.equals(existingEvent.eventName)) {
@@ -243,19 +243,19 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
                             finished = true;
                         } else {
                             Pair<String, String> blockInformation = moreBlockView.getBlockInformation();
-                            ProjectDataManager.getProjectDataManager(sc_id).a(projectFile.getJavaName(), blockInformation.first, blockInformation.second);
+                            ProjectDataManager.getProjectDataManager(sc_id).addMoreBlock(projectFile.getJavaName(), blockInformation.first, blockInformation.second);
                         }
                     }
                     if (!finished) {
                         for (EventBean eventBean : eventsToAdd) {
-                            ProjectDataManager.getProjectDataManager(sc_id).a(projectFile.getJavaName(), eventBean);
+                            ProjectDataManager.getProjectDataManager(sc_id).addEventBean(projectFile.getJavaName(), eventBean);
                         }
                         if (eventsToAdd.size() == 1) {
                             SketchToast.toast(getApplicationContext(), getApplicationContext().getString(R.string.event_message_new_event), SketchToast.TOAST_NORMAL).show();
                         } else if (eventsToAdd.size() > 1) {
                             SketchToast.toast(getApplicationContext(), getApplicationContext().getString(R.string.event_message_new_events), SketchToast.TOAST_NORMAL).show();
                         }
-                        ProjectDataManager.getProjectDataManager(sc_id).k();
+                        ProjectDataManager.getProjectDataManager(sc_id).saveAllBackup();
                         setResult(RESULT_OK);
                         finish();
                     }
@@ -325,7 +325,7 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
     @Override
     public void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        moreBlockView.setFuncNameValidator(ProjectDataManager.getProjectDataManager(sc_id).a(projectFile));
+        moreBlockView.setFuncNameValidator(ProjectDataManager.getProjectDataManager(sc_id).getAllIdentifiers(projectFile));
     }
 
     @Override

@@ -126,7 +126,7 @@ public class AddFontActivity extends BaseDialogActivity implements View.OnClickL
 
             if (binding.addToCollectionCheckbox.isChecked()) {
                 try {
-                    ImageCollectionManager.g().a(sc_id, resourceBean);
+                    ImageCollectionManager.getInstance().addResource(sc_id, resourceBean);
                 } catch (Exception e) {
                     Log.e("AddFontActivity", "Failed to add font to collection", e);
                     // Well, (parts of) the bytecode's lying, CompileException can be thrown.

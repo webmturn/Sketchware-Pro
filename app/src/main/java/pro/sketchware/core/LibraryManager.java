@@ -26,10 +26,10 @@ public class LibraryManager {
     this.projectId = paramString;
     this.fileUtil = new EncryptedFileUtil();
     this.gson = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
-    f();
+    initializeDefaults();
   }
   
-  public void a() {
+  public void deleteBackup() {
     String str = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str);
@@ -39,11 +39,11 @@ public class LibraryManager {
     this.fileUtil.deleteFileByPath(str);
   }
   
-  public void a(ProjectLibraryBean paramProjectLibraryBean) {
+  public void setAdmob(ProjectLibraryBean paramProjectLibraryBean) {
     this.admob = paramProjectLibraryBean;
   }
   
-  public void a(BufferedReader paramBufferedReader) throws java.io.IOException {
+  public void parseLibraryData(BufferedReader paramBufferedReader) throws java.io.IOException {
     try {
       StringBuffer stringBuffer = new StringBuffer();
       String str = "";
@@ -55,7 +55,7 @@ public class LibraryManager {
           if (str1.charAt(0) == '@') {
             StringBuffer stringBuffer1 = stringBuffer;
             if (str.length() > 0) {
-              a(str, stringBuffer.toString());
+              parseLibrarySection(str, stringBuffer.toString());
               stringBuffer1 = new StringBuffer();
             } 
             str = str1.substring(1);
@@ -67,7 +67,7 @@ public class LibraryManager {
           continue;
         } 
         if (str.length() > 0)
-          a(str, stringBuffer.toString()); 
+          parseLibrarySection(str, stringBuffer.toString()); 
         if (this.firebaseDB == null)
           this.firebaseDB = new ProjectLibraryBean(0); 
         if (this.compat == null)
@@ -83,9 +83,9 @@ public class LibraryManager {
     } 
   }
   
-  public final void a(String paramString) {
+  public final void writeToFile(String paramString) {
     StringBuffer stringBuffer = new StringBuffer();
-    a(stringBuffer);
+    serializeLibraries(stringBuffer);
     try {
       byte[] arrayOfByte = this.fileUtil.encryptString(stringBuffer.toString());
       this.fileUtil.writeBytes(paramString, arrayOfByte);
@@ -94,7 +94,7 @@ public class LibraryManager {
     } 
   }
   
-  public void a(String paramString1, String paramString2) {
+  public void parseLibrarySection(String paramString1, String paramString2) {
     if (paramString2.length() <= 0)
       return; 
     BufferedReader bufferedReader = null;
@@ -117,7 +117,7 @@ public class LibraryManager {
     }
   }
   
-  public final void a(StringBuffer paramStringBuffer) {
+  public final void serializeLibraries(StringBuffer paramStringBuffer) {
     if (this.firebaseDB != null) {
       paramStringBuffer.append("@");
       paramStringBuffer.append("firebaseDB");
@@ -148,42 +148,42 @@ public class LibraryManager {
     } 
   }
   
-  public ProjectLibraryBean b() {
+  public ProjectLibraryBean getAdmob() {
     return this.admob;
   }
   
-  public void b(ProjectLibraryBean paramProjectLibraryBean) {
+  public void setCompat(ProjectLibraryBean paramProjectLibraryBean) {
     this.compat = paramProjectLibraryBean;
   }
   
-  public ProjectLibraryBean c() {
+  public ProjectLibraryBean getCompat() {
     return this.compat;
   }
   
-  public void c(ProjectLibraryBean paramProjectLibraryBean) {
+  public void setFirebaseDB(ProjectLibraryBean paramProjectLibraryBean) {
     this.firebaseDB = paramProjectLibraryBean;
   }
   
-  public ProjectLibraryBean d() {
+  public ProjectLibraryBean getFirebaseDB() {
     return this.firebaseDB;
   }
   
-  public void d(ProjectLibraryBean paramProjectLibraryBean) {
+  public void setGoogleMap(ProjectLibraryBean paramProjectLibraryBean) {
     this.googleMap = paramProjectLibraryBean;
   }
   
-  public ProjectLibraryBean e() {
+  public ProjectLibraryBean getGoogleMap() {
     return this.googleMap;
   }
   
-  public final void f() {
+  public final void initializeDefaults() {
     this.firebaseDB = new ProjectLibraryBean(0);
     this.compat = new ProjectLibraryBean(1);
     this.admob = new ProjectLibraryBean(2);
     this.googleMap = new ProjectLibraryBean(3);
   }
   
-  public boolean g() {
+  public boolean hasBackup() {
     String str1 = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str1);
@@ -193,8 +193,8 @@ public class LibraryManager {
     return this.fileUtil.exists(str2);
   }
   
-  public void h() {
-    f();
+  public void loadFromBackup() {
+    initializeDefaults();
     String str1 = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder1 = new StringBuilder();
     stringBuilder1.append(str1);
@@ -206,7 +206,7 @@ public class LibraryManager {
       byte[] arrayOfByte = this.fileUtil.readFileBytes(str1);
       String str = this.fileUtil.decryptToString(arrayOfByte);
       bufferedReader = new BufferedReader(new StringReader(str));
-      a(bufferedReader);
+      parseLibraryData(bufferedReader);
     } catch (Exception exception) {
       exception.printStackTrace();
     } finally {
@@ -214,8 +214,8 @@ public class LibraryManager {
     }
   }
   
-  public void i() {
-    f();
+  public void loadFromData() {
+    initializeDefaults();
     String str1 = SketchwarePaths.getDataPath(this.projectId);
     StringBuilder stringBuilder1 = new StringBuilder();
     stringBuilder1.append(str1);
@@ -229,7 +229,7 @@ public class LibraryManager {
       byte[] arrayOfByte = this.fileUtil.readFileBytes(str1);
       String str = this.fileUtil.decryptToString(arrayOfByte);
       bufferedReader = new BufferedReader(new StringReader(str));
-      a(bufferedReader);
+      parseLibraryData(bufferedReader);
     } catch (Exception exception) {
       exception.printStackTrace();
     } finally {
@@ -237,27 +237,27 @@ public class LibraryManager {
     }
   }
   
-  public void j() {
+  public void resetAll() {
     this.projectId = "";
-    f();
+    initializeDefaults();
   }
   
-  public void k() {
+  public void saveToBackup() {
     String str = SketchwarePaths.getBackupPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str);
     stringBuilder.append(File.separator);
     stringBuilder.append("library");
-    a(stringBuilder.toString());
+    writeToFile(stringBuilder.toString());
   }
   
-  public void l() {
+  public void saveToData() {
     String str = SketchwarePaths.getDataPath(this.projectId);
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(str);
     stringBuilder.append(File.separator);
     stringBuilder.append("library");
-    a(stringBuilder.toString());
-    a();
+    writeToFile(stringBuilder.toString());
+    deleteBackup();
   }
 }
