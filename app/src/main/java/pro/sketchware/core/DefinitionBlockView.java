@@ -10,13 +10,13 @@ import com.besome.sketch.beans.BlockBean;
 import java.util.ArrayList;
 
 public class DefinitionBlockView extends BlockView {
-  public ArrayList<BlockBean> sa;
+  public ArrayList<BlockBean> blockData;
   
-  public TextView ta;
+  public TextView definitionLabel;
   
   public DefinitionBlockView(Context paramContext, String paramString1, String paramString2, String paramString3, String paramString4, ArrayList<BlockBean> paramArrayList) {
     super(paramContext, -1, paramString4, paramString1, paramString2, paramString3);
-    this.sa = paramArrayList;
+    this.blockData = paramArrayList;
     this.blockTypeInt = 2;
   }
   
@@ -53,13 +53,13 @@ public class DefinitionBlockView extends BlockView {
   }
   
   public ArrayList<BlockBean> getData() {
-    return this.sa;
+    return this.blockData;
   }
   
   public void calculateBlockLayout() {
-    this.ta.setX((float) this.leftIndent);
-    this.ta.setY((float) this.topSpacing);
-    int[] textSize = measureTextBounds(this.ta);
+    this.definitionLabel.setX((float) this.leftIndent);
+    this.definitionLabel.setY((float) this.topSpacing);
+    int[] textSize = measureTextBounds(this.definitionLabel);
     int textWidth = textSize[0];
     int textHeight = textSize[1];
     int width = this.leftIndent + textWidth + this.rightIndent;
@@ -180,8 +180,8 @@ public class DefinitionBlockView extends BlockView {
           this.isParameter = true;
           break;
       } 
-      this.ta = createDefinitionLabel(this.spec);
-      addView((View)this.ta);
+      this.definitionLabel = createDefinitionLabel(this.spec);
+      addView((View)this.definitionLabel);
       ((BaseBlockView)this).blockColor = getResources().getColor(pro.sketchware.R.color.scolor_red_02);
       layoutChain();
       return;
@@ -203,8 +203,8 @@ public class DefinitionBlockView extends BlockView {
         this.isParameter = true;
         break;
     } 
-    this.ta = createDefinitionLabel(this.spec);
-    addView((View)this.ta);
+    this.definitionLabel = createDefinitionLabel(this.spec);
+    addView((View)this.definitionLabel);
     ((BaseBlockView)this).blockColor = getResources().getColor(pro.sketchware.R.color.scolor_red_02);
     layoutChain();
   }
