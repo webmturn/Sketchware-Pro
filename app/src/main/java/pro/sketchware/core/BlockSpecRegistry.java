@@ -3113,7 +3113,7 @@ public class BlockSpecRegistry {
   public static ArrayList<String> getBlockMenuItems(String blockName) {
     if (cacheB.containsKey(blockName)) return cacheB.get(blockName);
     byte b = -1;
-    ArrayList<String> arrayList = new ArrayList<>();
+    ArrayList<String> menuItems = new ArrayList<>();
     switch (blockName.hashCode()) {
       default:
         b = -1;
@@ -3411,132 +3411,132 @@ public class BlockSpecRegistry {
     } 
     switch (b) {
       case 57:
-        arrayList.add("%d.lat");
-        arrayList.add("%d.lng");
-        arrayList.add("%d.acc");
+        menuItems.add("%d.lat");
+        menuItems.add("%d.lng");
+        menuItems.add("%d.acc");
         break;
       case 56:
-        arrayList.add("%s.id");
+        menuItems.add("%s.id");
         break;
       case 54:
-        arrayList.add("%s.tag");
+        menuItems.add("%s.tag");
         break;
       case 53:
-        arrayList.add("%s.tag");
-        arrayList.add("%s.connectionState");
-        arrayList.add("%s.errorMessage");
+        menuItems.add("%s.tag");
+        menuItems.add("%s.connectionState");
+        menuItems.add("%s.errorMessage");
         break;
       case 52:
-        arrayList.add("%s.tag");
-        arrayList.add("%s.data");
+        menuItems.add("%s.tag");
+        menuItems.add("%s.data");
         break;
       case 51:
-        arrayList.add("%s.tag");
-        arrayList.add("%s.data");
+        menuItems.add("%s.tag");
+        menuItems.add("%s.data");
         break;
       case 50:
-        arrayList.add("%s.tag");
-        arrayList.add("%m.varMap.deviceData");
+        menuItems.add("%s.tag");
+        menuItems.add("%m.varMap.deviceData");
         break;
       case 49:
-        arrayList.add("%s.errorMessage");
+        menuItems.add("%s.errorMessage");
         break;
       case 48:
-        arrayList.add("%s.result");
+        menuItems.add("%s.result");
         break;
       case 47:
-        arrayList.add("%s.tag");
-        arrayList.add("%s.message");
+        menuItems.add("%s.tag");
+        menuItems.add("%s.message");
         break;
       case 46:
-        arrayList.add("%s.tag");
-        arrayList.add("%s.response");
-        arrayList.add("%m.varMap.responseHeaders");
+        menuItems.add("%s.tag");
+        menuItems.add("%s.response");
+        menuItems.add("%m.varMap.responseHeaders");
         break;
       case 45:
-        arrayList.add("%d.errorCode");
+        menuItems.add("%d.errorCode");
         break;
       case 43:
-        arrayList.add("%m.listStr.filePath");
+        menuItems.add("%m.listStr.filePath");
         break;
       case 41:
-        arrayList.add("%s.filePath");
+        menuItems.add("%s.filePath");
         break;
       case 40:
-        arrayList.add("%s.message");
+        menuItems.add("%s.message");
         break;
       case 38:
-        arrayList.add("%d.totalByteCount");
+        menuItems.add("%d.totalByteCount");
         break;
       case 37:
-        arrayList.add("%s.downloadUrl");
+        menuItems.add("%s.downloadUrl");
         break;
       case 35:
       case 36:
-        arrayList.add("%d.progressValue");
+        menuItems.add("%d.progressValue");
         break;
       case 34:
-        arrayList.add("%b.success");
+        menuItems.add("%b.success");
         break;
       case 33:
-        arrayList.add("%b.success");
-        arrayList.add("%s.errorMessage");
+        menuItems.add("%b.success");
+        menuItems.add("%s.errorMessage");
         break;
       case 32:
-        arrayList.add("%b.success");
-        arrayList.add("%s.errorMessage");
+        menuItems.add("%b.success");
+        menuItems.add("%s.errorMessage");
         break;
       case 31:
-        arrayList.add("%d.x");
-        arrayList.add("%d.y");
-        arrayList.add("%d.z");
+        menuItems.add("%d.x");
+        menuItems.add("%d.y");
+        menuItems.add("%d.z");
         break;
       case 30:
-        arrayList.add("%d.errorCode");
-        arrayList.add("%s.errorMessage");
+        menuItems.add("%d.errorCode");
+        menuItems.add("%s.errorMessage");
         break;
       case 27:
       case 28:
       case 29:
-        arrayList.add("%s.childKey");
-        arrayList.add("%m.varMap.childValue");
+        menuItems.add("%s.childKey");
+        menuItems.add("%m.varMap.childValue");
         break;
       case 26:
-        arrayList.add("%d.year");
-        arrayList.add("%d.month");
-        arrayList.add("%d.day");
+        menuItems.add("%d.year");
+        menuItems.add("%d.month");
+        menuItems.add("%d.day");
         break;
       case 25:
-        arrayList.add("%m.listMap.data");
-        arrayList.add("%d.position");
+        menuItems.add("%m.listMap.data");
+        menuItems.add("%d.position");
         break;
       case 24:
-        arrayList.add("%d.progressValue");
+        menuItems.add("%d.progressValue");
         break;
       case 23:
-        arrayList.add("%s.url");
+        menuItems.add("%s.url");
         break;
       case 22:
-        arrayList.add("%s.url");
+        menuItems.add("%s.url");
         break;
       case 21:
-        arrayList.add("%d.position");
+        menuItems.add("%d.position");
         break;
       case 20:
-        arrayList.add("%d.position");
+        menuItems.add("%d.position");
         break;
       case 19:
-        arrayList.add("%s.charSeq");
+        menuItems.add("%s.charSeq");
         break;
       case 18:
-        arrayList.add("%d.position");
+        menuItems.add("%d.position");
         break;
       case 17:
-        arrayList.add("%b.isChecked");
+        menuItems.add("%b.isChecked");
         break;
     } 
-    cacheB.put(blockName, arrayList);
-    return arrayList;
+    cacheB.put(blockName, menuItems);
+    return menuItems;
   }
   
   public static String getEventSpec(String blockName) {
