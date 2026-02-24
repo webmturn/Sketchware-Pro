@@ -10,23 +10,23 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public final class UriPathResolver {
-  public static String resolve(Context context, Uri paramUri) {
+  public static String resolve(Context context, Uri uri) {
     String result = null;
-    if (android.provider.DocumentsContract.isDocumentUri(context, paramUri)) {
-      if (isExternalStorageDocument(paramUri)) {
-        String[] split = android.provider.DocumentsContract.getDocumentId(paramUri).split(":");
+    if (android.provider.DocumentsContract.isDocumentUri(context, uri)) {
+      if (isExternalStorageDocument(uri)) {
+        String[] split = android.provider.DocumentsContract.getDocumentId(uri).split(":");
         if ("primary".equalsIgnoreCase(split[0])) {
           result = android.os.Environment.getExternalStorageDirectory() + "/" + split[1];
         }
-      } else if (isDownloadsDocument(paramUri)) {
-        String docId = android.provider.DocumentsContract.getDocumentId(paramUri);
+      } else if (isDownloadsDocument(uri)) {
+        String docId = android.provider.DocumentsContract.getDocumentId(uri);
         if (!android.text.TextUtils.isEmpty(docId) && docId.startsWith("raw:")) {
           return docId.replaceFirst("raw:", "");
         }
         result = queryDataColumn(context, android.content.ContentUris.withAppendedId(
             Uri.parse("content://downloads/public_downloads"), Long.valueOf(docId).longValue()), null, null);
-      } else if (isMediaDocument(paramUri)) {
-        String[] split = android.provider.DocumentsContract.getDocumentId(paramUri).split(":");
+      } else if (isMediaDocument(uri)) {
+        String[] split = android.provider.DocumentsContract.getDocumentId(uri).split(":");
         String type = split[0];
         Uri contentUri = null;
         if ("image".equals(type)) {
@@ -38,10 +38,10 @@ public final class UriPathResolver {
         }
         result = queryDataColumn(context, contentUri, "_id=?", new String[]{split[1]});
       }
-    } else if ("content".equalsIgnoreCase(paramUri.getScheme())) {
-      result = queryDataColumn(context, paramUri, null, null);
-    } else if ("file".equalsIgnoreCase(paramUri.getScheme())) {
-      result = paramUri.getPath();
+    } else if ("content".equalsIgnoreCase(uri.getScheme())) {
+      result = queryDataColumn(context, uri, null, null);
+    } else if ("file".equalsIgnoreCase(uri.getScheme())) {
+      result = uri.getPath();
     }
     if (result != null) {
       try {
@@ -53,7 +53,7 @@ public final class UriPathResolver {
         return result;
       }
     }
-    return copyUriToCache(context, paramUri);
+    return copyUriToCache(context, uri);
   }
   
   public static String copyUriToCache(Context context, Uri uri) {
@@ -77,10 +77,10 @@ public final class UriPathResolver {
     }
   }
   
-  public static String queryDataColumn(Context context, Uri paramUri, String input, String[] paramArrayOfString) {
+  public static String queryDataColumn(Context context, Uri uri, String input, String[] paramArrayOfString) {
     android.database.Cursor cursor = null;
     try {
-      cursor = context.getContentResolver().query(paramUri, new String[]{"_data"}, input, paramArrayOfString, null);
+      cursor = context.getContentResolver().query(uri, new String[]{"_data"}, input, paramArrayOfString, null);
       if (cursor != null && cursor.moveToFirst()) {
         String result = cursor.getString(cursor.getColumnIndexOrThrow("_data"));
         return result;
@@ -93,15 +93,15 @@ public final class UriPathResolver {
     return null;
   }
   
-  public static boolean isDownloadsDocument(Uri paramUri) {
-    return "com.android.providers.downloads.documents".equals(paramUri.getAuthority());
+  public static boolean isDownloadsDocument(Uri uri) {
+    return "com.android.providers.downloads.documents".equals(uri.getAuthority());
   }
   
-  public static boolean isExternalStorageDocument(Uri paramUri) {
-    return "com.android.externalstorage.documents".equals(paramUri.getAuthority());
+  public static boolean isExternalStorageDocument(Uri uri) {
+    return "com.android.externalstorage.documents".equals(uri.getAuthority());
   }
   
-  public static boolean isMediaDocument(Uri paramUri) {
-    return "com.android.providers.media.documents".equals(paramUri.getAuthority());
+  public static boolean isMediaDocument(Uri uri) {
+    return "com.android.providers.media.documents".equals(uri.getAuthority());
   }
 }

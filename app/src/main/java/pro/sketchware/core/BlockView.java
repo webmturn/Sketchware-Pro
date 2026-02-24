@@ -99,43 +99,43 @@ public class BlockView extends BaseBlockView {
     return textView;
   }
   
-  public final void appendToChain(BlockView paramRs) {
-    if (paramRs == this) return;
+  public final void appendToChain(BlockView blockView) {
+    if (blockView == this) return;
     if (hasSubstack() && -1 == this.subStack1) {
-      setSubstack1Block(paramRs);
+      setSubstack1Block(blockView);
     } else {
       BlockView rs = getLastInChain();
-      if (rs != paramRs) {
-        rs.nextBlock = ((Integer)paramRs.getTag()).intValue();
-        paramRs.parentBlock = rs;
+      if (rs != blockView) {
+        rs.nextBlock = ((Integer)blockView.getTag()).intValue();
+        blockView.parentBlock = rs;
       }
     } 
   }
   
-  public void replaceParameter(BaseBlockView paramTs, BlockView paramRs) {
-    int index = this.specViews.indexOf(paramTs);
+  public void replaceParameter(BaseBlockView targetBlock, BlockView blockView) {
+    int index = this.specViews.indexOf(targetBlock);
     if (index < 0) return;
-    boolean isRs = paramTs instanceof BlockView;
+    boolean isRs = targetBlock instanceof BlockView;
     if (isRs) {
-      BlockView oldRs = (BlockView) paramTs;
-      paramRs.blockTypeStr = oldRs.blockTypeStr;
-      paramRs.componentTypeStr = oldRs.componentTypeStr;
-    } else if (paramTs instanceof FieldBlockView) {
-      paramRs.blockTypeStr = paramTs.blockType;
-      paramRs.componentTypeStr = paramTs.componentType;
+      BlockView oldRs = (BlockView) targetBlock;
+      blockView.blockTypeStr = oldRs.blockTypeStr;
+      blockView.componentTypeStr = oldRs.componentTypeStr;
+    } else if (targetBlock instanceof FieldBlockView) {
+      blockView.blockTypeStr = targetBlock.blockType;
+      blockView.componentTypeStr = targetBlock.componentType;
     }
     if (!isRs) {
-      removeView(paramTs);
+      removeView(targetBlock);
     }
-    this.specViews.set(index, paramRs);
-    paramRs.parentBlock = this;
+    this.specViews.set(index, blockView);
+    blockView.parentBlock = this;
     rebuildChildViews();
     recalculateDepthChain();
-    if (paramTs != paramRs && isRs) {
-      ((BlockView) paramTs).parentBlock = null;
-      paramTs.setX(getX() + getWidthSum() + 10.0f);
-      paramTs.setY(getY() + 5.0f);
-      ((BlockView) paramTs).layoutChain();
+    if (targetBlock != blockView && isRs) {
+      ((BlockView) targetBlock).parentBlock = null;
+      targetBlock.setX(getX() + getWidthSum() + 10.0f);
+      targetBlock.setY(getY() + 5.0f);
+      ((BlockView) targetBlock).layoutChain();
     }
   }
   
@@ -179,66 +179,66 @@ public class BlockView extends BaseBlockView {
     return createLabel(FormatUtil.unescapeString(spec));
   }
   
-  public void setNextBlock(BlockView paramRs) {
-    if (paramRs == this) return;
+  public void setNextBlock(BlockView blockView) {
+    if (blockView == this) return;
     View view = this.blockPane.findViewWithTag(Integer.valueOf(this.nextBlock));
     if (view != null)
       ((BlockView)view).parentBlock = null; 
-    paramRs.parentBlock = this;
-    this.nextBlock = ((Integer)paramRs.getTag()).intValue();
-    if (view != null && view != paramRs)
-      paramRs.appendToChain((BlockView)view); 
+    blockView.parentBlock = this;
+    this.nextBlock = ((Integer)blockView.getTag()).intValue();
+    if (view != null && view != blockView)
+      blockView.appendToChain((BlockView)view); 
   }
   
-  public void positionAbove(BlockView paramRs) {
-    paramRs.setX(getX());
-    paramRs.setY(getY() - paramRs.getHeightSum() + this.borderWidth);
-    paramRs.getLastInChain().setNextBlock(this);
+  public void positionAbove(BlockView blockView) {
+    blockView.setX(getX());
+    blockView.setY(getY() - blockView.getHeightSum() + this.borderWidth);
+    blockView.getLastInChain().setNextBlock(this);
   }
   
-  public void positionInSubstack1(BlockView paramRs) {
-    if (paramRs == this) return;
-    paramRs.setX(getX() - this.cornerRadius);
-    paramRs.setY(getY() - getBlockHeight());
-    this.parentBlock = paramRs;
-    paramRs.subStack1 = ((Integer)getTag()).intValue();
+  public void positionInSubstack1(BlockView blockView) {
+    if (blockView == this) return;
+    blockView.setX(getX() - this.cornerRadius);
+    blockView.setY(getY() - getBlockHeight());
+    this.parentBlock = blockView;
+    blockView.subStack1 = ((Integer)getTag()).intValue();
   }
   
-  public void setSubstack1Block(BlockView paramRs) {
-    if (paramRs == this) return;
+  public void setSubstack1Block(BlockView blockView) {
+    if (blockView == this) return;
     View view = this.blockPane.findViewWithTag(Integer.valueOf(this.subStack1));
     if (view != null)
       ((BlockView)view).parentBlock = null; 
-    paramRs.parentBlock = this;
-    this.subStack1 = ((Integer)paramRs.getTag()).intValue();
-    if (view != null && view != paramRs)
-      paramRs.appendToChain((BlockView)view); 
+    blockView.parentBlock = this;
+    this.subStack1 = ((Integer)blockView.getTag()).intValue();
+    if (view != null && view != blockView)
+      blockView.appendToChain((BlockView)view); 
   }
   
-  public void setSubstack2Block(BlockView paramRs) {
-    if (paramRs == this) return;
+  public void setSubstack2Block(BlockView blockView) {
+    if (blockView == this) return;
     View view = this.blockPane.findViewWithTag(Integer.valueOf(this.subStack2));
     if (view != null)
       ((BlockView)view).parentBlock = null; 
-    paramRs.parentBlock = this;
-    this.subStack2 = ((Integer)paramRs.getTag()).intValue();
-    if (view != null && view != paramRs)
-      paramRs.appendToChain((BlockView)view); 
+    blockView.parentBlock = this;
+    this.subStack2 = ((Integer)blockView.getTag()).intValue();
+    if (view != null && view != blockView)
+      blockView.appendToChain((BlockView)view); 
   }
   
-  public void detachBlock(BlockView paramRs) {
-    if (this.nextBlock == ((Integer)paramRs.getTag()).intValue())
+  public void detachBlock(BlockView blockView) {
+    if (this.nextBlock == ((Integer)blockView.getTag()).intValue())
       this.nextBlock = -1; 
-    if (this.subStack1 == ((Integer)paramRs.getTag()).intValue())
+    if (this.subStack1 == ((Integer)blockView.getTag()).intValue())
       this.subStack1 = -1; 
-    if (this.subStack2 == ((Integer)paramRs.getTag()).intValue())
+    if (this.subStack2 == ((Integer)blockView.getTag()).intValue())
       this.subStack2 = -1; 
-    if (paramRs.isParameter) {
-      int i = this.specViews.indexOf(paramRs);
+    if (blockView.isParameter) {
+      int i = this.specViews.indexOf(blockView);
       if (i < 0)
         return; 
-      paramRs.blockTypeStr = "";
-      paramRs.componentTypeStr = "";
+      blockView.blockTypeStr = "";
+      blockView.componentTypeStr = "";
       View view = createSpecView(this.specTypes.get(i), this.blockColor);
       if (view instanceof BaseBlockView)
         ((BaseBlockView)view).parentBlock = this; 

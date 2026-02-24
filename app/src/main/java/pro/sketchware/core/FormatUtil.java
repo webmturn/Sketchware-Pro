@@ -8,20 +8,20 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class FormatUtil {
-  public static int hexCharToInt(char paramChar) {
-    if (paramChar >= '0' && paramChar <= '9')
-      return paramChar - 48; 
+  public static int hexCharToInt(char ch) {
+    if (ch >= '0' && ch <= '9')
+      return ch - 48; 
     byte b = 65;
-    if (paramChar < 'A' || paramChar > 'F') {
+    if (ch < 'A' || ch > 'F') {
       b = 97;
-      if (paramChar < 'a' || paramChar > 'f') {
+      if (ch < 'a' || ch > 'f') {
         StringBuilder stringBuilder = new StringBuilder("invalid hex digit '");
-        stringBuilder.append(paramChar);
+        stringBuilder.append(ch);
         stringBuilder.append("'");
         throw new IllegalArgumentException(stringBuilder.toString());
       } 
     } 
-    return paramChar - b + 10;
+    return ch - b + 10;
   }
   
   public static String generateRandomId() {

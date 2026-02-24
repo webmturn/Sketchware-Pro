@@ -83,8 +83,8 @@ public class EncryptedFileUtil {
     }
   }
   
-  public void deleteDirectory(File paramFile) {
-    deleteRecursive(paramFile, true);
+  public void deleteDirectory(File file) {
+    deleteRecursive(file, true);
   }
   
   public void copyDirectory(File paramFile1, File paramFile2) throws IOException {
@@ -105,9 +105,9 @@ public class EncryptedFileUtil {
     copyFile(paramFile1.getAbsolutePath(), paramFile2.getAbsolutePath());
   }
   
-  public void deleteRecursive(File paramFile, boolean flag) {
-    if (paramFile.exists()) {
-      File[] arrayOfFile = paramFile.listFiles();
+  public void deleteRecursive(File dir, boolean flag) {
+    if (dir.exists()) {
+      File[] arrayOfFile = dir.listFiles();
       if (arrayOfFile != null) {
         int i = arrayOfFile.length;
         for (int b = 0; b < i; b++) {
@@ -133,7 +133,7 @@ public class EncryptedFileUtil {
         } 
       } 
       if (flag)
-        paramFile.delete(); 
+        dir.delete(); 
     } 
   }
   
@@ -203,8 +203,8 @@ public class EncryptedFileUtil {
     return sb.toString();
   }
   
-  public void deleteFile(File paramFile) {
-    paramFile.delete();
+  public void deleteFile(File file) {
+    file.delete();
   }
   
   public void deleteDirectoryByPath(String value) {
@@ -236,11 +236,11 @@ public class EncryptedFileUtil {
     return cipher.doFinal(paramArrayOfbyte);
   }
   
-  public String readFileContent(File paramFile) {
+  public String readFileContent(File file) {
     StringBuilder sb = new StringBuilder();
     java.io.FileReader reader = null;
     try {
-      reader = new java.io.FileReader(paramFile);
+      reader = new java.io.FileReader(file);
       char[] buf = new char[1024];
       int len;
       while ((len = reader.read(buf)) > 0) {

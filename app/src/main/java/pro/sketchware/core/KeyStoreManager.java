@@ -40,17 +40,17 @@ public class KeyStoreManager {
     return enumeration.hasMoreElements() ? enumeration.nextElement() : "";
   }
   
-  public void loadKeyStore(InputStream paramInputStream, String str) throws Exception {
-    if (paramInputStream == null)
+  public void loadKeyStore(InputStream inputStream, String str) throws Exception {
+    if (inputStream == null)
       return; 
     try {
-      this.keyStore.load(paramInputStream, str.toCharArray());
+      this.keyStore.load(inputStream, str.toCharArray());
     } catch (Exception exception) {
       exception.printStackTrace();
       throw new Exception(exception.getMessage());
     } finally {
       try {
-        paramInputStream.close();
+        inputStream.close();
       } catch (Exception exception) {}
     }
   }

@@ -231,13 +231,13 @@ public class BaseBlockView extends RelativeLayout {
       refreshLayout(); 
   }
   
-  public void copyBlockDimensions(BaseBlockView paramTs, boolean paramBoolean1, boolean paramBoolean2, int index) {
+  public void copyBlockDimensions(BaseBlockView targetBlock, boolean paramBoolean1, boolean paramBoolean2, int index) {
     this.blockColor = -16777216;
-    this.shapeType = paramTs.shapeType;
-    this.blockWidth = paramTs.blockWidth;
-    this.blockHeight = paramTs.blockHeight;
-    this.contentHeight = paramTs.contentHeight;
-    this.innerHeight = paramTs.innerHeight;
+    this.shapeType = targetBlock.shapeType;
+    this.blockWidth = targetBlock.blockWidth;
+    this.blockHeight = targetBlock.blockHeight;
+    this.contentHeight = targetBlock.contentHeight;
+    this.innerHeight = targetBlock.innerHeight;
     if (!paramBoolean1)
       if (paramBoolean2) {
         this.shapeType = 4;
@@ -321,43 +321,43 @@ public class BaseBlockView extends RelativeLayout {
       paramCanvas.drawLines(getBooleanReflections(), this.reflectionPaint); 
   }
   
-  public final void drawTopPath(Path paramPath) {
-    paramPath.moveTo(0.0F, this.notchWidth);
-    paramPath.lineTo(this.notchWidth, 0.0F);
-    paramPath.lineTo(this.connectorOffset, 0.0F);
-    paramPath.lineTo(this.connectorStart, this.borderWidth);
-    paramPath.lineTo(this.connectorEnd, this.borderWidth);
-    paramPath.lineTo(this.connectorEndOffset, 0.0F);
-    paramPath.lineTo((this.blockWidth - this.notchWidth), 0.0F);
-    paramPath.lineTo(this.blockWidth, this.notchWidth);
+  public final void drawTopPath(Path path) {
+    path.moveTo(0.0F, this.notchWidth);
+    path.lineTo(this.notchWidth, 0.0F);
+    path.lineTo(this.connectorOffset, 0.0F);
+    path.lineTo(this.connectorStart, this.borderWidth);
+    path.lineTo(this.connectorEnd, this.borderWidth);
+    path.lineTo(this.connectorEndOffset, 0.0F);
+    path.lineTo((this.blockWidth - this.notchWidth), 0.0F);
+    path.lineTo(this.blockWidth, this.notchWidth);
   }
   
-  public final void drawSubstackBottomPath(Path paramPath, int index) {
-    paramPath.lineTo(this.cornerRadius, (index - this.notchDepth));
+  public final void drawSubstackBottomPath(Path path, int index) {
+    path.lineTo(this.cornerRadius, (index - this.notchDepth));
     float f1 = (this.cornerRadius + this.notchDepth);
     float f2 = index;
-    paramPath.lineTo(f1, f2);
-    paramPath.lineTo((this.blockWidth - this.notchWidth), f2);
-    paramPath.lineTo(this.blockWidth, (index + this.notchWidth));
+    path.lineTo(f1, f2);
+    path.lineTo((this.blockWidth - this.notchWidth), f2);
+    path.lineTo(this.blockWidth, (index + this.notchWidth));
   }
   
-  public final void drawBottomPath(Path paramPath, int start, boolean flag, int end) {
-    paramPath.lineTo(this.blockWidth, (start - this.notchWidth));
+  public final void drawBottomPath(Path path, int start, boolean flag, int end) {
+    path.lineTo(this.blockWidth, (start - this.notchWidth));
     float f1 = (this.blockWidth - this.notchWidth);
     float f2 = start;
-    paramPath.lineTo(f1, f2);
+    path.lineTo(f1, f2);
     if (flag) {
-      paramPath.lineTo((this.connectorEndOffset + end), f2);
-      paramPath.lineTo((this.connectorEnd + end), (this.borderWidth + start));
-      paramPath.lineTo((this.connectorStart + end), (this.borderWidth + start));
-      paramPath.lineTo((this.connectorOffset + end), f2);
+      path.lineTo((this.connectorEndOffset + end), f2);
+      path.lineTo((this.connectorEnd + end), (this.borderWidth + start));
+      path.lineTo((this.connectorStart + end), (this.borderWidth + start));
+      path.lineTo((this.connectorOffset + end), f2);
     } 
     if (end > 0) {
-      paramPath.lineTo((this.notchDepth + end), f2);
-      paramPath.lineTo(end, (start + this.notchDepth));
+      path.lineTo((this.notchDepth + end), f2);
+      path.lineTo(end, (start + this.notchDepth));
     } else {
-      paramPath.lineTo((end + this.notchWidth), f2);
-      paramPath.lineTo(0.0F, (start - this.notchWidth));
+      path.lineTo((end + this.notchWidth), f2);
+      path.lineTo(0.0F, (start - this.notchWidth));
     } 
   }
   

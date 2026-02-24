@@ -10,9 +10,9 @@ import java.io.OutputStream;
 import java.lang.reflect.Field;
 
 public class NinePatchDecoder {
-  public static Bitmap decode(InputStream paramInputStream) throws Exception {
+  public static Bitmap decode(InputStream inputStream) throws Exception {
     Field field;
-    Bitmap bitmap = BitmapFactory.decodeStream(paramInputStream);
+    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
     byte[] arrayOfByte = buildNinePatchChunk(bitmap);
     if (NinePatch.isNinePatchChunk(arrayOfByte)) {
       Bitmap bitmap1 = Bitmap.createBitmap(bitmap, 1, 1, bitmap.getWidth() - 2, bitmap.getHeight() - 2);
@@ -64,11 +64,11 @@ public class NinePatchDecoder {
     } 
   }
   
-  public static void writeIntLE(OutputStream paramOutputStream, int value) throws java.io.IOException {
-    paramOutputStream.write(value >> 0 & 0xFF);
-    paramOutputStream.write(value >> 8 & 0xFF);
-    paramOutputStream.write(value >> 16 & 0xFF);
-    paramOutputStream.write(value >> 24 & 0xFF);
+  public static void writeIntLE(OutputStream outputStream, int value) throws java.io.IOException {
+    outputStream.write(value >> 0 & 0xFF);
+    outputStream.write(value >> 8 & 0xFF);
+    outputStream.write(value >> 16 & 0xFF);
+    outputStream.write(value >> 24 & 0xFF);
   }
   
   public static void putIntLE(byte[] paramArrayOfbyte, int x, int y) {
