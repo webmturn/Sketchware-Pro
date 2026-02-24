@@ -30,7 +30,7 @@ public class SelectableButtonBar extends LinearLayout {
         super(context, attributeSet);
     }
 
-    public void a() {
+    public void buildButtons() {
         removeAllViews();
         int valuesSize = values.size();
 
@@ -50,7 +50,7 @@ public class SelectableButtonBar extends LinearLayout {
         setSelectedItemByIndex(selectedItemIndex);
     }
 
-    public void a(int key, String value) {
+    public void addItem(int key, String value) {
         keys.add(key);
         values.add(value);
     }
@@ -96,7 +96,7 @@ public class SelectableButtonBar extends LinearLayout {
                 selectableButton.setSelected(true);
                 selectedItemIndex = i;
                 if (selectionListener != null) {
-                    selectionListener.a(key);
+                    selectionListener.onIntValue(key);
                 }
             }
         }

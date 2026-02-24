@@ -1,5 +1,5 @@
 package pro.sketchware.core;
 
 public interface IntCallback {
-  void a(int paramInt);
+  void onIntValue(int paramInt);
 }
