@@ -43,11 +43,11 @@ public class ViewFilesAdapter extends BaseFragment {
     intValues[position] = i;
     stringBuilder.append(i);
     String candidateId = stringBuilder.toString();
-    ArrayList arrayList = ProjectDataManager.getProjectDataManager(this.projectId).getViews(xmlName);
+    ArrayList existingViews = ProjectDataManager.getProjectDataManager(this.projectId).getViews(xmlName);
     xmlName = candidateId;
     while (true) {
       int found = 0;
-      Iterator iterator = arrayList.iterator();
+      Iterator iterator = existingViews.iterator();
       while (true) {
         i = found;
         if (iterator.hasNext()) {

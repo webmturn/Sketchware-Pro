@@ -45,30 +45,30 @@ public class ViewHistoryManager {
   public final void trimFutureHistory(String key) {
     if (!this.positionMap.containsKey(key))
       return; 
-    ArrayList arrayList = this.historyMap.get(key);
+    ArrayList historyEntries = this.historyMap.get(key);
     int i = ((Integer)this.positionMap.get(key)).intValue();
-    if (arrayList == null)
+    if (historyEntries == null)
       return; 
-    for (int j = arrayList.size(); j > i; j--)
-      arrayList.remove(j - 1); 
+    for (int j = historyEntries.size(); j > i; j--)
+      historyEntries.remove(j - 1); 
   }
   
   public final void addHistoryEntry(String key, HistoryViewBean historyViewBean) {
     if (!this.historyMap.containsKey(key))
       initHistory(key); 
-    ArrayList<HistoryViewBean> arrayList = this.historyMap.get(key);
-    arrayList.add(historyViewBean);
-    if (arrayList.size() > 50) {
-      arrayList.remove(0);
+    ArrayList<HistoryViewBean> entries = this.historyMap.get(key);
+    entries.add(historyViewBean);
+    if (entries.size() > 50) {
+      entries.remove(0);
     } else {
       incrementPosition(key);
     } 
   }
   
   public void recordAdd(String key, ViewBean viewBean) {
-    ArrayList<ViewBean> arrayList = new ArrayList<>();
-    arrayList.add(viewBean);
-    recordAddMultiple(key, arrayList);
+    ArrayList<ViewBean> views = new ArrayList<>();
+    views.add(viewBean);
+    recordAddMultiple(key, views);
   }
   
   public void recordUpdate(String key, ViewBean viewBean1, ViewBean viewBean2) {

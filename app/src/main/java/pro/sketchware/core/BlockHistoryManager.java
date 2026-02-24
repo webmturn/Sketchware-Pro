@@ -55,12 +55,12 @@ public class BlockHistoryManager {
   public final void trimFutureHistory(String historyKey) {
     if (!this.positionMap.containsKey(historyKey))
       return; 
-    ArrayList arrayList = this.historyMap.get(historyKey);
+    ArrayList historyEntries = this.historyMap.get(historyKey);
     int i = ((Integer)this.positionMap.get(historyKey)).intValue();
-    if (arrayList == null)
+    if (historyEntries == null)
       return; 
-    for (int j = arrayList.size(); j > i; j--)
-      arrayList.remove(j - 1); 
+    for (int j = historyEntries.size(); j > i; j--)
+      historyEntries.remove(j - 1); 
   }
   
   public void recordAdd(String historyKey, BlockBean blockBean1, int start, int end, BlockBean blockBean2, BlockBean blockBean3) {
