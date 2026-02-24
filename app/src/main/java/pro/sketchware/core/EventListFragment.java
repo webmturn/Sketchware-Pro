@@ -185,7 +185,7 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
                 }
             }
             if (getPaletteIndex() == -1) {
-                eventAdapter.a(events.get(0));
+                eventAdapter.setEvents(events.get(0));
                 paletteView.setSelectedItemId(R.id.activity);
             }
             if (getPaletteIndex() == 4) {
@@ -194,7 +194,7 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
                 importMoreBlockFromCollection.setVisibility(View.GONE);
             }
             if (eventAdapter != null) {
-                eventAdapter.a(events.get(getPaletteIndex()));
+                eventAdapter.setEvents(events.get(getPaletteIndex()));
                 eventAdapter.notifyDataSetChanged();
                 restoreSearchState();
             }
@@ -251,7 +251,7 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
                     } else {
                         importMoreBlockFromCollection.setVisibility(View.GONE);
                     }
-                    eventAdapter.a(events.get(getPaletteIndex(item.getItemId())));
+                    eventAdapter.setEvents(events.get(getPaletteIndex(item.getItemId())));
                     eventAdapter.notifyDataSetChanged();
                     return true;
                 });
@@ -541,7 +541,7 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
             holder.optionContainer.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
         }
 
-        public void a(ArrayList<EventBean> arrayList) {
+        public void setEvents(ArrayList<EventBean> arrayList) {
             currentCategoryEvents = arrayList;
             String previousQuery = searchQuery;
             searchQuery = "";
