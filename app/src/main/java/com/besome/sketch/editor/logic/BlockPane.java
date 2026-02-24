@@ -112,15 +112,15 @@ public class BlockPane extends RelativeLayout {
   }
   
   public void computeSnapPoints(BlockView blockView) {
-    boolean bool;
-    boolean bool1 = (blockView.getLastInChain()).hasEndCap;
+    boolean hasEmptySubstack;
+    boolean hasEndCap = (blockView.getLastInChain()).hasEndCap;
     if (blockView.hasSubstack() && -1 == blockView.subStack1) {
-      bool = true;
+      hasEmptySubstack = true;
     } else {
-      bool = false;
+      hasEmptySubstack = false;
     } 
-    boolean bool2 = blockView.isParameter;
-    buildSnapPoints(blockView.getTag().toString(), bool1, bool, bool2, blockView.getHeight(), blockView.getBlockHeight());
+    boolean isParameter = blockView.isParameter;
+    buildSnapPoints(blockView.getTag().toString(), hasEndCap, hasEmptySubstack, isParameter, blockView.getHeight(), blockView.getBlockHeight());
     this.currentSnapPoint = null;
   }
   
@@ -604,9 +604,9 @@ public class BlockPane extends RelativeLayout {
   public void updateDragPreview(BlockView blockView, int start, int end) {
     getLocationOnScreen(this.locationBuffer);
     this.currentSnapPoint = findNearestSnapPoint(blockView, start, end);
-    boolean bool = blockView.hasSubstack();
-    boolean bool1 = true;
-    if (bool && -1 == blockView.subStack1) {
+    boolean hasSubstack = blockView.hasSubstack();
+    boolean showNotch = true;
+    if (hasSubstack && -1 == blockView.subStack1) {
       Object[] objects1 = this.currentSnapPoint;
       if (objects1 != null) {
         BlockView rs = (BlockView)objects1[1];
@@ -644,8 +644,8 @@ public class BlockPane extends RelativeLayout {
           start = 0;
         } 
         if (end == 1 || end == 4)
-          bool1 = false; 
-        this.activeBlock.copyBlockDimensions((BaseBlockView)blockView, false, bool1, start);
+          showNotch = false; 
+        this.activeBlock.copyBlockDimensions((BaseBlockView)blockView, false, showNotch, start);
       } 
     } else {
       hideActiveBlock();
