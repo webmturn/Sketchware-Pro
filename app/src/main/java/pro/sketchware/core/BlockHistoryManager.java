@@ -63,17 +63,17 @@ public class BlockHistoryManager {
       arrayList.remove(j - 1); 
   }
   
-  public void recordAdd(String str, BlockBean paramBlockBean1, int start, int end, BlockBean paramBlockBean2, BlockBean paramBlockBean3) {
+  public void recordAdd(String str, BlockBean blockBean1, int start, int end, BlockBean blockBean2, BlockBean blockBean3) {
     ArrayList<BlockBean> arrayList = new ArrayList<>();
-    arrayList.add(paramBlockBean1);
-    recordAddMultiple(str, arrayList, start, end, paramBlockBean2, paramBlockBean3);
+    arrayList.add(blockBean1);
+    recordAddMultiple(str, arrayList, start, end, blockBean2, blockBean3);
   }
   
-  public void recordUpdate(String str, BlockBean paramBlockBean1, BlockBean paramBlockBean2) {
-    if (paramBlockBean1.isEqual(paramBlockBean2))
+  public void recordUpdate(String str, BlockBean blockBean1, BlockBean blockBean2) {
+    if (blockBean1.isEqual(blockBean2))
       return; 
     HistoryBlockBean historyBlockBean = new HistoryBlockBean();
-    historyBlockBean.actionUpdate(paramBlockBean1, paramBlockBean2);
+    historyBlockBean.actionUpdate(blockBean1, blockBean2);
     if (!this.historyMap.containsKey(str))
       initHistory(str); 
     trimFutureHistory(str);
@@ -92,18 +92,18 @@ public class BlockHistoryManager {
     } 
   }
   
-  public void recordAddMultiple(String str, ArrayList<BlockBean> list, int start, int end, BlockBean paramBlockBean1, BlockBean paramBlockBean2) {
+  public void recordAddMultiple(String str, ArrayList<BlockBean> list, int start, int end, BlockBean blockBean1, BlockBean blockBean2) {
     HistoryBlockBean historyBlockBean = new HistoryBlockBean();
-    historyBlockBean.actionAdd(list, start, end, paramBlockBean1, paramBlockBean2);
+    historyBlockBean.actionAdd(list, start, end, blockBean1, blockBean2);
     if (!this.historyMap.containsKey(str))
       initHistory(str); 
     trimFutureHistory(str);
     addHistoryEntry(str, historyBlockBean);
   }
   
-  public void recordMove(String str, ArrayList<BlockBean> paramArrayList1, ArrayList<BlockBean> paramArrayList2, int start, int end, int paramInt3, int paramInt4, BlockBean paramBlockBean1, BlockBean paramBlockBean2, BlockBean paramBlockBean3, BlockBean paramBlockBean4) {
+  public void recordMove(String str, ArrayList<BlockBean> list1, ArrayList<BlockBean> list2, int start, int end, int width, int height, BlockBean blockBean1, BlockBean blockBean2, BlockBean blockBean3, BlockBean blockBean4) {
     HistoryBlockBean historyBlockBean = new HistoryBlockBean();
-    historyBlockBean.actionMove(paramArrayList1, paramArrayList2, start, end, paramInt3, paramInt4, paramBlockBean1, paramBlockBean2, paramBlockBean3, paramBlockBean4);
+    historyBlockBean.actionMove(list1, list2, start, end, width, height, blockBean1, blockBean2, blockBean3, blockBean4);
     if (!this.historyMap.containsKey(str))
       initHistory(str); 
     trimFutureHistory(str);
@@ -117,9 +117,9 @@ public class BlockHistoryManager {
     } 
   }
   
-  public void recordRemove(String str, ArrayList<BlockBean> list, int start, int end, BlockBean paramBlockBean1, BlockBean paramBlockBean2) {
+  public void recordRemove(String str, ArrayList<BlockBean> list, int start, int end, BlockBean blockBean1, BlockBean blockBean2) {
     HistoryBlockBean historyBlockBean = new HistoryBlockBean();
-    historyBlockBean.actionRemove(list, start, end, paramBlockBean1, paramBlockBean2);
+    historyBlockBean.actionRemove(list, start, end, blockBean1, blockBean2);
     if (!this.historyMap.containsKey(str))
       initHistory(str); 
     trimFutureHistory(str);

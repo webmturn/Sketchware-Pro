@@ -83,8 +83,8 @@ public class ViewFilesAdapter extends BaseFragment {
     return arrayList;
   }
   
-  public void addProjectFile(ProjectFileBean paramProjectFileBean) {
-    this.projectFiles.add(paramProjectFileBean);
+  public void addProjectFile(ProjectFileBean fileBean) {
+    this.projectFiles.add(fileBean);
     this.adapter.notifyDataSetChanged();
   }
   

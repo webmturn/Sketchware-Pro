@@ -34,7 +34,7 @@ public class BlockBean extends SelectableBean implements Parcelable {
     public int nextBlock;
     @Expose
     public String opCode;
-    public ArrayList<ClassInfo> paramClassInfo;
+    public ArrayList<ClassInfo> parameterClassInfo;
     @Expose
     public ArrayList<String> parameters;
     @Expose
@@ -95,7 +95,7 @@ public class BlockBean extends SelectableBean implements Parcelable {
 
     private void buildClassInfo() {
         classInfo = ComponentTypeMapper.getClassInfo(type, typeName);
-        paramClassInfo = ComponentTypeMapper.getParamClassInfoList(spec);
+        parameterClassInfo = ComponentTypeMapper.getParamClassInfoList(spec);
     }
 
     public void copy(BlockBean other) {
@@ -125,10 +125,10 @@ public class BlockBean extends SelectableBean implements Parcelable {
     }
 
     public ArrayList<ClassInfo> getParamClassInfo() {
-        if (paramClassInfo == null) {
+        if (parameterClassInfo == null) {
             buildClassInfo();
         }
-        return paramClassInfo;
+        return parameterClassInfo;
     }
 
     public boolean isEqual(BlockBean other) {

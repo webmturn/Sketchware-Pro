@@ -22,7 +22,7 @@ public class FieldBlockView extends BaseBlockView {
   
   public int minCWidth = 2;
   
-  public int paramSpacing = 0;
+  public int spacing = 0;
   
   public int isDefinitionBlock = 0;
   
@@ -56,17 +56,17 @@ public class FieldBlockView extends BaseBlockView {
     this.minSimpleWidth = (int) (this.minSimpleWidth * scale);
     this.minHatWidth = (int) (this.minHatWidth * scale);
     this.minCWidth = (int) (this.minCWidth * scale);
-    this.paramSpacing = this.minCWidth;
+    this.spacing = this.minCWidth;
     if (this.blockType.equals("m") && getComponentLabel(this.componentType).length() >= 0) {
       this.dropdownLabel = createLabelTextView(this.componentType);
       addView(this.dropdownLabel);
-      this.paramSpacing = getDropdownTypeWidth();
+      this.spacing = getDropdownTypeWidth();
     }
     if (this.blockType.equals("m") || this.blockType.equals("d") || this.blockType.equals("n") || this.blockType.equals("s")) {
       this.labelView = createValueTextView("");
       addView(this.labelView);
     }
-    setBlockSize((float) (this.minSimpleWidth + this.paramSpacing), (float) this.textHeight, false);
+    setBlockSize((float) (this.minSimpleWidth + this.spacing), (float) this.textHeight, false);
   }
   
   private int getDropdownTypeWidth() {
@@ -118,7 +118,7 @@ public class FieldBlockView extends BaseBlockView {
     textView.setText(str);
     textView.setTextSize(9.0F);
     RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(this.minSimpleWidth, this.textHeight);
-    layoutParams.setMargins(this.paramSpacing, 0, this.isDefinitionBlock, 0);
+    layoutParams.setMargins(this.spacing, 0, this.isDefinitionBlock, 0);
     textView.setPadding(0, 0, 0, 0);
     textView.setLayoutParams((ViewGroup.LayoutParams)layoutParams);
     textView.setBackgroundColor(0);
@@ -140,13 +140,13 @@ public class FieldBlockView extends BaseBlockView {
     return this.componentType;
   }
   
-  public void setArgValue(Object paramObject) {
-    this.argValue = paramObject;
+  public void setArgValue(Object obj) {
+    this.argValue = obj;
     if (this.blockType.equals("d") || this.blockType.equals("m") || this.blockType.equals("s")) {
-      this.labelView.setText(paramObject.toString());
+      this.labelView.setText(obj.toString());
       int i = Math.max(this.minSimpleWidth, getLabelWidth());
       (this.labelView.getLayoutParams()).width = i;
-      setBlockSize((i + this.paramSpacing), this.textHeight, true);
+      setBlockSize((i + this.spacing), this.textHeight, true);
     } 
   }
 }

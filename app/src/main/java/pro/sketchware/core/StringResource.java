@@ -527,13 +527,13 @@ public class StringResource {
     return result;
   }
   
-  public HashMap<String, String> parseXmlTranslationsFromBytes(byte[] paramArrayOfbyte) {
+  public HashMap<String, String> parseXmlTranslationsFromBytes(byte[] data) {
     HashMap<String, String> result = new HashMap<String, String>();
     java.io.ByteArrayInputStream bis = null;
     java.io.InputStreamReader isr = null;
     try {
       org.xmlpull.v1.XmlPullParser parser = org.xmlpull.v1.XmlPullParserFactory.newInstance().newPullParser();
-      bis = new java.io.ByteArrayInputStream(paramArrayOfbyte);
+      bis = new java.io.ByteArrayInputStream(data);
       isr = new java.io.InputStreamReader(bis, "UTF-8");
       parser.setInput(isr);
       int eventType = parser.getEventType();

@@ -16,7 +16,7 @@ public class ViewFileEditClickListener implements View.OnClickListener {
     this.b = parama;
   }
   
-  public void onClick(View paramView) {
+  public void onClick(View view) {
     char c;
     if (UIHelper.isClickThrottled())
       return; 

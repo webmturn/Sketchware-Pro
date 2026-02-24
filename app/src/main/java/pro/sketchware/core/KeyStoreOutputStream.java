@@ -9,7 +9,7 @@ public class KeyStoreOutputStream extends OutputStream {
     this.keyStoreManager = paramiI;
   }
   
-  public void write(int paramInt) {
-    this.keyStoreManager.keyBuffer.put((byte)paramInt);
+  public void write(int value) {
+    this.keyStoreManager.keyBuffer.put((byte)value);
   }
 }

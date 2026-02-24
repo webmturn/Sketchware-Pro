@@ -39,16 +39,16 @@ public class LibraryManager {
     this.fileUtil.deleteFileByPath(str);
   }
   
-  public void setAdmob(ProjectLibraryBean paramProjectLibraryBean) {
-    this.admob = paramProjectLibraryBean;
+  public void setAdmob(ProjectLibraryBean libraryBean) {
+    this.admob = libraryBean;
   }
   
-  public void parseLibraryData(BufferedReader paramBufferedReader) throws java.io.IOException {
+  public void parseLibraryData(BufferedReader reader) throws java.io.IOException {
     try {
       StringBuffer stringBuffer = new StringBuffer();
       String str = "";
       while (true) {
-        String str1 = paramBufferedReader.readLine();
+        String str1 = reader.readLine();
         if (str1 != null) {
           if (str1.length() <= 0)
             continue; 
@@ -117,34 +117,34 @@ public class LibraryManager {
     }
   }
   
-  public final void serializeLibraries(StringBuffer paramStringBuffer) {
+  public final void serializeLibraries(StringBuffer buffer) {
     if (this.firebaseDB != null) {
-      paramStringBuffer.append("@");
-      paramStringBuffer.append("firebaseDB");
-      paramStringBuffer.append("\n");
-      paramStringBuffer.append(this.gson.toJson(this.firebaseDB, ProjectLibraryBean.class));
-      paramStringBuffer.append("\n");
+      buffer.append("@");
+      buffer.append("firebaseDB");
+      buffer.append("\n");
+      buffer.append(this.gson.toJson(this.firebaseDB, ProjectLibraryBean.class));
+      buffer.append("\n");
     } 
     if (this.compat != null) {
-      paramStringBuffer.append("@");
-      paramStringBuffer.append("compat");
-      paramStringBuffer.append("\n");
-      paramStringBuffer.append(this.gson.toJson(this.compat, ProjectLibraryBean.class));
-      paramStringBuffer.append("\n");
+      buffer.append("@");
+      buffer.append("compat");
+      buffer.append("\n");
+      buffer.append(this.gson.toJson(this.compat, ProjectLibraryBean.class));
+      buffer.append("\n");
     } 
     if (this.admob != null) {
-      paramStringBuffer.append("@");
-      paramStringBuffer.append("admob");
-      paramStringBuffer.append("\n");
-      paramStringBuffer.append(this.gson.toJson(this.admob, ProjectLibraryBean.class));
-      paramStringBuffer.append("\n");
+      buffer.append("@");
+      buffer.append("admob");
+      buffer.append("\n");
+      buffer.append(this.gson.toJson(this.admob, ProjectLibraryBean.class));
+      buffer.append("\n");
     } 
     if (this.googleMap != null) {
-      paramStringBuffer.append("@");
-      paramStringBuffer.append("googleMap");
-      paramStringBuffer.append("\n");
-      paramStringBuffer.append(this.gson.toJson(this.googleMap, ProjectLibraryBean.class));
-      paramStringBuffer.append("\n");
+      buffer.append("@");
+      buffer.append("googleMap");
+      buffer.append("\n");
+      buffer.append(this.gson.toJson(this.googleMap, ProjectLibraryBean.class));
+      buffer.append("\n");
     } 
   }
   
@@ -152,24 +152,24 @@ public class LibraryManager {
     return this.admob;
   }
   
-  public void setCompat(ProjectLibraryBean paramProjectLibraryBean) {
-    this.compat = paramProjectLibraryBean;
+  public void setCompat(ProjectLibraryBean libraryBean) {
+    this.compat = libraryBean;
   }
   
   public ProjectLibraryBean getCompat() {
     return this.compat;
   }
   
-  public void setFirebaseDB(ProjectLibraryBean paramProjectLibraryBean) {
-    this.firebaseDB = paramProjectLibraryBean;
+  public void setFirebaseDB(ProjectLibraryBean libraryBean) {
+    this.firebaseDB = libraryBean;
   }
   
   public ProjectLibraryBean getFirebaseDB() {
     return this.firebaseDB;
   }
   
-  public void setGoogleMap(ProjectLibraryBean paramProjectLibraryBean) {
-    this.googleMap = paramProjectLibraryBean;
+  public void setGoogleMap(ProjectLibraryBean libraryBean) {
+    this.googleMap = libraryBean;
   }
   
   public ProjectLibraryBean getGoogleMap() {

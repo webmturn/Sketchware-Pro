@@ -77,19 +77,19 @@ public class ProjectFileManager {
     refreshNameLists();
   }
   
-  public void addProjectFile(ProjectFileBean paramProjectFileBean) {
-    if (paramProjectFileBean.fileType == 0) {
-      this.activities.add(paramProjectFileBean);
+  public void addProjectFile(ProjectFileBean fileBean) {
+    if (fileBean.fileType == 0) {
+      this.activities.add(fileBean);
     } else {
-      this.customViews.add(paramProjectFileBean);
+      this.customViews.add(fileBean);
     } 
   }
   
-  public void parseFileData(BufferedReader paramBufferedReader) throws java.io.IOException {
+  public void parseFileData(BufferedReader reader) throws java.io.IOException {
     StringBuffer stringBuffer = new StringBuffer();
     String str = "";
     while (true) {
-      String str1 = paramBufferedReader.readLine();
+      String str1 = reader.readLine();
       if (str1 != null) {
         if (str1.length() <= 0)
           continue; 
@@ -172,24 +172,24 @@ public class ProjectFileManager {
     } 
   }
   
-  public final void serializeFiles(StringBuffer paramStringBuffer) {
-    paramStringBuffer.append("@");
-    paramStringBuffer.append("activity");
-    paramStringBuffer.append("\n");
+  public final void serializeFiles(StringBuffer buffer) {
+    buffer.append("@");
+    buffer.append("activity");
+    buffer.append("\n");
     ArrayList<ProjectFileBean> arrayList = this.activities;
     if (arrayList != null)
       for (ProjectFileBean projectFileBean : arrayList) {
-        paramStringBuffer.append(this.gson.toJson(projectFileBean, ProjectFileBean.class));
-        paramStringBuffer.append("\n");
+        buffer.append(this.gson.toJson(projectFileBean, ProjectFileBean.class));
+        buffer.append("\n");
       }  
-    paramStringBuffer.append("@");
-    paramStringBuffer.append("customview");
-    paramStringBuffer.append("\n");
+    buffer.append("@");
+    buffer.append("customview");
+    buffer.append("\n");
     arrayList = this.customViews;
     if (arrayList != null)
       for (ProjectFileBean projectFileBean : arrayList) {
-        paramStringBuffer.append(this.gson.toJson(projectFileBean, ProjectFileBean.class));
-        paramStringBuffer.append("\n");
+        buffer.append(this.gson.toJson(projectFileBean, ProjectFileBean.class));
+        buffer.append("\n");
       }  
   }
   

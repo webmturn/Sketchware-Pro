@@ -14,18 +14,18 @@ public class NumberRangeValidator extends BaseValidator {
   
   public int maxValue;
   
-  public NumberRangeValidator(Context paramContext, TextInputLayout paramTextInputLayout, int paramInt1, int paramInt2) {
-    super(paramContext, paramTextInputLayout);
-    this.minValue = paramInt1;
-    this.maxValue = paramInt2;
+  public NumberRangeValidator(Context context, TextInputLayout textInputLayout, int x, int y) {
+    super(context, textInputLayout);
+    this.minValue = x;
+    this.maxValue = y;
   }
   
-  public CharSequence filter(CharSequence paramCharSequence, int paramInt1, int paramInt2, Spanned paramSpanned, int paramInt3, int paramInt4) {
+  public CharSequence filter(CharSequence text, int x, int y, Spanned paramSpanned, int width, int height) {
     return null;
   }
   
-  public void onTextChanged(CharSequence paramCharSequence, int paramInt1, int paramInt2, int paramInt3) {
-    String str = paramCharSequence.toString().trim();
+  public void onTextChanged(CharSequence text, int x, int y, int width) {
+    String str = text.toString().trim();
     if (str.isEmpty()) {
       this.valid = false;
       return;

@@ -22,26 +22,26 @@ public class SharedPrefsHelper {
     return this.prefs.getString(key, value);
   }
   
-  public void put(String value, Object paramObject) {
-    put(value, paramObject, true);
+  public void put(String value, Object obj) {
+    put(value, obj, true);
   }
   
-  public void put(String value, Object paramObject, boolean flag) {
-    if (paramObject instanceof String) {
-      this.editor.putString(value, (String)paramObject);
-    } else if (paramObject instanceof Integer) {
-      this.editor.putInt(value, ((Integer)paramObject).intValue());
-    } else if (paramObject instanceof Long) {
-      this.editor.putLong(value, ((Long)paramObject).longValue());
-    } else if (paramObject instanceof Boolean) {
-      this.editor.putBoolean(value, ((Boolean)paramObject).booleanValue());
+  public void put(String value, Object obj, boolean flag) {
+    if (obj instanceof String) {
+      this.editor.putString(value, (String)obj);
+    } else if (obj instanceof Integer) {
+      this.editor.putInt(value, ((Integer)obj).intValue());
+    } else if (obj instanceof Long) {
+      this.editor.putLong(value, ((Long)obj).longValue());
+    } else if (obj instanceof Boolean) {
+      this.editor.putBoolean(value, ((Boolean)obj).booleanValue());
     } 
     if (flag)
       this.editor.commit(); 
   }
   
-  public void putMap(String value, HashMap<String, Object> paramHashMap) {
-    put(value, GsonMapHelper.toJson(paramHashMap));
+  public void putMap(String value, HashMap<String, Object> hashMap) {
+    put(value, GsonMapHelper.toJson(hashMap));
   }
   
   public boolean clearAll() {

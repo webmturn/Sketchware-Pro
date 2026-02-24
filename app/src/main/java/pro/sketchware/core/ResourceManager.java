@@ -67,11 +67,11 @@ public class ResourceManager {
     cleanupUnusedFonts();
   }
   
-  public void parseResourceData(BufferedReader paramBufferedReader) throws java.io.IOException {
+  public void parseResourceData(BufferedReader reader) throws java.io.IOException {
     StringBuffer stringBuffer = new StringBuffer();
     String str = "";
     while (true) {
-      String str1 = paramBufferedReader.readLine();
+      String str1 = reader.readLine();
       if (str1 != null) {
         if (str1.length() <= 0)
           continue; 
@@ -145,27 +145,27 @@ public class ResourceManager {
     }
   }
   
-  public final void serializeResources(StringBuffer paramStringBuffer) {
-    paramStringBuffer.append("@");
-    paramStringBuffer.append("images");
-    paramStringBuffer.append("\n");
+  public final void serializeResources(StringBuffer buffer) {
+    buffer.append("@");
+    buffer.append("images");
+    buffer.append("\n");
     for (ProjectResourceBean projectResourceBean : this.images) {
-      paramStringBuffer.append(this.gson.toJson(projectResourceBean, ProjectResourceBean.class));
-      paramStringBuffer.append("\n");
+      buffer.append(this.gson.toJson(projectResourceBean, ProjectResourceBean.class));
+      buffer.append("\n");
     } 
-    paramStringBuffer.append("@");
-    paramStringBuffer.append("sounds");
-    paramStringBuffer.append("\n");
+    buffer.append("@");
+    buffer.append("sounds");
+    buffer.append("\n");
     for (ProjectResourceBean projectResourceBean : this.sounds) {
-      paramStringBuffer.append(this.gson.toJson(projectResourceBean, ProjectResourceBean.class));
-      paramStringBuffer.append("\n");
+      buffer.append(this.gson.toJson(projectResourceBean, ProjectResourceBean.class));
+      buffer.append("\n");
     } 
-    paramStringBuffer.append("@");
-    paramStringBuffer.append("fonts");
-    paramStringBuffer.append("\n");
+    buffer.append("@");
+    buffer.append("fonts");
+    buffer.append("\n");
     for (ProjectResourceBean projectResourceBean : this.fonts) {
-      paramStringBuffer.append(this.gson.toJson(projectResourceBean, ProjectResourceBean.class));
-      paramStringBuffer.append("\n");
+      buffer.append(this.gson.toJson(projectResourceBean, ProjectResourceBean.class));
+      buffer.append("\n");
     } 
   }
   

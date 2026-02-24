@@ -97,7 +97,7 @@ public class ComponentTypeMapper {
      * @return A parameter class info ({@link ClassInfo}) list
      */
     public static ArrayList<ClassInfo> getParamClassInfoList(String spec) {
-        ArrayList<ClassInfo> paramClass = new ArrayList<>();
+        ArrayList<ClassInfo> clazz = new ArrayList<>();
         ArrayList<String> specList = FormatUtil.parseBlockSpec(spec);
         for (String params : specList) {
             if (params.charAt(0) == '%' && params.length() >= 2) {
@@ -108,10 +108,10 @@ public class ComponentTypeMapper {
                 } else {
                     typeName = "";
                 }
-                paramClass.add(getClassInfo(type, typeName));
+                clazz.add(getClassInfo(type, typeName));
             }
         }
-        return paramClass;
+        return clazz;
     }
 
     /**

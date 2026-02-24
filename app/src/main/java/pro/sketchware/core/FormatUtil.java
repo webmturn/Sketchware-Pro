@@ -59,12 +59,12 @@ public class FormatUtil {
     return str;
   }
   
-  public static String bytesToHex(byte[] paramArrayOfbyte) {
-    StringBuffer stringBuffer = new StringBuffer(paramArrayOfbyte.length * 2);
-    for (int b = 0; b < paramArrayOfbyte.length; b++) {
-      if ((paramArrayOfbyte[b] & 0xFF) < 16)
+  public static String bytesToHex(byte[] data) {
+    StringBuffer stringBuffer = new StringBuffer(data.length * 2);
+    for (int b = 0; b < data.length; b++) {
+      if ((data[b] & 0xFF) < 16)
         stringBuffer.append("0"); 
-      stringBuffer.append(Long.toString((paramArrayOfbyte[b] & 0xFF), 16));
+      stringBuffer.append(Long.toString((data[b] & 0xFF), 16));
     } 
     return stringBuffer.toString();
   }

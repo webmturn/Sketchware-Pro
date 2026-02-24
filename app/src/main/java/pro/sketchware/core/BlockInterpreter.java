@@ -771,11 +771,11 @@ public class BlockInterpreter {
                 if (param.isEmpty()) {
                     break;
                 }
-                var paramAdapter = param;
-                if (isViewBindingEnabled && paramAdapter.startsWith("binding.")) {
-                    paramAdapter = paramAdapter.substring("binding.".length());
+                var adapter = param;
+                if (isViewBindingEnabled && adapter.startsWith("binding.")) {
+                    adapter = adapter.substring("binding.".length());
                 }
-                opcode = String.format("%s.setAdapter(new %s(%s));", param, ComponentCodeGenerator.getAdapterClassName(paramAdapter, isViewBindingEnabled), params.get(1));
+                opcode = String.format("%s.setAdapter(new %s(%s));", param, ComponentCodeGenerator.getAdapterClassName(adapter, isViewBindingEnabled), params.get(1));
                 break;
             case "listRefresh":
                 opcode = String.format("((BaseAdapter)%s.getAdapter()).notifyDataSetChanged();", params.get(0));
@@ -1495,13 +1495,13 @@ public class BlockInterpreter {
     private int getBlockType(BlockBean blockBean, int parameterIndex) {
         int blockType;
 
-        ClassInfo paramClassInfo = blockBean.getParamClassInfo().get(parameterIndex);
+        ClassInfo classInfo = blockBean.getParamClassInfo().get(parameterIndex);
 
-        if (paramClassInfo.isExactType("boolean")) {
+        if (classInfo.isExactType("boolean")) {
             blockType = 0;
-        } else if (paramClassInfo.isExactType("double")) {
+        } else if (classInfo.isExactType("double")) {
             blockType = 1;
-        } else if (paramClassInfo.isExactType("String")) {
+        } else if (classInfo.isExactType("String")) {
             blockType = 2;
         } else {
             blockType = 3;

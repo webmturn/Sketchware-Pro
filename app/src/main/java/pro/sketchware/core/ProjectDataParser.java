@@ -29,7 +29,7 @@ public class ProjectDataParser {
     } 
   }
   
-  public static ArrayList<BlockBean> parseBlockBeans(Gson paramGson, String str) {
+  public static ArrayList<BlockBean> parseBlockBeans(Gson gson, String str) {
     ArrayList<BlockBean> result = new ArrayList<>();
     java.io.BufferedReader reader = null;
     try {
@@ -38,7 +38,7 @@ public class ProjectDataParser {
       while ((line = reader.readLine()) != null) {
         if (line.trim().length() <= 0) continue;
         if (line.trim().charAt(0) != '{') continue;
-        result.add(paramGson.fromJson(line, BlockBean.class));
+        result.add(gson.fromJson(line, BlockBean.class));
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -48,7 +48,7 @@ public class ProjectDataParser {
     return result;
   }
   
-  public static ArrayList<ViewBean> parseViewBeans(Gson paramGson, String str) {
+  public static ArrayList<ViewBean> parseViewBeans(Gson gson, String str) {
     ArrayList<ViewBean> result = new ArrayList<>();
     java.io.BufferedReader reader = null;
     try {
@@ -57,7 +57,7 @@ public class ProjectDataParser {
       while ((line = reader.readLine()) != null) {
         if (line.trim().length() <= 0) continue;
         if (line.trim().charAt(0) != '{') continue;
-        result.add(paramGson.fromJson(line, ViewBean.class));
+        result.add(gson.fromJson(line, ViewBean.class));
       }
     } catch (Exception e) {
       e.printStackTrace();

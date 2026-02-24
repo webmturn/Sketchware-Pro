@@ -28,13 +28,13 @@ public class FontCollectionManager extends BaseCollectionManager {
     return null;
   }
   
-  public void renameResource(ProjectResourceBean paramProjectResourceBean, String str, boolean flag) {
+  public void renameResource(ProjectResourceBean resourceBean, String str, boolean flag) {
     if (this.collections == null)
       initialize(); 
     int i = this.collections.size();
     while (--i >= 0) {
       CollectionBean collectionBean = this.collections.get(i);
-      if (collectionBean.name.equals(paramProjectResourceBean.resName)) {
+      if (collectionBean.name.equals(resourceBean.resName)) {
         collectionBean.name = str;
         break;
       } 
@@ -43,30 +43,30 @@ public class FontCollectionManager extends BaseCollectionManager {
       saveCollections(); 
   }
   
-  public void addResource(String str, ProjectResourceBean paramProjectResourceBean) throws CompileException {
-    addResource(str, paramProjectResourceBean, true);
+  public void addResource(String str, ProjectResourceBean resourceBean) throws CompileException {
+    addResource(str, resourceBean, true);
   }
   
-  public void addResource(String str, ProjectResourceBean paramProjectResourceBean, boolean flag) throws CompileException {
+  public void addResource(String str, ProjectResourceBean resourceBean, boolean flag) throws CompileException {
     if (this.collections == null) initialize();
     ArrayList<String> duplicates = new ArrayList<String>();
     for (CollectionBean bean : this.collections) {
-      if (bean.name.equals(paramProjectResourceBean.resName)) {
+      if (bean.name.equals(resourceBean.resName)) {
         duplicates.add(bean.name);
       }
     }
     if (duplicates.size() > 0) {
       throw new CompileException("duplicate_name");
     }
-    String resName = paramProjectResourceBean.resName;
+    String resName = resourceBean.resName;
     String dataName = resName;
-    if (paramProjectResourceBean.resFullName.contains(".")) {
-      String ext = paramProjectResourceBean.resFullName.substring(paramProjectResourceBean.resFullName.lastIndexOf('.'));
+    if (resourceBean.resFullName.contains(".")) {
+      String ext = resourceBean.resFullName.substring(resourceBean.resFullName.lastIndexOf('.'));
       dataName = resName + ext;
     }
     String destPath = this.dataDirPath + java.io.File.separator + dataName;
-    if (paramProjectResourceBean.savedPos == 1) {
-      String srcPath = paramProjectResourceBean.resFullName;
+    if (resourceBean.savedPos == 1) {
+      String srcPath = resourceBean.resFullName;
       if (!this.fileUtil.exists(srcPath)) {
         throw new CompileException("file_no_exist");
       }
@@ -77,7 +77,7 @@ public class FontCollectionManager extends BaseCollectionManager {
         throw new CompileException("fail_to_copy");
       }
     } else {
-      String srcPath = SketchwarePaths.getSoundsPath() + java.io.File.separator + str + java.io.File.separator + paramProjectResourceBean.resFullName;
+      String srcPath = SketchwarePaths.getSoundsPath() + java.io.File.separator + str + java.io.File.separator + resourceBean.resFullName;
       if (!this.fileUtil.exists(srcPath)) {
         throw new CompileException("file_no_exist");
       }
@@ -88,7 +88,7 @@ public class FontCollectionManager extends BaseCollectionManager {
         throw new CompileException("fail_to_copy");
       }
     }
-    this.collections.add(new CollectionBean(paramProjectResourceBean.resName, dataName));
+    this.collections.add(new CollectionBean(resourceBean.resName, dataName));
     if (flag) saveCollections();
   }
   

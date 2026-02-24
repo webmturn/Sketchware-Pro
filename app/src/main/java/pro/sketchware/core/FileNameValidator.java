@@ -19,16 +19,16 @@ public class FileNameValidator extends BaseValidator {
   
   public Pattern namePattern = Pattern.compile("^[a-z][a-z0-9_]*");
   
-  public FileNameValidator(Context context, TextInputLayout paramTextInputLayout, String[] paramArrayOfString, ArrayList<String> list) {
-    super(context, paramTextInputLayout);
-    this.reservedNames = paramArrayOfString;
+  public FileNameValidator(Context context, TextInputLayout textInputLayout, String[] strings, ArrayList<String> list) {
+    super(context, textInputLayout);
+    this.reservedNames = strings;
     this.existingNames = list;
     this.batchCount = 1;
   }
   
-  public FileNameValidator(Context context, TextInputLayout paramTextInputLayout, String[] paramArrayOfString, ArrayList<String> list, String str) {
-    super(context, paramTextInputLayout);
-    this.reservedNames = paramArrayOfString;
+  public FileNameValidator(Context context, TextInputLayout textInputLayout, String[] strings, ArrayList<String> list, String str) {
+    super(context, textInputLayout);
+    this.reservedNames = strings;
     this.existingNames = list;
     this.currentName = str;
     this.batchCount = 1;
@@ -147,11 +147,11 @@ public class FileNameValidator extends BaseValidator {
     } 
   }
   
-  public CharSequence filter(CharSequence paramCharSequence, int x, int y, Spanned paramSpanned, int paramInt3, int paramInt4) {
+  public CharSequence filter(CharSequence text, int x, int y, Spanned paramSpanned, int width, int height) {
     return null;
   }
   
-  public void onTextChanged(CharSequence paramCharSequence, int x, int y, int paramInt3) {
-    validate(paramCharSequence.toString().trim());
+  public void onTextChanged(CharSequence text, int x, int y, int width) {
+    validate(text.toString().trim());
   }
 }

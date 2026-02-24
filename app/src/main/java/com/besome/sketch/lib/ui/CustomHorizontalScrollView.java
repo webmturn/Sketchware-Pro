@@ -32,11 +32,11 @@ public class CustomHorizontalScrollView extends HorizontalScrollView {
     return (this.useScroll && this.scrollEnabled) ? super.onInterceptTouchEvent(event) : false;
   }
   
-  public void onScrollChanged(int x, int y, int paramInt3, int paramInt4) {
-    super.onScrollChanged(x, y, paramInt3, paramInt4);
+  public void onScrollChanged(int x, int y, int width, int height) {
+    super.onScrollChanged(x, y, width, height);
     OnScrollChangedListener a1 = this.scrollChangedListener;
     if (a1 != null)
-      a1.onScrollChanged(x, y, paramInt3, paramInt4); 
+      a1.onScrollChanged(x, y, width, height); 
   }
   
   public boolean onTouchEvent(MotionEvent event) {

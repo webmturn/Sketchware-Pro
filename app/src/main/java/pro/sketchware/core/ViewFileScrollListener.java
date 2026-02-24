@@ -13,12 +13,12 @@ public class ViewFileScrollListener extends RecyclerView.OnScrollListener {
     this.innerAdapter = parama;
   }
   
-  public void onScrolled(RecyclerView paramRecyclerView, int paramInt1, int paramInt2) {
-    super.onScrolled(paramRecyclerView, paramInt1, paramInt2);
-    if (paramInt2 > 2) {
+  public void onScrolled(RecyclerView paramRecyclerView, int x, int y) {
+    super.onScrolled(paramRecyclerView, x, y);
+    if (y > 2) {
       if (((ManageViewActivity)this.innerAdapter.outerAdapter.getActivity()).fab.isEnabled())
         ((ManageViewActivity)this.innerAdapter.outerAdapter.getActivity()).fab.hide(); 
-    } else if (paramInt2 < -2 && ((ManageViewActivity)this.innerAdapter.outerAdapter.getActivity()).fab.isEnabled()) {
+    } else if (y < -2 && ((ManageViewActivity)this.innerAdapter.outerAdapter.getActivity()).fab.isEnabled()) {
       ((ManageViewActivity)this.innerAdapter.outerAdapter.getActivity()).fab.show();
     } 
   }

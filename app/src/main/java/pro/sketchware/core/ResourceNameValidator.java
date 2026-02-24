@@ -20,25 +20,25 @@ public class ResourceNameValidator extends BaseValidator {
   
   public Pattern namePattern = Pattern.compile("^[a-z][a-z0-9_]*");
   
-  public ResourceNameValidator(Context context, TextInputLayout paramTextInputLayout, String[] paramArrayOfString, ArrayList<String> list) {
-    super(context, paramTextInputLayout);
-    this.reservedNames = paramArrayOfString;
+  public ResourceNameValidator(Context context, TextInputLayout textInputLayout, String[] strings, ArrayList<String> list) {
+    super(context, textInputLayout);
+    this.reservedNames = strings;
     this.existingNames = list;
   }
   
-  public ResourceNameValidator(Context context, TextInputLayout paramTextInputLayout, String[] paramArrayOfString, ArrayList<String> list, String input) {
-    super(context, paramTextInputLayout);
-    this.reservedNames = paramArrayOfString;
+  public ResourceNameValidator(Context context, TextInputLayout textInputLayout, String[] strings, ArrayList<String> list, String input) {
+    super(context, textInputLayout);
+    this.reservedNames = strings;
     this.existingNames = list;
     this.currentName = input;
   }
   
-  public CharSequence filter(CharSequence paramCharSequence, int x, int y, Spanned paramSpanned, int paramInt3, int paramInt4) {
+  public CharSequence filter(CharSequence text, int x, int y, Spanned paramSpanned, int width, int height) {
     return null;
   }
   
-  public void onTextChanged(CharSequence paramCharSequence, int x, int y, int paramInt3) {
-    String str = paramCharSequence.toString().trim();
+  public void onTextChanged(CharSequence text, int x, int y, int width) {
+    String str = text.toString().trim();
     if (str.length() < 3) {
       this.textInputLayout.setErrorEnabled(true);
       this.textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(this.context, R.string.invalid_value_min_lenth, new Object[] { Integer.valueOf(3) }));
@@ -69,7 +69,7 @@ public class ResourceNameValidator extends BaseValidator {
     while (true) {
       if (x < y) {
         str = arrayOfString[x];
-        if (paramCharSequence.toString().equals(str)) {
+        if (text.toString().equals(str)) {
           x = 1;
           break;
         } 
@@ -85,13 +85,13 @@ public class ResourceNameValidator extends BaseValidator {
       this.valid = false;
       return;
     } 
-    if (!Character.isLetter(paramCharSequence.charAt(0))) {
+    if (!Character.isLetter(text.charAt(0))) {
       this.textInputLayout.setErrorEnabled(true);
       this.textInputLayout.setError(StringResource.getInstance().getTranslatedString(this.context, R.string.logic_editor_message_variable_name_must_start_letter));
       this.valid = false;
       return;
     } 
-    if (this.namePattern.matcher(paramCharSequence.toString()).matches()) {
+    if (this.namePattern.matcher(text.toString()).matches()) {
       this.textInputLayout.setErrorEnabled(false);
       this.valid = true;
     } else {

@@ -9,8 +9,8 @@ public class UserExperienceLevel {
   
   public int score;
   
-  public UserExperienceLevel(Context paramContext) {
-    this.database = new SharedPrefsHelper(paramContext, "U1");
+  public UserExperienceLevel(Context context) {
+    this.database = new SharedPrefsHelper(context, "U1");
     this.level = this.database.getIntDefault("U1I0");
     int i = this.level;
     int j = i;

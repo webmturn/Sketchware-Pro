@@ -14,7 +14,7 @@ public class ViewFileClickListener implements View.OnClickListener {
     this.b = parama;
   }
   
-  public void onClick(View paramView) {
+  public void onClick(View view) {
     ViewFilesAdapter.FileListAdapter.ViewHolder a1 = this.b;
     a1.adapterRef.selectedPosition = a1.getLayoutPosition();
     if (this.b.adapterRef.outerAdapter.isSelectionMode.booleanValue()) {

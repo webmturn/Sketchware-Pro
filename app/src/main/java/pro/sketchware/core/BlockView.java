@@ -24,7 +24,7 @@ public class BlockView extends BaseBlockView {
   
   public int minCWidth = 90;
   
-  public int paramSpacing = 4;
+  public int spacing = 4;
   
   public boolean isDefinitionBlock = false;
   
@@ -72,9 +72,9 @@ public class BlockView extends BaseBlockView {
     initBlock();
   }
   
-  public final int getTextWidth(TextView paramTextView) {
+  public final int getTextWidth(TextView textView) {
     Rect rect = new Rect();
-    paramTextView.getPaint().getTextBounds(paramTextView.getText().toString(), 0, paramTextView.getText().length(), rect);
+    textView.getPaint().getTextBounds(textView.getText().toString(), 0, textView.getText().length(), rect);
     return rect.width();
   }
   
@@ -461,7 +461,7 @@ public class BlockView extends BaseBlockView {
       if (isRs) {
         childWidth = ((BlockView) child).getWidthSum();
       }
-      xOffset += childWidth + this.paramSpacing;
+      xOffset += childWidth + this.spacing;
       if (isRs) {
         BlockView childRs = (BlockView) child;
         child.setY(getY() + (float) this.topSpacing + (float) ((this.depth - childRs.depth - 1) * this.shadowOffset));
@@ -528,7 +528,7 @@ public class BlockView extends BaseBlockView {
     this.minSimpleWidth = (int) (this.minSimpleWidth * scale);
     this.minHatWidth = (int) (this.minHatWidth * scale);
     this.minCWidth = (int) (this.minCWidth * scale);
-    this.paramSpacing = (int) (this.paramSpacing * scale);
+    this.spacing = (int) (this.spacing * scale);
     String type = this.blockType;
     byte typeNum = 0;
     if (type.equals("b")) { typeNum = 1; }
@@ -633,7 +633,7 @@ public class BlockView extends BaseBlockView {
       if (child instanceof BlockView) {
         childWidth = ((BlockView) child).getWidthSum();
       }
-      xOffset += childWidth + this.paramSpacing;
+      xOffset += childWidth + this.spacing;
     }
     int w = xOffset;
     if (this.blockType.equals("b") || this.blockType.equals("d") || this.blockType.equals("s") || this.blockType.equals("a")) {

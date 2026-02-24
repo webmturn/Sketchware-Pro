@@ -1,5 +1,5 @@
 package pro.sketchware.core;
 
 public interface BlockSizeListener {
-  void onBlockSizeChanged(int paramInt1, int paramInt2);
+  void onBlockSizeChanged(int x, int y);
 }

@@ -46,9 +46,9 @@ public class DefinitionBlockView extends BlockView {
     return textView;
   }
   
-  public final int[] measureTextBounds(TextView paramTextView) {
+  public final int[] measureTextBounds(TextView textView) {
     Rect rect = new Rect();
-    paramTextView.getPaint().getTextBounds(paramTextView.getText().toString(), 0, paramTextView.getText().length(), rect);
+    textView.getPaint().getTextBounds(textView.getText().toString(), 0, textView.getText().length(), rect);
     return new int[] { rect.width(), rect.height() };
   }
   
@@ -93,7 +93,7 @@ public class DefinitionBlockView extends BlockView {
     this.minSimpleWidth = (int)(this.minSimpleWidth * f2);
     this.minHatWidth = (int)(this.minHatWidth * f2);
     this.minCWidth = (int)(this.minCWidth * f2);
-    this.paramSpacing = (int)(this.paramSpacing * f2);
+    this.spacing = (int)(this.spacing * f2);
     String str = ((BaseBlockView)this).blockType;
     int i = str.hashCode();
     if (i != 32) {

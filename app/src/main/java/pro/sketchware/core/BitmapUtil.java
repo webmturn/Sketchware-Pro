@@ -47,17 +47,17 @@ public class BitmapUtil {
     return i;
   }
   
-  public static Bitmap rotateBitmap(Bitmap paramBitmap, int index) {
+  public static Bitmap rotateBitmap(Bitmap bitmap, int index) {
     Matrix matrix = new Matrix();
     matrix.postRotate(index);
-    return Bitmap.createBitmap(paramBitmap, 0, 0, paramBitmap.getWidth(), paramBitmap.getHeight(), matrix, false);
+    return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, false);
   }
   
-  public static Bitmap scaleAndRotateBitmap(Bitmap paramBitmap, int x, int y, int paramInt3) {
+  public static Bitmap scaleAndRotateBitmap(Bitmap bitmap, int x, int y, int width) {
     Matrix matrix = new Matrix();
-    matrix.setScale(y, paramInt3);
+    matrix.setScale(y, width);
     matrix.postRotate(x);
-    return Bitmap.createBitmap(paramBitmap, 0, 0, paramBitmap.getWidth(), paramBitmap.getHeight(), matrix, false);
+    return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, false);
   }
   
   public static Bitmap decodeWithSampleSize(String str, int index) {
@@ -75,7 +75,7 @@ public class BitmapUtil {
     return BitmapFactory.decodeFile(str, options);
   }
   
-  public static void processAndSaveBitmap(String key, String value, int x, int y, int paramInt3) {
+  public static void processAndSaveBitmap(String key, String value, int x, int y, int width) {
     Bitmap bitmap = decodeSampledBitmap(key, 512, 512);
     int rotation = 0;
     try {
@@ -87,7 +87,7 @@ public class BitmapUtil {
     if (rotation > 0) {
       rotated = rotateBitmap(bitmap, rotation);
     }
-    Bitmap result = scaleAndRotateBitmap(rotated, x, y, paramInt3);
+    Bitmap result = scaleAndRotateBitmap(rotated, x, y, width);
     java.io.FileOutputStream fos = null;
     try {
       fos = new java.io.FileOutputStream(new java.io.File(value));

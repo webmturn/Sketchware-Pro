@@ -53,8 +53,8 @@ public class EncryptedFileUtil {
     return l;
   }
   
-  public String decryptToString(byte[] paramArrayOfbyte) throws Exception {
-    return new String(decrypt(paramArrayOfbyte), "UTF-8");
+  public String decryptToString(byte[] data) throws Exception {
+    return new String(decrypt(data), "UTF-8");
   }
   
   public void copyAssetFile(Context context, String key, String value) {
@@ -87,22 +87,22 @@ public class EncryptedFileUtil {
     deleteRecursive(file, true);
   }
   
-  public void copyDirectory(File paramFile1, File paramFile2) throws IOException {
+  public void copyDirectory(File srcFile, File destFile) throws IOException {
     StringBuilder stringBuilder;
-    if (paramFile1.isDirectory()) {
-      if (paramFile2.exists() || paramFile2.mkdirs()) {
-        String[] arrayOfString = paramFile1.list();
+    if (srcFile.isDirectory()) {
+      if (destFile.exists() || destFile.mkdirs()) {
+        String[] arrayOfString = srcFile.list();
         if (arrayOfString != null)
           for (int b = 0; b < arrayOfString.length; b++)
-            copyDirectory(new File(paramFile1, arrayOfString[b]), new File(paramFile2, arrayOfString[b]));  
+            copyDirectory(new File(srcFile, arrayOfString[b]), new File(destFile, arrayOfString[b]));  
         return;
       } 
       stringBuilder = new StringBuilder();
       stringBuilder.append("Cannot create dir ");
-      stringBuilder.append(paramFile2.getAbsolutePath());
+      stringBuilder.append(destFile.getAbsolutePath());
       throw new IOException(stringBuilder.toString());
     } 
-    copyFile(paramFile1.getAbsolutePath(), paramFile2.getAbsolutePath());
+    copyFile(srcFile.getAbsolutePath(), destFile.getAbsolutePath());
   }
   
   public void deleteRecursive(File dir, boolean flag) {
@@ -166,7 +166,7 @@ public class EncryptedFileUtil {
     deleteRecursive(new File(value), flag);
   }
   
-  public void writeBytes(String value, byte[] paramArrayOfbyte) {
+  public void writeBytes(String value, byte[] data) {
     int i = value.lastIndexOf(File.separator);
     if (i > 0)
       mkdirs(value.substring(0, i)); 
@@ -176,7 +176,7 @@ public class EncryptedFileUtil {
     FileOutputStream fos = null;
     try {
       fos = new FileOutputStream(file);
-      fos.write(paramArrayOfbyte);
+      fos.write(data);
       fos.flush();
     } catch (IOException e) {
     } finally {
@@ -229,11 +229,11 @@ public class EncryptedFileUtil {
     }
   }
   
-  public byte[] decrypt(byte[] paramArrayOfbyte) throws Exception {
+  public byte[] decrypt(byte[] data) throws Exception {
     Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
     byte[] arrayOfByte = "sketchwaresecure".getBytes();
     cipher.init(2, new SecretKeySpec(arrayOfByte, "AES"), new IvParameterSpec(arrayOfByte));
-    return cipher.doFinal(paramArrayOfbyte);
+    return cipher.doFinal(data);
   }
   
   public String readFileContent(File file) {
@@ -257,11 +257,11 @@ public class EncryptedFileUtil {
     deleteFile(new File(value));
   }
   
-  public byte[] encrypt(byte[] paramArrayOfbyte) throws Exception {
+  public byte[] encrypt(byte[] data) throws Exception {
     Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
     byte[] arrayOfByte = "sketchwaresecure".getBytes();
     cipher.init(1, new SecretKeySpec(arrayOfByte, "AES"), new IvParameterSpec(arrayOfByte));
-    return cipher.doFinal(paramArrayOfbyte);
+    return cipher.doFinal(data);
   }
   
   public byte[] encryptString(String value) throws Exception {

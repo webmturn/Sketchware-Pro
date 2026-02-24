@@ -79,10 +79,10 @@ public class ProjectDataStore {
     return arrayList;
   }
   
-  public static ArrayList<ViewBean> getChildViews(ArrayList<ViewBean> list, ViewBean paramViewBean) {
+  public static ArrayList<ViewBean> getChildViews(ArrayList<ViewBean> list, ViewBean parentBean) {
     ArrayList<ViewBean> arrayList = new ArrayList<>();
     for (ViewBean viewBean : list) {
-      if (viewBean.parent.equals(paramViewBean.id))
+      if (viewBean.parent.equals(parentBean.id))
         arrayList.add(viewBean); 
     } 
     int j = arrayList.size();
@@ -93,14 +93,14 @@ public class ProjectDataStore {
         int n = ((ViewBean)arrayList.get(k)).index;
         m = k + 1;
         if (n > ((ViewBean)arrayList.get(m)).index) {
-          ViewBean viewBean = arrayList.get(k);
+          ViewBean tempBean = arrayList.get(k);
           arrayList.set(k, arrayList.get(m));
-          arrayList.set(m, viewBean);
+          arrayList.set(m, tempBean);
         } 
       } 
     } 
     for (ViewBean viewBean : list) {
-      if (viewBean.parent.equals(paramViewBean.id)) {
+      if (viewBean.parent.equals(parentBean.id)) {
         i = viewBean.type;
         if (i == 0 || i == 2 || i == 1 || i == 36 || i == 37 || i == 38 || i == 39 || i == 40 || i == 12)
           arrayList.addAll(getChildViews(list, viewBean)); 
@@ -113,9 +113,9 @@ public class ProjectDataStore {
     return !this.componentMap.containsKey(str) ? null : ((ArrayList<ComponentBean>)this.componentMap.get(str)).get(index);
   }
   
-  public ArrayList<String> getAllIdentifiers(ProjectFileBean paramProjectFileBean) {
-    String str1 = paramProjectFileBean.getXmlName();
-    String str2 = paramProjectFileBean.getJavaName();
+  public ArrayList<String> getAllIdentifiers(ProjectFileBean fileBean) {
+    String str1 = fileBean.getXmlName();
+    String str2 = fileBean.getJavaName();
     ArrayList<Object> arrayList = new ArrayList<>();
     Iterator<Pair<Integer, String>> iterator1 = getVariables(str2).iterator();
     while (iterator1.hasNext())
@@ -135,12 +135,12 @@ public class ProjectDataStore {
     return (ArrayList)arrayList;
   }
   
-  public ArrayList<EventBean> getComponentEvents(String str, ComponentBean paramComponentBean) {
+  public ArrayList<EventBean> getComponentEvents(String str, ComponentBean componentBean) {
     if (!this.eventMap.containsKey(str))
       return new ArrayList<EventBean>(); 
     ArrayList<EventBean> arrayList = new ArrayList<>();
     for (EventBean eventBean : this.eventMap.get(str)) {
-      if (eventBean.targetType == paramComponentBean.type && eventBean.targetId.equals(paramComponentBean.componentId))
+      if (eventBean.targetType == componentBean.type && eventBean.targetId.equals(componentBean.componentId))
         arrayList.add(eventBean); 
     } 
     return arrayList;
@@ -285,16 +285,16 @@ public class ProjectDataStore {
     } 
   }
   
-  public void removeView(ProjectFileBean paramProjectFileBean, ViewBean paramViewBean) {
-    if (!this.viewMap.containsKey(paramProjectFileBean.getXmlName()))
+  public void removeView(ProjectFileBean fileBean, ViewBean targetBean) {
+    if (!this.viewMap.containsKey(fileBean.getXmlName()))
       return; 
-    ArrayList arrayList = this.viewMap.get(paramProjectFileBean.getXmlName());
+    ArrayList arrayList = this.viewMap.get(fileBean.getXmlName());
     int i = arrayList.size();
     while (true) {
       int j = i - 1;
       if (j >= 0) {
         i = j;
-        if (((ViewBean)arrayList.get(j)).id.equals(paramViewBean.id)) {
+        if (((ViewBean)arrayList.get(j)).id.equals(targetBean.id)) {
           arrayList.remove(j);
           break;
         } 
@@ -302,15 +302,15 @@ public class ProjectDataStore {
       } 
       break;
     } 
-    i = paramProjectFileBean.fileType;
+    i = fileBean.fileType;
     if (i == 0) {
-      removeEventsByTarget(paramProjectFileBean.getJavaName(), paramViewBean.id);
-      removeBlockReferences(paramProjectFileBean.getJavaName(), paramViewBean.getClassInfo(), paramViewBean.id, true);
+      removeEventsByTarget(fileBean.getJavaName(), targetBean.id);
+      removeBlockReferences(fileBean.getJavaName(), targetBean.getClassInfo(), targetBean.id, true);
     } else if (i == 1) {
       ArrayList<Pair> arrayList1 = new ArrayList<>();
       for (Map.Entry<String, ArrayList<ViewBean>> entry : this.viewMap.entrySet()) {
         for (ViewBean viewBean : entry.getValue()) {
-          if ((viewBean.type == 9 || viewBean.type == 10 || viewBean.type == 25 || viewBean.type == 48 || viewBean.type == 31) && viewBean.customView.equals(paramProjectFileBean.fileName)) {
+          if ((viewBean.type == 9 || viewBean.type == 10 || viewBean.type == 25 || viewBean.type == 48 || viewBean.type == 31) && viewBean.customView.equals(fileBean.fileName)) {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append(viewBean.id);
             stringBuilder.append("_");
@@ -334,7 +334,7 @@ public class ProjectDataStore {
               if (j >= 0) {
                 BlockBean blockBean = arrayList2.get(j);
                 ClassInfo gx = blockBean.getClassInfo();
-                if (gx != null && gx.isExactType(paramViewBean.getClassInfo().getClassName()) && blockBean.spec.equals(paramViewBean.id)) {
+                if (gx != null && gx.isExactType(targetBean.getClassInfo().getClassName()) && blockBean.spec.equals(targetBean.id)) {
                   arrayList2.remove(j);
                   i = j;
                   continue;
@@ -349,7 +349,7 @@ public class ProjectDataStore {
                       i = j;
                       if (b < arrayList3.size()) {
                         ClassInfo gx1 = arrayList3.get(b);
-                        if (gx1 != null && paramViewBean.getClassInfo().isAssignableFrom(gx1) && ((String)blockBean.parameters.get(b)).equals(paramViewBean.id))
+                        if (gx1 != null && targetBean.getClassInfo().isAssignableFrom(gx1) && ((String)blockBean.parameters.get(b)).equals(targetBean.id))
                           blockBean.parameters.set(b, ""); 
                         b++;
                         continue;
@@ -366,12 +366,12 @@ public class ProjectDataStore {
         } 
       } 
     } else if (i == 2) {
-      removeViewEventsByTarget(paramProjectFileBean.getDrawersJavaName(), paramViewBean.id);
+      removeViewEventsByTarget(fileBean.getDrawersJavaName(), targetBean.id);
     } 
   }
   
-  public void removeAdmobComponents(ProjectLibraryBean paramProjectLibraryBean) {
-    if (paramProjectLibraryBean.useYn.equals("Y"))
+  public void removeAdmobComponents(ProjectLibraryBean libraryBean) {
+    if (libraryBean.useYn.equals("Y"))
       return; 
     Iterator iterator = this.componentMap.entrySet().iterator();
     while (iterator.hasNext()) {
@@ -382,8 +382,8 @@ public class ProjectDataStore {
     } 
   }
   
-  public void removeFirebaseViews(ProjectLibraryBean paramProjectLibraryBean, ProjectFileManager paramhC) {
-    if (paramProjectLibraryBean.useYn.equals("Y"))
+  public void removeFirebaseViews(ProjectLibraryBean libraryBean, ProjectFileManager paramhC) {
+    if (libraryBean.useYn.equals("Y"))
       return; 
     for (ProjectFileBean projectFileBean : paramhC.getActivities()) {
       for (ViewBean viewBean : getViews(projectFileBean.getXmlName())) {
@@ -402,7 +402,7 @@ public class ProjectDataStore {
       removeComponentsByType((String)((Map.Entry)iterator.next()).getKey(), 13); 
   }
   
-  public void readLogicData(BufferedReader paramBufferedReader) throws java.io.IOException {
+  public void readLogicData(BufferedReader reader) throws java.io.IOException {
     HashMap<String, ArrayList<Pair<Integer, String>>> hashMap4 = this.variableMap;
     if (hashMap4 != null)
       hashMap4.clear(); 
@@ -424,7 +424,7 @@ public class ProjectDataStore {
     StringBuffer stringBuffer = new StringBuffer();
     String str = "";
     while (true) {
-      String str1 = paramBufferedReader.readLine();
+      String str1 = reader.readLine();
       if (str1 != null) {
         if (str1.length() <= 0)
           continue; 
@@ -479,7 +479,7 @@ public class ProjectDataStore {
     ((ArrayList<ComponentBean>)this.componentMap.get(fileName)).add(new ComponentBean(index, data, extra));
   }
   
-  public void removeBlockReferences(String fileName, ClassInfo paramGx, String data, boolean flag) {
+  public void removeBlockReferences(String fileName, ClassInfo classInfo, String data, boolean flag) {
     if (!this.blockMap.containsKey(fileName))
       return; 
     Map map = this.blockMap.get(fileName);
@@ -497,7 +497,7 @@ public class ProjectDataStore {
         if (j >= 0) {
           BlockBean blockBean = arrayList.get(j);
           ClassInfo gx = blockBean.getClassInfo();
-          if (gx != null && gx.isExactType(paramGx.getClassName()) && blockBean.spec.equals(data)) {
+          if (gx != null && gx.isExactType(classInfo.getClassName()) && blockBean.spec.equals(data)) {
             arrayList.remove(j);
             i = j;
             continue;
@@ -512,7 +512,7 @@ public class ProjectDataStore {
                 i = j;
                 if (b < arrayList1.size()) {
                   ClassInfo gx1 = arrayList1.get(b);
-                  if (gx1 != null && paramGx.isAssignableFrom(gx1) && ((String)blockBean.parameters.get(b)).equals(data))
+                  if (gx1 != null && classInfo.isAssignableFrom(gx1) && ((String)blockBean.parameters.get(b)).equals(data))
                     blockBean.parameters.set(b, ""); 
                   b++;
                   continue;
@@ -528,16 +528,16 @@ public class ProjectDataStore {
     } 
   }
   
-  public void addEventBean(String str, EventBean paramEventBean) {
+  public void addEventBean(String str, EventBean eventBean) {
     if (!this.eventMap.containsKey(str))
       this.eventMap.put(str, new ArrayList<EventBean>()); 
-    ((ArrayList<EventBean>)this.eventMap.get(str)).add(paramEventBean);
+    ((ArrayList<EventBean>)this.eventMap.get(str)).add(eventBean);
   }
   
-  public void addView(String str, ViewBean paramViewBean) {
+  public void addView(String str, ViewBean viewBean) {
     if (!this.viewMap.containsKey(str))
       this.viewMap.put(str, new ArrayList<ViewBean>()); 
-    ((ArrayList<ViewBean>)this.viewMap.get(str)).add(paramViewBean);
+    ((ArrayList<ViewBean>)this.viewMap.get(str)).add(viewBean);
   }
   
   public void addMoreBlock(String fileName, String data, String extra) {
@@ -553,7 +553,7 @@ public class ProjectDataStore {
     ((Map<String, ArrayList<BlockBean>>)this.blockMap.get(fileName)).put(data, list);
   }
   
-  public final void serializeLogicData(StringBuffer paramStringBuffer) {
+  public final void serializeLogicData(StringBuffer buffer) {
     HashMap<String, ArrayList<Pair<Integer, String>>> hashMap4 = this.variableMap;
     if (hashMap4 != null && hashMap4.size() > 0)
       for (Map.Entry<String, ArrayList<Pair<Integer, String>>> entry : this.variableMap.entrySet()) {
@@ -569,15 +569,15 @@ public class ProjectDataStore {
           stringBuilder1.append("\n");
         }
         String str = stringBuilder1.toString();
-        paramStringBuffer.append("@");
+        buffer.append("@");
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append((String)entry.getKey());
         stringBuilder.append("_");
         stringBuilder.append("var");
-        paramStringBuffer.append(stringBuilder.toString());
-        paramStringBuffer.append("\n");
-        paramStringBuffer.append(str);
-        paramStringBuffer.append("\n");
+        buffer.append(stringBuilder.toString());
+        buffer.append("\n");
+        buffer.append(str);
+        buffer.append("\n");
       }  
     hashMap4 = this.listMap;
     if (hashMap4 != null && hashMap4.size() > 0)
@@ -594,15 +594,15 @@ public class ProjectDataStore {
           stringBuilder1.append("\n");
         }
         String str = stringBuilder1.toString();
-        paramStringBuffer.append("@");
+        buffer.append("@");
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append((String)entry.getKey());
         stringBuilder.append("_");
         stringBuilder.append("list");
-        paramStringBuffer.append(stringBuilder.toString());
-        paramStringBuffer.append("\n");
-        paramStringBuffer.append(str);
-        paramStringBuffer.append("\n");
+        buffer.append(stringBuilder.toString());
+        buffer.append("\n");
+        buffer.append(str);
+        buffer.append("\n");
       }  
     HashMap<String, ArrayList<Pair<String, String>>> hashMap3 = this.moreBlockMap;
     if (hashMap3 != null && hashMap3.size() > 0)
@@ -619,15 +619,15 @@ public class ProjectDataStore {
           stringBuilder1.append("\n");
         }
         String str = stringBuilder1.toString();
-        paramStringBuffer.append("@");
+        buffer.append("@");
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append((String)entry.getKey());
         stringBuilder.append("_");
         stringBuilder.append("func");
-        paramStringBuffer.append(stringBuilder.toString());
-        paramStringBuffer.append("\n");
-        paramStringBuffer.append(str);
-        paramStringBuffer.append("\n");
+        buffer.append(stringBuilder.toString());
+        buffer.append("\n");
+        buffer.append(str);
+        buffer.append("\n");
       }  
     HashMap<String, ArrayList<ComponentBean>> hashMap2 = this.componentMap;
     if (hashMap2 != null && hashMap2.size() > 0)
@@ -643,15 +643,15 @@ public class ProjectDataStore {
           stringBuilder1.append("\n");
         }
         String str = stringBuilder1.toString();
-        paramStringBuffer.append("@");
+        buffer.append("@");
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append((String)entry.getKey());
         stringBuilder.append("_");
         stringBuilder.append("components");
-        paramStringBuffer.append(stringBuilder.toString());
-        paramStringBuffer.append("\n");
-        paramStringBuffer.append(str);
-        paramStringBuffer.append("\n");
+        buffer.append(stringBuilder.toString());
+        buffer.append("\n");
+        buffer.append(str);
+        buffer.append("\n");
       }  
     HashMap<String, ArrayList<EventBean>> hashMap1 = this.eventMap;
     if (hashMap1 != null && hashMap1.size() > 0)
@@ -666,15 +666,15 @@ public class ProjectDataStore {
           stringBuilder1.append("\n");
         }
         String str = stringBuilder1.toString();
-        paramStringBuffer.append("@");
+        buffer.append("@");
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append((String)entry.getKey());
         stringBuilder.append("_");
         stringBuilder.append("events");
-        paramStringBuffer.append(stringBuilder.toString());
-        paramStringBuffer.append("\n");
-        paramStringBuffer.append(stringBuilder1.toString());
-        paramStringBuffer.append("\n");
+        buffer.append(stringBuilder.toString());
+        buffer.append("\n");
+        buffer.append(stringBuilder1.toString());
+        buffer.append("\n");
       }  
     HashMap<String, HashMap<String, ArrayList<BlockBean>>> hashMap = this.blockMap;
     if (hashMap != null && hashMap.size() > 0)
@@ -694,15 +694,15 @@ public class ProjectDataStore {
             stringBuilder1.append("\n");
           }
           String str1 = stringBuilder1.toString();
-          paramStringBuffer.append("@");
+          buffer.append("@");
           StringBuilder stringBuilder = new StringBuilder();
           stringBuilder.append(str);
           stringBuilder.append("_");
           stringBuilder.append((String)entry1.getKey());
-          paramStringBuffer.append(stringBuilder.toString());
-          paramStringBuffer.append("\n");
-          paramStringBuffer.append(str1);
-          paramStringBuffer.append("\n");
+          buffer.append(stringBuilder.toString());
+          buffer.append("\n");
+          buffer.append(str1);
+          buffer.append("\n");
         } 
       }  
   }
@@ -734,10 +734,10 @@ public class ProjectDataStore {
     return arrayList1;
   }
   
-  public ArrayList<ViewBean> getViewWithChildren(String str, ViewBean paramViewBean) {
+  public ArrayList<ViewBean> getViewWithChildren(String str, ViewBean viewBean) {
     ArrayList<ViewBean> arrayList = new ArrayList<>();
-    arrayList.add(paramViewBean);
-    arrayList.addAll(getChildViews(this.viewMap.get(str), paramViewBean));
+    arrayList.add(viewBean);
+    arrayList.addAll(getChildViews(this.viewMap.get(str), viewBean));
     return arrayList;
   }
   
@@ -808,14 +808,14 @@ public class ProjectDataStore {
     } 
   }
   
-  public void removeFab(ProjectFileBean paramProjectFileBean) {
-    if (this.fabMap.containsKey(paramProjectFileBean.getXmlName()))
-      this.fabMap.remove(paramProjectFileBean.getXmlName()); 
-    removeEventsByTarget(paramProjectFileBean.getJavaName(), "_fab");
+  public void removeFab(ProjectFileBean fileBean) {
+    if (this.fabMap.containsKey(fileBean.getXmlName()))
+      this.fabMap.remove(fileBean.getXmlName()); 
+    removeEventsByTarget(fileBean.getJavaName(), "_fab");
   }
   
-  public void removeMapViews(ProjectLibraryBean paramProjectLibraryBean, ProjectFileManager paramhC) {
-    if (paramProjectLibraryBean.useYn.equals("Y"))
+  public void removeMapViews(ProjectLibraryBean libraryBean, ProjectFileManager paramhC) {
+    if (libraryBean.useYn.equals("Y"))
       return; 
     for (ProjectFileBean projectFileBean : paramhC.getActivities()) {
       for (ViewBean viewBean : getViews(projectFileBean.getXmlName())) {
@@ -825,7 +825,7 @@ public class ProjectDataStore {
     } 
   }
   
-  public void readViewData(BufferedReader paramBufferedReader) throws java.io.IOException {
+  public void readViewData(BufferedReader reader) throws java.io.IOException {
     HashMap<String, ArrayList<ViewBean>> hashMap1 = this.viewMap;
     if (hashMap1 != null)
       hashMap1.clear(); 
@@ -835,7 +835,7 @@ public class ProjectDataStore {
     StringBuffer stringBuffer = new StringBuffer();
     String str = "";
     while (true) {
-      String str1 = paramBufferedReader.readLine();
+      String str1 = reader.readLine();
       if (str1 != null) {
         if (str1.length() <= 0)
           continue; 
@@ -866,19 +866,19 @@ public class ProjectDataStore {
     ((ArrayList)this.listMap.get(fileName)).add(pair);
   }
   
-  public void removeComponent(String str, ComponentBean paramComponentBean) {
+  public void removeComponent(String str, ComponentBean componentBean) {
     if (!this.componentMap.containsKey(str))
       return; 
     ArrayList arrayList = this.componentMap.get(str);
-    if (arrayList.indexOf(paramComponentBean) < 0)
+    if (arrayList.indexOf(componentBean) < 0)
       return; 
-    arrayList.remove(paramComponentBean);
-    removeEventsByTarget(str, paramComponentBean.componentId);
-    removeBlockReferences(str, paramComponentBean.getClassInfo(), paramComponentBean.componentId, false);
-    this.buildConfig.constVarComponent.handleDeleteComponent(paramComponentBean.componentId);
+    arrayList.remove(componentBean);
+    removeEventsByTarget(str, componentBean.componentId);
+    removeBlockReferences(str, componentBean.getClassInfo(), componentBean.componentId, false);
+    this.buildConfig.constVarComponent.handleDeleteComponent(componentBean.componentId);
   }
   
-  public final void serializeViewData(StringBuffer paramStringBuffer) {
+  public final void serializeViewData(StringBuffer buffer) {
     HashMap<String, ArrayList<ViewBean>> hashMap1 = this.viewMap;
     if (hashMap1 != null && hashMap1.size() > 0)
       for (Map.Entry<String, ArrayList<ViewBean>> entry : this.viewMap.entrySet()) {
@@ -908,11 +908,11 @@ public class ProjectDataStore {
         } else {
           str = "";
         } 
-        paramStringBuffer.append("@");
-        paramStringBuffer.append((String)entry.getKey());
-        paramStringBuffer.append("\n");
-        paramStringBuffer.append(str);
-        paramStringBuffer.append("\n");
+        buffer.append("@");
+        buffer.append((String)entry.getKey());
+        buffer.append("\n");
+        buffer.append(str);
+        buffer.append("\n");
       }  
     HashMap<String, ViewBean> hashMap = this.fabMap;
     if (hashMap != null && hashMap.size() > 0)
@@ -925,14 +925,14 @@ public class ProjectDataStore {
         stringBuilder.append(this.gson.toJson(viewBean));
         stringBuilder.append("\n");
         String str = stringBuilder.toString();
-        paramStringBuffer.append("@");
+        buffer.append("@");
         stringBuilder = new StringBuilder();
         stringBuilder.append((String)entry.getKey());
         stringBuilder.append("_fab");
-        paramStringBuffer.append(stringBuilder.toString());
-        paramStringBuffer.append("\n");
-        paramStringBuffer.append(str);
-        paramStringBuffer.append("\n");
+        buffer.append(stringBuilder.toString());
+        buffer.append("\n");
+        buffer.append(str);
+        buffer.append("\n");
       }  
   }
   

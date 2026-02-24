@@ -21,11 +21,11 @@ public class XmlNameValidator extends BaseValidator {
   
   public Pattern namePattern = Pattern.compile("^[a-z][a-z0-9_]*");
   
-  public XmlNameValidator(Context context, TextInputLayout paramTextInputLayout, String[] paramArrayOfString, ArrayList<String> paramArrayList1, ArrayList<String> paramArrayList2) {
-    super(context, paramTextInputLayout);
-    this.reservedNames = paramArrayOfString;
-    this.xmlNames = paramArrayList1;
-    this.javaNames = paramArrayList2;
+  public XmlNameValidator(Context context, TextInputLayout textInputLayout, String[] strings, ArrayList<String> list1, ArrayList<String> list2) {
+    super(context, textInputLayout);
+    this.reservedNames = strings;
+    this.xmlNames = list1;
+    this.javaNames = list2;
     this.batchCount = 1;
   }
   
@@ -155,11 +155,11 @@ public class XmlNameValidator extends BaseValidator {
     this.currentName = value;
   }
   
-  public CharSequence filter(CharSequence paramCharSequence, int paramInt1, int paramInt2, Spanned paramSpanned, int paramInt3, int paramInt4) {
+  public CharSequence filter(CharSequence text, int x, int y, Spanned paramSpanned, int width, int height) {
     return null;
   }
   
-  public void onTextChanged(CharSequence paramCharSequence, int paramInt1, int paramInt2, int paramInt3) {
-    validate(paramCharSequence.toString().trim());
+  public void onTextChanged(CharSequence text, int x, int y, int width) {
+    validate(text.toString().trim());
   }
 }

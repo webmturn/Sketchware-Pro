@@ -61,17 +61,17 @@ public class ZipUtil {
     }
   }
   
-  public int addDirectoryToZip(String str, File dir, ZipOutputStream paramZipOutputStream, ArrayList<String> list) {
+  public int addDirectoryToZip(String str, File dir, ZipOutputStream zipOut, ArrayList<String> list) {
     File[] files = dir.listFiles();
     if (files == null) return 0;
     if (files.length == 0) {
       String absPath = dir.getAbsolutePath();
-      addFileToZip(str, absPath.substring(str.length(), absPath.length()), paramZipOutputStream);
+      addFileToZip(str, absPath.substring(str.length(), absPath.length()), zipOut);
     }
     int count = 0;
     for (File file : files) {
       if (file.isDirectory()) {
-        addDirectoryToZip(str, file, paramZipOutputStream, list);
+        addDirectoryToZip(str, file, zipOut, list);
       }
       if (file.isFile()) {
         String absPath = file.getAbsolutePath();
@@ -83,7 +83,7 @@ public class ZipUtil {
             break;
           }
         }
-        if (!excluded && addFileToZip(str, relPath, paramZipOutputStream)) {
+        if (!excluded && addFileToZip(str, relPath, zipOut)) {
           count++;
         }
       }
@@ -143,16 +143,16 @@ public class ZipUtil {
     extractZipStream(new FileInputStream(key), value);
   }
   
-  public void createZipFile(String str, ArrayList<String> paramArrayList1, ArrayList<String> paramArrayList2) {
+  public void createZipFile(String str, ArrayList<String> list1, ArrayList<String> list2) {
     FileOutputStream fos = null;
     ZipOutputStream zos = null;
     try {
       fos = new FileOutputStream(str);
       zos = new ZipOutputStream(fos);
-      Iterator<String> iterator = paramArrayList1.iterator();
+      Iterator<String> iterator = list1.iterator();
       while (iterator.hasNext()) {
         String path = iterator.next();
-        addDirectoryToZip(path, new File(path), zos, paramArrayList2);
+        addDirectoryToZip(path, new File(path), zos, list2);
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -162,10 +162,10 @@ public class ZipUtil {
     }
   }
   
-  public boolean addFileToZip(String key, String value, ZipOutputStream paramZipOutputStream) {
+  public boolean addFileToZip(String key, String value, ZipOutputStream zipOut) {
     File file = new File(key + value);
     if (!file.isFile()) {
-      try { if (paramZipOutputStream != null) paramZipOutputStream.closeEntry(); } catch (IOException e) { e.printStackTrace(); }
+      try { if (zipOut != null) zipOut.closeEntry(); } catch (IOException e) { e.printStackTrace(); }
       return false;
     }
     FileInputStream fis = null;
@@ -174,15 +174,15 @@ public class ZipUtil {
       fis = new FileInputStream(file);
       bis = new java.io.BufferedInputStream(fis);
       java.util.zip.ZipEntry entry = new java.util.zip.ZipEntry(value);
-      paramZipOutputStream.putNextEntry(entry);
+      zipOut.putNextEntry(entry);
       byte[] buf = new byte[1024];
       int len;
       while ((len = bis.read(buf)) > 0) {
-        paramZipOutputStream.write(buf, 0, len);
+        zipOut.write(buf, 0, len);
       }
     } catch (Exception e) {
     } finally {
-      try { if (paramZipOutputStream != null) paramZipOutputStream.closeEntry(); } catch (IOException e) { e.printStackTrace(); }
+      try { if (zipOut != null) zipOut.closeEntry(); } catch (IOException e) { e.printStackTrace(); }
       if (fis != null) try { fis.close(); } catch (IOException e) { e.printStackTrace(); }
       if (bis != null) try { bis.close(); } catch (IOException e) { e.printStackTrace(); }
     }

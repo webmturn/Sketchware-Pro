@@ -77,10 +77,10 @@ public final class UriPathResolver {
     }
   }
   
-  public static String queryDataColumn(Context context, Uri uri, String input, String[] paramArrayOfString) {
+  public static String queryDataColumn(Context context, Uri uri, String input, String[] strings) {
     android.database.Cursor cursor = null;
     try {
-      cursor = context.getContentResolver().query(uri, new String[]{"_data"}, input, paramArrayOfString, null);
+      cursor = context.getContentResolver().query(uri, new String[]{"_data"}, input, strings, null);
       if (cursor != null && cursor.moveToFirst()) {
         String result = cursor.getString(cursor.getColumnIndexOrThrow("_data"));
         return result;

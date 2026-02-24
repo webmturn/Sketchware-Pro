@@ -31,20 +31,20 @@ public class NinePatchDecoder {
     }
   }
   
-  public static void extractPadding(Bitmap bitmap, byte[] paramArrayOfbyte) {
+  public static void extractPadding(Bitmap bitmap, byte[] data) {
     int[] arrayOfInt = new int[bitmap.getWidth() - 2];
     bitmap.getPixels(arrayOfInt, 0, arrayOfInt.length, 1, bitmap.getHeight() - 1, arrayOfInt.length, 1);
     boolean bool = false;
     int i;
     for (i = 0; i < arrayOfInt.length; i++) {
       if (-16777216 == arrayOfInt[i]) {
-        putIntLE(paramArrayOfbyte, 12, i);
+        putIntLE(data, 12, i);
         break;
       } 
     } 
     for (i = arrayOfInt.length - 1; i >= 0; i--) {
       if (-16777216 == arrayOfInt[i]) {
-        putIntLE(paramArrayOfbyte, 16, arrayOfInt.length - i - 2);
+        putIntLE(data, 16, arrayOfInt.length - i - 2);
         break;
       } 
     } 
@@ -52,13 +52,13 @@ public class NinePatchDecoder {
     bitmap.getPixels(arrayOfInt, 0, 1, bitmap.getWidth() - 1, 0, 1, arrayOfInt.length);
     for (i = 0; i < arrayOfInt.length; i++) {
       if (-16777216 == arrayOfInt[i]) {
-        putIntLE(paramArrayOfbyte, 20, i);
+        putIntLE(data, 20, i);
         break;
       } 
     } 
     for (i = arrayOfInt.length - 1; i >= 0; i--) {
       if (-16777216 == arrayOfInt[i]) {
-        putIntLE(paramArrayOfbyte, 24, arrayOfInt.length - i - 2);
+        putIntLE(data, 24, arrayOfInt.length - i - 2);
         break;
       } 
     } 
@@ -71,11 +71,11 @@ public class NinePatchDecoder {
     outputStream.write(value >> 24 & 0xFF);
   }
   
-  public static void putIntLE(byte[] paramArrayOfbyte, int x, int y) {
-    paramArrayOfbyte[x + 0] = (byte)(y >> 0);
-    paramArrayOfbyte[x + 1] = (byte)(y >> 8);
-    paramArrayOfbyte[x + 2] = (byte)(y >> 16);
-    paramArrayOfbyte[x + 3] = (byte)(y >> 24);
+  public static void putIntLE(byte[] data, int x, int y) {
+    data[x + 0] = (byte)(y >> 0);
+    data[x + 1] = (byte)(y >> 8);
+    data[x + 2] = (byte)(y >> 16);
+    data[x + 3] = (byte)(y >> 24);
   }
   
   public static byte[] buildNinePatchChunk(Bitmap bitmap) throws java.io.IOException {
