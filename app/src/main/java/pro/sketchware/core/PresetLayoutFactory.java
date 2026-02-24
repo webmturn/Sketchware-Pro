@@ -33,9 +33,9 @@ public class PresetLayoutFactory {
   }
   
   public static ArrayList<ProjectFileBean> getListItemPresets() {
-    ArrayList<ProjectFileBean> arrayList = new ArrayList<>();
-    arrayList.add(createBasicListItemFile());
-    return arrayList;
+    ArrayList<ProjectFileBean> presets = new ArrayList<>();
+    presets.add(createBasicListItemFile());
+    return presets;
   }
   
   public static ArrayList<ViewBean> getListItemPresetViews(String presetName) {
@@ -59,17 +59,17 @@ public class PresetLayoutFactory {
   }
   
   public static ArrayList<ProjectFileBean> getDrawerPresets() {
-    ArrayList<ProjectFileBean> arrayList = new ArrayList<>();
-    arrayList.add(createBasicDrawerFile());
-    return arrayList;
+    ArrayList<ProjectFileBean> presets = new ArrayList<>();
+    presets.add(createBasicDrawerFile());
+    return presets;
   }
   
   public static ArrayList<ProjectFileBean> getActivityPresets() {
-    ArrayList<ProjectFileBean> arrayList = new ArrayList<>();
-    arrayList.add(createEmptyActivityFile());
-    arrayList.add(createBasicActivityFile());
-    arrayList.add(createTextActivityFile());
-    return arrayList;
+    ArrayList<ProjectFileBean> presets = new ArrayList<>();
+    presets.add(createEmptyActivityFile());
+    presets.add(createBasicActivityFile());
+    presets.add(createTextActivityFile());
+    return presets;
   }
   
   public static ArrayList<ViewBean> getDrawerPresetViews(String presetName) {
@@ -120,15 +120,15 @@ public class PresetLayoutFactory {
   }
   
   public static ArrayList<ViewBean> createBasicDrawerViews() {
-    ArrayList<ViewBean> arrayList = new ArrayList<>();
-    arrayList.add(createDefaultTextView());
-    arrayList.add(createDefaultTextView());
-    arrayList.add(createDefaultTextView());
-    arrayList.add(createDefaultTextView());
-    arrayList.add(createDefaultTextView());
-    arrayList.add(createDefaultTextView());
-    arrayList.add(createDefaultTextView());
-    return arrayList;
+    ArrayList<ViewBean> views = new ArrayList<>();
+    views.add(createDefaultTextView());
+    views.add(createDefaultTextView());
+    views.add(createDefaultTextView());
+    views.add(createDefaultTextView());
+    views.add(createDefaultTextView());
+    views.add(createDefaultTextView());
+    views.add(createDefaultTextView());
+    return views;
   }
   
   public static ProjectFileBean createBasicListItemFile() {
@@ -136,15 +136,15 @@ public class PresetLayoutFactory {
   }
   
   public static ArrayList<ViewBean> createBasicListItemViews() {
-    ArrayList<ViewBean> arrayList = new ArrayList<>();
-    arrayList.add(createDefaultTextView());
-    arrayList.add(createDefaultTextView());
-    arrayList.add(createDefaultTextView());
-    arrayList.add(createDefaultTextView());
-    arrayList.add(createDefaultTextView());
-    arrayList.add(createDefaultTextView());
-    arrayList.add(createDefaultTextView());
-    return arrayList;
+    ArrayList<ViewBean> views = new ArrayList<>();
+    views.add(createDefaultTextView());
+    views.add(createDefaultTextView());
+    views.add(createDefaultTextView());
+    views.add(createDefaultTextView());
+    views.add(createDefaultTextView());
+    views.add(createDefaultTextView());
+    views.add(createDefaultTextView());
+    return views;
   }
   
   public static ProjectFileBean createEmptyActivityFile() {
@@ -160,14 +160,14 @@ public class PresetLayoutFactory {
   }
   
   public static ArrayList<ViewBean> createTextActivityViews() {
-    ArrayList<ViewBean> arrayList = new ArrayList<>();
-    arrayList.add(createDefaultTextView());
-    arrayList.add(createDefaultTextView());
-    arrayList.add(createDefaultTextView());
-    arrayList.add(createDefaultTextView());
-    arrayList.add(createDefaultTextView());
-    arrayList.add(createDefaultTextView());
-    arrayList.add(createDefaultTextView());
-    return arrayList;
+    ArrayList<ViewBean> views = new ArrayList<>();
+    views.add(createDefaultTextView());
+    views.add(createDefaultTextView());
+    views.add(createDefaultTextView());
+    views.add(createDefaultTextView());
+    views.add(createDefaultTextView());
+    views.add(createDefaultTextView());
+    views.add(createDefaultTextView());
+    return views;
   }
 }
