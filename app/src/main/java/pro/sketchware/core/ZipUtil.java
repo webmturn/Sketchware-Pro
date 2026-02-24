@@ -61,21 +61,21 @@ public class ZipUtil {
     }
   }
   
-  public int addDirectoryToZip(String str, File dir, ZipOutputStream zipOut, ArrayList<String> list) {
+  public int addDirectoryToZip(String basePath, File dir, ZipOutputStream zipOut, ArrayList<String> list) {
     File[] files = dir.listFiles();
     if (files == null) return 0;
     if (files.length == 0) {
       String absPath = dir.getAbsolutePath();
-      addFileToZip(str, absPath.substring(str.length(), absPath.length()), zipOut);
+      addFileToZip(basePath, absPath.substring(basePath.length(), absPath.length()), zipOut);
     }
     int count = 0;
     for (File file : files) {
       if (file.isDirectory()) {
-        addDirectoryToZip(str, file, zipOut, list);
+        addDirectoryToZip(basePath, file, zipOut, list);
       }
       if (file.isFile()) {
         String absPath = file.getAbsolutePath();
-        String relPath = absPath.substring(str.length(), absPath.length());
+        String relPath = absPath.substring(basePath.length(), absPath.length());
         boolean excluded = false;
         for (String exclude : list) {
           if (absPath.contains(exclude)) {
@@ -83,7 +83,7 @@ public class ZipUtil {
             break;
           }
         }
-        if (!excluded && addFileToZip(str, relPath, zipOut)) {
+        if (!excluded && addFileToZip(basePath, relPath, zipOut)) {
           count++;
         }
       }
@@ -91,9 +91,9 @@ public class ZipUtil {
     return count;
   }
   
-  public void extractZipStream(InputStream inputStream, String str) {
+  public void extractZipStream(InputStream inputStream, String destPath) {
     byte[] buf = new byte[1024];
-    String destDir = str;
+    String destDir = destPath;
     if (!destDir.endsWith(File.separator)) {
       destDir = destDir + File.separator;
     }
@@ -143,11 +143,11 @@ public class ZipUtil {
     extractZipStream(new FileInputStream(key), value);
   }
   
-  public void createZipFile(String str, ArrayList<String> list1, ArrayList<String> list2) {
+  public void createZipFile(String zipFilePath, ArrayList<String> list1, ArrayList<String> list2) {
     FileOutputStream fos = null;
     ZipOutputStream zos = null;
     try {
-      fos = new FileOutputStream(str);
+      fos = new FileOutputStream(zipFilePath);
       zos = new ZipOutputStream(fos);
       Iterator<String> iterator = list1.iterator();
       while (iterator.hasNext()) {
@@ -189,11 +189,11 @@ public class ZipUtil {
     return true;
   }
   
-  public byte[] readFileToBytes(String str) {
+  public byte[] readFileToBytes(String filePath) {
     ByteArrayOutputStream baos = null;
     try {
       baos = new ByteArrayOutputStream();
-      FileInputStream fis = new FileInputStream(new File(str));
+      FileInputStream fis = new FileInputStream(new File(filePath));
       byte[] buf = new byte[1024];
       int len;
       while ((len = fis.read(buf)) > 0) {
