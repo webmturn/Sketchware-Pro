@@ -19,7 +19,7 @@ import pro.sketchware.databinding.ManageProguardBinding;
 public class ManageProguardActivity extends BaseAppCompatActivity
         implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
-    private ProguardHandler pg;
+    private ProguardHandler proguardHandler;
 
     private ManageProguardBinding binding;
 
@@ -29,7 +29,7 @@ public class ManageProguardActivity extends BaseAppCompatActivity
         if (id == binding.lnPgRules.getId()) {
             Intent intent = new Intent(this, SrcCodeEditor.class);
             intent.putExtra("title", "proguard-rules.pro");
-            intent.putExtra("content", pg.getCustomProguardRules());
+            intent.putExtra("content", proguardHandler.getCustomProguardRules());
             startActivity(intent);
         } else if (id == binding.lnPgFm.getId()) {
             fmDialog();
@@ -48,7 +48,7 @@ public class ManageProguardActivity extends BaseAppCompatActivity
             Object name = current.get("name");
             if (name instanceof String) {
                 libraries[i] = (String) name;
-                enabledLibraries[i] = pg.libIsProguardFMEnabled(libraries[i]);
+                enabledLibraries[i] = proguardHandler.libIsProguardFMEnabled(libraries[i]);
             } else {
                 libraries[i] = "(broken library configuration)";
                 enabledLibraries[i] = false;
@@ -72,7 +72,7 @@ public class ManageProguardActivity extends BaseAppCompatActivity
                         }
                     }
 
-                    pg.setProguardFMLibs(finalList);
+                    proguardHandler.setProguardFMLibs(finalList);
                 });
         bld.setNegativeButton(R.string.common_word_cancel, null);
         bld.create().show();
@@ -82,11 +82,11 @@ public class ManageProguardActivity extends BaseAppCompatActivity
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         int id = buttonView.getId();
         if (id == binding.swPgEnabled.getId()) {
-            pg.setProguardEnabled(isChecked);
+            proguardHandler.setProguardEnabled(isChecked);
         } else if (id == binding.r8Enabled.getId()) {
-            pg.setR8Enabled(isChecked);
+            proguardHandler.setR8Enabled(isChecked);
         } else if (id == binding.swPgDebug.getId()) {
-            pg.setDebugEnabled(isChecked);
+            proguardHandler.setDebugEnabled(isChecked);
         }
     }
 
@@ -110,10 +110,10 @@ public class ManageProguardActivity extends BaseAppCompatActivity
 
     private void initializeLogic() {
         _initToolbar();
-        pg = new ProguardHandler(getIntent().getStringExtra("sc_id"));
-        binding.swPgEnabled.setChecked(pg.isShrinkingEnabled());
-        binding.swPgDebug.setChecked(pg.isDebugFilesEnabled());
-        binding.r8Enabled.setChecked(pg.isR8Enabled());
+        proguardHandler = new ProguardHandler(getIntent().getStringExtra("sc_id"));
+        binding.swPgEnabled.setChecked(proguardHandler.isShrinkingEnabled());
+        binding.swPgDebug.setChecked(proguardHandler.isDebugFilesEnabled());
+        binding.r8Enabled.setChecked(proguardHandler.isR8Enabled());
     }
 
     private void _initToolbar() {

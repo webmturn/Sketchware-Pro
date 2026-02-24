@@ -344,12 +344,12 @@ public class EventCodeGenerator {
     }
 
     private static class Event {
-        private final EventCodeGenerator hx;
+        private final EventCodeGenerator eventCodeGenerator;
         private final String id;
         private final ArrayList<ComponentEvents> listeners = new ArrayList<>();
 
-        private Event(EventCodeGenerator hx, String id, ClassInfo classInfo, boolean isViewBindingEnabled) {
-            this.hx = hx;
+        private Event(EventCodeGenerator eventCodeGenerator, String id, ClassInfo classInfo, boolean isViewBindingEnabled) {
+            this.eventCodeGenerator = eventCodeGenerator;
             this.id = id;
 
             String[] listeners = EventRegistry.getListenersForClass(classInfo);
@@ -407,7 +407,7 @@ public class EventCodeGenerator {
                 }
 
                 if (listener.isInitialized) {
-                    hx.imports.addAll(ComponentTypeMapper.getListenerImports(listener.listenerName));
+                    eventCodeGenerator.imports.addAll(ComponentTypeMapper.getListenerImports(listener.listenerName));
                 }
             }
         }

@@ -88,14 +88,14 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
     private DraggingListener draggingListener;
     private SimpleCallback historyChangeListener;
     private ProjectFileBean projectFileBean;
-    private boolean S = true;
-    private boolean T = false;
+    private boolean hasToolbar = true;
+    private boolean isFullscreen = false;
     private LinearLayout paletteGroup;
     private String scId;
-    private LinearLayout aa;
+    private LinearLayout screenContainer;
     private String xmlName;
     private int screenType;
-    private boolean da = true;
+    private boolean isAdLoaded = true;
     private int[] countItems = new int[99];
     private float dip = 0;
     private int displayWidth;
@@ -468,7 +468,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
     }
 
     public void setIsAdLoaded(boolean z) {
-        da = z;
+        isAdLoaded = z;
     }
 
     public void setOnDraggingListener(DraggingListener dragListener) {
@@ -522,11 +522,11 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         displayWidth = getResources().getDisplayMetrics().widthPixels;
         displayHeight = getResources().getDisplayMetrics().heightPixels;
 
-        aa = new LinearLayout(context);
-        aa.setOrientation(LinearLayout.VERTICAL);
-        aa.setGravity(Gravity.CENTER);
-        aa.setLayoutParams(new FrameLayout.LayoutParams(displayWidth, displayHeight));
-        shape.addView(aa);
+        screenContainer = new LinearLayout(context);
+        screenContainer.setOrientation(LinearLayout.VERTICAL);
+        screenContainer.setGravity(Gravity.CENTER);
+        screenContainer.setLayoutParams(new FrameLayout.LayoutParams(displayWidth, displayHeight));
+        shape.addView(screenContainer);
 
         bgStatus = new LinearLayout(context);
         bgStatus.setBackgroundColor(0xff0084c2);
@@ -837,14 +837,14 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         }
         removeFab();
         if (projectFileBean.fileType == ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY) {
-            S = projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_TOOLBAR);
-            T = projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FULLSCREEN);
+            hasToolbar = projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_TOOLBAR);
+            isFullscreen = projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FULLSCREEN);
             if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB)) {
                 addFab(ProjectDataManager.getProjectDataManager(str).getFabView(projectFileBean.getXmlName()));
             }
         } else {
-            S = false;
-            T = false;
+            hasToolbar = false;
+            isFullscreen = false;
         }
         isLayoutChanged = true;
     }
@@ -863,8 +863,8 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
     }
 
     private void updateLayoutPreview() {
-        toolbar.setVisibility(S ? View.VISIBLE : View.GONE);
-        bgStatus.setVisibility(T ? View.GONE : View.VISIBLE);
+        toolbar.setVisibility(hasToolbar ? View.VISIBLE : View.GONE);
+        bgStatus.setVisibility(isFullscreen ? View.GONE : View.VISIBLE);
 
         viewPane.setVisibility(View.VISIBLE);
         displayWidth = getResources().getDisplayMetrics().widthPixels;
@@ -876,7 +876,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         int toolBarHeight = DeviceUtil.getToolbarHeight(getContext());
         int var9 = displayWidth - (int) (120.0F * dip);
         int var8 = displayHeight - statusBarHeight - toolBarHeight - (int) (dip * 48.0F) - (int) (dip * 48.0F);
-        if (screenType == 0 && da) {
+        if (screenType == 0 && isAdLoaded) {
             Log.d("ViewEditor", "hmmm");
             var8 -= (int) (dip * 56.0F);
         }
@@ -884,11 +884,11 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         float var11 = Math.min((float) var9 / (float) displayWidth, (float) var8 / (float) displayHeight);
         float var3 = Math.min((float) (var9 - var4 * 2) / (float) displayWidth, (float) (var8 - var5 * 2) / (float) displayHeight);
 
-        aa.setLayoutParams(new FrameLayout.LayoutParams(displayWidth, displayHeight));
-        aa.setScaleX(var11);
-        aa.setScaleY(var11);
-        aa.setX(-((int) ((displayWidth - displayWidth * var11) / 2.0F)));
-        aa.setY(-((int) ((displayHeight - displayHeight * var11) / 2.0F)));
+        screenContainer.setLayoutParams(new FrameLayout.LayoutParams(displayWidth, displayHeight));
+        screenContainer.setScaleX(var11);
+        screenContainer.setScaleY(var11);
+        screenContainer.setX(-((int) ((displayWidth - displayWidth * var11) / 2.0F)));
+        screenContainer.setY(-((int) ((displayHeight - displayHeight * var11) / 2.0F)));
         int var10 = var4 - (int) ((displayWidth - displayWidth * var3) / 2.0F);
         int var13 = var5;
         if (bgStatus.getVisibility() == View.VISIBLE) {

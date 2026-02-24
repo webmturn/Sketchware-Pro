@@ -39,7 +39,7 @@ public class ActivityCodeGenerator {
     private final ProjectFileBean projectFileBean;
     private final ProjectDataStore projectDataManager;
     private final BuildConfig buildConfig;
-    private final LayoutGenerator ox;
+    private final LayoutGenerator layoutGenerator;
     private final Boolean isViewBindingEnabled;
     /**
      * Fields with static initializer that added Components need,
@@ -94,7 +94,7 @@ public class ActivityCodeGenerator {
         mll = new ManageLocalLibrary(eCVar.projectId);
         settings = new ProjectSettings(eCVar.projectId);
         permissionManager = new PermissionManager(eCVar.projectId, projectFileBean.getJavaName());
-        ox = new LayoutGenerator(buildConfig, projectFileBean);
+        layoutGenerator = new LayoutGenerator(buildConfig, projectFileBean);
         extraBlocks = getExtraBlockData();
         isViewBindingEnabled = settings.getValue(ProjectSettings.SETTING_ENABLE_VIEWBINDING, BuildSettings.SETTING_GENERIC_VALUE_FALSE)
                 .equals(BuildSettings.SETTING_GENERIC_VALUE_TRUE);
@@ -862,13 +862,13 @@ public class ActivityCodeGenerator {
             String adapterLogic = new BlockInterpreter(projectFileBean.getActivityName(), buildConfig, projectDataManager.getBlocks(projectFileBean.getJavaName(), eventName), isViewBindingEnabled).interpretBlocks();
             String adapterCode;
             if (viewBean.type == ViewBeans.VIEW_TYPE_LAYOUT_VIEWPAGER) {
-                adapterCode = ComponentCodeGenerator.pagerAdapter(ox, viewBean.id, viewBean.customView, projectDataManager.getViews(xmlName), adapterLogic, isViewBindingEnabled);
+                adapterCode = ComponentCodeGenerator.pagerAdapter(layoutGenerator, viewBean.id, viewBean.customView, projectDataManager.getViews(xmlName), adapterLogic, isViewBindingEnabled);
             } else if (viewBean.type == ViewBeans.VIEW_TYPE_WIDGET_RECYCLERVIEW) {
-                adapterCode = ComponentCodeGenerator.recyclerViewAdapter(ox, viewBean.id, viewBean.customView, projectDataManager.getViews(xmlName), adapterLogic, isViewBindingEnabled);
+                adapterCode = ComponentCodeGenerator.recyclerViewAdapter(layoutGenerator, viewBean.id, viewBean.customView, projectDataManager.getViews(xmlName), adapterLogic, isViewBindingEnabled);
                 addImport("androidx.recyclerview.widget.LinearLayoutManager");
                 addImport("androidx.recyclerview.widget.RecyclerView");
             } else {
-                adapterCode = ComponentCodeGenerator.getListAdapterCode(ox, viewBean.id, viewBean.customView, projectDataManager.getViews(xmlName), adapterLogic, isViewBindingEnabled);
+                adapterCode = ComponentCodeGenerator.getListAdapterCode(layoutGenerator, viewBean.id, viewBean.customView, projectDataManager.getViews(xmlName), adapterLogic, isViewBindingEnabled);
             }
             adapterClasses.add(adapterCode);
         }
@@ -985,7 +985,7 @@ public class ActivityCodeGenerator {
         ArrayList<ViewBean> viewBeans = projectDataManager.getViews(projectFileBean.getXmlName());
         for (ViewBean viewBean : viewBeans) {
             if (!viewBean.convert.equals("include")) {
-                Set<String> toNotAdd = ox.readAttributesToReplace(viewBean);
+                Set<String> toNotAdd = layoutGenerator.readAttributesToReplace(viewBean);
                 if (!toNotAdd.contains("android:id")) {
                     initializeMethodCode.add(getViewInitializer(viewBean));
                 }
@@ -996,7 +996,7 @@ public class ActivityCodeGenerator {
                 ArrayList<ViewBean> drawerBeans = projectDataManager.getViews(projectFileBean.getDrawerXmlName());
                 for (ViewBean viewBean : drawerBeans) {
                     if (!viewBean.convert.equals("include")) {
-                        Set<String> toNotAdd = ox.readAttributesToReplace(viewBean);
+                        Set<String> toNotAdd = layoutGenerator.readAttributesToReplace(viewBean);
                         if (!toNotAdd.contains("android:id")) {
                             initializeMethodCode.add(getDrawerViewInitializer(viewBean));
                         }
@@ -1046,7 +1046,7 @@ public class ActivityCodeGenerator {
         }
         for (ViewBean viewBean : projectDataManager.getViews(projectFileBean.getXmlName())) {
             if (!viewBean.convert.equals("include")) {
-                Set<String> toNotAdd = ox.readAttributesToReplace(viewBean);
+                Set<String> toNotAdd = layoutGenerator.readAttributesToReplace(viewBean);
                 if (!toNotAdd.contains("android:id")) {
                     String viewDeclarations = getViewDeclarationAndAddImports(viewBean);
                     if (!viewDeclarations.isEmpty()) {
@@ -1059,7 +1059,7 @@ public class ActivityCodeGenerator {
         if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)) {
             for (ViewBean viewBean : projectDataManager.getViews(projectFileBean.getDrawerXmlName())) {
                 if (!viewBean.convert.equals("include")) {
-                    Set<String> toNotAdd = ox.readAttributesToReplace(viewBean);
+                    Set<String> toNotAdd = layoutGenerator.readAttributesToReplace(viewBean);
                     if (!toNotAdd.contains("android:id")) {
                         String drawerViewDeclarations = getDrawerViewDeclarationAndAddImports(viewBean);
                         if (!drawerViewDeclarations.isEmpty()) {

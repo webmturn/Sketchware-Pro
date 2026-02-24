@@ -15,12 +15,12 @@ public class AsdHandlerCodeEditor implements View.OnClickListener {
     private final AsdDialog asdDialog;
     private final LogicEditorActivity logicEditorActivity;
     private final CodeEditor codeEditor;
-    private final FieldBlockView ss;
+    private final FieldBlockView fieldBlockView;
 
-    public AsdHandlerCodeEditor(LogicEditorActivity logicEditorActivity, boolean enteringNumber, FieldBlockView ss, AsdDialog asdDialog, CodeEditor codeEditor) {
+    public AsdHandlerCodeEditor(LogicEditorActivity logicEditorActivity, boolean enteringNumber, FieldBlockView fieldBlockView, AsdDialog asdDialog, CodeEditor codeEditor) {
         this.logicEditorActivity = logicEditorActivity;
         this.enteringNumber = enteringNumber;
-        this.ss = ss;
+        this.fieldBlockView = fieldBlockView;
         this.asdDialog = asdDialog;
         this.codeEditor = codeEditor;
     }
@@ -41,7 +41,7 @@ public class AsdHandlerCodeEditor implements View.OnClickListener {
         } else if (!content.isEmpty() && content.charAt(0) == '@') {
             content = " " + content;
         }
-        logicEditorActivity.setFieldValue(ss, content);
+        logicEditorActivity.setFieldValue(fieldBlockView, content);
         asdDialog.dismiss();
     }
 }

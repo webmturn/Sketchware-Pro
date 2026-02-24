@@ -173,7 +173,7 @@ public class BackupRestoreManager {
         private final String project_name;
         private final HashMap<Integer, Boolean> options;
         private final WeakReference<Activity> activityWeakReference;
-        private BackupFactory bm;
+        private BackupFactory backupFactory;
         private AlertDialog dlg;
 
         BackupAsyncTask(WeakReference<Activity> activityWeakReference, String sc_id, String project_name, HashMap<Integer, Boolean> options) {
@@ -201,11 +201,11 @@ public class BackupRestoreManager {
         protected String doInBackground(String... params) {
             var act = activityWeakReference.get();
             if (act == null) return "";
-            bm = new BackupFactory(sc_id);
-            bm.setBackupLocalLibs(options.get(0));
-            bm.setBackupCustomBlocks(options.get(1));
+            backupFactory = new BackupFactory(sc_id);
+            backupFactory.setBackupLocalLibs(options.get(0));
+            backupFactory.setBackupCustomBlocks(options.get(1));
 
-            bm.backup(act, project_name);
+            backupFactory.backup(act, project_name);
 
             return "";
         }
@@ -214,10 +214,10 @@ public class BackupRestoreManager {
         protected void onPostExecute(String _result) {
             dlg.dismiss();
 
-            if (bm.getOutFile() != null) {
-                SketchwareUtil.toast(String.format(Helper.getResString(R.string.backup_msg_success), bm.getOutFile().getAbsolutePath()));
+            if (backupFactory.getOutFile() != null) {
+                SketchwareUtil.toast(String.format(Helper.getResString(R.string.backup_msg_success), backupFactory.getOutFile().getAbsolutePath()));
             } else {
-                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.backup_error_prefix), bm.error), Toast.LENGTH_LONG);
+                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.backup_error_prefix), backupFactory.error), Toast.LENGTH_LONG);
             }
         }
     }
@@ -228,7 +228,7 @@ public class BackupRestoreManager {
         private final String file;
         private final ProjectsFragment projectsFragment;
         private final boolean restoreLocalLibs;
-        private BackupFactory bm;
+        private BackupFactory backupFactory;
         private AlertDialog dlg;
         private boolean error = false;
 
@@ -255,13 +255,13 @@ public class BackupRestoreManager {
 
         @Override
         protected String doInBackground(String... params) {
-            bm = new BackupFactory(ProjectListManager.getNextProjectId());
-            bm.setBackupLocalLibs(restoreLocalLibs);
+            backupFactory = new BackupFactory(ProjectListManager.getNextProjectId());
+            backupFactory.setBackupLocalLibs(restoreLocalLibs);
 
             try {
-                bm.restore(new File(file));
+                backupFactory.restore(new File(file));
             } catch (Exception e) {
-                bm.error = e.getMessage();
+                backupFactory.error = e.getMessage();
                 error = true;
             }
 
@@ -272,8 +272,8 @@ public class BackupRestoreManager {
         protected void onPostExecute(String _result) {
             dlg.dismiss();
 
-            if (!bm.isRestoreSuccess() || error) {
-                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.backup_error_restore), bm.error), Toast.LENGTH_LONG);
+            if (!backupFactory.isRestoreSuccess() || error) {
+                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.backup_error_restore), backupFactory.error), Toast.LENGTH_LONG);
             } else if (projectsFragment != null) {
                 projectsFragment.refreshProjectsList();
                 SketchwareUtil.toast(Helper.getResString(R.string.backup_toast_restored));
