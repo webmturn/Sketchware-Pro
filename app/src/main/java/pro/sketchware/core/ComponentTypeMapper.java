@@ -648,7 +648,7 @@ public class ComponentTypeMapper {
     /**
      * @return List of imports required by a listener
      */
-    public static ArrayList<String> d(String listener) {
+    public static ArrayList<String> getListenerImports(String listener) {
         ArrayList<String> importList = new ArrayList<>();
 
         switch (listener) {
@@ -755,7 +755,7 @@ public class ComponentTypeMapper {
     /**
      * @return The actual class info from its internal type name, as displayed in the generated code.
      */
-    public static String e(String typeName) {
+    public static String getActualTypeName(String typeName) {
         return switch (typeName) {
             case "double", "double.SelectDouble" -> "double";
             case "Map" -> "HashMap<String, Object>";

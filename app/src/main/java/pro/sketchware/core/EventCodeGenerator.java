@@ -407,7 +407,7 @@ public class EventCodeGenerator {
                 }
 
                 if (listener.isInitialized) {
-                    hx.imports.addAll(ComponentTypeMapper.d(listener.listenerName));
+                    hx.imports.addAll(ComponentTypeMapper.getListenerImports(listener.listenerName));
                 }
             }
         }

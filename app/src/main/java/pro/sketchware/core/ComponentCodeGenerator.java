@@ -595,7 +595,7 @@ public class ComponentCodeGenerator {
             if (!isViewBindingEnabled) {
                 fieldDeclaration = accessModifier.getName();
                 String initializer = getInitializer(typeName, parameters);
-                String builtInType = ComponentTypeMapper.e(typeName);
+                String builtInType = ComponentTypeMapper.getActualTypeName(typeName);
                 if (initializer.isEmpty()) {
                     if (!(builtInType.isEmpty() || builtInType.equals("RewardedVideoAd") || builtInType.equals("FirebaseCloudMessage") || builtInType.equals("FragmentStatePagerAdapter"))) {
                         fieldDeclaration += " " + builtInType + " " + typeInstanceName + ";";
@@ -764,7 +764,7 @@ public class ComponentCodeGenerator {
 
                             int lastIndexOfPeriod = parameterSpec.lastIndexOf(".");
                             code = str +
-                                    "final " + ComponentTypeMapper.e(ComponentTypeMapper.getInternalTypeName(parameterSpec.substring(3, lastIndexOfPeriod))) + " _" +
+                                    "final " + ComponentTypeMapper.getActualTypeName(ComponentTypeMapper.getInternalTypeName(parameterSpec.substring(3, lastIndexOfPeriod))) + " _" +
                                     parameterSpec.substring(lastIndexOfPeriod + 1);
                             break;
                         } else {
