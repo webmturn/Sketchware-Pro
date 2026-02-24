@@ -62,19 +62,19 @@ public class ImageBean extends ReflectiveToString implements Parcelable {
     }
 
     public boolean isEqual(ImageBean imageBean) {
-        String str = resName;
-        if (str != null) {
-            String str2 = imageBean.resName;
-            if (!str.equals(str2)) {
+        String thisResName = resName;
+        if (thisResName != null) {
+            String otherResName = imageBean.resName;
+            if (!thisResName.equals(otherResName)) {
                 return false;
             }
         } else if (imageBean.resName != null) {
             return false;
         }
-        String str3 = scaleType;
-        if (str3 != null) {
-            String str4 = imageBean.scaleType;
-            if (!str3.equals(str4)) {
+        String thisScaleType = scaleType;
+        if (thisScaleType != null) {
+            String otherScaleType = imageBean.scaleType;
+            if (!thisScaleType.equals(otherScaleType)) {
                 return false;
             }
         } else if (imageBean.scaleType != null) {

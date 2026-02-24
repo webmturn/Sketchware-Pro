@@ -121,10 +121,10 @@ public class TextBean extends ReflectiveToString implements Parcelable {
     }
 
     public boolean isEqual(TextBean textBean) {
-        String str = text;
-        if (str != null) {
-            String str2 = textBean.text;
-            if (!str.equals(str2)) {
+        String thisText = text;
+        if (thisText != null) {
+            String otherText = textBean.text;
+            if (!thisText.equals(otherText)) {
                 return false;
             }
         } else if (textBean.text != null) {
@@ -133,19 +133,19 @@ public class TextBean extends ReflectiveToString implements Parcelable {
         if (textSize != textBean.textSize || textColor != textBean.textColor || textType != textBean.textType || resTextColor != textBean.resTextColor || resHintColor != textBean.resTextColor) { //new
             return false;
         }
-        String str3 = textFont;
-        if (str3 != null) {
-            String str4 = textBean.textFont;
-            if (!str3.equals(str4)) {
+        String thisFont = textFont;
+        if (thisFont != null) {
+            String otherFont = textBean.textFont;
+            if (!thisFont.equals(otherFont)) {
                 return false;
             }
         } else if (textBean.textFont != null) {
             return false;
         }
-        String str5 = hint;
-        if (str5 != null) {
-            String str6 = textBean.hint;
-            if (!str5.equals(str6)) {
+        String thisHint = hint;
+        if (thisHint != null) {
+            String otherHint = textBean.hint;
+            if (!thisHint.equals(otherHint)) {
                 return false;
             }
         } else if (textBean.hint != null) {
