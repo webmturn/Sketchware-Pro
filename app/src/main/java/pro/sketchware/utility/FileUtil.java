@@ -542,9 +542,8 @@ public class FileUtil {
         int height = decodeFile.getHeight();
         int scaledHeight = maxSize;
         if (width > height) {
-            int i3 = maxSize * height / width;
+            scaledHeight = maxSize * height / width;
             scaledWidth = maxSize;
-            scaledHeight = i3;
         } else {
             scaledWidth = width * maxSize / height;
         }

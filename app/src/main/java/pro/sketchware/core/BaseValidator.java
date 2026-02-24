@@ -37,7 +37,7 @@ public abstract class BaseValidator implements TextWatcher, InputFilter {
     }
 
     @Override
-    public CharSequence filter(CharSequence source, int i, int i1, Spanned spanned, int i2, int i3) {
+    public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
         return null;
     }
 
@@ -59,6 +59,6 @@ public abstract class BaseValidator implements TextWatcher, InputFilter {
     }
 
     @Override
-    public void beforeTextChanged(CharSequence s, int i, int i2, int i3) {
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
     }
 }

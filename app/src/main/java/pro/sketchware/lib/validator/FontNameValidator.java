@@ -32,25 +32,25 @@ public class FontNameValidator extends BaseValidator {
     }
 
     @Override
-    public void onTextChanged(CharSequence input, int i, int i2, int i3) {
-        String a2;
+    public void onTextChanged(CharSequence input, int start, int before, int count) {
+        String errorMessage;
         int msgRes;
         String trim = input.toString().trim();
         if (trim.length() < 3) {
-            a2 = context.getString(R.string.invalid_value_min_lenth, 3);
+            errorMessage = context.getString(R.string.invalid_value_min_lenth, 3);
         } else if (trim.length() > 70) {
-            a2 = context.getString(R.string.invalid_value_max_lenth, 70);
+            errorMessage = context.getString(R.string.invalid_value_max_lenth, 70);
         } else if (trim.equals("default_image") || "NONE".equalsIgnoreCase(trim) || (!trim.equals(editingName) && (fontNames != null && fontNames.contains(trim)))) {
-            a2 = context.getString(R.string.common_message_name_unavailable);
+            errorMessage = context.getString(R.string.common_message_name_unavailable);
         } else {
-            int count = 0;
+            int keywordIndex = 0;
             while (true) {
-                if (count < reservedKeywords.length) {
-                    if (input.toString().equals(reservedKeywords[count])) {
+                if (keywordIndex < reservedKeywords.length) {
+                    if (input.toString().equals(reservedKeywords[keywordIndex])) {
                         msgRes = R.string.logic_editor_message_reserved_keywords;
                         break;
                     }
-                    count++;
+                    keywordIndex++;
                 } else if (Character.isLetter(input.charAt(0))) {
                     if (pattern.matcher(input.toString()).matches()) {
                         textInputLayout.setError(null);
@@ -64,9 +64,9 @@ public class FontNameValidator extends BaseValidator {
                     msgRes = R.string.logic_editor_message_variable_name_must_start_letter;
                 }
             }
-            a2 = context.getString(msgRes);
+            errorMessage = context.getString(msgRes);
         }
-        textInputLayout.setError(a2);
+        textInputLayout.setError(errorMessage);
         valid = false;
     }
 }

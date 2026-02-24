@@ -79,17 +79,17 @@ public class ViewFilesFragment extends BaseFragment {
         }
     }
 
-    public final ArrayList<ViewBean> getPresetViews(String var1) {
-        return PresetLayoutFactory.getActivityPresetViews(var1);
+    public final ArrayList<ViewBean> getPresetViews(String presetName) {
+        return PresetLayoutFactory.getActivityPresetViews(presetName);
     }
 
-    public void addProjectFile(ProjectFileBean var1) {
-        activitiesFiles.add(var1);
+    public void addProjectFile(ProjectFileBean projectFile) {
+        activitiesFiles.add(projectFile);
         projectFilesAdapter.notifyDataSetChanged();
     }
 
-    public void setSelectionMode(boolean var1) {
-        isSelectionMode = var1;
+    public void setSelectionMode(boolean enabled) {
+        isSelectionMode = enabled;
         clearSelection();
         projectFilesAdapter.notifyDataSetChanged();
     }
@@ -116,7 +116,7 @@ public class ViewFilesFragment extends BaseFragment {
         return activitiesFiles;
     }
 
-    public final void applyPreset(ProjectFileBean var1) {
+    public final void applyPreset(ProjectFileBean presetFile) {
         ProjectFileBean projectFileBean = activitiesFiles.get(projectFilesAdapter.layoutPosition);
 
         ArrayList<ViewBean> fileViewBeans = ProjectDataManager.getProjectDataManager(sc_id).getViews(projectFileBean.getXmlName());
@@ -124,8 +124,8 @@ public class ViewFilesFragment extends BaseFragment {
             ProjectDataManager.getProjectDataManager(sc_id).removeView(projectFileBean, fileViewBeans.get(i));
         }
 
-        ArrayList<ViewBean> var6 = getPresetViews(var1.presetName);
-        for (ViewBean viewBean : ProjectDataStore.getSortedRootViews(var6)) {
+        ArrayList<ViewBean> presetViews = getPresetViews(presetFile.presetName);
+        for (ViewBean viewBean : ProjectDataStore.getSortedRootViews(presetViews)) {
             viewBean.id = generateWidgetId(viewBean.type, projectFileBean.getXmlName());
             ProjectDataManager.getProjectDataManager(sc_id).addView(projectFileBean.getXmlName(), viewBean);
             if (viewBean.type == 3 && projectFileBean.fileType == 0) {
