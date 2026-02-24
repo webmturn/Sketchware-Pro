@@ -64,13 +64,13 @@ public class PropertyActivity extends BaseAppCompatActivity implements PropertyC
     public void onPropertyChanged(String var1, Object var2) {
     }
 
-    public void l() {
+    public void setupPropertyItems() {
         propertyItems.setProjectFileBean(projectFileBean);
         propertyItems.initializeProperties(sc_id, viewBean);
         content.addView(propertyItems);
     }
 
-    private void m() {
+    private void validateImageResources() {
         ArrayList<String> var1 = ProjectDataManager.getResourceManager(sc_id).getImageNames();
         PropertyResourceItem resourceProperty;
         if (!var1.contains(viewBean.layout.backgroundResource)) {
@@ -118,7 +118,7 @@ public class PropertyActivity extends BaseAppCompatActivity implements PropertyC
         }
     }
 
-    public void o() {
+    public void saveAndFinish() {
         ViewBean viewBean;
         if (this.viewBean.id.equals("_fab")) {
             viewBean = ProjectDataManager.getProjectDataManager(sc_id).getFabView(projectFileBean.getXmlName());
@@ -144,7 +144,7 @@ public class PropertyActivity extends BaseAppCompatActivity implements PropertyC
             @Override
             public void handleOnBackPressed() {
                 propertyItems.applyPropertyValues(viewBean);
-                o();
+                saveAndFinish();
             }
         });
         imageManagerLauncher = registerForActivityResult(
@@ -154,7 +154,7 @@ public class PropertyActivity extends BaseAppCompatActivity implements PropertyC
                         ArrayList<ProjectResourceBean> resultList = result.getData().getParcelableArrayListExtra("result");
                         if (ProjectDataManager.getResourceManager(var4) != null) {
                             ProjectDataManager.getResourceManager(var4).setImages(resultList);
-                            m();
+                            validateImageResources();
                         }
                     }
                 });
@@ -215,7 +215,7 @@ public class PropertyActivity extends BaseAppCompatActivity implements PropertyC
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem menuItem) {
         if (menuItem.getItemId() == R.id.menu_add_image_res) {
-            p();
+            openImageManager();
         }
         return super.onOptionsItemSelected(menuItem);
     }
@@ -226,7 +226,7 @@ public class PropertyActivity extends BaseAppCompatActivity implements PropertyC
         propertyItems = new ViewPropertyItems(this);
         propertyItems.setProjectSettings(new ProjectSettings(sc_id));
         propertyItems.setOrientation(LinearLayout.VERTICAL);
-        l();
+        setupPropertyItems();
     }
 
     @Override
@@ -245,7 +245,7 @@ public class PropertyActivity extends BaseAppCompatActivity implements PropertyC
         super.onSaveInstanceState(outState);
     }
 
-    public void p() {
+    public void openImageManager() {
         Intent var1 = new Intent(getApplicationContext(), ManageImageActivity.class);
         var1.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         var1.putExtra("sc_id", sc_id);
