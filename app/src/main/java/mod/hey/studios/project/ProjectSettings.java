@@ -66,7 +66,7 @@ public class ProjectSettings {
     private static final String TAG = "ProjectSettings";
     private final String path;
     public String sc_id;
-    private HashMap<String, String> hashmap;
+    private HashMap<String, String> settings;
 
     public ProjectSettings(String scId) {
         sc_id = scId;
@@ -75,14 +75,14 @@ public class ProjectSettings {
 
         if (FileUtil.isExistFile(path)) {
             try {
-                hashmap = new Gson().fromJson(FileUtil.readFile(path).trim(), Helper.TYPE_STRING_MAP);
+                settings = new Gson().fromJson(FileUtil.readFile(path).trim(), Helper.TYPE_STRING_MAP);
             } catch (JsonSyntaxException e) {
                 Log.e("ProjectSettings", "Failed to read project settings for project " + sc_id + "!", e);
-                hashmap = new HashMap<>();
+                settings = new HashMap<>();
                 save();
             }
         } else {
-            hashmap = new HashMap<>();
+            settings = new HashMap<>();
         }
     }
 
@@ -91,10 +91,10 @@ public class ProjectSettings {
      * @see #SETTING_MINIMUM_SDK_VERSION
      */
     public int getMinSdkVersion() {
-        if (hashmap.containsKey(SETTING_MINIMUM_SDK_VERSION)) {
+        if (settings.containsKey(SETTING_MINIMUM_SDK_VERSION)) {
             try {
                 //noinspection ConstantConditions because we catch that already
-                return Integer.parseInt(hashmap.get(SETTING_MINIMUM_SDK_VERSION));
+                return Integer.parseInt(settings.get(SETTING_MINIMUM_SDK_VERSION));
             } catch (NumberFormatException | NullPointerException e) {
                 LogUtil.e(TAG, "Failed to parse the project's minimum SDK version! Defaulting to 21", e);
                 return 21;
@@ -109,9 +109,9 @@ public class ProjectSettings {
     }
 
     public String getValue(String key, String defaultValue) {
-        if (hashmap != null && hashmap.containsKey(key)) {
-            if (!hashmap.get(key).isEmpty()) {
-                return hashmap.get(key);
+        if (settings != null && settings.containsKey(key)) {
+            if (!settings.get(key).isEmpty()) {
+                return settings.get(key);
             } else {
                 return defaultValue;
             }
@@ -135,7 +135,7 @@ public class ProjectSettings {
                 return;
             }
 
-            hashmap.put(key, value);
+            settings.put(key, value);
         }
     }
 
@@ -147,7 +147,7 @@ public class ProjectSettings {
     }
 
     public void setValue(String key, String value) {
-        hashmap.put(key, value);
+        settings.put(key, value);
         save();
     }
 
@@ -164,6 +164,6 @@ public class ProjectSettings {
     }
 
     private void save() {
-        FileUtil.writeFile(path, new Gson().toJson(hashmap));
+        FileUtil.writeFile(path, new Gson().toJson(settings));
     }
 }

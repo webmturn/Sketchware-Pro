@@ -157,24 +157,24 @@ public class ReturnMoreblockManager {
     }
 
     public static String injectMbType(String str, String str2, String str3) {
-        String str4 = str;
+        String result = str;
 
         if (!str3.equals(" ")) {
             if (str3.contains("|")) {
-                str4 = injectToMbName(str4, str2, str3);
+                result = injectToMbName(result, str2, str3);
 
             } else if (str3.equals("s")) {
-                str4 = injectToMbName(str4, str2, "String");
+                result = injectToMbName(result, str2, "String");
 
             } else if (str3.equals("d")) {
-                str4 = injectToMbName(str4, str2, "double");
+                result = injectToMbName(result, str2, "double");
 
             } else if (str3.equals("b")) {
-                str4 = injectToMbName(str4, str2, "boolean");
+                result = injectToMbName(result, str2, "boolean");
             }
         }
 
-        return str4;
+        return result;
 
     }
 

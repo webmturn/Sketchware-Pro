@@ -48,14 +48,14 @@ public class MoreblockValidator extends BaseValidator {
                 textInputLayout.setError(context.getString(R.string.common_message_name_unavailable, 0));
                 valid = false;
             } else {
-                boolean z = false;
+                boolean isEventName = false;
                 for (String eventsName : eventNames) {
                     if (name.equals(eventsName)) {
-                        z = true;
+                        isEventName = true;
                         break;
                     }
                 }
-                if (z) {
+                if (isEventName) {
                     textInputLayout.setError(Helper.getResString(R.string.common_message_name_unavailable));
                     valid = false;
                     return;

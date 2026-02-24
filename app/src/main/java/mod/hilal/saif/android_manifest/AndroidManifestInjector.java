@@ -250,9 +250,9 @@ public class AndroidManifestInjector {
         if (appComponents.exists()) {
             String appComponentsContent;
             if (!(appComponentsContent = FileUtil.readFile(appComponents.getAbsolutePath())).trim().isEmpty()) {
-                String str2 = manifestLines.get(manifestLines.size() - 3);
-                String str3 = str2 + "\r\n" + appComponentsContent;
-                manifestLines.set(manifestLines.size() - 3, str3);
+                String lastComponentLine = manifestLines.get(manifestLines.size() - 3);
+                String mergedLine = lastComponentLine + "\r\n" + appComponentsContent;
+                manifestLines.set(manifestLines.size() - 3, mergedLine);
             }
         }
 
