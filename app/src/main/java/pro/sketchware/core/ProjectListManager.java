@@ -14,7 +14,7 @@ public class ProjectListManager {
     public static ArrayList<HashMap<String, Object>> listProjects() {
         String projectFileName = "project";
         ArrayList<HashMap<String, Object>> arrayList = new ArrayList<>();
-        EncryptedFileUtil oBVar = new EncryptedFileUtil();
+        EncryptedFileUtil fileUtil = new EncryptedFileUtil();
         File[] listFiles = new File(SketchwarePaths.getProjectListBasePath()).listFiles();
         if (listFiles == null) {
             return arrayList;
@@ -23,7 +23,7 @@ public class ProjectListManager {
             try {
                 if (new File(file, projectFileName).exists()) {
                     String path = file.getAbsolutePath() + File.separator + projectFileName;
-                    HashMap<String, Object> a = GsonMapHelper.fromJson(oBVar.decryptToString(oBVar.readFileBytes(path)));
+                    HashMap<String, Object> a = GsonMapHelper.fromJson(fileUtil.decryptToString(fileUtil.readFileBytes(path)));
                     if (MapValueHelper.getString(a, "sc_id").equals(file.getName())) {
                         arrayList.add(a);
                     }
@@ -47,31 +47,31 @@ public class ProjectListManager {
     public static void deleteProject(Context context, String projectId) {
         File file = new File(SketchwarePaths.getProjectListPath(projectId));
         if (file.exists()) {
-            EncryptedFileUtil oBVar = new EncryptedFileUtil();
-            oBVar.deleteDirectory(file);
-            oBVar.deleteDirectoryByPath(SketchwarePaths.getMyscPath(projectId));
+            EncryptedFileUtil fileUtil = new EncryptedFileUtil();
+            fileUtil.deleteDirectory(file);
+            fileUtil.deleteDirectoryByPath(SketchwarePaths.getMyscPath(projectId));
             StringBuilder pathBuilder = new StringBuilder();
             pathBuilder.append(SketchwarePaths.getImagesPath());
             pathBuilder.append(File.separator);
             pathBuilder.append(projectId);
-            oBVar.deleteDirectoryByPath(pathBuilder.toString());
+            fileUtil.deleteDirectoryByPath(pathBuilder.toString());
             pathBuilder = new StringBuilder();
             pathBuilder.append(SketchwarePaths.getSoundsPath());
             pathBuilder.append(File.separator);
             pathBuilder.append(projectId);
-            oBVar.deleteDirectoryByPath(pathBuilder.toString());
+            fileUtil.deleteDirectoryByPath(pathBuilder.toString());
             pathBuilder = new StringBuilder();
             pathBuilder.append(SketchwarePaths.getFontsResourcePath());
             pathBuilder.append(File.separator);
             pathBuilder.append(projectId);
-            oBVar.deleteDirectoryByPath(pathBuilder.toString());
+            fileUtil.deleteDirectoryByPath(pathBuilder.toString());
             pathBuilder = new StringBuilder();
             pathBuilder.append(SketchwarePaths.getIconsPath());
             pathBuilder.append(File.separator);
             pathBuilder.append(projectId);
-            oBVar.deleteDirectoryByPath(pathBuilder.toString());
-            oBVar.deleteDirectoryByPath(SketchwarePaths.getDataPath(projectId));
-            oBVar.deleteDirectoryByPath(SketchwarePaths.getBackupPath(projectId));
+            fileUtil.deleteDirectoryByPath(pathBuilder.toString());
+            fileUtil.deleteDirectoryByPath(SketchwarePaths.getDataPath(projectId));
+            fileUtil.deleteDirectoryByPath(SketchwarePaths.getBackupPath(projectId));
             pathBuilder = new StringBuilder();
             pathBuilder.append("D01_");
             pathBuilder.append(projectId);
@@ -91,7 +91,7 @@ public class ProjectListManager {
         }
     }
 
-    public static void initializeDb(Context context, boolean z) {
+    public static void initializeDb(Context context, boolean unused) {
         if (sharedPrefsHelper == null) {
             sharedPrefsHelper = new SharedPrefsHelper(context, "P15");
         }
@@ -104,10 +104,10 @@ public class ProjectListManager {
         }
         String path = SketchwarePaths.getProjectListPath(projectId);
         path = path + File.separator + "project";
-        String a = GsonMapHelper.toJson(projectData);
-        EncryptedFileUtil oBVar = new EncryptedFileUtil();
+        String jsonData = GsonMapHelper.toJson(projectData);
+        EncryptedFileUtil fileUtil = new EncryptedFileUtil();
         try {
-            oBVar.writeBytes(path, oBVar.encryptString(a));
+            fileUtil.writeBytes(path, fileUtil.encryptString(jsonData));
         } catch (Throwable e) {
             Log.e("ProjectListManager", e.getMessage(), e);
         }
@@ -123,7 +123,7 @@ public class ProjectListManager {
 
     public static HashMap<String, Object> getProjectById(String projectId) {
         Throwable e;
-        EncryptedFileUtil oBVar = new EncryptedFileUtil();
+        EncryptedFileUtil fileUtil = new EncryptedFileUtil();
         HashMap<String, Object> projectData = null;
         try {
             String c = SketchwarePaths.getProjectListPath(projectId);
@@ -131,7 +131,7 @@ public class ProjectListManager {
                 return null;
             }
             String path = c + File.separator + "project";
-            HashMap<String, Object> a = GsonMapHelper.fromJson(oBVar.decryptToString(oBVar.readFileBytes(path)));
+            HashMap<String, Object> a = GsonMapHelper.fromJson(fileUtil.decryptToString(fileUtil.readFileBytes(path)));
             try {
                 return !MapValueHelper.getString(a, "sc_id").equals(projectId) ? null : a;
             } catch (Exception e2) {
