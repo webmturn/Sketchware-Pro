@@ -20,7 +20,7 @@ public class DefinitionBlockView extends BlockView {
     this.oa = 2;
   }
   
-  private TextView createLabel(String paramString) {
+  private TextView createDefinitionLabel(String paramString) {
     TextView textView = new TextView(((BaseBlockView)this).context);
     String str1 = ((BaseBlockView)this).componentType;
     String str2 = paramString;
@@ -180,10 +180,10 @@ public class DefinitionBlockView extends BlockView {
           this.fa = true;
           break;
       } 
-      this.ta = createLabel(this.spec);
+      this.ta = createDefinitionLabel(this.spec);
       addView((View)this.ta);
       ((BaseBlockView)this).blockColor = getResources().getColor(pro.sketchware.R.color.scolor_red_02);
-      k();
+      layoutChain();
       return;
     } 
     switch (b) {
@@ -203,9 +203,9 @@ public class DefinitionBlockView extends BlockView {
         this.fa = true;
         break;
     } 
-    this.ta = createLabel(this.spec);
+    this.ta = createDefinitionLabel(this.spec);
     addView((View)this.ta);
     ((BaseBlockView)this).blockColor = getResources().getColor(pro.sketchware.R.color.scolor_red_02);
-    k();
+    layoutChain();
   }
 }

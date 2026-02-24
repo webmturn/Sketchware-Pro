@@ -66,12 +66,12 @@ public class BlockPane extends RelativeLayout {
     } 
     Object[] arrayOfObject = this.currentSnapPoint;
     if (arrayOfObject == null) {
-      rs.p().k();
+      rs.getRootBlock().layoutChain();
       b();
       return rs;
     } 
     if (paramRs.fa) {
-      ((BaseBlockView)arrayOfObject[1]).parentBlock.a((BaseBlockView)arrayOfObject[1], rs);
+      ((BaseBlockView)arrayOfObject[1]).parentBlock.replaceParameter((BaseBlockView)arrayOfObject[1], rs);
     } else {
       paramRs = (BlockView)arrayOfObject[1];
       paramInt1 = ((Integer)arrayOfObject[2]).intValue();
@@ -80,21 +80,21 @@ public class BlockPane extends RelativeLayout {
           if (paramInt1 != 2) {
             if (paramInt1 != 3) {
               if (paramInt1 == 4)
-                paramRs.d(rs); 
+                paramRs.positionInSubstack1(rs); 
             } else {
-              paramRs.f(rs);
+              paramRs.setSubstack2Block(rs);
             } 
           } else {
-            paramRs.e(rs);
+            paramRs.setSubstack1Block(rs);
           } 
         } else {
-          paramRs.c(rs);
+          paramRs.positionAbove(rs);
         } 
       } else {
-        paramRs.b(rs);
+        paramRs.setNextBlock(rs);
       } 
     } 
-    rs.p().k();
+    rs.getRootBlock().layoutChain();
     b();
     return rs;
   }
@@ -113,7 +113,7 @@ public class BlockPane extends RelativeLayout {
   
   public void a(BlockView paramRs) {
     boolean bool;
-    boolean bool1 = (paramRs.h()).ga;
+    boolean bool1 = (paramRs.getLastInChain()).ga;
     if (paramRs.hasSubstack() && -1 == paramRs.ia) {
       bool = true;
     } else {
@@ -272,7 +272,7 @@ public class BlockPane extends RelativeLayout {
         removeView((View)rs1);
       } 
       if (paramBoolean && rs2 != null)
-        rs2.p().k(); 
+        rs2.getRootBlock().layoutChain(); 
     } 
   }
   
@@ -596,7 +596,7 @@ public class BlockPane extends RelativeLayout {
     if (rs == null)
       return; 
     if (rs != null) {
-      rs.g(paramRs);
+      rs.detachBlock(paramRs);
       ((BaseBlockView)paramRs).parentBlock = null;
     } 
   }

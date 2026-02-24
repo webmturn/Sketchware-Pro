@@ -68,19 +68,19 @@ public class ShowBlockCollectionActivity extends BaseAppCompatActivity implement
                 int subStack1Id = blockBean.subStack1;
                 BlockView subStack1;
                 if (subStack1Id >= 0 && (subStack1 = blockIdsWithBlocks.get(subStack1Id)) != null) {
-                    block.e(subStack1);
+                    block.setSubstack1Block(subStack1);
                 }
 
                 int subStack2Id = blockBean.subStack2;
                 BlockView subStack2;
                 if (subStack2Id >= 0 && (subStack2 = blockIdsWithBlocks.get(subStack2Id)) != null) {
-                    block.f(subStack2);
+                    block.setSubstack2Block(subStack2);
                 }
 
                 int nextBlockId = blockBean.nextBlock;
                 BlockView nextBlock;
                 if (nextBlockId >= 0 && (nextBlock = blockIdsWithBlocks.get(nextBlockId)) != null) {
-                    block.b(nextBlock);
+                    block.setNextBlock(nextBlock);
                 }
 
                 ArrayList<String> parameters = blockBean.parameters;
@@ -91,17 +91,17 @@ public class ShowBlockCollectionActivity extends BaseAppCompatActivity implement
                         if (parameter.charAt(0) == '@') {
                             BlockView parameterBlock = blockIdsWithBlocks.get(Integer.valueOf(parameter.substring(1)));
                             if (parameterBlock != null) {
-                                block.a((BaseBlockView) block.childViews.get(i), parameterBlock);
+                                block.replaceParameter((BaseBlockView) block.childViews.get(i), parameterBlock);
                             }
                         } else {
                             ((FieldBlockView) block.childViews.get(i)).setArgValue(parameter);
-                            block.m();
+                            block.recalculateToRoot();
                         }
                     }
                 }
             }
         }
-        firstBlock.k();
+        firstBlock.layoutChain();
         pane.b();
     }
 

@@ -55,7 +55,7 @@ public class ShowMoreBlockCollectionActivity extends BaseAppCompatActivity imple
             pane.a(block, 0, 0);
 
             if (isFirstBlock) {
-                pane.getRoot().b(block);
+                pane.getRoot().setNextBlock(block);
                 isFirstBlock = false;
             }
         }
@@ -67,19 +67,19 @@ public class ShowMoreBlockCollectionActivity extends BaseAppCompatActivity imple
                 int subStack1Id = blockBean.subStack1;
                 BlockView subStack1;
                 if (subStack1Id >= 0 && (subStack1 = hashMap.get(subStack1Id)) != null) {
-                    block.e(subStack1);
+                    block.setSubstack1Block(subStack1);
                 }
 
                 int subStack2Id = blockBean.subStack2;
                 BlockView subStack2;
                 if (subStack2Id >= 0 && (subStack2 = hashMap.get(subStack2Id)) != null) {
-                    block.f(subStack2);
+                    block.setSubstack2Block(subStack2);
                 }
 
                 int nextBlockId = blockBean.nextBlock;
                 BlockView nextBlock;
                 if (nextBlockId >= 0 && (nextBlock = hashMap.get(nextBlockId)) != null) {
-                    block.b(nextBlock);
+                    block.setNextBlock(nextBlock);
                 }
 
                 ArrayList<String> parameters = blockBean.parameters;
@@ -90,17 +90,17 @@ public class ShowMoreBlockCollectionActivity extends BaseAppCompatActivity imple
                         if (parameter.charAt(0) == '@') {
                             BlockView parameterBlock = hashMap.get(Integer.valueOf(parameter.substring(1)));
                             if (parameterBlock != null) {
-                                block.a((BaseBlockView) block.childViews.get(i), parameterBlock);
+                                block.replaceParameter((BaseBlockView) block.childViews.get(i), parameterBlock);
                             }
                         } else {
                             ((FieldBlockView) block.childViews.get(i)).setArgValue(parameter);
-                            block.m();
+                            block.recalculateToRoot();
                         }
                     }
                 }
             }
         }
-        pane.getRoot().k();
+        pane.getRoot().layoutChain();
         pane.b();
     }
 
@@ -108,7 +108,7 @@ public class ShowMoreBlockCollectionActivity extends BaseAppCompatActivity imple
         pane.a(spec, "moreBlock");
         var header = pane.getRoot();
         BlockUtil.loadPreviewBlockVariables(pane, header, spec);
-        header.k();
+        header.layoutChain();
     }
 
     private void resizeBottomViews() {
