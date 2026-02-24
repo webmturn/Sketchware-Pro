@@ -127,24 +127,24 @@ public class SoundCollectionManager extends BaseCollectionManager {
           String sourcePath;
           String fileName = projectResourceBean.resName;
           if (projectResourceBean.isNinePatch()) {
-            StringBuilder stringBuilder1 = new StringBuilder();
-            stringBuilder1.append(fileName);
-            stringBuilder1.append(".9.png");
-            fileName = stringBuilder1.toString();
+            StringBuilder innerBuilder = new StringBuilder();
+            innerBuilder.append(fileName);
+            innerBuilder.append(".9.png");
+            fileName = innerBuilder.toString();
           } else {
-            StringBuilder stringBuilder1 = new StringBuilder();
-            stringBuilder1.append(fileName);
-            stringBuilder1.append(".png");
-            fileName = stringBuilder1.toString();
+            StringBuilder innerBuilder = new StringBuilder();
+            innerBuilder.append(fileName);
+            innerBuilder.append(".png");
+            fileName = innerBuilder.toString();
           } 
           if (((SelectableBean)projectResourceBean).savedPos == 0) {
-            StringBuilder stringBuilder1 = new StringBuilder();
-            stringBuilder1.append(SketchwarePaths.getImagesPath());
-            stringBuilder1.append(File.separator);
-            stringBuilder1.append(input);
-            stringBuilder1.append(File.separator);
-            stringBuilder1.append(projectResourceBean.resFullName);
-            sourcePath = stringBuilder1.toString();
+            StringBuilder innerBuilder = new StringBuilder();
+            innerBuilder.append(SketchwarePaths.getImagesPath());
+            innerBuilder.append(File.separator);
+            innerBuilder.append(input);
+            innerBuilder.append(File.separator);
+            innerBuilder.append(projectResourceBean.resFullName);
+            sourcePath = innerBuilder.toString();
           } else {
             sourcePath = projectResourceBean.resFullName;
           } 

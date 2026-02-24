@@ -323,11 +323,11 @@ public class ProjectFileManager {
   public void loadFromData() {
     initializeDefaults();
     String dataPath = SketchwarePaths.getDataPath(this.projectId);
-    StringBuilder stringBuilder1 = new StringBuilder();
-    stringBuilder1.append(dataPath);
-    stringBuilder1.append(File.separator);
-    stringBuilder1.append("file");
-    dataPath = stringBuilder1.toString();
+    StringBuilder pathBuilder = new StringBuilder();
+    pathBuilder.append(dataPath);
+    pathBuilder.append(File.separator);
+    pathBuilder.append("file");
+    dataPath = pathBuilder.toString();
     if (!this.fileUtil.exists(dataPath))
       return; 
     BufferedReader bufferedReader = null;

@@ -102,16 +102,16 @@ public class ResourceManager {
       if (!file.exists())
         file.mkdirs(); 
       for (ProjectResourceBean projectResourceBean : this.fonts) {
-        StringBuilder stringBuilder1 = new StringBuilder();
-        stringBuilder1.append(this.fontDirPath);
-        stringBuilder1.append(File.separator);
-        stringBuilder1.append(projectResourceBean.resFullName.toLowerCase());
-        String sourcePath = stringBuilder1.toString();
-        StringBuilder stringBuilder2 = new StringBuilder();
-        stringBuilder2.append(str);
-        stringBuilder2.append(File.separator);
-        stringBuilder2.append(projectResourceBean.resFullName.toLowerCase());
-        String destPath = stringBuilder2.toString();
+        StringBuilder sourceBuilder = new StringBuilder();
+        sourceBuilder.append(this.fontDirPath);
+        sourceBuilder.append(File.separator);
+        sourceBuilder.append(projectResourceBean.resFullName.toLowerCase());
+        String sourcePath = sourceBuilder.toString();
+        StringBuilder destBuilder = new StringBuilder();
+        destBuilder.append(str);
+        destBuilder.append(File.separator);
+        destBuilder.append(projectResourceBean.resFullName.toLowerCase());
+        String destPath = destBuilder.toString();
         try {
           this.fileUtil.copyFile(sourcePath, destPath);
         } catch (Exception exception) {
@@ -198,16 +198,16 @@ public class ResourceManager {
       if (!file.exists())
         file.mkdirs(); 
       for (ProjectResourceBean projectResourceBean : this.images) {
-        StringBuilder stringBuilder1 = new StringBuilder();
-        stringBuilder1.append(this.imageDirPath);
-        stringBuilder1.append(File.separator);
-        stringBuilder1.append(projectResourceBean.resFullName.toLowerCase());
-        String sourcePath = stringBuilder1.toString();
-        StringBuilder stringBuilder2 = new StringBuilder();
-        stringBuilder2.append(str);
-        stringBuilder2.append(File.separator);
-        stringBuilder2.append(projectResourceBean.resFullName.toLowerCase());
-        String destPath = stringBuilder2.toString();
+        StringBuilder sourceBuilder = new StringBuilder();
+        sourceBuilder.append(this.imageDirPath);
+        sourceBuilder.append(File.separator);
+        sourceBuilder.append(projectResourceBean.resFullName.toLowerCase());
+        String sourcePath = sourceBuilder.toString();
+        StringBuilder destBuilder = new StringBuilder();
+        destBuilder.append(str);
+        destBuilder.append(File.separator);
+        destBuilder.append(projectResourceBean.resFullName.toLowerCase());
+        String destPath = destBuilder.toString();
         try {
           this.fileUtil.copyFile(sourcePath, destPath);
         } catch (Exception exception) {
@@ -246,16 +246,16 @@ public class ResourceManager {
       if (!file.exists())
         file.mkdirs(); 
       for (ProjectResourceBean projectResourceBean : this.sounds) {
-        StringBuilder stringBuilder1 = new StringBuilder();
-        stringBuilder1.append(this.soundDirPath);
-        stringBuilder1.append(File.separator);
-        stringBuilder1.append(projectResourceBean.resFullName.toLowerCase());
-        String sourcePath = stringBuilder1.toString();
-        StringBuilder stringBuilder2 = new StringBuilder();
-        stringBuilder2.append(str);
-        stringBuilder2.append(File.separator);
-        stringBuilder2.append(projectResourceBean.resFullName.toLowerCase());
-        String destPath = stringBuilder2.toString();
+        StringBuilder sourceBuilder = new StringBuilder();
+        sourceBuilder.append(this.soundDirPath);
+        sourceBuilder.append(File.separator);
+        sourceBuilder.append(projectResourceBean.resFullName.toLowerCase());
+        String sourcePath = sourceBuilder.toString();
+        StringBuilder destBuilder = new StringBuilder();
+        destBuilder.append(str);
+        destBuilder.append(File.separator);
+        destBuilder.append(projectResourceBean.resFullName.toLowerCase());
+        String destPath = destBuilder.toString();
         try {
           this.fileUtil.copyFile(sourcePath, destPath);
         } catch (Exception exception) {
@@ -529,11 +529,11 @@ public class ResourceManager {
     this.sounds = new ArrayList<ProjectResourceBean>();
     this.fonts = new ArrayList<ProjectResourceBean>();
     String dataPath = SketchwarePaths.getDataPath(this.projectId);
-    StringBuilder stringBuilder1 = new StringBuilder();
-    stringBuilder1.append(dataPath);
-    stringBuilder1.append(File.separator);
-    stringBuilder1.append("resource");
-    dataPath = stringBuilder1.toString();
+    StringBuilder sourceBuilder = new StringBuilder();
+    sourceBuilder.append(dataPath);
+    sourceBuilder.append(File.separator);
+    sourceBuilder.append("resource");
+    dataPath = sourceBuilder.toString();
     if (!this.fileUtil.exists(dataPath))
       return; 
     BufferedReader bufferedReader = null;

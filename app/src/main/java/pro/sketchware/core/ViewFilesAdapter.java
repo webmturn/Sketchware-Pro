@@ -61,13 +61,13 @@ public class ViewFilesAdapter extends BaseFragment {
       } 
       if (i == 0)
         return xmlName; 
-      StringBuilder stringBuilder1 = new StringBuilder();
-      stringBuilder1.append(prefix);
+      StringBuilder retryBuilder = new StringBuilder();
+      retryBuilder.append(prefix);
       int[] intValues1 = this.viewCounters;
       i = intValues1[position] + 1;
       intValues1[position] = i;
-      stringBuilder1.append(i);
-      xmlName = stringBuilder1.toString();
+      retryBuilder.append(i);
+      xmlName = retryBuilder.toString();
     } 
   }
   

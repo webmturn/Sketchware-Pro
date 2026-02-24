@@ -185,10 +185,10 @@ public class FormatUtil {
       while (this.position < this.input.length() && this.input.charAt(this.position) != ' ') {
         char c = this.input.charAt(this.position);
         if (c == '\\') {
-          StringBuilder stringBuilder1 = new StringBuilder();
-          stringBuilder1.append(str);
-          stringBuilder1.append(c + this.input.charAt(this.position + 1));
-          str = stringBuilder1.toString();
+          StringBuilder escapeBuilder = new StringBuilder();
+          escapeBuilder.append(str);
+          escapeBuilder.append(c + this.input.charAt(this.position + 1));
+          str = escapeBuilder.toString();
           this.position += 2;
           continue;
         } 

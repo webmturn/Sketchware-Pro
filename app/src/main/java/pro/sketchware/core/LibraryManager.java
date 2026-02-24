@@ -196,11 +196,11 @@ public class LibraryManager {
   public void loadFromBackup() {
     initializeDefaults();
     String basePath = SketchwarePaths.getBackupPath(this.projectId);
-    StringBuilder stringBuilder1 = new StringBuilder();
-    stringBuilder1.append(basePath);
-    stringBuilder1.append(File.separator);
-    stringBuilder1.append("library");
-    basePath = stringBuilder1.toString();
+    StringBuilder pathBuilder = new StringBuilder();
+    pathBuilder.append(basePath);
+    pathBuilder.append(File.separator);
+    pathBuilder.append("library");
+    basePath = pathBuilder.toString();
     BufferedReader bufferedReader = null;
     try {
       byte[] bytes = this.fileUtil.readFileBytes(basePath);
@@ -217,11 +217,11 @@ public class LibraryManager {
   public void loadFromData() {
     initializeDefaults();
     String dataPath = SketchwarePaths.getDataPath(this.projectId);
-    StringBuilder stringBuilder1 = new StringBuilder();
-    stringBuilder1.append(dataPath);
-    stringBuilder1.append(File.separator);
-    stringBuilder1.append("library");
-    dataPath = stringBuilder1.toString();
+    StringBuilder pathBuilder = new StringBuilder();
+    pathBuilder.append(dataPath);
+    pathBuilder.append(File.separator);
+    pathBuilder.append("library");
+    dataPath = pathBuilder.toString();
     if (!this.fileUtil.exists(dataPath))
       return; 
     BufferedReader bufferedReader = null;

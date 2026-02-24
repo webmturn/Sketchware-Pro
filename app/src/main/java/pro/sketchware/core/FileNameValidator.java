@@ -90,15 +90,15 @@ public class FileNameValidator extends BaseValidator {
           String conflictName = iterator.next();
           String accumulated = str;
           if (str.length() > 0) {
-            StringBuilder stringBuilder2 = new StringBuilder();
-            stringBuilder2.append(str);
-            stringBuilder2.append(", ");
-            accumulated = stringBuilder2.toString();
+            StringBuilder separatorBuilder = new StringBuilder();
+            separatorBuilder.append(str);
+            separatorBuilder.append(", ");
+            accumulated = separatorBuilder.toString();
           } 
-          StringBuilder stringBuilder1 = new StringBuilder();
-          stringBuilder1.append(accumulated);
-          stringBuilder1.append(conflictName);
-          str = stringBuilder1.toString();
+          StringBuilder nameBuilder = new StringBuilder();
+          nameBuilder.append(accumulated);
+          nameBuilder.append(conflictName);
+          str = nameBuilder.toString();
         } 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(errorMessage);
