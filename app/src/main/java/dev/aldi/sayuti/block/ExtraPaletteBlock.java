@@ -381,7 +381,7 @@ public class ExtraPaletteBlock {
 
     public void setBlock(int paletteId, int paletteColor) {
         // Remove previous palette's blocks
-        logicEditor.m.a();
+        logicEditor.m.clearAll();
 
         if (eventName.equals("Import")) {
             if (paletteId == 3) {

@@ -42,7 +42,7 @@ public class PaletteBlock extends LinearLayout {
         density = ViewUtil.dpToPx(context, 1.0F);
     }
 
-    public BaseBlockView a(String var1, String var2, String var3) {
+    public BaseBlockView addBlock(String var1, String var2, String var3) {
         View view = new View(context);
         view.setLayoutParams(getLayoutParams(8.0F));
         binding.blockBuilder.addView(view);
@@ -53,7 +53,7 @@ public class PaletteBlock extends LinearLayout {
         return blockView;
     }
 
-    public BaseBlockView a(String var1, String var2, String var3, String var4) {
+    public BaseBlockView addBlock(String var1, String var2, String var3, String var4) {
         View view = new View(context);
         view.setLayoutParams(getLayoutParams(8.0F));
         binding.blockBuilder.addView(view);
@@ -64,7 +64,7 @@ public class PaletteBlock extends LinearLayout {
         return blockView;
     }
 
-    public TextView a(String title) {
+    public TextView addActionLabel(String title) {
         var textView = new TextView(context);
         textView.setText(title);
         textView.setTextSize(10.0F);
@@ -83,12 +83,12 @@ public class PaletteBlock extends LinearLayout {
         return textView;
     }
 
-    public void a() {
+    public void clearAll() {
         binding.blockBuilder.removeAllViews();
         binding.actionsContainer.removeAllViews();
     }
 
-    public void a(String title, int color) {
+    public void addCategoryHeader(String title, int color) {
         var cardView = new MaterialCardView(context);
         var params = getLayoutParams(18.0F);
         params.topMargin = (int) (density * 16.0F);
@@ -109,9 +109,9 @@ public class PaletteBlock extends LinearLayout {
 
     public void addDeprecatedBlock(String message, String type, String opCode) {
         if (message != null && !message.isEmpty()) {
-            a(message, getColor(context, isDarkThemeEnabled(context) ? R.attr.colorSurfaceContainerHigh : R.attr.colorSurfaceInverse));
+            addCategoryHeader(message, getColor(context, isDarkThemeEnabled(context) ? R.attr.colorSurfaceContainerHigh : R.attr.colorSurfaceInverse));
         }
-        BaseBlockView blockView = a("", type, opCode);
+        BaseBlockView blockView = addBlock("", type, opCode);
         blockView.blockColor = 0xFFBDBDBD;
         blockView.setTag(opCode);
     }

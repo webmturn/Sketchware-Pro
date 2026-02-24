@@ -520,7 +520,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public View createPaletteBlock(String str, String str2) {
-        BaseBlockView a2 = m.a("", str, str2);
+        BaseBlockView a2 = m.addBlock("", str, str2);
         a2.setTag(str2);
         a2.setClickable(true);
         a2.setOnTouchListener(this);
@@ -528,7 +528,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public final View createPaletteBlockWithSpec(String str, String str2, String str3) {
-        BaseBlockView a2 = m.a(str, str2, str3);
+        BaseBlockView a2 = m.addBlock(str, str2, str3);
         a2.setTag(str3);
         a2.setClickable(true);
         a2.setOnTouchListener(this);
@@ -536,7 +536,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public final View createPaletteBlockWithComponent(String str, String str2, String str3, String str4) {
-        BaseBlockView a2 = m.a(str, str2, str3, str4);
+        BaseBlockView a2 = m.addBlock(str, str2, str3, str4);
         a2.setTag(str4);
         a2.setClickable(true);
         a2.setOnTouchListener(this);
@@ -1174,7 +1174,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public void addPaletteCategory(String str, int i) {
-        m.a(str, i);
+        m.addCategoryHeader(str, i);
     }
 
     public void saveBlockToCollection(String str, BlockView rs) {
@@ -1289,14 +1289,14 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public void addPaletteLabel(String str, String tag) {
-        TextView textView = m.a(str);
+        TextView textView = m.addActionLabel(str);
         textView.setTag(tag);
         textView.setSoundEffectsEnabled(true);
         textView.setOnClickListener(this);
     }
 
     public void addPaletteLabelWithListener(String str, String tag, View.OnClickListener onClickListener) {
-        TextView textView = m.a(str);
+        TextView textView = m.addActionLabel(str);
         textView.setTag(tag);
         textView.setSoundEffectsEnabled(true);
         textView.setOnClickListener(onClickListener);
