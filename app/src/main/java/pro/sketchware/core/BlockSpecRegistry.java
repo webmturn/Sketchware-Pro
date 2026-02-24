@@ -11,7 +11,7 @@ public class BlockSpecRegistry {
   public static ArrayList<String> getBlockParams(String blockName) {
     if (cacheA.containsKey(blockName)) return cacheA.get(blockName);
     short s = -1;
-    ArrayList<String> arrayList2 = new ArrayList<>();
+    ArrayList<String> params = new ArrayList<>();
     switch (blockName.hashCode()) {
       default:
         s = -1;
@@ -1627,1463 +1627,1463 @@ public class BlockSpecRegistry {
           break;
         } 
     } 
-    ArrayList<String> arrayList1 = arrayList2;
+    ArrayList<String> result = params;
     switch (s) {
       default:
-        arrayList1 = null;
+        result = null;
         break;
       case 321:
-        arrayList2.add("%m.locationmanager");
-        arrayList1 = arrayList2;
+        params.add("%m.locationmanager");
+        result = params;
         break;
       case 320:
-        arrayList2.add("%m.locationmanager");
-        arrayList2.add("%m.providerType");
-        arrayList2.add("%d");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.locationmanager");
+        params.add("%m.providerType");
+        params.add("%d");
+        params.add("%d");
+        result = params;
         break;
       case 319:
-        arrayList2.add("%m.bluetoothconnect");
-        arrayList1 = arrayList2;
+        params.add("%m.bluetoothconnect");
+        result = params;
         break;
       case 318:
-        arrayList2.add("%m.bluetoothconnect");
-        arrayList2.add("%m.listMap");
-        arrayList1 = arrayList2;
+        params.add("%m.bluetoothconnect");
+        params.add("%m.listMap");
+        result = params;
         break;
       case 317:
-        arrayList2.add("%m.bluetoothconnect");
-        arrayList1 = arrayList2;
+        params.add("%m.bluetoothconnect");
+        result = params;
         break;
       case 316:
-        arrayList2.add("%m.bluetoothconnect");
-        arrayList1 = arrayList2;
+        params.add("%m.bluetoothconnect");
+        result = params;
         break;
       case 315:
-        arrayList2.add("%m.bluetoothconnect");
-        arrayList1 = arrayList2;
+        params.add("%m.bluetoothconnect");
+        result = params;
         break;
       case 314:
-        arrayList2.add("%m.bluetoothconnect");
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.bluetoothconnect");
+        params.add("%s");
+        params.add("%s");
+        result = params;
         break;
       case 313:
-        arrayList2.add("%m.bluetoothconnect");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.bluetoothconnect");
+        params.add("%s");
+        result = params;
         break;
       case 312:
-        arrayList2.add("%m.bluetoothconnect");
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.bluetoothconnect");
+        params.add("%s");
+        params.add("%s");
+        params.add("%s");
+        result = params;
         break;
       case 311:
-        arrayList2.add("%m.bluetoothconnect");
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.bluetoothconnect");
+        params.add("%s");
+        params.add("%s");
+        result = params;
         break;
       case 310:
-        arrayList2.add("%m.bluetoothconnect");
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.bluetoothconnect");
+        params.add("%s");
+        params.add("%s");
+        result = params;
         break;
       case 309:
-        arrayList2.add("%m.bluetoothconnect");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.bluetoothconnect");
+        params.add("%s");
+        result = params;
         break;
       case 308:
-        arrayList2.add("%m.speechtotext");
-        arrayList1 = arrayList2;
+        params.add("%m.speechtotext");
+        result = params;
         break;
       case 307:
-        arrayList2.add("%m.speechtotext");
-        arrayList1 = arrayList2;
+        params.add("%m.speechtotext");
+        result = params;
         break;
       case 306:
-        arrayList2.add("%m.speechtotext");
-        arrayList1 = arrayList2;
+        params.add("%m.speechtotext");
+        result = params;
         break;
       case 305:
-        arrayList2.add("%m.texttospeech");
-        arrayList1 = arrayList2;
+        params.add("%m.texttospeech");
+        result = params;
         break;
       case 304:
-        arrayList2.add("%m.texttospeech");
-        arrayList1 = arrayList2;
+        params.add("%m.texttospeech");
+        result = params;
         break;
       case 303:
-        arrayList2.add("%m.texttospeech");
-        arrayList1 = arrayList2;
+        params.add("%m.texttospeech");
+        result = params;
         break;
       case 302:
-        arrayList2.add("%m.texttospeech");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.texttospeech");
+        params.add("%s");
+        result = params;
         break;
       case 301:
-        arrayList2.add("%m.texttospeech");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.texttospeech");
+        params.add("%d");
+        result = params;
         break;
       case 300:
-        arrayList2.add("%m.texttospeech");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.texttospeech");
+        params.add("%d");
+        result = params;
         break;
       case 299:
-        arrayList2.add("%m.progressbar");
-        arrayList2.add("%b");
-        arrayList1 = arrayList2;
+        params.add("%m.progressbar");
+        params.add("%b");
+        result = params;
         break;
       case 298:
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        result = params;
         break;
       case 297:
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        params.add("%s");
+        params.add("%d");
+        result = params;
         break;
       case 296:
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        params.add("%s");
+        params.add("%d");
+        result = params;
         break;
       case 295:
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList2.add("%m.color");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        params.add("%s");
+        params.add("%m.color");
+        result = params;
         break;
       case 294:
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList2.add("%d");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        params.add("%s");
+        params.add("%d");
+        params.add("%d");
+        result = params;
         break;
       case 293:
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList2.add("%d");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        params.add("%s");
+        params.add("%d");
+        params.add("%d");
+        result = params;
         break;
       case 292:
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        params.add("%s");
+        params.add("%d");
+        result = params;
         break;
       case 291:
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList2.add("%d");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        params.add("%s");
+        params.add("%d");
+        params.add("%d");
+        result = params;
         break;
       case 290:
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        params.add("%s");
+        params.add("%d");
+        result = params;
         break;
       case 289:
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        params.add("%s");
+        result = params;
         break;
       case 288:
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        params.add("%s");
+        params.add("%d");
+        result = params;
         break;
       case 287:
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        params.add("%s");
+        params.add("%d");
+        result = params;
         break;
       case 286:
-        arrayList2.add("%s.inputOnly");
-        arrayList1 = arrayList2;
+        params.add("%s.inputOnly");
+        result = params;
         break;
       case 285:
-        arrayList2.add("%m.seekbar");
-        arrayList1 = arrayList2;
+        params.add("%m.seekbar");
+        result = params;
         break;
       case 284:
-        arrayList2.add("%m.seekbar");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.seekbar");
+        params.add("%d");
+        result = params;
         break;
       case 283:
-        arrayList2.add("%m.seekbar");
-        arrayList1 = arrayList2;
+        params.add("%m.seekbar");
+        result = params;
         break;
       case 282:
-        arrayList2.add("%m.seekbar");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.seekbar");
+        params.add("%d");
+        result = params;
         break;
       case 281:
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        result = params;
         break;
       case 280:
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        result = params;
         break;
       case 279:
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        result = params;
         break;
       case 278:
-        arrayList2.add("%m.spinner");
-        arrayList1 = arrayList2;
+        params.add("%m.spinner");
+        result = params;
         break;
       case 277:
-        arrayList2.add("%m.listview");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.listview");
+        params.add("%d");
+        result = params;
         break;
       case 276:
-        arrayList2.add("%m.listview");
-        arrayList1 = arrayList2;
+        params.add("%m.listview");
+        result = params;
         break;
       case 275:
-        arrayList2.add("%m.listview");
-        arrayList2.add("%m.listInt");
-        arrayList1 = arrayList2;
+        params.add("%m.listview");
+        params.add("%m.listInt");
+        result = params;
         break;
       case 274:
-        arrayList2.add("%m.listview");
-        arrayList1 = arrayList2;
+        params.add("%m.listview");
+        result = params;
         break;
       case 273:
-        arrayList2.add("%m.listview");
-        arrayList2.add("%d");
-        arrayList2.add("%b");
-        arrayList1 = arrayList2;
+        params.add("%m.listview");
+        params.add("%d");
+        params.add("%b");
+        result = params;
         break;
       case 272:
-        arrayList2.add("%m.listview");
-        arrayList1 = arrayList2;
+        params.add("%m.listview");
+        result = params;
         break;
       case 271:
-        arrayList2.add("%m.directoryType");
-        arrayList1 = arrayList2;
+        params.add("%m.directoryType");
+        result = params;
         break;
       case 268:
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        result = params;
         break;
       case 267:
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        params.add("%s");
+        result = params;
         break;
       case 266:
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        params.add("%s");
+        result = params;
         break;
       case 265:
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        result = params;
         break;
       case 264:
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        result = params;
         break;
       case 263:
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        result = params;
         break;
       case 262:
-        arrayList2.add("%s");
-        arrayList2.add("%m.listStr");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        params.add("%m.listStr");
+        result = params;
         break;
       case 261:
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        result = params;
         break;
       case 260:
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        result = params;
         break;
       case 259:
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        result = params;
         break;
       case 258:
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        params.add("%s");
+        result = params;
         break;
       case 257:
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        params.add("%s");
+        result = params;
         break;
       case 256:
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        params.add("%s");
+        result = params;
         break;
       case 255:
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        result = params;
         break;
       case 254:
-        arrayList2.add("%m.requestnetwork");
-        arrayList2.add("%m.method");
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.requestnetwork");
+        params.add("%m.method");
+        params.add("%s");
+        params.add("%s");
+        result = params;
         break;
       case 253:
-        arrayList2.add("%m.requestnetwork");
-        arrayList2.add("%m.varMap");
-        arrayList1 = arrayList2;
+        params.add("%m.requestnetwork");
+        params.add("%m.varMap");
+        result = params;
         break;
       case 252:
-        arrayList2.add("%m.requestnetwork");
-        arrayList2.add("%m.varMap");
-        arrayList2.add("%m.requestType");
-        arrayList1 = arrayList2;
+        params.add("%m.requestnetwork");
+        params.add("%m.varMap");
+        params.add("%m.requestType");
+        result = params;
         break;
       case 251:
-        arrayList2.add("%m.filepicker");
-        arrayList1 = arrayList2;
+        params.add("%m.filepicker");
+        result = params;
         break;
       case 250:
-        arrayList2.add("%m.camera");
-        arrayList1 = arrayList2;
+        params.add("%m.camera");
+        result = params;
         break;
       case 249:
-        arrayList2.add("%m.firebasestorage");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.firebasestorage");
+        params.add("%s");
+        result = params;
         break;
       case 248:
-        arrayList2.add("%m.firebasestorage");
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.firebasestorage");
+        params.add("%s");
+        params.add("%s");
+        result = params;
         break;
       case 247:
-        arrayList2.add("%m.firebasestorage");
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.firebasestorage");
+        params.add("%s");
+        params.add("%s");
+        result = params;
         break;
       case 246:
-        arrayList2.add("%m.interstitialad");
-        arrayList1 = arrayList2;
+        params.add("%m.interstitialad");
+        result = params;
         break;
       case 245:
-        arrayList2.add("%m.interstitialad");
-        arrayList1 = arrayList2;
+        params.add("%m.interstitialad");
+        result = params;
         break;
       case 244:
-        arrayList2.add("%m.interstitialad");
-        arrayList1 = arrayList2;
+        params.add("%m.interstitialad");
+        result = params;
         break;
       case 243:
-        arrayList2.add("%m.gyroscope");
-        arrayList1 = arrayList2;
+        params.add("%m.gyroscope");
+        result = params;
         break;
       case 242:
-        arrayList2.add("%m.gyroscope");
-        arrayList1 = arrayList2;
+        params.add("%m.gyroscope");
+        result = params;
         break;
       case 241:
-        arrayList2.add("%m.firebase");
-        arrayList1 = arrayList2;
+        params.add("%m.firebase");
+        result = params;
         break;
       case 240:
-        arrayList2.add("%m.firebase");
-        arrayList1 = arrayList2;
+        params.add("%m.firebase");
+        result = params;
         break;
       case 235:
-        arrayList2.add("%m.firebaseauth");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.firebaseauth");
+        params.add("%s");
+        result = params;
         break;
       case 234:
-        arrayList2.add("%m.firebaseauth");
-        arrayList1 = arrayList2;
+        params.add("%m.firebaseauth");
+        result = params;
         break;
       case 233:
-        arrayList2.add("%m.firebaseauth");
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.firebaseauth");
+        params.add("%s");
+        params.add("%s");
+        result = params;
         break;
       case 232:
-        arrayList2.add("%m.firebaseauth");
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.firebaseauth");
+        params.add("%s");
+        params.add("%s");
+        result = params;
         break;
       case 231:
-        arrayList2.add("%m.firebase");
-        arrayList2.add("%m.listMap");
-        arrayList1 = arrayList2;
+        params.add("%m.firebase");
+        params.add("%m.listMap");
+        result = params;
         break;
       case 230:
-        arrayList2.add("%m.firebase");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.firebase");
+        params.add("%s");
+        result = params;
         break;
       case 229:
-        arrayList2.add("%m.firebase");
-        arrayList1 = arrayList2;
+        params.add("%m.firebase");
+        result = params;
         break;
       case 228:
-        arrayList2.add("%m.firebase");
-        arrayList2.add("%m.varMap");
-        arrayList1 = arrayList2;
+        params.add("%m.firebase");
+        params.add("%m.varMap");
+        result = params;
         break;
       case 227:
-        arrayList2.add("%m.firebase");
-        arrayList2.add("%s");
-        arrayList2.add("%m.varMap");
-        arrayList1 = arrayList2;
+        params.add("%m.firebase");
+        params.add("%s");
+        params.add("%m.varMap");
+        result = params;
         break;
       case 226:
-        arrayList2.add("%m.objectanimator");
-        arrayList1 = arrayList2;
+        params.add("%m.objectanimator");
+        result = params;
         break;
       case 225:
-        arrayList2.add("%m.objectanimator");
-        arrayList1 = arrayList2;
+        params.add("%m.objectanimator");
+        result = params;
         break;
       case 224:
-        arrayList2.add("%m.objectanimator");
-        arrayList1 = arrayList2;
+        params.add("%m.objectanimator");
+        result = params;
         break;
       case 223:
-        arrayList2.add("%m.objectanimator");
-        arrayList2.add("%m.aniInterpolator");
-        arrayList1 = arrayList2;
+        params.add("%m.objectanimator");
+        params.add("%m.aniInterpolator");
+        result = params;
         break;
       case 222:
-        arrayList2.add("%m.objectanimator");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.objectanimator");
+        params.add("%d");
+        result = params;
         break;
       case 221:
-        arrayList2.add("%m.objectanimator");
-        arrayList2.add("%m.aniRepeatMode");
-        arrayList1 = arrayList2;
+        params.add("%m.objectanimator");
+        params.add("%m.aniRepeatMode");
+        result = params;
         break;
       case 220:
-        arrayList2.add("%m.objectanimator");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.objectanimator");
+        params.add("%d");
+        result = params;
         break;
       case 219:
-        arrayList2.add("%m.objectanimator");
-        arrayList2.add("%d");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.objectanimator");
+        params.add("%d");
+        params.add("%d");
+        result = params;
         break;
       case 218:
-        arrayList2.add("%m.objectanimator");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.objectanimator");
+        params.add("%d");
+        result = params;
         break;
       case 217:
-        arrayList2.add("%m.objectanimator");
-        arrayList2.add("%m.animatorproperty");
-        arrayList1 = arrayList2;
+        params.add("%m.objectanimator");
+        params.add("%m.animatorproperty");
+        result = params;
         break;
       case 216:
-        arrayList2.add("%m.objectanimator");
-        arrayList2.add("%m.view");
-        arrayList1 = arrayList2;
+        params.add("%m.objectanimator");
+        params.add("%m.view");
+        result = params;
         break;
       case 215:
-        arrayList2.add("%m.soundpool");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.soundpool");
+        params.add("%d");
+        result = params;
         break;
       case 214:
-        arrayList2.add("%m.soundpool");
-        arrayList2.add("%d");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.soundpool");
+        params.add("%d");
+        params.add("%d");
+        result = params;
         break;
       case 213:
-        arrayList2.add("%m.soundpool");
-        arrayList2.add("%m.sound");
-        arrayList1 = arrayList2;
+        params.add("%m.soundpool");
+        params.add("%m.sound");
+        result = params;
         break;
       case 212:
-        arrayList2.add("%m.soundpool");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.soundpool");
+        params.add("%d");
+        result = params;
         break;
       case 211:
-        arrayList2.add("%m.mediaplayer");
-        arrayList1 = arrayList2;
+        params.add("%m.mediaplayer");
+        result = params;
         break;
       case 210:
-        arrayList2.add("%m.mediaplayer");
-        arrayList2.add("%b");
-        arrayList1 = arrayList2;
+        params.add("%m.mediaplayer");
+        params.add("%b");
+        result = params;
         break;
       case 209:
-        arrayList2.add("%m.mediaplayer");
-        arrayList1 = arrayList2;
+        params.add("%m.mediaplayer");
+        result = params;
         break;
       case 208:
-        arrayList2.add("%m.mediaplayer");
-        arrayList1 = arrayList2;
+        params.add("%m.mediaplayer");
+        result = params;
         break;
       case 207:
-        arrayList2.add("%m.mediaplayer");
-        arrayList1 = arrayList2;
+        params.add("%m.mediaplayer");
+        result = params;
         break;
       case 206:
-        arrayList2.add("%m.mediaplayer");
-        arrayList1 = arrayList2;
+        params.add("%m.mediaplayer");
+        result = params;
         break;
       case 205:
-        arrayList2.add("%m.mediaplayer");
-        arrayList1 = arrayList2;
+        params.add("%m.mediaplayer");
+        result = params;
         break;
       case 204:
-        arrayList2.add("%m.mediaplayer");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.mediaplayer");
+        params.add("%d");
+        result = params;
         break;
       case 203:
-        arrayList2.add("%m.mediaplayer");
-        arrayList1 = arrayList2;
+        params.add("%m.mediaplayer");
+        result = params;
         break;
       case 202:
-        arrayList2.add("%m.mediaplayer");
-        arrayList1 = arrayList2;
+        params.add("%m.mediaplayer");
+        result = params;
         break;
       case 201:
-        arrayList2.add("%m.mediaplayer");
-        arrayList2.add("%m.sound");
-        arrayList1 = arrayList2;
+        params.add("%m.mediaplayer");
+        params.add("%m.sound");
+        result = params;
         break;
       case 200:
-        arrayList2.add("%m.dialog");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.dialog");
+        params.add("%s");
+        result = params;
         break;
       case 199:
-        arrayList2.add("%m.dialog");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.dialog");
+        params.add("%s");
+        result = params;
         break;
       case 198:
-        arrayList2.add("%m.dialog");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.dialog");
+        params.add("%s");
+        result = params;
         break;
       case 197:
-        arrayList2.add("%m.dialog");
-        arrayList1 = arrayList2;
+        params.add("%m.dialog");
+        result = params;
         break;
       case 196:
-        arrayList2.add("%m.dialog");
-        arrayList1 = arrayList2;
+        params.add("%m.dialog");
+        result = params;
         break;
       case 195:
-        arrayList2.add("%m.dialog");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.dialog");
+        params.add("%s");
+        result = params;
         break;
       case 194:
-        arrayList2.add("%m.dialog");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.dialog");
+        params.add("%s");
+        result = params;
         break;
       case 193:
-        arrayList2.add("%m.timer");
-        arrayList1 = arrayList2;
+        params.add("%m.timer");
+        result = params;
         break;
       case 192:
-        arrayList2.add("%m.timer");
-        arrayList2.add("%d");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.timer");
+        params.add("%d");
+        params.add("%d");
+        result = params;
         break;
       case 191:
-        arrayList2.add("%m.timer");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.timer");
+        params.add("%d");
+        result = params;
         break;
       case 190:
-        arrayList2.add("%m.vibrator");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.vibrator");
+        params.add("%d");
+        result = params;
         break;
       case 189:
-        arrayList2.add("%m.calendar");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.calendar");
+        params.add("%d");
+        result = params;
         break;
       case 188:
-        arrayList2.add("%m.calendar");
-        arrayList1 = arrayList2;
+        params.add("%m.calendar");
+        result = params;
         break;
       case 187:
-        arrayList2.add("%m.calendar");
-        arrayList2.add("%m.calendar");
-        arrayList1 = arrayList2;
+        params.add("%m.calendar");
+        params.add("%m.calendar");
+        result = params;
         break;
       case 186:
-        arrayList2.add("%m.calendar");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.calendar");
+        params.add("%s");
+        result = params;
         break;
       case 185:
-        arrayList2.add("%m.calendar");
-        arrayList2.add("%m.calendarField");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.calendar");
+        params.add("%m.calendarField");
+        params.add("%d");
+        result = params;
         break;
       case 184:
-        arrayList2.add("%m.calendar");
-        arrayList2.add("%m.calendarField");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.calendar");
+        params.add("%m.calendarField");
+        params.add("%d");
+        result = params;
         break;
       case 183:
-        arrayList2.add("%m.calendar");
-        arrayList1 = arrayList2;
+        params.add("%m.calendar");
+        result = params;
         break;
       case 182:
-        arrayList2.add("%m.file");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.file");
+        params.add("%s");
+        result = params;
         break;
       case 181:
-        arrayList2.add("%m.file");
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.file");
+        params.add("%s");
+        params.add("%s");
+        result = params;
         break;
       case 180:
-        arrayList2.add("%m.file");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.file");
+        params.add("%s");
+        result = params;
         break;
       case 178:
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        result = params;
         break;
       case 177:
-        arrayList2.add("%m.intent");
-        arrayList1 = arrayList2;
+        params.add("%m.intent");
+        result = params;
         break;
       case 176:
-        arrayList2.add("%m.intent");
-        arrayList2.add("%m.intentFlags");
-        arrayList1 = arrayList2;
+        params.add("%m.intent");
+        params.add("%m.intentFlags");
+        result = params;
         break;
       case 175:
-        arrayList2.add("%m.intent");
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.intent");
+        params.add("%s");
+        params.add("%s");
+        result = params;
         break;
       case 174:
-        arrayList2.add("%m.intent");
-        arrayList2.add("%m.activity");
-        arrayList1 = arrayList2;
+        params.add("%m.intent");
+        params.add("%m.activity");
+        result = params;
         break;
       case 173:
-        arrayList2.add("%m.intent");
-        arrayList2.add("%s.intentData");
-        arrayList1 = arrayList2;
+        params.add("%m.intent");
+        params.add("%s.intentData");
+        result = params;
         break;
       case 172:
-        arrayList2.add("%m.intent");
-        arrayList2.add("%m.intentAction");
-        arrayList1 = arrayList2;
+        params.add("%m.intent");
+        params.add("%m.intentAction");
+        result = params;
         break;
       case 171:
-        arrayList2.add("%m.mapview");
-        arrayList2.add("%s");
-        arrayList2.add("%b");
-        arrayList1 = arrayList2;
+        params.add("%m.mapview");
+        params.add("%s");
+        params.add("%b");
+        result = params;
         break;
       case 170:
-        arrayList2.add("%m.mapview");
-        arrayList2.add("%s");
-        arrayList2.add("%m.resource");
-        arrayList1 = arrayList2;
+        params.add("%m.mapview");
+        params.add("%s");
+        params.add("%m.resource");
+        result = params;
         break;
       case 169:
-        arrayList2.add("%m.mapview");
-        arrayList2.add("%s");
-        arrayList2.add("%m.markerColor");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.mapview");
+        params.add("%s");
+        params.add("%m.markerColor");
+        params.add("%d");
+        result = params;
         break;
       case 168:
-        arrayList2.add("%m.mapview");
-        arrayList2.add("%s");
-        arrayList2.add("%d");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.mapview");
+        params.add("%s");
+        params.add("%d");
+        params.add("%d");
+        result = params;
         break;
       case 167:
-        arrayList2.add("%m.mapview");
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.mapview");
+        params.add("%s");
+        params.add("%s");
+        params.add("%s");
+        result = params;
         break;
       case 166:
-        arrayList2.add("%m.mapview");
-        arrayList2.add("%s");
-        arrayList2.add("%d");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.mapview");
+        params.add("%s");
+        params.add("%d");
+        params.add("%d");
+        result = params;
         break;
       case 165:
-        arrayList2.add("%m.mapview");
-        arrayList1 = arrayList2;
+        params.add("%m.mapview");
+        result = params;
         break;
       case 164:
-        arrayList2.add("%m.mapview");
-        arrayList1 = arrayList2;
+        params.add("%m.mapview");
+        result = params;
         break;
       case 163:
-        arrayList2.add("%m.mapview");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.mapview");
+        params.add("%d");
+        result = params;
         break;
       case 162:
-        arrayList2.add("%m.mapview");
-        arrayList2.add("%d");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.mapview");
+        params.add("%d");
+        params.add("%d");
+        result = params;
         break;
       case 161:
-        arrayList2.add("%m.mapview");
-        arrayList2.add("%m.mapType");
-        arrayList1 = arrayList2;
+        params.add("%m.mapview");
+        params.add("%m.mapType");
+        result = params;
         break;
       case 160:
-        arrayList2.add("%m.adview");
-        arrayList1 = arrayList2;
+        params.add("%m.adview");
+        result = params;
         break;
       case 159:
-        arrayList2.add("%m.calendarview");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.calendarview");
+        params.add("%d");
+        result = params;
         break;
       case 158:
-        arrayList2.add("%m.calendarview");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.calendarview");
+        params.add("%d");
+        result = params;
         break;
       case 157:
-        arrayList2.add("%m.calendarview");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.calendarview");
+        params.add("%d");
+        result = params;
         break;
       case 156:
-        arrayList2.add("%m.calendarview");
-        arrayList1 = arrayList2;
+        params.add("%m.calendarview");
+        result = params;
         break;
       case 155:
-        arrayList2.add("%m.webview");
-        arrayList1 = arrayList2;
+        params.add("%m.webview");
+        result = params;
         break;
       case 154:
-        arrayList2.add("%m.webview");
-        arrayList1 = arrayList2;
+        params.add("%m.webview");
+        result = params;
         break;
       case 153:
-        arrayList2.add("%m.webview");
-        arrayList1 = arrayList2;
+        params.add("%m.webview");
+        result = params;
         break;
       case 152:
-        arrayList2.add("%m.webview");
-        arrayList1 = arrayList2;
+        params.add("%m.webview");
+        result = params;
         break;
       case 151:
-        arrayList2.add("%m.webview");
-        arrayList1 = arrayList2;
+        params.add("%m.webview");
+        result = params;
         break;
       case 150:
-        arrayList2.add("%m.webview");
-        arrayList1 = arrayList2;
+        params.add("%m.webview");
+        result = params;
         break;
       case 149:
-        arrayList2.add("%m.webview");
-        arrayList1 = arrayList2;
+        params.add("%m.webview");
+        result = params;
         break;
       case 148:
-        arrayList2.add("%m.webview");
-        arrayList1 = arrayList2;
+        params.add("%m.webview");
+        result = params;
         break;
       case 147:
-        arrayList2.add("%m.webview");
-        arrayList1 = arrayList2;
+        params.add("%m.webview");
+        result = params;
         break;
       case 146:
-        arrayList2.add("%m.webview");
-        arrayList2.add("%m.cacheMode");
-        arrayList1 = arrayList2;
+        params.add("%m.webview");
+        params.add("%m.cacheMode");
+        result = params;
         break;
       case 145:
-        arrayList2.add("%m.webview");
-        arrayList1 = arrayList2;
+        params.add("%m.webview");
+        result = params;
         break;
       case 144:
-        arrayList2.add("%m.webview");
-        arrayList2.add("%s.url");
-        arrayList1 = arrayList2;
+        params.add("%m.webview");
+        params.add("%s.url");
+        result = params;
         break;
       case 143:
-        arrayList2.add("%m.spinner");
-        arrayList1 = arrayList2;
+        params.add("%m.spinner");
+        result = params;
         break;
       case 142:
-        arrayList2.add("%m.spinner");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.spinner");
+        params.add("%d");
+        result = params;
         break;
       case 141:
-        arrayList2.add("%m.spinner");
-        arrayList2.add("%m.listStr");
-        arrayList1 = arrayList2;
+        params.add("%m.spinner");
+        params.add("%m.listStr");
+        result = params;
         break;
       case 140:
-        arrayList2.add("%m.listview");
-        arrayList2.add("%m.listMap");
-        arrayList1 = arrayList2;
+        params.add("%m.listview");
+        params.add("%m.listMap");
+        result = params;
         break;
       case 139:
-        arrayList2.add("%m.listview");
-        arrayList2.add("%m.listStr");
-        arrayList1 = arrayList2;
+        params.add("%m.listview");
+        params.add("%m.listStr");
+        result = params;
         break;
       case 138:
-        arrayList2.add("%m.switch");
-        arrayList2.add("%m.resource");
-        arrayList1 = arrayList2;
+        params.add("%m.switch");
+        params.add("%m.resource");
+        result = params;
         break;
       case 137:
-        arrayList2.add("%m.switch");
-        arrayList2.add("%m.resource");
-        arrayList1 = arrayList2;
+        params.add("%m.switch");
+        params.add("%m.resource");
+        result = params;
         break;
       case 136:
-        arrayList2.add("%m.checkbox");
-        arrayList1 = arrayList2;
+        params.add("%m.checkbox");
+        result = params;
         break;
       case 135:
-        arrayList2.add("%m.checkbox");
-        arrayList2.add("%b");
-        arrayList1 = arrayList2;
+        params.add("%m.checkbox");
+        params.add("%b");
+        result = params;
         break;
       case 134:
-        arrayList2.add("%m.view");
-        arrayList1 = arrayList2;
+        params.add("%m.view");
+        result = params;
         break;
       case 133:
-        arrayList2.add("%m.view");
-        arrayList1 = arrayList2;
+        params.add("%m.view");
+        result = params;
         break;
       case 132:
-        arrayList2.add("%m.view");
-        arrayList1 = arrayList2;
+        params.add("%m.view");
+        result = params;
         break;
       case 131:
-        arrayList2.add("%m.view");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.view");
+        params.add("%d");
+        result = params;
         break;
       case 130:
-        arrayList2.add("%m.view");
-        arrayList1 = arrayList2;
+        params.add("%m.view");
+        result = params;
         break;
       case 129:
-        arrayList2.add("%m.view");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.view");
+        params.add("%d");
+        result = params;
         break;
       case 128:
-        arrayList2.add("%m.view");
-        arrayList1 = arrayList2;
+        params.add("%m.view");
+        result = params;
         break;
       case 127:
-        arrayList2.add("%m.view");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.view");
+        params.add("%d");
+        result = params;
         break;
       case 126:
-        arrayList2.add("%m.view");
-        arrayList1 = arrayList2;
+        params.add("%m.view");
+        result = params;
         break;
       case 125:
-        arrayList2.add("%m.view");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.view");
+        params.add("%d");
+        result = params;
         break;
       case 124:
-        arrayList2.add("%m.view");
-        arrayList1 = arrayList2;
+        params.add("%m.view");
+        result = params;
         break;
       case 123:
-        arrayList2.add("%m.view");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.view");
+        params.add("%d");
+        result = params;
         break;
       case 122:
-        arrayList2.add("%m.view");
-        arrayList1 = arrayList2;
+        params.add("%m.view");
+        result = params;
         break;
       case 121:
-        arrayList2.add("%m.view");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.view");
+        params.add("%d");
+        result = params;
         break;
       case 120:
-        arrayList2.add("%m.imageview");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.imageview");
+        params.add("%s");
+        result = params;
         break;
       case 119:
-        arrayList2.add("%m.imageview");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.imageview");
+        params.add("%s");
+        result = params;
         break;
       case 118:
-        arrayList2.add("%m.view");
-        arrayList1 = arrayList2;
+        params.add("%m.view");
+        result = params;
         break;
       case 117:
-        arrayList2.add("%m.imageview");
-        arrayList2.add("%m.color");
-        arrayList1 = arrayList2;
+        params.add("%m.imageview");
+        params.add("%m.color");
+        result = params;
         break;
       case 116:
-        arrayList2.add("%m.imageview");
-        arrayList2.add("%m.resource");
-        arrayList1 = arrayList2;
+        params.add("%m.imageview");
+        params.add("%m.resource");
+        result = params;
         break;
       case 115:
-        arrayList2.add("%m.edittext");
-        arrayList2.add("%m.color");
-        arrayList1 = arrayList2;
+        params.add("%m.edittext");
+        params.add("%m.color");
+        result = params;
         break;
       case 114:
-        arrayList2.add("%m.edittext");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.edittext");
+        params.add("%s");
+        result = params;
         break;
       case 113:
-        arrayList2.add("%m.textview");
-        arrayList2.add("%m.color");
-        arrayList1 = arrayList2;
+        params.add("%m.textview");
+        params.add("%m.color");
+        result = params;
         break;
       case 112:
-        arrayList2.add("%m.view");
-        arrayList2.add("%m.resource_bg");
-        arrayList1 = arrayList2;
+        params.add("%m.view");
+        params.add("%m.resource_bg");
+        result = params;
         break;
       case 111:
-        arrayList2.add("%m.view");
-        arrayList2.add("%m.color");
-        arrayList1 = arrayList2;
+        params.add("%m.view");
+        params.add("%m.color");
+        result = params;
         break;
       case 110:
-        arrayList2.add("%m.textview");
-        arrayList1 = arrayList2;
+        params.add("%m.textview");
+        result = params;
         break;
       case 109:
-        arrayList2.add("%m.textview");
-        arrayList2.add("%m.font");
-        arrayList2.add("%m.typeface");
-        arrayList1 = arrayList2;
+        params.add("%m.textview");
+        params.add("%m.font");
+        params.add("%m.typeface");
+        result = params;
         break;
       case 108:
-        arrayList2.add("%m.textview");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.textview");
+        params.add("%s");
+        result = params;
         break;
       case 107:
-        arrayList2.add("%m.view");
-        arrayList2.add("%b");
-        arrayList1 = arrayList2;
+        params.add("%m.view");
+        params.add("%b");
+        result = params;
         break;
       case 106:
-        arrayList2.add("%m.view");
-        arrayList2.add("%m.visible");
-        arrayList1 = arrayList2;
+        params.add("%m.view");
+        params.add("%m.visible");
+        result = params;
         break;
       case 105:
-        arrayList2.add("%m.view");
-        arrayList1 = arrayList2;
+        params.add("%m.view");
+        result = params;
         break;
       case 104:
-        arrayList2.add("%m.view");
-        arrayList2.add("%b");
-        arrayList1 = arrayList2;
+        params.add("%m.view");
+        params.add("%b");
+        result = params;
         break;
       case 100:
-        arrayList2.add("%m.view");
-        arrayList1 = arrayList2;
+        params.add("%m.view");
+        result = params;
         break;
       case 99:
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        result = params;
         break;
       case 98:
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        result = params;
         break;
       case 97:
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        result = params;
         break;
       case 96:
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        result = params;
         break;
       case 95:
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        result = params;
         break;
       case 94:
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        result = params;
         break;
       case 93:
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        result = params;
         break;
       case 92:
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        result = params;
         break;
       case 91:
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        result = params;
         break;
       case 90:
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        result = params;
         break;
       case 89:
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        result = params;
         break;
       case 88:
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        result = params;
         break;
       case 87:
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        result = params;
         break;
       case 86:
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        result = params;
         break;
       case 85:
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        result = params;
         break;
       case 84:
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        result = params;
         break;
       case 83:
-        arrayList2.add("%d");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        params.add("%d");
+        result = params;
         break;
       case 82:
-        arrayList2.add("%d");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        params.add("%d");
+        result = params;
         break;
       case 81:
-        arrayList2.add("%d");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        params.add("%d");
+        result = params;
         break;
       case 76:
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        result = params;
         break;
       case 75:
-        arrayList2.add("%m.listMap");
-        arrayList1 = arrayList2;
+        params.add("%m.listMap");
+        result = params;
         break;
       case 74:
-        arrayList2.add("%s");
-        arrayList2.add("%m.listMap");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        params.add("%m.listMap");
+        result = params;
         break;
       case 73:
-        arrayList2.add("%m.varMap");
-        arrayList1 = arrayList2;
+        params.add("%m.varMap");
+        result = params;
         break;
       case 72:
-        arrayList2.add("%s");
-        arrayList2.add("%m.varMap");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        params.add("%m.varMap");
+        result = params;
         break;
       case 71:
-        arrayList2.add("%d");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        params.add("%s");
+        result = params;
         break;
       case 70:
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        result = params;
         break;
       case 69:
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        result = params;
         break;
       case 68:
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        result = params;
         break;
       case 67:
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        result = params;
         break;
       case 66:
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        result = params;
         break;
       case 65:
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        result = params;
         break;
       case 64:
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        params.add("%s");
+        params.add("%s");
+        result = params;
         break;
       case 63:
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        params.add("%s");
+        params.add("%s");
+        result = params;
         break;
       case 62:
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        params.add("%s");
+        params.add("%s");
+        result = params;
         break;
       case 61:
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        params.add("%s");
+        result = params;
         break;
       case 60:
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        params.add("%s");
+        result = params;
         break;
       case 59:
-        arrayList2.add("%s");
-        arrayList2.add("%d");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        params.add("%d");
+        params.add("%d");
+        result = params;
         break;
       case 58:
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        params.add("%s");
+        result = params;
         break;
       case 57:
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        params.add("%s");
+        result = params;
         break;
       case 56:
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        params.add("%s");
+        result = params;
         break;
       case 55:
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        result = params;
         break;
       case 54:
-        arrayList2.add("%d");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        params.add("%d");
+        result = params;
         break;
       case 53:
-        arrayList2.add("%d");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        params.add("%d");
+        result = params;
         break;
       case 52:
-        arrayList2.add("%d");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        params.add("%d");
+        result = params;
         break;
       case 51:
-        arrayList2.add("%d");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        params.add("%d");
+        result = params;
         break;
       case 50:
-        arrayList2.add("%d");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        params.add("%d");
+        result = params;
         break;
       case 49:
-        arrayList2.add("%d");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        params.add("%d");
+        result = params;
         break;
       case 48:
-        arrayList2.add("%b");
-        arrayList1 = arrayList2;
+        params.add("%b");
+        result = params;
         break;
       case 47:
-        arrayList2.add("%b");
-        arrayList2.add("%b");
-        arrayList1 = arrayList2;
+        params.add("%b");
+        params.add("%b");
+        result = params;
         break;
       case 46:
-        arrayList2.add("%b");
-        arrayList2.add("%b");
-        arrayList1 = arrayList2;
+        params.add("%b");
+        params.add("%b");
+        result = params;
         break;
       case 45:
-        arrayList2.add("%d");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        params.add("%d");
+        result = params;
         break;
       case 44:
-        arrayList2.add("%d");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        params.add("%d");
+        result = params;
         break;
       case 43:
-        arrayList2.add("%d");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        params.add("%d");
+        result = params;
         break;
       case 39:
-        arrayList2.add("%b");
-        arrayList1 = arrayList2;
+        params.add("%b");
+        result = params;
         break;
       case 38:
-        arrayList2.add("%b");
-        arrayList1 = arrayList2;
+        params.add("%b");
+        result = params;
         break;
       case 35:
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        result = params;
         break;
       case 34:
-        arrayList2.add("%m.list");
-        arrayList1 = arrayList2;
+        params.add("%m.list");
+        result = params;
         break;
       case 33:
-        arrayList2.add("%m.list");
-        arrayList1 = arrayList2;
+        params.add("%m.list");
+        result = params;
         break;
       case 32:
-        arrayList2.add("%d");
-        arrayList2.add("%m.list");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        params.add("%m.list");
+        result = params;
         break;
       case 31:
-        arrayList2.add("%d");
-        arrayList2.add("%m.listMap");
-        arrayList2.add("%m.varMap");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        params.add("%m.listMap");
+        params.add("%m.varMap");
+        result = params;
         break;
       case 30:
-        arrayList2.add("%m.varMap");
-        arrayList2.add("%d");
-        arrayList2.add("%m.listMap");
-        arrayList1 = arrayList2;
+        params.add("%m.varMap");
+        params.add("%d");
+        params.add("%m.listMap");
+        result = params;
         break;
       case 29:
-        arrayList2.add("%m.varMap");
-        arrayList2.add("%m.listMap");
-        arrayList1 = arrayList2;
+        params.add("%m.varMap");
+        params.add("%m.listMap");
+        result = params;
         break;
       case 28:
-        arrayList2.add("%m.listMap");
-        arrayList2.add("%d");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.listMap");
+        params.add("%d");
+        params.add("%s");
+        result = params;
         break;
       case 27:
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList2.add("%d");
-        arrayList2.add("%m.listMap");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        params.add("%s");
+        params.add("%d");
+        params.add("%m.listMap");
+        result = params;
         break;
       case 26:
-        arrayList2.add("%d");
-        arrayList2.add("%s");
-        arrayList2.add("%m.listMap");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        params.add("%s");
+        params.add("%m.listMap");
+        result = params;
         break;
       case 25:
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList2.add("%d");
-        arrayList2.add("%m.listMap");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        params.add("%s");
+        params.add("%d");
+        params.add("%m.listMap");
+        result = params;
         break;
       case 24:
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList2.add("%m.listMap");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        params.add("%s");
+        params.add("%m.listMap");
+        result = params;
         break;
       case 23:
-        arrayList2.add("%m.listStr");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.listStr");
+        params.add("%s");
+        result = params;
         break;
       case 22:
-        arrayList2.add("%s");
-        arrayList2.add("%m.listStr");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        params.add("%m.listStr");
+        result = params;
         break;
       case 21:
-        arrayList2.add("%d");
-        arrayList2.add("%m.listStr");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        params.add("%m.listStr");
+        result = params;
         break;
       case 20:
-        arrayList2.add("%s");
-        arrayList2.add("%d");
-        arrayList2.add("%m.listStr");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        params.add("%d");
+        params.add("%m.listStr");
+        result = params;
         break;
       case 19:
-        arrayList2.add("%s");
-        arrayList2.add("%m.listStr");
-        arrayList1 = arrayList2;
+        params.add("%s");
+        params.add("%m.listStr");
+        result = params;
         break;
       case 18:
-        arrayList2.add("%m.listInt");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.listInt");
+        params.add("%d");
+        result = params;
         break;
       case 17:
-        arrayList2.add("%d");
-        arrayList2.add("%m.listInt");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        params.add("%m.listInt");
+        result = params;
         break;
       case 16:
-        arrayList2.add("%d");
-        arrayList2.add("%m.listInt");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        params.add("%m.listInt");
+        result = params;
         break;
       case 15:
-        arrayList2.add("%d");
-        arrayList2.add("%d");
-        arrayList2.add("%m.listInt");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        params.add("%d");
+        params.add("%m.listInt");
+        result = params;
         break;
       case 14:
-        arrayList2.add("%d");
-        arrayList2.add("%m.listInt");
-        arrayList1 = arrayList2;
+        params.add("%d");
+        params.add("%m.listInt");
+        result = params;
         break;
       case 13:
-        arrayList2.add("%m.varMap");
-        arrayList2.add("%m.listStr");
-        arrayList1 = arrayList2;
+        params.add("%m.varMap");
+        params.add("%m.listStr");
+        result = params;
         break;
       case 12:
-        arrayList2.add("%m.varMap");
-        arrayList1 = arrayList2;
+        params.add("%m.varMap");
+        result = params;
         break;
       case 11:
-        arrayList2.add("%m.varMap");
-        arrayList1 = arrayList2;
+        params.add("%m.varMap");
+        result = params;
         break;
       case 10:
-        arrayList2.add("%m.varMap");
-        arrayList1 = arrayList2;
+        params.add("%m.varMap");
+        result = params;
         break;
       case 9:
-        arrayList2.add("%m.varMap");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.varMap");
+        params.add("%s");
+        result = params;
         break;
       case 8:
-        arrayList2.add("%m.varMap");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.varMap");
+        params.add("%s");
+        result = params;
         break;
       case 7:
-        arrayList2.add("%m.varMap");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.varMap");
+        params.add("%s");
+        result = params;
         break;
       case 6:
-        arrayList2.add("%m.varMap");
-        arrayList2.add("%s");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.varMap");
+        params.add("%s");
+        params.add("%s");
+        result = params;
         break;
       case 5:
-        arrayList2.add("%m.varMap");
-        arrayList1 = arrayList2;
+        params.add("%m.varMap");
+        result = params;
         break;
       case 4:
-        arrayList2.add("%m.varStr");
-        arrayList2.add("%s");
-        arrayList1 = arrayList2;
+        params.add("%m.varStr");
+        params.add("%s");
+        result = params;
         break;
       case 3:
-        arrayList2.add("%m.varInt");
-        arrayList1 = arrayList2;
+        params.add("%m.varInt");
+        result = params;
         break;
       case 2:
-        arrayList2.add("%m.varInt");
-        arrayList1 = arrayList2;
+        params.add("%m.varInt");
+        result = params;
         break;
       case 1:
-        arrayList2.add("%m.varInt");
-        arrayList2.add("%d");
-        arrayList1 = arrayList2;
+        params.add("%m.varInt");
+        params.add("%d");
+        result = params;
         break;
       case 0:
-        arrayList2.add("%m.varBool");
-        arrayList2.add("%b");
-        arrayList1 = arrayList2;
+        params.add("%m.varBool");
+        params.add("%b");
+        result = params;
         break;
       case 36:
       case 37:
@@ -3106,8 +3106,8 @@ public class BlockSpecRegistry {
       case 270:
         break;
     } 
-    cacheA.put(blockName, arrayList1);
-    return arrayList1;
+    cacheA.put(blockName, result);
+    return result;
   }
   
   public static ArrayList<String> getBlockMenuItems(String blockName) {
