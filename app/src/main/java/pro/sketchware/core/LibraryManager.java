@@ -87,8 +87,8 @@ public class LibraryManager {
     StringBuffer stringBuffer = new StringBuffer();
     serializeLibraries(stringBuffer);
     try {
-      byte[] arrayOfByte = this.fileUtil.encryptString(stringBuffer.toString());
-      this.fileUtil.writeBytes(value, arrayOfByte);
+      byte[] bytes = this.fileUtil.encryptString(stringBuffer.toString());
+      this.fileUtil.writeBytes(value, bytes);
     } catch (Exception exception) {
       exception.printStackTrace();
     } 
@@ -203,8 +203,8 @@ public class LibraryManager {
     str1 = stringBuilder1.toString();
     BufferedReader bufferedReader = null;
     try {
-      byte[] arrayOfByte = this.fileUtil.readFileBytes(str1);
-      String str = this.fileUtil.decryptToString(arrayOfByte);
+      byte[] bytes = this.fileUtil.readFileBytes(str1);
+      String str = this.fileUtil.decryptToString(bytes);
       bufferedReader = new BufferedReader(new StringReader(str));
       parseLibraryData(bufferedReader);
     } catch (Exception exception) {
@@ -226,8 +226,8 @@ public class LibraryManager {
       return; 
     BufferedReader bufferedReader = null;
     try {
-      byte[] arrayOfByte = this.fileUtil.readFileBytes(str1);
-      String str = this.fileUtil.decryptToString(arrayOfByte);
+      byte[] bytes = this.fileUtil.readFileBytes(str1);
+      String str = this.fileUtil.decryptToString(bytes);
       bufferedReader = new BufferedReader(new StringReader(str));
       parseLibraryData(bufferedReader);
     } catch (Exception exception) {

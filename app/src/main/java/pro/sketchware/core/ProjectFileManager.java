@@ -275,8 +275,8 @@ public class ProjectFileManager {
     StringBuffer stringBuffer = new StringBuffer();
     serializeFiles(stringBuffer);
     try {
-      byte[] arrayOfByte = this.fileUtil.encryptString(stringBuffer.toString());
-      this.fileUtil.writeBytes(str, arrayOfByte);
+      byte[] bytes = this.fileUtil.encryptString(stringBuffer.toString());
+      this.fileUtil.writeBytes(str, bytes);
     } catch (Exception exception) {
       exception.printStackTrace();
     } 
@@ -308,8 +308,8 @@ public class ProjectFileManager {
     String str2 = stringBuilder.toString();
     BufferedReader bufferedReader = null;
     try {
-      byte[] arrayOfByte = this.fileUtil.readFileBytes(str2);
-      String str = this.fileUtil.decryptToString(arrayOfByte);
+      byte[] bytes = this.fileUtil.readFileBytes(str2);
+      String str = this.fileUtil.decryptToString(bytes);
       bufferedReader = new BufferedReader(new StringReader(str));
       parseFileData(bufferedReader);
     } catch (Exception exception) {
@@ -332,8 +332,8 @@ public class ProjectFileManager {
       return; 
     BufferedReader bufferedReader = null;
     try {
-      byte[] arrayOfByte = this.fileUtil.readFileBytes(str1);
-      String str = this.fileUtil.decryptToString(arrayOfByte);
+      byte[] bytes = this.fileUtil.readFileBytes(str1);
+      String str = this.fileUtil.decryptToString(bytes);
       bufferedReader = new BufferedReader(new StringReader(str));
       parseFileData(bufferedReader);
     } catch (Exception exception) {

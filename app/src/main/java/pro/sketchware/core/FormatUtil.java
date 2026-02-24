@@ -75,22 +75,22 @@ public class FormatUtil {
   
   public static byte[] hexStringToBytes(String value) {
     int i = value.length();
-    byte[] arrayOfByte = new byte[(i + 1) / 2];
+    byte[] bytes = new byte[(i + 1) / 2];
     int j = 0;
     byte b = 1;
     if (i % 2 == 1) {
-      arrayOfByte[0] = (byte)hexCharToInt(value.charAt(0));
+      bytes[0] = (byte)hexCharToInt(value.charAt(0));
       j = 1;
     } else {
       b = 0;
     } 
     while (j < i) {
       int k = j + 1;
-      arrayOfByte[b] = (byte)(hexCharToInt(value.charAt(j)) << 4 | hexCharToInt(value.charAt(k)));
+      bytes[b] = (byte)(hexCharToInt(value.charAt(j)) << 4 | hexCharToInt(value.charAt(k)));
       b++;
       j = k + 1;
     } 
-    return arrayOfByte;
+    return bytes;
   }
   
   public static String formatNumber(int index) {

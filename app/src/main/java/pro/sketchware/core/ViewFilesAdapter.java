@@ -63,9 +63,9 @@ public class ViewFilesAdapter extends BaseFragment {
         return str; 
       StringBuilder stringBuilder1 = new StringBuilder();
       stringBuilder1.append(str1);
-      int[] arrayOfInt1 = this.viewCounters;
-      i = arrayOfInt1[position] + 1;
-      arrayOfInt1[position] = i;
+      int[] intValues1 = this.viewCounters;
+      i = intValues1[position] + 1;
+      intValues1[position] = i;
       stringBuilder1.append(i);
       str = stringBuilder1.toString(); // Fix: assign generated string back to str
     } 

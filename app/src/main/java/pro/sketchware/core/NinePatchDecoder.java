@@ -13,13 +13,13 @@ public class NinePatchDecoder {
   public static Bitmap decode(InputStream inputStream) throws Exception {
     Field field;
     Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-    byte[] arrayOfByte = buildNinePatchChunk(bitmap);
-    if (NinePatch.isNinePatchChunk(arrayOfByte)) {
+    byte[] bytes = buildNinePatchChunk(bitmap);
+    if (NinePatch.isNinePatchChunk(bytes)) {
       Bitmap bitmap1 = Bitmap.createBitmap(bitmap, 1, 1, bitmap.getWidth() - 2, bitmap.getHeight() - 2);
       bitmap.recycle();
       field = bitmap1.getClass().getDeclaredField("mNinePatchChunk");
       field.setAccessible(true);
-      field.set(bitmap1, arrayOfByte);
+      field.set(bitmap1, bytes);
       return bitmap1;
     } 
     return bitmap;
@@ -174,13 +174,13 @@ public class NinePatchDecoder {
         k++;
         continue;
       } 
-      byte[] arrayOfByte = byteArrayOutputStream.toByteArray();
-      arrayOfByte[0] = 1;
-      arrayOfByte[1] = (byte)i;
-      arrayOfByte[2] = (byte)i3;
-      arrayOfByte[3] = (byte)n;
-      extractPadding(bitmap, arrayOfByte);
-      return arrayOfByte;
+      byte[] bytes = byteArrayOutputStream.toByteArray();
+      bytes[0] = 1;
+      bytes[1] = (byte)i;
+      bytes[2] = (byte)i3;
+      bytes[3] = (byte)n;
+      extractPadding(bitmap, bytes);
+      return bytes;
     } 
   }
 }

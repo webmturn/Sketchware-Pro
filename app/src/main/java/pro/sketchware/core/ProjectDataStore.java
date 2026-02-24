@@ -1195,8 +1195,8 @@ public class ProjectDataStore {
       return; 
     BufferedReader bufferedReader = null;
     try {
-      byte[] arrayOfByte = this.fileUtil.readFileBytes(str2);
-      String str = this.fileUtil.decryptToString(arrayOfByte);
+      byte[] bytes = this.fileUtil.readFileBytes(str2);
+      String str = this.fileUtil.decryptToString(bytes);
       bufferedReader = new BufferedReader(new StringReader(str));
       readLogicData(bufferedReader);
     } catch (Exception exception) {
@@ -1252,8 +1252,8 @@ public class ProjectDataStore {
     String str2 = stringBuilder.toString();
     BufferedReader bufferedReader = null;
     try {
-      byte[] arrayOfByte = this.fileUtil.readFileBytes(str2);
-      String str = this.fileUtil.decryptToString(arrayOfByte);
+      byte[] bytes = this.fileUtil.readFileBytes(str2);
+      String str = this.fileUtil.decryptToString(bytes);
       bufferedReader = new BufferedReader(new StringReader(str));
       readLogicData(bufferedReader);
     } catch (Exception exception) {
@@ -1328,8 +1328,8 @@ public class ProjectDataStore {
       return; 
     BufferedReader bufferedReader = null;
     try {
-      byte[] arrayOfByte = this.fileUtil.readFileBytes(str2);
-      String str = this.fileUtil.decryptToString(arrayOfByte);
+      byte[] bytes = this.fileUtil.readFileBytes(str2);
+      String str = this.fileUtil.decryptToString(bytes);
       bufferedReader = new BufferedReader(new StringReader(str));
       readViewData(bufferedReader);
     } catch (Exception exception) {
@@ -1387,8 +1387,8 @@ public class ProjectDataStore {
     str2 = stringBuilder1.toString();
     BufferedReader bufferedReader = null;
     try {
-      byte[] arrayOfByte = this.fileUtil.readFileBytes(str2);
-      String str = this.fileUtil.decryptToString(arrayOfByte);
+      byte[] bytes = this.fileUtil.readFileBytes(str2);
+      String str = this.fileUtil.decryptToString(bytes);
       bufferedReader = new BufferedReader(new StringReader(str));
       readViewData(bufferedReader);
     } catch (Exception exception) {
@@ -1565,8 +1565,8 @@ public class ProjectDataStore {
     StringBuffer stringBuffer = new StringBuffer();
     serializeLogicData(stringBuffer);
     try {
-      byte[] arrayOfByte = this.fileUtil.encryptString(stringBuffer.toString());
-      this.fileUtil.writeBytes(str, arrayOfByte);
+      byte[] bytes = this.fileUtil.encryptString(stringBuffer.toString());
+      this.fileUtil.writeBytes(str, bytes);
     } catch (Exception exception) {
       exception.printStackTrace();
     } 
@@ -1619,8 +1619,8 @@ public class ProjectDataStore {
     StringBuffer stringBuffer = new StringBuffer();
     serializeViewData(stringBuffer);
     try {
-      byte[] arrayOfByte = this.fileUtil.encryptString(stringBuffer.toString());
-      this.fileUtil.writeBytes(str, arrayOfByte);
+      byte[] bytes = this.fileUtil.encryptString(stringBuffer.toString());
+      this.fileUtil.writeBytes(str, bytes);
     } catch (Exception exception) {
       exception.printStackTrace();
     } 

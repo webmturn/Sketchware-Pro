@@ -60,11 +60,11 @@ public class KeyStoreManager {
   }
   
   public void generateAndSaveKeyStore(String key, String value, int index, String extra, String tag) throws Exception {
-    byte[] arrayOfByte = generateKeyPair(value, index, extra, tag);
+    byte[] bytes = generateKeyPair(value, index, extra, tag);
     File file = new File(SketchwarePaths.getKeystoreDirPath());
     if (!file.exists())
       file.mkdirs(); 
-    (new EncryptedFileUtil()).writeBytes(key, arrayOfByte);
+    (new EncryptedFileUtil()).writeBytes(key, bytes);
   }
   
   public final byte[] exportKeyStore(String str) throws Exception {
@@ -73,18 +73,18 @@ public class KeyStoreManager {
     this.keyBuffer = ByteBuffer.allocate(8192);
     KeyStoreOutputStream hI = new KeyStoreOutputStream(this);
     this.keyStore.store(hI, str.toCharArray());
-    byte[] arrayOfByte = new byte[this.keyBuffer.position()];
-    System.arraycopy(this.keyBuffer.array(), 0, arrayOfByte, 0, this.keyBuffer.position());
-    int i = arrayOfByte.length;
+    byte[] bytes = new byte[this.keyBuffer.position()];
+    System.arraycopy(this.keyBuffer.array(), 0, bytes, 0, this.keyBuffer.position());
+    int i = bytes.length;
     str = "";
     for (int b = 0; b < i; b++) {
-      byte b1 = arrayOfByte[b];
+      byte b1 = bytes[b];
       StringBuilder stringBuilder = new StringBuilder();
       stringBuilder.append(str);
       stringBuilder.append(String.format("%02X", new Object[] { Byte.valueOf(b1) }));
       str = stringBuilder.toString();
     } 
-    return arrayOfByte;
+    return bytes;
   }
   
   public byte[] generateKeyPair(String key, int index, String value, String extra) throws Exception {

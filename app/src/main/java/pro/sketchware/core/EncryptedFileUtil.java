@@ -231,8 +231,8 @@ public class EncryptedFileUtil {
   
   public byte[] decrypt(byte[] data) throws Exception {
     Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-    byte[] arrayOfByte = "sketchwaresecure".getBytes();
-    cipher.init(2, new SecretKeySpec(arrayOfByte, "AES"), new IvParameterSpec(arrayOfByte));
+    byte[] bytes = "sketchwaresecure".getBytes();
+    cipher.init(2, new SecretKeySpec(bytes, "AES"), new IvParameterSpec(bytes));
     return cipher.doFinal(data);
   }
   
@@ -259,8 +259,8 @@ public class EncryptedFileUtil {
   
   public byte[] encrypt(byte[] data) throws Exception {
     Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-    byte[] arrayOfByte = "sketchwaresecure".getBytes();
-    cipher.init(1, new SecretKeySpec(arrayOfByte, "AES"), new IvParameterSpec(arrayOfByte));
+    byte[] bytes = "sketchwaresecure".getBytes();
+    cipher.init(1, new SecretKeySpec(bytes, "AES"), new IvParameterSpec(bytes));
     return cipher.doFinal(data);
   }
   

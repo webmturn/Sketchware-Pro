@@ -513,8 +513,8 @@ public class ResourceManager {
     String str2 = stringBuilder.toString();
     BufferedReader bufferedReader = null;
     try {
-      byte[] arrayOfByte = this.fileUtil.readFileBytes(str2);
-      String str = this.fileUtil.decryptToString(arrayOfByte);
+      byte[] bytes = this.fileUtil.readFileBytes(str2);
+      String str = this.fileUtil.decryptToString(bytes);
       bufferedReader = new BufferedReader(new StringReader(str));
       parseResourceData(bufferedReader);
     } catch (Exception exception) {
@@ -538,8 +538,8 @@ public class ResourceManager {
       return; 
     BufferedReader bufferedReader = null;
     try {
-      byte[] arrayOfByte = this.fileUtil.readFileBytes(str1);
-      String str = this.fileUtil.decryptToString(arrayOfByte);
+      byte[] bytes = this.fileUtil.readFileBytes(str1);
+      String str = this.fileUtil.decryptToString(bytes);
       bufferedReader = new BufferedReader(new StringReader(str));
       parseResourceData(bufferedReader);
     } catch (Exception exception) {
@@ -614,8 +614,8 @@ public class ResourceManager {
     StringBuffer stringBuffer = new StringBuffer();
     serializeResources(stringBuffer);
     try {
-      byte[] arrayOfByte = this.fileUtil.encryptString(stringBuffer.toString());
-      this.fileUtil.writeBytes(str2, arrayOfByte);
+      byte[] bytes = this.fileUtil.encryptString(stringBuffer.toString());
+      this.fileUtil.writeBytes(str2, bytes);
     } catch (Exception exception) {
       exception.printStackTrace();
     } 
@@ -632,8 +632,8 @@ public class ResourceManager {
     StringBuffer stringBuffer = new StringBuffer();
     serializeResources(stringBuffer);
     try {
-      byte[] arrayOfByte = this.fileUtil.encryptString(stringBuffer.toString());
-      this.fileUtil.writeBytes(str, arrayOfByte);
+      byte[] bytes = this.fileUtil.encryptString(stringBuffer.toString());
+      this.fileUtil.writeBytes(str, bytes);
     } catch (Exception exception) {
       exception.printStackTrace();
     } 
