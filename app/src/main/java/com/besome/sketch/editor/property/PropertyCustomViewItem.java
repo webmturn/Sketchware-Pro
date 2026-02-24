@@ -40,10 +40,10 @@ public class PropertyCustomViewItem extends RelativeLayout implements View.OnCli
 
     public PropertyCustomViewItem(Context context, boolean idk) {
         super(context);
-        a(idk);
+        initializeView(idk);
     }
 
-    private RadioButton a(String fileName) {
+    private RadioButton createRadioButton(String fileName) {
         RadioButton radioButton = new RadioButton(getContext());
         radioButton.setText(fileName);
         radioButton.setTag(fileName);
@@ -53,16 +53,16 @@ public class PropertyCustomViewItem extends RelativeLayout implements View.OnCli
         return radioButton;
     }
 
-    private void a() {
+    private void showSelectionDialog() {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(getContext());
         dialog.setTitle(Helper.getText(tvName));
         dialog.setIcon(f);
         PropertyPopupSelectorSingleBinding propertyBinding = PropertyPopupSelectorSingleBinding.inflate(((Activity) getContext()).getLayoutInflater());
         RadioGroup rgContent = propertyBinding.rgContent;
-        rgContent.addView(a("none"));
+        rgContent.addView(createRadioButton("none"));
 
         for (ProjectFileBean projectFileBean : customViews) {
-            RadioButton var4 = a(projectFileBean.fileName);
+            RadioButton var4 = createRadioButton(projectFileBean.fileName);
             propertyBinding.rgContent.addView(var4);
         }
 
@@ -93,7 +93,7 @@ public class PropertyCustomViewItem extends RelativeLayout implements View.OnCli
         dialog.show();
     }
 
-    private void a(boolean var2) {
+    private void initializeView(boolean var2) {
         ViewUtil.inflateLayoutInto(getContext(), this, R.layout.property_selector_item);
         tvName = findViewById(R.id.tv_name);
         tvValue = findViewById(R.id.tv_value);
@@ -144,7 +144,7 @@ public class PropertyCustomViewItem extends RelativeLayout implements View.OnCli
     public void onClick(View var1) {
         if (!UIHelper.isClickThrottled()) {
             if ("property_custom_view_listview".equals(key)) {
-                a();
+                showSelectionDialog();
             }
         }
     }
