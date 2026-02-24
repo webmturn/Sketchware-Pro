@@ -8,11 +8,11 @@ public class MapValueHelper {
     return (value instanceof Integer) ? ((Integer)get(map, key, Integer.valueOf(index))).intValue() : ((value instanceof Double) ? ((Double)get(map, key, Integer.valueOf(index))).intValue() : index);
   }
   
-  public static Object get(Map<String, Object> map, String key, Object obj) {
+  public static Object get(Map<String, Object> map, String key, Object defaultValue) {
     if (map == null)
-      return obj; 
+      return defaultValue; 
     Object result = map.get(key);
-    return (result == null) ? obj : result;
+    return (result == null) ? defaultValue : result;
   }
   
   public static boolean get(Map<String, Object> map, String key) {

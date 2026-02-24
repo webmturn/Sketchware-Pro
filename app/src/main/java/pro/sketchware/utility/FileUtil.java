@@ -239,13 +239,13 @@ public class FileUtil {
             if (parentFile == null || parentFile.exists() || parentFile.mkdirs()) {
                 try (FileInputStream fileInputStream = new FileInputStream(source);
                      FileOutputStream fileOutputStream = new FileOutputStream(copyInto)) {
-                    byte[] bArr = new byte[2048];
+                    byte[] buffer = new byte[2048];
                     while (true) {
-                        int read = fileInputStream.read(bArr);
+                        int read = fileInputStream.read(buffer);
                         if (read <= 0) {
                             return;
                         }
-                        fileOutputStream.write(bArr, 0, read);
+                        fileOutputStream.write(buffer, 0, read);
                     }
                 } catch (IOException e) {
                     Log.e("FileUtil", "Error copying file " + source.getAbsolutePath() + " to " + copyInto.getAbsolutePath(), e);
@@ -268,11 +268,11 @@ public class FileUtil {
 
     public static void extractFileFromZip(InputStream inputStream, File file) throws IOException {
         try (OutputStream outputStream = new FileOutputStream(file)) {
-            byte[] bArr = new byte[1024];
+            byte[] buffer = new byte[1024];
             while (true) {
-                int read = inputStream.read(bArr);
+                int read = inputStream.read(buffer);
                 if (read > 0) {
-                    outputStream.write(bArr, 0, read);
+                    outputStream.write(buffer, 0, read);
                 } else {
                     return;
                 }

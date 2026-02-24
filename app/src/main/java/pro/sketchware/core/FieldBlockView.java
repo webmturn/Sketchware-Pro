@@ -140,10 +140,10 @@ public class FieldBlockView extends BaseBlockView {
     return this.componentType;
   }
   
-  public void setArgValue(Object obj) {
-    this.argValue = obj;
+  public void setArgValue(Object value) {
+    this.argValue = value;
     if (this.blockType.equals("d") || this.blockType.equals("m") || this.blockType.equals("s")) {
-      this.labelView.setText(obj.toString());
+      this.labelView.setText(value.toString());
       int i = Math.max(this.minSimpleWidth, getLabelWidth());
       (this.labelView.getLayoutParams()).width = i;
       setBlockSize((i + this.spacing), this.textHeight, true);

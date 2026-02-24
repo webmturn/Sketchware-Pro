@@ -22,19 +22,19 @@ public class SharedPrefsHelper {
     return this.prefs.getString(key, value);
   }
   
-  public void put(String value, Object obj) {
-    put(value, obj, true);
+  public void put(String key, Object data) {
+    put(key, data, true);
   }
   
-  public void put(String value, Object obj, boolean flag) {
-    if (obj instanceof String) {
-      this.editor.putString(value, (String)obj);
-    } else if (obj instanceof Integer) {
-      this.editor.putInt(value, ((Integer)obj).intValue());
-    } else if (obj instanceof Long) {
-      this.editor.putLong(value, ((Long)obj).longValue());
-    } else if (obj instanceof Boolean) {
-      this.editor.putBoolean(value, ((Boolean)obj).booleanValue());
+  public void put(String key, Object data, boolean flag) {
+    if (data instanceof String) {
+      this.editor.putString(key, (String)data);
+    } else if (data instanceof Integer) {
+      this.editor.putInt(key, ((Integer)data).intValue());
+    } else if (data instanceof Long) {
+      this.editor.putLong(key, ((Long)data).longValue());
+    } else if (data instanceof Boolean) {
+      this.editor.putBoolean(key, ((Boolean)data).booleanValue());
     } 
     if (flag)
       this.editor.commit(); 

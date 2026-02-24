@@ -1,5 +1,5 @@
 package pro.sketchware.core;
 
 public interface PropertyChangedCallback {
-  void onPropertyChanged(String input, Object obj);
+  void onPropertyChanged(String input, Object value);
 }
