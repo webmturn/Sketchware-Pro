@@ -183,7 +183,7 @@ public class ViewPane extends RelativeLayout {
         }
     }
 
-    public ItemView g(ViewBean viewBean) {
+    public ItemView updateView(ViewBean viewBean) {
         View findViewWithTag;
         String preId = viewBean.preId;
         if (preId != null && !preId.isEmpty() && !preId.equals(viewBean.id)) {
@@ -200,7 +200,7 @@ public class ViewPane extends RelativeLayout {
         return (ItemView) findViewWithTag;
     }
 
-    public ItemView d(ViewBean viewBean) {
+    public ItemView moveView(ViewBean viewBean) {
         View findViewWithTag = rootLayout.findViewWithTag(viewBean.id);
         if (viewBean.id.charAt(0) == '_') {
             findViewWithTag = findViewWithTag(viewBean.id);

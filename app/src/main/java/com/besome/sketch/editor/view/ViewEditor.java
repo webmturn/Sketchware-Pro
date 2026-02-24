@@ -615,7 +615,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
     }
 
     public ItemView selectView(ViewBean viewBean) {
-        ItemView g = viewPane.g(viewBean);
+        ItemView g = viewPane.updateView(viewBean);
         widgetSelectedListener.onSelectionChanged();
         widgetSelectedListener.onViewSelected(viewBean.id);
         return g;
@@ -731,7 +731,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
                 historyChangeListener.onCallback();
             }
         }
-        return viewPane.d(viewBean);
+        return viewPane.moveView(viewBean);
     }
 
     public ItemView createAndAddView(ViewBean viewBean) {
