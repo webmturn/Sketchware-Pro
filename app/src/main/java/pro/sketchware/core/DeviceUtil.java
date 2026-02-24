@@ -19,11 +19,11 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class DeviceUtil {
-  public static int a(Context paramContext) {
+  public static int getToolbarHeight(Context paramContext) {
     return (int)ViewUtil.a(paramContext, 48.0F);
   }
   
-  public static String a() {
+  public static String getCpuAbi() {
     String str = "";
     if (Build.VERSION.SDK_INT >= 21) {
       String[] arrayOfString = Build.SUPPORTED_ABIS;
@@ -36,7 +36,7 @@ public class DeviceUtil {
     return str;
   }
   
-  public static void a(Context paramContext, int paramInt) {
+  public static void updateBadgeCount(Context paramContext, int paramInt) {
     String str = paramContext.getPackageManager().getLaunchIntentForPackage(paramContext.getPackageName()).getComponent().getClassName();
     Intent intent = new Intent("android.intent.action.BADGE_COUNT_UPDATE");
     intent.putExtra("badge_count", paramInt);
@@ -45,7 +45,7 @@ public class DeviceUtil {
     paramContext.sendBroadcast(intent);
   }
   
-  public static boolean a(Activity paramActivity) {
+  public static boolean isGooglePlayAvailable(Activity paramActivity) {
     GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
     int i = googleApiAvailability.isGooglePlayServicesAvailable((Context)paramActivity);
     if (i != 0) {
@@ -55,7 +55,7 @@ public class DeviceUtil {
     return true;
   }
   
-  public static String b() {
+  public static String getAndroidVersionName() {
     Field[] arrayOfField = Build.VERSION_CODES.class.getFields();
     int i = arrayOfField.length;
     int b = 0;
@@ -76,11 +76,11 @@ public class DeviceUtil {
     } 
   }
   
-  public static String b(Context paramContext) {
+  public static String getDeviceId(Context paramContext) {
     return "";
   }
   
-  public static boolean b(Context paramContext, int paramInt) {
+  public static boolean hasSensor(Context paramContext, int paramInt) {
     boolean bool;
     if (((SensorManager)paramContext.getSystemService(Context.SENSOR_SERVICE)).getDefaultSensor(paramInt) != null) {
       bool = true;
@@ -90,13 +90,13 @@ public class DeviceUtil {
     return bool;
   }
   
-  public static float[] b(Activity paramActivity) {
+  public static float[] getScreenDpi(Activity paramActivity) {
     DisplayMetrics displayMetrics = new DisplayMetrics();
     paramActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
     return new float[] { displayMetrics.xdpi, displayMetrics.ydpi };
   }
   
-  public static long c() {
+  public static long getFreeStorageMB() {
     try {
       StatFs statFs = new StatFs(Environment.getExternalStorageDirectory().getPath());
       return statFs.getFreeBytes() / 1048576L;
@@ -105,7 +105,7 @@ public class DeviceUtil {
     } 
   }
   
-  public static ArrayList<String> c(Context paramContext) {
+  public static ArrayList<String> getGoogleAccounts(Context paramContext) {
     ArrayList<String> arrayList = new ArrayList<>();
     Account[] arrayOfAccount = AccountManager.get(paramContext).getAccountsByType("com.google");
     for (int b = 0; b < arrayOfAccount.length; b++) {
@@ -115,13 +115,13 @@ public class DeviceUtil {
     return arrayList;
   }
   
-  public static int[] c(Activity paramActivity) {
+  public static int[] getScreenResolution(Activity paramActivity) {
     DisplayMetrics displayMetrics = new DisplayMetrics();
     paramActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
     return new int[] { displayMetrics.widthPixels, displayMetrics.heightPixels };
   }
   
-  public static int d(Context paramContext) {
+  public static int getVersionCode(Context paramContext) {
     int i = 0;
     try {
       String str = paramContext.getPackageName();
@@ -133,7 +133,7 @@ public class DeviceUtil {
     return i;
   }
   
-  public static String e(Context paramContext) {
+  public static String getVersionName(Context paramContext) {
     String str;
     try {
       String str1 = paramContext.getPackageName();
@@ -145,7 +145,7 @@ public class DeviceUtil {
     return str;
   }
   
-  public static int f(Context paramContext) {
+  public static int getStatusBarHeight(Context paramContext) {
     int i = paramContext.getResources().getIdentifier("status_bar_height", "dimen", "android");
     if (i > 0) {
       i = paramContext.getResources().getDimensionPixelSize(i);
@@ -155,7 +155,7 @@ public class DeviceUtil {
     return i;
   }
   
-  public static Locale g(Context paramContext) {
+  public static Locale getLocale(Context paramContext) {
     Locale locale;
     if (Build.VERSION.SDK_INT >= 24) {
       locale = paramContext.getResources().getConfiguration().getLocales().get(0);
@@ -165,7 +165,7 @@ public class DeviceUtil {
     return locale;
   }
   
-  public static boolean h(Context paramContext) {
+  public static boolean isNetworkAvailable(Context paramContext) {
     int[] arrayOfInt = new int[2];
     arrayOfInt[0] = 0;
     arrayOfInt[1] = 1;

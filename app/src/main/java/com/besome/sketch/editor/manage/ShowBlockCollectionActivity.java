@@ -110,7 +110,7 @@ public class ShowBlockCollectionActivity extends BaseAppCompatActivity implement
         binding.layoutButton.measure(0, 0);
         binding.editor.setLayoutParams(new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                ((i - DeviceUtil.a((Context) this)) - DeviceUtil.f(this)) - binding.layoutButton.getMeasuredHeight()));
+                ((i - DeviceUtil.getToolbarHeight((Context) this)) - DeviceUtil.getStatusBarHeight(this)) - binding.layoutButton.getMeasuredHeight()));
         binding.editor.requestLayout();
     }
 

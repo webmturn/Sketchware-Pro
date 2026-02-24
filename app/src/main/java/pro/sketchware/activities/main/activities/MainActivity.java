@@ -399,7 +399,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
     public void onResume() {
         super.onResume();
         /* Check if the device is running low on storage space */
-        long freeMegabytes = DeviceUtil.c();
+        long freeMegabytes = DeviceUtil.getFreeStorageMB();
         if (freeMegabytes < 100 && freeMegabytes > 0) {
             showNoticeNotEnoughFreeStorageSpace();
         }

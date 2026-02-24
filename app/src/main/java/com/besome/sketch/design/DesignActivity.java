@@ -219,7 +219,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     private void saveVersionCodeInformationToProject() {
         HashMap<String, Object> projectMetadata = ProjectListManager.getProjectById(sc_id);
         if (projectMetadata != null) {
-            projectMetadata.put("sketchware_ver", DeviceUtil.d(getApplicationContext()));
+            projectMetadata.put("sketchware_ver", DeviceUtil.getVersionCode(getApplicationContext()));
             ProjectListManager.updateProject(sc_id, projectMetadata);
         }
     }
@@ -679,7 +679,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             finish();
         }
 
-        long freeMegabytes = DeviceUtil.c();
+        long freeMegabytes = DeviceUtil.getFreeStorageMB();
         if (freeMegabytes < 100L && freeMegabytes > 0L) {
             warnAboutInsufficientStorageSpace();
         }

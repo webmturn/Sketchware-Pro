@@ -96,7 +96,7 @@ public class CustomBlocksManager {
                     if (!(block.opCode.equals("definedFunc")
                             || block.opCode.equals("getVar")
                             || block.opCode.equals("getArg"))) {
-                        if (BlockColorMapper.a(context, block.opCode, block.type) == 0xff8a55d7) {
+                        if (BlockColorMapper.getBlockColor(context, block.opCode, block.type) == 0xff8a55d7) {
                             if (!usedBlocks.contains(block.opCode)) {
                                 usedBlocks.add(block.opCode);
 
@@ -222,7 +222,7 @@ public class CustomBlocksManager {
 
                     if (!(block.opCode.equals("definedFunc") || block.opCode.equals("getVar") || block.opCode.equals("getArg")))
                     {
-                        if (BlockColorMapper.a(block.opCode, block.type) == -7711273)
+                        if (BlockColorMapper.getBlockColor(block.opCode, block.type) == -7711273)
                         {
                             if (!usedBlocks.contains(block.opCode))
                             {

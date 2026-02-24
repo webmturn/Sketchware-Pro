@@ -62,7 +62,7 @@ public class VariableItemView extends LinearLayout {
                 break;
 
             default:
-                type = BlockColorMapper.b(name);
+                type = BlockColorMapper.getComponentDisplayName(name);
         }
 
         switch (name) {

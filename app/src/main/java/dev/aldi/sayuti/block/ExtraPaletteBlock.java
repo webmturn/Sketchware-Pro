@@ -359,7 +359,7 @@ public class ExtraPaletteBlock {
             String name = list.second;
 
             switch (type) {
-                case 1, 2, 3 -> logicEditor.a(name, "l", BlockColorMapper.a(type), "getVar").setTag(name);
+                case 1, 2, 3 -> logicEditor.a(name, "l", BlockColorMapper.getListTypeName(type), "getVar").setTag(name);
                 default -> {
                     String variableName = CustomVariableUtil.getVariableName(name);
                     if (variableName != null) {

@@ -47,7 +47,7 @@ public class SystemInfoActivity extends BaseAppCompatActivity {
 
     private void addAndroidVersionNameInfo() {
         addInfo(1, Helper.getResString(R.string.system_information_title_android_version),
-                DeviceUtil.b() + "(" + VERSION.RELEASE + ")");
+                DeviceUtil.getAndroidVersionName() + "(" + VERSION.RELEASE + ")");
     }
 
     private void addApiLevelInfo() {
@@ -74,7 +74,7 @@ public class SystemInfoActivity extends BaseAppCompatActivity {
     }
 
     private void addScreenDpiInfo() {
-        float[] dpiXY = DeviceUtil.b(this);
+        float[] dpiXY = DeviceUtil.getScreenDpi(this);
         addInfo(3, Helper.getResString(R.string.system_information_dpi), String.valueOf(dpiXY[0]));
     }
 
@@ -83,7 +83,7 @@ public class SystemInfoActivity extends BaseAppCompatActivity {
     }
 
     private void addScreenResolutionInfo() {
-        int[] widthHeight = DeviceUtil.c(this);
+        int[] widthHeight = DeviceUtil.getScreenResolution(this);
         addInfo(2, Helper.getResString(R.string.system_information_system_resolution),
                 widthHeight[0] + " x " + widthHeight[1]);
     }

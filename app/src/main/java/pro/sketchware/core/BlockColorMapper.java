@@ -10,12 +10,12 @@ import pro.sketchware.SketchApplication;
 import pro.sketchware.menu.DefaultExtraMenuBean;
 
 public class BlockColorMapper {
-    public static int a(String opcode, String blockType) {
+    public static int getBlockColor(String opcode, String blockType) {
         Context context = new ContextThemeWrapper(SketchApplication.getContext(), R.style.Theme_SketchwarePro);
-        return a(context, opcode, blockType);
+        return getBlockColor(context, opcode, blockType);
     }
 
-    public static int a(Context context, String opcode, String blockType) {
+    public static int getBlockColor(Context context, String opcode, String blockType) {
         int viewType = harmonizeWithPrimary(context, 0xff4a6cd4);
 
         if (blockType.equals("h")) {
@@ -124,7 +124,7 @@ public class BlockColorMapper {
         };
     }
 
-    public static String a(int listType) {
+    public static String getListTypeName(int listType) {
         return switch (listType) {
             case 1 -> "List Number";
             case 2 -> "List String";
@@ -133,7 +133,7 @@ public class BlockColorMapper {
         };
     }
 
-    public static String a(String blockName) {
+    public static String getComponentCategory(String blockName) {
         return switch (blockName) {
             case "spinner", "adview", "textview", "switch", "imageview", "calendarview", "view",
                  "progressbar", "webview", "listview", "checkbox", "edittext", "mapview" -> "v";
@@ -148,14 +148,14 @@ public class BlockColorMapper {
         };
     }
 
-    public static String b(int var0) {
+    public static String getMapTypeName(int var0) {
         return var0 == 3 ? "Map" : "";
     }
 
     /**
      * @return The placeholder name for block menu from its type name
      */
-    public static String b(String typeName) {
+    public static String getComponentDisplayName(String typeName) {
         return switch (typeName) {
             case "spinner" -> "Spinner";
             case "tablayout" -> "TabLayout";

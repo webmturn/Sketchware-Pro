@@ -68,7 +68,7 @@ public class ManageFirebaseActivity extends BaseAppCompatActivity implements Vie
     }
 
     private void goToConsole() {
-        if (DeviceUtil.h(getApplicationContext())) {
+        if (DeviceUtil.isNetworkAvailable(getApplicationContext())) {
             try {
                 Uri consoleUrl = Uri.parse("https://console.firebase.google.com");
                 Intent intent = new Intent(Intent.ACTION_VIEW);

@@ -528,7 +528,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
                 data.put("isIconAdaptive", isIconAdaptive);
                 data.put("sc_ver_code", Helper.getText(binding.verCode));
                 data.put("sc_ver_name", Helper.getText(binding.verName));
-                data.put("sketchware_ver", DeviceUtil.d(getApplicationContext()));
+                data.put("sketchware_ver", DeviceUtil.getVersionCode(getApplicationContext()));
                 for (int i = 0; i < themeColorKeys.length; i++) {
                     data.put(themeColorKeys[i], projectThemeColors[i]);
                 }
@@ -540,7 +540,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
                 data.put("isIconAdaptive", isIconAdaptive);
                 data.put("sc_ver_code", Helper.getText(binding.verCode));
                 data.put("sc_ver_name", Helper.getText(binding.verName));
-                data.put("sketchware_ver", DeviceUtil.d(getApplicationContext()));
+                data.put("sketchware_ver", DeviceUtil.getVersionCode(getApplicationContext()));
                 for (int i = 0; i < themeColorKeys.length; i++) {
                     data.put(themeColorKeys[i], projectThemeColors[i]);
                 }

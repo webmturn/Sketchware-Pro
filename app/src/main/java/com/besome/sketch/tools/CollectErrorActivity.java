@@ -65,7 +65,7 @@ public class CollectErrorActivity extends BaseAppCompatActivity {
 
                 String deviceInfo = "Sketchware Pro " + info.versionName + " (" + info.versionCode + ")\n"
                         + "base.apk size: " + Formatter.formatFileSize(this, fileSizeInBytes) + " (" + fileSizeInBytes + " B)\n"
-                        + "Locale: " + DeviceUtil.g(getApplicationContext()) + "\n"
+                        + "Locale: " + DeviceUtil.getLocale(getApplicationContext()) + "\n"
                         + "SDK version: " + Build.VERSION.SDK_INT + "\n"
                         + "Brand: " + Build.BRAND + "\n"
                         + "Manufacturer: " + Build.MANUFACTURER + "\n"

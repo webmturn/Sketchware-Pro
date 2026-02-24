@@ -173,7 +173,7 @@ public class ColorPickerDialog extends PopupWindow {
         super.setFocusable(true);
         super.setOutsideTouchable(true);
         super.setContentView(binding.getRoot());
-        int[] widthAndHeight = DeviceUtil.c(activity);
+        int[] widthAndHeight = DeviceUtil.getScreenResolution(activity);
         super.setWidth(widthAndHeight[0]);
         super.setHeight(widthAndHeight[1]);
         binding.colorList.setHasFixedSize(true);

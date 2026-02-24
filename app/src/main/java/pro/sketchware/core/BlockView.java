@@ -557,7 +557,7 @@ public class BlockView extends BaseBlockView {
       default:
         break;
     }
-    int color = BlockColorMapper.a(this.opCode, this.blockType);
+    int color = BlockColorMapper.getBlockColor(this.opCode, this.blockType);
     if (!this.ea && !this.opCode.equals("definedFunc") && !this.opCode.equals("getVar")
         && !this.opCode.equals("getResStr") && !this.opCode.equals("getArg") && color != -7711273) {
       this.spec = StringResource.b().a(getContext(), this.opCode);

@@ -107,7 +107,7 @@ public class ProgramInfoActivity extends BaseAppCompatActivity {
                 switch (key) {
                     case ITEM_SYSTEM_INFORMATION -> toSystemInfoActivity();
                     case ITEM_OPEN_SOURCE_LICENSES -> {
-                        if (!DeviceUtil.h(getApplicationContext())) {
+                        if (!DeviceUtil.isNetworkAvailable(getApplicationContext())) {
                             SketchToast.toast(getApplicationContext(), Helper.getResString(R.string.common_message_check_network), SketchToast.TOAST_NORMAL).show();
                         } else {
                             toLicenseActivity();
@@ -138,7 +138,7 @@ public class ProgramInfoActivity extends BaseAppCompatActivity {
         setContentView(binding.getRoot());
 
         binding.toolbar.setNavigationOnClickListener(Helper.getBackPressedClickListener(this));
-        binding.appVersion.setText(DeviceUtil.e(getApplicationContext()));
+        binding.appVersion.setText(DeviceUtil.getVersionName(getApplicationContext()));
         binding.btnReset.setOnClickListener(this::resetDialog);
         binding.btnUpgrade.setOnClickListener(v -> {
             try {

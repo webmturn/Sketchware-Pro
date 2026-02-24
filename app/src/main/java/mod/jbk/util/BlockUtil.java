@@ -54,7 +54,7 @@ public class BlockUtil {
             case 'm' -> {
                 String specLast = spec.substring(spec.lastIndexOf(".") + 1);
                 String specFirst = spec.substring(spec.indexOf(".") + 1, spec.lastIndexOf("."));
-                yield new BlockView(context, id, specLast, BlockColorMapper.a(specFirst), BlockColorMapper.b(specFirst), opCode);
+                yield new BlockView(context, id, specLast, BlockColorMapper.getComponentCategory(specFirst), BlockColorMapper.getComponentDisplayName(specFirst), opCode);
             }
             default -> null;
         };

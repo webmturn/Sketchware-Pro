@@ -101,7 +101,7 @@ public class ManageAdmobActivity extends BaseAppCompatActivity implements View.O
     }
 
     private void openAdmobConsole() {
-        if (DeviceUtil.h(getApplicationContext())) {
+        if (DeviceUtil.isNetworkAvailable(getApplicationContext())) {
             try {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

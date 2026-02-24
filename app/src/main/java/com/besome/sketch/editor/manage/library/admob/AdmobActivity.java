@@ -153,7 +153,7 @@ public class AdmobActivity extends BaseAppCompatActivity implements View.OnClick
     }
 
     private void goToConsole() {
-        if (DeviceUtil.h(this)) {
+        if (DeviceUtil.isNetworkAvailable(this)) {
             try {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -236,7 +236,7 @@ public class AdmobActivity extends BaseAppCompatActivity implements View.OnClick
 
     private void goToDocumentation() {
         if (!step.getDocUrl().isEmpty()) {
-            if (DeviceUtil.h(this)) {
+            if (DeviceUtil.isNetworkAvailable(this)) {
                 try {
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

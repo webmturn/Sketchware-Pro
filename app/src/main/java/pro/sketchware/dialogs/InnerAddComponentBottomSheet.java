@@ -90,7 +90,7 @@ public class InnerAddComponentBottomSheet extends BottomSheetDialogFragment {
                 break;
 
             case ComponentBean.COMPONENT_TYPE_GYROSCOPE:
-                if (!DeviceUtil.b(getContext(), Sensor.TYPE_GYROSCOPE)) {
+                if (!DeviceUtil.hasSensor(getContext(), Sensor.TYPE_GYROSCOPE)) {
                     binding.cardWarning.setVisibility(View.VISIBLE);
                     binding.warning.setText(Helper.getResString(R.string.message_device_not_support));
                 }

@@ -34,7 +34,7 @@ public class ManageGoogleMapActivity extends BaseAppCompatActivity implements Vi
     private ProjectLibraryBean googleMapLibraryBean;
 
     private void openDoc() {
-        if (DeviceUtil.h(getApplicationContext())) {
+        if (DeviceUtil.isNetworkAvailable(getApplicationContext())) {
             try {
                 Uri documentationUrl = Uri.parse("https://developers.google.com/maps/documentation/android-sdk/signup");
                 Intent openDocIntent = new Intent(Intent.ACTION_VIEW);

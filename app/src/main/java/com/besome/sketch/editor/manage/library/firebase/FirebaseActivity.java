@@ -104,7 +104,7 @@ public class FirebaseActivity extends BaseAppCompatActivity implements View.OnCl
     private void openDocumentation() {
         String docUrl = step.getDocUrl();
         if (!docUrl.isEmpty()) {
-            if (DeviceUtil.h(getApplicationContext())) {
+            if (DeviceUtil.isNetworkAvailable(getApplicationContext())) {
                 try {
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -124,7 +124,7 @@ public class FirebaseActivity extends BaseAppCompatActivity implements View.OnCl
     }
 
     private void openFirebaseConsole() {
-        if (DeviceUtil.h(getApplicationContext())) {
+        if (DeviceUtil.isNetworkAvailable(getApplicationContext())) {
             try {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

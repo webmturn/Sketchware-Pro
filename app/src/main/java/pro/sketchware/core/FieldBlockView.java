@@ -85,7 +85,7 @@ public class FieldBlockView extends BaseBlockView {
   
   public final String a(String paramString) {
     String str1 = "";
-    String str2 = BlockColorMapper.b(paramString);
+    String str2 = BlockColorMapper.getComponentDisplayName(paramString);
     paramString = str2;
     if (str2.length() > 0) {
       StringBuilder stringBuilder = new StringBuilder();

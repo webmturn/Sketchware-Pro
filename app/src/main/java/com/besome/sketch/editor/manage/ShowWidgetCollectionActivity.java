@@ -52,7 +52,7 @@ public class ShowWidgetCollectionActivity extends BaseAppCompatActivity implemen
     private void setActionContainerHeight() {
         binding.layoutButton.measure(0, 0);
         binding.scrollView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                getResources().getDisplayMetrics().heightPixels - DeviceUtil.a(getApplicationContext()) - DeviceUtil.f(getApplicationContext()) - binding.layoutButton.getMeasuredHeight()));
+                getResources().getDisplayMetrics().heightPixels - DeviceUtil.getToolbarHeight(getApplicationContext()) - DeviceUtil.getStatusBarHeight(getApplicationContext()) - binding.layoutButton.getMeasuredHeight()));
         binding.scrollView.requestLayout();
     }
 

@@ -116,7 +116,7 @@ public class ShowMoreBlockCollectionActivity extends BaseAppCompatActivity imple
         binding.layoutButton.measure(0, 0);
         binding.editor.setLayoutParams(new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                ((height - DeviceUtil.a((Context) this)) - DeviceUtil.f(this)) - binding.layoutButton.getMeasuredHeight()));
+                ((height - DeviceUtil.getToolbarHeight((Context) this)) - DeviceUtil.getStatusBarHeight(this)) - binding.layoutButton.getMeasuredHeight()));
         binding.editor.requestLayout();
     }
 
