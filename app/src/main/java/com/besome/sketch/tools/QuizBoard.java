@@ -69,7 +69,7 @@ public class QuizBoard extends LinearLayout implements View.OnClickListener {
         }
     }
 
-    public void a() {
+    public void cancelTimer() {
         if (countdownTimer != null) {
             countdownTimer.cancel();
             countdownTimer = null;
@@ -78,17 +78,17 @@ public class QuizBoard extends LinearLayout implements View.OnClickListener {
 
     private void initialize(Context context) {
         quizBinding = QuizBoardBinding.inflate(((Activity) context).getLayoutInflater(), this, true);
-        g();
+        startQuiz();
     }
 
-    public void b() {
+    public void loadNextQuestion() {
         if (quizList == null || quizList.isEmpty()) {
             quizList = CompileQuizManager.getQuizQuestions();
         }
 
         int var1 = new Random().nextInt(quizList.size());
         setData(quizList.remove(var1));
-        e();
+        startTimer();
     }
 
     public final void invalidateClickListeners() {
@@ -128,7 +128,7 @@ public class QuizBoard extends LinearLayout implements View.OnClickListener {
         }
     }
 
-    public final void e() {
+    public final void startTimer() {
         a var1 = countdownTimer;
         if (var1 != null) {
             var1.cancel();
@@ -140,7 +140,7 @@ public class QuizBoard extends LinearLayout implements View.OnClickListener {
         var1.start();
     }
 
-    public void f() {
+    public void showAnswer() {
         QuizBean quizBean = this.quizBean;
         int quizType = quizBean.type;
 
@@ -153,22 +153,22 @@ public class QuizBoard extends LinearLayout implements View.OnClickListener {
         invalidateClickListeners();
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             resetQuizViews();
-            b();
+            loadNextQuestion();
         }, 2000); // ask next question after 2 secs
     }
 
-    public void g() {
+    public void startQuiz() {
         resetQuizViews();
-        b();
+        loadNextQuestion();
     }
 
     @Override
     public void onClick(View var1) {
         if (!UIHelper.isClickThrottled()) {
-            a();
+            cancelTimer();
             int id = var1.getId();
             if (id == R.id.img_answer_o || id == R.id.img_answer_x || id == R.id.view_answer_a || id == R.id.view_answer_b) {
-                f();
+                showAnswer();
             }
             if (quizBean.type == 2) {
                 var1.getId();
@@ -183,7 +183,7 @@ public class QuizBoard extends LinearLayout implements View.OnClickListener {
 
         @Override
         public void onFinish() {
-            f();
+            showAnswer();
         }
 
         @Override

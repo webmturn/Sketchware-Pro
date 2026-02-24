@@ -51,7 +51,7 @@ public class BuildingDialog extends Dialog {
 
     @Override
     public void dismiss() {
-        quizBoard.a();
+        quizBoard.cancelTimer();
         super.dismiss();
     }
 
