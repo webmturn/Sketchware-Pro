@@ -21,11 +21,11 @@ public class SketchToast {
         return toast(context, Helper.getResString(resString), duration, 48, 0.0f, 64.0f, TOAST_NORMAL);
     }
 
-    public static Toast toast(Context context, CharSequence charSequence, int duration) {
-        return toast(context, charSequence, duration, 48, 0.0f, 64.0f, TOAST_NORMAL);
+    public static Toast toast(Context context, CharSequence message, int duration) {
+        return toast(context, message, duration, 48, 0.0f, 64.0f, TOAST_NORMAL);
     }
 
-    public static Toast toast(Context context, CharSequence charSequence, int duration, int gravity, float xOffset, float yOffset, int toastType) {
+    public static Toast toast(Context context, CharSequence message, int duration, int gravity, float xOffset, float yOffset, int toastType) {
         try {
             Context themedContext = new ContextThemeWrapper(context, R.style.Theme_SketchwarePro);
 
@@ -39,7 +39,7 @@ public class SketchToast {
                 binding.tvStoast.setTextColor(errorColor);
             }
 
-            binding.tvStoast.setText(charSequence);
+            binding.tvStoast.setText(message);
 
             Toast toast = new Toast(themedContext);
             toast.setDuration(duration);
@@ -52,7 +52,7 @@ public class SketchToast {
 
             return toast;
         } catch (Exception e) {
-            return Toast.makeText(context, charSequence, duration);
+            return Toast.makeText(context, message, duration);
         }
     }
 
@@ -60,7 +60,7 @@ public class SketchToast {
         return toast(context, Helper.getResString(resString), duration, 48, 0.0f, 64.0f, TOAST_WARNING);
     }
 
-    public static Toast warning(Context context, CharSequence charSequence, int duration) {
-        return toast(context, charSequence, duration, 48, 0.0f, 64.0f, TOAST_WARNING);
+    public static Toast warning(Context context, CharSequence message, int duration) {
+        return toast(context, message, duration, 48, 0.0f, 64.0f, TOAST_WARNING);
     }
 }

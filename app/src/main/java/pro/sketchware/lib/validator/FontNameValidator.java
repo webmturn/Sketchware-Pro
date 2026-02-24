@@ -32,10 +32,10 @@ public class FontNameValidator extends BaseValidator {
     }
 
     @Override
-    public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+    public void onTextChanged(CharSequence input, int i, int i2, int i3) {
         String a2;
         int msgRes;
-        String trim = charSequence.toString().trim();
+        String trim = input.toString().trim();
         if (trim.length() < 3) {
             a2 = context.getString(R.string.invalid_value_min_lenth, 3);
         } else if (trim.length() > 70) {
@@ -46,13 +46,13 @@ public class FontNameValidator extends BaseValidator {
             int count = 0;
             while (true) {
                 if (count < reservedKeywords.length) {
-                    if (charSequence.toString().equals(reservedKeywords[count])) {
+                    if (input.toString().equals(reservedKeywords[count])) {
                         msgRes = R.string.logic_editor_message_reserved_keywords;
                         break;
                     }
                     count++;
-                } else if (Character.isLetter(charSequence.charAt(0))) {
-                    if (pattern.matcher(charSequence.toString()).matches()) {
+                } else if (Character.isLetter(input.charAt(0))) {
+                    if (pattern.matcher(input.toString()).matches()) {
                         textInputLayout.setError(null);
                         valid = true;
                         return;

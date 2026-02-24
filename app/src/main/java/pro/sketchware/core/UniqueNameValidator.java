@@ -18,8 +18,8 @@ public class UniqueNameValidator extends BaseValidator {
     }
 
     @Override
-    public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-        String inputValue = charSequence.toString();
+    public void onTextChanged(CharSequence input, int start, int before, int count) {
+        String inputValue = input.toString();
         if (preDefNames.contains(inputValue)) {
             textInputLayout.setErrorEnabled(true);
             textInputLayout.setError(context.getString(R.string.common_message_name_unavailable));

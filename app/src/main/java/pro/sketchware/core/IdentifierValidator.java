@@ -17,11 +17,11 @@ public class IdentifierValidator extends BaseValidator {
     private String[] reservedNames;
     private String lastValidName;
 
-    public IdentifierValidator(Context context, TextInputLayout textInputLayout, String[] newReservedNames, String[] strArr2, ArrayList<String> arrayList) {
+    public IdentifierValidator(Context context, TextInputLayout textInputLayout, String[] newReservedNames, String[] restrictedKeywords, ArrayList<String> existingNames) {
         super(context, textInputLayout);
         restrictedNames = newReservedNames;
-        reservedNames = strArr2;
-        excludedNames = arrayList;
+        reservedNames = restrictedKeywords;
+        excludedNames = existingNames;
     }
 
     public void setReservedNames(String[] newReservedNames) {

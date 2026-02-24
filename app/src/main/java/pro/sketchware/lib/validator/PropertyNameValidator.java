@@ -30,8 +30,8 @@ public class PropertyNameValidator extends BaseValidator {
     }
 
     @Override
-    public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-        String trimmedLowerName = charSequence.toString().trim().toLowerCase();
+    public void onTextChanged(CharSequence input, int start, int before, int count) {
+        String trimmedLowerName = input.toString().trim().toLowerCase();
         if (trimmedLowerName.length() < 1) {
             textInputLayout.setErrorEnabled(true);
             textInputLayout.setError(context.getString(R.string.invalid_value_min_lenth, 1));
@@ -75,7 +75,7 @@ public class PropertyNameValidator extends BaseValidator {
             textInputLayout.setErrorEnabled(true);
             textInputLayout.setError(context.getString(R.string.logic_editor_message_variable_name_must_start_letter));
             valid = false;
-        } else if (pattern.matcher(charSequence).matches()) {
+        } else if (pattern.matcher(input).matches()) {
             textInputLayout.setErrorEnabled(false);
             valid = true;
         } else {

@@ -20,8 +20,8 @@ public class VariableTypeValidator extends BaseValidator {
     }
 
     @Override
-    public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-        String variableType = charSequence.toString();
+    public void onTextChanged(CharSequence input, int start, int before, int count) {
+        String variableType = input.toString();
         String trimmedInput = variableType.trim();
         String[] words = trimmedInput.split("\\s+");
         String reconsInput = String.join(" ", words);
@@ -32,8 +32,8 @@ public class VariableTypeValidator extends BaseValidator {
             return;
         }
 
-        if (!TextUtils.isEmpty(charSequence)) {
-            if (!Character.isLetter(charSequence.charAt(0))) {
+        if (!TextUtils.isEmpty(input)) {
+            if (!Character.isLetter(input.charAt(0))) {
                 textInputLayout.setError(textInputLayout.getContext().getString(R.string.error_type_must_start_letter));
                 valid = false;
                 return;
