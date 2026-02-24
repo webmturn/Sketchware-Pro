@@ -300,7 +300,7 @@ public class StringResource {
       default:
         String result = this.eventTranslations.get(paramString2);
         if (result == null)
-          result = ManageEvent.i(paramString1, paramString2); 
+          result = ManageEvent.getExtraEventSpec(paramString1, paramString2); 
         return result;
       case 0:
       case 1:

@@ -389,7 +389,7 @@ public class ManageEvent {
         };
     }
 
-    public static String f(String targetId, String eventName, String eventLogic) {
+    public static String getExtraEventCode(String targetId, String eventName, String eventLogic) {
         String code;
         String resetInterstitialAd = targetId.isEmpty() ? "" : targetId + " = null;\r\n";
         String setAdFullScreenContentCallback = targetId.isEmpty() ? "\r\n" : targetId + " = _param1;\r\n" +
@@ -665,7 +665,7 @@ public class ManageEvent {
     /**
      * @return Code of extra listeners, used in {@link pro.sketchware.core.ComponentCodeGenerator#getListenerCode(String, String, String)}
      */
-    public static String g(String listenerName, String targetId, String listenerLogic) {
+    public static String getExtraListenerCode(String listenerName, String targetId, String listenerLogic) {
         return switch (listenerName) {
             case "OnCompletionListener" ->
                     targetId + ".setOnCompletionListener(new MediaPlayer.OnCompletionListener() {\r\n" +
@@ -839,7 +839,7 @@ public class ManageEvent {
         };
     }
 
-    public static String h(String eventName) {
+    public static String getExtraEventBlocks(String eventName) {
         return switch (eventName) {
             case "onUpdateProfileComplete", "onEmailVerificationSent", "onDeleteUserComplete",
                  "onUpdateEmailComplete", "onGoogleSignIn", "signInWithPhoneAuthComplete",
@@ -921,7 +921,7 @@ public class ManageEvent {
         EventsHandler.addEvents(gx, list);
     }
 
-    public static String i(String targetId, String eventName) {
+    public static String getExtraEventSpec(String targetId, String eventName) {
         return switch (eventName) {
             case "onUpdateProfileComplete", "onEmailVerificationSent", "onDeleteUserComplete",
                  "onUpdateEmailComplete", "onGoogleSignIn", "onUpdatePasswordComplete",

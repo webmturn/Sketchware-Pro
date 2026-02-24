@@ -571,7 +571,7 @@ public class ComponentCodeGenerator {
                     "final double _acc = _param1.getAccuracy();\r\n" +
                     eventLogic + "\r\n" +
                     "}";
-            default -> ManageEvent.f(targetId, eventName, eventLogic);
+            default -> ManageEvent.getExtraEventCode(targetId, eventName, eventLogic);
         };
     }
 
@@ -1803,7 +1803,7 @@ public class ComponentCodeGenerator {
                         "};\r\n"
                         + componentName + ".addChildEventListener(" + childEventListenerName + ");";
             }
-            default -> ManageEvent.g(eventName, componentName, eventLogic);
+            default -> ManageEvent.getExtraListenerCode(eventName, componentName, eventLogic);
         };
     }
 

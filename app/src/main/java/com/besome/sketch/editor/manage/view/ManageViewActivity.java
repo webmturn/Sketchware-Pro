@@ -166,7 +166,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
         customViewsFragment.updateEmptyState();
     }
 
-    public ArrayList<String> l() {
+    public ArrayList<String> getProjectLayoutFiles() {
         ArrayList<String> projectLayoutFiles = new ArrayList<>();
         projectLayoutFiles.add("debug");
         ArrayList<ProjectFileBean> activitiesFiles = activitiesFragment.getActivitiesFiles();
@@ -183,7 +183,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
         return projectLayoutFiles;
     }
 
-    public final void m() {
+    public final void saveAndSyncFiles() {
         ProjectDataManager.getFileManager(sc_id).setActivities(activitiesFragment.getActivitiesFiles());
         ProjectDataManager.getFileManager(sc_id).setCustomViews(customViewsFragment.getProjectFiles());
         ProjectDataManager.getFileManager(sc_id).saveToBackup();
@@ -215,7 +215,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
 
                 boolean isActivitiesTab = viewPager.getCurrentItem() == 0;
                 Intent intent = new Intent(this, isActivitiesTab ? AddViewActivity.class : AddCustomViewActivity.class);
-                intent.putStringArrayListExtra("screen_names", l());
+                intent.putStringArrayListExtra("screen_names", getProjectLayoutFiles());
                 if (isActivitiesTab) {
                     intent.putExtra("request_code", REQUEST_CODE_ADD_ACTIVITY);
                 }
@@ -368,7 +368,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
             if (activity == null) return;
             try {
                 publishProgress(activity.getString(R.string.common_message_progress));
-                activity.m();
+                activity.saveAndSyncFiles();
             } catch (Exception e) {
                 Log.e("ManageViewActivity", e.getMessage(), e);
                 throw new SketchwareException(activity.getString(R.string.common_error_unknown));
