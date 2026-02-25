@@ -269,7 +269,7 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
             return selectedImage;
         }
 
-        class ViewHolder extends RecyclerView.ViewHolder {
+        static class ViewHolder extends RecyclerView.ViewHolder {
             ImagePickerItemBinding binding;
             ViewHolder(ImagePickerItemBinding b) {
                 super(b.getRoot());

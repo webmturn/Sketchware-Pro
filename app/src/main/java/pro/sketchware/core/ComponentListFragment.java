@@ -441,7 +441,7 @@ public class ComponentListFragment extends BaseFragment implements View.OnClickL
                 }
             }
 
-            private class EventViewHolder extends RecyclerView.ViewHolder {
+            private static class EventViewHolder extends RecyclerView.ViewHolder {
                 public final ComponentEventButton button;
 
                 public EventViewHolder(@NonNull ComponentEventButton itemView) {

@@ -362,7 +362,7 @@ public class LogReaderActivity extends BaseAppCompatActivity {
             return data.size();
         }
 
-        private class ViewHolder extends RecyclerView.ViewHolder {
+        private static class ViewHolder extends RecyclerView.ViewHolder {
             private final ViewLogcatItemBinding listBinding;
 
             public ViewHolder(@NonNull ViewLogcatItemBinding listBinding) {

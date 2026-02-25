@@ -325,7 +325,7 @@ public class ManageAdmobActivity extends BaseAppCompatActivity implements View.O
             return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.manage_library_setting_admob_test_device_item, parent, false));
         }
 
-        private class ViewHolder extends RecyclerView.ViewHolder {
+        private static class ViewHolder extends RecyclerView.ViewHolder {
 
             private final TextView tvDeviceId;
 

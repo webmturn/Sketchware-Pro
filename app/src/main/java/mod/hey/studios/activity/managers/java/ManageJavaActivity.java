@@ -556,7 +556,7 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
             popupMenu.show();
         }
 
-        public class ViewHolder extends RecyclerView.ViewHolder {
+        public static class ViewHolder extends RecyclerView.ViewHolder {
             ManageJavaItemHsBinding binding;
 
             public ViewHolder(ManageJavaItemHsBinding binding) {

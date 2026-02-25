@@ -465,7 +465,7 @@ public class ManageResourceActivity extends BaseAppCompatActivity {
             return data.size();
         }
 
-        class ViewHolder extends RecyclerView.ViewHolder {
+        static class ViewHolder extends RecyclerView.ViewHolder {
             private final ManageJavaItemHsBinding binding;
 
             public ViewHolder(ManageJavaItemHsBinding binding) {
