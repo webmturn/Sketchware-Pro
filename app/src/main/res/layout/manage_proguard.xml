@@ -62,8 +62,9 @@
                     android:src="@drawable/connected_96" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="@string/code_shrinker_obfuscate_def"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -121,8 +122,9 @@
                     android:src="@drawable/ic_mtrl_settings" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="@string/code_shrinker_configure_shrinker"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -172,8 +174,9 @@
                     android:src="@drawable/ic_mtrl_settings" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="@string/code_shrinker_full_mode_def"
                     android:textSize="14sp" />
             </LinearLayout>
