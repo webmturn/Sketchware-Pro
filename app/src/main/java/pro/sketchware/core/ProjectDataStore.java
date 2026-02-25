@@ -386,16 +386,22 @@ public class ProjectDataStore {
     if (libraryBean.useYn.equals("Y"))
       return; 
     for (ProjectFileBean projectFileBean : fileManager.getActivities()) {
+      ArrayList<ViewBean> toRemove = new ArrayList<>();
       for (ViewBean viewBean : getViews(projectFileBean.getXmlName())) {
         if (viewBean.type == 17)
-          removeView(projectFileBean, viewBean); 
+          toRemove.add(viewBean); 
       } 
+      for (ViewBean viewBean : toRemove)
+        removeView(projectFileBean, viewBean); 
     } 
     for (ProjectFileBean projectFileBean : fileManager.getCustomViews()) {
+      ArrayList<ViewBean> toRemove = new ArrayList<>();
       for (ViewBean viewBean : getViews(projectFileBean.getXmlName())) {
         if (viewBean.type == 17)
-          removeView(projectFileBean, viewBean); 
+          toRemove.add(viewBean); 
       } 
+      for (ViewBean viewBean : toRemove)
+        removeView(projectFileBean, viewBean); 
     } 
     Iterator componentEntryIterator = this.componentMap.entrySet().iterator();
     while (componentEntryIterator.hasNext())

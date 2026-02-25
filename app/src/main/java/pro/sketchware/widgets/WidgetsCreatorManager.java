@@ -521,7 +521,7 @@ public class WidgetsCreatorManager {
         dialog.setIcon(R.drawable.ic_mtrl_delete);
         dialog.setMessage(R.string.view_widget_favorites_delete_message);
         dialog.setPositiveButton(R.string.common_word_delete, (v, which) -> {
-            String Class = Objects.requireNonNull(widgetConfigurationsList.get(position).get("Class")).toString();
+            String Class = String.valueOf(widgetConfigurationsList.get(position).get("Class"));
             widgetConfigurationsList.remove(position);
             if (isClassEmpty(Class) && !mainCategories.contains(Class)) {
                 allCategories.remove(Class);
