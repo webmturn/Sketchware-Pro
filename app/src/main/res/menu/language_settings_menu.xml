@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/import_language_strings"
+        android:title="@string/language_settings_import_strings"
+        android:showAsAction="never" />
+    <item
+        android:id="@+id/export_language_strings"
+        android:title="@string/language_settings_export_strings"
+        android:showAsAction="never" />
+</menu>

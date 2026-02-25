@@ -24,12 +24,22 @@
         android:largeHeap="true"
         android:requestLegacyExternalStorage="true"
         android:theme="@style/Theme.SketchwarePro"
+        android:localeConfig="@xml/locales_config"
         tools:targetApi="p">
         <activity
             android:name=".activities.iconcreator.IconCreatorActivity"
             android:exported="false"
             android:label="@string/title_activity_icon_creator"
             android:theme="@style/Theme.SketchwarePro" />
+
+        <service
+            android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
+            android:enabled="false"
+            android:exported="false">
+            <meta-data
+                android:name="autoStoreLocales"
+                android:value="true" />
+        </service>
 
         <provider
             android:name="androidx.core.content.FileProvider"

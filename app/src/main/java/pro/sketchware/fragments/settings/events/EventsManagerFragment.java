@@ -55,7 +55,7 @@ public class EventsManagerFragment extends BaseFragment {
                 }
             }
         }
-        return "Events: " + eventAmount;
+        return String.format(Helper.getResString(R.string.app_settings_events_count), eventAmount);
     }
 
     @Override

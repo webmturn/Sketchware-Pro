@@ -1,0 +1,2751 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ========== 通用词汇 (Common Words) ========== -->
+    <string name="common_word_accept">保存</string>
+    <string name="common_word_actions">操作</string>
+    <string name="common_word_activity">Activity</string>
+    <string name="common_word_add_activtiy">添加 Activity</string>
+    <string name="common_word_add">添加</string>
+    <string name="common_word_agree">同意</string>
+    <string name="common_word_all">全部</string>
+    <string name="common_word_apply">应用</string>
+    <string name="common_word_block">积木块</string>
+    <string name="common_word_cancel">取消</string>
+    <string name="common_word_change_variant">更改变体</string>
+    <string name="common_word_change">更改</string>
+    <string name="common_word_choose">选择</string>
+    <string name="common_word_close">关闭</string>
+    <string name="common_word_code_editor">代码编辑器</string>
+    <string name="common_word_collection">收藏</string>
+    <string name="common_word_component">组件</string>
+    <string name="common_word_confirmation">确认</string>
+    <string name="common_word_continue">继续</string>
+    <string name="common_word_contributor">贡献者</string>
+    <string name="common_word_copy">复制</string>
+    <string name="common_word_create_variant">创建新变体</string>
+    <string name="common_word_create">创建</string>
+    <string name="common_word_custom_view">自定义视图</string>
+    <string name="common_word_custom">自定义</string>
+    <string name="common_word_decrypt">解密</string>
+    <string name="common_word_defaults">默认</string>
+    <string name="common_word_delete_confirm">确定要删除此项吗？</string>
+    <string name="common_word_delete">删除</string>
+    <string name="common_word_deleted">已删除！</string>
+    <string name="common_word_deprecated">*已弃用</string>
+    <string name="common_word_description">描述</string>
+    <string name="common_word_detail">详情</string>
+    <string name="common_word_dismiss">关闭</string>
+    <string name="common_word_dont_copy">不要复制</string>
+    <string name="common_word_dont_show_anymore">不再显示</string>
+    <string name="common_word_download">下载</string>
+    <string name="common_word_drawer">抽屉</string>
+    <string name="common_word_duplicate">复制</string>
+    <string name="common_word_edit">编辑</string>
+    <string name="common_word_empty">空</string>
+    <string name="common_word_ended">已结束</string>
+    <string name="common_word_enroll">报名</string>
+    <string name="common_word_enrolled">已报名</string>
+    <string name="common_word_exit">退出</string>
+    <string name="common_word_export">导出</string>
+    <string name="common_word_file">文件</string>
+    <string name="common_word_finish">完成</string>
+    <string name="common_word_folder">文件夹</string>
+    <string name="common_word_font">字体</string>
+    <string name="common_word_fragment">Fragment</string>
+    <string name="common_word_go_to_documentation">查看文档</string>
+    <string name="common_word_goback">返回</string>
+    <string name="common_word_image">图片</string>
+    <string name="common_word_import_all">全部导入</string>
+    <string name="common_word_import_count">导入 %s 项</string>
+    <string name="common_word_import_variant">从默认变体导入</string>
+    <string name="common_word_import">导入</string>
+    <string name="common_word_information">信息</string>
+    <string name="common_word_locale">语言区域</string>
+    <string name="common_word_modify">修改</string>
+    <string name="common_word_moreblock">更多积木块</string>
+    <string name="common_word_new">新建</string>
+    <string name="common_word_next">下一步</string>
+    <string name="common_word_no">否</string>
+    <string name="common_word_ok">确定</string>
+    <string name="common_word_okay">好的</string>
+    <string name="common_word_overwrite">覆盖</string>
+    <string name="common_word_please_wait">请稍候</string>
+    <string name="common_word_prev">上一步</string>
+    <string name="common_word_preview">预览</string>
+    <string name="common_word_progressing">进行中</string>
+    <string name="common_word_project_information_app_name">应用名称</string>
+    <string name="common_word_project_information_package">包名</string>
+    <string name="common_word_project_information_project">项目</string>
+    <string name="common_word_project_information_version_code">版本号</string>
+    <string name="common_word_project_information_version_name">版本名</string>
+    <string name="common_word_project_information">项目信息</string>
+    <string name="common_word_purchase">购买</string>
+    <string name="common_word_remove">移除</string>
+    <string name="common_word_rename">重命名</string>
+    <string name="common_word_reset">重置</string>
+    <string name="common_word_restore">恢复</string>
+    <string name="common_word_review">审查</string>
+    <string name="common_word_run">运行</string>
+    <string name="common_word_save_as_new">另存为</string>
+    <string name="common_word_save">保存</string>
+    <string name="common_word_saved">已保存</string>
+    <string name="common_word_see_all">查看全部</string>
+    <string name="common_word_see_more">查看更多</string>
+    <string name="common_word_select_variant">选择变体</string>
+    <string name="common_word_select">选择</string>
+    <string name="common_word_settings">设置</string>
+    <string name="common_word_share">分享</string>
+    <string name="common_word_show">显示</string>
+    <string name="common_word_skip">跳过</string>
+    <string name="common_word_sound">音效</string>
+    <string name="common_word_step">第 %d 步</string>
+    <string name="common_word_submit">提交</string>
+    <string name="common_word_try_again">重试</string>
+    <string name="common_word_update">更新</string>
+    <string name="common_word_upload">上传</string>
+    <string name="common_word_variable">变量</string>
+    <string name="common_word_view_changes">查看更改</string>
+    <string name="common_word_view">视图</string>
+    <string name="common_word_warning">警告</string>
+    <string name="common_word_watch">观看</string>
+    <string name="common_word_widget">控件</string>
+    <string name="common_word_yes">是</string>
+
+    <!-- ========== 通用消息 (Common Messages) ========== -->
+    <string name="common_error_activity_not_found">未找到 Activity</string>
+    <string name="common_error_an_error_occurred">发生错误！</string>
+    <string name="common_error_failed_to_connect_server">无法连接到服务器</string>
+    <string name="common_error_failed_to_save">保存失败</string>
+    <string name="common_error_unknown">未知错误！请联系管理员</string>
+    <string name="common_message_check_network">请检查网络连接</string>
+    <string name="common_message_complete_delete">删除完成</string>
+    <string name="common_message_complete_reset">重置完成</string>
+    <string name="common_message_complete_save">保存完成</string>
+    <string name="common_message_confirm">确定吗？</string>
+    <string name="common_message_insufficient_storage_space_title">存储空间不足</string>
+    <string name="common_message_loading">正在加载</string>
+    <string name="common_message_name_unavailable">当前名称不可用</string>
+    <string name="common_message_no_item_delete">没有可删除的项目</string>
+    <string name="common_message_permission_denied">权限被拒绝</string>
+    <string name="common_message_permission_need_load_project">我们需要存储权限来保存和加载项目</string>
+    <string name="common_message_permission_storage">要访问照片、媒体和文件，请在下一步授予 Sketchware 权限</string>
+    <string name="common_message_permission_title_storage">需要权限</string>
+    <string name="common_message_progress">处理中</string>
+    <string name="common_message_selected_file_empty">所选文件为空</string>
+    <string name="common_google_play_services_unknown_issue">%1$s 在使用 Google Play 服务时遇到问题。请重试。</string>
+    <string name="common_message_insufficient_storage_space">存储空间不足。\n请腾出空间后重试</string>
+    <string name="common_message_permission_storage1">权限被拒绝。\n请点击设置以允许存储权限。没有此权限，部分功能可能无法正常工作</string>
+    <string name="common_signin_button_text">登录</string>
+    <string name="common_signin_button_text_long">使用 Google 登录</string>
+
+    <!-- ========== 设计器 (Designer) ========== -->
+    <string name="design_tab_title_view">视图</string>
+    <string name="design_tab_title_event">事件</string>
+    <string name="design_tab_title_component">组件</string>
+    <string name="design_manager_sound_title_add_sound">添加音效</string>
+    <string name="design_manager_sound_title_edit_sound">编辑音效</string>
+    <string name="design_manager_image_title_add_image">添加图片</string>
+    <string name="design_manager_image_title_edit_image">编辑图片</string>
+    <string name="design_manager_font_title_add_font">添加字体</string>
+    <string name="design_manager_font_title_edit_font">编辑字体</string>
+    <string name="design_manager_message_add_complete">添加完成</string>
+    <string name="design_manager_message_edit_complete">编辑完成</string>
+    <string name="design_manager_message_import_complete">导入完成</string>
+    <string name="design_menu_build_settings">构建设置</string>
+    <string name="design_menu_clean_temp">清理临时文件</string>
+    <string name="design_menu_install_apk">安装上次构建的 APK</string>
+    <string name="design_menu_show_last_error">显示上次编译错误</string>
+    <string name="design_menu_show_signatures">显示 APK 签名</string>
+    <string name="design_menu_show_source">显示源代码</string>
+    <string name="design_menu_xml_editor">直接 XML 编辑器</string>
+    <string name="design_option_menu_title_save_project">保存项目</string>
+    <string name="design_quit_button_save_and_exit">保存并退出</string>
+    <string name="design_quit_message_confirm_save">退出前是否要保存更改？</string>
+    <string name="design_quit_title_exit_projet">退出项目</string>
+    <string name="design_restore_data_message_confirm">出现问题，之前的数据未保存。是否要恢复？</string>
+    <string name="design_restore_data_title">恢复项目数据</string>
+    <string name="design_run">运行</string>
+    <string name="design_run_message_invalid_forever_block">永久循环块中缺少停止块</string>
+    <string name="design_run_message_usage_break_block">中断块只能在重复或永久循环块内使用</string>
+    <string name="design_run_title_ready_to_build">准备构建</string>
+    <string name="design_toast_clean_temp_done">临时文件清理完成！</string>
+    <string name="design_toast_package_installed">应用安装成功！</string>
+    <string name="design_property_recent_message_nodata">最近使用的属性将在此显示</string>
+    <string name="design_manager_tab_title_my_collection">我的收藏</string>
+    <string name="design_manager_tab_title_this_project">当前项目</string>
+    <string name="design_manager_title_add_to_collection">添加到我的收藏</string>
+    <string name="design_manager_block_detail_actionbar_title">积木块详情</string>
+    <string name="design_manager_block_hint_enter_block_name">输入积木块名称</string>
+    <string name="design_manager_change_name_button">更改名称</string>
+    <string name="design_manager_font_hint_enter_font_name">输入字体名称</string>
+    <string name="design_manager_font_title_edit_font_name">编辑字体名称</string>
+    <string name="design_manager_icon_actionbar_title">导入图标</string>
+    <string name="design_manager_icon_hint_enter_icon_name">输入图标名称</string>
+    <string name="design_manager_image_hint_enter_image_name">输入图片名称</string>
+    <string name="design_manager_image_title_edit_image_name">编辑图片名称</string>
+    <string name="design_manager_sound_hint_enter_sound_name">输入音效名称</string>
+    <string name="design_manager_sound_title_edit_sound_name">编辑音效名称</string>
+    <string name="design_manager_view_hint_enter_view_name">输入视图名称</string>
+    <string name="design_manager_view_message_no_view">没有可显示的视图</string>
+    <string name="design_manager_view_title_activity_name">Activity 名称:</string>
+    <string name="design_manager_view_title_activity_preset">Activity 预设</string>
+    <string name="design_manager_view_title_add_activity">新建 Activity</string>
+    <string name="design_manager_view_title_add_custom_view">新建自定义视图</string>
+    <string name="design_manager_view_title_add_view">新建视图</string>
+    <string name="design_manager_view_title_edit_activity">编辑 Activity</string>
+    <string name="design_manager_view_title_edit_view">编辑视图</string>
+    <string name="design_manager_view_title_empty_activity">空白 Activity</string>
+    <string name="design_manager_view_title_keyboad_settings">键盘设置</string>
+    <string name="design_manager_view_title_screen_orientation">屏幕方向</string>
+    <string name="design_manager_view_title_view_name">视图名称:</string>
+    <string name="design_manager_widget_hint_enter_widget_name">输入控件名称</string>
+    <string name="design_manager_widget_title_actionbar_title">控件详情</string>
+    <string name="design_manager_message_collection_name_conflict">存在命名冲突，请确保没有重复名称。</string>
+    <string name="design_manager_message_collection_name_no_conflict">没有命名冲突</string>
+    <string name="design_manager_message_invalid_font">所选字体无效</string>
+    <string name="design_manager_message_no_font_selected">请选择一个新字体</string>
+    <string name="design_manager_font_description_guide_add_font">添加 .ttf 扩展名的字体文件</string>
+    <string name="design_manager_font_description_look_like_this">我的新字体看起来像这样！</string>
+    <string name="design_manager_font_title_apply_same_naming">对其他可用字体应用相同命名样式</string>
+    <string name="design_manager_image_import_icon_button_black">黑色</string>
+    <string name="design_manager_image_import_icon_button_grey">灰色</string>
+    <string name="design_manager_image_import_icon_button_white">白色</string>
+    <string name="design_manager_image_title_apply_same_naming">对其他可用图片应用相同命名样式</string>
+    <string name="design_manager_sound_title_apply_same_naming">对其他可用音效应用相同命名样式</string>
+    <string name="design_manager_view_description_guide_create_activity">要创建新 Activity，请在此添加</string>
+    <string name="design_manager_view_description_guide_create_custom_view">在此创建新的自定义视图</string>
+    <string name="design_manager_view_description_guide_use_custom_view">自定义视图可用于更改 ListView 或 Spinner 中项目的显示方式</string>
+    <string name="design_manager_view_message_slow_down">包含抽屉或 FAB 可能会减慢某些设备的编译速度。</string>
+    <string name="design_library_settings_title_enabled">已启用</string>
+    <string name="design_library_title_appcompat">AppCompat</string>
+    <string name="design_library_title_appcompat_and_design">AppCompat 和 Design</string>
+    <string name="design_library_title_select_project">选择项目</string>
+    <string name="design_library_message_confirm_uncheck_appcompat_and_design">现有的抽屉布局和 FAB 将被删除。是否继续？</string>
+    <string name="design_library_message_confirm_uncheck_google_map">现有的 MapView 将被删除。是否继续？</string>
+    <string name="design_library_message_slow_down_compilation_time">包含此库可能会减慢某些设备的编译速度。</string>
+    <string name="design_library_settings_guide_tutorial">如果你是第一次设置，请参阅教程。</string>
+    <string name="design_library_title_material3">Material3 管理器</string>
+
+    <!-- ========== 逻辑编辑器 (Logic Editor) ========== -->
+    <string name="logic_editor_message_currently_used_block">该积木块正在使用中</string>
+    <string name="logic_editor_message_reserved_keywords">这是保留关键字</string>
+    <string name="logic_editor_message_variable_name_must_start_letter">变量名必须以字母开头</string>
+
+    <!-- ========== 变量类型 (Variable Types) ========== -->
+    <string name="logic_variable_type_boolean">布尔值</string>
+    <string name="logic_variable_type_number">数值</string>
+    <string name="logic_variable_type_string">字符串</string>
+    <string name="logic_variable_type_map">映射</string>
+    <string name="logic_variable_type_list_number">数值列表</string>
+    <string name="logic_variable_type_list_string">字符串列表</string>
+    <string name="logic_variable_type_list_map">映射列表</string>
+
+    <!-- ========== Block分类 (Block Categories) ========== -->
+    <string name="block_category_var">变量</string>
+    <string name="block_category_list">列表</string>
+    <string name="block_category_control">控制</string>
+    <string name="block_category_operator">运算符</string>
+    <string name="block_category_math">数学</string>
+    <string name="block_category_file">文件</string>
+    <string name="block_category_view_func">视图函数</string>
+    <string name="block_category_component_func">组件函数</string>
+    <string name="block_category_moreblock">更多积木块</string>
+
+    <!-- ========== 导出APK (Export APK) ========== -->
+    <string name="export_apk_sign_dialog_title">签名 APK</string>
+    <string name="export_apk_sign_dialog_desc">请输入密钥库信息</string>
+
+    <!-- ========== 项目 (Projects) ========== -->
+    <string name="myprojects_list_menu_title_backup">备份</string>
+    <string name="myprojects_list_menu_title_config">配置</string>
+    <string name="myprojects_list_menu_title_delete">删除</string>
+    <string name="myprojects_list_menu_title_settings">设置</string>
+    <string name="myprojects_settings_message_contain_dot">需要包含点号</string>
+    <string name="myprojects_settings_context_menu_title_choose_gallery">从图库选择</string>
+    <string name="myprojects_settings_context_menu_title_choose_gallery_default">从图库选择（默认）</string>
+    <string name="myprojects_settings_context_menu_title_choose_gallery_with_crop">从图库选择（裁剪）</string>
+
+    <!-- ========== 搜索 (Search) ========== -->
+    <string name="search_error_message">未找到结果，\n请尝试其他关键词</string>
+    <string name="search_hint">搜索…</string>
+    <string name="search_in_palettes_dialog_title">搜索调色板</string>
+    <string name="search_recent_button_delete_all_recent_keyword">全部删除</string>
+    <string name="search_recent_message_delete_keyword_dialog_delete_all">是否删除所有关键词？</string>
+    <string name="search_recent_message_delete_keyword_dialog_delete_one">是否删除此关键词？</string>
+    <string name="search_recent_message_no_data">没有最近的关键词</string>
+    <string name="search_recent_message_no_keyword_to_delete">没有可删除的关键词</string>
+    <string name="search_recent_recent_keyword">最近的关键词</string>
+    <string name="search_recent_title">内容搜索</string>
+    <string name="search_recent_title_delete_keyword_dialog">删除关键词</string>
+    <string name="search_result_message_no_data">没有搜索结果。:(</string>
+    <string name="search_result_title">"%s" 的搜索结果</string>
+
+    <!-- ========== 验证器消息 (Validator Messages) ========== -->
+    <string name="invalid_value_min_lenth">最少需要 %d 个字符</string>
+    <string name="invalid_value_max_lenth">最多允许 %d 个字符</string>
+    <string name="invalid_value_format">格式无效</string>
+    <string name="invalid_value_rule_2">只能包含字母、数字和点号</string>
+    <string name="invalid_value_rule_3">只能包含字母、数字和下划线</string>
+    <string name="invalid_value_rule_4">只能包含小写字母、数字和下划线</string>
+    <string name="invalid_value_rule_5">不能包含特殊字符</string>
+
+    <!-- ========== 收藏/资源管理 (Collection/Resource) ========== -->
+    <string name="collection_duplicated_name">名称重复</string>
+    <string name="collection_no_exist_file">文件不存在</string>
+    <string name="collection_failed_to_copy">复制失败</string>
+
+    <!-- ========== 资源编辑器 (Resources Editor) ========== -->
+    <string name="resource_manager_no_list_title">没有 %s</string>
+    <string name="resource_manager_no_list_body">点击 + 按钮添加 %s</string>
+    <string name="resource_type_themes">主题</string>
+    <string name="resource_type_themes_lower">主题</string>
+    <string name="resource_type_styles">样式</string>
+    <string name="resource_type_styles_lower">样式</string>
+    <string name="resource_type_arrays">数组</string>
+    <string name="resource_type_arrays_lower">数组</string>
+    <string name="resource_type_strings">字符串</string>
+
+    <!-- ========== 语言设置 (Language Settings) ========== -->
+    <string name="language_settings_system_locale">系统语言: %s</string>
+    <string name="language_settings_override_info">已覆盖 %d 个字符串</string>
+    <string name="language_settings_cleared">语言覆盖已清除</string>
+    <string name="language_settings_select_xml">选择 XML 文件</string>
+    <string name="language_settings_import_empty">导入的文件不包含任何字符串</string>
+    <string name="language_settings_import_confirm_title">确认导入</string>
+    <string name="language_settings_import_confirm_msg">即将导入 %d 个字符串覆盖。继续吗？</string>
+    <string name="language_settings_import_success_title">导入成功</string>
+    <string name="language_settings_import_success_msg">已成功导入 %d 个字符串覆盖</string>
+    <string name="language_settings_clear_confirm_title">清除覆盖</string>
+    <string name="language_settings_clear_confirm_msg">确定要清除所有语言覆盖并恢复为英文吗？</string>
+
+    <!-- ========== 错误消息 (Error Messages) ========== -->
+    <string name="error_file_empty">文件为空</string>
+    <string name="error_block_name_in_use">积木块名称已被使用</string>
+    <string name="error_invalid_hex_color_short">无效的十六进制颜色</string>
+    <string name="error_invalid_hex_color_toast">请输入有效的十六进制颜色</string>
+    <string name="error_invalid_block_params">无效的积木块参数</string>
+    <string name="error_invalid_name_data">无效的名称数据</string>
+    <string name="error_invalid_type_data">无效的类型数据</string>
+    <string name="error_invalid_typename_data">无效的类型名数据</string>
+    <string name="error_invalid_spec_data">无效的规格数据</string>
+    <string name="error_invalid_spec2_data">无效的规格2数据</string>
+    <string name="error_invalid_imports_data">无效的导入数据</string>
+    <string name="error_invalid_color_data">无效的颜色数据</string>
+    <string name="error_invalid_value">无效的值</string>
+    <string name="error_invalid_format">格式无效</string>
+    <string name="error_item_already_exists">该项目已存在</string>
+    <string name="error_extra_spaces_not_allowed">不允许多余的空格</string>
+    <string name="error_extra_spaces_words_not_allowed">不允许单词间有多余的空格</string>
+    <string name="error_type_must_start_letter">类型名必须以字母开头</string>
+    <string name="error_angle_bracket_not_matched">尖括号不匹配</string>
+    <string name="error_box_bracket_not_matched">方括号不匹配</string>
+    <string name="error_invalid_variable_type">无效的变量类型</string>
+    <string name="error_no_spaces_allowed">不允许空格</string>
+    <string name="error_only_letters_numbers_special">只能包含字母、数字和下划线</string>
+    <string name="error_invalid_modifier_format">无效的修饰符: %s</string>
+    <string name="error_duplicate_modifier_format">重复的修饰符: %s</string>
+    <string name="error_access_modifier_only_one">只能使用一个访问修饰符</string>
+    <string name="error_invalid_icon_id">无效的图标 ID</string>
+    <string name="error_add_extra_widget_failed">无法添加额外的控件类: %s</string>
+    <string name="error_add_widget_failed">无法添加控件: %s</string>
+    <string name="error_algorithm_empty">算法不能为空</string>
+    <string name="error_alias_empty">别名不能为空</string>
+    <string name="error_api_key_empty">API 密钥不能为空！</string>
+    <string name="error_array_name_empty">数组名称输入为空</string>
+    <string name="error_array_type_not_selected">未选择数组类型</string>
+    <string name="error_cannot_change_selector_name">无法更改此选择器的名称</string>
+    <string name="error_circular_dependency">在 \"%s\" 中发现循环依赖\n请在保存前解决此问题</string>
+    <string name="error_circular_rel_layout">IllegalStateException: RelativeLayout 中不能存在循环依赖</string>
+    <string name="error_color_cannot_be_empty">颜色不能为空</string>
+    <string name="error_content_null">内容为空</string>
+    <string name="error_copy_backup">无法将备份文件复制到临时位置: %s</string>
+    <string name="error_corrupt_block">无法打开损坏的积木块</string>
+    <string name="error_corrupt_more_block">无法打开损坏的 MoreBlock</string>
+    <string name="error_crash_report_msg">运行 Sketchware Pro 时发生错误。是否要报告此错误日志以便我们修复？不会包含任何个人信息。</string>
+    <string name="error_crash_show_error">显示错误</string>
+    <string name="error_dependencies_not_found">未找到依赖项</string>
+    <string name="error_dev_options_unavailable">此设备上无法使用开发者选项</string>
+    <string name="error_device_no_crop">你的设备不支持裁剪操作！</string>
+    <string name="error_dexing_failed_format">DEX 转换失败: %s</string>
+    <string name="error_downloading_unavailable">当前无法下载项目！</string>
+    <string name="error_enable_material3">请先在库管理器中启用 Material3</string>
+    <string name="error_enter_activity_name">请输入 Activity 名称</string>
+    <string name="error_enter_dependency">请输入依赖项</string>
+    <string name="error_failed_prefix">失败: %s</string>
+    <string name="error_file_exists">文件已存在</string>
+    <string name="error_fill_all_fields">请填写所有字段</string>
+    <string name="error_folder_already_exists">文件夹已存在</string>
+    <string name="error_font_invalid">警告: 字体似乎无效</string>
+    <string name="error_format_xml_failed">格式化 XML 文件失败</string>
+    <string name="error_get_custom_blocks">获取自定义积木块失败: %s</string>
+    <string name="error_get_package_info">无法获取包信息。堆栈跟踪:\n</string>
+    <string name="error_get_selector_failed">获取选择器时发生错误</string>
+    <string name="error_import_file">无法导入文件！[%s]</string>
+    <string name="error_import_moreblocks">无法导入: %s</string>
+    <string name="error_import_resource">无法导入资源！[%s]</string>
+    <string name="error_incorrect_parentheses">你的代码中包含不正确的嵌套括号</string>
+    <string name="error_invalid_dependency_format">无效的依赖项格式</string>
+    <string name="error_invalid_dex_path">已启用的本地库 #%d 的 DEX 文件路径无效</string>
+    <string name="error_invalid_file">无效文件</string>
+    <string name="error_invalid_file_name">无效的文件名</string>
+    <string name="error_invalid_folder_name">无效的文件夹名</string>
+    <string name="error_invalid_hex_color">无效的十六进制颜色</string>
+    <string name="error_invalid_hex_color_caps">无效的十六进制颜色</string>
+    <string name="error_invalid_hex_color_value">无效的十六进制颜色值</string>
+    <string name="error_invalid_lib_name">已启用的本地库 #%d 的名称无效</string>
+    <string name="error_invalid_name">无效的名称！</string>
+    <string name="error_invalid_name_short">无效的名称</string>
+    <string name="error_invalid_packaging">无效的打包</string>
+    <string name="error_invalid_scope_format">无效的作用域: %s</string>
+    <string name="error_invalid_selector_file">请确保选择了包含选择器项的文件。</string>
+    <string name="error_invalid_type_format">控件的类型格式无效: %s</string>
+    <string name="error_invalid_variant">无效的变体输入</string>
+    <string name="error_invalid_widget_type">无效的控件类型: %s</string>
+    <string name="error_key_already_exists">\"%s\" 已存在</string>
+    <string name="error_keystore_not_found">未找到密钥库</string>
+    <string name="error_load_custom_blocks">加载自定义积木块失败: %s</string>
+    <string name="error_load_font">无法加载字体: %s</string>
+    <string name="error_load_font_file">加载字体时出错: %s</string>
+    <string name="error_load_palette">加载自定义积木块调色板时出错: %s</string>
+    <string name="error_load_sound">加载音效时出错: %s</string>
+    <string name="error_loading_widgets">加载控件时出错: %s</string>
+    <string name="error_main_activity_cannot_delete">主 Activity 无法删除</string>
+    <string name="error_missing_widget_keys">控件缺少必要的键: %s</string>
+    <string name="error_name_cannot_be_empty">名称不能为空</string>
+    <string name="error_name_empty">名称不能为空</string>
+    <string name="error_nested_parentheses">错误: 你的代码中包含不正确的嵌套括号</string>
+    <string name="error_no_files_selected">未选择文件</string>
+    <string name="error_nothing_to_export">没有可导出的内容</string>
+    <string name="error_parse_backup_filename">解析自定义备份文件名失败。使用默认名称</string>
+    <string name="error_parse_palette_color">无法解析自定义积木块调色板 #%d 的颜色</string>
+    <string name="error_password_empty">密码不能为空</string>
+    <string name="error_play_sound">播放音效失败: %s</string>
+    <string name="error_received_invalid_data">收到无效数据</string>
+    <string name="error_reference_required">需要引用</string>
+    <string name="error_release_file">释放文件 %1$s 失败: %2$s</string>
+    <string name="error_required_fields_empty">部分必填字段为空！</string>
+    <string name="error_save_image_failed">无法保存图片</string>
+    <string name="error_select_more_block">请选择一个 MoreBlock</string>
+    <string name="error_selector_name_required">请输入选择器名称</string>
+    <string name="error_selector_title_required">请输入选择器标题</string>
+    <string name="error_something_went_wrong">出了点问题！</string>
+    <string name="error_style_name_empty">样式名称输入为空</string>
+    <string name="error_theme_name_empty">主题名称输入为空</string>
+    <string name="error_type_empty">类型不能为空</string>
+    <string name="error_value_min_0">值必须大于或等于 0</string>
+    <string name="error_value_min_01">值必须大于或等于 0.1</string>
+    <string name="error_version_not_available">版本不可用</string>
+    <string name="error_xml_name_required">XML 名称是必需的</string>
+    <string name="error_no_package_installer">未找到包安装器</string>
+    <string name="error_no_browser_app">未找到浏览器应用</string>
+    <string name="error_imported_widgets_empty_or_invalid">导入的控件文件 #%s 为空或无效</string>
+
+    <!-- ========== Block管理 (Block Management) ========== -->
+    <string name="block_move_to_bin">移到回收站</string>
+    <string name="block_type_regular">常规</string>
+    <string name="blocks_add_title">添加新积木块</string>
+    <string name="blocks_button_create_palette">创建新调色板</string>
+    <string name="blocks_config_title">积木块配置</string>
+    <string name="blocks_count_format">积木块: %d</string>
+    <string name="blocks_custom_block_palettes">自定义积木块调色板</string>
+    <string name="blocks_custom_blocks">自定义积木块</string>
+    <string name="blocks_delete_msg">确定要删除此积木块吗？</string>
+    <string name="blocks_delete_title">删除积木块？</string>
+    <string name="blocks_edit_title">编辑积木块</string>
+    <string name="blocks_error_already_exists">此积木块已存在于你的收藏中</string>
+    <string name="blocks_error_import">发生错误！[%s]</string>
+    <string name="blocks_error_invalid_color">调色板 #%d 的颜色无效</string>
+    <string name="blocks_error_invalid_color_entry">积木块 #%d 中的颜色条目无效</string>
+    <string name="blocks_error_invalid_color_palette">自定义积木块调色板 #%d 的颜色无效</string>
+    <string name="blocks_error_invalid_json">无效的 JSON 文件</string>
+    <string name="blocks_error_invalid_name">调色板 #%d 的名称无效</string>
+    <string name="blocks_error_invalid_name_entry">要导入的积木块中自定义积木块 #%d 的名称条目无效</string>
+    <string name="blocks_error_invalid_name_in_palette">当前调色板中的自定义积木块 #%d 名称无效</string>
+    <string name="blocks_error_invalid_name_palette">自定义积木块调色板 #%d 的名称无效</string>
+    <string name="blocks_error_invalid_palette_entry">积木块 #%d 中的调色板条目无效</string>
+    <string name="blocks_error_missing">此积木块缺失</string>
+    <string name="blocks_error_select_at_least_one">请至少选择一个积木块来导入。</string>
+    <string name="blocks_error_valid_hex">请输入有效的十六进制颜色</string>
+    <string name="blocks_import_reverse">反转</string>
+    <string name="blocks_import_title">导入积木块</string>
+    <string name="blocks_insert_title">插入积木块</string>
+    <string name="blocks_invalid_block_name">（无效的积木块名称条目）</string>
+    <string name="blocks_invalid_block_spec">（无效的积木块规格条目）</string>
+    <string name="blocks_manage_title">管理积木块</string>
+    <string name="blocks_menu_delete">删除</string>
+    <string name="blocks_menu_delete_permanently">永久删除</string>
+    <string name="blocks_menu_duplicate">复制</string>
+    <string name="blocks_menu_edit">编辑</string>
+    <string name="blocks_menu_insert">插入</string>
+    <string name="blocks_menu_insert_above">在上方插入</string>
+    <string name="blocks_menu_move_to_palette">移至调色板</string>
+    <string name="blocks_menu_restore">恢复</string>
+    <string name="blocks_menu_swap">交换</string>
+    <string name="blocks_move_title">移至</string>
+    <string name="blocks_no_palettes">没有调色板</string>
+    <string name="blocks_palette_count_format">%d 个调色板</string>
+    <string name="blocks_recycle_bin">回收站</string>
+    <string name="blocks_recycle_bin_confirm">确定要清空回收站吗？其中的积木块将被永久删除，无法恢复！</string>
+    <string name="blocks_recycle_bin_title">回收站</string>
+    <string name="blocks_remove_palette_msg">移除此调色板相关的所有积木块？</string>
+    <string name="blocks_remove_permanently">永久移除</string>
+    <string name="blocks_restore_title">恢复到</string>
+    <string name="blocks_title_create_palette">创建新调色板</string>
+    <string name="blocks_title_edit_palette">编辑调色板</string>
+    <string name="blocks_title_import_to">导入自定义积木块到</string>
+    <string name="blocks_toast_blocks_imported">积木块已导入！</string>
+    <string name="blocks_toast_exported">成功导出积木块到:\n%s</string>
+    <string name="blocks_toast_imported">导入成功</string>
+    <string name="blocks_type_boolean">布尔值 (b)</string>
+    <string name="blocks_type_component">组件 (p)</string>
+    <string name="blocks_type_header">头部 (h)</string>
+    <string name="blocks_type_if">if 块 (c)</string>
+    <string name="blocks_type_if_else">if-else 块 (e)</string>
+    <string name="blocks_type_list">列表 (l)</string>
+    <string name="blocks_type_map">映射 (a)</string>
+    <string name="blocks_type_number">数值 (d)</string>
+    <string name="blocks_type_regular">常规块 (regular)</string>
+    <string name="blocks_type_stop">停止块 (f)</string>
+    <string name="blocks_type_string">字符串 (s)</string>
+    <string name="blocks_type_title">积木块类型</string>
+    <string name="blocks_type_variable">变量 (v)</string>
+    <string name="custom_blocks_none_used">你在此项目中未使用任何自定义积木块</string>
+    <string name="custom_blocks_used_count">你在此项目中使用了 %d 个自定义积木块。</string>
+    <string name="custom_blocks_missing_one">有一个缺失的积木块</string>
+    <string name="custom_blocks_missing_multi">有 %d 个缺失的积木块</string>
+    <string name="extra_block_error_invalid_block_name">当前调色板的自定义积木块 #%d 的名称数据类型无效</string>
+    <string name="extra_block_error_invalid_block_palette">当前调色板的自定义积木块 #%d 的调色板数据类型无效</string>
+    <string name="extra_block_error_invalid_block_type">当前调色板的自定义积木块 #%d 的块类型数据类型无效</string>
+    <string name="extra_block_error_invalid_spec">当前调色板的自定义积木块 #%d 的规格数据类型无效</string>
+    <string name="extra_block_error_invalid_var">发现自定义变量 #%1$d 的无效数据: \"%2$s\"</string>
+    <string name="make_block_add_variable">添加变量</string>
+    <string name="make_block_custom_param">自定义参数</string>
+    <string name="make_block_hint_label">标签文本</string>
+    <string name="make_block_hint_name">积木块名称</string>
+    <string name="make_block_hint_parameter">参数</string>
+    <string name="make_block_hint_variable">变量名</string>
+    <string name="make_block_select_type">选择 MoreBlock 类型</string>
+    <string name="palette_hint_color">颜色十六进制代码</string>
+    <string name="palette_hint_name">调色板名称</string>
+    <string name="palettes_hint_search">搜索…</string>
+    <string name="used_custom_blocks">已使用的自定义积木块</string>
+
+    <!-- ========== 分享积木块 ========== -->
+    <string name="share_block_information_step_desc">输入关于此积木块的描述和截图</string>
+    <string name="share_block_information_step_name">积木块信息</string>
+    <string name="share_block_information_title_block_name">积木块名称</string>
+    <string name="share_block_message_uploading_block_data">正在上传积木块数据</string>
+    <string name="share_block_message_uploading_more_block_data">正在上传更多积木块数据</string>
+    <string name="share_block_review_information_step_desc">请检查以下信息。如果全部正确，请点击\"分享\"。</string>
+    <string name="share_block_review_information_step_name">审查信息</string>
+    <string name="share_block_select_favorite_block_message_favorite_block">请选择你想分享的积木块</string>
+    <string name="share_block_select_favorite_block_step_desc">选择你想分享的积木块</string>
+    <string name="share_block_select_favorite_block_step_name">选择积木块</string>
+    <string name="share_block_select_favorite_more_block_step_desc">选择你想分享的更多积木块</string>
+    <string name="share_block_select_favorite_more_block_step_name">选择更多积木块</string>
+    <string name="share_block_select_required_fonts_step_desc">选择此积木块需要的字体</string>
+    <string name="share_block_select_required_fonts_step_name">选择字体</string>
+    <string name="share_block_select_required_images_step_desc">选择此积木块需要的图片</string>
+    <string name="share_block_select_required_images_step_name">选择图片</string>
+    <string name="share_block_select_required_sounds_step_desc">选择此积木块需要的音效</string>
+    <string name="share_block_select_required_sounds_step_name">选择音效</string>
+
+    <!-- ========== 选择器 (Selector) ========== -->
+    <string name="selector_confirm_delete">确定要删除此选择器吗？</string>
+    <string name="selector_dialog_button_create">创建</string>
+    <string name="selector_dialog_title_edit">编辑选择器</string>
+    <string name="selector_dialog_title_new">新建选择器</string>
+    <string name="selector_exported_format">已导出到 %s</string>
+    <string name="selector_hint_name">选择器名称</string>
+    <string name="selector_hint_title">选择器标题 (例: 选择视图:)</string>
+    <string name="selector_message_delete_item">确定要删除此项吗？</string>
+    <string name="selector_select_json">选择 .json 选择器文件</string>
+    <string name="selector_title_actions">操作</string>
+    <string name="selector_title_attention">注意</string>
+    <string name="selector_title_new_item">新选择器项</string>
+
+    <!-- ========== 操作/对话框 ========== -->
+    <string name="action_delete">删除</string>
+    <string name="action_edit">编辑</string>
+    <string name="action_export">导出</string>
+    <string name="add_to">添加到分类</string>
+    <string name="cancel">取消</string>
+    <string name="restore">恢复</string>
+    <string name="search">搜索</string>
+    <string name="create_enter_name_format">输入新 %s 的名称</string>
+    <string name="create_file_class">类</string>
+    <string name="create_file_extension_hint">如果你正在创建文件，请确保添加扩展名。</string>
+    <string name="create_file_file">文件</string>
+    <string name="create_file_folder">文件夹</string>
+    <string name="create_file_hint_name">输入名称</string>
+    <string name="create_file_java_activity">Java Activity</string>
+    <string name="create_file_java_class">Java 类</string>
+    <string name="create_file_kotlin_activity">Kotlin Activity</string>
+    <string name="create_file_kotlin_class">Kotlin 类</string>
+    <string name="delete_confirm_format">确定要删除此 %1$s 吗？%2$s此操作不可撤销。</string>
+    <string name="delete_custom_activity_dialog_message">与 %1$s 相关的所有功能将被移除。确定吗？</string>
+    <string name="delete_custom_activity_dialog_title">删除 Activity</string>
+    <string name="delete_project_dialog_message">确定要删除名为 %1$s 的项目吗？</string>
+    <string name="delete_project_dialog_title">删除项目</string>
+    <string name="dialog_msg_delete_attr">确定要删除 %s 吗？</string>
+    <string name="dialog_msg_delete_confirm">确定要删除 %s 吗？</string>
+    <string name="dialog_msg_delete_event_confirm">点击确认删除选中的事件。</string>
+    <string name="dialog_title_add_attribute">添加新属性</string>
+    <string name="dialog_title_choose_attr">选择属性</string>
+    <string name="dialog_title_choose_id">选择 ID</string>
+    <string name="dialog_title_confirm_delete">确认删除</string>
+    <string name="dialog_title_delete">删除</string>
+    <string name="dialog_title_select_font_size">选择字体大小</string>
+    <string name="dialog_title_select_icon">选择图标</string>
+
+    <!-- ========== 消息 ========== -->
+    <string name="message_compatible_chrome_brower">以下页面兼容 Google Chrome。是否要安装 Chrome？</string>
+    <string name="title_compatible_chrome_browser">需要 Chrome 浏览器</string>
+    <string name="message_device_not_support">你的设备不支持此硬件。此组件可能无法正常工作</string>
+    <string name="message_device_not_supported">此设备不受支持。未安装 Google Play 服务。</string>
+    <string name="message_free_trial">是否观看广告以解锁内容一次？</string>
+    <string name="message_strings_xml_loaded">你的 \"strings.xml\" 文件已成功加载！</string>
+
+    <!-- ========== 菜单 (Menu) ========== -->
+    <string name="menu_about_team">关于团队</string>
+    <string name="menu_add_lowercase">添加</string>
+    <string name="menu_add_to_manifest">添加到 AndroidManifest</string>
+    <string name="menu_admob_config">Admob 配置</string>
+    <string name="menu_admob_help">Admob 帮助</string>
+    <string name="menu_app_info">应用信息</string>
+    <string name="menu_apps">应用</string>
+    <string name="menu_auto_complete">自动补全</string>
+    <string name="menu_auto_complete_symbol_pair">自动补全符号对</string>
+    <string name="menu_auto_scroll">自动滚动</string>
+    <string name="menu_blocks_collection">积木块收藏</string>
+    <string name="menu_changelog">更新日志</string>
+    <string name="menu_clear_all_logs">清除所有日志</string>
+    <string name="menu_components">组件</string>
+    <string name="menu_create">创建</string>
+    <string name="menu_create_keystore">创建密钥库</string>
+    <string name="menu_delete_selected_libs">删除选中的本地库</string>
+    <string name="menu_design_drawer">设计抽屉</string>
+    <string name="menu_edit_appcompat">编辑 AppCompat</string>
+    <string name="menu_edit_lowercase">编辑</string>
+    <string name="menu_edit_with">编辑方式…</string>
+    <string name="menu_export_all_block_selector">导出所有积木块选择器菜单</string>
+    <string name="menu_export_events">导出事件</string>
+    <string name="menu_export_logcat">导出日志</string>
+    <string name="menu_filter_by_package">按包名筛选</string>
+    <string name="menu_find_replace">查找和替换</string>
+    <string name="menu_firebase_settings">设置</string>
+    <string name="menu_import_block_selector">导入积木块选择器菜单</string>
+    <string name="menu_import_events">导入事件</string>
+    <string name="menu_layout_preview">布局预览</string>
+    <string name="menu_open_in_editor">在编辑器中打开</string>
+    <string name="menu_paste">粘贴</string>
+    <string name="menu_pretty_print">格式化代码</string>
+    <string name="menu_projects">项目</string>
+    <string name="menu_redo">重做</string>
+    <string name="menu_related_links">相关链接</string>
+    <string name="menu_reload_colors">重新加载配色方案</string>
+    <string name="menu_remove">移除</string>
+    <string name="menu_reset">重置</string>
+    <string name="menu_save">保存</string>
+    <string name="menu_settings">设置</string>
+    <string name="menu_show_source_code">显示源代码</string>
+    <string name="menu_store">商店</string>
+    <string name="menu_undo">撤销</string>
+    <string name="menu_variables">变量</string>
+    <string name="menu_views">视图</string>
+    <string name="menu_word_wrap">自动换行</string>
+
+    <!-- ========== 构建 (Build) ========== -->
+    <string name="build_settings_title">构建设置</string>
+    <string name="build_settings_java_version">Java 版本</string>
+    <string name="build_settings_dexer">Dexer</string>
+    <string name="build_settings_enable_logcat">启用调试 logcat 日志，可在日志查看器中查看。不包含在导出的 AAB/APK 中。</string>
+    <string name="build_settings_hide_warnings">在错误日志中隐藏警告</string>
+    <string name="build_settings_no_http_legacy">不包含 http-legacy-28.dex</string>
+    <string name="build_progress_building_apk">正在构建 APK…</string>
+    <string name="build_progress_merging_dex">正在合并 DEX 文件…</string>
+    <string name="build_progress_signing_apk">正在签名 APK…</string>
+
+    <!-- ========== 应用设置 (App Settings) ========== -->
+    <string name="app_settings_app_settings">应用设置</string>
+    <string name="app_settings_app_settings_desc">更改常规应用设置</string>
+    <string name="app_settings_block_manager">积木块管理器</string>
+    <string name="app_settings_block_manager_desc">管理你自己的积木块，用于逻辑编辑器</string>
+    <string name="app_settings_block_selector_manager">积木块选择器菜单管理器</string>
+    <string name="app_settings_block_selector_manager_desc">管理你自己的积木块选择器菜单</string>
+    <string name="app_settings_category_general">常规</string>
+    <string name="app_settings_category_managers">管理器</string>
+    <string name="app_settings_component_manager">组件管理器</string>
+    <string name="app_settings_component_manager_desc">管理你自己的组件</string>
+    <string name="app_settings_event_manager">事件管理器</string>
+    <string name="app_settings_event_manager_desc">管理你自己的事件</string>
+    <string name="app_settings_events_count">事件: %d</string>
+    <string name="app_settings_local_library_manager">本地库管理器</string>
+    <string name="app_settings_local_library_manager_desc">管理和下载本地库</string>
+    <string name="app_settings_open_working_dir">打开工作目录</string>
+    <string name="app_settings_open_working_dir_desc">打开 Sketchware Pro 的目录并编辑文件</string>
+    <string name="app_settings_select_action">选择操作</string>
+    <string name="app_settings_sign_apk">使用 testkey 签名 APK 文件</string>
+    <string name="app_settings_sign_apk_desc">使用 testkey 和最高 V4 签名方案签名现有 APK 文件</string>
+    <string name="app_settings_sign_apk_title">使用 testkey 签名 APK</string>
+    <string name="app_settings_action_delete">删除</string>
+    <string name="app_settings_action_edit">编辑</string>
+    <string name="app_settings_delete_confirm_title">删除 %s？</string>
+    <string name="app_settings_delete_confirm_msg">确定要永久删除此 %s 吗？此操作不可撤销。</string>
+    <string name="app_settings_file_exists_title">文件已存在</string>
+    <string name="app_settings_file_exists_msg">名为 %1$s 的 APK 已存在于 /sketchware/signed_apk/。是否覆盖？</string>
+    <string name="app_settings_file_select_entry">选择要修改的条目</string>
+    <string name="app_settings_system_settings_desc">自动保存和振动</string>
+
+    <!-- ========== 代码编辑器 (Code Editor) ========== -->
+    <string name="code_editor_title">代码编辑器</string>
+    <string name="code_editor_menu_complete_brackets">补全括号</string>
+    <string name="code_editor_menu_dark_theme">深色主题</string>
+    <string name="code_editor_menu_exit_confirmation">退出确认</string>
+    <string name="code_editor_menu_font_size">字体大小</string>
+    <string name="code_editor_menu_pretty_print">格式化代码</string>
+    <string name="code_editor_menu_word_wrap">自动换行</string>
+    <string name="code_editor_select_font_size">选择字体大小</string>
+    <string name="code_editor_select_language">选择语言</string>
+    <string name="code_editor_select_theme">选择主题</string>
+    <string name="code_viewer">代码查看器</string>
+
+    <!-- ========== 偏好设置 (Preferences) ========== -->
+    <string name="pref_backup_dir_title">备份目录</string>
+    <string name="pref_backup_dir_summary">默认目录为 /Internal storage/.sketchware/backups/</string>
+    <string name="pref_backup_filename_title">备份文件名格式</string>
+    <string name="pref_block_highlighting_title">启用积木块文本输入高亮</string>
+    <string name="pref_block_highlighting_summary">编辑积木块文本参数时启用语法高亮</string>
+    <string name="pref_built_in_blocks_title">内置积木块</string>
+    <string name="pref_built_in_blocks_summary">可能会减慢逻辑编辑器中积木块的加载速度</string>
+    <string name="pref_new_version_control_title">使用新版本控制</string>
+    <string name="pref_new_version_control_summary">为项目启用自定义版本号和版本名</string>
+    <string name="pref_root_install_title">使用 root 权限安装项目</string>
+    <string name="pref_root_install_summary">构建后使用 root 权限自动安装项目 APK</string>
+    <string name="pref_root_launch_title">安装后启动项目</string>
+    <string name="pref_root_launch_summary">使用 root 自动安装后自动打开项目</string>
+    <string name="pref_show_all_palette_blocks_title">显示调色板的所有积木块</string>
+    <string name="pref_show_all_palette_blocks_summary">将显示每个可用的积木块。会减慢打开调色板的速度！</string>
+    <string name="pref_show_all_var_blocks_title">显示所有变量积木块</string>
+    <string name="pref_show_all_var_blocks_summary">即使没有相应的变量，所有变量积木块也会显示</string>
+
+    <!-- ========== 代码缩减 (Code Shrinker) ========== -->
+    <string name="code_shrinker_rules">代码缩减规则</string>
+    <string name="code_shrinker_use_r8">使用 R8</string>
+    <string name="code_shrinker_generate_debug_files">生成调试文件</string>
+
+    <!-- ========== 管理 (Manage) ========== -->
+    <string name="manage_custom_attr_title">管理自定义属性</string>
+
+    <!-- ========== 控件 (Widget) ========== -->
+    <string name="create_new_widget">创建控件</string>
+    <string name="view_widget_delete_title">删除控件</string>
+    <string name="view_widget_delete_description">确定要删除此视图及其子元素吗？\n如有需要可以撤销此操作</string>
+    <string name="view_widget_favorites_delete_title">从我的收藏中删除</string>
+    <string name="view_widget_favorites_delete_message">确定要从我的收藏中删除已保存的控件吗？此操作不可撤销。</string>
+    <string name="view_widget_favorites_image_auto_added">控件中使用的图片已添加到此项目。</string>
+    <string name="view_widget_favorites_save_guide">保存的控件会保存到我的收藏，所有项目都可以访问。</string>
+    <string name="view_widget_favorites_save_title">保存控件到我的收藏</string>
+    <string name="widget_editor">控件编辑器</string>
+    <string name="widget_creator_hint_attrs">XML 属性</string>
+    <string name="widget_creator_hint_category">选择分类</string>
+    <string name="widget_creator_hint_class">控件类名</string>
+    <string name="widget_creator_hint_title">控件标题</string>
+    <string name="widget_creator_hint_type">选择控件类型</string>
+    <string name="widget_type_title">控件类型</string>
+    <string name="widgets_select_json">选择 .json 控件文件</string>
+
+    <!-- ========== 字体 (Font) ========== -->
+    <string name="font_add_to_collection">添加到我的收藏</string>
+    <string name="font_clear">清除</string>
+    <string name="font_hint_name">字体名称</string>
+    <string name="font_load_failed">无法加载字体</string>
+    <string name="font_preview">预览</string>
+    <string name="font_preview_sample">这是你的字体效果。</string>
+    <string name="font_preview_title">字体预览</string>
+    <string name="font_select">选择</string>
+
+    <!-- ========== 密钥库 (Keystore) ========== -->
+    <string name="keystore_export_path_format">导出路径: %s</string>
+    <string name="keystore_helper_algorithm">例: SHA256withRSA</string>
+    <string name="keystore_hint_algorithm">签名算法</string>
+    <string name="keystore_hint_alias">密钥库别名</string>
+    <string name="keystore_hint_password">别名密码</string>
+    <string name="keystore_hint_signing_mode">签名模式</string>
+
+    <!-- ========== MoreBlock ========== -->
+    <string name="moreblock_dialog_title_select">选择一个 MoreBlock</string>
+
+    <!-- ========== 图标创建器 (Icon Creator) ========== -->
+    <string name="icon_creator_color">颜色</string>
+    <string name="icon_creator_image">图片</string>
+    <string name="icon_creator_opacity">不透明度</string>
+    <string name="icon_creator_other">其他</string>
+    <string name="icon_creator_rotation">旋转</string>
+    <string name="icon_creator_scale">缩放</string>
+    <string name="icon_creator_score_effect">评分效果</string>
+    <string name="icon_creator_size">大小</string>
+    <string name="icon_creator_textures">纹理</string>
+    <string name="icon_creator_horizontal_position">水平位置</string>
+    <string name="icon_creator_vertical_position">垂直位置</string>
+    <string name="import_icon_filter">筛选</string>
+    <string name="import_icon_filter_title">筛选图标</string>
+    <string name="save_icon_hint_name">输入图标名称</string>
+    <string name="save_icon_licence">此图标可根据 Apache 许可证 2.0 版使用。点击了解更多。</string>
+
+    <!-- ========== Material3 ========== -->
+    <string name="material3_dark">深色</string>
+    <string name="material3_daynight">日/夜</string>
+    <string name="material3_description">采用自适应动态主题的现代 Material 设计</string>
+    <string name="material3_dynamic_colors">启用动态颜色</string>
+    <string name="material3_enable">启用 Material3</string>
+    <string name="material3_light">浅色</string>
+    <string name="material3_theme_pref">Material3 主题偏好:</string>
+
+    <!-- ========== 文本菜单标题 ========== -->
+    <string name="text_subtitle_menu_assets">导入资产文件</string>
+    <string name="text_subtitle_menu_broadcast">导入后台服务文件</string>
+    <string name="text_subtitle_menu_java">导入 Java/Kotlin 文件</string>
+    <string name="text_subtitle_menu_local_library">添加本地库</string>
+    <string name="text_subtitle_menu_permission">添加自定义权限</string>
+    <string name="text_subtitle_menu_resource">管理资源文件</string>
+    <string name="text_subtitle_menu_resource_editor">编辑资源文件</string>
+    <string name="text_title_menu_assets">资产管理器</string>
+    <string name="text_title_menu_broadcast">后台服务</string>
+    <string name="text_title_menu_java">Java/Kotlin 管理器</string>
+    <string name="text_title_menu_local_library">本地库</string>
+    <string name="text_title_menu_permission">权限管理器</string>
+    <string name="text_title_menu_resource">资源管理器</string>
+    <string name="text_title_menu_resource_editor">资源编辑器</string>
+
+    <!-- ========== 组件 ========== -->
+    <string name="component_description_bluetooth_connect">蓝牙连接用于通过蓝牙连接到另一台设备。</string>
+    <string name="component_description_calendar">日历用于计算时间和日期</string>
+    <string name="component_description_camera">相机用于拍照。</string>
+    <string name="component_description_date_picker_dialog">日期选择对话框</string>
+    <string name="component_description_dialog">对话框用于创建弹出窗口</string>
+    <string name="component_description_file">文件用于在本地保存数据</string>
+    <string name="component_description_file_picker">FilePicker 用于选择原始文件和媒体文件，如图片、音效和文本。</string>
+    <string name="component_description_firebase_auth">Firebase Auth 允许在线用户身份验证</string>
+    <string name="component_description_firebase_storage">Firebase Storage 专为需要存储和提供用户生成内容的应用开发者设计。</string>
+    <string name="component_description_gyrosope">陀螺仪测量设备绕 x、y 和 z 轴的旋转速率（rad/s）。</string>
+    <string name="component_description_intent">Intent 用于启动新的 Activity</string>
+    <string name="component_description_interstitial_ad">插屏广告允许你添加全屏广告。</string>
+    <string name="component_description_location_manager">LocationManager 用于加载当前位置数据</string>
+    <string name="component_description_mediaplayer">MediaPlayer 用于播放大型音频文件</string>
+    <string name="component_description_notification">创建通知</string>
+    <string name="component_description_objectanimator">ObjectAnimator 用于为视图的某些属性添加动画</string>
+    <string name="component_description_progress_dialog">创建弹出对话框式进度条</string>
+    <string name="component_description_request_network">RequestNetwork 用于进行 Web API 调用</string>
+    <string name="component_description_soundpool">SoundPool 用于播放短音效</string>
+    <string name="component_description_speech_to_text">SpeechToText 用于将语音转换为文本</string>
+    <string name="component_description_text_to_speech">TextToSpeech 用于将文本转换为语音</string>
+    <string name="component_description_time_picker_dialog">时间选择对话框</string>
+    <string name="component_description_timer">Timer 用于延迟某些操作</string>
+    <string name="component_description_vibrator">Vibrator 用于使设备振动</string>
+    <string name="component_description_video_ad">视频广告允许你添加视频广告</string>
+    <string name="component_description_fragment_adapter">FragmentStatePagerAdapter 与 TabLayout 和 ViewPager 配合使用来管理每个页面。</string>
+    <string name="component_description_fb_fcm">Firebase Cloud Messaging 用于发送和接收推送通知</string>
+    <string name="component_description_fb_google">Firebase Google Sign 与 Firebase Auth 配合使用，以 Google 账号登录你的应用</string>
+    <string name="component_description_fb_phone_auth">Firebase Phone 与 Firebase Auth 配合使用，以手机号登录你的应用</string>
+    <string name="component_description_fb_dynamic">Firebase Dynamic Links 是智能 URL，允许你将现有和潜在用户引导到应用中的任何位置</string>
+    <string name="component_description_fb_admin">OneSignal 是客户参与度的市场领导者</string>
+    <string name="component_description_fb_ads_banner">Facebook Ads Banner 用于显示 Facebook 广告横幅</string>
+    <string name="component_description_fb_ads_interstitial">Facebook Ads Interstitial 用于显示 Facebook 插页广告</string>
+    <string name="component_error_invalid_file">发现无效的自定义组件文件</string>
+    <string name="component_error_read_failed">无法读取自定义组件文件: %s</string>
+    <string name="component_file_hint_enter_file_name">输入文件名</string>
+    <string name="component_file_picker_hint_mime_type">输入 MIME 类型</string>
+    <string name="component_file_picker_title_select_mime_type">选择 MIME 类型</string>
+    <string name="component_file_picker_title_select_mime_type_all_files">所有文件</string>
+    <string name="component_file_picker_title_select_mime_type_audio_files">音频文件</string>
+    <string name="component_file_picker_title_select_mime_type_image_files">图片文件</string>
+    <string name="component_file_picker_title_select_mime_type_text_files">文本文件</string>
+    <string name="component_file_title_file_name">文件名</string>
+    <string name="component_hint_enter_name">输入组件名称</string>
+    <string name="component_message_component_block_added">已在逻辑编辑器中添加新积木块</string>
+    <string name="component_message_no_components">没有可显示的组件</string>
+    <string name="component_new">新建组件</string>
+    <string name="component_select_json">选择 json 文件</string>
+    <string name="component_select_json_selector">选择 .json 选择器文件</string>
+    <string name="component_title_add_component">添加组件</string>
+    <string name="custom_component_add_title">添加新组件</string>
+    <string name="developer_tools_component_add_var">附加变量</string>
+    <string name="developer_tools_component_build_class">构建类</string>
+
+    <!-- ========== 解析错误 (Parse Error) ========== -->
+    <string name="parse_error_title_format">%s 数据损坏</string>
+    <string name="parse_error_message_format">解析文件 %2$s 中的 %1$s 失败。是否将旧文件重命名为 %3$s？如果不重命名，将不会使用任何 %1$s。</string>
+
+    <!-- ========== 关于 (About) ========== -->
+    <string name="about_team_title">团队</string>
+    <string name="about_changelog_title">更新日志</string>
+    <string name="about_beta_changes_title">测试版更改</string>
+
+    <!-- ========== 属性编辑器 (Property Editor) ========== -->
+    <string name="property_header_layout">布局</string>
+    <string name="property_header_text">文本</string>
+    <string name="property_header_image">图片</string>
+    <string name="property_slider">滑块</string>
+    <string name="property_hint_enter_new_attr">输入新属性</string>
+    <string name="property_configure_parent_attrs">配置父属性</string>
+
+    <!-- ========== 颜色 (Colors) ========== -->
+    <string name="color_transparent">透明</string>
+    <string name="color_none">无</string>
+
+    <!-- ========== 版本控制 (Version Control) ========== -->
+    <string name="version_control_title">高级版本控制</string>
+    <string name="version_error_invalid_code">无效的版本号</string>
+    <string name="version_error_invalid_name">无效的版本名</string>
+    <string name="version_hint_code">版本号</string>
+    <string name="version_hint_name">版本名</string>
+    <string name="version_hint_name_extra">版本名后缀</string>
+
+    <!-- ========== 事件 (Events) ========== -->
+    <string name="events_activity_event">Activity 事件</string>
+
+    <!-- ========== 逻辑编辑器 - 补充 ========== -->
+    <string name="logic_custom_activities">自定义 Activities</string>
+
+    <!-- ========== 属性编辑器 - 补充 ========== -->
+    <string name="property_alpha">透明度</string>
+    <string name="property_background_color">背景颜色</string>
+    <string name="property_checked">选中</string>
+    <string name="property_clickable">可点击</string>
+    <string name="property_enabled">已启用</string>
+    <string name="property_first_day_of_week">每周第一天</string>
+    <string name="property_gravity">对齐方式</string>
+    <string name="property_hint">提示文本</string>
+    <string name="property_hint_color">提示颜色</string>
+    <string name="property_image">图片</string>
+    <string name="property_indeterminate">不确定进度</string>
+    <string name="property_input_type">输入类型</string>
+    <string name="property_lines">行数</string>
+    <string name="property_max">最大值</string>
+    <string name="property_progress">进度</string>
+    <string name="property_rotate">旋转</string>
+    <string name="property_scale_type">缩放类型</string>
+    <string name="property_single_line">单行</string>
+    <string name="property_spinner_mode">Spinner 模式</string>
+    <string name="property_text">文本</string>
+    <string name="property_text_color">文本颜色</string>
+    <string name="property_text_font">文本字体</string>
+    <string name="property_text_size">文本大小</string>
+    <string name="property_text_style">文本样式</string>
+    <string name="property_weight">权重</string>
+    <string name="property_weight_sum">权重总和</string>
+
+    <!-- ========== Toast 消息 ========== -->
+    <string name="toast_file_created">文件已创建</string>
+    <string name="toast_folder_created">文件夹已创建</string>
+
+    <!-- ========== Manifest ========== -->
+    <string name="manifest_add_attribute">添加属性</string>
+    <string name="manifest_add_permission">添加权限</string>
+    <string name="manifest_hint_permission">权限名称</string>
+
+    <!-- ========== 组件补充 ========== -->
+    <string name="component_error_invalid_additional_var">自定义组件 #%d 中的附加变量条目无效</string>
+    <string name="component_error_invalid_additional_var_in">自定义组件 #%d 中的附加变量条目无效</string>
+    <string name="component_error_invalid_build_class">自定义组件 #%d 的构建类条目无效</string>
+    <string name="component_error_invalid_class">自定义组件 #%d 的类条目无效</string>
+    <string name="component_error_invalid_define_additional_var">自定义组件 #%d 中的定义附加变量条目无效</string>
+    <string name="component_error_invalid_description">自定义组件 #%d 的描述条目无效</string>
+    <string name="component_error_invalid_icon">自定义组件 #%d 的图标条目无效</string>
+    <string name="component_error_invalid_id_at">自定义组件 #%d 的 ID 条目无效</string>
+    <string name="component_error_invalid_id_for">自定义组件 #%d 的 ID 条目无效</string>
+    <string name="component_error_invalid_id_in">自定义组件 #%d 中的 ID 条目无效</string>
+    <string name="component_error_invalid_imports">自定义组件 #%d 中的导入条目无效</string>
+    <string name="component_error_invalid_listener">自定义组件 #%d 的监听器条目无效</string>
+    <string name="component_error_invalid_name_at">自定义组件 #%d 的名称条目无效</string>
+    <string name="component_error_invalid_name_for">自定义组件 #%d 的名称条目无效</string>
+    <string name="component_error_invalid_name_in">自定义组件 #%d 中的名称条目无效</string>
+    <string name="component_error_invalid_type_name_at">自定义组件 #%d 的类型名条目无效</string>
+    <string name="component_error_invalid_type_name_for">自定义组件 #%d 的类型名条目无效</string>
+    <string name="component_error_invalid_type_name_in">自定义组件 #%d 中的类型名条目无效</string>
+    <string name="component_error_invalid_url">自定义组件 #%d 的 URL 条目无效</string>
+    <string name="component_error_invalid_var_name">自定义组件 #%d 的变量名条目无效</string>
+    <string name="component_error_invalid_var_name_in">自定义组件 #%d 中的变量名条目无效</string>
+    <string name="component_error_null">位置 %d 处的自定义组件无效 (null)</string>
+    <string name="component_helper_add_var">允许向类中添加多个字段。\n使用 \'###\' 作为组件名称的占位符。</string>
+    <string name="component_helper_def_add_var">用于初始化额外添加的变量。\n使用 \'###\' 作为组件名称的占位符。</string>
+    <string name="component_helper_var_name">在类字段中使用的实际变量名（例: \'private VariableName name\'）。\n保持与组件名称一致以正确使用 \'附加变量\' 功能。</string>
+
+    <!-- ========== 样式/主题编辑器 ========== -->
+    <string name="style_no_parent">无父项</string>
+    <string name="xml_cmd_reference_format">引用: %s</string>
+
+    <!-- ========== 排除内置库 ========== -->
+    <string name="exclude_libs_title">排除内置库</string>
+
+    <!-- ========== 设计器 - 操作栏/抽屉 ========== -->
+    <string name="design_actionbar_title_library">库管理器</string>
+    <string name="design_actionbar_title_manager_collection">收藏管理器</string>
+    <string name="design_actionbar_title_manager_font">字体管理器</string>
+    <string name="design_actionbar_title_manager_image">图片管理器</string>
+    <string name="design_actionbar_title_manager_resources">资源管理器</string>
+    <string name="design_actionbar_title_manager_sound">音效管理器</string>
+    <string name="design_actionbar_title_manager_view">视图管理器</string>
+    <string name="design_actionbar_title_show_source_code">显示源代码</string>
+    <string name="design_button_properties">属性</string>
+    <string name="design_cancel_build_btn_continue">继续</string>
+    <string name="design_cancel_build_btn_stop">停止</string>
+    <string name="design_cancel_build_desc">正在构建中，是否取消？</string>
+    <string name="design_cancel_build_title">取消构建</string>
+    <string name="design_drawer_menu_androidmanifest">AndroidManifest</string>
+    <string name="design_drawer_menu_androidmanifest_subtitle">添加 Activity、权限等</string>
+    <string name="design_drawer_menu_bottom_title">工具</string>
+    <string name="design_drawer_menu_customblocks">自定义积木块</string>
+    <string name="design_drawer_menu_customblocks_subtitle">查看此项目中使用的自定义积木块</string>
+    <string name="design_drawer_menu_description_collection">管理你已保存的积木块收藏</string>
+    <string name="design_drawer_menu_description_font">从收藏或设备添加字体</string>
+    <string name="design_drawer_menu_description_image">从收藏或设备添加图片</string>
+    <string name="design_drawer_menu_description_library">管理库</string>
+    <string name="design_drawer_menu_description_sound">从收藏或设备添加音效</string>
+    <string name="design_drawer_menu_description_source_code">查看项目源代码</string>
+    <string name="design_drawer_menu_description_theme">更改应用主题</string>
+    <string name="design_drawer_menu_description_view">管理 Activity 和自定义视图</string>
+    <string name="design_drawer_menu_description_xml_command">编辑 XML 命令</string>
+    <string name="design_drawer_menu_injection">代码注入</string>
+    <string name="design_drawer_menu_injection_subtitle">添加代码注入</string>
+    <string name="design_drawer_menu_nativelibs">原生库</string>
+    <string name="design_drawer_menu_nativelibs_subtitle">管理原生库</string>
+    <string name="design_drawer_menu_proguard">ProGuard</string>
+    <string name="design_drawer_menu_proguard_subtitle">管理 ProGuard 规则</string>
+    <string name="design_drawer_menu_stringfog">StringFog</string>
+    <string name="design_drawer_menu_stringfog_subtitle">管理 StringFog 加密</string>
+    <string name="design_drawer_menu_subtitle_editor_code">编辑代码</string>
+    <string name="design_drawer_menu_subtitle_logcat_reader">读取应用日志</string>
+    <string name="design_drawer_menu_title">菜单</string>
+    <string name="design_drawer_menu_title_collection">收藏</string>
+    <string name="design_drawer_menu_title_font">字体</string>
+    <string name="design_drawer_menu_title_image">图片</string>
+    <string name="design_drawer_menu_title_library">库</string>
+    <string name="design_drawer_menu_title_logcat_reader">日志查看器</string>
+    <string name="design_drawer_menu_title_sound">音效</string>
+    <string name="design_drawer_menu_title_source_code">源代码</string>
+    <string name="design_drawer_menu_title_theme">主题</string>
+    <string name="design_drawer_menu_title_view">视图</string>
+    <string name="design_drawer_menu_title_xml_command">XML 命令</string>
+    <string name="design_error_apk_not_exist">APK 文件不存在</string>
+    <string name="design_error_cannot_launch">无法启动应用</string>
+    <string name="design_error_generate_code">生成代码时出错</string>
+    <string name="design_error_generate_source">生成源代码时出错</string>
+    <string name="design_error_no_root_access">无 Root 权限</string>
+    <string name="design_error_install_failed">安装包失败，结果代码: %1$d。日志已保存到 /Internal storage/.sketchware/debug.txt</string>
+    <string name="design_file_selector_title_java">选择 Java/Kotlin 文件</string>
+
+    <!-- ========== 设计器 - AdMob ========== -->
+    <string name="design_library_admob_button_goto_console">前往 AdMob 控制台</string>
+    <string name="design_library_admob_button_goto_setting">前往设置</string>
+    <string name="design_library_admob_button_manual_add_to_adunit">手动添加广告单元</string>
+    <string name="design_library_admob_button_request_adunit">请求广告单元</string>
+    <string name="design_library_admob_button_set_test_device">设置测试设备</string>
+    <string name="design_library_admob_component_setup_first">使用此组件前，需先在库管理器中设置</string>
+    <string name="design_library_admob_description">使用 Google AdMob 在应用中展示广告</string>
+    <string name="design_library_admob_dialog_add_adunit_hint_adunit_id">广告单元 ID</string>
+    <string name="design_library_admob_dialog_add_adunit_hint_adunit_name">广告单元名称</string>
+    <string name="design_library_admob_dialog_add_adunit_title">添加广告单元</string>
+    <string name="design_library_admob_dialog_confirm_delete_adunit">确定要删除此广告单元吗？</string>
+    <string name="design_library_admob_dialog_confirm_delete_test_device">确定要删除此测试设备吗？</string>
+    <string name="design_library_admob_dialog_delete_adunit_title">删除广告单元</string>
+    <string name="design_library_admob_dialog_delete_test_device_title">删除测试设备</string>
+    <string name="design_library_admob_dialog_description_confirm_uncheck">如果取消勾选 AdMob，现有的广告组件将被删除。是否继续？</string>
+    <string name="design_library_admob_dialog_select_unit_title">选择广告单元</string>
+    <string name="design_library_admob_dialog_set_app_id">设置应用 ID</string>
+    <string name="design_library_admob_dialog_set_app_id_title">设置 AdMob 应用 ID</string>
+    <string name="design_library_admob_dialog_set_test_device_hint_device_id">设备 ID</string>
+    <string name="design_library_admob_dialog_set_test_device_title">设置测试设备</string>
+    <string name="design_library_admob_dialog_set_test_device_warning_duplicated">此测试设备已存在</string>
+    <string name="design_library_admob_message_failed_to_request">广告单元请求失败。请检查你的 AdMob 账户 [%s]。</string>
+    <string name="design_library_admob_message_no_test_device">没有测试设备</string>
+    <string name="design_library_admob_message_no_unit_id">没有广告单元 ID</string>
+    <string name="design_library_admob_message_select_ad_unit">请选择广告单元</string>
+    <string name="design_library_admob_title_ad_unit_id">广告单元 ID</string>
+    <string name="design_library_admob_title_admob">AdMob</string>
+    <string name="design_library_admob_title_admob_manager">AdMob 管理器</string>
+    <string name="design_library_admob_title_app_id">应用 ID</string>
+    <string name="design_library_admob_title_banner">横幅广告</string>
+    <string name="design_library_admob_title_interstitial">插屏广告</string>
+    <string name="design_library_admob_widget_setup_first">要使用此控件，需先在库管理器中设置。</string>
+    <string name="design_library_appcompat_description">启用 AppCompat 库可以在 Activity 中添加抽屉布局和悬浮操作按钮。</string>
+    <string name="design_library_appcompat_need_firebase_disable">使用 Firebase 时无法禁用 AppCompat 库。</string>
+    <string name="design_library_appcompat_need_m3_disable">使用 Material3 和动态颜色时无法禁用 AppCompat 库。</string>
+    <string name="design_library_button_import_from_other_project">从其他项目导入</string>
+    <string name="design_library_description_admob">使用 Google AdMob</string>
+    <string name="design_library_description_appcompat_and_design">抽屉布局、悬浮操作按钮</string>
+    <string name="design_library_description_firebase">使用 Firebase 数据库和身份验证</string>
+    <string name="design_library_description_google_map">使用 Google 地图</string>
+    <string name="design_library_dynamic_colors_description">启用动态颜色后，应用可以根据用户的系统偏好调整配色方案，创造无缝且个性化的体验。</string>
+
+    <!-- ========== 设计器 - Firebase ========== -->
+    <string name="design_library_firebase_button_goto_firebase_authentication">前往 Firebase 身份验证</string>
+    <string name="design_library_firebase_button_goto_firebase_console">前往 Firebase 控制台</string>
+    <string name="design_library_firebase_button_goto_firebase_database">前往 Firebase 数据库</string>
+    <string name="design_library_firebase_button_goto_firebase_storage">前往 Firebase 存储</string>
+    <string name="design_library_firebase_description">启用后，你可以使用 Firebase DB、Auth 和 Storage 组件。</string>
+    <string name="design_library_firebase_description_about_firebase">Firebase 实时数据库是 Google 的云端 NoSQL 数据库，你可以实时保存和同步数据。</string>
+    <string name="design_library_firebase_description_settings">项目 ID、应用 ID 和 API 密钥必须与 Firebase 控制台中的值匹配。</string>
+    <string name="design_library_firebase_description_storage">Storage Bucket URL 必须与 Firebase Storage 中的值匹配才能正常工作。</string>
+    <string name="design_library_firebase_dialog_description_confirm_uncheck_firebase">如果取消勾选 Firebase DB，现有的 Firebase 组件将被删除。是否继续？</string>
+    <string name="design_library_firebase_guide_path_example">从根路径开始。\n例: \"users/username\"</string>
+    <string name="design_library_firebase_guide_setup_first">使用此组件前，需先在 Firebase 设置中配置 API 密钥。</string>
+    <string name="design_library_firebase_hint_enter_data_location">输入数据位置</string>
+    <string name="design_library_firebase_hint_enter_firebase_api_key">输入 Firebase API 密钥</string>
+    <string name="design_library_firebase_hint_enter_firebase_app_id">输入 Firebase 应用 ID</string>
+    <string name="design_library_firebase_hint_enter_firebase_project_id">输入完整的 Firebase 数据库 URL</string>
+    <string name="design_library_firebase_hint_enter_firebase_storage_bucket_url">输入 Firebase Storage Bucket URL</string>
+    <string name="design_library_firebase_message_id_fill_out">完整数据库 URL、应用 ID 和 API 密钥必须填写完整。</string>
+    <string name="design_library_firebase_message_need_compat">由于 Firebase 需要 AppCompat 作为依赖，AppCompat 库将被启用。</string>
+    <string name="design_library_firebase_message_not_input_text">请提供所有必要信息</string>
+    <string name="design_library_firebase_setting_step1_desc">输入完整数据库 URL、Web API 密钥和应用 ID</string>
+    <string name="design_library_firebase_setting_step1_title">项目设置</string>
+    <string name="design_library_firebase_setting_step2_desc">输入 Firebase Storage URL</string>
+    <string name="design_library_firebase_setting_step2_title">Storage URL 设置</string>
+    <string name="design_library_firebase_setting_step3_desc">请检查以下信息。如果全部正确，点击\"保存\"。</string>
+    <string name="design_library_firebase_setting_step3_title">设置审查</string>
+    <string name="design_library_firebase_title_api_key">API 密钥</string>
+    <string name="design_library_firebase_title_app_id">应用 ID</string>
+    <string name="design_library_firebase_title_data_location">数据位置</string>
+    <string name="design_library_firebase_title_firebase">Firebase</string>
+    <string name="design_library_firebase_title_firebase_manager">Firebase 管理器</string>
+    <string name="design_library_firebase_title_firebase_settings">Firebase 设置</string>
+    <string name="design_library_firebase_title_firebase_setup_tutorial">Firebase 设置教程</string>
+    <string name="design_library_firebase_title_project_id">完整数据库 URL (例: sk-pro-default-rtdb.firebaseio.com)</string>
+    <string name="design_library_firebase_title_storage_bucket_url">Storage Bucket URL</string>
+    <string name="design_library_google_map_button_open_doc">打开文档</string>
+    <string name="design_library_google_map_title">Google 地图</string>
+    <string name="design_library_google_map_title_api_key">API 密钥</string>
+    <string name="design_library_google_maps_description_operate_normally">Google Map View 可以正常运行。\n你必须输入 API 密钥才能正常操作地图。</string>
+    <string name="design_library_guide_setup_first">使用此组件前，需先在库管理器中设置。</string>
+    <string name="design_library_material_3_description">启用 Material 3 将在应用中启用最新的 Material You 设计原则，提供更现代、视觉吸引力更强的界面，以及可自定义的组件和高级主题选项。</string>
+    <string name="design_library_material_3_enable_warning">请注意，启用此库可能会影响应用的整体设计和外观，特别是对于较旧的项目。建议在启用前验证更改并确保与当前设置兼容。</string>
+    <string name="design_manager_font_message_not_support_font">如果你的设备不支持上方的字体，括号中的文本可能无法显示</string>
+    <string name="design_manager_image_description_guide_add_image">在此添加图片后，\n你可以将其用作图标或 ImageView</string>
+    <string name="design_manager_sound_description_guide_add_sound">在此添加背景音乐\n或音效</string>
+
+    <!-- ========== 逻辑编辑器 - 完整 ========== -->
+    <string name="logic_editor_more_block_button_add">添加</string>
+    <string name="logic_editor_more_block_dialog_description_goback">你当前的工作将丢失</string>
+    <string name="logic_editor_more_block_dialog_message_confirm_goback">确定吗？</string>
+    <string name="logic_editor_more_block_hint_enter_block_label">输入标签文本</string>
+    <string name="logic_editor_more_block_hint_enter_new_block_name">* 输入积木块的新名称</string>
+    <string name="logic_editor_more_block_hint_enter_variable_name">输入变量名</string>
+    <string name="logic_editor_more_block_title_add_label">添加标签</string>
+    <string name="logic_editor_more_block_title_add_variable">添加变量</string>
+    <string name="logic_editor_more_block_title_add_variable_type">添加变量类型</string>
+    <string name="logic_editor_more_block_title_name_of_block">积木块名称</string>
+    <string name="logic_editor_option_menu_title_copy_blocks">复制积木块</string>
+    <string name="logic_editor_option_menu_title_paste_blocks">粘贴已复制的积木块</string>
+    <string name="logic_editor_panel_button_add_component">添加组件</string>
+    <string name="logic_editor_panel_button_add_list">添加列表</string>
+    <string name="logic_editor_panel_button_add_variable">添加变量</string>
+    <string name="logic_editor_panel_button_create_moreblock">创建</string>
+    <string name="logic_editor_panel_button_remove_list">移除列表</string>
+    <string name="logic_editor_panel_button_remove_variable">移除变量</string>
+    <string name="logic_editor_settings">设置</string>
+    <string name="logic_editor_title_add_new_list">添加新列表</string>
+    <string name="logic_editor_title_add_new_variable">添加新变量</string>
+    <string name="logic_editor_title_block_collection">我的积木块收藏</string>
+    <string name="logic_editor_title_enter_data_value">输入数据值</string>
+    <string name="logic_editor_title_enter_number_value">输入数值</string>
+    <string name="logic_editor_title_enter_string_value">输入字符串值</string>
+    <string name="logic_editor_title_location_manager_provider_type">选择提供者类型</string>
+    <string name="logic_editor_title_mapview_map_type">选择地图类型</string>
+    <string name="logic_editor_title_mapview_marker_color">选择标记颜色</string>
+    <string name="logic_editor_title_remove_list">移除列表</string>
+    <string name="logic_editor_title_remove_variable">移除变量</string>
+    <string name="logic_editor_title_remove_xml_string_error">所选字符串当前正在项目中使用。\n请在移除所有实例后重试</string>
+    <string name="logic_editor_title_remove_xml_strings">移除字符串</string>
+    <string name="logic_editor_title_request_network_method">选择方法</string>
+    <string name="logic_editor_title_request_network_request_type">选择请求类型</string>
+    <string name="logic_editor_title_select_activity">选择 Activity</string>
+    <string name="logic_editor_title_select_animator_interpolator">选择插值器</string>
+    <string name="logic_editor_title_select_animator_repeat_mode">选择重复模式</string>
+    <string name="logic_editor_title_select_animator_target_property">选择目标属性</string>
+    <string name="logic_editor_title_select_cache_mode">选择缓存模式</string>
+    <string name="logic_editor_title_select_component">选择组件</string>
+    <string name="logic_editor_title_select_component_bluetooth_connect">选择蓝牙连接组件</string>
+    <string name="logic_editor_title_select_component_calendar">选择日历组件</string>
+    <string name="logic_editor_title_select_component_calendar_field">选择日历字段</string>
+    <string name="logic_editor_title_select_component_camera">选择相机组件</string>
+    <string name="logic_editor_title_select_component_dialog">选择对话框组件</string>
+    <string name="logic_editor_title_select_component_file">选择文件组件</string>
+    <string name="logic_editor_title_select_component_filepicker">选择 FilePicker 组件</string>
+    <string name="logic_editor_title_select_component_firebase">选择 Firebase DB 组件</string>
+    <string name="logic_editor_title_select_component_firebasestorage">选择 Firebase Storage 组件</string>
+    <string name="logic_editor_title_select_component_gyroscope">选择陀螺仪组件</string>
+    <string name="logic_editor_title_select_component_intent">选择 Intent 组件</string>
+    <string name="logic_editor_title_select_component_intent_action">选择 Intent Action</string>
+    <string name="logic_editor_title_select_component_intent_flags">选择 Intent 标志</string>
+    <string name="logic_editor_title_select_component_interstitialad">选择插屏广告组件</string>
+    <string name="logic_editor_title_select_component_location_manager">选择 LocationManager 组件</string>
+    <string name="logic_editor_title_select_component_mediaplayer">选择 MediaPlayer 组件</string>
+    <string name="logic_editor_title_select_component_objectanimator">选择 ObjectAnimator 组件</string>
+    <string name="logic_editor_title_select_component_request_network">选择 RequestNetwork 组件</string>
+    <string name="logic_editor_title_select_component_soundpool">选择 SoundPool 组件</string>
+    <string name="logic_editor_title_select_component_speech_to_text">选择 SpeechToText 组件</string>
+    <string name="logic_editor_title_select_component_text_to_speech">选择 TextToSpeech 组件</string>
+    <string name="logic_editor_title_select_component_timer">选择 Timer 组件</string>
+    <string name="logic_editor_title_select_component_vibrator">选择 Vibrator 组件</string>
+    <string name="logic_editor_title_select_directory_type">选择目录类型</string>
+    <string name="logic_editor_title_select_font">选择字体</string>
+    <string name="logic_editor_title_select_gyroscope">选择陀螺仪组件</string>
+    <string name="logic_editor_title_select_image">选择图片</string>
+    <string name="logic_editor_title_select_image_background">选择背景图片</string>
+    <string name="logic_editor_title_select_list">选择列表</string>
+    <string name="logic_editor_title_select_list_boolean">选择布尔列表</string>
+    <string name="logic_editor_title_select_list_map">选择映射列表</string>
+    <string name="logic_editor_title_select_list_number">选择数值列表</string>
+    <string name="logic_editor_title_select_list_string">选择字符串列表</string>
+    <string name="logic_editor_title_select_sound">选择音效</string>
+    <string name="logic_editor_title_select_typeface">选择字体样式</string>
+    <string name="logic_editor_title_select_variable_boolean">选择布尔变量</string>
+    <string name="logic_editor_title_select_variable_map">选择映射变量</string>
+    <string name="logic_editor_title_select_variable_number">选择数值变量</string>
+    <string name="logic_editor_title_select_variable_string">选择字符串变量</string>
+    <string name="logic_editor_title_select_view">选择控件</string>
+    <string name="logic_editor_title_select_visibility">选择可见性</string>
+    <string name="logic_list_menu_add_to_collection">添加到收藏</string>
+    <string name="logic_more_block_desc_add_variable_resource">MoreBlock 中的变量和资源会自动添加。是否继续？\n但组件需要手动添加才能正常工作。</string>
+    <string name="logic_more_block_desc_change_block_name">MoreBlock 名称重复。请编辑名称。</string>
+    <string name="logic_more_block_favorites_save_guide">保存此积木块后，你可以在所有项目中使用它。</string>
+    <string name="logic_more_block_favorites_save_title">保存 MoreBlock 到我的收藏</string>
+    <string name="logic_more_block_message_missed_resource_exist">部分资源无法添加到收藏。请检查资源。</string>
+    <string name="logic_more_block_message_resource_added">包含的资源已自动添加到收藏。</string>
+    <string name="logic_more_block_title_add_variable_resource">自动添加变量和资源</string>
+    <string name="logic_more_block_title_change_block_name">编辑 MoreBlock 名称</string>
+    <string name="logic_more_block_title_select_more_block">选择 MoreBlock</string>
+    <string name="logic_search_events">搜索事件…</string>
+    <string name="logic_sort_alphabetical">A-Z</string>
+    <string name="logic_sort_default">默认</string>
+    <string name="logic_sort_menu">排序选项</string>
+    <string name="logic_sort_type">按控件类型</string>
+
+    <!-- ========== 发布 - 完整 ========== -->
+    <string name="publish_account_setting_connecting_account_step_name">你有 Google Play 开发者账号吗？</string>
+    <string name="publish_account_setting_select_json_step_name">检查服务账号凭证</string>
+    <string name="publish_account_setting_title">发布账号设置</string>
+    <string name="publish_check_upload_apk_message_dialog_upload_apk_agreement">发布后，APK 文件将上传到 Sketchware 服务器进行备份。是否继续？</string>
+    <string name="publish_check_upload_apk_step_desc">确定此次发布的类型</string>
+    <string name="publish_check_upload_apk_step_name">发布类型</string>
+    <string name="publish_check_upload_apk_title_dialog_upload_apk_agreement">上传 APK 文件协议</string>
+    <string name="publish_check_upload_apk_title_radio_not_upload">我想更新商店描述</string>
+    <string name="publish_check_upload_apk_title_radio_upload">我想发布包含 APK 文件的更新</string>
+    <string name="publish_complete_back_up_button_name">备份</string>
+    <string name="publish_complete_desc">项目已成功发布。</string>
+    <string name="publish_complete_title">发布完成</string>
+    <string name="publish_complete_title_published_data">发布日期</string>
+    <string name="publish_complete_title_published_fraction">发布比例</string>
+    <string name="publish_complete_title_published_status">发布状态</string>
+    <string name="publish_complete_title_published_track">发布轨道</string>
+    <string name="publish_complete_title_published_version_code">发布版本号</string>
+    <string name="publish_connecting_account_have_account">我有 Google Play 开发者账号</string>
+    <string name="publish_connecting_account_no_have_account">我没有 Google Play 开发者账号</string>
+    <string name="publish_desc_choose_project">选择要发布或更新的项目</string>
+    <string name="publish_exception_title_code">代码</string>
+    <string name="publish_exception_title_message">消息</string>
+    <string name="publish_exception_title_read_in_detail">更多详情</string>
+    <string name="publish_exception_title_reason">原因</string>
+    <string name="publish_images_message_dialog_delete_screenshot">要删除此图片吗？</string>
+    <string name="publish_images_message_dialog_invalid_delete_screenshot">至少需要两张截图</string>
+    <string name="publish_images_message_dialog_invalid_icon_size">图标大小无效。(512 X 512)</string>
+    <string name="publish_images_message_dialog_invalid_screenshot_size">截图大小无效。(任一边最小: 320px, 最大: 3840px)</string>
+    <string name="publish_images_step_desc">为你的应用附加图片</string>
+    <string name="publish_images_step_name">图形资产</string>
+    <string name="publish_images_title_dialog_delete_screenshot">删除截图</string>
+    <string name="publish_images_title_dialog_invalid_delete_screenshot">删除截图错误</string>
+    <string name="publish_images_title_dialog_invalid_icon_size">图标大小错误</string>
+    <string name="publish_images_title_dialog_invalid_screenshot_size">截图大小错误</string>
+    <string name="publish_images_title_icon">图标</string>
+    <string name="publish_images_title_screenshots">截图</string>
+    <string name="publish_mail_complete_desc">我们已将你的 APK 和发布指南发送到你的邮箱。请按照邮件中的指南发布你的第一个 APK。</string>
+    <string name="publish_mail_complete_title">邮件已发送！</string>
+    <string name="publish_manage_no_publish_apps">点击 FAB 按钮发布你的第一个应用</string>
+    <string name="publish_manage_title">发布管理器</string>
+    <string name="publish_message_dialog_authorization_error">此 JSON 文件的访问令牌已过期。请选择有效的 JSON 文件</string>
+    <string name="publish_message_dialog_cannot_start_publish">请在另存为新项目后重试</string>
+    <string name="publish_message_dialog_change_version_code">此应用的版本号已更改。要重新签名 APK 文件吗？</string>
+    <string name="publish_message_dialog_compile_apk_failed">APK 编译失败。请检查此项目</string>
+    <string name="publish_message_dialog_conflict_version_code">此版本号不能使用。如果要更新版本号，请点击确定按钮。</string>
+    <string name="publish_message_dialog_default_package_name">请使用不同的包名。以 \"%s\" 开头的包名无法发布</string>
+    <string name="publish_message_dialog_invalid_json">JSON 文件无效。请仔细检查文件</string>
+
+    <!-- ========== 关于 - 完整 ========== -->
+    <string name="about_badge_contributor">贡献者</string>
+    <string name="about_badge_core_team">核心团队</string>
+    <string name="about_changelog_error">出了些问题，给你带来不便深感抱歉！\n(详情: \"title\" 的数据类型无效)</string>
+    <string name="about_contributors_title">贡献者</string>
+    <string name="about_core_team_title">核心团队成员</string>
+    <string name="about_date_last_month">上个月</string>
+    <string name="about_date_last_week">上周</string>
+    <string name="about_date_months_ago">%d 个月前</string>
+    <string name="about_date_one_month_ago">1 个月前</string>
+    <string name="about_date_one_year_ago">1 年前</string>
+    <string name="about_date_this_week">本周</string>
+    <string name="about_date_today">今天</string>
+    <string name="about_date_years_ago">%d 年前</string>
+    <string name="about_date_yesterday">昨天</string>
+    <string name="about_deleted_account">已删除的账号</string>
+    <string name="about_joindiscord">加入我们的 Discord 服务器</string>
+    <string name="about_loading_subtitle">别担心，不会超过一秒钟。</string>
+    <string name="about_loading_title">正在获取数据…</string>
+    <string name="about_released_on">发布日期: %s</string>
+    <string name="about_specialthanks_title">特别感谢</string>
+    <string name="about_status_active">活跃</string>
+    <string name="about_status_inactive">不活跃</string>
+    <string name="about_title">关于 Sketchware Pro</string>
+    <string name="about_update_current">当前版本</string>
+    <string name="about_update_new">有新更新</string>
+    <string name="about_update_old">旧版本</string>
+    <string name="about_variant_beta">测试版</string>
+    <string name="about_variant_official">正式版</string>
+
+    <!-- ========== 设置 ========== -->
+    <string name="settings_appearance">外观</string>
+    <string name="settings_appearance_description">更改 Sketchware 外观</string>
+    <string name="settings_appearance_theme">Sketchware 主题</string>
+    <string name="settings_appearance_theme_dark">深色主题</string>
+    <string name="settings_appearance_theme_light">浅色主题</string>
+    <string name="settings_appearance_theme_system">跟随系统</string>
+    <string name="settings_backup_directory_msg">在 /Internal storage/ 中的目录，例: .sketchware/backups</string>
+    <string name="settings_backup_directory_title">备份目录</string>
+    <string name="settings_backup_filename_msg">定义 SWB 备份文件的命名方式。\n可用变量:\n - $projectName - 项目名称\n - $versionCode - 应用版本号\n - $versionName - 应用版本名\n - $pkgName - 包名</string>
+    <string name="settings_backup_filename_title">备份文件名格式</string>
+    <string name="settings_block_selector">积木块选择器管理器</string>
+    <string name="settings_events_manager">事件管理器</string>
+    <string name="settings_events_manager_activity_events">Activity 事件</string>
+    <string name="settings_events_manager_details">事件管理器详情</string>
+    <string name="settings_events_manager_listeners">监听器</string>
+    <string name="settings_title">应用设置</string>
+
+    <!-- ========== 代码缩减 ========== -->
+    <string name="code_shrinker_full_mode_def">使用它，你可以配置特定的本地库以包含在 R8/ProGuard 处理过程中。(注意: 启用此功能将忽略你选择的本地库的 DEX 文件，并强制 Sketchware 重新编译它们为 dex，使编译速度明显变慢。)</string>
+    <string name="code_shrinker_obfuscate_def">启用 R8/ProGuard 将在编译时通过重命名现有类和方法来最小化和混淆你的项目。</string>
+    <string name="code_shrinker_warning">使用 R8/ProGuard 可能会有一定风险。请确保提供正确的规则配置文件，以免破坏你的项目。</string>
+    <string name="pref_backup_filename_summary">默认是 \"$projectName v$versionName ($pkgName, $versionCode) $time(yyyy-MM-dd\'T\'HHmmss)\"</string>
+
+    <!-- ========== Toast ========== -->
+    <string name="toast_activity_not_in_manifest">Activity 未在 AndroidManifest 中定义。</string>
+    <string name="toast_activity_removed">Activity 已移除</string>
+    <string name="toast_added">已添加</string>
+    <string name="toast_added_activity_manifest">已成功将 %s 添加为 AndroidManifest 中的 Activity</string>
+    <string name="toast_added_service_manifest">已成功将 %s 添加为 AndroidManifest 中的 Service</string>
+    <string name="toast_block_image_saved">图片已保存到 /Internal storage/sketchware/saved_block/%s.png!</string>
+    <string name="toast_compile_logs_cleared">编译日志已清除。</string>
+    <string name="toast_configure_firebase">请先配置 Firebase 设置，可以通过导入 google-services.json 或手动输入项目详情。</string>
+    <string name="toast_copied">已复制</string>
+    <string name="toast_copied_to_clipboard">已复制到剪贴板</string>
+    <string name="toast_created_file">文件创建成功</string>
+    <string name="toast_deleted_successfully">删除成功</string>
+    <string name="toast_enable_d8_reminder">别忘了启用 D8 以编译 Java 8+ 代码</string>
+    <string name="toast_event_exported">事件已成功导出到:\n/Internal storage/.sketchware/data/system/export/events</string>
+    <string name="toast_events_exported">事件已成功导出到:\n/Internal storage/.sketchware/data/system/export/events</string>
+    <string name="toast_events_imported">事件导入成功</string>
+    <string name="toast_exported_in">已导出到 %s</string>
+    <string name="toast_imported">已导入！</string>
+    <string name="toast_library_downloaded">库下载成功</string>
+    <string name="toast_logcat_exported">日志导出成功: %s</string>
+    <string name="toast_new_activity_added">新 Activity 已添加</string>
+    <string name="toast_no_changes">没有需要保存的更改</string>
+    <string name="toast_no_compile_logs">未找到编译日志。</string>
+    <string name="toast_no_http_legacy_warning">注意此选项在使用 RequestNetwork 组件时可能会导致问题</string>
+    <string name="toast_only_java_xml_format">只有 Java 和 XML 文件可以格式化</string>
+    <string name="toast_only_xml_editable">只有 XML 文件可以编辑</string>
+    <string name="toast_removed_activity_from_manifest">已成功从 AndroidManifest 移除 Activity %s</string>
+    <string name="toast_removed_activity_manifest">注意: 已从 Manifest 移除 Activity</string>
+    <string name="toast_removed_service_from_manifest">已成功从 AndroidManifest 移除 Service %s</string>
+    <string name="toast_renamed_successfully">重命名成功</string>
+    <string name="toast_save_completed">保存完成</string>
+    <string name="toast_select_file_type">选择文件类型</string>
+    <string name="toast_service_not_in_manifest">Service 未在 AndroidManifest 中定义。</string>
+
+    <!-- ========== 通用 ========== -->
+    <string name="title_sketchware">Sketchware Pro</string>
+    <string name="restoring">正在恢复…</string>
+    <string name="searching">正在搜索…</string>
+    <string name="quiz_while_you_wait">请稍候…</string>
+    <string name="invalid_component">无效组件</string>
+    <string name="invalid_icon_id">无效图标 ID</string>
+    <string name="invalid_required_fields">部分必填项为空</string>
+    <string name="invalid_value_rule_1">只能使用字母(a-z)、数字和特殊字符(.)、(@)</string>
+    <string name="invalid_value_rule_6">不允许使用空格</string>
+    <string name="unknown_attr">未知属性</string>
+    <string name="var_is_required">%s 是必填项</string>
+    <string name="attr_already_exist">此属性已存在</string>
+    <string name="attr_title_create">创建新属性</string>
+    <string name="attr_title_edit">编辑属性</string>
+
+    <!-- ========== 备份 ========== -->
+    <string name="backup_button_back_up">备份</string>
+    <string name="backup_button_copy_libs">复制</string>
+    <string name="backup_button_dont_copy_libs">不复制</string>
+    <string name="backup_error_prefix">错误: %s</string>
+    <string name="backup_error_restore">无法恢复: %s</string>
+    <string name="backup_include_custom_blocks">包含已使用的自定义积木块</string>
+    <string name="backup_include_local_libs">包含已使用的本地库</string>
+    <string name="backup_msg_creating">正在创建备份…</string>
+    <string name="backup_msg_restoring">正在恢复…</string>
+    <string name="backup_msg_success">备份已成功创建到: %s</string>
+    <string name="backup_select_to_restore">选择要恢复的备份 (%s)</string>
+    <string name="backup_title_options">备份选项</string>
+    <string name="backup_toast_restored">恢复成功</string>
+    <string name="backup_toast_restored_refresh">恢复成功。刷新以查看项目</string>
+    <string name="backup_restore_local_libs_single">你选择的备份文件包含一些本地库。是否将它们复制到你的 local_libs 目录（如果尚不存在）？</string>
+    <string name="backup_restore_local_libs_multi">备份文件 %1$s（第 %2$d 个，共 %3$d 个）包含一些本地库。是否将它们复制到你的 local_libs 目录（如果尚不存在）？</string>
+
+    <!-- ========== 组件 ========== -->
+    <string name="component_add_docs_button_title_go_to_docs">阅读文档</string>
+    <string name="component_add_message_docs_updated_soon">文档页面将很快更新</string>
+    <string name="component_context_menu_title">组件菜单</string>
+    <string name="component_context_menu_title_delete_component">删除组件</string>
+    <string name="component_description_file_picker_guide_mime_type_example">MIME 类型用于标识数据类型。\n例: \"*/*\"、\"image/*\"、\"audio/*\"、\"text/*\"</string>
+
+    <!-- ========== 开发者工具 ========== -->
+    <string name="developer_tools_component_define_add_var">定义附加变量</string>
+    <string name="developer_tools_component_description">描述（可选）</string>
+    <string name="developer_tools_component_description_guide_add_component">在此添加组件后，\n你可以在逻辑编辑器中使用它</string>
+    <string name="developer_tools_component_icon">组件图标（必填）</string>
+    <string name="developer_tools_component_id">组件 ID（必填）</string>
+    <string name="developer_tools_component_imports">导入</string>
+    <string name="developer_tools_component_manager">组件管理器</string>
+    <string name="developer_tools_component_message_export">确定要导出 %s 吗？</string>
+    <string name="developer_tools_component_name">组件名称（必填）</string>
+    <string name="developer_tools_component_success_message_export">组件已成功导出到:\n%s</string>
+    <string name="developer_tools_component_type_class">类型类</string>
+    <string name="developer_tools_component_type_name">类型名称</string>
+    <string name="developer_tools_component_url">文档 URL（可选）</string>
+    <string name="developer_tools_component_var_type_name">变量类型名称</string>
+
+    <!-- ========== 创建视图 ========== -->
+    <string name="create_view_both">两者</string>
+    <string name="create_view_hidden">隐藏</string>
+    <string name="create_view_hint_name">输入名称</string>
+    <string name="create_view_important_note">重要提示</string>
+    <string name="create_view_keyboard_settings">键盘设置</string>
+    <string name="create_view_landscape">横屏</string>
+    <string name="create_view_portrait">竖屏</string>
+    <string name="create_view_screen_orientation">屏幕方向</string>
+    <string name="create_view_title">创建视图</string>
+    <string name="create_view_type">类型</string>
+    <string name="create_view_unspecified">未指定</string>
+    <string name="create_view_visible">可见</string>
+    <string name="custom_activity_hint_name">Activity 名称</string>
+    <string name="custom_view_desc">自定义视图可用于更改 ListView 或 Spinner 中项目的显示方式</string>
+
+    <!-- ========== 视图面板 ========== -->
+    <string name="edit_view_properties_title">编辑属性</string>
+    <string name="view_panel_title_layouts">布局</string>
+    <string name="view_panel_title_properties">属性</string>
+    <string name="view_panel_title_widgets">控件</string>
+    <string name="view_title_create_new">新建</string>
+    <string name="view_title_edit">编辑 %s</string>
+
+    <!-- ========== AdMob 设置 ========== -->
+    <string name="design_library_admob_setting_message_add_ad_unit">至少需要一个广告单元 ID</string>
+    <string name="design_library_admob_setting_message_add_app_id">应用 ID 是必填项</string>
+    <string name="design_library_admob_setting_step1_desc">分配给你应用的唯一 ID。你需要在此添加应用 ID。</string>
+    <string name="design_library_admob_setting_step1_title">添加应用 ID</string>
+    <string name="design_library_admob_setting_step2_desc">首先你需要在 AdMob 控制台中创建广告单元。手动或通过关联 AdMob 账号添加创建的广告单元。</string>
+    <string name="design_library_admob_setting_step2_title">添加广告单元</string>
+    <string name="design_library_admob_setting_step3_desc">将广告单元 ID 分配给横幅和插屏广告。</string>
+    <string name="design_library_admob_setting_step3_title">分配广告单元 ID</string>
+    <string name="design_library_admob_setting_step4_desc">如果你不添加设备 ID 就测试 AdMob，你的 AdMob 账号可能被封禁。请添加你的设备 ID。</string>
+    <string name="design_library_admob_setting_step4_title">配置测试设备</string>
+    <string name="design_library_admob_setting_step5_desc">请检查以下信息。如果全部正确，点击\"保存\"。</string>
+    <string name="design_library_admob_setting_step5_title">审查信息</string>
+    <string name="design_library_admob_title_ad_name">广告名称</string>
+
+    <!-- ========== 事件 ========== -->
+    <string name="event_context_menu_title">事件菜单</string>
+    <string name="event_context_menu_title_delete_event">删除事件</string>
+    <string name="event_context_menu_title_delete_more_block">删除 MoreBlock</string>
+    <string name="event_context_menu_title_initialize_logic">初始化逻辑</string>
+    <string name="event_definefunc">MoreBlock</string>
+    <string name="event_desc_add_custom_imports">添加自定义导入</string>
+    <string name="event_desc_do_in_background">此方法包含需要在后台执行的代码。</string>
+    <string name="event_desc_post_execute">此方法在 doInBackground 方法完成处理后调用。</string>
+    <string name="event_desc_pre_execute">此方法包含在后台处理开始前执行的代码。</string>
+    <string name="event_desc_progress_update">此方法从 doInBackground 方法接收进度更新。</string>
+    <string name="event_desc_swipe_refresh">SwipeRefreshLayout 滑动时</string>
+    <string name="event_desc_tab_new_tab">返回当前标签页的名称</string>
+    <string name="event_dialog_confirm_delete_component">确定要删除所选组件吗？</string>
+    <string name="event_dialog_confirm_delete_logic">所选事件的所有逻辑数据将丢失\n是否继续？</string>
+    <string name="event_dialog_confirm_delete_moreblock">确定要删除此 MoreBlock 吗？</string>
+    <string name="event_dialog_confirm_reset_logic">确定要重置此逻辑吗？</string>
+    <string name="event_error_invalid_code">自定义事件 #%d 中发现无效的代码数据类型</string>
+    <string name="event_error_invalid_description">自定义事件 #%d 中发现无效的描述数据类型</string>
+    <string name="event_error_invalid_header_spec">自定义事件 #%d 中发现无效的 header spec 数据类型</string>
+    <string name="event_error_invalid_icon">自定义事件 #%d 中发现无效的图标数据类型</string>
+    <string name="event_error_invalid_import">自定义事件 #%d 中发现无效的导入数据类型</string>
+    <string name="event_error_invalid_listener">自定义事件 #%d 中发现无效的监听器数据类型</string>
+    <string name="event_error_invalid_name">自定义事件 #%d 中发现无效的名称数据类型</string>
+    <string name="event_error_invalid_parameters">自定义事件 #%d 中发现无效的参数数据类型</string>
+    <string name="event_error_invalid_var">自定义事件 #%d 中发现无效的变量数据类型</string>
+    <string name="event_error_null">位置 %d 处发现无效的 (null) 自定义事件</string>
+    <string name="event_initialize">Activity 创建时</string>
+    <string name="event_message_new_event">新事件已添加</string>
+    <string name="event_message_new_events">新事件已添加</string>
+    <string name="event_message_no_avail_events">没有可添加的事件</string>
+    <string name="event_message_no_events">没有可显示的事件</string>
+    <string name="event_onbackpressed">返回键按下时</string>
+    <string name="event_onbindcustomview">绑定自定义视图时</string>
+    <string name="event_oncancelled">取消时</string>
+    <string name="event_onclick">点击时</string>
+    <string name="event_ondestroy">Activity 销毁时</string>
+    <string name="event_onpause">Activity 暂停时</string>
+
+    <!-- ========== 项目管理 - 完整 ========== -->
+
+    <!-- ========== 菜单 - 完整 ========== -->
+    <string name="menu_select_all">全选</string>
+
+    <!-- ========== 主界面 - 完整 ========== -->
+
+    <!-- ========== Manifest - 完整 ========== -->
+
+    <!-- ========== Toast 消息 - 完整 ========== -->
+
+    <!-- ========== 属性编辑器 - 完整 ========== -->
+    <string name="property_ad_size">广告尺寸</string>
+    <string name="property_animate_layout_changes">动画布局更改</string>
+    <string name="property_background_resource">背景资源</string>
+    <string name="property_choice_mode">选择模式</string>
+    <string name="property_convert">转换</string>
+    <string name="property_custom_view_listview">自定义视图</string>
+    <string name="property_description_edittext_ime_options">当 single_line 为 \'false\' 且 input_type 为 \'text\' 时不起作用</string>
+    <string name="property_divider_height">分隔线高度</string>
+    <string name="property_enter_value">输入 %s 值</string>
+    <string name="property_group_basic">基本</string>
+    <string name="property_group_event">事件</string>
+    <string name="property_group_recent">最近</string>
+    <string name="property_header_seekbar">SeekBar 属性</string>
+    <string name="property_header_view">视图属性</string>
+    <string name="property_hint_enter_value">输入值</string>
+    <string name="property_hint_search">搜索</string>
+    <string name="property_id">ID</string>
+    <string name="property_ime_option">输入法选项</string>
+    <string name="property_indent_format">左: %1$d, 上: %2$d, 右: %3$d, 下: %4$d</string>
+    <string name="property_inject">自定义属性</string>
+    <string name="property_layout_gravity">布局对齐</string>
+    <string name="property_layout_height">高度</string>
+    <string name="property_layout_width">宽度</string>
+    <string name="property_margin">外边距</string>
+    <string name="property_orientation">方向</string>
+    <string name="property_padding">内边距</string>
+    <string name="property_parent_attr">父属性</string>
+    <string name="property_progressbar_style">进度条样式</string>
+    <string name="property_resource">资源</string>
+    <string name="property_scale_x">X 缩放</string>
+    <string name="property_scale_y">Y 缩放</string>
+    <string name="property_translation_x">X 平移</string>
+    <string name="property_translation_y">Y 平移</string>
+    <string name="property_visibility">可见性</string>
+
+    <!-- ========== 项目 ========== -->
+    <string name="project_version_code">版本号</string>
+    <string name="project_version_name">版本名</string>
+
+    <!-- ========== 管理导出 URL ========== -->
+    <string name="manage_export_url_actionbar_title">管理导出 URL</string>
+    <string name="manage_export_url_list_app_name">应用名称</string>
+    <string name="manage_export_url_list_expire_dt_expired">已过期</string>
+    <string name="manage_export_url_list_expire_dt_left">过期时间: 剩余 %s 天</string>
+    <string name="manage_export_url_list_menu_extend">延长过期时间</string>
+    <string name="manage_export_url_list_package_name">包名</string>
+    <string name="manage_export_url_list_reg_dt">注册日期</string>
+    <string name="manage_export_url_message_complete_extend">延长过期时间成功。</string>
+    <string name="manage_export_url_message_fail_extend">延长过期时间失败。</string>
+    <string name="manage_export_url_message_no_url">导出 URL 不存在。</string>
+    <string name="manage_export_url_popup_desc_delete_url">URL 将被删除且无法恢复。是否继续？</string>
+    <string name="manage_export_url_popup_desc_extend_expire">URL 的过期时间将延长到 %s 天。是否继续？</string>
+    <string name="manage_export_url_popup_title_delete_url">删除 URL</string>
+    <string name="manage_export_url_popup_title_extend_expire">延长 URL 过期时间</string>
+    <string name="manage_export_url_tab_title_apk">已签名 APK</string>
+    <string name="manage_export_url_tab_title_data">导出数据</string>
+    <string name="manage_export_url_word_extend">延长</string>
+
+    <!-- ========== 本地库 - 完整 ========== -->
+    <string name="local_lib_error_invalid_assets">已启用的本地库 #%d 的资产路径无效</string>
+    <string name="local_lib_error_invalid_config">发现无效的本地库配置！暂时使用空配置</string>
+    <string name="local_lib_error_invalid_dex">已启用的本地库 #%d 的 DEX 路径无效</string>
+    <string name="local_lib_error_invalid_jar">已启用的本地库 #%1$d->%2$s 的 JAR 路径无效</string>
+    <string name="local_lib_error_invalid_package">已启用的本地库 #%d 的包名无效</string>
+    <string name="local_lib_error_invalid_proguard">已启用的本地库 #%d 的 ProGuard 路径无效</string>
+    <string name="local_lib_error_invalid_res">已启用的本地库 #%d 的 res/ 文件夹路径无效</string>
+    <string name="local_lib_hint_search">搜索库</string>
+    <string name="local_library_manager">本地库管理器</string>
+    <string name="local_library_manager_dependency_example">示例: org.ow2.asm:asm:9.5</string>
+    <string name="local_library_manager_dependency_info">你可以在 GitHub 中找到库的依赖项，通常在 Readme 文件中。</string>
+    <string name="local_library_manager_download">下载库</string>
+    <string name="local_library_manager_download_status">下载状态</string>
+    <string name="local_library_manager_enter_dependency">输入依赖项</string>
+    <string name="local_library_manager_no_libraries_body">你还没有任何本地库，试试下载一个。</string>
+    <string name="local_library_manager_no_libraries_title">没有可用的本地库</string>
+    <string name="local_library_manager_skip_downloading_dependencies">跳过下载子依赖</string>
+
+    <!-- ========== 构建 - 完整 ========== -->
+    <string name="build_error_failed_create_directory">创建目录失败！</string>
+    <string name="build_error_missing_directory_msg">构建所需的目录丢失。Sketchware Pro 可以尝试创建 %s，如果你愿意的话。</string>
+    <string name="build_error_missing_directory_title">检测到目录丢失</string>
+    <string name="build_error_missing_file_msg">构建所需的文件丢失。请将正确的文件放回 %s 并重试构建。</string>
+    <string name="build_error_missing_file_title">检测到文件丢失</string>
+    <string name="build_progress_aapt2_running">AAPT2 正在运行…</string>
+    <string name="build_progress_aligning_apk">正在对齐 APK…</string>
+    <string name="build_progress_building_bundle">正在构建应用包…</string>
+    <string name="build_progress_canceling">正在取消进程…</string>
+    <string name="build_progress_creating_module">正在创建应用模块…</string>
+    <string name="build_progress_deleting_temp">正在删除临时文件…</string>
+    <string name="build_progress_extracting_aapt2">正在提取 AAPT/AAPT2 二进制文件…</string>
+    <string name="build_progress_extracting_libraries">正在提取内置库…</string>
+    <string name="build_progress_java_compiling">Java 正在编译…</string>
+    <string name="build_progress_signing_bundle">正在签名应用包…</string>
+    <string name="build_settings_hint_android_jar">自定义 android.jar</string>
+    <string name="build_settings_hint_classpath">Classpath \'以 : 分隔\'</string>
+
+    <!-- ========== 语言设置 - 完整 ========== -->
+    <string name="language_settings_title">语言设置</string>
+    <string name="language_settings_desc">导出和导入翻译文件</string>
+    <string name="language_settings_current_language">当前语言</string>
+    <string name="language_settings_default_language">英语（默认）</string>
+    <string name="language_settings_select_language">选择语言</string>
+    <string name="language_settings_follow_system">跟随系统</string>
+    <string name="language_settings_restart_hint">语言已更改。立即重启应用以将新语言应用到所有界面？</string>
+    <string name="language_settings_custom_override">自定义 (%d 个字符串已覆盖)</string>
+    <string name="language_settings_override_active">语言覆盖已激活</string>
+    <string name="language_settings_clear">清除</string>
+    <string name="language_settings_section_export">导出</string>
+    <string name="language_settings_export_strings">导出字符串</string>
+    <string name="language_settings_export_desc">将所有应用字符串导出为 XML 文件以供翻译</string>
+    <string name="language_settings_exported">字符串已导出到:\n%s</string>
+    <string name="language_settings_export_error">导出失败: %s</string>
+    <string name="language_settings_section_import">导入</string>
+    <string name="language_settings_import_strings">导入字符串</string>
+    <string name="language_settings_import_desc">导入已翻译的字符串 XML 文件以覆盖当前语言</string>
+    <string name="language_settings_imported">成功导入 %d 个字符串</string>
+    <string name="language_settings_import_error">导入失败: %s</string>
+    <string name="language_settings_help">使用方法:\n\n1. 点击\"导出字符串\"生成包含所有应用字符串的 XML 文件。\n2. 翻译导出文件中的字符串。\n3. 点击\"导入字符串\"加载你的翻译文件。\n\n导入的字符串将覆盖默认显示语言。你可以随时清除覆盖以恢复默认设置。</string>
+
+    <!-- ========== 事件 - 补充 ========== -->
+    <string name="event_on_connected">连接时</string>
+    <string name="event_on_connection_error">连接错误时</string>
+    <string name="event_on_connection_stopped">连接停止时</string>
+    <string name="event_on_data_received">收到数据时</string>
+    <string name="event_on_data_sent">发送数据时</string>
+    <string name="event_on_error_response">错误响应时</string>
+    <string name="event_on_location_changed">位置变化时</string>
+    <string name="event_on_map_ready">地图就绪时</string>
+    <string name="event_on_marker_clicked">标记点击时</string>
+    <string name="event_on_response">响应时</string>
+    <string name="event_on_speech_error">语音错误时</string>
+    <string name="event_on_speech_result">语音结果时</string>
+    <string name="event_onadclosed">广告关闭时</string>
+    <string name="event_onadfailedtoload">广告加载失败时</string>
+    <string name="event_onadloaded">广告加载时</string>
+    <string name="event_onadopened">广告打开时</string>
+    <string name="event_onanimationcancel">动画取消时</string>
+    <string name="event_onanimationend">动画结束时</string>
+    <string name="event_onanimationstart">动画开始时</string>
+    <string name="event_oncheckchanged">选中状态改变时</string>
+    <string name="event_onchildadded">子项添加时</string>
+    <string name="event_onchildchanged">子项变化时</string>
+    <string name="event_onchildremoved">子项移除时</string>
+    <string name="event_oncreateusercomplete">创建用户完成时</string>
+    <string name="event_ondatechange">日期变化时</string>
+    <string name="event_ondeletesuccess">删除成功时</string>
+    <string name="event_ondownloadprogress">下载进度时</string>
+    <string name="event_ondownloadsuccess">下载成功时</string>
+    <string name="event_onfailure">失败时</string>
+    <string name="event_onfilespicked">文件选择时</string>
+    <string name="event_onfilespickedcancel">文件选择取消时</string>
+    <string name="event_onitemclicked">项目点击时</string>
+    <string name="event_onitemlongclicked">项目长按时</string>
+    <string name="event_onitemselected">项目选中时</string>
+    <string name="event_onpagefinished">页面加载完成时</string>
+    <string name="event_onpagestarted">页面开始加载时</string>
+    <string name="event_onpicturetaken">拍照完成时</string>
+    <string name="event_onpicturetakencancel">拍照取消时</string>
+    <string name="event_onresume">Activity 恢复时</string>
+    <string name="event_onsensorchanged">传感器变化时</string>
+    <string name="event_onstop">Activity 停止时</string>
+    <string name="event_ontextchanged">文本改变时</string>
+    <string name="event_onuploadsuccess">上传成功时</string>
+    <string name="event_onuploadprogress">上传进度时</string>
+
+    <!-- ========== 事件管理 ========== -->
+    <string name="events_creator_listener_props">监听器属性:</string>
+    <string name="events_delete_confirm_msg">确定要删除此项吗？</string>
+    <string name="events_delete_event_msg">删除此事件？</string>
+    <string name="events_delete_listener_title">删除监听器</string>
+    <string name="events_details_title">事件详情</string>
+    <string name="events_edit_listener">编辑监听器</string>
+    <string name="events_new_activity_title">新 Activity 事件</string>
+    <string name="events_new_event">新事件</string>
+    <string name="events_new_event_title">新事件</string>
+    <string name="events_new_listener">新监听器</string>
+    <string name="events_no_events">没有事件</string>
+    <string name="events_properties_title">事件属性</string>
+    <string name="events_start_creating">从创建新事件开始</string>
+
+    <!-- ========== 逻辑编辑器 - 分类 ========== -->
+    <string name="logic_editor_panel_button_add_custom_variable">添加自定义变量</string>
+    <string name="logic_editor_panel_button_add_custom_list">添加自定义列表</string>
+    <string name="logic_editor_panel_button_open_resources_editor">打开资源编辑器</string>
+    <string name="logic_editor_category_boolean">布尔值</string>
+    <string name="logic_editor_category_number">数字</string>
+    <string name="logic_editor_category_string">字符串</string>
+    <string name="logic_editor_category_map">映射</string>
+    <string name="logic_editor_category_custom_variable">自定义变量</string>
+    <string name="logic_editor_category_components">组件</string>
+    <string name="logic_editor_category_custom_views">自定义视图</string>
+    <string name="logic_editor_category_views">视图</string>
+    <string name="logic_editor_category_drawer_views">抽屉视图</string>
+    <string name="logic_editor_category_fragment_tablayout">Fragment &amp; TabLayout</string>
+    <string name="logic_editor_category_listview">ListView</string>
+    <string name="logic_editor_category_recyclerview">RecyclerView</string>
+    <string name="logic_editor_category_viewpager">ViewPager</string>
+    <string name="logic_editor_category_menu">菜单</string>
+    <string name="logic_editor_category_saved_res_strings">已保存的资源字符串:</string>
+    <string name="logic_editor_category_fileutil_blocks">FileUtil 积木块</string>
+    <string name="logic_editor_category_widgets">控件</string>
+    <string name="logic_editor_category_list">列表</string>
+    <string name="logic_editor_category_androidx_components">AndroidX 组件</string>
+    <string name="logic_editor_category_library">库</string>
+    <string name="logic_editor_category_google">Google</string>
+    <string name="logic_editor_category_date_time">日期 &amp; 时间</string>
+    <string name="logic_editor_category_function">函数</string>
+    <string name="logic_editor_category_intent">Intent</string>
+    <string name="logic_editor_category_broadcast">广播</string>
+    <string name="logic_editor_category_service">Service</string>
+    <string name="logic_editor_category_shared_preferences">SharedPreferences</string>
+    <string name="logic_editor_category_date_picker_dialog">DatePickerDialog</string>
+    <string name="logic_editor_category_time_picker_dialog">TimePickerDialog</string>
+    <string name="logic_editor_category_calendar">日历</string>
+    <string name="logic_editor_category_vibrator">Vibrator</string>
+    <string name="logic_editor_category_timer">Timer</string>
+    <string name="logic_editor_category_async_task">AsyncTask</string>
+    <string name="logic_editor_category_dialog">对话框</string>
+    <string name="logic_editor_category_media_player">MediaPlayer</string>
+    <string name="logic_editor_category_sound_pool">SoundPool</string>
+    <string name="logic_editor_category_object_animator">ObjectAnimator</string>
+    <string name="logic_editor_category_firebase">Firebase</string>
+    <string name="logic_editor_category_firebase_auth">FirebaseAuth</string>
+    <string name="logic_editor_category_gyroscope">陀螺仪</string>
+    <string name="logic_editor_category_admob_interstitial">AdMob 插屏广告</string>
+    <string name="logic_editor_category_rewarded_video_ad">激励视频广告</string>
+    <string name="logic_editor_category_firebase_storage">Firebase Storage</string>
+    <string name="logic_editor_category_camera">相机</string>
+    <string name="logic_editor_category_file_picker">FilePicker</string>
+    <string name="logic_editor_category_request_network">RequestNetwork</string>
+    <string name="logic_editor_category_text_to_speech">TextToSpeech</string>
+    <string name="logic_editor_category_speech_to_text">SpeechToText</string>
+    <string name="logic_editor_category_bluetooth">蓝牙</string>
+    <string name="logic_editor_category_location_manager">LocationManager</string>
+    <string name="logic_editor_category_progress_dialog">ProgressDialog</string>
+    <string name="logic_editor_category_command_blocks">命令积木块</string>
+    <string name="logic_editor_category_permission_command_blocks">权限命令积木块</string>
+    <string name="logic_editor_category_other_command_blocks">其他命令积木块</string>
+    <string name="logic_editor_panel_button_create_block">创建</string>
+    <string name="logic_editor_panel_button_import_collection">从收藏导入</string>
+    <string name="logic_editor_deprecated_xml_command">已弃用: 请使用 XML 命令管理器</string>
+    <string name="logic_editor_invalid_label">无效: %s</string>
+    <string name="logic_editor_helper_modifier">输入修饰符，例: private、public、public static 或留空 (package private)。</string>
+    <string name="logic_add_custom_list">添加新的自定义列表</string>
+    <string name="logic_add_custom_variable">添加新的自定义变量</string>
+    <string name="logic_block_favorites_delete_message">确定要从收藏中删除已保存的积木块吗？此操作不可撤销。</string>
+    <string name="logic_block_favorites_delete_title">从收藏中删除</string>
+    <string name="logic_block_favorites_save_guide">保存的积木块会添加到收藏中，可从所有项目访问。</string>
+    <string name="logic_block_favorites_save_title">保存积木块到收藏</string>
+    <string name="logic_button_explore_shared_more_block">共享 MoreBlock</string>
+    <string name="logic_button_import_more_block">从收藏导入</string>
+    <string name="logic_editor_component_firebaseauth_title_select_firebase_auth">选择 Firebase Auth 组件</string>
+    <string name="logic_editor_hint_enter_variable_name">输入变量名（区分大小写）</string>
+    <string name="logic_editor_message_currently_used_list">所选列表当前正在使用\n请在移除使用此列表的积木块后重试</string>
+    <string name="logic_editor_message_currently_used_variable">所选变量当前正在使用\n请在移除使用此变量的积木块后重试</string>
+    <string name="logic_editor_message_name_requied">需要有效的 MoreBlock 名称</string>
+    <string name="logic_editor_message_select_copy_block">选择要复制的积木块</string>
+    <string name="logic_editor_more_block_actionbar_title_create_more_block">创建新的 MoreBlock</string>
+
+    <!-- ========== 菜单 - 补充 ========== -->
+    <string name="menu_activity_hint_name">名称</string>
+    <string name="menu_activity_hint_title">标题</string>
+    <string name="menu_activity_hint_value">值</string>
+    <string name="menu_activity_new_menu">新菜单:</string>
+    <string name="menu_activity_title">标题</string>
+    <string name="menu_deprecated_msg">此积木块菜单最初用于解析资源值，但因 I/O 开销过大已被移除。请改用代码编辑器。</string>
+    <string name="menu_deprecated_title">已弃用</string>
+    <string name="menu_name_box_mode">盒子模式</string>
+    <string name="menu_name_custom_image">自定义图片</string>
+    <string name="menu_name_fab_size">FAB 大小</string>
+    <string name="menu_name_fab_visible">FAB 可见性</string>
+    <string name="menu_name_gravity_horizontal">水平对齐</string>
+    <string name="menu_name_gravity_toast">Toast 对齐</string>
+    <string name="menu_name_gravity_vertical">垂直对齐</string>
+    <string name="menu_name_language">语言</string>
+    <string name="menu_name_menu_action">菜单动作</string>
+    <string name="menu_name_pattern_mode">图案模式</string>
+    <string name="menu_name_porterduff_mode">PorterDuff 模式</string>
+    <string name="menu_name_progress_style">进度样式</string>
+    <string name="menu_name_scroll_param">滚动参数</string>
+    <string name="menu_name_stretch_mode">拉伸模式</string>
+    <string name="menu_name_theme">主题</string>
+    <string name="menu_name_transcript_mode">记录模式</string>
+    <string name="menu_select_asset">选择资产</string>
+    <string name="menu_select_box_mode">选择盒子模式</string>
+    <string name="menu_select_command">选择命令</string>
+    <string name="menu_select_component_format">选择 %s</string>
+    <string name="menu_select_fab_size">选择 FAB 大小</string>
+    <string name="menu_select_fab_visibility">选择 FAB 可见性</string>
+    <string name="menu_select_format">选择 %s</string>
+    <string name="menu_select_gravity_horizontal">选择水平对齐</string>
+    <string name="menu_select_gravity_toast">选择 Toast 对齐</string>
+    <string name="menu_select_gravity_vertical">选择垂直对齐</string>
+    <string name="menu_select_language">选择语言</string>
+    <string name="menu_select_menu_action">选择菜单动作</string>
+    <string name="menu_select_porterduff_mode">选择 PorterDuff 模式</string>
+    <string name="menu_select_progress_style">选择进度样式</string>
+    <string name="menu_select_scroll_param">选择滚动参数</string>
+    <string name="menu_select_stretch_mode">选择拉伸模式</string>
+    <string name="menu_select_theme">选择主题</string>
+    <string name="menu_select_transcript_mode">选择记录模式</string>
+
+    <!-- ========== 其他通用 ========== -->
+    <string name="button_delete_permanently">永久删除</string>
+    <string name="button_move">移动</string>
+    <string name="button_recycle_bin">回收站</string>
+    <string name="button_restore">恢复</string>
+    <string name="extra_menu_import_hint">输入路径，不包含 import 和分号</string>
+    <string name="program_information_actionbar_title">程序信息</string>
+
+    <!-- ========== 项目管理 ========== -->
+    <string name="myprojects_list_menu_title_restore_projects">恢复项目</string>
+
+    <!-- ========== 主界面 ========== -->
+
+    <!-- ========== Manifest ========== -->
+
+    <!-- ========== 项目 ========== -->
+
+    <!-- ========== 导出 ========== -->
+
+    <!-- ========== 资源管理器 ========== -->
+
+    <!-- ========== 自定义积木块 ========== -->
+
+    <!-- ========== 商店 ========== -->
+
+    <!-- ========== 颜色选择器 ========== -->
+    <string name="picker_color_already_exist">此颜色已存在</string>
+    <string name="picker_color_custom_color_not_found">未找到自定义颜色</string>
+    <string name="picker_color_hint_enter_hex_color_code">输入十六进制颜色代码</string>
+    <string name="picker_color_message_delete_all_custom_color">确定要继续吗？此操作不可撤销。</string>
+    <string name="picker_color_message_delete_custom_color">确定要继续吗？此操作不可撤销。</string>
+    <string name="picker_color_title_delete_all_custom_color">删除所有自定义颜色</string>
+    <string name="picker_color_title_delete_custom_attr">删除自定义属性</string>
+    <string name="picker_color_title_delete_custom_color">删除自定义颜色</string>
+    <string name="picker_color_xml_is_empty">colors.xml 为空</string>
+
+    <!-- ========== 源代码编辑器 ========== -->
+    <string name="src_code_editor_unsaved_changes_dialog_warning_message">你有未保存的更改。确定要退出吗？</string>
+
+    <!-- ========== 字符串编辑器 ========== -->
+    <string name="string_editor_hint_header">字符串 header 值（可选）</string>
+    <string name="string_editor_hint_key">字符串键</string>
+    <string name="string_editor_hint_value">字符串值</string>
+    <string name="string_title_create">创建新字符串</string>
+    <string name="strings_edit_title">编辑字符串</string>
+    <string name="strings_xml">strings.xml</string>
+
+    <!-- ========== 样式编辑器 ========== -->
+    <string name="style_attr_hint_name">输入属性名称</string>
+    <string name="style_attr_hint_value">输入属性值</string>
+    <string name="style_hint_header">样式 header 值（可选）</string>
+    <string name="style_hint_name">样式名称</string>
+    <string name="style_hint_parent">样式父级</string>
+    <string name="style_title_create">创建新样式</string>
+    <string name="style_title_edit">编辑样式</string>
+    <string name="styles_error_already_exists">\"%s\" 已存在</string>
+
+    <!-- ========== XML 命令 ========== -->
+    <string name="xml_cmd_hint_backend">后端</string>
+    <string name="xml_cmd_hint_code">输入代码</string>
+    <string name="xml_cmd_hint_command">选择命令</string>
+    <string name="xml_cmd_hint_distance">距离</string>
+    <string name="xml_cmd_hint_frontend">前端</string>
+    <string name="xml_cmd_hint_name">XML 名称（带 .xml）</string>
+    <string name="xml_cmd_hint_reference">引用</string>
+    <string name="xml_command_confirmation_title">确认</string>
+    <string name="xml_command_select_xml">选择 XML</string>
+    <string name="xml_command_title">XML 命令管理器</string>
+    <string name="xml_strings">XML 字符串</string>
+
+    <!-- ========== 视图编辑器 ========== -->
+    <string name="view_code_editor_title">XML 编辑器</string>
+    <string name="view_editor_drag_delete">拖拽到此处删除</string>
+
+    <!-- ========== AppCompat ========== -->
+    <string name="appcompat_add_attr">添加新属性</string>
+    <string name="appcompat_disabled_msg">请在库管理器中启用 AppCompat 以使用它。</string>
+    <string name="appcompat_disabled_title">AppCompat 已禁用。</string>
+    <string name="appcompat_edit_attr">编辑属性</string>
+    <string name="appcompat_manager_title">AppCompat 管理器</string>
+    <string name="appcompat_no_options_msg">此 Activity 中当前没有可用的 AppCompat 选项。</string>
+    <string name="appcompat_no_options_title">未找到选项。</string>
+    <string name="appcompat_not_available_msg">你当前不在 Activity 布局中。</string>
+    <string name="appcompat_not_available_title">不可用。</string>
+    <string name="appcompat_reset_confirm_msg">确定要重置 %s 的 AppCompat 属性吗？</string>
+
+    <!-- ========== GitHub ========== -->
+    <string name="github_api_date_unavailable">日期不可用</string>
+    <string name="github_api_error_message">出了些问题。请稍后重试。</string>
+
+    <!-- ========== 监听器/属性 ========== -->
+    <string name="listener_hint_name">名称</string>
+    <string name="listener_independent_class">独立类/方法</string>
+    <string name="measurement_custom_value">自定义值</string>
+    <string name="measurement_hint_value">输入值</string>
+    <string name="padding_all_sides">四边内边距</string>
+    <string name="padding_hint_value">输入内边距值</string>
+    <string name="parent_attr_title">父属性</string>
+
+    <!-- ========== AdMob ========== -->
+    <string name="admob_ad_name_label">广告名称:</string>
+    <string name="admob_ad_unit_id_label">广告单元 ID:</string>
+    <string name="admob_edit">编辑</string>
+    <string name="admob_edit_label">编辑</string>
+    <string name="admob_no_ad_units">没有可显示的广告单元</string>
+    <string name="admob_rewarded_ad">激励广告</string>
+
+    <!-- ========== 图标筛选 ========== -->
+    <string name="filter_icons_baseline">基线</string>
+    <string name="filter_icons_outlined">轮廓</string>
+    <string name="filter_icons_round">圆角</string>
+    <string name="filter_icons_selected_color">已选颜色</string>
+    <string name="filter_icons_sharp">锐利</string>
+    <string name="filter_icons_style">样式</string>
+    <string name="filter_icons_two_tone">双色调</string>
+
+    <!-- ========== 图标创建器 ========== -->
+    <string name="icon_creator_adaptive_icon">自适应图标</string>
+    <string name="icon_creator_badge">徽章</string>
+    <string name="icon_creator_badge_bg_color">徽章背景颜色</string>
+    <string name="icon_creator_bg_type">背景类型</string>
+    <string name="icon_creator_corners">圆角</string>
+    <string name="icon_creator_effects">效果</string>
+    <string name="icon_creator_gradient">渐变</string>
+    <string name="icon_creator_gradient_direction">渐变方向</string>
+    <string name="icon_creator_hint_badge">徽章文本</string>
+    <string name="icon_creator_hint_text">文本</string>
+    <string name="title_activity_icon_creator">图标创建器</string>
+
+    <!-- ========== 控件收藏 ========== -->
+    <string name="view_widget_favorites_save_guide_new">如果你保存此控件，它将被添加到控件收藏中，使用的图片将自动添加到图片收藏中。保存的控件可在所有项目中使用。</string>
+
+    <!-- ========== 搜索 ========== -->
+    <string name="search_header">  搜索…</string>
+
+    <!-- ========== 其他 ========== -->
+    <string name="save_to_collection">保存到收藏</string>
+    <string name="title_community">社交网络</string>
+    <string name="title_discord_community">Discord</string>
+    <string name="title_telegram_community">Telegram</string>
+    <string name="menu_components_asd">组件 ASD</string>
+
+    <!-- ========== 分享 ========== -->
+    <string name="share_collection_inform_message_input_tag">关于此收藏要添加的文本标签</string>
+    <string name="share_collection_inform_message_limit_tag_count">超出可添加的标签数量</string>
+    <string name="share_collection_inform_message_no_input_tag">没有要添加的标签</string>
+    <string name="share_collection_inform_message_tag_added_already">标签已添加</string>
+    <string name="share_collection_inform_message_tag_middle_sharp"># 不能在标签中间</string>
+    <string name="share_collection_inform_title_related_tag">相关标签</string>
+    <string name="share_collection_inform_title_tag">标签</string>
+    <string name="share_collection_information_message_desc_length">文本长度无效。请检查收藏信息的长度。</string>
+    <string name="share_collection_information_message_hint_long_desc">详细描述此收藏</string>
+    <string name="share_collection_information_message_hint_short_desc">简短描述此收藏</string>
+    <string name="share_collection_information_message_screenshots">至少需要一张截图</string>
+    <string name="share_collection_information_message_short_desc">请用简短描述说明此收藏</string>
+    <string name="share_collection_information_title_long_desc">详细描述</string>
+    <string name="share_collection_information_title_screenshots">截图</string>
+    <string name="share_collection_information_title_short_desc">简短描述</string>
+    <string name="share_collection_message_dialog_delete_upload_data">所有上传数据将被移除。是否继续？</string>
+    <string name="share_collection_select_favorite_collection_message_no_data">没有可分享的收藏。\n请在添加至少一个收藏后重试。</string>
+    <string name="share_collection_select_required_collection_message_no_data">没有可分享的收藏。</string>
+    <string name="share_more_block_information_title_more_block_name">MoreBlock 名称</string>
+    <string name="share_view_information_step_desc">输入此视图的描述和截图</string>
+    <string name="share_view_information_step_name">视图信息</string>
+    <string name="share_view_information_title_view_name">视图名称</string>
+    <string name="share_view_message_uploading_view_data">正在上传视图数据</string>
+    <string name="share_view_review_information_step_desc">请检查以下信息。如果全部正确，点击\"分享\"。</string>
+    <string name="share_view_review_information_step_name">审查信息</string>
+    <string name="share_view_select_favorite_view_message_favorite_view">请选择要分享的视图</string>
+    <string name="share_view_select_favorite_view_step_desc">选择要分享的视图</string>
+    <string name="share_view_select_favorite_view_step_name">选择视图</string>
+    <string name="share_view_select_required_images_step_desc">选择此视图需要的图片</string>
+    <string name="share_view_select_required_images_step_name">选择图片</string>
+
+    <!-- ========== 主题/颜色 ========== -->
+    <string name="theme_title_create">创建新主题</string>
+    <string name="theme_title_edit">编辑主题</string>
+    <string name="color_title_create">创建新颜色</string>
+    <string name="color_title_edit">编辑颜色</string>
+
+    <!-- ========== 项目管理 - 补充 ========== -->
+    <string name="myprojects_settings_button_save">保存</string>
+
+    <!-- ========== 主界面 - 补充 ========== -->
+
+    <!-- ========== Manifest - 补充 ========== -->
+
+    <!-- ========== 项目 - 补充 ========== -->
+
+    <!-- ========== 程序 - 补充 ========== -->
+
+    <!-- ========== 商店 - 补充 ========== -->
+
+    <!-- ========== 导出 - 补充 ========== -->
+    <string name="export_aab_title">导出 AAB (Android App Bundle)</string>
+    <string name="export_btn_understood">我知道了</string>
+    <string name="export_title_important_note">重要提示</string>
+    <string name="export_widgets">导出控件</string>
+
+    <!-- ========== Logcat ========== -->
+    <string name="logcat_hint_search">搜索日志</string>
+    <string name="logcat_msg_filter_hint">多个包名用逗号 (,) 分隔。</string>
+    <string name="logcat_no_content">Logcat 尚未捕获任何内容</string>
+    <string name="logcat_no_content_desc">保持此屏幕打开然后运行你的应用</string>
+    <string name="logcat_title">Logcat 阅读器</string>
+    <string name="logcat_title_filter_package">按包名筛选</string>
+
+    <!-- ========== ProGuard ========== -->
+    <string name="proguard_activated">已激活</string>
+    <string name="proguard_full_mode">完整模式</string>
+    <string name="proguard_select_local_libs">选择本地库</string>
+    <string name="proguard_title">代码缩减管理器</string>
+    <string name="signatures_title">签名</string>
+
+    <!-- ========== 通知 ========== -->
+    <string name="notification_building_project">正在构建项目</string>
+    <string name="notification_cancel_build">取消构建</string>
+    <string name="notification_channel_build">构建通知</string>
+    <string name="notification_channel_build_description">构建进度通知</string>
+    <string name="notification_channel_firebase">Sketchware Pro 通知</string>
+    <string name="notification_starting_build">正在启动构建…</string>
+
+    <!-- ========== 签名/APK ========== -->
+    <string name="snackbar_show_compile_log">显示编译日志</string>
+    <string name="signing_apk_progress">正在签名 APK…</string>
+    <string name="signing_error_occurred">发生错误。请检查日志了解详情。</string>
+    <string name="signing_failed_format">签名失败: %s</string>
+    <string name="sign_apk_desc_export_apk_file">APK 文件已生成。请检查下方的保存目录。</string>
+    <string name="sign_apk_desc_generate_apk_file">点击下方的签名按钮生成 APK 文件！</string>
+    <string name="sign_apk_path_placeholder">APK 路径将在此显示</string>
+    <string name="sign_apk_selected">已选 APK</string>
+    <string name="sign_apk_title_apk_file_save_path">保存目录</string>
+    <string name="sign_apk_title_export_apk_file">APK 文件生成完成</string>
+    <string name="apk_sign_select_file">请选择要签名的 APK 文件</string>
+    <string name="apk_sign_success">已签名 APK 已成功保存到: /Internal storage/sketchware/signed_apk/%s</string>
+    <string name="overwrite_apk_format">名为 %s 的 APK 已存在于 /sketchware/signed_apk/。是否覆盖？</string>
+
+    <!-- ========== StringFog ========== -->
+    <string name="stringfog_activated">已激活</string>
+    <string name="stringfog_desc">启用 StringFog 将在编译时加密字符串，使你的应用更难被逆向工程。</string>
+    <string name="stringfog_disabled">StringFog 已禁用</string>
+    <string name="stringfog_enabled">StringFog 已启用</string>
+    <string name="stringfog_title">StringFog 管理器</string>
+
+    <!-- ========== 系统设置 ========== -->
+    <string name="system_settings_description_automatically_save">退出项目时自动保存</string>
+    <string name="system_settings_description_setting_vibration">长按控件或积木块时振动</string>
+    <string name="system_settings_title_automatically_save">自动保存</string>
+    <string name="system_settings_title_setting_vibration">振动设置</string>
+
+    <!-- ========== 主题 - 补充 ========== -->
+    <string name="theme_dark">深色</string>
+    <string name="theme_generate_random">随机生成</string>
+    <string name="theme_light">浅色</string>
+    <string name="theme_random_generated">已生成随机主题</string>
+    <string name="theme_section_description">从预定义主题中选择或随机生成</string>
+    <string name="theme_section_title">主题预设</string>
+    <string name="theme_settings_title">主题设置</string>
+    <string name="theme_system_default">跟随系统</string>
+    <string name="theme_system_default_desc">跟随系统主题设置</string>
+
+    <!-- ========== 数组编辑器 ========== -->
+    <string name="array_attr_hint_name">输入项目名称</string>
+    <string name="array_attr_hint_value">输入项目值</string>
+    <string name="array_hint_header">数组 header 值（可选）</string>
+    <string name="array_hint_name">数组名称</string>
+    <string name="array_hint_type">数组类型</string>
+    <string name="array_item_title_create">创建新项目</string>
+    <string name="array_item_title_edit">编辑项目</string>
+    <string name="array_select_type">选择数组类型</string>
+    <string name="array_title_create">创建新数组</string>
+    <string name="array_title_edit">编辑数组</string>
+
+    <!-- ========== 颜色编辑器 - 补充 ========== -->
+    <string name="color_editor_delete_color">删除颜色</string>
+    <string name="color_editor_hint_header">字符串 header 值（可选）</string>
+    <string name="color_editor_hint_name">颜色名称</string>
+    <string name="color_editor_hint_value">颜色值</string>
+    <string name="color_picker_custom_attr_hint">输入自定义属性</string>
+    <string name="color_picker_desc">输入十六进制颜色代码或从下方列表中选择颜色。</string>
+    <string name="color_picker_new">新颜色</string>
+    <string name="color_picker_preview_label">颜色预览:</string>
+    <string name="color_picker_title">选择颜色</string>
+
+    <!-- ========== 自定义属性/变量/列表 ========== -->
+    <string name="custom_attr_hint_attr">attr</string>
+    <string name="custom_attr_hint_res">res</string>
+    <string name="custom_attr_hint_value">value</string>
+    <string name="custom_list_hint_name">名称，例: dataList</string>
+    <string name="custom_list_hint_type">类型，例: ArrayList&lt;Data&gt;</string>
+    <string name="custom_var_hint_initializer">初始化器，例: new File()（可选）</string>
+    <string name="custom_var_hint_modifier">private、public 或 public static（可选）</string>
+    <string name="custom_var_hint_name">名称，例: file</string>
+    <string name="custom_var_hint_type">类型，例: File</string>
+
+    <!-- ========== 编辑器拖拽 ========== -->
+    <string name="editor_drag_to_actions">拖拽到此处查看操作</string>
+    <string name="editor_drag_to_delete">拖拽到此处删除</string>
+    <string name="editor_release_to_actions">释放以查看操作</string>
+    <string name="editor_release_to_delete">释放以删除</string>
+
+    <!-- ========== 缩进/输入 ========== -->
+    <string name="indent_hint_bottom">下</string>
+    <string name="indent_hint_left">左</string>
+    <string name="indent_hint_right">右</string>
+    <string name="indent_hint_top">上</string>
+    <string name="input_hint_new_name">输入新名称</string>
+    <string name="input_rename_occurrences">重命名文件中的引用</string>
+    <string name="input_size_hint">输入分隔线高度值</string>
+    <string name="layout_preview_title">布局预览</string>
+    <string name="listener_hint_code">代码 (### =&gt; 变量名)</string>
+    <string name="listener_hint_custom_import">自定义导入</string>
+
+    <!-- ========== 配置 ========== -->
+    <string name="config_error_no_root">无法获取 Root 权限</string>
+    <string name="config_error_parse_settings">无法解析应用设置！正在恢复默认值。</string>
+    <string name="config_toast_reset_default">已恢复默认设置。</string>
+    <string name="firebase_import_json">从 google-services.json 导入</string>
+    <string name="firebase_select_json_title">选择你的 google-services.json</string>
+    <string name="change_firebase_config_title">更改 Firebase 配置</string>
+    <string name="review_firebase_config_title">审查</string>
+    <string name="googlemap_settings_title">GoogleMap 设置</string>
+    <string name="change_launcher_activity_dialog_title">启动 Activity</string>
+    <string name="permission_hint_search">搜索权限</string>
+    <string name="permission_manager_title">权限管理器</string>
+    <string name="permission_reset_message">确定要重置所有权限吗？</string>
+    <string name="permission_reset_title">重置权限</string>
+    <string name="permission_scroll_top">滚动到顶部</string>
+    <string name="preset_setting_edit_warning">如果应用预设，现有视图数据将被删除。是否继续？</string>
+    <string name="preset_setting_title">预设设置</string>
+
+    <!-- ========== 项目管理 - 补充 ========== -->
+
+    <!-- ========== 主界面 - 补充 ========== -->
+
+    <!-- ========== Manifest - 补充 ========== -->
+
+    <!-- ========== 项目 - 补充 ========== -->
+
+    <!-- ========== 程序 - 补充 ========== -->
+
+    <!-- ========== 商店 ========== -->
+
+    <!-- ========== 管理器 ========== -->
+    <string name="manager_assets_select_files">选择资产文件</string>
+    <string name="manager_assets_title">资产管理器</string>
+    <string name="manager_create_file">创建新文件</string>
+    <string name="manager_create_folder">创建新文件夹</string>
+    <string name="manager_create_new_msg">文件扩展名将根据你选择的文件类型自动添加</string>
+    <string name="manager_create_new_title">新建</string>
+    <string name="manager_delete_title">删除 %s？</string>
+    <string name="manager_java_select_files">选择 Java/Kotlin 文件</string>
+    <string name="manager_java_title">Java/Kotlin 管理器</string>
+    <string name="manager_nativelibs_select_files">选择 Native 库文件</string>
+    <string name="manager_nativelibs_title">Native 库管理器</string>
+    <string name="manager_rename_title">重命名 %s</string>
+    <string name="manager_resource_select_files">选择资源文件</string>
+    <string name="manager_resource_title">资源管理器</string>
+
+    <!-- ========== 事件 - 补充 ========== -->
+
+    <!-- ========== 事件管理 - 补充 ========== -->
+
+    <!-- ========== NativeLib ========== -->
+    <string name="nativelib_create_folder_msg">输入新文件夹名称</string>
+    <string name="nativelib_error_import">无法导入库！[%s]</string>
+    <string name="nativelib_error_rename_failed">重命名失败</string>
+    <string name="nativelib_hint_folder_name">文件夹名称</string>
+    <string name="nativelib_import_library">导入库</string>
+    <string name="nativelib_new_folder">新文件夹</string>
+    <string name="nativelib_toast_created_folder">文件夹创建成功</string>
+    <string name="nativelib_toast_deleted">已删除</string>
+    <string name="nativelib_toast_nothing_changed">没有更改</string>
+    <string name="nativelib_toast_renamed">重命名成功</string>
+
+    <!-- ========== Java 管理 ========== -->
+    <string name="java_delete_manifest_warning">这也会将其从 AndroidManifest 中移除。</string>
+    <string name="java_menu_add_activity">作为 Activity 添加到 Manifest</string>
+    <string name="java_menu_add_service">作为 Service 添加到 Manifest</string>
+    <string name="java_menu_edit">编辑</string>
+    <string name="java_menu_edit_with">使用…编辑</string>
+    <string name="java_menu_remove_activity">从 Manifest 移除 Activity</string>
+    <string name="java_menu_remove_service">从 Manifest 移除 Service</string>
+    <string name="java_menu_rename">重命名</string>
+    <string name="java_rename_occurrences_format">重命名文件中 \"%s\" 的引用</string>
+
+    <!-- ========== 库管理 ========== -->
+    <string name="library_appcompat_disabled_msg">请先启用 AppCompat 以使用此功能</string>
+    <string name="library_appcompat_disabled_title">AppCompat 已禁用！</string>
+    <string name="library_download_confirm_title">确认下载</string>
+    <string name="library_manager_title">库管理器</string>
+    <string name="library_msg_reset_confirm">重置排除的内置库？此操作不可撤销。</string>
+    <string name="library_remove_warning_msg">库 \"%s\" 已在项目中使用，移除可能导致项目损坏。是否继续移除？</string>
+    <string name="library_title_exclude">排除内置库</string>
+    <string name="library_title_select">选择内置库</string>
+    <string name="library_default_description">使用自定义库版本</string>
+    <string name="library_excluded_count">已排除 %1$d/%2$d 个内置库</string>
+    <string name="lib_downloader_hint">输入依赖项</string>
+    <string name="lib_downloader_title">下载依赖项</string>
+    <string name="select_lib_hint_search">搜索库</string>
+
+    <!-- ========== 导出 - 补充 ========== -->
+    <string name="export_aab_button">导出 AAB</string>
+    <string name="export_aab_finished_message">你可以在以下位置找到已生成和签名的 AAB 文件:\n/Internal storage/sketchware/signed_aab/%s</string>
+    <string name="export_aab_finished_title">AAB 导出完成</string>
+    <string name="export_aab_sign_dialog_desc">填写密钥库详情以签名 AAB。</string>
+    <string name="export_aab_sign_dialog_title">签名输出的 AAB</string>
+    <string name="export_aab_sign_note">生成的 .aab 文件必须签名。\n将你的密钥库复制到 /Internal storage/sketchware/keystore/release_key.jks 并输入别名密码。</string>
+    <string name="export_apk_sign_note">要签名 APK，你需要密钥库。使用已创建的密钥库，将其复制到 /Internal storage/sketchware/keystore/release_key.jks 并输入别名密码。\n\n注意这只使用签名方案 V1 签名你的 APK，要支持 Android 11+ 等，请使用第三方工具（暂时）。</string>
+
+    <!-- ========== 排除库 ========== -->
+    <string name="exclude_libs_excluded_title">已排除的内置库</string>
+    <string name="exclude_libs_fab">排除库</string>
+    <string name="exclude_libs_no_content">未找到已排除的内置库</string>
+    <string name="exclude_libs_no_content_desc">如果已禁用请启用此功能，然后点击浮动操作按钮选择并排除内置库。</string>
+    <string name="exclude_libs_warning">如果你不知道自己在做什么，这可能会破坏你的项目！</string>
+
+    <!-- ========== 编译日志 ========== -->
+    <string name="compile_log_continue">让我们继续完善项目</string>
+    <string name="compile_log_no_bugs">太好了，没有需要修复的 bug！</string>
+    <string name="compile_log_title">编译日志</string>
+    <string name="compile_log_title_last">上次编译日志</string>
+
+    <!-- ========== 文件选择/导入 ========== -->
+    <string name="file_picker_select_json">选择 .json 文件</string>
+    <string name="file_picker_select_txt">选择 .txt 文件</string>
+    <string name="file_selector_create_new_view">创建新视图</string>
+    <string name="import_merge_replace">合并并替换</string>
+    <string name="import_merge_skip">合并并跳过</string>
+    <string name="import_replace_all">全部替换</string>
+    <string name="import_select_option">选择导入选项</string>
+    <string name="import_widgets">导入控件</string>
+
+    <!-- ========== 资源编辑器 ========== -->
+    <string name="new_class">或创建新分类</string>
+    <string name="resource_create_new">新建</string>
+    <string name="resource_create_or_import">新建或导入</string>
+    <string name="resource_type_string_lower">string</string>
+    <string name="resource_type_color">Color</string>
+    <string name="resource_type_color_lower">color</string>
+    <string name="resources_editor_unsaved_changes_message">你在 \"%s\" 中有未保存的更改\n是否在退出前保存？</string>
+    <string name="resources_editor_unsaved_changes_message_variant_change">你在 \"%s\" 中有未保存的更改\n是否在切换变体前保存？</string>
+    <string name="resources_manager_xml_important_note_message_colors">更改主色调将影响应用的视觉主题，包括按钮和高亮</string>
+    <string name="resources_manager_xml_important_note_message_strings">更改 `app_name` 值将直接影响此项目的应用名称</string>
+    <string name="resources_manager_xml_important_note_title">重要提示:</string>
+    <string name="resources_manager_xml_load_failed_message">数据加载失败 \"%s\"\n请打开代码编辑器手动修复问题</string>
+    <string name="resources_manager_xml_load_failed_title">数据加载失败</string>
+    <string name="resources_open_code_editor">打开代码编辑器</string>
+
+    <!-- ========== 声音管理 ========== -->
+    <string name="sound_add">添加声音</string>
+    <string name="sound_add_to_collection">添加到我的收藏</string>
+    <string name="sound_hint_name">输入声音名称</string>
+    <string name="sound_manager_title">声音管理器</string>
+
+    <!-- ========== 菜单 - 补充 ========== -->
+
+    <!-- ========== Toast - 补充 ========== -->
+
+    <!-- ========== 本地库 - 补充 ========== -->
+
+    <!-- ========== 代码缩减 ========== -->
+    <string name="code_shrinker_configure_shrinker">通过编辑规则文件配置 R8/ProGuard。此步骤是必要的，因为没有正确的配置，ProGuard 可能会破坏你的项目。</string>
+    <string name="config_backup_filename_msg">这定义了 SWB 备份文件的命名方式。\n可用变量:\n - $projectName - 项目名称\n - $versionCode - 应用版本号\n - $versionName - 应用版本名\n - $pkgName - 应用包名\n - $timeInMs - 备份时间（毫秒）\n\n你也可以使用 Java 的日期格式语法自定义时间格式:\n$time(yyyy-MM-dd\'T\'HHmmss)\n</string>
+
+    <!-- ========== 通用 ========== -->
+    <string name="title_besome_blog">Medium</string>
+    <string name="common_word_bottom_sheet_dialog_fragment">BottomSheetDialogFragment</string>
+    <string name="common_word_dialog_fragment">DialogFragment</string>
+    <string name="common_word_private">private</string>
+    <string name="common_word_public">public</string>
+    <string name="message_license_expired">许可证已过期。\n%s</string>
+
+    <!-- ========== 事件 - 精确补充 ========== -->
+    <string name="event_onpostcreated">创建完成后</string>
+    <string name="event_onprogresschanged">进度改变时</string>
+    <string name="event_onresetpasswordemailsent">重置密码邮件已发送</string>
+    <string name="event_onsigninusercomplete">用户登录完成时</string>
+    <string name="event_onstart">Activity 开始时</string>
+    <string name="event_onstarttrackingtouch">开始触摸追踪时</string>
+    <string name="event_onstoptrackingtouch">停止触摸追踪时</string>
+    <string name="event_onsaveinstancestate">Activity 保存实例状态</string>
+    <string name="event_onrestoreinstancestate">Activity 恢复实例状态</string>
+    <string name="event_oncreateoptionsmenu">创建选项菜单</string>
+    <string name="event_onoptionsitemselected">选项菜单项被选中</string>
+    <string name="event_oncreatecontextmenu">创建上下文菜单</string>
+    <string name="event_oncontextitemselected">上下文菜单项被选中</string>
+    <string name="event_onfragmentadded">返回 Fragment</string>
+    <string name="event_ontabadded">返回标题</string>
+    <string name="event_title_add_new_component">添加新组件</string>
+    <string name="event_title_add_new_event">添加新事件</string>
+    <string name="event_title_edit_component">编辑组件</string>
+    <string name="event_type_activity">Activity</string>
+
+    <!-- ========== 事件管理 - 精确补充 ========== -->
+    <string name="events_creator_hint_code">代码</string>
+    <string name="events_creator_hint_custom_import">自定义导入</string>
+    <string name="events_creator_hint_desc">描述</string>
+    <string name="events_creator_hint_icon">图标</string>
+    <string name="events_creator_hint_listener_code">监听器代码</string>
+    <string name="events_creator_hint_name">名称</string>
+    <string name="events_creator_hint_params">参数</string>
+    <string name="events_creator_hint_spec">规格</string>
+    <string name="events_creator_hint_widget">控件</string>
+
+    <!-- ========== 菜单 - 精确补充 ========== -->
+    <string name="menu_select_image">选择图片</string>
+    <string name="menu_select_layout_params">选择布局参数</string>
+    <string name="menu_select_native_lib">选择 Native 库</string>
+    <string name="menu_select_patternview_mode">选择 PatternView 模式</string>
+    <string name="menu_select_variable_format">选择 %s</string>
+
+    <!-- ========== Manifest - 精确补充 ========== -->
+    <string name="manifest_activities">Activities</string>
+    <string name="manifest_attrs_all_activities">所有 Activities 属性</string>
+    <string name="manifest_attrs_application">Application 属性</string>
+    <string name="manifest_attrs_permissions">权限</string>
+    <string name="manifest_components_title_format">%s 组件</string>
+    <string name="manifest_delete_attr_msg">确定要删除此属性吗？</string>
+    <string name="manifest_delete_attr_title">删除属性</string>
+    <string name="manifest_edit_value">编辑值</string>
+    <string name="manifest_error_invalid_name">第 %d 个属性中的 AndroidManifest 属性注入名称无效</string>
+    <string name="manifest_error_invalid_value">第 %d 个属性中的 AndroidManifest 属性注入值无效</string>
+    <string name="manifest_error_parse_failed">解析 AndroidManifest 属性注入失败；原因: %s</string>
+    <string name="manifest_hint_attr_value">属性值</string>
+    <string name="manifest_option_all_activities">所有 Activities</string>
+    <string name="manifest_option_all_activities_desc">为所有 Activities 设置属性</string>
+    <string name="manifest_option_app_components">应用组件</string>
+    <string name="manifest_option_app_components_desc">管理应用组件</string>
+    <string name="manifest_option_application">Application</string>
+    <string name="manifest_option_application_desc">设置 Application 属性</string>
+    <string name="manifest_option_launcher_activity">启动 Activity</string>
+    <string name="manifest_option_launcher_activity_desc">设置启动 Activity 属性</string>
+    <string name="manifest_option_permissions">权限</string>
+    <string name="manifest_option_permissions_desc">管理应用权限</string>
+    <string name="manifest_title">AndroidManifest 管理器</string>
+
+    <!-- ========== 主界面 - 精确补充 ========== -->
+    <string name="main_drawer_context_menu_title_slack_invitation">Slack 邀请</string>
+    <string name="main_drawer_context_menu_title_slack_open">打开 Slack</string>
+    <string name="main_drawer_title_ad_label">广告</string>
+    <string name="main_drawer_title_docs">文档</string>
+    <string name="main_drawer_title_export_urls">导出 URL</string>
+    <string name="main_drawer_title_language_settings">语言设置</string>
+    <string name="main_drawer_title_program_information">程序信息</string>
+    <string name="main_drawer_title_purchase_list">购买列表</string>
+    <string name="main_drawer_title_remove_ads">移除广告</string>
+    <string name="main_drawer_title_save_sketchware">保存 Sketchware</string>
+    <string name="main_drawer_title_share_with_friends">分享给朋友</string>
+    <string name="main_drawer_title_sketchware_for_arduino">Sketchware for Arduino</string>
+    <string name="main_drawer_title_subscribe">订阅</string>
+    <string name="main_drawer_title_system_settings">系统设置</string>
+    <string name="main_major_changes_desc">此版本包含重大更改</string>
+    <string name="main_major_changes_title">重大更新</string>
+    <string name="main_new_project">新建项目</string>
+    <string name="main_search_projects">搜索项目</string>
+    <string name="main_storage_access_message">Sketchware Pro 需要存储权限才能正常工作</string>
+    <string name="main_storage_access_title">存储权限</string>
+    <string name="main_tab_title_competitions">比赛</string>
+    <string name="main_tab_title_myproject">我的项目</string>
+    <string name="main_tab_title_projects_store">项目商店</string>
+    <string name="main_tab_title_tutorials">教程</string>
+
+    <!-- ========== 项目管理 - 精确补充 ========== -->
+    <string name="myprojects_confirm_project_delete">确定要删除此项目吗？</string>
+    <string name="myprojects_customize_icon">自定义图标</string>
+    <string name="myprojects_export_project_actionbar_title">导出项目</string>
+    <string name="myprojects_export_project_button_export_src">导出源代码</string>
+    <string name="myprojects_export_project_button_send_src_zip">发送源代码 ZIP</string>
+    <string name="myprojects_export_project_button_sign_apk">签名 APK</string>
+    <string name="myprojects_export_project_title_export_src">导出源代码</string>
+    <string name="myprojects_export_project_title_local_path">本地路径</string>
+    <string name="myprojects_export_project_title_sign_apk">签名 APK</string>
+    <string name="myprojects_export_src_chooser_title_email">发送邮件</string>
+    <string name="myprojects_export_src_title_email_body">附件: %s</string>
+    <string name="myprojects_export_src_title_email_subject">%s，Android Studio 源代码</string>
+    <string name="myprojects_list_menu_title_create_a_new_project">创建新项目</string>
+    <string name="myprojects_list_menu_title_sign_export">签名并导出</string>
+    <string name="myprojects_settings_actionbar_title_new_projet">新建项目</string>
+    <string name="myprojects_settings_actionbar_title_project_settings">项目设置</string>
+    <string name="myprojects_settings_button_create_app">创建应用</string>
+    <string name="myprojects_settings_confirm_reset_icon">确定要重置图标吗？</string>
+    <string name="myprojects_settings_context_menu_title_choose">选择</string>
+    <string name="myprojects_settings_description_change_icon">更改图标</string>
+    <string name="myprojects_settings_description_create_icon">创建图标</string>
+    <string name="myprojects_settings_hint_enter_application_name">输入应用名称</string>
+    <string name="myprojects_settings_hint_enter_package_name">输入包名</string>
+    <string name="myprojects_settings_hint_enter_project_name">输入项目名称</string>
+    <string name="myprojects_settings_message_package_rename">注意：更改包名可能导致应用被视为新应用</string>
+    <string name="myprojects_settings_title_advanced_settings">高级设置</string>
+    <string name="myprojects_settings_version_control_title">版本控制</string>
+    <string name="myprojects_settings_version_control_title_code">版本号</string>
+    <string name="myprojects_settings_version_control_title_name">版本名</string>
+    <string name="myprojects_sign_apk_dialog_complete_create_certificate">证书创建成功</string>
+    <string name="myprojects_sign_apk_error_failed_create_new_certificate">创建新证书失败</string>
+    <string name="myprojects_sign_apk_hint_enter_new_password">输入新密码</string>
+    <string name="myprojects_sign_apk_incorrect_password">密码不正确</string>
+    <string name="myprojects_sign_apk_new_certificate_button_create">创建</string>
+    <string name="myprojects_sign_apk_new_certificate_hint_certificate_name">证书名称</string>
+    <string name="myprojects_sign_apk_new_certificate_hint_city">城市</string>
+    <string name="myprojects_sign_apk_new_certificate_hint_confirm_password">确认密码</string>
+    <string name="myprojects_sign_apk_new_certificate_hint_country_code">国家代码</string>
+    <string name="myprojects_sign_apk_new_certificate_hint_first_and_last_name">姓名</string>
+    <string name="myprojects_sign_apk_new_certificate_hint_organization">组织</string>
+    <string name="myprojects_sign_apk_new_certificate_hint_organizational_unit">组织单位</string>
+    <string name="myprojects_sign_apk_new_certificate_hint_state">省/州</string>
+    <string name="myprojects_sign_apk_new_certificate_title_certificate">证书</string>
+    <string name="myprojects_sign_apk_new_certificate_title_certificate_creds">证书凭据</string>
+    <string name="myprojects_sign_apk_new_certificate_title_new_certificate">新证书</string>
+    <string name="myprojects_sign_apk_new_certificate_title_validity">有效期</string>
+
+    <!-- ========== 程序信息 - 精确补充 ========== -->
+    <string name="program_information_button_check_update">检查更新</string>
+    <string name="program_information_button_reset_system">重置系统</string>
+    <string name="program_information_reset_system_complete_initialize">系统重置完成</string>
+    <string name="program_information_reset_system_confirm_description">确定要重置吗？此操作不可撤销。</string>
+    <string name="program_information_reset_system_title">重置系统</string>
+    <string name="program_information_reset_system_title_all_settings">所有设置</string>
+    <string name="program_information_reset_system_title_all_settings_data">所有设置和数据</string>
+    <string name="program_information_title_docs">文档</string>
+    <string name="program_information_title_open_source_license">开源许可</string>
+    <string name="program_information_title_service_terms">服务条款</string>
+    <string name="program_information_title_share_with_friends">分享给朋友</string>
+    <string name="program_information_title_suggest_ideas">建议与反馈</string>
+    <string name="program_information_title_system_information">系统信息</string>
+
+    <!-- ========== 项目选项 ========== -->
+    <string name="project_option_backup">备份</string>
+    <string name="project_option_change_settings">更改设置</string>
+    <string name="project_option_config">配置</string>
+    <string name="project_option_delete">删除</string>
+    <string name="project_option_export">导出</string>
+    <string name="project_option_pin">置顶</string>
+    <string name="project_option_title">项目选项</string>
+    <string name="project_pin">置顶</string>
+    <string name="project_save_changes">保存更改</string>
+    <string name="project_settings_hint_app_class">应用类</string>
+    <string name="project_settings_hint_min_sdk">最低 SDK</string>
+    <string name="project_settings_hint_target_sdk">目标 SDK</string>
+    <string name="project_settings_material_components">Material Components</string>
+    <string name="project_settings_material_components_desc">使用 Material Components 替代 Support Library</string>
+    <string name="project_settings_remove_old">移除旧的</string>
+    <string name="project_settings_remove_old_desc">移除旧的 Support Library</string>
+    <string name="project_settings_title">项目设置</string>
+    <string name="project_settings_viewbinding">ViewBinding</string>
+    <string name="project_settings_viewbinding_desc">启用 ViewBinding</string>
+    <string name="project_unpin">取消置顶</string>
+    <string name="projects_restore_desc">恢复已备份的项目</string>
+    <string name="projects_sort_title">排序项目</string>
+    <string name="projects_title">项目</string>
+
+    <!-- ========== 排序 ========== -->
+    <string name="sort_ascending">升序 (A-Z)</string>
+    <string name="sort_by_id">按 ID</string>
+    <string name="sort_by_name">按名称</string>
+    <string name="sort_descending">降序</string>
+    <string name="sort_projects">排序项目</string>
+
+    <!-- ========== 商店 - 补充 ========== -->
+    <string name="store_about_project">关于项目</string>
+    <string name="store_comments">评论</string>
+    <string name="store_comments_title">评论</string>
+    <string name="store_download">下载</string>
+    <string name="store_downloads_format">%s 次下载</string>
+    <string name="store_editors_choice">编辑精选</string>
+    <string name="store_most_downloaded">热门下载</string>
+    <string name="store_new_updated">最新更新</string>
+    <string name="store_released_format">发布于 %s</string>
+    <string name="store_screenshots">截图</string>
+    <string name="store_side_note">附注</string>
+    <string name="store_size_format">大小: %s</string>
+    <string name="store_verified">已验证</string>
+
+    <!-- ========== 系统信息 ========== -->
+    <string name="system_information_developer_options">开发者选项</string>
+    <string name="system_information_dpi">DPI</string>
+    <string name="system_information_model_name">设备型号</string>
+    <string name="system_information_system_resolution">系统分辨率</string>
+    <string name="system_information_title_android_version">Android 版本</string>
+
+    <!-- ========== 公司信息 ========== -->
+    <string name="title_company_addr">地址</string>
+    <string name="title_company_email">邮箱</string>
+    <string name="title_company_intro">介绍</string>
+    <string name="title_company_tel">电话</string>
+    <string name="title_company_url">网址</string>
+
+    <!-- ========== 资产管理 ========== -->
+    <string name="assets_manager_add_file">添加文件</string>
+    <string name="assets_manager_add_new">添加新的</string>
+    <string name="assets_manager_nofiles_body">你还没有添加任何资产文件</string>
+    <string name="assets_manager_nofiles_title">没有资产文件</string>
+    <string name="assets_manager_options">选项</string>
+    <string name="assets_manager_rename">重命名</string>
+    <string name="assets_manager_title">资产管理器</string>
+
+    <!-- ========== 属性描述 ========== -->
+    <string name="property_description_component_intent_usage">请按照以下示例操作！不遵循可能会导致运行时错误！\nACTION_CALL, ACTION_DIAL\n tel:number (tel:12345678)\n\nACTION_VIEW\n url type (http://sketchware.io)</string>
+
+    <!-- ========== 共享平台 ========== -->
+    <string name="shared_more_block_detail_message_add_collections_complete">添加收藏完成。如果积木块有所需的收藏，所需收藏会自动添加，你可以在项目中直接使用所需收藏的视图。</string>
+    <string name="shared_more_block_message_downloading_more_block_data">正在下载 MoreBlock 数据</string>
+    <string name="shared_more_block_preview_title">MoreBlock 预览</string>
+    <string name="shared_more_blocks_list_message_no_data">没有可显示的 MoreBlock 数据。:(</string>
+    <string name="shared_project_all_actionbar_title_editor_choice_project">编辑精选项目</string>
+    <string name="shared_project_all_actionbar_title_my_liked_project">我点赞的项目</string>
+    <string name="shared_project_all_actionbar_title_my_shared_project">我分享的项目</string>
+    <string name="shared_project_all_actionbar_title_new_project">最新项目</string>
+    <string name="shared_project_all_actionbar_title_popular_project">热门项目</string>
+    <string name="shared_project_all_actionbar_title_who_liked_project">%s 的分享项目</string>
+    <string name="shared_project_confirm_delete_project">确定要删除此项目吗？此操作不可撤销</string>
+    <string name="shared_project_detail_about_button_title_delete_project">删除项目</string>
+    <string name="shared_project_detail_about_button_title_edit_project">编辑项目</string>
+    <string name="shared_project_detail_about_button_title_save_as_new">另存为新项目</string>
+    <string name="shared_project_detail_about_error_failed_delete_project">删除项目失败\n请稍后重试</string>
+    <string name="shared_project_detail_about_error_failed_download_project">下载失败\n请稍后重试</string>
+    <string name="shared_project_detail_about_project_information_last_updated">最近更新</string>
+    <string name="shared_project_detail_about_project_information_registered_date">注册日期</string>
+    <string name="shared_project_detail_about_report_project_dialog_description_reason">你认为此内容或应用不当的原因:</string>
+    <string name="shared_project_detail_about_report_project_dialog_title_flag_as_inappropriate">标记为不当内容</string>
+    <string name="shared_project_detail_about_report_project_hint_written_english">原因必须用英文填写</string>
+    <string name="shared_project_detail_about_report_project_title_reason_type_1">色情内容</string>
+    <string name="shared_project_detail_about_report_project_title_reason_type_2">血腥暴力</string>
+    <string name="shared_project_detail_about_report_project_title_reason_type_3">仇恨或辱骂内容</string>
+    <string name="shared_project_detail_about_report_project_title_reason_type_4">垃圾信息</string>
+    <string name="shared_project_detail_about_report_project_title_reason_type_5">广告</string>
+    <string name="shared_project_detail_about_report_project_title_reason_type_6">赌博内容</string>
+    <string name="shared_project_detail_about_report_project_title_reason_type_7">违法活动</string>
+    <string name="shared_project_detail_about_report_project_title_reason_type_8">其他异议</string>
+    <string name="shared_project_detail_about_title_more_project_by_whom">%s 的更多项目</string>
+    <string name="shared_project_detail_about_title_read_less">收起</string>
+    <string name="shared_project_detail_about_title_read_more">展开</string>
+    <string name="shared_project_detail_about_title_report_project">举报项目</string>
+    <string name="shared_project_detail_button_open_project">打开项目</string>
+    <string name="shared_project_detail_comment_complete_deleted_comment">评论已删除</string>
+    <string name="shared_project_detail_comment_complete_deleted_project">项目已删除</string>
+    <string name="shared_project_detail_comment_error_failed_comment">评论失败\n请稍后重试</string>
+    <string name="shared_project_detail_comment_hint_enter_comment">输入你的评论</string>
+    <string name="shared_project_detail_comments_confirm_delete_comment">确定要删除此评论吗？</string>
+    <string name="shared_project_detail_comments_context_menu_title">查看 %s 的项目</string>
+    <string name="shared_project_detail_comments_context_menu_title_comment_copy">复制评论</string>
+    <string name="shared_project_detail_comments_context_menu_title_comment_delete">删除评论</string>
+    <string name="shared_project_detail_comments_error_failed_delete_comment">删除评论失败\n请稍后重试</string>
+    <string name="shared_project_detail_comments_error_failed_load_comment">加载评论失败\n请稍后重试</string>
+    <string name="shared_project_detail_comments_hint_enter_comment">输入你的评论</string>
+    <string name="shared_project_detail_comments_message_already_delete_comment">此评论已被删除</string>
+    <string name="shared_project_detail_comments_message_commented">已评论</string>
+    <string name="shared_project_detail_comments_message_no_comments">没有可显示的评论</string>
+    <string name="shared_project_detail_dialog_last_version_description">你需要最新版本的 Sketchware 才能打开此项目</string>
+    <string name="shared_project_detail_dialog_last_version_title">需要更新</string>
+    <string name="shared_project_detail_dialog_share_project_confirm">你想分享此项目吗？</string>
+    <string name="shared_project_detail_dialog_share_project_title">分享项目</string>
+    <string name="shared_project_detail_error_failed_like_project">点赞失败\n请稍后重试</string>
+    <string name="shared_project_detail_error_failed_unlike_project">取消点赞失败\n请稍后重试</string>
+    <string name="shared_project_detail_message_already_liked_project">你已经点赞了此项目</string>
+    <string name="shared_project_detail_message_liked">已点赞</string>
+    <string name="shared_project_detail_message_unliked">已取消点赞</string>
+    <string name="shared_project_detail_message_unregister_like">点赞未注册</string>
+    <string name="shared_project_detail_tab_title_about">关于</string>
+    <string name="shared_project_detail_tab_title_comments">评论</string>
+    <string name="shared_project_error_failed_generate_shareable_link">生成分享链接失败</string>
+    <string name="shared_project_list_title_editor_choice">编辑精选</string>
+    <string name="shared_project_list_title_new">最新</string>
+    <string name="shared_project_list_title_popular">热门</string>
+    <string name="shared_project_message_no_shared_projects">没有可显示的分享项目</string>
+    <string name="shared_project_viewpager_button_open_project">打开项目</string>
+    <string name="shared_project_viewpager_button_share_my_project">分享我的项目</string>
+    <string name="shared_project_viewpager_message_go_premium">想让你的项目被推荐？</string>
+    <string name="shared_project_viewpager_message_share_my_project">你有什么精彩的项目？</string>
+    <string name="shared_project_viewpager_title_trending">热门趋势</string>
+    <string name="shared_search_collection_list_title">%s 的搜索结果</string>
+    <string name="shared_view_message_downloading_view_data">正在下载视图数据</string>
+    <string name="shared_view_preview_message_download_complete">下载完成。请检查此视图</string>
+    <string name="shared_view_preview_title">视图预览</string>
+    <string name="shared_views_detail_message_add_collection_complete">添加收藏完成。如果视图有所需的图片，所需图片会自动添加到图片收藏中，你可以在项目中直接使用所需图片的视图。</string>
+    <string name="shared_views_detail_message_already_liked_view">已点赞的视图</string>
+    <string name="shared_views_detail_message_dialog_delete_my_shared_view">你想删除此视图吗？</string>
+    <string name="shared_views_detail_see_more_views">查看 %s 的更多分享视图</string>
+    <string name="shared_views_detail_title_dialog_delete_my_shared_view">删除分享的视图</string>
+    <string name="shared_views_detail_title_view_detail">视图详情</string>
+    <string name="shared_views_list_message_no_data">没有可显示的视图数据。:(</string>
+    <string name="shared_views_list_title_my_shared_views">我分享的视图</string>
+    <string name="shared_views_list_title_other_user_shared_views">%s 的分享视图</string>
+    <string name="shared_views_list_title_shared_views">分享的视图</string>
+    <string name="xml_command_enable_new_message">你想启用新的 XML 命令吗？这将加快 XML 生成和编译速度，但此更改无法撤销。放心，你之前使用 XML 命令积木块所做的更改将被转移到此处，不会受到影响。</string>
+
+    <!-- ========== 共享平台 - 积木块 ========== -->
+    <string name="shared_block_message_downloading_block_data">正在下载积木块数据</string>
+    <string name="shared_block_preview_message_download_complete">下载完成。请检查此积木块</string>
+    <string name="shared_block_preview_title">积木块预览</string>
+    <string name="shared_blocks_detail_message_already_liked_blocks">已点赞的积木块</string>
+    <string name="shared_blocks_detail_message_already_liked_more_blocks">已点赞的 MoreBlock</string>
+    <string name="shared_blocks_detail_message_dialog_delete_my_shared_blocks">你想删除此积木块吗？</string>
+    <string name="shared_blocks_detail_message_dialog_delete_my_shared_more_blocks">你想删除此 MoreBlock 吗？</string>
+    <string name="shared_blocks_detail_see_more_blocks">查看 %s 的更多分享积木块</string>
+    <string name="shared_blocks_detail_see_more_more_blocks">查看 %s 的更多分享 MoreBlock</string>
+    <string name="shared_blocks_detail_title_block_detail">积木块详情</string>
+    <string name="shared_blocks_detail_title_dialog_delete_my_shared_blocks">删除分享的积木块</string>
+    <string name="shared_blocks_detail_title_dialog_delete_my_shared_more_blocks">删除分享的 MoreBlock</string>
+    <string name="shared_blocks_detail_title_more_block_detail">MoreBlock 详情</string>
+    <string name="shared_blocks_list_message_no_data">没有可显示的积木块数据。:(</string>
+    <string name="shared_blocks_list_title_my_shared_blocks">我分享的积木块</string>
+    <string name="shared_blocks_list_title_my_shared_more_blocks">我分享的 MoreBlock</string>
+    <string name="shared_blocks_list_title_other_user_shared_blocks">%s 的分享积木块</string>
+    <string name="shared_blocks_list_title_other_user_shared_more_blocks">%s 的分享 MoreBlock</string>
+    <string name="shared_blocks_list_title_shared_blocks">分享的积木块</string>
+    <string name="shared_blocks_list_title_shared_more_blocks">分享的 MoreBlock</string>
+
+    <!-- ========== 共享平台 - 收藏/书签 ========== -->
+    <string name="shared_collection_bookmark_list_message_no_data">没有书签数据</string>
+    <string name="shared_collection_bookmark_list_title_shared_blocks">分享的积木块</string>
+    <string name="shared_collection_bookmark_list_title_shared_more_blocks">分享的 MoreBlock</string>
+    <string name="shared_collection_bookmark_list_title_shared_views">分享的视图</string>
+    <string name="shared_collection_detail_button_included_collection_show_detail">显示详情</string>
+    <string name="shared_collection_detail_description_recommend_collection">推荐收藏</string>
+    <string name="shared_collection_detail_header_name">收藏名称</string>
+    <string name="shared_collection_detail_message_add_bookmark">已添加书签</string>
+    <string name="shared_collection_detail_message_add_bookmark_failed">添加书签失败</string>
+    <string name="shared_collection_detail_message_bookmark_exist">书签已存在</string>
+    <string name="shared_collection_detail_message_bookmark_not_exist">书签不存在</string>
+    <string name="shared_collection_detail_message_cancel_set_data">已取消设置数据</string>
+    <string name="shared_collection_detail_message_delete_bookmark">已删除书签</string>
+    <string name="shared_collection_detail_message_delete_bookmark_failed">删除书签失败</string>
+    <string name="shared_collection_detail_message_no_included_collection">没有包含的收藏</string>
+    <string name="shared_collection_detail_message_set_data_complete">数据设置完成</string>
+    <string name="shared_collection_detail_message_warn_comment">评论警告</string>
+    <string name="shared_collection_detail_title_dialog_add_collection_complete">添加收藏完成</string>
+    <string name="shared_collection_detail_title_included_collection">包含的收藏</string>
+    <string name="shared_collection_list_title_down">下载量</string>
+    <string name="shared_collection_list_title_like">点赞</string>
+    <string name="shared_collection_list_title_recent">最近</string>
+    <string name="shared_collection_message_delete_complete">删除完成</string>
+    <string name="shared_collection_message_delete_fail">删除失败</string>
+    <string name="shared_collection_message_download_complete">下载完成</string>
+    <string name="shared_collection_message_download_fail">下载失败</string>
+    <string name="shared_collection_message_downloaded_data_setting">已下载数据设置</string>
+    <string name="shared_collection_message_no_data">没有收藏数据</string>
+    <string name="shared_collection_message_no_search_keyword">没有搜索关键词</string>
+    <string name="shared_collection_message_recommend_no_data">没有推荐数据</string>
+    <string name="shared_collection_message_tag_trend_no_data">没有标签趋势数据</string>
+    <string name="shared_collection_message_update_soon">即将更新</string>
+    <string name="shared_collection_title_recommend">推荐</string>
+    <string name="shared_collection_title_tag_trend">标签趋势</string>
+    <string name="shared_collection_title_top_downloaded">热门下载</string>
+    <string name="shared_collection_word_search_collection">搜索收藏</string>
+    <string name="shared_collection_word_show_details">显示详情</string>
+
+    <string name="common_word_move_up">上移</string>
+    <string name="common_word_move_down">下移</string>
+    <string name="common_word_help">帮助</string>
+    <string name="common_word_config">配置</string>
+    <string name="manifest_show_source">显示清单源码</string>
+    <string name="menu_save_image">保存图片</string>
+    <string name="event_onactivityresult">Activity 返回结果</string>
+    <string name="event_initializelogic">初始化逻辑</string>
+    <string name="event_onlongclick">长按时</string>
+
+    <!-- ========== 构建错误 ========== -->
+
+    <!-- ========== 块管理 ========== -->
+
+    <!-- ========== 通用按钮 ========== -->
+    <string name="button_download">下载</string>
+    <string name="button_apply">应用</string>
+
+    <!-- ========== 通用对话框 ========== -->
+    <string name="dialog_title_actions">操作</string>
+    <string name="dialog_title_attention">注意</string>
+    <string name="dialog_title_rename">重命名</string>
+    <string name="dialog_title_create_new">新建</string>
+
+    <!-- ========== 事件管理器 ========== -->
+    <string name="events_new_title">新建事件</string>
+
+    <!-- ========== 块选择器 ========== -->
+    <string name="selector_new_title">新建选择器</string>
+    <string name="selector_edit_title">编辑选择器</string>
+    <string name="selector_new_item_title">新建选择器项</string>
+
+    <!-- ========== 文件选择器 ========== -->
+    <string name="file_picker_select_json_selector">选择 .json 选择器文件</string>
+
+    <!-- ========== 库管理补充 ========== -->
+
+    <!-- ========== 本地库管理 ========== -->
+    <string name="nativelib_manager_title">Native 库管理器</string>
+    <string name="nativelib_import_title">导入 Native 库</string>
+    <string name="folder_create_title">创建新文件夹</string>
+    <string name="folder_create_msg">输入新文件夹的名称</string>
+
+    <!-- ========== Java/Kotlin管理 ========== -->
+    <string name="java_manager_title">Java/Kotlin 管理器</string>
+    <string name="java_create_msg">文件扩展名将根据你选择的文件类型自动添加</string>
+
+    <!-- ========== 代码编辑器 ========== -->
+    <string name="editor_select_theme_title">选择主题</string>
+    <string name="editor_select_language_title">选择语言</string>
+    <string name="code_editor_menu_undo">撤销</string>
+    <string name="code_editor_menu_redo">重做</string>
+    <string name="code_editor_menu_find_replace">查找和替换</string>
+    <string name="code_editor_menu_auto_complete">自动补全</string>
+    <string name="code_editor_menu_auto_complete_symbol_pair">自动补全符号对</string>
+    <string name="code_editor_menu_layout_preview">布局预览</string>
+
+    <!-- ========== Proguard ========== -->
+    <string name="proguard_select_libraries_title">选择本地库</string>
+
+    <!-- ========== Firebase ========== -->
+
+    <!-- ========== GoogleMap ========== -->
+
+    <!-- ========== 视图管理 ========== -->
+    <string name="view_title_edit_format">编辑 %s</string>
+
+    <!-- ========== 错误报告 ========== -->
+
+    <!-- ========== 小部件 ========== -->
+    <string name="widgets_select_json_title">选择 .json 小部件文件</string>
+
+    <!-- ========== 资源编辑器补充 ========== -->
+    <string name="array_select_type_title">选择数组类型</string>
+    <string name="item_title_create">创建新项</string>
+    <string name="item_title_edit">编辑项</string>
+
+    <!-- ========== Material 3 ========== -->
+    <string name="design_library_material_3_theme_mode_description">
+选择主题模式可让你个性化应用的外观，注意:\n
+1. 选择 `DayNight` 主题可获得自适应体验，根据系统设置自动在 `浅色` 和 `深色` 之间切换\n
+2. 此设置也会影响编辑器视图，例如：启用 DayNight 后，编辑器颜色将跟随系统主题在浅色和深色之间切换。
+</string>
+    <string name="design_manager_font_description_example_sentence">
+    An example sentence for preview
+    预览的例句
+    عرض مثالي للتوضيح
+    プレビューの例文
+    Пример предложения для предварительного просмотра
+</string>
+
+</resources>

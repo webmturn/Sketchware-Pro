@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.graphics.Insets;
+import androidx.core.os.LocaleListCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
@@ -55,10 +57,9 @@ public class LanguageSettingsFragment extends BaseFragment {
         configureToolbar(binding.toolbar);
 
         setupInsets();
+        setupLanguagePicker();
         setupCurrentLanguage();
         setupOverrideStatus();
-        setupExport();
-        setupImport();
     }
 
     private void setupInsets() {
@@ -90,21 +91,89 @@ public class LanguageSettingsFragment extends BaseFragment {
         }
     }
 
+    private static final String[] LOCALE_TAGS = {"", "en", "zh"};
+    private static final String[] DISPLAY_NAMES = {"", "English", "中文"};
+
+    private int getCurrentLocaleIndex() {
+        LocaleListCompat currentLocales = AppCompatDelegate.getApplicationLocales();
+        if (currentLocales.isEmpty()) return 0;
+        String currentTag = currentLocales.get(0).getLanguage();
+        for (int i = 1; i < LOCALE_TAGS.length; i++) {
+            if (LOCALE_TAGS[i].equals(currentTag)) return i;
+        }
+        return 0;
+    }
+
+    private String getLocaleDisplayName(int index) {
+        if (index == 0) {
+            Locale systemLocale = Resources.getSystem().getConfiguration().getLocales().get(0);
+            return Helper.getResString(R.string.language_settings_follow_system)
+                    + " (" + systemLocale.getDisplayLanguage(systemLocale) + ")";
+        }
+        return DISPLAY_NAMES[index];
+    }
+
+    private void setupLanguagePicker() {
+        int selectedIndex = getCurrentLocaleIndex();
+        binding.currentLocaleDisplay.setText(getLocaleDisplayName(selectedIndex));
+
+        binding.cardLanguagePicker.setOnClickListener(v -> {
+            int currentIndex = getCurrentLocaleIndex();
+            String[] items = new String[LOCALE_TAGS.length];
+            for (int i = 0; i < items.length; i++) {
+                items[i] = getLocaleDisplayName(i);
+            }
+
+            final int[] pendingChoice = {currentIndex};
+            new MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.language_settings_select_language)
+                    .setSingleChoiceItems(items, currentIndex, (dialog, which) -> {
+                        pendingChoice[0] = which;
+                    })
+                    .setPositiveButton(R.string.common_word_ok, (dialog, which) -> {
+                        if (pendingChoice[0] == currentIndex) return;
+                        applyLocaleAndRestart(LOCALE_TAGS[pendingChoice[0]]);
+                    })
+                    .setNegativeButton(R.string.common_word_cancel, null)
+                    .show();
+        });
+    }
+
+    private void applyLocaleAndRestart(String tag) {
+        LocaleListCompat locales = tag.isEmpty()
+                ? LocaleListCompat.getEmptyLocaleList()
+                : LocaleListCompat.forLanguageTags(tag);
+
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.language_settings_select_language)
+                .setMessage(R.string.language_settings_restart_hint)
+                .setPositiveButton(R.string.common_word_ok, (dialog, which) -> {
+                    AppCompatDelegate.setApplicationLocales(locales);
+                })
+                .setNegativeButton(R.string.common_word_cancel, null)
+                .setCancelable(false)
+                .show();
+    }
+
     private void setupCurrentLanguage() {
         Locale systemLocale = Resources.getSystem().getConfiguration().getLocales().get(0);
+        Locale appLocale = requireContext().getResources().getConfiguration().getLocales().get(0);
         LanguageOverrideManager mgr = LanguageOverrideManager.getInstance();
 
-        String display;
+        StringBuilder display = new StringBuilder();
+        display.append(appLocale.getDisplayLanguage(appLocale));
+        display.append(" (").append(appLocale.getLanguage()).append(")");
+
         if (mgr.isActive()) {
-            display = String.format(Helper.getResString(R.string.language_settings_custom_override),
-                    mgr.getOverrideCount());
-        } else {
-            display = "English (default)";
+            display.append("\n").append(String.format(
+                    Helper.getResString(R.string.language_settings_custom_override),
+                    mgr.getOverrideCount()));
         }
-        display += "\n" + String.format(
+
+        display.append("\n").append(String.format(
                 Helper.getResString(R.string.language_settings_system_locale),
-                systemLocale.getDisplayLanguage() + " (" + systemLocale.getLanguage() + ")");
-        binding.currentLanguageValue.setText(display);
+                systemLocale.getDisplayLanguage(systemLocale) + " (" + systemLocale.getLanguage() + ")"));
+        binding.currentLanguageValue.setText(display.toString());
     }
 
     private void setupOverrideStatus() {
@@ -137,10 +206,6 @@ public class LanguageSettingsFragment extends BaseFragment {
     private void refreshUI() {
         setupCurrentLanguage();
         setupOverrideStatus();
-    }
-
-    private void setupExport() {
-        binding.cardExport.setOnClickListener(v -> exportStrings());
     }
 
     private static final Pattern NON_TRANSLATABLE_PATTERN = Pattern.compile(
@@ -228,8 +293,21 @@ public class LanguageSettingsFragment extends BaseFragment {
                 .replace("\n", "\\n");
     }
 
-    private void setupImport() {
-        binding.cardImport.setOnClickListener(v -> showImportDialog());
+    @Override
+    public void configureToolbar(@NonNull com.google.android.material.appbar.MaterialToolbar toolbar) {
+        super.configureToolbar(toolbar);
+        toolbar.inflateMenu(R.menu.language_settings_menu);
+        toolbar.setOnMenuItemClickListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.import_language_strings) {
+                showImportDialog();
+                return true;
+            } else if (id == R.id.export_language_strings) {
+                exportStrings();
+                return true;
+            }
+            return false;
+        });
     }
 
     private void showImportDialog() {

@@ -262,10 +262,10 @@ public class EventsHandler {
     public static String getDesc(String name) {
         return switch (name) {
             case "Import" -> Helper.getResString(R.string.event_desc_add_custom_imports);
-            case "onActivityResult" -> "onActivityResult";
-            case "initializeLogic" -> "initializeLogic";
+            case "onActivityResult" -> Helper.getResString(R.string.event_onactivityresult);
+            case "initializeLogic" -> Helper.getResString(R.string.event_initializelogic);
             case "onSwipeRefreshLayout" -> Helper.getResString(R.string.event_desc_swipe_refresh);
-            case " onLongClick" -> "onLongClick";
+            case " onLongClick" -> Helper.getResString(R.string.event_onlongclick);
             case "onTabLayoutNewTabAdded" -> Helper.getResString(R.string.event_desc_tab_new_tab);
             case "onPreExecute" ->
                     Helper.getResString(R.string.event_desc_pre_execute);
