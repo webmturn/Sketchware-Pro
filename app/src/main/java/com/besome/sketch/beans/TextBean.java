@@ -130,7 +130,7 @@ public class TextBean extends ReflectiveToString implements Parcelable {
         } else if (textBean.text != null) {
             return false;
         }
-        if (textSize != textBean.textSize || textColor != textBean.textColor || textType != textBean.textType || resTextColor != textBean.resTextColor || resHintColor != textBean.resTextColor) { //new
+        if (textSize != textBean.textSize || textColor != textBean.textColor || textType != textBean.textType || !java.util.Objects.equals(resTextColor, textBean.resTextColor) || !java.util.Objects.equals(resHintColor, textBean.resHintColor)) { //new
             return false;
         }
         String thisFont = textFont;
@@ -151,7 +151,7 @@ public class TextBean extends ReflectiveToString implements Parcelable {
         } else if (textBean.hint != null) {
             return false;
         }
-        return hintColor == textBean.hintColor && singleLine == textBean.singleLine && line == textBean.line && inputType == textBean.inputType && imeOption == textBean.imeOption || resTextColor == textBean.resTextColor || resHintColor == textBean.resTextColor; //new
+        return hintColor == textBean.hintColor && singleLine == textBean.singleLine && line == textBean.line && inputType == textBean.inputType && imeOption == textBean.imeOption;
     }
 
     public void print() {
