@@ -441,6 +441,9 @@
     <string name="error_imported_widgets_empty_or_invalid">导入的控件文件 #%s 为空或无效</string>
 
     <!-- ========== Block管理 (Block Management) ========== -->
+    <string name="block_manager_title">积木块管理器</string>
+    <string name="block_manager_palettes">调色板</string>
+    <string name="block_manager_recycle_bin">回收站</string>
     <string name="block_move_to_bin">移到回收站</string>
     <string name="block_type_regular">常规</string>
     <string name="blocks_add_title">添加新积木块</string>
