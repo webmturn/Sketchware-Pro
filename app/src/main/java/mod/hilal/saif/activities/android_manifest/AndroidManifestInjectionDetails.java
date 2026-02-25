@@ -51,6 +51,9 @@ public class AndroidManifestInjectionDetails extends BaseAppCompatActivity {
             src_id = getIntent().getStringExtra("sc_id");
             activityName = getIntent().getStringExtra("file_name").replaceAll(".java", "");
             type = getIntent().getStringExtra("type");
+        } else {
+            finish();
+            return;
         }
         ATTRIBUTES_FILE_PATH = FileUtil.getExternalStorageDir().concat("/.sketchware/data/").concat(src_id).concat("/Injection/androidmanifest/attributes.json");
         setupConst();
@@ -94,7 +97,7 @@ public class AndroidManifestInjectionDetails extends BaseAppCompatActivity {
             }
             for (HashMap<String, Object> item : data) {
                 String itemName = (String) item.get("name");
-                if (itemName.equals(constant)) {
+                if (itemName != null && constant.equals(itemName)) {
                     listMap.add(item);
                 }
             }
@@ -182,7 +185,7 @@ public class AndroidManifestInjectionDetails extends BaseAppCompatActivity {
             }
             for (int i = data.size() - 1; i > -1; i--) {
                 String itemName = (String) data.get(i).get("name");
-                if (itemName.equals(constant)) {
+                if (itemName != null && constant.equals(itemName)) {
                     data.remove(i);
                 }
             }

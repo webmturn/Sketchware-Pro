@@ -266,7 +266,7 @@ public class ProjectsFragment extends PermissionFragment {
         executorService.execute(() -> {
             HashMap<String, Object> updatedProject = ProjectListManager.getProjectById(sc_id);
             if (updatedProject != null) {
-                int index = IntStream.range(0, projectsList.size()).filter(i -> projectsList.get(i).get("sc_id").equals(sc_id)).findFirst().orElse(-1);
+                int index = IntStream.range(0, projectsList.size()).filter(i -> sc_id.equals(projectsList.get(i).get("sc_id"))).findFirst().orElse(-1);
                 if (index != -1) {
                     projectsList.set(index, updatedProject);
                     var activity = getActivity();

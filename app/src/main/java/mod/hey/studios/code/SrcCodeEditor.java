@@ -322,7 +322,8 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
                     activityComponents = new ArrayList<>();
                 }
                 for (int i = 0; i < activityComponents.size(); i++) {
-                    if (activityComponents.get(i).get("name").equals(activityName)) {
+                    Object name = activityComponents.get(i).get("name");
+                    if (name != null && activityName.equals(name)) {
                         beforeContent = (String) activityComponents.get(i).get("value");
                     }
                 }
@@ -333,14 +334,14 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
             beforeContent = FileUtil.readFile(getIntent().getStringExtra("content"));
         binding.editor.setText(beforeContent);
 
-        if (title.endsWith(".java")) {
+        if (title != null && title.endsWith(".java")) {
             binding.editor.setEditorLanguage(new JavaLanguage());
             languageId = 0;
-        } else if (title.endsWith(".kt")) {
+        } else if (title != null && title.endsWith(".kt")) {
             binding.editor.setEditorLanguage(CodeEditorLanguages.loadTextMateLanguage(CodeEditorLanguages.SCOPE_NAME_KOTLIN));
             binding.editor.setColorScheme(CodeEditorColorSchemes.loadTextMateColorScheme(CodeEditorColorSchemes.THEME_DRACULA));
             languageId = 1;
-        } else if (title.endsWith(".xml")) {
+        } else if (title != null && title.endsWith(".xml")) {
             binding.editor.setEditorLanguage(CodeEditorLanguages.loadTextMateLanguage(CodeEditorLanguages.SCOPE_NAME_XML));
             if (ThemeUtils.isDarkThemeEnabled(getApplicationContext())) {
                 binding.editor.setColorScheme(CodeEditorColorSchemes.loadTextMateColorScheme(CodeEditorColorSchemes.THEME_DRACULA));
@@ -371,7 +372,7 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
                     activitiesComponents = new ArrayList<>();
                 }
                 for (int i = 0; i < activitiesComponents.size(); i++) {
-                    if (activitiesComponents.get(i).get("name").equals(activityName)) {
+                    if (activityName.equals(activitiesComponents.get(i).get("name"))) {
                         activitiesComponents.get(i).put("value", beforeContent);
                         FileUtil.writeFile(filePath, getGson().toJson(activitiesComponents));
                         SketchwareUtil.toast(Helper.getResString(R.string.common_word_saved));
