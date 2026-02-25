@@ -236,16 +236,16 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                         if (next2.nextBlock >= 0 && (nextBlock = blockIdsAndBlocks.get(next2.nextBlock)) != null) {
                             block.setNextBlock(nextBlock);
                         }
-                        for (int i = 0; i < next2.parameters.size(); i++) {
+                        for (int i = 0; i < next2.parameters.size() && i < block.childViews.size(); i++) {
                             String parameter = next2.parameters.get(i);
                             if (parameter != null && !parameter.isEmpty()) {
                                 if (parameter.charAt(0) == '@') {
                                     BlockView parameterBlock = blockIdsAndBlocks.get(Integer.valueOf(parameter.substring(1)));
-                                    if (parameterBlock != null) {
+                                    if (parameterBlock != null && block.childViews.get(i) instanceof BaseBlockView) {
                                         block.replaceParameter((BaseBlockView) block.childViews.get(i), parameterBlock);
                                     }
-                                } else {
-                                    ((FieldBlockView) block.childViews.get(i)).setArgValue(parameter);
+                                } else if (block.childViews.get(i) instanceof FieldBlockView fieldBlock) {
+                                    fieldBlock.setArgValue(parameter);
                                 }
                             }
                         }
@@ -831,14 +831,14 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             block.subStack2 = -1;
             block.nextBlock = -1;
 
-            for (int i = 0; i < blockBean.parameters.size(); i++) {
+            for (int i = 0; i < blockBean.parameters.size() && i < block.childViews.size(); i++) {
                 String parameter = blockBean.parameters.get(i);
                 if (parameter != null) {
                     if (!parameter.isEmpty() && parameter.charAt(0) == '@') {
                         int blockId = Integer.parseInt(parameter.substring(1));
                         if (blockId > 0) {
                             BlockView parameterBlock = blockPane.findBlockById(blockId);
-                            if (parameterBlock != null) {
+                            if (parameterBlock != null && block.childViews.get(i) instanceof BaseBlockView) {
                                 block.replaceParameter((BaseBlockView) block.childViews.get(i), parameterBlock);
                             }
                         }

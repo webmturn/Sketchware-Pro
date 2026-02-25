@@ -63,19 +63,17 @@ public class CompileLogActivity extends BaseAppCompatActivity {
 
         compileErrorSaver = new CompileErrorSaver(sc_id);
 
-        if (compileErrorSaver.logFileExists()) {
-            binding.clearButton.setOnClickListener(v -> {
-                if (compileErrorSaver.logFileExists()) {
-                    compileErrorSaver.deleteSavedLogs();
-                    getIntent().removeExtra("error");
-                    SketchwareUtil.toast(Helper.getResString(R.string.toast_compile_logs_cleared));
-                } else {
-                    SketchwareUtil.toast(Helper.getResString(R.string.toast_no_compile_logs));
-                }
+        binding.clearButton.setOnClickListener(v -> {
+            if (compileErrorSaver.logFileExists()) {
+                compileErrorSaver.deleteSavedLogs();
+                getIntent().removeExtra("error");
+                SketchwareUtil.toast(Helper.getResString(R.string.toast_compile_logs_cleared));
+            } else {
+                SketchwareUtil.toast(Helper.getResString(R.string.toast_no_compile_logs));
+            }
 
-                setErrorText();
-            });
-        }
+            setErrorText();
+        });
 
         final String wrapTextLabel = "Wrap text";
         final String monospacedFontLabel = "Monospaced font";

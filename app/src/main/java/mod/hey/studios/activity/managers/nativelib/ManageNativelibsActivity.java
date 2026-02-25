@@ -73,7 +73,11 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
         binding = ManageFileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        if (getIntent().hasExtra("sc_id")) numProj = getIntent().getStringExtra("sc_id");
+        numProj = getIntent().getStringExtra("sc_id");
+        if (numProj == null) {
+            finish();
+            return;
+        }
 
         frc = new FileResConfig(numProj);
         fpu = new FilePathUtil();
@@ -85,19 +89,16 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
 
 
     private void checkDir() {
-        if (FileUtil.isExistFile(fpu.getPathNativelibs(numProj))) {
-            nativeLibrariesPath = fpu.getPathNativelibs(numProj);
-            handleAdapter(nativeLibrariesPath);
-            handleFab();
-            return;
+        if (!FileUtil.isExistFile(fpu.getPathNativelibs(numProj))) {
+            FileUtil.makeDir(fpu.getPathNativelibs(numProj));
+            FileUtil.makeDir(fpu.getPathNativelibs(numProj) + "/armeabi");
+            FileUtil.makeDir(fpu.getPathNativelibs(numProj) + "/armeabi-v7a");
+            FileUtil.makeDir(fpu.getPathNativelibs(numProj) + "/arm64-v8a");
+            FileUtil.makeDir(fpu.getPathNativelibs(numProj) + "/x86");
         }
-        FileUtil.makeDir(fpu.getPathNativelibs(numProj));
-        FileUtil.makeDir(fpu.getPathNativelibs(numProj) + "/armeabi");
-        FileUtil.makeDir(fpu.getPathNativelibs(numProj) + "/armeabi-v7a");
-        FileUtil.makeDir(fpu.getPathNativelibs(numProj) + "/arm64-v8a");
-        FileUtil.makeDir(fpu.getPathNativelibs(numProj) + "/x86");
-
-        checkDir();
+        nativeLibrariesPath = fpu.getPathNativelibs(numProj);
+        handleAdapter(nativeLibrariesPath);
+        handleFab();
     }
 
     private void handleAdapter(String directoryPath) {
@@ -125,7 +126,6 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
         binding.topAppBar.setNavigationOnClickListener(Helper.getBackPressedClickListener(this));
         binding.topAppBar.setTitle(R.string.manager_nativelibs_title);
 
-        binding.showOptionsButton.setOnClickListener(view -> hideShowOptionsButton(false));
         binding.closeButton.setOnClickListener(view -> hideShowOptionsButton(true));
         binding.createNewButton.setOnClickListener(v -> {
             createNewDialog();
@@ -220,9 +220,6 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
                 dialog.dismiss();
             });
 
-            dialog.setView(dialogBinding.getRoot());
-            dialog.show();
-
             dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
             inputText.requestFocus();
         });
@@ -285,7 +282,6 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
         } catch (Exception ignored) {
         }
 
-        dialog.setView(dialogBinding.getRoot());
         dialog.show();
 
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
@@ -331,10 +327,10 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
                 menu.setOnMenuItemClickListener(item -> {
                     int id = item.getItemId();
                     if (id == R.id.delete) {
-                        FileUtil.deleteFile(frc.listFileNativeLibs.get(position));
+                        FileUtil.deleteFile(path);
                         handleAdapter(nativeLibrariesPath);
                     } else if (id == R.id.rename) {
-                        showRenameDialog(frc.listFileNativeLibs.get(position));
+                        showRenameDialog(path);
                     } else {
                         return false;
                     }
@@ -345,11 +341,11 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
             });
 
             binding.getRoot().setOnLongClickListener(view -> {
-                if (FileUtil.isDirectory(frc.listFileNativeLibs.get(position))) {
+                if (FileUtil.isDirectory(path)) {
                     PopupMenu menu = new PopupMenu(ManageNativelibsActivity.this, view);
                     menu.getMenu().add(Menu.NONE, 4, Menu.NONE, R.string.common_word_delete);
                     menu.setOnMenuItemClickListener(item -> {
-                        FileUtil.deleteFile(frc.listFileNativeLibs.get(position));
+                        FileUtil.deleteFile(path);
                         handleAdapter(nativeLibrariesPath);
                         SketchwareUtil.toast(Helper.getResString(R.string.nativelib_toast_deleted));
 
@@ -361,8 +357,8 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
             });
 
             binding.getRoot().setOnClickListener(v -> {
-                if (FileUtil.isDirectory(frc.listFileNativeLibs.get(position))) {
-                    nativeLibrariesPath = frc.listFileNativeLibs.get(position);
+                if (FileUtil.isDirectory(path)) {
+                    nativeLibrariesPath = path;
                     handleAdapter(nativeLibrariesPath);
                     handleFab();
                 }
