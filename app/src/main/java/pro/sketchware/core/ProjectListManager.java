@@ -114,9 +114,12 @@ public class ProjectListManager {
     }
 
     public static String getNextProjectId() {
-        int nextId = Integer.parseInt("600") + 1;
+        int nextId = 601;
         for (HashMap<String, Object> project : listProjects()) {
-            nextId = Math.max(nextId, Integer.parseInt(MapValueHelper.getString(project, "sc_id")) + 1);
+            try {
+                nextId = Math.max(nextId, Integer.parseInt(MapValueHelper.getString(project, "sc_id")) + 1);
+            } catch (NumberFormatException ignored) {
+            }
         }
         return String.valueOf(nextId);
     }
