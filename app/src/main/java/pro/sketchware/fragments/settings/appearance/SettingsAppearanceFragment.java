@@ -6,14 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.card.MaterialCardView;
 
 import pro.sketchware.core.BaseFragment;
 import pro.sketchware.databinding.FragmentSettingsAppearanceBinding;
+import pro.sketchware.utility.UI;
 import pro.sketchware.utility.theme.ThemeManager;
 
 public class SettingsAppearanceFragment extends BaseFragment {
@@ -32,20 +30,7 @@ public class SettingsAppearanceFragment extends BaseFragment {
         setupToolbar();
         initializeThemeSettings();
         setupClickListeners();
-
-        {
-            View view1 = binding.content;
-            int left = view1.getPaddingLeft();
-            int top = view1.getPaddingTop();
-            int right = view1.getPaddingRight();
-            int bottom = view1.getPaddingBottom();
-
-            ViewCompat.setOnApplyWindowInsetsListener(view1, (v, i) -> {
-                Insets insets = i.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
-                v.setPadding(left + insets.left, top, right + insets.right, bottom + insets.bottom);
-                return i;
-            });
-        }
+        UI.addSystemWindowInsetToPadding(binding.content, true, false, true, true);
     }
 
     private void setupToolbar() {
@@ -56,20 +41,7 @@ public class SettingsAppearanceFragment extends BaseFragment {
                 requireActivity().getOnBackPressedDispatcher().onBackPressed();
             }
         });
-
-        {
-            View view1 = binding.appBarLayout;
-            int left = view1.getPaddingLeft();
-            int top = view1.getPaddingTop();
-            int right = view1.getPaddingRight();
-            int bottom = view1.getPaddingBottom();
-
-            ViewCompat.setOnApplyWindowInsetsListener(view1, (v, i) -> {
-                Insets insets = i.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
-                v.setPadding(left + insets.left, top + insets.top, right + insets.right, bottom);
-                return i;
-            });
-        }
+        UI.addSystemWindowInsetToPadding(binding.appBarLayout, true, true, true, false);
     }
 
     private void initializeThemeSettings() {

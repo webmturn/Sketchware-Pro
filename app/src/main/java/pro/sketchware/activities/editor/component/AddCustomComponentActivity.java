@@ -39,6 +39,7 @@ import pro.sketchware.databinding.ManageCustomComponentAddBinding;
 import pro.sketchware.tools.ComponentHelper;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.SketchwareUtil;
+import pro.sketchware.utility.UI;
 
 public class AddCustomComponentActivity extends BaseAppCompatActivity implements View.OnClickListener {
 
@@ -89,19 +90,7 @@ public class AddCustomComponentActivity extends BaseAppCompatActivity implements
             });
         }
 
-        {
-            View view = binding.appBarLayout;
-            int left = view.getPaddingLeft();
-            int top = view.getPaddingTop();
-            int right = view.getPaddingRight();
-            int bottom = view.getPaddingBottom();
-
-            ViewCompat.setOnApplyWindowInsetsListener(view, (v, i) -> {
-                Insets insets = i.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
-                v.setPadding(left + insets.left, top + insets.top, right + insets.right, bottom + insets.bottom);
-                return i;
-            });
-        }
+        UI.addSystemWindowInsetToPadding(binding.appBarLayout, true, true, true, true);
     }
 
     @Override

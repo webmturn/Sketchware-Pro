@@ -25,6 +25,7 @@ import pro.sketchware.R;
 import pro.sketchware.databinding.FragmentEventsManagerCreatorBinding;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.SketchwareUtil;
+import pro.sketchware.utility.UI;
 
 public class EventsManagerCreatorFragment extends BaseFragment {
 
@@ -77,20 +78,7 @@ public class EventsManagerCreatorFragment extends BaseFragment {
         setupViews();
 
         if (isEdit) fillUp();
-
-        {
-            View view1 = binding.appBarLayout;
-            int left = view1.getPaddingLeft();
-            int top = view1.getPaddingTop();
-            int right = view1.getPaddingRight();
-            int bottom = view1.getPaddingBottom();
-
-            ViewCompat.setOnApplyWindowInsetsListener(view1, (v, i) -> {
-                Insets insets = i.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
-                v.setPadding(left + insets.left, top + insets.top, right + insets.right, bottom + insets.bottom);
-                return i;
-            });
-        }
+        UI.addSystemWindowInsetToPadding(binding.appBarLayout, true, true, true, true);
 
         {
             View view1 = binding.content;

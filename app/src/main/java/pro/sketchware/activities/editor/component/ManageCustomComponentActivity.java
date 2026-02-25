@@ -49,6 +49,7 @@ import mod.jbk.util.OldResourceIdMapper;
 import pro.sketchware.R;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.SketchwareUtil;
+import pro.sketchware.utility.UI;
 
 public class ManageCustomComponentActivity extends BaseAppCompatActivity {
 
@@ -93,34 +94,8 @@ public class ManageCustomComponentActivity extends BaseAppCompatActivity {
             });
         }
 
-        {
-            View view = findViewById(R.id.app_bar_layout);
-            int left = view.getPaddingLeft();
-            int top = view.getPaddingTop();
-            int right = view.getPaddingRight();
-            int bottom = view.getPaddingBottom();
-
-            ViewCompat.setOnApplyWindowInsetsListener(view, (v, i) -> {
-                Insets insets = i.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
-                v.setPadding(left + insets.left, top + insets.top, right + insets.right, bottom + insets.bottom);
-                return i;
-            });
-        }
-
-        {
-            View view = findViewById(R.id.fab);
-            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
-            int end = lp.getMarginEnd();
-            int bottom = lp.bottomMargin;
-
-            ViewCompat.setOnApplyWindowInsetsListener(view, (v, i) -> {
-                Insets insets = i.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
-                lp.setMarginEnd(end + insets.right);
-                lp.bottomMargin = bottom + insets.bottom;
-                v.setLayoutParams(lp);
-                return i;
-            });
-        }
+        UI.addSystemWindowInsetToPadding(findViewById(R.id.app_bar_layout), true, true, true, true);
+        UI.addSystemWindowInsetToMargin(findViewById(R.id.fab), false, false, true, true);
     }
 
     @Override
