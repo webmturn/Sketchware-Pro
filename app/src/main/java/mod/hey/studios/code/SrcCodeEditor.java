@@ -356,6 +356,17 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
         }
 
         loadCESettings(this, binding.editor, "act", true);
+
+        // Ensure dark mode always uses a dark color scheme as fallback
+        if (ThemeUtils.isDarkThemeEnabled(getApplicationContext())) {
+            EditorColorScheme currentScheme = binding.editor.getColorScheme();
+            if (!(currentScheme instanceof TextMateColorScheme)
+                    && !(currentScheme instanceof SchemeDarcula)
+                    && !(currentScheme instanceof SchemeVS2019)) {
+                binding.editor.setColorScheme(new SchemeDarcula());
+            }
+        }
+
         loadToolbar();
 
         UI.addSystemWindowInsetToPadding(binding.appBarLayout, true, true, true, false);
