@@ -22,9 +22,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import pro.sketchware.core.ClassInfo;
+import pro.sketchware.core.FontCollectionManager;
 import pro.sketchware.core.ImageCollectionManager;
 import pro.sketchware.core.SoundCollectionManager;
-import pro.sketchware.core.FontCollectionManager;
 import pro.sketchware.core.IdentifierValidator;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.ProjectDataStore;
@@ -226,8 +226,8 @@ public class MoreblockImporter {
     }
 
     private void copyImageFromCollectionsToProject(String imageName) {
-        if (SoundCollectionManager.getInstance().hasResource(imageName)) {
-            ProjectResourceBean image = SoundCollectionManager.getInstance().getResourceByName(imageName);
+        if (ImageCollectionManager.getInstance().hasResource(imageName)) {
+            ProjectResourceBean image = ImageCollectionManager.getInstance().getResourceByName(imageName);
             try {
                 fileUtil.copyFile(SketchwarePaths.getCollectionPath() + File.separator + "image" + File.separator + "data" + File.separator + image.resFullName, SketchwarePaths.getImagesPath() + File.separator + sc_id + File.separator + image.resFullName);
                 ProjectDataManager.getResourceManager(sc_id).images.add(image);
@@ -238,8 +238,8 @@ public class MoreblockImporter {
     }
 
     private void copySoundFromCollectionsToProject(String soundName) {
-        if (FontCollectionManager.getInstance().hasResource(soundName)) {
-            ProjectResourceBean a2 = FontCollectionManager.getInstance().getResourceByName(soundName);
+        if (SoundCollectionManager.getInstance().hasResource(soundName)) {
+            ProjectResourceBean a2 = SoundCollectionManager.getInstance().getResourceByName(soundName);
             try {
                 fileUtil.copyFile(SketchwarePaths.getCollectionPath() + File.separator + "sound" + File.separator + "data" + File.separator + a2.resFullName, SketchwarePaths.getSoundsPath() + File.separator + sc_id + File.separator + a2.resFullName);
                 ProjectDataManager.getResourceManager(sc_id).sounds.add(a2);
@@ -250,8 +250,8 @@ public class MoreblockImporter {
     }
 
     private void copyFontFromCollectionsToProject(String fontName) {
-        if (ImageCollectionManager.getInstance().hasResource(fontName)) {
-            ProjectResourceBean font = ImageCollectionManager.getInstance().getResourceByName(fontName);
+        if (FontCollectionManager.getInstance().hasResource(fontName)) {
+            ProjectResourceBean font = FontCollectionManager.getInstance().getResourceByName(fontName);
             try {
                 fileUtil.copyFile(SketchwarePaths.getCollectionPath() + File.separator + "font" + File.separator + "data" + File.separator + font.resFullName, SketchwarePaths.getFontsResourcePath() + File.separator + sc_id + File.separator + font.resFullName);
                 ProjectDataManager.getResourceManager(sc_id).fonts.add(font);
@@ -313,7 +313,7 @@ public class MoreblockImporter {
                 return;
             }
         }
-        ProjectResourceBean sound = FontCollectionManager.getInstance().getResourceByName(soundName);
+        ProjectResourceBean sound = SoundCollectionManager.getInstance().getResourceByName(soundName);
         if (sound != null) {
             boolean alreadyToBeAdded = false;
             for (ProjectResourceBean toBeAddedSound : toBeAddedSounds) {
@@ -337,7 +337,7 @@ public class MoreblockImporter {
                 return;
             }
         }
-        ProjectResourceBean font = ImageCollectionManager.getInstance().getResourceByName(fontName);
+        ProjectResourceBean font = FontCollectionManager.getInstance().getResourceByName(fontName);
         if (font != null) {
             boolean alreadyToBeAdded = false;
             for (ProjectResourceBean toBeAddedFont : toBeAddedFonts) {
@@ -361,7 +361,7 @@ public class MoreblockImporter {
                 return;
             }
         }
-        ProjectResourceBean image = SoundCollectionManager.getInstance().getResourceByName(imageName);
+        ProjectResourceBean image = ImageCollectionManager.getInstance().getResourceByName(imageName);
         if (image != null) {
             boolean alreadyToBeAdded = false;
             for (ProjectResourceBean toBeAddedImage : toBeAddedImages) {

@@ -10,8 +10,6 @@ import static dev.aldi.sayuti.editor.manage.LocalLibrariesUtil.getLocalLibraries
 import static dev.aldi.sayuti.editor.manage.LocalLibrariesUtil.rewriteLocalLibFile;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -174,7 +172,7 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
 
     private void runLoadLocalLibrariesTask() {
         showLoadingDialog();
-        new Handler(Looper.getMainLooper()).postDelayed(() -> new LoadLocalLibrariesTask(this).execute(), 500L);
+        new LoadLocalLibrariesTask(this).execute();
     }
 
     private List<LocalLibrary> getAdapterLocalLibraries() {
@@ -245,6 +243,33 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
             }
         }
         return false;
+    }
+
+    private void toggleLibrary(boolean isChecked, String name) {
+        if (!isChecked) {
+            int indexToRemove = -1;
+            for (int i = 0; i < projectUsedLibs.size(); i++) {
+                Map<String, Object> libraryMap = projectUsedLibs.get(i);
+                if (name.equals(libraryMap.get("name").toString())) {
+                    indexToRemove = i;
+                    break;
+                }
+            }
+            if (indexToRemove != -1) {
+                projectUsedLibs.remove(indexToRemove);
+            }
+        } else {
+            String dependency = null;
+            for (Map<String, Object> libraryMap : projectUsedLibs) {
+                if (name.equals(libraryMap.get("name").toString())) {
+                    dependency = (String) libraryMap.get("dependency");
+                    break;
+                }
+            }
+            HashMap<String, Object> localLibrary = createLibraryMap(name, dependency);
+            projectUsedLibs.add(localLibrary);
+        }
+        rewriteLocalLibFile(scId, new Gson().toJson(projectUsedLibs));
     }
 
     public interface OnLocalLibrarySelectedStateChangedListener {
@@ -375,34 +400,7 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
         }
 
         private void onItemClicked(ViewItemLocalLibBinding binding, String name) {
-            HashMap<String, Object> localLibrary;
-            if (!binding.materialSwitch.isChecked()) {
-                // Remove the library from the list
-                int indexToRemove = -1;
-                for (int i = 0; i < projectUsedLibs.size(); i++) {
-                    Map<String, Object> libraryMap = projectUsedLibs.get(i);
-                    if (name.equals(libraryMap.get("name").toString())) {
-                        indexToRemove = i;
-                        break;
-                    }
-                }
-                if (indexToRemove != -1) {
-                    projectUsedLibs.remove(indexToRemove);
-                }
-            } else {
-                // Add the library to the list
-                // Here, we need to find the dependency string if it exists
-                String dependency = null;
-                for (Map<String, Object> libraryMap : projectUsedLibs) {
-                    if (name.equals(libraryMap.get("name").toString())) {
-                        dependency = (String) libraryMap.get("dependency");
-                        break;
-                    }
-                }
-                localLibrary = createLibraryMap(name, dependency);
-                projectUsedLibs.add(localLibrary);
-            }
-            rewriteLocalLibFile(scId, new Gson().toJson(projectUsedLibs));
+            toggleLibrary(binding.materialSwitch.isChecked(), name);
         }
 
         public List<LocalLibrary> getLocalLibraries() {
@@ -470,34 +468,7 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
         }
 
         private void onItemClicked(ViewItemLocalLibSearchBinding binding, String name) {
-            HashMap<String, Object> localLibrary;
-            if (!binding.materialSwitch.isChecked()) {
-                // Remove the library from the list
-                int indexToRemove = -1;
-                for (int i = 0; i < projectUsedLibs.size(); i++) {
-                    Map<String, Object> libraryMap = projectUsedLibs.get(i);
-                    if (name.equals(libraryMap.get("name").toString())) {
-                        indexToRemove = i;
-                        break;
-                    }
-                }
-                if (indexToRemove != -1) {
-                    projectUsedLibs.remove(indexToRemove);
-                }
-            } else {
-                // Add the library to the list
-                // Here, we need to find the dependency string if it exists
-                String dependency = null;
-                for (Map<String, Object> libraryMap : projectUsedLibs) {
-                    if (name.equals(libraryMap.get("name").toString())) {
-                        dependency = (String) libraryMap.get("dependency");
-                        break;
-                    }
-                }
-                localLibrary = createLibraryMap(name, dependency);
-                projectUsedLibs.add(localLibrary);
-            }
-            rewriteLocalLibFile(scId, new Gson().toJson(projectUsedLibs));
+            toggleLibrary(binding.materialSwitch.isChecked(), name);
         }
 
         public void filter(List<LocalLibrary> localLibraries, String query) {

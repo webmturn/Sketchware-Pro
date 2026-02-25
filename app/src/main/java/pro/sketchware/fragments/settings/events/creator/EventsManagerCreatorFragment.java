@@ -141,6 +141,7 @@ public class EventsManagerCreatorFragment extends BaseFragment {
         if (FileUtil.isExistFile(concat)) {
             try {
                 eventsList = getGson().fromJson(FileUtil.readFile(concat), Helper.TYPE_MAP_LIST);
+                if (eventsList == null) eventsList = new ArrayList<>();
             } catch (JsonSyntaxException e) {
                 eventsList = new ArrayList<>();
             }
@@ -149,7 +150,12 @@ public class EventsManagerCreatorFragment extends BaseFragment {
         }
         HashMap<String, Object> eventData = new HashMap<>();
         if (isEdit) {
-            eventData = eventsList.get(figureP(_name));
+            int index = figureP(eventsList, _name);
+            if (index < 0) {
+                SketchwareUtil.toast(Helper.getResString(R.string.common_error_an_error_occurred));
+                return;
+            }
+            eventData = eventsList.get(index);
         }
         eventData.put("name", Helper.getText(binding.eventsCreatorEventname));
         eventData.put("var", Helper.getText(binding.eventsCreatorVarname));
@@ -171,22 +177,13 @@ public class EventsManagerCreatorFragment extends BaseFragment {
         getParentFragmentManager().popBackStack();
     }
 
-                 private int figureP(String eventName) {
-        String concat = FileUtil.getExternalStorageDir().concat("/.sketchware/data/system/events.json");
-        if (FileUtil.isExistFile(concat)) {
-            ArrayList<HashMap<String, Object>> eventsList;
-            try {
-                eventsList = getGson().fromJson(FileUtil.readFile(concat), Helper.TYPE_MAP_LIST);
-            } catch (JsonSyntaxException e) {
-                return 0;
-            }
-            for (int i = 0; i < eventsList.size(); i++) {
-                if (eventName.equals(eventsList.get(i).get("name"))) {
-                    return i;
-                }
+    private int figureP(ArrayList<HashMap<String, Object>> eventsList, String eventName) {
+        for (int i = 0; i < eventsList.size(); i++) {
+            if (eventName.equals(eventsList.get(i).get("name"))) {
+                return i;
             }
         }
-        return 0;
+        return -1;
     }
 
     private void setToolbar() {

@@ -46,6 +46,7 @@ public class EventsManagerFragment extends BaseFragment {
         if (FileUtil.isExistFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath())) {
             ArrayList<HashMap<String, Object>> events = new Gson()
                     .fromJson(FileUtil.readFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath()), Helper.TYPE_MAP_LIST);
+            if (events == null) events = new ArrayList<>();
             for (HashMap<String, Object> event : events) {
                 if (event.get("listener").toString().equals(name)) {
                     eventAmount++;
@@ -243,6 +244,7 @@ public class EventsManagerFragment extends BaseFragment {
         if (FileUtil.isExistFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath())) {
             events = new Gson()
                     .fromJson(FileUtil.readFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath()), Helper.TYPE_MAP_LIST);
+            if (events == null) events = new ArrayList<>();
             for (int i = events.size() - 1; i > -1; i--) {
                 if (events.get(i).get("listener").toString().equals(name)) {
                     events.remove(i);

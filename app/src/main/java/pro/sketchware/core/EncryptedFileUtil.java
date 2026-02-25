@@ -24,33 +24,12 @@ public class EncryptedFileUtil {
   }
   
   public long getAssetFileSize(Context context, String value) {
-    long l;
-    InputStream inputStream1 = null;
-    InputStream inputStream2 = null;
-    try {
-      InputStream inputStream = context.getAssets().open(value);
-      inputStream2 = inputStream;
-      inputStream1 = inputStream;
-      int i = inputStream.available();
-      long l1 = i;
-      l = l1;
-      if (inputStream != null)
-        try {
-          inputStream.close();
-          l = l1;
-        } catch (IOException iOException) {
-          l = l1;
-        }  
-    } catch (IOException iOException) {
-      inputStream2 = inputStream1;
-      iOException.printStackTrace();
-      if (inputStream1 != null)
-        try {
-          inputStream1.close();
-        } catch (IOException iOException1) {} 
-      l = -1L;
-    } finally {}
-    return l;
+    try (InputStream inputStream = context.getAssets().open(value)) {
+      return inputStream.available();
+    } catch (IOException e) {
+      e.printStackTrace();
+      return -1L;
+    }
   }
   
   public String decryptToString(byte[] data) throws Exception {
