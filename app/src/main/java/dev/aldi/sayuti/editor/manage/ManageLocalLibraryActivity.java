@@ -237,7 +237,7 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
     private boolean isUsedLibrary(String libraryName) {
         if (!notAssociatedWithProject) {
             for (Map<String, Object> libraryMap : projectUsedLibs) {
-                if (libraryName.equals(libraryMap.get("name").toString())) {
+                if (libraryName.equals(String.valueOf(libraryMap.get("name")))) {
                     return true;
                 }
             }
@@ -250,7 +250,7 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
             int indexToRemove = -1;
             for (int i = 0; i < projectUsedLibs.size(); i++) {
                 Map<String, Object> libraryMap = projectUsedLibs.get(i);
-                if (name.equals(libraryMap.get("name").toString())) {
+                if (name.equals(String.valueOf(libraryMap.get("name")))) {
                     indexToRemove = i;
                     break;
                 }
@@ -261,7 +261,7 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
         } else {
             String dependency = null;
             for (Map<String, Object> libraryMap : projectUsedLibs) {
-                if (name.equals(libraryMap.get("name").toString())) {
+                if (name.equals(String.valueOf(libraryMap.get("name")))) {
                     dependency = (String) libraryMap.get("dependency");
                     break;
                 }
@@ -356,7 +356,7 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
                 binding.materialSwitch.setOnClickListener(v -> onItemClicked(binding, library.getName()));
 
                 for (Map<String, Object> libraryMap : projectUsedLibs) {
-                    if (library.getName().equals(libraryMap.get("name").toString())) {
+                    if (library.getName().equals(String.valueOf(libraryMap.get("name")))) {
                         binding.materialSwitch.setChecked(true);
                     }
                 }
@@ -453,7 +453,7 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
                 });
 
                 for (Map<String, Object> libraryMap : projectUsedLibs) {
-                    if (library.getName().equals(libraryMap.get("name").toString())) {
+                    if (library.getName().equals(String.valueOf(libraryMap.get("name")))) {
                         binding.materialSwitch.setChecked(true);
                     }
                 }

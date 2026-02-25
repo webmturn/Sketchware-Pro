@@ -315,7 +315,7 @@ public class BlocksManager extends BaseAppCompatActivity {
         if (all_blocks_list == null) return 0;
 
         for (int i = 0; i < all_blocks_list.size(); i++) {
-            if (Objects.requireNonNull(all_blocks_list.get(i).get("palette")).toString().equals(String.valueOf((long) _p))) {
+            if (String.valueOf(all_blocks_list.get(i).get("palette")).equals(String.valueOf((long) _p))) {
                 n++;
             }
         }
@@ -579,7 +579,7 @@ public class BlocksManager extends BaseAppCompatActivity {
             int backgroundColor = PropertiesUtil.parseColor(paletteColorValue);
 
             holder.itemView.setVisibility(View.VISIBLE);
-            holder.itemBinding.title.setText(Objects.requireNonNull(pallet_listmap.get(position).get("name")).toString());
+            holder.itemBinding.title.setText(String.valueOf(pallet_listmap.get(position).get("name")));
             holder.itemBinding.sub.setText(Helper.getResString(R.string.blocks_count_format, (long) getN(position + 9)));
             holder.itemBinding.color.setBackgroundColor(backgroundColor);
             holder.itemBinding.dragHandler.setVisibility(View.VISIBLE);
@@ -596,13 +596,13 @@ public class BlocksManager extends BaseAppCompatActivity {
                     switch (item.getItemId()) {
                         case PALETTE_MENU_EDIT:
                             showPaletteDialog(true, pos,
-                                    Objects.requireNonNull(pallet_listmap.get(pos).get("name")).toString(),
-                                    Objects.requireNonNull(pallet_listmap.get(pos).get("color")).toString(), null);
+                                    String.valueOf(pallet_listmap.get(pos).get("name")),
+                                    String.valueOf(pallet_listmap.get(pos).get("color")), null);
                             break;
 
                         case PALETTE_MENU_DELETE:
                             new MaterialAlertDialogBuilder(BlocksManager.this)
-                                    .setTitle(Objects.requireNonNull(pallet_listmap.get(pos).get("name")).toString())
+                                    .setTitle(String.valueOf(pallet_listmap.get(pos).get("name")))
                                     .setMessage(R.string.blocks_remove_palette_msg)
                                     .setPositiveButton(R.string.blocks_remove_permanently, (dialog, which) -> {
                                         palettes.remove(pos);
