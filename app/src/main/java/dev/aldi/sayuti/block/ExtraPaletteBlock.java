@@ -415,7 +415,7 @@ public class ExtraPaletteBlock {
                 }
 
                 for (int i = 0; i < StringsListMap.size(); i++) {
-                    String key = StringsListMap.get(i).get("key").toString();
+                    String key = String.valueOf(StringsListMap.get(i).get("key"));
                     logicEditor.createPaletteBlockWithSpec(key, "s", "getResStr").setTag("S98ZCS" + key);
                 }
                 return;

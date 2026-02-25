@@ -58,7 +58,7 @@ public class LocalLibrariesUtil {
                     int indexToRemove = -1;
                     for (int i = 0; i < projectUsedLibs.size(); i++) {
                         Map<String, Object> libraryMap = projectUsedLibs.get(i);
-                        if (library.getName().equals(libraryMap.get("name").toString())) {
+                        if (library.getName().equals(String.valueOf(libraryMap.get("name")))) {
                             indexToRemove = i;
                             break;
                         }

@@ -328,7 +328,7 @@ public class WidgetsCreatorManager {
                     if (isInvalidWidget(widget)) return;
                     widget.put("position", widgetConfigurationsList.size());
                     widgetConfigurationsList.add(widget);
-                    String widgetClass = widget.get("Class").toString();
+                    String widgetClass = String.valueOf(widget.get("Class"));
                     if (!allCategories.contains(widgetClass)) {
                         allCategories.add(widgetClass);
                     }

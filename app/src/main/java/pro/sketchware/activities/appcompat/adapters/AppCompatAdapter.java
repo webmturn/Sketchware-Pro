@@ -78,7 +78,7 @@ public class AppCompatAdapter
             int onSurface = ThemeUtils.getColor(itemView, R.attr.colorOnSurface);
             int green = ThemeUtils.getColor(itemView, R.attr.colorGreen);
 
-            String value = item.get("value").toString();
+            String value = String.valueOf(item.get("value"));
             SpannableString spannableString = new SpannableString(value);
 
             int colonIndex = value.indexOf(":");

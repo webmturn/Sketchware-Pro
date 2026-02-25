@@ -220,7 +220,7 @@ public class ManageCustomComponentActivity extends BaseAppCompatActivity {
     }
 
     private void export(int position) {
-        String componentName = componentsList.get(position).get("name").toString();
+        String componentName = String.valueOf(componentsList.get(position).get("name"));
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(Helper.getResString(R.string.common_word_export));
         dialog.setMessage(Helper.getResString(R.string.developer_tools_component_message_export, componentName));

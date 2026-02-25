@@ -265,7 +265,7 @@ public class ManageAppCompatActivity extends BaseAppCompatActivity {
         attributeBinding.inputLayoutRes.setVisibility(View.GONE);
 
         if (type.equals("edit")) {
-            String injectionValue = activityInjections.get(position).get("value").toString();
+            String injectionValue = String.valueOf(activityInjections.get(position).get("value"));
             attributeBinding.inputAttr.setText(
                     injectionValue.substring(0, injectionValue.indexOf("=")));
             attributeBinding.inputValue.setText(
@@ -312,7 +312,7 @@ public class ManageAppCompatActivity extends BaseAppCompatActivity {
         List<HashMap<String, Object>> filteredList = new ArrayList<>();
         for (HashMap<String, Object> injection : activityInjections) {
             if (injection.containsKey("type")
-                    && injection.get("type").toString().equals(widgetName)) {
+                    && widgetName.equals(String.valueOf(injection.get("type")))) {
                 filteredList.add(injection);
             }
         }
