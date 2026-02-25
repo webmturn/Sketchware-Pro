@@ -20,8 +20,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -80,20 +78,7 @@ public class ManageCustomComponentActivity extends BaseAppCompatActivity {
         findViewById(R.id.fab).setOnClickListener(_view ->
                 startActivity(new Intent(getApplicationContext(), AddCustomComponentActivity.class)));
 
-        {
-            View view = findViewById(R.id.content);
-            int left = view.getPaddingLeft();
-            int top = view.getPaddingTop();
-            int right = view.getPaddingRight();
-            int bottom = view.getPaddingBottom();
-
-            ViewCompat.setOnApplyWindowInsetsListener(view, (v, i) -> {
-                Insets insets = i.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.ime() | WindowInsetsCompat.Type.displayCutout());
-                v.setPadding(left + insets.left, top, right + insets.right, bottom + insets.bottom);
-                return i;
-            });
-        }
-
+        UI.addWindowInsetToPadding(findViewById(R.id.content), WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.ime() | WindowInsetsCompat.Type.displayCutout(), true, false, true, true);
         UI.addSystemWindowInsetToPadding(findViewById(R.id.app_bar_layout), true, true, true, true);
         UI.addSystemWindowInsetToMargin(findViewById(R.id.fab), false, false, true, true);
     }

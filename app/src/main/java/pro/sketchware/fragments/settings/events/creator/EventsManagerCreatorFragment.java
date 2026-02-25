@@ -10,8 +10,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
@@ -79,20 +77,7 @@ public class EventsManagerCreatorFragment extends BaseFragment {
 
         if (isEdit) fillUp();
         UI.addSystemWindowInsetToPadding(binding.appBarLayout, true, true, true, true);
-
-        {
-            View view1 = binding.content;
-            int left = view1.getPaddingLeft();
-            int top = view1.getPaddingTop();
-            int right = view1.getPaddingRight();
-            int bottom = view1.getPaddingBottom();
-
-            ViewCompat.setOnApplyWindowInsetsListener(view1, (v, i) -> {
-                Insets insets = i.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.ime() | WindowInsetsCompat.Type.displayCutout());
-                v.setPadding(left + insets.left, top, right + insets.right, bottom + insets.bottom);
-                return i;
-            });
-        }
+        UI.addWindowInsetToPadding(binding.content, WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.ime() | WindowInsetsCompat.Type.displayCutout(), true, false, true, true);
     }
 
     private void fillUp() {

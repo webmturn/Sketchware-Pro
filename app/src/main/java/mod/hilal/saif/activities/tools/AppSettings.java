@@ -16,8 +16,6 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.besome.sketch.editor.manage.library.LibraryCategoryView;
@@ -59,20 +57,7 @@ public class AppSettings extends BaseAppCompatActivity {
         setContentView(binding.getRoot());
 
         UI.addSystemWindowInsetToPadding(binding.appBarLayout, true, true, true, true);
-
-        {
-            View view = binding.contentScroll;
-            int left = view.getPaddingLeft();
-            int top = view.getPaddingTop();
-            int right = view.getPaddingRight();
-            int bottom = view.getPaddingBottom();
-
-            ViewCompat.setOnApplyWindowInsetsListener(view, (v, i) -> {
-                Insets insets = i.getInsets(WindowInsetsCompat.Type.systemBars());
-                v.setPadding(left, top, right, bottom + insets.bottom);
-                return i;
-            });
-        }
+        UI.addWindowInsetToPadding(binding.contentScroll, WindowInsetsCompat.Type.systemBars(), false, false, false, true);
 
         binding.topAppBar.setNavigationOnClickListener(Helper.getBackPressedClickListener(this));
         setupPreferences(binding.content);

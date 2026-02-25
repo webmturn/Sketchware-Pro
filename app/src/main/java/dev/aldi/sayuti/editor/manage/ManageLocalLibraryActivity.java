@@ -21,8 +21,6 @@ import android.view.ViewGroup;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -69,38 +67,11 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
         binding = ManageLocallibrariesBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        {
-            View view1 = binding.searchBar;
-            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) view1.getLayoutParams();
-
-            int end = lp.getMarginEnd();
-            int start = lp.getMarginStart();
-
-            ViewCompat.setOnApplyWindowInsetsListener(view1, (v, i) -> {
-                Insets insets = i.getInsets(WindowInsetsCompat.Type.displayCutout());
-                lp.setMarginEnd(end + insets.right);
-                lp.setMarginStart(start + insets.left);
-                v.setLayoutParams(lp);
-                return i;
-            });
-        }
-
+        UI.addWindowInsetToMargin(binding.searchBar, WindowInsetsCompat.Type.displayCutout(), true, false, true, false);
         UI.addSystemWindowInsetToPadding(binding.contextualToolbarContainer, true, true, true, false);
         UI.addSystemWindowInsetToPadding(binding.librariesList, true, false, true, true);
         UI.addSystemWindowInsetToPadding(binding.searchList, true, false, true, true);
-
-        {
-            View view1 = binding.downloadLibraryButton;
-            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) view1.getLayoutParams();
-            int bottom = lp.bottomMargin;
-
-            ViewCompat.setOnApplyWindowInsetsListener(view1, (v, i) -> {
-                Insets insets = i.getInsets(WindowInsetsCompat.Type.systemBars());
-                lp.bottomMargin = bottom + insets.bottom;
-                v.setLayoutParams(lp);
-                return i;
-            });
-        }
+        UI.addWindowInsetToMargin(binding.downloadLibraryButton, WindowInsetsCompat.Type.systemBars(), false, false, false, true);
 
         if (getIntent().hasExtra("sc_id")) {
             scId = Objects.requireNonNull(getIntent().getStringExtra("sc_id"));

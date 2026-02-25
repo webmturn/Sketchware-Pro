@@ -18,8 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.besome.sketch.lib.base.BaseAppCompatActivity;
@@ -236,20 +234,7 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
         receiveIntents();
         new SimpleHighlighter(binding.code);
 
-        {
-            View view = binding.content;
-            int left = view.getPaddingLeft();
-            int top = view.getPaddingTop();
-            int right = view.getPaddingRight();
-            int bottom = view.getPaddingBottom();
-
-            ViewCompat.setOnApplyWindowInsetsListener(view, (v, i) -> {
-                Insets insets = i.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.ime() | WindowInsetsCompat.Type.displayCutout());
-                v.setPadding(left + insets.left, top, right + insets.right, bottom + insets.bottom);
-                return i;
-            });
-        }
-
+        UI.addWindowInsetToPadding(binding.content, WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.ime() | WindowInsetsCompat.Type.displayCutout(), true, false, true, true);
         UI.addSystemWindowInsetToPadding(binding.appBarLayout, true, true, true, true);
     }
 
