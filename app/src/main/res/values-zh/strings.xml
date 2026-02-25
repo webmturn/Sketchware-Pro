@@ -2304,10 +2304,10 @@
     <string name="resources_open_code_editor">打开代码编辑器</string>
 
     <!-- ========== 声音管理 ========== -->
-    <string name="sound_add">添加声音</string>
+    <string name="sound_add">添加音效</string>
     <string name="sound_add_to_collection">添加到我的收藏</string>
-    <string name="sound_hint_name">输入声音名称</string>
-    <string name="sound_manager_title">声音管理器</string>
+    <string name="sound_hint_name">输入音效名称</string>
+    <string name="sound_manager_title">音效管理器</string>
 
     <!-- ========== 菜单 - 补充 ========== -->
 
