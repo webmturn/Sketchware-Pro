@@ -1868,6 +1868,9 @@
     <string name="styles_error_already_exists">\"%s\" 已存在</string>
 
     <!-- ========== XML 命令 ========== -->
+    <string name="xml_cmd_add_new_command">添加新命令</string>
+    <string name="xml_cmd_edit_command">编辑命令</string>
+    <string name="xml_cmd_generate_failed">生成源代码失败。</string>
     <string name="xml_cmd_hint_backend">后端</string>
     <string name="xml_cmd_hint_code">输入代码</string>
     <string name="xml_cmd_hint_command">选择命令</string>

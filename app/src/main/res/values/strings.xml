@@ -3058,6 +3058,9 @@ ACTION_VIEW
     <string name="styles_error_already_exists">\"%s\" is already exist</string>
     <string name="view_code_editor_title">XML Editor</string>
     <string name="view_editor_drag_delete">Drag here to delete</string>
+    <string name="xml_cmd_add_new_command">Add new command</string>
+    <string name="xml_cmd_edit_command">Edit command</string>
+    <string name="xml_cmd_generate_failed">Failed to generate source.</string>
     <string name="xml_cmd_hint_backend">Backend</string>
     <string name="xml_cmd_hint_code">Input code</string>
     <string name="xml_cmd_hint_command">Select command</string>

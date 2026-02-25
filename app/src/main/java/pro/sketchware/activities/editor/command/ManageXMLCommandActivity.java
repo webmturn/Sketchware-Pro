@@ -229,7 +229,7 @@ public class ManageXMLCommandActivity extends BaseAppCompatActivity {
                     }
                 });
         dialog.show();
-        binding.title.setText(!edit ? "Add new command" : "Edit command");
+        binding.title.setText(!edit ? Helper.getResString(R.string.xml_cmd_add_new_command) : Helper.getResString(R.string.xml_cmd_edit_command));
 
         if (edit) {
             var command = commands.get(position);
@@ -350,7 +350,7 @@ public class ManageXMLCommandActivity extends BaseAppCompatActivity {
                                         editor.setText(
                                                 !source.isEmpty()
                                                         ? source
-                                                        : "Failed to generate source.");
+                                                        : Helper.getResString(R.string.xml_cmd_generate_failed));
                                         editor.getComponent(Magnifier.class)
                                                 .setWithinEditorForcibly(true);
 
