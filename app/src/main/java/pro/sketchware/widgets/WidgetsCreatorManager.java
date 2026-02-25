@@ -155,7 +155,7 @@ public class WidgetsCreatorManager {
         allCategories.clear();
         Objects.requireNonNull(allCategories).addAll(mainCategories);
         for (HashMap<String, Object> map : widgetConfigurationsList) {
-            String Class = map.get("Class").toString();
+            String Class = String.valueOf(map.get("Class"));
             if (!allCategories.contains(Class)) {
                 allCategories.add(Class);
             }
@@ -183,11 +183,11 @@ public class WidgetsCreatorManager {
 
         if (isEditing) {
             HashMap<String, Object> map = widgetConfigurationsList.get(position);
-            binding.widgetType.setText(map.get("type").toString());
-            binding.widgetName.setText(map.get("name").toString());
-            binding.widgetTitle.setText(map.get("title").toString());
-            binding.addWidgetTo.setText(map.get("Class").toString());
-            binding.injectCode.setText(map.get("inject").toString());
+            binding.widgetType.setText(String.valueOf(map.get("type")));
+            binding.widgetName.setText(String.valueOf(map.get("name")));
+            binding.widgetTitle.setText(String.valueOf(map.get("title")));
+            binding.addWidgetTo.setText(String.valueOf(map.get("Class")));
+            binding.injectCode.setText(String.valueOf(map.get("inject")));
         } else {
             builder.setNeutralButton(Helper.getResString(R.string.common_word_see_more), null);
         }

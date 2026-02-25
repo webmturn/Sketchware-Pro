@@ -48,7 +48,7 @@ public class EventsManagerFragment extends BaseFragment {
                     .fromJson(FileUtil.readFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath()), Helper.TYPE_MAP_LIST);
             if (events == null) events = new ArrayList<>();
             for (HashMap<String, Object> event : events) {
-                if (event.get("listener").toString().equals(name)) {
+                if (name.equals(String.valueOf(event.get("listener")))) {
                     eventAmount++;
                 }
             }
@@ -97,12 +97,12 @@ public class EventsManagerFragment extends BaseFragment {
     private void showListenerDialog(@Nullable HashMap<String, Object> existingListener, int position) {
         var listenerBinding = DialogAddNewListenerBinding.inflate(LayoutInflater.from(requireContext()));
         if (existingListener != null) {
-            listenerBinding.listenerName.setText(existingListener.get("name").toString());
-            listenerBinding.listenerCode.setText(existingListener.get("code").toString());
-            listenerBinding.listenerCustomImport.setText(existingListener.get("imports").toString());
+            listenerBinding.listenerName.setText(String.valueOf(existingListener.get("name")));
+            listenerBinding.listenerCode.setText(String.valueOf(existingListener.get("code")));
+            listenerBinding.listenerCustomImport.setText(String.valueOf(existingListener.get("imports")));
             if ("true".equals(existingListener.get("s"))) {
                 listenerBinding.listenerIsIndependentClassOrMethod.setChecked(true);
-                listenerBinding.listenerCode.setText(existingListener.get("code").toString().replaceFirst("//" + Helper.getText(listenerBinding.listenerName) + "\n", ""));
+                listenerBinding.listenerCode.setText(String.valueOf(existingListener.get("code")).replaceFirst("//" + Helper.getText(listenerBinding.listenerName) + "\n", ""));
             }
         }
 
@@ -206,12 +206,12 @@ public class EventsManagerFragment extends BaseFragment {
                 events = new ArrayList<>();
             }
             for (int i = 0; i < events.size(); i++) {
-                if (events.get(i).get("listener").toString().equals(listMap.get(p).get("name"))) {
+                if (String.valueOf(listMap.get(p).get("name")).equals(String.valueOf(events.get(i).get("listener")))) {
                     ex2.add(events.get(i));
                 }
             }
         }
-        FileUtil.writeFile(concat + ex.get(0).get("name").toString() + ".txt", new Gson().toJson(ex) + "\n" + new Gson().toJson(ex2));
+        FileUtil.writeFile(concat + String.valueOf(ex.get(0).get("name")) + ".txt", new Gson().toJson(ex) + "\n" + new Gson().toJson(ex2));
         SketchwareUtil.toast(Helper.getResString(R.string.toast_event_exported), Toast.LENGTH_LONG);
     }
 
@@ -246,7 +246,7 @@ public class EventsManagerFragment extends BaseFragment {
                     .fromJson(FileUtil.readFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath()), Helper.TYPE_MAP_LIST);
             if (events == null) events = new ArrayList<>();
             for (int i = events.size() - 1; i > -1; i--) {
-                if (events.get(i).get("listener").toString().equals(name)) {
+                if (name.equals(String.valueOf(events.get(i).get("listener")))) {
                     events.remove(i);
                 }
             }

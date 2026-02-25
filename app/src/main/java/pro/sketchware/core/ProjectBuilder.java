@@ -853,11 +853,11 @@ public class ProjectBuilder {
             }
         }
         for (HashMap<String, Object> libEntry : localLibraryManager.list) {
-            String obj = libEntry.get("name").toString();
+            String obj = String.valueOf(libEntry.get("name"));
             if (libEntry.containsKey("packageName") && !proguard.libIsProguardFMEnabled(obj)) {
                 sb.append("\n");
                 sb.append("-keep class ");
-                sb.append(libEntry.get("packageName").toString());
+                sb.append(String.valueOf(libEntry.get("packageName")));
                 sb.append(".** { *; }");
             }
         }
@@ -885,9 +885,9 @@ public class ProjectBuilder {
         jars.add(projectFilePaths.compiledClassesPath + ".jar");
 
         for (HashMap<String, Object> libEntry : localLibraryManager.list) {
-            String obj = libEntry.get("name").toString();
+            String obj = String.valueOf(libEntry.get("name"));
             if (libEntry.containsKey("jarPath") && proguard.libIsProguardFMEnabled(obj)) {
-                jars.add(libEntry.get("jarPath").toString());
+                jars.add(String.valueOf(libEntry.get("jarPath")));
             }
         }
         try {
@@ -930,10 +930,10 @@ public class ProjectBuilder {
         args.add(projectFilePaths.compiledClassesPath);
 
         for (HashMap<String, Object> libEntry : localLibraryManager.list) {
-            String obj = libEntry.get("name").toString();
+            String obj = String.valueOf(libEntry.get("name"));
             if (libEntry.containsKey("jarPath") && proguard.libIsProguardFMEnabled(obj)) {
                 args.add("-injars");
-                args.add(libEntry.get("jarPath").toString());
+                args.add(String.valueOf(libEntry.get("jarPath")));
             }
         }
         args.add("-libraryjars");
