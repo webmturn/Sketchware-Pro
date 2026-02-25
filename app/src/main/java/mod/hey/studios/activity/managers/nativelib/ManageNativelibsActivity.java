@@ -17,7 +17,6 @@ import android.widget.PopupMenu;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -35,8 +34,8 @@ import dev.pranav.filepicker.FilePickerCallback;
 import dev.pranav.filepicker.FilePickerDialogFragment;
 import dev.pranav.filepicker.FilePickerOptions;
 import mod.hey.studios.util.Helper;
-import mod.jbk.util.AddMarginOnApplyWindowInsetsListener;
-import pro.sketchware.R;
+        import pro.sketchware.R;
+import pro.sketchware.utility.UI;
 import pro.sketchware.databinding.DialogCreateNewFileLayoutBinding;
 import pro.sketchware.databinding.DialogInputLayoutBinding;
 import pro.sketchware.databinding.ManageFileBinding;
@@ -140,8 +139,7 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
             }
         });
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.createNewButton,
-                new AddMarginOnApplyWindowInsetsListener(WindowInsetsCompat.Type.navigationBars(), WindowInsetsCompat.CONSUMED));
+        UI.addWindowInsetToMargin(binding.createNewButton, WindowInsetsCompat.Type.navigationBars(), true, true, true, true);
     }
 
     private void hideShowOptionsButton(boolean isHide) {

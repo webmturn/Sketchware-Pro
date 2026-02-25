@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.PopupMenu;
 
-import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.besome.sketch.lib.base.BaseAppCompatActivity;
@@ -22,9 +21,9 @@ import mod.hey.studios.util.CompileLogHelper;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import mod.jbk.diagnostic.CompileErrorSaver;
-import mod.jbk.util.AddMarginOnApplyWindowInsetsListener;
 import pro.sketchware.databinding.CompileLogBinding;
 import pro.sketchware.utility.SketchwareUtil;
+import pro.sketchware.utility.UI;
 
 public class CompileLogActivity extends BaseAppCompatActivity {
 
@@ -44,8 +43,7 @@ public class CompileLogActivity extends BaseAppCompatActivity {
         binding = CompileLogBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.optionsLayout,
-                new AddMarginOnApplyWindowInsetsListener(WindowInsetsCompat.Type.navigationBars(), WindowInsetsCompat.CONSUMED));
+        UI.addWindowInsetToMargin(binding.optionsLayout, WindowInsetsCompat.Type.navigationBars(), true, true, true, true);
 
         logViewerPreferences = getPreferences(Context.MODE_PRIVATE);
 
