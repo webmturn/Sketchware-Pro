@@ -37,7 +37,7 @@
                 android:layout_weight="1"
                 android:ellipsize="marquee"
                 android:maxLines="2"
-                android:text="Random User"
+                tools:text="Random User"
                 android:textAppearance="?attr/textAppearanceTitleMediumEmphasized"
                 android:textColor="?attr/colorOnSurface" />
 

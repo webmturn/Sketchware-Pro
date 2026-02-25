@@ -1,5 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -47,7 +48,7 @@
                         android:paddingTop="2dp"
                         android:paddingRight="2dp"
                         android:paddingBottom="6dp"
-                        android:text="Application"
+                        tools:text="Application"
                         android:textSize="14sp" />
 
                     <include layout="@layout/block_customview_spec" />
