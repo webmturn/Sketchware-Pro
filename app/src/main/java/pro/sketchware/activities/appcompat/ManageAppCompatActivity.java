@@ -314,6 +314,7 @@ public class ManageAppCompatActivity extends BaseAppCompatActivity {
 
     private List<HashMap<String, Object>> filterInjections(String widgetName) {
         List<HashMap<String, Object>> filteredList = new ArrayList<>();
+        if (widgetName == null) return filteredList;
         for (HashMap<String, Object> injection : activityInjections) {
             if (injection.containsKey("type")
                     && widgetName.equals(String.valueOf(injection.get("type")))) {
