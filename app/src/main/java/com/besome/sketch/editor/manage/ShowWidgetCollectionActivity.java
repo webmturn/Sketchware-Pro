@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 
 import com.besome.sketch.beans.ViewBean;
+import com.besome.sketch.beans.WidgetCollectionBean;
 import com.besome.sketch.editor.view.ItemView;
 import com.besome.sketch.lib.base.BaseAppCompatActivity;
 
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 
 import pro.sketchware.core.DeviceUtil;
 import pro.sketchware.core.UniqueNameValidator;
-import pro.sketchware.core.SoundCollectionManager;
+import pro.sketchware.core.ImageCollectionManager;
 import pro.sketchware.core.WidgetCollectionManager;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.ResourceManager;
@@ -26,6 +27,7 @@ import pro.sketchware.core.SketchwarePaths;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageCollectionShowWidgetBinding;
+import pro.sketchware.utility.SketchwareUtil;
 import pro.sketchware.utility.UI;
 
 public class ShowWidgetCollectionActivity extends BaseAppCompatActivity implements View.OnClickListener {
@@ -96,7 +98,7 @@ public class ShowWidgetCollectionActivity extends BaseAppCompatActivity implemen
         binding.pane.initialize(sc_id, true);
         binding.pane.setVerticalScrollBarEnabled(true);
         ResourceManager kCVar = new ResourceManager("", SketchwarePaths.getCollectionPath() + "/image/data/", "", "");
-        kCVar.setImages(SoundCollectionManager.getInstance().getResources());
+        kCVar.setImages(ImageCollectionManager.getInstance().getResources());
         binding.pane.setResourceManager(kCVar);
         widgetNameInput = binding.edInput.getEditText();
         widgetNameInput.setPrivateImeOptions("defaultInputmode=english;");
@@ -109,8 +111,14 @@ public class ShowWidgetCollectionActivity extends BaseAppCompatActivity implemen
     @Override
     public void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        loadViews(WidgetCollectionManager.getInstance().getWidgetByName(widgetName).widgets);
-        setActionContainerHeight();
+        WidgetCollectionBean widget = WidgetCollectionManager.getInstance().getWidgetByName(widgetName);
+        if (widget != null) {
+            loadViews(widget.widgets);
+            setActionContainerHeight();
+        } else {
+            SketchwareUtil.toastError(Helper.getResString(R.string.error_corrupt_block));
+            finish();
+        }
     }
 
     private ItemView loadView(ViewBean view) {

@@ -19,7 +19,7 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import java.lang.ref.WeakReference;
 
 import pro.sketchware.core.BaseAsyncTask;
-import pro.sketchware.core.FontCollectionManager;
+import pro.sketchware.core.SoundCollectionManager;
 import pro.sketchware.core.SoundImportFragment;
 import pro.sketchware.core.UIHelper;
 import pro.sketchware.core.SoundListFragment;
@@ -127,7 +127,7 @@ public class ManageSoundActivity extends BaseAppCompatActivity implements ViewPa
             activity.dismissLoadingDialog();
             activity.setResult(RESULT_OK);
             activity.finish();
-            FontCollectionManager.getInstance().clearCollections();
+            SoundCollectionManager.getInstance().clearCollections();
         }
 
         @Override

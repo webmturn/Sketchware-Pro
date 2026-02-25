@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import pro.sketchware.core.SketchwareException;
 import pro.sketchware.core.UriPathResolver;
 import pro.sketchware.core.BaseAsyncTask;
-import pro.sketchware.core.SoundCollectionManager;
+import pro.sketchware.core.ImageCollectionManager;
 import pro.sketchware.core.FileNameValidator;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.BitmapUtil;
@@ -378,7 +378,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
                         image.flipVertical = activity.imageScaleY;
                         image.flipHorizontal = activity.imageScaleX;
                         if (activity.chk_collection.isChecked()) {
-                            SoundCollectionManager.getInstance().addResource(activity.sc_id, image);
+                            ImageCollectionManager.getInstance().addResource(activity.sc_id, image);
                         }
                         activity.images.add(image);
                     } else if (!activity.isImagePicked) {
@@ -416,7 +416,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
                         toAdd.add(image);
                     }
                     if (activity.chk_collection.isChecked()) {
-                        SoundCollectionManager.getInstance().addResources(activity.sc_id, toAdd, true);
+                        ImageCollectionManager.getInstance().addResources(activity.sc_id, toAdd, true);
                     }
                     activity.multipleImagesPicked = false;
                     activity.images.addAll(toAdd);

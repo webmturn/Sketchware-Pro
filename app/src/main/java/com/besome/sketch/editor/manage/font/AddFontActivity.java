@@ -15,7 +15,7 @@ import android.widget.Toast;
 import com.besome.sketch.beans.ProjectResourceBean;
 import com.besome.sketch.lib.base.BaseDialogActivity;
 
-import pro.sketchware.core.ImageCollectionManager;
+import pro.sketchware.core.FontCollectionManager;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.UIHelper;
 import pro.sketchware.core.BlockConstants;
@@ -126,7 +126,7 @@ public class AddFontActivity extends BaseDialogActivity implements View.OnClickL
 
             if (binding.addToCollectionCheckbox.isChecked()) {
                 try {
-                    ImageCollectionManager.getInstance().addResource(sc_id, resourceBean);
+                    FontCollectionManager.getInstance().addResource(sc_id, resourceBean);
                 } catch (Exception e) {
                     Log.e("AddFontActivity", "Failed to add font to collection", e);
                     // Well, (parts of) the bytecode's lying, CompileException can be thrown.

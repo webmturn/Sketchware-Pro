@@ -18,7 +18,7 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import java.lang.ref.WeakReference;
 
 import pro.sketchware.core.BaseAsyncTask;
-import pro.sketchware.core.ImageCollectionManager;
+import pro.sketchware.core.FontCollectionManager;
 import pro.sketchware.core.UIHelper;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
@@ -131,7 +131,7 @@ public class ManageFontActivity extends BaseAppCompatActivity {
             activity.dismissLoadingDialog();
             activity.setResult(RESULT_OK);
             activity.finish();
-            ImageCollectionManager.getInstance().clearCollections();
+            FontCollectionManager.getInstance().clearCollections();
         }
 
         @Override

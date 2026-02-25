@@ -53,10 +53,10 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import pro.sketchware.core.BlockCollectionManager;
-import pro.sketchware.core.ImageCollectionManager;
-import pro.sketchware.core.SoundCollectionManager;
-import pro.sketchware.core.MoreBlockCollectionManager;
 import pro.sketchware.core.FontCollectionManager;
+import pro.sketchware.core.ImageCollectionManager;
+import pro.sketchware.core.MoreBlockCollectionManager;
+import pro.sketchware.core.SoundCollectionManager;
 import pro.sketchware.core.WidgetCollectionManager;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.UIHelper;
@@ -263,28 +263,28 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
                 case 0 -> {
                     for (ProjectResourceBean bean : images) {
                         if (bean.isSelected) {
-                            SoundCollectionManager.getInstance().removeResource(bean.resName, false);
+                            ImageCollectionManager.getInstance().removeResource(bean.resName, false);
                         }
                     }
-                    SoundCollectionManager.getInstance().saveCollections();
+                    ImageCollectionManager.getInstance().saveCollections();
                     loadImages();
                 }
                 case 1 -> {
                     for (ProjectResourceBean bean : sounds) {
                         if (bean.isSelected) {
-                            FontCollectionManager.getInstance().removeResource(bean.resName, false);
+                            SoundCollectionManager.getInstance().removeResource(bean.resName, false);
                         }
                     }
-                    FontCollectionManager.getInstance().saveCollections();
+                    SoundCollectionManager.getInstance().saveCollections();
                     loadSounds();
                 }
                 case 2 -> {
                     for (ProjectResourceBean bean : fonts) {
                         if (bean.isSelected) {
-                            ImageCollectionManager.getInstance().removeResource(bean.resName, false);
+                            FontCollectionManager.getInstance().removeResource(bean.resName, false);
                         }
                     }
-                    ImageCollectionManager.getInstance().saveCollections();
+                    FontCollectionManager.getInstance().saveCollections();
                     loadFonts();
                 }
                 case 3 -> {
@@ -491,9 +491,9 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
     }
 
     private void loadAllCollectionItems() {
-        images = SoundCollectionManager.getInstance().getResources();
-        sounds = FontCollectionManager.getInstance().getResources();
-        fonts = ImageCollectionManager.getInstance().getResources();
+        images = ImageCollectionManager.getInstance().getResources();
+        sounds = SoundCollectionManager.getInstance().getResources();
+        fonts = FontCollectionManager.getInstance().getResources();
         widgets = WidgetCollectionManager.getInstance().getWidgets();
         blocks = BlockCollectionManager.getInstance().getBlocks();
         moreBlocks = MoreBlockCollectionManager.getInstance().getMoreBlocks();
@@ -511,7 +511,7 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
     }
 
     private void loadImages() {
-        images = SoundCollectionManager.getInstance().getResources();
+        images = ImageCollectionManager.getInstance().getResources();
         if (currentItemId == 0) {
             collectionAdapter.setData(images);
             collectionAdapter.currentViewType = 0;
@@ -521,7 +521,7 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
     }
 
     private void loadSounds() {
-        sounds = FontCollectionManager.getInstance().getResources();
+        sounds = SoundCollectionManager.getInstance().getResources();
         if (currentItemId == 1) {
             collectionAdapter.setData(sounds);
             collectionAdapter.currentViewType = 1;
@@ -531,7 +531,7 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
     }
 
     private void loadFonts() {
-        fonts = ImageCollectionManager.getInstance().getResources();
+        fonts = FontCollectionManager.getInstance().getResources();
         if (currentItemId == 2) {
             collectionAdapter.setData(fonts);
             collectionAdapter.currentViewType = 2;

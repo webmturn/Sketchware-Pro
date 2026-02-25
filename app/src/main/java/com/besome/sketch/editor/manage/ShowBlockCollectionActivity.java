@@ -85,24 +85,26 @@ public class ShowBlockCollectionActivity extends BaseAppCompatActivity implement
                 }
 
                 ArrayList<String> parameters = blockBean.parameters;
-                for (int i = 0; i < parameters.size(); i++) {
+                for (int i = 0; i < parameters.size() && i < block.childViews.size(); i++) {
                     String parameter = blockBean.parameters.get(i);
 
                     if (parameter != null && !parameter.isEmpty()) {
                         if (parameter.charAt(0) == '@') {
                             BlockView parameterBlock = blockIdsWithBlocks.get(Integer.valueOf(parameter.substring(1)));
-                            if (parameterBlock != null) {
+                            if (parameterBlock != null && block.childViews.get(i) instanceof BaseBlockView) {
                                 block.replaceParameter((BaseBlockView) block.childViews.get(i), parameterBlock);
                             }
-                        } else {
-                            ((FieldBlockView) block.childViews.get(i)).setArgValue(parameter);
+                        } else if (block.childViews.get(i) instanceof FieldBlockView fieldBlock) {
+                            fieldBlock.setArgValue(parameter);
                             block.recalculateToRoot();
                         }
                     }
                 }
             }
         }
-        firstBlock.layoutChain();
+        if (firstBlock != null) {
+            firstBlock.layoutChain();
+        }
         pane.updatePaneSize();
     }
 

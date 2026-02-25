@@ -22,7 +22,7 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import java.lang.ref.WeakReference;
 
 import pro.sketchware.core.BaseAsyncTask;
-import pro.sketchware.core.SoundCollectionManager;
+import pro.sketchware.core.ImageCollectionManager;
 import pro.sketchware.core.ImageCollectionFragment;
 import pro.sketchware.core.UIHelper;
 import pro.sketchware.core.ImageListFragment;
@@ -149,7 +149,7 @@ public class ManageImageActivity extends BaseAppCompatActivity implements ViewPa
             activity.dismissLoadingDialog();
             activity.setResult(Activity.RESULT_OK);
             activity.finish();
-            SoundCollectionManager.getInstance().clearCollections();
+            ImageCollectionManager.getInstance().clearCollections();
         }
 
         @Override

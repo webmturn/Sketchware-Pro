@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import pro.sketchware.core.SketchwareException;
 import pro.sketchware.core.UriPathResolver;
 import pro.sketchware.core.BaseAsyncTask;
-import pro.sketchware.core.SoundCollectionManager;
+import pro.sketchware.core.ImageCollectionManager;
 import pro.sketchware.core.FileNameValidator;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.BitmapUtil;
@@ -316,9 +316,9 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
                     image.rotate = activity.imageRotationDegrees;
                     image.flipVertical = activity.imageScaleY;
                     image.flipHorizontal = activity.imageScaleX;
-                    SoundCollectionManager.getInstance().addResource(activity.sc_id, image);
+                    ImageCollectionManager.getInstance().addResource(activity.sc_id, image);
                 } else {
-                    SoundCollectionManager.getInstance().renameResource(activity.editTarget, Helper.getText(activity.ed_input_edittext), false);
+                    ImageCollectionManager.getInstance().renameResource(activity.editTarget, Helper.getText(activity.ed_input_edittext), false);
                 }
             } catch (Exception e) {
                 // the bytecode's lying

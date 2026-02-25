@@ -22,7 +22,7 @@ import com.besome.sketch.beans.ProjectResourceBean;
 import java.io.File;
 import java.util.ArrayList;
 
-import pro.sketchware.core.ImageCollectionManager;
+import pro.sketchware.core.FontCollectionManager;
 import pro.sketchware.core.EncryptedFileUtil;
 import pro.sketchware.core.BaseFragment;
 import pro.sketchware.core.SketchwarePaths;
@@ -65,7 +65,7 @@ public class FontManagerFragment extends BaseFragment {
     }
 
     public void loadProjectResources() {
-        projectResourceBeans = ImageCollectionManager.getInstance().getResources();
+        projectResourceBeans = FontCollectionManager.getInstance().getResources();
         adapter.notifyDataSetChanged();
 
         if (projectResourceBeans.isEmpty()) {
@@ -173,7 +173,7 @@ public class FontManagerFragment extends BaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        ImageCollectionManager.getInstance().clearCollections();
+        FontCollectionManager.getInstance().clearCollections();
     }
 
     @Override

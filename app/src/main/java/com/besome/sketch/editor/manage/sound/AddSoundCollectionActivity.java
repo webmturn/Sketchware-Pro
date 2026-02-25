@@ -27,7 +27,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import pro.sketchware.core.UriPathResolver;
-import pro.sketchware.core.FontCollectionManager;
+import pro.sketchware.core.SoundCollectionManager;
 import pro.sketchware.core.ResourceNameValidator;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.BlockConstants;
@@ -192,6 +192,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
     }
 
     private void togglePlayback() {
+        if (mediaPlayer == null) return;
         if (mediaPlayer.isPlaying()) {
             pausePlayback();
             return;
@@ -213,7 +214,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
                 projectResourceBean.savedPos = 1;
                 projectResourceBean.isNew = true;
                 try {
-                    FontCollectionManager.getInstance().addResource(scId, projectResourceBean);
+                    SoundCollectionManager.getInstance().addResource(scId, projectResourceBean);
                     SketchToast.toast(this, Helper.getResString(R.string.design_manager_message_add_complete), 1).show();
                 } catch (Exception e) {
                     // the bytecode's lying
@@ -233,7 +234,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
                     }
                 }
             } else {
-                FontCollectionManager.getInstance().renameResource(editTarget, Helper.getText(binding.edInput), true);
+                SoundCollectionManager.getInstance().renameResource(editTarget, Helper.getText(binding.edInput), true);
                 SketchToast.toast(this, Helper.getResString(R.string.design_manager_message_edit_complete), 1).show();
             }
             finish();
@@ -251,8 +252,9 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
                         return;
                     }
                     int currentPosition = mediaPlayer.getCurrentPosition() / 100;
-                    binding.currentTime.setText(String.format("%02d : %02d", currentPosition / 60, currentPosition % 60));
-                    binding.seek.setProgress(currentPosition / 100);
+                    int totalSeconds = currentPosition / 10;
+                    binding.currentTime.setText(String.format("%02d : %02d", totalSeconds / 60, totalSeconds % 60));
+                    binding.seek.setProgress(currentPosition);
                 });
             }
         };
@@ -281,8 +283,8 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
                 binding.play.setEnabled(true);
                 binding.seek.setMax(mp.getDuration() / 100);
                 binding.seek.setProgress(0);
-                int duration = mp.getDuration() / 100;
-                binding.fileLength.setText(String.format("%02d : %02d", duration / 60, duration % 60));
+                int durationSeconds = mp.getDuration() / 1000;
+                binding.fileLength.setText(String.format("%02d : %02d", durationSeconds / 60, durationSeconds % 60));
                 mediaPlayer.start();
                 startProgressTimer();
             });
@@ -324,8 +326,8 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
                 binding.play.setEnabled(true);
                 binding.seek.setMax(mp.getDuration() / 100);
                 binding.seek.setProgress(0);
-                int duration = mp.getDuration() / 100;
-                binding.fileLength.setText(String.format("%02d : %02d", duration / 60, duration % 60));
+                int durationSeconds = mp.getDuration() / 1000;
+                binding.fileLength.setText(String.format("%02d : %02d", durationSeconds / 60, durationSeconds % 60));
                 binding.fileName.setText(resolvedPath.substring(resolvedPath.lastIndexOf("/") + 1));
                 mp.start();
                 startProgressTimer();
