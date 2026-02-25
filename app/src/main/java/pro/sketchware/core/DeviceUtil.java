@@ -144,14 +144,12 @@ public class DeviceUtil {
     return versionName;
   }
   
+  /**
+   * @deprecated Use {@link pro.sketchware.utility.UI#getStatusBarHeight(Context)} instead.
+   */
+  @Deprecated
   public static int getStatusBarHeight(Context context) {
-    int i = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
-    if (i > 0) {
-      i = context.getResources().getDimensionPixelSize(i);
-    } else {
-      i = 0;
-    } 
-    return i;
+    return pro.sketchware.utility.UI.getStatusBarHeight(context);
   }
   
   public static Locale getLocale(Context context) {

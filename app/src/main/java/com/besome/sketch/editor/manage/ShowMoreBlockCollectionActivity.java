@@ -28,6 +28,7 @@ import pro.sketchware.core.FieldBlockView;
 import pro.sketchware.core.BaseBlockView;
 import pro.sketchware.core.SketchToast;
 import mod.hey.studios.util.Helper;
+import pro.sketchware.utility.UI;
 import mod.jbk.util.BlockUtil;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageCollectionShowBlockBinding;
@@ -116,7 +117,7 @@ public class ShowMoreBlockCollectionActivity extends BaseAppCompatActivity imple
         binding.layoutButton.measure(0, 0);
         binding.editor.setLayoutParams(new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                ((height - DeviceUtil.getToolbarHeight((Context) this)) - DeviceUtil.getStatusBarHeight(this)) - binding.layoutButton.getMeasuredHeight()));
+                ((height - DeviceUtil.getToolbarHeight((Context) this)) - UI.getStatusBarHeight(this)) - binding.layoutButton.getMeasuredHeight()));
         binding.editor.requestLayout();
     }
 

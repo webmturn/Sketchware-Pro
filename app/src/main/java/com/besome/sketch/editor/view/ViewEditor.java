@@ -66,6 +66,7 @@ import mod.hey.studios.util.ProjectFile;
 import mod.jbk.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.utility.ThemeUtils;
+import pro.sketchware.utility.UI;
 import pro.sketchware.widgets.IconCustomWidget;
 import pro.sketchware.widgets.WidgetsCreatorManager;
 
@@ -873,7 +874,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         boolean isLandscapeMode = displayWidth > displayHeight;
         int var4 = (int) (dip * (!isLandscapeMode ? 12.0F : 24.0F));
         int var5 = (int) (dip * (!isLandscapeMode ? 20.0F : 10.0F));
-        int statusBarHeight = DeviceUtil.getStatusBarHeight(getContext());
+        int statusBarHeight = UI.getStatusBarHeight(getContext());
         int toolBarHeight = DeviceUtil.getToolbarHeight(getContext());
         int var9 = displayWidth - (int) (120.0F * dip);
         int var8 = displayHeight - statusBarHeight - toolBarHeight - (int) (dip * 48.0F) - (int) (dip * 48.0F);

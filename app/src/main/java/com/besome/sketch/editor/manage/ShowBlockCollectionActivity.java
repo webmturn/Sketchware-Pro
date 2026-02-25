@@ -32,6 +32,7 @@ import pro.sketchware.R;
 import pro.sketchware.databinding.ManageCollectionShowBlockBinding;
 import pro.sketchware.tools.ImageFactory;
 import pro.sketchware.utility.SketchwareUtil;
+import pro.sketchware.utility.UI;
 
 public class ShowBlockCollectionActivity extends BaseAppCompatActivity implements View.OnClickListener {
 
@@ -110,7 +111,7 @@ public class ShowBlockCollectionActivity extends BaseAppCompatActivity implement
         binding.layoutButton.measure(0, 0);
         binding.editor.setLayoutParams(new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                ((i - DeviceUtil.getToolbarHeight((Context) this)) - DeviceUtil.getStatusBarHeight(this)) - binding.layoutButton.getMeasuredHeight()));
+                ((i - DeviceUtil.getToolbarHeight((Context) this)) - UI.getStatusBarHeight(this)) - binding.layoutButton.getMeasuredHeight()));
         binding.editor.requestLayout();
     }
 

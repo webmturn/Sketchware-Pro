@@ -26,6 +26,7 @@ import pro.sketchware.core.SketchwarePaths;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageCollectionShowWidgetBinding;
+import pro.sketchware.utility.UI;
 
 public class ShowWidgetCollectionActivity extends BaseAppCompatActivity implements View.OnClickListener {
     private String widgetName;
@@ -52,7 +53,7 @@ public class ShowWidgetCollectionActivity extends BaseAppCompatActivity implemen
     private void setActionContainerHeight() {
         binding.layoutButton.measure(0, 0);
         binding.scrollView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                getResources().getDisplayMetrics().heightPixels - DeviceUtil.getToolbarHeight(getApplicationContext()) - DeviceUtil.getStatusBarHeight(getApplicationContext()) - binding.layoutButton.getMeasuredHeight()));
+                getResources().getDisplayMetrics().heightPixels - DeviceUtil.getToolbarHeight(getApplicationContext()) - UI.getStatusBarHeight(getApplicationContext()) - binding.layoutButton.getMeasuredHeight()));
         binding.scrollView.requestLayout();
     }
 
