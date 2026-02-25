@@ -8,6 +8,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Build;
@@ -478,6 +480,11 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             if (currentBuildTask != null && !currentBuildTask.canceled && !currentBuildTask.isBuildFinished) {
                 currentBuildTask.cancelBuild();
                 return;
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                    && ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1001);
             }
 
             BuildTask buildTask = new BuildTask(this);
@@ -1308,9 +1315,19 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             }
         }
 
+        private boolean hasNotificationPermission() {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                DesignActivity activity = getActivity();
+                return activity != null
+                        && ContextCompat.checkSelfPermission(activity, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED;
+            }
+            return true;
+        }
+
         private void maybeShowNotification() {
             DesignActivity activity = getActivity();
             if (activity == null) return;
+            if (!hasNotificationPermission()) return;
 
             if (!isShowingNotification) {
                 createNotificationChannelIfNeeded();
@@ -1331,6 +1348,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         private void updateNotification(String progress) {
             DesignActivity activity = getActivity();
             if (activity == null) return;
+            if (!hasNotificationPermission()) return;
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(activity, CHANNEL_ID)
                     .setSmallIcon(R.drawable.ic_mtrl_code)
