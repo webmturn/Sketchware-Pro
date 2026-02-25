@@ -37,6 +37,15 @@ public class ManageLocalLibrary {
 
                     // fall-through to shared error handler
                 } else {
+                    list.removeIf(entry -> {
+                        Object name = entry.get("name");
+                        if (name instanceof String) {
+                            File libDir = new File(Environment.getExternalStorageDirectory(),
+                                    ".sketchware/libs/local_libs/" + name);
+                            return !libDir.exists();
+                        }
+                        return true;
+                    });
                     return;
                 }
             } catch (JsonParseException e) {
