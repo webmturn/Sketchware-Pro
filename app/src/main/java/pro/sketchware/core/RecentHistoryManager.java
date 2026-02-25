@@ -16,7 +16,7 @@ public class RecentHistoryManager {
   
   public static RecentHistoryManager getInstance() {
     if (instance == null) {
-      synchronized (StringResource.class) {
+      synchronized (RecentHistoryManager.class) {
         if (instance == null) {
           instance = new RecentHistoryManager();
         }
