@@ -1,23 +1,23 @@
 # Method & Field Renaming Map — Phase 8a Classes
 
-Only Phase 8a classes (no JAR references) have methods/fields safe to rename.
-Phase 8b classes have JAR wrappers, so their methods CANNOT be renamed (JAR bytecode calls them by letter).
+**Status: ALL renames complete.** 68 methods + 19 fields renamed.
+All classes are source code — no JAR constraints exist.
 
 ---
 
 ## 1. BlockHistoryManager (was `bC`) — 14 methods, 4 fields
 
 ### Fields
-| Current | Proposed | Type | Purpose |
-|---------|----------|------|---------|
+| Original | Name | Type | Purpose |
+|----------|------|------|---------|
 | `a` (static) | `instance` | `BlockHistoryManager` | Singleton instance |
 | `b` | `positionMap` | `Map<String, Integer>` | Current undo/redo position per key |
 | `c` | `historyMap` | `Map<String, ArrayList<HistoryBlockBean>>` | History entries per key |
 | `d` | `scId` | `String` | Project ID |
 
 ### Methods
-| Current Signature | Proposed Name | Purpose |
-|-------------------|---------------|---------|
+| Original Signature | Name | Purpose |
+|--------------------|------|---------|
 | `static String a(String, String, String)` | `buildKey` | Concatenates 3 strings with `_` separator |
 | `static void a()` | `clearInstance` | Nullifies singleton and clears data |
 | `static BlockHistoryManager d(String)` | `getInstance` | Lazy singleton factory |
@@ -42,16 +42,16 @@ Phase 8b classes have JAR wrappers, so their methods CANNOT be renamed (JAR byte
 ## 2. ViewHistoryManager (was `cC`) — 12 methods, 4 fields
 
 ### Fields
-| Current | Proposed | Type | Purpose |
-|---------|----------|------|---------|
+| Original | Name | Type | Purpose |
+|----------|------|------|---------|
 | `a` (static) | `instance` | `ViewHistoryManager` | Singleton instance |
 | `b` | `positionMap` | `Map<String, Integer>` | Current undo/redo position per key |
 | `c` | `historyMap` | `Map<String, ArrayList<HistoryViewBean>>` | History entries per key |
 | `d` | `scId` | `String` | Project ID |
 
 ### Methods
-| Current Signature | Proposed Name | Purpose |
-|-------------------|---------------|---------|
+| Original Signature | Name | Purpose |
+|--------------------|------|---------|
 | `static void a()` | `clearInstance` | Nullifies singleton |
 | `static ViewHistoryManager c(String)` | `getInstance` | Lazy singleton factory |
 | `void a(String)` | `trimFutureHistory` | Removes entries after current position |
@@ -74,8 +74,8 @@ Phase 8b classes have JAR wrappers, so their methods CANNOT be renamed (JAR byte
 ## 3. ZipUtil (was `KB`) — 7 methods, 0 fields
 
 ### Methods
-| Current Signature | Proposed Name | Purpose |
-|-------------------|---------------|---------|
+| Original Signature | Name | Purpose |
+|--------------------|------|---------|
 | `static void a(Context, String, String)` | `extractAssetZip` | Extracts ZIP from assets to directory |
 | `void a(InputStream, String)` | `extractZipStream` | Extracts ZIP from InputStream |
 | `void a(String, String)` | `extractZipFile` | Extracts ZIP file to directory |
@@ -89,8 +89,8 @@ Phase 8b classes have JAR wrappers, so their methods CANNOT be renamed (JAR byte
 ## 4. DateTimeUtil (was `nB`) — 7 methods, 0 fields
 
 ### Methods
-| Current Signature | Proposed Name | Purpose |
-|-------------------|---------------|---------|
+| Original Signature | Name | Purpose |
+|--------------------|------|---------|
 | `long a()` | `currentTimeMillis` | Returns current time in milliseconds |
 | `String a(long, String)` | `formatTimestamp` | Formats timestamp with given pattern |
 | `String a(String)` | `formatCurrentTime` | Formats current time with pattern |
@@ -104,16 +104,16 @@ Phase 8b classes have JAR wrappers, so their methods CANNOT be renamed (JAR byte
 ## 5. RecentHistoryManager (was `Cx`) — 6 methods, 4 fields
 
 ### Fields
-| Current | Proposed | Type | Purpose |
-|---------|----------|------|---------|
+| Original | Name | Type | Purpose |
+|----------|------|------|---------|
 | `a` (static) | `instance` | `RecentHistoryManager` | Singleton |
 | `b` (static) | `maxItems` | `int` | Maximum items per category (10) |
 | `c` | `recentMap` | `HashMap<String, ArrayList<String>>` | Recent items per category |
-| `d` | `database` | `DB` | SharedPreferences DB (P26) |
+| `d` | `database` | `SharedPrefsHelper` | SharedPreferences DB (P26) |
 
 ### Methods
-| Current Signature | Proposed Name | Purpose |
-|-------------------|---------------|---------|
+| Original Signature | Name | Purpose |
+|--------------------|------|---------|
 | `static RecentHistoryManager a()` | `getInstance` | Lazy singleton factory |
 | `ArrayList<String> a(String)` | `getRecentItems` | Gets recent items for category |
 | `void a(Context)` | `initialize` | Initializes maps and DB |
@@ -126,8 +126,8 @@ Phase 8b classes have JAR wrappers, so their methods CANNOT be renamed (JAR byte
 ## 6. NinePatchDecoder (was `zB`) — 6 methods, 0 fields
 
 ### Methods
-| Current Signature | Proposed Name | Purpose |
-|-------------------|---------------|---------|
+| Original Signature | Name | Purpose |
+|--------------------|------|---------|
 | `static Bitmap a(InputStream)` | `decode` | Decodes 9-patch from InputStream |
 | `static Bitmap a(String)` | `decodeFile` | Decodes 9-patch from file path |
 | `static void a(Bitmap, byte[])` | `extractPadding` | Extracts padding data from bitmap |
@@ -140,8 +140,8 @@ Phase 8b classes have JAR wrappers, so their methods CANNOT be renamed (JAR byte
 ## 7. UriPathResolver (was `HB`) — 5 methods, 0 fields
 
 ### Methods
-| Current Signature | Proposed Name | Purpose |
-|-------------------|---------------|---------|
+| Original Signature | Name | Purpose |
+|--------------------|------|---------|
 | `static String a(Context, Uri)` | `resolve` | Resolves URI to file path (main entry) |
 | `static String a(Context, Uri, String, String[])` | `queryDataColumn` | Queries content resolver for `_data` |
 | `static boolean a(Uri)` | `isDownloadsDocument` | Checks downloads provider authority |
@@ -153,8 +153,8 @@ Phase 8b classes have JAR wrappers, so their methods CANNOT be renamed (JAR byte
 ## 8. VersionCodeValidator (was `xq`) — 2 methods, 0 fields
 
 ### Methods
-| Current Signature | Proposed Name | Purpose |
-|-------------------|---------------|---------|
+| Original Signature | Name | Purpose |
+|--------------------|------|---------|
 | `static boolean a(String)` | `isValid` | Always returns true (stub) |
 | `static boolean b(String)` | `isInRange` | Checks if version code is between 200-600 |
 
@@ -163,14 +163,14 @@ Phase 8b classes have JAR wrappers, so their methods CANNOT be renamed (JAR byte
 ## 9. ActivityConfigConstants (was `vq`) — 1 method, 2 fields
 
 ### Fields
-| Current | Proposed | Type | Purpose |
-|---------|----------|------|---------|
+| Original | Name | Type | Purpose |
+|----------|------|------|---------|
 | `a` | `THEME_OPTIONS` | `String[]` | {"Default", "NoActionBar", "FullScreen"} |
 | `b` | `ORIENTATION_OPTIONS` | `String[]` | {"Portrait", "Landscape", "Both"} |
 
 ### Methods
-| Current Signature | Proposed Name | Purpose |
-|-------------------|---------------|---------|
+| Original Signature | Name | Purpose |
+|--------------------|------|---------|
 | `static String a(int)` | `getKeyboardSettingName` | Returns keyboard setting name for int code |
 
 ---
@@ -178,9 +178,9 @@ Phase 8b classes have JAR wrappers, so their methods CANNOT be renamed (JAR byte
 ## 10. UserExperienceLevel (was `ro`) — 0 methods, 3 fields
 
 ### Fields
-| Current | Proposed | Type | Purpose |
-|---------|----------|------|---------|
-| `a` | `database` | `DB` | SharedPreferences DB (U1) |
+| Original | Name | Type | Purpose |
+|----------|------|------|---------|
+| `a` | `database` | `SharedPrefsHelper` | SharedPreferences DB (U1) |
 | `b` | `level` | `int` | Raw experience level |
 | `c` | `score` | `int` | Computed score (level * 20, capped at 60) |
 
@@ -189,8 +189,8 @@ Phase 8b classes have JAR wrappers, so their methods CANNOT be renamed (JAR byte
 ## 11. KeyboardSettingConstants (was `fC`) — 0 methods, 1 field
 
 ### Fields
-| Current | Proposed | Type | Purpose |
-|---------|----------|------|---------|
+| Original | Name | Type | Purpose |
+|----------|------|------|---------|
 | `a` | `VALUES` | `String[]` | Keyboard setting string values |
 
 ---
@@ -198,16 +198,16 @@ Phase 8b classes have JAR wrappers, so their methods CANNOT be renamed (JAR byte
 ## 12. FirebaseClickListenerLegacy (was `jv`) — 0 methods, 1 field
 
 ### Fields
-| Current | Proposed | Type | Purpose |
-|---------|----------|------|---------|
+| Original | Name | Type | Purpose |
+|----------|------|------|---------|
 | `a` | `noOpClickListener` | `View.OnClickListener` | No-op click listener |
 
 ---
 
 ## Summary
 
-| Class | Methods to Rename | Fields to Rename |
-|-------|-------------------|------------------|
+| Class | Methods Renamed | Fields Renamed |
+|-------|-----------------|----------------|
 | BlockHistoryManager | 18 | 4 |
 | ViewHistoryManager | 16 | 4 |
 | ZipUtil | 7 | 0 |
