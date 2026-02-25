@@ -126,11 +126,11 @@ public class ManageXMLCommandActivity extends BaseAppCompatActivity {
                     int position = item.second;
                     PopupMenu popupMenu = new PopupMenu(this, item.first);
                     var menu = popupMenu.getMenu();
-                    menu.add(Menu.NONE, 0, Menu.NONE, "Edit");
-                    menu.add(Menu.NONE, 1, Menu.NONE, "Delete");
-                    if (position != 0) menu.add(Menu.NONE, 2, Menu.NONE, "Move up");
+                    menu.add(Menu.NONE, 0, Menu.NONE, Helper.getResString(R.string.common_word_edit));
+                    menu.add(Menu.NONE, 1, Menu.NONE, Helper.getResString(R.string.common_word_delete));
+                    if (position != 0) menu.add(Menu.NONE, 2, Menu.NONE, Helper.getResString(R.string.common_word_move_up));
                     if (position != adapter.getItemCount() - 1)
-                        menu.add(Menu.NONE, 3, Menu.NONE, "Move down");
+                        menu.add(Menu.NONE, 3, Menu.NONE, Helper.getResString(R.string.common_word_move_down));
 
                     popupMenu.setOnMenuItemClickListener(
                             itemMenu -> {
@@ -305,8 +305,7 @@ public class ManageXMLCommandActivity extends BaseAppCompatActivity {
     private void showConfirmationDialog() {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.xml_command_confirmation_title);
-        dialog.setMessage(
-                "Would you like to enable the new XML Command? It will speed up XML generation and compilation, but this change cannot be undone. Don't worry, your previous changes with the XML Command Block will be transferred here so they will remain unaffected.");
+        dialog.setMessage(R.string.xml_command_enable_new_message);
         dialog.setPositiveButton(
                 R.string.common_word_yes,
                 (d, w) -> {

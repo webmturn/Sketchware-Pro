@@ -396,6 +396,11 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
         SketchwareUtil.toast(Helper.getResString(R.string.common_word_saved));
     }
 
+    private static final int MENU_UNDO = 1, MENU_REDO = 2, MENU_SAVE = 3, MENU_LAYOUT_PREVIEW = 4,
+            MENU_FIND_REPLACE = 5, MENU_WORD_WRAP = 6, MENU_PRETTY_PRINT = 7,
+            MENU_SELECT_LANGUAGE = 8, MENU_SELECT_THEME = 9, MENU_AUTO_COMPLETE = 10,
+            MENU_AUTO_COMPLETE_SYMBOL_PAIR = 11;
+
     private void loadToolbar() {
         {
             String title = getIntent().getStringExtra("title");
@@ -403,36 +408,36 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
             SharedPreferences local_pref = getSharedPreferences("hsce", Activity.MODE_PRIVATE);
             Menu toolbarMenu = binding.toolbar.getMenu();
             toolbarMenu.clear();
-            toolbarMenu.add(Menu.NONE, Menu.NONE, Menu.NONE, "Undo").setIcon(AppCompatResources.getDrawable(this, R.drawable.ic_mtrl_undo)).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-            toolbarMenu.add(Menu.NONE, Menu.NONE, Menu.NONE, "Redo").setIcon(AppCompatResources.getDrawable(this, R.drawable.ic_mtrl_redo)).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-            toolbarMenu.add(Menu.NONE, Menu.NONE, Menu.NONE, "Save").setIcon(AppCompatResources.getDrawable(this, R.drawable.ic_mtrl_save)).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            toolbarMenu.add(Menu.NONE, MENU_UNDO, Menu.NONE, Helper.getResString(R.string.code_editor_menu_undo)).setIcon(AppCompatResources.getDrawable(this, R.drawable.ic_mtrl_undo)).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            toolbarMenu.add(Menu.NONE, MENU_REDO, Menu.NONE, Helper.getResString(R.string.code_editor_menu_redo)).setIcon(AppCompatResources.getDrawable(this, R.drawable.ic_mtrl_redo)).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            toolbarMenu.add(Menu.NONE, MENU_SAVE, Menu.NONE, Helper.getResString(R.string.common_word_save)).setIcon(AppCompatResources.getDrawable(this, R.drawable.ic_mtrl_save)).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
             if (isFileInLayoutFolder() && getIntent().hasExtra("sc_id")) {
-                toolbarMenu.add(Menu.NONE, Menu.NONE, Menu.NONE, "Layout Preview");
+                toolbarMenu.add(Menu.NONE, MENU_LAYOUT_PREVIEW, Menu.NONE, Helper.getResString(R.string.code_editor_menu_layout_preview));
             }
-            toolbarMenu.add(Menu.NONE, Menu.NONE, Menu.NONE, "Find & Replace");
-            toolbarMenu.add(Menu.NONE, Menu.NONE, Menu.NONE, "Word wrap").setCheckable(true).setChecked(local_pref.getBoolean("act_ww", false));
-            toolbarMenu.add(Menu.NONE, Menu.NONE, Menu.NONE, "Pretty print");
-            toolbarMenu.add(Menu.NONE, Menu.NONE, Menu.NONE, "Select language");
-            toolbarMenu.add(Menu.NONE, Menu.NONE, Menu.NONE, "Select theme");
-            toolbarMenu.add(Menu.NONE, Menu.NONE, Menu.NONE, "Auto complete").setCheckable(true).setChecked(local_pref.getBoolean("act_ac", true));
-            toolbarMenu.add(Menu.NONE, Menu.NONE, Menu.NONE, "Auto complete symbol pair").setCheckable(true).setChecked(local_pref.getBoolean("act_acsp", true));
+            toolbarMenu.add(Menu.NONE, MENU_FIND_REPLACE, Menu.NONE, Helper.getResString(R.string.code_editor_menu_find_replace));
+            toolbarMenu.add(Menu.NONE, MENU_WORD_WRAP, Menu.NONE, Helper.getResString(R.string.code_editor_menu_word_wrap)).setCheckable(true).setChecked(local_pref.getBoolean("act_ww", false));
+            toolbarMenu.add(Menu.NONE, MENU_PRETTY_PRINT, Menu.NONE, Helper.getResString(R.string.code_editor_menu_pretty_print));
+            toolbarMenu.add(Menu.NONE, MENU_SELECT_LANGUAGE, Menu.NONE, Helper.getResString(R.string.code_editor_select_language));
+            toolbarMenu.add(Menu.NONE, MENU_SELECT_THEME, Menu.NONE, Helper.getResString(R.string.code_editor_select_theme));
+            toolbarMenu.add(Menu.NONE, MENU_AUTO_COMPLETE, Menu.NONE, Helper.getResString(R.string.code_editor_menu_auto_complete)).setCheckable(true).setChecked(local_pref.getBoolean("act_ac", true));
+            toolbarMenu.add(Menu.NONE, MENU_AUTO_COMPLETE_SYMBOL_PAIR, Menu.NONE, Helper.getResString(R.string.code_editor_menu_auto_complete_symbol_pair)).setCheckable(true).setChecked(local_pref.getBoolean("act_acsp", true));
 
             binding.toolbar.setOnMenuItemClickListener(item -> {
-                String title1 = item.getTitle().toString();
-                switch (title1) {
-                    case "Undo":
+                
+                switch (item.getItemId()) {
+                    case MENU_UNDO:
                         binding.editor.undo();
                         break;
 
-                    case "Redo":
+                    case MENU_REDO:
                         binding.editor.redo();
                         break;
 
-                    case "Save":
+                    case MENU_SAVE:
                         save();
                         break;
 
-                    case "Pretty print":
+                    case MENU_PRETTY_PRINT:
                         if (getIntent().hasExtra("java")) {
                             StringBuilder b = new StringBuilder();
 
@@ -469,19 +474,19 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
                         }
                         break;
 
-                    case "Select language":
+                    case MENU_SELECT_LANGUAGE:
                         showSwitchLanguageDialog(this, binding.editor, (dialog, which) -> {
                             selectLanguage(binding.editor, which);
                             dialog.dismiss();
                         });
                         break;
 
-                    case "Find & Replace":
+                    case MENU_FIND_REPLACE:
                         binding.editor.getSearcher().stopSearch();
                         binding.editor.beginSearchMode();
                         break;
 
-                    case "Select theme":
+                    case MENU_SELECT_THEME:
                         showSwitchThemeDialog(this, binding.editor, (dialog, which) -> {
                             selectTheme(binding.editor, which);
                             pref.edit().putInt("act_theme", which).apply();
@@ -489,28 +494,28 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
                         });
                         break;
 
-                    case "Word wrap":
+                    case MENU_WORD_WRAP:
                         item.setChecked(!item.isChecked());
                         binding.editor.setWordwrap(item.isChecked());
 
                         pref.edit().putBoolean("act_ww", item.isChecked()).apply();
                         break;
 
-                    case "Auto complete symbol pair":
+                    case MENU_AUTO_COMPLETE_SYMBOL_PAIR:
                         item.setChecked(!item.isChecked());
                         binding.editor.getProps().symbolPairAutoCompletion = item.isChecked();
 
                         pref.edit().putBoolean("act_acsp", item.isChecked()).apply();
                         break;
 
-                    case "Auto complete":
+                    case MENU_AUTO_COMPLETE:
                         item.setChecked(!item.isChecked());
 
                         binding.editor.getComponent(EditorAutoCompletion.class).setEnabled(item.isChecked());
                         pref.edit().putBoolean("act_ac", item.isChecked()).apply();
                         break;
 
-                    case "Layout Preview":
+                    case MENU_LAYOUT_PREVIEW:
                         toLayoutPreview();
                         break;
 

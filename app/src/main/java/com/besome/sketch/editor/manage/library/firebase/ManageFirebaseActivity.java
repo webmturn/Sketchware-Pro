@@ -208,20 +208,19 @@ public class ManageFirebaseActivity extends BaseAppCompatActivity implements Vie
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(Menu.NONE, Menu.NONE, Menu.NONE, "Help").setIcon(AppCompatResources.getDrawable(this, R.drawable.ic_mtrl_help)).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        menu.add(Menu.NONE, Menu.NONE, Menu.NONE, "Config").setIcon(AppCompatResources.getDrawable(this, R.drawable.ic_mtrl_settings)).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(Menu.NONE, 1, Menu.NONE, Helper.getResString(R.string.common_word_help)).setIcon(AppCompatResources.getDrawable(this, R.drawable.ic_mtrl_help)).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(Menu.NONE, 2, Menu.NONE, Helper.getResString(R.string.common_word_config)).setIcon(AppCompatResources.getDrawable(this, R.drawable.ic_mtrl_settings)).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem menuItem) {
-        String title = menuItem.getTitle().toString();
-        switch (title) {
-            case "Help":
+        switch (menuItem.getItemId()) {
+            case 1:
                 openDoc();
                 break;
 
-            case "Config":
+            case 2:
                 toFirebaseActivity();
                 break;
 

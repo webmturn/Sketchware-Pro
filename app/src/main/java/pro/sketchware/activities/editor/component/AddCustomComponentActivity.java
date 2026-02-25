@@ -106,7 +106,7 @@ public class AddCustomComponentActivity extends BaseAppCompatActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(0, 0, 0, "Import");
+        menu.add(0, 0, 0, Helper.getResString(R.string.common_word_import));
         return super.onCreateOptionsMenu(menu);
     }
 

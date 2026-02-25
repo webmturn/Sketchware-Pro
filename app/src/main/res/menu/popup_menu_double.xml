@@ -5,7 +5,9 @@
     <item
         android:id="@+id/edit"
         android:title="@string/common_word_edit" />
-    <item android:title="@string/menu_edit_with" />
+    <item
+        android:id="@+id/edit_with"
+        android:title="@string/menu_edit_with" />
     <item
         android:id="@+id/rename"
         android:title="@string/common_word_rename" />

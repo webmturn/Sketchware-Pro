@@ -401,25 +401,26 @@ public class ManageResourceActivity extends BaseAppCompatActivity {
                 popupMenu.inflate(R.menu.popup_menu_double);
                 popupMenu.getMenu().getItem(0).setVisible(false);
                 popupMenu.setOnMenuItemClickListener(item -> {
-                    switch (item.getTitle().toString()) {
-                        case "Edit with..." -> {
-                            if (frc.listFileResource.get(position).endsWith("xml")) {
-                                try {
-                                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                                    intent.setDataAndType(Uri.fromFile(new File(frc.listFileResource.get(position))), "text/plain");
-                                    startActivity(intent);
-                                } catch (android.content.ActivityNotFoundException ignored) {
-                                }
-                            } else {
-                                SketchwareUtil.toast(Helper.getResString(R.string.toast_only_xml_editable));
+                    int id = item.getItemId();
+                    if (id == R.id.edit_with) {
+                        if (frc.listFileResource.get(position).endsWith("xml")) {
+                            try {
+                                Intent intent = new Intent(Intent.ACTION_VIEW);
+                                intent.setDataAndType(Uri.fromFile(new File(frc.listFileResource.get(position))), "text/plain");
+                                startActivity(intent);
+                            } catch (android.content.ActivityNotFoundException ignored) {
                             }
+                        } else {
+                            SketchwareUtil.toast(Helper.getResString(R.string.toast_only_xml_editable));
                         }
-                        case "Edit" -> goEdit2(position);
-                        case "Delete" -> showDeleteDialog(position);
-                        case "Rename" -> showRenameDialog(frc.listFileResource.get(position));
-                        default -> {
-                            return false;
-                        }
+                    } else if (id == R.id.edit) {
+                        goEdit2(position);
+                    } else if (id == R.id.delete) {
+                        showDeleteDialog(position);
+                    } else if (id == R.id.rename) {
+                        showRenameDialog(frc.listFileResource.get(position));
+                    } else {
+                        return false;
                     }
                     return true;
                 });
@@ -429,7 +430,7 @@ public class ManageResourceActivity extends BaseAppCompatActivity {
             binding.getRoot().setOnLongClickListener(v -> {
                 if (FileUtil.isDirectory(frc.listFileResource.get(position))) {
                     PopupMenu popupMenu = new PopupMenu(ManageResourceActivity.this, binding.more);
-                    popupMenu.getMenu().add("Delete");
+                    popupMenu.getMenu().add(0, R.id.delete, 0, R.string.common_word_delete);
                     popupMenu.setOnMenuItemClickListener(item -> {
                         showDeleteDialog(position);
                         return true;

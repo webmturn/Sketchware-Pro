@@ -180,7 +180,7 @@ public class ShowBlockCollectionActivity extends BaseAppCompatActivity implement
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuItem saveImageItem = menu.add(0, 12, 0, "Save image");
+        MenuItem saveImageItem = menu.add(0, 12, 0, Helper.getResString(R.string.menu_save_image));
         saveImageItem.setIcon(R.drawable.full_image_48);
         saveImageItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 

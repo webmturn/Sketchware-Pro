@@ -304,11 +304,11 @@ public class ManageAssetsActivity extends BaseAppCompatActivity {
                 PopupMenu popupMenu = new PopupMenu(holder.itemView.getContext(), v);
 
                 if (!isFolder(position)) {
-                    popupMenu.getMenu().add(0, 0, 0, "Edit");
+                    popupMenu.getMenu().add(0, 0, 0, Helper.getResString(R.string.common_word_edit));
                 }
 
-                popupMenu.getMenu().add(0, 1, 0, "Rename");
-                popupMenu.getMenu().add(0, 2, 0, "Delete");
+                popupMenu.getMenu().add(0, 1, 0, Helper.getResString(R.string.common_word_rename));
+                popupMenu.getMenu().add(0, 2, 0, Helper.getResString(R.string.common_word_delete));
 
                 popupMenu.setOnMenuItemClickListener(itemMenu -> {
                     switch (itemMenu.getItemId()) {

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import pro.sketchware.core.ClassInfo;
 import pro.sketchware.core.ComponentCodeGenerator;
+import mod.hey.studios.util.Helper;
 import mod.hilal.saif.events.EventsHandler;
 import pro.sketchware.R;
 import pro.sketchware.blocks.generator.components.analyzers.BlockReturnAnalyzer;
@@ -355,21 +356,21 @@ public class ManageEvent {
         return switch (eventName) {
             case "onScrolled", "onRecyclerScrolled" -> "onScroll";
             case "onFailureLink" -> "onFailure";
-            case "onSaveInstanceState" -> "On activity save instance state";
-            case "onCreateOptionsMenu" -> "On create options menu";
+            case "onSaveInstanceState" -> Helper.getResString(R.string.event_onsaveinstancestate);
+            case "onCreateOptionsMenu" -> Helper.getResString(R.string.event_oncreateoptionsmenu);
             case "onVerificationCompleted" -> "onVerificationCompleted";
             case "onRecyclerScrollChanged", "onScrollChanged" -> "onScrollStateChanged";
-            case "onCreateContextMenu" -> "On create context menu";
-            case "onRestoreInstanceState" -> "On activity restore instance state";
-            case "onContextItemSelected" -> "On context menu selected";
+            case "onCreateContextMenu" -> Helper.getResString(R.string.event_oncreatecontextmenu);
+            case "onRestoreInstanceState" -> Helper.getResString(R.string.event_onrestoreinstancestate);
+            case "onContextItemSelected" -> Helper.getResString(R.string.event_oncontextitemselected);
             case "onSuccessLink" -> "onSuccess";
             case "onAccountPickerCancelled" -> "onAccountCancelled";
-            case "onFragmentAdded" -> "Return Fragment";
+            case "onFragmentAdded" -> Helper.getResString(R.string.event_onfragmentadded);
             case "onPageChanged" -> "onPageScrollStateChanged";
-            case "onOptionsItemSelected" -> "On options menu selected";
+            case "onOptionsItemSelected" -> Helper.getResString(R.string.event_onoptionsitemselected);
             case "onBannerAdClicked" -> "onAdClicked";
             case "onBannerAdLoaded" -> "onAdLoaded";
-            case "onTabAdded" -> "Return Title";
+            case "onTabAdded" -> Helper.getResString(R.string.event_ontabadded);
             case "onCompleteRegister" -> "onComplete";
             case "onBannerAdFailedToLoad", "onInterstitialAdFailedToLoad" -> "onAdFailedToLoad";
             case "onBannerAdClosed" -> "onAdClosed";

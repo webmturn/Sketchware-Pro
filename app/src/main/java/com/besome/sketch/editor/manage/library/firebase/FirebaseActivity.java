@@ -231,23 +231,19 @@ public class FirebaseActivity extends BaseAppCompatActivity implements View.OnCl
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.clear();
         if (stepNumber == STEP_3) {
-            menu.add(Menu.NONE, Menu.NONE, Menu.NONE, "Save").setIcon(AppCompatResources.getDrawable(this, R.drawable.ic_mtrl_save)).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            menu.add(Menu.NONE, 1, Menu.NONE, Helper.getResString(R.string.common_word_save)).setIcon(AppCompatResources.getDrawable(this, R.drawable.ic_mtrl_save)).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         } else {
-            menu.add(Menu.NONE, Menu.NONE, Menu.NONE, "Next").setIcon(AppCompatResources.getDrawable(this, R.drawable.ic_mtrl_next)).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            menu.add(Menu.NONE, 1, Menu.NONE, Helper.getResString(R.string.common_word_next)).setIcon(AppCompatResources.getDrawable(this, R.drawable.ic_mtrl_next)).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem menuItem) {
-        String title = menuItem.getTitle().toString();
-        switch (title) {
-            case "Save", "Next":
-                onNextPressed();
-                break;
-
-            default:
-                return false;
+        if (menuItem.getItemId() == 1) {
+            onNextPressed();
+        } else {
+            return false;
         }
         return super.onOptionsItemSelected(menuItem);
     }
