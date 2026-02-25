@@ -27,21 +27,11 @@ public class SettingsAppearanceFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setupToolbar();
+        configureToolbar(binding.toolbar);
         initializeThemeSettings();
         setupClickListeners();
-        UI.addSystemWindowInsetToPadding(binding.content, true, false, true, true);
-    }
-
-    private void setupToolbar() {
-        binding.toolbar.setNavigationOnClickListener(v -> {
-            if (requireActivity().getSupportFragmentManager().getBackStackEntryCount() > 0) {
-                requireActivity().getSupportFragmentManager().popBackStack();
-            } else {
-                requireActivity().getOnBackPressedDispatcher().onBackPressed();
-            }
-        });
         UI.addSystemWindowInsetToPadding(binding.appBarLayout, true, true, true, false);
+        UI.addSystemWindowInsetToPadding(binding.content, true, false, true, true);
     }
 
     private void initializeThemeSettings() {
