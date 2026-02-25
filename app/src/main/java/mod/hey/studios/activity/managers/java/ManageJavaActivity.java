@@ -4,6 +4,8 @@ import androidx.activity.OnBackPressedCallback;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+
+import androidx.core.content.FileProvider;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -123,7 +125,10 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
         setContentView(binding.getRoot());
 
         sc_id = getIntent().getStringExtra("sc_id");
-        Helper.fixFileprovider();
+        if (sc_id == null) {
+            finish();
+            return;
+        }
         setupUI();
         frc = new FileResConfig(sc_id);
         fpu = new FilePathUtil();
@@ -234,12 +239,7 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
                 dialog.dismiss();
             });
 
-            dialog.show();
-
-            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-            inputText.requestFocus();
-
-            dialogBinding.chipFolder.setVisibility(View.VISIBLE);
+             dialogBinding.chipFolder.setVisibility(View.VISIBLE);
             dialogBinding.chipJavaClass.setVisibility(View.VISIBLE);
             dialogBinding.chipJavaActivity.setVisibility(View.VISIBLE);
             dialogBinding.chipKotlinClass.setVisibility(View.VISIBLE);
@@ -535,7 +535,10 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
                     case MENU_EDIT_WITH -> {
                         try {
                             Intent launchIntent = new Intent(Intent.ACTION_VIEW);
-                            launchIntent.setDataAndType(Uri.fromFile(new File(getItem(position))), "text/plain");
+                            File file = new File(getItem(position));
+                            Uri uri = FileProvider.getUriForFile(getApplicationContext(), getPackageName() + ".provider", file);
+                            launchIntent.setDataAndType(uri, "text/plain");
+                            launchIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                             startActivity(launchIntent);
                         } catch (android.content.ActivityNotFoundException ignored) {
                         }

@@ -132,6 +132,7 @@ public abstract class SoundPlayingAdapter<VH extends SoundPlayingAdapter.ViewHol
                     timer.cancel();
                     mediaPlayer.pause();
                     mediaPlayer.release();
+                    mediaPlayer = null;
                     adapter.notifyItemChanged(nowPlayingPosition);
                 }
 
@@ -145,9 +146,11 @@ public abstract class SoundPlayingAdapter<VH extends SoundPlayingAdapter.ViewHol
                 });
                 mediaPlayer.setOnCompletionListener(mp -> {
                     timer.cancel();
-                    adapter.getData(position).curSoundPosition = 0;
-                    adapter.notifyItemChanged(position);
-                    nowPlayingPosition = -1;
+                    if (nowPlayingPosition == position) {
+                        adapter.getData(position).curSoundPosition = 0;
+                        adapter.notifyItemChanged(position);
+                        nowPlayingPosition = -1;
+                    }
                 });
 
                 var audio = adapter.getAudio(position);
@@ -191,6 +194,7 @@ public abstract class SoundPlayingAdapter<VH extends SoundPlayingAdapter.ViewHol
                 @Override
                 public void run() {
                     context.runOnUiThread(() -> {
+                        if (mediaPlayer == null || nowPlayingPosition != position) return;
                         var holder = adapter.getViewHolder(position);
                         if (holder != null) {
                             int positionInS = mediaPlayer.getCurrentPosition() / 1000;

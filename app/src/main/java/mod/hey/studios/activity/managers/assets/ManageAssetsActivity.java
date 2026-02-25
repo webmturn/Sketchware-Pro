@@ -5,6 +5,8 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+
+import androidx.core.content.FileProvider;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -78,7 +80,10 @@ public class ManageAssetsActivity extends BaseAppCompatActivity {
         setContentView(binding.getRoot());
 
         sc_id = getIntent().getStringExtra("sc_id");
-        Helper.fixFileprovider();
+        if (sc_id == null) {
+            finish();
+            return;
+        }
         setupUI();
 
         fpu = new FilePathUtil();
@@ -356,8 +361,10 @@ public class ManageAssetsActivity extends BaseAppCompatActivity {
             } else {
                 try {
                     Intent viewIntent = new Intent(Intent.ACTION_VIEW);
-                    viewIntent.setDataAndType(Uri.fromFile(new File(getItem(position))), "*/*");
-                    viewIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    File file = new File(getItem(position));
+                    Uri uri = FileProvider.getUriForFile(getApplicationContext(), getPackageName() + ".provider", file);
+                    viewIntent.setDataAndType(uri, "*/*");
+                    viewIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     startActivity(viewIntent);
                 } catch (android.content.ActivityNotFoundException ignored) {
                 }

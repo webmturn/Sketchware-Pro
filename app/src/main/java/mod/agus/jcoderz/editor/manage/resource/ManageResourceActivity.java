@@ -5,6 +5,8 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+
+import androidx.core.content.FileProvider;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -95,10 +97,11 @@ public class ManageResourceActivity extends BaseAppCompatActivity {
         binding = ManageFileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        if (getIntent().hasExtra("sc_id")) {
-            numProj = getIntent().getStringExtra("sc_id");
+        numProj = getIntent().getStringExtra("sc_id");
+        if (numProj == null) {
+            finish();
+            return;
         }
-        Helper.fixFileprovider();
         frc = new FileResConfig(numProj);
         fpu = new FilePathUtil();
         setupDialog();
@@ -107,20 +110,18 @@ public class ManageResourceActivity extends BaseAppCompatActivity {
     }
 
     private void checkDir() {
-        if (FileUtil.isExistFile(fpu.getPathResource(numProj))) {
-            temp = fpu.getPathResource(numProj);
-            handleAdapter(temp);
-            handleFab();
-            return;
+        if (!FileUtil.isExistFile(fpu.getPathResource(numProj))) {
+            FileUtil.makeDir(fpu.getPathResource(numProj));
+            FileUtil.makeDir(fpu.getPathResource(numProj) + "/anim");
+            FileUtil.makeDir(fpu.getPathResource(numProj) + "/drawable");
+            FileUtil.makeDir(fpu.getPathResource(numProj) + "/drawable-xhdpi");
+            FileUtil.makeDir(fpu.getPathResource(numProj) + "/layout");
+            FileUtil.makeDir(fpu.getPathResource(numProj) + "/menu");
+            FileUtil.makeDir(fpu.getPathResource(numProj) + "/values");
         }
-        FileUtil.makeDir(fpu.getPathResource(numProj));
-        FileUtil.makeDir(fpu.getPathResource(numProj) + "/anim");
-        FileUtil.makeDir(fpu.getPathResource(numProj) + "/drawable");
-        FileUtil.makeDir(fpu.getPathResource(numProj) + "/drawable-xhdpi");
-        FileUtil.makeDir(fpu.getPathResource(numProj) + "/layout");
-        FileUtil.makeDir(fpu.getPathResource(numProj) + "/menu");
-        FileUtil.makeDir(fpu.getPathResource(numProj) + "/values");
-        checkDir();
+        temp = fpu.getPathResource(numProj);
+        handleAdapter(temp);
+        handleFab();
     }
 
     private void handleAdapter(String resourceType) {
@@ -315,7 +316,7 @@ public class ManageResourceActivity extends BaseAppCompatActivity {
 
     private void showDeleteDialog(int position) {
         new MaterialAlertDialogBuilder(this)
-                .setTitle(Helper.getResString(R.string.common_word_delete) + " " + Uri.fromFile(new File(adapter.getItem(position))).getLastPathSegment() + "?")
+                .setTitle(Helper.getResString(R.string.common_word_delete) + " " + new File(adapter.getItem(position)).getName() + "?")
                 .setMessage(Helper.getResString(R.string.delete_confirm_format,
                         getString(FileUtil.isDirectory(adapter.getItem(position)) ? R.string.common_word_folder : R.string.common_word_file), ""))
                 .setPositiveButton(R.string.common_word_delete, (dialog, which) -> {
@@ -406,7 +407,10 @@ public class ManageResourceActivity extends BaseAppCompatActivity {
                         if (frc.listFileResource.get(position).endsWith("xml")) {
                             try {
                                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                                intent.setDataAndType(Uri.fromFile(new File(frc.listFileResource.get(position))), "text/plain");
+                                File file = new File(frc.listFileResource.get(position));
+                                Uri uri = FileProvider.getUriForFile(getApplicationContext(), getPackageName() + ".provider", file);
+                                intent.setDataAndType(uri, "text/plain");
+                                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                                 startActivity(intent);
                             } catch (android.content.ActivityNotFoundException ignored) {
                             }

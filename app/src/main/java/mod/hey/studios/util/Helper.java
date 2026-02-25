@@ -10,7 +10,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.RippleDrawable;
-import android.os.StrictMode;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -45,14 +44,6 @@ public class Helper {
     };
 
     private Helper() {
-    }
-
-    public static void fixFileprovider() {
-        try {
-            StrictMode.class.getMethod("disableDeathOnFileUriExposure").invoke(null);
-        } catch (ReflectiveOperationException e) {
-            Log.e("Helper", "An error occurred while trying to fix death on file URI exposure: " + e.getMessage(), e);
-        }
     }
 
     public static ArrayList<String> createStringList(String... strings) {

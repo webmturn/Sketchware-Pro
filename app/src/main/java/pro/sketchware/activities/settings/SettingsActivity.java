@@ -29,6 +29,10 @@ public class SettingsActivity extends BaseAppCompatActivity {
         setContentView(binding.getRoot());
 
         String fragmentTag = getIntent().getStringExtra(FRAGMENT_TAG_EXTRA);
+        if (fragmentTag == null) {
+            finish();
+            return;
+        }
         Fragment fragment = switch (fragmentTag) {
             case SETTINGS_APPEARANCE_FRAGMENT -> new SettingsAppearanceFragment();
             case EVENTS_MANAGER_FRAGMENT -> new EventsManagerFragment();
