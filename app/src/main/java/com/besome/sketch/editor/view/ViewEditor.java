@@ -879,7 +879,6 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         int var9 = displayWidth - (int) (120.0F * dip);
         int var8 = displayHeight - statusBarHeight - toolBarHeight - (int) (dip * 48.0F) - (int) (dip * 48.0F);
         if (screenType == 0 && isAdLoaded) {
-            Log.d("ViewEditor", "hmmm");
             var8 -= (int) (dip * 56.0F);
         }
 

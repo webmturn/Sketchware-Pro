@@ -81,6 +81,10 @@ public class EncryptedFileUtil {
       errorBuilder.append(destFile.getAbsolutePath());
       throw new IOException(errorBuilder.toString());
     } 
+    if (!srcFile.exists()) {
+      Log.w("EncryptedFileUtil", "copyDirectory: source file does not exist: " + srcFile.getAbsolutePath());
+      return;
+    }
     copyFile(srcFile.getAbsolutePath(), destFile.getAbsolutePath());
   }
   
