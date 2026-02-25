@@ -35,7 +35,7 @@ import pro.sketchware.core.FileSelectedCallback;
 import pro.sketchware.core.PropertyChangedCallback;
 import pro.sketchware.core.ViewBeanCallback;
 import pro.sketchware.core.UniqueNameValidator;
-import pro.sketchware.core.SoundCollectionManager;
+import pro.sketchware.core.ImageCollectionManager;
 import pro.sketchware.core.EventSelectedCallback;
 import pro.sketchware.core.WidgetCollectionManager;
 import pro.sketchware.core.SketchToast;
@@ -196,17 +196,17 @@ public class ViewProperty extends LinearLayout implements PropertyChangedCallbac
                 for (ViewBean viewBean : viewBeans) {
                     String backgroundResource = viewBean.layout.backgroundResource;
                     String resName = viewBean.image.resName;
-                    if (backgroundResource != null && !backgroundResource.equals("NONE") && ProjectDataManager.getResourceManager(sc_id).hasImage(backgroundResource) && !SoundCollectionManager.getInstance().hasResource(backgroundResource)) {
+                    if (backgroundResource != null && !backgroundResource.equals("NONE") && ProjectDataManager.getResourceManager(sc_id).hasImage(backgroundResource) && !ImageCollectionManager.getInstance().hasResource(backgroundResource)) {
                         try {
-                            SoundCollectionManager.getInstance().addResource(sc_id, ProjectDataManager.getResourceManager(sc_id).getImageBean(backgroundResource));
+                            ImageCollectionManager.getInstance().addResource(sc_id, ProjectDataManager.getResourceManager(sc_id).getImageBean(backgroundResource));
                         } catch (Exception e) {
                             Log.e("ViewProperty", e.getMessage(), e);
                             SketchToast.warning(getContext(), e.getMessage(), SketchToast.TOAST_NORMAL).show();
                         }
                     }
-                    if (resName != null && !resName.equals("default_image") && !resName.equals("NONE") && ProjectDataManager.getResourceManager(sc_id).hasImage(resName) && !SoundCollectionManager.getInstance().hasResource(resName)) {
+                    if (resName != null && !resName.equals("default_image") && !resName.equals("NONE") && ProjectDataManager.getResourceManager(sc_id).hasImage(resName) && !ImageCollectionManager.getInstance().hasResource(resName)) {
                         try {
-                            SoundCollectionManager.getInstance().addResource(sc_id, ProjectDataManager.getResourceManager(sc_id).getImageBean(resName));
+                            ImageCollectionManager.getInstance().addResource(sc_id, ProjectDataManager.getResourceManager(sc_id).getImageBean(resName));
                         } catch (Exception e) {
                             SketchToast.warning(getContext(), e.getMessage(), SketchToast.TOAST_NORMAL).show();
                         }

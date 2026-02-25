@@ -97,6 +97,7 @@ public class AddCustomComponentActivity extends BaseAppCompatActivity implements
         if (FileUtil.isExistFile(path)) {
             try {
                 ArrayList<HashMap<String, Object>> list = getGson().fromJson(FileUtil.readFile(path), Helper.TYPE_MAP_LIST);
+                if (list == null || position >= list.size()) return;
                 HashMap<String, Object> map = list.get(position);
                 setupViews(map);
             } catch (JsonSyntaxException ignored) {

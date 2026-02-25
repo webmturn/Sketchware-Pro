@@ -58,6 +58,7 @@ public class IconCustomWidget extends IconBase {
                 break;
             case 7, 10, 12, 14, 36, 39:
                 viewBean.layout.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                break;
             case 8:
                 viewBean.text.text = Title;
                 layoutBean.width = -1;

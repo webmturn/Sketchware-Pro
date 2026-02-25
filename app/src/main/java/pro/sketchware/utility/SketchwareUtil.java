@@ -122,7 +122,7 @@ public class SketchwareUtil {
 
     public static Optional<String> doSingleStringContentQuery(Uri uri, String columnName) {
         try (Cursor cursor = getContext().getContentResolver().query(uri, new String[]{columnName}, null, null, null)) {
-            if (cursor.moveToFirst() && !cursor.isNull(0)) {
+            if (cursor != null && cursor.moveToFirst() && !cursor.isNull(0)) {
                 return Optional.of(cursor.getString(0));
             } else {
                 return Optional.empty();

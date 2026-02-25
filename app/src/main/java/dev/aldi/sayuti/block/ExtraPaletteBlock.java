@@ -87,6 +87,10 @@ public class ExtraPaletteBlock {
                 // in case the View's in a Drawer
                 view = ProjectDataStore.getViewBean("_drawer_" + xmlName, logicEditor.id);
             }
+            if (view == null) {
+                mapSave.put(widgetType, false);
+                return false;
+            }
             String customView = view.customView;
             if (customView != null && !customView.isEmpty()) {
                 for (ViewBean viewBean : ProjectDataManager.getProjectDataManager(sc_id).getViews(ProjectFileBean.getXmlName(customView))) {
@@ -254,6 +258,7 @@ public class ExtraPaletteBlock {
                 // Event is of a Drawer View
                 viewBean = ProjectDataStore.getViewBean("_drawer_" + xmlName, viewId);
             }
+            if (viewBean == null) return;
             String viewBeanCustomView = viewBean.customView;
             if (viewBeanCustomView != null && !viewBeanCustomView.isEmpty()) {
                 ArrayList<ViewBean> customViews = ProjectDataManager.getProjectDataManager(sc_id).getViews(ProjectFileBean.getXmlName(viewBeanCustomView));

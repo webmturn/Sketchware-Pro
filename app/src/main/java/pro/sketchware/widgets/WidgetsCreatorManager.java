@@ -113,6 +113,9 @@ public class WidgetsCreatorManager {
                     FileUtil.readFile(widgetsJsonFilePath),
                     Helper.TYPE_MAP_LIST
             );
+            if (widgetConfigurationsList == null) {
+                widgetConfigurationsList = new ArrayList<>();
+            }
             widgetConfigurationsList.removeIf(this::isInvalidWidget);
         } catch (Exception e) {
             SketchwareUtil.toastError(String.format(Helper.getResString(R.string.error_loading_widgets), e.getMessage()));
@@ -316,7 +319,7 @@ public class WidgetsCreatorManager {
                 }.getType();
                 ArrayList<HashMap<String, Object>> importedWidgets = getGson().fromJson(value, listType);
 
-                if (importedWidgets.isEmpty()) {
+                if (importedWidgets == null || importedWidgets.isEmpty()) {
                     SketchwareUtil.toastError(String.format(ERROR_MESSAGE, i + 1));
                     continue;
                 }
@@ -487,6 +490,9 @@ public class WidgetsCreatorManager {
         AlertDialog dialog = dialogBuilder.create();
 
         int position = getWidgetPosition(tag);
+        if (position < 0 || position >= widgetConfigurationsList.size()) {
+            return;
+        }
 
         dialogBinding.edit.setOnClickListener(v -> {
             showWidgetsCreatorDialog(position);

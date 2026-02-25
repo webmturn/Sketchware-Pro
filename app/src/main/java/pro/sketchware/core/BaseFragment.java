@@ -47,7 +47,7 @@ public class BaseFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = getActivity();
-        appContext = activity.getApplicationContext();
+        appContext = activity != null ? activity.getApplicationContext() : requireContext().getApplicationContext();
         setEnterTransition(new MaterialSharedAxis(MaterialSharedAxis.X, true));
         setReturnTransition(new MaterialSharedAxis(MaterialSharedAxis.X, false));
         setExitTransition(new MaterialSharedAxis(MaterialSharedAxis.X, true));

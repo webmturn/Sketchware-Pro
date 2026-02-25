@@ -25,6 +25,7 @@ public class ExtraBlockFile {
         ArrayList<HashMap<String, Object>> extraBlocks;
         try {
             extraBlocks = new Gson().fromJson(getExtraBlockFile(), Helper.TYPE_MAP_LIST);
+            if (extraBlocks == null) extraBlocks = new ArrayList<>();
         } catch (com.google.gson.JsonSyntaxException e) {
             extraBlocks = new ArrayList<>();
         }

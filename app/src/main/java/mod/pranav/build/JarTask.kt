@@ -49,7 +49,7 @@ object JarBuilder {
                 target.putNextEntry(entry)
                 target.closeEntry()
             }
-            for (nestedFile in source.listFiles()!!) {
+            for (nestedFile in source.listFiles() ?: emptyArray()) {
                 add(parentPath, nestedFile, target)
             }
             return

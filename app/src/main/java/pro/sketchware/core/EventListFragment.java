@@ -418,20 +418,20 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
                     String parameter = next.parameters.get(i);
 
                     if (gx.isExactType("resource") || gx.isExactType("resource_bg")) {
-                        if (ProjectDataManager.getResourceManager(sc_id).hasImage(parameter) && !SoundCollectionManager.getInstance().hasResource(parameter)) {
-                            try { SoundCollectionManager.getInstance().addResource(sc_id, ProjectDataManager.getResourceManager(sc_id).getImageBean(parameter)); } catch (CompileException ignored) {}
+                        if (ProjectDataManager.getResourceManager(sc_id).hasImage(parameter) && !ImageCollectionManager.getInstance().hasResource(parameter)) {
+                            try { ImageCollectionManager.getInstance().addResource(sc_id, ProjectDataManager.getResourceManager(sc_id).getImageBean(parameter)); } catch (CompileException ignored) {}
                         }
                     } else if (gx.isExactType("sound")) {
-                        if (ProjectDataManager.getResourceManager(sc_id).hasSound(parameter) && !FontCollectionManager.getInstance().hasResource(parameter)) {
+                        if (ProjectDataManager.getResourceManager(sc_id).hasSound(parameter) && !SoundCollectionManager.getInstance().hasResource(parameter)) {
                             try {
-                                FontCollectionManager.getInstance().addResource(sc_id, ProjectDataManager.getResourceManager(sc_id).getSoundBean(parameter));
+                                SoundCollectionManager.getInstance().addResource(sc_id, ProjectDataManager.getResourceManager(sc_id).getSoundBean(parameter));
                             } catch (Exception unused) {
                                 failedToAddResourceToCollections = true;
                             }
                         }
                     } else if (gx.isExactType("font")) {
-                        if (ProjectDataManager.getResourceManager(sc_id).hasFont(parameter) && !ImageCollectionManager.getInstance().hasResource(parameter)) {
-                            try { ImageCollectionManager.getInstance().addResource(sc_id, ProjectDataManager.getResourceManager(sc_id).getFontBean(parameter)); } catch (CompileException ignored) {}
+                        if (ProjectDataManager.getResourceManager(sc_id).hasFont(parameter) && !FontCollectionManager.getInstance().hasResource(parameter)) {
+                            try { FontCollectionManager.getInstance().addResource(sc_id, ProjectDataManager.getResourceManager(sc_id).getFontBean(parameter)); } catch (CompileException ignored) {}
                         }
                     }
                 }

@@ -50,7 +50,7 @@ import java.util.HashMap;
 import pro.sketchware.core.SharedPrefsHelper;
 import pro.sketchware.core.DeviceUtil;
 import pro.sketchware.core.ViewEditorCallback;
-import pro.sketchware.core.SoundCollectionManager;
+import pro.sketchware.core.ImageCollectionManager;
 import pro.sketchware.core.WidgetCollectionManager;
 import pro.sketchware.core.SimpleCallback;
 import pro.sketchware.core.SketchToast;
@@ -379,8 +379,8 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
                         widgetViews.add(viewBean.clone());
                         String backgroundResource = viewBean.layout.backgroundResource;
                         String resName = viewBean.image.resName;
-                        if (!ProjectDataManager.getResourceManager(scId).hasImage(backgroundResource) && SoundCollectionManager.getInstance().hasResource(backgroundResource)) {
-                            ProjectResourceBean a2 = SoundCollectionManager.getInstance().getResourceByName(backgroundResource);
+                        if (!ProjectDataManager.getResourceManager(scId).hasImage(backgroundResource) && ImageCollectionManager.getInstance().hasResource(backgroundResource)) {
+                            ProjectResourceBean a2 = ImageCollectionManager.getInstance().getResourceByName(backgroundResource);
                             try {
                                 fileUtil.copyFile(SketchwarePaths.getCollectionPath() + File.separator + "image" + File.separator + "data" + File.separator + a2.resFullName, SketchwarePaths.getImagesPath() + File.separator + scId + File.separator + a2.resFullName);
                             } catch (Exception e) {
@@ -389,8 +389,8 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
                             ProjectDataManager.getResourceManager(scId).images.add(a2);
                             areImagesAdded = true;
                         }
-                        if (!ProjectDataManager.getResourceManager(scId).hasImage(resName) && SoundCollectionManager.getInstance().hasResource(resName)) {
-                            ProjectResourceBean a3 = SoundCollectionManager.getInstance().getResourceByName(resName);
+                        if (!ProjectDataManager.getResourceManager(scId).hasImage(resName) && ImageCollectionManager.getInstance().hasResource(resName)) {
+                            ProjectResourceBean a3 = ImageCollectionManager.getInstance().getResourceByName(resName);
                             try {
                                 fileUtil.copyFile(SketchwarePaths.getCollectionPath() + File.separator + "image" + File.separator + "data" + File.separator + a3.resFullName, SketchwarePaths.getImagesPath() + File.separator + scId + File.separator + a3.resFullName);
                             } catch (Exception e2) {
