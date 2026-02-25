@@ -29,8 +29,6 @@ public class FontCollectionManager extends BaseCollectionManager {
   }
   
   public void renameResource(ProjectResourceBean resourceBean, String newName, boolean flag) {
-    if (this.collections == null)
-      initialize(); 
     int i = this.collections.size();
     while (--i >= 0) {
       CollectionBean collectionBean = this.collections.get(i);
@@ -77,7 +75,7 @@ public class FontCollectionManager extends BaseCollectionManager {
         throw new CompileException("fail_to_copy");
       }
     } else {
-      String srcPath = SketchwarePaths.getSoundsPath() + java.io.File.separator + sourcePath + java.io.File.separator + resourceBean.resFullName;
+      String srcPath = SketchwarePaths.getFontsResourcePath() + java.io.File.separator + sourcePath + java.io.File.separator + resourceBean.resFullName;
       if (!this.fileUtil.exists(srcPath)) {
         throw new CompileException("file_no_exist");
       }
@@ -93,8 +91,6 @@ public class FontCollectionManager extends BaseCollectionManager {
   }
   
   public void removeResource(String input, boolean flag) {
-    if (this.collections == null)
-      initialize(); 
     int i = this.collections.size();
     while (true) {
       int j = i - 1;
@@ -103,12 +99,13 @@ public class FontCollectionManager extends BaseCollectionManager {
         i = j;
         if (collectionBean.name.equals(input)) {
           this.collections.remove(j);
+          String dataFileName = collectionBean.data;
+          EncryptedFileUtil EncryptedFileUtil = this.fileUtil;
           StringBuilder pathBuilder = new StringBuilder();
           pathBuilder.append(this.dataDirPath);
           pathBuilder.append(File.separator);
-          pathBuilder.append(collectionBean.data);
-          String filePath = pathBuilder.toString();
-          this.fileUtil.deleteFileByPath(filePath);
+          pathBuilder.append(dataFileName);
+          EncryptedFileUtil.deleteFileByPath(pathBuilder.toString());
           break;
         } 
         continue;
@@ -123,14 +120,14 @@ public class FontCollectionManager extends BaseCollectionManager {
     StringBuilder pathBuilder = new StringBuilder();
     pathBuilder.append(SketchwarePaths.getCollectionPath());
     pathBuilder.append(File.separator);
-    pathBuilder.append("sound");
+    pathBuilder.append("font");
     pathBuilder.append(File.separator);
     pathBuilder.append("list");
     this.collectionFilePath = pathBuilder.toString();
     pathBuilder = new StringBuilder();
     pathBuilder.append(SketchwarePaths.getCollectionPath());
     pathBuilder.append(File.separator);
-    pathBuilder.append("sound");
+    pathBuilder.append("font");
     pathBuilder.append(File.separator);
     pathBuilder.append("data");
     this.dataDirPath = pathBuilder.toString();

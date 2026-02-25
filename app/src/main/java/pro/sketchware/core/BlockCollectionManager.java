@@ -68,7 +68,7 @@ public class BlockCollectionManager extends BaseCollectionManager {
       contentBuilder.append("\n");
     }
     String serializedData = contentBuilder.toString();
-    this.collections.add(new CollectionBean(serializedData, serializedData));
+    this.collections.add(new CollectionBean(input, serializedData));
     if (flag)
       saveCollections(); 
   }

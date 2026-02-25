@@ -2,9 +2,7 @@ package pro.sketchware.core;
 
 import com.besome.sketch.beans.CollectionBean;
 import com.besome.sketch.beans.ProjectResourceBean;
-import com.besome.sketch.beans.SelectableBean;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -31,6 +29,8 @@ public class SoundCollectionManager extends BaseCollectionManager {
   }
   
   public void renameResource(ProjectResourceBean resourceBean, String newName, boolean flag) {
+    if (this.collections == null)
+      initialize(); 
     int i = this.collections.size();
     while (--i >= 0) {
       CollectionBean collectionBean = this.collections.get(i);
@@ -58,11 +58,11 @@ public class SoundCollectionManager extends BaseCollectionManager {
     if (duplicates.size() > 0) {
       throw new CompileException("duplicate_name");
     }
-    String dataName = resourceBean.resName;
-    if (resourceBean.isNinePatch()) {
-      dataName = dataName + ".9.png";
-    } else {
-      dataName = dataName + ".png";
+    String resName = resourceBean.resName;
+    String dataName = resName;
+    if (resourceBean.resFullName.contains(".")) {
+      String ext = resourceBean.resFullName.substring(resourceBean.resFullName.lastIndexOf('.'));
+      dataName = resName + ext;
     }
     String destPath = this.dataDirPath + java.io.File.separator + dataName;
     if (resourceBean.savedPos == 1) {
@@ -72,19 +72,19 @@ public class SoundCollectionManager extends BaseCollectionManager {
       }
       try {
         this.fileUtil.mkdirs(this.dataDirPath);
-        BitmapUtil.processAndSaveBitmap(srcPath, destPath, resourceBean.rotate, resourceBean.flipHorizontal, resourceBean.flipVertical);
-      } catch (Exception e) {
+        this.fileUtil.copyFile(srcPath, destPath);
+      } catch (java.io.IOException e) {
         throw new CompileException("fail_to_copy");
       }
     } else {
-      String srcPath = SketchwarePaths.getImagesPath() + java.io.File.separator + sourcePath + java.io.File.separator + resourceBean.resFullName;
+      String srcPath = SketchwarePaths.getSoundsPath() + java.io.File.separator + sourcePath + java.io.File.separator + resourceBean.resFullName;
       if (!this.fileUtil.exists(srcPath)) {
         throw new CompileException("file_no_exist");
       }
       try {
         this.fileUtil.mkdirs(this.dataDirPath);
         this.fileUtil.copyFile(srcPath, destPath);
-      } catch (Exception e) {
+      } catch (java.io.IOException e) {
         throw new CompileException("fail_to_copy");
       }
     }
@@ -92,100 +92,9 @@ public class SoundCollectionManager extends BaseCollectionManager {
     if (flag) saveCollections();
   }
   
-  public void addResources(String input, ArrayList<ProjectResourceBean> list, boolean flag) throws CompileException {
+  public void removeResource(String input, boolean flag) {
     if (this.collections == null)
       initialize(); 
-    ArrayList<String> duplicateNames = new ArrayList<>();
-    for (CollectionBean collectionBean : this.collections) {
-      for (ProjectResourceBean projectResourceBean : list) {
-        if (collectionBean.name.equals(projectResourceBean.resName))
-          duplicateNames.add(collectionBean.name); 
-      } 
-    } 
-    if (duplicateNames.size() <= 0) {
-      ArrayList<String> failedNames = new ArrayList<>();
-      for (ProjectResourceBean projectResourceBean : list) {
-        String resolvedPath;
-        if (((SelectableBean)projectResourceBean).savedPos == 0) {
-          StringBuilder pathBuilder = new StringBuilder();
-          pathBuilder.append(SketchwarePaths.getImagesPath());
-          pathBuilder.append(File.separator);
-          pathBuilder.append(input);
-          pathBuilder.append(File.separator);
-          pathBuilder.append(projectResourceBean.resFullName);
-          resolvedPath = pathBuilder.toString();
-        } else {
-          resolvedPath = projectResourceBean.resFullName;
-        } 
-        if (!this.fileUtil.exists(resolvedPath))
-          failedNames.add(projectResourceBean.resName); 
-      } 
-      if (failedNames.size() <= 0) {
-        failedNames = new ArrayList<String>();
-        ArrayList<String> processedPaths = new ArrayList<>();
-        for (ProjectResourceBean projectResourceBean : list) {
-          String sourcePath;
-          String fileName = projectResourceBean.resName;
-          if (projectResourceBean.isNinePatch()) {
-            StringBuilder innerBuilder = new StringBuilder();
-            innerBuilder.append(fileName);
-            innerBuilder.append(".9.png");
-            fileName = innerBuilder.toString();
-          } else {
-            StringBuilder innerBuilder = new StringBuilder();
-            innerBuilder.append(fileName);
-            innerBuilder.append(".png");
-            fileName = innerBuilder.toString();
-          } 
-          if (((SelectableBean)projectResourceBean).savedPos == 0) {
-            StringBuilder innerBuilder = new StringBuilder();
-            innerBuilder.append(SketchwarePaths.getImagesPath());
-            innerBuilder.append(File.separator);
-            innerBuilder.append(input);
-            innerBuilder.append(File.separator);
-            innerBuilder.append(projectResourceBean.resFullName);
-            sourcePath = innerBuilder.toString();
-          } else {
-            sourcePath = projectResourceBean.resFullName;
-          } 
-          StringBuilder pathBuilder = new StringBuilder();
-          pathBuilder.append(this.dataDirPath);
-          pathBuilder.append(File.separator);
-          pathBuilder.append(fileName);
-          String destPath = pathBuilder.toString();
-          try {
-            this.fileUtil.mkdirs(this.dataDirPath);
-            BitmapUtil.processAndSaveBitmap(sourcePath, destPath, projectResourceBean.rotate, projectResourceBean.flipHorizontal, projectResourceBean.flipVertical);
-            ArrayList<CollectionBean> collectionsList = this.collections;
-            CollectionBean collectionBean = new CollectionBean(projectResourceBean.resName, fileName);
-            collectionsList.add(collectionBean);
-            processedPaths.add(destPath);
-          } catch (Exception iOException) {
-            failedNames.add(projectResourceBean.resName);
-          } 
-        } 
-        if (failedNames.size() > 0) {
-          CompileException yy2 = new CompileException("fail_to_copy");
-          yy2.setErrorDetails(failedNames);
-          if (processedPaths.size() > 0)
-            for (String path : processedPaths)
-              this.fileUtil.deleteFileByPath(path);  
-          throw yy2;
-        } 
-        if (flag)
-          saveCollections(); 
-        return;
-      } 
-      CompileException yy1 = new CompileException("file_no_exist");
-      yy1.setErrorDetails(failedNames);
-      throw yy1;
-    } 
-    CompileException CompileException = new CompileException("duplicate_name");
-    CompileException.setErrorDetails(duplicateNames);
-    throw CompileException;
-  }
-  
-  public void removeResource(String input, boolean flag) {
     int i = this.collections.size();
     while (true) {
       int j = i - 1;
@@ -193,36 +102,35 @@ public class SoundCollectionManager extends BaseCollectionManager {
         CollectionBean collectionBean = this.collections.get(j);
         i = j;
         if (collectionBean.name.equals(input)) {
-          String filePath = collectionBean.data;
+          this.collections.remove(j);
           StringBuilder pathBuilder = new StringBuilder();
           pathBuilder.append(this.dataDirPath);
           pathBuilder.append(File.separator);
-          pathBuilder.append(filePath);
-          filePath = pathBuilder.toString();
+          pathBuilder.append(collectionBean.data);
+          String filePath = pathBuilder.toString();
           this.fileUtil.deleteFileByPath(filePath);
-          this.collections.remove(j);
-          i = j;
+          break;
         } 
         continue;
       } 
-      if (flag)
-        saveCollections(); 
-      return;
+      break;
     } 
+    if (flag)
+      saveCollections(); 
   }
   
   public void initializePaths() {
     StringBuilder pathBuilder = new StringBuilder();
     pathBuilder.append(SketchwarePaths.getCollectionPath());
     pathBuilder.append(File.separator);
-    pathBuilder.append("image");
+    pathBuilder.append("sound");
     pathBuilder.append(File.separator);
     pathBuilder.append("list");
     this.collectionFilePath = pathBuilder.toString();
     pathBuilder = new StringBuilder();
     pathBuilder.append(SketchwarePaths.getCollectionPath());
     pathBuilder.append(File.separator);
-    pathBuilder.append("image");
+    pathBuilder.append("sound");
     pathBuilder.append(File.separator);
     pathBuilder.append("data");
     this.dataDirPath = pathBuilder.toString();
