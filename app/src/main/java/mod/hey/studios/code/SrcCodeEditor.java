@@ -349,6 +349,10 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
                 binding.editor.setColorScheme(CodeEditorColorSchemes.loadTextMateColorScheme(CodeEditorColorSchemes.THEME_GITHUB));
             }
             languageId = 2;
+        } else {
+            if (ThemeUtils.isDarkThemeEnabled(getApplicationContext())) {
+                binding.editor.setColorScheme(CodeEditorColorSchemes.loadTextMateColorScheme(CodeEditorColorSchemes.THEME_DRACULA));
+            }
         }
 
         loadCESettings(this, binding.editor, "act", true);
