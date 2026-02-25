@@ -70,3 +70,4 @@ fastlane/readme.md
 /actions-runner
 release/
 app/libs/
+run_x/
