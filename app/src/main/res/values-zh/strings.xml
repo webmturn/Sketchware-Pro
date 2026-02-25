@@ -1910,6 +1910,7 @@
     <string name="measurement_wrap_content">包裹内容 (wrap_content)</string>
     <string name="measurement_custom_value">自定义值</string>
     <string name="measurement_hint_value">输入值</string>
+    <string name="unit_dp">dp</string>
     <string name="gravity_left">左对齐 (left)</string>
     <string name="gravity_right">右对齐 (right)</string>
     <string name="gravity_center">居中 (center)</string>
@@ -1922,6 +1923,15 @@
     <string name="padding_hint_value">输入内边距值</string>
     <string name="parent_attr_title">父属性</string>
     <string name="resource_editor_attributes_title">%s 属性</string>
+    <string name="moreblock_type_instruction">使用 (moreblockName[type|typeName] 或\nmoreblockName[type|typeName|typeCode]) 来自定义更多块类型</string>
+    <string name="moreblock_type_void">无返回值 (Void)</string>
+    <string name="moreblock_type_string">字符串 (String)</string>
+    <string name="moreblock_type_number">数字 (Number)</string>
+    <string name="moreblock_type_boolean">布尔 (Boolean)</string>
+    <string name="moreblock_type_map">映射 (Map)</string>
+    <string name="moreblock_type_list_string">字符串列表 (List String)</string>
+    <string name="moreblock_type_list_map">映射列表 (List Map)</string>
+    <string name="moreblock_type_view">视图 (View)</string>
 
     <!-- ========== AdMob ========== -->
     <string name="admob_ad_name_label">广告名称:</string>

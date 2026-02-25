@@ -46,7 +46,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginRight="8dp"
                 android:padding="4dp"
-                android:text="use (moreblockName[type|typeName] or\nmoreblockName[type|typeName|typeCode]) for custom moreblock type(S)"
+                android:text="@string/moreblock_type_instruction"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
@@ -115,7 +115,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:checked="true"
-                        android:text="Void"
+                        android:text="@string/moreblock_type_void"
                         app:checkedIconTint="?colorPrimary"
                         app:chipCornerRadius="8dp"
                         app:closeIconVisible="false" />
@@ -125,7 +125,7 @@
                         style="@style/Widget.Material3.Chip.Filter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="String"
+                        android:text="@string/moreblock_type_string"
                         app:checkedIconTint="?colorPrimary"
                         app:chipCornerRadius="8dp"
                         app:closeIconVisible="false" />
@@ -135,7 +135,7 @@
                         style="@style/Widget.Material3.Chip.Filter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Number"
+                        android:text="@string/moreblock_type_number"
                         app:checkedIconTint="?colorPrimary"
                         app:chipCornerRadius="8dp"
                         app:closeIconVisible="false" />
@@ -145,7 +145,7 @@
                         style="@style/Widget.Material3.Chip.Filter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Boolean"
+                        android:text="@string/moreblock_type_boolean"
                         app:checkedIconTint="?colorPrimary"
                         app:chipCornerRadius="8dp"
                         app:closeIconVisible="false" />
@@ -155,7 +155,7 @@
                         style="@style/Widget.Material3.Chip.Filter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Map"
+                        android:text="@string/moreblock_type_map"
                         app:checkedIconTint="?colorPrimary"
                         app:chipCornerRadius="8dp"
                         app:closeIconVisible="false" />
@@ -165,7 +165,7 @@
                         style="@style/Widget.Material3.Chip.Filter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="List String"
+                        android:text="@string/moreblock_type_list_string"
                         app:checkedIconTint="?colorPrimary"
                         app:chipCornerRadius="8dp"
                         app:closeIconVisible="false" />
@@ -175,7 +175,7 @@
                         style="@style/Widget.Material3.Chip.Filter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="List Map"
+                        android:text="@string/moreblock_type_list_map"
                         app:checkedIconTint="?colorPrimary"
                         app:chipCornerRadius="8dp"
                         app:closeIconVisible="false" />
@@ -185,7 +185,7 @@
                         style="@style/Widget.Material3.Chip.Filter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="View"
+                        android:text="@string/moreblock_type_view"
                         app:checkedIconTint="?colorPrimary"
                         app:chipCornerRadius="8dp"
                         app:closeIconVisible="false" />
