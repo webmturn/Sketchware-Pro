@@ -381,8 +381,10 @@ public class ResourceCompiler {
         }
 
         private void compileImportedResources(String outputPath) throws SimpleException {
-            if (FileUtil.isExistFile(buildHelper.filePathUtil.getPathResource(buildHelper.projectFilePaths.sc_id))
-                    && new File(buildHelper.filePathUtil.getPathResource(buildHelper.projectFilePaths.sc_id)).length() != 0) {
+            String resourcePath = buildHelper.filePathUtil.getPathResource(buildHelper.projectFilePaths.sc_id);
+            if (FileUtil.isExistFile(resourcePath)
+                    && new File(resourcePath).length() != 0) {
+                removeEmptyXmlFiles(new File(resourcePath));
                 ArrayList<String> commands = new ArrayList<>();
                 commands.add(aapt2.getAbsolutePath());
                 commands.add("compile");
@@ -396,6 +398,19 @@ public class ResourceCompiler {
                 if (!executor.execute().isEmpty()) {
                     LogUtil.e(TAG, executor.getLog());
                     throw new SimpleException(executor.getLog());
+                }
+            }
+        }
+
+        private void removeEmptyXmlFiles(File directory) {
+            File[] files = directory.listFiles();
+            if (files == null) return;
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    removeEmptyXmlFiles(file);
+                } else if (file.getName().endsWith(".xml") && file.length() == 0) {
+                    LogUtil.d(TAG, "Removing empty XML file: " + file.getAbsolutePath());
+                    file.delete();
                 }
             }
         }

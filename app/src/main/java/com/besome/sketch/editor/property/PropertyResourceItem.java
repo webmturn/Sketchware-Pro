@@ -227,7 +227,8 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             String image = filteredImages.get(position);
-            holder.binding.textView.setText(image);
+            holder.binding.textView.setText("NONE".equals(image)
+                    ? Helper.getResString(R.string.color_none) : image);
             holder.binding.radioButton.setChecked(image.equals(selectedImage));
 
             View imageView = imageCache.get(image);
