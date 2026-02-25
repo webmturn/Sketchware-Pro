@@ -190,20 +190,15 @@ public class ZipUtil {
   }
   
   public byte[] readFileToBytes(String filePath) {
-    ByteArrayOutputStream baos = null;
-    try {
-      baos = new ByteArrayOutputStream();
-      FileInputStream fis = new FileInputStream(new File(filePath));
+    try (FileInputStream fis = new FileInputStream(new File(filePath));
+         ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
       byte[] buf = new byte[1024];
       int len;
       while ((len = fis.read(buf)) > 0) {
         baos.write(buf, 0, len);
       }
-      fis.close();
       return baos.toByteArray();
     } catch (Exception e) {
-    } finally {
-      if (baos != null) try { baos.close(); } catch (Exception e) {}
     }
     return null;
   }

@@ -266,11 +266,15 @@ public class ManageAppCompatActivity extends BaseAppCompatActivity {
 
         if (type.equals("edit")) {
             String injectionValue = String.valueOf(activityInjections.get(position).get("value"));
-            attributeBinding.inputAttr.setText(
-                    injectionValue.substring(0, injectionValue.indexOf("=")));
-            attributeBinding.inputValue.setText(
-                    injectionValue.substring(
-                            injectionValue.indexOf("\"") + 1, injectionValue.length() - 1));
+            int eqIdx = injectionValue.indexOf("=");
+            int quoteIdx = injectionValue.indexOf("\"");
+            if (eqIdx >= 0) {
+                attributeBinding.inputAttr.setText(injectionValue.substring(0, eqIdx));
+            }
+            if (quoteIdx >= 0 && quoteIdx + 1 < injectionValue.length()) {
+                attributeBinding.inputValue.setText(
+                        injectionValue.substring(quoteIdx + 1, injectionValue.length() - 1));
+            }
         }
 
         dialog.setPositiveButton(
