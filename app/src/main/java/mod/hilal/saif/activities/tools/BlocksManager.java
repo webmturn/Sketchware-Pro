@@ -22,8 +22,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -56,6 +54,7 @@ import pro.sketchware.databinding.PalletCustomviewBinding;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.PropertiesUtil;
 import pro.sketchware.utility.SketchwareUtil;
+import pro.sketchware.utility.UI;
 
 public class BlocksManager extends BaseAppCompatActivity {
 
@@ -81,11 +80,7 @@ public class BlocksManager extends BaseAppCompatActivity {
 
         setContentView(binding.getRoot());
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.background, (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(), systemBars.bottom);
-            return insets;
-        });
+        UI.addWindowInsetToPadding(binding.background, WindowInsetsCompat.Type.systemBars(), false, false, false, true);
 
         initialize();
     }

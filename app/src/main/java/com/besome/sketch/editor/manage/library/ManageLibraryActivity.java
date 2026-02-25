@@ -17,8 +17,6 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.besome.sketch.beans.ProjectLibraryBean;
 import com.besome.sketch.editor.manage.library.admob.AdmobActivity;
@@ -339,12 +337,6 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
         libraryItemLayout = findViewById(R.id.contents);
-
-        ViewCompat.setOnApplyWindowInsetsListener(libraryItemLayout, (v, windowInsets) -> {
-            var insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom;
-            v.setPadding(0, 0, 0, insets);
-            return windowInsets;
-        });
 
         UI.addSystemWindowInsetToPadding(libraryItemLayout, false, false, false, true);
     }

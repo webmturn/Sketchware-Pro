@@ -9,8 +9,6 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.besome.sketch.beans.SrcCodeBean;
@@ -30,6 +28,7 @@ import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.SrcViewerBinding;
 import pro.sketchware.utility.EditorUtils;
+import pro.sketchware.utility.UI;
 
 public class SrcViewerActivity extends BaseAppCompatActivity {
 
@@ -49,11 +48,7 @@ public class SrcViewerActivity extends BaseAppCompatActivity {
         currentFileName = getIntent().hasExtra("current") ? getIntent().getStringExtra("current") : "";
         sc_id = savedInstanceState != null ? savedInstanceState.getString("sc_id") : getIntent().getStringExtra("sc_id");
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(v.getPaddingLeft(), systemBars.top, v.getPaddingRight(), systemBars.bottom);
-            return insets;
-        });
+        UI.addWindowInsetToPadding(binding.getRoot(), WindowInsetsCompat.Type.systemBars(), false, true, false, true);
 
         configureEditor();
 
