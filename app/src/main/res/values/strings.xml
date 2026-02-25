@@ -2956,8 +2956,10 @@ Do you want to continue?"</string>
     <string name="measurement_custom_value">Custom value</string>
     <string name="measurement_hint_value">Enter value</string>
     <string name="padding_all_sides">Padding on all sides</string>
+    <string name="property_all_sides_format">%s on all sides</string>
     <string name="padding_hint_value">Enter padding value</string>
     <string name="parent_attr_title">Parent attributes</string>
+    <string name="resource_editor_attributes_title">%s attributes</string>
     <string name="picker_color_already_exist">This color already exists</string>
     <string name="picker_color_custom_color_not_found">No custom color found</string>
     <string name="picker_color_hint_enter_hex_color_code">Enter hex color code</string>

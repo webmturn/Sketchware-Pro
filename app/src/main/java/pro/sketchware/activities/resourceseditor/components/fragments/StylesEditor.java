@@ -218,7 +218,7 @@ public class StylesEditor extends Fragment {
         dialog.setContentView(binding.getRoot());
         dialog.show();
 
-        binding.title.setText(style.getStyleName() + " attributes");
+        binding.title.setText(String.format(Helper.getResString(R.string.resource_editor_attributes_title), style.getStyleName()));
 
         attributesAdapter = new PropertyInputItem.AttributesAdapter();
         attributesAdapter.setOnItemClickListener(

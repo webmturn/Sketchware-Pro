@@ -148,7 +148,7 @@ public class PropertyIndentItem extends RelativeLayout implements View.OnClickLi
         View view = binding.getRoot();
 
         binding.tiAll.setHint(String.format(Helper.getResString(R.string.property_enter_value), propertyType.toLowerCase()));
-        binding.chkPtyAll.setText(String.format("%s on all sides", propertyType));
+        binding.chkPtyAll.setText(String.format(Helper.getResString(R.string.property_all_sides_format), propertyType));
 
         MinMaxInputValidator ti_all = new MinMaxInputValidator(context, binding.tiAll, 0, 999);
         MinMaxInputValidator ti_left = new MinMaxInputValidator(context, binding.tiLeft, 0, 999);

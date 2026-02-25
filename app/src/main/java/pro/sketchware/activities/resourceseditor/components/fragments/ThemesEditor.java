@@ -206,7 +206,7 @@ public class ThemesEditor extends Fragment {
         dialog.setContentView(binding.getRoot());
         dialog.show();
 
-        binding.title.setText(theme.getStyleName() + " attributes");
+        binding.title.setText(String.format(Helper.getResString(R.string.resource_editor_attributes_title), theme.getStyleName()));
 
         attributesAdapter = new PropertyInputItem.AttributesAdapter();
         attributesAdapter.setOnItemClickListener(

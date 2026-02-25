@@ -1909,8 +1909,10 @@
     <string name="measurement_custom_value">自定义值</string>
     <string name="measurement_hint_value">输入值</string>
     <string name="padding_all_sides">四边内边距</string>
+    <string name="property_all_sides_format">四边%s</string>
     <string name="padding_hint_value">输入内边距值</string>
     <string name="parent_attr_title">父属性</string>
+    <string name="resource_editor_attributes_title">%s 属性</string>
 
     <!-- ========== AdMob ========== -->
     <string name="admob_ad_name_label">广告名称:</string>
