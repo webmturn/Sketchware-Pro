@@ -42,7 +42,6 @@ import java.util.stream.IntStream;
 import pro.sketchware.core.PermissionFragment;
 import pro.sketchware.core.SharedPrefsHelper;
 import pro.sketchware.core.ProjectListManager;
-import dev.chrisbanes.insetter.Insetter;
 import mod.hey.studios.project.ProjectTracker;
 import mod.hey.studios.project.backup.BackupRestoreManager;
 import pro.sketchware.R;
@@ -146,7 +145,7 @@ public class ProjectsFragment extends PermissionFragment {
 
         ExtendedFloatingActionButton fab = requireActivity().findViewById(R.id.create_new_project);
         fab.setOnClickListener((v) -> toProjectSettingsActivity());
-        Insetter.builder().margin(WindowInsetsCompat.Type.navigationBars()).applyToView(fab);
+        UI.addWindowInsetToMargin(fab, WindowInsetsCompat.Type.navigationBars(), false, false, false, true);
 
         binding.swipeRefresh.setOnRefreshListener(this::refreshProjectsList);
 

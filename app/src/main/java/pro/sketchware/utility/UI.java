@@ -59,13 +59,17 @@ public class UI {
     }
 
     public static void addSystemWindowInsetToPadding(View view, boolean left, boolean top, boolean right, boolean bottom) {
+        addWindowInsetToPadding(view, WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout(), left, top, right, bottom);
+    }
+
+    public static void addWindowInsetToPadding(View view, int insetsTypeMask, boolean left, boolean top, boolean right, boolean bottom) {
         int initialLeft = view.getPaddingLeft();
         int initialTop = view.getPaddingTop();
         int initialRight = view.getPaddingRight();
         int initialBottom = view.getPaddingBottom();
 
         ViewCompat.setOnApplyWindowInsetsListener(view, (v, windowInsets) -> {
-            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
+            Insets insets = windowInsets.getInsets(insetsTypeMask);
             view.setPadding(
                     initialLeft + (left ? insets.left : 0),
                     initialTop + (top ? insets.top : 0),
@@ -77,6 +81,10 @@ public class UI {
     }
 
     public static void addSystemWindowInsetToMargin(View view, boolean left, boolean top, boolean right, boolean bottom) {
+        addWindowInsetToMargin(view, WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout(), left, top, right, bottom);
+    }
+
+    public static void addWindowInsetToMargin(View view, int insetsTypeMask, boolean left, boolean top, boolean right, boolean bottom) {
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
         int initialLeft = params.leftMargin;
         int initialTop = params.topMargin;
@@ -84,7 +92,7 @@ public class UI {
         int initialBottom = params.bottomMargin;
 
         ViewCompat.setOnApplyWindowInsetsListener(view, (v, windowInsets) -> {
-            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
+            Insets insets = windowInsets.getInsets(insetsTypeMask);
             params.setMargins(
                     initialLeft + (left ? insets.left : 0),
                     initialTop + (top ? insets.top : 0),

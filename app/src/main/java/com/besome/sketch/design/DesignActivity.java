@@ -95,7 +95,7 @@ import pro.sketchware.core.SketchwarePaths;
 import pro.sketchware.core.MapValueHelper;
 import pro.sketchware.core.ProjectFilePaths;
 import pro.sketchware.core.SimpleException;
-import dev.chrisbanes.insetter.Insetter;
+import pro.sketchware.utility.UI;
 import mod.agus.jcoderz.editor.manage.permission.ManagePermissionActivity;
 import mod.agus.jcoderz.editor.manage.resource.ManageResourceActivity;
 import mod.hey.studios.activity.managers.assets.ManageAssetsActivity;
@@ -466,7 +466,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         drawer = findViewById(R.id.drawer_layout);
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
-        Insetter.builder().margin(WindowInsetsCompat.Type.navigationBars()).applyToView(findViewById(R.id.container));
+        UI.addWindowInsetToMargin(findViewById(R.id.container), WindowInsetsCompat.Type.navigationBars(), false, false, false, true);
 
         coordinatorLayout = findViewById(R.id.layout_coordinator);
         fileName = findViewById(R.id.file_name);

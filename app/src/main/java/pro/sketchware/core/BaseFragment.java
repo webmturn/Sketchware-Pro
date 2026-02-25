@@ -13,8 +13,8 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.transition.MaterialSharedAxis;
 
-import dev.chrisbanes.insetter.Insetter;
 import pro.sketchware.R;
+import pro.sketchware.utility.UI;
 
 public class BaseFragment extends Fragment {
 
@@ -69,9 +69,7 @@ public class BaseFragment extends Fragment {
     }
 
     public void handleInsets(View root) {
-        Insetter.builder()
-                .padding(WindowInsetsCompat.Type.navigationBars())
-                .applyToView(root);
+        UI.addWindowInsetToPadding(root, WindowInsetsCompat.Type.navigationBars(), false, false, false, true);
     }
 
 }

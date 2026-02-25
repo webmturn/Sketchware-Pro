@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Objects;
 
-import dev.chrisbanes.insetter.Insetter;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManagePermissionBinding;
 import pro.sketchware.databinding.ViewItemPermissionBinding;
@@ -26,6 +25,7 @@ import pro.sketchware.lib.base.BaseTextWatcher;
 import pro.sketchware.utility.FilePathUtil;
 import pro.sketchware.utility.FileResConfig;
 import pro.sketchware.utility.FileUtil;
+import pro.sketchware.utility.UI;
 
 public class ManagePermissionActivity extends BaseAppCompatActivity {
     private PermissionsAdapter adapter;
@@ -68,8 +68,7 @@ public class ManagePermissionActivity extends BaseAppCompatActivity {
             return true;
         });
 
-        Insetter.builder().margin(WindowInsetsCompat.Type.navigationBars())
-                .applyToView(binding.scrollToTopButton);
+        UI.addWindowInsetToMargin(binding.scrollToTopButton, WindowInsetsCompat.Type.navigationBars(), false, false, false, true);
 
         binding.searchInput.addTextChangedListener(new BaseTextWatcher() {
             @Override

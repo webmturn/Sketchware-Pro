@@ -26,8 +26,8 @@ import java.util.ArrayList;
 
 import pro.sketchware.core.BaseAsyncTask;
 import pro.sketchware.core.ProjectListManager;
-import dev.chrisbanes.insetter.Insetter;
 import pro.sketchware.dialogs.ProgressDialog;
+import pro.sketchware.utility.UI;
 
 public abstract class BaseAppCompatActivity extends AppCompatActivity {
 
@@ -152,9 +152,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
     }
 
     public void handleInsets(View root) {
-        Insetter.builder()
-                .padding(WindowInsetsCompat.Type.navigationBars())
-                .applyToView(root);
+        UI.addWindowInsetToPadding(root, WindowInsetsCompat.Type.navigationBars(), false, false, false, true);
     }
 
     protected void enableEdgeToEdgeNoContrast() {

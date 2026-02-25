@@ -42,8 +42,8 @@ import pro.sketchware.core.UIHelper;
 import pro.sketchware.core.EventRegistry;
 import pro.sketchware.core.EventListFragment;
 import pro.sketchware.core.ViewUtil;
-import dev.chrisbanes.insetter.Insetter;
 import pro.sketchware.R;
+import pro.sketchware.utility.UI;
 import pro.sketchware.databinding.LogicPopupAddEventBinding;
 
 public class AddEventActivity extends BaseAppCompatActivity implements View.OnClickListener {
@@ -276,9 +276,7 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
         binding = LogicPopupAddEventBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        Insetter.builder()
-                .marginBottom(WindowInsetsCompat.Type.ime(), false)
-                .applyToView(binding.contentRoot);
+        UI.addWindowInsetToMargin(binding.contentRoot, WindowInsetsCompat.Type.ime(), false, false, false, true);
 
         Intent intent = getIntent();
         if (savedInstanceState == null) {
