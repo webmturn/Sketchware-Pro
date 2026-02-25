@@ -7,6 +7,7 @@ import com.besome.sketch.editor.LogicEditorActivity;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import mod.hey.studios.util.Helper;
 import mod.hilal.saif.activities.tools.ConfigActivity;
 import pro.sketchware.R;
 import pro.sketchware.blocks.ExtraBlocks;
@@ -2611,7 +2612,7 @@ public class BlocksHandler {
             boolean isIntUsed,
             boolean isStrUsed,
             boolean isMapUsed) {
-        logicEditorActivity.addPaletteCategory("Blocks", getTitleBgColor(logicEditorActivity));
+        logicEditorActivity.addPaletteCategory(Helper.getResString(R.string.logic_editor_category_blocks), getTitleBgColor(logicEditorActivity));
         if (showAll() || isBoolUsed) {
             logicEditorActivity.createPaletteBlock(" ", "setVarBoolean");
         }
@@ -2625,7 +2626,7 @@ public class BlocksHandler {
         }
         if (showAll() || isMapUsed) {
             logicEditorActivity.createPaletteBlock(" ", "mapCreateNew");
-            logicEditorActivity.addPaletteCategory("Map put values", getTitleBgColor(logicEditorActivity));
+            logicEditorActivity.addPaletteCategory(Helper.getResString(R.string.logic_editor_category_map_put_values), getTitleBgColor(logicEditorActivity));
             logicEditorActivity.createPaletteBlock(" ", "mapPut");
         }
         if (showBuiltIn() && (showAll() || isMapUsed)) {
@@ -2637,7 +2638,7 @@ public class BlocksHandler {
             logicEditorActivity.createPaletteBlock(" ", "hashmapPutListmap");
         }
         if (showAll() || isMapUsed) {
-            logicEditorActivity.addPaletteCategory("Map get values", getTitleBgColor(logicEditorActivity));
+            logicEditorActivity.addPaletteCategory(Helper.getResString(R.string.logic_editor_category_map_get_values), getTitleBgColor(logicEditorActivity));
             logicEditorActivity.createPaletteBlock("s", "mapGet");
         }
         if (showBuiltIn() && (showAll() || isMapUsed)) {
@@ -2648,7 +2649,7 @@ public class BlocksHandler {
             logicEditorActivity.createPaletteBlockWithComponent("", "l", "List Map", "hashmapGetListmap");
         }
         if (showAll() || isMapUsed) {
-            logicEditorActivity.addPaletteCategory("Map general", getTitleBgColor(logicEditorActivity));
+            logicEditorActivity.addPaletteCategory(Helper.getResString(R.string.logic_editor_category_map_general), getTitleBgColor(logicEditorActivity));
             logicEditorActivity.createPaletteBlock("b", "mapIsEmpty");
             logicEditorActivity.createPaletteBlock("b", "mapContainKey");
             logicEditorActivity.createPaletteBlock("b", "mapContainValue");
@@ -2668,7 +2669,7 @@ public class BlocksHandler {
         boolean inOnBindCustomViewEvent = eventName.equals("onBindCustomView");
         boolean inOnFilesPickedEvent = eventName.equals("onFilesPicked");
         if (showAll() || isListNumUsed) {
-            logicEditorActivity.addPaletteCategory("List Number", getTitleBgColor(logicEditorActivity));
+            logicEditorActivity.addPaletteCategory(Helper.getResString(R.string.logic_editor_category_list_number), getTitleBgColor(logicEditorActivity));
             logicEditorActivity.createPaletteBlock("b", "containListInt");
             logicEditorActivity.createPaletteBlock("d", "getAtListInt");
             logicEditorActivity.createPaletteBlock("d", "indexListInt");
@@ -2682,7 +2683,7 @@ public class BlocksHandler {
             logicEditorActivity.createPaletteBlock(" ", "sortListnum");
         }
         if (showAll() || isListStrUsed || inOnFilesPickedEvent) {
-            logicEditorActivity.addPaletteCategory("List String", getTitleBgColor(logicEditorActivity));
+            logicEditorActivity.addPaletteCategory(Helper.getResString(R.string.logic_editor_category_list_string), getTitleBgColor(logicEditorActivity));
             logicEditorActivity.createPaletteBlock("b", "containListStr");
             logicEditorActivity.createPaletteBlock("d", "indexListStr");
             logicEditorActivity.createPaletteBlock("s", "getAtListStr");
@@ -2696,7 +2697,7 @@ public class BlocksHandler {
             logicEditorActivity.createPaletteBlock(" ", "sortList");
         }
         if (showAll() || isListMapUsed || inOnBindCustomViewEvent) {
-            logicEditorActivity.addPaletteCategory("List Map", getTitleBgColor(logicEditorActivity));
+            logicEditorActivity.addPaletteCategory(Helper.getResString(R.string.logic_editor_category_list_map), getTitleBgColor(logicEditorActivity));
             logicEditorActivity.createPaletteBlock("b", "containListMap");
             logicEditorActivity.createPaletteBlock("s", "getAtListMap");
             if (showBuiltIn()) {
@@ -2720,7 +2721,7 @@ public class BlocksHandler {
                 || isListNumUsed
                 || inOnBindCustomViewEvent
                 || inOnFilesPickedEvent) {
-            logicEditorActivity.addPaletteCategory("General", getTitleBgColor(logicEditorActivity));
+            logicEditorActivity.addPaletteCategory(Helper.getResString(R.string.logic_editor_category_general), getTitleBgColor(logicEditorActivity));
             logicEditorActivity.createPaletteBlock(" ", "listAddAll");
             logicEditorActivity.createPaletteBlock("d", "lengthList");
             logicEditorActivity.createPaletteBlock(" ", "deleteList");
@@ -2824,7 +2825,7 @@ public class BlocksHandler {
             logicEditorActivity.createPaletteBlock("s", "GsonListTojsonString");
             logicEditorActivity.createPaletteBlock(" ", "stringSplitToList");
         }
-        logicEditorActivity.addPaletteCategory("add source directly", getTitleBgColor(logicEditorActivity));
+        logicEditorActivity.addPaletteCategory(Helper.getResString(R.string.logic_editor_category_add_source_directly), getTitleBgColor(logicEditorActivity));
         logicEditorActivity.createPaletteBlock(" ", "addSourceDirectly");
         logicEditorActivity.createPaletteBlock("b", "asdBoolean");
         logicEditorActivity.createPaletteBlock("d", "asdNumber");

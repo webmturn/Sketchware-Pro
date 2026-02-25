@@ -1766,6 +1766,15 @@
     <string name="logic_editor_category_command_blocks">命令积木块</string>
     <string name="logic_editor_category_permission_command_blocks">权限命令积木块</string>
     <string name="logic_editor_category_other_command_blocks">其他命令积木块</string>
+    <string name="logic_editor_category_blocks">积木块</string>
+    <string name="logic_editor_category_map_put_values">映射赋值</string>
+    <string name="logic_editor_category_map_get_values">映射取值</string>
+    <string name="logic_editor_category_map_general">映射通用</string>
+    <string name="logic_editor_category_list_number">数值列表</string>
+    <string name="logic_editor_category_list_string">字符串列表</string>
+    <string name="logic_editor_category_list_map">映射列表</string>
+    <string name="logic_editor_category_general">通用</string>
+    <string name="logic_editor_category_add_source_directly">直接添加源代码</string>
     <string name="logic_editor_panel_button_create_block">创建</string>
     <string name="logic_editor_panel_button_import_collection">从收藏导入</string>
     <string name="logic_editor_deprecated_xml_command">已弃用: 请使用 XML 命令管理器</string>

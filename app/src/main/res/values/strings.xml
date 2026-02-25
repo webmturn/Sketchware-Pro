@@ -2174,6 +2174,15 @@ Do you want to continue?"</string>
     <string name="logic_editor_category_command_blocks">Command Blocks</string>
     <string name="logic_editor_category_permission_command_blocks">Permission Command Blocks</string>
     <string name="logic_editor_category_other_command_blocks">Other Command Blocks</string>
+    <string name="logic_editor_category_blocks">Blocks</string>
+    <string name="logic_editor_category_map_put_values">Map put values</string>
+    <string name="logic_editor_category_map_get_values">Map get values</string>
+    <string name="logic_editor_category_map_general">Map general</string>
+    <string name="logic_editor_category_list_number">List Number</string>
+    <string name="logic_editor_category_list_string">List String</string>
+    <string name="logic_editor_category_list_map">List Map</string>
+    <string name="logic_editor_category_general">General</string>
+    <string name="logic_editor_category_add_source_directly">add source directly</string>
     <string name="logic_editor_panel_button_create_block">Create</string>
     <string name="logic_editor_panel_button_import_collection">Import From Collection</string>
     <string name="logic_editor_deprecated_xml_command">Deprecated: Use XML Command Manager</string>
