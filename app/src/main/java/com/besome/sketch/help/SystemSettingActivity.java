@@ -1,7 +1,6 @@
 package com.besome.sketch.help;
 
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.preference.PreferenceFragmentCompat;
