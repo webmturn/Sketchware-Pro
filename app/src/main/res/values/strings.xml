@@ -2953,8 +2953,17 @@ Do you want to continue?"</string>
     <string name="listener_hint_name">Name</string>
     <string name="listener_independent_class">Independent class/method</string>
     <string name="manage_custom_attr_title">Manage Custom Attribute</string>
+    <string name="measurement_match_parent">match_parent</string>
+    <string name="measurement_wrap_content">wrap_content</string>
     <string name="measurement_custom_value">Custom value</string>
     <string name="measurement_hint_value">Enter value</string>
+    <string name="gravity_left">left</string>
+    <string name="gravity_right">right</string>
+    <string name="gravity_center">center</string>
+    <string name="gravity_center_horizontal">center_horizontal</string>
+    <string name="gravity_top">top</string>
+    <string name="gravity_bottom">bottom</string>
+    <string name="gravity_center_vertical">center_vertical</string>
     <string name="padding_all_sides">Padding on all sides</string>
     <string name="property_all_sides_format">%s on all sides</string>
     <string name="padding_hint_value">Enter padding value</string>

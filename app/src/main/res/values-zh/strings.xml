@@ -1906,8 +1906,17 @@
     <!-- ========== 监听器/属性 ========== -->
     <string name="listener_hint_name">名称</string>
     <string name="listener_independent_class">独立类/方法</string>
+    <string name="measurement_match_parent">填充父容器 (match_parent)</string>
+    <string name="measurement_wrap_content">包裹内容 (wrap_content)</string>
     <string name="measurement_custom_value">自定义值</string>
     <string name="measurement_hint_value">输入值</string>
+    <string name="gravity_left">左对齐 (left)</string>
+    <string name="gravity_right">右对齐 (right)</string>
+    <string name="gravity_center">居中 (center)</string>
+    <string name="gravity_center_horizontal">水平居中 (center_horizontal)</string>
+    <string name="gravity_top">顶部对齐 (top)</string>
+    <string name="gravity_bottom">底部对齐 (bottom)</string>
+    <string name="gravity_center_vertical">垂直居中 (center_vertical)</string>
     <string name="padding_all_sides">四边内边距</string>
     <string name="property_all_sides_format">四边%s</string>
     <string name="padding_hint_value">输入内边距值</string>

@@ -17,14 +17,14 @@
             android:id="@+id/rb_matchparent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="match_parent"
+            android:text="@string/measurement_match_parent"
             android:textSize="15sp" />
 
         <RadioButton
             android:id="@+id/rb_wrapcontent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="wrap_content"
+            android:text="@string/measurement_wrap_content"
             android:textSize="15sp" />
 
         <RadioButton
