@@ -484,6 +484,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
         params.gravity = Gravity.LEFT;
         setLayoutParams(params);
         setGravity(Gravity.LEFT);
+        RecentHistoryManager.getInstance().loadFromDatabase(bean.getClassInfo().getClassName());
         ArrayList<String> items = RecentHistoryManager.getInstance().getRecentItems(bean.getClassInfo().getClassName());
         if (items == null) {
             setupViews();

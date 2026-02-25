@@ -32,7 +32,6 @@ public class RecentHistoryManager {
   public void initialize(Context context) {
     if (this.recentMap == null)
       this.recentMap = new HashMap<String, ArrayList<String>>(); 
-    this.recentMap.clear();
     if (this.database == null)
       this.database = new SharedPrefsHelper(context, "P26"); 
   }
@@ -52,18 +51,13 @@ public class RecentHistoryManager {
   }
   
   public void saveToDatabase() {
-    Iterator<String> iterator = this.recentMap.keySet().iterator();
-    String result = "";
-    while (iterator.hasNext()) {
-      String key = iterator.next();
+    for (String key : this.recentMap.keySet()) {
+      StringBuilder entryBuilder = new StringBuilder();
       for (String item : this.recentMap.get(key)) {
-        StringBuilder entryBuilder = new StringBuilder();
-        entryBuilder.append(result);
         entryBuilder.append(item);
         entryBuilder.append(",");
-        result = entryBuilder.toString();
       } 
-      this.database.put(key, result);
+      this.database.put(key, entryBuilder.toString());
     } 
   }
   
