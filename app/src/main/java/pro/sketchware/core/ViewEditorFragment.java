@@ -240,7 +240,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
         viewEditor.extraWidgetLayout("", "RelativeLayout");
         widgetsCreatorManager.addWidgetsByTitle("Layouts");
 
-        viewEditor.paletteWidget.extraTitle("AndroidX", 0);
+        viewEditor.paletteWidget.extraTitle(Helper.getResString(R.string.logic_editor_category_androidx_components), 0);
         viewEditor.extraWidgetLayout("", "TabLayout");
         viewEditor.extraWidgetLayout("", "BottomNavigationView");
         viewEditor.extraWidgetLayout("", "CollapsingToolbarLayout");
@@ -267,7 +267,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
         viewEditor.addWidget(PaletteWidget.WidgetType.h, "", "WebView", "WebView");
         widgetsCreatorManager.addWidgetsByTitle("Widgets");
 
-        viewEditor.paletteWidget.extraTitle("List", 1);
+        viewEditor.paletteWidget.extraTitle(Helper.getResString(R.string.logic_editor_category_list), 1);
         viewEditor.addWidget(PaletteWidget.WidgetType.e, "", "ListView", "ListView");
         viewEditor.extraWidget("", "GridView", "GridView");
         viewEditor.extraWidget("", "RecyclerView", "RecyclerView");
@@ -275,7 +275,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
         viewEditor.extraWidget("", "ViewPager", "ViewPager");
         widgetsCreatorManager.addWidgetsByTitle("List");
 
-        viewEditor.paletteWidget.extraTitle("Library", 1);
+        viewEditor.paletteWidget.extraTitle(Helper.getResString(R.string.logic_editor_category_library), 1);
         viewEditor.extraWidget("", "WaveSideBar", "WaveSideBar");
         viewEditor.extraWidget("", "PatternLockView", "PatternLockView");
         viewEditor.extraWidget("", "CodeView", "CodeView");
@@ -283,14 +283,14 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
         viewEditor.extraWidget("", "OTPView", "OTPView");
         widgetsCreatorManager.addWidgetsByTitle("Library");
 
-        viewEditor.paletteWidget.extraTitle("Google", 1);
+        viewEditor.paletteWidget.extraTitle(Helper.getResString(R.string.logic_editor_category_google), 1);
         viewEditor.addWidget(PaletteWidget.WidgetType.l, "", "AdView", "AdView");
         viewEditor.addWidget(PaletteWidget.WidgetType.n, "", "MapView", "MapView");
         viewEditor.extraWidget("", "SignInButton", "SignInButton");
         viewEditor.extraWidget("", "YoutubePlayer", "YoutubePlayer");
         widgetsCreatorManager.addWidgetsByTitle("Google");
 
-        viewEditor.paletteWidget.extraTitle("Date & Time", 1);
+        viewEditor.paletteWidget.extraTitle(Helper.getResString(R.string.logic_editor_category_date_time), 1);
         viewEditor.extraWidget("", "AnalogClock", "AnalogClock");
         viewEditor.extraWidget("", "DigitalClock", "DigitalClock");
         viewEditor.extraWidget("", "TimePicker", "TimePicker");
