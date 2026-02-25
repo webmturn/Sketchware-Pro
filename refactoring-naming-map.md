@@ -45,7 +45,7 @@
 ### UI - Validators (BaseValidator subclasses)
 | Original | Name | Role | Size |
 |----------|------|------|------|
-| `MB` | `BaseValidator` | Base text input validator (JAR wrapper kept) | 2KB |
+| `MB` | `BaseValidator` | Base text input validator | 2KB |
 | `NB` | `UniqueNameValidator` | Validates name not in predefined list | 1KB |
 | `RB` | `LowercaseNameValidator` | Validates lowercase name pattern | 1KB |
 | `SB` | `LengthRangeValidator` | Validates text length within min/max range | 1KB |
@@ -67,7 +67,7 @@
 ### UI - Dialogs & Views
 | Original | Name | Role | Size |
 |----------|------|------|------|
-| `aB` | `SketchDialog` | Custom AlertDialog builder | 6KB |
+| `aB` | ~~`SketchDialog`~~ | *(deleted — dead code)* | — |
 | `bB` | `SketchToast` | Custom Toast utility | 3KB |
 
 ### UI - Firebase Library Views (implement LibraryConfigView)
@@ -136,16 +136,16 @@
 | `Lw` | `ViewBeanCallback` | ViewBean selection callback | <1KB |
 | `Qs` | `EventSelectedCallback` | EventBean selection callback | <1KB |
 | `Uu` | `LibrarySettingsView` | Library settings view interface (setData, isValid, getDocUrl) | <1KB |
-| `by` | `ProjectFileSelectedCallback` | int + ProjectFileBean callback | <1KB |
+| `by` | ~~`ProjectFileSelectedCallback`~~ | *(deleted — dead code)* | — |
 | `cy` | `BuildCallback` | Build progress callback (start, progress, complete) | <1KB |
-| `ty` | `ScrollableContainer` | Scroll enable/disable interface | <1KB |
+| `ty` | ~~`ScrollableContainer`~~ | *(deleted — dead code)* | — |
 | `YA` | `IntCallback` | Simple int callback | <1KB |
 
 #### Other
 | Original | Name | Role | Size |
 |----------|------|------|------|
 | `Cx` | `RecentHistoryManager` | Manages recent items per category (max 10, stored in DB P26) | 4KB |
-| `jv` | `FirebaseClickListenerLegacy` | Legacy no-op click listener for FirebasePreviewView | <1KB |
+| `jv` | ~~`FirebaseClickListenerLegacy`~~ | *(deleted — dead code)* | — |
 | `ro` | `UserExperienceLevel` | Loads user experience level from DB U1 | 1KB |
 | `zy` | `SimpleException` | Simple exception wrapper | <1KB |
 
@@ -182,8 +182,11 @@
 | `mB` | `UIHelper` | UI interaction utilities |
 | `wB` | `ViewUtil` | dp conversion, layout inflation |
 | `GB` | `DeviceUtil` | Device info utilities |
-| `PB` | `ResourceNameValidator` | Resource name validation |
+| `PB` | `FileNameValidator` | File name validation |
+| `WB` | `ResourceNameValidator` | Sound/image resource name validation |
 | `QB` | `XmlNameValidator` | XML name validation |
+| `OB` | `NumberRangeValidator` | Numeric range validation |
+| `By` | `SketchwareException` | Build/compilation exception |
 | `oB` | `EncryptedFileUtil` | Encrypted file I/O |
 
 #### Collection Managers
@@ -234,6 +237,6 @@
 - **113 classes** renamed across 10 phases (109 after dead code removal)
 - **17 JAR wrapper classes** deleted
 - **4 dead code classes** deleted
-- **68 methods + 19 fields** renamed in Phase 8a classes
+- **68 methods + 18 fields** renamed in Phase 8a classes (1 class deleted before rename)
 - Package `a.a.a` fully removed from codebase
 - No remaining obfuscated class names

@@ -195,12 +195,7 @@ All classes are source code — no JAR constraints exist.
 
 ---
 
-## 12. FirebaseClickListenerLegacy (was `jv`) — 0 methods, 1 field
-
-### Fields
-| Original | Name | Type | Purpose |
-|----------|------|------|---------|
-| `a` | `noOpClickListener` | `View.OnClickListener` | No-op click listener |
+## 12. ~~FirebaseClickListenerLegacy~~ (was `jv`) — *DELETED (dead code)*
 
 ---
 
@@ -219,5 +214,5 @@ All classes are source code — no JAR constraints exist.
 | ActivityConfigConstants | 1 | 2 |
 | UserExperienceLevel | 0 | 3 |
 | KeyboardSettingConstants | 0 | 1 |
-| FirebaseClickListenerLegacy | 0 | 1 |
-| **Total** | **68** | **19** |
+| ~~FirebaseClickListenerLegacy~~ | *(deleted)* | *(deleted)* |
+| **Total** | **68** | **18** |
