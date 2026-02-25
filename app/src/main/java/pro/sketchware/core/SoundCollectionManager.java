@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class SoundCollectionManager extends BaseCollectionManager {
-  public static SoundCollectionManager instance;
+  public static volatile SoundCollectionManager instance;
   
   public static SoundCollectionManager getInstance() {
     if (instance == null) {

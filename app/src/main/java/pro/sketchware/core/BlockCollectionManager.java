@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class BlockCollectionManager extends BaseCollectionManager {
-  public static BlockCollectionManager instance;
+  public static volatile BlockCollectionManager instance;
   
   public Gson blockGson = null;
   

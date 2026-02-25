@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 public class RecentHistoryManager {
-  public static RecentHistoryManager instance;
+  public static volatile RecentHistoryManager instance;
   
   public static int maxItems = 10;
   

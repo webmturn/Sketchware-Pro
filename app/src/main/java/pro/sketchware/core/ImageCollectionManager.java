@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class ImageCollectionManager extends BaseCollectionManager {
-  public static ImageCollectionManager instance;
+  public static volatile ImageCollectionManager instance;
   
   public static ImageCollectionManager getInstance() {
     if (instance == null) {

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class FontCollectionManager extends BaseCollectionManager {
-  public static FontCollectionManager instance;
+  public static volatile FontCollectionManager instance;
   
   public static FontCollectionManager getInstance() {
     if (instance == null) {

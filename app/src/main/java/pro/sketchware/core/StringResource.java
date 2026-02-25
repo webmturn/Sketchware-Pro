@@ -12,7 +12,7 @@ import javax.crypto.IllegalBlockSizeException;
 import mod.agus.jcoderz.editor.event.ManageEvent;
 
 public class StringResource {
-  public static StringResource instance;
+  public static volatile StringResource instance;
   
   public HashMap<String, String> blockTranslations;
   

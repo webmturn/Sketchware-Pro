@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class WidgetCollectionManager extends BaseCollectionManager {
-  public static WidgetCollectionManager instance;
+  public static volatile WidgetCollectionManager instance;
   
   public Gson widgetGson = null;
   
