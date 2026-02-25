@@ -1,7 +1,7 @@
 package pro.sketchware.activities.editor.command;
 
 import static pro.sketchware.utility.GsonUtils.getGson;
-import static pro.sketchware.utility.SketchwareUtil.getDip;
+import static pro.sketchware.utility.SketchwareUtil.dpToPx;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -371,10 +371,10 @@ public class ManageXMLCommandActivity extends BaseAppCompatActivity {
                                         AlertDialog dialog = dialogBuilder.create();
                                         dialog.setView(
                                                 editor,
-                                                (int) getDip(24),
-                                                (int) getDip(20),
-                                                (int) getDip(24),
-                                                (int) getDip(0));
+                                                dpToPx(24),
+                                                dpToPx(20),
+                                                dpToPx(24),
+                                                dpToPx(0));
                                         dialog.show();
                                     });
                         });

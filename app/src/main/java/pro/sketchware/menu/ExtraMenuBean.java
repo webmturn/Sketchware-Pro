@@ -1,7 +1,7 @@
 package pro.sketchware.menu;
 
 import static android.text.TextUtils.isEmpty;
-import static pro.sketchware.utility.SketchwareUtil.getDip;
+import static pro.sketchware.utility.SketchwareUtil.dpToPx;
 
 import android.annotation.SuppressLint;
 import android.text.Editable;
@@ -547,7 +547,7 @@ public class ExtraMenuBean {
                     if (!activityMenu.isEmpty()) {
                         TextView txt = new TextView(logicEditor);
                         txt.setText(Helper.getResString(R.string.logic_custom_activities));
-                        txt.setPadding((int) getDip(2), (int) getDip(4), (int) getDip(4), (int) getDip(4));
+                        txt.setPadding(dpToPx(2), dpToPx(4), dpToPx(4), dpToPx(4));
                         txt.setTextSize(14f);
                         viewGroup.addView(txt);
                     }

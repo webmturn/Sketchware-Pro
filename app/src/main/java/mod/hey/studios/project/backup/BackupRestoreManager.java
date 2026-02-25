@@ -73,7 +73,7 @@ public class BackupRestoreManager {
         checkboxContainer.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT));
-        int dip = (int) SketchwareUtil.getDip(8);
+        int dip = SketchwareUtil.dpToPx(8);
         checkboxContainer.setPadding(dip, dip, dip, dip);
 
         CompoundButton.OnCheckedChangeListener listener = (buttonView, isChecked) -> {

@@ -49,8 +49,12 @@ public class SketchwareUtil {
         return new Random().nextInt(_max - _min + 1) + _min;
     }
 
+    /**
+     * @deprecated Use {@link #dpToPx(float)} instead.
+     */
+    @Deprecated
     public static float getDip(int input) {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, input, getContext().getResources().getDisplayMetrics());
+        return dpToPx(input);
     }
 
     /**

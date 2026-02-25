@@ -1,7 +1,7 @@
 package mod.hilal.saif.activities.android_manifest;
 
 import static pro.sketchware.utility.GsonUtils.getGson;
-import static pro.sketchware.utility.SketchwareUtil.getDip;
+import static pro.sketchware.utility.SketchwareUtil.dpToPx;
 
 import com.google.gson.JsonSyntaxException;
 import android.content.Intent;
@@ -197,7 +197,7 @@ public class AndroidManifestInjectionDetails extends BaseAppCompatActivity {
     private TextView newText(String text, float size, int color, int width, int height, float weight) {
         TextView temp_card = new TextView(this);
         temp_card.setLayoutParams(new LinearLayout.LayoutParams(width, height, weight));
-        temp_card.setPadding((int) getDip(4), (int) getDip(4), (int) getDip(4), (int) getDip(4));
+        temp_card.setPadding(dpToPx(4), dpToPx(4), dpToPx(4), dpToPx(4));
         temp_card.setTextColor(color);
         temp_card.setText(text);
         temp_card.setTextSize(size);

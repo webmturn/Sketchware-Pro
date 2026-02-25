@@ -244,9 +244,9 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
         textView.setPadding(
-                (int) SketchwareUtil.getDip(8),
+                SketchwareUtil.dpToPx(8),
                 0,
-                (int) SketchwareUtil.getDip(8),
+                SketchwareUtil.dpToPx(8),
                 0
         );
         textView.setTextColor(MaterialColors.getColor(textView, R.attr.colorPrimary));

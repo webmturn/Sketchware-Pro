@@ -92,8 +92,8 @@ public class DesignDrawer extends LinearLayout {
         setClickable(true);
 
         ShapeAppearanceModel shape = ShapeAppearanceModel.builder()
-                .setTopLeftCornerSize(SketchwareUtil.getDip(24))
-                .setBottomLeftCornerSize(SketchwareUtil.getDip(24))
+                .setTopLeftCornerSize(SketchwareUtil.dpToPx(24))
+                .setBottomLeftCornerSize(SketchwareUtil.dpToPx(24))
                 .build();
 
         MaterialShapeDrawable background = new MaterialShapeDrawable(shape);

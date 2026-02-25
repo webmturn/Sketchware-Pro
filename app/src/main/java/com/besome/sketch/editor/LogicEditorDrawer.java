@@ -1,6 +1,6 @@
 package com.besome.sketch.editor;
 
-import static pro.sketchware.utility.SketchwareUtil.getDip;
+import static pro.sketchware.utility.SketchwareUtil.dpToPx;
 
 import android.content.Context;
 import android.content.Intent;
@@ -71,7 +71,7 @@ public class LogicEditorDrawer extends LinearLayout {
             View view = new View(getContext());
             view.setLayoutParams(new LinearLayout.LayoutParams(
                     1,
-                    (int) getDip(8)));
+                    dpToPx(8)));
             favorite.addView(view);
         }
 
