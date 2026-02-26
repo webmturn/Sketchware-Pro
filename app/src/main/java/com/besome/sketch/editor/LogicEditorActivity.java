@@ -2353,20 +2353,20 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                         blockBean3.print();
                     }
                 } else if (rs13.getBlockType() == 2) {
-                    int addTargetId2 = blockPane.getAddTargetId();
-                    BlockBean prevDefTargetClone = addTargetId2 >= 0 ? blockPane.findBlockById(addTargetId2).getBean().clone() : null;
+                    int defAddTargetId = blockPane.getAddTargetId();
+                    BlockBean prevDefTargetClone = defAddTargetId >= 0 ? blockPane.findBlockById(defAddTargetId).getBean().clone() : null;
                     ArrayList<BlockBean> data = ((DefinitionBlockView) v).getData();
                     ArrayList<BlockBean> addedBlocks = addBlockBeans(data, this.locationBuffer[0], this.locationBuffer[1], true);
                     if (!addedBlocks.isEmpty()) {
                         BlockView firstAddedBlock = blockPane.findBlockByString(addedBlocks.get(0).id);
                         dropBlockOnPane(firstAddedBlock, this.locationBuffer[0], this.locationBuffer[1], true);
-                        BlockBean blockBean3 = null;
-                        if (addTargetId2 >= 0) {
-                            blockBean3 = blockPane.findBlockById(addTargetId2).getBean().clone();
+                        BlockBean currentParentData = null;
+                        if (defAddTargetId >= 0) {
+                            currentParentData = blockPane.findBlockById(defAddTargetId).getBean().clone();
                         }
                         int[] locationOnScreen = new int[2];
                         blockPane.getLocationOnScreen(locationOnScreen);
-                        BlockHistoryManager.getInstance(scId).recordAddMultiple(buildHistoryKey(), addedBlocks, this.locationBuffer[0] - locationOnScreen[0], this.locationBuffer[1] - locationOnScreen[1], prevDefTargetClone, blockBean3);
+                        BlockHistoryManager.getInstance(scId).recordAddMultiple(buildHistoryKey(), addedBlocks, this.locationBuffer[0] - locationOnScreen[0], this.locationBuffer[1] - locationOnScreen[1], prevDefTargetClone, currentParentData);
                     }
                     blockPane.clearSnapState();
                 } else {
