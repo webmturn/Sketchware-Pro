@@ -547,6 +547,11 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
 
             @Override
             public void onPageScrollStateChanged(int state) {
+                if (viewTabAdapter != null && viewTabAdapter.viewEditor != null) {
+                    viewTabAdapter.viewEditor.setLayerType(
+                            state != ViewPager.SCROLL_STATE_IDLE ? View.LAYER_TYPE_HARDWARE : View.LAYER_TYPE_NONE,
+                            null);
+                }
             }
 
             @Override
