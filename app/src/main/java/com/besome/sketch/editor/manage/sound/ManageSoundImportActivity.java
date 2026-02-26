@@ -104,10 +104,10 @@ public class ManageSoundImportActivity extends BaseAppCompatActivity implements 
                 String name = Helper.getText(ed_input_edittext);
                 if (isNameValid()) {
                     if (chk_samename.isChecked()) {
-                        int i = 0;
-                        while (i < selectedCollections.size()) {
-                            ProjectResourceBean sound = selectedCollections.get(i);
-                            sound.resName = name + "_" + (++i);
+                        int nameIdx = 0;
+                        while (nameIdx < selectedCollections.size()) {
+                            ProjectResourceBean sound = selectedCollections.get(nameIdx);
+                            sound.resName = name + "_" + (++nameIdx);
                             sound.isDuplicateCollection = false;
                         }
                     } else {

@@ -116,10 +116,10 @@ public class ManageImageImportActivity extends BaseAppCompatActivity implements 
                     nameValidator.setJavaNames(getReservedSelectedCollectionNames());
                     adapter.notifyDataSetChanged();
                 } else {
-                    int i = 0;
-                    while (i < selectedCollections.size()) {
-                        ProjectResourceBean projectResourceBean2 = selectedCollections.get(i);
-                        projectResourceBean2.resName = name + "_" + ++i;
+                    int nameIdx = 0;
+                    while (nameIdx < selectedCollections.size()) {
+                        ProjectResourceBean projectResourceBean2 = selectedCollections.get(nameIdx);
+                        projectResourceBean2.resName = name + "_" + ++nameIdx;
                         projectResourceBean2.isDuplicateCollection = false;
                     }
                     nameValidator.setJavaNames(getReservedSelectedCollectionNames());

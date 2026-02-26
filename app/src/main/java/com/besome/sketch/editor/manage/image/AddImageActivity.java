@@ -398,10 +398,10 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
                     }
                 } else {
                     var toAdd = new ArrayList<ProjectResourceBean>();
-                    int i = 0;
-                    while (i < activity.pickedImageUris.size()) {
-                        var uri = activity.pickedImageUris.get(i);
-                        var imageName = Helper.getText(activity.ed_input_edittext).trim() + "_" + ++i;
+                    int nameIdx = 0;
+                    while (nameIdx < activity.pickedImageUris.size()) {
+                        var uri = activity.pickedImageUris.get(nameIdx);
+                        var imageName = Helper.getText(activity.ed_input_edittext).trim() + "_" + ++nameIdx;
                         var imageFilePath = UriPathResolver.resolve(activity.getApplicationContext(), uri);
                         if (imageFilePath == null) {
                             return;

@@ -118,10 +118,10 @@ public class ManageFontImportActivity extends BaseAppCompatActivity implements V
                     resourceBean.resName = resName;
                     resourceBean.isDuplicateCollection = false;
                 } else {
-                    int i = 0;
-                    while (i < selectedCollection.size()) {
-                        ProjectResourceBean font = selectedCollection.get(i);
-                        font.resName = resName + "_" + ++i;
+                    int nameIdx = 0;
+                    while (nameIdx < selectedCollection.size()) {
+                        ProjectResourceBean font = selectedCollection.get(nameIdx);
+                        font.resName = resName + "_" + ++nameIdx;
                         font.isDuplicateCollection = false;
                     }
                 }
