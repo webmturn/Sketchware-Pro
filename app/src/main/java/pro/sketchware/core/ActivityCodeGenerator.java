@@ -1041,8 +1041,8 @@ public class ActivityCodeGenerator {
                 fields.add(getVariableDeclarationAndAddImports(variableId, variableValue));
             }
         }
-        for (Pair<Integer, String> next2 : projectDataManager.getListVariables(javaName)) {
-            lists.add(getListDeclarationAndAddImports(next2.first, next2.second));
+        for (Pair<Integer, String> listVar : projectDataManager.getListVariables(javaName)) {
+            lists.add(getListDeclarationAndAddImports(listVar.first, listVar.second));
         }
         for (ViewBean viewBean : projectDataManager.getViews(projectFileBean.getXmlName())) {
             if (!viewBean.convert.equals("include")) {
