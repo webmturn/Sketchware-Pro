@@ -3,7 +3,6 @@ package mod.hilal.saif.asd;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -17,15 +16,15 @@ import com.besome.sketch.editor.LogicEditorActivity;
 import pro.sketchware.core.ComponentCodeGenerator;
 import pro.sketchware.core.FieldBlockView;
 import io.github.rosemoe.sora.widget.component.EditorAutoCompletion;
-import mod.hey.studios.code.SrcCodeEditor;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.CodeEditorHsAsdBinding;
+import pro.sketchware.utility.CodeEditorPreferences;
 import pro.sketchware.utility.EditorUtils;
 import pro.sketchware.utility.SketchwareUtil;
 
 public class AsdDialog extends Dialog implements DialogInterface.OnDismissListener {
-    private SharedPreferences pref;
+    private CodeEditorPreferences editorPrefs;
     private Activity act;
     private CodeEditorHsAsdBinding binding;
     private String content;
@@ -50,20 +49,19 @@ public class AsdDialog extends Dialog implements DialogInterface.OnDismissListen
 
         binding.editor.setTypefaceText(EditorUtils.getTypeface(act));
         binding.editor.setText(content);
-        binding.editor.setWordwrap(false);
 
         EditorUtils.loadJavaConfig(binding.editor);
-        SrcCodeEditor.loadCESettings(act, binding.editor, "dlg");
-        pref = SrcCodeEditor.pref;
+        editorPrefs = new CodeEditorPreferences(act, "dlg");
+        editorPrefs.applyToEditor(binding.editor, false);
 
         Menu menu = binding.toolbar.getMenu();
         MenuItem itemWordwrap = menu.findItem(R.id.action_word_wrap);
         MenuItem itemAutocomplete = menu.findItem(R.id.action_autocomplete);
         MenuItem itemAutocompleteSymbolPair = menu.findItem(R.id.action_autocomplete_symbol_pair);
 
-        itemWordwrap.setChecked(pref.getBoolean("dlg_ww", false));
-        itemAutocomplete.setChecked(pref.getBoolean("dlg_ac", false));
-        itemAutocompleteSymbolPair.setChecked(pref.getBoolean("dlg_acsp", true));
+        itemWordwrap.setChecked(editorPrefs.getWordWrap());
+        itemAutocomplete.setChecked(editorPrefs.getAutoComplete());
+        itemAutocompleteSymbolPair.setChecked(editorPrefs.getSymbolPair());
 
         binding.toolbar.setOnMenuItemClickListener(item -> {
             int id = item.getItemId();
@@ -93,15 +91,15 @@ public class AsdDialog extends Dialog implements DialogInterface.OnDismissListen
             } else if (id == R.id.action_word_wrap) {
                 item.setChecked(!item.isChecked());
                 binding.editor.setWordwrap(item.isChecked());
-                pref.edit().putBoolean("dlg_ww", item.isChecked()).apply();
+                editorPrefs.setWordWrap(item.isChecked());
             } else if (id == R.id.action_autocomplete_symbol_pair) {
                 item.setChecked(!item.isChecked());
                 binding.editor.getProps().symbolPairAutoCompletion = item.isChecked();
-                pref.edit().putBoolean("dlg_acsp", item.isChecked()).apply();
+                editorPrefs.setSymbolPair(item.isChecked());
             } else if (id == R.id.action_autocomplete) {
                 item.setChecked(!item.isChecked());
                 binding.editor.getComponent(EditorAutoCompletion.class).setEnabled(item.isChecked());
-                pref.edit().putBoolean("dlg_ac", item.isChecked()).apply();
+                editorPrefs.setAutoComplete(item.isChecked());
             } else if (id == R.id.action_paste) {
                 binding.editor.pasteText();
             } else if (id == R.id.action_find_replace) {
@@ -116,8 +114,8 @@ public class AsdDialog extends Dialog implements DialogInterface.OnDismissListen
 
     @Override
     public void onDismiss(DialogInterface dialog) {
-        pref.edit().putInt("dlg_ts", (int) (binding.editor.getTextSizePx() / act.getResources().getDisplayMetrics().scaledDensity)).apply();
-        pref = null;
+        editorPrefs.saveTextSizeFromEditor(binding.editor, act.getResources().getDisplayMetrics().scaledDensity);
+        editorPrefs = null;
         act = null;
     }
 

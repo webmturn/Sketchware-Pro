@@ -6,12 +6,9 @@ import com.google.gson.JsonSyntaxException;
 
 import androidx.activity.OnBackPressedCallback;
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -19,6 +16,7 @@ import android.widget.Toast;
 import androidx.appcompat.content.res.AppCompatResources;
 
 import com.besome.sketch.lib.base.BaseAppCompatActivity;
+
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.w3c.dom.Document;
@@ -31,9 +29,7 @@ import java.io.File;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -53,13 +49,11 @@ import io.github.rosemoe.sora.widget.CodeEditor;
 import io.github.rosemoe.sora.widget.component.EditorAutoCompletion;
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
 import io.github.rosemoe.sora.widget.schemes.SchemeDarcula;
-import io.github.rosemoe.sora.widget.schemes.SchemeEclipse;
-import io.github.rosemoe.sora.widget.schemes.SchemeGitHub;
-import io.github.rosemoe.sora.widget.schemes.SchemeNotepadXX;
 import io.github.rosemoe.sora.widget.schemes.SchemeVS2019;
 import mod.hey.studios.util.Helper;
 import mod.jbk.code.CodeEditorColorSchemes;
 import mod.jbk.code.CodeEditorLanguages;
+import pro.sketchware.utility.CodeEditorPreferences;
 import pro.sketchware.R;
 import pro.sketchware.activities.preview.LayoutPreviewActivity;
 import pro.sketchware.databinding.CodeEditorHsBinding;
@@ -71,55 +65,16 @@ import pro.sketchware.utility.UI;
 
 public class SrcCodeEditor extends BaseAppCompatActivity {
     public static final String FLAG_FROM_ANDROID_MANIFEST = "from_android_manifest";
-    public static final List<Pair<String, Class<? extends EditorColorScheme>>> KNOWN_COLOR_SCHEMES = List.of(
-            new Pair<>("Default", EditorColorScheme.class),
-            new Pair<>("GitHub", SchemeGitHub.class),
-            new Pair<>("Eclipse", SchemeEclipse.class),
-            new Pair<>("Darcula", SchemeDarcula.class),
-            new Pair<>("VS2019", SchemeVS2019.class),
-            new Pair<>("NotepadXX", SchemeNotepadXX.class)
-    );
-    public static SharedPreferences pref;
     public static int languageId;
+    private CodeEditorPreferences editorPrefs;
     private String beforeContent = "";
     private CodeEditorHsBinding binding;
     private boolean fromAndroidManifest;
     private String scId;
     private String activityName;
 
-    public static void loadCESettings(Context c, CodeEditor ed, String prefix) {
-        loadCESettings(c, ed, prefix, false);
-    }
-
-    public static void loadCESettings(Context c, CodeEditor ed, String prefix, boolean loadTheme) {
-        pref = c.getSharedPreferences("hsce", Activity.MODE_PRIVATE);
-
-        int text_size = pref.getInt(prefix + "_ts", 12);
-        int theme = pref.getInt(prefix + "_theme", 3);
-        boolean word_wrap = pref.getBoolean(prefix + "_ww", false);
-        boolean auto_c = pref.getBoolean(prefix + "_ac", true);
-        boolean auto_complete_symbol_pairs = pref.getBoolean(prefix + "_acsp", true);
-
-        if (loadTheme) selectTheme(ed, theme);
-        ed.setTextSize(text_size);
-        ed.setWordwrap(word_wrap);
-        ed.getProps().symbolPairAutoCompletion = auto_complete_symbol_pairs;
-        ed.getComponent(EditorAutoCompletion.class).setEnabled(auto_c);
-    }
-
     public static void selectTheme(CodeEditor ed, int which) {
-        if (!(ed.getColorScheme() instanceof TextMateColorScheme)) {
-            EditorColorScheme scheme = switch (which) {
-                case 1 -> new SchemeGitHub();
-                case 2 -> new SchemeEclipse();
-                case 3 -> new SchemeDarcula();
-                case 4 -> new SchemeVS2019();
-                case 5 -> new SchemeNotepadXX();
-                default -> new EditorColorScheme();
-            };
-
-            ed.setColorScheme(scheme);
-        }
+        CodeEditorPreferences.applyTheme(ed, which);
     }
 
     public static void selectLanguage(CodeEditor ed, int which) {
@@ -243,20 +198,10 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
     }
 
     public static void showSwitchThemeDialog(Activity activity, CodeEditor codeEditor, DialogInterface.OnClickListener listener) {
-        EditorColorScheme currentScheme = codeEditor.getColorScheme();
-        var knownColorSchemesProperlyOrdered = new ArrayList<>(KNOWN_COLOR_SCHEMES);
-        Collections.reverse(knownColorSchemesProperlyOrdered);
-        int selectedThemeIndex = knownColorSchemesProperlyOrdered.stream()
-                .filter(pair -> pair.second.equals(currentScheme.getClass()))
-                .map(KNOWN_COLOR_SCHEMES::indexOf)
-                .findFirst()
-                .orElse(-1);
-        String[] themeItems = KNOWN_COLOR_SCHEMES.stream()
-                .map(pair -> pair.first)
-                .toArray(String[]::new);
+        int currentTheme = CodeEditorPreferences.detectThemeIndex(codeEditor);
         new MaterialAlertDialogBuilder(activity)
                 .setTitle(R.string.code_editor_select_theme)
-                .setSingleChoiceItems(themeItems, selectedThemeIndex, listener)
+                .setSingleChoiceItems(CodeEditorPreferences.THEME_NAMES, currentTheme, listener)
                 .setNegativeButton(R.string.common_word_cancel, null)
                 .show();
     }
@@ -309,7 +254,6 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
         activityName = getIntent().getStringExtra("activity_name");
 
         binding.editor.setTypefaceText(EditorUtils.getTypeface(this));
-        binding.editor.setTextSize(16);
 
         if (fromAndroidManifest) {
             String filePath = FileUtil.getExternalStorageDir() + "/.sketchware/data/" + scId + "/Injection/androidmanifest/activities_components.json";
@@ -355,7 +299,8 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
             }
         }
 
-        loadCESettings(this, binding.editor, "act", true);
+        editorPrefs = new CodeEditorPreferences(this, "src");
+        editorPrefs.applyToEditor(binding.editor, true);
 
         // Ensure dark mode always uses a dark color scheme as fallback
         if (ThemeUtils.isDarkThemeEnabled(getApplicationContext())) {
@@ -415,13 +360,12 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
     private static final int MENU_UNDO = 1, MENU_REDO = 2, MENU_SAVE = 3, MENU_LAYOUT_PREVIEW = 4,
             MENU_FIND_REPLACE = 5, MENU_WORD_WRAP = 6, MENU_PRETTY_PRINT = 7,
             MENU_SELECT_LANGUAGE = 8, MENU_SELECT_THEME = 9, MENU_AUTO_COMPLETE = 10,
-            MENU_AUTO_COMPLETE_SYMBOL_PAIR = 11;
+            MENU_AUTO_COMPLETE_SYMBOL_PAIR = 11, MENU_FONT_SIZE = 12, MENU_LINE_NUMBERS = 13;
 
     private void loadToolbar() {
         {
             String title = getIntent().getStringExtra("title");
             binding.toolbar.setTitle(title);
-            SharedPreferences local_pref = getSharedPreferences("hsce", Activity.MODE_PRIVATE);
             Menu toolbarMenu = binding.toolbar.getMenu();
             toolbarMenu.clear();
             toolbarMenu.add(Menu.NONE, MENU_UNDO, Menu.NONE, Helper.getResString(R.string.code_editor_menu_undo)).setIcon(AppCompatResources.getDrawable(this, R.drawable.ic_mtrl_undo)).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -431,15 +375,17 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
                 toolbarMenu.add(Menu.NONE, MENU_LAYOUT_PREVIEW, Menu.NONE, Helper.getResString(R.string.code_editor_menu_layout_preview));
             }
             toolbarMenu.add(Menu.NONE, MENU_FIND_REPLACE, Menu.NONE, Helper.getResString(R.string.code_editor_menu_find_replace));
-            toolbarMenu.add(Menu.NONE, MENU_WORD_WRAP, Menu.NONE, Helper.getResString(R.string.code_editor_menu_word_wrap)).setCheckable(true).setChecked(local_pref.getBoolean("act_ww", false));
+            toolbarMenu.add(Menu.NONE, MENU_WORD_WRAP, Menu.NONE, Helper.getResString(R.string.code_editor_menu_word_wrap)).setCheckable(true).setChecked(editorPrefs.getWordWrap());
             toolbarMenu.add(Menu.NONE, MENU_PRETTY_PRINT, Menu.NONE, Helper.getResString(R.string.code_editor_menu_pretty_print));
+            toolbarMenu.add(Menu.NONE, MENU_FONT_SIZE, Menu.NONE, Helper.getResString(R.string.code_editor_menu_font_size));
+            toolbarMenu.add(Menu.NONE, MENU_LINE_NUMBERS, Menu.NONE, Helper.getResString(R.string.code_editor_menu_line_numbers)).setCheckable(true).setChecked(editorPrefs.getLineNumbers());
             toolbarMenu.add(Menu.NONE, MENU_SELECT_LANGUAGE, Menu.NONE, Helper.getResString(R.string.code_editor_select_language));
             toolbarMenu.add(Menu.NONE, MENU_SELECT_THEME, Menu.NONE, Helper.getResString(R.string.code_editor_select_theme));
-            toolbarMenu.add(Menu.NONE, MENU_AUTO_COMPLETE, Menu.NONE, Helper.getResString(R.string.code_editor_menu_auto_complete)).setCheckable(true).setChecked(local_pref.getBoolean("act_ac", true));
-            toolbarMenu.add(Menu.NONE, MENU_AUTO_COMPLETE_SYMBOL_PAIR, Menu.NONE, Helper.getResString(R.string.code_editor_menu_auto_complete_symbol_pair)).setCheckable(true).setChecked(local_pref.getBoolean("act_acsp", true));
+            toolbarMenu.add(Menu.NONE, MENU_AUTO_COMPLETE, Menu.NONE, Helper.getResString(R.string.code_editor_menu_auto_complete)).setCheckable(true).setChecked(editorPrefs.getAutoComplete());
+            toolbarMenu.add(Menu.NONE, MENU_AUTO_COMPLETE_SYMBOL_PAIR, Menu.NONE, Helper.getResString(R.string.code_editor_menu_auto_complete_symbol_pair)).setCheckable(true).setChecked(editorPrefs.getSymbolPair());
 
             binding.toolbar.setOnMenuItemClickListener(item -> {
-                
+
                 switch (item.getItemId()) {
                     case MENU_UNDO:
                         binding.editor.undo();
@@ -503,32 +449,35 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
                         break;
 
                     case MENU_SELECT_THEME:
-                        showSwitchThemeDialog(this, binding.editor, (dialog, which) -> {
-                            selectTheme(binding.editor, which);
-                            pref.edit().putInt("act_theme", which).apply();
-                            dialog.dismiss();
-                        });
+                        editorPrefs.showThemeDialog(SrcCodeEditor.this, binding.editor);
                         break;
 
                     case MENU_WORD_WRAP:
                         item.setChecked(!item.isChecked());
                         binding.editor.setWordwrap(item.isChecked());
+                        editorPrefs.setWordWrap(item.isChecked());
+                        break;
 
-                        pref.edit().putBoolean("act_ww", item.isChecked()).apply();
+                    case MENU_FONT_SIZE:
+                        editorPrefs.showFontSizeDialog(SrcCodeEditor.this, binding.editor, null);
+                        break;
+
+                    case MENU_LINE_NUMBERS:
+                        item.setChecked(!item.isChecked());
+                        binding.editor.setLineNumberEnabled(item.isChecked());
+                        editorPrefs.setLineNumbers(item.isChecked());
                         break;
 
                     case MENU_AUTO_COMPLETE_SYMBOL_PAIR:
                         item.setChecked(!item.isChecked());
                         binding.editor.getProps().symbolPairAutoCompletion = item.isChecked();
-
-                        pref.edit().putBoolean("act_acsp", item.isChecked()).apply();
+                        editorPrefs.setSymbolPair(item.isChecked());
                         break;
 
                     case MENU_AUTO_COMPLETE:
                         item.setChecked(!item.isChecked());
-
                         binding.editor.getComponent(EditorAutoCompletion.class).setEnabled(item.isChecked());
-                        pref.edit().putBoolean("act_ac", item.isChecked()).apply();
+                        editorPrefs.setAutoComplete(item.isChecked());
                         break;
 
                     case MENU_LAYOUT_PREVIEW:
@@ -546,9 +495,7 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
     @Override
     public void onStop() {
         super.onStop();
-
-        float scaledDensity = getResources().getDisplayMetrics().scaledDensity;
-        pref.edit().putInt("act_ts", (int) (binding.editor.getTextSizePx() / scaledDensity)).apply();
+        editorPrefs.saveTextSizeFromEditor(binding.editor, getResources().getDisplayMetrics().scaledDensity);
     }
 
     private boolean isFileInLayoutFolder() {
