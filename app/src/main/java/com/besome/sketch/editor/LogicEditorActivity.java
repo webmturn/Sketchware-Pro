@@ -1752,16 +1752,16 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     public void showTypefaceSelector(FieldBlockView ss) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.logic_editor_title_select_typeface);
-        View a3 = ViewUtil.inflateLayout(this, R.layout.property_popup_selector_single);
-        RadioGroup radioGroup = a3.findViewById(R.id.rg_content);
+        View dialogView = ViewUtil.inflateLayout(this, R.layout.property_popup_selector_single);
+        RadioGroup radioGroup = dialogView.findViewById(R.id.rg_content);
         for (Pair<Integer, String> pair : SketchwareConstants.getPropertyPairs("property_text_style")) {
-            RadioButton e = createRadioButton(pair.second);
-            radioGroup.addView(e);
+            RadioButton radioButton = createRadioButton(pair.second);
+            radioGroup.addView(radioButton);
             if (pair.second.equals(ss.getArgValue())) {
-                e.setChecked(true);
+                radioButton.setChecked(true);
             }
         }
-        dialog.setView(a3);
+        dialog.setView(dialogView);
         dialog.setPositiveButton(R.string.common_word_save, (v, which) -> {
             int childCount = radioGroup.getChildCount();
             for (int i = 0; i < childCount; i++) {
@@ -2019,14 +2019,14 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         } else {
             title = StringResource.getInstance().getRootSpecTranslation(getContext(), id, eventName);
         }
-        String e1 = title;
+        String headerTitle = title;
 
         long pc0 = System.currentTimeMillis();
-        blockPane.createHeaderBlock(e1, eventName);
+        blockPane.createHeaderBlock(headerTitle, eventName);
         long pc1 = System.currentTimeMillis();
         android.util.Log.d("BlockLoad", "PC rootBlock: " + (pc1 - pc0) + "ms");
 
-        ArrayList<String> spec = FormatUtil.parseBlockSpec(e1);
+        ArrayList<String> spec = FormatUtil.parseBlockSpec(headerTitle);
         int blockId = 0;
         for (int i = 0; i < spec.size(); i++) {
             String specBit = spec.get(i);
@@ -2081,9 +2081,9 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         bundle.putParcelable("project_file", projectFile);
         super.onSaveInstanceState(bundle);
         ArrayList<BlockBean> blocks = blockPane.getBlocks();
-        ProjectDataStore a2 = ProjectDataManager.getProjectDataManager(scId);
+        ProjectDataStore projectDataStore = ProjectDataManager.getProjectDataManager(scId);
         String javaName = projectFile.getJavaName();
-        a2.putBlocks(javaName, id + "_" + eventName, blocks);
+        projectDataStore.putBlocks(javaName, id + "_" + eventName, blocks);
         ProjectDataManager.getProjectDataManager(scId).saveAllBackup();
     }
 
@@ -2327,25 +2327,25 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 int[] nLocationOnScreen = new int[2];
                 viewLogicEditor.getLocationOnScreen(nLocationOnScreen);
                 int width = nLocationOnScreen[0] + (viewLogicEditor.getWidth() / 2);
-                int a2 = nLocationOnScreen[1] + ((int) ViewUtil.dpToPx(getContext(), 4.0f));
-                ArrayList<BlockBean> a3 = addBlockBeans(clonedBeans, width, a2, true);
+                int dropY = nLocationOnScreen[1] + ((int) ViewUtil.dpToPx(getContext(), 4.0f));
+                ArrayList<BlockBean> addedBlocks = addBlockBeans(clonedBeans, width, dropY, true);
                 int[] oLocationOnScreen = new int[2];
                 blockPane.getLocationOnScreen(oLocationOnScreen);
-                BlockHistoryManager.getInstance(scId).recordAddMultiple(buildHistoryKey(), a3, width - oLocationOnScreen[0], a2 - oLocationOnScreen[1], null, null);
+                BlockHistoryManager.getInstance(scId).recordAddMultiple(buildHistoryKey(), addedBlocks, width - oLocationOnScreen[0], dropY - oLocationOnScreen[1], null, null);
                 refreshOptionsMenu();
             } else if (v instanceof BlockView rs13) {
                 dummy.getDummyLocation(this.locationBuffer);
                 if (rs13.getBlockType() == 1) {
                     int addTargetId = blockPane.getAddTargetId();
                     BlockBean clone3 = addTargetId >= 0 ? blockPane.findBlockById(addTargetId).getBean().clone() : null;
-                    BlockView a4 = dropBlockOnPane(rs13, this.locationBuffer[0], this.locationBuffer[1], false);
+                    BlockView droppedBlock = dropBlockOnPane(rs13, this.locationBuffer[0], this.locationBuffer[1], false);
                     BlockBean blockBean3 = null;
                     if (addTargetId >= 0) {
                         blockBean3 = blockPane.findBlockById(addTargetId).getBean().clone();
                     }
                     int[] locationOnScreen = new int[2];
                     blockPane.getLocationOnScreen(locationOnScreen);
-                    BlockHistoryManager.getInstance(scId).recordAdd(buildHistoryKey(), a4.getBean().clone(), this.locationBuffer[0] - locationOnScreen[0], this.locationBuffer[1] - locationOnScreen[1], clone3, blockBean3);
+                    BlockHistoryManager.getInstance(scId).recordAdd(buildHistoryKey(), droppedBlock.getBean().clone(), this.locationBuffer[0] - locationOnScreen[0], this.locationBuffer[1] - locationOnScreen[1], clone3, blockBean3);
                     if (clone3 != null) {
                         clone3.print();
                     }
@@ -2356,17 +2356,17 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     int addTargetId2 = blockPane.getAddTargetId();
                     BlockBean clone5 = addTargetId2 >= 0 ? blockPane.findBlockById(addTargetId2).getBean().clone() : null;
                     ArrayList<BlockBean> data = ((DefinitionBlockView) v).getData();
-                    ArrayList<BlockBean> a5 = addBlockBeans(data, this.locationBuffer[0], this.locationBuffer[1], true);
-                    if (!a5.isEmpty()) {
-                        BlockView a6 = blockPane.findBlockByString(a5.get(0).id);
-                        dropBlockOnPane(a6, this.locationBuffer[0], this.locationBuffer[1], true);
+                    ArrayList<BlockBean> addedBlocks = addBlockBeans(data, this.locationBuffer[0], this.locationBuffer[1], true);
+                    if (!addedBlocks.isEmpty()) {
+                        BlockView firstAddedBlock = blockPane.findBlockByString(addedBlocks.get(0).id);
+                        dropBlockOnPane(firstAddedBlock, this.locationBuffer[0], this.locationBuffer[1], true);
                         BlockBean blockBean3 = null;
                         if (addTargetId2 >= 0) {
                             blockBean3 = blockPane.findBlockById(addTargetId2).getBean().clone();
                         }
                         int[] locationOnScreen = new int[2];
                         blockPane.getLocationOnScreen(locationOnScreen);
-                        BlockHistoryManager.getInstance(scId).recordAddMultiple(buildHistoryKey(), a5, this.locationBuffer[0] - locationOnScreen[0], this.locationBuffer[1] - locationOnScreen[1], clone5, blockBean3);
+                        BlockHistoryManager.getInstance(scId).recordAddMultiple(buildHistoryKey(), addedBlocks, this.locationBuffer[0] - locationOnScreen[0], this.locationBuffer[1] - locationOnScreen[1], clone5, blockBean3);
                     }
                     blockPane.clearSnapState();
                 } else {
@@ -2387,8 +2387,8 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     } else {
                         blockBean = null;
                     }
-                    BlockView a7 = blockPane.findBlockById(blockPane.getAddTargetId());
-                    BlockBean clone6 = a7 != null ? a7.getBean().clone() : null;
+                    BlockView targetBlock = blockPane.findBlockById(blockPane.getAddTargetId());
+                    BlockBean clone6 = targetBlock != null ? targetBlock.getBean().clone() : null;
                     ArrayList<BlockView> allChildren3 = rs13.getAllChildren();
                     ArrayList<BlockBean> beansBeforeMove = new ArrayList<>();
                     for (BlockView rs : allChildren3) {
@@ -2401,8 +2401,8 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     }
                     BlockBean clone7 = dragSourceParent != null ? dragSourceParent.getBean().clone() : null;
                     BlockBean blockBean3 = null;
-                    if (a7 != null) {
-                        blockBean3 = a7.getBean().clone();
+                    if (targetBlock != null) {
+                        blockBean3 = targetBlock.getBean().clone();
                     }
                     if (blockBean == null || clone7 == null || !blockBean.isEqual(clone7)) {
                         int[] locationOnScreen = new int[2];
