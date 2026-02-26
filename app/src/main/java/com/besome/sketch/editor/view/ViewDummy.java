@@ -116,7 +116,7 @@ public class ViewDummy extends RelativeLayout {
         updateDummyPosition(view, touchX, touchY, offsetX, offsetY, 0.0f, 0.0f);
     }
 
-    public void getDummyLocation(int[] iArr) {
-        img_dummy.getLocationOnScreen(iArr);
+    public void getDummyLocation(int[] location) {
+        img_dummy.getLocationOnScreen(location);
     }
 }

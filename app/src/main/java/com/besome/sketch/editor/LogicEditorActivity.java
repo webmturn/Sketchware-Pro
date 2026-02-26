@@ -680,7 +680,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         dragSourceParent = null;
         dragParameterIndex = -1;
         dragConnectionType = 0;
-        int[] iArr = new int[2];
+        int[] unusedLocation = new int[2];
         BlockView parentBlock = rs.parentBlock;
         if (parentBlock != null) {
             dragSourceParent = parentBlock;
