@@ -95,28 +95,28 @@ public class LayoutGenerator {
 
     private void writeRootLayout() {
         var root = rootManager.getLayoutByFileName(projectFile.getXmlName());
-        XmlBuilder nx = new XmlBuilder(root.getClassName());
+        XmlBuilder xmlTag = new XmlBuilder(root.getClassName());
         var rootAttributes = root.getAttributes();
         if (!rootAttributes.containsKey("android:layout_width")) {
-            nx.addAttribute("android", "layout_width", "match_parent");
+            xmlTag.addAttribute("android", "layout_width", "match_parent");
         }
         if (!rootAttributes.containsKey("android:layout_height")) {
-            nx.addAttribute("android", "layout_height", "match_parent");
+            xmlTag.addAttribute("android", "layout_height", "match_parent");
         }
         for (Map.Entry<String, String> entry : rootAttributes.entrySet()) {
-            nx.addAttribute(null, entry.getKey(), entry.getValue());
+            xmlTag.addAttribute(null, entry.getKey(), entry.getValue());
         }
         for (ViewBean viewBean : views) {
             String parent = viewBean.parent;
             if (parent == null || parent.isEmpty() || parent.equals("root")) {
-                writeWidget(nx, viewBean);
+                writeWidget(xmlTag, viewBean);
             }
         }
         if (!excludeAppCompat && buildConfig.isAppCompatEnabled) {
             if (projectFile.fileType == ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY) {
                 if (projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_TOOLBAR)) {
                     if (!root.getAttributes().containsKey("app:layout_behavior")) {
-                        nx.addAttribute("app", "layout_behavior", "@string/appbar_scrolling_view_behavior");
+                        xmlTag.addAttribute("app", "layout_behavior", "@string/appbar_scrolling_view_behavior");
                     }
                 }
                 if (projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_TOOLBAR)
@@ -144,12 +144,12 @@ public class LayoutGenerator {
                         appBarLayoutTag.addChildNode(toolbarTag);
                     }
                     rootLayout.addChildNode(appBarLayoutTag);
-                    rootLayout.addChildNode(nx);
+                    rootLayout.addChildNode(xmlTag);
                 } else {
                     if (rootLayout == null) {
-                        rootLayout = nx;
+                        rootLayout = xmlTag;
                     } else {
-                        rootLayout.addChildNode(nx);
+                        rootLayout.addChildNode(xmlTag);
                     }
                 }
                 if (projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB)) {
@@ -174,17 +174,17 @@ public class LayoutGenerator {
                     rootLayout = drawerLayoutTag;
                 }
             } else {
-                rootLayout = nx;
+                rootLayout = xmlTag;
             }
         } else {
-            rootLayout = nx;
+            rootLayout = xmlTag;
         }
         rootLayout.addNamespaceDeclaration(0, "xmlns", "tools", "http://schemas.android.com/tools");
         rootLayout.addNamespaceDeclaration(0, "xmlns", "app", "http://schemas.android.com/apk/res-auto");
         rootLayout.addNamespaceDeclaration(0, "xmlns", "android", "http://schemas.android.com/apk/res/android");
     }
 
-    private void writeBackgroundResource(XmlBuilder nx, ViewBean viewBean) {
+    private void writeBackgroundResource(XmlBuilder xmlTag, ViewBean viewBean) {
         var injectHandler = new InjectAttributeHandler(viewBean);
         Set<String> toNotAdd = readAttributesToReplace(viewBean);
         String backgroundResource = viewBean.layout.backgroundResource;
@@ -197,73 +197,73 @@ public class LayoutGenerator {
             if (backgroundColor != 0xffffff) {
                 if (backgroundColor != 0) {
                     int color = backgroundColor & 0xffffff;
-                    if (nx.getCleanRootElementName().equals("BottomAppBar")) {
+                    if (xmlTag.getCleanRootElementName().equals("BottomAppBar")) {
                         if (!toNotAdd.contains("app:backgroundTint") && !injectHandler.contains("backgroundTint") && (backgroundResColor != null)) {
                             if (backgroundResColor.startsWith("?") || backgroundResColor.startsWith("@color/")) {
-                                nx.addAttribute("app", "backgroundTint", backgroundResColor);
+                                xmlTag.addAttribute("app", "backgroundTint", backgroundResColor);
                             } else {
-                                nx.addAttribute("app", "backgroundTint", "@color/" + backgroundResColor);
+                                xmlTag.addAttribute("app", "backgroundTint", "@color/" + backgroundResColor);
                             }
                         } else if (!toNotAdd.contains("app:backgroundTint") && !injectHandler.contains("backgroundTint")) {
-                            nx.addAttribute("app", "backgroundTint", formatColor(color));
+                            xmlTag.addAttribute("app", "backgroundTint", formatColor(color));
                         }
                     } else if (type == ViewBeans.VIEW_TYPE_LAYOUT_CARDVIEW) {
                         if (!toNotAdd.contains("app:cardBackgroundColor") && !injectHandler.contains("cardBackgroundColor") && backgroundResColor != null) {
                             if (backgroundResColor.startsWith("?") || backgroundResColor.startsWith("@color/")) {
-                                nx.addAttribute("app", "cardBackgroundColor", backgroundResColor);
+                                xmlTag.addAttribute("app", "cardBackgroundColor", backgroundResColor);
                             } else {
-                                nx.addAttribute("app", "cardBackgroundColor", "@color/" + backgroundResColor);
+                                xmlTag.addAttribute("app", "cardBackgroundColor", "@color/" + backgroundResColor);
                             }
                         } else if (!toNotAdd.contains("app:cardBackgroundColor") && !injectHandler.contains("cardBackgroundColor")) {
-                            nx.addAttribute("app", "cardBackgroundColor", formatColor(color));
+                            xmlTag.addAttribute("app", "cardBackgroundColor", formatColor(color));
                         }
-                    } else if (nx.getCleanRootElementName().equals("MaterialButton")) {
+                    } else if (xmlTag.getCleanRootElementName().equals("MaterialButton")) {
                         if (!toNotAdd.contains("app:backgroundTint") && !injectHandler.contains("backgroundTint")) {
-                            nx.addAttribute("app", "backgroundTint", backgroundResColor == null ? formatColor(color) : backgroundResColor);
+                            xmlTag.addAttribute("app", "backgroundTint", backgroundResColor == null ? formatColor(color) : backgroundResColor);
                         }
-                    } else if (nx.getCleanRootElementName().equals("CollapsingToolbarLayout")) {
+                    } else if (xmlTag.getCleanRootElementName().equals("CollapsingToolbarLayout")) {
                         if (!toNotAdd.contains("app:contentScrim") && !injectHandler.contains("contentScrim") && backgroundResColor != null) {
                             if (backgroundResColor.startsWith("?") || backgroundResColor.startsWith("@color/")) {
-                                nx.addAttribute("app", "contentScrim", backgroundResColor);
+                                xmlTag.addAttribute("app", "contentScrim", backgroundResColor);
                             } else {
-                                nx.addAttribute("app", "contentScrim", "@color/" + backgroundResColor);
+                                xmlTag.addAttribute("app", "contentScrim", "@color/" + backgroundResColor);
                             }
                         } else if (!toNotAdd.contains("app:contentScrim") && !injectHandler.contains("contentScrim")) {
-                            nx.addAttribute("app", "contentScrim", formatColor(color));
+                            xmlTag.addAttribute("app", "contentScrim", formatColor(color));
                         }
                     } else {
                         if (!hasAttr("background", viewBean) && !toNotAdd.contains("android:background") && !injectHandler.contains("background") && backgroundResColor != null) {
                             if (backgroundResColor.startsWith("?") || backgroundResColor.startsWith("@color/")) {
-                                nx.addAttribute("android", "background", backgroundResColor);
+                                xmlTag.addAttribute("android", "background", backgroundResColor);
                             } else {
-                                nx.addAttribute("android", "background", "@color/" + backgroundResColor);
+                                xmlTag.addAttribute("android", "background", "@color/" + backgroundResColor);
                             }
                         } else if (!hasAttr("background", viewBean) && !toNotAdd.contains("android:background") && !injectHandler.contains("background")) {
-                            nx.addAttribute("android", "background", formatColor(color));
+                            xmlTag.addAttribute("android", "background", formatColor(color));
                         }
                     }
-                } else if (nx.getCleanRootElementName().equals("BottomAppBar")) {
+                } else if (xmlTag.getCleanRootElementName().equals("BottomAppBar")) {
                     if (!toNotAdd.contains("android:backgroundTint") && !injectHandler.contains("backgroundTint")) {
-                        nx.addAttribute("android", "backgroundTint", "@android:color/transparent");
+                        xmlTag.addAttribute("android", "backgroundTint", "@android:color/transparent");
                     }
-                } else if (nx.getCleanRootElementName().equals("CollapsingToolbarLayout")) {
+                } else if (xmlTag.getCleanRootElementName().equals("CollapsingToolbarLayout")) {
                     if (!toNotAdd.contains("app:contentScrim") && !injectHandler.contains("contentScrim")) {
-                        nx.addAttribute("app", "contentScrim", "?attr/colorPrimary");
+                        xmlTag.addAttribute("app", "contentScrim", "?attr/colorPrimary");
                     }
                 } else if (type == ViewBeans.VIEW_TYPE_LAYOUT_CARDVIEW) {
                     if (!toNotAdd.contains("app:cardBackgroundColor") && !injectHandler.contains("cardBackgroundColor")) {
-                        nx.addAttribute("app", "cardBackgroundColor", "@android:color/transparent");
+                        xmlTag.addAttribute("app", "cardBackgroundColor", "@android:color/transparent");
                     }
                 } else {
                     if (!toNotAdd.contains("android:background") && !injectHandler.contains("background")) {
-                        nx.addAttribute("android", "background", "@android:color/transparent");
+                        xmlTag.addAttribute("android", "background", "@android:color/transparent");
                     }
                 }
             }
         } else {
             if (!hasAttr("background", viewBean) && !toNotAdd.contains("android:background") && !injectHandler.contains("background")) {
                 boolean isNinePatchBackground = backgroundResource.endsWith(".9");
-                nx.addAttribute("android", "background", "@drawable/" +
+                xmlTag.addAttribute("android", "background", "@drawable/" +
                         (isNinePatchBackground ? backgroundResource.replaceAll("\\.9", "") :
                                 backgroundResource));
             }
@@ -284,7 +284,7 @@ public class LayoutGenerator {
         return rootLayout.toCode();
     }
 
-    private void writeWidget(XmlBuilder nx, ViewBean viewBean) {
+    private void writeWidget(XmlBuilder xmlTag, ViewBean viewBean) {
         viewBean.getClassInfo().getClassName();
         String convert = viewBean.convert;
         var injectHandler = new InjectAttributeHandler(viewBean);
@@ -465,10 +465,10 @@ public class LayoutGenerator {
                 widgetTag.addAttribute("tools", "listitem", "@layout/" + customView);
             }
         }
-        nx.addChildNode(widgetTag);
+        xmlTag.addChildNode(widgetTag);
     }
 
-    private void writeFabView(XmlBuilder nx, ViewBean viewBean) {
+    private void writeFabView(XmlBuilder xmlTag, ViewBean viewBean) {
         var injectHandler = new InjectAttributeHandler(viewBean);
         Set<String> toNotAdd = readAttributesToReplace(viewBean);
         XmlBuilder floatingActionButtonTag = new XmlBuilder("com.google.android.material.floatingactionbutton.FloatingActionButton");
@@ -493,10 +493,10 @@ public class LayoutGenerator {
             aci.inject(floatingActionButtonTag, "FloatingActionButton");
         }
         addCommonAttributes(floatingActionButtonTag, viewBean);
-        nx.addChildNode(floatingActionButtonTag);
+        xmlTag.addChildNode(floatingActionButtonTag);
     }
 
-    private void writeViewGravity(XmlBuilder nx, ViewBean viewBean) {
+    private void writeViewGravity(XmlBuilder xmlTag, ViewBean viewBean) {
         var injectHandler = new InjectAttributeHandler(viewBean);
         Set<String> toNotAdd = readAttributesToReplace(viewBean);
         if (!toNotAdd.contains("android:gravity") && !injectHandler.contains("gravity")) {
@@ -537,24 +537,24 @@ public class LayoutGenerator {
                         attrValue += "bottom";
                     }
                 }
-                nx.addAttribute("android", "gravity", attrValue);
+                xmlTag.addAttribute("android", "gravity", attrValue);
             }
         }
     }
 
-    private void writeImgSrcAttr(XmlBuilder nx, ViewBean viewBean) {
+    private void writeImgSrcAttr(XmlBuilder xmlTag, ViewBean viewBean) {
         var injectHandler = new InjectAttributeHandler(viewBean);
         Set<String> toNotAdd = readAttributesToReplace(viewBean);
         String resName = viewBean.image.resName;
         if (!resName.isEmpty() && !"NONE".equals(resName)) {
             String value = "@drawable/" + resName.toLowerCase();
-            if (nx.getCleanRootElementName().equals("FloatingActionButton")) {
+            if (xmlTag.getCleanRootElementName().equals("FloatingActionButton")) {
                 if (!toNotAdd.contains("app:srcCompat") && !injectHandler.contains("srcCompat")) {
-                    nx.addAttribute("app", "srcCompat", value);
+                    xmlTag.addAttribute("app", "srcCompat", value);
                 }
             } else {
                 if (!toNotAdd.contains("android:src") && !injectHandler.contains("src")) {
-                    nx.addAttribute("android", "src", value);
+                    xmlTag.addAttribute("android", "src", value);
                 }
             }
         }
@@ -563,24 +563,24 @@ public class LayoutGenerator {
     /**
      * @see ImageView.ScaleType
      */
-    private void writeImageScaleType(XmlBuilder nx, ViewBean viewBean) {
+    private void writeImageScaleType(XmlBuilder xmlTag, ViewBean viewBean) {
         var injectHandler = new InjectAttributeHandler(viewBean);
         Set<String> toNotAdd = readAttributesToReplace(viewBean);
         if (!toNotAdd.contains("android:scaleType") && !injectHandler.contains("scaleType")) {
             if (viewBean.image.scaleType.equals(ImageBean.SCALE_TYPE_CENTER)) {
-                nx.addAttribute("android", "scaleType", "center");
+                xmlTag.addAttribute("android", "scaleType", "center");
             } else if (viewBean.image.scaleType.equals(ImageBean.SCALE_TYPE_FIT_XY)) {
-                nx.addAttribute("android", "scaleType", "fitXY");
+                xmlTag.addAttribute("android", "scaleType", "fitXY");
             } else if (viewBean.image.scaleType.equals(ImageBean.SCALE_TYPE_FIT_START)) {
-                nx.addAttribute("android", "scaleType", "fitStart");
+                xmlTag.addAttribute("android", "scaleType", "fitStart");
             } else if (viewBean.image.scaleType.equals(ImageBean.SCALE_TYPE_FIT_END)) {
-                nx.addAttribute("android", "scaleType", "fitEnd");
+                xmlTag.addAttribute("android", "scaleType", "fitEnd");
             } else if (viewBean.image.scaleType.equals(ImageBean.SCALE_TYPE_FIT_CENTER)) {
-                nx.addAttribute("android", "scaleType", "fitCenter");
+                xmlTag.addAttribute("android", "scaleType", "fitCenter");
             } else if (viewBean.image.scaleType.equals(ImageBean.SCALE_TYPE_CENTER_CROP)) {
-                nx.addAttribute("android", "scaleType", "centerCrop");
+                xmlTag.addAttribute("android", "scaleType", "centerCrop");
             } else if (viewBean.image.scaleType.equals(ImageBean.SCALE_TYPE_CENTER_INSIDE)) {
-                nx.addAttribute("android", "scaleType", "centerInside");
+                xmlTag.addAttribute("android", "scaleType", "centerInside");
             }
         }
     }
@@ -588,7 +588,7 @@ public class LayoutGenerator {
     /**
      * @see Gravity
      */
-    private void writeLayoutGravity(XmlBuilder nx, ViewBean viewBean) {
+    private void writeLayoutGravity(XmlBuilder xmlTag, ViewBean viewBean) {
         var injectHandler = new InjectAttributeHandler(viewBean);
         Set<String> toNotAdd = readAttributesToReplace(viewBean);
         if (!toNotAdd.contains("android:layout_gravity") && !injectHandler.contains("layout_gravity")) {
@@ -629,7 +629,7 @@ public class LayoutGenerator {
                         attrValue += "bottom";
                     }
                 }
-                nx.addAttribute("android", "layout_gravity", attrValue);
+                xmlTag.addAttribute("android", "layout_gravity", attrValue);
             }
         }
     }
@@ -637,7 +637,7 @@ public class LayoutGenerator {
     /**
      * @see ViewGroup.MarginLayoutParams
      */
-    private void writeLayoutMargin(XmlBuilder nx, ViewBean viewBean) {
+    private void writeLayoutMargin(XmlBuilder xmlTag, ViewBean viewBean) {
         var injectHandler = new InjectAttributeHandler(viewBean);
         Set<String> toNotAdd = readAttributesToReplace(viewBean);
         LayoutBean layoutBean = viewBean.layout;
@@ -649,22 +649,22 @@ public class LayoutGenerator {
         if (marginLeft == marginRight && marginTop == marginBottom
                 && marginLeft == marginTop && marginLeft > 0) {
             if (!toNotAdd.contains("android:layout_margin") && !injectHandler.contains("layout_margin")) {
-                nx.addAttribute("android", "layout_margin", marginLeft + "dp");
+                xmlTag.addAttribute("android", "layout_margin", marginLeft + "dp");
             }
             return;
         }
 
         if (marginLeft > 0 && !toNotAdd.contains("android:layout_marginLeft") && !injectHandler.contains("layout_marginLeft")) {
-            nx.addAttribute("android", "layout_marginLeft", marginLeft + "dp");
+            xmlTag.addAttribute("android", "layout_marginLeft", marginLeft + "dp");
         }
         if (viewBean.layout.marginTop > 0 && !toNotAdd.contains("android:layout_marginTop") && !injectHandler.contains("layout_marginTop")) {
-            nx.addAttribute("android", "layout_marginTop", viewBean.layout.marginTop + "dp");
+            xmlTag.addAttribute("android", "layout_marginTop", viewBean.layout.marginTop + "dp");
         }
         if (marginRight > 0 && !toNotAdd.contains("android:layout_marginRight") && !injectHandler.contains("layout_marginRight")) {
-            nx.addAttribute("android", "layout_marginRight", marginRight + "dp");
+            xmlTag.addAttribute("android", "layout_marginRight", marginRight + "dp");
         }
         if (marginBottom > 0 && !toNotAdd.contains("android:layout_marginBottom") && !injectHandler.contains("layout_marginBottom")) {
-            nx.addAttribute("android", "layout_marginBottom", marginBottom + "dp");
+            xmlTag.addAttribute("android", "layout_marginBottom", marginBottom + "dp");
         }
     }
 
@@ -674,7 +674,7 @@ public class LayoutGenerator {
      * @see View#getPaddingRight()
      * @see View#getPaddingBottom()
      */
-    private void writeCardViewPadding(XmlBuilder nx, ViewBean viewBean) {
+    private void writeCardViewPadding(XmlBuilder xmlTag, ViewBean viewBean) {
         var injectHandler = new InjectAttributeHandler(viewBean);
         Set<String> toNotAdd = readAttributesToReplace(viewBean);
         LayoutBean layoutBean = viewBean.layout;
@@ -686,22 +686,22 @@ public class LayoutGenerator {
         if (paddingLeft == paddingRight && paddingTop == paddingBottom
                 && paddingLeft == paddingTop && paddingLeft > 0) {
             if (!toNotAdd.contains("app:contentPadding") && !injectHandler.contains("contentPadding")) {
-                nx.addAttribute("app", "contentPadding", paddingLeft + "dp");
+                xmlTag.addAttribute("app", "contentPadding", paddingLeft + "dp");
             }
             return;
         }
 
         if (paddingLeft > 0 && !toNotAdd.contains("app:contentPaddingLeft") && !injectHandler.contains("contentPaddingLeft")) {
-            nx.addAttribute("app", "contentPaddingLeft", paddingLeft + "dp");
+            xmlTag.addAttribute("app", "contentPaddingLeft", paddingLeft + "dp");
         }
         if (paddingTop > 0 && !toNotAdd.contains("app:contentPaddingTop") && !injectHandler.contains("contentPaddingTop")) {
-            nx.addAttribute("app", "contentPaddingTop", paddingTop + "dp");
+            xmlTag.addAttribute("app", "contentPaddingTop", paddingTop + "dp");
         }
         if (paddingRight > 0 && !toNotAdd.contains("app:contentPaddingRight") && !injectHandler.contains("contentPaddingRight")) {
-            nx.addAttribute("app", "contentPaddingRight", paddingRight + "dp");
+            xmlTag.addAttribute("app", "contentPaddingRight", paddingRight + "dp");
         }
         if (paddingBottom > 0 && !toNotAdd.contains("app:contentPaddingBottom") && !injectHandler.contains("contentPaddingBottom")) {
-            nx.addAttribute("app", "contentPaddingBottom", paddingBottom + "dp");
+            xmlTag.addAttribute("app", "contentPaddingBottom", paddingBottom + "dp");
         }
     }
 
@@ -711,7 +711,7 @@ public class LayoutGenerator {
      * @see View#getPaddingRight()
      * @see View#getPaddingBottom()
      */
-    private void writeViewPadding(XmlBuilder nx, ViewBean viewBean) {
+    private void writeViewPadding(XmlBuilder xmlTag, ViewBean viewBean) {
         var injectHandler = new InjectAttributeHandler(viewBean);
         Set<String> toNotAdd = readAttributesToReplace(viewBean);
         LayoutBean layoutBean = viewBean.layout;
@@ -723,60 +723,60 @@ public class LayoutGenerator {
         if (paddingLeft == paddingRight && paddingTop == paddingBottom
                 && paddingLeft == paddingTop && paddingLeft > 0) {
             if (!toNotAdd.contains("android:padding") && !injectHandler.contains("padding")) {
-                nx.addAttribute("android", "padding", paddingLeft + "dp");
+                xmlTag.addAttribute("android", "padding", paddingLeft + "dp");
             }
             return;
         }
 
         if (paddingLeft > 0 && !toNotAdd.contains("android:paddingLeft") && !injectHandler.contains("paddingLeft")) {
-            nx.addAttribute("android", "paddingLeft", paddingLeft + "dp");
+            xmlTag.addAttribute("android", "paddingLeft", paddingLeft + "dp");
         }
         if (paddingTop > 0 && !toNotAdd.contains("android:paddingTop") && !injectHandler.contains("paddingTop")) {
-            nx.addAttribute("android", "paddingTop", paddingTop + "dp");
+            xmlTag.addAttribute("android", "paddingTop", paddingTop + "dp");
         }
         if (paddingRight > 0 && !toNotAdd.contains("android:paddingRight") && !injectHandler.contains("paddingRight")) {
-            nx.addAttribute("android", "paddingRight", paddingRight + "dp");
+            xmlTag.addAttribute("android", "paddingRight", paddingRight + "dp");
         }
         if (paddingBottom > 0 && !toNotAdd.contains("android:paddingBottom") && !injectHandler.contains("paddingBottom")) {
-            nx.addAttribute("android", "paddingBottom", paddingBottom + "dp");
+            xmlTag.addAttribute("android", "paddingBottom", paddingBottom + "dp");
         }
     }
 
-    private void writeTextAttributes(XmlBuilder nx, ViewBean viewBean) {
+    private void writeTextAttributes(XmlBuilder xmlTag, ViewBean viewBean) {
         var injectHandler = new InjectAttributeHandler(viewBean);
         Set<String> toNotAdd = readAttributesToReplace(viewBean);
         String text = viewBean.text.text;
         if (text != null && !text.isEmpty() && !toNotAdd.contains("android:text") && !injectHandler.contains("text")) {
             if (text.startsWith("@")) {
-                nx.addAttribute("android", "text", text);
+                xmlTag.addAttribute("android", "text", text);
             } else {
-                nx.addAttribute("android", "text", escapeXML(text));
+                xmlTag.addAttribute("android", "text", escapeXML(text));
             }
         }
 
         int textSize = viewBean.text.textSize;
         if (textSize > 0 && !toNotAdd.contains("android:textSize") && !injectHandler.contains("textSize")) {
-            nx.addAttribute("android", "textSize", textSize + "sp");
+            xmlTag.addAttribute("android", "textSize", textSize + "sp");
         }
         if (!toNotAdd.contains("android:textStyle") && !injectHandler.contains("textStyle")) {
             int textType = viewBean.text.textType;
             if (textType == TextBean.TEXT_TYPE_BOLD) {
-                nx.addAttribute("android", "textStyle", "bold");
+                xmlTag.addAttribute("android", "textStyle", "bold");
             } else if (textType == TextBean.TEXT_TYPE_ITALIC) {
-                nx.addAttribute("android", "textStyle", "italic");
+                xmlTag.addAttribute("android", "textStyle", "italic");
             } else if (textType == TextBean.TEXT_TYPE_BOLDITALIC) {
-                nx.addAttribute("android", "textStyle", "bold|italic");
+                xmlTag.addAttribute("android", "textStyle", "bold|italic");
             }
         }
         if (viewBean.text.textColor != 0xffffff) {
             if (!hasAttr("textColor", viewBean) && !toNotAdd.contains("android:textColor") && !injectHandler.contains("textColor") && viewBean.text.resTextColor != null) {
                 if (viewBean.text.resTextColor.startsWith("?") || viewBean.text.resTextColor.startsWith("@color/")) {
-                    nx.addAttribute("android", "textColor", viewBean.text.resTextColor);
+                    xmlTag.addAttribute("android", "textColor", viewBean.text.resTextColor);
                 } else {
-                    nx.addAttribute("android", "textColor", "@color/" + viewBean.text.resTextColor);
+                    xmlTag.addAttribute("android", "textColor", "@color/" + viewBean.text.resTextColor);
                 }
             } else if (!hasAttr("textColor", viewBean) && !toNotAdd.contains("android:textColor") && !injectHandler.contains("textColor")) {
-                nx.addAttribute("android", "textColor", formatColor(viewBean.text.textColor & 0xffffff));
+                xmlTag.addAttribute("android", "textColor", formatColor(viewBean.text.textColor & 0xffffff));
             }
         }
         switch (viewBean.type) {
@@ -786,96 +786,96 @@ public class LayoutGenerator {
                 String hint = viewBean.text.hint;
                 if (hint != null && !hint.isEmpty() && !toNotAdd.contains("android:hint") && !injectHandler.contains("hint")) {
                     if (hint.startsWith("@")) {
-                        nx.addAttribute("android", "hint", hint);
+                        xmlTag.addAttribute("android", "hint", hint);
                     } else {
-                        nx.addAttribute("android", "hint", escapeXML(hint));
+                        xmlTag.addAttribute("android", "hint", escapeXML(hint));
                     }
                 }
                 if (viewBean.text.hintColor != 0xffffff) {
                     if (!hasAttr("textColorHint", viewBean) && !toNotAdd.contains("android:textColorHint") && (viewBean.text.resHintColor != null)) {
                         if (viewBean.text.resHintColor.startsWith("?") || viewBean.text.resHintColor.startsWith("@color/")) {
-                            nx.addAttribute("android", "textColorHint", viewBean.text.resHintColor);
+                            xmlTag.addAttribute("android", "textColorHint", viewBean.text.resHintColor);
                         } else {
-                            nx.addAttribute("android", "textColorHint", "@color/" + viewBean.text.resHintColor);
+                            xmlTag.addAttribute("android", "textColorHint", "@color/" + viewBean.text.resHintColor);
                         }
                     } else if (!hasAttr("textColorHint", viewBean) && !toNotAdd.contains("android:textColorHint")) {
-                        nx.addAttribute("android", "textColorHint", formatColor(viewBean.text.hintColor & 0xffffff));
+                        xmlTag.addAttribute("android", "textColorHint", formatColor(viewBean.text.hintColor & 0xffffff));
                     }
                 }
                 if (viewBean.text.singleLine != 0 && !toNotAdd.contains("android:singleLine") && !injectHandler.contains("singleLine")) {
-                    nx.addAttribute("android", "singleLine", "true");
+                    xmlTag.addAttribute("android", "singleLine", "true");
                 }
 
                 int line = viewBean.text.line;
                 if (line > 0 && !toNotAdd.contains("android:lines") && !injectHandler.contains("lines")) {
-                    nx.addAttribute("android", "lines", String.valueOf(line));
+                    xmlTag.addAttribute("android", "lines", String.valueOf(line));
                 }
 
                 int inputType = viewBean.text.inputType;
                 if (inputType != TextBean.INPUT_TYPE_TEXT && !toNotAdd.contains("android:inputType") && !injectHandler.contains("inputType")) {
-                    nx.addAttribute("android", "inputType", SketchwareConstants.getPropertyValueString("property_input_type", inputType));
+                    xmlTag.addAttribute("android", "inputType", SketchwareConstants.getPropertyValueString("property_input_type", inputType));
                 }
 
                 int imeOption = viewBean.text.imeOption;
                 if (imeOption != TextBean.IME_OPTION_NORMAL && !toNotAdd.contains("android:imeOptions") && !injectHandler.contains("imeOptions")) {
                     if (imeOption == TextBean.IME_OPTION_NONE) {
-                        nx.addAttribute("android", "imeOptions", "actionNone");
+                        xmlTag.addAttribute("android", "imeOptions", "actionNone");
                     } else if (imeOption == TextBean.IME_OPTION_GO) {
-                        nx.addAttribute("android", "imeOptions", "actionGo");
+                        xmlTag.addAttribute("android", "imeOptions", "actionGo");
                     } else if (imeOption == TextBean.IME_OPTION_SEARCH) {
-                        nx.addAttribute("android", "imeOptions", "actionSearch");
+                        xmlTag.addAttribute("android", "imeOptions", "actionSearch");
                     } else if (imeOption == TextBean.IME_OPTION_SEND) {
-                        nx.addAttribute("android", "imeOptions", "actionSend");
+                        xmlTag.addAttribute("android", "imeOptions", "actionSend");
                     } else if (imeOption == TextBean.IME_OPTION_NEXT) {
-                        nx.addAttribute("android", "imeOptions", "actionNext");
+                        xmlTag.addAttribute("android", "imeOptions", "actionNext");
                     } else if (imeOption == TextBean.IME_OPTION_DONE) {
-                        nx.addAttribute("android", "imeOptions", "actionDone");
+                        xmlTag.addAttribute("android", "imeOptions", "actionDone");
                     }
                 }
                 break;
 
             case ViewBean.VIEW_TYPE_WIDGET_TEXTVIEW:
                 if (viewBean.text.singleLine != 0 && !toNotAdd.contains("android:singleLine") && !injectHandler.contains("singleLine")) {
-                    nx.addAttribute("android", "singleLine", "true");
+                    xmlTag.addAttribute("android", "singleLine", "true");
                 }
                 line = viewBean.text.line;
                 if (line > 0 && !toNotAdd.contains("android:lines") && !injectHandler.contains("lines")) {
-                    nx.addAttribute("android", "lines", String.valueOf(line));
+                    xmlTag.addAttribute("android", "lines", String.valueOf(line));
                 }
                 break;
         }
     }
 
-    private void addCommonAttributes(XmlBuilder nx, ViewBean viewBean) {
+    private void addCommonAttributes(XmlBuilder xmlTag, ViewBean viewBean) {
         var injectHandler = new InjectAttributeHandler(viewBean);
         Set<String> toNotAdd = readAttributesToReplace(viewBean);
         if (viewBean.enabled == 0 && !toNotAdd.contains("android:enabled") && !injectHandler.contains("enabled")) {
-            nx.addAttribute("android", "enabled", "false");
+            xmlTag.addAttribute("android", "enabled", "false");
         }
         if (viewBean.clickable == 0 && !toNotAdd.contains("android:clickable") && !injectHandler.contains("clickable")) {
-            nx.addAttribute("android", "clickable", "false");
+            xmlTag.addAttribute("android", "clickable", "false");
         }
         int rotate = viewBean.image.rotate;
         if (rotate != 0 && !toNotAdd.contains("android:rotation") && !injectHandler.contains("rotation")) {
-            nx.addAttribute("android", "rotation", String.valueOf(rotate));
+            xmlTag.addAttribute("android", "rotation", String.valueOf(rotate));
         }
         float alpha = viewBean.alpha;
         if (1.0f != alpha && !toNotAdd.contains("android:alpha") && !injectHandler.contains("alpha")) {
-            nx.addAttribute("android", "alpha", String.valueOf(alpha));
+            xmlTag.addAttribute("android", "alpha", String.valueOf(alpha));
         }
         if (0.0f != viewBean.translationX && !toNotAdd.contains("android:translationX") && !injectHandler.contains("translationX")) {
-            nx.addAttribute("android", "translationX", viewBean.translationX + "dp");
+            xmlTag.addAttribute("android", "translationX", viewBean.translationX + "dp");
         }
         if (0.0f != viewBean.translationY && !toNotAdd.contains("android:translationY") && !injectHandler.contains("translationY")) {
-            nx.addAttribute("android", "translationY", viewBean.translationY + "dp");
+            xmlTag.addAttribute("android", "translationY", viewBean.translationY + "dp");
         }
         float scaleX = viewBean.scaleX;
         if (1.0f != scaleX && !toNotAdd.contains("android:scaleX") && !injectHandler.contains("scaleX")) {
-            nx.addAttribute("android", "scaleX", String.valueOf(scaleX));
+            xmlTag.addAttribute("android", "scaleX", String.valueOf(scaleX));
         }
         float scaleY = viewBean.scaleY;
         if (1.0f != scaleY && !toNotAdd.contains("android:scaleY") && !injectHandler.contains("scaleY")) {
-            nx.addAttribute("android", "scaleY", String.valueOf(scaleY));
+            xmlTag.addAttribute("android", "scaleY", String.valueOf(scaleY));
         }
 
         switch (viewBean.type) {
@@ -883,26 +883,26 @@ public class LayoutGenerator {
             case ViewBean.VIEW_TYPE_WIDGET_SWITCH:
             case ViewBeans.VIEW_TYPE_WIDGET_RADIOBUTTON:
                 if (viewBean.checked == 1 && !toNotAdd.contains("android:checked") && !injectHandler.contains("checked")) {
-                    nx.addAttribute("android", "checked", "true");
+                    xmlTag.addAttribute("android", "checked", "true");
                 }
                 break;
 
             case ViewBean.VIEW_TYPE_WIDGET_SEEKBAR:
                 int progress = viewBean.progress;
                 if (progress > ViewBean.DEFAULT_PROGRESS && !toNotAdd.contains("android:progress") && !injectHandler.contains("progress")) {
-                    nx.addAttribute("android", "progress", String.valueOf(progress));
+                    xmlTag.addAttribute("android", "progress", String.valueOf(progress));
                 }
 
                 int max = viewBean.max;
                 if (max != ViewBean.DEFAULT_MAX && !toNotAdd.contains("android:max") && !injectHandler.contains("max")) {
-                    nx.addAttribute("android", "max", String.valueOf(max));
+                    xmlTag.addAttribute("android", "max", String.valueOf(max));
                 }
                 break;
 
             case ViewBean.VIEW_TYPE_WIDGET_CALENDARVIEW:
                 int firstDayOfWeek = viewBean.firstDayOfWeek;
                 if (firstDayOfWeek != 1 && !toNotAdd.contains("android:firstDayOfWeek") && !injectHandler.contains("firstDayOfWeek")) {
-                    nx.addAttribute("android", "firstDayOfWeek", String.valueOf(firstDayOfWeek));
+                    xmlTag.addAttribute("android", "firstDayOfWeek", String.valueOf(firstDayOfWeek));
                 }
                 break;
 
@@ -910,9 +910,9 @@ public class LayoutGenerator {
                 int spinnerMode = viewBean.spinnerMode;
                 if (!toNotAdd.contains("android:spinnerMode") && !injectHandler.contains("spinnerMode")) {
                     if (spinnerMode == ViewBean.SPINNER_MODE_DROPDOWN) {
-                        nx.addAttribute("android", "spinnerMode", "dropdown");
+                        xmlTag.addAttribute("android", "spinnerMode", "dropdown");
                     } else if (spinnerMode == ViewBean.SPINNER_MODE_DIALOG) {
-                        nx.addAttribute("android", "spinnerMode", "dialog");
+                        xmlTag.addAttribute("android", "spinnerMode", "dialog");
                     }
                 }
                 break;
@@ -920,10 +920,10 @@ public class LayoutGenerator {
             case ViewBean.VIEW_TYPE_WIDGET_LISTVIEW:
                 int dividerHeight = viewBean.dividerHeight;
                 if (dividerHeight != 1 && !toNotAdd.contains("android:dividerHeight") && !injectHandler.contains("dividerHeight")) {
-                    nx.addAttribute("android", "dividerHeight", dividerHeight + "dp");
+                    xmlTag.addAttribute("android", "dividerHeight", dividerHeight + "dp");
                 }
                 if (dividerHeight == 0 && !toNotAdd.contains("android:divider") && !injectHandler.contains("divider")) {
-                    nx.addAttribute("android", "divider", "@null");
+                    xmlTag.addAttribute("android", "divider", "@null");
                 }
 
                 if (!toNotAdd.contains("android:choiceMode") && !injectHandler.contains("choiceMode")) {
@@ -934,7 +934,7 @@ public class LayoutGenerator {
                         default -> "";
                     };
                     if (!value.isEmpty()) {
-                        nx.addAttribute("android", "choiceMode", value);
+                        xmlTag.addAttribute("android", "choiceMode", value);
                     }
                 }
                 break;
@@ -943,17 +943,17 @@ public class LayoutGenerator {
                 String adSize = viewBean.adSize;
                 if (!toNotAdd.contains("app:adSize") && !injectHandler.contains("adSize")) {
                     if (adSize == null || adSize.isEmpty()) {
-                        nx.addAttribute("app", "adSize", "SMART_BANNER");
+                        xmlTag.addAttribute("app", "adSize", "SMART_BANNER");
                     } else {
-                        nx.addAttribute("app", "adSize", adSize);
+                        xmlTag.addAttribute("app", "adSize", adSize);
                     }
                 }
 
                 if (!toNotAdd.contains("app:adUnitId") && !injectHandler.contains("adUnitId")) {
                     if (buildConfig.isDebugBuild) {
-                        nx.addAttribute("app", "adUnitId", "ca-app-pub-3940256099942544/6300978111");
+                        xmlTag.addAttribute("app", "adUnitId", "ca-app-pub-3940256099942544/6300978111");
                     } else {
-                        nx.addAttribute("app", "adUnitId", buildConfig.bannerAdUnitId);
+                        xmlTag.addAttribute("app", "adUnitId", buildConfig.bannerAdUnitId);
                     }
                 }
                 break;
@@ -961,21 +961,21 @@ public class LayoutGenerator {
             case ViewBean.VIEW_TYPE_WIDGET_PROGRESSBAR:
                 progress = viewBean.progress;
                 if (progress > ViewBean.DEFAULT_PROGRESS && !toNotAdd.contains("android:progress") && !injectHandler.contains("progress")) {
-                    nx.addAttribute("android", "progress", String.valueOf(progress));
+                    xmlTag.addAttribute("android", "progress", String.valueOf(progress));
                 }
 
                 max = viewBean.max;
                 if (max != ViewBean.DEFAULT_MAX && !toNotAdd.contains("android:max") && !injectHandler.contains("max")) {
-                    nx.addAttribute("android", "max", String.valueOf(max));
+                    xmlTag.addAttribute("android", "max", String.valueOf(max));
                 }
 
                 String indeterminate = viewBean.indeterminate;
                 if (indeterminate != null && !indeterminate.isEmpty() && !toNotAdd.contains("android:indeterminate") && !injectHandler.contains("indeterminate")) {
-                    nx.addAttribute("android", "indeterminate", indeterminate);
+                    xmlTag.addAttribute("android", "indeterminate", indeterminate);
                 }
                 String progressStyle = viewBean.progressStyle;
                 if (progressStyle != null && !progressStyle.isEmpty() && !toNotAdd.contains("style") && !injectHandler.contains("style")) {
-                    nx.addAttribute(null, "style", progressStyle);
+                    xmlTag.addAttribute(null, "style", progressStyle);
                 }
                 break;
         }
