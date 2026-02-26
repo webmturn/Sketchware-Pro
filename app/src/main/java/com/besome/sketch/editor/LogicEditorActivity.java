@@ -2213,7 +2213,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     } catch (NumberFormatException e) {
                         id = -1;
                     }
-                    BlockBean blockBean2;
+                    BlockBean prevParentData;
                     if (dragSourceParent != null && id != -1) {
                         BlockBean clone = dragSourceParent.getBean().clone();
                         if (dragConnectionType == 0) {
@@ -2225,9 +2225,9 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                         } else if (dragConnectionType == 5) {
                             clone.parameters.set(dragParameterIndex, "@" + id);
                         }
-                        blockBean2 = clone;
+                        prevParentData = clone;
                     } else {
-                        blockBean2 = null;
+                        prevParentData = null;
                     }
                     ArrayList<BlockBean> removedBlocks = new ArrayList<>();
                     for (BlockView allChild : deletedBlock.getAllChildren()) {
@@ -2240,7 +2240,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     }
                     int[] oLocationOnScreen = new int[2];
                     blockPane.getLocationOnScreen(oLocationOnScreen);
-                    BlockHistoryManager.getInstance(scId).recordRemove(buildHistoryKey(), removedBlocks, ((int) touchOriginX) - oLocationOnScreen[0], ((int) touchOriginY) - oLocationOnScreen[1], blockBean2, currentParentData);
+                    BlockHistoryManager.getInstance(scId).recordRemove(buildHistoryKey(), removedBlocks, ((int) touchOriginX) - oLocationOnScreen[0], ((int) touchOriginY) - oLocationOnScreen[1], prevParentData, currentParentData);
                     refreshOptionsMenu();
                 }
             } else if (logicTopMenu.isFavoriteActive) {
