@@ -13,18 +13,18 @@ public abstract class PermissionFragment extends BaseFragment {
     public PermissionFragment() {
     }
 
-    public boolean checkPermissionOrRequest(int var1) {
-        boolean var2 = hasStoragePermission();
-        if (!var2) {
-            showPermissionDialog(var1);
+    public boolean checkPermissionOrRequest(int requestCode) {
+        boolean hasPermission = hasStoragePermission();
+        if (!hasPermission) {
+            showPermissionDialog(requestCode);
         }
 
-        return var2;
+        return hasPermission;
     }
 
-    public abstract void onPermissionGranted(int var1);
+    public abstract void onPermissionGranted(int requestCode);
 
-    public abstract void openAppSettings(int var1);
+    public abstract void openAppSettings(int requestCode);
 
     public boolean hasStoragePermission() {
         return ContextCompat.checkSelfPermission(requireContext(), "android.permission.WRITE_EXTERNAL_STORAGE") == PackageManager.PERMISSION_GRANTED
@@ -33,7 +33,7 @@ public abstract class PermissionFragment extends BaseFragment {
 
     public abstract void onPermissionDenied();
 
-    public void showPermissionDialog(int var1) {
+    public void showPermissionDialog(int requestCode) {
         if (!ThrottleTimer.isThrottled) {
             MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(super.activity);
             dialog.setTitle(R.string.common_message_permission_title_storage);
@@ -42,7 +42,7 @@ public abstract class PermissionFragment extends BaseFragment {
             dialog.setPositiveButton(R.string.common_word_ok, (view, which) -> {
                 if (!UIHelper.isClickThrottled()) {
                     requestPermissions(new String[]{"android.permission.WRITE_EXTERNAL_STORAGE",
-                            "android.permission.READ_EXTERNAL_STORAGE"}, var1);
+                            "android.permission.READ_EXTERNAL_STORAGE"}, requestCode);
                     view.dismiss();
                 }
             });
@@ -60,7 +60,7 @@ public abstract class PermissionFragment extends BaseFragment {
 
     public abstract void onSettingsDenied();
 
-    public void showSettingsDialog(int var1) {
+    public void showSettingsDialog(int requestCode) {
         if (!ThrottleTimer.isThrottled) {
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(super.activity);
             builder.setTitle(R.string.common_message_permission_title_storage);
@@ -68,7 +68,7 @@ public abstract class PermissionFragment extends BaseFragment {
             builder.setMessage(R.string.common_message_permission_storage1);
             builder.setPositiveButton(R.string.common_word_settings, (view, which) -> {
                 if (!UIHelper.isClickThrottled()) {
-                    openAppSettings(var1);
+                    openAppSettings(requestCode);
                     view.dismiss();
                 }
             });

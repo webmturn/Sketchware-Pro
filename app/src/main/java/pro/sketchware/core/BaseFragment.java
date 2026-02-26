@@ -31,9 +31,9 @@ public class BaseFragment extends Fragment {
         }
     }
 
-    public void addTask(BaseAsyncTask var1) {
+    public void addTask(BaseAsyncTask task) {
         if (getActivity() instanceof BaseAppCompatActivity) {
-            ((BaseAppCompatActivity) getActivity()).addTask(var1);
+            ((BaseAppCompatActivity) getActivity()).addTask(task);
         }
     }
 

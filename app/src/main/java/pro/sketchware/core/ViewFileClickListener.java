@@ -9,9 +9,9 @@ public class ViewFileClickListener implements View.OnClickListener {
   
   public final ViewFilesAdapter.FileListAdapter.ViewHolder viewHolder;
   
-  public ViewFileClickListener(ViewFilesAdapter.FileListAdapter.ViewHolder parama, ViewFilesAdapter.FileListAdapter parama1) {
-    this.adapter = parama1;
-    this.viewHolder = parama;
+  public ViewFileClickListener(ViewFilesAdapter.FileListAdapter.ViewHolder holder, ViewFilesAdapter.FileListAdapter adapter) {
+    this.adapter = adapter;
+    this.viewHolder = holder;
   }
   
   public void onClick(View view) {

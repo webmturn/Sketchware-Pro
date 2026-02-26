@@ -148,8 +148,8 @@ public class BlockColorMapper {
         };
     }
 
-    public static String getMapTypeName(int var0) {
-        return var0 == 3 ? "Map" : "";
+    public static String getMapTypeName(int componentType) {
+        return componentType == 3 ? "Map" : "";
     }
 
     /**

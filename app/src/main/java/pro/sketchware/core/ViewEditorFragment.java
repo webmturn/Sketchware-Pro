@@ -103,14 +103,14 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
             }
 
             @Override
-            public void onViewSelectedWithProperty(boolean var1, String viewId) {
+            public void onViewSelectedWithProperty(boolean showProperty, String viewId) {
                 if (!viewId.isEmpty()) {
                     updatePropertyViews();
                     viewProperty.selectWidgetById(viewId);
                     viewProperty.refreshPropertyGroups();
                 }
 
-                ViewEditorFragment.this.togglePropertyView(var1);
+                ViewEditorFragment.this.togglePropertyView(showProperty);
             }
         });
         viewEditor.setOnDraggingListener(new DraggingListener() {
@@ -183,17 +183,17 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
         viewEditor.loadViews(ProjectDataStore.getSortedRootViews(viewBeans));
     }
 
-    public void togglePropertyView(boolean var1) {
+    public void togglePropertyView(boolean showProperty) {
         startAnimation();
-        if (!isPropertyViewVisible || !var1) {
+        if (!isPropertyViewVisible || !showProperty) {
             cancelAnimations();
-            if (var1) {
+            if (showProperty) {
                 showPropertyViewAnimator.start();
             } else if (isPropertyViewVisible) {
                 hidePropertyViewAnimator.start();
             }
 
-            isPropertyViewVisible = var1;
+            isPropertyViewVisible = showProperty;
         }
     }
 
@@ -216,8 +216,8 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
         if (hidePropertyViewAnimator != null && hidePropertyViewAnimator.isRunning()) hidePropertyViewAnimator.cancel();
     }
 
-    public void updateViewDisplay(ViewBean var1) {
-        viewEditor.selectView(var1);
+    public void updateViewDisplay(ViewBean viewBean) {
+        viewEditor.selectView(viewBean);
     }
 
     public void showHidePropertyView(boolean shouldShow) {

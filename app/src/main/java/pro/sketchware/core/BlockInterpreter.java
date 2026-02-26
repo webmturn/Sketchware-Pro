@@ -68,14 +68,14 @@ public class BlockInterpreter {
         }
     }
 
-    public final String generateBlock(BlockBean bean, String var2) {
+    public final String generateBlock(BlockBean bean, String parentOpcode) {
         ArrayList<String> params = getBlockParams(bean);
 
         String opcode = getBlockCode(bean, params);
 
         String code = opcode;
 
-        if (needsParentheses(bean.opCode, var2)) {
+        if (needsParentheses(bean.opCode, parentOpcode)) {
             code = "(" + opcode + ")";
         }
 
@@ -182,12 +182,12 @@ public class BlockInterpreter {
         return param;
     }
 
-    public final String resolveBlock(String blockId, String var2) {
-        return !blockMap.containsKey(blockId) ? "" : generateBlock(blockMap.get(blockId), var2);
+    public final String resolveBlock(String blockId, String parentOpcode) {
+        return !blockMap.containsKey(blockId) ? "" : generateBlock(blockMap.get(blockId), parentOpcode);
     }
 
-    public final boolean needsParentheses(String var1, String var2) {
-        return Arrays.asList(operators).contains(var2) && Arrays.asList(arithmetic).contains(var1);
+    public final boolean needsParentheses(String opcode, String parentOpcode) {
+        return Arrays.asList(operators).contains(parentOpcode) && Arrays.asList(arithmetic).contains(opcode);
     }
 
     public ArrayList<String> getBlockParams(BlockBean bean) {
@@ -1421,7 +1421,7 @@ public class BlockInterpreter {
         return opcode;
     }
 
-    private String getCodeExtraBlock(BlockBean blockBean, String var2) {
+    private String getCodeExtraBlock(BlockBean blockBean, String parentOpcode) {
         ArrayList<String> parameters = new ArrayList<>();
         ArrayList<String> paramsTypes = extractParamsTypes(blockBean.spec);
 
@@ -1463,13 +1463,13 @@ public class BlockInterpreter {
         }
 
         if (blockBean.subStack1 >= 0) {
-            parameters.add(resolveBlock(String.valueOf(blockBean.subStack1), var2));
+            parameters.add(resolveBlock(String.valueOf(blockBean.subStack1), parentOpcode));
         } else {
             parameters.add(" ");
         }
 
         if (blockBean.subStack2 >= 0) {
-            parameters.add(resolveBlock(String.valueOf(blockBean.subStack2), var2));
+            parameters.add(resolveBlock(String.valueOf(blockBean.subStack2), parentOpcode));
         } else {
             parameters.add(" ");
         }

@@ -10,9 +10,9 @@ public class ViewFileLongClickListener implements View.OnLongClickListener {
   
   public final ViewFilesAdapter.FileListAdapter.ViewHolder viewHolder;
   
-  public ViewFileLongClickListener(ViewFilesAdapter.FileListAdapter.ViewHolder parama, ViewFilesAdapter.FileListAdapter parama1) {
-    this.adapter = parama1;
-    this.viewHolder = parama;
+  public ViewFileLongClickListener(ViewFilesAdapter.FileListAdapter.ViewHolder holder, ViewFilesAdapter.FileListAdapter adapter) {
+    this.adapter = adapter;
+    this.viewHolder = holder;
   }
   
   public boolean onLongClick(View view) {

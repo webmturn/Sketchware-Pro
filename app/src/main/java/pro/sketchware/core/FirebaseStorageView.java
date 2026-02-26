@@ -27,9 +27,9 @@ public class FirebaseStorageView extends LinearLayout implements LibraryConfigVi
 
     @Override
     public void saveToBean(ProjectLibraryBean libraryBean) {
-        String var2 = binding.edInputStorageUrl.getText().toString().trim();
-        if (!var2.isEmpty()) {
-            String cleaned = var2;
+        String storageUrl = binding.edInputStorageUrl.getText().toString().trim();
+        if (!storageUrl.isEmpty()) {
+            String cleaned = storageUrl;
             if (cleaned.startsWith("gs://")) {
                 cleaned = cleaned.substring(5);
             }

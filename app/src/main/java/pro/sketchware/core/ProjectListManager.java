@@ -201,24 +201,24 @@ public class ProjectListManager {
         }
 
         projectIndices.sort(new IntegerComparator());
-        int var3 = 0;
+        int lastConsecutiveIndex = 0;
 
         for (int nextProjectIndex : projectIndices) {
-            int var5 = var3 + 1;
-            if (nextProjectIndex == var5) {
-                var3 = var5;
+            int expectedNext = lastConsecutiveIndex + 1;
+            if (nextProjectIndex == expectedNext) {
+                lastConsecutiveIndex = expectedNext;
             } else {
-                if (nextProjectIndex == var3) {
+                if (nextProjectIndex == lastConsecutiveIndex) {
                     continue;
                 }
                 break;
             }
         }
 
-        if (var3 == 0) {
+        if (lastConsecutiveIndex == 0) {
             return "NewProject";
         } else {
-            return "NewProject" + (var3 + 1);
+            return "NewProject" + (lastConsecutiveIndex + 1);
         }
     }
 

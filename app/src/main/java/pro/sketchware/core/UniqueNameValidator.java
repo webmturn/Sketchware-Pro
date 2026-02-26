@@ -14,8 +14,8 @@ public class UniqueNameValidator extends BaseValidator {
 
     private final ArrayList<String> preDefNames;
 
-    public UniqueNameValidator(Context var1, TextInputLayout var2, ArrayList<String> names) {
-        super(var1, var2);
+    public UniqueNameValidator(Context context, TextInputLayout textInputLayout, ArrayList<String> names) {
+        super(context, textInputLayout);
         preDefNames = names;
     }
 

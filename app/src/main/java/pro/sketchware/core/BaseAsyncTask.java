@@ -14,8 +14,8 @@ public abstract class BaseAsyncTask extends AsyncTask<Void, String, String> {
 
     private final WeakReference<Context> contextRef;
 
-    public BaseAsyncTask(Context var1) {
-        contextRef = new WeakReference<>(var1);
+    public BaseAsyncTask(Context context) {
+        contextRef = new WeakReference<>(context);
     }
 
     public Context getContext() {
