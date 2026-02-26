@@ -415,21 +415,38 @@ new BuiltInLibrary(FIREBASE_IID_INTEROP, List.of(
 new BuiltInLibrary(FIREBASE_MEASUREMENT_CONNECTOR, List.of(PLAY_SERVICES_BASEMENT)),
 ```
 
-#### 4.2.1 firebase-auth 23.1.0 的额外依赖风险
+#### 4.2.1 firebase-auth 额外依赖风险分析
 
-⚠️ firebase-auth 23.1.0 新增了以下依赖，这些在旧版中不存在：
+⚠️ 通过对多个 firebase-auth 版本的 Maven POM 对比研究：
 
-| 依赖 | 版本 | 说明 |
-|------|------|------|
-| `androidx.credentials:credentials` | 1.2.0-rc01 | Android 凭据管理 API（新） |
-| `androidx.credentials:credentials-play-services-auth` | 1.2.0-rc01 | 凭据 Play Services 实现（新） |
-| `com.google.android.play:integrity` | 1.3.0 | Play Integrity API（新） |
-| `com.google.android.recaptcha:recaptcha` | 18.5.1 | reCAPTCHA（新） |
+| firebase-auth 版本 | play:integrity | recaptcha | safetynet | credentials | 编译依赖数 |
+|-------------------|---------------|-----------|-----------|-------------|-----------|
+| 21.0.1 | ❌ | ❌ | ✅ 17.0.0 | ❌ | 12 |
+| 21.3.0 | ✅ 1.0.1 | ✅ 18.0.1 | ✅ 17.0.0 | ❌ | 13 |
+| 22.3.1 | ✅ 1.2.0 | ✅ 18.4.0 | ❌ | ❌ | 16 |
+| 23.1.0 (BOM 33.7.0) | ✅ 1.3.0 | ✅ 18.5.1 | ❌ | ✅ 1.2.0-rc01 | 18 |
 
-**决策点**：这些是 firebase-auth 23.1.0 的编译依赖，必须全部纳入内置库，否则用户项目编译会失败。
-这将显著增加内置库数量和 APK 体积。
+**关键发现**：
+- `play:integrity` 和 `recaptcha` 从 **21.3.0 起** 就已引入，**无法通过降级避免**
+- `androidx.credentials` 仅在 **23.x** 中引入
+- firebase-auth 21.0.1 使用 `play-services-safetynet`（已弃用）替代 integrity/recaptcha
+- firebase-auth 21.0.1 依赖 firebase-common **20.0.0**，与目标 21.0.0 可能不兼容
 
-**替代方案**：考虑使用 firebase-auth 22.x（BOM 32.x 系列），该版本可能不需要这些新依赖。
+**必须新增的 firebase-auth 额外依赖（所有 21.3.0+ 版本）：**
+
+| 依赖 | 版本 (23.1.0) | 说明 |
+|------|-------------|------|
+| `com.google.android.play:integrity` | 1.3.0 | Play Integrity API，App Check 使用 |
+| `com.google.android.recaptcha:recaptcha` | 18.5.1 | reCAPTCHA Enterprise |
+| `play-services-auth-api-phone` | 17.4.0 | 电话号码认证（已存在但需验证版本） |
+| `androidx.browser` | 1.4.0 | Custom Tabs 支持（已存在） |
+| `androidx.credentials:credentials` | 1.2.0-rc01 | **仅 23.x**，Credential Manager |
+| `androidx.credentials:credentials-play-services-auth` | 1.2.0-rc01 | **仅 23.x** |
+
+**推荐方案**：使用 **firebase-auth 23.1.0**（与 BOM 33.7.0 一致）
+- 理由：integrity/recaptcha 在 21.3.0+ 都需要，降级不能减少依赖
+- 代价：需额外捆绑 ~6 个新依赖（integrity, recaptcha, credentials ×2, auth-api-phone, browser）
+- 这些库的传递依赖还需进一步分析
 
 #### 4.3 更新 ProjectBuilder.java
 
