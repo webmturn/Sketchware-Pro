@@ -510,11 +510,14 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         paletteWidget = findViewById(R.id.palette_widget);
         paletteFavorite = findViewById(R.id.palette_favorite);
         dummyView = findViewById(R.id.dummy);
+        dummyView.setVisibility(View.GONE);
         deleteIcon = findViewById(R.id.icon_delete);
         deleteText = findViewById(R.id.text_delete);
         deleteView = findViewById(R.id.delete_view);
+        deleteView.setVisibility(View.GONE);
         FrameLayout shape = findViewById(R.id.shape);
         shape.setVisibility(View.GONE);
+        findViewById(R.id.layout_palette).setVisibility(View.GONE);
         paletteGroup = findViewById(R.id.palette_group);
 
         addPaletteGroupItems();
@@ -698,6 +701,9 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         if (draggingListener != null) draggingListener.onDragStarted();
         if (useVibrate) vibrator.vibrate(100L);
         isDragged = true;
+        if (dummyView.getVisibility() != View.VISIBLE) {
+            dummyView.setVisibility(View.VISIBLE);
+        }
         dummyView.captureViewBitmap(currentTouchedView);
         dummyView.bringToFront();
         clearSelection();
@@ -814,6 +820,9 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
             deleteText.setText(Helper.getResString(R.string.editor_drag_to_delete));
             setDeleteViewIconAndTextUi(false);
         }
+        if (deleteView.getVisibility() != View.VISIBLE) {
+            deleteView.setVisibility(View.VISIBLE);
+        }
         deleteView.bringToFront();
         if (!isAnimating) {
             animateUpDown();
@@ -872,6 +881,10 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         View shape = findViewById(R.id.shape);
         if (shape != null && shape.getVisibility() != View.VISIBLE) {
             shape.setVisibility(View.VISIBLE);
+        }
+        View palette = findViewById(R.id.layout_palette);
+        if (palette != null && palette.getVisibility() != View.VISIBLE) {
+            palette.setVisibility(View.VISIBLE);
         }
         toolbar.setVisibility(hasToolbar ? View.VISIBLE : View.GONE);
         bgStatus.setVisibility(isFullscreen ? View.GONE : View.VISIBLE);
