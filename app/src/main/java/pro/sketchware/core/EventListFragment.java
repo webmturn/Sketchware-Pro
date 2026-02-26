@@ -173,14 +173,14 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
             activityEvents.add(eventBean2);
             for (EventBean eventBean : ProjectDataManager.getProjectDataManager(sc_id).getEvents(currentActivity.getJavaName())) {
                 eventBean.initValue();
-                int i = eventBean.eventType;
-                if (i == EventBean.EVENT_TYPE_VIEW) {
+                int eventType = eventBean.eventType;
+                if (eventType == EventBean.EVENT_TYPE_VIEW) {
                     viewEvents.add(eventBean);
-                } else if (i == EventBean.EVENT_TYPE_COMPONENT) {
+                } else if (eventType == EventBean.EVENT_TYPE_COMPONENT) {
                     componentEvents.add(eventBean);
-                } else if (i == EventBean.EVENT_TYPE_ACTIVITY) {
+                } else if (eventType == EventBean.EVENT_TYPE_ACTIVITY) {
                     activityEvents.add(eventBean);
-                } else if (i == EventBean.EVENT_TYPE_DRAWER_VIEW) {
+                } else if (eventType == EventBean.EVENT_TYPE_DRAWER_VIEW) {
                     drawerViewEvents.add(eventBean);
                 }
             }

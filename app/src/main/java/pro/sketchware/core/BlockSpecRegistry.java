@@ -3969,1625 +3969,1626 @@ public class BlockSpecRegistry {
   public static String getBlockSpec(String blockName) {
     if (cacheD.containsKey(blockName)) return cacheD.get(blockName);
     String originalKey = blockName;
-    int i = blockName.hashCode();
+    int hashCode = blockName.hashCode();
+    int matchIndex = -1;
     String defaultValue = "false";
-    switch (i) {
+    switch (hashCode) {
       default:
-        i = -1;
+        matchIndex = -1;
         break;
       case 2138225950:
         if (blockName.equals("locationManagerRequestLocationUpdates")) {
-          i = 320;
+          matchIndex = 320;
           break;
         } 
       case 2130649194:
         if (blockName.equals("bluetoothConnectGetPairedDevices")) {
-          i = 318;
+          matchIndex = 318;
           break;
         } 
       case 2127377128:
         if (blockName.equals("mediaplayerGetCurrent")) {
-          i = 213;
+          matchIndex = 213;
           break;
         } 
       case 2090189010:
         if (blockName.equals("addListStr")) {
-          i = 22;
+          matchIndex = 22;
           break;
         } 
       case 2090182653:
         if (blockName.equals("addListMap")) {
-          i = 27;
+          matchIndex = 27;
           break;
         } 
       case 2090179216:
         if (blockName.equals("addListInt")) {
-          i = 14;
+          matchIndex = 14;
           break;
         } 
       case 2075310296:
         if (blockName.equals("interstitialadLoadAd")) {
-          i = 253;
+          matchIndex = 253;
           break;
         } 
       case 2017929665:
         if (blockName.equals("calendarViewSetMinDate")) {
-          i = 166;
+          matchIndex = 166;
           break;
         } 
       case 1984984239:
         if (blockName.equals("setText")) {
-          i = 109;
+          matchIndex = 109;
           break;
         } 
       case 1984630281:
         if (blockName.equals("setHint")) {
-          i = 115;
+          matchIndex = 115;
           break;
         } 
       case 1976325370:
         if (blockName.equals("setImageFilePath")) {
-          i = 120;
+          matchIndex = 120;
           break;
         } 
       case 1974249461:
         if (blockName.equals("skewBitmapFile")) {
-          i = 294;
+          matchIndex = 294;
           break;
         } 
       case 1973523807:
         if (blockName.equals("mediaplayerIsPlaying")) {
-          i = 215;
+          matchIndex = 215;
           break;
         } 
       case 1964823036:
         if (blockName.equals("bluetoothConnectStopConnection")) {
-          i = 313;
+          matchIndex = 313;
           break;
         } 
       case 1948735400:
         if (blockName.equals("getAlpha")) {
-          i = 125;
+          matchIndex = 125;
           break;
         } 
       case 1941634330:
         if (blockName.equals("firebaseAdd")) {
-          i = 235;
+          matchIndex = 235;
           break;
         } 
       case 1923980937:
         if (blockName.equals("requestnetworkSetParams")) {
-          i = 260;
+          matchIndex = 260;
           break;
         } 
       case 1908582864:
         if (blockName.equals("firebaseStopListen")) {
-          i = 249;
+          matchIndex = 249;
           break;
         } 
       case 1908132964:
         if (blockName.equals("mapViewSetMarkerPosition")) {
-          i = 176;
+          matchIndex = 176;
           break;
         } 
       case 1885231494:
         if (blockName.equals("webViewCanGoForward")) {
-          i = 156;
+          matchIndex = 156;
           break;
         } 
       case 1883337723:
         if (blockName.equals("mathGetDisplayHeight")) {
-          i = 79;
+          matchIndex = 79;
           break;
         } 
       case 1873103950:
         if (blockName.equals("locationManagerRemoveUpdates")) {
-          i = 321;
+          matchIndex = 321;
           break;
         } 
       case 1848365301:
         if (blockName.equals("mapViewSetMapType")) {
-          i = 169;
+          matchIndex = 169;
           break;
         } 
       case 1823151876:
         if (blockName.equals("fileGetData")) {
-          i = 188;
+          matchIndex = 188;
           break;
         } 
       case 1820536363:
         if (blockName.equals("interstitialadCreate")) {
-          i = 252;
+          matchIndex = 252;
           break;
         } 
       case 1814870108:
         if (blockName.equals("doToast")) {
-          i = 277;
+          matchIndex = 277;
           break;
         } 
       case 1792552710:
         if (blockName.equals("rotateBitmapFile")) {
-          i = 292;
+          matchIndex = 292;
           break;
         } 
       case 1779174257:
         if (blockName.equals("getChecked")) {
-          i = 137;
+          matchIndex = 137;
           break;
         } 
       case 1775620400:
         if (blockName.equals("strToMap")) {
-          i = 73;
+          matchIndex = 73;
           break;
         } 
       case 1764351209:
         if (blockName.equals("deleteList")) {
-          i = 16;
+          matchIndex = 16;
           break;
         } 
       case 1749552744:
         if (blockName.equals("textToSpeechSpeak")) {
-          i = 302;
+          matchIndex = 302;
           break;
         } 
       case 1712613410:
         if (blockName.equals("webViewZoomOut")) {
-          i = 163;
+          matchIndex = 163;
           break;
         } 
       case 1695890133:
         if (blockName.equals("fileutilStartsWith")) {
-          i = 274;
+          matchIndex = 274;
           break;
         } 
       case 1637498582:
         if (blockName.equals("timerEvery")) {
-          i = 200;
+          matchIndex = 200;
           break;
         } 
       case 1635356258:
         if (blockName.equals("requestnetworkStartRequestNetwork")) {
-          i = 262;
+          matchIndex = 262;
           break;
         } 
       case 1633341847:
         if (blockName.equals("timerAfter")) {
-          i = 199;
+          matchIndex = 199;
           break;
         } 
       case 1601394299:
         if (blockName.equals("listGetCheckedPositions")) {
-          i = 145;
+          matchIndex = 145;
           break;
         } 
       case 1498864168:
         if (blockName.equals("seekBarGetProgress")) {
-          i = 281;
+          matchIndex = 281;
           break;
         } 
       case 1470831563:
         if (blockName.equals("intentGetString")) {
-          i = 186;
+          matchIndex = 186;
           break;
         } 
       case 1437288110:
         if (blockName.equals("getPublicDir")) {
-          i = 286;
+          matchIndex = 286;
           break;
         } 
       case 1431171391:
         if (blockName.equals("mapRemoveKey")) {
-          i = 9;
+          matchIndex = 9;
           break;
         } 
       case 1410284340:
         if (blockName.equals("seekBarSetProgress")) {
-          i = 283;
+          matchIndex = 283;
           break;
         } 
       case 1405084438:
         if (blockName.equals("setTitle")) {
-          i = 279;
+          matchIndex = 279;
           break;
         } 
       case 1397501021:
         if (blockName.equals("listRefresh")) {
-          i = 142;
+          matchIndex = 142;
           break;
         } 
       case 1395026457:
         if (blockName.equals("setImage")) {
-          i = 118;
+          matchIndex = 118;
           break;
         } 
       case 1387622940:
         if (blockName.equals("setAlpha")) {
-          i = 124;
+          matchIndex = 124;
           break;
         } 
       case 1348133645:
         if (blockName.equals("stringReplaceFirst")) {
-          i = 63;
+          matchIndex = 63;
           break;
         } 
       case 1343794064:
         if (blockName.equals("listSetItemChecked")) {
-          i = 143;
+          matchIndex = 143;
           break;
         } 
       case 1330354473:
         if (blockName.equals("firebaseauthSignInAnonymously")) {
-          i = 242;
+          matchIndex = 242;
           break;
         } 
       case 1315302372:
         if (blockName.equals("fileutillength")) {
-          i = 273;
+          matchIndex = 273;
           break;
         } 
       case 1313527577:
         if (blockName.equals("setTypeface")) {
-          i = 110;
+          matchIndex = 110;
           break;
         } 
       case 1311764810:
         if (blockName.equals("setTranslationY")) {
-          i = 128;
+          matchIndex = 128;
           break;
         } 
       case 1311764809:
         if (blockName.equals("setTranslationX")) {
-          i = 126;
+          matchIndex = 126;
           break;
         } 
       case 1305932583:
         if (blockName.equals("spnGetSelection")) {
-          i = 151;
+          matchIndex = 151;
           break;
         } 
       case 1303367340:
         if (blockName.equals("textToSpeechStop")) {
-          i = 304;
+          matchIndex = 304;
           break;
         } 
       case 1280029577:
         if (blockName.equals("requestFocus")) {
-          i = 117;
+          matchIndex = 117;
           break;
         } 
       case 1252547704:
         if (blockName.equals("listMapToStr")) {
-          i = 76;
+          matchIndex = 76;
           break;
         } 
       case 1242107556:
         if (blockName.equals("fileutilisfile")) {
-          i = 272;
+          matchIndex = 272;
           break;
         } 
       case 1240510514:
         if (blockName.equals("intentSetScreen")) {
-          i = 182;
+          matchIndex = 182;
           break;
         } 
       case 1236956449:
         if (blockName.equals("mediaplayerCreate")) {
-          i = 209;
+          matchIndex = 209;
           break;
         } 
       case 1220078450:
         if (blockName.equals("addSourceDirectly")) {
-          i = 72;
+          matchIndex = 72;
           break;
         } 
       case 1219299503:
         if (blockName.equals("objectanimatorIsRunning")) {
-          i = 234;
+          matchIndex = 234;
           break;
         } 
       case 1219071185:
         if (blockName.equals("firebasestorageUploadFile")) {
-          i = 255;
+          matchIndex = 255;
           break;
         } 
       case 1216249183:
         if (blockName.equals("firebasestorageDelete")) {
-          i = 257;
+          matchIndex = 257;
           break;
         } 
       case 1187505507:
         if (blockName.equals("stringReplace")) {
-          i = 62;
+          matchIndex = 62;
           break;
         } 
       case 1179719371:
         if (blockName.equals("stringLastIndex")) {
-          i = 58;
+          matchIndex = 58;
           break;
         } 
       case 1162069698:
         if (blockName.equals("setThumbResource")) {
-          i = 138;
+          matchIndex = 138;
           break;
         } 
       case 1160674468:
         if (blockName.equals("lengthList")) {
-          i = 19;
+          matchIndex = 19;
           break;
         } 
       case 1159035162:
         if (blockName.equals("mapViewZoomOut")) {
-          i = 173;
+          matchIndex = 173;
           break;
         } 
       case 1156598140:
         if (blockName.equals("fileutilEndsWith")) {
-          i = 275;
+          matchIndex = 275;
           break;
         } 
       case 1142897724:
         if (blockName.equals("firebaseauthSignInUser")) {
-          i = 241;
+          matchIndex = 241;
           break;
         } 
       case 1129709718:
         if (blockName.equals("setImageUrl")) {
-          i = 121;
+          matchIndex = 121;
           break;
         } 
       case 1102670563:
         if (blockName.equals("requestnetworkSetHeaders")) {
-          i = 261;
+          matchIndex = 261;
           break;
         } 
       case 1090517587:
         if (blockName.equals("getPackageDataDir")) {
-          i = 285;
+          matchIndex = 285;
           break;
         } 
       case 1088879149:
         if (blockName.equals("setHintTextColor")) {
-          i = 116;
+          matchIndex = 116;
           break;
         } 
       case 1086207657:
         if (blockName.equals("fileutildelete")) {
-          i = 263;
+          matchIndex = 263;
           break;
         } 
       case 1068548733:
         if (blockName.equals("mathGetDip")) {
-          i = 77;
+          matchIndex = 77;
           break;
         } 
       case 1053179400:
         if (blockName.equals("mapViewSetMarkerColor")) {
-          i = 177;
+          matchIndex = 177;
           break;
         } 
       case 950609198:
         if (blockName.equals("setBitmapFileColorFilter")) {
-          i = 295;
+          matchIndex = 295;
           break;
         } 
       case 948234497:
         if (blockName.equals("webViewStopLoading")) {
-          i = 161;
+          matchIndex = 161;
           break;
         } 
       case 937017988:
         if (blockName.equals("gyroscopeStartListen")) {
-          i = 250;
+          matchIndex = 250;
           break;
         } 
       case 932259189:
         if (blockName.equals("setBgResource")) {
-          i = 113;
+          matchIndex = 113;
           break;
         } 
       case 898187172:
         if (blockName.equals("mathToRadian")) {
-          i = 99;
+          matchIndex = 99;
           break;
         } 
       case 858248741:
         if (blockName.equals("calendarGetTime")) {
-          i = 196;
+          matchIndex = 196;
           break;
         } 
       case 848786445:
         if (blockName.equals("objectanimatorSetTarget")) {
-          i = 224;
+          matchIndex = 224;
           break;
         } 
       case 845089750:
         if (blockName.equals("setVarString")) {
-          i = 4;
+          matchIndex = 4;
           break;
         } 
       case 840991609:
         if (blockName.equals("mathTan")) {
-          i = 92;
+          matchIndex = 92;
           break;
         } 
       case 840990896:
         if (blockName.equals("mathSin")) {
-          i = 90;
+          matchIndex = 90;
           break;
         } 
       case 840988208:
         if (blockName.equals("mathPow")) {
-          i = 82;
+          matchIndex = 82;
           break;
         } 
       case 840985130:
         if (blockName.equals("mathMin")) {
-          i = 83;
+          matchIndex = 83;
           break;
         } 
       case 840984892:
         if (blockName.equals("mathMax")) {
-          i = 84;
+          matchIndex = 84;
           break;
         } 
       case 840984348:
         if (blockName.equals("mathLog")) {
-          i = 97;
+          matchIndex = 97;
           break;
         } 
       case 840977909:
         if (blockName.equals("mathExp")) {
-          i = 96;
+          matchIndex = 96;
           break;
         } 
       case 840975711:
         if (blockName.equals("mathCos")) {
-          i = 91;
+          matchIndex = 91;
           break;
         } 
       case 840973386:
         if (blockName.equals("mathAbs")) {
-          i = 86;
+          matchIndex = 86;
           break;
         } 
       case 836692861:
         if (blockName.equals("mapSize")) {
-          i = 10;
+          matchIndex = 10;
           break;
         } 
       case 797861524:
         if (blockName.equals("addMapToList")) {
-          i = 32;
+          matchIndex = 32;
           break;
         } 
       case 787825477:
         if (blockName.equals("getScaleY")) {
-          i = 133;
+          matchIndex = 133;
           break;
         } 
       case 787825476:
         if (blockName.equals("getScaleX")) {
-          i = 131;
+          matchIndex = 131;
           break;
         } 
       case 770834513:
         if (blockName.equals("getRotate")) {
-          i = 123;
+          matchIndex = 123;
           break;
         } 
       case 762292097:
         if (blockName.equals("indexListStr")) {
-          i = 25;
+          matchIndex = 25;
           break;
         } 
       case 762282303:
         if (blockName.equals("indexListInt")) {
-          i = 18;
+          matchIndex = 18;
           break;
         } 
       case 754442829:
         if (blockName.equals("increaseInt")) {
-          i = 2;
+          matchIndex = 2;
           break;
         } 
       case 747168008:
         if (blockName.equals("mapCreateNew")) {
-          i = 5;
+          matchIndex = 5;
           break;
         } 
       case 738846120:
         if (blockName.equals("textToSpeechSetPitch")) {
-          i = 300;
+          matchIndex = 300;
           break;
         } 
       case 737664870:
         if (blockName.equals("mathRound")) {
-          i = 87;
+          matchIndex = 87;
           break;
         } 
       case 732108347:
         if (blockName.equals("mathLog10")) {
-          i = 98;
+          matchIndex = 98;
           break;
         } 
       case 726887785:
         if (blockName.equals("mapViewSetMarkerInfo")) {
-          i = 175;
+          matchIndex = 175;
           break;
         } 
       case 726877492:
         if (blockName.equals("mapViewSetMarkerIcon")) {
-          i = 178;
+          matchIndex = 178;
           break;
         } 
       case 726487524:
         if (blockName.equals("mathFloor")) {
-          i = 89;
+          matchIndex = 89;
           break;
         } 
       case 725249532:
         if (blockName.equals("intentSetAction")) {
-          i = 180;
+          matchIndex = 180;
           break;
         } 
       case 683193060:
         if (blockName.equals("bluetoothConnectStartConnection")) {
-          i = 311;
+          matchIndex = 311;
           break;
         } 
       case 657721930:
         if (blockName.equals("setVarInt")) {
-          i = 1;
+          matchIndex = 1;
           break;
         } 
       case 615286641:
         if (blockName.equals("dialogNeutralButton")) {
-          i = 206;
+          matchIndex = 206;
           break;
         } 
       case 610313513:
         if (blockName.equals("getMapInList")) {
-          i = 34;
+          matchIndex = 34;
           break;
         } 
       case 573295520:
         if (blockName.equals("listGetCheckedCount")) {
-          i = 146;
+          matchIndex = 146;
           break;
         } 
       case 573208401:
         if (blockName.equals("setScaleY")) {
-          i = 132;
+          matchIndex = 132;
           break;
         } 
       case 573208400:
         if (blockName.equals("setScaleX")) {
-          i = 130;
+          matchIndex = 130;
           break;
         } 
       case 571046965:
         if (blockName.equals("scaleBitmapFile")) {
-          i = 293;
+          matchIndex = 293;
           break;
         } 
       case 556217437:
         if (blockName.equals("setRotate")) {
-          i = 122;
+          matchIndex = 122;
           break;
         } 
       case 548860462:
         if (blockName.equals("webViewClearCache")) {
-          i = 159;
+          matchIndex = 159;
           break;
         } 
       case 530759231:
         if (blockName.equals("progressBarSetIndeterminate")) {
-          i = 299;
+          matchIndex = 299;
           break;
         } 
       case 501171279:
         if (blockName.equals("mathToDegree")) {
-          i = 100;
+          matchIndex = 100;
           break;
         } 
       case 490702942:
         if (blockName.equals("filepickerstartpickfiles")) {
-          i = 259;
+          matchIndex = 259;
           break;
         } 
       case 481850295:
         if (blockName.equals("resizeBitmapFileToSquare")) {
-          i = 288;
+          matchIndex = 288;
           break;
         } 
       case 475815924:
         if (blockName.equals("setTextColor")) {
-          i = 114;
+          matchIndex = 114;
           break;
         } 
       case 470160234:
         if (blockName.equals("fileutilGetLastSegmentPath")) {
-          i = 276;
+          matchIndex = 276;
           break;
         } 
       case 463594049:
         if (blockName.equals("objectanimatorSetFromTo")) {
-          i = 227;
+          matchIndex = 227;
           break;
         } 
       case 463560551:
         if (blockName.equals("mapContainKey")) {
-          i = 8;
+          matchIndex = 8;
           break;
         } 
       case 442768763:
         if (blockName.equals("mapGetAllKeys")) {
-          i = 13;
+          matchIndex = 13;
           break;
         } 
       case 404265028:
         if (blockName.equals("calendarSet")) {
-          i = 193;
+          matchIndex = 193;
           break;
         } 
       case 404247683:
         if (blockName.equals("calendarAdd")) {
-          i = 192;
+          matchIndex = 192;
           break;
         } 
       case 401012286:
         if (blockName.equals("getTranslationY")) {
-          i = 129;
+          matchIndex = 129;
           break;
         } 
       case 401012285:
         if (blockName.equals("getTranslationX")) {
-          i = 127;
+          matchIndex = 127;
           break;
         } 
       case 397166713:
         if (blockName.equals("getEnable")) {
-          i = 106;
+          matchIndex = 106;
           break;
         } 
       case 389111867:
         if (blockName.equals("spnSetData")) {
-          i = 148;
+          matchIndex = 148;
           break;
         } 
       case 348475309:
         if (blockName.equals("soundpoolStreamStop")) {
-          i = 223;
+          matchIndex = 223;
           break;
         } 
       case 348377823:
         if (blockName.equals("soundpoolStreamPlay")) {
-          i = 222;
+          matchIndex = 222;
           break;
         } 
       case 342026220:
         if (blockName.equals("interstitialadShow")) {
-          i = 254;
+          matchIndex = 254;
           break;
         } 
       case 317453636:
         if (blockName.equals("textToSpeechIsSpeaking")) {
-          i = 303;
+          matchIndex = 303;
           break;
         } 
       case 300921928:
         if (blockName.equals("mathSqrt")) {
-          i = 85;
+          matchIndex = 85;
           break;
         } 
       case 300433453:
         if (blockName.equals("mathCeil")) {
-          i = 88;
+          matchIndex = 88;
           break;
         } 
       case 300388040:
         if (blockName.equals("mathAtan")) {
-          i = 95;
+          matchIndex = 95;
           break;
         } 
       case 300387327:
         if (blockName.equals("mathAsin")) {
-          i = 93;
+          matchIndex = 93;
           break;
         } 
       case 300372142:
         if (blockName.equals("mathAcos")) {
-          i = 94;
+          matchIndex = 94;
           break;
         } 
       case 297379706:
         if (blockName.equals("textToSpeechSetSpeechRate")) {
-          i = 301;
+          matchIndex = 301;
           break;
         } 
       case 276674391:
         if (blockName.equals("mapViewMoveCamera")) {
-          i = 170;
+          matchIndex = 170;
           break;
         } 
       case 262073061:
         if (blockName.equals("bluetoothConnectReadyConnection")) {
-          i = 309;
+          matchIndex = 309;
           break;
         } 
       case 255417137:
         if (blockName.equals("adViewLoadAd")) {
-          i = 168;
+          matchIndex = 168;
           break;
         } 
       case 207764385:
         if (blockName.equals("calendarViewGetDate")) {
-          i = 164;
+          matchIndex = 164;
           break;
         } 
       case 182549637:
         if (blockName.equals("setEnable")) {
-          i = 105;
+          matchIndex = 105;
           break;
         } 
       case 168740282:
         if (blockName.equals("mapToStr")) {
-          i = 74;
+          matchIndex = 74;
           break;
         } 
       case 163812602:
         if (blockName.equals("cropBitmapFileFromCenter")) {
-          i = 291;
+          matchIndex = 291;
           break;
         } 
       case 152967761:
         if (blockName.equals("mapClear")) {
-          i = 11;
+          matchIndex = 11;
           break;
         } 
       case 134874756:
         if (blockName.equals("listSetCustomViewData")) {
-          i = 141;
+          matchIndex = 141;
           break;
         } 
       case 125431087:
         if (blockName.equals("speechToTextStopListening")) {
-          i = 307;
+          matchIndex = 307;
           break;
         } 
       case 103668285:
         if (blockName.equals("mathE")) {
-          i = 81;
+          matchIndex = 81;
           break;
         } 
       case 97196323:
         if (blockName.equals("false")) {
-          i = 42;
+          matchIndex = 42;
           break;
         } 
       case 94001407:
         if (blockName.equals("break")) {
-          i = 37;
+          matchIndex = 37;
           break;
         } 
       case 61585857:
         if (blockName.equals("firebasePush")) {
-          i = 236;
+          matchIndex = 236;
           break;
         } 
       case 56167279:
         if (blockName.equals("setBitmapFileContrast")) {
-          i = 297;
+          matchIndex = 297;
           break;
         } 
       case 27679870:
         if (blockName.equals("calendarGetNow")) {
-          i = 191;
+          matchIndex = 191;
           break;
         } 
       case 25469951:
         if (blockName.equals("bluetoothConnectActivateBluetooth")) {
-          i = 317;
+          matchIndex = 317;
           break;
         } 
       case 16308074:
         if (blockName.equals("resizeBitmapFileToCircle")) {
-          i = 289;
+          matchIndex = 289;
           break;
         } 
       case 8255701:
         if (blockName.equals("calendarFormat")) {
-          i = 194;
+          matchIndex = 194;
           break;
         } 
       case 3569038:
         if (blockName.equals("true")) {
-          i = 41;
+          matchIndex = 41;
           break;
         } 
       case 3568674:
         if (blockName.equals("trim")) {
-          i = 66;
+          matchIndex = 66;
           break;
         } 
       case 3116345:
         if (blockName.equals("else")) {
-          i = 40;
+          matchIndex = 40;
           break;
         } 
       case 109267:
         if (blockName.equals("not")) {
-          i = 48;
+          matchIndex = 48;
           break;
         } 
       case 3968:
         if (blockName.equals("||")) {
-          i = 47;
+          matchIndex = 47;
           break;
         } 
       case 3357:
         if (blockName.equals("if")) {
-          i = 38;
+          matchIndex = 38;
           break;
         } 
       case 1216:
         if (blockName.equals("&&")) {
-          i = 46;
+          matchIndex = 46;
           break;
         } 
       case 62:
         if (blockName.equals(">")) {
-          i = 45;
+          matchIndex = 45;
           break;
         } 
       case 61:
         if (blockName.equals("=")) {
-          i = 44;
+          matchIndex = 44;
           break;
         } 
       case 60:
         if (blockName.equals("<")) {
-          i = 43;
+          matchIndex = 43;
           break;
         } 
       case 47:
         if (blockName.equals("/")) {
-          i = 52;
+          matchIndex = 52;
           break;
         } 
       case 45:
         if (blockName.equals("-")) {
-          i = 50;
+          matchIndex = 50;
           break;
         } 
       case 43:
         if (blockName.equals("+")) {
-          i = 49;
+          matchIndex = 49;
           break;
         } 
       case 42:
         if (blockName.equals("*")) {
-          i = 51;
+          matchIndex = 51;
           break;
         } 
       case 37:
         if (blockName.equals("%")) {
-          i = 53;
+          matchIndex = 53;
           break;
         } 
       case -9742826:
         if (blockName.equals("firebaseGetPushKey")) {
-          i = 237;
+          matchIndex = 237;
           break;
         } 
       case -10599306:
         if (blockName.equals("firebaseauthCreateUser")) {
-          i = 240;
+          matchIndex = 240;
           break;
         } 
       case -14362103:
         if (blockName.equals("bluetoothConnectIsBluetoothActivated")) {
-          i = 316;
+          matchIndex = 316;
           break;
         } 
       case -24451690:
         if (blockName.equals("dialogOkButton")) {
-          i = 204;
+          matchIndex = 204;
           break;
         } 
       case -60048101:
         if (blockName.equals("firebaseauthResetPassword")) {
-          i = 243;
+          matchIndex = 243;
           break;
         } 
       case -60494417:
         if (blockName.equals("vibratorAction")) {
-          i = 198;
+          matchIndex = 198;
           break;
         } 
       case -75125341:
         if (blockName.equals("getText")) {
-          i = 111;
+          matchIndex = 111;
           break;
         } 
       case -83186725:
         if (blockName.equals("openDrawer")) {
-          i = 103;
+          matchIndex = 103;
           break;
         } 
       case -83301935:
         if (blockName.equals("webViewZoomIn")) {
-          i = 162;
+          matchIndex = 162;
           break;
         } 
       case -96303809:
         if (blockName.equals("containListStr")) {
-          i = 26;
+          matchIndex = 26;
           break;
         } 
       case -96310166:
         if (blockName.equals("containListMap")) {
-          i = 31;
+          matchIndex = 31;
           break;
         } 
       case -96313603:
         if (blockName.equals("containListInt")) {
-          i = 20;
+          matchIndex = 20;
           break;
         } 
       case -133532073:
         if (blockName.equals("stringLength")) {
-          i = 55;
+          matchIndex = 55;
           break;
         } 
       case -149850417:
         if (blockName.equals("fileutilisexist")) {
-          i = 268;
+          matchIndex = 268;
           break;
         } 
       case -152473824:
         if (blockName.equals("firebaseauthIsLoggedIn")) {
-          i = 244;
+          matchIndex = 244;
           break;
         } 
       case -189292433:
         if (blockName.equals("stringSub")) {
-          i = 59;
+          matchIndex = 59;
           break;
         } 
       case -208762465:
         if (blockName.equals("toStringWithDecimal")) {
-          i = 70;
+          matchIndex = 70;
           break;
         } 
       case -247015294:
         if (blockName.equals("mediaplayerRelease")) {
-          i = 219;
+          matchIndex = 219;
           break;
         } 
       case -258774775:
         if (blockName.equals("closeDrawer")) {
-          i = 104;
+          matchIndex = 104;
           break;
         } 
       case -283328259:
         if (blockName.equals("intentPutExtra")) {
-          i = 183;
+          matchIndex = 183;
           break;
         } 
       case -322651344:
         if (blockName.equals("stringEquals")) {
-          i = 60;
+          matchIndex = 60;
           break;
         } 
       case -329552966:
         if (blockName.equals("insertListStr")) {
-          i = 23;
+          matchIndex = 23;
           break;
         } 
       case -329559323:
         if (blockName.equals("insertListMap")) {
-          i = 28;
+          matchIndex = 28;
           break;
         } 
       case -329562760:
         if (blockName.equals("insertListInt")) {
-          i = 15;
+          matchIndex = 15;
           break;
         } 
       case -353129373:
         if (blockName.equals("calendarDiff")) {
-          i = 195;
+          matchIndex = 195;
           break;
         } 
       case -356866884:
         if (blockName.equals("webViewSetCacheMode")) {
-          i = 154;
+          matchIndex = 154;
           break;
         } 
       case -390304998:
         if (blockName.equals("mapViewAddMarker")) {
-          i = 174;
+          matchIndex = 174;
           break;
         } 
       case -399551817:
         if (blockName.equals("toUpperCase")) {
-          i = 67;
+          matchIndex = 67;
           break;
         } 
       case -411705840:
         if (blockName.equals("fileSetData")) {
-          i = 189;
+          matchIndex = 189;
           break;
         } 
       case -418212114:
         if (blockName.equals("firebaseGetChildren")) {
-          i = 239;
+          matchIndex = 239;
           break;
         } 
       case -425293664:
         if (blockName.equals("setClickable")) {
-          i = 108;
+          matchIndex = 108;
           break;
         } 
       case -437272040:
         if (blockName.equals("bluetoothConnectGetRandomUuid")) {
-          i = 319;
+          matchIndex = 319;
           break;
         } 
       case -439342016:
         if (blockName.equals("webViewClearHistory")) {
-          i = 160;
+          matchIndex = 160;
           break;
         } 
       case -509946902:
         if (blockName.equals("spnRefresh")) {
-          i = 149;
+          matchIndex = 149;
           break;
         } 
       case -578987803:
         if (blockName.equals("setChecked")) {
-          i = 136;
+          matchIndex = 136;
           break;
         } 
       case -601804268:
         if (blockName.equals("fileutilread")) {
-          i = 266;
+          matchIndex = 266;
           break;
         } 
       case -601942961:
         if (blockName.equals("fileutilmove")) {
-          i = 267;
+          matchIndex = 267;
           break;
         } 
       case -602241037:
         if (blockName.equals("fileutilcopy")) {
-          i = 264;
+          matchIndex = 264;
           break;
         } 
       case -621198621:
         if (blockName.equals("speechToTextStartListening")) {
-          i = 306;
+          matchIndex = 306;
           break;
         } 
       case -628607128:
         if (blockName.equals("webViewGoBack")) {
-          i = 157;
+          matchIndex = 157;
           break;
         } 
       case -636363854:
         if (blockName.equals("webViewGetUrl")) {
-          i = 153;
+          matchIndex = 153;
           break;
         } 
       case -649691581:
         if (blockName.equals("objectanimatorSetInterpolator")) {
-          i = 231;
+          matchIndex = 231;
           break;
         } 
       case -664474111:
         if (blockName.equals("intentSetFlags")) {
-          i = 184;
+          matchIndex = 184;
           break;
         } 
       case -668992194:
         if (blockName.equals("stringReplaceAll")) {
-          i = 64;
+          matchIndex = 64;
           break;
         } 
       case -677662361:
         if (blockName.equals("forever")) {
-          i = 36;
+          matchIndex = 36;
           break;
         } 
       case -697616870:
         if (blockName.equals("camerastarttakepicture")) {
-          i = 258;
+          matchIndex = 258;
           break;
         } 
       case -733318734:
         if (blockName.equals("strToListMap")) {
-          i = 75;
+          matchIndex = 75;
           break;
         } 
       case -831887360:
         if (blockName.equals("textToSpeechShutdown")) {
-          i = 305;
+          matchIndex = 305;
           break;
         } 
       case -853550561:
         if (blockName.equals("timerCancel")) {
-          i = 201;
+          matchIndex = 201;
           break;
         } 
       case -854558288:
         if (blockName.equals("setVisible")) {
-          i = 107;
+          matchIndex = 107;
           break;
         } 
       case -869293886:
         if (blockName.equals("finishActivity")) {
-          i = 187;
+          matchIndex = 187;
           break;
         } 
       case -883988307:
         if (blockName.equals("dialogSetMessage")) {
-          i = 203;
+          matchIndex = 203;
           break;
         } 
       case -903177036:
         if (blockName.equals("resizeBitmapFileWithRoundedBorder")) {
-          i = 290;
+          matchIndex = 290;
           break;
         } 
       case -911199919:
         if (blockName.equals("objectanimatorSetProperty")) {
-          i = 225;
+          matchIndex = 225;
           break;
         } 
       case -917343271:
         if (blockName.equals("getJpegRotate")) {
-          i = 298;
+          matchIndex = 298;
           break;
         } 
       case -918173448:
         if (blockName.equals("listGetCheckedPosition")) {
-          i = 144;
+          matchIndex = 144;
           break;
         } 
       case -934531685:
         if (blockName.equals("repeat")) {
-          i = 35;
+          matchIndex = 35;
           break;
         } 
       case -938285885:
         if (blockName.equals("random")) {
-          i = 54;
+          matchIndex = 54;
           break;
         } 
       case -995908985:
         if (blockName.equals("soundpoolCreate")) {
-          i = 220;
+          matchIndex = 220;
           break;
         } 
       case -996870276:
         if (blockName.equals("insertMapToList")) {
-          i = 33;
+          matchIndex = 33;
           break;
         } 
       case -1007787615:
         if (blockName.equals("mediaplayerSetLooping")) {
-          i = 216;
+          matchIndex = 216;
           break;
         } 
       case -1021852352:
         if (blockName.equals("objectanimatorCancel")) {
-          i = 233;
+          matchIndex = 233;
           break;
         } 
       case -1033658254:
         if (blockName.equals("mathGetDisplayWidth")) {
-          i = 78;
+          matchIndex = 78;
           break;
         } 
       case -1043233275:
         if (blockName.equals("mediaplayerGetDuration")) {
-          i = 214;
+          matchIndex = 214;
           break;
         } 
       case -1063598745:
         if (blockName.equals("resizeBitmapFileRetainRatio")) {
-          i = 287;
+          matchIndex = 287;
           break;
         } 
       case -1081250015:
         if (blockName.equals("mathPi")) {
-          i = 80;
+          matchIndex = 80;
           break;
         } 
       case -1081391085:
         if (blockName.equals("mapPut")) {
-          i = 6;
+          matchIndex = 6;
           break;
         } 
       case -1081400230:
         if (blockName.equals("mapGet")) {
-          i = 7;
+          matchIndex = 7;
           break;
         } 
       case -1094491139:
         if (blockName.equals("seekBarSetMax")) {
-          i = 282;
+          matchIndex = 282;
           break;
         } 
       case -1106141754:
         if (blockName.equals("webViewCanGoBack")) {
-          i = 155;
+          matchIndex = 155;
           break;
         } 
       case -1107376988:
         if (blockName.equals("webViewGoForward")) {
-          i = 158;
+          matchIndex = 158;
           break;
         } 
       case -1123431291:
         if (blockName.equals("calnedarViewSetMaxDate")) {
-          i = 167;
+          matchIndex = 167;
           break;
         } 
       case -1137582698:
         if (blockName.equals("toLowerCase")) {
-          i = 68;
+          matchIndex = 68;
           break;
         } 
       case -1139353316:
         if (blockName.equals("setListMap")) {
-          i = 30;
+          matchIndex = 30;
           break;
         } 
       case -1143684675:
         if (blockName.equals("firebaseauthGetCurrentUser")) {
-          i = 245;
+          matchIndex = 245;
           break;
         } 
       case -1149458632:
         if (blockName.equals("objectanimatorSetRepeatCount")) {
-          i = 230;
+          matchIndex = 230;
           break;
         } 
       case -1149848189:
         if (blockName.equals("toStringFormat")) {
-          i = 71;
+          matchIndex = 71;
           break;
         } 
       case -1160374245:
         if (blockName.equals("bluetoothConnectReadyConnectionToUuid")) {
-          i = 310;
+          matchIndex = 310;
           break;
         } 
       case -1182878167:
         if (blockName.equals("firebaseauthGetUid")) {
-          i = 246;
+          matchIndex = 246;
           break;
         } 
       case -1185284274:
         if (blockName.equals("gyroscopeStopListen")) {
-          i = 251;
+          matchIndex = 251;
           break;
         } 
       case -1192544266:
         if (blockName.equals("ifElse")) {
-          i = 39;
+          matchIndex = 39;
           break;
         } 
       case -1195899442:
         if (blockName.equals("bluetoothConnectSendData")) {
-          i = 314;
+          matchIndex = 314;
           break;
         } 
       case -1206794098:
         if (blockName.equals("getLocationY")) {
-          i = 135;
+          matchIndex = 135;
           break;
         } 
       case -1206794099:
         if (blockName.equals("getLocationX")) {
-          i = 134;
+          matchIndex = 134;
           break;
         } 
       case -1217704075:
         if (blockName.equals("objectanimatorSetValue")) {
-          i = 226;
+          matchIndex = 226;
           break;
         } 
       case -1271141237:
         if (blockName.equals("clearList")) {
-          i = 21;
+          matchIndex = 21;
           break;
         } 
       case -1272546178:
         if (blockName.equals("dialogSetTitle")) {
-          i = 202;
+          matchIndex = 202;
           break;
         } 
       case -1304067438:
         if (blockName.equals("firebaseDelete")) {
-          i = 238;
+          matchIndex = 238;
           break;
         } 
       case -1348084945:
         if (blockName.equals("mapViewZoomTo")) {
-          i = 171;
+          matchIndex = 171;
           break;
         } 
       case -1348085287:
         if (blockName.equals("mapViewZoomIn")) {
-          i = 172;
+          matchIndex = 172;
           break;
         } 
       case -1361468284:
         if (blockName.equals("viewOnClick")) {
-          i = 101;
+          matchIndex = 101;
           break;
         } 
       case -1376608975:
         if (blockName.equals("calendarSetTime")) {
-          i = 197;
+          matchIndex = 197;
           break;
         } 
       case -1377080719:
         if (blockName.equals("decreaseInt")) {
-          i = 3;
+          matchIndex = 3;
           break;
         } 
       case -1384851894:
         if (blockName.equals("getAtListStr")) {
-          i = 24;
+          matchIndex = 24;
           break;
         } 
       case -1384858251:
         if (blockName.equals("getAtListMap")) {
-          i = 29;
+          matchIndex = 29;
           break;
         } 
       case -1384861688:
         if (blockName.equals("getAtListInt")) {
-          i = 17;
+          matchIndex = 17;
           break;
         } 
       case -1385076635:
         if (blockName.equals("dialogShow")) {
-          i = 207;
+          matchIndex = 207;
           break;
         } 
       case -1405157727:
         if (blockName.equals("fileutilmakedir")) {
-          i = 269;
+          matchIndex = 269;
           break;
         } 
       case -1422112391:
         if (blockName.equals("bluetoothConnectIsBluetoothEnabled")) {
-          i = 315;
+          matchIndex = 315;
           break;
         } 
       case -1438040951:
         if (blockName.equals("seekBarGetMax")) {
-          i = 280;
+          matchIndex = 280;
           break;
         } 
       case -1440042085:
         if (blockName.equals("spnSetSelection")) {
-          i = 150;
+          matchIndex = 150;
           break;
         } 
       case -1462744030:
         if (blockName.equals("dialogDismiss")) {
-          i = 208;
+          matchIndex = 208;
           break;
         } 
       case -1471049951:
         if (blockName.equals("fileutilwrite")) {
-          i = 265;
+          matchIndex = 265;
           break;
         } 
       case -1477942289:
         if (blockName.equals("mediaplayerIsLooping")) {
-          i = 217;
+          matchIndex = 217;
           break;
         } 
       case -1483954587:
         if (blockName.equals("fileutilisdir")) {
-          i = 271;
+          matchIndex = 271;
           break;
         } 
       case -1513446476:
         if (blockName.equals("dialogCancelButton")) {
-          i = 205;
+          matchIndex = 205;
           break;
         } 
       case -1526161572:
         if (blockName.equals("setBgColor")) {
-          i = 112;
+          matchIndex = 112;
           break;
         } 
       case -1528850031:
         if (blockName.equals("startActivity")) {
-          i = 185;
+          matchIndex = 185;
           break;
         } 
       case -1530840255:
         if (blockName.equals("stringIndex")) {
-          i = 57;
+          matchIndex = 57;
           break;
         } 
       case -1541653284:
         if (blockName.equals("objectanimatorStart")) {
-          i = 232;
+          matchIndex = 232;
           break;
         } 
       case -1573371685:
         if (blockName.equals("stringJoin")) {
-          i = 56;
+          matchIndex = 56;
           break;
         } 
       case -1666623936:
         if (blockName.equals("speechToTextShutdown")) {
-          i = 308;
+          matchIndex = 308;
           break;
         } 
       case -1679834825:
         if (blockName.equals("setTrackResource")) {
-          i = 139;
+          matchIndex = 139;
           break;
         } 
       case -1684072208:
         if (blockName.equals("intentSetData")) {
-          i = 181;
+          matchIndex = 181;
           break;
         } 
       case -1699349926:
         if (blockName.equals("objectanimatorSetRepeatMode")) {
-          i = 229;
+          matchIndex = 229;
           break;
         } 
       case -1699631195:
         if (blockName.equals("isDrawerOpen")) {
-          i = 102;
+          matchIndex = 102;
           break;
         } 
       case -1718917155:
         if (blockName.equals("mediaplayerSeek")) {
-          i = 212;
+          matchIndex = 212;
           break;
         } 
       case -1746380899:
         if (blockName.equals("mediaplayerStart")) {
-          i = 210;
+          matchIndex = 210;
           break;
         } 
       case -1747734390:
         if (blockName.equals("mediaplayerReset")) {
-          i = 218;
+          matchIndex = 218;
           break;
         } 
       case -1749698255:
         if (blockName.equals("mediaplayerPause")) {
-          i = 211;
+          matchIndex = 211;
           break;
         } 
       case -1776922004:
         if (blockName.equals("toString")) {
-          i = 69;
+          matchIndex = 69;
           break;
         } 
       case -1778201036:
         if (blockName.equals("listSmoothScrollTo")) {
-          i = 147;
+          matchIndex = 147;
           break;
         } 
       case -1812313351:
         if (blockName.equals("setColorFilter")) {
-          i = 119;
+          matchIndex = 119;
           break;
         } 
       case -1834369666:
         if (blockName.equals("setBitmapFileBrightness")) {
-          i = 296;
+          matchIndex = 296;
           break;
         } 
       case -1886802639:
         if (blockName.equals("soundpoolLoad")) {
-          i = 221;
+          matchIndex = 221;
           break;
         } 
       case -1910071024:
         if (blockName.equals("objectanimatorSetDuration")) {
-          i = 228;
+          matchIndex = 228;
           break;
         } 
       case -1919300188:
         if (blockName.equals("toNumber")) {
-          i = 65;
+          matchIndex = 65;
           break;
         } 
       case -1920517885:
         if (blockName.equals("setVarBoolean")) {
-          i = 0;
+          matchIndex = 0;
           break;
         } 
       case -1922362317:
         if (blockName.equals("getExternalStorageDir")) {
-          i = 284;
+          matchIndex = 284;
           break;
         } 
       case -1937348542:
         if (blockName.equals("firebaseStartListen")) {
-          i = 248;
+          matchIndex = 248;
           break;
         } 
       case -1966668787:
         if (blockName.equals("firebaseauthSignOutUser")) {
-          i = 247;
+          matchIndex = 247;
           break;
         } 
       case -1975568730:
         if (blockName.equals("copyToClipboard")) {
-          i = 278;
+          matchIndex = 278;
           break;
         } 
       case -1979147952:
         if (blockName.equals("stringContains")) {
-          i = 61;
+          matchIndex = 61;
           break;
         } 
       case -1989678633:
         if (blockName.equals("mapViewSetMarkerVisible")) {
-          i = 179;
+          matchIndex = 179;
           break;
         } 
       case -1998407506:
         if (blockName.equals("listSetData")) {
-          i = 140;
+          matchIndex = 140;
           break;
         } 
       case -2020761366:
         if (blockName.equals("fileRemoveData")) {
-          i = 190;
+          matchIndex = 190;
           break;
         } 
       case -2027093331:
         if (blockName.equals("calendarViewSetDate")) {
-          i = 165;
+          matchIndex = 165;
           break;
         } 
       case -2037144358:
         if (blockName.equals("bluetoothConnectStartConnectionToUuid")) {
-          i = 312;
+          matchIndex = 312;
           break;
         } 
       case -2055793167:
         if (blockName.equals("fileutillistdir")) {
-          i = 270;
+          matchIndex = 270;
           break;
         } 
       case -2114384168:
         if (blockName.equals("firebasestorageDownloadFile")) {
-          i = 256;
+          matchIndex = 256;
           break;
         } 
       case -2120571577:
         if (blockName.equals("mapIsEmpty")) {
-          i = 12;
+          matchIndex = 12;
           break;
         } 
       case -2135695280:
         if (blockName.equals("webViewLoadUrl")) {
-          i = 152;
+          matchIndex = 152;
           break;
         } 
     } 
     blockName = defaultValue;
-    switch (i) {
+    switch (matchIndex) {
       default:
         blockName = "";
         break;

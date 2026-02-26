@@ -161,13 +161,13 @@ public class ViewFilesFragment extends BaseFragment {
     }
 
     public void removeSelectedFiles() {
-        int i = activitiesFiles.size();
+        int idx = activitiesFiles.size();
         while (true) {
-            i--;
-            if (i >= 0) {
-                ProjectFileBean projectFileBean = activitiesFiles.get(i);
+            idx--;
+            if (idx >= 0) {
+                ProjectFileBean projectFileBean = activitiesFiles.get(idx);
                 if (projectFileBean.isSelected) {
-                    activitiesFiles.remove(i);
+                    activitiesFiles.remove(idx);
                     if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)) {
                         ((ManageViewActivity) getActivity()).removeCustomView(ProjectFileBean.getDrawerName(projectFileBean.fileName));
                     }

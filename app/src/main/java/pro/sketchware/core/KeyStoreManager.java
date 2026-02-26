@@ -97,11 +97,11 @@ public class KeyStoreManager {
       X509V3CertificateGenerator x509V3CertificateGenerator = new X509V3CertificateGenerator();
       X509Principal x509Principal = new X509Principal(key);
       SecureRandom secureRandom = new SecureRandom();
-      int i = secureRandom.nextInt();
-      int j = i;
-      if (i < 0)
-        j = i * -1; 
-      x509V3CertificateGenerator.setSerialNumber(BigInteger.valueOf(j));
+      int randomInt = secureRandom.nextInt();
+      int serialNumber = randomInt;
+      if (randomInt < 0)
+        serialNumber = randomInt * -1; 
+      x509V3CertificateGenerator.setSerialNumber(BigInteger.valueOf(serialNumber));
       x509V3CertificateGenerator.setIssuerDN((X509Name)x509Principal);
       Date date = new Date(System.currentTimeMillis());
       x509V3CertificateGenerator.setNotBefore(date);
