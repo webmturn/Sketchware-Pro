@@ -168,9 +168,9 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
                 eventBean.initValue();
                 moreBlocks.add(eventBean);
             }
-            EventBean eventBean2 = new EventBean(EventBean.EVENT_TYPE_ACTIVITY, -1, "onCreate", "initializeLogic");
-            eventBean2.initValue();
-            activityEvents.add(eventBean2);
+            EventBean initLogicEvent = new EventBean(EventBean.EVENT_TYPE_ACTIVITY, -1, "onCreate", "initializeLogic");
+            initLogicEvent.initValue();
+            activityEvents.add(initLogicEvent);
             for (EventBean eventBean : ProjectDataManager.getProjectDataManager(sc_id).getEvents(currentActivity.getJavaName())) {
                 eventBean.initValue();
                 int eventType = eventBean.eventType;
