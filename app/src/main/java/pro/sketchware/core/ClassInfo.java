@@ -16,8 +16,8 @@ public class ClassInfo {
         return className;
     }
 
-    public boolean isAssignableFrom(ClassInfo gx) {
-        return matchesType(gx.className);
+    public boolean isAssignableFrom(ClassInfo other) {
+        return matchesType(other.className);
     }
 
     public boolean matchesType(String classInfo) {

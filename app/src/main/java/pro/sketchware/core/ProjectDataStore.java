@@ -334,8 +334,8 @@ public class ProjectDataStore {
               int j = i - 1;
               if (j >= 0) {
                 BlockBean blockBean = blockBeans.get(j);
-                ClassInfo gx = blockBean.getClassInfo();
-                if (gx != null && gx.isExactType(targetBean.getClassInfo().getClassName()) && blockBean.spec.equals(targetBean.id)) {
+                ClassInfo blockClassInfo = blockBean.getClassInfo();
+                if (blockClassInfo != null && blockClassInfo.isExactType(targetBean.getClassInfo().getClassName()) && blockBean.spec.equals(targetBean.id)) {
                   blockBeans.remove(j);
                   i = j;
                   continue;
@@ -503,8 +503,8 @@ public class ProjectDataStore {
         int j = i - 1;
         if (j >= 0) {
           BlockBean blockBean = blockBeans.get(j);
-          ClassInfo gx = blockBean.getClassInfo();
-          if (gx != null && gx.isExactType(classInfo.getClassName()) && blockBean.spec.equals(data)) {
+          ClassInfo blockClassInfo = blockBean.getClassInfo();
+          if (blockClassInfo != null && blockClassInfo.isExactType(classInfo.getClassName()) && blockBean.spec.equals(data)) {
             blockBeans.remove(j);
             i = j;
             continue;
@@ -951,8 +951,8 @@ public class ProjectDataStore {
       if (((String)entry.getKey()).equals(extra))
         continue; 
       for (BlockBean blockBean : (ArrayList<BlockBean>)entry.getValue()) {
-        ClassInfo gx = blockBean.getClassInfo();
-        if (gx != null && gx.isList() && blockBean.spec.equals(data))
+        ClassInfo blockClassInfo = blockBean.getClassInfo();
+        if (blockClassInfo != null && blockClassInfo.isList() && blockBean.spec.equals(data))
           return true; 
         ArrayList<ClassInfo> paramClassInfos = blockBean.getParamClassInfo();
         if (paramClassInfos != null && paramClassInfos.size() > 0)
@@ -1046,8 +1046,8 @@ public class ProjectDataStore {
       if (((String)entry.getKey()).equals(extra))
         continue; 
       for (BlockBean blockBean : (ArrayList<BlockBean>)entry.getValue()) {
-        ClassInfo gx = blockBean.getClassInfo();
-        if (gx != null && gx.isVariable() && blockBean.spec.equals(data))
+        ClassInfo blockClassInfo = blockBean.getClassInfo();
+        if (blockClassInfo != null && blockClassInfo.isVariable() && blockBean.spec.equals(data))
           return true; 
         ArrayList<ClassInfo> paramClassInfos = blockBean.getParamClassInfo();
         if (paramClassInfos != null && paramClassInfos.size() > 0)
