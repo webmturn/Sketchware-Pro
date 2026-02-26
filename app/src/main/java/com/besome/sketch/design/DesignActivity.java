@@ -777,34 +777,34 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         dialog.setMessage(Helper.getResString(R.string.design_restore_data_message_confirm));
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_restore), (v, which) -> {
             if (!UIHelper.isClickThrottled()) {
-                boolean g = ProjectDataManager.getLibraryManager(sc_id).hasBackup();
-                boolean g2 = ProjectDataManager.getFileManager(sc_id).hasBackup();
-                boolean q = ProjectDataManager.getResourceManager(sc_id).hasBackup();
-                boolean d = ProjectDataManager.getProjectDataManager(sc_id).hasViewBackup();
-                boolean c = ProjectDataManager.getProjectDataManager(sc_id).hasLogicBackup();
-                if (g) {
+                boolean hasLibraryBackup = ProjectDataManager.getLibraryManager(sc_id).hasBackup();
+                boolean hasFileBackup = ProjectDataManager.getFileManager(sc_id).hasBackup();
+                boolean hasResourceBackup = ProjectDataManager.getResourceManager(sc_id).hasBackup();
+                boolean hasViewBackup = ProjectDataManager.getProjectDataManager(sc_id).hasViewBackup();
+                boolean hasLogicBackup = ProjectDataManager.getProjectDataManager(sc_id).hasLogicBackup();
+                if (hasLibraryBackup) {
                     ProjectDataManager.getLibraryManager(sc_id).loadFromBackup();
                 }
-                if (g2) {
+                if (hasFileBackup) {
                     ProjectDataManager.getFileManager(sc_id).loadFromBackup();
                 }
-                if (q) {
+                if (hasResourceBackup) {
                     ProjectDataManager.getResourceManager(sc_id).loadFromBackup();
                 }
-                if (d) {
+                if (hasViewBackup) {
                     ProjectDataManager.getProjectDataManager(sc_id).loadViewFromBackup();
                 }
-                if (c) {
+                if (hasLogicBackup) {
                     ProjectDataManager.getProjectDataManager(sc_id).loadLogicFromBackup();
                 }
-                if (g) {
+                if (hasLibraryBackup) {
                     ProjectDataManager.getFileManager(sc_id).syncWithLibrary(ProjectDataManager.getLibraryManager(sc_id));
                     ProjectDataManager.getProjectDataManager(sc_id).removeAdmobComponents(ProjectDataManager.getLibraryManager(sc_id).getFirebaseDB());
                 }
-                if (g2 || g) {
+                if (hasFileBackup || hasLibraryBackup) {
                     ProjectDataManager.getProjectDataManager(sc_id).syncWithFileManager(ProjectDataManager.getFileManager(sc_id));
                 }
-                if (q) {
+                if (hasResourceBackup) {
                     ProjectDataManager.getProjectDataManager(sc_id).syncSounds(ProjectDataManager.getResourceManager(sc_id));
                     ProjectDataManager.getProjectDataManager(sc_id).syncFonts(ProjectDataManager.getResourceManager(sc_id));
                 }

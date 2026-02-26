@@ -359,29 +359,29 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
                         ArrayList<ViewBean> widgetViews = new ArrayList<>();
                         EncryptedFileUtil fileUtil = new EncryptedFileUtil();
                         boolean areImagesAdded = false;
-                        for (int i3 = 0; i3 < uyVar.getData().size(); i3++) {
-                            ViewBean viewBean = uyVar.getData().get(i3);
+                        for (int idx = 0; idx < uyVar.getData().size(); idx++) {
+                            ViewBean viewBean = uyVar.getData().get(idx);
                             widgetViews.add(viewBean.clone());
                             String backgroundResource = viewBean.layout.backgroundResource;
                             String resName = viewBean.image.resName;
                             if (!ProjectDataManager.getResourceManager(scId).hasImage(backgroundResource) && ImageCollectionManager.getInstance().hasResource(backgroundResource)) {
-                                ProjectResourceBean a2 = ImageCollectionManager.getInstance().getResourceByName(backgroundResource);
+                                ProjectResourceBean bgResource = ImageCollectionManager.getInstance().getResourceByName(backgroundResource);
                                 try {
-                                    fileUtil.copyFile(SketchwarePaths.getCollectionPath() + File.separator + "image" + File.separator + "data" + File.separator + a2.resFullName, SketchwarePaths.getImagesPath() + File.separator + scId + File.separator + a2.resFullName);
+                                    fileUtil.copyFile(SketchwarePaths.getCollectionPath() + File.separator + "image" + File.separator + "data" + File.separator + bgResource.resFullName, SketchwarePaths.getImagesPath() + File.separator + scId + File.separator + bgResource.resFullName);
                                 } catch (Exception e) {
                                     LogUtil.e("ViewEditor", "", e);
                                 }
-                                ProjectDataManager.getResourceManager(scId).images.add(a2);
+                                ProjectDataManager.getResourceManager(scId).images.add(bgResource);
                                 areImagesAdded = true;
                             }
                             if (!ProjectDataManager.getResourceManager(scId).hasImage(resName) && ImageCollectionManager.getInstance().hasResource(resName)) {
-                                ProjectResourceBean a3 = ImageCollectionManager.getInstance().getResourceByName(resName);
+                                ProjectResourceBean imgResource = ImageCollectionManager.getInstance().getResourceByName(resName);
                                 try {
-                                    fileUtil.copyFile(SketchwarePaths.getCollectionPath() + File.separator + "image" + File.separator + "data" + File.separator + a3.resFullName, SketchwarePaths.getImagesPath() + File.separator + scId + File.separator + a3.resFullName);
-                                } catch (Exception e2) {
-                                    LogUtil.e("ViewEditor", "", e2);
+                                    fileUtil.copyFile(SketchwarePaths.getCollectionPath() + File.separator + "image" + File.separator + "data" + File.separator + imgResource.resFullName, SketchwarePaths.getImagesPath() + File.separator + scId + File.separator + imgResource.resFullName);
+                                } catch (Exception ex) {
+                                    LogUtil.e("ViewEditor", "", ex);
                                 }
-                                ProjectDataManager.getResourceManager(scId).images.add(a3);
+                                ProjectDataManager.getResourceManager(scId).images.add(imgResource);
                                 areImagesAdded = true;
                             }
                         }
@@ -442,11 +442,11 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
     }
 
     public void deleteWidget(ViewBean viewBean) {
-        ArrayList<ViewBean> b2 = ProjectDataManager.getProjectDataManager(scId).getViewWithChildren(xmlName, viewBean);
-        for (int size = b2.size() - 1; size >= 0; size--) {
-            ProjectDataManager.getProjectDataManager(scId).removeView(projectFileBean, b2.get(size));
+        ArrayList<ViewBean> viewsToRemove = ProjectDataManager.getProjectDataManager(scId).getViewWithChildren(xmlName, viewBean);
+        for (int size = viewsToRemove.size() - 1; size >= 0; size--) {
+            ProjectDataManager.getProjectDataManager(scId).removeView(projectFileBean, viewsToRemove.get(size));
         }
-        removeViews(b2, true);
+        removeViews(viewsToRemove, true);
     }
 
     public void setFavoriteData(ArrayList<WidgetCollectionBean> collections) {
@@ -952,39 +952,39 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
     }
 
     private void addFavoriteViews(String collectionName, ArrayList<ViewBean> widgetBeans) {
-        View a2 = paletteFavorite.addWidgetCollection(collectionName, widgetBeans);
-        a2.setClickable(true);
-        a2.setOnTouchListener(this);
+        View favoriteView = paletteFavorite.addWidgetCollection(collectionName, widgetBeans);
+        favoriteView.setClickable(true);
+        favoriteView.setOnTouchListener(this);
     }
 
     private String generateWidgetId(ViewBean bean) {
         int type = bean.type;
-        String b2 = !bean.isCustomWidget ? SketchwarePaths.getWidgetTypeName(type) : widgetsCreatorManager.generateCustomWidgetId(bean.convert);
+        String typeName = !bean.isCustomWidget ? SketchwarePaths.getWidgetTypeName(type) : widgetsCreatorManager.generateCustomWidgetId(bean.convert);
         boolean typeInBounds = type >= 0 && type < countItems.length;
         StringBuilder sb = new StringBuilder();
-        sb.append(b2);
+        sb.append(typeName);
         int counter = (typeInBounds ? countItems[type] : 0) + 1;
         if (typeInBounds) countItems[type] = counter;
         sb.append(counter);
-        String sb2 = sb.toString();
-        ArrayList<ViewBean> d = ProjectDataManager.getProjectDataManager(scId).getViews(xmlName);
+        String candidateId = sb.toString();
+        ArrayList<ViewBean> existingViews = ProjectDataManager.getProjectDataManager(scId).getViews(xmlName);
         while (true) {
             boolean isIdUsed = false;
-            for (ViewBean view : d) {
-                if (sb2.equals(view.id)) {
+            for (ViewBean view : existingViews) {
+                if (candidateId.equals(view.id)) {
                     isIdUsed = true;
                     break;
                 }
             }
             if (!isIdUsed) {
-                return sb2;
+                return candidateId;
             }
             StringBuilder sb3 = new StringBuilder();
-            sb3.append(b2);
+            sb3.append(typeName);
             counter = (typeInBounds ? countItems[type] : counter) + 1;
             if (typeInBounds) countItems[type] = counter;
             sb3.append(counter);
-            sb2 = sb3.toString();
+            candidateId = sb3.toString();
         }
     }
 
