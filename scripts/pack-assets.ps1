@@ -124,15 +124,39 @@ foreach ($dex in $dexDirs) {
     Write-Host "  Added dexs/$libName.dex" -ForegroundColor Green
 }
 
-# Step 5: Repack zips
+# Step 5: Repack zips using .NET ZipFile to ensure forward-slash paths (Android/Linux compatible)
+# PowerShell's Compress-Archive uses backslash separators which break extraction on Android
+Add-Type -Assembly System.IO.Compression
+Add-Type -Assembly System.IO.Compression.FileSystem
+
+function New-CrossPlatformZip($sourceDir, $destZip) {
+    if (Test-Path $destZip) { Remove-Item $destZip -Force }
+    $zip = [IO.Compression.ZipFile]::Open($destZip, [IO.Compression.ZipArchiveMode]::Create)
+    $basePath = (Resolve-Path $sourceDir).Path
+    if (-not $basePath.EndsWith([IO.Path]::DirectorySeparatorChar)) { $basePath += [IO.Path]::DirectorySeparatorChar }
+    Get-ChildItem $sourceDir -Recurse | ForEach-Object {
+        $relativePath = $_.FullName.Substring($basePath.Length).Replace('\', '/')
+        if ($_.PSIsContainer) {
+            # Add directory entry with trailing slash
+            $null = $zip.CreateEntry("$relativePath/", [IO.Compression.CompressionLevel]::Optimal)
+        } else {
+            $entry = $zip.CreateEntry($relativePath, [IO.Compression.CompressionLevel]::Optimal)
+            $stream = $entry.Open()
+            $fileStream = [IO.File]::OpenRead($_.FullName)
+            $fileStream.CopyTo($stream)
+            $fileStream.Close()
+            $stream.Close()
+        }
+    }
+    $zip.Dispose()
+}
+
 Write-Host ""
 Write-Host "Repacking libs.zip..." -ForegroundColor Yellow
-Remove-Item $libsZip -Force
-Compress-Archive -Path "$tempLibs\*" -DestinationPath $libsZip -CompressionLevel Optimal
+New-CrossPlatformZip $tempLibs $libsZip
 
 Write-Host "Repacking dexs.zip..." -ForegroundColor Yellow
-Remove-Item $dexsZip -Force
-Compress-Archive -Path "$tempDexs\*" -DestinationPath $dexsZip -CompressionLevel Optimal
+New-CrossPlatformZip $tempDexs $dexsZip
 
 # Cleanup
 Remove-Item $tempLibs -Recurse -Force
