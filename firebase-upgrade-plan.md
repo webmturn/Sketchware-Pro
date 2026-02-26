@@ -14,11 +14,11 @@ Sketchware-Pro 内置的 Firebase 库版本为 v19.x（2019-2020 年），已严
 | 库名 | 当前版本 | 目标版本 (BOM 33.7.0) | 变化 |
 |------|---------|----------------------|------|
 | firebase-common | 19.3.0 | 21.0.0 | 主版本升级 |
-| firebase-components | 16.0.0 | ~18.x | 主版本升级 |
+| firebase-components | 16.0.0 | 18.0.0 | 主版本升级 |
 | firebase-auth | 19.0.0 | 23.1.0 | 主版本升级×4 |
-| firebase-auth-interop | 18.0.0 | ~20.x | 需验证 |
+| firebase-auth-interop | 18.0.0 | 20.0.0 | 主版本升级 |
 | firebase-database | 19.3.1 | 21.0.0 | 主版本升级 |
-| firebase-database-collection | 17.0.1 | ~18.x | 需验证 |
+| firebase-database-collection | 17.0.1 | 18.0.1 | 主版本升级 |
 | firebase-storage | 19.0.0 | 21.0.1 | 主版本升级 |
 | firebase-messaging | 19.0.0 | 24.1.0 | 主版本升级×5 |
 
@@ -27,16 +27,36 @@ Sketchware-Pro 内置的 Firebase 库版本为 v19.x（2019-2020 年），已严
 | 库名 | 当前版本 | 替代方案 |
 |------|---------|---------|
 | firebase-iid | 19.0.0 | firebase-installations 18.0.0 + FirebaseMessaging.getToken() |
-| firebase-iid-interop | 17.0.0 | 无需替代（内部依赖已重构） |
-| firebase-measurement-connector | 18.0.0 | 无需替代（功能合并到 firebase-analytics） |
+| firebase-iid-interop | 17.0.0 | 保留 17.1.0（firebase-messaging 24.1.0 仍依赖） |
+| firebase-measurement-connector | 18.0.0 | 升级到 19.0.0（firebase-messaging 24.1.0 仍依赖） |
 
 ### 需要新增的库
 
 | 库名 | 版本 | 原因 |
 |------|------|------|
-| firebase-installations | 18.0.0 | 替代 firebase-iid |
-| firebase-annotations | ~16.x | 新版 firebase-common 的传递依赖 |
-| firebase-datatransport | ~18.x | 新版传递依赖（需验证） |
+| firebase-installations | 17.2.0 | 替代 firebase-iid（firebase-messaging 24.1.0 依赖） |
+| firebase-installations-interop | 17.1.0 | firebase-installations 17.2.0 的编译依赖 |
+| firebase-annotations | 16.2.0 | firebase-components 18.0.0 的编译依赖 |
+| firebase-common-ktx | 21.0.0 | firebase-auth/database/storage/messaging 的编译依赖 |
+| firebase-datatransport | 18.2.0 | firebase-messaging 24.1.0 的编译依赖 |
+| firebase-encoders | 17.0.0 | firebase-messaging 24.1.0 的编译依赖 |
+| firebase-encoders-json | 18.0.0 | firebase-messaging 24.1.0 的编译依赖 |
+| firebase-encoders-proto | 16.0.0 | firebase-messaging 24.1.0 的编译依赖 |
+| firebase-appcheck-interop | 17.1.0 | firebase-database 21.0.0 + firebase-storage 21.0.1 的编译依赖 |
+| firebase-appcheck | 17.1.0 | firebase-storage 21.0.1 的编译依赖 |
+| transport-api | 3.1.0 | firebase-datatransport 的传递依赖 |
+| transport-runtime | 3.1.8 | firebase-datatransport 的传递依赖 |
+| transport-backend-cct | 3.1.8 | firebase-datatransport 的传递依赖 |
+| play-services-cloud-messaging | 17.2.0 | firebase-messaging 24.1.0 的运行时依赖 |
+| kotlinx-coroutines-play-services | 1.6.4 | firebase-common 21.0.0 的编译依赖 |
+
+### Play Services 版本升级（同步要求）
+
+| 库名 | 当前版本 | 最低要求版本 | 原因 |
+|------|---------|------------|------|
+| play-services-basement | 18.0.0 | 18.3.0 | firebase-common 21.0.0 运行时依赖 |
+| play-services-tasks | 18.0.1 | 18.1.0 | firebase-common 21.0.0 运行时依赖 |
+| play-services-base | 18.0.0 | 18.1.0 | firebase-database/storage 运行时依赖 |
 
 ---
 
@@ -148,29 +168,63 @@ FirebaseMessaging.getInstance().getToken()
 
 #### 3.1 准备新版 JAR/AAR 文件
 
-从 Maven Central / Google Maven 下载以下 AAR 文件并提取 `classes.jar`：
+从 Google Maven (https://maven.google.com/) 下载以下 AAR/JAR 文件：
 
 ```
-# 升级的库
-firebase-common-21.0.0.aar         → classes.jar
-firebase-components-18.x.aar       → classes.jar  （需确认精确版本）
-firebase-auth-23.1.0.aar           → classes.jar
-firebase-auth-interop-20.x.aar     → classes.jar  （需确认精确版本）
-firebase-database-21.0.0.aar       → classes.jar
-firebase-database-collection-18.x.aar → classes.jar
-firebase-storage-21.0.1.aar        → classes.jar
-firebase-messaging-24.1.0.aar      → classes.jar
+# ═══ 升级的库（8 个）═══
+firebase-common-21.0.0.aar              → 提取 classes.jar + res/ + AndroidManifest.xml
+firebase-components-18.0.0.aar          → 提取 classes.jar
+firebase-auth-23.1.0.aar                → 提取 classes.jar + res/
+firebase-auth-interop-20.0.0.aar        → 提取 classes.jar
+firebase-database-21.0.0.aar            → 提取 classes.jar
+firebase-database-collection-18.0.1.aar → 提取 classes.jar
+firebase-storage-21.0.1.aar             → 提取 classes.jar
+firebase-messaging-24.1.0.aar           → 提取 classes.jar + res/ + AndroidManifest.xml
 
-# 新增的库
-firebase-installations-18.0.0.aar  → classes.jar
-firebase-annotations-16.x.jar     （需确认精确版本）
+# ═══ 升级的库（保留但更新版本）═══
+firebase-iid-interop-17.1.0.aar         → 提取 classes.jar
+firebase-measurement-connector-19.0.0.aar → 提取 classes.jar
 
-# 检查其他新增的传递依赖
-# 新版 Firebase 可能需要：
-#   - firebase-encoders
-#   - firebase-datatransport
-#   - protobuf-javalite (如果新版依赖)
-#   - play-services-tasks 升级
+# ═══ 新增的库（15 个）═══
+firebase-installations-17.2.0.aar       → 提取 classes.jar
+firebase-installations-interop-17.1.0.aar → 提取 classes.jar
+firebase-annotations-16.2.0.jar         → 直接使用（纯 JAR）
+firebase-common-ktx-21.0.0.aar          → 提取 classes.jar
+firebase-datatransport-18.2.0.aar       → 提取 classes.jar
+firebase-encoders-17.0.0.jar            → 直接使用（纯 JAR）
+firebase-encoders-json-18.0.0.aar       → 提取 classes.jar
+firebase-encoders-proto-16.0.0.aar      → 提取 classes.jar
+firebase-appcheck-interop-17.1.0.aar    → 提取 classes.jar
+firebase-appcheck-17.1.0.aar            → 提取 classes.jar
+transport-api-3.1.0.aar                 → 提取 classes.jar
+transport-runtime-3.1.8.aar             → 提取 classes.jar
+transport-backend-cct-3.1.8.aar         → 提取 classes.jar
+play-services-cloud-messaging-17.2.0.aar → 提取 classes.jar
+kotlinx-coroutines-play-services-1.6.4.jar → 直接使用
+
+# ═══ 同步升级的 Play Services（3 个）═══
+play-services-basement-18.3.0.aar       → 替换原 18.0.0
+play-services-tasks-18.1.0.aar          → 替换原 18.0.1
+play-services-base-18.1.0.aar           → 替换原 18.0.0
+
+# ═══ 移除的库（1 个）═══
+firebase-iid-19.0.0                     → 删除（被 firebase-installations 替代）
+```
+
+#### 3.1.1 下载脚本
+
+建议在 `scripts/download-firebase-libs.sh` 中自动化：
+
+```bash
+BASE_URL="https://maven.google.com/com/google/firebase"
+
+# 示例：下载 firebase-common-21.0.0.aar
+curl -O "$BASE_URL/firebase-common/21.0.0/firebase-common-21.0.0.aar"
+
+# 提取 classes.jar
+unzip -o firebase-common-21.0.0.aar classes.jar -d firebase-common-21.0.0/
+# 提取 res/ 和 AndroidManifest.xml（如果存在）
+unzip -o firebase-common-21.0.0.aar 'res/*' AndroidManifest.xml -d firebase-common-21.0.0/ 2>/dev/null || true
 ```
 
 #### 3.2 生成 DEX 文件
@@ -222,46 +276,167 @@ public static String FIREBASE_COMMON = "firebase-common-19.3.0";
 public static String FIREBASE_COMPONENTS = "firebase-components-16.0.0";
 public static String FIREBASE_DATABASE = "firebase-database-19.3.1";
 public static String FIREBASE_DATABASE_COLLECTION = "firebase-database-collection-17.0.1";
-public static String FIREBASE_IID = "firebase-iid-19.0.0";                         // 移除
-public static String FIREBASE_IID_INTEROP = "firebase-iid-interop-17.0.0";         // 移除
-public static String FIREBASE_MEASUREMENT_CONNECTOR = "firebase-measurement-connector-18.0.0"; // 移除
+public static String FIREBASE_IID = "firebase-iid-19.0.0";
+public static String FIREBASE_IID_INTEROP = "firebase-iid-interop-17.0.0";
+public static String FIREBASE_MEASUREMENT_CONNECTOR = "firebase-measurement-connector-18.0.0";
 public static String FIREBASE_MESSAGING = "firebase-messaging-19.0.0";
 public static String FIREBASE_STORAGE = "firebase-storage-19.0.0";
 
 // 修改后：
+public static String FIREBASE_ANNOTATIONS = "firebase-annotations-16.2.0";           // 新增
+public static String FIREBASE_APPCHECK = "firebase-appcheck-17.1.0";                 // 新增
+public static String FIREBASE_APPCHECK_INTEROP = "firebase-appcheck-interop-17.1.0"; // 新增
 public static String FIREBASE_AUTH = "firebase-auth-23.1.0";
-public static String FIREBASE_AUTH_INTEROP = "firebase-auth-interop-20.x.0";     // 需确认
+public static String FIREBASE_AUTH_INTEROP = "firebase-auth-interop-20.0.0";
 public static String FIREBASE_COMMON = "firebase-common-21.0.0";
-public static String FIREBASE_COMPONENTS = "firebase-components-18.x.0";          // 需确认
+public static String FIREBASE_COMMON_KTX = "firebase-common-ktx-21.0.0";             // 新增
+public static String FIREBASE_COMPONENTS = "firebase-components-18.0.0";
 public static String FIREBASE_DATABASE = "firebase-database-21.0.0";
-public static String FIREBASE_DATABASE_COLLECTION = "firebase-database-collection-18.x.0"; // 需确认
-public static String FIREBASE_INSTALLATIONS = "firebase-installations-18.0.0";    // 新增
+public static String FIREBASE_DATABASE_COLLECTION = "firebase-database-collection-18.0.1";
+public static String FIREBASE_DATATRANSPORT = "firebase-datatransport-18.2.0";       // 新增
+public static String FIREBASE_ENCODERS = "firebase-encoders-17.0.0";                 // 新增
+public static String FIREBASE_ENCODERS_JSON = "firebase-encoders-json-18.0.0";       // 新增
+public static String FIREBASE_ENCODERS_PROTO = "firebase-encoders-proto-16.0.0";     // 新增
+public static String FIREBASE_IID_INTEROP = "firebase-iid-interop-17.1.0";           // 保留，升级
+public static String FIREBASE_INSTALLATIONS = "firebase-installations-17.2.0";       // 新增（替代 firebase-iid）
+public static String FIREBASE_INSTALLATIONS_INTEROP = "firebase-installations-interop-17.1.0"; // 新增
+public static String FIREBASE_MEASUREMENT_CONNECTOR = "firebase-measurement-connector-19.0.0"; // 升级
 public static String FIREBASE_MESSAGING = "firebase-messaging-24.1.0";
 public static String FIREBASE_STORAGE = "firebase-storage-21.0.1";
+// 移除：FIREBASE_IID（已被 Google 完全移除）
 ```
 
 #### 4.2 更新依赖树
 
-`KNOWN_BUILT_IN_LIBRARIES` 数组中的依赖关系需要根据新版 POM 文件更新：
+`KNOWN_BUILT_IN_LIBRARIES` 数组中的依赖关系需要根据 Maven POM 精确更新：
 
 ```java
-// 移除：
-new BuiltInLibrary(FIREBASE_IID, ...),
-new BuiltInLibrary(FIREBASE_IID_INTEROP, ...),
-new BuiltInLibrary(FIREBASE_MEASUREMENT_CONNECTOR, ...),
+// ═══ 移除 ═══
+new BuiltInLibrary(FIREBASE_IID, ...),        // 完全移除
 
-// 新增：
-new BuiltInLibrary(FIREBASE_INSTALLATIONS, List.of(...)),
+// ═══ 新增 ═══
+new BuiltInLibrary(FIREBASE_ANNOTATIONS, List.of()),
 
-// 更新所有 Firebase 库的依赖列表
-// 需要从 Maven POM 文件中提取精确的传递依赖
+new BuiltInLibrary(FIREBASE_APPCHECK, List.of(
+    FIREBASE_APPCHECK_INTEROP, FIREBASE_COMMON, FIREBASE_COMMON_KTX, FIREBASE_COMPONENTS,
+    FIREBASE_ANNOTATIONS, PLAY_SERVICES_BASE, PLAY_SERVICES_BASEMENT, PLAY_SERVICES_TASKS)),
+
+new BuiltInLibrary(FIREBASE_APPCHECK_INTEROP, List.of()),
+
+new BuiltInLibrary(FIREBASE_COMMON_KTX, List.of(FIREBASE_COMMON, JETBRAINS_KOTLIN_STDLIB)),
+
+new BuiltInLibrary(FIREBASE_DATATRANSPORT, List.of(
+    FIREBASE_COMMON, FIREBASE_COMPONENTS, TRANSPORT_API, TRANSPORT_RUNTIME, TRANSPORT_BACKEND_CCT)),
+
+new BuiltInLibrary(FIREBASE_ENCODERS, List.of()),
+
+new BuiltInLibrary(FIREBASE_ENCODERS_JSON, List.of(FIREBASE_ENCODERS)),
+
+new BuiltInLibrary(FIREBASE_ENCODERS_PROTO, List.of(FIREBASE_ENCODERS)),
+
+new BuiltInLibrary(FIREBASE_INSTALLATIONS, List.of(
+    FIREBASE_ANNOTATIONS, FIREBASE_COMMON, FIREBASE_COMMON_KTX, FIREBASE_COMPONENTS,
+    FIREBASE_INSTALLATIONS_INTEROP, PLAY_SERVICES_TASKS, JETBRAINS_KOTLIN_STDLIB)),
+
+new BuiltInLibrary(FIREBASE_INSTALLATIONS_INTEROP, List.of()),
+
+new BuiltInLibrary(PLAY_SERVICES_CLOUD_MESSAGING, List.of(
+    PLAY_SERVICES_BASE, PLAY_SERVICES_BASEMENT, PLAY_SERVICES_TASKS)),
+
+new BuiltInLibrary(TRANSPORT_API, List.of()),
+new BuiltInLibrary(TRANSPORT_RUNTIME, List.of(TRANSPORT_API)),
+new BuiltInLibrary(TRANSPORT_BACKEND_CCT, List.of(TRANSPORT_API, TRANSPORT_RUNTIME)),
+
+new BuiltInLibrary(KOTLINX_COROUTINES_PLAY_SERVICES, List.of(
+    JETBRAINS_KOTLINX_COROUTINES_CORE_JVM, PLAY_SERVICES_TASKS, JETBRAINS_KOTLIN_STDLIB)),
+
+// ═══ 更新现有依赖树 ═══
+
+// firebase-components 18.0.0
+new BuiltInLibrary(FIREBASE_COMPONENTS, List.of(
+    FIREBASE_ANNOTATIONS, ANDROIDX_ANNOTATION_JVM, ERROR_PRONE_ANNOTATIONS)),
+
+// firebase-common 21.0.0
+new BuiltInLibrary(FIREBASE_COMMON, List.of(
+    FIREBASE_COMPONENTS, FIREBASE_ANNOTATIONS, KOTLINX_COROUTINES_PLAY_SERVICES,
+    PLAY_SERVICES_BASEMENT, PLAY_SERVICES_TASKS,
+    ANDROIDX_CONCURRENT_FUTURES, JETBRAINS_KOTLIN_STDLIB)),
+
+// firebase-auth-interop 20.0.0
+new BuiltInLibrary(FIREBASE_AUTH_INTEROP, List.of(
+    FIREBASE_ANNOTATIONS, FIREBASE_COMMON,
+    PLAY_SERVICES_BASEMENT, PLAY_SERVICES_TASKS)),
+
+// firebase-auth 23.1.0
+new BuiltInLibrary(FIREBASE_AUTH, List.of(
+    FIREBASE_ANNOTATIONS, FIREBASE_APPCHECK_INTEROP, FIREBASE_AUTH_INTEROP,
+    FIREBASE_COMMON, FIREBASE_COMMON_KTX, FIREBASE_COMPONENTS,
+    ANDROIDX_BROWSER, ANDROIDX_COLLECTION_JVM, ANDROIDX_FRAGMENT,
+    ANDROIDX_LOCALBROADCASTMANAGER,
+    PLAY_SERVICES_AUTH_API_PHONE, PLAY_SERVICES_BASEMENT, PLAY_SERVICES_TASKS,
+    JETBRAINS_KOTLIN_STDLIB)),
+    // 注意：还依赖 androidx.credentials, com.google.android.play:integrity,
+    //       com.google.android.recaptcha:recaptcha — 这些需评估是否纳入内置库
+
+// firebase-database 21.0.0
+new BuiltInLibrary(FIREBASE_DATABASE, List.of(
+    FIREBASE_APPCHECK_INTEROP, FIREBASE_AUTH_INTEROP, FIREBASE_COMMON,
+    FIREBASE_COMMON_KTX, FIREBASE_COMPONENTS, FIREBASE_DATABASE_COLLECTION,
+    PLAY_SERVICES_BASE, PLAY_SERVICES_BASEMENT, PLAY_SERVICES_TASKS,
+    ANDROIDX_ANNOTATION_JVM, JETBRAINS_KOTLIN_STDLIB)),
+
+// firebase-database-collection 18.0.1
+new BuiltInLibrary(FIREBASE_DATABASE_COLLECTION, List.of(PLAY_SERVICES_BASE)),
+
+// firebase-storage 21.0.1
+new BuiltInLibrary(FIREBASE_STORAGE, List.of(
+    FIREBASE_ANNOTATIONS, FIREBASE_APPCHECK, FIREBASE_APPCHECK_INTEROP,
+    FIREBASE_AUTH_INTEROP, FIREBASE_COMMON, FIREBASE_COMMON_KTX, FIREBASE_COMPONENTS,
+    PLAY_SERVICES_BASE, PLAY_SERVICES_TASKS,
+    ANDROIDX_ANNOTATION_JVM, JETBRAINS_KOTLIN_STDLIB)),
+
+// firebase-messaging 24.1.0
+new BuiltInLibrary(FIREBASE_MESSAGING, List.of(
+    FIREBASE_COMMON, FIREBASE_COMMON_KTX, FIREBASE_COMPONENTS,
+    FIREBASE_DATATRANSPORT, FIREBASE_ENCODERS, FIREBASE_ENCODERS_JSON,
+    FIREBASE_ENCODERS_PROTO, FIREBASE_IID_INTEROP, FIREBASE_INSTALLATIONS,
+    FIREBASE_INSTALLATIONS_INTEROP, FIREBASE_MEASUREMENT_CONNECTOR,
+    PLAY_SERVICES_BASE, PLAY_SERVICES_BASEMENT, PLAY_SERVICES_CLOUD_MESSAGING,
+    PLAY_SERVICES_STATS, PLAY_SERVICES_TASKS,
+    ERROR_PRONE_ANNOTATIONS, JETBRAINS_KOTLIN_STDLIB,
+    TRANSPORT_API, TRANSPORT_RUNTIME, TRANSPORT_BACKEND_CCT),
+    "com.google.firebase.messaging"),
+
+// firebase-iid-interop 17.1.0（保留，更新版本）
+new BuiltInLibrary(FIREBASE_IID_INTEROP, List.of(
+    PLAY_SERVICES_BASE, PLAY_SERVICES_BASEMENT)),
+
+// firebase-measurement-connector 19.0.0（保留，更新版本）
+new BuiltInLibrary(FIREBASE_MEASUREMENT_CONNECTOR, List.of(PLAY_SERVICES_BASEMENT)),
 ```
+
+#### 4.2.1 firebase-auth 23.1.0 的额外依赖风险
+
+⚠️ firebase-auth 23.1.0 新增了以下依赖，这些在旧版中不存在：
+
+| 依赖 | 版本 | 说明 |
+|------|------|------|
+| `androidx.credentials:credentials` | 1.2.0-rc01 | Android 凭据管理 API（新） |
+| `androidx.credentials:credentials-play-services-auth` | 1.2.0-rc01 | 凭据 Play Services 实现（新） |
+| `com.google.android.play:integrity` | 1.3.0 | Play Integrity API（新） |
+| `com.google.android.recaptcha:recaptcha` | 18.5.1 | reCAPTCHA（新） |
+
+**决策点**：这些是 firebase-auth 23.1.0 的编译依赖，必须全部纳入内置库，否则用户项目编译会失败。
+这将显著增加内置库数量和 APK 体积。
+
+**替代方案**：考虑使用 firebase-auth 22.x（BOM 32.x 系列），该版本可能不需要这些新依赖。
 
 #### 4.3 更新 ProjectBuilder.java
 
 ```java
 // ProjectBuilder.java:768-779
-// 如果需要新增 firebase-installations 作为 FCM 的依赖：
+// 无需修改 — firebase-installations 会通过 BuiltInLibrary 依赖树自动引入
+// 但如需显式添加（安全起见）：
 if (projectFilePaths.buildConfig.constVarComponent.isFCMUsed) {
     builtInLibraryManager.addLibrary(BuiltInLibraries.FIREBASE_INSTALLATIONS);
 }
@@ -271,10 +446,11 @@ if (projectFilePaths.buildConfig.constVarComponent.isFCMUsed) {
 
 ```java
 // mod/agus/jcoderz/editor/library/ExtLibSelected.java
-// 更新 FCM 依赖链
+// FCM 依赖链无需手动修改 — firebase-messaging 的依赖树已包含 firebase-installations
+// 但如需显式添加（安全起见）：
 if (component.isFCMUsed) {
     kp.addLibrary(BuiltInLibraries.FIREBASE_MESSAGING);
-    kp.addLibrary(BuiltInLibraries.FIREBASE_INSTALLATIONS); // 新增
+    // firebase-installations 已通过依赖树自动包含
 }
 ```
 
@@ -284,6 +460,22 @@ if (component.isFCMUsed) {
 // ComponentCodeGenerator.java:98
 // 更新 BOM 版本号为与内置库匹配的版本
 content.append("implementation platform('com.google.firebase:firebase-bom:33.7.0')\r\n");
+```
+
+#### 4.6 更新 play-services 版本常量
+
+```java
+// BuiltInLibraries.java
+public static String PLAY_SERVICES_BASE = "play-services-base-18.1.0";           // 原 18.0.0
+public static String PLAY_SERVICES_BASEMENT = "play-services-basement-18.3.0";   // 原 18.0.0
+public static String PLAY_SERVICES_TASKS = "play-services-tasks-18.1.0";         // 原 18.0.1
+
+// 新增：
+public static String PLAY_SERVICES_CLOUD_MESSAGING = "play-services-cloud-messaging-17.2.0";
+public static String TRANSPORT_API = "transport-api-3.1.0";
+public static String TRANSPORT_RUNTIME = "transport-runtime-3.1.8";
+public static String TRANSPORT_BACKEND_CCT = "transport-backend-cct-3.1.8";
+public static String KOTLINX_COROUTINES_PLAY_SERVICES = "kotlinx-coroutines-play-services-1.6.4";
 ```
 
 **验证**：
@@ -339,29 +531,41 @@ firebase-upgrade/phase-4-declarations
 
 ---
 
-## 五、时间估计
+## 五、库数量统计
+
+| 类别 | 数量 | 说明 |
+|------|------|------|
+| 升级的 Firebase 库 | 8 | auth (23.1.0), common (21.0.0), components (18.0.0), database (21.0.0), db-collection (18.0.1), storage (21.0.1), messaging (24.1.0), auth-interop (20.0.0) |
+| 升级的 Play Services | 3 | base (18.1.0), basement (18.3.0), tasks (18.1.0) |
+| 保留但版本更新 | 2 | iid-interop (17.1.0), measurement-connector (19.0.0) |
+| 新增的 Firebase 库 | 10 | annotations (16.2.0), appcheck (17.1.0), appcheck-interop (17.1.0), common-ktx (21.0.0), datatransport (18.2.0), encoders (17.0.0), encoders-json (18.0.0), encoders-proto (16.0.0), installations (17.2.0), installations-interop (17.1.0) |
+| 新增的其他库 | 5 | transport-api (3.1.0), transport-runtime (3.1.8), transport-backend-cct (3.1.8), cloud-messaging (17.2.0), coroutines-play-services (1.6.4) |
+| 移除的库 | 1 | firebase-iid |
+| **总影响** | **29** | libs.zip 和 dexs.zip 中需要修改/新增/删除 29 个库 |
+
+## 六、时间估计
 
 | 阶段 | 工作量 | 预计时间 |
-|------|--------|---------|
+|------|--------|--------|
 | 阶段 1：修复 BOM 不匹配 | 低 | 10 分钟 |
 | 阶段 2：废弃 API 迁移 | 中 | 1-2 小时 |
-| 阶段 3：资产文件替换 | 高 | 3-5 小时（含依赖分析） |
-| 阶段 4：代码声明更新 | 中 | 1-2 小时 |
+| 阶段 3：资产文件替换（29 个库） | 高 | 4-6 小时（含下载、提取、打包） |
+| 阶段 4：代码声明更新 | 高 | 2-3 小时（含依赖树验证） |
 | 测试验证 | 高 | 2-3 小时 |
-| **总计** | | **7-12 小时** |
+| **总计** | | **9-15 小时** |
 
 ---
 
-## 六、文件变更清单
+## 七、文件变更清单
 
 | 文件 | 阶段 | 变更类型 |
-|------|------|---------|
-| `ComponentCodeGenerator.java` | 1, 4 | 修改 BOM 版本号 |
-| `ComponentTypeMapper.java` | 2 | 移除废弃 import |
+|------|------|--------|
+| `ComponentCodeGenerator.java` | 1, 4 | 修改 BOM 版本号 (34.1.0 → 33.7.0) |
+| `ComponentTypeMapper.java` | 2 | 移除 FirebaseInstanceId/InstanceIdResult import |
 | `ManifestGenerator.java` | 2 | 移除 firebase-iid Registrar + c2dm 权限 |
 | `EditorManifest.java` | 2 | 移除 FirebaseInstanceIdReceiver |
-| `app/src/main/assets/libs/libs.zip` | 3 | 替换 Firebase JAR 文件 |
-| `app/src/main/assets/libs/dexs.zip` | 3 | 替换 Firebase DEX 文件 |
-| `BuiltInLibraries.java` | 4 | 更新版本常量 + 依赖树 |
-| `ProjectBuilder.java` | 4 | 可能需要添加 firebase-installations |
-| `ExtLibSelected.java` | 4 | 更新 FCM 依赖 |
+| `app/src/main/assets/libs/libs.zip` | 3 | 替换/新增/删除 29 个库的 JAR + res 文件 |
+| `app/src/main/assets/libs/dexs.zip` | 3 | 替换/新增/删除 29 个库的 DEX 文件 |
+| `BuiltInLibraries.java` | 4 | 更新 20+ 版本常量 + 完整依赖树重建 |
+| `ProjectBuilder.java` | 4 | 可能需要添加 firebase-installations 显式引入 |
+| `ExtLibSelected.java` | 4 | 验证 FCM 依赖链 |
