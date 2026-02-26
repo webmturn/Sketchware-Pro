@@ -346,28 +346,28 @@ public class BlockPane extends RelativeLayout {
   }
   
   public void updatePaneSize() {
-    int i = getChildCount();
-    int j = (getLayoutParams()).width;
-    int k = (getLayoutParams()).width;
-    int b = 0;
-    while (b < i) {
-      View view = getChildAt(b);
-      int m = j;
-      int n = k;
+    int childCount = getChildCount();
+    int maxWidth = (getLayoutParams()).width;
+    int maxHeight = (getLayoutParams()).width;
+    int childIdx = 0;
+    while (childIdx < childCount) {
+      View view = getChildAt(childIdx);
+      int newWidth = maxWidth;
+      int newHeight = maxHeight;
       if (view instanceof BlockView) {
         BlockView rs = (BlockView)view;
         if (rs.parentBlock == null) {
           float f = view.getX();
-          m = Math.max((int)(f + rs.getWidthSum()) + 150, j);
-          n = Math.max((int)(view.getY() + rs.getHeightSum()) + 150, k);
+          newWidth = Math.max((int)(f + rs.getWidthSum()) + 150, maxWidth);
+          newHeight = Math.max((int)(view.getY() + rs.getHeightSum()) + 150, maxHeight);
         }
       } 
-      b++;
-      j = m;
-      k = n;
+      childIdx++;
+      maxWidth = newWidth;
+      maxHeight = newHeight;
     } 
-    (getLayoutParams()).width = j;
-    (getLayoutParams()).height = k;
+    (getLayoutParams()).width = maxWidth;
+    (getLayoutParams()).height = maxHeight;
   }
   
   public void removeBlockTree(BlockView blockView) {

@@ -362,9 +362,9 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
             ImageView imageView = new ImageView(holder.itemView.getContext());
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             layoutParams.setMargins(0, 0, (int) ViewUtil.dpToPx(getApplicationContext(), 2.0f), 0);
-            int a = (int) ViewUtil.dpToPx(getApplicationContext(), 16.0f);
-            layoutParams.width = a;
-            layoutParams.height = a;
+            int iconSize = (int) ViewUtil.dpToPx(getApplicationContext(), 16.0f);
+            layoutParams.width = iconSize;
+            layoutParams.height = iconSize;
             imageView.setLayoutParams(layoutParams);
             imageView.setImageResource(EventRegistry.getEventIconResource(event.eventName));
             imageView.setColorFilter(MaterialColors.getColor(imageView, com.google.android.material.R.attr.colorOutline));
