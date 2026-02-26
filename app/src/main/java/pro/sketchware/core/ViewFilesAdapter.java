@@ -39,9 +39,9 @@ public class ViewFilesAdapter extends BaseFragment {
     StringBuilder idBuilder = new StringBuilder();
     idBuilder.append(prefix);
     int[] intValues = this.viewCounters;
-    int i = intValues[position] + 1;
-    intValues[position] = i;
-    idBuilder.append(i);
+    int counter = intValues[position] + 1;
+    intValues[position] = counter;
+    idBuilder.append(counter);
     String candidateId = idBuilder.toString();
     ArrayList existingViews = ProjectDataManager.getProjectDataManager(this.projectId).getViews(xmlName);
     xmlName = candidateId;
@@ -49,24 +49,24 @@ public class ViewFilesAdapter extends BaseFragment {
       int found = 0;
       Iterator viewIterator = existingViews.iterator();
       while (true) {
-        i = found;
+        counter = found;
         if (viewIterator.hasNext()) {
           if (xmlName.equals(((ViewBean)viewIterator.next()).id)) {
-            i = 1;
+            counter = 1;
             break;
           } 
           continue;
         } 
         break;
       } 
-      if (i == 0)
+      if (counter == 0)
         return xmlName; 
       StringBuilder retryBuilder = new StringBuilder();
       retryBuilder.append(prefix);
       int[] intValues1 = this.viewCounters;
-      i = intValues1[position] + 1;
-      intValues1[position] = i;
-      retryBuilder.append(i);
+      counter = intValues1[position] + 1;
+      intValues1[position] = counter;
+      retryBuilder.append(counter);
       xmlName = retryBuilder.toString();
     } 
   }
@@ -137,14 +137,14 @@ public class ViewFilesAdapter extends BaseFragment {
   }
   
   public void removeSelectedFiles() {
-    int i = this.projectFiles.size();
+    int size = this.projectFiles.size();
     while (true) {
-      int j = i - 1;
-      if (j >= 0) {
-        i = j;
-        if (((SelectableBean)this.projectFiles.get(j)).isSelected) {
-          this.projectFiles.remove(j);
-          i = j;
+      int idx = size - 1;
+      if (idx >= 0) {
+        size = idx;
+        if (((SelectableBean)this.projectFiles.get(idx)).isSelected) {
+          this.projectFiles.remove(idx);
+          size = idx;
         } 
         continue;
       } 

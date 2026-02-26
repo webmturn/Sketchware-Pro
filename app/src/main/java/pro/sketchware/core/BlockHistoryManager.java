@@ -56,10 +56,10 @@ public class BlockHistoryManager {
     if (!this.positionMap.containsKey(historyKey))
       return; 
     ArrayList historyEntries = this.historyMap.get(historyKey);
-    int i = ((Integer)this.positionMap.get(historyKey)).intValue();
+    int position = ((Integer)this.positionMap.get(historyKey)).intValue();
     if (historyEntries == null)
       return; 
-    for (int j = historyEntries.size(); j > i; j--)
+    for (int j = historyEntries.size(); j > position; j--)
       historyEntries.remove(j - 1); 
   }
   
@@ -129,17 +129,17 @@ public class BlockHistoryManager {
   public final void decrementPosition(String historyKey) {
     if (!this.positionMap.containsKey(historyKey))
       initHistory(historyKey); 
-    int i = ((Integer)this.positionMap.get(historyKey)).intValue();
-    if (i == 0)
+    int position = ((Integer)this.positionMap.get(historyKey)).intValue();
+    if (position == 0)
       return; 
-    this.positionMap.put(historyKey, Integer.valueOf(i - 1));
+    this.positionMap.put(historyKey, Integer.valueOf(position - 1));
   }
   
   public final void incrementPosition(String historyKey) {
     if (!this.positionMap.containsKey(historyKey))
       initHistory(historyKey); 
-    int i = ((Integer)this.positionMap.get(historyKey)).intValue();
-    this.positionMap.put(historyKey, Integer.valueOf(i + 1));
+    int position = ((Integer)this.positionMap.get(historyKey)).intValue();
+    this.positionMap.put(historyKey, Integer.valueOf(position + 1));
   }
   
   public void initHistory(String historyKey) {
@@ -158,16 +158,16 @@ public class BlockHistoryManager {
   public HistoryBlockBean redo(String historyKey) {
     if (!canRedo(historyKey))
       return null; 
-    int i = ((Integer)this.positionMap.get(historyKey)).intValue();
+    int position = ((Integer)this.positionMap.get(historyKey)).intValue();
     incrementPosition(historyKey);
-    return ((HistoryBlockBean)((ArrayList<HistoryBlockBean>)this.historyMap.get(historyKey)).get(i - 1 + 1)).clone();
+    return ((HistoryBlockBean)((ArrayList<HistoryBlockBean>)this.historyMap.get(historyKey)).get(position - 1 + 1)).clone();
   }
   
   public HistoryBlockBean undo(String historyKey) {
     if (!canUndo(historyKey))
       return null; 
-    int i = ((Integer)this.positionMap.get(historyKey)).intValue();
+    int position = ((Integer)this.positionMap.get(historyKey)).intValue();
     decrementPosition(historyKey);
-    return ((HistoryBlockBean)((ArrayList<HistoryBlockBean>)this.historyMap.get(historyKey)).get(i - 1)).clone();
+    return ((HistoryBlockBean)((ArrayList<HistoryBlockBean>)this.historyMap.get(historyKey)).get(position - 1)).clone();
   }
 }
