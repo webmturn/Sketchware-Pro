@@ -349,8 +349,8 @@ public class ProjectDataStore {
                     while (true) {
                       i = j;
                       if (b < paramClassInfos.size()) {
-                        ClassInfo gx1 = paramClassInfos.get(b);
-                        if (gx1 != null && targetBean.getClassInfo().isAssignableFrom(gx1) && ((String)blockBean.parameters.get(b)).equals(targetBean.id))
+                        ClassInfo paramClassInfo = paramClassInfos.get(b);
+                        if (paramClassInfo != null && targetBean.getClassInfo().isAssignableFrom(paramClassInfo) && ((String)blockBean.parameters.get(b)).equals(targetBean.id))
                           blockBean.parameters.set(b, ""); 
                         b++;
                         continue;
@@ -518,8 +518,8 @@ public class ProjectDataStore {
               while (true) {
                 i = j;
                 if (b < paramClassInfos.size()) {
-                  ClassInfo gx1 = paramClassInfos.get(b);
-                  if (gx1 != null && classInfo.isAssignableFrom(gx1) && ((String)blockBean.parameters.get(b)).equals(data))
+                  ClassInfo paramClassInfo = paramClassInfos.get(b);
+                  if (paramClassInfo != null && classInfo.isAssignableFrom(paramClassInfo) && ((String)blockBean.parameters.get(b)).equals(data))
                     blockBean.parameters.set(b, ""); 
                   b++;
                   continue;
@@ -957,8 +957,8 @@ public class ProjectDataStore {
         ArrayList<ClassInfo> paramClassInfos = blockBean.getParamClassInfo();
         if (paramClassInfos != null && paramClassInfos.size() > 0)
           for (int b = 0; b < paramClassInfos.size(); b++) {
-            ClassInfo gx1 = paramClassInfos.get(b);
-            if (gx1 != null && gx1.isList() && ((String)blockBean.parameters.get(b)).equals(data))
+            ClassInfo paramClassInfo = paramClassInfos.get(b);
+            if (paramClassInfo != null && paramClassInfo.isList() && ((String)blockBean.parameters.get(b)).equals(data))
               return true; 
           }  
       } 
@@ -1052,8 +1052,8 @@ public class ProjectDataStore {
         ArrayList<ClassInfo> paramClassInfos = blockBean.getParamClassInfo();
         if (paramClassInfos != null && paramClassInfos.size() > 0)
           for (int b = 0; b < paramClassInfos.size(); b++) {
-            ClassInfo gx1 = paramClassInfos.get(b);
-            if (gx1 != null && gx1.isVariable() && ((String)blockBean.parameters.get(b)).equals(data))
+            ClassInfo paramClassInfo = paramClassInfos.get(b);
+            if (paramClassInfo != null && paramClassInfo.isVariable() && ((String)blockBean.parameters.get(b)).equals(data))
               return true; 
           }  
       } 

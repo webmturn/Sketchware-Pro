@@ -602,19 +602,19 @@ public class BlockView extends BaseBlockView {
   }
   
   public void recalculateToRoot() {
-    BlockView rs2;
-    BlockView rs1 = this;
+    BlockView parent;
+    BlockView current = this;
     int count = 0;
     do {
-      rs1.recalculateSize();
-      rs2 = rs1.parentBlock;
+      current.recalculateSize();
+      parent = current.parentBlock;
       count++;
       if (count > 500) {
-        android.util.Log.e("BlockView", "m() infinite loop detected! count=" + count + " tag=" + rs1.getTag() + " E.tag=" + (rs2 != null ? rs2.getTag() : "null"));
+        android.util.Log.e("BlockView", "m() infinite loop detected! count=" + count + " tag=" + current.getTag() + " E.tag=" + (parent != null ? parent.getTag() : "null"));
         break;
       }
-      rs1 = rs2;
-    } while (rs2 != null);
+      current = parent;
+    } while (parent != null);
   }
   
   public void recalculateSize() {
@@ -684,9 +684,9 @@ public class BlockView extends BaseBlockView {
     BlockView rs = this;
     int limit = 200;
     while (true) {
-      BlockView rs1 = rs.parentBlock;
-      if (rs1 != null && --limit > 0) {
-        rs = rs1;
+      BlockView parent = rs.parentBlock;
+      if (parent != null && --limit > 0) {
+        rs = parent;
         continue;
       } 
       return rs;
