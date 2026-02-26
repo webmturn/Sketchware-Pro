@@ -157,17 +157,17 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
                             replaceWithPresetViews(presetData, activity, lastPresetRequestCode);
                             ProjectDataManager.getFileManager(sc_id).refreshNameLists();
                             viewSelectorAdapter.notifyDataSetChanged();
-                            Intent intent2 = new Intent();
-                            intent2.putExtra("project_file", activity);
-                            setResult(RESULT_OK, intent2);
+                            Intent resultIntent = new Intent();
+                            resultIntent.putExtra("project_file", activity);
+                            setResult(RESULT_OK, resultIntent);
                         } else {
                             ProjectFileBean customView = ProjectDataManager.getFileManager(sc_id).getCustomViews().get(viewSelectorAdapter.selectedItem);
                             replaceWithPresetViews(presetData, customView, lastPresetRequestCode);
                             ProjectDataManager.getFileManager(sc_id).refreshNameLists();
                             viewSelectorAdapter.notifyDataSetChanged();
-                            Intent intent3 = new Intent();
-                            intent3.putExtra("project_file", customView);
-                            setResult(RESULT_OK, intent3);
+                            Intent resultIntent = new Intent();
+                            resultIntent.putExtra("project_file", customView);
+                            setResult(RESULT_OK, resultIntent);
                         }
                     }
                 });
