@@ -521,8 +521,8 @@ public class StringResource {
     } catch (Exception ex) {
       this.isLoaded = false;
     } finally {
-      try { if (fis != null) fis.close(); } catch (Exception ignored) {}
-      try { if (isr != null) isr.close(); } catch (Exception ignored) {}
+      try { if (fis != null) fis.close(); } catch (Exception ignored) { Log.w("StringResource", "Failed to close stream", ignored); }
+      try { if (isr != null) isr.close(); } catch (Exception ignored) { Log.w("StringResource", "Failed to close reader", ignored); }
     }
     return result;
   }
@@ -547,8 +547,8 @@ public class StringResource {
     } catch (Exception ex) {
       this.isLoaded = false;
     } finally {
-      try { if (bis != null) bis.close(); } catch (Exception ignored) {}
-      try { if (isr != null) isr.close(); } catch (Exception ignored) {}
+      try { if (bis != null) bis.close(); } catch (Exception ignored) { Log.w("StringResource", "Failed to close stream", ignored); }
+      try { if (isr != null) isr.close(); } catch (Exception ignored) { Log.w("StringResource", "Failed to close reader", ignored); }
     }
     return result;
   }

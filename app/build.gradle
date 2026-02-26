@@ -35,10 +35,12 @@ android {
         }
     }
 
-    packagingOptions {
-        resources.excludes += "license/*"
-        resources.excludes += "META-INF/DEPENDENCIES"
-        resources.pickFirsts += "api_database/*"
+    packaging {
+        resources {
+            excludes += "license/*"
+            excludes += "META-INF/DEPENDENCIES"
+            pickFirsts += "api_database/*"
+        }
     }
 
     compileOptions {

@@ -1,5 +1,7 @@
 package pro.sketchware.core;
 
+import android.util.Log;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -34,7 +36,9 @@ public class DateTimeUtil {
       date.setTime(l1 + l2);
       String formatted = simpleDateFormat.format(date);
       key = formatted;
-    } catch (Exception exception) {}
+    } catch (Exception exception) {
+      Log.w("DateTimeUtil", "Failed to convert timezone", exception);
+    }
     return key;
   }
   
@@ -48,7 +52,9 @@ public class DateTimeUtil {
       simpleDateFormat = new SimpleDateFormat(extra);
       String formatted = simpleDateFormat.format(date);
       key = formatted;
-    } catch (Exception exception) {}
+    } catch (Exception exception) {
+      Log.w("DateTimeUtil", "Failed to reformat date", exception);
+    }
     return key;
   }
   

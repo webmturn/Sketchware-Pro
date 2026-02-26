@@ -1,6 +1,7 @@
 package pro.sketchware.fragments.settings.language;
 
 import android.content.res.Resources;
+import android.util.Log;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -249,10 +250,12 @@ public class LanguageSettingsFragment extends BaseFragment {
                         String value = res.getString(id);
                         result.put(field.getName(), value);
                     } catch (Exception ignored) {
+                        Log.w("LanguageSettingsFragment", "Failed to read string resource field", ignored);
                     }
                 }
             }
         } catch (Exception ignored) {
+            Log.w("LanguageSettingsFragment", "Failed to collect all string resources", ignored);
         }
         return result;
     }

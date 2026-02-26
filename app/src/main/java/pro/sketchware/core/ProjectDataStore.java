@@ -1,5 +1,6 @@
 package pro.sketchware.core;
 
+import android.util.Log;
 import android.util.Pair;
 import com.besome.sketch.beans.BlockBean;
 import com.besome.sketch.beans.ComponentBean;
@@ -1208,7 +1209,7 @@ public class ProjectDataStore {
     } catch (Exception exception) {
       exception.printStackTrace();
     } finally {
-      if (bufferedReader != null) try { bufferedReader.close(); } catch (Exception e) {}
+      if (bufferedReader != null) try { bufferedReader.close(); } catch (Exception e) { Log.w("ProjectDataStore", "Failed to close reader", e); }
     }
   }
   
@@ -1265,7 +1266,7 @@ public class ProjectDataStore {
     } catch (Exception exception) {
       exception.printStackTrace();
     } finally {
-      if (bufferedReader != null) try { bufferedReader.close(); } catch (Exception e) {}
+      if (bufferedReader != null) try { bufferedReader.close(); } catch (Exception e) { Log.w("ProjectDataStore", "Failed to close reader", e); }
     }
   }
   
@@ -1341,7 +1342,7 @@ public class ProjectDataStore {
     } catch (Exception exception) {
       exception.printStackTrace();
     } finally {
-      if (bufferedReader != null) try { bufferedReader.close(); } catch (Exception e) {}
+      if (bufferedReader != null) try { bufferedReader.close(); } catch (Exception e) { Log.w("ProjectDataStore", "Failed to close reader", e); }
     }
   }
   
@@ -1400,7 +1401,7 @@ public class ProjectDataStore {
     } catch (Exception exception) {
       exception.printStackTrace();
     } finally {
-      if (bufferedReader != null) try { bufferedReader.close(); } catch (Exception e) {}
+      if (bufferedReader != null) try { bufferedReader.close(); } catch (Exception e) { Log.w("ProjectDataStore", "Failed to close reader", e); }
     }
   }
   

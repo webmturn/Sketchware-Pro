@@ -280,6 +280,7 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
         try {
             inputText.setText(path.substring(path.lastIndexOf("/") + 1));
         } catch (Exception ignored) {
+            android.util.Log.w("ManageNativelibsActivity", "Failed to extract filename from path", ignored);
         }
 
         dialog.show();

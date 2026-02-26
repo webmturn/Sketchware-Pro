@@ -1,5 +1,7 @@
 package pro.sketchware.core;
 
+import android.util.Log;
+
 import com.besome.sketch.beans.ProjectFileBean;
 import com.besome.sketch.beans.ProjectLibraryBean;
 import com.google.gson.Gson;
@@ -315,7 +317,7 @@ public class ProjectFileManager {
     } catch (Exception exception) {
       exception.printStackTrace();
     } finally {
-      if (bufferedReader != null) try { bufferedReader.close(); } catch (Exception e) {}
+      if (bufferedReader != null) try { bufferedReader.close(); } catch (Exception e) { Log.w("ProjectFileManager", "Failed to close reader", e); }
     }
     refreshNameLists();
   }
@@ -339,7 +341,7 @@ public class ProjectFileManager {
     } catch (Exception exception) {
       exception.printStackTrace();
     } finally {
-      if (bufferedReader != null) try { bufferedReader.close(); } catch (Exception e) {}
+      if (bufferedReader != null) try { bufferedReader.close(); } catch (Exception e) { Log.w("ProjectFileManager", "Failed to close reader", e); }
     }
   }
   

@@ -127,7 +127,7 @@ public class WidgetCollectionManager extends BaseCollectionManager {
     } catch (IOException iOException) {
       iOException.printStackTrace();
     } finally {
-      if (bufferedReader != null) try { bufferedReader.close(); } catch (Exception e) {}
+      if (bufferedReader != null) try { bufferedReader.close(); } catch (Exception e) { android.util.Log.w("WidgetCollectionManager", "Failed to close reader", e); }
     }
   }
   

@@ -34,6 +34,7 @@ public class BlockMenu {
                     }
                 }
             } catch (Exception ignored) {
+                android.util.Log.w("BlockMenu", "Failed to parse block menu JSON for: " + name, ignored);
             }
             if (result == null) {
                 result = fallback;

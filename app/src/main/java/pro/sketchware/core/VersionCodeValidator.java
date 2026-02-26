@@ -13,7 +13,9 @@ public class VersionCodeValidator {
         if (i < j)
           return true; 
       } 
-    } catch (Exception exception) {}
+    } catch (Exception exception) {
+      android.util.Log.w("VersionCodeValidator", "Failed to validate version code: " + input, exception);
+    }
     return false;
   }
 }

@@ -1,5 +1,7 @@
 package pro.sketchware.core;
 
+import android.util.Log;
+
 import com.besome.sketch.beans.ProjectResourceBean;
 import com.bumptech.glide.signature.StringSignature;
 import com.google.gson.Gson;
@@ -517,7 +519,7 @@ public class ResourceManager {
     } catch (Exception exception) {
       exception.printStackTrace();
     } finally {
-      if (bufferedReader != null) try { bufferedReader.close(); } catch (Exception e) {}
+      if (bufferedReader != null) try { bufferedReader.close(); } catch (Exception e) { Log.w("ResourceManager", "Failed to close reader", e); }
     }
   }
   
@@ -542,7 +544,7 @@ public class ResourceManager {
     } catch (Exception exception) {
       exception.printStackTrace();
     } finally {
-      if (bufferedReader != null) try { bufferedReader.close(); } catch (Exception e) {}
+      if (bufferedReader != null) try { bufferedReader.close(); } catch (Exception e) { Log.w("ResourceManager", "Failed to close reader", e); }
     }
   }
   

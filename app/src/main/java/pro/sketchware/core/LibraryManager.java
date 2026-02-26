@@ -1,5 +1,7 @@
 package pro.sketchware.core;
 
+import android.util.Log;
+
 import com.besome.sketch.beans.ProjectLibraryBean;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -113,7 +115,7 @@ public class LibraryManager {
     } catch (Exception exception) {
       exception.printStackTrace();
     } finally {
-      if (bufferedReader != null) try { bufferedReader.close(); } catch (Exception e) {}
+      if (bufferedReader != null) try { bufferedReader.close(); } catch (Exception e) { Log.w("LibraryManager", "Failed to close reader", e); }
     }
   }
   
@@ -210,7 +212,7 @@ public class LibraryManager {
     } catch (Exception exception) {
       exception.printStackTrace();
     } finally {
-      if (bufferedReader != null) try { bufferedReader.close(); } catch (Exception e) {}
+      if (bufferedReader != null) try { bufferedReader.close(); } catch (Exception e) { Log.w("LibraryManager", "Failed to close reader", e); }
     }
   }
   
@@ -233,7 +235,7 @@ public class LibraryManager {
     } catch (Exception exception) {
       exception.printStackTrace();
     } finally {
-      if (bufferedReader != null) try { bufferedReader.close(); } catch (Exception e) {}
+      if (bufferedReader != null) try { bufferedReader.close(); } catch (Exception e) { Log.w("LibraryManager", "Failed to close reader", e); }
     }
   }
   

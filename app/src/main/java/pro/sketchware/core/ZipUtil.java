@@ -1,6 +1,8 @@
 package pro.sketchware.core;
 
 import android.content.Context;
+import android.util.Log;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -181,6 +183,7 @@ public class ZipUtil {
         zipOut.write(buf, 0, len);
       }
     } catch (Exception e) {
+      Log.w("ZipUtil", "Failed to add file to zip: " + key + value, e);
     } finally {
       try { if (zipOut != null) zipOut.closeEntry(); } catch (IOException e) { e.printStackTrace(); }
       if (fis != null) try { fis.close(); } catch (IOException e) { e.printStackTrace(); }
@@ -199,6 +202,7 @@ public class ZipUtil {
       }
       return baos.toByteArray();
     } catch (Exception e) {
+      Log.w("ZipUtil", "Failed to read file to bytes: " + filePath, e);
     }
     return null;
   }

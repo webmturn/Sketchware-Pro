@@ -466,7 +466,7 @@ public class ExtraMenuBean {
 
             case "asynctask":
                 title = Helper.getResString(R.string.logic_editor_title_select_component);
-                menus = getComponentMenus(36);
+                menus = getComponentMenus(ComponentBean.COMPONENT_TYPE_ASYNC_TASK);
                 break;
 
             case "timepickerdialog":
@@ -480,22 +480,22 @@ public class ExtraMenuBean {
                 break;
 
             case "fragmentAdapter":
-                title = "Select a FragmentAdapter Component";
+                title = Helper.getResString(R.string.logic_editor_title_select_component_fragment_adapter);
                 menus = getComponentMenus(ComponentBean.COMPONENT_TYPE_FRAGMENT_ADAPTER);
                 break;
 
             case "phoneauth":
-                title = "Select a FirebasePhone Component";
+                title = Helper.getResString(R.string.logic_editor_title_select_component_firebase_phone);
                 menus = getComponentMenus(ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH_PHONE);
                 break;
 
             case "cloudmessage":
-                title = "Select a CloudMessage Component";
+                title = Helper.getResString(R.string.logic_editor_title_select_component_cloud_message);
                 menus = getComponentMenus(ComponentBean.COMPONENT_TYPE_FIREBASE_CLOUD_MESSAGE);
                 break;
 
             case "googlelogin":
-                title = "Select a FirebaseGoogle Component";
+                title = Helper.getResString(R.string.logic_editor_title_select_component_firebase_google);
                 menus = getComponentMenus(ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH_GOOGLE_LOGIN);
                 break;
 
@@ -515,14 +515,14 @@ public class ExtraMenuBean {
                 break;
 
             case "service":
-                title = "Select a Background Service";
+                title = Helper.getResString(R.string.logic_editor_title_select_background_service);
                 if (FileUtil.isExistFile(fpu.getManifestService(sc_id))) {
                     menus = frc.getServiceManifestList();
                 }
                 break;
 
             case "broadcast":
-                title = "Select a Broadcast Receiver";
+                title = Helper.getResString(R.string.logic_editor_title_select_broadcast_receiver);
                 if (FileUtil.isExistFile(fpu.getManifestBroadcast(sc_id))) {
                     menus = frc.getBroadcastManifestList();
                 }
@@ -559,28 +559,28 @@ public class ExtraMenuBean {
                 break;
 
             case "customViews":
-                title = "Select a Custom View";
+                title = Helper.getResString(R.string.logic_editor_title_select_custom_view);
                 for (ProjectFileBean projectFileBean : ProjectDataManager.getFileManager(sc_id).getCustomViews()) {
                     menus.add(projectFileBean.fileName);
                 }
                 break;
 
             case "SignButtonColor":
-                title = "Select a SignInButton Color";
+                title = Helper.getResString(R.string.logic_editor_title_select_signin_button_color);
                 menus.add("COLOR_AUTO");
                 menus.add("COLOR_DARK");
                 menus.add("COLOR_LIGHT");
                 break;
 
             case "SignButtonSize":
-                title = "Select SignInButton Size";
+                title = Helper.getResString(R.string.logic_editor_title_select_signin_button_size);
                 menus.add("SIZE_ICON_ONLY");
                 menus.add("SIZE_STANDARD");
                 menus.add("SIZE_WIDE");
                 break;
 
             case "ResString":
-                title = "Select a ResString";
+                title = Helper.getResString(R.string.logic_editor_title_select_res_string);
 
                 String filePath = FileUtil.getExternalStorageDir().concat("/.sketchware/data/").concat(sc_id.concat("/files/resource/values/strings.xml"));
                 ArrayList<HashMap<String, Object>> StringsListMap = new ArrayList<>();
@@ -609,7 +609,7 @@ public class ExtraMenuBean {
 
             case "AdUnit":
                 dialog.setIcon(R.drawable.unit_96);
-                title = "Select an Ad Unit";
+                title = Helper.getResString(R.string.logic_editor_title_select_ad_unit);
                 for (AdUnitBean bean : ProjectDataManager.getLibraryManager(sc_id).admob.adUnits) {
                     menus.add(bean.id);
                 }
@@ -617,39 +617,39 @@ public class ExtraMenuBean {
 
             case "TestDevice":
                 dialog.setIcon(R.drawable.ic_test_device_48dp);
-                title = "Select a Test device";
+                title = Helper.getResString(R.string.logic_editor_title_select_test_device);
                 for (AdTestDeviceBean testDevice : ProjectDataManager.getLibraryManager(sc_id).admob.testDevices) {
                     menus.add(testDevice.deviceId);
                 }
                 break;
 
             case "IntentKey":
-                title = "Select an Intent key";
+                title = Helper.getResString(R.string.logic_editor_title_select_intent_key);
                 menus.addAll(new ArrayList<>(Arrays.asList(intentKey)));
                 break;
 
             case "PatternFlag":
-                title = "Select a Pattern Flags";
+                title = Helper.getResString(R.string.logic_editor_title_select_pattern_flag);
                 menus.addAll(new ArrayList<>(Arrays.asList(patternFlags)));
                 break;
 
             case "Permission":
-                title = "Select a Permission";
+                title = Helper.getResString(R.string.logic_editor_title_select_permission);
                 menus.addAll(new ArrayList<>(Arrays.asList(permission)));
                 break;
 
             case "AdSize":
-                title = "Select an Ad size";
+                title = Helper.getResString(R.string.logic_editor_title_select_ad_size);
                 menus.addAll(new ArrayList<>(Arrays.asList(adSize)));
                 break;
 
             case "PixelFormat":
-                title = "Select a PixelFormat";
+                title = Helper.getResString(R.string.logic_editor_title_select_pixel_format);
                 menus.addAll(new ArrayList<>(Arrays.asList(pixelFormat)));
                 break;
 
             case "Variable":
-                title = "Select a Variable";
+                title = Helper.getResString(R.string.logic_editor_title_select_variable);
                 for (Pair<Integer, String> integerStringPair : projectDataManager.getVariables(javaName)) {
                     String variable = integerStringPair.second;
                     String variableName = CustomVariableUtil.getVariableName(variable);
@@ -658,14 +658,14 @@ public class ExtraMenuBean {
                 break;
 
             case "Component":
-                title = "Select a Component";
+                title = Helper.getResString(R.string.logic_editor_title_select_component_any);
                 for (ComponentBean componentBean : projectDataManager.getComponents(javaName)) {
                     menus.add(componentBean.componentId);
                 }
                 break;
 
             case "CustomVar":
-                title = "Select a Custom Variable";
+                title = Helper.getResString(R.string.logic_editor_title_select_custom_variable);
                 for (String s : projectDataManager.getVariableNamesByType(javaName, 5)) {
                     Matcher matcher = Pattern.compile("^(\\w+)[\\s]+(\\w+)").matcher(s);
                     while (matcher.find()) {

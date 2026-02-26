@@ -53,6 +53,7 @@ public class ComponentBean extends CollapsibleBean implements Parcelable {
     public static final int COMPONENT_TYPE_FIREBASE_AUTH_PHONE = 28;
     public static final int COMPONENT_TYPE_FIREBASE_CLOUD_MESSAGE = 30;
     public static final int COMPONENT_TYPE_FIREBASE_AUTH_GOOGLE_LOGIN = 31;
+    public static final int COMPONENT_TYPE_ASYNC_TASK = 36;
 
     public ClassInfo classInfo;
     @Expose

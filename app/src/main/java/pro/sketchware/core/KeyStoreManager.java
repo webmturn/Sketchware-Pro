@@ -51,7 +51,9 @@ public class KeyStoreManager {
     } finally {
       try {
         inputStream.close();
-      } catch (Exception exception) {}
+      } catch (Exception exception) {
+        android.util.Log.w("KeyStoreManager", "Failed to close input stream", exception);
+      }
     }
   }
   

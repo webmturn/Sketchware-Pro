@@ -212,8 +212,8 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
     }
 
     private void cancelAnimations() {
-        if (showPropertyViewAnimator.isRunning()) showPropertyViewAnimator.cancel();
-        if (hidePropertyViewAnimator.isRunning()) hidePropertyViewAnimator.cancel();
+        if (showPropertyViewAnimator != null && showPropertyViewAnimator.isRunning()) showPropertyViewAnimator.cancel();
+        if (hidePropertyViewAnimator != null && hidePropertyViewAnimator.isRunning()) hidePropertyViewAnimator.cancel();
     }
 
     public void updateViewDisplay(ViewBean var1) {

@@ -14,6 +14,8 @@ import android.os.Environment;
 import android.os.StatFs;
 import android.util.DisplayMetrics;
 import com.google.android.gms.common.GoogleApiAvailability;
+import android.util.Log;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -70,7 +72,9 @@ public class DeviceUtil {
             return fieldName; 
           b++;
           continue;
-        } catch (Exception exception) {}
+        } catch (Exception exception) {
+          Log.w("DeviceUtil", "Failed to get version name field", exception);
+        }
       } 
       return "";
     } 
@@ -178,7 +182,9 @@ public class DeviceUtil {
             return true; 
         } 
       } 
-    } catch (Exception exception) {}
+    } catch (Exception exception) {
+      Log.w("DeviceUtil", "Failed to check network availability", exception);
+    }
     return false;
   }
 }

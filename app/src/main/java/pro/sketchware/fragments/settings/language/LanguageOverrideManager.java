@@ -101,6 +101,7 @@ public class LanguageOverrideManager {
                 }
             }
         } catch (Exception ignored) {
+            android.util.Log.w("LanguageOverrideManager", "Failed to build name-to-id map", ignored);
         }
         return map;
     }

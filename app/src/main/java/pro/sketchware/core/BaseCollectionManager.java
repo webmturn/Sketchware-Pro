@@ -1,5 +1,7 @@
 package pro.sketchware.core;
 
+import android.util.Log;
+
 import com.besome.sketch.beans.CollectionBean;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -48,7 +50,7 @@ public abstract class BaseCollectionManager {
     } catch (java.io.IOException e) {
       e.printStackTrace();
     } finally {
-      if (reader != null) try { reader.close(); } catch (Exception ignored) {}
+      if (reader != null) try { reader.close(); } catch (Exception ignored) { Log.w("BaseCollectionManager", "Failed to close reader", ignored); }
     }
   }
   

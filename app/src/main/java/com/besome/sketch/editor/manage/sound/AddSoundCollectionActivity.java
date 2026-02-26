@@ -380,6 +380,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
             try {
                 mediaMetadataRetriever.release();
             } catch (Exception ignored) {
+                Log.w("AddSoundCollectionActivity", "Failed to release MediaMetadataRetriever", ignored);
             }
         }
     }

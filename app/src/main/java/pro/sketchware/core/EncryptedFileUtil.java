@@ -230,8 +230,9 @@ public class EncryptedFileUtil {
         sb.append(new String(buf, 0, len));
       }
     } catch (IOException e) {
+      android.util.Log.w("EncryptedFileUtil", "Failed to read file content", e);
     } finally {
-      if (reader != null) try { reader.close(); } catch (Exception e) {}
+      if (reader != null) try { reader.close(); } catch (Exception e) { android.util.Log.w("EncryptedFileUtil", "Failed to close reader", e); }
     }
     return sb.toString();
   }
