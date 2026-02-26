@@ -165,20 +165,20 @@ public class ImageCollectionManager extends BaseCollectionManager {
           } 
         } 
         if (failedNames.size() > 0) {
-          CompileException yy2 = new CompileException("fail_to_copy");
-          yy2.setErrorDetails(failedNames);
+          CompileException copyException = new CompileException("fail_to_copy");
+          copyException.setErrorDetails(failedNames);
           if (processedPaths.size() > 0)
             for (String path : processedPaths)
               this.fileUtil.deleteFileByPath(path);  
-          throw yy2;
+          throw copyException;
         } 
         if (flag)
           saveCollections(); 
         return;
       } 
-      CompileException yy1 = new CompileException("file_no_exist");
-      yy1.setErrorDetails(failedNames);
-      throw yy1;
+      CompileException noExistException = new CompileException("file_no_exist");
+      noExistException.setErrorDetails(failedNames);
+      throw noExistException;
     } 
     CompileException CompileException = new CompileException("duplicate_name");
     CompileException.setErrorDetails(duplicateNames);

@@ -22,11 +22,11 @@ public class ViewHistoryManager {
   }
   
   public static void clearInstance() {
-    ViewHistoryManager cC1 = instance;
-    if (cC1 != null) {
-      cC1.scId = "";
-      cC1.historyMap = null;
-      cC1.positionMap = null;
+    ViewHistoryManager currentInstance = instance;
+    if (currentInstance != null) {
+      currentInstance.scId = "";
+      currentInstance.historyMap = null;
+      currentInstance.positionMap = null;
     } 
     instance = null;
   }
