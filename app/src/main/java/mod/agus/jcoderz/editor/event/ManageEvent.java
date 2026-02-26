@@ -581,9 +581,9 @@ public class ManageEvent {
                     }
                     """, eventLogic, "\"\"");
             case "onCompleteRegister" -> "@Override\r\n" +
-                    "public void onComplete(Task<InstanceIdResult> task) {\r\n" +
+                    "public void onComplete(Task<String> task) {\r\n" +
                     "final boolean _success = task.isSuccessful();\r\n" +
-                    "final String _token = task.getResult().getToken();\r\n" +
+                    "final String _token = task.getResult();\r\n" +
                     "final String _errorMessage = task.getException() != null ? task.getException().getMessage() : \"\";\r\n" +
                     eventLogic + "\r\n" +
                     "}";
@@ -799,7 +799,7 @@ public class ManageEvent {
                     listenerLogic + "\r\n" +
                     "});";
             case "OnCompleteListenerFCM" ->
-                    targetId + "_onCompleteListener = new OnCompleteListener<InstanceIdResult>() {\r\n" +
+                    targetId + "_onCompleteListener = new OnCompleteListener<String>() {\r\n" +
                             listenerLogic + "\r\n" +
                             "};";
             case "PatternLockViewListener" ->

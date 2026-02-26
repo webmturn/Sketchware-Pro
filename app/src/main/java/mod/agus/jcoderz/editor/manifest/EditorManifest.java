@@ -20,17 +20,7 @@ public class EditorManifest {
         messagingEventActionTag.addAttribute("android", "name", "com.google.firebase.MESSAGING_EVENT");
         firebaseMessagingServiceIntentFilterTag.addChildNode(messagingEventActionTag);
         firebaseMessagingServiceTag.addChildNode(firebaseMessagingServiceIntentFilterTag);
-        XmlBuilder firebaseInstanceIdReceiverTag = new XmlBuilder("receiver");
-        firebaseInstanceIdReceiverTag.addAttribute("android", "name", "com.google.firebase.iid.FirebaseInstanceIdReceiver");
-        firebaseInstanceIdReceiverTag.addAttribute("android", "exported", "true");
-        firebaseInstanceIdReceiverTag.addAttribute("android", "permission", "com.google.android.c2dm.permission.SEND");
-        XmlBuilder firebaseInstanceIdReceiverIntentFilterTag = new XmlBuilder("intent-filter");
-        XmlBuilder receiveActionTag = new XmlBuilder("action");
-        receiveActionTag.addAttribute("android", "name", "com.google.android.c2dm.intent.RECEIVE");
-        firebaseInstanceIdReceiverIntentFilterTag.addChildNode(receiveActionTag);
-        firebaseInstanceIdReceiverTag.addChildNode(firebaseInstanceIdReceiverIntentFilterTag);
         applicationTag.addChildNode(firebaseMessagingServiceTag);
-        applicationTag.addChildNode(firebaseInstanceIdReceiverTag);
     }
 
     public static void manifestFBGoogleLogin(XmlBuilder applicationTag) {
