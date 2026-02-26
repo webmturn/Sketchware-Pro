@@ -92,9 +92,9 @@ public class EncryptedFileUtil {
     if (dir.exists()) {
       File[] files = dir.listFiles();
       if (files != null) {
-        int i = files.length;
-        for (int b = 0; b < i; b++) {
-          File file = files[b];
+        int fileCount = files.length;
+        for (int fileIdx = 0; fileIdx < fileCount; fileIdx++) {
+          File file = files[fileIdx];
           if (file.isDirectory())
             deleteDirectory(file); 
           if (file.isFile())

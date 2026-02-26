@@ -49,9 +49,9 @@ public class DeviceUtil {
   
   public static boolean isGooglePlayAvailable(Activity activity) {
     GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
-    int i = googleApiAvailability.isGooglePlayServicesAvailable((Context)activity);
-    if (i != 0) {
-      googleApiAvailability.isUserResolvableError(i);
+    int resultCode = googleApiAvailability.isGooglePlayServicesAvailable((Context)activity);
+    if (resultCode != 0) {
+      googleApiAvailability.isUserResolvableError(resultCode);
       return false;
     } 
     return true;
@@ -59,18 +59,18 @@ public class DeviceUtil {
   
   public static String getAndroidVersionName() {
     Field[] fields = Build.VERSION_CODES.class.getFields();
-    int i = fields.length;
-    int b = 0;
+    int fieldCount = fields.length;
+    int fieldIdx = 0;
     while (true) {
-      if (b < i) {
-        Field field = fields[b];
+      if (fieldIdx < fieldCount) {
+        Field field = fields[fieldIdx];
         String fieldName = field.getName();
         try {
-          int j = field.getInt(null);
-          int k = Build.VERSION.SDK_INT;
-          if (j == k)
+          int fieldValue = field.getInt(null);
+          int sdkInt = Build.VERSION.SDK_INT;
+          if (fieldValue == sdkInt)
             return fieldName; 
-          b++;
+          fieldIdx++;
           continue;
         } catch (Exception exception) {
           Log.w("DeviceUtil", "Failed to get version name field", exception);
@@ -172,13 +172,13 @@ public class DeviceUtil {
     intValues[1] = 1;
     try {
       ConnectivityManager connectivityManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
-      int i = intValues.length;
-      for (int b = 0; b < i; b++) {
-        int j = intValues[b];
+      int typeCount = intValues.length;
+      for (int typeIdx = 0; typeIdx < typeCount; typeIdx++) {
+        int networkType = intValues[typeIdx];
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         if (networkInfo != null) {
-          int k = networkInfo.getType();
-          if (k == j)
+          int activeType = networkInfo.getType();
+          if (activeType == networkType)
             return true; 
         } 
       } 

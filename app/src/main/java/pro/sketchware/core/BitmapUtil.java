@@ -7,44 +7,44 @@ import android.media.ExifInterface;
 
 public class BitmapUtil {
   public static int calculateSampleSize(BitmapFactory.Options options, int x, int y) {
-    int i = options.outWidth;
-    int j = options.outHeight;
-    int k = 1;
-    int m = 1;
-    if (j > y || i > x) {
-      j /= 2;
-      i /= 2;
+    int outWidth = options.outWidth;
+    int outHeight = options.outHeight;
+    int sampleSize = 1;
+    int candidate = 1;
+    if (outHeight > y || outWidth > x) {
+      outHeight /= 2;
+      outWidth /= 2;
       while (true) {
-        k = m;
-        if (j / m >= y) {
-          k = m;
-          if (i / m >= x) {
-            m *= 2;
+        sampleSize = candidate;
+        if (outHeight / candidate >= y) {
+          sampleSize = candidate;
+          if (outWidth / candidate >= x) {
+            candidate *= 2;
             continue;
           } 
         } 
         break;
       } 
     } 
-    return k;
+    return sampleSize;
   }
   
   public static int getExifRotation(String filePath) throws java.io.IOException {
-    int i = (new ExifInterface(filePath)).getAttributeInt("Orientation", -1);
-    if (i != 3) {
-      if (i != 6) {
-        if (i != 8) {
-          i = 0;
+    int orientation = (new ExifInterface(filePath)).getAttributeInt("Orientation", -1);
+    if (orientation != 3) {
+      if (orientation != 6) {
+        if (orientation != 8) {
+          orientation = 0;
         } else {
-          i = 270;
+          orientation = 270;
         } 
       } else {
-        i = 90;
+        orientation = 90;
       } 
     } else {
-      i = 180;
+      orientation = 180;
     } 
-    return i;
+    return orientation;
   }
   
   public static Bitmap rotateBitmap(Bitmap bitmap, int index) {
