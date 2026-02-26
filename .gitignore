@@ -71,3 +71,11 @@ fastlane/readme.md
 release/
 app/libs/
 run_x/
+
+# Windsurf IDE config
+.windsurfrules
+
+# Refactoring work notes
+refactoring-naming-map.md
+refactoring-method-naming.md
+jar_list.txt
