@@ -103,17 +103,17 @@ public class ViewDummy extends RelativeLayout {
         rs.getLocationOnScreen(sourceLocation);
     }
 
-    public void updateDummyPosition(View view, float f, float f2, float f3, float f4, float f5, float f6) {
+    public void updateDummyPosition(View view, float touchX, float touchY, float offsetX, float offsetY, float extraOffsetX, float extraOffsetY) {
         if (layout_dummy.getVisibility() != View.VISIBLE) {
             setDummyVisibility(View.VISIBLE);
         }
         getLocationOnScreen(dummyLocation);
-        layout_dummy.setX((sourceLocation[0] - dummyLocation[0]) + f - f3 - img_notallowed.getWidth() + f5);
-        layout_dummy.setY((sourceLocation[1] - dummyLocation[1]) + f2 - f4 + f6);
+        layout_dummy.setX((sourceLocation[0] - dummyLocation[0]) + touchX - offsetX - img_notallowed.getWidth() + extraOffsetX);
+        layout_dummy.setY((sourceLocation[1] - dummyLocation[1]) + touchY - offsetY + extraOffsetY);
     }
 
-    public void updateDummyPosition(View view, float f, float f2, float f3, float f4) {
-        updateDummyPosition(view, f, f2, f3, f4, 0.0f, 0.0f);
+    public void updateDummyPosition(View view, float touchX, float touchY, float offsetX, float offsetY) {
+        updateDummyPosition(view, touchX, touchY, offsetX, offsetY, 0.0f, 0.0f);
     }
 
     public void getDummyLocation(int[] iArr) {

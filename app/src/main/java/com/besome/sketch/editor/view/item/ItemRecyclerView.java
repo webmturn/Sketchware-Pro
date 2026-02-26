@@ -99,12 +99,12 @@ public class ItemRecyclerView extends RecyclerView implements ItemView, EditorLi
             paint.setColor(0x60000000);
             int measuredWidth = getMeasuredWidth();
             int measuredHeight = getMeasuredHeight();
-            float f2 = (float) measuredWidth;
-            canvas.drawLine(0.0f, 0.0f, f2, 0.0f, paint);
-            float f3 = (float) measuredHeight;
-            canvas.drawLine(0.0f, 0.0f, 0.0f, f3, paint);
-            canvas.drawLine(f2, 0.0f, f2, f3, paint);
-            canvas.drawLine(0.0f, f3, f2, f3, paint);
+            float widthF = (float) measuredWidth;
+            canvas.drawLine(0.0f, 0.0f, widthF, 0.0f, paint);
+            float heightF = (float) measuredHeight;
+            canvas.drawLine(0.0f, 0.0f, 0.0f, heightF, paint);
+            canvas.drawLine(widthF, 0.0f, widthF, heightF, paint);
+            canvas.drawLine(0.0f, heightF, widthF, heightF, paint);
         }
         super.onDraw(canvas);
     }

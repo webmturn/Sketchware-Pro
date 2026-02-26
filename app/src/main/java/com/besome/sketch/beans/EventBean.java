@@ -68,9 +68,9 @@ public class EventBean extends CollapsibleBean implements Parcelable {
 
     public static void deleteEvent(String sc_id, EventBean event, ProjectFileBean projectFileBean) {
         ProjectDataManager.getProjectDataManager(sc_id).removeEvent(projectFileBean.getJavaName(), event.targetId, event.eventName);
-        ProjectDataStore a2 = ProjectDataManager.getProjectDataManager(sc_id);
+        ProjectDataStore projectDataStore = ProjectDataManager.getProjectDataManager(sc_id);
         String javaName = projectFileBean.getJavaName();
-        a2.removeBlockEntry(javaName, event.targetId + "_" + event.eventName);
+        projectDataStore.removeBlockEntry(javaName, event.targetId + "_" + event.eventName);
     }
 
     public static int getEventTypeBgRes(int eventType) {

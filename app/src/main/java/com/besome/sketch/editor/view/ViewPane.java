@@ -661,7 +661,7 @@ public class ViewPane extends RelativeLayout {
         return null;
     }
 
-    public void updateViewBeanProperties(ViewBean viewBean, int i, int i2) {
+    public void updateViewBeanProperties(ViewBean viewBean, int index, int depth) {
         if (viewInfo != null) {
             View view = viewInfo.view();
             if (view instanceof LinearLayout) {
@@ -989,8 +989,8 @@ public class ViewPane extends RelativeLayout {
         }
     }
 
-    private void addViewInfo(Rect rect, View view, int i, int i2) {
-        viewInfos.add(new ViewInfo(rect, view, i, i2));
+    private void addViewInfo(Rect rect, View view, int index, int depth) {
+        viewInfos.add(new ViewInfo(rect, view, index, depth));
     }
 
     public void addViewAndUpdateIndex(View view) {

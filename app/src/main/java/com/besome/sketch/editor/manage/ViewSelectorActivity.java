@@ -287,31 +287,31 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
     }
 
     private String generateUniqueViewId(int viewType, String xmlName) {
-        String b = SketchwarePaths.getWidgetTypeName(viewType);
+        String typeName = SketchwarePaths.getWidgetTypeName(viewType);
         StringBuilder sb = new StringBuilder();
-        sb.append(b);
-        int i2 = widgetTypeCounts[viewType] + 1;
-        widgetTypeCounts[viewType] = i2;
-        sb.append(i2);
-        String sb2 = sb.toString();
-        ArrayList<ViewBean> d = ProjectDataManager.getProjectDataManager(sc_id).getViews(xmlName);
+        sb.append(typeName);
+        int count = widgetTypeCounts[viewType] + 1;
+        widgetTypeCounts[viewType] = count;
+        sb.append(count);
+        String candidateId = sb.toString();
+        ArrayList<ViewBean> views = ProjectDataManager.getProjectDataManager(sc_id).getViews(xmlName);
         while (true) {
             boolean isDuplicate = false;
-            for (ViewBean viewBean : d) {
-                if (sb2.equals(viewBean.id)) {
+            for (ViewBean viewBean : views) {
+                if (candidateId.equals(viewBean.id)) {
                     isDuplicate = true;
                     break;
                 }
             }
             if (!isDuplicate) {
-                return sb2;
+                return candidateId;
             }
             sb = new StringBuilder();
-            sb.append(b);
-            i2 = widgetTypeCounts[viewType] + 1;
-            widgetTypeCounts[viewType] = i2;
-            sb.append(i2);
-            sb2 = sb.toString();
+            sb.append(typeName);
+            count = widgetTypeCounts[viewType] + 1;
+            widgetTypeCounts[viewType] = count;
+            sb.append(count);
+            candidateId = sb.toString();
         }
     }
 
