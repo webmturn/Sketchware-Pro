@@ -281,11 +281,11 @@ public class BlockPane extends RelativeLayout {
     BlockView rs = this.dragBlock;
     rs.blockPane = this;
     addView((View)rs);
-    float f = ViewUtil.dpToPx(getContext(), 1.0F);
+    float padding = ViewUtil.dpToPx(getContext(), 1.0F);
     rs = this.dragBlock;
-    f *= 8.0F;
-    rs.setX(f);
-    this.dragBlock.setY(f);
+    padding *= 8.0F;
+    rs.setX(padding);
+    this.dragBlock.setY(padding);
   }
   
   public void buildSnapPoints(String excludeBlockId, boolean flag1, boolean flag2, boolean flag3, int start, int end) {

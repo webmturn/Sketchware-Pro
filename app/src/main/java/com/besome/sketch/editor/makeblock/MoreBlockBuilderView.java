@@ -102,12 +102,12 @@ public class MoreBlockBuilderView extends LinearLayout {
         binding.parameter.addTextChangedListener(new BaseTextWatcher() {
             @Override
             public void onTextChanged(CharSequence sequence, int start, int before, int count) {
-                String s = sequence.toString();
+                String input = sequence.toString();
 
-                if (CUSTOM_VARIABLE_PATTERN.matcher(s).matches()) {
+                if (CUSTOM_VARIABLE_PATTERN.matcher(input).matches()) {
                     customVariableInvalid = false;
                 } else {
-                    customVariableInvalid = !s.isEmpty();
+                    customVariableInvalid = !input.isEmpty();
                 }
                 binding.tiParameter.setError(Helper.getResString(R.string.error_invalid_format));
                 binding.tiParameter.setErrorEnabled(customVariableInvalid);
