@@ -206,11 +206,11 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
         if (validateAndCheckFile(nameValidator)) {
             if (!isEditing) {
                 String obj = Helper.getText(binding.edInput);
-                String a = UriPathResolver.resolve(this, pickedSoundUri);
-                if (a == null) {
+                String soundFilePath = UriPathResolver.resolve(this, pickedSoundUri);
+                if (soundFilePath == null) {
                     return;
                 }
-                ProjectResourceBean projectResourceBean = new ProjectResourceBean(ProjectResourceBean.PROJECT_RES_TYPE_FILE, obj, a);
+                ProjectResourceBean projectResourceBean = new ProjectResourceBean(ProjectResourceBean.PROJECT_RES_TYPE_FILE, obj, soundFilePath);
                 projectResourceBean.savedPos = 1;
                 projectResourceBean.isNew = true;
                 try {

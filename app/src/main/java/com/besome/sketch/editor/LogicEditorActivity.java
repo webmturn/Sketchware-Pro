@@ -889,12 +889,12 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                                             break;
 
                                         case "list":
-                                            boolean b = ProjectDataStore.hasListVariable(javaName, ExtraMenuBean.LIST_TYPE_NUMBER, parameter);
-                                            if (!b) {
-                                                b = ProjectDataStore.hasListVariable(javaName, ExtraMenuBean.LIST_TYPE_STRING, parameter);
+                                            boolean hasListVar = ProjectDataStore.hasListVariable(javaName, ExtraMenuBean.LIST_TYPE_NUMBER, parameter);
+                                            if (!hasListVar) {
+                                                hasListVar = ProjectDataStore.hasListVariable(javaName, ExtraMenuBean.LIST_TYPE_STRING, parameter);
                                             }
 
-                                            if (!b) {
+                                            if (!hasListVar) {
                                                 ProjectDataStore.hasListVariable(javaName, ExtraMenuBean.LIST_TYPE_MAP, parameter);
                                             }
                                             break;
@@ -2472,9 +2472,9 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 blockPane.computeSnapPoints((BlockView) currentTouchedView);
             }
 
-            float a = posInitX - touchOriginX;
-            float b = posInitY - touchOriginY;
-            dummy.updateDummyPosition(currentTouchedView, a, b, a, b, dummyOffsetX, dummyOffsetY);
+            float deltaX = posInitX - touchOriginX;
+            float deltaY = posInitY - touchOriginY;
+            dummy.updateDummyPosition(currentTouchedView, deltaX, deltaY, deltaX, deltaY, dummyOffsetX, dummyOffsetY);
             dummy.getDummyLocation(locationBuffer);
             if (viewLogicEditor.hitTest(locationBuffer[0], locationBuffer[1])) {
                 dummy.setAllow(true);

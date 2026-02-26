@@ -16,11 +16,11 @@ import pro.sketchware.R;
 public abstract class BasePermissionAppCompatActivity extends BaseAppCompatActivity {
 
     public boolean checkStoragePermission(int i) {
-        boolean j = isStoragePermissionGranted();
-        if (!j) {
+        boolean isGranted = isStoragePermissionGranted();
+        if (!isGranted) {
             showPermissionRequestDialog(i);
         }
-        return j;
+        return isGranted;
     }
 
     public abstract void onStoragePermissionGranted(int i);
