@@ -473,9 +473,9 @@ public class ViewPane extends RelativeLayout {
                             view.setBackground(new BitmapDrawable(getResources(), backgroundRes));
                         }
                     } else {
-                        Bitmap decodeFile2 = BitmapFactory.decodeFile(backgroundRes);
-                        int round2 = Math.round(getResources().getDisplayMetrics().density / 2.0f);
-                        view.setBackground(new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(decodeFile2, decodeFile2.getWidth() * round2, decodeFile2.getHeight() * round2, true)));
+                        Bitmap bgBitmap = BitmapFactory.decodeFile(backgroundRes);
+                        int densityScale = Math.round(getResources().getDisplayMetrics().density / 2.0f);
+                        view.setBackground(new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bgBitmap, bgBitmap.getWidth() * densityScale, bgBitmap.getHeight() * densityScale, true)));
                     }
                 }
             } catch (Exception e) {
@@ -521,13 +521,13 @@ public class ViewPane extends RelativeLayout {
                     String imagelocation = resourcesManager.getImagePath(viewBean.image.resName);
                     File file = new File(imagelocation);
                     if (file.exists() && file.length() > 0) {
-                        int round3 = Math.round(getResources().getDisplayMetrics().density / 2.0f);
+                        int imageScale = Math.round(getResources().getDisplayMetrics().density / 2.0f);
                         if (imagelocation.endsWith(".xml")) {
                             FilePathUtil fpu = new FilePathUtil();
-                            svgUtils.loadScaledSvgIntoImageView((ImageView) view, fpu.getSvgFullPath(sc_id, viewBean.image.resName), round3);
+                            svgUtils.loadScaledSvgIntoImageView((ImageView) view, fpu.getSvgFullPath(sc_id, viewBean.image.resName), imageScale);
                         } else {
-                            Bitmap decodeFile3 = BitmapFactory.decodeFile(imagelocation);
-                            ((ImageView) view).setImageBitmap(Bitmap.createScaledBitmap(decodeFile3, decodeFile3.getWidth() * round3, decodeFile3.getHeight() * round3, true));
+                            Bitmap imageBitmap = BitmapFactory.decodeFile(imagelocation);
+                            ((ImageView) view).setImageBitmap(Bitmap.createScaledBitmap(imageBitmap, imageBitmap.getWidth() * imageScale, imageBitmap.getHeight() * imageScale, true));
                         }
                     } else {
                         VectorDrawableLoader vectorDrawableLoader = new VectorDrawableLoader();

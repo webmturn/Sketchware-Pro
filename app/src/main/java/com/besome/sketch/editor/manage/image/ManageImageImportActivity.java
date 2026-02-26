@@ -118,9 +118,9 @@ public class ManageImageImportActivity extends BaseAppCompatActivity implements 
                 } else {
                     int nameIdx = 0;
                     while (nameIdx < selectedCollections.size()) {
-                        ProjectResourceBean projectResourceBean2 = selectedCollections.get(nameIdx);
-                        projectResourceBean2.resName = name + "_" + ++nameIdx;
-                        projectResourceBean2.isDuplicateCollection = false;
+                        ProjectResourceBean resourceBean = selectedCollections.get(nameIdx);
+                        resourceBean.resName = name + "_" + ++nameIdx;
+                        resourceBean.isDuplicateCollection = false;
                     }
                     nameValidator.setJavaNames(getReservedSelectedCollectionNames());
                     adapter.notifyDataSetChanged();
