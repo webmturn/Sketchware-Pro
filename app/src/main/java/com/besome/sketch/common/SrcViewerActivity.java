@@ -1,20 +1,16 @@
 package com.besome.sketch.common;
 
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
-import android.widget.NumberPicker;
 
 import androidx.core.view.WindowInsetsCompat;
 
 import com.besome.sketch.beans.SrcCodeBean;
 import com.besome.sketch.ctrls.CommonSpinnerItem;
 import com.besome.sketch.lib.base.BaseAppCompatActivity;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
@@ -27,6 +23,7 @@ import pro.sketchware.core.ProjectFilePaths;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.SrcViewerBinding;
+import pro.sketchware.utility.CodeEditorPreferences;
 import pro.sketchware.utility.EditorUtils;
 import pro.sketchware.utility.UI;
 
@@ -38,7 +35,7 @@ public class SrcViewerActivity extends BaseAppCompatActivity {
     private ArrayList<SrcCodeBean> sourceCodeBeans;
 
     private String currentFileName;
-    private int editorFontSize = 12;
+    private CodeEditorPreferences editorPrefs;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,9 +47,11 @@ public class SrcViewerActivity extends BaseAppCompatActivity {
 
         UI.addWindowInsetToPadding(binding.getRoot(), WindowInsetsCompat.Type.systemBars(), false, true, false, true);
 
+        editorPrefs = new CodeEditorPreferences(this, "viewer");
+
         configureEditor();
 
-        binding.changeFontSize.setOnClickListener(v -> showChangeFontSizeDialog());
+        binding.changeFontSize.setOnClickListener(v -> editorPrefs.showFontSizeDialog(this, binding.editor, null));
 
         binding.filesListSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -65,6 +64,7 @@ public class SrcViewerActivity extends BaseAppCompatActivity {
                 } else {
                     EditorUtils.loadJavaConfig(binding.editor);
                 }
+                editorPrefs.applyToEditor(binding.editor, false);
             }
 
             @Override
@@ -110,7 +110,6 @@ public class SrcViewerActivity extends BaseAppCompatActivity {
     private void configureEditor() {
         binding.editor.setTypefaceText(EditorUtils.getTypeface(this));
         binding.editor.setEditable(false);
-        binding.editor.setTextSize(editorFontSize);
         binding.editor.setPinLineNumber(true);
 
         if (currentFileName.endsWith(".xml")) {
@@ -118,6 +117,7 @@ public class SrcViewerActivity extends BaseAppCompatActivity {
         } else {
             EditorUtils.loadJavaConfig(binding.editor);
         }
+        editorPrefs.applyToEditor(binding.editor, false);
     }
 
     @Override
@@ -130,31 +130,6 @@ public class SrcViewerActivity extends BaseAppCompatActivity {
     public void onSaveInstanceState(Bundle outState) {
         outState.putString("sc_id", sc_id);
         super.onSaveInstanceState(outState);
-    }
-
-    private void showChangeFontSizeDialog() {
-        NumberPicker picker = new NumberPicker(this);
-        picker.setMinValue(8);
-        picker.setMaxValue(30);
-        picker.setWrapSelectorWheel(false);
-        picker.setValue(editorFontSize);
-
-        LinearLayout layout = new LinearLayout(this);
-        layout.addView(picker, new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                Gravity.CENTER));
-
-        new MaterialAlertDialogBuilder(this)
-                .setTitle(R.string.dialog_title_select_font_size)
-                .setIcon(R.drawable.ic_mtrl_formattext)
-                .setView(layout)
-                .setPositiveButton(R.string.common_word_apply, (dialog, which) -> {
-                    editorFontSize = picker.getValue();
-                    binding.editor.setTextSize(editorFontSize);
-                })
-                .setNegativeButton(android.R.string.cancel, null)
-                .show();
     }
 
     public class FilesListSpinnerAdapter extends BaseAdapter {
