@@ -467,20 +467,20 @@ public class StringResource {
         int argCount = formatArgs.length;
         int replaceCount = 0;
         while (argIdx < argCount) {
-          Object object1 = formatArgs[argIdx];
+          Object formatArg = formatArgs[argIdx];
           int newReplaceCount = replaceCount;
-          String object2 = object;
+          String replacedStr = object;
           if (object.contains("%")) {
-            object1 = object1.toString();
-            object2 = (String)object1;
-            if (object1.equals("\\n"))
-              object2 = "\\\\n"; 
-            object2 = object.replaceFirst("%s", object2);
+            formatArg = formatArg.toString();
+            replacedStr = (String)formatArg;
+            if (formatArg.equals("\\n"))
+              replacedStr = "\\\\n"; 
+            replacedStr = object.replaceFirst("%s", replacedStr);
             newReplaceCount = replaceCount + 1;
           } 
           argIdx++;
           replaceCount = newReplaceCount;
-          object = (String)object2;
+          object = (String)replacedStr;
         } 
         if (replaceCount == formatArgs.length) {
           boolean hasPlaceholder = object.contains("%");
