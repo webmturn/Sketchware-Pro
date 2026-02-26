@@ -468,7 +468,7 @@ public class StringResource {
         int replaceCount = 0;
         while (argIdx < argCount) {
           Object object1 = formatArgs[argIdx];
-          int k = replaceCount;
+          int newReplaceCount = replaceCount;
           String object2 = object;
           if (object.contains("%")) {
             object1 = object1.toString();
@@ -476,10 +476,10 @@ public class StringResource {
             if (object1.equals("\\n"))
               object2 = "\\\\n"; 
             object2 = object.replaceFirst("%s", object2);
-            k = replaceCount + 1;
+            newReplaceCount = replaceCount + 1;
           } 
           argIdx++;
-          replaceCount = k;
+          replaceCount = newReplaceCount;
           object = (String)object2;
         } 
         if (replaceCount == formatArgs.length) {
