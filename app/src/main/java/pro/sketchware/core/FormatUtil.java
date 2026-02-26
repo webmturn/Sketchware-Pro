@@ -11,9 +11,9 @@ public class FormatUtil {
   public static int hexCharToInt(char ch) {
     if (ch >= '0' && ch <= '9')
       return ch - 48; 
-    byte b = 65;
+    byte baseChar = 65;
     if (ch < 'A' || ch > 'F') {
-      b = 97;
+      baseChar = 97;
       if (ch < 'a' || ch > 'f') {
         StringBuilder errorBuilder = new StringBuilder("invalid hex digit '");
         errorBuilder.append(ch);
@@ -21,7 +21,7 @@ public class FormatUtil {
         throw new IllegalArgumentException(errorBuilder.toString());
       } 
     } 
-    return ch - b + 10;
+    return ch - baseChar + 10;
   }
   
   public static String generateRandomId() {
@@ -74,21 +74,21 @@ public class FormatUtil {
   }
   
   public static byte[] hexStringToBytes(String value) {
-    int i = value.length();
-    byte[] bytes = new byte[(i + 1) / 2];
-    int j = 0;
-    byte b = 1;
-    if (i % 2 == 1) {
+    int length = value.length();
+    byte[] bytes = new byte[(length + 1) / 2];
+    int charIdx = 0;
+    byte byteIdx = 1;
+    if (length % 2 == 1) {
       bytes[0] = (byte)hexCharToInt(value.charAt(0));
-      j = 1;
+      charIdx = 1;
     } else {
-      b = 0;
+      byteIdx = 0;
     } 
-    while (j < i) {
-      int k = j + 1;
-      bytes[b] = (byte)(hexCharToInt(value.charAt(j)) << 4 | hexCharToInt(value.charAt(k)));
-      b++;
-      j = k + 1;
+    while (charIdx < length) {
+      int nextCharIdx = charIdx + 1;
+      bytes[byteIdx] = (byte)(hexCharToInt(value.charAt(charIdx)) << 4 | hexCharToInt(value.charAt(nextCharIdx)));
+      byteIdx++;
+      charIdx = nextCharIdx + 1;
     } 
     return bytes;
   }

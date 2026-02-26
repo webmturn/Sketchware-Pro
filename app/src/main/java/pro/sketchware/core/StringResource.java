@@ -74,7 +74,7 @@ public class StringResource {
     if (this.blockTranslations == null)
       this.blockTranslations = new HashMap<String, String>(); 
     boolean isEmpty = this.blockTranslations.isEmpty();
-    byte b = 0;
+    byte matchIndex = 0;
     if (isEmpty) {
       this.isLoaded = false;
       this.blockTranslations = loadTranslationsFromFile(this.translationDir);
@@ -85,181 +85,181 @@ public class StringResource {
       loadEventTranslations(context); 
     switch (eventName.hashCode()) {
       default:
-        b = -1;
+        matchIndex = -1;
         break;
       case 2087273080:
         if (eventName.equals("onFilesPicked")) {
-          b = 28;
+          matchIndex = 28;
           break;
         } 
       case 1979400473:
         if (eventName.equals("onItemLongClicked")) {
-          b = 4;
+          matchIndex = 4;
           break;
         } 
       case 1803231982:
         if (eventName.equals("onMarkerClicked")) {
-          b = 40;
+          matchIndex = 40;
           break;
         } 
       case 1757061906:
         if (eventName.equals("onFilesPickedCancel")) {
-          b = 29;
+          matchIndex = 29;
           break;
         } 
       case 1710477203:
         if (eventName.equals("onPageStarted")) {
-          b = 6;
+          matchIndex = 6;
           break;
         } 
       case 1586033095:
         if (eventName.equals("onStopTrackingTouch")) {
-          b = 10;
+          matchIndex = 10;
           break;
         } 
       case 1395209852:
         if (eventName.equals("onDownloadSuccess")) {
-          b = 23;
+          matchIndex = 23;
           break;
         } 
       case 1348605570:
         if (eventName.equals("onPictureTakenCancel")) {
-          b = 27;
+          matchIndex = 27;
           break;
         } 
       case 1348442836:
         if (eventName.equals("onDownloadProgress")) {
-          b = 21;
+          matchIndex = 21;
           break;
         } 
       case 1170737640:
         if (eventName.equals("onPictureTaken")) {
-          b = 26;
+          matchIndex = 26;
           break;
         } 
       case 805710389:
         if (eventName.equals("onItemClicked")) {
-          b = 3;
+          matchIndex = 3;
           break;
         } 
       case 694589214:
         if (eventName.equals("onSpeechResult")) {
-          b = 32;
+          matchIndex = 32;
           break;
         } 
       case 445802034:
         if (eventName.equals("onCancelled")) {
-          b = 19;
+          matchIndex = 19;
           break;
         } 
       case 378110312:
         if (eventName.equals("onTextChanged")) {
-          b = 5;
+          matchIndex = 5;
           break;
         } 
       case 372583555:
         if (eventName.equals("onChildAdded")) {
-          b = 16;
+          matchIndex = 16;
           break;
         } 
       case 264008033:
         if (eventName.equals("onDataSent")) {
-          b = 36;
+          matchIndex = 36;
           break;
         } 
       case 249705131:
         if (eventName.equals("onFailure")) {
-          b = 25;
+          matchIndex = 25;
           break;
         } 
       case 162093458:
         if (eventName.equals("onBindCustomView")) {
-          b = 14;
+          matchIndex = 14;
           break;
         } 
       case 136827711:
         if (eventName.equals("onAnimationCancel")) {
-          b = 13;
+          matchIndex = 13;
           break;
         } 
       case 80616227:
         if (eventName.equals("onUploadSuccess")) {
-          b = 22;
+          matchIndex = 22;
           break;
         } 
       case -376002870:
         if (eventName.equals("onErrorResponse")) {
-          b = 31;
+          matchIndex = 31;
           break;
         } 
       case -484536541:
         if (eventName.equals("onChildRemoved")) {
-          b = 18;
+          matchIndex = 18;
           break;
         } 
       case -505277536:
         if (eventName.equals("onPageFinished")) {
-          b = 7;
+          matchIndex = 7;
           break;
         } 
       case -507667891:
         if (eventName.equals("onItemSelected")) {
-          b = 2;
+          matchIndex = 2;
           break;
         } 
       case -584901992:
         if (eventName.equals("onCheckedChange")) {
-          b = 1;
+          matchIndex = 1;
           break;
         } 
       case -609996822:
         if (eventName.equals("onConnected")) {
-          b = 34;
+          matchIndex = 34;
           break;
         } 
       case -672992515:
         if (eventName.equals("onAnimationStart")) {
-          b = 11;
+          matchIndex = 11;
           break;
         } 
       case -719893013:
         if (eventName.equals("onConnectionError")) {
-          b = 37;
+          matchIndex = 37;
           break;
         } 
       case -732782352:
         if (eventName.equals("onConnectionStopped")) {
-          b = 38;
+          matchIndex = 38;
           break;
         } 
       case -749253875:
         if (eventName.equals("onUploadProgress")) {
-          b = 20;
+          matchIndex = 20;
           break;
         } 
       case -821066400:
         if (eventName.equals("onLocationChanged")) {
-          b = 41;
+          matchIndex = 41;
           break;
         } 
       case -837428873:
         if (eventName.equals("onChildChanged")) {
-          b = 17;
+          matchIndex = 17;
           break;
         } 
       case -891988931:
         if (eventName.equals("onDateChange")) {
-          b = 15;
+          matchIndex = 15;
           break;
         } 
       case -1153785290:
         if (eventName.equals("onAnimationEnd")) {
-          b = 12;
+          matchIndex = 12;
           break;
         } 
       case -1215328199:
         if (eventName.equals("onDeleteSuccess")) {
-          b = 24;
+          matchIndex = 24;
           break;
         } 
       case -1351902487:
@@ -267,36 +267,36 @@ public class StringResource {
           break; 
       case -1358405466:
         if (eventName.equals("onMapReady")) {
-          b = 39;
+          matchIndex = 39;
           break;
         } 
       case -1779618840:
         if (eventName.equals("onProgressChanged")) {
-          b = 8;
+          matchIndex = 8;
           break;
         } 
       case -1809154262:
         if (eventName.equals("onDataReceived")) {
-          b = 35;
+          matchIndex = 35;
           break;
         } 
       case -1865337024:
         if (eventName.equals("onResponse")) {
-          b = 30;
+          matchIndex = 30;
           break;
         } 
       case -2067423513:
         if (eventName.equals("onSpeechError")) {
-          b = 33;
+          matchIndex = 33;
           break;
         } 
       case -2117913147:
         if (eventName.equals("onStartTrackingTouch")) {
-          b = 9;
+          matchIndex = 9;
           break;
         } 
     } 
-    switch (b) {
+    switch (matchIndex) {
       default:
         String result = this.eventTranslations.get(eventName);
         if (result == null)
@@ -456,7 +456,7 @@ public class StringResource {
     if (this.blockTranslations == null)
       this.blockTranslations = new HashMap<String, String>(); 
     boolean isEmpty = this.blockTranslations.isEmpty();
-    byte b = 0;
+    byte argIdx = 0;
     if (isEmpty) {
       this.isLoaded = false;
       this.blockTranslations = loadTranslationsFromFile(this.translationDir);
@@ -464,11 +464,11 @@ public class StringResource {
     try {
       if (this.blockTranslations.containsKey(resEntryName) && this.blockTranslations.get(resEntryName) != null && ((String)this.blockTranslations.get(resEntryName)).length() > 0) {
         String object = ((String)this.blockTranslations.get(resEntryName)).replaceAll("\\\\\\'", "'").replaceAll("\\\\\\\"", "\"").replaceAll("\\\\n", "\\\n");
-        int i = formatArgs.length;
-        int j = 0;
-        while (b < i) {
-          Object object1 = formatArgs[b];
-          int k = j;
+        int argCount = formatArgs.length;
+        int replaceCount = 0;
+        while (argIdx < argCount) {
+          Object object1 = formatArgs[argIdx];
+          int k = replaceCount;
           String object2 = object;
           if (object.contains("%")) {
             object1 = object1.toString();
@@ -476,13 +476,13 @@ public class StringResource {
             if (object1.equals("\\n"))
               object2 = "\\\\n"; 
             object2 = object.replaceFirst("%s", object2);
-            k = j + 1;
+            k = replaceCount + 1;
           } 
-          b++;
-          j = k;
+          argIdx++;
+          replaceCount = k;
           object = (String)object2;
         } 
-        if (j == formatArgs.length) {
+        if (replaceCount == formatArgs.length) {
           boolean hasPlaceholder = object.contains("%");
           if (!hasPlaceholder)
             return (String)object; 
