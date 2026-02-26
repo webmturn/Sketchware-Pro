@@ -514,6 +514,7 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
         deleteText = findViewById(R.id.text_delete);
         deleteView = findViewById(R.id.delete_view);
         FrameLayout shape = findViewById(R.id.shape);
+        shape.setVisibility(View.GONE);
         paletteGroup = findViewById(R.id.palette_group);
 
         addPaletteGroupItems();
@@ -868,6 +869,10 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
     }
 
     private void updateLayoutPreview() {
+        View shape = findViewById(R.id.shape);
+        if (shape != null && shape.getVisibility() != View.VISIBLE) {
+            shape.setVisibility(View.VISIBLE);
+        }
         toolbar.setVisibility(hasToolbar ? View.VISIBLE : View.GONE);
         bgStatus.setVisibility(isFullscreen ? View.GONE : View.VISIBLE);
 
