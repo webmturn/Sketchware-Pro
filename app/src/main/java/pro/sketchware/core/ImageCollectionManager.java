@@ -31,9 +31,9 @@ public class ImageCollectionManager extends BaseCollectionManager {
   }
   
   public void renameResource(ProjectResourceBean resourceBean, String newName, boolean flag) {
-    int i = this.collections.size();
-    while (--i >= 0) {
-      CollectionBean collectionBean = this.collections.get(i);
+    int idx = this.collections.size();
+    while (--idx >= 0) {
+      CollectionBean collectionBean = this.collections.get(idx);
       if (collectionBean.name.equals(resourceBean.resName)) {
         collectionBean.name = newName;
         break;
@@ -186,12 +186,12 @@ public class ImageCollectionManager extends BaseCollectionManager {
   }
   
   public void removeResource(String input, boolean flag) {
-    int i = this.collections.size();
+    int size = this.collections.size();
     while (true) {
-      int j = i - 1;
-      if (j >= 0) {
-        CollectionBean collectionBean = this.collections.get(j);
-        i = j;
+      int idx = size - 1;
+      if (idx >= 0) {
+        CollectionBean collectionBean = this.collections.get(idx);
+        size = idx;
         if (collectionBean.name.equals(input)) {
           String filePath = collectionBean.data;
           StringBuilder pathBuilder = new StringBuilder();
@@ -200,8 +200,8 @@ public class ImageCollectionManager extends BaseCollectionManager {
           pathBuilder.append(filePath);
           filePath = pathBuilder.toString();
           this.fileUtil.deleteFileByPath(filePath);
-          this.collections.remove(j);
-          i = j;
+          this.collections.remove(idx);
+          size = idx;
         } 
         continue;
       } 

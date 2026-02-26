@@ -31,9 +31,9 @@ public class SoundCollectionManager extends BaseCollectionManager {
   public void renameResource(ProjectResourceBean resourceBean, String newName, boolean flag) {
     if (this.collections == null)
       initialize(); 
-    int i = this.collections.size();
-    while (--i >= 0) {
-      CollectionBean collectionBean = this.collections.get(i);
+    int idx = this.collections.size();
+    while (--idx >= 0) {
+      CollectionBean collectionBean = this.collections.get(idx);
       if (collectionBean.name.equals(resourceBean.resName)) {
         collectionBean.name = newName;
         break;
@@ -95,14 +95,14 @@ public class SoundCollectionManager extends BaseCollectionManager {
   public void removeResource(String input, boolean flag) {
     if (this.collections == null)
       initialize(); 
-    int i = this.collections.size();
+    int size = this.collections.size();
     while (true) {
-      int j = i - 1;
-      if (j >= 0) {
-        CollectionBean collectionBean = this.collections.get(j);
-        i = j;
+      int idx = size - 1;
+      if (idx >= 0) {
+        CollectionBean collectionBean = this.collections.get(idx);
+        size = idx;
         if (collectionBean.name.equals(input)) {
-          this.collections.remove(j);
+          this.collections.remove(idx);
           StringBuilder pathBuilder = new StringBuilder();
           pathBuilder.append(this.dataDirPath);
           pathBuilder.append(File.separator);

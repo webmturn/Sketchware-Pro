@@ -75,13 +75,13 @@ public class WidgetCollectionManager extends BaseCollectionManager {
   }
   
   public void removeWidget(String name, boolean flag) {
-    int i = this.collections.size();
+    int size = this.collections.size();
     while (true) {
-      int j = i - 1;
-      if (j >= 0) {
-        i = j;
-        if (((CollectionBean)this.collections.get(j)).name.equals(name)) {
-          this.collections.remove(j);
+      int idx = size - 1;
+      if (idx >= 0) {
+        size = idx;
+        if (((CollectionBean)this.collections.get(idx)).name.equals(name)) {
+          this.collections.remove(idx);
           break;
         } 
         continue;
