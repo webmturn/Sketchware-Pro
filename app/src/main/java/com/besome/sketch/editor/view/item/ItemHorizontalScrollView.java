@@ -147,16 +147,16 @@ public class ItemHorizontalScrollView extends FrameLayout implements ItemView, S
             if (lastTouchX < 0.0f) {
                 lastTouchX = currentTouchX;
             }
-            int i = (int) (lastTouchX - currentTouchX);
+            int scrollDelta = (int) (lastTouchX - currentTouchX);
             lastTouchX = currentTouchX;
-            if (i <= 0) {
+            if (scrollDelta <= 0) {
                 if (getScrollX() <= 0) {
-                    i = 0;
+                    scrollDelta = 0;
                 }
-                scrollOffset = Math.max(-getScrollX(), i);
+                scrollOffset = Math.max(-getScrollX(), scrollDelta);
             } else {
                 int paddingRight = ((view.getRight() - getScrollX()) - getWidth()) + getPaddingRight();
-                scrollOffset = paddingRight > 0 ? Math.min(paddingRight, i) : 0;
+                scrollOffset = paddingRight > 0 ? Math.min(paddingRight, scrollDelta) : 0;
             }
             if (scrollOffset != 0) {
                 scrollBy(scrollOffset, 0);
@@ -244,12 +244,12 @@ public class ItemHorizontalScrollView extends FrameLayout implements ItemView, S
 
     @Override
     public void reindexChildren() {
-        int i = 0;
-        for (int j = 0; j < getChildCount(); j++) {
-            KeyEvent.Callback firstChild = getChildAt(j);
+        int viewIndex = 0;
+        for (int childIdx = 0; childIdx < getChildCount(); childIdx++) {
+            KeyEvent.Callback firstChild = getChildAt(childIdx);
             if (firstChild instanceof ItemView) {
-                ((ItemView) firstChild).getBean().index = i;
-                i++;
+                ((ItemView) firstChild).getBean().index = viewIndex;
+                viewIndex++;
             }
         }
     }

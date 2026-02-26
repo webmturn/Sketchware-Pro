@@ -328,17 +328,17 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         dialog.setView(dialogView);
         dialog.setPositiveButton(R.string.common_word_add, (v, which) -> {
             if (listNameValidator.isValid()) {
-                int i = 1;
+                int listType = 1;
                 int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
                 if (checkedRadioButtonId != R.id.rb_int) {
                     if (checkedRadioButtonId == R.id.rb_string) {
-                        i = 2;
+                        listType = 2;
                     } else if (checkedRadioButtonId == R.id.rb_map) {
-                        i = 3;
+                        listType = 3;
                     }
                 }
 
-                addListVariable(i, Helper.getText(editText));
+                addListVariable(listType, Helper.getText(editText));
                 v.dismiss();
             }
         });
@@ -399,9 +399,9 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         dialog.setView(dialogView);
         dialog.setPositiveButton(R.string.common_word_remove, (v, which) -> {
             int childCount = viewGroup.getChildCount();
-            int i = 0;
-            while (i < childCount) {
-                RadioButton radioButton = (RadioButton) viewGroup.getChildAt(i);
+            int radioIdx = 0;
+            while (radioIdx < childCount) {
+                RadioButton radioButton = (RadioButton) viewGroup.getChildAt(radioIdx);
                 if (radioButton.isChecked()) {
                     if (!blockPane.hasListReference(Helper.getText(radioButton))) {
                         if (!ProjectDataManager.getProjectDataManager(scId).isListUsedInBlocks(projectFile.getJavaName(), Helper.getText(radioButton), id + "_" + eventName)) {
@@ -411,7 +411,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     Toast.makeText(getContext(), R.string.logic_editor_message_currently_used_list, Toast.LENGTH_SHORT).show();
                     return;
                 }
-                i++;
+                radioIdx++;
             }
             v.dismiss();
         });
@@ -432,9 +432,9 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         dialog.setView(dialogView);
         dialog.setPositiveButton(R.string.common_word_remove, (v, which) -> {
             int childCount = viewGroup.getChildCount();
-            int i = 0;
-            while (i < childCount) {
-                RadioButton radioButton = (RadioButton) viewGroup.getChildAt(i);
+            int radioIdx = 0;
+            while (radioIdx < childCount) {
+                RadioButton radioButton = (RadioButton) viewGroup.getChildAt(radioIdx);
                 if (radioButton.isChecked()) {
                     if (!blockPane.hasMapReference(Helper.getText(radioButton))) {
                         if (!ProjectDataManager.getProjectDataManager(scId).isVariableUsedInBlocks(projectFile.getJavaName(), Helper.getText(radioButton), id + "_" + eventName)) {
@@ -444,7 +444,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     Toast.makeText(getContext(), R.string.logic_editor_message_currently_used_variable, Toast.LENGTH_SHORT).show();
                     return;
                 }
-                i++;
+                radioIdx++;
             }
             v.dismiss();
         });
