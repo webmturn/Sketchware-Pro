@@ -542,7 +542,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         xmlLayoutOrientation = findViewById(R.id.img_orientation);
         viewPager = findViewById(R.id.viewpager);
         viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager()));
-        viewPager.setOffscreenPageLimit(1);
+        viewPager.setOffscreenPageLimit(3);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
