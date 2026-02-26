@@ -201,21 +201,21 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 if (eventName.equals("onTextChanged") && next.opCode.equals("getArg") && next.spec.equals("text")) {
                     next.spec = "charSeq";
                 }
-                BlockView b2 = createBlockView(next);
-                createdBlocks.add(b2);
-                blockIdsAndBlocks.put((Integer) b2.getTag(), b2);
-                blockPane.nextBlockId = Math.max(blockPane.nextBlockId, (Integer) b2.getTag() + 1);
+                BlockView blockView = createBlockView(next);
+                createdBlocks.add(blockView);
+                blockIdsAndBlocks.put((Integer) blockView.getTag(), blockView);
+                blockPane.nextBlockId = Math.max(blockPane.nextBlockId, (Integer) blockView.getTag() + 1);
             }
 
             runOnUiThread(() -> {
                 android.util.Log.d("BlockLoad", "UI batch START blocks=" + createdBlocks.size());
                 long t0 = System.currentTimeMillis();
                 for (int idx = 0; idx < createdBlocks.size(); idx++) {
-                    BlockView b2 = createdBlocks.get(idx);
-                    blockPane.addBlock(b2, 0, 0);
-                    b2.setOnTouchListener(this);
+                    BlockView blockView = createdBlocks.get(idx);
+                    blockPane.addBlock(blockView, 0, 0);
+                    blockView.setOnTouchListener(this);
                     if (idx == 0) {
-                        blockPane.getRoot().setNextBlock(b2);
+                        blockPane.getRoot().setNextBlock(blockView);
                     }
                 }
                 long t1 = System.currentTimeMillis();
@@ -313,19 +313,19 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public void saveBlocks() {
-        ProjectDataStore a2 = ProjectDataManager.getProjectDataManager(scId);
+        ProjectDataStore projectDataStore = ProjectDataManager.getProjectDataManager(scId);
         String javaName = projectFile.getJavaName();
-        a2.putBlocks(javaName, id + "_" + eventName, blockPane.getBlocks());
+        projectDataStore.putBlocks(javaName, id + "_" + eventName, blockPane.getBlocks());
     }
 
     public void showAddListDialog() {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.logic_editor_title_add_new_list);
-        View a2 = ViewUtil.inflateLayout(this, R.layout.logic_popup_add_list);
-        RadioGroup radioGroup = a2.findViewById(R.id.rg_type);
-        TextInputEditText editText = a2.findViewById(R.id.ed_input);
-        IdentifierValidator listNameValidator = new IdentifierValidator(getContext(), a2.findViewById(R.id.ti_input), BlockConstants.RESERVED_KEYWORDS, BlockConstants.COMPONENT_TYPES, ProjectDataManager.getProjectDataManager(scId).getAllIdentifiers(projectFile));
-        dialog.setView(a2);
+        View dialogView = ViewUtil.inflateLayout(this, R.layout.logic_popup_add_list);
+        RadioGroup radioGroup = dialogView.findViewById(R.id.rg_type);
+        TextInputEditText editText = dialogView.findViewById(R.id.ed_input);
+        IdentifierValidator listNameValidator = new IdentifierValidator(getContext(), dialogView.findViewById(R.id.ti_input), BlockConstants.RESERVED_KEYWORDS, BlockConstants.COMPONENT_TYPES, ProjectDataManager.getProjectDataManager(scId).getAllIdentifiers(projectFile));
+        dialog.setView(dialogView);
         dialog.setPositiveButton(R.string.common_word_add, (v, which) -> {
             if (listNameValidator.isValid()) {
                 int i = 1;
@@ -391,12 +391,12 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     public void showRemoveListDialog() {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.logic_editor_title_remove_list);
-        View a2 = ViewUtil.inflateLayout(this, R.layout.property_popup_selector_single);
-        ViewGroup viewGroup = a2.findViewById(R.id.rg_content);
+        View dialogView = ViewUtil.inflateLayout(this, R.layout.property_popup_selector_single);
+        ViewGroup viewGroup = dialogView.findViewById(R.id.rg_content);
         for (Pair<Integer, String> list : ProjectDataManager.getProjectDataManager(scId).getListVariables(projectFile.getJavaName())) {
             viewGroup.addView(createRadioButton(list.second));
         }
-        dialog.setView(a2);
+        dialog.setView(dialogView);
         dialog.setPositiveButton(R.string.common_word_remove, (v, which) -> {
             int childCount = viewGroup.getChildCount();
             int i = 0;
@@ -422,14 +422,14 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     public void showRemoveVariableDialog() {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.logic_editor_title_remove_variable);
-        View a2 = ViewUtil.inflateLayout(this, R.layout.property_popup_selector_single);
-        ViewGroup viewGroup = a2.findViewById(R.id.rg_content);
+        View dialogView = ViewUtil.inflateLayout(this, R.layout.property_popup_selector_single);
+        ViewGroup viewGroup = dialogView.findViewById(R.id.rg_content);
         for (Pair<Integer, String> next : ProjectDataManager.getProjectDataManager(scId).getVariables(projectFile.getJavaName())) {
-            RadioButton e = createRadioButton(next.second);
-            e.setTag(next.first);
-            viewGroup.addView(e);
+            RadioButton radioButton = createRadioButton(next.second);
+            radioButton.setTag(next.first);
+            viewGroup.addView(radioButton);
         }
-        dialog.setView(a2);
+        dialog.setView(dialogView);
         dialog.setPositiveButton(R.string.common_word_remove, (v, which) -> {
             int childCount = viewGroup.getChildCount();
             int i = 0;
@@ -507,12 +507,12 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
     }
 
-    public BlockView dropBlockOnPane(BlockView rs, int i, int i2, boolean isParameter) {
-        BlockView a2 = blockPane.dropBlock(rs, i, i2, isParameter);
+    public BlockView dropBlockOnPane(BlockView rs, int x, int y, boolean isParameter) {
+        BlockView droppedBlock = blockPane.dropBlock(rs, x, y, isParameter);
         if (!isParameter) {
-            a2.setOnTouchListener(this);
+            droppedBlock.setOnTouchListener(this);
         }
-        return a2;
+        return droppedBlock;
     }
 
     public void addDeprecatedBlock(String message, String type, String opCode) {
@@ -520,27 +520,27 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public View createPaletteBlock(String spec, String opCode) {
-        BaseBlockView a2 = paletteBlock.addBlock("", spec, opCode);
-        a2.setTag(opCode);
-        a2.setClickable(true);
-        a2.setOnTouchListener(this);
-        return a2;
+        BaseBlockView paletteBlockView = paletteBlock.addBlock("", spec, opCode);
+        paletteBlockView.setTag(opCode);
+        paletteBlockView.setClickable(true);
+        paletteBlockView.setOnTouchListener(this);
+        return paletteBlockView;
     }
 
     public final View createPaletteBlockWithSpec(String type, String spec, String opCode) {
-        BaseBlockView a2 = paletteBlock.addBlock(type, spec, opCode);
-        a2.setTag(opCode);
-        a2.setClickable(true);
-        a2.setOnTouchListener(this);
-        return a2;
+        BaseBlockView paletteBlockView = paletteBlock.addBlock(type, spec, opCode);
+        paletteBlockView.setTag(opCode);
+        paletteBlockView.setClickable(true);
+        paletteBlockView.setOnTouchListener(this);
+        return paletteBlockView;
     }
 
     public final View createPaletteBlockWithComponent(String type, String spec, String opCode, String componentType) {
-        BaseBlockView a2 = paletteBlock.addBlock(type, spec, opCode, componentType);
-        a2.setTag(componentType);
-        a2.setClickable(true);
-        a2.setOnTouchListener(this);
-        return a2;
+        BaseBlockView paletteBlockView = paletteBlock.addBlock(type, spec, opCode, componentType);
+        paletteBlockView.setTag(componentType);
+        paletteBlockView.setClickable(true);
+        paletteBlockView.setOnTouchListener(this);
+        return paletteBlockView;
     }
 
     private ImageView setImageViewContent(String name) {
@@ -586,7 +586,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         return imageView;
     }
 
-    public final ArrayList<BlockBean> addBlockBeans(ArrayList<BlockBean> blockBeans, int i, int i2, boolean layoutChain) {
+    public final ArrayList<BlockBean> addBlockBeans(ArrayList<BlockBean> blockBeans, int x, int y, boolean layoutChain) {
         HashMap<Integer, Integer> idMapping = new HashMap<>();
         ArrayList<BlockBean> clonedBlocks = new ArrayList<>();
         for (BlockBean next : blockBeans) {
@@ -650,7 +650,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 if (j == 0) {
                     firstBlock = block;
                 }
-                blockPane.addBlock(block, i, i2);
+                blockPane.addBlock(block, x, y);
                 block.setOnTouchListener(this);
             }
         }
@@ -667,8 +667,8 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     @Override
-    public void onBlockSizeChanged(int i, int i2) {
-        extraPaletteBlock.setBlock(i, i2);
+    public void onBlockSizeChanged(int width, int height) {
+        extraPaletteBlock.setBlock(width, height);
     }
 
     public void addListVariable(int i, String variableName) {
@@ -704,9 +704,9 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
     }
 
-    public void handleBlockFieldClick(BlockView rs, float f, float f2) {
+    public void handleBlockFieldClick(BlockView rs, float touchX, float touchY) {
         for (View next : rs.childViews) {
-            if ((next instanceof FieldBlockView) && next.getX() < f && next.getX() + next.getWidth() > f && next.getY() < f2 && next.getY() + next.getHeight() > f2) {
+            if ((next instanceof FieldBlockView) && next.getX() < touchX && next.getX() + next.getWidth() > touchX && next.getY() < touchY && next.getY() + next.getHeight() > touchY) {
                 new ExtraMenuBean(this).defineMenuSelector((FieldBlockView) next);
                 return;
             }
@@ -782,8 +782,8 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     public void showNumberOrStringInput(FieldBlockView ss, boolean isNumber) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(isNumber ? R.string.logic_editor_title_enter_number_value : R.string.logic_editor_title_enter_string_value);
-        View a2 = ViewUtil.inflateLayout(this, R.layout.property_popup_input_text);
-        EditText editText = a2.findViewById(R.id.ed_input);
+        View dialogView = ViewUtil.inflateLayout(this, R.layout.property_popup_input_text);
+        EditText editText = dialogView.findViewById(R.id.ed_input);
         if (isNumber) {
             editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
             editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
@@ -793,7 +793,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             editText.setImeOptions(EditorInfo.IME_ACTION_NONE);
         }
         editText.setText(ss.getArgValue().toString());
-        dialog.setView(a2);
+        dialog.setView(dialogView);
         dialog.setPositiveButton(R.string.common_word_save, (v, which) -> {
             String text = Helper.getText(editText);
             emptyStringSetter:
@@ -1223,8 +1223,8 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         logicTopMenu.setCopyActive(active);
     }
 
-    public final boolean hitTestCopy(float f, float f2) {
-        return logicTopMenu.isInsideCopyArea(f, f2);
+    public final boolean hitTestCopy(float x, float y) {
+        return logicTopMenu.isInsideCopyArea(x, y);
     }
 
     public final boolean isBlockValid(BlockBean blockBean) {
@@ -1306,22 +1306,22 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         logicTopMenu.setDeleteActive(showDeleteIcon);
     }
 
-    public final boolean hitTestIconDelete(float f, float f2) {
-        return logicTopMenu.isInsideDeleteArea(f, f2);
+    public final boolean hitTestIconDelete(float x, float y) {
+        return logicTopMenu.isInsideDeleteArea(x, y);
     }
 
     public void showSaveToFavorites(BlockView rs) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.logic_block_favorites_save_title);
-        View a2 = ViewUtil.inflateLayout(this, R.layout.property_popup_save_to_favorite);
-        ((TextView) a2.findViewById(R.id.tv_favorites_guide)).setText(R.string.logic_block_favorites_save_guide);
-        EditText editText = a2.findViewById(R.id.ed_input);
+        View dialogView = ViewUtil.inflateLayout(this, R.layout.property_popup_save_to_favorite);
+        ((TextView) dialogView.findViewById(R.id.tv_favorites_guide)).setText(R.string.logic_block_favorites_save_guide);
+        EditText editText = dialogView.findViewById(R.id.ed_input);
         editText.setPrivateImeOptions("defaultInputmode=english;");
         editText.setLines(1);
         editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
-        UniqueNameValidator blockNameValidator = new UniqueNameValidator(this, a2.findViewById(R.id.ti_input), BlockCollectionManager.getInstance().getBlockNames());
-        dialog.setView(a2);
+        UniqueNameValidator blockNameValidator = new UniqueNameValidator(this, dialogView.findViewById(R.id.ti_input), BlockCollectionManager.getInstance().getBlockNames());
+        dialog.setView(dialogView);
         dialog.setPositiveButton(R.string.common_word_save, (v, which) -> {
             if (blockNameValidator.isValid()) {
                 saveBlockToCollection(Helper.getText(editText), rs);
@@ -1335,14 +1335,14 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     public void showStringInput(FieldBlockView ss) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.logic_editor_title_enter_string_value);
-        View a2 = ViewUtil.inflateLayout(this, R.layout.property_popup_input_text);
-        ((TextInputLayout) a2.findViewById(R.id.ti_input)).setHint(Helper.getResString(R.string.property_hint_enter_value));
-        EditText editText = a2.findViewById(R.id.ed_input);
+        View dialogView = ViewUtil.inflateLayout(this, R.layout.property_popup_input_text);
+        ((TextInputLayout) dialogView.findViewById(R.id.ti_input)).setHint(Helper.getResString(R.string.property_hint_enter_value));
+        EditText editText = dialogView.findViewById(R.id.ed_input);
         editText.setSingleLine(true);
         editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS);
         editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
         editText.setText(ss.getArgValue().toString());
-        dialog.setView(a2);
+        dialog.setView(dialogView);
         dialog.setPositiveButton(R.string.common_word_save, (v, which) -> {
             setFieldValue(ss, Helper.getText(editText));
             v.dismiss();
@@ -1360,8 +1360,8 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         logicTopMenu.setDetailActive(active);
     }
 
-    public final boolean hitTestDetail(float f, float f2) {
-        return logicTopMenu.isInsideDetailArea(f, f2);
+    public final boolean hitTestDetail(float x, float y) {
+        return logicTopMenu.isInsideDetailArea(x, y);
     }
 
     private LinearLayout getFontPreview(String fontName) {
@@ -1450,8 +1450,8 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         logicTopMenu.setFavoriteActive(active);
     }
 
-    public final boolean hitTestFavorite(float f, float f2) {
-        return logicTopMenu.isInsideFavoriteArea(f, f2);
+    public final boolean hitTestFavorite(float x, float y) {
+        return logicTopMenu.isInsideFavoriteArea(x, y);
     }
 
     public final RadioButton createRadioButton(String text) {
@@ -1479,13 +1479,13 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     public void showIntentDataInput(FieldBlockView ss) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.logic_editor_title_enter_data_value);
-        View a2 = ViewUtil.inflateLayout(this, R.layout.property_popup_input_intent_data);
-        ((TextView) a2.findViewById(R.id.tv_desc_intent_usage)).setText(Helper.getResString(R.string.property_description_component_intent_usage));
-        EditText editText = a2.findViewById(R.id.ed_input);
-        ((TextInputLayout) a2.findViewById(R.id.ti_input)).setHint(Helper.getResString(R.string.property_hint_enter_value));
+        View dialogView = ViewUtil.inflateLayout(this, R.layout.property_popup_input_intent_data);
+        ((TextView) dialogView.findViewById(R.id.tv_desc_intent_usage)).setText(Helper.getResString(R.string.property_description_component_intent_usage));
+        EditText editText = dialogView.findViewById(R.id.ed_input);
+        ((TextInputLayout) dialogView.findViewById(R.id.ti_input)).setHint(Helper.getResString(R.string.property_hint_enter_value));
         editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         editText.setText(ss.getArgValue().toString());
-        dialog.setView(a2);
+        dialog.setView(dialogView);
         dialog.setPositiveButton(R.string.common_word_save, (v, which) -> {
             setFieldValue(ss, Helper.getText(editText));
             v.dismiss();
