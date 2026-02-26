@@ -77,13 +77,13 @@ public class KeyStoreManager {
     this.keyStore.store(hI, password.toCharArray());
     byte[] bytes = new byte[this.keyBuffer.position()];
     System.arraycopy(this.keyBuffer.array(), 0, bytes, 0, this.keyBuffer.position());
-    int i = bytes.length;
+    int length = bytes.length;
     String hexStr = "";
-    for (int b = 0; b < i; b++) {
-      byte b1 = bytes[b];
+    for (int byteIdx = 0; byteIdx < length; byteIdx++) {
+      byte currentByte = bytes[byteIdx];
       StringBuilder hexBuilder = new StringBuilder();
       hexBuilder.append(hexStr);
-      hexBuilder.append(String.format("%02X", new Object[] { Byte.valueOf(b1) }));
+      hexBuilder.append(String.format("%02X", new Object[] { Byte.valueOf(currentByte) }));
       hexStr = hexBuilder.toString();
     } 
     return bytes;

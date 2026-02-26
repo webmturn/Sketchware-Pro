@@ -85,85 +85,85 @@ public class DefinitionBlockView extends BlockView {
   }
   
   public void initializeBlockDimensions() {
-    byte b = 0;
+    byte matchIndex = 0;
     setDrawingCacheEnabled(false);
-    float f1 = this.minBlockWidth;
-    float f2 = ((BaseBlockView)this).density;
-    this.minBlockWidth = (int)(f1 * f2);
-    this.minSimpleWidth = (int)(this.minSimpleWidth * f2);
-    this.minHatWidth = (int)(this.minHatWidth * f2);
-    this.minCWidth = (int)(this.minCWidth * f2);
-    this.spacing = (int)(this.spacing * f2);
+    float blockWidth = this.minBlockWidth;
+    float density = ((BaseBlockView)this).density;
+    this.minBlockWidth = (int)(blockWidth * density);
+    this.minSimpleWidth = (int)(this.minSimpleWidth * density);
+    this.minHatWidth = (int)(this.minHatWidth * density);
+    this.minCWidth = (int)(this.minCWidth * density);
+    this.spacing = (int)(this.spacing * density);
     String blockTypeCode = ((BaseBlockView)this).blockType;
-    int i = blockTypeCode.hashCode();
-    if (i != 32) {
-      if (i != 104) {
-        if (i != 108) {
-          if (i != 112) {
-            if (i != 115) {
-              if (i != 118) {
-                switch (i) {
+    int hashCode = blockTypeCode.hashCode();
+    if (hashCode != 32) {
+      if (hashCode != 104) {
+        if (hashCode != 108) {
+          if (hashCode != 112) {
+            if (hashCode != 115) {
+              if (hashCode != 118) {
+                switch (hashCode) {
                   default:
-                    b = -1;
+                    matchIndex = -1;
                     break;
                   case 102:
                     if (blockTypeCode.equals("f")) {
-                      b = 10;
+                      matchIndex = 10;
                       break;
                     } 
                   case 101:
                     if (blockTypeCode.equals("e")) {
-                      b = 9;
+                      matchIndex = 9;
                       break;
                     } 
                   case 100:
                     if (blockTypeCode.equals("d")) {
-                      b = 3;
+                      matchIndex = 3;
                       break;
                     } 
                   case 99:
                     if (blockTypeCode.equals("c")) {
-                      b = 8;
+                      matchIndex = 8;
                       break;
                     } 
                   case 98:
                     if (blockTypeCode.equals("b")) {
-                      b = 1;
+                      matchIndex = 1;
                       break;
                     } 
                   case 97:
                     if (blockTypeCode.equals("a")) {
-                      b = 7;
+                      matchIndex = 7;
                       break;
                     } 
                 } 
               } else if (blockTypeCode.equals("v")) {
-                b = 4;
+                matchIndex = 4;
               } else {
               
               } 
             } else if (blockTypeCode.equals("s")) {
-              b = 2;
+              matchIndex = 2;
             } else {
             
             } 
           } else if (blockTypeCode.equals("p")) {
-            b = 5;
+            matchIndex = 5;
           } else {
           
           } 
         } else if (blockTypeCode.equals("l")) {
-          b = 6;
+          matchIndex = 6;
         } else {
         
         } 
       } else if (blockTypeCode.equals("h")) {
-        b = 11;
+        matchIndex = 11;
       } else {
       
       } 
     } else if (blockTypeCode.equals(" ")) {
-      switch (b) {
+      switch (matchIndex) {
         case 11:
           this.isDefinitionBlock = true;
           break;
@@ -186,7 +186,7 @@ public class DefinitionBlockView extends BlockView {
       layoutChain();
       return;
     } 
-    switch (b) {
+    switch (matchIndex) {
       case 11:
         this.isDefinitionBlock = true;
         break;

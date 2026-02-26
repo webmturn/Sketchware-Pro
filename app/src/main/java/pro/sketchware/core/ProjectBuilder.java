@@ -681,8 +681,8 @@ public class ProjectBuilder {
 
         /* Add local libraries' main DEX files */
         ArrayList<HashMap<String, Object>> list = localLibraryManager.list;
-        for (int i1 = 0, listSize = list.size(); i1 < listSize; i1++) {
-            HashMap<String, Object> localLibrary = list.get(i1);
+        for (int localLibIdx = 0, listSize = list.size(); localLibIdx < listSize; localLibIdx++) {
+            HashMap<String, Object> localLibrary = list.get(localLibIdx);
             Object localLibraryName = localLibrary.get("name");
 
             if (localLibraryName instanceof String) {
@@ -710,10 +710,10 @@ public class ProjectBuilder {
                         }
                     }
                 } else {
-                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.error_invalid_dex_path), i1), Toast.LENGTH_LONG);
+                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.error_invalid_dex_path), localLibIdx), Toast.LENGTH_LONG);
                 }
             } else {
-                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.error_invalid_lib_name), i1), Toast.LENGTH_LONG);
+                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.error_invalid_lib_name), localLibIdx), Toast.LENGTH_LONG);
             }
         }
 

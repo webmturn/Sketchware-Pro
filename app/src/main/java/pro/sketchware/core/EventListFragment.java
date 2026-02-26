@@ -338,15 +338,15 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
         MaterialAlertDialogBuilder aBVar = new MaterialAlertDialogBuilder(requireActivity());
         aBVar.setTitle(R.string.logic_more_block_favorites_save_title);
         aBVar.setIcon(R.drawable.ic_bookmark_red_48dp);
-        View a2 = ViewUtil.inflateLayout(requireContext(), R.layout.property_popup_save_to_favorite);
-        ((TextView) a2.findViewById(R.id.tv_favorites_guide)).setText(R.string.logic_more_block_favorites_save_guide);
-        EditText editText = a2.findViewById(R.id.ed_input);
+        View dialogView = ViewUtil.inflateLayout(requireContext(), R.layout.property_popup_save_to_favorite);
+        ((TextView) dialogView.findViewById(R.id.tv_favorites_guide)).setText(R.string.logic_more_block_favorites_save_guide);
+        EditText editText = dialogView.findViewById(R.id.ed_input);
         editText.setPrivateImeOptions("defaultInputmode=english;");
         editText.setLines(1);
         editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
-        UniqueNameValidator nameValidator = new UniqueNameValidator(requireContext(), a2.findViewById(R.id.ti_input), MoreBlockCollectionManager.getInstance().getMoreBlockNames());
-        aBVar.setView(a2);
+        UniqueNameValidator nameValidator = new UniqueNameValidator(requireContext(), dialogView.findViewById(R.id.ti_input), MoreBlockCollectionManager.getInstance().getMoreBlockNames());
+        aBVar.setView(dialogView);
         aBVar.setPositiveButton(R.string.common_word_save, (v, which) -> {
             if (nameValidator.isValid()) {
                 saveMoreBlockToCollection(Helper.getText(editText), moreBlocks.get(moreBlockPosition));
@@ -362,9 +362,9 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
     }
 
     private void resetEvent(EventBean event) {
-        ProjectDataStore a2 = ProjectDataManager.getProjectDataManager(sc_id);
+        ProjectDataStore projectDataStore = ProjectDataManager.getProjectDataManager(sc_id);
         String javaName = currentActivity.getJavaName();
-        a2.putBlocks(javaName, event.targetId + "_" + event.eventName, new ArrayList<>());
+        projectDataStore.putBlocks(javaName, event.targetId + "_" + event.eventName, new ArrayList<>());
         SketchToast.toast(requireContext(), Helper.getResString(R.string.common_message_complete_reset), 0).show();
     }
 
@@ -403,10 +403,10 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
     }
 
     private void saveMoreBlockToCollection(String moreBlockName, EventBean moreBlock) {
-        String b2 = ProjectDataManager.getProjectDataManager(sc_id).getMoreBlockSpec(currentActivity.getJavaName(), moreBlock.targetId);
-        ProjectDataStore a2 = ProjectDataManager.getProjectDataManager(sc_id);
+        String moreBlockSpec = ProjectDataManager.getProjectDataManager(sc_id).getMoreBlockSpec(currentActivity.getJavaName(), moreBlock.targetId);
+        ProjectDataStore projectDataStore = ProjectDataManager.getProjectDataManager(sc_id);
         String javaName = currentActivity.getJavaName();
-        ArrayList<BlockBean> moreBlockBlocks = a2.getBlocks(javaName, moreBlock.targetId + "_" + moreBlock.eventName);
+        ArrayList<BlockBean> moreBlockBlocks = projectDataStore.getBlocks(javaName, moreBlock.targetId + "_" + moreBlock.eventName);
 
         boolean hasAnyBlocks = false;
         boolean failedToAddResourceToCollections = false;
@@ -446,7 +446,7 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
             }
         }
         try {
-            MoreBlockCollectionManager.getInstance().addMoreBlock(moreBlockName, b2, moreBlockBlocks, true);
+            MoreBlockCollectionManager.getInstance().addMoreBlock(moreBlockName, moreBlockSpec, moreBlockBlocks, true);
         } catch (Exception unused2) {
             SketchToast.warning(requireContext(), Helper.getResString(R.string.common_error_failed_to_save), 0).show();
         }
