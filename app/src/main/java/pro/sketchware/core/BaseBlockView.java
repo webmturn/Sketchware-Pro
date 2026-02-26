@@ -231,15 +231,15 @@ public class BaseBlockView extends RelativeLayout {
       refreshLayout(); 
   }
   
-  public void copyBlockDimensions(BaseBlockView targetBlock, boolean flag1, boolean flag2, int index) {
+  public void copyBlockDimensions(BaseBlockView targetBlock, boolean isParameter, boolean showNotch, int index) {
     this.blockColor = -16777216;
     this.shapeType = targetBlock.shapeType;
     this.blockWidth = targetBlock.blockWidth;
     this.blockHeight = targetBlock.blockHeight;
     this.contentHeight = targetBlock.contentHeight;
     this.innerHeight = targetBlock.innerHeight;
-    if (!flag1)
-      if (flag2) {
+    if (!isParameter)
+      if (showNotch) {
         this.shapeType = 4;
         this.blockHeight = (int)(this.density * 6.0F);
       } else if (index > 0) {
