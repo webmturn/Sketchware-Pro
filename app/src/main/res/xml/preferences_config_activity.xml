@@ -53,4 +53,10 @@
         app:key="backup-filename"
         app:summary="@string/pref_backup_filename_summary"
         app:title="@string/pref_backup_filename_title" />
+
+    <SwitchPreferenceCompat
+        app:iconSpaceReserved="false"
+        app:key="project-data-encryption"
+        app:summary="@string/pref_project_encryption_summary"
+        app:title="@string/pref_project_encryption_title" />
 </PreferenceScreen>

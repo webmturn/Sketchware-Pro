@@ -8,9 +8,12 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+
+import mod.hilal.saif.activities.tools.ConfigActivity;
 
 public class EncryptedFileUtil {
   public boolean encryptionEnabled = false;
@@ -33,7 +36,14 @@ public class EncryptedFileUtil {
   }
   
   public String decryptToString(byte[] data) throws Exception {
-    return new String(decrypt(data), "UTF-8");
+    if (data == null) return "";
+    // Auto-detect: try decryption first, fall back to plaintext
+    try {
+      return new String(decrypt(data), StandardCharsets.UTF_8);
+    } catch (Exception e) {
+      // Decryption failed — data is likely plaintext
+      return new String(data, StandardCharsets.UTF_8);
+    }
   }
   
   public void copyAssetFile(Context context, String key, String value) {
@@ -249,6 +259,10 @@ public class EncryptedFileUtil {
   }
   
   public byte[] encryptString(String value) throws Exception {
+    if (!ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_PROJECT_DATA_ENCRYPTION)) {
+      // Encryption disabled — write as plaintext UTF-8 bytes
+      return value.getBytes(StandardCharsets.UTF_8);
+    }
     return encrypt(value.getBytes("UTF-8"));
   }
   
