@@ -38,7 +38,7 @@ $libraries = @(
     @("com.google.firebase", "firebase-datatransport", "18.2.0", "aar"),
     @("com.google.firebase", "firebase-encoders", "17.0.0", "jar"),
     @("com.google.firebase", "firebase-encoders-json", "18.0.0", "aar"),
-    @("com.google.firebase", "firebase-encoders-proto", "16.0.0", "aar"),
+    @("com.google.firebase", "firebase-encoders-proto", "16.0.0", "jar"),
     @("com.google.firebase", "firebase-installations", "17.2.0", "aar"),
     @("com.google.firebase", "firebase-installations-interop", "17.1.0", "aar"),
 
@@ -142,7 +142,11 @@ foreach ($lib in $libraries) {
         if (-not (Test-Path $jarFile)) {
             New-Item -ItemType Directory -Force -Path $libExtractDir | Out-Null
             try {
-                Expand-Archive -Path $downloadFile -DestinationPath $libExtractDir -Force
+                # Expand-Archive requires .zip extension; AAR is ZIP format
+                $tempZip = Join-Path $downloadDir "$libName.zip"
+                if (-not (Test-Path $tempZip)) { Copy-Item $downloadFile $tempZip }
+                Expand-Archive -Path $tempZip -DestinationPath $libExtractDir -Force
+                Remove-Item $tempZip -Force
                 $classesJar = Join-Path $libExtractDir "classes.jar"
                 if (Test-Path $classesJar) {
                     Copy-Item $classesJar $jarFile

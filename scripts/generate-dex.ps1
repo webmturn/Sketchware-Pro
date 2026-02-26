@@ -60,6 +60,14 @@ Write-Host ""
 
 New-Item -ItemType Directory -Force -Path $DexsDir | Out-Null
 
+# Collect existing bundled JARs for classpath resolution
+$existingLibsDir = Join-Path (Split-Path $JarsDir) "existing-libs"
+$existingJars = @()
+if (Test-Path $existingLibsDir) {
+    $existingJars = Get-ChildItem $existingLibsDir -Recurse -Filter "classes.jar" -File
+    Write-Host "Found $($existingJars.Count) existing bundled JARs for classpath" -ForegroundColor Green
+}
+
 $jarFiles = Get-ChildItem $JarsDir -Filter "*.jar" -File
 $total = $jarFiles.Count
 $current = 0
@@ -81,13 +89,31 @@ foreach ($jar in $jarFiles) {
     New-Item -ItemType Directory -Force -Path $dexDir | Out-Null
 
     try {
-        $d8Args = @("--output", $dexDir, $jar.FullName)
+        # Build args via temp file to avoid Windows command line length limit
+        $argFile = Join-Path $env:TEMP "d8-args-$libName.txt"
+        $argLines = @("--min-api", "21")
         if ($AndroidJar) {
-            $d8Args = @("--lib", $AndroidJar) + $d8Args
+            $argLines += "--lib"
+            $argLines += $AndroidJar
         }
-        $d8Args = @("--min-api", "21") + $d8Args
+        foreach ($otherJar in $jarFiles) {
+            if ($otherJar.FullName -ne $jar.FullName) {
+                $argLines += "--classpath"
+                $argLines += $otherJar.FullName
+            }
+        }
+        foreach ($existingJar in $existingJars) {
+            $argLines += "--classpath"
+            $argLines += $existingJar.FullName
+        }
+        $argLines += "--output"
+        $argLines += $dexDir
+        $argLines += $jar.FullName
+        # Write without BOM — d8 can't parse BOM-prefixed argfiles
+        [System.IO.File]::WriteAllLines($argFile, $argLines)
 
-        $result = & $d8 @d8Args 2>&1
+        & $d8 "@$argFile" 2>&1 | Out-Null
+        Remove-Item $argFile -Force -ErrorAction SilentlyContinue
         if ($LASTEXITCODE -ne 0) {
             throw "d8 exited with code $LASTEXITCODE"
         }
