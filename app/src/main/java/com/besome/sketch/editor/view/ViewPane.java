@@ -730,14 +730,14 @@ public class ViewPane extends RelativeLayout {
         itemFloatingActionButton.setMainColor(ProjectFile.getColor(sc_id, ProjectFile.COLOR_ACCENT));
         itemFloatingActionButton.setFixed(true);
         if (viewBean == null) {
-            ViewBean viewBean2 = new ViewBean("_fab", ViewBean.VIEW_TYPE_WIDGET_FAB);
-            LayoutBean layoutBean = viewBean2.layout;
+            ViewBean defaultFabBean = new ViewBean("_fab", ViewBean.VIEW_TYPE_WIDGET_FAB);
+            LayoutBean layoutBean = defaultFabBean.layout;
             layoutBean.marginLeft = 16;
             layoutBean.marginTop = 16;
             layoutBean.marginRight = 16;
             layoutBean.marginBottom = 16;
             layoutBean.layoutGravity = Gravity.RIGHT | Gravity.BOTTOM;
-            itemFloatingActionButton.setBean(viewBean2);
+            itemFloatingActionButton.setBean(defaultFabBean);
         } else {
             itemFloatingActionButton.setBean(viewBean);
         }

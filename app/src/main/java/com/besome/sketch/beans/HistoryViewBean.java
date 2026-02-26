@@ -45,17 +45,17 @@ public class HistoryViewBean extends ReflectiveToString {
         }
     }
 
-    public void actionUpdate(ViewBean viewBean, ViewBean viewBean2) {
+    public void actionUpdate(ViewBean prevViewBean, ViewBean currentViewBean) {
         actionType = 1;
         prevUpdateData = new ViewBean();
-        prevUpdateData.copy(viewBean);
+        prevUpdateData.copy(prevViewBean);
         currentUpdateData = new ViewBean();
-        currentUpdateData.copy(viewBean2);
+        currentUpdateData.copy(currentViewBean);
     }
 
-    public void actionOverride(ArrayList<ViewBean> beans, ArrayList<ViewBean> beans2) {
-        actionAdd(beans);
-        actionRemove(beans2);
+    public void actionOverride(ArrayList<ViewBean> addedBeans, ArrayList<ViewBean> removedBeans) {
+        actionAdd(addedBeans);
+        actionRemove(removedBeans);
         actionType = ACTION_TYPE_OVERRIDE;
     }
 
@@ -84,9 +84,9 @@ public class HistoryViewBean extends ReflectiveToString {
         if (historyViewBean.removedData != null) {
             removedData = new ArrayList<>();
             for (ViewBean removedDatum : historyViewBean.removedData) {
-                ViewBean viewBean2 = new ViewBean();
-                viewBean2.copy(removedDatum);
-                removedData.add(viewBean2);
+                ViewBean copiedBean = new ViewBean();
+                copiedBean.copy(removedDatum);
+                removedData.add(copiedBean);
             }
         }
     }

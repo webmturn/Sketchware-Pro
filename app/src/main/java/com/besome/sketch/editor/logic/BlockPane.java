@@ -261,18 +261,18 @@ public class BlockPane extends RelativeLayout {
   public void removeBlock(BlockBean blockBean, boolean enabled) {
     String blockId = blockBean.id;
     if (blockId != null && !blockId.equals("") && !blockBean.id.equals("0")) {
-      BlockView rs1 = (BlockView)findViewWithTag(Integer.valueOf(blockBean.id));
-      if (rs1 == null)
+      BlockView targetView = (BlockView)findViewWithTag(Integer.valueOf(blockBean.id));
+      if (targetView == null)
         return; 
-      BlockView rs2 = ((BaseBlockView)rs1).parentBlock;
-      if (rs1 != rs2) {
-        detachFromParent(rs1);
-        removeView((View)rs1);
+      BlockView parentBlockView = ((BaseBlockView)targetView).parentBlock;
+      if (targetView != parentBlockView) {
+        detachFromParent(targetView);
+        removeView((View)targetView);
       } else {
-        removeView((View)rs1);
+        removeView((View)targetView);
       } 
-      if (enabled && rs2 != null)
-        rs2.getRootBlock().layoutChain(); 
+      if (enabled && parentBlockView != null)
+        parentBlockView.getRootBlock().layoutChain(); 
     } 
   }
   
