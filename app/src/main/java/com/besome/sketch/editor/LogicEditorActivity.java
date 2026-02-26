@@ -2234,13 +2234,13 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                         removedBlocks.add(allChild.getBean().clone());
                     }
                     deleteBlock(rs5);
-                    BlockBean blockBean3 = null;
+                    BlockBean currentParentData = null;
                     if (dragSourceParent != null) {
-                        blockBean3 = dragSourceParent.getBean().clone();
+                        currentParentData = dragSourceParent.getBean().clone();
                     }
                     int[] oLocationOnScreen = new int[2];
                     blockPane.getLocationOnScreen(oLocationOnScreen);
-                    BlockHistoryManager.getInstance(scId).recordRemove(buildHistoryKey(), removedBlocks, ((int) touchOriginX) - oLocationOnScreen[0], ((int) touchOriginY) - oLocationOnScreen[1], blockBean2, blockBean3);
+                    BlockHistoryManager.getInstance(scId).recordRemove(buildHistoryKey(), removedBlocks, ((int) touchOriginX) - oLocationOnScreen[0], ((int) touchOriginY) - oLocationOnScreen[1], blockBean2, currentParentData);
                     refreshOptionsMenu();
                 }
             } else if (logicTopMenu.isFavoriteActive) {
@@ -2339,18 +2339,18 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     int addTargetId = blockPane.getAddTargetId();
                     BlockBean prevAddTargetClone = addTargetId >= 0 ? blockPane.findBlockById(addTargetId).getBean().clone() : null;
                     BlockView droppedBlock = dropBlockOnPane(rs13, this.locationBuffer[0], this.locationBuffer[1], false);
-                    BlockBean blockBean3 = null;
+                    BlockBean currentParentData = null;
                     if (addTargetId >= 0) {
-                        blockBean3 = blockPane.findBlockById(addTargetId).getBean().clone();
+                        currentParentData = blockPane.findBlockById(addTargetId).getBean().clone();
                     }
                     int[] locationOnScreen = new int[2];
                     blockPane.getLocationOnScreen(locationOnScreen);
-                    BlockHistoryManager.getInstance(scId).recordAdd(buildHistoryKey(), droppedBlock.getBean().clone(), this.locationBuffer[0] - locationOnScreen[0], this.locationBuffer[1] - locationOnScreen[1], prevAddTargetClone, blockBean3);
+                    BlockHistoryManager.getInstance(scId).recordAdd(buildHistoryKey(), droppedBlock.getBean().clone(), this.locationBuffer[0] - locationOnScreen[0], this.locationBuffer[1] - locationOnScreen[1], prevAddTargetClone, currentParentData);
                     if (prevAddTargetClone != null) {
                         prevAddTargetClone.print();
                     }
-                    if (blockBean3 != null) {
-                        blockBean3.print();
+                    if (currentParentData != null) {
+                        currentParentData.print();
                     }
                 } else if (rs13.getBlockType() == 2) {
                     int defAddTargetId = blockPane.getAddTargetId();
@@ -2400,16 +2400,16 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                         beansAfterMove.add(rs.getBean().clone());
                     }
                     BlockBean prevDragSourceClone = dragSourceParent != null ? dragSourceParent.getBean().clone() : null;
-                    BlockBean blockBean3 = null;
+                    BlockBean currentParentData = null;
                     if (targetBlock != null) {
-                        blockBean3 = targetBlock.getBean().clone();
+                        currentParentData = targetBlock.getBean().clone();
                     }
                     if (blockBean == null || prevDragSourceClone == null || !blockBean.isEqual(prevDragSourceClone)) {
                         int[] locationOnScreen = new int[2];
                         blockPane.getLocationOnScreen(locationOnScreen);
                         int x = locationOnScreen[0];
                         int y = locationOnScreen[1];
-                        BlockHistoryManager.getInstance(scId).recordMove(buildHistoryKey(), beansBeforeMove, beansAfterMove, ((int) touchOriginX) - x, ((int) touchOriginY) - y, this.locationBuffer[0] - x, this.locationBuffer[1] - y, blockBean, prevDragSourceClone, prevMoveTargetClone, blockBean3);
+                        BlockHistoryManager.getInstance(scId).recordMove(buildHistoryKey(), beansBeforeMove, beansAfterMove, ((int) touchOriginX) - x, ((int) touchOriginY) - y, this.locationBuffer[0] - x, this.locationBuffer[1] - y, blockBean, prevDragSourceClone, prevMoveTargetClone, currentParentData);
                     }
                     blockPane.clearSnapState();
                 }
