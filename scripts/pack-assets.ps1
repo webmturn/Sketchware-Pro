@@ -13,7 +13,7 @@ $ErrorActionPreference = "Stop"
 
 # Current libs.zip structure: each library is a folder named like "firebase-auth-19.0.0"
 # containing classes.jar and optionally res/, AndroidManifest.xml, etc.
-# Current dexs.zip structure: each library is a folder containing classes.dex
+# Current dexs.zip structure: each library is a FLAT FILE named like "firebase-auth-23.1.0.dex"
 
 $libsZip = Join-Path $AssetsDir "libs.zip"
 $dexsZip = Join-Path $AssetsDir "dexs.zip"
@@ -73,14 +73,14 @@ Write-Host ""
 Write-Host "Removing old library versions..." -ForegroundColor Yellow
 foreach ($lib in $removeLibs) {
     $libPath = Join-Path $tempLibs $lib
-    $dexPath = Join-Path $tempDexs $lib
+    $dexPath = Join-Path $tempDexs "$lib.dex"
     if (Test-Path $libPath) {
         Remove-Item $libPath -Recurse -Force
         Write-Host "  Removed libs/$lib" -ForegroundColor Gray
     }
     if (Test-Path $dexPath) {
-        Remove-Item $dexPath -Recurse -Force
-        Write-Host "  Removed dexs/$lib" -ForegroundColor Gray
+        Remove-Item $dexPath -Force
+        Write-Host "  Removed dexs/$lib.dex" -ForegroundColor Gray
     }
 }
 
@@ -116,12 +116,12 @@ foreach ($jar in $jarFiles) {
 $dexDirs = Get-ChildItem $DexsDir -Directory
 foreach ($dex in $dexDirs) {
     $libName = $dex.Name
-    $targetDexDir = Join-Path $tempDexs $libName
+    $targetDexFile = Join-Path $tempDexs "$libName.dex"
 
-    New-Item -ItemType Directory -Force -Path $targetDexDir | Out-Null
-    Copy-Item (Join-Path $dex.FullName "classes.dex") (Join-Path $targetDexDir "classes.dex") -Force
+    # dexs.zip uses flat file format: <name>.dex (not directory/classes.dex)
+    Copy-Item (Join-Path $dex.FullName "classes.dex") $targetDexFile -Force
 
-    Write-Host "  Added dexs/$libName" -ForegroundColor Green
+    Write-Host "  Added dexs/$libName.dex" -ForegroundColor Green
 }
 
 # Step 5: Repack zips
