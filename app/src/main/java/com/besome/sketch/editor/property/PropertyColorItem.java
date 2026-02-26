@@ -151,16 +151,16 @@ public class PropertyColorItem extends RelativeLayout implements View.OnClickLis
         ColorPickerDialog colorPicker = new ColorPickerDialog((Activity) context, color, key.equals("property_background_color"), true, sc_id);
         colorPicker.setColorPickerCallback(new ColorPickerDialog.OnColorPickedListener() {
             @Override
-            public void onColorPicked(int var1) {
-                setValue(var1);
+            public void onColorPicked(int color) {
+                setValue(color);
                 if (valueChangeListener != null) {
                     valueChangeListener.onPropertyChanged(key, value);
                 }
             }
 
             @Override
-            public void onResourceColorPicked(String var1, int var2) {
-                setValue(var2, "@color/" + var1);
+            public void onResourceColorPicked(String resourceName, int color) {
+                setValue(color, "@color/" + resourceName);
                 if (valueChangeListener != null) {
                     valueChangeListener.onPropertyChanged(key, value);
                 }

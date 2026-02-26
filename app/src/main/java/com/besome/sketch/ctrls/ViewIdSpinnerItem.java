@@ -40,13 +40,13 @@ public class ViewIdSpinnerItem extends LinearLayout {
         binding.icon.setImageResource(iconResId);
     }
 
-    public void setTextStyle(boolean notSelected, int color, int var3) {
+    public void setTextStyle(boolean notSelected, int color, int defaultColor) {
         if (notSelected) {
-            if (!isDropDown) color = var3;
+            if (!isDropDown) color = defaultColor;
             binding.name.setTextColor(color);
             binding.name.setTypeface(null, Typeface.NORMAL);
         } else {
-            if (!isDropDown) color = var3;
+            if (!isDropDown) color = defaultColor;
             binding.name.setTextColor(color);
             binding.name.setTypeface(null, Typeface.BOLD_ITALIC);
         }

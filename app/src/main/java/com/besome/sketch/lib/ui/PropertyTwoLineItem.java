@@ -37,8 +37,8 @@ public class PropertyTwoLineItem extends RelativeLayout {
         tvDesc.setText(txt);
     }
 
-    public void setName(String var1) {
-        tvName.setText(var1);
+    public void setName(String name) {
+        tvName.setText(name);
     }
 
     public void setHideDivider(boolean hideDivider) {

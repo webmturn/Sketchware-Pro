@@ -154,10 +154,10 @@ public class NewKeyStoreActivity extends BaseAppCompatActivity implements OnClic
         keyStoreManager = new KeyStoreManager();
 
 
-        Button var2 = findViewById(R.id.btn_keystore_save);
-        var2.setOnClickListener(this);
-        var2 = findViewById(R.id.btn_keystore_cancel);
-        var2.setOnClickListener(this);
+        Button button = findViewById(R.id.btn_keystore_save);
+        button.setOnClickListener(this);
+        button = findViewById(R.id.btn_keystore_cancel);
+        button.setOnClickListener(this);
         alias = findViewById(R.id.et_keystore_alias);
         TextInputLayout tilAlias = findViewById(R.id.ti_keystore_alias);
         password = findViewById(R.id.et_keystore_passwd);

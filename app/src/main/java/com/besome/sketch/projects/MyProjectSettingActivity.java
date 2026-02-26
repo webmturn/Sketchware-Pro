@@ -368,15 +368,15 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
         ColorPickerDialog colorPickerDialog = new ColorPickerDialog(this, projectThemeColors[colorIndex], false, false);
         colorPickerDialog.setColorPickerCallback(new ColorPickerDialog.OnColorPickedListener() {
             @Override
-            public void onColorPicked(int var1) {
-                projectThemeColors[colorIndex] = var1;
+            public void onColorPicked(int color) {
+                projectThemeColors[colorIndex] = color;
                 syncThemeColors();
                 themePresetAdapter.unselectThePreviousTheme(-1);
             }
 
             @Override
-            public void onResourceColorPicked(String var1, int var2) {
-                projectThemeColors[colorIndex] = var2;
+            public void onResourceColorPicked(String resourceName, int color) {
+                projectThemeColors[colorIndex] = color;
                 syncThemeColors();
                 themePresetAdapter.unselectThePreviousTheme(-1);
             }

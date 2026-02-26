@@ -337,13 +337,13 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
     }
 
     private int getGridLayoutColumnCount() {
-        int var1 = (int) ((float) getResources().getDisplayMetrics().widthPixels / getResources().getDisplayMetrics().density) / 100;
-        int var2 = var1;
-        if (var1 > 2) {
-            var2 = var1 - 1;
+        int columnCount = (int) ((float) getResources().getDisplayMetrics().widthPixels / getResources().getDisplayMetrics().density) / 100;
+        int result = columnCount;
+        if (columnCount > 2) {
+            result = columnCount - 1;
         }
 
-        return var2;
+        return result;
     }
 
     private void initialize() {

@@ -93,8 +93,8 @@ public class BaseBottomSheetDialogActivity extends BaseAppCompatActivity {
         ViewUtil.inflateLayoutInto(this, dialogContentView, layoutResID);
     }
 
-    public void setDismissOnOutsideClick(boolean var1) {
-        if (var1) {
+    public void setDismissOnOutsideClick(boolean dismissOnOutsideClick) {
+        if (dismissOnOutsideClick) {
             dialogContainerView.setOnClickListener(v -> {
                 if (!UIHelper.isClickThrottled()) {
                     finish();

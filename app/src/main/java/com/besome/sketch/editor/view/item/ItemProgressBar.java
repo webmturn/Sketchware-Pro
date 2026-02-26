@@ -77,11 +77,11 @@ public class ItemProgressBar extends LinearLayout implements ItemView {
     }
 
     @Override
-    public void onDraw(Canvas var1) {
+    public void onDraw(Canvas canvas) {
         if (isSelected) {
-            var1.drawRect(0, 0, getMeasuredWidth(), getMeasuredHeight(), paint);
+            canvas.drawRect(0, 0, getMeasuredWidth(), getMeasuredHeight(), paint);
         }
-        super.onDraw(var1);
+        super.onDraw(canvas);
     }
 
     @Override

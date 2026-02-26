@@ -68,8 +68,8 @@ public class SelectableButtonBar extends LinearLayout {
         return selectionListener;
     }
 
-    public void setListener(IntCallback var1) {
-        selectionListener = var1;
+    public void setListener(IntCallback listener) {
+        selectionListener = listener;
     }
 
     public int getSelectedItemKey() {

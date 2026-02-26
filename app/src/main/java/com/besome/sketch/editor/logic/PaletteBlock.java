@@ -42,23 +42,23 @@ public class PaletteBlock extends LinearLayout {
         density = ViewUtil.dpToPx(context, 1.0F);
     }
 
-    public BaseBlockView addBlock(String var1, String var2, String var3) {
+    public BaseBlockView addBlock(String blockType, String spec, String opCode) {
         View view = new View(context);
         view.setLayoutParams(getLayoutParams(8.0F));
         binding.blockBuilder.addView(view);
-        BlockView blockView = new BlockView(context, -1, var1, var2, var3);
-        blockView.setContentDescription(generateContentDescription(var3));
+        BlockView blockView = new BlockView(context, -1, blockType, spec, opCode);
+        blockView.setContentDescription(generateContentDescription(opCode));
         blockView.setBlockType(1);
         binding.blockBuilder.addView(blockView);
         return blockView;
     }
 
-    public BaseBlockView addBlock(String var1, String var2, String var3, String var4) {
+    public BaseBlockView addBlock(String blockType, String spec, String opCode, String componentType) {
         View view = new View(context);
         view.setLayoutParams(getLayoutParams(8.0F));
         binding.blockBuilder.addView(view);
-        BlockView blockView = new BlockView(context, -1, var1, var2, var3, var4);
-        blockView.setContentDescription(generateContentDescription(var4));
+        BlockView blockView = new BlockView(context, -1, blockType, spec, opCode, componentType);
+        blockView.setContentDescription(generateContentDescription(componentType));
         blockView.setBlockType(1);
         binding.blockBuilder.addView(blockView);
         return blockView;

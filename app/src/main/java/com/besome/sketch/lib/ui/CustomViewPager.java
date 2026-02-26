@@ -27,7 +27,7 @@ public class CustomViewPager extends ViewPager {
         if (isTouchEnabled) {
             try {
                 return super.onInterceptTouchEvent(motionEvent);
-            } catch (Exception var3) {
+            } catch (Exception e) {
                 return true;
             }
         }

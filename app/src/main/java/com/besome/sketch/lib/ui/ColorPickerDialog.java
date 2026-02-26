@@ -68,10 +68,10 @@ public class ColorPickerDialog extends PopupWindow {
     private ProjectFilePaths projectFilePaths;
     private ColorsEditorManager colorsEditorManager;
 
-    public ColorPickerDialog(Activity activity, int var3, boolean isTransparentColor, boolean isNoneColor) {
+    public ColorPickerDialog(Activity activity, int color, boolean isTransparentColor, boolean isNoneColor) {
         super(activity);
         binding = ColorPickerBinding.inflate(activity.getLayoutInflater());
-        initialize(activity, getHexColor(var3), isTransparentColor, isNoneColor);
+        initialize(activity, getHexColor(color), isTransparentColor, isNoneColor);
     }
 
     public ColorPickerDialog(Activity activity, String color, boolean isTransparentColor, boolean isNoneColor, String scId) {
@@ -595,9 +595,9 @@ public class ColorPickerDialog extends PopupWindow {
     }
 
     public interface OnColorPickedListener {
-        void onColorPicked(int var1);
+        void onColorPicked(int color);
 
-        void onResourceColorPicked(String var1, int var2);
+        void onResourceColorPicked(String resourceName, int color);
     }
 
     public interface materialColorAttr {

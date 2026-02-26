@@ -230,14 +230,14 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         projectFile = getDefaultProjectFile();
         ProjectDataManager.getProjectDataManager(sc_id, haveSavedState);
         ProjectDataManager.getFileManager(sc_id, haveSavedState);
-        ResourceManager var2 = ProjectDataManager.getResourceManager(sc_id, haveSavedState);
+        ResourceManager resourceManager = ProjectDataManager.getResourceManager(sc_id, haveSavedState);
         ProjectDataManager.getLibraryManager(sc_id, haveSavedState);
         ViewHistoryManager.getInstance(sc_id);
         BlockHistoryManager.getInstance(sc_id);
         if (!haveSavedState) {
-            var2.backupImages();
-            var2.backupSounds();
-            var2.backupFonts();
+            resourceManager.backupImages();
+            resourceManager.backupSounds();
+            resourceManager.backupFonts();
         }
     }
 

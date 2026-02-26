@@ -51,9 +51,9 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
         }
     }
 
-    public void setProgressMessage(String var1) {
+    public void setProgressMessage(String message) {
         if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.setMessage(var1);
+            progressDialog.setMessage(message);
         }
     }
 
@@ -71,7 +71,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
             if (lottieDialog != null && lottieDialog.isShowing()) {
                 lottieDialog.dismiss();
             }
-        } catch (Exception var2) {
+        } catch (Exception e) {
             lottieDialog = null;
             lottieDialog = new LoadingDialog(this);
         }
@@ -82,7 +82,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
             if (progressDialog != null && progressDialog.isShowing()) {
                 progressDialog.dismiss();
             }
-        } catch (Exception var2) {
+        } catch (Exception e) {
             progressDialog = null;
             progressDialog = new ProgressDialog(this);
         }
