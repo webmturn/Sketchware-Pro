@@ -378,139 +378,139 @@ public class BlockPane extends RelativeLayout {
   }
   
   public boolean hasListReference(String listName) {
-    int i = getChildCount();
-    for (int b = 0; b < i; b++) {
-      View view = getChildAt(b);
+    int childCount = getChildCount();
+    for (int childIdx = 0; childIdx < childCount; childIdx++) {
+      View view = getChildAt(childIdx);
       if (view instanceof BlockView) {
-        byte b1 = -1;
+        byte matchIndex = -1;
         BlockBean blockBean = ((BlockView)view).getBean();
         String opCode = blockBean.opCode;
         switch (opCode.hashCode()) {
           default:
-            b1 = -1;
+            matchIndex = -1;
             break;
           case 2090189010:
             if (opCode.equals("addListStr")) {
-              b1 = 8;
+              matchIndex = 8;
               break;
             } 
           case 2090182653:
             if (opCode.equals("addListMap")) {
-              b1 = 20;
+              matchIndex = 20;
               break;
             } 
           case 2090179216:
             if (opCode.equals("addListInt")) {
-              b1 = 7;
+              matchIndex = 7;
               break;
             } 
           case 1764351209:
             if (opCode.equals("deleteList")) {
-              b1 = 13;
+              matchIndex = 13;
               break;
             } 
           case 1252547704:
             if (opCode.equals("listMapToStr")) {
-              b1 = 6;
+              matchIndex = 6;
               break;
             } 
           case 1160674468:
             if (opCode.equals("lengthList")) {
-              b1 = 1;
+              matchIndex = 1;
               break;
             } 
           case 762292097:
             if (opCode.equals("indexListStr")) {
-              b1 = 12;
+              matchIndex = 12;
               break;
             } 
           case 762282303:
             if (opCode.equals("indexListInt")) {
-              b1 = 11;
+              matchIndex = 11;
               break;
             } 
           case 389111867:
             if (opCode.equals("spnSetData")) {
-              b1 = 14;
+              matchIndex = 14;
               break;
             } 
           case 134874756:
             if (opCode.equals("listSetCustomViewData")) {
-              b1 = 16;
+              matchIndex = 16;
               break;
             } 
           case -96303809:
             if (opCode.equals("containListStr")) {
-              b1 = 3;
+              matchIndex = 3;
               break;
             } 
           case -96310166:
             if (opCode.equals("containListMap")) {
-              b1 = 4;
+              matchIndex = 4;
               break;
             } 
           case -96313603:
             if (opCode.equals("containListInt")) {
-              b1 = 2;
+              matchIndex = 2;
               break;
             } 
           case -329552966:
             if (opCode.equals("insertListStr")) {
-              b1 = 19;
+              matchIndex = 19;
               break;
             } 
           case -329559323:
             if (opCode.equals("insertListMap")) {
-              b1 = 22;
+              matchIndex = 22;
               break;
             } 
           case -329562760:
             if (opCode.equals("insertListInt")) {
-              b1 = 18;
+              matchIndex = 18;
               break;
             } 
           case -733318734:
             if (opCode.equals("strToListMap")) {
-              b1 = 17;
+              matchIndex = 17;
               break;
             } 
           case -1139353316:
             if (opCode.equals("setListMap")) {
-              b1 = 23;
+              matchIndex = 23;
               break;
             } 
           case -1249347599:
             if (opCode.equals("getVar")) {
-              b1 = 0;
+              matchIndex = 0;
               break;
             } 
           case -1271141237:
             if (opCode.equals("clearList")) {
-              b1 = 5;
+              matchIndex = 5;
               break;
             } 
           case -1384851894:
             if (opCode.equals("getAtListStr")) {
-              b1 = 10;
+              matchIndex = 10;
               break;
             } 
           case -1384858251:
             if (opCode.equals("getAtListMap")) {
-              b1 = 21;
+              matchIndex = 21;
               break;
             } 
           case -1384861688:
             if (opCode.equals("getAtListInt")) {
-              b1 = 9;
+              matchIndex = 9;
               break;
             } 
           case -1998407506:
             if (opCode.equals("listSetData")) {
-              b1 = 15;
+              matchIndex = 15;
               break;
             } 
         } 
-        switch (b1) {
+        switch (matchIndex) {
           case 22:
           case 23:
             if (((String)blockBean.parameters.get(3)).equals(listName))
@@ -557,27 +557,27 @@ public class BlockPane extends RelativeLayout {
   }
   
   public Object[] findNearestSnapPoint(BlockView blockView, int start, int end) {
-    byte b;
+    byte snapThreshold;
     Object[] objects = null;
     if (blockView.isParameter) {
-      b = 40;
+      snapThreshold = 40;
     } else {
-      b = 60;
+      snapThreshold = 60;
     } 
-    int i = 100000;
+    int minDistance = 100000;
     Point point2 = new Point(start, end);
     start = 0;
-    end = i;
+    end = minDistance;
     while (start < this.blockSnapPoints.size()) {
       Object[] objects1 = this.blockSnapPoints.get(start);
       int[] intValues = (int[])objects1[0];
       int dx = point2.x - intValues[0];
       int dy = point2.y - intValues[1];
-      int j = Math.abs(dx / 2) + Math.abs(dy);
-      if (j < end && j < b) {
+      int distance = Math.abs(dx / 2) + Math.abs(dy);
+      if (distance < end && distance < snapThreshold) {
         if (isCompatibleBlock(blockView, (View)objects1[1])) {
           objects = objects1;
-          end = j;
+          end = distance;
         } 
       } 
       start++;
@@ -653,119 +653,119 @@ public class BlockPane extends RelativeLayout {
   }
   
   public boolean hasMapReference(String mapName) {
-    int i = getChildCount();
-    for (int b = 0; b < i; b++) {
-      View view = getChildAt(b);
+    int childCount = getChildCount();
+    for (int childIdx = 0; childIdx < childCount; childIdx++) {
+      View view = getChildAt(childIdx);
       if (view instanceof BlockView) {
-        byte b1 = -1;
+        byte matchIndex = -1;
         BlockBean blockBean = ((BlockView)view).getBean();
         String opCode = blockBean.opCode;
         switch (opCode.hashCode()) {
           default:
-            b1 = -1;
+            matchIndex = -1;
             break;
           case 2090182653:
             if (opCode.equals("addListMap")) {
-              b1 = 15;
+              matchIndex = 15;
               break;
             } 
           case 1775620400:
             if (opCode.equals("strToMap")) {
-              b1 = 18;
+              matchIndex = 18;
               break;
             } 
           case 1431171391:
             if (opCode.equals("mapRemoveKey")) {
-              b1 = 10;
+              matchIndex = 10;
               break;
             } 
           case 845089750:
             if (opCode.equals("setVarString")) {
-              b1 = 3;
+              matchIndex = 3;
               break;
             } 
           case 836692861:
             if (opCode.equals("mapSize")) {
-              b1 = 11;
+              matchIndex = 11;
               break;
             } 
           case 754442829:
             if (opCode.equals("increaseInt")) {
-              b1 = 4;
+              matchIndex = 4;
               break;
             } 
           case 747168008:
             if (opCode.equals("mapCreateNew")) {
-              b1 = 6;
+              matchIndex = 6;
               break;
             } 
           case 657721930:
             if (opCode.equals("setVarInt")) {
-              b1 = 2;
+              matchIndex = 2;
               break;
             } 
           case 463560551:
             if (opCode.equals("mapContainKey")) {
-              b1 = 9;
+              matchIndex = 9;
               break;
             } 
           case 442768763:
             if (opCode.equals("mapGetAllKeys")) {
-              b1 = 14;
+              matchIndex = 14;
               break;
             } 
           case 168740282:
             if (opCode.equals("mapToStr")) {
-              b1 = 17;
+              matchIndex = 17;
               break;
             } 
           case 152967761:
             if (opCode.equals("mapClear")) {
-              b1 = 12;
+              matchIndex = 12;
               break;
             } 
           case -329559323:
             if (opCode.equals("insertListMap")) {
-              b1 = 16;
+              matchIndex = 16;
               break;
             } 
           case -1081391085:
             if (opCode.equals("mapPut")) {
-              b1 = 7;
+              matchIndex = 7;
               break;
             } 
           case -1081400230:
             if (opCode.equals("mapGet")) {
-              b1 = 8;
+              matchIndex = 8;
               break;
             } 
           case -1249347599:
             if (opCode.equals("getVar")) {
-              b1 = 0;
+              matchIndex = 0;
               break;
             } 
           case -1377080719:
             if (opCode.equals("decreaseInt")) {
-              b1 = 5;
+              matchIndex = 5;
               break;
             } 
           case -1384858251:
             if (opCode.equals("getAtListMap")) {
-              b1 = 19;
+              matchIndex = 19;
               break;
             } 
           case -1920517885:
             if (opCode.equals("setVarBoolean")) {
-              b1 = 1;
+              matchIndex = 1;
               break;
             } 
           case -2120571577:
             if (opCode.equals("mapIsEmpty")) {
-              b1 = 13;
+              matchIndex = 13;
               break;
             } 
         } 
-        switch (b1) {
+        switch (matchIndex) {
           case 19:
             if (((String)blockBean.parameters.get(2)).equals(mapName))
               return true; 
