@@ -38,6 +38,7 @@ public class CodeEditorPreferences {
     private static final String KEY_AUTO_COMPLETE = "_auto_complete";
     private static final String KEY_SYMBOL_PAIR = "_symbol_pair";
     private static final String KEY_LINE_NUMBERS = "_line_numbers";
+    private static final String KEY_STICKY_SCROLL = "_sticky_scroll";
 
     // Default values
     public static final int DEFAULT_TEXT_SIZE = 14;
@@ -46,6 +47,7 @@ public class CodeEditorPreferences {
     public static final boolean DEFAULT_AUTO_COMPLETE = true;
     public static final boolean DEFAULT_SYMBOL_PAIR = true;
     public static final boolean DEFAULT_LINE_NUMBERS = true;
+    public static final boolean DEFAULT_STICKY_SCROLL = false;
 
     // Theme indices (matching KNOWN_THEME_NAMES order)
     public static final int THEME_DEFAULT = 0;
@@ -93,6 +95,10 @@ public class CodeEditorPreferences {
         return prefs.getBoolean(prefix + KEY_LINE_NUMBERS, DEFAULT_LINE_NUMBERS);
     }
 
+    public boolean getStickyScroll() {
+        return prefs.getBoolean(prefix + KEY_STICKY_SCROLL, DEFAULT_STICKY_SCROLL);
+    }
+
     // --- Setters ---
 
     public void setTextSize(int size) {
@@ -119,6 +125,10 @@ public class CodeEditorPreferences {
         prefs.edit().putBoolean(prefix + KEY_LINE_NUMBERS, enabled).apply();
     }
 
+    public void setStickyScroll(boolean enabled) {
+        prefs.edit().putBoolean(prefix + KEY_STICKY_SCROLL, enabled).apply();
+    }
+
     // --- Apply to editor ---
 
     /**
@@ -132,6 +142,7 @@ public class CodeEditorPreferences {
         editor.setWordwrap(getWordWrap());
         editor.setLineNumberEnabled(getLineNumbers());
         editor.getProps().symbolPairAutoCompletion = getSymbolPair();
+        editor.getProps().stickyScroll = getStickyScroll();
         editor.getComponent(EditorAutoCompletion.class).setEnabled(getAutoComplete());
         if (applyTheme) {
             applyTheme(editor, getTheme());

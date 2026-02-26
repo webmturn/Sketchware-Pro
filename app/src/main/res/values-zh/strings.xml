@@ -724,6 +724,7 @@
     <string name="code_editor_menu_exit_confirmation">退出确认</string>
     <string name="code_editor_menu_font_size">字体大小</string>
     <string name="code_editor_menu_line_numbers">行号显示</string>
+    <string name="code_editor_menu_sticky_scroll">粘性滚动</string>
     <string name="code_editor_menu_pretty_print">格式化代码</string>
     <string name="code_editor_menu_word_wrap">自动换行</string>
     <string name="code_editor_select_font_size">选择字体大小</string>

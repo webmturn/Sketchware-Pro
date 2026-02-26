@@ -2937,6 +2937,7 @@ Do you want to continue?"</string>
     <string name="code_editor_menu_exit_confirmation">Exit confirmation</string>
     <string name="code_editor_menu_font_size">Font size</string>
     <string name="code_editor_menu_line_numbers">Line numbers</string>
+    <string name="code_editor_menu_sticky_scroll">Sticky scroll</string>
     <string name="code_editor_menu_pretty_print">Pretty print</string>
     <string name="code_editor_menu_word_wrap">Word wrap</string>
     <string name="code_editor_select_font_size">Select font size</string>

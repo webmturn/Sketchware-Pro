@@ -3,7 +3,7 @@ activity = "1.11.0"
 appcompat = "1.7.1"
 desugar_jdk_libs_nio = "2.1.5"
 firebaseBom = "34.3.0"
-sora-editor = "0.23.5"
+sora-editor = "0.24.4"
 bundletool = "1.18.2"
 cardview = "1.0.0"
 circleimageview = "3.1.0"
@@ -62,10 +62,10 @@ flexbox = { module = "com.google.android.flexbox:flexbox", version.ref = "flexbo
 lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
 
-sora-editor = { module = "io.github.Rosemoe.sora-editor:bom", version.ref = "sora-editor" }
-editor = { module = "io.github.Rosemoe.sora-editor:editor" }
-language-java = { module = "io.github.Rosemoe.sora-editor:language-java" }
-language-textmate = { module = "io.github.Rosemoe.sora-editor:language-textmate" }
+sora-editor = { module = "io.github.rosemoe:editor-bom", version.ref = "sora-editor" }
+editor = { module = "io.github.rosemoe:editor" }
+language-java = { module = "io.github.rosemoe:language-java" }
+language-textmate = { module = "io.github.rosemoe:language-textmate" }
 
 bundletool = { module = "com.android.tools.build:bundletool", version.ref = "bundletool" }
 

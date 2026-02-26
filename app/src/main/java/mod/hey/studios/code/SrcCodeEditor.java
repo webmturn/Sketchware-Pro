@@ -360,7 +360,8 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
     private static final int MENU_UNDO = 1, MENU_REDO = 2, MENU_SAVE = 3, MENU_LAYOUT_PREVIEW = 4,
             MENU_FIND_REPLACE = 5, MENU_WORD_WRAP = 6, MENU_PRETTY_PRINT = 7,
             MENU_SELECT_LANGUAGE = 8, MENU_SELECT_THEME = 9, MENU_AUTO_COMPLETE = 10,
-            MENU_AUTO_COMPLETE_SYMBOL_PAIR = 11, MENU_FONT_SIZE = 12, MENU_LINE_NUMBERS = 13;
+            MENU_AUTO_COMPLETE_SYMBOL_PAIR = 11, MENU_FONT_SIZE = 12, MENU_LINE_NUMBERS = 13,
+            MENU_STICKY_SCROLL = 14;
 
     private void loadToolbar() {
         {
@@ -379,6 +380,7 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
             toolbarMenu.add(Menu.NONE, MENU_PRETTY_PRINT, Menu.NONE, Helper.getResString(R.string.code_editor_menu_pretty_print));
             toolbarMenu.add(Menu.NONE, MENU_FONT_SIZE, Menu.NONE, Helper.getResString(R.string.code_editor_menu_font_size));
             toolbarMenu.add(Menu.NONE, MENU_LINE_NUMBERS, Menu.NONE, Helper.getResString(R.string.code_editor_menu_line_numbers)).setCheckable(true).setChecked(editorPrefs.getLineNumbers());
+            toolbarMenu.add(Menu.NONE, MENU_STICKY_SCROLL, Menu.NONE, Helper.getResString(R.string.code_editor_menu_sticky_scroll)).setCheckable(true).setChecked(editorPrefs.getStickyScroll());
             toolbarMenu.add(Menu.NONE, MENU_SELECT_LANGUAGE, Menu.NONE, Helper.getResString(R.string.code_editor_select_language));
             toolbarMenu.add(Menu.NONE, MENU_SELECT_THEME, Menu.NONE, Helper.getResString(R.string.code_editor_select_theme));
             toolbarMenu.add(Menu.NONE, MENU_AUTO_COMPLETE, Menu.NONE, Helper.getResString(R.string.code_editor_menu_auto_complete)).setCheckable(true).setChecked(editorPrefs.getAutoComplete());
@@ -466,6 +468,13 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
                         item.setChecked(!item.isChecked());
                         binding.editor.setLineNumberEnabled(item.isChecked());
                         editorPrefs.setLineNumbers(item.isChecked());
+                        break;
+
+                    case MENU_STICKY_SCROLL:
+                        item.setChecked(!item.isChecked());
+                        binding.editor.getProps().stickyScroll = item.isChecked();
+                        binding.editor.invalidate();
+                        editorPrefs.setStickyScroll(item.isChecked());
                         break;
 
                     case MENU_AUTO_COMPLETE_SYMBOL_PAIR:

@@ -56,7 +56,7 @@ public class ViewCodeEditorActivity extends BaseAppCompatActivity {
     private static final int MENU_UNDO = 0, MENU_REDO = 1, MENU_SAVE = 2,
             MENU_EDIT_APPCOMPAT = 3, MENU_RELOAD_COLORS = 4, MENU_LAYOUT_PREVIEW = 5,
             MENU_FIND_REPLACE = 6, MENU_WORD_WRAP = 7, MENU_FONT_SIZE = 8,
-            MENU_LINE_NUMBERS = 9;
+            MENU_LINE_NUMBERS = 9, MENU_STICKY_SCROLL = 10;
 
     private final OnBackPressedCallback onBackPressedCallback =
             new OnBackPressedCallback(true) {
@@ -163,6 +163,8 @@ public class ViewCodeEditorActivity extends BaseAppCompatActivity {
         menu.add(Menu.NONE, MENU_FONT_SIZE, Menu.NONE, Helper.getResString(R.string.code_editor_menu_font_size));
         menu.add(Menu.NONE, MENU_LINE_NUMBERS, Menu.NONE, Helper.getResString(R.string.code_editor_menu_line_numbers))
                 .setCheckable(true).setChecked(editorPrefs.getLineNumbers());
+        menu.add(Menu.NONE, MENU_STICKY_SCROLL, Menu.NONE, Helper.getResString(R.string.code_editor_menu_sticky_scroll))
+                .setCheckable(true).setChecked(editorPrefs.getStickyScroll());
         return true;
     }
 
@@ -213,6 +215,13 @@ public class ViewCodeEditorActivity extends BaseAppCompatActivity {
                 item.setChecked(!item.isChecked());
                 editor.setLineNumberEnabled(item.isChecked());
                 editorPrefs.setLineNumbers(item.isChecked());
+                return true;
+            }
+            case MENU_STICKY_SCROLL -> {
+                item.setChecked(!item.isChecked());
+                editor.getProps().stickyScroll = item.isChecked();
+                editor.invalidate();
+                editorPrefs.setStickyScroll(item.isChecked());
                 return true;
             }
             default -> {
