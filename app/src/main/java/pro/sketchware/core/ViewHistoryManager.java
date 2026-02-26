@@ -71,11 +71,11 @@ public class ViewHistoryManager {
     recordAddMultiple(key, views);
   }
   
-  public void recordUpdate(String key, ViewBean viewBean1, ViewBean viewBean2) {
-    if (viewBean1.isEqual(viewBean2))
+  public void recordUpdate(String key, ViewBean prevViewData, ViewBean currentViewData) {
+    if (prevViewData.isEqual(currentViewData))
       return; 
     HistoryViewBean historyViewBean = new HistoryViewBean();
-    historyViewBean.actionUpdate(viewBean1, viewBean2);
+    historyViewBean.actionUpdate(prevViewData, currentViewData);
     if (!this.historyMap.containsKey(key))
       initHistory(key); 
     trimFutureHistory(key);
