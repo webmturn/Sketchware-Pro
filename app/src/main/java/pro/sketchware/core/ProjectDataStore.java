@@ -58,23 +58,23 @@ public class ProjectDataStore {
       if (viewBean.parent.equals("root"))
         sortedViews.add(viewBean); 
     } 
-    int j = sortedViews.size();
-    int i;
-    int m = 0;
-    for (i = 0; i < j - 1; i++) {
-      for (int k = 0; k < j - i - 1; k = m) {
-        int n = ((ViewBean)sortedViews.get(k)).index;
-        m = k + 1;
-        if (n > ((ViewBean)sortedViews.get(m)).index) {
-          ViewBean viewBean = sortedViews.get(k);
-          sortedViews.set(k, sortedViews.get(m));
-          sortedViews.set(m, viewBean);
+    int listSize = sortedViews.size();
+    int outerIdx;
+    int nextIdx = 0;
+    for (outerIdx = 0; outerIdx < listSize - 1; outerIdx++) {
+      for (int innerIdx = 0; innerIdx < listSize - outerIdx - 1; innerIdx = nextIdx) {
+        int currentIndex = ((ViewBean)sortedViews.get(innerIdx)).index;
+        nextIdx = innerIdx + 1;
+        if (currentIndex > ((ViewBean)sortedViews.get(nextIdx)).index) {
+          ViewBean viewBean = sortedViews.get(innerIdx);
+          sortedViews.set(innerIdx, sortedViews.get(nextIdx));
+          sortedViews.set(nextIdx, viewBean);
         } 
       } 
     } 
     for (ViewBean viewBean : list) {
-      i = viewBean.type;
-      if ((i == 2 || i == 1 || i == 36 || i == 37 || i == 38 || i == 39 || i == 40 || i == 0 || i == 12) && viewBean.parent.equals("root"))
+      int viewType = viewBean.type;
+      if ((viewType == 2 || viewType == 1 || viewType == 36 || viewType == 37 || viewType == 38 || viewType == 39 || viewType == 40 || viewType == 0 || viewType == 12) && viewBean.parent.equals("root"))
         sortedViews.addAll(getChildViews(list, viewBean)); 
     } 
     return sortedViews;
@@ -86,24 +86,24 @@ public class ProjectDataStore {
       if (viewBean.parent.equals(parentBean.id))
         childViews.add(viewBean); 
     } 
-    int j = childViews.size();
-    int i;
-    int m = 0;
-    for (i = 0; i < j - 1; i++) {
-      for (int k = 0; k < j - i - 1; k = m) {
-        int n = ((ViewBean)childViews.get(k)).index;
-        m = k + 1;
-        if (n > ((ViewBean)childViews.get(m)).index) {
-          ViewBean tempBean = childViews.get(k);
-          childViews.set(k, childViews.get(m));
-          childViews.set(m, tempBean);
+    int listSize = childViews.size();
+    int outerIdx;
+    int nextIdx = 0;
+    for (outerIdx = 0; outerIdx < listSize - 1; outerIdx++) {
+      for (int innerIdx = 0; innerIdx < listSize - outerIdx - 1; innerIdx = nextIdx) {
+        int currentIndex = ((ViewBean)childViews.get(innerIdx)).index;
+        nextIdx = innerIdx + 1;
+        if (currentIndex > ((ViewBean)childViews.get(nextIdx)).index) {
+          ViewBean tempBean = childViews.get(innerIdx);
+          childViews.set(innerIdx, childViews.get(nextIdx));
+          childViews.set(nextIdx, tempBean);
         } 
       } 
     } 
     for (ViewBean viewBean : list) {
       if (viewBean.parent.equals(parentBean.id)) {
-        i = viewBean.type;
-        if (i == 0 || i == 2 || i == 1 || i == 36 || i == 37 || i == 38 || i == 39 || i == 40 || i == 12)
+        int viewType = viewBean.type;
+        if (viewType == 0 || viewType == 2 || viewType == 1 || viewType == 36 || viewType == 37 || viewType == 38 || viewType == 39 || viewType == 40 || viewType == 12)
           childViews.addAll(getChildViews(list, viewBean)); 
       } 
     } 
@@ -290,24 +290,24 @@ public class ProjectDataStore {
     if (!this.viewMap.containsKey(fileBean.getXmlName()))
       return; 
     ArrayList views = this.viewMap.get(fileBean.getXmlName());
-    int i = views.size();
+    int size = views.size();
     while (true) {
-      int j = i - 1;
-      if (j >= 0) {
-        i = j;
-        if (((ViewBean)views.get(j)).id.equals(targetBean.id)) {
-          views.remove(j);
+      int idx = size - 1;
+      if (idx >= 0) {
+        size = idx;
+        if (((ViewBean)views.get(idx)).id.equals(targetBean.id)) {
+          views.remove(idx);
           break;
         } 
         continue;
       } 
       break;
     } 
-    i = fileBean.fileType;
-    if (i == 0) {
+    int fileType = fileBean.fileType;
+    if (fileType == 0) {
       removeEventsByTarget(fileBean.getJavaName(), targetBean.id);
       removeBlockReferences(fileBean.getJavaName(), targetBean.getClassInfo(), targetBean.id, true);
-    } else if (i == 1) {
+    } else if (fileType == 1) {
       ArrayList<Pair> customViewPairs = new ArrayList<>();
       for (Map.Entry<String, ArrayList<ViewBean>> entry : this.viewMap.entrySet()) {
         for (ViewBean viewBean : entry.getValue()) {
@@ -329,7 +329,7 @@ public class ProjectDataStore {
             ArrayList<BlockBean> blockBeans = (ArrayList)blockEntryMap.get(viewPair.second);
             if (blockBeans == null || blockBeans.size() <= 0)
               continue; 
-            i = blockBeans.size();
+            int i = blockBeans.size();
             label68: while (true) {
               int j = i - 1;
               if (j >= 0) {
@@ -366,7 +366,7 @@ public class ProjectDataStore {
           } 
         } 
       } 
-    } else if (i == 2) {
+    } else if (fileType == 2) {
       removeViewEventsByTarget(fileBean.getDrawersJavaName(), targetBean.id);
     } 
   }
@@ -1307,11 +1307,11 @@ public class ProjectDataStore {
         continue; 
       for (BlockBean blockBean : (ArrayList<BlockBean>)entry.getValue()) {
         if (blockBean.opCode.equals("definedFunc")) {
-          int i = blockBean.spec.indexOf(" ");
+          int spaceIdx = blockBean.spec.indexOf(" ");
           String specStr = blockBean.spec;
           String funcName = specStr;
-          if (i > 0)
-            funcName = specStr.substring(0, i); 
+          if (spaceIdx > 0)
+            funcName = specStr.substring(0, spaceIdx); 
           if (funcName.equals(data))
             return true; 
         } 
@@ -1487,10 +1487,10 @@ public class ProjectDataStore {
       ProjectDataParser ProjectDataParser = new ProjectDataParser(fileName);
       String parsedFileName = ProjectDataParser.getFileName();
       ProjectDataParser.DataType dataType = ProjectDataParser.getDataType();
-      int i = ScreenOrientationConstants.ORIENTATION_VALUES[dataType.ordinal()];
-      if (i == 1) {
+      int orientationValue = ScreenOrientationConstants.ORIENTATION_VALUES[dataType.ordinal()];
+      if (orientationValue == 1) {
         this.viewMap.put(parsedFileName, (ArrayList<ViewBean>)ProjectDataParser.parseData(data));
-      } else if (i == 2) {
+      } else if (orientationValue == 2) {
         this.fabMap.put(parsedFileName, (ViewBean)ProjectDataParser.parseData(data));
       }
     } catch (Exception exception) {
