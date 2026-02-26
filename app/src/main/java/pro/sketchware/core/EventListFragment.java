@@ -447,7 +447,7 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
         }
         try {
             MoreBlockCollectionManager.getInstance().addMoreBlock(moreBlockName, moreBlockSpec, moreBlockBlocks, true);
-        } catch (Exception unused2) {
+        } catch (Exception saveException) {
             SketchToast.warning(requireContext(), Helper.getResString(R.string.common_error_failed_to_save), 0).show();
         }
     }
