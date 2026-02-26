@@ -288,7 +288,7 @@ public class BlockPane extends RelativeLayout {
     this.dragBlock.setY(padding);
   }
   
-  public void buildSnapPoints(String excludeBlockId, boolean flag1, boolean flag2, boolean flag3, int start, int end) {
+  public void buildSnapPoints(String excludeBlockId, boolean endsWithF, boolean hasEmptySubStack, boolean isArgType, int start, int end) {
     this.blockSnapPoints = new ArrayList();
     int snapMargin = (int)(this.densityScale * 3.0F);
     for (int b = 0; b < getChildCount(); b++) {
@@ -296,24 +296,24 @@ public class BlockPane extends RelativeLayout {
       if (view instanceof BlockView) {
         BlockView rs = (BlockView)view;
         if (rs.getVisibility() != 8 && ((BaseBlockView)rs).parentBlock == null)
-          if (flag3) {
+          if (isArgType) {
             collectParameterSnapPoints(rs, excludeBlockId);
           } else if (!rs.isParameter) {
             boolean enableChildren = true;
-            if (!flag1 && !rs.isDefinitionBlock) {
+            if (!endsWithF && !rs.isDefinitionBlock) {
               int[] intValues = new int[2];
               rs.getLocationOnScreen(intValues);
               intValues[1] = intValues[1] - start - snapMargin;
               addSnapPoint(intValues, (View)rs, 1);
             } 
-            if (flag2 && !rs.isDefinitionBlock) {
+            if (hasEmptySubStack && !rs.isDefinitionBlock) {
               int[] intValues = new int[2];
               rs.getLocationOnScreen(intValues);
               intValues[0] = intValues[0] - ((BaseBlockView)rs).cornerRadius;
               intValues[1] = intValues[1] - end - snapMargin;
               addSnapPoint(intValues, (View)rs, 4);
             } 
-            if (!flag1 || flag2)
+            if (!endsWithF || hasEmptySubStack)
               enableChildren = false; 
             collectSnapPoints(rs, enableChildren);
           }  
@@ -565,18 +565,18 @@ public class BlockPane extends RelativeLayout {
       snapThreshold = 60;
     } 
     int minDistance = 100000;
-    Point point2 = new Point(start, end);
+    Point touchPoint = new Point(start, end);
     start = 0;
     end = minDistance;
     while (start < this.blockSnapPoints.size()) {
-      Object[] objects1 = this.blockSnapPoints.get(start);
-      int[] intValues = (int[])objects1[0];
-      int dx = point2.x - intValues[0];
-      int dy = point2.y - intValues[1];
+      Object[] snapEntry = this.blockSnapPoints.get(start);
+      int[] intValues = (int[])snapEntry[0];
+      int dx = touchPoint.x - intValues[0];
+      int dy = touchPoint.y - intValues[1];
       int distance = Math.abs(dx / 2) + Math.abs(dy);
       if (distance < end && distance < snapThreshold) {
-        if (isCompatibleBlock(blockView, (View)objects1[1])) {
-          objects = objects1;
+        if (isCompatibleBlock(blockView, (View)snapEntry[1])) {
+          objects = snapEntry;
           end = distance;
         } 
       } 
@@ -607,10 +607,10 @@ public class BlockPane extends RelativeLayout {
     boolean hasSubstack = blockView.hasSubstack();
     boolean showNotch = true;
     if (hasSubstack && -1 == blockView.subStack1) {
-      Object[] objects1 = this.currentSnapPoint;
-      if (objects1 != null) {
-        BlockView rs = (BlockView)objects1[1];
-        start = ((Integer)objects1[2]).intValue();
+      Object[] snapEntry = this.currentSnapPoint;
+      if (snapEntry != null) {
+        BlockView rs = (BlockView)snapEntry[1];
+        start = ((Integer)snapEntry[2]).intValue();
         if (start != 0) {
           if (start != 2) {
             if (start == 3)
