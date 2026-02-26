@@ -79,7 +79,7 @@ public class LogicEditorScrollView extends FrameLayout {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int min;
-        int i = 0;
+        int scrollOffsetY = 0;
         if (!isPossibleScroll()) {
             return false;
         }
@@ -117,15 +117,15 @@ public class LogicEditorScrollView extends FrameLayout {
                 if (getScrollY() <= 0) {
                     deltaY = 0;
                 }
-                i = Math.max(-getScrollY(), deltaY);
+                scrollOffsetY = Math.max(-getScrollY(), deltaY);
             } else {
                 int bottom = ((child.getBottom() - getScrollY()) - getHeight()) - getPaddingBottom();
                 if (bottom > 0) {
-                    i = Math.min(bottom, deltaY);
+                    scrollOffsetY = Math.min(bottom, deltaY);
                 }
             }
-            if (min != 0 || i != 0) {
-                scrollBy(min, i);
+            if (min != 0 || scrollOffsetY != 0) {
+                scrollBy(min, scrollOffsetY);
             }
         }
         return true;
