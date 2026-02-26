@@ -681,18 +681,18 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         dragParameterIndex = -1;
         dragConnectionType = 0;
         int[] iArr = new int[2];
-        BlockView rs2 = rs.parentBlock;
-        if (rs2 != null) {
-            dragSourceParent = rs2;
+        BlockView parentBlock = rs.parentBlock;
+        if (parentBlock != null) {
+            dragSourceParent = parentBlock;
             if (savedBlockBean.isEmpty()) {
                 savedBlockBean = blockPane.getBlocks();
             }
         }
-        BlockView rs3 = dragSourceParent;
-        if (rs3 == null) {
+        BlockView sourceParent = dragSourceParent;
+        if (sourceParent == null) {
             return;
         }
-        if (rs3.nextBlock == (Integer) rs.getTag()) {
+        if (sourceParent.nextBlock == (Integer) rs.getTag()) {
             dragConnectionType = 0;
         } else if (dragSourceParent.subStack1 == (Integer) rs.getTag()) {
             dragConnectionType = 2;
@@ -2177,9 +2177,9 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             editorDrawer.setDragEnabled(true);
             dummy.setDummyVisibility(View.GONE);
             if (!dummy.getAllow()) {
-                BlockView rs2 = (BlockView) v;
-                if (rs2.getBlockType() == 0) {
-                    blockPane.setBlockTreeVisibility(rs2, 0);
+                BlockView restoredBlock = (BlockView) v;
+                if (restoredBlock.getBlockType() == 0) {
+                    blockPane.setBlockTreeVisibility(restoredBlock, 0);
                     if (dragSourceParent != null) {
                         if (dragConnectionType == 0) {
                             dragSourceParent.nextBlock = (Integer) v.getTag();
@@ -2191,25 +2191,25 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                             dragSourceParent.subStack2 = (Integer) v.getTag();
                         }
                         if (dragConnectionType == 5) {
-                            dragSourceParent.replaceParameter((BaseBlockView) dragSourceParent.childViews.get(dragParameterIndex), rs2);
+                            dragSourceParent.replaceParameter((BaseBlockView) dragSourceParent.childViews.get(dragParameterIndex), restoredBlock);
                         }
-                        rs2.parentBlock = dragSourceParent;
+                        restoredBlock.parentBlock = dragSourceParent;
                         dragSourceParent.getRootBlock().layoutChain();
                     } else {
-                        rs2.getRootBlock().layoutChain();
+                        restoredBlock.getRootBlock().layoutChain();
                     }
                 }
                 onBlockDropped();
             } else if (logicTopMenu.isDeleteActive) {
-                BlockView rs5 = (BlockView) v;
-                if (rs5.getBlockType() == 2) {
+                BlockView deletedBlock = (BlockView) v;
+                if (deletedBlock.getBlockType() == 2) {
                     toggleDrawerVisibility(true);
-                    showDeleteFavoriteDialog(rs5.spec);
+                    showDeleteFavoriteDialog(deletedBlock.spec);
                 } else {
                     activeIconDelete(false);
                     int id;
                     try {
-                        id = Integer.parseInt(rs5.getBean().id);
+                        id = Integer.parseInt(deletedBlock.getBean().id);
                     } catch (NumberFormatException e) {
                         id = -1;
                     }
@@ -2230,10 +2230,10 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                         blockBean2 = null;
                     }
                     ArrayList<BlockBean> removedBlocks = new ArrayList<>();
-                    for (BlockView allChild : rs5.getAllChildren()) {
+                    for (BlockView allChild : deletedBlock.getAllChildren()) {
                         removedBlocks.add(allChild.getBean().clone());
                     }
-                    deleteBlock(rs5);
+                    deleteBlock(deletedBlock);
                     BlockBean currentParentData = null;
                     if (dragSourceParent != null) {
                         currentParentData = dragSourceParent.getBean().clone();
@@ -2245,8 +2245,8 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 }
             } else if (logicTopMenu.isFavoriteActive) {
                 setFavoriteActive(false);
-                BlockView rs7 = (BlockView) v;
-                blockPane.setBlockTreeVisibility(rs7, 0);
+                BlockView favoritedBlock = (BlockView) v;
+                blockPane.setBlockTreeVisibility(favoritedBlock, 0);
                 if (dragSourceParent != null) {
                     if (dragConnectionType == 0) {
                         dragSourceParent.nextBlock = (Integer) v.getTag();
@@ -2258,14 +2258,14 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                         dragSourceParent.subStack2 = (Integer) v.getTag();
                     }
                     if (dragConnectionType == 5) {
-                        dragSourceParent.replaceParameter((BaseBlockView) dragSourceParent.childViews.get(dragParameterIndex), rs7);
+                        dragSourceParent.replaceParameter((BaseBlockView) dragSourceParent.childViews.get(dragParameterIndex), favoritedBlock);
                     }
-                    rs7.parentBlock = dragSourceParent;
+                    favoritedBlock.parentBlock = dragSourceParent;
                     dragSourceParent.getRootBlock().layoutChain();
                 } else {
-                    rs7.getRootBlock().layoutChain();
+                    favoritedBlock.getRootBlock().layoutChain();
                 }
-                showSaveToFavorites(rs7);
+                showSaveToFavorites(favoritedBlock);
             } else if (logicTopMenu.isDetailActive) {
                 setDetailActive(false);
                 if (v instanceof DefinitionBlockView) {
@@ -2273,8 +2273,8 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 }
             } else if (logicTopMenu.isCopyActive) {
                 setCopyActive(false);
-                BlockView rs10 = (BlockView) v;
-                blockPane.setBlockTreeVisibility(rs10, 0);
+                BlockView copiedBlock = (BlockView) v;
+                blockPane.setBlockTreeVisibility(copiedBlock, 0);
                 if (dragSourceParent != null) {
                     if (dragConnectionType == 0) {
                         dragSourceParent.nextBlock = (Integer) v.getTag();
@@ -2286,17 +2286,17 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                         dragSourceParent.subStack2 = (Integer) v.getTag();
                     }
                     if (dragConnectionType == 5) {
-                        dragSourceParent.replaceParameter((BaseBlockView) dragSourceParent.childViews.get(dragParameterIndex), rs10);
+                        dragSourceParent.replaceParameter((BaseBlockView) dragSourceParent.childViews.get(dragParameterIndex), copiedBlock);
                     }
-                    rs10.parentBlock = dragSourceParent;
+                    copiedBlock.parentBlock = dragSourceParent;
                     dragSourceParent.getRootBlock().layoutChain();
                 } else {
                     // somehow the blocks is moving to the last position
                     // commenting it to fix it too
-                    // rs10.getRootBlock().layoutChain();
+                    // copiedBlock.getRootBlock().layoutChain();
                 }
                 ArrayList<BlockBean> clonedBeans = new ArrayList<>();
-                for (BlockView rs : rs10.getAllChildren()) {
+                for (BlockView rs : copiedBlock.getAllChildren()) {
                     BlockBean clonedBean = rs.getBean().clone();
                     int id;
                     try {
