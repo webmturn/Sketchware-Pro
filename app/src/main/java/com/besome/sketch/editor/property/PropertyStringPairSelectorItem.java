@@ -132,18 +132,18 @@ public class PropertyStringPairSelectorItem extends RelativeLayout implements Vi
         }
         dialog.setView(view);
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_select), (v, which) -> {
-            int childCount1 = radioGroupContent.getChildCount();
-            int counter1 = 0;
+            int radioCount = radioGroupContent.getChildCount();
+            int idx = 0;
             while (true) {
-                if (counter1 >= childCount1) {
+                if (idx >= radioCount) {
                     break;
                 }
-                RadioButton radioButton = (RadioButton) radioGroupContent.getChildAt(counter1);
+                RadioButton radioButton = (RadioButton) radioGroupContent.getChildAt(idx);
                 if (radioButton.isChecked()) {
                     setValue(radioButton.getTag().toString());
                     break;
                 }
-                counter1++;
+                idx++;
             }
             if (valueChangeListener != null) {
                 valueChangeListener.onPropertyChanged(key, value);

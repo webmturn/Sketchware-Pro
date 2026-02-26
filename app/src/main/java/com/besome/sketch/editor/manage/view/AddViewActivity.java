@@ -196,10 +196,10 @@ public class AddViewActivity extends BaseAppCompatActivity {
         binding.toolbar.setTitle(R.string.view_title_create_new);
         binding.toolbar.setNavigationOnClickListener(v -> finish());
 
-        Intent intent1 = getIntent();
-        screenNames = intent1.getStringArrayListExtra("screen_names");
-        requestCode = intent1.getIntExtra("request_code", REQUEST_CODE_ADD);
-        projectFileBean = intent1.getParcelableExtra("project_file");
+        Intent intent = getIntent();
+        screenNames = intent.getStringArrayListExtra("screen_names");
+        requestCode = intent.getIntExtra("request_code", REQUEST_CODE_ADD);
+        projectFileBean = intent.getParcelableExtra("project_file");
         if (projectFileBean != null) {
             binding.toolbar.setTitle(String.format(Helper.getResString(R.string.view_title_edit), projectFileBean.fileName));
         }
