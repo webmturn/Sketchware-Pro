@@ -109,11 +109,11 @@ public class ShowBlockCollectionActivity extends BaseAppCompatActivity implement
     }
 
     private void resizeBottomViews() {
-        int i = getResources().getDisplayMetrics().heightPixels;
+        int screenHeight = getResources().getDisplayMetrics().heightPixels;
         binding.layoutButton.measure(0, 0);
         binding.editor.setLayoutParams(new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                ((i - DeviceUtil.getToolbarHeight((Context) this)) - UI.getStatusBarHeight(this)) - binding.layoutButton.getMeasuredHeight()));
+                ((screenHeight - DeviceUtil.getToolbarHeight((Context) this)) - UI.getStatusBarHeight(this)) - binding.layoutButton.getMeasuredHeight()));
         binding.editor.requestLayout();
     }
 

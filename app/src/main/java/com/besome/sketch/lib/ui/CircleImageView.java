@@ -41,11 +41,11 @@ public class CircleImageView extends AppCompatImageView {
       return; 
     if (getWidth() != 0 && getHeight() != 0) {
       Bitmap bitmap = bitmapDrawable.getBitmap();
-      int i = getMeasuredWidth();
-      int j = getMeasuredHeight();
+      int measuredWidth = getMeasuredWidth();
+      int measuredHeight = getMeasuredHeight();
       if (bitmap != null) {
-        if (i != bitmap.getWidth() || j != bitmap.getHeight())
-          bitmap = Bitmap.createScaledBitmap(bitmap, i, j, true); 
+        if (measuredWidth != bitmap.getWidth() || measuredHeight != bitmap.getHeight())
+          bitmap = Bitmap.createScaledBitmap(bitmap, measuredWidth, measuredHeight, true); 
         canvas.drawBitmap(createCircleBitmap(bitmap), 0.0F, 0.0F, null);
       } 
     } 
