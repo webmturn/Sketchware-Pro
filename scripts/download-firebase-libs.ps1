@@ -18,7 +18,7 @@ $ErrorActionPreference = "Stop"
 # ============================================================
 
 $libraries = @(
-    # ═══ Firebase libraries (upgraded) ═══
+    # --- Firebase libraries (upgraded) ---
     @("com.google.firebase", "firebase-common", "21.0.0", "aar"),
     @("com.google.firebase", "firebase-components", "18.0.0", "aar"),
     @("com.google.firebase", "firebase-auth", "23.1.0", "aar"),
@@ -30,7 +30,7 @@ $libraries = @(
     @("com.google.firebase", "firebase-iid-interop", "17.1.0", "aar"),
     @("com.google.firebase", "firebase-measurement-connector", "19.0.0", "aar"),
 
-    # ═══ Firebase libraries (new) ═══
+    # --- Firebase libraries (new) ---
     @("com.google.firebase", "firebase-annotations", "16.2.0", "jar"),
     @("com.google.firebase", "firebase-appcheck", "17.1.0", "aar"),
     @("com.google.firebase", "firebase-appcheck-interop", "17.1.0", "aar"),
@@ -42,7 +42,7 @@ $libraries = @(
     @("com.google.firebase", "firebase-installations", "17.2.0", "aar"),
     @("com.google.firebase", "firebase-installations-interop", "17.1.0", "aar"),
 
-    # ═══ Play Services (upgraded) ═══
+    # --- Play Services (upgraded) ---
     @("com.google.android.gms", "play-services-base", "18.1.0", "aar"),
     @("com.google.android.gms", "play-services-basement", "18.3.0", "aar"),
     @("com.google.android.gms", "play-services-tasks", "18.1.0", "aar"),
@@ -51,16 +51,16 @@ $libraries = @(
     @("com.google.android.gms", "play-services-auth-base", "18.0.4", "aar"),
     @("com.google.android.gms", "play-services-stats", "17.0.2", "aar"),
 
-    # ═══ Play Services (new) ═══
+    # --- Play Services (new) ---
     @("com.google.android.gms", "play-services-cloud-messaging", "17.2.0", "aar"),
     @("com.google.android.gms", "play-services-fido", "20.1.0", "aar"),
 
-    # ═══ Transport (new) ═══
+    # --- Transport (new) ---
     @("com.google.android.datatransport", "transport-api", "3.1.0", "aar"),
     @("com.google.android.datatransport", "transport-runtime", "3.1.8", "aar"),
     @("com.google.android.datatransport", "transport-backend-cct", "3.1.8", "aar"),
 
-    # ═══ Auth extra dependencies (new) ═══
+    # --- Auth extra dependencies (new) ---
     @("com.google.android.play", "integrity", "1.3.0", "aar"),
     @("com.google.android.play", "core-common", "2.0.3", "aar"),
     @("com.google.android.recaptcha", "recaptcha", "18.5.1", "aar")
