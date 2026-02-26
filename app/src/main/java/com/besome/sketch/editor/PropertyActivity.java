@@ -61,7 +61,7 @@ public class PropertyActivity extends BaseAppCompatActivity implements PropertyC
     private LinearLayout content;
 
     @Override
-    public void onPropertyChanged(String var1, Object var2) {
+    public void onPropertyChanged(String key, Object value) {
     }
 
     public void setupPropertyItems() {
@@ -71,9 +71,9 @@ public class PropertyActivity extends BaseAppCompatActivity implements PropertyC
     }
 
     private void validateImageResources() {
-        ArrayList<String> var1 = ProjectDataManager.getResourceManager(sc_id).getImageNames();
+        ArrayList<String> imageNames = ProjectDataManager.getResourceManager(sc_id).getImageNames();
         PropertyResourceItem resourceProperty;
-        if (!var1.contains(viewBean.layout.backgroundResource)) {
+        if (!imageNames.contains(viewBean.layout.backgroundResource)) {
             viewBean.layout.backgroundResource = null;
             resourceProperty = content.findViewWithTag("property_background_resource");
             if (resourceProperty != null) {
@@ -81,7 +81,7 @@ public class PropertyActivity extends BaseAppCompatActivity implements PropertyC
             }
         }
 
-        if (viewBean.type == 6 && !var1.contains(viewBean.image.resName)) {
+        if (viewBean.type == 6 && !imageNames.contains(viewBean.image.resName)) {
             viewBean.image.resName = "default_image";
             resourceProperty = content.findViewWithTag("property_image");
             if (resourceProperty != null) {
@@ -91,12 +91,12 @@ public class PropertyActivity extends BaseAppCompatActivity implements PropertyC
 
         for (String fileName : ProjectDataManager.getFileManager(sc_id).getXmlNames()) {
             for (ViewBean bean : ProjectDataManager.getProjectDataManager(sc_id).getViews(fileName)) {
-                if (bean.type == 6 && !var1.contains(bean.image.resName)) {
+                if (bean.type == 6 && !imageNames.contains(bean.image.resName)) {
                     bean.image.resName = "default_image";
                     isImageEdited = true;
                 }
 
-                if (!var1.contains(bean.layout.backgroundResource)) {
+                if (!imageNames.contains(bean.layout.backgroundResource)) {
                     bean.layout.backgroundResource = null;
                     isImageEdited = true;
                 }
@@ -104,13 +104,13 @@ public class PropertyActivity extends BaseAppCompatActivity implements PropertyC
         }
 
         for (String fileName : ProjectDataManager.getFileManager(sc_id).getJavaNames()) {
-            for (Map.Entry<String, ArrayList<BlockBean>> var4 : ProjectDataManager.getProjectDataManager(sc_id).getBlockMap(fileName).entrySet()) {
-                for (BlockBean bean : var4.getValue()) {
+            for (Map.Entry<String, ArrayList<BlockBean>> entry : ProjectDataManager.getProjectDataManager(sc_id).getBlockMap(fileName).entrySet()) {
+                for (BlockBean bean : entry.getValue()) {
                     if ("setImage".equals(bean.opCode)) {
-                        if (!var1.contains(bean.parameters.get(1))) {
+                        if (!imageNames.contains(bean.parameters.get(1))) {
                             bean.parameters.set(1, "default_image");
                         }
-                    } else if ("setBgResource".equals(bean.opCode) && !var1.contains(bean.parameters.get(1))) {
+                    } else if ("setBgResource".equals(bean.opCode) && !imageNames.contains(bean.parameters.get(1))) {
                         bean.parameters.set(1, "NONE");
                     }
                 }
@@ -128,11 +128,11 @@ public class PropertyActivity extends BaseAppCompatActivity implements PropertyC
 
         ViewHistoryManager.getInstance(sc_id).recordUpdate(projectFileBean.getXmlName(), viewBean.clone(), this.viewBean);
         viewBean.copy(this.viewBean);
-        Intent var2 = new Intent();
-        var2.putExtra("view_id", this.viewBean.id);
-        var2.putExtra("is_edit_image", isImageEdited);
-        var2.putExtra("bean", viewBean);
-        setResult(RESULT_OK, var2);
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("view_id", this.viewBean.id);
+        resultIntent.putExtra("is_edit_image", isImageEdited);
+        resultIntent.putExtra("bean", viewBean);
+        setResult(RESULT_OK, resultIntent);
         finish();
     }
 
@@ -150,10 +150,10 @@ public class PropertyActivity extends BaseAppCompatActivity implements PropertyC
         imageManagerLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     if (result.getResultCode() == RESULT_OK && ProjectDataManager.getResourceManager(sc_id) != null && result.getData() != null) {
-                        String var4 = result.getData().getStringExtra("sc_id");
+                        String resultScId = result.getData().getStringExtra("sc_id");
                         ArrayList<ProjectResourceBean> resultList = result.getData().getParcelableArrayListExtra("result");
-                        if (ProjectDataManager.getResourceManager(var4) != null) {
-                            ProjectDataManager.getResourceManager(var4).setImages(resultList);
+                        if (ProjectDataManager.getResourceManager(resultScId) != null) {
+                            ProjectDataManager.getResourceManager(resultScId).setImages(resultList);
                             validateImageResources();
                         }
                     }
@@ -246,10 +246,10 @@ public class PropertyActivity extends BaseAppCompatActivity implements PropertyC
     }
 
     public void openImageManager() {
-        Intent var1 = new Intent(getApplicationContext(), ManageImageActivity.class);
-        var1.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        var1.putExtra("sc_id", sc_id);
-        imageManagerLauncher.launch(var1);
+        Intent intent = new Intent(getApplicationContext(), ManageImageActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.putExtra("sc_id", sc_id);
+        imageManagerLauncher.launch(intent);
     }
 
     public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
@@ -324,7 +324,7 @@ public class PropertyActivity extends BaseAppCompatActivity implements PropertyC
             }
 
             @Override
-            public void onClick(View var1) {
+            public void onClick(View view) {
                 if (!UIHelper.isClickThrottled()) {
                     if (getLayoutPosition() != -1) {
                         if (getLayoutPosition() != layoutPosition) {

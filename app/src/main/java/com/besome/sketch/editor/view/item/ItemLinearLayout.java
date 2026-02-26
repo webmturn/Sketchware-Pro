@@ -30,18 +30,18 @@ public class ItemLinearLayout extends LinearLayout implements ItemView, ScrollCo
 
     @Override
     public void reindexChildren() {
-        int var1 = 0;
+        int childIdx = 0;
 
-        int var4;
-        for (int i = 0; var1 < getChildCount(); i = var4) {
-            View child = getChildAt(var1);
-            var4 = i;
+        int nextIndex;
+        for (int i = 0; childIdx < getChildCount(); i = nextIndex) {
+            View child = getChildAt(childIdx);
+            nextIndex = i;
             if (child instanceof ItemView) {
                 ((ItemView) child).getBean().index = i;
-                var4 = i + 1;
+                nextIndex = i + 1;
             }
 
-            ++var1;
+            ++childIdx;
         }
 
     }
@@ -62,25 +62,25 @@ public class ItemLinearLayout extends LinearLayout implements ItemView, ScrollCo
         if (index > childCount) {
             super.addView(child);
         } else {
-            byte var4 = -1;
-            int var5 = 0;
+            byte defaultGoneIndex = -1;
+            int searchIdx = 0;
 
-            int var6;
+            int goneChildIndex;
             while (true) {
-                var6 = var4;
-                if (var5 >= childCount) {
+                goneChildIndex = defaultGoneIndex;
+                if (searchIdx >= childCount) {
                     break;
                 }
 
-                if (getChildAt(var5).getVisibility() == View.GONE) {
-                    var6 = var5;
+                if (getChildAt(searchIdx).getVisibility() == View.GONE) {
+                    goneChildIndex = searchIdx;
                     break;
                 }
 
-                ++var5;
+                ++searchIdx;
             }
 
-            if (var6 >= 0 && index >= var6) {
+            if (goneChildIndex >= 0 && index >= goneChildIndex) {
                 super.addView(child, index + 1);
             } else {
                 super.addView(child, index);

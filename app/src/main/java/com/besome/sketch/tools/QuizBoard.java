@@ -55,17 +55,17 @@ public class QuizBoard extends LinearLayout implements View.OnClickListener {
         }
     }
 
-    private void setTimeoutProgress(int var1) {
-        int var2 = var1 / 250;
-        var1 = quizBinding.timeoutBar.getChildCount();
+    private void setTimeoutProgress(int elapsedMs) {
+        int filledCount = elapsedMs / 250;
+        int childCount = quizBinding.timeoutBar.getChildCount();
 
         while (true) {
-            --var1;
-            if (var1 < var2) {
+            --childCount;
+            if (childCount < filledCount) {
                 return;
             }
 
-            quizBinding.timeoutBar.getChildAt(var1).setBackgroundColor(0xffeeeeee);
+            quizBinding.timeoutBar.getChildAt(childCount).setBackgroundColor(0xffeeeeee);
         }
     }
 
@@ -86,8 +86,8 @@ public class QuizBoard extends LinearLayout implements View.OnClickListener {
             quizList = CompileQuizManager.getQuizQuestions();
         }
 
-        int var1 = new Random().nextInt(quizList.size());
-        setData(quizList.remove(var1));
+        int randomIndex = new Random().nextInt(quizList.size());
+        setData(quizList.remove(randomIndex));
         startTimer();
     }
 
@@ -129,15 +129,15 @@ public class QuizBoard extends LinearLayout implements View.OnClickListener {
     }
 
     public final void startTimer() {
-        QuizCountDownTimer var1 = countdownTimer;
-        if (var1 != null) {
-            var1.cancel();
+        QuizCountDownTimer timer = countdownTimer;
+        if (timer != null) {
+            timer.cancel();
         }
 
         countdownTimer = null;
-        var1 = new QuizCountDownTimer(15000L, 250L);
-        countdownTimer = var1;
-        var1.start();
+        timer = new QuizCountDownTimer(15000L, 250L);
+        countdownTimer = timer;
+        timer.start();
     }
 
     public void showAnswer() {
@@ -163,22 +163,22 @@ public class QuizBoard extends LinearLayout implements View.OnClickListener {
     }
 
     @Override
-    public void onClick(View var1) {
+    public void onClick(View view) {
         if (!UIHelper.isClickThrottled()) {
             cancelTimer();
-            int id = var1.getId();
+            int id = view.getId();
             if (id == R.id.img_answer_o || id == R.id.img_answer_x || id == R.id.view_answer_a || id == R.id.view_answer_b) {
                 showAnswer();
             }
             if (quizBean.type == 2) {
-                var1.getId();
+                view.getId();
             }
         }
     }
 
     public class QuizCountDownTimer extends CountDownTimer {
-        public QuizCountDownTimer(long var2, long var4) {
-            super(var2, var4);
+        public QuizCountDownTimer(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
         }
 
         @Override

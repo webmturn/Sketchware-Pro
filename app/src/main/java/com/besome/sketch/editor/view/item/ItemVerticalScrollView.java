@@ -34,66 +34,67 @@ public class ItemVerticalScrollView extends FrameLayout implements ItemView, Scr
     }
 
     private int computeScrollDelta(Rect rect) {
-        int var2 = getChildCount();
-        byte var3 = 0;
-        if (var2 == 0) {
+        int childCount = getChildCount();
+        byte defaultDelta = 0;
+        if (childCount == 0) {
             return 0;
         } else {
-            int var4 = getHeight();
-            int var5 = getScrollY();
-            var2 = var5 + var4;
-            int var6 = getVerticalFadingEdgeLength();
-            int var7 = var5;
+            int viewHeight = getHeight();
+            int scrollY = getScrollY();
+            int bottomEdge = scrollY + viewHeight;
+            int fadingEdge = getVerticalFadingEdgeLength();
+            int topEdge = scrollY;
             if (rect.top > 0) {
-                var7 = var5 + var6;
+                topEdge = scrollY + fadingEdge;
             }
 
-            var5 = var2;
+            int adjustedBottom = bottomEdge;
             if (rect.bottom < getChildAt(0).getHeight()) {
-                var5 = var2 - var6;
+                adjustedBottom = bottomEdge - fadingEdge;
             }
 
-            if (rect.bottom > var5 && rect.top > var7) {
-                if (rect.height() > var4) {
-                    var2 = rect.top - var7;
+            int delta;
+            if (rect.bottom > adjustedBottom && rect.top > topEdge) {
+                if (rect.height() > viewHeight) {
+                    delta = rect.top - topEdge;
                 } else {
-                    var2 = rect.bottom - var5;
+                    delta = rect.bottom - adjustedBottom;
                 }
 
-                var2 = Math.min(var2, getChildAt(0).getBottom() - var5);
+                delta = Math.min(delta, getChildAt(0).getBottom() - adjustedBottom);
             } else {
-                var2 = var3;
-                if (rect.top < var7) {
-                    if (rect.bottom < var5) {
-                        if (rect.height() > var4) {
-                            var2 = -(var5 - rect.bottom);
+                delta = defaultDelta;
+                if (rect.top < topEdge) {
+                    if (rect.bottom < adjustedBottom) {
+                        if (rect.height() > viewHeight) {
+                            delta = -(adjustedBottom - rect.bottom);
                         } else {
-                            var2 = -(var7 - rect.top);
+                            delta = -(topEdge - rect.top);
                         }
 
-                        var2 = Math.max(var2, -getScrollY());
+                        delta = Math.max(delta, -getScrollY());
                     }
                 }
             }
 
-            return var2;
+            return delta;
         }
     }
 
     @Override
     public void reindexChildren() {
-        int var1 = 0;
+        int childIdx = 0;
 
-        int var4;
-        for (int var2 = 0; var1 < getChildCount(); var2 = var4) {
-            View var3 = getChildAt(var1);
-            var4 = var2;
-            if (var3 instanceof ItemView) {
-                ((ItemView) var3).getBean().index = var2;
-                var4 = var2 + 1;
+        int nextIndex;
+        for (int itemIndex = 0; childIdx < getChildCount(); itemIndex = nextIndex) {
+            View child = getChildAt(childIdx);
+            nextIndex = itemIndex;
+            if (child instanceof ItemView) {
+                ((ItemView) child).getBean().index = itemIndex;
+                nextIndex = itemIndex + 1;
             }
 
-            ++var1;
+            ++childIdx;
         }
 
     }
@@ -104,18 +105,18 @@ public class ItemVerticalScrollView extends FrameLayout implements ItemView, Scr
         }
     }
 
-    private void initialize(Context var1) {
+    private void initialize(Context context) {
         setDrawingCacheEnabled(true);
-        setMinimumWidth((int) ViewUtil.dpToPx(var1, 32.0F));
-        setMinimumHeight((int) ViewUtil.dpToPx(var1, 32.0F));
+        setMinimumWidth((int) ViewUtil.dpToPx(context, 32.0F));
+        setMinimumHeight((int) ViewUtil.dpToPx(context, 32.0F));
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setStrokeWidth(ViewUtil.dpToPx(getContext(), 2.0F));
     }
 
-    private boolean isViewVisible(View view, int var2, int var3) {
+    private boolean isViewVisible(View view, int offset, int viewportHeight) {
         view.getDrawingRect(tempRect);
         offsetDescendantRectToMyCoords(view, tempRect);
-        return tempRect.bottom + var2 >= getScrollY() && tempRect.top - var2 <= getScrollY() + var3;
+        return tempRect.bottom + offset >= getScrollY() && tempRect.top - offset <= getScrollY() + viewportHeight;
     }
 
     @Override
@@ -124,25 +125,25 @@ public class ItemVerticalScrollView extends FrameLayout implements ItemView, Scr
         if (index > childCount) {
             super.addView(view);
         } else {
-            byte var4 = -1;
-            int var5 = 0;
+            byte defaultGoneIndex = -1;
+            int searchIdx = 0;
 
-            int var6;
+            int goneChildIndex;
             while (true) {
-                var6 = var4;
-                if (var5 >= childCount) {
+                goneChildIndex = defaultGoneIndex;
+                if (searchIdx >= childCount) {
                     break;
                 }
 
-                if (getChildAt(var5).getVisibility() == View.GONE) {
-                    var6 = var5;
+                if (getChildAt(searchIdx).getVisibility() == View.GONE) {
+                    goneChildIndex = searchIdx;
                     break;
                 }
 
-                ++var5;
+                ++searchIdx;
             }
 
-            if (var6 >= 0 && index >= var6) {
+            if (goneChildIndex >= 0 && index >= goneChildIndex) {
                 super.addView(view, index + 1);
             } else {
                 super.addView(view, index);
@@ -224,35 +225,35 @@ public class ItemVerticalScrollView extends FrameLayout implements ItemView, Scr
         } else if (getChildCount() <= 0) {
             return false;
         } else {
-            View var2 = getChildAt(0);
-            int var3 = motionEvent.getAction();
+            View firstChild = getChildAt(0);
+            int action = motionEvent.getAction();
             float motionEventY = motionEvent.getY();
-            if (var3 != 0) {
-                if (var3 != 1) {
-                    if (var3 == 2) {
+            if (action != 0) {
+                if (action != 1) {
+                    if (action == 2) {
                         if (lastMotionY < 0.0F) {
                             lastMotionY = motionEventY;
                         }
 
-                        var3 = (int) (lastMotionY - motionEventY);
+                        int scrollDelta = (int) (lastMotionY - motionEventY);
                         lastMotionY = motionEventY;
-                        if (var3 <= 0) {
+                        if (scrollDelta <= 0) {
                             if (getScrollY() <= 0) {
-                                var3 = 0;
+                                scrollDelta = 0;
                             }
 
-                            var3 = Math.max(-getScrollY(), var3);
+                            scrollDelta = Math.max(-getScrollY(), scrollDelta);
                         } else {
-                            int var5 = var2.getBottom() - getScrollY() - getHeight() + getPaddingRight();
-                            if (var5 > 0) {
-                                var3 = Math.min(var5, var3);
+                            int maxScroll = firstChild.getBottom() - getScrollY() - getHeight() + getPaddingRight();
+                            if (maxScroll > 0) {
+                                scrollDelta = Math.min(maxScroll, scrollDelta);
                             } else {
-                                var3 = 0;
+                                scrollDelta = 0;
                             }
                         }
 
-                        if (var3 != 0) {
-                            scrollBy(0, var3);
+                        if (scrollDelta != 0) {
+                            scrollBy(0, scrollDelta);
                         }
                     }
                 } else {
@@ -272,11 +273,11 @@ public class ItemVerticalScrollView extends FrameLayout implements ItemView, Scr
         if (MeasureSpec.getMode(heightMeasureSpec) != MeasureSpec.UNSPECIFIED) {
             if (getChildCount() > 0) {
                 View child = getChildAt(0);
-                ViewGroup.LayoutParams var4 = child.getLayoutParams();
+                ViewGroup.LayoutParams childParams = child.getLayoutParams();
                 heightMeasureSpec = getPaddingLeft();
                 int measuringSize = getMeasuredHeight() - (getPaddingTop() + getPaddingBottom());
                 if (child.getMeasuredHeight() < measuringSize) {
-                    child.measure(FrameLayout.getChildMeasureSpec(widthMeasureSpec, heightMeasureSpec + getPaddingRight(), var4.width), MeasureSpec.makeMeasureSpec(measuringSize, MeasureSpec.EXACTLY));
+                    child.measure(FrameLayout.getChildMeasureSpec(widthMeasureSpec, heightMeasureSpec + getPaddingRight(), childParams.width), MeasureSpec.makeMeasureSpec(measuringSize, MeasureSpec.EXACTLY));
                 }
             }
         }

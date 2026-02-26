@@ -866,60 +866,60 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
         displayWidth = getResources().getDisplayMetrics().widthPixels;
         displayHeight = getResources().getDisplayMetrics().heightPixels;
         boolean isLandscapeMode = displayWidth > displayHeight;
-        int var4 = (int) (dip * (!isLandscapeMode ? 12.0F : 24.0F));
-        int var5 = (int) (dip * (!isLandscapeMode ? 20.0F : 10.0F));
+        int paddingX = (int) (dip * (!isLandscapeMode ? 12.0F : 24.0F));
+        int paddingY = (int) (dip * (!isLandscapeMode ? 20.0F : 10.0F));
         int statusBarHeight = UI.getStatusBarHeight(getContext());
         int toolBarHeight = DeviceUtil.getToolbarHeight(getContext());
-        int var9 = displayWidth - (int) (120.0F * dip);
-        int var8 = displayHeight - statusBarHeight - toolBarHeight - (int) (dip * 48.0F) - (int) (dip * 48.0F);
-        float var11 = Math.min((float) var9 / (float) displayWidth, (float) var8 / (float) displayHeight);
-        float var3 = Math.min((float) (var9 - var4 * 2) / (float) displayWidth, (float) (var8 - var5 * 2) / (float) displayHeight);
+        int availableWidth = displayWidth - (int) (120.0F * dip);
+        int availableHeight = displayHeight - statusBarHeight - toolBarHeight - (int) (dip * 48.0F) - (int) (dip * 48.0F);
+        float containerScale = Math.min((float) availableWidth / (float) displayWidth, (float) availableHeight / (float) displayHeight);
+        float contentScale = Math.min((float) (availableWidth - paddingX * 2) / (float) displayWidth, (float) (availableHeight - paddingY * 2) / (float) displayHeight);
 
         screenContainer.setLayoutParams(new FrameLayout.LayoutParams(displayWidth, displayHeight));
-        screenContainer.setScaleX(var11);
-        screenContainer.setScaleY(var11);
-        screenContainer.setX(-((int) ((displayWidth - displayWidth * var11) / 2.0F)));
-        screenContainer.setY(-((int) ((displayHeight - displayHeight * var11) / 2.0F)));
-        int var10 = var4 - (int) ((displayWidth - displayWidth * var3) / 2.0F);
-        int var13 = var5;
+        screenContainer.setScaleX(containerScale);
+        screenContainer.setScaleY(containerScale);
+        screenContainer.setX(-((int) ((displayWidth - displayWidth * containerScale) / 2.0F)));
+        screenContainer.setY(-((int) ((displayHeight - displayHeight * containerScale) / 2.0F)));
+        int offsetX = paddingX - (int) ((displayWidth - displayWidth * contentScale) / 2.0F);
+        int currentY = paddingY;
         if (bgStatus.getVisibility() == View.VISIBLE) {
             bgStatus.setLayoutParams(new FrameLayout.LayoutParams(displayWidth, statusBarHeight));
-            bgStatus.setScaleX(var3);
-            bgStatus.setScaleY(var3);
-            var11 = statusBarHeight;
-            float var12 = var11 * var3;
-            bgStatus.setX(var10);
-            bgStatus.setY(var5 - (int) ((var11 - var12) / 2.0F));
-            var13 = var5 + (int) var12;
+            bgStatus.setScaleX(contentScale);
+            bgStatus.setScaleY(contentScale);
+            float statusHeight = statusBarHeight;
+            float scaledStatusHeight = statusHeight * contentScale;
+            bgStatus.setX(offsetX);
+            bgStatus.setY(paddingY - (int) ((statusHeight - scaledStatusHeight) / 2.0F));
+            currentY = paddingY + (int) scaledStatusHeight;
         }
 
-        var8 = var13;
+        int contentY = currentY;
         if (toolbar.getVisibility() == View.VISIBLE) {
             toolbar.setLayoutParams(new FrameLayout.LayoutParams(displayWidth, toolBarHeight));
-            toolbar.setScaleX(var3);
-            toolbar.setScaleY(var3);
-            var11 = (float) toolBarHeight * var3;
-            toolbar.setX(var10);
-            toolbar.setY(var13 - (int) (((float) toolBarHeight - var11) / 2.0F));
-            var8 = var13 + (int) var11;
+            toolbar.setScaleX(contentScale);
+            toolbar.setScaleY(contentScale);
+            float scaledToolbarHeight = (float) toolBarHeight * contentScale;
+            toolbar.setX(offsetX);
+            toolbar.setY(currentY - (int) (((float) toolBarHeight - scaledToolbarHeight) / 2.0F));
+            contentY = currentY + (int) scaledToolbarHeight;
         }
 
-        var13 = displayHeight;
+        int remainingHeight = displayHeight;
         if (bgStatus.getVisibility() == View.VISIBLE) {
-            var13 = displayHeight - statusBarHeight;
+            remainingHeight = displayHeight - statusBarHeight;
         }
 
-        var5 = var13;
+        int viewPaneHeight = remainingHeight;
         if (toolbar.getVisibility() == View.VISIBLE) {
-            var5 = var13 - toolBarHeight;
+            viewPaneHeight = remainingHeight - toolBarHeight;
         }
 
-        viewPane.setLayoutParams(new FrameLayout.LayoutParams(displayWidth, var5));
-        viewPane.setScaleX(var3);
-        viewPane.setScaleY(var3);
-        var11 = var5;
-        viewPane.setX(var10);
-        viewPane.setY(var8 - (int) ((var11 - var3 * var11) / 2.0F));
+        viewPane.setLayoutParams(new FrameLayout.LayoutParams(displayWidth, viewPaneHeight));
+        viewPane.setScaleX(contentScale);
+        viewPane.setScaleY(contentScale);
+        float paneHeight = viewPaneHeight;
+        viewPane.setX(offsetX);
+        viewPane.setY(contentY - (int) ((paneHeight - contentScale * paneHeight) / 2.0F));
         isLayoutChanged = false;
     }
 
