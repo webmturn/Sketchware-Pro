@@ -44,9 +44,9 @@ public class BlockPane extends RelativeLayout {
     BlockView rs = blockView;
     if (blockView.getBlockType() == 1) {
       Context context = getContext();
-      int i = this.nextBlockId;
-      this.nextBlockId = i + 1;
-      rs = new BlockView(context, i, blockView.spec, ((BaseBlockView)blockView).blockType, ((BaseBlockView)blockView).componentType, blockView.opCode);
+      int blockId = this.nextBlockId;
+      this.nextBlockId = blockId + 1;
+      rs = new BlockView(context, blockId, blockView.spec, ((BaseBlockView)blockView).blockType, ((BaseBlockView)blockView).componentType, blockView.opCode);
     } 
     rs.blockPane = this;
     addView((View)rs);
@@ -135,22 +135,22 @@ public class BlockPane extends RelativeLayout {
           setBlockTreeVisibility((BlockView)view, position); 
       } 
       if (blockView.hasSubstack()) {
-        int j = blockView.subStack1;
-        if (j != -1 && !visited.contains(j)) {
-          BlockView sub = (BlockView)findViewWithTag(Integer.valueOf(j));
+        int subStackId = blockView.subStack1;
+        if (subStackId != -1 && !visited.contains(subStackId)) {
+          BlockView sub = (BlockView)findViewWithTag(Integer.valueOf(subStackId));
           if (sub != null) setBlockTreeVisibility(sub, position);
         }
       } 
       if (blockView.hasDoubleSubstack()) {
-        int j = blockView.subStack2;
-        if (j != -1 && !visited.contains(j)) {
-          BlockView sub = (BlockView)findViewWithTag(Integer.valueOf(j));
+        int subStackId = blockView.subStack2;
+        if (subStackId != -1 && !visited.contains(subStackId)) {
+          BlockView sub = (BlockView)findViewWithTag(Integer.valueOf(subStackId));
           if (sub != null) setBlockTreeVisibility(sub, position);
         }
       } 
-      int i = blockView.nextBlock;
-      if (i != -1) {
-        blockView = (BlockView)findViewWithTag(Integer.valueOf(i));
+      int nextBlockId = blockView.nextBlock;
+      if (nextBlockId != -1) {
+        blockView = (BlockView)findViewWithTag(Integer.valueOf(nextBlockId));
       } else {
         blockView = null;
       }
@@ -174,19 +174,19 @@ public class BlockPane extends RelativeLayout {
               collectParameterSnapPoints((BlockView)view, excludeBlockId); 
           } 
         }  
-      int i = blockView.subStack1;
-      if (i != -1 && !visited.contains(i)) {
-        BlockView sub = (BlockView)findViewWithTag(Integer.valueOf(i));
+      int traverseId = blockView.subStack1;
+      if (traverseId != -1 && !visited.contains(traverseId)) {
+        BlockView sub = (BlockView)findViewWithTag(Integer.valueOf(traverseId));
         if (sub != null) collectParameterSnapPoints(sub, excludeBlockId);
       }
-      i = blockView.subStack2;
-      if (i != -1 && !visited.contains(i)) {
-        BlockView sub = (BlockView)findViewWithTag(Integer.valueOf(i));
+      traverseId = blockView.subStack2;
+      if (traverseId != -1 && !visited.contains(traverseId)) {
+        BlockView sub = (BlockView)findViewWithTag(Integer.valueOf(traverseId));
         if (sub != null) collectParameterSnapPoints(sub, excludeBlockId);
       }
-      i = blockView.nextBlock;
-      if (i != -1) {
-        blockView = (BlockView)findViewWithTag(Integer.valueOf(i));
+      traverseId = blockView.nextBlock;
+      if (traverseId != -1) {
+        blockView = (BlockView)findViewWithTag(Integer.valueOf(traverseId));
       } else {
         blockView = null;
       }
@@ -234,19 +234,19 @@ public class BlockPane extends RelativeLayout {
         intValues[1] = intValues[1] + blockView.getSubstackBottom();
         addSnapPoint(intValues, (View)blockView, 3);
       } 
-      int i = blockView.subStack1;
-      if (i != -1 && !visited.contains(i)) {
-        BlockView sub = (BlockView)findViewWithTag(Integer.valueOf(i));
+      int traverseId = blockView.subStack1;
+      if (traverseId != -1 && !visited.contains(traverseId)) {
+        BlockView sub = (BlockView)findViewWithTag(Integer.valueOf(traverseId));
         if (sub != null) collectSnapPoints(sub, enabled);
       }
-      i = blockView.subStack2;
-      if (i != -1 && !visited.contains(i)) {
-        BlockView sub = (BlockView)findViewWithTag(Integer.valueOf(i));
+      traverseId = blockView.subStack2;
+      if (traverseId != -1 && !visited.contains(traverseId)) {
+        BlockView sub = (BlockView)findViewWithTag(Integer.valueOf(traverseId));
         if (sub != null) collectSnapPoints(sub, enabled);
       }
-      i = blockView.nextBlock;
-      if (i != -1) {
-        blockView = (BlockView)findViewWithTag(Integer.valueOf(i));
+      traverseId = blockView.nextBlock;
+      if (traverseId != -1) {
+        blockView = (BlockView)findViewWithTag(Integer.valueOf(traverseId));
         continue;
       } 
       break;
@@ -290,7 +290,7 @@ public class BlockPane extends RelativeLayout {
   
   public void buildSnapPoints(String excludeBlockId, boolean flag1, boolean flag2, boolean flag3, int start, int end) {
     this.blockSnapPoints = new ArrayList();
-    int i = (int)(this.densityScale * 3.0F);
+    int snapMargin = (int)(this.densityScale * 3.0F);
     for (int b = 0; b < getChildCount(); b++) {
       View view = getChildAt(b);
       if (view instanceof BlockView) {
@@ -303,14 +303,14 @@ public class BlockPane extends RelativeLayout {
             if (!flag1 && !rs.isDefinitionBlock) {
               int[] intValues = new int[2];
               rs.getLocationOnScreen(intValues);
-              intValues[1] = intValues[1] - start - i;
+              intValues[1] = intValues[1] - start - snapMargin;
               addSnapPoint(intValues, (View)rs, 1);
             } 
             if (flag2 && !rs.isDefinitionBlock) {
               int[] intValues = new int[2];
               rs.getLocationOnScreen(intValues);
               intValues[0] = intValues[0] - ((BaseBlockView)rs).cornerRadius;
-              intValues[1] = intValues[1] - end - i;
+              intValues[1] = intValues[1] - end - snapMargin;
               addSnapPoint(intValues, (View)rs, 4);
             } 
             if (!flag1 || flag2)
