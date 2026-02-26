@@ -474,19 +474,19 @@ public class BlockView extends BaseBlockView {
     if (this.blockType.equals("b") || this.blockType.equals("d") || this.blockType.equals("s") || this.blockType.equals("a")) {
       w = Math.max(xOffset, this.minBlockWidth);
     }
-    int w2 = w;
+    int widthWithSimple = w;
     if (this.blockType.equals(" ") || this.blockType.equals("") || this.blockType.equals("f")) {
-      w2 = Math.max(w, this.minSimpleWidth);
+      widthWithSimple = Math.max(w, this.minSimpleWidth);
     }
-    int w3 = w2;
+    int widthWithC = widthWithSimple;
     if (this.blockType.equals("c") || this.blockType.equals("e")) {
-      w3 = Math.max(w2, this.minCWidth);
+      widthWithC = Math.max(widthWithSimple, this.minCWidth);
     }
-    int w4 = w3;
+    int widthWithHat = widthWithC;
     if (this.blockType.equals("h")) {
-      w4 = Math.max(w3, this.minHatWidth);
+      widthWithHat = Math.max(widthWithC, this.minHatWidth);
     }
-    setBlockSize((float) (this.rightIndent + w4), (float) (this.topSpacing + this.textHeight + this.depth * this.shadowOffset * 2 + this.bottomSpacing), true);
+    setBlockSize((float) (this.rightIndent + widthWithHat), (float) (this.topSpacing + this.textHeight + this.depth * this.shadowOffset * 2 + this.bottomSpacing), true);
     if (hasSubstack()) {
       int ss1Height = this.minHeight;
       int sub1 = this.subStack1;
@@ -639,22 +639,22 @@ public class BlockView extends BaseBlockView {
     if (this.blockType.equals("b") || this.blockType.equals("d") || this.blockType.equals("s") || this.blockType.equals("a")) {
       w = Math.max(xOffset, this.minBlockWidth);
     }
-    int w2 = w;
+    int widthWithSimple = w;
     if (this.blockType.equals(" ") || this.blockType.equals("") || this.blockType.equals("o")) {
-      w2 = Math.max(w, this.minSimpleWidth);
+      widthWithSimple = Math.max(w, this.minSimpleWidth);
     }
-    int w3 = w2;
+    int widthWithC = widthWithSimple;
     if (this.blockType.equals("c") || this.blockType.equals("e")) {
-      w3 = Math.max(w2, this.minCWidth);
+      widthWithC = Math.max(widthWithSimple, this.minCWidth);
     }
-    int w4 = w3;
+    int widthWithHat = widthWithC;
     if (this.blockType.equals("h")) {
-      w4 = Math.max(w3, this.minHatWidth);
+      widthWithHat = Math.max(widthWithC, this.minHatWidth);
     }
-    int finalW = w4;
+    int finalW = widthWithHat;
     TextView label = this.elseLabel;
     if (label != null) {
-      finalW = Math.max(w4, label.getWidth() + this.leftIndent + 2);
+      finalW = Math.max(widthWithHat, label.getWidth() + this.leftIndent + 2);
     }
     setBlockSize((float) (this.rightIndent + finalW), (float) (this.topSpacing + this.textHeight + this.depth * this.shadowOffset * 2 + this.bottomSpacing), false);
   }
