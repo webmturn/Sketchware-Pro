@@ -247,8 +247,8 @@ public class MoreBlockBuilderView extends LinearLayout {
     }
 
     public Pair<String, String> getBlockInformation() {
-        String var1 = Helper.getText(binding.edName).trim();
-        return new Pair<>(ReturnMoreblockManager.injectMbType(var1, var1, getType()), ReturnMoreblockManager.injectMbType(block.spec, var1, getType()));
+        String funcName = Helper.getText(binding.edName).trim();
+        return new Pair<>(ReturnMoreblockManager.injectMbType(funcName, funcName, getType()), ReturnMoreblockManager.injectMbType(block.spec, funcName, getType()));
     }
 
     private String getType() {
@@ -261,13 +261,13 @@ public class MoreBlockBuilderView extends LinearLayout {
 
     private void refresh(String type) {
         type = ReturnMoreblockManager.getPreviewType(type);
-        BlockView var2 = new BlockView(activity, 0, "", type, "definedFunc");
-        block = var2;
-        updateBlockPreview(binding.blockArea, binding.removeArea, var2, Helper.getText(binding.edName), variablesSpecAndNamePair);
+        BlockView blockView = new BlockView(activity, 0, "", type, "definedFunc");
+        block = blockView;
+        updateBlockPreview(binding.blockArea, binding.removeArea, blockView, Helper.getText(binding.edName), variablesSpecAndNamePair);
     }
 
-    public void setFuncNameValidator(ArrayList<String> var1) {
-        blockNameValidator = new MoreblockValidator(activity, binding.tiName, BlockConstants.RESERVED_KEYWORDS, BlockConstants.COMPONENT_TYPES, var1);
+    public void setFuncNameValidator(ArrayList<String> existingNames) {
+        blockNameValidator = new MoreblockValidator(activity, binding.tiName, BlockConstants.RESERVED_KEYWORDS, BlockConstants.COMPONENT_TYPES, existingNames);
     }
 
 }

@@ -67,71 +67,71 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
     private ViewPager viewPager;
     private String sc_id;
 
-    public final String generateUniqueWidgetId(int var1, String var2) {
-        String var3 = SketchwarePaths.getWidgetTypeName(var1);
-        StringBuilder var4 = new StringBuilder();
-        var4.append(var3);
-        int[] var5 = widgetTypeCounts;
-        int var6 = var5[var1] + 1;
-        var5[var1] = var6;
-        var4.append(var6);
-        String var9 = var4.toString();
-        ArrayList<ViewBean> var12 = ProjectDataManager.getProjectDataManager(sc_id).getViews(var2);
-        var2 = var9;
+    public final String generateUniqueWidgetId(int widgetType, String xmlName) {
+        String typeName = SketchwarePaths.getWidgetTypeName(widgetType);
+        StringBuilder sb = new StringBuilder();
+        sb.append(typeName);
+        int[] counts = widgetTypeCounts;
+        int count = counts[widgetType] + 1;
+        counts[widgetType] = count;
+        sb.append(count);
+        String candidateId = sb.toString();
+        ArrayList<ViewBean> views = ProjectDataManager.getProjectDataManager(sc_id).getViews(xmlName);
+        String currentId = candidateId;
 
         while (true) {
-            boolean var7 = false;
-            Iterator<ViewBean> var10 = var12.iterator();
+            boolean isDuplicate = false;
+            Iterator<ViewBean> iterator = views.iterator();
 
-            boolean var13;
+            boolean found;
             while (true) {
-                var13 = var7;
-                if (!var10.hasNext()) {
+                found = isDuplicate;
+                if (!iterator.hasNext()) {
                     break;
                 }
 
-                if (var2.equals(var10.next().id)) {
-                    var13 = true;
+                if (currentId.equals(iterator.next().id)) {
+                    found = true;
                     break;
                 }
             }
 
-            if (!var13) {
-                return var2;
+            if (!found) {
+                return currentId;
             }
 
-            StringBuilder var8 = new StringBuilder();
-            var8.append(var3);
-            int[] var11 = widgetTypeCounts;
-            var6 = var11[var1] + 1;
-            var11[var1] = var6;
-            var8.append(var6);
-            var2 = var8.toString();
+            StringBuilder nextSb = new StringBuilder();
+            nextSb.append(typeName);
+            int[] nextCounts = widgetTypeCounts;
+            count = nextCounts[widgetType] + 1;
+            nextCounts[widgetType] = count;
+            nextSb.append(count);
+            currentId = nextSb.toString();
         }
     }
 
     @Override
-    public void onPageScrollStateChanged(int var1) {
+    public void onPageScrollStateChanged(int state) {
     }
 
     @Override
-    public void onPageScrolled(int var1, float var2, int var3) {
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         setSelectionMode(false);
     }
 
-    public final void addPresetViews(ProjectFileBean var1, ArrayList<ViewBean> var2) {
+    public final void addPresetViews(ProjectFileBean projectFile, ArrayList<ViewBean> presetViews) {
         ProjectDataManager.getProjectDataManager(sc_id);
-        for (ViewBean viewBean : ProjectDataStore.getSortedRootViews(var2)) {
-            viewBean.id = generateUniqueWidgetId(viewBean.type, var1.getXmlName());
-            ProjectDataManager.getProjectDataManager(sc_id).addView(var1.getXmlName(), viewBean);
-            if (viewBean.type == ViewBean.VIEW_TYPE_WIDGET_BUTTON && var1.fileType == ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY) {
-                ProjectDataManager.getProjectDataManager(sc_id).addEvent(var1.getJavaName(), EventBean.EVENT_TYPE_VIEW, viewBean.type, viewBean.id, "onClick");
+        for (ViewBean viewBean : ProjectDataStore.getSortedRootViews(presetViews)) {
+            viewBean.id = generateUniqueWidgetId(viewBean.type, projectFile.getXmlName());
+            ProjectDataManager.getProjectDataManager(sc_id).addView(projectFile.getXmlName(), viewBean);
+            if (viewBean.type == ViewBean.VIEW_TYPE_WIDGET_BUTTON && projectFile.fileType == ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY) {
+                ProjectDataManager.getProjectDataManager(sc_id).addEvent(projectFile.getJavaName(), EventBean.EVENT_TYPE_VIEW, viewBean.type, viewBean.id, "onClick");
             }
         }
     }
 
-    public void setSelectionMode(boolean var1) {
-        selecting = var1;
+    public void setSelectionMode(boolean selectionMode) {
+        selecting = selectionMode;
         invalidateOptionsMenu();
 
         if (selecting) {
@@ -150,17 +150,17 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
     }
 
     @Override
-    public void onPageSelected(int var1) {
+    public void onPageSelected(int position) {
         fab.show();
     }
 
-    public void addCustomView(String var1) {
-        customViewsFragment.addCustomView(var1);
+    public void addCustomView(String viewName) {
+        customViewsFragment.addCustomView(viewName);
         customViewsFragment.updateEmptyState();
     }
 
-    public void removeCustomView(String var1) {
-        customViewsFragment.removeCustomView(var1);
+    public void removeCustomView(String viewName) {
+        customViewsFragment.removeCustomView(viewName);
         customViewsFragment.updateEmptyState();
     }
 
@@ -354,7 +354,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
         }
 
         @Override
-        public void onError(String var1) {
+        public void onError(String errorMessage) {
             var activity = this.activity.get();
             if (activity == null) return;
             activity.dismissLoadingDialog();
@@ -396,14 +396,14 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
         @Override
         @NonNull
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
-            Fragment var3 = (Fragment) super.instantiateItem(container, position);
+            Fragment fragment = (Fragment) super.instantiateItem(container, position);
             if (position != 0) {
-                customViewsFragment = (ViewFilesAdapter) var3;
+                customViewsFragment = (ViewFilesAdapter) fragment;
             } else {
-                activitiesFragment = (ViewFilesFragment) var3;
+                activitiesFragment = (ViewFilesFragment) fragment;
             }
 
-            return var3;
+            return fragment;
         }
 
         @Override

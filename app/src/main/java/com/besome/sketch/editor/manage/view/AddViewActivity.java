@@ -396,10 +396,10 @@ public class AddViewActivity extends BaseAppCompatActivity {
 
         @NonNull
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup var1, int var2) {
-            View var3 = ViewUtil.inflateLayout(var1.getContext(), R.layout.manage_screen_activity_add_feature_item);
-            var3.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            return new ViewHolder(var3);
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View itemView = ViewUtil.inflateLayout(parent.getContext(), R.layout.manage_screen_activity_add_feature_item);
+            itemView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            return new ViewHolder(itemView);
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
@@ -408,11 +408,11 @@ public class AddViewActivity extends BaseAppCompatActivity {
             public TextView nameTextView;
             public CheckBox featureCheckBox;
 
-            public ViewHolder(View var2) {
-                super(var2);
-                iconImageView = var2.findViewById(R.id.img_icon);
-                nameTextView = var2.findViewById(R.id.tv_name);
-                featureCheckBox = var2.findViewById(R.id.checkbox);
+            public ViewHolder(View itemView) {
+                super(itemView);
+                iconImageView = itemView.findViewById(R.id.img_icon);
+                nameTextView = itemView.findViewById(R.id.tv_name);
+                featureCheckBox = itemView.findViewById(R.id.checkbox);
                 featureCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
                     if (!isUpdatingAdapter) {
                         layoutPosition = getLayoutPosition();

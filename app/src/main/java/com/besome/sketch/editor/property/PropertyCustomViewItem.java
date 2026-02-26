@@ -62,8 +62,8 @@ public class PropertyCustomViewItem extends RelativeLayout implements View.OnCli
         rgContent.addView(createRadioButton("none"));
 
         for (ProjectFileBean projectFileBean : customViews) {
-            RadioButton var4 = createRadioButton(projectFileBean.fileName);
-            propertyBinding.rgContent.addView(var4);
+            RadioButton radioButton = createRadioButton(projectFileBean.fileName);
+            propertyBinding.rgContent.addView(radioButton);
         }
 
         ((RadioButton) rgContent.getChildAt(0)).setChecked(true);
@@ -93,7 +93,7 @@ public class PropertyCustomViewItem extends RelativeLayout implements View.OnCli
         dialog.show();
     }
 
-    private void initializeView(boolean var2) {
+    private void initializeView(boolean showMenu) {
         ViewUtil.inflateLayoutInto(getContext(), this, R.layout.property_selector_item);
         tvName = findViewById(R.id.tv_name);
         tvValue = findViewById(R.id.tv_value);
@@ -112,15 +112,15 @@ public class PropertyCustomViewItem extends RelativeLayout implements View.OnCli
 
     public void setKey(String key) {
         this.key = key;
-        int var2 = getResources().getIdentifier(key, "string", getContext().getPackageName());
-        if (var2 > 0) {
-            tvName.setText(var2);
+        int stringResId = getResources().getIdentifier(key, "string", getContext().getPackageName());
+        if (stringResId > 0) {
+            tvName.setText(stringResId);
             iconResId = R.drawable.ic_mtrl_interface;
             if (propertyMenuItem.getVisibility() == View.VISIBLE) {
-                ImageView var3 = findViewById(R.id.img_icon);
-                TextView var4 = findViewById(R.id.tv_title);
-                var3.setImageResource(iconResId);
-                var4.setText(var2);
+                ImageView iconView = findViewById(R.id.img_icon);
+                TextView titleView = findViewById(R.id.tv_title);
+                iconView.setImageResource(iconResId);
+                titleView.setText(stringResId);
             } else {
                 imgLeftIcon.setImageResource(iconResId);
             }
@@ -141,7 +141,7 @@ public class PropertyCustomViewItem extends RelativeLayout implements View.OnCli
     }
 
     @Override
-    public void onClick(View var1) {
+    public void onClick(View view) {
         if (!UIHelper.isClickThrottled()) {
             if ("property_custom_view_listview".equals(key)) {
                 showSelectionDialog();
@@ -153,8 +153,8 @@ public class PropertyCustomViewItem extends RelativeLayout implements View.OnCli
         customViews = customView;
     }
 
-    public void setOnPropertyValueChangeListener(PropertyChangedCallback var1) {
-        propertyValueChangeListener = var1;
+    public void setOnPropertyValueChangeListener(PropertyChangedCallback listener) {
+        propertyValueChangeListener = listener;
     }
 
     public void setOrientationItem(int orientationItem) {

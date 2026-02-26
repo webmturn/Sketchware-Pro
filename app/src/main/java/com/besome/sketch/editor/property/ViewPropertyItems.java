@@ -48,9 +48,9 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     private ProjectFileBean projectFile;
     private ProjectSettings settings;
 
-    public ViewPropertyItems(Context var1) {
-        super(var1);
-        RecentHistoryManager.getInstance().initialize(var1);
+    public ViewPropertyItems(Context context) {
+        super(context);
+        RecentHistoryManager.getInstance().initialize(context);
     }
 
     private void setupViews() {
@@ -251,8 +251,8 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     }
 
     @Override
-    public void onPropertyChanged(String var1, Object var2) {
-        RecentHistoryManager.getInstance().addRecentItem(viewBean.getClassInfo().getClassName(), var1);
+    public void onPropertyChanged(String key, Object value) {
+        RecentHistoryManager.getInstance().addRecentItem(viewBean.getClassInfo().getClassName(), key);
         if (viewBeanCallback != null) {
             ViewBean cloned = viewBean.clone();
             applyPropertyValues(viewBean);
@@ -697,9 +697,9 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
             if (view instanceof PropertyInputItem inputItem) {
                 switch (inputItem.getKey()) {
                     case "property_id" -> {
-                        String var5 = bean.id;
-                        bean.preId = var5;
-                        if (var5.charAt(0) != '_') {
+                        String currentId = bean.id;
+                        bean.preId = currentId;
+                        if (currentId.charAt(0) != '_') {
                             bean.id = inputItem.getValue();
                         }
                     }

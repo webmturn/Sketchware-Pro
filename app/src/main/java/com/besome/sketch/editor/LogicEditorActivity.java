@@ -1271,17 +1271,17 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         ColorPickerDialog colorPickerDialog = new ColorPickerDialog(this, (ss.getArgValue() == null || ss.getArgValue().toString().isEmpty()) ? "Color.TRANSPARENT" : ss.getArgValue().toString().replace("0xFF", "#"), true, false, scId);
         colorPickerDialog.setColorPickerCallback(new ColorPickerDialog.OnColorPickedListener() {
             @Override
-            public void onColorPicked(int var1) {
-                if (var1 == 0) {
+            public void onColorPicked(int color) {
+                if (color == 0) {
                     LogicEditorActivity.this.setFieldValue(ss, "Color.TRANSPARENT");
                 } else {
-                    LogicEditorActivity.this.setFieldValue(ss, String.format("0x%08X", var1 & (Color.WHITE)));
+                    LogicEditorActivity.this.setFieldValue(ss, String.format("0x%08X", color & (Color.WHITE)));
                 }
             }
 
             @Override
-            public void onResourceColorPicked(String var1, int var2) {
-                LogicEditorActivity.this.setFieldValue(ss, "R.color." + var1);
+            public void onResourceColorPicked(String resourceName, int color) {
+                LogicEditorActivity.this.setFieldValue(ss, "R.color." + resourceName);
             }
         });
         colorPickerDialog.materialColorAttr((attr, attrColor) -> setFieldValue(ss, "R.attr." + attr));
@@ -1663,16 +1663,16 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public void setupPaletteAnimators(int i) {
-        boolean var2 = isPaletteVisible;
+        boolean wasPaletteVisible = isPaletteVisible;
         if (i == 2) {
-            if (!var2) {
+            if (!wasPaletteVisible) {
                 paletteLayout.setTranslationX(ViewUtil.dpToPx(this, 320.0F));
             } else {
                 paletteLayout.setTranslationX(0.0F);
             }
             paletteLayout.setTranslationY(0.0F);
         } else {
-            if (!var2) {
+            if (!wasPaletteVisible) {
                 paletteLayout.setTranslationX(0.0F);
                 paletteLayout.setTranslationY(ViewUtil.dpToPx(this, 240.0F));
             } else {
