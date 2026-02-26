@@ -221,23 +221,23 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 long t1 = System.currentTimeMillis();
                 android.util.Log.d("BlockLoad", "UI addView done: " + (t1 - t0) + "ms");
 
-                for (BlockBean next2 : eventBlocks) {
-                    BlockView block = blockIdsAndBlocks.get(Integer.valueOf(next2.id));
+                for (BlockBean blockBean : eventBlocks) {
+                    BlockView block = blockIdsAndBlocks.get(Integer.valueOf(blockBean.id));
                     if (block != null) {
                         BlockView subStack1RootBlock;
-                        if (next2.subStack1 >= 0 && (subStack1RootBlock = blockIdsAndBlocks.get(next2.subStack1)) != null) {
+                        if (blockBean.subStack1 >= 0 && (subStack1RootBlock = blockIdsAndBlocks.get(blockBean.subStack1)) != null) {
                             block.setSubstack1Block(subStack1RootBlock);
                         }
                         BlockView subStack2RootBlock;
-                        if (next2.subStack2 >= 0 && (subStack2RootBlock = blockIdsAndBlocks.get(next2.subStack2)) != null) {
+                        if (blockBean.subStack2 >= 0 && (subStack2RootBlock = blockIdsAndBlocks.get(blockBean.subStack2)) != null) {
                             block.setSubstack2Block(subStack2RootBlock);
                         }
                         BlockView nextBlock;
-                        if (next2.nextBlock >= 0 && (nextBlock = blockIdsAndBlocks.get(next2.nextBlock)) != null) {
+                        if (blockBean.nextBlock >= 0 && (nextBlock = blockIdsAndBlocks.get(blockBean.nextBlock)) != null) {
                             block.setNextBlock(nextBlock);
                         }
-                        for (int i = 0; i < next2.parameters.size() && i < block.childViews.size(); i++) {
-                            String parameter = next2.parameters.get(i);
+                        for (int i = 0; i < blockBean.parameters.size() && i < block.childViews.size(); i++) {
+                            String parameter = blockBean.parameters.get(i);
                             if (parameter != null && !parameter.isEmpty()) {
                                 if (parameter.charAt(0) == '@') {
                                     BlockView parameterBlock = blockIdsAndBlocks.get(Integer.valueOf(parameter.substring(1)));
@@ -594,12 +594,12 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 clonedBlocks.add(next.clone());
             }
         }
-        for (BlockBean next2 : clonedBlocks) {
-            if (Integer.parseInt(next2.id) >= 99000000) {
-                idMapping.put(Integer.valueOf(next2.id), blockPane.nextBlockId);
+        for (BlockBean clonedBlock : clonedBlocks) {
+            if (Integer.parseInt(clonedBlock.id) >= 99000000) {
+                idMapping.put(Integer.valueOf(clonedBlock.id), blockPane.nextBlockId);
                 blockPane.nextBlockId = blockPane.nextBlockId + 1;
             } else {
-                idMapping.put(Integer.valueOf(next2.id), Integer.valueOf(next2.id));
+                idMapping.put(Integer.valueOf(clonedBlock.id), Integer.valueOf(clonedBlock.id));
             }
         }
         int size = clonedBlocks.size();
@@ -1637,8 +1637,8 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             paletteArea.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) ViewUtil.dpToPx(this, 240.0f)));
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.gravity = Gravity.CENTER | Gravity.RIGHT;
-            int dimension2 = (int) getResources().getDimension(R.dimen.action_button_margin);
-            params.setMargins(dimension2, dimension2, dimension2, dimension2);
+            int buttonMargin = (int) getResources().getDimension(R.dimen.action_button_margin);
+            params.setMargins(buttonMargin, buttonMargin, buttonMargin, buttonMargin);
             openBlocksMenuButton.setLayoutParams(params);
             layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
@@ -1709,9 +1709,9 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                         .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                         .build())
                 .build();
-        soundPool.setOnLoadCompleteListener((soundPool1, sampleId, status) -> {
-            if (soundPool1 != null) {
-                soundPool1.play(sampleId, 1, 1, 1, 0, 1);
+        soundPool.setOnLoadCompleteListener((pool, sampleId, status) -> {
+            if (pool != null) {
+                pool.play(sampleId, 1, 1, 1, 0, 1);
             }
         });
 
