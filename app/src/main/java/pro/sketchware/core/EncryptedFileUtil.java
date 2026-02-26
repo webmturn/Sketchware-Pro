@@ -150,9 +150,9 @@ public class EncryptedFileUtil {
   }
   
   public void writeBytes(String value, byte[] data) {
-    int i = value.lastIndexOf(File.separator);
-    if (i > 0)
-      mkdirs(value.substring(0, i)); 
+    int separatorIdx = value.lastIndexOf(File.separator);
+    if (separatorIdx > 0)
+      mkdirs(value.substring(0, separatorIdx)); 
     File file = new File(value);
     if (!file.exists())
       try { file.createNewFile(); } catch (IOException e) { e.printStackTrace(); } 
@@ -195,9 +195,9 @@ public class EncryptedFileUtil {
   }
   
   public void writeText(String key, String value) {
-    int i = key.lastIndexOf(File.separator);
-    if (i > 0)
-      mkdirs(key.substring(0, i)); 
+    int separatorIdx = key.lastIndexOf(File.separator);
+    if (separatorIdx > 0)
+      mkdirs(key.substring(0, separatorIdx)); 
     File file = new File(key);
     if (!file.exists())
       try { file.createNewFile(); } catch (IOException e) { e.printStackTrace(); } 

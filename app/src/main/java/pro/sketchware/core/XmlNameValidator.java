@@ -115,21 +115,21 @@ public class XmlNameValidator extends BaseValidator {
       } 
     } 
     String[] parts = this.reservedNames;
-    int i = parts.length;
-    int b = 0;
+    int nameCount = parts.length;
+    int found = 0;
     while (true) {
-      if (b < i) {
-        if (value.equals(parts[b])) {
-          b = 1;
+      if (found < nameCount) {
+        if (value.equals(parts[found])) {
+          found = 1;
           break;
         } 
-        b++;
+        found++;
         continue;
       } 
-      b = 0;
+      found = 0;
       break;
     } 
-    if (b != 0) {
+    if (found != 0) {
       this.textInputLayout.setErrorEnabled(true);
       this.textInputLayout.setError(StringResource.getInstance().getTranslatedString(this.context, R.string.logic_editor_message_reserved_keywords));
       this.valid = false;

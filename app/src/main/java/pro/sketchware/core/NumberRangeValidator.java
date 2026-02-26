@@ -31,12 +31,12 @@ public class NumberRangeValidator extends BaseValidator {
       return;
     }
     try {
-      int i = Integer.parseInt(input);
-      if (i < this.minValue) {
+      int parsedValue = Integer.parseInt(input);
+      if (parsedValue < this.minValue) {
         this.textInputLayout.setErrorEnabled(true);
         this.textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(this.context, R.string.invalid_value_min_lenth, new Object[] { Integer.valueOf(this.minValue) }));
         this.valid = false;
-      } else if (i > this.maxValue) {
+      } else if (parsedValue > this.maxValue) {
         this.textInputLayout.setErrorEnabled(true);
         this.textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(this.context, R.string.invalid_value_max_lenth, new Object[] { Integer.valueOf(this.maxValue) }));
         this.valid = false;
