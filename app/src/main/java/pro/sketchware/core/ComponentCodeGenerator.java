@@ -784,13 +784,13 @@ public class ComponentCodeGenerator {
     /**
      * @return Code of an adapter for a ListView
      */
-    public static String getListAdapterCode(LayoutGenerator ox, String widgetName, String itemResourceName, ArrayList<ViewBean> views, String onBindCustomViewLogic, boolean isViewBindingEnabled) {
+    public static String getListAdapterCode(LayoutGenerator layoutGenerator, String widgetName, String itemResourceName, ArrayList<ViewBean> views, String onBindCustomViewLogic, boolean isViewBindingEnabled) {
         String className = getAdapterClassName(widgetName, isViewBindingEnabled);
 
         String initializers = "";
         StringBuilder initializersBuilder = new StringBuilder(initializers);
         for (ViewBean bean : views) {
-            Set<String> toNotAdd = ox.readAttributesToReplace(bean);
+            Set<String> toNotAdd = layoutGenerator.readAttributesToReplace(bean);
             if (!toNotAdd.contains("android:id")) {
                 initializersBuilder.append(getViewInitializerString(bean)).append("\r\n");
             }
@@ -3247,7 +3247,7 @@ public class ComponentCodeGenerator {
         }
     }
 
-    public static String pagerAdapter(LayoutGenerator ox, String pagerName, String
+    public static String pagerAdapter(LayoutGenerator layoutGenerator, String pagerName, String
                                               pagerItemLayoutName, ArrayList<ViewBean> pagerItemViews, String onBindCustomViewLogic,
                                       boolean isViewBindingEnabled) {
         String adapterName = getAdapterClassName(pagerName, isViewBindingEnabled);
@@ -3255,7 +3255,7 @@ public class ComponentCodeGenerator {
         String viewsInitializer = "";
         StringBuilder viewInitBuilder = new StringBuilder(viewsInitializer);
         for (ViewBean bean : pagerItemViews) {
-            Set<String> toNotAdd = ox.readAttributesToReplace(bean);
+            Set<String> toNotAdd = layoutGenerator.readAttributesToReplace(bean);
             if (!toNotAdd.contains("android:id")) {
                 viewInitBuilder.append(getViewInitializerString(bean)).append("\r\n");
             }
@@ -3337,14 +3337,14 @@ public class ComponentCodeGenerator {
                 "}\r\n";
     }
 
-    public static String recyclerViewAdapter(LayoutGenerator ox, String recyclerViewName, String
+    public static String recyclerViewAdapter(LayoutGenerator layoutGenerator, String recyclerViewName, String
                                                      itemLayoutName, ArrayList<ViewBean> itemViews, String onBindCustomViewLogic,
                                              boolean isViewBindingEnabled) {
         String adapterName = getAdapterClassName(recyclerViewName, isViewBindingEnabled);
         String viewsInitializer = "";
         StringBuilder viewInitBuilder = new StringBuilder(viewsInitializer);
         for (ViewBean bean : itemViews) {
-            Set<String> toNotAdd = ox.readAttributesToReplace(bean);
+            Set<String> toNotAdd = layoutGenerator.readAttributesToReplace(bean);
             if (!toNotAdd.contains("android:id")) {
                 viewInitBuilder.append(getViewInitializerString(bean)).append("\r\n");
             }

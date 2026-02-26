@@ -699,8 +699,8 @@ public class ProjectFilePaths {
         }
         if (buildConfig.isFirebaseEnabled || buildConfig.isAdMobEnabled || buildConfig.isMapUsed) {
             ProjectLibraryBean firebaseLibrary = projectLibraryManager.getFirebaseDB();
-            XmlBuilderHelper mx = new XmlBuilderHelper();
-            mx.addInteger("google_play_services_version", 12451000);
+            XmlBuilderHelper xmlBuilder = new XmlBuilderHelper();
+            xmlBuilder.addInteger("google_play_services_version", 12451000);
             if (buildConfig.isFirebaseEnabled) {
                 String databaseUrl;
                 String projectId;
@@ -712,23 +712,23 @@ public class ProjectFilePaths {
                     databaseUrl = "https://" + libraryData + ".firebaseio.com";
                     projectId = libraryData;
                 }
-                mx.addString("firebase_database_url", databaseUrl, false);
-                mx.addString("project_id", projectId, false);
-                mx.addString("google_app_id", firebaseLibrary.reserved1, false);
+                xmlBuilder.addString("firebase_database_url", databaseUrl, false);
+                xmlBuilder.addString("project_id", projectId, false);
+                xmlBuilder.addString("google_app_id", firebaseLibrary.reserved1, false);
                 if (firebaseLibrary.reserved2 != null && !firebaseLibrary.reserved2.isEmpty()) {
-                    mx.addString("google_api_key", firebaseLibrary.reserved2, false);
+                    xmlBuilder.addString("google_api_key", firebaseLibrary.reserved2, false);
                 }
                 if (firebaseLibrary.reserved3 != null && !firebaseLibrary.reserved3.isEmpty()) {
-                    mx.addString("google_storage_bucket", firebaseLibrary.reserved3, false);
+                    xmlBuilder.addString("google_storage_bucket", firebaseLibrary.reserved3, false);
                 }
             }
             if (buildConfig.isMapUsed) {
                 // if p3 is false, then "translatable="false" will be added
-                mx.addString("google_maps_key", projectLibraryManager.getGoogleMap().data, false);
+                xmlBuilder.addString("google_maps_key", projectLibraryManager.getGoogleMap().data, false);
             }
             String filePath = "values/secrets.xml";
             fileUtil.writeText(resDirectoryPath + File.separator + filePath,
-                    CommandBlock.applyCommands(filePath, mx.toCode()));
+                    CommandBlock.applyCommands(filePath, xmlBuilder.toCode()));
         }
         generateGradleFiles();
     }
@@ -778,15 +778,15 @@ public class ProjectFilePaths {
         ArrayList<ProjectFileBean> regularLayouts = projectFileManager.getActivities();
         for (ProjectFileBean layout : regularLayouts) {
             String xmlName = layout.getXmlName();
-            LayoutGenerator ox = new LayoutGenerator(buildConfig, layout);
-            ox.setViews(ProjectDataStore.getSortedRootViews(projectDataManager.getViews(xmlName)), projectDataManager.getFabView(xmlName));
+            LayoutGenerator layoutGenerator = new LayoutGenerator(buildConfig, layout);
+            layoutGenerator.setViews(ProjectDataStore.getSortedRootViews(projectDataManager.getViews(xmlName)), projectDataManager.getFabView(xmlName));
             var ogFile = new File(layoutDir + xmlName);
             if (!layoutFiles.contains(ogFile)) {
-                srcCodeBeans.add(new SrcCodeBean(xmlName, CommandBlock.applyCommands(xmlName, ox.toXmlString())));
+                srcCodeBeans.add(new SrcCodeBean(xmlName, CommandBlock.applyCommands(xmlName, layoutGenerator.toXmlString())));
 
                 if (isViewBindingEnable()) {
                     var privFile = new File(context.getCacheDir(), xmlName);
-                    FileUtil.writeFile(privFile.getAbsolutePath(), CommandBlock.applyCommands(xmlName, ox.toXmlString()));
+                    FileUtil.writeFile(privFile.getAbsolutePath(), CommandBlock.applyCommands(xmlName, layoutGenerator.toXmlString()));
                     var code = viewBindingBuilder.generateBindingForLayout(privFile);
                     srcCodeBeans.add(new SrcCodeBean(
                             ViewBindingBuilder.generateFileNameForLayout(xmlName.replace(".xml", "")) + ".java",
@@ -799,15 +799,15 @@ public class ProjectFilePaths {
         ArrayList<ProjectFileBean> customViewFiles = projectFileManager.getCustomViews();
         for (ProjectFileBean customViewFile : customViewFiles) {
             String xmlName = customViewFile.getXmlName();
-            LayoutGenerator ox = new LayoutGenerator(buildConfig, customViewFile);
-            ox.setViews(ProjectDataStore.getSortedRootViews(projectDataManager.getViews(xmlName)));
+            LayoutGenerator layoutGenerator = new LayoutGenerator(buildConfig, customViewFile);
+            layoutGenerator.setViews(ProjectDataStore.getSortedRootViews(projectDataManager.getViews(xmlName)));
             var ogFile = new File(layoutDir + xmlName);
             if (!layoutFiles.contains(ogFile)) {
-                srcCodeBeans.add(new SrcCodeBean(xmlName, CommandBlock.applyCommands(xmlName, ox.toXmlString())));
+                srcCodeBeans.add(new SrcCodeBean(xmlName, CommandBlock.applyCommands(xmlName, layoutGenerator.toXmlString())));
 
                 if (isViewBindingEnable()) {
                     var privFile = new File(context.getCacheDir(), xmlName);
-                    FileUtil.writeFile(privFile.getAbsolutePath(), CommandBlock.applyCommands(xmlName, ox.toXmlString()));
+                    FileUtil.writeFile(privFile.getAbsolutePath(), CommandBlock.applyCommands(xmlName, layoutGenerator.toXmlString()));
                     var code = viewBindingBuilder.generateBindingForLayout(privFile);
                     srcCodeBeans.add(new SrcCodeBean(
                             ViewBindingBuilder.generateFileNameForLayout(xmlName.replace(".xml", "")) + ".java",
@@ -817,8 +817,8 @@ public class ProjectFilePaths {
             }
         }
 
-        ManifestGenerator ix = new ManifestGenerator(buildConfig, projectFileManager.getActivities(), builtInLibraryManager);
-        ix.setYq(this);
+        ManifestGenerator manifestGenerator = new ManifestGenerator(buildConfig, projectFileManager.getActivities(), builtInLibraryManager);
+        manifestGenerator.setYq(this);
 
         // Make generated classes viewable
         if (!javaFiles.contains(new File(javaDir + "SketchwareUtil.java"))) {
@@ -858,7 +858,7 @@ public class ProjectFilePaths {
             }
         }
 
-        srcCodeBeans.add(new SrcCodeBean("AndroidManifest.xml", CommandBlock.applyCommands("AndroidManifest.xml", ix.generateManifest())));
+        srcCodeBeans.add(new SrcCodeBean("AndroidManifest.xml", CommandBlock.applyCommands("AndroidManifest.xml", manifestGenerator.generateManifest())));
         srcCodeBeans.add(new SrcCodeBean("styles.xml", getXMLStyle()));
         srcCodeBeans.add(new SrcCodeBean("colors.xml", getXMLColor()));
         srcCodeBeans.add(new SrcCodeBean("strings.xml", getXMLString()));
@@ -913,9 +913,9 @@ public class ProjectFilePaths {
         if (isManifestFile) {
             ProjectBuilder builder = new ProjectBuilder(SketchApplication.getContext(), this);
             builder.buildBuiltInLibraryInformation();
-            ManifestGenerator ix = new ManifestGenerator(buildConfig, projectFileManager.getActivities(), builder.getBuiltInLibraryManager());
-            ix.setYq(this);
-            return CommandBlock.applyCommands("AndroidManifest.xml", ix.generateManifest());
+            ManifestGenerator manifestGenerator = new ManifestGenerator(buildConfig, projectFileManager.getActivities(), builder.getBuiltInLibraryManager());
+            manifestGenerator.setYq(this);
+            return CommandBlock.applyCommands("AndroidManifest.xml", manifestGenerator.generateManifest());
         }
 
         for (ProjectFileBean file : files) {
