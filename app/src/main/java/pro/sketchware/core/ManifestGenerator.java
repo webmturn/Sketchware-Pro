@@ -384,10 +384,10 @@ public class ManifestGenerator {
         application.addChildNode(diagnosticsReceiver);
     }
 
-    public void setYq(ProjectFilePaths yqVar) {
-        settings = new ProjectSettings(yqVar.sc_id);
+    public void setProjectFilePaths(ProjectFilePaths projectFilePaths) {
+        settings = new ProjectSettings(projectFilePaths.sc_id);
         targetsSdkVersion31OrHigher = Integer.parseInt(settings.getValue(ProjectSettings.SETTING_TARGET_SDK_VERSION, String.valueOf(VAR_DEFAULT_TARGET_SDK_VERSION))) >= 31;
-        packageName = yqVar.packageName;
+        packageName = projectFilePaths.packageName;
     }
 
     /**

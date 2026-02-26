@@ -818,7 +818,7 @@ public class ProjectFilePaths {
         }
 
         ManifestGenerator manifestGenerator = new ManifestGenerator(buildConfig, projectFileManager.getActivities(), builtInLibraryManager);
-        manifestGenerator.setYq(this);
+        manifestGenerator.setProjectFilePaths(this);
 
         // Make generated classes viewable
         if (!javaFiles.contains(new File(javaDir + "SketchwareUtil.java"))) {
@@ -914,7 +914,7 @@ public class ProjectFilePaths {
             ProjectBuilder builder = new ProjectBuilder(SketchApplication.getContext(), this);
             builder.buildBuiltInLibraryInformation();
             ManifestGenerator manifestGenerator = new ManifestGenerator(buildConfig, projectFileManager.getActivities(), builder.getBuiltInLibraryManager());
-            manifestGenerator.setYq(this);
+            manifestGenerator.setProjectFilePaths(this);
             return CommandBlock.applyCommands("AndroidManifest.xml", manifestGenerator.generateManifest());
         }
 
