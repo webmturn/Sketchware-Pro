@@ -146,7 +146,10 @@ public class EventsManagerDetailsFragment extends BaseFragment {
             if (listName.isEmpty()) {
                 holder.binding.eventIcon.setImageResource(R.drawable.ic_mtrl_code);
             } else {
-                int imgRes = ((Number) dataArray.get(position).get("icon")).intValue();
+                Object iconValue = dataArray.get(position).get("icon");
+                int imgRes = iconValue instanceof Number
+                        ? ((Number) iconValue).intValue()
+                        : Integer.parseInt(String.valueOf(iconValue));
                 holder.binding.eventIcon.setImageResource(OldResourceIdMapper.getDrawableFromOldResourceId(imgRes));
             }
 
