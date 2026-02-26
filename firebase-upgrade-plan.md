@@ -432,21 +432,40 @@ new BuiltInLibrary(FIREBASE_MEASUREMENT_CONNECTOR, List.of(PLAY_SERVICES_BASEMEN
 - firebase-auth 21.0.1 使用 `play-services-safetynet`（已弃用）替代 integrity/recaptcha
 - firebase-auth 21.0.1 依赖 firebase-common **20.0.0**，与目标 21.0.0 可能不兼容
 
-**必须新增的 firebase-auth 额外依赖（所有 21.3.0+ 版本）：**
+**firebase-auth 额外依赖完整传递分析（基于 Maven POM）：**
 
-| 依赖 | 版本 (23.1.0) | 说明 |
-|------|-------------|------|
-| `com.google.android.play:integrity` | 1.3.0 | Play Integrity API，App Check 使用 |
-| `com.google.android.recaptcha:recaptcha` | 18.5.1 | reCAPTCHA Enterprise |
-| `play-services-auth-api-phone` | 17.4.0 | 电话号码认证（已存在但需验证版本） |
-| `androidx.browser` | 1.4.0 | Custom Tabs 支持（已存在） |
-| `androidx.credentials:credentials` | 1.2.0-rc01 | **仅 23.x**，Credential Manager |
-| `androidx.credentials:credentials-play-services-auth` | 1.2.0-rc01 | **仅 23.x** |
+**A. 真正需要新增的库（当前 BuiltInLibraries 中不存在）：**
+
+| 依赖 | 版本 | 传递依赖 |
+|------|------|---------|
+| `com.google.android.play:integrity` | 1.3.0 | play-services-basement, play-services-tasks, play:core-common |
+| `com.google.android.play:core-common` | 2.0.3 | 无（叶子节点） |
+| `com.google.android.recaptcha:recaptcha` | 18.5.1 | play-services-basement, play-services-tasks, play:integrity, kotlin-stdlib, kotlinx-coroutines-android, kotlinx-coroutines-play-services |
+| `androidx.credentials:credentials` | 1.2.0-rc01 | annotation, kotlin-stdlib |
+| `androidx.credentials:credentials-play-services-auth` | 1.2.0-rc01 | credentials, kotlin-stdlib; **运行时**: play-services-auth, play-services-fido, googleid |
+| `com.google.android.gms:play-services-fido` | 20.1.0 | 需进一步分析 |
+| `com.google.android.libraries.identity.googleid:googleid` | 1.1.0 | 需进一步分析 |
+
+**B. 已存在但需版本升级的库：**
+
+| 依赖 | 当前版本 | 需要版本 | 说明 |
+|------|---------|---------|------|
+| `play-services-auth` | 19.0.0 | 20.7.0 | credentials-play-services-auth 运行时依赖 |
+| `play-services-auth-api-phone` | 17.0.0 | 17.4.0 | firebase-auth 编译依赖 |
+| `play-services-auth-base` | 17.0.0 | 需验证 | play-services-auth 升级后可能需要 |
+
+**C. 已存在且无需额外操作的库：**
+- `androidx.browser` — 已捆绑
+- `kotlinx-coroutines-android` — 已捆绑 1.8.1
+- `kotlinx-coroutines-core-jvm` — 已捆绑 1.8.1
+- `kotlin-stdlib` — 已捆绑 2.2.0
+- `play-services-basement`, `play-services-tasks` — 已在升级计划中
 
 **推荐方案**：使用 **firebase-auth 23.1.0**（与 BOM 33.7.0 一致）
-- 理由：integrity/recaptcha 在 21.3.0+ 都需要，降级不能减少依赖
-- 代价：需额外捆绑 ~6 个新依赖（integrity, recaptcha, credentials ×2, auth-api-phone, browser）
-- 这些库的传递依赖还需进一步分析
+- 理由：integrity/recaptcha 从 21.3.0 起就是必需依赖，降级到 22.x 不能减少核心依赖数量
+- 真正新增的库：**7 个**（integrity, core-common, recaptcha, credentials ×2, fido, googleid）
+- 需升级的库：**2-3 个**（play-services-auth, auth-api-phone, 可能 auth-base）
+- 大部分传递依赖已在现有内置库中覆盖，无需重复添加
 
 #### 4.3 更新 ProjectBuilder.java
 
@@ -557,8 +576,10 @@ firebase-upgrade/phase-4-declarations
 | 保留但版本更新 | 2 | iid-interop (17.1.0), measurement-connector (19.0.0) |
 | 新增的 Firebase 库 | 10 | annotations (16.2.0), appcheck (17.1.0), appcheck-interop (17.1.0), common-ktx (21.0.0), datatransport (18.2.0), encoders (17.0.0), encoders-json (18.0.0), encoders-proto (16.0.0), installations (17.2.0), installations-interop (17.1.0) |
 | 新增的其他库 | 5 | transport-api (3.1.0), transport-runtime (3.1.8), transport-backend-cct (3.1.8), cloud-messaging (17.2.0), coroutines-play-services (1.6.4) |
+| 新增的 Auth 额外依赖 | 7 | play:integrity (1.3.0), play:core-common (2.0.3), recaptcha (18.5.1), credentials (1.2.0-rc01), credentials-play-services-auth (1.2.0-rc01), play-services-fido (20.1.0), googleid (1.1.0) |
+| 升级的 Auth 相关 Play Services | 2 | play-services-auth (19.0.0→20.7.0), play-services-auth-api-phone (17.0.0→17.4.0) |
 | 移除的库 | 1 | firebase-iid |
-| **总影响** | **29** | libs.zip 和 dexs.zip 中需要修改/新增/删除 29 个库 |
+| **总影响** | **~38** | libs.zip 和 dexs.zip 中需要修改/新增/删除约 38 个库 |
 
 ## 六、时间估计
 
@@ -566,10 +587,10 @@ firebase-upgrade/phase-4-declarations
 |------|--------|--------|
 | 阶段 1：修复 BOM 不匹配 | 低 | 10 分钟 |
 | 阶段 2：废弃 API 迁移 | 中 | 1-2 小时 |
-| 阶段 3：资产文件替换（29 个库） | 高 | 4-6 小时（含下载、提取、打包） |
-| 阶段 4：代码声明更新 | 高 | 2-3 小时（含依赖树验证） |
+| 阶段 3：资产文件替换（~38 个库） | 高 | 5-8 小时（含下载、提取、打包） |
+| 阶段 4：代码声明更新 | 高 | 3-4 小时（含依赖树验证） |
 | 测试验证 | 高 | 2-3 小时 |
-| **总计** | | **9-15 小时** |
+| **总计** | | **11-18 小时** |
 
 ---
 
@@ -581,8 +602,8 @@ firebase-upgrade/phase-4-declarations
 | `ComponentTypeMapper.java` | 2 | 移除 FirebaseInstanceId/InstanceIdResult import |
 | `ManifestGenerator.java` | 2 | 移除 firebase-iid Registrar + c2dm 权限 |
 | `EditorManifest.java` | 2 | 移除 FirebaseInstanceIdReceiver |
-| `app/src/main/assets/libs/libs.zip` | 3 | 替换/新增/删除 29 个库的 JAR + res 文件 |
-| `app/src/main/assets/libs/dexs.zip` | 3 | 替换/新增/删除 29 个库的 DEX 文件 |
-| `BuiltInLibraries.java` | 4 | 更新 20+ 版本常量 + 完整依赖树重建 |
+| `app/src/main/assets/libs/libs.zip` | 3 | 替换/新增/删除 ~38 个库的 JAR + res 文件 |
+| `app/src/main/assets/libs/dexs.zip` | 3 | 替换/新增/删除 ~38 个库的 DEX 文件 |
+| `BuiltInLibraries.java` | 4 | 新增 ~15 个版本常量 + 更新 ~15 个 + 完整依赖树重建 |
 | `ProjectBuilder.java` | 4 | 可能需要添加 firebase-installations 显式引入 |
 | `ExtLibSelected.java` | 4 | 验证 FCM 依赖链 |
