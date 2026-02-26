@@ -10,10 +10,10 @@ public class HistoryBean extends ReflectiveToString {
     public ReflectiveToString currentData;
     public ReflectiveToString prevData;
 
-    public HistoryBean(int i, ReflectiveToString nAVar, ReflectiveToString nAVar2) {
-        actionType = i;
-        prevData = nAVar;
-        currentData = nAVar2;
+    public HistoryBean(int actionType, ReflectiveToString prevData, ReflectiveToString currentData) {
+        this.actionType = actionType;
+        this.prevData = prevData;
+        this.currentData = currentData;
     }
 
     public int getActionType() {

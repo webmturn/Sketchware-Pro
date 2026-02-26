@@ -347,11 +347,11 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
             try {
                 if (binding.edInput.getText() == null || binding.edInput.getText().length() <= 0) {
                     int lastIndexOf = resolvedPath.lastIndexOf("/");
-                    int lastIndexOf2 = resolvedPath.lastIndexOf(".");
-                    if (lastIndexOf2 <= 0) {
-                        lastIndexOf2 = resolvedPath.length();
+                    int dotIndex = resolvedPath.lastIndexOf(".");
+                    if (dotIndex <= 0) {
+                        dotIndex = resolvedPath.length();
                     }
-                    binding.edInput.setText(resolvedPath.substring(lastIndexOf + 1, lastIndexOf2));
+                    binding.edInput.setText(resolvedPath.substring(lastIndexOf + 1, dotIndex));
                 }
             } catch (Exception e) {
                 Log.w("AddSoundCollectionActivity", "Failed to extract filename for input field", e);
