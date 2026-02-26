@@ -267,7 +267,10 @@ public class ViewEditor extends RelativeLayout implements View.OnClickListener, 
     @Override
     public void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        if (isLayoutChanged) updateLayoutPreview();
+        if (isLayoutChanged) {
+            isLayoutChanged = false;
+            post(this::updateLayoutPreview);
+        }
     }
 
     @Override
