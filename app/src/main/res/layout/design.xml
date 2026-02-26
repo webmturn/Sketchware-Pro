@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
+    <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -177,9 +177,9 @@
             android:id="@+id/view_property"
             android:layout_width="match_parent"
             android:layout_height="170dp"
-            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
             android:translationY="170dp" />
-    </RelativeLayout>
+    </FrameLayout>
 
     <com.besome.sketch.design.DesignDrawer
         android:layout_width="wrap_content"
