@@ -137,14 +137,14 @@ public class ProjectListManager {
             HashMap<String, Object> parsedProject = GsonMapHelper.fromJson(fileUtil.decryptToString(fileUtil.readFileBytes(path)));
             try {
                 return !MapValueHelper.getString(parsedProject, "sc_id").equals(projectId) ? null : parsedProject;
-            } catch (Exception e2) {
-                e = e2;
+            } catch (Exception innerException) {
+                e = innerException;
                 projectData = parsedProject;
                 Log.e("ProjectListManager", e.getMessage(), e);
                 return projectData;
             }
-        } catch (Exception e3) {
-            e = e3;
+        } catch (Exception outerException) {
+            e = outerException;
             Log.e("ProjectListManager", e.getMessage(), e);
             return projectData;
         }

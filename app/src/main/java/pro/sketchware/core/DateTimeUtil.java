@@ -30,10 +30,10 @@ public class DateTimeUtil {
   public String convertTimezone(String key, String value) {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(value);
     try {
-      long l1 = simpleDateFormat.parse(key).getTime();
-      long l2 = TimeZone.getDefault().getOffset(l1);
+      long timeMillis = simpleDateFormat.parse(key).getTime();
+      long timezoneOffset = TimeZone.getDefault().getOffset(timeMillis);
       Date date = new Date();
-      date.setTime(l1 + l2);
+      date.setTime(timeMillis + timezoneOffset);
       String formatted = simpleDateFormat.format(date);
       key = formatted;
     } catch (Exception exception) {
@@ -45,10 +45,10 @@ public class DateTimeUtil {
   public String reformatDate(String key, String value, String extra) {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(value);
     try {
-      long l1 = simpleDateFormat.parse(key).getTime();
-      long l2 = TimeZone.getDefault().getOffset(l1);
+      long timeMillis = simpleDateFormat.parse(key).getTime();
+      long timezoneOffset = TimeZone.getDefault().getOffset(timeMillis);
       Date date = new Date();
-      date.setTime(l1 + l2);
+      date.setTime(timeMillis + timezoneOffset);
       simpleDateFormat = new SimpleDateFormat(extra);
       String formatted = simpleDateFormat.format(date);
       key = formatted;

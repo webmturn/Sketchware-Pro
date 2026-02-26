@@ -311,8 +311,8 @@ public class ProjectFilePaths {
     public void extractAssetsToRes(Context context, String assetZipName) {
         try {
             ZipUtil.extractAssetZip(context, assetZipName, resDirectoryPath);
-        } catch (Exception e2) {
-            Log.e("ProjectFilePaths", e2.getMessage(), e2);
+        } catch (Exception ex) {
+            Log.e("ProjectFilePaths", ex.getMessage(), ex);
         }
     }
 
@@ -322,8 +322,8 @@ public class ProjectFilePaths {
     public void copyAppIcon(String iconPath) {
         try {
             fileUtil.copyFile(iconPath, resDirectoryPath + File.separator + "mipmap-xhdpi" + File.separator + "ic_launcher.png");
-        } catch (Exception e2) {
-            Log.e("ProjectFilePaths", e2.getMessage(), e2);
+        } catch (Exception ex) {
+            Log.e("ProjectFilePaths", ex.getMessage(), ex);
         }
     }
 
@@ -334,8 +334,8 @@ public class ProjectFilePaths {
     public void copyMipmapFolder(String iconPath) {
         try {
             FileUtil.copyDirectory(new File(iconPath), new File(resDirectoryPath + File.separator));
-        } catch (IOException e2) {
-            Log.e("ProjectFilePaths", e2.getMessage(), e2);
+        } catch (IOException ex) {
+            Log.e("ProjectFilePaths", ex.getMessage(), ex);
         }
     }
 
@@ -346,8 +346,8 @@ public class ProjectFilePaths {
     public void createLauncherIconXml(String content) {
         try {
             fileUtil.writeText(resDirectoryPath + File.separator + "mipmap-anydpi-v26" + File.separator + "ic_launcher.xml", content);
-        } catch (Exception e2) {
-            Log.e("ProjectFilePaths", e2.getMessage(), e2);
+        } catch (Exception ex) {
+            Log.e("ProjectFilePaths", ex.getMessage(), ex);
         }
     }
 

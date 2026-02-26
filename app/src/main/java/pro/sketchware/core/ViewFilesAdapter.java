@@ -193,8 +193,8 @@ public class ViewFilesAdapter extends BaseFragment {
         if (viewBean.type == 3 && projectFileBean.fileType == 0)
           ProjectDataManager.getProjectDataManager(this.projectId).addEvent(projectFileBean.getJavaName(), 1, viewBean.type, viewBean.id, "onClick"); 
       } 
-      FileListAdapter a1 = this.adapter;
-      a1.notifyItemChanged(a1.selectedPosition);
+      FileListAdapter fileListAdapter = this.adapter;
+      fileListAdapter.notifyItemChanged(fileListAdapter.selectedPosition);
     } 
   }
   

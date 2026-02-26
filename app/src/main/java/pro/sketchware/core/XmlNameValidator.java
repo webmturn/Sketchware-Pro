@@ -73,11 +73,11 @@ public class XmlNameValidator extends BaseValidator {
       } 
     } else {
       ArrayList<String> candidateNames = new ArrayList<>();
-      for (int b1 = 1; b1 <= this.batchCount; b1++) {
+      for (int batchIdx = 1; batchIdx <= this.batchCount; batchIdx++) {
         StringBuilder candidateBuilder = new StringBuilder();
         candidateBuilder.append(value);
         candidateBuilder.append("_");
-        candidateBuilder.append(b1);
+        candidateBuilder.append(batchIdx);
         candidateNames.add(candidateBuilder.toString());
       } 
       ArrayList<String> conflictNames = new ArrayList<>();
