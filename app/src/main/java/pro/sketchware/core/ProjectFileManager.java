@@ -123,10 +123,10 @@ public class ProjectFileManager {
       if (value.length() <= 0)
         return; 
       while (true) {
-        int i = key.indexOf("\n");
-        if (i < 0 || key.charAt(0) != '{')
+        int newlineIdx = key.indexOf("\n");
+        if (newlineIdx < 0 || key.charAt(0) != '{')
           break; 
-        value = key.substring(0, i);
+        value = key.substring(0, newlineIdx);
         ProjectFileBean projectFileBean1 = (ProjectFileBean)this.gson.fromJson(value, ProjectFileBean.class);
         projectFileBean1.setOptionsByTheme();
         if (projectFileBean1.fileName.equals("main")) {
@@ -150,9 +150,9 @@ public class ProjectFileManager {
         } else {
           this.activities.add(projectFileBean1);
         } 
-        if (i >= key.length() - 1)
+        if (newlineIdx >= key.length() - 1)
           break; 
-        key = key.substring(i + 1);
+        key = key.substring(newlineIdx + 1);
       } 
     } else if (key.equals("customview")) {
       if (value.length() <= 0)
@@ -160,16 +160,16 @@ public class ProjectFileManager {
       this.customViews = new ArrayList<ProjectFileBean>();
       String remaining = value;
       while (true) {
-        int i = remaining.indexOf("\n");
-        if (i < 0 || remaining.charAt(0) != '{')
+        int newlineIdx = remaining.indexOf("\n");
+        if (newlineIdx < 0 || remaining.charAt(0) != '{')
           break; 
-        key = remaining.substring(0, i);
+        key = remaining.substring(0, newlineIdx);
         ProjectFileBean projectFileBean1 = (ProjectFileBean)this.gson.fromJson(key, ProjectFileBean.class);
         projectFileBean1.setOptionsByTheme();
         this.customViews.add(projectFileBean1);
-        if (i >= remaining.length() - 1)
+        if (newlineIdx >= remaining.length() - 1)
           break; 
-        remaining = remaining.substring(i + 1);
+        remaining = remaining.substring(newlineIdx + 1);
       } 
     } 
   }

@@ -26,13 +26,13 @@ public class FormatUtil {
   
   public static String generateRandomId() {
     Random random = new Random();
-    int i = random.nextInt(100000);
+    int randomId = random.nextInt(100000);
     while (true) {
-      if (i < 10000 || i > 99999) {
-        i = random.nextInt(100000);
+      if (randomId < 10000 || randomId > 99999) {
+        randomId = random.nextInt(100000);
         continue;
       } 
-      return String.valueOf(i);
+      return String.valueOf(randomId);
     } 
   }
   
@@ -181,7 +181,7 @@ public class FormatUtil {
       if (atEnd)
         return ""; 
       boolean hasPercent = false;
-      int i = this.position;
+      int startPos = this.position;
       while (this.position < this.input.length() && this.input.charAt(this.position) != ' ') {
         char c = this.input.charAt(this.position);
         if (c == '\\') {
@@ -193,7 +193,7 @@ public class FormatUtil {
           continue;
         } 
         if (c == '%') {
-          if (this.position > i)
+          if (this.position > startPos)
             break; 
           hasPercent = true;
         } 

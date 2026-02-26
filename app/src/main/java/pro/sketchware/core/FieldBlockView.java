@@ -102,8 +102,8 @@ public class FieldBlockView extends BaseBlockView {
     textView.setTextSize(8.0F);
     textView.setTypeface(null, 1);
     RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-2, this.textHeight);
-    int i = this.minCWidth;
-    layoutParams.setMargins(i, 0, i, 0);
+    int margin = this.minCWidth;
+    layoutParams.setMargins(margin, 0, margin, 0);
     textView.setPadding(0, 0, 0, 0);
     textView.setLayoutParams((ViewGroup.LayoutParams)layoutParams);
     textView.setBackgroundColor(0);
@@ -144,9 +144,9 @@ public class FieldBlockView extends BaseBlockView {
     this.argValue = value;
     if (this.blockType.equals("d") || this.blockType.equals("m") || this.blockType.equals("s")) {
       this.labelView.setText(value.toString());
-      int i = Math.max(this.minSimpleWidth, getLabelWidth());
-      (this.labelView.getLayoutParams()).width = i;
-      setBlockSize((i + this.spacing), this.textHeight, true);
+      int labelWidth = Math.max(this.minSimpleWidth, getLabelWidth());
+      (this.labelView.getLayoutParams()).width = labelWidth;
+      setBlockSize((labelWidth + this.spacing), this.textHeight, true);
     } 
   }
 }

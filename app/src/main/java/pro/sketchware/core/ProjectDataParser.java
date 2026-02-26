@@ -173,12 +173,12 @@ public class ProjectDataParser {
   public final void parseKey(String rawKey) throws Exception {
     String keyPart = rawKey.trim();
     if (keyPart.contains(".xml")) {
-      int i = keyPart.indexOf(".xml") + 4;
-      this.fileName = keyPart.substring(0, i);
-      if (keyPart.length() == i) {
+      int extEndIdx = keyPart.indexOf(".xml") + 4;
+      this.fileName = keyPart.substring(0, extEndIdx);
+      if (keyPart.length() == extEndIdx) {
         this.dataType = ProjectDataParser.DataType.VIEW;
       } else {
-        keyPart = keyPart.substring(i);
+        keyPart = keyPart.substring(extEndIdx);
         if (keyPart.charAt(0) == '_') {
           if (keyPart.substring(1).equals("fab")) {
             this.dataType = ProjectDataParser.DataType.FAB;
@@ -191,40 +191,40 @@ public class ProjectDataParser {
       } 
     } else {
       if (keyPart.contains(".java")) {
-        int i = keyPart.indexOf(".java") + 5;
-        this.fileName = keyPart.substring(0, i);
-        if (keyPart.length() != i) {
-          keyPart = keyPart.substring(i);
+        int extEndIdx = keyPart.indexOf(".java") + 5;
+        this.fileName = keyPart.substring(0, extEndIdx);
+        if (keyPart.length() != extEndIdx) {
+          keyPart = keyPart.substring(extEndIdx);
           if (keyPart.charAt(0) == '_') {
             keyPart = keyPart.substring(1);
-            i = -1;
+            int matchIndex = -1;
             switch (keyPart.hashCode()) {
               case 3322014:
                 if (keyPart.equals("list"))
-                  i = 1; 
+                  matchIndex = 1; 
                 break;
               case 3154628:
                 if (keyPart.equals("func"))
-                  i = 4; 
+                  matchIndex = 4; 
                 break;
               case 116519:
                 if (keyPart.equals("var"))
-                  i = 0; 
+                  matchIndex = 0; 
                 break;
               case -447446250:
                 if (keyPart.equals("components"))
-                  i = 2; 
+                  matchIndex = 2; 
                 break;
               case -1291329255:
                 if (keyPart.equals("events"))
-                  i = 3; 
+                  matchIndex = 3; 
                 break;
             } 
-            if (i != 0) {
-              if (i != 1) {
-                if (i != 2) {
-                  if (i != 3) {
-                    if (i != 4) {
+            if (matchIndex != 0) {
+              if (matchIndex != 1) {
+                if (matchIndex != 2) {
+                  if (matchIndex != 3) {
+                    if (matchIndex != 4) {
                       this.dataType = ProjectDataParser.DataType.EVENT_BLOCK;
                       this.eventKey = keyPart;
                     } else {

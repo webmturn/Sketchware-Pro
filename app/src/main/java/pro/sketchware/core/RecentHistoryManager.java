@@ -64,14 +64,14 @@ public class RecentHistoryManager {
   public void loadFromDatabase(String category) {
     if ((ArrayList)this.recentMap.get(category) == null) {
       String[] parts = this.database.getStringDefault(category).split(",");
-      int i = parts.length;
+      int size = parts.length;
       while (true) {
-        int j = i - 1;
-        if (j >= 0) {
-          i = j;
-          if (!parts[j].isEmpty()) {
-            addRecentItem(category, parts[j]);
-            i = j;
+        int idx = size - 1;
+        if (idx >= 0) {
+          size = idx;
+          if (!parts[idx].isEmpty()) {
+            addRecentItem(category, parts[idx]);
+            size = idx;
           } 
           continue;
         } 
