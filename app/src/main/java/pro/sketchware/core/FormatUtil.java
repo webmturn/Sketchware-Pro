@@ -40,16 +40,16 @@ public class FormatUtil {
     String formatted;
     if (index < 0)
       return "0"; 
-    float f = index;
-    if (f >= 1024.0F && f < 1048576.0F) {
-      f /= 1024.0F;
-      formatted = (new DecimalFormat("#.#KB")).format(f);
-    } else if (f >= 1048576.0F && f < 1.07374182E9F) {
-      f /= 1048576.0F;
-      formatted = (new DecimalFormat("#.#MB")).format(f);
-    } else if (f >= 1.07374182E9F && f < 1.09951163E12F) {
-      f /= 1.07374182E9F;
-      formatted = (new DecimalFormat("#.#GB")).format(f);
+    float sizeValue = index;
+    if (sizeValue >= 1024.0F && sizeValue < 1048576.0F) {
+      sizeValue /= 1024.0F;
+      formatted = (new DecimalFormat("#.#KB")).format(sizeValue);
+    } else if (sizeValue >= 1048576.0F && sizeValue < 1.07374182E9F) {
+      sizeValue /= 1048576.0F;
+      formatted = (new DecimalFormat("#.#MB")).format(sizeValue);
+    } else if (sizeValue >= 1.07374182E9F && sizeValue < 1.09951163E12F) {
+      sizeValue /= 1.07374182E9F;
+      formatted = (new DecimalFormat("#.#GB")).format(sizeValue);
     } else {
       StringBuilder sizeBuilder = new StringBuilder();
       sizeBuilder.append(String.valueOf(index));
@@ -95,16 +95,16 @@ public class FormatUtil {
   
   public static String formatNumber(int index) {
     String formatted;
-    float f = index;
-    if (f >= 1000.0F && f < 1000000.0F) {
-      f /= 1000.0F;
-      formatted = (new DecimalFormat("#.#K")).format(f);
-    } else if (f >= 1000000.0F && f < 1.0E9F) {
-      f /= 1000000.0F;
-      formatted = (new DecimalFormat("#.#M")).format(f);
-    } else if (f >= 1.0E9F && f < 1.0E12F) {
-      f /= 1.0E9F;
-      formatted = (new DecimalFormat("#.#G")).format(f);
+    float numValue = index;
+    if (numValue >= 1000.0F && numValue < 1000000.0F) {
+      numValue /= 1000.0F;
+      formatted = (new DecimalFormat("#.#K")).format(numValue);
+    } else if (numValue >= 1000000.0F && numValue < 1.0E9F) {
+      numValue /= 1000000.0F;
+      formatted = (new DecimalFormat("#.#M")).format(numValue);
+    } else if (numValue >= 1.0E9F && numValue < 1.0E12F) {
+      numValue /= 1.0E9F;
+      formatted = (new DecimalFormat("#.#G")).format(numValue);
     } else {
       formatted = String.valueOf(index);
     } 
