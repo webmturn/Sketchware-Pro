@@ -357,7 +357,10 @@ public class ManageCustomComponentActivity extends BaseAppCompatActivity {
             public void bind(HashMap<String, Object> item) {
                 type.setText((String) item.get("name"));
                 description.setText((String) item.get("description"));
-                int imgRes = ((Number) item.get("icon")).intValue();
+                Object iconValue = item.get("icon");
+                int imgRes = iconValue instanceof Number
+                        ? ((Number) iconValue).intValue()
+                        : Integer.parseInt(String.valueOf(iconValue));
                 icon.setImageResource(OldResourceIdMapper.getDrawableFromOldResourceId(imgRes));
             }
 
