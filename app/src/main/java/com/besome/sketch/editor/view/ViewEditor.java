@@ -979,12 +979,12 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
             if (!isIdUsed) {
                 return candidateId;
             }
-            StringBuilder sb3 = new StringBuilder();
-            sb3.append(typeName);
+            StringBuilder idBuilder = new StringBuilder();
+            idBuilder.append(typeName);
             counter = (typeInBounds ? countItems[type] : counter) + 1;
             if (typeInBounds) countItems[type] = counter;
-            sb3.append(counter);
-            candidateId = sb3.toString();
+            idBuilder.append(counter);
+            candidateId = idBuilder.toString();
         }
     }
 
