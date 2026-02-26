@@ -2389,14 +2389,14 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     }
                     BlockView targetBlock = blockPane.findBlockById(blockPane.getAddTargetId());
                     BlockBean prevMoveTargetClone = targetBlock != null ? targetBlock.getBean().clone() : null;
-                    ArrayList<BlockView> allChildren3 = paletteBlock.getAllChildren();
+                    ArrayList<BlockView> blockChildren = paletteBlock.getAllChildren();
                     ArrayList<BlockBean> beansBeforeMove = new ArrayList<>();
-                    for (BlockView rs : allChildren3) {
+                    for (BlockView rs : blockChildren) {
                         beansBeforeMove.add(rs.getBean().clone());
                     }
                     dropBlockOnPane(paletteBlock, this.locationBuffer[0], this.locationBuffer[1], true);
                     ArrayList<BlockBean> beansAfterMove = new ArrayList<>();
-                    for (BlockView rs : allChildren3) {
+                    for (BlockView rs : blockChildren) {
                         beansAfterMove.add(rs.getBean().clone());
                     }
                     BlockBean prevDragSourceClone = dragSourceParent != null ? dragSourceParent.getBean().clone() : null;
