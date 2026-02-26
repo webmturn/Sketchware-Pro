@@ -443,8 +443,8 @@ new BuiltInLibrary(FIREBASE_MEASUREMENT_CONNECTOR, List.of(PLAY_SERVICES_BASEMEN
 | `com.google.android.recaptcha:recaptcha` | 18.5.1 | play-services-basement, play-services-tasks, play:integrity, kotlin-stdlib, kotlinx-coroutines-android, kotlinx-coroutines-play-services |
 | `androidx.credentials:credentials` | 1.2.0-rc01 | annotation, kotlin-stdlib |
 | `androidx.credentials:credentials-play-services-auth` | 1.2.0-rc01 | credentials, kotlin-stdlib; **运行时**: play-services-auth, play-services-fido, googleid |
-| `com.google.android.gms:play-services-fido` | 20.1.0 | 需进一步分析 |
-| `com.google.android.libraries.identity.googleid:googleid` | 1.1.0 | 需进一步分析 |
+| `com.google.android.gms:play-services-fido` | 20.1.0 | play-services-base, play-services-basement, play-services-tasks（均已覆盖） |
+| `com.google.android.libraries.identity.googleid:googleid` | 1.1.0 | credentials, kotlin-stdlib, kotlin-stdlib-jdk8（均已覆盖） |
 
 **B. 已存在但需版本升级的库：**
 
