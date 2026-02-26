@@ -32,11 +32,11 @@ public class BlockHistoryManager {
   }
   
   public static void clearInstance() {
-    BlockHistoryManager bC1 = instance;
-    if (bC1 != null) {
-      bC1.scId = "";
-      bC1.historyMap = null;
-      bC1.positionMap = null;
+    BlockHistoryManager currentInstance = instance;
+    if (currentInstance != null) {
+      currentInstance.scId = "";
+      currentInstance.historyMap = null;
+      currentInstance.positionMap = null;
     } 
     instance = null;
   }
