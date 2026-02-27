@@ -1,22 +1,19 @@
 package dev.aldi.sayuti.editor.manage;
 
 import static android.net.ConnectivityManager.NetworkCallback;
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import static dev.aldi.sayuti.editor.manage.LocalLibrariesUtil.createLibraryMap;
 
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.net.Network;
-import android.net.NetworkCapabilities;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -29,7 +26,6 @@ import com.google.gson.Gson;
 
 import org.cosmic.ide.dependency.resolver.api.Artifact;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,6 +38,7 @@ import mod.jbk.build.BuiltInLibraries;
 import mod.pranav.dependency.resolver.DependencyResolver;
 import pro.sketchware.R;
 import pro.sketchware.databinding.LibraryDownloaderDialogBinding;
+import pro.sketchware.utility.FilePathUtil;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.SketchwareUtil;
 
@@ -136,41 +133,6 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
     }
 
     private void initDownloadFlow() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && !Environment.isExternalStorageManager()) {
-            new MaterialAlertDialogBuilder(requireContext())
-                    .setTitle(R.string.common_message_permission_title_storage)
-                    .setMessage(R.string.common_message_permission_storage)
-                    .setPositiveButton(R.string.common_word_settings, (dialog, which) -> {
-                        FileUtil.requestAllFilesAccessPermission(requireContext());
-                        dialog.dismiss();
-                    })
-                    .setNegativeButton(R.string.common_word_cancel, null)
-                    .show();
-            return;
-        }
-
-        // Practical write test: some devices report isExternalStorageManager()=true
-        // but still block writes to external storage. Test in a NEW subdirectory
-        // to match the actual download path (parent/.sketchware/libs/local_libs/<name>/file).
-        File testDir = new File(FileUtil.getExternalStorageDir(), ".sketchware/libs/local_libs/.write_test_dir");
-        File testFile = new File(testDir, ".write_test");
-        try {
-            if (!testDir.mkdirs() && !testDir.exists()) {
-                showStorageAccessError();
-                return;
-            }
-            if (!testFile.createNewFile()) {
-                showStorageAccessError();
-                return;
-            }
-        } catch (Exception e) {
-            showStorageAccessError();
-            return;
-        } finally {
-            testFile.delete();
-            testDir.delete();
-        }
-
         dependencyName = Helper.getText(binding.dependencyInput);
         if (dependencyName.isEmpty()) {
             binding.dependencyInputLayout.setError(Helper.getResString(R.string.error_enter_dependency));
@@ -220,26 +182,6 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
         var handler = new Handler(Looper.getMainLooper());
 
         downloadExecutor.execute(() -> {
-            // Write test on the SAME background thread as the download.
-            // UI thread tests may pass while background thread writes fail on some devices.
-            File testDir = new File(FileUtil.getExternalStorageDir(), ".sketchware/libs/local_libs/.write_test_dir");
-            File testFile = new File(testDir, ".write_test");
-            try {
-                if (!testDir.mkdirs() && !testDir.exists()) throw new java.io.IOException("Cannot create directory");
-                testFile.createNewFile();
-            } catch (Exception e) {
-                testFile.delete();
-                testDir.delete();
-                handler.post(() -> {
-                    setDownloadState(false);
-                    showStorageAccessError();
-                });
-                return;
-            } finally {
-                testFile.delete();
-                testDir.delete();
-            }
-
             BuiltInLibraries.maybeExtractAndroidJar((message, progress) ->
                     handler.post(() -> binding.overallProgress.setIndeterminate(true)));
             BuiltInLibraries.maybeExtractCoreLambdaStubsJar();
@@ -466,14 +408,12 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
     }
 
     private void showStorageAccessError() {
+        if (!isAdded()) return;
         new MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.common_message_permission_title_storage)
                 .setMessage(Helper.getResString(R.string.common_message_permission_storage)
-                        + "\n\nPath: " + FileUtil.getExternalStorageDir() + "/.sketchware/libs/local_libs")
+                        + "\n\nPath: " + FilePathUtil.getLocalLibsDir().getAbsolutePath())
                 .setPositiveButton(R.string.common_word_settings, (dialog, which) -> {
-                    // Don't use FileUtil.requestAllFilesAccessPermission() — it has an
-                    // internal isExternalStorageManager() check that may return true on
-                    // some devices even when writes are actually blocked.
                     try {
                         Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
                                 android.net.Uri.parse("package:" + requireContext().getPackageName()));

@@ -2,6 +2,8 @@ package mod.hey.studios.project.backup;
 
 import android.content.Context;
 import android.os.Environment;
+
+import pro.sketchware.utility.FilePathUtil;
 import android.util.Log;
 
 import com.besome.sketch.beans.BlockBean;
@@ -87,8 +89,7 @@ public class BackupFactory {
     }
 
     private static File getAllLocalLibsDir() {
-        return new File(Environment.getExternalStorageDirectory(),
-                ".sketchware/libs/local_libs");
+        return FilePathUtil.getLocalLibsDir();
     }
 
     private static HashMap<String, Object> getProject(File file) {
