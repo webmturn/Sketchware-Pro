@@ -10,23 +10,16 @@ import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 
 public class ProjectDataParser {
-  public final String TAG = "dataParser";
+  private String fileName;
   
-  public String fileName;
+  private String eventKey;
   
-  public String eventKey;
+  private DataType dataType;
   
-  public DataType dataType;
-  
-  public Gson gson = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
+  private final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
   
   public ProjectDataParser(String key) throws Exception {
-    try {
-      parseKey(key);
-      return;
-    } catch (Exception exception) {
-      throw exception;
-    } 
+    parseKey(key);
   }
   
   public static ArrayList<BlockBean> parseBlockBeans(Gson gson, String data) {
@@ -68,35 +61,26 @@ public class ProjectDataParser {
   }
   
   public DataType getDataType() {
-    return this.dataType;
+    return dataType;
   }
   
+  @SuppressWarnings("unchecked")
   public <T> T parseData(String data) {
-    switch (KeyboardSettingConstants.VALUES[this.dataType.ordinal()]) {
-      default:
-        return null;
-      case 8:
-        return (T)parseBlockBeans(this.gson, data);
-      case 7:
-        return (T)parseMoreBlockFunctions(data);
-      case 6:
-        return (T)parseEventBeans(data);
-      case 5:
-        return (T)parseComponentBeans(data);
-      case 4:
-        return (T)parseListVariables(data);
-      case 3:
-        return (T)parseVariables(data);
-      case 2:
-        return (T)parseFabViewBean(data);
-      case 1:
-        break;
-    } 
-    return (T)parseViewBeans(this.gson, data);
+    switch (dataType) {
+      case VIEW:        return (T) parseViewBeans(gson, data);
+      case FAB:         return (T) parseFabViewBean(data);
+      case VARIABLE:    return (T) parseVariables(data);
+      case LIST:        return (T) parseListVariables(data);
+      case COMPONENT:   return (T) parseComponentBeans(data);
+      case EVENT:       return (T) parseEventBeans(data);
+      case MORE_BLOCK:  return (T) parseMoreBlockFunctions(data);
+      case EVENT_BLOCK: return (T) parseBlockBeans(gson, data);
+      default:          return null;
+    }
   }
   
   public String getFileName() {
-    return this.fileName;
+    return fileName;
   }
   
   public ArrayList<ComponentBean> parseComponentBeans(String data) {
@@ -108,7 +92,7 @@ public class ProjectDataParser {
       while ((line = reader.readLine()) != null) {
         if (line.trim().length() <= 0) continue;
         if (line.trim().charAt(0) != '{') continue;
-        ComponentBean bean = this.gson.fromJson(line, ComponentBean.class);
+        ComponentBean bean = gson.fromJson(line, ComponentBean.class);
         bean.initValue();
         result.add(bean);
       }
@@ -121,7 +105,7 @@ public class ProjectDataParser {
   }
   
   public String getEventKey() {
-    return this.eventKey;
+    return eventKey;
   }
   
   public ArrayList<EventBean> parseEventBeans(String data) {
@@ -133,7 +117,7 @@ public class ProjectDataParser {
       while ((line = reader.readLine()) != null) {
         if (line.trim().length() <= 0) continue;
         if (line.charAt(0) != '{') continue;
-        EventBean bean = this.gson.fromJson(line, EventBean.class);
+        EventBean bean = gson.fromJson(line, EventBean.class);
         bean.initValue();
         result.add(bean);
       }
@@ -146,7 +130,7 @@ public class ProjectDataParser {
   }
   
   public ViewBean parseFabViewBean(String data) {
-    return (data.trim().length() <= 0 || data.trim().charAt(0) != '{') ? new ViewBean("_fab", 16) : (ViewBean)this.gson.fromJson(data, ViewBean.class);
+    return (data.trim().length() <= 0 || data.trim().charAt(0) != '{') ? new ViewBean("_fab", 16) : gson.fromJson(data, ViewBean.class);
   }
   
   public ArrayList<Pair<String, String>> parseMoreBlockFunctions(String data) {
@@ -174,82 +158,44 @@ public class ProjectDataParser {
     String keyPart = rawKey.trim();
     if (keyPart.contains(".xml")) {
       int extEndIdx = keyPart.indexOf(".xml") + 4;
-      this.fileName = keyPart.substring(0, extEndIdx);
+      fileName = keyPart.substring(0, extEndIdx);
       if (keyPart.length() == extEndIdx) {
-        this.dataType = ProjectDataParser.DataType.VIEW;
+        dataType = DataType.VIEW;
       } else {
         keyPart = keyPart.substring(extEndIdx);
-        if (keyPart.charAt(0) == '_') {
-          if (keyPart.substring(1).equals("fab")) {
-            this.dataType = ProjectDataParser.DataType.FAB;
-          } else {
-            throw new Exception("invalid key : Unknown type string");
-          } 
+        if (keyPart.charAt(0) == '_' && keyPart.substring(1).equals("fab")) {
+          dataType = DataType.FAB;
+        } else if (keyPart.charAt(0) != '_') {
+          throw new Exception("invalid key : No separator");
         } else {
-          throw new Exception("invalid key : No separator");
-        } 
-      } 
-    } else {
-      if (keyPart.contains(".java")) {
-        int extEndIdx = keyPart.indexOf(".java") + 5;
-        this.fileName = keyPart.substring(0, extEndIdx);
-        if (keyPart.length() != extEndIdx) {
-          keyPart = keyPart.substring(extEndIdx);
-          if (keyPart.charAt(0) == '_') {
-            keyPart = keyPart.substring(1);
-            int matchIndex = -1;
-            switch (keyPart.hashCode()) {
-              case 3322014:
-                if (keyPart.equals("list"))
-                  matchIndex = 1; 
-                break;
-              case 3154628:
-                if (keyPart.equals("func"))
-                  matchIndex = 4; 
-                break;
-              case 116519:
-                if (keyPart.equals("var"))
-                  matchIndex = 0; 
-                break;
-              case -447446250:
-                if (keyPart.equals("components"))
-                  matchIndex = 2; 
-                break;
-              case -1291329255:
-                if (keyPart.equals("events"))
-                  matchIndex = 3; 
-                break;
-            } 
-            if (matchIndex != 0) {
-              if (matchIndex != 1) {
-                if (matchIndex != 2) {
-                  if (matchIndex != 3) {
-                    if (matchIndex != 4) {
-                      this.dataType = ProjectDataParser.DataType.EVENT_BLOCK;
-                      this.eventKey = keyPart;
-                    } else {
-                      this.dataType = ProjectDataParser.DataType.MORE_BLOCK;
-                    } 
-                  } else {
-                    this.dataType = ProjectDataParser.DataType.EVENT;
-                  } 
-                } else {
-                  this.dataType = ProjectDataParser.DataType.COMPONENT;
-                } 
-              } else {
-                this.dataType = ProjectDataParser.DataType.LIST;
-              } 
-            } else {
-              this.dataType = ProjectDataParser.DataType.VARIABLE;
-            } 
-            return;
-          } 
-          throw new Exception("invalid key : No separator");
-        } 
+          throw new Exception("invalid key : Unknown type string");
+        }
+      }
+    } else if (keyPart.contains(".java")) {
+      int extEndIdx = keyPart.indexOf(".java") + 5;
+      fileName = keyPart.substring(0, extEndIdx);
+      if (keyPart.length() == extEndIdx) {
         throw new Exception("invalid key : No data type");
-      } 
+      }
+      keyPart = keyPart.substring(extEndIdx);
+      if (keyPart.charAt(0) != '_') {
+        throw new Exception("invalid key : No separator");
+      }
+      keyPart = keyPart.substring(1);
+      switch (keyPart) {
+        case "var":        dataType = DataType.VARIABLE;  break;
+        case "list":       dataType = DataType.LIST;      break;
+        case "components": dataType = DataType.COMPONENT; break;
+        case "events":     dataType = DataType.EVENT;     break;
+        case "func":       dataType = DataType.MORE_BLOCK; break;
+        default:
+          dataType = DataType.EVENT_BLOCK;
+          eventKey = keyPart;
+          break;
+      }
+    } else {
       throw new Exception("invalid key : No filename");
-    } 
+    }
   }
   
   public ArrayList<Pair<Integer, String>> parseListVariables(String data) {
@@ -295,8 +241,6 @@ public class ProjectDataParser {
   }
   
   public enum DataType {
-    VIEW, FAB, VARIABLE, LIST, COMPONENT, EVENT, MORE_BLOCK, EVENT_BLOCK;
-    
-    public static final DataType[] VALUES = new DataType[] { VIEW, FAB, VARIABLE, LIST, COMPONENT, EVENT, MORE_BLOCK, EVENT_BLOCK };
+    VIEW, FAB, VARIABLE, LIST, COMPONENT, EVENT, MORE_BLOCK, EVENT_BLOCK
   }
 }
