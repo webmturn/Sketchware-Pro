@@ -1933,7 +1933,7 @@ private SharedPreferences sp;
 | 字段 | 类型 | 说明 |
 |------|------|------|
 | `useYn` | String | `"Y"` 启用, `"N"` 禁用 |
-| `libType` | int | 库类型：0=Firebase, 1=AppCompat, 2=AdMob, 3=GoogleMap, 4=LocalLib, 5=NativeLib, 6=ExcludeBuiltin, 7=Material3 |
+| `libType` | int | 库类型：0=Firebase, 1=AppCompat, 2=AdMob, 3=GoogleMap, 4=LocalLib, 5=NativeLib, 6=ExcludeBuiltin, 7=Material3。**注意**：此字段为冗余字段，加载时由节名（section key）强制覆盖，不以 JSON 中的值为准。 |
 | `adUnits` | Array | 广告单元列表（仅 AdMob 使用） |
 | `testDevices` | Array | 测试设备列表（仅 AdMob 使用） |
 | `configurations` | Object | 附加配置（HashMap），通常为空 `{}` |
@@ -2753,6 +2753,10 @@ Firebase 组件的事件名必须使用代码生成器期望的**完整名称**�
 #### 7.2 library 必须有 4 个节
 
 即使不使用任何库，也必须包含 `@firebaseDB`、`@compat`、`@admob`、`@googleMap` 四个节，每个节下有一个 `useYn:"N"` 的 JSON。
+
+#### 7.3 libType 由节名决定，JSON 中的值被忽略
+
+`libType` 在加载时由 `parseLibrarySection()` 根据节名强制覆盖（`@firebaseDB`→0, `@compat`→1, `@admob`→2, `@googleMap`→3），JSON 中存储的 `libType` 值不被信任。部分旧项目的数据文件中所有条目的 `libType` 均为 0，如果直接使用会导致库管理器将所有库显示为 Firebase。
 
 ### 8. project 文件陷阱
 
