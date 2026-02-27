@@ -5,32 +5,27 @@ import android.content.res.Resources;
 import android.util.Log;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-import javax.crypto.BadPaddingException;
+import java.util.HashSet;
+import java.util.Set;
 import pro.sketchware.R;
-import javax.crypto.IllegalBlockSizeException;
 import mod.agus.jcoderz.editor.event.ManageEvent;
 
 public class StringResource {
-  public static volatile StringResource instance;
+  private static volatile StringResource instance;
   
-  public HashMap<String, String> blockTranslations;
+  private HashMap<String, String> blockTranslations;
   
-  public HashMap<String, String> eventTranslations;
+  private HashMap<String, String> eventTranslations;
   
-  public String translationDir = SketchwarePaths.getLocalizationStringsPath();
+  private final String translationDir = SketchwarePaths.getLocalizationStringsPath();
   
-  public boolean isLoaded;
-  
-  public final String BLOCK_PREFIX = "block";
-  
-  public final String ROOT_SPEC_PREFIX = "root_spec";
+  private boolean isLoaded;
   
   public StringResource() {
-    if (this.blockTranslations == null)
-      this.blockTranslations = new HashMap<String, String>(); 
-    if (this.eventTranslations == null)
-      this.eventTranslations = new HashMap<String, String>(); 
+    blockTranslations = new HashMap<>();
+    eventTranslations = new HashMap<>();
   }
   
   public static StringResource getInstance() {
@@ -53,454 +48,160 @@ public class StringResource {
   }
   
   public String getEventTranslation(Context context, String eventKey) {
-    if (this.blockTranslations == null)
-      this.blockTranslations = new HashMap<String, String>(); 
-    if (this.blockTranslations.isEmpty()) {
-      this.isLoaded = false;
-      this.blockTranslations = loadTranslationsFromFile(this.translationDir);
-    } 
-    if (this.eventTranslations == null)
-      this.eventTranslations = new HashMap<String, String>(); 
-    if (this.eventTranslations.isEmpty())
-      loadEventTranslations(context); 
-    eventKey = this.eventTranslations.get(eventKey);
-    String translation = eventKey;
-    if (eventKey == null)
-      translation = ""; 
-    return translation;
+    ensureTranslationsLoaded(context);
+    String translation = eventTranslations.get(eventKey);
+    return translation != null ? translation : "";
   }
   
+  private void ensureTranslationsLoaded(Context context) {
+    if (blockTranslations == null)
+      blockTranslations = new HashMap<>();
+    if (blockTranslations.isEmpty()) {
+      isLoaded = false;
+      blockTranslations = loadTranslationsFromFile(translationDir);
+    }
+    if (eventTranslations == null)
+      eventTranslations = new HashMap<>();
+    if (eventTranslations.isEmpty())
+      loadEventTranslations(context);
+  }
+  
+  private static final Set<String> KNOWN_ROOT_SPEC_EVENTS = new HashSet<>(Arrays.asList(
+      "onClick", "onCheckedChange", "onItemSelected", "onItemClicked", "onItemLongClicked",
+      "onTextChanged", "onPageStarted", "onPageFinished", "onProgressChanged",
+      "onStartTrackingTouch", "onStopTrackingTouch", "onAnimationStart", "onAnimationEnd",
+      "onAnimationCancel", "onBindCustomView", "onDateChange", "onChildAdded", "onChildChanged",
+      "onChildRemoved", "onCancelled", "onUploadProgress", "onDownloadProgress",
+      "onUploadSuccess", "onDownloadSuccess", "onDeleteSuccess", "onFailure",
+      "onPictureTaken", "onPictureTakenCancel", "onFilesPicked", "onFilesPickedCancel",
+      "onResponse", "onErrorResponse", "onSpeechResult", "onSpeechError",
+      "onConnected", "onDataReceived", "onDataSent", "onConnectionError", "onConnectionStopped",
+      "onMapReady", "onMarkerClicked", "onLocationChanged"
+  ));
+
   public String getRootSpecTranslation(Context context, String blockType, String eventName) {
-    if (this.blockTranslations == null)
-      this.blockTranslations = new HashMap<String, String>(); 
-    boolean isEmpty = this.blockTranslations.isEmpty();
-    byte matchIndex = 0;
-    if (isEmpty) {
-      this.isLoaded = false;
-      this.blockTranslations = loadTranslationsFromFile(this.translationDir);
-    } 
-    if (this.eventTranslations == null)
-      this.eventTranslations = new HashMap<String, String>(); 
-    if (this.eventTranslations.isEmpty())
-      loadEventTranslations(context); 
-    switch (eventName.hashCode()) {
-      default:
-        matchIndex = -1;
-        break;
-      case 2087273080:
-        if (eventName.equals("onFilesPicked")) {
-          matchIndex = 28;
-          break;
-        } 
-      case 1979400473:
-        if (eventName.equals("onItemLongClicked")) {
-          matchIndex = 4;
-          break;
-        } 
-      case 1803231982:
-        if (eventName.equals("onMarkerClicked")) {
-          matchIndex = 40;
-          break;
-        } 
-      case 1757061906:
-        if (eventName.equals("onFilesPickedCancel")) {
-          matchIndex = 29;
-          break;
-        } 
-      case 1710477203:
-        if (eventName.equals("onPageStarted")) {
-          matchIndex = 6;
-          break;
-        } 
-      case 1586033095:
-        if (eventName.equals("onStopTrackingTouch")) {
-          matchIndex = 10;
-          break;
-        } 
-      case 1395209852:
-        if (eventName.equals("onDownloadSuccess")) {
-          matchIndex = 23;
-          break;
-        } 
-      case 1348605570:
-        if (eventName.equals("onPictureTakenCancel")) {
-          matchIndex = 27;
-          break;
-        } 
-      case 1348442836:
-        if (eventName.equals("onDownloadProgress")) {
-          matchIndex = 21;
-          break;
-        } 
-      case 1170737640:
-        if (eventName.equals("onPictureTaken")) {
-          matchIndex = 26;
-          break;
-        } 
-      case 805710389:
-        if (eventName.equals("onItemClicked")) {
-          matchIndex = 3;
-          break;
-        } 
-      case 694589214:
-        if (eventName.equals("onSpeechResult")) {
-          matchIndex = 32;
-          break;
-        } 
-      case 445802034:
-        if (eventName.equals("onCancelled")) {
-          matchIndex = 19;
-          break;
-        } 
-      case 378110312:
-        if (eventName.equals("onTextChanged")) {
-          matchIndex = 5;
-          break;
-        } 
-      case 372583555:
-        if (eventName.equals("onChildAdded")) {
-          matchIndex = 16;
-          break;
-        } 
-      case 264008033:
-        if (eventName.equals("onDataSent")) {
-          matchIndex = 36;
-          break;
-        } 
-      case 249705131:
-        if (eventName.equals("onFailure")) {
-          matchIndex = 25;
-          break;
-        } 
-      case 162093458:
-        if (eventName.equals("onBindCustomView")) {
-          matchIndex = 14;
-          break;
-        } 
-      case 136827711:
-        if (eventName.equals("onAnimationCancel")) {
-          matchIndex = 13;
-          break;
-        } 
-      case 80616227:
-        if (eventName.equals("onUploadSuccess")) {
-          matchIndex = 22;
-          break;
-        } 
-      case -376002870:
-        if (eventName.equals("onErrorResponse")) {
-          matchIndex = 31;
-          break;
-        } 
-      case -484536541:
-        if (eventName.equals("onChildRemoved")) {
-          matchIndex = 18;
-          break;
-        } 
-      case -505277536:
-        if (eventName.equals("onPageFinished")) {
-          matchIndex = 7;
-          break;
-        } 
-      case -507667891:
-        if (eventName.equals("onItemSelected")) {
-          matchIndex = 2;
-          break;
-        } 
-      case -584901992:
-        if (eventName.equals("onCheckedChange")) {
-          matchIndex = 1;
-          break;
-        } 
-      case -609996822:
-        if (eventName.equals("onConnected")) {
-          matchIndex = 34;
-          break;
-        } 
-      case -672992515:
-        if (eventName.equals("onAnimationStart")) {
-          matchIndex = 11;
-          break;
-        } 
-      case -719893013:
-        if (eventName.equals("onConnectionError")) {
-          matchIndex = 37;
-          break;
-        } 
-      case -732782352:
-        if (eventName.equals("onConnectionStopped")) {
-          matchIndex = 38;
-          break;
-        } 
-      case -749253875:
-        if (eventName.equals("onUploadProgress")) {
-          matchIndex = 20;
-          break;
-        } 
-      case -821066400:
-        if (eventName.equals("onLocationChanged")) {
-          matchIndex = 41;
-          break;
-        } 
-      case -837428873:
-        if (eventName.equals("onChildChanged")) {
-          matchIndex = 17;
-          break;
-        } 
-      case -891988931:
-        if (eventName.equals("onDateChange")) {
-          matchIndex = 15;
-          break;
-        } 
-      case -1153785290:
-        if (eventName.equals("onAnimationEnd")) {
-          matchIndex = 12;
-          break;
-        } 
-      case -1215328199:
-        if (eventName.equals("onDeleteSuccess")) {
-          matchIndex = 24;
-          break;
-        } 
-      case -1351902487:
-        if (eventName.equals("onClick"))
-          break; 
-      case -1358405466:
-        if (eventName.equals("onMapReady")) {
-          matchIndex = 39;
-          break;
-        } 
-      case -1779618840:
-        if (eventName.equals("onProgressChanged")) {
-          matchIndex = 8;
-          break;
-        } 
-      case -1809154262:
-        if (eventName.equals("onDataReceived")) {
-          matchIndex = 35;
-          break;
-        } 
-      case -1865337024:
-        if (eventName.equals("onResponse")) {
-          matchIndex = 30;
-          break;
-        } 
-      case -2067423513:
-        if (eventName.equals("onSpeechError")) {
-          matchIndex = 33;
-          break;
-        } 
-      case -2117913147:
-        if (eventName.equals("onStartTrackingTouch")) {
-          matchIndex = 9;
-          break;
-        } 
-    } 
-    switch (matchIndex) {
-      default:
-        String result = this.eventTranslations.get(eventName);
-        if (result == null)
-          result = ManageEvent.getExtraEventSpec(blockType, eventName); 
-        return result;
-      case 0:
-      case 1:
-      case 2:
-      case 3:
-      case 4:
-      case 5:
-      case 6:
-      case 7:
-      case 8:
-      case 9:
-      case 10:
-      case 11:
-      case 12:
-      case 13:
-      case 14:
-      case 15:
-      case 16:
-      case 17:
-      case 18:
-      case 19:
-      case 20:
-      case 21:
-      case 22:
-      case 23:
-      case 24:
-      case 25:
-      case 26:
-      case 27:
-      case 28:
-      case 29:
-      case 30:
-      case 31:
-      case 32:
-      case 33:
-      case 34:
-      case 35:
-      case 36:
-      case 37:
-      case 38:
-      case 39:
-      case 40:
-      case 41:
-        break;
-    } 
-    String translation = this.eventTranslations.get(eventName);
-    eventName = translation;
+    ensureTranslationsLoaded(context);
+
+    if (!KNOWN_ROOT_SPEC_EVENTS.contains(eventName)) {
+      String result = eventTranslations.get(eventName);
+      if (result == null)
+        result = ManageEvent.getExtraEventSpec(blockType, eventName);
+      return result;
+    }
+
+    String translation = eventTranslations.get(eventName);
     if (translation == null)
-      eventName = ""; 
-    StringBuilder specBuilder = new StringBuilder();
-    specBuilder.append(getTranslatedString(context, R.string.root_spec_common_when));
-    specBuilder.append(" ");
-    specBuilder.append(blockType);
-    specBuilder.append(" ");
-    specBuilder.append(eventName);
-    return specBuilder.toString();
+      translation = "";
+    return getTranslatedString(context, R.string.root_spec_common_when)
+        + " " + blockType + " " + translation;
   }
   
   public String getBlockTranslation(Context context, String blockKeyPrefix, ArrayList<String> specParts) {
     int bodyCount = specParts.size() > 1 ? specParts.size() - 1 : 0;
-    if (this.blockTranslations == null)
-      this.blockTranslations = new HashMap<String, String>();
-    if (this.blockTranslations.isEmpty()) {
-      this.isLoaded = false;
-      this.blockTranslations = loadTranslationsFromFile(this.translationDir);
+    if (blockTranslations == null)
+      blockTranslations = new HashMap<>();
+    if (blockTranslations.isEmpty()) {
+      isLoaded = false;
+      blockTranslations = loadTranslationsFromFile(translationDir);
     }
     StringBuilder result = new StringBuilder(1024);
     String headKey = blockKeyPrefix + "_head";
     String tailKey = blockKeyPrefix + "_tail";
     boolean useTranslation = false;
-    if (this.blockTranslations != null && this.blockTranslations.containsKey(headKey) && this.blockTranslations.containsKey(tailKey)) {
+    if (blockTranslations.containsKey(headKey) && blockTranslations.containsKey(tailKey)) {
       useTranslation = true;
       for (int i = 0; i < bodyCount; i++) {
         String bk = blockKeyPrefix + "_body_" + (i + 1);
-        if (!this.blockTranslations.containsKey(bk)) {
+        if (!blockTranslations.containsKey(bk)) {
           useTranslation = false;
           break;
         }
       }
     }
-    String headStr;
-    if (useTranslation) {
-      headStr = (String) this.blockTranslations.get(headKey);
-    } else {
-      try {
-        headStr = context.getResources().getString(
-            context.getResources().getIdentifier(headKey, "string", context.getPackageName()));
-      } catch (Exception e) {
-        headStr = "";
-      }
-    }
-    if (headStr == null) headStr = "";
+    String headStr = resolveTranslationString(context, useTranslation, headKey);
     result.append(headStr);
-    int bodyIdx = 0;
-    if (specParts.size() > 0) {
+    if (!specParts.isEmpty()) {
       if (result.length() > 0) result.append(" ");
-      result.append((String) specParts.get(0));
+      result.append(specParts.get(0));
     }
-    while (bodyIdx < bodyCount) {
-      bodyIdx++;
+    for (int bodyIdx = 1; bodyIdx <= bodyCount; bodyIdx++) {
       String bodyKey = blockKeyPrefix + "_body_" + bodyIdx;
-      String bodyStr;
-      if (useTranslation) {
-        bodyStr = (String) this.blockTranslations.get(bodyKey);
-      } else {
-        try {
-          bodyStr = context.getResources().getString(
-              context.getResources().getIdentifier(bodyKey, "string", context.getPackageName()));
-        } catch (Exception e) {
-          bodyStr = "";
-        }
-      }
-      if (bodyStr == null) bodyStr = "";
-      if (bodyStr.length() > 0) result.append(" ");
+      String bodyStr = resolveTranslationString(context, useTranslation, bodyKey);
+      if (!bodyStr.isEmpty()) result.append(" ");
       result.append(bodyStr);
       if (result.length() > 0) result.append(" ");
-      result.append((String) specParts.get(bodyIdx));
+      result.append(specParts.get(bodyIdx));
     }
-    String tailStr;
-    if (useTranslation) {
-      tailStr = (String) this.blockTranslations.get(tailKey);
-    } else {
-      try {
-        tailStr = context.getResources().getString(
-            context.getResources().getIdentifier(tailKey, "string", context.getPackageName()));
-      } catch (Exception e) {
-        tailStr = "";
-      }
-    }
-    if (tailStr == null) tailStr = "";
-    if (result.length() > 0 && tailStr.length() > 0) result.append(" ");
+    String tailStr = resolveTranslationString(context, useTranslation, tailKey);
+    if (result.length() > 0 && !tailStr.isEmpty()) result.append(" ");
     result.append(tailStr);
     return result.toString();
   }
   
+  private String resolveTranslationString(Context context, boolean useTranslation, String key) {
+    if (useTranslation) {
+      String value = blockTranslations.get(key);
+      return value != null ? value : "";
+    }
+    try {
+      return context.getResources().getString(
+          context.getResources().getIdentifier(key, "string", context.getPackageName()));
+    } catch (Exception e) {
+      return "";
+    }
+  }
+  
   public String getTranslatedStringFromRes(Resources resources, int resId) {
     String resEntryName = resources.getResourceEntryName(resId);
-    if (this.blockTranslations == null)
-      this.blockTranslations = new HashMap<String, String>(); 
+    if (blockTranslations == null)
+      blockTranslations = new HashMap<>();
     try {
-      if (this.blockTranslations.isEmpty()) {
-        this.isLoaded = false;
-        this.blockTranslations = loadTranslationsFromFile(this.translationDir);
-      } 
-      return (this.blockTranslations.containsKey(resEntryName) && this.blockTranslations.get(resEntryName) != null && ((String)this.blockTranslations.get(resEntryName)).length() > 0) ? ((String)this.blockTranslations.get(resEntryName)).replaceAll("\\\\\\'", "'").replaceAll("\\\\\\\"", "\"").replaceAll("\\\\n", "\\\n") : resources.getString(resId);
+      if (blockTranslations.isEmpty()) {
+        isLoaded = false;
+        blockTranslations = loadTranslationsFromFile(translationDir);
+      }
+      String value = blockTranslations.get(resEntryName);
+      if (value != null && !value.isEmpty()) {
+        return value.replaceAll("\\\\\\'" , "'").replaceAll("\\\\\\\"", "\"").replaceAll("\\\\n", "\\\n");
+      }
+      return resources.getString(resId);
     } catch (Exception exception) {
       return resources.getString(resId);
-    } 
+    }
   }
   
   public String getTranslatedStringFormattedFromRes(Resources resources, int resId, Object... formatArgs) {
     String resEntryName = resources.getResourceEntryName(resId);
-    if (this.blockTranslations == null)
-      this.blockTranslations = new HashMap<String, String>(); 
-    boolean isEmpty = this.blockTranslations.isEmpty();
-    byte argIdx = 0;
-    if (isEmpty) {
-      this.isLoaded = false;
-      this.blockTranslations = loadTranslationsFromFile(this.translationDir);
-    } 
+    if (blockTranslations == null)
+      blockTranslations = new HashMap<>();
+    if (blockTranslations.isEmpty()) {
+      isLoaded = false;
+      blockTranslations = loadTranslationsFromFile(translationDir);
+    }
     try {
-      if (this.blockTranslations.containsKey(resEntryName) && this.blockTranslations.get(resEntryName) != null && ((String)this.blockTranslations.get(resEntryName)).length() > 0) {
-        String object = ((String)this.blockTranslations.get(resEntryName)).replaceAll("\\\\\\'", "'").replaceAll("\\\\\\\"", "\"").replaceAll("\\\\n", "\\\n");
-        int argCount = formatArgs.length;
+      String value = blockTranslations.get(resEntryName);
+      if (value != null && !value.isEmpty()) {
+        String template = value.replaceAll("\\\\\\'" , "'").replaceAll("\\\\\\\"", "\"").replaceAll("\\\\n", "\\\n");
         int replaceCount = 0;
-        while (argIdx < argCount) {
-          Object formatArg = formatArgs[argIdx];
-          int newReplaceCount = replaceCount;
-          String replacedStr = object;
-          if (object.contains("%")) {
-            formatArg = formatArg.toString();
-            replacedStr = (String)formatArg;
-            if (formatArg.equals("\\n"))
-              replacedStr = "\\\\n"; 
-            replacedStr = object.replaceFirst("%s", replacedStr);
-            newReplaceCount = replaceCount + 1;
-          } 
-          argIdx++;
-          replaceCount = newReplaceCount;
-          object = (String)replacedStr;
-        } 
-        if (replaceCount == formatArgs.length) {
-          boolean hasPlaceholder = object.contains("%");
-          if (!hasPlaceholder)
-            return (String)object; 
-        } 
-      } 
+        for (Object formatArg : formatArgs) {
+          if (!template.contains("%")) break;
+          String argStr = formatArg.toString();
+          if (argStr.equals("\\n")) argStr = "\\\\n";
+          template = template.replaceFirst("%s", argStr);
+          replaceCount++;
+        }
+        if (replaceCount == formatArgs.length && !template.contains("%"))
+          return template;
+      }
     } catch (Exception exception) {
-      StringBuilder errorBuilder = new StringBuilder();
-      errorBuilder.append("Faild to load (");
-      errorBuilder.append(resEntryName);
-      errorBuilder.append(")");
-      Log.e("ERROR", errorBuilder.toString(), exception);
-    } 
+      Log.e("ERROR", "Failed to load (" + resEntryName + ")", exception);
+    }
     return resources.getString(resId, formatArgs);
   }
   
   public final HashMap<String, String> parseXmlTranslations(String filePath) {
-    HashMap<String, String> result = new HashMap<String, String>();
-    if (!new java.io.File(filePath).exists()) {
+    HashMap<String, String> result = new HashMap<>();
+    if (!new File(filePath).exists()) {
       return result;
     }
     java.io.FileInputStream fis = null;
@@ -511,15 +212,15 @@ public class StringResource {
       isr = new java.io.InputStreamReader(fis, "UTF-8");
       parser.setInput(isr);
       int eventType = parser.getEventType();
-      while (eventType != 1) {
-        if (eventType == 2 && "string".equals(parser.getName())) {
+      while (eventType != org.xmlpull.v1.XmlPullParser.END_DOCUMENT) {
+        if (eventType == org.xmlpull.v1.XmlPullParser.START_TAG && "string".equals(parser.getName())) {
           result.put(parser.getAttributeValue(null, "name"), parser.nextText());
         }
         eventType = parser.next();
       }
-      this.isLoaded = true;
+      isLoaded = true;
     } catch (Exception ex) {
-      this.isLoaded = false;
+      isLoaded = false;
     } finally {
       try { if (fis != null) fis.close(); } catch (Exception ignored) { Log.w("StringResource", "Failed to close stream", ignored); }
       try { if (isr != null) isr.close(); } catch (Exception ignored) { Log.w("StringResource", "Failed to close reader", ignored); }
@@ -528,7 +229,7 @@ public class StringResource {
   }
   
   public HashMap<String, String> parseXmlTranslationsFromBytes(byte[] data) {
-    HashMap<String, String> result = new HashMap<String, String>();
+    HashMap<String, String> result = new HashMap<>();
     java.io.ByteArrayInputStream bis = null;
     java.io.InputStreamReader isr = null;
     try {
@@ -537,15 +238,15 @@ public class StringResource {
       isr = new java.io.InputStreamReader(bis, "UTF-8");
       parser.setInput(isr);
       int eventType = parser.getEventType();
-      while (eventType != 1) {
-        if (eventType == 2 && "string".equals(parser.getName())) {
+      while (eventType != org.xmlpull.v1.XmlPullParser.END_DOCUMENT) {
+        if (eventType == org.xmlpull.v1.XmlPullParser.START_TAG && "string".equals(parser.getName())) {
           result.put(parser.getAttributeValue(null, "name"), parser.nextText());
         }
         eventType = parser.next();
       }
-      this.isLoaded = true;
+      isLoaded = true;
     } catch (Exception ex) {
-      this.isLoaded = false;
+      isLoaded = false;
     } finally {
       try { if (bis != null) bis.close(); } catch (Exception ignored) { Log.w("StringResource", "Failed to close stream", ignored); }
       try { if (isr != null) isr.close(); } catch (Exception ignored) { Log.w("StringResource", "Failed to close reader", ignored); }
@@ -554,20 +255,18 @@ public class StringResource {
   }
   
   public void clearTranslations() {
-    HashMap<String, String> tempBlockTranslations = this.blockTranslations;
-    if (tempBlockTranslations != null) {
-      tempBlockTranslations.clear();
-      this.blockTranslations = null;
-    } 
-    HashMap<String, String> tempEventTranslations = this.eventTranslations;
-    if (tempEventTranslations != null) {
-      tempEventTranslations.clear();
-      this.eventTranslations = null;
-    } 
+    if (blockTranslations != null) {
+      blockTranslations.clear();
+      blockTranslations = null;
+    }
+    if (eventTranslations != null) {
+      eventTranslations.clear();
+      eventTranslations = null;
+    }
   }
   
   public void loadEventTranslations(Context context) {
-    this.eventTranslations = new HashMap<String, String>();
+    eventTranslations = new HashMap<>();
     loadEventSpecTranslation(context, "initializeLogic");
     loadEventSpecTranslation(context, "onBackPressed");
     loadEventSpecTranslation(context, "onPostCreate");
@@ -732,7 +431,6 @@ public class StringResource {
     loadBlockTranslation(context, "isDrawerOpen");
     loadBlockTranslation(context, "openDrawer");
     loadBlockTranslation(context, "closeDrawer");
-    loadBlockTranslation(context, "viewOnClick");
     loadBlockTranslation(context, "setEnable");
     loadBlockTranslation(context, "getEnable");
     loadBlockTranslation(context, "setVisible");
@@ -950,53 +648,45 @@ public class StringResource {
     loadBlockTranslation(context, "bluetoothConnectGetRandomUuid");
     loadBlockTranslation(context, "locationManagerRequestLocationUpdates");
     loadBlockTranslation(context, "locationManagerRemoveUpdates");
+    loadBlockTranslation(context, "notifCreateChannel");
+    loadBlockTranslation(context, "notifSetChannel");
+    loadBlockTranslation(context, "notifSetTitle");
+    loadBlockTranslation(context, "notifSetContent");
+    loadBlockTranslation(context, "notifSetSmallIcon");
+    loadBlockTranslation(context, "notifSetAutoCancel");
+    loadBlockTranslation(context, "notifSetPriority");
+    loadBlockTranslation(context, "notifSetClickIntent");
+    loadBlockTranslation(context, "notifShow");
+    loadBlockTranslation(context, "notifCancel");
   }
   
   public HashMap<String, String> loadTranslationsFromFile(String filePath) {
-    HashMap<String, String> translations;
-    HashMap<Object, Object> fallback = new HashMap<Object, Object>();
-    if (!(new File(filePath)).exists())
-      return (HashMap)fallback; 
+    if (!new File(filePath).exists())
+      return new HashMap<>();
     try {
-      translations = parseXmlTranslations(filePath);
+      return parseXmlTranslations(filePath);
     } catch (Exception exception) {
-      translations = (HashMap)fallback;
-    } 
-    return translations;
+      return new HashMap<>();
+    }
   }
   
   public void loadBlockTranslation(Context context, String blockName) {
-    StringBuilder keyBuilder = new StringBuilder();
-    keyBuilder.append("block_");
-    keyBuilder.append(BlockSpecRegistry.getBlockSpec(blockName));
-    String translationKey = keyBuilder.toString();
+    String translationKey = "block_" + BlockSpecRegistry.getBlockSpec(blockName);
     ArrayList<String> blockParams = BlockSpecRegistry.getBlockParams(blockName);
-    this.eventTranslations.put(blockName, getBlockTranslation(context, translationKey, blockParams));
+    eventTranslations.put(blockName, getBlockTranslation(context, translationKey, blockParams));
   }
   
   public boolean reloadTranslations(Context context) {
-    boolean loadedSuccessfully;
-    if (this.blockTranslations == null)
-      this.blockTranslations = new HashMap<String, String>(); 
-    HashMap<String, String> tempTranslations = this.blockTranslations;
-    if (tempTranslations != null)
-      tempTranslations.clear(); 
-    this.blockTranslations = loadTranslationsFromFile(this.translationDir);
+    if (blockTranslations != null)
+      blockTranslations.clear();
+    blockTranslations = loadTranslationsFromFile(translationDir);
     loadEventTranslations(context);
-    if (!this.blockTranslations.isEmpty() && this.isLoaded) {
-      loadedSuccessfully = true;
-    } else {
-      loadedSuccessfully = false;
-    } 
-    return loadedSuccessfully;
+    return !blockTranslations.isEmpty() && isLoaded;
   }
   
   public void loadEventSpecTranslation(Context context, String eventName) {
-    StringBuilder keyBuilder = new StringBuilder();
-    keyBuilder.append("root_spec_");
-    keyBuilder.append(BlockSpecRegistry.getEventSpec(eventName));
-    String translationKey = keyBuilder.toString();
+    String translationKey = "root_spec_" + BlockSpecRegistry.getEventSpec(eventName);
     ArrayList<String> menuItems = BlockSpecRegistry.getBlockMenuItems(eventName);
-    this.eventTranslations.put(eventName, getBlockTranslation(context, translationKey, menuItems));
+    eventTranslations.put(eventName, getBlockTranslation(context, translationKey, menuItems));
   }
 }

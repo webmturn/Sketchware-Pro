@@ -1406,6 +1406,82 @@ public class BlockInterpreter {
             case "locationManagerRemoveUpdates":
                 opcode = params.get(0) + ".removeUpdates(_" + params.get(0) + "_location_listener);";
                 break;
+
+            case "notifCreateChannel":
+                if (params.size() >= 4) {
+                    opcode = String.format(
+                            "if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {\n" +
+                            "NotificationChannel _channel_%s = new NotificationChannel(%s, %s, NotificationManager.%s);\n" +
+                            "_nm_%s.createNotificationChannel(_channel_%s);\n}\n" +
+                            "%s = new NotificationCompat.Builder(getApplicationContext(), %s);\n" +
+                            "%s.setSmallIcon(R.mipmap.ic_launcher);",
+                            params.get(0), params.get(1), params.get(2), params.get(3),
+                            params.get(0), params.get(0),
+                            params.get(0), params.get(1),
+                            params.get(0));
+                }
+                break;
+
+            case "notifSetChannel":
+                if (params.size() >= 2) {
+                    opcode = String.format("%s = new NotificationCompat.Builder(getApplicationContext(), %s);\n" +
+                            "%s.setSmallIcon(R.mipmap.ic_launcher);",
+                            params.get(0), params.get(1), params.get(0));
+                }
+                break;
+
+            case "notifSetTitle":
+                if (params.size() >= 2) {
+                    opcode = String.format("%s.setContentTitle(%s);", params.get(0), params.get(1));
+                }
+                break;
+
+            case "notifSetContent":
+                if (params.size() >= 2) {
+                    opcode = String.format("%s.setContentText(%s);", params.get(0), params.get(1));
+                }
+                break;
+
+            case "notifSetSmallIcon":
+                if (params.size() >= 2) {
+                    opcode = String.format("%s.setSmallIcon(R.drawable.%s);", params.get(0), params.get(1));
+                }
+                break;
+
+            case "notifSetAutoCancel":
+                if (params.size() >= 2) {
+                    opcode = String.format("%s.setAutoCancel(%s);", params.get(0), params.get(1));
+                }
+                break;
+
+            case "notifSetPriority":
+                if (params.size() >= 2) {
+                    opcode = String.format("%s.setPriority(NotificationCompat.%s);", params.get(0), params.get(1));
+                }
+                break;
+
+            case "notifSetClickIntent":
+                if (params.size() >= 2) {
+                    opcode = String.format(
+                            "%s.setContentIntent(PendingIntent.getActivity(getApplicationContext(), 0, %s, " +
+                            "PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE));",
+                            params.get(0), params.get(1));
+                }
+                break;
+
+            case "notifShow":
+                if (params.size() >= 2) {
+                    opcode = String.format("_nm_%s.notify((int)(%s), %s.build());",
+                            params.get(0), params.get(1), params.get(0));
+                }
+                break;
+
+            case "notifCancel":
+                if (params.size() >= 2) {
+                    opcode = String.format("_nm_%s.cancel((int)(%s));", params.get(0), params.get(1));
+                }
+                break;
+
             default:
                 opcode = getCodeExtraBlock(bean, "\"\"");
         }

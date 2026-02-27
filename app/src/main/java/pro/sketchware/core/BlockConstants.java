@@ -19,6 +19,8 @@ public class BlockConstants {
     public static final String[] LOCATION_PROVIDERS = {"GPS_PROVIDER", "NETWORK_PROVIDER"};
     public static final String[] MAP_TYPES = {"MAP_TYPE_NONE", "MAP_TYPE_NORMAL", "MAP_TYPE_SATELLITE", "MAP_TYPE_TERRAIN", "MAP_TYPE_HYBRID"};
     public static final String[] MARKER_HUES = {"HUE_RED", "HUE_ORANGE", "HUE_YELLOW", "HUE_GREEN", "HUE_CYAN", "HUE_AZURE", "HUE_BLUE", "HUE_VIOLET", "HUE_MAGENTA", "HUE_ROSE"};
+    public static final String[] NOTIFICATION_IMPORTANCE = {"IMPORTANCE_DEFAULT", "IMPORTANCE_HIGH", "IMPORTANCE_LOW", "IMPORTANCE_MIN", "IMPORTANCE_NONE"};
+    public static final String[] NOTIFICATION_PRIORITY = {"PRIORITY_DEFAULT", "PRIORITY_HIGH", "PRIORITY_LOW", "PRIORITY_MIN", "PRIORITY_MAX"};
 
     public static final String[] TIL_BOX_MODE = {"NONE", "OUTLINED", "FILLED"};
     public static final String[] FAB_SIZE = {"AUTO", "MINI", "NORMAL"};

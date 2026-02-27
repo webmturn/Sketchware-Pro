@@ -585,6 +585,8 @@ public class ProjectFilePaths {
                     }
                     case ComponentBean.COMPONENT_TYPE_LOCATION_MANAGER ->
                             buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_ACCESS_FINE_LOCATION);
+                    case ComponentBean.COMPONENT_TYPE_NOTIFICATION ->
+                            buildConfig.isNotificationUsed = true;
                     case ComponentBean.COMPONENT_TYPE_FIREBASE_CLOUD_MESSAGE ->
                             buildConfig.constVarComponent.isFCMUsed = true;
                     case ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH_GOOGLE_LOGIN ->

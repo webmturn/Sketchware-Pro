@@ -218,6 +218,7 @@ public class ComponentTypeMapper {
             case "swiperefreshlayout" -> "SwipeRefreshLayout";
             case "signinbutton" -> "SignInButton";
             case "materialButton" -> "MaterialButton";
+            case "notification", "Notification" -> "Notification";
             case "fragmentAdapter" -> "FragmentAdapter";
             default -> DefaultExtraMenuBean.getName(name);
         };
@@ -592,6 +593,18 @@ public class ComponentTypeMapper {
                 importList.add("com.google.android.material.bottomnavigation.BottomNavigationView.OnNavigationItemSelectedListener");
                 return importList;
 
+            case "Notification":
+                importList.add("android.app.NotificationChannel");
+                importList.add("android.app.NotificationManager");
+                importList.add("android.app.PendingIntent");
+                importList.add("android.content.Context");
+                importList.add("android.content.pm.PackageManager");
+                importList.add("android.os.Build");
+                importList.add("androidx.core.app.ActivityCompat");
+                importList.add("androidx.core.app.NotificationCompat");
+                importList.add("androidx.core.content.ContextCompat");
+                return importList;
+
             case "FirebaseCloudMessage":
                 importList.add("com.google.android.gms.tasks.OnCompleteListener");
                 importList.add("com.google.android.gms.tasks.Task");
@@ -766,6 +779,7 @@ public class ComponentTypeMapper {
             case "FirebaseDB" -> "DatabaseReference";
             case "FirebaseStorage" -> "StorageReference";
             case "Camera", "FilePicker" -> "Intent";
+            case "Notification" -> "NotificationCompat.Builder";
             case "SpeechToText" -> "SpeechRecognizer";
             case "FragmentAdapter" -> "FragmentStatePagerAdapter";
             case "Context" -> "Activity";

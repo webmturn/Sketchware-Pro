@@ -1280,6 +1280,7 @@ DB.addListenerForSingleValueEvent(new ValueEventListener() {
 {"componentId":"Fa","param1":"","param2":"","param3":"","type":12}
 {"componentId":"timer1","param1":"","param2":"","param3":"","type":5}
 {"componentId":"sp","param1":"","param2":"","param3":"","type":2}
+{"componentId":"notif1","param1":"","param2":"","param3":"","type":26}
 ```
 
 生成的字段声明：
@@ -1289,6 +1290,8 @@ private DatabaseReference DB = _firebase.getReference("test");   // param1="test
 private FirebaseAuth Fa = FirebaseAuth.getInstance();
 private TimerTask timer1;
 private SharedPreferences sp;
+private NotificationCompat.Builder notif1;       // 双字段：Builder + Manager
+private NotificationManager _nm_notif1;
 ```
 
 > **⚠️ 组件变量命名规则**: 组件变量名 = `componentId`（**无** `_` 前缀）。
@@ -1298,6 +1301,59 @@ private SharedPreferences sp;
 >
 > **Block 参数中的组件引用**：`%m.firebase`、`%m.FirebaseAuth` 等选择器存储 raw `componentId`（如 `"DB"`、`"auth"`），
 > **不加** `_` 前缀。代码生成器直接将此值插入生成代码中。
+
+#### 示例7：Notification 通知完整流程
+
+场景：点击按钮后创建渠道、设置标题/内容、显示通知。
+
+```
+@MainActivity.java_components
+{"componentId":"notif1","param1":"","param2":"","param3":"","type":26}
+```
+
+```
+@MainActivity.java_button1_onClick
+```
+
+```json
+{"color":-13850718,"id":"1","nextBlock":2,"opCode":"notifCreateChannel","parameters":["notif1","\"my_channel\"","\"My Channel\"","IMPORTANCE_DEFAULT"],"spec":"%m.notification createChannel id %s name %s importance %m.notifImportance","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+{"color":-13850718,"id":"2","nextBlock":3,"opCode":"notifSetTitle","parameters":["notif1","\"Hello!\""],"spec":"%m.notification setTitle %s","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+{"color":-13850718,"id":"3","nextBlock":4,"opCode":"notifSetContent","parameters":["notif1","\"This is a test notification\""],"spec":"%m.notification setContent %s","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+{"color":-13850718,"id":"4","nextBlock":5,"opCode":"notifSetAutoCancel","parameters":["notif1","true"],"spec":"%m.notification setAutoCancel %b","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+{"color":-13850718,"id":"5","nextBlock":-1,"opCode":"notifShow","parameters":["notif1","1"],"spec":"%m.notification show id %d","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+```
+
+生成的 Java 代码：
+```java
+// 字段声明（自动生成）
+private NotificationCompat.Builder notif1;
+private NotificationManager _nm_notif1;
+
+// 初始化（onCreate 中自动生成）
+_nm_notif1 = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+notif1 = new NotificationCompat.Builder(this, "default_channel");
+notif1.setSmallIcon(R.mipmap.ic_launcher);
+if (Build.VERSION.SDK_INT >= 33) {
+    if (ContextCompat.checkSelfPermission(this, "android.permission.POST_NOTIFICATIONS") != PackageManager.PERMISSION_GRANTED) {
+        ActivityCompat.requestPermissions(this, new String[]{"android.permission.POST_NOTIFICATIONS"}, 9901);
+    }
+}
+
+// onClick 回调中（由积木生成）
+if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+    NotificationChannel _channel_notif1 = new NotificationChannel("my_channel", "My Channel", NotificationManager.IMPORTANCE_DEFAULT);
+    _nm_notif1.createNotificationChannel(_channel_notif1);
+}
+notif1 = new NotificationCompat.Builder(getApplicationContext(), "my_channel");
+notif1.setSmallIcon(R.mipmap.ic_launcher);
+notif1.setContentTitle("Hello!");
+notif1.setContentText("This is a test notification");
+notif1.setAutoCancel(true);
+_nm_notif1.notify((int)(1), notif1.build());
+```
+
+> **❗ 注意**: `notifCreateChannel` 会重建 Builder 并重设小图标，因此必须在其他 `notifSet*` 块之前调用。
+> 生成代码中使用 `getApplicationContext()` 而非 `this`，因为积木代码运行在匿名内部类（如 `OnClickListener`）中。
 
 ### 完整 opCode 参考
 
@@ -1857,7 +1913,22 @@ private SharedPreferences sp;
 
 #### Notification (type=26)
 
-> Notification 组件已注册为组件类型，但**当前没有对应的 opCode 块**。它是一个占位类型，需要通过 `addSourceDirectly` 手动实现通知功能。
+| opCode | 说明 | 参数 | 生成代码 |
+|--------|------|------|----------|
+| `notifCreateChannel` | 创建通知渠道（Android 8+）并设置 Builder 渠道 | [组件, 渠道ID, 渠道名, 重要性] | `NotificationChannel` + `NotificationCompat.Builder` 重建 |
+| `notifSetChannel` | 切换通知渠道 | [组件, 渠道ID] | 重建 `NotificationCompat.Builder` |
+| `notifSetTitle` | 设置通知标题 | [组件, 标题] | `notif1.setContentTitle("...");` |
+| `notifSetContent` | 设置通知内容 | [组件, 内容] | `notif1.setContentText("...");` |
+| `notifSetSmallIcon` | 设置通知小图标 | [组件, 图标资源名] | `notif1.setSmallIcon(R.drawable.xxx);` |
+| `notifSetAutoCancel` | 设置点击后自动关闭 | [组件, true/false] | `notif1.setAutoCancel(true);` |
+| `notifSetPriority` | 设置通知优先级 | [组件, 优先级] | `notif1.setPriority(NotificationCompat.xxx);` |
+| `notifSetClickIntent` | 设置点击通知打开的 Intent | [组件, Intent] | `notif1.setContentIntent(PendingIntent.getActivity(...));` |
+| `notifShow` | 显示通知 | [组件, 通知ID] | `_nm_notif1.notify(id, notif1.build());` |
+| `notifCancel` | 取消通知 | [组件, 通知ID] | `_nm_notif1.cancel(id);` |
+
+> **⚠️ 重要**: Notification 组件会生成**双字段**：`NotificationCompat.Builder notif1` 和 `NotificationManager _nm_notif1`。
+> 初始化时自动设置 `R.mipmap.ic_launcher` 为默认小图标，并在 Android 13+ 自动请求 `POST_NOTIFICATIONS` 运行时权限。
+> `notifCreateChannel` 会自动重建 Builder 以匹配创建的渠道 ID，因此**必须在 `notifSetTitle` 等设置块之前调用**。
 
 #### FragmentAdapter (type=27)
 
@@ -2188,6 +2259,7 @@ custom_font
 | `%m.videoad` | RewardedVideoAd |
 | `%m.progressdialog` | ProgressDialog |
 | `%m.timepickerdialog` | TimePickerDialog |
+| `%m.notification` | Notification |
 
 **变量选择器**：
 
@@ -2229,6 +2301,8 @@ custom_font
 | `%m.markerColor` | 标记颜色 | 颜色名称（如 `RED`, `BLUE`, `GREEN` 等） |
 | `%m.directoryType` | 公共目录类型 | `DIRECTORY_MUSIC`, `DIRECTORY_PICTURES`, `DIRECTORY_DOWNLOADS` 等 |
 | `%m.styleprogress` | 进度条样式 | `STYLE_HORIZONTAL`, `STYLE_SPINNER` |
+| `%m.notifImportance` | 通知渠道重要性 | `IMPORTANCE_DEFAULT`, `IMPORTANCE_HIGH`, `IMPORTANCE_LOW`, `IMPORTANCE_MIN`, `IMPORTANCE_NONE` |
+| `%m.notifPriority` | 通知优先级 | `PRIORITY_DEFAULT`, `PRIORITY_HIGH`, `PRIORITY_LOW`, `PRIORITY_MIN`, `PRIORITY_MAX` |
 
 > 这些枚举选择器的详细值列表参见下方「属性值速查表」各小节。
 
@@ -2268,6 +2342,7 @@ if %b                          → if [布尔输入]  (subStack1=true分支)
 | `-11242015` | `#FF5445E1` | Firebase Auth（蓝紫） |
 | `-11899692` | `#FF4A86D4` | 直接代码 / addSourceDirectly（蓝色） |
 | `-14575885` | `#FF21A083` | 控制流（绿色） |
+| `-13850718` | `#FF2CA5E2` | 组件操作（蓝色，含 Notification） |
 | `-10701022` | `#FF5CB722` | 运算符（黄绿） |
 
 ---
