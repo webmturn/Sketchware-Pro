@@ -88,4 +88,4 @@ The built-in Firebase libraries have been upgraded from severely outdated v19.x 
 
 ---
 
-**Full Changelog**: https://github.com/nicholasgasior/Sketchware-Pro/compare/v7.0.0-beta-01...v7.0.0-beta-02
+**Full Changelog**: https://github.com/webmturn/Sketchware-Pro/compare/v7.0.0-beta-01...v7.0.0-beta-02
