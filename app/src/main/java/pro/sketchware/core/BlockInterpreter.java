@@ -1413,7 +1413,7 @@ public class BlockInterpreter {
                             "if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {\n" +
                             "NotificationChannel _channel_%s = new NotificationChannel(%s, %s, NotificationManager.%s);\n" +
                             "_nm_%s.createNotificationChannel(_channel_%s);\n}\n" +
-                            "%s = new NotificationCompat.Builder(this, %s);",
+                            "%s = new NotificationCompat.Builder(getApplicationContext(), %s);",
                             params.get(0), params.get(1), params.get(2), params.get(3),
                             params.get(0), params.get(0),
                             params.get(0), params.get(1));
@@ -1422,7 +1422,7 @@ public class BlockInterpreter {
 
             case "notifSetChannel":
                 if (params.size() >= 2) {
-                    opcode = String.format("%s = new NotificationCompat.Builder(this, %s);",
+                    opcode = String.format("%s = new NotificationCompat.Builder(getApplicationContext(), %s);",
                             params.get(0), params.get(1));
                 }
                 break;
@@ -1460,7 +1460,7 @@ public class BlockInterpreter {
             case "notifSetClickIntent":
                 if (params.size() >= 2) {
                     opcode = String.format(
-                            "%s.setContentIntent(PendingIntent.getActivity(this, 0, %s, " +
+                            "%s.setContentIntent(PendingIntent.getActivity(getApplicationContext(), 0, %s, " +
                             "PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE));",
                             params.get(0), params.get(1));
                 }
