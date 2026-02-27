@@ -1412,9 +1412,11 @@ public class BlockInterpreter {
                     opcode = String.format(
                             "if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {\n" +
                             "NotificationChannel _channel_%s = new NotificationChannel(%s, %s, NotificationManager.%s);\n" +
-                            "_nm_%s.createNotificationChannel(_channel_%s);\n}",
+                            "_nm_%s.createNotificationChannel(_channel_%s);\n}\n" +
+                            "%s = new NotificationCompat.Builder(this, %s);",
                             params.get(0), params.get(1), params.get(2), params.get(3),
-                            params.get(0), params.get(0));
+                            params.get(0), params.get(0),
+                            params.get(0), params.get(1));
                 }
                 break;
 
