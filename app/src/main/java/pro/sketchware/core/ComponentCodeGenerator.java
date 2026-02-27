@@ -2991,6 +2991,17 @@ public class ComponentCodeGenerator {
                     public static void showMessage(Context _context, String _s) {
                         Toast.makeText(_context, _s, Toast.LENGTH_SHORT).show();
                     }
+                
+                    public static String getClipboardText(Context _context) {
+                        ClipboardManager _clipboard = (ClipboardManager) _context.getSystemService(Context.CLIPBOARD_SERVICE);
+                        if (_clipboard != null && _clipboard.hasPrimaryClip() && _clipboard.getPrimaryClip().getItemCount() > 0) {
+                            CharSequence _text = _clipboard.getPrimaryClip().getItemAt(0).getText();
+                            if (_text != null) {
+                                return _text.toString();
+                            }
+                        }
+                        return "";
+                    }
                 """);
 
         if (isMaterial3Enabled) {

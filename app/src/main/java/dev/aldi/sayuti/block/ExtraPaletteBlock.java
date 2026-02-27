@@ -949,6 +949,7 @@ public class ExtraPaletteBlock {
                 logicEditor.createPaletteBlock(" ", "hideKeyboard");
                 logicEditor.createPaletteBlock(" ", "doToast");
                 logicEditor.createPaletteBlock(" ", "copyToClipboard");
+                logicEditor.createPaletteBlock("s", "getClipboard");
                 logicEditor.createPaletteBlock(" ", "setTitle");
                 logicEditor.createPaletteBlock("b", "intentHasExtra");
                 logicEditor.createPaletteBlock("s", "intentGetString");

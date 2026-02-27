@@ -938,6 +938,7 @@ public class ActivityCodeGenerator {
                         break;
 
                     case "copyToClipboard":
+                    case "getClipboard":
                         addImport("android.content.ClipData");
                         addImport("android.content.ClipboardManager");
                         break;

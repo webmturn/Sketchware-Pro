@@ -335,6 +335,16 @@ public class BlocksHandler {
         arrayList.add(blockDef);
 
         blockDef = new HashMap<>();
+        blockDef.put("name", "getClipboard");
+        blockDef.put("type", "s");
+        blockDef.put("typeName", "");
+        blockDef.put("code", "SketchwareUtil.getClipboardText(getApplicationContext())");
+        blockDef.put("color", "#8A55D7");
+        blockDef.put("palette", "-1");
+        blockDef.put("spec", "get clipboard text");
+        arrayList.add(blockDef);
+
+        blockDef = new HashMap<>();
         blockDef.put("name", "customImport");
         blockDef.put("type", " ");
         blockDef.put("code", "import %s;");
@@ -2161,6 +2171,16 @@ public class BlocksHandler {
         arrayList.add(blockDef);
 
         blockDef = new HashMap<>();
+        blockDef.put("name", "getExceptionMessage");
+        blockDef.put("type", "s");
+        blockDef.put("typeName", "");
+        blockDef.put("code", "e.getMessage()");
+        blockDef.put("color", "#e1a92a");
+        blockDef.put("palette", "-1");
+        blockDef.put("spec", "exception message");
+        arrayList.add(blockDef);
+
+        blockDef = new HashMap<>();
         blockDef.put("name", "switchStr");
         blockDef.put("type", "c");
         blockDef.put("typeName", "");
@@ -2757,6 +2777,7 @@ public class BlocksHandler {
             logicEditorActivity.createPaletteBlock("c", "caseNum");
             logicEditorActivity.createPaletteBlock("c", "defaultSwitch");
             logicEditorActivity.createPaletteBlock("e", "tryCatch");
+            logicEditorActivity.createPaletteBlock("s", "getExceptionMessage");
             logicEditorActivity.createPaletteBlock("s", "ternaryString");
             logicEditorActivity.createPaletteBlock("d", "ternaryNumber");
             logicEditorActivity.createPaletteBlock("f", "returnString");
