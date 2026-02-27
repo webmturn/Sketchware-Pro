@@ -1,0 +1,8 @@
+@firebaseDB
+{"useYn":"N","libType":0,"data":"","reserved1":"","reserved2":"","reserved3":"","appId":"","adUnits":[],"testDevices":[],"configurations":{}}
+@compat
+{"useYn":"Y","libType":1,"data":"","reserved1":"","reserved2":"","reserved3":"","appId":"","adUnits":[],"testDevices":[],"configurations":{}}
+@admob
+{"useYn":"N","libType":2,"data":"","reserved1":"","reserved2":"","reserved3":"","appId":"","adUnits":[],"testDevices":[],"configurations":{}}
+@googleMap
+{"useYn":"N","libType":3,"data":"","reserved1":"","reserved2":"","reserved3":"","appId":"","adUnits":[],"testDevices":[],"configurations":{}}

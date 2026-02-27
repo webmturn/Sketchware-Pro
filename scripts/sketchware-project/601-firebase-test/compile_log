@@ -1,0 +1,57 @@
+----------
+1. ERROR in /storage/emulated/0/.sketchware/mysc/601/app/src/main/java/com/my/newproject/MainActivity.java (at line 101)
+	map.put("message", edittext1.getText().toString());
+	                   ^^^^^^^^^
+edittext1 cannot be resolved
+----------
+2. ERROR in /storage/emulated/0/.sketchware/mysc/601/app/src/main/java/com/my/newproject/MainActivity.java (at line 104)
+	_db.child("\"data\"").updateChildren(map);
+	^^^
+_db cannot be resolved
+----------
+3. ERROR in /storage/emulated/0/.sketchware/mysc/601/app/src/main/java/com/my/newproject/MainActivity.java (at line 112)
+	_db.addListenerForSingleValueEvent(new ValueEventListener() {
+	^^^
+_db cannot be resolved
+----------
+4. ERROR in /storage/emulated/0/.sketchware/mysc/601/app/src/main/java/com/my/newproject/MainActivity.java (at line 137)
+	_auth.createUserWithEmailAndPassword("\"test@test.com\"", "\"Test123456\"").addOnCompleteListener(MainActivity.this, __auth_create_user_listener);
+	^^^^^
+_auth cannot be resolved
+----------
+5. ERROR in /storage/emulated/0/.sketchware/mysc/601/app/src/main/java/com/my/newproject/MainActivity.java (at line 137)
+	_auth.createUserWithEmailAndPassword("\"test@test.com\"", "\"Test123456\"").addOnCompleteListener(MainActivity.this, __auth_create_user_listener);
+	                                                                                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+__auth_create_user_listener cannot be resolved to a variable
+----------
+6. ERROR in /storage/emulated/0/.sketchware/mysc/601/app/src/main/java/com/my/newproject/MainActivity.java (at line 145)
+	_auth.signInWithEmailAndPassword("\"test@test.com\"", "\"Test123456\"").addOnCompleteListener(MainActivity.this, __auth_sign_in_listener);
+	^^^^^
+_auth cannot be resolved
+----------
+7. ERROR in /storage/emulated/0/.sketchware/mysc/601/app/src/main/java/com/my/newproject/MainActivity.java (at line 145)
+	_auth.signInWithEmailAndPassword("\"test@test.com\"", "\"Test123456\"").addOnCompleteListener(MainActivity.this, __auth_sign_in_listener);
+	                                                                                                                 ^^^^^^^^^^^^^^^^^^^^^^^
+__auth_sign_in_listener cannot be resolved to a variable
+----------
+8. ERROR in /storage/emulated/0/.sketchware/mysc/601/app/src/main/java/com/my/newproject/MainActivity.java (at line 156)
+	textview1.setText("DB onChildAdded:\nKey: " + _childKey + "\nValue: " + String.valueOf(_childValue));
+	^^^^^^^^^
+textview1 cannot be resolved
+----------
+9. ERROR in /storage/emulated/0/.sketchware/mysc/601/app/src/main/java/com/my/newproject/MainActivity.java (at line 195)
+	textview1.setText("FCM Token:\n" + (_success ? _token : "FAILED\n" + _errorMessage));
+	^^^^^^^^^
+textview1 cannot be resolved
+----------
+10. ERROR in /storage/emulated/0/.sketchware/mysc/601/app/src/main/java/com/my/newproject/MainActivity.java (at line 267)
+	textview1.setText("Register: " + (_success ? "SUCCESS" : "FAILED") + "\n" + _errorMessage);
+	^^^^^^^^^
+textview1 cannot be resolved
+----------
+11. ERROR in /storage/emulated/0/.sketchware/mysc/601/app/src/main/java/com/my/newproject/MainActivity.java (at line 291)
+	com.google.firebase.messaging.FirebaseMessaging.getInstance().getToken().addOnCompleteListener(_fcm_onCompleteListener);
+	                                                                                               ^^^^^^^^^^^^^^^^^^^^^^^
+_fcm_onCompleteListener cannot be resolved to a variable
+----------
+11 problems (11 errors)
