@@ -131,36 +131,46 @@ class DependencyResolver(
             dependencyClasspath.add(Paths.get(it))
         }
 
-        dependency.downloadTo(
-            File(downloadPath + "/${dependency.artifactId}-v${dependency.version}/classes.${dependency.extension}")
-                .apply {
-                    parentFile?.mkdirs()
-                }
-        )
+        try {
+            dependency.downloadTo(
+                File(downloadPath + "/${dependency.artifactId}-v${dependency.version}/classes.${dependency.extension}")
+                    .apply {
+                        parentFile?.mkdirs()
+                    }
+            )
+        } catch (e: Exception) {
+            callback.onDownloadError(dependency, e)
+            return@runBlocking
+        }
 
         if (dependency.extension == "aar") {
             callback.unzipping(dependency)
-            unzip(
-                Paths.get(
-                    downloadPath,
-                    "${dependency.artifactId}-v${dependency.version}",
-                    "classes.aar"
+            try {
+                unzip(
+                    Paths.get(
+                        downloadPath,
+                        "${dependency.artifactId}-v${dependency.version}",
+                        "classes.aar"
+                    )
                 )
-            )
-            Files.delete(
-                Paths.get(
-                    downloadPath,
-                    "${dependency.artifactId}-v${dependency.version}",
-                    "classes.aar"
+                Files.delete(
+                    Paths.get(
+                        downloadPath,
+                        "${dependency.artifactId}-v${dependency.version}",
+                        "classes.aar"
+                    )
                 )
-            )
-            val packageName = findPackageName(
-                Paths.get(downloadPath, "${dependency.artifactId}-v${dependency.version}")
-                    .toAbsolutePath().toString(),
-                dependency.groupId
-            )
-            Paths.get(downloadPath, "${dependency.artifactId}-v${dependency.version}", "config")
-                .writeText(packageName)
+                val packageName = findPackageName(
+                    Paths.get(downloadPath, "${dependency.artifactId}-v${dependency.version}")
+                        .toAbsolutePath().toString(),
+                    dependency.groupId
+                )
+                Paths.get(downloadPath, "${dependency.artifactId}-v${dependency.version}", "config")
+                    .writeText(packageName)
+            } catch (e: Exception) {
+                callback.onDownloadError(dependency, e)
+                return@runBlocking
+            }
         }
 
         val jar = Paths.get(
@@ -202,17 +212,26 @@ class DependencyResolver(
                 "classes.${dep.extension}"
             )
 
-            Files.createDirectories(path.parent)
-
-            dep.downloadTo(File(path.toString()))
+            try {
+                Files.createDirectories(path.parent)
+                dep.downloadTo(File(path.toString()))
+            } catch (e: Exception) {
+                callback.onDownloadError(dep, e)
+                return@forEach
+            }
 
             if (dep.extension == "aar") {
                 callback.unzipping(dep)
-                unzip(path)
-                Files.delete(path)
-                val packageName =
-                    findPackageName(path.parent.toAbsolutePath().toString(), dep.groupId)
-                path.parent.resolve("config").writeText(packageName)
+                try {
+                    unzip(path)
+                    Files.delete(path)
+                    val packageName =
+                        findPackageName(path.parent.toAbsolutePath().toString(), dep.groupId)
+                    path.parent.resolve("config").writeText(packageName)
+                } catch (e: Exception) {
+                    callback.onDownloadError(dep, e)
+                    return@forEach
+                }
             }
 
             val jar = if (dep.extension == "jar") path else Paths.get(
