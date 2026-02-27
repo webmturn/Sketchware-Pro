@@ -40,9 +40,9 @@ public class ManageLocalLibrary {
                     list.removeIf(entry -> {
                         Object name = entry.get("name");
                         if (name instanceof String) {
-                            File libDir = new File(Environment.getExternalStorageDirectory(),
-                                    ".sketchware/libs/local_libs/" + name);
-                            return !libDir.exists();
+                            File newLibDir = new File(FilePathUtil.getLocalLibsDir(), (String) name);
+                            File legacyLibDir = new File(FilePathUtil.getLocalLibsLegacyDir(), (String) name);
+                            return !newLibDir.exists() && !legacyLibDir.exists();
                         }
                         return true;
                     });

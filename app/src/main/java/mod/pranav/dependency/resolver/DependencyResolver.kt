@@ -16,6 +16,7 @@ import org.cosmic.ide.dependency.resolver.api.Repository
 import org.cosmic.ide.dependency.resolver.eventReciever
 import org.cosmic.ide.dependency.resolver.getArtifact
 import org.cosmic.ide.dependency.resolver.repositories
+import pro.sketchware.utility.FilePathUtil
 import pro.sketchware.utility.FileUtil
 import java.io.File
 import java.nio.file.Files
@@ -48,7 +49,7 @@ class DependencyResolver(
     }
 
     private val downloadPath: String =
-        FileUtil.getExternalStorageDir() + "/.sketchware/libs/local_libs"
+        FilePathUtil.getLocalLibsDir().absolutePath
 
     private val repositoriesJson = Paths.get(
         Environment.getExternalStorageDirectory().absolutePath,

@@ -4,10 +4,38 @@ import android.os.Environment;
 
 import java.io.File;
 
+import pro.sketchware.SketchApplication;
+
 public class FilePathUtil {
 
     private static final File SKETCHWARE_DATA = new File(Environment.getExternalStorageDirectory(), ".sketchware/data/");
-    private static final File SKETCHWARE_LOCAL_LIBS = new File(Environment.getExternalStorageDirectory(), ".sketchware/libs/local_libs");
+    private static final File SKETCHWARE_LOCAL_LIBS_LEGACY = new File(Environment.getExternalStorageDirectory(), ".sketchware/libs/local_libs");
+    private static volatile File sketchwareLocalLibs;
+
+    /**
+     * Returns the local libs directory using app-specific external storage.
+     * This bypasses FUSE/MediaProvider restrictions on Android 11+ that block
+     * file creation even with MANAGE_EXTERNAL_STORAGE granted.
+     */
+    public static File getLocalLibsDir() {
+        if (sketchwareLocalLibs == null) {
+            synchronized (FilePathUtil.class) {
+                if (sketchwareLocalLibs == null) {
+                    File externalFilesDir = SketchApplication.getContext().getExternalFilesDir(null);
+                    sketchwareLocalLibs = new File(externalFilesDir, "local_libs");
+                }
+            }
+        }
+        return sketchwareLocalLibs;
+    }
+
+    /**
+     * Returns the legacy local libs directory (shared external storage).
+     * Used for backward compatibility to find libraries downloaded by older versions.
+     */
+    public static File getLocalLibsLegacyDir() {
+        return SKETCHWARE_LOCAL_LIBS_LEGACY;
+    }
 
     public static String getLastCompileLogPath(String sc_id) {
         return new File(SKETCHWARE_DATA, sc_id + "/compile_log").getAbsolutePath();
@@ -62,15 +90,32 @@ public class FilePathUtil {
     }
 
     public static String getJarPathLocalLibrary(String libraryName) {
-        return new File(SKETCHWARE_LOCAL_LIBS, libraryName + "/classes.jar").getAbsolutePath();
+        return resolveLocalLibFile(libraryName, "classes.jar").getAbsolutePath();
     }
 
     public static String getDexPathLocalLibrary(String libraryName) {
-        return new File(SKETCHWARE_LOCAL_LIBS, libraryName + "/classes.dex").getAbsolutePath();
+        return resolveLocalLibFile(libraryName, "classes.dex").getAbsolutePath();
     }
 
     public static String getResPathLocalLibrary(String libraryName) {
-        return new File(SKETCHWARE_LOCAL_LIBS, libraryName + "/res").getAbsolutePath();
+        return resolveLocalLibFile(libraryName, "res").getAbsolutePath();
+    }
+
+    /**
+     * Resolves a local library file, checking the new app-specific path first,
+     * then falling back to the legacy shared storage path.
+     */
+    private static File resolveLocalLibFile(String libraryName, String fileName) {
+        File newPath = new File(getLocalLibsDir(), libraryName + "/" + fileName);
+        if (newPath.exists()) {
+            return newPath;
+        }
+        File legacyPath = new File(SKETCHWARE_LOCAL_LIBS_LEGACY, libraryName + "/" + fileName);
+        if (legacyPath.exists()) {
+            return legacyPath;
+        }
+        // Default to new path for new files
+        return newPath;
     }
 
     public static String getJarPathLocalLibraryUser(String sc_id) {

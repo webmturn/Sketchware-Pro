@@ -17,13 +17,36 @@ import java.util.List;
 import java.util.Map;
 
 import mod.hey.studios.util.Helper;
+import pro.sketchware.utility.FilePathUtil;
 
 public class LocalLibrariesUtil {
-    private static final String localLibsPath = getExternalStorageDir().concat("/.sketchware/libs/local_libs/");
+    private static String getLocalLibsPath() {
+        return FilePathUtil.getLocalLibsDir().getAbsolutePath() + "/";
+    }
+
+    private static String getLegacyLocalLibsPath() {
+        return FilePathUtil.getLocalLibsLegacyDir().getAbsolutePath() + "/";
+    }
 
     public static List<LocalLibrary> getAllLocalLibraries() {
         ArrayList<File> localLibraryFiles = new ArrayList<>();
-        listDirAsFile(localLibsPath, localLibraryFiles);
+        // Check new app-specific path
+        listDirAsFile(getLocalLibsPath(), localLibraryFiles);
+        // Also check legacy path for backward compatibility
+        ArrayList<File> legacyFiles = new ArrayList<>();
+        listDirAsFile(getLegacyLocalLibsPath(), legacyFiles);
+        for (File legacyFile : legacyFiles) {
+            boolean alreadyExists = false;
+            for (File newFile : localLibraryFiles) {
+                if (newFile.getName().equals(legacyFile.getName())) {
+                    alreadyExists = true;
+                    break;
+                }
+            }
+            if (!alreadyExists) {
+                localLibraryFiles.add(legacyFile);
+            }
+        }
         localLibraryFiles.sort(new LocalLibrariesComparator());
 
         List<LocalLibrary> localLibraries = new LinkedList<>();
@@ -53,7 +76,8 @@ public class LocalLibrariesUtil {
     public static void deleteSelectedLocalLibraries(String scId, List<LocalLibrary> localLibraries, ArrayList<HashMap<String, Object>> projectUsedLibs) {
         localLibraries.removeIf(library -> {
             if (library.isSelected()) {
-                deleteFile(localLibsPath.concat(library.getName()));
+                deleteFile(getLocalLibsPath().concat(library.getName()));
+                deleteFile(getLegacyLocalLibsPath().concat(library.getName()));
                 if (projectUsedLibs != null) {
                     int indexToRemove = -1;
                     for (int i = 0; i < projectUsedLibs.size(); i++) {
@@ -84,13 +108,14 @@ public class LocalLibrariesUtil {
     }
 
     public static HashMap<String, Object> createLibraryMap(String name, String dependency) {
-        String configPath = localLibsPath + name + "/config";
-        String resPath = localLibsPath + name + "/res";
-        String jarPath = localLibsPath + name + "/classes.jar";
-        String dexPath = localLibsPath + name + "/classes.dex";
-        String manifestPath = localLibsPath + name + "/AndroidManifest.xml";
-        String pgRulesPath = localLibsPath + name + "/proguard.txt";
-        String assetsPath = localLibsPath + name + "/assets";
+        String basePath = resolveLibBasePath(name);
+        String configPath = basePath + "/config";
+        String resPath = basePath + "/res";
+        String jarPath = basePath + "/classes.jar";
+        String dexPath = basePath + "/classes.dex";
+        String manifestPath = basePath + "/AndroidManifest.xml";
+        String pgRulesPath = basePath + "/proguard.txt";
+        String assetsPath = basePath + "/assets";
 
         HashMap<String, Object> localLibrary = new HashMap<>();
         localLibrary.put("name", name);
@@ -119,5 +144,17 @@ public class LocalLibrariesUtil {
             localLibrary.put("assetsPath", assetsPath);
         }
         return localLibrary;
+    }
+
+    private static String resolveLibBasePath(String name) {
+        String newPath = getLocalLibsPath() + name;
+        if (new File(newPath).exists()) {
+            return newPath;
+        }
+        String legacyPath = getLegacyLocalLibsPath() + name;
+        if (new File(legacyPath).exists()) {
+            return legacyPath;
+        }
+        return newPath;
     }
 }
