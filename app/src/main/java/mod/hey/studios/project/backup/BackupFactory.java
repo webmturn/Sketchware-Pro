@@ -545,7 +545,9 @@ public class BackupFactory {
                                 primaryPath.mkdirs();
                                 copy(local_lib, primaryPath);
                             } catch (Exception e) {
-                                // Primary path blocked by FUSE, use app-specific fallback
+                                // Primary path blocked by FUSE, clean up empty dir
+                                // and use app-specific fallback
+                                FileUtil.deleteFile(primaryPath.getAbsolutePath());
                                 fallbackPath.mkdirs();
                                 copy(local_lib, fallbackPath);
                             }
