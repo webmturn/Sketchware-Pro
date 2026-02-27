@@ -598,8 +598,11 @@ public class ComponentTypeMapper {
                 importList.add("android.app.NotificationManager");
                 importList.add("android.app.PendingIntent");
                 importList.add("android.content.Context");
+                importList.add("android.content.pm.PackageManager");
                 importList.add("android.os.Build");
+                importList.add("androidx.core.app.ActivityCompat");
                 importList.add("androidx.core.app.NotificationCompat");
+                importList.add("androidx.core.content.ContextCompat");
                 return importList;
 
             case "FirebaseCloudMessage":
