@@ -104,12 +104,16 @@ public class LibraryManager {
       bufferedReader = new BufferedReader(new StringReader(value));
       ProjectLibraryBean bean = this.gson.fromJson(value, ProjectLibraryBean.class);
       if (key.equals("firebaseDB")) {
+        bean.libType = ProjectLibraryBean.PROJECT_LIB_TYPE_FIREBASE;
         this.firebaseDB = bean;
       } else if (key.equals("compat")) {
+        bean.libType = ProjectLibraryBean.PROJECT_LIB_TYPE_COMPAT;
         this.compat = bean;
       } else if (key.equals("admob")) {
+        bean.libType = ProjectLibraryBean.PROJECT_LIB_TYPE_ADMOB;
         this.admob = bean;
       } else if (key.equals("googleMap")) {
+        bean.libType = ProjectLibraryBean.PROJECT_LIB_TYPE_GOOGLE_MAP;
         this.googleMap = bean;
       }
     } catch (Exception exception) {
