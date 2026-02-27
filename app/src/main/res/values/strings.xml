@@ -1888,6 +1888,8 @@ Choosing a theme mode lets you personalize the app\'s appearance, notes:\n
     <string name="design_library_title_appcompat">AppCompat</string>
     <string name="design_library_title_appcompat_and_design">AppCompat and Design</string>
     <string name="design_library_title_material3">"Material3 Manager"</string>
+    <string name="design_library_category_external">External libraries</string>
+    <string name="design_library_category_advanced">Advanced</string>
     <string name="design_library_title_select_project">Select Project</string>
     <string name="design_manager_block_detail_actionbar_title">Block Details</string>
     <string name="design_manager_block_hint_enter_block_name">Enter block name</string>
