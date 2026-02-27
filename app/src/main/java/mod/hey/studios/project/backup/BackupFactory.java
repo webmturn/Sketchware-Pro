@@ -537,11 +537,18 @@ public class BackupFactory {
 
                     for (File local_lib : local_libs_content) {
 
-                        File local_lib_real_path = new File(getAllLocalLibsDir(), local_lib.getName());
+                        File primaryPath = new File(getAllLocalLibsDir(), local_lib.getName());
+                        File fallbackPath = new File(FilePathUtil.getLocalLibsFallbackDir(), local_lib.getName());
 
-                        if (!local_lib_real_path.exists()) {
-                            local_lib_real_path.mkdirs();
-                            copy(local_lib, local_lib_real_path);
+                        if (!primaryPath.exists() && !fallbackPath.exists()) {
+                            try {
+                                primaryPath.mkdirs();
+                                copy(local_lib, primaryPath);
+                            } catch (Exception e) {
+                                // Primary path blocked by FUSE, use app-specific fallback
+                                fallbackPath.mkdirs();
+                                copy(local_lib, fallbackPath);
+                            }
                         }
                     }
                 }
