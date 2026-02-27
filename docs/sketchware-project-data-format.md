@@ -1280,6 +1280,7 @@ DB.addListenerForSingleValueEvent(new ValueEventListener() {
 {"componentId":"Fa","param1":"","param2":"","param3":"","type":12}
 {"componentId":"timer1","param1":"","param2":"","param3":"","type":5}
 {"componentId":"sp","param1":"","param2":"","param3":"","type":2}
+{"componentId":"notif1","param1":"","param2":"","param3":"","type":26}
 ```
 
 生成的字段声明：
@@ -1289,6 +1290,8 @@ private DatabaseReference DB = _firebase.getReference("test");   // param1="test
 private FirebaseAuth Fa = FirebaseAuth.getInstance();
 private TimerTask timer1;
 private SharedPreferences sp;
+private NotificationCompat.Builder notif1;       // 双字段：Builder + Manager
+private NotificationManager _nm_notif1;
 ```
 
 > **⚠️ 组件变量命名规则**: 组件变量名 = `componentId`（**无** `_` 前缀）。
@@ -1298,6 +1301,59 @@ private SharedPreferences sp;
 >
 > **Block 参数中的组件引用**：`%m.firebase`、`%m.FirebaseAuth` 等选择器存储 raw `componentId`（如 `"DB"`、`"auth"`），
 > **不加** `_` 前缀。代码生成器直接将此值插入生成代码中。
+
+#### 示例7：Notification 通知完整流程
+
+场景：点击按钮后创建渠道、设置标题/内容、显示通知。
+
+```
+@MainActivity.java_components
+{"componentId":"notif1","param1":"","param2":"","param3":"","type":26}
+```
+
+```
+@MainActivity.java_button1_onClick
+```
+
+```json
+{"color":-13850718,"id":"1","nextBlock":2,"opCode":"notifCreateChannel","parameters":["notif1","\"my_channel\"","\"My Channel\"","IMPORTANCE_DEFAULT"],"spec":"%m.notification createChannel id %s name %s importance %m.notifImportance","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+{"color":-13850718,"id":"2","nextBlock":3,"opCode":"notifSetTitle","parameters":["notif1","\"Hello!\""],"spec":"%m.notification setTitle %s","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+{"color":-13850718,"id":"3","nextBlock":4,"opCode":"notifSetContent","parameters":["notif1","\"This is a test notification\""],"spec":"%m.notification setContent %s","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+{"color":-13850718,"id":"4","nextBlock":5,"opCode":"notifSetAutoCancel","parameters":["notif1","true"],"spec":"%m.notification setAutoCancel %b","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+{"color":-13850718,"id":"5","nextBlock":-1,"opCode":"notifShow","parameters":["notif1","1"],"spec":"%m.notification show id %d","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+```
+
+生成的 Java 代码：
+```java
+// 字段声明（自动生成）
+private NotificationCompat.Builder notif1;
+private NotificationManager _nm_notif1;
+
+// 初始化（onCreate 中自动生成）
+_nm_notif1 = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+notif1 = new NotificationCompat.Builder(this, "default_channel");
+notif1.setSmallIcon(R.mipmap.ic_launcher);
+if (Build.VERSION.SDK_INT >= 33) {
+    if (ContextCompat.checkSelfPermission(this, "android.permission.POST_NOTIFICATIONS") != PackageManager.PERMISSION_GRANTED) {
+        ActivityCompat.requestPermissions(this, new String[]{"android.permission.POST_NOTIFICATIONS"}, 9901);
+    }
+}
+
+// onClick 回调中（由积木生成）
+if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+    NotificationChannel _channel_notif1 = new NotificationChannel("my_channel", "My Channel", NotificationManager.IMPORTANCE_DEFAULT);
+    _nm_notif1.createNotificationChannel(_channel_notif1);
+}
+notif1 = new NotificationCompat.Builder(getApplicationContext(), "my_channel");
+notif1.setSmallIcon(R.mipmap.ic_launcher);
+notif1.setContentTitle("Hello!");
+notif1.setContentText("This is a test notification");
+notif1.setAutoCancel(true);
+_nm_notif1.notify((int)(1), notif1.build());
+```
+
+> **❗ 注意**: `notifCreateChannel` 会重建 Builder 并重设小图标，因此必须在其他 `notifSet*` 块之前调用。
+> 生成代码中使用 `getApplicationContext()` 而非 `this`，因为积木代码运行在匿名内部类（如 `OnClickListener`）中。
 
 ### 完整 opCode 参考
 
