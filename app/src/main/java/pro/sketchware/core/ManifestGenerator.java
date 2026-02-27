@@ -445,6 +445,9 @@ public class ManifestGenerator {
                 writePermission(manifestXml, Manifest.permission.ACCESS_FINE_LOCATION);
             }
         }
+        if (buildConfig.isNotificationUsed) {
+            writePermission(manifestXml, "android.permission.POST_NOTIFICATIONS");
+        }
         if (FileUtil.isExistFile(filePathUtil.getPathPermission(buildConfig.sc_id))) {
             for (String s : fileResConfig.getPermissionList()) {
                 writePermission(manifestXml, s);

@@ -1158,6 +1158,19 @@ public class ExtraPaletteBlock {
                     logicEditor.createPaletteBlock(" ", "locationManagerRequestLocationUpdates");
                     logicEditor.createPaletteBlock(" ", "locationManagerRemoveUpdates");
                 }
+                if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_NOTIFICATION)) {
+                    logicEditor.addPaletteCategory("Notification", getTitleBgColor());
+                    logicEditor.createPaletteBlock(" ", "notifCreateChannel");
+                    logicEditor.createPaletteBlock(" ", "notifSetChannel");
+                    logicEditor.createPaletteBlock(" ", "notifSetTitle");
+                    logicEditor.createPaletteBlock(" ", "notifSetContent");
+                    logicEditor.createPaletteBlock(" ", "notifSetSmallIcon");
+                    logicEditor.createPaletteBlock(" ", "notifSetAutoCancel");
+                    logicEditor.createPaletteBlock(" ", "notifSetPriority");
+                    logicEditor.createPaletteBlock(" ", "notifSetClickIntent");
+                    logicEditor.createPaletteBlock(" ", "notifShow");
+                    logicEditor.createPaletteBlock(" ", "notifCancel");
+                }
                 if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_PROGRESS_DIALOG)
                         || extraBlocks.isCustomVarUsed("ProgressDialog")
                         || eventName.equals("onPreExecute") || eventName.equals("onProgressUpdate")

@@ -182,6 +182,12 @@ public class BuildConfig {
     public boolean isSpeechToTextUsed = false;
 
     /**
+     * If at least 1 Notification Component ({@link com.besome.sketch.beans.ComponentBean#COMPONENT_TYPE_NOTIFICATION})
+     * is used in the project.
+     */
+    public boolean isNotificationUsed = false;
+
+    /**
      * Permissions of the whole project, stored as bitfield.
      */
     public int permissions = 0;
