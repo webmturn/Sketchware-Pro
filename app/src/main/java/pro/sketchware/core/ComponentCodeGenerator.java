@@ -1197,7 +1197,11 @@ public class ComponentCodeGenerator {
             case "Notification":
                 return "_nm_" + componentName + " = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);\r\n"
                         + componentName + " = new NotificationCompat.Builder(this, \"default_channel\");\r\n"
-                        + componentName + ".setSmallIcon(R.mipmap.ic_launcher);";
+                        + componentName + ".setSmallIcon(R.mipmap.ic_launcher);\r\n"
+                        + "if (Build.VERSION.SDK_INT >= 33) {\r\n"
+                        + "if (ContextCompat.checkSelfPermission(this, \"android.permission.POST_NOTIFICATIONS\") != PackageManager.PERMISSION_GRANTED) {\r\n"
+                        + "ActivityCompat.requestPermissions(this, new String[]{\"android.permission.POST_NOTIFICATIONS\"}, 9901);\r\n"
+                        + "}\r\n}";
 
             case "LocationManager":
                 return componentName + " = (LocationManager) getSystemService(Context.LOCATION_SERVICE)";
