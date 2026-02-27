@@ -9,32 +9,33 @@ import pro.sketchware.SketchApplication;
 public class FilePathUtil {
 
     private static final File SKETCHWARE_DATA = new File(Environment.getExternalStorageDirectory(), ".sketchware/data/");
-    private static final File SKETCHWARE_LOCAL_LIBS_LEGACY = new File(Environment.getExternalStorageDirectory(), ".sketchware/libs/local_libs");
-    private static volatile File sketchwareLocalLibs;
+    private static final File SKETCHWARE_LOCAL_LIBS = new File(Environment.getExternalStorageDirectory(), ".sketchware/libs/local_libs");
+    private static volatile File sketchwareLocalLibsFallback;
 
     /**
-     * Returns the local libs directory using app-specific external storage.
-     * This bypasses FUSE/MediaProvider restrictions on Android 11+ that block
-     * file creation even with MANAGE_EXTERNAL_STORAGE granted.
+     * Returns the primary local libs directory (shared external storage).
+     * Libraries stored here survive app uninstall.
      */
     public static File getLocalLibsDir() {
-        if (sketchwareLocalLibs == null) {
-            synchronized (FilePathUtil.class) {
-                if (sketchwareLocalLibs == null) {
-                    File externalFilesDir = SketchApplication.getContext().getExternalFilesDir(null);
-                    sketchwareLocalLibs = new File(externalFilesDir, "local_libs");
-                }
-            }
-        }
-        return sketchwareLocalLibs;
+        return SKETCHWARE_LOCAL_LIBS;
     }
 
     /**
-     * Returns the legacy local libs directory (shared external storage).
-     * Used for backward compatibility to find libraries downloaded by older versions.
+     * Returns the fallback local libs directory using app-specific external storage.
+     * This bypasses FUSE/MediaProvider restrictions on Android 11+ (e.g. Samsung Android 16)
+     * that block file creation even with MANAGE_EXTERNAL_STORAGE granted.
+     * Note: files here are deleted when the app is uninstalled.
      */
-    public static File getLocalLibsLegacyDir() {
-        return SKETCHWARE_LOCAL_LIBS_LEGACY;
+    public static File getLocalLibsFallbackDir() {
+        if (sketchwareLocalLibsFallback == null) {
+            synchronized (FilePathUtil.class) {
+                if (sketchwareLocalLibsFallback == null) {
+                    File externalFilesDir = SketchApplication.getContext().getExternalFilesDir(null);
+                    sketchwareLocalLibsFallback = new File(externalFilesDir, "local_libs");
+                }
+            }
+        }
+        return sketchwareLocalLibsFallback;
     }
 
     public static String getLastCompileLogPath(String sc_id) {
@@ -102,20 +103,20 @@ public class FilePathUtil {
     }
 
     /**
-     * Resolves a local library file, checking the new app-specific path first,
-     * then falling back to the legacy shared storage path.
+     * Resolves a local library file, checking the primary shared storage path first,
+     * then falling back to the app-specific storage path.
      */
     private static File resolveLocalLibFile(String libraryName, String fileName) {
-        File newPath = new File(getLocalLibsDir(), libraryName + "/" + fileName);
-        if (newPath.exists()) {
-            return newPath;
+        File primaryPath = new File(SKETCHWARE_LOCAL_LIBS, libraryName + "/" + fileName);
+        if (primaryPath.exists()) {
+            return primaryPath;
         }
-        File legacyPath = new File(SKETCHWARE_LOCAL_LIBS_LEGACY, libraryName + "/" + fileName);
-        if (legacyPath.exists()) {
-            return legacyPath;
+        File fallbackPath = new File(getLocalLibsFallbackDir(), libraryName + "/" + fileName);
+        if (fallbackPath.exists()) {
+            return fallbackPath;
         }
-        // Default to new path for new files
-        return newPath;
+        // Default to primary path
+        return primaryPath;
     }
 
     public static String getJarPathLocalLibraryUser(String sc_id) {

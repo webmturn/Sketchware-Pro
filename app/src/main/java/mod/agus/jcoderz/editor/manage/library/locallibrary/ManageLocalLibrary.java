@@ -40,9 +40,9 @@ public class ManageLocalLibrary {
                     list.removeIf(entry -> {
                         Object name = entry.get("name");
                         if (name instanceof String) {
-                            File newLibDir = new File(FilePathUtil.getLocalLibsDir(), (String) name);
-                            File legacyLibDir = new File(FilePathUtil.getLocalLibsLegacyDir(), (String) name);
-                            return !newLibDir.exists() && !legacyLibDir.exists();
+                            File primaryLibDir = new File(FilePathUtil.getLocalLibsDir(), (String) name);
+                            File fallbackLibDir = new File(FilePathUtil.getLocalLibsFallbackDir(), (String) name);
+                            return !primaryLibDir.exists() && !fallbackLibDir.exists();
                         }
                         return true;
                     });

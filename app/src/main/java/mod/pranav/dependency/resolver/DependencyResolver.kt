@@ -48,8 +48,29 @@ class DependencyResolver(
         """.trimMargin()
     }
 
-    private val downloadPath: String =
-        FilePathUtil.getLocalLibsDir().absolutePath
+    private val downloadPath: String by lazy {
+        resolveWritableDownloadPath()
+    }
+
+    /**
+     * Tries the primary shared storage path first. If a write test fails
+     * (e.g. FUSE/EPERM on Samsung Android 16+), falls back to app-specific storage.
+     */
+    private fun resolveWritableDownloadPath(): String {
+        val primaryDir = FilePathUtil.getLocalLibsDir()
+        try {
+            val testDir = File(primaryDir, ".write_test_dir")
+            testDir.mkdirs()
+            val testFile = File(testDir, ".write_test")
+            testFile.createNewFile()
+            testFile.delete()
+            testDir.delete()
+            return primaryDir.absolutePath
+        } catch (e: Exception) {
+            // Primary path blocked by FUSE, use app-specific fallback
+            return FilePathUtil.getLocalLibsFallbackDir().absolutePath
+        }
+    }
 
     private val repositoriesJson = Paths.get(
         Environment.getExternalStorageDirectory().absolutePath,

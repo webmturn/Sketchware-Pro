@@ -24,18 +24,18 @@ public class LocalLibrariesUtil {
         return FilePathUtil.getLocalLibsDir().getAbsolutePath() + "/";
     }
 
-    private static String getLegacyLocalLibsPath() {
-        return FilePathUtil.getLocalLibsLegacyDir().getAbsolutePath() + "/";
+    private static String getFallbackLocalLibsPath() {
+        return FilePathUtil.getLocalLibsFallbackDir().getAbsolutePath() + "/";
     }
 
     public static List<LocalLibrary> getAllLocalLibraries() {
         ArrayList<File> localLibraryFiles = new ArrayList<>();
-        // Check new app-specific path
+        // Check primary shared storage path
         listDirAsFile(getLocalLibsPath(), localLibraryFiles);
-        // Also check legacy path for backward compatibility
-        ArrayList<File> legacyFiles = new ArrayList<>();
-        listDirAsFile(getLegacyLocalLibsPath(), legacyFiles);
-        for (File legacyFile : legacyFiles) {
+        // Also check app-specific fallback path
+        ArrayList<File> fallbackFiles = new ArrayList<>();
+        listDirAsFile(getFallbackLocalLibsPath(), fallbackFiles);
+        for (File legacyFile : fallbackFiles) {
             boolean alreadyExists = false;
             for (File newFile : localLibraryFiles) {
                 if (newFile.getName().equals(legacyFile.getName())) {
@@ -77,7 +77,7 @@ public class LocalLibrariesUtil {
         localLibraries.removeIf(library -> {
             if (library.isSelected()) {
                 deleteFile(getLocalLibsPath().concat(library.getName()));
-                deleteFile(getLegacyLocalLibsPath().concat(library.getName()));
+                deleteFile(getFallbackLocalLibsPath().concat(library.getName()));
                 if (projectUsedLibs != null) {
                     int indexToRemove = -1;
                     for (int i = 0; i < projectUsedLibs.size(); i++) {
@@ -151,9 +151,9 @@ public class LocalLibrariesUtil {
         if (new File(newPath).exists()) {
             return newPath;
         }
-        String legacyPath = getLegacyLocalLibsPath() + name;
-        if (new File(legacyPath).exists()) {
-            return legacyPath;
+        String fallbackPath = getFallbackLocalLibsPath() + name;
+        if (new File(fallbackPath).exists()) {
+            return fallbackPath;
         }
         return newPath;
     }
