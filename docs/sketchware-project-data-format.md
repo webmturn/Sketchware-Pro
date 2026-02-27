@@ -1857,7 +1857,22 @@ private SharedPreferences sp;
 
 #### Notification (type=26)
 
-> Notification 组件已注册为组件类型，但**当前没有对应的 opCode 块**。它是一个占位类型，需要通过 `addSourceDirectly` 手动实现通知功能。
+| opCode | 说明 | 参数 | 生成代码 |
+|--------|------|------|----------|
+| `notifCreateChannel` | 创建通知渠道（Android 8+）并设置 Builder 渠道 | [组件, 渠道ID, 渠道名, 重要性] | `NotificationChannel` + `NotificationCompat.Builder` 重建 |
+| `notifSetChannel` | 切换通知渠道 | [组件, 渠道ID] | 重建 `NotificationCompat.Builder` |
+| `notifSetTitle` | 设置通知标题 | [组件, 标题] | `notif1.setContentTitle("...");` |
+| `notifSetContent` | 设置通知内容 | [组件, 内容] | `notif1.setContentText("...");` |
+| `notifSetSmallIcon` | 设置通知小图标 | [组件, 图标资源名] | `notif1.setSmallIcon(R.drawable.xxx);` |
+| `notifSetAutoCancel` | 设置点击后自动关闭 | [组件, true/false] | `notif1.setAutoCancel(true);` |
+| `notifSetPriority` | 设置通知优先级 | [组件, 优先级] | `notif1.setPriority(NotificationCompat.xxx);` |
+| `notifSetClickIntent` | 设置点击通知打开的 Intent | [组件, Intent] | `notif1.setContentIntent(PendingIntent.getActivity(...));` |
+| `notifShow` | 显示通知 | [组件, 通知ID] | `_nm_notif1.notify(id, notif1.build());` |
+| `notifCancel` | 取消通知 | [组件, 通知ID] | `_nm_notif1.cancel(id);` |
+
+> **⚠️ 重要**: Notification 组件会生成**双字段**：`NotificationCompat.Builder notif1` 和 `NotificationManager _nm_notif1`。
+> 初始化时自动设置 `R.mipmap.ic_launcher` 为默认小图标，并在 Android 13+ 自动请求 `POST_NOTIFICATIONS` 运行时权限。
+> `notifCreateChannel` 会自动重建 Builder 以匹配创建的渠道 ID，因此**必须在 `notifSetTitle` 等设置块之前调用**。
 
 #### FragmentAdapter (type=27)
 
@@ -2188,6 +2203,7 @@ custom_font
 | `%m.videoad` | RewardedVideoAd |
 | `%m.progressdialog` | ProgressDialog |
 | `%m.timepickerdialog` | TimePickerDialog |
+| `%m.notification` | Notification |
 
 **变量选择器**：
 
@@ -2229,6 +2245,8 @@ custom_font
 | `%m.markerColor` | 标记颜色 | 颜色名称（如 `RED`, `BLUE`, `GREEN` 等） |
 | `%m.directoryType` | 公共目录类型 | `DIRECTORY_MUSIC`, `DIRECTORY_PICTURES`, `DIRECTORY_DOWNLOADS` 等 |
 | `%m.styleprogress` | 进度条样式 | `STYLE_HORIZONTAL`, `STYLE_SPINNER` |
+| `%m.notifImportance` | 通知渠道重要性 | `IMPORTANCE_DEFAULT`, `IMPORTANCE_HIGH`, `IMPORTANCE_LOW`, `IMPORTANCE_MIN`, `IMPORTANCE_NONE` |
+| `%m.notifPriority` | 通知优先级 | `PRIORITY_DEFAULT`, `PRIORITY_HIGH`, `PRIORITY_LOW`, `PRIORITY_MIN`, `PRIORITY_MAX` |
 
 > 这些枚举选择器的详细值列表参见下方「属性值速查表」各小节。
 
@@ -2268,6 +2286,7 @@ if %b                          → if [布尔输入]  (subStack1=true分支)
 | `-11242015` | `#FF5445E1` | Firebase Auth（蓝紫） |
 | `-11899692` | `#FF4A86D4` | 直接代码 / addSourceDirectly（蓝色） |
 | `-14575885` | `#FF21A083` | 控制流（绿色） |
+| `-13850718` | `#FF2CA5E2` | 组件操作（蓝色，含 Notification） |
 | `-10701022` | `#FF5CB722` | 运算符（黄绿） |
 
 ---
