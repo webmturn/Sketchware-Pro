@@ -427,8 +427,21 @@ Sketchware-Pro 的项目数据存储在设备的 `/storage/emulated/0/.sketchwar
 │
 ├── backups/                                 ← 项目备份（.swb 文件）
 ├── libs/                                    ← 额外库文件
+│   ├── local_libs/                          ← 下载的本地库（主路径，卸载不丢失）
+│   │   └── {artifactId}-v{version}/         ← 每个库一个目录
+│   │       ├── classes.jar                  ← JAR 文件
+│   │       ├── classes.dex                  ← DEX 文件（编译生成）
+│   │       ├── config                       ← 包名配置
+│   │       ├── res/                         ← 资源目录（AAR 库）
+│   │       ├── AndroidManifest.xml           ← 清单文件（AAR 库）
+│   │       ├── proguard.txt                 ← ProGuard 规则
+│   │       └── assets/                      ← Assets 目录
+│   └── repositories.json                    ← Maven 仓库配置
 ├── temp/                                    ← 临时文件
 └── debug.txt                                ← 调试日志
+
+# 另外，当主路径被 FUSE 阻止时（如 Samsung Android 16+），库会下载到：
+# /storage/emulated/0/Android/data/<pkg>/files/local_libs/
 ```
 
 ### 创建新项目需要的最少文件
@@ -3465,6 +3478,8 @@ EditText 的 `text.inputType`：
 | `/storage/emulated/0/.sketchware/resources/images/{id}/` | 图片资源 |
 | `/storage/emulated/0/.sketchware/resources/sounds/{id}/` | 声音资源 |
 | `/storage/emulated/0/.sketchware/resources/fonts/{id}/` | 字体资源 |
+| `/storage/emulated/0/.sketchware/libs/local_libs/{name}/` | 本地库文件（主路径） |
+| `Android/data/<pkg>/files/local_libs/{name}/` | 本地库文件（回退路径，Samsung Android 16+） |
 | `/storage/emulated/0/.sketchware/mysc/{id}/` | 编译输出目录 |
 
 ### Activity 命名映射规则
@@ -4391,22 +4406,22 @@ JSON 数组，引用本地库。每个元素包含库的文件路径和依赖信
 ```json
 [
   {
-    "name": "mylibrary",
-    "dependency": "com.example:mylibrary:1.0",
-    "packageName": "com.example.mylibrary",
-    "jarPath": "/storage/emulated/0/.sketchware/libs/local_libs/mylibrary/classes.jar",
-    "dexPath": "/storage/emulated/0/.sketchware/libs/local_libs/mylibrary/classes.dex",
-    "resPath": "/storage/emulated/0/.sketchware/libs/local_libs/mylibrary/res",
-    "manifestPath": "/storage/emulated/0/.sketchware/libs/local_libs/mylibrary/AndroidManifest.xml",
-    "pgRulesPath": "/storage/emulated/0/.sketchware/libs/local_libs/mylibrary/proguard.txt",
-    "assetsPath": "/storage/emulated/0/.sketchware/libs/local_libs/mylibrary/assets"
+    "name": "retrofit-v2.9.0",
+    "dependency": "com.squareup.retrofit2:retrofit:2.9.0",
+    "packageName": "retrofit2",
+    "jarPath": "/storage/emulated/0/.sketchware/libs/local_libs/retrofit-v2.9.0/classes.jar",
+    "dexPath": "/storage/emulated/0/.sketchware/libs/local_libs/retrofit-v2.9.0/classes.dex",
+    "resPath": "/storage/emulated/0/.sketchware/libs/local_libs/retrofit-v2.9.0/res",
+    "manifestPath": "/storage/emulated/0/.sketchware/libs/local_libs/retrofit-v2.9.0/AndroidManifest.xml",
+    "pgRulesPath": "/storage/emulated/0/.sketchware/libs/local_libs/retrofit-v2.9.0/proguard.txt",
+    "assetsPath": "/storage/emulated/0/.sketchware/libs/local_libs/retrofit-v2.9.0/assets"
   }
 ]
 ```
 
 | 字段 | 说明 |
 |------|------|
-| `name` | 库名称 |
+| `name` | 库目录名（格式：`{artifactId}-v{version}`） |
 | `dependency` | Gradle 依赖声明（生成 `implementation 'xxx'`），可选 |
 | `packageName` | 库包名（从 `config` 文件读取） |
 | `jarPath` | classes.jar 路径 |
@@ -4416,7 +4431,24 @@ JSON 数组，引用本地库。每个元素包含库的文件路径和依赖信
 | `pgRulesPath` | ProGuard 规则文件路径 |
 | `assetsPath` | assets 目录路径 |
 
-> 所有路径字段仅在对应文件存在时才包含。库文件存储在 `/storage/emulated/0/.sketchware/libs/local_libs/{name}/`。
+> 所有路径字段仅在对应文件存在时才包含。
+
+#### 库文件存储路径（两级策略）
+
+下载库时采用 **主路径优先、回退路径兜底** 的策略：
+
+| 路径 | 位置 | 特点 |
+|------|------|------|
+| **主路径** | `/storage/emulated/0/.sketchware/libs/local_libs/{name}/` | 卸载 app 后库文件保留 |
+| **回退路径** | `Android/data/<pkg>/files/local_libs/{name}/` | 卸载 app 后库文件删除 |
+
+**工作流程**：
+1. 下载前在主路径做写入测试（`DependencyResolver.resolveWritableDownloadPath()`）
+2. 写入成功 → 使用主路径（大多数设备）
+3. 写入失败（FUSE/EPERM） → 自动回退到 app-specific 路径（Samsung Android 16+ 等）
+4. 读取/列出/编译时两个路径都检查，主路径优先
+
+> **背景**: Android 16 的 Samsung 设备上，FUSE 虚拟文件系统会阻止在共享存储中创建 `classes.jar` 等可见文件，即使已授予 `MANAGE_EXTERNAL_STORAGE` 权限。app-specific 存储（`getExternalFilesDir()`）不经过 FUSE 审查，因此作为回退路径。
 
 ### Injection/ 目录
 
