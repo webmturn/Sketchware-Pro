@@ -950,6 +950,16 @@ public class StringResource {
     loadBlockTranslation(context, "bluetoothConnectGetRandomUuid");
     loadBlockTranslation(context, "locationManagerRequestLocationUpdates");
     loadBlockTranslation(context, "locationManagerRemoveUpdates");
+    loadBlockTranslation(context, "notifCreateChannel");
+    loadBlockTranslation(context, "notifSetChannel");
+    loadBlockTranslation(context, "notifSetTitle");
+    loadBlockTranslation(context, "notifSetContent");
+    loadBlockTranslation(context, "notifSetSmallIcon");
+    loadBlockTranslation(context, "notifSetAutoCancel");
+    loadBlockTranslation(context, "notifSetPriority");
+    loadBlockTranslation(context, "notifSetClickIntent");
+    loadBlockTranslation(context, "notifShow");
+    loadBlockTranslation(context, "notifCancel");
   }
   
   public HashMap<String, String> loadTranslationsFromFile(String filePath) {
