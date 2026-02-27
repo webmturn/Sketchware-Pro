@@ -1426,38 +1426,39 @@ public class ProjectDataStore {
     clearAllData();
   }
   
+  @SuppressWarnings("unchecked")
   public void parseLogicSection(String fileName, String data) {
     if (data.length() <= 0)
       return; 
     try {
-      ProjectDataParser ProjectDataParser = new ProjectDataParser(fileName);
-      String parsedFileName = ProjectDataParser.getFileName();
-      ProjectDataParser.DataType dataType = ProjectDataParser.getDataType();
-      switch (ScreenOrientationConstants.ORIENTATION_VALUES[dataType.ordinal()]) {
-        default:
-          return;
-        case 8:
+      ProjectDataParser parser = new ProjectDataParser(fileName);
+      String parsedFileName = parser.getFileName();
+      ProjectDataParser.DataType dataType = parser.getDataType();
+      switch (dataType) {
+        case VARIABLE:
+          this.variableMap.put(parsedFileName, (ArrayList<Pair<Integer, String>>)parser.parseData(data));
+          break;
+        case LIST:
+          this.listMap.put(parsedFileName, (ArrayList<Pair<Integer, String>>)parser.parseData(data));
+          break;
+        case COMPONENT:
+          this.componentMap.put(parsedFileName, (ArrayList<ComponentBean>)parser.parseData(data));
+          break;
+        case EVENT:
+          this.eventMap.put(parsedFileName, (ArrayList<EventBean>)parser.parseData(data));
+          break;
+        case MORE_BLOCK:
+          this.moreBlockMap.put(parsedFileName, (ArrayList<Pair<String, String>>)parser.parseData(data));
+          break;
+        case EVENT_BLOCK:
           if (!this.blockMap.containsKey(parsedFileName)) {
             this.blockMap.put(parsedFileName, new HashMap<String, ArrayList<BlockBean>>());
-          } 
-          this.blockMap.get(parsedFileName).put(ProjectDataParser.getEventKey(), (ArrayList<BlockBean>)ProjectDataParser.parseData(data));
+          }
+          this.blockMap.get(parsedFileName).put(parser.getEventKey(), (ArrayList<BlockBean>)parser.parseData(data));
           break;
-        case 7:
-          this.moreBlockMap.put(parsedFileName, (ArrayList<Pair<String, String>>)ProjectDataParser.parseData(data));
-          break;
-        case 6:
-          this.eventMap.put(parsedFileName, (ArrayList<EventBean>)ProjectDataParser.parseData(data));
-          break;
-        case 5:
-          this.componentMap.put(parsedFileName, (ArrayList<ComponentBean>)ProjectDataParser.parseData(data));
-          break;
-        case 4:
-          this.listMap.put(parsedFileName, (ArrayList<Pair<Integer, String>>)ProjectDataParser.parseData(data));
-          break;
-        case 3:
-          this.variableMap.put(parsedFileName, (ArrayList<Pair<Integer, String>>)ProjectDataParser.parseData(data));
-          break;
-      } 
+        default:
+          return;
+      }
     } catch (Exception exception) {
       exception.printStackTrace();
     } 
@@ -1482,16 +1483,16 @@ public class ProjectDataStore {
     deleteBackupFiles();
   }
   
+  @SuppressWarnings("unchecked")
   public void parseViewSection(String fileName, String data) {
     try {
-      ProjectDataParser ProjectDataParser = new ProjectDataParser(fileName);
-      String parsedFileName = ProjectDataParser.getFileName();
-      ProjectDataParser.DataType dataType = ProjectDataParser.getDataType();
-      int orientationValue = ScreenOrientationConstants.ORIENTATION_VALUES[dataType.ordinal()];
-      if (orientationValue == 1) {
-        this.viewMap.put(parsedFileName, (ArrayList<ViewBean>)ProjectDataParser.parseData(data));
-      } else if (orientationValue == 2) {
-        this.fabMap.put(parsedFileName, (ViewBean)ProjectDataParser.parseData(data));
+      ProjectDataParser parser = new ProjectDataParser(fileName);
+      String parsedFileName = parser.getFileName();
+      ProjectDataParser.DataType dataType = parser.getDataType();
+      if (dataType == ProjectDataParser.DataType.VIEW) {
+        this.viewMap.put(parsedFileName, (ArrayList<ViewBean>)parser.parseData(data));
+      } else if (dataType == ProjectDataParser.DataType.FAB) {
+        this.fabMap.put(parsedFileName, (ViewBean)parser.parseData(data));
       }
     } catch (Exception exception) {
       exception.printStackTrace();
