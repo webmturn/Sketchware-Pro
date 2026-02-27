@@ -583,7 +583,7 @@ public class ManageEvent {
             case "onCompleteRegister" -> "@Override\r\n" +
                     "public void onComplete(Task<String> task) {\r\n" +
                     "final boolean _success = task.isSuccessful();\r\n" +
-                    "final String _token = task.getResult();\r\n" +
+                    "final String _token = task.isSuccessful() ? task.getResult() : \"\";\r\n" +
                     "final String _errorMessage = task.getException() != null ? task.getException().getMessage() : \"\";\r\n" +
                     eventLogic + "\r\n" +
                     "}";
