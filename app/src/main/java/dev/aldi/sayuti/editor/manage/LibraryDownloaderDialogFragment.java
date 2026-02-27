@@ -3,6 +3,7 @@ package dev.aldi.sayuti.editor.manage;
 import static android.net.ConnectivityManager.NetworkCallback;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import static dev.aldi.sayuti.editor.manage.LocalLibrariesUtil.createLibraryMap;
 
@@ -28,6 +29,7 @@ import com.google.gson.Gson;
 
 import org.cosmic.ide.dependency.resolver.api.Artifact;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -147,6 +149,28 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
             return;
         }
 
+        // Practical write test: some devices report isExternalStorageManager()=true
+        // but still block writes to external storage. Test in a NEW subdirectory
+        // to match the actual download path (parent/.sketchware/libs/local_libs/<name>/file).
+        File testDir = new File(FileUtil.getExternalStorageDir(), ".sketchware/libs/local_libs/.write_test_dir");
+        File testFile = new File(testDir, ".write_test");
+        try {
+            if (!testDir.mkdirs() && !testDir.exists()) {
+                showStorageAccessError();
+                return;
+            }
+            if (!testFile.createNewFile()) {
+                showStorageAccessError();
+                return;
+            }
+        } catch (Exception e) {
+            showStorageAccessError();
+            return;
+        } finally {
+            testFile.delete();
+            testDir.delete();
+        }
+
         dependencyName = Helper.getText(binding.dependencyInput);
         if (dependencyName.isEmpty()) {
             binding.dependencyInputLayout.setError(Helper.getResString(R.string.error_enter_dependency));
@@ -196,6 +220,26 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
         var handler = new Handler(Looper.getMainLooper());
 
         downloadExecutor.execute(() -> {
+            // Write test on the SAME background thread as the download.
+            // UI thread tests may pass while background thread writes fail on some devices.
+            File testDir = new File(FileUtil.getExternalStorageDir(), ".sketchware/libs/local_libs/.write_test_dir");
+            File testFile = new File(testDir, ".write_test");
+            try {
+                if (!testDir.mkdirs() && !testDir.exists()) throw new java.io.IOException("Cannot create directory");
+                testFile.createNewFile();
+            } catch (Exception e) {
+                testFile.delete();
+                testDir.delete();
+                handler.post(() -> {
+                    setDownloadState(false);
+                    showStorageAccessError();
+                });
+                return;
+            } finally {
+                testFile.delete();
+                testDir.delete();
+            }
+
             BuiltInLibraries.maybeExtractAndroidJar((message, progress) ->
                     handler.post(() -> binding.overallProgress.setIndeterminate(true)));
             BuiltInLibraries.maybeExtractCoreLambdaStubsJar();
@@ -294,8 +338,12 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
                         item.setError(e.getMessage());
                         dependencyAdapter.updateDependency(item);
                         setDownloadState(false);
-                        SketchwareUtil.showAnErrorOccurredDialog(getActivity(),
-                                "Downloading dependency '" + dep + "' failed: " + Log.getStackTraceString(e));
+                        if (isStoragePermissionError(e)) {
+                            showStorageAccessError();
+                        } else {
+                            SketchwareUtil.showAnErrorOccurredDialog(getActivity(),
+                                    "Downloading dependency '" + dep + "' failed: " + Log.getStackTraceString(e));
+                        }
                     });
                 }
 
@@ -402,6 +450,48 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
             downloadItems.clear();
             dependencyAdapter.setDependencies(new ArrayList<>());
         }
+    }
+
+    private boolean isStoragePermissionError(Throwable e) {
+        // Walk the cause chain looking for EPERM / "Operation not permitted"
+        Throwable current = e;
+        while (current != null) {
+            String msg = current.getMessage();
+            if (msg != null && (msg.contains("Operation not permitted") || msg.contains("EPERM"))) {
+                return true;
+            }
+            current = current.getCause();
+        }
+        return false;
+    }
+
+    private void showStorageAccessError() {
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.common_message_permission_title_storage)
+                .setMessage(Helper.getResString(R.string.common_message_permission_storage)
+                        + "\n\nPath: " + FileUtil.getExternalStorageDir() + "/.sketchware/libs/local_libs")
+                .setPositiveButton(R.string.common_word_settings, (dialog, which) -> {
+                    // Don't use FileUtil.requestAllFilesAccessPermission() — it has an
+                    // internal isExternalStorageManager() check that may return true on
+                    // some devices even when writes are actually blocked.
+                    try {
+                        Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
+                                android.net.Uri.parse("package:" + requireContext().getPackageName()));
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    } catch (Exception e) {
+                        // Fallback: open general app settings
+                        try {
+                            Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                    android.net.Uri.parse("package:" + requireContext().getPackageName()));
+                            startActivity(intent);
+                        } catch (Exception ignored) {
+                        }
+                    }
+                    dialog.dismiss();
+                })
+                .setNegativeButton(R.string.common_word_cancel, null)
+                .show();
     }
 
     private boolean isNetworkAvailable() {
