@@ -1197,7 +1197,7 @@ public class ComponentCodeGenerator {
             case "Notification":
                 return "_nm_" + componentName + " = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);\r\n"
                         + componentName + " = new NotificationCompat.Builder(this, \"default_channel\");\r\n"
-                        + componentName + ".setSmallIcon(R.drawable.app_icon);";
+                        + componentName + ".setSmallIcon(R.mipmap.ic_launcher);";
 
             case "LocationManager":
                 return componentName + " = (LocationManager) getSystemService(Context.LOCATION_SERVICE)";
