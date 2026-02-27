@@ -1376,6 +1376,8 @@ private SharedPreferences sp;
 | `forever` | 无限循环 | — | subStack1=循环体 |
 | `repeat` | 重复N次 | [次数] | subStack1=循环体 |
 | `break` | 跳出循环 | — | |
+| `tryCatch` | 异常捕获 | — | subStack1=try体, subStack2=catch体 (type="e") |
+| `getExceptionMessage` | 获取异常信息 | — | 返回 `e.getMessage()`（在 catch 中使用, type="s"） |
 
 #### 运算符
 
@@ -1528,6 +1530,7 @@ private SharedPreferences sp;
 |--------|------|------|
 | `doToast` | 显示Toast | [消息] |
 | `copyToClipboard` | 复制到剪贴板 | [文本] |
+| `getClipboard` | 读取剪贴板文本 | — |
 | `setTitle` | 设置标题 | [标题] |
 | `addSourceDirectly` | 直接插入Java代码 | [代码字符串] |
 
