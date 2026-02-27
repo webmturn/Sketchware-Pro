@@ -239,7 +239,7 @@ class DependencyResolver(
                 return@forEach
             }
 
-            val path = Paths.get(
+            var path = Paths.get(
                 downloadPath,
                 "${dep.artifactId}-v${dep.version}",
                 "classes.${dep.extension}"
@@ -251,14 +251,14 @@ class DependencyResolver(
             } catch (e: Exception) {
                 if (isStoragePermissionError(e) && downloadPath == FilePathUtil.getLocalLibsDir().absolutePath) {
                     switchToFallbackPath()
-                    val fallbackPath = Paths.get(
+                    path = Paths.get(
                         downloadPath,
                         "${dep.artifactId}-v${dep.version}",
                         "classes.${dep.extension}"
                     )
                     try {
-                        Files.createDirectories(fallbackPath.parent)
-                        dep.downloadTo(File(fallbackPath.toString()))
+                        Files.createDirectories(path.parent)
+                        dep.downloadTo(File(path.toString()))
                     } catch (e2: Exception) {
                         callback.onDownloadError(dep, e2)
                         return@forEach
