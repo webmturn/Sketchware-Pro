@@ -6,7 +6,9 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import static dev.aldi.sayuti.editor.manage.LocalLibrariesUtil.createLibraryMap;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -132,6 +134,19 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
     }
 
     private void initDownloadFlow() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && !Environment.isExternalStorageManager()) {
+            new MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.common_message_permission_title_storage)
+                    .setMessage(R.string.common_message_permission_storage)
+                    .setPositiveButton(R.string.common_word_settings, (dialog, which) -> {
+                        FileUtil.requestAllFilesAccessPermission(requireContext());
+                        dialog.dismiss();
+                    })
+                    .setNegativeButton(R.string.common_word_cancel, null)
+                    .show();
+            return;
+        }
+
         dependencyName = Helper.getText(binding.dependencyInput);
         if (dependencyName.isEmpty()) {
             binding.dependencyInputLayout.setError(Helper.getResString(R.string.error_enter_dependency));
