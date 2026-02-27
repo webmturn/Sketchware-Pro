@@ -4443,10 +4443,11 @@ JSON 数组，引用本地库。每个元素包含库的文件路径和依赖信
 | **回退路径** | `Android/data/<pkg>/files/local_libs/{name}/` | 卸载 app 后库文件删除 |
 
 **工作流程**：
-1. 下载前在主路径做写入测试（`DependencyResolver.resolveWritableDownloadPath()`）
-2. 写入成功 → 使用主路径（大多数设备）
-3. 写入失败（FUSE/EPERM） → 自动回退到 app-specific 路径（Samsung Android 16+ 等）
-4. 读取/列出/编译时两个路径都检查，主路径优先
+1. 下载时先尝试主路径
+2. 下载成功 → 使用主路径（大多数设备）
+3. 下载失败（FUSE/EPERM） → 自动切换到 app-specific 路径并重试（Samsung Android 16+、Huawei Android 12+ 等）
+4. 备份恢复同理：先尝试主路径，FUSE 阻止时回退（并清理空目录）
+5. 读取/列出/编译时两个路径都检查，主路径优先
 
 > **背景**: Android 16 的 Samsung 设备上，FUSE 虚拟文件系统会阻止在共享存储中创建 `classes.jar` 等可见文件，即使已授予 `MANAGE_EXTERNAL_STORAGE` 权限。app-specific 存储（`getExternalFilesDir()`）不经过 FUSE 审查，因此作为回退路径。
 
