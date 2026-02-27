@@ -1,6564 +1,824 @@
 package pro.sketchware.core;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 public class BlockSpecRegistry {
-  private static final HashMap<String, ArrayList<String>> cacheA = new HashMap<>();
-  private static final HashMap<String, ArrayList<String>> cacheB = new HashMap<>();
-  private static final HashMap<String, String> cacheC = new HashMap<>();
-  private static final HashMap<String, String> cacheD = new HashMap<>();
-  public static ArrayList<String> getBlockParams(String blockName) {
-    if (cacheA.containsKey(blockName)) return cacheA.get(blockName);
-    short matchIndex = -1;
-    ArrayList<String> params = new ArrayList<>();
-    switch (blockName.hashCode()) {
-      default:
-        matchIndex = -1;
-        break;
-      case 2138225950:
-        if (blockName.equals("locationManagerRequestLocationUpdates")) {
-          matchIndex = 320;
-          break;
-        } 
-      case 2130649194:
-        if (blockName.equals("bluetoothConnectGetPairedDevices")) {
-          matchIndex = 318;
-          break;
-        } 
-      case 2127377128:
-        if (blockName.equals("mediaplayerGetCurrent")) {
-          matchIndex = 205;
-          break;
-        } 
-      case 2090189010:
-        if (blockName.equals("addListStr")) {
-          matchIndex = 19;
-          break;
-        } 
-      case 2090182653:
-        if (blockName.equals("addListMap")) {
-          matchIndex = 24;
-          break;
-        } 
-      case 2090179216:
-        if (blockName.equals("addListInt")) {
-          matchIndex = 14;
-          break;
-        } 
-      case 2075310296:
-        if (blockName.equals("interstitialadLoadAd")) {
-          matchIndex = 245;
-          break;
-        } 
-      case 2017929665:
-        if (blockName.equals("calendarViewSetMinDate")) {
-          matchIndex = 158;
-          break;
-        } 
-      case 1984984239:
-        if (blockName.equals("setText")) {
-          matchIndex = 108;
-          break;
-        } 
-      case 1984630281:
-        if (blockName.equals("setHint")) {
-          matchIndex = 114;
-          break;
-        } 
-      case 1976325370:
-        if (blockName.equals("setImageFilePath")) {
-          matchIndex = 119;
-          break;
-        } 
-      case 1974249461:
-        if (blockName.equals("skewBitmapFile")) {
-          matchIndex = 294;
-          break;
-        } 
-      case 1973523807:
-        if (blockName.equals("mediaplayerIsPlaying")) {
-          matchIndex = 209;
-          break;
-        } 
-      case 1964823036:
-        if (blockName.equals("bluetoothConnectStopConnection")) {
-          matchIndex = 313;
-          break;
-        } 
-      case 1948735400:
-        if (blockName.equals("getAlpha")) {
-          matchIndex = 124;
-          break;
-        } 
-      case 1941634330:
-        if (blockName.equals("firebaseAdd")) {
-          matchIndex = 227;
-          break;
-        } 
-      case 1923980937:
-        if (blockName.equals("requestnetworkSetParams")) {
-          matchIndex = 252;
-          break;
-        } 
-      case 1908582864:
-        if (blockName.equals("firebaseStopListen")) {
-          matchIndex = 241;
-          break;
-        } 
-      case 1908132964:
-        if (blockName.equals("mapViewSetMarkerPosition")) {
-          matchIndex = 168;
-          break;
-        } 
-      case 1885231494:
-        if (blockName.equals("webViewCanGoForward")) {
-          matchIndex = 148;
-          break;
-        } 
-      case 1883337723:
-        if (blockName.equals("mathGetDisplayHeight")) {
-          matchIndex = 78;
-          break;
-        } 
-      case 1873103950:
-        if (blockName.equals("locationManagerRemoveUpdates")) {
-          matchIndex = 321;
-          break;
-        } 
-      case 1848365301:
-        if (blockName.equals("mapViewSetMapType")) {
-          matchIndex = 161;
-          break;
-        } 
-      case 1823151876:
-        if (blockName.equals("fileGetData")) {
-          matchIndex = 180;
-          break;
-        } 
-      case 1820536363:
-        if (blockName.equals("interstitialadCreate")) {
-          matchIndex = 244;
-          break;
-        } 
-      case 1814870108:
-        if (blockName.equals("doToast")) {
-          matchIndex = 279;
-          break;
-        } 
-      case 1792552710:
-        if (blockName.equals("rotateBitmapFile")) {
-          matchIndex = 292;
-          break;
-        } 
-      case 1779174257:
-        if (blockName.equals("getChecked")) {
-          matchIndex = 136;
-          break;
-        } 
-      case 1775620400:
-        if (blockName.equals("strToMap")) {
-          matchIndex = 72;
-          break;
-        } 
-      case 1764351209:
-        if (blockName.equals("deleteList")) {
-          matchIndex = 32;
-          break;
-        } 
-      case 1749552744:
-        if (blockName.equals("textToSpeechSpeak")) {
-          matchIndex = 302;
-          break;
-        } 
-      case 1712613410:
-        if (blockName.equals("webViewZoomOut")) {
-          matchIndex = 155;
-          break;
-        } 
-      case 1695890133:
-        if (blockName.equals("fileutilStartsWith")) {
-          matchIndex = 266;
-          break;
-        } 
-      case 1637498582:
-        if (blockName.equals("timerEvery")) {
-          matchIndex = 192;
-          break;
-        } 
-      case 1635356258:
-        if (blockName.equals("requestnetworkStartRequestNetwork")) {
-          matchIndex = 254;
-          break;
-        } 
-      case 1633341847:
-        if (blockName.equals("timerAfter")) {
-          matchIndex = 191;
-          break;
-        } 
-      case 1601394299:
-        if (blockName.equals("listGetCheckedPositions")) {
-          matchIndex = 275;
-          break;
-        } 
-      case 1498864168:
-        if (blockName.equals("seekBarGetProgress")) {
-          matchIndex = 283;
-          break;
-        } 
-      case 1470831563:
-        if (blockName.equals("intentGetString")) {
-          matchIndex = 178;
-          break;
-        } 
-      case 1437288110:
-        if (blockName.equals("getPublicDir")) {
-          matchIndex = 271;
-          break;
-        } 
-      case 1431171391:
-        if (blockName.equals("mapRemoveKey")) {
-          matchIndex = 9;
-          break;
-        } 
-      case 1410284340:
-        if (blockName.equals("seekBarSetProgress")) {
-          matchIndex = 282;
-          break;
-        } 
-      case 1405084438:
-        if (blockName.equals("setTitle")) {
-          matchIndex = 281;
-          break;
-        } 
-      case 1397501021:
-        if (blockName.equals("listRefresh")) {
-          matchIndex = 272;
-          break;
-        } 
-      case 1395026457:
-        if (blockName.equals("setImage")) {
-          matchIndex = 116;
-          break;
-        } 
-      case 1387622940:
-        if (blockName.equals("setAlpha")) {
-          matchIndex = 123;
-          break;
-        } 
-      case 1348133645:
-        if (blockName.equals("stringReplaceFirst")) {
-          matchIndex = 63;
-          break;
-        } 
-      case 1343794064:
-        if (blockName.equals("listSetItemChecked")) {
-          matchIndex = 273;
-          break;
-        } 
-      case 1330354473:
-        if (blockName.equals("firebaseauthSignInAnonymously")) {
-          matchIndex = 234;
-          break;
-        } 
-      case 1315302372:
-        if (blockName.equals("fileutillength")) {
-          matchIndex = 265;
-          break;
-        } 
-      case 1313527577:
-        if (blockName.equals("setTypeface")) {
-          matchIndex = 109;
-          break;
-        } 
-      case 1311764810:
-        if (blockName.equals("setTranslationY")) {
-          matchIndex = 127;
-          break;
-        } 
-      case 1311764809:
-        if (blockName.equals("setTranslationX")) {
-          matchIndex = 125;
-          break;
-        } 
-      case 1305932583:
-        if (blockName.equals("spnGetSelection")) {
-          matchIndex = 143;
-          break;
-        } 
-      case 1303367340:
-        if (blockName.equals("textToSpeechStop")) {
-          matchIndex = 304;
-          break;
-        } 
-      case 1280029577:
-        if (blockName.equals("requestFocus")) {
-          matchIndex = 118;
-          break;
-        } 
-      case 1252547704:
-        if (blockName.equals("listMapToStr")) {
-          matchIndex = 75;
-          break;
-        } 
-      case 1242107556:
-        if (blockName.equals("fileutilisfile")) {
-          matchIndex = 264;
-          break;
-        } 
-      case 1240510514:
-        if (blockName.equals("intentSetScreen")) {
-          matchIndex = 174;
-          break;
-        } 
-      case 1236956449:
-        if (blockName.equals("mediaplayerCreate")) {
-          matchIndex = 201;
-          break;
-        } 
-      case 1220078450:
-        if (blockName.equals("addSourceDirectly")) {
-          matchIndex = 286;
-          break;
-        } 
-      case 1219299503:
-        if (blockName.equals("objectanimatorIsRunning")) {
-          matchIndex = 226;
-          break;
-        } 
-      case 1219071185:
-        if (blockName.equals("firebasestorageUploadFile")) {
-          matchIndex = 247;
-          break;
-        } 
-      case 1216249183:
-        if (blockName.equals("firebasestorageDelete")) {
-          matchIndex = 249;
-          break;
-        } 
-      case 1187505507:
-        if (blockName.equals("stringReplace")) {
-          matchIndex = 62;
-          break;
-        } 
-      case 1179719371:
-        if (blockName.equals("stringLastIndex")) {
-          matchIndex = 58;
-          break;
-        } 
-      case 1162069698:
-        if (blockName.equals("setThumbResource")) {
-          matchIndex = 137;
-          break;
-        } 
-      case 1160674468:
-        if (blockName.equals("lengthList")) {
-          matchIndex = 33;
-          break;
-        } 
-      case 1159035162:
-        if (blockName.equals("mapViewZoomOut")) {
-          matchIndex = 165;
-          break;
-        } 
-      case 1156598140:
-        if (blockName.equals("fileutilEndsWith")) {
-          matchIndex = 267;
-          break;
-        } 
-      case 1142897724:
-        if (blockName.equals("firebaseauthSignInUser")) {
-          matchIndex = 233;
-          break;
-        } 
-      case 1129709718:
-        if (blockName.equals("setImageUrl")) {
-          matchIndex = 120;
-          break;
-        } 
-      case 1102670563:
-        if (blockName.equals("requestnetworkSetHeaders")) {
-          matchIndex = 253;
-          break;
-        } 
-      case 1090517587:
-        if (blockName.equals("getPackageDataDir")) {
-          matchIndex = 270;
-          break;
-        } 
-      case 1088879149:
-        if (blockName.equals("setHintTextColor")) {
-          matchIndex = 115;
-          break;
-        } 
-      case 1086207657:
-        if (blockName.equals("fileutildelete")) {
-          matchIndex = 259;
-          break;
-        } 
-      case 1068548733:
-        if (blockName.equals("mathGetDip")) {
-          matchIndex = 76;
-          break;
-        } 
-      case 1053179400:
-        if (blockName.equals("mapViewSetMarkerColor")) {
-          matchIndex = 169;
-          break;
-        } 
-      case 950609198:
-        if (blockName.equals("setBitmapFileColorFilter")) {
-          matchIndex = 295;
-          break;
-        } 
-      case 948234497:
-        if (blockName.equals("webViewStopLoading")) {
-          matchIndex = 153;
-          break;
-        } 
-      case 937017988:
-        if (blockName.equals("gyroscopeStartListen")) {
-          matchIndex = 242;
-          break;
-        } 
-      case 932259189:
-        if (blockName.equals("setBgResource")) {
-          matchIndex = 112;
-          break;
-        } 
-      case 898187172:
-        if (blockName.equals("mathToRadian")) {
-          matchIndex = 98;
-          break;
-        } 
-      case 858248741:
-        if (blockName.equals("calendarGetTime")) {
-          matchIndex = 188;
-          break;
-        } 
-      case 848786445:
-        if (blockName.equals("objectanimatorSetTarget")) {
-          matchIndex = 216;
-          break;
-        } 
-      case 845089750:
-        if (blockName.equals("setVarString")) {
-          matchIndex = 4;
-          break;
-        } 
-      case 840991609:
-        if (blockName.equals("mathTan")) {
-          matchIndex = 91;
-          break;
-        } 
-      case 840990896:
-        if (blockName.equals("mathSin")) {
-          matchIndex = 89;
-          break;
-        } 
-      case 840988208:
-        if (blockName.equals("mathPow")) {
-          matchIndex = 81;
-          break;
-        } 
-      case 840985130:
-        if (blockName.equals("mathMin")) {
-          matchIndex = 82;
-          break;
-        } 
-      case 840984892:
-        if (blockName.equals("mathMax")) {
-          matchIndex = 83;
-          break;
-        } 
-      case 840984348:
-        if (blockName.equals("mathLog")) {
-          matchIndex = 96;
-          break;
-        } 
-      case 840977909:
-        if (blockName.equals("mathExp")) {
-          matchIndex = 95;
-          break;
-        } 
-      case 840975711:
-        if (blockName.equals("mathCos")) {
-          matchIndex = 90;
-          break;
-        } 
-      case 840973386:
-        if (blockName.equals("mathAbs")) {
-          matchIndex = 85;
-          break;
-        } 
-      case 836692861:
-        if (blockName.equals("mapSize")) {
-          matchIndex = 10;
-          break;
-        } 
-      case 797861524:
-        if (blockName.equals("addMapToList")) {
-          matchIndex = 29;
-          break;
-        } 
-      case 787825477:
-        if (blockName.equals("getScaleY")) {
-          matchIndex = 132;
-          break;
-        } 
-      case 787825476:
-        if (blockName.equals("getScaleX")) {
-          matchIndex = 130;
-          break;
-        } 
-      case 770834513:
-        if (blockName.equals("getRotate")) {
-          matchIndex = 122;
-          break;
-        } 
-      case 762292097:
-        if (blockName.equals("indexListStr")) {
-          matchIndex = 22;
-          break;
-        } 
-      case 762282303:
-        if (blockName.equals("indexListInt")) {
-          matchIndex = 17;
-          break;
-        } 
-      case 754442829:
-        if (blockName.equals("increaseInt")) {
-          matchIndex = 2;
-          break;
-        } 
-      case 747168008:
-        if (blockName.equals("mapCreateNew")) {
-          matchIndex = 5;
-          break;
-        } 
-      case 738846120:
-        if (blockName.equals("textToSpeechSetPitch")) {
-          matchIndex = 300;
-          break;
-        } 
-      case 737664870:
-        if (blockName.equals("mathRound")) {
-          matchIndex = 86;
-          break;
-        } 
-      case 732108347:
-        if (blockName.equals("mathLog10")) {
-          matchIndex = 97;
-          break;
-        } 
-      case 726887785:
-        if (blockName.equals("mapViewSetMarkerInfo")) {
-          matchIndex = 167;
-          break;
-        } 
-      case 726877492:
-        if (blockName.equals("mapViewSetMarkerIcon")) {
-          matchIndex = 170;
-          break;
-        } 
-      case 726487524:
-        if (blockName.equals("mathFloor")) {
-          matchIndex = 88;
-          break;
-        } 
-      case 725249532:
-        if (blockName.equals("intentSetAction")) {
-          matchIndex = 172;
-          break;
-        } 
-      case 683193060:
-        if (blockName.equals("bluetoothConnectStartConnection")) {
-          matchIndex = 311;
-          break;
-        } 
-      case 657721930:
-        if (blockName.equals("setVarInt")) {
-          matchIndex = 1;
-          break;
-        } 
-      case 615286641:
-        if (blockName.equals("dialogNeutralButton")) {
-          matchIndex = 200;
-          break;
-        } 
-      case 610313513:
-        if (blockName.equals("getMapInList")) {
-          matchIndex = 31;
-          break;
-        } 
-      case 573295520:
-        if (blockName.equals("listGetCheckedCount")) {
-          matchIndex = 276;
-          break;
-        } 
-      case 573208401:
-        if (blockName.equals("setScaleY")) {
-          matchIndex = 131;
-          break;
-        } 
-      case 573208400:
-        if (blockName.equals("setScaleX")) {
-          matchIndex = 129;
-          break;
-        } 
-      case 571046965:
-        if (blockName.equals("scaleBitmapFile")) {
-          matchIndex = 293;
-          break;
-        } 
-      case 556217437:
-        if (blockName.equals("setRotate")) {
-          matchIndex = 121;
-          break;
-        } 
-      case 548860462:
-        if (blockName.equals("webViewClearCache")) {
-          matchIndex = 151;
-          break;
-        } 
-      case 530759231:
-        if (blockName.equals("progressBarSetIndeterminate")) {
-          matchIndex = 299;
-          break;
-        } 
-      case 501171279:
-        if (blockName.equals("mathToDegree")) {
-          matchIndex = 99;
-          break;
-        } 
-      case 490702942:
-        if (blockName.equals("filepickerstartpickfiles")) {
-          matchIndex = 251;
-          break;
-        } 
-      case 481850295:
-        if (blockName.equals("resizeBitmapFileToSquare")) {
-          matchIndex = 288;
-          break;
-        } 
-      case 475815924:
-        if (blockName.equals("setTextColor")) {
-          matchIndex = 113;
-          break;
-        } 
-      case 470160234:
-        if (blockName.equals("fileutilGetLastSegmentPath")) {
-          matchIndex = 268;
-          break;
-        } 
-      case 463594049:
-        if (blockName.equals("objectanimatorSetFromTo")) {
-          matchIndex = 219;
-          break;
-        } 
-      case 463560551:
-        if (blockName.equals("mapContainKey")) {
-          matchIndex = 8;
-          break;
-        } 
-      case 442768763:
-        if (blockName.equals("mapGetAllKeys")) {
-          matchIndex = 13;
-          break;
-        } 
-      case 404265028:
-        if (blockName.equals("calendarSet")) {
-          matchIndex = 185;
-          break;
-        } 
-      case 404247683:
-        if (blockName.equals("calendarAdd")) {
-          matchIndex = 184;
-          break;
-        } 
-      case 401012286:
-        if (blockName.equals("getTranslationY")) {
-          matchIndex = 128;
-          break;
-        } 
-      case 401012285:
-        if (blockName.equals("getTranslationX")) {
-          matchIndex = 126;
-          break;
-        } 
-      case 397166713:
-        if (blockName.equals("getEnable")) {
-          matchIndex = 105;
-          break;
-        } 
-      case 389111867:
-        if (blockName.equals("spnSetData")) {
-          matchIndex = 141;
-          break;
-        } 
-      case 348475309:
-        if (blockName.equals("soundpoolStreamStop")) {
-          matchIndex = 215;
-          break;
-        } 
-      case 348377823:
-        if (blockName.equals("soundpoolStreamPlay")) {
-          matchIndex = 214;
-          break;
-        } 
-      case 342026220:
-        if (blockName.equals("interstitialadShow")) {
-          matchIndex = 246;
-          break;
-        } 
-      case 317453636:
-        if (blockName.equals("textToSpeechIsSpeaking")) {
-          matchIndex = 303;
-          break;
-        } 
-      case 300921928:
-        if (blockName.equals("mathSqrt")) {
-          matchIndex = 84;
-          break;
-        } 
-      case 300433453:
-        if (blockName.equals("mathCeil")) {
-          matchIndex = 87;
-          break;
-        } 
-      case 300388040:
-        if (blockName.equals("mathAtan")) {
-          matchIndex = 94;
-          break;
-        } 
-      case 300387327:
-        if (blockName.equals("mathAsin")) {
-          matchIndex = 92;
-          break;
-        } 
-      case 300372142:
-        if (blockName.equals("mathAcos")) {
-          matchIndex = 93;
-          break;
-        } 
-      case 297379706:
-        if (blockName.equals("textToSpeechSetSpeechRate")) {
-          matchIndex = 301;
-          break;
-        } 
-      case 276674391:
-        if (blockName.equals("mapViewMoveCamera")) {
-          matchIndex = 162;
-          break;
-        } 
-      case 262073061:
-        if (blockName.equals("bluetoothConnectReadyConnection")) {
-          matchIndex = 309;
-          break;
-        } 
-      case 255417137:
-        if (blockName.equals("adViewLoadAd")) {
-          matchIndex = 160;
-          break;
-        } 
-      case 207764385:
-        if (blockName.equals("calendarViewGetDate")) {
-          matchIndex = 156;
-          break;
-        } 
-      case 182549637:
-        if (blockName.equals("setEnable")) {
-          matchIndex = 104;
-          break;
-        } 
-      case 168740282:
-        if (blockName.equals("mapToStr")) {
-          matchIndex = 73;
-          break;
-        } 
-      case 163812602:
-        if (blockName.equals("cropBitmapFileFromCenter")) {
-          matchIndex = 291;
-          break;
-        } 
-      case 152967761:
-        if (blockName.equals("mapClear")) {
-          matchIndex = 11;
-          break;
-        } 
-      case 134874756:
-        if (blockName.equals("listSetCustomViewData")) {
-          matchIndex = 140;
-          break;
-        } 
-      case 125431087:
-        if (blockName.equals("speechToTextStopListening")) {
-          matchIndex = 307;
-          break;
-        } 
-      case 103668285:
-        if (blockName.equals("mathE")) {
-          matchIndex = 80;
-          break;
-        } 
-      case 97196323:
-        if (blockName.equals("false")) {
-          matchIndex = 42;
-          break;
-        } 
-      case 94001407:
-        if (blockName.equals("break")) {
-          matchIndex = 37;
-          break;
-        } 
-      case 61585857:
-        if (blockName.equals("firebasePush")) {
-          matchIndex = 228;
-          break;
-        } 
-      case 56167279:
-        if (blockName.equals("setBitmapFileContrast")) {
-          matchIndex = 297;
-          break;
-        } 
-      case 27679870:
-        if (blockName.equals("calendarGetNow")) {
-          matchIndex = 183;
-          break;
-        } 
-      case 25469951:
-        if (blockName.equals("bluetoothConnectActivateBluetooth")) {
-          matchIndex = 317;
-          break;
-        } 
-      case 16308074:
-        if (blockName.equals("resizeBitmapFileToCircle")) {
-          matchIndex = 289;
-          break;
-        } 
-      case 8255701:
-        if (blockName.equals("calendarFormat")) {
-          matchIndex = 186;
-          break;
-        } 
-      case 3569038:
-        if (blockName.equals("true")) {
-          matchIndex = 41;
-          break;
-        } 
-      case 3568674:
-        if (blockName.equals("trim")) {
-          matchIndex = 66;
-          break;
-        } 
-      case 3116345:
-        if (blockName.equals("else")) {
-          matchIndex = 40;
-          break;
-        } 
-      case 109267:
-        if (blockName.equals("not")) {
-          matchIndex = 48;
-          break;
-        } 
-      case 3968:
-        if (blockName.equals("||")) {
-          matchIndex = 47;
-          break;
-        } 
-      case 3357:
-        if (blockName.equals("if")) {
-          matchIndex = 38;
-          break;
-        } 
-      case 1216:
-        if (blockName.equals("&&")) {
-          matchIndex = 46;
-          break;
-        } 
-      case 62:
-        if (blockName.equals(">")) {
-          matchIndex = 45;
-          break;
-        } 
-      case 61:
-        if (blockName.equals("=")) {
-          matchIndex = 44;
-          break;
-        } 
-      case 60:
-        if (blockName.equals("<")) {
-          matchIndex = 43;
-          break;
-        } 
-      case 47:
-        if (blockName.equals("/")) {
-          matchIndex = 52;
-          break;
-        } 
-      case 45:
-        if (blockName.equals("-")) {
-          matchIndex = 50;
-          break;
-        } 
-      case 43:
-        if (blockName.equals("+")) {
-          matchIndex = 49;
-          break;
-        } 
-      case 42:
-        if (blockName.equals("*")) {
-          matchIndex = 51;
-          break;
-        } 
-      case 37:
-        if (blockName.equals("%")) {
-          matchIndex = 53;
-          break;
-        } 
-      case -9742826:
-        if (blockName.equals("firebaseGetPushKey")) {
-          matchIndex = 229;
-          break;
-        } 
-      case -10599306:
-        if (blockName.equals("firebaseauthCreateUser")) {
-          matchIndex = 232;
-          break;
-        } 
-      case -14362103:
-        if (blockName.equals("bluetoothConnectIsBluetoothActivated")) {
-          matchIndex = 316;
-          break;
-        } 
-      case -24451690:
-        if (blockName.equals("dialogOkButton")) {
-          matchIndex = 198;
-          break;
-        } 
-      case -60048101:
-        if (blockName.equals("firebaseauthResetPassword")) {
-          matchIndex = 235;
-          break;
-        } 
-      case -60494417:
-        if (blockName.equals("vibratorAction")) {
-          matchIndex = 190;
-          break;
-        } 
-      case -75125341:
-        if (blockName.equals("getText")) {
-          matchIndex = 110;
-          break;
-        } 
-      case -83186725:
-        if (blockName.equals("openDrawer")) {
-          matchIndex = 102;
-          break;
-        } 
-      case -83301935:
-        if (blockName.equals("webViewZoomIn")) {
-          matchIndex = 154;
-          break;
-        } 
-      case -96303809:
-        if (blockName.equals("containListStr")) {
-          matchIndex = 23;
-          break;
-        } 
-      case -96310166:
-        if (blockName.equals("containListMap")) {
-          matchIndex = 28;
-          break;
-        } 
-      case -96313603:
-        if (blockName.equals("containListInt")) {
-          matchIndex = 18;
-          break;
-        } 
-      case -133532073:
-        if (blockName.equals("stringLength")) {
-          matchIndex = 55;
-          break;
-        } 
-      case -149850417:
-        if (blockName.equals("fileutilisexist")) {
-          matchIndex = 260;
-          break;
-        } 
-      case -152473824:
-        if (blockName.equals("firebaseauthIsLoggedIn")) {
-          matchIndex = 236;
-          break;
-        } 
-      case -189292433:
-        if (blockName.equals("stringSub")) {
-          matchIndex = 59;
-          break;
-        } 
-      case -208762465:
-        if (blockName.equals("toStringWithDecimal")) {
-          matchIndex = 70;
-          break;
-        } 
-      case -247015294:
-        if (blockName.equals("mediaplayerRelease")) {
-          matchIndex = 208;
-          break;
-        } 
-      case -258774775:
-        if (blockName.equals("closeDrawer")) {
-          matchIndex = 103;
-          break;
-        } 
-      case -283328259:
-        if (blockName.equals("intentPutExtra")) {
-          matchIndex = 175;
-          break;
-        } 
-      case -322651344:
-        if (blockName.equals("stringEquals")) {
-          matchIndex = 60;
-          break;
-        } 
-      case -329552966:
-        if (blockName.equals("insertListStr")) {
-          matchIndex = 20;
-          break;
-        } 
-      case -329559323:
-        if (blockName.equals("insertListMap")) {
-          matchIndex = 25;
-          break;
-        } 
-      case -329562760:
-        if (blockName.equals("insertListInt")) {
-          matchIndex = 15;
-          break;
-        } 
-      case -353129373:
-        if (blockName.equals("calendarDiff")) {
-          matchIndex = 187;
-          break;
-        } 
-      case -356866884:
-        if (blockName.equals("webViewSetCacheMode")) {
-          matchIndex = 146;
-          break;
-        } 
-      case -390304998:
-        if (blockName.equals("mapViewAddMarker")) {
-          matchIndex = 166;
-          break;
-        } 
-      case -399551817:
-        if (blockName.equals("toUpperCase")) {
-          matchIndex = 67;
-          break;
-        } 
-      case -411705840:
-        if (blockName.equals("fileSetData")) {
-          matchIndex = 181;
-          break;
-        } 
-      case -418212114:
-        if (blockName.equals("firebaseGetChildren")) {
-          matchIndex = 231;
-          break;
-        } 
-      case -425293664:
-        if (blockName.equals("setClickable")) {
-          matchIndex = 107;
-          break;
-        } 
-      case -437272040:
-        if (blockName.equals("bluetoothConnectGetRandomUuid")) {
-          matchIndex = 319;
-          break;
-        } 
-      case -439342016:
-        if (blockName.equals("webViewClearHistory")) {
-          matchIndex = 152;
-          break;
-        } 
-      case -509946902:
-        if (blockName.equals("spnRefresh")) {
-          matchIndex = 278;
-          break;
-        } 
-      case -578987803:
-        if (blockName.equals("setChecked")) {
-          matchIndex = 135;
-          break;
-        } 
-      case -601804268:
-        if (blockName.equals("fileutilread")) {
-          matchIndex = 255;
-          break;
-        } 
-      case -601942961:
-        if (blockName.equals("fileutilmove")) {
-          matchIndex = 258;
-          break;
-        } 
-      case -602241037:
-        if (blockName.equals("fileutilcopy")) {
-          matchIndex = 257;
-          break;
-        } 
-      case -621198621:
-        if (blockName.equals("speechToTextStartListening")) {
-          matchIndex = 306;
-          break;
-        } 
-      case -628607128:
-        if (blockName.equals("webViewGoBack")) {
-          matchIndex = 149;
-          break;
-        } 
-      case -636363854:
-        if (blockName.equals("webViewGetUrl")) {
-          matchIndex = 145;
-          break;
-        } 
-      case -649691581:
-        if (blockName.equals("objectanimatorSetInterpolator")) {
-          matchIndex = 223;
-          break;
-        } 
-      case -664474111:
-        if (blockName.equals("intentSetFlags")) {
-          matchIndex = 176;
-          break;
-        } 
-      case -668992194:
-        if (blockName.equals("stringReplaceAll")) {
-          matchIndex = 64;
-          break;
-        } 
-      case -677662361:
-        if (blockName.equals("forever")) {
-          matchIndex = 36;
-          break;
-        } 
-      case -697616870:
-        if (blockName.equals("camerastarttakepicture")) {
-          matchIndex = 250;
-          break;
-        } 
-      case -733318734:
-        if (blockName.equals("strToListMap")) {
-          matchIndex = 74;
-          break;
-        } 
-      case -831887360:
-        if (blockName.equals("textToSpeechShutdown")) {
-          matchIndex = 305;
-          break;
-        } 
-      case -853550561:
-        if (blockName.equals("timerCancel")) {
-          matchIndex = 193;
-          break;
-        } 
-      case -854558288:
-        if (blockName.equals("setVisible")) {
-          matchIndex = 106;
-          break;
-        } 
-      case -869293886:
-        if (blockName.equals("finishActivity")) {
-          matchIndex = 179;
-          break;
-        } 
-      case -883988307:
-        if (blockName.equals("dialogSetMessage")) {
-          matchIndex = 195;
-          break;
-        } 
-      case -903177036:
-        if (blockName.equals("resizeBitmapFileWithRoundedBorder")) {
-          matchIndex = 290;
-          break;
-        } 
-      case -911199919:
-        if (blockName.equals("objectanimatorSetProperty")) {
-          matchIndex = 217;
-          break;
-        } 
-      case -917343271:
-        if (blockName.equals("getJpegRotate")) {
-          matchIndex = 298;
-          break;
-        } 
-      case -918173448:
-        if (blockName.equals("listGetCheckedPosition")) {
-          matchIndex = 274;
-          break;
-        } 
-      case -934531685:
-        if (blockName.equals("repeat")) {
-          matchIndex = 35;
-          break;
-        } 
-      case -938285885:
-        if (blockName.equals("random")) {
-          matchIndex = 54;
-          break;
-        } 
-      case -995908985:
-        if (blockName.equals("soundpoolCreate")) {
-          matchIndex = 212;
-          break;
-        } 
-      case -996870276:
-        if (blockName.equals("insertMapToList")) {
-          matchIndex = 30;
-          break;
-        } 
-      case -1007787615:
-        if (blockName.equals("mediaplayerSetLooping")) {
-          matchIndex = 210;
-          break;
-        } 
-      case -1021852352:
-        if (blockName.equals("objectanimatorCancel")) {
-          matchIndex = 225;
-          break;
-        } 
-      case -1033658254:
-        if (blockName.equals("mathGetDisplayWidth")) {
-          matchIndex = 77;
-          break;
-        } 
-      case -1043233275:
-        if (blockName.equals("mediaplayerGetDuration")) {
-          matchIndex = 206;
-          break;
-        } 
-      case -1063598745:
-        if (blockName.equals("resizeBitmapFileRetainRatio")) {
-          matchIndex = 287;
-          break;
-        } 
-      case -1081250015:
-        if (blockName.equals("mathPi")) {
-          matchIndex = 79;
-          break;
-        } 
-      case -1081391085:
-        if (blockName.equals("mapPut")) {
-          matchIndex = 6;
-          break;
-        } 
-      case -1081400230:
-        if (blockName.equals("mapGet")) {
-          matchIndex = 7;
-          break;
-        } 
-      case -1094491139:
-        if (blockName.equals("seekBarSetMax")) {
-          matchIndex = 284;
-          break;
-        } 
-      case -1106141754:
-        if (blockName.equals("webViewCanGoBack")) {
-          matchIndex = 147;
-          break;
-        } 
-      case -1107376988:
-        if (blockName.equals("webViewGoForward")) {
-          matchIndex = 150;
-          break;
-        } 
-      case -1123431291:
-        if (blockName.equals("calnedarViewSetMaxDate")) {
-          matchIndex = 159;
-          break;
-        } 
-      case -1137582698:
-        if (blockName.equals("toLowerCase")) {
-          matchIndex = 68;
-          break;
-        } 
-      case -1139353316:
-        if (blockName.equals("setListMap")) {
-          matchIndex = 27;
-          break;
-        } 
-      case -1143684675:
-        if (blockName.equals("firebaseauthGetCurrentUser")) {
-          matchIndex = 237;
-          break;
-        } 
-      case -1149458632:
-        if (blockName.equals("objectanimatorSetRepeatCount")) {
-          matchIndex = 222;
-          break;
-        } 
-      case -1149848189:
-        if (blockName.equals("toStringFormat")) {
-          matchIndex = 71;
-          break;
-        } 
-      case -1160374245:
-        if (blockName.equals("bluetoothConnectReadyConnectionToUuid")) {
-          matchIndex = 310;
-          break;
-        } 
-      case -1182878167:
-        if (blockName.equals("firebaseauthGetUid")) {
-          matchIndex = 238;
-          break;
-        } 
-      case -1185284274:
-        if (blockName.equals("gyroscopeStopListen")) {
-          matchIndex = 243;
-          break;
-        } 
-      case -1192544266:
-        if (blockName.equals("ifElse")) {
-          matchIndex = 39;
-          break;
-        } 
-      case -1195899442:
-        if (blockName.equals("bluetoothConnectSendData")) {
-          matchIndex = 314;
-          break;
-        } 
-      case -1206794098:
-        if (blockName.equals("getLocationY")) {
-          matchIndex = 134;
-          break;
-        } 
-      case -1206794099:
-        if (blockName.equals("getLocationX")) {
-          matchIndex = 133;
-          break;
-        } 
-      case -1217704075:
-        if (blockName.equals("objectanimatorSetValue")) {
-          matchIndex = 218;
-          break;
-        } 
-      case -1271141237:
-        if (blockName.equals("clearList")) {
-          matchIndex = 34;
-          break;
-        } 
-      case -1272546178:
-        if (blockName.equals("dialogSetTitle")) {
-          matchIndex = 194;
-          break;
-        } 
-      case -1304067438:
-        if (blockName.equals("firebaseDelete")) {
-          matchIndex = 230;
-          break;
-        } 
-      case -1348084945:
-        if (blockName.equals("mapViewZoomTo")) {
-          matchIndex = 163;
-          break;
-        } 
-      case -1348085287:
-        if (blockName.equals("mapViewZoomIn")) {
-          matchIndex = 164;
-          break;
-        } 
-      case -1361468284:
-        if (blockName.equals("viewOnClick")) {
-          matchIndex = 100;
-          break;
-        } 
-      case -1376608975:
-        if (blockName.equals("calendarSetTime")) {
-          matchIndex = 189;
-          break;
-        } 
-      case -1377080719:
-        if (blockName.equals("decreaseInt")) {
-          matchIndex = 3;
-          break;
-        } 
-      case -1384851894:
-        if (blockName.equals("getAtListStr")) {
-          matchIndex = 21;
-          break;
-        } 
-      case -1384858251:
-        if (blockName.equals("getAtListMap")) {
-          matchIndex = 26;
-          break;
-        } 
-      case -1384861688:
-        if (blockName.equals("getAtListInt")) {
-          matchIndex = 16;
-          break;
-        } 
-      case -1385076635:
-        if (blockName.equals("dialogShow")) {
-          matchIndex = 196;
-          break;
-        } 
-      case -1405157727:
-        if (blockName.equals("fileutilmakedir")) {
-          matchIndex = 261;
-          break;
-        } 
-      case -1422112391:
-        if (blockName.equals("bluetoothConnectIsBluetoothEnabled")) {
-          matchIndex = 315;
-          break;
-        } 
-      case -1438040951:
-        if (blockName.equals("seekBarGetMax")) {
-          matchIndex = 285;
-          break;
-        } 
-      case -1440042085:
-        if (blockName.equals("spnSetSelection")) {
-          matchIndex = 142;
-          break;
-        } 
-      case -1462744030:
-        if (blockName.equals("dialogDismiss")) {
-          matchIndex = 197;
-          break;
-        } 
-      case -1471049951:
-        if (blockName.equals("fileutilwrite")) {
-          matchIndex = 256;
-          break;
-        } 
-      case -1477942289:
-        if (blockName.equals("mediaplayerIsLooping")) {
-          matchIndex = 211;
-          break;
-        } 
-      case -1483954587:
-        if (blockName.equals("fileutilisdir")) {
-          matchIndex = 263;
-          break;
-        } 
-      case -1513446476:
-        if (blockName.equals("dialogCancelButton")) {
-          matchIndex = 199;
-          break;
-        } 
-      case -1526161572:
-        if (blockName.equals("setBgColor")) {
-          matchIndex = 111;
-          break;
-        } 
-      case -1528850031:
-        if (blockName.equals("startActivity")) {
-          matchIndex = 177;
-          break;
-        } 
-      case -1530840255:
-        if (blockName.equals("stringIndex")) {
-          matchIndex = 57;
-          break;
-        } 
-      case -1541653284:
-        if (blockName.equals("objectanimatorStart")) {
-          matchIndex = 224;
-          break;
-        } 
-      case -1573371685:
-        if (blockName.equals("stringJoin")) {
-          matchIndex = 56;
-          break;
-        } 
-      case -1666623936:
-        if (blockName.equals("speechToTextShutdown")) {
-          matchIndex = 308;
-          break;
-        } 
-      case -1679834825:
-        if (blockName.equals("setTrackResource")) {
-          matchIndex = 138;
-          break;
-        } 
-      case -1684072208:
-        if (blockName.equals("intentSetData")) {
-          matchIndex = 173;
-          break;
-        } 
-      case -1699349926:
-        if (blockName.equals("objectanimatorSetRepeatMode")) {
-          matchIndex = 221;
-          break;
-        } 
-      case -1699631195:
-        if (blockName.equals("isDrawerOpen")) {
-          matchIndex = 101;
-          break;
-        } 
-      case -1718917155:
-        if (blockName.equals("mediaplayerSeek")) {
-          matchIndex = 204;
-          break;
-        } 
-      case -1746380899:
-        if (blockName.equals("mediaplayerStart")) {
-          matchIndex = 202;
-          break;
-        } 
-      case -1747734390:
-        if (blockName.equals("mediaplayerReset")) {
-          matchIndex = 207;
-          break;
-        } 
-      case -1749698255:
-        if (blockName.equals("mediaplayerPause")) {
-          matchIndex = 203;
-          break;
-        } 
-      case -1776922004:
-        if (blockName.equals("toString")) {
-          matchIndex = 69;
-          break;
-        } 
-      case -1778201036:
-        if (blockName.equals("listSmoothScrollTo")) {
-          matchIndex = 277;
-          break;
-        } 
-      case -1812313351:
-        if (blockName.equals("setColorFilter")) {
-          matchIndex = 117;
-          break;
-        } 
-      case -1834369666:
-        if (blockName.equals("setBitmapFileBrightness")) {
-          matchIndex = 296;
-          break;
-        } 
-      case -1886802639:
-        if (blockName.equals("soundpoolLoad")) {
-          matchIndex = 213;
-          break;
-        } 
-      case -1910071024:
-        if (blockName.equals("objectanimatorSetDuration")) {
-          matchIndex = 220;
-          break;
-        } 
-      case -1919300188:
-        if (blockName.equals("toNumber")) {
-          matchIndex = 65;
-          break;
-        } 
-      case -1920517885:
-        if (blockName.equals("setVarBoolean")) {
-          matchIndex = 0;
-          break;
-        } 
-      case -1922362317:
-        if (blockName.equals("getExternalStorageDir")) {
-          matchIndex = 269;
-          break;
-        } 
-      case -1937348542:
-        if (blockName.equals("firebaseStartListen")) {
-          matchIndex = 240;
-          break;
-        } 
-      case -1966668787:
-        if (blockName.equals("firebaseauthSignOutUser")) {
-          matchIndex = 239;
-          break;
-        } 
-      case -1975568730:
-        if (blockName.equals("copyToClipboard")) {
-          matchIndex = 280;
-          break;
-        } 
-      case -1979147952:
-        if (blockName.equals("stringContains")) {
-          matchIndex = 61;
-          break;
-        } 
-      case -1989678633:
-        if (blockName.equals("mapViewSetMarkerVisible")) {
-          matchIndex = 171;
-          break;
-        } 
-      case -1998407506:
-        if (blockName.equals("listSetData")) {
-          matchIndex = 139;
-          break;
-        } 
-      case -2020761366:
-        if (blockName.equals("fileRemoveData")) {
-          matchIndex = 182;
-          break;
-        } 
-      case -2027093331:
-        if (blockName.equals("calendarViewSetDate")) {
-          matchIndex = 157;
-          break;
-        } 
-      case -2037144358:
-        if (blockName.equals("bluetoothConnectStartConnectionToUuid")) {
-          matchIndex = 312;
-          break;
-        } 
-      case -2055793167:
-        if (blockName.equals("fileutillistdir")) {
-          matchIndex = 262;
-          break;
-        } 
-      case -2114384168:
-        if (blockName.equals("firebasestorageDownloadFile")) {
-          matchIndex = 248;
-          break;
-        } 
-      case -2120571577:
-        if (blockName.equals("mapIsEmpty")) {
-          matchIndex = 12;
-          break;
-        } 
-      case -2135695280:
-        if (blockName.equals("webViewLoadUrl")) {
-          matchIndex = 144;
-          break;
-        } 
-    } 
-    ArrayList<String> result = params;
-    switch (matchIndex) {
-      default:
-        result = null;
-        break;
-      case 321:
-        params.add("%m.locationmanager");
-        result = params;
-        break;
-      case 320:
-        params.add("%m.locationmanager");
-        params.add("%m.providerType");
-        params.add("%d");
-        params.add("%d");
-        result = params;
-        break;
-      case 319:
-        params.add("%m.bluetoothconnect");
-        result = params;
-        break;
-      case 318:
-        params.add("%m.bluetoothconnect");
-        params.add("%m.listMap");
-        result = params;
-        break;
-      case 317:
-        params.add("%m.bluetoothconnect");
-        result = params;
-        break;
-      case 316:
-        params.add("%m.bluetoothconnect");
-        result = params;
-        break;
-      case 315:
-        params.add("%m.bluetoothconnect");
-        result = params;
-        break;
-      case 314:
-        params.add("%m.bluetoothconnect");
-        params.add("%s");
-        params.add("%s");
-        result = params;
-        break;
-      case 313:
-        params.add("%m.bluetoothconnect");
-        params.add("%s");
-        result = params;
-        break;
-      case 312:
-        params.add("%m.bluetoothconnect");
-        params.add("%s");
-        params.add("%s");
-        params.add("%s");
-        result = params;
-        break;
-      case 311:
-        params.add("%m.bluetoothconnect");
-        params.add("%s");
-        params.add("%s");
-        result = params;
-        break;
-      case 310:
-        params.add("%m.bluetoothconnect");
-        params.add("%s");
-        params.add("%s");
-        result = params;
-        break;
-      case 309:
-        params.add("%m.bluetoothconnect");
-        params.add("%s");
-        result = params;
-        break;
-      case 308:
-        params.add("%m.speechtotext");
-        result = params;
-        break;
-      case 307:
-        params.add("%m.speechtotext");
-        result = params;
-        break;
-      case 306:
-        params.add("%m.speechtotext");
-        result = params;
-        break;
-      case 305:
-        params.add("%m.texttospeech");
-        result = params;
-        break;
-      case 304:
-        params.add("%m.texttospeech");
-        result = params;
-        break;
-      case 303:
-        params.add("%m.texttospeech");
-        result = params;
-        break;
-      case 302:
-        params.add("%m.texttospeech");
-        params.add("%s");
-        result = params;
-        break;
-      case 301:
-        params.add("%m.texttospeech");
-        params.add("%d");
-        result = params;
-        break;
-      case 300:
-        params.add("%m.texttospeech");
-        params.add("%d");
-        result = params;
-        break;
-      case 299:
-        params.add("%m.progressbar");
-        params.add("%b");
-        result = params;
-        break;
-      case 298:
-        params.add("%s");
-        result = params;
-        break;
-      case 297:
-        params.add("%s");
-        params.add("%s");
-        params.add("%d");
-        result = params;
-        break;
-      case 296:
-        params.add("%s");
-        params.add("%s");
-        params.add("%d");
-        result = params;
-        break;
-      case 295:
-        params.add("%s");
-        params.add("%s");
-        params.add("%m.color");
-        result = params;
-        break;
-      case 294:
-        params.add("%s");
-        params.add("%s");
-        params.add("%d");
-        params.add("%d");
-        result = params;
-        break;
-      case 293:
-        params.add("%s");
-        params.add("%s");
-        params.add("%d");
-        params.add("%d");
-        result = params;
-        break;
-      case 292:
-        params.add("%s");
-        params.add("%s");
-        params.add("%d");
-        result = params;
-        break;
-      case 291:
-        params.add("%s");
-        params.add("%s");
-        params.add("%d");
-        params.add("%d");
-        result = params;
-        break;
-      case 290:
-        params.add("%s");
-        params.add("%s");
-        params.add("%d");
-        result = params;
-        break;
-      case 289:
-        params.add("%s");
-        params.add("%s");
-        result = params;
-        break;
-      case 288:
-        params.add("%s");
-        params.add("%s");
-        params.add("%d");
-        result = params;
-        break;
-      case 287:
-        params.add("%s");
-        params.add("%s");
-        params.add("%d");
-        result = params;
-        break;
-      case 286:
-        params.add("%s.inputOnly");
-        result = params;
-        break;
-      case 285:
-        params.add("%m.seekbar");
-        result = params;
-        break;
-      case 284:
-        params.add("%m.seekbar");
-        params.add("%d");
-        result = params;
-        break;
-      case 283:
-        params.add("%m.seekbar");
-        result = params;
-        break;
-      case 282:
-        params.add("%m.seekbar");
-        params.add("%d");
-        result = params;
-        break;
-      case 281:
-        params.add("%s");
-        result = params;
-        break;
-      case 280:
-        params.add("%s");
-        result = params;
-        break;
-      case 279:
-        params.add("%s");
-        result = params;
-        break;
-      case 278:
-        params.add("%m.spinner");
-        result = params;
-        break;
-      case 277:
-        params.add("%m.listview");
-        params.add("%d");
-        result = params;
-        break;
-      case 276:
-        params.add("%m.listview");
-        result = params;
-        break;
-      case 275:
-        params.add("%m.listview");
-        params.add("%m.listInt");
-        result = params;
-        break;
-      case 274:
-        params.add("%m.listview");
-        result = params;
-        break;
-      case 273:
-        params.add("%m.listview");
-        params.add("%d");
-        params.add("%b");
-        result = params;
-        break;
-      case 272:
-        params.add("%m.listview");
-        result = params;
-        break;
-      case 271:
-        params.add("%m.directoryType");
-        result = params;
-        break;
-      case 268:
-        params.add("%s");
-        result = params;
-        break;
-      case 267:
-        params.add("%s");
-        params.add("%s");
-        result = params;
-        break;
-      case 266:
-        params.add("%s");
-        params.add("%s");
-        result = params;
-        break;
-      case 265:
-        params.add("%s");
-        result = params;
-        break;
-      case 264:
-        params.add("%s");
-        result = params;
-        break;
-      case 263:
-        params.add("%s");
-        result = params;
-        break;
-      case 262:
-        params.add("%s");
-        params.add("%m.listStr");
-        result = params;
-        break;
-      case 261:
-        params.add("%s");
-        result = params;
-        break;
-      case 260:
-        params.add("%s");
-        result = params;
-        break;
-      case 259:
-        params.add("%s");
-        result = params;
-        break;
-      case 258:
-        params.add("%s");
-        params.add("%s");
-        result = params;
-        break;
-      case 257:
-        params.add("%s");
-        params.add("%s");
-        result = params;
-        break;
-      case 256:
-        params.add("%s");
-        params.add("%s");
-        result = params;
-        break;
-      case 255:
-        params.add("%s");
-        result = params;
-        break;
-      case 254:
-        params.add("%m.requestnetwork");
-        params.add("%m.method");
-        params.add("%s");
-        params.add("%s");
-        result = params;
-        break;
-      case 253:
-        params.add("%m.requestnetwork");
-        params.add("%m.varMap");
-        result = params;
-        break;
-      case 252:
-        params.add("%m.requestnetwork");
-        params.add("%m.varMap");
-        params.add("%m.requestType");
-        result = params;
-        break;
-      case 251:
-        params.add("%m.filepicker");
-        result = params;
-        break;
-      case 250:
-        params.add("%m.camera");
-        result = params;
-        break;
-      case 249:
-        params.add("%m.firebasestorage");
-        params.add("%s");
-        result = params;
-        break;
-      case 248:
-        params.add("%m.firebasestorage");
-        params.add("%s");
-        params.add("%s");
-        result = params;
-        break;
-      case 247:
-        params.add("%m.firebasestorage");
-        params.add("%s");
-        params.add("%s");
-        result = params;
-        break;
-      case 246:
-        params.add("%m.interstitialad");
-        result = params;
-        break;
-      case 245:
-        params.add("%m.interstitialad");
-        result = params;
-        break;
-      case 244:
-        params.add("%m.interstitialad");
-        result = params;
-        break;
-      case 243:
-        params.add("%m.gyroscope");
-        result = params;
-        break;
-      case 242:
-        params.add("%m.gyroscope");
-        result = params;
-        break;
-      case 241:
-        params.add("%m.firebase");
-        result = params;
-        break;
-      case 240:
-        params.add("%m.firebase");
-        result = params;
-        break;
-      case 235:
-        params.add("%m.firebaseauth");
-        params.add("%s");
-        result = params;
-        break;
-      case 234:
-        params.add("%m.firebaseauth");
-        result = params;
-        break;
-      case 233:
-        params.add("%m.firebaseauth");
-        params.add("%s");
-        params.add("%s");
-        result = params;
-        break;
-      case 232:
-        params.add("%m.firebaseauth");
-        params.add("%s");
-        params.add("%s");
-        result = params;
-        break;
-      case 231:
-        params.add("%m.firebase");
-        params.add("%m.listMap");
-        result = params;
-        break;
-      case 230:
-        params.add("%m.firebase");
-        params.add("%s");
-        result = params;
-        break;
-      case 229:
-        params.add("%m.firebase");
-        result = params;
-        break;
-      case 228:
-        params.add("%m.firebase");
-        params.add("%m.varMap");
-        result = params;
-        break;
-      case 227:
-        params.add("%m.firebase");
-        params.add("%s");
-        params.add("%m.varMap");
-        result = params;
-        break;
-      case 226:
-        params.add("%m.objectanimator");
-        result = params;
-        break;
-      case 225:
-        params.add("%m.objectanimator");
-        result = params;
-        break;
-      case 224:
-        params.add("%m.objectanimator");
-        result = params;
-        break;
-      case 223:
-        params.add("%m.objectanimator");
-        params.add("%m.aniInterpolator");
-        result = params;
-        break;
-      case 222:
-        params.add("%m.objectanimator");
-        params.add("%d");
-        result = params;
-        break;
-      case 221:
-        params.add("%m.objectanimator");
-        params.add("%m.aniRepeatMode");
-        result = params;
-        break;
-      case 220:
-        params.add("%m.objectanimator");
-        params.add("%d");
-        result = params;
-        break;
-      case 219:
-        params.add("%m.objectanimator");
-        params.add("%d");
-        params.add("%d");
-        result = params;
-        break;
-      case 218:
-        params.add("%m.objectanimator");
-        params.add("%d");
-        result = params;
-        break;
-      case 217:
-        params.add("%m.objectanimator");
-        params.add("%m.animatorproperty");
-        result = params;
-        break;
-      case 216:
-        params.add("%m.objectanimator");
-        params.add("%m.view");
-        result = params;
-        break;
-      case 215:
-        params.add("%m.soundpool");
-        params.add("%d");
-        result = params;
-        break;
-      case 214:
-        params.add("%m.soundpool");
-        params.add("%d");
-        params.add("%d");
-        result = params;
-        break;
-      case 213:
-        params.add("%m.soundpool");
-        params.add("%m.sound");
-        result = params;
-        break;
-      case 212:
-        params.add("%m.soundpool");
-        params.add("%d");
-        result = params;
-        break;
-      case 211:
-        params.add("%m.mediaplayer");
-        result = params;
-        break;
-      case 210:
-        params.add("%m.mediaplayer");
-        params.add("%b");
-        result = params;
-        break;
-      case 209:
-        params.add("%m.mediaplayer");
-        result = params;
-        break;
-      case 208:
-        params.add("%m.mediaplayer");
-        result = params;
-        break;
-      case 207:
-        params.add("%m.mediaplayer");
-        result = params;
-        break;
-      case 206:
-        params.add("%m.mediaplayer");
-        result = params;
-        break;
-      case 205:
-        params.add("%m.mediaplayer");
-        result = params;
-        break;
-      case 204:
-        params.add("%m.mediaplayer");
-        params.add("%d");
-        result = params;
-        break;
-      case 203:
-        params.add("%m.mediaplayer");
-        result = params;
-        break;
-      case 202:
-        params.add("%m.mediaplayer");
-        result = params;
-        break;
-      case 201:
-        params.add("%m.mediaplayer");
-        params.add("%m.sound");
-        result = params;
-        break;
-      case 200:
-        params.add("%m.dialog");
-        params.add("%s");
-        result = params;
-        break;
-      case 199:
-        params.add("%m.dialog");
-        params.add("%s");
-        result = params;
-        break;
-      case 198:
-        params.add("%m.dialog");
-        params.add("%s");
-        result = params;
-        break;
-      case 197:
-        params.add("%m.dialog");
-        result = params;
-        break;
-      case 196:
-        params.add("%m.dialog");
-        result = params;
-        break;
-      case 195:
-        params.add("%m.dialog");
-        params.add("%s");
-        result = params;
-        break;
-      case 194:
-        params.add("%m.dialog");
-        params.add("%s");
-        result = params;
-        break;
-      case 193:
-        params.add("%m.timer");
-        result = params;
-        break;
-      case 192:
-        params.add("%m.timer");
-        params.add("%d");
-        params.add("%d");
-        result = params;
-        break;
-      case 191:
-        params.add("%m.timer");
-        params.add("%d");
-        result = params;
-        break;
-      case 190:
-        params.add("%m.vibrator");
-        params.add("%d");
-        result = params;
-        break;
-      case 189:
-        params.add("%m.calendar");
-        params.add("%d");
-        result = params;
-        break;
-      case 188:
-        params.add("%m.calendar");
-        result = params;
-        break;
-      case 187:
-        params.add("%m.calendar");
-        params.add("%m.calendar");
-        result = params;
-        break;
-      case 186:
-        params.add("%m.calendar");
-        params.add("%s");
-        result = params;
-        break;
-      case 185:
-        params.add("%m.calendar");
-        params.add("%m.calendarField");
-        params.add("%d");
-        result = params;
-        break;
-      case 184:
-        params.add("%m.calendar");
-        params.add("%m.calendarField");
-        params.add("%d");
-        result = params;
-        break;
-      case 183:
-        params.add("%m.calendar");
-        result = params;
-        break;
-      case 182:
-        params.add("%m.file");
-        params.add("%s");
-        result = params;
-        break;
-      case 181:
-        params.add("%m.file");
-        params.add("%s");
-        params.add("%s");
-        result = params;
-        break;
-      case 180:
-        params.add("%m.file");
-        params.add("%s");
-        result = params;
-        break;
-      case 178:
-        params.add("%s");
-        result = params;
-        break;
-      case 177:
-        params.add("%m.intent");
-        result = params;
-        break;
-      case 176:
-        params.add("%m.intent");
-        params.add("%m.intentFlags");
-        result = params;
-        break;
-      case 175:
-        params.add("%m.intent");
-        params.add("%s");
-        params.add("%s");
-        result = params;
-        break;
-      case 174:
-        params.add("%m.intent");
-        params.add("%m.activity");
-        result = params;
-        break;
-      case 173:
-        params.add("%m.intent");
-        params.add("%s.intentData");
-        result = params;
-        break;
-      case 172:
-        params.add("%m.intent");
-        params.add("%m.intentAction");
-        result = params;
-        break;
-      case 171:
-        params.add("%m.mapview");
-        params.add("%s");
-        params.add("%b");
-        result = params;
-        break;
-      case 170:
-        params.add("%m.mapview");
-        params.add("%s");
-        params.add("%m.resource");
-        result = params;
-        break;
-      case 169:
-        params.add("%m.mapview");
-        params.add("%s");
-        params.add("%m.markerColor");
-        params.add("%d");
-        result = params;
-        break;
-      case 168:
-        params.add("%m.mapview");
-        params.add("%s");
-        params.add("%d");
-        params.add("%d");
-        result = params;
-        break;
-      case 167:
-        params.add("%m.mapview");
-        params.add("%s");
-        params.add("%s");
-        params.add("%s");
-        result = params;
-        break;
-      case 166:
-        params.add("%m.mapview");
-        params.add("%s");
-        params.add("%d");
-        params.add("%d");
-        result = params;
-        break;
-      case 165:
-        params.add("%m.mapview");
-        result = params;
-        break;
-      case 164:
-        params.add("%m.mapview");
-        result = params;
-        break;
-      case 163:
-        params.add("%m.mapview");
-        params.add("%d");
-        result = params;
-        break;
-      case 162:
-        params.add("%m.mapview");
-        params.add("%d");
-        params.add("%d");
-        result = params;
-        break;
-      case 161:
-        params.add("%m.mapview");
-        params.add("%m.mapType");
-        result = params;
-        break;
-      case 160:
-        params.add("%m.adview");
-        result = params;
-        break;
-      case 159:
-        params.add("%m.calendarview");
-        params.add("%d");
-        result = params;
-        break;
-      case 158:
-        params.add("%m.calendarview");
-        params.add("%d");
-        result = params;
-        break;
-      case 157:
-        params.add("%m.calendarview");
-        params.add("%d");
-        result = params;
-        break;
-      case 156:
-        params.add("%m.calendarview");
-        result = params;
-        break;
-      case 155:
-        params.add("%m.webview");
-        result = params;
-        break;
-      case 154:
-        params.add("%m.webview");
-        result = params;
-        break;
-      case 153:
-        params.add("%m.webview");
-        result = params;
-        break;
-      case 152:
-        params.add("%m.webview");
-        result = params;
-        break;
-      case 151:
-        params.add("%m.webview");
-        result = params;
-        break;
-      case 150:
-        params.add("%m.webview");
-        result = params;
-        break;
-      case 149:
-        params.add("%m.webview");
-        result = params;
-        break;
-      case 148:
-        params.add("%m.webview");
-        result = params;
-        break;
-      case 147:
-        params.add("%m.webview");
-        result = params;
-        break;
-      case 146:
-        params.add("%m.webview");
-        params.add("%m.cacheMode");
-        result = params;
-        break;
-      case 145:
-        params.add("%m.webview");
-        result = params;
-        break;
-      case 144:
-        params.add("%m.webview");
-        params.add("%s.url");
-        result = params;
-        break;
-      case 143:
-        params.add("%m.spinner");
-        result = params;
-        break;
-      case 142:
-        params.add("%m.spinner");
-        params.add("%d");
-        result = params;
-        break;
-      case 141:
-        params.add("%m.spinner");
-        params.add("%m.listStr");
-        result = params;
-        break;
-      case 140:
-        params.add("%m.listview");
-        params.add("%m.listMap");
-        result = params;
-        break;
-      case 139:
-        params.add("%m.listview");
-        params.add("%m.listStr");
-        result = params;
-        break;
-      case 138:
-        params.add("%m.switch");
-        params.add("%m.resource");
-        result = params;
-        break;
-      case 137:
-        params.add("%m.switch");
-        params.add("%m.resource");
-        result = params;
-        break;
-      case 136:
-        params.add("%m.checkbox");
-        result = params;
-        break;
-      case 135:
-        params.add("%m.checkbox");
-        params.add("%b");
-        result = params;
-        break;
-      case 134:
-        params.add("%m.view");
-        result = params;
-        break;
-      case 133:
-        params.add("%m.view");
-        result = params;
-        break;
-      case 132:
-        params.add("%m.view");
-        result = params;
-        break;
-      case 131:
-        params.add("%m.view");
-        params.add("%d");
-        result = params;
-        break;
-      case 130:
-        params.add("%m.view");
-        result = params;
-        break;
-      case 129:
-        params.add("%m.view");
-        params.add("%d");
-        result = params;
-        break;
-      case 128:
-        params.add("%m.view");
-        result = params;
-        break;
-      case 127:
-        params.add("%m.view");
-        params.add("%d");
-        result = params;
-        break;
-      case 126:
-        params.add("%m.view");
-        result = params;
-        break;
-      case 125:
-        params.add("%m.view");
-        params.add("%d");
-        result = params;
-        break;
-      case 124:
-        params.add("%m.view");
-        result = params;
-        break;
-      case 123:
-        params.add("%m.view");
-        params.add("%d");
-        result = params;
-        break;
-      case 122:
-        params.add("%m.view");
-        result = params;
-        break;
-      case 121:
-        params.add("%m.view");
-        params.add("%d");
-        result = params;
-        break;
-      case 120:
-        params.add("%m.imageview");
-        params.add("%s");
-        result = params;
-        break;
-      case 119:
-        params.add("%m.imageview");
-        params.add("%s");
-        result = params;
-        break;
-      case 118:
-        params.add("%m.view");
-        result = params;
-        break;
-      case 117:
-        params.add("%m.imageview");
-        params.add("%m.color");
-        result = params;
-        break;
-      case 116:
-        params.add("%m.imageview");
-        params.add("%m.resource");
-        result = params;
-        break;
-      case 115:
-        params.add("%m.edittext");
-        params.add("%m.color");
-        result = params;
-        break;
-      case 114:
-        params.add("%m.edittext");
-        params.add("%s");
-        result = params;
-        break;
-      case 113:
-        params.add("%m.textview");
-        params.add("%m.color");
-        result = params;
-        break;
-      case 112:
-        params.add("%m.view");
-        params.add("%m.resource_bg");
-        result = params;
-        break;
-      case 111:
-        params.add("%m.view");
-        params.add("%m.color");
-        result = params;
-        break;
-      case 110:
-        params.add("%m.textview");
-        result = params;
-        break;
-      case 109:
-        params.add("%m.textview");
-        params.add("%m.font");
-        params.add("%m.typeface");
-        result = params;
-        break;
-      case 108:
-        params.add("%m.textview");
-        params.add("%s");
-        result = params;
-        break;
-      case 107:
-        params.add("%m.view");
-        params.add("%b");
-        result = params;
-        break;
-      case 106:
-        params.add("%m.view");
-        params.add("%m.visible");
-        result = params;
-        break;
-      case 105:
-        params.add("%m.view");
-        result = params;
-        break;
-      case 104:
-        params.add("%m.view");
-        params.add("%b");
-        result = params;
-        break;
-      case 100:
-        params.add("%m.view");
-        result = params;
-        break;
-      case 99:
-        params.add("%d");
-        result = params;
-        break;
-      case 98:
-        params.add("%d");
-        result = params;
-        break;
-      case 97:
-        params.add("%d");
-        result = params;
-        break;
-      case 96:
-        params.add("%d");
-        result = params;
-        break;
-      case 95:
-        params.add("%d");
-        result = params;
-        break;
-      case 94:
-        params.add("%d");
-        result = params;
-        break;
-      case 93:
-        params.add("%d");
-        result = params;
-        break;
-      case 92:
-        params.add("%d");
-        result = params;
-        break;
-      case 91:
-        params.add("%d");
-        result = params;
-        break;
-      case 90:
-        params.add("%d");
-        result = params;
-        break;
-      case 89:
-        params.add("%d");
-        result = params;
-        break;
-      case 88:
-        params.add("%d");
-        result = params;
-        break;
-      case 87:
-        params.add("%d");
-        result = params;
-        break;
-      case 86:
-        params.add("%d");
-        result = params;
-        break;
-      case 85:
-        params.add("%d");
-        result = params;
-        break;
-      case 84:
-        params.add("%d");
-        result = params;
-        break;
-      case 83:
-        params.add("%d");
-        params.add("%d");
-        result = params;
-        break;
-      case 82:
-        params.add("%d");
-        params.add("%d");
-        result = params;
-        break;
-      case 81:
-        params.add("%d");
-        params.add("%d");
-        result = params;
-        break;
-      case 76:
-        params.add("%d");
-        result = params;
-        break;
-      case 75:
-        params.add("%m.listMap");
-        result = params;
-        break;
-      case 74:
-        params.add("%s");
-        params.add("%m.listMap");
-        result = params;
-        break;
-      case 73:
-        params.add("%m.varMap");
-        result = params;
-        break;
-      case 72:
-        params.add("%s");
-        params.add("%m.varMap");
-        result = params;
-        break;
-      case 71:
-        params.add("%d");
-        params.add("%s");
-        result = params;
-        break;
-      case 70:
-        params.add("%d");
-        result = params;
-        break;
-      case 69:
-        params.add("%d");
-        result = params;
-        break;
-      case 68:
-        params.add("%s");
-        result = params;
-        break;
-      case 67:
-        params.add("%s");
-        result = params;
-        break;
-      case 66:
-        params.add("%s");
-        result = params;
-        break;
-      case 65:
-        params.add("%s");
-        result = params;
-        break;
-      case 64:
-        params.add("%s");
-        params.add("%s");
-        params.add("%s");
-        result = params;
-        break;
-      case 63:
-        params.add("%s");
-        params.add("%s");
-        params.add("%s");
-        result = params;
-        break;
-      case 62:
-        params.add("%s");
-        params.add("%s");
-        params.add("%s");
-        result = params;
-        break;
-      case 61:
-        params.add("%s");
-        params.add("%s");
-        result = params;
-        break;
-      case 60:
-        params.add("%s");
-        params.add("%s");
-        result = params;
-        break;
-      case 59:
-        params.add("%s");
-        params.add("%d");
-        params.add("%d");
-        result = params;
-        break;
-      case 58:
-        params.add("%s");
-        params.add("%s");
-        result = params;
-        break;
-      case 57:
-        params.add("%s");
-        params.add("%s");
-        result = params;
-        break;
-      case 56:
-        params.add("%s");
-        params.add("%s");
-        result = params;
-        break;
-      case 55:
-        params.add("%s");
-        result = params;
-        break;
-      case 54:
-        params.add("%d");
-        params.add("%d");
-        result = params;
-        break;
-      case 53:
-        params.add("%d");
-        params.add("%d");
-        result = params;
-        break;
-      case 52:
-        params.add("%d");
-        params.add("%d");
-        result = params;
-        break;
-      case 51:
-        params.add("%d");
-        params.add("%d");
-        result = params;
-        break;
-      case 50:
-        params.add("%d");
-        params.add("%d");
-        result = params;
-        break;
-      case 49:
-        params.add("%d");
-        params.add("%d");
-        result = params;
-        break;
-      case 48:
-        params.add("%b");
-        result = params;
-        break;
-      case 47:
-        params.add("%b");
-        params.add("%b");
-        result = params;
-        break;
-      case 46:
-        params.add("%b");
-        params.add("%b");
-        result = params;
-        break;
-      case 45:
-        params.add("%d");
-        params.add("%d");
-        result = params;
-        break;
-      case 44:
-        params.add("%d");
-        params.add("%d");
-        result = params;
-        break;
-      case 43:
-        params.add("%d");
-        params.add("%d");
-        result = params;
-        break;
-      case 39:
-        params.add("%b");
-        result = params;
-        break;
-      case 38:
-        params.add("%b");
-        result = params;
-        break;
-      case 35:
-        params.add("%d");
-        result = params;
-        break;
-      case 34:
-        params.add("%m.list");
-        result = params;
-        break;
-      case 33:
-        params.add("%m.list");
-        result = params;
-        break;
-      case 32:
-        params.add("%d");
-        params.add("%m.list");
-        result = params;
-        break;
-      case 31:
-        params.add("%d");
-        params.add("%m.listMap");
-        params.add("%m.varMap");
-        result = params;
-        break;
-      case 30:
-        params.add("%m.varMap");
-        params.add("%d");
-        params.add("%m.listMap");
-        result = params;
-        break;
-      case 29:
-        params.add("%m.varMap");
-        params.add("%m.listMap");
-        result = params;
-        break;
-      case 28:
-        params.add("%m.listMap");
-        params.add("%d");
-        params.add("%s");
-        result = params;
-        break;
-      case 27:
-        params.add("%s");
-        params.add("%s");
-        params.add("%d");
-        params.add("%m.listMap");
-        result = params;
-        break;
-      case 26:
-        params.add("%d");
-        params.add("%s");
-        params.add("%m.listMap");
-        result = params;
-        break;
-      case 25:
-        params.add("%s");
-        params.add("%s");
-        params.add("%d");
-        params.add("%m.listMap");
-        result = params;
-        break;
-      case 24:
-        params.add("%s");
-        params.add("%s");
-        params.add("%m.listMap");
-        result = params;
-        break;
-      case 23:
-        params.add("%m.listStr");
-        params.add("%s");
-        result = params;
-        break;
-      case 22:
-        params.add("%s");
-        params.add("%m.listStr");
-        result = params;
-        break;
-      case 21:
-        params.add("%d");
-        params.add("%m.listStr");
-        result = params;
-        break;
-      case 20:
-        params.add("%s");
-        params.add("%d");
-        params.add("%m.listStr");
-        result = params;
-        break;
-      case 19:
-        params.add("%s");
-        params.add("%m.listStr");
-        result = params;
-        break;
-      case 18:
-        params.add("%m.listInt");
-        params.add("%d");
-        result = params;
-        break;
-      case 17:
-        params.add("%d");
-        params.add("%m.listInt");
-        result = params;
-        break;
-      case 16:
-        params.add("%d");
-        params.add("%m.listInt");
-        result = params;
-        break;
-      case 15:
-        params.add("%d");
-        params.add("%d");
-        params.add("%m.listInt");
-        result = params;
-        break;
-      case 14:
-        params.add("%d");
-        params.add("%m.listInt");
-        result = params;
-        break;
-      case 13:
-        params.add("%m.varMap");
-        params.add("%m.listStr");
-        result = params;
-        break;
-      case 12:
-        params.add("%m.varMap");
-        result = params;
-        break;
-      case 11:
-        params.add("%m.varMap");
-        result = params;
-        break;
-      case 10:
-        params.add("%m.varMap");
-        result = params;
-        break;
-      case 9:
-        params.add("%m.varMap");
-        params.add("%s");
-        result = params;
-        break;
-      case 8:
-        params.add("%m.varMap");
-        params.add("%s");
-        result = params;
-        break;
-      case 7:
-        params.add("%m.varMap");
-        params.add("%s");
-        result = params;
-        break;
-      case 6:
-        params.add("%m.varMap");
-        params.add("%s");
-        params.add("%s");
-        result = params;
-        break;
-      case 5:
-        params.add("%m.varMap");
-        result = params;
-        break;
-      case 4:
-        params.add("%m.varStr");
-        params.add("%s");
-        result = params;
-        break;
-      case 3:
-        params.add("%m.varInt");
-        result = params;
-        break;
-      case 2:
-        params.add("%m.varInt");
-        result = params;
-        break;
-      case 1:
-        params.add("%m.varInt");
-        params.add("%d");
-        result = params;
-        break;
-      case 0:
-        params.add("%m.varBool");
-        params.add("%b");
-        result = params;
-        break;
-      case 36:
-      case 37:
-      case 40:
-      case 41:
-      case 42:
-      case 77:
-      case 78:
-      case 79:
-      case 80:
-      case 101:
-      case 102:
-      case 103:
-      case 179:
-      case 236:
-      case 237:
-      case 238:
-      case 239:
-      case 269:
-      case 270:
-        break;
-    } 
-    cacheA.put(blockName, result);
-    return result;
-  }
-  
-  public static ArrayList<String> getBlockMenuItems(String blockName) {
-    if (cacheB.containsKey(blockName)) return cacheB.get(blockName);
-    byte matchIndex = -1;
-    ArrayList<String> menuItems = new ArrayList<>();
-    switch (blockName.hashCode()) {
-      default:
-        matchIndex = -1;
-        break;
-      case 2087273080:
-        if (blockName.equals("onFilesPicked")) {
-          matchIndex = 43;
-          break;
-        } 
-      case 1979400473:
-        if (blockName.equals("onItemLongClicked")) {
-          matchIndex = 21;
-          break;
-        } 
-      case 1855724576:
-        if (blockName.equals("onAdFailedToLoad")) {
-          matchIndex = 45;
-          break;
-        } 
-      case 1803231982:
-        if (blockName.equals("onMarkerClicked")) {
-          matchIndex = 56;
-          break;
-        } 
-      case 1757061906:
-        if (blockName.equals("onFilesPickedCancel")) {
-          matchIndex = 44;
-          break;
-        } 
-      case 1710477203:
-        if (blockName.equals("onPageStarted")) {
-          matchIndex = 22;
-          break;
-        } 
-      case 1633718655:
-        if (blockName.equals("onCreateUserComplete")) {
-          matchIndex = 32;
-          break;
-        } 
-      case 1586033095:
-        if (blockName.equals("onStopTrackingTouch")) {
-          matchIndex = 10;
-          break;
-        } 
-      case 1463983852:
-        if (blockName.equals("onResume")) {
-          matchIndex = 6;
-          break;
-        } 
-      case 1395209852:
-        if (blockName.equals("onDownloadSuccess")) {
-          matchIndex = 38;
-          break;
-        } 
-      case 1348605570:
-        if (blockName.equals("onPictureTakenCancel")) {
-          matchIndex = 42;
-          break;
-        } 
-      case 1348442836:
-        if (blockName.equals("onDownloadProgress")) {
-          matchIndex = 36;
-          break;
-        } 
-      case 1170737640:
-        if (blockName.equals("onPictureTaken")) {
-          matchIndex = 41;
-          break;
-        } 
-      case 948174187:
-        if (blockName.equals("onAdOpened")) {
-          matchIndex = 15;
-          break;
-        } 
-      case 863618555:
-        if (blockName.equals("onSensorChanged")) {
-          matchIndex = 31;
-          break;
-        } 
-      case 861234439:
-        if (blockName.equals("onAdLoaded")) {
-          matchIndex = 14;
-          break;
-        } 
-      case 805710389:
-        if (blockName.equals("onItemClicked")) {
-          matchIndex = 20;
-          break;
-        } 
-      case 694589214:
-        if (blockName.equals("onSpeechResult")) {
-          matchIndex = 48;
-          break;
-        } 
-      case 601233006:
-        if (blockName.equals("onAdClosed")) {
-          matchIndex = 16;
-          break;
-        } 
-      case 445802034:
-        if (blockName.equals("onCancelled")) {
-          matchIndex = 30;
-          break;
-        } 
-      case 378110312:
-        if (blockName.equals("onTextChanged")) {
-          matchIndex = 19;
-          break;
-        } 
-      case 372583555:
-        if (blockName.equals("onChildAdded")) {
-          matchIndex = 27;
-          break;
-        } 
-      case 264008033:
-        if (blockName.equals("onDataSent")) {
-          matchIndex = 52;
-          break;
-        } 
-      case 249705131:
-        if (blockName.equals("onFailure")) {
-          matchIndex = 40;
-          break;
-        } 
-      case 204442875:
-        if (blockName.equals("onPostCreate")) {
-          matchIndex = 2;
-          break;
-        } 
-      case 162093458:
-        if (blockName.equals("onBindCustomView")) {
-          matchIndex = 25;
-          break;
-        } 
-      case 136827711:
-        if (blockName.equals("onAnimationCancel")) {
-          matchIndex = 13;
-          break;
-        } 
-      case 80616227:
-        if (blockName.equals("onUploadSuccess")) {
-          matchIndex = 37;
-          break;
-        } 
-      case -376002870:
-        if (blockName.equals("onErrorResponse")) {
-          matchIndex = 47;
-          break;
-        } 
-      case -388502098:
-        if (blockName.equals("initializeLogic")) {
-          matchIndex = 0;
-          break;
-        } 
-      case -484536541:
-        if (blockName.equals("onChildRemoved")) {
-          matchIndex = 29;
-          break;
-        } 
-      case -505277536:
-        if (blockName.equals("onPageFinished")) {
-          matchIndex = 23;
-          break;
-        } 
-      case -507667891:
-        if (blockName.equals("onItemSelected")) {
-          matchIndex = 18;
-          break;
-        } 
-      case -536246231:
-        if (blockName.equals("onResetPasswordEmailSent")) {
-          matchIndex = 34;
-          break;
-        } 
-      case -584901992:
-        if (blockName.equals("onCheckedChange")) {
-          matchIndex = 17;
-          break;
-        } 
-      case -609996822:
-        if (blockName.equals("onConnected")) {
-          matchIndex = 50;
-          break;
-        } 
-      case -672992515:
-        if (blockName.equals("onAnimationStart")) {
-          matchIndex = 11;
-          break;
-        } 
-      case -719893013:
-        if (blockName.equals("onConnectionError")) {
-          matchIndex = 53;
-          break;
-        } 
-      case -732782352:
-        if (blockName.equals("onConnectionStopped")) {
-          matchIndex = 54;
-          break;
-        } 
-      case -749253875:
-        if (blockName.equals("onUploadProgress")) {
-          matchIndex = 35;
-          break;
-        } 
-      case -821066400:
-        if (blockName.equals("onLocationChanged")) {
-          matchIndex = 57;
-          break;
-        } 
-      case -837428873:
-        if (blockName.equals("onChildChanged")) {
-          matchIndex = 28;
-          break;
-        } 
-      case -891988931:
-        if (blockName.equals("onDateChange")) {
-          matchIndex = 26;
-          break;
-        } 
-      case -1012956543:
-        if (blockName.equals("onStop")) {
-          matchIndex = 4;
-          break;
-        } 
-      case -1111243300:
-        if (blockName.equals("onBackPressed")) {
-          matchIndex = 1;
-          break;
-        } 
-      case -1153785290:
-        if (blockName.equals("onAnimationEnd")) {
-          matchIndex = 12;
-          break;
-        } 
-      case -1215328199:
-        if (blockName.equals("onDeleteSuccess")) {
-          matchIndex = 39;
-          break;
-        } 
-      case -1336895037:
-        if (blockName.equals("onStart")) {
-          matchIndex = 3;
-          break;
-        } 
-      case -1340212393:
-        if (blockName.equals("onPause")) {
-          matchIndex = 7;
-          break;
-        } 
-      case -1351902487:
-        if (blockName.equals("onClick")) {
-          matchIndex = 8;
-          break;
-        } 
-      case -1358405466:
-        if (blockName.equals("onMapReady")) {
-          matchIndex = 55;
-          break;
-        } 
-      case -1401315045:
-        if (blockName.equals("onDestroy")) {
-          matchIndex = 5;
-          break;
-        } 
-      case -1708629179:
-        if (blockName.equals("onSignInUserComplete")) {
-          matchIndex = 33;
-          break;
-        } 
-      case -1779618840:
-        if (blockName.equals("onProgressChanged")) {
-          matchIndex = 24;
-          break;
-        } 
-      case -1809154262:
-        if (blockName.equals("onDataReceived")) {
-          matchIndex = 51;
-          break;
-        } 
-      case -1865337024:
-        if (blockName.equals("onResponse")) {
-          matchIndex = 46;
-          break;
-        } 
-      case -2067423513:
-        if (blockName.equals("onSpeechError")) {
-          matchIndex = 49;
-          break;
-        } 
-      case -2117913147:
-        if (blockName.equals("onStartTrackingTouch")) {
-          matchIndex = 9;
-          break;
-        } 
-    } 
-    switch (matchIndex) {
-      case 57:
-        menuItems.add("%d.lat");
-        menuItems.add("%d.lng");
-        menuItems.add("%d.acc");
-        break;
-      case 56:
-        menuItems.add("%s.id");
-        break;
-      case 54:
-        menuItems.add("%s.tag");
-        break;
-      case 53:
-        menuItems.add("%s.tag");
-        menuItems.add("%s.connectionState");
-        menuItems.add("%s.errorMessage");
-        break;
-      case 52:
-        menuItems.add("%s.tag");
-        menuItems.add("%s.data");
-        break;
-      case 51:
-        menuItems.add("%s.tag");
-        menuItems.add("%s.data");
-        break;
-      case 50:
-        menuItems.add("%s.tag");
-        menuItems.add("%m.varMap.deviceData");
-        break;
-      case 49:
-        menuItems.add("%s.errorMessage");
-        break;
-      case 48:
-        menuItems.add("%s.result");
-        break;
-      case 47:
-        menuItems.add("%s.tag");
-        menuItems.add("%s.message");
-        break;
-      case 46:
-        menuItems.add("%s.tag");
-        menuItems.add("%s.response");
-        menuItems.add("%m.varMap.responseHeaders");
-        break;
-      case 45:
-        menuItems.add("%d.errorCode");
-        break;
-      case 43:
-        menuItems.add("%m.listStr.filePath");
-        break;
-      case 41:
-        menuItems.add("%s.filePath");
-        break;
-      case 40:
-        menuItems.add("%s.message");
-        break;
-      case 38:
-        menuItems.add("%d.totalByteCount");
-        break;
-      case 37:
-        menuItems.add("%s.downloadUrl");
-        break;
-      case 35:
-      case 36:
-        menuItems.add("%d.progressValue");
-        break;
-      case 34:
-        menuItems.add("%b.success");
-        break;
-      case 33:
-        menuItems.add("%b.success");
-        menuItems.add("%s.errorMessage");
-        break;
-      case 32:
-        menuItems.add("%b.success");
-        menuItems.add("%s.errorMessage");
-        break;
-      case 31:
-        menuItems.add("%d.x");
-        menuItems.add("%d.y");
-        menuItems.add("%d.z");
-        break;
-      case 30:
-        menuItems.add("%d.errorCode");
-        menuItems.add("%s.errorMessage");
-        break;
-      case 27:
-      case 28:
-      case 29:
-        menuItems.add("%s.childKey");
-        menuItems.add("%m.varMap.childValue");
-        break;
-      case 26:
-        menuItems.add("%d.year");
-        menuItems.add("%d.month");
-        menuItems.add("%d.day");
-        break;
-      case 25:
-        menuItems.add("%m.listMap.data");
-        menuItems.add("%d.position");
-        break;
-      case 24:
-        menuItems.add("%d.progressValue");
-        break;
-      case 23:
-        menuItems.add("%s.url");
-        break;
-      case 22:
-        menuItems.add("%s.url");
-        break;
-      case 21:
-        menuItems.add("%d.position");
-        break;
-      case 20:
-        menuItems.add("%d.position");
-        break;
-      case 19:
-        menuItems.add("%s.charSeq");
-        break;
-      case 18:
-        menuItems.add("%d.position");
-        break;
-      case 17:
-        menuItems.add("%b.isChecked");
-        break;
-    } 
-    cacheB.put(blockName, menuItems);
-    return menuItems;
-  }
-  
-  public static String getEventSpec(String blockName) {
-    if (cacheC.containsKey(blockName)) return cacheC.get(blockName);
-    String resultC = computeC(blockName);
-    cacheC.put(blockName, resultC);
-    return resultC;
-  }
 
-  private static String computeC(String blockName) {
-    byte matchIndex = -1;
-    switch (blockName.hashCode()) {
-      default:
-        matchIndex = -1;
-        break;
-      case 2087273080:
-        if (blockName.equals("onFilesPicked")) {
-          matchIndex = 40;
-          break;
-        } 
-      case 1979400473:
-        if (blockName.equals("onItemLongClicked")) {
-          matchIndex = 12;
-          break;
-        } 
-      case 1855724576:
-        if (blockName.equals("onAdFailedToLoad")) {
-          matchIndex = 43;
-          break;
-        } 
-      case 1803231982:
-        if (blockName.equals("onMarkerClicked")) {
-          matchIndex = 56;
-          break;
-        } 
-      case 1757061906:
-        if (blockName.equals("onFilesPickedCancel")) {
-          matchIndex = 41;
-          break;
-        } 
-      case 1710477203:
-        if (blockName.equals("onPageStarted")) {
-          matchIndex = 14;
-          break;
-        } 
-      case 1633718655:
-        if (blockName.equals("onCreateUserComplete")) {
-          matchIndex = 29;
-          break;
-        } 
-      case 1586033095:
-        if (blockName.equals("onStopTrackingTouch")) {
-          matchIndex = 18;
-          break;
-        } 
-      case 1463983852:
-        if (blockName.equals("onResume")) {
-          matchIndex = 6;
-          break;
-        } 
-      case 1395209852:
-        if (blockName.equals("onDownloadSuccess")) {
-          matchIndex = 35;
-          break;
-        } 
-      case 1348605570:
-        if (blockName.equals("onPictureTakenCancel")) {
-          matchIndex = 39;
-          break;
-        } 
-      case 1348442836:
-        if (blockName.equals("onDownloadProgress")) {
-          matchIndex = 33;
-          break;
-        } 
-      case 1170737640:
-        if (blockName.equals("onPictureTaken")) {
-          matchIndex = 38;
-          break;
-        } 
-      case 948174187:
-        if (blockName.equals("onAdOpened")) {
-          matchIndex = 44;
-          break;
-        } 
-      case 863618555:
-        if (blockName.equals("onSensorChanged")) {
-          matchIndex = 28;
-          break;
-        } 
-      case 861234439:
-        if (blockName.equals("onAdLoaded")) {
-          matchIndex = 42;
-          break;
-        } 
-      case 805710389:
-        if (blockName.equals("onItemClicked")) {
-          matchIndex = 11;
-          break;
-        } 
-      case 694589214:
-        if (blockName.equals("onSpeechResult")) {
-          matchIndex = 48;
-          break;
-        } 
-      case 601233006:
-        if (blockName.equals("onAdClosed")) {
-          matchIndex = 45;
-          break;
-        } 
-      case 445802034:
-        if (blockName.equals("onCancelled")) {
-          matchIndex = 27;
-          break;
-        } 
-      case 378110312:
-        if (blockName.equals("onTextChanged")) {
-          matchIndex = 13;
-          break;
-        } 
-      case 372583555:
-        if (blockName.equals("onChildAdded")) {
-          matchIndex = 24;
-          break;
-        } 
-      case 264008033:
-        if (blockName.equals("onDataSent")) {
-          matchIndex = 52;
-          break;
-        } 
-      case 249705131:
-        if (blockName.equals("onFailure")) {
-          matchIndex = 37;
-          break;
-        } 
-      case 204442875:
-        if (blockName.equals("onPostCreate")) {
-          matchIndex = 2;
-          break;
-        } 
-      case 162093458:
-        if (blockName.equals("onBindCustomView")) {
-          matchIndex = 22;
-          break;
-        } 
-      case 136827711:
-        if (blockName.equals("onAnimationCancel")) {
-          matchIndex = 21;
-          break;
-        } 
-      case 80616227:
-        if (blockName.equals("onUploadSuccess")) {
-          matchIndex = 34;
-          break;
-        } 
-      case -376002870:
-        if (blockName.equals("onErrorResponse")) {
-          matchIndex = 47;
-          break;
-        } 
-      case -388502098:
-        if (blockName.equals("initializeLogic")) {
-          matchIndex = 0;
-          break;
-        } 
-      case -484536541:
-        if (blockName.equals("onChildRemoved")) {
-          matchIndex = 26;
-          break;
-        } 
-      case -505277536:
-        if (blockName.equals("onPageFinished")) {
-          matchIndex = 15;
-          break;
-        } 
-      case -507667891:
-        if (blockName.equals("onItemSelected")) {
-          matchIndex = 10;
-          break;
-        } 
-      case -536246231:
-        if (blockName.equals("onResetPasswordEmailSent")) {
-          matchIndex = 31;
-          break;
-        } 
-      case -584901992:
-        if (blockName.equals("onCheckedChange")) {
-          matchIndex = 9;
-          break;
-        } 
-      case -609996822:
-        if (blockName.equals("onConnected")) {
-          matchIndex = 50;
-          break;
-        } 
-      case -672992515:
-        if (blockName.equals("onAnimationStart")) {
-          matchIndex = 19;
-          break;
-        } 
-      case -719893013:
-        if (blockName.equals("onConnectionError")) {
-          matchIndex = 53;
-          break;
-        } 
-      case -732782352:
-        if (blockName.equals("onConnectionStopped")) {
-          matchIndex = 54;
-          break;
-        } 
-      case -749253875:
-        if (blockName.equals("onUploadProgress")) {
-          matchIndex = 32;
-          break;
-        } 
-      case -821066400:
-        if (blockName.equals("onLocationChanged")) {
-          matchIndex = 57;
-          break;
-        } 
-      case -837428873:
-        if (blockName.equals("onChildChanged")) {
-          matchIndex = 25;
-          break;
-        } 
-      case -891988931:
-        if (blockName.equals("onDateChange")) {
-          matchIndex = 23;
-          break;
-        } 
-      case -1012956543:
-        if (blockName.equals("onStop")) {
-          matchIndex = 4;
-          break;
-        } 
-      case -1111243300:
-        if (blockName.equals("onBackPressed")) {
-          matchIndex = 1;
-          break;
-        } 
-      case -1153785290:
-        if (blockName.equals("onAnimationEnd")) {
-          matchIndex = 20;
-          break;
-        } 
-      case -1215328199:
-        if (blockName.equals("onDeleteSuccess")) {
-          matchIndex = 36;
-          break;
-        } 
-      case -1336895037:
-        if (blockName.equals("onStart")) {
-          matchIndex = 3;
-          break;
-        } 
-      case -1340212393:
-        if (blockName.equals("onPause")) {
-          matchIndex = 7;
-          break;
-        } 
-      case -1351902487:
-        if (blockName.equals("onClick")) {
-          matchIndex = 8;
-          break;
-        } 
-      case -1358405466:
-        if (blockName.equals("onMapReady")) {
-          matchIndex = 55;
-          break;
-        } 
-      case -1401315045:
-        if (blockName.equals("onDestroy")) {
-          matchIndex = 5;
-          break;
-        } 
-      case -1708629179:
-        if (blockName.equals("onSignInUserComplete")) {
-          matchIndex = 30;
-          break;
-        } 
-      case -1779618840:
-        if (blockName.equals("onProgressChanged")) {
-          matchIndex = 16;
-          break;
-        } 
-      case -1809154262:
-        if (blockName.equals("onDataReceived")) {
-          matchIndex = 51;
-          break;
-        } 
-      case -1865337024:
-        if (blockName.equals("onResponse")) {
-          matchIndex = 46;
-          break;
-        } 
-      case -2067423513:
-        if (blockName.equals("onSpeechError")) {
-          matchIndex = 49;
-          break;
-        } 
-      case -2117913147:
-        if (blockName.equals("onStartTrackingTouch")) {
-          matchIndex = 17;
-          break;
-        } 
-    } 
-    switch (matchIndex) {
-      default:
-        return "";
-      case 57:
-        return "on_location_changed";
-      case 56:
-        return "on_marker_clicked";
-      case 55:
-        return "on_map_ready";
-      case 54:
-        return "on_connection_stopped";
-      case 53:
-        return "on_connection_error";
-      case 52:
-        return "on_data_sent";
-      case 51:
-        return "on_data_received";
-      case 50:
-        return "on_connected";
-      case 49:
-        return "on_speech_error";
-      case 48:
-        return "on_speech_result";
-      case 47:
-        return "on_error_response";
-      case 46:
-        return "on_response";
-      case 45:
-        return "on_ad_closed";
-      case 44:
-        return "on_ad_opened";
-      case 43:
-        return "on_ad_failed_to_load";
-      case 42:
-        return "on_ad_loaded";
-      case 41:
-        return "on_files_picked_cancel";
-      case 40:
-        return "on_files_picked";
-      case 39:
-        return "on_picture_taken_cancel";
-      case 38:
-        return "on_picture_taken";
-      case 37:
-        return "on_failure";
-      case 36:
-        return "on_delete_success";
-      case 35:
-        return "on_download_success";
-      case 34:
-        return "on_upload_success";
-      case 33:
-        return "on_download_progress";
-      case 32:
-        return "on_upload_progress";
-      case 31:
-        return "on_reset_password_email_sent";
-      case 30:
-        return "on_sign_in_user_complete";
-      case 29:
-        return "on_create_user_complete";
-      case 28:
-        return "on_sensor_changed";
-      case 27:
-        return "on_cancelled";
-      case 26:
-        return "on_child_removed";
-      case 25:
-        return "on_child_changed";
-      case 24:
-        return "on_child_added";
-      case 23:
-        return "on_date_change";
-      case 22:
-        return "on_bind_custom_view";
-      case 21:
-        return "on_animation_cancel";
-      case 20:
-        return "on_animation_end";
-      case 19:
-        return "on_animation_start";
-      case 18:
-        return "on_stop_tracking_touch";
-      case 17:
-        return "on_start_tracking_touch";
-      case 16:
-        return "on_progress_changed";
-      case 15:
-        return "on_page_finished";
-      case 14:
-        return "on_page_started";
-      case 13:
-        return "on_text_changed";
-      case 12:
-        return "on_item_long_clicked";
-      case 11:
-        return "on_item_clicked";
-      case 10:
-        return "on_item_selected";
-      case 9:
-        return "on_check_changed";
-      case 8:
-        return "on_clicked";
-      case 7:
-        return "on_pause";
-      case 6:
-        return "on_resume";
-      case 5:
-        return "on_destroy";
-      case 4:
-        return "on_stop";
-      case 3:
-        return "on_start";
-      case 2:
-        return "on_post_created";
-      case 1:
-        return "on_back_pressed";
-      case 0:
-        break;
-    } 
-    return "initialize";
-  }
-  
-  public static String getBlockSpec(String blockName) {
-    if (cacheD.containsKey(blockName)) return cacheD.get(blockName);
-    String originalKey = blockName;
-    int hashCode = blockName.hashCode();
-    int matchIndex = -1;
-    String defaultValue = "false";
-    switch (hashCode) {
-      default:
-        matchIndex = -1;
-        break;
-      case 2138225950:
-        if (blockName.equals("locationManagerRequestLocationUpdates")) {
-          matchIndex = 320;
-          break;
-        } 
-      case 2130649194:
-        if (blockName.equals("bluetoothConnectGetPairedDevices")) {
-          matchIndex = 318;
-          break;
-        } 
-      case 2127377128:
-        if (blockName.equals("mediaplayerGetCurrent")) {
-          matchIndex = 213;
-          break;
-        } 
-      case 2090189010:
-        if (blockName.equals("addListStr")) {
-          matchIndex = 22;
-          break;
-        } 
-      case 2090182653:
-        if (blockName.equals("addListMap")) {
-          matchIndex = 27;
-          break;
-        } 
-      case 2090179216:
-        if (blockName.equals("addListInt")) {
-          matchIndex = 14;
-          break;
-        } 
-      case 2075310296:
-        if (blockName.equals("interstitialadLoadAd")) {
-          matchIndex = 253;
-          break;
-        } 
-      case 2017929665:
-        if (blockName.equals("calendarViewSetMinDate")) {
-          matchIndex = 166;
-          break;
-        } 
-      case 1984984239:
-        if (blockName.equals("setText")) {
-          matchIndex = 109;
-          break;
-        } 
-      case 1984630281:
-        if (blockName.equals("setHint")) {
-          matchIndex = 115;
-          break;
-        } 
-      case 1976325370:
-        if (blockName.equals("setImageFilePath")) {
-          matchIndex = 120;
-          break;
-        } 
-      case 1974249461:
-        if (blockName.equals("skewBitmapFile")) {
-          matchIndex = 294;
-          break;
-        } 
-      case 1973523807:
-        if (blockName.equals("mediaplayerIsPlaying")) {
-          matchIndex = 215;
-          break;
-        } 
-      case 1964823036:
-        if (blockName.equals("bluetoothConnectStopConnection")) {
-          matchIndex = 313;
-          break;
-        } 
-      case 1948735400:
-        if (blockName.equals("getAlpha")) {
-          matchIndex = 125;
-          break;
-        } 
-      case 1941634330:
-        if (blockName.equals("firebaseAdd")) {
-          matchIndex = 235;
-          break;
-        } 
-      case 1923980937:
-        if (blockName.equals("requestnetworkSetParams")) {
-          matchIndex = 260;
-          break;
-        } 
-      case 1908582864:
-        if (blockName.equals("firebaseStopListen")) {
-          matchIndex = 249;
-          break;
-        } 
-      case 1908132964:
-        if (blockName.equals("mapViewSetMarkerPosition")) {
-          matchIndex = 176;
-          break;
-        } 
-      case 1885231494:
-        if (blockName.equals("webViewCanGoForward")) {
-          matchIndex = 156;
-          break;
-        } 
-      case 1883337723:
-        if (blockName.equals("mathGetDisplayHeight")) {
-          matchIndex = 79;
-          break;
-        } 
-      case 1873103950:
-        if (blockName.equals("locationManagerRemoveUpdates")) {
-          matchIndex = 321;
-          break;
-        } 
-      case 1848365301:
-        if (blockName.equals("mapViewSetMapType")) {
-          matchIndex = 169;
-          break;
-        } 
-      case 1823151876:
-        if (blockName.equals("fileGetData")) {
-          matchIndex = 188;
-          break;
-        } 
-      case 1820536363:
-        if (blockName.equals("interstitialadCreate")) {
-          matchIndex = 252;
-          break;
-        } 
-      case 1814870108:
-        if (blockName.equals("doToast")) {
-          matchIndex = 277;
-          break;
-        } 
-      case 1792552710:
-        if (blockName.equals("rotateBitmapFile")) {
-          matchIndex = 292;
-          break;
-        } 
-      case 1779174257:
-        if (blockName.equals("getChecked")) {
-          matchIndex = 137;
-          break;
-        } 
-      case 1775620400:
-        if (blockName.equals("strToMap")) {
-          matchIndex = 73;
-          break;
-        } 
-      case 1764351209:
-        if (blockName.equals("deleteList")) {
-          matchIndex = 16;
-          break;
-        } 
-      case 1749552744:
-        if (blockName.equals("textToSpeechSpeak")) {
-          matchIndex = 302;
-          break;
-        } 
-      case 1712613410:
-        if (blockName.equals("webViewZoomOut")) {
-          matchIndex = 163;
-          break;
-        } 
-      case 1695890133:
-        if (blockName.equals("fileutilStartsWith")) {
-          matchIndex = 274;
-          break;
-        } 
-      case 1637498582:
-        if (blockName.equals("timerEvery")) {
-          matchIndex = 200;
-          break;
-        } 
-      case 1635356258:
-        if (blockName.equals("requestnetworkStartRequestNetwork")) {
-          matchIndex = 262;
-          break;
-        } 
-      case 1633341847:
-        if (blockName.equals("timerAfter")) {
-          matchIndex = 199;
-          break;
-        } 
-      case 1601394299:
-        if (blockName.equals("listGetCheckedPositions")) {
-          matchIndex = 145;
-          break;
-        } 
-      case 1498864168:
-        if (blockName.equals("seekBarGetProgress")) {
-          matchIndex = 281;
-          break;
-        } 
-      case 1470831563:
-        if (blockName.equals("intentGetString")) {
-          matchIndex = 186;
-          break;
-        } 
-      case 1437288110:
-        if (blockName.equals("getPublicDir")) {
-          matchIndex = 286;
-          break;
-        } 
-      case 1431171391:
-        if (blockName.equals("mapRemoveKey")) {
-          matchIndex = 9;
-          break;
-        } 
-      case 1410284340:
-        if (blockName.equals("seekBarSetProgress")) {
-          matchIndex = 283;
-          break;
-        } 
-      case 1405084438:
-        if (blockName.equals("setTitle")) {
-          matchIndex = 279;
-          break;
-        } 
-      case 1397501021:
-        if (blockName.equals("listRefresh")) {
-          matchIndex = 142;
-          break;
-        } 
-      case 1395026457:
-        if (blockName.equals("setImage")) {
-          matchIndex = 118;
-          break;
-        } 
-      case 1387622940:
-        if (blockName.equals("setAlpha")) {
-          matchIndex = 124;
-          break;
-        } 
-      case 1348133645:
-        if (blockName.equals("stringReplaceFirst")) {
-          matchIndex = 63;
-          break;
-        } 
-      case 1343794064:
-        if (blockName.equals("listSetItemChecked")) {
-          matchIndex = 143;
-          break;
-        } 
-      case 1330354473:
-        if (blockName.equals("firebaseauthSignInAnonymously")) {
-          matchIndex = 242;
-          break;
-        } 
-      case 1315302372:
-        if (blockName.equals("fileutillength")) {
-          matchIndex = 273;
-          break;
-        } 
-      case 1313527577:
-        if (blockName.equals("setTypeface")) {
-          matchIndex = 110;
-          break;
-        } 
-      case 1311764810:
-        if (blockName.equals("setTranslationY")) {
-          matchIndex = 128;
-          break;
-        } 
-      case 1311764809:
-        if (blockName.equals("setTranslationX")) {
-          matchIndex = 126;
-          break;
-        } 
-      case 1305932583:
-        if (blockName.equals("spnGetSelection")) {
-          matchIndex = 151;
-          break;
-        } 
-      case 1303367340:
-        if (blockName.equals("textToSpeechStop")) {
-          matchIndex = 304;
-          break;
-        } 
-      case 1280029577:
-        if (blockName.equals("requestFocus")) {
-          matchIndex = 117;
-          break;
-        } 
-      case 1252547704:
-        if (blockName.equals("listMapToStr")) {
-          matchIndex = 76;
-          break;
-        } 
-      case 1242107556:
-        if (blockName.equals("fileutilisfile")) {
-          matchIndex = 272;
-          break;
-        } 
-      case 1240510514:
-        if (blockName.equals("intentSetScreen")) {
-          matchIndex = 182;
-          break;
-        } 
-      case 1236956449:
-        if (blockName.equals("mediaplayerCreate")) {
-          matchIndex = 209;
-          break;
-        } 
-      case 1220078450:
-        if (blockName.equals("addSourceDirectly")) {
-          matchIndex = 72;
-          break;
-        } 
-      case 1219299503:
-        if (blockName.equals("objectanimatorIsRunning")) {
-          matchIndex = 234;
-          break;
-        } 
-      case 1219071185:
-        if (blockName.equals("firebasestorageUploadFile")) {
-          matchIndex = 255;
-          break;
-        } 
-      case 1216249183:
-        if (blockName.equals("firebasestorageDelete")) {
-          matchIndex = 257;
-          break;
-        } 
-      case 1187505507:
-        if (blockName.equals("stringReplace")) {
-          matchIndex = 62;
-          break;
-        } 
-      case 1179719371:
-        if (blockName.equals("stringLastIndex")) {
-          matchIndex = 58;
-          break;
-        } 
-      case 1162069698:
-        if (blockName.equals("setThumbResource")) {
-          matchIndex = 138;
-          break;
-        } 
-      case 1160674468:
-        if (blockName.equals("lengthList")) {
-          matchIndex = 19;
-          break;
-        } 
-      case 1159035162:
-        if (blockName.equals("mapViewZoomOut")) {
-          matchIndex = 173;
-          break;
-        } 
-      case 1156598140:
-        if (blockName.equals("fileutilEndsWith")) {
-          matchIndex = 275;
-          break;
-        } 
-      case 1142897724:
-        if (blockName.equals("firebaseauthSignInUser")) {
-          matchIndex = 241;
-          break;
-        } 
-      case 1129709718:
-        if (blockName.equals("setImageUrl")) {
-          matchIndex = 121;
-          break;
-        } 
-      case 1102670563:
-        if (blockName.equals("requestnetworkSetHeaders")) {
-          matchIndex = 261;
-          break;
-        } 
-      case 1090517587:
-        if (blockName.equals("getPackageDataDir")) {
-          matchIndex = 285;
-          break;
-        } 
-      case 1088879149:
-        if (blockName.equals("setHintTextColor")) {
-          matchIndex = 116;
-          break;
-        } 
-      case 1086207657:
-        if (blockName.equals("fileutildelete")) {
-          matchIndex = 263;
-          break;
-        } 
-      case 1068548733:
-        if (blockName.equals("mathGetDip")) {
-          matchIndex = 77;
-          break;
-        } 
-      case 1053179400:
-        if (blockName.equals("mapViewSetMarkerColor")) {
-          matchIndex = 177;
-          break;
-        } 
-      case 950609198:
-        if (blockName.equals("setBitmapFileColorFilter")) {
-          matchIndex = 295;
-          break;
-        } 
-      case 948234497:
-        if (blockName.equals("webViewStopLoading")) {
-          matchIndex = 161;
-          break;
-        } 
-      case 937017988:
-        if (blockName.equals("gyroscopeStartListen")) {
-          matchIndex = 250;
-          break;
-        } 
-      case 932259189:
-        if (blockName.equals("setBgResource")) {
-          matchIndex = 113;
-          break;
-        } 
-      case 898187172:
-        if (blockName.equals("mathToRadian")) {
-          matchIndex = 99;
-          break;
-        } 
-      case 858248741:
-        if (blockName.equals("calendarGetTime")) {
-          matchIndex = 196;
-          break;
-        } 
-      case 848786445:
-        if (blockName.equals("objectanimatorSetTarget")) {
-          matchIndex = 224;
-          break;
-        } 
-      case 845089750:
-        if (blockName.equals("setVarString")) {
-          matchIndex = 4;
-          break;
-        } 
-      case 840991609:
-        if (blockName.equals("mathTan")) {
-          matchIndex = 92;
-          break;
-        } 
-      case 840990896:
-        if (blockName.equals("mathSin")) {
-          matchIndex = 90;
-          break;
-        } 
-      case 840988208:
-        if (blockName.equals("mathPow")) {
-          matchIndex = 82;
-          break;
-        } 
-      case 840985130:
-        if (blockName.equals("mathMin")) {
-          matchIndex = 83;
-          break;
-        } 
-      case 840984892:
-        if (blockName.equals("mathMax")) {
-          matchIndex = 84;
-          break;
-        } 
-      case 840984348:
-        if (blockName.equals("mathLog")) {
-          matchIndex = 97;
-          break;
-        } 
-      case 840977909:
-        if (blockName.equals("mathExp")) {
-          matchIndex = 96;
-          break;
-        } 
-      case 840975711:
-        if (blockName.equals("mathCos")) {
-          matchIndex = 91;
-          break;
-        } 
-      case 840973386:
-        if (blockName.equals("mathAbs")) {
-          matchIndex = 86;
-          break;
-        } 
-      case 836692861:
-        if (blockName.equals("mapSize")) {
-          matchIndex = 10;
-          break;
-        } 
-      case 797861524:
-        if (blockName.equals("addMapToList")) {
-          matchIndex = 32;
-          break;
-        } 
-      case 787825477:
-        if (blockName.equals("getScaleY")) {
-          matchIndex = 133;
-          break;
-        } 
-      case 787825476:
-        if (blockName.equals("getScaleX")) {
-          matchIndex = 131;
-          break;
-        } 
-      case 770834513:
-        if (blockName.equals("getRotate")) {
-          matchIndex = 123;
-          break;
-        } 
-      case 762292097:
-        if (blockName.equals("indexListStr")) {
-          matchIndex = 25;
-          break;
-        } 
-      case 762282303:
-        if (blockName.equals("indexListInt")) {
-          matchIndex = 18;
-          break;
-        } 
-      case 754442829:
-        if (blockName.equals("increaseInt")) {
-          matchIndex = 2;
-          break;
-        } 
-      case 747168008:
-        if (blockName.equals("mapCreateNew")) {
-          matchIndex = 5;
-          break;
-        } 
-      case 738846120:
-        if (blockName.equals("textToSpeechSetPitch")) {
-          matchIndex = 300;
-          break;
-        } 
-      case 737664870:
-        if (blockName.equals("mathRound")) {
-          matchIndex = 87;
-          break;
-        } 
-      case 732108347:
-        if (blockName.equals("mathLog10")) {
-          matchIndex = 98;
-          break;
-        } 
-      case 726887785:
-        if (blockName.equals("mapViewSetMarkerInfo")) {
-          matchIndex = 175;
-          break;
-        } 
-      case 726877492:
-        if (blockName.equals("mapViewSetMarkerIcon")) {
-          matchIndex = 178;
-          break;
-        } 
-      case 726487524:
-        if (blockName.equals("mathFloor")) {
-          matchIndex = 89;
-          break;
-        } 
-      case 725249532:
-        if (blockName.equals("intentSetAction")) {
-          matchIndex = 180;
-          break;
-        } 
-      case 683193060:
-        if (blockName.equals("bluetoothConnectStartConnection")) {
-          matchIndex = 311;
-          break;
-        } 
-      case 657721930:
-        if (blockName.equals("setVarInt")) {
-          matchIndex = 1;
-          break;
-        } 
-      case 615286641:
-        if (blockName.equals("dialogNeutralButton")) {
-          matchIndex = 206;
-          break;
-        } 
-      case 610313513:
-        if (blockName.equals("getMapInList")) {
-          matchIndex = 34;
-          break;
-        } 
-      case 573295520:
-        if (blockName.equals("listGetCheckedCount")) {
-          matchIndex = 146;
-          break;
-        } 
-      case 573208401:
-        if (blockName.equals("setScaleY")) {
-          matchIndex = 132;
-          break;
-        } 
-      case 573208400:
-        if (blockName.equals("setScaleX")) {
-          matchIndex = 130;
-          break;
-        } 
-      case 571046965:
-        if (blockName.equals("scaleBitmapFile")) {
-          matchIndex = 293;
-          break;
-        } 
-      case 556217437:
-        if (blockName.equals("setRotate")) {
-          matchIndex = 122;
-          break;
-        } 
-      case 548860462:
-        if (blockName.equals("webViewClearCache")) {
-          matchIndex = 159;
-          break;
-        } 
-      case 530759231:
-        if (blockName.equals("progressBarSetIndeterminate")) {
-          matchIndex = 299;
-          break;
-        } 
-      case 501171279:
-        if (blockName.equals("mathToDegree")) {
-          matchIndex = 100;
-          break;
-        } 
-      case 490702942:
-        if (blockName.equals("filepickerstartpickfiles")) {
-          matchIndex = 259;
-          break;
-        } 
-      case 481850295:
-        if (blockName.equals("resizeBitmapFileToSquare")) {
-          matchIndex = 288;
-          break;
-        } 
-      case 475815924:
-        if (blockName.equals("setTextColor")) {
-          matchIndex = 114;
-          break;
-        } 
-      case 470160234:
-        if (blockName.equals("fileutilGetLastSegmentPath")) {
-          matchIndex = 276;
-          break;
-        } 
-      case 463594049:
-        if (blockName.equals("objectanimatorSetFromTo")) {
-          matchIndex = 227;
-          break;
-        } 
-      case 463560551:
-        if (blockName.equals("mapContainKey")) {
-          matchIndex = 8;
-          break;
-        } 
-      case 442768763:
-        if (blockName.equals("mapGetAllKeys")) {
-          matchIndex = 13;
-          break;
-        } 
-      case 404265028:
-        if (blockName.equals("calendarSet")) {
-          matchIndex = 193;
-          break;
-        } 
-      case 404247683:
-        if (blockName.equals("calendarAdd")) {
-          matchIndex = 192;
-          break;
-        } 
-      case 401012286:
-        if (blockName.equals("getTranslationY")) {
-          matchIndex = 129;
-          break;
-        } 
-      case 401012285:
-        if (blockName.equals("getTranslationX")) {
-          matchIndex = 127;
-          break;
-        } 
-      case 397166713:
-        if (blockName.equals("getEnable")) {
-          matchIndex = 106;
-          break;
-        } 
-      case 389111867:
-        if (blockName.equals("spnSetData")) {
-          matchIndex = 148;
-          break;
-        } 
-      case 348475309:
-        if (blockName.equals("soundpoolStreamStop")) {
-          matchIndex = 223;
-          break;
-        } 
-      case 348377823:
-        if (blockName.equals("soundpoolStreamPlay")) {
-          matchIndex = 222;
-          break;
-        } 
-      case 342026220:
-        if (blockName.equals("interstitialadShow")) {
-          matchIndex = 254;
-          break;
-        } 
-      case 317453636:
-        if (blockName.equals("textToSpeechIsSpeaking")) {
-          matchIndex = 303;
-          break;
-        } 
-      case 300921928:
-        if (blockName.equals("mathSqrt")) {
-          matchIndex = 85;
-          break;
-        } 
-      case 300433453:
-        if (blockName.equals("mathCeil")) {
-          matchIndex = 88;
-          break;
-        } 
-      case 300388040:
-        if (blockName.equals("mathAtan")) {
-          matchIndex = 95;
-          break;
-        } 
-      case 300387327:
-        if (blockName.equals("mathAsin")) {
-          matchIndex = 93;
-          break;
-        } 
-      case 300372142:
-        if (blockName.equals("mathAcos")) {
-          matchIndex = 94;
-          break;
-        } 
-      case 297379706:
-        if (blockName.equals("textToSpeechSetSpeechRate")) {
-          matchIndex = 301;
-          break;
-        } 
-      case 276674391:
-        if (blockName.equals("mapViewMoveCamera")) {
-          matchIndex = 170;
-          break;
-        } 
-      case 262073061:
-        if (blockName.equals("bluetoothConnectReadyConnection")) {
-          matchIndex = 309;
-          break;
-        } 
-      case 255417137:
-        if (blockName.equals("adViewLoadAd")) {
-          matchIndex = 168;
-          break;
-        } 
-      case 207764385:
-        if (blockName.equals("calendarViewGetDate")) {
-          matchIndex = 164;
-          break;
-        } 
-      case 182549637:
-        if (blockName.equals("setEnable")) {
-          matchIndex = 105;
-          break;
-        } 
-      case 168740282:
-        if (blockName.equals("mapToStr")) {
-          matchIndex = 74;
-          break;
-        } 
-      case 163812602:
-        if (blockName.equals("cropBitmapFileFromCenter")) {
-          matchIndex = 291;
-          break;
-        } 
-      case 152967761:
-        if (blockName.equals("mapClear")) {
-          matchIndex = 11;
-          break;
-        } 
-      case 134874756:
-        if (blockName.equals("listSetCustomViewData")) {
-          matchIndex = 141;
-          break;
-        } 
-      case 125431087:
-        if (blockName.equals("speechToTextStopListening")) {
-          matchIndex = 307;
-          break;
-        } 
-      case 103668285:
-        if (blockName.equals("mathE")) {
-          matchIndex = 81;
-          break;
-        } 
-      case 97196323:
-        if (blockName.equals("false")) {
-          matchIndex = 42;
-          break;
-        } 
-      case 94001407:
-        if (blockName.equals("break")) {
-          matchIndex = 37;
-          break;
-        } 
-      case 61585857:
-        if (blockName.equals("firebasePush")) {
-          matchIndex = 236;
-          break;
-        } 
-      case 56167279:
-        if (blockName.equals("setBitmapFileContrast")) {
-          matchIndex = 297;
-          break;
-        } 
-      case 27679870:
-        if (blockName.equals("calendarGetNow")) {
-          matchIndex = 191;
-          break;
-        } 
-      case 25469951:
-        if (blockName.equals("bluetoothConnectActivateBluetooth")) {
-          matchIndex = 317;
-          break;
-        } 
-      case 16308074:
-        if (blockName.equals("resizeBitmapFileToCircle")) {
-          matchIndex = 289;
-          break;
-        } 
-      case 8255701:
-        if (blockName.equals("calendarFormat")) {
-          matchIndex = 194;
-          break;
-        } 
-      case 3569038:
-        if (blockName.equals("true")) {
-          matchIndex = 41;
-          break;
-        } 
-      case 3568674:
-        if (blockName.equals("trim")) {
-          matchIndex = 66;
-          break;
-        } 
-      case 3116345:
-        if (blockName.equals("else")) {
-          matchIndex = 40;
-          break;
-        } 
-      case 109267:
-        if (blockName.equals("not")) {
-          matchIndex = 48;
-          break;
-        } 
-      case 3968:
-        if (blockName.equals("||")) {
-          matchIndex = 47;
-          break;
-        } 
-      case 3357:
-        if (blockName.equals("if")) {
-          matchIndex = 38;
-          break;
-        } 
-      case 1216:
-        if (blockName.equals("&&")) {
-          matchIndex = 46;
-          break;
-        } 
-      case 62:
-        if (blockName.equals(">")) {
-          matchIndex = 45;
-          break;
-        } 
-      case 61:
-        if (blockName.equals("=")) {
-          matchIndex = 44;
-          break;
-        } 
-      case 60:
-        if (blockName.equals("<")) {
-          matchIndex = 43;
-          break;
-        } 
-      case 47:
-        if (blockName.equals("/")) {
-          matchIndex = 52;
-          break;
-        } 
-      case 45:
-        if (blockName.equals("-")) {
-          matchIndex = 50;
-          break;
-        } 
-      case 43:
-        if (blockName.equals("+")) {
-          matchIndex = 49;
-          break;
-        } 
-      case 42:
-        if (blockName.equals("*")) {
-          matchIndex = 51;
-          break;
-        } 
-      case 37:
-        if (blockName.equals("%")) {
-          matchIndex = 53;
-          break;
-        } 
-      case -9742826:
-        if (blockName.equals("firebaseGetPushKey")) {
-          matchIndex = 237;
-          break;
-        } 
-      case -10599306:
-        if (blockName.equals("firebaseauthCreateUser")) {
-          matchIndex = 240;
-          break;
-        } 
-      case -14362103:
-        if (blockName.equals("bluetoothConnectIsBluetoothActivated")) {
-          matchIndex = 316;
-          break;
-        } 
-      case -24451690:
-        if (blockName.equals("dialogOkButton")) {
-          matchIndex = 204;
-          break;
-        } 
-      case -60048101:
-        if (blockName.equals("firebaseauthResetPassword")) {
-          matchIndex = 243;
-          break;
-        } 
-      case -60494417:
-        if (blockName.equals("vibratorAction")) {
-          matchIndex = 198;
-          break;
-        } 
-      case -75125341:
-        if (blockName.equals("getText")) {
-          matchIndex = 111;
-          break;
-        } 
-      case -83186725:
-        if (blockName.equals("openDrawer")) {
-          matchIndex = 103;
-          break;
-        } 
-      case -83301935:
-        if (blockName.equals("webViewZoomIn")) {
-          matchIndex = 162;
-          break;
-        } 
-      case -96303809:
-        if (blockName.equals("containListStr")) {
-          matchIndex = 26;
-          break;
-        } 
-      case -96310166:
-        if (blockName.equals("containListMap")) {
-          matchIndex = 31;
-          break;
-        } 
-      case -96313603:
-        if (blockName.equals("containListInt")) {
-          matchIndex = 20;
-          break;
-        } 
-      case -133532073:
-        if (blockName.equals("stringLength")) {
-          matchIndex = 55;
-          break;
-        } 
-      case -149850417:
-        if (blockName.equals("fileutilisexist")) {
-          matchIndex = 268;
-          break;
-        } 
-      case -152473824:
-        if (blockName.equals("firebaseauthIsLoggedIn")) {
-          matchIndex = 244;
-          break;
-        } 
-      case -189292433:
-        if (blockName.equals("stringSub")) {
-          matchIndex = 59;
-          break;
-        } 
-      case -208762465:
-        if (blockName.equals("toStringWithDecimal")) {
-          matchIndex = 70;
-          break;
-        } 
-      case -247015294:
-        if (blockName.equals("mediaplayerRelease")) {
-          matchIndex = 219;
-          break;
-        } 
-      case -258774775:
-        if (blockName.equals("closeDrawer")) {
-          matchIndex = 104;
-          break;
-        } 
-      case -283328259:
-        if (blockName.equals("intentPutExtra")) {
-          matchIndex = 183;
-          break;
-        } 
-      case -322651344:
-        if (blockName.equals("stringEquals")) {
-          matchIndex = 60;
-          break;
-        } 
-      case -329552966:
-        if (blockName.equals("insertListStr")) {
-          matchIndex = 23;
-          break;
-        } 
-      case -329559323:
-        if (blockName.equals("insertListMap")) {
-          matchIndex = 28;
-          break;
-        } 
-      case -329562760:
-        if (blockName.equals("insertListInt")) {
-          matchIndex = 15;
-          break;
-        } 
-      case -353129373:
-        if (blockName.equals("calendarDiff")) {
-          matchIndex = 195;
-          break;
-        } 
-      case -356866884:
-        if (blockName.equals("webViewSetCacheMode")) {
-          matchIndex = 154;
-          break;
-        } 
-      case -390304998:
-        if (blockName.equals("mapViewAddMarker")) {
-          matchIndex = 174;
-          break;
-        } 
-      case -399551817:
-        if (blockName.equals("toUpperCase")) {
-          matchIndex = 67;
-          break;
-        } 
-      case -411705840:
-        if (blockName.equals("fileSetData")) {
-          matchIndex = 189;
-          break;
-        } 
-      case -418212114:
-        if (blockName.equals("firebaseGetChildren")) {
-          matchIndex = 239;
-          break;
-        } 
-      case -425293664:
-        if (blockName.equals("setClickable")) {
-          matchIndex = 108;
-          break;
-        } 
-      case -437272040:
-        if (blockName.equals("bluetoothConnectGetRandomUuid")) {
-          matchIndex = 319;
-          break;
-        } 
-      case -439342016:
-        if (blockName.equals("webViewClearHistory")) {
-          matchIndex = 160;
-          break;
-        } 
-      case -509946902:
-        if (blockName.equals("spnRefresh")) {
-          matchIndex = 149;
-          break;
-        } 
-      case -578987803:
-        if (blockName.equals("setChecked")) {
-          matchIndex = 136;
-          break;
-        } 
-      case -601804268:
-        if (blockName.equals("fileutilread")) {
-          matchIndex = 266;
-          break;
-        } 
-      case -601942961:
-        if (blockName.equals("fileutilmove")) {
-          matchIndex = 267;
-          break;
-        } 
-      case -602241037:
-        if (blockName.equals("fileutilcopy")) {
-          matchIndex = 264;
-          break;
-        } 
-      case -621198621:
-        if (blockName.equals("speechToTextStartListening")) {
-          matchIndex = 306;
-          break;
-        } 
-      case -628607128:
-        if (blockName.equals("webViewGoBack")) {
-          matchIndex = 157;
-          break;
-        } 
-      case -636363854:
-        if (blockName.equals("webViewGetUrl")) {
-          matchIndex = 153;
-          break;
-        } 
-      case -649691581:
-        if (blockName.equals("objectanimatorSetInterpolator")) {
-          matchIndex = 231;
-          break;
-        } 
-      case -664474111:
-        if (blockName.equals("intentSetFlags")) {
-          matchIndex = 184;
-          break;
-        } 
-      case -668992194:
-        if (blockName.equals("stringReplaceAll")) {
-          matchIndex = 64;
-          break;
-        } 
-      case -677662361:
-        if (blockName.equals("forever")) {
-          matchIndex = 36;
-          break;
-        } 
-      case -697616870:
-        if (blockName.equals("camerastarttakepicture")) {
-          matchIndex = 258;
-          break;
-        } 
-      case -733318734:
-        if (blockName.equals("strToListMap")) {
-          matchIndex = 75;
-          break;
-        } 
-      case -831887360:
-        if (blockName.equals("textToSpeechShutdown")) {
-          matchIndex = 305;
-          break;
-        } 
-      case -853550561:
-        if (blockName.equals("timerCancel")) {
-          matchIndex = 201;
-          break;
-        } 
-      case -854558288:
-        if (blockName.equals("setVisible")) {
-          matchIndex = 107;
-          break;
-        } 
-      case -869293886:
-        if (blockName.equals("finishActivity")) {
-          matchIndex = 187;
-          break;
-        } 
-      case -883988307:
-        if (blockName.equals("dialogSetMessage")) {
-          matchIndex = 203;
-          break;
-        } 
-      case -903177036:
-        if (blockName.equals("resizeBitmapFileWithRoundedBorder")) {
-          matchIndex = 290;
-          break;
-        } 
-      case -911199919:
-        if (blockName.equals("objectanimatorSetProperty")) {
-          matchIndex = 225;
-          break;
-        } 
-      case -917343271:
-        if (blockName.equals("getJpegRotate")) {
-          matchIndex = 298;
-          break;
-        } 
-      case -918173448:
-        if (blockName.equals("listGetCheckedPosition")) {
-          matchIndex = 144;
-          break;
-        } 
-      case -934531685:
-        if (blockName.equals("repeat")) {
-          matchIndex = 35;
-          break;
-        } 
-      case -938285885:
-        if (blockName.equals("random")) {
-          matchIndex = 54;
-          break;
-        } 
-      case -995908985:
-        if (blockName.equals("soundpoolCreate")) {
-          matchIndex = 220;
-          break;
-        } 
-      case -996870276:
-        if (blockName.equals("insertMapToList")) {
-          matchIndex = 33;
-          break;
-        } 
-      case -1007787615:
-        if (blockName.equals("mediaplayerSetLooping")) {
-          matchIndex = 216;
-          break;
-        } 
-      case -1021852352:
-        if (blockName.equals("objectanimatorCancel")) {
-          matchIndex = 233;
-          break;
-        } 
-      case -1033658254:
-        if (blockName.equals("mathGetDisplayWidth")) {
-          matchIndex = 78;
-          break;
-        } 
-      case -1043233275:
-        if (blockName.equals("mediaplayerGetDuration")) {
-          matchIndex = 214;
-          break;
-        } 
-      case -1063598745:
-        if (blockName.equals("resizeBitmapFileRetainRatio")) {
-          matchIndex = 287;
-          break;
-        } 
-      case -1081250015:
-        if (blockName.equals("mathPi")) {
-          matchIndex = 80;
-          break;
-        } 
-      case -1081391085:
-        if (blockName.equals("mapPut")) {
-          matchIndex = 6;
-          break;
-        } 
-      case -1081400230:
-        if (blockName.equals("mapGet")) {
-          matchIndex = 7;
-          break;
-        } 
-      case -1094491139:
-        if (blockName.equals("seekBarSetMax")) {
-          matchIndex = 282;
-          break;
-        } 
-      case -1106141754:
-        if (blockName.equals("webViewCanGoBack")) {
-          matchIndex = 155;
-          break;
-        } 
-      case -1107376988:
-        if (blockName.equals("webViewGoForward")) {
-          matchIndex = 158;
-          break;
-        } 
-      case -1123431291:
-        if (blockName.equals("calnedarViewSetMaxDate")) {
-          matchIndex = 167;
-          break;
-        } 
-      case -1137582698:
-        if (blockName.equals("toLowerCase")) {
-          matchIndex = 68;
-          break;
-        } 
-      case -1139353316:
-        if (blockName.equals("setListMap")) {
-          matchIndex = 30;
-          break;
-        } 
-      case -1143684675:
-        if (blockName.equals("firebaseauthGetCurrentUser")) {
-          matchIndex = 245;
-          break;
-        } 
-      case -1149458632:
-        if (blockName.equals("objectanimatorSetRepeatCount")) {
-          matchIndex = 230;
-          break;
-        } 
-      case -1149848189:
-        if (blockName.equals("toStringFormat")) {
-          matchIndex = 71;
-          break;
-        } 
-      case -1160374245:
-        if (blockName.equals("bluetoothConnectReadyConnectionToUuid")) {
-          matchIndex = 310;
-          break;
-        } 
-      case -1182878167:
-        if (blockName.equals("firebaseauthGetUid")) {
-          matchIndex = 246;
-          break;
-        } 
-      case -1185284274:
-        if (blockName.equals("gyroscopeStopListen")) {
-          matchIndex = 251;
-          break;
-        } 
-      case -1192544266:
-        if (blockName.equals("ifElse")) {
-          matchIndex = 39;
-          break;
-        } 
-      case -1195899442:
-        if (blockName.equals("bluetoothConnectSendData")) {
-          matchIndex = 314;
-          break;
-        } 
-      case -1206794098:
-        if (blockName.equals("getLocationY")) {
-          matchIndex = 135;
-          break;
-        } 
-      case -1206794099:
-        if (blockName.equals("getLocationX")) {
-          matchIndex = 134;
-          break;
-        } 
-      case -1217704075:
-        if (blockName.equals("objectanimatorSetValue")) {
-          matchIndex = 226;
-          break;
-        } 
-      case -1271141237:
-        if (blockName.equals("clearList")) {
-          matchIndex = 21;
-          break;
-        } 
-      case -1272546178:
-        if (blockName.equals("dialogSetTitle")) {
-          matchIndex = 202;
-          break;
-        } 
-      case -1304067438:
-        if (blockName.equals("firebaseDelete")) {
-          matchIndex = 238;
-          break;
-        } 
-      case -1348084945:
-        if (blockName.equals("mapViewZoomTo")) {
-          matchIndex = 171;
-          break;
-        } 
-      case -1348085287:
-        if (blockName.equals("mapViewZoomIn")) {
-          matchIndex = 172;
-          break;
-        } 
-      case -1361468284:
-        if (blockName.equals("viewOnClick")) {
-          matchIndex = 101;
-          break;
-        } 
-      case -1376608975:
-        if (blockName.equals("calendarSetTime")) {
-          matchIndex = 197;
-          break;
-        } 
-      case -1377080719:
-        if (blockName.equals("decreaseInt")) {
-          matchIndex = 3;
-          break;
-        } 
-      case -1384851894:
-        if (blockName.equals("getAtListStr")) {
-          matchIndex = 24;
-          break;
-        } 
-      case -1384858251:
-        if (blockName.equals("getAtListMap")) {
-          matchIndex = 29;
-          break;
-        } 
-      case -1384861688:
-        if (blockName.equals("getAtListInt")) {
-          matchIndex = 17;
-          break;
-        } 
-      case -1385076635:
-        if (blockName.equals("dialogShow")) {
-          matchIndex = 207;
-          break;
-        } 
-      case -1405157727:
-        if (blockName.equals("fileutilmakedir")) {
-          matchIndex = 269;
-          break;
-        } 
-      case -1422112391:
-        if (blockName.equals("bluetoothConnectIsBluetoothEnabled")) {
-          matchIndex = 315;
-          break;
-        } 
-      case -1438040951:
-        if (blockName.equals("seekBarGetMax")) {
-          matchIndex = 280;
-          break;
-        } 
-      case -1440042085:
-        if (blockName.equals("spnSetSelection")) {
-          matchIndex = 150;
-          break;
-        } 
-      case -1462744030:
-        if (blockName.equals("dialogDismiss")) {
-          matchIndex = 208;
-          break;
-        } 
-      case -1471049951:
-        if (blockName.equals("fileutilwrite")) {
-          matchIndex = 265;
-          break;
-        } 
-      case -1477942289:
-        if (blockName.equals("mediaplayerIsLooping")) {
-          matchIndex = 217;
-          break;
-        } 
-      case -1483954587:
-        if (blockName.equals("fileutilisdir")) {
-          matchIndex = 271;
-          break;
-        } 
-      case -1513446476:
-        if (blockName.equals("dialogCancelButton")) {
-          matchIndex = 205;
-          break;
-        } 
-      case -1526161572:
-        if (blockName.equals("setBgColor")) {
-          matchIndex = 112;
-          break;
-        } 
-      case -1528850031:
-        if (blockName.equals("startActivity")) {
-          matchIndex = 185;
-          break;
-        } 
-      case -1530840255:
-        if (blockName.equals("stringIndex")) {
-          matchIndex = 57;
-          break;
-        } 
-      case -1541653284:
-        if (blockName.equals("objectanimatorStart")) {
-          matchIndex = 232;
-          break;
-        } 
-      case -1573371685:
-        if (blockName.equals("stringJoin")) {
-          matchIndex = 56;
-          break;
-        } 
-      case -1666623936:
-        if (blockName.equals("speechToTextShutdown")) {
-          matchIndex = 308;
-          break;
-        } 
-      case -1679834825:
-        if (blockName.equals("setTrackResource")) {
-          matchIndex = 139;
-          break;
-        } 
-      case -1684072208:
-        if (blockName.equals("intentSetData")) {
-          matchIndex = 181;
-          break;
-        } 
-      case -1699349926:
-        if (blockName.equals("objectanimatorSetRepeatMode")) {
-          matchIndex = 229;
-          break;
-        } 
-      case -1699631195:
-        if (blockName.equals("isDrawerOpen")) {
-          matchIndex = 102;
-          break;
-        } 
-      case -1718917155:
-        if (blockName.equals("mediaplayerSeek")) {
-          matchIndex = 212;
-          break;
-        } 
-      case -1746380899:
-        if (blockName.equals("mediaplayerStart")) {
-          matchIndex = 210;
-          break;
-        } 
-      case -1747734390:
-        if (blockName.equals("mediaplayerReset")) {
-          matchIndex = 218;
-          break;
-        } 
-      case -1749698255:
-        if (blockName.equals("mediaplayerPause")) {
-          matchIndex = 211;
-          break;
-        } 
-      case -1776922004:
-        if (blockName.equals("toString")) {
-          matchIndex = 69;
-          break;
-        } 
-      case -1778201036:
-        if (blockName.equals("listSmoothScrollTo")) {
-          matchIndex = 147;
-          break;
-        } 
-      case -1812313351:
-        if (blockName.equals("setColorFilter")) {
-          matchIndex = 119;
-          break;
-        } 
-      case -1834369666:
-        if (blockName.equals("setBitmapFileBrightness")) {
-          matchIndex = 296;
-          break;
-        } 
-      case -1886802639:
-        if (blockName.equals("soundpoolLoad")) {
-          matchIndex = 221;
-          break;
-        } 
-      case -1910071024:
-        if (blockName.equals("objectanimatorSetDuration")) {
-          matchIndex = 228;
-          break;
-        } 
-      case -1919300188:
-        if (blockName.equals("toNumber")) {
-          matchIndex = 65;
-          break;
-        } 
-      case -1920517885:
-        if (blockName.equals("setVarBoolean")) {
-          matchIndex = 0;
-          break;
-        } 
-      case -1922362317:
-        if (blockName.equals("getExternalStorageDir")) {
-          matchIndex = 284;
-          break;
-        } 
-      case -1937348542:
-        if (blockName.equals("firebaseStartListen")) {
-          matchIndex = 248;
-          break;
-        } 
-      case -1966668787:
-        if (blockName.equals("firebaseauthSignOutUser")) {
-          matchIndex = 247;
-          break;
-        } 
-      case -1975568730:
-        if (blockName.equals("copyToClipboard")) {
-          matchIndex = 278;
-          break;
-        } 
-      case -1979147952:
-        if (blockName.equals("stringContains")) {
-          matchIndex = 61;
-          break;
-        } 
-      case -1989678633:
-        if (blockName.equals("mapViewSetMarkerVisible")) {
-          matchIndex = 179;
-          break;
-        } 
-      case -1998407506:
-        if (blockName.equals("listSetData")) {
-          matchIndex = 140;
-          break;
-        } 
-      case -2020761366:
-        if (blockName.equals("fileRemoveData")) {
-          matchIndex = 190;
-          break;
-        } 
-      case -2027093331:
-        if (blockName.equals("calendarViewSetDate")) {
-          matchIndex = 165;
-          break;
-        } 
-      case -2037144358:
-        if (blockName.equals("bluetoothConnectStartConnectionToUuid")) {
-          matchIndex = 312;
-          break;
-        } 
-      case -2055793167:
-        if (blockName.equals("fileutillistdir")) {
-          matchIndex = 270;
-          break;
-        } 
-      case -2114384168:
-        if (blockName.equals("firebasestorageDownloadFile")) {
-          matchIndex = 256;
-          break;
-        } 
-      case -2120571577:
-        if (blockName.equals("mapIsEmpty")) {
-          matchIndex = 12;
-          break;
-        } 
-      case -2135695280:
-        if (blockName.equals("webViewLoadUrl")) {
-          matchIndex = 152;
-          break;
-        } 
-    } 
-    blockName = defaultValue;
-    switch (matchIndex) {
-      default:
-        blockName = "";
-        break;
-      case 321:
-        blockName = "locationmanager_remove_updates";
-        break;
-      case 320:
-        blockName = "locationmanager_request_location_updates";
-        break;
-      case 319:
-        blockName = "bluetoothconnect_get_random_uuid";
-        break;
-      case 318:
-        blockName = "bluetoothconnect_get_paired_devices";
-        break;
-      case 317:
-        blockName = "bluetoothconnect_activate_bluetooth";
-        break;
-      case 316:
-        blockName = "bluetoothconnect_is_bluetooth_activated";
-        break;
-      case 315:
-        blockName = "bluetoothconnect_is_bluetooth_enabled";
-        break;
-      case 314:
-        blockName = "bluetoothconnect_send_data";
-        break;
-      case 313:
-        blockName = "bluetoothconnect_stop_connection";
-        break;
-      case 312:
-        blockName = "bluetoothconnect_start_connection_to_uuid";
-        break;
-      case 311:
-        blockName = "bluetoothconnect_start_connection";
-        break;
-      case 310:
-        blockName = "bluetoothconnect_ready_connection_to_uuid";
-        break;
-      case 309:
-        blockName = "bluetoothconnect_ready_connection";
-        break;
-      case 308:
-        blockName = "speechtotext_shutdown";
-        break;
-      case 307:
-        blockName = "speechtotext_stop_listening";
-        break;
-      case 306:
-        blockName = "speechtotext_start_listening";
-        break;
-      case 305:
-        blockName = "texttospeech_shutdown";
-        break;
-      case 304:
-        blockName = "texttospeech_stop";
-        break;
-      case 303:
-        blockName = "texttospeech_is_speaking";
-        break;
-      case 302:
-        blockName = "texttospeech_speak";
-        break;
-      case 301:
-        blockName = "texttospeech_set_speech_rate";
-        break;
-      case 300:
-        blockName = "texttospeech_set_pitch";
-        break;
-      case 299:
-        blockName = "progressbar_set_indeterminate";
-        break;
-      case 298:
-        blockName = "get_jpeg_rotate";
-        break;
-      case 297:
-        blockName = "set_bitmap_contrast";
-        break;
-      case 296:
-        blockName = "set_bitmap_brightness";
-        break;
-      case 295:
-        blockName = "set_bitmap_color_filter";
-        break;
-      case 294:
-        blockName = "skew_bitmap";
-        break;
-      case 293:
-        blockName = "scale_bitmap";
-        break;
-      case 292:
-        blockName = "rotate_bitmap";
-        break;
-      case 291:
-        blockName = "crop_bitmap_center";
-        break;
-      case 290:
-        blockName = "resize_bitmap_rounded";
-        break;
-      case 289:
-        blockName = "resize_bitmap_circle";
-        break;
-      case 288:
-        blockName = "resize_bitmap_square";
-        break;
-      case 287:
-        blockName = "resize_bitmap_ratio";
-        break;
-      case 286:
-        blockName = "get_public_dir";
-        break;
-      case 285:
-        blockName = "get_package_data_dir";
-        break;
-      case 284:
-        blockName = "get_external_storage_dir";
-        break;
-      case 283:
-        blockName = "seekbar_set_progress";
-        break;
-      case 282:
-        blockName = "seekbar_set_max";
-        break;
-      case 281:
-        blockName = "seekbar_get_progress";
-        break;
-      case 280:
-        blockName = "seekbar_get_max";
-        break;
-      case 279:
-        blockName = "set_title";
-        break;
-      case 278:
-        blockName = "copy_to_clipboard";
-        break;
-      case 277:
-        blockName = "do_toast";
-        break;
-      case 276:
-        blockName = "fileutil_get_last_segment_path";
-        break;
-      case 275:
-        blockName = "fileutil_ends_with";
-        break;
-      case 274:
-        blockName = "fileutil_starts_with";
-        break;
-      case 273:
-        blockName = "fileutil_length";
-        break;
-      case 272:
-        blockName = "fileutil_is_file";
-        break;
-      case 271:
-        blockName = "fileutil_is_dir";
-        break;
-      case 270:
-        blockName = "fileutil_list_dir";
-        break;
-      case 269:
-        blockName = "fileutil_make_dir";
-        break;
-      case 268:
-        blockName = "fileutil_is_exist";
-        break;
-      case 267:
-        blockName = "fileutil_move";
-        break;
-      case 266:
-        blockName = "fileutil_read";
-        break;
-      case 265:
-        blockName = "fileutil_write";
-        break;
-      case 264:
-        blockName = "fileutil_copy";
-        break;
-      case 263:
-        blockName = "fileutil_delete";
-        break;
-      case 262:
-        blockName = "requestnetwork_start_request_network";
-        break;
-      case 261:
-        blockName = "requestnetwork_set_headers";
-        break;
-      case 260:
-        blockName = "requestnetwork_set_params";
-        break;
-      case 259:
-        blockName = "file_picker_start_pick_files";
-        break;
-      case 258:
-        blockName = "camera_start_take_picture";
-        break;
-      case 257:
-        blockName = "firebasestorage_delete";
-        break;
-      case 256:
-        blockName = "firebasestorage_download_file";
-        break;
-      case 255:
-        blockName = "firebasestorage_upload_file";
-        break;
-      case 254:
-        blockName = "interstitialad_show";
-        break;
-      case 253:
-        blockName = "interstitialad_load_ad";
-        break;
-      case 252:
-        blockName = "interstitialad_create";
-        break;
-      case 251:
-        blockName = "gyroscope_stop_listen";
-        break;
-      case 250:
-        blockName = "gyroscope_start_listen";
-        break;
-      case 249:
-        blockName = "firebase_stop_listen";
-        break;
-      case 248:
-        blockName = "firebase_start_listen";
-        break;
-      case 247:
-        blockName = "firebaseauth_signout";
-        break;
-      case 246:
-        blockName = "firebaseauth_get_uid";
-        break;
-      case 245:
-        blockName = "firebaseauth_get_email";
-        break;
-      case 244:
-        blockName = "firebaseauth_is_logged_in";
-        break;
-      case 243:
-        blockName = "firebaseauth_reset_password";
-        break;
-      case 242:
-        blockName = "firebaseauth_signin_anonymously";
-        break;
-      case 241:
-        blockName = "firebaseauth_signin_user";
-        break;
-      case 240:
-        blockName = "firebaseauth_create_user";
-        break;
-      case 239:
-        blockName = "firebase_get_children";
-        break;
-      case 238:
-        blockName = "firebase_delete";
-        break;
-      case 237:
-        blockName = "firebase_get_key";
-        break;
-      case 236:
-        blockName = "firebase_push";
-        break;
-      case 235:
-        blockName = "firebase_add";
-        break;
-      case 234:
-        blockName = "objectanimator_is_running";
-        break;
-      case 233:
-        blockName = "objectanimator_cancel";
-        break;
-      case 232:
-        blockName = "objectanimator_start";
-        break;
-      case 231:
-        blockName = "objectanimator_set_interpolator";
-        break;
-      case 230:
-        blockName = "objectanimator_set_repeat_count";
-        break;
-      case 229:
-        blockName = "objectanimator_set_repeat_mode";
-        break;
-      case 228:
-        blockName = "objectanimator_set_duration";
-        break;
-      case 227:
-        blockName = "objectanimator_set_from_to";
-        break;
-      case 226:
-        blockName = "objectanimator_set_value";
-        break;
-      case 225:
-        blockName = "objectanimator_set_property";
-        break;
-      case 224:
-        blockName = "objectanimator_set_target";
-        break;
-      case 223:
-        blockName = "soundpool_stream_stop";
-        break;
-      case 222:
-        blockName = "soundpool_stream_play";
-        break;
-      case 221:
-        blockName = "soundpool_load";
-        break;
-      case 220:
-        blockName = "soundpool_create";
-        break;
-      case 219:
-        blockName = "mediaplayer_release";
-        break;
-      case 218:
-        blockName = "mediaplayer_reset";
-        break;
-      case 217:
-        blockName = "mediaplayer_is_looping";
-        break;
-      case 216:
-        blockName = "mediaplayer_set_looping";
-        break;
-      case 215:
-        blockName = "mediaplayer_is_playing";
-        break;
-      case 214:
-        blockName = "mediaplayer_get_duration";
-        break;
-      case 213:
-        blockName = "mediaplayer_get_current";
-        break;
-      case 212:
-        blockName = "mediaplayer_seek";
-        break;
-      case 211:
-        blockName = "mediaplayer_pause";
-        break;
-      case 210:
-        blockName = "mediaplayer_start";
-        break;
-      case 209:
-        blockName = "mediaplayer_create";
-        break;
-      case 208:
-        blockName = "dialog_dismiss";
-        break;
-      case 207:
-        blockName = "dialog_show";
-        break;
-      case 206:
-        blockName = "dialog_neutral_button";
-        break;
-      case 205:
-        blockName = "dialog_cancel_button";
-        break;
-      case 204:
-        blockName = "dialog_ok_button";
-        break;
-      case 203:
-        blockName = "dialog_set_message";
-        break;
-      case 202:
-        blockName = "dialog_set_title";
-        break;
-      case 201:
-        blockName = "timer_cancel";
-        break;
-      case 200:
-        blockName = "timer_every";
-        break;
-      case 199:
-        blockName = "timer_after";
-        break;
-      case 198:
-        blockName = "vibrator_action";
-        break;
-      case 197:
-        blockName = "calendar_set_time";
-        break;
-      case 196:
-        blockName = "calendar_get_time";
-        break;
-      case 195:
-        blockName = "calendar_diff";
-        break;
-      case 194:
-        blockName = "calendar_format";
-        break;
-      case 193:
-        blockName = "calendar_set";
-        break;
-      case 192:
-        blockName = "calendar_add";
-        break;
-      case 191:
-        blockName = "calendar_get_now";
-        break;
-      case 190:
-        blockName = "file_remove_data";
-        break;
-      case 189:
-        blockName = "file_set_data";
-        break;
-      case 188:
-        blockName = "file_get_data";
-        break;
-      case 187:
-        blockName = "finish_activity";
-        break;
-      case 186:
-        blockName = "intent_get_string";
-        break;
-      case 185:
-        blockName = "start_activity";
-        break;
-      case 184:
-        blockName = "intent_set_flags";
-        break;
-      case 183:
-        blockName = "intent_put_extra";
-        break;
-      case 182:
-        blockName = "intent_set_screen";
-        break;
-      case 181:
-        blockName = "intent_set_data";
-        break;
-      case 180:
-        blockName = "intent_set_action";
-        break;
-      case 179:
-        blockName = "mapview_set_marker_visible";
-        break;
-      case 178:
-        blockName = "mapview_set_marker_icon";
-        break;
-      case 177:
-        blockName = "mapview_set_marker_color";
-        break;
-      case 176:
-        blockName = "mapview_set_marker_position";
-        break;
-      case 175:
-        blockName = "mapview_set_marker_info";
-        break;
-      case 174:
-        blockName = "mapview_add_marker";
-        break;
-      case 173:
-        blockName = "mapview_zoom_out";
-        break;
-      case 172:
-        blockName = "mapview_zoom_in";
-        break;
-      case 171:
-        blockName = "mapview_zoom_to";
-        break;
-      case 170:
-        blockName = "mapview_move_camera";
-        break;
-      case 169:
-        blockName = "mapview_set_map_type";
-        break;
-      case 168:
-        blockName = "adview_load_ad";
-        break;
-      case 167:
-        blockName = "calendarview_set_max_date";
-        break;
-      case 166:
-        blockName = "calendarview_set_min_date";
-        break;
-      case 165:
-        blockName = "calendarview_set_date";
-        break;
-      case 164:
-        blockName = "calendarview_get_date";
-        break;
-      case 163:
-        blockName = "webview_zoom_out";
-        break;
-      case 162:
-        blockName = "webview_zoom_in";
-        break;
-      case 161:
-        blockName = "webview_stop_loading";
-        break;
-      case 160:
-        blockName = "webview_clear_history";
-        break;
-      case 159:
-        blockName = "webview_clear_cache";
-        break;
-      case 158:
-        blockName = "webview_go_forward";
-        break;
-      case 157:
-        blockName = "webview_go_back";
-        break;
-      case 156:
-        blockName = "webview_can_go_forward";
-        break;
-      case 155:
-        blockName = "webview_can_go_back";
-        break;
-      case 154:
-        blockName = "webview_set_cache_mode";
-        break;
-      case 153:
-        blockName = "webview_get_url";
-        break;
-      case 152:
-        blockName = "webview_load_url";
-        break;
-      case 151:
-        blockName = "spn_get_selection";
-        break;
-      case 150:
-        blockName = "spn_set_selection";
-        break;
-      case 149:
-        blockName = "spn_refresh";
-        break;
-      case 148:
-        blockName = "spn_set_data";
-        break;
-      case 147:
-        blockName = "list_smooth_scrollto";
-        break;
-      case 146:
-        blockName = "list_get_checked_count";
-        break;
-      case 145:
-        blockName = "list_get_checked_positions";
-        break;
-      case 144:
-        blockName = "list_get_checked_position";
-        break;
-      case 143:
-        blockName = "list_set_item_checked";
-        break;
-      case 142:
-        blockName = "list_refresh";
-        break;
-      case 141:
-        blockName = "list_set_custom_view_data";
-        break;
-      case 140:
-        blockName = "list_set_data";
-        break;
-      case 139:
-        blockName = "set_track_resource";
-        break;
-      case 138:
-        blockName = "set_thumb_resource";
-        break;
-      case 137:
-        blockName = "get_checked";
-        break;
-      case 136:
-        blockName = "set_checked";
-        break;
-      case 135:
-        blockName = "get_location_y";
-        break;
-      case 134:
-        blockName = "get_location_x";
-        break;
-      case 133:
-        blockName = "get_scale_y";
-        break;
-      case 132:
-        blockName = "set_scale_y";
-        break;
-      case 131:
-        blockName = "get_scale_x";
-        break;
-      case 130:
-        blockName = "set_scale_x";
-        break;
-      case 129:
-        blockName = "get_translation_y";
-        break;
-      case 128:
-        blockName = "set_translation_y";
-        break;
-      case 127:
-        blockName = "get_translation_x";
-        break;
-      case 126:
-        blockName = "set_translation_x";
-        break;
-      case 125:
-        blockName = "get_alpha";
-        break;
-      case 124:
-        blockName = "set_alpha";
-        break;
-      case 123:
-        blockName = "get_rotate";
-        break;
-      case 122:
-        blockName = "set_rotate";
-        break;
-      case 121:
-        blockName = "set_image_url";
-        break;
-      case 120:
-        blockName = "set_image_file_path";
-        break;
-      case 119:
-        blockName = "set_color_filter";
-        break;
-      case 118:
-        blockName = "set_image";
-        break;
-      case 117:
-        blockName = "request_focus";
-        break;
-      case 116:
-        blockName = "set_hint_text_color";
-        break;
-      case 115:
-        blockName = "set_hint";
-        break;
-      case 114:
-        blockName = "set_text_color";
-        break;
-      case 113:
-        blockName = "set_bg_resource";
-        break;
-      case 112:
-        blockName = "set_bg_color";
-        break;
-      case 111:
-        blockName = "get_text";
-        break;
-      case 110:
-        blockName = "set_typeface";
-        break;
-      case 109:
-        blockName = "set_text";
-        break;
-      case 108:
-        blockName = "set_clickable";
-        break;
-      case 107:
-        blockName = "set_visible";
-        break;
-      case 106:
-        blockName = "get_enable";
-        break;
-      case 105:
-        blockName = "set_enable";
-        break;
-      case 104:
-        blockName = "close_drawer";
-        break;
-      case 103:
-        blockName = "open_drawer";
-        break;
-      case 102:
-        blockName = "is_drawer_open";
-        break;
-      case 101:
-        blockName = "view_on_click";
-        break;
-      case 100:
-        blockName = "math_to_degree";
-        break;
-      case 99:
-        blockName = "math_to_radian";
-        break;
-      case 98:
-        blockName = "math_log10";
-        break;
-      case 97:
-        blockName = "math_log";
-        break;
-      case 96:
-        blockName = "math_exp";
-        break;
-      case 95:
-        blockName = "math_atan";
-        break;
-      case 94:
-        blockName = "math_acos";
-        break;
-      case 93:
-        blockName = "math_asin";
-        break;
-      case 92:
-        blockName = "math_tan";
-        break;
-      case 91:
-        blockName = "math_cos";
-        break;
-      case 90:
-        blockName = "math_sin";
-        break;
-      case 89:
-        blockName = "math_floor";
-        break;
-      case 88:
-        blockName = "math_ceil";
-        break;
-      case 87:
-        blockName = "math_round";
-        break;
-      case 86:
-        blockName = "math_abs";
-        break;
-      case 85:
-        blockName = "math_sqrt";
-        break;
-      case 84:
-        blockName = "math_max";
-        break;
-      case 83:
-        blockName = "math_min";
-        break;
-      case 82:
-        blockName = "math_pow";
-        break;
-      case 81:
-        blockName = "math_e";
-        break;
-      case 80:
-        blockName = "math_pi";
-        break;
-      case 79:
-        blockName = "math_get_display_height";
-        break;
-      case 78:
-        blockName = "math_get_display_width";
-        break;
-      case 77:
-        blockName = "math_get_dip";
-        break;
-      case 76:
-        blockName = "list_map_to_str";
-        break;
-      case 75:
-        blockName = "str_to_list_map";
-        break;
-      case 74:
-        blockName = "map_to_str";
-        break;
-      case 73:
-        blockName = "str_to_map";
-        break;
-      case 72:
-        blockName = "add_source_directly";
-        break;
-      case 71:
-        blockName = "to_string_format";
-        break;
-      case 70:
-        blockName = "to_string_with_decimal";
-        break;
-      case 69:
-        blockName = "to_string";
-        break;
-      case 68:
-        blockName = "to_lower_case";
-        break;
-      case 67:
-        blockName = "to_upper_case";
-        break;
-      case 66:
-        blockName = "trim";
-        break;
-      case 65:
-        blockName = "to_number";
-        break;
-      case 64:
-        blockName = "string_replace_all";
-        break;
-      case 63:
-        blockName = "string_replace_first";
-        break;
-      case 62:
-        blockName = "string_replace";
-        break;
-      case 61:
-        blockName = "string_contains";
-        break;
-      case 60:
-        blockName = "string_equals";
-        break;
-      case 59:
-        blockName = "string_sub";
-        break;
-      case 58:
-        blockName = "string_last_index";
-        break;
-      case 57:
-        blockName = "string_index";
-        break;
-      case 56:
-        blockName = "string_join";
-        break;
-      case 55:
-        blockName = "string_length";
-        break;
-      case 54:
-        blockName = "random";
-        break;
-      case 53:
-        blockName = "rest";
-        break;
-      case 52:
-        blockName = "divide";
-        break;
-      case 51:
-        blockName = "times";
-        break;
-      case 50:
-        blockName = "minus";
-        break;
-      case 49:
-        blockName = "plus";
-        break;
-      case 48:
-        blockName = "not";
-        break;
-      case 47:
-        blockName = "or";
-        break;
-      case 46:
-        blockName = "and";
-        break;
-      case 45:
-        blockName = "bigger";
-        break;
-      case 44:
-        blockName = "equal";
-        break;
-      case 43:
-        blockName = "smaller";
-        break;
-      case 41:
-        blockName = "true";
-        break;
-      case 40:
-        blockName = "else";
-        break;
-      case 39:
-        blockName = "if_else";
-        break;
-      case 38:
-        blockName = "if";
-        break;
-      case 37:
-        blockName = "break";
-        break;
-      case 36:
-        blockName = "forever";
-        break;
-      case 35:
-        blockName = "repeat";
-        break;
-      case 34:
-        blockName = "get_map_in_list";
-        break;
-      case 33:
-        blockName = "insert_map_to_list";
-        break;
-      case 32:
-        blockName = "add_map_to_list";
-        break;
-      case 31:
-        blockName = "contain_list_map";
-        break;
-      case 30:
-        blockName = "set_at_list_map";
-        break;
-      case 29:
-        blockName = "get_at_list_map";
-        break;
-      case 28:
-        blockName = "insert_list_map";
-        break;
-      case 27:
-        blockName = "add_list_map";
-        break;
-      case 26:
-        blockName = "contain_list_str";
-        break;
-      case 25:
-        blockName = "indexof_list_str";
-        break;
-      case 24:
-        blockName = "get_at_list_str";
-        break;
-      case 23:
-        blockName = "insert_list_str";
-        break;
-      case 22:
-        blockName = "add_list_str";
-        break;
-      case 21:
-        blockName = "clear_list";
-        break;
-      case 20:
-        blockName = "contain_list_int";
-        break;
-      case 19:
-        blockName = "length_list";
-        break;
-      case 18:
-        blockName = "indexof_list_int";
-        break;
-      case 17:
-        blockName = "get_at_list_int";
-        break;
-      case 16:
-        blockName = "delete_list";
-        break;
-      case 15:
-        blockName = "insert_list_int";
-        break;
-      case 14:
-        blockName = "add_list_int";
-        break;
-      case 13:
-        blockName = "map_get_all_keys";
-        break;
-      case 12:
-        blockName = "map_is_empty";
-        break;
-      case 11:
-        blockName = "map_clear";
-        break;
-      case 10:
-        blockName = "map_size";
-        break;
-      case 9:
-        blockName = "map_remove_key";
-        break;
-      case 8:
-        blockName = "map_contain_key";
-        break;
-      case 7:
-        blockName = "map_get";
-        break;
-      case 6:
-        blockName = "map_put";
-        break;
-      case 5:
-        blockName = "map_create_new";
-        break;
-      case 4:
-        blockName = "set_var_str";
-        break;
-      case 3:
-        blockName = "decrease_int";
-        break;
-      case 2:
-        blockName = "increase_int";
-        break;
-      case 1:
-        blockName = "set_var_int";
-        break;
-      case 0:
-        blockName = "set_var_bool";
-        break;
-      case 42:
-        break;
-    } 
-    cacheD.put(originalKey, blockName);
-    return blockName;
-  }
+    // ===== Block Parameters: opCode -> parameter types =====
+    private static final Map<String, String[]> BLOCK_PARAMS = new HashMap<>();
+    // ===== Block Specs: opCode -> spec key (for StringResource lookup) =====
+    private static final Map<String, String> BLOCK_SPECS = new HashMap<>();
+    // ===== Event Menu Items: eventName -> menu parameter types =====
+    private static final Map<String, String[]> EVENT_MENUS = new HashMap<>();
+    // ===== Event Specs: eventName -> spec key (for StringResource lookup) =====
+    private static final Map<String, String> EVENT_SPECS = new HashMap<>();
+
+    static {
+        initBlockParams();
+        initBlockSpecs();
+        initEventMenus();
+        initEventSpecs();
+    }
+
+    private static void initBlockParams() {
+        BLOCK_PARAMS.put("-", new String[]{"%d", "%d"});
+        BLOCK_PARAMS.put("%", new String[]{"%d", "%d"});
+        BLOCK_PARAMS.put("&&", new String[]{"%b", "%b"});
+        BLOCK_PARAMS.put("*", new String[]{"%d", "%d"});
+        BLOCK_PARAMS.put("/", new String[]{"%d", "%d"});
+        BLOCK_PARAMS.put("||", new String[]{"%b", "%b"});
+        BLOCK_PARAMS.put("+", new String[]{"%d", "%d"});
+        BLOCK_PARAMS.put("<", new String[]{"%d", "%d"});
+        BLOCK_PARAMS.put("=", new String[]{"%d", "%d"});
+        BLOCK_PARAMS.put(">", new String[]{"%d", "%d"});
+        BLOCK_PARAMS.put("addListInt", new String[]{"%d", "%m.listInt"});
+        BLOCK_PARAMS.put("addListMap", new String[]{"%s", "%s", "%m.listMap"});
+        BLOCK_PARAMS.put("addListStr", new String[]{"%s", "%m.listStr"});
+        BLOCK_PARAMS.put("addMapToList", new String[]{"%m.varMap", "%m.listMap"});
+        BLOCK_PARAMS.put("addSourceDirectly", new String[]{"%s.inputOnly"});
+        BLOCK_PARAMS.put("adViewLoadAd", new String[]{"%m.adview"});
+        BLOCK_PARAMS.put("bluetoothConnectActivateBluetooth", new String[]{"%m.bluetoothconnect"});
+        BLOCK_PARAMS.put("bluetoothConnectGetPairedDevices", new String[]{"%m.bluetoothconnect", "%m.listMap"});
+        BLOCK_PARAMS.put("bluetoothConnectGetRandomUuid", new String[]{"%m.bluetoothconnect"});
+        BLOCK_PARAMS.put("bluetoothConnectIsBluetoothActivated", new String[]{"%m.bluetoothconnect"});
+        BLOCK_PARAMS.put("bluetoothConnectIsBluetoothEnabled", new String[]{"%m.bluetoothconnect"});
+        BLOCK_PARAMS.put("bluetoothConnectReadyConnection", new String[]{"%m.bluetoothconnect", "%s"});
+        BLOCK_PARAMS.put("bluetoothConnectReadyConnectionToUuid", new String[]{"%m.bluetoothconnect", "%s", "%s"});
+        BLOCK_PARAMS.put("bluetoothConnectSendData", new String[]{"%m.bluetoothconnect", "%s", "%s"});
+        BLOCK_PARAMS.put("bluetoothConnectStartConnection", new String[]{"%m.bluetoothconnect", "%s", "%s"});
+        BLOCK_PARAMS.put("bluetoothConnectStartConnectionToUuid", new String[]{"%m.bluetoothconnect", "%s", "%s", "%s"});
+        BLOCK_PARAMS.put("bluetoothConnectStopConnection", new String[]{"%m.bluetoothconnect", "%s"});
+        BLOCK_PARAMS.put("break", new String[]{});
+        BLOCK_PARAMS.put("calendarAdd", new String[]{"%m.calendar", "%m.calendarField", "%d"});
+        BLOCK_PARAMS.put("calendarDiff", new String[]{"%m.calendar", "%m.calendar"});
+        BLOCK_PARAMS.put("calendarFormat", new String[]{"%m.calendar", "%s"});
+        BLOCK_PARAMS.put("calendarGetNow", new String[]{"%m.calendar"});
+        BLOCK_PARAMS.put("calendarGetTime", new String[]{"%m.calendar"});
+        BLOCK_PARAMS.put("calendarSet", new String[]{"%m.calendar", "%m.calendarField", "%d"});
+        BLOCK_PARAMS.put("calendarSetTime", new String[]{"%m.calendar", "%d"});
+        BLOCK_PARAMS.put("calendarViewGetDate", new String[]{"%m.calendarview"});
+        BLOCK_PARAMS.put("calendarViewSetDate", new String[]{"%m.calendarview", "%d"});
+        BLOCK_PARAMS.put("calendarViewSetMinDate", new String[]{"%m.calendarview", "%d"});
+        BLOCK_PARAMS.put("calnedarViewSetMaxDate", new String[]{"%m.calendarview", "%d"});
+        BLOCK_PARAMS.put("camerastarttakepicture", new String[]{"%m.camera"});
+        BLOCK_PARAMS.put("clearList", new String[]{"%m.list"});
+        BLOCK_PARAMS.put("closeDrawer", new String[]{});
+        BLOCK_PARAMS.put("containListInt", new String[]{"%m.listInt", "%d"});
+        BLOCK_PARAMS.put("containListMap", new String[]{"%m.listMap", "%d", "%s"});
+        BLOCK_PARAMS.put("containListStr", new String[]{"%m.listStr", "%s"});
+        BLOCK_PARAMS.put("copyToClipboard", new String[]{"%s"});
+        BLOCK_PARAMS.put("cropBitmapFileFromCenter", new String[]{"%s", "%s", "%d", "%d"});
+        BLOCK_PARAMS.put("decreaseInt", new String[]{"%m.varInt"});
+        BLOCK_PARAMS.put("deleteList", new String[]{"%d", "%m.list"});
+        BLOCK_PARAMS.put("dialogCancelButton", new String[]{"%m.dialog", "%s"});
+        BLOCK_PARAMS.put("dialogDismiss", new String[]{"%m.dialog"});
+        BLOCK_PARAMS.put("dialogNeutralButton", new String[]{"%m.dialog", "%s"});
+        BLOCK_PARAMS.put("dialogOkButton", new String[]{"%m.dialog", "%s"});
+        BLOCK_PARAMS.put("dialogSetMessage", new String[]{"%m.dialog", "%s"});
+        BLOCK_PARAMS.put("dialogSetTitle", new String[]{"%m.dialog", "%s"});
+        BLOCK_PARAMS.put("dialogShow", new String[]{"%m.dialog"});
+        BLOCK_PARAMS.put("doToast", new String[]{"%s"});
+        BLOCK_PARAMS.put("else", new String[]{});
+        BLOCK_PARAMS.put("false", new String[]{});
+        BLOCK_PARAMS.put("fileGetData", new String[]{"%m.file", "%s"});
+        BLOCK_PARAMS.put("filepickerstartpickfiles", new String[]{"%m.filepicker"});
+        BLOCK_PARAMS.put("fileRemoveData", new String[]{"%m.file", "%s"});
+        BLOCK_PARAMS.put("fileSetData", new String[]{"%m.file", "%s", "%s"});
+        BLOCK_PARAMS.put("fileutilcopy", new String[]{"%s", "%s"});
+        BLOCK_PARAMS.put("fileutildelete", new String[]{"%s"});
+        BLOCK_PARAMS.put("fileutilEndsWith", new String[]{"%s", "%s"});
+        BLOCK_PARAMS.put("fileutilGetLastSegmentPath", new String[]{"%s"});
+        BLOCK_PARAMS.put("fileutilisdir", new String[]{"%s"});
+        BLOCK_PARAMS.put("fileutilisexist", new String[]{"%s"});
+        BLOCK_PARAMS.put("fileutilisfile", new String[]{"%s"});
+        BLOCK_PARAMS.put("fileutillength", new String[]{"%s"});
+        BLOCK_PARAMS.put("fileutillistdir", new String[]{"%s", "%m.listStr"});
+        BLOCK_PARAMS.put("fileutilmakedir", new String[]{"%s"});
+        BLOCK_PARAMS.put("fileutilmove", new String[]{"%s", "%s"});
+        BLOCK_PARAMS.put("fileutilread", new String[]{"%s"});
+        BLOCK_PARAMS.put("fileutilStartsWith", new String[]{"%s", "%s"});
+        BLOCK_PARAMS.put("fileutilwrite", new String[]{"%s", "%s"});
+        BLOCK_PARAMS.put("finishActivity", new String[]{});
+        BLOCK_PARAMS.put("firebaseAdd", new String[]{"%m.firebase", "%s", "%m.varMap"});
+        BLOCK_PARAMS.put("firebaseauthCreateUser", new String[]{"%m.firebaseauth", "%s", "%s"});
+        BLOCK_PARAMS.put("firebaseauthResetPassword", new String[]{"%m.firebaseauth", "%s"});
+        BLOCK_PARAMS.put("firebaseauthSignInAnonymously", new String[]{"%m.firebaseauth"});
+        BLOCK_PARAMS.put("firebaseauthSignInUser", new String[]{"%m.firebaseauth", "%s", "%s"});
+        BLOCK_PARAMS.put("firebaseauthGetCurrentUser", new String[]{});
+        BLOCK_PARAMS.put("firebaseauthGetUid", new String[]{});
+        BLOCK_PARAMS.put("firebaseauthIsLoggedIn", new String[]{});
+        BLOCK_PARAMS.put("firebaseauthSignOutUser", new String[]{});
+        BLOCK_PARAMS.put("firebaseDelete", new String[]{"%m.firebase", "%s"});
+        BLOCK_PARAMS.put("firebaseGetChildren", new String[]{"%m.firebase", "%m.listMap"});
+        BLOCK_PARAMS.put("firebaseGetPushKey", new String[]{"%m.firebase"});
+        BLOCK_PARAMS.put("firebasePush", new String[]{"%m.firebase", "%m.varMap"});
+        BLOCK_PARAMS.put("firebaseStartListen", new String[]{"%m.firebase"});
+        BLOCK_PARAMS.put("firebaseStopListen", new String[]{"%m.firebase"});
+        BLOCK_PARAMS.put("firebasestorageDelete", new String[]{"%m.firebasestorage", "%s"});
+        BLOCK_PARAMS.put("firebasestorageDownloadFile", new String[]{"%m.firebasestorage", "%s", "%s"});
+        BLOCK_PARAMS.put("firebasestorageUploadFile", new String[]{"%m.firebasestorage", "%s", "%s"});
+        BLOCK_PARAMS.put("forever", new String[]{});
+        BLOCK_PARAMS.put("getAlpha", new String[]{"%m.view"});
+        BLOCK_PARAMS.put("getExternalStorageDir", new String[]{});
+        BLOCK_PARAMS.put("getAtListInt", new String[]{"%d", "%m.listInt"});
+        BLOCK_PARAMS.put("getAtListMap", new String[]{"%d", "%s", "%m.listMap"});
+        BLOCK_PARAMS.put("getAtListStr", new String[]{"%d", "%m.listStr"});
+        BLOCK_PARAMS.put("getChecked", new String[]{"%m.checkbox"});
+        BLOCK_PARAMS.put("getEnable", new String[]{"%m.view"});
+        BLOCK_PARAMS.put("getJpegRotate", new String[]{"%s"});
+        BLOCK_PARAMS.put("getLocationX", new String[]{"%m.view"});
+        BLOCK_PARAMS.put("getLocationY", new String[]{"%m.view"});
+        BLOCK_PARAMS.put("getMapInList", new String[]{"%d", "%m.listMap", "%m.varMap"});
+        BLOCK_PARAMS.put("getPackageDataDir", new String[]{});
+        BLOCK_PARAMS.put("getPublicDir", new String[]{"%m.directoryType"});
+        BLOCK_PARAMS.put("getRotate", new String[]{"%m.view"});
+        BLOCK_PARAMS.put("getScaleX", new String[]{"%m.view"});
+        BLOCK_PARAMS.put("getScaleY", new String[]{"%m.view"});
+        BLOCK_PARAMS.put("getText", new String[]{"%m.textview"});
+        BLOCK_PARAMS.put("getTranslationX", new String[]{"%m.view"});
+        BLOCK_PARAMS.put("getTranslationY", new String[]{"%m.view"});
+        BLOCK_PARAMS.put("gyroscopeStartListen", new String[]{"%m.gyroscope"});
+        BLOCK_PARAMS.put("gyroscopeStopListen", new String[]{"%m.gyroscope"});
+        BLOCK_PARAMS.put("if", new String[]{"%b"});
+        BLOCK_PARAMS.put("ifElse", new String[]{"%b"});
+        BLOCK_PARAMS.put("increaseInt", new String[]{"%m.varInt"});
+        BLOCK_PARAMS.put("indexListInt", new String[]{"%d", "%m.listInt"});
+        BLOCK_PARAMS.put("indexListStr", new String[]{"%s", "%m.listStr"});
+        BLOCK_PARAMS.put("insertListInt", new String[]{"%d", "%d", "%m.listInt"});
+        BLOCK_PARAMS.put("insertListMap", new String[]{"%s", "%s", "%d", "%m.listMap"});
+        BLOCK_PARAMS.put("insertListStr", new String[]{"%s", "%d", "%m.listStr"});
+        BLOCK_PARAMS.put("insertMapToList", new String[]{"%m.varMap", "%d", "%m.listMap"});
+        BLOCK_PARAMS.put("intentGetString", new String[]{"%s"});
+        BLOCK_PARAMS.put("intentPutExtra", new String[]{"%m.intent", "%s", "%s"});
+        BLOCK_PARAMS.put("intentSetAction", new String[]{"%m.intent", "%m.intentAction"});
+        BLOCK_PARAMS.put("intentSetData", new String[]{"%m.intent", "%s.intentData"});
+        BLOCK_PARAMS.put("intentSetFlags", new String[]{"%m.intent", "%m.intentFlags"});
+        BLOCK_PARAMS.put("intentSetScreen", new String[]{"%m.intent", "%m.activity"});
+        BLOCK_PARAMS.put("interstitialadCreate", new String[]{"%m.interstitialad"});
+        BLOCK_PARAMS.put("interstitialadLoadAd", new String[]{"%m.interstitialad"});
+        BLOCK_PARAMS.put("interstitialadShow", new String[]{"%m.interstitialad"});
+        BLOCK_PARAMS.put("isDrawerOpen", new String[]{});
+        BLOCK_PARAMS.put("lengthList", new String[]{"%m.list"});
+        BLOCK_PARAMS.put("listGetCheckedCount", new String[]{"%m.listview"});
+        BLOCK_PARAMS.put("listGetCheckedPosition", new String[]{"%m.listview"});
+        BLOCK_PARAMS.put("listGetCheckedPositions", new String[]{"%m.listview", "%m.listInt"});
+        BLOCK_PARAMS.put("listMapToStr", new String[]{"%m.listMap"});
+        BLOCK_PARAMS.put("listRefresh", new String[]{"%m.listview"});
+        BLOCK_PARAMS.put("listSetCustomViewData", new String[]{"%m.listview", "%m.listMap"});
+        BLOCK_PARAMS.put("listSetData", new String[]{"%m.listview", "%m.listStr"});
+        BLOCK_PARAMS.put("listSetItemChecked", new String[]{"%m.listview", "%d", "%b"});
+        BLOCK_PARAMS.put("listSmoothScrollTo", new String[]{"%m.listview", "%d"});
+        BLOCK_PARAMS.put("locationManagerRemoveUpdates", new String[]{"%m.locationmanager"});
+        BLOCK_PARAMS.put("locationManagerRequestLocationUpdates", new String[]{"%m.locationmanager", "%m.providerType", "%d", "%d"});
+        BLOCK_PARAMS.put("mapClear", new String[]{"%m.varMap"});
+        BLOCK_PARAMS.put("mapContainKey", new String[]{"%m.varMap", "%s"});
+        BLOCK_PARAMS.put("mapCreateNew", new String[]{"%m.varMap"});
+        BLOCK_PARAMS.put("mapGet", new String[]{"%m.varMap", "%s"});
+        BLOCK_PARAMS.put("mapGetAllKeys", new String[]{"%m.varMap", "%m.listStr"});
+        BLOCK_PARAMS.put("mapIsEmpty", new String[]{"%m.varMap"});
+        BLOCK_PARAMS.put("mapPut", new String[]{"%m.varMap", "%s", "%s"});
+        BLOCK_PARAMS.put("mapRemoveKey", new String[]{"%m.varMap", "%s"});
+        BLOCK_PARAMS.put("mapSize", new String[]{"%m.varMap"});
+        BLOCK_PARAMS.put("mapToStr", new String[]{"%m.varMap"});
+        BLOCK_PARAMS.put("mapViewAddMarker", new String[]{"%m.mapview", "%s", "%d", "%d"});
+        BLOCK_PARAMS.put("mapViewMoveCamera", new String[]{"%m.mapview", "%d", "%d"});
+        BLOCK_PARAMS.put("mapViewSetMapType", new String[]{"%m.mapview", "%m.mapType"});
+        BLOCK_PARAMS.put("mapViewSetMarkerColor", new String[]{"%m.mapview", "%s", "%m.markerColor", "%d"});
+        BLOCK_PARAMS.put("mapViewSetMarkerIcon", new String[]{"%m.mapview", "%s", "%m.resource"});
+        BLOCK_PARAMS.put("mapViewSetMarkerInfo", new String[]{"%m.mapview", "%s", "%s", "%s"});
+        BLOCK_PARAMS.put("mapViewSetMarkerPosition", new String[]{"%m.mapview", "%s", "%d", "%d"});
+        BLOCK_PARAMS.put("mapViewSetMarkerVisible", new String[]{"%m.mapview", "%s", "%b"});
+        BLOCK_PARAMS.put("mapViewZoomIn", new String[]{"%m.mapview"});
+        BLOCK_PARAMS.put("mapViewZoomOut", new String[]{"%m.mapview"});
+        BLOCK_PARAMS.put("mapViewZoomTo", new String[]{"%m.mapview", "%d"});
+        BLOCK_PARAMS.put("mathAbs", new String[]{"%d"});
+        BLOCK_PARAMS.put("mathAcos", new String[]{"%d"});
+        BLOCK_PARAMS.put("mathAsin", new String[]{"%d"});
+        BLOCK_PARAMS.put("mathAtan", new String[]{"%d"});
+        BLOCK_PARAMS.put("mathCeil", new String[]{"%d"});
+        BLOCK_PARAMS.put("mathCos", new String[]{"%d"});
+        BLOCK_PARAMS.put("mathE", new String[]{});
+        BLOCK_PARAMS.put("mathExp", new String[]{"%d"});
+        BLOCK_PARAMS.put("mathFloor", new String[]{"%d"});
+        BLOCK_PARAMS.put("mathGetDip", new String[]{"%d"});
+        BLOCK_PARAMS.put("mathGetDisplayHeight", new String[]{});
+        BLOCK_PARAMS.put("mathGetDisplayWidth", new String[]{});
+        BLOCK_PARAMS.put("mathLog", new String[]{"%d"});
+        BLOCK_PARAMS.put("mathLog10", new String[]{"%d"});
+        BLOCK_PARAMS.put("mathMax", new String[]{"%d", "%d"});
+        BLOCK_PARAMS.put("mathMin", new String[]{"%d", "%d"});
+        BLOCK_PARAMS.put("mathPi", new String[]{});
+        BLOCK_PARAMS.put("mathPow", new String[]{"%d", "%d"});
+        BLOCK_PARAMS.put("mathRound", new String[]{"%d"});
+        BLOCK_PARAMS.put("mathSin", new String[]{"%d"});
+        BLOCK_PARAMS.put("mathSqrt", new String[]{"%d"});
+        BLOCK_PARAMS.put("mathTan", new String[]{"%d"});
+        BLOCK_PARAMS.put("mathToDegree", new String[]{"%d"});
+        BLOCK_PARAMS.put("mathToRadian", new String[]{"%d"});
+        BLOCK_PARAMS.put("mediaplayerCreate", new String[]{"%m.mediaplayer", "%m.sound"});
+        BLOCK_PARAMS.put("mediaplayerGetCurrent", new String[]{"%m.mediaplayer"});
+        BLOCK_PARAMS.put("mediaplayerGetDuration", new String[]{"%m.mediaplayer"});
+        BLOCK_PARAMS.put("mediaplayerIsLooping", new String[]{"%m.mediaplayer"});
+        BLOCK_PARAMS.put("mediaplayerIsPlaying", new String[]{"%m.mediaplayer"});
+        BLOCK_PARAMS.put("mediaplayerPause", new String[]{"%m.mediaplayer"});
+        BLOCK_PARAMS.put("mediaplayerRelease", new String[]{"%m.mediaplayer"});
+        BLOCK_PARAMS.put("mediaplayerReset", new String[]{"%m.mediaplayer"});
+        BLOCK_PARAMS.put("mediaplayerSeek", new String[]{"%m.mediaplayer", "%d"});
+        BLOCK_PARAMS.put("mediaplayerSetLooping", new String[]{"%m.mediaplayer", "%b"});
+        BLOCK_PARAMS.put("mediaplayerStart", new String[]{"%m.mediaplayer"});
+        BLOCK_PARAMS.put("not", new String[]{"%b"});
+        BLOCK_PARAMS.put("objectanimatorCancel", new String[]{"%m.objectanimator"});
+        BLOCK_PARAMS.put("objectanimatorIsRunning", new String[]{"%m.objectanimator"});
+        BLOCK_PARAMS.put("objectanimatorSetDuration", new String[]{"%m.objectanimator", "%d"});
+        BLOCK_PARAMS.put("objectanimatorSetFromTo", new String[]{"%m.objectanimator", "%d", "%d"});
+        BLOCK_PARAMS.put("objectanimatorSetInterpolator", new String[]{"%m.objectanimator", "%m.aniInterpolator"});
+        BLOCK_PARAMS.put("objectanimatorSetProperty", new String[]{"%m.objectanimator", "%m.animatorproperty"});
+        BLOCK_PARAMS.put("objectanimatorSetRepeatCount", new String[]{"%m.objectanimator", "%d"});
+        BLOCK_PARAMS.put("objectanimatorSetRepeatMode", new String[]{"%m.objectanimator", "%m.aniRepeatMode"});
+        BLOCK_PARAMS.put("objectanimatorSetTarget", new String[]{"%m.objectanimator", "%m.view"});
+        BLOCK_PARAMS.put("objectanimatorSetValue", new String[]{"%m.objectanimator", "%d"});
+        BLOCK_PARAMS.put("objectanimatorStart", new String[]{"%m.objectanimator"});
+        BLOCK_PARAMS.put("openDrawer", new String[]{});
+        BLOCK_PARAMS.put("progressBarSetIndeterminate", new String[]{"%m.progressbar", "%b"});
+        BLOCK_PARAMS.put("random", new String[]{"%d", "%d"});
+        BLOCK_PARAMS.put("repeat", new String[]{"%d"});
+        BLOCK_PARAMS.put("requestFocus", new String[]{"%m.view"});
+        BLOCK_PARAMS.put("requestnetworkSetHeaders", new String[]{"%m.requestnetwork", "%m.varMap"});
+        BLOCK_PARAMS.put("requestnetworkSetParams", new String[]{"%m.requestnetwork", "%m.varMap", "%m.requestType"});
+        BLOCK_PARAMS.put("requestnetworkStartRequestNetwork", new String[]{"%m.requestnetwork", "%m.method", "%s", "%s"});
+        BLOCK_PARAMS.put("resizeBitmapFileRetainRatio", new String[]{"%s", "%s", "%d"});
+        BLOCK_PARAMS.put("resizeBitmapFileToCircle", new String[]{"%s", "%s"});
+        BLOCK_PARAMS.put("resizeBitmapFileToSquare", new String[]{"%s", "%s", "%d"});
+        BLOCK_PARAMS.put("resizeBitmapFileWithRoundedBorder", new String[]{"%s", "%s", "%d"});
+        BLOCK_PARAMS.put("rotateBitmapFile", new String[]{"%s", "%s", "%d"});
+        BLOCK_PARAMS.put("scaleBitmapFile", new String[]{"%s", "%s", "%d", "%d"});
+        BLOCK_PARAMS.put("seekBarGetMax", new String[]{"%m.seekbar"});
+        BLOCK_PARAMS.put("seekBarGetProgress", new String[]{"%m.seekbar"});
+        BLOCK_PARAMS.put("seekBarSetMax", new String[]{"%m.seekbar", "%d"});
+        BLOCK_PARAMS.put("seekBarSetProgress", new String[]{"%m.seekbar", "%d"});
+        BLOCK_PARAMS.put("setAlpha", new String[]{"%m.view", "%d"});
+        BLOCK_PARAMS.put("setBgColor", new String[]{"%m.view", "%m.color"});
+        BLOCK_PARAMS.put("setBgResource", new String[]{"%m.view", "%m.resource_bg"});
+        BLOCK_PARAMS.put("setBitmapFileBrightness", new String[]{"%s", "%s", "%d"});
+        BLOCK_PARAMS.put("setBitmapFileColorFilter", new String[]{"%s", "%s", "%m.color"});
+        BLOCK_PARAMS.put("setBitmapFileContrast", new String[]{"%s", "%s", "%d"});
+        BLOCK_PARAMS.put("setChecked", new String[]{"%m.checkbox", "%b"});
+        BLOCK_PARAMS.put("setClickable", new String[]{"%m.view", "%b"});
+        BLOCK_PARAMS.put("setColorFilter", new String[]{"%m.imageview", "%m.color"});
+        BLOCK_PARAMS.put("setEnable", new String[]{"%m.view", "%b"});
+        BLOCK_PARAMS.put("setHint", new String[]{"%m.edittext", "%s"});
+        BLOCK_PARAMS.put("setHintTextColor", new String[]{"%m.edittext", "%m.color"});
+        BLOCK_PARAMS.put("setImage", new String[]{"%m.imageview", "%m.resource"});
+        BLOCK_PARAMS.put("setImageFilePath", new String[]{"%m.imageview", "%s"});
+        BLOCK_PARAMS.put("setImageUrl", new String[]{"%m.imageview", "%s"});
+        BLOCK_PARAMS.put("setListMap", new String[]{"%s", "%s", "%d", "%m.listMap"});
+        BLOCK_PARAMS.put("setRotate", new String[]{"%m.view", "%d"});
+        BLOCK_PARAMS.put("setScaleX", new String[]{"%m.view", "%d"});
+        BLOCK_PARAMS.put("setScaleY", new String[]{"%m.view", "%d"});
+        BLOCK_PARAMS.put("setText", new String[]{"%m.textview", "%s"});
+        BLOCK_PARAMS.put("setTextColor", new String[]{"%m.textview", "%m.color"});
+        BLOCK_PARAMS.put("setThumbResource", new String[]{"%m.switch", "%m.resource"});
+        BLOCK_PARAMS.put("setTitle", new String[]{"%s"});
+        BLOCK_PARAMS.put("setTrackResource", new String[]{"%m.switch", "%m.resource"});
+        BLOCK_PARAMS.put("setTranslationX", new String[]{"%m.view", "%d"});
+        BLOCK_PARAMS.put("setTranslationY", new String[]{"%m.view", "%d"});
+        BLOCK_PARAMS.put("setTypeface", new String[]{"%m.textview", "%m.font", "%m.typeface"});
+        BLOCK_PARAMS.put("setVarBoolean", new String[]{"%m.varBool", "%b"});
+        BLOCK_PARAMS.put("setVarInt", new String[]{"%m.varInt", "%d"});
+        BLOCK_PARAMS.put("setVarString", new String[]{"%m.varStr", "%s"});
+        BLOCK_PARAMS.put("setVisible", new String[]{"%m.view", "%m.visible"});
+        BLOCK_PARAMS.put("skewBitmapFile", new String[]{"%s", "%s", "%d", "%d"});
+        BLOCK_PARAMS.put("soundpoolCreate", new String[]{"%m.soundpool", "%d"});
+        BLOCK_PARAMS.put("soundpoolLoad", new String[]{"%m.soundpool", "%m.sound"});
+        BLOCK_PARAMS.put("soundpoolStreamPlay", new String[]{"%m.soundpool", "%d", "%d"});
+        BLOCK_PARAMS.put("soundpoolStreamStop", new String[]{"%m.soundpool", "%d"});
+        BLOCK_PARAMS.put("speechToTextShutdown", new String[]{"%m.speechtotext"});
+        BLOCK_PARAMS.put("speechToTextStartListening", new String[]{"%m.speechtotext"});
+        BLOCK_PARAMS.put("speechToTextStopListening", new String[]{"%m.speechtotext"});
+        BLOCK_PARAMS.put("spnGetSelection", new String[]{"%m.spinner"});
+        BLOCK_PARAMS.put("spnRefresh", new String[]{"%m.spinner"});
+        BLOCK_PARAMS.put("spnSetData", new String[]{"%m.spinner", "%m.listStr"});
+        BLOCK_PARAMS.put("spnSetSelection", new String[]{"%m.spinner", "%d"});
+        BLOCK_PARAMS.put("startActivity", new String[]{"%m.intent"});
+        BLOCK_PARAMS.put("stringContains", new String[]{"%s", "%s"});
+        BLOCK_PARAMS.put("stringEquals", new String[]{"%s", "%s"});
+        BLOCK_PARAMS.put("stringIndex", new String[]{"%s", "%s"});
+        BLOCK_PARAMS.put("stringJoin", new String[]{"%s", "%s"});
+        BLOCK_PARAMS.put("stringLastIndex", new String[]{"%s", "%s"});
+        BLOCK_PARAMS.put("stringLength", new String[]{"%s"});
+        BLOCK_PARAMS.put("stringReplace", new String[]{"%s", "%s", "%s"});
+        BLOCK_PARAMS.put("stringReplaceAll", new String[]{"%s", "%s", "%s"});
+        BLOCK_PARAMS.put("stringReplaceFirst", new String[]{"%s", "%s", "%s"});
+        BLOCK_PARAMS.put("stringSub", new String[]{"%s", "%d", "%d"});
+        BLOCK_PARAMS.put("strToListMap", new String[]{"%s", "%m.listMap"});
+        BLOCK_PARAMS.put("strToMap", new String[]{"%s", "%m.varMap"});
+        BLOCK_PARAMS.put("textToSpeechIsSpeaking", new String[]{"%m.texttospeech"});
+        BLOCK_PARAMS.put("textToSpeechSetPitch", new String[]{"%m.texttospeech", "%d"});
+        BLOCK_PARAMS.put("textToSpeechSetSpeechRate", new String[]{"%m.texttospeech", "%d"});
+        BLOCK_PARAMS.put("textToSpeechShutdown", new String[]{"%m.texttospeech"});
+        BLOCK_PARAMS.put("textToSpeechSpeak", new String[]{"%m.texttospeech", "%s"});
+        BLOCK_PARAMS.put("textToSpeechStop", new String[]{"%m.texttospeech"});
+        BLOCK_PARAMS.put("timerAfter", new String[]{"%m.timer", "%d"});
+        BLOCK_PARAMS.put("timerCancel", new String[]{"%m.timer"});
+        BLOCK_PARAMS.put("timerEvery", new String[]{"%m.timer", "%d", "%d"});
+        BLOCK_PARAMS.put("toLowerCase", new String[]{"%s"});
+        BLOCK_PARAMS.put("toNumber", new String[]{"%s"});
+        BLOCK_PARAMS.put("toString", new String[]{"%d"});
+        BLOCK_PARAMS.put("toStringFormat", new String[]{"%d", "%s"});
+        BLOCK_PARAMS.put("toStringWithDecimal", new String[]{"%d"});
+        BLOCK_PARAMS.put("toUpperCase", new String[]{"%s"});
+        BLOCK_PARAMS.put("trim", new String[]{"%s"});
+        BLOCK_PARAMS.put("true", new String[]{});
+        BLOCK_PARAMS.put("vibratorAction", new String[]{"%m.vibrator", "%d"});
+        BLOCK_PARAMS.put("viewOnClick", new String[]{"%m.view"});
+        BLOCK_PARAMS.put("webViewCanGoBack", new String[]{"%m.webview"});
+        BLOCK_PARAMS.put("webViewCanGoForward", new String[]{"%m.webview"});
+        BLOCK_PARAMS.put("webViewClearCache", new String[]{"%m.webview"});
+        BLOCK_PARAMS.put("webViewClearHistory", new String[]{"%m.webview"});
+        BLOCK_PARAMS.put("webViewGetUrl", new String[]{"%m.webview"});
+        BLOCK_PARAMS.put("webViewGoBack", new String[]{"%m.webview"});
+        BLOCK_PARAMS.put("webViewGoForward", new String[]{"%m.webview"});
+        BLOCK_PARAMS.put("webViewLoadUrl", new String[]{"%m.webview", "%s.url"});
+        BLOCK_PARAMS.put("webViewSetCacheMode", new String[]{"%m.webview", "%m.cacheMode"});
+        BLOCK_PARAMS.put("webViewStopLoading", new String[]{"%m.webview"});
+        BLOCK_PARAMS.put("webViewZoomIn", new String[]{"%m.webview"});
+        BLOCK_PARAMS.put("webViewZoomOut", new String[]{"%m.webview"});
+    }
+
+    private static void initBlockSpecs() {
+        BLOCK_SPECS.put("-", "minus");
+        BLOCK_SPECS.put("%", "rest");
+        BLOCK_SPECS.put("&&", "and");
+        BLOCK_SPECS.put("*", "times");
+        BLOCK_SPECS.put("/", "divide");
+        BLOCK_SPECS.put("||", "or");
+        BLOCK_SPECS.put("+", "plus");
+        BLOCK_SPECS.put("<", "smaller");
+        BLOCK_SPECS.put("=", "equal");
+        BLOCK_SPECS.put(">", "bigger");
+        BLOCK_SPECS.put("addListInt", "add_list_int");
+        BLOCK_SPECS.put("addListMap", "add_list_map");
+        BLOCK_SPECS.put("addListStr", "add_list_str");
+        BLOCK_SPECS.put("addMapToList", "add_map_to_list");
+        BLOCK_SPECS.put("addSourceDirectly", "add_source_directly");
+        BLOCK_SPECS.put("adViewLoadAd", "adview_load_ad");
+        BLOCK_SPECS.put("bluetoothConnectActivateBluetooth", "bluetoothconnect_activate_bluetooth");
+        BLOCK_SPECS.put("bluetoothConnectGetPairedDevices", "bluetoothconnect_get_paired_devices");
+        BLOCK_SPECS.put("bluetoothConnectGetRandomUuid", "bluetoothconnect_get_random_uuid");
+        BLOCK_SPECS.put("bluetoothConnectIsBluetoothActivated", "bluetoothconnect_is_bluetooth_activated");
+        BLOCK_SPECS.put("bluetoothConnectIsBluetoothEnabled", "bluetoothconnect_is_bluetooth_enabled");
+        BLOCK_SPECS.put("bluetoothConnectReadyConnection", "bluetoothconnect_ready_connection");
+        BLOCK_SPECS.put("bluetoothConnectReadyConnectionToUuid", "bluetoothconnect_ready_connection_to_uuid");
+        BLOCK_SPECS.put("bluetoothConnectSendData", "bluetoothconnect_send_data");
+        BLOCK_SPECS.put("bluetoothConnectStartConnection", "bluetoothconnect_start_connection");
+        BLOCK_SPECS.put("bluetoothConnectStartConnectionToUuid", "bluetoothconnect_start_connection_to_uuid");
+        BLOCK_SPECS.put("bluetoothConnectStopConnection", "bluetoothconnect_stop_connection");
+        BLOCK_SPECS.put("break", "break");
+        BLOCK_SPECS.put("calendarAdd", "calendar_add");
+        BLOCK_SPECS.put("calendarDiff", "calendar_diff");
+        BLOCK_SPECS.put("calendarFormat", "calendar_format");
+        BLOCK_SPECS.put("calendarGetNow", "calendar_get_now");
+        BLOCK_SPECS.put("calendarGetTime", "calendar_get_time");
+        BLOCK_SPECS.put("calendarSet", "calendar_set");
+        BLOCK_SPECS.put("calendarSetTime", "calendar_set_time");
+        BLOCK_SPECS.put("calendarViewGetDate", "calendarview_get_date");
+        BLOCK_SPECS.put("calendarViewSetDate", "calendarview_set_date");
+        BLOCK_SPECS.put("calendarViewSetMinDate", "calendarview_set_min_date");
+        BLOCK_SPECS.put("calnedarViewSetMaxDate", "calendarview_set_max_date");
+        BLOCK_SPECS.put("camerastarttakepicture", "camera_start_take_picture");
+        BLOCK_SPECS.put("clearList", "clear_list");
+        BLOCK_SPECS.put("closeDrawer", "close_drawer");
+        BLOCK_SPECS.put("containListInt", "contain_list_int");
+        BLOCK_SPECS.put("containListMap", "contain_list_map");
+        BLOCK_SPECS.put("containListStr", "contain_list_str");
+        BLOCK_SPECS.put("copyToClipboard", "copy_to_clipboard");
+        BLOCK_SPECS.put("cropBitmapFileFromCenter", "crop_bitmap_center");
+        BLOCK_SPECS.put("decreaseInt", "decrease_int");
+        BLOCK_SPECS.put("deleteList", "delete_list");
+        BLOCK_SPECS.put("dialogCancelButton", "dialog_cancel_button");
+        BLOCK_SPECS.put("dialogDismiss", "dialog_dismiss");
+        BLOCK_SPECS.put("dialogNeutralButton", "dialog_neutral_button");
+        BLOCK_SPECS.put("dialogOkButton", "dialog_ok_button");
+        BLOCK_SPECS.put("dialogSetMessage", "dialog_set_message");
+        BLOCK_SPECS.put("dialogSetTitle", "dialog_set_title");
+        BLOCK_SPECS.put("dialogShow", "dialog_show");
+        BLOCK_SPECS.put("doToast", "do_toast");
+        BLOCK_SPECS.put("else", "else");
+        BLOCK_SPECS.put("false", "false");
+        BLOCK_SPECS.put("fileGetData", "file_get_data");
+        BLOCK_SPECS.put("filepickerstartpickfiles", "file_picker_start_pick_files");
+        BLOCK_SPECS.put("fileRemoveData", "file_remove_data");
+        BLOCK_SPECS.put("fileSetData", "file_set_data");
+        BLOCK_SPECS.put("fileutilcopy", "fileutil_copy");
+        BLOCK_SPECS.put("fileutildelete", "fileutil_delete");
+        BLOCK_SPECS.put("fileutilEndsWith", "fileutil_ends_with");
+        BLOCK_SPECS.put("fileutilGetLastSegmentPath", "fileutil_get_last_segment_path");
+        BLOCK_SPECS.put("fileutilisdir", "fileutil_is_dir");
+        BLOCK_SPECS.put("fileutilisexist", "fileutil_is_exist");
+        BLOCK_SPECS.put("fileutilisfile", "fileutil_is_file");
+        BLOCK_SPECS.put("fileutillength", "fileutil_length");
+        BLOCK_SPECS.put("fileutillistdir", "fileutil_list_dir");
+        BLOCK_SPECS.put("fileutilmakedir", "fileutil_make_dir");
+        BLOCK_SPECS.put("fileutilmove", "fileutil_move");
+        BLOCK_SPECS.put("fileutilread", "fileutil_read");
+        BLOCK_SPECS.put("fileutilStartsWith", "fileutil_starts_with");
+        BLOCK_SPECS.put("fileutilwrite", "fileutil_write");
+        BLOCK_SPECS.put("finishActivity", "finish_activity");
+        BLOCK_SPECS.put("firebaseAdd", "firebase_add");
+        BLOCK_SPECS.put("firebaseauthCreateUser", "firebaseauth_create_user");
+        BLOCK_SPECS.put("firebaseauthGetCurrentUser", "firebaseauth_get_email");
+        BLOCK_SPECS.put("firebaseauthGetUid", "firebaseauth_get_uid");
+        BLOCK_SPECS.put("firebaseauthIsLoggedIn", "firebaseauth_is_logged_in");
+        BLOCK_SPECS.put("firebaseauthResetPassword", "firebaseauth_reset_password");
+        BLOCK_SPECS.put("firebaseauthSignInAnonymously", "firebaseauth_signin_anonymously");
+        BLOCK_SPECS.put("firebaseauthSignInUser", "firebaseauth_signin_user");
+        BLOCK_SPECS.put("firebaseauthSignOutUser", "firebaseauth_signout");
+        BLOCK_SPECS.put("firebaseDelete", "firebase_delete");
+        BLOCK_SPECS.put("firebaseGetChildren", "firebase_get_children");
+        BLOCK_SPECS.put("firebaseGetPushKey", "firebase_get_key");
+        BLOCK_SPECS.put("firebasePush", "firebase_push");
+        BLOCK_SPECS.put("firebaseStartListen", "firebase_start_listen");
+        BLOCK_SPECS.put("firebaseStopListen", "firebase_stop_listen");
+        BLOCK_SPECS.put("firebasestorageDelete", "firebasestorage_delete");
+        BLOCK_SPECS.put("firebasestorageDownloadFile", "firebasestorage_download_file");
+        BLOCK_SPECS.put("firebasestorageUploadFile", "firebasestorage_upload_file");
+        BLOCK_SPECS.put("forever", "forever");
+        BLOCK_SPECS.put("getAlpha", "get_alpha");
+        BLOCK_SPECS.put("getAtListInt", "get_at_list_int");
+        BLOCK_SPECS.put("getAtListMap", "get_at_list_map");
+        BLOCK_SPECS.put("getAtListStr", "get_at_list_str");
+        BLOCK_SPECS.put("getChecked", "get_checked");
+        BLOCK_SPECS.put("getEnable", "get_enable");
+        BLOCK_SPECS.put("getExternalStorageDir", "get_external_storage_dir");
+        BLOCK_SPECS.put("getJpegRotate", "get_jpeg_rotate");
+        BLOCK_SPECS.put("getLocationX", "get_location_x");
+        BLOCK_SPECS.put("getLocationY", "get_location_y");
+        BLOCK_SPECS.put("getMapInList", "get_map_in_list");
+        BLOCK_SPECS.put("getPackageDataDir", "get_package_data_dir");
+        BLOCK_SPECS.put("getPublicDir", "get_public_dir");
+        BLOCK_SPECS.put("getRotate", "get_rotate");
+        BLOCK_SPECS.put("getScaleX", "get_scale_x");
+        BLOCK_SPECS.put("getScaleY", "get_scale_y");
+        BLOCK_SPECS.put("getText", "get_text");
+        BLOCK_SPECS.put("getTranslationX", "get_translation_x");
+        BLOCK_SPECS.put("getTranslationY", "get_translation_y");
+        BLOCK_SPECS.put("gyroscopeStartListen", "gyroscope_start_listen");
+        BLOCK_SPECS.put("gyroscopeStopListen", "gyroscope_stop_listen");
+        BLOCK_SPECS.put("if", "if");
+        BLOCK_SPECS.put("ifElse", "if_else");
+        BLOCK_SPECS.put("increaseInt", "increase_int");
+        BLOCK_SPECS.put("indexListInt", "indexof_list_int");
+        BLOCK_SPECS.put("indexListStr", "indexof_list_str");
+        BLOCK_SPECS.put("insertListInt", "insert_list_int");
+        BLOCK_SPECS.put("insertListMap", "insert_list_map");
+        BLOCK_SPECS.put("insertListStr", "insert_list_str");
+        BLOCK_SPECS.put("insertMapToList", "insert_map_to_list");
+        BLOCK_SPECS.put("intentGetString", "intent_get_string");
+        BLOCK_SPECS.put("intentPutExtra", "intent_put_extra");
+        BLOCK_SPECS.put("intentSetAction", "intent_set_action");
+        BLOCK_SPECS.put("intentSetData", "intent_set_data");
+        BLOCK_SPECS.put("intentSetFlags", "intent_set_flags");
+        BLOCK_SPECS.put("intentSetScreen", "intent_set_screen");
+        BLOCK_SPECS.put("interstitialadCreate", "interstitialad_create");
+        BLOCK_SPECS.put("interstitialadLoadAd", "interstitialad_load_ad");
+        BLOCK_SPECS.put("interstitialadShow", "interstitialad_show");
+        BLOCK_SPECS.put("isDrawerOpen", "is_drawer_open");
+        BLOCK_SPECS.put("lengthList", "length_list");
+        BLOCK_SPECS.put("listGetCheckedCount", "list_get_checked_count");
+        BLOCK_SPECS.put("listGetCheckedPosition", "list_get_checked_position");
+        BLOCK_SPECS.put("listGetCheckedPositions", "list_get_checked_positions");
+        BLOCK_SPECS.put("listMapToStr", "list_map_to_str");
+        BLOCK_SPECS.put("listRefresh", "list_refresh");
+        BLOCK_SPECS.put("listSetCustomViewData", "list_set_custom_view_data");
+        BLOCK_SPECS.put("listSetData", "list_set_data");
+        BLOCK_SPECS.put("listSetItemChecked", "list_set_item_checked");
+        BLOCK_SPECS.put("listSmoothScrollTo", "list_smooth_scrollto");
+        BLOCK_SPECS.put("locationManagerRemoveUpdates", "locationmanager_remove_updates");
+        BLOCK_SPECS.put("locationManagerRequestLocationUpdates", "locationmanager_request_location_updates");
+        BLOCK_SPECS.put("mapClear", "map_clear");
+        BLOCK_SPECS.put("mapContainKey", "map_contain_key");
+        BLOCK_SPECS.put("mapCreateNew", "map_create_new");
+        BLOCK_SPECS.put("mapGet", "map_get");
+        BLOCK_SPECS.put("mapGetAllKeys", "map_get_all_keys");
+        BLOCK_SPECS.put("mapIsEmpty", "map_is_empty");
+        BLOCK_SPECS.put("mapPut", "map_put");
+        BLOCK_SPECS.put("mapRemoveKey", "map_remove_key");
+        BLOCK_SPECS.put("mapSize", "map_size");
+        BLOCK_SPECS.put("mapToStr", "map_to_str");
+        BLOCK_SPECS.put("mapViewAddMarker", "mapview_add_marker");
+        BLOCK_SPECS.put("mapViewMoveCamera", "mapview_move_camera");
+        BLOCK_SPECS.put("mapViewSetMapType", "mapview_set_map_type");
+        BLOCK_SPECS.put("mapViewSetMarkerColor", "mapview_set_marker_color");
+        BLOCK_SPECS.put("mapViewSetMarkerIcon", "mapview_set_marker_icon");
+        BLOCK_SPECS.put("mapViewSetMarkerInfo", "mapview_set_marker_info");
+        BLOCK_SPECS.put("mapViewSetMarkerPosition", "mapview_set_marker_position");
+        BLOCK_SPECS.put("mapViewSetMarkerVisible", "mapview_set_marker_visible");
+        BLOCK_SPECS.put("mapViewZoomIn", "mapview_zoom_in");
+        BLOCK_SPECS.put("mapViewZoomOut", "mapview_zoom_out");
+        BLOCK_SPECS.put("mapViewZoomTo", "mapview_zoom_to");
+        BLOCK_SPECS.put("mathAbs", "math_abs");
+        BLOCK_SPECS.put("mathAcos", "math_acos");
+        BLOCK_SPECS.put("mathAsin", "math_asin");
+        BLOCK_SPECS.put("mathAtan", "math_atan");
+        BLOCK_SPECS.put("mathCeil", "math_ceil");
+        BLOCK_SPECS.put("mathCos", "math_cos");
+        BLOCK_SPECS.put("mathE", "math_e");
+        BLOCK_SPECS.put("mathExp", "math_exp");
+        BLOCK_SPECS.put("mathFloor", "math_floor");
+        BLOCK_SPECS.put("mathGetDip", "math_get_dip");
+        BLOCK_SPECS.put("mathGetDisplayHeight", "math_get_display_height");
+        BLOCK_SPECS.put("mathGetDisplayWidth", "math_get_display_width");
+        BLOCK_SPECS.put("mathLog", "math_log");
+        BLOCK_SPECS.put("mathLog10", "math_log10");
+        BLOCK_SPECS.put("mathMax", "math_max");
+        BLOCK_SPECS.put("mathMin", "math_min");
+        BLOCK_SPECS.put("mathPi", "math_pi");
+        BLOCK_SPECS.put("mathPow", "math_pow");
+        BLOCK_SPECS.put("mathRound", "math_round");
+        BLOCK_SPECS.put("mathSin", "math_sin");
+        BLOCK_SPECS.put("mathSqrt", "math_sqrt");
+        BLOCK_SPECS.put("mathTan", "math_tan");
+        BLOCK_SPECS.put("mathToDegree", "math_to_degree");
+        BLOCK_SPECS.put("mathToRadian", "math_to_radian");
+        BLOCK_SPECS.put("mediaplayerCreate", "mediaplayer_create");
+        BLOCK_SPECS.put("mediaplayerGetCurrent", "mediaplayer_get_current");
+        BLOCK_SPECS.put("mediaplayerGetDuration", "mediaplayer_get_duration");
+        BLOCK_SPECS.put("mediaplayerIsLooping", "mediaplayer_is_looping");
+        BLOCK_SPECS.put("mediaplayerIsPlaying", "mediaplayer_is_playing");
+        BLOCK_SPECS.put("mediaplayerPause", "mediaplayer_pause");
+        BLOCK_SPECS.put("mediaplayerRelease", "mediaplayer_release");
+        BLOCK_SPECS.put("mediaplayerReset", "mediaplayer_reset");
+        BLOCK_SPECS.put("mediaplayerSeek", "mediaplayer_seek");
+        BLOCK_SPECS.put("mediaplayerSetLooping", "mediaplayer_set_looping");
+        BLOCK_SPECS.put("mediaplayerStart", "mediaplayer_start");
+        BLOCK_SPECS.put("not", "not");
+        BLOCK_SPECS.put("objectanimatorCancel", "objectanimator_cancel");
+        BLOCK_SPECS.put("objectanimatorIsRunning", "objectanimator_is_running");
+        BLOCK_SPECS.put("objectanimatorSetDuration", "objectanimator_set_duration");
+        BLOCK_SPECS.put("objectanimatorSetFromTo", "objectanimator_set_from_to");
+        BLOCK_SPECS.put("objectanimatorSetInterpolator", "objectanimator_set_interpolator");
+        BLOCK_SPECS.put("objectanimatorSetProperty", "objectanimator_set_property");
+        BLOCK_SPECS.put("objectanimatorSetRepeatCount", "objectanimator_set_repeat_count");
+        BLOCK_SPECS.put("objectanimatorSetRepeatMode", "objectanimator_set_repeat_mode");
+        BLOCK_SPECS.put("objectanimatorSetTarget", "objectanimator_set_target");
+        BLOCK_SPECS.put("objectanimatorSetValue", "objectanimator_set_value");
+        BLOCK_SPECS.put("objectanimatorStart", "objectanimator_start");
+        BLOCK_SPECS.put("openDrawer", "open_drawer");
+        BLOCK_SPECS.put("progressBarSetIndeterminate", "progressbar_set_indeterminate");
+        BLOCK_SPECS.put("random", "random");
+        BLOCK_SPECS.put("repeat", "repeat");
+        BLOCK_SPECS.put("requestFocus", "request_focus");
+        BLOCK_SPECS.put("requestnetworkSetHeaders", "requestnetwork_set_headers");
+        BLOCK_SPECS.put("requestnetworkSetParams", "requestnetwork_set_params");
+        BLOCK_SPECS.put("requestnetworkStartRequestNetwork", "requestnetwork_start_request_network");
+        BLOCK_SPECS.put("resizeBitmapFileRetainRatio", "resize_bitmap_ratio");
+        BLOCK_SPECS.put("resizeBitmapFileToCircle", "resize_bitmap_circle");
+        BLOCK_SPECS.put("resizeBitmapFileToSquare", "resize_bitmap_square");
+        BLOCK_SPECS.put("resizeBitmapFileWithRoundedBorder", "resize_bitmap_rounded");
+        BLOCK_SPECS.put("rotateBitmapFile", "rotate_bitmap");
+        BLOCK_SPECS.put("scaleBitmapFile", "scale_bitmap");
+        BLOCK_SPECS.put("seekBarGetMax", "seekbar_get_max");
+        BLOCK_SPECS.put("seekBarGetProgress", "seekbar_get_progress");
+        BLOCK_SPECS.put("seekBarSetMax", "seekbar_set_max");
+        BLOCK_SPECS.put("seekBarSetProgress", "seekbar_set_progress");
+        BLOCK_SPECS.put("setAlpha", "set_alpha");
+        BLOCK_SPECS.put("setBgColor", "set_bg_color");
+        BLOCK_SPECS.put("setBgResource", "set_bg_resource");
+        BLOCK_SPECS.put("setBitmapFileBrightness", "set_bitmap_brightness");
+        BLOCK_SPECS.put("setBitmapFileColorFilter", "set_bitmap_color_filter");
+        BLOCK_SPECS.put("setBitmapFileContrast", "set_bitmap_contrast");
+        BLOCK_SPECS.put("setChecked", "set_checked");
+        BLOCK_SPECS.put("setClickable", "set_clickable");
+        BLOCK_SPECS.put("setColorFilter", "set_color_filter");
+        BLOCK_SPECS.put("setEnable", "set_enable");
+        BLOCK_SPECS.put("setHint", "set_hint");
+        BLOCK_SPECS.put("setHintTextColor", "set_hint_text_color");
+        BLOCK_SPECS.put("setImage", "set_image");
+        BLOCK_SPECS.put("setImageFilePath", "set_image_file_path");
+        BLOCK_SPECS.put("setImageUrl", "set_image_url");
+        BLOCK_SPECS.put("setListMap", "set_at_list_map");
+        BLOCK_SPECS.put("setRotate", "set_rotate");
+        BLOCK_SPECS.put("setScaleX", "set_scale_x");
+        BLOCK_SPECS.put("setScaleY", "set_scale_y");
+        BLOCK_SPECS.put("setText", "set_text");
+        BLOCK_SPECS.put("setTextColor", "set_text_color");
+        BLOCK_SPECS.put("setThumbResource", "set_thumb_resource");
+        BLOCK_SPECS.put("setTitle", "set_title");
+        BLOCK_SPECS.put("setTrackResource", "set_track_resource");
+        BLOCK_SPECS.put("setTranslationX", "set_translation_x");
+        BLOCK_SPECS.put("setTranslationY", "set_translation_y");
+        BLOCK_SPECS.put("setTypeface", "set_typeface");
+        BLOCK_SPECS.put("setVarBoolean", "set_var_bool");
+        BLOCK_SPECS.put("setVarInt", "set_var_int");
+        BLOCK_SPECS.put("setVarString", "set_var_str");
+        BLOCK_SPECS.put("setVisible", "set_visible");
+        BLOCK_SPECS.put("skewBitmapFile", "skew_bitmap");
+        BLOCK_SPECS.put("soundpoolCreate", "soundpool_create");
+        BLOCK_SPECS.put("soundpoolLoad", "soundpool_load");
+        BLOCK_SPECS.put("soundpoolStreamPlay", "soundpool_stream_play");
+        BLOCK_SPECS.put("soundpoolStreamStop", "soundpool_stream_stop");
+        BLOCK_SPECS.put("speechToTextShutdown", "speechtotext_shutdown");
+        BLOCK_SPECS.put("speechToTextStartListening", "speechtotext_start_listening");
+        BLOCK_SPECS.put("speechToTextStopListening", "speechtotext_stop_listening");
+        BLOCK_SPECS.put("spnGetSelection", "spn_get_selection");
+        BLOCK_SPECS.put("spnRefresh", "spn_refresh");
+        BLOCK_SPECS.put("spnSetData", "spn_set_data");
+        BLOCK_SPECS.put("spnSetSelection", "spn_set_selection");
+        BLOCK_SPECS.put("startActivity", "start_activity");
+        BLOCK_SPECS.put("stringContains", "string_contains");
+        BLOCK_SPECS.put("stringEquals", "string_equals");
+        BLOCK_SPECS.put("stringIndex", "string_index");
+        BLOCK_SPECS.put("stringJoin", "string_join");
+        BLOCK_SPECS.put("stringLastIndex", "string_last_index");
+        BLOCK_SPECS.put("stringLength", "string_length");
+        BLOCK_SPECS.put("stringReplace", "string_replace");
+        BLOCK_SPECS.put("stringReplaceAll", "string_replace_all");
+        BLOCK_SPECS.put("stringReplaceFirst", "string_replace_first");
+        BLOCK_SPECS.put("stringSub", "string_sub");
+        BLOCK_SPECS.put("strToListMap", "str_to_list_map");
+        BLOCK_SPECS.put("strToMap", "str_to_map");
+        BLOCK_SPECS.put("textToSpeechIsSpeaking", "texttospeech_is_speaking");
+        BLOCK_SPECS.put("textToSpeechSetPitch", "texttospeech_set_pitch");
+        BLOCK_SPECS.put("textToSpeechSetSpeechRate", "texttospeech_set_speech_rate");
+        BLOCK_SPECS.put("textToSpeechShutdown", "texttospeech_shutdown");
+        BLOCK_SPECS.put("textToSpeechSpeak", "texttospeech_speak");
+        BLOCK_SPECS.put("textToSpeechStop", "texttospeech_stop");
+        BLOCK_SPECS.put("timerAfter", "timer_after");
+        BLOCK_SPECS.put("timerCancel", "timer_cancel");
+        BLOCK_SPECS.put("timerEvery", "timer_every");
+        BLOCK_SPECS.put("toLowerCase", "to_lower_case");
+        BLOCK_SPECS.put("toNumber", "to_number");
+        BLOCK_SPECS.put("toString", "to_string");
+        BLOCK_SPECS.put("toStringFormat", "to_string_format");
+        BLOCK_SPECS.put("toStringWithDecimal", "to_string_with_decimal");
+        BLOCK_SPECS.put("toUpperCase", "to_upper_case");
+        BLOCK_SPECS.put("trim", "trim");
+        BLOCK_SPECS.put("true", "true");
+        BLOCK_SPECS.put("vibratorAction", "vibrator_action");
+        BLOCK_SPECS.put("viewOnClick", "view_on_click");
+        BLOCK_SPECS.put("webViewCanGoBack", "webview_can_go_back");
+        BLOCK_SPECS.put("webViewCanGoForward", "webview_can_go_forward");
+        BLOCK_SPECS.put("webViewClearCache", "webview_clear_cache");
+        BLOCK_SPECS.put("webViewClearHistory", "webview_clear_history");
+        BLOCK_SPECS.put("webViewGetUrl", "webview_get_url");
+        BLOCK_SPECS.put("webViewGoBack", "webview_go_back");
+        BLOCK_SPECS.put("webViewGoForward", "webview_go_forward");
+        BLOCK_SPECS.put("webViewLoadUrl", "webview_load_url");
+        BLOCK_SPECS.put("webViewSetCacheMode", "webview_set_cache_mode");
+        BLOCK_SPECS.put("webViewStopLoading", "webview_stop_loading");
+        BLOCK_SPECS.put("webViewZoomIn", "webview_zoom_in");
+        BLOCK_SPECS.put("webViewZoomOut", "webview_zoom_out");
+    }
+
+    private static void initEventMenus() {
+        EVENT_MENUS.put("initializeLogic", new String[]{});
+        EVENT_MENUS.put("onAdClosed", new String[]{});
+        EVENT_MENUS.put("onAdFailedToLoad", new String[]{"%d.errorCode"});
+        EVENT_MENUS.put("onAdLoaded", new String[]{});
+        EVENT_MENUS.put("onAdOpened", new String[]{});
+        EVENT_MENUS.put("onAnimationCancel", new String[]{});
+        EVENT_MENUS.put("onAnimationEnd", new String[]{});
+        EVENT_MENUS.put("onAnimationStart", new String[]{});
+        EVENT_MENUS.put("onBackPressed", new String[]{});
+        EVENT_MENUS.put("onBindCustomView", new String[]{"%m.listMap.data", "%d.position"});
+        EVENT_MENUS.put("onCancelled", new String[]{"%d.errorCode", "%s.errorMessage"});
+        EVENT_MENUS.put("onCheckedChange", new String[]{"%b.isChecked"});
+        EVENT_MENUS.put("onChildAdded", new String[]{"%s.childKey", "%m.varMap.childValue"});
+        EVENT_MENUS.put("onChildChanged", new String[]{"%s.childKey", "%m.varMap.childValue"});
+        EVENT_MENUS.put("onChildRemoved", new String[]{"%s.childKey", "%m.varMap.childValue"});
+        EVENT_MENUS.put("onClick", new String[]{});
+        EVENT_MENUS.put("onConnected", new String[]{"%s.tag", "%m.varMap.deviceData"});
+        EVENT_MENUS.put("onConnectionError", new String[]{"%s.tag", "%s.connectionState", "%s.errorMessage"});
+        EVENT_MENUS.put("onConnectionStopped", new String[]{"%s.tag"});
+        EVENT_MENUS.put("onCreateUserComplete", new String[]{"%b.success", "%s.errorMessage"});
+        EVENT_MENUS.put("onDataReceived", new String[]{"%s.tag", "%s.data"});
+        EVENT_MENUS.put("onDataSent", new String[]{"%s.tag", "%s.data"});
+        EVENT_MENUS.put("onDateChange", new String[]{"%d.year", "%d.month", "%d.day"});
+        EVENT_MENUS.put("onDeleteSuccess", new String[]{});
+        EVENT_MENUS.put("onDestroy", new String[]{});
+        EVENT_MENUS.put("onDownloadProgress", new String[]{"%d.progressValue"});
+        EVENT_MENUS.put("onDownloadSuccess", new String[]{"%d.totalByteCount"});
+        EVENT_MENUS.put("onErrorResponse", new String[]{"%s.tag", "%s.message"});
+        EVENT_MENUS.put("onFailure", new String[]{"%s.message"});
+        EVENT_MENUS.put("onFilesPicked", new String[]{"%m.listStr.filePath"});
+        EVENT_MENUS.put("onFilesPickedCancel", new String[]{});
+        EVENT_MENUS.put("onItemClicked", new String[]{"%d.position"});
+        EVENT_MENUS.put("onItemLongClicked", new String[]{"%d.position"});
+        EVENT_MENUS.put("onItemSelected", new String[]{"%d.position"});
+        EVENT_MENUS.put("onLocationChanged", new String[]{"%d.lat", "%d.lng", "%d.acc"});
+        EVENT_MENUS.put("onMapReady", new String[]{});
+        EVENT_MENUS.put("onMarkerClicked", new String[]{"%s.id"});
+        EVENT_MENUS.put("onPageFinished", new String[]{"%s.url"});
+        EVENT_MENUS.put("onPageStarted", new String[]{"%s.url"});
+        EVENT_MENUS.put("onPause", new String[]{});
+        EVENT_MENUS.put("onPictureTaken", new String[]{"%s.filePath"});
+        EVENT_MENUS.put("onPictureTakenCancel", new String[]{});
+        EVENT_MENUS.put("onPostCreate", new String[]{});
+        EVENT_MENUS.put("onProgressChanged", new String[]{"%d.progressValue"});
+        EVENT_MENUS.put("onResetPasswordEmailSent", new String[]{"%b.success"});
+        EVENT_MENUS.put("onResume", new String[]{});
+        EVENT_MENUS.put("onResponse", new String[]{"%s.tag", "%s.response", "%m.varMap.responseHeaders"});
+        EVENT_MENUS.put("onSensorChanged", new String[]{"%d.x", "%d.y", "%d.z"});
+        EVENT_MENUS.put("onSignInUserComplete", new String[]{"%b.success", "%s.errorMessage"});
+        EVENT_MENUS.put("onSpeechError", new String[]{"%s.errorMessage"});
+        EVENT_MENUS.put("onSpeechResult", new String[]{"%s.result"});
+        EVENT_MENUS.put("onStart", new String[]{});
+        EVENT_MENUS.put("onStartTrackingTouch", new String[]{});
+        EVENT_MENUS.put("onStop", new String[]{});
+        EVENT_MENUS.put("onStopTrackingTouch", new String[]{});
+        EVENT_MENUS.put("onTextChanged", new String[]{"%s.charSeq"});
+        EVENT_MENUS.put("onUploadProgress", new String[]{"%d.progressValue"});
+        EVENT_MENUS.put("onUploadSuccess", new String[]{"%s.downloadUrl"});
+    }
+
+    private static void initEventSpecs() {
+        EVENT_SPECS.put("initializeLogic", "initialize");
+        EVENT_SPECS.put("onAdClosed", "on_ad_closed");
+        EVENT_SPECS.put("onAdFailedToLoad", "on_ad_failed_to_load");
+        EVENT_SPECS.put("onAdLoaded", "on_ad_loaded");
+        EVENT_SPECS.put("onAdOpened", "on_ad_opened");
+        EVENT_SPECS.put("onAnimationCancel", "on_animation_cancel");
+        EVENT_SPECS.put("onAnimationEnd", "on_animation_end");
+        EVENT_SPECS.put("onAnimationStart", "on_animation_start");
+        EVENT_SPECS.put("onBackPressed", "on_back_pressed");
+        EVENT_SPECS.put("onBindCustomView", "on_bind_custom_view");
+        EVENT_SPECS.put("onCancelled", "on_cancelled");
+        EVENT_SPECS.put("onCheckedChange", "on_check_changed");
+        EVENT_SPECS.put("onChildAdded", "on_child_added");
+        EVENT_SPECS.put("onChildChanged", "on_child_changed");
+        EVENT_SPECS.put("onChildRemoved", "on_child_removed");
+        EVENT_SPECS.put("onClick", "on_clicked");
+        EVENT_SPECS.put("onConnected", "on_connected");
+        EVENT_SPECS.put("onConnectionError", "on_connection_error");
+        EVENT_SPECS.put("onConnectionStopped", "on_connection_stopped");
+        EVENT_SPECS.put("onCreateUserComplete", "on_create_user_complete");
+        EVENT_SPECS.put("onDataReceived", "on_data_received");
+        EVENT_SPECS.put("onDataSent", "on_data_sent");
+        EVENT_SPECS.put("onDateChange", "on_date_change");
+        EVENT_SPECS.put("onDeleteSuccess", "on_delete_success");
+        EVENT_SPECS.put("onDestroy", "on_destroy");
+        EVENT_SPECS.put("onDownloadProgress", "on_download_progress");
+        EVENT_SPECS.put("onDownloadSuccess", "on_download_success");
+        EVENT_SPECS.put("onErrorResponse", "on_error_response");
+        EVENT_SPECS.put("onFailure", "on_failure");
+        EVENT_SPECS.put("onFilesPicked", "on_files_picked");
+        EVENT_SPECS.put("onFilesPickedCancel", "on_files_picked_cancel");
+        EVENT_SPECS.put("onItemClicked", "on_item_clicked");
+        EVENT_SPECS.put("onItemLongClicked", "on_item_long_clicked");
+        EVENT_SPECS.put("onItemSelected", "on_item_selected");
+        EVENT_SPECS.put("onLocationChanged", "on_location_changed");
+        EVENT_SPECS.put("onMapReady", "on_map_ready");
+        EVENT_SPECS.put("onMarkerClicked", "on_marker_clicked");
+        EVENT_SPECS.put("onPageFinished", "on_page_finished");
+        EVENT_SPECS.put("onPageStarted", "on_page_started");
+        EVENT_SPECS.put("onPause", "on_pause");
+        EVENT_SPECS.put("onPictureTaken", "on_picture_taken");
+        EVENT_SPECS.put("onPictureTakenCancel", "on_picture_taken_cancel");
+        EVENT_SPECS.put("onPostCreate", "on_post_created");
+        EVENT_SPECS.put("onProgressChanged", "on_progress_changed");
+        EVENT_SPECS.put("onResetPasswordEmailSent", "on_reset_password_email_sent");
+        EVENT_SPECS.put("onResponse", "on_response");
+        EVENT_SPECS.put("onResume", "on_resume");
+        EVENT_SPECS.put("onSensorChanged", "on_sensor_changed");
+        EVENT_SPECS.put("onSignInUserComplete", "on_sign_in_user_complete");
+        EVENT_SPECS.put("onSpeechError", "on_speech_error");
+        EVENT_SPECS.put("onSpeechResult", "on_speech_result");
+        EVENT_SPECS.put("onStart", "on_start");
+        EVENT_SPECS.put("onStartTrackingTouch", "on_start_tracking_touch");
+        EVENT_SPECS.put("onStop", "on_stop");
+        EVENT_SPECS.put("onStopTrackingTouch", "on_stop_tracking_touch");
+        EVENT_SPECS.put("onTextChanged", "on_text_changed");
+        EVENT_SPECS.put("onUploadProgress", "on_upload_progress");
+        EVENT_SPECS.put("onUploadSuccess", "on_upload_success");
+    }
+
+    // Note: The old decompiled code returned null for unknown blockNames.
+    // This refactored version returns an empty list instead, which is safer
+    // and avoids potential NPE in callers (e.g. StringResource.getBlockTranslation).
+    public static ArrayList<String> getBlockParams(String blockName) {
+        String[] params = BLOCK_PARAMS.get(blockName);
+        if (params == null) return new ArrayList<>();
+        ArrayList<String> list = new ArrayList<>(params.length);
+        Collections.addAll(list, params);
+        return list;
+    }
+
+    public static ArrayList<String> getBlockMenuItems(String blockName) {
+        String[] items = EVENT_MENUS.get(blockName);
+        if (items == null) return new ArrayList<>();
+        ArrayList<String> list = new ArrayList<>(items.length);
+        Collections.addAll(list, items);
+        return list;
+    }
+
+    public static String getEventSpec(String blockName) {
+        return EVENT_SPECS.getOrDefault(blockName, "initialize");
+    }
+
+    public static String getBlockSpec(String blockName) {
+        return BLOCK_SPECS.getOrDefault(blockName, blockName);
+    }
 }
