@@ -109,7 +109,9 @@ public class BlockColorMapper {
                  "bluetoothConnectIsBluetoothEnabled", "bluetoothConnectIsBluetoothActivated",
                  "bluetoothConnectActivateBluetooth", "bluetoothConnectGetPairedDevices",
                  "bluetoothConnectGetRandomUuid", "locationManagerRequestLocationUpdates",
-                 "locationManagerRemoveUpdates" -> harmonizeWithPrimary(context, 0xff2ca5e2);
+                 "locationManagerRemoveUpdates", "notifCreateChannel", "notifSetChannel", "notifSetTitle", "notifSetContent",
+                 "notifSetSmallIcon", "notifSetAutoCancel", "notifSetPriority",
+                 "notifSetClickIntent", "notifShow", "notifCancel" -> harmonizeWithPrimary(context, 0xff2ca5e2);
             case "fileutildelete", "fileutilcopy", "fileutilwrite", "fileutilread", "fileutilmove",
                  "fileutilisexist", "fileutilmakedir", "fileutillistdir", "fileutilisdir",
                  "fileutilisfile", "fileutillength", "fileutilStartsWith", "fileutilEndsWith",
