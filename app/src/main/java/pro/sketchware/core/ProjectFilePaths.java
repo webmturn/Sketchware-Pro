@@ -564,6 +564,10 @@ public class ProjectFilePaths {
                         buildConfig.isFirebaseAuthUsed = true;
                         buildConfig.getActivityPermissions(activity.getActivityName()).usesFirebaseAuth = true;
                     }
+                    case ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH_PHONE -> {
+                        buildConfig.isFirebaseAuthUsed = true;
+                        buildConfig.getActivityPermissions(activity.getActivityName()).usesFirebaseAuth = true;
+                    }
                     case ComponentBean.COMPONENT_TYPE_REQUEST_NETWORK -> {
                         buildConfig.isGsonUsed = true;
                         buildConfig.isHttp3Used = true;

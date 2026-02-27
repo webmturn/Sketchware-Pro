@@ -738,6 +738,8 @@
     <string name="pref_backup_filename_title">备份文件名格式</string>
     <string name="pref_block_highlighting_title">启用积木块文本输入高亮</string>
     <string name="pref_block_highlighting_summary">编辑积木块文本参数时启用语法高亮</string>
+    <string name="pref_project_encryption_title">加密项目数据</string>
+    <string name="pref_project_encryption_summary">关闭后，项目数据文件（视图、逻辑、库配置）以明文存储，方便调试。读取时自动兼容两种格式。</string>
     <string name="pref_built_in_blocks_title">内置积木块</string>
     <string name="pref_built_in_blocks_summary">可能会减慢逻辑编辑器中积木块的加载速度</string>
     <string name="pref_new_version_control_title">使用新版本控制</string>

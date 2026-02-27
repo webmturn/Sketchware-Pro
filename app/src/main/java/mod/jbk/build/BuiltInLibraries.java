@@ -90,17 +90,26 @@ public class BuiltInLibraries {
     public static String CIRCLEIMAGEVIEW = "circleimageview-3.1.0";
     public static String CODEVIEW = "CodeView-0.4.0";
     public static String ERROR_PRONE_ANNOTATIONS = "error_prone_annotations-2.38.0";
-    public static String FIREBASE_AUTH = "firebase-auth-19.0.0";
-    public static String FIREBASE_AUTH_INTEROP = "firebase-auth-interop-18.0.0";
-    public static String FIREBASE_COMMON = "firebase-common-19.3.0";
-    public static String FIREBASE_COMPONENTS = "firebase-components-16.0.0";
-    public static String FIREBASE_DATABASE = "firebase-database-19.3.1";
-    public static String FIREBASE_DATABASE_COLLECTION = "firebase-database-collection-17.0.1";
-    public static String FIREBASE_IID = "firebase-iid-19.0.0";
-    public static String FIREBASE_IID_INTEROP = "firebase-iid-interop-17.0.0";
-    public static String FIREBASE_MEASUREMENT_CONNECTOR = "firebase-measurement-connector-18.0.0";
-    public static String FIREBASE_MESSAGING = "firebase-messaging-19.0.0";
-    public static String FIREBASE_STORAGE = "firebase-storage-19.0.0";
+    public static String FIREBASE_ANNOTATIONS = "firebase-annotations-16.2.0";
+    public static String FIREBASE_APPCHECK = "firebase-appcheck-17.1.0";
+    public static String FIREBASE_APPCHECK_INTEROP = "firebase-appcheck-interop-17.1.0";
+    public static String FIREBASE_AUTH = "firebase-auth-23.1.0";
+    public static String FIREBASE_AUTH_INTEROP = "firebase-auth-interop-20.0.0";
+    public static String FIREBASE_COMMON = "firebase-common-21.0.0";
+    public static String FIREBASE_COMMON_KTX = "firebase-common-ktx-21.0.0";
+    public static String FIREBASE_COMPONENTS = "firebase-components-18.0.0";
+    public static String FIREBASE_DATABASE = "firebase-database-21.0.0";
+    public static String FIREBASE_DATABASE_COLLECTION = "firebase-database-collection-18.0.1";
+    public static String FIREBASE_DATATRANSPORT = "firebase-datatransport-18.2.0";
+    public static String FIREBASE_ENCODERS = "firebase-encoders-17.0.0";
+    public static String FIREBASE_ENCODERS_JSON = "firebase-encoders-json-18.0.0";
+    public static String FIREBASE_ENCODERS_PROTO = "firebase-encoders-proto-16.0.0";
+    public static String FIREBASE_IID_INTEROP = "firebase-iid-interop-17.1.0";
+    public static String FIREBASE_INSTALLATIONS = "firebase-installations-17.2.0";
+    public static String FIREBASE_INSTALLATIONS_INTEROP = "firebase-installations-interop-17.1.0";
+    public static String FIREBASE_MEASUREMENT_CONNECTOR = "firebase-measurement-connector-19.0.0";
+    public static String FIREBASE_MESSAGING = "firebase-messaging-24.1.0";
+    public static String FIREBASE_STORAGE = "firebase-storage-21.0.1";
     public static String GLIDE = "glide-5.0.4";
     public static String GLIDE_ANNOTATIONS = "annotations-5.0.4";
     public static String GLIDE_DISKLRUCACHE = "disklrucache-5.0.4";
@@ -123,11 +132,13 @@ public class BuiltInLibraries {
     public static String PLAY_SERVICES_ADS_IDENTIFIER = "play-services-ads-identifier-18.0.0";
     public static String PLAY_SERVICES_ADS_LITE = "play-services-ads-lite-22.2.0";
     public static String PLAY_SERVICES_APPSET = "play-services-appset-16.0.1";
-    public static String PLAY_SERVICES_AUTH = "play-services-auth-19.0.0";
-    public static String PLAY_SERVICES_AUTH_API_PHONE = "play-services-auth-api-phone-17.0.0";
-    public static String PLAY_SERVICES_AUTH_BASE = "play-services-auth-base-17.0.0";
-    public static String PLAY_SERVICES_BASE = "play-services-base-18.0.0";
-    public static String PLAY_SERVICES_BASEMENT = "play-services-basement-18.0.0";
+    public static String PLAY_CORE_COMMON = "core-common-2.0.3";
+    public static String PLAY_INTEGRITY = "integrity-1.3.0";
+    public static String PLAY_SERVICES_AUTH = "play-services-auth-20.7.0";
+    public static String PLAY_SERVICES_AUTH_API_PHONE = "play-services-auth-api-phone-17.4.0";
+    public static String PLAY_SERVICES_AUTH_BASE = "play-services-auth-base-18.0.4";
+    public static String PLAY_SERVICES_BASE = "play-services-base-18.1.0";
+    public static String PLAY_SERVICES_BASEMENT = "play-services-basement-18.3.0";
     public static String PLAY_SERVICES_GASS = "play-services-gass-20.0.0";
     public static String PLAY_SERVICES_GCM = "play-services-gcm-17.0.0";
     public static String PLAY_SERVICES_IID = "play-services-iid-17.0.0";
@@ -136,8 +147,14 @@ public class BuiltInLibraries {
     public static String PLAY_SERVICES_MEASUREMENT_BASE = "play-services-measurement-base-20.1.2";
     public static String PLAY_SERVICES_MEASUREMENT_SDK_API = "play-services-measurement-sdk-api-20.1.2";
     public static String PLAY_SERVICES_PLACES_PLACEREPORT = "play-services-places-placereport-17.0.0";
-    public static String PLAY_SERVICES_STATS = "play-services-stats-17.0.0";
-    public static String PLAY_SERVICES_TASKS = "play-services-tasks-18.0.1";
+    public static String PLAY_SERVICES_CLOUD_MESSAGING = "play-services-cloud-messaging-17.2.0";
+    public static String PLAY_SERVICES_FIDO = "play-services-fido-20.1.0";
+    public static String PLAY_SERVICES_STATS = "play-services-stats-17.0.2";
+    public static String PLAY_SERVICES_TASKS = "play-services-tasks-18.1.0";
+    public static String RECAPTCHA = "recaptcha-18.5.1";
+    public static String TRANSPORT_API = "transport-api-3.1.0";
+    public static String TRANSPORT_BACKEND_CCT = "transport-backend-cct-3.1.8";
+    public static String TRANSPORT_RUNTIME = "transport-runtime-3.1.8";
     public static String USER_MESSAGING_PLATFORM = "user-messaging-platform-2.0.0";
     public static String WAVE_SIDE_BAR = "wave-side-bar";
 
@@ -354,37 +371,71 @@ public class BuiltInLibraries {
 
             new BuiltInLibrary(ERROR_PRONE_ANNOTATIONS),
 
-            new BuiltInLibrary(FIREBASE_AUTH, List.of(ANDROIDX_COLLECTION_JVM, ANDROIDX_FRAGMENT, ANDROIDX_LOCALBROADCASTMANAGER,
+            new BuiltInLibrary(FIREBASE_ANNOTATIONS),
+
+            new BuiltInLibrary(FIREBASE_APPCHECK, List.of(FIREBASE_APPCHECK_INTEROP, FIREBASE_COMMON, FIREBASE_COMMON_KTX,
+                    FIREBASE_COMPONENTS, FIREBASE_ANNOTATIONS,
+                    PLAY_SERVICES_BASE, PLAY_SERVICES_BASEMENT, PLAY_SERVICES_TASKS)),
+
+            new BuiltInLibrary(FIREBASE_APPCHECK_INTEROP),
+
+            new BuiltInLibrary(FIREBASE_AUTH, List.of(FIREBASE_ANNOTATIONS, FIREBASE_APPCHECK_INTEROP, FIREBASE_AUTH_INTEROP,
+                    FIREBASE_COMMON, FIREBASE_COMMON_KTX, FIREBASE_COMPONENTS,
+                    ANDROIDX_BROWSER, ANDROIDX_COLLECTION_JVM, ANDROIDX_FRAGMENT, ANDROIDX_LOCALBROADCASTMANAGER,
+                    PLAY_SERVICES_AUTH_API_PHONE, PLAY_SERVICES_BASEMENT, PLAY_SERVICES_TASKS,
+                    PLAY_INTEGRITY, RECAPTCHA, JETBRAINS_KOTLIN_STDLIB)),
+
+            new BuiltInLibrary(FIREBASE_AUTH_INTEROP, List.of(FIREBASE_ANNOTATIONS, FIREBASE_COMMON,
+                    PLAY_SERVICES_BASEMENT, PLAY_SERVICES_TASKS)),
+
+            new BuiltInLibrary(FIREBASE_COMMON, List.of(FIREBASE_COMPONENTS, FIREBASE_ANNOTATIONS,
+                    PLAY_SERVICES_BASEMENT, PLAY_SERVICES_TASKS,
+                    ANDROIDX_CONCURRENT_FUTURES, JETBRAINS_KOTLIN_STDLIB)),
+
+            new BuiltInLibrary(FIREBASE_COMMON_KTX, List.of(FIREBASE_COMMON, JETBRAINS_KOTLIN_STDLIB)),
+
+            new BuiltInLibrary(FIREBASE_COMPONENTS, List.of(FIREBASE_ANNOTATIONS, ANDROIDX_ANNOTATION_JVM,
+                    ERROR_PRONE_ANNOTATIONS)),
+
+            new BuiltInLibrary(FIREBASE_DATABASE, List.of(FIREBASE_APPCHECK_INTEROP, FIREBASE_AUTH_INTEROP, FIREBASE_COMMON,
+                    FIREBASE_COMMON_KTX, FIREBASE_COMPONENTS, FIREBASE_DATABASE_COLLECTION,
                     PLAY_SERVICES_BASE, PLAY_SERVICES_BASEMENT, PLAY_SERVICES_TASKS,
-                    FIREBASE_AUTH_INTEROP, FIREBASE_COMMON)),
-
-            new BuiltInLibrary(FIREBASE_AUTH_INTEROP, List.of(PLAY_SERVICES_BASE, PLAY_SERVICES_BASEMENT, PLAY_SERVICES_TASKS, FIREBASE_COMMON)),
-
-            new BuiltInLibrary(FIREBASE_COMMON, List.of(PLAY_SERVICES_BASEMENT, PLAY_SERVICES_TASKS, AUTO_VALUE_ANNOTATIONS,
-                    FIREBASE_COMPONENTS)),
-
-            new BuiltInLibrary(FIREBASE_COMPONENTS, List.of(ANDROIDX_ANNOTATION_JVM)),
-
-            new BuiltInLibrary(FIREBASE_DATABASE, List.of(ANDROIDX_ANNOTATION_JVM, PLAY_SERVICES_BASE, PLAY_SERVICES_BASEMENT,
-                    PLAY_SERVICES_TASKS, FIREBASE_AUTH_INTEROP, FIREBASE_COMMON,
-                    FIREBASE_COMPONENTS, FIREBASE_DATABASE_COLLECTION)),
+                    ANDROIDX_ANNOTATION_JVM, JETBRAINS_KOTLIN_STDLIB)),
 
             new BuiltInLibrary(FIREBASE_DATABASE_COLLECTION, List.of(PLAY_SERVICES_BASE)),
 
-            new BuiltInLibrary(FIREBASE_IID, List.of(ANDROIDX_COLLECTION_JVM, ANDROIDX_CORE, ANDROIDX_LEGACY_SUPPORT_CORE_UTILS,
-                    PLAY_SERVICES_BASEMENT, PLAY_SERVICES_STATS, PLAY_SERVICES_TASKS,
-                    FIREBASE_COMMON, FIREBASE_IID_INTEROP)),
+            new BuiltInLibrary(FIREBASE_DATATRANSPORT, List.of(FIREBASE_COMMON, FIREBASE_COMPONENTS,
+                    TRANSPORT_API, TRANSPORT_RUNTIME, TRANSPORT_BACKEND_CCT)),
+
+            new BuiltInLibrary(FIREBASE_ENCODERS),
+
+            new BuiltInLibrary(FIREBASE_ENCODERS_JSON, List.of(FIREBASE_ENCODERS)),
+
+            new BuiltInLibrary(FIREBASE_ENCODERS_PROTO, List.of(FIREBASE_ENCODERS)),
 
             new BuiltInLibrary(FIREBASE_IID_INTEROP, List.of(PLAY_SERVICES_BASE, PLAY_SERVICES_BASEMENT)),
 
+            new BuiltInLibrary(FIREBASE_INSTALLATIONS, List.of(FIREBASE_ANNOTATIONS, FIREBASE_COMMON, FIREBASE_COMMON_KTX,
+                    FIREBASE_COMPONENTS, FIREBASE_INSTALLATIONS_INTEROP,
+                    PLAY_SERVICES_TASKS, JETBRAINS_KOTLIN_STDLIB)),
+
+            new BuiltInLibrary(FIREBASE_INSTALLATIONS_INTEROP),
+
             new BuiltInLibrary(FIREBASE_MEASUREMENT_CONNECTOR, List.of(PLAY_SERVICES_BASEMENT)),
 
-            new BuiltInLibrary(FIREBASE_MESSAGING, List.of(ANDROIDX_COLLECTION_JVM, ANDROIDX_CORE, PLAY_SERVICES_BASEMENT,
-                    PLAY_SERVICES_TASKS, FIREBASE_COMMON, FIREBASE_IID,
-                    FIREBASE_MEASUREMENT_CONNECTOR), "com.google.firebase.messaging"),
+            new BuiltInLibrary(FIREBASE_MESSAGING, List.of(FIREBASE_COMMON, FIREBASE_COMMON_KTX, FIREBASE_COMPONENTS,
+                    FIREBASE_DATATRANSPORT, FIREBASE_ENCODERS, FIREBASE_ENCODERS_JSON,
+                    FIREBASE_ENCODERS_PROTO, FIREBASE_IID_INTEROP, FIREBASE_INSTALLATIONS,
+                    FIREBASE_INSTALLATIONS_INTEROP, FIREBASE_MEASUREMENT_CONNECTOR,
+                    PLAY_SERVICES_BASE, PLAY_SERVICES_BASEMENT, PLAY_SERVICES_CLOUD_MESSAGING,
+                    PLAY_SERVICES_STATS, PLAY_SERVICES_TASKS,
+                    ERROR_PRONE_ANNOTATIONS, JETBRAINS_KOTLIN_STDLIB,
+                    TRANSPORT_API, TRANSPORT_RUNTIME, TRANSPORT_BACKEND_CCT), "com.google.firebase.messaging"),
 
-            new BuiltInLibrary(FIREBASE_STORAGE, List.of(ANDROIDX_ANNOTATION_JVM, PLAY_SERVICES_BASE, PLAY_SERVICES_TASKS,
-                    FIREBASE_AUTH_INTEROP, FIREBASE_COMMON)),
+            new BuiltInLibrary(FIREBASE_STORAGE, List.of(FIREBASE_ANNOTATIONS, FIREBASE_APPCHECK, FIREBASE_APPCHECK_INTEROP,
+                    FIREBASE_AUTH_INTEROP, FIREBASE_COMMON, FIREBASE_COMMON_KTX, FIREBASE_COMPONENTS,
+                    PLAY_SERVICES_BASE, PLAY_SERVICES_TASKS,
+                    ANDROIDX_ANNOTATION_JVM, JETBRAINS_KOTLIN_STDLIB)),
 
             new BuiltInLibrary(GLIDE, List.of(ANDROIDX_EXIFINTERFACE, ANDROIDX_FRAGMENT, ANDROIDX_TRACING,
                     ANDROIDX_VECTORDRAWABLE_ANIMATED, GLIDE_ANNOTATIONS,
@@ -480,6 +531,23 @@ public class BuiltInLibraries {
             new BuiltInLibrary(PLAY_SERVICES_STATS, List.of(ANDROIDX_LEGACY_SUPPORT_CORE_UTILS, PLAY_SERVICES_BASEMENT)),
 
             new BuiltInLibrary(PLAY_SERVICES_TASKS, List.of(PLAY_SERVICES_BASEMENT)),
+
+            new BuiltInLibrary(PLAY_CORE_COMMON),
+
+            new BuiltInLibrary(PLAY_INTEGRITY, List.of(PLAY_SERVICES_BASEMENT, PLAY_SERVICES_TASKS, PLAY_CORE_COMMON)),
+
+            new BuiltInLibrary(PLAY_SERVICES_CLOUD_MESSAGING, List.of(PLAY_SERVICES_BASE, PLAY_SERVICES_BASEMENT, PLAY_SERVICES_TASKS)),
+
+            new BuiltInLibrary(PLAY_SERVICES_FIDO, List.of(PLAY_SERVICES_BASE, PLAY_SERVICES_BASEMENT, PLAY_SERVICES_TASKS)),
+
+            new BuiltInLibrary(RECAPTCHA, List.of(PLAY_SERVICES_BASEMENT, PLAY_SERVICES_TASKS, PLAY_INTEGRITY,
+                    JETBRAINS_KOTLIN_STDLIB, JETBRAINS_KOTLINX_COROUTINES_ANDROID)),
+
+            new BuiltInLibrary(TRANSPORT_API),
+
+            new BuiltInLibrary(TRANSPORT_BACKEND_CCT, List.of(TRANSPORT_API, TRANSPORT_RUNTIME)),
+
+            new BuiltInLibrary(TRANSPORT_RUNTIME, List.of(TRANSPORT_API)),
 
             new BuiltInLibrary(USER_MESSAGING_PLATFORM, List.of(ANDROIDX_ANNOTATION_JVM, PLAY_SERVICES_ADS_IDENTIFIER, PLAY_SERVICES_BASEMENT)),
 

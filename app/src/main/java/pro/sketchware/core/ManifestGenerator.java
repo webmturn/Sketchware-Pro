@@ -123,9 +123,13 @@ public class ManifestGenerator {
         }
         if (buildConfig.constVarComponent.isFCMUsed) {
             XmlBuilder metadataTag = new XmlBuilder("meta-data");
-            metadataTag.addAttribute("android", "name", "com.google.firebase.components:com.google.firebase.iid.Registrar");
+            metadataTag.addAttribute("android", "name", "com.google.firebase.components:com.google.firebase.messaging.FirebaseMessagingRegistrar");
             metadataTag.addAttribute("android", "value", "com.google.firebase.components.ComponentRegistrar");
             serviceTag.addChildNode(metadataTag);
+            XmlBuilder installationsMetadataTag = new XmlBuilder("meta-data");
+            installationsMetadataTag.addAttribute("android", "name", "com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsRegistrar");
+            installationsMetadataTag.addAttribute("android", "value", "com.google.firebase.components.ComponentRegistrar");
+            serviceTag.addChildNode(installationsMetadataTag);
         }
         applicationTag.addChildNode(serviceTag);
     }
@@ -457,7 +461,7 @@ public class ManifestGenerator {
         }
         if (buildConfig.constVarComponent.isFCMUsed) {
             writePermission(manifestXml, Manifest.permission.WAKE_LOCK);
-            writePermission(manifestXml, "com.google.android.c2dm.permission.RECEIVE");
+            // c2dm permission removed — not needed by Firebase Messaging 24.1.0+
         }
         AndroidManifestInjector.getP(manifestXml, buildConfig.sc_id);
 

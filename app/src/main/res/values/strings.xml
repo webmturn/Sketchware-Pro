@@ -2820,6 +2820,8 @@ Do you want to continue?"</string>
     <string name="pref_backup_filename_title">Backup filename format</string>
     <string name="pref_block_highlighting_summary">Enables syntax highlighting while editing blocks\' text parameters.</string>
     <string name="pref_block_highlighting_title">Enable block text input highlighting</string>
+    <string name="pref_project_encryption_title">Encrypt project data</string>
+    <string name="pref_project_encryption_summary">When disabled, project data files (view, logic, library) are stored as plaintext for easier debugging. Reading auto-detects both formats.</string>
     <string name="pref_built_in_blocks_summary">May slow down loading blocks in Logic Editor.</string>
     <string name="pref_built_in_blocks_title">Built-in blocks</string>
     <string name="pref_new_version_control_summary">Enables custom version code and name for projects.</string>

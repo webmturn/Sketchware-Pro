@@ -95,7 +95,7 @@ public class ComponentCodeGenerator {
         }
 
         if (metadata.isFirebaseEnabled) {
-            content.append("implementation platform('com.google.firebase:firebase-bom:34.1.0')\r\n");
+            content.append("implementation platform('com.google.firebase:firebase-bom:33.7.0')\r\n");
         }
 
         if (isLibraryNotExcluded(BuiltInLibraries.FIREBASE_AUTH, excludedLibraries) && metadata.isFirebaseAuthUsed) {
