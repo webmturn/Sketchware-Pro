@@ -1413,17 +1413,20 @@ public class BlockInterpreter {
                             "if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {\n" +
                             "NotificationChannel _channel_%s = new NotificationChannel(%s, %s, NotificationManager.%s);\n" +
                             "_nm_%s.createNotificationChannel(_channel_%s);\n}\n" +
-                            "%s = new NotificationCompat.Builder(getApplicationContext(), %s);",
+                            "%s = new NotificationCompat.Builder(getApplicationContext(), %s);\n" +
+                            "%s.setSmallIcon(R.mipmap.ic_launcher);",
                             params.get(0), params.get(1), params.get(2), params.get(3),
                             params.get(0), params.get(0),
-                            params.get(0), params.get(1));
+                            params.get(0), params.get(1),
+                            params.get(0));
                 }
                 break;
 
             case "notifSetChannel":
                 if (params.size() >= 2) {
-                    opcode = String.format("%s = new NotificationCompat.Builder(getApplicationContext(), %s);",
-                            params.get(0), params.get(1));
+                    opcode = String.format("%s = new NotificationCompat.Builder(getApplicationContext(), %s);\n" +
+                            "%s.setSmallIcon(R.mipmap.ic_launcher);",
+                            params.get(0), params.get(1), params.get(0));
                 }
                 break;
 
