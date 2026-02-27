@@ -32,7 +32,7 @@ class DependencyResolver(
     private val artifactId: String,
     private val version: String,
     private val skipDependencies: Boolean,
-    private val buildSettings: BuildSettings
+    private val buildSettings: BuildSettings?
 ) {
     companion object {
         private val DEFAULT_REPOS = """
@@ -48,28 +48,22 @@ class DependencyResolver(
         """.trimMargin()
     }
 
-    private val downloadPath: String by lazy {
-        resolveWritableDownloadPath()
+    private var downloadPath: String = FilePathUtil.getLocalLibsDir().absolutePath
+
+    private fun isStoragePermissionError(e: Throwable): Boolean {
+        var current: Throwable? = e
+        while (current != null) {
+            val msg = current.message
+            if (msg != null && (msg.contains("Operation not permitted") || msg.contains("EPERM"))) {
+                return true
+            }
+            current = current.cause
+        }
+        return false
     }
 
-    /**
-     * Tries the primary shared storage path first. If a write test fails
-     * (e.g. FUSE/EPERM on Samsung Android 16+), falls back to app-specific storage.
-     */
-    private fun resolveWritableDownloadPath(): String {
-        val primaryDir = FilePathUtil.getLocalLibsDir()
-        try {
-            val testDir = File(primaryDir, ".write_test_dir")
-            testDir.mkdirs()
-            val testFile = File(testDir, ".write_test")
-            testFile.createNewFile()
-            testFile.delete()
-            testDir.delete()
-            return primaryDir.absolutePath
-        } catch (e: Exception) {
-            // Primary path blocked by FUSE, use app-specific fallback
-            return FilePathUtil.getLocalLibsFallbackDir().absolutePath
-        }
+    private fun switchToFallbackPath() {
+        downloadPath = FilePathUtil.getLocalLibsFallbackDir().absolutePath
     }
 
     private val repositoriesJson = Paths.get(
@@ -135,18 +129,19 @@ class DependencyResolver(
             return@runBlocking
         }
 
+        val defaultAndroidJar = BuiltInLibraries.EXTRACTED_COMPILE_ASSETS_PATH.resolve("android.jar").absolutePath
         val libraryJars = listOf(
             BuiltInLibraries.EXTRACTED_COMPILE_ASSETS_PATH.toPath()
                 .resolve("core-lambda-stubs.jar"), Paths.get(
-                buildSettings.getValue(
+                buildSettings?.getValue(
                     BuildSettings.SETTING_ANDROID_JAR_PATH,
-                    BuiltInLibraries.EXTRACTED_COMPILE_ASSETS_PATH.resolve("android.jar").absolutePath
-                )
+                    defaultAndroidJar
+                ) ?: defaultAndroidJar
             )
         )
         val dependencyClasspath = mutableListOf<Path>()
 
-        val classpath = buildSettings.getValue(BuildSettings.SETTING_CLASSPATH, "")
+        val classpath = buildSettings?.getValue(BuildSettings.SETTING_CLASSPATH, "") ?: ""
 
         classpath.split(":").forEach {
             if (it.isEmpty()) return@forEach
@@ -161,8 +156,24 @@ class DependencyResolver(
                     }
             )
         } catch (e: Exception) {
-            callback.onDownloadError(dependency, e)
-            return@runBlocking
+            if (isStoragePermissionError(e) && downloadPath == FilePathUtil.getLocalLibsDir().absolutePath) {
+                // Primary path blocked by FUSE, retry with app-specific fallback
+                switchToFallbackPath()
+                try {
+                    dependency.downloadTo(
+                        File(downloadPath + "/${dependency.artifactId}-v${dependency.version}/classes.${dependency.extension}")
+                            .apply {
+                                parentFile?.mkdirs()
+                            }
+                    )
+                } catch (e2: Exception) {
+                    callback.onDownloadError(dependency, e2)
+                    return@runBlocking
+                }
+            } else {
+                callback.onDownloadError(dependency, e)
+                return@runBlocking
+            }
         }
 
         if (dependency.extension == "aar") {
@@ -238,8 +249,24 @@ class DependencyResolver(
                 Files.createDirectories(path.parent)
                 dep.downloadTo(File(path.toString()))
             } catch (e: Exception) {
-                callback.onDownloadError(dep, e)
-                return@forEach
+                if (isStoragePermissionError(e) && downloadPath == FilePathUtil.getLocalLibsDir().absolutePath) {
+                    switchToFallbackPath()
+                    val fallbackPath = Paths.get(
+                        downloadPath,
+                        "${dep.artifactId}-v${dep.version}",
+                        "classes.${dep.extension}"
+                    )
+                    try {
+                        Files.createDirectories(fallbackPath.parent)
+                        dep.downloadTo(File(fallbackPath.toString()))
+                    } catch (e2: Exception) {
+                        callback.onDownloadError(dep, e2)
+                        return@forEach
+                    }
+                } else {
+                    callback.onDownloadError(dep, e)
+                    return@forEach
+                }
             }
 
             if (dep.extension == "aar") {

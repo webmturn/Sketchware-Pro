@@ -133,7 +133,7 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
     }
 
     private void initDownloadFlow() {
-        dependencyName = Helper.getText(binding.dependencyInput);
+        dependencyName = Helper.getText(binding.dependencyInput).trim();
         if (dependencyName.isEmpty()) {
             binding.dependencyInputLayout.setError(Helper.getResString(R.string.error_enter_dependency));
             binding.dependencyInputLayout.setErrorEnabled(true);
@@ -186,6 +186,7 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
                     handler.post(() -> binding.overallProgress.setIndeterminate(true)));
             BuiltInLibraries.maybeExtractCoreLambdaStubsJar();
 
+            try {
             resolver.resolveDependency(new DependencyResolver.DependencyResolverCallback() {
                 @Override
                 public void onResolving(@NonNull Artifact artifact, @NonNull Artifact dependency) {
@@ -320,7 +321,7 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
                             ArrayList<HashMap<String, Object>> enabledLibs;
                             try {
                                 enabledLibs = gson.fromJson(fileContent, Helper.TYPE_MAP_LIST);
-                            } catch (com.google.gson.JsonSyntaxException e) {
+                            } catch (com.google.gson.JsonSyntaxException e2) {
                                 enabledLibs = new ArrayList<>();
                             }
                             enabledLibs.addAll(dependencies.stream()
@@ -334,6 +335,13 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
                     });
                 }
             });
+        } catch (Exception e) {
+            handler.post(() -> {
+                setDownloadState(false);
+                SketchwareUtil.showAnErrorOccurredDialog(getActivity(),
+                        "Failed to resolve dependency '" + dependencyName + "': " + e.getMessage());
+            });
+            }
         });
     }
 
