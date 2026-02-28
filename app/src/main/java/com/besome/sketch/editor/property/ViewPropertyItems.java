@@ -102,7 +102,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
             case "property_layout_gravity" -> addGravityProperty(property, bean.layout.layoutGravity);
             case "property_weight" -> addSimpleInputProperty(property, String.valueOf(bean.layout.weight));
             case "property_text" -> addSimpleInputProperty(property, bean.text.text);
-            case "property_text_size" -> addSelectorProperty(property, bean.text.textSize);
+            case "property_text_size" -> addSimpleInputProperty(property, String.valueOf(bean.text.textSize));
             case "property_text_style" -> addSelectorProperty(property, bean.text.textType);
             case "property_text_color" -> addColorProperty(property, bean.text.resTextColor, bean.text.textColor);
             case "property_hint" -> addSimpleInputProperty(property, bean.text.hint);
@@ -233,6 +233,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
         viewBean = bean;
         RecentHistoryManager.getInstance().loadFromDatabase(viewBean.getClassInfo().getClassName());
         removeAllViews();
+        propertyViewCache.clear();
         if (bean.id.equals("_fab")) {
             addFabProperties(bean);
         } else {
@@ -479,6 +480,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     public void setupRecentProperties(ViewBean bean) {
         viewBean = bean;
         removeAllViews();
+        propertyViewCache.clear();
         LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
         params.gravity = Gravity.LEFT;
