@@ -3,7 +3,6 @@ package pro.sketchware.core;
 import android.content.Context;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 public class RecentHistoryManager {
   public static volatile RecentHistoryManager instance;
@@ -26,22 +25,22 @@ public class RecentHistoryManager {
   }
   
   public ArrayList<String> getRecentItems(String category) {
-    return this.recentMap.get(category);
+    return recentMap.get(category);
   }
   
   public void initialize(Context context) {
-    if (this.recentMap == null)
-      this.recentMap = new HashMap<String, ArrayList<String>>(); 
-    if (this.database == null)
-      this.database = new SharedPrefsHelper(context, "P26"); 
+    if (recentMap == null)
+      recentMap = new HashMap<>(); 
+    if (database == null)
+      database = new SharedPrefsHelper(context, "P26"); 
   }
   
   public void addRecentItem(String key, String value) {
-    ArrayList<String> existingList = this.recentMap.get(key);
+    ArrayList<String> existingList = recentMap.get(key);
     ArrayList<String> historyList = existingList;
     if (existingList == null) {
       historyList = new ArrayList<>();
-      this.recentMap.put(key, historyList);
+      recentMap.put(key, historyList);
     } 
     if (historyList.contains(value))
       historyList.remove(value); 
@@ -51,19 +50,19 @@ public class RecentHistoryManager {
   }
   
   public void saveToDatabase() {
-    for (String key : this.recentMap.keySet()) {
+    for (String key : recentMap.keySet()) {
       StringBuilder entryBuilder = new StringBuilder();
-      for (String item : this.recentMap.get(key)) {
+      for (String item : recentMap.get(key)) {
         entryBuilder.append(item);
         entryBuilder.append(",");
       } 
-      this.database.put(key, entryBuilder.toString());
+      database.put(key, entryBuilder.toString());
     } 
   }
   
   public void loadFromDatabase(String category) {
-    if ((ArrayList)this.recentMap.get(category) == null) {
-      String[] parts = this.database.getStringDefault(category).split(",");
+    if ((ArrayList)recentMap.get(category) == null) {
+      String[] parts = database.getStringDefault(category).split(",");
       int size = parts.length;
       while (true) {
         int idx = size - 1;

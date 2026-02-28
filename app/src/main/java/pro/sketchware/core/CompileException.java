@@ -10,10 +10,10 @@ public class CompileException extends Exception {
   }
   
   public ArrayList<String> getErrorDetails() {
-    return this.errorDetails;
+    return errorDetails;
   }
   
   public void setErrorDetails(ArrayList<String> list) {
-    this.errorDetails = list;
+    errorDetails = list;
   }
 }

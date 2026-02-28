@@ -17,7 +17,6 @@ import pro.sketchware.R;
 import com.besome.sketch.beans.SelectableBean;
 import com.besome.sketch.beans.ViewBean;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class ViewFilesAdapter extends BaseFragment {
   public RecyclerView recyclerView;
@@ -36,38 +35,26 @@ public class ViewFilesAdapter extends BaseFragment {
   
   public final String generateUniqueViewId(int position, String xmlName) {
     String prefix = SketchwarePaths.getWidgetTypeName(position);
-    StringBuilder idBuilder = new StringBuilder();
-    idBuilder.append(prefix);
-    int[] intValues = this.viewCounters;
+    int[] intValues = viewCounters;
     int counter = intValues[position] + 1;
     intValues[position] = counter;
-    idBuilder.append(counter);
-    String candidateId = idBuilder.toString();
-    ArrayList existingViews = ProjectDataManager.getProjectDataManager(this.projectId).getViews(xmlName);
+    String candidateId = prefix + counter;
+    ArrayList existingViews = ProjectDataManager.getProjectDataManager(projectId).getViews(xmlName);
     xmlName = candidateId;
     while (true) {
-      int found = 0;
-      Iterator viewIterator = existingViews.iterator();
-      while (true) {
-        counter = found;
-        if (viewIterator.hasNext()) {
-          if (xmlName.equals(((ViewBean)viewIterator.next()).id)) {
-            counter = 1;
-            break;
-          } 
-          continue;
-        } 
-        break;
-      } 
+      counter = 0;
+      for (Object view : existingViews) {
+        if (xmlName.equals(((ViewBean)view).id)) {
+          counter = 1;
+          break;
+        }
+      }
       if (counter == 0)
         return xmlName; 
-      StringBuilder retryBuilder = new StringBuilder();
-      retryBuilder.append(prefix);
-      int[] intValues1 = this.viewCounters;
+      int[] intValues1 = viewCounters;
       counter = intValues1[position] + 1;
       intValues1[position] = counter;
-      retryBuilder.append(counter);
-      xmlName = retryBuilder.toString();
+      xmlName = prefix + counter;
     } 
   }
   
@@ -84,84 +71,83 @@ public class ViewFilesAdapter extends BaseFragment {
   }
   
   public void addProjectFile(ProjectFileBean fileBean) {
-    this.projectFiles.add(fileBean);
-    this.adapter.notifyDataSetChanged();
+    projectFiles.add(fileBean);
+    adapter.notifyDataSetChanged();
   }
   
   public void addCustomView(String fileName) {
     boolean found = false;
-    for (ProjectFileBean bean : this.projectFiles) {
+    for (ProjectFileBean bean : projectFiles) {
       if (bean.fileType == 2 && bean.fileName.equals(fileName)) {
         found = true;
         break;
       }
     }
     if (!found) {
-      this.projectFiles.add(new ProjectFileBean(2, fileName));
-      this.adapter.notifyDataSetChanged();
+      projectFiles.add(new ProjectFileBean(2, fileName));
+      adapter.notifyDataSetChanged();
     }
   }
   
   public void setSelectionMode(boolean flag) {
-    this.isSelectionMode = Boolean.valueOf(flag);
+    isSelectionMode = Boolean.valueOf(flag);
     deselectAll();
-    this.adapter.notifyDataSetChanged();
+    adapter.notifyDataSetChanged();
   }
   
   public void removeCustomView(String fileName) {
-    for (ProjectFileBean projectFileBean : this.projectFiles) {
+    for (ProjectFileBean projectFileBean : projectFiles) {
       if (projectFileBean.fileType == 2 && projectFileBean.fileName.equals(fileName)) {
-        this.projectFiles.remove(projectFileBean);
+        projectFiles.remove(projectFileBean);
         break;
       } 
     } 
-    this.adapter.notifyDataSetChanged();
+    adapter.notifyDataSetChanged();
   }
   
   public ArrayList<ProjectFileBean> getProjectFiles() {
-    return this.projectFiles;
+    return projectFiles;
   }
   
   public void loadCustomViews() {
-    ArrayList<ProjectFileBean> customViews = ProjectDataManager.getFileManager(this.projectId).getCustomViews();
+    ArrayList<ProjectFileBean> customViews = ProjectDataManager.getFileManager(projectId).getCustomViews();
     if (customViews == null)
       return; 
     for (ProjectFileBean projectFileBean : customViews)
-      this.projectFiles.add(projectFileBean); 
+      projectFiles.add(projectFileBean); 
   }
   
   public final void deselectAll() {
-    Iterator<ProjectFileBean> iterator = this.projectFiles.iterator();
-    while (iterator.hasNext())
-      ((SelectableBean)iterator.next()).isSelected = false; 
+    for (ProjectFileBean bean : projectFiles)
+      bean.isSelected = false; 
   }
   
   public void removeSelectedFiles() {
-    int size = this.projectFiles.size();
+    int size = projectFiles.size();
     while (true) {
       int idx = size - 1;
       if (idx >= 0) {
         size = idx;
-        if (((SelectableBean)this.projectFiles.get(idx)).isSelected) {
-          this.projectFiles.remove(idx);
+        if (((SelectableBean)projectFiles.get(idx)).isSelected) {
+          projectFiles.remove(idx);
           size = idx;
         } 
         continue;
       } 
-      this.adapter.notifyDataSetChanged();
+      adapter.notifyDataSetChanged();
       return;
     } 
   }
   
   public void updateEmptyState() {
-    ArrayList<ProjectFileBean> filesList = this.projectFiles;
+    ArrayList<ProjectFileBean> filesList = projectFiles;
     if (filesList != null)
       if (filesList.size() == 0) {
-        this.emptyText.setVisibility(View.VISIBLE);
-        this.recyclerView.setVisibility(View.GONE);
+        emptyText.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
       } else {
-        this.emptyText.setVisibility(View.GONE);
-        this.recyclerView.setVisibility(View.VISIBLE);
+        emptyText.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
       }  
   }
   
@@ -170,55 +156,55 @@ public class ViewFilesAdapter extends BaseFragment {
     if (savedInstanceState == null) {
       loadCustomViews();
     } else {
-      this.projectId = savedInstanceState.getString("sc_id");
-      this.projectFiles = savedInstanceState.getParcelableArrayList("custom_views");
+      projectId = savedInstanceState.getString("sc_id");
+      projectFiles = savedInstanceState.getParcelableArrayList("custom_views");
     } 
-    this.recyclerView.getAdapter().notifyDataSetChanged();
+    recyclerView.getAdapter().notifyDataSetChanged();
     updateEmptyState();
   }
   
   public void onActivityResult(int start, int end, Intent resultIntent) {
     if ((start == 277 || start == 278) && end == -1) {
-      ProjectFileBean projectFileBean = this.projectFiles.get(this.adapter.selectedPosition);
-      ArrayList<ViewBean> currentViews = ProjectDataManager.getProjectDataManager(this.projectId).getViews(projectFileBean.getXmlName());
+      ProjectFileBean projectFileBean = projectFiles.get(adapter.selectedPosition);
+      ArrayList<ViewBean> currentViews = ProjectDataManager.getProjectDataManager(projectId).getViews(projectFileBean.getXmlName());
       for (end = currentViews.size() - 1; end >= 0; end--) {
         ViewBean viewBean = currentViews.get(end);
-        ProjectDataManager.getProjectDataManager(this.projectId).removeView(projectFileBean, viewBean);
+        ProjectDataManager.getProjectDataManager(projectId).removeView(projectFileBean, viewBean);
       } 
       ArrayList<ViewBean> existingViews = getPresetViews(((ProjectFileBean)resultIntent.getParcelableExtra("preset_data")).presetName, start);
-      ProjectDataManager.getProjectDataManager(this.projectId);
+      ProjectDataManager.getProjectDataManager(projectId);
       for (ViewBean viewBean : ProjectDataStore.getSortedRootViews(existingViews)) {
         viewBean.id = generateUniqueViewId(viewBean.type, projectFileBean.getXmlName());
-        ProjectDataManager.getProjectDataManager(this.projectId).addView(projectFileBean.getXmlName(), viewBean);
+        ProjectDataManager.getProjectDataManager(projectId).addView(projectFileBean.getXmlName(), viewBean);
         if (viewBean.type == 3 && projectFileBean.fileType == 0)
-          ProjectDataManager.getProjectDataManager(this.projectId).addEvent(projectFileBean.getJavaName(), 1, viewBean.type, viewBean.id, "onClick"); 
+          ProjectDataManager.getProjectDataManager(projectId).addEvent(projectFileBean.getJavaName(), 1, viewBean.type, viewBean.id, "onClick"); 
       } 
-      FileListAdapter fileListAdapter = this.adapter;
+      FileListAdapter fileListAdapter = adapter;
       fileListAdapter.notifyItemChanged(fileListAdapter.selectedPosition);
     } 
   }
   
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     ViewGroup viewGroup = (ViewGroup)inflater.inflate(R.layout.fr_manage_view_list, container, false);
-    this.projectFiles = new ArrayList<ProjectFileBean>();
-    this.recyclerView = (RecyclerView)viewGroup.findViewById(R.id.list_activities);
-    this.recyclerView.setHasFixedSize(true);
-    this.recyclerView.setLayoutManager((RecyclerView.LayoutManager)new LinearLayoutManager(getContext()));
-    this.adapter = new FileListAdapter(this, this.recyclerView);
-    this.recyclerView.setAdapter(this.adapter);
+    projectFiles = new ArrayList<>();
+    recyclerView = (RecyclerView)viewGroup.findViewById(R.id.list_activities);
+    recyclerView.setHasFixedSize(true);
+    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+    adapter = new FileListAdapter(this, recyclerView);
+    recyclerView.setAdapter(adapter);
     if (savedInstanceState == null) {
-      this.projectId = requireActivity().getIntent().getStringExtra("sc_id");
+      projectId = requireActivity().getIntent().getStringExtra("sc_id");
     } else {
-      this.projectId = savedInstanceState.getString("sc_id");
+      projectId = savedInstanceState.getString("sc_id");
     } 
-    this.emptyText = (TextView)viewGroup.findViewById(R.id.tv_guide);
-    this.emptyText.setText(StringResource.getInstance().getTranslatedString((Context)requireActivity(), R.string.design_manager_view_description_guide_create_custom_view));
-    return (View)viewGroup;
+    emptyText = (TextView)viewGroup.findViewById(R.id.tv_guide);
+    emptyText.setText(StringResource.getInstance().getTranslatedString(requireActivity(), R.string.design_manager_view_description_guide_create_custom_view));
+    return viewGroup;
   }
   
   public void onSaveInstanceState(Bundle savedInstanceState) {
-    savedInstanceState.putString("sc_id", this.projectId);
-    savedInstanceState.putParcelableArrayList("custom_views", this.projectFiles);
+    savedInstanceState.putString("sc_id", projectId);
+    savedInstanceState.putParcelableArrayList("custom_views", projectFiles);
     super.onSaveInstanceState(savedInstanceState);
   }
   
@@ -228,24 +214,24 @@ public class ViewFilesAdapter extends BaseFragment {
     public final ViewFilesAdapter outerAdapter;
     
     public FileListAdapter(ViewFilesAdapter this$0, RecyclerView recyclerView) {
-      this.outerAdapter = this$0;
+      outerAdapter = this$0;
       if (recyclerView.getLayoutManager() instanceof LinearLayoutManager)
         recyclerView.addOnScrollListener(new ViewFileScrollListener(this, this$0)); 
     }
     
     public int getItemCount() {
-      return (this.outerAdapter.projectFiles != null) ? this.outerAdapter.projectFiles.size() : 0;
+      return (outerAdapter.projectFiles != null) ? outerAdapter.projectFiles.size() : 0;
     }
     
     public void onBindViewHolder(ViewHolder holder, int position) {
-      if (this.outerAdapter.isSelectionMode.booleanValue()) {
+      if (outerAdapter.isSelectionMode.booleanValue()) {
         holder.deleteContainer.setVisibility(View.VISIBLE);
         holder.activityIcon.setVisibility(View.GONE);
       } else {
         holder.deleteContainer.setVisibility(View.GONE);
         holder.activityIcon.setVisibility(View.VISIBLE);
       } 
-      ProjectFileBean projectFileBean = this.outerAdapter.projectFiles.get(position);
+      ProjectFileBean projectFileBean = outerAdapter.projectFiles.get(position);
       holder.activityIcon.setImageResource(R.drawable.activity_preset_1);
       holder.checkbox.setChecked(((SelectableBean)projectFileBean).isSelected);
       position = projectFileBean.fileType;
@@ -284,17 +270,17 @@ public class ViewFilesAdapter extends BaseFragment {
       
       public ViewHolder(ViewFilesAdapter.FileListAdapter this$0, View itemView) {
         super(itemView);
-        this.adapterRef = this$0;
-        this.checkbox = (CheckBox)itemView.findViewById(R.id.chk_select);
-        this.activityIcon = (ImageView)itemView.findViewById(R.id.img_activity);
-        this.screenName = (TextView)itemView.findViewById(R.id.tv_screen_name);
-        this.deleteContainer = (LinearLayout)itemView.findViewById(R.id.delete_img_container);
-        this.deleteIcon = (ImageView)itemView.findViewById(R.id.img_delete);
-        this.presetIcon = (ImageView)itemView.findViewById(R.id.img_preset_setting);
-        this.checkbox.setVisibility(View.GONE);
+        adapterRef = this$0;
+        checkbox = (CheckBox)itemView.findViewById(R.id.chk_select);
+        activityIcon = (ImageView)itemView.findViewById(R.id.img_activity);
+        screenName = (TextView)itemView.findViewById(R.id.tv_screen_name);
+        deleteContainer = (LinearLayout)itemView.findViewById(R.id.delete_img_container);
+        deleteIcon = (ImageView)itemView.findViewById(R.id.img_delete);
+        presetIcon = (ImageView)itemView.findViewById(R.id.img_preset_setting);
+        checkbox.setVisibility(View.GONE);
         itemView.setOnClickListener(new ViewFileClickListener(this, this$0));
         itemView.setOnLongClickListener(new ViewFileLongClickListener(this, this$0));
-        this.presetIcon.setOnClickListener(new ViewFileEditClickListener(this, this$0));
+        presetIcon.setOnClickListener(new ViewFileEditClickListener(this, this$0));
       }
     }
   }

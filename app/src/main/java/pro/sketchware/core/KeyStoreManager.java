@@ -32,11 +32,11 @@ public class KeyStoreManager {
   
   public KeyStoreManager() {
     Security.addProvider((Provider)new BouncyCastleProvider());
-    this.keyStore = (KeyStore)new JksKeyStore();
+    keyStore = (KeyStore)new JksKeyStore();
   }
   
   public String getFirstAlias() throws Exception {
-    Enumeration<String> enumeration = this.keyStore.aliases();
+    Enumeration<String> enumeration = keyStore.aliases();
     return enumeration.hasMoreElements() ? enumeration.nextElement() : "";
   }
   
@@ -44,15 +44,15 @@ public class KeyStoreManager {
     if (inputStream == null)
       return; 
     try {
-      this.keyStore.load(inputStream, password.toCharArray());
+      keyStore.load(inputStream, password.toCharArray());
     } catch (Exception exception) {
-      exception.printStackTrace();
+      Log.w("KeyStoreManager", "Failed to load keystore", exception);
       throw new Exception(exception.getMessage());
     } finally {
       try {
         inputStream.close();
       } catch (Exception exception) {
-        android.util.Log.w("KeyStoreManager", "Failed to close input stream", exception);
+        Log.w("KeyStoreManager", "Failed to close input stream", exception);
       }
     }
   }
@@ -70,21 +70,18 @@ public class KeyStoreManager {
   }
   
   public final byte[] exportKeyStore(String password) throws Exception {
-    if (this.keyStore == null)
+    if (keyStore == null)
       return null; 
-    this.keyBuffer = ByteBuffer.allocate(8192);
+    keyBuffer = ByteBuffer.allocate(8192);
     KeyStoreOutputStream hI = new KeyStoreOutputStream(this);
-    this.keyStore.store(hI, password.toCharArray());
-    byte[] bytes = new byte[this.keyBuffer.position()];
-    System.arraycopy(this.keyBuffer.array(), 0, bytes, 0, this.keyBuffer.position());
+    keyStore.store(hI, password.toCharArray());
+    byte[] bytes = new byte[keyBuffer.position()];
+    System.arraycopy(keyBuffer.array(), 0, bytes, 0, keyBuffer.position());
     int length = bytes.length;
     String hexStr = "";
     for (int byteIdx = 0; byteIdx < length; byteIdx++) {
       byte currentByte = bytes[byteIdx];
-      StringBuilder hexBuilder = new StringBuilder();
-      hexBuilder.append(hexStr);
-      hexBuilder.append(String.format("%02X", new Object[] { Byte.valueOf(currentByte) }));
-      hexStr = hexBuilder.toString();
+      hexStr = hexStr + String.format("%02X", new Object[] { Byte.valueOf(currentByte) });
     } 
     return bytes;
   }
@@ -112,9 +109,9 @@ public class KeyStoreManager {
       x509V3CertificateGenerator.setSignatureAlgorithm("MD5WithRSAEncryption");
       X509Certificate x509Certificate = x509V3CertificateGenerator.generateX509Certificate(keyPair.getPrivate());
       JksKeyStore jksKeyStore = new JksKeyStore();
-      this.keyStore = (KeyStore)jksKeyStore;
-      this.keyStore.load(null, extra.toCharArray());
-      this.keyStore.setKeyEntry(value, keyPair.getPrivate(), extra.toCharArray(), new Certificate[] { x509Certificate });
+      keyStore = (KeyStore)jksKeyStore;
+      keyStore.load(null, extra.toCharArray());
+      keyStore.setKeyEntry(value, keyPair.getPrivate(), extra.toCharArray(), new Certificate[] { x509Certificate });
       return exportKeyStore(extra);
     } catch (LoadKeystoreException loadKeystoreException) {
       Log.e("ERROR", "Failed to access keystore. incorrect passward");
@@ -128,7 +125,7 @@ public class KeyStoreManager {
     ZipSigner zipSigner = new ZipSigner();
     zipSigner.issueLoadingCertAndKeysProgressEvent();
     String alias = getFirstAlias();
-    zipSigner.setKeys("custom", (X509Certificate)this.keyStore.getCertificate(alias), (PrivateKey)this.keyStore.getKey(alias, alias.toCharArray()), "SHA1WITHRSA", null);
+    zipSigner.setKeys("custom", (X509Certificate)keyStore.getCertificate(alias), (PrivateKey)keyStore.getKey(alias, alias.toCharArray()), "SHA1WITHRSA", null);
     return zipSigner;
   }
 }

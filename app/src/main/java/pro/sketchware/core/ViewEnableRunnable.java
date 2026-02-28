@@ -10,6 +10,6 @@ public class ViewEnableRunnable implements Runnable {
   }
   
   public void run() {
-    this.view.setEnabled(true);
+    view.setEnabled(true);
   }
 }

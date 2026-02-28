@@ -4,7 +4,6 @@ import android.content.Context;
 import android.text.Spanned;
 import com.google.android.material.textfield.TextInputLayout;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.regex.Pattern;
 import pro.sketchware.R;
 
@@ -23,98 +22,81 @@ public class XmlNameValidator extends BaseValidator {
   
   public XmlNameValidator(Context context, TextInputLayout textInputLayout, String[] strings, ArrayList<String> list1, ArrayList<String> list2) {
     super(context, textInputLayout);
-    this.reservedNames = strings;
-    this.xmlNames = list1;
-    this.javaNames = list2;
-    this.batchCount = 1;
+    reservedNames = strings;
+    xmlNames = list1;
+    javaNames = list2;
+    batchCount = 1;
   }
   
   public void setBatchCount(int index) {
-    this.batchCount = index;
+    batchCount = index;
     validate(getText());
   }
   
   public void setJavaNames(ArrayList<String> list) {
-    this.javaNames = list;
+    javaNames = list;
   }
   
   public final void validate(String value) {
     String conflictList = "";
     if (value.length() < 3) {
-      this.textInputLayout.setErrorEnabled(true);
-      this.textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(this.context, R.string.invalid_value_min_lenth, new Object[] { Integer.valueOf(3) }));
-      this.valid = false;
+      textInputLayout.setErrorEnabled(true);
+      textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(context, R.string.invalid_value_min_lenth, new Object[] { Integer.valueOf(3) }));
+      valid = false;
       return;
     } 
     if (value.length() > 70) {
-      this.textInputLayout.setErrorEnabled(true);
-      this.textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(this.context, R.string.invalid_value_max_lenth, new Object[] { Integer.valueOf(70) }));
-      this.valid = false;
+      textInputLayout.setErrorEnabled(true);
+      textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(context, R.string.invalid_value_max_lenth, new Object[] { Integer.valueOf(70) }));
+      valid = false;
       return;
     } 
     if (value.equals("default_image") || "NONE".toLowerCase().equals(value.toLowerCase())) {
-      this.textInputLayout.setErrorEnabled(true);
-      this.textInputLayout.setError(StringResource.getInstance().getTranslatedString(this.context, R.string.common_message_name_unavailable));
-      this.valid = false;
+      textInputLayout.setErrorEnabled(true);
+      textInputLayout.setError(StringResource.getInstance().getTranslatedString(context, R.string.common_message_name_unavailable));
+      valid = false;
       return;
     } 
-    if (this.batchCount == 1) {
-      if (!value.equals(this.currentName) && this.xmlNames.indexOf(value) >= 0) {
-        this.textInputLayout.setErrorEnabled(true);
-        this.textInputLayout.setError(StringResource.getInstance().getTranslatedString(this.context, R.string.common_message_name_unavailable));
-        this.valid = false;
+    if (batchCount == 1) {
+      if (!value.equals(currentName) && xmlNames.indexOf(value) >= 0) {
+        textInputLayout.setErrorEnabled(true);
+        textInputLayout.setError(StringResource.getInstance().getTranslatedString(context, R.string.common_message_name_unavailable));
+        valid = false;
         return;
       } 
-      if (!value.equals(this.currentName) && this.javaNames.indexOf(value) >= 0) {
-        this.textInputLayout.setErrorEnabled(true);
-        this.textInputLayout.setError(StringResource.getInstance().getTranslatedString(this.context, R.string.common_message_name_unavailable));
-        this.valid = false;
+      if (!value.equals(currentName) && javaNames.indexOf(value) >= 0) {
+        textInputLayout.setErrorEnabled(true);
+        textInputLayout.setError(StringResource.getInstance().getTranslatedString(context, R.string.common_message_name_unavailable));
+        valid = false;
         return;
       } 
     } else {
       ArrayList<String> candidateNames = new ArrayList<>();
-      for (int batchIdx = 1; batchIdx <= this.batchCount; batchIdx++) {
-        StringBuilder candidateBuilder = new StringBuilder();
-        candidateBuilder.append(value);
-        candidateBuilder.append("_");
-        candidateBuilder.append(batchIdx);
-        candidateNames.add(candidateBuilder.toString());
+      for (int batchIdx = 1; batchIdx <= batchCount; batchIdx++) {
+        candidateNames.add(value + "_" + batchIdx);
       } 
       ArrayList<String> conflictNames = new ArrayList<>();
       for (String candidateName : candidateNames) {
-        if (this.xmlNames.indexOf(candidateName) >= 0)
+        if (xmlNames.indexOf(candidateName) >= 0)
           conflictNames.add(candidateName); 
       } 
       if (conflictNames.size() > 0) {
-        this.textInputLayout.setErrorEnabled(true);
-        String errorMessage = StringResource.getInstance().getTranslatedString(this.context, R.string.common_message_name_unavailable);
-        Iterator<String> iterator = conflictNames.iterator();
+        textInputLayout.setErrorEnabled(true);
+        String errorMessage = StringResource.getInstance().getTranslatedString(context, R.string.common_message_name_unavailable);
         value = "";
-        while (iterator.hasNext()) {
-          String conflictName = iterator.next();
+        for (String conflictName : conflictNames) {
           String accumulated = value;
           if (value.length() > 0) {
-            StringBuilder separatorBuilder = new StringBuilder();
-            separatorBuilder.append(value);
-            separatorBuilder.append(", ");
-            accumulated = separatorBuilder.toString();
+            accumulated = value + ", ";
           } 
-          StringBuilder nameBuilder = new StringBuilder();
-          nameBuilder.append(accumulated);
-          nameBuilder.append(conflictName);
-          conflictList = nameBuilder.toString();
+          conflictList = accumulated + conflictName;
         } 
-        StringBuilder errorBuilder = new StringBuilder();
-        errorBuilder.append(errorMessage);
-        errorBuilder.append("\n[");
-        errorBuilder.append(conflictList);
-        errorBuilder.append("]");
-        this.textInputLayout.setError(errorBuilder.toString());
-        this.valid = false;
+        textInputLayout.setError(errorMessage + "\n[" + conflictList + "]");
+        valid = false;
         return;
       } 
     } 
-    String[] parts = this.reservedNames;
+    String[] parts = reservedNames;
     int nameCount = parts.length;
     int found = 0;
     while (true) {
@@ -130,29 +112,29 @@ public class XmlNameValidator extends BaseValidator {
       break;
     } 
     if (found != 0) {
-      this.textInputLayout.setErrorEnabled(true);
-      this.textInputLayout.setError(StringResource.getInstance().getTranslatedString(this.context, R.string.logic_editor_message_reserved_keywords));
-      this.valid = false;
+      textInputLayout.setErrorEnabled(true);
+      textInputLayout.setError(StringResource.getInstance().getTranslatedString(context, R.string.logic_editor_message_reserved_keywords));
+      valid = false;
       return;
     } 
     if (!Character.isLetter(value.charAt(0))) {
-      this.textInputLayout.setErrorEnabled(true);
-      this.textInputLayout.setError(StringResource.getInstance().getTranslatedString(this.context, R.string.logic_editor_message_variable_name_must_start_letter));
-      this.valid = false;
+      textInputLayout.setErrorEnabled(true);
+      textInputLayout.setError(StringResource.getInstance().getTranslatedString(context, R.string.logic_editor_message_variable_name_must_start_letter));
+      valid = false;
       return;
     } 
-    if (this.namePattern.matcher(value).matches()) {
-      this.textInputLayout.setErrorEnabled(false);
-      this.valid = true;
+    if (namePattern.matcher(value).matches()) {
+      textInputLayout.setErrorEnabled(false);
+      valid = true;
     } else {
-      this.textInputLayout.setErrorEnabled(true);
-      this.textInputLayout.setError(StringResource.getInstance().getTranslatedString(this.context, R.string.invalid_value_rule_4));
-      this.valid = false;
+      textInputLayout.setErrorEnabled(true);
+      textInputLayout.setError(StringResource.getInstance().getTranslatedString(context, R.string.invalid_value_rule_4));
+      valid = false;
     } 
   }
   
   public void setCurrentName(String value) {
-    this.currentName = value;
+    currentName = value;
   }
   
   public CharSequence filter(CharSequence text, int x, int y, Spanned spanned, int width, int height) {

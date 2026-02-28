@@ -10,6 +10,6 @@ public class KeyStoreOutputStream extends OutputStream {
   }
   
   public void write(int value) {
-    this.keyStoreManager.keyBuffer.put((byte)value);
+    keyStoreManager.keyBuffer.put((byte)value);
   }
 }

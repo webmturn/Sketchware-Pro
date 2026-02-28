@@ -155,15 +155,10 @@ public class ProjectBuilder {
      * @return If the file in assets has been extracted
      */
     public static boolean hasFileChanged(String fileInAssets, String targetFile) {
-        long length;
         File compareToFile = new File(targetFile);
         EncryptedFileUtil fileUtil = new EncryptedFileUtil();
         long lengthOfFileInAssets = fileUtil.getAssetFileSize(SketchApplication.getContext(), fileInAssets);
-        if (compareToFile.exists()) {
-            length = compareToFile.length();
-        } else {
-            length = 0;
-        }
+        long length = compareToFile.exists() ? compareToFile.length() : 0;
         if (lengthOfFileInAssets == length) {
             return false;
         }
@@ -461,7 +456,7 @@ public class ProjectBuilder {
 
         class EclipseOutOutputStream extends OutputStream {
 
-            private final StringBuffer mBuffer = new StringBuffer();
+            private final StringBuilder mBuffer = new StringBuilder();
 
             @Override
             public void write(int b) {
@@ -475,7 +470,7 @@ public class ProjectBuilder {
 
         class EclipseErrOutputStream extends OutputStream {
 
-            private final StringBuffer mBuffer = new StringBuffer();
+            private final StringBuilder mBuffer = new StringBuilder();
 
             @Override
             public void write(int b) {

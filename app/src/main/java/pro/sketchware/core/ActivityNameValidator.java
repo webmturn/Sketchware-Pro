@@ -67,7 +67,7 @@ public class ActivityNameValidator extends BaseValidator {
             textInputLayout.setErrorEnabled(true);
             textInputLayout.setError(Helper.getResString(R.string.logic_editor_message_variable_name_must_start_letter));
             valid = false;
-        } else if (ActivityNameValidator.namePattern.matcher(input.toString()).matches()) {
+        } else if (namePattern.matcher(input.toString()).matches()) {
             textInputLayout.setErrorEnabled(false);
             valid = true;
         } else {

@@ -10,12 +10,12 @@ public class UserExperienceLevel {
   public int score;
   
   public UserExperienceLevel(Context context) {
-    this.database = new SharedPrefsHelper(context, "U1");
-    this.level = this.database.getIntDefault("U1I0");
-    int levelValue = this.level;
+    database = new SharedPrefsHelper(context, "U1");
+    level = database.getIntDefault("U1I0");
+    int levelValue = level;
     int clampedLevel = levelValue;
     if (levelValue > 3)
       clampedLevel = 3; 
-    this.score = clampedLevel * 20;
+    score = clampedLevel * 20;
   }
 }

@@ -16,8 +16,8 @@ public class NumberRangeValidator extends BaseValidator {
   
   public NumberRangeValidator(Context context, TextInputLayout textInputLayout, int x, int y) {
     super(context, textInputLayout);
-    this.minValue = x;
-    this.maxValue = y;
+    minValue = x;
+    maxValue = y;
   }
   
   public CharSequence filter(CharSequence text, int x, int y, Spanned spanned, int width, int height) {
@@ -27,27 +27,27 @@ public class NumberRangeValidator extends BaseValidator {
   public void onTextChanged(CharSequence text, int x, int y, int width) {
     String input = text.toString().trim();
     if (input.isEmpty()) {
-      this.valid = false;
+      valid = false;
       return;
     }
     try {
       int parsedValue = Integer.parseInt(input);
-      if (parsedValue < this.minValue) {
-        this.textInputLayout.setErrorEnabled(true);
-        this.textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(this.context, R.string.invalid_value_min_lenth, new Object[] { Integer.valueOf(this.minValue) }));
-        this.valid = false;
-      } else if (parsedValue > this.maxValue) {
-        this.textInputLayout.setErrorEnabled(true);
-        this.textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(this.context, R.string.invalid_value_max_lenth, new Object[] { Integer.valueOf(this.maxValue) }));
-        this.valid = false;
+      if (parsedValue < minValue) {
+        textInputLayout.setErrorEnabled(true);
+        textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(context, R.string.invalid_value_min_lenth, new Object[] { Integer.valueOf(minValue) }));
+        valid = false;
+      } else if (parsedValue > maxValue) {
+        textInputLayout.setErrorEnabled(true);
+        textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(context, R.string.invalid_value_max_lenth, new Object[] { Integer.valueOf(maxValue) }));
+        valid = false;
       } else {
-        this.textInputLayout.setErrorEnabled(false);
-        this.valid = true;
+        textInputLayout.setErrorEnabled(false);
+        valid = true;
       }
     } catch (NumberFormatException numberFormatException) {
-      this.textInputLayout.setErrorEnabled(true);
-      this.textInputLayout.setError(StringResource.getInstance().getTranslatedString(this.context, R.string.logic_editor_message_variable_name_must_start_letter));
-      this.valid = false;
+      textInputLayout.setErrorEnabled(true);
+      textInputLayout.setError(StringResource.getInstance().getTranslatedString(context, R.string.logic_editor_message_variable_name_must_start_letter));
+      valid = false;
     }
   }
 }

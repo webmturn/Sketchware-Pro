@@ -12,16 +12,16 @@ public class ViewFileLongClickListener implements View.OnLongClickListener {
   
   public ViewFileLongClickListener(ViewFilesAdapter.FileListAdapter.ViewHolder holder, ViewFilesAdapter.FileListAdapter adapter) {
     this.adapter = adapter;
-    this.viewHolder = holder;
+    viewHolder = holder;
   }
   
   public boolean onLongClick(View view) {
-    ((ManageViewActivity)this.viewHolder.adapterRef.outerAdapter.getActivity()).setSelectionMode(true);
-    ViewFilesAdapter.FileListAdapter.ViewHolder holder = this.viewHolder;
+    ((ManageViewActivity)viewHolder.adapterRef.outerAdapter.getActivity()).setSelectionMode(true);
+    ViewFilesAdapter.FileListAdapter.ViewHolder holder = viewHolder;
     holder.adapterRef.selectedPosition = holder.getLayoutPosition();
-    CheckBox checkBox = this.viewHolder.checkbox;
+    CheckBox checkBox = viewHolder.checkbox;
     checkBox.setChecked(checkBox.isChecked() ^ true);
-    ((SelectableBean)this.viewHolder.adapterRef.outerAdapter.projectFiles.get(this.viewHolder.adapterRef.selectedPosition)).isSelected = this.viewHolder.checkbox.isChecked();
+    ((SelectableBean)viewHolder.adapterRef.outerAdapter.projectFiles.get(viewHolder.adapterRef.selectedPosition)).isSelected = viewHolder.checkbox.isChecked();
     return true;
   }
 }

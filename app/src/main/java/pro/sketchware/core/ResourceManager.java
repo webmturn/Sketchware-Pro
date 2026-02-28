@@ -70,7 +70,7 @@ public class ResourceManager {
   }
   
   public void parseResourceData(BufferedReader reader) throws IOException {
-    StringBuffer contentBuffer = new StringBuffer();
+    StringBuilder contentBuffer = new StringBuilder();
     String sectionName = "";
     while (true) {
       String line = reader.readLine();
@@ -78,10 +78,10 @@ public class ResourceManager {
         if (line.length() <= 0)
           continue; 
         if (line.charAt(0) == '@') {
-          StringBuffer tempBuffer = contentBuffer;
+          StringBuilder tempBuffer = contentBuffer;
           if (sectionName.length() > 0) {
             parseResourceSection(sectionName, contentBuffer.toString());
-            tempBuffer = new StringBuffer();
+            tempBuffer = new StringBuilder();
           } 
           sectionName = line.substring(1);
           contentBuffer = tempBuffer;
@@ -135,7 +135,7 @@ public class ResourceManager {
     }
   }
   
-  public final void serializeResources(StringBuffer buffer) {
+  public final void serializeResources(StringBuilder buffer) {
     buffer.append("@images\n");
     for (ProjectResourceBean projectResourceBean : images) {
       buffer.append(gson.toJson(projectResourceBean, ProjectResourceBean.class));
@@ -509,7 +509,7 @@ public class ResourceManager {
   
   public void saveToData() {
     String resourcePath = SketchwarePaths.getDataPath(projectId) + File.separator + "resource";
-    StringBuffer contentBuffer = new StringBuffer();
+    StringBuilder contentBuffer = new StringBuilder();
     serializeResources(contentBuffer);
     try {
       byte[] bytes = fileUtil.encryptString(contentBuffer.toString());
@@ -522,7 +522,7 @@ public class ResourceManager {
   
   public void saveToBackup() {
     String backupPath = SketchwarePaths.getBackupPath(projectId) + File.separator + "resource";
-    StringBuffer contentBuffer = new StringBuffer();
+    StringBuilder contentBuffer = new StringBuilder();
     serializeResources(contentBuffer);
     try {
       byte[] bytes = fileUtil.encryptString(contentBuffer.toString());

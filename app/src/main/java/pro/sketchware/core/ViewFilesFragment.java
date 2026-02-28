@@ -47,15 +47,12 @@ public class ViewFilesFragment extends BaseFragment {
 
     public final String generateWidgetId(int beanType, String xmlName) {
         String baseName = SketchwarePaths.getWidgetTypeName(beanType);
-        StringBuilder nameBuilder = new StringBuilder();
-        nameBuilder.append(baseName);
         int[] nameCounters = widgetIdCounters;
         int counter = nameCounters[beanType] + 1;
         nameCounters[beanType] = counter;
-        nameBuilder.append(counter);
-        String newName = nameBuilder.toString();
+        String candidateId = baseName + counter;
         ArrayList<ViewBean> viewBeans = ProjectDataManager.getProjectDataManager(sc_id).getViews(xmlName);
-        xmlName = newName;
+        xmlName = candidateId;
 
         while (true) {
             boolean nameExists = false;
@@ -70,12 +67,9 @@ public class ViewFilesFragment extends BaseFragment {
                 return xmlName;
             }
 
-            nameBuilder = new StringBuilder();
-            nameBuilder.append(baseName);
             counter = nameCounters[beanType] + 1;
             nameCounters[beanType] = counter;
-            nameBuilder.append(counter);
-            xmlName = nameBuilder.toString();
+            xmlName = baseName + counter;
         }
     }
 

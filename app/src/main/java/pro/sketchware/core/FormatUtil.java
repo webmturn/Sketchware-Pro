@@ -15,10 +15,7 @@ public class FormatUtil {
     if (ch < 'A' || ch > 'F') {
       baseChar = 97;
       if (ch < 'a' || ch > 'f') {
-        StringBuilder errorBuilder = new StringBuilder("invalid hex digit '");
-        errorBuilder.append(ch);
-        errorBuilder.append("'");
-        throw new IllegalArgumentException(errorBuilder.toString());
+        throw new IllegalArgumentException("invalid hex digit '" + ch + "'");
       } 
     } 
     return ch - baseChar + 10;
@@ -51,16 +48,13 @@ public class FormatUtil {
       sizeValue /= 1.07374182E9F;
       formatted = (new DecimalFormat("#.#GB")).format(sizeValue);
     } else {
-      StringBuilder sizeBuilder = new StringBuilder();
-      sizeBuilder.append(String.valueOf(index));
-      sizeBuilder.append("B");
-      formatted = sizeBuilder.toString();
+      formatted = index + "B";
     } 
     return formatted;
   }
   
   public static String bytesToHex(byte[] data) {
-    StringBuffer hexBuffer = new StringBuffer(data.length * 2);
+    StringBuilder hexBuffer = new StringBuilder(data.length * 2);
     for (int b = 0; b < data.length; b++) {
       if ((data[b] & 0xFF) < 16)
         hexBuffer.append("0"); 
@@ -140,15 +134,9 @@ public class FormatUtil {
     for (int b = 0; b < value.length(); b++) {
       char c = value.charAt(b);
       if (c == '\\') {
-        StringBuilder charBuilder = new StringBuilder();
-        charBuilder.append(result);
-        charBuilder.append(value.charAt(++b));
-        result = charBuilder.toString();
+        result = result + value.charAt(++b);
       } else {
-        StringBuilder charBuilder = new StringBuilder();
-        charBuilder.append(result);
-        charBuilder.append(c);
-        result = charBuilder.toString();
+        result = result + c;
       } 
     } 
     return result;
@@ -161,17 +149,11 @@ public class FormatUtil {
     
     public StringScanner(String input) {
       this.input = input;
-      this.position = 0;
+      position = 0;
     }
     
     public boolean isAtEnd() {
-      boolean result;
-      if (this.position >= this.input.length()) {
-        result = true;
-      } else {
-        result = false;
-      } 
-      return result;
+      return position >= input.length();
     }
     
     public String nextToken() {
@@ -181,36 +163,30 @@ public class FormatUtil {
       if (atEnd)
         return ""; 
       boolean hasPercent = false;
-      int startPos = this.position;
-      while (this.position < this.input.length() && this.input.charAt(this.position) != ' ') {
-        char c = this.input.charAt(this.position);
+      int startPos = position;
+      while (position < input.length() && input.charAt(position) != ' ') {
+        char c = input.charAt(position);
         if (c == '\\') {
-          StringBuilder escapeBuilder = new StringBuilder();
-          escapeBuilder.append(token);
-          escapeBuilder.append(c + this.input.charAt(this.position + 1));
-          token = escapeBuilder.toString();
-          this.position += 2;
+          token = token + (c + input.charAt(position + 1));
+          position += 2;
           continue;
         } 
         if (c == '%') {
-          if (this.position > startPos)
+          if (position > startPos)
             break; 
           hasPercent = true;
         } 
         if (hasPercent && (c == '?' || c == '-'))
           break; 
-        StringBuilder tokenBuilder = new StringBuilder();
-        tokenBuilder.append(token);
-        tokenBuilder.append(c);
-        token = tokenBuilder.toString();
-        this.position++;
+        token = token + c;
+        position++;
       } 
       return token;
     }
     
     public void skipSpaces() {
-      while (this.position < this.input.length() && this.input.charAt(this.position) == ' ')
-        this.position++; 
+      while (position < input.length() && input.charAt(position) == ' ')
+        position++; 
     }
   }
 }

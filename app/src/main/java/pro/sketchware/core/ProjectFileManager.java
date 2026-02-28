@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 
@@ -80,8 +81,8 @@ public class ProjectFileManager {
     } 
   }
   
-  public void parseFileData(BufferedReader reader) throws java.io.IOException {
-    StringBuffer contentBuffer = new StringBuffer();
+  public void parseFileData(BufferedReader reader) throws IOException {
+    StringBuilder contentBuffer = new StringBuilder();
     String sectionName = "";
     while (true) {
       String line = reader.readLine();
@@ -89,10 +90,10 @@ public class ProjectFileManager {
         if (line.isEmpty())
           continue; 
         if (line.charAt(0) == '@') {
-          StringBuffer tempBuffer = contentBuffer;
+          StringBuilder tempBuffer = contentBuffer;
           if (!sectionName.isEmpty()) {
             parseFileSection(sectionName, contentBuffer.toString());
-            tempBuffer = new StringBuffer();
+            tempBuffer = new StringBuilder();
           } 
           sectionName = line.substring(1);
           contentBuffer = tempBuffer;
@@ -161,7 +162,7 @@ public class ProjectFileManager {
     } 
   }
   
-  public final void serializeFiles(StringBuffer buffer) {
+  public final void serializeFiles(StringBuilder buffer) {
     buffer.append("@activity\n");
     if (activities != null)
       for (ProjectFileBean projectFileBean : activities)
@@ -240,7 +241,7 @@ public class ProjectFileManager {
   }
 
   public final void writeToFile(String filePath) {
-    StringBuffer contentBuffer = new StringBuffer();
+    StringBuilder contentBuffer = new StringBuilder();
     serializeFiles(contentBuffer);
     try {
       fileUtil.writeBytes(filePath, fileUtil.encryptString(contentBuffer.toString()));

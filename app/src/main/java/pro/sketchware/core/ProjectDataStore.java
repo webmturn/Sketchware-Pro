@@ -323,7 +323,7 @@ public class ProjectDataStore {
     if (componentMap != null) componentMap.clear();
     if (eventMap != null) eventMap.clear();
     if (blockMap != null) blockMap.clear();
-    StringBuffer contentBuffer = new StringBuffer();
+    StringBuilder contentBuffer = new StringBuilder();
     String sectionName = "";
     while (true) {
       String line = reader.readLine();
@@ -331,10 +331,10 @@ public class ProjectDataStore {
         if (line.length() <= 0)
           continue; 
         if (line.charAt(0) == '@') {
-          StringBuffer tempBuffer = contentBuffer;
+          StringBuilder tempBuffer = contentBuffer;
           if (sectionName.length() > 0) {
             parseLogicSection(sectionName, contentBuffer.toString());
-            tempBuffer = new StringBuffer();
+            tempBuffer = new StringBuilder();
           } 
           sectionName = line.substring(1);
           contentBuffer = tempBuffer;
@@ -436,7 +436,7 @@ public class ProjectDataStore {
     blockMap.get(fileName).put(data, list);
   }
   
-  public final void serializeLogicData(StringBuffer buffer) {
+  public final void serializeLogicData(StringBuilder buffer) {
     if (variableMap != null && !variableMap.isEmpty()) {
       for (Map.Entry<String, ArrayList<Pair<Integer, String>>> entry : variableMap.entrySet()) {
         ArrayList<Pair<Integer, String>> variables = entry.getValue();
@@ -629,7 +629,7 @@ public class ProjectDataStore {
   public void readViewData(BufferedReader reader) throws IOException {
     if (viewMap != null) viewMap.clear();
     if (fabMap != null) fabMap.clear();
-    StringBuffer contentBuffer = new StringBuffer();
+    StringBuilder contentBuffer = new StringBuilder();
     String sectionName = "";
     while (true) {
       String line = reader.readLine();
@@ -637,10 +637,10 @@ public class ProjectDataStore {
         if (line.length() <= 0)
           continue; 
         if (line.charAt(0) == '@') {
-          StringBuffer tempBuffer = contentBuffer;
+          StringBuilder tempBuffer = contentBuffer;
           if (sectionName.length() > 0) {
             parseViewSection(sectionName, contentBuffer.toString());
-            tempBuffer = new StringBuffer();
+            tempBuffer = new StringBuilder();
           } 
           sectionName = line.substring(1);
           contentBuffer = tempBuffer;
@@ -674,7 +674,7 @@ public class ProjectDataStore {
     buildConfig.constVarComponent.handleDeleteComponent(componentBean.componentId);
   }
   
-  public final void serializeViewData(StringBuffer buffer) {
+  public final void serializeViewData(StringBuilder buffer) {
     if (viewMap != null && !viewMap.isEmpty()) {
       for (Map.Entry<String, ArrayList<ViewBean>> entry : viewMap.entrySet()) {
         ArrayList<ViewBean> viewBeans = entry.getValue();
@@ -1189,7 +1189,7 @@ public class ProjectDataStore {
   }
   
   public final void saveLogicFile(String filePath) {
-    StringBuffer contentBuffer = new StringBuffer();
+    StringBuilder contentBuffer = new StringBuilder();
     serializeLogicData(contentBuffer);
     try {
       fileUtil.writeBytes(filePath, fileUtil.encryptString(contentBuffer.toString()));
@@ -1217,7 +1217,7 @@ public class ProjectDataStore {
   }
   
   public final void saveViewFile(String filePath) {
-    StringBuffer contentBuffer = new StringBuffer();
+    StringBuilder contentBuffer = new StringBuilder();
     serializeViewData(contentBuffer);
     try {
       fileUtil.writeBytes(filePath, fileUtil.encryptString(contentBuffer.toString()));

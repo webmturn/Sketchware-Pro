@@ -13,8 +13,9 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
 import android.util.DisplayMetrics;
-import com.google.android.gms.common.GoogleApiAvailability;
 import android.util.Log;
+
+import com.google.android.gms.common.GoogleApiAvailability;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ public class DeviceUtil {
   
   public static boolean isGooglePlayAvailable(Activity activity) {
     GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
-    int resultCode = googleApiAvailability.isGooglePlayServicesAvailable((Context)activity);
+    int resultCode = googleApiAvailability.isGooglePlayServicesAvailable(activity);
     if (resultCode != 0) {
       googleApiAvailability.isUserResolvableError(resultCode);
       return false;
@@ -85,13 +86,7 @@ public class DeviceUtil {
   }
   
   public static boolean hasSensor(Context context, int sensorType) {
-    boolean sensorExists;
-    if (((SensorManager)context.getSystemService(Context.SENSOR_SERVICE)).getDefaultSensor(sensorType) != null) {
-      sensorExists = true;
-    } else {
-      sensorExists = false;
-    } 
-    return sensorExists;
+    return ((SensorManager)context.getSystemService(Context.SENSOR_SERVICE)).getDefaultSensor(sensorType) != null;
   }
   
   public static float[] getScreenDpi(Activity activity) {
@@ -130,8 +125,8 @@ public class DeviceUtil {
     try {
       String packageName = context.getPackageName();
       versionCode = (context.getPackageManager().getPackageInfo(packageName, 0)).versionCode;
-    } catch (android.content.pm.PackageManager.NameNotFoundException nameNotFoundException) {
-      nameNotFoundException.printStackTrace();
+    } catch (PackageManager.NameNotFoundException e) {
+      Log.w("DeviceUtil", "Failed to get version code", e);
     } 
     return versionCode;
   }
@@ -141,8 +136,8 @@ public class DeviceUtil {
     try {
       String packageName = context.getPackageName();
       versionName = (context.getPackageManager().getPackageInfo(packageName, 0)).versionName;
-    } catch (android.content.pm.PackageManager.NameNotFoundException nameNotFoundException) {
-      nameNotFoundException.printStackTrace();
+    } catch (PackageManager.NameNotFoundException e) {
+      Log.w("DeviceUtil", "Failed to get version name", e);
       versionName = "";
     } 
     return versionName;

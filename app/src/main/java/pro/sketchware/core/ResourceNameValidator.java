@@ -22,15 +22,15 @@ public class ResourceNameValidator extends BaseValidator {
   
   public ResourceNameValidator(Context context, TextInputLayout textInputLayout, String[] strings, ArrayList<String> list) {
     super(context, textInputLayout);
-    this.reservedNames = strings;
-    this.existingNames = list;
+    reservedNames = strings;
+    existingNames = list;
   }
   
   public ResourceNameValidator(Context context, TextInputLayout textInputLayout, String[] strings, ArrayList<String> list, String input) {
     super(context, textInputLayout);
-    this.reservedNames = strings;
-    this.existingNames = list;
-    this.currentName = input;
+    reservedNames = strings;
+    existingNames = list;
+    currentName = input;
   }
   
   public CharSequence filter(CharSequence text, int x, int y, Spanned spanned, int width, int height) {
@@ -40,30 +40,30 @@ public class ResourceNameValidator extends BaseValidator {
   public void onTextChanged(CharSequence text, int x, int y, int width) {
     String input = text.toString().trim();
     if (input.length() < 3) {
-      this.textInputLayout.setErrorEnabled(true);
-      this.textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(this.context, R.string.invalid_value_min_lenth, new Object[] { Integer.valueOf(3) }));
-      this.valid = false;
+      textInputLayout.setErrorEnabled(true);
+      textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(context, R.string.invalid_value_min_lenth, new Object[] { Integer.valueOf(3) }));
+      valid = false;
       return;
     } 
     if (input.length() > 70) {
-      this.textInputLayout.setErrorEnabled(true);
-      this.textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(this.context, R.string.invalid_value_max_lenth, new Object[] { Integer.valueOf(70) }));
-      this.valid = false;
+      textInputLayout.setErrorEnabled(true);
+      textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(context, R.string.invalid_value_max_lenth, new Object[] { Integer.valueOf(70) }));
+      valid = false;
       return;
     } 
     if (input.equals("default_image") || "NONE".toLowerCase().equals(input.toLowerCase())) {
-      this.textInputLayout.setErrorEnabled(true);
-      this.textInputLayout.setError(StringResource.getInstance().getTranslatedString(this.context, R.string.common_message_name_unavailable));
-      this.valid = false;
+      textInputLayout.setErrorEnabled(true);
+      textInputLayout.setError(StringResource.getInstance().getTranslatedString(context, R.string.common_message_name_unavailable));
+      valid = false;
       return;
     } 
-    if (!input.equals(this.currentName) && this.existingNames.indexOf(input) >= 0) {
-      this.textInputLayout.setErrorEnabled(true);
-      this.textInputLayout.setError(StringResource.getInstance().getTranslatedString(this.context, R.string.common_message_name_unavailable));
-      this.valid = false;
+    if (!input.equals(currentName) && existingNames.indexOf(input) >= 0) {
+      textInputLayout.setErrorEnabled(true);
+      textInputLayout.setError(StringResource.getInstance().getTranslatedString(context, R.string.common_message_name_unavailable));
+      valid = false;
       return;
     } 
-    String[] parts = this.reservedNames;
+    String[] parts = reservedNames;
     y = parts.length;
     x = 0;
     while (true) {
@@ -80,24 +80,24 @@ public class ResourceNameValidator extends BaseValidator {
       break;
     } 
     if (x != 0) {
-      this.textInputLayout.setErrorEnabled(true);
-      this.textInputLayout.setError(StringResource.getInstance().getTranslatedString(this.context, R.string.logic_editor_message_reserved_keywords));
-      this.valid = false;
+      textInputLayout.setErrorEnabled(true);
+      textInputLayout.setError(StringResource.getInstance().getTranslatedString(context, R.string.logic_editor_message_reserved_keywords));
+      valid = false;
       return;
     } 
     if (!Character.isLetter(text.charAt(0))) {
-      this.textInputLayout.setErrorEnabled(true);
-      this.textInputLayout.setError(StringResource.getInstance().getTranslatedString(this.context, R.string.logic_editor_message_variable_name_must_start_letter));
-      this.valid = false;
+      textInputLayout.setErrorEnabled(true);
+      textInputLayout.setError(StringResource.getInstance().getTranslatedString(context, R.string.logic_editor_message_variable_name_must_start_letter));
+      valid = false;
       return;
     } 
-    if (this.namePattern.matcher(text.toString()).matches()) {
-      this.textInputLayout.setErrorEnabled(false);
-      this.valid = true;
+    if (namePattern.matcher(text.toString()).matches()) {
+      textInputLayout.setErrorEnabled(false);
+      valid = true;
     } else {
-      this.textInputLayout.setErrorEnabled(true);
-      this.textInputLayout.setError(StringResource.getInstance().getTranslatedString(this.context, R.string.invalid_value_rule_4));
-      this.valid = false;
+      textInputLayout.setErrorEnabled(true);
+      textInputLayout.setError(StringResource.getInstance().getTranslatedString(context, R.string.invalid_value_rule_4));
+      valid = false;
     } 
   }
 }

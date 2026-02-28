@@ -13,23 +13,23 @@ public class ViewFileEditClickListener implements View.OnClickListener {
   
   public ViewFileEditClickListener(ViewFilesAdapter.FileListAdapter.ViewHolder holder, ViewFilesAdapter.FileListAdapter adapter) {
     this.adapter = adapter;
-    this.viewHolder = holder;
+    viewHolder = holder;
   }
   
   public void onClick(View view) {
     char c;
     if (UIHelper.isClickThrottled())
       return; 
-    ViewFilesAdapter.FileListAdapter.ViewHolder holder = this.viewHolder;
+    ViewFilesAdapter.FileListAdapter.ViewHolder holder = viewHolder;
     holder.adapterRef.selectedPosition = holder.getLayoutPosition();
-    Intent intent = new Intent((Context)this.viewHolder.adapterRef.outerAdapter.getActivity(), PresetSettingActivity.class);
-    if (((ProjectFileBean)this.viewHolder.adapterRef.outerAdapter.projectFiles.get(this.viewHolder.adapterRef.selectedPosition)).fileType == 1) {
+    Intent intent = new Intent(viewHolder.adapterRef.outerAdapter.getActivity(), PresetSettingActivity.class);
+    if (((ProjectFileBean)viewHolder.adapterRef.outerAdapter.projectFiles.get(viewHolder.adapterRef.selectedPosition)).fileType == 1) {
       c = 'ĕ';
     } else {
       c = 'Ė';
     } 
     intent.putExtra("request_code", c);
     intent.putExtra("edit_mode", true);
-    this.viewHolder.adapterRef.outerAdapter.startActivityForResult(intent, c);
+    viewHolder.adapterRef.outerAdapter.startActivityForResult(intent, c);
   }
 }

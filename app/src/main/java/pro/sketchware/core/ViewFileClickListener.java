@@ -11,17 +11,17 @@ public class ViewFileClickListener implements View.OnClickListener {
   
   public ViewFileClickListener(ViewFilesAdapter.FileListAdapter.ViewHolder holder, ViewFilesAdapter.FileListAdapter adapter) {
     this.adapter = adapter;
-    this.viewHolder = holder;
+    viewHolder = holder;
   }
   
   public void onClick(View view) {
-    ViewFilesAdapter.FileListAdapter.ViewHolder holder = this.viewHolder;
+    ViewFilesAdapter.FileListAdapter.ViewHolder holder = viewHolder;
     holder.adapterRef.selectedPosition = holder.getLayoutPosition();
-    if (this.viewHolder.adapterRef.outerAdapter.isSelectionMode.booleanValue()) {
-      CheckBox checkBox = this.viewHolder.checkbox;
+    if (viewHolder.adapterRef.outerAdapter.isSelectionMode.booleanValue()) {
+      CheckBox checkBox = viewHolder.checkbox;
       checkBox.setChecked(checkBox.isChecked() ^ true);
-      ((SelectableBean)this.viewHolder.adapterRef.outerAdapter.projectFiles.get(this.viewHolder.adapterRef.selectedPosition)).isSelected = this.viewHolder.checkbox.isChecked();
-      ViewFilesAdapter.FileListAdapter listAdapter = this.viewHolder.adapterRef;
+      ((SelectableBean)viewHolder.adapterRef.outerAdapter.projectFiles.get(viewHolder.adapterRef.selectedPosition)).isSelected = viewHolder.checkbox.isChecked();
+      ViewFilesAdapter.FileListAdapter listAdapter = viewHolder.adapterRef;
       listAdapter.notifyItemChanged(listAdapter.selectedPosition);
     } 
   }
