@@ -538,6 +538,11 @@ public class ActivityCodeGenerator {
                 eventManager.addLifecycleEvent("onDestroy", "AdView", next.id);
             }
         }
+        for (ComponentBean comp : projectDataManager.getComponents(projectFileBean.getJavaName())) {
+            if (comp.type == ComponentBean.COMPONENT_TYPE_SQLITE) {
+                eventManager.addLifecycleEvent("onDestroy", "SQLiteDatabase", comp.componentId);
+            }
+        }
         if (!eventManager.eventLogic.isEmpty()) {
             sb.append(EOL);
             sb.append(eventManager.eventLogic).append(EOL);

@@ -372,6 +372,7 @@ public class EventCodeGenerator {
                     case "InterstitialAd":
                     case "RequestNetwork":
                     case "BluetoothConnect":
+                    case "SQLiteDatabase":
                         for (ComponentEvents value : this.listeners) {
                             value.isInitialized = true;
                         }

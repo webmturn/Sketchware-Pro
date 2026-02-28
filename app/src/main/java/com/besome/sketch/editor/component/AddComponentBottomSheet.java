@@ -79,6 +79,7 @@ public class AddComponentBottomSheet extends BottomSheetDialogFragment {
         componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_DATE_PICKER_DIALOG));
         componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_TIME_PICKER_DIALOG));
         componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_NOTIFICATION));
+        componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_SQLITE));
         componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_FRAGMENT_ADAPTER));
 
         // Ads

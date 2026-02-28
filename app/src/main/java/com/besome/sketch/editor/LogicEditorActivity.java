@@ -1075,6 +1075,10 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                                             ProjectDataStore.hasComponent(xmlName, ComponentBean.COMPONENT_TYPE_NOTIFICATION, parameter);
                                             break;
 
+                                        case "sqlite":
+                                            ProjectDataStore.hasComponent(xmlName, ComponentBean.COMPONENT_TYPE_SQLITE, parameter);
+                                            break;
+
                                         case "radiobutton":
                                             ProjectDataStore.hasViewOfType(xmlName, 19, parameter);
                                             break;

@@ -1488,6 +1488,157 @@ public class BlockInterpreter {
                 }
                 break;
 
+            case "sqliteOpen":
+                if (params.size() >= 2) {
+                    opcode = String.format(
+                            "try {\n" +
+                            "%s = openOrCreateDatabase(%s, MODE_PRIVATE, null);\n" +
+                            "} catch (Exception _sqliteException) {\n" +
+                            "_%s_onSQLiteError(_sqliteException.getMessage());\n" +
+                            "}",
+                            params.get(0), params.get(1), params.get(0));
+                }
+                break;
+
+            case "sqliteClose":
+                if (params.size() >= 1) {
+                    opcode = String.format("if (%s != null) { %s.close(); }",
+                            params.get(0), params.get(0));
+                }
+                break;
+
+            case "sqliteExecSQL":
+                if (params.size() >= 2) {
+                    opcode = String.format(
+                            "try {\n" +
+                            "%s.execSQL(%s);\n" +
+                            "} catch (Exception _sqliteException) {\n" +
+                            "_%s_onSQLiteError(_sqliteException.getMessage());\n" +
+                            "}",
+                            params.get(0), params.get(1), params.get(0));
+                }
+                break;
+
+            case "sqliteRawQuery":
+                if (params.size() >= 2) {
+                    opcode = String.format(
+                            "try {\n" +
+                            "_%s_cursor = %s.rawQuery(%s, null);\n" +
+                            "} catch (Exception _sqliteException) {\n" +
+                            "_%s_onSQLiteError(_sqliteException.getMessage());\n" +
+                            "}",
+                            params.get(0), params.get(0), params.get(1), params.get(0));
+                }
+                break;
+
+            case "sqliteMoveToFirst":
+                if (params.size() >= 1) {
+                    opcode = String.format("(_%s_cursor != null && _%s_cursor.moveToFirst())",
+                            params.get(0), params.get(0));
+                }
+                break;
+
+            case "sqliteMoveToNext":
+                if (params.size() >= 1) {
+                    opcode = String.format("(_%s_cursor != null && !_%s_cursor.isAfterLast() ? (_%s_cursor.moveToNext() || true) : false)",
+                            params.get(0), params.get(0), params.get(0));
+                }
+                break;
+
+            case "sqliteIsAfterLast":
+                if (params.size() >= 1) {
+                    opcode = String.format("(_%s_cursor == null || _%s_cursor.isAfterLast())",
+                            params.get(0), params.get(0));
+                }
+                break;
+
+            case "sqliteGetString":
+                if (params.size() >= 2) {
+                    opcode = String.format(
+                            "(_%s_cursor != null ? _%s_cursor.getString(_%s_cursor.getColumnIndexOrThrow(%s)) : \"\")",
+                            params.get(0), params.get(0), params.get(0), params.get(1));
+                }
+                break;
+
+            case "sqliteGetNumber":
+                if (params.size() >= 2) {
+                    opcode = String.format(
+                            "(_%s_cursor != null ? _%s_cursor.getDouble(_%s_cursor.getColumnIndexOrThrow(%s)) : 0)",
+                            params.get(0), params.get(0), params.get(0), params.get(1));
+                }
+                break;
+
+            case "sqliteGetCount":
+                if (params.size() >= 1) {
+                    opcode = String.format("(double)(_%s_cursor != null ? _%s_cursor.getCount() : 0)",
+                            params.get(0), params.get(0));
+                }
+                break;
+
+            case "sqliteBeginTransaction":
+                if (params.size() >= 1) {
+                    opcode = String.format("if (%s != null && %s.isOpen()) { %s.beginTransaction(); }",
+                            params.get(0), params.get(0), params.get(0));
+                }
+                break;
+
+            case "sqliteSetTransactionSuccessful":
+                if (params.size() >= 1) {
+                    opcode = String.format("if (%s != null && %s.isOpen() && %s.inTransaction()) { %s.setTransactionSuccessful(); }",
+                            params.get(0), params.get(0), params.get(0), params.get(0));
+                }
+                break;
+
+            case "sqliteEndTransaction":
+                if (params.size() >= 1) {
+                    opcode = String.format("if (%s != null && %s.isOpen() && %s.inTransaction()) { %s.endTransaction(); }",
+                            params.get(0), params.get(0), params.get(0), params.get(0));
+                }
+                break;
+
+            case "sqliteForEachRow":
+                if (params.size() >= 1) {
+                    String forEachBody = (bean.subStack1 >= 0) ? resolveBlock(String.valueOf(bean.subStack1), "") : "";
+                    opcode = String.format(
+                            "if (_%s_cursor != null && _%s_cursor.moveToFirst()) {\n" +
+                            "while (!_%s_cursor.isAfterLast()) {\n" +
+                            "%s\n" +
+                            "_%s_cursor.moveToNext();\n" +
+                            "}\n" +
+                            "}",
+                            params.get(0), params.get(0), params.get(0),
+                            forEachBody, params.get(0));
+                }
+                break;
+
+            case "sqliteEnableWAL":
+                if (params.size() >= 1) {
+                    opcode = String.format("if (%s != null) { %s.enableWriteAheadLogging(); }",
+                            params.get(0), params.get(0));
+                }
+                break;
+
+            case "sqliteCloseCursor":
+                if (params.size() >= 1) {
+                    opcode = String.format("if (_%s_cursor != null) { _%s_cursor.close(); }",
+                            params.get(0), params.get(0));
+                }
+                break;
+
+            case "sqliteIsOpen":
+                if (params.size() >= 1) {
+                    opcode = String.format("(%s != null && %s.isOpen())",
+                            params.get(0), params.get(0));
+                }
+                break;
+
+            case "sqliteCursorIsNull":
+                if (params.size() >= 1) {
+                    opcode = String.format("(_%s_cursor == null || _%s_cursor.isClosed())",
+                            params.get(0), params.get(0));
+                }
+                break;
+
             default:
                 opcode = getCodeExtraBlock(bean, "\"\"");
         }

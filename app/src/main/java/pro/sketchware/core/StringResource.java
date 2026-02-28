@@ -658,6 +658,24 @@ public class StringResource {
     loadBlockTranslation(context, "notifSetClickIntent");
     loadBlockTranslation(context, "notifShow");
     loadBlockTranslation(context, "notifCancel");
+    loadBlockTranslation(context, "sqliteOpen");
+    loadBlockTranslation(context, "sqliteClose");
+    loadBlockTranslation(context, "sqliteExecSQL");
+    loadBlockTranslation(context, "sqliteRawQuery");
+    loadBlockTranslation(context, "sqliteMoveToFirst");
+    loadBlockTranslation(context, "sqliteMoveToNext");
+    loadBlockTranslation(context, "sqliteIsAfterLast");
+    loadBlockTranslation(context, "sqliteGetString");
+    loadBlockTranslation(context, "sqliteGetNumber");
+    loadBlockTranslation(context, "sqliteGetCount");
+    loadBlockTranslation(context, "sqliteCloseCursor");
+    loadBlockTranslation(context, "sqliteIsOpen");
+    loadBlockTranslation(context, "sqliteBeginTransaction");
+    loadBlockTranslation(context, "sqliteSetTransactionSuccessful");
+    loadBlockTranslation(context, "sqliteEndTransaction");
+    loadBlockTranslation(context, "sqliteForEachRow");
+    loadBlockTranslation(context, "sqliteEnableWAL");
+    loadBlockTranslation(context, "sqliteCursorIsNull");
   }
   
   public HashMap<String, String> loadTranslationsFromFile(String filePath) {

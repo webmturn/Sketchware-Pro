@@ -1171,6 +1171,27 @@ public class ExtraPaletteBlock {
                     logicEditor.createPaletteBlock(" ", "notifShow");
                     logicEditor.createPaletteBlock(" ", "notifCancel");
                 }
+                if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_SQLITE)) {
+                    logicEditor.addPaletteCategory("SQLiteDatabase", getTitleBgColor());
+                    logicEditor.createPaletteBlock(" ", "sqliteOpen");
+                    logicEditor.createPaletteBlock(" ", "sqliteClose");
+                    logicEditor.createPaletteBlock(" ", "sqliteExecSQL");
+                    logicEditor.createPaletteBlock(" ", "sqliteRawQuery");
+                    logicEditor.createPaletteBlock("b", "sqliteMoveToFirst");
+                    logicEditor.createPaletteBlock("b", "sqliteMoveToNext");
+                    logicEditor.createPaletteBlock("b", "sqliteIsAfterLast");
+                    logicEditor.createPaletteBlock("s", "sqliteGetString");
+                    logicEditor.createPaletteBlock("d", "sqliteGetNumber");
+                    logicEditor.createPaletteBlock("d", "sqliteGetCount");
+                    logicEditor.createPaletteBlock(" ", "sqliteCloseCursor");
+                    logicEditor.createPaletteBlock("b", "sqliteIsOpen");
+                    logicEditor.createPaletteBlock("b", "sqliteCursorIsNull");
+                    logicEditor.createPaletteBlock("c", "sqliteForEachRow");
+                    logicEditor.createPaletteBlock(" ", "sqliteBeginTransaction");
+                    logicEditor.createPaletteBlock(" ", "sqliteSetTransactionSuccessful");
+                    logicEditor.createPaletteBlock(" ", "sqliteEndTransaction");
+                    logicEditor.createPaletteBlock(" ", "sqliteEnableWAL");
+                }
                 if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_PROGRESS_DIALOG)
                         || extraBlocks.isCustomVarUsed("ProgressDialog")
                         || eventName.equals("onPreExecute") || eventName.equals("onProgressUpdate")

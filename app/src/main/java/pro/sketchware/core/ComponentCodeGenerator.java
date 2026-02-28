@@ -685,6 +685,10 @@ public class ComponentCodeGenerator {
                     fieldDeclaration += "\r\nprivate NotificationManager _nm_" + typeInstanceName + ";";
                     break;
 
+                case "SQLiteDatabase":
+                    fieldDeclaration += "\r\nprivate Cursor _" + typeInstanceName + "_cursor;";
+                    break;
+
                 case "LocationManager":
                     fieldDeclaration += "\r\nprivate LocationListener _" + typeInstanceName + "_location_listener;";
                     break;
@@ -1056,6 +1060,14 @@ public class ComponentCodeGenerator {
                     code.append(viewId).append(".destroy();\r\n");
                     code.append("}");
                 }
+                if (viewType.equals("SQLiteDatabase")) {
+                    code.append("if (_").append(viewId).append("_cursor != null && !_").append(viewId).append("_cursor.isClosed()) {\r\n");
+                    code.append("_").append(viewId).append("_cursor.close();\r\n");
+                    code.append("}\r\n");
+                    code.append("if (").append(viewId).append(" != null && ").append(viewId).append(".isOpen()) {\r\n");
+                    code.append(viewId).append(".close();\r\n");
+                    code.append("}");
+                }
                 break;
 
             case "onPause":
@@ -1193,6 +1205,9 @@ public class ComponentCodeGenerator {
 
             case "BluetoothConnect":
                 return componentName + " = new BluetoothConnect(this);";
+
+            case "SQLiteDatabase":
+                return "";
 
             case "Notification":
                 return "_nm_" + componentName + " = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);\r\n"

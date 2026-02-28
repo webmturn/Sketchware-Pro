@@ -479,6 +479,11 @@ public class ExtraMenuBean {
                 menus = getComponentMenus(ComponentBean.COMPONENT_TYPE_NOTIFICATION);
                 break;
 
+            case "sqlite":
+                title = Helper.getResString(R.string.logic_editor_title_select_component);
+                menus = getComponentMenus(ComponentBean.COMPONENT_TYPE_SQLITE);
+                break;
+
             case "notifImportance":
                 title = "Select importance";
                 menus = new ArrayList<>(Arrays.asList(BlockConstants.NOTIFICATION_IMPORTANCE));
