@@ -236,7 +236,7 @@ public class BlockSpecRegistry {
         BLOCK_PARAMS.put("notifSetClickIntent", new String[]{"%m.notification", "%m.intent"});
         BLOCK_PARAMS.put("notifSetContent", new String[]{"%m.notification", "%s"});
         BLOCK_PARAMS.put("notifSetPriority", new String[]{"%m.notification", "%m.notifPriority"});
-        BLOCK_PARAMS.put("notifSetSmallIcon", new String[]{"%m.notification", "%s"});
+        BLOCK_PARAMS.put("notifSetSmallIcon", new String[]{"%m.notification", "%m.resource"});
         BLOCK_PARAMS.put("notifSetTitle", new String[]{"%m.notification", "%s"});
         BLOCK_PARAMS.put("notifShow", new String[]{"%m.notification", "%d"});
         BLOCK_PARAMS.put("not", new String[]{"%b"});

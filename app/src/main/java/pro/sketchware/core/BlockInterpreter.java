@@ -1444,7 +1444,8 @@ public class BlockInterpreter {
 
             case "notifSetSmallIcon":
                 if (params.size() >= 2) {
-                    opcode = String.format("%s.setSmallIcon(R.drawable.%s);", params.get(0), params.get(1));
+                    String iconName = params.get(1).replaceAll("\\.9", "").toLowerCase();
+                    opcode = String.format("%s.setSmallIcon(R.drawable.%s);", params.get(0), iconName);
                 }
                 break;
 
@@ -1471,7 +1472,12 @@ public class BlockInterpreter {
 
             case "notifShow":
                 if (params.size() >= 2) {
-                    opcode = String.format("_nm_%s.notify((int)(%s), %s.build());",
+                    opcode = String.format(
+                            "if (Build.VERSION.SDK_INT >= 33 && ContextCompat.checkSelfPermission(%s.this, \"android.permission.POST_NOTIFICATIONS\") != PackageManager.PERMISSION_GRANTED) {\n" +
+                            "ActivityCompat.requestPermissions(%s.this, new String[]{\"android.permission.POST_NOTIFICATIONS\"}, 9901);\n" +
+                            "} else {\n" +
+                            "_nm_%s.notify((int)(%s), %s.build());\n}",
+                            activityName, activityName,
                             params.get(0), params.get(1), params.get(0));
                 }
                 break;
