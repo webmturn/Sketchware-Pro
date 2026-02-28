@@ -2,252 +2,181 @@ package pro.sketchware.core;
 
 import com.besome.sketch.beans.CollectionBean;
 import com.besome.sketch.beans.ProjectResourceBean;
-import com.besome.sketch.beans.SelectableBean;
+
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 public class ImageCollectionManager extends BaseCollectionManager {
-  public static volatile ImageCollectionManager instance;
-  
-  public static ImageCollectionManager getInstance() {
-    if (instance == null) {
-      synchronized (ImageCollectionManager.class) {
+    private static volatile ImageCollectionManager instance;
+
+    public static ImageCollectionManager getInstance() {
         if (instance == null) {
-          instance = new ImageCollectionManager();
+            synchronized (ImageCollectionManager.class) {
+                if (instance == null) {
+                    instance = new ImageCollectionManager();
+                }
+            }
         }
-      }
+        return instance;
     }
-    return instance;
-  }
-  
-  public ProjectResourceBean getResourceByName(String name) {
-    for (ProjectResourceBean projectResourceBean : getResources()) {
-      if (projectResourceBean.resName.equals(name))
-        return projectResourceBean; 
-    } 
-    return null;
-  }
-  
-  public void renameResource(ProjectResourceBean resourceBean, String newName, boolean flag) {
-    int idx = this.collections.size();
-    while (--idx >= 0) {
-      CollectionBean collectionBean = this.collections.get(idx);
-      if (collectionBean.name.equals(resourceBean.resName)) {
-        collectionBean.name = newName;
-        break;
-      } 
-    } 
-    if (flag)
-      saveCollections(); 
-  }
-  
-  public void addResource(String sourcePath, ProjectResourceBean resourceBean) throws CompileException {
-    addResource(sourcePath, resourceBean, true);
-  }
-  
-  public void addResource(String sourcePath, ProjectResourceBean resourceBean, boolean flag) throws CompileException {
-    if (this.collections == null) initialize();
-    ArrayList<String> duplicates = new ArrayList<String>();
-    for (CollectionBean bean : this.collections) {
-      if (bean.name.equals(resourceBean.resName)) {
-        duplicates.add(bean.name);
-      }
+
+    public ProjectResourceBean getResourceByName(String name) {
+        for (ProjectResourceBean resource : getResources()) {
+            if (resource.resName.equals(name)) return resource;
+        }
+        return null;
     }
-    if (duplicates.size() > 0) {
-      throw new CompileException("duplicate_name");
+
+    public void renameResource(ProjectResourceBean resourceBean, String newName, boolean save) {
+        for (int i = collections.size() - 1; i >= 0; i--) {
+            CollectionBean bean = collections.get(i);
+            if (bean.name.equals(resourceBean.resName)) {
+                bean.name = newName;
+                break;
+            }
+        }
+        if (save) saveCollections();
     }
-    String dataName = resourceBean.resName;
-    if (resourceBean.isNinePatch()) {
-      dataName = dataName + ".9.png";
-    } else {
-      dataName = dataName + ".png";
+
+    public void addResource(String sourcePath, ProjectResourceBean resourceBean) throws CompileException {
+        addResource(sourcePath, resourceBean, true);
     }
-    String destPath = this.dataDirPath + java.io.File.separator + dataName;
-    if (resourceBean.savedPos == 1) {
-      String srcPath = resourceBean.resFullName;
-      if (!this.fileUtil.exists(srcPath)) {
-        throw new CompileException("file_no_exist");
-      }
-      try {
-        this.fileUtil.mkdirs(this.dataDirPath);
-        BitmapUtil.processAndSaveBitmap(srcPath, destPath, resourceBean.rotate, resourceBean.flipHorizontal, resourceBean.flipVertical);
-      } catch (Exception e) {
-        throw new CompileException("fail_to_copy");
-      }
-    } else {
-      String srcPath = SketchwarePaths.getImagesPath() + java.io.File.separator + sourcePath + java.io.File.separator + resourceBean.resFullName;
-      if (!this.fileUtil.exists(srcPath)) {
-        throw new CompileException("file_no_exist");
-      }
-      try {
-        this.fileUtil.mkdirs(this.dataDirPath);
-        this.fileUtil.copyFile(srcPath, destPath);
-      } catch (Exception e) {
-        throw new CompileException("fail_to_copy");
-      }
-    }
-    this.collections.add(new CollectionBean(resourceBean.resName, dataName));
-    if (flag) saveCollections();
-  }
-  
-  public void addResources(String input, ArrayList<ProjectResourceBean> list, boolean flag) throws CompileException {
-    if (this.collections == null)
-      initialize(); 
-    ArrayList<String> duplicateNames = new ArrayList<>();
-    for (CollectionBean collectionBean : this.collections) {
-      for (ProjectResourceBean projectResourceBean : list) {
-        if (collectionBean.name.equals(projectResourceBean.resName))
-          duplicateNames.add(collectionBean.name); 
-      } 
-    } 
-    if (duplicateNames.size() <= 0) {
-      ArrayList<String> failedNames = new ArrayList<>();
-      for (ProjectResourceBean projectResourceBean : list) {
-        String resolvedPath;
-        if (((SelectableBean)projectResourceBean).savedPos == 0) {
-          StringBuilder pathBuilder = new StringBuilder();
-          pathBuilder.append(SketchwarePaths.getImagesPath());
-          pathBuilder.append(File.separator);
-          pathBuilder.append(input);
-          pathBuilder.append(File.separator);
-          pathBuilder.append(projectResourceBean.resFullName);
-          resolvedPath = pathBuilder.toString();
+
+    public void addResource(String sourcePath, ProjectResourceBean resourceBean, boolean save) throws CompileException {
+        if (collections == null) initialize();
+        for (CollectionBean bean : collections) {
+            if (bean.name.equals(resourceBean.resName)) {
+                throw new CompileException("duplicate_name");
+            }
+        }
+        String dataName = resourceBean.resName + (resourceBean.isNinePatch() ? ".9.png" : ".png");
+        String destPath = dataDirPath + File.separator + dataName;
+        if (resourceBean.savedPos == 1) {
+            if (!fileUtil.exists(resourceBean.resFullName)) {
+                throw new CompileException("file_no_exist");
+            }
+            try {
+                fileUtil.mkdirs(dataDirPath);
+                BitmapUtil.processAndSaveBitmap(resourceBean.resFullName, destPath, resourceBean.rotate, resourceBean.flipHorizontal, resourceBean.flipVertical);
+            } catch (Exception e) {
+                throw new CompileException("fail_to_copy");
+            }
         } else {
-          resolvedPath = projectResourceBean.resFullName;
-        } 
-        if (!this.fileUtil.exists(resolvedPath))
-          failedNames.add(projectResourceBean.resName); 
-      } 
-      if (failedNames.size() <= 0) {
-        failedNames = new ArrayList<String>();
+            String srcPath = SketchwarePaths.getImagesPath() + File.separator + sourcePath + File.separator + resourceBean.resFullName;
+            if (!fileUtil.exists(srcPath)) {
+                throw new CompileException("file_no_exist");
+            }
+            try {
+                fileUtil.mkdirs(dataDirPath);
+                fileUtil.copyFile(srcPath, destPath);
+            } catch (Exception e) {
+                throw new CompileException("fail_to_copy");
+            }
+        }
+        collections.add(new CollectionBean(resourceBean.resName, dataName));
+        if (save) saveCollections();
+    }
+
+    public void addResources(String category, ArrayList<ProjectResourceBean> resources, boolean save) throws CompileException {
+        if (collections == null) initialize();
+
+        ArrayList<String> duplicateNames = new ArrayList<>();
+        for (CollectionBean bean : collections) {
+            for (ProjectResourceBean resource : resources) {
+                if (bean.name.equals(resource.resName)) {
+                    duplicateNames.add(bean.name);
+                }
+            }
+        }
+        if (!duplicateNames.isEmpty()) {
+            CompileException ex = new CompileException("duplicate_name");
+            ex.setErrorDetails(duplicateNames);
+            throw ex;
+        }
+
+        ArrayList<String> missingNames = new ArrayList<>();
+        for (ProjectResourceBean resource : resources) {
+            String srcPath = resolveSourcePath(category, resource);
+            if (!fileUtil.exists(srcPath)) {
+                missingNames.add(resource.resName);
+            }
+        }
+        if (!missingNames.isEmpty()) {
+            CompileException ex = new CompileException("file_no_exist");
+            ex.setErrorDetails(missingNames);
+            throw ex;
+        }
+
+        ArrayList<String> failedNames = new ArrayList<>();
         ArrayList<String> processedPaths = new ArrayList<>();
-        for (ProjectResourceBean projectResourceBean : list) {
-          String sourcePath;
-          String fileName = projectResourceBean.resName;
-          if (projectResourceBean.isNinePatch()) {
-            StringBuilder innerBuilder = new StringBuilder();
-            innerBuilder.append(fileName);
-            innerBuilder.append(".9.png");
-            fileName = innerBuilder.toString();
-          } else {
-            StringBuilder innerBuilder = new StringBuilder();
-            innerBuilder.append(fileName);
-            innerBuilder.append(".png");
-            fileName = innerBuilder.toString();
-          } 
-          if (((SelectableBean)projectResourceBean).savedPos == 0) {
-            StringBuilder innerBuilder = new StringBuilder();
-            innerBuilder.append(SketchwarePaths.getImagesPath());
-            innerBuilder.append(File.separator);
-            innerBuilder.append(input);
-            innerBuilder.append(File.separator);
-            innerBuilder.append(projectResourceBean.resFullName);
-            sourcePath = innerBuilder.toString();
-          } else {
-            sourcePath = projectResourceBean.resFullName;
-          } 
-          StringBuilder pathBuilder = new StringBuilder();
-          pathBuilder.append(this.dataDirPath);
-          pathBuilder.append(File.separator);
-          pathBuilder.append(fileName);
-          String destPath = pathBuilder.toString();
-          try {
-            this.fileUtil.mkdirs(this.dataDirPath);
-            BitmapUtil.processAndSaveBitmap(sourcePath, destPath, projectResourceBean.rotate, projectResourceBean.flipHorizontal, projectResourceBean.flipVertical);
-            ArrayList<CollectionBean> collectionsList = this.collections;
-            CollectionBean collectionBean = new CollectionBean(projectResourceBean.resName, fileName);
-            collectionsList.add(collectionBean);
-            processedPaths.add(destPath);
-          } catch (Exception iOException) {
-            failedNames.add(projectResourceBean.resName);
-          } 
-        } 
-        if (failedNames.size() > 0) {
-          CompileException copyException = new CompileException("fail_to_copy");
-          copyException.setErrorDetails(failedNames);
-          if (processedPaths.size() > 0)
-            for (String path : processedPaths)
-              this.fileUtil.deleteFileByPath(path);  
-          throw copyException;
-        } 
-        if (flag)
-          saveCollections(); 
-        return;
-      } 
-      CompileException noExistException = new CompileException("file_no_exist");
-      noExistException.setErrorDetails(failedNames);
-      throw noExistException;
-    } 
-    CompileException CompileException = new CompileException("duplicate_name");
-    CompileException.setErrorDetails(duplicateNames);
-    throw CompileException;
-  }
-  
-  public void removeResource(String input, boolean flag) {
-    int size = this.collections.size();
-    while (true) {
-      int idx = size - 1;
-      if (idx >= 0) {
-        CollectionBean collectionBean = this.collections.get(idx);
-        size = idx;
-        if (collectionBean.name.equals(input)) {
-          String filePath = collectionBean.data;
-          StringBuilder pathBuilder = new StringBuilder();
-          pathBuilder.append(this.dataDirPath);
-          pathBuilder.append(File.separator);
-          pathBuilder.append(filePath);
-          filePath = pathBuilder.toString();
-          this.fileUtil.deleteFileByPath(filePath);
-          this.collections.remove(idx);
-          size = idx;
-        } 
-        continue;
-      } 
-      if (flag)
-        saveCollections(); 
-      return;
-    } 
-  }
-  
-  public void initializePaths() {
-    StringBuilder pathBuilder = new StringBuilder();
-    pathBuilder.append(SketchwarePaths.getCollectionPath());
-    pathBuilder.append(File.separator);
-    pathBuilder.append("image");
-    pathBuilder.append(File.separator);
-    pathBuilder.append("list");
-    this.collectionFilePath = pathBuilder.toString();
-    pathBuilder = new StringBuilder();
-    pathBuilder.append(SketchwarePaths.getCollectionPath());
-    pathBuilder.append(File.separator);
-    pathBuilder.append("image");
-    pathBuilder.append(File.separator);
-    pathBuilder.append("data");
-    this.dataDirPath = pathBuilder.toString();
-  }
-  
-  public boolean hasResource(String name) {
-    Iterator<ProjectResourceBean> iterator = getResources().iterator();
-    while (iterator.hasNext()) {
-      if (((ProjectResourceBean)iterator.next()).resName.equals(name))
-        return true; 
-    } 
-    return false;
-  }
-  
-  public void clearCollections() {
-    super.clearCollections();
-    instance = null;
-  }
-  
-  public ArrayList<ProjectResourceBean> getResources() {
-    if (this.collections == null)
-      initialize(); 
-    ArrayList<ProjectResourceBean> resources = new ArrayList<>();
-    for (CollectionBean collectionBean : this.collections)
-      resources.add(new ProjectResourceBean(ProjectResourceBean.PROJECT_RES_TYPE_FILE, collectionBean.name, collectionBean.data)); 
-    return resources;
-  }
+        for (ProjectResourceBean resource : resources) {
+            String fileName = resource.resName + (resource.isNinePatch() ? ".9.png" : ".png");
+            String srcPath = resolveSourcePath(category, resource);
+            String destPath = dataDirPath + File.separator + fileName;
+            try {
+                fileUtil.mkdirs(dataDirPath);
+                BitmapUtil.processAndSaveBitmap(srcPath, destPath, resource.rotate, resource.flipHorizontal, resource.flipVertical);
+                collections.add(new CollectionBean(resource.resName, fileName));
+                processedPaths.add(destPath);
+            } catch (Exception e) {
+                failedNames.add(resource.resName);
+            }
+        }
+        if (!failedNames.isEmpty()) {
+            for (String path : processedPaths) {
+                fileUtil.deleteFileByPath(path);
+            }
+            CompileException ex = new CompileException("fail_to_copy");
+            ex.setErrorDetails(failedNames);
+            throw ex;
+        }
+        if (save) saveCollections();
+    }
+
+    private String resolveSourcePath(String category, ProjectResourceBean resource) {
+        if (resource.savedPos == 0) {
+            return SketchwarePaths.getImagesPath() + File.separator + category + File.separator + resource.resFullName;
+        }
+        return resource.resFullName;
+    }
+
+    public void removeResource(String name, boolean save) {
+        Iterator<CollectionBean> it = collections.iterator();
+        while (it.hasNext()) {
+            CollectionBean bean = it.next();
+            if (bean.name.equals(name)) {
+                fileUtil.deleteFileByPath(dataDirPath + File.separator + bean.data);
+                it.remove();
+            }
+        }
+        if (save) saveCollections();
+    }
+
+    public void initializePaths() {
+        String basePath = SketchwarePaths.getCollectionPath() + File.separator + "image" + File.separator;
+        collectionFilePath = basePath + "list";
+        dataDirPath = basePath + "data";
+    }
+
+    public boolean hasResource(String name) {
+        for (ProjectResourceBean resource : getResources()) {
+            if (resource.resName.equals(name)) return true;
+        }
+        return false;
+    }
+
+    public void clearCollections() {
+        super.clearCollections();
+        instance = null;
+    }
+
+    public ArrayList<ProjectResourceBean> getResources() {
+        if (collections == null) initialize();
+        ArrayList<ProjectResourceBean> resources = new ArrayList<>();
+        for (CollectionBean bean : collections) {
+            resources.add(new ProjectResourceBean(ProjectResourceBean.PROJECT_RES_TYPE_FILE, bean.name, bean.data));
+        }
+        return resources;
+    }
 }

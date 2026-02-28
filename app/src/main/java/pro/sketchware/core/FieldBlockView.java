@@ -3,7 +3,6 @@ package pro.sketchware.core;
 import android.content.Context;
 import android.graphics.Rect;
 import android.text.TextPaint;
-import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -28,84 +27,79 @@ public class FieldBlockView extends BaseBlockView {
   
   public FieldBlockView(Context context, String key, String value) {
     super(context, key, value, true);
-    this.fieldContext = context;
+    fieldContext = context;
     initSs(context);
   }
   
   private void initSs(Context context) {
-    String type = this.blockType;
+    String type = blockType;
     switch (type) {
       case "b":
-        this.blockColor = 1342177280;
-        this.minSimpleWidth = 25;
+        blockColor = 1342177280;
+        minSimpleWidth = 25;
         break;
       case "d":
-        this.blockColor = -657931;
+        blockColor = -657931;
         break;
       case "n":
-        this.blockColor = -3155748;
+        blockColor = -3155748;
         break;
       case "s":
-        this.blockColor = -1;
+        blockColor = -1;
         break;
       case "m":
-        this.blockColor = 805306368;
+        blockColor = 805306368;
         break;
     }
-    float scale = this.density;
-    this.minSimpleWidth = (int) (this.minSimpleWidth * scale);
-    this.minHatWidth = (int) (this.minHatWidth * scale);
-    this.minCWidth = (int) (this.minCWidth * scale);
-    this.spacing = this.minCWidth;
-    if (this.blockType.equals("m") && getComponentLabel(this.componentType).length() >= 0) {
-      this.dropdownLabel = createLabelTextView(this.componentType);
-      addView(this.dropdownLabel);
-      this.spacing = getDropdownTypeWidth();
+    float scale = density;
+    minSimpleWidth = (int) (minSimpleWidth * scale);
+    minHatWidth = (int) (minHatWidth * scale);
+    minCWidth = (int) (minCWidth * scale);
+    spacing = minCWidth;
+    if (blockType.equals("m") && getComponentLabel(componentType).length() >= 0) {
+      dropdownLabel = createLabelTextView(componentType);
+      addView(dropdownLabel);
+      spacing = getDropdownTypeWidth();
     }
-    if (this.blockType.equals("m") || this.blockType.equals("d") || this.blockType.equals("n") || this.blockType.equals("s")) {
-      this.labelView = createValueTextView("");
-      addView(this.labelView);
+    if (blockType.equals("m") || blockType.equals("d") || blockType.equals("n") || blockType.equals("s")) {
+      labelView = createValueTextView("");
+      addView(labelView);
     }
-    setBlockSize((float) (this.minSimpleWidth + this.spacing), (float) this.textHeight, false);
+    setBlockSize((float) (minSimpleWidth + spacing), (float) textHeight, false);
   }
   
   private int getDropdownTypeWidth() {
     Rect rect = new Rect();
-    TextPaint textPaint = this.dropdownLabel.getPaint();
-    String labelText = getComponentLabel(this.componentType);
+    TextPaint textPaint = dropdownLabel.getPaint();
+    String labelText = getComponentLabel(componentType);
     textPaint.getTextBounds(labelText, 0, labelText.length(), rect);
-    return rect.width() + this.minCWidth * 2;
+    return rect.width() + minCWidth * 2;
   }
   
   private int getLabelWidth() {
     Rect rect = new Rect();
-    this.labelView.getPaint().getTextBounds(this.labelView.getText().toString(), 0, this.labelView.getText().length(), rect);
-    return rect.width() + this.minHatWidth;
+    labelView.getPaint().getTextBounds(labelView.getText().toString(), 0, labelView.getText().length(), rect);
+    return rect.width() + minHatWidth;
   }
   
   public final String getComponentLabel(String componentId) {
-    String prefix = "";
     String displayName = BlockColorMapper.getComponentDisplayName(componentId);
-    componentId = displayName;
     if (displayName.length() > 0) {
-      StringBuilder prefixBuilder = new StringBuilder();
-      prefixBuilder.append(displayName);
-      prefixBuilder.append(" : ");
-      prefix = prefixBuilder.toString();
+      return displayName + " : ";
     } 
-    return prefix;
+    return "";
   }
   
   public final TextView createLabelTextView(String componentId) {
-    TextView textView = new TextView(this.fieldContext);
+    TextView textView = new TextView(fieldContext);
     textView.setText(getComponentLabel(componentId));
     textView.setTextSize(8.0F);
     textView.setTypeface(null, 1);
-    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-2, this.textHeight);
-    int margin = this.minCWidth;
+    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-2, textHeight);
+    int margin = minCWidth;
     layoutParams.setMargins(margin, 0, margin, 0);
     textView.setPadding(0, 0, 0, 0);
-    textView.setLayoutParams((ViewGroup.LayoutParams)layoutParams);
+    textView.setLayoutParams(layoutParams);
     textView.setBackgroundColor(0);
     textView.setSingleLine();
     textView.setGravity(17);
@@ -114,17 +108,17 @@ public class FieldBlockView extends BaseBlockView {
   }
   
   public final TextView createValueTextView(String text) {
-    TextView textView = new TextView(this.fieldContext);
+    TextView textView = new TextView(fieldContext);
     textView.setText(text);
     textView.setTextSize(9.0F);
-    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(this.minSimpleWidth, this.textHeight);
-    layoutParams.setMargins(this.spacing, 0, this.isDefinitionBlock, 0);
+    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(minSimpleWidth, textHeight);
+    layoutParams.setMargins(spacing, 0, isDefinitionBlock, 0);
     textView.setPadding(0, 0, 0, 0);
-    textView.setLayoutParams((ViewGroup.LayoutParams)layoutParams);
+    textView.setLayoutParams(layoutParams);
     textView.setBackgroundColor(0);
     textView.setSingleLine();
     textView.setGravity(17);
-    if (!this.blockType.equals("m")) {
+    if (!blockType.equals("m")) {
       textView.setTextColor(-268435456);
     } else {
       textView.setTextColor(-251658241);
@@ -133,20 +127,20 @@ public class FieldBlockView extends BaseBlockView {
   }
   
   public Object getArgValue() {
-    return (this.blockType.equals("d") || this.blockType.equals("m") || this.blockType.equals("s")) ? this.labelView.getText() : this.argValue;
+    return (blockType.equals("d") || blockType.equals("m") || blockType.equals("s")) ? labelView.getText() : argValue;
   }
   
   public String getMenuName() {
-    return this.componentType;
+    return componentType;
   }
   
   public void setArgValue(Object value) {
-    this.argValue = value;
-    if (this.blockType.equals("d") || this.blockType.equals("m") || this.blockType.equals("s")) {
-      this.labelView.setText(value.toString());
-      int labelWidth = Math.max(this.minSimpleWidth, getLabelWidth());
-      (this.labelView.getLayoutParams()).width = labelWidth;
-      setBlockSize((labelWidth + this.spacing), this.textHeight, true);
+    argValue = value;
+    if (blockType.equals("d") || blockType.equals("m") || blockType.equals("s")) {
+      labelView.setText(value.toString());
+      int labelWidth = Math.max(minSimpleWidth, getLabelWidth());
+      (labelView.getLayoutParams()).width = labelWidth;
+      setBlockSize((labelWidth + spacing), textHeight, true);
     } 
   }
 }

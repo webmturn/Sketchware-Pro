@@ -1,12 +1,16 @@
 package pro.sketchware.core;
 
+import android.util.Log;
 import android.util.Pair;
+
 import com.besome.sketch.beans.BlockBean;
 import com.besome.sketch.beans.ComponentBean;
 import com.besome.sketch.beans.EventBean;
 import com.besome.sketch.beans.ViewBean;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.io.BufferedReader;
+import java.io.StringReader;
 import java.util.ArrayList;
 
 public class ProjectDataParser {
@@ -24,9 +28,7 @@ public class ProjectDataParser {
   
   public static ArrayList<BlockBean> parseBlockBeans(Gson gson, String data) {
     ArrayList<BlockBean> result = new ArrayList<>();
-    java.io.BufferedReader reader = null;
-    try {
-      reader = new java.io.BufferedReader(new java.io.StringReader(data));
+    try (BufferedReader reader = new BufferedReader(new StringReader(data))) {
       String line;
       while ((line = reader.readLine()) != null) {
         if (line.trim().length() <= 0) continue;
@@ -34,18 +36,14 @@ public class ProjectDataParser {
         result.add(gson.fromJson(line, BlockBean.class));
       }
     } catch (Exception e) {
-      e.printStackTrace();
-    } finally {
-      if (reader != null) try { reader.close(); } catch (Exception e) { e.printStackTrace(); }
+      Log.w("ProjectDataParser", "Failed to parse block beans", e);
     }
     return result;
   }
   
   public static ArrayList<ViewBean> parseViewBeans(Gson gson, String data) {
     ArrayList<ViewBean> result = new ArrayList<>();
-    java.io.BufferedReader reader = null;
-    try {
-      reader = new java.io.BufferedReader(new java.io.StringReader(data));
+    try (BufferedReader reader = new BufferedReader(new StringReader(data))) {
       String line;
       while ((line = reader.readLine()) != null) {
         if (line.trim().length() <= 0) continue;
@@ -53,9 +51,7 @@ public class ProjectDataParser {
         result.add(gson.fromJson(line, ViewBean.class));
       }
     } catch (Exception e) {
-      e.printStackTrace();
-    } finally {
-      if (reader != null) try { reader.close(); } catch (Exception e) { e.printStackTrace(); }
+      Log.w("ProjectDataParser", "Failed to parse view beans", e);
     }
     return result;
   }
@@ -85,9 +81,7 @@ public class ProjectDataParser {
   
   public ArrayList<ComponentBean> parseComponentBeans(String data) {
     ArrayList<ComponentBean> result = new ArrayList<>();
-    java.io.BufferedReader reader = null;
-    try {
-      reader = new java.io.BufferedReader(new java.io.StringReader(data));
+    try (BufferedReader reader = new BufferedReader(new StringReader(data))) {
       String line;
       while ((line = reader.readLine()) != null) {
         if (line.trim().length() <= 0) continue;
@@ -97,9 +91,7 @@ public class ProjectDataParser {
         result.add(bean);
       }
     } catch (Exception e) {
-      e.printStackTrace();
-    } finally {
-      if (reader != null) try { reader.close(); } catch (Exception e) { e.printStackTrace(); }
+      Log.w("ProjectDataParser", "Failed to parse component beans", e);
     }
     return result;
   }
@@ -110,9 +102,7 @@ public class ProjectDataParser {
   
   public ArrayList<EventBean> parseEventBeans(String data) {
     ArrayList<EventBean> result = new ArrayList<>();
-    java.io.BufferedReader reader = null;
-    try {
-      reader = new java.io.BufferedReader(new java.io.StringReader(data));
+    try (BufferedReader reader = new BufferedReader(new StringReader(data))) {
       String line;
       while ((line = reader.readLine()) != null) {
         if (line.trim().length() <= 0) continue;
@@ -122,9 +112,7 @@ public class ProjectDataParser {
         result.add(bean);
       }
     } catch (Exception e) {
-      e.printStackTrace();
-    } finally {
-      if (reader != null) try { reader.close(); } catch (Exception e) { e.printStackTrace(); }
+      Log.w("ProjectDataParser", "Failed to parse event beans", e);
     }
     return result;
   }
@@ -135,9 +123,7 @@ public class ProjectDataParser {
   
   public ArrayList<Pair<String, String>> parseMoreBlockFunctions(String data) {
     ArrayList<Pair<String, String>> result = new ArrayList<>();
-    java.io.BufferedReader reader = null;
-    try {
-      reader = new java.io.BufferedReader(new java.io.StringReader(data));
+    try (BufferedReader reader = new BufferedReader(new StringReader(data))) {
       String line;
       while ((line = reader.readLine()) != null) {
         if (line.trim().length() <= 0) continue;
@@ -147,9 +133,7 @@ public class ProjectDataParser {
         result.add(new Pair<>(key, value));
       }
     } catch (Exception e) {
-      e.printStackTrace();
-    } finally {
-      if (reader != null) try { reader.close(); } catch (Exception e) { e.printStackTrace(); }
+      Log.w("ProjectDataParser", "Failed to parse more block functions", e);
     }
     return result;
   }
@@ -200,9 +184,7 @@ public class ProjectDataParser {
   
   public ArrayList<Pair<Integer, String>> parseListVariables(String data) {
     ArrayList<Pair<Integer, String>> result = new ArrayList<>();
-    java.io.BufferedReader reader = null;
-    try {
-      reader = new java.io.BufferedReader(new java.io.StringReader(data));
+    try (BufferedReader reader = new BufferedReader(new StringReader(data))) {
       String line;
       while ((line = reader.readLine()) != null) {
         if (line.trim().length() <= 0) continue;
@@ -212,18 +194,14 @@ public class ProjectDataParser {
         result.add(new Pair<>(Integer.valueOf(key), value));
       }
     } catch (Exception e) {
-      e.printStackTrace();
-    } finally {
-      if (reader != null) try { reader.close(); } catch (Exception e) { e.printStackTrace(); }
+      Log.w("ProjectDataParser", "Failed to parse list variables", e);
     }
     return result;
   }
   
   public ArrayList<Pair<Integer, String>> parseVariables(String data) {
     ArrayList<Pair<Integer, String>> result = new ArrayList<>();
-    java.io.BufferedReader reader = null;
-    try {
-      reader = new java.io.BufferedReader(new java.io.StringReader(data));
+    try (BufferedReader reader = new BufferedReader(new StringReader(data))) {
       String line;
       while ((line = reader.readLine()) != null) {
         if (line.trim().length() <= 0) continue;
@@ -233,9 +211,7 @@ public class ProjectDataParser {
         result.add(new Pair<>(Integer.valueOf(key), value));
       }
     } catch (Exception e) {
-      e.printStackTrace();
-    } finally {
-      if (reader != null) try { reader.close(); } catch (Exception e) { e.printStackTrace(); }
+      Log.w("ProjectDataParser", "Failed to parse variables", e);
     }
     return result;
   }

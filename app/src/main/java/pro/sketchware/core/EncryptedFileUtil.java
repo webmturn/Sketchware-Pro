@@ -2,12 +2,15 @@ package pro.sketchware.core;
 
 import android.content.Context;
 import android.util.Log;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -22,15 +25,15 @@ public class EncryptedFileUtil {
     this(false);
   }
   
-  public EncryptedFileUtil(boolean flag) {
-    this.encryptionEnabled = flag;
+  public EncryptedFileUtil(boolean encryptionEnabled) {
+    this.encryptionEnabled = encryptionEnabled;
   }
   
   public long getAssetFileSize(Context context, String value) {
     try (InputStream inputStream = context.getAssets().open(value)) {
       return inputStream.available();
     } catch (IOException e) {
-      e.printStackTrace();
+      Log.w("EncryptedFileUtil", "Failed to get asset file size: " + value, e);
       return -1L;
     }
   }
@@ -47,28 +50,22 @@ public class EncryptedFileUtil {
   }
   
   public void copyAssetFile(Context context, String key, String value) {
-    android.content.res.AssetManager assets = context.getAssets();
     int sepIdx = value.lastIndexOf(File.separator);
     if (sepIdx > 0) {
       mkdirs(value.substring(0, sepIdx));
     }
-    java.io.InputStream is = null;
-    java.io.FileOutputStream fos = null;
-    try {
-      is = assets.open(key);
-      fos = new java.io.FileOutputStream(value, false);
+    try (InputStream is = context.getAssets().open(key);
+         FileOutputStream fos = new FileOutputStream(value, false)) {
       byte[] buf = new byte[1024];
       int len;
       while ((len = is.read(buf)) > 0) {
         fos.write(buf, 0, len);
       }
-      if (this.encryptionEnabled) {
+      if (encryptionEnabled) {
         Log.d(getClass().getSimpleName(), "assetFile =>" + value + " copy success.");
       }
     } catch (IOException e) {
-    } finally {
-      if (is != null) try { is.close(); } catch (IOException e) { e.printStackTrace(); }
-      if (fos != null) try { fos.close(); } catch (IOException e) { e.printStackTrace(); }
+      Log.w("EncryptedFileUtil", "Failed to copy asset file: " + key, e);
     }
   }
   
@@ -77,19 +74,15 @@ public class EncryptedFileUtil {
   }
   
   public void copyDirectory(File srcFile, File destFile) throws IOException {
-    StringBuilder errorBuilder;
     if (srcFile.isDirectory()) {
       if (destFile.exists() || destFile.mkdirs()) {
         String[] parts = srcFile.list();
         if (parts != null)
-          for (int b = 0; b < parts.length; b++)
-            copyDirectory(new File(srcFile, parts[b]), new File(destFile, parts[b]));  
+          for (String part : parts)
+            copyDirectory(new File(srcFile, part), new File(destFile, part));
         return;
       } 
-      errorBuilder = new StringBuilder();
-      errorBuilder.append("Cannot create dir ");
-      errorBuilder.append(destFile.getAbsolutePath());
-      throw new IOException(errorBuilder.toString());
+      throw new IOException("Cannot create dir " + destFile.getAbsolutePath());
     } 
     if (!srcFile.exists()) {
       Log.w("EncryptedFileUtil", "copyDirectory: source file does not exist: " + srcFile.getAbsolutePath());
@@ -98,34 +91,24 @@ public class EncryptedFileUtil {
     copyFile(srcFile.getAbsolutePath(), destFile.getAbsolutePath());
   }
   
-  public void deleteRecursive(File dir, boolean flag) {
+  public void deleteRecursive(File dir, boolean deleteRoot) {
     if (dir.exists()) {
       File[] files = dir.listFiles();
       if (files != null) {
-        int fileCount = files.length;
-        for (int fileIdx = 0; fileIdx < fileCount; fileIdx++) {
-          File file = files[fileIdx];
+        for (File file : files) {
           if (file.isDirectory())
             deleteDirectory(file); 
-          if (file.isFile())
+          if (file.isFile()) {
             if (file.delete()) {
-              if (this.encryptionEnabled) {
-                String tag = EncryptedFileUtil.class.getSimpleName();
-                StringBuilder logBuilder = new StringBuilder();
-                logBuilder.append("Delete file success.");
-                logBuilder.append(file.getAbsolutePath());
-                Log.d(tag, logBuilder.toString());
-              } 
-            } else if (this.encryptionEnabled) {
-              String tag = EncryptedFileUtil.class.getSimpleName();
-              StringBuilder logBuilder = new StringBuilder();
-              logBuilder.append("Delete file failed.");
-              logBuilder.append(file.getAbsolutePath());
-              Log.d(tag, logBuilder.toString());
-            }  
+              if (encryptionEnabled)
+                Log.d("EncryptedFileUtil", "Delete file success." + file.getAbsolutePath());
+            } else if (encryptionEnabled) {
+              Log.d("EncryptedFileUtil", "Delete file failed." + file.getAbsolutePath());
+            }
+          }
         } 
       } 
-      if (flag)
+      if (deleteRoot)
         dir.delete(); 
     } 
   }
@@ -136,22 +119,16 @@ public class EncryptedFileUtil {
   }
   
   public void copyFile(String key, String value) throws IOException {
-    FileInputStream fis = null;
-    FileOutputStream fos = null;
-    try {
-      fis = new FileInputStream(key);
-      fos = new FileOutputStream(value, false);
+    try (FileInputStream fis = new FileInputStream(key);
+         FileOutputStream fos = new FileOutputStream(value, false)) {
       byte[] buf = new byte[1024];
-      if (this.encryptionEnabled) {
+      if (encryptionEnabled) {
         Log.d(getClass().getSimpleName(), "src=" + key + ",dest=" + value);
       }
       int len;
       while ((len = fis.read(buf)) > 0) {
         fos.write(buf, 0, len);
       }
-    } finally {
-      if (fis != null) try { fis.close(); } catch (IOException e) { e.printStackTrace(); }
-      if (fos != null) try { fos.close(); } catch (IOException e) { e.printStackTrace(); }
     }
   }
   
@@ -165,33 +142,26 @@ public class EncryptedFileUtil {
       mkdirs(value.substring(0, separatorIdx)); 
     File file = new File(value);
     if (!file.exists())
-      try { file.createNewFile(); } catch (IOException e) { e.printStackTrace(); } 
-    FileOutputStream fos = null;
-    try {
-      fos = new FileOutputStream(file);
+      try { file.createNewFile(); } catch (IOException e) { Log.w("EncryptedFileUtil", "Failed to create file", e); } 
+    try (FileOutputStream fos = new FileOutputStream(file)) {
       fos.write(data);
       fos.flush();
     } catch (IOException e) {
-    } finally {
-      if (fos != null) try { fos.close(); } catch (IOException e) {}
+      Log.w("EncryptedFileUtil", "Failed to write bytes", e);
     }
   }
   
   public String readAssetFile(Context context, String value) {
     StringBuilder sb = new StringBuilder();
-    java.io.BufferedReader reader = null;
-    try {
-      java.io.InputStream is = context.getAssets().open(value.trim());
-      reader = new java.io.BufferedReader(new java.io.InputStreamReader(is, "utf-8"));
+    try (InputStream is = context.getAssets().open(value.trim());
+         BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
       String line;
       while ((line = reader.readLine()) != null) {
         sb.append(line);
         sb.append("\r\n");
       }
     } catch (IOException e) {
-      e.printStackTrace();
-    } finally {
-      if (reader != null) try { reader.close(); } catch (IOException e) { e.printStackTrace(); }
+      Log.w("EncryptedFileUtil", "Failed to read asset file: " + value, e);
     }
     return sb.toString();
   }
@@ -210,15 +180,12 @@ public class EncryptedFileUtil {
       mkdirs(key.substring(0, separatorIdx)); 
     File file = new File(key);
     if (!file.exists())
-      try { file.createNewFile(); } catch (IOException e) { e.printStackTrace(); } 
-    FileWriter fw = null;
-    try {
-      fw = new FileWriter(file, false);
+      try { file.createNewFile(); } catch (IOException e) { Log.w("EncryptedFileUtil", "Failed to create file", e); } 
+    try (FileWriter fw = new FileWriter(file, false)) {
       fw.write(value);
       fw.flush();
     } catch (IOException e) {
-    } finally {
-      if (fw != null) try { fw.close(); } catch (IOException e) {}
+      Log.w("EncryptedFileUtil", "Failed to write text", e);
     }
   }
   
@@ -231,18 +198,14 @@ public class EncryptedFileUtil {
   
   public String readFileContent(File file) {
     StringBuilder sb = new StringBuilder();
-    java.io.FileReader reader = null;
-    try {
-      reader = new java.io.FileReader(file);
+    try (FileReader reader = new FileReader(file)) {
       char[] buf = new char[1024];
       int len;
       while ((len = reader.read(buf)) > 0) {
-        sb.append(new String(buf, 0, len));
+        sb.append(buf, 0, len);
       }
     } catch (IOException e) {
-      android.util.Log.w("EncryptedFileUtil", "Failed to read file content", e);
-    } finally {
-      if (reader != null) try { reader.close(); } catch (Exception e) { android.util.Log.w("EncryptedFileUtil", "Failed to close reader", e); }
+      Log.w("EncryptedFileUtil", "Failed to read file content", e);
     }
     return sb.toString();
   }
@@ -267,11 +230,11 @@ public class EncryptedFileUtil {
   }
   
   public boolean exists(String value) {
-    return (new File(value)).exists();
+    return new File(value).exists();
   }
   
   public boolean mkdirs(String value) {
-    return !exists(value) ? (new File(value)).mkdirs() : false;
+    return !exists(value) && new File(value).mkdirs();
   }
   
   public String readFile(String value) {
@@ -279,9 +242,7 @@ public class EncryptedFileUtil {
   }
   
   public byte[] readFileBytes(String value) {
-    FileInputStream fis = null;
-    try {
-      fis = new FileInputStream(new File(value));
+    try (FileInputStream fis = new FileInputStream(value)) {
       int size = fis.available();
       if (size > 0) {
         byte[] data = new byte[size];
@@ -289,8 +250,7 @@ public class EncryptedFileUtil {
         return data;
       }
     } catch (IOException e) {
-    } finally {
-      if (fis != null) try { fis.close(); } catch (IOException e) {}
+      Log.w("EncryptedFileUtil", "Failed to read file bytes: " + value, e);
     }
     return null;
   }

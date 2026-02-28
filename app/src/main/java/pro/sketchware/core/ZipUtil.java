@@ -3,14 +3,17 @@ package pro.sketchware.core;
 import android.content.Context;
 import android.util.Log;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 public class ZipUtil {
@@ -24,12 +27,9 @@ public class ZipUtil {
     if (!dir.exists()) {
       if (!dir.mkdirs()) dir.mkdir();
     }
-    java.io.BufferedInputStream bis = null;
-    java.util.zip.ZipInputStream zis = null;
-    try {
-      bis = new java.io.BufferedInputStream(context.getAssets().open(key));
-      zis = new java.util.zip.ZipInputStream(bis);
-      java.util.zip.ZipEntry entry;
+    try (BufferedInputStream bis = new BufferedInputStream(context.getAssets().open(key));
+         ZipInputStream zis = new ZipInputStream(bis)) {
+      ZipEntry entry;
       while ((entry = zis.getNextEntry()) != null) {
         String filePath = destDir + entry.getName();
         File file = new File(filePath);
@@ -38,9 +38,7 @@ public class ZipUtil {
         } else {
           File parent = file.getParentFile();
           if (parent != null && !parent.isDirectory()) parent.mkdirs();
-          FileOutputStream fos = null;
-          try {
-            fos = new FileOutputStream(file, false);
+          try (FileOutputStream fos = new FileOutputStream(file, false)) {
             int len;
             while ((len = zis.read(buf, 0, buf.length)) > 0) {
               fos.write(buf, 0, len);
@@ -48,18 +46,13 @@ public class ZipUtil {
             zis.closeEntry();
             fos.flush();
           } catch (Exception e) {
-            e.printStackTrace();
-          } finally {
-            if (fos != null) fos.close();
+            Log.w("ZipUtil", "Failed to extract entry: " + entry.getName(), e);
           }
         }
       }
     } catch (Exception e) {
-      android.util.Log.e("DEBUG", e.getMessage(), e);
+      Log.e("ZipUtil", "Failed to extract asset zip: " + key, e);
       throw new RuntimeException(e);
-    } finally {
-      if (zis != null) try { zis.close(); } catch (IOException e) { e.printStackTrace(); }
-      if (bis != null) try { bis.close(); } catch (IOException e) { e.printStackTrace(); }
     }
   }
   
@@ -101,12 +94,9 @@ public class ZipUtil {
     }
     File dir = new File(destDir);
     if (!dir.exists()) dir.mkdirs();
-    java.io.BufferedInputStream bis = null;
-    java.util.zip.ZipInputStream zis = null;
-    try {
-      bis = new java.io.BufferedInputStream(inputStream);
-      zis = new java.util.zip.ZipInputStream(bis);
-      java.util.zip.ZipEntry entry;
+    try (BufferedInputStream bis = new BufferedInputStream(inputStream);
+         ZipInputStream zis = new ZipInputStream(bis)) {
+      ZipEntry entry;
       while ((entry = zis.getNextEntry()) != null) {
         String filePath = destDir + entry.getName();
         File file = new File(filePath);
@@ -115,9 +105,7 @@ public class ZipUtil {
         } else {
           File parent = file.getParentFile();
           if (parent != null && !parent.isDirectory()) parent.mkdirs();
-          FileOutputStream fos = null;
-          try {
-            fos = new FileOutputStream(file, false);
+          try (FileOutputStream fos = new FileOutputStream(file, false)) {
             int len;
             while ((len = zis.read(buf, 0, buf.length)) > 0) {
               fos.write(buf, 0, len);
@@ -125,57 +113,39 @@ public class ZipUtil {
             zis.closeEntry();
             fos.flush();
           } catch (Exception e) {
-            e.printStackTrace();
-          } finally {
-            if (fos != null) fos.close();
+            Log.w("ZipUtil", "Failed to extract entry: " + entry.getName(), e);
           }
         }
       }
-    } catch (java.io.FileNotFoundException e) {
-      e.printStackTrace();
     } catch (IOException e) {
-      e.printStackTrace();
-    } finally {
-      if (bis != null) try { bis.close(); } catch (IOException e) { e.printStackTrace(); }
-      if (zis != null) try { zis.close(); } catch (IOException e) { e.printStackTrace(); }
+      Log.w("ZipUtil", "Failed to extract zip stream", e);
     }
   }
   
-  public void extractZipFile(String key, String value) throws java.io.FileNotFoundException {
+  public void extractZipFile(String key, String value) throws FileNotFoundException {
     extractZipStream(new FileInputStream(key), value);
   }
   
   public void createZipFile(String zipFilePath, ArrayList<String> list1, ArrayList<String> list2) {
-    FileOutputStream fos = null;
-    ZipOutputStream zos = null;
-    try {
-      fos = new FileOutputStream(zipFilePath);
-      zos = new ZipOutputStream(fos);
-      Iterator<String> iterator = list1.iterator();
-      while (iterator.hasNext()) {
-        String path = iterator.next();
+    try (FileOutputStream fos = new FileOutputStream(zipFilePath);
+         ZipOutputStream zos = new ZipOutputStream(fos)) {
+      for (String path : list1) {
         addDirectoryToZip(path, new File(path), zos, list2);
       }
     } catch (Exception e) {
-      e.printStackTrace();
-    } finally {
-      if (zos != null) try { zos.close(); } catch (IOException e) { e.printStackTrace(); }
-      if (fos != null) try { fos.close(); } catch (IOException e) { e.printStackTrace(); }
+      Log.w("ZipUtil", "Failed to create zip file: " + zipFilePath, e);
     }
   }
   
   public boolean addFileToZip(String key, String value, ZipOutputStream zipOut) {
     File file = new File(key + value);
     if (!file.isFile()) {
-      try { if (zipOut != null) zipOut.closeEntry(); } catch (IOException e) { e.printStackTrace(); }
+      try { if (zipOut != null) zipOut.closeEntry(); } catch (IOException e) { Log.w("ZipUtil", "Failed to close zip entry", e); }
       return false;
     }
-    FileInputStream fis = null;
-    java.io.BufferedInputStream bis = null;
-    try {
-      fis = new FileInputStream(file);
-      bis = new java.io.BufferedInputStream(fis);
-      java.util.zip.ZipEntry entry = new java.util.zip.ZipEntry(value);
+    try (FileInputStream fis = new FileInputStream(file);
+         BufferedInputStream bis = new BufferedInputStream(fis)) {
+      ZipEntry entry = new ZipEntry(value);
       zipOut.putNextEntry(entry);
       byte[] buf = new byte[1024];
       int len;
@@ -185,9 +155,7 @@ public class ZipUtil {
     } catch (Exception e) {
       Log.w("ZipUtil", "Failed to add file to zip: " + key + value, e);
     } finally {
-      try { if (zipOut != null) zipOut.closeEntry(); } catch (IOException e) { e.printStackTrace(); }
-      if (fis != null) try { fis.close(); } catch (IOException e) { e.printStackTrace(); }
-      if (bis != null) try { bis.close(); } catch (IOException e) { e.printStackTrace(); }
+      try { if (zipOut != null) zipOut.closeEntry(); } catch (IOException e) { Log.w("ZipUtil", "Failed to close zip entry", e); }
     }
     return true;
   }

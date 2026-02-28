@@ -2,8 +2,6 @@ package pro.sketchware.core;
 
 import android.content.Context;
 import android.graphics.Rect;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.besome.sketch.beans.BlockBean;
@@ -16,23 +14,15 @@ public class DefinitionBlockView extends BlockView {
   
   public DefinitionBlockView(Context context, String key, String value, String extra, String extra2, ArrayList<BlockBean> list) {
     super(context, -1, extra2, key, value, extra);
-    this.blockData = list;
-    this.blockTypeInt = 2;
+    blockData = list;
+    blockTypeInt = 2;
   }
   
   private TextView createDefinitionLabel(String input) {
-    TextView textView = new TextView(((BaseBlockView)this).context);
-    String compType = ((BaseBlockView)this).componentType;
+    TextView textView = new TextView(context);
     String labelText = input;
-    if (compType != null) {
-      labelText = input;
-      if (compType.length() > 0) {
-        StringBuilder labelBuilder = new StringBuilder();
-        labelBuilder.append(((BaseBlockView)this).componentType);
-        labelBuilder.append(" : ");
-        labelBuilder.append(input);
-        labelText = labelBuilder.toString();
-      } 
+    if (componentType != null && componentType.length() > 0) {
+      labelText = componentType + " : " + input;
     } 
     textView.setText(labelText);
     textView.setTextSize(10.0F);
@@ -40,9 +30,9 @@ public class DefinitionBlockView extends BlockView {
     textView.setGravity(16);
     textView.setTextColor(-1);
     textView.setTypeface(null, 1);
-    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-2, ((BaseBlockView)this).textHeight);
+    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-2, textHeight);
     layoutParams.setMargins(0, 0, 0, 0);
-    textView.setLayoutParams((ViewGroup.LayoutParams)layoutParams);
+    textView.setLayoutParams(layoutParams);
     return textView;
   }
   
@@ -53,159 +43,76 @@ public class DefinitionBlockView extends BlockView {
   }
   
   public ArrayList<BlockBean> getData() {
-    return this.blockData;
+    return blockData;
   }
   
   public void calculateBlockLayout() {
-    this.definitionLabel.setX((float) this.leftIndent);
-    this.definitionLabel.setY((float) this.topSpacing);
-    int[] textSize = measureTextBounds(this.definitionLabel);
+    definitionLabel.setX((float) leftIndent);
+    definitionLabel.setY((float) topSpacing);
+    int[] textSize = measureTextBounds(definitionLabel);
     int textWidth = textSize[0];
-    int textHeight = textSize[1];
-    int width = this.leftIndent + textWidth + this.rightIndent;
-    int yPos = this.topSpacing;
-    int height = this.textHeight;
-    int vPad = this.bottomSpacing;
-    String spec = this.componentType;
-    if (spec != null && spec.length() > 0) {
-      width = (int) (width + this.density * 8.0f);
+    int measuredTextHeight = textSize[1];
+    int width = leftIndent + textWidth + rightIndent;
+    int yPos = topSpacing;
+    int height = textHeight;
+    int vPad = bottomSpacing;
+    String compType = componentType;
+    if (compType != null && compType.length() > 0) {
+      width = (int) (width + density * 8.0f);
     }
-    String type = this.blockType;
+    String type = blockType;
     if (type.equals("b") || type.equals("d") || type.equals("s") || type.equals("a")) {
-      width = Math.max(width, this.minBlockWidth);
+      width = Math.max(width, minBlockWidth);
     }
     if (type.equals(" ") || type.equals("") || type.equals("o")) {
-      width = Math.max(width, this.minSimpleWidth);
+      width = Math.max(width, minSimpleWidth);
     }
     if (type.equals("c") || type.equals("e")) {
-      width = Math.max(width, this.minCWidth);
+      width = Math.max(width, minCWidth);
     }
-    int totalHeight = Math.max(yPos + height + vPad, this.topSpacing + textHeight + this.bottomSpacing);
+    int totalHeight = Math.max(yPos + height + vPad, topSpacing + measuredTextHeight + bottomSpacing);
     setBlockSize((float) width, (float) totalHeight, true);
   }
   
   public void initializeBlockDimensions() {
-    byte matchIndex = 0;
     setDrawingCacheEnabled(false);
-    float blockWidth = this.minBlockWidth;
-    float density = ((BaseBlockView)this).density;
-    this.minBlockWidth = (int)(blockWidth * density);
-    this.minSimpleWidth = (int)(this.minSimpleWidth * density);
-    this.minHatWidth = (int)(this.minHatWidth * density);
-    this.minCWidth = (int)(this.minCWidth * density);
-    this.spacing = (int)(this.spacing * density);
-    String blockTypeCode = ((BaseBlockView)this).blockType;
-    int hashCode = blockTypeCode.hashCode();
-    if (hashCode != 32) {
-      if (hashCode != 104) {
-        if (hashCode != 108) {
-          if (hashCode != 112) {
-            if (hashCode != 115) {
-              if (hashCode != 118) {
-                switch (hashCode) {
-                  default:
-                    matchIndex = -1;
-                    break;
-                  case 102:
-                    if (blockTypeCode.equals("f")) {
-                      matchIndex = 10;
-                      break;
-                    } 
-                  case 101:
-                    if (blockTypeCode.equals("e")) {
-                      matchIndex = 9;
-                      break;
-                    } 
-                  case 100:
-                    if (blockTypeCode.equals("d")) {
-                      matchIndex = 3;
-                      break;
-                    } 
-                  case 99:
-                    if (blockTypeCode.equals("c")) {
-                      matchIndex = 8;
-                      break;
-                    } 
-                  case 98:
-                    if (blockTypeCode.equals("b")) {
-                      matchIndex = 1;
-                      break;
-                    } 
-                  case 97:
-                    if (blockTypeCode.equals("a")) {
-                      matchIndex = 7;
-                      break;
-                    } 
-                } 
-              } else if (blockTypeCode.equals("v")) {
-                matchIndex = 4;
-              } else {
-              
-              } 
-            } else if (blockTypeCode.equals("s")) {
-              matchIndex = 2;
-            } else {
-            
-            } 
-          } else if (blockTypeCode.equals("p")) {
-            matchIndex = 5;
-          } else {
-          
-          } 
-        } else if (blockTypeCode.equals("l")) {
-          matchIndex = 6;
-        } else {
-        
-        } 
-      } else if (blockTypeCode.equals("h")) {
-        matchIndex = 11;
-      } else {
-      
-      } 
-    } else if (blockTypeCode.equals(" ")) {
-      switch (matchIndex) {
-        case 11:
-          this.isDefinitionBlock = true;
-          break;
-        case 10:
-          this.hasEndCap = true;
-          break;
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-        case 5:
-        case 6:
-        case 7:
-          this.isParameter = true;
-          break;
-      } 
-      this.definitionLabel = createDefinitionLabel(this.spec);
-      addView((View)this.definitionLabel);
-      ((BaseBlockView)this).blockColor = getResources().getColor(pro.sketchware.R.color.scolor_red_02);
-      layoutChain();
-      return;
-    } 
-    switch (matchIndex) {
-      case 11:
-        this.isDefinitionBlock = true;
+    float scale = density;
+    minBlockWidth = (int)(minBlockWidth * scale);
+    minSimpleWidth = (int)(minSimpleWidth * scale);
+    minHatWidth = (int)(minHatWidth * scale);
+    minCWidth = (int)(minCWidth * scale);
+    spacing = (int)(spacing * scale);
+    String type = blockType;
+    byte typeNum = 0;
+    if (type.equals("b")) { typeNum = 1; }
+    else if (type.equals("s")) { typeNum = 2; }
+    else if (type.equals("d")) { typeNum = 3; }
+    else if (type.equals("v")) { typeNum = 4; }
+    else if (type.equals("p")) { typeNum = 5; }
+    else if (type.equals("l")) { typeNum = 6; }
+    else if (type.equals("a")) { typeNum = 7; }
+    else if (type.equals("c")) { typeNum = 8; }
+    else if (type.equals("e")) { typeNum = 9; }
+    else if (type.equals("f")) { typeNum = 10; }
+    else if (type.equals("h")) { typeNum = 11; }
+    else if (type.equals(" ")) { typeNum = 0; }
+    else { typeNum = -1; }
+    switch (typeNum) {
+      case 1: case 2: case 3: case 4: case 5: case 6: case 7:
+        isParameter = true;
         break;
       case 10:
-        this.hasEndCap = true;
+        hasEndCap = true;
         break;
-      case 1:
-      case 2:
-      case 3:
-      case 4:
-      case 5:
-      case 6:
-      case 7:
-        this.isParameter = true;
+      case 11:
+        isDefinitionBlock = true;
         break;
-    } 
-    this.definitionLabel = createDefinitionLabel(this.spec);
-    addView((View)this.definitionLabel);
-    ((BaseBlockView)this).blockColor = getResources().getColor(pro.sketchware.R.color.scolor_red_02);
+      default:
+        break;
+    }
+    definitionLabel = createDefinitionLabel(spec);
+    addView(definitionLabel);
+    blockColor = getResources().getColor(pro.sketchware.R.color.scolor_red_02);
     layoutChain();
   }
 }

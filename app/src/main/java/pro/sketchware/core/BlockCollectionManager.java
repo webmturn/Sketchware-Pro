@@ -5,131 +5,95 @@ import com.besome.sketch.beans.BlockCollectionBean;
 import com.besome.sketch.beans.CollectionBean;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import java.io.BufferedReader;
+
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class BlockCollectionManager extends BaseCollectionManager {
-  public static volatile BlockCollectionManager instance;
-  
-  public Gson blockGson = null;
-  
-  public BlockCollectionManager() {
-    initializeGson();
-  }
-  
-  public static BlockCollectionManager getInstance() {
-    if (instance == null) {
-      synchronized (BlockCollectionManager.class) {
+    private static volatile BlockCollectionManager instance;
+    private Gson blockGson;
+
+    public BlockCollectionManager() {
+        initializeGson();
+    }
+
+    public static BlockCollectionManager getInstance() {
         if (instance == null) {
-          instance = new BlockCollectionManager();
+            synchronized (BlockCollectionManager.class) {
+                if (instance == null) {
+                    instance = new BlockCollectionManager();
+                }
+            }
         }
-      }
+        return instance;
     }
-    return instance;
-  }
-  
-  public BlockCollectionBean getBlockByName(String name) {
-    for (CollectionBean collectionBean : this.collections) {
-      if (collectionBean.name.equals(name))
-        return new BlockCollectionBean(collectionBean.name, ProjectDataParser.parseBlockBeans(this.blockGson, collectionBean.data)); 
-    } 
-    return null;
-  }
-  
-  public void renameBlock(String key, String value, boolean flag) {
-    for (CollectionBean collectionBean : this.collections) {
-      if (collectionBean.name.equals(key)) {
-        collectionBean.name = value;
-        break;
-      } 
-    } 
-    if (flag)
-      saveCollections(); 
-  }
-  
-  public void addBlock(String input, ArrayList<BlockBean> list, boolean flag) throws CompileException {
-    if (this.collections == null)
-      initialize(); 
-    if (this.blockGson == null)
-      initializeGson(); 
-    Iterator<CollectionBean> iterator = this.collections.iterator();
-    while (iterator.hasNext()) {
-      if (!((CollectionBean)iterator.next()).name.equals(input))
-        continue; 
-      throw new CompileException("duplicate_name");
-    } 
-    StringBuilder contentBuilder = new StringBuilder();
-    for (int bi = 0; bi < list.size(); bi++) {
-      BlockBean blockBean = list.get(bi);
-      contentBuilder.append(this.blockGson.toJson(blockBean));
-      contentBuilder.append("\n");
+
+    public BlockCollectionBean getBlockByName(String name) {
+        for (CollectionBean bean : collections) {
+            if (bean.name.equals(name)) {
+                return new BlockCollectionBean(bean.name, ProjectDataParser.parseBlockBeans(blockGson, bean.data));
+            }
+        }
+        return null;
     }
-    String serializedData = contentBuilder.toString();
-    this.collections.add(new CollectionBean(input, serializedData));
-    if (flag)
-      saveCollections(); 
-  }
-  
-  public void removeBlock(String name, boolean flag) {
-    int size = this.collections.size();
-    while (true) {
-      int idx = size - 1;
-      if (idx >= 0) {
-        size = idx;
-        if (((CollectionBean)this.collections.get(idx)).name.equals(name)) {
-          this.collections.remove(idx);
-          break;
-        } 
-        continue;
-      } 
-      break;
-    } 
-    if (flag)
-      saveCollections(); 
-  }
-  
-  public void initializePaths() {
-    StringBuilder pathBuilder = new StringBuilder();
-    pathBuilder.append(SketchwarePaths.getCollectionPath());
-    pathBuilder.append(File.separator);
-    pathBuilder.append("block");
-    pathBuilder.append(File.separator);
-    pathBuilder.append("list");
-    this.collectionFilePath = pathBuilder.toString();
-    pathBuilder = new StringBuilder();
-    pathBuilder.append(SketchwarePaths.getCollectionPath());
-    pathBuilder.append(File.separator);
-    pathBuilder.append("block");
-    pathBuilder.append(File.separator);
-    pathBuilder.append("data");
-    this.dataDirPath = pathBuilder.toString();
-  }
-  
-  public ArrayList<BlockCollectionBean> getBlocks() {
-    if (this.collections == null)
-      initialize(); 
-    if (this.blockGson == null)
-      initializeGson(); 
-    ArrayList<BlockCollectionBean> blockCollections = new ArrayList<>();
-    for (CollectionBean collectionBean : this.collections)
-      blockCollections.add(new BlockCollectionBean(collectionBean.name, ProjectDataParser.parseBlockBeans(this.blockGson, collectionBean.data))); 
-    return blockCollections;
-  }
-  
-  public ArrayList<String> getBlockNames() {
-    if (this.collections == null)
-      initialize(); 
-    ArrayList<String> blockNames = new ArrayList<>();
-    Iterator<CollectionBean> iterator = this.collections.iterator();
-    while (iterator.hasNext())
-      blockNames.add(((CollectionBean)iterator.next()).name); 
-    return blockNames;
-  }
-  
-  public final void initializeGson() {
-    this.blockGson = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
-  }
+
+    public void renameBlock(String oldName, String newName, boolean save) {
+        for (CollectionBean bean : collections) {
+            if (bean.name.equals(oldName)) {
+                bean.name = newName;
+                break;
+            }
+        }
+        if (save) saveCollections();
+    }
+
+    public void addBlock(String name, ArrayList<BlockBean> blocks, boolean save) throws CompileException {
+        if (collections == null) initialize();
+        if (blockGson == null) initializeGson();
+        for (CollectionBean bean : collections) {
+            if (bean.name.equals(name)) {
+                throw new CompileException("duplicate_name");
+            }
+        }
+        StringBuilder contentBuilder = new StringBuilder();
+        for (BlockBean block : blocks) {
+            contentBuilder.append(blockGson.toJson(block)).append("\n");
+        }
+        collections.add(new CollectionBean(name, contentBuilder.toString()));
+        if (save) saveCollections();
+    }
+
+    public void removeBlock(String name, boolean save) {
+        collections.removeIf(bean -> bean.name.equals(name));
+        if (save) saveCollections();
+    }
+
+    public void initializePaths() {
+        String basePath = SketchwarePaths.getCollectionPath() + File.separator + "block" + File.separator;
+        collectionFilePath = basePath + "list";
+        dataDirPath = basePath + "data";
+    }
+
+    public ArrayList<BlockCollectionBean> getBlocks() {
+        if (collections == null) initialize();
+        if (blockGson == null) initializeGson();
+        ArrayList<BlockCollectionBean> result = new ArrayList<>();
+        for (CollectionBean bean : collections) {
+            result.add(new BlockCollectionBean(bean.name, ProjectDataParser.parseBlockBeans(blockGson, bean.data)));
+        }
+        return result;
+    }
+
+    public ArrayList<String> getBlockNames() {
+        if (collections == null) initialize();
+        ArrayList<String> names = new ArrayList<>();
+        for (CollectionBean bean : collections) {
+            names.add(bean.name);
+        }
+        return names;
+    }
+
+    public final void initializeGson() {
+        blockGson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+    }
 }

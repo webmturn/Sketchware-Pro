@@ -5,76 +5,71 @@ import android.util.Log;
 import com.besome.sketch.beans.CollectionBean;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 
 public abstract class BaseCollectionManager {
-  public String collectionFilePath;
-  
-  public String dataDirPath;
-  
-  public EncryptedFileUtil fileUtil;
-  
-  public Gson gson;
-  
-  public ArrayList<CollectionBean> collections;
-  
-  public BaseCollectionManager() {
-    initialize();
-  }
-  
-  public void initialize() {
-    initializePaths();
-    this.fileUtil = new EncryptedFileUtil();
-    this.gson = (new GsonBuilder()).create();
-    loadCollections();
-  }
-  
-  public abstract void initializePaths();
-  
-  public void loadCollections() {
-    this.collections = new ArrayList<CollectionBean>();
-    java.io.BufferedReader reader = null;
-    try {
-      String content = this.fileUtil.readFile(this.collectionFilePath);
-      reader = new java.io.BufferedReader(new java.io.StringReader(content));
-      String line;
-      while ((line = reader.readLine()) != null) {
-        if (line.length() <= 0) continue;
-        CollectionBean bean = this.gson.fromJson(line, CollectionBean.class);
-        String path = this.dataDirPath + java.io.File.separator + bean.data;
-        if (this.fileUtil.exists(path)) {
-          this.collections.add(bean);
-        }
-      }
-    } catch (java.io.IOException e) {
-      e.printStackTrace();
-    } finally {
-      if (reader != null) try { reader.close(); } catch (Exception ignored) { Log.w("BaseCollectionManager", "Failed to close reader", ignored); }
+    protected String collectionFilePath;
+    protected String dataDirPath;
+    protected EncryptedFileUtil fileUtil;
+    protected Gson gson;
+    protected ArrayList<CollectionBean> collections;
+
+    public BaseCollectionManager() {
+        initialize();
     }
-  }
-  
-  public void clearCollections() {
-    ArrayList<CollectionBean> collectionsList = this.collections;
-    if (collectionsList != null) {
-      collectionsList.clear();
-      this.collections = null;
-    } 
-  }
-  
-  public void saveCollections() {
-    if (this.collections == null)
-      return; 
-    StringBuilder contentBuilder = new StringBuilder(1024);
-    for (CollectionBean collectionBean : this.collections) {
-      contentBuilder.append(this.gson.toJson(collectionBean));
-      contentBuilder.append("\n");
-    } 
-    try {
-      this.fileUtil.deleteFileByPath(this.collectionFilePath);
-      this.fileUtil.writeText(this.collectionFilePath, contentBuilder.toString());
-    } catch (Exception exception) {
-      exception.printStackTrace();
-    } 
-  }
+
+    public void initialize() {
+        initializePaths();
+        fileUtil = new EncryptedFileUtil();
+        gson = new GsonBuilder().create();
+        loadCollections();
+    }
+
+    public abstract void initializePaths();
+
+    public void loadCollections() {
+        collections = new ArrayList<>();
+        try {
+            String content = fileUtil.readFile(collectionFilePath);
+            try (BufferedReader reader = new BufferedReader(new StringReader(content))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    if (line.isEmpty()) continue;
+                    CollectionBean bean = gson.fromJson(line, CollectionBean.class);
+                    String path = dataDirPath + File.separator + bean.data;
+                    if (fileUtil.exists(path)) {
+                        collections.add(bean);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            Log.e("BaseCollectionManager", "Failed to load collections", e);
+        }
+    }
+
+    public void clearCollections() {
+        if (collections != null) {
+            collections.clear();
+            collections = null;
+        }
+    }
+
+    public void saveCollections() {
+        if (collections == null) return;
+        StringBuilder contentBuilder = new StringBuilder(1024);
+        for (CollectionBean bean : collections) {
+            contentBuilder.append(gson.toJson(bean)).append("\n");
+        }
+        try {
+            fileUtil.deleteFileByPath(collectionFilePath);
+            fileUtil.writeText(collectionFilePath, contentBuilder.toString());
+        } catch (Exception e) {
+            Log.e("BaseCollectionManager", "Failed to save collections", e);
+        }
+    }
 }

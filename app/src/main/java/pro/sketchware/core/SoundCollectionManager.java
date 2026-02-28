@@ -2,160 +2,119 @@ package pro.sketchware.core;
 
 import com.besome.sketch.beans.CollectionBean;
 import com.besome.sketch.beans.ProjectResourceBean;
+
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 public class SoundCollectionManager extends BaseCollectionManager {
-  public static volatile SoundCollectionManager instance;
-  
-  public static SoundCollectionManager getInstance() {
-    if (instance == null) {
-      synchronized (SoundCollectionManager.class) {
+    private static volatile SoundCollectionManager instance;
+
+    public static SoundCollectionManager getInstance() {
         if (instance == null) {
-          instance = new SoundCollectionManager();
+            synchronized (SoundCollectionManager.class) {
+                if (instance == null) {
+                    instance = new SoundCollectionManager();
+                }
+            }
         }
-      }
+        return instance;
     }
-    return instance;
-  }
-  
-  public ProjectResourceBean getResourceByName(String name) {
-    for (ProjectResourceBean projectResourceBean : getResources()) {
-      if (projectResourceBean.resName.equals(name))
-        return projectResourceBean; 
-    } 
-    return null;
-  }
-  
-  public void renameResource(ProjectResourceBean resourceBean, String newName, boolean flag) {
-    if (this.collections == null)
-      initialize(); 
-    int idx = this.collections.size();
-    while (--idx >= 0) {
-      CollectionBean collectionBean = this.collections.get(idx);
-      if (collectionBean.name.equals(resourceBean.resName)) {
-        collectionBean.name = newName;
-        break;
-      } 
-    } 
-    if (flag)
-      saveCollections(); 
-  }
-  
-  public void addResource(String sourcePath, ProjectResourceBean resourceBean) throws CompileException {
-    addResource(sourcePath, resourceBean, true);
-  }
-  
-  public void addResource(String sourcePath, ProjectResourceBean resourceBean, boolean flag) throws CompileException {
-    if (this.collections == null) initialize();
-    ArrayList<String> duplicates = new ArrayList<String>();
-    for (CollectionBean bean : this.collections) {
-      if (bean.name.equals(resourceBean.resName)) {
-        duplicates.add(bean.name);
-      }
+
+    public ProjectResourceBean getResourceByName(String name) {
+        for (ProjectResourceBean resource : getResources()) {
+            if (resource.resName.equals(name)) return resource;
+        }
+        return null;
     }
-    if (duplicates.size() > 0) {
-      throw new CompileException("duplicate_name");
+
+    public void renameResource(ProjectResourceBean resourceBean, String newName, boolean save) {
+        if (collections == null) initialize();
+        for (int i = collections.size() - 1; i >= 0; i--) {
+            CollectionBean bean = collections.get(i);
+            if (bean.name.equals(resourceBean.resName)) {
+                bean.name = newName;
+                break;
+            }
+        }
+        if (save) saveCollections();
     }
-    String resName = resourceBean.resName;
-    String dataName = resName;
-    if (resourceBean.resFullName.contains(".")) {
-      String ext = resourceBean.resFullName.substring(resourceBean.resFullName.lastIndexOf('.'));
-      dataName = resName + ext;
+
+    public void addResource(String sourcePath, ProjectResourceBean resourceBean) throws CompileException {
+        addResource(sourcePath, resourceBean, true);
     }
-    String destPath = this.dataDirPath + java.io.File.separator + dataName;
-    if (resourceBean.savedPos == 1) {
-      String srcPath = resourceBean.resFullName;
-      if (!this.fileUtil.exists(srcPath)) {
-        throw new CompileException("file_no_exist");
-      }
-      try {
-        this.fileUtil.mkdirs(this.dataDirPath);
-        this.fileUtil.copyFile(srcPath, destPath);
-      } catch (java.io.IOException e) {
-        throw new CompileException("fail_to_copy");
-      }
-    } else {
-      String srcPath = SketchwarePaths.getSoundsPath() + java.io.File.separator + sourcePath + java.io.File.separator + resourceBean.resFullName;
-      if (!this.fileUtil.exists(srcPath)) {
-        throw new CompileException("file_no_exist");
-      }
-      try {
-        this.fileUtil.mkdirs(this.dataDirPath);
-        this.fileUtil.copyFile(srcPath, destPath);
-      } catch (java.io.IOException e) {
-        throw new CompileException("fail_to_copy");
-      }
+
+    public void addResource(String sourcePath, ProjectResourceBean resourceBean, boolean save) throws CompileException {
+        if (collections == null) initialize();
+        for (CollectionBean bean : collections) {
+            if (bean.name.equals(resourceBean.resName)) {
+                throw new CompileException("duplicate_name");
+            }
+        }
+        String dataName = resourceBean.resName;
+        if (resourceBean.resFullName.contains(".")) {
+            String ext = resourceBean.resFullName.substring(resourceBean.resFullName.lastIndexOf('.'));
+            dataName = dataName + ext;
+        }
+        String destPath = dataDirPath + File.separator + dataName;
+        String srcPath;
+        if (resourceBean.savedPos == 1) {
+            srcPath = resourceBean.resFullName;
+        } else {
+            srcPath = SketchwarePaths.getSoundsPath() + File.separator + sourcePath + File.separator + resourceBean.resFullName;
+        }
+        if (!fileUtil.exists(srcPath)) {
+            throw new CompileException("file_no_exist");
+        }
+        try {
+            fileUtil.mkdirs(dataDirPath);
+            fileUtil.copyFile(srcPath, destPath);
+        } catch (IOException e) {
+            throw new CompileException("fail_to_copy");
+        }
+        collections.add(new CollectionBean(resourceBean.resName, dataName));
+        if (save) saveCollections();
     }
-    this.collections.add(new CollectionBean(resourceBean.resName, dataName));
-    if (flag) saveCollections();
-  }
-  
-  public void removeResource(String input, boolean flag) {
-    if (this.collections == null)
-      initialize(); 
-    int size = this.collections.size();
-    while (true) {
-      int idx = size - 1;
-      if (idx >= 0) {
-        CollectionBean collectionBean = this.collections.get(idx);
-        size = idx;
-        if (collectionBean.name.equals(input)) {
-          this.collections.remove(idx);
-          StringBuilder pathBuilder = new StringBuilder();
-          pathBuilder.append(this.dataDirPath);
-          pathBuilder.append(File.separator);
-          pathBuilder.append(collectionBean.data);
-          String filePath = pathBuilder.toString();
-          this.fileUtil.deleteFileByPath(filePath);
-          break;
-        } 
-        continue;
-      } 
-      break;
-    } 
-    if (flag)
-      saveCollections(); 
-  }
-  
-  public void initializePaths() {
-    StringBuilder pathBuilder = new StringBuilder();
-    pathBuilder.append(SketchwarePaths.getCollectionPath());
-    pathBuilder.append(File.separator);
-    pathBuilder.append("sound");
-    pathBuilder.append(File.separator);
-    pathBuilder.append("list");
-    this.collectionFilePath = pathBuilder.toString();
-    pathBuilder = new StringBuilder();
-    pathBuilder.append(SketchwarePaths.getCollectionPath());
-    pathBuilder.append(File.separator);
-    pathBuilder.append("sound");
-    pathBuilder.append(File.separator);
-    pathBuilder.append("data");
-    this.dataDirPath = pathBuilder.toString();
-  }
-  
-  public boolean hasResource(String name) {
-    Iterator<ProjectResourceBean> iterator = getResources().iterator();
-    while (iterator.hasNext()) {
-      if (((ProjectResourceBean)iterator.next()).resName.equals(name))
-        return true; 
-    } 
-    return false;
-  }
-  
-  public void clearCollections() {
-    super.clearCollections();
-    instance = null;
-  }
-  
-  public ArrayList<ProjectResourceBean> getResources() {
-    if (this.collections == null)
-      initialize(); 
-    ArrayList<ProjectResourceBean> resources = new ArrayList<>();
-    for (CollectionBean collectionBean : this.collections)
-      resources.add(new ProjectResourceBean(ProjectResourceBean.PROJECT_RES_TYPE_FILE, collectionBean.name, collectionBean.data)); 
-    return resources;
-  }
+
+    public void removeResource(String name, boolean save) {
+        if (collections == null) initialize();
+        Iterator<CollectionBean> it = collections.iterator();
+        while (it.hasNext()) {
+            CollectionBean bean = it.next();
+            if (bean.name.equals(name)) {
+                it.remove();
+                fileUtil.deleteFileByPath(dataDirPath + File.separator + bean.data);
+                break;
+            }
+        }
+        if (save) saveCollections();
+    }
+
+    public void initializePaths() {
+        String basePath = SketchwarePaths.getCollectionPath() + File.separator + "sound" + File.separator;
+        collectionFilePath = basePath + "list";
+        dataDirPath = basePath + "data";
+    }
+
+    public boolean hasResource(String name) {
+        for (ProjectResourceBean resource : getResources()) {
+            if (resource.resName.equals(name)) return true;
+        }
+        return false;
+    }
+
+    public void clearCollections() {
+        super.clearCollections();
+        instance = null;
+    }
+
+    public ArrayList<ProjectResourceBean> getResources() {
+        if (collections == null) initialize();
+        ArrayList<ProjectResourceBean> resources = new ArrayList<>();
+        for (CollectionBean bean : collections) {
+            resources.add(new ProjectResourceBean(ProjectResourceBean.PROJECT_RES_TYPE_FILE, bean.name, bean.data));
+        }
+        return resources;
+    }
 }
