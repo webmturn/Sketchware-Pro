@@ -1,3 +1,81 @@
+# v7.0.0-beta3
+
+## ✨ New Features
+
+### SQLite Database Component (type 29)
+- **12 blocks** for full SQLite CRUD operations
+- Create/open database, execute SQL, query with cursor, insert/update/delete rows
+- `onSQLiteError` event with localized descriptions
+- Chinese translations included
+
+### Notification Component (type 26)
+- **10 blocks**, 7 layers for channel-based notifications
+- `POST_NOTIFICATIONS` runtime permission for Android 13+
+- Proper channel management with `notifCreateChannel` / `notifSetChannel`
+- Small icon, color, and builder pattern support
+
+### Dependency Resolver (Localized)
+- **Replaced remote module** (`com.github.Cosmic-Ide:DependencyResolver`) with local `:resolver` module
+- **BOM support** — Automatically resolves Bill of Materials for version management
+- **Dependency tree caching** — `dependency-tree.json` avoids redundant resolution
+- **Built-in dependency detection** — Skips AndroidX, Firebase, Kotlin, etc. that are already bundled
+- **EPERM auto-retry** — Falls back to app-specific storage on FUSE-restricted devices
+
+### Library Management UI
+- **Sub-dependency viewer** — See all transitive dependencies of a root library
+- **Cascade toggling** — Enable/disable root library cascades to sub-dependencies
+- **Smart deletion** — Shared sub-dependencies retained, orphan detection and cleanup
+- **Version conflict detection** and built-in dependency badges
+
+### Logic Editor
+- **Variable and list rename** — Rename variables/lists across all blocks in an activity
+- **New blocks**: `getClipboard`, `getExceptionMessage`
+
+## 🐛 Bug Fixes
+
+### Editor Performance
+- **Fix editor tab swiping lag** — Skip unnecessary full view rebuild (990 views) on tab switch; dirty-check ensures rebuild only when Activity file changes
+- **Fix ViewPane NPE** — 6 null/exists checks for `BitmapFactory.decodeFile` and `NinePatchDecoder.decodeFile`
+- **Remove debug log storm** — `ViewEditor` was logging full stack traces for every custom-ID view
+
+### Component & Lifecycle
+- **Fix Gyroscope sensor** — Lifecycle management and type mismatch
+- **Fix lifecycle event generation** — Accumulate multi-component events, preserve auto-cleanup with user events, fix ViewBinding ID resolution
+- **Fix ClassCastException** in `ViewPropertyItems` for `property_text_size`
+
+### Library Downloads
+- **Fix FUSE EPERM** — Auto-retry with fallback path for Huawei/Samsung devices
+- **Fix backup/restore** — Reliability improvements for local library restore
+- **Fix libType enforcement** — Correct `libType` based on section key during deserialization
+- **Fix DependencyResolver crash** — Catch `IOException` to prevent thread crash
+
+### Notification Component Fixes
+- 8 incremental fixes: block colors, translations, permission, channel ID, small icon, anonymous class compatibility, params size guards
+
+### Performance
+- **O(1) DEX merge estimation** — Replace O(n) method counting with header-based approach
+
+## ♻️ Refactoring
+
+- **BlockSpecRegistry** — Replace decompiled hashCode switch with HashMap
+- **ProjectDataStore** — Replace decompiled enum switches, delete `ScreenOrientationConstants` and `KeyboardSettingConstants`
+- **ProjectDataParser** — Replace decompiled hashCode/enum switches, clean up fields
+- **StringResource** — Replace decompiled hashCode switch with Set
+- **BlockPane** — Replace decompiled hashCode switches with Map lookups
+- **Code style cleanup** across 30+ files (this. prefixes, FQN imports, verbose conditionals)
+- **Decompiler artifact cleanup** across 17 files
+
+## 🌐 i18n
+
+- Chinese translations for SQLite component, library category titles, onSQLiteError event
+- Localized dependency resolver event descriptions
+
+---
+
+**Full Changelog**: https://github.com/webmturn/Sketchware-Pro/compare/v7.0.0-beta-02...v7.0.0-beta-03
+
+---
+
 # v7.0.0-beta2
 
 ## 🔥 Firebase Libraries Upgrade (v19.x → BOM 33.7.0)
