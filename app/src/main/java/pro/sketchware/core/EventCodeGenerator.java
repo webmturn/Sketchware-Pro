@@ -126,8 +126,9 @@ public class EventCodeGenerator {
     }
 
     public void addLifecycleEvent(String eventName, String viewType, String viewId) {
-        if (!activityLifecycleEvents.containsKey(eventName)) {
-            activityLifecycleEvents.put(eventName, ComponentCodeGenerator.getDefaultActivityLifecycleCode(eventName, viewType, isViewBindingEnabled ? "binding." + ViewBindingBuilder.generateParameterFromId(viewId) : viewId));
+        String code = ComponentCodeGenerator.getDefaultActivityLifecycleCode(eventName, viewType, viewId);
+        if (!code.isEmpty()) {
+            activityLifecycleEvents.merge(eventName, code, (existing, newCode) -> existing + "\r\n" + newCode);
         }
     }
 
@@ -179,17 +180,19 @@ public class EventCodeGenerator {
             String name = event.getKey();
             String logic = event.getValue();
 
-            boolean found = false;
+            ActivityEvent matchedEvent = null;
             for (ActivityEvent next : activityEvents) {
                 if (next.name.equals(name)) {
-                    found = true;
+                    matchedEvent = next;
                     break;
                 }
             }
-            if (!found) {
+            if (matchedEvent == null) {
                 ActivityEvent a = new ActivityEvent(name);
                 a.setLogic(logic);
                 activityEvents.add(a);
+            } else {
+                matchedEvent.logic = logic + "\r\n" + matchedEvent.logic;
             }
         }
 
