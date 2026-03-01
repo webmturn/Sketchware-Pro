@@ -1060,6 +1060,11 @@ public class ComponentCodeGenerator {
                     code.append(viewId).append(".destroy();\r\n");
                     code.append("}");
                 }
+                if (viewType.equals("Gyroscope")) {
+                    code.append("if (_").append(viewId).append("_sensor_listener != null) {\r\n");
+                    code.append(viewId).append(".unregisterListener(_").append(viewId).append("_sensor_listener);\r\n");
+                    code.append("}\r\n");
+                }
                 if (viewType.equals("SQLiteDatabase")) {
                     code.append("if (_").append(viewId).append("_cursor != null && !_").append(viewId).append("_cursor.isClosed()) {\r\n");
                     code.append("_").append(viewId).append("_cursor.close();\r\n");
@@ -1166,7 +1171,7 @@ public class ComponentCodeGenerator {
 
             case "Gyroscope":
                 return componentName + " = (SensorManager) getSystemService(Context.SENSOR_SERVICE);\r\n" +
-                        "if (" + componentName + ".getDefaultSensor(Sensor.TYPE_GYROSCOPE) == null) {\r\n" +
+                        "if (" + componentName + ".getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR) == null) {\r\n" +
                         "SketchwareUtil.showMessage(getApplicationContext(), \"Gyroscope is not supported on this device\");\r\n" +
                         "}";
 
