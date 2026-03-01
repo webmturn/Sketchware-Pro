@@ -335,7 +335,7 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
                         });
                     }
                 });
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 handler.post(() -> {
                     setDownloadState(false);
                     SketchwareUtil.showAnErrorOccurredDialog(getActivity(),

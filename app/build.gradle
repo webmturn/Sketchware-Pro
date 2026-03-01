@@ -113,7 +113,7 @@ dependencies {
     implementation libs.bundles.kotlin.compiler
     compileOnly libs.kotlin.compiler
 
-    implementation libs.dependencyresolver
+    implementation project(':resolver')
     implementation libs.filepicker
 
     implementation libs.libsu
