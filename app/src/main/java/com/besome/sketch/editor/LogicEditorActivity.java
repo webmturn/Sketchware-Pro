@@ -1810,6 +1810,18 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         onBlockSizeChanged(0, 0xffee7d16);
     }
 
+    public void renameVariable(String oldName, String newName) {
+        saveBlocks();
+        ProjectDataManager.getProjectDataManager(scId).renameVariable(projectFile.getJavaName(), oldName, newName);
+        onBlockSizeChanged(0, 0xffee7d16);
+    }
+
+    public void renameListVariable(String oldName, String newName) {
+        saveBlocks();
+        ProjectDataManager.getProjectDataManager(scId).renameListVariable(projectFile.getJavaName(), oldName, newName);
+        onBlockSizeChanged(1, 0xffcc5b22);
+    }
+
     public void cancelPaletteAnimations() {
         if (paletteShowAnimator.isRunning()) {
             paletteShowAnimator.cancel();

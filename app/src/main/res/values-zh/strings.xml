@@ -1170,6 +1170,16 @@
     <string name="logic_editor_panel_button_create_moreblock">创建</string>
     <string name="logic_editor_panel_button_remove_list">移除列表</string>
     <string name="logic_editor_panel_button_remove_variable">移除变量</string>
+    <string name="logic_editor_panel_button_rename_variable">重命名变量</string>
+    <string name="logic_editor_panel_button_rename_list">重命名列表</string>
+    <string name="logic_editor_title_rename_variable">重命名变量</string>
+    <string name="logic_editor_title_rename_list">重命名列表</string>
+    <string name="logic_editor_title_enter_new_name">输入\"%s\"的新名称</string>
+    <string name="logic_editor_hint_new_name">新名称</string>
+    <string name="logic_editor_message_variable_renamed">变量已重命名：%1$s → %2$s</string>
+    <string name="logic_editor_message_list_renamed">列表已重命名：%1$s → %2$s</string>
+    <string name="logic_editor_message_no_variables">没有可重命名的变量</string>
+    <string name="logic_editor_message_no_lists">没有可重命名的列表</string>
     <string name="logic_editor_settings">设置</string>
     <string name="logic_editor_title_add_new_list">添加新列表</string>
     <string name="logic_editor_title_add_new_variable">添加新变量</string>
