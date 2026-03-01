@@ -213,7 +213,8 @@ public class BackupRestoreManager {
 
         @Override
         protected void onPostExecute(String _result) {
-            dlg.dismiss();
+            if (dlg != null) dlg.dismiss();
+            if (backupFactory == null) return;
 
             if (backupFactory.getOutFile() != null) {
                 SketchwareUtil.toast(String.format(Helper.getResString(R.string.backup_msg_success), backupFactory.getOutFile().getAbsolutePath()));
@@ -262,7 +263,7 @@ public class BackupRestoreManager {
             try {
                 backupFactory.restore(new File(file));
             } catch (Exception e) {
-                backupFactory.error = e.getMessage();
+                backupFactory.error = android.util.Log.getStackTraceString(e);
                 error = true;
             }
 
@@ -271,7 +272,7 @@ public class BackupRestoreManager {
 
         @Override
         protected void onPostExecute(String _result) {
-            dlg.dismiss();
+            if (dlg != null) dlg.dismiss();
 
             if (!backupFactory.isRestoreSuccess() || error) {
                 SketchwareUtil.toastError(String.format(Helper.getResString(R.string.backup_error_restore), backupFactory.error), Toast.LENGTH_LONG);
