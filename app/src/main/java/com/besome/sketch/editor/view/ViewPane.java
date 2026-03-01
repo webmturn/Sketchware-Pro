@@ -399,6 +399,7 @@ public class ViewPane extends RelativeLayout {
                         fab.setImageResource(R.drawable.default_image);
                     } else {
                         String imagePath = resourcesManager.getImagePath(viewBean.image.resName);
+                        if (imagePath == null) return;
                         File imageFile = new File(imagePath);
 
                         if (imageFile.exists()) {
@@ -464,18 +465,24 @@ public class ViewPane extends RelativeLayout {
                     view.setBackgroundResource(getContext().getResources().getIdentifier(viewBean.layout.backgroundResource, "drawable", getContext().getPackageName()));
                 } else {
                     String backgroundRes = resourcesManager.getImagePath(viewBean.layout.backgroundResource);
-                    if (backgroundRes.endsWith(".9.png")) {
-                        Bitmap decodedBitmap = NinePatchDecoder.decodeFile(backgroundRes);
-                        byte[] ninePatchChunk = decodedBitmap.getNinePatchChunk();
-                        if (NinePatch.isNinePatchChunk(ninePatchChunk)) {
-                            view.setBackground(new NinePatchDrawable(getResources(), decodedBitmap, ninePatchChunk, new Rect(), null));
+                    if (backgroundRes != null && new File(backgroundRes).exists()) {
+                        if (backgroundRes.endsWith(".9.png")) {
+                            Bitmap decodedBitmap = NinePatchDecoder.decodeFile(backgroundRes);
+                            if (decodedBitmap != null) {
+                                byte[] ninePatchChunk = decodedBitmap.getNinePatchChunk();
+                                if (NinePatch.isNinePatchChunk(ninePatchChunk)) {
+                                    view.setBackground(new NinePatchDrawable(getResources(), decodedBitmap, ninePatchChunk, new Rect(), null));
+                                } else {
+                                    view.setBackground(new BitmapDrawable(getResources(), backgroundRes));
+                                }
+                            }
                         } else {
-                            view.setBackground(new BitmapDrawable(getResources(), backgroundRes));
+                            Bitmap bgBitmap = BitmapFactory.decodeFile(backgroundRes);
+                            if (bgBitmap != null) {
+                                int densityScale = Math.round(getResources().getDisplayMetrics().density / 2.0f);
+                                view.setBackground(new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bgBitmap, bgBitmap.getWidth() * densityScale, bgBitmap.getHeight() * densityScale, true)));
+                            }
                         }
-                    } else {
-                        Bitmap bgBitmap = BitmapFactory.decodeFile(backgroundRes);
-                        int densityScale = Math.round(getResources().getDisplayMetrics().density / 2.0f);
-                        view.setBackground(new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bgBitmap, bgBitmap.getWidth() * densityScale, bgBitmap.getHeight() * densityScale, true)));
                     }
                 }
             } catch (Exception e) {
@@ -519,19 +526,23 @@ public class ViewPane extends RelativeLayout {
             } else {
                 try {
                     String imagelocation = resourcesManager.getImagePath(viewBean.image.resName);
-                    File file = new File(imagelocation);
-                    if (file.exists() && file.length() > 0) {
-                        int imageScale = Math.round(getResources().getDisplayMetrics().density / 2.0f);
-                        if (imagelocation.endsWith(".xml")) {
-                            FilePathUtil fpu = new FilePathUtil();
-                            svgUtils.loadScaledSvgIntoImageView((ImageView) view, fpu.getSvgFullPath(sc_id, viewBean.image.resName), imageScale);
+                    if (imagelocation != null) {
+                        File file = new File(imagelocation);
+                        if (file.exists() && file.length() > 0) {
+                            int imageScale = Math.round(getResources().getDisplayMetrics().density / 2.0f);
+                            if (imagelocation.endsWith(".xml")) {
+                                FilePathUtil fpu = new FilePathUtil();
+                                svgUtils.loadScaledSvgIntoImageView((ImageView) view, fpu.getSvgFullPath(sc_id, viewBean.image.resName), imageScale);
+                            } else {
+                                Bitmap imageBitmap = BitmapFactory.decodeFile(imagelocation);
+                                if (imageBitmap != null) {
+                                    ((ImageView) view).setImageBitmap(Bitmap.createScaledBitmap(imageBitmap, imageBitmap.getWidth() * imageScale, imageBitmap.getHeight() * imageScale, true));
+                                }
+                            }
                         } else {
-                            Bitmap imageBitmap = BitmapFactory.decodeFile(imagelocation);
-                            ((ImageView) view).setImageBitmap(Bitmap.createScaledBitmap(imageBitmap, imageBitmap.getWidth() * imageScale, imageBitmap.getHeight() * imageScale, true));
+                            VectorDrawableLoader vectorDrawableLoader = new VectorDrawableLoader();
+                            vectorDrawableLoader.setImageVectorFromFile((ImageView) view, vectorDrawableLoader.getVectorFullPath(DesignActivity.sc_id, viewBean.image.resName));
                         }
-                    } else {
-                        VectorDrawableLoader vectorDrawableLoader = new VectorDrawableLoader();
-                        vectorDrawableLoader.setImageVectorFromFile((ImageView) view, vectorDrawableLoader.getVectorFullPath(DesignActivity.sc_id, viewBean.image.resName));
                     }
                 } catch (Exception vectorException) {
                     crashlytics.recordException(vectorException);

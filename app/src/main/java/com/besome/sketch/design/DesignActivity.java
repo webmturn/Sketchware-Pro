@@ -139,6 +139,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     private ImageView xmlLayoutOrientation;
     private boolean isRestoringData;
     private int currentTabNumber;
+    private ProjectFileBean lastViewTabProjectFile;
     private CustomViewPager viewPager;
     private CoordinatorLayout coordinatorLayout;
     private DrawerLayout drawer;
@@ -273,6 +274,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     }
 
     private void refreshViewTabAdapter() {
+        lastViewTabProjectFile = projectFile;
         if (viewTabAdapter != null && projectFile != null) {
             int orientation = projectFile.orientation;
             if (orientation == ProjectFileBean.ORIENTATION_PORTRAIT) {
@@ -592,8 +594,16 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                         }
                     }
                 }
-                refresh();
                 currentTabNumber = position;
+                refreshFileSelector();
+                if (position == 0) {
+                    if (projectFile != lastViewTabProjectFile) {
+                        refreshViewTabAdapter();
+                    }
+                } else {
+                    refreshEventTabAdapter();
+                    refreshComponentTabAdapter();
+                }
                 invalidateOptionsMenu();
             }
         });

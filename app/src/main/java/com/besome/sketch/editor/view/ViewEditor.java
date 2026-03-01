@@ -731,8 +731,7 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
                 if (viewBean.type >= 0 && viewBean.type < countItems.length && countItems[viewBean.type] < intValue) {
                     countItems[viewBean.type] = intValue;
                 }
-            } catch (NumberFormatException e) {
-                android.util.Log.d("ViewEditor", "Failed to parse numeric suffix for view ID: " + viewBean.id, e);
+            } catch (NumberFormatException ignored) {
             }
         }
         itemView.setOnTouchListener(this);
