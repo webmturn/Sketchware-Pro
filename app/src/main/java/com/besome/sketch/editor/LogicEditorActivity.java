@@ -1075,6 +1075,10 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                                             ProjectDataStore.hasComponent(xmlName, ComponentBean.COMPONENT_TYPE_NOTIFICATION, parameter);
                                             break;
 
+                                        case "sqlite":
+                                            ProjectDataStore.hasComponent(xmlName, ComponentBean.COMPONENT_TYPE_SQLITE, parameter);
+                                            break;
+
                                         case "radiobutton":
                                             ProjectDataStore.hasViewOfType(xmlName, 19, parameter);
                                             break;
@@ -1804,6 +1808,18 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     public void removeVariable(String variableName) {
         ProjectDataManager.getProjectDataManager(scId).removeVariable(projectFile.getJavaName(), variableName);
         onBlockSizeChanged(0, 0xffee7d16);
+    }
+
+    public void renameVariable(String oldName, String newName) {
+        saveBlocks();
+        ProjectDataManager.getProjectDataManager(scId).renameVariable(projectFile.getJavaName(), oldName, newName);
+        onBlockSizeChanged(0, 0xffee7d16);
+    }
+
+    public void renameListVariable(String oldName, String newName) {
+        saveBlocks();
+        ProjectDataManager.getProjectDataManager(scId).renameListVariable(projectFile.getJavaName(), oldName, newName);
+        onBlockSizeChanged(1, 0xffcc5b22);
     }
 
     public void cancelPaletteAnimations() {

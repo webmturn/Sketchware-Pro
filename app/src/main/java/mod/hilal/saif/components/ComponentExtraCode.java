@@ -42,6 +42,15 @@ public class ComponentExtraCode {
             }
             return;
         }
+        if (listenerCode.contains("_onSQLiteError")) {
+            String temp = eventCodeGenerator.eventLogic;
+            if (temp.isEmpty()) {
+                eventCodeGenerator.eventLogic = listenerCode;
+            } else {
+                eventCodeGenerator.eventLogic = temp.concat("\r\n\r\n").concat(listenerCode);
+            }
+            return;
+        }
 
         // Hilal's components
         String path = FileUtil.getExternalStorageDir().concat("/.sketchware/data/system/listeners.json");

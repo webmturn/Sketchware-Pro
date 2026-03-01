@@ -79,6 +79,7 @@ public class EventRegistry {
             case "onLocationChanged" -> R.drawable.ic_mtrl_location_changed;
             case "onMapReady" -> R.drawable.ic_mtrl_map_ready;
             case "onMarkerClicked" -> R.drawable.ic_mtrl_loc_click;
+            case "onSQLiteError" -> R.drawable.ic_mtrl_warning;
             default -> ManageEvent.getDrawableForEvent(eventName);
         };
     }
@@ -146,6 +147,7 @@ public class EventRegistry {
             case "onMapReady" -> Helper.getResString(R.string.event_on_map_ready);
             case "onMarkerClicked" -> Helper.getResString(R.string.event_on_marker_clicked);
             case "onLocationChanged" -> Helper.getResString(R.string.event_on_location_changed);
+            case "onSQLiteError" -> Helper.getResString(R.string.event_on_sqlite_error);
             default -> ManageEvent.getEventDescription(eventName);
         };
     }
@@ -227,6 +229,10 @@ public class EventRegistry {
 
         if (classInfo.matchesType("LocationManager")) {
             eventList.add("onLocationChanged");
+        }
+
+        if (classInfo.matchesType("SQLiteDatabase")) {
+            eventList.add("onSQLiteError");
         }
 
         return eventList.toArray(new String[0]);
@@ -326,6 +332,10 @@ public class EventRegistry {
             eventList.add("locationListener");
         }
 
+        if (classInfo.matchesType("SQLiteDatabase")) {
+            eventList.add("sqliteErrorHandler");
+        }
+
         return eventList.toArray(new String[0]);
     }
 
@@ -417,6 +427,7 @@ public class EventRegistry {
             case "onMapReadyCallback" -> eventList.add("onMapReady");
             case "onMapMarkerClickListener" -> eventList.add("onMarkerClicked");
             case "locationListener" -> eventList.add("onLocationChanged");
+            case "sqliteErrorHandler" -> eventList.add("onSQLiteError");
         }
 
         return eventList.toArray(new String[0]);

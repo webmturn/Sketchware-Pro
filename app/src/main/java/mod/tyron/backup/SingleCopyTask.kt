@@ -58,8 +58,9 @@ class SingleCopyTask(private val context: Context, private val callback: CallBac
             pathPlusName = "${folder}/${getFileName(uri)}"
             val file = File(pathPlusName)
 
-            inputStream?.use { input ->
-                BufferedInputStream(input).use { bis ->
+            val input = inputStream ?: throw IOException("Failed to open input stream")
+            input.use {
+                BufferedInputStream(it).use { bis ->
                     FileOutputStream(file).use { fos ->
                         val data = ByteArray(1024)
                         var total: Long = 0

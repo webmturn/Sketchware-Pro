@@ -51,6 +51,7 @@ public class ComponentBean extends CollapsibleBean implements Parcelable {
     public static final int COMPONENT_TYPE_NOTIFICATION = 26;
     public static final int COMPONENT_TYPE_FRAGMENT_ADAPTER = 27;
     public static final int COMPONENT_TYPE_FIREBASE_AUTH_PHONE = 28;
+    public static final int COMPONENT_TYPE_SQLITE = 29;
     public static final int COMPONENT_TYPE_FIREBASE_CLOUD_MESSAGE = 30;
     public static final int COMPONENT_TYPE_FIREBASE_AUTH_GOOGLE_LOGIN = 31;
     public static final int COMPONENT_TYPE_ASYNC_TASK = 36;
@@ -137,6 +138,7 @@ public class ComponentBean extends CollapsibleBean implements Parcelable {
                     "https://docs.sketchware.io/docs/component-firebase-auth.html";
             case COMPONENT_TYPE_FIREBASE_CLOUD_MESSAGE ->
                     "https://sketchware-pro.vercel.app/docs/components/Firebase/cloud-messaging";
+            case COMPONENT_TYPE_SQLITE -> "";
             case COMPONENT_TYPE_INTERSTITIAL_AD, COMPONENT_TYPE_REQUEST_NETWORK,
                  COMPONENT_TYPE_TEXT_TO_SPEECH, COMPONENT_TYPE_SPEECH_TO_TEXT,
                  COMPONENT_TYPE_BLUETOOTH_CONNECT, COMPONENT_TYPE_LOCATION_MANAGER ->
@@ -182,6 +184,7 @@ public class ComponentBean extends CollapsibleBean implements Parcelable {
             case COMPONENT_TYPE_DATE_PICKER_DIALOG -> "DatePickerDialog";
             case COMPONENT_TYPE_TIME_PICKER_DIALOG -> "TimePickerDialog";
             case COMPONENT_TYPE_NOTIFICATION -> "Notification";
+            case COMPONENT_TYPE_SQLITE -> "SQLiteDatabase";
             case COMPONENT_TYPE_FRAGMENT_ADAPTER -> "FragmentAdapter";
             case COMPONENT_TYPE_FIREBASE_AUTH_PHONE -> "PhoneAuth";
             case COMPONENT_TYPE_FIREBASE_CLOUD_MESSAGE -> "Cloud Message";
@@ -218,6 +221,7 @@ public class ComponentBean extends CollapsibleBean implements Parcelable {
             case "DatePickerDialog" -> COMPONENT_TYPE_DATE_PICKER_DIALOG;
             case "TimePickerDialog" -> COMPONENT_TYPE_TIME_PICKER_DIALOG;
             case "Notification" -> COMPONENT_TYPE_NOTIFICATION;
+            case "SQLiteDatabase" -> COMPONENT_TYPE_SQLITE;
             case "FragmentAdapter" -> COMPONENT_TYPE_FRAGMENT_ADAPTER;
             case "FirebasePhoneAuth" -> COMPONENT_TYPE_FIREBASE_AUTH_PHONE;
             case "FirebaseCloudMessage" -> COMPONENT_TYPE_FIREBASE_CLOUD_MESSAGE;
@@ -254,6 +258,7 @@ public class ComponentBean extends CollapsibleBean implements Parcelable {
             case COMPONENT_TYPE_DATE_PICKER_DIALOG -> "DatePickerDialog";
             case COMPONENT_TYPE_TIME_PICKER_DIALOG -> "TimePickerDialog";
             case COMPONENT_TYPE_NOTIFICATION -> "Notification";
+            case COMPONENT_TYPE_SQLITE -> "SQLiteDatabase";
             case COMPONENT_TYPE_FRAGMENT_ADAPTER -> "FragmentAdapter";
             case COMPONENT_TYPE_FIREBASE_AUTH_PHONE -> "FirebasePhoneAuth";
             case COMPONENT_TYPE_FIREBASE_CLOUD_MESSAGE -> "FirebaseCloudMessage";
@@ -298,6 +303,7 @@ public class ComponentBean extends CollapsibleBean implements Parcelable {
             case COMPONENT_TYPE_TIME_PICKER_DIALOG ->
                     R.string.component_description_time_picker_dialog;
             case COMPONENT_TYPE_NOTIFICATION -> R.string.component_description_notification;
+            case COMPONENT_TYPE_SQLITE -> R.string.component_description_sqlite;
             case COMPONENT_TYPE_FRAGMENT_ADAPTER -> R.string.component_description_fragment_adapter;
             case COMPONENT_TYPE_FIREBASE_AUTH_PHONE -> R.string.component_description_fb_phone_auth;
             case COMPONENT_TYPE_FIREBASE_CLOUD_MESSAGE -> R.string.component_description_fb_fcm;
@@ -335,6 +341,7 @@ public class ComponentBean extends CollapsibleBean implements Parcelable {
             case COMPONENT_TYPE_DATE_PICKER_DIALOG -> R.drawable.ic_mtrl_calendar_add;
             case COMPONENT_TYPE_TIME_PICKER_DIALOG -> R.drawable.ic_mtrl_time;
             case COMPONENT_TYPE_NOTIFICATION -> R.drawable.ic_mtrl_notifications;
+            case COMPONENT_TYPE_SQLITE -> R.drawable.ic_mtrl_sqlite;
             case COMPONENT_TYPE_FRAGMENT_ADAPTER -> R.drawable.ic_mtrl_viewpager;
             case COMPONENT_TYPE_FIREBASE_AUTH_PHONE -> R.drawable.ic_mtrl_firebase_sms;
             case COMPONENT_TYPE_FIREBASE_CLOUD_MESSAGE -> R.drawable.ic_mtrl_firebase_cloud;
@@ -373,6 +380,7 @@ public class ComponentBean extends CollapsibleBean implements Parcelable {
             case COMPONENT_TYPE_DATE_PICKER_DIALOG -> "DatePickerDialog";
             case COMPONENT_TYPE_TIME_PICKER_DIALOG -> "TimePickerDialog";
             case COMPONENT_TYPE_NOTIFICATION -> "Notification";
+            case COMPONENT_TYPE_SQLITE -> "SQLiteDatabase";
             case COMPONENT_TYPE_FRAGMENT_ADAPTER -> "FragmentAdapter";
             case COMPONENT_TYPE_FIREBASE_AUTH_PHONE -> "FirebasePhoneAuth";
             case COMPONENT_TYPE_FIREBASE_CLOUD_MESSAGE -> "FirebaseCloudMessage";

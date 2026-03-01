@@ -1273,6 +1273,97 @@ public class ProjectDataStore {
     } 
   }
   
+  public void renameVariable(String fileName, String oldName, String newName) {
+    ArrayList<Pair<Integer, String>> vars = variableMap.get(fileName);
+    if (vars != null) {
+      for (int i = 0; i < vars.size(); i++) {
+        if (vars.get(i).second.equals(oldName)) {
+          vars.set(i, new Pair<>(vars.get(i).first, newName));
+          break;
+        }
+      }
+    }
+    renameVariableInBlocks(fileName, oldName, newName, true);
+  }
+  
+  public void renameListVariable(String fileName, String oldName, String newName) {
+    ArrayList<Pair<Integer, String>> lists = listMap.get(fileName);
+    if (lists != null) {
+      for (int i = 0; i < lists.size(); i++) {
+        if (lists.get(i).second.equals(oldName)) {
+          lists.set(i, new Pair<>(lists.get(i).first, newName));
+          break;
+        }
+      }
+    }
+    renameVariableInBlocks(fileName, oldName, newName, false);
+  }
+  
+  private static final Map<String, Integer> VAR_REF_PARAM_INDEX = new HashMap<>();
+  private static final Map<String, Integer> LIST_REF_PARAM_INDEX = new HashMap<>();
+  static {
+    VAR_REF_PARAM_INDEX.put("getVar", -1);
+    for (String op : new String[]{"setVarBoolean", "setVarInt", "setVarString",
+        "increaseInt", "decreaseInt", "mapCreateNew", "mapPut", "mapGet", "mapContainKey",
+        "mapRemoveKey", "mapSize", "mapClear", "mapIsEmpty", "mapGetAllKeys",
+        "addListMap", "insertListMap", "mapToStr"})
+      VAR_REF_PARAM_INDEX.put(op, 0);
+    VAR_REF_PARAM_INDEX.put("strToMap", 1);
+    VAR_REF_PARAM_INDEX.put("getAtListMap", 2);
+
+    LIST_REF_PARAM_INDEX.put("getVar", -1);
+    for (String op : new String[]{"lengthList", "containListInt", "containListStr",
+        "containListMap", "clearList", "listMapToStr"})
+      LIST_REF_PARAM_INDEX.put(op, 0);
+    for (String op : new String[]{"addListInt", "addListStr", "getAtListInt", "getAtListStr",
+        "indexListInt", "indexListStr", "deleteList", "spnSetData", "listSetData",
+        "listSetCustomViewData", "strToListMap"})
+      LIST_REF_PARAM_INDEX.put(op, 1);
+    for (String op : new String[]{"insertListInt", "insertListStr", "addListMap", "getAtListMap"})
+      LIST_REF_PARAM_INDEX.put(op, 2);
+    for (String op : new String[]{"insertListMap", "setListMap"})
+      LIST_REF_PARAM_INDEX.put(op, 3);
+  }
+
+  private void renameVariableInBlocks(String fileName, String oldName, String newName, boolean isVariable) {
+    HashMap<String, ArrayList<BlockBean>> blockEntryMap = blockMap.get(fileName);
+    if (blockEntryMap == null) return;
+    Map<String, Integer> refIndex = isVariable ? VAR_REF_PARAM_INDEX : LIST_REF_PARAM_INDEX;
+    for (Map.Entry<String, ArrayList<BlockBean>> entry : blockEntryMap.entrySet()) {
+      for (BlockBean blockBean : entry.getValue()) {
+        // ClassInfo-based detection (catches getVar blocks and typed parameters)
+        ClassInfo blockClassInfo = blockBean.getClassInfo();
+        if (blockClassInfo != null
+            && (isVariable ? blockClassInfo.isVariable() : blockClassInfo.isList())
+            && blockBean.spec.equals(oldName)) {
+          blockBean.spec = newName;
+        }
+        ArrayList<ClassInfo> paramClassInfos = blockBean.getParamClassInfo();
+        if (paramClassInfos != null && !paramClassInfos.isEmpty()) {
+          for (int b = 0; b < paramClassInfos.size(); b++) {
+            ClassInfo paramClassInfo = paramClassInfos.get(b);
+            if (paramClassInfo != null
+                && (isVariable ? paramClassInfo.isVariable() : paramClassInfo.isList())
+                && blockBean.parameters.get(b).equals(oldName)) {
+              blockBean.parameters.set(b, newName);
+            }
+          }
+        }
+        // opCode-based detection (catches %m.varInt style selector parameters
+        // that ClassInfo misses because their ClassInfo resolves to "Component")
+        Integer paramIdx = refIndex.get(blockBean.opCode);
+        if (paramIdx != null) {
+          if (paramIdx == -1) {
+            if (blockBean.spec.equals(oldName)) blockBean.spec = newName;
+          } else if (paramIdx < blockBean.parameters.size()
+              && blockBean.parameters.get(paramIdx).equals(oldName)) {
+            blockBean.parameters.set(paramIdx, newName);
+          }
+        }
+      }
+    }
+  }
+  
   public boolean hasViewType(String fileName, int index) {
     ArrayList<ViewBean> views = viewMap.get(fileName);
     if (views == null)

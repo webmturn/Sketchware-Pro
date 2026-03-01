@@ -440,9 +440,10 @@ public class ActivityCodeGenerator {
         } else {
             sb.append("private void initialize(Bundle _savedInstanceState) {");
         }
-        if (!TextUtils.isEmpty(initializeLogic())) {
+        String initLogic = initializeLogic();
+        if (!TextUtils.isEmpty(initLogic)) {
             sb.append(EOL);
-            sb.append(initializeLogic());
+            sb.append(initLogic);
         }
 
         for (String value : initializeMethodCode) {
@@ -519,23 +520,33 @@ public class ActivityCodeGenerator {
             sb.append("}").append(EOL);
         }
 
-        if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER) && !isViewBindingEnabled) {
-            eventManager.addLifecycleEvent("onBackPressed", "DrawerLayout", "_drawer");
+        if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)) {
+            String drawerId = isViewBindingEnabled ? "binding." + ViewBindingBuilder.generateParameterFromId("_drawer") : "_drawer";
+            eventManager.addLifecycleEvent("onBackPressed", "DrawerLayout", drawerId);
         }
 
         ArrayList<ViewBean> beans = projectDataManager.getViews(projectFileBean.getXmlName());
         for (ViewBean next : beans) {
+            String resolvedId = isViewBindingEnabled ? "binding." + ViewBindingBuilder.generateParameterFromId(next.id) : next.id;
             if (next.type == ViewBean.VIEW_TYPE_WIDGET_MAPVIEW) {
-                eventManager.addLifecycleEvent("onStart", "MapView", next.id);
-                eventManager.addLifecycleEvent("onResume", "MapView", next.id);
-                eventManager.addLifecycleEvent("onPause", "MapView", next.id);
-                eventManager.addLifecycleEvent("onStop", "MapView", next.id);
-                eventManager.addLifecycleEvent("onDestroy", "MapView", next.id);
+                eventManager.addLifecycleEvent("onStart", "MapView", resolvedId);
+                eventManager.addLifecycleEvent("onResume", "MapView", resolvedId);
+                eventManager.addLifecycleEvent("onPause", "MapView", resolvedId);
+                eventManager.addLifecycleEvent("onStop", "MapView", resolvedId);
+                eventManager.addLifecycleEvent("onDestroy", "MapView", resolvedId);
             }
             if (next.type == ViewBean.VIEW_TYPE_WIDGET_ADVIEW) {
-                eventManager.addLifecycleEvent("onResume", "AdView", next.id);
-                eventManager.addLifecycleEvent("onPause", "AdView", next.id);
-                eventManager.addLifecycleEvent("onDestroy", "AdView", next.id);
+                eventManager.addLifecycleEvent("onResume", "AdView", resolvedId);
+                eventManager.addLifecycleEvent("onPause", "AdView", resolvedId);
+                eventManager.addLifecycleEvent("onDestroy", "AdView", resolvedId);
+            }
+        }
+        for (ComponentBean comp : projectDataManager.getComponents(projectFileBean.getJavaName())) {
+            if (comp.type == ComponentBean.COMPONENT_TYPE_SQLITE) {
+                eventManager.addLifecycleEvent("onDestroy", "SQLiteDatabase", comp.componentId);
+            }
+            if (comp.type == ComponentBean.COMPONENT_TYPE_GYROSCOPE) {
+                eventManager.addLifecycleEvent("onDestroy", "Gyroscope", comp.componentId);
             }
         }
         if (!eventManager.eventLogic.isEmpty()) {

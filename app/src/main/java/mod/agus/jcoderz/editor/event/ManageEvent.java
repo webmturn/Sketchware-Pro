@@ -385,7 +385,7 @@ public class ManageEvent {
                  "onTabUnselected", "onPageSelected", "onPrepared", "onQueryTextSubmit",
                  "onCodeSent", "onTimeChanged", "onUpdatePasswordComplete",
                  "onAdDismissedFullScreenContent", "onAdFailedToShowFullScreenContent",
-                 "onAdShowedFullScreenContent", "onUserEarnedReward" -> eventName;
+                 "onAdShowedFullScreenContent", "onUserEarnedReward", "onSQLiteError" -> eventName;
             default -> EventsHandler.getDesc(eventName);
         };
     }
@@ -659,6 +659,7 @@ public class ManageEvent {
                         "}";
             }
             case "onUserEarnedReward" -> eventLogic;
+            case "onSQLiteError" -> eventLogic;
             default -> EventsHandler.getEventCode(targetId, eventName, eventLogic);
         };
     }
@@ -814,6 +815,10 @@ public class ManageEvent {
                     targetId + "_googleSignInListener = new OnCompleteListener<AuthResult>() {\r\n" +
                             listenerLogic + "\r\n" +
                             "};";
+            case "sqliteErrorHandler" ->
+                    "private void _" + targetId + "_onSQLiteError(String _errorMessage) {\r\n" +
+                            listenerLogic + "\r\n" +
+                            "}";
             case "interstitialAdLoadCallback" ->
                     "_" + targetId + "_interstitial_ad_load_callback = new InterstitialAdLoadCallback() {\r\n" +
                             listenerLogic + "\r\n" +
@@ -875,6 +880,7 @@ public class ManageEvent {
             case "onScrollChanged" -> "%d.scrollState";
             case "onBannerAdFailedToLoad", "onRewardAdFailedToLoad", "onInterstitialAdFailedToLoad",
                  "onAdFailedToShowFullScreenContent" -> "%d.errorCode %d.errorMessage";
+            case "onSQLiteError" -> "%s.errorMessage";
             default -> EventsHandler.getBlocks(eventName);
         };
     }
@@ -981,6 +987,7 @@ public class ManageEvent {
             case "onBannerAdOpened" -> targetId + ": onAdOpened";
             case "onBannerAdClicked" -> targetId + ": onAdClicked";
             case "onBannerAdClosed" -> targetId + ": onAdClosed";
+            case "onSQLiteError" -> "When " + targetId + " onSQLiteError %s.errorMessage";
             default -> EventsHandler.getSpec(targetId, eventName);
         };
     }

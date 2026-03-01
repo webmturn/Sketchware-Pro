@@ -84,6 +84,7 @@ public class ComponentTypeMapper {
             case ComponentBean.COMPONENT_TYPE_DATE_PICKER_DIALOG -> "DatePickerDialog";
             case ComponentBean.COMPONENT_TYPE_TIME_PICKER_DIALOG -> "TimePickerDialog";
             case ComponentBean.COMPONENT_TYPE_NOTIFICATION -> "Notification";
+            case ComponentBean.COMPONENT_TYPE_SQLITE -> "SQLiteDatabase";
             case ComponentBean.COMPONENT_TYPE_FRAGMENT_ADAPTER -> "FragmentStatePagerAdapter";
             case ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH_PHONE ->
                     "PhoneAuthProvider.OnVerificationStateChangedCallbacks";
@@ -219,6 +220,7 @@ public class ComponentTypeMapper {
             case "signinbutton" -> "SignInButton";
             case "materialButton" -> "MaterialButton";
             case "notification", "Notification" -> "Notification";
+            case "sqlite", "SQLiteDatabase" -> "SQLiteDatabase";
             case "fragmentAdapter" -> "FragmentAdapter";
             default -> DefaultExtraMenuBean.getName(name);
         };
@@ -479,6 +481,11 @@ public class ComponentTypeMapper {
                 importList.add("android.speech.SpeechRecognizer");
                 importList.add("android.speech.RecognizerIntent");
                 importList.add("android.speech.RecognitionListener");
+                return importList;
+
+            case "SQLiteDatabase":
+                importList.add("android.database.sqlite.SQLiteDatabase");
+                importList.add("android.database.Cursor");
                 return importList;
 
             case "LocationManager":

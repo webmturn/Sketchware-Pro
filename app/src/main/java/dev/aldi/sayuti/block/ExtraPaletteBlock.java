@@ -423,6 +423,7 @@ public class ExtraPaletteBlock {
                 logicEditor.addPaletteLabel(Helper.getResString(R.string.logic_editor_panel_button_add_variable), "variableAdd");
                 logicEditor.addPaletteLabelWithListener(Helper.getResString(R.string.logic_editor_panel_button_add_custom_variable), "variableAddNew", clickListener);
                 logicEditor.addPaletteLabelWithListener(Helper.getResString(R.string.logic_editor_panel_button_remove_variable), "variableRemove", clickListener);
+                logicEditor.addPaletteLabelWithListener(Helper.getResString(R.string.logic_editor_panel_button_rename_variable), "variableRename", clickListener);
                 variables();
                 return;
 
@@ -430,6 +431,7 @@ public class ExtraPaletteBlock {
                 logicEditor.addPaletteLabel(Helper.getResString(R.string.logic_editor_panel_button_add_list), "listAdd");
                 logicEditor.addPaletteLabelWithListener(Helper.getResString(R.string.logic_editor_panel_button_add_custom_list), "listAddCustom", clickListener);
                 logicEditor.addPaletteLabelWithListener(Helper.getResString(R.string.logic_editor_panel_button_remove_list), "listRemove", clickListener);
+                logicEditor.addPaletteLabelWithListener(Helper.getResString(R.string.logic_editor_panel_button_rename_list), "listRename", clickListener);
                 list();
                 return;
 
@@ -1170,6 +1172,27 @@ public class ExtraPaletteBlock {
                     logicEditor.createPaletteBlock(" ", "notifSetClickIntent");
                     logicEditor.createPaletteBlock(" ", "notifShow");
                     logicEditor.createPaletteBlock(" ", "notifCancel");
+                }
+                if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_SQLITE)) {
+                    logicEditor.addPaletteCategory("SQLiteDatabase", getTitleBgColor());
+                    logicEditor.createPaletteBlock(" ", "sqliteOpen");
+                    logicEditor.createPaletteBlock(" ", "sqliteClose");
+                    logicEditor.createPaletteBlock(" ", "sqliteExecSQL");
+                    logicEditor.createPaletteBlock(" ", "sqliteRawQuery");
+                    logicEditor.createPaletteBlock("b", "sqliteMoveToFirst");
+                    logicEditor.createPaletteBlock("b", "sqliteMoveToNext");
+                    logicEditor.createPaletteBlock("b", "sqliteIsAfterLast");
+                    logicEditor.createPaletteBlock("s", "sqliteGetString");
+                    logicEditor.createPaletteBlock("d", "sqliteGetNumber");
+                    logicEditor.createPaletteBlock("d", "sqliteGetCount");
+                    logicEditor.createPaletteBlock(" ", "sqliteCloseCursor");
+                    logicEditor.createPaletteBlock("b", "sqliteIsOpen");
+                    logicEditor.createPaletteBlock("b", "sqliteCursorIsNull");
+                    logicEditor.createPaletteBlock("c", "sqliteForEachRow");
+                    logicEditor.createPaletteBlock(" ", "sqliteBeginTransaction");
+                    logicEditor.createPaletteBlock(" ", "sqliteSetTransactionSuccessful");
+                    logicEditor.createPaletteBlock(" ", "sqliteEndTransaction");
+                    logicEditor.createPaletteBlock(" ", "sqliteEnableWAL");
                 }
                 if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_PROGRESS_DIALOG)
                         || extraBlocks.isCustomVarUsed("ProgressDialog")

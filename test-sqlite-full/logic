@@ -1,0 +1,45 @@
+@MainActivity.java_var
+@MainActivity.java_list
+@MainActivity.java_func
+@MainActivity.java_components
+{"componentId":"db","param1":"","param2":"","param3":"","type":29}
+@MainActivity.java_events
+{"eventName":"onClick","eventType":1,"targetId":"btnSetup","targetType":3}
+{"eventName":"onClick","eventType":1,"targetId":"btnQuery","targetType":3}
+{"eventName":"onClick","eventType":1,"targetId":"btnForEach","targetType":3}
+{"eventName":"onClick","eventType":1,"targetId":"btnTransaction","targetType":3}
+{"eventName":"onClick","eventType":1,"targetId":"btnStatus","targetType":3}
+{"eventName":"onClick","eventType":1,"targetId":"btnError","targetType":3}
+{"eventName":"onSQLiteError","eventType":2,"targetId":"db","targetType":29}
+@MainActivity.java_onCreate_initializeLogic
+{"color":-11230996,"id":"1","nextBlock":2,"opCode":"sqliteOpen","parameters":["db","fulltest.db"],"spec":"%m.sqlite open database name %s","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+{"color":-11230996,"id":"2","nextBlock":-1,"opCode":"sqliteEnableWAL","parameters":["db"],"spec":"%m.sqlite enableWAL","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+@MainActivity.java_btnSetup_onClick
+{"color":-11230996,"id":"10","nextBlock":11,"opCode":"sqliteExecSQL","parameters":["db","CREATE TABLE IF NOT EXISTS items (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, price REAL)"],"spec":"%m.sqlite execSQL %s","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+{"color":-11230996,"id":"11","nextBlock":12,"opCode":"sqliteExecSQL","parameters":["db","DELETE FROM items"],"spec":"%m.sqlite execSQL %s","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+{"color":-11230996,"id":"12","nextBlock":13,"opCode":"sqliteExecSQL","parameters":["db","INSERT INTO items (name, price) VALUES ('Apple', 1.50)"],"spec":"%m.sqlite execSQL %s","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+{"color":-11230996,"id":"13","nextBlock":14,"opCode":"sqliteExecSQL","parameters":["db","INSERT INTO items (name, price) VALUES ('Banana', 2.00)"],"spec":"%m.sqlite execSQL %s","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+{"color":-11230996,"id":"14","nextBlock":15,"opCode":"sqliteExecSQL","parameters":["db","INSERT INTO items (name, price) VALUES ('Cherry', 3.75)"],"spec":"%m.sqlite execSQL %s","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+{"color":-7584130,"id":"15","nextBlock":-1,"opCode":"addSourceDirectly","parameters":["tvResult.setText(\"Setup OK:\\n- Table created\\n- 3 items inserted (Apple, Banana, Cherry)\");"],"spec":"add source directly %s.inputOnly","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+@MainActivity.java_btnQuery_onClick
+{"color":-11230996,"id":"20","nextBlock":21,"opCode":"sqliteRawQuery","parameters":["db","SELECT * FROM items"],"spec":"%m.sqlite rawQuery %s","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+{"color":-7584130,"id":"21","nextBlock":-1,"opCode":"addSourceDirectly","parameters":["tvResult.setText(\"[sqliteRawQuery] OK\\n[sqliteGetCount] Row count: \" + (_db_cursor != null ? _db_cursor.getCount() : 0));"],"spec":"add source directly %s.inputOnly","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+@MainActivity.java_btnForEach_onClick
+{"color":-11230996,"id":"30","nextBlock":31,"opCode":"sqliteRawQuery","parameters":["db","SELECT * FROM items"],"spec":"%m.sqlite rawQuery %s","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+{"color":-7584130,"id":"31","nextBlock":32,"opCode":"addSourceDirectly","parameters":["String _result = \"[sqliteForEachRow] Results:\\n\";"],"spec":"add source directly %s.inputOnly","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+{"color":-11230996,"id":"32","nextBlock":35,"opCode":"sqliteForEachRow","parameters":["db"],"spec":"%m.sqlite forEachRow","subStack1":33,"subStack2":-1,"type":"c","typeName":""}
+{"color":-7584130,"id":"33","nextBlock":-1,"opCode":"addSourceDirectly","parameters":["_result += \"  \" + _db_cursor.getString(_db_cursor.getColumnIndexOrThrow(\"name\")) + \": $\" + _db_cursor.getDouble(_db_cursor.getColumnIndexOrThrow(\"price\")) + \"\\n\";"],"spec":"add source directly %s.inputOnly","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+{"color":-7584130,"id":"35","nextBlock":-1,"opCode":"addSourceDirectly","parameters":["tvResult.setText(_result + \"[sqliteGetString] OK\\n[sqliteGetNumber] OK\");"],"spec":"add source directly %s.inputOnly","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+@MainActivity.java_btnTransaction_onClick
+{"color":-11230996,"id":"40","nextBlock":41,"opCode":"sqliteBeginTransaction","parameters":["db"],"spec":"%m.sqlite beginTransaction","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+{"color":-11230996,"id":"41","nextBlock":42,"opCode":"sqliteExecSQL","parameters":["db","INSERT INTO items (name, price) VALUES ('Date', 4.00)"],"spec":"%m.sqlite execSQL %s","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+{"color":-11230996,"id":"42","nextBlock":43,"opCode":"sqliteExecSQL","parameters":["db","INSERT INTO items (name, price) VALUES ('Elderberry', 5.50)"],"spec":"%m.sqlite execSQL %s","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+{"color":-11230996,"id":"43","nextBlock":44,"opCode":"sqliteSetTransactionSuccessful","parameters":["db"],"spec":"%m.sqlite setTransactionSuccessful","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+{"color":-11230996,"id":"44","nextBlock":45,"opCode":"sqliteEndTransaction","parameters":["db"],"spec":"%m.sqlite endTransaction","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+{"color":-7584130,"id":"45","nextBlock":-1,"opCode":"addSourceDirectly","parameters":["tvResult.setText(\"[sqliteBeginTransaction] OK\\n[sqliteSetTransactionSuccessful] OK\\n[sqliteEndTransaction] OK\\n- 2 items added in transaction (Date, Elderberry)\");"],"spec":"add source directly %s.inputOnly","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+@MainActivity.java_btnStatus_onClick
+{"color":-7584130,"id":"50","nextBlock":-1,"opCode":"addSourceDirectly","parameters":["StringBuilder _sb = new StringBuilder(); _sb.append(\"[sqliteIsOpen] db open: \" + (db != null && db.isOpen()) + \"\\n\"); _sb.append(\"[sqliteCursorIsNull] cursor null/closed: \" + (_db_cursor == null || _db_cursor.isClosed()) + \"\\n\"); if (_db_cursor != null && !_db_cursor.isClosed()) { _db_cursor.close(); _sb.append(\"[sqliteCloseCursor] cursor closed OK\\n\"); } else { _sb.append(\"[sqliteCloseCursor] cursor already null/closed\\n\"); } if (db != null && db.isOpen()) { db.close(); _sb.append(\"[sqliteClose] db closed OK\\n\"); _sb.append(\"[sqliteIsOpen] db open after close: \" + db.isOpen() + \"\\n\"); } db = openOrCreateDatabase(\"fulltest.db\", MODE_PRIVATE, null); _sb.append(\"[sqliteOpen] db reopened: \" + db.isOpen()); tvResult.setText(_sb.toString());"],"spec":"add source directly %s.inputOnly","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+@MainActivity.java_btnError_onClick
+{"color":-11230996,"id":"60","nextBlock":-1,"opCode":"sqliteExecSQL","parameters":["db","THIS IS INVALID SQL"],"spec":"%m.sqlite execSQL %s","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+@MainActivity.java_db_onSQLiteError
+{"color":-7584130,"id":"70","nextBlock":-1,"opCode":"addSourceDirectly","parameters":["tvResult.setText(\"[onSQLiteError] Event triggered!\\nError: \" + _errorMessage);"],"spec":"add source directly %s.inputOnly","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}

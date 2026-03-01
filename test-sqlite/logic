@@ -1,0 +1,27 @@
+@MainActivity.java_var
+@MainActivity.java_list
+@MainActivity.java_func
+@MainActivity.java_components
+{"componentId":"db","param1":"","param2":"","param3":"","type":29}
+@MainActivity.java_events
+{"eventName":"onClick","eventType":1,"targetId":"btnCreate","targetType":3}
+{"eventName":"onClick","eventType":1,"targetId":"btnInsert","targetType":3}
+{"eventName":"onClick","eventType":1,"targetId":"btnQuery","targetType":3}
+{"eventName":"onClick","eventType":1,"targetId":"btnError","targetType":3}
+{"eventName":"onSQLiteError","eventType":2,"targetId":"db","targetType":29}
+@MainActivity.java_onCreate_initializeLogic
+{"color":-11230996,"id":"1","nextBlock":-1,"opCode":"sqliteOpen","parameters":["db","test.db"],"spec":"%m.sqlite open database name %s","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+@MainActivity.java_btnCreate_onClick
+{"color":-11230996,"id":"1","nextBlock":2,"opCode":"sqliteExecSQL","parameters":["db","CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, age INTEGER)"],"spec":"%m.sqlite execSQL %s","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+{"color":-11124483,"id":"2","nextBlock":-1,"opCode":"setText","parameters":["tvResult","Table created successfully!"],"spec":"%m.textview setText %s","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+@MainActivity.java_btnInsert_onClick
+{"color":-11230996,"id":"1","nextBlock":2,"opCode":"sqliteExecSQL","parameters":["db","INSERT INTO users (name, age) VALUES ('Alice', 25)"],"spec":"%m.sqlite execSQL %s","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+{"color":-11230996,"id":"2","nextBlock":3,"opCode":"sqliteExecSQL","parameters":["db","INSERT INTO users (name, age) VALUES ('Bob', 30)"],"spec":"%m.sqlite execSQL %s","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+{"color":-11124483,"id":"3","nextBlock":-1,"opCode":"setText","parameters":["tvResult","Inserted Alice and Bob!"],"spec":"%m.textview setText %s","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+@MainActivity.java_btnQuery_onClick
+{"color":-11230996,"id":"1","nextBlock":2,"opCode":"sqliteRawQuery","parameters":["db","SELECT * FROM users"],"spec":"%m.sqlite rawQuery %s","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+{"color":-7584130,"id":"2","nextBlock":-1,"opCode":"addSourceDirectly","parameters":["tvResult.setText(\"Query count: \" + String.valueOf((int)_db_cursor.getCount()));"],"spec":"add source directly %s.inputOnly","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+@MainActivity.java_btnError_onClick
+{"color":-11230996,"id":"1","nextBlock":-1,"opCode":"sqliteExecSQL","parameters":["db","INVALID SQL SYNTAX HERE"],"spec":"%m.sqlite execSQL %s","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}
+@MainActivity.java_db_onSQLiteError
+{"color":-7584130,"id":"1","nextBlock":-1,"opCode":"addSourceDirectly","parameters":["tvResult.setText(\"SQLite Error: \" + _errorMessage);"],"spec":"add source directly %s.inputOnly","subStack1":-1,"subStack2":-1,"type":" ","typeName":""}

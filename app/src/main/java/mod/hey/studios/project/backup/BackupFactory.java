@@ -44,6 +44,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import pro.sketchware.core.ProjectListManager;
 import pro.sketchware.core.MapValueHelper;
+import dev.aldi.sayuti.editor.manage.LocalLibrariesUtil;
 import mod.hey.studios.editor.manage.block.ExtraBlockInfo;
 import mod.hey.studios.editor.manage.block.v2.BlockLoader;
 import mod.hey.studios.project.custom_blocks.CustomBlocksManager;
@@ -94,17 +95,20 @@ public class BackupFactory {
 
     private static HashMap<String, Object> getProject(File file) {
         try {
-            Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
-            cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(LEGACY_KEY, "AES"), new IvParameterSpec(LEGACY_KEY));
-            byte[] encrypted;
+            byte[] data;
             try (RandomAccessFile raf = new RandomAccessFile(file, "r")) {
-                encrypted = new byte[(int) raf.length()];
-                raf.readFully(encrypted);
+                data = new byte[(int) raf.length()];
+                raf.readFully(data);
             }
-            byte[] decrypted = cipher.doFinal(encrypted);
-            String decryptedString = new String(decrypted);
-
-            return new Gson().fromJson(decryptedString.trim(), Helper.TYPE_MAP);
+            try {
+                Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
+                cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(LEGACY_KEY, "AES"), new IvParameterSpec(LEGACY_KEY));
+                byte[] decrypted = cipher.doFinal(data);
+                return new Gson().fromJson(new String(decrypted, java.nio.charset.StandardCharsets.UTF_8).trim(), Helper.TYPE_MAP);
+            } catch (Exception e) {
+                // Decryption failed — project file is stored as plaintext
+                return new Gson().fromJson(new String(data, java.nio.charset.StandardCharsets.UTF_8).trim(), Helper.TYPE_MAP);
+            }
         } catch (Exception e) {
             return null;
         }
@@ -114,12 +118,18 @@ public class BackupFactory {
         String path = file.getAbsolutePath();
 
         try {
-            Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
-            cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(LEGACY_KEY, "AES"), new IvParameterSpec(LEGACY_KEY));
-            byte[] encrypted = cipher.doFinal((string.trim()).getBytes());
+            byte[] data;
+            if (mod.hilal.saif.activities.tools.ConfigActivity.isSettingEnabled(
+                    mod.hilal.saif.activities.tools.ConfigActivity.SETTING_PROJECT_DATA_ENCRYPTION)) {
+                Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
+                cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(LEGACY_KEY, "AES"), new IvParameterSpec(LEGACY_KEY));
+                data = cipher.doFinal((string.trim()).getBytes(java.nio.charset.StandardCharsets.UTF_8));
+            } else {
+                data = string.trim().getBytes(java.nio.charset.StandardCharsets.UTF_8);
+            }
             try (RandomAccessFile raf = new RandomAccessFile(path, "rw")) {
                 raf.setLength(0);
-                raf.write(encrypted);
+                raf.write(data);
             }
 
             return true;
@@ -379,10 +389,16 @@ public class BackupFactory {
 
                     for (int i = 0; i < ja.length(); i++) {
                         JSONObject jo = ja.getJSONObject(i);
+                        String libName = jo.optString("name", "");
+                        if (libName.isEmpty()) continue;
 
-                        File f = new File(jo.getString("dexPath")).getParentFile();
-                        copy(f, new File(libsF, f.getName()));
-
+                        File libDir = new File(getAllLocalLibsDir(), libName);
+                        if (!libDir.exists()) {
+                            libDir = new File(FilePathUtil.getLocalLibsFallbackDir(), libName);
+                        }
+                        if (libDir.isDirectory()) {
+                            copy(libDir, new File(libsF, libName));
+                        }
                     }
 
                 } catch (Exception e) {
@@ -419,17 +435,12 @@ public class BackupFactory {
         try {
             zipFolder(outFolder, outZip);
         } catch (Exception e) {
-            // An error occurred
-
-//            StringBuilder sb = new StringBuilder();
-//            for (StackTraceElement el : e.getStackTrace()) {
-//                sb.append(el.toString());
-//                sb.append("\n");
-//            }
-
             error = Log.getStackTraceString(e);
             outPath = null;
-
+            FileUtil.deleteFile(outFolder.getAbsolutePath());
+            if (outZip.exists()) {
+                FileUtil.deleteFile(outZip.getAbsolutePath());
+            }
             return;
         }
 
@@ -485,6 +496,7 @@ public class BackupFactory {
         if (!unzip(swbPath, outFolder)) {
             error = "couldn't unzip the backup";
             restoreSuccess = false;
+            FileUtil.deleteFile(outFolder.getAbsolutePath());
             return;
         }
 
@@ -498,6 +510,7 @@ public class BackupFactory {
         if (map == null) {
             error = "couldn't read the project file";
             restoreSuccess = false;
+            FileUtil.deleteFile(outFolder.getAbsolutePath());
             return;
         }
 
@@ -508,6 +521,7 @@ public class BackupFactory {
         if (!writeEncrypted(project, new Gson().toJson(map))) {
             error = "couldn't write to the project file";
             restoreSuccess = false;
+            FileUtil.deleteFile(outFolder.getAbsolutePath());
             return;
         }
 
@@ -557,10 +571,27 @@ public class BackupFactory {
             }
         }
 
+        // Rebuild local_library paths to use current device's storage layout
+        rebuildLocalLibraryPaths();
+
         // Delete temp folder
         FileUtil.deleteFile(outFolder.getAbsolutePath());
 
         restoreSuccess = true;
+    }
+
+    private void rebuildLocalLibraryPaths() {
+        ArrayList<HashMap<String, Object>> libs = LocalLibrariesUtil.getLocalLibraries(sc_id);
+        if (libs.isEmpty()) return;
+
+        ArrayList<HashMap<String, Object>> rebuilt = new ArrayList<>();
+        for (HashMap<String, Object> lib : libs) {
+            String name = MapValueHelper.getString(lib, "name");
+            if (name == null || name.isEmpty()) continue;
+            String dependency = MapValueHelper.getString(lib, "dependency");
+            rebuilt.add(LocalLibrariesUtil.createLibraryMap(name, dependency.isEmpty() ? null : dependency));
+        }
+        LocalLibrariesUtil.rewriteLocalLibFile(sc_id, new Gson().toJson(rebuilt));
     }
 
     public String getError() {

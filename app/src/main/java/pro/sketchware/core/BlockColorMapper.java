@@ -112,6 +112,13 @@ public class BlockColorMapper {
                  "locationManagerRemoveUpdates", "notifCreateChannel", "notifSetChannel", "notifSetTitle", "notifSetContent",
                  "notifSetSmallIcon", "notifSetAutoCancel", "notifSetPriority",
                  "notifSetClickIntent", "notifShow", "notifCancel" -> harmonizeWithPrimary(context, 0xff2ca5e2);
+            case "sqliteOpen", "sqliteClose", "sqliteExecSQL", "sqliteRawQuery",
+                 "sqliteMoveToFirst", "sqliteMoveToNext", "sqliteIsAfterLast",
+                 "sqliteGetString", "sqliteGetNumber", "sqliteGetCount",
+                 "sqliteCloseCursor", "sqliteIsOpen",
+                 "sqliteBeginTransaction", "sqliteSetTransactionSuccessful",
+                 "sqliteEndTransaction", "sqliteForEachRow",
+                 "sqliteEnableWAL", "sqliteCursorIsNull" -> harmonizeWithPrimary(context, 0xffa1887f);
             case "fileutildelete", "fileutilcopy", "fileutilwrite", "fileutilread", "fileutilmove",
                  "fileutilisexist", "fileutilmakedir", "fileutillistdir", "fileutilisdir",
                  "fileutilisfile", "fileutillength", "fileutilStartsWith", "fileutilEndsWith",
@@ -143,7 +150,7 @@ public class BlockColorMapper {
                  "intent", "locationmanager", "firebase", "speechtotext", "calendar", "file",
                  "firebaseauth", "timer", "gyroscope", "mediaplayer", "bluetoothconnect",
                  "vibrator", "firebasestorage", "phoneauth",
-                 "googlelogin", "cloudmessage" -> "p";
+                 "googlelogin", "cloudmessage", "notification", "sqlite" -> "p";
             case "varMap" -> "a";
             case "listInt", "listMap", "listStr" -> "l";
             default -> "v";
@@ -205,6 +212,7 @@ public class BlockColorMapper {
             case "videoad" -> "VideoAd";
             case "mediaplayer" -> "MediaPlayer";
             case "notification" -> "Notification";
+            case "sqlite" -> "SQLiteDatabase";
             case "bluetoothconnect" -> "BluetoothConnect";
             case "mapview" -> "MapView";
             case "vibrator" -> "Vibrator";

@@ -21,6 +21,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.besome.sketch.beans.ProjectFileBean;
 import com.besome.sketch.editor.LogicEditorActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -85,6 +87,14 @@ public class LogicClickListener implements View.OnClickListener {
 
                 case "listRemove":
                     removeList();
+                    break;
+
+                case "variableRename":
+                    renameVariable();
+                    break;
+
+                case "listRename":
+                    renameList();
                     break;
             }
         }
@@ -267,6 +277,129 @@ public class LogicClickListener implements View.OnClickListener {
         listBinding.typeLayout.requestFocus();
     }
 
+    private void renameVariable() {
+        int horizontalPadding = dpToPx(20);
+        RecyclerView recyclerView = new RecyclerView(logicEditor);
+        recyclerView.setPadding(horizontalPadding, dpToPx(8), horizontalPadding, 0);
+        recyclerView.setLayoutManager(new LinearLayoutManager(null));
+
+        List<Item> data = new LinkedList<>();
+        List<Pair<List<Integer>, String>> variableTypes = List.of(
+                new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_BOOLEAN), "Boolean (%d)"),
+                new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_NUMBER), "Number (%d)"),
+                new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_STRING), "String (%d)"),
+                new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_MAP), "Map (%d)")
+        );
+        for (Pair<List<Integer>, String> variableType : variableTypes) {
+            List<String> instances = new LinkedList<>();
+            for (Integer type : variableType.first) {
+                instances.addAll(getUsedVariable(type));
+            }
+            for (int i = 0, size = instances.size(); i < size; i++) {
+                if (i == 0) data.add(new Item(String.format(variableType.second, size)));
+                data.add(new Item(instances.get(i), 0));
+            }
+        }
+        if (data.isEmpty()) {
+            SketchwareUtil.toastError(Helper.getResString(R.string.logic_editor_message_no_variables));
+            return;
+        }
+
+        RenameAdapter adapter = new RenameAdapter(logicEditor, data);
+        recyclerView.setAdapter(adapter);
+
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(logicEditor);
+        builder.setTitle(R.string.logic_editor_title_rename_variable);
+        builder.setView(recyclerView);
+        builder.setNegativeButton(R.string.common_word_cancel, null);
+        androidx.appcompat.app.AlertDialog dialog = builder.show();
+        adapter.setOnItemClickListener(name -> {
+            dialog.dismiss();
+            showRenameInputDialog(name, false, this::renameVariable);
+        });
+    }
+
+    private void renameList() {
+        int horizontalPadding = dpToPx(20);
+        RecyclerView recyclerView = new RecyclerView(logicEditor);
+        recyclerView.setPadding(horizontalPadding, dpToPx(8), horizontalPadding, 0);
+        recyclerView.setLayoutManager(new LinearLayoutManager(null));
+
+        List<Item> data = new LinkedList<>();
+        List<Pair<Integer, String>> listTypes = List.of(
+                new Pair<>(ExtraMenuBean.LIST_TYPE_NUMBER, "List Integer (%d)"),
+                new Pair<>(ExtraMenuBean.LIST_TYPE_STRING, "List String (%d)"),
+                new Pair<>(ExtraMenuBean.LIST_TYPE_MAP, "List Map (%d)")
+        );
+        for (Pair<Integer, String> listType : listTypes) {
+            ArrayList<String> lists = getUsedList(listType.first);
+            for (int i = 0, size = lists.size(); i < size; i++) {
+                if (i == 0) data.add(new Item(String.format(listType.second, size)));
+                data.add(new Item(lists.get(i), 0));
+            }
+        }
+        if (data.isEmpty()) {
+            SketchwareUtil.toastError(Helper.getResString(R.string.logic_editor_message_no_lists));
+            return;
+        }
+
+        RenameAdapter adapter = new RenameAdapter(logicEditor, data);
+        recyclerView.setAdapter(adapter);
+
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(logicEditor);
+        builder.setTitle(R.string.logic_editor_title_rename_list);
+        builder.setView(recyclerView);
+        builder.setNegativeButton(R.string.common_word_cancel, null);
+        androidx.appcompat.app.AlertDialog dialog = builder.show();
+        adapter.setOnItemClickListener(name -> {
+            dialog.dismiss();
+            showRenameInputDialog(name, true, this::renameList);
+        });
+    }
+
+    private void showRenameInputDialog(String oldName, boolean isList, Runnable onCancel) {
+        TextInputLayout inputLayout = new TextInputLayout(logicEditor,
+                null, com.google.android.material.R.attr.textInputOutlinedStyle);
+        inputLayout.setPadding(dpToPx(20), dpToPx(8), dpToPx(20), 0);
+        inputLayout.setHint(Helper.getResString(R.string.logic_editor_hint_new_name));
+        TextInputEditText editText = new TextInputEditText(inputLayout.getContext());
+        editText.setText(oldName);
+        editText.selectAll();
+        inputLayout.addView(editText);
+
+        ArrayList<String> existingIds = projectDataManager.getAllIdentifiers(projectFile);
+        existingIds.remove(oldName);
+        IdentifierValidator validator = new IdentifierValidator(
+                getContext(), inputLayout, BlockConstants.RESERVED_KEYWORDS,
+                BlockConstants.COMPONENT_TYPES, existingIds);
+        editText.addTextChangedListener(validator);
+
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(logicEditor);
+        builder.setTitle(String.format(Helper.getResString(R.string.logic_editor_title_enter_new_name), oldName));
+        builder.setView(inputLayout);
+        builder.setPositiveButton(R.string.common_word_save, null);
+        builder.setNegativeButton(R.string.common_word_cancel, (d, w) -> onCancel.run());
+        androidx.appcompat.app.AlertDialog dialog = builder.show();
+        dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+            String newName = editText.getText() != null ? editText.getText().toString().trim() : "";
+            if (newName.isEmpty() || newName.equals(oldName)) {
+                dialog.dismiss();
+                return;
+            }
+            if (!validator.isValid()) return;
+            if (isList) {
+                logicEditor.renameListVariable(oldName, newName);
+                SketchwareUtil.toast(String.format(
+                        Helper.getResString(R.string.logic_editor_message_list_renamed), oldName, newName));
+            } else {
+                logicEditor.renameVariable(oldName, newName);
+                SketchwareUtil.toast(String.format(
+                        Helper.getResString(R.string.logic_editor_message_variable_renamed), oldName, newName));
+            }
+            dialog.dismiss();
+        });
+    }
+
     private void removeList() {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(logicEditor);
         dialog.setTitle(Helper.getResString(R.string.logic_editor_title_remove_list));
@@ -412,6 +545,81 @@ public class LogicClickListener implements View.OnClickListener {
             public TitleHolder(View itemView) {
                 super(itemView);
                 title = (TextView) itemView;
+            }
+        }
+    }
+
+    private static class RenameAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+        private final Context context;
+        private final List<Item> data;
+        private java.util.function.Consumer<String> onItemClickListener;
+
+        private RenameAdapter(Context context, List<Item> data) {
+            this.context = context;
+            this.data = data;
+        }
+
+        public void setOnItemClickListener(java.util.function.Consumer<String> listener) {
+            this.onItemClickListener = listener;
+        }
+
+        @Override
+        public int getItemCount() {
+            return data.size();
+        }
+
+        @Override
+        @NonNull
+        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            if (viewType == Item.TYPE_TITLE) {
+                TextView textView = new TextView(context);
+                textView.setLayoutParams(new LinearLayout.LayoutParams(
+                        LayoutParams.WRAP_CONTENT,
+                        LayoutParams.WRAP_CONTENT));
+                textView.setPadding(dpToPx(4), dpToPx(12), dpToPx(4), dpToPx(4));
+                textView.setTextSize(12);
+                textView.setAlpha(0.7f);
+                return new RemoveAdapter.TitleHolder(textView);
+            } else {
+                TextView textView = new TextView(context);
+                textView.setLayoutParams(new LinearLayout.LayoutParams(
+                        LayoutParams.MATCH_PARENT,
+                        LayoutParams.WRAP_CONTENT));
+                textView.setPadding(dpToPx(8), dpToPx(12), dpToPx(8), dpToPx(12));
+                textView.setTextSize(16);
+                android.util.TypedValue outValue = new android.util.TypedValue();
+                context.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
+                textView.setBackgroundResource(outValue.resourceId);
+                textView.setClickable(true);
+                textView.setFocusable(true);
+                return new ItemHolder(textView);
+            }
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+            Item item = data.get(position);
+            if (holder instanceof RemoveAdapter.TitleHolder titleHolder) {
+                titleHolder.title.setText(item.text);
+            } else if (holder instanceof ItemHolder itemHolder) {
+                itemHolder.textView.setText(item.text);
+                itemHolder.textView.setOnClickListener(v -> {
+                    if (onItemClickListener != null) onItemClickListener.accept(item.text);
+                });
+            }
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return data.get(position).type;
+        }
+
+        private static class ItemHolder extends RecyclerView.ViewHolder {
+            public final TextView textView;
+
+            public ItemHolder(View itemView) {
+                super(itemView);
+                textView = (TextView) itemView;
             }
         }
     }
