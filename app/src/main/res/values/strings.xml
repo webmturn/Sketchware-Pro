@@ -2101,6 +2101,7 @@ Do you want to continue?"</string>
     <string name="event_on_data_sent">onDataSent</string>
     <string name="event_on_error_response">onErrorResponse</string>
     <string name="event_on_location_changed">onLocationChanged</string>
+    <string name="event_on_sqlite_error">onSQLiteError</string>
     <string name="event_on_map_ready">onMapReady</string>
     <string name="event_on_marker_clicked">onMarkerClicked</string>
     <string name="event_on_response">onResponse</string>

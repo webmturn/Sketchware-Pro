@@ -860,6 +860,7 @@
     <string name="component_description_location_manager">LocationManager 用于加载当前位置数据</string>
     <string name="component_description_mediaplayer">MediaPlayer 用于播放大型音频文件</string>
     <string name="component_description_notification">创建通知</string>
+    <string name="component_description_sqlite">SQLiteDatabase 用于本地结构化数据存储和查询</string>
     <string name="component_description_objectanimator">ObjectAnimator 用于为视图的某些属性添加动画</string>
     <string name="component_description_progress_dialog">创建弹出对话框式进度条</string>
     <string name="component_description_request_network">RequestNetwork 用于进行 Web API 调用</string>
@@ -1671,6 +1672,7 @@
     <string name="event_on_data_sent">发送数据时</string>
     <string name="event_on_error_response">错误响应时</string>
     <string name="event_on_location_changed">位置变化时</string>
+    <string name="event_on_sqlite_error">SQLite 错误时</string>
     <string name="event_on_map_ready">地图就绪时</string>
     <string name="event_on_marker_clicked">标记点击时</string>
     <string name="event_on_response">响应时</string>

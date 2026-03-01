@@ -147,7 +147,7 @@ public class EventRegistry {
             case "onMapReady" -> Helper.getResString(R.string.event_on_map_ready);
             case "onMarkerClicked" -> Helper.getResString(R.string.event_on_marker_clicked);
             case "onLocationChanged" -> Helper.getResString(R.string.event_on_location_changed);
-            case "onSQLiteError" -> "onSQLiteError";
+            case "onSQLiteError" -> Helper.getResString(R.string.event_on_sqlite_error);
             default -> ManageEvent.getEventDescription(eventName);
         };
     }
