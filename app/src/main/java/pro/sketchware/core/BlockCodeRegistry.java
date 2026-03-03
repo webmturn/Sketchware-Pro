@@ -55,6 +55,9 @@ public class BlockCodeRegistry {
         registerLocationBlocks();
         registerNotificationBlocks();
         registerSQLiteBlocks();
+        registerGoogleLoginBlocks();
+        registerPhoneAuthBlocks();
+        registerFCMBlocks();
         registerMiscBlocks();
     }
 
@@ -639,7 +642,7 @@ public class BlockCodeRegistry {
         register("requestnetworkSetParams", (bean, params, ctx) -> String.format("%s.setParams(%s, RequestNetworkController.%s);", params.get(0), params.get(1), params.get(2)));
         register("requestnetworkSetHeaders", (bean, params, ctx) -> String.format("%s.setHeaders(%s);", params.get(0), params.get(1)));
         register("requestnetworkStartRequestNetwork", (bean, params, ctx) -> String.format("%s.startRequestNetwork(RequestNetworkController.%s, %s, %s, _%s_request_listener);", params.get(0), params.get(1), params.get(2), params.get(3), params.get(0)));
-        register("requestnetworkUploadFile", (bean, params, ctx) -> params.size() >= 4 ? String.format("%s.uploadFile(%s, %s, %s, %s, _%s_request_listener);", params.get(0), params.get(1), params.get(2), params.get(3), params.get(4), params.get(0)) : "");
+        register("requestnetworkUploadFile", (bean, params, ctx) -> params.size() >= 5 ? String.format("%s.uploadFile(%s, %s, %s, %s, _%s_request_listener);", params.get(0), params.get(1), params.get(2), params.get(3), params.get(4), params.get(0)) : "");
     }
 
     private static void registerSpeechBlocks() {
@@ -691,6 +694,41 @@ public class BlockCodeRegistry {
         register("notifSetClickIntent", (bean, params, ctx) -> params.size() >= 2 ? String.format("%s.setContentIntent(PendingIntent.getActivity(%s, 0, %s, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE));", params.get(0), ctx.codeContext.appContext(), params.get(1)) : "");
         register("notifShow", (bean, params, ctx) -> params.size() >= 2 ? String.format("if (Build.VERSION.SDK_INT >= 33 && ContextCompat.checkSelfPermission(%s, \"android.permission.POST_NOTIFICATIONS\") != PackageManager.PERMISSION_GRANTED) {\nActivityCompat.requestPermissions(%s, new String[]{\"android.permission.POST_NOTIFICATIONS\"}, 9901);\n} else {\n_nm_%s.notify((int)(%s), %s.build());\n}", ctx.codeContext.qualifiedThis(), ctx.codeContext.qualifiedThis(), params.get(0), params.get(1), params.get(0)) : "");
         register("notifCancel", (bean, params, ctx) -> params.size() >= 2 ? String.format("_nm_%s.cancel((int)(%s));", params.get(0), params.get(1)) : "");
+    }
+
+    private static void registerGoogleLoginBlocks() {
+        register("googleSignInInit", (bean, params, ctx) -> params.size() >= 2 ? String.format(
+                "GoogleSignInOptions _gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(%s).requestEmail().build();\n%s = GoogleSignIn.getClient(%s, _gso);",
+                params.get(1), params.get(0), ctx.codeContext.appContext()) : "");
+        register("googleSignInLaunch", (bean, params, ctx) -> params.size() >= 1 ? String.format(
+                "startActivityForResult(%s.getSignInIntent(), REQ_CD_%s);",
+                params.get(0), params.get(0).toUpperCase()) : "");
+        register("googleSignOut", (bean, params, ctx) -> params.size() >= 1 ? String.format(
+                "%s.signOut();", params.get(0)) : "");
+    }
+
+    private static void registerPhoneAuthBlocks() {
+        register("phoneAuthSendCode", (bean, params, ctx) -> params.size() >= 2 ? String.format(
+                "PhoneAuthProvider.getInstance().verifyPhoneNumber(%s, 60, TimeUnit.SECONDS, %s, %s);",
+                params.get(1), ctx.codeContext.qualifiedThis(), params.get(0)) : "");
+        register("phoneAuthResendCode", (bean, params, ctx) -> params.size() >= 2 ? String.format(
+                "PhoneAuthProvider.getInstance().verifyPhoneNumber(%s, 60, TimeUnit.SECONDS, %s, %s, %s_resendToken);",
+                params.get(1), ctx.codeContext.qualifiedThis(), params.get(0), params.get(0)) : "");
+        register("phoneAuthSignIn", (bean, params, ctx) -> params.size() >= 3 ? String.format(
+                "FirebaseAuth.getInstance().signInWithCredential(PhoneAuthProvider.getCredential(%s, %s)).addOnCompleteListener(%s_phoneAuthListener);",
+                params.get(1), params.get(2), params.get(0)) : "");
+    }
+
+    private static void registerFCMBlocks() {
+        register("fcmGetToken", (bean, params, ctx) -> params.size() >= 1 ? String.format(
+                "FirebaseMessaging.getInstance().getToken().addOnCompleteListener(%s_onCompleteListener);",
+                params.get(0)) : "");
+        register("fcmSubscribeTopic", (bean, params, ctx) -> params.size() >= 2 ? String.format(
+                "FirebaseMessaging.getInstance().subscribeToTopic(%s);",
+                params.get(1)) : "");
+        register("fcmUnsubscribeTopic", (bean, params, ctx) -> params.size() >= 2 ? String.format(
+                "FirebaseMessaging.getInstance().unsubscribeFromTopic(%s);",
+                params.get(1)) : "");
     }
 
     private static void registerSQLiteBlocks() {

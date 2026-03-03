@@ -1161,6 +1161,24 @@ public class ExtraPaletteBlock {
                     logicEditor.createPaletteBlock(" ", "locationManagerRequestLocationUpdates");
                     logicEditor.createPaletteBlock(" ", "locationManagerRemoveUpdates");
                 }
+                if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH_GOOGLE_LOGIN)) {
+                    logicEditor.addPaletteCategory("Google Sign-In", getTitleBgColor());
+                    logicEditor.createPaletteBlock(" ", "googleSignInInit");
+                    logicEditor.createPaletteBlock(" ", "googleSignInLaunch");
+                    logicEditor.createPaletteBlock(" ", "googleSignOut");
+                }
+                if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH_PHONE)) {
+                    logicEditor.addPaletteCategory("Phone Auth", getTitleBgColor());
+                    logicEditor.createPaletteBlock(" ", "phoneAuthSendCode");
+                    logicEditor.createPaletteBlock(" ", "phoneAuthResendCode");
+                    logicEditor.createPaletteBlock(" ", "phoneAuthSignIn");
+                }
+                if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_FIREBASE_CLOUD_MESSAGE)) {
+                    logicEditor.addPaletteCategory("Cloud Message", getTitleBgColor());
+                    logicEditor.createPaletteBlock(" ", "fcmGetToken");
+                    logicEditor.createPaletteBlock(" ", "fcmSubscribeTopic");
+                    logicEditor.createPaletteBlock(" ", "fcmUnsubscribeTopic");
+                }
                 if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_NOTIFICATION)) {
                     logicEditor.addPaletteCategory("Notification", getTitleBgColor());
                     logicEditor.createPaletteBlock(" ", "notifCreateChannel");

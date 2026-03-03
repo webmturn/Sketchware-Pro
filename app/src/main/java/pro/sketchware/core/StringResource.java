@@ -589,6 +589,15 @@ public class StringResource {
     loadBlockTranslation(context, "requestnetworkSetHeaders");
     loadBlockTranslation(context, "requestnetworkStartRequestNetwork");
     loadBlockTranslation(context, "requestnetworkUploadFile");
+    loadBlockTranslation(context, "googleSignInInit");
+    loadBlockTranslation(context, "googleSignInLaunch");
+    loadBlockTranslation(context, "googleSignOut");
+    loadBlockTranslation(context, "phoneAuthSendCode");
+    loadBlockTranslation(context, "phoneAuthResendCode");
+    loadBlockTranslation(context, "phoneAuthSignIn");
+    loadBlockTranslation(context, "fcmGetToken");
+    loadBlockTranslation(context, "fcmSubscribeTopic");
+    loadBlockTranslation(context, "fcmUnsubscribeTopic");
     loadBlockTranslation(context, "fileutildelete");
     loadBlockTranslation(context, "fileutilcopy");
     loadBlockTranslation(context, "fileutilwrite");
