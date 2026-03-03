@@ -338,8 +338,8 @@ public class BlockCodeRegistry {
     private static void registerSharedPrefsBlocks() {
         register("fileSetFileName", (bean, params, ctx) -> String.format("%s = %s(%s, Activity.MODE_PRIVATE);", params.get(0), ctx.codeContext.sharedPreferences(), params.get(1)));
         register("fileGetData", (bean, params, ctx) -> String.format("%s.getString(%s, \"\")", params.get(0), params.get(1)));
-        register("fileSetData", (bean, params, ctx) -> String.format("%s.edit().putString(%s, %s).commit();", params.get(0), params.get(1), params.get(2)));
-        register("fileRemoveData", (bean, params, ctx) -> String.format("%s.edit().remove(%s).commit();", params.get(0), params.get(1)));
+        register("fileSetData", (bean, params, ctx) -> String.format("%s.edit().putString(%s, %s).apply();", params.get(0), params.get(1), params.get(2)));
+        register("fileRemoveData", (bean, params, ctx) -> String.format("%s.edit().remove(%s).apply();", params.get(0), params.get(1)));
     }
 
     private static void registerCalendarBlocks() {

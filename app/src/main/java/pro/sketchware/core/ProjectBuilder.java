@@ -232,8 +232,8 @@ public class ProjectBuilder {
         if (isD8Enabled()) {
             long savedTimeMillis = System.currentTimeMillis();
             File dexOutputDir = new File(projectFilePaths.binDirectoryPath, "dex");
-            if (!classFilesChanged && dexOutputDir.exists()
-                    && dexOutputDir.listFiles() != null && dexOutputDir.listFiles().length > 0) {
+            File[] existingDexFiles = dexOutputDir.exists() ? dexOutputDir.listFiles() : null;
+            if (!classFilesChanged && existingDexFiles != null && existingDexFiles.length > 0) {
                 LogUtil.d(TAG, "Skipping D8: no .class files changed (incremental). Saved ~"
                         + (System.currentTimeMillis() - savedTimeMillis) + " ms");
                 if (progressReceiver != null) {
@@ -840,14 +840,16 @@ public class ProjectBuilder {
                         }
                         return;
                     }
-                } catch (IOException ignored) {
+                } catch (IOException e) {
+                    LogUtil.d(TAG, "Failed to read DEX merge fingerprint, will re-merge: " + e.getMessage());
                 }
             }
             dexLibraries(new File(projectFilePaths.binDirectoryPath), dexes);
             // Save fingerprint after successful merge
             try {
                 java.nio.file.Files.write(fingerprintFile.toPath(), dexFingerprint.getBytes());
-            } catch (IOException ignored) {
+            } catch (IOException e) {
+                LogUtil.d(TAG, "Failed to save DEX merge fingerprint: " + e.getMessage());
             }
             LogUtil.d(TAG, "Merging DEX files took " + (System.currentTimeMillis() - savedTimeMillis) + " ms");
         } else {

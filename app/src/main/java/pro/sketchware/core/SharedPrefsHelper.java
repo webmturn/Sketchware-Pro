@@ -37,7 +37,7 @@ public class SharedPrefsHelper {
       editor.putBoolean(key, ((Boolean)data).booleanValue());
     } 
     if (flag)
-      editor.commit(); 
+      editor.apply(); 
   }
   
   public void putMap(String key, HashMap<String, Object> map) {
@@ -46,12 +46,14 @@ public class SharedPrefsHelper {
   
   public boolean clearAll() {
     editor.clear();
-    return editor.commit();
+    editor.apply();
+    return true;
   }
   
   public boolean remove(String value) {
     editor.remove(value);
-    return editor.commit();
+    editor.apply();
+    return true;
   }
   
   public boolean getBoolean(String value, boolean flag) {
@@ -59,7 +61,8 @@ public class SharedPrefsHelper {
   }
   
   public boolean commit() {
-    return editor.commit();
+    editor.apply();
+    return true;
   }
   
   public boolean contains(String value) {

@@ -172,7 +172,8 @@ public class IncrementalBuildCache {
                 byte[] buf = new byte[8192];
                 int len;
                 while ((len = fis.read(buf)) != -1) crc.update(buf, 0, len);
-            } catch (IOException ignored) {
+            } catch (IOException e) {
+                LogUtil.d("IncrementalBuildCache", "Failed to compute CRC for " + file.getName() + ": " + e.getMessage());
             }
         }
         return crc.getValue();

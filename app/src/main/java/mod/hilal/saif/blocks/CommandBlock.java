@@ -489,6 +489,15 @@ public class CommandBlock {
         return res;
     }
 
+    private static int parseIntOrZero(String s) {
+        if (s == null || s.trim().isEmpty()) return 0;
+        try {
+            return Integer.parseInt(s.trim());
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
     private static int getIndex(ArrayList<String> a, String r) {
         for (int i = 0; i < a.size(); i++) {
             if (a.get(i).contains(r)) {
@@ -543,13 +552,13 @@ public class CommandBlock {
         ref = aa.get(0);
 
         v = arr.get(p.first + 2);
-        dis = Integer.parseInt(v.substring(v.indexOf(">") + 1));
+        dis = parseIntOrZero(v.substring(v.indexOf(">") + 1));
 
         v = arr.get(p.first + 3);
-        af = Integer.parseInt(v.substring(v.indexOf(">") + 1));
+        af = parseIntOrZero(v.substring(v.indexOf(">") + 1));
 
         v = arr.get(p.first + 4);
-        be = Integer.parseInt(v.substring(v.indexOf(">") + 1));
+        be = parseIntOrZero(v.substring(v.indexOf(">") + 1));
 
         v = arr.get(p.first + 5);
         c = v.substring(v.indexOf(">") + 1);

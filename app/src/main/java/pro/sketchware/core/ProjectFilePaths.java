@@ -37,6 +37,7 @@ import java.util.regex.Pattern;
 import android.util.Pair;
 
 import dev.aldi.sayuti.block.ExtraBlockFile;
+import mod.hey.studios.editor.manage.block.v2.BlockLoader;
 import mod.hilal.saif.events.EventsHandler;
 import mod.agus.jcoderz.editor.manage.library.locallibrary.ManageLocalLibrary;
 import mod.hey.studios.build.BuildSettings;
@@ -840,6 +841,9 @@ public class ProjectFilePaths {
             HashMap<String, Map<String, Object>> sharedExtraBlocksMap = ActivityCodeGenerator.buildExtraBlocksMap(getExtraBlockData());
             Material3LibraryManager sharedMaterialLibraryManager = new Material3LibraryManager(projectDataManager.projectId);
 
+            // Pre-warm BlockLoader caches to avoid race conditions during parallel execution
+            BlockLoader.getBlockFromProject(sc_id, "");
+
             threadCount = activitiesToGenerate.isEmpty() ? 0
                     : Math.min(Runtime.getRuntime().availableProcessors(), activitiesToGenerate.size());
             if (threadCount <= 1) {
@@ -1173,6 +1177,9 @@ public class ProjectFilePaths {
 
         // Extra blocks definition file
         appendFileInfo(key, ExtraBlockFile.EXTRA_BLOCKS_DATA_FILE);
+
+        // Per-project custom blocks definition
+        appendFileInfo(key, new File(dataPath, "custom_blocks"));
 
         // Global system files — custom event/listener/component definitions affect generated code
         appendFileInfo(key, new File(EventsHandler.CUSTOM_EVENTS_FILE_PATH));

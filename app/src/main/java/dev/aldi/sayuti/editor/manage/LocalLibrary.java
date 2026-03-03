@@ -76,7 +76,8 @@ public class LocalLibrary {
                         }
                     }
                 }
-            } catch (Exception ignored) {
+            } catch (Exception e) {
+                android.util.Log.w("LocalLibrary", "Failed to parse dependency tree for " + file.getName() + ": " + e.getMessage());
             }
         }
         return new LocalLibrary(file.getName(), formatFileSize(getFileSize(file)), isRoot, subDeps, allDeps);

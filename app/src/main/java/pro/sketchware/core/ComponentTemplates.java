@@ -1649,6 +1649,7 @@ public class ComponentTemplates {
                             _outputStream.close();
                             _inputStream.close();
                         } catch (IOException _e) {
+                            _e.printStackTrace();
                         }
                 
                         return _outputStream.toString();

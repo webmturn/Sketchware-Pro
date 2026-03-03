@@ -425,6 +425,7 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
                 return;
             }
         } catch (JsonParseException e) {
+            android.util.Log.w("BlocksManagerCreator", "Failed to parse custom blocks JSON", e);
         }
         SketchwareUtil.showFailedToParseJsonDialog(this, new File(path), Helper.getResString(R.string.blocks_custom_blocks), v -> getBlockList());
         blocksList = new ArrayList<>();

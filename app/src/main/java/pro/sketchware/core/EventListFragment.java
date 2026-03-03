@@ -421,7 +421,11 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
 
                     if (paramType.isExactType("resource") || paramType.isExactType("resource_bg")) {
                         if (ProjectDataManager.getResourceManager(sc_id).hasImage(parameter) && !ImageCollectionManager.getInstance().hasResource(parameter)) {
-                            try { ImageCollectionManager.getInstance().addResource(sc_id, ProjectDataManager.getResourceManager(sc_id).getImageBean(parameter)); } catch (CompileException ignored) {}
+                            try {
+                                ImageCollectionManager.getInstance().addResource(sc_id, ProjectDataManager.getResourceManager(sc_id).getImageBean(parameter));
+                            } catch (CompileException unused) {
+                                failedToAddResourceToCollections = true;
+                            }
                         }
                     } else if (paramType.isExactType("sound")) {
                         if (ProjectDataManager.getResourceManager(sc_id).hasSound(parameter) && !SoundCollectionManager.getInstance().hasResource(parameter)) {
@@ -433,7 +437,11 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
                         }
                     } else if (paramType.isExactType("font")) {
                         if (ProjectDataManager.getResourceManager(sc_id).hasFont(parameter) && !FontCollectionManager.getInstance().hasResource(parameter)) {
-                            try { FontCollectionManager.getInstance().addResource(sc_id, ProjectDataManager.getResourceManager(sc_id).getFontBean(parameter)); } catch (CompileException ignored) {}
+                            try {
+                                FontCollectionManager.getInstance().addResource(sc_id, ProjectDataManager.getResourceManager(sc_id).getFontBean(parameter));
+                            } catch (CompileException unused) {
+                                failedToAddResourceToCollections = true;
+                            }
                         }
                     }
                 }
