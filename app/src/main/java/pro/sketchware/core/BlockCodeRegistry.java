@@ -639,6 +639,7 @@ public class BlockCodeRegistry {
         register("requestnetworkSetParams", (bean, params, ctx) -> String.format("%s.setParams(%s, RequestNetworkController.%s);", params.get(0), params.get(1), params.get(2)));
         register("requestnetworkSetHeaders", (bean, params, ctx) -> String.format("%s.setHeaders(%s);", params.get(0), params.get(1)));
         register("requestnetworkStartRequestNetwork", (bean, params, ctx) -> String.format("%s.startRequestNetwork(RequestNetworkController.%s, %s, %s, _%s_request_listener);", params.get(0), params.get(1), params.get(2), params.get(3), params.get(0)));
+        register("requestnetworkUploadFile", (bean, params, ctx) -> params.size() >= 4 ? String.format("%s.uploadFile(%s, %s, %s, %s, _%s_request_listener);", params.get(0), params.get(1), params.get(2), params.get(3), params.get(4), params.get(0)) : "");
     }
 
     private static void registerSpeechBlocks() {

@@ -728,6 +728,12 @@
     <string name="block_requestnetwork_start_request_network_body_3">with tag</string>
     <string name="block_requestnetwork_start_request_network_head" />
     <string name="block_requestnetwork_start_request_network_tail" />
+    <string name="block_requestnetwork_upload_file_body_1">upload file to url</string>
+    <string name="block_requestnetwork_upload_file_body_2">file key</string>
+    <string name="block_requestnetwork_upload_file_body_3">file path</string>
+    <string name="block_requestnetwork_upload_file_body_4">with tag</string>
+    <string name="block_requestnetwork_upload_file_head" />
+    <string name="block_requestnetwork_upload_file_tail" />
     <string name="block_resize_bitmap_circle_body_1">to path</string>
     <string name="block_resize_bitmap_circle_head">resize image to circle from path</string>
     <string name="block_resize_bitmap_circle_tail" />

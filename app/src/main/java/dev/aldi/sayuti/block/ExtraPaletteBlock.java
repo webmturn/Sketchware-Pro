@@ -1125,6 +1125,7 @@ public class ExtraPaletteBlock {
                     logicEditor.createPaletteBlock(" ", "requestnetworkSetParams");
                     logicEditor.createPaletteBlock(" ", "requestnetworkSetHeaders");
                     logicEditor.createPaletteBlock(" ", "requestnetworkStartRequestNetwork");
+                    logicEditor.createPaletteBlock(" ", "requestnetworkUploadFile");
                 }
                 if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_TEXT_TO_SPEECH)) {
                     logicEditor.addPaletteCategory(Helper.getResString(R.string.logic_editor_category_text_to_speech), getTitleBgColor());

@@ -99,7 +99,7 @@ public class BlockColorMapper {
                  "interstitialadLoadAd", "interstitialadShow", "firebasestorageUploadFile",
                  "firebasestorageDownloadFile", "firebasestorageDelete", "camerastarttakepicture",
                  "filepickerstartpickfiles", "requestnetworkSetParams", "requestnetworkSetHeaders",
-                 "requestnetworkStartRequestNetwork", "textToSpeechSetPitch",
+                 "requestnetworkStartRequestNetwork", "requestnetworkUploadFile", "textToSpeechSetPitch",
                  "textToSpeechSetSpeechRate", "textToSpeechSpeak", "textToSpeechIsSpeaking",
                  "textToSpeechStop", "textToSpeechShutdown", "speechToTextStartListening",
                  "speechToTextStopListening", "speechToTextShutdown",

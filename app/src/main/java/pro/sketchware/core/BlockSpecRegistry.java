@@ -278,6 +278,7 @@ public class BlockSpecRegistry {
         BLOCK_PARAMS.put("requestnetworkSetHeaders", new String[]{"%m.requestnetwork", "%m.varMap"});
         BLOCK_PARAMS.put("requestnetworkSetParams", new String[]{"%m.requestnetwork", "%m.varMap", "%m.requestType"});
         BLOCK_PARAMS.put("requestnetworkStartRequestNetwork", new String[]{"%m.requestnetwork", "%m.method", "%s", "%s"});
+        BLOCK_PARAMS.put("requestnetworkUploadFile", new String[]{"%m.requestnetwork", "%s", "%s", "%s", "%s"});
         BLOCK_PARAMS.put("resizeBitmapFileRetainRatio", new String[]{"%s", "%s", "%d"});
         BLOCK_PARAMS.put("resizeBitmapFileToCircle", new String[]{"%s", "%s"});
         BLOCK_PARAMS.put("resizeBitmapFileToSquare", new String[]{"%s", "%s", "%d"});
@@ -632,6 +633,7 @@ public class BlockSpecRegistry {
         BLOCK_SPECS.put("requestnetworkSetHeaders", "requestnetwork_set_headers");
         BLOCK_SPECS.put("requestnetworkSetParams", "requestnetwork_set_params");
         BLOCK_SPECS.put("requestnetworkStartRequestNetwork", "requestnetwork_start_request_network");
+        BLOCK_SPECS.put("requestnetworkUploadFile", "requestnetwork_upload_file");
         BLOCK_SPECS.put("resizeBitmapFileRetainRatio", "resize_bitmap_ratio");
         BLOCK_SPECS.put("resizeBitmapFileToCircle", "resize_bitmap_circle");
         BLOCK_SPECS.put("resizeBitmapFileToSquare", "resize_bitmap_square");

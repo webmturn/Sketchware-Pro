@@ -588,6 +588,7 @@ public class StringResource {
     loadBlockTranslation(context, "requestnetworkSetParams");
     loadBlockTranslation(context, "requestnetworkSetHeaders");
     loadBlockTranslation(context, "requestnetworkStartRequestNetwork");
+    loadBlockTranslation(context, "requestnetworkUploadFile");
     loadBlockTranslation(context, "fileutildelete");
     loadBlockTranslation(context, "fileutilcopy");
     loadBlockTranslation(context, "fileutilwrite");
