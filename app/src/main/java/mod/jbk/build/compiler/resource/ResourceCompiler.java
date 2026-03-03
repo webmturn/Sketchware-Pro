@@ -102,6 +102,7 @@ public class ResourceCompiler {
         private final File aapt2;
         private final ProjectBuilder buildHelper;
         private final File compiledBuiltInLibraryResourcesDirectory;
+        private final File compiledLocalLibraryResourcesDirectory;
         private ProgressListener progressListener;
 
         public Aapt2Compiler(ProjectBuilder buildHelper, File aapt2, boolean buildAppBundle) {
@@ -109,6 +110,7 @@ public class ResourceCompiler {
             this.aapt2 = aapt2;
             this.buildAppBundle = buildAppBundle;
             compiledBuiltInLibraryResourcesDirectory = new File(SketchApplication.getContext().getCacheDir(), "compiledLibs");
+            compiledLocalLibraryResourcesDirectory = new File(SketchApplication.getContext().getCacheDir(), "compiledLocalLibs");
         }
 
         @Override
@@ -123,7 +125,7 @@ public class ResourceCompiler {
             compileBuiltInLibraryResources();
             LogUtil.d(TAG + ":c", "Compiling built-in library resources took " + (System.currentTimeMillis() - savedTimeMillis) + " ms");
             savedTimeMillis = System.currentTimeMillis();
-            compileLocalLibraryResources(outputPath);
+            compileLocalLibraryResources();
             LogUtil.d(TAG + ":c", "Compiling local library resources took " + (System.currentTimeMillis() - savedTimeMillis) + " ms");
             savedTimeMillis = System.currentTimeMillis();
             compileProjectResources(outputPath);
@@ -218,14 +220,13 @@ public class ResourceCompiler {
             }
 
             /* Include compiled local libraries' resources */
-            File[] filesInCompiledResourcesPath = new File(resourcesPath).listFiles();
-            if (filesInCompiledResourcesPath != null) {
-                for (File file : filesInCompiledResourcesPath) {
-                    if (file.isFile()) {
-                        if (!file.getName().equals("project.zip") || !file.getName().equals("project-imported.zip")) {
-                            args.add("-R");
-                            args.add(file.getAbsolutePath());
-                        }
+            for (String localLibraryResDirectory : buildHelper.localLibraryManager.getResLocalLibrary()) {
+                File localLibraryDirectory = new File(localLibraryResDirectory).getParentFile();
+                if (localLibraryDirectory != null) {
+                    File cachedZip = new File(compiledLocalLibraryResourcesDirectory, localLibraryDirectory.getName() + ".zip");
+                    if (cachedZip.exists()) {
+                        args.add("-R");
+                        args.add(cachedZip.getAbsolutePath());
                     }
                 }
             }
@@ -304,7 +305,8 @@ public class ResourceCompiler {
             FileUtil.makeDir(path);
         }
 
-        private void compileLocalLibraryResources(String outputPath) throws SimpleException, MissingFileException {
+        private void compileLocalLibraryResources() throws SimpleException, MissingFileException {
+            compiledLocalLibraryResourcesDirectory.mkdirs();
             int localLibrariesCount = buildHelper.localLibraryManager.getResLocalLibrary().size();
             LogUtil.d(TAG + ":cLLR", "About to compile " + localLibrariesCount
                     + " local " + (localLibrariesCount == 1 ? "library" : "libraries"));
@@ -313,23 +315,48 @@ public class ResourceCompiler {
                 if (localLibraryDirectory != null) {
                     compilingAssertDirectoryExists(localLibraryResDirectory);
 
-                    ArrayList<String> commands = new ArrayList<>();
-                    commands.add(aapt2.getAbsolutePath());
-                    commands.add("compile");
-                    commands.add("--dir");
-                    commands.add(localLibraryResDirectory);
-                    commands.add("-o");
-                    commands.add(outputPath + File.separator + localLibraryDirectory.getName() + ".zip");
+                    File cachedZip = new File(compiledLocalLibraryResourcesDirectory, localLibraryDirectory.getName() + ".zip");
 
-                    LogUtil.d(TAG + ":cLLR", "Now executing: " + commands);
-                    BinaryExecutor executor = new BinaryExecutor();
-                    executor.setCommands(commands);
-                    if (!executor.execute().isEmpty()) {
-                        LogUtil.e(TAG, executor.getLog());
-                        throw new SimpleException(executor.getLog());
+                    if (isLocalLibraryRecompilingNeeded(cachedZip, localLibraryResDirectory)) {
+                        ArrayList<String> commands = new ArrayList<>();
+                        commands.add(aapt2.getAbsolutePath());
+                        commands.add("compile");
+                        commands.add("--dir");
+                        commands.add(localLibraryResDirectory);
+                        commands.add("-o");
+                        commands.add(cachedZip.getAbsolutePath());
+
+                        LogUtil.d(TAG + ":cLLR", "Now executing: " + commands);
+                        BinaryExecutor executor = new BinaryExecutor();
+                        executor.setCommands(commands);
+                        if (!executor.execute().isEmpty()) {
+                            LogUtil.e(TAG, executor.getLog());
+                            throw new SimpleException(executor.getLog());
+                        }
+                    } else {
+                        LogUtil.d(TAG + ":cLLR", "Skipped resource recompilation for local library " + localLibraryDirectory.getName());
                     }
                 }
             }
+        }
+
+        private boolean isLocalLibraryRecompilingNeeded(File cachedZip, String resDirectory) {
+            if (!cachedZip.exists()) return true;
+            long cacheTime = cachedZip.lastModified();
+            return hasNewerFiles(new File(resDirectory), cacheTime);
+        }
+
+        private boolean hasNewerFiles(File directory, long cacheTime) {
+            File[] files = directory.listFiles();
+            if (files == null) return false;
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    if (hasNewerFiles(file, cacheTime)) return true;
+                } else if (file.lastModified() > cacheTime) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private void compileBuiltInLibraryResources() throws SimpleException, MissingFileException {

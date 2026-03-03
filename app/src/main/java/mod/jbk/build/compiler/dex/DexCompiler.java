@@ -38,7 +38,12 @@ public class DexCompiler {
 
         Collection<Path> libraryFiles = new LinkedList<>();
         for (String jarPath : builder.getClasspath().split(":")) {
-            libraryFiles.add(Paths.get(jarPath));
+            if (!jarPath.isEmpty()) {
+                Path jar = Paths.get(jarPath);
+                if (jar.toFile().exists()) {
+                    libraryFiles.add(jar);
+                }
+            }
         }
 
         D8.run(D8Command.builder()

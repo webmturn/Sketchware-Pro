@@ -1160,7 +1160,6 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 ResourceManager.copySoundsToDir(q.resDirectoryPath + File.separator + "raw");
                 ResourceManager = ProjectDataManager.getResourceManager(sc_id);
                 ResourceManager.copyFontsToDir(q.assetsPath + File.separator + "fonts");
-
                 ProjectBuilder builder = new ProjectBuilder(this, activity.getApplicationContext(), q);
 
                 var fileManager = ProjectDataManager.getFileManager(sc_id);
@@ -1169,9 +1168,20 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 q.initializeMetadata(libraryManager, fileManager, dataManager);
                 builder.buildBuiltInLibraryInformation();
                 q.generateProjectFiles(fileManager, dataManager, libraryManager, builder.getBuiltInLibraryManager());
-                q.cleanBuildCache();
+                pro.sketchware.core.IncrementalBuildCache buildCache =
+                        new pro.sketchware.core.IncrementalBuildCache(q.binDirectoryPath);
+                buildCache.load();
+                boolean incrementalMode = new File(q.compiledClassesPath).exists()
+                        && buildCache.hasCacheFile()
+                        && !builder.proguard.isShrinkingEnabled()
+                        && !buildCache.isClasspathChanged(builder.getClasspath());
+                builder.preloadedBuildCache = buildCache;
+                if (incrementalMode) {
+                    q.cleanRJavaOnly();
+                } else {
+                    q.cleanBuildCache();
+                }
                 q.prepareBuildDirectories();
-
                 builder.maybeExtractAapt2();
                 if (canceled) {
                     return;

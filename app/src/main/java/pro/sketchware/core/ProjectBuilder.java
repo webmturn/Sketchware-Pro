@@ -42,9 +42,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import mod.agus.jcoderz.dex.Dex;
@@ -97,6 +99,8 @@ public class ProjectBuilder {
     private BuildProgressReceiver progressReceiver;
     private boolean buildAppBundle = false;
     private ArrayList<File> dexesToAddButNotMerge = new ArrayList<>();
+    /** Pre-loaded cache set by the caller to avoid a redundant JSON read in {@link #compileJavaCode()}. */
+    public IncrementalBuildCache preloadedBuildCache = null;
 
     /**
      * Timestamp keeping track of when compiling the project's resources started, needed for stats of how long compiling took.
@@ -449,37 +453,123 @@ public class ProjectBuilder {
     }
 
     /**
-     * Run Eclipse Compiler to compile Java files.
+     * Compiles the project's Java sources using Eclipse JDT (ECJ).
+     * <p>
+     * Uses incremental compilation when possible:
+     * <ul>
+     *   <li>Skips ECJ entirely if no Java files changed and R.java is unchanged.</li>
+     *   <li>Compiles only the changed Activity files when the classpath and R.java are stable.</li>
+     *   <li>Falls back to a full recompile when R.java changed, the classpath changed,
+     *       user-written Java files changed, or no previous {@code .class} cache exists.</li>
+     * </ul>
      */
     public void compileJavaCode() throws SimpleException, IOException {
         long savedTimeMillis = System.currentTimeMillis();
 
-        class EclipseOutOutputStream extends OutputStream {
+        IncrementalBuildCache cache = preloadedBuildCache != null
+                ? preloadedBuildCache
+                : new IncrementalBuildCache(projectFilePaths.binDirectoryPath);
+        if (preloadedBuildCache == null) cache.load();
 
-            private final StringBuilder mBuffer = new StringBuilder();
+        String currentClasspath = getClasspath();
+        boolean classesExist = new File(projectFilePaths.compiledClassesPath).exists()
+                && !FileUtil.listFilesRecursively(new File(projectFilePaths.compiledClassesPath), ".class").isEmpty();
 
-            @Override
-            public void write(int b) {
-                mBuffer.append((char) b);
+        boolean canIncremental = classesExist
+                && cache.hasCacheFile()
+                && !proguard.isShrinkingEnabled()
+                && !cache.isClasspathChanged(currentClasspath);
+
+        if (!canIncremental) {
+            LogUtil.d(TAG, "Incremental build not possible, doing full ECJ recompile");
+            runEclipseCompiler(collectAllSourcePaths(), currentClasspath, savedTimeMillis);
+            updateCacheAfterSuccessfulBuild(cache, currentClasspath);
+            return;
+        }
+
+        if (cache.isRJavaChanged(projectFilePaths.rJavaDirectoryPath)) {
+            LogUtil.d(TAG, "R.java changed \u2013 resource IDs may have been reassigned, doing full ECJ recompile");
+            for (File stale : FileUtil.listFilesRecursively(new File(projectFilePaths.compiledClassesPath), ".class")) {
+                stale.delete();
             }
+            runEclipseCompiler(collectAllSourcePaths(), currentClasspath, savedTimeMillis);
+            updateCacheAfterSuccessfulBuild(cache, currentClasspath);
+            return;
+        }
 
-            public String getOut() {
-                return mBuffer.toString();
+        for (String customDir : getCustomJavaDirectories()) {
+            if (FileUtil.isExistFile(customDir)) {
+                for (File f : FileUtil.listFilesRecursively(new File(customDir), ".java")) {
+                    if (cache.isDirtyFile(f)) {
+                        LogUtil.d(TAG, "User custom Java file changed: " + f.getName() + " \u2013 doing full ECJ recompile");
+                        runEclipseCompiler(collectAllSourcePaths(), currentClasspath, savedTimeMillis);
+                        updateCacheAfterSuccessfulBuild(cache, currentClasspath);
+                        return;
+                    }
+                }
             }
         }
 
-        class EclipseErrOutputStream extends OutputStream {
+        List<File> allJavaFiles = FileUtil.listFilesRecursively(
+                new File(projectFilePaths.javaFilesPath), ".java");
 
+        Set<String> currentJavaPaths = new HashSet<>();
+        for (File f : allJavaFiles) currentJavaPaths.add(f.getAbsolutePath());
+
+        List<String> stalePaths = new ArrayList<>();
+        for (String cachedPath : cache.getAllCachedFilePaths()) {
+            if (cachedPath.startsWith(projectFilePaths.javaFilesPath) && !currentJavaPaths.contains(cachedPath)) {
+                deleteOldClassFiles(new File(cachedPath));
+                stalePaths.add(cachedPath);
+                LogUtil.d(TAG, "Incremental build: source deleted, removed stale .class for: " + new File(cachedPath).getName());
+            }
+        }
+        for (String p : stalePaths) cache.removeFromCache(p);
+
+        List<String> dirtyFilePaths = new ArrayList<>();
+        for (File javaFile : allJavaFiles) {
+            if (cache.isDirtyFile(javaFile)) {
+                deleteOldClassFiles(javaFile);
+                dirtyFilePaths.add(javaFile.getAbsolutePath());
+            }
+        }
+
+        if (dirtyFilePaths.isEmpty()) {
+            LogUtil.d(TAG, "Incremental build: no Java files changed, skipping ECJ entirely. Saved ~"
+                    + (System.currentTimeMillis() - savedTimeMillis) + " ms");
+            if (progressReceiver != null) {
+                progressReceiver.onProgress("Java is up to date (incremental build, no changes)", 13);
+            }
+            return;
+        }
+
+        LogUtil.d(TAG, "Incremental build: compiling " + dirtyFilePaths.size() + " changed file(s) out of " + allJavaFiles.size());
+        if (progressReceiver != null) {
+            progressReceiver.onProgress("Java is compiling... (incremental: " + dirtyFilePaths.size()
+                    + " of " + allJavaFiles.size() + " file(s) changed)", 13);
+        }
+        dirtyFilePaths.add(projectFilePaths.rJavaDirectoryPath);
+        String incrementalClasspath = projectFilePaths.compiledClassesPath + ":" + currentClasspath;
+        runEclipseCompiler(dirtyFilePaths, incrementalClasspath, savedTimeMillis);
+        updateCacheAfterSuccessfulBuild(cache, currentClasspath);
+    }
+
+    /**
+     * Invokes the Eclipse JDT batch compiler with the given source paths and classpath.
+     * Throws {@link SimpleException} on any compilation error.
+     */
+    private void runEclipseCompiler(List<String> sourcePaths, String classpath, long startTime)
+            throws SimpleException, IOException {
+
+        class EclipseOutOutputStream extends OutputStream {
             private final StringBuilder mBuffer = new StringBuilder();
-
-            @Override
-            public void write(int b) {
-                mBuffer.append((char) b);
-            }
-
-            public String getOut() {
-                return mBuffer.toString();
-            }
+            @Override public void write(int b) { mBuffer.append((char) b); }
+            String getOut() { return mBuffer.toString(); }
+        }
+        class EclipseErrOutputStream extends OutputStream {
+            private final StringBuilder mBuffer = new StringBuilder();
+            @Override public void write(int b) { mBuffer.append((char) b); }
+            String getOut() { return mBuffer.toString(); }
         }
 
         try (EclipseOutOutputStream outOutputStream = new EclipseOutOutputStream();
@@ -498,22 +588,9 @@ public class ProjectBuilder {
             args.add("-d");
             args.add(projectFilePaths.compiledClassesPath);
             args.add("-cp");
-            args.add(getClasspath());
+            args.add(classpath);
             args.add("-proc:none");
-            args.add(projectFilePaths.javaFilesPath);
-            args.add(projectFilePaths.rJavaDirectoryPath);
-            String pathJava = filePathUtil.getPathJava(projectFilePaths.sc_id);
-            if (FileUtil.isExistFile(pathJava)) {
-                args.add(pathJava);
-            }
-            String pathBroadcast = filePathUtil.getPathBroadcast(projectFilePaths.sc_id);
-            if (FileUtil.isExistFile(pathBroadcast)) {
-                args.add(pathBroadcast);
-            }
-            String pathService = filePathUtil.getPathService(projectFilePaths.sc_id);
-            if (FileUtil.isExistFile(pathService)) {
-                args.add(pathService);
-            }
+            args.addAll(sourcePaths);
 
             /* Avoid "package ;" line in that file causing issues while compiling */
             File rJavaFileWithoutPackage = new File(projectFilePaths.rJavaDirectoryPath, "R.java");
@@ -521,18 +598,85 @@ public class ProjectBuilder {
                 LogUtil.w(TAG, "Failed to delete file " + rJavaFileWithoutPackage.getAbsolutePath());
             }
 
-            /* Start compiling */
-            org.eclipse.jdt.internal.compiler.batch.Main main = new org.eclipse.jdt.internal.compiler.batch.Main(outWriter, errWriter, false, null, null);
+            org.eclipse.jdt.internal.compiler.batch.Main main =
+                    new org.eclipse.jdt.internal.compiler.batch.Main(outWriter, errWriter, false, null, null);
             LogUtil.d(TAG, "Running Eclipse compiler with these arguments: " + args);
             main.compile(args.toArray(new String[0]));
 
             LogUtil.d(TAG, "System.out of Eclipse compiler: " + outOutputStream.getOut());
             if (main.globalErrorsCount <= 0) {
                 LogUtil.d(TAG, "System.err of Eclipse compiler: " + errOutputStream.getOut());
-                LogUtil.d(TAG, "Compiling Java files took " + (System.currentTimeMillis() - savedTimeMillis) + " ms");
+                LogUtil.d(TAG, "Compiling Java files took " + (System.currentTimeMillis() - startTime) + " ms");
             } else {
                 LogUtil.e(TAG, "Failed to compile Java files");
                 throw new SimpleException(errOutputStream.getOut());
+            }
+        }
+    }
+
+    private List<String> collectAllSourcePaths() {
+        List<String> paths = new ArrayList<>();
+        paths.add(projectFilePaths.javaFilesPath);
+        paths.add(projectFilePaths.rJavaDirectoryPath);
+        String pathJava = filePathUtil.getPathJava(projectFilePaths.sc_id);
+        if (FileUtil.isExistFile(pathJava)) paths.add(pathJava);
+        String pathBroadcast = filePathUtil.getPathBroadcast(projectFilePaths.sc_id);
+        if (FileUtil.isExistFile(pathBroadcast)) paths.add(pathBroadcast);
+        String pathService = filePathUtil.getPathService(projectFilePaths.sc_id);
+        if (FileUtil.isExistFile(pathService)) paths.add(pathService);
+        return paths;
+    }
+
+    private void updateCacheAfterSuccessfulBuild(IncrementalBuildCache cache, String classpath) {
+        for (File f : FileUtil.listFilesRecursively(new File(projectFilePaths.javaFilesPath), ".java")) {
+            cache.markFileClean(f);
+        }
+        for (String customDir : getCustomJavaDirectories()) {
+            if (FileUtil.isExistFile(customDir)) {
+                for (File f : FileUtil.listFilesRecursively(new File(customDir), ".java")) {
+                    cache.markFileClean(f);
+                }
+            }
+        }
+        cache.storeClasspath(classpath);
+        cache.storeRJavaHash(projectFilePaths.rJavaDirectoryPath);
+        cache.save();
+    }
+
+    private List<String> getCustomJavaDirectories() {
+        List<String> dirs = new ArrayList<>();
+        dirs.add(filePathUtil.getPathJava(projectFilePaths.sc_id));
+        dirs.add(filePathUtil.getPathBroadcast(projectFilePaths.sc_id));
+        dirs.add(filePathUtil.getPathService(projectFilePaths.sc_id));
+        return dirs;
+    }
+
+    /**
+     * Deletes all {@code .class} files associated with the given {@code .java} source file
+     * (including inner-class files like {@code Foo$1.class}) before recompiling that file,
+     * so that stale inner-class files cannot accumulate in the output directory.
+     */
+    private void deleteOldClassFiles(File javaFile) {
+        String base = projectFilePaths.javaFilesPath;
+        String absolutePath = javaFile.getAbsolutePath();
+        if (!absolutePath.startsWith(base)) return;
+
+        String rel = absolutePath.substring(base.length());
+        if (rel.startsWith(File.separator)) rel = rel.substring(1);
+        String classRel = rel.replace(".java", "");
+
+        int lastSep = classRel.lastIndexOf(File.separator);
+        File classDir = lastSep >= 0
+                ? new File(projectFilePaths.compiledClassesPath + File.separator + classRel.substring(0, lastSep))
+                : new File(projectFilePaths.compiledClassesPath);
+        String baseName = lastSep >= 0 ? classRel.substring(lastSep + 1) : classRel;
+
+        if (!classDir.exists()) return;
+        File[] toDelete = classDir.listFiles(
+                f -> f.getName().startsWith(baseName) && f.getName().endsWith(".class"));
+        if (toDelete != null) {
+            for (File f : toDelete) {
+                if (!f.delete()) LogUtil.w(TAG, "Could not delete stale class file: " + f.getAbsolutePath());
             }
         }
     }

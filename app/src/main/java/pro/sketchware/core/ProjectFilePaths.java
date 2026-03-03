@@ -2,10 +2,16 @@ package pro.sketchware.core;
 
 import static com.besome.sketch.Config.VAR_DEFAULT_MIN_SDK_VERSION;
 import static com.besome.sketch.Config.VAR_DEFAULT_TARGET_SDK_VERSION;
+import static dev.aldi.sayuti.block.ExtraBlockFile.getExtraBlockData;
+
 import static mod.hey.studios.util.ProjectFile.getDefaultColor;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.util.Log;
+
+import java.io.FileInputStream;
+import java.util.zip.CRC32;
 
 import com.besome.sketch.beans.BlockBean;
 import com.besome.sketch.beans.ComponentBean;
@@ -22,8 +28,16 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.regex.Pattern;
 
+import android.util.Pair;
+
+import dev.aldi.sayuti.block.ExtraBlockFile;
+import mod.hilal.saif.events.EventsHandler;
+import mod.agus.jcoderz.editor.manage.library.locallibrary.ManageLocalLibrary;
 import mod.hey.studios.build.BuildSettings;
 import mod.hey.studios.project.ProjectSettings;
 import mod.hey.studios.util.ProjectFile;
@@ -286,6 +300,15 @@ public class ProjectFilePaths {
      */
     public void cleanBuildCache() {
         fileUtil.deleteDirectoryByPath(binDirectoryPath);
+        fileUtil.deleteDirectoryByPath(rJavaDirectoryPath);
+    }
+
+    /**
+     * Incremental-build variant of {@link #cleanBuildCache()}: only deletes the R.java
+     * directory so that AAPT2 can regenerate a fresh R.java, while leaving the compiled
+     * {@code .class} files intact for reuse by the incremental ECJ compile step.
+     */
+    public void cleanRJavaOnly() {
         fileUtil.deleteDirectoryByPath(rJavaDirectoryPath);
     }
 
@@ -764,11 +787,107 @@ public class ProjectFilePaths {
         // Generate Activities unless a custom version of it exists already
         // at /Internal storage/.sketchware/data/<sc_id>/files/java/
         ArrayList<SrcCodeBean> srcCodeBeans = new ArrayList<>();
+
+        List<ProjectFileBean> activitiesToGenerate = new ArrayList<>();
         for (ProjectFileBean activity : projectFileManager.getActivities()) {
             if (!javaFiles.contains(new File(javaDir + activity.getJavaName()))) {
-                srcCodeBeans.add(new SrcCodeBean(activity.getJavaName(),
-                        new ActivityCodeGenerator(buildConfig, activity, projectDataManager).generateCode(isAndroidStudioExport, sc_id)));
+                activitiesToGenerate.add(activity);
             }
+        }
+
+        // Code generation cache: skip regeneration if inputs haven't changed
+        File codegenCacheDir = new File(SketchApplication.getContext().getCacheDir(), "codegenCache/" + sc_id);
+        String cacheKey = computeCodeGenCacheKey();
+        boolean cacheHit = false;
+
+        File cacheKeyFile = new File(codegenCacheDir, "cache.key");
+        if (cacheKeyFile.exists()) {
+            try {
+                String cachedKey = FileUtil.readFile(cacheKeyFile.getAbsolutePath());
+                if (cacheKey.equals(cachedKey)) {
+                    // Try to load all activities from cache
+                    boolean allCached = true;
+                    ArrayList<SrcCodeBean> cachedBeans = new ArrayList<>();
+                    for (ProjectFileBean activity : activitiesToGenerate) {
+                        File cachedFile = new File(codegenCacheDir, activity.getJavaName() + ".code");
+                        if (cachedFile.exists()) {
+                            String cachedCode = FileUtil.readFile(cachedFile.getAbsolutePath());
+                            cachedBeans.add(new SrcCodeBean(activity.getJavaName(),
+                                    ActivityCodeGenerator.applyCommands(cachedCode)));
+                        } else {
+                            allCached = false;
+                            break;
+                        }
+                    }
+                    if (allCached) {
+                        srcCodeBeans.addAll(cachedBeans);
+                        cacheHit = true;
+                    }
+                }
+            } catch (Exception e) {
+                Log.e("ProjectFilePaths", "Cache read failed", e);
+            }
+        }
+
+        int threadCount = 0;
+        if (!cacheHit) {
+            // Cache miss: generate code and save to cache
+            codegenCacheDir.mkdirs();
+
+            // Pre-build shared objects once for all Activities (optimization)
+            ManageLocalLibrary sharedMll = new ManageLocalLibrary(projectDataManager.projectId);
+            HashMap<String, Map<String, Object>> sharedExtraBlocksMap = ActivityCodeGenerator.buildExtraBlocksMap(getExtraBlockData());
+            Material3LibraryManager sharedMaterialLibraryManager = new Material3LibraryManager(projectDataManager.projectId);
+
+            threadCount = activitiesToGenerate.isEmpty() ? 0
+                    : Math.min(Runtime.getRuntime().availableProcessors(), activitiesToGenerate.size());
+            if (threadCount <= 1) {
+                for (ProjectFileBean activity : activitiesToGenerate) {
+                    String phase1Code = new ActivityCodeGenerator(buildConfig, activity, projectDataManager,
+                            sharedMll, projectSettings, sharedExtraBlocksMap, sharedMaterialLibraryManager)
+                            .generateCode(isAndroidStudioExport, sc_id, false);
+                    srcCodeBeans.add(new SrcCodeBean(activity.getJavaName(),
+                            ActivityCodeGenerator.applyCommands(phase1Code)));
+                    FileUtil.writeFile(new File(codegenCacheDir, activity.getJavaName() + ".code").getAbsolutePath(), phase1Code);
+                }
+            } else {
+                ExecutorService executor = Executors.newFixedThreadPool(threadCount);
+                try {
+                    List<Future<Pair<String, String>>> futures = new ArrayList<>();
+
+                    for (ProjectFileBean activity : activitiesToGenerate) {
+                        futures.add(executor.submit(() -> {
+                            String rawCode = new ActivityCodeGenerator(buildConfig, activity, projectDataManager,
+                                    sharedMll, projectSettings, sharedExtraBlocksMap, sharedMaterialLibraryManager)
+                                    .generateCode(isAndroidStudioExport, sc_id, false);
+                            return new Pair<>(activity.getJavaName(), rawCode);
+                        }));
+                    }
+
+                    // Phase 2: Apply command blocks serially (CommandBlock is not thread-safe)
+                    for (int i = 0; i < futures.size(); i++) {
+                        try {
+                            Pair<String, String> result = futures.get(i).get();
+                            srcCodeBeans.add(new SrcCodeBean(result.first,
+                                    ActivityCodeGenerator.applyCommands(result.second)));
+                            FileUtil.writeFile(new File(codegenCacheDir, result.first + ".code").getAbsolutePath(), result.second);
+                        } catch (Exception e) {
+                            Log.e("ProjectFilePaths", "Parallel code generation failed, falling back to serial", e);
+                            ProjectFileBean activity = activitiesToGenerate.get(i);
+                            String phase1Code = new ActivityCodeGenerator(buildConfig, activity, projectDataManager,
+                                    sharedMll, projectSettings, sharedExtraBlocksMap, sharedMaterialLibraryManager)
+                                    .generateCode(isAndroidStudioExport, sc_id, false);
+                            srcCodeBeans.add(new SrcCodeBean(activity.getJavaName(),
+                                    ActivityCodeGenerator.applyCommands(phase1Code)));
+                            FileUtil.writeFile(new File(codegenCacheDir, activity.getJavaName() + ".code").getAbsolutePath(), phase1Code);
+                        }
+                    }
+                } finally {
+                    executor.shutdownNow();
+                }
+            }
+            // Save cache key after successful generation
+            FileUtil.writeFile(cacheKeyFile.getAbsolutePath(), cacheKey);
         }
 
         var path = SketchwarePaths.getDataPath(sc_id) + "/command";
@@ -1033,6 +1152,62 @@ public class ProjectFilePaths {
             stylesFileBuilder.addItemToStyle("NoStatusBar", "android:windowFullscreen", "true");
             stylesFileBuilder.addStyle("AppTheme.DebugActivity", "AppTheme");
             return CommandBlock.applyCommands("styles.xml", stylesFileBuilder.toCode());
+        }
+    }
+
+    /**
+     * Computes a cache key for code generation based on all input data files and settings.
+     * If any input changes, the key changes and cached code is invalidated.
+     */
+    private String computeCodeGenCacheKey() {
+        StringBuilder key = new StringBuilder(256);
+
+        // Data files that determine generated code
+        String dataPath = SketchwarePaths.getDataPath(sc_id);
+        appendFileInfo(key, new File(dataPath, "logic"));
+        appendFileInfo(key, new File(dataPath, "view"));
+        appendFileInfo(key, new File(dataPath, "file"));
+        appendFileInfo(key, new File(dataPath, "library"));
+        appendFileInfo(key, new File(dataPath, "project_config"));
+
+        // Extra blocks definition file
+        appendFileInfo(key, ExtraBlockFile.EXTRA_BLOCKS_DATA_FILE);
+
+        // Global system files — custom event/listener/component definitions affect generated code
+        appendFileInfo(key, new File(EventsHandler.CUSTOM_EVENTS_FILE_PATH));
+        appendFileInfo(key, new File(EventsHandler.CUSTOM_LISTENERE_FILE_PATH));
+        appendFileInfo(key, new File(FileUtil.getExternalStorageDir() + "/.sketchware/data/system/component.json"));
+
+        // Export mode
+        key.append(isAndroidStudioExport ? '1' : '0');
+
+        // Sketchware-Pro app version (code generation logic may change between updates)
+        try {
+            Context ctx = SketchApplication.getContext();
+            key.append('|').append(ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0).versionCode);
+        } catch (PackageManager.NameNotFoundException ignored) {
+        }
+
+        return key.toString();
+    }
+
+    private static void appendFileInfo(StringBuilder key, File file) {
+        if (file.exists()) {
+            try {
+                CRC32 crc = new CRC32();
+                byte[] buffer = new byte[8192];
+                try (FileInputStream fis = new FileInputStream(file)) {
+                    int bytesRead;
+                    while ((bytesRead = fis.read(buffer)) != -1) {
+                        crc.update(buffer, 0, bytesRead);
+                    }
+                }
+                key.append(crc.getValue()).append('|').append(file.length()).append('|');
+            } catch (IOException e) {
+                key.append(file.lastModified()).append('|').append(file.length()).append('|');
+            }
+        } else {
+            key.append("0|0|");
         }
     }
 

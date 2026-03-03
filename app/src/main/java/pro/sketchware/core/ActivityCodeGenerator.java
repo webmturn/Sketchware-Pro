@@ -80,25 +80,46 @@ public class ActivityCodeGenerator {
      */
     private final ArrayList<String> filePickerRequestCodes = new ArrayList<>();
 
-    private final ArrayList<HashMap<String, Object>> extraBlocks;
+    private final HashMap<String, Map<String, Object>> extraBlocksMap;
     private EventCodeGenerator eventManager;
     private ArrayList<String> imports = new ArrayList<>();
     private String onCreateEventCode = "";
     private Material3LibraryManager materialLibraryManager;
 
     public ActivityCodeGenerator(BuildConfig jqVar, ProjectFileBean projectFileBean, ProjectDataStore eCVar) {
+        this(jqVar, projectFileBean, eCVar,
+                new ManageLocalLibrary(eCVar.projectId),
+                new ProjectSettings(eCVar.projectId),
+                buildExtraBlocksMap(getExtraBlockData()),
+                new Material3LibraryManager(eCVar.projectId));
+    }
+
+    public ActivityCodeGenerator(BuildConfig jqVar, ProjectFileBean projectFileBean, ProjectDataStore eCVar,
+                                 ManageLocalLibrary sharedMll, ProjectSettings sharedSettings,
+                                 HashMap<String, Map<String, Object>> sharedExtraBlocksMap,
+                                 Material3LibraryManager sharedMaterialLibraryManager) {
         packageName = jqVar.packageName;
         this.projectFileBean = projectFileBean;
         projectDataManager = eCVar;
         buildConfig = jqVar;
-        mll = new ManageLocalLibrary(eCVar.projectId);
-        settings = new ProjectSettings(eCVar.projectId);
+        mll = sharedMll;
+        settings = sharedSettings;
         permissionManager = new PermissionManager(eCVar.projectId, projectFileBean.getJavaName());
         layoutGenerator = new LayoutGenerator(buildConfig, projectFileBean);
-        extraBlocks = getExtraBlockData();
+        extraBlocksMap = sharedExtraBlocksMap;
         isViewBindingEnabled = settings.getValue(ProjectSettings.SETTING_ENABLE_VIEWBINDING, BuildSettings.SETTING_GENERIC_VALUE_FALSE)
                 .equals(BuildSettings.SETTING_GENERIC_VALUE_TRUE);
-        materialLibraryManager = new Material3LibraryManager(projectDataManager.projectId);
+        materialLibraryManager = sharedMaterialLibraryManager;
+    }
+
+    public static HashMap<String, Map<String, Object>> buildExtraBlocksMap(ArrayList<HashMap<String, Object>> extraBlocksList) {
+        HashMap<String, Map<String, Object>> map = new HashMap<>(extraBlocksList.size());
+        for (Map<String, Object> block : extraBlocksList) {
+            if (block.containsKey("name")) {
+                map.putIfAbsent(block.get("name").toString(), block);
+            }
+        }
+        return map;
     }
 
     public String activityResult() {
@@ -170,6 +191,13 @@ public class ActivityCodeGenerator {
      * @return Generated Java code of the current View (not Widget)
      */
     public String generateCode(boolean isAndroidStudioExport, String sc_id) {
+        return generateCode(isAndroidStudioExport, sc_id, true);
+    }
+
+    /**
+     * @param applyFormatting if false, returns raw code without CommandBlock.CB + formatCode (Phase 1, thread-safe)
+     */
+    public String generateCode(boolean isAndroidStudioExport, String sc_id, boolean applyFormatting) {
         boolean isDialogFragment = projectFileBean.fileName.contains("_dialog_fragment");
         boolean isBottomDialogFragment = projectFileBean.fileName.contains("_bottomdialog_fragment");
         boolean isFragment = projectFileBean.fileName.contains("_fragment");
@@ -178,9 +206,13 @@ public class ActivityCodeGenerator {
         handleAppCompat();
         addFieldsDeclaration();
         addDrawerComponentInitializer();
+
         initializeEventsCodeGenerator();
+
         addMoreBlockCodes();
+
         addAdapterCode();
+
         addRequestCodeConstants();
         addImportsForBlocks();
         addLocalLibraryImports();
@@ -594,28 +626,40 @@ public class ActivityCodeGenerator {
         String code = sb.toString();
 
         if (isFragment) {
-            code = code.replaceAll("getApplicationContext\\(\\)", "getContext().getApplicationContext()")
-                    .replaceAll("getBaseContext\\(\\)", "getActivity().getBaseContext()")
-                    .replaceAll("\\(ClipboardManager\\) getSystemService", "(ClipboardManager) getContext().getSystemService")
-                    .replaceAll("\\(Vibrator\\) getSystemService", "(Vibrator) getContext().getSystemService")
-                    .replaceAll("\\(SensorManager\\) getSystemService", "(SensorManager) getContext().getSystemService")
-                    .replaceAll("Typeface.createFromAsset\\(getAssets\\(\\)", "Typeface.createFromAsset(getContext().getAssets()")
-                    .replaceAll("= getAssets\\(\\).open", "= getContext().getAssets().open")
-                    .replaceAll("getSharedPreferences", "getContext().getSharedPreferences")
-                    .replaceAll("AlertDialog.Builder\\(this\\);", "AlertDialog.Builder(getActivity());")
-                    .replaceAll("SpeechRecognizer.createSpeechRecognizer\\(this\\);", "SpeechRecognizer.createSpeechRecognizer(getContext());")
-                    .replaceAll("new RequestNetwork\\(this\\);", "new RequestNetwork((Activity) getContext());")
-                    .replaceAll("new BluetoothConnect\\(this\\);", "new BluetoothConnect((Activity) getContext());")
-                    .replaceAll("MobileAds.getRewardedVideoAdInstance\\(this\\);", "MobileAds.getRewardedVideoAdInstance(getContext());")
-                    .replaceAll("runOnUiThread\\(new", "getActivity().runOnUiThread(new")
-                    .replaceAll(".setLayoutManager\\(new LinearLayoutManager\\(this", ".setLayoutManager(new LinearLayoutManager(getContext()")
-                    .replaceAll("getLayoutInflater\\(\\)", "getActivity().getLayoutInflater()")
-                    .replaceAll("getSupportFragmentManager\\(\\)", "getActivity().getSupportFragmentManager()");
+            code = code.replace("getApplicationContext()", "getContext().getApplicationContext()")
+                    .replace("getBaseContext()", "getActivity().getBaseContext()")
+                    .replace("(ClipboardManager) getSystemService", "(ClipboardManager) getContext().getSystemService")
+                    .replace("(Vibrator) getSystemService", "(Vibrator) getContext().getSystemService")
+                    .replace("(SensorManager) getSystemService", "(SensorManager) getContext().getSystemService")
+                    .replace("Typeface.createFromAsset(getAssets()", "Typeface.createFromAsset(getContext().getAssets()")
+                    .replace("= getAssets().open", "= getContext().getAssets().open")
+                    .replace("getSharedPreferences", "getContext().getSharedPreferences")
+                    .replace("AlertDialog.Builder(this);", "AlertDialog.Builder(getActivity());")
+                    .replace("SpeechRecognizer.createSpeechRecognizer(this);", "SpeechRecognizer.createSpeechRecognizer(getContext());")
+                    .replace("new RequestNetwork(this);", "new RequestNetwork((Activity) getContext());")
+                    .replace("new BluetoothConnect(this);", "new BluetoothConnect((Activity) getContext());")
+                    .replace("MobileAds.getRewardedVideoAdInstance(this);", "MobileAds.getRewardedVideoAdInstance(getContext());")
+                    .replace("runOnUiThread(new", "getActivity().runOnUiThread(new")
+                    .replace(".setLayoutManager(new LinearLayoutManager(this", ".setLayoutManager(new LinearLayoutManager(getContext()")
+                    .replace("getLayoutInflater()", "getActivity().getLayoutInflater()")
+                    .replace("getSupportFragmentManager()", "getActivity().getSupportFragmentManager()");
         } else if (buildConfig.isAppCompatEnabled) {
-            code = code.replaceAll("getFragmentManager", "getSupportFragmentManager");
+            code = code.replace("getFragmentManager", "getSupportFragmentManager");
+        }
+
+        if (!applyFormatting) {
+            return ComponentCodeGenerator.formatCode(code, false);
         }
 
         return CommandBlock.CB(ComponentCodeGenerator.formatCode(code, false));
+    }
+
+    /**
+     * Phase 2 of parallel code generation: applies command blocks only.
+     * NOT thread-safe — must be called serially due to CommandBlock shared file I/O.
+     */
+    public static String applyCommands(String formattedCode) {
+        return CommandBlock.CB(formattedCode);
     }
 
     private String getListDeclarationAndAddImports(int listType, String listName) {
@@ -982,12 +1026,7 @@ public class ActivityCodeGenerator {
     }
 
     private Map<String, Object> getExtraBlockByName(String name) {
-        for (Map<String, Object> block : extraBlocks) {
-            if (block.containsKey("name") && block.get("name").toString().equals(name)) {
-                return block;
-            }
-        }
-        return null;
+        return extraBlocksMap.get(name);
     }
 
     /**
