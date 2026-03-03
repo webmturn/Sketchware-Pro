@@ -676,6 +676,14 @@
     <string name="menu_variables">变量</string>
     <string name="menu_views">视图</string>
     <string name="menu_word_wrap">自动换行</string>
+    <string name="menu_import_xml">导入 XML</string>
+    <string name="menu_import_xml_title">导入 XML 布局</string>
+    <string name="menu_import_xml_layout_hint">在此粘贴布局 XML</string>
+    <string name="menu_import_xml_dimens_hint">在此粘贴 dimens.xml（可选）</string>
+    <string name="menu_import_xml_success">已导入 %d 个视图</string>
+    <string name="menu_import_xml_error">XML 解析错误：%s</string>
+    <string name="menu_import_xml_empty">XML 中未找到视图</string>
+    <string name="menu_import_xml_id_conflict">ID 冲突：\'%s\' 已存在，已重命名为 \'%s\'</string>
 
     <!-- ========== 构建 (Build) ========== -->
     <string name="build_settings_title">构建设置</string>
