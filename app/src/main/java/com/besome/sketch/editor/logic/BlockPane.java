@@ -56,6 +56,19 @@ public class BlockPane extends RelativeLayout {
     rs.setY((end - this.locationBuffer[1] - getPaddingTop()));
     return rs;
   }
+
+  /**
+   * Adds a block without triggering layout — for batch loading.
+   * Call requestLayout() once after all blocks are added.
+   */
+  public void addBlockNoLayout(BlockView blockView) {
+    blockView.blockPane = this;
+    android.view.ViewGroup.LayoutParams lp = blockView.getLayoutParams();
+    if (lp == null) lp = generateDefaultLayoutParams();
+    addViewInLayout(blockView, -1, lp, true);
+    blockView.setX(0);
+    blockView.setY(0);
+  }
   
   public BlockView dropBlock(BlockView blockView, int start, int end, boolean enabled) {
     BlockView rs;

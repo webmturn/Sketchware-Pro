@@ -216,6 +216,9 @@ public class SoundListFragment extends BaseFragment implements MenuProvider {
     }
 
     public void saveSounds() {
+        // Backup sounds before any file writes, so discard can restore pristine state
+        ProjectDataManager.getResourceManager(sc_id).backupSounds();
+
         for (ProjectResourceBean sound : sounds) {
             if (sound.isNew) {
                 String temporarySoundPath = getFilePathFromName(sound.resFullName);

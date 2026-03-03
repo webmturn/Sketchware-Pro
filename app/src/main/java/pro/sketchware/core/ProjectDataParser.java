@@ -9,6 +9,8 @@ import com.besome.sketch.beans.EventBean;
 import com.besome.sketch.beans.ViewBean;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -20,7 +22,7 @@ public class ProjectDataParser {
   
   private DataType dataType;
   
-  private final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+  private static final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
   
   public ProjectDataParser(String key) throws Exception {
     parseKey(key);
@@ -28,12 +30,10 @@ public class ProjectDataParser {
   
   public static ArrayList<BlockBean> parseBlockBeans(Gson gson, String data) {
     ArrayList<BlockBean> result = new ArrayList<>();
-    try (BufferedReader reader = new BufferedReader(new StringReader(data))) {
-      String line;
-      while ((line = reader.readLine()) != null) {
-        if (line.trim().length() <= 0) continue;
-        if (line.trim().charAt(0) != '{') continue;
-        result.add(gson.fromJson(line, BlockBean.class));
+    try (JsonReader reader = new JsonReader(new StringReader(data))) {
+      reader.setLenient(true);
+      while (reader.peek() != JsonToken.END_DOCUMENT) {
+        result.add(gson.fromJson(reader, BlockBean.class));
       }
     } catch (Exception e) {
       Log.w("ProjectDataParser", "Failed to parse block beans", e);
@@ -43,12 +43,10 @@ public class ProjectDataParser {
   
   public static ArrayList<ViewBean> parseViewBeans(Gson gson, String data) {
     ArrayList<ViewBean> result = new ArrayList<>();
-    try (BufferedReader reader = new BufferedReader(new StringReader(data))) {
-      String line;
-      while ((line = reader.readLine()) != null) {
-        if (line.trim().length() <= 0) continue;
-        if (line.trim().charAt(0) != '{') continue;
-        result.add(gson.fromJson(line, ViewBean.class));
+    try (JsonReader reader = new JsonReader(new StringReader(data))) {
+      reader.setLenient(true);
+      while (reader.peek() != JsonToken.END_DOCUMENT) {
+        result.add(gson.fromJson(reader, ViewBean.class));
       }
     } catch (Exception e) {
       Log.w("ProjectDataParser", "Failed to parse view beans", e);
@@ -81,12 +79,10 @@ public class ProjectDataParser {
   
   public ArrayList<ComponentBean> parseComponentBeans(String data) {
     ArrayList<ComponentBean> result = new ArrayList<>();
-    try (BufferedReader reader = new BufferedReader(new StringReader(data))) {
-      String line;
-      while ((line = reader.readLine()) != null) {
-        if (line.trim().length() <= 0) continue;
-        if (line.trim().charAt(0) != '{') continue;
-        ComponentBean bean = gson.fromJson(line, ComponentBean.class);
+    try (JsonReader reader = new JsonReader(new StringReader(data))) {
+      reader.setLenient(true);
+      while (reader.peek() != JsonToken.END_DOCUMENT) {
+        ComponentBean bean = gson.fromJson(reader, ComponentBean.class);
         bean.initValue();
         result.add(bean);
       }
@@ -102,12 +98,10 @@ public class ProjectDataParser {
   
   public ArrayList<EventBean> parseEventBeans(String data) {
     ArrayList<EventBean> result = new ArrayList<>();
-    try (BufferedReader reader = new BufferedReader(new StringReader(data))) {
-      String line;
-      while ((line = reader.readLine()) != null) {
-        if (line.trim().length() <= 0) continue;
-        if (line.charAt(0) != '{') continue;
-        EventBean bean = gson.fromJson(line, EventBean.class);
+    try (JsonReader reader = new JsonReader(new StringReader(data))) {
+      reader.setLenient(true);
+      while (reader.peek() != JsonToken.END_DOCUMENT) {
+        EventBean bean = gson.fromJson(reader, EventBean.class);
         bean.initValue();
         result.add(bean);
       }

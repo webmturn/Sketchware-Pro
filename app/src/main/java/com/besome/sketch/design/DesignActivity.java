@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import android.util.Log;
@@ -235,11 +236,8 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         ProjectDataManager.getLibraryManager(sc_id, haveSavedState);
         ViewHistoryManager.getInstance(sc_id);
         BlockHistoryManager.getInstance(sc_id);
-        if (!haveSavedState) {
-            resourceManager.backupImages();
-            resourceManager.backupSounds();
-            resourceManager.backupFonts();
-        }
+        // Resource backup is now lazy — ensureBackedUp() is called
+        // before any resource modification, not eagerly on project open.
     }
 
     private ProjectFileBean getDefaultProjectFile() {
@@ -1462,9 +1460,12 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             DesignActivity activity = getActivity();
             if (activity != null) {
                 var sc_id = DesignActivity.sc_id;
-                ProjectDataManager.getResourceManager(sc_id).restoreImagesFromTemp();
-                ProjectDataManager.getResourceManager(sc_id).restoreSoundsFromTemp();
-                ProjectDataManager.getResourceManager(sc_id).restoreFontsFromTemp();
+                ResourceManager rm = ProjectDataManager.getResourceManager(sc_id);
+                if (rm.hasLazyBackup()) {
+                    rm.restoreImagesFromTemp();
+                    rm.restoreSoundsFromTemp();
+                    rm.restoreFontsFromTemp();
+                }
                 activity.runOnUiThread(() -> {
                     activity.dismissLoadingDialog();
                     activity.finish();
@@ -1489,17 +1490,21 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             if (activity != null) {
                 var sc_id = DesignActivity.sc_id;
                 ProjectDataManager.getResourceManager(sc_id).cleanupAllResources();
-                ProjectDataManager.getFileManager(sc_id).saveToData();
-                ProjectDataManager.getProjectDataManager(sc_id).saveAllData();
-                ProjectDataManager.getResourceManager(sc_id).saveToData();
-                ProjectDataManager.getLibraryManager(sc_id).saveToData();
+                ExecutorService pool = Executors.newFixedThreadPool(4);
+                CompletableFuture.allOf(
+                    CompletableFuture.runAsync(() -> ProjectDataManager.getFileManager(sc_id).saveToData(), pool),
+                    CompletableFuture.runAsync(() -> ProjectDataManager.getProjectDataManager(sc_id).saveAllData(), pool),
+                    CompletableFuture.runAsync(() -> ProjectDataManager.getResourceManager(sc_id).saveToData(), pool),
+                    CompletableFuture.runAsync(() -> ProjectDataManager.getLibraryManager(sc_id).saveToData(), pool)
+                ).join();
+                pool.shutdown();
                 activity.runOnUiThread(() -> {
                     SketchToast.toast(activity.getApplicationContext(), Helper.getResString(R.string.common_message_complete_save), SketchToast.TOAST_NORMAL).show();
                     activity.saveVersionCodeInformationToProject();
                     activity.dismissLoadingDialog();
-                    ProjectDataManager.getResourceManager(sc_id).backupImages();
-                    ProjectDataManager.getResourceManager(sc_id).backupSounds();
-                    ProjectDataManager.getResourceManager(sc_id).backupFonts();
+                    // Reset backup state after save — next resource modification
+                    // will trigger a fresh backup.
+                    ProjectDataManager.getResourceManager(sc_id).resetBackupState();
                 });
             }
         }
@@ -1521,10 +1526,14 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             if (activity != null) {
                 var sc_id = DesignActivity.sc_id;
                 ProjectDataManager.getResourceManager(sc_id).cleanupAllResources();
-                ProjectDataManager.getFileManager(sc_id).saveToData();
-                ProjectDataManager.getProjectDataManager(sc_id).saveAllData();
-                ProjectDataManager.getResourceManager(sc_id).saveToData();
-                ProjectDataManager.getLibraryManager(sc_id).saveToData();
+                ExecutorService pool = Executors.newFixedThreadPool(4);
+                CompletableFuture.allOf(
+                    CompletableFuture.runAsync(() -> ProjectDataManager.getFileManager(sc_id).saveToData(), pool),
+                    CompletableFuture.runAsync(() -> ProjectDataManager.getProjectDataManager(sc_id).saveAllData(), pool),
+                    CompletableFuture.runAsync(() -> ProjectDataManager.getResourceManager(sc_id).saveToData(), pool),
+                    CompletableFuture.runAsync(() -> ProjectDataManager.getLibraryManager(sc_id).saveToData(), pool)
+                ).join();
+                pool.shutdown();
                 ProjectDataManager.getResourceManager(sc_id).deleteTempDirs();
                 activity.runOnUiThread(() -> {
                     SketchToast.toast(activity.getApplicationContext(), Helper.getResString(R.string.common_message_complete_save), SketchToast.TOAST_NORMAL).show();

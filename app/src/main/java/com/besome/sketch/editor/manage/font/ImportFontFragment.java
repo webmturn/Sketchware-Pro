@@ -143,6 +143,9 @@ public class ImportFontFragment extends BaseFragment implements MenuProvider {
             return;
         }
 
+        // Backup fonts before any file writes, so discard can restore pristine state
+        ProjectDataManager.getResourceManager(sc_id).backupFonts();
+
         for (ProjectResourceBean resourceBean : projectResourceBeans) {
             if (resourceBean.isNew) {
                 try {

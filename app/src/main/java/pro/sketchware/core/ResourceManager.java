@@ -32,6 +32,10 @@ public class ResourceManager {
   public String projectId;
   
   public Gson gson;
+
+  private boolean imagesBackedUp;
+  private boolean soundsBackedUp;
+  private boolean fontsBackedUp;
   
   public ResourceManager(String projectId) {
     this(projectId,
@@ -154,6 +158,7 @@ public class ResourceManager {
   }
   
   public void setFonts(ArrayList<ProjectResourceBean> list) {
+    backupFonts();
     fonts = list;
   }
   
@@ -194,6 +199,7 @@ public class ResourceManager {
   }
   
   public void setImages(ArrayList<ProjectResourceBean> list) {
+    backupImages();
     images = list;
   }
   
@@ -234,6 +240,7 @@ public class ResourceManager {
   }
   
   public void setSounds(ArrayList<ProjectResourceBean> list) {
+    backupSounds();
     sounds = list;
   }
   
@@ -274,12 +281,14 @@ public class ResourceManager {
   }
   
   public void backupFonts() {
+    if (fontsBackedUp || projectId.isEmpty()) return;
     String tempPath = SketchwarePaths.getTempFontsPath();
     try {
       fileUtil.deleteDirectoryByPath(tempPath);
       File sourceDir = new File(fontDirPath);
       File destDir = new File(tempPath);
       fileUtil.copyDirectory(sourceDir, destDir);
+      fontsBackedUp = true;
     } catch (Exception e) {
       Log.w("ResourceManager", "Failed to backup fonts", e);
     } 
@@ -296,12 +305,14 @@ public class ResourceManager {
   }
   
   public void backupImages() {
+    if (imagesBackedUp || projectId.isEmpty()) return;
     String tempPath = SketchwarePaths.getTempImagesPath();
     try {
       fileUtil.deleteDirectoryByPath(tempPath);
       File sourceDir = new File(imageDirPath);
       File destDir = new File(tempPath);
       fileUtil.copyDirectory(sourceDir, destDir);
+      imagesBackedUp = true;
     } catch (Exception e) {
       Log.w("ResourceManager", "Failed to backup images", e);
     } 
@@ -316,12 +327,14 @@ public class ResourceManager {
   }
   
   public void backupSounds() {
+    if (soundsBackedUp || projectId.isEmpty()) return;
     String tempPath = SketchwarePaths.getTempSoundsPath();
     try {
       fileUtil.deleteDirectoryByPath(tempPath);
       File sourceDir = new File(soundDirPath);
       File destDir = new File(tempPath);
       fileUtil.copyDirectory(sourceDir, destDir);
+      soundsBackedUp = true;
     } catch (Exception e) {
       Log.w("ResourceManager", "Failed to backup sounds", e);
     } 
@@ -347,7 +360,8 @@ public class ResourceManager {
       fileUtil.deleteDirectoryByPath(tempFontsPath);
     } catch (Exception e) {
       Log.w("ResourceManager", "Failed to delete temp dirs", e);
-    } 
+    }
+    resetBackupState();
   }
   
   public String getSoundPath(String name) {
@@ -471,6 +485,28 @@ public class ResourceManager {
     fonts = new ArrayList<>();
   }
   
+  /**
+   * Ensures all resource types are backed up before any modification.
+   * Called lazily — only when resources are about to change.
+   */
+  public void ensureBackedUp() {
+    backupImages();
+    backupSounds();
+    backupFonts();
+  }
+
+  /** Resets backup flags after save, so next modification cycle gets a fresh backup. */
+  public void resetBackupState() {
+    imagesBackedUp = false;
+    soundsBackedUp = false;
+    fontsBackedUp = false;
+  }
+
+  /** Returns true if any resource type has been backed up via lazy backup (i.e., resources were modified). */
+  public boolean hasLazyBackup() {
+    return imagesBackedUp || soundsBackedUp || fontsBackedUp;
+  }
+
   public void restoreFontsFromTemp() {
     String tempPath = SketchwarePaths.getTempFontsPath();
     try {

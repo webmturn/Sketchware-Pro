@@ -20,6 +20,9 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ProjectDataStore {
   public String projectId;
@@ -32,14 +35,13 @@ public class ProjectDataStore {
   public HashMap<String, ArrayList<ComponentBean>> componentMap;
   public HashMap<String, ArrayList<EventBean>> eventMap;
   public HashMap<String, ViewBean> fabMap;
-  public Gson gson;
+  public static final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
   public BuildConfig buildConfig;
   
   public ProjectDataStore(String projectId) {
     clearAllData();
     this.projectId = projectId;
     fileUtil = new EncryptedFileUtil();
-    gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     buildConfig = new BuildConfig();
   }
   
@@ -1134,8 +1136,13 @@ public class ProjectDataStore {
   
   public void saveAllData() {
     String basePath = SketchwarePaths.getDataPath(projectId);
-    saveViewFile(basePath + File.separator + "view");
-    saveLogicFile(basePath + File.separator + "logic");
+    ExecutorService pool = Executors.newFixedThreadPool(2);
+    CompletableFuture<Void> viewFuture = CompletableFuture.runAsync(
+        () -> saveViewFile(basePath + File.separator + "view"), pool);
+    CompletableFuture<Void> logicFuture = CompletableFuture.runAsync(
+        () -> saveLogicFile(basePath + File.separator + "logic"), pool);
+    CompletableFuture.allOf(viewFuture, logicFuture).join();
+    pool.shutdown();
     deleteBackupFiles();
   }
   
@@ -1161,8 +1168,13 @@ public class ProjectDataStore {
   
   public void saveAllBackup() {
     String basePath = SketchwarePaths.getBackupPath(projectId);
-    saveViewFile(basePath + File.separator + "view");
-    saveLogicFile(basePath + File.separator + "logic");
+    ExecutorService pool = Executors.newFixedThreadPool(2);
+    CompletableFuture<Void> viewFuture = CompletableFuture.runAsync(
+        () -> saveViewFile(basePath + File.separator + "view"), pool);
+    CompletableFuture<Void> logicFuture = CompletableFuture.runAsync(
+        () -> saveLogicFile(basePath + File.separator + "logic"), pool);
+    CompletableFuture.allOf(viewFuture, logicFuture).join();
+    pool.shutdown();
   }
   
   public void removeBlockEntry(String fileName, String data) {

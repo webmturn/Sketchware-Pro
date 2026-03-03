@@ -186,7 +186,8 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
     }
 
     public void saveImages() {
-
+        // Backup images before any file writes, so discard can restore pristine state
+        ProjectDataManager.getResourceManager(sc_id).backupImages();
 
         Path svgDir = Paths.get(fpu.getPathSvg(sc_id));
         try {

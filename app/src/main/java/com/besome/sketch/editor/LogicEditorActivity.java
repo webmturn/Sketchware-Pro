@@ -212,12 +212,13 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 long t0 = System.currentTimeMillis();
                 for (int idx = 0; idx < createdBlocks.size(); idx++) {
                     BlockView blockView = createdBlocks.get(idx);
-                    blockPane.addBlock(blockView, 0, 0);
+                    blockPane.addBlockNoLayout(blockView);
                     blockView.setOnTouchListener(this);
                     if (idx == 0) {
                         blockPane.getRoot().setNextBlock(blockView);
                     }
                 }
+                blockPane.requestLayout();
                 long t1 = System.currentTimeMillis();
                 android.util.Log.d("BlockLoad", "UI addView done: " + (t1 - t0) + "ms");
 
