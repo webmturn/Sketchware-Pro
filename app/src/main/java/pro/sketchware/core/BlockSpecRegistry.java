@@ -63,6 +63,7 @@ public class BlockSpecRegistry {
         BLOCK_PARAMS.put("calendarViewSetDate", new String[]{"%m.calendarview", "%d"});
         BLOCK_PARAMS.put("calendarViewSetMinDate", new String[]{"%m.calendarview", "%d"});
         BLOCK_PARAMS.put("calnedarViewSetMaxDate", new String[]{"%m.calendarview", "%d"});
+        BLOCK_PARAMS.put("calendarViewSetMaxDate", new String[]{"%m.calendarview", "%d"});
         BLOCK_PARAMS.put("camerastarttakepicture", new String[]{"%m.camera"});
         BLOCK_PARAMS.put("clearList", new String[]{"%m.list"});
         BLOCK_PARAMS.put("closeDrawer", new String[]{});
@@ -416,6 +417,7 @@ public class BlockSpecRegistry {
         BLOCK_SPECS.put("calendarViewSetDate", "calendarview_set_date");
         BLOCK_SPECS.put("calendarViewSetMinDate", "calendarview_set_min_date");
         BLOCK_SPECS.put("calnedarViewSetMaxDate", "calendarview_set_max_date");
+        BLOCK_SPECS.put("calendarViewSetMaxDate", "calendarview_set_max_date");
         BLOCK_SPECS.put("camerastarttakepicture", "camera_start_take_picture");
         BLOCK_SPECS.put("clearList", "clear_list");
         BLOCK_SPECS.put("closeDrawer", "close_drawer");

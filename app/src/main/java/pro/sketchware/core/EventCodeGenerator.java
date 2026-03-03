@@ -27,12 +27,14 @@ public class EventCodeGenerator {
     private final ArrayList<String> imports = new ArrayList<>();
     private final HashMap<String, String> activityLifecycleEvents = new HashMap<>();
     private final Boolean isViewBindingEnabled;
+    private final CodeContext codeContext;
     public String eventLogic = "";
     public String eventListenerCode = "";
 
-    public EventCodeGenerator(BuildConfig logicHolder, ProjectFileBean projectFileBean, ProjectDataStore ProjectDataStore) {
+    public EventCodeGenerator(BuildConfig logicHolder, ProjectFileBean projectFileBean, ProjectDataStore ProjectDataStore, CodeContext codeContext) {
         buildConfig = logicHolder;
         this.projectFileBean = projectFileBean;
+        this.codeContext = codeContext;
 
         ProjectSettings projectSettings = new ProjectSettings(logicHolder.sc_id);
         isViewBindingEnabled = projectSettings.getValue(ProjectSettings.SETTING_ENABLE_VIEWBINDING, "false").equals("true");
@@ -98,7 +100,7 @@ public class EventCodeGenerator {
             }
         }
         if (!alreadyRegistered) {
-            ComponentCallback event = new ComponentCallback(targetType, targetId);
+            ComponentCallback event = new ComponentCallback(targetType, targetId, codeContext);
             if (hasOnSuccessLogic) {
                 event.setOnSuccessLogic(eventLogic);
             } else if (hasOnCancelledLogic) {
@@ -325,12 +327,14 @@ public class EventCodeGenerator {
 
         private final int componentId;
         private final String componentName;
+        private final CodeContext codeContext;
         private String onSuccessCode = "";
         private String onCancelledCode = "";
 
-        private ComponentCallback(int componentId, String componentName) {
+        private ComponentCallback(int componentId, String componentName, CodeContext codeContext) {
             this.componentId = componentId;
             this.componentName = componentName;
+            this.codeContext = codeContext;
         }
 
         private void setOnCancelledLogic(String onCancelledLogic) {
@@ -342,7 +346,7 @@ public class EventCodeGenerator {
         }
 
         private String getCode() {
-            return ComponentCodeGenerator.getOnActivityResultCode(componentId, componentName, onSuccessCode, onCancelledCode);
+            return ComponentCodeGenerator.getOnActivityResultCode(codeContext, componentId, componentName, onSuccessCode, onCancelledCode);
         }
     }
 

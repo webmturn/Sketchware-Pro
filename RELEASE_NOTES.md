@@ -73,6 +73,13 @@
 
 ## ♻️ Refactoring
 
+### Code Generation System — Registry Pattern
+- **`BlockCodeRegistry`** — All 200+ block opcodes migrated from `BlockInterpreter`'s 1400-line switch to a `HashMap<String, BlockCodeHandler>` registry; new blocks can be added via `BlockCodeRegistry.register()` without modifying `BlockInterpreter`
+- **`EventCodeRegistry`** — All 40+ event templates migrated from `ComponentCodeGenerator.getEventCode()`'s 310-line switch to a `HashMap<String, EventCodeHandler>` registry
+- **`BlockCodeHandler` / `EventCodeHandler`** — New `@FunctionalInterface` contracts for block code generation and event code templates
+- **`BlockInterpreter`** — `getBlockCode()` now delegates to `BlockCodeRegistry`; legacy switch fully removed
+- **`ComponentCodeGenerator`** — `getEventCode()` now delegates to `EventCodeRegistry`
+
 - **BlockSpecRegistry** — Replace decompiled hashCode switch with HashMap
 - **ProjectDataStore** — Replace decompiled enum switches, delete `ScreenOrientationConstants` and `KeyboardSettingConstants`
 - **ProjectDataParser** — Replace decompiled hashCode/enum switches, clean up fields

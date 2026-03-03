@@ -25,6 +25,7 @@ import java.io.StringReader;
 import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -39,6 +40,8 @@ import pro.sketchware.xml.XmlBuilder;
 
 @SuppressLint("RtlHardcoded")
 public class LayoutGenerator {
+
+    private static final HashMap<String, Pattern> attrPatternCache = new HashMap<>();
 
     private final BuildConfig buildConfig;
     private final InjectRootLayoutManager rootManager;
@@ -987,7 +990,9 @@ public class LayoutGenerator {
     private boolean hasAttr(String attrName, ViewBean bean) {
         String inject = bean.inject;
         if (inject == null || inject.isEmpty()) return false;
-        return Pattern.compile("(android|app) *?: *?" + attrName).matcher(inject).find();
+        Pattern pattern = attrPatternCache.computeIfAbsent(attrName,
+                name -> Pattern.compile("(android|app) *?: *?" + name));
+        return pattern.matcher(inject).find();
     }
 
     public Set<String> readAttributesToReplace(ViewBean viewBean) {

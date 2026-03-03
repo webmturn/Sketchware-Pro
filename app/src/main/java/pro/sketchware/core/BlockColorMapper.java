@@ -68,7 +68,7 @@ public class BlockColorMapper {
                  "webViewCanGoBack", "webViewCanGoForward", "webViewGoBack", "webViewGoForward",
                  "webViewClearCache", "webViewClearHistory", "webViewStopLoading", "webViewZoomIn",
                  "webViewZoomOut", "calendarViewGetDate", "calendarViewSetDate",
-                 "calendarViewSetMinDate", "calnedarViewSetMaxDate", "adViewLoadAd",
+                 "calendarViewSetMinDate", "calnedarViewSetMaxDate", "calendarViewSetMaxDate", "adViewLoadAd",
                  "setImageFilePath", "setImageUrl", "setHint", "setHintTextColor",
                  "progressBarSetIndeterminate", "mapViewSetMapType", "mapViewMoveCamera",
                  "mapViewZoomTo", "mapViewZoomIn", "mapViewZoomOut", "mapViewAddMarker",

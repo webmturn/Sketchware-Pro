@@ -948,38 +948,38 @@ public class ProjectFilePaths {
         // Make generated classes viewable
         if (!javaFiles.contains(new File(javaDir + "SketchwareUtil.java"))) {
             srcCodeBeans.add(new SrcCodeBean("SketchwareUtil.java",
-                    ComponentCodeGenerator.getSketchwareUtilCode(packageName, material3LibraryManager.isMaterial3Enabled())));
+                    ComponentTemplates.getSketchwareUtilCode(packageName, material3LibraryManager.isMaterial3Enabled())));
         }
 
         if (!javaFiles.contains(new File(javaDir + "FileUtil.java"))) {
             srcCodeBeans.add(new SrcCodeBean("FileUtil.java",
-                    ComponentCodeGenerator.getFileUtilCode(packageName)));
+                    ComponentTemplates.getFileUtilCode(packageName)));
         }
 
         if (!javaFiles.contains(new File(javaDir + "RequestNetwork.java")) && buildConfig.isHttp3Used) {
             srcCodeBeans.add(new SrcCodeBean("RequestNetwork.java",
-                    ComponentCodeGenerator.formatCode(ComponentCodeGenerator.getRequestNetworkCode(packageName), false)));
+                    ComponentCodeGenerator.formatCode(ComponentTemplates.getRequestNetworkCode(packageName), false)));
         }
 
         if (!FileUtil.isExistFile(javaDir + "RequestNetworkController.java") && buildConfig.isHttp3Used) {
             srcCodeBeans.add(new SrcCodeBean("RequestNetworkController.java",
-                    ComponentCodeGenerator.formatCode(ComponentCodeGenerator.getRequestNetworkControllerCode(packageName), false)));
+                    ComponentCodeGenerator.formatCode(ComponentTemplates.getRequestNetworkControllerCode(packageName), false)));
         }
 
         if (!javaFiles.contains(new File(javaDir + "BluetoothConnect.java")) && buildConfig.hasPermission(BuildConfig.PERMISSION_BLUETOOTH)) {
             srcCodeBeans.add(new SrcCodeBean("BluetoothConnect.java",
-                    ComponentCodeGenerator.formatCode(ComponentCodeGenerator.getBluetoothConnectCode(packageName), false)));
+                    ComponentCodeGenerator.formatCode(ComponentTemplates.getBluetoothConnectCode(packageName), false)));
         }
 
         if (!javaFiles.contains(new File(javaDir + "BluetoothController.java")) && buildConfig.hasPermission(BuildConfig.PERMISSION_BLUETOOTH)) {
             srcCodeBeans.add(new SrcCodeBean("BluetoothController.java",
-                    ComponentCodeGenerator.formatCode(ComponentCodeGenerator.getBluetoothControllerCode(packageName), false)));
+                    ComponentCodeGenerator.formatCode(ComponentTemplates.getBluetoothControllerCode(packageName), false)));
         }
 
         if (buildConfig.isMapUsed) {
             if (!javaFiles.contains(new File(javaDir + "GoogleMapController.java")) && buildConfig.isMapUsed) {
                 srcCodeBeans.add(new SrcCodeBean("GoogleMapController.java",
-                        ComponentCodeGenerator.formatCode(ComponentCodeGenerator.getGoogleMapControllerCode(packageName), false)));
+                        ComponentCodeGenerator.formatCode(ComponentTemplates.getGoogleMapControllerCode(packageName), false)));
             }
         }
 

@@ -492,6 +492,7 @@ public class StringResource {
     loadBlockTranslation(context, "calendarViewSetDate");
     loadBlockTranslation(context, "calendarViewSetMinDate");
     loadBlockTranslation(context, "calnedarViewSetMaxDate");
+    loadBlockTranslation(context, "calendarViewSetMaxDate");
     loadBlockTranslation(context, "adViewLoadAd");
     loadBlockTranslation(context, "mapViewSetMapType");
     loadBlockTranslation(context, "mapViewMoveCamera");

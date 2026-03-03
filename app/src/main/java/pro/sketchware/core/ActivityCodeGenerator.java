@@ -81,6 +81,7 @@ public class ActivityCodeGenerator {
     private final ArrayList<String> filePickerRequestCodes = new ArrayList<>();
 
     private final HashMap<String, Map<String, Object>> extraBlocksMap;
+    private final CodeContext codeContext;
     private EventCodeGenerator eventManager;
     private ArrayList<String> imports = new ArrayList<>();
     private String onCreateEventCode = "";
@@ -110,6 +111,8 @@ public class ActivityCodeGenerator {
         isViewBindingEnabled = settings.getValue(ProjectSettings.SETTING_ENABLE_VIEWBINDING, BuildSettings.SETTING_GENERIC_VALUE_FALSE)
                 .equals(BuildSettings.SETTING_GENERIC_VALUE_TRUE);
         materialLibraryManager = sharedMaterialLibraryManager;
+        boolean isFragment = projectFileBean.fileName.contains("_fragment");
+        codeContext = new CodeContext(projectFileBean.getActivityName(), isFragment);
     }
 
     public static HashMap<String, Map<String, Object>> buildExtraBlocksMap(ArrayList<HashMap<String, Object>> extraBlocksList) {
@@ -400,11 +403,7 @@ public class ActivityCodeGenerator {
         }
         sb.append(EOL);
         if (buildConfig.isFirebaseEnabled) {
-            if (isFragment) {
-                sb.append("FirebaseApp.initializeApp(getContext());");
-            } else {
-                sb.append("FirebaseApp.initializeApp(this);");
-            }
+            sb.append("FirebaseApp.initializeApp(").append(codeContext.thisContext()).append(");");
             sb.append(EOL);
         }
 
@@ -625,25 +624,23 @@ public class ActivityCodeGenerator {
         sb.append("}").append(EOL);
         String code = sb.toString();
 
+        // Most Fragment-specific replacements are handled at generation time by CodeContext
+        // in BlockCodeRegistry, ComponentCodeGenerator, etc. However, Extra Blocks (BlocksHandler
+        // and user-defined custom blocks) bypass CodeContext and use String.format() directly,
+        // so we keep a fallback safety net for patterns they may produce.
         if (isFragment) {
-            code = code.replace("getApplicationContext()", "getContext().getApplicationContext()")
-                    .replace("getBaseContext()", "getActivity().getBaseContext()")
-                    .replace("(ClipboardManager) getSystemService", "(ClipboardManager) getContext().getSystemService")
-                    .replace("(Vibrator) getSystemService", "(Vibrator) getContext().getSystemService")
-                    .replace("(SensorManager) getSystemService", "(SensorManager) getContext().getSystemService")
-                    .replace("Typeface.createFromAsset(getAssets()", "Typeface.createFromAsset(getContext().getAssets()")
-                    .replace("= getAssets().open", "= getContext().getAssets().open")
-                    .replace("getSharedPreferences", "getContext().getSharedPreferences")
-                    .replace("AlertDialog.Builder(this);", "AlertDialog.Builder(getActivity());")
-                    .replace("SpeechRecognizer.createSpeechRecognizer(this);", "SpeechRecognizer.createSpeechRecognizer(getContext());")
-                    .replace("new RequestNetwork(this);", "new RequestNetwork((Activity) getContext());")
-                    .replace("new BluetoothConnect(this);", "new BluetoothConnect((Activity) getContext());")
-                    .replace("MobileAds.getRewardedVideoAdInstance(this);", "MobileAds.getRewardedVideoAdInstance(getContext());")
-                    .replace("runOnUiThread(new", "getActivity().runOnUiThread(new")
-                    .replace(".setLayoutManager(new LinearLayoutManager(this", ".setLayoutManager(new LinearLayoutManager(getContext()")
-                    .replace("getLayoutInflater()", "getActivity().getLayoutInflater()")
-                    .replace("getSupportFragmentManager()", "getActivity().getSupportFragmentManager()");
-        } else if (buildConfig.isAppCompatEnabled) {
+            // Use negative lookbehind to avoid double-transforming CodeContext-generated code
+            // (e.g., getContext().getApplicationContext() must NOT become getContext().getContext().getApplicationContext())
+            code = code.replaceAll("(?<!\\.)getApplicationContext\\(\\)", "getContext().getApplicationContext()")
+                    .replaceAll("(?<!\\.)getBaseContext\\(\\)", "getActivity().getBaseContext()")
+                    .replaceAll("(?<!\\.)getAssets\\(\\)", "getContext().getAssets()")
+                    .replaceAll("(?<!\\.)getSupportFragmentManager\\(\\)", "getActivity().getSupportFragmentManager()")
+                    // Extra blocks (BlocksHandler) use "this" as Activity/Context reference
+                    .replace("LinearLayoutManager(this)", "LinearLayoutManager(getContext())")
+                    .replace("LinearLayoutManager(this,", "LinearLayoutManager(getContext(),")
+                    .replace("CropImage(this,", "CropImage(getActivity(),");
+        }
+        if (!isFragment && buildConfig.isAppCompatEnabled) {
             code = code.replace("getFragmentManager", "getSupportFragmentManager");
         }
 
@@ -775,7 +772,7 @@ public class ActivityCodeGenerator {
      * @see ComponentCodeGenerator#getComponentInitializerCode(String, String, String...)
      */
     private String getComponentBeanInitializer(ComponentBean componentBean) {
-        return ComponentCodeGenerator.getComponentInitializerCode(ComponentTypeMapper.getComponentTypeName(componentBean.type), componentBean.componentId, componentBean.param1, componentBean.param2, componentBean.param3);
+        return ComponentCodeGenerator.getComponentInitializerCode(codeContext, ComponentTypeMapper.getComponentTypeName(componentBean.type), componentBean.componentId, componentBean.param1, componentBean.param2, componentBean.param3);
     }
 
     private void handleAppCompat() {
@@ -917,13 +914,13 @@ public class ActivityCodeGenerator {
             String adapterLogic = new BlockInterpreter(projectFileBean.getActivityName(), buildConfig, projectDataManager.getBlocks(projectFileBean.getJavaName(), eventName), isViewBindingEnabled).interpretBlocks();
             String adapterCode;
             if (viewBean.type == ViewBeans.VIEW_TYPE_LAYOUT_VIEWPAGER) {
-                adapterCode = ComponentCodeGenerator.pagerAdapter(layoutGenerator, viewBean.id, viewBean.customView, projectDataManager.getViews(xmlName), adapterLogic, isViewBindingEnabled);
+                adapterCode = ComponentCodeGenerator.pagerAdapter(codeContext, layoutGenerator, viewBean.id, viewBean.customView, projectDataManager.getViews(xmlName), adapterLogic, isViewBindingEnabled);
             } else if (viewBean.type == ViewBeans.VIEW_TYPE_WIDGET_RECYCLERVIEW) {
-                adapterCode = ComponentCodeGenerator.recyclerViewAdapter(layoutGenerator, viewBean.id, viewBean.customView, projectDataManager.getViews(xmlName), adapterLogic, isViewBindingEnabled);
+                adapterCode = ComponentCodeGenerator.recyclerViewAdapter(codeContext, layoutGenerator, viewBean.id, viewBean.customView, projectDataManager.getViews(xmlName), adapterLogic, isViewBindingEnabled);
                 addImport("androidx.recyclerview.widget.LinearLayoutManager");
                 addImport("androidx.recyclerview.widget.RecyclerView");
             } else {
-                adapterCode = ComponentCodeGenerator.getListAdapterCode(layoutGenerator, viewBean.id, viewBean.customView, projectDataManager.getViews(xmlName), adapterLogic, isViewBindingEnabled);
+                adapterCode = ComponentCodeGenerator.getListAdapterCode(codeContext, layoutGenerator, viewBean.id, viewBean.customView, projectDataManager.getViews(xmlName), adapterLogic, isViewBindingEnabled);
             }
             adapterClasses.add(adapterCode);
         }
@@ -957,7 +954,7 @@ public class ActivityCodeGenerator {
     }
 
     private void initializeEventsCodeGenerator() {
-        eventManager = new EventCodeGenerator(buildConfig, projectFileBean, projectDataManager);
+        eventManager = new EventCodeGenerator(buildConfig, projectFileBean, projectDataManager, codeContext);
         addImports(eventManager.getImports());
     }
 

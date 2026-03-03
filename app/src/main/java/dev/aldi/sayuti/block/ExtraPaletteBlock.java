@@ -931,7 +931,7 @@ public class ExtraPaletteBlock {
                     if (calendarViewUsed) {
                         logicEditor.createPaletteBlock(" ", "calendarViewSetDate");
                         logicEditor.createPaletteBlock(" ", "calendarViewSetMinDate");
-                        logicEditor.createPaletteBlock(" ", "calnedarViewSetMaxDate");
+                        logicEditor.createPaletteBlock(" ", "calendarViewSetMaxDate");
                     }
                 }
             }

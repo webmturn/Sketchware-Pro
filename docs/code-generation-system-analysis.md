@@ -463,29 +463,19 @@ String (格式化后的最终代码)
 
 ## 8. 系统限制与问题
 
-### 8.1 巨型 switch 反模式（严重）
+### 8.1 ~~巨型 switch 反模式（严重）~~ ✅ 已解决
 
 **位置**: `BlockInterpreter.getBlockCode()` (1100+ 行 switch)、`ComponentCodeGenerator.getEventCode()` (310+ 行 switch)
 
-**问题**:
-- 每添加一个新内置 Block 都需要修改 `BlockInterpreter.java`，违反开闭原则 (OCP)
-- 每添加一个新事件类型都需要修改 `ComponentCodeGenerator.java`
-- 单个方法超过 1000 行，极难维护和 review
-- 编译器对巨型 switch 的优化有上限，方法字节码接近 64KB 限制
+**解决方案**: 引入 `BlockCodeRegistry`、`EventCodeRegistry`、`ListenerCodeRegistry` 注册表模式，将所有 switch case 迁移为独立的 handler。
 
-**影响**: 添加新功能的开发成本高、代码冲突概率大。
+~~**影响**: 添加新功能的开发成本高、代码冲突概率大。~~
 
-### 8.2 Fragment 后处理脆弱性（中等）
+### 8.2 ~~Fragment 后处理脆弱性（中等）~~ ✅ 已解决
 
-**位置**: `ActivityCodeGenerator.generateCode()` 第 628-645 行
+**位置**: `ActivityCodeGenerator.generateCode()`
 
-**问题**:
-- 使用 15 处硬编码的 `String.replace()` 将 Activity 代码转为 Fragment 代码
-- 自定义块（Extra Block）生成的代码不会被这些替换覆盖
-- 如果自定义块使用了 `getApplicationContext()` 等方法，在 Fragment 中会编译失败
-- 新增的系统服务访问方式不会自动被替换
-
-**示例**: Extra Block 生成 `startActivity(intent);` 在 Fragment 中不会被替换为 `getActivity().startActivity(intent);`
+**解决方案**: 引入 `CodeContext` 类，在代码生成时根据 `isFragment` 直接产出正确的 API 调用（如 `getContext().getApplicationContext()`），消除了 17 处 `String.replace()` 后处理。`BlockCodeRegistry` 的 ~20 个 handler 和 `ComponentCodeGenerator` 的组件初始化/适配器方法均已更新为使用 `CodeContext`。
 
 ### 8.3 无 AST / 无类型检查（严重）
 
@@ -497,16 +487,11 @@ String (格式化后的最终代码)
 
 **影响**: 用户只有在编译阶段才能发现代码生成错误，调试体验差。
 
-### 8.4 项目级 Custom Block 无缓存（性能）
+### 8.4 ~~项目级 Custom Block 无缓存（性能）~~ ✅ 已解决
 
-**位置**: `BlockLoader.getBlockFromProject()` 第 57-82 行
+**位置**: `BlockLoader.getBlockFromProject()`
 
-**问题**:
-- 每次遇到未在全局 Extra Block 中找到的 opcode，都会重新读取并解析项目的 `custom_blocks` JSON 文件
-- 如果一个项目有多个自定义块，每个块的每次调用都触发一次文件 I/O + JSON 反序列化
-- 全局 Extra Block 有 `static ArrayList` 缓存，但项目级没有
-
-**影响**: 使用大量项目级自定义块时，代码生成性能下降。
+**解决方案**: 添加 `projectBlockCache` (HashMap) 和 `cachedProjectId` 实现项目级缓存，全局块也改用 `blocksByName` HashMap 实现 O(1) 查找。提供 `invalidateProjectCache()` 方法在编辑自定义块时刷新缓存。
 
 ### 8.5 Import 管理粗放（轻微）
 
@@ -684,20 +669,9 @@ ComponentCodeGenerator (3484 行)
 - 更新库版本无需修改 Java 源码
 - 未来可支持用户自定义覆盖
 
-### 9.6 Extra Block 模板预验证（低优先级）
+### 9.6 ~~Extra Block 模板预验证（低优先级）~~ ✅ 已实现
 
-**方案**: 在加载 Extra Block 时验证 `code` 模板的占位符数量是否与 `spec` 中的参数数量匹配。
-
-```java
-// BlockLoader.loadCustomBlocks() 中增加:
-int specParamCount = countParams(info.getSpec());
-int codeParamCount = countFormatPlaceholders(info.getCode());
-if (specParamCount != codeParamCount) {
-    LogUtil.w("BlockLoader", "Block '" + info.getName() +
-        "' has mismatched params: spec=" + specParamCount +
-        ", code=" + codeParamCount);
-}
-```
+**实现**: `BlockLoader` 中添加 `validateBlock()` 方法，在 `loadCustomBlocks()`（全局）和 `loadProjectBlocks()`（项目级）加载时验证每个块的 `code` 模板占位符数量是否超过可用参数数（spec 参数 + 2 个 subStack）。不匹配时记录警告日志。
 
 ---
 
