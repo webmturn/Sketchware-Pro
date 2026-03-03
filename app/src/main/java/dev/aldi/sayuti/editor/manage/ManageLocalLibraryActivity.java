@@ -9,12 +9,17 @@ import static dev.aldi.sayuti.editor.manage.LocalLibrariesUtil.rewriteLocalLibFi
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -25,8 +30,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -102,7 +110,10 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
         // Step 2: orphan cleanup menu on SearchBar (available in both project and global view)
         binding.searchBar.inflateMenu(R.menu.menu_search_bar_local_libraries);
         binding.searchBar.setOnMenuItemClickListener(item -> {
-            if (item.getItemId() == R.id.action_clean_orphans) {
+            if (item.getItemId() == R.id.action_manage_repositories) {
+                showManageRepositoriesDialog();
+                return true;
+            } else if (item.getItemId() == R.id.action_clean_orphans) {
                 showOrphanCleanupDialog();
                 return true;
             }
@@ -677,6 +688,224 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
                 this.binding = binding;
             }
         }
+    }
+
+    // ==================== Repository Management ====================
+
+    private Runnable repoDialogRefresh;
+
+    private static final String REPOSITORIES_JSON_PATH = Environment.getExternalStorageDirectory()
+            .getAbsolutePath() + "/.sketchware/libs/repositories.json";
+
+    private static final String[] BUILTIN_REPOS = {
+            "Maven Central", "Google Maven", "Jitpack", "Sonatype Snapshots"
+    };
+
+    private ArrayList<HashMap<String, Object>> loadCustomRepos() {
+        File file = new File(REPOSITORIES_JSON_PATH);
+        if (!file.exists()) {
+            // Seed with DependencyResolver's defaults so they aren't lost
+            // if the user adds a custom repo before ever downloading a library
+            seedDefaultRepos(file);
+        }
+        if (file.exists()) {
+            try {
+                ArrayList<HashMap<String, Object>> list = new Gson().fromJson(
+                        pro.sketchware.utility.FileUtil.readFile(file.getAbsolutePath()),
+                        Helper.TYPE_MAP_LIST);
+                if (list != null) return list;
+            } catch (Exception e) {
+                Log.e("ManageLocalLibrary", "Failed to parse repositories.json", e);
+            }
+        }
+        return new ArrayList<>();
+    }
+
+    private void seedDefaultRepos(File file) {
+        ArrayList<HashMap<String, Object>> defaults = new ArrayList<>();
+        String[][] defaultEntries = {
+                {"HortanWorks", "https://repo.hortonworks.com/content/repositories/releases"},
+                {"Atlassian", "https://maven.atlassian.com/content/repositories/atlassian-public"},
+                {"JCenter", "https://jcenter.bintray.com"},
+                {"Sonatype", "https://oss.sonatype.org/content/repositories/releases"},
+                {"Spring Plugins", "https://repo.spring.io/plugins-release"},
+                {"Spring Milestone", "https://repo.spring.io/libs-milestone"},
+                {"Apache Maven", "https://repo.maven.apache.org/maven2"},
+        };
+        for (String[] entry : defaultEntries) {
+            HashMap<String, Object> repo = new HashMap<>();
+            repo.put("name", entry[0]);
+            repo.put("url", entry[1]);
+            defaults.add(repo);
+        }
+        file.getParentFile().mkdirs();
+        pro.sketchware.utility.FileUtil.writeFile(file.getAbsolutePath(), new Gson().toJson(defaults));
+    }
+
+    private void saveCustomRepos(ArrayList<HashMap<String, Object>> repos) {
+        File file = new File(REPOSITORIES_JSON_PATH);
+        file.getParentFile().mkdirs();
+        pro.sketchware.utility.FileUtil.writeFile(file.getAbsolutePath(), new Gson().toJson(repos));
+    }
+
+    private void showManageRepositoriesDialog() {
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_manage_repositories, null);
+        TextView builtinRepos = dialogView.findViewById(R.id.builtin_repos);
+        LinearLayout customReposContainer = dialogView.findViewById(R.id.custom_repos_container);
+        TextView emptyMessage = dialogView.findViewById(R.id.empty_message);
+        ImageButton btnAdd = dialogView.findViewById(R.id.btn_add_repo);
+
+        // Show built-in repos
+        StringBuilder builtinText = new StringBuilder();
+        for (String name : BUILTIN_REPOS) {
+            if (builtinText.length() > 0) builtinText.append('\n');
+            builtinText.append("• ").append(name);
+        }
+        builtinRepos.setText(builtinText);
+
+        // Wrap in ScrollView for large lists
+        ScrollView scrollView = new ScrollView(this);
+        scrollView.addView(dialogView);
+
+        androidx.appcompat.app.AlertDialog dialog = new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.dialog_repo_title)
+                .setView(scrollView)
+                .setPositiveButton(R.string.common_word_ok, null)
+                .create();
+
+        // Populate custom repos
+        Runnable refreshCustomRepos = () -> {
+            customReposContainer.removeAllViews();
+            ArrayList<HashMap<String, Object>> repos = loadCustomRepos();
+            emptyMessage.setVisibility(repos.isEmpty() ? View.VISIBLE : View.GONE);
+            for (int i = 0; i < repos.size(); i++) {
+                final int index = i;
+                HashMap<String, Object> repo = repos.get(i);
+                String name = repo.get("name") instanceof String ? (String) repo.get("name") : "";
+                String url = repo.get("url") instanceof String ? (String) repo.get("url") : "";
+
+                View itemView = LayoutInflater.from(this).inflate(R.layout.item_repository, customReposContainer, false);
+                ((TextView) itemView.findViewById(R.id.repo_name)).setText(name);
+                ((TextView) itemView.findViewById(R.id.repo_url)).setText(url);
+
+                itemView.findViewById(R.id.btn_edit).setOnClickListener(v ->
+                        showAddEditRepoDialog(name, url, index));
+                itemView.findViewById(R.id.btn_delete).setOnClickListener(v ->
+                        showDeleteRepoDialog(name, index));
+
+                customReposContainer.addView(itemView);
+            }
+        };
+        refreshCustomRepos.run();
+        repoDialogRefresh = refreshCustomRepos;
+
+        btnAdd.setOnClickListener(v -> showAddEditRepoDialog("", "", -1));
+
+        dialog.setOnDismissListener(d -> repoDialogRefresh = null);
+        dialog.show();
+    }
+
+    private void refreshRepoDialog() {
+        if (repoDialogRefresh != null) {
+            repoDialogRefresh.run();
+        }
+    }
+
+    private void showAddEditRepoDialog(String currentName, String currentUrl, int editIndex) {
+        boolean isEdit = editIndex >= 0;
+
+        // Build dialog with two TextInputLayouts
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        int padding = (int) (24 * getResources().getDisplayMetrics().density);
+        layout.setPadding(padding, (int) (16 * getResources().getDisplayMetrics().density), padding, 0);
+
+        TextInputLayout nameLayout = new TextInputLayout(this, null,
+                com.google.android.material.R.attr.textInputOutlinedStyle);
+        nameLayout.setHint(getString(R.string.dialog_repo_name_hint));
+        nameLayout.setPlaceholderText(getString(R.string.dialog_repo_name_placeholder));
+        TextInputEditText nameInput = new TextInputEditText(nameLayout.getContext());
+        nameInput.setText(currentName);
+        nameInput.setSingleLine(true);
+        nameLayout.addView(nameInput);
+
+        TextInputLayout urlLayout = new TextInputLayout(this, null,
+                com.google.android.material.R.attr.textInputOutlinedStyle);
+        urlLayout.setHint(getString(R.string.dialog_repo_url_hint));
+        urlLayout.setPlaceholderText(getString(R.string.dialog_repo_url_placeholder));
+        TextInputEditText urlInput = new TextInputEditText(urlLayout.getContext());
+        urlInput.setText(currentUrl);
+        urlInput.setSingleLine(true);
+        urlLayout.addView(urlInput);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        params.bottomMargin = (int) (8 * getResources().getDisplayMetrics().density);
+        layout.addView(nameLayout, params);
+        layout.addView(urlLayout, new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        androidx.appcompat.app.AlertDialog addEditDialog = new MaterialAlertDialogBuilder(this)
+                .setTitle(isEdit ? R.string.dialog_repo_edit_title : R.string.dialog_repo_add_title)
+                .setView(layout)
+                .setPositiveButton(R.string.common_word_save, null)
+                .setNegativeButton(R.string.common_word_cancel, null)
+                .create();
+
+        addEditDialog.show();
+
+        // Override positive button to prevent auto-dismiss on validation failure
+        addEditDialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+            nameLayout.setError(null);
+            urlLayout.setError(null);
+
+            String name = nameInput.getText() != null ? nameInput.getText().toString().trim() : "";
+            String url = urlInput.getText() != null ? urlInput.getText().toString().trim() : "";
+
+            if (name.isEmpty()) {
+                nameLayout.setError(getString(R.string.dialog_repo_error_name_required));
+                return;
+            }
+            if (url.isEmpty()) {
+                urlLayout.setError(getString(R.string.dialog_repo_error_url_required));
+                return;
+            }
+            if (!url.startsWith("http://") && !url.startsWith("https://")) {
+                urlLayout.setError(getString(R.string.dialog_repo_error_url_invalid));
+                return;
+            }
+            // Remove trailing slash
+            if (url.endsWith("/")) url = url.substring(0, url.length() - 1);
+
+            ArrayList<HashMap<String, Object>> repos = loadCustomRepos();
+            HashMap<String, Object> entry = new HashMap<>();
+            entry.put("name", name);
+            entry.put("url", url);
+
+            if (isEdit && editIndex < repos.size()) {
+                repos.set(editIndex, entry);
+            } else {
+                repos.add(entry);
+            }
+            saveCustomRepos(repos);
+            refreshRepoDialog();
+            addEditDialog.dismiss();
+        });
+    }
+
+    private void showDeleteRepoDialog(String repoName, int index) {
+        new MaterialAlertDialogBuilder(this)
+                .setMessage(String.format(getString(R.string.dialog_repo_delete_confirm), repoName))
+                .setPositiveButton(R.string.common_word_delete, (d, w) -> {
+                    ArrayList<HashMap<String, Object>> repos = loadCustomRepos();
+                    if (index < repos.size()) {
+                        repos.remove(index);
+                        saveCustomRepos(repos);
+                        refreshRepoDialog();
+                    }
+                })
+                .setNegativeButton(R.string.common_word_cancel, null)
+                .show();
     }
 
     @Override
