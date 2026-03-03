@@ -83,11 +83,11 @@ public class XmlNameValidator extends BaseValidator {
       if (conflictNames.size() > 0) {
         textInputLayout.setErrorEnabled(true);
         String errorMessage = StringResource.getInstance().getTranslatedString(context, R.string.common_message_name_unavailable);
-        value = "";
+        conflictList = "";
         for (String conflictName : conflictNames) {
-          String accumulated = value;
-          if (value.length() > 0) {
-            accumulated = value + ", ";
+          String accumulated = conflictList;
+          if (conflictList.length() > 0) {
+            accumulated = conflictList + ", ";
           } 
           conflictList = accumulated + conflictName;
         } 

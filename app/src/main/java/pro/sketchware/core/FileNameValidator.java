@@ -40,7 +40,7 @@ public class FileNameValidator extends BaseValidator {
   }
   
   public final void validate(String input) {
-    String conflictList = "";
+    String conflictList = input;
     if (conflictList.length() < 3) {
       textInputLayout.setErrorEnabled(true);
       textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(context, R.string.invalid_value_min_lenth, new Object[] { Integer.valueOf(3) }));
