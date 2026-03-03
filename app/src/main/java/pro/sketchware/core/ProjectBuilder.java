@@ -101,6 +101,8 @@ public class ProjectBuilder {
     private ArrayList<File> dexesToAddButNotMerge = new ArrayList<>();
     /** Pre-loaded cache set by the caller to avoid a redundant JSON read in {@link #compileJavaCode()}. */
     public IncrementalBuildCache preloadedBuildCache = null;
+    /** Set to false by {@link #compileJavaCode()} when incremental build detects no changes. */
+    private boolean classFilesChanged = true;
 
     /**
      * Timestamp keeping track of when compiling the project's resources started, needed for stats of how long compiling took.
@@ -229,6 +231,16 @@ public class ProjectBuilder {
 
         if (isD8Enabled()) {
             long savedTimeMillis = System.currentTimeMillis();
+            File dexOutputDir = new File(projectFilePaths.binDirectoryPath, "dex");
+            if (!classFilesChanged && dexOutputDir.exists()
+                    && dexOutputDir.listFiles() != null && dexOutputDir.listFiles().length > 0) {
+                LogUtil.d(TAG, "Skipping D8: no .class files changed (incremental). Saved ~"
+                        + (System.currentTimeMillis() - savedTimeMillis) + " ms");
+                if (progressReceiver != null) {
+                    progressReceiver.onProgress("DEX is up to date (no changes)", 17);
+                }
+                return;
+            }
             try {
                 DexCompiler.compileDexFiles(this);
                 LogUtil.d(TAG, "D8 took " + (System.currentTimeMillis() - savedTimeMillis) + " ms");
@@ -535,6 +547,7 @@ public class ProjectBuilder {
         }
 
         if (dirtyFilePaths.isEmpty()) {
+            classFilesChanged = false;
             LogUtil.d(TAG, "Incremental build: no Java files changed, skipping ECJ entirely. Saved ~"
                     + (System.currentTimeMillis() - savedTimeMillis) + " ms");
             if (progressReceiver != null) {
@@ -812,7 +825,30 @@ public class ProjectBuilder {
         LogUtil.d(TAG, "Will merge these " + dexes.size() + " DEX files to classes.dex: " + dexes);
 
         if (settings.getMinSdkVersion() < 21 || !projectFilePaths.buildConfig.isDebugBuild) {
+            // Cache: skip merge if all input DEX files are unchanged
+            String dexFingerprint = computeDexMergeFingerprint(dexes);
+            File fingerprintFile = new File(projectFilePaths.binDirectoryPath, "dex_merge_fingerprint");
+            File mergedClassesDex = new File(projectFilePaths.binDirectoryPath, "classes.dex");
+            if (mergedClassesDex.exists() && fingerprintFile.exists()) {
+                try {
+                    String cached = new String(java.nio.file.Files.readAllBytes(fingerprintFile.toPath()));
+                    if (dexFingerprint.equals(cached)) {
+                        LogUtil.d(TAG, "Skipping DEX merge: all input DEX files unchanged (cached). Saved ~"
+                                + (System.currentTimeMillis() - savedTimeMillis) + " ms");
+                        if (progressReceiver != null) {
+                            progressReceiver.onProgress("DEX merge is up to date (cached)", 18);
+                        }
+                        return;
+                    }
+                } catch (IOException ignored) {
+                }
+            }
             dexLibraries(new File(projectFilePaths.binDirectoryPath), dexes);
+            // Save fingerprint after successful merge
+            try {
+                java.nio.file.Files.write(fingerprintFile.toPath(), dexFingerprint.getBytes());
+            } catch (IOException ignored) {
+            }
             LogUtil.d(TAG, "Merging DEX files took " + (System.currentTimeMillis() - savedTimeMillis) + " ms");
         } else {
             dexesToAddButNotMerge = dexes;
@@ -897,6 +933,20 @@ public class ProjectBuilder {
      */
     public void signDebugApk() throws GeneralSecurityException, IOException, ClassNotFoundException, IllegalAccessException, InstantiationException {
         TestkeySignBridge.signWithTestkey(projectFilePaths.unsignedUnalignedApkPath, projectFilePaths.finalToInstallApkPath);
+    }
+
+    /**
+     * Computes a fingerprint of all input DEX files for merge caching.
+     * Uses path + size + lastModified to detect changes.
+     */
+    private String computeDexMergeFingerprint(List<File> dexFiles) {
+        StringBuilder sb = new StringBuilder(dexFiles.size() * 64);
+        for (File f : dexFiles) {
+            sb.append(f.getAbsolutePath()).append('|')
+              .append(f.length()).append('|')
+              .append(f.lastModified()).append('\n');
+        }
+        return sb.toString();
     }
 
     private void mergeDexes(File target, List<Dex> dexes) throws IOException {
