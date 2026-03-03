@@ -102,6 +102,7 @@ import mod.agus.jcoderz.editor.view.item.ItemTimePicker;
 import mod.agus.jcoderz.editor.view.item.ItemVideoView;
 import mod.bobur.VectorDrawableLoader;
 import mod.hey.studios.util.ProjectFile;
+import mod.jbk.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.activities.resourceseditor.components.utils.ColorsEditorManager;
 import pro.sketchware.activities.resourceseditor.components.utils.StringsEditorManager;
@@ -327,7 +328,7 @@ public class ViewPane extends RelativeLayout {
     }
 
     private View getUnknownItemView(ViewBean bean) {
-        bean.type = ViewBean.VIEW_TYPE_LAYOUT_LINEAR;
+        LogUtil.w("ViewPane", "Unknown widget type " + bean.type + " for view '" + bean.id + "'; showing as LinearLayout placeholder");
         return new ItemLinearLayout(context);
     }
 

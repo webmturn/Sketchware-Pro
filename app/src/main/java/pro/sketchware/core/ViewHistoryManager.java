@@ -8,6 +8,9 @@ import java.util.Map;
 
 public class ViewHistoryManager {
   public static ViewHistoryManager instance;
+
+  /** Maximum number of undo/redo steps retained per layout file. */
+  public static int MAX_HISTORY_STEPS = 50;
   
   public Map<String, Integer> positionMap;
   
@@ -58,7 +61,7 @@ public class ViewHistoryManager {
       initHistory(key); 
     ArrayList<HistoryViewBean> entries = historyMap.get(key);
     entries.add(historyViewBean);
-    if (entries.size() > 50) {
+    if (entries.size() > MAX_HISTORY_STEPS) {
       entries.remove(0);
     } else {
       incrementPosition(key);

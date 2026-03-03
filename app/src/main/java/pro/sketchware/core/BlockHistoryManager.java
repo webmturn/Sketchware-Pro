@@ -8,6 +8,9 @@ import java.util.Map;
 
 public class BlockHistoryManager {
   public static BlockHistoryManager instance;
+
+  /** Maximum number of undo/redo steps retained per event. */
+  public static int MAX_HISTORY_STEPS = 50;
   
   public Map<String, Integer> positionMap;
   
@@ -79,7 +82,7 @@ public class BlockHistoryManager {
       initHistory(historyKey); 
     ArrayList<HistoryBlockBean> historyEntries = historyMap.get(historyKey);
     historyEntries.add(historyBlockBean);
-    if (historyEntries.size() > 50) {
+    if (historyEntries.size() > MAX_HISTORY_STEPS) {
       historyEntries.remove(0);
     } else {
       incrementPosition(historyKey);
