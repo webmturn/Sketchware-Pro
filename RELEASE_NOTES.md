@@ -31,6 +31,15 @@
 - **Variable and list rename** — Rename variables/lists across all blocks in an activity
 - **New blocks**: `getClipboard`, `getExceptionMessage`
 
+### Build System — Incremental Java Compilation
+- **Skip ECJ entirely** when no Java files changed and R.java is stable — saves 2-10s per build
+- **Partial recompile** — only changed Activity files recompiled; unchanged `.class` files reused
+- CRC32-based hash cache (`bin/build_hashes.json`) survives across builds, reset on full clean
+- **Full recompile triggered** automatically when: R.java changes (resource IDs), classpath changes, user custom Java/Broadcast/Service files change, or ProGuard is enabled
+- **Stale `.class` cleanup** — deleted Activities have their `.class` and inner-class files removed from `bin/classes/` automatically
+- 4 files changed: `IncrementalBuildCache` (new), `ProjectFilePaths.cleanRJavaOnly()`, `ProjectBuilder.compileJavaCode()`, `DesignActivity`
+- **Fix: `computeCodeGenCacheKey()` missing system file inputs** — Custom event/listener/component definition files (`events.json`, `listeners.json`, `component.json`) now included in the code generation cache key; previously, modifying a custom event's code template wouldn't invalidate the cache
+
 ## 🐛 Bug Fixes
 
 ### Editor Performance
@@ -54,6 +63,13 @@
 
 ### Performance
 - **O(1) DEX merge estimation** — Replace O(n) method counting with header-based approach
+
+### UI Designer
+- **Fix `ViewPane.getUnknownItemView()` data corruption**
+- **`ViewHistoryManager.MAX_HISTORY_STEPS`** — Hard-coded 50 extracted to named constant; easy to adjust in one place
+
+### Logic Editor
+- **`BlockHistoryManager.MAX_HISTORY_STEPS`** — Same change for consistency; both editors now share the same configurable pattern
 
 ## ♻️ Refactoring
 
