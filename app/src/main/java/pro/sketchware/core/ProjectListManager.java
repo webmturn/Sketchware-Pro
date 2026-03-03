@@ -90,8 +90,9 @@ public class ProjectListManager {
         for (HashMap<String, Object> project : listProjects()) {
             try {
                 nextId = Math.max(nextId, Integer.parseInt(MapValueHelper.getString(project, "sc_id")) + 1);
-            } catch (NumberFormatException ignored) {
-            }
+            } catch (NumberFormatException e) {
+            android.util.Log.w("ProjectListManager", "Caught NumberFormatException", e);
+        }
         }
         return String.valueOf(nextId);
     }

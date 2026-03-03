@@ -96,8 +96,9 @@ public class LanguageOverrideManager {
                         && field.getType() == int.class) {
                     try {
                         map.put(field.getName(), field.getInt(null));
-                    } catch (IllegalAccessException ignored) {
-                    }
+                    } catch (IllegalAccessException e) {
+            android.util.Log.w("LanguageOverrideManager", "Caught IllegalAccessException", e);
+        }
                 }
             }
         } catch (Exception ignored) {

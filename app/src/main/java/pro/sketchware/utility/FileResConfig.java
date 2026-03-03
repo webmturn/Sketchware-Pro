@@ -32,7 +32,8 @@ public class FileResConfig {
 
         try {
             listFilePermission = new Gson().fromJson(FileUtil.readFile(fpu.getPathPermission(numProj)), Helper.TYPE_STRING);
-        } catch (JsonSyntaxException ignored) {
+        } catch (JsonSyntaxException e) {
+            android.util.Log.w("FileResConfig", "Failed to parse JSON config for project", e);
         }
     }
 
@@ -79,7 +80,8 @@ public class FileResConfig {
 
         try {
             listFileImport = new Gson().fromJson(readFile, Helper.TYPE_STRING);
-        } catch (JsonSyntaxException ignored) {
+        } catch (JsonSyntaxException e) {
+            android.util.Log.w("FileResConfig", "Failed to parse JSON config for project", e);
         }
 
         return listFileImport;
@@ -99,7 +101,8 @@ public class FileResConfig {
 
         try {
             listJavaManifest = new Gson().fromJson(readFile, Helper.TYPE_STRING);
-        } catch (JsonSyntaxException ignored) {
+        } catch (JsonSyntaxException e) {
+            android.util.Log.w("FileResConfig", "Failed to parse JSON config for project", e);
         }
 
         return listJavaManifest;
@@ -111,7 +114,8 @@ public class FileResConfig {
 
         try {
             listBroadcastManifest = new Gson().fromJson(readFile, Helper.TYPE_STRING);
-        } catch (JsonSyntaxException ignored) {
+        } catch (JsonSyntaxException e) {
+            android.util.Log.w("FileResConfig", "Failed to parse JSON config for project", e);
         }
 
         return listBroadcastManifest;
@@ -123,7 +127,8 @@ public class FileResConfig {
 
         try {
             listServiceManifest = new Gson().fromJson(readFile, Helper.TYPE_STRING);
-        } catch (JsonSyntaxException ignored) {
+        } catch (JsonSyntaxException e) {
+            android.util.Log.w("FileResConfig", "Failed to parse JSON config for project", e);
         }
 
         return listServiceManifest;

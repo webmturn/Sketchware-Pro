@@ -211,8 +211,9 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
         if (FileUtil.isExistFile(path)) {
             try {
                 data = getGson().fromJson(FileUtil.readFile(path), Helper.TYPE_MAP_LIST);
-            } catch (JsonSyntaxException ignored) {
-            }
+            } catch (JsonSyntaxException e) {
+            android.util.Log.w("AndroidManifestInjection", "Caught JsonSyntaxException", e);
+        }
         }
         {
             HashMap<String, Object> _item = new HashMap<>();

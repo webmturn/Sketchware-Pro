@@ -182,7 +182,8 @@ public class EventsManagerFragment extends BaseFragment {
         if (FileUtil.isExistFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath())) {
             try {
                 events = new Gson().fromJson(FileUtil.readFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath()), Helper.TYPE_MAP_LIST);
-            } catch (JsonSyntaxException ignored) {
+            } catch (JsonSyntaxException e) {
+                android.util.Log.w("EventsManagerFragment", "Failed to parse events JSON", e);
             }
         }
         events.addAll(data2);
@@ -220,7 +221,8 @@ public class EventsManagerFragment extends BaseFragment {
         if (FileUtil.isExistFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath())) {
             try {
                 events = new Gson().fromJson(FileUtil.readFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath()), Helper.TYPE_MAP_LIST);
-            } catch (JsonSyntaxException ignored) {
+            } catch (JsonSyntaxException e) {
+                android.util.Log.w("EventsManagerFragment", "Failed to parse events JSON", e);
             }
         }
         FileUtil.writeFile(new File(EventsManagerConstants.EVENT_EXPORT_LOCATION, "All_Events.txt").getAbsolutePath(),

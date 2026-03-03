@@ -100,7 +100,8 @@ public class AddCustomComponentActivity extends BaseAppCompatActivity implements
                 if (list == null || position >= list.size()) return;
                 HashMap<String, Object> map = list.get(position);
                 setupViews(map);
-            } catch (JsonSyntaxException ignored) {
+            } catch (JsonSyntaxException e) {
+                android.util.Log.w("AddCustomComponentActivity", "Failed to parse custom component JSON", e);
             }
         }
     }
@@ -165,7 +166,8 @@ public class AddCustomComponentActivity extends BaseAppCompatActivity implements
         if (FileUtil.isExistFile(path)) {
             try {
                 list = getGson().fromJson(FileUtil.readFile(path), Helper.TYPE_MAP_LIST);
-            } catch (JsonSyntaxException ignored) {
+            } catch (JsonSyntaxException e) {
+                android.util.Log.w("AddCustomComponentActivity", "Failed to parse custom component JSON", e);
             }
         }
         HashMap<String, Object> map = new HashMap<>();

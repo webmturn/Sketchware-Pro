@@ -88,7 +88,8 @@ public class ManageResourceActivity extends BaseAppCompatActivity {
                         handleFab();
                         return;
                     }
-                } catch (IndexOutOfBoundsException ignored) {
+                } catch (IndexOutOfBoundsException e) {
+                    android.util.Log.w("ManageResourceActivity", "Resource index out of bounds", e);
                 }
                 setResult(RESULT_OK);
                 finish();
