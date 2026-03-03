@@ -1263,9 +1263,12 @@ public class ComponentTemplates {
                 "import okhttp3.HttpUrl;\r\n" +
                 "import okhttp3.MediaType;\r\n" +
                 "import okhttp3.OkHttpClient;\r\n" +
+                "import okhttp3.MultipartBody;\r\n" +
                 "import okhttp3.Request;\r\n" +
                 "import okhttp3.RequestBody;\r\n" +
                 "import okhttp3.Response;\r\n" +
+                "\r\n" +
+                "import java.io.File;\r\n" +
                 "\r\n" +
                 "public class RequestNetworkController {\r\n" +
                 "public static final String GET = \"GET\";\r\n" +
@@ -1425,6 +1428,74 @@ public class ComponentTemplates {
                 "requestListener.onErrorResponse(tag, e.getMessage());\r\n" +
                 "}\r\n" +
                 "}\r\n" +
+                "\r\n" +
+                "public void uploadFile(final RequestNetwork requestNetwork, String url, String fileKey, String filePath, final String tag, final RequestNetwork.RequestListener requestListener) {\r\n" +
+                "MultipartBody.Builder multipartBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);\r\n" +
+                "\r\n" +
+                "if (requestNetwork.getParams().size() > 0) {\r\n" +
+                "HashMap<String, Object> params = requestNetwork.getParams();\r\n" +
+                "for (HashMap.Entry<String, Object> param : params.entrySet()) {\r\n" +
+                "multipartBuilder.addFormDataPart(param.getKey(), String.valueOf(param.getValue()));\r\n" +
+                "}\r\n" +
+                "}\r\n" +
+                "\r\n" +
+                "File file = new File(filePath);\r\n" +
+                "if (file.exists()) {\r\n" +
+                "String mimeType = \"application/octet-stream\";\r\n" +
+                "String name = file.getName().toLowerCase();\r\n" +
+                "if (name.endsWith(\".jpg\") || name.endsWith(\".jpeg\")) mimeType = \"image/jpeg\";\r\n" +
+                "else if (name.endsWith(\".png\")) mimeType = \"image/png\";\r\n" +
+                "else if (name.endsWith(\".gif\")) mimeType = \"image/gif\";\r\n" +
+                "else if (name.endsWith(\".webp\")) mimeType = \"image/webp\";\r\n" +
+                "else if (name.endsWith(\".mp4\")) mimeType = \"video/mp4\";\r\n" +
+                "else if (name.endsWith(\".mp3\")) mimeType = \"audio/mpeg\";\r\n" +
+                "multipartBuilder.addFormDataPart(fileKey, file.getName(), RequestBody.create(MediaType.parse(mimeType), file));\r\n" +
+                "}\r\n" +
+                "\r\n" +
+                "Request.Builder reqBuilder = new Request.Builder();\r\n" +
+                "Headers.Builder headerBuilder = new Headers.Builder();\r\n" +
+                "if (requestNetwork.getHeaders().size() > 0) {\r\n" +
+                "HashMap<String, Object> headers = requestNetwork.getHeaders();\r\n" +
+                "for (HashMap.Entry<String, Object> header : headers.entrySet()) {\r\n" +
+                "headerBuilder.add(header.getKey(), String.valueOf(header.getValue()));\r\n" +
+                "}\r\n" +
+                "}\r\n" +
+                "\r\n" +
+                "try {\r\n" +
+                "reqBuilder.url(url).headers(headerBuilder.build()).post(multipartBuilder.build());\r\n" +
+                "Request req = reqBuilder.build();\r\n" +
+                "\r\n" +
+                "getClient().newCall(req).enqueue(new Callback() {\r\n" +
+                "@Override\r\n" +
+                "public void onFailure(Call call, final IOException e) {\r\n" +
+                "requestNetwork.getActivity().runOnUiThread(new Runnable() {\r\n" +
+                "@Override\r\n" +
+                "public void run() {\r\n" +
+                "requestListener.onErrorResponse(tag, e.getMessage());\r\n" +
+                "}\r\n" +
+                "});\r\n" +
+                "}\r\n" +
+                "\r\n" +
+                "@Override\r\n" +
+                "public void onResponse(Call call, final Response response) throws IOException {\r\n" +
+                "final String responseBody = response.body().string().trim();\r\n" +
+                "requestNetwork.getActivity().runOnUiThread(new Runnable() {\r\n" +
+                "@Override\r\n" +
+                "public void run() {\r\n" +
+                "Headers b = response.headers();\r\n" +
+                "HashMap<String, Object> map = new HashMap<>();\r\n" +
+                "for (String s : b.names()) {\r\n" +
+                "map.put(s, b.get(s) != null ? b.get(s) : \"null\");\r\n" +
+                "}\r\n" +
+                "requestListener.onResponse(tag, responseBody, map);\r\n" +
+                "}\r\n" +
+                "});\r\n" +
+                "}\r\n" +
+                "});\r\n" +
+                "} catch (Exception e) {\r\n" +
+                "requestListener.onErrorResponse(tag, e.getMessage());\r\n" +
+                "}\r\n" +
+                "}\r\n" +
                 "}\r\n";
     }
 
@@ -1477,6 +1548,10 @@ public class ComponentTemplates {
                 "\r\n" +
                 "public void startRequestNetwork(String method, String url, String tag, RequestListener requestListener) {\r\n" +
                 "RequestNetworkController.getInstance().execute(this, method, url, tag, requestListener);\r\n" +
+                "}\r\n" +
+                "\r\n" +
+                "public void uploadFile(String url, String fileKey, String filePath, String tag, RequestListener requestListener) {\r\n" +
+                "RequestNetworkController.getInstance().uploadFile(this, url, fileKey, filePath, tag, requestListener);\r\n" +
                 "}\r\n" +
                 "\r\n" +
                 "public interface RequestListener {\r\n" +
