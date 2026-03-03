@@ -3283,6 +3283,14 @@ ACTION_VIEW
     <string name="menu_show_source_code">Show Source Code</string>
     <string name="menu_store">Store</string>
     <string name="menu_undo">Undo</string>
+    <string name="menu_import_xml">Import XML</string>
+    <string name="menu_import_xml_title">Import XML Layout</string>
+    <string name="menu_import_xml_layout_hint">Paste layout XML here</string>
+    <string name="menu_import_xml_dimens_hint">Paste dimens.xml here (optional)</string>
+    <string name="menu_import_xml_success">Imported %d views</string>
+    <string name="menu_import_xml_error">XML parse error: %s</string>
+    <string name="menu_import_xml_empty">No views found in XML</string>
+    <string name="menu_import_xml_id_conflict">ID conflict: \'%s\' already exists, renamed to \'%s\'</string>
     <string name="menu_variables">Variables</string>
     <string name="menu_views">Views</string>
     <string name="menu_word_wrap">Word wrap</string>

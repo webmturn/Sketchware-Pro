@@ -41,6 +41,11 @@ public class BlockLoader {
     private static String cachedProjectId;
     private static HashMap<String, ExtraBlockInfo> projectBlockCache;
 
+    // Matches %s, %d, %b, %m in spec strings
+    private static final Pattern SPEC_PARAM_PATTERN = Pattern.compile("%[sdbm]");
+    // Matches String.format placeholders: %s, %1$s, %2$s, etc.
+    private static final Pattern CODE_PLACEHOLDER_PATTERN = Pattern.compile("%(\\d+\\$)?s");
+
     static {
         loadCustomBlocks();
     }
@@ -230,11 +235,6 @@ public class BlockLoader {
         loadCustomBlocks();
         invalidateProjectCache();
     }
-
-    // Matches %s, %d, %b, %m in spec strings
-    private static final Pattern SPEC_PARAM_PATTERN = Pattern.compile("%[sdbm]");
-    // Matches String.format placeholders: %s, %1$s, %2$s, etc.
-    private static final Pattern CODE_PLACEHOLDER_PATTERN = Pattern.compile("%(\\d+\\$)?s");
 
     /**
      * Counts the number of parameters in a block spec string.

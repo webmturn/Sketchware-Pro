@@ -31,7 +31,20 @@ import com.besome.sketch.editor.view.ViewEditor;
 import com.besome.sketch.editor.view.ViewProperty;
 import com.besome.sketch.editor.view.palette.PaletteWidget;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
+import org.xmlpull.v1.XmlPullParserException;
 
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
@@ -463,10 +476,124 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
         } else if (itemId == R.id.menu_view_undo) {
             onUndo();
             return true;
+        } else if (itemId == R.id.menu_view_import_xml) {
+            showImportXmlDialog();
+            return true;
         }
         return false;
     }
 
+    private void showImportXmlDialog() {
+        if (projectFileBean == null || sc_id == null) return;
+
+        LinearLayout container = new LinearLayout(requireContext());
+        container.setOrientation(LinearLayout.VERTICAL);
+        int pad = (int) (16 * getResources().getDisplayMetrics().density);
+        container.setPadding(pad, pad, pad, 0);
+
+        TextView layoutLabel = new TextView(requireContext());
+        layoutLabel.setText("Layout XML");
+        layoutLabel.setTextSize(12);
+        container.addView(layoutLabel);
+
+        EditText layoutInput = new EditText(requireContext());
+        layoutInput.setHint(Helper.getResString(R.string.menu_import_xml_layout_hint));
+        layoutInput.setMinLines(5);
+        layoutInput.setMaxLines(12);
+        layoutInput.setGravity(android.view.Gravity.TOP);
+        layoutInput.setHorizontallyScrolling(true);
+        layoutInput.setTextSize(12);
+        container.addView(layoutInput);
+
+        TextView dimensLabel = new TextView(requireContext());
+        dimensLabel.setText("dimens.xml");
+        dimensLabel.setTextSize(12);
+        dimensLabel.setPadding(0, pad / 2, 0, 0);
+        container.addView(dimensLabel);
+
+        EditText dimensInput = new EditText(requireContext());
+        dimensInput.setHint(Helper.getResString(R.string.menu_import_xml_dimens_hint));
+        dimensInput.setMinLines(3);
+        dimensInput.setMaxLines(8);
+        dimensInput.setGravity(android.view.Gravity.TOP);
+        dimensInput.setHorizontallyScrolling(true);
+        dimensInput.setTextSize(12);
+        container.addView(dimensInput);
+
+        ScrollView scrollView = new ScrollView(requireContext());
+        scrollView.addView(container);
+
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(Helper.getResString(R.string.menu_import_xml_title))
+                .setView(scrollView)
+                .setPositiveButton(R.string.common_word_import, (dialog, which) -> {
+                    String layoutXml = layoutInput.getText().toString().trim();
+                    String dimensXml = dimensInput.getText().toString().trim();
+                    if (layoutXml.isEmpty()) return;
+                    performImport(layoutXml, dimensXml.isEmpty() ? null : dimensXml);
+                })
+                .setNegativeButton(R.string.common_word_cancel, null)
+                .show();
+    }
+
+    private void performImport(String layoutXml, String dimensXml) {
+        try {
+            XmlLayoutParser.ParseResult result = XmlLayoutParser.parse(layoutXml, dimensXml);
+            List<ViewBean> parsed = result.viewBeans;
+
+            if (parsed.isEmpty()) {
+                SketchwareUtil.toast(Helper.getResString(R.string.menu_import_xml_empty));
+                return;
+            }
+
+            String fileName = projectFileBean.getXmlName();
+            ArrayList<ViewBean> existingViews = ProjectDataManager.getProjectDataManager(sc_id).getViews(fileName);
+            Set<String> existingIds = new HashSet<>();
+            if (existingViews != null) {
+                for (ViewBean v : existingViews) {
+                    existingIds.add(v.id);
+                }
+            }
+
+            ArrayList<ViewBean> importedViews = new ArrayList<>();
+            for (ViewBean bean : parsed) {
+                if (existingIds.contains(bean.id)) {
+                    String originalId = bean.id;
+                    int suffix = 2;
+                    while (existingIds.contains(originalId + "_" + suffix)) {
+                        suffix++;
+                    }
+                    String newId = originalId + "_" + suffix;
+                    for (ViewBean other : parsed) {
+                        if (originalId.equals(other.parent)) {
+                            other.parent = newId;
+                        }
+                    }
+                    bean.id = newId;
+                    bean.name = newId;
+                }
+                existingIds.add(bean.id);
+                importedViews.add(bean);
+            }
+
+            for (ViewBean bean : importedViews) {
+                ProjectDataManager.getProjectDataManager(sc_id).addView(fileName, bean);
+            }
+
+            viewEditor.addViews(importedViews, true);
+            invalidateOptionsMenu();
+
+            String msg = String.format(Helper.getResString(R.string.menu_import_xml_success), importedViews.size());
+            if (!result.warnings.isEmpty()) {
+                msg += "\n" + result.warnings.size() + " warning(s)";
+            }
+            SketchwareUtil.toast(msg);
+
+        } catch (XmlPullParserException | IOException e) {
+            String msg = String.format(Helper.getResString(R.string.menu_import_xml_error), e.getMessage());
+            SketchwareUtil.toast(msg);
+        }
+    }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
