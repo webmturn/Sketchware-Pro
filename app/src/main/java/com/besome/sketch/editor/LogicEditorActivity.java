@@ -161,6 +161,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     private int dummyOffsetY = -30;
     private View currentTouchedView;
     private boolean isVibrationEnabled, isDragged, paletteAnimatorsInitialized, isPaletteVisible, topMenuAnimatorsInitialized, isTopMenuVisible, drawerAnimatorsInitialized, isDrawerVisible;
+    private boolean paletteBlocksInitialized = false;
     private ArrayList<BlockBean> savedBlockBean = new ArrayList<>();
     private final Runnable longPressed = this::startDragMode;
     private Boolean isViewBindingEnabled;
@@ -1512,6 +1513,10 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         if (visible) {
             toggleDrawerVisibility(false);
             objectAnimator = paletteShowAnimator;
+            if (!paletteBlocksInitialized) {
+                paletteBlocksInitialized = true;
+                paletteBlock.post(() -> onBlockSizeChanged(0, 0xffee7d16));
+            }
         } else {
             objectAnimator = paletteHideAnimator;
         }
@@ -2027,6 +2032,8 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     @Override
     public void onPostCreate(Bundle bundle) {
         super.onPostCreate(bundle);
+        showLoadingDialog();
+        blockPane.setVisibility(View.INVISIBLE);
 
         String title;
         if (eventName.equals("moreBlock")) {
@@ -2069,17 +2076,15 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         long pc4 = System.currentTimeMillis();
         android.util.Log.d("BlockLoad", "PC orient: " + (pc4 - pc3) + "ms");
 
-        onBlockSizeChanged(0, 0xffee7d16);
-        long pc5 = System.currentTimeMillis();
-        android.util.Log.d("BlockLoad", "PC palette: " + (pc5 - pc4) + "ms");
-
         LoadEventBlocksTask loadEventBlocksTask = new LoadEventBlocksTask(this);
         loadEventBlocksTask.execute();
-        long pc6 = System.currentTimeMillis();
-        android.util.Log.d("BlockLoad", "PC taskExec: " + (pc6 - pc5) + "ms");
+        long pc5 = System.currentTimeMillis();
+        android.util.Log.d("BlockLoad", "PC taskExec: " + (pc5 - pc4) + "ms");
 
         loadBlockCollections();
-        android.util.Log.d("BlockLoad", "PC z(): " + (System.currentTimeMillis() - pc6) + "ms total=" + (System.currentTimeMillis() - pc0) + "ms");
+        long pc6 = System.currentTimeMillis();
+        android.util.Log.d("BlockLoad", "PC z(): " + (pc6 - pc5) + "ms total=" + (pc6 - pc0) + "ms");
+
     }
 
     @Override
@@ -2587,7 +2592,6 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
 
         public void execute() {
-            getActivity().showLoadingDialog();
             new Thread(this::doInBackground).start();
         }
 
@@ -2595,7 +2599,10 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             LogicEditorActivity activity = getActivity();
             if (activity != null) {
                 activity.loadEventBlocks();
-                activity.runOnUiThread(activity::dismissLoadingDialog);
+                activity.runOnUiThread(() -> {
+                    activity.blockPane.setVisibility(View.VISIBLE);
+                    activity.dismissLoadingDialog();
+                });
             }
         }
 

@@ -721,7 +721,7 @@ public class BlockCodeRegistry {
 
     private static void registerMiscBlocks() {
         register("doToast", (bean, params, ctx) -> String.format("SketchwareUtil.showMessage(%s, %s);", ctx.codeContext.appContext(), params.get(0)));
-        register("copyToClipboard", (bean, params, ctx) -> String.format("%s(Context.CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText(\"clipboard\", %s));", ctx.codeContext.systemService("ClipboardManager"), params.get(0)));
+        register("copyToClipboard", (bean, params, ctx) -> String.format("(%s(Context.CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText(\"clipboard\", %s));", ctx.codeContext.systemService("ClipboardManager"), params.get(0)));
         register("setTitle", (bean, params, ctx) -> String.format("setTitle(%s);", params.get(0)));
         register("vibratorAction", (bean, params, ctx) -> String.format("%s.vibrate((long)(%s));", params.get(0), params.get(1)));
     }

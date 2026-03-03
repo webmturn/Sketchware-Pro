@@ -7,6 +7,7 @@ import static dev.aldi.sayuti.block.ExtraBlockFile.getExtraBlockData;
 import static mod.hey.studios.util.ProjectFile.getDefaultColor;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.util.Log;
 
@@ -1181,10 +1182,12 @@ public class ProjectFilePaths {
         // Export mode
         key.append(isAndroidStudioExport ? '1' : '0');
 
-        // Sketchware-Pro app version (code generation logic may change between updates)
+        // Sketchware-Pro app install time — invalidates cache whenever the APK is reinstalled,
+        // even if versionCode stays the same (e.g. debug builds with template fixes).
         try {
             Context ctx = SketchApplication.getContext();
-            key.append('|').append(ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0).versionCode);
+            PackageInfo pkgInfo = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0);
+            key.append('|').append(pkgInfo.versionCode).append('|').append(pkgInfo.lastUpdateTime);
         } catch (PackageManager.NameNotFoundException ignored) {
         }
 

@@ -573,7 +573,9 @@ public class BlockView extends BaseBlockView {
           && !ProjectTracker.SC_ID.equals("")) {
         blockInfo = BlockLoader.getBlockFromProject(
             ProjectTracker.SC_ID, opCode);
-        Log.d("BlockView", "BlockView:returned block: " + new Gson().toJson(blockInfo));
+        if (Log.isLoggable("BlockView", Log.DEBUG)) {
+          Log.d("BlockView", "BlockView:returned block: " + new Gson().toJson(blockInfo));
+        }
       }
       spec2 = blockInfo.getSpec2();
       if (spec.equals("")) {
