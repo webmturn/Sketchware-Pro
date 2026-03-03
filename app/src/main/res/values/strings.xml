@@ -1732,6 +1732,7 @@ ex)\"*/*\", \"image/*\", \"audio/*\", \"text/*\""</string>
     <string name="component_description_mediaplayer">MediaPlayer is used to play big sound files</string>
     <string name="component_description_notification">Create notification</string>
     <string name="component_description_sqlite">SQLiteDatabase for local structured data storage and queries</string>
+    <string name="component_description_async_task">AsyncTask enables background processing with UI updates on the main thread</string>
     <string name="component_description_objectanimator">ObjectAnimator is used to animate certain properties of a View</string>
     <string name="component_description_progress_dialog">Create popup dialog style progress</string>
     <string name="component_description_request_network">RequestNetwork is used to make Web API calls</string>

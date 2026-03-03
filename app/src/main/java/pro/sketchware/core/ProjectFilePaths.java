@@ -563,7 +563,7 @@ public class ProjectFilePaths {
             }
             for (ComponentBean component : projectDataManager.getComponents(activity.getJavaName())) {
                 switch (component.type) {
-                    case ComponentBean.COMPONENT_TYPE_CAMERA, 35 -> {
+                    case ComponentBean.COMPONENT_TYPE_CAMERA, ComponentBean.COMPONENT_TYPE_CAMERA_LEGACY -> {
                         buildConfig.isAppCompatEnabled = true;
                         buildConfig.isFileProviderUsed = true;
                         buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_CAMERA);

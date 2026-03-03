@@ -46,7 +46,7 @@ public class ComponentCodeGenerator {
                     " String _filePath = _file_" + componentName + ".getAbsolutePath();\r\n";
             case ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH_GOOGLE_LOGIN ->
                     "Task<GoogleSignInAccount> _task = GoogleSignIn.getSignedInAccountFromIntent(_data);\r\n";
-            case 35 -> "String _filePath = file_" + componentName + ".getAbsolutePath();\r\n";
+            case ComponentBean.COMPONENT_TYPE_CAMERA_LEGACY -> "String _filePath = file_" + componentName + ".getAbsolutePath();\r\n";
             default -> "";
         };
 
