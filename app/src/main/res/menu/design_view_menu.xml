@@ -15,5 +15,4 @@
         android:title="@string/menu_redo"
         app:showAsAction="always" />
 
-
 </menu>
