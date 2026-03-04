@@ -13,21 +13,21 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <RadioButton
+        <com.google.android.material.radiobutton.MaterialRadioButton
             android:id="@+id/rb_matchparent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/measurement_match_parent"
             android:textSize="15sp" />
 
-        <RadioButton
+        <com.google.android.material.radiobutton.MaterialRadioButton
             android:id="@+id/rb_wrapcontent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/measurement_wrap_content"
             android:textSize="15sp" />
 
-        <RadioButton
+        <com.google.android.material.radiobutton.MaterialRadioButton
             android:id="@+id/rb_directinput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

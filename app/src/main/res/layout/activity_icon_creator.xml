@@ -25,7 +25,7 @@
         android:gravity="center_horizontal|center_vertical"
         android:orientation="vertical">
 
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/app_ico_card"
             android:layout_width="80dp"
             android:layout_height="80dp"
@@ -100,7 +100,7 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
         <TextView
             android:layout_width="wrap_content"
