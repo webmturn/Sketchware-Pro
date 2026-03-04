@@ -148,6 +148,7 @@ public class ProjectsFragment extends PermissionFragment {
         UI.addWindowInsetToMargin(fab, WindowInsetsCompat.Type.navigationBars(), false, false, false, true);
 
         binding.swipeRefresh.setOnRefreshListener(this::refreshProjectsList);
+        binding.swipeRefresh.setOnChildScrollUpCallback((parent, child) -> binding.myprojects.canScrollVertically(-1));
 
         projectsAdapter = new ProjectsAdapter(this, projectsList);
         binding.myprojects.setAdapter(projectsAdapter);
