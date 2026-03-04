@@ -73,7 +73,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="10dp"
                             android:background="#ff000000"
-                            android:gravity="right"
+                            android:gravity="end"
                             android:orientation="horizontal"
                             android:padding="2dp">
 
