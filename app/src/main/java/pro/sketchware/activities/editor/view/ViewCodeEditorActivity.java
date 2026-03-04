@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ScrollView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -56,7 +57,7 @@ public class ViewCodeEditorActivity extends BaseAppCompatActivity {
     private static final int MENU_UNDO = 0, MENU_REDO = 1, MENU_SAVE = 2,
             MENU_EDIT_APPCOMPAT = 3, MENU_RELOAD_COLORS = 4, MENU_LAYOUT_PREVIEW = 5,
             MENU_FIND_REPLACE = 6, MENU_WORD_WRAP = 7, MENU_FONT_SIZE = 8,
-            MENU_LINE_NUMBERS = 9, MENU_STICKY_SCROLL = 10;
+            MENU_LINE_NUMBERS = 9, MENU_STICKY_SCROLL = 10, MENU_IMPORT_XML = 11;
 
     private final OnBackPressedCallback onBackPressedCallback =
             new OnBackPressedCallback(true) {
@@ -165,6 +166,7 @@ public class ViewCodeEditorActivity extends BaseAppCompatActivity {
                 .setCheckable(true).setChecked(editorPrefs.getLineNumbers());
         menu.add(Menu.NONE, MENU_STICKY_SCROLL, Menu.NONE, Helper.getResString(R.string.code_editor_menu_sticky_scroll))
                 .setCheckable(true).setChecked(editorPrefs.getStickyScroll());
+        menu.add(Menu.NONE, MENU_IMPORT_XML, Menu.NONE, Helper.getResString(R.string.menu_import_xml));
         return true;
     }
 
@@ -222,6 +224,10 @@ public class ViewCodeEditorActivity extends BaseAppCompatActivity {
                 editor.getProps().stickyScroll = item.isChecked();
                 editor.invalidate();
                 editorPrefs.setStickyScroll(item.isChecked());
+                return true;
+            }
+            case MENU_IMPORT_XML -> {
+                showImportXmlDialog();
                 return true;
             }
             default -> {
@@ -292,6 +298,35 @@ public class ViewCodeEditorActivity extends BaseAppCompatActivity {
 
     private boolean isContentModified() {
         return !content.equals(editor.getText().toString());
+    }
+
+    private void showImportXmlDialog() {
+        ScrollView scrollView = new ScrollView(this);
+        android.widget.EditText input = new android.widget.EditText(this);
+        input.setHint(Helper.getResString(R.string.menu_import_xml_layout_hint));
+        input.setMinLines(8);
+        input.setMaxLines(16);
+        input.setGravity(android.view.Gravity.TOP);
+        input.setHorizontallyScrolling(true);
+        input.setTextSize(12);
+        int pad = (int) (16 * getResources().getDisplayMetrics().density);
+        scrollView.setPadding(pad, pad, pad, 0);
+        scrollView.addView(input);
+
+        new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+                .setTitle(Helper.getResString(R.string.menu_import_xml_title))
+                .setView(scrollView)
+                .setPositiveButton(R.string.common_word_import, (dialog, which) -> {
+                    String xml = input.getText().toString().trim();
+                    if (!xml.isEmpty()) {
+                        editor.getText().insert(
+                                editor.getCursor().getLeftLine(),
+                                editor.getCursor().getLeftColumn(),
+                                xml);
+                    }
+                })
+                .setNegativeButton(R.string.common_word_cancel, null)
+                .show();
     }
 
     @Override

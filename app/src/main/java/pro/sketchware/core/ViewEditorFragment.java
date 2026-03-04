@@ -476,9 +476,6 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
         } else if (itemId == R.id.menu_view_undo) {
             onUndo();
             return true;
-        } else if (itemId == R.id.menu_view_import_xml) {
-            showImportXmlDialog();
-            return true;
         }
         return false;
     }
