@@ -13,7 +13,7 @@
         android:layout_marginTop="8dp"
         app:cardBackgroundColor="?attr/colorSurfaceContainer">
 
-        <CheckBox
+        <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/checkbox_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

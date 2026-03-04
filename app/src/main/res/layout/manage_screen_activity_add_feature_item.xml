@@ -21,7 +21,7 @@
         android:layout_weight="1"
         tools:text="ToolBar" />
 
-    <CheckBox
+    <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/checkbox"
         android:minWidth="0dp"
         android:minHeight="0dp"
