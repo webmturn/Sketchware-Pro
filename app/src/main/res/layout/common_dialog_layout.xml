@@ -7,8 +7,8 @@
     android:background="#66000000"
     android:clipChildren="false"
     android:clipToPadding="false"
-    android:paddingLeft="24dp"
-    android:paddingRight="24dp">
+    android:paddingStart="24dp"
+    android:paddingEnd="24dp">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -49,7 +49,7 @@
                         android:id="@+id/common_dialog_icon"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:layout_marginRight="8dp"
+                        android:layout_marginEnd="8dp"
                         app:tint="?colorSecondary"
                         tools:src="@drawable/ic_mtrl_tune" />
 
@@ -96,7 +96,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center|right"
+                        android:gravity="center|end"
                         android:orientation="horizontal">
 
                         <TextView
