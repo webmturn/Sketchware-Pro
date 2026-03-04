@@ -506,6 +506,10 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
                 svgUtils.initImageLoader();
             }
 
+            // Clear previous load to prevent stale images when views are recycled
+            Glide.with(requireActivity()).clear(holder.binding.img);
+            holder.binding.img.setImageDrawable(null);
+
             if (image.resFullName.endsWith(".svg")) {
                 svgUtils.loadImage(holder.binding.img, image.isNew ? image.resFullName : String.join(File.separator, projectImagesDirectory, image.resFullName));
             } else if (image.resFullName.endsWith(".xml")) {
