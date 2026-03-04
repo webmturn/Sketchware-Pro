@@ -50,7 +50,7 @@
                             android:id="@+id/sign_apk_title"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="8dp"
+                            android:layout_marginStart="8dp"
                             android:text="@string/myprojects_export_project_button_sign_apk"
                             android:textAppearance="?attr/textAppearanceBodyMedium"
                             android:textSize="16sp"
@@ -91,7 +91,7 @@
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="8dp"
+                                    android:layout_marginStart="8dp"
                                     android:text="@string/myprojects_export_project_title_local_path"
                                     android:textSize="14sp"
                                     android:textStyle="bold" />
@@ -161,7 +161,7 @@
                             android:id="@+id/export_source_title"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="8dp"
+                            android:layout_marginStart="8dp"
                             android:text="@string/myprojects_export_project_title_export_src"
                             android:textAppearance="?attr/textAppearanceBodyMedium"
                             android:textSize="16sp"
@@ -202,7 +202,7 @@
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="8dp"
+                                    android:layout_marginStart="8dp"
                                     android:text="@string/myprojects_export_project_title_local_path"
                                     android:textSize="14sp"
                                     android:textStyle="bold" />
@@ -234,7 +234,7 @@
                                 style="@style/Widget.Material3Expressive.Button"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_gravity="right"
+                                android:layout_gravity="end"
                                 android:layout_marginTop="14dp"
                                 android:text="@string/myprojects_export_project_button_send_src_zip"
                                 android:textSize="12sp" />
@@ -282,7 +282,7 @@
                             android:id="@+id/export_aab_title"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="8dp"
+                            android:layout_marginStart="8dp"
                             android:text="@string/export_aab_title"
                             android:textAppearance="?attr/textAppearanceBodyMedium"
                             android:textSize="16sp"
