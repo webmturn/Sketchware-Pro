@@ -17,7 +17,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
@@ -153,7 +153,7 @@ public class BuildSettingsBottomSheet extends BottomSheetDialogFragment {
         }
     }
 
-    private void setCheckboxValue(CheckBox checkBox, String key, boolean defaultValue) {
+    private void setCheckboxValue(CompoundButton checkBox, String key, boolean defaultValue) {
         String value = projectSettings.getValue(key, defaultValue ? "true" : "false");
         checkBox.setChecked(value.equals("true"));
 
