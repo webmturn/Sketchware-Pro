@@ -480,7 +480,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
         return false;
     }
 
-    private void showImportXmlDialog() {
+    public void showImportXmlDialog() {
         if (projectFileBean == null || sc_id == null) return;
 
         LinearLayout container = new LinearLayout(requireContext());
