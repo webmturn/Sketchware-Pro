@@ -1090,10 +1090,12 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         private final MaterialButton btnOptions;
         private final LinearLayout progressContainer;
         private final TextView progressText;
+        private final TextView stepInfoText;
         private final LinearProgressIndicator progressBar;
         public volatile boolean canceled;
         private volatile boolean isBuildFinished;
         private boolean isShowingNotification = false;
+        private long buildStartTime;
 
         public BuildTask(DesignActivity activity) {
             super(activity);
@@ -1102,6 +1104,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             btnOptions = activity.btnOptions;
             progressContainer = activity.findViewById(R.id.progress_container);
             progressText = activity.findViewById(R.id.progress_text);
+            stepInfoText = activity.findViewById(R.id.progress_step_info);
             progressBar = activity.findViewById(R.id.progress);
         }
 
@@ -1115,6 +1118,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             if (activity == null) return;
 
             activity.runOnUiThread(() -> {
+                buildStartTime = System.currentTimeMillis();
                 updateRunButton(true);
                 activity.prefP1.put("P1I10", true);
                 activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -1301,6 +1305,15 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 progressText.setText(progress);
                 var progressInt = (step * 100) / totalSteps;
                 progressBar.setProgress(progressInt, true);
+
+                long elapsed = (System.currentTimeMillis() - buildStartTime) / 1000;
+                String elapsedStr = String.format("%d:%02d", elapsed / 60, elapsed % 60);
+                if (step >= 1) {
+                    stepInfoText.setText(step + "/" + totalSteps + " · " + elapsedStr);
+                } else {
+                    stepInfoText.setText(elapsedStr);
+                }
+
                 Log.d("DesignActivity$BuildTask", step + " / " + totalSteps);
             });
         }
