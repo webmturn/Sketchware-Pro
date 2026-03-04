@@ -632,7 +632,7 @@ public class ComponentCodeGenerator {
                         + "}\r\n}";
 
             case "LocationManager":
-                return componentName + " = " + codeCtx.systemService("LocationManager") + "(Context.LOCATION_SERVICE)";
+                return componentName + " = " + codeCtx.systemService("LocationManager") + "(Context.LOCATION_SERVICE);";
 
             case "TimePickerDialog":
                 return componentName + " = new TimePickerDialog(" + codeCtx.thisActivity() + ", " + componentName + "_listener, Calendar.HOUR_OF_DAY, Calendar.MINUTE, false);";
@@ -646,11 +646,11 @@ public class ComponentCodeGenerator {
                         + "if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {\r\n"
                         + "_uri_" + componentName + " = FileProvider.getUriForFile(" + codeCtx.appContext() + ", " +
                         codeCtx.appContext() + ".getPackageName() + \".provider\", file_" + componentName + ");\r\n"
-                        + "}\r\n"
-                        + "else {\r\n"
+                        + "} else {\r\n"
                         + "_uri_" + componentName + " = Uri.fromFile(file_" + componentName + ");\r\n"
+                        + "}\r\n"
                         + componentName + ".putExtra(MediaStore.EXTRA_OUTPUT, _uri_" + componentName + ");\r\n"
-                        + componentName + ".addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);";
+                        + componentName + ".addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)";
 
             case "DatePickerDialog":
                 return componentName + " = new DatePickerDialog(" + codeCtx.thisActivity() + ");";

@@ -42,6 +42,7 @@ public class BlockCodeRegistry {
         registerTimerBlocks();
         registerFirebaseBlocks();
         registerFirebaseAuthBlocks();
+        registerGyroscopeBlocks();
         registerDialogBlocks();
         registerMediaBlocks();
         registerSeekBarBlocks();
@@ -504,6 +505,9 @@ public class BlockCodeRegistry {
             return "";
         });
         register("firebaseauthSignOutUser", (bean, params, ctx) -> "FirebaseAuth.getInstance().signOut();");
+    }
+
+    private static void registerGyroscopeBlocks() {
         register("gyroscopeStartListen", (bean, params, ctx) -> String.format("%s.registerListener(_%s_sensor_listener, %s.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR), SensorManager.SENSOR_DELAY_NORMAL);", params.get(0), params.get(0), params.get(0)));
         register("gyroscopeStopListen", (bean, params, ctx) -> String.format("%s.unregisterListener(_%s_sensor_listener);", params.get(0), params.get(0)));
     }
@@ -524,6 +528,7 @@ public class BlockCodeRegistry {
             String onClick = (bean.subStack1 >= 0) ? ctx.resolveBlock(String.valueOf(bean.subStack1), "") : "";
             return String.format("%s.setNeutralButton(%s, new DialogInterface.OnClickListener() {\n@Override\npublic void onClick(DialogInterface _dialog, int _which) {\n%s\n}\n});", params.get(0), params.get(1), onClick);
         });
+        register("dialogDismiss", (bean, params, ctx) -> String.format("%s.dismiss();", params.get(0)));
     }
 
     private static void registerMediaBlocks() {

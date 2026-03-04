@@ -64,9 +64,9 @@ public class LayoutGenerator {
         int alpha = (color >> 24) & 0xff;
 
         if (alpha != 0xff) {
-            return String.format("#%06X", color);
-        } else {
             return String.format("#%08X", color);
+        } else {
+            return String.format("#%06X", color & 0xFFFFFF);
         }
     }
 

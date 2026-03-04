@@ -373,7 +373,7 @@ public class FileUtil {
         if (directoryFiles != null) {
             for (File file : directoryFiles) {
                 if (file.isFile()) {
-                    if (optionalFilenameExtension != null && file.getName().endsWith(optionalFilenameExtension)) {
+                    if (optionalFilenameExtension == null || file.getName().endsWith(optionalFilenameExtension)) {
                         files.add(file);
                     }
                 } else {

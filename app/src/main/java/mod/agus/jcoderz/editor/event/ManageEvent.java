@@ -879,7 +879,7 @@ public class ManageEvent {
             case "onTimeChanged" -> "%d.hour %d.minute";
             case "onScrollChanged" -> "%d.scrollState";
             case "onBannerAdFailedToLoad", "onRewardAdFailedToLoad", "onInterstitialAdFailedToLoad",
-                 "onAdFailedToShowFullScreenContent" -> "%d.errorCode %d.errorMessage";
+                 "onAdFailedToShowFullScreenContent" -> "%d.errorCode %s.errorMessage";
             case "onSQLiteError" -> "%s.errorMessage";
             default -> EventsHandler.getBlocks(eventName);
         };

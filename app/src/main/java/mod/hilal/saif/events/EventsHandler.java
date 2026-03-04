@@ -474,20 +474,24 @@ public class EventsHandler {
             default -> {
                 for (int i = 0, cachedCustomListenersSize = cachedCustomListeners.size(); i < cachedCustomListenersSize; i++) {
                     HashMap<String, Object> customListener = cachedCustomListeners.get(i);
-                    Object eventName = customListener.get("name");
+                    if (customListener != null) {
+                        Object eventName = customListener.get("name");
 
-                    if (eventName instanceof String) {
-                        if (name.equals(eventName)) {
-                            Object code = customListener.get("code");
+                        if (eventName instanceof String) {
+                            if (name.equals(eventName)) {
+                                Object code = customListener.get("code");
 
-                            if (code instanceof String) {
-                                yield String.format(((String) code).replace("###", var), param);
-                            } else {
-                                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_invalid_code), i + 1));
+                                if (code instanceof String) {
+                                    yield String.format(((String) code).replace("###", var), param);
+                                } else {
+                                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_invalid_code), i + 1));
+                                }
                             }
+                        } else {
+                            SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_invalid_name), i + 1));
                         }
                     } else {
-                        SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_invalid_name), i + 1));
+                        SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_null), i));
                     }
                 }
 
@@ -499,22 +503,26 @@ public class EventsHandler {
     public static void getImports(ArrayList<String> list, String name) {
         for (int i = 0, cachedCustomListenersSize = cachedCustomListeners.size(); i < cachedCustomListenersSize; i++) {
             HashMap<String, Object> customEvent = cachedCustomListeners.get(i);
-            Object eventName = customEvent.get("name");
+            if (customEvent != null) {
+                Object eventName = customEvent.get("name");
 
-            if (eventName instanceof String) {
-                if (name.equals(eventName)) {
-                    Object imports = customEvent.get("imports");
+                if (eventName instanceof String) {
+                    if (name.equals(eventName)) {
+                        Object imports = customEvent.get("imports");
 
-                    if (imports instanceof String) {
-                        if (!imports.equals("")) {
-                            list.addAll(new ArrayList<>(Arrays.asList(((String) imports).split("\n"))));
+                        if (imports instanceof String) {
+                            if (!imports.equals("")) {
+                                list.addAll(new ArrayList<>(Arrays.asList(((String) imports).split("\n"))));
+                            }
+                        } else {
+                            SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_invalid_import), i + 1));
                         }
-                    } else {
-                        SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_invalid_import), i + 1));
                     }
+                } else {
+                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_invalid_name), i + 1));
                 }
             } else {
-                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_invalid_name), i + 1));
+                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_null), i));
             }
         }
     }

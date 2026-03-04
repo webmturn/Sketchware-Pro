@@ -151,11 +151,11 @@ public class GradleFileGenerator {
         }
 
         if (isLibraryNotExcluded(BuiltInLibraries.PLAY_SERVICES_AUTH, excludedLibraries) && extraMetadata.isFBGoogleUsed) {
-            content.append("implementation 'com.google.android.gms:play-services-auth:19.0.0'");
+            content.append("implementation 'com.google.android.gms:play-services-auth:19.0.0'\r\n");
         }
 
         if (isLibraryNotExcluded(BuiltInLibraries.FIREBASE_MESSAGING, excludedLibraries) && extraMetadata.isFCMUsed) {
-            content.append("implementation 'com.google.firebase:firebase-messaging'");
+            content.append("implementation 'com.google.firebase:firebase-messaging'\r\n");
         }
 
         String sc_id = metadata.sc_id;
