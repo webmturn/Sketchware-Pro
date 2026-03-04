@@ -57,9 +57,9 @@
         android:layout_gravity="center|bottom"
         android:layout_margin="16dp"
         android:text="@string/about_joindiscord"
-        android:textColor="#FFF"
+        android:textColor="@android:color/white"
         app:backgroundTint="#5865F2"
         app:icon="@drawable/ic_discord"
-        app:iconTint="#FFF" />
+        app:iconTint="@android:color/white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
