@@ -382,6 +382,10 @@ public class ManageResourceActivity extends BaseAppCompatActivity {
             binding.more.setVisibility(FileUtil.isDirectory(path) ? View.GONE : View.VISIBLE);
             binding.title.setText(Uri.parse(path).getLastPathSegment());
 
+            // Clear previous load to prevent stale images when views are recycled
+            Glide.with(ManageResourceActivity.this).clear(binding.icon);
+            binding.icon.setImageDrawable(null);
+
             if (FileUtil.isDirectory(path)) {
                 binding.icon.setImageResource(R.drawable.ic_mtrl_folder);
             } else {

@@ -7,6 +7,7 @@ import android.widget.ImageView
 import androidx.core.graphics.drawable.toBitmap
 import coil.ImageLoader
 import coil.decode.SvgDecoder
+import coil.dispose
 import coil.load
 import coil.request.ImageRequest
 import org.xmlpull.v1.XmlPullParser
@@ -24,6 +25,13 @@ const val SIZE_MULTIPLIER = 2
 
 class SvgUtils(private val context: Context) {
     private var imageLoader: ImageLoader? = null
+
+    companion object {
+        @JvmStatic
+        fun cancelLoad(imageView: ImageView) {
+            imageView.dispose()
+        }
+    }
 
     init {
         initImageLoader()

@@ -291,6 +291,10 @@ public class ManageAssetsActivity extends BaseAppCompatActivity {
                 holder.binding.more.performClick();
                 return false;
             });
+            // Clear previous load to prevent stale images when views are recycled
+            Glide.with(holder.binding.icon.getContext()).clear(holder.binding.icon);
+            holder.binding.icon.setImageDrawable(null);
+
             if (isFolder(position)) {
                 holder.binding.icon.setImageResource(R.drawable.ic_mtrl_folder);
             } else {

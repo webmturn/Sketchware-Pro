@@ -508,6 +508,7 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
 
             // Clear previous load to prevent stale images when views are recycled
             Glide.with(requireActivity()).clear(holder.binding.img);
+            SvgUtils.cancelLoad(holder.binding.img);
             holder.binding.img.setImageDrawable(null);
 
             if (image.resFullName.endsWith(".svg")) {
