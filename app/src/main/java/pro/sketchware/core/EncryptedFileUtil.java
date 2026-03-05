@@ -138,7 +138,7 @@ public class EncryptedFileUtil {
     deleteRecursive(new File(value), flag);
   }
   
-  public void writeBytes(String value, byte[] data) {
+  public boolean writeBytes(String value, byte[] data) {
     int separatorIdx = value.lastIndexOf(File.separator);
     if (separatorIdx > 0)
       mkdirs(value.substring(0, separatorIdx)); 
@@ -150,7 +150,7 @@ public class EncryptedFileUtil {
     } catch (IOException e) {
       Log.w("EncryptedFileUtil", "Failed to write bytes", e);
       tmpFile.delete();
-      return;
+      return false;
     }
     if (!tmpFile.renameTo(file)) {
       // renameTo can fail across filesystems; fall back to delete+rename
@@ -158,8 +158,10 @@ public class EncryptedFileUtil {
       if (!tmpFile.renameTo(file)) {
         Log.e("EncryptedFileUtil", "Atomic rename failed for: " + value);
         tmpFile.delete();
+        return false;
       }
     }
+    return true;
   }
   
   public String readAssetFile(Context context, String value) {
@@ -185,7 +187,7 @@ public class EncryptedFileUtil {
     deleteRecursiveByPath(value, true);
   }
   
-  public void writeText(String key, String value) {
+  public boolean writeText(String key, String value) {
     int separatorIdx = key.lastIndexOf(File.separator);
     if (separatorIdx > 0)
       mkdirs(key.substring(0, separatorIdx)); 
@@ -199,15 +201,17 @@ public class EncryptedFileUtil {
     } catch (IOException e) {
       Log.w("EncryptedFileUtil", "Failed to write text", e);
       tmpFile.delete();
-      return;
+      return false;
     }
     if (!tmpFile.renameTo(file)) {
       file.delete();
       if (!tmpFile.renameTo(file)) {
         Log.e("EncryptedFileUtil", "Atomic rename failed for: " + key);
         tmpFile.delete();
+        return false;
       }
     }
+    return true;
   }
   
   public byte[] decrypt(byte[] data) throws Exception {

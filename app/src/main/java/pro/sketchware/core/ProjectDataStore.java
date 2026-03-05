@@ -1134,16 +1134,20 @@ public class ProjectDataStore {
     return listMap.containsKey(fileName) ? listMap.get(fileName) : new ArrayList<>();
   }
   
-  public void saveAllData() {
+  public boolean saveAllData() {
     String basePath = SketchwarePaths.getDataPath(projectId);
     ExecutorService pool = Executors.newFixedThreadPool(2);
-    CompletableFuture<Void> viewFuture = CompletableFuture.runAsync(
+    CompletableFuture<Boolean> viewFuture = CompletableFuture.supplyAsync(
         () -> saveViewFile(basePath + File.separator + "view"), pool);
-    CompletableFuture<Void> logicFuture = CompletableFuture.runAsync(
+    CompletableFuture<Boolean> logicFuture = CompletableFuture.supplyAsync(
         () -> saveLogicFile(basePath + File.separator + "logic"), pool);
-    CompletableFuture.allOf(viewFuture, logicFuture).join();
+    boolean viewOk = viewFuture.join();
+    boolean logicOk = logicFuture.join();
     pool.shutdown();
-    deleteBackupFiles();
+    if (viewOk && logicOk) {
+      deleteBackupFiles();
+    }
+    return viewOk && logicOk;
   }
   
   @SuppressWarnings("unchecked")
@@ -1166,15 +1170,17 @@ public class ProjectDataStore {
     return variableMap.containsKey(fileName) ? variableMap.get(fileName) : new ArrayList<>();
   }
   
-  public void saveAllBackup() {
+  public boolean saveAllBackup() {
     String basePath = SketchwarePaths.getBackupPath(projectId);
     ExecutorService pool = Executors.newFixedThreadPool(2);
-    CompletableFuture<Void> viewFuture = CompletableFuture.runAsync(
+    CompletableFuture<Boolean> viewFuture = CompletableFuture.supplyAsync(
         () -> saveViewFile(basePath + File.separator + "view"), pool);
-    CompletableFuture<Void> logicFuture = CompletableFuture.runAsync(
+    CompletableFuture<Boolean> logicFuture = CompletableFuture.supplyAsync(
         () -> saveLogicFile(basePath + File.separator + "logic"), pool);
-    CompletableFuture.allOf(viewFuture, logicFuture).join();
+    boolean viewOk = viewFuture.join();
+    boolean logicOk = logicFuture.join();
     pool.shutdown();
+    return viewOk && logicOk;
   }
   
   public void removeBlockEntry(String fileName, String data) {
@@ -1200,13 +1206,14 @@ public class ProjectDataStore {
     events.removeIf(event -> event.eventType == 4 && event.targetId.equals(data));
   }
   
-  public final void saveLogicFile(String filePath) {
+  public final boolean saveLogicFile(String filePath) {
     StringBuilder contentBuffer = new StringBuilder();
     serializeLogicData(contentBuffer);
     try {
-      fileUtil.writeBytes(filePath, fileUtil.encryptString(contentBuffer.toString()));
+      return fileUtil.writeBytes(filePath, fileUtil.encryptString(contentBuffer.toString()));
     } catch (Exception e) {
       Log.e("ProjectDataStore", "Failed to save logic file", e);
+      return false;
     } 
   }
   
@@ -1228,13 +1235,14 @@ public class ProjectDataStore {
     }
   }
   
-  public final void saveViewFile(String filePath) {
+  public final boolean saveViewFile(String filePath) {
     StringBuilder contentBuffer = new StringBuilder();
     serializeViewData(contentBuffer);
     try {
-      fileUtil.writeBytes(filePath, fileUtil.encryptString(contentBuffer.toString()));
+      return fileUtil.writeBytes(filePath, fileUtil.encryptString(contentBuffer.toString()));
     } catch (Exception e) {
       Log.e("ProjectDataStore", "Failed to save view file", e);
+      return false;
     } 
   }
   
