@@ -1989,6 +1989,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         toolbar.setSubtitle(eventText);
         paletteSelector = findViewById(R.id.palette_selector);
         paletteSelector.setOnBlockCategorySelectListener(this);
+        paletteSelector.post(() -> paletteBlocksInitialized = true);
         paletteBlock = findViewById(R.id.palette_block);
         dummy = findViewById(R.id.dummy);
         viewLogicEditor = findViewById(R.id.editor);
