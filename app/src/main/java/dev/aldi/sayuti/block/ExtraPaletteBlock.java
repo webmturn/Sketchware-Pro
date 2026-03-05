@@ -38,6 +38,24 @@ import pro.sketchware.utility.FileResConfig;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.SketchwareUtil;
 
+/**
+ * Populates the logic editor's palette with blocks for each category.
+ * <p>
+ * When the user selects a palette category (e.g. "Variables", "Control", a component
+ * category, or "More Blocks"), this class fills the palette panel with the appropriate
+ * draggable block templates. It handles:
+ * <ul>
+ *   <li>Built-in variable/list/map blocks</li>
+ *   <li>Component-specific blocks (per component type)</li>
+ *   <li>View-specific blocks (per view type in the current layout)</li>
+ *   <li>Custom view blocks (for RecyclerView/ListView/etc. custom views)</li>
+ *   <li>MoreBlock definitions (user-created functions)</li>
+ *   <li>Extra blocks loaded from {@code .sketchware/resources/block/} JSON files</li>
+ * </ul>
+ *
+ * @see LogicEditorActivity
+ * @see ExtraBlocks
+ */
 public class ExtraPaletteBlock {
 
     private final String eventName;
@@ -55,6 +73,12 @@ public class ExtraPaletteBlock {
     public LogicEditorActivity logicEditor;
     private ArrayList<HashMap<String, Object>> cachedStringsListMap;
 
+    /**
+     * Creates an ExtraPaletteBlock bound to the given logic editor.
+     *
+     * @param logicEditorActivity the logic editor activity instance
+     * @param isViewBindingEnabled whether ViewBinding is enabled for this project
+     */
     public ExtraPaletteBlock(LogicEditorActivity logicEditorActivity, Boolean isViewBindingEnabled) {
         logicEditor = logicEditorActivity;
         eventName = logicEditorActivity.eventName;

@@ -83,6 +83,29 @@ import proguard.ConfigurationParser;
 import proguard.ParseException;
 import proguard.ProGuard;
 
+/**
+ * Orchestrates the entire build pipeline for a Sketchware user project:
+ * resource compilation (AAPT2), Java compilation (ECJ), Kotlin compilation,
+ * DEX generation (D8/Dx), DEX merging, ProGuard/R8 shrinking, StringFog
+ * obfuscation, APK assembly, zipalign, and signing.
+ * <p>
+ * The typical build sequence called from the UI is:
+ * <ol>
+ *   <li>{@link #maybeExtractAapt2()} — extract AAPT2 binary from assets</li>
+ *   <li>{@link #buildBuiltInLibraryInformation()} — resolve which built-in libraries are needed</li>
+ *   <li>{@link #compileResources()} — AAPT2 compile + link</li>
+ *   <li>{@link #generateViewBinding()} — generate ViewBinding Java sources (optional)</li>
+ *   <li>{@link #compileJavaCode()} — ECJ incremental compilation</li>
+ *   <li>{@link #createDexFilesFromClasses()} — D8/Dx conversion</li>
+ *   <li>{@link #getDexFilesReady()} — merge library DEX files</li>
+ *   <li>{@link #buildApk()} — assemble unsigned APK</li>
+ *   <li>{@link #runZipalign(String, String)} — align the APK</li>
+ *   <li>{@link #signDebugApk()} — sign with testkey</li>
+ * </ol>
+ *
+ * @see BuildProgressReceiver
+ * @see ProjectFilePaths
+ */
 public class ProjectBuilder {
     public static final String TAG = "AppBuilder";
 
@@ -109,6 +132,14 @@ public class ProjectBuilder {
      */
     private long timestampResourceCompilationStarted;
 
+    /**
+     * Creates a new project builder for the given project.
+     * Initializes build settings, local library manager, ProGuard handler,
+     * project settings, and AAPT2 binary path.
+     *
+     * @param context the Android context
+     * @param yqVar   the project file paths configuration
+     */
     public ProjectBuilder(Context context, ProjectFilePaths yqVar) {
         /* Detect some bad behaviour of the app */
         StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
@@ -145,6 +176,13 @@ public class ProjectBuilder {
         settings = new ProjectSettings(yqVar.sc_id);
     }
 
+    /**
+     * Creates a new project builder with a progress receiver for UI updates.
+     *
+     * @param buildAsyncTask the progress receiver to report build steps to
+     * @param context        the Android context
+     * @param yqVar          the project file paths configuration
+     */
     public ProjectBuilder(BuildProgressReceiver buildAsyncTask, Context context, ProjectFilePaths yqVar) {
         this(context, yqVar);
         progressReceiver = buildAsyncTask;
@@ -192,6 +230,13 @@ public class ProjectBuilder {
         LogUtil.d(TAG, "Compiling resources took " + (System.currentTimeMillis() - timestampResourceCompilationStarted) + " ms");
     }
 
+    /**
+     * Generates ViewBinding Java source files for all layout XML files.
+     * Does nothing if ViewBinding is not enabled in project settings.
+     *
+     * @throws IOException  if reading layout files fails
+     * @throws SAXException if parsing layout XML fails
+     */
     public void generateViewBinding() throws IOException, SAXException {
         if (settings.getValue(ProjectSettings.SETTING_ENABLE_VIEWBINDING, ProjectSettings.SETTING_GENERIC_VALUE_FALSE)
                 .equals(ProjectSettings.SETTING_GENERIC_VALUE_FALSE)) {
@@ -209,6 +254,11 @@ public class ProjectBuilder {
         builder.generateBindings();
     }
 
+    /**
+     * Checks whether D8 is selected as the dexer (instead of Dx).
+     *
+     * @return {@code true} if D8 is enabled in build settings
+     */
     public boolean isD8Enabled() {
         return buildSettings.getValue(
                 BuildSettings.SETTING_DEXER,
@@ -216,6 +266,11 @@ public class ProjectBuilder {
         ).equals(BuildSettings.SETTING_DEXER_D8);
     }
 
+    /**
+     * Returns a user-facing status message indicating which dexer is running.
+     *
+     * @return {@code "D8 is running..."} or {@code "Dx is running..."}
+     */
     public String getDxRunningText() {
         return (isD8Enabled() ? "D8" : "Dx") + " is running...";
     }
@@ -276,6 +331,14 @@ public class ProjectBuilder {
         }
     }
 
+    /**
+     * Builds the full classpath string for Java compilation, including:
+     * android.jar, HTTP legacy (if enabled), MultiDex (if minSdk &lt; 21),
+     * lambda stubs (if Java &gt; 1.7), built-in libraries, local libraries,
+     * user-specified classpath, and project classpath JARs.
+     *
+     * @return colon-separated classpath string
+     */
     public String getClasspath() {
         StringBuilder classpath = new StringBuilder();
 
@@ -696,6 +759,12 @@ public class ProjectBuilder {
         }
     }
 
+    /**
+     * Assembles the unsigned, unaligned APK from compiled resources, DEX files,
+     * native libraries, and library JARs.
+     *
+     * @throws SketchwareException if APK assembly fails (e.g. duplicate files)
+     */
     public void buildApk() throws SketchwareException {
         String firstDexPath = dexesToAddButNotMerge.isEmpty() ? projectFilePaths.classesDexPath : dexesToAddButNotMerge.remove(0).getAbsolutePath();
         try {
@@ -885,8 +954,10 @@ public class ProjectBuilder {
     }
 
     /**
-     * Checks if we need to extract any library/dependency from assets to filesDir,
-     * and extracts them, if needed. Also initializes used built-in libraries.
+     * Populates the built-in library manager based on project configuration flags
+     * (AppCompat, Firebase, Maps, AdMob, Gson, Glide, OkHttp, Kotlin, etc.).
+     * This must be called before compilation so that the classpath includes
+     * all required library JARs.
      */
     public void buildBuiltInLibraryInformation() {
         if (projectFilePaths.buildConfig.isAppCompatEnabled) {
@@ -927,6 +998,11 @@ public class ProjectBuilder {
         ExtLibSelected.addUsedDependencies(projectFilePaths.buildConfig.constVarComponent, builtInLibraryManager);
     }
 
+    /**
+     * Returns the built-in library manager used for this build.
+     *
+     * @return the built-in library manager instance
+     */
     public BuiltInLibraryManager getBuiltInLibraryManager() {
         return builtInLibraryManager;
     }
@@ -1009,6 +1085,14 @@ public class ProjectBuilder {
         return sb.toString();
     }
 
+    /**
+     * Runs R8 compiler for code shrinking and optimization.
+     * Packages compiled classes into a JAR, applies ProGuard rules from
+     * built-in libraries, local libraries, and user configuration,
+     * then invokes R8 with the project's min SDK version.
+     *
+     * @throws IOException if R8 compilation fails
+     */
     public void runR8() throws IOException {
         long savedTimeMillis = System.currentTimeMillis();
 
@@ -1042,6 +1126,14 @@ public class ProjectBuilder {
         LogUtil.d(TAG, "R8 took " + (System.currentTimeMillis() - savedTimeMillis) + " ms");
     }
 
+    /**
+     * Runs ProGuard for code shrinking and obfuscation.
+     * Applies global rules, AAPT2-generated rules, user custom rules,
+     * built-in library rules, and local library rules.
+     * Optionally generates seeds, usage, and mapping debug files.
+     *
+     * @throws IOException if ProGuard execution fails
+     */
     public void runProguard() throws IOException {
         long savedTimeMillis = System.currentTimeMillis();
 
@@ -1115,6 +1207,11 @@ public class ProjectBuilder {
         LogUtil.d(TAG, "ProGuard took " + (System.currentTimeMillis() - savedTimeMillis) + " ms");
     }
 
+    /**
+     * Runs StringFog string encryption on compiled class files.
+     * Injects the StringFog runtime classes and encrypts string constants
+     * using XOR-based obfuscation. Generates a mapping file for debugging.
+     */
     public void runStringfog() {
         try {
             StringFogMappingPrinter stringFogMappingPrinter = new StringFogMappingPrinter(new File(projectFilePaths.binDirectoryPath,
@@ -1133,6 +1230,13 @@ public class ProjectBuilder {
         }
     }
 
+    /**
+     * Runs zipalign on an APK to ensure 4-byte alignment of uncompressed data.
+     *
+     * @param inPath  path to the input (unaligned) APK
+     * @param outPath path to write the aligned APK
+     * @throws SketchwareException if zipalign fails
+     */
     public void runZipalign(String inPath, String outPath) throws SketchwareException {
         LogUtil.d(TAG, "About to zipalign " + inPath + " to " + outPath);
         long savedTimeMillis = System.currentTimeMillis();
@@ -1149,6 +1253,11 @@ public class ProjectBuilder {
         LogUtil.d(TAG, "zipalign took " + (System.currentTimeMillis() - savedTimeMillis) + " ms");
     }
 
+    /**
+     * Sets whether to build an Android App Bundle (AAB) instead of an APK.
+     *
+     * @param buildAppBundle {@code true} to produce AAB output
+     */
     public void setBuildAppBundle(boolean buildAppBundle) {
         this.buildAppBundle = buildAppBundle;
     }

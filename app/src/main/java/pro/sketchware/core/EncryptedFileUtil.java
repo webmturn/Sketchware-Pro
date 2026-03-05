@@ -20,6 +20,22 @@ import javax.crypto.spec.SecretKeySpec;
 
 import mod.hilal.saif.activities.tools.ConfigActivity;
 
+/**
+ * Low-level file I/O utility used throughout Sketchware Pro for reading and writing
+ * project data files. Supports optional AES-128-CBC encryption using a fixed key
+ * ({@code "sketchwaresecure"}).
+ * <p>
+ * Key features:
+ * <ul>
+ *   <li>Atomic writes via tmp-file + rename pattern ({@link #writeText}, {@link #writeBytes})</li>
+ *   <li>Auto-detect encrypted vs plaintext on read ({@link #decryptToString})</li>
+ *   <li>Recursive directory operations ({@link #deleteDirectory}, {@link #copyDirectory})</li>
+ *   <li>Asset file extraction ({@link #copyAssetFile})</li>
+ * </ul>
+ *
+ * @see ProjectDataStore
+ * @see ConfigActivity#SETTING_PROJECT_DATA_ENCRYPTION
+ */
 public class EncryptedFileUtil {
   public boolean encryptionEnabled = false;
   
@@ -31,6 +47,13 @@ public class EncryptedFileUtil {
     this.encryptionEnabled = encryptionEnabled;
   }
   
+  /**
+   * Returns the size of an asset file in bytes.
+   *
+   * @param context the Android context
+   * @param value   the asset path relative to {@code assets/}
+   * @return the file size in bytes, or {@code -1} on error
+   */
   public long getAssetFileSize(Context context, String value) {
     try (InputStream inputStream = context.getAssets().open(value)) {
       return inputStream.available();
@@ -40,6 +63,14 @@ public class EncryptedFileUtil {
     }
   }
   
+  /**
+   * Decrypts the given byte array to a UTF-8 string.
+   * Auto-detects plaintext: if decryption fails, returns the data as-is.
+   *
+   * @param data the encrypted (or plaintext) byte array
+   * @return the decoded string, or empty string if data is null
+   * @throws Exception if both decryption and plaintext fallback fail
+   */
   public String decryptToString(byte[] data) throws Exception {
     if (data == null) return "";
     // Auto-detect: try decryption first, fall back to plaintext
@@ -51,6 +82,13 @@ public class EncryptedFileUtil {
     }
   }
   
+  /**
+   * Copies an asset file to local storage, creating parent directories as needed.
+   *
+   * @param context the Android context
+   * @param key     the asset path relative to {@code assets/}
+   * @param value   the destination file path on local storage
+   */
   public void copyAssetFile(Context context, String key, String value) {
     int sepIdx = value.lastIndexOf(File.separator);
     if (sepIdx > 0) {
@@ -138,6 +176,14 @@ public class EncryptedFileUtil {
     deleteRecursive(new File(value), flag);
   }
   
+  /**
+   * Atomically writes raw bytes to a file using a tmp-file + rename strategy.
+   * Creates parent directories if they don't exist.
+   *
+   * @param value the destination file path
+   * @param data  the bytes to write
+   * @return {@code true} if the write succeeded
+   */
   public boolean writeBytes(String value, byte[] data) {
     int separatorIdx = value.lastIndexOf(File.separator);
     if (separatorIdx > 0)
@@ -187,6 +233,14 @@ public class EncryptedFileUtil {
     deleteRecursiveByPath(value, true);
   }
   
+  /**
+   * Atomically writes a UTF-8 text string to a file using a tmp-file + rename strategy.
+   * Creates parent directories if they don't exist.
+   *
+   * @param key   the destination file path
+   * @param value the text content to write
+   * @return {@code true} if the write succeeded
+   */
   public boolean writeText(String key, String value) {
     int separatorIdx = key.lastIndexOf(File.separator);
     if (separatorIdx > 0)
@@ -214,6 +268,13 @@ public class EncryptedFileUtil {
     return true;
   }
   
+  /**
+   * Decrypts data using AES-128-CBC with the fixed Sketchware key.
+   *
+   * @param data the ciphertext bytes
+   * @return the decrypted plaintext bytes
+   * @throws Exception if decryption fails
+   */
   public byte[] decrypt(byte[] data) throws Exception {
     Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
     byte[] bytes = "sketchwaresecure".getBytes();
@@ -239,6 +300,13 @@ public class EncryptedFileUtil {
     deleteFile(new File(value));
   }
   
+  /**
+   * Encrypts data using AES-128-CBC with the fixed Sketchware key.
+   *
+   * @param data the plaintext bytes
+   * @return the ciphertext bytes
+   * @throws Exception if encryption fails
+   */
   public byte[] encrypt(byte[] data) throws Exception {
     Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
     byte[] bytes = "sketchwaresecure".getBytes();
@@ -246,6 +314,14 @@ public class EncryptedFileUtil {
     return cipher.doFinal(data);
   }
   
+  /**
+   * Encrypts a string for storage. Returns plaintext UTF-8 bytes if
+   * encryption is disabled in {@link ConfigActivity} settings.
+   *
+   * @param value the string to encrypt
+   * @return encrypted bytes, or plaintext UTF-8 bytes if encryption is disabled
+   * @throws Exception if encryption fails
+   */
   public byte[] encryptString(String value) throws Exception {
     if (!ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_PROJECT_DATA_ENCRYPTION)) {
       // Encryption disabled — write as plaintext UTF-8 bytes
@@ -266,6 +342,12 @@ public class EncryptedFileUtil {
     return readFileContent(new File(value));
   }
   
+  /**
+   * Reads the entire contents of a file as a byte array.
+   *
+   * @param value the file path to read
+   * @return the file contents, or {@code null} if the file is empty or an error occurs
+   */
   public byte[] readFileBytes(String value) {
     try (FileInputStream fis = new FileInputStream(value);
          ByteArrayOutputStream bos = new ByteArrayOutputStream()) {

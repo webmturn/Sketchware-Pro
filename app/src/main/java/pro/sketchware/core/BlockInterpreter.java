@@ -16,6 +16,24 @@ import mod.hey.studios.editor.manage.block.v2.BlockLoader;
 import mod.hey.studios.moreblock.ReturnMoreblockManager;
 import mod.pranav.viewbinding.ViewBindingBuilder;
 
+/**
+ * Converts a chain of {@link BlockBean}s into executable Java source code.
+ * <p>
+ * Each block's {@code opCode} is looked up in {@link BlockCodeRegistry} to find
+ * the corresponding code template. Parameters are recursively resolved: nested
+ * blocks (prefixed with {@code @}) are expanded in-place, strings are escaped
+ * and quoted, numbers are validated, and view references are optionally
+ * transformed to ViewBinding accessors.
+ * <p>
+ * Usage:
+ * <pre>
+ * BlockInterpreter interpreter = new BlockInterpreter(activityName, buildConfig, blocks, vbEnabled);
+ * String javaCode = interpreter.interpretBlocks();
+ * </pre>
+ *
+ * @see BlockCodeRegistry
+ * @see BlockBean
+ */
 public class BlockInterpreter {
 
     private static final Pattern PARAM_PATTERN = Pattern.compile("%m(?!\\.[\\w]+)");
@@ -50,6 +68,12 @@ public class BlockInterpreter {
         this.isViewBindingEnabled = isViewBindingEnabled;
     }
 
+    /**
+     * Interprets the entire block chain starting from the first block,
+     * building a map of all blocks by ID and recursively generating code.
+     *
+     * @return the generated Java code string, or empty string if no blocks exist
+     */
     public String interpretBlocks() {
         blockMap = new HashMap<>();
         ArrayList<BlockBean> beans = eventBlocks;
@@ -65,6 +89,14 @@ public class BlockInterpreter {
         }
     }
 
+    /**
+     * Generates Java code for a single block and its {@code nextBlock} chain.
+     * Wraps arithmetic sub-expressions in parentheses when nested inside operators.
+     *
+     * @param bean          the block to generate code for
+     * @param parentOpcode  the opCode of the parent block (for precedence handling)
+     * @return the generated Java code fragment
+     */
     public final String generateBlock(BlockBean bean, String parentOpcode) {
         ArrayList<String> params = getBlockParams(bean);
 
@@ -142,6 +174,20 @@ public class BlockInterpreter {
         return escapedString.toString();
     }
 
+    /**
+     * Resolves a single block parameter to its Java code representation.
+     * <ul>
+     *   <li>If the param starts with {@code @}, it references another block (recursive)</li>
+     *   <li>Type 0 (boolean): returns the param as-is, defaults to {@code "true"}</li>
+     *   <li>Type 1 (number): validates and appends {@code "d"} suffix for doubles</li>
+     *   <li>Type 2 (string): escapes special characters and wraps in quotes</li>
+     * </ul>
+     *
+     * @param param  the raw parameter value (may be a block reference like {@code "@5"})
+     * @param type   the parameter type: 0=boolean, 1=number, 2=string, 3=other
+     * @param opcode the parent block's opCode (passed to recursive resolution)
+     * @return the resolved Java code for this parameter
+     */
     public final String resolveParam(String param, int type, String opcode) {
         if (!param.isEmpty() && param.charAt(0) == '@') {
             opcode = resolveBlock(param.substring(1), opcode);
@@ -179,15 +225,38 @@ public class BlockInterpreter {
         return param;
     }
 
+    /**
+     * Resolves a block reference by its ID, generating code for the referenced block.
+     *
+     * @param blockId       the ID of the block to resolve
+     * @param parentOpcode  the parent block's opCode (for precedence handling)
+     * @return the generated code, or empty string if the block is not found
+     */
     public final String resolveBlock(String blockId, String parentOpcode) {
         BlockBean block = blockMap.get(blockId);
         return block == null ? "" : generateBlock(block, parentOpcode);
     }
 
+    /**
+     * Determines if the current block needs parentheses to preserve operator precedence.
+     *
+     * @param opcode       the current block's opCode
+     * @param parentOpcode the parent block's opCode
+     * @return {@code true} if the parent is an operator and the child is arithmetic
+     */
     public final boolean needsParentheses(String opcode, String parentOpcode) {
         return OPERATORS.contains(parentOpcode) && ARITHMETIC.contains(opcode);
     }
 
+    /**
+     * Resolves all parameters of a block to their Java code representations.
+     * Each parameter is processed according to its type (extracted from the block spec)
+     * and may involve recursive block resolution, ViewBinding transformation, or
+     * color attribute resolution.
+     *
+     * @param bean the block whose parameters to resolve
+     * @return list of resolved parameter code strings
+     */
     public ArrayList<String> getBlockParams(BlockBean bean) {
         ArrayList<String> params = new ArrayList<>();
         ArrayList<String> paramsTypes = extractParamsTypes(bean.spec);

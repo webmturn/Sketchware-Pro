@@ -19,12 +19,30 @@ import com.besome.sketch.tools.CollectErrorActivity;
 import pro.sketchware.fragments.settings.language.LanguageOverrideManager;
 import pro.sketchware.utility.theme.ThemeManager;
 
+/**
+ * Global {@link Application} subclass for Sketchware Pro.
+ * <p>
+ * Responsibilities:
+ * <ul>
+ *   <li>Provides a static application context via {@link #getContext()} (locale-aware)</li>
+ *   <li>Tracks the current foreground {@link Activity} via lifecycle callbacks</li>
+ *   <li>Installs a global uncaught exception handler that launches {@link CollectErrorActivity}</li>
+ *   <li>Initializes {@link LanguageOverrideManager} and {@link ThemeManager} on startup</li>
+ * </ul>
+ */
 public class SketchApplication extends Application {
     private static Context mApplicationContext;
     private static Activity currentActivity;
     private static Context cachedLocaleContext;
     private static String cachedLocaleTag;
 
+    /**
+     * Returns the best available context, preferring the current foreground Activity
+     * for correct theme/locale resolution. Falls back to a locale-configured
+     * application context, or the raw application context.
+     *
+     * @return a context suitable for resource access with correct locale
+     */
     public static Context getContext() {
         if (currentActivity != null) {
             return currentActivity;
