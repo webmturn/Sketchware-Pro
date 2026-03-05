@@ -133,9 +133,9 @@
             android:id="@+id/tv_loading_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="8dp"
+            android:paddingStart="8dp"
             android:paddingTop="4dp"
-            android:paddingRight="8dp"
+            android:paddingEnd="8dp"
             android:text="@string/about_loading_subtitle"
             android:textAppearance="?attr/textAppearanceBodySmall" />
     </LinearLayout>
@@ -147,10 +147,10 @@
         android:layout_gravity="center|bottom"
         android:layout_margin="16dp"
         android:text="@string/about_joindiscord"
-        android:textAllCaps="false"
-        android:textColor="#FFF"
+        
+        android:textColor="@android:color/white"
         app:backgroundTint="#5865F2"
         app:icon="@drawable/ic_discord"
-        app:iconTint="#FFF" />
+        app:iconTint="@android:color/white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

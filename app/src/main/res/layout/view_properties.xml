@@ -11,7 +11,7 @@
         android:paddingLeft="4dp"
         android:paddingRight="4dp">
 
-        <Spinner
+        <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/spn_widget"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

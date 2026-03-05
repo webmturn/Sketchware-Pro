@@ -15,11 +15,4 @@
         android:title="@string/menu_redo"
         app:showAsAction="always" />
 
-    <item
-        android:id="@+id/menu_view_import_xml"
-        android:icon="@drawable/ic_mtrl_code"
-        android:orderInCategory="200"
-        android:title="@string/menu_import_xml"
-        app:showAsAction="ifRoom" />
-
 </menu>

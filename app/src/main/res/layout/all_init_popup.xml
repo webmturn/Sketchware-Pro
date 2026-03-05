@@ -11,15 +11,15 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:orientation="vertical"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp">
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp">
 
-        <RadioButton
+        <com.google.android.material.radiobutton.MaterialRadioButton
             android:id="@+id/rb_all"
             android:layout_width="match_parent"
             android:layout_height="40dp" />
 
-        <RadioButton
+        <com.google.android.material.radiobutton.MaterialRadioButton
             android:id="@+id/rb_only_config"
             android:layout_width="match_parent"
             android:layout_height="40dp"

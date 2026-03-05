@@ -477,14 +477,11 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
         } else if (itemId == R.id.menu_view_undo) {
             onUndo();
             return true;
-        } else if (itemId == R.id.menu_view_import_xml) {
-            showImportXmlDialog();
-            return true;
         }
         return false;
     }
 
-    private void showImportXmlDialog() {
+    public void showImportXmlDialog() {
         if (projectFileBean == null || sc_id == null) return;
 
         LinearLayout container = new LinearLayout(requireContext());

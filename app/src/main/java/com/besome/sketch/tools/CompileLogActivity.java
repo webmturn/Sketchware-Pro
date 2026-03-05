@@ -63,6 +63,15 @@ public class CompileLogActivity extends BaseAppCompatActivity {
 
         compileErrorSaver = new CompileErrorSaver(sc_id);
 
+        binding.copyButton.setOnClickListener(v -> {
+            CharSequence logText = binding.tvCompileLog.getText();
+            if (logText != null && logText.length() > 0) {
+                android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                clipboard.setPrimaryClip(android.content.ClipData.newPlainText("Compile Log", logText));
+                SketchwareUtil.toast(Helper.getResString(R.string.toast_copied_to_clipboard));
+            }
+        });
+
         binding.clearButton.setOnClickListener(v -> {
             if (compileErrorSaver.logFileExists()) {
                 compileErrorSaver.deleteSavedLogs();
@@ -141,7 +150,7 @@ public class CompileLogActivity extends BaseAppCompatActivity {
     }
 
     private int getFontSizePreference() {
-        return logViewerPreferences.getInt(PREFERENCE_FONT_SIZE, 11);
+        return logViewerPreferences.getInt(PREFERENCE_FONT_SIZE, 13);
     }
 
     private void toggleWrapText(boolean isChecked) {

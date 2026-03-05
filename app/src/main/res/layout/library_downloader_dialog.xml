@@ -48,7 +48,7 @@
         android:textColor="?attr/colorOnSurface"
         android:textAppearance="?attr/textAppearanceBodyMedium" />
 
-    <CheckBox
+    <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/cb_skip_subdependencies"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

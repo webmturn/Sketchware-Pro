@@ -25,8 +25,8 @@
                 android:layout_marginStart="24dp"
                 android:alpha="0.87"
                 android:fontFamily="sans-serif-medium"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 android:textSize="12sp"
                 android:visibility="gone" />
 
@@ -83,7 +83,7 @@
                         android:id="@+id/img_preview"
                         android:layout_width="12dp"
                         android:layout_height="12dp"
-                        android:layout_marginRight="4dp"
+                        android:layout_marginEnd="4dp"
                         tools:src="@drawable/event_on_click_48dp" />
 
                     <TextView

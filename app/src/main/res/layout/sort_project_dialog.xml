@@ -11,14 +11,14 @@
         android:orientation="horizontal"
         android:padding="5dp">
 
-        <RadioButton
+        <com.google.android.material.radiobutton.MaterialRadioButton
             android:id="@+id/sortByName"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="@string/sort_by_name" />
 
-        <RadioButton
+        <com.google.android.material.radiobutton.MaterialRadioButton
             android:id="@+id/sortByID"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -32,14 +32,14 @@
         android:orientation="horizontal"
         android:padding="5dp">
 
-        <RadioButton
+        <com.google.android.material.radiobutton.MaterialRadioButton
             android:id="@+id/sortOrderAsc"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="@string/sort_ascending" />
 
-        <RadioButton
+        <com.google.android.material.radiobutton.MaterialRadioButton
             android:id="@+id/sortOrderDesc"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

@@ -129,7 +129,7 @@
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <CheckBox
+    <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/add_to_collection_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

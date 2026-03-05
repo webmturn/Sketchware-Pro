@@ -117,10 +117,7 @@ public class ManageProguardActivity extends BaseAppCompatActivity
     }
 
     private void _initToolbar() {
-        setSupportActionBar(binding.toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(R.string.proguard_title);
+        binding.toolbar.setTitle(R.string.proguard_title);
         binding.toolbar.setNavigationOnClickListener(view -> getOnBackPressedDispatcher().onBackPressed());
     }
 }

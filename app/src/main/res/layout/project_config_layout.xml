@@ -99,7 +99,7 @@
             android:text="@string/build_settings_hide_warnings"
             android:textAppearance="?attr/textAppearanceBodyMedium" />
 
-        <CheckBox
+        <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/cb_no_warnings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -130,7 +130,7 @@
             android:text="@string/build_settings_no_http_legacy"
             android:textAppearance="?attr/textAppearanceBodyMedium" />
 
-        <CheckBox
+        <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/cb_no_http_legacy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -161,7 +161,7 @@
             android:text="@string/build_settings_enable_logcat"
             android:textAppearance="?attr/textAppearanceBodyMedium" />
 
-        <CheckBox
+        <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/cb_enable_logcat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
