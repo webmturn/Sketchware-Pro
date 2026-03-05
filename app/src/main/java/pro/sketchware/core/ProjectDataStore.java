@@ -24,6 +24,19 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * In-memory store for all editable project data: views, blocks, variables, lists,
+ * MoreBlocks, components, events, and FAB configuration.
+ * <p>
+ * Data is loaded from encrypted files in {@code .sketchware/data/{sc_id}/} and
+ * optionally from backup files in {@code .sketchware/mysc/backup/{sc_id}/}.
+ * All maps are keyed by the XML filename (for views) or Java filename (for logic data).
+ * <p>
+ * Obtain instances through {@link ProjectDataManager#getProjectDataManager(String)}.
+ *
+ * @see ProjectDataManager
+ * @see EncryptedFileUtil
+ */
 public class ProjectDataStore {
   public String projectId;
   public EncryptedFileUtil fileUtil;
@@ -38,6 +51,11 @@ public class ProjectDataStore {
   public static final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
   public BuildConfig buildConfig;
   
+  /**
+   * Creates a new data store for the given project, initializing all maps to empty.
+   *
+   * @param projectId the project identifier (e.g. {@code "601"})
+   */
   public ProjectDataStore(String projectId) {
     clearAllData();
     this.projectId = projectId;
@@ -45,6 +63,14 @@ public class ProjectDataStore {
     buildConfig = new BuildConfig();
   }
   
+  /**
+   * Returns a flattened, depth-first ordered list of views starting from root views.
+   * Root views are sorted by their {@link ViewBean#index}, then child views of
+   * container types are recursively appended.
+   *
+   * @param list all views in a layout file (unsorted)
+   * @return views ordered for code generation (root first, then children depth-first)
+   */
   public static ArrayList<ViewBean> getSortedRootViews(ArrayList<ViewBean> list) {
     ArrayList<ViewBean> sortedViews = new ArrayList<>();
     for (ViewBean viewBean : list) {
@@ -73,6 +99,13 @@ public class ProjectDataStore {
     return sortedViews;
   }
   
+  /**
+   * Recursively collects and sorts child views of the given parent, depth-first.
+   *
+   * @param list       all views in a layout file
+   * @param parentBean the parent view whose children to collect
+   * @return sorted child views (including nested children of container types)
+   */
   public static ArrayList<ViewBean> getChildViews(ArrayList<ViewBean> list, ViewBean parentBean) {
     ArrayList<ViewBean> childViews = new ArrayList<>();
     for (ViewBean viewBean : list) {
@@ -103,10 +136,25 @@ public class ProjectDataStore {
     return childViews;
   }
   
+  /**
+   * Returns the component at the given index for the specified Java file.
+   *
+   * @param fileName the Java filename key (e.g. {@code "MainActivity.java"})
+   * @param index    the component's position in the list
+   * @return the component bean, or {@code null} if the file has no components
+   */
   public ComponentBean getComponent(String fileName, int index) {
     return !componentMap.containsKey(fileName) ? null : componentMap.get(fileName).get(index);
   }
   
+  /**
+   * Collects all identifiers (variable names, list names, MoreBlock names,
+   * view IDs, component IDs) defined in the given file.
+   * Used for name collision detection when adding new identifiers.
+   *
+   * @param fileBean the project file descriptor
+   * @return list of all identifier strings
+   */
   public ArrayList<String> getAllIdentifiers(ProjectFileBean fileBean) {
     String xmlName = fileBean.getXmlName();
     String javaName = fileBean.getJavaName();
@@ -124,6 +172,13 @@ public class ProjectDataStore {
     return identifiers;
   }
   
+  /**
+   * Returns all events that target the given component in the specified file.
+   *
+   * @param fileName      the Java filename key
+   * @param componentBean the component to filter events for
+   * @return matching events, or an empty list if none found
+   */
   public ArrayList<EventBean> getComponentEvents(String fileName, ComponentBean componentBean) {
     if (!eventMap.containsKey(fileName))
       return new ArrayList<>(); 
@@ -135,6 +190,14 @@ public class ProjectDataStore {
     return filteredEvents;
   }
   
+  /**
+   * Returns the block chain for a specific event/MoreBlock in the given file.
+   *
+   * @param fileName the Java filename key (e.g. {@code "MainActivity.java"})
+   * @param data     the event or MoreBlock identifier (e.g. {@code "onCreate"},
+   *                 {@code "btn1_onClick"}, {@code "myFunc_moreBlock_blocks"})
+   * @return the list of blocks in the chain, or an empty list
+   */
   public ArrayList<BlockBean> getBlocks(String fileName, String data) {
     if (!blockMap.containsKey(fileName))
       return new ArrayList<>(); 
@@ -144,12 +207,22 @@ public class ProjectDataStore {
     return blockEntryMap.get(data);
   }
   
+  /**
+   * Deletes the view and logic backup files for this project.
+   */
   public void deleteBackupFiles() {
     String backupDir = SketchwarePaths.getBackupPath(projectId);
     fileUtil.deleteFileByPath(backupDir + File.separator + "view");
     fileUtil.deleteFileByPath(backupDir + File.separator + "logic");
   }
   
+  /**
+   * Synchronizes this data store with the file manager by removing orphaned
+   * references: views for deleted layout files, events/blocks for deleted
+   * activities, invalid custom view references, and stale intentSetScreen targets.
+   *
+   * @param fileManager the project file manager containing current file list
+   */
   public void syncWithFileManager(ProjectFileManager fileManager) {
     for (ProjectFileBean projectFileBean : fileManager.getActivities()) {
       if (!projectFileBean.hasActivityOption(8))
@@ -215,6 +288,12 @@ public class ProjectDataStore {
       blockMap.remove(key); 
   }
   
+  /**
+   * Resets font references in setTypeface blocks to {@code "default_font"}
+   * if the referenced font no longer exists in the resource manager.
+   *
+   * @param resourceManager the resource manager with current font list
+   */
   public void syncFonts(ResourceManager resourceManager) {
     ArrayList<String> fontNames = resourceManager.getFontNames();
     for (HashMap<String, ArrayList<BlockBean>> fileBlocks : blockMap.values()) {
@@ -227,6 +306,14 @@ public class ProjectDataStore {
     } 
   }
   
+  /**
+   * Removes a view and all its associated events and block references.
+   * For custom view files, also cleans up onBindCustomView block references
+   * across all files that use this custom view.
+   *
+   * @param fileBean   the file containing the view
+   * @param targetBean the view to remove
+   */
   public void removeView(ProjectFileBean fileBean, ViewBean targetBean) {
     if (!viewMap.containsKey(fileBean.getXmlName()))
       return; 
@@ -318,6 +405,14 @@ public class ProjectDataStore {
       removeComponentsByType(key, 13); 
   }
   
+  /**
+   * Parses the logic data file format, populating variables, lists, MoreBlocks,
+   * components, events, and blocks maps. The format uses {@code @sectionName}
+   * as section delimiters.
+   *
+   * @param reader a reader over the decrypted logic file content
+   * @throws IOException if reading fails
+   */
   public void readLogicData(BufferedReader reader) throws IOException {
     if (variableMap != null) variableMap.clear();
     if (listMap != null) listMap.clear();
@@ -352,6 +447,13 @@ public class ProjectDataStore {
     } 
   }
   
+  /**
+   * Initializes a default FAB (Floating Action Button) view for the given file
+   * if one does not already exist. The FAB is positioned at bottom-right with
+   * 16dp margins.
+   *
+   * @param fileName the Java filename key
+   */
   public void initFab(String fileName) {
     if (fabMap.containsKey(fileName))
       return; 
@@ -365,24 +467,57 @@ public class ProjectDataStore {
     fabMap.put(fileName, viewBean);
   }
   
+  /**
+   * Adds a new event to the specified file.
+   *
+   * @param fileName the Java filename key
+   * @param x        the event target type
+   * @param y        the event type
+   * @param data     the target ID (e.g. view ID or component ID)
+   * @param extra    additional event data
+   */
   public void addEvent(String fileName, int x, int y, String data, String extra) {
     if (!eventMap.containsKey(fileName))
       eventMap.put(fileName, new ArrayList<>()); 
     eventMap.get(fileName).add(new EventBean(x, y, data, extra));
   }
   
+  /**
+   * Adds a new component to the specified file.
+   *
+   * @param fileName the Java filename key
+   * @param index    the component type index (see {@link ComponentBean} type constants)
+   * @param data     the component ID
+   */
   public void addComponent(String fileName, int index, String data) {
     if (!componentMap.containsKey(fileName))
       componentMap.put(fileName, new ArrayList<>()); 
     componentMap.get(fileName).add(new ComponentBean(index, data));
   }
   
+  /**
+   * Adds a new component with an extra parameter to the specified file.
+   *
+   * @param fileName the Java filename key
+   * @param index    the component type index
+   * @param data     the component ID
+   * @param extra    additional configuration parameter
+   */
   public void addComponentWithParam(String fileName, int index, String data, String extra) {
     if (!componentMap.containsKey(fileName))
       componentMap.put(fileName, new ArrayList<>()); 
     componentMap.get(fileName).add(new ComponentBean(index, data, extra));
   }
   
+  /**
+   * Removes or clears block references to a deleted view/component across all
+   * event handlers in the given file.
+   *
+   * @param fileName       the Java filename key
+   * @param classInfo      the class info of the removed element
+   * @param data           the ID of the removed element
+   * @param skipCustomView if {@code true}, skips onBindCustomView event handlers
+   */
   public void removeBlockReferences(String fileName, ClassInfo classInfo, String data, boolean skipCustomView) {
     if (!blockMap.containsKey(fileName))
       return; 

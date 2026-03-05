@@ -9,12 +9,42 @@ import pro.sketchware.R;
 import pro.sketchware.SketchApplication;
 import pro.sketchware.menu.DefaultExtraMenuBean;
 
+/**
+ * Maps block opCodes to their display colors using Material You color harmonization.
+ * <p>
+ * Colors are assigned by category (view operations, variable operations, list operations,
+ * control flow, operators, math, etc.) and harmonized with the app primary color
+ * via harmonizeWithPrimary.
+ *
+ * @see BlockSpecRegistry
+ * @see BlockCodeRegistry
+ */
 public class BlockColorMapper {
     public static int getBlockColor(String opcode, String blockType) {
         Context context = new ContextThemeWrapper(SketchApplication.getContext(), R.style.Theme_SketchwarePro);
         return getBlockColor(context, opcode, blockType);
     }
 
+    /**
+     * Returns the harmonized color for a block, using the given themed context.
+     * <p>
+     * Color assignment rules:
+     * <ul>
+     *   <li>Hat blocks ({@code "h"}) → orange {@code #c88330}</li>
+     *   <li>View operations → blue {@code #4a6cd4}</li>
+     *   <li>Variable operations → orange {@code #ee7d16}</li>
+     *   <li>List operations → dark orange {@code #cc5b22}</li>
+     *   <li>Control flow (if/repeat) → gold {@code #e1a92a}</li>
+     *   <li>Operators/strings → green {@code #5cb722}</li>
+     *   <li>Math → teal {@code #23b9a9}</li>
+     *   <li>Component references → light blue {@code #2ca5e2}</li>
+     * </ul>
+     *
+     * @param context   a themed context for color harmonization
+     * @param opcode    the block opCode
+     * @param blockType the block type character
+     * @return the ARGB color int
+     */
     public static int getBlockColor(Context context, String opcode, String blockType) {
         int viewType = harmonizeWithPrimary(context, 0xff4a6cd4);
 

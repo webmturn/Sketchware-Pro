@@ -5,15 +5,27 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Central registry mapping block/event opCodes to their specifications.
+ * <p>
+ * Contains four lookup tables:
+ * <ul>
+ *   <li><b>BLOCK_PARAMS</b> — opCode → parameter type array (e.g. {@code {"%d", "%d"}} for arithmetic)</li>
+ *   <li><b>BLOCK_SPECS</b> — opCode → display spec string key (used for i18n via StringResource)</li>
+ *   <li><b>EVENT_MENUS</b> — eventName → menu parameter types for event blocks</li>
+ *   <li><b>EVENT_SPECS</b> — eventName → display spec string key for event blocks</li>
+ * </ul>
+ * All tables are populated once at class load via static initializers.
+ *
+ * @see BlockCodeRegistry
+ * @see BlockColorMapper
+ * @see BlockInterpreter
+ */
 public class BlockSpecRegistry {
 
-    // ===== Block Parameters: opCode -> parameter types =====
     private static final Map<String, String[]> BLOCK_PARAMS = new HashMap<>();
-    // ===== Block Specs: opCode -> spec key (for StringResource lookup) =====
     private static final Map<String, String> BLOCK_SPECS = new HashMap<>();
-    // ===== Event Menu Items: eventName -> menu parameter types =====
     private static final Map<String, String[]> EVENT_MENUS = new HashMap<>();
-    // ===== Event Specs: eventName -> spec key (for StringResource lookup) =====
     private static final Map<String, String> EVENT_SPECS = new HashMap<>();
 
     static {
@@ -873,9 +885,15 @@ public class BlockSpecRegistry {
         EVENT_SPECS.put("onUploadSuccess", "on_upload_success");
     }
 
-    // Note: The old decompiled code returned null for unknown blockNames.
-    // This refactored version returns an empty list instead, which is safer
-    // and avoids potential NPE in callers (e.g. StringResource.getBlockTranslation).
+    /**
+     * Returns the parameter type list for a block opCode.
+     * <p>
+     * Each element is a spec placeholder like {@code "%s"}, {@code "%d"}, {@code "%b"},
+     * or {@code "%m.view"}. Returns an empty list for unknown opCodes (never null).
+     *
+     * @param blockName the block opCode (e.g. {@code "doToast"}, {@code "setVarInt"})
+     * @return mutable list of parameter type strings
+     */
     public static ArrayList<String> getBlockParams(String blockName) {
         String[] params = BLOCK_PARAMS.get(blockName);
         if (params == null) return new ArrayList<>();
@@ -884,6 +902,12 @@ public class BlockSpecRegistry {
         return list;
     }
 
+    /**
+     * Returns the menu parameter type list for an event name.
+     *
+     * @param blockName the event name
+     * @return mutable list of menu parameter types, or empty list if unknown
+     */
     public static ArrayList<String> getBlockMenuItems(String blockName) {
         String[] items = EVENT_MENUS.get(blockName);
         if (items == null) return new ArrayList<>();
@@ -892,10 +916,22 @@ public class BlockSpecRegistry {
         return list;
     }
 
+    /**
+     * Returns the spec key for an event, used for i18n display text lookup.
+     *
+     * @param blockName the event name
+     * @return the spec key string, defaults to {@code "initialize"} if unknown
+     */
     public static String getEventSpec(String blockName) {
         return EVENT_SPECS.getOrDefault(blockName, "initialize");
     }
 
+    /**
+     * Returns the spec key for a block opCode, used for i18n display text lookup.
+     *
+     * @param blockName the block opCode
+     * @return the spec key string, defaults to the opCode itself if unknown
+     */
     public static String getBlockSpec(String blockName) {
         return BLOCK_SPECS.getOrDefault(blockName, blockName);
     }
