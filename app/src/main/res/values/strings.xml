@@ -1309,6 +1309,7 @@
     <string name="common_message_complete_delete">Delete complete</string>
     <string name="common_message_complete_reset">Reset complete</string>
     <string name="common_message_complete_save">Save complete</string>
+    <string name="common_message_save_failed">Save failed! Please check storage space and try again.</string>
     <string name="common_message_confirm">Are you sure?</string>
     <string name="common_message_insufficient_storage_space">"There is not enough space available in the storage.
 Please make room and try again"</string>

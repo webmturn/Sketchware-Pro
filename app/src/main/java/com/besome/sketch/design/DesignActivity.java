@@ -1526,14 +1526,14 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 activity.runOnUiThread(() -> {
                     if (dataSaved) {
                         SketchToast.toast(activity.getApplicationContext(), Helper.getResString(R.string.common_message_complete_save), SketchToast.TOAST_NORMAL).show();
+                        activity.saveVersionCodeInformationToProject();
+                        // Reset backup state after save — next resource modification
+                        // will trigger a fresh backup.
+                        ProjectDataManager.getResourceManager(sc_id).resetBackupState();
                     } else {
-                        SketchToast.toast(activity.getApplicationContext(), "Save failed! Please check storage space and try again.", SketchToast.TOAST_WARNING).show();
+                        SketchToast.toast(activity.getApplicationContext(), Helper.getResString(R.string.common_message_save_failed), SketchToast.TOAST_WARNING).show();
                     }
-                    activity.saveVersionCodeInformationToProject();
                     activity.dismissLoadingDialog();
-                    // Reset backup state after save — next resource modification
-                    // will trigger a fresh backup.
-                    ProjectDataManager.getResourceManager(sc_id).resetBackupState();
                 });
             }
         }
@@ -1574,7 +1574,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                         activity.dismissLoadingDialog();
                         activity.finish();
                     } else {
-                        SketchToast.toast(activity.getApplicationContext(), "Save failed! Please check storage space and try again.", SketchToast.TOAST_WARNING).show();
+                        SketchToast.toast(activity.getApplicationContext(), Helper.getResString(R.string.common_message_save_failed), SketchToast.TOAST_WARNING).show();
                         activity.dismissLoadingDialog();
                     }
                 });
