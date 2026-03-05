@@ -68,7 +68,9 @@ public class ExtraPaletteBlock {
         frc = new FileResConfig(sc_id);
         extraBlocks = new ExtraBlocks(logicEditor);
         clickListener = new LogicClickListener(logicEditor);
-        layoutGenerator = new LayoutGenerator(new BuildConfig(), projectFile);
+        BuildConfig buildConfig = new BuildConfig();
+        buildConfig.sc_id = sc_id;
+        layoutGenerator = new LayoutGenerator(buildConfig, projectFile);
     }
 
     private boolean isWidgetUsed(String widgetType) {
