@@ -2,10 +2,10 @@ package pro.sketchware.core;
 
 public class ProjectDataManager {
 
-    public static ProjectDataStore projectDataStore;
-    public static ProjectFileManager projectFileManager;
-    public static ResourceManager resourceManager;
-    public static LibraryManager libraryManager;
+    private static ProjectDataStore projectDataStore;
+    private static ProjectFileManager projectFileManager;
+    private static ResourceManager resourceManager;
+    private static LibraryManager libraryManager;
 
     /** Clears all cached manager instances. */
     public static void clearAll() {

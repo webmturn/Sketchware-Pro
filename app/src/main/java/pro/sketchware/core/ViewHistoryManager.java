@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ViewHistoryManager {
-  public static ViewHistoryManager instance;
+  public static volatile ViewHistoryManager instance;
 
   /** Maximum number of undo/redo steps retained per layout file. */
   public static int MAX_HISTORY_STEPS = 50;
