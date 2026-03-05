@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BlockHistoryManager {
-  public static BlockHistoryManager instance;
+  public static volatile BlockHistoryManager instance;
 
   /** Maximum number of undo/redo steps retained per event. */
   public static int MAX_HISTORY_STEPS = 50;
