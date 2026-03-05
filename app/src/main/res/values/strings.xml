@@ -443,6 +443,8 @@
     <string name="block_locationmanager_request_location_updates_tail" />
     <string name="block_manager_palettes">Palettes</string>
     <string name="block_manager_recycle_bin">Recycle bin</string>
+    <string name="block_manager_search_hint">Search palettes and blocks…</string>
+    <string name="block_manager_search_result_format">Found %d palettes</string>
     <string name="block_manager_title">Block Manager</string>
     <string name="block_map_clear_head" />
     <string name="block_map_clear_tail">clear</string>
@@ -1430,6 +1432,7 @@ Please click on Settings to allow permission for Storage. Without this permissio
     <string name="common_word_saved">Saved</string>
     <string name="common_word_see_all">See All</string>
     <string name="common_word_see_more">See More</string>
+    <string name="common_word_search">Search</string>
     <string name="common_word_select">Select</string>
     <string name="common_word_select_variant">Select a Variant</string>
     <string name="common_word_settings">Settings</string>

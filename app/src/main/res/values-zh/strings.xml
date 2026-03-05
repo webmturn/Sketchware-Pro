@@ -92,6 +92,7 @@
     <string name="common_word_see_all">查看全部</string>
     <string name="common_word_see_more">查看更多</string>
     <string name="common_word_select_variant">选择变体</string>
+    <string name="common_word_search">搜索</string>
     <string name="common_word_select">选择</string>
     <string name="common_word_settings">设置</string>
     <string name="common_word_share">分享</string>
@@ -448,6 +449,8 @@
     <string name="block_manager_title">积木块管理器</string>
     <string name="block_manager_palettes">调色板</string>
     <string name="block_manager_recycle_bin">回收站</string>
+    <string name="block_manager_search_hint">搜索调色板和积木块…</string>
+    <string name="block_manager_search_result_format">找到 %d 个调色板</string>
     <string name="block_move_to_bin">移到回收站</string>
     <string name="block_type_regular">常规</string>
     <string name="blocks_add_title">添加新积木块</string>

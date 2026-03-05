@@ -20,6 +20,8 @@ import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.SearchView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.view.WindowInsetsCompat;
@@ -67,6 +69,9 @@ public class BlocksManager extends BaseAppCompatActivity {
     private int newPos;
     private Activity activity;
     private ArrayList<HashMap<String, Object>> pallet_listmap = new ArrayList<>();
+    private ArrayList<HashMap<String, Object>> filtered_pallet_list = new ArrayList<>();
+    private boolean isSearchActive = false;
+    private String currentQuery = "";
     private ItemTouchHelper itemTouchHelper;
     private ActivityBlocksManagerBinding binding;
     private DialogPaletteBinding dialogBinding;
@@ -175,8 +180,97 @@ public class BlocksManager extends BaseAppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        MenuItem searchItem = menu.add(Menu.NONE, MENU_SEARCH, Menu.NONE, R.string.common_word_search);
+        searchItem.setIcon(AppCompatResources.getDrawable(this, R.drawable.ic_search_white_24dp));
+        searchItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+
+        SearchView searchView = new SearchView(this);
+        searchView.setQueryHint(Helper.getResString(R.string.block_manager_search_hint));
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+        searchItem.setActionView(searchView);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                currentQuery = newText;
+                filterPalettes(newText);
+                return true;
+            }
+        });
+
+        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(@NonNull MenuItem item) {
+                isSearchActive = true;
+                binding.fab.hide();
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
+                isSearchActive = false;
+                currentQuery = "";
+                filterPalettes("");
+                binding.fab.show();
+                return true;
+            }
+        });
+
         menu.add(Menu.NONE, MENU_SETTINGS, Menu.NONE, R.string.common_word_settings).setIcon(AppCompatResources.getDrawable(this, R.drawable.ic_mtrl_settings)).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         return true;
+    }
+
+    private void filterPalettes(String query) {
+        filtered_pallet_list.clear();
+        if (query.isEmpty()) {
+            filtered_pallet_list.addAll(pallet_listmap);
+        } else {
+            String lowerQuery = query.toLowerCase();
+            for (int i = 0; i < pallet_listmap.size(); i++) {
+                HashMap<String, Object> palette = pallet_listmap.get(i);
+                String name = String.valueOf(palette.get("name")).toLowerCase();
+                if (name.contains(lowerQuery)) {
+                    filtered_pallet_list.add(palette);
+                    continue;
+                }
+                // Also search block names/specs within this palette
+                int paletteIndex = i + 9;
+                if (all_blocks_list != null) {
+                    for (HashMap<String, Object> block : all_blocks_list) {
+                        double pv = getPaletteValueDouble(block);
+                        if (pv == paletteIndex) {
+                            String blockName = String.valueOf(block.get("name")).toLowerCase();
+                            String blockSpec = String.valueOf(block.get("spec")).toLowerCase();
+                            if (blockName.contains(lowerQuery) || blockSpec.contains(lowerQuery)) {
+                                filtered_pallet_list.add(palette);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        binding.paletteRecycler.setAdapter(new PaletteAdapter(filtered_pallet_list));
+        if (query.isEmpty()) {
+            refreshCount();
+        } else {
+            binding.paletteCount.setText(Helper.getResString(R.string.block_manager_search_result_format, filtered_pallet_list.size()));
+        }
+    }
+
+    private double getPaletteValueDouble(Map<String, Object> block) {
+        Object paletteObj = block.get("palette");
+        if (paletteObj == null) return Double.NaN;
+        try {
+            return Double.parseDouble(paletteObj.toString());
+        } catch (NumberFormatException e) {
+            return Double.NaN;
+        }
     }
 
     @Override
@@ -305,7 +399,13 @@ public class BlocksManager extends BaseAppCompatActivity {
             pallet_listmap = new ArrayList<>();
         }
 
-        binding.paletteRecycler.setAdapter(new PaletteAdapter(pallet_listmap));
+        filtered_pallet_list.clear();
+        filtered_pallet_list.addAll(pallet_listmap);
+        if (isSearchActive && !currentQuery.isEmpty()) {
+            filterPalettes(currentQuery);
+        } else {
+            binding.paletteRecycler.setAdapter(new PaletteAdapter(filtered_pallet_list));
+        }
         binding.recycleSub.setText(Helper.getResString(R.string.blocks_count_format, (long) getN(-1)));
         refreshCount();
     }
@@ -550,6 +650,7 @@ public class BlocksManager extends BaseAppCompatActivity {
     }
 
 
+    private static final int MENU_SEARCH = 4;
     private static final int MENU_SETTINGS = 0;
     private static final int PALETTE_MENU_EDIT = 1;
     private static final int PALETTE_MENU_DELETE = 2;
