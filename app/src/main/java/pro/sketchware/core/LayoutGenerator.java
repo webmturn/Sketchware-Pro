@@ -25,7 +25,7 @@ import java.io.StringReader;
 import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -41,7 +41,7 @@ import pro.sketchware.xml.XmlBuilder;
 @SuppressLint("RtlHardcoded")
 public class LayoutGenerator {
 
-    private static final HashMap<String, Pattern> attrPatternCache = new HashMap<>();
+    private static final ConcurrentHashMap<String, Pattern> attrPatternCache = new ConcurrentHashMap<>();
 
     private final BuildConfig buildConfig;
     private final InjectRootLayoutManager rootManager;
@@ -199,7 +199,7 @@ public class LayoutGenerator {
 
             if (backgroundColor != 0xffffff) {
                 if (backgroundColor != 0) {
-                    int color = backgroundColor & 0xffffff;
+                    int color = backgroundColor;
                     if (xmlTag.getCleanRootElementName().equals("BottomAppBar")) {
                         if (!toNotAdd.contains("app:backgroundTint") && !injectHandler.contains("backgroundTint") && (backgroundResColor != null)) {
                             if (backgroundResColor.startsWith("?") || backgroundResColor.startsWith("@color/")) {
@@ -411,7 +411,7 @@ public class LayoutGenerator {
                     widgetTag.addAttribute("app", "sidebar_text_color", "@color/" + resTextColor);
                 }
             } else if (textColor != 0 && !toNotAdd.contains("app:sidebar_text_color")) {
-                widgetTag.addAttribute("app", "sidebar_text_color", formatColor(textColor & 0xffffff));
+                widgetTag.addAttribute("app", "sidebar_text_color", formatColor(textColor));
             }
         }
         addCommonAttributes(widgetTag, viewBean);
@@ -779,7 +779,7 @@ public class LayoutGenerator {
                     xmlTag.addAttribute("android", "textColor", "@color/" + viewBean.text.resTextColor);
                 }
             } else if (!hasAttr("textColor", viewBean) && !toNotAdd.contains("android:textColor") && !injectHandler.contains("textColor")) {
-                xmlTag.addAttribute("android", "textColor", formatColor(viewBean.text.textColor & 0xffffff));
+                xmlTag.addAttribute("android", "textColor", formatColor(viewBean.text.textColor));
             }
         }
         switch (viewBean.type) {
@@ -802,7 +802,7 @@ public class LayoutGenerator {
                             xmlTag.addAttribute("android", "textColorHint", "@color/" + viewBean.text.resHintColor);
                         }
                     } else if (!hasAttr("textColorHint", viewBean) && !toNotAdd.contains("android:textColorHint")) {
-                        xmlTag.addAttribute("android", "textColorHint", formatColor(viewBean.text.hintColor & 0xffffff));
+                        xmlTag.addAttribute("android", "textColorHint", formatColor(viewBean.text.hintColor));
                     }
                 }
                 if (viewBean.text.singleLine != 0 && !toNotAdd.contains("android:singleLine") && !injectHandler.contains("singleLine")) {

@@ -523,6 +523,7 @@ public class ManifestGenerator {
                 .equals(BuildSettings.SETTING_GENERIC_VALUE_TRUE)) {
             applicationTag.addAttribute("android", "usesCleartextTraffic", "true");
         }
+        applicationTag.addAttribute("android", "forceDarkAllowed", "false");
         AndroidManifestInjector.getAppAttrs(applicationTag, buildConfig.sc_id);
 
         boolean hasDebugActivity = false;
