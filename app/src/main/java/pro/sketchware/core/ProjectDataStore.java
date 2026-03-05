@@ -225,9 +225,9 @@ public class ProjectDataStore {
    */
   public void syncWithFileManager(ProjectFileManager fileManager) {
     for (ProjectFileBean projectFileBean : fileManager.getActivities()) {
-      if (!projectFileBean.hasActivityOption(8))
+      if (!projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB))
         removeFab(projectFileBean); 
-      if (!projectFileBean.hasActivityOption(4))
+      if (!projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER))
         removeViewTypeEvents(projectFileBean.getJavaName()); 
     } 
     ArrayList<String> viewKeysToRemove = new ArrayList<>();

@@ -711,7 +711,7 @@ public class BaseBlockView extends RelativeLayout {
   }
   
   public void onMeasure(int start, int end) {
-    super.onMeasure(View.MeasureSpec.makeMeasureSpec(getTotalWidth(), 1073741824), View.MeasureSpec.makeMeasureSpec(getTotalHeight(), 1073741824));
+    super.onMeasure(View.MeasureSpec.makeMeasureSpec(getTotalWidth(), View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(getTotalHeight(), View.MeasureSpec.EXACTLY));
   }
   
   public void setSubstack1Height(int index) {

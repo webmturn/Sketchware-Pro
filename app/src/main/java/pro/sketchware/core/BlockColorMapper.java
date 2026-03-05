@@ -20,6 +20,13 @@ import pro.sketchware.menu.DefaultExtraMenuBean;
  * @see BlockCodeRegistry
  */
 public class BlockColorMapper {
+    /**
+     * Returns the harmonized color for a block, using the application context.
+     *
+     * @param opcode    the block opCode
+     * @param blockType the block type character
+     * @return the ARGB color int
+     */
     public static int getBlockColor(String opcode, String blockType) {
         Context context = new ContextThemeWrapper(SketchApplication.getContext(), R.style.Theme_SketchwarePro);
         return getBlockColor(context, opcode, blockType);
