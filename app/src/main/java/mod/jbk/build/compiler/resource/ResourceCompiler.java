@@ -409,6 +409,7 @@ public class ResourceCompiler {
 
         private void compileImportedResources(String outputPath) throws SimpleException {
             String resourcePath = buildHelper.filePathUtil.getPathResource(buildHelper.projectFilePaths.sc_id);
+            File importedArchive = new File(outputPath, "project-imported.zip");
             if (FileUtil.isExistFile(resourcePath)
                     && new File(resourcePath).length() != 0) {
                 removeEmptyXmlFiles(new File(resourcePath));
@@ -426,6 +427,9 @@ public class ResourceCompiler {
                     LogUtil.e(TAG, executor.getLog());
                     throw new SimpleException(executor.getLog());
                 }
+            } else if (importedArchive.exists()) {
+                LogUtil.d(TAG + ":cIR", "No imported resources found, removing stale " + importedArchive.getName());
+                importedArchive.delete();
             }
         }
 

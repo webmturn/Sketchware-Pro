@@ -8,7 +8,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.net.Uri;
+
 import android.os.Build;
 import android.os.StrictMode;
 import android.system.Os;
@@ -334,15 +334,14 @@ public class ProjectBuilder {
      * @return Similar to {@link ProjectBuilder#getClasspath()}, but doesn't return some local libraries' JARs if ProGuard full mode is enabled
      */
     public String getProguardClasspath() {
-        Collection<String> localLibraryJarsWithFullModeOn = new LinkedList<>();
+        Set<String> localLibraryJarsWithFullModeOn = new HashSet<>();
 
         for (HashMap<String, Object> localLibrary : localLibraryManager.list) {
             Object nameObject = localLibrary.get("name");
             Object jarPathObject = localLibrary.get("jarPath");
 
             if (nameObject instanceof String name && jarPathObject instanceof String jarPath) {
-
-                if (localLibrary.containsKey("jarPath") && proguard.libIsProguardFMEnabled(name)) {
+                if (proguard.libIsProguardFMEnabled(name)) {
                     localLibraryJarsWithFullModeOn.add(jarPath);
                 }
             }
@@ -350,13 +349,9 @@ public class ProjectBuilder {
 
         String normalClasspath = getClasspath();
         StringBuilder classpath = new StringBuilder();
-        normalClasspathLoop:
         for (String classpathPart : normalClasspath.split(":")) {
-            for (String jarPathToExclude : localLibraryJarsWithFullModeOn) {
-                if (classpathPart.equals(jarPathToExclude)) {
-                    localLibraryJarsWithFullModeOn.remove(jarPathToExclude);
-                    continue normalClasspathLoop;
-                }
+            if (localLibraryJarsWithFullModeOn.contains(classpathPart)) {
+                continue;
             }
 
             if (!classpathPart.equals(projectFilePaths.compiledClassesPath)) {
@@ -393,7 +388,11 @@ public class ProjectBuilder {
         int mergedTypeCount;
 
         {
-            Dex firstDex = new Dex(new FileInputStream(toMergeIterator.next()));
+            File firstFile = toMergeIterator.next();
+            Dex firstDex;
+            try (FileInputStream fis = new FileInputStream(firstFile)) {
+                firstDex = new Dex(fis);
+            }
             dexObjects.add(firstDex);
             TableOfContents toc = firstDex.getTableOfContents();
             mergedFieldCount = toc.fieldIds.size;
@@ -406,7 +405,10 @@ public class ProjectBuilder {
             File dexFile = toMergeIterator.next();
             String nextMergedDexFilename = lastDexNumber == 1 ? "classes.dex" : "classes" + lastDexNumber + ".dex";
 
-            Dex dex = new Dex(new FileInputStream(dexFile));
+            Dex dex;
+            try (FileInputStream fis = new FileInputStream(dexFile)) {
+                dex = new Dex(fis);
+            }
             TableOfContents toc = dex.getTableOfContents();
 
             boolean canMerge = mergedFieldCount + toc.fieldIds.size <= 0xffff
@@ -723,8 +725,9 @@ public class ProjectBuilder {
             if (dexesToAddButNotMerge.isEmpty()) {
                 List<String> dexFiles = FileUtil.listFiles(projectFilePaths.binDirectoryPath, "dex");
                 for (String dexFile : dexFiles) {
-                    if (!Uri.fromFile(new File(dexFile)).getLastPathSegment().equals("classes.dex")) {
-                        apkBuilder.addFile(new File(dexFile), Uri.parse(dexFile).getLastPathSegment());
+                    String dexFileName = new File(dexFile).getName();
+                    if (!dexFileName.equals("classes.dex")) {
+                        apkBuilder.addFile(new File(dexFile), dexFileName);
                     }
                 }
             } else {
