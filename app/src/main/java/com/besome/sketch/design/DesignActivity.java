@@ -1513,15 +1513,22 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 var sc_id = DesignActivity.sc_id;
                 ProjectDataManager.getResourceManager(sc_id).cleanupAllResources();
                 ExecutorService pool = Executors.newFixedThreadPool(4);
+                CompletableFuture<Boolean> dataFuture = CompletableFuture.supplyAsync(
+                    () -> ProjectDataManager.getProjectDataManager(sc_id).saveAllData(), pool);
                 CompletableFuture.allOf(
                     CompletableFuture.runAsync(() -> ProjectDataManager.getFileManager(sc_id).saveToData(), pool),
-                    CompletableFuture.runAsync(() -> ProjectDataManager.getProjectDataManager(sc_id).saveAllData(), pool),
+                    dataFuture,
                     CompletableFuture.runAsync(() -> ProjectDataManager.getResourceManager(sc_id).saveToData(), pool),
                     CompletableFuture.runAsync(() -> ProjectDataManager.getLibraryManager(sc_id).saveToData(), pool)
                 ).join();
                 pool.shutdown();
+                boolean dataSaved = dataFuture.join();
                 activity.runOnUiThread(() -> {
-                    SketchToast.toast(activity.getApplicationContext(), Helper.getResString(R.string.common_message_complete_save), SketchToast.TOAST_NORMAL).show();
+                    if (dataSaved) {
+                        SketchToast.toast(activity.getApplicationContext(), Helper.getResString(R.string.common_message_complete_save), SketchToast.TOAST_NORMAL).show();
+                    } else {
+                        SketchToast.toast(activity.getApplicationContext(), "Save failed! Please check storage space and try again.", SketchToast.TOAST_WARNING).show();
+                    }
                     activity.saveVersionCodeInformationToProject();
                     activity.dismissLoadingDialog();
                     // Reset backup state after save — next resource modification
@@ -1549,19 +1556,27 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 var sc_id = DesignActivity.sc_id;
                 ProjectDataManager.getResourceManager(sc_id).cleanupAllResources();
                 ExecutorService pool = Executors.newFixedThreadPool(4);
+                CompletableFuture<Boolean> dataFuture = CompletableFuture.supplyAsync(
+                    () -> ProjectDataManager.getProjectDataManager(sc_id).saveAllData(), pool);
                 CompletableFuture.allOf(
                     CompletableFuture.runAsync(() -> ProjectDataManager.getFileManager(sc_id).saveToData(), pool),
-                    CompletableFuture.runAsync(() -> ProjectDataManager.getProjectDataManager(sc_id).saveAllData(), pool),
+                    dataFuture,
                     CompletableFuture.runAsync(() -> ProjectDataManager.getResourceManager(sc_id).saveToData(), pool),
                     CompletableFuture.runAsync(() -> ProjectDataManager.getLibraryManager(sc_id).saveToData(), pool)
                 ).join();
                 pool.shutdown();
+                boolean dataSaved = dataFuture.join();
                 ProjectDataManager.getResourceManager(sc_id).deleteTempDirs();
                 activity.runOnUiThread(() -> {
-                    SketchToast.toast(activity.getApplicationContext(), Helper.getResString(R.string.common_message_complete_save), SketchToast.TOAST_NORMAL).show();
-                    activity.saveVersionCodeInformationToProject();
-                    activity.dismissLoadingDialog();
-                    activity.finish();
+                    if (dataSaved) {
+                        SketchToast.toast(activity.getApplicationContext(), Helper.getResString(R.string.common_message_complete_save), SketchToast.TOAST_NORMAL).show();
+                        activity.saveVersionCodeInformationToProject();
+                        activity.dismissLoadingDialog();
+                        activity.finish();
+                    } else {
+                        SketchToast.toast(activity.getApplicationContext(), "Save failed! Please check storage space and try again.", SketchToast.TOAST_WARNING).show();
+                        activity.dismissLoadingDialog();
+                    }
                 });
             }
         }
