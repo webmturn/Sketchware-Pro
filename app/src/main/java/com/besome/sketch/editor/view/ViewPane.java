@@ -132,6 +132,8 @@ public class ViewPane extends RelativeLayout {
     private int defaultTextColor = 0; // need to save the original color before changes, cause using getDefaultColor() returns the current text color
     private int defaultHintColor = 0;
     private Material3LibraryManager material3LibraryManager;
+    private HashMap<String, String> xmlStringCache = null;
+    private String xmlStringCacheScId = null;
 
     public ViewPane(Context context) {
         super(context);
@@ -1317,25 +1319,27 @@ public class ViewPane extends RelativeLayout {
         if (sc_id == null) {
             return key;
         }
-        String filePath = SketchwarePaths.getDataPath(sc_id) + "/files/resource/values/strings.xml";
-
-        ArrayList<HashMap<String, Object>> stringsListMap = new ArrayList<>();
-
-        StringsEditorManager stringsEditorManager = new StringsEditorManager();
-        stringsEditorManager.convertXmlStringsToListMap(FileUtil.readFileIfExist(filePath), stringsListMap);
-
-        if (key.equals("@string/app_name") && !stringsEditorManager.isXmlStringsExist(stringsListMap, "app_name")) {
-            return MapValueHelper.getString(ProjectListManager.getProjectById(sc_id), "my_app_name");
-        }
-
-        for (HashMap<String, Object> map : stringsListMap) {
-            String keyValue = stringsStart + map.get("key").toString().trim();
-            if (key.equals(keyValue)) {
-                return map.get("text").toString();
+        if (xmlStringCache == null || !sc_id.equals(xmlStringCacheScId)) {
+            xmlStringCache = new HashMap<>();
+            xmlStringCacheScId = sc_id;
+            String filePath = SketchwarePaths.getDataPath(sc_id) + "/files/resource/values/strings.xml";
+            ArrayList<HashMap<String, Object>> stringsListMap = new ArrayList<>();
+            StringsEditorManager stringsEditorManager = new StringsEditorManager();
+            stringsEditorManager.convertXmlStringsToListMap(FileUtil.readFileIfExist(filePath), stringsListMap);
+            for (HashMap<String, Object> map : stringsListMap) {
+                String k = stringsStart + map.get("key").toString().trim();
+                xmlStringCache.put(k, map.get("text").toString());
             }
         }
+        if (key.equals("@string/app_name") && !xmlStringCache.containsKey(key)) {
+            return MapValueHelper.getString(ProjectListManager.getProjectById(sc_id), "my_app_name");
+        }
+        String value = xmlStringCache.get(key);
+        return value != null ? value : key;
+    }
 
-        return key;
+    public void invalidateXmlStringCache() {
+        xmlStringCache = null;
     }
 
     private void updateEditText(EditText editText, ViewBean viewBean) {
