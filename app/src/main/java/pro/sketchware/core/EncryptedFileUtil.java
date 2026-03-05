@@ -5,12 +5,14 @@ import android.util.Log;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -141,13 +143,22 @@ public class EncryptedFileUtil {
     if (separatorIdx > 0)
       mkdirs(value.substring(0, separatorIdx)); 
     File file = new File(value);
-    if (!file.exists())
-      try { file.createNewFile(); } catch (IOException e) { Log.w("EncryptedFileUtil", "Failed to create file", e); } 
-    try (FileOutputStream fos = new FileOutputStream(file)) {
+    File tmpFile = new File(value + ".tmp");
+    try (FileOutputStream fos = new FileOutputStream(tmpFile)) {
       fos.write(data);
-      fos.flush();
+      fos.getFD().sync();
     } catch (IOException e) {
       Log.w("EncryptedFileUtil", "Failed to write bytes", e);
+      tmpFile.delete();
+      return;
+    }
+    if (!tmpFile.renameTo(file)) {
+      // renameTo can fail across filesystems; fall back to delete+rename
+      file.delete();
+      if (!tmpFile.renameTo(file)) {
+        Log.e("EncryptedFileUtil", "Atomic rename failed for: " + value);
+        tmpFile.delete();
+      }
     }
   }
   
@@ -179,13 +190,23 @@ public class EncryptedFileUtil {
     if (separatorIdx > 0)
       mkdirs(key.substring(0, separatorIdx)); 
     File file = new File(key);
-    if (!file.exists())
-      try { file.createNewFile(); } catch (IOException e) { Log.w("EncryptedFileUtil", "Failed to create file", e); } 
-    try (FileWriter fw = new FileWriter(file, false)) {
+    File tmpFile = new File(key + ".tmp");
+    try (FileOutputStream fos = new FileOutputStream(tmpFile);
+         Writer fw = new OutputStreamWriter(fos, StandardCharsets.UTF_8)) {
       fw.write(value);
       fw.flush();
+      fos.getFD().sync();
     } catch (IOException e) {
       Log.w("EncryptedFileUtil", "Failed to write text", e);
+      tmpFile.delete();
+      return;
+    }
+    if (!tmpFile.renameTo(file)) {
+      file.delete();
+      if (!tmpFile.renameTo(file)) {
+        Log.e("EncryptedFileUtil", "Atomic rename failed for: " + key);
+        tmpFile.delete();
+      }
     }
   }
   
@@ -242,13 +263,15 @@ public class EncryptedFileUtil {
   }
   
   public byte[] readFileBytes(String value) {
-    try (FileInputStream fis = new FileInputStream(value)) {
-      int size = fis.available();
-      if (size > 0) {
-        byte[] data = new byte[size];
-        fis.read(data);
-        return data;
+    try (FileInputStream fis = new FileInputStream(value);
+         ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+      byte[] buf = new byte[4096];
+      int len;
+      while ((len = fis.read(buf)) != -1) {
+        bos.write(buf, 0, len);
       }
+      byte[] data = bos.toByteArray();
+      return data.length > 0 ? data : null;
     } catch (IOException e) {
       Log.w("EncryptedFileUtil", "Failed to read file bytes: " + value, e);
     }
