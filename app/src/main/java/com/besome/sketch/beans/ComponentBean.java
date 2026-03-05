@@ -10,6 +10,20 @@ import pro.sketchware.core.ClassInfo;
 import mod.hilal.saif.components.ComponentsHandler;
 import pro.sketchware.R;
 
+/**
+ * Represents a non-visual component (Intent, Timer, Firebase, Dialog, etc.) in a project.
+ * <p>
+ * Each component has a {@link #type} constant (see {@code COMPONENT_TYPE_*}),
+ * a unique {@link #componentId}, and up to three string parameters ({@link #param1},
+ * {@link #param2}, {@link #param3}) whose meaning depends on the component type.
+ * <p>
+ * Components are stored per-file in {@link pro.sketchware.core.ProjectDataStore#componentMap}
+ * and generate Java field declarations and initialization code via
+ * {@link pro.sketchware.core.ComponentTypeMapper}.
+ *
+ * @see pro.sketchware.core.ProjectDataStore
+ * @see EventBean
+ */
 public class ComponentBean extends CollapsibleBean implements Parcelable {
     public static final Parcelable.Creator<ComponentBean> CREATOR = new Parcelable.Creator<>() {
         @Override

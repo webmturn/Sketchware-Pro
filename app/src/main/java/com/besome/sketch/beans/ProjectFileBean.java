@@ -12,6 +12,25 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Represents a file (Activity, CustomView, Drawer, Fragment, or BottomSheet) in a project.
+ * <p>
+ * Each file has a {@link #fileType} (see {@code PROJECT_FILE_TYPE_*} constants),
+ * a {@link #fileName} used to derive both the XML layout name ({@link #getXmlName()})
+ * and the Java class name ({@link #getJavaName()}), and configuration flags for
+ * orientation, keyboard behavior, and activity options (toolbar, fullscreen, FAB, drawer).
+ * <p>
+ * Activity options are stored as a bitmask in {@link #options}:
+ * <ul>
+ *   <li>{@link #OPTION_ACTIVITY_TOOLBAR} (bit 0) — has toolbar / no ActionBar</li>
+ *   <li>{@link #OPTION_ACTIVITY_FULLSCREEN} (bit 1) — fullscreen mode</li>
+ *   <li>{@link #OPTION_ACTIVITY_DRAWER} (bit 2) — has navigation drawer</li>
+ *   <li>{@link #OPTION_ACTIVITY_FAB} (bit 3) — has floating action button</li>
+ * </ul>
+ *
+ * @see pro.sketchware.core.ProjectFileManager
+ * @see pro.sketchware.core.ProjectDataStore
+ */
 public class ProjectFileBean extends SelectableBean implements Parcelable {
     public static final Creator<ProjectFileBean> CREATOR = new Creator<>() {
         @Override

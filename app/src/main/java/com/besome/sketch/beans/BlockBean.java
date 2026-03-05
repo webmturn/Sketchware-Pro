@@ -12,6 +12,22 @@ import java.util.ArrayList;
 import pro.sketchware.core.ClassInfo;
 import pro.sketchware.core.ComponentTypeMapper;
 
+/**
+ * Represents a single block in the logic editor.
+ * <p>
+ * Each block has an {@link #opCode} that identifies its function, a {@link #spec} string
+ * that defines its visual layout and parameter placeholders (e.g. {@code "%s"}, {@code "%d"},
+ * {@code "%m.view"}), a {@link #type} character indicating its shape ({@code " "} for
+ * statement, {@code "b"} for boolean, {@code "d"} for number, {@code "s"} for string),
+ * and a list of {@link #parameters} containing literal values or block references
+ * (prefixed with {@code "@"}).
+ * <p>
+ * Blocks form linked chains via {@link #nextBlock} (the next statement) and can contain
+ * nested sub-stacks via {@link #subStack1} and {@link #subStack2} (for if/else, repeat, etc.).
+ *
+ * @see pro.sketchware.core.BlockInterpreter
+ * @see pro.sketchware.core.BlockCodeRegistry
+ */
 public class BlockBean extends SelectableBean implements Parcelable {
     public static final Parcelable.Creator<BlockBean> CREATOR = new Parcelable.Creator<>() {
         @Override
@@ -62,6 +78,15 @@ public class BlockBean extends SelectableBean implements Parcelable {
         this(id, spec, type, "", opCode);
     }
 
+    /**
+     * Constructs a block with full parameters.
+     *
+     * @param id       the unique block ID within an event chain (e.g. {@code "1"}, {@code "5"})
+     * @param spec     the display spec with parameter placeholders
+     * @param type     the block shape character ({@code " "}, {@code "b"}, {@code "d"}, {@code "s"})
+     * @param typeName the component type name (e.g. {@code "textview"}, {@code "timer"})
+     * @param opCode   the operation code identifying this block's function
+     */
     public BlockBean(String id, String spec, String type, String typeName, String opCode) {
         this.id = id;
         this.spec = spec;
@@ -98,6 +123,12 @@ public class BlockBean extends SelectableBean implements Parcelable {
         parameterClassInfo = ComponentTypeMapper.getParamClassInfoList(spec);
     }
 
+    /**
+     * Deep-copies all fields from another BlockBean into this one,
+     * including rebuilding class info from the copied type/spec.
+     *
+     * @param other the source block to copy from
+     */
     public void copy(BlockBean other) {
         id = other.id;
         spec = other.spec;
@@ -117,6 +148,12 @@ public class BlockBean extends SelectableBean implements Parcelable {
         return 0;
     }
 
+    /**
+     * Returns the {@link ClassInfo} for this block's return type.
+     * Lazily builds class info on first access.
+     *
+     * @return the class info, never null
+     */
     public ClassInfo getClassInfo() {
         if (classInfo == null) {
             buildClassInfo();
@@ -124,6 +161,12 @@ public class BlockBean extends SelectableBean implements Parcelable {
         return classInfo;
     }
 
+    /**
+     * Returns the list of {@link ClassInfo} objects for each parameter slot,
+     * derived from the spec's parameter placeholders.
+     *
+     * @return the parameter class info list, never null
+     */
     public ArrayList<ClassInfo> getParamClassInfo() {
         if (parameterClassInfo == null) {
             buildClassInfo();
@@ -131,6 +174,14 @@ public class BlockBean extends SelectableBean implements Parcelable {
         return parameterClassInfo;
     }
 
+    /**
+     * Checks value equality with another BlockBean by comparing all fields
+     * including parameters. Used by {@link pro.sketchware.core.BlockHistoryManager}
+     * to detect actual changes before recording undo history.
+     *
+     * @param other the block to compare with
+     * @return {@code true} if all fields are equal
+     */
     public boolean isEqual(BlockBean other) {
         if (other == null) {
             return false;

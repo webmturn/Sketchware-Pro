@@ -32,14 +32,35 @@ public class EventCodeRegistry {
         registerMapLocationEvents();
     }
 
+    /**
+     * Registers a handler for the given event name.
+     *
+     * @param eventName the event name (e.g. {@code "onClick"}, {@code "onResume"})
+     * @param handler   the code generation handler
+     */
     public static void register(String eventName, EventCodeHandler handler) {
         handlers.put(eventName, handler);
     }
 
+    /**
+     * Returns the handler for the given event name, or {@code null} if not registered.
+     *
+     * @param eventName the event name
+     * @return the handler, or {@code null}
+     */
     public static EventCodeHandler get(String eventName) {
         return handlers.get(eventName);
     }
 
+    /**
+     * Generates the Java code for an event handler method.
+     * Falls back to {@link ManageEvent#getExtraEventCode} for unregistered events.
+     *
+     * @param targetId   the target view/component ID
+     * @param eventName  the event name
+     * @param eventLogic the generated logic code body
+     * @return the complete event handler method as Java source
+     */
     public static String generate(String targetId, String eventName, String eventLogic) {
         EventCodeHandler handler = handlers.get(eventName);
         if (handler != null) {

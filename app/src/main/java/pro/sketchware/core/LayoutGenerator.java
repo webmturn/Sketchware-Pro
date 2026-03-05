@@ -38,6 +38,23 @@ import pro.sketchware.managers.inject.InjectRootLayoutManager;
 import pro.sketchware.utility.InjectAttributeHandler;
 import pro.sketchware.xml.XmlBuilder;
 
+/**
+ * Generates Android XML layout files from a project's {@link ViewBean} tree.
+ * <p>
+ * Converts the in-memory view hierarchy into properly formatted XML with:
+ * <ul>
+ *   <li>Layout attributes (width, height, gravity, margins, padding)</li>
+ *   <li>Text attributes (text, textSize, textColor, typeface, hint)</li>
+ *   <li>Image attributes (src, scaleType)</li>
+ *   <li>AppCompat widget upgrades (e.g. Button → MaterialButton when enabled)</li>
+ *   <li>Custom inject attributes from user XML injections</li>
+ *   <li>Material3 / CollapsingToolbarLayout root wrappers</li>
+ * </ul>
+ *
+ * @see ViewBean
+ * @see pro.sketchware.xml.XmlBuilder
+ * @see ProjectBuilder
+ */
 @SuppressLint("RtlHardcoded")
 public class LayoutGenerator {
 
@@ -273,16 +290,32 @@ public class LayoutGenerator {
         }
     }
 
+    /**
+     * Sets the view list and builds the layout XML tree (without FAB).
+     *
+     * @param arrayList the flat list of views to arrange into a tree
+     */
     public void setViews(ArrayList<ViewBean> arrayList) {
         setViews(arrayList, null);
     }
 
+    /**
+     * Sets the view list and FAB, then builds the layout XML tree.
+     *
+     * @param arrayList the flat list of views to arrange into a tree
+     * @param viewBean  the FAB view, or {@code null} if none
+     */
     public void setViews(ArrayList<ViewBean> arrayList, ViewBean viewBean) {
         fab = viewBean;
         views = arrayList;
         writeRootLayout();
     }
 
+    /**
+     * Returns the generated layout as an XML string.
+     *
+     * @return the complete layout XML
+     */
     public String toXmlString() {
         return rootLayout.toCode();
     }

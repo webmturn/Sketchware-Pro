@@ -9,6 +9,22 @@ import pro.sketchware.core.ProjectDataStore;
 import pro.sketchware.core.ProjectDataManager;
 import pro.sketchware.R;
 
+/**
+ * Represents an event handler attached to a view or component in the logic editor.
+ * <p>
+ * Events are categorized by {@link #eventType}:
+ * <ul>
+ *   <li>{@link #EVENT_TYPE_VIEW} — UI view events (onClick, onLongClick, etc.)</li>
+ *   <li>{@link #EVENT_TYPE_COMPONENT} — component callbacks (onResponse, onComplete, etc.)</li>
+ *   <li>{@link #EVENT_TYPE_ACTIVITY} — activity lifecycle events (onCreate, onResume, etc.)</li>
+ *   <li>{@link #EVENT_TYPE_DRAWER_VIEW} — drawer view events</li>
+ * </ul>
+ * The {@link #targetId} identifies the view/component this event belongs to,
+ * and {@link #targetType} specifies the view/component type constant.
+ *
+ * @see ProjectDataStore
+ * @see BlockBean
+ */
 public class EventBean extends CollapsibleBean implements Parcelable {
     public static final Parcelable.Creator<EventBean> CREATOR = new Parcelable.Creator<>() {
         @Override
@@ -39,6 +55,14 @@ public class EventBean extends CollapsibleBean implements Parcelable {
     @Expose
     public int targetType;
 
+    /**
+     * Constructs an event with all fields.
+     *
+     * @param eventType  the event category (see {@code EVENT_TYPE_*} constants)
+     * @param targetType the view/component type constant
+     * @param targetId   the target view ID or component ID
+     * @param eventName  the event name (e.g. {@code "onClick"}, {@code "onResponse"})
+     */
     public EventBean(int eventType, int targetType, String targetId, String eventName) {
         this.eventType = eventType;
         this.targetType = targetType;
@@ -66,6 +90,13 @@ public class EventBean extends CollapsibleBean implements Parcelable {
         };
     }
 
+    /**
+     * Deletes this event and its associated block chain from the project data store.
+     *
+     * @param sc_id           the project identifier
+     * @param event           the event to delete
+     * @param projectFileBean the file containing this event
+     */
     public static void deleteEvent(String sc_id, EventBean event, ProjectFileBean projectFileBean) {
         ProjectDataManager.getProjectDataManager(sc_id).removeEvent(projectFileBean.getJavaName(), event.targetId, event.eventName);
         ProjectDataStore projectDataStore = ProjectDataManager.getProjectDataManager(sc_id);
@@ -105,6 +136,12 @@ public class EventBean extends CollapsibleBean implements Parcelable {
         return 0;
     }
 
+    /**
+     * Returns the composite key used to identify this event's block chain
+     * in the block map (format: {@code "targetId_eventName"}).
+     *
+     * @return the event key string
+     */
     public String getEventKey() {
         return targetId + SEPARATOR + eventName;
     }
