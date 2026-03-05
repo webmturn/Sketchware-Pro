@@ -1941,6 +1941,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         openResourcesEditor = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     if (result.getResultCode() == RESULT_OK) {
+                        extraPaletteBlock.invalidateStringsCache();
                         paletteSelector.performClickPalette(-1);
                     }
                 });

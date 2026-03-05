@@ -33,6 +33,7 @@ import pro.sketchware.activities.resourceseditor.components.utils.StringsEditorM
 import pro.sketchware.blocks.ExtraBlocks;
 import pro.sketchware.control.logic.LogicClickListener;
 import pro.sketchware.utility.CustomVariableUtil;
+import pro.sketchware.core.SketchwarePaths;
 import pro.sketchware.utility.FileResConfig;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.SketchwareUtil;
@@ -50,7 +51,9 @@ public class ExtraPaletteBlock {
     private final HashMap<String, Object> mapSave = new HashMap<>();
     private final ProjectFileBean projectFile;
     private final Boolean isViewBindingEnabled;
+    private final LayoutGenerator layoutGenerator;
     public LogicEditorActivity logicEditor;
+    private ArrayList<HashMap<String, Object>> cachedStringsListMap;
 
     public ExtraPaletteBlock(LogicEditorActivity logicEditorActivity, Boolean isViewBindingEnabled) {
         logicEditor = logicEditorActivity;
@@ -65,6 +68,7 @@ public class ExtraPaletteBlock {
         frc = new FileResConfig(sc_id);
         extraBlocks = new ExtraBlocks(logicEditor);
         clickListener = new LogicClickListener(logicEditor);
+        layoutGenerator = new LayoutGenerator(new BuildConfig(), projectFile);
     }
 
     private boolean isWidgetUsed(String widgetType) {
@@ -286,7 +290,7 @@ public class ExtraPaletteBlock {
         ArrayList<ViewBean> views = ProjectDataManager.getProjectDataManager(sc_id).getViews(xmlName);
         for (int i = 0, viewsSize = views.size(); i < viewsSize; i++) {
             ViewBean view = views.get(i);
-            Set<String> toNotAdd = new LayoutGenerator(new BuildConfig(), projectFile).readAttributesToReplace(view);
+            Set<String> toNotAdd = layoutGenerator.readAttributesToReplace(view);
 
             if (i == 0) {
                 logicEditor.addPaletteCategory(Helper.getResString(R.string.logic_editor_category_views), getTitleBgColor());
@@ -384,9 +388,14 @@ public class ExtraPaletteBlock {
         );
     }
 
+    public void invalidateStringsCache() {
+        cachedStringsListMap = null;
+    }
+
     public void setBlock(int paletteId, int paletteColor) {
         // Remove previous palette's blocks
         logicEditor.paletteBlock.clearAll();
+        extraBlocks.invalidateCustomVarCache();
 
         if (eventName.equals("Import")) {
             if (paletteId == 3) {
@@ -401,21 +410,22 @@ public class ExtraPaletteBlock {
 
         switch (paletteId) {
             case -1:
-                String filePath = FileUtil.getExternalStorageDir().concat("/.sketchware/data/").concat(sc_id.concat("/files/resource/values/strings.xml"));
-                ArrayList<HashMap<String, Object>> StringsListMap = new ArrayList<>();
-                StringsEditorManager stringsEditorManager = new StringsEditorManager();
-                stringsEditorManager.convertXmlStringsToListMap(FileUtil.readFileIfExist(filePath), StringsListMap);
+                if (cachedStringsListMap == null) {
+                    cachedStringsListMap = new ArrayList<>();
+                    String filePath = SketchwarePaths.getDataPath(sc_id) + "/files/resource/values/strings.xml";
+                    new StringsEditorManager().convertXmlStringsToListMap(FileUtil.readFileIfExist(filePath), cachedStringsListMap);
+                }
 
                 logicEditor.addPaletteLabel(Helper.getResString(R.string.logic_editor_panel_button_open_resources_editor), "openResourcesEditor");
 
                 logicEditor.createPaletteBlock("s", "getResString");
                 logicEditor.addPaletteCategory(Helper.getResString(R.string.logic_editor_category_saved_res_strings), getTitleBgColor());
-                if (!stringsEditorManager.isXmlStringsExist(StringsListMap, "app_name")) {
+                if (!new StringsEditorManager().isXmlStringsExist(cachedStringsListMap, "app_name")) {
                     logicEditor.createPaletteBlockWithSpec("app_name", "s", "getResStr").setTag("S98ZCSapp_name");
                 }
 
-                for (int i = 0; i < StringsListMap.size(); i++) {
-                    String key = String.valueOf(StringsListMap.get(i).get("key"));
+                for (int i = 0; i < cachedStringsListMap.size(); i++) {
+                    String key = String.valueOf(cachedStringsListMap.get(i).get("key"));
                     logicEditor.createPaletteBlockWithSpec(key, "s", "getResStr").setTag("S98ZCS" + key);
                 }
                 return;

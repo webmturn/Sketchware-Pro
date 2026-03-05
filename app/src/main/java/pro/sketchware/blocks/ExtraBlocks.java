@@ -6,6 +6,8 @@ import com.besome.sketch.editor.LogicEditorActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,10 +17,13 @@ import mod.hilal.saif.activities.tools.ConfigActivity;
 
 public class ExtraBlocks {
 
+    private static final Pattern CUSTOM_VAR_PATTERN = Pattern.compile("^(\\w+)[\\s]+(\\w+)");
+
     private final String eventName;
     private final String javaName;
     private final LogicEditorActivity logicEditor;
     private final ProjectDataStore projectDataManager;
+    private Set<String> customVarTypesCache;
 
     public ExtraBlocks(LogicEditorActivity logicEditor) {
         eventName = logicEditor.eventName;
@@ -107,40 +112,41 @@ public class ExtraBlocks {
     }
 
     public boolean isVariableUsed(int varId) {
-        ArrayList<Pair<Integer, String>> variables = projectDataManager.getVariables(javaName);
-        ArrayList<Integer> variableList = new ArrayList<>();
-        for (Pair<Integer, String> intStrPair : variables) {
-            variableList.add(intStrPair.first);
+        for (Pair<Integer, String> entry : projectDataManager.getVariables(javaName)) {
+            if (entry.first == varId) return true;
         }
-        return variableList.contains(varId);
+        return false;
     }
 
     public boolean isListUsed(int listId) {
-        ArrayList<Pair<Integer, String>> listVars = projectDataManager.getListVariables(javaName);
-        ArrayList<Integer> listVar = new ArrayList<>();
-        for (Pair<Integer, String> intStrPair : listVars) {
-            listVar.add(intStrPair.first);
+        for (Pair<Integer, String> entry : projectDataManager.getListVariables(javaName)) {
+            if (entry.first == listId) return true;
         }
-        return listVar.contains(listId);
+        return false;
     }
 
     public boolean isComponentUsed(int componentId) {
         return projectDataManager.hasComponentOfType(javaName, componentId) || ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_SHOW_EVERY_SINGLE_BLOCK);
     }
 
+    public void invalidateCustomVarCache() {
+        customVarTypesCache = null;
+    }
+
     public boolean isCustomVarUsed(String variable) {
         if (ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_SHOW_EVERY_SINGLE_BLOCK)) {
             return true;
         }
-
-        ArrayList<String> varTypes = new ArrayList<>();
-        for (String variableName : projectDataManager.getVariableNamesByType(javaName, 5)) {
-            Matcher matcher = Pattern.compile("^(\\w+)[\\s]+(\\w+)").matcher(variableName);
-            while (matcher.find()) {
-                varTypes.add(matcher.group(1));
+        if (customVarTypesCache == null) {
+            customVarTypesCache = new HashSet<>();
+            for (String variableName : projectDataManager.getVariableNamesByType(javaName, 5)) {
+                Matcher matcher = CUSTOM_VAR_PATTERN.matcher(variableName);
+                if (matcher.find()) {
+                    customVarTypesCache.add(matcher.group(1));
+                }
             }
         }
-        return varTypes.contains(variable);
+        return customVarTypesCache.contains(variable);
     }
 
     public void eventBlocks() {
