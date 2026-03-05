@@ -38,7 +38,6 @@ public class ProguardHandler {
                     -verbose
                     
                     -dontoptimize
-                    -dontpreverify
                     
                     -keepattributes *Annotation*
                     -keep public class com.google.vending.licensing.ILicensingService
@@ -70,32 +69,9 @@ public class ProguardHandler {
                         public static <fields>;
                     }
                     
-                    -dontwarn android.support.**
-                    
-                    -keep class android.support.annotation.Keep
-                    
-                    -keep @android.support.annotation.Keep class * {*;}
-                    
-                    -keepclasseswithmembers class * {
-                        @android.support.annotation.Keep <methods>;
-                    }
-                    
-                    -keepclasseswithmembers class * {
-                        @android.support.annotation.Keep <fields>;
-                    }
-                    
-                    -keepclasseswithmembers class * {
-                        @android.support.annotation.Keep <init>(...);
-                    }
-                    
                     -keepclassmembers class * {
-                        @android.webkit.JavascriptInterface <methods>;\
+                        @android.webkit.JavascriptInterface <methods>;
                     }
-                    
-                    -dontwarn android.arch.**
-                    -dontwarn android.lifecycle.**
-                    -keep class android.arch.** { *; }
-                    -keep class android.lifecycle.** { *; }
                     
                     -dontwarn androidx.arch.**
                     -dontwarn androidx.lifecycle.**
@@ -113,7 +89,6 @@ public class ProguardHandler {
         if (!FileUtil.isExistFile(path)) {
             FileUtil.writeFile(path, """
                     -repackageclasses
-                    -ignorewarnings
                     -dontwarn
                     -dontnote
                     """);
