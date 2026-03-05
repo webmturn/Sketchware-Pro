@@ -641,14 +641,13 @@ public class XmlLayoutParser {
 
     /**
      * Parses a hex color string (#RGB, #RRGGBB, #AARRGGBB) to an integer.
-     * Returns the color with alpha stripped (Sketchware stores RGB only in most fields).
+     * Returns the full ARGB color value (alpha preserved).
      */
     private static int parseColorValue(String value) {
         try {
-            int color = Color.parseColor(value);
-            return color & 0xFFFFFF;
+            return Color.parseColor(value);
         } catch (IllegalArgumentException e) {
-            return 0xFFFFFF;
+            return 0xFFFFFFFF;
         }
     }
 }
