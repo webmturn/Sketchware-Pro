@@ -4377,7 +4377,7 @@ JSON 对象（`HashMap<String, String>`），控制代码混淆/缩减。由 `Pr
 | `debug` | 是否生成调试映射文件 | `"false"` |
 | `r8` | 使用 R8 替代 ProGuard | `"false"` |
 
-> 混淆规则文件为同目录下的 `proguard-rules.pro`（纯文本），默认包含 `-repackageclasses -ignorewarnings -dontwarn -dontnote`。
+> 混淆规则文件为同目录下的 `proguard-rules.pro`（纯文本），默认包含 `-repackageclasses -dontwarn -dontnote`。
 > 另有 `proguard_fm` 文件（JSON 字符串数组），列出启用全量混淆模式的库名。
 
 ### stringfog 文件

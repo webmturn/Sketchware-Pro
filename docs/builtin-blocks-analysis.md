@@ -556,7 +556,7 @@
 ## 三、缺失分析：建议补充的 Block（经三轮审查）
 
 > **重要发现**：项目存在**两套 block 系统**：
-> 1. **核心块**（`BlockInterpreter.java` + `BlockSpecRegistry.java`）— ~174 个，硬编码在 switch 语句中
+> 1. **核心块**（`BlockCodeRegistry.java` + `BlockSpecRegistry.java`）— ~174 个，通过注册表模式管理
 > 2. **额外块**（`BlocksHandler.java` 的 `builtInBlocks()` 方法）— ~200+ 个，通过 HashMap 动态定义
 >
 > 初始分析仅覆盖了核心块系统，遗漏了额外块系统。经三轮审查后，初步建议的 35 个缺失块中：
@@ -629,7 +629,7 @@
    - `getBlockParams(blockName)` — 参数类型列表（`%d` 数值, `%s` 字符串, `%b` 布尔, `%m.xxx` 菜单选择）
    - `getBlockSpec(blockName)` — 显示文本（如 `set %m.textview text %s`）
 
-2. **`BlockInterpreter.java`** — `getBlockCode()` 方法中添加 `case "opcode":` 分支，定义代码生成逻辑
+2. **`BlockCodeRegistry.java`** — 注册新的 handler，定义代码生成逻辑
 
 3. **Block 调色板** — 将 block 添加到 Logic Editor 的块面板中，使用户可以拖拽使用
    - 相关文件：`LogicEditorActivity.java` 或块菜单配置
@@ -637,6 +637,8 @@
 4. **翻译** — 在 `values/strings.xml` 和各语言文件中添加 `block_xxx` 格式的翻译字符串
 
 > **注意**: `BlockSpecRegistry.java` 使用 hash-based switch（基于 `String.hashCode()`），添加新 block 需要正确计算 hash 值并插入到正确位置，或改用更现代的 switch 语法。
+>
+> **架构更新**: `BlockInterpreter.getBlockCode()` 中的巨型 switch 已重构为 `BlockCodeRegistry` 注册表模式，新增 block 只需注册 handler。
 
 ---
 
@@ -644,7 +646,7 @@
 
 | 指标 | 数量 |
 |------|------|
-| 核心块（BlockInterpreter） | ~174 个 |
+| 核心块（BlockCodeRegistry） | ~174 个 |
 | 额外块（BlocksHandler） | ~200+ 个 |
 | 已知 Bug/Typo | 3 个 |
 | 初步建议中已存在于额外块 | 12 个 |

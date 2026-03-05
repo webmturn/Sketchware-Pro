@@ -43,16 +43,16 @@
 
 | 文件 | 行数 | 职责 |
 |------|------|------|
-| `BlockInterpreter.java` | 1748 | 将单个 Block 的 opcode 翻译为 Java 代码片段 |
-| `ActivityCodeGenerator.java` | 1206 | 组装完整的 Activity/Fragment Java 源文件 |
-| `EventCodeGenerator.java` | 455 | 管理事件分类（View/Component/Activity/Drawer）并生成监听器 |
-| `ComponentCodeGenerator.java` | 3484 | build.gradle 生成、字段声明、事件代码模板、代码格式化 |
-| `BlockLoader.java` | 206 | 加载 Extra Block 自定义块定义 |
-| `ExtraBlockInfo.java` | 61 | Extra Block 数据模型 |
+| `BlockInterpreter.java` | 383 | 将单个 Block 的 opcode 翻译为 Java 代码片段 |
+| `ActivityCodeGenerator.java` | 1202 | 组装完整的 Activity/Fragment Java 源文件 |
+| `EventCodeGenerator.java` | 458 | 管理事件分类（View/Component/Activity/Drawer）并生成监听器 |
+| `ComponentCodeGenerator.java` | 919 | build.gradle 生成、字段声明、事件代码模板、代码格式化 |
+| `BlockLoader.java` | 283 | 加载 Extra Block 自定义块定义 |
+| `ExtraBlockInfo.java` | 60 | Extra Block 数据模型 |
 
 ## 2. BlockInterpreter 分析
 
-**文件**: `pro/sketchware/core/BlockInterpreter.java` (1748 行)
+**文件**: `pro/sketchware/core/BlockInterpreter.java` (383 行)
 
 ### 2.1 核心职责
 
@@ -116,7 +116,7 @@
 
 ## 3. ActivityCodeGenerator 分析
 
-**文件**: `pro/sketchware/core/ActivityCodeGenerator.java` (1206 行)
+**文件**: `pro/sketchware/core/ActivityCodeGenerator.java` (1202 行)
 
 ### 3.1 核心职责
 
@@ -197,7 +197,7 @@ code = code.replace("getApplicationContext()", "getContext().getApplicationConte
 
 ## 4. EventCodeGenerator 分析
 
-**文件**: `pro/sketchware/core/EventCodeGenerator.java` (455 行)
+**文件**: `pro/sketchware/core/EventCodeGenerator.java` (458 行)
 
 ### 4.1 核心职责
 
@@ -253,7 +253,7 @@ for (EventBean eventBean : events) {
 
 ## 5. ComponentCodeGenerator 分析
 
-**文件**: `pro/sketchware/core/ComponentCodeGenerator.java` (3484 行)
+**文件**: `pro/sketchware/core/ComponentCodeGenerator.java` (919 行)
 
 ### 5.1 核心职责
 
@@ -515,7 +515,7 @@ String (格式化后的最终代码)
 ### 8.7 ComponentCodeGenerator 职责过重（设计）
 
 **问题**:
-- 3484 行的单一类，承担了至少 8 种不同职责
+- 919 行的单一类，承担了至少 8 种不同职责
 - build.gradle 生成、事件代码模板、字段声明、代码格式化等功能耦合在一起
 - 任何依赖变更（如新增内置库）都需要修改此文件
 - 违反单一职责原则 (SRP)
@@ -641,10 +641,10 @@ public class CodeContext {
 
 ### 9.4 拆分 ComponentCodeGenerator（中优先级）
 
-将 3484 行的 `ComponentCodeGenerator` 拆分为独立职责类：
+将 919 行的 `ComponentCodeGenerator` 拆分为独立职责类：
 
 ```
-ComponentCodeGenerator (3484 行)
+ComponentCodeGenerator (919 行)
   → GradleFileGenerator      (build.gradle / settings.gradle 生成)
   → FieldDeclarationGenerator (字段声明)
   → EventTemplateGenerator    (事件代码模板)
@@ -685,24 +685,24 @@ ComponentCodeGenerator (3484 行)
                              ▼
                 ┌────────────────────────────┐
                 │  ActivityCodeGenerator     │ ← 组装完整 .java
-                │  (1206 行)                 │
+                │  (1202 行)                 │
                 └────┬──────────┬────────────┘
                      │          │
           ┌──────────▼──┐   ┌──▼─────────────────┐
           │EventCode    │   │ComponentCode        │
           │Generator    │   │Generator            │
-          │(455 行)     │   │(3484 行)            │
+          │(458 行)     │   │(919 行)             │
           └──────┬──────┘   └─────────────────────┘
                  │ 对每个事件创建
                  ▼
         ┌─────────────────┐     ┌──────────────┐
         │BlockInterpreter │────▶│  BlockLoader  │
-        │(1748 行)        │     │  (206 行)     │
+        │(383 行)         │     │  (283 行)     │
         └─────────────────┘     └──────┬───────┘
                                        │
                                 ┌──────▼───────┐
                                 │ExtraBlockInfo│
-                                │(61 行)       │
+                                │(60 行)       │
                                 └──────────────┘
 ```
 

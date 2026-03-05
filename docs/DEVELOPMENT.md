@@ -2,7 +2,7 @@
 
 > 版本：1.0  
 > 最后更新：2026-03-05  
-> 适用分支：`ui-improvements`
+> 适用分支：`main`
 
 ---
 
@@ -45,7 +45,7 @@ Sketchware Pro 是一款运行在 Android 设备上的**可视化 Android 应用
 | **最低 API** | Android 8.0（API 26）|
 | **编译 SDK** | API 36 |
 | **目标 SDK** | API 28（不上架 Google Play，故未升级）|
-| **构建工具** | Gradle 8.12.0、AGP 8.12.0 |
+| **构建工具** | Gradle 8.13、AGP 8.12.0 |
 | **UI 框架** | AndroidX、Material Design、ViewBinding |
 | **代码编辑器** | Sora Editor |
 | **图片加载** | Coil + Glide |
@@ -180,7 +180,7 @@ app/src/main/java/
 
 ```bash
 # 1. 克隆仓库
-git clone https://github.com/nicholasgasior/Sketchware-Pro.git
+git clone https://github.com/Sketchware-Pro/Sketchware-Pro.git
 cd Sketchware-Pro
 
 # 2. 设置 JAVA_HOME（Windows PowerShell 示例）
@@ -833,7 +833,7 @@ ComponentCodeGenerator
 
 ## 5.5 BlocksHandler 扩展代码生成
 
-`BlocksHandler.java`（122KB，`mod/hilal/saif/blocks/`）是**全项目最大的单个文件**，负责扩展 Block 的代码生成：
+`BlocksHandler.java`（122KB，`mod/hilal/saif/blocks/`）是项目第二大文件（仅次于 `LogicEditorActivity` 132KB），负责扩展 Block 的代码生成：
 
 ```
 BlocksHandler
@@ -1443,7 +1443,7 @@ Sketchware 的所有项目数据存储在设备的 `.sketchware/` 目录下：
 {"targetId":"button1","eventName":"onClick","eventType":2,...}
 
 @MainActivity.java_components
-{"componentId":"timer1","type":16,"param1":"","param2":"","param3":""}
+{"componentId":"timer1","type":5,"param1":"","param2":"","param3":""}
 
 @MainActivity.java_onClick_blocks
 {"id":"1","opCode":"addSourceDirectly","spec":"...","color":-11893762,...}
@@ -1494,15 +1494,16 @@ Sketchware 的所有项目数据存储在设备的 `.sketchware/` 目录下：
 **type 编号映射**（部分）：
 | type | 视图 | type | 视图 |
 |------|------|------|------|
-| 0 | LinearLayout(V) | 9 | ListView |
-| 1 | LinearLayout(H) | 10 | Spinner |
-| 2 | Button | 11 | CheckBox |
-| 3 | TextView | 12 | WebView |
-| 4 | EditText | 13 | SeekBar |
-| 5 | ImageView | 14 | CalendarView |
-| 6 | ScrollView(V) | 15 | Switch |
-| 7 | ScrollView(H) | 16 | MapView |
-| 8 | ProgressBar | ... | ... |
+| 0 | LinearLayout | 10 | Spinner |
+| 1 | RelativeLayout | 11 | CheckBox |
+| 2 | HScrollView | 12 | ScrollView(V) |
+| 3 | Button | 13 | Switch |
+| 4 | TextView | 14 | SeekBar |
+| 5 | EditText | 15 | CalendarView |
+| 6 | ImageView | 16 | FAB |
+| 7 | WebView | 17 | AdView |
+| 8 | ProgressBar | 18 | MapView |
+| 9 | ListView | 19+ | 见 ViewBeans.java |
 
 ## 8.4 加密与备份
 
@@ -1513,7 +1514,7 @@ Sketchware 的所有项目数据存储在设备的 `.sketchware/` 目录下：
 ```
 EncryptedFileUtil (9KB)
 ├── encrypt(String data) → byte[]
-│   └── 自定义加密算法（非标准 AES，基于字节移位）
+│   └── AES-128-CBC 加密（固定密钥 "sketchwaresecure"）
 ├── decrypt(byte[] data) → String
 │   └── 对应的解密算法
 ├── writeEncryptedFile(path, data) → 原子写入
@@ -1575,7 +1576,7 @@ mod/tyron/backup/
 
 ## 9.1 已修复的关键问题清单
 
-截至当前版本，已修复 **109** 个 Bug，分四批提交（18 个 Git commits）：
+截至当前版本，已修复 **124** 个 Bug，分多批提交：
 
 ### 批次 1-2：51 个修复
 - **ExecutorService 泄漏**（12 处）：未关闭的线程池 → 添加 `pool.shutdown()`
@@ -1605,7 +1606,7 @@ mod/tyron/backup/
 |------|----------|------|
 | **39 处 `getExternalStorageDirectory`** | 全项目 | 需要完整的 Scoped Storage 迁移，工作量大 |
 | **511 处静默异常捕获** | 全项目 | `catch (Exception e) {}` 吞掉异常，需逐一评估 |
-| **ViewEditor 单字母变量名** | ViewEditor | 来自反编译的 JAR，改名可能破坏兼容性 |
+| **BaseBlockView/NinePatchDecoder Canvas 坐标变量** | 绘图方法 | 来自反编译，与路径数组结构耦合，需完整重写 |
 | **废弃布局中的硬编码颜色** | `menu_activity.xml` | 文件未使用，不影响运行 |
 
 ## 9.3 性能优化记录
