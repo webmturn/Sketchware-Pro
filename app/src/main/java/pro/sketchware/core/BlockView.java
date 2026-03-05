@@ -186,13 +186,13 @@ public class BlockView extends BaseBlockView {
   
   public void setNextBlock(BlockView blockView) {
     if (blockView == this) return;
-    View view = blockPane.findViewWithTag(Integer.valueOf(nextBlock));
-    if (view != null)
-      ((BlockView)view).parentBlock = null; 
+    BlockView existing = blockPane.getBlockByTag(nextBlock);
+    if (existing != null)
+      existing.parentBlock = null; 
     blockView.parentBlock = this;
     nextBlock = ((Integer)blockView.getTag()).intValue();
-    if (view != null && view != blockView)
-      blockView.appendToChain((BlockView)view); 
+    if (existing != null && existing != blockView)
+      blockView.appendToChain(existing); 
   }
   
   public void positionAbove(BlockView blockView) {
@@ -211,24 +211,24 @@ public class BlockView extends BaseBlockView {
   
   public void setSubstack1Block(BlockView blockView) {
     if (blockView == this) return;
-    View view = blockPane.findViewWithTag(Integer.valueOf(subStack1));
-    if (view != null)
-      ((BlockView)view).parentBlock = null; 
+    BlockView existing = blockPane.getBlockByTag(subStack1);
+    if (existing != null)
+      existing.parentBlock = null; 
     blockView.parentBlock = this;
     subStack1 = ((Integer)blockView.getTag()).intValue();
-    if (view != null && view != blockView)
-      blockView.appendToChain((BlockView)view); 
+    if (existing != null && existing != blockView)
+      blockView.appendToChain(existing); 
   }
   
   public void setSubstack2Block(BlockView blockView) {
     if (blockView == this) return;
-    View view = blockPane.findViewWithTag(Integer.valueOf(subStack2));
-    if (view != null)
-      ((BlockView)view).parentBlock = null; 
+    BlockView existing = blockPane.getBlockByTag(subStack2);
+    if (existing != null)
+      existing.parentBlock = null; 
     blockView.parentBlock = this;
     subStack2 = ((Integer)blockView.getTag()).intValue();
-    if (view != null && view != blockView)
-      blockView.appendToChain((BlockView)view); 
+    if (existing != null && existing != blockView)
+      blockView.appendToChain(existing); 
   }
   
   public void detachBlock(BlockView blockView) {
@@ -268,7 +268,7 @@ public class BlockView extends BaseBlockView {
       if (rs.hasSubstack()) {
         int j = rs.subStack1;
         if (j != -1) {
-          BlockView sub = (BlockView)blockPane.findViewWithTag(Integer.valueOf(j));
+          BlockView sub = blockPane.getBlockByTag(j);
           if (sub != null && sub != this)
             children.addAll(sub.getAllChildren()); 
         }
@@ -276,14 +276,14 @@ public class BlockView extends BaseBlockView {
       if (rs.hasDoubleSubstack()) {
         int j = rs.subStack2;
         if (j != -1) {
-          BlockView sub = (BlockView)blockPane.findViewWithTag(Integer.valueOf(j));
+          BlockView sub = blockPane.getBlockByTag(j);
           if (sub != null && sub != this)
             children.addAll(sub.getAllChildren()); 
         }
       } 
       int i = rs.nextBlock;
       if (i != -1 && --limit > 0) {
-        BlockView next = (BlockView)blockPane.findViewWithTag(Integer.valueOf(i));
+        BlockView next = blockPane.getBlockByTag(i);
         if (next == null || next == this) return children;
         rs = next;
         continue;
@@ -336,7 +336,7 @@ public class BlockView extends BaseBlockView {
       i = j + rs.getTotalHeight();
       j = rs.nextBlock;
       if (j != -1 && --limit > 0) {
-        BlockView next = (BlockView)blockPane.findViewWithTag(Integer.valueOf(j));
+        BlockView next = blockPane.getBlockByTag(j);
         if (next == null || next == this) break;
         rs = next;
         continue;
@@ -357,7 +357,7 @@ public class BlockView extends BaseBlockView {
         int k = rs.subStack1;
         j = i;
         if (k != -1) {
-          BlockView sub1 = (BlockView)blockPane.findViewWithTag(Integer.valueOf(k));
+          BlockView sub1 = blockPane.getBlockByTag(k);
           if (sub1 != null) {
             j = cornerRadius;
             j = Math.max(i, sub1.getWidthSum() + j);
@@ -369,7 +369,7 @@ public class BlockView extends BaseBlockView {
         int k = rs.subStack2;
         i = j;
         if (k != -1) {
-          BlockView sub2 = (BlockView)blockPane.findViewWithTag(Integer.valueOf(k));
+          BlockView sub2 = blockPane.getBlockByTag(k);
           if (sub2 != null) {
             i = cornerRadius;
             i = Math.max(j, sub2.getWidthSum() + i);
@@ -378,7 +378,7 @@ public class BlockView extends BaseBlockView {
       } 
       j = rs.nextBlock;
       if (j != -1 && --limit > 0) {
-        BlockView next = (BlockView)blockPane.findViewWithTag(Integer.valueOf(j));
+        BlockView next = blockPane.getBlockByTag(j);
         if (next == null || next == this) break;
         rs = next;
         continue;
@@ -394,7 +394,7 @@ public class BlockView extends BaseBlockView {
     while (true) {
       int i = rs.nextBlock;
       if (i != -1 && --limit > 0) {
-        BlockView next = (BlockView)blockPane.findViewWithTag(Integer.valueOf(i));
+        BlockView next = blockPane.getBlockByTag(i);
         if (next == null || next == this) return rs;
         rs = next;
         continue;
@@ -427,7 +427,7 @@ public class BlockView extends BaseBlockView {
       current.layoutSingle();
       int next = current.nextBlock;
       if (next > -1) {
-        BlockView nextRs = (BlockView) current.blockPane.findViewWithTag(Integer.valueOf(next));
+        BlockView nextRs = current.blockPane.getBlockByTag(next);
         if (nextRs == null || nextRs == this) break;
         nextRs.setX(current.getX());
         nextRs.setY(current.getY() + (float) current.getContentBottom());
@@ -495,7 +495,7 @@ public class BlockView extends BaseBlockView {
       int ss1Height = minHeight;
       int sub1 = subStack1;
       if (sub1 > -1) {
-        BlockView sub1Rs = (BlockView) blockPane.findViewWithTag(Integer.valueOf(sub1));
+        BlockView sub1Rs = blockPane.getBlockByTag(sub1);
         if (sub1Rs != null) {
           sub1Rs.setX(getX() + (float) cornerRadius);
           sub1Rs.setY(getY() + (float) getBlockHeight());
@@ -508,7 +508,7 @@ public class BlockView extends BaseBlockView {
       int ss2Height = minHeight;
       int sub2 = subStack2;
       if (sub2 > -1) {
-        BlockView sub2Rs = (BlockView) blockPane.findViewWithTag(Integer.valueOf(sub2));
+        BlockView sub2Rs = blockPane.getBlockByTag(sub2);
         if (sub2Rs != null) {
           sub2Rs.setX(getX() + (float) cornerRadius);
           sub2Rs.setY(getY() + (float) getSubstackBottom());
