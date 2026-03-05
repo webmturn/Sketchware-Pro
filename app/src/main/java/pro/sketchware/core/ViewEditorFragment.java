@@ -378,6 +378,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
 
     public void refreshAllViews() {
         invalidateOptionsMenu();
+        viewEditor.invalidateXmlStringCache();
         if (projectFileBean != null) {
             clearAndLoadViews(ProjectDataManager.getProjectDataManager(sc_id).getViews(projectFileBean.getXmlName()));
             updateFab(ProjectDataManager.getProjectDataManager(sc_id).getFabView(projectFileBean.getXmlName()));

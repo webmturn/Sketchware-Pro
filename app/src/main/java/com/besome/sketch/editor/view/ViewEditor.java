@@ -193,6 +193,10 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
         viewPane.setResourceManager(ProjectDataManager.getResourceManager(scId));
     }
 
+    public void invalidateXmlStringCache() {
+        viewPane.invalidateXmlStringCache();
+    }
+
     public void clearSelection() {
         if (selectedItem != null) {
             selectedItem.setSelection(false);
