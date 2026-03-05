@@ -31,6 +31,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
 import java.util.Locale;
 
 import mod.hey.studios.util.Helper;
@@ -240,7 +241,8 @@ public class SoundListFragment extends BaseFragment implements MenuProvider {
         ProjectDataManager.getResourceManager(sc_id).setSounds(sounds);
         ProjectDataManager.getResourceManager(sc_id).saveToBackup();
         ProjectDataManager.getProjectDataManager(sc_id).syncSounds(ProjectDataManager.getResourceManager(sc_id));
-        ProjectDataManager.getProjectDataManager(sc_id).saveAllBackup();
+        var store = ProjectDataManager.getProjectDataManager(sc_id);
+        CompletableFuture.runAsync(() -> { synchronized (store) { store.saveAllBackup(); } });
     }
 
     private boolean isResourceUnavailable(String name) {
