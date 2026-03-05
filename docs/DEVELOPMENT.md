@@ -2339,3 +2339,129 @@ getData[String] %s.key       # 返回 String 的函数
 | **了解数据文件格式** | 本手册第 8 章 | 8.1-8.5 |
 | **查看审查清单** | 本手册 10.3 节 | 10.3 |
 
+---
+
+## 附录 K：`pro.sketchware.core` 文件分类索引
+
+> 该包含 120+ 文件，以下按职责分类。每个类的详细说明见源码 Javadoc。
+
+### K.1 Block 系统
+| 文件 | 职责 |
+|---|---|
+| `BaseBlockView` | Block 视图基类（绘制、测量、路径） |
+| `BlockView` | 普通 Block 视图（拼接、子栈、参数） |
+| `DefinitionBlockView` | MoreBlock 定义头部视图 |
+| `FieldBlockView` | Block 内参数输入框视图 |
+| `BlockInterpreter` | Block→Java 代码转换引擎 |
+| `BlockCodeRegistry` / `BlockCodeHandler` | Block opCode→代码生成处理器注册表 |
+| `BlockSpecRegistry` | Block/Event opCode→spec/参数类型映射 |
+| `BlockColorMapper` | Block opCode→Material You 颜色映射 |
+| `BlockHistoryManager` | Block 编辑 undo/redo 历史 |
+| `BlockCollectionManager` | Block 收藏管理 |
+| `BlockConstants` | Block 相关常量（保留关键字等） |
+| `BlockSizeListener` | Block 尺寸变化回调接口 |
+
+### K.2 代码生成
+| 文件 | 职责 |
+|---|---|
+| `ActivityCodeGenerator` | Activity Java 源文件完整生成 |
+| `ComponentCodeGenerator` | 组件字段声明、初始化、onActivityResult 代码 |
+| `ComponentTypeMapper` | 组件类型→Java 类名/import 映射 |
+| `ComponentTemplates` | 组件初始化代码模板（98KB，最大文件） |
+| `EventCodeGenerator` | 事件监听器代码生成 |
+| `EventCodeRegistry` / `EventCodeHandler` | 事件名→代码生成处理器注册表 |
+| `ListenerCodeRegistry` | Listener 代码片段注册表 |
+| `EventRegistry` | 事件定义注册表 |
+| `LayoutGenerator` | ViewBean 树→XML 布局文件生成 |
+| `ManifestGenerator` | AndroidManifest.xml 生成 |
+| `GradleFileGenerator` | build.gradle / settings.gradle 生成 |
+| `CodeContext` | 代码生成上下文（包名、绑定模式等） |
+| `CodeFormatter` | Java 代码格式化（缩进、换行） |
+
+### K.3 项目数据管理
+| 文件 | 职责 |
+|---|---|
+| `ProjectDataManager` | 项目级单例工厂（DataStore/FileManager/Library/Resource） |
+| `ProjectDataStore` | 内存中项目数据存储（view/event/block/component/variable） |
+| `ProjectDataParser` | JSON→Bean 反序列化（JsonReader 流式解析） |
+| `ProjectFileManager` | Activity/CustomView 文件列表管理 |
+| `ProjectFilePaths` | 项目文件路径常量与 sc_id→路径映射 |
+| `ProjectListManager` | 项目列表加载与排序 |
+| `ProjectBuilder` | 构建流水线（AAPT2→ECJ→D8→APK→签名） |
+| `BuildConfig` | 构建配置 Bean（包名、SDK 版本、功能开关） |
+| `IncrementalBuildCache` | 增量编译缓存（文件 hash 比对） |
+
+### K.4 验证器
+| 文件 | 职责 |
+|---|---|
+| `BaseValidator` | 验证器基类 |
+| `ActivityNameValidator` | Activity/文件名验证 |
+| `FileNameValidator` | 通用文件名验证 |
+| `XmlNameValidator` | XML 资源名验证 |
+| `IdentifierValidator` | Java 标识符验证 |
+| `ResourceNameValidator` | 资源名验证 |
+| `VariableNameValidator` | 变量名验证 |
+| `LengthRangeValidator` | 长度范围验证 |
+| `NumberRangeValidator` | 数值范围验证 |
+| `LowercaseNameValidator` | 小写名验证 |
+| `UniqueNameValidator` | 唯一名验证 |
+| `VersionCodeValidator` | 版本号验证 |
+
+### K.5 UI Fragment / View
+| 文件 | 职责 |
+|---|---|
+| `EventListFragment` | 事件列表页 |
+| `ComponentListFragment` | 组件列表页 |
+| `ViewEditorFragment` | 视图编辑器 Fragment |
+| `ViewFilesFragment` / `ViewFilesAdapter` | 项目文件列表 |
+| `ImageListFragment` / `ImageCollectionFragment` | 图片资源管理 |
+| `SoundListFragment` / `SoundImportFragment` | 音频资源管理 |
+| `PermissionFragment` | 权限选择页 |
+| `FirebasePreviewView` / `FirebaseSettingsView` / `FirebaseStorageView` | Firebase 配置 UI |
+
+### K.6 Collection 管理器
+| 文件 | 职责 |
+|---|---|
+| `BaseCollectionManager` | 收藏管理基类 |
+| `BlockCollectionManager` | Block 收藏 |
+| `MoreBlockCollectionManager` | MoreBlock 收藏 |
+| `WidgetCollectionManager` | Widget 收藏 |
+| `ImageCollectionManager` | 图片收藏 |
+| `FontCollectionManager` | 字体收藏 |
+| `SoundCollectionManager` | 音频收藏 |
+
+### K.7 工具类
+| 文件 | 职责 |
+|---|---|
+| `EncryptedFileUtil` | AES-128 加密文件读写 |
+| `AnimationUtil` | 视图动画工具 |
+| `BitmapUtil` | 图片裁剪/缩放 |
+| `DateTimeUtil` | 日期时间格式化 |
+| `DeviceUtil` | 设备信息获取 |
+| `FormatUtil` | 数字/大小格式化 |
+| `NinePatchDecoder` | 9-patch 图片解析 |
+| `ZipUtil` | ZIP 压缩/解压 |
+| `UriPathResolver` | Uri→文件路径转换 |
+| `ViewUtil` | View 操作工具 |
+| `UIHelper` | UI 通用工具 |
+| `SketchToast` | Toast 封装 |
+| `SharedPrefsHelper` | SharedPreferences 封装 |
+| `XmlLayoutParser` | XML 布局解析（预览用） |
+| `StringResource` | Block 文案国际化 |
+
+### K.8 其他
+| 文件 | 职责 |
+|---|---|
+| `ClassInfo` | View/组件→Java 类信息映射 |
+| `PresetLayoutFactory` | 预设布局模板工厂 |
+| `SketchwareConstants` | 全局常量 |
+| `SketchwarePaths` | .sketchware 路径工具 |
+| `LibraryManager` / `ResourceManager` | 库/资源管理器 |
+| `KeyStoreManager` | 签名密钥管理 |
+| `MapValueHelper` / `GsonMapHelper` / `HashMapTypeToken` | Gson 辅助 |
+| `ReflectiveToString` | Bean toString 基类 |
+| `ViewHistoryManager` / `RecentHistoryManager` | 视图/最近历史 |
+| `CompileQuizManager` | 编译提示管理 |
+| 回调接口 | `BuildCallback`, `SimpleCallback`, `IntCallback`, `ViewBeanCallback` 等 |
+| 异常类 | `CompileException`, `SketchwareException`, `SimpleException` |
+

@@ -2,6 +2,7 @@ package pro.sketchware.core;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.text.TextPaint;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -94,7 +95,7 @@ public class FieldBlockView extends BaseBlockView {
     TextView textView = new TextView(fieldContext);
     textView.setText(getComponentLabel(componentId));
     textView.setTextSize(8.0F);
-    textView.setTypeface(null, 1);
+    textView.setTypeface(null, Typeface.BOLD);
     RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-2, textHeight);
     int margin = minCWidth;
     layoutParams.setMargins(margin, 0, margin, 0);

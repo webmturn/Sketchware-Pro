@@ -257,7 +257,7 @@ public class BlockPane extends RelativeLayout {
   
   public final void collectSnapPoints(BlockView blockView, boolean enabled) {
     java.util.HashSet<Integer> visited = new java.util.HashSet<>();
-    while (blockView != null && blockView.getVisibility() != 8) {
+    while (blockView != null && blockView.getVisibility() != View.GONE) {
       Integer tag = (Integer) blockView.getTag();
       if (!visited.add(tag)) break;
       if (!blockView.hasEndCap && (!enabled || -1 == blockView.nextBlock)) {
@@ -341,7 +341,7 @@ public class BlockPane extends RelativeLayout {
       View view = getChildAt(b);
       if (view instanceof BlockView) {
         BlockView rs = (BlockView)view;
-        if (rs.getVisibility() != 8 && ((BaseBlockView)rs).parentBlock == null)
+        if (rs.getVisibility() != View.GONE && ((BaseBlockView)rs).parentBlock == null)
           if (isArgType) {
             collectParameterSnapPoints(rs, excludeBlockId);
           } else if (!rs.isParameter) {
@@ -531,7 +531,7 @@ public class BlockPane extends RelativeLayout {
       this.activeBlock.setX((intValues[0] - this.locationBuffer[0]));
       this.activeBlock.setY((intValues[1] - this.locationBuffer[1]));
       this.activeBlock.bringToFront();
-      this.activeBlock.setVisibility(0);
+      this.activeBlock.setVisibility(View.VISIBLE);
       if (blockView.isParameter) {
         if (view instanceof BlockView)
           this.activeBlock.copyBlockDimensions((BaseBlockView)view, true, false, 0); 
@@ -584,7 +584,7 @@ public class BlockPane extends RelativeLayout {
   }
   
   public void hideActiveBlock() {
-    this.activeBlock.setVisibility(8);
+    this.activeBlock.setVisibility(View.GONE);
   }
   
   public int getAddTargetId() {

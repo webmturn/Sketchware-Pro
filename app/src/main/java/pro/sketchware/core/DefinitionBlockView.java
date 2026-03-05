@@ -2,6 +2,7 @@ package pro.sketchware.core;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.besome.sketch.beans.BlockBean;
@@ -29,7 +30,7 @@ public class DefinitionBlockView extends BlockView {
     textView.setPadding(0, 0, 0, 0);
     textView.setGravity(16);
     textView.setTextColor(-1);
-    textView.setTypeface(null, 1);
+    textView.setTypeface(null, Typeface.BOLD);
     RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-2, textHeight);
     layoutParams.setMargins(0, 0, 0, 0);
     textView.setLayoutParams(layoutParams);

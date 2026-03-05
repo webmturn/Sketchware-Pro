@@ -63,12 +63,12 @@ public class ProjectFileManager {
     if (projectLibraryBean != null && projectLibraryBean.useYn.equals("Y"))
       return; 
     for (ProjectFileBean projectFileBean : activities) {
-      if (projectFileBean.hasActivityOption(4)) {
-        removeFile(2, projectFileBean.getDrawerName());
-        projectFileBean.setActivityOptions(1);
+      if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)) {
+        removeFile(ProjectFileBean.PROJECT_FILE_TYPE_DRAWER, projectFileBean.getDrawerName());
+        projectFileBean.setActivityOptions(ProjectFileBean.OPTION_ACTIVITY_TOOLBAR);
       } 
-      if (projectFileBean.hasActivityOption(8))
-        projectFileBean.setActivityOptions(1); 
+      if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB))
+        projectFileBean.setActivityOptions(ProjectFileBean.OPTION_ACTIVITY_TOOLBAR); 
     } 
     refreshNameLists();
   }
