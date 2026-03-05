@@ -31,6 +31,40 @@ public class BlockPane extends RelativeLayout {
   public int nextBlockId = 10;
   
   public float densityScale = ViewUtil.dpToPx(getContext(), 1.0F);
+
+  private final HashMap<Integer, BlockView> blockIndex = new HashMap<>();
+
+  public BlockView getBlockByTag(int id) {
+    return blockIndex.get(id);
+  }
+
+  @Override
+  public void addView(View child) {
+    super.addView(child);
+    if (child instanceof BlockView) {
+      Object tag = child.getTag();
+      if (tag instanceof Integer) blockIndex.put((Integer) tag, (BlockView) child);
+    }
+  }
+
+  @Override
+  public void addView(View child, int index) {
+    super.addView(child, index);
+    if (child instanceof BlockView) {
+      Object tag = child.getTag();
+      if (tag instanceof Integer) blockIndex.put((Integer) tag, (BlockView) child);
+    }
+  }
+
+
+  @Override
+  public void removeView(View view) {
+    if (view instanceof BlockView) {
+      Object tag = view.getTag();
+      if (tag instanceof Integer) blockIndex.remove((Integer) tag);
+    }
+    super.removeView(view);
+  }
   
   public BlockPane(Context context) {
     super(context);
@@ -38,7 +72,7 @@ public class BlockPane extends RelativeLayout {
   }
   
   public BlockView findBlockById(int position) {
-    return (BlockView)findViewWithTag(Integer.valueOf(position));
+    return blockIndex.get(position);
   }
   
   public BlockView addBlock(BlockView blockView, int start, int end) {
@@ -66,6 +100,8 @@ public class BlockPane extends RelativeLayout {
     android.view.ViewGroup.LayoutParams lp = blockView.getLayoutParams();
     if (lp == null) lp = generateDefaultLayoutParams();
     addViewInLayout(blockView, -1, lp, true);
+    Object tag = blockView.getTag();
+    if (tag instanceof Integer) blockIndex.put((Integer) tag, blockView);
     blockView.setX(0);
     blockView.setY(0);
   }
@@ -115,7 +151,11 @@ public class BlockPane extends RelativeLayout {
   }
   
   public BlockView findBlockByString(String blockId) {
-    return (BlockView)findViewWithTag(Integer.valueOf(blockId));
+    try {
+      return blockIndex.get(Integer.valueOf(blockId));
+    } catch (NumberFormatException e) {
+      return null;
+    }
   }
   
   public final void initActiveBlock() {
@@ -152,20 +192,20 @@ public class BlockPane extends RelativeLayout {
       if (blockView.hasSubstack()) {
         int subStackId = blockView.subStack1;
         if (subStackId != -1 && !visited.contains(subStackId)) {
-          BlockView sub = (BlockView)findViewWithTag(Integer.valueOf(subStackId));
+          BlockView sub = blockIndex.get(subStackId);
           if (sub != null) setBlockTreeVisibility(sub, position);
         }
       } 
       if (blockView.hasDoubleSubstack()) {
         int subStackId = blockView.subStack2;
         if (subStackId != -1 && !visited.contains(subStackId)) {
-          BlockView sub = (BlockView)findViewWithTag(Integer.valueOf(subStackId));
+          BlockView sub = blockIndex.get(subStackId);
           if (sub != null) setBlockTreeVisibility(sub, position);
         }
       } 
       int nextBlockId = blockView.nextBlock;
       if (nextBlockId != -1) {
-        blockView = (BlockView)findViewWithTag(Integer.valueOf(nextBlockId));
+        blockView = blockIndex.get(nextBlockId);
       } else {
         blockView = null;
       }
@@ -191,17 +231,17 @@ public class BlockPane extends RelativeLayout {
         }  
       int traverseId = blockView.subStack1;
       if (traverseId != -1 && !visited.contains(traverseId)) {
-        BlockView sub = (BlockView)findViewWithTag(Integer.valueOf(traverseId));
+        BlockView sub = blockIndex.get(traverseId);
         if (sub != null) collectParameterSnapPoints(sub, excludeBlockId);
       }
       traverseId = blockView.subStack2;
       if (traverseId != -1 && !visited.contains(traverseId)) {
-        BlockView sub = (BlockView)findViewWithTag(Integer.valueOf(traverseId));
+        BlockView sub = blockIndex.get(traverseId);
         if (sub != null) collectParameterSnapPoints(sub, excludeBlockId);
       }
       traverseId = blockView.nextBlock;
       if (traverseId != -1) {
-        blockView = (BlockView)findViewWithTag(Integer.valueOf(traverseId));
+        blockView = blockIndex.get(traverseId);
       } else {
         blockView = null;
       }
@@ -251,17 +291,17 @@ public class BlockPane extends RelativeLayout {
       } 
       int traverseId = blockView.subStack1;
       if (traverseId != -1 && !visited.contains(traverseId)) {
-        BlockView sub = (BlockView)findViewWithTag(Integer.valueOf(traverseId));
+        BlockView sub = blockIndex.get(traverseId);
         if (sub != null) collectSnapPoints(sub, enabled);
       }
       traverseId = blockView.subStack2;
       if (traverseId != -1 && !visited.contains(traverseId)) {
-        BlockView sub = (BlockView)findViewWithTag(Integer.valueOf(traverseId));
+        BlockView sub = blockIndex.get(traverseId);
         if (sub != null) collectSnapPoints(sub, enabled);
       }
       traverseId = blockView.nextBlock;
       if (traverseId != -1) {
-        blockView = (BlockView)findViewWithTag(Integer.valueOf(traverseId));
+        blockView = blockIndex.get(traverseId);
         continue;
       } 
       break;
@@ -276,7 +316,7 @@ public class BlockPane extends RelativeLayout {
   public void removeBlock(BlockBean blockBean, boolean enabled) {
     String blockId = blockBean.id;
     if (blockId != null && !blockId.equals("") && !blockBean.id.equals("0")) {
-      BlockView targetView = (BlockView)findViewWithTag(Integer.valueOf(blockBean.id));
+      BlockView targetView = findBlockByString(blockBean.id);
       if (targetView == null)
         return; 
       BlockView parentBlockView = ((BaseBlockView)targetView).parentBlock;
@@ -484,12 +524,12 @@ public class BlockPane extends RelativeLayout {
         if (start != 0) {
           if (start != 2) {
             if (start == 3)
-              rs = (BlockView)findViewWithTag(Integer.valueOf(rs.subStack2)); 
+              rs = blockIndex.get(rs.subStack2); 
           } else {
-            rs = (BlockView)findViewWithTag(Integer.valueOf(rs.subStack1));
+            rs = blockIndex.get(rs.subStack1);
           } 
         } else {
-          rs = (BlockView)findViewWithTag(Integer.valueOf(rs.nextBlock));
+          rs = blockIndex.get(rs.nextBlock);
         } 
       } 
     } 
@@ -580,7 +620,7 @@ public class BlockPane extends RelativeLayout {
   
   public ArrayList<BlockBean> getBlocks() {
     ArrayList<BlockBean> blocks = new ArrayList();
-    BlockView rs = (BlockView)findViewWithTag(Integer.valueOf(this.dragBlock.nextBlock));
+    BlockView rs = blockIndex.get(this.dragBlock.nextBlock);
     if (rs != null) {
       Iterator<BlockView> iterator = rs.getAllChildren().iterator();
       while (iterator.hasNext())
