@@ -30,6 +30,7 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import com.google.android.material.color.MaterialColors;
 
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -257,7 +258,8 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
                         } else if (eventsToAdd.size() > 1) {
                             SketchToast.toast(getApplicationContext(), Helper.getResString(R.string.event_message_new_events), SketchToast.TOAST_NORMAL).show();
                         }
-                        ProjectDataManager.getProjectDataManager(sc_id).saveAllBackup();
+                        var store = ProjectDataManager.getProjectDataManager(sc_id);
+                        CompletableFuture.runAsync(() -> { synchronized (store) { store.saveAllBackup(); } });
                         setResult(RESULT_OK);
                         finish();
                     }

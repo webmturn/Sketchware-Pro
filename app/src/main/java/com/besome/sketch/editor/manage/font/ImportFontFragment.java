@@ -27,6 +27,7 @@ import com.besome.sketch.beans.ProjectResourceBean;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import pro.sketchware.core.ProjectDataManager;
@@ -174,7 +175,8 @@ public class ImportFontFragment extends BaseFragment implements MenuProvider {
         ProjectDataManager.getResourceManager(sc_id).setFonts(projectResourceBeans);
         ProjectDataManager.getResourceManager(sc_id).saveToBackup();
         ProjectDataManager.getProjectDataManager(sc_id).syncFonts(ProjectDataManager.getResourceManager(sc_id));
-        ProjectDataManager.getProjectDataManager(sc_id).saveAllBackup();
+        var store = ProjectDataManager.getProjectDataManager(sc_id);
+        CompletableFuture.runAsync(() -> { synchronized (store) { store.saveAllBackup(); } });
     }
 
     public final void toggleEmptyStateVisibility() {

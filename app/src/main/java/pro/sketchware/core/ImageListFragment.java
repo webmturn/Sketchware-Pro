@@ -51,6 +51,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 import pro.sketchware.R;
 import pro.sketchware.activities.importicon.ImportIconActivity;
@@ -255,7 +256,8 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
         // This method is replaces not exist images to default_image, I removed it because it changes vector images to default_images
         // ProjectDataManager.getProjectDataManager(sc_id).b(ProjectDataManager.getResourceManager(sc_id));
 
-        ProjectDataManager.getProjectDataManager(sc_id).saveAllBackup();
+        var store = ProjectDataManager.getProjectDataManager(sc_id);
+        CompletableFuture.runAsync(() -> { synchronized (store) { store.saveAllBackup(); } });
     }
 
     private void updateGuideVisibility() {

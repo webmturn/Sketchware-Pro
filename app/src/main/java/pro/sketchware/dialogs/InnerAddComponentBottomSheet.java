@@ -19,6 +19,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import pro.sketchware.core.DeviceUtil;
@@ -256,7 +257,8 @@ public class InnerAddComponentBottomSheet extends BottomSheetDialogFragment {
             default:
                 ProjectDataManager.getProjectDataManager(scId).addComponent(projectFileBean.getJavaName(), componentType, componentId);
         }
-        ProjectDataManager.getProjectDataManager(scId).saveAllBackup();
+        var store = ProjectDataManager.getProjectDataManager(scId);
+        CompletableFuture.runAsync(() -> { synchronized (store) { store.saveAllBackup(); } });
         return true;
     }
 
