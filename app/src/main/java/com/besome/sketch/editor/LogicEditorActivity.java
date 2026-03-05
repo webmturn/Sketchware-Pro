@@ -82,6 +82,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 
 import pro.sketchware.core.SharedPrefsHelper;
@@ -2106,7 +2107,11 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         ProjectDataStore projectDataStore = ProjectDataManager.getProjectDataManager(scId);
         String javaName = projectFile.getJavaName();
         projectDataStore.putBlocks(javaName, id + "_" + eventName, blocks);
-        ProjectDataManager.getProjectDataManager(scId).saveAllBackup();
+        CompletableFuture.runAsync(() -> {
+            synchronized (projectDataStore) {
+                projectDataStore.saveAllBackup();
+            }
+        });
     }
 
     @Override

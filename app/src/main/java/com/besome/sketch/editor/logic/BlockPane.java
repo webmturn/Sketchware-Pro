@@ -39,15 +39,6 @@ public class BlockPane extends RelativeLayout {
   }
 
   @Override
-  public void addView(View child) {
-    super.addView(child);
-    if (child instanceof BlockView) {
-      Object tag = child.getTag();
-      if (tag instanceof Integer) blockIndex.put((Integer) tag, (BlockView) child);
-    }
-  }
-
-  @Override
   public void addView(View child, int index) {
     super.addView(child, index);
     if (child instanceof BlockView) {
