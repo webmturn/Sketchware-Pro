@@ -32,6 +32,24 @@ import pro.sketchware.utility.FileResConfig;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.xml.XmlBuilder;
 
+/**
+ * Generates the {@code AndroidManifest.xml} for a Sketchware project.
+ * <p>
+ * Assembles the manifest from project configuration, producing:
+ * <ul>
+ *   <li>Package name, version code/name, min/target SDK</li>
+ *   <li>{@code <uses-permission>} tags based on used components and features</li>
+ *   <li>{@code <activity>} tags for each project file with theme, orientation, and keyboard settings</li>
+ *   <li>Firebase provider/service metadata</li>
+ *   <li>FileProvider for camera components</li>
+ *   <li>AdMob application ID metadata</li>
+ *   <li>User-injected manifest entries via {@link AndroidManifestInjector}</li>
+ * </ul>
+ *
+ * @see ProjectBuilder
+ * @see LayoutGenerator
+ * @see ComponentCodeGenerator
+ */
 public class ManifestGenerator {
     private final BuiltInLibraryManager builtInLibraryManager;
     public XmlBuilder manifestXml = new XmlBuilder("manifest");
@@ -45,6 +63,13 @@ public class ManifestGenerator {
     private String packageName;
     private final Set<String> addedPermissions = new HashSet<>();
 
+    /**
+     * Creates a manifest generator for the given project configuration.
+     *
+     * @param buildConfig             the project build configuration
+     * @param projectFileBeans        the list of project files (activities, fragments, etc.)
+     * @param builtInLibraryManager   the built-in library manager for dependency resolution
+     */
     public ManifestGenerator(BuildConfig buildConfig, ArrayList<ProjectFileBean> projectFileBeans, BuiltInLibraryManager builtInLibraryManager) {
         this.buildConfig = buildConfig;
         projectFiles = projectFileBeans;
@@ -388,6 +413,12 @@ public class ManifestGenerator {
         application.addChildNode(diagnosticsReceiver);
     }
 
+    /**
+     * Initializes project settings and package name from the project file paths.
+     * Must be called before {@link #generateManifest()}.
+     *
+     * @param projectFilePaths the project file paths configuration
+     */
     public void setProjectFilePaths(ProjectFilePaths projectFilePaths) {
         settings = new ProjectSettings(projectFilePaths.sc_id);
         targetsSdkVersion31OrHigher = Integer.parseInt(settings.getValue(ProjectSettings.SETTING_TARGET_SDK_VERSION, String.valueOf(VAR_DEFAULT_TARGET_SDK_VERSION))) >= 31;

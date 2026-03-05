@@ -14,6 +14,22 @@ import pro.sketchware.core.ReflectiveToString;
 import mod.agus.jcoderz.beans.ViewBeans;
 import pro.sketchware.R;
 
+/**
+ * Represents a UI view widget in a project's layout tree.
+ * <p>
+ * Each view has a {@link #type} constant (see {@code VIEW_TYPE_*}), a unique {@link #id}
+ * (the Android ID used in code generation), and a {@link #parent} reference forming the
+ * layout hierarchy. Views contain sub-beans for layout properties ({@link LayoutBean}),
+ * text properties ({@link TextBean}), and image properties ({@link ImageBean}).
+ * <p>
+ * Views are stored per-XML-file in {@link pro.sketchware.core.ProjectDataStore#viewMap}
+ * and rendered in the UI designer via {@link com.besome.sketch.editor.view.ViewPane}.
+ *
+ * @see LayoutBean
+ * @see TextBean
+ * @see ImageBean
+ * @see pro.sketchware.core.ProjectDataStore
+ */
 public class ViewBean extends ReflectiveToString implements Parcelable {
     public static final Parcelable.Creator<ViewBean> CREATOR = new Parcelable.Creator<>() {
         @Override

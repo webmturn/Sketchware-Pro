@@ -12,6 +12,19 @@ import mod.hey.studios.moreblock.ReturnMoreblockManager;
 import mod.hilal.saif.components.ComponentsHandler;
 import mod.pranav.viewbinding.ViewBindingBuilder;
 
+/**
+ * Generates Java source code for component-related operations:
+ * field declarations, initialization, event callbacks (onActivityResult, onCreate),
+ * and MoreBlock method signatures.
+ * <p>
+ * Each method produces a code fragment (as a {@link String}) that is inserted into
+ * the generated Activity Java file at the appropriate location. Component-specific
+ * logic is dispatched via {@code switch} on {@link ComponentBean} type constants.
+ *
+ * @see BlockInterpreter
+ * @see BlockCodeRegistry
+ * @see ManifestGenerator
+ */
 public class ComponentCodeGenerator {
 
     /** @deprecated Use {@link GradleFileGenerator#getSettingsGradle()} directly */
