@@ -265,7 +265,7 @@ public class LogReaderActivity extends BaseAppCompatActivity {
 
         public void updateList(HashMap<String, Object> _map) {
             data.add(_map);
-            binding.logsRecyclerView.getAdapter().notifyItemInserted(data.size() + 1);
+            binding.logsRecyclerView.getAdapter().notifyItemInserted(data.size() - 1);
 
             if (autoScroll) {
                 binding.logsRecyclerView.getLayoutManager().scrollToPosition(data.size() - 1);

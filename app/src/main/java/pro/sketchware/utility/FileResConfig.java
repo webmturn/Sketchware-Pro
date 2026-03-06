@@ -32,7 +32,7 @@ public class FileResConfig {
         if (permissions.isEmpty()) return;
 
         try {
-            listFilePermission = new Gson().fromJson(FileUtil.readFile(fpu.getPathPermission(numProj)), Helper.TYPE_STRING);
+            listFilePermission = new Gson().fromJson(permissions, Helper.TYPE_STRING);
         } catch (JsonSyntaxException e) {
             android.util.Log.w("FileResConfig", "Failed to parse JSON config for project", e);
         }

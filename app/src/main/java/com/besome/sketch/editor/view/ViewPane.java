@@ -418,15 +418,9 @@ public class ViewPane extends RelativeLayout {
                                     }
                                 }, fpu.getSvgFullPath(sc_id, viewBean.image.resName), scaleFactor);
                             } else {
-                                Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+                                Bitmap bitmap = FileUtil.decodeSampleBitmapFromPath(imagePath, 256, 256);
                                 if (bitmap != null) {
-                                    Bitmap scaledBitmap = Bitmap.createScaledBitmap(
-                                            bitmap,
-                                            bitmap.getWidth() * scaleFactor,
-                                            bitmap.getHeight() * scaleFactor,
-                                            true
-                                    );
-                                    fab.setImageBitmap(scaledBitmap);
+                                    fab.setImageBitmap(bitmap);
                                 }
                             }
                         } else {
@@ -480,10 +474,9 @@ public class ViewPane extends RelativeLayout {
                                 }
                             }
                         } else {
-                            Bitmap bgBitmap = BitmapFactory.decodeFile(backgroundRes);
+                            Bitmap bgBitmap = FileUtil.decodeSampleBitmapFromPath(backgroundRes, 512, 512);
                             if (bgBitmap != null) {
-                                int densityScale = Math.round(getResources().getDisplayMetrics().density / 2.0f);
-                                view.setBackground(new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bgBitmap, bgBitmap.getWidth() * densityScale, bgBitmap.getHeight() * densityScale, true)));
+                                view.setBackground(new BitmapDrawable(getResources(), bgBitmap));
                             }
                         }
                     }
@@ -537,9 +530,9 @@ public class ViewPane extends RelativeLayout {
                                 FilePathUtil fpu = new FilePathUtil();
                                 svgUtils.loadScaledSvgIntoImageView((ImageView) view, fpu.getSvgFullPath(sc_id, viewBean.image.resName), imageScale);
                             } else {
-                                Bitmap imageBitmap = BitmapFactory.decodeFile(imagelocation);
+                                Bitmap imageBitmap = FileUtil.decodeSampleBitmapFromPath(imagelocation, 512, 512);
                                 if (imageBitmap != null) {
-                                    ((ImageView) view).setImageBitmap(Bitmap.createScaledBitmap(imageBitmap, imageBitmap.getWidth() * imageScale, imageBitmap.getHeight() * imageScale, true));
+                                    ((ImageView) view).setImageBitmap(imageBitmap);
                                 }
                             }
                         } else {

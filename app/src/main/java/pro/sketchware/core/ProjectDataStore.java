@@ -18,7 +18,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -77,20 +79,8 @@ public class ProjectDataStore {
       if (viewBean.parent.equals("root"))
         sortedViews.add(viewBean); 
     } 
-    int listSize = sortedViews.size();
-    int outerIdx;
-    int nextIdx = 0;
-    for (outerIdx = 0; outerIdx < listSize - 1; outerIdx++) {
-      for (int innerIdx = 0; innerIdx < listSize - outerIdx - 1; innerIdx = nextIdx) {
-        int currentIndex = sortedViews.get(innerIdx).index;
-        nextIdx = innerIdx + 1;
-        if (currentIndex > sortedViews.get(nextIdx).index) {
-          ViewBean viewBean = sortedViews.get(innerIdx);
-          sortedViews.set(innerIdx, sortedViews.get(nextIdx));
-          sortedViews.set(nextIdx, viewBean);
-        } 
-      } 
-    } 
+    sortedViews.sort(Comparator.comparingInt(v -> v.index));
+
     for (ViewBean viewBean : list) {
       int viewType = viewBean.type;
       if ((viewType == 2 || viewType == 1 || viewType == 36 || viewType == 37 || viewType == 38 || viewType == 39 || viewType == 40 || viewType == 0 || viewType == 12) && viewBean.parent.equals("root"))
@@ -112,20 +102,8 @@ public class ProjectDataStore {
       if (viewBean.parent.equals(parentBean.id))
         childViews.add(viewBean); 
     } 
-    int listSize = childViews.size();
-    int outerIdx;
-    int nextIdx = 0;
-    for (outerIdx = 0; outerIdx < listSize - 1; outerIdx++) {
-      for (int innerIdx = 0; innerIdx < listSize - outerIdx - 1; innerIdx = nextIdx) {
-        int currentIndex = childViews.get(innerIdx).index;
-        nextIdx = innerIdx + 1;
-        if (currentIndex > childViews.get(nextIdx).index) {
-          ViewBean tempBean = childViews.get(innerIdx);
-          childViews.set(innerIdx, childViews.get(nextIdx));
-          childViews.set(nextIdx, tempBean);
-        } 
-      } 
-    } 
+    childViews.sort(Comparator.comparingInt(v -> v.index));
+
     for (ViewBean viewBean : list) {
       if (viewBean.parent.equals(parentBean.id)) {
         int viewType = viewBean.type;
@@ -295,7 +273,7 @@ public class ProjectDataStore {
    * @param resourceManager the resource manager with current font list
    */
   public void syncFonts(ResourceManager resourceManager) {
-    ArrayList<String> fontNames = resourceManager.getFontNames();
+    HashSet<String> fontNames = new HashSet<>(resourceManager.getFontNames());
     for (HashMap<String, ArrayList<BlockBean>> fileBlocks : blockMap.values()) {
       for (ArrayList<BlockBean> blocks : fileBlocks.values()) {
         for (BlockBean blockBean : blocks) {
@@ -718,7 +696,7 @@ public class ProjectDataStore {
   }
   
   public void syncImages(ResourceManager resourceManager) {
-    ArrayList<String> imageNames = resourceManager.getImageNames();
+    HashSet<String> imageNames = new HashSet<>(resourceManager.getImageNames());
     for (ArrayList<ViewBean> views : viewMap.values()) {
       for (ViewBean viewBean : views) {
         if (!imageNames.contains(viewBean.layout.backgroundResource))
@@ -903,7 +881,7 @@ public class ProjectDataStore {
   }
   
   public void syncSounds(ResourceManager resourceManager) {
-    ArrayList<String> soundNames = resourceManager.getSoundNames();
+    HashSet<String> soundNames = new HashSet<>(resourceManager.getSoundNames());
     for (HashMap<String, ArrayList<BlockBean>> fileBlocks : blockMap.values()) {
       for (ArrayList<BlockBean> blocks : fileBlocks.values()) {
         for (BlockBean blockBean : blocks) {

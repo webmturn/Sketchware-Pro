@@ -263,8 +263,9 @@ public class ComponentCodeGenerator {
      * @return Code of a More Block
      */
     public static String getMoreBlockCode(String moreBlockName, String moreBlockSpec, String moreBlockLogic) {
-        String code = "public " + ReturnMoreblockManager.getMbTypeCode(moreBlockName) + " _" +
-                ReturnMoreblockManager.getMbName(moreBlockName) + "(";
+        StringBuilder code = new StringBuilder();
+        code.append("public ").append(ReturnMoreblockManager.getMbTypeCode(moreBlockName))
+                .append(" _").append(ReturnMoreblockManager.getMbName(moreBlockName)).append("(");
         ArrayList<String> parameterSpecs = FormatUtil.parseBlockSpec(moreBlockSpec);
         boolean isFirstParameter = true;
 
@@ -272,58 +273,42 @@ public class ComponentCodeGenerator {
             // Avoid label spec parts
             if (parameterSpec.charAt(0) == '%') {
                 char parameterType = parameterSpec.charAt(1);
+                String typeName = null;
+                int lastIndexOfPeriod = -1;
                 switch (parameterType) {
                     case 'b':
-                        String accumulated = code;
-                        if (!isFirstParameter) {
-                            accumulated += ", ";
-                        }
-
-                        code = accumulated + "final boolean _" + parameterSpec.substring(3);
+                        typeName = "boolean";
                         break;
-
                     case 'd':
-                        accumulated = code;
-                        if (!isFirstParameter) {
-                            accumulated += ", ";
-                        }
-
-                        code = accumulated + "final double _" + parameterSpec.substring(3);
+                        typeName = "double";
                         break;
-
                     case 's':
-                        accumulated = code;
-                        if (!isFirstParameter) {
-                            accumulated += ", ";
-                        }
-
-                        code = accumulated + "final String _" + parameterSpec.substring(3);
+                        typeName = "String";
                         break;
-
                     default:
                         if (parameterType == 'm') {
-                            accumulated = code;
-                            if (!isFirstParameter) {
-                                accumulated += ", ";
-                            }
-
-                            int lastIndexOfPeriod = parameterSpec.lastIndexOf(".");
-                            code = accumulated +
-                                    "final " + ComponentTypeMapper.getActualTypeName(ComponentTypeMapper.getInternalTypeName(parameterSpec.substring(3, lastIndexOfPeriod))) + " _" +
-                                    parameterSpec.substring(lastIndexOfPeriod + 1);
-                            break;
+                            lastIndexOfPeriod = parameterSpec.lastIndexOf(".");
+                            typeName = ComponentTypeMapper.getActualTypeName(ComponentTypeMapper.getInternalTypeName(parameterSpec.substring(3, lastIndexOfPeriod)));
                         } else {
                             continue;
                         }
                 }
 
+                if (!isFirstParameter) {
+                    code.append(", ");
+                }
+                code.append("final ").append(typeName).append(" _");
+                if (parameterType == 'm') {
+                    code.append(parameterSpec.substring(lastIndexOfPeriod + 1));
+                } else {
+                    code.append(parameterSpec.substring(3));
+                }
                 isFirstParameter = false;
             }
         }
 
-        return code + ") {\r\n" +
-                moreBlockLogic + "\r\n" +
-                "}\r\n";
+        code.append(") {\r\n").append(moreBlockLogic).append("\r\n}\r\n");
+        return code.toString();
     }
 
     /**
