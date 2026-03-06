@@ -82,6 +82,10 @@ public class BitmapUtil {
   
   public static void processAndSaveBitmap(String key, String value, int x, int y, int width) {
     Bitmap bitmap = decodeSampledBitmap(key, 512, 512);
+    if (bitmap == null) {
+      Log.w("BitmapUtil", "Failed to decode bitmap: " + key);
+      return;
+    }
     int rotation = 0;
     try {
       rotation = getExifRotation(key);

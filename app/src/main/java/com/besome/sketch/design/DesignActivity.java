@@ -1595,7 +1595,8 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         private void doInBackground() {
             DesignActivity activity = getActivity();
             if (activity != null) {
-                ProjectDataStore ecInstance = ProjectDataManager.getProjectDataManager(sc_id);
+                var currentScId = DesignActivity.sc_id;
+                ProjectDataStore ecInstance = ProjectDataManager.getProjectDataManager(currentScId);
                 synchronized (ecInstance) {
                     ecInstance.saveAllBackup();
                 }

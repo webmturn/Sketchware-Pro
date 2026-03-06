@@ -104,16 +104,22 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
             @Override
             public void onAvailable(@NonNull Network network) {
                 super.onAvailable(network);
-                if (binding != null) {
-                    requireActivity().runOnUiThread(() -> binding.btnDownload.setEnabled(true));
+                var activity = getActivity();
+                if (activity != null) {
+                    activity.runOnUiThread(() -> {
+                        if (binding != null) binding.btnDownload.setEnabled(true);
+                    });
                 }
             }
 
             @Override
             public void onLost(@NonNull Network network) {
                 super.onLost(network);
-                if (binding != null) {
-                    requireActivity().runOnUiThread(() -> binding.btnDownload.setEnabled(false));
+                var activity = getActivity();
+                if (activity != null) {
+                    activity.runOnUiThread(() -> {
+                        if (binding != null) binding.btnDownload.setEnabled(false);
+                    });
                 }
             }
         };
@@ -169,6 +175,7 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
     }
 
     private void startDownloadProcess(String group, String artifact, String version) {
+        if (binding == null) return;
         binding.dependencyInputLayout.setErrorEnabled(false);
 
         binding.dependencyInfo.setVisibility(View.GONE);
@@ -177,13 +184,16 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
 
         setDownloadState(true);
 
+        boolean skipSubDeps = binding.cbSkipSubdependencies.isChecked();
         var resolver = new DependencyResolver(group, artifact, version,
-                binding.cbSkipSubdependencies.isChecked(), buildSettings);
+                skipSubDeps, buildSettings);
         var handler = new Handler(Looper.getMainLooper());
 
         downloadExecutor.execute(() -> {
             BuiltInLibraries.maybeExtractAndroidJar((message, progress) ->
-                    handler.post(() -> binding.overallProgress.setIndeterminate(true)));
+                    handler.post(() -> {
+                        if (binding != null) binding.overallProgress.setIndeterminate(true);
+                    }));
             BuiltInLibraries.maybeExtractCoreLambdaStubsJar();
 
             try {
@@ -368,6 +378,7 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
     }
 
     private void updateOverallProgress() {
+        if (binding == null) return;
         int completed = 0;
         for (DependencyDownloadItem item : downloadItems) {
             if (item.isCompleted()) completed++;
@@ -380,6 +391,7 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
     }
 
     private void setDownloadState(boolean downloading) {
+        if (binding == null) return;
         if (downloading) {
             binding.btnDownload.setVisibility(View.GONE);
         } else {

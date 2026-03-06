@@ -10,7 +10,7 @@ public class SharedPrefsHelper {
   public SharedPreferences.Editor editor;
   
   public SharedPrefsHelper(Context context, String value) {
-    prefs = context.getSharedPreferences(value, 0);
+    prefs = context.getSharedPreferences(value, Context.MODE_PRIVATE);
     editor = prefs.edit();
   }
   

@@ -523,6 +523,7 @@ public class FileUtil {
     }
 
     private static void saveBitmap(Bitmap bitmap, String destPath) {
+        if (bitmap == null) return;
         FileUtil.createNewFileIfNotPresent(destPath);
 
         try (FileOutputStream out = new FileOutputStream(destPath)) {
@@ -583,6 +584,7 @@ public class FileUtil {
     public static void resizeBitmapFileRetainRatio(String fromPath, String destPath, int max) {
         if (isExistFile(fromPath)) {
             Bitmap scaled = getScaledBitmap(fromPath, max);
+            if (scaled == null) return;
             saveBitmap(scaled, destPath);
             scaled.recycle();
         }

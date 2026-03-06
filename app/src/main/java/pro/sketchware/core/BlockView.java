@@ -438,6 +438,7 @@ public class BlockView extends BaseBlockView {
         current = null;
       }
     }
+    requestLayout();
   }
 
   private void layoutSingle() {
@@ -491,7 +492,7 @@ public class BlockView extends BaseBlockView {
     if (blockType.equals("h")) {
       widthWithHat = Math.max(widthWithC, minHatWidth);
     }
-    setBlockSize((float) (rightIndent + widthWithHat), (float) (topSpacing + textHeight + depth * shadowOffset * 2 + bottomSpacing), true);
+    setBlockSize((float) (rightIndent + widthWithHat), (float) (topSpacing + textHeight + depth * shadowOffset * 2 + bottomSpacing), false);
     if (hasSubstack()) {
       int ss1Height = minHeight;
       int sub1 = subStack1;
