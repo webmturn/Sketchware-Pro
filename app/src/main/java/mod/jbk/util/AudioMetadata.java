@@ -3,12 +3,17 @@ package mod.jbk.util;
 import android.app.Activity;
 import android.media.AudioAttributes;
 import android.media.MediaMetadataRetriever;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
@@ -19,6 +24,9 @@ public class AudioMetadata {
             .setUsage(AudioAttributes.USAGE_MEDIA)
             .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
             .build();
+
+    private static final ExecutorService metadataExecutor = Executors.newSingleThreadExecutor();
+    private static final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     private final Path source;
     private final int durationInMs;
@@ -45,6 +53,13 @@ public class AudioMetadata {
                 SketchwareUtil.toastError(String.format(Helper.getResString(R.string.error_release_file), audio, e));
             }
         }
+    }
+
+    public static void fromPathAsync(Path audio, Consumer<AudioMetadata> callback) {
+        metadataExecutor.execute(() -> {
+            AudioMetadata metadata = fromPath(audio);
+            mainHandler.post(() -> callback.accept(metadata));
+        });
     }
 
     public int getDurationInMs() {

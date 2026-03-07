@@ -363,9 +363,18 @@ public class SoundListFragment extends BaseFragment implements MenuProvider {
                 var audioMetadata = holder.audioMetadata;
                 var audio = getAudio(position);
                 if (audioMetadata == null || !audioMetadata.getSource().equals(audio)) {
-                    audioMetadata = holder.audioMetadata = AudioMetadata.fromPath(audio);
-                    bean.totalSoundDuration = audioMetadata.getDurationInMs();
-                    audioMetadata.setEmbeddedPictureAsAlbumCover(requireActivity(), holder.binding.imgAlbum);
+                    holder.audioMetadata = null;
+                    holder.binding.imgAlbum.setImageResource(R.drawable.default_album_art_200dp);
+                    AudioMetadata.fromPathAsync(audio, metadata -> {
+                        if (holder.getBindingAdapterPosition() == position) {
+                            holder.audioMetadata = metadata;
+                            bean.totalSoundDuration = metadata.getDurationInMs();
+                            metadata.setEmbeddedPictureAsAlbumCover(requireActivity(), holder.binding.imgAlbum);
+                            int durationInS = bean.totalSoundDuration / 1000;
+                            holder.binding.tvEndtime.setText(String.format(Locale.US, "%d:%02d", durationInS / 60, durationInS % 60));
+                            holder.binding.progPlaytime.setMax(bean.totalSoundDuration / 100);
+                        }
+                    });
                 }
                 holder.binding.imgAlbum.setVisibility(View.VISIBLE);
                 holder.binding.deleteImgContainer.setVisibility(View.GONE);

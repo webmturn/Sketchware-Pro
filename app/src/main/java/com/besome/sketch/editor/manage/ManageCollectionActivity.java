@@ -681,9 +681,18 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
                 var audioMetadata = holder.audioMetadata;
                 var audio = getAudio(position);
                 if (audioMetadata == null || !audioMetadata.getSource().equals(audio)) {
-                    audioMetadata = holder.audioMetadata = AudioMetadata.fromPath(audio);
-                    bean.totalSoundDuration = audioMetadata.getDurationInMs();
-                    audioMetadata.setEmbeddedPictureAsAlbumCover(ManageCollectionActivity.this, holder.album);
+                    holder.audioMetadata = null;
+                    holder.album.setImageResource(R.drawable.default_album_art_200dp);
+                    AudioMetadata.fromPathAsync(audio, metadata -> {
+                        if (holder.getBindingAdapterPosition() == position) {
+                            holder.audioMetadata = metadata;
+                            bean.totalSoundDuration = metadata.getDurationInMs();
+                            metadata.setEmbeddedPictureAsAlbumCover(ManageCollectionActivity.this, holder.album);
+                            int durationInS = bean.totalSoundDuration / 1000;
+                            holder.totalDuration.setText(String.format("%d:%02d", durationInS / 60, durationInS % 60));
+                            holder.playbackProgress.setMax(bean.totalSoundDuration / 100);
+                        }
+                    });
                 }
                 holder.album.setVisibility(View.VISIBLE);
                 holder.deleteContainer.setVisibility(View.GONE);
