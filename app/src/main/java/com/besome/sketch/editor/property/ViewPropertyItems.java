@@ -146,7 +146,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     }
 
     private void addSimpleColorProperty(String name, int value) {
-        PropertyColorItem colorItem = (PropertyColorItem) propertyViewCache.get(name);
+        PropertyColorItem colorItem = propertyViewCache.get(name) instanceof PropertyColorItem c ? c : null;
         if (colorItem == null) {
             colorItem = new PropertyColorItem(getContext(), !isEditMode);
             colorItem.setOrientationItem(getOrientation());
@@ -163,7 +163,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     }
 
     private void addIndentProperty(String key, int left, int top, int right, int bottom) {
-        PropertyIndentItem indentItem = (PropertyIndentItem) propertyViewCache.get(key);
+        PropertyIndentItem indentItem = propertyViewCache.get(key) instanceof PropertyIndentItem c ? c : null;
         if (indentItem == null) {
             indentItem = new PropertyIndentItem(getContext(), !isEditMode);
             indentItem.setOrientationItem(getOrientation());
@@ -180,7 +180,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     }
 
     private void addColorProperty(String name, String value, int value2) {
-        PropertyColorItem colorItem = (PropertyColorItem) propertyViewCache.get(name);
+        PropertyColorItem colorItem = propertyViewCache.get(name) instanceof PropertyColorItem c ? c : null;
         if (colorItem == null) {
             colorItem = new PropertyColorItem(getContext(), !isEditMode, sc_id);
             colorItem.setOrientationItem(getOrientation());
@@ -196,7 +196,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     }
 
     private void addMeasureProperty(String key, int value, boolean isEnable) {
-        PropertyMeasureItem measureItem = (PropertyMeasureItem) propertyViewCache.get(key);
+        PropertyMeasureItem measureItem = propertyViewCache.get(key) instanceof PropertyMeasureItem c ? c : null;
         int isEnabled;
         if (isEnable) {
             isEnabled = 7;
@@ -265,7 +265,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     }
 
     private void addCustomViewProperty(String key, String value) {
-        PropertyCustomViewItem propertyCustomViewItem = (PropertyCustomViewItem) propertyViewCache.get(key);
+        PropertyCustomViewItem propertyCustomViewItem = propertyViewCache.get(key) instanceof PropertyCustomViewItem c ? c : null;
         if (propertyCustomViewItem == null) {
             propertyCustomViewItem = new PropertyCustomViewItem(getContext(), !isEditMode);
             propertyCustomViewItem.setOrientationItem(getOrientation());
@@ -281,7 +281,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     }
 
     private void addInputProperty(String key, String value, boolean isMenuMode, String typeView) {
-        PropertyInputItem inputItem = (PropertyInputItem) propertyViewCache.get(key);
+        PropertyInputItem inputItem = propertyViewCache.get(key) instanceof PropertyInputItem c ? c : null;
         if (inputItem == null) {
             inputItem = new PropertyInputItem(getContext(), !isMenuMode);
             inputItem.setOrientationItem(getOrientation());
@@ -374,7 +374,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     }
 
     private void addSelectorProperty(String key, int value) {
-        PropertySelectorItem selectorItem = (PropertySelectorItem) propertyViewCache.get(key);
+        PropertySelectorItem selectorItem = propertyViewCache.get(key) instanceof PropertySelectorItem c ? c : null;
         if (selectorItem == null) {
             selectorItem = new PropertySelectorItem(getContext(), !isEditMode);
             selectorItem.setOrientationItem(getOrientation());
@@ -391,7 +391,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     }
 
     private void addStringPairSelectorProperty(String key, String value) {
-        PropertyStringPairSelectorItem pairSelectorItem = (PropertyStringPairSelectorItem) propertyViewCache.get(key);
+        PropertyStringPairSelectorItem pairSelectorItem = propertyViewCache.get(key) instanceof PropertyStringPairSelectorItem c ? c : null;
         if (pairSelectorItem == null) {
             pairSelectorItem = new PropertyStringPairSelectorItem(getContext(), !isEditMode);
             pairSelectorItem.setOrientationItem(getOrientation());
@@ -444,7 +444,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     }
 
     private void addSizeProperty(String key, int value) {
-        PropertySizeItem propertySizeItem = (PropertySizeItem) propertyViewCache.get(key);
+        PropertySizeItem propertySizeItem = propertyViewCache.get(key) instanceof PropertySizeItem c ? c : null;
         if (propertySizeItem == null) {
             propertySizeItem = new PropertySizeItem(getContext(), !isEditMode);
             propertySizeItem.setOrientationItem(getOrientation());
@@ -461,7 +461,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     }
 
     private void addStringSelectorProperty(String key, String value) {
-        PropertyStringSelectorItem stringSelectorItem = (PropertyStringSelectorItem) propertyViewCache.get(key);
+        PropertyStringSelectorItem stringSelectorItem = propertyViewCache.get(key) instanceof PropertyStringSelectorItem c ? c : null;
         if (stringSelectorItem == null) {
             stringSelectorItem = new PropertyStringSelectorItem(getContext(), !isEditMode);
             stringSelectorItem.setOrientationItem(getOrientation());
@@ -498,7 +498,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     }
 
     private void addSwitchProperty(String key, int value) {
-        PropertySwitchSingleLineItem switchSingleLineItem = (PropertySwitchSingleLineItem) propertyViewCache.get(key);
+        PropertySwitchSingleLineItem switchSingleLineItem = propertyViewCache.get(key) instanceof PropertySwitchSingleLineItem c ? c : null;
         boolean isEnabled = false;
         if (switchSingleLineItem == null) {
             switchSingleLineItem = new PropertySwitchSingleLineItem(getContext(), !isEditMode);
