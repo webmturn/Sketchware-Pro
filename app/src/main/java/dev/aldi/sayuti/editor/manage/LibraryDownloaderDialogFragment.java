@@ -331,6 +331,7 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
                                 ArrayList<HashMap<String, Object>> enabledLibs;
                                 try {
                                     enabledLibs = gson.fromJson(fileContent, Helper.TYPE_MAP_LIST);
+                                    if (enabledLibs == null) enabledLibs = new ArrayList<>();
                                 } catch (com.google.gson.JsonSyntaxException e2) {
                                     enabledLibs = new ArrayList<>();
                                 }
