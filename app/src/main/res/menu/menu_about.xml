@@ -5,6 +5,5 @@
     <item
         android:id="@+id/action_crash_logs"
         android:title="@string/about_crash_logs"
-        android:icon="@drawable/ic_mtrl_chip_close_circle"
         app:showAsAction="never" />
 </menu>

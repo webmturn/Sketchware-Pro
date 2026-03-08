@@ -11,13 +11,10 @@ import androidx.annotation.Nullable;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FilenameFilter;
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.Locale;
 
@@ -46,7 +43,9 @@ public final class CrashLogManager {
      */
     @NonNull
     public static File getCrashDir() {
-        File dir = new File(SketchApplication.getContext().getExternalFilesDir(null), CRASH_DIR_NAME);
+        File externalDir = SketchApplication.getContext().getExternalFilesDir(null);
+        File base = (externalDir != null) ? externalDir : SketchApplication.getContext().getCacheDir();
+        File dir = new File(base, CRASH_DIR_NAME);
         if (!dir.exists()) {
             dir.mkdirs();
         }
