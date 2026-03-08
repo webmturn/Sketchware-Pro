@@ -47,6 +47,53 @@ class DependencyResolver(
           |    {"url": "https://repo.maven.apache.org/maven2", "name": "Apache Maven"}
           |]
         """.trimMargin()
+
+        /** Specific androidx groupIds that are bundled in BuiltInLibraries.
+         *  Non-built-in groups (media3, camera, compose, navigation, paging, etc.) are NOT listed. */
+        private val BUILT_IN_ANDROIDX_GROUPS = setOf(
+            "androidx.activity",
+            "androidx.annotation",
+            "androidx.appcompat",
+            "androidx.arch.core",
+            "androidx.asynclayoutinflater",
+            "androidx.browser",
+            "androidx.cardview",
+            "androidx.collection",
+            "androidx.concurrent",
+            "androidx.constraintlayout",
+            "androidx.coordinatorlayout",
+            "androidx.core",
+            "androidx.cursoradapter",
+            "androidx.customview",
+            "androidx.documentfile",
+            "androidx.drawerlayout",
+            "androidx.dynamicanimation",
+            "androidx.emoji2",
+            "androidx.exifinterface",
+            "androidx.fragment",
+            "androidx.graphics.shapes",
+            "androidx.interpolator",
+            "androidx.legacy",
+            "androidx.lifecycle",
+            "androidx.loader",
+            "androidx.localbroadcastmanager",
+            "androidx.media",
+            "androidx.multidex",
+            "androidx.recyclerview",
+            "androidx.room",
+            "androidx.savedstate",
+            "androidx.slidingpanelayout",
+            "androidx.sqlite",
+            "androidx.startup",
+            "androidx.swiperefreshlayout",
+            "androidx.tracing",
+            "androidx.transition",
+            "androidx.vectordrawable",
+            "androidx.versionedparcelable",
+            "androidx.viewpager",
+            "androidx.viewpager2",
+            "androidx.work",
+        )
     }
 
     private var downloadPath: String = FilePathUtil.getLocalLibsDir().absolutePath
@@ -514,8 +561,9 @@ class DependencyResolver(
         // we only skip if the built-in major version >= the required major version.
         // For all other groups the built-in versions are backward-compatible across minor versions.
 
-        // These groups are entirely backward-compatible across minor/patch versions:
-        if (groupId.startsWith("androidx.")) return true
+        // Only skip specific androidx groups that are actually bundled in BuiltInLibraries.
+        // Non-built-in androidx libs (media3, camera, compose, navigation, etc.) must NOT be skipped.
+        if (groupId.startsWith("androidx.") && groupId in BUILT_IN_ANDROIDX_GROUPS) return true
         if (groupId == "com.google.firebase") return true
         if (groupId.startsWith("com.google.android.gms")) return true
         if (groupId.startsWith("com.google.android.datatransport")) return true
