@@ -190,6 +190,7 @@ class DependencyResolver(
 
     fun resolveDependency(callback: DependencyResolverCallback) = runBlocking(kotlinx.coroutines.Dispatchers.IO) {
         eventReciever = callback
+        org.cosmic.ide.dependency.resolver.clearSessionCaches()
         val dependency = getArtifact(groupId, artifactId, version) ?: return@runBlocking
 
         if (dependency.extension != "jar" && dependency.extension != "aar") {

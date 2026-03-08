@@ -70,6 +70,18 @@ private val repoCache = ConcurrentHashMap<String, String>()
 val pomCache = ConcurrentHashMap<String, ProjectObjectModel>()
 private val expandedBoms = ConcurrentHashMap<String, Boolean>()
 
+/**
+ * Clears per-session caches that must not persist across separate dependency resolution calls.
+ * [expandedBoms] tracks which BOMs have been expanded into [managedDependencies], but since
+ * [managedDependencies] is created fresh for each [resolveDependencyTree] call, stale entries
+ * in [expandedBoms] would cause BOMs to be skipped for new resolution sessions.
+ *
+ * [pomCache] and [repoCache] are safe to keep — they cache immutable data (POM content, repo URLs).
+ */
+fun clearSessionCaches() {
+    expandedBoms.clear()
+}
+
 fun initHost(artifact: Artifact): Artifact? {
     if (artifact.repository != null) {
         return artifact // Already initialized or repository was set externally
