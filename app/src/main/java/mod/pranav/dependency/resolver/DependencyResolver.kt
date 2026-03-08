@@ -184,6 +184,7 @@ class DependencyResolver(
         open fun dexing(artifact: Artifact) {}
         open fun onTaskCompleted(artifacts: List<String>) {}
         open fun dexingFailed(artifact: Artifact, e: Exception) {}
+        open fun onResolutionTimeout(artifact: Artifact) {}
         open fun invalidPackaging(artifact: Artifact) {}
     }
 
@@ -322,7 +323,8 @@ class DependencyResolver(
                     dependency.getAllDependencies()
                 }
             } catch (e: TimeoutCancellationException) {
-                // Timed out resolving transitive deps; complete with just the main library
+                // Timed out resolving transitive deps; notify UI and complete with just the main library
+                callback.onResolutionTimeout(dependency)
                 callback.onTaskCompleted(listOf("${dependency.artifactId}-v${dependency.version}"))
                 return@runBlocking
             } catch (t: Throwable) {

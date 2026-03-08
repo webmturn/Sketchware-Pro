@@ -311,6 +311,13 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
                     }
 
                     @Override
+                    public void onResolutionTimeout(@NonNull Artifact dep) {
+                        handler.post(() -> SketchwareUtil.toast(
+                                "Dependency tree resolution timed out for " + dep.getArtifactId()
+                                        + ". Only the main library was downloaded."));
+                    }
+
+                    @Override
                     public void dexingFailed(@NonNull Artifact dependency, @NonNull Exception e) {
                         handler.post(() -> {
                             DependencyDownloadItem item = findOrCreateDependencyItem(dependency);
