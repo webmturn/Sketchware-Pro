@@ -335,6 +335,9 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
                                     enabledLibs = new ArrayList<>();
                                 }
                                 String mainLibName = dependencies.get(0);
+                                // Remove existing entries for these libraries to avoid duplicates on re-download
+                                java.util.Set<String> newNames = new java.util.HashSet<>(dependencies);
+                                enabledLibs.removeIf(m -> newNames.contains(String.valueOf(m.get("name"))));
                                 for (int i = 0; i < dependencies.size(); i++) {
                                     String name = dependencies.get(i);
                                     // Main library: no parent dependency; sub-deps: parent is main library folder name

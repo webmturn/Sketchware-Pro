@@ -71,7 +71,7 @@ class DependencyResolver(
             "androidx.emoji2",
             "androidx.exifinterface",
             "androidx.fragment",
-            "androidx.graphics.shapes",
+            "androidx.graphics",
             "androidx.interpolator",
             "androidx.legacy",
             "androidx.lifecycle",
