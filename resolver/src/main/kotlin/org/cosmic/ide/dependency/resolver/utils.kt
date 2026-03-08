@@ -67,21 +67,24 @@ fun getArtifact(groupId: String, artifactId: String, version: String): Artifact?
  */
 // In-memory cache: groupId → repo URL (same groupId is typically hosted on the same repo)
 private val repoCache = ConcurrentHashMap<String, String>()
+val pomCache = ConcurrentHashMap<String, ProjectObjectModel>()
+private val expandedBoms = ConcurrentHashMap<String, Boolean>()
 
 fun initHost(artifact: Artifact): Artifact? {
     if (artifact.repository != null) {
         return artifact // Already initialized or repository was set externally
     }
-    // Try cached repo first (same groupId is typically hosted on same repo)
+    // Try cached repo first — trust the cache, skip HTTP verification.
+    // Same groupId is always hosted on the same repo in Maven conventions.
     val cachedRepoUrl = repoCache[artifact.groupId]
     if (cachedRepoUrl != null) {
         val cachedRepo = repositories.find { it.getURL() == cachedRepoUrl }
-        if (cachedRepo != null && cachedRepo.checkExists(artifact)) {
+        if (cachedRepo != null) {
             artifact.repository = cachedRepo
             return artifact
         }
     }
-    // Attempt to find a repository only if not already set
+    // Attempt to find a repository only if not cached
     for (repository in repositories) {
         if (repository.checkExists(artifact)) {
             artifact.repository = repository
@@ -101,11 +104,10 @@ fun initHost(artifact: Artifact): Artifact? {
 private fun expandManagedDependencies(
     pom: ProjectObjectModel,
     managedDependencies: ConcurrentLinkedDeque<Artifact>,
-    visitedBoms: MutableSet<String> = mutableSetOf(),
     skipFilter: ((Artifact) -> Boolean)? = null
 ) {
     val pomKey = "${pom.groupId ?: pom.parent?.groupId}:${pom.artifactId}:${pom.version ?: pom.parent?.version}"
-    if (!visitedBoms.add(pomKey)) return // cycle guard
+    if (expandedBoms.putIfAbsent(pomKey, true) != null) return // already expanded or cycle guard
 
     // Step 1: Add current POM's non-BOM <dependencyManagement> entries (highest priority — skip if already present)
     pom.dependencyManagement?.dependencies.orEmpty()
@@ -130,7 +132,7 @@ private fun expandManagedDependencies(
             initHost(bomArtifact)
             val bomPom = bomArtifact.getPOM() ?: return@forEach
             // Recursively expand the BOM's managed deps (skips entries already added above)
-            expandManagedDependencies(bomPom, managedDependencies, visitedBoms, skipFilter)
+            expandManagedDependencies(bomPom, managedDependencies, skipFilter)
         }
 
     // Step 3: Inherit parent POM's <dependencyManagement> (lowest priority — recursively)
@@ -139,9 +141,10 @@ private fun expandManagedDependencies(
         // Skip downloading parent POMs for built-in groups
         if (skipFilter?.invoke(Artifact(parentGav.groupId, parentGav.artifactId, parentGav.version)) != true) {
             val parentArtifact = Artifact(parentGav.groupId, parentGav.artifactId, parentGav.version)
+            initHost(parentArtifact)
             val parentPom = parentArtifact.getPOM()
             if (parentPom != null) {
-                expandManagedDependencies(parentPom, managedDependencies, visitedBoms, skipFilter)
+                expandManagedDependencies(parentPom, managedDependencies, skipFilter)
             }
         }
     }

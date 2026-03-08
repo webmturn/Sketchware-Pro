@@ -238,6 +238,12 @@ data class Artifact(
             eventReciever.onInvalidPOM(this)
             return null
         }
+        // Check global POM cache first
+        val cacheKey = "$groupId:$artifactId:$version"
+        org.cosmic.ide.dependency.resolver.pomCache[cacheKey]?.let {
+            this.pom = it
+            return it
+        }
         val pomUrl = "${repository?.getURL()}/${
             groupId.replace(
                 ".", "/"
@@ -255,6 +261,8 @@ data class Artifact(
                 response.body!!.byteStream(),
                 ProjectObjectModel::class.java
             )
+            // Store in global cache
+            this.pom?.let { org.cosmic.ide.dependency.resolver.pomCache[cacheKey] = it }
             return this.pom
         } catch (_: SocketException) {
             eventReciever.onVersionNotFound(this)
