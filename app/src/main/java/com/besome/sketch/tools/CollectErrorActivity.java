@@ -6,11 +6,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.text.format.Formatter;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,11 +14,9 @@ import android.widget.Toast;
 import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import java.io.File;
-
-import pro.sketchware.core.DeviceUtil;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
+import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.SketchwareUtil;
 
 public class CollectErrorActivity extends BaseAppCompatActivity {
@@ -32,50 +26,55 @@ public class CollectErrorActivity extends BaseAppCompatActivity {
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
-        if (intent != null) {
-            String error = intent.getStringExtra("error");
-
-            var dialog = new MaterialAlertDialogBuilder(this)
-                    .setTitle(R.string.common_error_an_error_occurred)
-                    .setMessage(R.string.error_crash_report_msg)
-                    .setPositiveButton(R.string.common_word_copy, null)
-                    .setNegativeButton(R.string.common_word_cancel, (dialogInterface, which) -> finish())
-                    .setNeutralButton(R.string.error_crash_show_error, null) // null to set proper onClick listeners later without dismissing the AlertDialog
-                    .setCancelable(false)
-                    .show();
-
-            TextView messageView = dialog.findViewById(android.R.id.message);
-
-            dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(v -> {
-                messageView.setTextIsSelectable(true);
-                messageView.setText(error);
-            });
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
-                PackageInfo info;
-
-                try {
-                    info = getPackageManager().getPackageInfo(getPackageName(), 0);
-                } catch (PackageManager.NameNotFoundException e) {
-                    messageView.setTextIsSelectable(true);
-                    messageView.setText(Helper.getResString(R.string.error_get_package_info) + Log.getStackTraceString(e));
-                    return;
-                }
-
-                long fileSizeInBytes = new File(info.applicationInfo.sourceDir).length();
-
-                String deviceInfo = "Sketchware Pro " + info.versionName + " (" + info.versionCode + ")\n"
-                        + "base.apk size: " + Formatter.formatFileSize(this, fileSizeInBytes) + " (" + fileSizeInBytes + " B)\n"
-                        + "Locale: " + DeviceUtil.getLocale(getApplicationContext()) + "\n"
-                        + "SDK version: " + Build.VERSION.SDK_INT + "\n"
-                        + "Brand: " + Build.BRAND + "\n"
-                        + "Manufacturer: " + Build.MANUFACTURER + "\n"
-                        + "Model: " + Build.MODEL;
-
-                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("error", deviceInfo + "\n\n```\n" + error + "\n```");
-                clipboard.setPrimaryClip(clip);
-                runOnUiThread(() -> SketchwareUtil.toast(Helper.getResString(R.string.toast_copied), Toast.LENGTH_LONG));
-            });
+        if (intent == null) {
+            finish();
+            return;
         }
+
+        // Read crash report: prefer file-based (includes device info), fall back to legacy extra
+        String crashReport = loadCrashReport(intent);
+        if (crashReport == null || crashReport.isEmpty()) {
+            crashReport = "(No crash data available)";
+        }
+        final String report = crashReport;
+
+        var dialog = new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.common_error_an_error_occurred)
+                .setMessage(R.string.error_crash_report_msg)
+                .setPositiveButton(R.string.common_word_copy, null)
+                .setNegativeButton(R.string.common_word_cancel, (dialogInterface, which) -> finish())
+                .setNeutralButton(R.string.error_crash_show_error, null)
+                .setCancelable(false)
+                .show();
+
+        TextView messageView = dialog.findViewById(android.R.id.message);
+
+        dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(v -> {
+            messageView.setTextIsSelectable(true);
+            messageView.setText(report);
+        });
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("crash_report", "```\n" + report + "\n```");
+            clipboard.setPrimaryClip(clip);
+            SketchwareUtil.toast(Helper.getResString(R.string.toast_copied), Toast.LENGTH_LONG);
+        });
+    }
+
+    /**
+     * Loads the crash report string. Prefers the file-based report (which already
+     * contains device info, memory stats, timestamps). Falls back to the legacy
+     * "error" string extra for backward compatibility.
+     */
+    private String loadCrashReport(Intent intent) {
+        String crashFilePath = intent.getStringExtra("crash_file");
+        if (crashFilePath != null) {
+            try {
+                return FileUtil.readFile(crashFilePath);
+            } catch (Exception e) {
+                Log.e("CollectErrorActivity", "Failed to read crash file: " + crashFilePath, e);
+            }
+        }
+        return intent.getStringExtra("error");
     }
 }

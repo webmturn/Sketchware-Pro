@@ -1540,6 +1540,7 @@ Please click on Settings to allow permission for Storage. Without this permissio
     <string name="error_corrupt_more_block">Can\'t open corrupt More Block</string>
     <string name="error_crash_report_msg">An error occurred while running Sketchware Pro. Do you want to report this error log so that we can fix it? No personal information will be included.</string>
     <string name="error_crash_show_error">Show error</string>
+    <string name="error_crash_previous_session">Sketchware Pro crashed during your last session. Would you like to view the crash log?</string>
     <string name="error_dependencies_not_found">Dependencies not found</string>
     <string name="error_dev_options_unavailable">Developer options not available on this device</string>
     <string name="error_device_no_crop">Your device doesn\'t support the crop action!</string>

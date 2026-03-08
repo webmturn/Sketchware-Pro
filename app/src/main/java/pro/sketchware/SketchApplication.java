@@ -17,6 +17,7 @@ import androidx.core.os.LocaleListCompat;
 import com.besome.sketch.tools.CollectErrorActivity;
 
 import pro.sketchware.fragments.settings.language.LanguageOverrideManager;
+import pro.sketchware.utility.CrashLogManager;
 import pro.sketchware.utility.theme.ThemeManager;
 
 /**
@@ -75,16 +76,21 @@ public class SketchApplication extends Application {
             @Override public void onActivitySaveInstanceState(@NonNull Activity activity, @NonNull Bundle outState) {}
             @Override public void onActivityDestroyed(@NonNull Activity activity) { if (currentActivity == activity) currentActivity = null; }
         });
-        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(@NonNull Thread thread, @NonNull Throwable throwable) {
-                Intent intent = new Intent(getApplicationContext(), CollectErrorActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
+            // Persist crash log to file first (survives process death)
+            String crashFilePath = CrashLogManager.writeCrashLog(thread, throwable);
+
+            Intent intent = new Intent(getApplicationContext(), CollectErrorActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            if (crashFilePath != null) {
+                intent.putExtra("crash_file", crashFilePath);
+            } else {
+                // Fallback: pass stack trace directly if file write failed
                 intent.putExtra("error", Log.getStackTraceString(throwable));
-                startActivity(intent);
-                Process.killProcess(Process.myPid());
-                System.exit(1);
             }
+            startActivity(intent);
+            Process.killProcess(Process.myPid());
+            System.exit(1);
         });
         super.onCreate();
         LanguageOverrideManager.getInstance().init(this);

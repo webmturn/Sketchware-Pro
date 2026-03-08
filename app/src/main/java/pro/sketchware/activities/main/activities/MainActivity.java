@@ -30,6 +30,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.besome.sketch.lib.base.BasePermissionAppCompatActivity;
+import com.besome.sketch.tools.CollectErrorActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseApp;
@@ -39,6 +40,8 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
+
+import pro.sketchware.utility.CrashLogManager;
 
 import pro.sketchware.core.SharedPrefsHelper;
 import pro.sketchware.core.DeviceUtil;
@@ -152,6 +155,35 @@ public class MainActivity extends BasePermissionAppCompatActivity {
         drawerToggle.onConfigurationChanged(newConfig);
     }
 
+    /**
+     * Checks if the app crashed in a previous session and offers to show the crash log.
+     * This catches cases where CollectErrorActivity failed to launch during the crash.
+     */
+    private void checkPreviousCrash() {
+        try {
+            File latestCrash = CrashLogManager.getLatestCrashLog();
+            if (latestCrash == null) return;
+
+            // Only show if the crash happened within the last 5 minutes
+            // (older crashes were likely already shown by CollectErrorActivity)
+            long ageMs = System.currentTimeMillis() - latestCrash.lastModified();
+            if (ageMs > 5 * 60 * 1000) return;
+
+            new MaterialAlertDialogBuilder(this)
+                    .setTitle(R.string.common_error_an_error_occurred)
+                    .setMessage(R.string.error_crash_previous_session)
+                    .setPositiveButton(R.string.error_crash_show_error, (d, w) -> {
+                        Intent intent = new Intent(this, CollectErrorActivity.class);
+                        intent.putExtra("crash_file", latestCrash.getAbsolutePath());
+                        startActivity(intent);
+                    })
+                    .setNegativeButton(R.string.common_word_cancel, null)
+                    .show();
+        } catch (Exception e) {
+            Log.e("MainActivity", "Failed to check previous crash", e);
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         SplashScreen.installSplashScreen(this);
@@ -163,6 +195,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
                     }
                 });
         enableEdgeToEdgeNoContrast();
+        checkPreviousCrash();
 
         binding = MainBinding.inflate(getLayoutInflater());
 
