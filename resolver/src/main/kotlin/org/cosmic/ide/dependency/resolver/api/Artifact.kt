@@ -179,7 +179,10 @@ data class Artifact(
             }
 
             currentLevelArtifacts.filter { it.dependencies == null }.parallelForEach { artifact ->
-                if (skipFilter?.invoke(artifact) == true) {
+                // Never skip the root artifact — the user explicitly asked to download it,
+                // so its transitive dependencies must always be resolved even if the root's
+                // group happens to be in the built-in list.
+                if (artifact !== this && skipFilter?.invoke(artifact) == true) {
                     artifact.dependencies = emptyList()
                     eventReciever.onSkippingResolution(artifact)
                 } else {
