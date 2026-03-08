@@ -374,15 +374,21 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
         ArrayList<String> folders = new ArrayList<>(allDeps.size());
         ArrayList<String> coords = new ArrayList<>(allDeps.size());
         boolean[] builtIn = new boolean[allDeps.size()];
+        int[] depths = new int[allDeps.size()];
+        ArrayList<String> parents = new ArrayList<>(allDeps.size());
         for (int i = 0; i < allDeps.size(); i++) {
             LocalLibrary.DepInfo dep = allDeps.get(i);
             folders.add(dep.folderName);
             coords.add(dep.groupId + ":" + dep.artifactId + ":" + dep.version);
             builtIn[i] = dep.builtIn;
+            depths[i] = dep.depth;
+            parents.add(dep.parentCoord);
         }
         intent.putStringArrayListExtra(SubDependenciesActivity.EXTRA_DEP_FOLDERS, folders);
         intent.putStringArrayListExtra(SubDependenciesActivity.EXTRA_DEP_COORDS, coords);
         intent.putExtra(SubDependenciesActivity.EXTRA_DEP_BUILTIN, builtIn);
+        intent.putExtra(SubDependenciesActivity.EXTRA_DEP_DEPTHS, depths);
+        intent.putStringArrayListExtra(SubDependenciesActivity.EXTRA_DEP_PARENTS, parents);
         startActivity(intent);
     }
 

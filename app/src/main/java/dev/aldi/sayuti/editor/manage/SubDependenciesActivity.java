@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +39,8 @@ public class SubDependenciesActivity extends BaseAppCompatActivity {
     public static final String EXTRA_DEP_FOLDERS = "dep_folders";
     public static final String EXTRA_DEP_COORDS = "dep_coords";
     public static final String EXTRA_DEP_BUILTIN = "dep_builtin";
+    public static final String EXTRA_DEP_DEPTHS = "dep_depths";
+    public static final String EXTRA_DEP_PARENTS = "dep_parents";
 
     private ActivitySubDependenciesBinding binding;
     private String scId;
@@ -60,6 +63,8 @@ public class SubDependenciesActivity extends BaseAppCompatActivity {
         ArrayList<String> depFolders = intent.getStringArrayListExtra(EXTRA_DEP_FOLDERS);
         ArrayList<String> depCoords = intent.getStringArrayListExtra(EXTRA_DEP_COORDS);
         boolean[] depBuiltIn = intent.getBooleanArrayExtra(EXTRA_DEP_BUILTIN);
+        int[] depDepths = intent.getIntArrayExtra(EXTRA_DEP_DEPTHS);
+        ArrayList<String> depParents = intent.getStringArrayListExtra(EXTRA_DEP_PARENTS);
         scId = intent.getStringExtra(EXTRA_SC_ID);
 
         notAssociatedWithProject = scId == null || scId.equals("system");
@@ -77,22 +82,117 @@ public class SubDependenciesActivity extends BaseAppCompatActivity {
             binding.noContentLayout.setVisibility(View.VISIBLE);
             binding.dependenciesList.setVisibility(View.GONE);
         } else {
-            loadDependencies(depFolders, depCoords, depBuiltIn);
+            loadDependencies(rootLibName, depFolders, depCoords, depBuiltIn, depDepths, depParents);
         }
     }
 
-    private void loadDependencies(List<String> folders, List<String> coords, boolean[] builtIn) {
-        List<SubDepItem> items = new ArrayList<>();
+    private void loadDependencies(String rootLibName, List<String> folders, List<String> coords,
+                                  boolean[] builtIn, int[] depths, List<String> parents) {
+        // Build raw items from intent data
+        List<SubDepItem> rawItems = new ArrayList<>();
+        boolean hasTreeData = (depths != null && parents != null && depths.length == folders.size());
+
+        int builtInCount = 0;
+        int downloadedCount = 0;
+
         for (int i = 0; i < folders.size(); i++) {
             String folder = folders.get(i);
             String coord = (coords != null && i < coords.size()) ? coords.get(i) : folder;
             boolean isBuiltIn = (builtIn != null && i < builtIn.length) && builtIn[i];
+            int depth = hasTreeData ? depths[i] : 1;
+            String parent = hasTreeData && i < parents.size() ? parents.get(i) : null;
             File dir = resolveLibDir(folder);
-            String size = isBuiltIn ? "Built-in" : (dir != null ? formatFileSize(getFileSize(dir)) : "—");
-            items.add(new SubDepItem(folder, coord, size, isBuiltIn));
+            String size = isBuiltIn ? "Built-in" : (dir != null ? formatFileSize(getFileSize(dir)) : "\u2014");
+
+            rawItems.add(new SubDepItem(folder, coord, size, isBuiltIn, depth, parent));
+
+            if (isBuiltIn) builtInCount++;
+            else downloadedCount++;
         }
-        adapter.setItems(items);
-        binding.noContentLayout.setVisibility(items.isEmpty() ? View.VISIBLE : View.GONE);
+
+        // Set subtitle with summary stats
+        binding.toolbar.setSubtitle(downloadedCount + " downloaded, " + builtInCount + " built-in");
+
+        // If tree data is available, sort into DFS order for proper tree display
+        List<SubDepItem> orderedItems;
+        if (hasTreeData) {
+            orderedItems = sortDfs(rawItems);
+        } else {
+            orderedItems = rawItems;
+        }
+
+        // Compute isLastChild for tree connectors
+        computeLastChildFlags(orderedItems);
+
+        adapter.setItems(orderedItems);
+        binding.noContentLayout.setVisibility(orderedItems.isEmpty() ? View.VISIBLE : View.GONE);
+    }
+
+    /**
+     * Sorts items into DFS order using the parent→children relationship.
+     * Items without tree data or orphaned items are appended at the end.
+     */
+    private List<SubDepItem> sortDfs(List<SubDepItem> items) {
+        // Build parent → children map (preserving insertion order)
+        Map<String, List<SubDepItem>> childrenMap = new LinkedHashMap<>();
+        for (SubDepItem item : items) {
+            if (item.parentCoord != null) {
+                childrenMap.computeIfAbsent(item.parentCoord, k -> new ArrayList<>()).add(item);
+            }
+        }
+
+        List<SubDepItem> result = new ArrayList<>();
+        java.util.Set<String> visited = new java.util.HashSet<>();
+
+        // DFS from depth-1 items (direct children of root)
+        for (SubDepItem item : items) {
+            if (item.depth == 1) {
+                dfsVisit(item, childrenMap, visited, result);
+            }
+        }
+
+        // Append any orphaned items not reached by DFS
+        for (SubDepItem item : items) {
+            if (!visited.contains(item.coordinate)) {
+                result.add(item);
+            }
+        }
+
+        return result;
+    }
+
+    private void dfsVisit(SubDepItem item, Map<String, List<SubDepItem>> childrenMap,
+                          java.util.Set<String> visited, List<SubDepItem> result) {
+        if (!visited.add(item.coordinate)) return;
+        result.add(item);
+        List<SubDepItem> children = childrenMap.get(item.coordinate);
+        if (children != null) {
+            for (SubDepItem child : children) {
+                dfsVisit(child, childrenMap, visited, result);
+            }
+        }
+    }
+
+    /**
+     * Computes whether each item is the last child of its parent,
+     * used for drawing └── vs ├── tree connectors.
+     */
+    private void computeLastChildFlags(List<SubDepItem> items) {
+        // For each parent, find the index of its last child
+        Map<String, Integer> lastChildIndex = new HashMap<>();
+        for (int i = 0; i < items.size(); i++) {
+            SubDepItem item = items.get(i);
+            if (item.parentCoord != null) {
+                lastChildIndex.put(item.parentCoord, i);
+            }
+        }
+        for (int i = 0; i < items.size(); i++) {
+            SubDepItem item = items.get(i);
+            if (item.parentCoord != null) {
+                Integer lastIdx = lastChildIndex.get(item.parentCoord);
+                item.isLastChild = (lastIdx != null && lastIdx == i);
+            }
+        }
     }
 
     private File resolveLibDir(String name) {
@@ -131,17 +231,28 @@ public class SubDependenciesActivity extends BaseAppCompatActivity {
         final String coordinate;
         final String size;
         final boolean builtIn;
+        final int depth;
+        final String parentCoord;
+        boolean isLastChild;
 
-        SubDepItem(String folderName, String coordinate, String size, boolean builtIn) {
+        SubDepItem(String folderName, String coordinate, String size, boolean builtIn,
+                   int depth, String parentCoord) {
             this.folderName = folderName;
             this.coordinate = coordinate;
             this.size = size;
             this.builtIn = builtIn;
+            this.depth = depth;
+            this.parentCoord = parentCoord;
         }
     }
 
     private class SubDepAdapter extends RecyclerView.Adapter<SubDepAdapter.ViewHolder> {
         private final List<SubDepItem> items = new ArrayList<>();
+        private final float dpUnit;
+
+        SubDepAdapter() {
+            dpUnit = SubDependenciesActivity.this.getResources().getDisplayMetrics().density;
+        }
 
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -154,14 +265,24 @@ public class SubDependenciesActivity extends BaseAppCompatActivity {
             var binding = holder.binding;
             var item = items.get(position);
 
-            // Line 1: artifactId only.  Line 2: groupId:version · size/Built-in
+            // Tree indentation: 20dp per depth level (depth 1 = no indent, depth 2 = 20dp, etc.)
+            int indentPx = (int) ((item.depth - 1) * 20 * dpUnit);
+            binding.card.setPadding(indentPx, 0, 0, 0);
+
+            // Tree connector prefix
+            String treePrefix = "";
+            if (item.depth > 1) {
+                treePrefix = item.isLastChild ? "\u2514\u2500 " : "\u251C\u2500 ";
+            }
+
+            // Line 1: [tree prefix] artifactId.  Line 2: groupId:version · size/Built-in
             String coord = item.coordinate;
             String[] parts = coord.split(":");
             if (parts.length == 3) {
-                binding.libraryName.setText(parts[1]);
+                binding.libraryName.setText(treePrefix + parts[1]);
                 binding.librarySize.setText(parts[0] + ":" + parts[2] + " \u00b7 " + item.size);
             } else {
-                binding.libraryName.setText(coord);
+                binding.libraryName.setText(treePrefix + coord);
                 binding.librarySize.setText(item.size);
             }
             binding.libraryName.setSingleLine(true);

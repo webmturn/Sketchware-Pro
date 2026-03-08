@@ -31,13 +31,18 @@ public class LocalLibrary {
         public final String artifactId;
         public final String version;
         public final boolean builtIn;
+        public final int depth;           // tree depth (1 = direct dep of root)
+        public final String parentCoord;  // Maven coordinate of parent, e.g. "com.squareup.okhttp3:okhttp:5.1.0"
 
-        DepInfo(String folderName, String groupId, String artifactId, String version, boolean builtIn) {
+        DepInfo(String folderName, String groupId, String artifactId, String version,
+                boolean builtIn, int depth, String parentCoord) {
             this.folderName = folderName;
             this.groupId = groupId;
             this.artifactId = artifactId;
             this.version = version;
             this.builtIn = builtIn;
+            this.depth = depth;
+            this.parentCoord = parentCoord;
         }
     }
 
@@ -68,8 +73,12 @@ public class LocalLibrary {
                         boolean builtIn = Boolean.TRUE.equals(entry.get("builtIn"));
                         if (artifactId != null && version != null) {
                             String folderName = artifactId + "-v" + version;
+                            int depth = 1;
+                            Object depthObj = entry.get("depth");
+                            if (depthObj instanceof Number) depth = ((Number) depthObj).intValue();
+                            String parentCoord = (String) entry.get("parent");
                             allDeps.add(new DepInfo(folderName, groupId != null ? groupId : "",
-                                    artifactId, version, builtIn));
+                                    artifactId, version, builtIn, depth, parentCoord));
                             if (!builtIn) {
                                 subDeps.add(folderName);
                             }
