@@ -334,9 +334,13 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
                                 } catch (com.google.gson.JsonSyntaxException e2) {
                                     enabledLibs = new ArrayList<>();
                                 }
-                                enabledLibs.addAll(dependencies.stream()
-                                        .map(name -> createLibraryMap(name, dependencyName))
-                                        .toList());
+                                String mainLibName = dependencies.get(0);
+                                for (int i = 0; i < dependencies.size(); i++) {
+                                    String name = dependencies.get(i);
+                                    // Main library: no parent dependency; sub-deps: parent is main library folder name
+                                    String parent = (i == 0) ? null : mainLibName;
+                                    enabledLibs.add(createLibraryMap(name, parent));
+                                }
                                 FileUtil.writeFile(localLibFile, gson.toJson(enabledLibs));
                             }
                             if (getActivity() == null) return;

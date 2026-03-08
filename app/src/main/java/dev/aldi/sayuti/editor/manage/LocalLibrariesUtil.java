@@ -52,14 +52,30 @@ public class LocalLibrariesUtil {
         }
         localLibraryFiles.sort(new LocalLibrariesComparator());
 
-        List<LocalLibrary> localLibraries = new LinkedList<>();
+        List<LocalLibrary> allLibraries = new LinkedList<>();
         for (File libraryFile : localLibraryFiles) {
             if (libraryFile.isDirectory()) {
-                localLibraries.add(LocalLibrary.fromFile(libraryFile));
+                allLibraries.add(LocalLibrary.fromFile(libraryFile));
             }
         }
 
-        return localLibraries;
+        // Collect all sub-dependency folder names from root libraries
+        Set<String> subDepNames = new HashSet<>();
+        for (LocalLibrary lib : allLibraries) {
+            if (lib.isRootLibrary()) {
+                subDepNames.addAll(lib.getSubDependencyNames());
+            }
+        }
+
+        // Show root libraries and standalone libraries (not a sub-dep of any root library)
+        List<LocalLibrary> filtered = new LinkedList<>();
+        for (LocalLibrary lib : allLibraries) {
+            if (lib.isRootLibrary() || !subDepNames.contains(lib.getName())) {
+                filtered.add(lib);
+            }
+        }
+
+        return filtered;
     }
 
     public static ArrayList<HashMap<String, Object>> getLocalLibraries(String scId) {
