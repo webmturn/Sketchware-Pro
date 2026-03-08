@@ -3362,6 +3362,10 @@ ACTION_VIEW
     <string name="about_date_years_ago">%d years ago</string>
     <string name="about_date_yesterday">Yesterday</string>
     <string name="about_deleted_account">Deleted Account</string>
+    <string name="about_crash_logs">Crash logs</string>
+    <string name="about_crash_logs_empty">No crash logs found</string>
+    <string name="about_crash_logs_clear">Clear all</string>
+    <string name="about_crash_logs_cleared">Crash logs cleared</string>
     <string name="about_joindiscord">Join our Discord server</string>
     <string name="about_loading_subtitle">Don\'t worry, it won\'t take more than a second.</string>
     <string name="about_loading_title">Getting data…</string>

@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,8 +17,15 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.besome.sketch.lib.base.BaseAppCompatActivity;
+import com.besome.sketch.tools.CollectErrorActivity;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.gson.Gson;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
@@ -25,7 +35,9 @@ import pro.sketchware.activities.about.fragments.TeamFragment;
 import pro.sketchware.activities.about.models.AboutAppViewModel;
 import pro.sketchware.activities.about.models.AboutResponseModel;
 import pro.sketchware.databinding.ActivityAboutAppBinding;
+import pro.sketchware.utility.CrashLogManager;
 import pro.sketchware.utility.Network;
+import pro.sketchware.utility.SketchwareUtil;
 
 public class AboutActivity extends BaseAppCompatActivity {
 
@@ -42,6 +54,7 @@ public class AboutActivity extends BaseAppCompatActivity {
         binding = ActivityAboutAppBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        setSupportActionBar(binding.toolbar);
         binding.toolbar.setNavigationOnClickListener(v -> finish());
 
         aboutAppData = new ViewModelProvider(this).get(AboutAppViewModel.class);
@@ -110,6 +123,50 @@ public class AboutActivity extends BaseAppCompatActivity {
             aboutAppData.setTeamMembers(aboutResponseModel.getTeam());
             aboutAppData.setChangelog(aboutResponseModel.getChangelog());
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_about, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_crash_logs) {
+            showCrashLogsDialog();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void showCrashLogsDialog() {
+        File[] logs = CrashLogManager.listCrashLogs();
+        if (logs == null || logs.length == 0) {
+            SketchwareUtil.toast(Helper.getResString(R.string.about_crash_logs_empty), Toast.LENGTH_SHORT);
+            return;
+        }
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+        String[] items = new String[logs.length];
+        for (int i = 0; i < logs.length; i++) {
+            items[i] = sdf.format(new Date(logs[i].lastModified()));
+        }
+
+        final File[] finalLogs = logs;
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.about_crash_logs)
+                .setItems(items, (dialog, which) -> {
+                    Intent intent = new Intent(this, CollectErrorActivity.class);
+                    intent.putExtra("crash_file", finalLogs[which].getAbsolutePath());
+                    startActivity(intent);
+                })
+                .setNeutralButton(R.string.about_crash_logs_clear, (dialog, which) -> {
+                    CrashLogManager.clearAll();
+                    SketchwareUtil.toast(Helper.getResString(R.string.about_crash_logs_cleared), Toast.LENGTH_SHORT);
+                })
+                .setNegativeButton(R.string.common_word_cancel, null)
+                .show();
     }
 
     // ----------------- classes ----------------- //
