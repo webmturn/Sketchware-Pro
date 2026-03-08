@@ -248,11 +248,7 @@ public class SubDependenciesActivity extends BaseAppCompatActivity {
 
     private class SubDepAdapter extends RecyclerView.Adapter<SubDepAdapter.ViewHolder> {
         private final List<SubDepItem> items = new ArrayList<>();
-        private final float dpUnit;
-
-        SubDepAdapter() {
-            dpUnit = SubDependenciesActivity.this.getResources().getDisplayMetrics().density;
-        }
+        private float dpUnit;
 
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -266,6 +262,7 @@ public class SubDependenciesActivity extends BaseAppCompatActivity {
             var item = items.get(position);
 
             // Tree indentation: 20dp per depth level (depth 1 = no indent, depth 2 = 20dp, etc.)
+            if (dpUnit == 0) dpUnit = holder.itemView.getResources().getDisplayMetrics().density;
             int indentPx = (int) ((item.depth - 1) * 20 * dpUnit);
             binding.card.setPadding(indentPx, 0, 0, 0);
 
