@@ -100,7 +100,8 @@ data class Artifact(
 
     suspend fun resolve(
         resolved: ConcurrentHashMap<Pair<String, String>, Pair<Artifact, ConcurrentLinkedDeque<Artifact>>>,
-        managedDependencies: ConcurrentLinkedDeque<Artifact>
+        managedDependencies: ConcurrentLinkedDeque<Artifact>,
+        skipFilter: ((Artifact) -> Boolean)? = null
     ) {
         if (this.dependencies != null) {
             eventReciever.onSkippingResolution(this)
@@ -151,7 +152,7 @@ data class Artifact(
             return
         }
 
-        val directDependencies = pomFile.resolveDependencies(resolved, managedDependencies, this.activeExclusions)
+        val directDependencies = pomFile.resolveDependencies(resolved, managedDependencies, this.activeExclusions, skipFilter)
         this.dependencies = directDependencies.toList()
         if (this.dependencies?.isEmpty() == true) {
             eventReciever.onDependenciesNotFound(this)
@@ -162,7 +163,8 @@ data class Artifact(
 
     suspend fun resolveDependencyTree(
         resolved: ConcurrentHashMap<Pair<String, String>, Pair<Artifact, ConcurrentLinkedDeque<Artifact>>> = ConcurrentHashMap(),
-        managedDependencies: ConcurrentLinkedDeque<Artifact> = ConcurrentLinkedDeque()
+        managedDependencies: ConcurrentLinkedDeque<Artifact> = ConcurrentLinkedDeque(),
+        skipFilter: ((Artifact) -> Boolean)? = null
     ) {
         val queue = ArrayDeque<Artifact>()
         queue.add(this)
@@ -177,7 +179,12 @@ data class Artifact(
             }
 
             currentLevelArtifacts.filter { it.dependencies == null }.parallelForEach { artifact ->
-                artifact.resolve(resolved, managedDependencies)
+                if (skipFilter?.invoke(artifact) == true) {
+                    artifact.dependencies = emptyList()
+                    eventReciever.onSkippingResolution(artifact)
+                } else {
+                    artifact.resolve(resolved, managedDependencies, skipFilter)
+                }
             }
 
             for (artifact in currentLevelArtifacts) {

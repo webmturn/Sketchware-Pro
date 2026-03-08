@@ -7,6 +7,7 @@ import com.android.tools.r8.D8Command
 import com.android.tools.r8.OutputMode
 import com.google.gson.Gson
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
 import mod.hey.studios.build.BuildSettings
 import mod.hey.studios.util.Helper
 import mod.jbk.build.BuiltInLibraries
@@ -21,6 +22,7 @@ import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
+import kotlinx.coroutines.TimeoutCancellationException
 import java.util.regex.Pattern
 import java.util.zip.ZipFile
 import kotlin.io.path.readText
@@ -138,7 +140,7 @@ class DependencyResolver(
         open fun invalidPackaging(artifact: Artifact) {}
     }
 
-    fun resolveDependency(callback: DependencyResolverCallback) = runBlocking {
+    fun resolveDependency(callback: DependencyResolverCallback) = runBlocking(kotlinx.coroutines.Dispatchers.IO) {
         eventReciever = callback
         val dependency = getArtifact(groupId, artifactId, version) ?: return@runBlocking
 
@@ -241,12 +243,16 @@ class DependencyResolver(
         } else {
             callback.dexing(dependency)
             try {
-                compileJar(jar, dependencyClasspath, libraryJars)
+                compileJarWithFallback(jar, dependencyClasspath, libraryJars)
                 callback.onResolutionComplete(dependency)
             } catch (t: Throwable) {
-                if (t is Exception) {
-                    callback.dexingFailed(dependency, t)
-                    return@runBlocking  // Don't resolve transitive deps if main dep failed to dex
+                if (t is Exception || t is OutOfMemoryError) {
+                    System.gc()
+                    val reportException = if (t is OutOfMemoryError)
+                        RuntimeException("Out of memory during dexing. The library may be too large for this device.", t)
+                    else t as Exception
+                    callback.dexingFailed(dependency, reportException)
+                    return@runBlocking
                 } else throw t
             }
         }
@@ -262,8 +268,16 @@ class DependencyResolver(
             allDeps = cachedDeps
         } else {
             try {
-                dependency.resolveDependencyTree()
-                allDeps = dependency.getAllDependencies()
+                allDeps = withTimeout(300_000L) {
+                    dependency.resolveDependencyTree(skipFilter = { dep ->
+                        isBuiltInDependency(dep.groupId, dep.artifactId, dep.version)
+                    })
+                    dependency.getAllDependencies()
+                }
+            } catch (e: TimeoutCancellationException) {
+                // Timed out resolving transitive deps; complete with just the main library
+                callback.onTaskCompleted(listOf("${dependency.artifactId}-v${dependency.version}"))
+                return@runBlocking
             } catch (t: Throwable) {
                 callback.onDependenciesNotFound(dependency)
                 return@runBlocking
@@ -377,13 +391,18 @@ class DependencyResolver(
 
             callback.dexing(dep)
             try {
-                compileJar(
+                compileJarWithFallback(
                     dexJar, dependencyClasspath.toMutableList().apply { remove(dexJar) }, libraryJars
                 )
                 callback.onResolutionComplete(dep)
             } catch (t: Throwable) {
-                if (t is Exception) callback.dexingFailed(dep, t)
-                else throw t
+                if (t is Exception || t is OutOfMemoryError) {
+                    System.gc()
+                    val reportException = if (t is OutOfMemoryError)
+                        RuntimeException("Out of memory during dexing: ${dep.artifactId}", t)
+                    else t as Exception
+                    callback.dexingFailed(dep, reportException)
+                } else throw t
                 return@forEach
             }
         }
@@ -537,12 +556,30 @@ class DependencyResolver(
     private fun parseMajorVersion(version: String): Int =
         version.trimStart().split(".", "-").firstOrNull()?.toIntOrNull() ?: 0
 
-    private fun compileJar(jarFile: Path, jars: List<Path>, libraryJars: List<Path>) {
+    /**
+     * Compiles a JAR to DEX using D8, trying without classpath first to minimize memory usage.
+     * If the minimal-classpath attempt fails (e.g. desugaring needs type info from dependencies),
+     * retries with full classpath. This reduces D8 memory from O(N) to O(1) for most libraries.
+     */
+    private fun compileJarWithFallback(jarFile: Path, jars: List<Path>, libraryJars: List<Path>) {
         Files.createDirectories(jarFile.parent)
-        D8.run(
-            D8Command.builder().setIntermediate(true).setMode(CompilationMode.RELEASE)
-                .addProgramFiles(jarFile).addLibraryFiles(libraryJars).addClasspathFiles(jars)
-                .setOutput(jarFile.parent, OutputMode.DexIndexed).build()
-        )
+        try {
+            // Fast path: no classpath, minimal memory
+            D8.run(
+                D8Command.builder().setIntermediate(true).setMode(CompilationMode.RELEASE)
+                    .addProgramFiles(jarFile).addLibraryFiles(libraryJars)
+                    .setOutput(jarFile.parent, OutputMode.DexIndexed).build()
+            )
+        } catch (_: Throwable) {
+            // Fallback: full classpath for desugaring
+            System.gc()
+            D8.run(
+                D8Command.builder().setIntermediate(true).setMode(CompilationMode.RELEASE)
+                    .addProgramFiles(jarFile).addLibraryFiles(libraryJars).addClasspathFiles(jars)
+                    .setOutput(jarFile.parent, OutputMode.DexIndexed).build()
+            )
+        } finally {
+            System.gc()
+        }
     }
 }

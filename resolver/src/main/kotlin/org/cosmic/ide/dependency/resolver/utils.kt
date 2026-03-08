@@ -40,7 +40,12 @@ val repositories = ConcurrentLinkedQueue<Repository>().apply {
     addAll(listOf(MavenCentral(), GoogleMaven(), Jitpack(), SonatypeSnapshots()))
 }
 var eventReciever = EventReciever()
-val okHttpClient = okhttp3.OkHttpClient()
+val okHttpClient = okhttp3.OkHttpClient.Builder()
+    .connectTimeout(5, java.util.concurrent.TimeUnit.SECONDS)
+    .readTimeout(15, java.util.concurrent.TimeUnit.SECONDS)
+    .writeTimeout(15, java.util.concurrent.TimeUnit.SECONDS)
+    .callTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+    .build()
 
 val xmlDeserializer: ObjectMapper = XmlMapper(JacksonXmlModule().apply {
     setDefaultUseWrapper(false)
@@ -96,7 +101,8 @@ fun initHost(artifact: Artifact): Artifact? {
 private fun expandManagedDependencies(
     pom: ProjectObjectModel,
     managedDependencies: ConcurrentLinkedDeque<Artifact>,
-    visitedBoms: MutableSet<String> = mutableSetOf()
+    visitedBoms: MutableSet<String> = mutableSetOf(),
+    skipFilter: ((Artifact) -> Boolean)? = null
 ) {
     val pomKey = "${pom.groupId ?: pom.parent?.groupId}:${pom.artifactId}:${pom.version ?: pom.parent?.version}"
     if (!visitedBoms.add(pomKey)) return // cycle guard
@@ -116,22 +122,27 @@ private fun expandManagedDependencies(
         .filter { it.scope == "import" }
         .forEach { bomDep ->
             val bomGroupId = bomDep.groupId ?: pom.groupId ?: pom.parent?.groupId ?: return@forEach
+            // Skip downloading BOM POMs for built-in groups
+            if (skipFilter?.invoke(Artifact(bomGroupId, bomDep.artifactId, bomDep.version ?: "")) == true) return@forEach
             val bomVersion = bomDep.version ?: ""
             if (bomVersion.isEmpty()) return@forEach
             val bomArtifact = Artifact(bomGroupId, bomDep.artifactId, bomVersion)
             initHost(bomArtifact)
             val bomPom = bomArtifact.getPOM() ?: return@forEach
             // Recursively expand the BOM's managed deps (skips entries already added above)
-            expandManagedDependencies(bomPom, managedDependencies, visitedBoms)
+            expandManagedDependencies(bomPom, managedDependencies, visitedBoms, skipFilter)
         }
 
     // Step 3: Inherit parent POM's <dependencyManagement> (lowest priority — recursively)
     val parentGav = pom.parent
     if (parentGav != null) {
-        val parentArtifact = Artifact(parentGav.groupId, parentGav.artifactId, parentGav.version)
-        val parentPom = parentArtifact.getPOM()
-        if (parentPom != null) {
-            expandManagedDependencies(parentPom, managedDependencies, visitedBoms)
+        // Skip downloading parent POMs for built-in groups
+        if (skipFilter?.invoke(Artifact(parentGav.groupId, parentGav.artifactId, parentGav.version)) != true) {
+            val parentArtifact = Artifact(parentGav.groupId, parentGav.artifactId, parentGav.version)
+            val parentPom = parentArtifact.getPOM()
+            if (parentPom != null) {
+                expandManagedDependencies(parentPom, managedDependencies, visitedBoms, skipFilter)
+            }
         }
     }
 }
@@ -139,10 +150,11 @@ private fun expandManagedDependencies(
 suspend fun ProjectObjectModel.resolveDependencies(
     resolved: ConcurrentHashMap<Pair<String, String>, Pair<Artifact, ConcurrentLinkedDeque<Artifact>>>,
     managedDependencies: ConcurrentLinkedDeque<Artifact>,
-    parentExclusions: List<Exclusion> = emptyList()
+    parentExclusions: List<Exclusion> = emptyList(),
+    skipFilter: ((Artifact) -> Boolean)? = null
 ): ConcurrentLinkedDeque<Artifact> {
     // Expand BOM imports + current POM's dependencyManagement + parent POM's dependencyManagement
-    expandManagedDependencies(this, managedDependencies)
+    expandManagedDependencies(this, managedDependencies, skipFilter = skipFilter)
 
     val deps = ConcurrentLinkedDeque<Artifact>()
     dependencies.orEmpty().filterNot { dep ->
@@ -173,6 +185,14 @@ suspend fun ProjectObjectModel.resolveDependencies(
         val artifact = Artifact(depGroupId, depArtifactId, dependency.version ?: "")
         // Propagate exclusions transitively: ancestor exclusions + this dep's own exclusions
         artifact.activeExclusions = parentExclusions + dependency.exclusions.orEmpty()
+
+        // Skip network requests entirely for built-in dependencies
+        if (skipFilter?.invoke(artifact) == true) {
+            artifact.dependencies = emptyList()
+            deps.add(artifact)
+            eventReciever.onSkippingResolution(artifact)
+            return@parallelForEach
+        }
 
         val originalGroupIdForEvent = this.groupId ?: parent?.groupId ?: "unknown.parent.groupId"
         val originalArtifactIdForEvent = this.artifactId
@@ -412,6 +432,6 @@ private val resolutionSemaphore = Semaphore(8)
 
 suspend fun <T> Iterable<T>.parallelForEach(action: suspend (T) -> Unit) = coroutineScope {
     map { element ->
-        async { resolutionSemaphore.withPermit { action(element) } }
+        async(kotlinx.coroutines.Dispatchers.IO) { resolutionSemaphore.withPermit { action(element) } }
     }.awaitAll()
 }
