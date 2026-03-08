@@ -611,10 +611,12 @@ class DependencyResolver(
      */
     private fun compileJarWithFallback(jarFile: Path, jars: List<Path>, libraryJars: List<Path>) {
         Files.createDirectories(jarFile.parent)
+        val minApi = buildSettings?.minSdkVersion ?: 26
         try {
             // Fast path: no classpath, minimal memory
             D8.run(
                 D8Command.builder().setIntermediate(true).setMode(CompilationMode.RELEASE)
+                    .setMinApiLevel(minApi)
                     .addProgramFiles(jarFile).addLibraryFiles(libraryJars)
                     .setOutput(jarFile.parent, OutputMode.DexIndexed).build()
             )
@@ -623,6 +625,7 @@ class DependencyResolver(
             System.gc()
             D8.run(
                 D8Command.builder().setIntermediate(true).setMode(CompilationMode.RELEASE)
+                    .setMinApiLevel(minApi)
                     .addProgramFiles(jarFile).addLibraryFiles(libraryJars).addClasspathFiles(jars)
                     .setOutput(jarFile.parent, OutputMode.DexIndexed).build()
             )
