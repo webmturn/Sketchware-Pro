@@ -79,3 +79,6 @@ run_x/
 refactoring-naming-map.md
 refactoring-method-naming.md
 jar_list.txt
+
+# Test scripts and project data
+scripts/
