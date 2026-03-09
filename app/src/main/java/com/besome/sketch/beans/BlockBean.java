@@ -65,6 +65,10 @@ public class BlockBean extends SelectableBean implements Parcelable {
     public String typeName;
     @Expose
     public boolean disabled;
+    @Expose
+    public boolean collapsed;
+    @Expose
+    public boolean collapsed2;
 
     public BlockBean() {
         parameters = new ArrayList<>();
@@ -114,6 +118,8 @@ public class BlockBean extends SelectableBean implements Parcelable {
         subStack2 = parcel.readInt();
         nextBlock = parcel.readInt();
         disabled = parcel.readByte() != 0;
+        collapsed = parcel.readByte() != 0;
+        collapsed2 = parcel.readByte() != 0;
         buildClassInfo();
     }
 
@@ -144,6 +150,8 @@ public class BlockBean extends SelectableBean implements Parcelable {
         subStack2 = other.subStack2;
         nextBlock = other.nextBlock;
         disabled = other.disabled;
+        collapsed = other.collapsed;
+        collapsed2 = other.collapsed2;
         buildClassInfo();
     }
 
@@ -202,7 +210,9 @@ public class BlockBean extends SelectableBean implements Parcelable {
         if (!((typeName == null || typeName.equals(other.typeName)) && opCode.equals(other.opCode)
                 && color == other.color && subStack1 == other.subStack1
                 && subStack2 == other.subStack2 && nextBlock == other.nextBlock
-                && disabled == other.disabled)) {
+                && disabled == other.disabled
+                && collapsed == other.collapsed
+                && collapsed2 == other.collapsed2)) {
             return false;
         }
         ArrayList<String> parameters = this.parameters;
@@ -235,6 +245,8 @@ public class BlockBean extends SelectableBean implements Parcelable {
         dest.writeInt(subStack2);
         dest.writeInt(nextBlock);
         dest.writeByte((byte) (disabled ? 1 : 0));
+        dest.writeByte((byte) (collapsed ? 1 : 0));
+        dest.writeByte((byte) (collapsed2 ? 1 : 0));
     }
 
     @Override

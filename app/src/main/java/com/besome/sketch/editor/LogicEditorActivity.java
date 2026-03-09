@@ -749,10 +749,31 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         popup.getMenu().add(0, 1, 0, blockView.disabled
                 ? R.string.block_enable
                 : R.string.block_disable);
+        if (blockView.hasSubstack()) {
+            if (blockView.hasDoubleSubstack()) {
+                popup.getMenu().add(0, 2, 1, blockView.collapsed
+                        ? R.string.block_expand_if
+                        : R.string.block_collapse_if);
+                popup.getMenu().add(0, 3, 2, blockView.collapsed2
+                        ? R.string.block_expand_else
+                        : R.string.block_collapse_else);
+            } else {
+                popup.getMenu().add(0, 2, 1, blockView.collapsed
+                        ? R.string.block_expand
+                        : R.string.block_collapse);
+            }
+        }
         popup.setOnMenuItemClickListener(item -> {
-            if (item.getItemId() == 1) {
-                toggleBlockDisabled(blockView);
-                return true;
+            switch (item.getItemId()) {
+                case 1:
+                    toggleBlockDisabled(blockView);
+                    return true;
+                case 2:
+                    toggleBlockCollapsed(blockView);
+                    return true;
+                case 3:
+                    toggleBlockCollapsed2(blockView);
+                    return true;
             }
             return false;
         });
@@ -767,7 +788,27 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     private void toggleBlockDisabled(BlockView blockView) {
         BlockBean before = blockView.getBean().clone();
         blockView.disabled = !blockView.disabled;
+        for (BlockView child : blockView.getAllChildren()) {
+            child.invalidate();
+        }
+        BlockHistoryManager.getInstance(scId).recordUpdate(buildHistoryKey(), before, blockView.getBean().clone());
+        refreshOptionsMenu();
+    }
+
+    private void toggleBlockCollapsed(BlockView blockView) {
+        BlockBean before = blockView.getBean().clone();
+        blockView.setCollapsed(!blockView.collapsed);
         blockView.invalidate();
+        blockView.blockPane.updatePaneSize();
+        BlockHistoryManager.getInstance(scId).recordUpdate(buildHistoryKey(), before, blockView.getBean().clone());
+        refreshOptionsMenu();
+    }
+
+    private void toggleBlockCollapsed2(BlockView blockView) {
+        BlockBean before = blockView.getBean().clone();
+        blockView.setCollapsed2(!blockView.collapsed2);
+        blockView.invalidate();
+        blockView.blockPane.updatePaneSize();
         BlockHistoryManager.getInstance(scId).recordUpdate(buildHistoryKey(), before, blockView.getBean().clone());
         refreshOptionsMenu();
     }
@@ -1229,12 +1270,20 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             }
 
             block.disabled = blockBean.disabled;
+            if (block.hasSubstack() && block.collapsed != blockBean.collapsed) {
+                block.setCollapsed(blockBean.collapsed);
+            }
+            if (block.hasDoubleSubstack() && block.collapsed2 != blockBean.collapsed2) {
+                block.setCollapsed2(blockBean.collapsed2);
+            }
             block.recalculateToRoot();
             if (doLayout) {
                 block.getRootBlock().layoutChain();
                 blockPane.updatePaneSize();
             }
-            block.invalidate();
+            for (BlockView child : block.getAllChildren()) {
+                child.invalidate();
+            }
         }
     }
 

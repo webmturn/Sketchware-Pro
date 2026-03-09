@@ -36,6 +36,14 @@ public class BlockView extends BaseBlockView {
   
   public boolean disabled = false;
   
+  public boolean collapsed = false;
+  
+  public boolean collapsed2 = false;
+  
+  public TextView collapsedLabel = null;
+  
+  public TextView collapsedLabel2 = null;
+  
   public boolean isParameter = false;
   
   public boolean hasEndCap = false;
@@ -309,6 +317,8 @@ public class BlockView extends BaseBlockView {
     blockBean.subStack2 = subStack2;
     blockBean.nextBlock = nextBlock;
     blockBean.disabled = disabled;
+    blockBean.collapsed = collapsed;
+    blockBean.collapsed2 = collapsed2;
     return blockBean;
   }
   
@@ -497,36 +507,49 @@ public class BlockView extends BaseBlockView {
     }
     setBlockSize((float) (rightIndent + widthWithHat), (float) (topSpacing + textHeight + depth * shadowOffset * 2 + bottomSpacing), false);
     if (hasSubstack()) {
-      int ss1Height = minHeight;
-      int sub1 = subStack1;
-      if (sub1 > -1) {
-        BlockView sub1Rs = blockPane.getBlockByTag(sub1);
-        if (sub1Rs != null) {
-          sub1Rs.setX(getX() + (float) cornerRadius);
-          sub1Rs.setY(getY() + (float) getBlockHeight());
-          sub1Rs.bringToFront();
-          sub1Rs.layoutChain();
-          ss1Height = sub1Rs.getHeightSum();
-        }
-      }
-      setSubstack1Height(ss1Height);
-      int ss2Height = minHeight;
-      int sub2 = subStack2;
-      if (sub2 > -1) {
-        BlockView sub2Rs = blockPane.getBlockByTag(sub2);
-        if (sub2Rs != null) {
-          sub2Rs.setX(getX() + (float) cornerRadius);
-          sub2Rs.setY(getY() + (float) getSubstackBottom());
-          sub2Rs.bringToFront();
-          sub2Rs.layoutChain();
-          ss2Height = sub2Rs.getHeightSum();
-          if (sub2Rs.getLastInChain().hasEndCap) {
-            ss2Height += borderWidth;
+      int collapsedHeight = textHeight + topSpacing;
+      if (collapsed) {
+        setSubstack1Height(collapsedHeight);
+        layoutCollapsedLabel(collapsedLabel, getBlockHeight());
+      } else {
+        int ss1Height = minHeight;
+        int sub1 = subStack1;
+        if (sub1 > -1) {
+          BlockView sub1Rs = blockPane.getBlockByTag(sub1);
+          if (sub1Rs != null) {
+            sub1Rs.setX(getX() + (float) cornerRadius);
+            sub1Rs.setY(getY() + (float) getBlockHeight());
+            sub1Rs.bringToFront();
+            sub1Rs.layoutChain();
+            ss1Height = sub1Rs.getHeightSum();
           }
         }
+        setSubstack1Height(ss1Height);
       }
-      setSubstack2Height(ss2Height);
-      positionElseLabel();
+      if (hasDoubleSubstack()) {
+        positionElseLabel();
+        if (collapsed2) {
+          setSubstack2Height(collapsedHeight);
+          layoutCollapsedLabel(collapsedLabel2, getSubstackBottom());
+        } else {
+          int ss2Height = minHeight;
+          int sub2 = subStack2;
+          if (sub2 > -1) {
+            BlockView sub2Rs = blockPane.getBlockByTag(sub2);
+            if (sub2Rs != null) {
+              sub2Rs.setX(getX() + (float) cornerRadius);
+              sub2Rs.setY(getY() + (float) getSubstackBottom());
+              sub2Rs.bringToFront();
+              sub2Rs.layoutChain();
+              ss2Height = sub2Rs.getHeightSum();
+              if (sub2Rs.getLastInChain().hasEndCap) {
+                ss2Height += borderWidth;
+              }
+            }
+          }
+          setSubstack2Height(ss2Height);
+        }
+      }
     }
   }
   
@@ -700,6 +723,123 @@ public class BlockView extends BaseBlockView {
       } 
       return rs;
     } 
+  }
+  
+  public int countBlocksInChain(int tag) {
+    int count = 0;
+    BlockView rs = blockPane.getBlockByTag(tag);
+    int limit = 200;
+    while (rs != null && --limit > 0) {
+      count++;
+      for (View view : rs.specViews) {
+        if (view instanceof BlockView)
+          count += ((BlockView) view).getAllChildren().size();
+      }
+      if (rs.hasSubstack() && rs.subStack1 > -1) {
+        count += countBlocksInChain(rs.subStack1);
+      }
+      if (rs.hasDoubleSubstack() && rs.subStack2 > -1) {
+        count += countBlocksInChain(rs.subStack2);
+      }
+      int next = rs.nextBlock;
+      if (next == -1) break;
+      rs = blockPane.getBlockByTag(next);
+    }
+    return count;
+  }
+  
+  public void setCollapsed(boolean value) {
+    this.collapsed = value;
+    updateCollapsedState(true);
+  }
+  
+  public void setCollapsed2(boolean value) {
+    this.collapsed2 = value;
+    updateCollapsedState(false);
+  }
+  
+  private void updateCollapsedState(boolean isStack1) {
+    if (!hasSubstack()) return;
+    if (isStack1) {
+      collapsedLabel = updateSingleLabel(collapsedLabel, collapsed, subStack1);
+      if (subStack1 > -1) {
+        setChainVisibility(subStack1, collapsed ? View.GONE : View.VISIBLE);
+      }
+    } else {
+      collapsedLabel2 = updateSingleLabel(collapsedLabel2, collapsed2, subStack2);
+      if (subStack2 > -1) {
+        setChainVisibility(subStack2, collapsed2 ? View.GONE : View.VISIBLE);
+      }
+    }
+    if (elseLabel != null) {
+      elseLabel.setVisibility(View.VISIBLE);
+    }
+    recalculateToRoot();
+    getRootBlock().layoutChain();
+  }
+  
+  private TextView updateSingleLabel(TextView label, boolean isCollapsed, int stackTag) {
+    if (isCollapsed) {
+      int count = (stackTag > -1) ? countBlocksInChain(stackTag) : 0;
+      String text = "... (" + count + (count == 1 ? " block)" : " blocks)");
+      if (label == null) {
+        label = createCollapsedLabel();
+        addView(label);
+      }
+      label.setText(text);
+      label.setVisibility(View.VISIBLE);
+    } else {
+      if (label != null) {
+        label.setVisibility(View.GONE);
+      }
+    }
+    return label;
+  }
+  
+  private TextView createCollapsedLabel() {
+    TextView label = new TextView(context);
+    label.setTextSize(9.0f);
+    label.setPadding((int)(density * 4), 0, 0, 0);
+    label.setGravity(16);
+    label.setTextColor(0xAAFFFFFF);
+    label.setTypeface(null, Typeface.ITALIC);
+    return label;
+  }
+  
+  private void layoutCollapsedLabel(TextView label, int yBase) {
+    if (label != null && label.getVisibility() == View.VISIBLE) {
+      label.bringToFront();
+      label.setX((float) (cornerRadius + leftIndent));
+      label.setY((float) (yBase + topSpacing / 2));
+      RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(-2, textHeight);
+      label.setLayoutParams(lp);
+    }
+  }
+  
+  private void setChainVisibility(int tag, int visibility) {
+    BlockView rs = blockPane.getBlockByTag(tag);
+    int limit = 200;
+    while (rs != null && --limit > 0) {
+      rs.setVisibility(visibility);
+      for (View view : rs.specViews) {
+        if (view instanceof BlockView) {
+          BlockView paramBlock = (BlockView) view;
+          paramBlock.setVisibility(visibility);
+          for (BlockView child : paramBlock.getAllChildren()) {
+            child.setVisibility(visibility);
+          }
+        }
+      }
+      if (rs.hasSubstack() && rs.subStack1 > -1) {
+        setChainVisibility(rs.subStack1, visibility);
+      }
+      if (rs.hasDoubleSubstack() && rs.subStack2 > -1) {
+        setChainVisibility(rs.subStack2, visibility);
+      }
+      int next = rs.nextBlock;
+      if (next == -1) break;
+      rs = blockPane.getBlockByTag(next);
+    }
   }
   
   public void setBlockType(int index) {

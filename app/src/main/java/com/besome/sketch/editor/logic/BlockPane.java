@@ -182,14 +182,16 @@ public class BlockPane extends RelativeLayout {
       } 
       if (blockView.hasSubstack()) {
         int subStackId = blockView.subStack1;
-        if (subStackId != -1 && !visited.contains(subStackId)) {
+        if (subStackId != -1 && !visited.contains(subStackId)
+            && !(position == View.VISIBLE && blockView.collapsed)) {
           BlockView sub = blockIndex.get(subStackId);
           if (sub != null) setBlockTreeVisibility(sub, position);
         }
       } 
       if (blockView.hasDoubleSubstack()) {
         int subStackId = blockView.subStack2;
-        if (subStackId != -1 && !visited.contains(subStackId)) {
+        if (subStackId != -1 && !visited.contains(subStackId)
+            && !(position == View.VISIBLE && blockView.collapsed2)) {
           BlockView sub = blockIndex.get(subStackId);
           if (sub != null) setBlockTreeVisibility(sub, position);
         }
@@ -266,14 +268,14 @@ public class BlockPane extends RelativeLayout {
         intValues[1] = intValues[1] + blockView.getContentBottom();
         addSnapPoint(intValues, (View)blockView, 0);
       } 
-      if (blockView.hasSubstack() && (!enabled || blockView.subStack1 == -1)) {
+      if (blockView.hasSubstack() && !blockView.collapsed && (!enabled || blockView.subStack1 == -1)) {
         int[] intValues = new int[2];
         blockView.getLocationOnScreen(intValues);
         intValues[0] = intValues[0] + ((BaseBlockView)blockView).cornerRadius;
         intValues[1] = intValues[1] + blockView.getBlockHeight();
         addSnapPoint(intValues, (View)blockView, 2);
       } 
-      if (blockView.hasDoubleSubstack() && (!enabled || blockView.subStack2 == -1)) {
+      if (blockView.hasDoubleSubstack() && !blockView.collapsed2 && (!enabled || blockView.subStack2 == -1)) {
         int[] intValues = new int[2];
         blockView.getLocationOnScreen(intValues);
         intValues[0] = intValues[0] + ((BaseBlockView)blockView).cornerRadius;
@@ -281,12 +283,12 @@ public class BlockPane extends RelativeLayout {
         addSnapPoint(intValues, (View)blockView, 3);
       } 
       int traverseId = blockView.subStack1;
-      if (traverseId != -1 && !visited.contains(traverseId)) {
+      if (traverseId != -1 && !blockView.collapsed && !visited.contains(traverseId)) {
         BlockView sub = blockIndex.get(traverseId);
         if (sub != null) collectSnapPoints(sub, enabled);
       }
       traverseId = blockView.subStack2;
-      if (traverseId != -1 && !visited.contains(traverseId)) {
+      if (traverseId != -1 && !blockView.collapsed2 && !visited.contains(traverseId)) {
         BlockView sub = blockIndex.get(traverseId);
         if (sub != null) collectSnapPoints(sub, enabled);
       }
