@@ -153,7 +153,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     private ExtraPaletteBlock extraPaletteBlock;
     private ViewLogicEditor viewLogicEditor;
     private ViewDummy dummy;
-    private PaletteSelector paletteSelector;
+    public PaletteSelector paletteSelector;
     private ActivityResultLauncher<Intent> openResourcesEditor;
     private ActivityResultLauncher<Intent> makeBlockLauncher;
     private BlockView dragSourceParent;
@@ -169,6 +169,21 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
     private SvgUtils svgUtils;
     private final FilePathUtil fpu = new FilePathUtil();
+    private EditText blockSearchField;
+    private int lastSelectedPaletteId = 0;
+    private int lastSelectedPaletteColor = 0xffee7d16;
+    private boolean isBlockSearchActive = false;
+    private boolean suppressSearchTextChange = false;
+    private Runnable pendingSearchRunnable;
+    private View canvasSearchBar;
+    private EditText canvasSearchInput;
+    private TextView canvasSearchCount;
+    private ArrayList<BlockView> canvasSearchMatches = new ArrayList<>();
+    private int canvasSearchIndex = -1;
+    private boolean isCanvasSearchActive = false;
+    private Runnable pendingCanvasSearchRunnable;
+    private OnBackPressedCallback canvasSearchBackCallback;
+    private boolean suppressCanvasSearchTextChange = false;
 
     public static ArrayList<String> getAllJavaFileNames(String projectScId) {
         ArrayList<String> javaFileNames = new ArrayList<>();
@@ -671,6 +686,14 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
     @Override
     public void onBlockSizeChanged(int width, int height) {
+        lastSelectedPaletteId = width;
+        lastSelectedPaletteColor = height;
+        if (isBlockSearchActive && blockSearchField != null) {
+            isBlockSearchActive = false;
+            suppressSearchTextChange = true;
+            blockSearchField.setText("");
+            suppressSearchTextChange = false;
+        }
         extraPaletteBlock.setBlock(width, height);
     }
 
@@ -1510,6 +1533,9 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             return;
         }
         isPaletteVisible = visible;
+        if (visible && isCanvasSearchActive) {
+            closeCanvasSearch();
+        }
         cancelPaletteAnimations();
         if (visible) {
             toggleDrawerVisibility(false);
@@ -2000,7 +2026,69 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         openBlocksMenuButton.setOnClickListener(v -> togglePaletteVisibility(!isPaletteVisible));
         logicTopMenu = findViewById(R.id.top_menu);
         editorDrawer = findViewById(R.id.right_drawer);
-        findViewById(R.id.search_header).setOnClickListener(v -> paletteSelector.showSearchDialog());
+        blockSearchField = findViewById(R.id.search_header);
+        blockSearchField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (suppressSearchTextChange) return;
+                if (pendingSearchRunnable != null) {
+                    handler.removeCallbacks(pendingSearchRunnable);
+                }
+                String query = s.toString().trim();
+                if (query.isEmpty()) {
+                    if (isBlockSearchActive) {
+                        isBlockSearchActive = false;
+                        extraPaletteBlock.setBlock(lastSelectedPaletteId, lastSelectedPaletteColor);
+                    }
+                } else {
+                    pendingSearchRunnable = () -> {
+                        isBlockSearchActive = true;
+                        extraPaletteBlock.searchAllBlocks(query);
+                    };
+                    handler.postDelayed(pendingSearchRunnable, 300);
+                }
+            }
+        });
+        canvasSearchBar = findViewById(R.id.canvas_search_bar);
+        canvasSearchInput = findViewById(R.id.canvas_search_input);
+        canvasSearchCount = findViewById(R.id.canvas_search_count);
+        canvasSearchBackCallback = new OnBackPressedCallback(false) {
+            @Override
+            public void handleOnBackPressed() {
+                closeCanvasSearch();
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, canvasSearchBackCallback);
+        findViewById(R.id.canvas_search_close).setOnClickListener(v -> closeCanvasSearch());
+        findViewById(R.id.canvas_search_prev).setOnClickListener(v -> navigateCanvasSearch(-1));
+        findViewById(R.id.canvas_search_next).setOnClickListener(v -> navigateCanvasSearch(1));
+        canvasSearchInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (suppressCanvasSearchTextChange) return;
+                if (pendingCanvasSearchRunnable != null) {
+                    handler.removeCallbacks(pendingCanvasSearchRunnable);
+                }
+                String query = s.toString().trim();
+                if (query.isEmpty()) {
+                    performCanvasSearch("");
+                } else {
+                    pendingCanvasSearchRunnable = () -> performCanvasSearch(query);
+                    handler.postDelayed(pendingCanvasSearchRunnable, 300);
+                }
+            }
+        });
+
         extraPaletteBlock = new ExtraPaletteBlock(this, isViewBindingEnabled);
 
         svgUtils = new SvgUtils(this);
@@ -2027,6 +2115,8 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             undo();
         } else if (itemId == R.id.menu_logic_showsource) {
             showSourceCode();
+        } else if (itemId == R.id.menu_logic_search) {
+            toggleCanvasSearch();
         }
 
         return super.onOptionsItemSelected(menuItem);
@@ -2701,5 +2791,77 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 this.binding = binding;
             }
         }
+    }
+
+    private void toggleCanvasSearch() {
+        if (isCanvasSearchActive) {
+            closeCanvasSearch();
+        } else {
+            isCanvasSearchActive = true;
+            canvasSearchBackCallback.setEnabled(true);
+            canvasSearchBar.setVisibility(View.VISIBLE);
+            canvasSearchInput.requestFocus();
+            android.view.inputmethod.InputMethodManager imm =
+                    (android.view.inputmethod.InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            if (imm != null) imm.showSoftInput(canvasSearchInput, 0);
+            if (isPaletteVisible) togglePaletteVisibility(false);
+        }
+    }
+
+    private void closeCanvasSearch() {
+        isCanvasSearchActive = false;
+        canvasSearchBackCallback.setEnabled(false);
+        canvasSearchBar.setVisibility(View.GONE);
+        canvasSearchMatches.clear();
+        canvasSearchIndex = -1;
+        canvasSearchCount.setText("");
+        blockPane.clearSearchHighlight();
+        suppressCanvasSearchTextChange = true;
+        canvasSearchInput.setText("");
+        suppressCanvasSearchTextChange = false;
+        android.view.inputmethod.InputMethodManager imm =
+                (android.view.inputmethod.InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        if (imm != null) imm.hideSoftInputFromWindow(canvasSearchInput.getWindowToken(), 0);
+    }
+
+    private void performCanvasSearch(String query) {
+        canvasSearchIndex = -1;
+        if (query.isEmpty()) {
+            blockPane.clearSearchHighlight();
+            canvasSearchCount.setText("");
+            return;
+        }
+        canvasSearchMatches = blockPane.searchBlocks(query);
+        if (canvasSearchMatches.isEmpty()) {
+            blockPane.clearSearchHighlight();
+            canvasSearchCount.setText(getString(R.string.search_canvas_no_results));
+        } else {
+            canvasSearchIndex = 0;
+            blockPane.highlightSearchResults(canvasSearchMatches, canvasSearchMatches.get(0));
+            scrollToBlock(canvasSearchMatches.get(0));
+            updateCanvasSearchCount();
+        }
+    }
+
+    private void navigateCanvasSearch(int direction) {
+        if (canvasSearchMatches.isEmpty()) return;
+        canvasSearchIndex += direction;
+        if (canvasSearchIndex < 0) canvasSearchIndex = canvasSearchMatches.size() - 1;
+        if (canvasSearchIndex >= canvasSearchMatches.size()) canvasSearchIndex = 0;
+        BlockView current = canvasSearchMatches.get(canvasSearchIndex);
+        blockPane.highlightSearchResults(canvasSearchMatches, current);
+        scrollToBlock(current);
+        updateCanvasSearchCount();
+    }
+
+    private void updateCanvasSearchCount() {
+        canvasSearchCount.setText(getString(R.string.search_canvas_count,
+                canvasSearchIndex + 1, canvasSearchMatches.size()));
+    }
+
+    private void scrollToBlock(BlockView target) {
+        int scrollX = (int) target.getX() - viewLogicEditor.getWidth() / 2 + target.getWidth() / 2;
+        int scrollY = (int) target.getY() - viewLogicEditor.getHeight() / 2 + target.getHeight() / 2;
+        viewLogicEditor.scrollTo(Math.max(0, scrollX), Math.max(0, scrollY));
     }
 }
