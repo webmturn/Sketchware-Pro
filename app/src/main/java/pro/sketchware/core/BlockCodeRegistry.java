@@ -256,6 +256,28 @@ public class BlockCodeRegistry {
             String body = bean.subStack1 >= 0 ? ctx.resolveBlock(String.valueOf(bean.subStack1), "") : "";
             return String.format("else {\r\n%s\r\n}", body);
         });
+        register("tryCatch", (bean, params, ctx) -> {
+            String tryBody = bean.subStack1 >= 0 ? ctx.resolveBlock(String.valueOf(bean.subStack1), "") : "";
+            if (bean.subStack2 >= 0) {
+                BlockBean sub2 = ctx.blockMap.get(String.valueOf(bean.subStack2));
+                if (sub2 != null && ("catchBlock".equals(sub2.opCode) || "finallyBlock".equals(sub2.opCode))) {
+                    String chain = ctx.resolveBlock(String.valueOf(bean.subStack2), "");
+                    return String.format("try {\r\n%s\r\n} %s", tryBody, chain);
+                }
+                String catchBody = ctx.resolveBlock(String.valueOf(bean.subStack2), "");
+                return String.format("try {\r\n%s\r\n} catch (Exception e) {\r\n%s\r\n}", tryBody, catchBody);
+            }
+            return String.format("try {\r\n%s\r\n} catch (Exception e) {\r\n}", tryBody);
+        });
+        register("catchBlock", (bean, params, ctx) -> {
+            String body = bean.subStack1 >= 0 ? ctx.resolveBlock(String.valueOf(bean.subStack1), "") : "";
+            String varName = params.size() > 0 && !params.get(0).isEmpty() ? params.get(0) : "e";
+            return String.format("catch (Exception %s) {\r\n%s\r\n}", varName, body);
+        });
+        register("finallyBlock", (bean, params, ctx) -> {
+            String body = bean.subStack1 >= 0 ? ctx.resolveBlock(String.valueOf(bean.subStack1), "") : "";
+            return String.format("finally {\r\n%s\r\n}", body);
+        });
         register("break", (bean, params, ctx) -> "break;");
     }
 

@@ -2150,7 +2150,27 @@ public class BlocksHandler {
         blockDef.put("color", "#e1a92a");
         blockDef.put("palette", "-1");
         blockDef.put("spec", "try");
-        blockDef.put("spec2", "catch");
+        blockDef.put("spec2", "catch / finally");
+        arrayList.add(blockDef);
+
+        blockDef = new HashMap<>();
+        blockDef.put("name", "catchBlock");
+        blockDef.put("type", "c");
+        blockDef.put("typeName", "");
+        blockDef.put("code", "");
+        blockDef.put("color", "#e1a92a");
+        blockDef.put("palette", "-1");
+        blockDef.put("spec", "catch %s.inputOnly");
+        arrayList.add(blockDef);
+
+        blockDef = new HashMap<>();
+        blockDef.put("name", "finallyBlock");
+        blockDef.put("type", "c");
+        blockDef.put("typeName", "");
+        blockDef.put("code", "");
+        blockDef.put("color", "#e1a92a");
+        blockDef.put("palette", "-1");
+        blockDef.put("spec", "finally");
         arrayList.add(blockDef);
 
         blockDef = new HashMap<>();
@@ -2827,6 +2847,8 @@ public class BlocksHandler {
             logicEditorActivity.createPaletteBlock("c", "caseNum");
             logicEditorActivity.createPaletteBlock("c", "defaultSwitch");
             logicEditorActivity.createPaletteBlock("e", "tryCatch");
+            logicEditorActivity.createPaletteBlock("c", "catchBlock");
+            logicEditorActivity.createPaletteBlock("c", "finallyBlock");
             logicEditorActivity.createPaletteBlock("s", "getExceptionMessage");
             logicEditorActivity.createPaletteBlock("s", "ternaryString");
             logicEditorActivity.createPaletteBlock("d", "ternaryNumber");
