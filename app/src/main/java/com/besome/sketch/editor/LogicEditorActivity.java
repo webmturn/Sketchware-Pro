@@ -34,6 +34,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -737,6 +738,37 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 return;
             }
         }
+        if (!rs.isDefinitionBlock && isStatementBlock(rs)) {
+            showBlockContextMenu(rs);
+        }
+    }
+
+    private void showBlockContextMenu(BlockView blockView) {
+        PopupMenu popup = new PopupMenu(this, blockView);
+        popup.getMenu().add(0, 1, 0, blockView.disabled
+                ? R.string.block_enable
+                : R.string.block_disable);
+        popup.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == 1) {
+                toggleBlockDisabled(blockView);
+                return true;
+            }
+            return false;
+        });
+        popup.show();
+    }
+
+    private boolean isStatementBlock(BlockView blockView) {
+        String type = blockView.blockType;
+        return " ".equals(type) || "c".equals(type) || "e".equals(type) || "f".equals(type);
+    }
+
+    private void toggleBlockDisabled(BlockView blockView) {
+        BlockBean before = blockView.getBean().clone();
+        blockView.disabled = !blockView.disabled;
+        blockView.invalidate();
+        BlockHistoryManager.getInstance(scId).recordUpdate(buildHistoryKey(), before, blockView.getBean().clone());
+        refreshOptionsMenu();
     }
 
     public void setFieldValue(FieldBlockView ss, Object value) {
@@ -1195,11 +1227,13 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 }
             }
 
+            block.disabled = blockBean.disabled;
             block.recalculateToRoot();
             if (doLayout) {
                 block.getRootBlock().layoutChain();
                 blockPane.updatePaneSize();
             }
+            block.invalidate();
         }
     }
 
@@ -1275,7 +1309,9 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public BlockView createBlockView(BlockBean blockBean) {
-        return new BlockView(this, Integer.parseInt(blockBean.id), blockBean.spec, blockBean.type, blockBean.typeName, blockBean.opCode);
+        BlockView blockView = new BlockView(this, Integer.parseInt(blockBean.id), blockBean.spec, blockBean.type, blockBean.typeName, blockBean.opCode);
+        blockView.disabled = blockBean.disabled;
+        return blockView;
     }
 
     private RadioButton getFontRadioButton(String fontName) {

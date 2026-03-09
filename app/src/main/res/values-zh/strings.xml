@@ -279,6 +279,8 @@
     <string name="search_canvas_no_results">无匹配</string>
     <string name="search_canvas_prev">上一个匹配</string>
     <string name="search_canvas_next">下一个匹配</string>
+    <string name="block_disable">禁用块</string>
+    <string name="block_enable">启用块</string>
     <string name="search_in_palettes_dialog_title">搜索调色板</string>
     <string name="search_recent_button_delete_all_recent_keyword">全部删除</string>
     <string name="search_recent_message_delete_keyword_dialog_delete_all">是否删除所有关键词？</string>
