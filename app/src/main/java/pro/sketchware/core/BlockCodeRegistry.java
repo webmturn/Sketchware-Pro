@@ -243,6 +243,19 @@ public class BlockCodeRegistry {
             String elseBlock = bean.subStack2 >= 0 ? ctx.resolveBlock(String.valueOf(bean.subStack2), "") : "";
             return String.format("if (%s) {\r\n%s\r\n} else {\r\n%s\r\n}", params.get(0), ifBlock, elseBlock);
         });
+        register("ifElseChain", (bean, params, ctx) -> {
+            String ifBody = bean.subStack1 >= 0 ? ctx.resolveBlock(String.valueOf(bean.subStack1), "") : "";
+            String elseChain = bean.subStack2 >= 0 ? ctx.resolveBlock(String.valueOf(bean.subStack2), "") : "";
+            return String.format("if (%s) {\r\n%s\r\n} %s", params.get(0), ifBody, elseChain);
+        });
+        register("elseIf", (bean, params, ctx) -> {
+            String body = bean.subStack1 >= 0 ? ctx.resolveBlock(String.valueOf(bean.subStack1), "") : "";
+            return String.format("else if (%s) {\r\n%s\r\n}", params.get(0), body);
+        });
+        register("elseBlock", (bean, params, ctx) -> {
+            String body = bean.subStack1 >= 0 ? ctx.resolveBlock(String.valueOf(bean.subStack1), "") : "";
+            return String.format("else {\r\n%s\r\n}", body);
+        });
         register("break", (bean, params, ctx) -> "break;");
     }
 

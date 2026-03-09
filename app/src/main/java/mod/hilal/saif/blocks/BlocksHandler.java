@@ -2521,6 +2521,67 @@ public class BlocksHandler {
         arrayList.add(blockDef);
 
         blockDef = new HashMap<>();
+        blockDef.put("name", "forEachStr");
+        blockDef.put("type", "c");
+        blockDef.put("typeName", "");
+        blockDef.put("code", "for (String %1$s : %2$s) {\r\n%3$s\r\n}");
+        blockDef.put("color", "#e1a92a");
+        blockDef.put("palette", "-1");
+        blockDef.put("spec", "for each item %s.inputOnly in %m.listStr");
+        arrayList.add(blockDef);
+
+        blockDef = new HashMap<>();
+        blockDef.put("name", "forEachNum");
+        blockDef.put("type", "c");
+        blockDef.put("typeName", "");
+        blockDef.put("code", "for (double %1$s : %2$s) {\r\n%3$s\r\n}");
+        blockDef.put("color", "#e1a92a");
+        blockDef.put("palette", "-1");
+        blockDef.put("spec", "for each item %s.inputOnly in %m.listInt");
+        arrayList.add(blockDef);
+
+        blockDef = new HashMap<>();
+        blockDef.put("name", "forEachMap");
+        blockDef.put("type", "c");
+        blockDef.put("typeName", "");
+        blockDef.put("code", "for (HashMap<String, Object> %1$s : %2$s) {\r\n%3$s\r\n}");
+        blockDef.put("color", "#e1a92a");
+        blockDef.put("palette", "-1");
+        blockDef.put("spec", "for each item %s.inputOnly in %m.listMap");
+        arrayList.add(blockDef);
+
+        blockDef = new HashMap<>();
+        blockDef.put("name", "ifElseChain");
+        blockDef.put("type", "e");
+        blockDef.put("typeName", "");
+        blockDef.put("code", "");
+        blockDef.put("color", "#e1a92a");
+        blockDef.put("palette", "-1");
+        blockDef.put("spec", "if %b");
+        blockDef.put("spec2", "else if / else");
+        arrayList.add(blockDef);
+
+        blockDef = new HashMap<>();
+        blockDef.put("name", "elseIf");
+        blockDef.put("type", "c");
+        blockDef.put("typeName", "");
+        blockDef.put("code", "");
+        blockDef.put("color", "#e1a92a");
+        blockDef.put("palette", "-1");
+        blockDef.put("spec", "else if %b");
+        arrayList.add(blockDef);
+
+        blockDef = new HashMap<>();
+        blockDef.put("name", "elseBlock");
+        blockDef.put("type", "c");
+        blockDef.put("typeName", "");
+        blockDef.put("code", "");
+        blockDef.put("color", "#e1a92a");
+        blockDef.put("palette", "-1");
+        blockDef.put("spec", "else");
+        arrayList.add(blockDef);
+
+        blockDef = new HashMap<>();
         blockDef.put("name", "interstitialAdLoad");
         blockDef.put("type", " ");
         blockDef.put("typeName", "");
@@ -2746,10 +2807,16 @@ public class BlocksHandler {
         logicEditorActivity.createPaletteBlock("c", "forever");
         if (showBuiltIn()) {
             logicEditorActivity.createPaletteBlock("c", "whileLoop");
+            logicEditorActivity.createPaletteBlock("c", "forEachStr");
+            logicEditorActivity.createPaletteBlock("c", "forEachNum");
+            logicEditorActivity.createPaletteBlock("c", "forEachMap");
         }
         logicEditorActivity.createPaletteBlock("c", "if");
         logicEditorActivity.createPaletteBlock("e", "ifElse");
         if (showBuiltIn()) {
+            logicEditorActivity.createPaletteBlock("e", "ifElseChain");
+            logicEditorActivity.createPaletteBlock("c", "elseIf");
+            logicEditorActivity.createPaletteBlock("c", "elseBlock");
             logicEditorActivity.createPaletteBlock("b", "instanceOfOperator");
             logicEditorActivity.createPaletteBlock("b", "isEmpty");
             logicEditorActivity.createPaletteBlock("c", "switchStr");
