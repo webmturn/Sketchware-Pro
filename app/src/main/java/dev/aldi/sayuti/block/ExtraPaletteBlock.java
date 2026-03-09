@@ -72,6 +72,7 @@ public class ExtraPaletteBlock {
     private final LayoutGenerator layoutGenerator;
     public LogicEditorActivity logicEditor;
     private ArrayList<HashMap<String, Object>> cachedStringsListMap;
+    private boolean skipClear = false;
 
     /**
      * Creates an ExtraPaletteBlock bound to the given logic editor.
@@ -418,10 +419,31 @@ public class ExtraPaletteBlock {
         cachedStringsListMap = null;
     }
 
-    public void setBlock(int paletteId, int paletteColor) {
-        // Remove previous palette's blocks
+    public void searchAllBlocks(String query) {
         logicEditor.paletteBlock.clearAll();
         extraBlocks.invalidateCustomVarCache();
+        skipClear = true;
+        for (var palette : logicEditor.paletteSelector.getAllPalettes()) {
+            logicEditor.addPaletteCategory(palette.text(), getTitleBgColor());
+            setBlock(palette.index(), 0);
+        }
+        skipClear = false;
+        logicEditor.paletteBlock.clearActions();
+        int count = logicEditor.paletteBlock.filterBlocks(query);
+        if (count == 0) {
+            logicEditor.paletteBlock.clearAll();
+            logicEditor.addPaletteCategory(
+                    Helper.getResString(R.string.search_blocks_no_results),
+                    getTitleBgColor());
+        }
+    }
+
+    public void setBlock(int paletteId, int paletteColor) {
+        if (!skipClear) {
+            // Remove previous palette's blocks
+            logicEditor.paletteBlock.clearAll();
+            extraBlocks.invalidateCustomVarCache();
+        }
 
         if (eventName.equals("Import")) {
             if (paletteId == 3) {

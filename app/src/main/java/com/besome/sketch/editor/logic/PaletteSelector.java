@@ -141,6 +141,10 @@ public class PaletteSelector extends RecyclerView {
         });
     }
 
+    public List<paletteSelectorRecord> getAllPalettes() {
+        return allPalettes;
+    }
+
     public void setOnBlockCategorySelectListener(BlockSizeListener listener) {
         initialize(listener);
     }

@@ -20,6 +20,8 @@ import pro.sketchware.core.ViewUtil;
 import pro.sketchware.R;
 import pro.sketchware.databinding.PaletteBlockBinding;
 
+import java.util.Locale;
+
 public class PaletteBlock extends LinearLayout {
 
     public float density = 0.0F;
@@ -85,6 +87,10 @@ public class PaletteBlock extends LinearLayout {
 
     public void clearAll() {
         binding.blockBuilder.removeAllViews();
+        binding.actionsContainer.removeAllViews();
+    }
+
+    public void clearActions() {
         binding.actionsContainer.removeAllViews();
     }
 
@@ -161,4 +167,54 @@ public class PaletteBlock extends LinearLayout {
         binding.scroll.setUseScroll(useScroll);
         binding.scrollHorizontal.setUseScroll(useScroll);
     }
+
+    public int filterBlocks(String query) {
+        String lowerQuery = query.toLowerCase(Locale.ROOT);
+        int visibleCount = 0;
+        int childCount = binding.blockBuilder.getChildCount();
+        boolean lastHeaderVisible = false;
+        View lastHeader = null;
+
+        for (int i = 0; i < childCount; i++) {
+            View child = binding.blockBuilder.getChildAt(i);
+
+            if (child instanceof MaterialCardView) {
+                // Category header — hide initially, show if any block below matches
+                child.setVisibility(View.GONE);
+                lastHeader = child;
+                lastHeaderVisible = false;
+                continue;
+            }
+
+            if (child instanceof BlockView blockView) {
+                String opCode = blockView.opCode != null ? blockView.opCode.toLowerCase(Locale.ROOT) : "";
+                String spec = blockView.spec != null ? blockView.spec.toLowerCase(Locale.ROOT) : "";
+                CharSequence desc = blockView.getContentDescription();
+                String descStr = desc != null ? desc.toString().toLowerCase(Locale.ROOT) : "";
+
+                boolean matches = opCode.contains(lowerQuery)
+                        || spec.contains(lowerQuery)
+                        || descStr.contains(lowerQuery);
+
+                child.setVisibility(matches ? View.VISIBLE : View.GONE);
+                if (matches) {
+                    visibleCount++;
+                    if (lastHeader != null && !lastHeaderVisible) {
+                        lastHeader.setVisibility(View.VISIBLE);
+                        lastHeaderVisible = true;
+                    }
+                }
+
+                // Also toggle the spacer view before this block
+                if (i > 0) {
+                    View spacer = binding.blockBuilder.getChildAt(i - 1);
+                    if (!(spacer instanceof BlockView) && !(spacer instanceof MaterialCardView)) {
+                        spacer.setVisibility(matches ? View.VISIBLE : View.GONE);
+                    }
+                }
+            }
+        }
+        return visibleCount;
+    }
+
 }
