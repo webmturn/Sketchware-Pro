@@ -72,7 +72,8 @@ public class BlockColorMapper {
                  "getAtListStr", "indexListStr", "containListStr", "addListMap", "insertListMap",
                  "getAtListMap", "setListMap", "containListMap", "addMapToList", "insertMapToList",
                  "getMapInList" -> harmonizeWithPrimary(context, 0xffcc5b22);
-            case "setVarBoolean", "setVarInt", "increaseInt", "decreaseInt", "setVarString",
+            case "setVarBoolean", "setVarInt", "increaseInt", "decreaseInt",
+                 "setVarInteger", "increaseInteger", "decreaseInteger", "setVarString",
                  "mapCreateNew", "mapPut", "mapGet", "mapContainKey", "mapRemoveKey", "mapSize",
                  "mapIsEmpty", "mapClear", "mapGetAllKeys" ->
                     harmonizeWithPrimary(context, 0xffee7d16);
@@ -227,6 +228,7 @@ public class BlockColorMapper {
             case "switch" -> "Switch";
             case "imageview" -> "ImageView";
             case "varInt" -> "Number";
+            case "varInteger" -> "Integer";
             case "varMap" -> "Map";
             case "varStr" -> "String";
             case "searchview" -> "SearchView";

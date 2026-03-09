@@ -2184,6 +2184,36 @@ public class BlocksHandler {
         arrayList.add(blockDef);
 
         blockDef = new HashMap<>();
+        blockDef.put("name", "setVarInteger");
+        blockDef.put("type", " ");
+        blockDef.put("typeName", "");
+        blockDef.put("code", "");
+        blockDef.put("color", "#ee7d16");
+        blockDef.put("palette", "-1");
+        blockDef.put("spec", "set %m.varInteger to %d");
+        arrayList.add(blockDef);
+
+        blockDef = new HashMap<>();
+        blockDef.put("name", "increaseInteger");
+        blockDef.put("type", " ");
+        blockDef.put("typeName", "");
+        blockDef.put("code", "");
+        blockDef.put("color", "#ee7d16");
+        blockDef.put("palette", "-1");
+        blockDef.put("spec", "%m.varInteger increase 1");
+        arrayList.add(blockDef);
+
+        blockDef = new HashMap<>();
+        blockDef.put("name", "decreaseInteger");
+        blockDef.put("type", " ");
+        blockDef.put("typeName", "");
+        blockDef.put("code", "");
+        blockDef.put("color", "#ee7d16");
+        blockDef.put("palette", "-1");
+        blockDef.put("spec", "%m.varInteger decrease 1");
+        arrayList.add(blockDef);
+
+        blockDef = new HashMap<>();
         blockDef.put("name", "switchStr");
         blockDef.put("type", "c");
         blockDef.put("typeName", "");
@@ -2695,7 +2725,8 @@ public class BlocksHandler {
             boolean isBoolUsed,
             boolean isIntUsed,
             boolean isStrUsed,
-            boolean isMapUsed) {
+            boolean isMapUsed,
+            boolean isIntegerUsed) {
         logicEditorActivity.addPaletteCategory(Helper.getResString(R.string.logic_editor_category_blocks), getTitleBgColor(logicEditorActivity));
         if (showAll() || isBoolUsed) {
             logicEditorActivity.createPaletteBlock(" ", "setVarBoolean");
@@ -2704,6 +2735,11 @@ public class BlocksHandler {
             logicEditorActivity.createPaletteBlock(" ", "setVarInt");
             logicEditorActivity.createPaletteBlock(" ", "increaseInt");
             logicEditorActivity.createPaletteBlock(" ", "decreaseInt");
+        }
+        if (showAll() || isIntegerUsed) {
+            logicEditorActivity.createPaletteBlock(" ", "setVarInteger");
+            logicEditorActivity.createPaletteBlock(" ", "increaseInteger");
+            logicEditorActivity.createPaletteBlock(" ", "decreaseInteger");
         }
         if (showAll() || isStrUsed) {
             logicEditorActivity.createPaletteBlock(" ", "setVarString");

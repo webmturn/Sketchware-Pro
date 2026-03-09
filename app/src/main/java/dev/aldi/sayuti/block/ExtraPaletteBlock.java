@@ -205,6 +205,13 @@ public class ExtraPaletteBlock {
             logicEditor.createPaletteBlockWithSpec(numberVariables.get(i), "d", "getVar").setTag(numberVariables.get(i));
         }
 
+        ArrayList<String> integerVariables = ProjectDataManager.getProjectDataManager(sc_id).getVariableNamesByType(javaName, 4);
+        for (int i = 0; i < integerVariables.size(); i++) {
+            if (i == 0) logicEditor.addPaletteCategory(Helper.getResString(R.string.logic_editor_category_integer), getTitleBgColor());
+
+            logicEditor.createPaletteBlockWithSpec(integerVariables.get(i), "d", "getVar").setTag(integerVariables.get(i));
+        }
+
         ArrayList<String> stringVariables = ProjectDataManager.getProjectDataManager(sc_id).getVariableNamesByType(javaName, 2);
         for (int i = 0; i < stringVariables.size(); i++) {
             if (i == 0) logicEditor.addPaletteCategory(Helper.getResString(R.string.logic_editor_category_string), getTitleBgColor());
@@ -256,7 +263,8 @@ public class ExtraPaletteBlock {
                 extraBlocks.isVariableUsed(0),
                 extraBlocks.isVariableUsed(1),
                 extraBlocks.isVariableUsed(2),
-                extraBlocks.isVariableUsed(3)
+                extraBlocks.isVariableUsed(3),
+                extraBlocks.isVariableUsed(4)
         );
         blockCustomViews();
         blockDrawer();

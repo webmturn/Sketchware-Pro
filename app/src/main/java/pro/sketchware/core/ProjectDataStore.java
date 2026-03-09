@@ -1437,7 +1437,8 @@ public class ProjectDataStore {
   static {
     VAR_REF_PARAM_INDEX.put("getVar", -1);
     for (String op : new String[]{"setVarBoolean", "setVarInt", "setVarString",
-        "increaseInt", "decreaseInt", "mapCreateNew", "mapPut", "mapGet", "mapContainKey",
+        "increaseInt", "decreaseInt", "setVarInteger", "increaseInteger", "decreaseInteger",
+        "mapCreateNew", "mapPut", "mapGet", "mapContainKey",
         "mapRemoveKey", "mapSize", "mapClear", "mapIsEmpty", "mapGetAllKeys",
         "addListMap", "insertListMap", "mapToStr"})
       VAR_REF_PARAM_INDEX.put(op, 0);

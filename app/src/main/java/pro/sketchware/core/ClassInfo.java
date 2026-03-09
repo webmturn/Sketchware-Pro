@@ -58,6 +58,10 @@ public class ClassInfo {
                 classInfos = "Var.double";
                 break;
 
+            case "int":
+                classInfos = "Var.int";
+                break;
+
             case "String":
                 classInfos = "Var.String";
                 break;

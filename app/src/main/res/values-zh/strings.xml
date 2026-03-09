@@ -236,12 +236,15 @@
 
     <!-- ========== 变量类型 (Variable Types) ========== -->
     <string name="logic_variable_type_boolean">布尔值</string>
-    <string name="logic_variable_type_number">数值</string>
+    <string name="logic_variable_type_number">浮点数</string>
+    <string name="logic_variable_type_integer">整数</string>
     <string name="logic_variable_type_string">字符串</string>
     <string name="logic_variable_type_map">映射</string>
-    <string name="logic_variable_type_list_number">数值列表</string>
+    <string name="logic_variable_type_list_number">浮点数列表</string>
     <string name="logic_variable_type_list_string">字符串列表</string>
     <string name="logic_variable_type_list_map">映射列表</string>
+
+    <string name="logic_editor_category_integer">整数</string>
 
     <!-- ========== Block分类 (Block Categories) ========== -->
     <string name="block_category_var">变量</string>
@@ -1276,13 +1279,14 @@
     <string name="logic_editor_title_select_list">选择列表</string>
     <string name="logic_editor_title_select_list_boolean">选择布尔列表</string>
     <string name="logic_editor_title_select_list_map">选择映射列表</string>
-    <string name="logic_editor_title_select_list_number">选择数值列表</string>
+    <string name="logic_editor_title_select_list_number">选择浮点数列表</string>
     <string name="logic_editor_title_select_list_string">选择字符串列表</string>
     <string name="logic_editor_title_select_sound">选择音效</string>
     <string name="logic_editor_title_select_typeface">选择字体样式</string>
     <string name="logic_editor_title_select_variable_boolean">选择布尔变量</string>
+    <string name="logic_editor_title_select_variable_integer">选择整数变量</string>
     <string name="logic_editor_title_select_variable_map">选择映射变量</string>
-    <string name="logic_editor_title_select_variable_number">选择数值变量</string>
+    <string name="logic_editor_title_select_variable_number">选择浮点数变量</string>
     <string name="logic_editor_title_select_variable_string">选择字符串变量</string>
     <string name="logic_editor_title_select_view">选择控件</string>
     <string name="logic_editor_title_select_visibility">选择可见性</string>
@@ -1794,7 +1798,7 @@
     <string name="logic_editor_panel_button_add_custom_list">添加自定义列表</string>
     <string name="logic_editor_panel_button_open_resources_editor">打开资源编辑器</string>
     <string name="logic_editor_category_boolean">布尔值</string>
-    <string name="logic_editor_category_number">数字</string>
+    <string name="logic_editor_category_number">浮点数</string>
     <string name="logic_editor_category_string">字符串</string>
     <string name="logic_editor_category_map">映射</string>
     <string name="logic_editor_category_custom_variable">自定义变量</string>

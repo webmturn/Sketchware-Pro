@@ -188,6 +188,7 @@ public class LogicClickListener implements View.OnClickListener {
         List<Pair<List<Integer>, String>> variableTypes = List.of(
                 new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_BOOLEAN), "Boolean (%d)"),
                 new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_NUMBER), "Number (%d)"),
+                new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_INT), "Integer (%d)"),
                 new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_STRING), "String (%d)"),
                 new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_MAP), "Map (%d)"),
                 new Pair<>(List.of(5, 6), "Custom Variable (%d)")
@@ -287,6 +288,7 @@ public class LogicClickListener implements View.OnClickListener {
         List<Pair<List<Integer>, String>> variableTypes = List.of(
                 new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_BOOLEAN), "Boolean (%d)"),
                 new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_NUMBER), "Number (%d)"),
+                new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_INT), "Integer (%d)"),
                 new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_STRING), "String (%d)"),
                 new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_MAP), "Map (%d)")
         );

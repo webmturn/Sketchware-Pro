@@ -85,6 +85,7 @@ public class BlockSpecRegistry {
         BLOCK_PARAMS.put("copyToClipboard", new String[]{"%s"});
         BLOCK_PARAMS.put("cropBitmapFileFromCenter", new String[]{"%s", "%s", "%d", "%d"});
         BLOCK_PARAMS.put("decreaseInt", new String[]{"%m.varInt"});
+        BLOCK_PARAMS.put("decreaseInteger", new String[]{"%m.varInteger"});
         BLOCK_PARAMS.put("deleteList", new String[]{"%d", "%m.list"});
         BLOCK_PARAMS.put("dialogCancelButton", new String[]{"%m.dialog", "%s"});
         BLOCK_PARAMS.put("dialogDismiss", new String[]{"%m.dialog"});
@@ -158,6 +159,7 @@ public class BlockSpecRegistry {
         BLOCK_PARAMS.put("if", new String[]{"%b"});
         BLOCK_PARAMS.put("ifElse", new String[]{"%b"});
         BLOCK_PARAMS.put("increaseInt", new String[]{"%m.varInt"});
+        BLOCK_PARAMS.put("increaseInteger", new String[]{"%m.varInteger"});
         BLOCK_PARAMS.put("indexListInt", new String[]{"%d", "%m.listInt"});
         BLOCK_PARAMS.put("indexListStr", new String[]{"%s", "%m.listStr"});
         BLOCK_PARAMS.put("insertListInt", new String[]{"%d", "%d", "%m.listInt"});
@@ -339,6 +341,7 @@ public class BlockSpecRegistry {
         BLOCK_PARAMS.put("setTypeface", new String[]{"%m.textview", "%m.font", "%m.typeface"});
         BLOCK_PARAMS.put("setVarBoolean", new String[]{"%m.varBool", "%b"});
         BLOCK_PARAMS.put("setVarInt", new String[]{"%m.varInt", "%d"});
+        BLOCK_PARAMS.put("setVarInteger", new String[]{"%m.varInteger", "%d"});
         BLOCK_PARAMS.put("setVarString", new String[]{"%m.varStr", "%s"});
         BLOCK_PARAMS.put("setVisible", new String[]{"%m.view", "%m.visible"});
         BLOCK_PARAMS.put("skewBitmapFile", new String[]{"%s", "%s", "%d", "%d"});
@@ -703,7 +706,10 @@ public class BlockSpecRegistry {
         BLOCK_SPECS.put("setTypeface", "set_typeface");
         BLOCK_SPECS.put("setVarBoolean", "set_var_bool");
         BLOCK_SPECS.put("setVarInt", "set_var_int");
+        BLOCK_SPECS.put("setVarInteger", "set_var_integer");
         BLOCK_SPECS.put("setVarString", "set_var_str");
+        BLOCK_SPECS.put("increaseInteger", "increase_integer");
+        BLOCK_SPECS.put("decreaseInteger", "decrease_integer");
         BLOCK_SPECS.put("setVisible", "set_visible");
         BLOCK_SPECS.put("skewBitmapFile", "skew_bitmap");
         BLOCK_SPECS.put("soundpoolCreate", "soundpool_create");

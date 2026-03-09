@@ -393,6 +393,7 @@ public class ComponentCodeGenerator {
                 return "false";
 
             case "double":
+            case "int":
                 return "0";
 
             case "String":
