@@ -627,4 +627,40 @@ public class BlockPane extends RelativeLayout {
   public BlockView getRoot() {
     return this.dragBlock;
   }
+
+  public ArrayList<BlockView> searchBlocks(String query) {
+    ArrayList<BlockView> matches = new ArrayList<>();
+    if (query == null || query.isEmpty()) return matches;
+    String lowerQuery = query.toLowerCase(java.util.Locale.ROOT);
+    for (BlockView blockView : blockIndex.values()) {
+      if (blockView.isDefinitionBlock) continue;
+      String opCode = blockView.opCode != null ? blockView.opCode.toLowerCase(java.util.Locale.ROOT) : "";
+      String spec = blockView.spec != null ? blockView.spec.toLowerCase(java.util.Locale.ROOT) : "";
+      if (opCode.contains(lowerQuery) || spec.contains(lowerQuery)) {
+        matches.add(blockView);
+      }
+    }
+    return matches;
+  }
+
+  public void highlightSearchResults(ArrayList<BlockView> matches, BlockView current) {
+    java.util.HashSet<BlockView> matchSet = new java.util.HashSet<>(matches);
+    for (BlockView blockView : blockIndex.values()) {
+      if (blockView.isDefinitionBlock) continue;
+      if (matchSet.contains(blockView)) {
+        blockView.setAlpha(1.0f);
+      } else {
+        blockView.setAlpha(0.25f);
+      }
+    }
+    if (current != null) {
+      current.setAlpha(1.0f);
+    }
+  }
+
+  public void clearSearchHighlight() {
+    for (BlockView blockView : blockIndex.values()) {
+      blockView.setAlpha(1.0f);
+    }
+  }
 }

@@ -2,6 +2,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/menu_logic_search"
+        android:icon="@drawable/ic_mtrl_search"
+        android:orderInCategory="50"
+        android:title="@string/search_canvas_blocks"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/menu_logic_showsource"
         android:icon="@drawable/ic_mtrl_code"
         android:orderInCategory="100"

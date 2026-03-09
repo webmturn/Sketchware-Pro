@@ -19,6 +19,8 @@
             app:subtitle="onCreate"
             app:title="Activity" />
 
+        <include layout="@layout/logic_canvas_search_bar" />
+
         <com.besome.sketch.editor.view.ViewLogicEditor
             android:id="@+id/editor"
             android:layout_width="match_parent"
