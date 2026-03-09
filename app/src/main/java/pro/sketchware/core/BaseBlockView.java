@@ -710,7 +710,13 @@ public class BaseBlockView extends RelativeLayout {
         drawRectShape(canvas);
         break;
     }
-    if (this instanceof BlockView && ((BlockView) this).disabled) {
+    super.onDraw(canvas);
+  }
+  
+  @Override
+  protected void dispatchDraw(Canvas canvas) {
+    super.dispatchDraw(canvas);
+    if (this instanceof BlockView && isEffectivelyDisabled((BlockView) this)) {
       if (disabledOverlayPaint == null) {
         disabledOverlayPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         disabledOverlayPaint.setColor(0x60000000);
@@ -728,7 +734,28 @@ public class BaseBlockView extends RelativeLayout {
         canvas.drawLine(i, h, i + h, 0, disabledStripePaint);
       }
     }
-    super.onDraw(canvas);
+  }
+  
+  private static boolean isEffectivelyDisabled(BlockView blockView) {
+    if (blockView.disabled) return true;
+    BlockView child = blockView;
+    BlockView parent = blockView.parentBlock;
+    int limit = 200;
+    while (parent != null && --limit > 0) {
+      int childTag = ((Integer) child.getTag()).intValue();
+      boolean isSubStackChild = (parent.subStack1 == childTag || parent.subStack2 == childTag);
+      boolean isNextBlockChild = (parent.nextBlock == childTag);
+      if (!isSubStackChild && !isNextBlockChild) {
+        // child is a parameter of parent — parent's disabled state applies
+        if (parent.disabled) return true;
+      } else if (isSubStackChild) {
+        if (parent.disabled) return true;
+      }
+      // for nextBlock, skip disabled check and continue up
+      child = parent;
+      parent = parent.parentBlock;
+    }
+    return false;
   }
   
   public void onMeasure(int start, int end) {
