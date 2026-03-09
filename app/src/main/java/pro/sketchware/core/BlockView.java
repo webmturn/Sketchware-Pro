@@ -34,6 +34,8 @@ public class BlockView extends BaseBlockView {
   
   public boolean isDefinitionBlock = false;
   
+  public boolean disabled = false;
+  
   public boolean isParameter = false;
   
   public boolean hasEndCap = false;
@@ -306,6 +308,7 @@ public class BlockView extends BaseBlockView {
     blockBean.subStack1 = subStack1;
     blockBean.subStack2 = subStack2;
     blockBean.nextBlock = nextBlock;
+    blockBean.disabled = disabled;
     return blockBean;
   }
   
