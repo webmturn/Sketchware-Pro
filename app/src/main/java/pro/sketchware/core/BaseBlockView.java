@@ -10,6 +10,9 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 public class BaseBlockView extends RelativeLayout {
+  private static Paint disabledOverlayPaint;
+  private static Paint disabledStripePaint;
+
   public int blockHeight;
   
   public int contentHeight;
@@ -706,7 +709,25 @@ public class BaseBlockView extends RelativeLayout {
       case 1:
         drawRectShape(canvas);
         break;
-    } 
+    }
+    if (this instanceof BlockView && ((BlockView) this).disabled) {
+      if (disabledOverlayPaint == null) {
+        disabledOverlayPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        disabledOverlayPaint.setColor(0x60000000);
+      }
+      canvas.drawRect(0, 0, getTotalWidth(), getTotalHeight(), disabledOverlayPaint);
+      if (disabledStripePaint == null) {
+        disabledStripePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        disabledStripePaint.setColor(0x40FFFFFF);
+        disabledStripePaint.setStrokeWidth(density * 2);
+      }
+      int step = (int) (density * 8);
+      int w = getTotalWidth();
+      int h = getTotalHeight();
+      for (int i = -h; i < w; i += step) {
+        canvas.drawLine(i, h, i + h, 0, disabledStripePaint);
+      }
+    }
     super.onDraw(canvas);
   }
   
