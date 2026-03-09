@@ -98,6 +98,13 @@ public class BlockInterpreter {
      * @return the generated Java code fragment
      */
     public final String generateBlock(BlockBean bean, String parentOpcode) {
+        if (bean.disabled) {
+            if (bean.nextBlock >= 0) {
+                return resolveBlock(String.valueOf(bean.nextBlock), moreBlock);
+            }
+            return "";
+        }
+
         ArrayList<String> params = getBlockParams(bean);
 
         String opcode = getBlockCode(bean, params);
