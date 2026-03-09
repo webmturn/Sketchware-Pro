@@ -3697,6 +3697,14 @@ Please try again later"</string>
     <string name="search_error_message">Nothing found,\ntry again with something else</string>
     <string name="search_header">"  Search…"</string>
     <string name="search_hint">Search…</string>
+    <string name="search_blocks_hint">Search blocks…</string>
+    <string name="search_blocks_no_results">No blocks found</string>
+    <string name="search_canvas_blocks">Search placed blocks</string>
+    <string name="search_canvas_blocks_hint">Search in canvas…</string>
+    <string name="search_canvas_count">%1$d/%2$d</string>
+    <string name="search_canvas_no_results">No matches</string>
+    <string name="search_canvas_prev">Previous match</string>
+    <string name="search_canvas_next">Next match</string>
     <string name="search_in_palettes_dialog_title">Search palettes</string>
     <string name="search_recent_button_delete_all_recent_keyword">Delete All</string>
     <string name="search_recent_message_delete_keyword_dialog_delete_all">Do you want to delete all keywords?</string>

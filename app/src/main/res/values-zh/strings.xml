@@ -271,6 +271,14 @@
     <!-- ========== 搜索 (Search) ========== -->
     <string name="search_error_message">未找到结果，\n请尝试其他关键词</string>
     <string name="search_hint">搜索…</string>
+    <string name="search_blocks_hint">搜索积木块…</string>
+    <string name="search_blocks_no_results">未找到积木块</string>
+    <string name="search_canvas_blocks">搜索已放置的块</string>
+    <string name="search_canvas_blocks_hint">在画布中搜索…</string>
+    <string name="search_canvas_count">%1$d/%2$d</string>
+    <string name="search_canvas_no_results">无匹配</string>
+    <string name="search_canvas_prev">上一个匹配</string>
+    <string name="search_canvas_next">下一个匹配</string>
     <string name="search_in_palettes_dialog_title">搜索调色板</string>
     <string name="search_recent_button_delete_all_recent_keyword">全部删除</string>
     <string name="search_recent_message_delete_keyword_dialog_delete_all">是否删除所有关键词？</string>
