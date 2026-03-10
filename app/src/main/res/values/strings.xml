@@ -1686,6 +1686,7 @@ Please click on Settings to allow permission for Storage. Without this permissio
     <string name="dialog_orphan_libs_body">The following libraries are not referenced by any root library. They may be safe to delete:</string>
     <string name="sub_dependencies_subtitle">Sub-dependencies</string>
     <string name="sub_dependencies_empty">No sub-dependencies</string>
+    <string name="sub_dependencies_disable_required_message">%1$s is still required by these enabled root libraries:\n\n%2$s\n\nDisable those root libraries first.</string>
     <string name="toast_enable_d8_reminder">Don\'t forget to enable D8 to be able to compile Java 8+ code</string>
     <string name="toast_event_exported">Successfully exported event to:\n/Internal storage/.sketchware/data/system/export/events</string>
     <string name="toast_events_exported">Successfully exported events to:\n/Internal storage/.sketchware/data/system/export/events</string>

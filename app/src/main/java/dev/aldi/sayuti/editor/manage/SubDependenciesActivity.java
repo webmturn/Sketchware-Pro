@@ -1,5 +1,6 @@
 package dev.aldi.sayuti.editor.manage;
 
+import static dev.aldi.sayuti.editor.manage.LocalLibrariesUtil.buildEnabledRootDependencyState;
 import static dev.aldi.sayuti.editor.manage.LocalLibrariesUtil.createLibraryMap;
 import static dev.aldi.sayuti.editor.manage.LocalLibrariesUtil.getLocalLibraries;
 import static dev.aldi.sayuti.editor.manage.LocalLibrariesUtil.rewriteLocalLibFile;
@@ -14,14 +15,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.besome.sketch.lib.base.BaseAppCompatActivity;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.Gson;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import pro.sketchware.R;
 import pro.sketchware.databinding.ActivitySubDependenciesBinding;
@@ -47,6 +52,10 @@ public class SubDependenciesActivity extends BaseAppCompatActivity {
     private ArrayList<HashMap<String, Object>> projectUsedLibs;
     private boolean notAssociatedWithProject;
     private final SubDepAdapter adapter = new SubDepAdapter();
+    private final ExecutorService dependencyStateExecutor = Executors.newSingleThreadExecutor();
+    private Map<String, List<String>> enabledRootLibrariesBySubDependency = Collections.emptyMap();
+    private Map<String, List<String>> subDependenciesByEnabledRootLibrary = Collections.emptyMap();
+    private boolean dependencyGuardReady = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,9 +77,11 @@ public class SubDependenciesActivity extends BaseAppCompatActivity {
         scId = intent.getStringExtra(EXTRA_SC_ID);
 
         notAssociatedWithProject = scId == null || scId.equals("system");
+        dependencyGuardReady = notAssociatedWithProject;
 
         if (!notAssociatedWithProject) {
             projectUsedLibs = getLocalLibraries(scId);
+            preloadDependencyState();
         }
 
         binding.toolbar.setTitle(rootLibName);
@@ -84,6 +95,12 @@ public class SubDependenciesActivity extends BaseAppCompatActivity {
         } else {
             loadDependencies(rootLibName, depFolders, depCoords, depBuiltIn, depDepths, depParents);
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        dependencyStateExecutor.shutdownNow();
+        super.onDestroy();
     }
 
     private void loadDependencies(String rootLibName, List<String> folders, List<String> coords,
@@ -214,9 +231,14 @@ public class SubDependenciesActivity extends BaseAppCompatActivity {
         return false;
     }
 
-    private void toggleLibrary(boolean isChecked, String name) {
-        if (projectUsedLibs == null) return;
+    private boolean toggleLibrary(boolean isChecked, String name) {
+        if (projectUsedLibs == null) return false;
         if (!isChecked) {
+            List<String> dependentRoots = getEnabledRootLibrariesDependingOn(name);
+            if (!dependentRoots.isEmpty()) {
+                showDependentRootLibrariesDialog(name, dependentRoots);
+                return false;
+            }
             projectUsedLibs.removeIf(m -> name.equals(String.valueOf(m.get("name"))));
         } else {
             if (!isUsedLibrary(name)) {
@@ -224,6 +246,27 @@ public class SubDependenciesActivity extends BaseAppCompatActivity {
             }
         }
         rewriteLocalLibFile(scId, new Gson().toJson(projectUsedLibs));
+        updateDependencyGuardCache(name, isChecked);
+        return true;
+    }
+
+    private List<String> getEnabledRootLibrariesDependingOn(String subDependencyName) {
+        List<String> dependentRoots = enabledRootLibrariesBySubDependency.get(subDependencyName);
+        if (dependentRoots == null) {
+            return Collections.emptyList();
+        }
+        return dependentRoots;
+    }
+
+    private void showDependentRootLibrariesDialog(String libraryName, List<String> dependentRoots) {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.common_word_warning)
+                .setMessage(getString(
+                        R.string.sub_dependencies_disable_required_message,
+                        libraryName,
+                        String.join("\n", dependentRoots)))
+                .setPositiveButton(R.string.common_word_ok, null)
+                .show();
     }
 
     private static class SubDepItem {
@@ -296,14 +339,23 @@ public class SubDependenciesActivity extends BaseAppCompatActivity {
             } else {
                 binding.card.setAlpha(1.0f);
                 binding.materialSwitch.setVisibility(View.VISIBLE);
-                binding.materialSwitch.setEnabled(true);
                 binding.materialSwitch.setChecked(false);
                 if (!notAssociatedWithProject) {
                     binding.materialSwitch.setChecked(isUsedLibrary(item.folderName));
-                    binding.materialSwitch.setOnClickListener(v ->
-                            toggleLibrary(binding.materialSwitch.isChecked(), item.folderName));
+                    binding.materialSwitch.setEnabled(dependencyGuardReady);
+                    if (dependencyGuardReady) {
+                        binding.materialSwitch.setOnClickListener(v -> {
+                            boolean isChecked = binding.materialSwitch.isChecked();
+                            if (!toggleLibrary(isChecked, item.folderName)) {
+                                binding.materialSwitch.setChecked(!isChecked);
+                            }
+                        });
+                    } else {
+                        binding.materialSwitch.setOnClickListener(null);
+                    }
                 } else {
                     binding.materialSwitch.setEnabled(false);
+                    binding.materialSwitch.setOnClickListener(null);
                 }
             }
         }
@@ -327,5 +379,81 @@ public class SubDependenciesActivity extends BaseAppCompatActivity {
                 this.binding = binding;
             }
         }
+    }
+
+    private void preloadDependencyState() {
+        dependencyStateExecutor.execute(() -> {
+            LocalLibrariesUtil.EnabledRootDependencyState dependencyState =
+                    buildEnabledRootDependencyState(projectUsedLibs);
+            runOnUiThread(() -> {
+                if (isFinishing() || isDestroyed()) {
+                    return;
+                }
+                enabledRootLibrariesBySubDependency =
+                        copyDependencyMap(dependencyState.getRootLibrariesBySubDependency());
+                subDependenciesByEnabledRootLibrary =
+                        copyDependencyMap(dependencyState.getSubDependenciesByRootLibrary());
+                dependencyGuardReady = true;
+                adapter.notifyDataSetChanged();
+            });
+        });
+    }
+
+    private void updateDependencyGuardCache(String libraryName, boolean enabled) {
+        List<String> subDependencies = enabled
+                ? getRootLibrarySubDependencies(libraryName)
+                : subDependenciesByEnabledRootLibrary.remove(libraryName);
+
+        if (!enabled && subDependencies == null) {
+            subDependencies = getRootLibrarySubDependencies(libraryName);
+        }
+        if (subDependencies == null || subDependencies.isEmpty()) {
+            return;
+        }
+
+        if (enabled) {
+            subDependenciesByEnabledRootLibrary.put(libraryName, new ArrayList<>(subDependencies));
+            for (String subDependency : subDependencies) {
+                List<String> dependentRoots = enabledRootLibrariesBySubDependency
+                        .computeIfAbsent(subDependency, key -> new ArrayList<>());
+                if (!dependentRoots.contains(libraryName)) {
+                    dependentRoots.add(libraryName);
+                }
+            }
+            return;
+        }
+
+        for (String subDependency : subDependencies) {
+            List<String> dependentRoots = enabledRootLibrariesBySubDependency.get(subDependency);
+            if (dependentRoots == null) {
+                continue;
+            }
+            dependentRoots.remove(libraryName);
+            if (dependentRoots.isEmpty()) {
+                enabledRootLibrariesBySubDependency.remove(subDependency);
+            }
+        }
+    }
+
+    private List<String> getRootLibrarySubDependencies(String libraryName) {
+        File libraryDir = resolveLibDir(libraryName);
+        if (libraryDir == null) {
+            return null;
+        }
+
+        LocalLibrary library = LocalLibrary.fromFile(libraryDir);
+        if (!library.isRootLibrary()) {
+            return null;
+        }
+
+        return new ArrayList<>(library.getSubDependencyNames());
+    }
+
+    private Map<String, List<String>> copyDependencyMap(Map<String, List<String>> source) {
+        Map<String, List<String>> copy = new HashMap<>();
+        for (Map.Entry<String, List<String>> entry : source.entrySet()) {
+            copy.put(entry.getKey(), new ArrayList<>(entry.getValue()));
+        }
+        return copy;
     }
 }

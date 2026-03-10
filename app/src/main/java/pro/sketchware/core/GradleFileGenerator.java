@@ -2,6 +2,7 @@ package pro.sketchware.core;
 
 import com.google.gson.Gson;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +12,7 @@ import mod.hey.studios.util.Helper;
 import mod.jbk.build.BuiltInLibraries;
 import mod.jbk.editor.manage.library.ExcludeBuiltInLibrariesActivity;
 import mod.agus.jcoderz.handle.component.ConstVarComponent;
+import pro.sketchware.utility.FilePathUtil;
 import pro.sketchware.utility.FileUtil;
 
 /**
@@ -167,10 +169,9 @@ public class GradleFileGenerator {
             ArrayList<HashMap<String, Object>> localLibraries = gson.fromJson(fileContent, Helper.TYPE_MAP_LIST);
             if (localLibraries != null) {
                 for (HashMap<String, Object> library : localLibraries) {
-                    String dependency = (String) library.get("dependency");
-                    if (dependency != null && !dependency.isEmpty()) {
-                        dependency = "implementation '" + dependency + "'";
-                        content.append(dependency).append("\r\n");
+                    String dependency = resolveDependencyNotation(library);
+                    if (dependency != null) {
+                        content.append("implementation '").append(dependency).append("'\r\n");
                     }
                 }
             }
@@ -182,6 +183,59 @@ public class GradleFileGenerator {
     private static boolean isLibraryNotExcluded(String libraryName, List<BuiltInLibraries.BuiltInLibrary> excludedLibraries) {
         var library = BuiltInLibraries.BuiltInLibrary.ofName(libraryName);
         return library.isPresent() && !excludedLibraries.contains(library.get());
+    }
+
+    private static String resolveDependencyNotation(HashMap<String, Object> library) {
+        Object dependencyObject = library.get("dependency");
+        if (dependencyObject instanceof String dependency && isValidMavenCoordinate(dependency)) {
+            return dependency;
+        }
+
+        Object nameObject = library.get("name");
+        if (nameObject instanceof String name) {
+            File coordinateFile = resolveCoordinateFile(name);
+            if (coordinateFile.exists()) {
+                String storedDependency = FileUtil.readFile(coordinateFile.getAbsolutePath()).trim();
+                if (isValidMavenCoordinate(storedDependency)) {
+                    return storedDependency;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private static File resolveCoordinateFile(String libraryName) {
+        File primaryCoordinateFile = new File(FilePathUtil.getLocalLibsDir(), libraryName + "/maven-coordinate");
+        if (primaryCoordinateFile.exists()) {
+            return primaryCoordinateFile;
+        }
+
+        File fallbackCoordinateFile = new File(FilePathUtil.getLocalLibsFallbackDir(), libraryName + "/maven-coordinate");
+        if (fallbackCoordinateFile.exists()) {
+            return fallbackCoordinateFile;
+        }
+
+        return primaryCoordinateFile;
+    }
+
+    private static boolean isValidMavenCoordinate(String dependency) {
+        if (dependency == null || dependency.isEmpty()) {
+            return false;
+        }
+
+        String[] parts = dependency.split(":");
+        if (parts.length != 3) {
+            return false;
+        }
+
+        for (String part : parts) {
+            if (part == null || part.trim().isEmpty()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**

@@ -23,6 +23,8 @@ import mod.hey.studios.util.Helper;
 import pro.sketchware.utility.FilePathUtil;
 
 public class LocalLibrariesUtil {
+    private static final String MAVEN_COORDINATE_FILE_NAME = "maven-coordinate";
+
     private static String getLocalLibsPath() {
         return FilePathUtil.getLocalLibsDir().getAbsolutePath() + "/";
     }
@@ -166,6 +168,72 @@ public class LocalLibrariesUtil {
         return refMap;
     }
 
+    public static final class EnabledRootDependencyState {
+        private final Map<String, List<String>> rootLibrariesBySubDependency;
+        private final Map<String, List<String>> subDependenciesByRootLibrary;
+
+        public EnabledRootDependencyState(Map<String, List<String>> rootLibrariesBySubDependency,
+                                          Map<String, List<String>> subDependenciesByRootLibrary) {
+            this.rootLibrariesBySubDependency = rootLibrariesBySubDependency;
+            this.subDependenciesByRootLibrary = subDependenciesByRootLibrary;
+        }
+
+        public Map<String, List<String>> getRootLibrariesBySubDependency() {
+            return rootLibrariesBySubDependency;
+        }
+
+        public Map<String, List<String>> getSubDependenciesByRootLibrary() {
+            return subDependenciesByRootLibrary;
+        }
+    }
+
+    public static Map<String, List<String>> buildEnabledRootDependencyMap(
+            ArrayList<HashMap<String, Object>> projectUsedLibs) {
+        return buildEnabledRootDependencyState(projectUsedLibs).getRootLibrariesBySubDependency();
+    }
+
+    public static EnabledRootDependencyState buildEnabledRootDependencyState(
+            ArrayList<HashMap<String, Object>> projectUsedLibs) {
+        if (projectUsedLibs == null || projectUsedLibs.isEmpty()) {
+            return new EnabledRootDependencyState(Collections.emptyMap(), Collections.emptyMap());
+        }
+
+        Map<String, List<String>> refMap = new HashMap<>();
+        Map<String, List<String>> subDepsByRootLibrary = new HashMap<>();
+        Set<String> enabledLibraryNames = new HashSet<>();
+        for (HashMap<String, Object> libraryMap : projectUsedLibs) {
+            Object nameValue = libraryMap.get("name");
+            if (nameValue == null) {
+                continue;
+            }
+
+            String name = String.valueOf(nameValue);
+            if (!name.isEmpty()) {
+                enabledLibraryNames.add(name);
+            }
+        }
+
+        for (String libraryName : enabledLibraryNames) {
+            File libraryDir = findLocalLibraryDirectory(libraryName);
+            if (libraryDir == null) {
+                continue;
+            }
+
+            LocalLibrary library = LocalLibrary.fromFile(libraryDir);
+            if (!library.isRootLibrary()) {
+                continue;
+            }
+
+            List<String> subDeps = new ArrayList<>(library.getSubDependencyNames());
+            subDepsByRootLibrary.put(library.getName(), subDeps);
+            for (String subDep : subDeps) {
+                refMap.computeIfAbsent(subDep, k -> new ArrayList<>()).add(library.getName());
+            }
+        }
+
+        return new EnabledRootDependencyState(refMap, subDepsByRootLibrary);
+    }
+
     /**
      * Returns libraries that are not root libraries AND are not referenced by any
      * root library's dependency-tree.json — i.e., they are orphaned transitive deps.
@@ -218,8 +286,9 @@ public class LocalLibrariesUtil {
 
         HashMap<String, Object> localLibrary = new HashMap<>();
         localLibrary.put("name", name);
-        if (dependency != null) {
-            localLibrary.put("dependency", dependency);
+        String resolvedDependency = resolveDependencyNotation(basePath, dependency);
+        if (resolvedDependency != null) {
+            localLibrary.put("dependency", resolvedDependency);
         }
         if (isExistFile(configPath)) {
             localLibrary.put("packageName", readFile(configPath));
@@ -245,15 +314,58 @@ public class LocalLibrariesUtil {
         return localLibrary;
     }
 
+    private static String resolveDependencyNotation(String basePath, String dependency) {
+        if (isValidMavenCoordinate(dependency)) {
+            return dependency;
+        }
+
+        String coordinatePath = basePath + "/" + MAVEN_COORDINATE_FILE_NAME;
+        if (isExistFile(coordinatePath)) {
+            String storedDependency = readFile(coordinatePath).trim();
+            if (isValidMavenCoordinate(storedDependency)) {
+                return storedDependency;
+            }
+        }
+
+        return null;
+    }
+
+    private static boolean isValidMavenCoordinate(String dependency) {
+        if (dependency == null || dependency.isEmpty()) {
+            return false;
+        }
+
+        String[] parts = dependency.split(":");
+        if (parts.length != 3) {
+            return false;
+        }
+
+        for (String part : parts) {
+            if (part == null || part.trim().isEmpty()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     private static String resolveLibBasePath(String name) {
-        String newPath = getLocalLibsPath() + name;
-        if (new File(newPath).exists()) {
+        File libraryDir = findLocalLibraryDirectory(name);
+        if (libraryDir != null) {
+            return libraryDir.getAbsolutePath();
+        }
+        return getLocalLibsPath() + name;
+    }
+
+    private static File findLocalLibraryDirectory(String name) {
+        File newPath = new File(getLocalLibsPath() + name);
+        if (newPath.exists()) {
             return newPath;
         }
-        String fallbackPath = getFallbackLocalLibsPath() + name;
-        if (new File(fallbackPath).exists()) {
+        File fallbackPath = new File(getFallbackLocalLibsPath() + name);
+        if (fallbackPath.exists()) {
             return fallbackPath;
         }
-        return newPath;
+        return null;
     }
 }

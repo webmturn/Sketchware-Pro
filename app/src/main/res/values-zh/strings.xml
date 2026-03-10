@@ -1445,6 +1445,7 @@
     <string name="dialog_orphan_libs_body">以下库未被任何根库引用，可以安全删除：</string>
     <string name="sub_dependencies_subtitle">子依赖</string>
     <string name="sub_dependencies_empty">无子依赖</string>
+    <string name="sub_dependencies_disable_required_message">%1$s 仍被这些已启用的根库依赖：\n\n%2$s\n\n请先禁用这些根库。</string>
     <string name="toast_enable_d8_reminder">别忘了启用 D8 以编译 Java 8+ 代码</string>
     <string name="toast_event_exported">事件已成功导出到:\n/Internal storage/.sketchware/data/system/export/events</string>
     <string name="toast_events_exported">事件已成功导出到:\n/Internal storage/.sketchware/data/system/export/events</string>

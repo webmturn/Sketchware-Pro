@@ -26,9 +26,11 @@ import com.google.gson.Gson;
 
 import org.cosmic.ide.dependency.resolver.api.Artifact;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -332,31 +334,15 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
                     @Override
                     public void onTaskCompleted(@NonNull List<String> dependencies) {
                         handler.post(() -> {
-                            SketchwareUtil.toast(Helper.getResString(R.string.toast_library_downloaded));
-                            if (!notAssociatedWithProject) {
-                                var fileContent = FileUtil.readFile(localLibFile);
-                                ArrayList<HashMap<String, Object>> enabledLibs;
-                                try {
-                                    enabledLibs = gson.fromJson(fileContent, Helper.TYPE_MAP_LIST);
-                                    if (enabledLibs == null) enabledLibs = new ArrayList<>();
-                                } catch (com.google.gson.JsonSyntaxException e2) {
-                                    enabledLibs = new ArrayList<>();
-                                }
-                                String mainLibName = dependencies.get(0);
-                                // Remove existing entries for these libraries to avoid duplicates on re-download
-                                java.util.Set<String> newNames = new java.util.HashSet<>(dependencies);
-                                enabledLibs.removeIf(m -> newNames.contains(String.valueOf(m.get("name"))));
-                                for (int i = 0; i < dependencies.size(); i++) {
-                                    String name = dependencies.get(i);
-                                    // Main library: no parent dependency; sub-deps: parent is main library folder name
-                                    String parent = (i == 0) ? null : mainLibName;
-                                    enabledLibs.add(createLibraryMap(name, parent));
-                                }
-                                FileUtil.writeFile(localLibFile, gson.toJson(enabledLibs));
+                            Map<String, String> dependencyCoordinates = buildDependencyCoordinates(dependencies);
+                            if (downloadExecutor != null && !downloadExecutor.isShutdown()) {
+                                downloadExecutor.execute(() -> finalizeDownloadedLibraries(
+                                        dependencies, dependencyCoordinates, handler));
+                            } else {
+                                new Thread(() -> finalizeDownloadedLibraries(
+                                        dependencies, dependencyCoordinates, handler),
+                                        "LibraryDownloadFinalizer").start();
                             }
-                            if (getActivity() == null) return;
-                            dismiss();
-                            if (onLibraryDownloadedTask != null) onLibraryDownloadedTask.invoke();
                         });
                     }
                 });
@@ -380,6 +366,102 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
         downloadItems.add(newItem);
         dependencyAdapter.addDependency(newItem);
         return newItem;
+    }
+
+    private Map<String, String> buildDependencyCoordinates(List<String> dependencyNames) {
+        Map<String, String> dependencyCoordinates = new HashMap<>();
+        java.util.Set<String> includedLibraries = new java.util.HashSet<>(dependencyNames);
+
+        if (dependencyName != null) {
+            String[] parts = dependencyName.split(":");
+            if (parts.length == 3) {
+                String libraryName = parts[1] + "-v" + parts[2];
+                if (includedLibraries.contains(libraryName)) {
+                    dependencyCoordinates.put(libraryName, dependencyName);
+                }
+            }
+        }
+
+        for (DependencyDownloadItem item : downloadItems) {
+            Artifact artifact = item.getArtifact();
+            String libraryName = artifact.getArtifactId() + "-v" + artifact.getVersion();
+            if (includedLibraries.contains(libraryName)) {
+                dependencyCoordinates.put(
+                        libraryName,
+                        artifact.getGroupId() + ":" + artifact.getArtifactId() + ":" + artifact.getVersion());
+            }
+        }
+
+        return dependencyCoordinates;
+    }
+
+    private void persistDependencyCoordinates(Map<String, String> dependencyCoordinates) {
+        for (Map.Entry<String, String> entry : dependencyCoordinates.entrySet()) {
+            File libraryDirectory = resolveLibraryDirectory(entry.getKey());
+            if (!libraryDirectory.exists() && !libraryDirectory.mkdirs()) {
+                continue;
+            }
+            FileUtil.writeFile(new File(libraryDirectory, "maven-coordinate").getAbsolutePath(), entry.getValue());
+        }
+    }
+
+    private File resolveLibraryDirectory(String libraryName) {
+        File primaryDirectory = new File(FilePathUtil.getLocalLibsDir(), libraryName);
+        if (primaryDirectory.exists()) {
+            return primaryDirectory;
+        }
+
+        File fallbackDirectory = new File(FilePathUtil.getLocalLibsFallbackDir(), libraryName);
+        if (fallbackDirectory.exists()) {
+            return fallbackDirectory;
+        }
+
+        return primaryDirectory;
+    }
+
+    private void finalizeDownloadedLibraries(List<String> dependencies,
+                                             Map<String, String> dependencyCoordinates,
+                                             Handler handler) {
+        try {
+            persistDependencyCoordinates(dependencyCoordinates);
+            if (!notAssociatedWithProject) {
+                var fileContent = FileUtil.readFile(localLibFile);
+                ArrayList<HashMap<String, Object>> enabledLibs;
+                try {
+                    enabledLibs = gson.fromJson(fileContent, Helper.TYPE_MAP_LIST);
+                    if (enabledLibs == null) enabledLibs = new ArrayList<>();
+                } catch (com.google.gson.JsonSyntaxException e) {
+                    enabledLibs = new ArrayList<>();
+                }
+
+                // Remove existing entries for these libraries to avoid duplicates on re-download.
+                java.util.Set<String> newNames = new java.util.HashSet<>(dependencies);
+                enabledLibs.removeIf(m -> newNames.contains(String.valueOf(m.get("name"))));
+                for (String name : dependencies) {
+                    enabledLibs.add(createLibraryMap(name, dependencyCoordinates.get(name)));
+                }
+                FileUtil.writeFile(localLibFile, gson.toJson(enabledLibs));
+            }
+
+            handler.post(() -> {
+                SketchwareUtil.toast(Helper.getResString(R.string.toast_library_downloaded));
+                if (getActivity() == null) return;
+                dismiss();
+                if (onLibraryDownloadedTask != null) onLibraryDownloadedTask.invoke();
+            });
+        } catch (Throwable e) {
+            handler.post(() -> {
+                setDownloadState(false);
+                String errorMessage = "Failed to finalize downloaded library '" + dependencyName
+                        + "': " + e.getMessage();
+                var activity = getActivity();
+                if (activity != null && !activity.isFinishing() && !activity.isDestroyed()) {
+                    SketchwareUtil.showAnErrorOccurredDialog(activity, errorMessage);
+                } else {
+                    SketchwareUtil.toastError(errorMessage);
+                }
+            });
+        }
     }
 
     private void updateDependencyState(Artifact artifact, DependencyDownloadItem.DownloadState state) {
