@@ -94,6 +94,7 @@ public class MoreblockImporter {
                     case "d":
                         maybeAddVariable(1, next.spec);
                         break;
+
                     case "s":
                         maybeAddVariable(2, next.spec);
                         break;
@@ -119,6 +120,8 @@ public class MoreblockImporter {
                             maybeAddVariable(0, paramValue);
                         } else if (gx.isExactType("double.SelectDouble")) {
                             maybeAddVariable(1, paramValue);
+                        } else if (gx.isExactType("int.SelectInt")) {
+                            maybeAddVariable(4, paramValue);
                         } else if (gx.isExactType("String.SelectString")) {
                             maybeAddVariable(2, paramValue);
                         } else if (gx.isExactType("Map")) {

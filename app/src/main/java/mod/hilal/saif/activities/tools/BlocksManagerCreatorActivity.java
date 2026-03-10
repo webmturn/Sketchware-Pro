@@ -284,6 +284,7 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
         binding.parametersHolder.addView(addBlockMenu("%s ", "string"));
         binding.parametersHolder.addView(addBlockMenu("%b ", "boolean"));
         binding.parametersHolder.addView(addBlockMenu("%d ", "number"));
+        binding.parametersHolder.addView(addBlockMenu("%m.varInteger ", "integer"));
         binding.parametersHolder.addView(addBlockMenu("%m.varMap ", "map"));
         binding.parametersHolder.addView(addBlockMenu("%m.view ", "view"));
         binding.parametersHolder.addView(addBlockMenu("%m.textview ", "textView"));

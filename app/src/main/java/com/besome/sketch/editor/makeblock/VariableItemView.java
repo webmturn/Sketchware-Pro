@@ -70,6 +70,10 @@ public class VariableItemView extends LinearLayout {
                 type = Helper.getResString(R.string.logic_variable_type_number);
                 break;
 
+            case "varInteger":
+                type = Helper.getResString(R.string.logic_variable_type_integer);
+                break;
+
             case "varBool":
                 type = Helper.getResString(R.string.logic_variable_type_boolean);
                 break;
@@ -184,6 +188,7 @@ public class VariableItemView extends LinearLayout {
     private void initializeVariableItems() {
         variableItems.add(new VariableItem("b", "", R.drawable.ic_true_false_color_48dp));
         variableItems.add(new VariableItem("d", "", R.drawable.numbers_48));
+        variableItems.add(new VariableItem("m", "varInteger", R.drawable.numbers_48));
         variableItems.add(new VariableItem("s", "", R.drawable.abc_96_color));
         variableItems.add(new VariableItem("m", "varMap", R.drawable.ic_map_color_48dp));
         variableItems.add(new VariableItem("m", "listInt", R.drawable.ic_list_color_48dp));
