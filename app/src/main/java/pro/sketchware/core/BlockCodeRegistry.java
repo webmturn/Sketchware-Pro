@@ -114,9 +114,6 @@ public class BlockCodeRegistry {
         register("setVarString", (bean, params, ctx) -> String.format("%s = %s;", params.get(0), params.get(1)));
         register("increaseInt", (bean, params, ctx) -> String.format("%s++;", params.get(0)));
         register("decreaseInt", (bean, params, ctx) -> String.format("%s--;", params.get(0)));
-        register("setVarInteger", (bean, params, ctx) -> String.format("%s = (int)(%s);", params.get(0), params.get(1)));
-        register("increaseInteger", (bean, params, ctx) -> String.format("%s++;", params.get(0)));
-        register("decreaseInteger", (bean, params, ctx) -> String.format("%s--;", params.get(0)));
         register("addSourceDirectly", (bean, params, ctx) -> {
             String asd = bean.parameters.get(0);
             return (asd != null) ? asd : "";

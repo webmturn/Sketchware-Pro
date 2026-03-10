@@ -890,13 +890,6 @@
     <string name="block_set_var_int_body_1">to</string>
     <string name="block_set_var_int_head">set</string>
     <string name="block_set_var_int_tail" />
-    <string name="block_set_var_integer_body_1">to</string>
-    <string name="block_set_var_integer_head">set</string>
-    <string name="block_set_var_integer_tail" />
-    <string name="block_increase_integer_head" />
-    <string name="block_increase_integer_tail">increase 1</string>
-    <string name="block_decrease_integer_head" />
-    <string name="block_decrease_integer_tail">decrease 1</string>
     <string name="block_set_var_str_body_1">to</string>
     <string name="block_set_var_str_head">set</string>
     <string name="block_set_var_str_tail" />
@@ -2264,7 +2257,6 @@ Do you want to continue?"</string>
     <string name="logic_editor_panel_button_open_resources_editor">Open Resources editor</string>
     <string name="logic_editor_category_boolean">Boolean</string>
     <string name="logic_editor_category_number">Number</string>
-    <string name="logic_editor_category_integer">Integer</string>
     <string name="logic_editor_category_string">String</string>
     <string name="logic_editor_category_map">Map</string>
     <string name="logic_editor_category_custom_variable">Custom Variable</string>
@@ -2462,7 +2454,6 @@ Please try again after removing the blocks with this variable"</string>
     <string name="logic_editor_title_select_sound">Select sound</string>
     <string name="logic_editor_title_select_typeface">Select typeface</string>
     <string name="logic_editor_title_select_variable_boolean">Select boolean variable</string>
-    <string name="logic_editor_title_select_variable_integer">Select integer variable</string>
     <string name="logic_editor_title_select_variable_map">Select map variable</string>
     <string name="logic_editor_title_select_variable_number">Select number variable</string>
     <string name="logic_editor_title_select_variable_string">Select string variable</string>
@@ -2488,7 +2479,6 @@ But, components should be added manually for working correctly."</string>
     <string name="logic_variable_type_list_map">List Map</string>
     <string name="logic_variable_type_list_number">List Number</string>
     <string name="logic_variable_type_list_string">List String</string>
-    <string name="logic_variable_type_integer">Integer</string>
     <string name="logic_variable_type_map">Map</string>
     <string name="logic_variable_type_number">Number</string>
     <string name="logic_variable_type_string">String</string>

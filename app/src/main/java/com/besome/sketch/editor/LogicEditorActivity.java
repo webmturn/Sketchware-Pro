@@ -376,15 +376,14 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         dialog.setView(customView);
         dialog.setPositiveButton(R.string.common_word_add, (v, which) -> {
             int variableType = 1;
-            int checkedId = radioGroup.getCheckedRadioButtonId();
-            if (checkedId == R.id.rb_boolean) {
+            if (radioGroup.getCheckedRadioButtonId() == R.id.rb_boolean) {
                 variableType = 0;
-            } else if (checkedId == R.id.rb_integer) {
-                variableType = 4;
-            } else if (checkedId == R.id.rb_string) {
-                variableType = 2;
-            } else if (checkedId == R.id.rb_map) {
-                variableType = 3;
+            } else if (radioGroup.getCheckedRadioButtonId() != R.id.rb_int) {
+                if (radioGroup.getCheckedRadioButtonId() == R.id.rb_string) {
+                    variableType = 2;
+                } else if (radioGroup.getCheckedRadioButtonId() == R.id.rb_map) {
+                    variableType = 3;
+                }
             }
 
             if (nameValidator.isValid()) {

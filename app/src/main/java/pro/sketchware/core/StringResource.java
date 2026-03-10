@@ -331,9 +331,6 @@ public class StringResource {
     loadBlockTranslation(context, "setVarInt");
     loadBlockTranslation(context, "increaseInt");
     loadBlockTranslation(context, "decreaseInt");
-    loadBlockTranslation(context, "setVarInteger");
-    loadBlockTranslation(context, "increaseInteger");
-    loadBlockTranslation(context, "decreaseInteger");
     loadBlockTranslation(context, "setVarString");
     loadBlockTranslation(context, "mapCreateNew");
     loadBlockTranslation(context, "mapPut");

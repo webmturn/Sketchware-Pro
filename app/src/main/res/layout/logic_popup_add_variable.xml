@@ -29,12 +29,6 @@
                 android:text="@string/logic_variable_type_number" />
 
             <com.google.android.material.radiobutton.MaterialRadioButton
-                android:id="@+id/rb_integer"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:text="@string/logic_variable_type_integer" />
-
-            <com.google.android.material.radiobutton.MaterialRadioButton
                 android:id="@+id/rb_string"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"

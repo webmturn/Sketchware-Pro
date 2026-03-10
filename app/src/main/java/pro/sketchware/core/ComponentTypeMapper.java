@@ -147,7 +147,6 @@ public class ComponentTypeMapper {
             case "InterstitialAd" -> "InterstitialAd";
             case "varBool" -> "boolean.SelectBoolean";
             case "varInt" -> "double.SelectDouble";
-            case "varInteger" -> "int.SelectInt";
             case "varStr" -> "String.SelectString";
             case "varMap" -> "Map";
             case "listInt" -> "ListInt";
@@ -236,7 +235,6 @@ public class ComponentTypeMapper {
             case 1 -> "double";
             case 2 -> "String";
             case 3 -> "Map";
-            case 4 -> "int";
             default -> "";
         };
     }
@@ -778,7 +776,6 @@ public class ComponentTypeMapper {
     public static String getActualTypeName(String typeName) {
         return switch (typeName) {
             case "double", "double.SelectDouble" -> "double";
-            case "int", "int.SelectInt" -> "int";
             case "Map" -> "HashMap<String, Object>";
             case "ListInt" -> "ArrayList<Double>";
             case "ListString" -> "ArrayList<String>";
