@@ -636,9 +636,7 @@ public class BlockPane extends RelativeLayout {
     String lowerQuery = query.toLowerCase(java.util.Locale.ROOT);
     for (BlockView blockView : blockIndex.values()) {
       if (blockView.isDefinitionBlock) continue;
-      String opCode = blockView.opCode != null ? blockView.opCode.toLowerCase(java.util.Locale.ROOT) : "";
-      String spec = blockView.spec != null ? blockView.spec.toLowerCase(java.util.Locale.ROOT) : "";
-      if (opCode.contains(lowerQuery) || spec.contains(lowerQuery)) {
+      if (blockView.matchesSearchQuery(lowerQuery)) {
         matches.add(blockView);
       }
     }

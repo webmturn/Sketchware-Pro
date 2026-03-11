@@ -321,7 +321,33 @@ public class BlockView extends BaseBlockView {
     blockBean.collapsed2 = collapsed2;
     return blockBean;
   }
-  
+
+  public boolean matchesSearchQuery(String lowerQuery) {
+    if (containsSearchQuery(lowerQuery, opCode)
+        || containsSearchQuery(lowerQuery, spec)
+        || containsSearchQuery(lowerQuery, blockType)
+        || containsSearchQuery(lowerQuery, componentType)
+        || containsSearchQuery(lowerQuery, blockTypeStr)
+        || containsSearchQuery(lowerQuery, componentTypeStr)
+        || containsSearchQuery(lowerQuery, elseLabel != null ? elseLabel.getText() : null)) {
+      return true;
+    }
+
+    for (View view : specViews) {
+      if (view instanceof FieldBlockView) {
+        if (((FieldBlockView) view).matchesSearchQuery(lowerQuery)) {
+          return true;
+        }
+      } else if (view instanceof TextView) {
+        if (containsSearchQuery(lowerQuery, ((TextView) view).getText())) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
   public int getBlockType() {
     return blockTypeInt;
   }
@@ -862,5 +888,13 @@ public class BlockView extends BaseBlockView {
       addView(elseLabel);
     } 
     layoutChain();
+  }
+
+  private boolean containsSearchQuery(String lowerQuery, Object value) {
+    if (value == null) {
+      return false;
+    }
+    String text = value.toString().trim();
+    return !text.isEmpty() && text.toLowerCase(java.util.Locale.ROOT).contains(lowerQuery);
   }
 }

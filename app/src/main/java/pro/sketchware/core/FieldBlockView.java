@@ -130,7 +130,16 @@ public class FieldBlockView extends BaseBlockView {
   public Object getArgValue() {
     return (blockType.equals("d") || blockType.equals("m") || blockType.equals("s")) ? labelView.getText() : argValue;
   }
-  
+
+  public boolean matchesSearchQuery(String lowerQuery) {
+    return containsSearchQuery(lowerQuery, blockType)
+        || containsSearchQuery(lowerQuery, componentType)
+        || containsSearchQuery(lowerQuery, getComponentLabel(componentType))
+        || containsSearchQuery(lowerQuery, dropdownLabel != null ? dropdownLabel.getText() : null)
+        || containsSearchQuery(lowerQuery, labelView != null ? labelView.getText() : null)
+        || containsSearchQuery(lowerQuery, getArgValue());
+  }
+
   public String getMenuName() {
     return componentType;
   }
@@ -143,5 +152,13 @@ public class FieldBlockView extends BaseBlockView {
       (labelView.getLayoutParams()).width = labelWidth;
       setBlockSize((labelWidth + spacing), textHeight, true);
     } 
+  }
+
+  private boolean containsSearchQuery(String lowerQuery, Object value) {
+    if (value == null) {
+      return false;
+    }
+    String text = value.toString().trim();
+    return !text.isEmpty() && text.toLowerCase(java.util.Locale.ROOT).contains(lowerQuery);
   }
 }
