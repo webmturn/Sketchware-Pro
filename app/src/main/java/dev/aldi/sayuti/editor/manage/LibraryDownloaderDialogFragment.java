@@ -424,6 +424,10 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
                                              Handler handler) {
         try {
             persistDependencyCoordinates(dependencyCoordinates);
+            for (String name : dependencies) {
+                LocalLibraryImportPackageIndex.rebuildPackages(
+                        LocalLibrariesUtil.getLocalLibraryDirectory(name));
+            }
             if (!notAssociatedWithProject) {
                 var fileContent = FileUtil.readFile(localLibFile);
                 ArrayList<HashMap<String, Object>> enabledLibs;

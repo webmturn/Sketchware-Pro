@@ -8,8 +8,12 @@ import com.google.gson.JsonParseException;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 
+import dev.aldi.sayuti.editor.manage.LocalLibrariesUtil;
+import dev.aldi.sayuti.editor.manage.LocalLibraryImportPackageIndex;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;
 import pro.sketchware.R;
@@ -135,15 +139,28 @@ public class ManageLocalLibrary {
     }
 
     public ArrayList<String> getImportLocalLibrary() {
-        ArrayList<String> imports = new ArrayList<>();
+        LinkedHashSet<String> imports = new LinkedHashSet<>();
 
-        for (String packageName : getPackageNames()) {
-            if (!packageName.isEmpty()) {
-                imports.add(packageName.concat(".*"));
+        for (int i = 0, listSize = list.size(); i < listSize; i++) {
+            HashMap<String, Object> localLibrary = list.get(i);
+            ArrayList<String> importPackages = getImportPackages(localLibrary, i);
+
+            if (importPackages.isEmpty()) {
+                Object packageName = localLibrary.get("packageName");
+                if (packageName instanceof String && !((String) packageName).isEmpty()) {
+                    imports.add(((String) packageName).concat(".*"));
+                }
+                continue;
+            }
+
+            for (String packageName : importPackages) {
+                if (!packageName.isEmpty()) {
+                    imports.add(packageName.concat(".*"));
+                }
             }
         }
 
-        return imports;
+        return new ArrayList<>(imports);
     }
 
     public ArrayList<File> getLocalLibraryJars() {
@@ -212,6 +229,49 @@ public class ManageLocalLibrary {
         }
 
         return packageNames;
+    }
+
+    private ArrayList<String> getImportPackages(HashMap<String, Object> localLibrary, int index) {
+        ArrayList<String> importPackages = getConfiguredImportPackages(localLibrary, index);
+        if (!importPackages.isEmpty()) {
+            return importPackages;
+        }
+
+        String libraryName = localLibrary.get("name") instanceof String
+                ? (String) localLibrary.get("name")
+                : null;
+        if (libraryName != null && !libraryName.isEmpty()) {
+            return LocalLibraryImportPackageIndex.readPackages(
+                    LocalLibrariesUtil.getLocalLibraryDirectory(libraryName));
+        }
+
+        return new ArrayList<>();
+    }
+
+    private ArrayList<String> getConfiguredImportPackages(HashMap<String, Object> localLibrary, int index) {
+        ArrayList<String> importPackages = new ArrayList<>();
+        Object configuredPackages = localLibrary.get("importPackages");
+        if (configuredPackages == null) {
+            return importPackages;
+        }
+
+        if (!(configuredPackages instanceof Collection)) {
+            LogUtil.w(getClass().getSimpleName(),
+                    "Invalid importPackages entry at index " + index + " for local library "
+                            + localLibrary.get("name"));
+            return importPackages;
+        }
+
+        for (Object configuredPackage : (Collection<?>) configuredPackages) {
+            if (configuredPackage instanceof String) {
+                String packageName = ((String) configuredPackage).trim();
+                if (!packageName.isEmpty()) {
+                    importPackages.add(packageName);
+                }
+            }
+        }
+
+        return importPackages;
     }
 
     public String getPackageNameLocalLibrary() {

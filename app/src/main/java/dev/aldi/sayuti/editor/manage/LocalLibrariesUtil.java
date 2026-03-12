@@ -275,7 +275,8 @@ public class LocalLibrariesUtil {
     }
 
     public static HashMap<String, Object> createLibraryMap(String name, String dependency) {
-        String basePath = resolveLibBasePath(name);
+        File libraryDir = getLocalLibraryDirectory(name);
+        String basePath = libraryDir.getAbsolutePath();
         String configPath = basePath + "/config";
         String resPath = basePath + "/res";
         String jarPath = basePath + "/classes.jar";
@@ -289,6 +290,10 @@ public class LocalLibrariesUtil {
         String resolvedDependency = resolveDependencyNotation(basePath, dependency);
         if (resolvedDependency != null) {
             localLibrary.put("dependency", resolvedDependency);
+        }
+        ArrayList<String> importPackages = LocalLibraryImportPackageIndex.readPackages(libraryDir);
+        if (!importPackages.isEmpty()) {
+            localLibrary.put("importPackages", importPackages);
         }
         if (isExistFile(configPath)) {
             localLibrary.put("packageName", readFile(configPath));
@@ -349,12 +354,12 @@ public class LocalLibrariesUtil {
         return true;
     }
 
-    private static String resolveLibBasePath(String name) {
+    public static File getLocalLibraryDirectory(String name) {
         File libraryDir = findLocalLibraryDirectory(name);
         if (libraryDir != null) {
-            return libraryDir.getAbsolutePath();
+            return libraryDir;
         }
-        return getLocalLibsPath() + name;
+        return new File(getLocalLibsPath() + name);
     }
 
     private static File findLocalLibraryDirectory(String name) {
