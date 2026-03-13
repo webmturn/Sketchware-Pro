@@ -1440,6 +1440,8 @@
     <string name="dialog_repo_error_url_required">URL 不能为空</string>
     <string name="dialog_repo_error_url_invalid">URL 必须以 http:// 或 https:// 开头</string>
     <string name="menu_clean_orphan_libs">清理孤立库</string>
+    <string name="menu_rebuild_import_indices">重建导入索引</string>
+    <string name="dialog_rebuild_indices_done">已为 %d 个库重建导入索引。</string>
     <string name="dialog_orphan_libs_title">孤立库</string>
     <string name="dialog_orphan_libs_none">未找到孤立库。</string>
     <string name="dialog_orphan_libs_body">以下库未被任何根库引用，可以安全删除：</string>

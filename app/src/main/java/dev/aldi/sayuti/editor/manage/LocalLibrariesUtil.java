@@ -292,6 +292,9 @@ public class LocalLibrariesUtil {
             localLibrary.put("dependency", resolvedDependency);
         }
         ArrayList<String> importPackages = LocalLibraryImportPackageIndex.readPackages(libraryDir);
+        if (importPackages.isEmpty() && new File(libraryDir, "classes.jar").isFile()) {
+            importPackages = LocalLibraryImportPackageIndex.rebuildPackages(libraryDir);
+        }
         if (!importPackages.isEmpty()) {
             localLibrary.put("importPackages", importPackages);
         }
