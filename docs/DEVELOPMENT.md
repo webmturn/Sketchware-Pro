@@ -1576,7 +1576,7 @@ mod/tyron/backup/
 
 ## 9.1 已修复的关键问题清单
 
-截至当前版本，已修复 **124** 个 Bug，分多批提交：
+截至当前版本，已修复 **132+** 个 Bug，分多批提交：
 
 ### 批次 1-2：51 个修复
 - **ExecutorService 泄漏**（12 处）：未关闭的线程池 → 添加 `pool.shutdown()`
@@ -1599,6 +1599,12 @@ mod/tyron/backup/
 - **资源泄漏**：`IconCreatorActivity` FileOutputStream
 - **数组越界**：`split()[index]` 模式 3 处修复
 - **暗色模式**：搜索事件输入框背景修复
+
+### 批次 5：属性面板与视图编辑器（2026-03）
+- **PropertyIndentItem**：对话框在 listener 为 null 时不关闭 → 将 `v.dismiss()` 移出 listener 判断
+- **ViewPane.findItemViewByTag**：`tag` 为 null/空时 `charAt(0)` 崩溃 → 增加空检查
+- **ViewPropertyItems**：`settings`、`bean.id`、`currentId` 空指针防护；`blockBean.parameters.get(0)` 越界防护
+- **ViewPane**：`view.getTag().toString()` 空安全（5 处）；`viewBean.id.charAt(0)` 空安全（3 处）；`map.get("key")`/`map.get("text")` 空安全
 
 ## 9.2 未修复的已知问题
 

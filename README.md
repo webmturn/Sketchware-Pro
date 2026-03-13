@@ -18,14 +18,14 @@ To build the app, you must use Gradle. It's highly recommended to use Android St
 
 | Class           | Role                                        |
 | --------------- | ------------------------------------------- |
-| `a.a.a.ProjectBuilder`      | Helper for compiling an entire project       |
-| `a.a.a.Ix`      | Responsible for generating AndroidManifest.xml |
-| `a.a.a.Jx`      | Generates source code of activities          |
-| `a.a.a.Lx`      | Generates source code of components, such as listeners, etc. |
-| `a.a.a.Ox`      | Responsible for generating XML files of layouts |
-| `a.a.a.qq`      | Registry of built-in libraries' dependencies |
-| `a.a.a.tq`      | Responsible for the compiling dialog's quizzes |
-| `a.a.a.yq`      | Organizes Sketchware projects' file paths    |
+| `pro.sketchware.core.ProjectBuilder` | Helper for compiling an entire project |
+| `pro.sketchware.core.ManifestGenerator` | Responsible for generating AndroidManifest.xml |
+| `pro.sketchware.core.ActivityCodeGenerator` | Generates source code of activities |
+| `pro.sketchware.core.ComponentCodeGenerator` | Generates source code of components, such as listeners, etc. |
+| `pro.sketchware.core.LayoutGenerator` | Responsible for generating XML files of layouts |
+| `pro.sketchware.core.BuiltInLibrary` | Registry of built-in libraries' dependencies |
+| `pro.sketchware.core.CompileQuizManager` | Responsible for the compiling dialog's quizzes |
+| `pro.sketchware.core.ProjectFilePaths` | Organizes Sketchware projects' file paths |
 
 > [!TIP]
 > You can also check the `mod` package, which contains the majority of contributors' changes.

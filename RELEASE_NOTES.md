@@ -1,3 +1,31 @@
+# Unreleased (Pending)
+
+## 🐛 Bug Fixes
+
+### Property Editor & View Pane
+- **PropertyIndentItem** — Fix dialog not closing when `valueChangeListener` is null; move `v.dismiss()` outside listener check
+- **ViewPane.findItemViewByTag** — Add null/empty check for `tag` to prevent `charAt(0)` crash
+- **ViewPropertyItems** — Add `settings != null` guard before `settings.getValue()` to prevent NPE
+- **ViewPropertyItems** — Add null/empty checks for `bean.id` and `currentId` before `charAt(0)`
+- **ViewPropertyItems** — Add `!blockBean.parameters.isEmpty()` before `parameters.get(0)` to prevent IndexOutOfBoundsException
+- **ViewPane.updateViewBeanProperties** — Replace `view.getTag().toString()` with null-safe `view.getTag() != null ? view.getTag().toString() : ""` (5 places)
+- **ViewPane** — Add null/empty checks for `viewBean.id` before `charAt(0)` (3 places in `addViewAndUpdateIndex`, `moveView`, `updateItemView`)
+- **ViewPane.getXmlString** — Add null checks for `map.get("key")` and `map.get("text")` to prevent NPE when parsing strings.xml
+
+### values-night Colors
+- Add `editor_*` and `palette_*` color definitions to `values-night/colors.xml` for dark theme support
+
+### Other Modules
+- **EventListFragment** — Fix `LinearLayoutManager(null)` → use `parent.getContext()`
+- **SoundImportFragment** — Fix `LinearLayoutManager(null)` → use `requireContext()`
+- **LogicClickListener** — Fix 4× `LinearLayoutManager(null)` → use `logicEditor`
+- **LibrarySettingsImporter** — Fix `LinearLayoutManager(null)` → use `activity`
+- **ExcludeBuiltInLibrariesActivity** — Fix `LinearLayoutManager(null)` → use `this`
+- **LibraryDownloaderDialogFragment** — Fix `LinearLayoutManager(getContext())` → use `requireContext()`; add `getActivity() != null` guards before `showAnErrorOccurredDialog` (4 places) to prevent NPE when fragment is detached
+- **LogicEditorActivity** — Fix undefined variable `ss`: use `fieldBlock` for `showAtLocation` anchor, use `viewBean` for `getClassInfo()` (pre-existing compilation errors)
+
+---
+
 # v7.0.0-beta3
 
 ## ✨ New Features
