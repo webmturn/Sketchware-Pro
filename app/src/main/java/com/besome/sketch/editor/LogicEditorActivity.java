@@ -25,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.Choreographer;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
@@ -46,6 +47,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -136,6 +138,9 @@ import pro.sketchware.utility.SvgUtils;
 @SuppressLint({"ClickableViewAccessibility", "RtlHardcoded", "SetTextI18n", "DefaultLocale"})
 public class LogicEditorActivity extends BaseAppCompatActivity implements View.OnClickListener, BlockSizeListener, View.OnTouchListener, MoreblockImporterDialog.CallBack {
 
+    /** Blocks per chunk when loading; larger = fewer frames but more jank per frame. */
+    private static final int BLOCK_LOAD_CHUNK_SIZE = 80;
+
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final int[] locationBuffer = new int[2];
     private final FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
@@ -172,7 +177,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     private final FilePathUtil fpu = new FilePathUtil();
     private EditText blockSearchField;
     private int lastSelectedPaletteId = 0;
-    private int lastSelectedPaletteColor = 0xffee7d16;
+    private int lastSelectedPaletteColor;
     private boolean isBlockSearchActive = false;
     private boolean suppressSearchTextChange = false;
     private Runnable pendingSearchRunnable;
@@ -205,12 +210,20 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         return xmlFileNames;
     }
 
-    private void loadEventBlocks() {
+    /**
+     * Loads event blocks with chunked UI updates to avoid jank when there are many blocks.
+     * @param onComplete run when loading is fully done (pane visible, dialog dismissed).
+     */
+    private void loadEventBlocks(Runnable onComplete) {
         crashlytics.log("Loading event blocks");
         ArrayList<BlockBean> eventBlocks = ProjectDataManager.getProjectDataManager(scId).getBlocks(projectFile.getJavaName(), id + "_" + eventName);
         if (eventBlocks != null) {
             if (eventBlocks.isEmpty()) {
-                runOnUiThread(() -> togglePaletteVisibility(isPaletteVisible));
+                runOnUiThread(() -> {
+                    togglePaletteVisibility(isPaletteVisible);
+                    if (onComplete != null) onComplete.run();
+                });
+                return;
             }
 
             ArrayList<BlockView> createdBlocks = new ArrayList<>();
@@ -225,62 +238,69 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 blockPane.nextBlockId = Math.max(blockPane.nextBlockId, (Integer) blockView.getTag() + 1);
             }
 
-            runOnUiThread(() -> {
-                android.util.Log.d("BlockLoad", "UI batch START blocks=" + createdBlocks.size());
-                long t0 = System.currentTimeMillis();
-                for (int idx = 0; idx < createdBlocks.size(); idx++) {
-                    BlockView blockView = createdBlocks.get(idx);
-                    blockPane.addBlockNoLayout(blockView);
-                    blockView.setOnTouchListener(this);
-                    if (idx == 0) {
-                        blockPane.getRoot().setNextBlock(blockView);
-                    }
-                }
-                blockPane.requestLayout();
-                long t1 = System.currentTimeMillis();
-                android.util.Log.d("BlockLoad", "UI addView done: " + (t1 - t0) + "ms");
-
-                for (BlockBean blockBean : eventBlocks) {
-                    BlockView block = blockIdsAndBlocks.get(Integer.valueOf(blockBean.id));
-                    if (block != null) {
-                        BlockView subStack1RootBlock;
-                        if (blockBean.subStack1 >= 0 && (subStack1RootBlock = blockIdsAndBlocks.get(blockBean.subStack1)) != null) {
-                            block.setSubstack1Block(subStack1RootBlock);
-                        }
-                        BlockView subStack2RootBlock;
-                        if (blockBean.subStack2 >= 0 && (subStack2RootBlock = blockIdsAndBlocks.get(blockBean.subStack2)) != null) {
-                            block.setSubstack2Block(subStack2RootBlock);
-                        }
-                        BlockView nextBlock;
-                        if (blockBean.nextBlock >= 0 && (nextBlock = blockIdsAndBlocks.get(blockBean.nextBlock)) != null) {
-                            block.setNextBlock(nextBlock);
-                        }
-                        for (int i = 0; i < blockBean.parameters.size() && i < block.childViews.size(); i++) {
-                            String parameter = blockBean.parameters.get(i);
-                            if (parameter != null && !parameter.isEmpty()) {
-                                if (parameter.charAt(0) == '@') {
-                                    BlockView parameterBlock = blockIdsAndBlocks.get(Integer.valueOf(parameter.substring(1)));
-                                    if (parameterBlock != null && block.childViews.get(i) instanceof BaseBlockView) {
-                                        block.replaceParameter((BaseBlockView) block.childViews.get(i), parameterBlock);
-                                    }
-                                } else if (block.childViews.get(i) instanceof FieldBlockView fieldBlock) {
-                                    fieldBlock.setArgValue(parameter);
-                                }
-                            }
-                        }
-                    }
-                }
-                long t2 = System.currentTimeMillis();
-                android.util.Log.d("BlockLoad", "UI connect done: " + (t2 - t1) + "ms");
-
-                blockPane.getRoot().layoutChain();
-                long t3 = System.currentTimeMillis();
-                android.util.Log.d("BlockLoad", "UI k() done: " + (t3 - t2) + "ms");
-                blockPane.updatePaneSize();
-                long t4 = System.currentTimeMillis();
-                android.util.Log.d("BlockLoad", "UI b() done: " + (t4 - t3) + "ms total=" + (t4 - t0) + "ms");
-            });
+            runOnUiThread(() -> scheduleChunkedBlockAdd(createdBlocks, eventBlocks, blockIdsAndBlocks, 0, onComplete));
+        } else if (onComplete != null) {
+            runOnUiThread(onComplete);
         }
+    }
+
+    private void scheduleChunkedBlockAdd(ArrayList<BlockView> createdBlocks, ArrayList<BlockBean> eventBlocks,
+                                         HashMap<Integer, BlockView> blockIdsAndBlocks, int startIdx, Runnable onComplete) {
+        int endIdx = Math.min(startIdx + BLOCK_LOAD_CHUNK_SIZE, createdBlocks.size());
+        for (int idx = startIdx; idx < endIdx; idx++) {
+            BlockView blockView = createdBlocks.get(idx);
+            blockPane.addBlockNoLayout(blockView);
+            blockView.setOnTouchListener(this);
+            if (idx == 0) {
+                blockPane.getRoot().setNextBlock(blockView);
+            }
+        }
+        blockPane.requestLayout();
+
+        if (endIdx >= createdBlocks.size()) {
+            connectBlocksAndLayout(eventBlocks, blockIdsAndBlocks, onComplete);
+        } else {
+            Choreographer.getInstance().postFrameCallback(frameTimeNanos ->
+                    scheduleChunkedBlockAdd(createdBlocks, eventBlocks, blockIdsAndBlocks, endIdx, onComplete));
+        }
+    }
+
+    private void connectBlocksAndLayout(ArrayList<BlockBean> eventBlocks, HashMap<Integer, BlockView> blockIdsAndBlocks, Runnable onComplete) {
+        for (BlockBean blockBean : eventBlocks) {
+            BlockView block = blockIdsAndBlocks.get(Integer.valueOf(blockBean.id));
+            if (block != null) {
+                BlockView subStack1RootBlock;
+                if (blockBean.subStack1 >= 0 && (subStack1RootBlock = blockIdsAndBlocks.get(blockBean.subStack1)) != null) {
+                    block.setSubstack1Block(subStack1RootBlock);
+                }
+                BlockView subStack2RootBlock;
+                if (blockBean.subStack2 >= 0 && (subStack2RootBlock = blockIdsAndBlocks.get(blockBean.subStack2)) != null) {
+                    block.setSubstack2Block(subStack2RootBlock);
+                }
+                BlockView nextBlock;
+                if (blockBean.nextBlock >= 0 && (nextBlock = blockIdsAndBlocks.get(blockBean.nextBlock)) != null) {
+                    block.setNextBlock(nextBlock);
+                }
+                for (int i = 0; i < blockBean.parameters.size() && i < block.childViews.size(); i++) {
+                    String parameter = blockBean.parameters.get(i);
+                    if (parameter != null && !parameter.isEmpty()) {
+                        if (parameter.charAt(0) == '@') {
+                            BlockView parameterBlock = blockIdsAndBlocks.get(Integer.valueOf(parameter.substring(1)));
+                            if (parameterBlock != null && block.childViews.get(i) instanceof BaseBlockView) {
+                                block.replaceParameter((BaseBlockView) block.childViews.get(i), parameterBlock);
+                            }
+                        } else if (block.childViews.get(i) instanceof FieldBlockView fieldBlock) {
+                            fieldBlock.setArgValue(parameter);
+                        }
+                    }
+                }
+            }
+        }
+        Choreographer.getInstance().postFrameCallback(frameTimeNanos -> {
+            blockPane.getRoot().layoutChain();
+            blockPane.updatePaneSize();
+            if (onComplete != null) onComplete.run();
+        });
     }
 
     private void redo() {
@@ -700,7 +720,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
     public void addListVariable(int i, String variableName) {
         ProjectDataManager.getProjectDataManager(scId).addListVariable(projectFile.getJavaName(), i, variableName);
-        onBlockSizeChanged(1, 0xffcc5b22);
+        onBlockSizeChanged(1, ContextCompat.getColor(this, R.color.palette_list));
     }
 
     public void trackDragSource(BlockView rs) {
@@ -812,17 +832,17 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         refreshOptionsMenu();
     }
 
-    public void setFieldValue(FieldBlockView ss, Object value) {
-        BlockBean clone = ss.parentBlock.getBean().clone();
-        ss.setArgValue(value);
-        ss.parentBlock.recalculateToRoot();
-        ss.parentBlock.getRootBlock().layoutChain();
-        ss.parentBlock.blockPane.updatePaneSize();
-        BlockHistoryManager.getInstance(scId).recordUpdate(buildHistoryKey(), clone, ss.parentBlock.getBean().clone());
+    public void setFieldValue(FieldBlockView fieldBlock, Object value) {
+        BlockBean clone = fieldBlock.parentBlock.getBean().clone();
+        fieldBlock.setArgValue(value);
+        fieldBlock.parentBlock.recalculateToRoot();
+        fieldBlock.parentBlock.getRootBlock().layoutChain();
+        fieldBlock.parentBlock.blockPane.updatePaneSize();
+        BlockHistoryManager.getInstance(scId).recordUpdate(buildHistoryKey(), clone, fieldBlock.parentBlock.getBean().clone());
         refreshOptionsMenu();
     }
 
-    public void pickImage(FieldBlockView ss, String propertyKey) {
+    public void pickImage(FieldBlockView fieldBlock, String propertyKey) {
         boolean selectingBackgroundImage = "property_background_resource".equals(propertyKey);
         boolean selectingImage = !selectingBackgroundImage && "property_image".equals(propertyKey);
         AtomicReference<String> selectedImage = new AtomicReference<>("");
@@ -846,7 +866,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             images.add(0, "NONE");
         }
 
-        ImagePickerAdapter adapter = new ImagePickerAdapter(images, (String) ss.getArgValue(), selectedImage::set);
+        ImagePickerAdapter adapter = new ImagePickerAdapter(images, (String) fieldBlock.getArgValue(), selectedImage::set);
         binding.recyclerView.setAdapter(adapter);
 
 
@@ -869,7 +889,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         dialog.setPositiveButton(R.string.common_word_save, (v, which) -> {
             String selectedImg = selectedImage.get();
             if (!selectedImg.isEmpty()) {
-                setFieldValue(ss, selectedImage.get());
+                setFieldValue(fieldBlock, selectedImage.get());
             }
         });
 
@@ -878,7 +898,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         dialog.show();
     }
 
-    public void showNumberOrStringInput(FieldBlockView ss, boolean isNumber) {
+    public void showNumberOrStringInput(FieldBlockView fieldBlock, boolean isNumber) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(isNumber ? R.string.logic_editor_title_enter_number_value : R.string.logic_editor_title_enter_string_value);
         View dialogView = ViewUtil.inflateLayout(this, R.layout.property_popup_input_text);
@@ -891,7 +911,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
             editText.setImeOptions(EditorInfo.IME_ACTION_NONE);
         }
-        editText.setText(ss.getArgValue().toString());
+        editText.setText(fieldBlock.getArgValue().toString());
         dialog.setView(dialogView);
         dialog.setPositiveButton(R.string.common_word_save, (v, which) -> {
             String text = Helper.getText(editText);
@@ -916,7 +936,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 text = "";
             }
 
-            setFieldValue(ss, text);
+            setFieldValue(fieldBlock, text);
             v.dismiss();
         });
         dialog.setNegativeButton(R.string.common_word_cancel, null);
@@ -946,11 +966,11 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                             String javaName = projectFile.getJavaName();
                             String xmlName = projectFile.getXmlName();
                             if (eventName.equals("onBindCustomView")) {
-                                var ProjectDataStore = ProjectDataManager.getProjectDataManager(scId);
-                                var view = ProjectDataStore.getViewBean(xmlName, id);
+                                var projectDataStore = ProjectDataManager.getProjectDataManager(scId);
+                                var view = projectDataStore.getViewBean(xmlName, id);
                                 if (view == null) {
                                     // Event is of a Drawer View
-                                    view = ProjectDataStore.getViewBean("_drawer_" + xmlName, id);
+                                    view = projectDataStore.getViewBean("_drawer_" + xmlName, id);
                                 }
                                 String customView = view.customView;
                                 if (customView != null) {
@@ -960,170 +980,170 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
                             if (!parameter.isEmpty()) {
                                 if (ss.blockType.equals("m")) {
-                                    ProjectDataStore ProjectDataStore = ProjectDataManager.getProjectDataManager(scId);
+                                    ProjectDataStore projectDataStore = ProjectDataManager.getProjectDataManager(scId);
 
                                     switch (ss.componentType) {
                                         case "varInt":
-                                            ProjectDataStore.hasVariable(javaName, ExtraMenuBean.VARIABLE_TYPE_NUMBER, parameter);
+                                            projectDataStore.hasVariable(javaName, ExtraMenuBean.VARIABLE_TYPE_NUMBER, parameter);
                                             break;
 
                                         case "varBool":
-                                            ProjectDataStore.hasVariable(javaName, ExtraMenuBean.VARIABLE_TYPE_BOOLEAN, parameter);
+                                            projectDataStore.hasVariable(javaName, ExtraMenuBean.VARIABLE_TYPE_BOOLEAN, parameter);
                                             break;
 
                                         case "varStr":
-                                            ProjectDataStore.hasVariable(javaName, ExtraMenuBean.VARIABLE_TYPE_STRING, parameter);
+                                            projectDataStore.hasVariable(javaName, ExtraMenuBean.VARIABLE_TYPE_STRING, parameter);
                                             break;
 
                                         case "listInt":
-                                            ProjectDataStore.hasListVariable(javaName, ExtraMenuBean.LIST_TYPE_NUMBER, parameter);
+                                            projectDataStore.hasListVariable(javaName, ExtraMenuBean.LIST_TYPE_NUMBER, parameter);
                                             break;
 
                                         case "listStr":
-                                            ProjectDataStore.hasListVariable(javaName, ExtraMenuBean.LIST_TYPE_STRING, parameter);
+                                            projectDataStore.hasListVariable(javaName, ExtraMenuBean.LIST_TYPE_STRING, parameter);
                                             break;
 
                                         case "listMap":
-                                            ProjectDataStore.hasListVariable(javaName, ExtraMenuBean.LIST_TYPE_MAP, parameter);
+                                            projectDataStore.hasListVariable(javaName, ExtraMenuBean.LIST_TYPE_MAP, parameter);
                                             break;
 
                                         case "list":
-                                            boolean hasListVar = ProjectDataStore.hasListVariable(javaName, ExtraMenuBean.LIST_TYPE_NUMBER, parameter);
+                                            boolean hasListVar = projectDataStore.hasListVariable(javaName, ExtraMenuBean.LIST_TYPE_NUMBER, parameter);
                                             if (!hasListVar) {
-                                                hasListVar = ProjectDataStore.hasListVariable(javaName, ExtraMenuBean.LIST_TYPE_STRING, parameter);
+                                                hasListVar = projectDataStore.hasListVariable(javaName, ExtraMenuBean.LIST_TYPE_STRING, parameter);
                                             }
 
                                             if (!hasListVar) {
-                                                ProjectDataStore.hasListVariable(javaName, ExtraMenuBean.LIST_TYPE_MAP, parameter);
+                                                projectDataStore.hasListVariable(javaName, ExtraMenuBean.LIST_TYPE_MAP, parameter);
                                             }
                                             break;
 
                                         case "view":
-                                            ProjectDataStore.hasView(xmlName, parameter);
+                                            projectDataStore.hasView(xmlName, parameter);
                                             break;
 
                                         case "textview":
-                                            ProjectDataStore.hasTextView(xmlName, parameter);
+                                            projectDataStore.hasTextView(xmlName, parameter);
                                             break;
 
                                         case "checkbox":
-                                            ProjectDataStore.hasCompoundButtonView(xmlName, parameter);
+                                            projectDataStore.hasCompoundButtonView(xmlName, parameter);
                                             break;
 
                                         case "imageview":
-                                            ProjectDataStore.hasViewOfType(xmlName, ViewBean.VIEW_TYPE_WIDGET_IMAGEVIEW, parameter);
+                                            projectDataStore.hasViewOfType(xmlName, ViewBean.VIEW_TYPE_WIDGET_IMAGEVIEW, parameter);
                                             break;
 
                                         case "seekbar":
-                                            ProjectDataStore.hasViewOfType(xmlName, ViewBean.VIEW_TYPE_WIDGET_SEEKBAR, parameter);
+                                            projectDataStore.hasViewOfType(xmlName, ViewBean.VIEW_TYPE_WIDGET_SEEKBAR, parameter);
                                             break;
 
                                         case "calendarview":
-                                            ProjectDataStore.hasViewOfType(xmlName, ViewBean.VIEW_TYPE_WIDGET_CALENDARVIEW, parameter);
+                                            projectDataStore.hasViewOfType(xmlName, ViewBean.VIEW_TYPE_WIDGET_CALENDARVIEW, parameter);
                                             break;
 
                                         case "adview":
-                                            ProjectDataStore.hasViewOfType(xmlName, ViewBean.VIEW_TYPE_WIDGET_ADVIEW, parameter);
+                                            projectDataStore.hasViewOfType(xmlName, ViewBean.VIEW_TYPE_WIDGET_ADVIEW, parameter);
                                             break;
 
                                         case "listview":
-                                            ProjectDataStore.hasViewOfType(xmlName, ViewBean.VIEW_TYPE_WIDGET_LISTVIEW, parameter);
+                                            projectDataStore.hasViewOfType(xmlName, ViewBean.VIEW_TYPE_WIDGET_LISTVIEW, parameter);
                                             break;
 
                                         case "spinner":
-                                            ProjectDataStore.hasViewOfType(xmlName, ViewBean.VIEW_TYPE_WIDGET_SPINNER, parameter);
+                                            projectDataStore.hasViewOfType(xmlName, ViewBean.VIEW_TYPE_WIDGET_SPINNER, parameter);
                                             break;
 
                                         case "webview":
-                                            ProjectDataStore.hasViewOfType(xmlName, ViewBean.VIEW_TYPE_WIDGET_WEBVIEW, parameter);
+                                            projectDataStore.hasViewOfType(xmlName, ViewBean.VIEW_TYPE_WIDGET_WEBVIEW, parameter);
                                             break;
 
                                         case "switch":
-                                            ProjectDataStore.hasViewOfType(xmlName, ViewBean.VIEW_TYPE_WIDGET_SWITCH, parameter);
+                                            projectDataStore.hasViewOfType(xmlName, ViewBean.VIEW_TYPE_WIDGET_SWITCH, parameter);
                                             break;
 
                                         case "progressbar":
-                                            ProjectDataStore.hasViewOfType(xmlName, ViewBean.VIEW_TYPE_WIDGET_PROGRESSBAR, parameter);
+                                            projectDataStore.hasViewOfType(xmlName, ViewBean.VIEW_TYPE_WIDGET_PROGRESSBAR, parameter);
                                             break;
 
                                         case "mapview":
-                                            ProjectDataStore.hasViewOfType(xmlName, ViewBean.VIEW_TYPE_WIDGET_MAPVIEW, parameter);
+                                            projectDataStore.hasViewOfType(xmlName, ViewBean.VIEW_TYPE_WIDGET_MAPVIEW, parameter);
                                             break;
 
                                         case "intent":
-                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_INTENT, parameter);
+                                            projectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_INTENT, parameter);
                                             break;
 
                                         case "file":
-                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_SHAREDPREF, parameter);
+                                            projectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_SHAREDPREF, parameter);
                                             break;
 
                                         case "calendar":
-                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_CALENDAR, parameter);
+                                            projectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_CALENDAR, parameter);
                                             break;
 
                                         case "timer":
-                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_TIMERTASK, parameter);
+                                            projectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_TIMERTASK, parameter);
                                             break;
 
                                         case "vibrator":
-                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_VIBRATOR, parameter);
+                                            projectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_VIBRATOR, parameter);
                                             break;
 
                                         case "dialog":
-                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_DIALOG, parameter);
+                                            projectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_DIALOG, parameter);
                                             break;
 
                                         case "mediaplayer":
-                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_MEDIAPLAYER, parameter);
+                                            projectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_MEDIAPLAYER, parameter);
                                             break;
 
                                         case "soundpool":
-                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_SOUNDPOOL, parameter);
+                                            projectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_SOUNDPOOL, parameter);
                                             break;
 
                                         case "objectanimator":
-                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_OBJECTANIMATOR, parameter);
+                                            projectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_OBJECTANIMATOR, parameter);
                                             break;
 
                                         case "firebase":
-                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_FIREBASE, parameter);
+                                            projectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_FIREBASE, parameter);
                                             break;
 
                                         case "firebaseauth":
-                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH, parameter);
+                                            projectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH, parameter);
                                             break;
 
                                         case "firebasestorage":
-                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_FIREBASE_STORAGE, parameter);
+                                            projectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_FIREBASE_STORAGE, parameter);
                                             break;
 
                                         case "gyroscope":
-                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_GYROSCOPE, parameter);
+                                            projectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_GYROSCOPE, parameter);
                                             break;
 
                                         case "interstitialad":
-                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_INTERSTITIAL_AD, parameter);
+                                            projectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_INTERSTITIAL_AD, parameter);
                                             break;
 
                                         case "requestnetwork":
-                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_REQUEST_NETWORK, parameter);
+                                            projectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_REQUEST_NETWORK, parameter);
                                             break;
 
                                         case "texttospeech":
-                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_TEXT_TO_SPEECH, parameter);
+                                            projectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_TEXT_TO_SPEECH, parameter);
                                             break;
 
                                         case "speechtotext":
-                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_SPEECH_TO_TEXT, parameter);
+                                            projectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_SPEECH_TO_TEXT, parameter);
                                             break;
 
                                         case "bluetoothconnect":
-                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_BLUETOOTH_CONNECT, parameter);
+                                            projectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_BLUETOOTH_CONNECT, parameter);
                                             break;
 
                                         case "locationmanager":
-                                            ProjectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_LOCATION_MANAGER, parameter);
+                                            projectDataStore.hasComponent(javaName, ComponentBean.COMPONENT_TYPE_LOCATION_MANAGER, parameter);
                                             break;
 
                                         case "resource_bg":
@@ -1155,79 +1175,79 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                                             break;
 
                                         case "videoad":
-                                            ProjectDataStore.hasComponent(xmlName, ComponentBean.COMPONENT_TYPE_REWARDED_VIDEO_AD, parameter);
+                                            projectDataStore.hasComponent(xmlName, ComponentBean.COMPONENT_TYPE_REWARDED_VIDEO_AD, parameter);
                                             break;
 
                                         case "progressdialog":
-                                            ProjectDataStore.hasComponent(xmlName, ComponentBean.COMPONENT_TYPE_PROGRESS_DIALOG, parameter);
+                                            projectDataStore.hasComponent(xmlName, ComponentBean.COMPONENT_TYPE_PROGRESS_DIALOG, parameter);
                                             break;
 
                                         case "datepickerdialog":
-                                            ProjectDataStore.hasComponent(xmlName, ComponentBean.COMPONENT_TYPE_DATE_PICKER_DIALOG, parameter);
+                                            projectDataStore.hasComponent(xmlName, ComponentBean.COMPONENT_TYPE_DATE_PICKER_DIALOG, parameter);
                                             break;
 
                                         case "timepickerdialog":
-                                            ProjectDataStore.hasComponent(xmlName, ComponentBean.COMPONENT_TYPE_TIME_PICKER_DIALOG, parameter);
+                                            projectDataStore.hasComponent(xmlName, ComponentBean.COMPONENT_TYPE_TIME_PICKER_DIALOG, parameter);
                                             break;
 
                                         case "notification":
-                                            ProjectDataStore.hasComponent(xmlName, ComponentBean.COMPONENT_TYPE_NOTIFICATION, parameter);
+                                            projectDataStore.hasComponent(xmlName, ComponentBean.COMPONENT_TYPE_NOTIFICATION, parameter);
                                             break;
 
                                         case "sqlite":
-                                            ProjectDataStore.hasComponent(xmlName, ComponentBean.COMPONENT_TYPE_SQLITE, parameter);
+                                            projectDataStore.hasComponent(xmlName, ComponentBean.COMPONENT_TYPE_SQLITE, parameter);
                                             break;
 
                                         case "radiobutton":
-                                            ProjectDataStore.hasViewOfType(xmlName, 19, parameter);
+                                            projectDataStore.hasViewOfType(xmlName, 19, parameter);
                                             break;
 
                                         case "ratingbar":
-                                            ProjectDataStore.hasViewOfType(xmlName, 20, parameter);
+                                            projectDataStore.hasViewOfType(xmlName, 20, parameter);
                                             break;
 
                                         case "videoview":
-                                            ProjectDataStore.hasViewOfType(xmlName, 21, parameter);
+                                            projectDataStore.hasViewOfType(xmlName, 21, parameter);
                                             break;
 
                                         case "searchview":
-                                            ProjectDataStore.hasViewOfType(xmlName, 22, parameter);
+                                            projectDataStore.hasViewOfType(xmlName, 22, parameter);
                                             break;
 
                                         case "actv":
-                                            ProjectDataStore.hasViewOfType(xmlName, 23, parameter);
+                                            projectDataStore.hasViewOfType(xmlName, 23, parameter);
                                             break;
 
                                         case "mactv":
-                                            ProjectDataStore.hasViewOfType(xmlName, 24, parameter);
+                                            projectDataStore.hasViewOfType(xmlName, 24, parameter);
                                             break;
 
                                         case "gridview":
-                                            ProjectDataStore.hasViewOfType(xmlName, 25, parameter);
+                                            projectDataStore.hasViewOfType(xmlName, 25, parameter);
                                             break;
 
                                         case "tablayout":
-                                            ProjectDataStore.hasViewOfType(xmlName, 30, parameter);
+                                            projectDataStore.hasViewOfType(xmlName, 30, parameter);
                                             break;
 
                                         case "viewpager":
-                                            ProjectDataStore.hasViewOfType(xmlName, 31, parameter);
+                                            projectDataStore.hasViewOfType(xmlName, 31, parameter);
                                             break;
 
                                         case "bottomnavigation":
-                                            ProjectDataStore.hasViewOfType(xmlName, 32, parameter);
+                                            projectDataStore.hasViewOfType(xmlName, 32, parameter);
                                             break;
 
                                         case "badgeview":
-                                            ProjectDataStore.hasViewOfType(xmlName, 33, parameter);
+                                            projectDataStore.hasViewOfType(xmlName, 33, parameter);
                                             break;
 
                                         case "patternview":
-                                            ProjectDataStore.hasViewOfType(xmlName, 34, parameter);
+                                            projectDataStore.hasViewOfType(xmlName, 34, parameter);
                                             break;
 
                                         case "sidebar":
-                                            ProjectDataStore.hasViewOfType(xmlName, 35, parameter);
+                                            projectDataStore.hasViewOfType(xmlName, 35, parameter);
                                             break;
 
                                         default:
@@ -1375,32 +1395,32 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
     public void addVariable(int i, String variableName) {
         ProjectDataManager.getProjectDataManager(scId).addVariable(projectFile.getJavaName(), i, variableName);
-        onBlockSizeChanged(0, 0xffee7d16);
+        onBlockSizeChanged(0, ContextCompat.getColor(this, R.color.palette_variable));
     }
 
     public void deleteBlock(BlockView rs) {
         blockPane.removeBlockTree(rs);
     }
 
-    public void showColorPicker(FieldBlockView ss) {
-        ColorPickerDialog colorPickerDialog = new ColorPickerDialog(this, (ss.getArgValue() == null || ss.getArgValue().toString().isEmpty()) ? "Color.TRANSPARENT" : ss.getArgValue().toString().replace("0xFF", "#"), true, false, scId);
+    public void showColorPicker(FieldBlockView fieldBlock) {
+        ColorPickerDialog colorPickerDialog = new ColorPickerDialog(this, (fieldBlock.getArgValue() == null || fieldBlock.getArgValue().toString().isEmpty()) ? "Color.TRANSPARENT" : fieldBlock.getArgValue().toString().replace("0xFF", "#"), true, false, scId);
         colorPickerDialog.setColorPickerCallback(new ColorPickerDialog.OnColorPickedListener() {
             @Override
             public void onColorPicked(int color) {
                 if (color == 0) {
-                    LogicEditorActivity.this.setFieldValue(ss, "Color.TRANSPARENT");
+                    LogicEditorActivity.this.setFieldValue(fieldBlock, "Color.TRANSPARENT");
                 } else {
-                    LogicEditorActivity.this.setFieldValue(ss, String.format("0x%08X", color & (Color.WHITE)));
+                    LogicEditorActivity.this.setFieldValue(fieldBlock, String.format("0x%08X", color & (Color.WHITE)));
                 }
             }
 
             @Override
             public void onResourceColorPicked(String resourceName, int color) {
-                LogicEditorActivity.this.setFieldValue(ss, "R.color." + resourceName);
+                LogicEditorActivity.this.setFieldValue(fieldBlock, "R.color." + resourceName);
             }
         });
-        colorPickerDialog.materialColorAttr((attr, attrColor) -> setFieldValue(ss, "R.attr." + attr));
-        colorPickerDialog.showAtLocation(ss, Gravity.CENTER, 0, 0);
+        colorPickerDialog.materialColorAttr((attr, attrColor) -> setFieldValue(fieldBlock, "R.attr." + attr));
+        colorPickerDialog.showAtLocation(fieldBlock, Gravity.CENTER, 0, 0);
     }
 
     public void addPaletteLabel(String label, String tag) {
@@ -1447,7 +1467,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         dialog.show();
     }
 
-    public void showStringInput(FieldBlockView ss) {
+    public void showStringInput(FieldBlockView fieldBlock) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.logic_editor_title_enter_string_value);
         View dialogView = ViewUtil.inflateLayout(this, R.layout.property_popup_input_text);
@@ -1456,10 +1476,10 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         editText.setSingleLine(true);
         editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS);
         editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
-        editText.setText(ss.getArgValue().toString());
+        editText.setText(fieldBlock.getArgValue().toString());
         dialog.setView(dialogView);
         dialog.setPositiveButton(R.string.common_word_save, (v, which) -> {
-            setFieldValue(ss, Helper.getText(editText));
+            setFieldValue(fieldBlock, Helper.getText(editText));
             v.dismiss();
         });
         dialog.setNegativeButton(R.string.common_word_cancel, null);
@@ -1468,7 +1488,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
     public void addMoreBlock(String name, String spec) {
         ProjectDataManager.getProjectDataManager(scId).addMoreBlock(projectFile.getJavaName(), name, spec);
-        onBlockSizeChanged(8, 0xff8a55d7);
+        onBlockSizeChanged(8, ContextCompat.getColor(this, R.color.palette_more_block));
     }
 
     public void setDetailActive(boolean active) {
@@ -1526,7 +1546,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         return radioButton;
     }
 
-    public void showFontPicker(FieldBlockView ss) {
+    public void showFontPicker(FieldBlockView fieldBlock) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.logic_editor_title_select_font);
 
@@ -1538,7 +1558,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         for (String fontName : fontNames) {
             RadioButton font = getFontRadioButton(fontName);
             radioGroup.addView(font);
-            if (fontName.equals(ss.getArgValue())) {
+            if (fontName.equals(fieldBlock.getArgValue())) {
                 font.setChecked(true);
             }
             LinearLayout fontPreview = getFontPreview(fontName);
@@ -1551,7 +1571,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             for (int i = 0; i < radioGroup.getChildCount(); i++) {
                 RadioButton radioButton = (RadioButton) radioGroup.getChildAt(i);
                 if (radioButton.isChecked()) {
-                    setFieldValue(ss, radioButton.getTag());
+                    setFieldValue(fieldBlock, radioButton.getTag());
                     break;
                 }
             }
@@ -1591,7 +1611,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         return checkBox;
     }
 
-    public void showIntentDataInput(FieldBlockView ss) {
+    public void showIntentDataInput(FieldBlockView fieldBlock) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.logic_editor_title_enter_data_value);
         View dialogView = ViewUtil.inflateLayout(this, R.layout.property_popup_input_intent_data);
@@ -1599,10 +1619,10 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         EditText editText = dialogView.findViewById(R.id.ed_input);
         ((TextInputLayout) dialogView.findViewById(R.id.ti_input)).setHint(Helper.getResString(R.string.property_hint_enter_value));
         editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
-        editText.setText(ss.getArgValue().toString());
+        editText.setText(fieldBlock.getArgValue().toString());
         dialog.setView(dialogView);
         dialog.setPositiveButton(R.string.common_word_save, (v, which) -> {
-            setFieldValue(ss, Helper.getText(editText));
+            setFieldValue(fieldBlock, Helper.getText(editText));
             v.dismiss();
         });
         dialog.setNegativeButton(R.string.common_word_cancel, null);
@@ -1627,7 +1647,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             objectAnimator = paletteShowAnimator;
             if (!paletteBlocksInitialized) {
                 paletteBlocksInitialized = true;
-                paletteBlock.post(() -> onBlockSizeChanged(0, 0xffee7d16));
+                paletteBlock.post(() -> onBlockSizeChanged(0, ContextCompat.getColor(this, R.color.palette_variable)));
             }
         } else {
             objectAnimator = paletteHideAnimator;
@@ -1660,17 +1680,17 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         viewLogicEditor.requestLayout();
     }
 
-    public void showViewSelector(FieldBlockView ss) {
+    public void showViewSelector(FieldBlockView fieldBlock) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         View customView = ViewUtil.inflateLayout(this, R.layout.property_popup_selector_single);
         ViewGroup viewGroup = customView.findViewById(R.id.rg_content);
         String xmlName = projectFile.getXmlName();
 
         if (eventName.equals("onBindCustomView")) {
-            var ProjectDataStore = ProjectDataManager.getProjectDataManager(scId);
-            var view = ProjectDataStore.getViewBean(xmlName, id);
+            var projectDataStore = ProjectDataManager.getProjectDataManager(scId);
+            var view = projectDataStore.getViewBean(xmlName, id);
             if (view == null) {
-                view = ProjectDataStore.getViewBean("_drawer_" + xmlName, id);
+                view = projectDataStore.getViewBean("_drawer_" + xmlName, id);
             }
             if (view != null && view.customView != null) {
                 xmlName = ProjectFileBean.getXmlName(view.customView);
@@ -1685,7 +1705,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             if (!convert.equals("include")) {
                 Set<String> toNotAdd = new LayoutGenerator(new BuildConfig(), projectFile).readAttributesToReplace(viewBean);
                 if (!toNotAdd.contains("android:id")) {
-                    String classInfo = ss.getClassInfo().getClassName();
+                    String classInfo = fieldBlock.getClassInfo().getClassName();
                     if ((classInfo.equals("CheckBox") && viewBean.getClassInfo().matchesType("CompoundButton")) || viewBean.getClassInfo().matchesType(classInfo)) {
                         viewGroup.addView(createViewRadioButton(typeName, viewBean.id));
                     }
@@ -1696,7 +1716,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
         for (int i = 0; i < viewGroup.getChildCount(); i++) {
             RadioButton radioButton = (RadioButton) viewGroup.getChildAt(i);
-            String argValue = ss.getArgValue().toString();
+            String argValue = fieldBlock.getArgValue().toString();
             if (argValue.equals(radioButton.getTag().toString())) {
                 radioButton.setChecked(true);
                 break;
@@ -1706,9 +1726,9 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         dialog.setView(customView);
         dialog.setNeutralButton(R.string.common_word_code_editor, (v, which) -> {
             AsdDialog editor = new AsdDialog(this);
-            editor.setContent(ss.getArgValue().toString());
+            editor.setContent(fieldBlock.getArgValue().toString());
             editor.show();
-            editor.setOnSaveClickListener(this, false, ss, editor);
+            editor.setOnSaveClickListener(this, false, fieldBlock, editor);
             editor.setOnCancelClickListener(editor);
             v.dismiss();
         });
@@ -1716,7 +1736,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             for (int i = 0; i < viewGroup.getChildCount(); i++) {
                 RadioButton radioButton = (RadioButton) viewGroup.getChildAt(i);
                 if (radioButton.isChecked()) {
-                    setFieldValue(ss, radioButton.getTag());
+                    setFieldValue(fieldBlock, radioButton.getTag());
                     break;
                 }
             }
@@ -1818,7 +1838,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         paletteAnimatorsInitialized = true;
     }
 
-    public void showSoundPicker(FieldBlockView ss) {
+    public void showSoundPicker(FieldBlockView fieldBlock) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.logic_editor_title_select_sound);
 
@@ -1840,7 +1860,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         for (String soundName : ProjectDataManager.getResourceManager(scId).getSoundNames()) {
             RadioButton sound = createRadioButton(soundName);
             radioGroup.addView(sound);
-            if (soundName.equals(ss.getArgValue())) {
+            if (soundName.equals(fieldBlock.getArgValue())) {
                 sound.setChecked(true);
             }
             sound.setOnClickListener(v -> soundPool.load(ProjectDataManager.getResourceManager(scId).getSoundPath(Helper.getText(sound)), 1));
@@ -1848,7 +1868,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         dialog.setView(customView);
         dialog.setPositiveButton(R.string.common_word_select, (v, which) -> {
             RadioButton checkedRadioButton = radioGroup.findViewById(radioGroup.getCheckedRadioButtonId());
-            setFieldValue(ss, Helper.getText(checkedRadioButton));
+            setFieldValue(fieldBlock, Helper.getText(checkedRadioButton));
             v.dismiss();
         });
         dialog.setNegativeButton(R.string.common_word_cancel, null);
@@ -1871,7 +1891,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         (visible ? topMenuShowAnimator : topMenuHideAnimator).start();
     }
 
-    public void showTypefaceSelector(FieldBlockView ss) {
+    public void showTypefaceSelector(FieldBlockView fieldBlock) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(R.string.logic_editor_title_select_typeface);
         View dialogView = ViewUtil.inflateLayout(this, R.layout.property_popup_selector_single);
@@ -1879,7 +1899,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         for (Pair<Integer, String> pair : SketchwareConstants.getPropertyPairs("property_text_style")) {
             RadioButton radioButton = createRadioButton(pair.second);
             radioGroup.addView(radioButton);
-            if (pair.second.equals(ss.getArgValue())) {
+            if (pair.second.equals(fieldBlock.getArgValue())) {
                 radioButton.setChecked(true);
             }
         }
@@ -1889,7 +1909,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             for (int i = 0; i < childCount; i++) {
                 RadioButton radioButton = (RadioButton) radioGroup.getChildAt(i);
                 if (radioButton.isChecked()) {
-                    setFieldValue(ss, Helper.getText(radioButton));
+                    setFieldValue(fieldBlock, Helper.getText(radioButton));
                     break;
                 }
             }
@@ -1911,7 +1931,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
     public void removeListVariable(String variableName) {
         ProjectDataManager.getProjectDataManager(scId).removeListVariable(projectFile.getJavaName(), variableName);
-        onBlockSizeChanged(1, 0xffcc5b22);
+        onBlockSizeChanged(1, ContextCompat.getColor(this, R.color.palette_list));
     }
 
     public void cancelTopMenuAnimations() {
@@ -1925,19 +1945,19 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
     public void removeVariable(String variableName) {
         ProjectDataManager.getProjectDataManager(scId).removeVariable(projectFile.getJavaName(), variableName);
-        onBlockSizeChanged(0, 0xffee7d16);
+        onBlockSizeChanged(0, ContextCompat.getColor(this, R.color.palette_variable));
     }
 
     public void renameVariable(String oldName, String newName) {
         saveBlocks();
         ProjectDataManager.getProjectDataManager(scId).renameVariable(projectFile.getJavaName(), oldName, newName);
-        onBlockSizeChanged(0, 0xffee7d16);
+        onBlockSizeChanged(0, ContextCompat.getColor(this, R.color.palette_variable));
     }
 
     public void renameListVariable(String oldName, String newName) {
         saveBlocks();
         ProjectDataManager.getProjectDataManager(scId).renameListVariable(projectFile.getJavaName(), oldName, newName);
-        onBlockSizeChanged(1, 0xffcc5b22);
+        onBlockSizeChanged(1, ContextCompat.getColor(this, R.color.palette_list));
     }
 
     public void cancelPaletteAnimations() {
@@ -1978,7 +1998,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == 224) {
-                onBlockSizeChanged(7, 0xff2ca5e2);
+                onBlockSizeChanged(7, ContextCompat.getColor(this, R.color.palette_component));
             }
         }
     }
@@ -2005,7 +2025,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     makeBlockLauncher.launch(intent);
                 } else if (tag.equals("componentAdd")) {
-                    AddComponentBottomSheet addComponentBottomSheet = AddComponentBottomSheet.newInstance(scId, projectFile, () -> onBlockSizeChanged(7, 0xff2ca5e2));
+                    AddComponentBottomSheet addComponentBottomSheet = AddComponentBottomSheet.newInstance(scId, projectFile, () -> onBlockSizeChanged(7, ContextCompat.getColor(this, R.color.palette_component)));
                     addComponentBottomSheet.show(getSupportFragmentManager(), null);
                 } else if (tag.equals("blockImport")) {
                     showMoreBlockImporter();
@@ -2031,6 +2051,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        lastSelectedPaletteColor = ContextCompat.getColor(this, R.color.palette_variable);
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -2257,12 +2278,8 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         LoadEventBlocksTask loadEventBlocksTask = new LoadEventBlocksTask(this);
         loadEventBlocksTask.execute();
         long pc5 = System.currentTimeMillis();
-        android.util.Log.d("BlockLoad", "PC taskExec: " + (pc5 - pc4) + "ms");
-
-        loadBlockCollections();
-        long pc6 = System.currentTimeMillis();
-        android.util.Log.d("BlockLoad", "PC z(): " + (pc6 - pc5) + "ms total=" + (pc6 - pc0) + "ms");
-
+        android.util.Log.d("BlockLoad", "PC taskExec: " + (pc5 - pc4) + "ms total=" + (pc5 - pc0) + "ms");
+        // loadBlockCollections() deferred to onComplete so it runs after blocks are visible
     }
 
     @Override
@@ -2293,7 +2310,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
     @Override
     public void onSelected(MoreBlockCollectionBean moreBlockCollectionBean) {
-        new MoreblockImporter(this, scId, projectFile).importMoreblock(moreBlockCollectionBean, () -> onBlockSizeChanged(8, 0xff8a55d7));
+        new MoreblockImporter(this, scId, projectFile).importMoreblock(moreBlockCollectionBean, () -> onBlockSizeChanged(8, ContextCompat.getColor(this, R.color.palette_more_block)));
     }
 
     @Override
@@ -2780,11 +2797,18 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         private void doInBackground() {
             LogicEditorActivity activity = getActivity();
             if (activity != null) {
-                activity.loadEventBlocks();
-                activity.runOnUiThread(() -> {
-                    activity.blockPane.setVisibility(View.VISIBLE);
-                    activity.dismissLoadingDialog();
-                });
+                Runnable onComplete = () -> {
+                    LogicEditorActivity a = getActivity();
+                    if (a != null) {
+                        a.blockPane.setVisibility(View.VISIBLE);
+                        a.dismissLoadingDialog();
+                        Choreographer.getInstance().postFrameCallback(ft -> {
+                            LogicEditorActivity act = getActivity();
+                            if (act != null) act.loadBlockCollections();
+                        });
+                    }
+                };
+                activity.loadEventBlocks(onComplete);
             }
         }
 
