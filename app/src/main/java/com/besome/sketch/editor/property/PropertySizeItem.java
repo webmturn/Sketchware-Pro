@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import pro.sketchware.core.FormatUtil;
 import pro.sketchware.core.PropertyChangedCallback;
 import pro.sketchware.core.UIHelper;
 import pro.sketchware.core.ViewUtil;
@@ -117,7 +118,7 @@ public class PropertySizeItem extends RelativeLayout implements View.OnClickList
         dialog.setView(view);
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_save), (v, which) -> {
             if (validator.isValid()) {
-                setValue(Integer.parseInt(Helper.getText(input)));
+                setValue(FormatUtil.safeParseInt(Helper.getText(input), value));
                 if (valueChangeListener != null) {
                     valueChangeListener.onPropertyChanged(key, value);
                 }

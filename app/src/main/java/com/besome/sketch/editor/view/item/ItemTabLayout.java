@@ -12,6 +12,8 @@ import com.besome.sketch.beans.ViewBean;
 import com.besome.sketch.editor.view.ItemView;
 import com.google.android.material.tabs.TabLayout;
 
+import mod.hey.studios.util.Helper;
+import pro.sketchware.R;
 import pro.sketchware.core.ViewUtil;
 
 public class ItemTabLayout extends TabLayout implements ItemView {
@@ -33,9 +35,9 @@ public class ItemTabLayout extends TabLayout implements ItemView {
         setDrawingCacheEnabled(true);
         setClickable(false);
         setFocusable(false);
-        addTab(newTab().setText("Tab 1"), true);
-        addTab(newTab().setText("Tab 2"));
-        addTab(newTab().setText("Tab 3"));
+        addTab(newTab().setText(Helper.getResString(R.string.editor_preview_tab1)), true);
+        addTab(newTab().setText(Helper.getResString(R.string.editor_preview_tab2)));
+        addTab(newTab().setText(Helper.getResString(R.string.editor_preview_tab3)));
     }
 
     @Override

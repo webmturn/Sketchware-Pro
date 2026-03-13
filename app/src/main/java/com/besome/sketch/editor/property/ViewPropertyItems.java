@@ -2,6 +2,7 @@ package com.besome.sketch.editor.property;
 
 
 import mod.hey.studios.util.Helper;
+import pro.sketchware.core.FormatUtil;
 import com.besome.sketch.editor.PropertyActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -27,7 +28,6 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import pro.sketchware.core.RecentHistoryManager;
-import pro.sketchware.core.ClassInfo;
 import pro.sketchware.core.ClassInfo;
 import pro.sketchware.core.PropertyChangedCallback;
 import pro.sketchware.core.ViewBeanCallback;
@@ -78,7 +78,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
 
     private void addPropertyForBean(ViewBean bean, String property) {
         boolean isNotAdview = !bean.getClassInfo().matchesType("AdView");
-        boolean isGeneratedId = bean.id.charAt(0) == '_';
+        boolean isGeneratedId = bean.id != null && !bean.id.isEmpty() && bean.id.charAt(0) == '_';
 
         switch (property) {
             case "property_id" -> {
@@ -701,7 +701,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
                     case "property_id" -> {
                         String currentId = bean.id;
                         bean.preId = currentId;
-                        if (currentId.charAt(0) != '_') {
+                        if (currentId != null && !currentId.isEmpty() && currentId.charAt(0) != '_') {
                             bean.id = inputItem.getValue();
                         }
                     }
@@ -709,25 +709,25 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
                     case "property_inject" -> bean.inject = inputItem.getValue();
                     case "property_text" -> bean.text.text = inputItem.getValue();
                     case "property_hint" -> bean.text.hint = inputItem.getValue();
-                    case "property_text_size" -> bean.text.textSize = Integer.parseInt(inputItem.getValue());
+                    case "property_text_size" -> bean.text.textSize = FormatUtil.safeParseInt(inputItem.getValue(), bean.text.textSize);
                     case "property_weight" ->
-                            bean.layout.weight = Integer.parseInt(inputItem.getValue());
+                            bean.layout.weight = FormatUtil.safeParseInt(inputItem.getValue(), bean.layout.weight);
                     case "property_weight_sum" ->
-                            bean.layout.weightSum = Integer.parseInt(inputItem.getValue());
+                            bean.layout.weightSum = FormatUtil.safeParseInt(inputItem.getValue(), bean.layout.weightSum);
                     case "property_rotate" ->
-                            bean.image.rotate = Integer.parseInt(inputItem.getValue());
-                    case "property_alpha" -> bean.alpha = Float.parseFloat(inputItem.getValue());
+                            bean.image.rotate = FormatUtil.safeParseInt(inputItem.getValue(), bean.image.rotate);
+                    case "property_alpha" -> bean.alpha = FormatUtil.safeParseFloat(inputItem.getValue(), bean.alpha);
                     case "property_translation_x" ->
-                            bean.translationX = Float.parseFloat(inputItem.getValue());
+                            bean.translationX = FormatUtil.safeParseFloat(inputItem.getValue(), bean.translationX);
                     case "property_translation_y" ->
-                            bean.translationY = Float.parseFloat(inputItem.getValue());
-                    case "property_scale_x" -> bean.scaleX = Float.parseFloat(inputItem.getValue());
-                    case "property_scale_y" -> bean.scaleY = Float.parseFloat(inputItem.getValue());
+                            bean.translationY = FormatUtil.safeParseFloat(inputItem.getValue(), bean.translationY);
+                    case "property_scale_x" -> bean.scaleX = FormatUtil.safeParseFloat(inputItem.getValue(), bean.scaleX);
+                    case "property_scale_y" -> bean.scaleY = FormatUtil.safeParseFloat(inputItem.getValue(), bean.scaleY);
                     case "property_lines" ->
-                            bean.text.line = Integer.parseInt(inputItem.getValue());
-                    case "property_max" -> bean.max = Integer.parseInt(inputItem.getValue());
+                            bean.text.line = FormatUtil.safeParseInt(inputItem.getValue(), bean.text.line);
+                    case "property_max" -> bean.max = FormatUtil.safeParseInt(inputItem.getValue(), bean.max);
                     case "property_progress" ->
-                            bean.progress = Integer.parseInt(inputItem.getValue());
+                            bean.progress = FormatUtil.safeParseInt(inputItem.getValue(), bean.progress);
                 }
             } else if (view instanceof PropertyMeasureItem measureItem) {
                 if (measureItem.getKey().equals("property_layout_width")) {
@@ -826,7 +826,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
         }
 
         if (!bean.id.equals(bean.preId)) {
-            boolean viewBinding = settings.getValue(ProjectSettings.SETTING_ENABLE_VIEWBINDING, "false").equals("true");
+            boolean viewBinding = settings != null && settings.getValue(ProjectSettings.SETTING_ENABLE_VIEWBINDING, "false").equals("true");
             for (ViewBean viewBean : ProjectDataManager.getProjectDataManager(sc_id).getViews(projectFile.getXmlName())) {
                 if (viewBean.parent.equals(bean.preId)) {
                     viewBean.parent = bean.id;
@@ -958,7 +958,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
 
                                 while (blocks.hasNext()) {
                                     for (BlockBean blockBean : blocks.next().getValue()) {
-                                        if ("listSetCustomViewData".equals(blockBean.opCode) && bean.id.equals(blockBean.parameters.get(0))) {
+                                        if ("listSetCustomViewData".equals(blockBean.opCode) && !blockBean.parameters.isEmpty() && bean.id.equals(blockBean.parameters.get(0))) {
                                             blockBean.parameters.set(0, "");
                                         }
                                     }

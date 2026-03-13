@@ -29,6 +29,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.ContextCompat;
 import androidx.appcompat.widget.AppCompatImageView;
 
 import com.besome.sketch.beans.ImageBean;
@@ -194,7 +195,7 @@ public class ViewPane extends RelativeLayout {
             if (preView != null) preView.setTag(viewBean.id);
             viewBean.preId = "";
         }
-        if (viewBean.id.charAt(0) == '_') {
+        if (viewBean.id != null && !viewBean.id.isEmpty() && viewBean.id.charAt(0) == '_') {
             findViewWithTag = findViewWithTag(viewBean.id);
         } else {
             findViewWithTag = rootLayout.findViewWithTag(viewBean.id);
@@ -205,7 +206,7 @@ public class ViewPane extends RelativeLayout {
 
     public ItemView moveView(ViewBean viewBean) {
         View findViewWithTag = rootLayout.findViewWithTag(viewBean.id);
-        if (viewBean.id.charAt(0) == '_') {
+        if (viewBean.id != null && !viewBean.id.isEmpty() && viewBean.id.charAt(0) == '_') {
             findViewWithTag = findViewWithTag(viewBean.id);
         }
         String preParent = viewBean.preParent;
@@ -637,7 +638,6 @@ public class ViewPane extends RelativeLayout {
             String listitem = injectHandler.getAttributeValueOf("listitem");
             String itemCount = injectHandler.getAttributeValueOf("itemCount");
             if (!TextUtils.isEmpty(listitem)) {
-                //lmao use simple_list_item_1 for now
                 listItem.setListItem(android.R.layout.simple_list_item_1);
             }
             crashlytics.log("ViewPane: setting item count to EditorListItem");
@@ -654,6 +654,9 @@ public class ViewPane extends RelativeLayout {
     }
 
     public ItemView findItemViewByTag(String tag) {
+        if (tag == null || tag.isEmpty()) {
+            return null;
+        }
         View findViewWithTag = null;
         if (tag.charAt(0) == '_') {
             findViewWithTag = findViewWithTag(tag);
@@ -675,14 +678,14 @@ public class ViewPane extends RelativeLayout {
                 viewBean.preIndex = viewBean.index;
                 viewBean.index = viewInfo.index();
                 viewBean.preParent = viewBean.parent;
-                viewBean.parent = view.getTag().toString();
+                viewBean.parent = view.getTag() != null ? view.getTag().toString() : "";
                 viewBean.preParentType = viewBean.parentType;
                 viewBean.parentType = ViewBean.VIEW_TYPE_LAYOUT_LINEAR;
             } else if (view instanceof ItemVerticalScrollView) {
                 viewBean.preIndex = viewBean.index;
                 viewBean.index = viewInfo.index();
                 viewBean.preParent = viewBean.parent;
-                viewBean.parent = view.getTag().toString();
+                viewBean.parent = view.getTag() != null ? view.getTag().toString() : "";
                 viewBean.preParentType = viewBean.parentType;
                 viewBean.parentType = ViewBean.VIEW_TYPE_LAYOUT_VSCROLLVIEW;
                 viewBean.layout.height = ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -690,7 +693,7 @@ public class ViewPane extends RelativeLayout {
                 viewBean.preIndex = viewBean.index;
                 viewBean.index = viewInfo.index();
                 viewBean.preParent = viewBean.parent;
-                viewBean.parent = view.getTag().toString();
+                viewBean.parent = view.getTag() != null ? view.getTag().toString() : "";
                 viewBean.preParentType = viewBean.parentType;
                 viewBean.parentType = ViewBean.VIEW_TYPE_LAYOUT_HSCROLLVIEW;
                 viewBean.layout.width = ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -698,7 +701,7 @@ public class ViewPane extends RelativeLayout {
                 viewBean.preIndex = viewBean.index;
                 viewBean.index = viewInfo.index();
                 viewBean.preParent = viewBean.parent;
-                viewBean.parent = view.getTag().toString();
+                viewBean.parent = view.getTag() != null ? view.getTag().toString() : "";
                 viewBean.preParentType = viewBean.parentType;
                 viewBean.parentType = ViewBeans.VIEW_TYPE_LAYOUT_CARDVIEW;
                 viewBean.layout.width = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -706,7 +709,7 @@ public class ViewPane extends RelativeLayout {
                 viewBean.preIndex = viewBean.index;
                 viewBean.index = viewInfo.index();
                 viewBean.preParent = viewBean.parent;
-                viewBean.parent = view.getTag().toString();
+                viewBean.parent = view.getTag() != null ? view.getTag().toString() : "";
                 viewBean.preParentType = viewBean.parentType;
                 viewBean.parentType = ViewBean.VIEW_TYPE_LAYOUT_RELATIVE;
             }
@@ -1320,8 +1323,12 @@ public class ViewPane extends RelativeLayout {
             StringsEditorManager stringsEditorManager = new StringsEditorManager();
             stringsEditorManager.convertXmlStringsToListMap(FileUtil.readFileIfExist(filePath), stringsListMap);
             for (HashMap<String, Object> map : stringsListMap) {
-                String k = stringsStart + map.get("key").toString().trim();
-                xmlStringCache.put(k, map.get("text").toString());
+                Object keyObj = map.get("key");
+                Object textObj = map.get("text");
+                if (keyObj != null && textObj != null) {
+                    String k = stringsStart + keyObj.toString().trim();
+                    xmlStringCache.put(k, textObj.toString());
+                }
             }
         }
         if (key.equals("@string/app_name") && !xmlStringCache.containsKey(key)) {
@@ -1382,8 +1389,8 @@ public class ViewPane extends RelativeLayout {
         String borderWidth = handler.getAttributeValueOf("civ_border_width");
         String borderOverlay = handler.getAttributeValueOf("civ_border_overlay");
 
-        imageView.setBorderColor(PropertiesUtil.isHexColor(borderColor) ? PropertiesUtil.parseColor(borderColor) : 0xff008dcd);
-        imageView.setCircleBackgroundColor(PropertiesUtil.isHexColor(backgroundColor) ? PropertiesUtil.parseColor(backgroundColor) : 0xff008dcd);
+        imageView.setBorderColor(PropertiesUtil.isHexColor(borderColor) ? PropertiesUtil.parseColor(borderColor) : ContextCompat.getColor(getContext(), R.color.editor_default_border));
+        imageView.setCircleBackgroundColor(PropertiesUtil.isHexColor(backgroundColor) ? PropertiesUtil.parseColor(backgroundColor) : ContextCompat.getColor(getContext(), R.color.editor_default_border));
         imageView.setBorderWidth(PropertiesUtil.resolveSize(borderWidth, 3));
         imageView.setBorderOverlay(Boolean.parseBoolean(TextUtils.isEmpty(borderOverlay) ? "false" : borderOverlay));
     }
@@ -1407,8 +1414,8 @@ public class ViewPane extends RelativeLayout {
             default -> TabLayout.MODE_FIXED;
         });
         tabLayout.setSelectedTabIndicatorHeight(PropertiesUtil.resolveSize(indicatorHeight, 3));
-        tabLayout.setSelectedTabIndicatorColor(PropertiesUtil.isHexColor(indicatorColor) ? PropertiesUtil.parseColor(indicatorColor) : 0xffffc107);
-        int tabTextColor = PropertiesUtil.isHexColor(textColor) ? PropertiesUtil.parseColor(textColor) : 0xff57beee;
+        tabLayout.setSelectedTabIndicatorColor(PropertiesUtil.isHexColor(indicatorColor) ? PropertiesUtil.parseColor(indicatorColor) : ContextCompat.getColor(getContext(), R.color.editor_tab_indicator));
+        int tabTextColor = PropertiesUtil.isHexColor(textColor) ? PropertiesUtil.parseColor(textColor) : ContextCompat.getColor(getContext(), R.color.editor_tab_text);
         int tabSelectedTextColor = PropertiesUtil.isHexColor(selectedTextColor) ? PropertiesUtil.parseColor(selectedTextColor) : Color.WHITE;
         tabLayout.setTabTextColors(tabTextColor, tabSelectedTextColor);
     }

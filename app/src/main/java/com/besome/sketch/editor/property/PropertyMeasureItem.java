@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import pro.sketchware.core.FormatUtil;
 import pro.sketchware.core.PropertyChangedCallback;
 import pro.sketchware.core.UIHelper;
 import pro.sketchware.core.SketchwareConstants;
@@ -171,7 +172,7 @@ public class PropertyMeasureItem extends RelativeLayout implements View.OnClickL
             } else if (checkedRadioButtonId == R.id.rb_wrapcontent) {
                 setValue(LayoutParams.WRAP_CONTENT);
             } else if (minMaxInputValidator.isValid()) {
-                setValue(Integer.parseInt(Helper.getText(binding.edInput)));
+                setValue(FormatUtil.safeParseInt(Helper.getText(binding.edInput), measureValue));
             } else {
                 return;
             }

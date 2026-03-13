@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import pro.sketchware.core.FormatUtil;
 import pro.sketchware.core.PropertyChangedCallback;
 import pro.sketchware.core.UIHelper;
 import pro.sketchware.core.ViewUtil;
@@ -219,26 +220,26 @@ public class PropertyIndentItem extends RelativeLayout implements View.OnClickLi
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_save), (v, which) -> {
             if (binding.chkPtyAll.isChecked()) {
                 if (ti_all.isValid() && ti_left.isValid() && ti_right.isValid() && ti_top.isValid() && ti_bottom.isValid()) {
-                    int left = Integer.parseInt(Helper.getText(binding.etLeft));
-                    int top = Integer.parseInt(Helper.getText(binding.etTop));
-                    int right = Integer.parseInt(Helper.getText(binding.etRight));
-                    int bottom = Integer.parseInt(Helper.getText(binding.etBottom));
+                    int left = FormatUtil.safeParseInt(Helper.getText(binding.etLeft), 0);
+                    int top = FormatUtil.safeParseInt(Helper.getText(binding.etTop), 0);
+                    int right = FormatUtil.safeParseInt(Helper.getText(binding.etRight), 0);
+                    int bottom = FormatUtil.safeParseInt(Helper.getText(binding.etBottom), 0);
                     setIndent(left, top, right, bottom);
                     if (valueChangeListener != null) {
                         valueChangeListener.onPropertyChanged(key, new int[]{left, top, right, bottom});
-                        v.dismiss();
                     }
+                    v.dismiss();
                 }
             } else if (ti_left.isValid() && ti_right.isValid() && ti_top.isValid() && ti_bottom.isValid()) {
-                int left = Integer.parseInt(Helper.getText(binding.etLeft));
-                int top = Integer.parseInt(Helper.getText(binding.etTop));
-                int right = Integer.parseInt(Helper.getText(binding.etRight));
-                int bottom = Integer.parseInt(Helper.getText(binding.etBottom));
+                int left = FormatUtil.safeParseInt(Helper.getText(binding.etLeft), 0);
+                int top = FormatUtil.safeParseInt(Helper.getText(binding.etTop), 0);
+                int right = FormatUtil.safeParseInt(Helper.getText(binding.etRight), 0);
+                int bottom = FormatUtil.safeParseInt(Helper.getText(binding.etBottom), 0);
                 setIndent(left, top, right, bottom);
                 if (valueChangeListener != null) {
                     valueChangeListener.onPropertyChanged(key, new int[]{left, top, right, bottom});
-                    v.dismiss();
                 }
+                v.dismiss();
             }
         });
         dialog.setNegativeButton(Helper.getResString(R.string.common_word_cancel), null);
