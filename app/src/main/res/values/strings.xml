@@ -2308,6 +2308,11 @@ Do you want to continue?"</string>
     <string name="logic_editor_category_speech_to_text">SpeechToText</string>
     <string name="logic_editor_category_bluetooth">Bluetooth</string>
     <string name="logic_editor_category_location_manager">LocationManager</string>
+    <string name="logic_editor_category_google_sign_in">Google Sign-In</string>
+    <string name="logic_editor_category_phone_auth">Phone Auth</string>
+    <string name="logic_editor_category_cloud_message">Cloud Message</string>
+    <string name="logic_editor_category_notification">Notification</string>
+    <string name="logic_editor_category_sqlite">SQLiteDatabase</string>
     <string name="logic_editor_category_progress_dialog">ProgressDialog</string>
     <string name="logic_editor_category_command_blocks">Command Blocks</string>
     <string name="logic_editor_category_permission_command_blocks">Permission Command Blocks</string>
@@ -2698,6 +2703,11 @@ Do you want to continue?"</string>
     <string name="store_released_format">Released: %s</string>
     <string name="store_screenshots">Screenshots</string>
     <string name="store_side_note">This is still a basic implementation of the projects store. We\'re actively working on improving it. Stay tuned!</string>
+    <string name="store_loading">Loading store…</string>
+    <string name="store_error">Unable to load projects. Check your connection.</string>
+    <string name="store_retry">Retry</string>
+    <string name="project_icon">Project icon</string>
+    <string name="project_options">Project options</string>
     <string name="store_size_format">Size: %s</string>
     <string name="store_verified">Verified</string>
     <string name="system_information_developer_options">Developer options</string>
@@ -3813,6 +3823,18 @@ Please try again later"</string>
     <!-- ========== Firebase ========== -->
 
     <!-- ========== GoogleMap ========== -->
+
+    <!-- ========== 编辑器预览 (Editor Preview) ========== -->
+    <string name="editor_preview_statusbar">StatusBar</string>
+    <string name="editor_preview_toolbar">Toolbar</string>
+    <string name="editor_preview_drawer">Drawer</string>
+    <string name="editor_preview_fab">FAB</string>
+    <string name="editor_preview_tab1">Tab 1</string>
+    <string name="editor_preview_tab2">Tab 2</string>
+    <string name="editor_preview_tab3">Tab 3</string>
+    <string name="editor_preview_webview">WebView</string>
+    <string name="editor_preview_spinner">Spinner</string>
+    <string name="editor_preview_mapview">MapView</string>
 
     <!-- ========== 视图管理 (View Manager) ========== -->
     <string name="view_title_edit_format">Edit %s</string>

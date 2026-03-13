@@ -1852,6 +1852,11 @@
     <string name="logic_editor_category_speech_to_text">SpeechToText</string>
     <string name="logic_editor_category_bluetooth">蓝牙</string>
     <string name="logic_editor_category_location_manager">LocationManager</string>
+    <string name="logic_editor_category_google_sign_in">Google Sign-In</string>
+    <string name="logic_editor_category_phone_auth">Phone Auth</string>
+    <string name="logic_editor_category_cloud_message">Cloud Message</string>
+    <string name="logic_editor_category_notification">通知</string>
+    <string name="logic_editor_category_sqlite">SQLiteDatabase</string>
     <string name="logic_editor_category_progress_dialog">ProgressDialog</string>
     <string name="logic_editor_category_command_blocks">命令积木块</string>
     <string name="logic_editor_category_permission_command_blocks">权限命令积木块</string>
@@ -2623,6 +2628,11 @@
     <string name="store_released_format">发布于 %s</string>
     <string name="store_screenshots">截图</string>
     <string name="store_side_note">附注</string>
+    <string name="store_loading">正在加载商店…</string>
+    <string name="store_error">无法加载项目，请检查网络连接。</string>
+    <string name="store_retry">重试</string>
+    <string name="project_icon">项目图标</string>
+    <string name="project_options">项目选项</string>
     <string name="store_size_format">大小: %s</string>
     <string name="store_verified">已验证</string>
 
@@ -2863,6 +2873,18 @@
     <!-- ========== Firebase ========== -->
 
     <!-- ========== GoogleMap ========== -->
+
+    <!-- ========== 编辑器预览 ========== -->
+    <string name="editor_preview_statusbar">状态栏</string>
+    <string name="editor_preview_toolbar">工具栏</string>
+    <string name="editor_preview_drawer">抽屉导航</string>
+    <string name="editor_preview_fab">悬浮按钮</string>
+    <string name="editor_preview_tab1">Tab 1</string>
+    <string name="editor_preview_tab2">Tab 2</string>
+    <string name="editor_preview_tab3">Tab 3</string>
+    <string name="editor_preview_webview">WebView</string>
+    <string name="editor_preview_spinner">Spinner</string>
+    <string name="editor_preview_mapview">MapView</string>
 
     <!-- ========== 视图管理 ========== -->
     <string name="view_title_edit_format">编辑 %s</string>

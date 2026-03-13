@@ -76,6 +76,19 @@
     <!--  views  -->
     <color name="cardStrokeColor">#D1D1D1</color>
 
+    <!-- editor preview -->
+    <color name="editor_statusbar_bg">#ff0084c2</color>
+    <color name="editor_toolbar_bg">#ff008dcd</color>
+    <color name="editor_default_border">#ff008dcd</color>
+    <color name="editor_tab_indicator">#ffffc107</color>
+    <color name="editor_tab_text">#ff57beee</color>
+
+    <!-- logic editor palette -->
+    <color name="palette_variable">#ffee7d16</color>
+    <color name="palette_list">#ffcc5b22</color>
+    <color name="palette_component">#ff2ca5e2</color>
+    <color name="palette_more_block">#ff8a55d7</color>
+
     <color name="view_property_background_color">#ffffff</color>
     <color name="view_property_tab_active">#ff0084c2</color>
     <color name="view_property_tab_deactive">#30008dcd</color>
