@@ -260,7 +260,7 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
         fab = parent.findViewById(R.id.fab);
         noEvents.setVisibility(View.GONE);
         noEvents.setText(R.string.event_message_no_events);
-        eventList.setLayoutManager(new LinearLayoutManager(null, RecyclerView.VERTICAL, false));
+        eventList.setLayoutManager(new LinearLayoutManager(parent.getContext(), RecyclerView.VERTICAL, false));
         eventAdapter = new EventAdapter();
         eventList.setAdapter(eventAdapter);
         fab.setOnClickListener(this);
@@ -337,9 +337,9 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
     }
 
     private void showSaveMoreBlockToCollectionsDialog(int moreBlockPosition) {
-        MaterialAlertDialogBuilder aBVar = new MaterialAlertDialogBuilder(requireActivity());
-        aBVar.setTitle(R.string.logic_more_block_favorites_save_title);
-        aBVar.setIcon(R.drawable.ic_bookmark_red_48dp);
+        MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(requireActivity());
+        dialog.setTitle(R.string.logic_more_block_favorites_save_title);
+        dialog.setIcon(R.drawable.ic_bookmark_red_48dp);
         View dialogView = ViewUtil.inflateLayout(requireContext(), R.layout.property_popup_save_to_favorite);
         ((TextView) dialogView.findViewById(R.id.tv_favorites_guide)).setText(R.string.logic_more_block_favorites_save_guide);
         EditText editText = dialogView.findViewById(R.id.ed_input);
@@ -348,19 +348,19 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
         editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
         UniqueNameValidator nameValidator = new UniqueNameValidator(requireContext(), dialogView.findViewById(R.id.ti_input), MoreBlockCollectionManager.getInstance().getMoreBlockNames());
-        aBVar.setView(dialogView);
-        aBVar.setPositiveButton(R.string.common_word_save, (v, which) -> {
+        dialog.setView(dialogView);
+        dialog.setPositiveButton(R.string.common_word_save, (v, which) -> {
             if (nameValidator.isValid()) {
                 saveMoreBlockToCollection(Helper.getText(editText), moreBlocks.get(moreBlockPosition));
                 UIHelper.hideKeyboard(requireContext(), editText);
                 v.dismiss();
             }
         });
-        aBVar.setNegativeButton(R.string.common_word_cancel, (v, which) -> {
+        dialog.setNegativeButton(R.string.common_word_cancel, (v, which) -> {
             UIHelper.hideKeyboard(requireContext(), editText);
             v.dismiss();
         });
-        aBVar.show();
+        dialog.show();
     }
 
     private void resetEvent(EventBean event) {

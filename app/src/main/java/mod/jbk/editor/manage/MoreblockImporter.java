@@ -159,18 +159,18 @@ public class MoreblockImporter {
     }
 
     private void showAutoAddDialog(MoreBlockCollectionBean moreBlock) {
-        MaterialAlertDialogBuilder aBVar = new MaterialAlertDialogBuilder(activity);
-        aBVar.setTitle(R.string.logic_more_block_title_add_variable_resource);
-        aBVar.setIcon(R.drawable.break_warning_96_red);
-        aBVar.setMessage(R.string.logic_more_block_desc_add_variable_resource);
-        aBVar.setPositiveButton(R.string.common_word_continue, (v, which) -> {
+        MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(activity);
+        dialog.setTitle(R.string.logic_more_block_title_add_variable_resource);
+        dialog.setIcon(R.drawable.break_warning_96_red);
+        dialog.setMessage(R.string.logic_more_block_desc_add_variable_resource);
+        dialog.setPositiveButton(R.string.common_word_continue, (v, which) -> {
             for (Pair<Integer, String> pair : toBeAddedVariables) {
-                ProjectDataStore ProjectDataStore = ProjectDataManager.getProjectDataManager(sc_id);
-                ProjectDataStore.addVariable(activityJavaName, pair.first, pair.second);
+                ProjectDataStore projectDataStore = ProjectDataManager.getProjectDataManager(sc_id);
+                projectDataStore.addVariable(activityJavaName, pair.first, pair.second);
             }
             for (Pair<Integer, String> pair : toBeAddedLists) {
-                ProjectDataStore ProjectDataStore = ProjectDataManager.getProjectDataManager(sc_id);
-                ProjectDataStore.addListVariable(activityJavaName, pair.first, pair.second);
+                ProjectDataStore projectDataStore = ProjectDataManager.getProjectDataManager(sc_id);
+                projectDataStore.addListVariable(activityJavaName, pair.first, pair.second);
             }
             for (ProjectResourceBean bean : toBeAddedImages) {
                 copyImageFromCollectionsToProject(bean.resName);
@@ -184,8 +184,8 @@ public class MoreblockImporter {
             createEvent(moreBlock);
             v.dismiss();
         });
-        aBVar.setNegativeButton(R.string.common_word_cancel, null);
-        aBVar.show();
+        dialog.setNegativeButton(R.string.common_word_cancel, null);
+        dialog.show();
     }
 
     private void showEditMoreBlockNameDialog(MoreBlockCollectionBean moreBlock) {
@@ -239,10 +239,10 @@ public class MoreblockImporter {
 
     private void copySoundFromCollectionsToProject(String soundName) {
         if (SoundCollectionManager.getInstance().hasResource(soundName)) {
-            ProjectResourceBean a2 = SoundCollectionManager.getInstance().getResourceByName(soundName);
+            ProjectResourceBean soundResource = SoundCollectionManager.getInstance().getResourceByName(soundName);
             try {
-                fileUtil.copyFile(SketchwarePaths.getCollectionPath() + File.separator + "sound" + File.separator + "data" + File.separator + a2.resFullName, SketchwarePaths.getSoundsPath() + File.separator + sc_id + File.separator + a2.resFullName);
-                ProjectDataManager.getResourceManager(sc_id).sounds.add(a2);
+                fileUtil.copyFile(SketchwarePaths.getCollectionPath() + File.separator + "sound" + File.separator + "data" + File.separator + soundResource.resFullName, SketchwarePaths.getSoundsPath() + File.separator + sc_id + File.separator + soundResource.resFullName);
+                ProjectDataManager.getResourceManager(sc_id).sounds.add(soundResource);
             } catch (Exception e) {
                 Log.e("MoreblockImporter", e.getMessage(), e);
             }

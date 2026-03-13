@@ -37,19 +37,19 @@ public class ShowWidgetCollectionActivity extends BaseAppCompatActivity implemen
     private ManageCollectionShowWidgetBinding binding;
 
     private ItemView loadViews(ArrayList<ViewBean> views) {
-        ItemView syVar = null;
+        ItemView selectedItemView = null;
         for (ViewBean view : views) {
             if (views.indexOf(view) == 0) {
                 view.parent = "root";
                 view.parentType = 0;
                 view.preParent = null;
                 view.preParentType = -1;
-                syVar = loadView(view);
+                selectedItemView = loadView(view);
             } else {
                 loadView(view);
             }
         }
-        return syVar;
+        return selectedItemView;
     }
 
     private void setActionContainerHeight() {

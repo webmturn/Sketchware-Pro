@@ -112,11 +112,11 @@ public class ExtraPaletteBlock {
             }
         }
         if (eventName.equals("onBindCustomView")) {
-            var ProjectDataStore = ProjectDataManager.getProjectDataManager(sc_id);
-            var view = ProjectDataStore.getViewBean(xmlName, logicEditor.id);
+            var projectDataStore = ProjectDataManager.getProjectDataManager(sc_id);
+            var view = projectDataStore.getViewBean(xmlName, logicEditor.id);
             if (view == null) {
                 // in case the View's in a Drawer
-                view = ProjectDataStore.getViewBean("_drawer_" + xmlName, logicEditor.id);
+                view = projectDataStore.getViewBean("_drawer_" + xmlName, logicEditor.id);
             }
             if (view == null) {
                 mapSave.put(widgetType, false);
@@ -283,11 +283,11 @@ public class ExtraPaletteBlock {
     private void blockCustomViews() {
         if (eventName.equals("onBindCustomView")) {
             String viewId = logicEditor.id;
-            var ProjectDataStore = ProjectDataManager.getProjectDataManager(sc_id);
-            ViewBean viewBean = ProjectDataStore.getViewBean(xmlName, viewId);
+            var projectDataStore = ProjectDataManager.getProjectDataManager(sc_id);
+            ViewBean viewBean = projectDataStore.getViewBean(xmlName, viewId);
             if (viewBean == null) {
                 // Event is of a Drawer View
-                viewBean = ProjectDataStore.getViewBean("_drawer_" + xmlName, viewId);
+                viewBean = projectDataStore.getViewBean("_drawer_" + xmlName, viewId);
             }
             if (viewBean == null) return;
             String viewBeanCustomView = viewBean.customView;
@@ -1221,25 +1221,25 @@ public class ExtraPaletteBlock {
                     logicEditor.createPaletteBlock(" ", "locationManagerRemoveUpdates");
                 }
                 if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH_GOOGLE_LOGIN)) {
-                    logicEditor.addPaletteCategory("Google Sign-In", getTitleBgColor());
+                    logicEditor.addPaletteCategory(Helper.getResString(R.string.logic_editor_category_google_sign_in), getTitleBgColor());
                     logicEditor.createPaletteBlock(" ", "googleSignInInit");
                     logicEditor.createPaletteBlock(" ", "googleSignInLaunch");
                     logicEditor.createPaletteBlock(" ", "googleSignOut");
                 }
                 if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH_PHONE)) {
-                    logicEditor.addPaletteCategory("Phone Auth", getTitleBgColor());
+                    logicEditor.addPaletteCategory(Helper.getResString(R.string.logic_editor_category_phone_auth), getTitleBgColor());
                     logicEditor.createPaletteBlock(" ", "phoneAuthSendCode");
                     logicEditor.createPaletteBlock(" ", "phoneAuthResendCode");
                     logicEditor.createPaletteBlock(" ", "phoneAuthSignIn");
                 }
                 if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_FIREBASE_CLOUD_MESSAGE)) {
-                    logicEditor.addPaletteCategory("Cloud Message", getTitleBgColor());
+                    logicEditor.addPaletteCategory(Helper.getResString(R.string.logic_editor_category_cloud_message), getTitleBgColor());
                     logicEditor.createPaletteBlock(" ", "fcmGetToken");
                     logicEditor.createPaletteBlock(" ", "fcmSubscribeTopic");
                     logicEditor.createPaletteBlock(" ", "fcmUnsubscribeTopic");
                 }
                 if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_NOTIFICATION)) {
-                    logicEditor.addPaletteCategory("Notification", getTitleBgColor());
+                    logicEditor.addPaletteCategory(Helper.getResString(R.string.logic_editor_category_notification), getTitleBgColor());
                     logicEditor.createPaletteBlock(" ", "notifCreateChannel");
                     logicEditor.createPaletteBlock(" ", "notifSetChannel");
                     logicEditor.createPaletteBlock(" ", "notifSetTitle");
@@ -1252,7 +1252,7 @@ public class ExtraPaletteBlock {
                     logicEditor.createPaletteBlock(" ", "notifCancel");
                 }
                 if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_SQLITE)) {
-                    logicEditor.addPaletteCategory("SQLiteDatabase", getTitleBgColor());
+                    logicEditor.addPaletteCategory(Helper.getResString(R.string.logic_editor_category_sqlite), getTitleBgColor());
                     logicEditor.createPaletteBlock(" ", "sqliteOpen");
                     logicEditor.createPaletteBlock(" ", "sqliteClose");
                     logicEditor.createPaletteBlock(" ", "sqliteExecSQL");

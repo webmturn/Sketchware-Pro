@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import androidx.annotation.StringRes;
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.ContextCompat;
 
 import mod.hey.studios.util.Helper;
 import com.besome.sketch.beans.ProjectFileBean;
@@ -464,12 +465,12 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
         draggingListener = dragListener;
     }
 
-    public void setOnHistoryChangeListener(SimpleCallback ayVar) {
-        historyChangeListener = ayVar;
+    public void setOnHistoryChangeListener(SimpleCallback listener) {
+        historyChangeListener = listener;
     }
 
-    public void setOnWidgetSelectedListener(BuildCallback cyVar) {
-        widgetSelectedListener = cyVar;
+    public void setOnWidgetSelectedListener(BuildCallback listener) {
+        widgetSelectedListener = listener;
     }
 
     public void setPaletteLayoutVisible(int i) {
@@ -513,7 +514,7 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
         shape.addView(screenContainer);
 
         bgStatus = new LinearLayout(context);
-        bgStatus.setBackgroundColor(0xff0084c2);
+        bgStatus.setBackgroundColor(ContextCompat.getColor(context, R.color.editor_statusbar_bg));
         bgStatus.setOrientation(LinearLayout.HORIZONTAL);
         bgStatus.setGravity(Gravity.CENTER_VERTICAL);
         bgStatus.setLayoutParams(new FrameLayout.LayoutParams(displayWidth, (int) (dip * 25f)));
@@ -535,7 +536,7 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
         shape.addView(bgStatus);
 
         toolbar = new LinearLayout(context);
-        toolbar.setBackgroundColor(0xff008dcd);
+        toolbar.setBackgroundColor(ContextCompat.getColor(context, R.color.editor_toolbar_bg));
         toolbar.setOrientation(LinearLayout.HORIZONTAL);
         toolbar.setGravity(Gravity.CENTER_VERTICAL);
         toolbar.setLayoutParams(new FrameLayout.LayoutParams(displayWidth, (int) (dip * 48f)));
@@ -547,7 +548,7 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
         tvToolbar.setPadding((int) (dip * 16f), 0, 0, 0);
         tvToolbar.setGravity(Gravity.CENTER_VERTICAL);
         tvToolbar.setTextSize(15f);
-        tvToolbar.setText("Toolbar");
+        tvToolbar.setText(Helper.getResString(R.string.editor_preview_toolbar));
         tvToolbar.setTypeface(null, Typeface.BOLD);
         toolbar.addView(tvToolbar);
         shape.addView(toolbar);
@@ -841,13 +842,13 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
     }
 
     public void updateSelection(String tag) {
-        ItemView syVar;
+        ItemView previousSelected;
         ItemView itemView = viewPane.findItemViewByTag(tag);
-        if (itemView == null || (syVar = selectedItem) == itemView) {
+        if (itemView == null || (previousSelected = selectedItem) == itemView) {
             return;
         }
-        if (syVar != null) {
-            syVar.setSelection(false);
+        if (previousSelected != null) {
+            previousSelected.setSelection(false);
         }
         itemView.setSelection(true);
         selectedItem = itemView;
@@ -926,8 +927,8 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
         isLayoutChanged = false;
     }
 
-    public void addWidgetLayout(PaletteWidget.LayoutType aVar, String layoutName) {
-        View widget = paletteWidget.addLayout(aVar, layoutName);
+    public void addWidgetLayout(PaletteWidget.LayoutType layoutType, String layoutName) {
+        View widget = paletteWidget.addLayout(layoutType, layoutName);
         widget.setClickable(true);
         widget.setOnTouchListener(this);
     }
@@ -938,8 +939,8 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
         extraWidgetLayout.setOnTouchListener(this);
     }
 
-    public void addWidget(PaletteWidget.WidgetType bVar, String tag, String text, String resourceName) {
-        View widget = paletteWidget.addWidget(bVar, tag, text, resourceName);
+    public void addWidget(PaletteWidget.WidgetType widgetType, String tag, String text, String resourceName) {
+        View widget = paletteWidget.addWidget(widgetType, tag, text, resourceName);
         widget.setClickable(true);
         widget.setOnTouchListener(this);
     }
@@ -998,17 +999,17 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
                 historyChangeListener.onCallback();
             }
         }
-        ItemView syVar = null;
+        ItemView firstItemView = null;
         boolean isFirst = true;
         for (ViewBean view : viewBeans) {
             if (isFirst) {
-                syVar = createAndAddView(view);
+                firstItemView = createAndAddView(view);
                 isFirst = false;
             } else {
                 createAndAddView(view);
             }
         }
-        return syVar;
+        return firstItemView;
     }
 
     public ItemView addView(ViewBean viewBean, boolean isInHistory) {
@@ -1034,12 +1035,12 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
         viewPane.addFab(viewBean).setOnTouchListener(this);
     }
 
-    public void setSelectedItem(ItemView syVar, boolean showProperties) {
-        if (syVar == null) return;
+    public void setSelectedItem(ItemView itemView, boolean showProperties) {
+        if (itemView == null) return;
         if (selectedItem != null) {
             selectedItem.setSelection(false);
         }
-        selectedItem = syVar;
+        selectedItem = itemView;
         selectedItem.setSelection(true);
         if (widgetSelectedListener != null) {
             widgetSelectedListener.onViewSelectedWithProperty(showProperties, selectedItem.getBean().id);
