@@ -82,3 +82,15 @@ jar_list.txt
 
 # Test scripts and project data
 scripts/
+
+# Gradle user home (custom GRADLE_USER_HOME inside project)
+.gradle-user-home/
+
+# Codex AI temp files
+.codex-temp/
+
+# Temporary Java files
+tmp_*.java
+
+# Cursor IDE
+.cursor/
