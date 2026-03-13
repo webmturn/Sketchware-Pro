@@ -87,7 +87,7 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
 
         dependencyAdapter = new DependencyDownloadAdapter();
         binding.dependenciesRecyclerView.setAdapter(dependencyAdapter);
-        binding.dependenciesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.dependenciesRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         downloadExecutor = Executors.newSingleThreadExecutor();
 
@@ -218,7 +218,8 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
                     public void onArtifactNotFound(@NonNull Artifact dep) {
                         handler.post(() -> {
                             setDownloadState(false);
-                            SketchwareUtil.showAnErrorOccurredDialog(getActivity(), "Dependency '" + dep + "' not found");
+                            var activity = getActivity();
+                            if (activity != null) SketchwareUtil.showAnErrorOccurredDialog(activity, "Dependency '" + dep + "' not found");
                         });
                     }
 
@@ -296,7 +297,8 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
                             if (isStoragePermissionError(e)) {
                                 showStorageAccessError();
                             } else {
-                                SketchwareUtil.showAnErrorOccurredDialog(getActivity(),
+                                var activity = getActivity();
+                                if (activity != null) SketchwareUtil.showAnErrorOccurredDialog(activity,
                                         "Downloading dependency '" + dep + "' failed: " + Log.getStackTraceString(e));
                             }
                         });
@@ -326,7 +328,8 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
                             item.setError(Helper.getResString(R.string.error_dexing_failed_format, e.getMessage()));
                             dependencyAdapter.updateDependency(item);
                             setDownloadState(false);
-                            SketchwareUtil.showAnErrorOccurredDialog(getActivity(),
+                            var activity = getActivity();
+                            if (activity != null) SketchwareUtil.showAnErrorOccurredDialog(activity,
                                     "Dexing dependency '" + dependency + "' failed: " + Log.getStackTraceString(e));
                         });
                     }
@@ -349,7 +352,8 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
             } catch (Throwable e) {
                 handler.post(() -> {
                     setDownloadState(false);
-                    SketchwareUtil.showAnErrorOccurredDialog(getActivity(),
+                    var activity = getActivity();
+                    if (activity != null) SketchwareUtil.showAnErrorOccurredDialog(activity,
                             "Failed to resolve dependency '" + dependencyName + "': " + e.getMessage());
                 });
             }

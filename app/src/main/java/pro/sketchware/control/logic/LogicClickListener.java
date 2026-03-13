@@ -178,7 +178,7 @@ public class LogicClickListener implements View.OnClickListener {
         int horizontalPadding = SketchwareUtil.dpToPx(20f);
         RecyclerView recyclerView = new RecyclerView(logicEditor);
         recyclerView.setPadding(horizontalPadding, SketchwareUtil.dpToPx(8f), horizontalPadding, 0);
-        recyclerView.setLayoutManager(new LinearLayoutManager(null));
+        recyclerView.setLayoutManager(new LinearLayoutManager(logicEditor));
 
         List<Item> data = new LinkedList<>();
         RemoveAdapter adapter = new RemoveAdapter(logicEditor, data,
@@ -281,7 +281,7 @@ public class LogicClickListener implements View.OnClickListener {
         int horizontalPadding = dpToPx(20);
         RecyclerView recyclerView = new RecyclerView(logicEditor);
         recyclerView.setPadding(horizontalPadding, dpToPx(8), horizontalPadding, 0);
-        recyclerView.setLayoutManager(new LinearLayoutManager(null));
+        recyclerView.setLayoutManager(new LinearLayoutManager(logicEditor));
 
         List<Item> data = new LinkedList<>();
         List<Pair<List<Integer>, String>> variableTypes = List.of(
@@ -323,7 +323,7 @@ public class LogicClickListener implements View.OnClickListener {
         int horizontalPadding = dpToPx(20);
         RecyclerView recyclerView = new RecyclerView(logicEditor);
         recyclerView.setPadding(horizontalPadding, dpToPx(8), horizontalPadding, 0);
-        recyclerView.setLayoutManager(new LinearLayoutManager(null));
+        recyclerView.setLayoutManager(new LinearLayoutManager(logicEditor));
 
         List<Item> data = new LinkedList<>();
         List<Pair<Integer, String>> listTypes = List.of(
@@ -407,7 +407,7 @@ public class LogicClickListener implements View.OnClickListener {
         int horizontalPadding = SketchwareUtil.dpToPx(20f);
         RecyclerView recyclerView = new RecyclerView(logicEditor);
         recyclerView.setPadding(horizontalPadding, SketchwareUtil.dpToPx(8f), horizontalPadding, 0);
-        recyclerView.setLayoutManager(new LinearLayoutManager(null));
+        recyclerView.setLayoutManager(new LinearLayoutManager(logicEditor));
 
         List<Item> data = new LinkedList<>();
         RemoveAdapter adapter = new RemoveAdapter(logicEditor, data,

@@ -113,6 +113,24 @@ public class FormatUtil {
       return false;
     } 
   }
+
+  public static int safeParseInt(String value, int defaultValue) {
+    if (value == null || value.isEmpty()) return defaultValue;
+    try {
+      return Integer.parseInt(value.trim());
+    } catch (NumberFormatException e) {
+      return defaultValue;
+    }
+  }
+
+  public static float safeParseFloat(String value, float defaultValue) {
+    if (value == null || value.isEmpty()) return defaultValue;
+    try {
+      return Float.parseFloat(value.trim());
+    } catch (NumberFormatException e) {
+      return defaultValue;
+    }
+  }
   
   public static String formatWithCommas(int index) {
     return (new DecimalFormat("#,###")).format(index);

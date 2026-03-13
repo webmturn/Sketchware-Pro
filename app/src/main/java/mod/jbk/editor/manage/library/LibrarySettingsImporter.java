@@ -65,7 +65,7 @@ public class LibrarySettingsImporter {
         LinearLayout root = (LinearLayout) ViewUtil.inflateLayout(activity, R.layout.manage_library_popup_project_selector);
         LottieAnimationView animationView = root.findViewById(R.id.animation_view);
         RecyclerView recyclerView = root.findViewById(R.id.list);
-        recyclerView.setLayoutManager(new LinearLayoutManager(null));
+        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         new Thread(() -> {
             try {

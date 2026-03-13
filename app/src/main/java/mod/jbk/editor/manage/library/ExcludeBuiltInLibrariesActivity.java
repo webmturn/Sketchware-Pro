@@ -311,7 +311,7 @@ public class ExcludeBuiltInLibrariesActivity extends BaseAppCompatActivity {
         typedArray.recycle();
         binding.recyclerView.setVerticalScrollBarEnabled(true);
 
-        binding.recyclerView.setLayoutManager(new LinearLayoutManager(null));
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         BuiltInLibraryAdapter adapter = new BuiltInLibraryAdapter(excludedLibraries);
         adapter.setHasStableIds(true);
         binding.recyclerView.setAdapter(adapter);

@@ -84,7 +84,7 @@ public class SoundImportFragment extends BaseFragment {
         actBinding = ((ManageSoundActivity) requireActivity()).binding;
         binding = FrManageSoundListBinding.inflate(inflater, container, false);
 
-        binding.soundList.setLayoutManager(new LinearLayoutManager(null, LinearLayoutManager.VERTICAL, false));
+        binding.soundList.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
         adapter = new Adapter();
         binding.soundList.setAdapter(adapter);
         binding.tvGuide.setText(R.string.design_manager_sound_description_guide_add_sound);
