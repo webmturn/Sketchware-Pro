@@ -28,7 +28,7 @@ public class ManageLocalLibrary {
 
     public ManageLocalLibrary(String sc_id) {
         projectId = sc_id;
-        String localLibraryConfigPath = new FilePathUtil().getPathLocalLibrary(projectId);
+        String localLibraryConfigPath = FilePathUtil.getPathLocalLibrary(projectId);
         if (FileUtil.isExistFile(localLibraryConfigPath)) {
             try {
                 list = new Gson().fromJson(FileUtil.readFile(localLibraryConfigPath), Helper.TYPE_MAP_LIST);
@@ -203,7 +203,9 @@ public class ManageLocalLibrary {
 
         for (String localLibraryDexPath : getDexLocalLibrary()) {
             File localLibraryDexFile = new File(localLibraryDexPath);
-            File jniFolder = new File(localLibraryDexFile.getParentFile(), "jni");
+            File parentDir = localLibraryDexFile.getParentFile();
+            if (parentDir == null) continue;
+            File jniFolder = new File(parentDir, "jni");
             if (jniFolder.isDirectory()) {
                 nativeLibraryDirectories.add(jniFolder.getAbsolutePath());
             }
