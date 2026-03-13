@@ -32,7 +32,7 @@
                 android:id="@+id/img_icon"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:contentDescription="@null"
+                android:contentDescription="@string/project_icon"
                 android:foreground="@drawable/shadow_gradient_bottom_top"
                 android:scaleType="centerCrop"
                 android:src="@drawable/sketch_app_icon" />
@@ -96,9 +96,10 @@
 
     <ImageView
         android:id="@+id/expand"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_width="@dimen/mtrl_min_touch_target_size"
+        android:layout_height="@dimen/mtrl_min_touch_target_size"
         android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/project_options"
         android:scaleType="centerInside"
         android:src="@drawable/selector_ic_expand_more_24"
         app:tint="?attr/colorControlNormal" />

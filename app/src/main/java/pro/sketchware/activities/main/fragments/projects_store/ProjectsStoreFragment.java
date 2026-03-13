@@ -23,9 +23,13 @@ import pro.sketchware.activities.main.fragments.projects_store.classes.CenterZoo
 import pro.sketchware.databinding.FragmentProjectsStoreBinding;
 import pro.sketchware.utility.UI;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class ProjectsStoreFragment extends Fragment {
     private FragmentProjectsStoreBinding binding;
     private SketchubAPI sketchubAPI;
+    private final AtomicInteger pendingRequests = new AtomicInteger(0);
+    private final AtomicInteger failedRequests = new AtomicInteger(0);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,8 +52,11 @@ public class ProjectsStoreFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         setupRecyclerView(binding.editorsChoiceProjectsRecyclerView);
+        binding.storeRetryButton.setOnClickListener(v -> fetchData());
         fetchData();
 
+        UI.addSystemWindowInsetToPadding(binding.storeLoadingContainer, true, false, true, true);
+        UI.addSystemWindowInsetToPadding(binding.storeErrorContainer, true, false, true, true);
         UI.addSystemWindowInsetToPadding(binding.textEditorsChoice, true, false, true, false);
         UI.addSystemWindowInsetToPadding(binding.editorsChoiceProjectsRecyclerView, true, false, true, false);
         UI.addSystemWindowInsetToPadding(binding.textRecent, true, false, true, false);
@@ -85,20 +92,79 @@ public class ProjectsStoreFragment extends Fragment {
     }
 
     private void fetchData() {
+        if (binding == null) return;
+        binding.storeLoadingContainer.setVisibility(View.VISIBLE);
+        binding.storeErrorContainer.setVisibility(View.GONE);
+        binding.storeContent.setVisibility(View.GONE);
+
+        pendingRequests.set(3);
+        failedRequests.set(0);
         var activity = getActivity();
+
         sketchubAPI.getEditorsChoicerProjects(1, projectModel -> {
-            if (projectModel != null) {
-                binding.editorsChoiceProjectsRecyclerView.setAdapter(new StorePagerProjectsAdapter(projectModel.getProjects(), activity));
+            if (projectModel != null && activity != null) {
+                activity.runOnUiThread(() -> {
+                    if (binding != null) {
+                        binding.editorsChoiceProjectsRecyclerView.setAdapter(new StorePagerProjectsAdapter(projectModel.getProjects(), activity));
+                    }
+                });
+            } else {
+                failedRequests.incrementAndGet();
+            }
+            if (pendingRequests.decrementAndGet() == 0 && activity != null && !activity.isFinishing()) {
+                activity.runOnUiThread(() -> {
+                    if (binding == null) return;
+                    binding.storeLoadingContainer.setVisibility(View.GONE);
+                    if (failedRequests.get() >= 3) {
+                        binding.storeErrorContainer.setVisibility(View.VISIBLE);
+                    } else {
+                        binding.storeContent.setVisibility(View.VISIBLE);
+                    }
+                });
             }
         });
         sketchubAPI.getMostDownloadedProjects(1, projectModel -> {
-            if (projectModel != null) {
-                binding.mostDownloadedProjectsRecyclerView.setAdapter(new StoreProjectsAdapter(projectModel.getProjects(), activity));
+            if (projectModel != null && activity != null) {
+                activity.runOnUiThread(() -> {
+                    if (binding != null) {
+                        binding.mostDownloadedProjectsRecyclerView.setAdapter(new StoreProjectsAdapter(projectModel.getProjects(), activity));
+                    }
+                });
+            } else {
+                failedRequests.incrementAndGet();
+            }
+            if (pendingRequests.decrementAndGet() == 0 && activity != null && !activity.isFinishing()) {
+                activity.runOnUiThread(() -> {
+                    if (binding == null) return;
+                    binding.storeLoadingContainer.setVisibility(View.GONE);
+                    if (failedRequests.get() >= 3) {
+                        binding.storeErrorContainer.setVisibility(View.VISIBLE);
+                    } else {
+                        binding.storeContent.setVisibility(View.VISIBLE);
+                    }
+                });
             }
         });
         sketchubAPI.getRecentProjects(1, projectModel -> {
-            if (projectModel != null) {
-                binding.recentProjectsRecyclerView.setAdapter(new StoreProjectsAdapter(projectModel.getProjects(), activity));
+            if (projectModel != null && activity != null) {
+                activity.runOnUiThread(() -> {
+                    if (binding != null) {
+                        binding.recentProjectsRecyclerView.setAdapter(new StoreProjectsAdapter(projectModel.getProjects(), activity));
+                    }
+                });
+            } else {
+                failedRequests.incrementAndGet();
+            }
+            if (pendingRequests.decrementAndGet() == 0 && activity != null && !activity.isFinishing()) {
+                activity.runOnUiThread(() -> {
+                    if (binding == null) return;
+                    binding.storeLoadingContainer.setVisibility(View.GONE);
+                    if (failedRequests.get() >= 3) {
+                        binding.storeErrorContainer.setVisibility(View.VISIBLE);
+                    } else {
+                        binding.storeContent.setVisibility(View.VISIBLE);
+                    }
+                });
             }
         });
     }

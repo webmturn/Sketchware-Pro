@@ -43,6 +43,7 @@
                 android:layout_width="@dimen/mtrl_min_touch_target_size"
                 android:layout_height="@dimen/mtrl_min_touch_target_size"
                 android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/sort_projects"
                 android:scaleType="centerInside"
                 app:srcCompat="@drawable/ic_mtrl_sort" />
         </LinearLayout>
