@@ -116,6 +116,9 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
             } else if (item.getItemId() == R.id.action_clean_orphans) {
                 showOrphanCleanupDialog();
                 return true;
+            } else if (item.getItemId() == R.id.action_rebuild_import_indices) {
+                rebuildAllImportIndices();
+                return true;
             }
             return false;
         });
@@ -362,6 +365,27 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
                 })
                 .setNegativeButton(R.string.common_word_cancel, null)
                 .show();
+    }
+
+    private void rebuildAllImportIndices() {
+        showLoadingDialog();
+        executorService.execute(() -> {
+            List<LocalLibrary> libraries = adapter.getLocalLibraries();
+            int rebuilt = 0;
+            for (LocalLibrary lib : libraries) {
+                File dir = LocalLibrariesUtil.getLocalLibraryDirectory(lib.getName());
+                if (new File(dir, "classes.jar").isFile()) {
+                    LocalLibraryImportPackageIndex.rebuildPackages(dir);
+                    rebuilt++;
+                }
+            }
+            int count = rebuilt;
+            runOnUiThread(() -> {
+                dismissLoadingDialog();
+                SketchwareUtil.toast(String.format(
+                        Helper.getResString(R.string.dialog_rebuild_indices_done), count));
+            });
+        });
     }
 
     /** Opens a new screen listing the sub-dependencies of a root library. */

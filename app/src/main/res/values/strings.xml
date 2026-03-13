@@ -1681,6 +1681,8 @@ Please click on Settings to allow permission for Storage. Without this permissio
     <string name="dialog_repo_error_url_required">URL is required</string>
     <string name="dialog_repo_error_url_invalid">URL must start with http:// or https://</string>
     <string name="menu_clean_orphan_libs">Clean up orphaned libraries</string>
+    <string name="menu_rebuild_import_indices">Rebuild import indices</string>
+    <string name="dialog_rebuild_indices_done">Rebuilt import indices for %d libraries.</string>
     <string name="dialog_orphan_libs_title">Orphaned Libraries</string>
     <string name="dialog_orphan_libs_none">No orphaned libraries found.</string>
     <string name="dialog_orphan_libs_body">The following libraries are not referenced by any root library. They may be safe to delete:</string>
