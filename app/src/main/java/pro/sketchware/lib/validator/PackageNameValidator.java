@@ -27,7 +27,6 @@ public class PackageNameValidator extends BaseValidator {
             if (customErrorResId == 0) {
                 textInputLayout.setError(Helper.getResString(R.string.invalid_value_max_lenth, 50));
             } else {
-                //what ???
                 textInputLayout.setError(context.getString(customErrorResId, 50));
             }
             valid = false;

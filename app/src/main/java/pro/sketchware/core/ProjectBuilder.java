@@ -1160,7 +1160,7 @@ public class ProjectBuilder {
             args.add(rule);
         }
 
-        /* Include compiled Java classes (?) IT SAYS -in*jar*s, so why include .class es? */
+        /* ProGuard -injars accepts both JAR files and directories of .class files */
         args.add("-injars");
         args.add(projectFilePaths.compiledClassesPath);
 
