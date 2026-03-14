@@ -6,9 +6,9 @@ import java.util.Map;
 import mod.agus.jcoderz.editor.event.ManageEvent;
 
 /**
- * Registry-based replacement for the giant switch in
+ * Maps event names to {@link EventCodeHandler} implementations that generate listener code.
+ * Replaced the former giant switch in
  * {@link ComponentCodeGenerator#getEventCode(String, String, String)}.
- * Each event name is mapped to an {@link EventCodeHandler}.
  */
 public class EventCodeRegistry {
 

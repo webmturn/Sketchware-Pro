@@ -1054,7 +1054,7 @@ public class LayoutGenerator {
                 eventType = parser.next();
             }
         } catch (XmlPullParserException | IOException | RuntimeException e) {
-            LogUtil.e("pro.sketchware.core.Ox", "Failed to parse inject property of View " + viewBean.id, e);
+            LogUtil.e("LayoutGenerator", "Failed to parse inject property of View " + viewBean.id, e);
         }
 
         return toReplace;

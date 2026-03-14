@@ -206,7 +206,7 @@ public class BlockInterpreter {
             return "\"" + escapeString(param) + "\"";
         } else if (type == 1) {
             /**
-             * Ideally, pro.sketchware.core.Fx#a(BlockBean, String) should be responsible for parsing the input properly.
+             * Ideally, pro.sketchware.core.BlockInterpreter#resolveParam(BlockBean, String) should be responsible for parsing the input properly.
              * However, upon decompiling this class, it seems to completely ignore this case.
              * This is the solution for now to prevent errors during code generation.
              */

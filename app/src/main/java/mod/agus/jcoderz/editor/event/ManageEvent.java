@@ -12,7 +12,7 @@ import pro.sketchware.blocks.generator.components.analyzers.BlockReturnAnalyzer;
 public class ManageEvent {
 
     /**
-     * Used in {@link pro.sketchware.core.oq#getEventsForClass(ClassInfo)} to retrieve extra Events of Components.
+     * Used in {@link pro.sketchware.core.EventRegistry#getEventsForClass(ClassInfo)} to retrieve extra Events of Components.
      */
     public static void addExtraEvents(ClassInfo gx, ArrayList<String> events) {
         if (gx.matchesType("RatingBar")) {
@@ -77,7 +77,7 @@ public class ManageEvent {
     }
 
     /**
-     * Used in {@link pro.sketchware.core.oq#getListenersForClass(ClassInfo)}
+     * Used in {@link pro.sketchware.core.EventRegistry#getListenersForClass(ClassInfo)}
      * to get extra listeners for Components and Widgets.
      */
     public static void addExtraListeners(ClassInfo gx, ArrayList<String> listeners) {
@@ -157,7 +157,7 @@ public class ManageEvent {
     }
 
     /**
-     * Used in {@link pro.sketchware.core.oq#getEventsForListener(String)} to get extra listeners' Events.
+     * Used in {@link pro.sketchware.core.EventRegistry#getEventsForListener(String)} to get extra listeners' Events.
      */
     public static void addEventsForListener(String eventName, ArrayList<String> list) {
         switch (eventName) {

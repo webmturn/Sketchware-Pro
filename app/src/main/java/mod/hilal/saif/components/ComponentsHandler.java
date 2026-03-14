@@ -452,7 +452,7 @@ public class ComponentsHandler {
     }
 
     /**
-     * Used at {@link Lx#a(String, String, ComponentCodeGenerator.AccessModifier, String...)}
+     * Used at {@link pro.sketchware.core.ComponentCodeGenerator#getExtraVar(String, String, ComponentCodeGenerator.AccessModifier, String...)}
      * to get Custom Components' fields.
      */
     public static String extraVar(String name, String code, String varName) {

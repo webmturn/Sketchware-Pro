@@ -12,11 +12,10 @@ import java.util.stream.Collectors;
 import mod.hey.studios.moreblock.ReturnMoreblockManager;
 
 /**
- * Registry-based replacement for the giant switch in {@link BlockInterpreter#getBlockCode}.
- * Each opcode is mapped to a {@link BlockCodeHandler} that generates the corresponding Java code.
+ * Maps block opcodes to {@link BlockCodeHandler} implementations that generate Java code.
+ * Replaced the former giant switch in {@link BlockInterpreter#getBlockCode}.
  * <p>
- * To add a new built-in block, call {@link #register(String, BlockCodeHandler)} — no need to
- * modify BlockInterpreter's switch statement.
+ * To add a new built-in block, call {@link #register(String, BlockCodeHandler)}.
  */
 public class BlockCodeRegistry {
 
