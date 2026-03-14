@@ -12,7 +12,7 @@ Notification 组件 (`COMPONENT_TYPE_NOTIFICATION = 26`) 曾是一个**空壳组
 
 ## 7 层架构分析
 
-### 第 1 层：组件注册 ✅ 已有
+### 第 1 层：组件注册 ✅ 已有（实现前即存在）
 
 | 文件 | 位置 | 状态 |
 |------|------|------|
@@ -20,7 +20,7 @@ Notification 组件 (`COMPONENT_TYPE_NOTIFICATION = 26`) 曾是一个**空壳组
 | `AddComponentBottomSheet.java` | `componentList.add(...)` | ✅ |
 | `ComponentBean.getComponentTypeName()` | `case 26 → "Notification"` | ✅ |
 
-### 第 2 层：类型映射 ❌ 需修改
+### 第 2 层：类型映射 ✅ 已实现
 
 **`ComponentTypeMapper.java`** — 3 处修改：
 
@@ -34,7 +34,7 @@ Notification 组件 (`COMPONENT_TYPE_NOTIFICATION = 26`) 曾是一个**空壳组
    - `androidx.core.app.NotificationCompat`
 3. `getInternalTypeName()`: 添加 `case "notification", "Notification" -> "Notification";`
 
-### 第 3 层：字段声明 ❌ 需修改
+### 第 3 层：字段声明 ✅ 已实现
 
 **`ComponentCodeGenerator.getFieldDeclaration()`** — 特殊处理双字段：
 
@@ -51,7 +51,7 @@ private NotificationCompat.Builder myNotif;
 private NotificationManager _nm_myNotif;
 ```
 
-### 第 4 层：初始化代码 ❌ 需添加
+### 第 4 层：初始化代码 ✅ 已实现
 
 **`ComponentCodeGenerator.getComponentInitializerCode()`**:
 
@@ -62,12 +62,11 @@ case "Notification":
          + componentName + ".setSmallIcon(R.drawable.app_icon);";
 ```
 
-### 第 5 层：积木 Spec 定义 ❌ 需添加
+### 第 5 层：积木 Spec 定义 ✅ 已实现
 
-`BlockSpecRegistry.java` 是反编译的哈希表，不能直接修改。
-积木通过 `BlocksHandler` 或 `ExtraBlockFile` 系统动态注册。
+积木通过 `BlockSpecRegistry` 的 HashMap 注册表直接注册（`BlockSpecRegistry.java` 已重构为注册表模式）。
 
-需要定义的积木（方案 C — Builder 模式）：
+已实现的积木（方案 C — Builder 模式）：
 
 | opCode | spec 格式 | 类型 | 参数 |
 |--------|----------|------|------|
@@ -94,7 +93,7 @@ public static final String[] NOTIFICATION_PRIORITY = {
 };
 ```
 
-### 第 6 层：积木面板注册 ❌ 需添加
+### 第 6 层：积木面板注册 ✅ 已实现
 
 **`ExtraPaletteBlock.setBlock()`** — 在 `case 7:` 中添加：
 
@@ -114,9 +113,9 @@ if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_NOTIFICATION)) {
 }
 ```
 
-### 第 7 层：代码生成 ❌ 需添加
+### 第 7 层：代码生成 ✅ 已实现
 
-**`BlockInterpreter.java`** — 10 个 case：
+**`BlockCodeRegistry.java`** — 10 个 handler（注册表模式，已从 `BlockInterpreter` 迁移）：
 
 ```java
 case "notifCreateChannel":
@@ -170,13 +169,14 @@ case "notifCancel":
     break;
 ```
 
-## 其他需要处理的文件
+## 其他已处理的文件
 
-| 文件 | 修改内容 |
-|------|---------|
-| `BlockColorMapper.java` | 添加 notification 积木的颜色映射 |
-| `EditorManifest.java` | 当项目使用 Notification 组件时，自动添加 `POST_NOTIFICATIONS` 权限 |
-| `ExtraMenuBean.java` | `%m.notification` 菜单已有（case "notification"），无需修改 |
+| 文件 | 修改内容 | 状态 |
+|------|---------|------|
+| `BlockColorMapper.java` | 添加 notification 积木的颜色映射 | ✅ 已实现 |
+| `EditorManifest.java` | 当项目使用 Notification 组件时，自动添加 `POST_NOTIFICATIONS` 权限 | ✅ 已实现 |
+| `ExtraMenuBean.java` | `%m.notification` 菜单已有（case "notification"），无需修改 | ✅ 无需改动 |
+| `StringResource.java` | 添加 10 个 notif 积木的本地化字符串 | ✅ 已实现 |
 
 ## 不需要事件
 
@@ -186,13 +186,11 @@ Notification 组件**不需要**监听事件：
 - Android 的 `NotificationManager` 不提供发送成功/失败的回调
 - `POST_NOTIFICATIONS` 权限由通用权限系统处理
 
-## 改动量估算
+## 实际改动量
 
-- **修改文件数**: ~8 个
+- **修改文件数**: 8 个（`ComponentTypeMapper`、`ComponentCodeGenerator` × 2、`BlockSpecRegistry`、`BlockCodeRegistry`、`ExtraPaletteBlock`、`BlockColorMapper`、`StringResource`、`EditorManifest`）
 - **新增代码量**: ~300 行
-- **删除/修改**: ~5 行
-- **难度**: 中等
-- **风险**: 低（不影响现有功能，纯新增）
+- **设备调试修复**: 8 处（参数越界 guard、图标路径、Channel 重建、`this` 引用、Android 13+ 运行时权限等）
 
 ## 生成代码示例
 
