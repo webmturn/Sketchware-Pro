@@ -2,10 +2,6 @@ package mod.agus.jcoderz.editor.manage.block.palette;
 
 import android.graphics.Color;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -20,27 +16,25 @@ public class PaletteSelector {
     private int start = 9;
 
     public ArrayList<HashMap<String, Object>> getPaletteSelector() {
-        String paletteBlockFile = ExtraBlockFile.getPaletteBlockFile();
-        if (!paletteBlockFile.isEmpty()) {
-            try {
-                JSONArray palettes = new JSONArray(paletteBlockFile);
-                for (int i = 0; i < palettes.length(); i++) {
-                    JSONObject item = palettes.getJSONObject(i);
-
-                    int color;
-
-                    try {
-                        color = Color.parseColor(item.get("color").toString());
-                    } catch (IllegalArgumentException e) {
-                        SketchwareUtil.toastError(String.format(Helper.getResString(R.string.error_parse_palette_color), i + 1));
-                        color = 0xff8a55d7;
-                    }
-
-                    setPaletteData(start, item.get("name").toString(), color);
-                    start++;
+        ArrayList<HashMap<String, Object>> palettes = ExtraBlockFile.getPaletteBlockData();
+        if (!palettes.isEmpty()) {
+            for (int i = 0; i < palettes.size(); i++) {
+                HashMap<String, Object> item = palettes.get(i);
+                Object name = item.get("name");
+                if (!(name instanceof String paletteName)) {
+                    continue;
                 }
-            } catch (JSONException e) {
-                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.error_load_palette), e));
+
+                int color;
+                try {
+                    color = Color.parseColor(String.valueOf(item.get("color")));
+                } catch (IllegalArgumentException e) {
+                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.error_parse_palette_color), i + 1));
+                    color = 0xff8a55d7;
+                }
+
+                setPaletteData(start, paletteName, color);
+                start++;
             }
         }
 
