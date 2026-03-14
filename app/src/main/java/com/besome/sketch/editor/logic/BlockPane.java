@@ -8,6 +8,7 @@ import pro.sketchware.core.ViewUtil;
 import android.content.Context;
 import android.graphics.Point;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import com.besome.sketch.beans.BlockBean;
 import java.util.ArrayList;
@@ -88,7 +89,7 @@ public class BlockPane extends RelativeLayout {
    */
   public void addBlockNoLayout(BlockView blockView) {
     blockView.blockPane = this;
-    android.view.ViewGroup.LayoutParams lp = blockView.getLayoutParams();
+    ViewGroup.LayoutParams lp = blockView.getLayoutParams();
     if (lp == null) lp = generateDefaultLayoutParams();
     addViewInLayout(blockView, -1, lp, true);
     Object tag = blockView.getTag();
@@ -334,6 +335,10 @@ public class BlockPane extends RelativeLayout {
     padding *= 8.0F;
     rs.setX(padding);
     this.dragBlock.setY(padding);
+    this.dragBlock.post(() -> {
+      this.dragBlock.layoutChain();
+      updatePaneSize();
+    });
   }
   
   public void buildSnapPoints(String excludeBlockId, boolean endsWithF, boolean hasEmptySubStack, boolean isArgType, int start, int end) {
@@ -396,7 +401,7 @@ public class BlockPane extends RelativeLayout {
   public void updatePaneSize() {
     int childCount = getChildCount();
     int maxWidth = (getLayoutParams()).width;
-    int maxHeight = (getLayoutParams()).width;
+    int maxHeight = (getLayoutParams()).height;
     int childIdx = 0;
     while (childIdx < childCount) {
       View view = getChildAt(childIdx);
@@ -414,8 +419,12 @@ public class BlockPane extends RelativeLayout {
       maxWidth = newWidth;
       maxHeight = newHeight;
     } 
-    (getLayoutParams()).width = maxWidth;
-    (getLayoutParams()).height = maxHeight;
+    ViewGroup.LayoutParams lp = getLayoutParams();
+    if (lp.width != maxWidth || lp.height != maxHeight) {
+      lp.width = maxWidth;
+      lp.height = maxHeight;
+      requestLayout();
+    }
   }
   
   public void removeBlockTree(BlockView blockView) {
