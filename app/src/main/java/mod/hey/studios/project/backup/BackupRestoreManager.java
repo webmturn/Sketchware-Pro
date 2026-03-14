@@ -24,6 +24,7 @@ import dev.pranav.filepicker.FilePickerCallback;
 import dev.pranav.filepicker.FilePickerDialogFragment;
 import dev.pranav.filepicker.FilePickerOptions;
 import mod.hey.studios.util.Helper;
+import mod.hilal.saif.activities.tools.ConfigActivity;
 import pro.sketchware.R;
 import pro.sketchware.activities.main.fragments.projects.ProjectsFragment;
 import pro.sketchware.databinding.ProgressMsgBoxBinding;
@@ -136,9 +137,20 @@ public class BackupRestoreManager {
         options.setExtensions(new String[]{BackupFactory.EXTENSION});
         options.setTitle(String.format(Helper.getResString(R.string.backup_select_to_restore), BackupFactory.EXTENSION));
 
+        String lastDir = ConfigActivity.getLastRestoreDirectory();
+        if (!lastDir.isEmpty() && new File(lastDir).isDirectory()) {
+            options.setInitialDirectory(lastDir);
+        }
+
         FilePickerCallback callback = new FilePickerCallback() {
             @Override
             public void onFilesSelected(@NotNull List<? extends File> files) {
+                if (!files.isEmpty()) {
+                    File parent = files.get(0).getParentFile();
+                    if (parent != null) {
+                        ConfigActivity.setLastRestoreDirectory(parent.getAbsolutePath());
+                    }
+                }
                 for (int i = 0; i < files.size(); i++) {
                     String backupFilePath = files.get(i).getAbsolutePath();
 

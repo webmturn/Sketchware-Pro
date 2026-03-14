@@ -54,9 +54,18 @@ public class ConfigActivity extends BaseAppCompatActivity {
     public static final String SETTING_BLOCKMANAGER_DIRECTORY_PALETTE_FILE_PATH = "palletteDir";
     public static final String SETTING_BLOCKMANAGER_DIRECTORY_BLOCK_FILE_PATH = "blockDir";
     public static final String SETTING_PROJECT_DATA_ENCRYPTION = "project-data-encryption";
+    public static final String SETTING_LAST_RESTORE_DIRECTORY = "last-restore-dir";
 
     public static String getBackupPath() {
         return DataStore.getInstance().getString(SETTING_BACKUP_DIRECTORY, "/.sketchware/backups/");
+    }
+
+    public static String getLastRestoreDirectory() {
+        return DataStore.getInstance().getString(SETTING_LAST_RESTORE_DIRECTORY, "");
+    }
+
+    public static void setLastRestoreDirectory(String path) {
+        DataStore.getInstance().putString(SETTING_LAST_RESTORE_DIRECTORY, path);
     }
 
     public static String getStringSettingValueOrSetAndGet(String settingKey, String toReturnAndSetIfNotFound) {
