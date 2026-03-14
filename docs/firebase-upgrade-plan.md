@@ -525,22 +525,22 @@ public static String KOTLINX_COROUTINES_PLAY_SERVICES = "kotlinx-coroutines-play
 ## 三、测试计划
 
 ### 单元测试
-- [ ] 验证 `BuiltInLibraries` 依赖解析无循环依赖
-- [ ] 验证所有 Firebase 库的 `classes.jar` 存在且可读
+- [x] 验证 `BuiltInLibraries` 依赖解析无循环依赖
+- [x] 验证所有 Firebase 库的 `classes.jar` 存在且可读
 
 ### 集成测试
-- [ ] 创建包含 Firebase Auth 的项目 → 编译成功
-- [ ] 创建包含 Firebase Database 的项目 → 编译成功
-- [ ] 创建包含 Firebase Storage 的项目 → 编译成功
-- [ ] 创建包含 FCM 的项目 → 编译成功
-- [ ] 创建包含 Firebase Google Login 的项目 → 编译成功
-- [ ] 创建同时使用所有 Firebase 功能的项目 → 编译成功
+- [x] 创建包含 Firebase Auth 的项目 → 编译成功
+- [x] 创建包含 Firebase Database 的项目 → 编译成功
+- [x] 创建包含 Firebase Storage 的项目 → 编译成功
+- [x] 创建包含 FCM 的项目 → 编译成功
+- [x] 创建包含 Firebase Google Login 的项目 → 编译成功
+- [x] 创建同时使用所有 Firebase 功能的项目 → 编译成功
 
 ### 回归测试
-- [ ] 不使用 Firebase 的项目不受影响
-- [ ] 生成的 AndroidManifest.xml 正确
-- [ ] 生成的 build.gradle 版本号正确
-- [ ] 生成的 Java 代码无废弃 API 引用
+- [x] 不使用 Firebase 的项目不受影响
+- [x] 生成的 AndroidManifest.xml 正确
+- [x] 生成的 build.gradle 版本号正确
+- [x] 生成的 Java 代码无废弃 API 引用
 
 ---
 

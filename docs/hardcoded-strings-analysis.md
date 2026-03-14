@@ -727,12 +727,12 @@ dialog.setTitle(context.getString(R.string.common_word_warning));
 
 ### 国际化工作检查清单
 
-- [ ] 提取所有对话框标题到strings.xml
-- [ ] 提取所有对话框消息到strings.xml
-- [ ] 提取所有按钮文本到strings.xml
-- [ ] 提取所有菜单项名称到strings.xml
-- [ ] 提取所有Toast消息到strings.xml
-- [ ] 提取所有错误消息到strings.xml
+- [x] 提取所有对话框标题到strings.xml
+- [x] 提取所有对话框消息到strings.xml
+- [x] 提取所有按钮文本到strings.xml
+- [x] 提取所有菜单项名称到strings.xml
+- [x] 提取所有Toast消息到strings.xml
+- [x] 提取所有错误消息到strings.xml
 - [ ] 创建翻译文件夹结构
 - [ ] 设置翻译平台
 - [ ] 测试不同语言的UI布局
@@ -813,22 +813,22 @@ dialog.setTitle(context.getString(R.string.common_word_warning));
 
 ## 二十八、实施路线图
 
-### 阶段一：高优先级（1-2天）
+### 阶段一：高优先级（1-2天） ✅ 已完成
 1. 提取对话框标题（~15处）
 2. 提取对话框消息（~10处）
 3. 提取按钮文本（~10处）
 
-### 阶段二：中优先级（2-3天）
+### 阶段二：中优先级（2-3天） ✅ 已完成
 1. 资源编辑器UI（~20处）
 2. 块管理界面（~35处）
 3. 菜单系统（~20处）
 
-### 阶段三：低优先级（1-2天）
+### 阶段三：低优先级（1-2天） ✅ 已完成
 1. 组件/事件相关（~12处）
 2. 内部提示（~10处）
 3. 清理和验证
 
-### 阶段四：翻译设置（1天）
+### 阶段四：翻译设置（1天） — 待实施
 1. 设置Crowdin/Weblate
 2. 创建翻译文件夹结构
 3. 邀请社区翻译者
