@@ -636,9 +636,7 @@
 
 4. **翻译** — 在 `values/strings.xml` 和各语言文件中添加 `block_xxx` 格式的翻译字符串
 
-> **注意**: `BlockSpecRegistry.java` 使用 hash-based switch（基于 `String.hashCode()`），添加新 block 需要正确计算 hash 值并插入到正确位置，或改用更现代的 switch 语法。
->
-> **架构更新**: `BlockInterpreter.getBlockCode()` 中的巨型 switch 已重构为 `BlockCodeRegistry` 注册表模式，新增 block 只需注册 handler。
+> **架构说明**: `BlockSpecRegistry.java` 和 `BlockCodeRegistry.java` 均使用 `HashMap` 注册表模式。`BlockInterpreter.getBlockCode()` 中的巨型 switch 已完全重构。添加新 block 只需在两个注册表中各调用一次 `put()`，无需处理 hash 值或 switch 排序。
 
 ---
 
