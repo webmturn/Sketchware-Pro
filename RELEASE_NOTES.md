@@ -1,4 +1,4 @@
-# Unreleased (Pending)
+# v7.0.0-beta4
 
 ## 🐛 Bug Fixes
 

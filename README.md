@@ -12,7 +12,23 @@
 Welcome to Sketchware Pro! Here you'll find the source code of many classes in Sketchware Pro and, most importantly, the place to contribute to Sketchware Pro.
 
 ## Building the App
-To build the app, you must use Gradle. It's highly recommended to use Android Studio for the best experience.
+
+### Prerequisites
+- **Android Studio** (recommended) or any IDE with Gradle support
+- **JDK 17** or higher
+- **Android SDK** with compileSdk 36
+
+### Build Steps
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Sketchware-Pro/Sketchware-Pro.git
+   ```
+2. Open the project in Android Studio.
+3. Wait for Gradle sync to complete. If `google-services.json` is missing, a mock file is generated automatically during the pre-build step.
+4. Build and run the `app` module on a device or emulator (minSdk 26).
+
+> [!NOTE]
+> The project uses **Gradle 8.13** with **AGP 8.12.0** and **Kotlin 2.1.21**. Java source/target compatibility is set to **Java 17**.
 
 ### Source Code Map
 
@@ -22,10 +38,22 @@ To build the app, you must use Gradle. It's highly recommended to use Android St
 | `pro.sketchware.core.ManifestGenerator` | Responsible for generating AndroidManifest.xml |
 | `pro.sketchware.core.ActivityCodeGenerator` | Generates source code of activities |
 | `pro.sketchware.core.ComponentCodeGenerator` | Generates source code of components, such as listeners, etc. |
+| `pro.sketchware.core.EventCodeGenerator` | Generates source code for event handlers |
 | `pro.sketchware.core.LayoutGenerator` | Responsible for generating XML files of layouts |
-| `pro.sketchware.core.BuiltInLibrary` | Registry of built-in libraries' dependencies |
-| `pro.sketchware.core.CompileQuizManager` | Responsible for the compiling dialog's quizzes |
+| `pro.sketchware.core.GradleFileGenerator` | Generates Gradle build files |
+| `pro.sketchware.core.BlockInterpreter` | Interprets and translates block specifications into Java code |
+| `pro.sketchware.core.BlockCodeRegistry` | Registry-based replacement for block code interpretation |
+| `pro.sketchware.core.BlockSpecRegistry` | Central registry mapping block/event opCodes to their specifications |
+| `pro.sketchware.core.ListenerCodeRegistry` | Registry for listener code generation patterns |
+| `pro.sketchware.core.EventRegistry` | Registry of known event names and configurations |
+| `pro.sketchware.core.BuiltInLibrary` | Represents a single built-in library and its metadata |
+| `pro.sketchware.core.LibraryManager` | Manages external libraries and dependencies |
+| `pro.sketchware.core.ResourceManager` | Manages project resources (images, colors, strings, etc.) |
+| `pro.sketchware.core.ProjectDataManager` | Singleton factory for project-scoped manager instances |
+| `pro.sketchware.core.ProjectFileManager` | Manages project file persistence and loading |
+| `pro.sketchware.core.ProjectListManager` | Manages the list of projects |
 | `pro.sketchware.core.ProjectFilePaths` | Organizes Sketchware projects' file paths |
+| `pro.sketchware.core.CompileQuizManager` | Responsible for the compiling dialog's quizzes |
 
 > [!TIP]
 > You can also check the `mod` package, which contains the majority of contributors' changes.

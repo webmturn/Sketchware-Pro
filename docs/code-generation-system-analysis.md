@@ -43,16 +43,16 @@
 
 | 文件 | 行数 | 职责 |
 |------|------|------|
-| `BlockInterpreter.java` | 383 | 将单个 Block 的 opcode 翻译为 Java 代码片段 |
+| `BlockInterpreter.java` | 390 | 将单个 Block 的 opcode 翻译为 Java 代码片段 |
 | `ActivityCodeGenerator.java` | 1202 | 组装完整的 Activity/Fragment Java 源文件 |
 | `EventCodeGenerator.java` | 458 | 管理事件分类（View/Component/Activity/Drawer）并生成监听器 |
-| `ComponentCodeGenerator.java` | 919 | build.gradle 生成、字段声明、事件代码模板、代码格式化 |
+| `ComponentCodeGenerator.java` | 904 | build.gradle 生成、字段声明、事件代码模板、代码格式化 |
 | `BlockLoader.java` | 283 | 加载 Extra Block 自定义块定义 |
 | `ExtraBlockInfo.java` | 60 | Extra Block 数据模型 |
 
 ## 2. BlockInterpreter 分析
 
-**文件**: `pro/sketchware/core/BlockInterpreter.java` (383 行)
+**文件**: `pro/sketchware/core/BlockInterpreter.java` (390 行)
 
 ### 2.1 核心职责
 
@@ -70,10 +70,11 @@
 - 如果有 `nextBlock`，递归拼接后续代码
 - 返回完整的代码字符串
 
-#### `getBlockCode(BlockBean bean)` — 巨型 switch（~1100 行）
-- 根据 `bean.opCode` 匹配对应的代码生成模板
-- 使用 `String.format()` 将参数嵌入模板
-- 支持 **200+ 内置 opcode**，涵盖：
+#### `getBlockCode(BlockBean bean, ArrayList<String> params)` — Registry 分发入口
+- 通过 `BlockCodeRegistry.get(bean.opCode)` 查找对应的 `BlockCodeHandler`
+- 命中内置 handler 时，调用 `handler.generate(bean, params, this)` 生成 Java 代码
+- 未命中时，回退到 `getCodeExtraBlock()` 处理 Extra Block / 项目级自定义块
+- 内置 opcode 的具体实现已拆分到 `BlockCodeRegistry` 的分组注册方法中，仍覆盖 **200+ opcode**，涵盖：
   - **UI 操作**: setText, setVisible, setAlpha, setRotate 等
   - **Intent**: intentSetAction, intentSetScreen, startActivity 等
   - **文件操作**: fileSetFileName, fileGetData, fileutilread 等
@@ -91,11 +92,12 @@
 - 递归调用 `getBlockCode()` 解析子 block
 - 处理操作符（+、-、*、/、>、<、==、&&、|| 等）
 
-#### `getCodeExtraBlock()` — Extra Block 处理（第 1657-1728 行）
-- 当 `getBlockCode()` 的 switch 没有匹配时，进入 `default` 分支
-- 调用 `BlockLoader.getBlockInfo(opCode)` 查找自定义块
-- 若全局也找不到，调用 `BlockLoader.getBlockFromProject(sc_id, opCode)` 查找项目级别自定义块
+#### `getCodeExtraBlock()` — Extra Block 回退路径
+- 为 `subStack1` / `subStack2` 追加解析后的代码参数
+- 调用 `BlockLoader.getBlockInfo(opCode)` 查找全局 Extra Block
+- 若全局未命中，则调用 `BlockLoader.getBlockFromProject(sc_id, opCode)` 查找项目级自定义块
 - 使用 `String.format(blockInfo.getCode(), parameters...)` 生成代码
+- 若模板格式化失败，返回带错误信息的注释字符串
 
 ### 2.3 参数类型系统
 
@@ -170,16 +172,17 @@ String finalCode = ActivityCodeGenerator.applyCommands(formattedCode);
 
 ### 3.4 Fragment 特殊处理（第 628-645 行）
 
-生成完成后，通过 **全局字符串替换** 将 Activity 代码适配为 Fragment：
+生成完成后，`ActivityCodeGenerator` 仍会做一层 **fallback 字符串替换**，主要用于兼容绕过 `CodeContext` 的 Extra Block / 自定义块输出：
 
 ```java
-code = code.replace("getApplicationContext()", "getContext().getApplicationContext()")
-           .replace("getBaseContext()", "getActivity().getBaseContext()")
-           .replace("(ClipboardManager) getSystemService", "(ClipboardManager) getContext().getSystemService")
-           // ... 共 15 处替换
+code = code.replaceAll("(?<!\\.)getApplicationContext\\(\\)", "getContext().getApplicationContext()")
+           .replaceAll("(?<!\\.)getBaseContext\\(\\)", "getActivity().getBaseContext()")
+           .replaceAll("(?<!\\.)getAssets\\(\\)", "getContext().getAssets()")
+           .replace("LinearLayoutManager(this)", "LinearLayoutManager(getContext())")
+           // ... 共 7 处 Fragment fallback 替换
 ```
 
-**问题**: 这种后处理方式非常脆弱，无法处理自定义块中的代码。
+**现状**: 大部分内置 handler 已通过 `CodeContext` 在生成阶段产出正确 API，但 Extra Block 仍依赖这层兜底替换。
 
 ### 3.5 Import 管理
 
@@ -253,7 +256,7 @@ for (EventBean eventBean : events) {
 
 ## 5. ComponentCodeGenerator 分析
 
-**文件**: `pro/sketchware/core/ComponentCodeGenerator.java` (919 行)
+**文件**: `pro/sketchware/core/ComponentCodeGenerator.java` (904 行)
 
 ### 5.1 核心职责
 
@@ -286,7 +289,7 @@ for (EventBean eventBean : events) {
 
 ### 5.3 事件代码模板 (`getEventCode()`)
 
-使用巨型 switch 表达式（~310 行），为 **60+ 事件** 生成方法签名和参数绑定：
+`ComponentCodeGenerator.getEventCode()` 现在直接委托给 `EventCodeRegistry.generate()`，由注册表为 **60+ 事件** 生成方法签名和参数绑定：
 
 | 分类 | 事件示例 |
 |------|----------|
@@ -306,7 +309,7 @@ for (EventBean eventBean : events) {
 | 位置 | onLocationChanged |
 | 生命周期 | onBackPressed, onStart, onStop, onResume, onPause, onDestroy |
 
-**扩展点**: `default` 分支调用 `ManageEvent.getExtraEventCode()` 处理自定义事件。
+**扩展点**: 未注册事件会回退到 `ManageEvent.getExtraEventCode()` 处理自定义事件。
 
 ### 5.4 字段声明 (`getFieldDeclaration()`)
 
@@ -360,22 +363,26 @@ public class ExtraBlockInfo {
 
 2. 项目级 Custom Blocks（单项目私有）
    路径: .sketchware/data/{sc_id}/custom_blocks
-   时机: 仅当全局未找到时按需读取（无缓存）
+   时机: 仅当全局未找到时按需读取，并按 `sc_id` 缓存到 `projectBlockCache`
 ```
 
 ### 6.4 代码生成集成
 
 ```java
-// BlockInterpreter.getBlockCode() 的 default 分支:
-default:
-    opcode = getCodeExtraBlock(bean, "\"\"");
+// BlockInterpreter.getBlockCode()
+BlockCodeHandler handler = BlockCodeRegistry.get(bean.opCode);
+if (handler != null) {
+    opcode = handler.generate(bean, params, this);
+} else {
+    opcode = getCodeExtraBlock(bean, params);
+}
 
 // getCodeExtraBlock() 内部:
 ExtraBlockInfo blockInfo = BlockLoader.getBlockInfo(bean.opCode);  // 全局查找
 if (blockInfo.isMissing) {
     blockInfo = BlockLoader.getBlockFromProject(sc_id, bean.opCode);  // 项目级查找
 }
-String formattedCode = String.format(blockInfo.getCode(), parameters...);
+String formattedCode = String.format(blockInfo.getCode(), parameters.toArray(new Object[0]));
 ```
 
 ### 6.5 Extra Block JSON 格式
@@ -417,7 +424,7 @@ String formattedCode = String.format(blockInfo.getCode(), parameters...);
 │  │         │ BlockInterpreter.interpretBlocks│              │    │
 │  │         │   ├── resolveBlock() [递归]      │              │    │
 │  │         │   │   ├── getBlockCode()        │              │    │
-│  │         │   │   │   ├── 内置 switch       │              │    │
+│  │         │   │   │   ├── BlockCodeRegistry │              │    │
 │  │         │   │   │   └── getCodeExtraBlock │              │    │
 │  │         │   │   │       └── BlockLoader   │              │    │
 │  │         │   │   └── resolveParam() [递归]  │              │    │
@@ -434,9 +441,9 @@ String formattedCode = String.format(blockInfo.getCode(), parameters...);
 │  │     ├── MoreBlock 方法                                  │    │
 │  │     └── Adapter 内部类                                  │    │
 │  │                                                         │    │
-│  │  4. 后处理:                                              │    │
-│  │     ├── Fragment 字符串替换（15 处）                      │    │
-│  │     ├── AppCompat 替换                                  │    │
+│  │  4. 后处理 / fallback:                                   │    │
+│  │     ├── Fragment 字符串替换（7 处）                       │    │
+│  │     ├── AppCompat 替换（1 处）                            │    │
 │  │     └── ComponentCodeGenerator.formatCode()             │    │
 │  └─────────────────────────────────────────────────────────┘    │
 │                                                                 │
@@ -465,17 +472,19 @@ String (格式化后的最终代码)
 
 ### 8.1 ~~巨型 switch 反模式（严重）~~ ✅ 已解决
 
-**位置**: `BlockInterpreter.getBlockCode()` (1100+ 行 switch)、`ComponentCodeGenerator.getEventCode()` (310+ 行 switch)
+**原位置**: `BlockInterpreter.getBlockCode()` (1100+ 行 switch)、`ComponentCodeGenerator.getEventCode()` (310+ 行 switch)
 
 **解决方案**: 引入 `BlockCodeRegistry`、`EventCodeRegistry`、`ListenerCodeRegistry` 注册表模式，将所有 switch case 迁移为独立的 handler。
 
 ~~**影响**: 添加新功能的开发成本高、代码冲突概率大。~~
 
-### 8.2 ~~Fragment 后处理脆弱性（中等）~~ ✅ 已解决
+### 8.2 Fragment 后处理脆弱性（中等，已部分缓解）
 
 **位置**: `ActivityCodeGenerator.generateCode()`
 
-**解决方案**: 引入 `CodeContext` 类，在代码生成时根据 `isFragment` 直接产出正确的 API 调用（如 `getContext().getApplicationContext()`），消除了 17 处 `String.replace()` 后处理。`BlockCodeRegistry` 的 ~20 个 handler 和 `ComponentCodeGenerator` 的组件初始化/适配器方法均已更新为使用 `CodeContext`。
+**现状**: `CodeContext` 已覆盖大部分内置生成路径，但 `ActivityCodeGenerator` 仍保留 7 处 Fragment fallback 替换，用于处理 Extra Block 与部分绕过 `CodeContext` 的代码片段。
+
+**影响**: 相比早期实现已明显收缩，但后处理仍是脆弱点，尤其对自定义块生成代码的兼容性依然依赖字符串模式匹配。
 
 ### 8.3 无 AST / 无类型检查（严重）
 
@@ -504,7 +513,7 @@ String (格式化后的最终代码)
 
 ### 8.6 Extra Block 代码模板安全性（中等）
 
-**位置**: `BlockInterpreter.getCodeExtraBlock()` 第 1718-1722 行
+**位置**: `BlockInterpreter.getCodeExtraBlock()`
 
 **问题**:
 - Extra Block 的 `code` 字段直接通过 `String.format()` 执行
@@ -515,7 +524,7 @@ String (格式化后的最终代码)
 ### 8.7 ComponentCodeGenerator 职责过重（设计）
 
 **问题**:
-- 919 行的单一类，承担了至少 8 种不同职责
+- 904 行的单一类，承担了至少 8 种不同职责
 - build.gradle 生成、事件代码模板、字段声明、代码格式化等功能耦合在一起
 - 任何依赖变更（如新增内置库）都需要修改此文件
 - 违反单一职责原则 (SRP)
@@ -532,119 +541,95 @@ String (格式化后的最终代码)
 ```java
 // 示例：硬编码的版本号
 "implementation 'androidx.appcompat:appcompat:1.7.1'"
-"implementation 'com.google.android.material:material:1.12.0'"
-"implementation 'com.github.bumptech.glide:glide:4.16.0'"
+"implementation 'com.google.android.material:material:1.13.0'"
+"implementation 'com.github.bumptech.glide:glide:5.0.4'"
 ```
 
 ### 8.9 拼写错误导致的潜在 Bug
 
-**位置**: `BlockInterpreter.java` 第 857 行
+**位置**: `BlockCodeRegistry.registerCalendarViewBlocks()`
 
 ```java
-case "calnedarViewSetMaxDate":  // 拼写错误: calnedar → calendar
+register("calnedarViewSetMaxDate", setMaxDate); // legacy typo, kept for backward compatibility
 ```
 
 这个拼写错误已经成为 API 的一部分，修改可能导致依赖此 opcode 的项目出现兼容性问题。
 
 ## 9. 改进建议
 
-### 9.1 注册表模式替代巨型 switch（高优先级）
+### 9.1 注册表模式（已完成，持续演进）
 
-**目标**: 消除 `BlockInterpreter.getBlockCode()` 和 `ComponentCodeGenerator.getEventCode()` 中的巨型 switch。
-
-**方案**: 引入 `BlockCodeRegistry` 和 `EventCodeRegistry`，将每个 opcode/event 的代码生成逻辑注册为独立的 handler。
+**现状**: `BlockInterpreter.getBlockCode()` 已通过 `BlockCodeRegistry` 分发内置 block；`ComponentCodeGenerator.getEventCode()` 已委托给 `EventCodeRegistry.generate()`。
 
 ```java
-// 定义接口
 public interface BlockCodeHandler {
-    String generate(List<String> params, BlockBean bean, BlockInterpreter interpreter);
+    String generate(BlockBean bean, ArrayList<String> params, BlockInterpreter context);
 }
 
-// 注册表
 public class BlockCodeRegistry {
     private static final Map<String, BlockCodeHandler> handlers = new HashMap<>();
 
-    static {
-        // 内置块
-        register("setText", (params, bean, interp) ->
-            String.format("%s.setText(%s);", params.get(0), params.get(1)));
-        register("setVisible", (params, bean, interp) ->
-            String.format("%s.setVisibility(View.%s);", params.get(0), params.get(1)));
-        // ... 其他内置块
-    }
-
-    public static void register(String opcode, BlockCodeHandler handler) {
-        handlers.put(opcode, handler);
-    }
-
-    public static String generate(String opcode, List<String> params,
-                                   BlockBean bean, BlockInterpreter interpreter) {
-        BlockCodeHandler handler = handlers.get(opcode);
-        if (handler != null) return handler.generate(params, bean, interpreter);
-        return null; // fallback to ExtraBlock
+    public static BlockCodeHandler get(String opcode) {
+        return handlers.get(opcode);
     }
 }
 ```
 
-**优势**:
-- 新增 Block 只需注册一个 handler，不修改核心代码
-- 每个 handler 可独立测试
-- Extra Block 系统可直接注册为 handler
-- 支持插件化扩展
+**后续建议**:
+- 新增内置 Block 时优先在 `BlockCodeRegistry` 注册
+- 新增事件模板时优先在 `EventCodeRegistry` 注册
+- 保持 `BlockInterpreter` / `ComponentCodeGenerator` 只负责分发与回退逻辑
 
-### 9.2 项目级 Custom Block 缓存（高优先级）
+### 9.2 项目级 Custom Block 缓存（已完成）
 
-**方案**: 在 `BlockLoader` 中添加项目级缓存。
+**现状**: `BlockLoader` 已按 `sc_id` 维护 `cachedProjectId` + `projectBlockCache`，并提供 `invalidateProjectCache()` / `refresh()` 失效机制。
 
 ```java
 private static String cachedProjectId;
-private static ArrayList<ExtraBlockInfo> projectBlocks;
+private static HashMap<String, ExtraBlockInfo> projectBlockCache;
 
-public static ExtraBlockInfo getBlockFromProject(String sc_id, String block_name) {
-    if (!sc_id.equals(cachedProjectId)) {
-        cachedProjectId = sc_id;
-        projectBlocks = loadProjectBlocks(sc_id);
+public static ExtraBlockInfo getBlockFromProject(String sc_id, String blockName) {
+    if (projectBlockCache == null || !sc_id.equals(cachedProjectId)) {
+        loadProjectBlocks(sc_id);
     }
-    for (ExtraBlockInfo info : projectBlocks) {
-        if (block_name.equals(info.getName())) return info;
+    ExtraBlockInfo cached = projectBlockCache.get(blockName);
+    if (cached != null) {
+        return cached;
     }
     // ... missing block handling
 }
 ```
 
-**预期收益**: 对大量使用自定义块的项目，代码生成速度提升数倍。
+**收益**: 项目级自定义块查找由重复扫描转为按项目缓存后的快速查找。
 
-### 9.3 Fragment 代码生成上下文化（中优先级）
+### 9.3 Fragment 代码生成上下文化（已部分完成）
 
-**方案**: 在 `BlockInterpreter` 中引入上下文感知，而非后处理替换。
+**现状**: `CodeContext` 已被注入 `BlockInterpreter`、`ActivityCodeGenerator` 和 `ComponentCodeGenerator` 的主要生成路径，用于在生成阶段产出更适合 Fragment / Activity 的 API 调用。
 
 ```java
 public class CodeContext {
     final boolean isFragment;
-    final boolean isViewBindingEnabled;
 
-    public String getApplicationContext() {
+    public String appContext() {
         return isFragment ? "getContext().getApplicationContext()" : "getApplicationContext()";
     }
-    public String getSystemService(String cast) {
-        return isFragment
-            ? "(" + cast + ") getContext().getSystemService"
-            : "(" + cast + ") getSystemService";
+
+    public String fragmentManager() {
+        return isFragment ? "getActivity().getSupportFragmentManager()" : "getSupportFragmentManager()";
     }
-    // ...
 }
 ```
 
-将 `CodeContext` 注入 `BlockInterpreter`，在代码生成时直接使用正确的 API 调用，而非事后替换。
-
-**优势**: Extra Block 生成的代码也能正确适配 Fragment。
+**后续建议**:
+- 继续减少 `ActivityCodeGenerator.generateCode()` 中的 fallback replace 逻辑
+- 为 Extra Block / 自定义块提供更稳定的上下文化方式
 
 ### 9.4 拆分 ComponentCodeGenerator（中优先级）
 
-将 919 行的 `ComponentCodeGenerator` 拆分为独立职责类：
+将 904 行的 `ComponentCodeGenerator` 拆分为独立职责类：
 
 ```
-ComponentCodeGenerator (919 行)
+ComponentCodeGenerator (904 行)
   → GradleFileGenerator      (build.gradle / settings.gradle 生成)
   → FieldDeclarationGenerator (字段声明)
   → EventTemplateGenerator    (事件代码模板)
@@ -660,8 +645,8 @@ ComponentCodeGenerator (919 行)
 // assets/library_versions.json
 {
   "androidx.appcompat:appcompat": "1.7.1",
-  "com.google.android.material:material": "1.12.0",
-  "com.github.bumptech.glide:glide": "4.16.0"
+  "com.google.android.material:material": "1.13.0",
+  "com.github.bumptech.glide:glide": "5.0.4"
 }
 ```
 
@@ -691,13 +676,13 @@ ComponentCodeGenerator (919 行)
           ┌──────────▼──┐   ┌──▼─────────────────┐
           │EventCode    │   │ComponentCode        │
           │Generator    │   │Generator            │
-          │(458 行)     │   │(919 行)             │
+          │(458 行)     │   │(904 行)             │
           └──────┬──────┘   └─────────────────────┘
                  │ 对每个事件创建
                  ▼
         ┌─────────────────┐     ┌──────────────┐
         │BlockInterpreter │────▶│  BlockLoader  │
-        │(383 行)         │     │  (283 行)     │
+        │(390 行)         │     │  (283 行)     │
         └─────────────────┘     └──────┬───────┘
                                        │
                                 ┌──────▼───────┐
@@ -708,4 +693,4 @@ ComponentCodeGenerator (919 行)
 
 ---
 
-*文档版本: 1.0 | 最后更新: 2026-03-03*
+*文档版本: 1.2 | 最后更新: 2026-03-15*

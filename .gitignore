@@ -89,6 +89,12 @@ scripts/
 # Codex AI temp files
 .codex-temp/
 
+# Claude local IDE settings
+.claude/settings.local.json
+
+# Local AI conversation exports
+ai_conversations/
+
 # Temporary Java files
 tmp_*.java
 
