@@ -622,11 +622,13 @@ res/values-ko/strings.xml     (韩语)
 
 ---
 
-## 二十一、a.a.a 包详细分析
+## 二十一、pro.sketchware.core 包详细分析
+
+> 原 `a.a.a` 包已完全重命名为 `pro.sketchware.core`。以下文件路径已更新。
 
 ### 22.1 Firebase预览视图
 
-**文件**: `a/a/a/FirebasePreviewView.java`
+**文件**: `pro/sketchware/core/FirebasePreviewView.java`
 
 | 状态 | 说明 |
 |------|------|
@@ -634,7 +636,7 @@ res/values-ko/strings.xml     (韩语)
 
 ### 22.2 权限Fragment
 
-**文件**: `a/a/a/PermissionFragment.java`
+**文件**: `pro/sketchware/core/PermissionFragment.java`
 
 | 状态 | 说明 |
 |------|------|
@@ -642,7 +644,7 @@ res/values-ko/strings.xml     (韩语)
 
 ### 22.3 事件列表Fragment
 
-**文件**: `a/a/a/EventListFragment.java`
+**文件**: `pro/sketchware/core/EventListFragment.java`
 
 | 状态 | 说明 |
 |------|------|
@@ -668,9 +670,9 @@ res/values-ko/strings.xml     (韩语)
 
 | 文件路径 | 使用的资源前缀 |
 |----------|---------------|
-| `a/a/a/FirebasePreviewView.java` | `R.string.common_word_*`, `R.string.design_library_*` |
-| `a/a/a/PermissionFragment.java` | `R.string.common_message_permission_*` |
-| `a/a/a/EventListFragment.java` | `R.string.logic_more_block_*` |
+| `pro/sketchware/core/FirebasePreviewView.java` | `R.string.common_word_*`, `R.string.design_library_*` |
+| `pro/sketchware/core/PermissionFragment.java` | `R.string.common_message_permission_*` |
+| `pro/sketchware/core/EventListFragment.java` | `R.string.logic_more_block_*` |
 | `mod/jbk/editor/manage/library/LibrarySettingsImporter.java` | `R.string.design_library_*` |
 | `mod/jbk/editor/manage/MoreblockImporter.java` | `R.string.logic_more_block_*` |
 
