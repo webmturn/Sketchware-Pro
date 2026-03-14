@@ -5,6 +5,7 @@ import static pro.sketchware.utility.ThemeUtils.isDarkThemeEnabled;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -14,13 +15,13 @@ import android.widget.TextView;
 
 import com.google.android.material.card.MaterialCardView;
 
-import pro.sketchware.core.BlockView;
-import pro.sketchware.core.BaseBlockView;
-import pro.sketchware.core.ViewUtil;
-import pro.sketchware.R;
-import pro.sketchware.databinding.PaletteBlockBinding;
-
 import java.util.Locale;
+
+import pro.sketchware.R;
+import pro.sketchware.core.BaseBlockView;
+import pro.sketchware.core.BlockView;
+import pro.sketchware.core.ViewUtil;
+import pro.sketchware.databinding.PaletteBlockBinding;
 
 public class PaletteBlock extends LinearLayout {
 
@@ -94,6 +95,22 @@ public class PaletteBlock extends LinearLayout {
         binding.actionsContainer.removeAllViews();
     }
 
+    public void runBulkUpdate(Runnable action) {
+        boolean canSuppressLayout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2;
+        if (canSuppressLayout) {
+            suppressLayout(true);
+        }
+        try {
+            action.run();
+        } finally {
+            if (canSuppressLayout) {
+                suppressLayout(false);
+            }
+            requestLayout();
+            invalidate();
+        }
+    }
+
     public void addCategoryHeader(String title, int color) {
         var cardView = new MaterialCardView(context);
         var params = getLayoutParams(18.0F);
@@ -122,7 +139,7 @@ public class PaletteBlock extends LinearLayout {
         blockView.setTag(opCode);
     }
 
-    private String generateContentDescription(String name) {
+    public static String generateContentDescription(String name) {
         if (name == null || name.isEmpty()) {
             return "";
         }
@@ -131,9 +148,6 @@ public class PaletteBlock extends LinearLayout {
         for (int i = 1; i < name.length(); i++) {
             char currentChar = name.charAt(i);
             if (Character.isUpperCase(currentChar)) {
-                // Check if previous char is not already a space (for acronyms like "HTTPExample")
-                // and if the current char is not part of an acronym (e.g. the TTP in HTTP)
-                // For simplicity here, just add a space before any uppercase unless it's followed by lowercase.
                 if (i + 1 < name.length() && Character.isLowerCase(name.charAt(i + 1)) || Character.isLowerCase(name.charAt(i - 1))) {
                     result.append(' ');
                 }
@@ -170,51 +184,42 @@ public class PaletteBlock extends LinearLayout {
 
     public int filterBlocks(String query) {
         String lowerQuery = query.toLowerCase(Locale.ROOT);
-        int visibleCount = 0;
-        int childCount = binding.blockBuilder.getChildCount();
-        boolean lastHeaderVisible = false;
-        View lastHeader = null;
+        final int[] visibleCount = {0};
+        runBulkUpdate(() -> {
+            int childCount = binding.blockBuilder.getChildCount();
+            boolean lastHeaderVisible = false;
+            View lastHeader = null;
 
-        for (int i = 0; i < childCount; i++) {
-            View child = binding.blockBuilder.getChildAt(i);
+            for (int i = 0; i < childCount; i++) {
+                View child = binding.blockBuilder.getChildAt(i);
 
-            if (child instanceof MaterialCardView) {
-                // Category header — hide initially, show if any block below matches
-                child.setVisibility(View.GONE);
-                lastHeader = child;
-                lastHeaderVisible = false;
-                continue;
-            }
-
-            if (child instanceof BlockView blockView) {
-                String opCode = blockView.opCode != null ? blockView.opCode.toLowerCase(Locale.ROOT) : "";
-                String spec = blockView.spec != null ? blockView.spec.toLowerCase(Locale.ROOT) : "";
-                CharSequence desc = blockView.getContentDescription();
-                String descStr = desc != null ? desc.toString().toLowerCase(Locale.ROOT) : "";
-
-                boolean matches = opCode.contains(lowerQuery)
-                        || spec.contains(lowerQuery)
-                        || descStr.contains(lowerQuery);
-
-                child.setVisibility(matches ? View.VISIBLE : View.GONE);
-                if (matches) {
-                    visibleCount++;
-                    if (lastHeader != null && !lastHeaderVisible) {
-                        lastHeader.setVisibility(View.VISIBLE);
-                        lastHeaderVisible = true;
-                    }
+                if (child instanceof MaterialCardView) {
+                    child.setVisibility(View.GONE);
+                    lastHeader = child;
+                    lastHeaderVisible = false;
+                    continue;
                 }
 
-                // Also toggle the spacer view before this block
-                if (i > 0) {
-                    View spacer = binding.blockBuilder.getChildAt(i - 1);
-                    if (!(spacer instanceof BlockView) && !(spacer instanceof MaterialCardView)) {
-                        spacer.setVisibility(matches ? View.VISIBLE : View.GONE);
+                if (child instanceof BlockView blockView) {
+                    boolean matches = blockView.matchesPaletteSearchQuery(lowerQuery);
+                    child.setVisibility(matches ? View.VISIBLE : View.GONE);
+                    if (matches) {
+                        visibleCount[0]++;
+                        if (lastHeader != null && !lastHeaderVisible) {
+                            lastHeader.setVisibility(View.VISIBLE);
+                            lastHeaderVisible = true;
+                        }
+                    }
+
+                    if (i > 0) {
+                        View spacer = binding.blockBuilder.getChildAt(i - 1);
+                        if (!(spacer instanceof BlockView) && !(spacer instanceof MaterialCardView)) {
+                            spacer.setVisibility(matches ? View.VISIBLE : View.GONE);
+                        }
                     }
                 }
             }
-        }
-        return visibleCount;
+        });
+        return visibleCount[0];
     }
-
 }

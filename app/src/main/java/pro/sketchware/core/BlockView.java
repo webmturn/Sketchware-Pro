@@ -1,7 +1,6 @@
 package pro.sketchware.core;
 
 import android.content.Context;
-import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.View;
@@ -71,6 +70,8 @@ public class BlockView extends BaseBlockView {
   public String componentTypeStr;
   
   private String spec2 = "";
+
+  private String paletteSearchTextCache;
   
   public BlockView(Context context, int index, String key, String value, String extra) {
     super(context, value, false);
@@ -89,9 +90,7 @@ public class BlockView extends BaseBlockView {
   }
   
   public final int getTextWidth(TextView textView) {
-    Rect rect = new Rect();
-    textView.getPaint().getTextBounds(textView.getText().toString(), 0, textView.getText().length(), rect);
-    return rect.width();
+    return (int) Math.ceil(textView.getPaint().measureText(textView.getText().toString()));
   }
   
   public final TextView createLabel(String label) {
@@ -346,6 +345,11 @@ public class BlockView extends BaseBlockView {
     }
 
     return false;
+  }
+
+  public boolean matchesPaletteSearchQuery(String lowerQuery) {
+    return lowerQuery != null && !lowerQuery.isEmpty()
+        && getPaletteSearchText().contains(lowerQuery);
   }
 
   public int getBlockType() {
@@ -874,6 +878,7 @@ public class BlockView extends BaseBlockView {
   
   public void setSpec(String spec) {
     this.spec = spec;
+    invalidateSearchCaches();
     removeAllViews();
     parseSpec(this.spec, blockColor);
     for (View view : specViews)
@@ -888,6 +893,33 @@ public class BlockView extends BaseBlockView {
       addView(elseLabel);
     } 
     layoutChain();
+  }
+
+  private String getPaletteSearchText() {
+    if (paletteSearchTextCache == null) {
+      StringBuilder searchText = new StringBuilder();
+      appendSearchValue(searchText, spec);
+      paletteSearchTextCache = searchText.toString().toLowerCase(java.util.Locale.ROOT);
+    }
+    return paletteSearchTextCache;
+  }
+
+  private void appendSearchValue(StringBuilder searchText, Object value) {
+    if (value == null) {
+      return;
+    }
+    String text = value.toString().trim();
+    if (text.isEmpty()) {
+      return;
+    }
+    if (searchText.length() > 0) {
+      searchText.append('\n');
+    }
+    searchText.append(text);
+  }
+
+  private void invalidateSearchCaches() {
+    paletteSearchTextCache = null;
   }
 
   private boolean containsSearchQuery(String lowerQuery, Object value) {

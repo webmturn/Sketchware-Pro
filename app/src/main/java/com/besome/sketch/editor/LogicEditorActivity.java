@@ -157,6 +157,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     private LogicEditorDrawer editorDrawer;
     private ObjectAnimator paletteShowAnimator, paletteHideAnimator, topMenuShowAnimator, topMenuHideAnimator, drawerShowAnimator, drawerHideAnimator;
     private ExtraPaletteBlock extraPaletteBlock;
+    private PaletteBuildInterceptor paletteBuildInterceptor;
     private ViewLogicEditor viewLogicEditor;
     private ViewDummy dummy;
     public PaletteSelector paletteSelector;
@@ -190,6 +191,20 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     private Runnable pendingCanvasSearchRunnable;
     private OnBackPressedCallback canvasSearchBackCallback;
     private boolean suppressCanvasSearchTextChange = false;
+
+    public interface PaletteBuildInterceptor {
+        void addDeprecatedBlock(String message, String type, String opCode);
+
+        void addPaletteCategory(String categoryName, int color);
+
+        void addPaletteLabel(String label, String tag, View.OnClickListener onClickListener);
+
+        View createPaletteBlock(String blockType, String opCode);
+
+        View createPaletteBlockWithSpec(String blockType, String spec, String opCode);
+
+        View createPaletteBlockWithComponent(String blockType, String spec, String opCode, String componentType);
+    }
 
     public static ArrayList<String> getAllJavaFileNames(String projectScId) {
         ArrayList<String> javaFileNames = new ArrayList<>();
@@ -555,10 +570,17 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public void addDeprecatedBlock(String message, String type, String opCode) {
+        if (paletteBuildInterceptor != null) {
+            paletteBuildInterceptor.addDeprecatedBlock(message, type, opCode);
+            return;
+        }
         paletteBlock.addDeprecatedBlock(message, type, opCode);
     }
 
     public View createPaletteBlock(String spec, String opCode) {
+        if (paletteBuildInterceptor != null) {
+            return paletteBuildInterceptor.createPaletteBlock(spec, opCode);
+        }
         BaseBlockView paletteBlockView = paletteBlock.addBlock("", spec, opCode);
         paletteBlockView.setTag(opCode);
         paletteBlockView.setClickable(true);
@@ -567,6 +589,9 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public final View createPaletteBlockWithSpec(String type, String spec, String opCode) {
+        if (paletteBuildInterceptor != null) {
+            return paletteBuildInterceptor.createPaletteBlockWithSpec(type, spec, opCode);
+        }
         BaseBlockView paletteBlockView = paletteBlock.addBlock(type, spec, opCode);
         paletteBlockView.setTag(opCode);
         paletteBlockView.setClickable(true);
@@ -575,6 +600,9 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public final View createPaletteBlockWithComponent(String type, String spec, String opCode, String componentType) {
+        if (paletteBuildInterceptor != null) {
+            return paletteBuildInterceptor.createPaletteBlockWithComponent(type, spec, opCode, componentType);
+        }
         BaseBlockView paletteBlockView = paletteBlock.addBlock(type, spec, opCode, componentType);
         paletteBlockView.setTag(componentType);
         paletteBlockView.setClickable(true);
@@ -1307,6 +1335,10 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public void addPaletteCategory(String categoryName, int i) {
+        if (paletteBuildInterceptor != null) {
+            paletteBuildInterceptor.addPaletteCategory(categoryName, i);
+            return;
+        }
         paletteBlock.addCategoryHeader(categoryName, i);
     }
 
@@ -1424,6 +1456,10 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public void addPaletteLabel(String label, String tag) {
+        if (paletteBuildInterceptor != null) {
+            paletteBuildInterceptor.addPaletteLabel(label, tag, this);
+            return;
+        }
         TextView textView = paletteBlock.addActionLabel(label);
         textView.setTag(tag);
         textView.setSoundEffectsEnabled(true);
@@ -1431,10 +1467,18 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public void addPaletteLabelWithListener(String label, String tag, View.OnClickListener onClickListener) {
+        if (paletteBuildInterceptor != null) {
+            paletteBuildInterceptor.addPaletteLabel(label, tag, onClickListener);
+            return;
+        }
         TextView textView = paletteBlock.addActionLabel(label);
         textView.setTag(tag);
         textView.setSoundEffectsEnabled(true);
         textView.setOnClickListener(onClickListener);
+    }
+
+    public void setPaletteBuildInterceptor(PaletteBuildInterceptor paletteBuildInterceptor) {
+        this.paletteBuildInterceptor = paletteBuildInterceptor;
     }
 
     public void activeIconDelete(boolean showDeleteIcon) {

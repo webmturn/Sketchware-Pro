@@ -3711,7 +3711,9 @@ Please try again later"</string>
     <string name="search_header">"  Search…"</string>
     <string name="search_hint">Search…</string>
     <string name="search_blocks_hint">Search blocks…</string>
+    <string name="search_blocks_min_length">Type at least %1$d characters</string>
     <string name="search_blocks_no_results">No blocks found</string>
+    <string name="search_blocks_result_limit">Showing first %1$d matches</string>
     <string name="search_canvas_blocks">Search placed blocks</string>
     <string name="search_canvas_blocks_hint">Search in canvas…</string>
     <string name="search_canvas_count">%1$d/%2$d</string>

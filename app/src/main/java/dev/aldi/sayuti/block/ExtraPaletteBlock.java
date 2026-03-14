@@ -3,6 +3,9 @@ package dev.aldi.sayuti.block;
 import static pro.sketchware.utility.ThemeUtils.getColor;
 import static pro.sketchware.utility.ThemeUtils.isDarkThemeEnabled;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.view.View;
 import android.util.Pair;
 
 import androidx.annotation.ColorInt;
@@ -11,10 +14,13 @@ import com.besome.sketch.beans.ComponentBean;
 import com.besome.sketch.beans.ProjectFileBean;
 import com.besome.sketch.beans.ViewBean;
 import com.besome.sketch.editor.LogicEditorActivity;
+import com.besome.sketch.editor.logic.PaletteBlock;
+import com.besome.sketch.editor.logic.PaletteSelector;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Set;
 
 import pro.sketchware.core.LayoutGenerator;
@@ -22,6 +28,8 @@ import pro.sketchware.core.ProjectDataManager;
 import pro.sketchware.core.BuildConfig;
 import pro.sketchware.core.BlockColorMapper;
 import mod.agus.jcoderz.beans.ViewBeans;
+import mod.hey.studios.editor.manage.block.ExtraBlockInfo;
+import mod.hey.studios.editor.manage.block.v2.BlockLoader;
 import mod.hey.studios.editor.view.IdGenerator;
 import mod.hey.studios.util.Helper;
 import mod.hey.studios.moreblock.ReturnMoreblockManager;
@@ -34,6 +42,7 @@ import pro.sketchware.blocks.ExtraBlocks;
 import pro.sketchware.control.logic.LogicClickListener;
 import pro.sketchware.utility.CustomVariableUtil;
 import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.StringResource;
 import pro.sketchware.utility.FileResConfig;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.SketchwareUtil;
@@ -57,6 +66,13 @@ import pro.sketchware.utility.SketchwareUtil;
  * @see ExtraBlocks
  */
 public class ExtraPaletteBlock {
+    private static final int MIN_BLOCK_SEARCH_QUERY_LENGTH = 2;
+    private static final int MAX_BLOCK_SEARCH_RESULTS = 120;
+    private static final int ASYNC_EXTRA_PALETTE_THRESHOLD = 120;
+    private static final int ASYNC_EXTRA_PALETTE_BATCH_SIZE = 24;
+    private static final int SEARCH_INDEX_EXTRA_PALETTE_BATCH_SIZE = 48;
+    private static final int ASYNC_SEARCH_RESULTS_THRESHOLD = 80;
+    private static final int ASYNC_SEARCH_RESULTS_BATCH_SIZE = 24;
 
     private final String eventName;
     private final String javaName;
@@ -72,7 +88,147 @@ public class ExtraPaletteBlock {
     private final LayoutGenerator layoutGenerator;
     public LogicEditorActivity logicEditor;
     private ArrayList<HashMap<String, Object>> cachedStringsListMap;
+    private final Handler searchIndexHandler = new Handler(Looper.getMainLooper());
+    private final Runnable searchIndexStepRunnable = this::buildNextSearchIndexChunk;
+    private final Runnable extraPaletteRenderRunnable = this::renderNextExtraPaletteChunk;
+    private final Runnable searchResultsRenderRunnable = this::renderNextSearchResultsChunk;
+    private final HashMap<String, String> cachedPaletteSearchTexts = new HashMap<>();
+    private final HashMap<String, String> cachedResolvedSpecs = new HashMap<>();
+    private final ArrayList<SearchPaletteEntry> searchPaletteEntries = new ArrayList<>();
+    private final ArrayList<PaletteSelector.paletteSelectorRecord> searchPalettesToBuild = new ArrayList<>();
+    private final ArrayList<HashMap<String, Object>> pendingSearchExtraPaletteBlocks = new ArrayList<>();
+    private final ArrayList<HashMap<String, Object>> pendingExtraPaletteBlocks = new ArrayList<>();
+    private final ArrayList<SearchPaletteEntry> pendingSearchResultEntries = new ArrayList<>();
     private boolean skipClear = false;
+    private boolean isSearchIndexBuilt = false;
+    private boolean isSearchIndexBuilding = false;
+    private boolean isExtraPaletteRendering = false;
+    private boolean isSearchResultsRendering = false;
+    private int nextSearchPaletteIndex = 0;
+    private int nextSearchExtraPaletteBlockIndex = 0;
+    private int nextExtraPaletteBlockIndex = 0;
+    private int nextSearchResultEntryIndex = 0;
+    private String pendingSearchQuery = "";
+
+    private interface SearchPaletteEntry {
+    }
+
+    private static final class SearchCategoryEntry implements SearchPaletteEntry {
+        private final String title;
+        private final int color;
+
+        private SearchCategoryEntry(String title, int color) {
+            this.title = title;
+            this.color = color;
+        }
+
+        private void render(LogicEditorActivity logicEditor) {
+            logicEditor.addPaletteCategory(title, color);
+        }
+    }
+
+    private enum SearchBlockKind {
+        SIMPLE,
+        SPEC,
+        COMPONENT,
+        DEPRECATED
+    }
+
+    private static final class SearchBlockEntry implements SearchPaletteEntry {
+        private final SearchBlockKind kind;
+        private final String spec;
+        private final String blockType;
+        private final String componentType;
+        private final String opCode;
+        private final String searchText;
+
+        private SearchBlockEntry(SearchBlockKind kind, String spec, String blockType,
+                                 String componentType, String opCode, String searchText) {
+            this.kind = kind;
+            this.spec = spec;
+            this.blockType = blockType;
+            this.componentType = componentType;
+            this.opCode = opCode;
+            this.searchText = searchText;
+        }
+
+        private boolean matches(String lowerQuery) {
+            return !lowerQuery.isEmpty() && searchText.contains(lowerQuery);
+        }
+
+        private void render(LogicEditorActivity logicEditor) {
+            switch (kind) {
+                case SIMPLE -> logicEditor.createPaletteBlock(blockType, opCode);
+                case SPEC -> logicEditor.createPaletteBlockWithSpec(blockType, spec, opCode);
+                case COMPONENT -> logicEditor.createPaletteBlockWithComponent(blockType, spec, opCode, componentType);
+                case DEPRECATED -> logicEditor.addDeprecatedBlock("", blockType, opCode);
+            }
+        }
+    }
+
+    private final class SearchIndexCollector implements LogicEditorActivity.PaletteBuildInterceptor {
+        private final View placeholderView = new View(logicEditor);
+
+        @Override
+        public void addDeprecatedBlock(String message, String type, String opCode) {
+            if (message != null && !message.isEmpty()) {
+                searchPaletteEntries.add(new SearchCategoryEntry(message, getDeprecatedHeaderColor()));
+            }
+            searchPaletteEntries.add(new SearchBlockEntry(
+                    SearchBlockKind.DEPRECATED,
+                    "",
+                    type,
+                    null,
+                    opCode,
+                    buildPaletteSearchText("", type, null, opCode)));
+        }
+
+        @Override
+        public void addPaletteCategory(String categoryName, int color) {
+            searchPaletteEntries.add(new SearchCategoryEntry(categoryName, color));
+        }
+
+        @Override
+        public void addPaletteLabel(String label, String tag, View.OnClickListener onClickListener) {
+            // Search results intentionally hide palette action buttons.
+        }
+
+        @Override
+        public View createPaletteBlock(String blockType, String opCode) {
+            searchPaletteEntries.add(new SearchBlockEntry(
+                    SearchBlockKind.SIMPLE,
+                    "",
+                    blockType,
+                    null,
+                    opCode,
+                    buildPaletteSearchText("", blockType, null, opCode)));
+            return placeholderView;
+        }
+
+        @Override
+        public View createPaletteBlockWithSpec(String blockType, String spec, String opCode) {
+            searchPaletteEntries.add(new SearchBlockEntry(
+                    SearchBlockKind.SPEC,
+                    spec,
+                    blockType,
+                    null,
+                    opCode,
+                    buildPaletteSearchText(spec, blockType, null, opCode)));
+            return placeholderView;
+        }
+
+        @Override
+        public View createPaletteBlockWithComponent(String blockType, String spec, String opCode, String componentType) {
+            searchPaletteEntries.add(new SearchBlockEntry(
+                    SearchBlockKind.COMPONENT,
+                    spec,
+                    blockType,
+                    componentType,
+                    opCode,
+                    buildPaletteSearchText(spec, blockType, componentType, opCode)));
+            return placeholderView;
+        }
+    }
 
     /**
      * Creates an ExtraPaletteBlock bound to the given logic editor.
@@ -417,28 +573,413 @@ public class ExtraPaletteBlock {
 
     public void invalidateStringsCache() {
         cachedStringsListMap = null;
+        invalidateSearchCache();
     }
 
     public void searchAllBlocks(String query) {
-        logicEditor.paletteBlock.clearAll();
-        extraBlocks.invalidateCustomVarCache();
-        skipClear = true;
-        for (var palette : logicEditor.paletteSelector.getAllPalettes()) {
-            logicEditor.addPaletteCategory(palette.text(), getTitleBgColor());
-            setBlock(palette.index(), 0);
+        cancelPendingExtraPaletteRender();
+        cancelPendingSearchResultsRender();
+        pendingSearchQuery = query;
+        if (query.length() < MIN_BLOCK_SEARCH_QUERY_LENGTH) {
+            cancelSearchIndexBuild();
+            showSearchShortQueryState();
+            return;
         }
-        skipClear = false;
-        logicEditor.paletteBlock.clearActions();
-        int count = logicEditor.paletteBlock.filterBlocks(query);
+        if (!isSearchIndexBuilt) {
+            if (!isSearchIndexBuilding) {
+                showSearchLoadingState();
+                startSearchIndexBuild();
+            }
+            return;
+        }
+        showSearchResults(query);
+    }
+
+    private void showSearchResults(String query) {
+        ArrayList<SearchPaletteEntry> matchedEntries = new ArrayList<>();
+        int count = collectSearchResults(query, matchedEntries);
         if (count == 0) {
             logicEditor.paletteBlock.clearAll();
             logicEditor.addPaletteCategory(
                     Helper.getResString(R.string.search_blocks_no_results),
                     getTitleBgColor());
+            return;
         }
+        if (count > ASYNC_SEARCH_RESULTS_THRESHOLD) {
+            startAsyncSearchResultsRender(matchedEntries);
+            return;
+        }
+        renderSearchEntries(matchedEntries);
+    }
+
+    private void showSearchShortQueryState() {
+        logicEditor.paletteBlock.runBulkUpdate(() -> {
+            logicEditor.paletteBlock.clearAll();
+            logicEditor.paletteBlock.addCategoryHeader(
+                    logicEditor.getString(
+                            R.string.search_blocks_min_length,
+                            MIN_BLOCK_SEARCH_QUERY_LENGTH),
+                    getTitleBgColor());
+        });
     }
 
     public void setBlock(int paletteId, int paletteColor) {
+        invalidateSearchCache();
+        cancelPendingExtraPaletteRender();
+        if (paletteId > 8) {
+            ArrayList<HashMap<String, Object>> extraBlockData = ExtraBlockFile.getExtraBlockData(String.valueOf(paletteId));
+            if (extraBlockData.size() > ASYNC_EXTRA_PALETTE_THRESHOLD) {
+                startAsyncExtraPaletteRender(extraBlockData);
+                return;
+            }
+        }
+        logicEditor.paletteBlock.runBulkUpdate(() -> populatePalette(paletteId, paletteColor));
+    }
+
+    private void invalidateSearchCache() {
+        cancelSearchIndexBuild();
+        cancelPendingSearchResultsRender();
+        cachedPaletteSearchTexts.clear();
+        cachedResolvedSpecs.clear();
+        searchPaletteEntries.clear();
+        searchPalettesToBuild.clear();
+        isSearchIndexBuilt = false;
+        pendingSearchQuery = "";
+    }
+
+    private void startSearchIndexBuild() {
+        searchPaletteEntries.clear();
+        searchPalettesToBuild.clear();
+        if (logicEditor.paletteSelector.getAllPalettes() != null) {
+            searchPalettesToBuild.addAll(logicEditor.paletteSelector.getAllPalettes());
+        }
+        if (searchPalettesToBuild.isEmpty()) {
+            isSearchIndexBuilt = true;
+            showSearchResults(pendingSearchQuery);
+            return;
+        }
+
+        extraBlocks.invalidateCustomVarCache();
+        nextSearchPaletteIndex = 0;
+        nextSearchExtraPaletteBlockIndex = 0;
+        pendingSearchExtraPaletteBlocks.clear();
+        isSearchIndexBuilding = true;
+        skipClear = true;
+        logicEditor.setPaletteBuildInterceptor(new SearchIndexCollector());
+        searchIndexHandler.post(searchIndexStepRunnable);
+    }
+
+    private void buildNextSearchIndexChunk() {
+        if (!isSearchIndexBuilding) {
+            return;
+        }
+
+        if (!pendingSearchExtraPaletteBlocks.isEmpty()) {
+            buildNextExtraPaletteSearchChunk();
+            return;
+        }
+
+        if (nextSearchPaletteIndex >= searchPalettesToBuild.size()) {
+            finishSearchIndexBuild();
+            return;
+        }
+
+        PaletteSelector.paletteSelectorRecord palette = searchPalettesToBuild.get(nextSearchPaletteIndex++);
+        logicEditor.addPaletteCategory(palette.text(), getTitleBgColor());
+
+        if (palette.index() > 8) {
+            pendingSearchExtraPaletteBlocks.clear();
+            pendingSearchExtraPaletteBlocks.addAll(ExtraBlockFile.getExtraBlockData(String.valueOf(palette.index())));
+            nextSearchExtraPaletteBlockIndex = 0;
+            if (!pendingSearchExtraPaletteBlocks.isEmpty()) {
+                buildNextExtraPaletteSearchChunk();
+                return;
+            }
+        }
+
+        populatePalette(palette.index(), 0);
+
+        if (nextSearchPaletteIndex < searchPalettesToBuild.size()) {
+            searchIndexHandler.post(searchIndexStepRunnable);
+            return;
+        }
+
+        finishSearchIndexBuild();
+    }
+
+    private void buildNextExtraPaletteSearchChunk() {
+        int endIndex = Math.min(
+                nextSearchExtraPaletteBlockIndex + SEARCH_INDEX_EXTRA_PALETTE_BATCH_SIZE,
+                pendingSearchExtraPaletteBlocks.size());
+        for (int i = nextSearchExtraPaletteBlockIndex; i < endIndex; i++) {
+            renderExtraPaletteBlock(pendingSearchExtraPaletteBlocks.get(i), i + 1);
+        }
+
+        nextSearchExtraPaletteBlockIndex = endIndex;
+        if (nextSearchExtraPaletteBlockIndex < pendingSearchExtraPaletteBlocks.size()) {
+            searchIndexHandler.post(searchIndexStepRunnable);
+            return;
+        }
+
+        pendingSearchExtraPaletteBlocks.clear();
+        nextSearchExtraPaletteBlockIndex = 0;
+        if (nextSearchPaletteIndex < searchPalettesToBuild.size()) {
+            searchIndexHandler.post(searchIndexStepRunnable);
+            return;
+        }
+
+        finishSearchIndexBuild();
+    }
+
+    private void finishSearchIndexBuild() {
+        if (!isSearchIndexBuilding) {
+            return;
+        }
+
+        searchIndexHandler.removeCallbacks(searchIndexStepRunnable);
+        isSearchIndexBuilding = false;
+        isSearchIndexBuilt = true;
+        nextSearchPaletteIndex = 0;
+        nextSearchExtraPaletteBlockIndex = 0;
+        searchPalettesToBuild.clear();
+        pendingSearchExtraPaletteBlocks.clear();
+        logicEditor.setPaletteBuildInterceptor(null);
+        skipClear = false;
+
+        if (!pendingSearchQuery.isEmpty()) {
+            showSearchResults(pendingSearchQuery);
+        }
+    }
+
+    private void cancelSearchIndexBuild() {
+        searchIndexHandler.removeCallbacks(searchIndexStepRunnable);
+        isSearchIndexBuilding = false;
+        nextSearchPaletteIndex = 0;
+        nextSearchExtraPaletteBlockIndex = 0;
+        pendingSearchExtraPaletteBlocks.clear();
+        logicEditor.setPaletteBuildInterceptor(null);
+        skipClear = false;
+    }
+
+    private void showSearchLoadingState() {
+        logicEditor.paletteBlock.runBulkUpdate(() -> {
+            logicEditor.paletteBlock.clearAll();
+            logicEditor.paletteBlock.addCategoryHeader(
+                    Helper.getResString(R.string.searching),
+                    getTitleBgColor());
+        });
+    }
+
+    private void startAsyncExtraPaletteRender(ArrayList<HashMap<String, Object>> extraBlockData) {
+        pendingExtraPaletteBlocks.clear();
+        pendingExtraPaletteBlocks.addAll(extraBlockData);
+        nextExtraPaletteBlockIndex = 0;
+        isExtraPaletteRendering = true;
+        logicEditor.paletteBlock.runBulkUpdate(() -> logicEditor.paletteBlock.clearAll());
+        renderNextExtraPaletteChunk();
+    }
+
+    private void renderNextExtraPaletteChunk() {
+        if (!isExtraPaletteRendering) {
+            return;
+        }
+
+        int endIndex = Math.min(
+                nextExtraPaletteBlockIndex + ASYNC_EXTRA_PALETTE_BATCH_SIZE,
+                pendingExtraPaletteBlocks.size());
+        logicEditor.paletteBlock.runBulkUpdate(() -> {
+            for (int i = nextExtraPaletteBlockIndex; i < endIndex; i++) {
+                renderExtraPaletteBlock(pendingExtraPaletteBlocks.get(i), i + 1);
+            }
+        });
+
+        nextExtraPaletteBlockIndex = endIndex;
+        if (nextExtraPaletteBlockIndex < pendingExtraPaletteBlocks.size()) {
+            searchIndexHandler.post(extraPaletteRenderRunnable);
+            return;
+        }
+
+        cancelPendingExtraPaletteRender();
+    }
+
+    private void cancelPendingExtraPaletteRender() {
+        searchIndexHandler.removeCallbacks(extraPaletteRenderRunnable);
+        isExtraPaletteRendering = false;
+        nextExtraPaletteBlockIndex = 0;
+        pendingExtraPaletteBlocks.clear();
+    }
+
+    private int collectSearchResults(String query, ArrayList<SearchPaletteEntry> matchedEntries) {
+        String lowerQuery = query.toLowerCase(Locale.ROOT);
+        int count = 0;
+        boolean limited = false;
+        SearchCategoryEntry pendingCategory = null;
+        boolean pendingCategoryRendered = false;
+
+        for (SearchPaletteEntry entry : searchPaletteEntries) {
+            if (entry instanceof SearchCategoryEntry categoryEntry) {
+                pendingCategory = categoryEntry;
+                pendingCategoryRendered = false;
+                continue;
+            }
+
+            SearchBlockEntry blockEntry = (SearchBlockEntry) entry;
+            if (!blockEntry.matches(lowerQuery)) {
+                continue;
+            }
+
+            if (pendingCategory != null && !pendingCategoryRendered) {
+                matchedEntries.add(pendingCategory);
+                pendingCategoryRendered = true;
+            }
+
+            matchedEntries.add(blockEntry);
+            count++;
+            if (count >= MAX_BLOCK_SEARCH_RESULTS) {
+                limited = true;
+                break;
+            }
+        }
+
+        if (limited) {
+            matchedEntries.add(0, new SearchCategoryEntry(
+                    logicEditor.getString(
+                            R.string.search_blocks_result_limit,
+                            MAX_BLOCK_SEARCH_RESULTS),
+                    getTitleBgColor()));
+        }
+
+        return count;
+    }
+
+    private void renderSearchEntries(ArrayList<SearchPaletteEntry> entries) {
+        logicEditor.paletteBlock.runBulkUpdate(() -> {
+            logicEditor.paletteBlock.clearAll();
+            for (SearchPaletteEntry entry : entries) {
+                if (entry instanceof SearchCategoryEntry categoryEntry) {
+                    categoryEntry.render(logicEditor);
+                } else {
+                    ((SearchBlockEntry) entry).render(logicEditor);
+                }
+            }
+        });
+    }
+
+    private void startAsyncSearchResultsRender(ArrayList<SearchPaletteEntry> entries) {
+        pendingSearchResultEntries.clear();
+        pendingSearchResultEntries.addAll(entries);
+        nextSearchResultEntryIndex = 0;
+        isSearchResultsRendering = true;
+        logicEditor.paletteBlock.runBulkUpdate(() -> logicEditor.paletteBlock.clearAll());
+        renderNextSearchResultsChunk();
+    }
+
+    private void renderNextSearchResultsChunk() {
+        if (!isSearchResultsRendering) {
+            return;
+        }
+
+        int endIndex = Math.min(
+                nextSearchResultEntryIndex + ASYNC_SEARCH_RESULTS_BATCH_SIZE,
+                pendingSearchResultEntries.size());
+        logicEditor.paletteBlock.runBulkUpdate(() -> {
+            for (int i = nextSearchResultEntryIndex; i < endIndex; i++) {
+                SearchPaletteEntry entry = pendingSearchResultEntries.get(i);
+                if (entry instanceof SearchCategoryEntry categoryEntry) {
+                    categoryEntry.render(logicEditor);
+                } else {
+                    ((SearchBlockEntry) entry).render(logicEditor);
+                }
+            }
+        });
+
+        nextSearchResultEntryIndex = endIndex;
+        if (nextSearchResultEntryIndex < pendingSearchResultEntries.size()) {
+            searchIndexHandler.post(searchResultsRenderRunnable);
+            return;
+        }
+
+        cancelPendingSearchResultsRender();
+    }
+
+    private void cancelPendingSearchResultsRender() {
+        searchIndexHandler.removeCallbacks(searchResultsRenderRunnable);
+        isSearchResultsRendering = false;
+        nextSearchResultEntryIndex = 0;
+        pendingSearchResultEntries.clear();
+    }
+
+    private int getDeprecatedHeaderColor() {
+        return getColor(logicEditor,
+                isDarkThemeEnabled(logicEditor)
+                        ? R.attr.colorSurfaceContainerHigh
+                        : R.attr.colorSurfaceInverse);
+    }
+
+    private String buildPaletteSearchText(String spec, String blockType, String componentType, String opCode) {
+        String cacheKey = String.valueOf(spec) + '\n' + blockType + '\n' + componentType + '\n' + opCode;
+        String cachedSearchText = cachedPaletteSearchTexts.get(cacheKey);
+        if (cachedSearchText != null) {
+            return cachedSearchText;
+        }
+
+        StringBuilder searchText = new StringBuilder();
+        appendSearchText(searchText, resolvePaletteDisplaySpec(spec, blockType, opCode));
+        String resolvedSearchText = searchText.toString().toLowerCase(Locale.ROOT);
+        cachedPaletteSearchTexts.put(cacheKey, resolvedSearchText);
+        return resolvedSearchText;
+    }
+
+    private void appendSearchText(StringBuilder searchText, String value) {
+        if (value == null) {
+            return;
+        }
+        String trimmedValue = value.trim();
+        if (trimmedValue.isEmpty()) {
+            return;
+        }
+        if (searchText.length() > 0) {
+            searchText.append('\n');
+        }
+        searchText.append(trimmedValue);
+    }
+
+    private String resolvePaletteDisplaySpec(String spec, String blockType, String opCode) {
+        int color = BlockColorMapper.getBlockColor(opCode, blockType);
+        boolean isDefinitionBlock = "h".equals(blockType);
+        if (!isDefinitionBlock && !opCode.equals("definedFunc") && !opCode.equals("getVar")
+                && !opCode.equals("getResStr") && !opCode.equals("getArg") && color != -7711273) {
+            return StringResource.getInstance().getEventTranslation(logicEditor, opCode);
+        }
+
+        if (color == -7711273) {
+            if (spec != null && !spec.isEmpty()) {
+                return spec;
+            }
+
+            String cachedSpec = cachedResolvedSpecs.get(opCode);
+            if (cachedSpec != null) {
+                return cachedSpec;
+            }
+
+            ExtraBlockInfo blockInfo = BlockLoader.getBlockInfo(opCode);
+            if (blockInfo != null && blockInfo.isMissing && !sc_id.isEmpty()) {
+                blockInfo = BlockLoader.getBlockFromProject(sc_id, opCode);
+            }
+
+            String extraSpec = blockInfo != null ? blockInfo.getSpec() : "";
+            if (extraSpec != null && !extraSpec.isEmpty()) {
+                cachedResolvedSpecs.put(opCode, extraSpec);
+                return extraSpec;
+            }
+            cachedResolvedSpecs.put(opCode, opCode);
+            return opCode;
+        }
+
+        return spec == null || spec.isEmpty() ? opCode : spec;
+    }
+
+    private void populatePalette(int paletteId, int paletteColor) {
         if (!skipClear) {
             // Remove previous palette's blocks
             logicEditor.paletteBlock.clearAll();
@@ -1314,53 +1855,50 @@ public class ExtraPaletteBlock {
                 return;
 
             default:
-                int paletteIndex = -1, paletteBlocks = 0;
-                ArrayList<HashMap<String, Object>> extraBlockData = ExtraBlockFile.getExtraBlockData();
+                ArrayList<HashMap<String, Object>> extraBlockData = ExtraBlockFile.getExtraBlockData(String.valueOf(paletteId));
                 for (int i = 0, extraBlockDataSize = extraBlockData.size(); i < extraBlockDataSize; i++) {
-                    HashMap<String, Object> map = extraBlockData.get(i);
-
-                    Object palette = map.get("palette");
-                    if (palette instanceof String paletteString) {
-
-                        if (paletteString.equals(String.valueOf(paletteId))) {
-                            if (paletteIndex == -1) paletteIndex = Integer.parseInt(paletteString);
-                            paletteBlocks++;
-
-                            Object type = map.get("type");
-                            if (type instanceof String typeString) {
-
-                                if (typeString.equals("h")) {
-                                    Object spec = map.get("spec");
-                                    if (spec instanceof String specString) {
-                                        logicEditor.addPaletteCategory(specString, getTitleBgColor());
-                                    } else {
-                                        SketchwareUtil.toastError(String.format(Helper.getResString(R.string.extra_block_error_invalid_spec), paletteBlocks));
-                                    }
-                                } else {
-                                    Object name = map.get("name");
-                                    if (name instanceof String nameString) {
-
-                                        Object typeName = map.get("typeName");
-                                        if (typeName instanceof String typeNameString) {
-
-                                            logicEditor.createPaletteBlockWithComponent("", typeString, typeNameString, nameString);
-                                        } else {
-                                            logicEditor.createPaletteBlockWithComponent("", typeString, "", nameString);
-                                        }
-                                    } else {
-                                        SketchwareUtil.toastError(String.format(Helper.getResString(R.string.extra_block_error_invalid_block_name), paletteBlocks));
-                                    }
-                                }
-                            } else {
-                                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.extra_block_error_invalid_block_type), paletteBlocks));
-                            }
-                        }
-                    } else {
-                        SketchwareUtil.toastError(String.format(Helper.getResString(R.string.extra_block_error_invalid_block_palette), paletteBlocks));
-                    }
+                    renderExtraPaletteBlock(extraBlockData.get(i), i + 1);
                 }
                 break;
         }
+    }
+
+    private void renderExtraPaletteBlock(HashMap<String, Object> map, int paletteBlocks) {
+        Object palette = map.get("palette");
+        if (!(palette instanceof String)) {
+            SketchwareUtil.toastError(String.format(Helper.getResString(R.string.extra_block_error_invalid_block_palette), paletteBlocks));
+            return;
+        }
+
+        Object type = map.get("type");
+        if (!(type instanceof String typeString)) {
+            SketchwareUtil.toastError(String.format(Helper.getResString(R.string.extra_block_error_invalid_block_type), paletteBlocks));
+            return;
+        }
+
+        if (typeString.equals("h")) {
+            Object spec = map.get("spec");
+            if (spec instanceof String specString) {
+                logicEditor.addPaletteCategory(specString, getTitleBgColor());
+            } else {
+                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.extra_block_error_invalid_spec), paletteBlocks));
+            }
+            return;
+        }
+
+        Object name = map.get("name");
+        if (!(name instanceof String nameString)) {
+            SketchwareUtil.toastError(String.format(Helper.getResString(R.string.extra_block_error_invalid_block_name), paletteBlocks));
+            return;
+        }
+
+        Object typeName = map.get("typeName");
+        if (typeName instanceof String typeNameString) {
+            logicEditor.createPaletteBlockWithComponent("", typeString, typeNameString, nameString);
+            return;
+        }
+
+        logicEditor.createPaletteBlockWithComponent("", typeString, "", nameString);
     }
 
     private @ColorInt int getTitleBgColor() {
