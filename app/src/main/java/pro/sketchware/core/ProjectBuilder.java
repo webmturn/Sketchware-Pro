@@ -343,8 +343,8 @@ public class ProjectBuilder {
         StringBuilder classpath = new StringBuilder();
 
         /*
-         * Add ProjectFilePaths#u (.sketchware/mysc/xxx/bin/classes) if it exists
-         * since there might be compiled Kotlin files for ecj to use classpath as.
+         * Add ProjectFilePaths#compiledClassesPath (.sketchware/mysc/xxx/bin/classes) if it exists,
+         * since it may already contain compiled Kotlin classes that ECJ should see on the classpath.
          */
         KotlinCompilerBridge.maybeAddKotlinFilesToClasspath(classpath, projectFilePaths);
 
@@ -352,8 +352,8 @@ public class ProjectBuilder {
         classpath.append(androidJarPath);
 
         /* Add HTTP legacy files if wanted */
-        if (!buildSettings.getValue(BuildSettings.SETTING_NO_HTTP_LEGACY,
-                BuildSettings.SETTING_GENERIC_VALUE_FALSE).equals(BuildSettings.SETTING_GENERIC_VALUE_TRUE)) {
+        if (!buildSettings.getValue(BuildSettings.SETTING_NO_HTTP_LEGACY, BuildSettings.SETTING_GENERIC_VALUE_FALSE)
+                .equals(BuildSettings.SETTING_GENERIC_VALUE_TRUE)) {
             classpath.append(":").append(BuiltInLibraries.getLibraryClassesJarPathString(BuiltInLibraries.HTTP_LEGACY_ANDROID));
         }
 
