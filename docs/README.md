@@ -34,6 +34,7 @@ Documents are grouped by purpose so that long-term references, active proposals,
 | Document | Description |
 |----------|-------------|
 | [local-library-dependency-order-solution.md](local-library-dependency-order-solution.md) | Unimplemented proposal for local library dependency ordering via topological sort |
+| [lan-web-editing-mvp-plan.md](lan-web-editing-mvp-plan.md) | MVP planning note for LAN-based Web viewing, low-risk editing, and single-writer collaboration |
 
 ## Historical Plans
 
