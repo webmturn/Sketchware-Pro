@@ -155,12 +155,12 @@ public class DefaultExtraMenuBean {
                 title = Helper.getResString(R.string.menu_select_transcript_mode);
                 menus.addAll(Arrays.asList(BlockConstants.TRANSCRIPT_MODE));
             }
-            // idk, but it seems this isn't used anywhere, yet it was included in the menu file.
+            // Used by the legacy ListView scroll-state blocks.
             case "listscrollparam" -> {
                 title = Helper.getResString(R.string.menu_select_scroll_param);
                 menus.addAll(Arrays.asList(BlockConstants.LIST_SCROLL_STATES));
             }
-            // same with listscrollparam
+            // Used by RecyclerView and ViewPager scroll-state blocks.
             case "recyclerscrollparam", "pagerscrollparam" -> {
                 title = Helper.getResString(R.string.menu_select_scroll_param);
                 menus.addAll(Arrays.asList(BlockConstants.RECYCLER_SCROLL_STATES));

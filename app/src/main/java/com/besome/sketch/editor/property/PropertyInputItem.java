@@ -840,17 +840,17 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
      * }
      * <p>
      * // Using getClassInfo
-     * if (bean.getClassInfo().a("TextView")) {
+     * if (bean.getClassInfo().matchesType("TextView")) {
      * attrs.add("android:text");
      * }
-     * if (bean.getClassInfo().b("LinearLayout")) {
+     * if (bean.getClassInfo().isExactType("LinearLayout")) {
      * attrs.add("android:orientation");
      * }
      * <p>
      * Notes for getClassInfo:
-     * - a(String): Similar to instanceof for view class names.
-     * - b(String): Represents the actual type of the view, I think?.
-     * Idk if there's a difference between ViewBean#type and this.
+     * - matchesType(String): checks the full type path, similar to an instanceof-style test.
+     * - isExactType(String): checks only the concrete widget/layout type.
+     * ViewBean#type stores the numeric editor type, while ClassInfo carries the resolved class hierarchy.
      *
      * @return A list of additional attributes for the specified view type.
      */

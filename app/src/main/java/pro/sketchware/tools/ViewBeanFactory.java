@@ -31,7 +31,7 @@ public class ViewBeanFactory {
             case "MaterialSwitch" -> ViewBean.VIEW_TYPE_WIDGET_SWITCH;
             case "MaterialCardView", "CardView" -> ViewBeans.VIEW_TYPE_LAYOUT_CARDVIEW;
             case "TextInputEditText" -> ViewBean.VIEW_TYPE_WIDGET_EDITTEXT;
-            //idk should I use ImageView(ViewBean.VIEW_TYPE_WIDGET_IMAGEVIEW) or Button(ViewBean.VIEW_TYPE_WIDGET_BUTTON)?
+            // Treat ImageButton as an image widget so image-specific properties remain available.
             case "ImageButton" -> ViewBean.VIEW_TYPE_WIDGET_IMAGEVIEW;
             case "NestedScrollView" -> ViewBean.VIEW_TYPE_LAYOUT_VSCROLLVIEW;
             default -> def;

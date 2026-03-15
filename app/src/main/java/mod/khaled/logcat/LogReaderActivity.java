@@ -223,7 +223,7 @@ public class LogReaderActivity extends BaseAppCompatActivity {
 
                 Matcher matcher = logPattern.matcher(intent.getStringExtra("log"));
                 if (matcher.matches()) {
-                    //group 1 = pid, time stuff & idk
+                    // group 1 = timestamp / process prefix before the log level marker
                     //group 2 = log type (a,d,e,i,w)
                     //group 3 = log tag,headers
                     //group 4 = everything else

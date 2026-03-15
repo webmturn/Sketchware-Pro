@@ -224,7 +224,7 @@ public class BlockInterpreter {
                 return param;
             }
         } else if (type == 0) {
-            //the same with type == 1
+            // Same fallback idea as the numeric branch above, but for booleans.
             if (param.isEmpty()) {
                 return "true";
             }
