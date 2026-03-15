@@ -150,6 +150,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     public String scId = "";
     public String id = "";
     public String eventName = "";
+    private String pendingScrollBlockId = null;
     private Vibrator vibrator;
     private LinearLayout paletteLayout, paletteArea;
     private FloatingActionButton openBlocksMenuButton;
@@ -440,70 +441,6 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     public void showMoreBlockImporter() {
         ArrayList<MoreBlockCollectionBean> moreBlocks = MoreBlockCollectionManager.getInstance().getMoreBlocks();
         new MoreblockImporterDialog(this, moreBlocks, this).show();
-    }
-
-    public void showRemoveListDialog() {
-        MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
-        dialog.setTitle(R.string.logic_editor_title_remove_list);
-        View dialogView = ViewUtil.inflateLayout(this, R.layout.property_popup_selector_single);
-        ViewGroup viewGroup = dialogView.findViewById(R.id.rg_content);
-        for (Pair<Integer, String> list : ProjectDataManager.getProjectDataManager(scId).getListVariables(projectFile.getJavaName())) {
-            viewGroup.addView(createRadioButton(list.second));
-        }
-        dialog.setView(dialogView);
-        dialog.setPositiveButton(R.string.common_word_remove, (v, which) -> {
-            int childCount = viewGroup.getChildCount();
-            int radioIdx = 0;
-            while (radioIdx < childCount) {
-                RadioButton radioButton = (RadioButton) viewGroup.getChildAt(radioIdx);
-                if (radioButton.isChecked()) {
-                    if (!blockPane.hasListReference(Helper.getText(radioButton))) {
-                        if (!ProjectDataManager.getProjectDataManager(scId).isListUsedInBlocks(projectFile.getJavaName(), Helper.getText(radioButton), id + "_" + eventName)) {
-                            removeListVariable(Helper.getText(radioButton));
-                        }
-                    }
-                    Toast.makeText(getContext(), R.string.logic_editor_message_currently_used_list, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                radioIdx++;
-            }
-            v.dismiss();
-        });
-        dialog.setNegativeButton(R.string.common_word_cancel, null);
-        dialog.show();
-    }
-
-    public void showRemoveVariableDialog() {
-        MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
-        dialog.setTitle(R.string.logic_editor_title_remove_variable);
-        View dialogView = ViewUtil.inflateLayout(this, R.layout.property_popup_selector_single);
-        ViewGroup viewGroup = dialogView.findViewById(R.id.rg_content);
-        for (Pair<Integer, String> next : ProjectDataManager.getProjectDataManager(scId).getVariables(projectFile.getJavaName())) {
-            RadioButton radioButton = createRadioButton(next.second);
-            radioButton.setTag(next.first);
-            viewGroup.addView(radioButton);
-        }
-        dialog.setView(dialogView);
-        dialog.setPositiveButton(R.string.common_word_remove, (v, which) -> {
-            int childCount = viewGroup.getChildCount();
-            int radioIdx = 0;
-            while (radioIdx < childCount) {
-                RadioButton radioButton = (RadioButton) viewGroup.getChildAt(radioIdx);
-                if (radioButton.isChecked()) {
-                    if (!blockPane.hasMapReference(Helper.getText(radioButton))) {
-                        if (!ProjectDataManager.getProjectDataManager(scId).isVariableUsedInBlocks(projectFile.getJavaName(), Helper.getText(radioButton), id + "_" + eventName)) {
-                            removeVariable(Helper.getText(radioButton));
-                        }
-                    }
-                    Toast.makeText(getContext(), R.string.logic_editor_message_currently_used_variable, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                radioIdx++;
-            }
-            v.dismiss();
-        });
-        dialog.setNegativeButton(R.string.common_word_cancel, null);
-        dialog.show();
     }
 
     public void saveProject() {
@@ -2054,14 +1991,10 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             if (tag != null) {
                 if (tag.equals("variableAdd")) {
                     showAddNewVariableDialog();
-                } else if (tag.equals("variableRemove")) {
-                    showRemoveVariableDialog();
                 } else if (tag.equals("openResourcesEditor")) {
                     openResourcesEditor();
                 } else if (tag.equals("listAdd")) {
                     showAddListDialog();
-                } else if (tag.equals("listRemove")) {
-                    showRemoveListDialog();
                 } else if (tag.equals("blockAdd")) {
                     Intent intent = new Intent(this, MakeBlockActivity.class);
                     intent.putExtra("sc_id", scId);
@@ -2136,11 +2069,13 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             scId = getIntent().getStringExtra("sc_id");
             id = getIntent().getStringExtra("id");
             eventName = getIntent().getStringExtra("event");
+            pendingScrollBlockId = getIntent().getStringExtra("scroll_to_block_id");
             parcelable = getIntent().getParcelableExtra("project_file");
         } else {
             scId = savedInstanceState.getString("sc_id");
             id = savedInstanceState.getString("id");
             eventName = savedInstanceState.getString("event");
+            pendingScrollBlockId = savedInstanceState.getString("scroll_to_block_id");
             parcelable = savedInstanceState.getParcelable("project_file");
         }
         if (parcelable == null) {
@@ -2339,6 +2274,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         bundle.putString("sc_id", scId);
         bundle.putString("id", id);
         bundle.putString("event", eventName);
+        bundle.putString("scroll_to_block_id", pendingScrollBlockId);
         bundle.putParcelable("project_file", projectFile);
         super.onSaveInstanceState(bundle);
         ArrayList<BlockBean> blocks = blockPane.getBlocks();
@@ -2848,7 +2784,10 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                         a.dismissLoadingDialog();
                         Choreographer.getInstance().postFrameCallback(ft -> {
                             LogicEditorActivity act = getActivity();
-                            if (act != null) act.loadBlockCollections();
+                            if (act != null) {
+                                act.loadBlockCollections();
+                                act.scrollToPendingBlock();
+                            }
                         });
                     }
                 };
@@ -3012,9 +2951,37 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 canvasSearchIndex + 1, canvasSearchMatches.size()));
     }
 
-    private void scrollToBlock(BlockView target) {
+    public void scrollToBlock(BlockView target) {
         int scrollX = (int) target.getX() - viewLogicEditor.getWidth() / 2 + target.getWidth() / 2;
         int scrollY = (int) target.getY() - viewLogicEditor.getHeight() / 2 + target.getHeight() / 2;
         viewLogicEditor.scrollTo(Math.max(0, scrollX), Math.max(0, scrollY));
+    }
+
+    private void scrollToPendingBlock() {
+        if (pendingScrollBlockId == null) return;
+        String blockIdStr = pendingScrollBlockId;
+        pendingScrollBlockId = null;
+        BlockView blockView = blockPane.findBlockByString(blockIdStr);
+        if (blockView != null) {
+            blockPane.clearSearchHighlight();
+            ArrayList<BlockView> single = new ArrayList<>();
+            single.add(blockView);
+            blockPane.highlightSearchResults(single, blockView);
+            scrollToBlock(blockView);
+        }
+    }
+
+    public void navigateToEvent(String targetId, String targetEventName, String blockId) {
+        saveBlocks();
+        Intent intent = new Intent(this, LogicEditorActivity.class);
+        intent.putExtra("sc_id", scId);
+        intent.putExtra("id", targetId);
+        intent.putExtra("event", targetEventName);
+        intent.putExtra("project_file", projectFile);
+        intent.putExtra("event_text", targetId + " : " + targetEventName);
+        if (blockId != null) {
+            intent.putExtra("scroll_to_block_id", blockId);
+        }
+        startActivity(intent);
     }
 }

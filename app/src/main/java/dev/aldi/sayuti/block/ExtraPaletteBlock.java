@@ -1021,16 +1021,16 @@ public class ExtraPaletteBlock {
             case 0:
                 logicEditor.addPaletteLabel(Helper.getResString(R.string.logic_editor_panel_button_add_variable), "variableAdd");
                 logicEditor.addPaletteLabelWithListener(Helper.getResString(R.string.logic_editor_panel_button_add_custom_variable), "variableAddNew", clickListener);
-                logicEditor.addPaletteLabelWithListener(Helper.getResString(R.string.logic_editor_panel_button_remove_variable), "variableRemove", clickListener);
-                logicEditor.addPaletteLabelWithListener(Helper.getResString(R.string.logic_editor_panel_button_rename_variable), "variableRename", clickListener);
+                logicEditor.addPaletteLabelWithListener(Helper.getResString(R.string.logic_editor_panel_button_manage_variable), "variableManage", clickListener);
+                logicEditor.addPaletteLabelWithListener(Helper.getResString(R.string.logic_editor_panel_button_find_refs_variable), "variableFindRefs", clickListener);
                 variables();
                 return;
 
             case 1:
                 logicEditor.addPaletteLabel(Helper.getResString(R.string.logic_editor_panel_button_add_list), "listAdd");
                 logicEditor.addPaletteLabelWithListener(Helper.getResString(R.string.logic_editor_panel_button_add_custom_list), "listAddCustom", clickListener);
-                logicEditor.addPaletteLabelWithListener(Helper.getResString(R.string.logic_editor_panel_button_remove_list), "listRemove", clickListener);
-                logicEditor.addPaletteLabelWithListener(Helper.getResString(R.string.logic_editor_panel_button_rename_list), "listRename", clickListener);
+                logicEditor.addPaletteLabelWithListener(Helper.getResString(R.string.logic_editor_panel_button_manage_list), "listManage", clickListener);
+                logicEditor.addPaletteLabelWithListener(Helper.getResString(R.string.logic_editor_panel_button_find_refs_list), "listFindRefs", clickListener);
                 list();
                 return;
 

@@ -927,6 +927,53 @@ public class ProjectDataStore {
     return false;
   }
   
+  public ArrayList<VariableReference> findVariableReferences(String fileName, String variableName, boolean isList) {
+    ArrayList<VariableReference> references = new ArrayList<>();
+    HashMap<String, ArrayList<BlockBean>> blockEntryMap = blockMap.get(fileName);
+    if (blockEntryMap == null)
+      return references;
+    for (Map.Entry<String, ArrayList<BlockBean>> entry : blockEntryMap.entrySet()) {
+      String eventKey = entry.getKey();
+      for (BlockBean blockBean : entry.getValue()) {
+        ClassInfo blockClassInfo = blockBean.getClassInfo();
+        if (blockClassInfo != null
+            && (isList ? blockClassInfo.isList() : blockClassInfo.isVariable())
+            && blockBean.spec.equals(variableName)) {
+          references.add(new VariableReference(eventKey, blockBean.opCode, blockBean.spec, blockBean.id));
+          continue;
+        }
+        ArrayList<ClassInfo> paramClassInfos = blockBean.getParamClassInfo();
+        if (paramClassInfos != null && !paramClassInfos.isEmpty()) {
+          for (int b = 0; b < paramClassInfos.size(); b++) {
+            ClassInfo paramClassInfo = paramClassInfos.get(b);
+            if (paramClassInfo != null
+                && (isList ? paramClassInfo.isList() : paramClassInfo.isVariable())
+                && b < blockBean.parameters.size()
+                && blockBean.parameters.get(b).equals(variableName)) {
+              references.add(new VariableReference(eventKey, blockBean.opCode, blockBean.spec, blockBean.id));
+              break;
+            }
+          }
+        }
+      }
+    }
+    return references;
+  }
+  
+  public static class VariableReference {
+    public final String eventKey;
+    public final String opCode;
+    public final String blockSpec;
+    public final String blockId;
+    
+    public VariableReference(String eventKey, String opCode, String blockSpec, String blockId) {
+      this.eventKey = eventKey;
+      this.opCode = opCode;
+      this.blockSpec = blockSpec;
+      this.blockId = blockId;
+    }
+  }
+  
   public ArrayList<ViewBean> getViews(String fileName) {
     ArrayList<ViewBean> views = viewMap.get(fileName);
     return views != null ? views : new ArrayList<>();
