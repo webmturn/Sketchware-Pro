@@ -3,6 +3,7 @@ package pro.sketchware.fragments.settings.events.creator;
 import static pro.sketchware.utility.GsonUtils.getGson;
 
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,11 +14,11 @@ import androidx.annotation.Nullable;
 import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import pro.sketchware.core.BaseFragment;
 import pro.sketchware.fragments.settings.events.EventsManagerConstants;
 import mod.hey.studios.util.Helper;
+import pro.sketchware.model.CustomEvent;
 import mod.hilal.saif.activities.tools.IconSelectorDialog;
 import mod.jbk.util.OldResourceIdMapper;
 import pro.sketchware.R;
@@ -137,11 +138,12 @@ public class EventsManagerCreatorFragment extends BaseFragment {
             binding.eventsCreatorIcon.requestFocus();
             return;
         }
-        ArrayList<HashMap<String, Object>> eventsList;
+        ArrayList<CustomEvent> eventsList;
         String concat = EventsManagerConstants.EVENTS_FILE.getAbsolutePath();
         if (FileUtil.isExistFile(concat)) {
             try {
-                eventsList = getGson().fromJson(FileUtil.readFile(concat), Helper.TYPE_MAP_LIST);
+                eventsList = getGson().fromJson(FileUtil.readFile(concat),
+                        new TypeToken<ArrayList<CustomEvent>>(){}.getType());
                 if (eventsList == null) eventsList = new ArrayList<>();
             } catch (JsonSyntaxException e) {
                 eventsList = new ArrayList<>();
@@ -149,7 +151,7 @@ public class EventsManagerCreatorFragment extends BaseFragment {
         } else {
             eventsList = new ArrayList<>();
         }
-        HashMap<String, Object> eventData = new HashMap<>();
+        CustomEvent eventData = new CustomEvent();
         if (isEdit) {
             int index = figureP(eventsList, _name);
             if (index < 0) {
@@ -158,18 +160,18 @@ public class EventsManagerCreatorFragment extends BaseFragment {
             }
             eventData = eventsList.get(index);
         }
-        eventData.put("name", Helper.getText(binding.eventsCreatorEventname));
-        eventData.put("var", Helper.getText(binding.eventsCreatorVarname));
+        eventData.setName(Helper.getText(binding.eventsCreatorEventname));
+        eventData.setVar(Helper.getText(binding.eventsCreatorVarname));
         if (isActivityEvent) {
-            eventData.put("listener", "");
+            eventData.setListener("");
         } else {
-            eventData.put("listener", lisName);
+            eventData.setListener(lisName);
         }
-        eventData.put("icon", Helper.getText(binding.eventsCreatorIcon));
-        eventData.put("description", Helper.getText(binding.eventsCreatorDesc));
-        eventData.put("parameters", Helper.getText(binding.eventsCreatorParams));
-        eventData.put("code", Helper.getText(binding.eventsCreatorCode));
-        eventData.put("headerSpec", Helper.getText(binding.eventsCreatorSpec));
+        eventData.setIcon(Helper.getText(binding.eventsCreatorIcon));
+        eventData.setDescription(Helper.getText(binding.eventsCreatorDesc));
+        eventData.setParameters(Helper.getText(binding.eventsCreatorParams));
+        eventData.setCode(Helper.getText(binding.eventsCreatorCode));
+        eventData.setHeaderSpec(Helper.getText(binding.eventsCreatorSpec));
         if (!isEdit) {
             eventsList.add(eventData);
         }
@@ -178,9 +180,9 @@ public class EventsManagerCreatorFragment extends BaseFragment {
         getParentFragmentManager().popBackStack();
     }
 
-    private int figureP(ArrayList<HashMap<String, Object>> eventsList, String eventName) {
+    private int figureP(ArrayList<CustomEvent> eventsList, String eventName) {
         for (int i = 0; i < eventsList.size(); i++) {
-            if (eventName.equals(eventsList.get(i).get("name"))) {
+            if (eventName.equals(eventsList.get(i).getName())) {
                 return i;
             }
         }

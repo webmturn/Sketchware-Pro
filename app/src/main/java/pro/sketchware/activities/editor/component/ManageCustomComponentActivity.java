@@ -29,10 +29,11 @@ import com.besome.sketch.lib.ui.CollapsibleButton;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import com.google.gson.reflect.TypeToken;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -44,6 +45,7 @@ import dev.pranav.filepicker.FilePickerOptions;
 import mod.hey.studios.util.Helper;
 import mod.hilal.saif.components.ComponentsHandler;
 import mod.jbk.util.OldResourceIdMapper;
+import pro.sketchware.model.CustomComponent;
 import pro.sketchware.R;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.SketchwareUtil;
@@ -53,7 +55,7 @@ public class ManageCustomComponentActivity extends BaseAppCompatActivity {
 
     private static final String COMPONENT_EXPORT_DIR = SketchwarePaths.getExtraDataExport() + "/components/";
     private static final String COMPONENT_DIR = SketchwarePaths.getCustomComponent();
-    private List<HashMap<String, Object>> componentsList = new ArrayList<>();
+    private List<CustomComponent> componentsList = new ArrayList<>();
     private TextView tv_guide;
     private RecyclerView componentView;
 
@@ -121,7 +123,8 @@ public class ManageCustomComponentActivity extends BaseAppCompatActivity {
 
     private void readComponents(String _path) {
         try {
-            componentsList = getGson().fromJson(FileUtil.readFile(_path), Helper.TYPE_MAP_LIST);
+            componentsList = getGson().fromJson(FileUtil.readFile(_path),
+                    new TypeToken<ArrayList<CustomComponent>>(){}.getType());
         } catch (JsonSyntaxException e) {
             componentsList = null;
         }
@@ -165,7 +168,7 @@ public class ManageCustomComponentActivity extends BaseAppCompatActivity {
         var components = readResult.second;
 
         var componentNames = components.stream()
-                .map(component -> (String) component.get("name"))
+                .map(CustomComponent::getName)
                 .collect(Collectors.toList());
         if (componentNames.size() > 1) {
             MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
@@ -214,13 +217,13 @@ public class ManageCustomComponentActivity extends BaseAppCompatActivity {
         }
     }
 
-    private void save(HashMap<String, Object> _item) {
+    private void save(CustomComponent _item) {
         componentsList.remove(_item);
         FileUtil.writeFile(COMPONENT_DIR, getGson().toJson(componentsList));
     }
 
     private void export(int position) {
-        String componentName = String.valueOf(componentsList.get(position).get("name"));
+        String componentName = componentsList.get(position).getName();
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(Helper.getResString(R.string.common_word_export));
         dialog.setMessage(Helper.getResString(R.string.developer_tools_component_message_export, componentName));
@@ -237,11 +240,11 @@ public class ManageCustomComponentActivity extends BaseAppCompatActivity {
     }
 
     public class ComponentsAdapter extends RecyclerView.Adapter<ComponentsAdapter.ViewHolder> {
-        private final List<HashMap<String, Object>> components;
+        private final List<CustomComponent> components;
         private final List<Boolean> collapse;
         private final List<Boolean> confirmation;
 
-        public ComponentsAdapter(List<HashMap<String, Object>> itemList) {
+        public ComponentsAdapter(List<CustomComponent> itemList) {
             components = itemList;
             collapse = new ArrayList<>(Collections.nCopies(itemList.size(), true));
             confirmation = new ArrayList<>(Collections.nCopies(itemList.size(), false));
@@ -354,14 +357,15 @@ public class ManageCustomComponentActivity extends BaseAppCompatActivity {
                 setOnClickCollapseConfig(v -> v != root);
             }
 
-            public void bind(HashMap<String, Object> item) {
-                type.setText((String) item.get("name"));
-                description.setText((String) item.get("description"));
-                Object iconValue = item.get("icon");
-                int imgRes = iconValue instanceof Number
-                        ? ((Number) iconValue).intValue()
-                        : Integer.parseInt(String.valueOf(iconValue));
-                icon.setImageResource(OldResourceIdMapper.getDrawableFromOldResourceId(imgRes));
+            public void bind(CustomComponent item) {
+                type.setText(item.getName());
+                description.setText(item.getDescription());
+                try {
+                    int imgRes = Integer.parseInt(item.getIcon());
+                    icon.setImageResource(OldResourceIdMapper.getDrawableFromOldResourceId(imgRes));
+                } catch (NumberFormatException e) {
+                    icon.setImageResource(R.drawable.color_new_96);
+                }
             }
 
             @Override

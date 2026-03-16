@@ -11,13 +11,12 @@ import androidx.annotation.NonNull;
 import com.besome.sketch.beans.ComponentBean;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import pro.sketchware.core.ComponentCodeGenerator;
@@ -25,6 +24,7 @@ import mod.hey.studios.util.Helper;
 import mod.jbk.util.OldResourceIdMapper;
 import pro.sketchware.R;
 import pro.sketchware.SketchApplication;
+import pro.sketchware.model.CustomComponent;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.SketchwareUtil;
 //responsible code :
@@ -37,7 +37,7 @@ import pro.sketchware.utility.SketchwareUtil;
 
 public class ComponentsHandler {
 
-    private static ArrayList<HashMap<String, Object>> cachedCustomComponents = readCustomComponents();
+    private static ArrayList<CustomComponent> cachedCustomComponents = readCustomComponents();
 
     /**
      * This is a utility class, don't instantiate it
@@ -55,27 +55,16 @@ public class ComponentsHandler {
         }
 
         for (int i = 0; i < cachedCustomComponents.size(); i++) {
-            HashMap<String, Object> component = cachedCustomComponents.get(i);
+            CustomComponent component = cachedCustomComponents.get(i);
             if (component != null) {
-                Object typeName = component.get("typeName");
-
-                if (typeName instanceof String) {
-                    if (name.equals(typeName)) {
-                        Object id = component.get("id");
-
-                        if (id instanceof String) {
-                            try {
-                                return Integer.parseInt((String) id);
-                            } catch (NumberFormatException e) {
-                                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_id_in), i + 1), Toast.LENGTH_LONG);
-                                break;
-                            }
-                        } else {
-                            SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_id_in), i + 1), Toast.LENGTH_LONG);
-                        }
+                if (name.equals(component.getTypeName())) {
+                    int idVal = component.getIdAsInt();
+                    if (idVal != -1) {
+                        return idVal;
+                    } else {
+                        SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_id_in), i + 1), Toast.LENGTH_LONG);
+                        break;
                     }
-                } else {
-                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_type_name_in), i + 1), Toast.LENGTH_LONG);
                 }
             } else {
                 SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_null), i));
@@ -95,29 +84,10 @@ public class ComponentsHandler {
         }
 
         for (int i = 0; i < cachedCustomComponents.size(); i++) {
-            HashMap<String, Object> component = cachedCustomComponents.get(i);
+            CustomComponent component = cachedCustomComponents.get(i);
             if (component != null) {
-                Object componentId = component.get("id");
-
-                if (componentId instanceof String) {
-                    try {
-                        int idInt = Integer.parseInt((String) componentId);
-
-                        if (idInt == id) {
-                            Object componentTypeName = component.get("typeName");
-
-                            if (componentTypeName instanceof String) {
-                                return (String) componentTypeName;
-                            } else {
-                                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_type_name_at), i + 1), Toast.LENGTH_LONG);
-                                break;
-                            }
-                        }
-                    } catch (NumberFormatException e) {
-                        SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_id_at), i + 1), Toast.LENGTH_LONG);
-                    }
-                } else {
-                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_id_at), i + 1), Toast.LENGTH_LONG);
+                if (component.getIdAsInt() == id) {
+                    return component.getTypeName();
                 }
             } else {
                 SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_null), i), Toast.LENGTH_LONG);
@@ -137,29 +107,10 @@ public class ComponentsHandler {
         }
 
         for (int i = 0; i < cachedCustomComponents.size(); i++) {
-            HashMap<String, Object> component = cachedCustomComponents.get(i);
+            CustomComponent component = cachedCustomComponents.get(i);
             if (component != null) {
-                Object componentId = component.get("id");
-
-                if (componentId instanceof String) {
-                    try {
-                        int idInt = Integer.parseInt((String) componentId);
-
-                        if (idInt == id) {
-                            Object componentName = component.get("name");
-
-                            if (componentName instanceof String) {
-                                return (String) componentName;
-                            } else {
-                                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_name_for), i + 1), Toast.LENGTH_LONG);
-                                break;
-                            }
-                        }
-                    } catch (NumberFormatException e) {
-                        SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_id_for), i + 1), Toast.LENGTH_LONG);
-                    }
-                } else {
-                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_id_for), i + 1), Toast.LENGTH_LONG);
+                if (component.getIdAsInt() == id) {
+                    return component.getName();
                 }
             } else {
                 SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_null), i));
@@ -178,31 +129,15 @@ public class ComponentsHandler {
         }
 
         for (int i = 0; i < cachedCustomComponents.size(); i++) {
-            HashMap<String, Object> component = cachedCustomComponents.get(i);
+            CustomComponent component = cachedCustomComponents.get(i);
             if (component != null) {
-                Object idObject = component.get("id");
-
-                if (idObject instanceof String) {
+                if (component.getIdAsInt() == id) {
                     try {
-                        int componentId = Integer.parseInt((String) idObject);
-
-                        if (componentId == id) {
-                            Object iconObject = component.get("icon");
-
-                            if (iconObject instanceof String) {
-                                try {
-                                    return OldResourceIdMapper.getDrawableFromOldResourceId(Integer.parseInt((String) iconObject));
-                                } catch (NumberFormatException e) {
-                                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_icon), i + 1), Toast.LENGTH_LONG);
-                                    break;
-                                }
-                            }
-                        }
+                        return OldResourceIdMapper.getDrawableFromOldResourceId(Integer.parseInt(component.getIcon()));
                     } catch (NumberFormatException e) {
-                        SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_id_for), i + 1), Toast.LENGTH_LONG);
+                        SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_icon), i + 1), Toast.LENGTH_LONG);
+                        break;
                     }
-                } else {
-                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_id_for), i + 1), Toast.LENGTH_LONG);
                 }
             } else {
                 SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_null), i));
@@ -233,29 +168,10 @@ public class ComponentsHandler {
      */
     public static String description2(int id) {
         for (int i = 0; i < cachedCustomComponents.size(); i++) {
-            HashMap<String, Object> component = cachedCustomComponents.get(i);
+            CustomComponent component = cachedCustomComponents.get(i);
             if (component != null) {
-                Object componentId = component.get("id");
-
-                if (componentId instanceof String) {
-                    try {
-                        int idInt = Integer.parseInt((String) componentId);
-
-                        if (idInt == id) {
-                            Object componentDescription = component.get("description");
-
-                            if (componentDescription instanceof String) {
-                                return (String) component.get("description");
-                            } else {
-                                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_description), i + 1), Toast.LENGTH_LONG);
-                                break;
-                            }
-                        }
-                    } catch (NumberFormatException e) {
-                        SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_id_for), i + 1), Toast.LENGTH_LONG);
-                    }
-                } else {
-                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_id_for), i + 1), Toast.LENGTH_LONG);
+                if (component.getIdAsInt() == id) {
+                    return component.getDescription();
                 }
             } else {
                 SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_null), i));
@@ -272,28 +188,10 @@ public class ComponentsHandler {
     public static String docs(int id) {
         if (id != 36) {
             for (int i = 0; i < cachedCustomComponents.size(); i++) {
-                HashMap<String, Object> component = cachedCustomComponents.get(i);
+                CustomComponent component = cachedCustomComponents.get(i);
                 if (component != null) {
-                    Object componentId = component.get("id");
-                    if (componentId instanceof String) {
-                        try {
-                            int componentIdInteger = Integer.parseInt((String) componentId);
-
-                            if (componentIdInteger == id) {
-                                Object componentUrl = component.get("url");
-
-                                if (componentUrl instanceof String) {
-                                    return (String) componentUrl;
-                                } else {
-                                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_url), i + 1), Toast.LENGTH_LONG);
-                                    break;
-                                }
-                            }
-                        } catch (NumberFormatException e) {
-                            SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_id_for), i + 1), Toast.LENGTH_LONG);
-                        }
-                    } else {
-                        SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_id_for), i + 1), Toast.LENGTH_LONG);
+                    if (component.getIdAsInt() == id) {
+                        return component.getUrl();
                     }
                 } else {
                     SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_null), i));
@@ -313,29 +211,10 @@ public class ComponentsHandler {
         }
 
         for (int i = 0; i < cachedCustomComponents.size(); i++) {
-            HashMap<String, Object> component = cachedCustomComponents.get(i);
+            CustomComponent component = cachedCustomComponents.get(i);
             if (component != null) {
-                Object componentId = component.get("id");
-
-                if (componentId instanceof String) {
-                    try {
-                        int componentIdInteger = Integer.parseInt((String) componentId);
-
-                        if (componentIdInteger == id) {
-                            Object componentBuildClass = component.get("buildClass");
-
-                            if (componentBuildClass instanceof String) {
-                                return (String) componentBuildClass;
-                            } else {
-                                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_build_class), i + 1), Toast.LENGTH_LONG);
-                                break;
-                            }
-                        }
-                    } catch (NumberFormatException e) {
-                        SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_id_for), i + 1), Toast.LENGTH_LONG);
-                    }
-                } else {
-                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_id_for), i + 1), Toast.LENGTH_LONG);
+                if (component.getIdAsInt() == id) {
+                    return component.getBuildClass();
                 }
             } else {
                 SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_null), i));
@@ -357,16 +236,11 @@ public class ComponentsHandler {
         list.add(new ComponentBean(36));
 
         for (int i = 0; i < cachedCustomComponents.size(); i++) {
-            HashMap<String, Object> component = cachedCustomComponents.get(i);
+            CustomComponent component = cachedCustomComponents.get(i);
             if (component != null) {
-                Object componentId = component.get("id");
-
-                if (componentId instanceof String) {
-                    try {
-                        list.add(new ComponentBean(Integer.parseInt((String) componentId)));
-                    } catch (NumberFormatException e) {
-                        SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_id_for), i + 1), Toast.LENGTH_LONG);
-                    }
+                int idVal = component.getIdAsInt();
+                if (idVal != -1) {
+                    list.add(new ComponentBean(idVal));
                 } else {
                     SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_id_for), i + 1), Toast.LENGTH_LONG);
                 }
@@ -382,29 +256,10 @@ public class ComponentsHandler {
         }
 
         for (int i = 0; i < cachedCustomComponents.size(); i++) {
-            HashMap<String, Object> component = cachedCustomComponents.get(i);
+            CustomComponent component = cachedCustomComponents.get(i);
             if (component != null) {
-                Object componentId = component.get("id");
-
-                if (componentId instanceof String) {
-                    try {
-                        int componentIdInteger = Integer.parseInt((String) componentId);
-
-                        if (componentIdInteger == id) {
-                            Object componentVarName = component.get("varName");
-
-                            if (componentVarName instanceof String) {
-                                return (String) componentVarName;
-                            } else {
-                                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_var_name), i + 1), Toast.LENGTH_LONG);
-                                break;
-                            }
-                        }
-                    } catch (NumberFormatException e) {
-                        SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_id_for), i + 1), Toast.LENGTH_LONG);
-                    }
-                } else {
-                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_id_for), i + 1), Toast.LENGTH_LONG);
+                if (component.getIdAsInt() == id) {
+                    return component.getVarName();
                 }
             } else {
                 SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_null), i));
@@ -425,23 +280,10 @@ public class ComponentsHandler {
         }
 
         for (int i = 0, customComponentsSize = cachedCustomComponents.size(); i < customComponentsSize; i++) {
-            HashMap<String, Object> component = cachedCustomComponents.get(i);
+            CustomComponent component = cachedCustomComponents.get(i);
             if (component != null) {
-                Object componentTypeName = component.get("typeName");
-
-                if (componentTypeName instanceof String) {
-                    if (name.equals(componentTypeName)) {
-                        Object componentClass = component.get("class");
-
-                        if (componentClass instanceof String) {
-                            return (String) componentClass;
-                        } else {
-                            SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_class), i + 1), Toast.LENGTH_LONG);
-                            break;
-                        }
-                    }
-                } else {
-                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_type_name_for), i + 1), Toast.LENGTH_LONG);
+                if (name.equals(component.getTypeName())) {
+                    return component.getClassName();
                 }
             } else {
                 SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_null), i));
@@ -457,27 +299,15 @@ public class ComponentsHandler {
      */
     public static String extraVar(String name, String code, String varName) {
         for (int i = 0; i < cachedCustomComponents.size(); i++) {
-            HashMap<String, Object> component = cachedCustomComponents.get(i);
+            CustomComponent component = cachedCustomComponents.get(i);
             if (component != null) {
-                Object componentName = component.get("name");
-
-                if (componentName instanceof String) {
-                    if (name.equals(componentName)) {
-                        Object componentAdditionalVar = component.get("additionalVar");
-
-                        if (componentAdditionalVar instanceof String) {
-                            if (TextUtils.isEmpty((String) componentAdditionalVar)) {
-                                return code;
-                            } else {
-                                return code + "\r\n" +
-                                        ((String) componentAdditionalVar).replace("###", varName);
-                            }
-                        } else {
-                            SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_additional_var), i + 1), Toast.LENGTH_LONG);
-                        }
+                if (name.equals(component.getName())) {
+                    String additionalVar = component.getAdditionalVar();
+                    if (TextUtils.isEmpty(additionalVar)) {
+                        return code;
+                    } else {
+                        return code + "\r\n" + additionalVar.replace("###", varName);
                     }
-                } else {
-                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_name_at), i + 1), Toast.LENGTH_LONG);
                 }
             } else {
                 SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_null), i));
@@ -490,26 +320,15 @@ public class ComponentsHandler {
     // define extra variable
     public static String defineExtraVar(String name, String varName) {
         for (int i = 0; i < cachedCustomComponents.size(); i++) {
-            HashMap<String, Object> component = cachedCustomComponents.get(i);
+            CustomComponent component = cachedCustomComponents.get(i);
             if (component != null) {
-                Object componentName = component.get("name");
-
-                if (componentName instanceof String) {
-                    if (name.equals(componentName)) {
-                        Object componentDefineAdditionalVar = component.get("defineAdditionalVar");
-
-                        if (componentDefineAdditionalVar instanceof String) {
-                            if (TextUtils.isEmpty((String) componentDefineAdditionalVar)) {
-                                break;
-                            } else {
-                                return ((String) componentDefineAdditionalVar).replace("###", varName);
-                            }
-                        } else {
-                            SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_additional_var_in), i + 1), Toast.LENGTH_LONG);
-                        }
+                if (name.equals(component.getName())) {
+                    String defineAdditionalVar = component.getDefineAdditionalVar();
+                    if (TextUtils.isEmpty(defineAdditionalVar)) {
+                        break;
+                    } else {
+                        return defineAdditionalVar.replace("###", varName);
                     }
-                } else {
-                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_name_in), i + 1));
                 }
             } else {
                 SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_null), i));
@@ -521,24 +340,13 @@ public class ComponentsHandler {
 
     public static void getImports(String name, ArrayList<String> arrayList) {
         for (int i = 0; i < cachedCustomComponents.size(); i++) {
-            HashMap<String, Object> component = cachedCustomComponents.get(i);
+            CustomComponent component = cachedCustomComponents.get(i);
             if (component != null) {
-                Object componentVarName = component.get("varName");
-
-                if (componentVarName instanceof String) {
-                    if (name.equals(componentVarName)) {
-                        Object componentImports = component.get("imports");
-
-                        if (componentImports instanceof String componentImportsString) {
-                            String[] componentImportsArray = componentImportsString.split("\n");
-                            arrayList.addAll(Arrays.asList(componentImportsArray));
-                        } else {
-                            SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_imports), i + 1), Toast.LENGTH_LONG);
-                            break;
-                        }
+                if (name.equals(component.getVarName())) {
+                    String imports = component.getImports();
+                    if (!imports.isEmpty()) {
+                        arrayList.addAll(Arrays.asList(imports.split("\n")));
                     }
-                } else {
-                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_var_name_in), i + 1), Toast.LENGTH_LONG);
                 }
             } else {
                 SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_null), i));
@@ -554,11 +362,12 @@ public class ComponentsHandler {
      * @return List of Custom Components. Will never return null, but will warn the user about
      * an invalid Custom Components JSON file.
      */
-    private static ArrayList<HashMap<String, Object>> readCustomComponents() {
-        ArrayList<HashMap<String, Object>> data;
+    private static ArrayList<CustomComponent> readCustomComponents() {
+        ArrayList<CustomComponent> data;
         if (FileUtil.isExistFile(getPath())) {
             try {
-                data = new Gson().fromJson(FileUtil.readFile(getPath()), Helper.TYPE_MAP_LIST);
+                data = new Gson().fromJson(FileUtil.readFile(getPath()),
+                        new TypeToken<ArrayList<CustomComponent>>(){}.getType());
             } catch (JsonSyntaxException e) {
                 data = new ArrayList<>();
                 SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_read_failed), e.getMessage()));
@@ -578,37 +387,40 @@ public class ComponentsHandler {
         cachedCustomComponents = readCustomComponents();
     }
 
-    public static boolean isValidComponent(Map<String, Object> map) {
-        return map.containsKey("name")
-                && map.containsKey("id")
-                && map.containsKey("icon")
-                && map.containsKey("varName")
-                && map.containsKey("typeName")
-                && map.containsKey("buildClass")
-                && map.containsKey("class")
-                && map.containsKey("description")
-                && map.containsKey("url")
-                && map.containsKey("additionalVar")
-                && map.containsKey("defineAdditionalVar")
-                && map.containsKey("imports");
+    public static boolean isValidComponent(CustomComponent component) {
+        return !component.getName().isEmpty()
+                && !component.getId().isEmpty()
+                && !component.getIcon().isEmpty()
+                && !component.getVarName().isEmpty()
+                && !component.getTypeName().isEmpty()
+                && !component.getBuildClass().isEmpty()
+                && !component.getClassName().isEmpty()
+                && !component.getDescription().isEmpty()
+                && !component.getUrl().isEmpty();
     }
 
-    public static boolean isValidComponentList(List<? extends Map<String, Object>> list) {
-        for (Map<String, Object> map : list) {
-            if (!isValidComponent(map)) {
+    public static boolean isValidComponentList(List<CustomComponent> list) {
+        for (CustomComponent component : list) {
+            if (!isValidComponent(component)) {
                 return false;
             }
         }
         return true;
     }
 
-    public static Pair<Optional<String>, List<HashMap<String, Object>>> readComponents(String filePath) {
+    public static Pair<Optional<String>, List<CustomComponent>> readComponents(String filePath) {
         String content = FileUtil.readFile(filePath);
         if (content.isEmpty() || content.equals("[]")) {
             return new Pair<>(Optional.of(Helper.getResString(R.string.common_message_selected_file_empty)), Collections.emptyList());
         }
 
-        var components = new Gson().fromJson(content, Helper.TYPE_MAP_LIST);
+        List<CustomComponent> components;
+        try {
+            components = new Gson().fromJson(content,
+                    new TypeToken<ArrayList<CustomComponent>>(){}.getType());
+        } catch (JsonSyntaxException e) {
+            return new Pair<>(Optional.of(Helper.getResString(R.string.publish_message_dialog_invalid_json)), Collections.emptyList());
+        }
         if (components == null || components.isEmpty() || !isValidComponentList(components)) {
             return new Pair<>(Optional.of(Helper.getResString(R.string.publish_message_dialog_invalid_json)), Collections.emptyList());
         }

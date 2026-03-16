@@ -13,13 +13,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import com.google.gson.reflect.TypeToken;
+
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 
 import pro.sketchware.core.BaseFragment;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.OldResourceIdMapper;
+import pro.sketchware.model.CustomEvent;
 import pro.sketchware.R;
 import pro.sketchware.databinding.FragmentEventsManagerDetailsBinding;
 import pro.sketchware.databinding.LayoutEventItemBinding;
@@ -30,7 +32,7 @@ import pro.sketchware.utility.UI;
 
 public class EventsManagerDetailsFragment extends BaseFragment {
 
-    private final ArrayList<HashMap<String, Object>> listMap = new ArrayList<>();
+    private final ArrayList<CustomEvent> listMap = new ArrayList<>();
     private String listName = "";
     private FragmentEventsManagerDetailsBinding binding;
 
@@ -80,15 +82,16 @@ public class EventsManagerDetailsFragment extends BaseFragment {
     private void refreshList() {
         listMap.clear();
         if (FileUtil.isExistFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath())) {
-            ArrayList<HashMap<String, Object>> events;
+            ArrayList<CustomEvent> events;
             try {
                 events = getGson()
-                        .fromJson(FileUtil.readFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath()), Helper.TYPE_MAP_LIST);
+                        .fromJson(FileUtil.readFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath()),
+                                new TypeToken<ArrayList<CustomEvent>>(){}.getType());
             } catch (JsonSyntaxException e) {
                 events = new ArrayList<>();
             }
             for (int i = 0; i < events.size(); i++) {
-                if (listName.equals(events.get(i).get("listener"))) {
+                if (listName.equals(events.get(i).getListener())) {
                     listMap.add(events.get(i));
                 }
             }
@@ -104,15 +107,16 @@ public class EventsManagerDetailsFragment extends BaseFragment {
     private void deleteItem(int position) {
         listMap.remove(position);
         if (FileUtil.isExistFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath())) {
-            ArrayList<HashMap<String, Object>> events;
+            ArrayList<CustomEvent> events;
             try {
                 events = getGson()
-                        .fromJson(FileUtil.readFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath()), Helper.TYPE_MAP_LIST);
+                        .fromJson(FileUtil.readFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath()),
+                                new TypeToken<ArrayList<CustomEvent>>(){}.getType());
             } catch (JsonSyntaxException e) {
                 return;
             }
             for (int i = events.size() - 1; i > -1; i--) {
-                if (listName.equals(events.get(i).get("listener"))) {
+                if (listName.equals(events.get(i).getListener())) {
                     events.remove(i);
                 }
             }
@@ -124,9 +128,9 @@ public class EventsManagerDetailsFragment extends BaseFragment {
 
     public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder> {
 
-        private final ArrayList<HashMap<String, Object>> dataArray;
+        private final ArrayList<CustomEvent> dataArray;
 
-        public EventsAdapter(ArrayList<HashMap<String, Object>> arrayList) {
+        public EventsAdapter(ArrayList<CustomEvent> arrayList) {
             dataArray = arrayList;
         }
 
@@ -139,61 +143,62 @@ public class EventsManagerDetailsFragment extends BaseFragment {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            HashMap<String, Object> item = dataArray.get(position);
+            CustomEvent item = dataArray.get(position);
 
             holder.itemView.setBackgroundResource(UI.getShapedBackgroundForList(dataArray, position));
 
             if (listName.isEmpty()) {
                 holder.binding.eventIcon.setImageResource(R.drawable.ic_mtrl_code);
             } else {
-                Object iconValue = dataArray.get(position).get("icon");
-                int imgRes = iconValue instanceof Number
-                        ? ((Number) iconValue).intValue()
-                        : Integer.parseInt(String.valueOf(iconValue));
-                holder.binding.eventIcon.setImageResource(OldResourceIdMapper.getDrawableFromOldResourceId(imgRes));
+                try {
+                    int imgRes = Integer.parseInt(item.getIcon());
+                    holder.binding.eventIcon.setImageResource(OldResourceIdMapper.getDrawableFromOldResourceId(imgRes));
+                } catch (NumberFormatException e) {
+                    holder.binding.eventIcon.setImageResource(R.drawable.android_icon);
+                }
             }
 
-            holder.binding.eventTitle.setText((String) item.get("name"));
-            if ("".equals(dataArray.get(position).get("var"))) {
+            holder.binding.eventTitle.setText(item.getName());
+            if (item.getVar().isEmpty()) {
                 holder.binding.eventSubtitle.setText(Helper.getResString(R.string.events_activity_event));
             } else {
-                holder.binding.eventSubtitle.setText((String) dataArray.get(position).get("var"));
+                holder.binding.eventSubtitle.setText(item.getVar());
             }
             holder.itemView.setOnClickListener(v -> {
                 Bundle args = new Bundle();
                 args.putString("lis_name", listName);
-                args.putString("event", (String) dataArray.get(position).get("name"));
+                args.putString("event", item.getName());
                 args.putString("_pos", String.valueOf(position));
-                args.putString("_name", (String) dataArray.get(position).get("name"));
-                args.putString("_var", (String) dataArray.get(position).get("var"));
-                args.putString("_lis", (String) dataArray.get(position).get("listener"));
-                args.putString("_icon", (String) dataArray.get(position).get("icon"));
-                args.putString("_desc", (String) dataArray.get(position).get("description"));
-                args.putString("_par", (String) dataArray.get(position).get("parameters"));
-                args.putString("_spec", (String) dataArray.get(position).get("headerSpec"));
-                args.putString("_code", (String) dataArray.get(position).get("code"));
+                args.putString("_name", item.getName());
+                args.putString("_var", item.getVar());
+                args.putString("_lis", item.getListener());
+                args.putString("_icon", item.getIcon());
+                args.putString("_desc", item.getDescription());
+                args.putString("_par", item.getParameters());
+                args.putString("_spec", item.getHeaderSpec());
+                args.putString("_code", item.getCode());
                 EventsManagerCreatorFragment fragment = new EventsManagerCreatorFragment();
                 fragment.setArguments(args);
                 openFragment(fragment);
             });
             holder.itemView.setOnLongClickListener(v -> {
                 new MaterialAlertDialogBuilder(requireContext())
-                        .setTitle((String) dataArray.get(position).get("name"))
+                        .setTitle(item.getName())
                         .setMessage(R.string.events_delete_event_msg)
                         .setPositiveButton(R.string.common_word_delete, (dialog, i) -> deleteItem(position))
                         .setNeutralButton(R.string.common_word_edit, (dialog, i) -> {
                             Bundle args = new Bundle();
                             args.putString("lis_name", listName);
-                            args.putString("event", (String) dataArray.get(position).get("name"));
+                            args.putString("event", item.getName());
                             args.putString("_pos", String.valueOf(position));
-                            args.putString("_name", (String) dataArray.get(position).get("name"));
-                            args.putString("_var", (String) dataArray.get(position).get("var"));
-                            args.putString("_lis", (String) dataArray.get(position).get("listener"));
-                            args.putString("_icon", (String) dataArray.get(position).get("icon"));
-                            args.putString("_desc", (String) dataArray.get(position).get("description"));
-                            args.putString("_par", (String) dataArray.get(position).get("parameters"));
-                            args.putString("_spec", (String) dataArray.get(position).get("headerSpec"));
-                            args.putString("_code", (String) dataArray.get(position).get("code"));
+                            args.putString("_name", item.getName());
+                            args.putString("_var", item.getVar());
+                            args.putString("_lis", item.getListener());
+                            args.putString("_icon", item.getIcon());
+                            args.putString("_desc", item.getDescription());
+                            args.putString("_par", item.getParameters());
+                            args.putString("_spec", item.getHeaderSpec());
+                            args.putString("_code", item.getCode());
                             EventsManagerCreatorFragment fragment = new EventsManagerCreatorFragment();
                             fragment.setArguments(args);
                             openFragment(fragment);

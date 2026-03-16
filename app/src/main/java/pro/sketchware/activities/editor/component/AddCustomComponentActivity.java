@@ -3,6 +3,7 @@ package pro.sketchware.activities.editor.component;
 import static pro.sketchware.utility.GsonUtils.getGson;
 
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,7 +21,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -33,6 +33,7 @@ import mod.hilal.saif.activities.tools.IconSelectorDialog;
 import mod.hilal.saif.components.ComponentsHandler;
 import mod.jbk.util.LogUtil;
 import mod.jbk.util.OldResourceIdMapper;
+import pro.sketchware.model.CustomComponent;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageCustomComponentAddBinding;
 import pro.sketchware.tools.ComponentHelper;
@@ -97,9 +98,10 @@ public class AddCustomComponentActivity extends BaseAppCompatActivity implements
     private void fillUp() {
         if (FileUtil.isExistFile(path)) {
             try {
-                ArrayList<HashMap<String, Object>> list = getGson().fromJson(FileUtil.readFile(path), Helper.TYPE_MAP_LIST);
+                ArrayList<CustomComponent> list = getGson().fromJson(FileUtil.readFile(path),
+                        new TypeToken<ArrayList<CustomComponent>>(){}.getType());
                 if (list == null || position >= list.size()) return;
-                HashMap<String, Object> map = list.get(position);
+                CustomComponent map = list.get(position);
                 setupViews(map);
             } catch (JsonSyntaxException e) {
                 LogUtil.w("AddCustomComponentActivity", "Failed to parse custom component JSON", e);
@@ -133,19 +135,19 @@ public class AddCustomComponentActivity extends BaseAppCompatActivity implements
         }
     }
 
-    private void setupViews(HashMap<String, Object> map) {
-        binding.componentName.setText((String) map.get("name"));
-        binding.componentId.setText((String) map.get("id"));
-        binding.componentIcon.setText((String) map.get("icon"));
-        binding.componentVariableName.setText((String) map.get("varName"));
-        binding.componentTypeName.setText((String) map.get("typeName"));
-        binding.componentBuildClass.setText((String) map.get("buildClass"));
-        binding.componentTypeClass.setText((String) map.get("class"));
-        binding.componentDescription.setText((String) map.get("description"));
-        binding.componentDocUrl.setText((String) map.get("url"));
-        binding.componentAddVar.setText((String) map.get("additionalVar"));
-        binding.componentDefAddVar.setText((String) map.get("defineAdditionalVar"));
-        binding.componentImports.setText((String) map.get("imports"));
+    private void setupViews(CustomComponent map) {
+        binding.componentName.setText(map.getName());
+        binding.componentId.setText(map.getId());
+        binding.componentIcon.setText(map.getIcon());
+        binding.componentVariableName.setText(map.getVarName());
+        binding.componentTypeName.setText(map.getTypeName());
+        binding.componentBuildClass.setText(map.getBuildClass());
+        binding.componentTypeClass.setText(map.getClassName());
+        binding.componentDescription.setText(map.getDescription());
+        binding.componentDocUrl.setText(map.getUrl());
+        binding.componentAddVar.setText(map.getAdditionalVar());
+        binding.componentDefAddVar.setText(map.getDefineAdditionalVar());
+        binding.componentImports.setText(map.getImports());
     }
 
     private void showIconSelectorDialog() {
@@ -163,30 +165,31 @@ public class AddCustomComponentActivity extends BaseAppCompatActivity implements
     }
 
     private void save() {
-        ArrayList<HashMap<String, Object>> list = new ArrayList<>();
+        ArrayList<CustomComponent> list = new ArrayList<>();
         if (FileUtil.isExistFile(path)) {
             try {
-                list = getGson().fromJson(FileUtil.readFile(path), Helper.TYPE_MAP_LIST);
+                list = getGson().fromJson(FileUtil.readFile(path),
+                        new TypeToken<ArrayList<CustomComponent>>(){}.getType());
             } catch (JsonSyntaxException e) {
                 LogUtil.w("AddCustomComponentActivity", "Failed to parse custom component JSON", e);
             }
         }
-        HashMap<String, Object> map = new HashMap<>();
+        CustomComponent map = new CustomComponent();
         if (isEditMode) {
             map = list.get(position);
         }
-        map.put("name", Helper.getText(binding.componentName));
-        map.put("id", Helper.getText(binding.componentId));
-        map.put("icon", Helper.getText(binding.componentIcon));
-        map.put("varName", Helper.getText(binding.componentVariableName));
-        map.put("typeName", Helper.getText(binding.componentTypeName));
-        map.put("buildClass", Helper.getText(binding.componentBuildClass));
-        map.put("class", Helper.getText(binding.componentTypeClass));
-        map.put("description", Helper.getText(binding.componentDescription));
-        map.put("url", Helper.getText(binding.componentDocUrl));
-        map.put("additionalVar", Helper.getText(binding.componentAddVar));
-        map.put("defineAdditionalVar", Helper.getText(binding.componentDefAddVar));
-        map.put("imports", Helper.getText(binding.componentImports));
+        map.setName(Helper.getText(binding.componentName));
+        map.setId(Helper.getText(binding.componentId));
+        map.setIcon(Helper.getText(binding.componentIcon));
+        map.setVarName(Helper.getText(binding.componentVariableName));
+        map.setTypeName(Helper.getText(binding.componentTypeName));
+        map.setBuildClass(Helper.getText(binding.componentBuildClass));
+        map.setClassName(Helper.getText(binding.componentTypeClass));
+        map.setDescription(Helper.getText(binding.componentDescription));
+        map.setUrl(Helper.getText(binding.componentDocUrl));
+        map.setAdditionalVar(Helper.getText(binding.componentAddVar));
+        map.setDefineAdditionalVar(Helper.getText(binding.componentDefAddVar));
+        map.setImports(Helper.getText(binding.componentImports));
         if (!isEditMode) {
             list.add(map);
         }
@@ -220,7 +223,7 @@ public class AddCustomComponentActivity extends BaseAppCompatActivity implements
         var components = readResult.second;
 
         var componentNames = components.stream()
-                .map(component -> (String) component.get("name"))
+                .map(CustomComponent::getName)
                 .collect(Collectors.toList());
         if (componentNames.size() > 1) {
             MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
@@ -236,7 +239,7 @@ public class AddCustomComponentActivity extends BaseAppCompatActivity implements
             dialog.setView(listView);
             dialog.setPositiveButton(Helper.getResString(R.string.common_word_import), (v, which) -> {
                 int position = choiceToImport.get();
-                var component = components.get(position);
+                CustomComponent component = components.get(position);
                 if (position != -1 && ComponentsHandler.isValidComponent(component)) {
                     setupViews(component);
                 } else {
@@ -247,7 +250,7 @@ public class AddCustomComponentActivity extends BaseAppCompatActivity implements
             dialog.setNegativeButton(Helper.getResString(R.string.common_word_cancel), null);
             dialog.show();
         } else {
-            var component = components.get(0);
+            CustomComponent component = components.get(0);
             if (ComponentsHandler.isValidComponent(component)) {
                 setupViews(component);
             } else {

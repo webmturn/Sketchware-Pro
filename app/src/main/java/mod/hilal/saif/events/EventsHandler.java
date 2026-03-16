@@ -2,10 +2,10 @@ package mod.hilal.saif.events;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 
 import pro.sketchware.core.ClassInfo;
 import pro.sketchware.core.EventRegistry;
@@ -14,6 +14,8 @@ import mod.jbk.util.LogUtil;
 import mod.jbk.util.OldResourceIdMapper;
 import pro.sketchware.R;
 import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.model.CustomEvent;
+import pro.sketchware.model.CustomListener;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.SketchwareUtil;
 
@@ -21,8 +23,8 @@ public class EventsHandler {
 
     public static final String CUSTOM_EVENTS_FILE_PATH = SketchwarePaths.getAbsolutePathOf(SketchwarePaths.CUSTOM_EVENTS_FILE);
     public static final String CUSTOM_LISTENER_FILE_PATH = SketchwarePaths.getAbsolutePathOf(SketchwarePaths.CUSTOM_LISTENERS_FILE);
-    private static ArrayList<HashMap<String, Object>> cachedCustomEvents = readCustomEvents();
-    private static ArrayList<HashMap<String, Object>> cachedCustomListeners = readCustomListeners();
+    private static ArrayList<CustomEvent> cachedCustomEvents = readCustomEvents();
+    private static ArrayList<CustomListener> cachedCustomListeners = readCustomListeners();
 
     /**
      * This is a utility class, don't instantiate it.
@@ -59,22 +61,10 @@ public class EventsHandler {
         array.add("onTabLayoutNewTabAdded");
 
         for (int i = cachedCustomEvents.size() - 1; i >= 0; i--) {
-            HashMap<String, Object> customEvent = cachedCustomEvents.get(i);
+            CustomEvent customEvent = cachedCustomEvents.get(i);
             if (customEvent != null) {
-                Object var = customEvent.get("var");
-
-                if (var instanceof String) {
-                    if (var.equals("")) {
-                        Object name = customEvent.get("name");
-
-                        if (name instanceof String) {
-                            array.add((String) name);
-                        } else {
-                            SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_invalid_name), i + 1));
-                        }
-                    }
-                } else {
-                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_invalid_var), i + 1));
+                if (customEvent.getVar().isEmpty()) {
+                    array.add(customEvent.getName());
                 }
             } else {
                 SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_null), i));
@@ -103,22 +93,10 @@ public class EventsHandler {
         }
 
         for (int i = 0, cachedCustomEventsSize = cachedCustomEvents.size(); i < cachedCustomEventsSize; i++) {
-            HashMap<String, Object> customEvent = cachedCustomEvents.get(i);
+            CustomEvent customEvent = cachedCustomEvents.get(i);
             if (customEvent != null) {
-                Object var = customEvent.get("var");
-
-                if (var instanceof String) {
-                    if (gx.matchesType((String) var)) {
-                        Object name = customEvent.get("name");
-
-                        if (name instanceof String) {
-                            list.add((String) name);
-                        } else {
-                            SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_invalid_name), i + 1));
-                        }
-                    }
-                } else {
-                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_invalid_var), i + 1));
+                if (gx.matchesType(customEvent.getVar())) {
+                    list.add(customEvent.getName());
                 }
             } else {
                 SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_null), i));
@@ -142,24 +120,13 @@ public class EventsHandler {
         }
 
         for (int i = 0, cachedCustomEventsSize = cachedCustomEvents.size(); i < cachedCustomEventsSize; i++) {
-            HashMap<String, Object> customEvent = cachedCustomEvents.get(i);
+            CustomEvent customEvent = cachedCustomEvents.get(i);
             if (customEvent != null) {
-                Object var = customEvent.get("var");
-
-                if (var instanceof String) {
-                    if (gx.matchesType((String) var)) {
-                        Object listener = customEvent.get("listener");
-
-                        if (listener instanceof String) {
-                            if (!list.contains((String) listener)) {
-                                list.add((String) listener);
-                            }
-                        } else {
-                            SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_invalid_listener), i + 1));
-                        }
+                if (gx.matchesType(customEvent.getVar())) {
+                    String listener = customEvent.getListener();
+                    if (!list.contains(listener)) {
+                        list.add(listener);
                     }
-                } else {
-                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_invalid_var), i + 1));
                 }
             } else {
                 SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_null), i));
@@ -190,22 +157,10 @@ public class EventsHandler {
 
             default:
                 for (int i = 0, cachedCustomEventsSize = cachedCustomEvents.size(); i < cachedCustomEventsSize; i++) {
-                    HashMap<String, Object> customEvent = cachedCustomEvents.get(i);
+                    CustomEvent customEvent = cachedCustomEvents.get(i);
                     if (customEvent != null) {
-                        Object listener = customEvent.get("listener");
-
-                        if (listener instanceof String) {
-                            if (name.equals(listener)) {
-                                Object eventName = customEvent.get("name");
-
-                                if (eventName instanceof String) {
-                                    list.add((String) eventName);
-                                } else {
-                                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_invalid_name), i + 1));
-                                }
-                            }
-                        } else {
-                            SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_invalid_listener), i + 1));
+                        if (name.equals(customEvent.getListener())) {
+                            list.add(customEvent.getName());
                         }
                     } else {
                         SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_null), i));
@@ -228,27 +183,15 @@ public class EventsHandler {
             case "onPostExecute" -> R.drawable.ic_mtrl_progress_check;
             default -> {
                 for (int i = 0, cachedCustomEventsSize = cachedCustomEvents.size(); i < cachedCustomEventsSize; i++) {
-                    HashMap<String, Object> customEvent = cachedCustomEvents.get(i);
+                    CustomEvent customEvent = cachedCustomEvents.get(i);
                     if (customEvent != null) {
-                        Object eventName = customEvent.get("name");
-
-                        if (eventName instanceof String) {
-                            if (name.equals(eventName)) {
-                                Object icon = customEvent.get("icon");
-
-                                if (icon instanceof String) {
-                                    try {
-                                        yield OldResourceIdMapper.getDrawableFromOldResourceId(Integer.parseInt((String) icon));
-                                    } catch (NumberFormatException e) {
-                                        SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_invalid_icon), i + 1));
-                                        yield R.drawable.android_icon;
-                                    }
-                                } else {
-                                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_invalid_icon), i + 1));
-                                }
+                        if (name.equals(customEvent.getName())) {
+                            try {
+                                yield OldResourceIdMapper.getDrawableFromOldResourceId(Integer.parseInt(customEvent.getIcon()));
+                            } catch (NumberFormatException e) {
+                                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_invalid_icon), i + 1));
+                                yield R.drawable.android_icon;
                             }
-                        } else {
-                            SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_invalid_name), i + 1));
                         }
                     } else {
                         SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_null), i));
@@ -278,22 +221,10 @@ public class EventsHandler {
                     Helper.getResString(R.string.event_desc_post_execute);
             default -> {
                 for (int i = 0, cachedCustomEventsSize = cachedCustomEvents.size(); i < cachedCustomEventsSize; i++) {
-                    HashMap<String, Object> customEvent = cachedCustomEvents.get(i);
+                    CustomEvent customEvent = cachedCustomEvents.get(i);
                     if (customEvent != null) {
-                        Object eventName = customEvent.get("name");
-
-                        if (eventName instanceof String) {
-                            if (name.equals(eventName)) {
-                                Object description = customEvent.get("description");
-
-                                if (description instanceof String) {
-                                    yield (String) description;
-                                } else {
-                                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_invalid_description), i + 1));
-                                }
-                            }
-                        } else {
-                            SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_invalid_name), i + 1));
+                        if (name.equals(customEvent.getName())) {
+                            yield customEvent.getDescription();
                         }
                     } else {
                         SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_null), i));
@@ -352,22 +283,10 @@ public class EventsHandler {
                     "}";
             default -> {
                 for (int i = 0, cachedCustomEventsSize = cachedCustomEvents.size(); i < cachedCustomEventsSize; i++) {
-                    HashMap<String, Object> customEvent = cachedCustomEvents.get(i);
+                    CustomEvent customEvent = cachedCustomEvents.get(i);
                     if (customEvent != null) {
-                        Object eventName = customEvent.get("name");
-
-                        if (eventName instanceof String) {
-                            if (name.equals(eventName)) {
-                                Object code = customEvent.get("code");
-
-                                if (code instanceof String) {
-                                    yield String.format(((String) code).replace("###", targetId), param);
-                                } else {
-                                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_invalid_code), i + 1));
-                                }
-                            }
-                        } else {
-                            SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_invalid_name), i + 1));
+                        if (name.equals(customEvent.getName())) {
+                            yield String.format(customEvent.getCode().replace("###", targetId), param);
                         }
                     } else {
                         SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_null), i));
@@ -388,22 +307,10 @@ public class EventsHandler {
             case "doInBackground", "onPostExecute" -> "%s";
             default -> {
                 for (int i = 0, cachedCustomEventsSize = cachedCustomEvents.size(); i < cachedCustomEventsSize; i++) {
-                    HashMap<String, Object> customEvent = cachedCustomEvents.get(i);
+                    CustomEvent customEvent = cachedCustomEvents.get(i);
                     if (customEvent != null) {
-                        Object eventName = customEvent.get("name");
-
-                        if (eventName instanceof String) {
-                            if (name.equals(eventName)) {
-                                Object parameters = customEvent.get("parameters");
-
-                                if (parameters instanceof String) {
-                                    yield (String) parameters;
-                                } else {
-                                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_invalid_parameters), i + 1));
-                                }
-                            }
-                        } else {
-                            SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_invalid_name), i + 1));
+                        if (name.equals(customEvent.getName())) {
+                            yield customEvent.getParameters();
                         }
                     } else {
                         SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_null), i));
@@ -430,22 +337,10 @@ public class EventsHandler {
             case "onPostExecute" -> name + " onPostExecute result %s.result";
             default -> {
                 for (int i = 0, cachedCustomEventsSize = cachedCustomEvents.size(); i < cachedCustomEventsSize; i++) {
-                    HashMap<String, Object> customEvent = cachedCustomEvents.get(i);
+                    CustomEvent customEvent = cachedCustomEvents.get(i);
                     if (customEvent != null) {
-                        Object eventName = customEvent.get("name");
-
-                        if (eventName instanceof String) {
-                            if (event.equals(eventName)) {
-                                Object headerSpec = customEvent.get("headerSpec");
-
-                                if (headerSpec instanceof String) {
-                                    yield ((String) headerSpec).replace("###", name);
-                                } else {
-                                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_invalid_header_spec), i + 1));
-                                }
-                            }
-                        } else {
-                            SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_invalid_name), i + 1));
+                        if (event.equals(customEvent.getName())) {
+                            yield customEvent.getHeaderSpec().replace("###", name);
                         }
                     } else {
                         SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_null), i));
@@ -474,22 +369,10 @@ public class EventsHandler {
                             "}";
             default -> {
                 for (int i = 0, cachedCustomListenersSize = cachedCustomListeners.size(); i < cachedCustomListenersSize; i++) {
-                    HashMap<String, Object> customListener = cachedCustomListeners.get(i);
+                    CustomListener customListener = cachedCustomListeners.get(i);
                     if (customListener != null) {
-                        Object eventName = customListener.get("name");
-
-                        if (eventName instanceof String) {
-                            if (name.equals(eventName)) {
-                                Object code = customListener.get("code");
-
-                                if (code instanceof String) {
-                                    yield String.format(((String) code).replace("###", var), param);
-                                } else {
-                                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_invalid_code), i + 1));
-                                }
-                            }
-                        } else {
-                            SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_invalid_name), i + 1));
+                        if (name.equals(customListener.getName())) {
+                            yield String.format(customListener.getCode().replace("###", var), param);
                         }
                     } else {
                         SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_null), i));
@@ -503,24 +386,13 @@ public class EventsHandler {
 
     public static void getImports(ArrayList<String> list, String name) {
         for (int i = 0, cachedCustomListenersSize = cachedCustomListeners.size(); i < cachedCustomListenersSize; i++) {
-            HashMap<String, Object> customEvent = cachedCustomListeners.get(i);
-            if (customEvent != null) {
-                Object eventName = customEvent.get("name");
-
-                if (eventName instanceof String) {
-                    if (name.equals(eventName)) {
-                        Object imports = customEvent.get("imports");
-
-                        if (imports instanceof String) {
-                            if (!imports.equals("")) {
-                                list.addAll(new ArrayList<>(Arrays.asList(((String) imports).split("\n"))));
-                            }
-                        } else {
-                            SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_invalid_import), i + 1));
-                        }
+            CustomListener customListener = cachedCustomListeners.get(i);
+            if (customListener != null) {
+                if (name.equals(customListener.getName())) {
+                    String imports = customListener.getImports();
+                    if (!imports.isEmpty()) {
+                        list.addAll(new ArrayList<>(Arrays.asList(imports.split("\n"))));
                     }
-                } else {
-                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_invalid_name), i + 1));
                 }
             } else {
                 SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_null), i));
@@ -536,22 +408,23 @@ public class EventsHandler {
         cachedCustomListeners = readCustomListeners();
     }
 
-    private static ArrayList<HashMap<String, Object>> readCustomEvents() {
-        ArrayList<HashMap<String, Object>> customEvents = new ArrayList<>();
+    private static ArrayList<CustomEvent> readCustomEvents() {
+        ArrayList<CustomEvent> customEvents = new ArrayList<>();
 
         if (FileUtil.isExistFile(CUSTOM_EVENTS_FILE_PATH)) {
             String customEventsContent = FileUtil.readFile(CUSTOM_EVENTS_FILE_PATH);
 
             if (!customEventsContent.isEmpty() && !customEventsContent.equals("[]")) {
                 try {
-                    customEvents = new Gson().fromJson(customEventsContent, Helper.TYPE_MAP_LIST);
+                    customEvents = new Gson().fromJson(customEventsContent,
+                            new TypeToken<ArrayList<CustomEvent>>(){}.getType());
 
                     if (customEvents == null) {
                         LogUtil.e("EventsHandler", "Failed to parse Custom Events file! Now using none");
                         customEvents = new ArrayList<>();
                     }
                 } catch (JsonParseException e) {
-                    LogUtil.e("EventsHandler", "Failed to parse Custom Events file! Now using none");
+                    LogUtil.e("EventsHandler", "Failed to parse Custom Events file! Now using none", e);
                 }
             }
         }
@@ -559,22 +432,23 @@ public class EventsHandler {
         return customEvents;
     }
 
-    private static ArrayList<HashMap<String, Object>> readCustomListeners() {
-        ArrayList<HashMap<String, Object>> customListeners = new ArrayList<>();
+    private static ArrayList<CustomListener> readCustomListeners() {
+        ArrayList<CustomListener> customListeners = new ArrayList<>();
 
         if (FileUtil.isExistFile(CUSTOM_LISTENER_FILE_PATH)) {
             String customListenersContent = FileUtil.readFile(CUSTOM_LISTENER_FILE_PATH);
 
             if (!customListenersContent.isEmpty() && !customListenersContent.equals("[]")) {
                 try {
-                    customListeners = new Gson().fromJson(customListenersContent, Helper.TYPE_MAP_LIST);
+                    customListeners = new Gson().fromJson(customListenersContent,
+                            new TypeToken<ArrayList<CustomListener>>(){}.getType());
 
                     if (customListeners == null) {
                         LogUtil.e("EventsHandler", "Failed to parse Custom Listeners file! Now using none");
                         customListeners = new ArrayList<>();
                     }
                 } catch (JsonParseException e) {
-                    LogUtil.e("EventsHandler", "Failed to parse Custom Listeners file! Now using none");
+                    LogUtil.e("EventsHandler", "Failed to parse Custom Listeners file! Now using none", e);
                 }
             }
         }

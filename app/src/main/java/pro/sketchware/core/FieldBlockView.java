@@ -2,12 +2,16 @@ package pro.sketchware.core;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.text.TextUtils;
 import android.graphics.Typeface;
 import android.text.TextPaint;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class FieldBlockView extends BaseBlockView {
+  private static final int PREVIEW_TEXT_MAX_CHARS = 120;
+  private static final int PREVIEW_FIELD_MAX_DP = 280;
+
   public Context fieldContext;
   
   public Object argValue = "";
@@ -118,6 +122,9 @@ public class FieldBlockView extends BaseBlockView {
     textView.setLayoutParams(layoutParams);
     textView.setBackgroundColor(0);
     textView.setSingleLine();
+    if (isPreviewLimitedTextField()) {
+      textView.setEllipsize(TextUtils.TruncateAt.END);
+    }
     textView.setGravity(17);
     if (!blockType.equals("m")) {
       textView.setTextColor(-268435456);
@@ -128,6 +135,9 @@ public class FieldBlockView extends BaseBlockView {
   }
   
   public Object getArgValue() {
+    if (isPreviewLimitedTextField()) {
+      return argValue;
+    }
     return (blockType.equals("d") || blockType.equals("m") || blockType.equals("s")) ? labelView.getText() : argValue;
   }
 
@@ -143,12 +153,39 @@ public class FieldBlockView extends BaseBlockView {
   public String getMenuName() {
     return componentType;
   }
+
+  private boolean isPreviewLimitedTextField() {
+    return "s".equals(blockType)
+        && ("inputOnly".equals(componentType)
+        || "inputCode".equals(componentType)
+        || "import".equals(componentType));
+  }
+
+  private String getDisplayValue(Object value) {
+    String text = value == null ? "" : value.toString();
+    if (!isPreviewLimitedTextField()) {
+      return text;
+    }
+    text = text.replace('\r', ' ').replace('\n', ' ');
+    if (text.length() > PREVIEW_TEXT_MAX_CHARS) {
+      return text.substring(0, PREVIEW_TEXT_MAX_CHARS - 3) + "...";
+    }
+    return text;
+  }
+
+  private int getMaxLabelWidth() {
+    if (!isPreviewLimitedTextField()) {
+      return Integer.MAX_VALUE;
+    }
+    return (int) (PREVIEW_FIELD_MAX_DP * density);
+  }
   
   public void setArgValue(Object value) {
-    argValue = value;
+    argValue = value == null ? "" : value;
     if (blockType.equals("d") || blockType.equals("m") || blockType.equals("s")) {
-      labelView.setText(value.toString());
+      labelView.setText(getDisplayValue(argValue));
       int labelWidth = Math.max(minSimpleWidth, getLabelWidth());
+      labelWidth = Math.min(labelWidth, getMaxLabelWidth());
       (labelView.getLayoutParams()).width = labelWidth;
       setBlockSize((labelWidth + spacing), textHeight, true);
     } 
