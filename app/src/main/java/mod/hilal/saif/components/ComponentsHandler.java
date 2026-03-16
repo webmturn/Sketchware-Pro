@@ -49,7 +49,7 @@ public class ComponentsHandler {
      * Called at {@link ComponentBean#getComponentTypeByTypeName(String)}.
      */
     // give typeName and return id
-    public static int id(String name) {
+    public static int getIdByTypeName(String name) {
         if (name.equals("AsyncTask")) {
             return 36;
         }
@@ -78,7 +78,7 @@ public class ComponentsHandler {
      * Called at {@link ComponentBean#getComponentTypeName(int)}.
      */
     // give id and return typeName
-    public static String typeName(int id) {
+    public static String getTypeNameById(int id) {
         if (id == 36) {
             return "AsyncTask";
         }
@@ -101,7 +101,7 @@ public class ComponentsHandler {
      * Called at {@link ComponentBean#getComponentName(Context, int)}.
      */
     // give id and return name
-    public static String name(int id) {
+    public static String getNameById(int id) {
         if (id == 36) {
             return "AsyncTask";
         }
@@ -123,7 +123,7 @@ public class ComponentsHandler {
      * Called at {@link ComponentBean#getIconResource(int)}.
      */
     // give id and return icon
-    public static int icon(int id) {
+    public static int getIconById(int id) {
         if (id == 36) {
             return R.drawable.ic_cycle_color_48dp;
         }
@@ -154,19 +154,19 @@ public class ComponentsHandler {
     //goto ComponentAddActivity
     //remove lines: 2303 to 2307
     //call this method using v0 as id and move result to v0
-    public static String description(int id) {
+    public static String getDescription(int id) {
         int componentBeanDescriptionResId = ComponentBean.getDescStrResource(id);
         if (componentBeanDescriptionResId != 0) {
             return SketchApplication.getContext().getString(componentBeanDescriptionResId);
         } else {
-            return description2(id);
+            return getCustomDescription(id);
         }
     }
 
     /**
      * @return Component description of a Custom Component
      */
-    public static String description2(int id) {
+    public static String getCustomDescription(int id) {
         for (int i = 0; i < cachedCustomComponents.size(); i++) {
             CustomComponent component = cachedCustomComponents.get(i);
             if (component != null) {
@@ -185,7 +185,7 @@ public class ComponentsHandler {
      * Called at {@link ComponentBean#getComponentDocsUrlByTypeName(int)}.
      */
     // give id and return docs url
-    public static String docs(int id) {
+    public static String getDocsUrlById(int id) {
         if (id != 36) {
             for (int i = 0; i < cachedCustomComponents.size(); i++) {
                 CustomComponent component = cachedCustomComponents.get(i);
@@ -232,7 +232,7 @@ public class ComponentsHandler {
      */
     // add components to sk
     //structure : list.add(new ComponentBean(27));
-    public static void add(ArrayList<ComponentBean> list) {
+    public static void addCustomComponents(ArrayList<ComponentBean> list) {
         list.add(new ComponentBean(36));
 
         for (int i = 0; i < cachedCustomComponents.size(); i++) {
@@ -250,7 +250,7 @@ public class ComponentsHandler {
         }
     }
 
-    public static String var(int id) {
+    public static String getVarNameById(int id) {
         if (id == 36) {
             return "#";
         }
@@ -297,7 +297,7 @@ public class ComponentsHandler {
      * Used at {@link pro.sketchware.core.ComponentCodeGenerator#getExtraVar(String, String, ComponentCodeGenerator.AccessModifier, String...)}
      * to get Custom Components' fields.
      */
-    public static String extraVar(String name, String code, String varName) {
+    public static String getExtraVar(String name, String code, String varName) {
         for (int i = 0; i < cachedCustomComponents.size(); i++) {
             CustomComponent component = cachedCustomComponents.get(i);
             if (component != null) {
@@ -318,7 +318,7 @@ public class ComponentsHandler {
     }
 
     // define extra variable
-    public static String defineExtraVar(String name, String varName) {
+    public static String getDefineExtraVar(String name, String varName) {
         for (int i = 0; i < cachedCustomComponents.size(); i++) {
             CustomComponent component = cachedCustomComponents.get(i);
             if (component != null) {

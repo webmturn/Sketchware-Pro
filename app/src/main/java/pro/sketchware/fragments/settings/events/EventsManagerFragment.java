@@ -267,7 +267,7 @@ public class EventsManagerFragment extends BaseFragment {
         FileUtil.writeFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath(), new Gson().toJson(events));
     }
 
-    public class ListenersAdapter extends RecyclerView.Adapter<ListenersAdapter.ViewHolder> {
+    private class ListenersAdapter extends RecyclerView.Adapter<ListenersAdapter.ViewHolder> {
 
         private final ArrayList<CustomListener> dataArray;
         private final Context context;

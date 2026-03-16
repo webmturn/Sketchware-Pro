@@ -126,7 +126,7 @@ public class EventsManagerDetailsFragment extends BaseFragment {
         }
     }
 
-    public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder> {
+    private class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder> {
 
         private final ArrayList<CustomEvent> dataArray;
 

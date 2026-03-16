@@ -94,7 +94,7 @@ public class AddComponentBottomSheet extends BottomSheetDialogFragment {
         componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_FIREBASE_CLOUD_MESSAGE));
         componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH_GOOGLE_LOGIN));
 
-        ComponentsHandler.add(componentList);
+        ComponentsHandler.addCustomComponents(componentList);
     }
 
     @Nullable

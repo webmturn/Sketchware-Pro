@@ -56,7 +56,7 @@ public class ManageCustomComponentActivity extends BaseAppCompatActivity {
     private static final String COMPONENT_EXPORT_DIR = SketchwarePaths.getExtraDataExport() + "/components/";
     private static final String COMPONENT_DIR = SketchwarePaths.getCustomComponent();
     private List<CustomComponent> componentsList = new ArrayList<>();
-    private TextView tv_guide;
+    private TextView tvGuide;
     private RecyclerView componentView;
 
     @Override
@@ -74,7 +74,7 @@ public class ManageCustomComponentActivity extends BaseAppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         toolbar.setNavigationOnClickListener(Helper.getBackPressedClickListener(this));
 
-        tv_guide = findViewById(R.id.tv_guide);
+        tvGuide = findViewById(R.id.tv_guide);
         componentView = findViewById(R.id.list);
 
         findViewById(R.id.fab).setOnClickListener(_view ->
@@ -116,7 +116,7 @@ public class ManageCustomComponentActivity extends BaseAppCompatActivity {
         if (FileUtil.isExistFile(COMPONENT_DIR)) {
             readComponents(COMPONENT_DIR);
         } else {
-            tv_guide.setVisibility(View.VISIBLE);
+            tvGuide.setVisibility(View.VISIBLE);
             componentView.setVisibility(View.GONE);
         }
     }
@@ -135,10 +135,10 @@ public class ManageCustomComponentActivity extends BaseAppCompatActivity {
             componentView.getLayoutManager().onRestoreInstanceState(state);
             adapter.notifyDataSetChanged();
             componentView.setVisibility(View.VISIBLE);
-            tv_guide.setVisibility(View.GONE);
+            tvGuide.setVisibility(View.GONE);
             return;
         }
-        tv_guide.setVisibility(View.VISIBLE);
+        tvGuide.setVisibility(View.VISIBLE);
         componentView.setVisibility(View.GONE);
     }
 
@@ -239,7 +239,7 @@ public class ManageCustomComponentActivity extends BaseAppCompatActivity {
         dialog.show();
     }
 
-    public class ComponentsAdapter extends RecyclerView.Adapter<ComponentsAdapter.ViewHolder> {
+    private class ComponentsAdapter extends RecyclerView.Adapter<ComponentsAdapter.ViewHolder> {
         private final List<CustomComponent> components;
         private final List<Boolean> collapse;
         private final List<Boolean> confirmation;

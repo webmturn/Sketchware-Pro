@@ -251,7 +251,7 @@ public class ComponentCodeGenerator {
                     break;
 
                 default:
-                    fieldDeclaration = ComponentsHandler.extraVar(typeName, fieldDeclaration, typeInstanceName);
+                    fieldDeclaration = ComponentsHandler.getExtraVar(typeName, fieldDeclaration, typeInstanceName);
                     break;
             }
         }
@@ -654,7 +654,7 @@ public class ComponentCodeGenerator {
                 return componentName + " = new DatePickerDialog(" + codeCtx.thisActivity() + ");";
 
             default:
-                return ComponentsHandler.defineExtraVar(componentNameId, componentName);
+                return ComponentsHandler.getDefineExtraVar(componentNameId, componentName);
 
         }
     }

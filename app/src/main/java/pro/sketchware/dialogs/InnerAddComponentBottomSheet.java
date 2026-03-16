@@ -104,7 +104,7 @@ public class InnerAddComponentBottomSheet extends BottomSheetDialogFragment {
 
         binding.title.setText(ComponentBean.getComponentName(getContext(), componentBean.type));
         binding.icon.setImageResource(ComponentBean.getIconResource(componentBean.type));
-        binding.description.setText(ComponentsHandler.description(componentBean.type));
+        binding.description.setText(ComponentsHandler.getDescription(componentBean.type));
 
         binding.btnSave.setText(Helper.getResString(R.string.common_word_add));
         binding.btnReadDocs.setText(Helper.getResString(R.string.component_add_docs_button_title_go_to_docs));

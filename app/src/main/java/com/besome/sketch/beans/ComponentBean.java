@@ -164,7 +164,7 @@ public class ComponentBean extends CollapsibleBean implements Parcelable {
             case COMPONENT_TYPE_CAMERA -> "https://docs.sketchware.io/docs/component-camera.html";
             case COMPONENT_TYPE_FILE_PICKER ->
                     "https://docs.sketchware.io/docs/component-filepicker.html";
-            default -> ComponentsHandler.docs(type);
+            default -> ComponentsHandler.getDocsUrlById(type);
         };
     }
 
@@ -205,7 +205,7 @@ public class ComponentBean extends CollapsibleBean implements Parcelable {
             case COMPONENT_TYPE_FIREBASE_CLOUD_MESSAGE -> "Cloud Message";
             case COMPONENT_TYPE_FIREBASE_AUTH_GOOGLE_LOGIN -> "Google Login";
             case COMPONENT_TYPE_ASYNC_TASK -> "AsyncTask";
-            default -> ComponentsHandler.name(type);
+            default -> ComponentsHandler.getNameById(type);
         };
     }
 
@@ -242,7 +242,7 @@ public class ComponentBean extends CollapsibleBean implements Parcelable {
             case "FirebasePhoneAuth" -> COMPONENT_TYPE_FIREBASE_AUTH_PHONE;
             case "FirebaseCloudMessage" -> COMPONENT_TYPE_FIREBASE_CLOUD_MESSAGE;
             case "FirebaseGoogleLogin" -> COMPONENT_TYPE_FIREBASE_AUTH_GOOGLE_LOGIN;
-            default -> ComponentsHandler.id(typeName);
+            default -> ComponentsHandler.getIdByTypeName(typeName);
         };
     }
 
@@ -279,7 +279,7 @@ public class ComponentBean extends CollapsibleBean implements Parcelable {
             case COMPONENT_TYPE_FIREBASE_AUTH_PHONE -> "FirebasePhoneAuth";
             case COMPONENT_TYPE_FIREBASE_CLOUD_MESSAGE -> "FirebaseCloudMessage";
             case COMPONENT_TYPE_FIREBASE_AUTH_GOOGLE_LOGIN -> "FirebaseGoogleLogin";
-            default -> ComponentsHandler.typeName(type);
+            default -> ComponentsHandler.getTypeNameById(type);
         };
     }
 
@@ -365,7 +365,7 @@ public class ComponentBean extends CollapsibleBean implements Parcelable {
             case COMPONENT_TYPE_FIREBASE_AUTH_GOOGLE_LOGIN -> R.drawable.ic_mtrl_firebase_google;
             case COMPONENT_TYPE_ASYNC_TASK -> R.drawable.ic_mtrl_sync;
 
-            default -> ComponentsHandler.icon(type);
+            default -> ComponentsHandler.getIconById(type);
         };
     }
 

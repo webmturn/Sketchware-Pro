@@ -90,7 +90,7 @@ public class ComponentTypeMapper {
                     "PhoneAuthProvider.OnVerificationStateChangedCallbacks";
             case ComponentBean.COMPONENT_TYPE_FIREBASE_CLOUD_MESSAGE -> "FirebaseCloudMessage";
             case ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH_GOOGLE_LOGIN -> "GoogleSignInClient";
-            default -> ComponentsHandler.var(componentId);
+            default -> ComponentsHandler.getVarNameById(componentId);
         };
     }
 
