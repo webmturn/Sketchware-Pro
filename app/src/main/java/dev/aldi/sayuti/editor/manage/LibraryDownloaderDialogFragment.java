@@ -551,6 +551,7 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
                                     android.net.Uri.parse("package:" + requireContext().getPackageName()));
                             startActivity(intent);
                         } catch (Exception ignored) {
+                            Log.e("LibraryDownloader", "Failed to open app settings screen", ignored);
                         }
                     }
                     dialog.dismiss();

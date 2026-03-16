@@ -106,7 +106,7 @@ public class ManageXMLCommandActivity extends BaseAppCompatActivity {
             // Phase 2: Apply CBForXml serially (not thread-safe)
             for (CompletableFuture<String> future : futures) {
                 try {
-                    CommandBlock.CBForXml(future.get());
+                    CommandBlock.collectXmlCommandBlocks(future.get());
                 } catch (Exception e) {
                     Log.e("ManageXMLCommand", "Code generation failed", e);
                 }

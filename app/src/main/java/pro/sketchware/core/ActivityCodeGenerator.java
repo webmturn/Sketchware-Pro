@@ -648,7 +648,7 @@ public class ActivityCodeGenerator {
             return ComponentCodeGenerator.formatCode(code, false);
         }
 
-        return CommandBlock.CB(ComponentCodeGenerator.formatCode(code, false));
+        return CommandBlock.processCommandBlocks(ComponentCodeGenerator.formatCode(code, false));
     }
 
     /**
@@ -656,7 +656,7 @@ public class ActivityCodeGenerator {
      * NOT thread-safe — must be called serially due to CommandBlock shared file I/O.
      */
     public static String applyCommands(String formattedCode) {
-        return CommandBlock.CB(formattedCode);
+        return CommandBlock.processCommandBlocks(formattedCode);
     }
 
     private String getListDeclarationAndAddImports(int listType, String listName) {

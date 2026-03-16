@@ -1023,7 +1023,7 @@ public class ProjectFilePaths {
                  Generating every java file is necessary to make command blocks for xml work
                  */
                 for (ProjectFileBean file : files) {
-                    CommandBlock.CBForXml(new ActivityCodeGenerator(buildConfig, file, projectDataManager).generateCode(isAndroidStudioExport, sc_id));
+                    CommandBlock.collectXmlCommandBlocks(new ActivityCodeGenerator(buildConfig, file, projectDataManager).generateCode(isAndroidStudioExport, sc_id));
                 }
             }
         }
