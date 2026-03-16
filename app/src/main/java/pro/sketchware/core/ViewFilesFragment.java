@@ -293,7 +293,8 @@ public class ViewFilesFragment extends BaseFragment {
         private int getImageResByOptions(int options) {
             String option = String.format("%4s", Integer.toBinaryString(options)).replace(' ', '0');
             Resources resources = getContext().getResources();
-            return resources.getIdentifier("activity_" + option, "drawable", getContext().getPackageName());
+            int resId = resources.getIdentifier("activity_" + option, "drawable", getContext().getPackageName());
+            return resId != 0 ? resId : R.drawable.default_image;
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {

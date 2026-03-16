@@ -52,7 +52,8 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
 
     private int getViewIcon(int i) {
         String replace = String.format("%4s", Integer.toBinaryString(i)).replace(' ', '0');
-        return getApplicationContext().getResources().getIdentifier("activity_" + replace, "drawable", getApplicationContext().getPackageName());
+        int resId = getApplicationContext().getResources().getIdentifier("activity_" + replace, "drawable", getApplicationContext().getPackageName());
+        return resId != 0 ? resId : R.drawable.default_image;
     }
 
     @Override

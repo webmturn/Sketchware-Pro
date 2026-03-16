@@ -110,7 +110,8 @@ public class EventBean extends CollapsibleBean implements Parcelable {
             case EVENT_TYPE_COMPONENT -> R.drawable.bg_event_type_component;
             case EVENT_TYPE_ACTIVITY -> R.drawable.bg_event_type_activity;
             case EVENT_TYPE_DRAWER_VIEW -> R.drawable.bg_event_type_drawer_view;
-            default -> 0;
+            case EVENT_TYPE_ETC -> R.drawable.bg_event_type_moreblock;
+            default -> R.drawable.bg_event_type_activity;
         };
     }
 
@@ -120,6 +121,7 @@ public class EventBean extends CollapsibleBean implements Parcelable {
             case EVENT_TYPE_COMPONENT -> "component event";
             case EVENT_TYPE_ACTIVITY -> "activity event";
             case EVENT_TYPE_DRAWER_VIEW -> "drawer view event";
+            case EVENT_TYPE_ETC -> "more block";
             default -> "";
         };
     }

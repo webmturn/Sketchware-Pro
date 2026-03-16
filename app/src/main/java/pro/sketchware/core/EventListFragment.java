@@ -85,7 +85,7 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
             case 2 -> R.drawable.ic_mtrl_component;
             case 3 -> R.drawable.ic_drawer;
             case 4 -> R.drawable.ic_mtrl_block;
-            default -> 0;
+            default -> R.drawable.ic_mtrl_code;
         };
     }
 

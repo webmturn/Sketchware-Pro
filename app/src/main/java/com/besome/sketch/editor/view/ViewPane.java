@@ -460,7 +460,10 @@ public class ViewPane extends RelativeLayout {
         if (backgroundResource != null) {
             try {
                 if (resourcesManager.getImageResType(backgroundResource) == ProjectResourceBean.PROJECT_RES_TYPE_RESOURCE) {
-                    view.setBackgroundResource(getContext().getResources().getIdentifier(viewBean.layout.backgroundResource, "drawable", getContext().getPackageName()));
+                    int bgResId = getContext().getResources().getIdentifier(viewBean.layout.backgroundResource, "drawable", getContext().getPackageName());
+                    if (bgResId != 0) {
+                        view.setBackgroundResource(bgResId);
+                    }
                 } else {
                     String backgroundRes = resourcesManager.getImagePath(viewBean.layout.backgroundResource);
                     if (backgroundRes != null && new File(backgroundRes).exists()) {
@@ -517,7 +520,10 @@ public class ViewPane extends RelativeLayout {
         }
         if (classInfo.matchesType("ImageView")) {
             if (resourcesManager.getImageResType(viewBean.image.resName) == ProjectResourceBean.PROJECT_RES_TYPE_RESOURCE) {
-                ((ImageView) view).setImageResource(getContext().getResources().getIdentifier(viewBean.image.resName, "drawable", getContext().getPackageName()));
+                int imgResId = getContext().getResources().getIdentifier(viewBean.image.resName, "drawable", getContext().getPackageName());
+                if (imgResId != 0) {
+                    ((ImageView) view).setImageResource(imgResId);
+                }
             } else if (viewBean.image.resName.equals("default_image")) {
                 ((ImageView) view).setImageResource(R.drawable.default_image);
             } else {

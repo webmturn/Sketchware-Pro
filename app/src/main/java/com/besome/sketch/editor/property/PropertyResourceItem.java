@@ -106,10 +106,11 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
             value = resName;
             valueTextView.setText(resName);
             if (ProjectDataManager.getResourceManager(scId).getImageResType(resName) == ProjectResourceBean.PROJECT_RES_TYPE_RESOURCE) {
-                imagePreview.setImageResource(getContext().getResources().getIdentifier(resName, "drawable", getContext().getPackageName()));
+                int resId = getContext().getResources().getIdentifier(resName, "drawable", getContext().getPackageName());
+                if (resId != 0) imagePreview.setImageResource(resId);
                 return;
             } else if (resName.equals("default_image")) {
-                imagePreview.setImageResource(getContext().getResources().getIdentifier(resName, "drawable", getContext().getPackageName()));
+                imagePreview.setImageResource(R.drawable.default_image);
                 return;
             } else {
                 File file = new File(ProjectDataManager.getResourceManager(scId).getImagePath(resName));
@@ -123,7 +124,8 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
                     Glide.with(getContext()).load(fromFile).signature(ResourceManager.getCacheSignature()).error(R.drawable.ic_remove_grey600_24dp).into(imagePreview);
                     return;
                 }
-                imagePreview.setImageResource(getContext().getResources().getIdentifier(resName, "drawable", getContext().getPackageName()));
+                int fallbackResId = getContext().getResources().getIdentifier(resName, "drawable", getContext().getPackageName());
+                if (fallbackResId != 0) imagePreview.setImageResource(fallbackResId);
                 return;
             }
         }
@@ -287,7 +289,7 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
 
         try {
             if ("default_image".equals(image)) {
-                imageView.setImageResource(getResources().getIdentifier(image, "drawable", getContext().getPackageName()));
+                imageView.setImageResource(R.drawable.default_image);
             } else {
                 File file = new File(ProjectDataManager.getResourceManager(scId).getImagePath(image));
                 if (file.exists()) {

@@ -99,7 +99,7 @@ public class ProjectLibraryBean implements Parcelable {
             case 3 -> R.drawable.ic_mtrl_map;
             case 4 -> R.drawable.ic_mtrl_box;
             case 5 -> R.drawable.ic_mtrl_settings_input;
-            default -> 0;
+            default -> R.drawable.android_icon;
         };
     }
 
@@ -111,7 +111,7 @@ public class ProjectLibraryBean implements Parcelable {
             case 3 -> R.string.design_library_description_google_map;
             case 4 -> R.string.text_subtitle_menu_local_library;
             case 5 -> R.string.design_drawer_menu_nativelibs_subtitle;
-            default -> 0;
+            default -> R.string.common_word_empty;
         };
     }
 
@@ -123,7 +123,7 @@ public class ProjectLibraryBean implements Parcelable {
             case 3 -> R.string.design_library_google_map_title;
             case 4 -> R.string.text_title_menu_local_library;
             case 5 -> R.string.design_drawer_menu_nativelibs;
-            default -> 0;
+            default -> R.string.common_word_empty;
         };
     }
 

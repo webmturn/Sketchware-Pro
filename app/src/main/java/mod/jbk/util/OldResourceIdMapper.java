@@ -1315,7 +1315,7 @@ public class OldResourceIdMapper {
             case 2131166562 -> R.drawable.ic_mtrl_youtube;
 
             case HIGHEST_ID -> R.drawable.download_80px;
-            default -> 0;
+            default -> R.drawable.android_icon;
         };
     }
 
