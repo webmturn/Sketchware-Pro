@@ -32,6 +32,7 @@ import pro.sketchware.core.ProjectFilePaths;
 import mod.hey.studios.code.SrcCodeEditor;
 import mod.hey.studios.util.Helper;
 import mod.hilal.saif.android_manifest.AndroidManifestInjector;
+import mod.jbk.util.LogUtil;
 import mod.remaker.view.CustomAttributeView;
 import pro.sketchware.R;
 import pro.sketchware.activities.editor.view.CodeViewerActivity;
@@ -212,7 +213,7 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
             try {
                 data = getGson().fromJson(FileUtil.readFile(path), Helper.TYPE_MAP_LIST);
             } catch (JsonSyntaxException e) {
-            android.util.Log.w("AndroidManifestInjection", "Caught JsonSyntaxException", e);
+            LogUtil.w("AndroidManifestInjection", "Caught JsonSyntaxException", e);
         }
         }
         {
@@ -373,7 +374,7 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
                     startActivity(intent);
                 });
             } catch (Exception e) {
-                android.util.Log.e("AndroidManifestInjection", "Failed to generate manifest source", e);
+                LogUtil.e("AndroidManifestInjection", "Failed to generate manifest source", e);
                 runOnUiThread(this::dismissLoadingDialog);
             }
         }).start();

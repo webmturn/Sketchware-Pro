@@ -27,6 +27,7 @@ import pro.sketchware.core.EncryptedFileUtil;
 import pro.sketchware.core.BaseFragment;
 import pro.sketchware.core.SketchwarePaths;
 import mod.hey.studios.util.Helper;
+import mod.jbk.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.databinding.FrManageFontListBinding;
 import pro.sketchware.databinding.ManageFontBinding;
@@ -204,7 +205,7 @@ public class FontManagerFragment extends BaseFragment {
             try {
                 holder.binding.tvFontPreview.setTypeface(Typeface.createFromFile(fontPath));
             } catch (Exception e) {
-                android.util.Log.e("FontManagerFragment", "Failed to load font from path: " + fontPath, e);
+                LogUtil.e("FontManagerFragment", "Failed to load font from path: " + fontPath, e);
                 // Set default font as fallback
                 holder.binding.tvFontPreview.setTypeface(Typeface.DEFAULT);
             }

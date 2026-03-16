@@ -3,6 +3,7 @@ package mod.hilal.saif.events;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import mod.jbk.util.LogUtil;
 import pro.sketchware.utility.FileUtil;
 
 public class LogicHandler {
@@ -101,7 +102,7 @@ public class LogicHandler {
             }
             FileUtil.writeFile(FileUtil.getExternalStorageDir().concat("/.sketchware/data/system/temp/").concat(javaName), newStr);
         } catch (Exception e) {
-            android.util.Log.e("LogicHandler", "Failed to process Java code file: " + javaName, e);
+            LogUtil.e("LogicHandler", "Failed to process Java code file: " + javaName, e);
         }
     }
 

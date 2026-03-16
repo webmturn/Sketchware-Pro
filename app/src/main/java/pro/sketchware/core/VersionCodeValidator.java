@@ -1,5 +1,7 @@
 package pro.sketchware.core;
 
+import mod.jbk.util.LogUtil;
+
 public class VersionCodeValidator {
   public static boolean isValid(String input) {
     return true;
@@ -14,7 +16,7 @@ public class VersionCodeValidator {
           return true; 
       } 
     } catch (Exception exception) {
-      android.util.Log.w("VersionCodeValidator", "Failed to validate version code: " + input, exception);
+      LogUtil.w("VersionCodeValidator", "Failed to validate version code: " + input, exception);
     }
     return false;
   }

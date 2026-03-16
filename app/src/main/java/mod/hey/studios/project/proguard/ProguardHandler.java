@@ -10,6 +10,7 @@ import java.util.HashMap;
 import pro.sketchware.core.ProjectBuilder;
 import mod.hey.studios.util.Helper;
 import mod.jbk.build.BuildProgressReceiver;
+import mod.jbk.util.LogUtil;
 import pro.sketchware.utility.FileUtil;
 
 public class ProguardHandler {
@@ -211,7 +212,7 @@ public class ProguardHandler {
                 enabled = config.contains(library);
                 return enabled;
             } catch (JsonSyntaxException e) {
-                android.util.Log.e("ProguardHandler", "Failed to parse JSON config: " + configContent, e);
+                LogUtil.e("ProguardHandler", "Failed to parse JSON config: " + configContent, e);
             }
         }
 

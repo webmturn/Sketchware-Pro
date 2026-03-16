@@ -24,6 +24,7 @@ import dev.aldi.sayuti.block.ExtraBlockFile;
 import mod.hey.studios.editor.manage.block.ExtraBlockInfo;
 import mod.hey.studios.editor.manage.block.v2.BlockLoader;
 import mod.hey.studios.util.Helper;
+import mod.jbk.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.SketchwareUtil;
@@ -131,7 +132,7 @@ public class CustomBlocksManager {
                 }
             }
         } catch (NullPointerException e) {
-            android.util.Log.e("CustomBlocksManager", "Failed to get code for custom block: " + opCode, e);
+            LogUtil.e("CustomBlocksManager", "Failed to get code for custom block: " + opCode, e);
         }
         return "";
     }
@@ -144,7 +145,7 @@ public class CustomBlocksManager {
                 }
             }
         } catch (NullPointerException e) {
-            android.util.Log.e("CustomBlocksManager", "Failed to get spec2 for custom block: " + opCode, e);
+            LogUtil.e("CustomBlocksManager", "Failed to get spec2 for custom block: " + opCode, e);
         }
         return "";
     }

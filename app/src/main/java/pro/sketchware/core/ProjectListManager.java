@@ -1,12 +1,13 @@
 package pro.sketchware.core;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+
+import mod.jbk.util.LogUtil;
 
 public class ProjectListManager {
     public static SharedPrefsHelper sharedPrefsHelper;
@@ -29,7 +30,7 @@ public class ProjectListManager {
                     }
                 }
             } catch (Throwable e) {
-                Log.e("ProjectListManager", e.getMessage(), e);
+                LogUtil.e("ProjectListManager", e.getMessage(), e);
             }
         }
         return projects;
@@ -81,7 +82,7 @@ public class ProjectListManager {
         try {
             fileUtil.writeBytes(path, fileUtil.encryptString(jsonData));
         } catch (Throwable e) {
-            Log.e("ProjectListManager", e.getMessage(), e);
+            LogUtil.e("ProjectListManager", e.getMessage(), e);
         }
     }
 
@@ -91,7 +92,7 @@ public class ProjectListManager {
             try {
                 nextId = Math.max(nextId, Integer.parseInt(MapValueHelper.getString(project, "sc_id")) + 1);
             } catch (NumberFormatException e) {
-            android.util.Log.w("ProjectListManager", "Caught NumberFormatException", e);
+            LogUtil.w("ProjectListManager", "Caught NumberFormatException", e);
         }
         }
         return String.valueOf(nextId);
@@ -113,12 +114,12 @@ public class ProjectListManager {
             } catch (Exception innerException) {
                 e = innerException;
                 projectData = parsedProject;
-                Log.e("ProjectListManager", e.getMessage(), e);
+                LogUtil.e("ProjectListManager", e.getMessage(), e);
                 return projectData;
             }
         } catch (Exception outerException) {
             e = outerException;
-            Log.e("ProjectListManager", e.getMessage(), e);
+            LogUtil.e("ProjectListManager", e.getMessage(), e);
             return projectData;
         }
     }
@@ -151,7 +152,7 @@ public class ProjectListManager {
                     fileUtil.writeBytes(path, fileUtil.encryptString(GsonMapHelper.toJson(existingProject)));
                 }
             } catch (Throwable e) {
-                Log.e("ProjectListManager", e.getMessage(), e);
+                LogUtil.e("ProjectListManager", e.getMessage(), e);
             }
         }
     }
@@ -168,7 +169,7 @@ public class ProjectListManager {
                 try {
                     projectIndices.add(Integer.parseInt(workspaceName.substring(10)));
                 } catch (NumberFormatException e) {
-                    Log.w("ProjectListManager", "Failed to parse project index from: " + workspaceName, e);
+                    LogUtil.w("ProjectListManager", "Failed to parse project index from: " + workspaceName, e);
                 }
             }
         }

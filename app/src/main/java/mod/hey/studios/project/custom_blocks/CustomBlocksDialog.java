@@ -27,6 +27,7 @@ import pro.sketchware.core.BlockView;
 import mod.hey.studios.editor.manage.block.ExtraBlockInfo;
 import mod.hey.studios.editor.manage.block.v2.BlockLoader;
 import mod.hey.studios.util.Helper;
+import mod.jbk.util.LogUtil;
 import mod.hilal.saif.activities.tools.ConfigActivity;
 import pro.sketchware.R;
 import pro.sketchware.databinding.DialogPaletteBinding;
@@ -166,7 +167,7 @@ public class CustomBlocksDialog {
                     result = new Gson().fromJson(content, Helper.TYPE_MAP_LIST);
                 }
             } catch (JsonParseException | NullPointerException e) {
-                android.util.Log.w("CustomBlocksDialog", "Failed to parse JSON from file: " + path, e);
+                LogUtil.w("CustomBlocksDialog", "Failed to parse JSON from file: " + path, e);
             }
         }
         return result;
@@ -269,7 +270,7 @@ public class CustomBlocksDialog {
                 blockData.put("palette", String.valueOf(paletteIndex));
                 blocksList.add(blockData);
             } catch (Exception e) {
-                android.util.Log.w("CustomBlocksDialog", "Failed to process block data: " + block.opCode, e);
+                LogUtil.w("CustomBlocksDialog", "Failed to process block data: " + block.opCode, e);
             }
         }
     }

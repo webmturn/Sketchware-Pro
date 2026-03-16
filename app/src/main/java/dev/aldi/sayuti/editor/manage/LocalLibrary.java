@@ -13,6 +13,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import mod.jbk.util.LogUtil;
+
 public class LocalLibrary {
     private final String name;
     private final String size;
@@ -86,7 +88,7 @@ public class LocalLibrary {
                     }
                 }
             } catch (Exception e) {
-                android.util.Log.w("LocalLibrary", "Failed to parse dependency tree for " + file.getName() + ": " + e.getMessage());
+                LogUtil.w("LocalLibrary", "Failed to parse dependency tree for " + file.getName() + ": " + e.getMessage());
             }
         }
         return new LocalLibrary(file.getName(), formatFileSize(getFileSize(file)), isRoot, subDeps, allDeps);

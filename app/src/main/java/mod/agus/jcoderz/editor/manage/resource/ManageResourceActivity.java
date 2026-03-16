@@ -38,6 +38,7 @@ import dev.pranav.filepicker.SelectionMode;
 import mod.bobur.VectorDrawableLoader;
 import mod.hey.studios.code.SrcCodeEditor;
 import mod.hey.studios.util.Helper;
+import mod.jbk.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.databinding.DialogCreateNewFileLayoutBinding;
 import pro.sketchware.databinding.DialogInputLayoutBinding;
@@ -89,7 +90,7 @@ public class ManageResourceActivity extends BaseAppCompatActivity {
                         return;
                     }
                 } catch (IndexOutOfBoundsException e) {
-                    android.util.Log.w("ManageResourceActivity", "Resource index out of bounds", e);
+                    LogUtil.w("ManageResourceActivity", "Resource index out of bounds", e);
                 }
                 setResult(RESULT_OK);
                 finish();

@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import mod.jbk.util.LogUtil;
 import pro.sketchware.R;
 
 /**
@@ -97,12 +98,12 @@ public class LanguageOverrideManager {
                     try {
                         map.put(field.getName(), field.getInt(null));
                     } catch (IllegalAccessException e) {
-            android.util.Log.w("LanguageOverrideManager", "Caught IllegalAccessException", e);
+            LogUtil.w("LanguageOverrideManager", "Caught IllegalAccessException", e);
         }
                 }
             }
         } catch (Exception ignored) {
-            android.util.Log.w("LanguageOverrideManager", "Failed to build name-to-id map", ignored);
+            LogUtil.w("LanguageOverrideManager", "Failed to build name-to-id map", ignored);
         }
         return map;
     }

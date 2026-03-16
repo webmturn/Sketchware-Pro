@@ -30,6 +30,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import mod.jbk.util.LogUtil;
 import pro.sketchware.core.LibraryManager;
 import pro.sketchware.core.ProjectListManager;
 import pro.sketchware.core.UIHelper;
@@ -79,7 +80,7 @@ public class LibrarySettingsImporter {
                     recyclerView.setAdapter(adapter);
                 });
             } catch (Exception e) {
-                android.util.Log.e("LibrarySettingsImporter", "Failed to load projects", e);
+                LogUtil.e("LibrarySettingsImporter", "Failed to load projects", e);
             }
         }).start();
         dialog.setView(root);

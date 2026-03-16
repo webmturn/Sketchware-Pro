@@ -31,6 +31,7 @@ import dev.pranav.filepicker.FilePickerOptions;
 import mod.hey.studios.util.Helper;
 import mod.hilal.saif.activities.tools.IconSelectorDialog;
 import mod.hilal.saif.components.ComponentsHandler;
+import mod.jbk.util.LogUtil;
 import mod.jbk.util.OldResourceIdMapper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageCustomComponentAddBinding;
@@ -101,7 +102,7 @@ public class AddCustomComponentActivity extends BaseAppCompatActivity implements
                 HashMap<String, Object> map = list.get(position);
                 setupViews(map);
             } catch (JsonSyntaxException e) {
-                android.util.Log.w("AddCustomComponentActivity", "Failed to parse custom component JSON", e);
+                LogUtil.w("AddCustomComponentActivity", "Failed to parse custom component JSON", e);
             }
         }
     }
@@ -167,7 +168,7 @@ public class AddCustomComponentActivity extends BaseAppCompatActivity implements
             try {
                 list = getGson().fromJson(FileUtil.readFile(path), Helper.TYPE_MAP_LIST);
             } catch (JsonSyntaxException e) {
-                android.util.Log.w("AddCustomComponentActivity", "Failed to parse custom component JSON", e);
+                LogUtil.w("AddCustomComponentActivity", "Failed to parse custom component JSON", e);
             }
         }
         HashMap<String, Object> map = new HashMap<>();

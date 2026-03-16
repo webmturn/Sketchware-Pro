@@ -14,6 +14,7 @@ import com.besome.sketch.lib.ui.PropertyTwoLineItem;
 import pro.sketchware.core.DeviceUtil;
 import pro.sketchware.core.UIHelper;
 import mod.hey.studios.util.Helper;
+import mod.jbk.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ActivitySystemInfoBinding;
 
@@ -66,7 +67,7 @@ public class SystemInfoActivity extends BaseAppCompatActivity {
                     Intent intent = new Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS);
                     startActivity(intent);
                 } catch (ActivityNotFoundException e) {
-                    android.util.Log.w("SystemInfoActivity", "Developer options not found on this device", e);
+                    LogUtil.w("SystemInfoActivity", "Developer options not found on this device", e);
                     pro.sketchware.core.SketchToast.toast(SystemInfoActivity.this, Helper.getResString(R.string.error_dev_options_unavailable), pro.sketchware.core.SketchToast.TOAST_WARNING).show();
                 }
             }

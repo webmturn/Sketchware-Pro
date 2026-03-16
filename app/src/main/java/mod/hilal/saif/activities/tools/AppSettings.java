@@ -38,6 +38,7 @@ import dev.pranav.filepicker.SelectionMode;
 import mod.alucard.tn.apksigner.ApkSigner;
 import mod.hey.studios.code.SrcCodeEditor;
 import mod.hey.studios.util.Helper;
+import mod.jbk.util.LogUtil;
 import mod.khaled.logcat.LogReaderActivity;
 import pro.sketchware.R;
 import pro.sketchware.activities.editor.component.ManageCustomComponentActivity;
@@ -268,7 +269,7 @@ public class AppSettings extends BaseAppCompatActivity {
                     }
                 });
             } catch (Exception e) {
-                android.util.Log.e("AppSettings", "Failed to sign APK", e);
+                LogUtil.e("AppSettings", "Failed to sign APK", e);
                 runOnUiThread(() -> tv_progress.setText(Helper.getResString(R.string.signing_failed_format, e.getMessage())));
             }
         }).start();

@@ -34,6 +34,7 @@ import pro.sketchware.core.MapValueHelper;
 import mod.hey.studios.project.ProjectSettingsDialog;
 import mod.hey.studios.project.backup.BackupRestoreManager;
 import mod.hey.studios.util.Helper;
+import mod.jbk.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.activities.main.fragments.projects.ProjectsFragment;
 import pro.sketchware.databinding.BottomSheetProjectOptionsBinding;
@@ -224,7 +225,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
                     allProjects.remove(projectMap);
                 });
             } catch (Exception e) {
-                android.util.Log.e("ProjectsAdapter", "Failed to delete project: " + scId, e);
+                LogUtil.e("ProjectsAdapter", "Failed to delete project: " + scId, e);
                 activity.runOnUiThread(progressDialog::dismiss);
             }
         }).start();

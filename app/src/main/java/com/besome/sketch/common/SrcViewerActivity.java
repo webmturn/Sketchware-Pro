@@ -21,6 +21,7 @@ import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.ProjectDataManager;
 import pro.sketchware.core.ProjectFilePaths;
 import mod.hey.studios.util.Helper;
+import mod.jbk.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.databinding.SrcViewerBinding;
 import pro.sketchware.utility.CodeEditorPreferences;
@@ -101,7 +102,7 @@ public class SrcViewerActivity extends BaseAppCompatActivity {
                     }
                 });
             } catch (Exception e) {
-                android.util.Log.e("SrcViewerActivity", "Failed to generate source code", e);
+                LogUtil.e("SrcViewerActivity", "Failed to generate source code", e);
             }
         });
 

@@ -34,6 +34,7 @@ import dev.pranav.filepicker.FilePickerCallback;
 import dev.pranav.filepicker.FilePickerDialogFragment;
 import dev.pranav.filepicker.FilePickerOptions;
 import mod.hey.studios.util.Helper;
+import mod.jbk.util.LogUtil;
         import pro.sketchware.R;
 import pro.sketchware.utility.UI;
 import pro.sketchware.databinding.DialogCreateNewFileLayoutBinding;
@@ -280,7 +281,7 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
         try {
             inputText.setText(path.substring(path.lastIndexOf("/") + 1));
         } catch (Exception ignored) {
-            android.util.Log.w("ManageNativelibsActivity", "Failed to extract filename from path", ignored);
+            LogUtil.w("ManageNativelibsActivity", "Failed to extract filename from path", ignored);
         }
 
         dialog.show();

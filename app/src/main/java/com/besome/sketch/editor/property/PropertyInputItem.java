@@ -61,6 +61,7 @@ import pro.sketchware.core.BlockConstants;
 import pro.sketchware.core.ViewUtil;
 import pro.sketchware.core.MapValueHelper;
 import mod.hey.studios.util.Helper;
+import mod.jbk.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.activities.resourceseditor.components.utils.StringsEditorManager;
 import pro.sketchware.databinding.PropertyInputItemBinding;
@@ -1070,7 +1071,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
                 eventType = parser.next();
             }
         } catch (XmlPullParserException | IOException | RuntimeException e) {
-            android.util.Log.e("PropertyInputItem", "Failed to parse XML attributes: " + value, e);
+            LogUtil.e("PropertyInputItem", "Failed to parse XML attributes: " + value, e);
         }
 
         return attributes;

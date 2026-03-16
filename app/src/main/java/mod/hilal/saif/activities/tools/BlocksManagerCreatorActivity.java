@@ -38,6 +38,7 @@ import java.util.regex.Pattern;
 import pro.sketchware.core.BlockView;
 import mod.hey.studios.util.Helper;
 import mod.hilal.saif.lib.PCP;
+import mod.jbk.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ActivityBlocksManagerCreatorBinding;
 import pro.sketchware.lib.base.BaseTextWatcher;
@@ -425,7 +426,7 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
                 return;
             }
         } catch (JsonParseException e) {
-            android.util.Log.w("BlocksManagerCreator", "Failed to parse custom blocks JSON", e);
+            LogUtil.w("BlocksManagerCreator", "Failed to parse custom blocks JSON", e);
         }
         SketchwareUtil.showFailedToParseJsonDialog(this, new File(path), Helper.getResString(R.string.blocks_custom_blocks), v -> getBlockList());
         blocksList = new ArrayList<>();

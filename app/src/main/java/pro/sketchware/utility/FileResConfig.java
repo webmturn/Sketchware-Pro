@@ -6,6 +6,7 @@ import com.google.gson.JsonSyntaxException;
 import java.util.ArrayList;
 
 import mod.hey.studios.util.Helper;
+import mod.jbk.util.LogUtil;
 
 public class FileResConfig {
 
@@ -34,7 +35,7 @@ public class FileResConfig {
         try {
             listFilePermission = new Gson().fromJson(permissions, Helper.TYPE_STRING);
         } catch (JsonSyntaxException e) {
-            android.util.Log.w("FileResConfig", "Failed to parse JSON config for project", e);
+            LogUtil.w("FileResConfig", "Failed to parse JSON config for project", e);
         }
     }
 
@@ -86,7 +87,7 @@ public class FileResConfig {
         try {
             listFileImport = new Gson().fromJson(readFile, Helper.TYPE_STRING);
         } catch (JsonSyntaxException e) {
-            android.util.Log.w("FileResConfig", "Failed to parse JSON config for project", e);
+            LogUtil.w("FileResConfig", "Failed to parse JSON config for project", e);
         }
 
         return listFileImport;
@@ -115,7 +116,7 @@ public class FileResConfig {
         try {
             listJavaManifest = new Gson().fromJson(readFile, Helper.TYPE_STRING);
         } catch (JsonSyntaxException e) {
-            android.util.Log.w("FileResConfig", "Failed to parse JSON config for project", e);
+            LogUtil.w("FileResConfig", "Failed to parse JSON config for project", e);
         }
 
         return listJavaManifest;
@@ -128,7 +129,7 @@ public class FileResConfig {
         try {
             listBroadcastManifest = new Gson().fromJson(readFile, Helper.TYPE_STRING);
         } catch (JsonSyntaxException e) {
-            android.util.Log.w("FileResConfig", "Failed to parse JSON config for project", e);
+            LogUtil.w("FileResConfig", "Failed to parse JSON config for project", e);
         }
 
         return listBroadcastManifest;
@@ -141,7 +142,7 @@ public class FileResConfig {
         try {
             listServiceManifest = new Gson().fromJson(readFile, Helper.TYPE_STRING);
         } catch (JsonSyntaxException e) {
-            android.util.Log.w("FileResConfig", "Failed to parse JSON config for project", e);
+            LogUtil.w("FileResConfig", "Failed to parse JSON config for project", e);
         }
 
         return listServiceManifest;

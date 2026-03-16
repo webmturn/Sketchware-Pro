@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 
+import mod.jbk.util.LogUtil;
 import pro.sketchware.utility.FileUtil;
 
 /**
@@ -34,7 +35,7 @@ public class BlockMenu {
                     }
                 }
             } catch (Exception ignored) {
-                android.util.Log.w("BlockMenu", "Failed to parse block menu JSON for: " + name, ignored);
+                LogUtil.w("BlockMenu", "Failed to parse block menu JSON for: " + name, ignored);
             }
             if (result == null) {
                 result = fallback;
