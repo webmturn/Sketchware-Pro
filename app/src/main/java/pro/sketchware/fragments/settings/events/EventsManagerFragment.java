@@ -195,7 +195,7 @@ public class EventsManagerFragment extends BaseFragment {
     }
 
     private void exportListener(int p) {
-        String concat = FileUtil.getExternalStorageDir().concat("/.sketchware/data/system/export/events/");
+        String concat = EventsManagerConstants.EVENT_EXPORT_LOCATION.getAbsolutePath() + File.separator;
         ArrayList<HashMap<String, Object>> ex = new ArrayList<>();
         ex.add(listMap.get(p));
         ArrayList<HashMap<String, Object>> ex2 = new ArrayList<>();

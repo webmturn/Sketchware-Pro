@@ -13,13 +13,14 @@ import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;
 import mod.jbk.util.OldResourceIdMapper;
 import pro.sketchware.R;
+import pro.sketchware.core.SketchwarePaths;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.SketchwareUtil;
 
 public class EventsHandler {
 
-    public static final String CUSTOM_EVENTS_FILE_PATH = FileUtil.getExternalStorageDir() + "/.sketchware/data/system/events.json";
-    public static final String CUSTOM_LISTENERE_FILE_PATH = FileUtil.getExternalStorageDir() + "/.sketchware/data/system/listeners.json";
+    public static final String CUSTOM_EVENTS_FILE_PATH = SketchwarePaths.getAbsolutePathOf(SketchwarePaths.CUSTOM_EVENTS_FILE);
+    public static final String CUSTOM_LISTENER_FILE_PATH = SketchwarePaths.getAbsolutePathOf(SketchwarePaths.CUSTOM_LISTENERS_FILE);
     private static ArrayList<HashMap<String, Object>> cachedCustomEvents = readCustomEvents();
     private static ArrayList<HashMap<String, Object>> cachedCustomListeners = readCustomListeners();
 
@@ -34,7 +35,7 @@ public class EventsHandler {
      *
      * @return Array of Activity Events.
      * @apiNote Custom Activity Events can be added by writing to the file
-     * /Internal storage/.sketchware/data/system/events.json and specifying an empty string for "var"
+     * defined by {@link #CUSTOM_EVENTS_FILE_PATH} and specifying an empty string for "var"
      */
     public static String[] getActivityEvents() {
         ArrayList<String> array = new ArrayList<>();
@@ -561,8 +562,8 @@ public class EventsHandler {
     private static ArrayList<HashMap<String, Object>> readCustomListeners() {
         ArrayList<HashMap<String, Object>> customListeners = new ArrayList<>();
 
-        if (FileUtil.isExistFile(CUSTOM_LISTENERE_FILE_PATH)) {
-            String customListenersContent = FileUtil.readFile(CUSTOM_LISTENERE_FILE_PATH);
+        if (FileUtil.isExistFile(CUSTOM_LISTENER_FILE_PATH)) {
+            String customListenersContent = FileUtil.readFile(CUSTOM_LISTENER_FILE_PATH);
 
             if (!customListenersContent.isEmpty() && !customListenersContent.equals("[]")) {
                 try {

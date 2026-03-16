@@ -1183,8 +1183,8 @@ public class ProjectFilePaths {
 
         // Global system files — custom event/listener/component definitions affect generated code
         appendFileInfo(key, new File(EventsHandler.CUSTOM_EVENTS_FILE_PATH));
-        appendFileInfo(key, new File(EventsHandler.CUSTOM_LISTENERE_FILE_PATH));
-        appendFileInfo(key, new File(FileUtil.getExternalStorageDir() + "/.sketchware/data/system/component.json"));
+        appendFileInfo(key, new File(EventsHandler.CUSTOM_LISTENER_FILE_PATH));
+        appendFileInfo(key, new File(SketchwarePaths.getAbsolutePathOf(SketchwarePaths.CUSTOM_COMPONENT_FILE)));
 
         // Export mode
         key.append(isAndroidStudioExport ? '1' : '0');

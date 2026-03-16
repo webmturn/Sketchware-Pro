@@ -41,8 +41,11 @@ public class SketchwarePaths {
     public static final String LOCALIZATION_STRINGS_PATH = "sketchware" + File.separator + "localization" + File.separator + "strings.xml";
 
     public static final String EXTRA_SYSTEM_DATA = ".sketchware" + File.separator + "data" + File.separator + "system";
+    public static final String CUSTOM_EVENTS_FILE = EXTRA_SYSTEM_DATA + File.separator + "events.json";
+    public static final String CUSTOM_LISTENERS_FILE = EXTRA_SYSTEM_DATA + File.separator + "listeners.json";
     public static final String CUSTOM_COMPONENT_FILE = EXTRA_SYSTEM_DATA + File.separator + "component.json";
     public static final String EXTRA_DATA_EXPORT = EXTRA_SYSTEM_DATA + File.separator + "export";
+    public static final String EVENT_EXPORT_PATH = EXTRA_DATA_EXPORT + File.separator + "events";
 
     public static String getAbsolutePathOf(String path) {
         return new File(Environment.getExternalStorageDirectory(), path).getAbsolutePath();

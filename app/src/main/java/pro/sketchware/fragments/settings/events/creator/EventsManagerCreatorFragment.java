@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import pro.sketchware.core.BaseFragment;
+import pro.sketchware.fragments.settings.events.EventsManagerConstants;
 import mod.hey.studios.util.Helper;
 import mod.hilal.saif.activities.tools.IconSelectorDialog;
 import mod.jbk.util.OldResourceIdMapper;
@@ -137,7 +138,7 @@ public class EventsManagerCreatorFragment extends BaseFragment {
             return;
         }
         ArrayList<HashMap<String, Object>> eventsList;
-        String concat = FileUtil.getExternalStorageDir().concat("/.sketchware/data/system/events.json");
+        String concat = EventsManagerConstants.EVENTS_FILE.getAbsolutePath();
         if (FileUtil.isExistFile(concat)) {
             try {
                 eventsList = getGson().fromJson(FileUtil.readFile(concat), Helper.TYPE_MAP_LIST);

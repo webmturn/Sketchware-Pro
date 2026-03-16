@@ -5,6 +5,7 @@ import org.json.JSONArray;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import mod.hilal.saif.events.EventsHandler;
 import pro.sketchware.core.EventCodeGenerator;
 import pro.sketchware.utility.FileUtil;
 
@@ -53,7 +54,7 @@ public class ComponentExtraCode {
         }
 
         // Hilal's components
-        String path = FileUtil.getExternalStorageDir().concat("/.sketchware/data/system/listeners.json");
+        String path = EventsHandler.CUSTOM_LISTENER_FILE_PATH;
         try {
             if (FileUtil.isExistFile(path) && !FileUtil.readFile(path).isEmpty() && !FileUtil.readFile(path).equals("[]")) {
                 JSONArray arr = new JSONArray(FileUtil.readFile(path));
