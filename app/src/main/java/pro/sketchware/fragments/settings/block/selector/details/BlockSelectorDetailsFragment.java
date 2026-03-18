@@ -50,8 +50,16 @@ public class BlockSelectorDetailsFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
 
         Bundle args = getArguments();
-        index = args.getInt("index");
+        if (args == null) {
+            selectors = new ArrayList<>();
+            index = -1;
+            return;
+        }
+        index = args.getInt("index", -1);
         selectors = args.getParcelableArrayList("selectors");
+        if (selectors == null) {
+            selectors = new ArrayList<>();
+        }
     }
 
     @Nullable
@@ -64,6 +72,11 @@ public class BlockSelectorDetailsFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if (index < 0 || index >= selectors.size()) {
+            getParentFragmentManager().popBackStack();
+            return;
+        }
+
         configureToolbar(binding.toolbar);
 
         adapter = new BlockSelectorDetailsAdapter(

@@ -83,7 +83,8 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (getArguments() == null) return;
+        Bundle args = getArguments();
+        if (args == null) return;
 
         dependencyAdapter = new DependencyDownloadAdapter();
         binding.dependenciesRecyclerView.setAdapter(dependencyAdapter);
@@ -91,9 +92,9 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
 
         downloadExecutor = Executors.newSingleThreadExecutor();
 
-        notAssociatedWithProject = getArguments().getBoolean("notAssociatedWithProject", false);
-        buildSettings = (BuildSettings) getArguments().getSerializable("buildSettings");
-        localLibFile = getArguments().getString("localLibFile");
+        notAssociatedWithProject = args.getBoolean("notAssociatedWithProject", false);
+        buildSettings = (BuildSettings) args.getSerializable("buildSettings");
+        localLibFile = args.getString("localLibFile");
 
         binding.btnDownload.setOnClickListener(v -> initDownloadFlow());
 
@@ -221,9 +222,9 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
                             var activity = getActivity();
                             if (activity != null && !activity.isFinishing() && !activity.isDestroyed()) SketchwareUtil.showAnErrorOccurredDialog(activity, "Dependency '" + dep + "' not found");
                         });
-                    }
+                    }····························································································································································································································································································································································································································································································································································
 
-                    @Override
+                    @Override··························································································································································································
                     public void onSkippingResolution(@NonNull Artifact dep) {
                         handler.post(() -> {
                             DependencyDownloadItem item = findOrCreateDependencyItem(dep);

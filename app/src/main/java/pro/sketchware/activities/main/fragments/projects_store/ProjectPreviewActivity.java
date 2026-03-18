@@ -47,7 +47,9 @@ public class ProjectPreviewActivity extends BaseAppCompatActivity {
         if (bundle == null) return;
 
         String json = bundle.getString("project_json");
+        if (json == null || json.isEmpty()) return;
         project = new Gson().fromJson(json, ProjectModel.Project.class);
+        if (project == null) return;
 
         binding.name.setText(project.getTitle());
         binding.author.setText(project.getUserName());

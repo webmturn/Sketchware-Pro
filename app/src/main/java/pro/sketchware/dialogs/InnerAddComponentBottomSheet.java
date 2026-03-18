@@ -65,9 +65,16 @@ public class InnerAddComponentBottomSheet extends BottomSheetDialogFragment {
         super.onCreate(savedInstanceState);
 
         Bundle args = getArguments();
+        if (args == null) {
+            dismissAllowingStateLoss();
+            return;
+        }
         scId = args.getString("sc_id");
         componentBean = args.getParcelable("component_bean");
         projectFileBean = args.getParcelable("project_file_bean");
+        if (scId == null || componentBean == null || projectFileBean == null) {
+            dismissAllowingStateLoss();
+        }
     }
 
     @Override
@@ -79,6 +86,7 @@ public class InnerAddComponentBottomSheet extends BottomSheetDialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if (componentBean == null || projectFileBean == null || scId == null) return;
 
         switch (componentBean.type) {
             case ComponentBean.COMPONENT_TYPE_SHAREDPREF:

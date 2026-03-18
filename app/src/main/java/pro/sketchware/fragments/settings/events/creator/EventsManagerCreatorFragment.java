@@ -46,20 +46,21 @@ public class EventsManagerCreatorFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null && getArguments().containsKey("lis_name")) {
-            lisName = getArguments().getString("lis_name");
+        Bundle args = getArguments();
+        if (args != null && args.containsKey("lis_name")) {
+            lisName = args.getString("lis_name", "");
             isActivityEvent = lisName.isEmpty();
         }
-        if (getArguments() != null && getArguments().containsKey("event")) {
-            event_name = getArguments().getString("event");
+        if (args != null && args.containsKey("event")) {
+            event_name = args.getString("event", "");
             isEdit = true;
-            _name = getArguments().getString("_name");
-            _var = getArguments().getString("_var");
-            _icon = getArguments().getString("_icon");
-            _desc = getArguments().getString("_desc");
-            _par = getArguments().getString("_par");
-            _spec = getArguments().getString("_spec");
-            _code = getArguments().getString("_code");
+            _name = args.getString("_name");
+            _var = args.getString("_var");
+            _icon = args.getString("_icon");
+            _desc = args.getString("_desc");
+            _par = args.getString("_par");
+            _spec = args.getString("_spec");
+            _code = args.getString("_code");
         }
     }
 

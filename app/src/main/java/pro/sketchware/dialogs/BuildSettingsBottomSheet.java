@@ -71,7 +71,16 @@ public class BuildSettingsBottomSheet extends BottomSheetDialogFragment {
         super.onCreate(savedInstanceState);
 
         Bundle arguments = getArguments();
-        projectSettings = new BuildSettings(arguments.getString("sc_id"));
+        if (arguments == null) {
+            dismissAllowingStateLoss();
+            return;
+        }
+        String scId = arguments.getString("sc_id");
+        if (scId == null) {
+            dismissAllowingStateLoss();
+            return;
+        }
+        projectSettings = new BuildSettings(scId);
         views = new View[totalViews];
     }
 
