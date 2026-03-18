@@ -235,7 +235,10 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
         icons = new ArrayList<>();
         currentPage = 0; // Reset currentPage to zero
         Log.d("icons", allIconPaths.toString());
-        runOnUiThread(this::loadMoreItems);
+        runOnUiThread(() -> {
+            if (isFinishing() || isDestroyed()) return;
+            loadMoreItems();
+        });
     }
 
     private void loadMoreItems() {
@@ -440,7 +443,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
         @Override
         public void onSuccess() {
             var activity = this.activity.get();
-            if (activity == null) return;
+            if (activity == null || activity.isFinishing() || activity.isDestroyed()) return;
             activity.dismissLoadingDialog();
             activity.setIconColor();
         }
@@ -457,7 +460,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
         @Override
         public void onError(String errorMessage) {
             var activity = this.activity.get();
-            if (activity == null) return;
+            if (activity == null || activity.isFinishing() || activity.isDestroyed()) return;
             activity.dismissLoadingDialog();
         }
 
@@ -476,7 +479,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
         @Override
         public void onSuccess() {
             var activity = this.activity.get();
-            if (activity == null) return;
+            if (activity == null || activity.isFinishing() || activity.isDestroyed()) return;
             activity.dismissLoadingDialog();
             activity.selectedIconPosition = -1;
         }
@@ -487,6 +490,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
             if (activity == null) return;
             activity.listIcons();
             activity.runOnUiThread(() -> {
+                if (activity.isFinishing() || activity.isDestroyed()) return;
                 if (activity.searchView != null) {
                     activity.searchView.setQuery("", false);
                 }
@@ -496,7 +500,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
         @Override
         public void onError(String errorMessage) {
             var activity = this.activity.get();
-            if (activity == null) return;
+            if (activity == null || activity.isFinishing() || activity.isDestroyed()) return;
             activity.dismissLoadingDialog();
         }
     }

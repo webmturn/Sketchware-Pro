@@ -71,6 +71,7 @@ public class CustomBlocksDialog {
                 }
 
                 context.runOnUiThread(() -> {
+                    if (context.isFinishing() || context.isDestroyed()) return;
 
                     String subtitle = String.format(Helper.getResString(R.string.custom_blocks_used_count), customBlocks.size());
 
@@ -106,6 +107,7 @@ public class CustomBlocksDialog {
 
             } else {
                 context.runOnUiThread(() -> {
+                    if (context.isFinishing() || context.isDestroyed()) return;
                     dialogBinding.subtitle.setText(Helper.getResString(R.string.custom_blocks_none_used));
                     dialogBinding.progressIndicator.setVisibility(View.GONE);
                 });

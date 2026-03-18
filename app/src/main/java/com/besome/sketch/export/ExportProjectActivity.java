@@ -248,9 +248,12 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
 
             new ZipUtil().createZipFile(exportedSourcesZipPath, toCompress, toExclude);
             project_metadata.prepareBuildDirectories();
-            runOnUiThread(() -> initializeAfterExportedSourceViews(exportedFilename));
+            runOnUiThread(() -> {
+                if (!isFinishing() && !isDestroyed()) initializeAfterExportedSourceViews(exportedFilename);
+            });
         } catch (Exception e) {
             runOnUiThread(() -> {
+                if (isFinishing() || isDestroyed()) return;
                 Log.e("ProjectExporter", "While trying to export project's sources: "
                         + e.getMessage(), e);
                 SketchwareUtil.showAnErrorOccurredDialog(this, Log.getStackTraceString(e));
@@ -674,11 +677,11 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
                 var errorAct = activity.get();
                 if (throwable instanceof LoadKeystoreException &&
                         "Incorrect password, or integrity check failed.".equals(throwable.getMessage())) {
-                    if (errorAct != null) errorAct.runOnUiThread(() -> SketchwareUtil.showAnErrorOccurredDialog(errorAct,
+                    if (errorAct != null && !errorAct.isFinishing() && !errorAct.isDestroyed()) errorAct.runOnUiThread(() -> SketchwareUtil.showAnErrorOccurredDialog(errorAct,
                             "Either an incorrect password was entered, or your key store is corrupt."));
                 } else {
                     Log.e("AppExporter", throwable.getMessage(), throwable);
-                    if (errorAct != null) errorAct.runOnUiThread(() -> SketchwareUtil.showAnErrorOccurredDialog(errorAct,
+                    if (errorAct != null && !errorAct.isFinishing() && !errorAct.isDestroyed()) errorAct.runOnUiThread(() -> SketchwareUtil.showAnErrorOccurredDialog(errorAct,
                             Log.getStackTraceString(throwable)));
                 }
 
@@ -768,7 +771,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
         @Override // pro.sketchware.core.BaseAsyncTask
         public void onError(String errorMessage) {
             var act = activity.get();
-            if (act == null) return;
+            if (act == null || act.isFinishing() || act.isDestroyed()) return;
             act.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             // Dismiss the ProgressDialog
             act.dismissProgressDialog();

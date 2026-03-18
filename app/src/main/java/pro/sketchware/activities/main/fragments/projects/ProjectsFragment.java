@@ -235,6 +235,7 @@ public class ProjectsFragment extends PermissionFragment {
             var activity = getActivity();
             if (activity == null) return;
             activity.runOnUiThread(() -> {
+                if (!isAdded() || activity.isFinishing() || activity.isDestroyed()) return;
                 if (binding == null) return;
                 if (binding.swipeRefresh.isRefreshing()) binding.swipeRefresh.setRefreshing(false);
                 if (binding.loadingContainer.getVisibility() == View.VISIBLE) {
@@ -257,6 +258,7 @@ public class ProjectsFragment extends PermissionFragment {
                 var activity = getActivity();
                 if (activity == null) return;
                 activity.runOnUiThread(() -> {
+                    if (!isAdded() || activity.isFinishing() || activity.isDestroyed()) return;
                     if (binding == null) return;
                     projectsList.add(0, newProject);
                     projectsAdapter.notifyDataSetChanged();
@@ -275,7 +277,10 @@ public class ProjectsFragment extends PermissionFragment {
                     projectsList.set(index, updatedProject);
                     var activity = getActivity();
                     if (activity == null) return;
-                    activity.runOnUiThread(() -> projectsAdapter.notifyDataSetChanged());
+                    activity.runOnUiThread(() -> {
+                        if (!isAdded() || activity.isFinishing() || activity.isDestroyed()) return;
+                        projectsAdapter.notifyDataSetChanged();
+                    });
                 }
             }
         });

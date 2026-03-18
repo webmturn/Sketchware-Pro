@@ -87,10 +87,12 @@ public class SrcViewerActivity extends BaseAppCompatActivity {
                 sourceCodeBeans = ProjectFilePaths.generateSourceCodeBeans(fileManager, dataManager, builder.getBuiltInLibraryManager());
 
                 runOnUiThread(() -> {
+                    if (isFinishing() || isDestroyed()) return;
                     if (sourceCodeBeans == null) {
                         SketchToast.warning(getApplicationContext(), Helper.getResString(R.string.common_error_unknown), SketchToast.TOAST_NORMAL).show();
                     } else {
                         binding.filesListSpinner.setAdapter(new FilesListSpinnerAdapter());
+
                         for (SrcCodeBean src : sourceCodeBeans) {
                             if (src.srcFileName.equals(currentFileName)) {
                                 binding.filesListSpinner.setSelection(sourceCodeBeans.indexOf(src));

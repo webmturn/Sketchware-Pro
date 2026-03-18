@@ -104,6 +104,7 @@ public class StringsEditor extends Fragment {
         }
 
         activity.runOnUiThread(() -> {
+            if (!isAdded() || getActivity() == null || binding == null || activity.isFinishing() || activity.isDestroyed()) return;
             adapter = new StringsAdapter(activity, listmap, notesMap);
             binding.recyclerView.setAdapter(adapter);
             activity.checkForInvalidResources();

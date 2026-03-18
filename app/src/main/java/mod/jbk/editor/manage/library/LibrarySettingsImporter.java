@@ -72,6 +72,7 @@ public class LibrarySettingsImporter {
             try {
                 loadProjects();
                 activity.runOnUiThread(() -> {
+                    if (activity.isFinishing() || activity.isDestroyed()) return;
                     animationView.cancelAnimation();
                     animationView.setVisibility(View.GONE);
                     root.removeView(animationView);

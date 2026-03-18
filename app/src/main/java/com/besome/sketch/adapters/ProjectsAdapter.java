@@ -219,6 +219,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
             try {
                 ProjectListManager.deleteProject(activity, scId);
                 activity.runOnUiThread(() -> {
+                    if (activity.isFinishing() || activity.isDestroyed()) return;
                     progressDialog.dismiss();
                     shownProjects.remove(position);
                     notifyDataSetChanged();
@@ -226,7 +227,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
                 });
             } catch (Exception e) {
                 LogUtil.e("ProjectsAdapter", "Failed to delete project: " + scId, e);
-                activity.runOnUiThread(progressDialog::dismiss);
+                activity.runOnUiThread(() -> { if (!activity.isFinishing() && !activity.isDestroyed()) progressDialog.dismiss(); });
             }
         }).start();
     }

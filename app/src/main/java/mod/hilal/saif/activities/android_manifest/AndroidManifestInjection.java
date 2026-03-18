@@ -365,7 +365,7 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
                 String source = new ProjectFilePaths(getApplicationContext(), sc_id).getFileSrc("AndroidManifest.xml", ProjectDataManager.getFileManager(sc_id), ProjectDataManager.getProjectDataManager(sc_id), ProjectDataManager.getLibraryManager(sc_id));
 
                 runOnUiThread(() -> {
-                    if (isFinishing()) return;
+                    if (isFinishing() || isDestroyed()) return;
                     dismissLoadingDialog();
                     var intent = new Intent(this, CodeViewerActivity.class);
                     intent.putExtra("code", !source.isEmpty() ? source : "Failed to generate source.");
@@ -375,7 +375,10 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
                 });
             } catch (Exception e) {
                 LogUtil.e("AndroidManifestInjection", "Failed to generate manifest source", e);
-                runOnUiThread(this::dismissLoadingDialog);
+                runOnUiThread(() -> {
+                    if (isFinishing() || isDestroyed()) return;
+                    dismissLoadingDialog();
+                });
             }
         }).start();
     }

@@ -236,6 +236,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         if (eventBlocks != null) {
             if (eventBlocks.isEmpty()) {
                 runOnUiThread(() -> {
+                    if (isFinishing() || isDestroyed()) return;
                     togglePaletteVisibility(isPaletteVisible);
                     if (onComplete != null) onComplete.run();
                 });
@@ -254,9 +255,15 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 blockPane.nextBlockId = Math.max(blockPane.nextBlockId, (Integer) blockView.getTag() + 1);
             }
 
-            runOnUiThread(() -> scheduleChunkedBlockAdd(createdBlocks, eventBlocks, blockIdsAndBlocks, 0, onComplete));
+            runOnUiThread(() -> {
+                if (isFinishing() || isDestroyed()) return;
+                scheduleChunkedBlockAdd(createdBlocks, eventBlocks, blockIdsAndBlocks, 0, onComplete);
+            });
         } else if (onComplete != null) {
-            runOnUiThread(onComplete);
+            runOnUiThread(() -> {
+                if (isFinishing() || isDestroyed()) return;
+                onComplete.run();
+            });
         }
     }
 

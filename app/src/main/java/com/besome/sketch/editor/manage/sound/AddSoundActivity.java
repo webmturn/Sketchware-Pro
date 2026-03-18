@@ -271,6 +271,7 @@ public class AddSoundActivity extends BaseDialogActivity implements View.OnClick
             @Override
             public void run() {
                 runOnUiThread(() -> {
+                    if (isFinishing() || isDestroyed()) return;
                     if (nowPlayingPlayer == null) {
                         timer.cancel();
                     } else {

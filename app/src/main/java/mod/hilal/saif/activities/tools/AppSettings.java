@@ -248,8 +248,10 @@ public class AppSettings extends BaseAppCompatActivity {
         ApkSigner signer = new ApkSigner();
         new Thread(() -> {
             try {
-                ApkSigner.LogCallback callback = line -> runOnUiThread(() ->
-                        tv_log.setText(Helper.getText(tv_log) + line));
+                ApkSigner.LogCallback callback = line -> runOnUiThread(() -> {
+                        if (isFinishing() || isDestroyed()) return;
+                        tv_log.setText(Helper.getText(tv_log) + line);
+                });
 
                 if (useTestkey) {
                     signer.signWithTestKey(inputApkPath, outputApkPath, callback);
@@ -259,6 +261,7 @@ public class AppSettings extends BaseAppCompatActivity {
                 }
 
                 runOnUiThread(() -> {
+                    if (isFinishing() || isDestroyed()) return;
                     if (ApkSigner.LogCallback.errorCount.get() == 0) {
                         building_dialog.dismiss();
                         SketchwareUtil.toast(String.format(Helper.getResString(R.string.apk_sign_success),
@@ -270,7 +273,10 @@ public class AppSettings extends BaseAppCompatActivity {
                 });
             } catch (Exception e) {
                 LogUtil.e("AppSettings", "Failed to sign APK", e);
-                runOnUiThread(() -> tv_progress.setText(Helper.getResString(R.string.signing_failed_format, e.getMessage())));
+                runOnUiThread(() -> {
+                    if (isFinishing() || isDestroyed()) return;
+                    tv_progress.setText(Helper.getResString(R.string.signing_failed_format, e.getMessage()));
+                });
             }
         }).start();
 

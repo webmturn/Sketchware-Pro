@@ -137,6 +137,7 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
                     List<String> retained = deleteSelectedLocalLibraries(
                             scId, adapter.getLocalLibraries(), projectUsedLibs);
                     runOnUiThread(() -> {
+                        if (isFinishing() || isDestroyed()) return;
                         dismissLoadingDialog();
                         adapter.isSelectionModeEnabled = false;
                         runLoadLocalLibrariesTask();
@@ -278,6 +279,7 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
         });
 
         runOnUiThread(() -> {
+            if (isFinishing() || isDestroyed()) return;
             adapter.setLocalLibraries(localLibraries);
             binding.noContentLayout.setVisibility(localLibraries.isEmpty() ? View.VISIBLE : View.GONE);
         });
@@ -357,6 +359,7 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
                         }
                         deleteSelectedLocalLibraries(scId, new ArrayList<>(orphans), projectUsedLibs);
                         runOnUiThread(() -> {
+                            if (isFinishing() || isDestroyed()) return;
                             dismissLoadingDialog();
                             SketchwareUtil.toast(Helper.getResString(R.string.toast_deleted_successfully));
                             runLoadLocalLibrariesTask();
@@ -381,6 +384,7 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
             }
             int count = rebuilt;
             runOnUiThread(() -> {
+                if (isFinishing() || isDestroyed()) return;
                 dismissLoadingDialog();
                 SketchwareUtil.toast(String.format(
                         Helper.getResString(R.string.dialog_rebuild_indices_done), count));

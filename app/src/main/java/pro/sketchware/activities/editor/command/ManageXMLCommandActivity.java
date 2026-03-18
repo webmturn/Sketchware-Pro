@@ -372,7 +372,7 @@ public class ManageXMLCommandActivity extends BaseAppCompatActivity {
 
                             runOnUiThread(
                                     () -> {
-                                        if (isFinishing()) return;
+                                        if (isFinishing() || isDestroyed()) return;
                                         dismissLoadingDialog();
 
                                         CodeEditor editor = new CodeEditor(this);
@@ -440,6 +440,7 @@ public class ManageXMLCommandActivity extends BaseAppCompatActivity {
                                     fetchXMLCommand(this, sc_id);
                                     runOnUiThread(
                                             () -> {
+                                                if (isFinishing() || isDestroyed()) return;
                                                 dismissLoadingDialog();
                                                 fetchCommand();
                                             });

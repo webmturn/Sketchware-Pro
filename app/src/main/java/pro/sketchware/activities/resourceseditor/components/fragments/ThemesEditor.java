@@ -98,6 +98,7 @@ public class ThemesEditor extends Fragment {
         }
 
         activity.runOnUiThread(() -> {
+            if (!isAdded() || getActivity() == null || binding == null || activity.isFinishing() || activity.isDestroyed()) return;
             notesMap = new HashMap<>(themesEditorManager.notesMap);
             adapter = new StylesAdapter(themesList, this, notesMap);
             binding.recyclerView.setAdapter(adapter);

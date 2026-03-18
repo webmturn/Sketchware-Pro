@@ -104,6 +104,7 @@ public class ArraysEditor extends Fragment {
         }
 
         activity.runOnUiThread(() -> {
+            if (!isAdded() || getActivity() == null || binding == null || activity.isFinishing() || activity.isDestroyed()) return;
             notesMap = new HashMap<>(arraysEditorManager.notesMap);
             adapter = new ArraysAdapter(arraysList, this, notesMap);
             binding.recyclerView.setAdapter(adapter);

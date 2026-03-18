@@ -1268,6 +1268,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             } catch (MissingFileException e) {
                 isBuildFinished = true;
                 activity.runOnUiThread(() -> {
+                    if (activity.isFinishing() || activity.isDestroyed()) return;
                     boolean isMissingDirectory = e.isMissingDirectory();
 
                     MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(activity);
@@ -1289,11 +1290,19 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 });
             } catch (SimpleException simpleException) {
                 isBuildFinished = true;
-                activity.indicateCompileErrorOccurred(simpleException.getMessage());
+                activity.runOnUiThread(() -> {
+                    if (!activity.isFinishing() && !activity.isDestroyed()) {
+                        activity.indicateCompileErrorOccurred(simpleException.getMessage());
+                    }
+                });
             } catch (Throwable tr) {
                 isBuildFinished = true;
                 LogUtil.e("DesignActivity$BuildTask", "Failed to build project", tr);
-                activity.indicateCompileErrorOccurred(Log.getStackTraceString(tr));
+                activity.runOnUiThread(() -> {
+                    if (!activity.isFinishing() && !activity.isDestroyed()) {
+                        activity.indicateCompileErrorOccurred(Log.getStackTraceString(tr));
+                    }
+                });
             } finally {
                 activity.runOnUiThread(this::onPostExecute);
             }

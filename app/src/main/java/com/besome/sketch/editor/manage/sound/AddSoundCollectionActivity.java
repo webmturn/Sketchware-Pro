@@ -247,6 +247,7 @@ public class AddSoundCollectionActivity extends BaseDialogActivity implements Vi
             @Override
             public void run() {
                 runOnUiThread(() -> {
+                    if (isFinishing() || isDestroyed()) return;
                     if (mediaPlayer == null) {
                         progressTimer.cancel();
                         return;

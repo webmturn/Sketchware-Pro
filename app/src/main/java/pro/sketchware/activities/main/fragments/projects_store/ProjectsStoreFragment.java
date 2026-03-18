@@ -104,6 +104,7 @@ public class ProjectsStoreFragment extends Fragment {
         sketchubAPI.getEditorsChoicerProjects(1, projectModel -> {
             if (projectModel != null && activity != null) {
                 activity.runOnUiThread(() -> {
+                    if (!isAdded() || activity.isFinishing() || activity.isDestroyed()) return;
                     if (binding != null) {
                         binding.editorsChoiceProjectsRecyclerView.setAdapter(new StorePagerProjectsAdapter(projectModel.getProjects(), activity));
                     }
@@ -113,6 +114,7 @@ public class ProjectsStoreFragment extends Fragment {
             }
             if (pendingRequests.decrementAndGet() == 0 && activity != null && !activity.isFinishing()) {
                 activity.runOnUiThread(() -> {
+                    if (!isAdded() || activity.isFinishing() || activity.isDestroyed()) return;
                     if (binding == null) return;
                     binding.storeLoadingContainer.setVisibility(View.GONE);
                     if (failedRequests.get() >= 3) {
@@ -126,6 +128,7 @@ public class ProjectsStoreFragment extends Fragment {
         sketchubAPI.getMostDownloadedProjects(1, projectModel -> {
             if (projectModel != null && activity != null) {
                 activity.runOnUiThread(() -> {
+                    if (!isAdded() || activity.isFinishing() || activity.isDestroyed()) return;
                     if (binding != null) {
                         binding.mostDownloadedProjectsRecyclerView.setAdapter(new StoreProjectsAdapter(projectModel.getProjects(), activity));
                     }
@@ -135,6 +138,7 @@ public class ProjectsStoreFragment extends Fragment {
             }
             if (pendingRequests.decrementAndGet() == 0 && activity != null && !activity.isFinishing()) {
                 activity.runOnUiThread(() -> {
+                    if (!isAdded() || activity.isFinishing() || activity.isDestroyed()) return;
                     if (binding == null) return;
                     binding.storeLoadingContainer.setVisibility(View.GONE);
                     if (failedRequests.get() >= 3) {
@@ -148,6 +152,7 @@ public class ProjectsStoreFragment extends Fragment {
         sketchubAPI.getRecentProjects(1, projectModel -> {
             if (projectModel != null && activity != null) {
                 activity.runOnUiThread(() -> {
+                    if (!isAdded() || activity.isFinishing() || activity.isDestroyed()) return;
                     if (binding != null) {
                         binding.recentProjectsRecyclerView.setAdapter(new StoreProjectsAdapter(projectModel.getProjects(), activity));
                     }
@@ -157,6 +162,7 @@ public class ProjectsStoreFragment extends Fragment {
             }
             if (pendingRequests.decrementAndGet() == 0 && activity != null && !activity.isFinishing()) {
                 activity.runOnUiThread(() -> {
+                    if (!isAdded() || activity.isFinishing() || activity.isDestroyed()) return;
                     if (binding == null) return;
                     binding.storeLoadingContainer.setVisibility(View.GONE);
                     if (failedRequests.get() >= 3) {

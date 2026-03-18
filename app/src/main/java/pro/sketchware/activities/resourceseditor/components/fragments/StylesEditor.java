@@ -105,6 +105,7 @@ public class StylesEditor extends Fragment {
         }
 
         activity.runOnUiThread(() -> {
+            if (!isAdded() || getActivity() == null || binding == null || activity.isFinishing() || activity.isDestroyed()) return;
             notesMap = new HashMap<>(stylesEditorManager.notesMap);
             adapter = new StylesAdapter(stylesList, this, notesMap);
             binding.recyclerView.setAdapter(adapter);

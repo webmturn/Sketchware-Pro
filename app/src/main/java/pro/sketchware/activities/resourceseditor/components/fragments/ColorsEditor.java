@@ -110,6 +110,7 @@ public class ColorsEditor extends Fragment {
         }
 
         activity.runOnUiThread(() -> {
+            if (!isAdded() || getActivity() == null || binding == null || activity.isFinishing() || activity.isDestroyed()) return;
             adapter = new ColorsAdapter(colorsEditorManager, colorList, activity, notesMap);
             binding.recyclerView.setAdapter(adapter);
             activity.checkForInvalidResources();
