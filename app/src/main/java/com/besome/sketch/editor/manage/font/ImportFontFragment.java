@@ -403,6 +403,7 @@ public class ImportFontFragment extends BaseFragment implements MenuProvider {
 
                 binding.layoutItem.setOnClickListener(view -> {
                     selectedPosition = getLayoutPosition();
+                    if (selectedPosition == RecyclerView.NO_POSITION) return;
 
                     if (isSelecting) {
                         boolean newState = !binding.chkSelect.isChecked();
@@ -413,8 +414,9 @@ public class ImportFontFragment extends BaseFragment implements MenuProvider {
                 });
 
                 binding.layoutItem.setOnLongClickListener(view -> {
-                    setSelectingMode(true);
                     selectedPosition = getLayoutPosition();
+                    if (selectedPosition == RecyclerView.NO_POSITION) return true;
+                    setSelectingMode(true);
 
                     boolean newState = !binding.chkSelect.isChecked();
                     binding.chkSelect.setChecked(newState);

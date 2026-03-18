@@ -87,6 +87,9 @@ public class EventsManagerDetailsFragment extends BaseFragment {
                 events = getGson()
                         .fromJson(FileUtil.readFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath()),
                                 new TypeToken<ArrayList<CustomEvent>>(){}.getType());
+                if (events == null) {
+                    events = new ArrayList<>();
+                }
             } catch (JsonSyntaxException e) {
                 events = new ArrayList<>();
             }
@@ -95,26 +98,27 @@ public class EventsManagerDetailsFragment extends BaseFragment {
                     listMap.add(events.get(i));
                 }
             }
+            Collections.reverse(listMap);
             binding.eventsRecyclerView.setAdapter(new EventsAdapter(listMap));
             binding.eventsRecyclerView.getAdapter().notifyDataSetChanged();
         }
-        Collections.reverse(listMap);
-        if (listMap.isEmpty()) {
-            binding.noEventsLayout.setVisibility(View.VISIBLE);
-        }
+        binding.noEventsLayout.setVisibility(listMap.isEmpty() ? View.VISIBLE : View.GONE);
     }
 
     private void deleteItem(int position) {
-        listMap.remove(position);
         if (FileUtil.isExistFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath())) {
             ArrayList<CustomEvent> events;
             try {
                 events = getGson()
                         .fromJson(FileUtil.readFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath()),
                                 new TypeToken<ArrayList<CustomEvent>>(){}.getType());
+                if (events == null) {
+                    events = new ArrayList<>();
+                }
             } catch (JsonSyntaxException e) {
                 return;
             }
+            listMap.remove(position);
             for (int i = events.size() - 1; i > -1; i--) {
                 if (listName.equals(events.get(i).getListener())) {
                     events.remove(i);
@@ -122,6 +126,9 @@ public class EventsManagerDetailsFragment extends BaseFragment {
             }
             events.addAll(listMap);
             FileUtil.writeFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath(), getGson().toJson(events));
+            refreshList();
+        } else {
+            listMap.remove(position);
             refreshList();
         }
     }

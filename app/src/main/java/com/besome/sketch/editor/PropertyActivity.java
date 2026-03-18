@@ -326,10 +326,11 @@ public class PropertyActivity extends BaseAppCompatActivity implements PropertyC
             @Override
             public void onClick(View view) {
                 if (!UIHelper.isClickThrottled()) {
-                    if (getLayoutPosition() != -1) {
-                        if (getLayoutPosition() != layoutPosition) {
+                    int pos = getLayoutPosition();
+                    if (pos != RecyclerView.NO_POSITION) {
+                        if (pos != layoutPosition) {
                             notifyItemChanged(layoutPosition);
-                            layoutPosition = getLayoutPosition();
+                            layoutPosition = pos;
                             notifyItemChanged(layoutPosition);
                             switch (propertyGroups.get(layoutPosition)) {
                                 case 1 -> propertyItems.addLayoutProperties(viewBean);

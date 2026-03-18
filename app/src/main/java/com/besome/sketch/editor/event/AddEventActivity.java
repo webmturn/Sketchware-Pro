@@ -436,6 +436,7 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
                 itemView.setOnClickListener(v -> {
                     if (!UIHelper.isClickThrottled()) {
                         lastSelectedEvent = getLayoutPosition();
+                        if (lastSelectedEvent == RecyclerView.NO_POSITION) return;
                         EventBean event = categories.get(categoryAdapter.lastSelectedCategory).get(lastSelectedEvent);
                         if (event.isSelected) {
                             event.isSelected = false;
@@ -455,6 +456,7 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
                 });
                 checkbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
                     lastSelectedEvent = getLayoutPosition();
+                    if (lastSelectedEvent == RecyclerView.NO_POSITION) return;
                     EventBean event = categories.get(categoryAdapter.lastSelectedCategory).get(lastSelectedEvent);
                     if (!event.isSelected && isChecked) {
                         event.isSelected = true;
@@ -525,10 +527,10 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
 
             @Override
             public void onClick(View v) {
-                if (getLayoutPosition() != -1) {
-                    int layoutPosition = getLayoutPosition();
+                int layoutPosition = getLayoutPosition();
+                if (layoutPosition != RecyclerView.NO_POSITION) {
                     if (layoutPosition != lastSelectedCategory) {
-                        lastSelectedCategory = getLayoutPosition();
+                        lastSelectedCategory = layoutPosition;
                         notifyDataSetChanged();
                         binding.tvCategory.setText(EventListFragment.getCategoryName(getApplicationContext(), lastSelectedCategory));
                         if (lastSelectedCategory == 4) {

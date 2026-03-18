@@ -273,14 +273,15 @@ public class ManageFontImportActivity extends BaseAppCompatActivity implements V
                 img.setOnClickListener(view -> {
                     if (!UIHelper.isClickThrottled()) {
                         selectedItem = getLayoutPosition();
+                        if (selectedItem == RecyclerView.NO_POSITION) return;
                         showPreview(selectedItem);
-                        binding.tvCurrentnum.setText(String.valueOf(getLayoutPosition() + 1));
-                        nameInput.setText(selectedCollection.get(getLayoutPosition()).resName);
+                        binding.tvCurrentnum.setText(String.valueOf(selectedItem + 1));
+                        nameInput.setText(selectedCollection.get(selectedItem).resName);
                         if (binding.chkSamename.isChecked()) {
                             nameValidator.setCurrentName(null);
                             nameValidator.setBatchCount(selectedCollection.size());
                         } else {
-                            nameValidator.setCurrentName(selectedCollection.get(getLayoutPosition()).resName);
+                            nameValidator.setCurrentName(selectedCollection.get(selectedItem).resName);
                             nameValidator.setBatchCount(1);
                         }
 

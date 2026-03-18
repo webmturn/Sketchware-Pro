@@ -126,7 +126,11 @@ public class ViewEvents extends LinearLayout {
             }
 
             public void bind(EventBean event, int position) {
-                binding.container.setOnClickListener(v -> createEvent(getLayoutPosition()));
+                binding.container.setOnClickListener(v -> {
+                    int pos = getLayoutPosition();
+                    if (pos == RecyclerView.NO_POSITION) return;
+                    createEvent(pos);
+                });
                 binding.imgIcon.setImageResource(EventRegistry.getEventIconResource(event.eventName));
                 binding.tvTitle.setText(event.eventName);
                 binding.tvTitle.setTextColor(MaterialColors.getColor(binding.tvTitle, event.isSelected ? com.google.android.material.R.attr.colorOnSurface : com.google.android.material.R.attr.colorOutline));

@@ -232,7 +232,9 @@ public class SoundImportFragment extends BaseFragment {
 
                 binding.imgPlay.setOnClickListener(v -> {
                     if (!UIHelper.isClickThrottled()) {
-                        soundPlayer.onPlayPressed(getLayoutPosition());
+                        int pos = getLayoutPosition();
+                        if (pos == RecyclerView.NO_POSITION) return;
+                        soundPlayer.onPlayPressed(pos);
                     }
                 });
 
@@ -240,6 +242,7 @@ public class SoundImportFragment extends BaseFragment {
 
                 binding.chkSelect.setOnCheckedChangeListener((buttonView, isChecked) -> {
                     int position = getLayoutPosition();
+                    if (position == RecyclerView.NO_POSITION) return;
                     sounds.get(position).isSelected = isChecked;
                     updateImportSoundsText();
                     new Handler(Looper.getMainLooper()).post(() -> notifyItemChanged(position));

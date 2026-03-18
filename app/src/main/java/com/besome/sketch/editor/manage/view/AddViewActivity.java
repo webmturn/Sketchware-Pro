@@ -416,6 +416,7 @@ public class AddViewActivity extends BaseAppCompatActivity {
                 featureCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
                     if (!isUpdatingAdapter) {
                         layoutPosition = getLayoutPosition();
+                        if (layoutPosition == RecyclerView.NO_POSITION) return;
                         FeatureItem item = featureItems.get(layoutPosition);
                         item.isEnabled = isChecked;
                         if (item.type == FEATURE_TYPE_DRAWER) {

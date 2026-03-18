@@ -2,6 +2,9 @@ package pro.sketchware.core;
 
 import android.view.View;
 import android.widget.CheckBox;
+
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.besome.sketch.beans.SelectableBean;
 
 public class ViewFileClickListener implements View.OnClickListener {
@@ -16,7 +19,9 @@ public class ViewFileClickListener implements View.OnClickListener {
   
   public void onClick(View view) {
     ViewFilesAdapter.FileListAdapter.ViewHolder holder = viewHolder;
-    holder.adapterRef.selectedPosition = holder.getLayoutPosition();
+    int pos = holder.getLayoutPosition();
+    if (pos == RecyclerView.NO_POSITION) return;
+    holder.adapterRef.selectedPosition = pos;
     if (viewHolder.adapterRef.outerAdapter.isSelectionMode.booleanValue()) {
       CheckBox checkBox = viewHolder.checkbox;
       checkBox.setChecked(checkBox.isChecked() ^ true);

@@ -423,7 +423,9 @@ public class SoundListFragment extends BaseFragment implements MenuProvider {
 
                 binding.imgPlay.setOnClickListener(v -> {
                     if (!UIHelper.isClickThrottled()) {
-                        lastSelectedSound = getLayoutPosition();
+                        int pos = getLayoutPosition();
+                        if (pos == RecyclerView.NO_POSITION) return;
+                        lastSelectedSound = pos;
                         if (!isSelecting) {
                             soundPlayer.onPlayPressed(lastSelectedSound);
                         }
@@ -432,7 +434,9 @@ public class SoundListFragment extends BaseFragment implements MenuProvider {
 
                 binding.layoutItem.setOnClickListener(v -> {
                     if (!UIHelper.isClickThrottled()) {
-                        lastSelectedSound = getLayoutPosition();
+                        int pos = getLayoutPosition();
+                        if (pos == RecyclerView.NO_POSITION) return;
+                        lastSelectedSound = pos;
                     }
                     if (isSelecting) {
                         binding.chkSelect.setChecked(!binding.chkSelect.isChecked());
@@ -445,8 +449,10 @@ public class SoundListFragment extends BaseFragment implements MenuProvider {
                 });
 
                 binding.layoutItem.setOnLongClickListener(v -> {
+                    int pos = getLayoutPosition();
+                    if (pos == RecyclerView.NO_POSITION) return true;
                     setSelecting(true);
-                    lastSelectedSound = getLayoutPosition();
+                    lastSelectedSound = pos;
                     binding.chkSelect.setChecked(!binding.chkSelect.isChecked());
                     sounds.get(lastSelectedSound).isSelected = binding.chkSelect.isChecked();
                     return true;

@@ -229,6 +229,7 @@ public class FontManagerFragment extends BaseFragment {
 
                 binding.chkSelect.setOnCheckedChangeListener((buttonView, isChecked) -> {
                     int position = getLayoutPosition();
+                    if (position == RecyclerView.NO_POSITION) return;
                     selectedPosition = position;
                     ProjectResourceBean resource = projectResourceBeans.get(position);
                     resource.isSelected = isChecked;

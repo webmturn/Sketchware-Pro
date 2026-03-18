@@ -361,6 +361,7 @@ public class ManageSoundImportActivity extends BaseAppCompatActivity implements 
                     if (!UIHelper.isClickThrottled()) {
                         pausePlayback();
                         selectedItem = getLayoutPosition();
+                        if (selectedItem == RecyclerView.NO_POSITION) return;
                         showPreview(selectedItem);
                         tv_currentnum.setText(String.valueOf(selectedItem + 1));
                         ed_input_edittext.setText(selectedCollections.get(selectedItem).resName);

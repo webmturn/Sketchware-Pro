@@ -399,7 +399,9 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
                 itemBinding = binding;
                 itemBinding.cardView.setOnClickListener(v -> {
                     if (!UIHelper.isClickThrottled()) {
-                        selectedItem = getLayoutPosition();
+                        int pos = getLayoutPosition();
+                        if (pos == RecyclerView.NO_POSITION) return;
+                        selectedItem = pos;
                         ProjectFileManager ProjectFileManager = ProjectDataManager.getFileManager(sc_id);
                         ArrayList<ProjectFileBean> list = switch (selectedTab) {
                             case TAB_ACTIVITY -> ProjectFileManager.getActivities();
@@ -407,7 +409,7 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
                             default -> null;
                         };
                         if (list != null) {
-                            projectFile = list.get(getLayoutPosition());
+                            projectFile = list.get(pos);
                         }
                         Intent intent = new Intent();
                         intent.putExtra("project_file", projectFile);
@@ -417,17 +419,21 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
                 });
                 itemBinding.actionContainer.setOnClickListener(v -> {
                     if (selectedTab == TAB_ACTIVITY && !UIHelper.isClickThrottled()) {
-                        selectedItem = getLayoutPosition();
+                        int pos = getLayoutPosition();
+                        if (pos == RecyclerView.NO_POSITION) return;
+                        selectedItem = pos;
                         Intent intent = new Intent(getApplicationContext(), AddViewActivity.class);
-                        intent.putExtra("project_file", ProjectDataManager.getFileManager(sc_id).getActivities().get(getLayoutPosition()));
+                        intent.putExtra("project_file", ProjectDataManager.getFileManager(sc_id).getActivities().get(pos));
                         intent.putExtra("request_code", 265);
                         editActivityLauncher.launch(intent);
                     }
                 });
                 itemBinding.imgPresetSetting.setOnClickListener(v -> {
                     if (!UIHelper.isClickThrottled()) {
-                        selectedItem = getLayoutPosition();
-                        int requestCode = getRequestCode(ProjectDataManager.getFileManager(sc_id).getActivities().get(getLayoutPosition()));
+                        int pos = getLayoutPosition();
+                        if (pos == RecyclerView.NO_POSITION) return;
+                        selectedItem = pos;
+                        int requestCode = getRequestCode(ProjectDataManager.getFileManager(sc_id).getActivities().get(pos));
                         Intent intent = new Intent(getApplicationContext(), PresetSettingActivity.class);
                         intent.putExtra("request_code", requestCode);
                         intent.putExtra("edit_mode", true);

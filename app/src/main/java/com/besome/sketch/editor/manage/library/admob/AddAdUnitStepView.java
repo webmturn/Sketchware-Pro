@@ -177,7 +177,11 @@ public class AddAdUnitStepView extends LinearLayout implements LibrarySettingsVi
                 tvName = itemView.findViewById(R.id.tv_name);
                 tvUnitId = itemView.findViewById(R.id.tv_unit_id);
                 imgDelete = itemView.findViewById(R.id.img_delete);
-                imgDelete.setOnClickListener(view -> deleteAdUnit(getLayoutPosition()));
+                imgDelete.setOnClickListener(view -> {
+                    int pos = getLayoutPosition();
+                    if (pos == RecyclerView.NO_POSITION) return;
+                    deleteAdUnit(pos);
+                });
             }
         }
     }

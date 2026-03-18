@@ -203,10 +203,12 @@ public class ImageCollectionFragment extends BaseFragment implements View.OnClic
                 this.binding = binding;
                 binding.chkSelect.setVisibility(View.VISIBLE);
                 binding.img.setOnClickListener(v -> {
+                    int pos = getLayoutPosition();
+                    if (pos == RecyclerView.NO_POSITION) return;
                     binding.chkSelect.setChecked(!binding.chkSelect.isChecked());
-                    collectionImages.get(getLayoutPosition()).isSelected = binding.chkSelect.isChecked();
+                    collectionImages.get(pos).isSelected = binding.chkSelect.isChecked();
                     onItemSelected();
-                    notifyItemChanged(getLayoutPosition());
+                    notifyItemChanged(pos);
                 });
             }
         }

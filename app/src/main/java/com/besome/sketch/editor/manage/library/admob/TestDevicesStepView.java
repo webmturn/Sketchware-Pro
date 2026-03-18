@@ -167,7 +167,11 @@ public class TestDevicesStepView extends LinearLayout implements LibrarySettings
                 super(itemView);
                 deviceId = itemView.findViewById(R.id.tv_device_id);
                 delete = itemView.findViewById(R.id.img_delete);
-                delete.setOnClickListener(v -> showDeleteTestDeviceDialog(getLayoutPosition()));
+                delete.setOnClickListener(v -> {
+                    int pos = getLayoutPosition();
+                    if (pos == RecyclerView.NO_POSITION) return;
+                    showDeleteTestDeviceDialog(pos);
+                });
             }
         }
     }

@@ -47,9 +47,14 @@ public class EventsManagerFragment extends BaseFragment {
     public static String getNumOfEvents(String name) {
         int eventAmount = 0;
         if (FileUtil.isExistFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath())) {
-            ArrayList<CustomEvent> events = new Gson()
-                    .fromJson(FileUtil.readFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath()),
-                            new TypeToken<ArrayList<CustomEvent>>(){}.getType());
+            ArrayList<CustomEvent> events;
+            try {
+                events = new Gson()
+                        .fromJson(FileUtil.readFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath()),
+                                new TypeToken<ArrayList<CustomEvent>>(){}.getType());
+            } catch (JsonSyntaxException e) {
+                events = new ArrayList<>();
+            }
             if (events == null) events = new ArrayList<>();
             for (CustomEvent event : events) {
                 if (name.equals(event.getListener())) {
@@ -106,7 +111,11 @@ public class EventsManagerFragment extends BaseFragment {
             listenerBinding.listenerCustomImport.setText(existingListener.getImports());
             if (existingListener.isIndependent()) {
                 listenerBinding.listenerIsIndependentClassOrMethod.setChecked(true);
-                listenerBinding.listenerCode.setText(existingListener.getCode().replaceFirst("//" + Helper.getText(listenerBinding.listenerName) + "\n", ""));
+                String independentPrefix = "//" + existingListener.getName() + "\n";
+                String listenerCode = existingListener.getCode();
+                if (listenerCode.startsWith(independentPrefix)) {
+                    listenerBinding.listenerCode.setText(listenerCode.substring(independentPrefix.length()));
+                }
             }
         }
 
@@ -144,13 +153,16 @@ public class EventsManagerFragment extends BaseFragment {
             try {
                 listMap = new Gson().fromJson(FileUtil.readFile(EventsManagerConstants.LISTENERS_FILE.getAbsolutePath()),
                         new TypeToken<ArrayList<CustomListener>>(){}.getType());
+                if (listMap == null) {
+                    listMap = new ArrayList<>();
+                }
             } catch (JsonSyntaxException e) {
                 listMap = new ArrayList<>();
             }
+            Collections.reverse(listMap);
             binding.listenersRecyclerView.setAdapter(new ListenersAdapter(listMap, requireContext()));
             binding.listenersRecyclerView.getAdapter().notifyDataSetChanged();
         }
-        Collections.reverse(listMap);
     }
 
     private void showImportEventsDialog() {
@@ -168,9 +180,15 @@ public class EventsManagerFragment extends BaseFragment {
                 } else {
                     try {
                         String[] split = FileUtil.readFile(file.getAbsolutePath()).split("\n");
-                        importEvents(
-                                new Gson().fromJson(split[0], new TypeToken<ArrayList<CustomListener>>(){}.getType()),
-                                new Gson().fromJson(split[1], new TypeToken<ArrayList<CustomEvent>>(){}.getType()));
+                        ArrayList<CustomListener> importedListeners =
+                                new Gson().fromJson(split[0], new TypeToken<ArrayList<CustomListener>>(){}.getType());
+                        ArrayList<CustomEvent> importedEvents =
+                                new Gson().fromJson(split[1], new TypeToken<ArrayList<CustomEvent>>(){}.getType());
+                        if (importedListeners == null || importedEvents == null) {
+                            SketchwareUtil.toastError(Helper.getResString(R.string.error_invalid_file));
+                            return;
+                        }
+                        importEvents(importedListeners, importedEvents);
                     } catch (JsonSyntaxException | ArrayIndexOutOfBoundsException e) {
                         SketchwareUtil.toastError(Helper.getResString(R.string.error_invalid_file));
                     }
@@ -184,11 +202,18 @@ public class EventsManagerFragment extends BaseFragment {
     }
 
     private void importEvents(ArrayList<CustomListener> data, ArrayList<CustomEvent> data2) {
+        if (data == null || data2 == null) {
+            SketchwareUtil.toastError(Helper.getResString(R.string.error_invalid_file));
+            return;
+        }
         ArrayList<CustomEvent> events = new ArrayList<>();
         if (FileUtil.isExistFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath())) {
             try {
                 events = new Gson().fromJson(FileUtil.readFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath()),
                         new TypeToken<ArrayList<CustomEvent>>(){}.getType());
+                if (events == null) {
+                    events = new ArrayList<>();
+                }
             } catch (JsonSyntaxException e) {
                 LogUtil.w("EventsManagerFragment", "Failed to parse events JSON", e);
             }
@@ -211,6 +236,9 @@ public class EventsManagerFragment extends BaseFragment {
             try {
                 events = new Gson().fromJson(FileUtil.readFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath()),
                         new TypeToken<ArrayList<CustomEvent>>(){}.getType());
+                if (events == null) {
+                    events = new ArrayList<>();
+                }
             } catch (JsonSyntaxException e) {
                 events = new ArrayList<>();
             }
@@ -231,6 +259,9 @@ public class EventsManagerFragment extends BaseFragment {
             try {
                 events = new Gson().fromJson(FileUtil.readFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath()),
                         new TypeToken<ArrayList<CustomEvent>>(){}.getType());
+                if (events == null) {
+                    events = new ArrayList<>();
+                }
             } catch (JsonSyntaxException e) {
                 LogUtil.w("EventsManagerFragment", "Failed to parse events JSON", e);
             }
@@ -254,9 +285,13 @@ public class EventsManagerFragment extends BaseFragment {
     private void deleteRelatedEvents(String name) {
         ArrayList<CustomEvent> events = new ArrayList<>();
         if (FileUtil.isExistFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath())) {
-            events = new Gson()
-                    .fromJson(FileUtil.readFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath()),
-                            new TypeToken<ArrayList<CustomEvent>>(){}.getType());
+            try {
+                events = new Gson()
+                        .fromJson(FileUtil.readFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath()),
+                                new TypeToken<ArrayList<CustomEvent>>(){}.getType());
+            } catch (JsonSyntaxException e) {
+                events = new ArrayList<>();
+            }
             if (events == null) events = new ArrayList<>();
             for (int i = events.size() - 1; i > -1; i--) {
                 if (name.equals(events.get(i).getListener())) {

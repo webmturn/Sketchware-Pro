@@ -30,6 +30,7 @@ public abstract class CollapsibleViewHolder extends RecyclerView.ViewHolder {
     protected final void onDoneInitializingViews() {
         for (var view : getOnClickCollapseTriggerViews()) {
             view.setOnClickListener(v -> {
+                if (getLayoutPosition() == RecyclerView.NO_POSITION) return;
                 if (isCollapsed()) {
                     expand();
                 } else {
@@ -39,6 +40,7 @@ public abstract class CollapsibleViewHolder extends RecyclerView.ViewHolder {
         }
         for (var view : getOnLongClickCollapseTriggerViews()) {
             view.setOnLongClickListener(v -> {
+                if (getLayoutPosition() == RecyclerView.NO_POSITION) return true;
                 if (isCollapsed()) {
                     expand();
                 } else {
@@ -77,6 +79,7 @@ public abstract class CollapsibleViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void collapse() {
+        if (getLayoutPosition() == RecyclerView.NO_POSITION) return;
         setIsCollapsed(true);
         for (var v : getOnClickCollapseTriggerViews()) {
             if (config == null || config.shouldRotateView(v)) {
@@ -92,6 +95,7 @@ public abstract class CollapsibleViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void expand() {
+        if (getLayoutPosition() == RecyclerView.NO_POSITION) return;
         setIsCollapsed(false);
         getOptionsLayout().setVisibility(View.VISIBLE);
         for (var v : getOnClickCollapseTriggerViews()) {

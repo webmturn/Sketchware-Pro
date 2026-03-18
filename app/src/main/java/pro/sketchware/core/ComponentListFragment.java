@@ -158,6 +158,7 @@ public class ComponentListFragment extends BaseFragment implements View.OnClickL
                         .setText(R.string.component_context_menu_title_delete_component);
                 binding.componentOption.setButtonOnClickListener(v -> {
                     int lastSelectedItem = getLayoutPosition();
+                    if (lastSelectedItem == RecyclerView.NO_POSITION) return;
                     ComponentBean bean =
                             ProjectDataManager.getProjectDataManager(sc_id).getComponent(projectFile.getJavaName(), lastSelectedItem);
                     if (v instanceof CollapsibleButton) {
@@ -428,7 +429,9 @@ public class ComponentListFragment extends BaseFragment implements View.OnClickL
                     holder.button.getIcon().setImageResource(EventRegistry.getEventIconResource(eventName));
                     holder.button.setClickListener(v -> {
                         if (!UIHelper.isClickThrottled()) {
-                            var component = components.get(getLayoutPosition());
+                            int componentPos = getLayoutPosition();
+                            if (componentPos == RecyclerView.NO_POSITION) return;
+                            var component = components.get(componentPos);
                             var event = new EventBean(EventBean.EVENT_TYPE_COMPONENT, component.type, component.componentId, eventName);
                             ProjectDataManager.getProjectDataManager(sc_id).addEventBean(projectFile.getJavaName(), event);
                             SketchToast.toast(requireContext(), Helper.getResString(R.string.event_message_new_event), 0).show();

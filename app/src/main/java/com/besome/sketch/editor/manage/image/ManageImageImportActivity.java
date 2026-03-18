@@ -291,6 +291,7 @@ public class ManageImageImportActivity extends BaseAppCompatActivity implements 
                 img.setOnClickListener(v -> {
                     if (!UIHelper.isClickThrottled()) {
                         selectedItem = getLayoutPosition();
+                        if (selectedItem == RecyclerView.NO_POSITION) return;
                         showPreview(selectedItem);
                         tv_currentnum.setText(String.valueOf(selectedItem + 1));
                         ed_input_edittext.setText(selectedCollections.get(selectedItem).resName);

@@ -78,6 +78,7 @@ public class IconAdapter extends ListAdapter<Pair<String, String>, IconAdapter.V
             itemBinding = binding;
             binding.getRoot().setOnClickListener(v -> {
                 int position = getLayoutPosition();
+                if (position == RecyclerView.NO_POSITION) return;
                 if (listener != null) {
                     listener.onIconSelected(position);
                 }

@@ -100,7 +100,7 @@ public class AddCustomComponentActivity extends BaseAppCompatActivity implements
             try {
                 ArrayList<CustomComponent> list = getGson().fromJson(FileUtil.readFile(path),
                         new TypeToken<ArrayList<CustomComponent>>(){}.getType());
-                if (list == null || position >= list.size()) return;
+                if (list == null || position < 0 || position >= list.size()) return;
                 CustomComponent map = list.get(position);
                 setupViews(map);
             } catch (JsonSyntaxException e) {
@@ -170,12 +170,19 @@ public class AddCustomComponentActivity extends BaseAppCompatActivity implements
             try {
                 list = getGson().fromJson(FileUtil.readFile(path),
                         new TypeToken<ArrayList<CustomComponent>>(){}.getType());
+                if (list == null) {
+                    list = new ArrayList<>();
+                }
             } catch (JsonSyntaxException e) {
                 LogUtil.w("AddCustomComponentActivity", "Failed to parse custom component JSON", e);
             }
         }
         CustomComponent map = new CustomComponent();
         if (isEditMode) {
+            if (position < 0 || position >= list.size()) {
+                SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+                return;
+            }
             map = list.get(position);
         }
         map.setName(Helper.getText(binding.componentName));
@@ -239,8 +246,13 @@ public class AddCustomComponentActivity extends BaseAppCompatActivity implements
             dialog.setView(listView);
             dialog.setPositiveButton(Helper.getResString(R.string.common_word_import), (v, which) -> {
                 int position = choiceToImport.get();
+                if (position == -1) {
+                    SketchwareUtil.toastError(Helper.getResString(R.string.invalid_component));
+                    v.dismiss();
+                    return;
+                }
                 CustomComponent component = components.get(position);
-                if (position != -1 && ComponentsHandler.isValidComponent(component)) {
+                if (ComponentsHandler.isValidComponent(component)) {
                     setupViews(component);
                 } else {
                     SketchwareUtil.toastError(Helper.getResString(R.string.invalid_component));

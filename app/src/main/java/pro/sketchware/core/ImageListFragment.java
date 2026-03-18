@@ -564,22 +564,26 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
                 this.binding = binding;
 
                 binding.img.setOnClickListener(v -> {
+                    int pos = getLayoutPosition();
+                    if (pos == RecyclerView.NO_POSITION) return;
                     if (!isSelecting) {
-                        if (!(images.get(getLayoutPosition()).resFullName.endsWith(".svg") ||
-                                images.get(getLayoutPosition()).resFullName.endsWith(".xml"))) {
-                            showImageDetailsDialog(images.get(getLayoutPosition()));
+                        if (!(images.get(pos).resFullName.endsWith(".svg") ||
+                                images.get(pos).resFullName.endsWith(".xml"))) {
+                            showImageDetailsDialog(images.get(pos));
                         }
                     } else {
                         binding.chkSelect.setChecked(!binding.chkSelect.isChecked());
-                        images.get(getLayoutPosition()).isSelected = binding.chkSelect.isChecked();
-                        notifyItemChanged(getLayoutPosition());
+                        images.get(pos).isSelected = binding.chkSelect.isChecked();
+                        notifyItemChanged(pos);
                     }
                 });
 
                 binding.img.setOnLongClickListener(v -> {
+                    int pos = getLayoutPosition();
+                    if (pos == RecyclerView.NO_POSITION) return true;
                     setSelectionMode(true);
                     binding.chkSelect.setChecked(!binding.chkSelect.isChecked());
-                    images.get(getLayoutPosition()).isSelected = binding.chkSelect.isChecked();
+                    images.get(pos).isSelected = binding.chkSelect.isChecked();
                     return true;
                 });
             }

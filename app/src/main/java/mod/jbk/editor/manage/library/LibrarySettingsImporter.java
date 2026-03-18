@@ -177,6 +177,7 @@ public class LibrarySettingsImporter {
             public void onClick(View v) {
                 if (!UIHelper.isClickThrottled() && v.getId() == R.id.project_layout) {
                     selectedProjectIndex = getLayoutPosition();
+                    if (selectedProjectIndex == RecyclerView.NO_POSITION) return;
                     selectProject(selectedProjectIndex);
                 }
             }

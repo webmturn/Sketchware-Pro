@@ -661,7 +661,9 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
                 optionsLayout = itemView.findViewById(R.id.event_option);
                 optionsLayout.setButtonOnClickListener(v -> {
                     if (!UIHelper.isClickThrottled()) {
-                        EventBean eventBean = getActiveList().get(getLayoutPosition());
+                        int pos = getLayoutPosition();
+                        if (pos == RecyclerView.NO_POSITION) return;
+                        EventBean eventBean = getActiveList().get(pos);
                         if (v instanceof CollapsibleButton button) {
                             setAnimateNextTransformation(true);
                             int id = button.getButtonId();
@@ -669,25 +671,25 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
                                 eventBean.buttonPressed = id;
                                 eventBean.isConfirmation = false;
                                 eventBean.isCollapsed = false;
-                                notifyItemChanged(getLayoutPosition());
-                                showSaveMoreBlockToCollectionsDialog(getLayoutPosition());
+                                notifyItemChanged(pos);
+                                showSaveMoreBlockToCollectionsDialog(pos);
                             } else {
                                 eventBean.buttonPressed = id;
                                 eventBean.isConfirmation = true;
-                                notifyItemChanged(getLayoutPosition());
+                                notifyItemChanged(pos);
                             }
                         } else {
                             if (v.getId() == R.id.confirm_no) {
                                 eventBean.isConfirmation = false;
                                 setAnimateNextTransformation(true);
-                                notifyItemChanged(getLayoutPosition());
+                                notifyItemChanged(pos);
                             } else if (v.getId() == R.id.confirm_yes) {
                                 if (eventBean.buttonPressed == 0) {
                                     eventBean.isConfirmation = false;
                                     eventBean.isCollapsed = true;
                                     setAnimateNextTransformation(true);
                                     resetEvent(eventBean);
-                                    notifyItemChanged(getLayoutPosition());
+                                    notifyItemChanged(pos);
                                 } else if (eventBean.buttonPressed == 1) {
                                     eventBean.isConfirmation = false;
                                     int originalPosition = currentCategoryEvents.indexOf(eventBean);
@@ -705,7 +707,9 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
                 onDoneInitializingViews();
                 root.setOnClickListener(v -> {
                     if (!UIHelper.isClickThrottled()) {
-                        EventBean eventBean = getActiveList().get(getLayoutPosition());
+                        int pos = getLayoutPosition();
+                        if (pos == RecyclerView.NO_POSITION) return;
+                        EventBean eventBean = getActiveList().get(pos);
                         openEvent(eventBean.targetId, eventBean.eventName, Helper.getText(description));
                     }
                 });

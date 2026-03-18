@@ -307,6 +307,7 @@ public class ViewFilesFragment extends BaseFragment {
                 binding.viewItem.setOnClickListener(view -> {
                     if (!UIHelper.isClickThrottled()) {
                         layoutPosition = getLayoutPosition();
+                        if (layoutPosition == RecyclerView.NO_POSITION) return;
                         ProjectFileBean projectFileBean = activitiesFiles.get(layoutPosition);
 
                         if (isSelectionMode) {
@@ -325,12 +326,13 @@ public class ViewFilesFragment extends BaseFragment {
                 });
 
                 binding.viewItem.setOnLongClickListener(view -> {
-                    if (getLayoutPosition() == 0) {
+                    layoutPosition = getLayoutPosition();
+                    if (layoutPosition == RecyclerView.NO_POSITION) return true;
+                    if (layoutPosition == 0) {
                         Toast.makeText(getContext(), Helper.getResString(R.string.error_main_activity_cannot_delete), Toast.LENGTH_SHORT).show();
                         return true;
                     }
                     ((ManageViewActivity) getActivity()).setSelectionMode(true);
-                    layoutPosition = getLayoutPosition();
                     ProjectFileBean projectFileBean = activitiesFiles.get(layoutPosition);
                     projectFileBean.isSelected = !projectFileBean.isSelected;
                     binding.chkSelect.setChecked(projectFileBean.isSelected);
@@ -341,6 +343,7 @@ public class ViewFilesFragment extends BaseFragment {
                 binding.imgPresetSetting.setOnClickListener(view -> {
                     if (!UIHelper.isClickThrottled()) {
                         layoutPosition = getLayoutPosition();
+                        if (layoutPosition == RecyclerView.NO_POSITION) return;
                         Intent intent = new Intent(getContext(), PresetSettingActivity.class);
                         intent.putExtra("request_code", REQUEST_CODE_PRESET_ACTIVITY);
                         intent.putExtra("edit_mode", true);

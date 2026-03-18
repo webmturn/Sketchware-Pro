@@ -3,6 +3,9 @@ package pro.sketchware.core;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
+
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.besome.sketch.beans.ProjectFileBean;
 import com.besome.sketch.editor.manage.view.PresetSettingActivity;
 
@@ -21,7 +24,9 @@ public class ViewFileEditClickListener implements View.OnClickListener {
     if (UIHelper.isClickThrottled())
       return; 
     ViewFilesAdapter.FileListAdapter.ViewHolder holder = viewHolder;
-    holder.adapterRef.selectedPosition = holder.getLayoutPosition();
+    int pos = holder.getLayoutPosition();
+    if (pos == RecyclerView.NO_POSITION) return;
+    holder.adapterRef.selectedPosition = pos;
     Intent intent = new Intent(viewHolder.adapterRef.outerAdapter.getActivity(), PresetSettingActivity.class);
     if (((ProjectFileBean)viewHolder.adapterRef.outerAdapter.projectFiles.get(viewHolder.adapterRef.selectedPosition)).fileType == 1) {
       c = 'ĕ';

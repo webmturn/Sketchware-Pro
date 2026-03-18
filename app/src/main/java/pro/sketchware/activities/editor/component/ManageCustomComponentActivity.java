@@ -125,10 +125,13 @@ public class ManageCustomComponentActivity extends BaseAppCompatActivity {
         try {
             componentsList = getGson().fromJson(FileUtil.readFile(_path),
                     new TypeToken<ArrayList<CustomComponent>>(){}.getType());
+            if (componentsList == null) {
+                componentsList = new ArrayList<>();
+            }
         } catch (JsonSyntaxException e) {
-            componentsList = null;
+            componentsList = new ArrayList<>();
         }
-        if (componentsList != null && !componentsList.isEmpty()) {
+        if (!componentsList.isEmpty()) {
             ComponentsAdapter adapter = new ComponentsAdapter(componentsList);
             Parcelable state = componentView.getLayoutManager().onSaveInstanceState();
             componentView.setAdapter(adapter);
@@ -322,6 +325,7 @@ public class ManageCustomComponentActivity extends BaseAppCompatActivity {
                 collapsibleComponentLayout = itemView.findViewById(R.id.component_option);
                 collapsibleComponentLayout.setButtonOnClickListener(v -> {
                     int lastSelectedItem = getLayoutPosition();
+                    if (lastSelectedItem == RecyclerView.NO_POSITION) return;
                     if (v instanceof CollapsibleButton button) {
                         int id = button.getButtonId();
                         if (id == 0) {
@@ -350,8 +354,10 @@ public class ManageCustomComponentActivity extends BaseAppCompatActivity {
                 });
                 onDoneInitializingViews();
                 root.setOnClickListener(v -> {
+                    int pos = getLayoutPosition();
+                    if (pos == RecyclerView.NO_POSITION) return;
                     Intent intent = new Intent(getApplicationContext(), AddCustomComponentActivity.class);
-                    intent.putExtra("pos", getLayoutPosition());
+                    intent.putExtra("pos", pos);
                     startActivity(intent);
                 });
                 setOnClickCollapseConfig(v -> v != root);
