@@ -84,7 +84,10 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         Bundle args = getArguments();
-        if (args == null) return;
+        if (args == null) {
+            dismissAllowingStateLoss();
+            return;
+        }
 
         dependencyAdapter = new DependencyDownloadAdapter();
         binding.dependenciesRecyclerView.setAdapter(dependencyAdapter);
@@ -95,6 +98,10 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
         notAssociatedWithProject = args.getBoolean("notAssociatedWithProject", false);
         buildSettings = (BuildSettings) args.getSerializable("buildSettings");
         localLibFile = args.getString("localLibFile");
+        if (buildSettings == null || (!notAssociatedWithProject && localLibFile == null)) {
+            dismissAllowingStateLoss();
+            return;
+        }
 
         binding.btnDownload.setOnClickListener(v -> initDownloadFlow());
 

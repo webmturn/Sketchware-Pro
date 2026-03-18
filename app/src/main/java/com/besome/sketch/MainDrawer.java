@@ -101,7 +101,11 @@ public class MainDrawer extends NavigationView {
         } else if (id == R.id.program_info) {
             Intent intent = new Intent(activity, ProgramInfoActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            ((MainActivity) activity).launchProgramInfo(intent);
+            if (activity instanceof MainActivity mainActivity) {
+                mainActivity.launchProgramInfo(intent);
+            } else {
+                activity.startActivity(intent);
+            }
         } else if (id == R.id.app_settings) {
             Intent intent = new Intent(activity, AppSettings.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
