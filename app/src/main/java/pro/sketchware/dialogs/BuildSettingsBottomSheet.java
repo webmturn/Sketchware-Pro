@@ -93,6 +93,10 @@ public class BuildSettingsBottomSheet extends BottomSheetDialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if (projectSettings == null || views == null) {
+            dismissAllowingStateLoss();
+            return;
+        }
 
         initializeViews();
 

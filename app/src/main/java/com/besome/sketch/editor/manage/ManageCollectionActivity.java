@@ -948,11 +948,11 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
                 });
                 cardView.setOnLongClickListener(v -> {
                     lastSelectedItemPosition = getLayoutPosition();
-                    if (lastSelectedItemPosition == RecyclerView.NO_POSITION) return false;
+                    if (lastSelectedItemPosition == RecyclerView.NO_POSITION) return true;
                     changeDeletingItemsState(true);
                     checkBox.setChecked(!checkBox.isChecked());
                     currentCollectionTypeItems.get(lastSelectedItemPosition).isSelected = checkBox.isChecked();
-                    return false;
+                    return true;
                 });
             }
         }
