@@ -998,7 +998,9 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     @Override
     public void onClick(View v) {
         if (!UIHelper.isClickThrottled() && !isEditMode) {
-            ((PropertyActivity) getContext()).openImageManager();
+            if (getContext() instanceof PropertyActivity activity) {
+                activity.openImageManager();
+            }
         }
     }
 }

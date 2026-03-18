@@ -33,7 +33,7 @@ import pro.sketchware.utility.UI;
 public class DesignDrawer extends LinearLayout {
     @SuppressLint("NonConstantResourceId")
     private final View.OnClickListener drawerItemClickListener = v -> {
-        Activity activity = (Activity) getContext();
+        if (!(getContext() instanceof Activity activity)) return;
         if (!(activity instanceof DesignActivity designActivity)) return;
         int id = v.getId();
 

@@ -102,7 +102,8 @@ public class PaletteSelector extends RecyclerView {
 
     public void showSearchDialog() {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(context);
-        PalettesSearchDialogBinding binding = PalettesSearchDialogBinding.inflate(((Activity) context).getLayoutInflater());
+        if (!(context instanceof Activity activity)) return;
+        PalettesSearchDialogBinding binding = PalettesSearchDialogBinding.inflate(activity.getLayoutInflater());
 
         dialog.setTitle(Helper.getResString(R.string.search_in_palettes_dialog_title));
         dialog.setPositiveButton(Helper.getResString(R.string.search), (v1, which) -> {

@@ -52,8 +52,9 @@ public class DataResetter {
 
         Intent intent = new Intent(context, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        Activity activity = (Activity) context;
-        activity.startActivity(intent);
-        activity.finishAffinity();
+        context.startActivity(intent);
+        if (context instanceof Activity activity) {
+            activity.finishAffinity();
+        }
     }
 }

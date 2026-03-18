@@ -88,6 +88,7 @@ public class MainDrawer extends NavigationView {
 
     private void initializeDrawerItems(@IdRes int id) {
         Activity activity = unwrap(getContext());
+        if (activity == null) return;
         if (id == R.id.about_team) {
             Intent intent = new Intent(activity, AboutActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -115,6 +116,7 @@ public class MainDrawer extends NavigationView {
     private void openUrl(String url) {
         try {
             Activity activity = unwrap(getContext());
+            if (activity == null) return;
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             activity.startActivity(intent);
         } catch (android.content.ActivityNotFoundException ignored) {
@@ -126,6 +128,6 @@ public class MainDrawer extends NavigationView {
             context = ((ContextWrapper) context).getBaseContext();
         }
 
-        return (Activity) context;
+        return context instanceof Activity activity ? activity : null;
     }
 }

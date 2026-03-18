@@ -57,7 +57,8 @@ public class PropertyCustomViewItem extends RelativeLayout implements View.OnCli
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(getContext());
         dialog.setTitle(Helper.getText(tvName));
         dialog.setIcon(iconResId);
-        PropertyPopupSelectorSingleBinding propertyBinding = PropertyPopupSelectorSingleBinding.inflate(((Activity) getContext()).getLayoutInflater());
+        if (!(getContext() instanceof Activity activity)) return;
+        PropertyPopupSelectorSingleBinding propertyBinding = PropertyPopupSelectorSingleBinding.inflate(activity.getLayoutInflater());
         RadioGroup rgContent = propertyBinding.rgContent;
         rgContent.addView(createRadioButton("none"));
 

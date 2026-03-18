@@ -539,10 +539,18 @@ public class WidgetsCreatorManager {
             HashMap<String, Object> widget = widgetConfigurationsList.get(i);
             Object positionValue = widget.get("position");
 
-            if (positionValue != null) {
-                int positionIntValue = ((Number) positionValue).intValue();
+            if (positionValue instanceof Number positionNumber) {
+                int positionIntValue = positionNumber.intValue();
                 if (positionIntValue == targetPosition) {
                     return i;
+                }
+            } else if (positionValue != null) {
+                try {
+                    int positionIntValue = Integer.parseInt(String.valueOf(positionValue));
+                    if (positionIntValue == targetPosition) {
+                        return i;
+                    }
+                } catch (NumberFormatException ignored) {
                 }
             }
         }
@@ -553,8 +561,8 @@ public class WidgetsCreatorManager {
         if (!widgetConfigurationsList.isEmpty()) {
             for (HashMap<String, Object> map : widgetConfigurationsList) {
                 if (map.containsKey("Class")) {
-                    String classNameValue = (String) map.get("Class");
-                    if (Objects.requireNonNull(classNameValue).equals(className)) {
+                    Object classNameValue = map.get("Class");
+                    if (classNameValue != null && className.equals(String.valueOf(classNameValue))) {
                         return false;
                     }
                 }

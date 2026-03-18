@@ -188,10 +188,11 @@ public class CustomBlocksDialog {
         dialog.setIcon(R.drawable.icon_style_white_96);
         dialog.setTitle(R.string.blocks_title_create_palette);
 
-        DialogPaletteBinding binding = DialogPaletteBinding.inflate(((Activity) context).getLayoutInflater());
+        if (!(context instanceof Activity activity)) return;
+        DialogPaletteBinding binding = DialogPaletteBinding.inflate(activity.getLayoutInflater());
 
         binding.openColorPalette.setOnClickListener(v -> {
-            ColorPickerDialog colorPicker = new ColorPickerDialog((Activity) context, 0, true, false);
+            ColorPickerDialog colorPicker = new ColorPickerDialog(activity, 0, true, false);
             colorPicker.setColorPickerCallback(new ColorPickerDialog.OnColorPickedListener() {
                 @Override
                 public void onColorPicked(int colorInt) {
