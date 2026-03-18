@@ -1316,6 +1316,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             if (activity == null) return;
 
             activity.runOnUiThread(() -> {
+                if (activity.isFinishing() || activity.isDestroyed()) return;
                 progressBar.setIndeterminate(step == -1);
                 if (!canceled) {
                     updateNotification(progress + " (" + step + " / " + totalSteps + ")");
@@ -1362,8 +1363,9 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 isShowingNotification = false;
             }
             DesignActivity activity = getActivity();
-            if (activity != null) {
+            if (activity != null && !activity.isFinishing() && !activity.isDestroyed()) {
                 activity.runOnUiThread(() -> {
+                    if (activity.isFinishing() || activity.isDestroyed()) return;
                     activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 });
             }
