@@ -77,6 +77,9 @@ public class SoundListFragment extends BaseFragment implements MenuProvider {
     }
 
     private void editSound() {
+        if (adapter.lastSelectedSound < 0 || adapter.lastSelectedSound >= sounds.size()) {
+            return;
+        }
         Intent intent = new Intent(getContext(), AddSoundActivity.class);
         intent.putExtra("sc_id", sc_id);
         intent.putExtra("dir_path", dirPath);
@@ -91,8 +94,10 @@ public class SoundListFragment extends BaseFragment implements MenuProvider {
         super.onCreate(savedInstanceState);
         addSoundLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                        sounds.add(result.getData().getParcelableExtra("project_resource"));
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null && isAdded()) {
+                        ProjectResourceBean sound = result.getData().getParcelableExtra("project_resource");
+                        if (sound == null) return;
+                        sounds.add(sound);
                         SketchwareUtil.toast(Helper.getResString(R.string.design_manager_message_add_complete));
                         adapter.notifyDataSetChanged();
                         updateNoSoundsTextVisibility();
@@ -101,8 +106,10 @@ public class SoundListFragment extends BaseFragment implements MenuProvider {
                 });
         editSoundLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                        sounds.set(adapter.lastSelectedSound, result.getData().getParcelableExtra("project_resource"));
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null && isAdded()) {
+                        ProjectResourceBean sound = result.getData().getParcelableExtra("project_resource");
+                        if (sound == null || adapter.lastSelectedSound < 0 || adapter.lastSelectedSound >= sounds.size()) return;
+                        sounds.set(adapter.lastSelectedSound, sound);
                         SketchwareUtil.toast(Helper.getResString(R.string.design_manager_message_edit_complete));
                         adapter.notifyDataSetChanged();
                         updateNoSoundsTextVisibility();

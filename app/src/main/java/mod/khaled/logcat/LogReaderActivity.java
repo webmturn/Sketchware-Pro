@@ -105,12 +105,12 @@ public class LogReaderActivity extends BaseAppCompatActivity {
                     ArrayList<HashMap<String, Object>> filteredList = new ArrayList<>();
                     for (HashMap<String, Object> m : mainList) {
                         if (!pkgFilterList.isEmpty()) {
-                            if (m.containsKey("pkgName") && pkgFilterList.contains(m.get("pkgName").toString())) {
-                                if (m.get("logRaw").toString().toLowerCase().contains(_charSeq.toLowerCase())) {
+                            if (pkgFilterList.contains(safeGet(m, "pkgName"))) {
+                                if (safeGet(m, "logRaw").toLowerCase().contains(_charSeq.toLowerCase())) {
                                     filteredList.add(m);
                                 }
                             }
-                        } else if (m.get("logRaw").toString().toLowerCase().contains(_charSeq.toLowerCase())) {
+                        } else if (safeGet(m, "logRaw").toLowerCase().contains(_charSeq.toLowerCase())) {
                             filteredList.add(m);
                         }
                     }
@@ -237,15 +237,15 @@ public class LogReaderActivity extends BaseAppCompatActivity {
                 mainList.add(map);
                 if (pkgFilterList.isEmpty()) {
                     if (!Helper.getText(binding.searchInput).isEmpty()) {
-                        if (map.get("logRaw").toString().toLowerCase().contains(Helper.getText(binding.searchInput).toLowerCase())) {
+                        if (safeGet(map, "logRaw").toLowerCase().contains(Helper.getText(binding.searchInput).toLowerCase())) {
                             ((Adapter) binding.logsRecyclerView.getAdapter()).updateList(map);
                         }
                     } else {
                         ((Adapter) binding.logsRecyclerView.getAdapter()).updateList(map);
                     }
-                } else if (map.containsKey("pkgName") && pkgFilterList.contains(map.get("pkgName").toString())) {
+                } else if (pkgFilterList.contains(safeGet(map, "pkgName"))) {
                     if (!Helper.getText(binding.searchInput).isEmpty()) {
-                        if (map.get("logRaw").toString().toLowerCase().contains(Helper.getText(binding.searchInput).toLowerCase())) {
+                        if (safeGet(map, "logRaw").toLowerCase().contains(Helper.getText(binding.searchInput).toLowerCase())) {
                             ((Adapter) binding.logsRecyclerView.getAdapter()).updateList(map);
                         }
                     } else {
@@ -293,18 +293,19 @@ public class LogReaderActivity extends BaseAppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             var binding = holder.listBinding;
+            HashMap<String, Object> item = data.get(position);
 
-            if (data.get(position).containsKey("pkgName")) {
-                binding.pkgName.setText(data.get(position).get("pkgName").toString());
+            if (item.containsKey("pkgName")) {
+                binding.pkgName.setText(safeGet(item, "pkgName"));
                 binding.pkgName.setVisibility(View.VISIBLE);
             } else {
                 binding.pkgName.setVisibility(View.GONE);
             }
-            if (data.get(position).containsKey("culturedLog")) {
+            if (item.containsKey("culturedLog")) {
                 binding.dateHeader.setVisibility(View.VISIBLE);
-                binding.type.setText(data.get(position).get("type").toString());
-                binding.dateHeader.setText(data.get(position).get("date").toString() + " | " + data.get(position).get("header").toString());
-                switch (Objects.requireNonNull(data.get(position).get("type")).toString()) {
+                binding.type.setText(safeGet(item, "type"));
+                binding.dateHeader.setText(safeGet(item, "date") + " | " + safeGet(item, "header"));
+                switch (safeGet(item, "type")) {
                     case "A" -> binding.type.setBackgroundColor(0xFF9C27B0);
                     case "D" -> binding.type.setBackgroundColor(0xFF2196F3);
                     case "E" -> binding.type.setBackgroundColor(0xFFF44336);
@@ -316,12 +317,12 @@ public class LogReaderActivity extends BaseAppCompatActivity {
                         binding.type.setText("U");
                     }
                 }
-                binding.log.setText(data.get(position).get("body").toString());
+                binding.log.setText(safeGet(item, "body"));
                 try {
-                    if (data.get(position).get("date").toString().equals(data.get(position + 1).get("date").toString())) {
+                    if (safeGet(item, "date").equals(safeGet(data.get(position + 1), "date"))) {
 //                        binding.divider.setVisibility(View.GONE);
                         try {
-                            if (data.get(position).get("pkgName").toString().equals(data.get(position + 1).get("pkgName").toString())) {
+                            if (safeGet(item, "pkgName").equals(safeGet(data.get(position + 1), "pkgName"))) {
                                 binding.pkgName.setVisibility(View.GONE);
                             } else {
                                 binding.pkgName.setVisibility(View.VISIBLE);
@@ -331,7 +332,7 @@ public class LogReaderActivity extends BaseAppCompatActivity {
                             binding.pkgName.setVisibility(View.VISIBLE);
                         }
                         try {
-                            if (data.get(position).get("header").toString().equals(data.get(position + 1).get("header").toString())) {
+                            if (safeGet(item, "header").equals(safeGet(data.get(position + 1), "header"))) {
                                 binding.dateHeader.setVisibility(View.GONE);
                             } else {
                                 binding.dateHeader.setVisibility(View.VISIBLE);
@@ -345,14 +346,14 @@ public class LogReaderActivity extends BaseAppCompatActivity {
                     android.util.Log.e("LogReaderActivity", "Failed to process log item at position " + position, e);
                 }
             } else {
-                binding.log.setText(data.get(position).get("logRaw").toString());
+                binding.log.setText(safeGet(item, "logRaw"));
                 binding.type.setBackgroundColor(0xFF616161);
                 binding.type.setText("U");
                 binding.dateHeader.setVisibility(View.GONE);
             }
             binding.getRoot().setOnLongClickListener(v -> {
                 SketchwareUtil.toast(Helper.getResString(R.string.toast_copied_to_clipboard));
-                ((ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText("clipboard", data.get(position).get("logRaw").toString()));
+                ((ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText("clipboard", safeGet(item, "logRaw")));
                 return true;
             });
         }

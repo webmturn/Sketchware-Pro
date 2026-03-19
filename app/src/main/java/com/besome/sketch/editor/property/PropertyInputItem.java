@@ -565,9 +565,11 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
         List<String> mergedList = new ArrayList<>();
 
         for (HashMap<String, Object> map : stringsListMap) {
-            String keyValue = map.get("key").toString();
+            Object keyObject = map.get("key");
+            String keyValue = keyObject != null ? keyObject.toString() : "";
             keysList.add(stringsStart + keyValue);
-            mergedList.add(stringsStart + keyValue + " ( " + map.get("text") + " )");
+            Object textObject = map.get("text");
+            mergedList.add(stringsStart + keyValue + " ( " + (textObject != null ? textObject.toString() : "") + " )");
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_dropdown_item_1line, mergedList);

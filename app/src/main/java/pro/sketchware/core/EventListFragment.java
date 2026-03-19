@@ -72,10 +72,16 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
     private ImageView sortMenuIcon;
     private View searchContainer;
     private final ActivityResultLauncher<Intent> addEventLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-            result -> refreshEvents());
+            result -> {
+                if (isAdded()) {
+                    refreshEvents();
+                }
+            });
     private final ActivityResultLauncher<Intent> openEvent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         // in case any Events were added, e.g. a new MoreBlock
-        refreshEvents();
+        if (isAdded()) {
+            refreshEvents();
+        }
     });
 
     public static int getCategoryIcon(int i) {
@@ -157,7 +163,7 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
     }
 
     public void refreshEvents() {
-        if (currentActivity != null) {
+        if (currentActivity != null && eventAdapter != null && paletteView != null && importMoreBlockFromCollection != null) {
             moreBlocks.clear();
             viewEvents.clear();
             componentEvents.clear();
@@ -217,6 +223,9 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
     }
 
     private void deleteMoreBlock(EventBean moreBlock, int position) {
+        if (currentActivity == null) {
+            return;
+        }
         if (ProjectDataManager.getProjectDataManager(sc_id).isMoreBlockUsed(currentActivity.getJavaName(), moreBlock.targetId)) {
             SketchToast.warning(requireContext(), Helper.getResString(R.string.logic_editor_message_currently_used_block), 0).show();
         } else {

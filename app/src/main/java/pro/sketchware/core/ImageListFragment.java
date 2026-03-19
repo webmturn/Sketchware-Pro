@@ -76,7 +76,7 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
     private final ActivityResultLauncher<Intent> openImportIconActivity = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         if (result.getResultCode() == Activity.RESULT_OK) {
             var data = result.getData();
-            if (data == null) return;
+            if (data == null || !isAdded() || binding == null) return;
             ProjectResourceBean icon = new ProjectResourceBean(
                     ProjectResourceBean.PROJECT_RES_TYPE_FILE,
                     data.getStringExtra("iconName"), data.getStringExtra("iconPath")
@@ -95,13 +95,14 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
     private final ActivityResultLauncher<Intent> showAddImageDialog = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         if (result.getResultCode() == Activity.RESULT_OK) {
             var data = result.getData();
-            if (data == null) return;
+            if (data == null || !isAdded() || binding == null) return;
             ArrayList<ProjectResourceBean> addedImages;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 addedImages = data.getParcelableArrayListExtra("images", ProjectResourceBean.class);
             } else {
                 addedImages = data.getParcelableArrayListExtra("images");
             }
+            if (addedImages == null) return;
             images.addAll(addedImages);
             adapter.notifyItemRangeInserted(images.size() - addedImages.size(), addedImages.size());
             updateGuideVisibility();
@@ -112,17 +113,19 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
     private final ActivityResultLauncher<Intent> showImageDetailsDialog = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         if (result.getResultCode() == Activity.RESULT_OK) {
             var data = result.getData();
-            if (data == null) return;
+            if (data == null || !isAdded() || binding == null) return;
             ProjectResourceBean editedImage;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 editedImage = data.getParcelableExtra("image", ProjectResourceBean.class);
             } else {
                 editedImage = data.getParcelableExtra("image");
             }
+            if (editedImage == null) return;
             ResourceManager.refreshCacheSignature();
             for (ProjectResourceBean image : images) {
                 if (image.resName.equals(editedImage.resName)) {
                     image.copy(editedImage);
+
                     adapter.notifyItemChanged(images.indexOf(image));
                     break;
                 }
@@ -216,8 +219,9 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
                         // convert the svg to vectors
                         String svgPath = fpu.getSvgFullPath(sc_id, image.resName);
                         copyFile(path, svgPath);
-                        String colorHex = (String) colorMap.get(index).get("colorHex");
-                        colorHex = (colorHex != null) ? colorHex : "#FFFFFF";
+                        Map<String, Object> colorInfo = colorMap.get(index);
+                        Object colorHexValue = colorInfo != null ? colorInfo.get("colorHex") : null;
+                        String colorHex = colorHexValue != null ? colorHexValue.toString() : "#FFFFFF";
                         svgUtils.convert(svgPath, projectImagesDirectory, colorHex);
                     } else {
                         BitmapUtil.processAndSaveBitmap(path, image.isNinePatch() ? imageBasePath + ".9.png" : imageBasePath + ".png", image.rotate, image.flipHorizontal, image.flipVertical);
@@ -564,23 +568,24 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
                 this.binding = binding;
 
                 binding.img.setOnClickListener(v -> {
-                    int pos = getLayoutPosition();
-                    if (pos == RecyclerView.NO_POSITION) return;
+                    int pos = getBindingAdapterPosition();
+                    if (pos == RecyclerView.NO_POSITION || pos < 0 || pos >= images.size()) return;
+                    ProjectResourceBean image = images.get(pos);
                     if (!isSelecting) {
-                        if (!(images.get(pos).resFullName.endsWith(".svg") ||
-                                images.get(pos).resFullName.endsWith(".xml"))) {
-                            showImageDetailsDialog(images.get(pos));
+                        if (!(image.resFullName.endsWith(".svg") ||
+                                image.resFullName.endsWith(".xml"))) {
+                            showImageDetailsDialog(image);
                         }
                     } else {
                         binding.chkSelect.setChecked(!binding.chkSelect.isChecked());
-                        images.get(pos).isSelected = binding.chkSelect.isChecked();
+                        image.isSelected = binding.chkSelect.isChecked();
                         notifyItemChanged(pos);
                     }
                 });
 
                 binding.img.setOnLongClickListener(v -> {
-                    int pos = getLayoutPosition();
-                    if (pos == RecyclerView.NO_POSITION) return true;
+                    int pos = getBindingAdapterPosition();
+                    if (pos == RecyclerView.NO_POSITION || pos < 0 || pos >= images.size()) return true;
                     setSelectionMode(true);
                     binding.chkSelect.setChecked(!binding.chkSelect.isChecked());
                     images.get(pos).isSelected = binding.chkSelect.isChecked();

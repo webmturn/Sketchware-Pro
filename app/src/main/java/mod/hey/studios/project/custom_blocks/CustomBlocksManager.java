@@ -57,7 +57,7 @@ public class CustomBlocksManager {
             BlockLoader.refresh();
         }
         for (HashMap<String, Object> block : ExtraBlockFile.buildInBlocks) {
-            if (Objects.requireNonNull(block.get("name")).toString().equals(blockName)) {
+            if (blockName.equals(String.valueOf(block.get("name")))) {
                 return true;
             }
         }

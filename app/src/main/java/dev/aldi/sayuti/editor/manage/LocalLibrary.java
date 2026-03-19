@@ -69,16 +69,20 @@ public class LocalLibrary {
                         json, new TypeToken<List<Map<String, Object>>>() {}.getType());
                 if (entries != null) {
                     for (Map<String, Object> entry : entries) {
-                        String artifactId = (String) entry.get("artifactId");
-                        String version = (String) entry.get("version");
-                        String groupId = (String) entry.get("groupId");
+                        Object artifactIdValue = entry.get("artifactId");
+                        Object versionValue = entry.get("version");
+                        Object groupIdValue = entry.get("groupId");
+                        String artifactId = artifactIdValue != null ? artifactIdValue.toString() : null;
+                        String version = versionValue != null ? versionValue.toString() : null;
+                        String groupId = groupIdValue != null ? groupIdValue.toString() : null;
                         boolean builtIn = Boolean.TRUE.equals(entry.get("builtIn"));
                         if (artifactId != null && version != null) {
                             String folderName = artifactId + "-v" + version;
                             int depth = 1;
                             Object depthObj = entry.get("depth");
                             if (depthObj instanceof Number) depth = ((Number) depthObj).intValue();
-                            String parentCoord = (String) entry.get("parent");
+                            Object parentValue = entry.get("parent");
+                            String parentCoord = parentValue != null ? parentValue.toString() : null;
                             allDeps.add(new DepInfo(folderName, groupId != null ? groupId : "",
                                     artifactId, version, builtIn, depth, parentCoord));
                             if (!builtIn) {

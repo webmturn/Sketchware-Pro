@@ -88,10 +88,13 @@ public class PaletteSelector extends RecyclerView {
     }
 
     private void addDynamicPalette(HashMap<String, Object> paletteMap) {
-        String text = Objects.requireNonNull(paletteMap.get("text")).toString();
+        Object textValue = paletteMap.get("text");
+        String text = textValue != null ? textValue.toString() : "";
         if (matchesSearch(text)) {
-            int index = ((Number) paletteMap.get("index")).intValue();
-            int color = ((Number) paletteMap.get("color")).intValue();
+            Object indexValue = paletteMap.get("index");
+            Object colorValue = paletteMap.get("color");
+            int index = indexValue instanceof Number ? ((Number) indexValue).intValue() : 0;
+            int color = colorValue instanceof Number ? ((Number) colorValue).intValue() : 0;
             allPalettes.add(new paletteSelectorRecord(index, text, color));
         }
     }

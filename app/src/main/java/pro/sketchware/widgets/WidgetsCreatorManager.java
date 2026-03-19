@@ -132,7 +132,8 @@ public class WidgetsCreatorManager {
         }
 
         try {
-            int typeId = ((Number) widgetData.get("type")).intValue();
+            Object typeValue = widgetData.get("type");
+            int typeId = typeValue instanceof Number ? ((Number) typeValue).intValue() : Integer.parseInt(String.valueOf(typeValue));
             if (!availableWidgetsTypes.contains(String.valueOf(typeId))) {
                 SketchwareUtil.toastError(String.format(Helper.getResString(R.string.error_invalid_widget_type), widgetData.get("title")));
                 return true;
@@ -459,7 +460,7 @@ public class WidgetsCreatorManager {
     public void addWidgetsByTitle(String title) {
         for (HashMap<String, Object> map : widgetConfigurationsList) {
             try {
-                if (Objects.requireNonNull(map.get("Class")).toString().equals(title)) {
+                if (title.equals(String.valueOf(map.get("Class")))) {
                     Object typeObj = map.get("type");
                     if (typeObj instanceof Double) {
                         map.put("type", ((Double) typeObj).intValue());

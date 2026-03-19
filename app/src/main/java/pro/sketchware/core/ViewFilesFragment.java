@@ -89,7 +89,9 @@ public class ViewFilesFragment extends BaseFragment {
     }
 
     public final void updateProjectFileOptions(ProjectFileBean projectFileBean) {
-        ProjectFileBean newProjectFile = activitiesFiles.get(projectFilesAdapter.layoutPosition);
+        int position = projectFilesAdapter.layoutPosition;
+        if (position < 0 || position >= activitiesFiles.size()) return;
+        ProjectFileBean newProjectFile = activitiesFiles.get(position);
         newProjectFile.keyboardSetting = projectFileBean.keyboardSetting;
         newProjectFile.orientation = projectFileBean.orientation;
         newProjectFile.options = projectFileBean.options;
@@ -111,7 +113,9 @@ public class ViewFilesFragment extends BaseFragment {
     }
 
     public final void applyPreset(ProjectFileBean presetFile) {
-        ProjectFileBean projectFileBean = activitiesFiles.get(projectFilesAdapter.layoutPosition);
+        int position = projectFilesAdapter.layoutPosition;
+        if (position < 0 || position >= activitiesFiles.size()) return;
+        ProjectFileBean projectFileBean = activitiesFiles.get(position);
 
         ArrayList<ViewBean> fileViewBeans = ProjectDataManager.getProjectDataManager(sc_id).getViews(projectFileBean.getXmlName());
         for (int i = fileViewBeans.size() - 1; i >= 0; --i) {
@@ -190,18 +194,25 @@ public class ViewFilesFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         addViewLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                        updateProjectFileOptions(result.getData().getParcelableExtra("project_file"));
-                        projectFilesAdapter.notifyItemChanged(projectFilesAdapter.layoutPosition);
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null && isAdded()) {
+                        ProjectFileBean projectFileBean = result.getData().getParcelableExtra("project_file");
+                        if (projectFileBean == null) return;
+                        updateProjectFileOptions(projectFileBean);
+                        if (projectFilesAdapter.layoutPosition >= 0 && projectFilesAdapter.layoutPosition < activitiesFiles.size()) {
+                            projectFilesAdapter.notifyItemChanged(projectFilesAdapter.layoutPosition);
+                        }
                     }
                 });
         presetLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null && isAdded()) {
                         ProjectFileBean projectFileBean = result.getData().getParcelableExtra("preset_data");
+                        if (projectFileBean == null) return;
                         updateProjectFileOptions(projectFileBean);
                         applyPreset(projectFileBean);
-                        projectFilesAdapter.notifyItemChanged(projectFilesAdapter.layoutPosition);
+                        if (projectFilesAdapter.layoutPosition >= 0 && projectFilesAdapter.layoutPosition < activitiesFiles.size()) {
+                            projectFilesAdapter.notifyItemChanged(projectFilesAdapter.layoutPosition);
+                        }
                     }
                 });
     }
@@ -306,8 +317,8 @@ public class ViewFilesFragment extends BaseFragment {
 
                 binding.viewItem.setOnClickListener(view -> {
                     if (!UIHelper.isClickThrottled()) {
-                        layoutPosition = getLayoutPosition();
-                        if (layoutPosition == RecyclerView.NO_POSITION) return;
+                        layoutPosition = getBindingAdapterPosition();
+                        if (layoutPosition == RecyclerView.NO_POSITION || layoutPosition < 0 || layoutPosition >= activitiesFiles.size()) return;
                         ProjectFileBean projectFileBean = activitiesFiles.get(layoutPosition);
 
                         if (isSelectionMode) {
@@ -326,8 +337,8 @@ public class ViewFilesFragment extends BaseFragment {
                 });
 
                 binding.viewItem.setOnLongClickListener(view -> {
-                    layoutPosition = getLayoutPosition();
-                    if (layoutPosition == RecyclerView.NO_POSITION) return true;
+                    layoutPosition = getBindingAdapterPosition();
+                    if (layoutPosition == RecyclerView.NO_POSITION || layoutPosition < 0 || layoutPosition >= activitiesFiles.size()) return true;
                     if (layoutPosition == 0) {
                         Toast.makeText(getContext(), Helper.getResString(R.string.error_main_activity_cannot_delete), Toast.LENGTH_SHORT).show();
                         return true;
@@ -342,8 +353,8 @@ public class ViewFilesFragment extends BaseFragment {
 
                 binding.imgPresetSetting.setOnClickListener(view -> {
                     if (!UIHelper.isClickThrottled()) {
-                        layoutPosition = getLayoutPosition();
-                        if (layoutPosition == RecyclerView.NO_POSITION) return;
+                        layoutPosition = getBindingAdapterPosition();
+                        if (layoutPosition == RecyclerView.NO_POSITION || layoutPosition < 0 || layoutPosition >= activitiesFiles.size()) return;
                         Intent intent = new Intent(getContext(), PresetSettingActivity.class);
                         intent.putExtra("request_code", REQUEST_CODE_PRESET_ACTIVITY);
                         intent.putExtra("edit_mode", true);

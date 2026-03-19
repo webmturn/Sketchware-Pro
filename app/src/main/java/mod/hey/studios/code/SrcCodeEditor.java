@@ -268,7 +268,8 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
                 for (int i = 0; i < activityComponents.size(); i++) {
                     Object name = activityComponents.get(i).get("name");
                     if (name != null && activityName.equals(name)) {
-                        beforeContent = (String) activityComponents.get(i).get("value");
+                        Object valueObj = activityComponents.get(i).get("value");
+                        beforeContent = valueObj != null ? valueObj.toString() : "";
                     }
                 }
             }

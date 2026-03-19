@@ -187,18 +187,22 @@ public class SketchwareUtil {
             @Override
             public int compare(HashMap<String, Object> _compareMap1, HashMap<String, Object> _compareMap2) {
                 if (isNumber) {
-                    int _count1 = ((Number) _compareMap1.get(key)).intValue();
-                    int _count2 = ((Number) _compareMap2.get(key)).intValue();
+                    Object value1 = _compareMap1.get(key);
+                    Object value2 = _compareMap2.get(key);
+                    int _count1 = value1 instanceof Number ? ((Number) value1).intValue() : 0;
+                    int _count2 = value2 instanceof Number ? ((Number) value2).intValue() : 0;
                     if (ascending) {
                         return Integer.compare(_count1, _count2);
                     } else {
                         return Integer.compare(_count2, _count1);
                     }
                 } else {
+                    String text1 = String.valueOf(_compareMap1.get(key));
+                    String text2 = String.valueOf(_compareMap2.get(key));
                     if (ascending) {
-                        return _compareMap1.get(key).toString().compareTo(_compareMap2.get(key).toString());
+                        return text1.compareTo(text2);
                     } else {
-                        return _compareMap2.get(key).toString().compareTo(_compareMap1.get(key).toString());
+                        return text2.compareTo(text1);
                     }
                 }
             }

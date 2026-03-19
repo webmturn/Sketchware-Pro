@@ -95,9 +95,12 @@ public class AndroidManifestInjectionDetails extends BaseAppCompatActivity {
             } catch (JsonSyntaxException e) {
                 return;
             }
+            if (data == null) {
+                return;
+            }
             for (HashMap<String, Object> item : data) {
-                String itemName = (String) item.get("name");
-                if (itemName != null && constant.equals(itemName)) {
+                Object itemName = item.get("name");
+                if (itemName != null && constant.equals(itemName.toString())) {
                     listMap.add(item);
                 }
             }
@@ -142,7 +145,8 @@ public class AndroidManifestInjectionDetails extends BaseAppCompatActivity {
         attributeBinding.chipGroupTypes.setVisibility(View.GONE);
         dialog.setView(attributeBinding.getRoot());
 
-        attributeBinding.inputText.setText((String) listMap.get(pos).get("value"));
+        Object dialogValue = listMap.get(pos).get("value");
+        attributeBinding.inputText.setText(dialogValue != null ? dialogValue.toString() : "");
         attributeBinding.inputText.setHint(Helper.getResString(R.string.manifest_hint_attr_value));
         dialog.setPositiveButton(R.string.common_word_save, (dialog1, which) -> {
             listMap.get(pos).put("value", Helper.getText(attributeBinding.inputText));
@@ -184,8 +188,8 @@ public class AndroidManifestInjectionDetails extends BaseAppCompatActivity {
                 data = new ArrayList<>();
             }
             for (int i = data.size() - 1; i > -1; i--) {
-                String itemName = (String) data.get(i).get("name");
-                if (itemName != null && constant.equals(itemName)) {
+                Object itemName = data.get(i).get("name");
+                if (itemName != null && constant.equals(itemName.toString())) {
                     data.remove(i);
                 }
             }
@@ -237,14 +241,17 @@ public class AndroidManifestInjectionDetails extends BaseAppCompatActivity {
                 int violet = ThemeUtils.getColor(attributeView, R.attr.colorViolet);
                 int onSurface = ThemeUtils.getColor(attributeView, R.attr.colorOnSurface);
                 int green = ThemeUtils.getColor(attributeView, R.attr.colorGreen);
+                Object valueObj = _data.get(position).get("value");
+                String value = valueObj != null ? valueObj.toString() : "";
 
-                SpannableString spannableString = new SpannableString((String) _data.get(position).get("value"));
-                spannableString.setSpan(new ForegroundColorSpan(violet), 0, ((String) _data.get(position).get("value")).indexOf(":"), 33);
-                spannableString.setSpan(new ForegroundColorSpan(onSurface), ((String) _data.get(position).get("value")).indexOf(":"), ((String) _data.get(position).get("value")).indexOf("=") + 1, 33);
-                spannableString.setSpan(new ForegroundColorSpan(green), ((String) _data.get(position).get("value")).indexOf("\""), ((String) _data.get(position).get("value")).length(), 33);
+                SpannableString spannableString = new SpannableString(value);
+                spannableString.setSpan(new ForegroundColorSpan(violet), 0, value.indexOf(":"), 33);
+                spannableString.setSpan(new ForegroundColorSpan(onSurface), value.indexOf(":"), value.indexOf("=") + 1, 33);
+                spannableString.setSpan(new ForegroundColorSpan(green), value.indexOf("\""), value.length(), 33);
                 attributeView.getTextView().setText(spannableString);
             } catch (Exception e) {
-                attributeView.getTextView().setText((String) _data.get(position).get("value"));
+                Object fallbackValue = _data.get(position).get("value");
+                attributeView.getTextView().setText(fallbackValue != null ? fallbackValue.toString() : "");
             }
 
             attributeView.getImageView().setVisibility(View.GONE);

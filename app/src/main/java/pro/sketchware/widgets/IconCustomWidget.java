@@ -24,7 +24,9 @@ public class IconCustomWidget extends IconBase {
 
     public IconCustomWidget(HashMap<String, Object> map, Context context) {
         super(context);
-        widgetMap.putAll(map);
+        if (map != null) {
+            widgetMap.putAll(map);
+        }
         Object typeValue = widgetMap.get("type");
         if (typeValue instanceof Number) {
             type = ((Number) typeValue).intValue();
@@ -35,9 +37,10 @@ public class IconCustomWidget extends IconBase {
                 type = ViewBean.VIEW_TYPE_WIDGET_TEXTVIEW;
             }
         }
-        Title = Objects.requireNonNull(widgetMap.get("title")).toString();
+        Object titleValue = widgetMap.get("title");
+        Title = titleValue != null ? titleValue.toString() : "";
         setWidgetImage(getViewTypeResId(type));
-        setWidgetName(Objects.requireNonNull(widgetMap.get("title")).toString());
+        setWidgetName(Title);
     }
 
     @Override
@@ -50,7 +53,9 @@ public class IconCustomWidget extends IconBase {
         layoutBean.paddingTop = 8;
         layoutBean.paddingRight = 8;
         layoutBean.paddingBottom = 8;
-        viewBean.convert = Objects.requireNonNull(widgetMap.get("name")).toString();
+        Object nameValue = widgetMap.get("name");
+        viewBean.convert = nameValue != null ? nameValue.toString() : "";
+
         switch (viewBean.type) {
             case 0, 1, 2:
                 layoutBean.width = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -73,9 +78,9 @@ public class IconCustomWidget extends IconBase {
                 layoutBean.width = -1;
                 break;
         }
-        viewBean.inject = Objects.requireNonNull(widgetMap.get("inject")).toString();
+        Object injectValue = widgetMap.get("inject");
+        viewBean.inject = injectValue != null ? injectValue.toString() : "";
         viewBean.isCustomWidget = true;
         return viewBean;
     }
-
 }

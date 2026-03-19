@@ -411,8 +411,10 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
             }
 
             for (HashMap<String, Object> map : stringsEditor.listmap) {
-                if (Objects.requireNonNull(map.get("key")).toString().equals("app_name")) {
-                    metadata.put("my_app_name", Objects.requireNonNull(map.get("text")).toString());
+                Object key = map.get("key");
+                if ("app_name".equals(String.valueOf(key))) {
+                    Object text = map.get("text");
+                    metadata.put("my_app_name", text != null ? text.toString() : "");
                 }
             }
 

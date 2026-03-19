@@ -74,9 +74,11 @@ public class PaletteWidget extends LinearLayout {
     }
 
     public View customWidget(HashMap<String, Object> map) {
-        String title = map.get("title").toString();
-        String name = map.get("name").toString();
-        if (map.get("Class").toString().equals("Layouts")) {
+        Object titleObj = map.get("title");
+        Object nameObj = map.get("name");
+        String title = titleObj != null ? titleObj.toString() : "";
+        String name = nameObj != null ? nameObj.toString() : "";
+        if ("Layouts".equals(String.valueOf(map.get("Class")))) {
             LinearLayout iconBase;
             Context context = getContext();
             iconBase = new IconCustomWidget(map, context);
@@ -88,7 +90,7 @@ public class PaletteWidget extends LinearLayout {
             iconBase = new IconCustomWidget(map, context);
             iconBase.setText(title);
             iconBase.setName(name);
-            if (map.get("Class").toString().equals("AndroidX")) {
+            if ("AndroidX".equals(String.valueOf(map.get("Class")))) {
                 layoutContainer.addView(iconBase);
             } else {
                 widgetsContainer.addView(iconBase);

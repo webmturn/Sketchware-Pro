@@ -60,9 +60,6 @@ public class SoundImportFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        EncryptedFileUtil fileUtil = new EncryptedFileUtil();
-        // create dirs if they don't exist
-        fileUtil.mkdirs(dirPath);
         if (savedInstanceState == null) {
             sc_id = requireActivity().getIntent().getStringExtra("sc_id");
             dirPath = requireActivity().getIntent().getStringExtra("dir_path");
@@ -70,11 +67,17 @@ public class SoundImportFragment extends BaseFragment {
             sc_id = savedInstanceState.getString("sc_id");
             dirPath = savedInstanceState.getString("dir_path");
         }
+        EncryptedFileUtil fileUtil = new EncryptedFileUtil();
+        // create dirs if they don't exist
+        fileUtil.mkdirs(dirPath);
         loadProjectSounds();
 
         importSoundsHandler = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                handleImportedSounds(result.getData().getParcelableArrayListExtra("results"));
+            if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null && isAdded()) {
+                ArrayList<ProjectResourceBean> importedSounds = result.getData().getParcelableArrayListExtra("results");
+                if (importedSounds != null) {
+                    handleImportedSounds(importedSounds);
+                }
             }
         });
     }

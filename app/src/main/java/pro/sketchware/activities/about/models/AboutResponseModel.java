@@ -120,7 +120,8 @@ public class AboutResponseModel {
                     return Helper.getResString(R.string.github_api_date_unavailable);
                 }
 
-                String commitDateString = (String) committerDetails.get("date");
+                Object commitDateValue = committerDetails.get("date");
+                String commitDateString = commitDateValue != null ? commitDateValue.toString() : null;
                 if (commitDateString == null || commitDateString.isEmpty()) {
                     return Helper.getResString(R.string.github_api_date_unavailable);
                 }

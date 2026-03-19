@@ -57,8 +57,10 @@ public class StringsAdapter extends RecyclerView.Adapter<StringsAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull StringsAdapter.ViewHolder holder, int position) {
         HashMap<String, Object> item = filteredData.get(position);
-        String key = (String) item.get("key");
-        String text = (String) item.get("text");
+        Object keyObj = item.get("key");
+        Object textObj = item.get("text");
+        String key = keyObj != null ? keyObj.toString() : "";
+        String text = textObj != null ? textObj.toString() : "";
         holder.binding.title.setText(key);
         holder.binding.sub.setText(text);
 
@@ -149,8 +151,10 @@ public class StringsAdapter extends RecyclerView.Adapter<StringsAdapter.ViewHold
         } else {
             filteredData = new ArrayList<>();
             for (HashMap<String, Object> item : originalData) {
-                String key = (String) item.get("key");
-                String text = (String) item.get("text");
+                Object keyObj = item.get("key");
+                Object textObj = item.get("text");
+                String key = keyObj != null ? keyObj.toString() : null;
+                String text = textObj != null ? textObj.toString() : null;
                 if (key != null && key.toLowerCase().contains(query) || text != null && text.toLowerCase().contains(query)) {
                     filteredData.add(item);
                 }
@@ -174,7 +178,8 @@ public class StringsAdapter extends RecyclerView.Adapter<StringsAdapter.ViewHold
         for (String javaFileName : getAllJavaFileNames(projectScId)) {
             for (Map.Entry<String, ArrayList<BlockBean>> entry : projectDataManager.getBlockMap(javaFileName).entrySet()) {
                 for (BlockBean block : entry.getValue()) {
-                    if (block.opCode.equals("getResStr") && block.spec.equals(key) || block.opCode.equals("getResString") && block.parameters.get(0).equals("R.string." + key)) {
+                    if ("getResStr".equals(block.opCode) && key.equals(block.spec) ||
+                            "getResString".equals(block.opCode) && block.parameters != null && !block.parameters.isEmpty() && ("R.string." + key).equals(block.parameters.get(0))) {
                         return true;
                     }
                 }
@@ -186,7 +191,8 @@ public class StringsAdapter extends RecyclerView.Adapter<StringsAdapter.ViewHold
     private boolean isStringUsedInXmlFiles(String projectScId, ProjectDataStore projectDataManager, String key) {
         for (String xmlFileName : getAllXmlFileNames(projectScId)) {
             for (ViewBean view : projectDataManager.getViews(xmlFileName)) {
-                if (view.text.text.equals("@string/" + key) || view.text.hint.equals("@string/" + key)) {
+                if (view != null && view.text != null && ("@string/" + key).equals(view.text.text) ||
+                        view != null && view.text != null && ("@string/" + key).equals(view.text.hint)) {
                     return true;
                 }
             }

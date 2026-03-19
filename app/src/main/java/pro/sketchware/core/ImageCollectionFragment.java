@@ -37,13 +37,14 @@ public class ImageCollectionFragment extends BaseFragment implements View.OnClic
 
     private final ActivityResultLauncher<Intent> openImageImportDetails = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         var data = result.getData();
-        if (result.getResultCode() == Activity.RESULT_OK && data != null) {
+        if (result.getResultCode() == Activity.RESULT_OK && data != null && isAdded()) {
             ArrayList<ProjectResourceBean> importedImages;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 importedImages = data.getParcelableArrayListExtra("results", ProjectResourceBean.class);
             } else {
                 importedImages = data.getParcelableArrayListExtra("results");
             }
+            if (importedImages == null) return;
             ArrayList<ProjectResourceBean> newImportedImages = new ArrayList<>();
             for (ProjectResourceBean image : importedImages) {
                 newImportedImages.add(new ProjectResourceBean(ProjectResourceBean.PROJECT_RES_TYPE_FILE, image.resName, image.resFullName));

@@ -316,7 +316,8 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
                 String dependency = null;
                 for (Map<String, Object> libraryMap : projectUsedLibs) {
                     if (name.equals(String.valueOf(libraryMap.get("name")))) {
-                        dependency = (String) libraryMap.get("dependency");
+                        Object dependencyValue = libraryMap.get("dependency");
+                        dependency = dependencyValue != null ? dependencyValue.toString() : null;
                         break;
                     }
                 }

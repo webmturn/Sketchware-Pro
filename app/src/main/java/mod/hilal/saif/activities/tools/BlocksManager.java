@@ -679,8 +679,7 @@ public class BlocksManager extends BaseAppCompatActivity {
         @SuppressLint("ClickableViewAccessibility")
         @Override
         public void onBindViewHolder(@NonNull PaletteAdapter.ViewHolder holder, int position) {
-            String paletteColorValue = (String) palettes.get(position).get("color");
-            assert paletteColorValue != null;
+            String paletteColorValue = String.valueOf(palettes.get(position).get("color"));
             int backgroundColor = PropertiesUtil.parseColor(paletteColorValue);
 
             holder.itemView.setVisibility(View.VISIBLE);

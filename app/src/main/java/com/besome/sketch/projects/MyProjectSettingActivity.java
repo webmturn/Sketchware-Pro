@@ -567,7 +567,8 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
             String baseDir = SketchwarePaths.getDataPath(sc_id) + "/files/resource/values/";
             String stringsFilePath = baseDir + "strings.xml";
             String colorsFilePath = baseDir + "colors.xml";
-            String newAppName = Objects.requireNonNull(data.get("my_app_name")).toString();
+            Object appNameValue = data.get("my_app_name");
+            String newAppName = appNameValue != null ? appNameValue.toString() : "";
 
             if (FileUtil.isExistFile(stringsFilePath)) {
                 String xmlContent = FileUtil.readFile(stringsFilePath);

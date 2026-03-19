@@ -84,11 +84,14 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
             } catch (JsonSyntaxException e) {
                 return;
             }
+            if (data == null) {
+                return;
+            }
             for (int i = 0; i < data.size(); i++) {
-                String str = (String) data.get(i).get("name");
-                if (Objects.requireNonNull(str).equals("_application_attrs")) {
-                    String str2 = (String) data.get(i).get("value");
-                    if (Objects.requireNonNull(str2).contains("android:theme")) {
+                Object rawName = data.get(i).get("name");
+                if ("_application_attrs".equals(rawName)) {
+                    Object rawValue = data.get(i).get("value");
+                    if (rawValue != null && rawValue.toString().contains("android:theme")) {
                         return;
                     }
                 }
@@ -275,10 +278,17 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
             } catch (JsonSyntaxException e) {
                 return;
             }
+            if (data == null) {
+                return;
+            }
             for (int i = 0; i < data.size(); i++) {
-                if (!temp.contains(Objects.requireNonNull(data.get(i).get("name")).toString())) {
-                    if (!Objects.requireNonNull(data.get(i).get("name")).equals("_application_attrs") && !Objects.requireNonNull(data.get(i).get("name")).equals("_apply_for_all_activities") && !Objects.requireNonNull(data.get(i).get("name")).equals("_application_permissions")) {
-                        temp.add((String) data.get(i).get("name"));
+                Object rawName = data.get(i).get("name");
+                if (rawName != null) {
+                    String name = rawName.toString();
+                    if (!temp.contains(name)) {
+                        if (!"_application_attrs".equals(name) && !"_apply_for_all_activities".equals(name) && !"_application_permissions".equals(name)) {
+                            temp.add(name);
+                        }
                     }
                 }
             }
@@ -293,7 +303,8 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
     }
 
     private void deleteActivity(int pos) {
-        String activity_name = (String) activitiesListMap.get(pos).get("act_name");
+        Object actNameValue = activitiesListMap.get(pos).get("act_name");
+        String activity_name = actNameValue != null ? actNameValue.toString() : "";
         String path = FileUtil.getExternalStorageDir().concat("/.sketchware/data/").concat(sc_id).concat("/Injection/androidmanifest/attributes.json");
         ArrayList<HashMap<String, Object>> data;
         try {
@@ -301,9 +312,12 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
         } catch (JsonSyntaxException e) {
             return;
         }
+        if (data == null) {
+            return;
+        }
         for (int i = data.size() - 1; i > -1; i--) {
-            String temp = (String) data.get(i).get("name");
-            if (Objects.requireNonNull(temp).equals(activity_name)) {
+            Object rawName = data.get(i).get("name");
+            if (activity_name.equals(rawName)) {
                 data.remove(i);
             }
         }
@@ -322,9 +336,12 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
             } catch (JsonSyntaxException e) {
                 return;
             }
+            if (data == null) {
+                return;
+            }
             for (int i = data.size() - 1; i > -1; i--) {
-                String name = (String) data.get(i).get("name");
-                if (Objects.requireNonNull(name).equals(activityName)) {
+                Object rawName = data.get(i).get("name");
+                if (activityName.equals(rawName)) {
                     data.remove(i);
                     break;
                 }

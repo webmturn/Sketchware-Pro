@@ -80,11 +80,15 @@ public class StringsEditor extends Fragment {
         if (isSkippingMode) {
             HashSet<String> existingKeys = new HashSet<>();
             for (HashMap<String, Object> existingMap : listmap) {
-                existingKeys.add((String) existingMap.get("key"));
+                Object existingKey = existingMap.get("key");
+                if (existingKey != null) {
+                    existingKeys.add(existingKey.toString());
+                }
             }
 
             for (HashMap<String, Object> stringMap : defaultStrings) {
-                String key = (String) stringMap.get("key");
+                Object keyValue = stringMap.get("key");
+                String key = keyValue != null ? keyValue.toString() : null;
                 if (existingKeys.add(key)) {
                     listmap.add(stringMap);
                 }
@@ -93,10 +97,16 @@ public class StringsEditor extends Fragment {
             if (isMergeAndReplace) {
                 HashSet<String> newKeys = new HashSet<>();
                 for (HashMap<String, Object> stringMap : defaultStrings) {
-                    newKeys.add((String) stringMap.get("key"));
+                    Object keyValue = stringMap.get("key");
+                    if (keyValue != null) {
+                        newKeys.add(keyValue.toString());
+                    }
                 }
 
-                listmap.removeIf(existingMap -> newKeys.contains((String) existingMap.get("key")));
+                listmap.removeIf(existingMap -> {
+                    Object k = existingMap.get("key");
+                    return k != null && newKeys.contains(k.toString());
+                });
             } else {
                 listmap.clear();
             }

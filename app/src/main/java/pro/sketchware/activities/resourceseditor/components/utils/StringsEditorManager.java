@@ -105,13 +105,16 @@ public class StringsEditorManager {
                 xmlString.append("    <!-- ").append(notesMap.get(i)).append(" -->\n");
             }
             HashMap<String, Object> map = listMap.get(i);
-            String key = (String) map.get("key");
-            String text = (String) map.getOrDefault("text", "");
+            Object keyValue = map.get("key");
+            String key = keyValue != null ? keyValue.toString() : "";
+            Object textValue = map.getOrDefault("text", "");
+            String text = textValue != null ? textValue.toString() : "";
             String escapedText = ResourcesEditorActivity.escapeXml(text);
             xmlString.append("    <string name=\"").append(key).append("\"");
             for (String mapKey : map.keySet()) {
                 if (mapKey.equals("text") || mapKey.equals("key")) continue;
-                String translatable = (String) map.get(mapKey);
+                Object translatableValue = map.get(mapKey);
+                String translatable = translatableValue != null ? translatableValue.toString() : "";
                 xmlString.append(" ").append(mapKey).append("=\"").append(translatable).append("\"");
             }
             xmlString.append(">").append(escapedText).append("</string>\n");

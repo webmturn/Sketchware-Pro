@@ -118,8 +118,9 @@ public class ActivityCodeGenerator {
     public static HashMap<String, Map<String, Object>> buildExtraBlocksMap(ArrayList<HashMap<String, Object>> extraBlocksList) {
         HashMap<String, Map<String, Object>> map = new HashMap<>(extraBlocksList.size());
         for (Map<String, Object> block : extraBlocksList) {
-            if (block.containsKey("name")) {
-                map.putIfAbsent(block.get("name").toString(), block);
+            Object nameValue = block.get("name");
+            if (nameValue != null) {
+                map.putIfAbsent(nameValue.toString(), block);
             }
         }
         return map;
@@ -1011,9 +1012,12 @@ public class ActivityCodeGenerator {
                     default:
                         var block = getExtraBlockByName(blockBean.opCode);
                         if (block != null && block.containsKey("imports")) {
-                            var imports = block.get("imports").toString().split("\n");
-                            for (String importCode : imports) {
-                                addImport(importCode);
+                            Object importsValue = block.get("imports");
+                            if (importsValue != null) {
+                                var imports = importsValue.toString().split("\n");
+                                for (String importCode : imports) {
+                                    addImport(importCode);
+                                }
                             }
                         }
                         break;

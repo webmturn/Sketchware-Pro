@@ -77,13 +77,20 @@ public class AppCompatInjection {
                 INJECTIONS.put(sc_id, new HashMap<>());
             }
             Map<String, List<? extends Map<String, Object>>> projectInjections = INJECTIONS.get(sc_id);
-            if (!Objects.requireNonNull(projectInjections).containsKey(projectFile.fileName)) {
+            if (projectInjections == null) {
+                return;
+            }
+            if (!projectInjections.containsKey(projectFile.fileName)) {
                 projectInjections.put(projectFile.fileName, readAppCompatInjections(sc_id, projectFile.fileName));
             }
 
-            for (Map<String, Object> injection : Objects.requireNonNull(projectInjections.get(projectFile.fileName))) {
+            List<? extends Map<String, Object>> injections = projectInjections.get(projectFile.fileName);
+            if (injections == null) {
+                return;
+            }
+            for (Map<String, Object> injection : injections) {
                 Object value;
-                if (injectionType.toLowerCase().equals(injection.get("type")) && (value = injection.get("value")) instanceof String) {
+                if (injectionType != null && injectionType.equalsIgnoreCase(String.valueOf(injection.get("type"))) && (value = injection.get("value")) instanceof String) {
                     nx.addAttributeValue((String) value);
                 }
             }
