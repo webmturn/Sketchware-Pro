@@ -68,11 +68,19 @@ public class ViewBeanFactory {
         if (width != null) {
             var va = getEnum("layout_width", width, null);
             if (va != null) {
-                layoutBean.width = Integer.parseInt(va);
+                try {
+                    layoutBean.width = Integer.parseInt(va);
+                } catch (NumberFormatException e) {
+                    injectAttributes.put("android:layout_width", width);
+                }
             } else {
                 var size = resolveDimenSize(width);
                 if (size != null) {
-                    layoutBean.width = Integer.parseInt(size);
+                    try {
+                        layoutBean.width = Integer.parseInt(size);
+                    } catch (NumberFormatException e) {
+                        injectAttributes.put("android:layout_width", width);
+                    }
                 } else {
                     injectAttributes.put("android:layout_width", width);
                 }
@@ -83,11 +91,19 @@ public class ViewBeanFactory {
         if (height != null) {
             var va = getEnum("layout_height", height, null);
             if (va != null) {
-                layoutBean.height = Integer.parseInt(va);
+                try {
+                    layoutBean.height = Integer.parseInt(va);
+                } catch (NumberFormatException e) {
+                    injectAttributes.put("android:layout_height", height);
+                }
             } else {
                 var size = resolveDimenSize(height);
                 if (size != null) {
-                    layoutBean.height = Integer.parseInt(size);
+                    try {
+                        layoutBean.height = Integer.parseInt(size);
+                    } catch (NumberFormatException e) {
+                        injectAttributes.put("android:layout_height", height);
+                    }
                 } else {
                     injectAttributes.put("android:layout_height", height);
                 }
@@ -98,7 +114,12 @@ public class ViewBeanFactory {
         if (orientation != null) {
             var va = getEnum("orientation", orientation, null);
             if (va != null) {
-                layoutBean.orientation = Integer.parseInt(va);
+                try {
+                    layoutBean.orientation = Integer.parseInt(va);
+                } catch (NumberFormatException e) {
+                    layoutBean.orientation = LayoutBean.ORIENTATION_NONE;
+                    injectAttributes.put("android:orientation", orientation);
+                }
             } else {
                 layoutBean.orientation = LayoutBean.ORIENTATION_NONE;
                 injectAttributes.put("android:orientation", orientation);
@@ -699,7 +720,11 @@ public class ViewBeanFactory {
         var name = parseReferName(attribute, ":");
         if (value != null) {
             if (containsFlag(name, value)) {
-                return Integer.parseInt(getFlag(name, value));
+                try {
+                    return Integer.parseInt(getFlag(name, value));
+                } catch (NumberFormatException e) {
+                    injectAttributes.put(attribute, value);
+                }
             } else {
                 injectAttributes.put(attribute, value);
             }
