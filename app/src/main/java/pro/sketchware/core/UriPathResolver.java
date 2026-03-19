@@ -15,7 +15,7 @@ public final class UriPathResolver {
     if (android.provider.DocumentsContract.isDocumentUri(context, uri)) {
       if (isExternalStorageDocument(uri)) {
         String[] split = android.provider.DocumentsContract.getDocumentId(uri).split(":");
-        if ("primary".equalsIgnoreCase(split[0])) {
+        if (split.length > 1 && "primary".equalsIgnoreCase(split[0])) {
           result = android.os.Environment.getExternalStorageDirectory() + "/" + split[1];
         }
       } else if (isDownloadsDocument(uri)) {
@@ -23,10 +23,17 @@ public final class UriPathResolver {
         if (!android.text.TextUtils.isEmpty(docId) && docId.startsWith("raw:")) {
           return docId.replaceFirst("raw:", "");
         }
-        result = queryDataColumn(context, android.content.ContentUris.withAppendedId(
-            Uri.parse("content://downloads/public_downloads"), Long.valueOf(docId).longValue()), null, null);
+        try {
+          result = queryDataColumn(context, android.content.ContentUris.withAppendedId(
+              Uri.parse("content://downloads/public_downloads"), Long.parseLong(docId)), null, null);
+        } catch (NumberFormatException e) {
+          Log.w("UriPathResolver", "Non-numeric download document id: " + docId, e);
+        }
       } else if (isMediaDocument(uri)) {
         String[] split = android.provider.DocumentsContract.getDocumentId(uri).split(":");
+        if (split.length < 2) {
+          return copyUriToCache(context, uri);
+        }
         String type = split[0];
         Uri contentUri = null;
         if ("image".equals(type)) {

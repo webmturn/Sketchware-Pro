@@ -141,6 +141,9 @@ public class ProjectDataParser {
         dataType = DataType.VIEW;
       } else {
         keyPart = keyPart.substring(extEndIdx);
+        if (keyPart.isEmpty()) {
+          throw new Exception("invalid key : No separator");
+        }
         if (keyPart.charAt(0) == '_' && keyPart.substring(1).equals("fab")) {
           dataType = DataType.FAB;
         } else if (keyPart.charAt(0) != '_') {
@@ -156,6 +159,9 @@ public class ProjectDataParser {
         throw new Exception("invalid key : No data type");
       }
       keyPart = keyPart.substring(extEndIdx);
+      if (keyPart.isEmpty()) {
+        throw new Exception("invalid key : No separator");
+      }
       if (keyPart.charAt(0) != '_') {
         throw new Exception("invalid key : No separator");
       }

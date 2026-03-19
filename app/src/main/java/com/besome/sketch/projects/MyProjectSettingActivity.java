@@ -289,7 +289,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
         versionNameFirstPartPicker.setWrapSelectorWheel(false);
         versionNameSecondPartPicker.setWrapSelectorWheel(false);
 
-        int versionCode = Integer.parseInt(Helper.getText(binding.verCode));
+        int versionCode = parseInt(Helper.getText(binding.verCode), 1);
         int versionCodeMinimum = versionCode - 5;
         int versionNameFirstPartMinimum = 1;
         if (versionCodeMinimum <= 0) {
@@ -301,7 +301,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
 
         String[] split = Helper.getText(binding.verName).split("\\.");
         AtomicInteger projectNewVersionNameFirstPart = new AtomicInteger(parseInt(split[0], 1));
-        AtomicInteger projectNewVersionNameSecondPart = new AtomicInteger(parseInt(split[1], 0));
+        AtomicInteger projectNewVersionNameSecondPart = new AtomicInteger(parseInt(split.length > 1 ? split[1] : "0", 0));
         if (projectNewVersionNameFirstPart.get() - 5 > 0) {
             versionNameFirstPartMinimum = projectNewVersionNameFirstPart.get() - 5;
         }
