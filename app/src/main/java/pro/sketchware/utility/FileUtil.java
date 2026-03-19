@@ -428,6 +428,9 @@ public class FileUtil {
             if (isExternalStorageDocument(uri)) {
                 String docId = DocumentsContract.getDocumentId(uri);
                 String[] split = docId.split(":");
+                if (split.length < 2) {
+                    return null;
+                }
                 String type = split[0];
 
                 if ("primary".equalsIgnoreCase(type)) {
@@ -452,6 +455,9 @@ public class FileUtil {
             } else if (isMediaDocument(uri)) {
                 String docId = DocumentsContract.getDocumentId(uri);
                 String[] split = docId.split(":");
+                if (split.length < 2) {
+                    return null;
+                }
                 String type = split[0];
 
                 Uri contentUri = null;
