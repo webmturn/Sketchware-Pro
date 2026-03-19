@@ -575,7 +575,8 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
         autoCompleteTextView.setThreshold(1);
         autoCompleteTextView.setOnItemClickListener((parent, view, position, id) -> {
             String value = Helper.getText(autoCompleteTextView);
-            autoCompleteTextView.setText(value.substring(0, value.indexOf(" (")));
+            int parenIdx = value.indexOf(" (");
+            autoCompleteTextView.setText(parenIdx >= 0 ? value.substring(0, parenIdx) : value);
             autoCompleteTextView.setSelection(autoCompleteTextView.getText().length());
         });
     }

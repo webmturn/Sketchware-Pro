@@ -47,13 +47,17 @@ public class BlockUtil {
      */
     @Nullable
     public static BlockView getVariableBlock(Context context, int id, String spec, String opCode) {
+        if (spec.length() < 2) return null;
         var type = spec.charAt(1);
         return switch (type) {
             case 'b', 'd', 's' ->
-                    new BlockView(context, id, spec.substring(3), Character.toString(type), opCode);
+                    new BlockView(context, id, spec.length() > 3 ? spec.substring(3) : "", Character.toString(type), opCode);
             case 'm' -> {
-                String specLast = spec.substring(spec.lastIndexOf(".") + 1);
-                String specFirst = spec.substring(spec.indexOf(".") + 1, spec.lastIndexOf("."));
+                int lastDot = spec.lastIndexOf(".");
+                int firstDot = spec.indexOf(".");
+                if (firstDot < 0 || lastDot < 0 || firstDot >= lastDot) yield null;
+                String specLast = spec.substring(lastDot + 1);
+                String specFirst = spec.substring(firstDot + 1, lastDot);
                 yield new BlockView(context, id, specLast, BlockColorMapper.getComponentCategory(specFirst), BlockColorMapper.getComponentDisplayName(specFirst), opCode);
             }
             default -> null;

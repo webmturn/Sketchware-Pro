@@ -271,7 +271,7 @@ public class ComponentCodeGenerator {
 
         for (String parameterSpec : parameterSpecs) {
             // Avoid label spec parts
-            if (parameterSpec.charAt(0) == '%') {
+            if (parameterSpec.length() >= 2 && parameterSpec.charAt(0) == '%') {
                 char parameterType = parameterSpec.charAt(1);
                 String typeName = null;
                 int lastIndexOfPeriod = -1;
