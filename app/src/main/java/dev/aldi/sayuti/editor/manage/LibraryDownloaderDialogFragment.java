@@ -229,9 +229,9 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
                             var activity = getActivity();
                             if (activity != null && !activity.isFinishing() && !activity.isDestroyed()) SketchwareUtil.showAnErrorOccurredDialog(activity, "Dependency '" + dep + "' not found");
                         });
-                    }····························································································································································································································································································································································································································································································································································
+                    }
 
-                    @Override··························································································································································································
+                    @Override
                     public void onSkippingResolution(@NonNull Artifact dep) {
                         handler.post(() -> {
                             DependencyDownloadItem item = findOrCreateDependencyItem(dep);

@@ -169,7 +169,7 @@ public class XmlLayoutParser {
                 }
 
                 // Generate unique ID
-                String baseName = simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
+                String baseName = simpleName.isEmpty() ? "view" : simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
                 int count = idCounters.getOrDefault(baseName, 0) + 1;
                 idCounters.put(baseName, count);
                 String viewId = baseName + count;

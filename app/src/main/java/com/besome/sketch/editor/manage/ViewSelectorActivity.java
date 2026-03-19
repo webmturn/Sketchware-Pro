@@ -359,7 +359,7 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
                 }
                 if (customView.fileType == ProjectFileBean.PROJECT_FILE_TYPE_DRAWER) {
                     viewHolder.itemBinding.imgView.setImageResource(getViewIcon(4));
-                    viewHolder.itemBinding.tvFilename.setText(customView.fileName.substring(1));
+                    viewHolder.itemBinding.tvFilename.setText(customView.fileName != null && !customView.fileName.isEmpty() ? customView.fileName.substring(1) : "");
                 } else {
                     viewHolder.itemBinding.imgView.setImageResource(getViewIcon(3));
                     viewHolder.itemBinding.tvFilename.setText(customView.getXmlName());

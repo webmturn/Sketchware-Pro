@@ -823,7 +823,7 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
         this.projectFileBean = projectFileBean;
         xmlName = projectFileBean.getXmlName();
         if (projectFileBean.fileType == ProjectFileBean.PROJECT_FILE_TYPE_DRAWER) {
-            fileName.setText(projectFileBean.fileName.substring(1));
+            fileName.setText(projectFileBean.fileName != null && !projectFileBean.fileName.isEmpty() ? projectFileBean.fileName.substring(1) : "");
         } else {
             fileName.setText(projectFileBean.getXmlName());
         }

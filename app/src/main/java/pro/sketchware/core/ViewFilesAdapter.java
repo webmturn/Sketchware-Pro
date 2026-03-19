@@ -240,7 +240,7 @@ public class ViewFilesAdapter extends BaseFragment {
       } else if (position == 2) {
         holder.checkbox.setVisibility(View.GONE);
         holder.activityIcon.setImageResource(R.drawable.activity_0110);
-        holder.screenName.setText(projectFileBean.fileName.substring(1));
+        holder.screenName.setText(projectFileBean.fileName != null && !projectFileBean.fileName.isEmpty() ? projectFileBean.fileName.substring(1) : "");
       } 
       if (((SelectableBean)projectFileBean).isSelected) {
         holder.deleteIcon.setImageResource(R.drawable.ic_checkmark_green_48dp);

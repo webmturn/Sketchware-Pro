@@ -55,7 +55,8 @@ public class ImportFontFragment extends BaseFragment implements MenuProvider {
 
     public String getResourceFilePath(ProjectResourceBean resourceBean) {
         String resFullName = resourceBean.resFullName;
-        resFullName = resFullName.substring(resFullName.lastIndexOf("."));
+        int dotIdx = resFullName.lastIndexOf(".");
+        resFullName = dotIdx >= 0 ? resFullName.substring(dotIdx) : "";
         return dirPath +
                 File.separator +
                 resourceBean.resName +
@@ -161,7 +162,8 @@ public class ImportFontFragment extends BaseFragment implements MenuProvider {
         for (int i = 0; i < projectResourceBeans.size(); i++) {
             ProjectResourceBean resourceBean = projectResourceBeans.get(i);
             if (resourceBean.isNew) {
-                String fileExtension = resourceBean.resFullName.substring(resourceBean.resFullName.lastIndexOf("."));
+                int extIdx = resourceBean.resFullName.lastIndexOf(".");
+                String fileExtension = extIdx >= 0 ? resourceBean.resFullName.substring(extIdx) : "";
                 String newFileName = resourceBean.resName + fileExtension;
                 resourceBean = new ProjectResourceBean(
                         ProjectResourceBean.PROJECT_RES_TYPE_FILE,
@@ -367,7 +369,8 @@ public class ImportFontFragment extends BaseFragment implements MenuProvider {
 
             holder.binding.chkSelect.setChecked(resource.isSelected);
 
-            String fileExtension = resource.resFullName.substring(resource.resFullName.lastIndexOf("."));
+            int extIdx = resource.resFullName.lastIndexOf(".");
+            String fileExtension = extIdx >= 0 ? resource.resFullName.substring(extIdx) : "";
             holder.binding.tvFontName.setText(resource.resName + fileExtension);
 
             String fontPath;

@@ -249,8 +249,14 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
         if (path.endsWith(".9.png")) {
             indexOfFilenameExtension = path.lastIndexOf(".9.png");
         }
+        if (indexOfFilenameExtension < 0) {
+            indexOfFilenameExtension = path.length();
+        }
         if (ed_input_edittext != null && (ed_input_edittext.getText() == null || ed_input_edittext.getText().length() <= 0)) {
-            ed_input_edittext.setText(path.substring(path.lastIndexOf("/") + 1, indexOfFilenameExtension));
+            int nameStart = path.lastIndexOf("/") + 1;
+            if (nameStart <= indexOfFilenameExtension) {
+                ed_input_edittext.setText(path.substring(nameStart, indexOfFilenameExtension));
+            }
         }
         try {
             imageExifOrientation = BitmapUtil.getExifRotation(path);

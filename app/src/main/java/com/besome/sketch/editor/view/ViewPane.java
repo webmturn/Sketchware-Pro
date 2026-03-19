@@ -359,7 +359,7 @@ public class ViewPane extends RelativeLayout {
         ImageBean imageBean;
         String resName;
         var injectHandler = new InjectAttributeHandler(viewBean);
-        if (viewBean.id.charAt(0) == '_') {
+        if (viewBean.id != null && !viewBean.id.isEmpty() && viewBean.id.charAt(0) == '_') {
             LayoutParams layoutParams = new LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);

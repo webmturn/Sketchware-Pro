@@ -152,7 +152,9 @@ public class FormatUtil {
     for (int b = 0; b < value.length(); b++) {
       char c = value.charAt(b);
       if (c == '\\') {
-        result = result + value.charAt(++b);
+        if (++b < value.length()) {
+          result = result + value.charAt(b);
+        }
       } else {
         result = result + c;
       } 

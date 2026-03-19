@@ -604,6 +604,7 @@ public class WidgetsCreatorManager {
         if (lastIndex != -1) {
             input = input.substring(lastIndex + 1);
         }
+        if (input.isEmpty()) return "view";
         return input.substring(0, 1).toLowerCase() + input.substring(1);
     }
 

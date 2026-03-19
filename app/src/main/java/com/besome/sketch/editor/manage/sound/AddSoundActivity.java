@@ -287,7 +287,8 @@ public class AddSoundActivity extends BaseDialogActivity implements View.OnClick
 
     private String getSoundFilePath(ProjectResourceBean projectResourceBean) {
         String fullName = projectResourceBean.resFullName;
-        String substring = fullName.substring(fullName.lastIndexOf("."));
+        int dotIdx = fullName.lastIndexOf(".");
+        String substring = dotIdx >= 0 ? fullName.substring(dotIdx) : "";
         return soundsDirectory + File.separator + projectResourceBean.resName + substring;
     }
 
