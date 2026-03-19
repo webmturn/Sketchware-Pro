@@ -278,6 +278,7 @@ public class BlockCodeRegistry {
             return String.format("finally {\r\n%s\r\n}", body);
         });
         register("break", (bean, params, ctx) -> "break;");
+        register("continue", (bean, params, ctx) -> "continue;");
     }
 
     private static void registerDrawerBlocks() {

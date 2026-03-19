@@ -77,6 +77,8 @@
     <string name="block_bluetoothconnect_stop_connection_tail" />
     <string name="block_break_head">stop</string>
     <string name="block_break_tail" />
+    <string name="block_continue_head">skip</string>
+    <string name="block_continue_tail" />
     <string name="block_calendar_add_body_1">add</string>
     <string name="block_calendar_add_body_2">value</string>
     <string name="block_calendar_add_head" />
@@ -2803,6 +2805,8 @@ Do you want to continue?"</string>
     <string name="resource_type_string_lower">string</string>
     <string name="resource_type_color">Color</string>
     <string name="resource_type_color_lower">color</string>
+    <string name="resource_type_dimen">Dimension</string>
+    <string name="resource_type_dimen_lower">dimension</string>
     <string name="resource_type_arrays">Arrays</string>
     <string name="resource_type_arrays_lower">arrays</string>
     <string name="resources_editor_unsaved_changes_message">You have unsaved changes in \"%s\"\nDo you want to save your changes before quitting?</string>
@@ -3202,6 +3206,12 @@ ACTION_VIEW
  url type (http://sketchware.io)"</string>
     <string name="property_description_edittext_ime_options">"It does not work when single_line is 'false' and input_type is 'text'"</string>
     <string name="property_divider_height">Divider height</string>
+    <string name="dimen_editor_hint_header">Comment ( optional )</string>
+    <string name="dimen_editor_hint_name">Dimen name</string>
+    <string name="dimen_editor_hint_value">Dimen value (e.g. 16dp, 14sp)</string>
+    <string name="dimen_title_create">Add Dimension</string>
+    <string name="dimen_title_edit">Edit Dimension</string>
+    <string name="property_elevation">Elevation</string>
     <string name="property_enabled">Enabled</string>
     <string name="property_enter_value">Enter %s value</string>
     <string name="property_first_day_of_week">firstDayOfWeek</string>

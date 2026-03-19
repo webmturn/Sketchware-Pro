@@ -390,6 +390,9 @@ public class LayoutGenerator {
             } else {
                 writeViewPadding(widgetTag, viewBean);
             }
+            if (viewBean.layout.elevation > 0 && !toNotAdd.contains("android:elevation") && !injectHandler.contains("elevation")) {
+                widgetTag.addAttribute("android", "elevation", viewBean.layout.elevation + "dp");
+            }
             writeBackgroundResource(widgetTag, viewBean);
             if (viewBean.getClassInfo().matchesType("ViewGroup")) {
                 writeViewGravity(widgetTag, viewBean);

@@ -64,6 +64,7 @@ public class BlockSpecRegistry {
         BLOCK_PARAMS.put("bluetoothConnectStartConnectionToUuid", new String[]{"%m.bluetoothconnect", "%s", "%s", "%s"});
         BLOCK_PARAMS.put("bluetoothConnectStopConnection", new String[]{"%m.bluetoothconnect", "%s"});
         BLOCK_PARAMS.put("break", new String[]{});
+        BLOCK_PARAMS.put("continue", new String[]{});
         BLOCK_PARAMS.put("calendarAdd", new String[]{"%m.calendar", "%m.calendarField", "%d"});
         BLOCK_PARAMS.put("calendarDiff", new String[]{"%m.calendar", "%m.calendar"});
         BLOCK_PARAMS.put("calendarFormat", new String[]{"%m.calendar", "%s"});
@@ -428,6 +429,7 @@ public class BlockSpecRegistry {
         BLOCK_SPECS.put("bluetoothConnectStartConnectionToUuid", "bluetoothconnect_start_connection_to_uuid");
         BLOCK_SPECS.put("bluetoothConnectStopConnection", "bluetoothconnect_stop_connection");
         BLOCK_SPECS.put("break", "break");
+        BLOCK_SPECS.put("continue", "continue");
         BLOCK_SPECS.put("calendarAdd", "calendar_add");
         BLOCK_SPECS.put("calendarDiff", "calendar_diff");
         BLOCK_SPECS.put("calendarFormat", "calendar_format");

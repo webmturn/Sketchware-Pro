@@ -74,6 +74,8 @@ public class LayoutBean extends ReflectiveToString implements Parcelable {
     public int weightSum;
     @Expose
     public int width;
+    @Expose
+    public int elevation;
 
     public LayoutBean() {
         width = LAYOUT_WRAP_CONTENT;
@@ -105,6 +107,9 @@ public class LayoutBean extends ReflectiveToString implements Parcelable {
         borderColor = parcel.readInt();
         backgroundResource = parcel.readString();
         backgroundResColor = parcel.readString();
+        if (parcel.dataAvail() > 0) {
+            elevation = parcel.readInt();
+        }
     }
 
     public static Parcelable.Creator<LayoutBean> getCreator() {
@@ -131,6 +136,7 @@ public class LayoutBean extends ReflectiveToString implements Parcelable {
         borderColor = layoutBean.borderColor;
         backgroundResource = layoutBean.backgroundResource;
         backgroundResColor = layoutBean.backgroundResColor;
+        elevation = layoutBean.elevation;
     }
 
     @Override
@@ -139,7 +145,7 @@ public class LayoutBean extends ReflectiveToString implements Parcelable {
     }
 
     public boolean isEqual(LayoutBean layoutBean) {
-        if (width != layoutBean.width || height != layoutBean.height || orientation != layoutBean.orientation || gravity != layoutBean.gravity || paddingLeft != layoutBean.paddingLeft || paddingTop != layoutBean.paddingTop || paddingRight != layoutBean.paddingRight || paddingBottom != layoutBean.paddingBottom || marginLeft != layoutBean.marginLeft || marginTop != layoutBean.marginTop || marginRight != layoutBean.marginRight || marginBottom != layoutBean.marginBottom || weight != layoutBean.weight || weightSum != layoutBean.weightSum || layoutGravity != layoutBean.layoutGravity || backgroundColor != layoutBean.backgroundColor || borderColor != layoutBean.borderColor) {
+        if (width != layoutBean.width || height != layoutBean.height || orientation != layoutBean.orientation || gravity != layoutBean.gravity || paddingLeft != layoutBean.paddingLeft || paddingTop != layoutBean.paddingTop || paddingRight != layoutBean.paddingRight || paddingBottom != layoutBean.paddingBottom || marginLeft != layoutBean.marginLeft || marginTop != layoutBean.marginTop || marginRight != layoutBean.marginRight || marginBottom != layoutBean.marginBottom || weight != layoutBean.weight || weightSum != layoutBean.weightSum || layoutGravity != layoutBean.layoutGravity || backgroundColor != layoutBean.backgroundColor || borderColor != layoutBean.borderColor || elevation != layoutBean.elevation) {
             return false;
         }
         if (backgroundResource != null) {
@@ -173,5 +179,6 @@ public class LayoutBean extends ReflectiveToString implements Parcelable {
         parcel.writeInt(borderColor);
         parcel.writeString(backgroundResource);
         parcel.writeString(backgroundResColor);
+        parcel.writeInt(elevation);
     }
 }

@@ -365,6 +365,7 @@ public class StringResource {
     loadBlockTranslation(context, "repeat");
     loadBlockTranslation(context, "forever");
     loadBlockTranslation(context, "break");
+    loadBlockTranslation(context, "continue");
     loadBlockTranslation(context, "if");
     loadBlockTranslation(context, "ifElse");
     loadBlockTranslation(context, "else");

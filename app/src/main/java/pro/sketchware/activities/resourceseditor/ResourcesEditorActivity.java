@@ -37,6 +37,7 @@ import pro.sketchware.R;
 import pro.sketchware.activities.resourceseditor.components.adapters.EditorsAdapter;
 import pro.sketchware.activities.resourceseditor.components.fragments.ArraysEditor;
 import pro.sketchware.activities.resourceseditor.components.fragments.ColorsEditor;
+import pro.sketchware.activities.resourceseditor.components.fragments.DimensEditor;
 import pro.sketchware.activities.resourceseditor.components.fragments.StringsEditor;
 import pro.sketchware.activities.resourceseditor.components.fragments.StylesEditor;
 import pro.sketchware.activities.resourceseditor.components.fragments.ThemesEditor;
@@ -61,11 +62,13 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
     public String stylesFilePath;
     public String themesFilePath;
     public String arrayFilePath;
+    public String dimensFilePath;
     public StringsEditor stringsEditor;
     public ColorsEditor colorsEditor;
     public StylesEditor stylesEditor;
     public ThemesEditor themesEditor;
     public ArraysEditor arraysEditor;
+    public DimensEditor dimensEditor;
     private ResourcesEditorsActivityBinding binding;
     private MaterialAlertDialogBuilder builder;
     private int currentTabPosition = 0;
@@ -101,7 +104,7 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
         binding = ResourcesEditorsActivityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setSupportActionBar(binding.topAppBar);
-        binding.viewPager.setOffscreenPageLimit(4);
+        binding.viewPager.setOffscreenPageLimit(5);
     }
 
     private void initializeManagers() {
@@ -117,6 +120,7 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
         stylesEditor = new StylesEditor();
         themesEditor = new ThemesEditor();
         arraysEditor = new ArraysEditor();
+        dimensEditor = new DimensEditor();
     }
 
     private void initializeBackgroundTask(String variant) {
@@ -127,6 +131,7 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
         stylesFilePath = baseDir + "styles.xml";
         themesFilePath = baseDir + "themes.xml";
         arrayFilePath = baseDir + "arrays.xml";
+        dimensFilePath = baseDir + "dimens.xml";
 
         setupViewPager();
         startBackgroundTask();
@@ -143,6 +148,7 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
                 case 2 -> stylesEditor.showAddStyleDialog();
                 case 3 -> themesEditor.showAddThemeDialog();
                 case 4 -> arraysEditor.showAddArrayDialog();
+                case 5 -> dimensEditor.showDimenEditDialog(null, -1);
             }
         });
     }
@@ -162,6 +168,7 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
         stylesEditor.updateStylesList(stylesFilePath, 0, false);
         themesEditor.updateThemesList(themesFilePath, 0, false);
         arraysEditor.updateArraysList(arrayFilePath, 0, false);
+        dimensEditor.updateDimensList(dimensFilePath, 0, false);
     }
 
     public void checkForInvalidResources() {
@@ -184,6 +191,11 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
 
         if (arraysEditor.arraysEditorManager.isDataLoadingFailed) {
             showLoadFailedDialog("arrays.xml", arrayFilePath);
+            return;
+        }
+
+        if (dimensEditor.dimensEditorManager != null && dimensEditor.dimensEditorManager.isDataLoadingFailed) {
+            showLoadFailedDialog("dimens.xml", dimensFilePath);
         }
     }
 
@@ -268,6 +280,9 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
         if (arraysEditor.hasUnsavedChanges) {
             unsavedFiles.add("arrays.xml");
         }
+        if (dimensEditor.hasUnsavedChanges) {
+            unsavedFiles.add("dimens.xml");
+        }
         return unsavedFiles;
     }
 
@@ -294,6 +309,10 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
 
             if (currentItem == 4 || arraysEditor.arraysEditorManager.isDataLoadingFailed) {
                 arraysEditor.updateArraysList(arrayFilePath, 0, false);
+            }
+
+            if (currentItem == 5 || (dimensEditor.dimensEditorManager != null && dimensEditor.dimensEditorManager.isDataLoadingFailed)) {
+                dimensEditor.updateDimensList(dimensFilePath, 0, false);
             }
             checkForInvalidResources();
         }
@@ -324,6 +343,8 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
                         themesEditor.adapter.filter(newText);
                     } else if (currentItem == 4) {
                         arraysEditor.adapter.filter(newText);
+                    } else if (currentItem == 5) {
+                        if (dimensEditor.adapter != null) dimensEditor.adapter.filter(newText);
                     }
                     return false;
                 }
@@ -379,6 +400,11 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
                     arraysEditor.saveArraysFile();
                     goToCodeEditor("arrays.xml", arrayFilePath);
                 }
+                case 5 -> {
+                    dimensEditor.hasUnsavedChanges = true;
+                    dimensEditor.saveDimensFile();
+                    goToCodeEditor("dimens.xml", dimensFilePath);
+                }
             }
         }
         return super.onOptionsItemSelected(item);
@@ -396,6 +422,7 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
         stylesEditor.saveStylesFile();
         themesEditor.saveThemesFile();
         arraysEditor.saveArraysFile();
+        dimensEditor.saveDimensFile();
         updateProjectMetadata();
         SketchwareUtil.toast(Helper.getResString(R.string.toast_save_completed));
     }
@@ -443,6 +470,9 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
                     break;
                 case 4:
                     tab.setText("arrays" + variant + ".xml");
+                    break;
+                case 5:
+                    tab.setText("dimens" + variant + ".xml");
             }
         }).attach();
         UI.animateLayoutChanges(binding.viewPager);
@@ -580,7 +610,8 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
                 "colors.xml",
                 "styles.xml",
                 "themes.xml",
-                "arrays.xml"
+                "arrays.xml",
+                "dimens.xml"
         ));
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice, resourcesFileNames);
@@ -607,6 +638,8 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
                                 themesEditor.updateThemesList(themesFilePath.replace(variant, ""), updateMode, true);
                         case 4 ->
                                 arraysEditor.updateArraysList(arrayFilePath.replace(variant, ""), updateMode, true);
+                        case 5 ->
+                                dimensEditor.updateDimensList(dimensFilePath.replace(variant, ""), updateMode, true);
                     }
                 }
             }

@@ -988,6 +988,7 @@
     <string name="property_text_font">文本字体</string>
     <string name="property_text_size">文本大小</string>
     <string name="property_text_style">文本样式</string>
+    <string name="property_elevation">高度阴影</string>
     <string name="property_weight">权重</string>
     <string name="property_weight_sum">权重总和</string>
 
@@ -2140,6 +2141,13 @@
     <string name="theme_title_edit">编辑主题</string>
     <string name="color_title_create">创建新颜色</string>
     <string name="color_title_edit">编辑颜色</string>
+    <string name="dimen_title_create">添加尺寸</string>
+    <string name="dimen_title_edit">编辑尺寸</string>
+    <string name="dimen_editor_hint_name">尺寸名称</string>
+    <string name="dimen_editor_hint_value">尺寸值（如 16dp、14sp）</string>
+    <string name="dimen_editor_hint_header">注释（可选）</string>
+    <string name="resource_type_dimen">尺寸</string>
+    <string name="resource_type_dimen_lower">尺寸</string>
 
     <!-- ========== 项目管理 - 补充 ========== -->
     <string name="myprojects_settings_button_save">保存</string>

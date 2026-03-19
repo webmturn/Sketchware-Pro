@@ -76,7 +76,7 @@ public class BlockColorMapper {
                  "mapCreateNew", "mapPut", "mapGet", "mapContainKey", "mapRemoveKey", "mapSize",
                  "mapIsEmpty", "mapClear", "mapGetAllKeys" ->
                     harmonizeWithPrimary(context, 0xffee7d16);
-            case "repeat", "forever", "break", "if", "ifElse" ->
+            case "repeat", "forever", "break", "continue", "if", "ifElse" ->
                     harmonizeWithPrimary(context, 0xffe1a92a);
             case "true", "false", "<", "=", ">", "&&", "||", "not", "+", "-", "*", "/", "%",
                  "random", "stringLength", "stringJoin", "stringIndex", "stringLastIndex",

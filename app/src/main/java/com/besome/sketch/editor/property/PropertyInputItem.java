@@ -105,6 +105,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
             case "property_text" -> icon = R.drawable.ic_mtrl_text_select;
             case "property_hint" -> icon = R.drawable.ic_mtrl_bulb;
             case "property_weight", "property_weight_sum" -> icon = R.drawable.ic_mtrl_weight;
+            case "property_elevation" -> icon = R.drawable.ic_mtrl_elevation;
             case "property_rotate" -> icon = R.drawable.ic_mtrl_rotate;
             case "property_lines" -> icon = R.drawable.ic_mtrl_numbers;
             case "property_progress" -> icon = R.drawable.ic_mtrl_prog_min;
@@ -205,6 +206,10 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
                         Helper.getText(tvName),
                         safeParseFloat(value, 0f),
                         0f, 10f, 1f, true);
+                case "property_elevation" -> showHybridSliderDialog(
+                        Helper.getText(tvName),
+                        safeParseFloat(value, 0f),
+                        0f, 24f, 1f, true);
                 case "property_lines" -> {
                     float currentVal = safeParseFloat(value, 0f);
                     float maxRange = Math.max(20f, currentVal);
@@ -428,7 +433,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
             textView.setText(Math.round(value) + "°");
         } else if (key.equals("property_text_size")) {
             textView.setText(Math.round(value) + "sp");
-        } else if (key.equals("property_divider_height")) {
+        } else if (key.equals("property_divider_height") || key.equals("property_elevation")) {
             textView.setText(Math.round(value) + "dp");
         } else if (isInteger) {
             textView.setText(String.valueOf(Math.round(value)));

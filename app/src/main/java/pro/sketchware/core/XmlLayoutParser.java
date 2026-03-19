@@ -318,6 +318,9 @@ public class XmlLayoutParser {
             case "layout_weight":
                 bean.layout.weight = parseDpValue(value, 0);
                 return true;
+            case "elevation":
+                bean.layout.elevation = parseDpOrInject(name, value, bean, injectBuilder, warnings, dimenMap);
+                return true;
             case "weightSum":
                 bean.layout.weightSum = parseDpValue(value, 0);
                 return true;

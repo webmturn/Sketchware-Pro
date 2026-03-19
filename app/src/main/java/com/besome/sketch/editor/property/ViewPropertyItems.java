@@ -101,6 +101,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
             case "property_gravity" -> addGravityProperty(property, bean.layout.gravity);
             case "property_layout_gravity" -> addGravityProperty(property, bean.layout.layoutGravity);
             case "property_weight" -> addSimpleInputProperty(property, String.valueOf(bean.layout.weight));
+            case "property_elevation" -> addSimpleInputProperty(property, String.valueOf(bean.layout.elevation));
             case "property_text" -> addSimpleInputProperty(property, bean.text.text);
             case "property_text_size" -> addSimpleInputProperty(property, String.valueOf(bean.text.textSize));
             case "property_text_style" -> addSelectorProperty(property, bean.text.textType);
@@ -683,6 +684,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
             addPropertyForBean(bean, "property_enabled");
         }
 
+        addPropertyForBean(bean, "property_elevation");
         addPropertyForBean(bean, "property_rotate");
         addPropertyForBean(bean, "property_alpha");
         addPropertyForBean(bean, "property_translation_x");
@@ -714,6 +716,8 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
                             bean.layout.weight = FormatUtil.safeParseInt(inputItem.getValue(), bean.layout.weight);
                     case "property_weight_sum" ->
                             bean.layout.weightSum = FormatUtil.safeParseInt(inputItem.getValue(), bean.layout.weightSum);
+                    case "property_elevation" ->
+                            bean.layout.elevation = FormatUtil.safeParseInt(inputItem.getValue(), bean.layout.elevation);
                     case "property_rotate" ->
                             bean.image.rotate = FormatUtil.safeParseInt(inputItem.getValue(), bean.image.rotate);
                     case "property_alpha" -> bean.alpha = FormatUtil.safeParseFloat(inputItem.getValue(), bean.alpha);

@@ -28,6 +28,7 @@ import pro.sketchware.databinding.LayoutEventItemBinding;
 import pro.sketchware.fragments.settings.events.EventsManagerConstants;
 import pro.sketchware.fragments.settings.events.creator.EventsManagerCreatorFragment;
 import pro.sketchware.utility.FileUtil;
+import pro.sketchware.utility.SketchwareUtil;
 import pro.sketchware.utility.UI;
 
 public class EventsManagerDetailsFragment extends BaseFragment {
