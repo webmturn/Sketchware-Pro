@@ -446,6 +446,7 @@ public class ViewPane extends RelativeLayout {
             view.setTranslationY(ViewUtil.dpToPx(getContext(), viewBean.translationY));
             view.setScaleX(viewBean.scaleX);
             view.setScaleY(viewBean.scaleY);
+            applyElevation(view, viewBean.layout.elevation);
             view.setVisibility(View.VISIBLE);
             return;
         }
@@ -639,6 +640,7 @@ public class ViewPane extends RelativeLayout {
         if (!elevation.isEmpty()) {
             view.setElevation(PropertiesUtil.resolveSize(elevation, 0));
         }
+        applyElevation(view, viewBean.layout.elevation);
         view.setVisibility(VISIBLE);
         if (view instanceof EditorListItem listItem) {
             String listitem = injectHandler.getAttributeValueOf("listitem");
@@ -1039,6 +1041,44 @@ public class ViewPane extends RelativeLayout {
             }
         }
         return defaultValue;
+    }
+
+    private void applyElevation(View view, int elevationDp) {
+        if (elevationDp > 0) {
+            float elevationPx = ViewUtil.dpToPx(getContext(), elevationDp);
+            view.setElevation(elevationPx);
+            android.graphics.drawable.Drawable bg = view.getBackground();
+            if (bg instanceof android.graphics.drawable.ColorDrawable colorDrawable) {
+                android.graphics.drawable.GradientDrawable gd = new android.graphics.drawable.GradientDrawable();
+                gd.setColor(colorDrawable.getColor());
+                gd.setShape(android.graphics.drawable.GradientDrawable.RECTANGLE);
+                view.setBackground(gd);
+            }
+            view.setOutlineProvider(android.view.ViewOutlineProvider.BACKGROUND);
+            view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+                @Override
+                public void onViewAttachedToWindow(View v) {
+                    disableClipInAncestors(v);
+                    v.removeOnAttachStateChangeListener(this);
+                }
+                @Override
+                public void onViewDetachedFromWindow(View v) {}
+            });
+            if (view.getParent() != null) {
+                disableClipInAncestors(view);
+            }
+        } else if (view.getElevation() != 0) {
+            view.setElevation(0);
+        }
+    }
+
+    private static void disableClipInAncestors(View view) {
+        ViewGroup parent = view.getParent() instanceof ViewGroup ? (ViewGroup) view.getParent() : null;
+        while (parent != null) {
+            parent.setClipChildren(false);
+            parent.setClipToPadding(false);
+            parent = parent.getParent() instanceof ViewGroup ? (ViewGroup) parent.getParent() : null;
+        }
     }
 
     private void updateLayout(View view, ViewBean viewBean) {
