@@ -332,6 +332,10 @@ public class BlocksManager extends BaseAppCompatActivity {
         dialog.setTitle(R.string.block_move_to_bin);
         dialog.setMessage(R.string.common_message_confirm);
         dialog.setPositiveButton(R.string.common_word_yes, (v, which) -> {
+            if (position < 0 || position >= pallet_listmap.size()) {
+                SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+                return;
+            }
             pallet_listmap.remove(position);
             Objects.requireNonNull(binding.paletteRecycler.getAdapter()).notifyItemRemoved(position);
             Objects.requireNonNull(binding.paletteRecycler.getAdapter()).notifyItemChanged(position);

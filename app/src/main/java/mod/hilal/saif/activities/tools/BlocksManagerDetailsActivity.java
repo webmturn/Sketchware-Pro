@@ -403,12 +403,20 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
     }
 
     private void _deleteBlock(int position) {
+        if (position < 0 || position >= all_blocks_list.size()) {
+            SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+            return;
+        }
         all_blocks_list.remove(position);
         FileUtil.writeFile(blocks_path, getGson().toJson(all_blocks_list));
         _refreshLists();
     }
 
     private void _moveToRecycleBin(int position) {
+        if (position < 0 || position >= all_blocks_list.size()) {
+            SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+            return;
+        }
         all_blocks_list.get(position).put("palette", "-1");
         FileUtil.writeFile(blocks_path, getGson().toJson(all_blocks_list));
         _refreshLists();

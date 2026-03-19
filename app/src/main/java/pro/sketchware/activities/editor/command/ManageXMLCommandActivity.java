@@ -186,7 +186,7 @@ public class ManageXMLCommandActivity extends BaseAppCompatActivity {
                                     dialog.setPositiveButton(
                                             R.string.common_word_yes,
                                             (d, w) -> {
-                                                if (position != -1) {
+                                                if (position >= 0 && position < commands.size()) {
                                                     commands.remove(position);
                                                     FileUtil.writeFile(
                                                             commandPath,
@@ -264,6 +264,11 @@ public class ManageXMLCommandActivity extends BaseAppCompatActivity {
         binding.title.setText(!edit ? Helper.getResString(R.string.xml_cmd_add_new_command) : Helper.getResString(R.string.xml_cmd_edit_command));
 
         if (edit) {
+            if (position < 0 || position >= commands.size()) {
+                SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+                dialog.dismiss();
+                return;
+            }
             var command = commands.get(position);
             binding.xmlName.setText(
                     CommandBlock.getInputName(
@@ -310,8 +315,11 @@ public class ManageXMLCommandActivity extends BaseAppCompatActivity {
                             Helper.getText(binding.changes);
                     map.put("input", inputBuilder);
                     if (edit) {
-                        if (position != -1) {
+                        if (position >= 0 && position < commands.size()) {
                             commands.set(position, map);
+                        } else {
+                            SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+                            return;
                         }
                     } else {
                         commands.add(map);

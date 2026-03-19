@@ -292,9 +292,12 @@ public class ManageAppCompatActivity extends BaseAppCompatActivity {
                             activityInjections.add(map);
                             SketchwareUtil.toast(Helper.getResString(R.string.toast_added));
                         } else if (type.equals("edit")) {
-                            if (position != -1) {
+                            if (position >= 0 && position < activityInjections.size()) {
                                 activityInjections.remove(position);
                                 activityInjections.add(position, map);
+                            } else {
+                                SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+                                return;
                             }
                             SketchwareUtil.toast(Helper.getResString(R.string.common_word_saved));
                         }
