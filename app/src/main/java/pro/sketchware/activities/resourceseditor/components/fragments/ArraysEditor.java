@@ -157,7 +157,13 @@ public class ArraysEditor extends Fragment {
                 return;
             }
 
-            ARRAYS_TYPES arrayType = ARRAYS_TYPES.valueOf(arrayTypeString.toUpperCase());
+            ARRAYS_TYPES arrayType;
+            try {
+                arrayType = ARRAYS_TYPES.valueOf(arrayTypeString.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                SketchwareUtil.toastError(Helper.getResString(R.string.error_invalid_value));
+                return;
+            }
 
             ArrayModel array = new ArrayModel(arrayName, arrayType);
             arraysList.add(array);
@@ -211,8 +217,18 @@ public class ArraysEditor extends Fragment {
                 return;
             }
 
+            if (arrayType.isEmpty()) {
+                SketchwareUtil.toastError(Helper.getResString(R.string.error_array_type_not_selected));
+                return;
+            }
+
             array.setArrayName(arrayName);
-            array.setArrayType(ARRAYS_TYPES.valueOf(arrayType.toUpperCase()));
+            try {
+                array.setArrayType(ARRAYS_TYPES.valueOf(arrayType.toUpperCase()));
+            } catch (IllegalArgumentException e) {
+                SketchwareUtil.toastError(Helper.getResString(R.string.error_invalid_value));
+                return;
+            }
             if (header.isEmpty()) {
                 notesMap.remove(position);
             } else {

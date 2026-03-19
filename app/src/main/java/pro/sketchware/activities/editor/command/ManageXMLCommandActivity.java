@@ -305,11 +305,22 @@ public class ManageXMLCommandActivity extends BaseAppCompatActivity {
                         SketchwareUtil.toastError(Helper.getResString(R.string.error_reference_required));
                         return;
                     }
+                    int distance;
+                    int after;
+                    int before;
+                    try {
+                        distance = Integer.parseInt(Helper.getText(binding.distance));
+                        after = Integer.parseInt(Helper.getText(binding.front));
+                        before = Integer.parseInt(Helper.getText(binding.backend));
+                    } catch (NumberFormatException e) {
+                        SketchwareUtil.toastError(Helper.getResString(R.string.error_invalid_value));
+                        return;
+                    }
                     HashMap<String, Object> map = new HashMap<>();
                     map.put("reference", reference);
-                    map.put("distance", Integer.parseInt(Helper.getText(binding.distance)));
-                    map.put("after", Integer.parseInt(Helper.getText(binding.front)));
-                    map.put("before", Integer.parseInt(Helper.getText(binding.backend)));
+                    map.put("distance", distance);
+                    map.put("after", after);
+                    map.put("before", before);
                     map.put("command", Helper.getText(binding.command));
                     String inputBuilder = ">" + xmlName + "\n" +
                             Helper.getText(binding.changes);

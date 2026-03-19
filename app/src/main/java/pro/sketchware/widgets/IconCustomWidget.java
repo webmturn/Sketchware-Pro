@@ -26,9 +26,15 @@ public class IconCustomWidget extends IconBase {
         super(context);
         widgetMap.putAll(map);
         Object typeValue = widgetMap.get("type");
-        type = typeValue instanceof Number
-                ? ((Number) typeValue).intValue()
-                : Integer.parseInt(String.valueOf(typeValue));
+        if (typeValue instanceof Number) {
+            type = ((Number) typeValue).intValue();
+        } else {
+            try {
+                type = Integer.parseInt(String.valueOf(typeValue));
+            } catch (NumberFormatException e) {
+                type = ViewBean.VIEW_TYPE_WIDGET_TEXTVIEW;
+            }
+        }
         Title = Objects.requireNonNull(widgetMap.get("title")).toString();
         setWidgetImage(getViewTypeResId(type));
         setWidgetName(Objects.requireNonNull(widgetMap.get("title")).toString());

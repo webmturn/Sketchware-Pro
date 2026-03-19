@@ -421,7 +421,13 @@ public class ManifestGenerator {
      */
     public void setProjectFilePaths(ProjectFilePaths projectFilePaths) {
         settings = new ProjectSettings(projectFilePaths.sc_id);
-        targetsSdkVersion31OrHigher = Integer.parseInt(settings.getValue(ProjectSettings.SETTING_TARGET_SDK_VERSION, String.valueOf(VAR_DEFAULT_TARGET_SDK_VERSION))) >= 31;
+        int targetSdkVersion;
+        try {
+            targetSdkVersion = Integer.parseInt(settings.getValue(ProjectSettings.SETTING_TARGET_SDK_VERSION, String.valueOf(VAR_DEFAULT_TARGET_SDK_VERSION)));
+        } catch (NumberFormatException ignored) {
+            targetSdkVersion = VAR_DEFAULT_TARGET_SDK_VERSION;
+        }
+        targetsSdkVersion31OrHigher = targetSdkVersion >= 31;
         packageName = projectFilePaths.packageName;
     }
 
