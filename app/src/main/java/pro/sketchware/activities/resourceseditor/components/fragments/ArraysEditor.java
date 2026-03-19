@@ -176,6 +176,10 @@ public class ArraysEditor extends Fragment {
     }
 
     public void showEditArrayDialog(int position) {
+        if (position < 0 || position >= arraysList.size()) {
+            SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+            return;
+        }
         ArrayModel array = arraysList.get(position);
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(requireActivity());
         ArraysEditorAddBinding binding = ArraysEditorAddBinding.inflate(getLayoutInflater());
@@ -221,6 +225,11 @@ public class ArraysEditor extends Fragment {
                 .setTitle(R.string.common_word_warning)
                 .setMessage(String.format(Helper.getResString(R.string.dialog_msg_delete_confirm), array.getArrayName()))
                 .setPositiveButton(R.string.common_word_yes, (d2, w) -> {
+                    if (position < 0 || position >= arraysList.size()) {
+                        SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+                        d.dismiss();
+                        return;
+                    }
                     arraysList.remove(position);
                     notesMap.remove(position);
                     adapter.notifyItemRemoved(position);
@@ -236,6 +245,10 @@ public class ArraysEditor extends Fragment {
     }
 
     public void showArrayAttributesDialog(int position) {
+        if (position < 0 || position >= arraysList.size()) {
+            SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+            return;
+        }
         ArrayModel array = arraysList.get(position);
         BottomSheetDialog dialog = new BottomSheetDialog(requireContext());
         var binding = PropertyPopupParentAttrBinding.inflate(getLayoutInflater());

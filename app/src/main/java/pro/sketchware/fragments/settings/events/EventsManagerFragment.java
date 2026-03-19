@@ -100,6 +100,10 @@ public class EventsManagerFragment extends BaseFragment {
     }
 
     private void showEditListenerDialog(int position) {
+        if (position < 0 || position >= listMap.size()) {
+            SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+            return;
+        }
         showListenerDialog(listMap.get(position), position);
     }
 
@@ -227,6 +231,10 @@ public class EventsManagerFragment extends BaseFragment {
     }
 
     private void exportListener(int p) {
+        if (p < 0 || p >= listMap.size()) {
+            SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+            return;
+        }
         String concat = EventsManagerConstants.EVENT_EXPORT_LOCATION.getAbsolutePath() + File.separator;
         ArrayList<CustomListener> ex = new ArrayList<>();
         ex.add(listMap.get(p));
@@ -277,6 +285,10 @@ public class EventsManagerFragment extends BaseFragment {
     }
 
     private void deleteItem(int position) {
+        if (position < 0 || position >= listMap.size()) {
+            SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+            return;
+        }
         listMap.remove(position);
         FileUtil.writeFile(EventsManagerConstants.LISTENERS_FILE.getAbsolutePath(), new Gson().toJson(listMap));
         refreshList();

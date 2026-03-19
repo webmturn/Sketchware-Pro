@@ -106,6 +106,10 @@ public class EventsManagerDetailsFragment extends BaseFragment {
     }
 
     private void deleteItem(int position) {
+        if (position < 0 || position >= listMap.size()) {
+            SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+            return;
+        }
         if (FileUtil.isExistFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath())) {
             ArrayList<CustomEvent> events;
             try {

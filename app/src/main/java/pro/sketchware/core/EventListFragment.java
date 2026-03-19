@@ -222,7 +222,9 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
         } else {
             ProjectDataManager.getProjectDataManager(sc_id).removeMoreBlock(currentActivity.getJavaName(), moreBlock.targetId);
             SketchToast.toast(requireContext(), Helper.getResString(R.string.common_message_complete_delete), 0).show();
-            events.get(getPaletteIndex()).remove(position);
+            int paletteIndex = getPaletteIndex();
+            ArrayList<EventBean> paletteEvents = paletteIndex >= 0 ? events.get(paletteIndex) : null;
+            if (paletteEvents != null && position >= 0 && position < paletteEvents.size()) paletteEvents.remove(position);
             eventAdapter.refreshAfterDelete();
         }
     }
@@ -383,7 +385,9 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
     private void deleteEvent(EventBean event, int position) {
         EventBean.deleteEvent(sc_id, event, currentActivity);
         SketchToast.toast(requireContext(), Helper.getResString(R.string.common_message_complete_delete), 0).show();
-        events.get(getPaletteIndex()).remove(position);
+        int paletteIndex = getPaletteIndex();
+        ArrayList<EventBean> paletteEvents = paletteIndex >= 0 ? events.get(paletteIndex) : null;
+        if (paletteEvents != null && position >= 0 && position < paletteEvents.size()) paletteEvents.remove(position);
         eventAdapter.refreshAfterDelete();
     }
 

@@ -226,12 +226,21 @@ public class ManageCustomComponentActivity extends BaseAppCompatActivity {
     }
 
     private void export(int position) {
+        if (position < 0 || position >= componentsList.size()) {
+            SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+            return;
+        }
         String componentName = componentsList.get(position).getName();
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(Helper.getResString(R.string.common_word_export));
         dialog.setMessage(Helper.getResString(R.string.developer_tools_component_message_export, componentName));
         dialog.setIcon(R.drawable.export_96);
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_yes), (v, which) -> {
+            if (position < 0 || position >= componentsList.size()) {
+                SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+                v.dismiss();
+                return;
+            }
             String fileName = componentName + ".json";
             String filePath = new File(COMPONENT_EXPORT_DIR, fileName).getAbsolutePath();
             FileUtil.writeFile(filePath, getGson().toJson(List.of(componentsList.get(position))));

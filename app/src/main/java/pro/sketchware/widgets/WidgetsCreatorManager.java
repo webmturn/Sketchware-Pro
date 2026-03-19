@@ -182,6 +182,10 @@ public class WidgetsCreatorManager {
         SyntaxScheme.setXMLHighlighter(binding.injectCode);
 
         if (isEditing) {
+            if (position < 0 || position >= widgetConfigurationsList.size()) {
+                SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+                return;
+            }
             HashMap<String, Object> map = widgetConfigurationsList.get(position);
             binding.widgetType.setText(String.valueOf(map.get("type")));
             binding.widgetName.setText(String.valueOf(map.get("name")));
@@ -246,6 +250,10 @@ public class WidgetsCreatorManager {
                     return;
                 }
                 if (isEditing) {
+                    if (position < 0 || position >= widgetConfigurationsList.size()) {
+                        SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+                        return;
+                    }
                     map.put("position", position);
                     widgetConfigurationsList.set(position, map);
                 } else {
@@ -495,10 +503,20 @@ public class WidgetsCreatorManager {
         }
 
         dialogBinding.edit.setOnClickListener(v -> {
+            if (position < 0 || position >= widgetConfigurationsList.size()) {
+                SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+                dialog.dismiss();
+                return;
+            }
             showWidgetsCreatorDialog(position);
             dialog.dismiss();
         });
         dialogBinding.export.setOnClickListener(v -> {
+            if (position < 0 || position >= widgetConfigurationsList.size()) {
+                SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+                dialog.dismiss();
+                return;
+            }
             HashMap<String, Object> mapToExport = widgetConfigurationsList.get(position);
             String exportFilePath = widgetExportDirectoryPath + mapToExport.get("title") + ".json";
             FileUtil.writeFile(exportFilePath, "[" + getGson().toJson(mapToExport) + "]");
@@ -506,6 +524,11 @@ public class WidgetsCreatorManager {
             dialog.dismiss();
         });
         dialogBinding.delete.setOnClickListener(v -> {
+            if (position < 0 || position >= widgetConfigurationsList.size()) {
+                SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+                dialog.dismiss();
+                return;
+            }
             deleteWidgetMap(position);
             dialog.dismiss();
         });
@@ -521,6 +544,11 @@ public class WidgetsCreatorManager {
         dialog.setIcon(R.drawable.ic_mtrl_delete);
         dialog.setMessage(R.string.view_widget_favorites_delete_message);
         dialog.setPositiveButton(R.string.common_word_delete, (v, which) -> {
+            if (position < 0 || position >= widgetConfigurationsList.size()) {
+                SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+                v.dismiss();
+                return;
+            }
             String Class = String.valueOf(widgetConfigurationsList.get(position).get("Class"));
             widgetConfigurationsList.remove(position);
             if (isClassEmpty(Class) && !mainCategories.contains(Class)) {

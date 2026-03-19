@@ -94,9 +94,17 @@ public class BlockSelectorDetailsFragment extends BaseFragment {
     }
 
     private void showCreateEditDialog(boolean isEdit, int indexA) {
+        if (index < 0 || index >= selectors.size()) {
+            getParentFragmentManager().popBackStack();
+            return;
+        }
         DialogAddCustomActivityBinding dialogBinding = DialogAddCustomActivityBinding.inflate(LayoutInflater.from(requireContext()));
         dialogBinding.activityNameInputLayout.setHint(Helper.getResString(R.string.selector_hint_name));
         if (isEdit) {
+            if (indexA < 0 || indexA >= selectors.get(index).getData().size()) {
+                SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+                return;
+            }
             dialogBinding.activityNameInput.setText(selectors.get(index).getData().get(indexA));
         }
 
@@ -108,6 +116,11 @@ public class BlockSelectorDetailsFragment extends BaseFragment {
                 if (!isEdit) {
                     selectors.get(index).getData().add(newItem);
                 } else {
+                    if (indexA < 0 || indexA >= selectors.get(index).getData().size()) {
+                        SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+                        v.dismiss();
+                        return;
+                    }
                     selectors.get(index).getData().set(indexA, newItem);
                 }
                 saveAll();
@@ -121,6 +134,10 @@ public class BlockSelectorDetailsFragment extends BaseFragment {
     }
 
     private void showActionsDialog(int indexA) {
+        if (index < 0 || index >= selectors.size() || indexA < 0 || indexA >= selectors.get(index).getData().size()) {
+            SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+            return;
+        }
         DialogSelectorActionsBinding dialogBinding = DialogSelectorActionsBinding.inflate(LayoutInflater.from(requireContext()));
 
         AlertDialog dialog = new MaterialAlertDialogBuilder(requireActivity()).create();
@@ -129,6 +146,10 @@ public class BlockSelectorDetailsFragment extends BaseFragment {
 
         dialogBinding.edit.setOnClickListener(v -> {
             dialog.dismiss();
+            if (index < 0 || index >= selectors.size() || indexA < 0 || indexA >= selectors.get(index).getData().size()) {
+                SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+                return;
+            }
             showCreateEditDialog(true, indexA);
         });
 
@@ -139,6 +160,11 @@ public class BlockSelectorDetailsFragment extends BaseFragment {
             showConfirmationDialog(
                     Helper.getResString(R.string.selector_message_delete_item),
                     confirmDialog -> {
+                        if (index < 0 || index >= selectors.size() || indexA < 0 || indexA >= selectors.get(index).getData().size()) {
+                            SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+                            confirmDialog.dismiss();
+                            return;
+                        }
                         selectors.get(index).getData().remove(indexA);
                         saveAll();
                         adapter.notifyDataSetChanged();
