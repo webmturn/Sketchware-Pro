@@ -74,6 +74,7 @@ public class InnerAddComponentBottomSheet extends BottomSheetDialogFragment {
         projectFileBean = args.getParcelable("project_file_bean");
         if (scId == null || componentBean == null || projectFileBean == null) {
             dismissAllowingStateLoss();
+            return;
         }
     }
 
