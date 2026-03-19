@@ -137,6 +137,10 @@ public class EventsManagerFragment extends BaseFragment {
                         listenerData.setIndependentFlag(listenerBinding.listenerIsIndependentClassOrMethod.isChecked() ? "true" : "false");
                         listenerData.setImports(Helper.getText(listenerBinding.listenerCustomImport));
                         if (position >= 0) {
+                            if (position >= listMap.size()) {
+                                SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+                                return;
+                            }
                             listMap.set(position, listenerData);
                         } else {
                             listMap.add(listenerData);
