@@ -30,7 +30,7 @@ public class PropertiesUtil {
             color = "#FFFFFFFF";
         }
         String hexColor = color.replaceFirst("#", "");
-        String formattedColor = String.format("#%8s", hexColor).replaceAll(" ", "F");
+        String formattedColor = String.format("#%8s", hexColor).replace(" ", "F");
         try {
             return Color.parseColor(formattedColor);
         } catch (IllegalArgumentException e) {

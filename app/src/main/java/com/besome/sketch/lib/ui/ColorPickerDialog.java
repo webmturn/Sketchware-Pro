@@ -270,7 +270,7 @@ public class ColorPickerDialog extends PopupWindow {
                         if (customColor.startsWith("#")) {
                             customColor = customColor.substring(1);
                         }
-                        String formattedColor = String.format("#%8s", customColor).replaceAll(" ", "F");
+                        String formattedColor = String.format("#%8s", customColor).replace(" ", "F");
                         savePickedColor(formattedColor.toUpperCase());
                         notifyChanges();
                     }

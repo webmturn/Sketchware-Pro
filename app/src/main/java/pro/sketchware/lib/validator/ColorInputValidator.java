@@ -36,7 +36,7 @@ public class ColorInputValidator extends BaseValidator {
         } else {
             if (hexPattern.matcher(hexCode).matches()) {
                 try {
-                    hexCode = String.format("#%8s", hexCode).replaceAll(" ", "F");
+                    hexCode = String.format("#%8s", hexCode).replace(" ", "F");
                     colorPreview.setBackgroundColor(Color.parseColor(hexCode));
                 } catch (IllegalArgumentException var5) {
                     textInputLayout.setErrorEnabled(true);
