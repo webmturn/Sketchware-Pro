@@ -332,7 +332,6 @@ public class LayoutGenerator {
     }
 
     private void writeWidget(XmlBuilder xmlTag, ViewBean viewBean) {
-        viewBean.getClassInfo().getClassName();
         String convert = viewBean.convert;
         var injectHandler = new InjectAttributeHandler(viewBean);
         Set<String> toNotAdd = readAttributesToReplace(viewBean);
@@ -342,7 +341,7 @@ public class LayoutGenerator {
                 ? (type == ViewBeans.VIEW_TYPE_LAYOUT_CARDVIEW
                         ? "com.google.android.material.card.MaterialCardView"
                         : viewBean.getClassInfo().getClassName())
-                : convert.replaceAll(" ", "");
+                : convert.replace(" ", "");
         XmlBuilder widgetTag = new XmlBuilder(xmlRootElement);
         if (convert.equals("include")) {
             if (!toNotAdd.contains("layout") && !injectHandler.contains("layout")) {
@@ -505,7 +504,7 @@ public class LayoutGenerator {
             }
         }
         if (!viewBean.inject.isEmpty()) {
-            widgetTag.addAttributeValue(viewBean.inject.replaceAll(" ", ""));
+            widgetTag.addAttributeValue(viewBean.inject.replace(" ", ""));
         }
 
         if (!viewBean.parentAttributes.isEmpty()) {
@@ -572,7 +571,7 @@ public class LayoutGenerator {
         }
         addCommonAttributes(floatingActionButtonTag, viewBean);
         if (!viewBean.inject.isEmpty()) {
-            floatingActionButtonTag.addAttributeValue(viewBean.inject.replaceAll(" ", ""));
+            floatingActionButtonTag.addAttributeValue(viewBean.inject.replace(" ", ""));
         }
         xmlTag.addChildNode(floatingActionButtonTag);
     }
