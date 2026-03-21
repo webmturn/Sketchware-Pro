@@ -3,6 +3,7 @@ package pro.sketchware.core;
 import static com.besome.sketch.editor.property.PropertyAttributesItem.RELATIVE_IDS;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,8 @@ import java.util.regex.Pattern;
 import dev.aldi.sayuti.editor.injection.AppCompatInjection;
 import mod.agus.jcoderz.beans.ViewBeans;
 import mod.jbk.util.LogUtil;
+import pro.sketchware.SketchApplication;
+import pro.sketchware.activities.resourceseditor.components.utils.ColorsEditorManager;
 import pro.sketchware.managers.inject.InjectRootLayoutManager;
 import pro.sketchware.utility.InjectAttributeHandler;
 import pro.sketchware.utility.PropertiesUtil;
@@ -69,6 +72,7 @@ public class LayoutGenerator {
     private ArrayList<ViewBean> views;
     private XmlBuilder rootLayout = null;
     private XmlBuilder collapsingToolbarLayout = null;
+    private ColorsEditorManager colorsEditorManager;
     private boolean excludeAppCompat;
 
     public LayoutGenerator(BuildConfig buildConfig, ProjectFileBean projectFileBean) {
@@ -272,22 +276,56 @@ public class LayoutGenerator {
                         }
                     }
                 } else if (xmlTag.getCleanRootElementName().equals("BottomAppBar")) {
-                    if (!toNotAdd.contains("android:backgroundTint") && !injectHandler.contains("backgroundTint")) {
-                        xmlTag.addAttribute("android", "backgroundTint", "@android:color/transparent");
+                    if (!toNotAdd.contains("app:backgroundTint") && !injectHandler.contains("backgroundTint")) {
+                        if (backgroundResColor != null) {
+                            if (backgroundResColor.startsWith("?") || backgroundResColor.startsWith("@color/")) {
+                                xmlTag.addAttribute("app", "backgroundTint", backgroundResColor);
+                            } else {
+                                xmlTag.addAttribute("app", "backgroundTint", "@color/" + backgroundResColor);
+                            }
+                        } else {
+                            xmlTag.addAttribute("app", "backgroundTint", "@android:color/transparent");
+                        }
                     }
                 } else if (xmlTag.getCleanRootElementName().equals("CollapsingToolbarLayout")) {
                     if (!toNotAdd.contains("app:contentScrim") && !injectHandler.contains("contentScrim")) {
-                        xmlTag.addAttribute("app", "contentScrim", "?attr/colorPrimary");
+                        if (backgroundResColor != null) {
+                            if (backgroundResColor.startsWith("?") || backgroundResColor.startsWith("@color/")) {
+                                xmlTag.addAttribute("app", "contentScrim", backgroundResColor);
+                            } else {
+                                xmlTag.addAttribute("app", "contentScrim", "@color/" + backgroundResColor);
+                            }
+                        } else {
+                            xmlTag.addAttribute("app", "contentScrim", "@android:color/transparent");
+                        }
                     }
                 } else if (type == ViewBeans.VIEW_TYPE_LAYOUT_CARDVIEW) {
                     if (!toNotAdd.contains("app:cardBackgroundColor") && !injectHandler.contains("cardBackgroundColor")) {
-                        xmlTag.addAttribute("app", "cardBackgroundColor", "@android:color/transparent");
+                        if (backgroundResColor != null) {
+                            if (backgroundResColor.startsWith("?") || backgroundResColor.startsWith("@color/")) {
+                                xmlTag.addAttribute("app", "cardBackgroundColor", backgroundResColor);
+                            } else {
+                                xmlTag.addAttribute("app", "cardBackgroundColor", "@color/" + backgroundResColor);
+                            }
+                        } else {
+                            xmlTag.addAttribute("app", "cardBackgroundColor", "@android:color/transparent");
+                        }
                     }
-                } else if (shouldPreserveDefaultBackground(viewBean)) {
-                    // Preserve the platform/default widget background instead of forcing it transparent.
+                } else if (xmlTag.getCleanRootElementName().equals("MaterialButton")) {
+                    if (!toNotAdd.contains("app:backgroundTint") && !injectHandler.contains("backgroundTint")) {
+                        xmlTag.addAttribute("app", "backgroundTint", backgroundResColor == null ? "@android:color/transparent" : backgroundResColor);
+                    }
                 } else {
-                    if (!toNotAdd.contains("android:background") && !injectHandler.contains("background")) {
-                        xmlTag.addAttribute("android", "background", "@android:color/transparent");
+                    if (!hasAttr("background", viewBean) && !toNotAdd.contains("android:background") && !injectHandler.contains("background")) {
+                        if (backgroundResColor != null) {
+                            if (backgroundResColor.startsWith("?") || backgroundResColor.startsWith("@color/")) {
+                                xmlTag.addAttribute("android", "background", backgroundResColor);
+                            } else {
+                                xmlTag.addAttribute("android", "background", "@color/" + backgroundResColor);
+                            }
+                        } else {
+                            xmlTag.addAttribute("android", "background", "@android:color/transparent");
+                        }
                     }
                 }
             }
@@ -1119,13 +1157,18 @@ public class LayoutGenerator {
     }
 
     private boolean shouldUseBoundsOutline(ViewBean viewBean, InjectAttributeHandler injectHandler, int elevationDp) {
-        if (elevationDp <= 0 || viewBean.type == ViewBeans.VIEW_TYPE_LAYOUT_CARDVIEW || hasExplicitBackground(viewBean, injectHandler)) {
+        if (elevationDp <= 0 || viewBean.type == ViewBeans.VIEW_TYPE_LAYOUT_CARDVIEW || hasOpaqueBackground(viewBean, injectHandler)) {
             return false;
         }
 
         ClassInfo classInfo = viewBean.getClassInfo();
+        if (!hasExplicitBackgroundSetting(viewBean, injectHandler) && shouldPreserveDefaultBackground(viewBean)) {
+            return false;
+        }
+        if (usesMaterialButtonBackgroundOutline(viewBean, injectHandler)) {
+            return false;
+        }
         return !classInfo.isExactType("FloatingActionButton")
-                && !classInfo.isExactType("MaterialButton")
                 && !classInfo.isExactType("SearchView")
                 && !classInfo.isExactType("CalendarView")
                 && !classInfo.isExactType("BottomNavigationView")
@@ -1139,14 +1182,74 @@ public class LayoutGenerator {
                 && !classInfo.matchesType("CompoundButton");
     }
 
-    private boolean hasExplicitBackground(ViewBean viewBean, InjectAttributeHandler injectHandler) {
+    private boolean hasExplicitBackgroundSetting(ViewBean viewBean, InjectAttributeHandler injectHandler) {
         return viewBean.layout.backgroundColor != 0xffffff
-                || viewBean.layout.backgroundResColor != null
+                || (viewBean.layout.backgroundResColor != null && !viewBean.layout.backgroundResColor.isEmpty())
                 || (viewBean.layout.backgroundResource != null && !"NONE".equalsIgnoreCase(viewBean.layout.backgroundResource))
                 || injectHandler.contains("background")
                 || injectHandler.contains("cardBackgroundColor")
                 || hasAttr("background", viewBean)
                 || hasAttr("cardBackgroundColor", viewBean);
+    }
+
+    private boolean usesMaterialButtonBackgroundOutline(ViewBean viewBean, InjectAttributeHandler injectHandler) {
+        if (!viewBean.getClassInfo().isExactType("MaterialButton")) {
+            return false;
+        }
+        return !injectHandler.contains("background")
+                && !hasAttr("background", viewBean)
+                && (viewBean.layout.backgroundResource == null || "NONE".equalsIgnoreCase(viewBean.layout.backgroundResource));
+    }
+
+    private boolean hasOpaqueBackground(ViewBean viewBean, InjectAttributeHandler injectHandler) {
+        if (viewBean.layout.backgroundResColor != null && !viewBean.layout.backgroundResColor.isEmpty()) {
+            return !isTransparentBackgroundValue(viewBean.layout.backgroundResColor);
+        }
+        if (viewBean.layout.backgroundColor != 0xffffff) {
+            return viewBean.layout.backgroundColor != 0;
+        }
+        if (viewBean.layout.backgroundResource != null && !"NONE".equalsIgnoreCase(viewBean.layout.backgroundResource)) {
+            return true;
+        }
+        String injectedBackground = injectHandler.getAttributeValueOf("background");
+        if (!injectedBackground.isEmpty()) {
+            return !isTransparentBackgroundValue(injectedBackground);
+        }
+        String injectedCardBackground = injectHandler.getAttributeValueOf("cardBackgroundColor");
+        if (!injectedCardBackground.isEmpty()) {
+            return !isTransparentBackgroundValue(injectedCardBackground);
+        }
+        return hasAttr("background", viewBean) || hasAttr("cardBackgroundColor", viewBean);
+    }
+
+    private boolean isTransparentBackgroundValue(String backgroundValue) {
+        String value = backgroundValue == null ? "" : backgroundValue.trim();
+        if (value.isEmpty()) {
+            return false;
+        }
+        if ("@null".equals(value) || "@android:color/transparent".equals(value)) {
+            return true;
+        }
+        if (PropertiesUtil.isHexColor(value)) {
+            return Color.alpha(PropertiesUtil.parseColor(value)) == 0;
+        }
+        Integer resolvedColor = resolveBackgroundColor(value);
+        return resolvedColor != null && Color.alpha(resolvedColor) == 0;
+    }
+
+    private Integer resolveBackgroundColor(String backgroundValue) {
+        if (buildConfig.sc_id == null || buildConfig.sc_id.isEmpty()) {
+            return null;
+        }
+        try {
+            if (colorsEditorManager == null) {
+                colorsEditorManager = new ColorsEditorManager(buildConfig.sc_id);
+            }
+            return colorsEditorManager.resolveColorInt(SketchApplication.getContext(), backgroundValue, 4);
+        } catch (Exception e) {
+            LogUtil.e("LayoutGenerator", "Failed to resolve background color for outline detection", e);
+            return null;
+        }
     }
 
     private boolean shouldPreserveDefaultBackground(ViewBean viewBean) {

@@ -150,6 +150,20 @@ public class StringResource {
       return "";
     }
   }
+
+  private String decodeTranslationValue(String value) {
+    return value.replace("\\'", "'")
+        .replace("\\\"", "\"")
+        .replace("\\n", "\n");
+  }
+
+  private String replaceFirstLiteral(String text, String target, String replacement) {
+    int index = text.indexOf(target);
+    if (index < 0) {
+      return text;
+    }
+    return text.substring(0, index) + replacement + text.substring(index + target.length());
+  }
   
   public String getTranslatedStringFromRes(Resources resources, int resId) {
     String resEntryName = resources.getResourceEntryName(resId);
@@ -162,7 +176,7 @@ public class StringResource {
       }
       String value = blockTranslations.get(resEntryName);
       if (value != null && !value.isEmpty()) {
-        return value.replaceAll("\\\\\\'" , "'").replaceAll("\\\\\\\"", "\"").replaceAll("\\\\n", "\\\n");
+        return decodeTranslationValue(value);
       }
       return resources.getString(resId);
     } catch (Exception exception) {
@@ -181,13 +195,12 @@ public class StringResource {
     try {
       String value = blockTranslations.get(resEntryName);
       if (value != null && !value.isEmpty()) {
-        String template = value.replaceAll("\\\\\\'" , "'").replaceAll("\\\\\\\"", "\"").replaceAll("\\\\n", "\\\n");
+        String template = decodeTranslationValue(value);
         int replaceCount = 0;
         for (Object formatArg : formatArgs) {
-          if (!template.contains("%")) break;
+          if (!template.contains("%s")) break;
           String argStr = formatArg.toString();
-          if (argStr.equals("\\n")) argStr = "\\\\n";
-          template = template.replaceFirst("%s", argStr);
+          template = replaceFirstLiteral(template, "%s", argStr);
           replaceCount++;
         }
         if (replaceCount == formatArgs.length && !template.contains("%"))

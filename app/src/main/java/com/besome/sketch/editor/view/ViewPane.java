@@ -1,6 +1,7 @@
 package com.besome.sketch.editor.view;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.NinePatch;
@@ -1071,17 +1072,18 @@ public class ViewPane extends RelativeLayout {
                     ? ViewOutlineProvider.BOUNDS
                     : ViewOutlineProvider.BACKGROUND);
             view.invalidateOutline();
-            view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
-                @Override
-                public void onViewAttachedToWindow(View v) {
-                    disableClipInAncestors(v);
-                    v.removeOnAttachStateChangeListener(this);
-                }
-                @Override
-                public void onViewDetachedFromWindow(View v) {}
-            });
             if (view.getParent() != null) {
                 disableClipInAncestors(view);
+            } else {
+                view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+                    @Override
+                    public void onViewAttachedToWindow(View v) {
+                        disableClipInAncestors(v);
+                        v.removeOnAttachStateChangeListener(this);
+                    }
+                    @Override
+                    public void onViewDetachedFromWindow(View v) {}
+                });
             }
         } else if (view.getElevation() != 0) {
             view.setElevation(0);
@@ -1100,9 +1102,6 @@ public class ViewPane extends RelativeLayout {
     }
 
     private boolean shouldUseBoundsOutline(View view, Drawable background) {
-        if (view instanceof ItemButton || view instanceof ItemEditText) {
-            return true;
-        }
         if (background == null) {
             return true;
         }
@@ -1153,7 +1152,11 @@ public class ViewPane extends RelativeLayout {
                     view.setBackground(null);
                 }
             } else if (bg == 0) {
-                view.setBackground(null);
+                if (view instanceof ItemButton || view instanceof ItemEditText || view instanceof ItemMaterialButton) {
+                    view.setBackgroundColor(bg);
+                } else {
+                    view.setBackground(null);
+                }
             } else {
                 view.setBackgroundColor(bg);
             }
@@ -1525,8 +1528,15 @@ public class ViewPane extends RelativeLayout {
     }
 
     private void updateMaterialButton(ItemMaterialButton materialButton, InjectAttributeHandler handler) {
+        String backgroundTint = handler.getAttributeValueOf("backgroundTint");
         String radius = handler.getAttributeValueOf("cornerRadius");
         String stroke = handler.getAttributeValueOf("strokeWidth");
+        if (!backgroundTint.isEmpty()) {
+            Integer tintColor = colorsEditorManager.resolveColorInt(context, backgroundTint, 3, material3LibraryManager.canUseNightVariantColors());
+            if (tintColor != null) {
+                materialButton.setBackgroundTintList(ColorStateList.valueOf(tintColor));
+            }
+        }
         materialButton.setStrokeWidth(PropertiesUtil.resolveSize(stroke, 0));
         materialButton.setCornerRadius(PropertiesUtil.resolveSize(radius, 8));
     }

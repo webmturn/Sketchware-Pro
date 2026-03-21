@@ -319,6 +319,12 @@ public class XmlLayoutParser {
             case "layout_weight":
                 bean.layout.weight = parseDpValue(value, 0);
                 return true;
+            case "cardElevation":
+                if (bean.type == ViewBeans.VIEW_TYPE_LAYOUT_CARDVIEW) {
+                    bean.layout.elevation = parseCardElevationOrInject(value, injectBuilder, warnings, dimenMap);
+                    return true;
+                }
+                return false;
             case "elevation":
                 bean.layout.elevation = parseDpOrInject(name, value, bean, injectBuilder, warnings, dimenMap);
                 return true;
@@ -367,6 +373,21 @@ public class XmlLayoutParser {
                 bean.layout.paddingRight = padding;
                 bean.layout.paddingBottom = padding;
                 return true;
+            case "cardBackgroundColor":
+                if (bean.type == ViewBeans.VIEW_TYPE_LAYOUT_CARDVIEW) {
+                    return parseColorBackedBackground(value, bean);
+                }
+                return false;
+            case "backgroundTint":
+                if (bean.type == ViewBeans.VIEW_TYPE_WIDGET_MATERIALBUTTON) {
+                    return parseColorBackedBackground(value, bean);
+                }
+                return false;
+            case "contentScrim":
+                if (bean.type == ViewBeans.VIEW_TYPE_LAYOUT_COLLAPSINGTOOLBARLAYOUT) {
+                    return parseColorBackedBackground(value, bean);
+                }
+                return false;
             case "background":
                 return parseBackground(value, bean);
             default:
@@ -430,6 +451,20 @@ public class XmlLayoutParser {
         return parseDpValue(value, 0);
     }
 
+    private static int parseCardElevationOrInject(String value, StringBuilder injectBuilder,
+                                                  List<String> warnings, Map<String, String> dimenMap) {
+        if (value.startsWith("@dimen/")) {
+            String dimenName = value.substring("@dimen/".length());
+            if (dimenMap != null && dimenMap.containsKey(dimenName)) {
+                return parseDpValue(dimenMap.get(dimenName), 0);
+            }
+            injectBuilder.append("\n").append("app:cardElevation=\"").append(value).append("\"");
+            warnings.add("@dimen/ reference '" + value + "' for cardElevation preserved in inject");
+            return 0;
+        }
+        return parseDpValue(value, 0);
+    }
+
     /**
      * Parses a dimens.xml string into a map of dimen name → value string.
      * Example: {@code <dimen name="toolbar_height">56dp</dimen>} → {"toolbar_height": "56dp"}
@@ -484,6 +519,25 @@ public class XmlLayoutParser {
             return true;
         }
         // Other background values (e.g., @android:color/) — fall through to inject
+        return false;
+    }
+
+    private static boolean parseColorBackedBackground(String value, ViewBean bean) {
+        if (value.startsWith("#")) {
+            bean.layout.backgroundColor = parseColorValue(value);
+            bean.layout.backgroundResColor = null;
+            return true;
+        }
+        if (value.startsWith("@color/") || value.startsWith("?attr/") || value.startsWith("?")) {
+            bean.layout.backgroundColor = 1;
+            bean.layout.backgroundResColor = value;
+            return true;
+        }
+        if ("@android:color/transparent".equals(value)) {
+            bean.layout.backgroundColor = 0;
+            bean.layout.backgroundResColor = null;
+            return true;
+        }
         return false;
     }
 

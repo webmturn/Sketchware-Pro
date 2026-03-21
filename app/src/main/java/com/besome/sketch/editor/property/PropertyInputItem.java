@@ -206,10 +206,14 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
                         Helper.getText(tvName),
                         safeParseFloat(value, 0f),
                         0f, 10f, 1f, true);
-                case "property_elevation" -> showHybridSliderDialog(
-                        Helper.getText(tvName),
-                        safeParseFloat(value, 0f),
-                        0f, 24f, 1f, true);
+                case "property_elevation" -> {
+                    float currentVal = safeParseFloat(value, 0f);
+                    float maxRange = Math.max(24f, currentVal);
+                    showHybridSliderDialog(
+                            Helper.getText(tvName),
+                            currentVal,
+                            0f, maxRange, 1f, true);
+                }
                 case "property_lines" -> {
                     float currentVal = safeParseFloat(value, 0f);
                     float maxRange = Math.max(20f, currentVal);

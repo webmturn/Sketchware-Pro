@@ -302,15 +302,16 @@ public class ColorPickerDialog extends PopupWindow {
                     return;
                 }
 
-                String color = colorsEditorManager.getColorValueFromAttrs(activity, input, 1, false);
+                Integer lightColorValue = colorsEditorManager.getColorIntFromAttrs(activity, input, 1, false);
 
-                if (color.equals(colorsEditorManager.defaultHexColor)) {
+                if (lightColorValue == null) {
                     dialogBinding.inputLayout.setError(Helper.getResString(R.string.unknown_attr));
                     return;
                 }
                 dialogBinding.inputLayout.setError(null);
-                int lightColor = PropertiesUtil.parseColor(color);
-                int darkColor = PropertiesUtil.parseColor(colorsEditorManager.getColorValueFromAttrs(activity, input, 1, true));
+                int lightColor = lightColorValue;
+                Integer darkColorValue = colorsEditorManager.getColorIntFromAttrs(activity, input, 1, true);
+                int darkColor = darkColorValue != null ? darkColorValue : lightColor;
 
                 // viewBinding don't support include , so here we should use findViewById
                 dialogBinding.getRoot().findViewById(R.id.dark_container).setBackgroundColor(darkColor);
