@@ -85,14 +85,6 @@
 
 > 将以上 6 个文件推送到 `data/700/` 和 `bak/700/`，project 推送到 `mysc/list/700/project`，即可在 Sketchware 中编译运行。
 
-### 示例项目：真机验收 layout.elevation / Card 阴影
-
-仓库内提供**可直接推送**的完整六文件示例（竖向 `ScrollView` + 灰底面板，含 TextView、Button、EditText、CardView、CheckBox、ImageView 等，均带 `layout.elevation`）：
-
-- 目录：`docs/sample-projects/elevation-verify-701/`
-- 项目 ID：`701`（若冲突请修改该目录下 `project` 的 `sc_id` 与推送路径中的 ID）
-- 使用步骤见该目录下的 `README.md`（含 `adb push` 脚本）
-
 ---
 
 ## 生成代码结构
@@ -783,7 +775,7 @@ Write-Host "Project $id pushed successfully!"
 }
 ```
 
-> `elevation` 为阴影高度（dp，整数）。与属性面板「阴影/高度」一致；**CardView** 在生成布局时映射为 `app:cardElevation`。详见 `docs/sample-projects/elevation-verify-701/` 示例。
+> `elevation` 为阴影高度（dp，整数）。与属性面板「阴影/高度」一致；**CardView** 在生成布局时映射为 `app:cardElevation`。
 
 > **背景色 `0xffffff`（十进制 16777215）**：在 `LayoutGenerator` 中表示**未设置**（不写 `android:background`）。在 Android ARGB 中若误用 `setBackgroundColor(16777215)` 会得到 **alpha=0 的透明色**，设计器预览会异常。设计器已按生成器语义对 `0xffffff` 视为不铺色；若要在预览与 APK 中均为**不透明白**，请使用 **`#FFFFFFFF`（如 JSON 整数 `-1`）** 或其它带不透明 alpha 的颜色。
 

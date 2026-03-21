@@ -5,7 +5,6 @@ import mod.hey.studios.util.Helper;
 import pro.sketchware.core.FormatUtil;
 import com.besome.sketch.editor.PropertyActivity;
 import android.content.Context;
-import android.content.Intent;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -19,7 +18,6 @@ import com.besome.sketch.beans.EventBean;
 import com.besome.sketch.beans.LayoutBean;
 import com.besome.sketch.beans.ProjectFileBean;
 import com.besome.sketch.beans.ViewBean;
-import com.besome.sketch.editor.manage.image.ManageImageActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
