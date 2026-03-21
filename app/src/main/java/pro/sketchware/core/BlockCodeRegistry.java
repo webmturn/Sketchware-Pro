@@ -326,12 +326,12 @@ public class BlockCodeRegistry {
         });
         register("setBgColor", (bean, params, ctx) -> String.format("%s.setBackgroundColor(%s);", params.get(0), params.get(1)));
         register("setBgResource", (bean, params, ctx) -> {
-            String res = params.get(1).equals("NONE") ? "0" : "R.drawable." + params.get(1).replaceAll("\\.9", "");
+            String res = params.get(1).equals("NONE") ? "0" : "R.drawable." + params.get(1).replace(".9", "");
             return String.format("%s.setBackgroundResource(%s);", params.get(0), res);
         });
         register("setTextColor", (bean, params, ctx) -> String.format("%s.setTextColor(%s);", params.get(0), params.get(1)));
         register("setImage", (bean, params, ctx) -> {
-            String name = params.get(1).replaceAll("\\.9", "");
+            String name = params.get(1).replace(".9", "");
             return String.format("%s.setImageResource(R.drawable.%s);", params.get(0), name.toLowerCase());
         });
         register("setColorFilter", (bean, params, ctx) -> String.format("%s.setColorFilter(%s, PorterDuff.Mode.MULTIPLY);", params.get(0), params.get(1)));
@@ -479,7 +479,7 @@ public class BlockCodeRegistry {
         register("mapViewSetMarkerPosition", (bean, params, ctx) -> String.format("_%s_controller.setMarkerPosition(%s, %s, %s);", params.get(0), params.get(1), params.get(2), params.get(3)));
         register("mapViewSetMarkerColor", (bean, params, ctx) -> String.format("_%s_controller.setMarkerColor(%s, BitmapDescriptorFactory.%s, %s);", params.get(0), params.get(1), params.get(2), params.get(3)));
         register("mapViewSetMarkerIcon", (bean, params, ctx) -> {
-            String name = params.get(2).endsWith(".9") ? params.get(2).replaceAll("\\.9", "") : params.get(2);
+            String name = params.get(2).endsWith(".9") ? params.get(2).replace(".9", "") : params.get(2);
             return String.format("_%s_controller.setMarkerIcon(%s, R.drawable.%s);", params.get(0), params.get(1), name.toLowerCase());
         });
         register("mapViewSetMarkerVisible", (bean, params, ctx) -> String.format("_%s_controller.setMarkerVisible(%s, %s);", params.get(0), params.get(1), params.get(2)));
@@ -584,8 +584,8 @@ public class BlockCodeRegistry {
         register("soundpoolStreamStop", (bean, params, ctx) -> String.format("%s.stop((int)(%s));", params.get(0), params.get(1)));
     }
     private static void registerSeekBarBlocks() {
-        register("setThumbResource", (bean, params, ctx) -> { String name = params.get(1).replaceAll("\\.9", ""); return String.format("%s.setThumbResource(R.drawable.%s)", params.get(0), name.toLowerCase()); });
-        register("setTrackResource", (bean, params, ctx) -> { String name = params.get(1).replaceAll("\\.9", ""); return String.format("%s.setTrackResource(R.drawable.%s)", params.get(0), name.toLowerCase()); });
+        register("setThumbResource", (bean, params, ctx) -> { String name = params.get(1).replace(".9", ""); return String.format("%s.setThumbResource(R.drawable.%s)", params.get(0), name.toLowerCase()); });
+        register("setTrackResource", (bean, params, ctx) -> { String name = params.get(1).replace(".9", ""); return String.format("%s.setTrackResource(R.drawable.%s)", params.get(0), name.toLowerCase()); });
         register("seekBarSetProgress", (bean, params, ctx) -> String.format("%s.setProgress((int)%s);", params.get(0), params.get(1)));
         register("seekBarGetProgress", (bean, params, ctx) -> String.format("%s.getProgress()", params.get(0)));
         register("seekBarSetMax", (bean, params, ctx) -> String.format("%s.setMax((int)%s);", params.get(0), params.get(1)));
@@ -728,7 +728,7 @@ public class BlockCodeRegistry {
         register("notifSetChannel", (bean, params, ctx) -> params.size() >= 2 ? String.format("%s = new NotificationCompat.Builder(%s, %s);\n%s.setSmallIcon(R.mipmap.ic_launcher);", params.get(0), ctx.codeContext.appContext(), params.get(1), params.get(0)) : "");
         register("notifSetTitle", (bean, params, ctx) -> params.size() >= 2 ? String.format("%s.setContentTitle(%s);", params.get(0), params.get(1)) : "");
         register("notifSetContent", (bean, params, ctx) -> params.size() >= 2 ? String.format("%s.setContentText(%s);", params.get(0), params.get(1)) : "");
-        register("notifSetSmallIcon", (bean, params, ctx) -> params.size() >= 2 ? String.format("%s.setSmallIcon(R.drawable.%s);", params.get(0), params.get(1).replaceAll("\\.9", "").toLowerCase()) : "");
+        register("notifSetSmallIcon", (bean, params, ctx) -> params.size() >= 2 ? String.format("%s.setSmallIcon(R.drawable.%s);", params.get(0), params.get(1).replace(".9", "").toLowerCase()) : "");
         register("notifSetAutoCancel", (bean, params, ctx) -> params.size() >= 2 ? String.format("%s.setAutoCancel(%s);", params.get(0), params.get(1)) : "");
         register("notifSetPriority", (bean, params, ctx) -> params.size() >= 2 ? String.format("%s.setPriority(NotificationCompat.%s);", params.get(0), params.get(1)) : "");
         register("notifSetClickIntent", (bean, params, ctx) -> params.size() >= 2 ? String.format("%s.setContentIntent(PendingIntent.getActivity(%s, 0, %s, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE));", params.get(0), ctx.codeContext.appContext(), params.get(1)) : "");
