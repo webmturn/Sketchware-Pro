@@ -296,7 +296,7 @@ public class LayoutGenerator {
                                 xmlTag.addAttribute("app", "contentScrim", "@color/" + backgroundResColor);
                             }
                         } else {
-                            xmlTag.addAttribute("app", "contentScrim", "@android:color/transparent");
+                            xmlTag.addAttribute("app", "contentScrim", "?attr/colorPrimary");
                         }
                     }
                 } else if (type == ViewBeans.VIEW_TYPE_LAYOUT_CARDVIEW) {
