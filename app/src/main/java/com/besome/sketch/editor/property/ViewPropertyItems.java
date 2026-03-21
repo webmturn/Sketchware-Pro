@@ -313,6 +313,7 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
         }
 
         addMarginAndGravityProperties(bean);
+        addPropertyForBean(bean, "property_elevation");
         addImageTransformSection(bean);
         if (getOrientation() == LinearLayout.HORIZONTAL) {
             addPropertyForBean(bean, "property_id");

@@ -446,7 +446,7 @@ public class ViewPane extends RelativeLayout {
             view.setTranslationY(ViewUtil.dpToPx(getContext(), viewBean.translationY));
             view.setScaleX(viewBean.scaleX);
             view.setScaleY(viewBean.scaleY);
-            applyElevation(view, viewBean.layout.elevation);
+            applyElevation(view, resolvePreviewElevation(injectHandler, viewBean.layout.elevation));
             view.setVisibility(View.VISIBLE);
             return;
         }
@@ -520,23 +520,26 @@ public class ViewPane extends RelativeLayout {
             updateEditText((EditText) view, viewBean);
         }
         if (classInfo.matchesType("ImageView")) {
-            if (resourcesManager.getImageResType(viewBean.image.resName) == ProjectResourceBean.PROJECT_RES_TYPE_RESOURCE) {
-                int imgResId = getContext().getResources().getIdentifier(viewBean.image.resName, "drawable", getContext().getPackageName());
+            String imgResName = viewBean.image.resName;
+            if (TextUtils.isEmpty(imgResName) || "NONE".equalsIgnoreCase(imgResName)) {
+                ((ImageView) view).setImageResource(R.drawable.default_image);
+            } else if (resourcesManager.getImageResType(imgResName) == ProjectResourceBean.PROJECT_RES_TYPE_RESOURCE) {
+                int imgResId = getContext().getResources().getIdentifier(imgResName, "drawable", getContext().getPackageName());
                 if (imgResId != 0) {
                     ((ImageView) view).setImageResource(imgResId);
                 }
-            } else if (viewBean.image.resName.equals("default_image")) {
+            } else if ("default_image".equals(imgResName)) {
                 ((ImageView) view).setImageResource(R.drawable.default_image);
             } else {
                 try {
-                    String imagelocation = resourcesManager.getImagePath(viewBean.image.resName);
+                    String imagelocation = resourcesManager.getImagePath(imgResName);
                     if (imagelocation != null) {
                         File file = new File(imagelocation);
                         if (file.exists() && file.length() > 0) {
                             int imageScale = Math.round(getResources().getDisplayMetrics().density / 2.0f);
                             if (imagelocation.endsWith(".xml")) {
                                 FilePathUtil fpu = new FilePathUtil();
-                                svgUtils.loadScaledSvgIntoImageView((ImageView) view, fpu.getSvgFullPath(sc_id, viewBean.image.resName), imageScale);
+                                svgUtils.loadScaledSvgIntoImageView((ImageView) view, fpu.getSvgFullPath(sc_id, imgResName), imageScale);
                             } else {
                                 Bitmap imageBitmap = FileUtil.decodeSampleBitmapFromPath(imagelocation, 512, 512);
                                 if (imageBitmap != null) {
@@ -545,12 +548,12 @@ public class ViewPane extends RelativeLayout {
                             }
                         } else {
                             VectorDrawableLoader vectorDrawableLoader = new VectorDrawableLoader();
-                            vectorDrawableLoader.setImageVectorFromFile((ImageView) view, vectorDrawableLoader.getVectorFullPath(DesignActivity.sc_id, viewBean.image.resName));
+                            vectorDrawableLoader.setImageVectorFromFile((ImageView) view, vectorDrawableLoader.getVectorFullPath(DesignActivity.sc_id, imgResName));
                         }
                     }
                 } catch (Exception vectorException) {
                     crashlytics.recordException(vectorException);
-                    FileUtil.deleteFile(new VectorDrawableLoader().getVectorFullPath(DesignActivity.sc_id, viewBean.image.resName));
+                    FileUtil.deleteFile(new VectorDrawableLoader().getVectorFullPath(DesignActivity.sc_id, imgResName));
                     viewBean.image.resName = "default_image";
                     ((ImageView) view).setImageResource(R.drawable.default_image);
                 }
@@ -558,7 +561,15 @@ public class ViewPane extends RelativeLayout {
             if (classInfo.isExactType("CircleImageView")) {
                 updateCircleImageView((ItemCircleImageView) view, injectHandler);
             } else {
-                ((ImageView) view).setScaleType(ImageView.ScaleType.valueOf(viewBean.image.scaleType));
+                String scaleTypeName = viewBean.image.scaleType;
+                if (TextUtils.isEmpty(scaleTypeName)) {
+                    scaleTypeName = ImageBean.SCALE_TYPE_CENTER;
+                }
+                try {
+                    ((ImageView) view).setScaleType(ImageView.ScaleType.valueOf(scaleTypeName));
+                } catch (IllegalArgumentException ignored) {
+                    ((ImageView) view).setScaleType(ImageView.ScaleType.CENTER);
+                }
             }
         }
         if (classInfo.matchesType("CompoundButton")) {
@@ -632,15 +643,13 @@ public class ViewPane extends RelativeLayout {
                         }
                     }
                 }
-                if (!hasButtonSize) button.setSize(ItemSignInButton.ButtonSize.STANDARD);
-                if (!hasColorScheme) button.setColorScheme(ItemSignInButton.ColorScheme.LIGHT);
             }
+            if (!hasButtonSize) button.setSize(ItemSignInButton.ButtonSize.STANDARD);
+            if (!hasColorScheme) button.setColorScheme(ItemSignInButton.ColorScheme.LIGHT);
         }
-        var elevation = injectHandler.getAttributeValueOf("elevation");
-        if (!elevation.isEmpty()) {
-            view.setElevation(PropertiesUtil.resolveSize(elevation, 0));
+        if (!classInfo.isExactType("CardView")) {
+            applyElevation(view, resolvePreviewElevation(injectHandler, viewBean.layout.elevation));
         }
-        applyElevation(view, viewBean.layout.elevation);
         view.setVisibility(VISIBLE);
         if (view instanceof EditorListItem listItem) {
             String listitem = injectHandler.getAttributeValueOf("listitem");
@@ -1048,13 +1057,17 @@ public class ViewPane extends RelativeLayout {
             float elevationPx = ViewUtil.dpToPx(getContext(), elevationDp);
             view.setElevation(elevationPx);
             android.graphics.drawable.Drawable bg = view.getBackground();
-            if (bg instanceof android.graphics.drawable.ColorDrawable colorDrawable) {
+            boolean useBoundsOutline = shouldUseBoundsOutline(view, bg);
+            if (!useBoundsOutline && bg instanceof android.graphics.drawable.ColorDrawable colorDrawable) {
                 android.graphics.drawable.GradientDrawable gd = new android.graphics.drawable.GradientDrawable();
                 gd.setColor(colorDrawable.getColor());
                 gd.setShape(android.graphics.drawable.GradientDrawable.RECTANGLE);
                 view.setBackground(gd);
             }
-            view.setOutlineProvider(android.view.ViewOutlineProvider.BACKGROUND);
+            view.setOutlineProvider(useBoundsOutline
+                    ? android.view.ViewOutlineProvider.BOUNDS
+                    : android.view.ViewOutlineProvider.BACKGROUND);
+            view.invalidateOutline();
             view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
                 @Override
                 public void onViewAttachedToWindow(View v) {
@@ -1069,14 +1082,42 @@ public class ViewPane extends RelativeLayout {
             }
         } else if (view.getElevation() != 0) {
             view.setElevation(0);
+            view.invalidateOutline();
         }
     }
 
-    private static void disableClipInAncestors(View view) {
+    private int getInjectedElevationDp(InjectAttributeHandler handler) {
+        String elevation = handler.getAttributeValueOf("elevation");
+        return elevation.isEmpty() ? -1 : PropertiesUtil.resolveSize(elevation, 0);
+    }
+
+    private int resolvePreviewElevation(InjectAttributeHandler handler, int fallbackDp) {
+        int injectedElevation = getInjectedElevationDp(handler);
+        return injectedElevation >= 0 ? injectedElevation : fallbackDp;
+    }
+
+    private boolean shouldUseBoundsOutline(View view, android.graphics.drawable.Drawable background) {
+        if (view instanceof ItemButton || view instanceof ItemEditText) {
+            return true;
+        }
+        if (background == null) {
+            return true;
+        }
+        if (background instanceof android.graphics.drawable.ColorDrawable colorDrawable) {
+            return Color.alpha(colorDrawable.getColor()) == 0;
+        }
+        return background.getAlpha() == 0;
+    }
+
+    private void disableClipInAncestors(View view) {
         ViewGroup parent = view.getParent() instanceof ViewGroup ? (ViewGroup) view.getParent() : null;
-        while (parent != null) {
+        int maxHops = 16;
+        while (parent != null && maxHops-- > 0) {
             parent.setClipChildren(false);
             parent.setClipToPadding(false);
+            if (parent == this) {
+                break;
+            }
             parent = parent.getParent() instanceof ViewGroup ? (ViewGroup) parent.getParent() : null;
         }
     }
@@ -1099,7 +1140,20 @@ public class ViewPane extends RelativeLayout {
         int bottomMargin = (int) ViewUtil.dpToPx(getContext(), (float) viewBean.layout.marginBottom);
 
         if (viewBean.layout.backgroundResColor == null) {
-            view.setBackgroundColor(viewBean.layout.backgroundColor);
+            int bg = viewBean.layout.backgroundColor;
+            // 0xffffff = LayoutBean default «unset» — LayoutGenerator omits android:background; do not apply
+            // 0x00FFFFFF as setBackgroundColor would be fully transparent (alpha 0) and breaks preview.
+            if (bg == 0xffffff) {
+                if (view instanceof ItemButton || view instanceof ItemEditText || view instanceof ItemMaterialButton) {
+                    view.setBackgroundColor(bg);
+                } else {
+                    view.setBackground(null);
+                }
+            } else if (bg == 0) {
+                view.setBackground(null);
+            } else {
+                view.setBackgroundColor(bg);
+            }
         } else {
             view.setBackgroundColor(PropertiesUtil.parseColor(colorsEditorManager.getColorValue(context, viewBean.layout.backgroundResColor, 3, material3LibraryManager.canUseNightVariantColors())));
         }
@@ -1422,7 +1476,8 @@ public class ViewPane extends RelativeLayout {
             cardView.setCardBackgroundColor(PropertiesUtil.parseColor(colorsEditorManager.getColorValue(context, cardBackgroundColor, 3, material3LibraryManager.canUseNightVariantColors())));
         }
 
-        cardView.setCardElevation(PropertiesUtil.resolveSize(cardElevation, 4));
+        int fallbackElevation = bean.layout.elevation > 0 ? bean.layout.elevation : 4;
+        cardView.setCardElevation(PropertiesUtil.resolveSize(cardElevation, fallbackElevation));
         cardView.setRadius(PropertiesUtil.resolveSize(cardCornerRadius, 8));
         cardView.setUseCompatPadding(Boolean.parseBoolean(TextUtils.isEmpty(compatPadding) ? "false" : compatPadding));
         cardView.setStrokeWidth(PropertiesUtil.resolveSize(strokeWidth, 0));

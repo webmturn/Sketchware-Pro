@@ -76,6 +76,7 @@ public class XmlLayoutParser {
         TAG_TO_TYPE.put("PatternLockView", ViewBeans.VIEW_TYPE_WIDGET_PATTERNLOCKVIEW);
         TAG_TO_TYPE.put("WaveSideBar", ViewBeans.VIEW_TYPE_WIDGET_WAVESIDEBAR);
         TAG_TO_TYPE.put("CardView", ViewBeans.VIEW_TYPE_LAYOUT_CARDVIEW);
+        TAG_TO_TYPE.put("MaterialCardView", ViewBeans.VIEW_TYPE_LAYOUT_CARDVIEW);
         TAG_TO_TYPE.put("CollapsingToolbarLayout", ViewBeans.VIEW_TYPE_LAYOUT_COLLAPSINGTOOLBARLAYOUT);
         TAG_TO_TYPE.put("TextInputLayout", ViewBeans.VIEW_TYPE_LAYOUT_TEXTINPUTLAYOUT);
         TAG_TO_TYPE.put("SwipeRefreshLayout", ViewBeans.VIEW_TYPE_LAYOUT_SWIPEREFRESHLAYOUT);

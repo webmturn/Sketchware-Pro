@@ -36,6 +36,7 @@ import mod.agus.jcoderz.beans.ViewBeans;
 import mod.jbk.util.LogUtil;
 import pro.sketchware.managers.inject.InjectRootLayoutManager;
 import pro.sketchware.utility.InjectAttributeHandler;
+import pro.sketchware.utility.PropertiesUtil;
 import pro.sketchware.xml.XmlBuilder;
 
 /**
@@ -125,6 +126,14 @@ public class LayoutGenerator {
         }
         for (Map.Entry<String, String> entry : rootAttributes.entrySet()) {
             xmlTag.addAttribute(null, entry.getKey(), entry.getValue());
+        }
+        if (supportsChildClippingAttrs(root.getClassName()) && hasShadowCastingChildren("root")) {
+            if (!rootAttributes.containsKey("android:clipChildren")) {
+                xmlTag.addAttribute("android", "clipChildren", "false");
+            }
+            if (!rootAttributes.containsKey("android:clipToPadding")) {
+                xmlTag.addAttribute("android", "clipToPadding", "false");
+            }
         }
         for (ViewBean viewBean : views) {
             String parent = viewBean.parent;
@@ -274,6 +283,8 @@ public class LayoutGenerator {
                     if (!toNotAdd.contains("app:cardBackgroundColor") && !injectHandler.contains("cardBackgroundColor")) {
                         xmlTag.addAttribute("app", "cardBackgroundColor", "@android:color/transparent");
                     }
+                } else if (shouldPreserveDefaultBackground(viewBean)) {
+                    // Preserve the platform/default widget background instead of forcing it transparent.
                 } else {
                     if (!toNotAdd.contains("android:background") && !injectHandler.contains("background")) {
                         xmlTag.addAttribute("android", "background", "@android:color/transparent");
@@ -325,9 +336,14 @@ public class LayoutGenerator {
         String convert = viewBean.convert;
         var injectHandler = new InjectAttributeHandler(viewBean);
         Set<String> toNotAdd = readAttributesToReplace(viewBean);
+        int type = viewBean.type;
 
-        XmlBuilder widgetTag = convert.isEmpty() ? new XmlBuilder(viewBean.getClassInfo().getClassName()) :
-                new XmlBuilder(convert.replaceAll(" ", ""));
+        String xmlRootElement = convert.isEmpty()
+                ? (type == ViewBeans.VIEW_TYPE_LAYOUT_CARDVIEW
+                        ? "com.google.android.material.card.MaterialCardView"
+                        : viewBean.getClassInfo().getClassName())
+                : convert.replaceAll(" ", "");
+        XmlBuilder widgetTag = new XmlBuilder(xmlRootElement);
         if (convert.equals("include")) {
             if (!toNotAdd.contains("layout") && !injectHandler.contains("layout")) {
                 widgetTag.addAttribute("", "layout", "@layout/" + viewBean.id);
@@ -336,7 +352,6 @@ public class LayoutGenerator {
             if (!toNotAdd.contains("android:id")) {
                 widgetTag.addAttribute("android", "id", "@+id/" + viewBean.id);
             }
-            int type = viewBean.type;
             if (projectFile.fileType == ProjectFileBean.PROJECT_FILE_TYPE_CUSTOM_VIEW) {
                 switch (type) {
                     case ViewBean.VIEW_TYPE_WIDGET_TEXTVIEW:
@@ -390,10 +405,29 @@ public class LayoutGenerator {
             } else {
                 writeViewPadding(widgetTag, viewBean);
             }
-            if (viewBean.layout.elevation > 0 && !toNotAdd.contains("android:elevation") && !injectHandler.contains("elevation")) {
-                widgetTag.addAttribute("android", "elevation", viewBean.layout.elevation + "dp");
+            int shadowDp = resolveShadowDp(viewBean, injectHandler);
+            int effectiveElevation = resolveElevationDp(injectHandler, viewBean.layout.elevation);
+            if (type == ViewBeans.VIEW_TYPE_LAYOUT_CARDVIEW) {
+                if (shadowDp > 0 && !toNotAdd.contains("app:cardElevation") && !injectHandler.contains("cardElevation")) {
+                    widgetTag.addAttribute("app", "cardElevation", shadowDp + "dp");
+                }
+            } else if (shadowDp > 0 && !toNotAdd.contains("android:elevation") && !injectHandler.contains("elevation")) {
+                widgetTag.addAttribute("android", "elevation", shadowDp + "dp");
+            }
+            if (shouldUseBoundsOutline(viewBean, injectHandler, effectiveElevation)
+                    && !toNotAdd.contains("android:outlineProvider")
+                    && !injectHandler.contains("outlineProvider")) {
+                widgetTag.addAttribute("android", "outlineProvider", "bounds");
             }
             writeBackgroundResource(widgetTag, viewBean);
+            if (viewBean.getClassInfo().matchesType("ViewGroup") && hasShadowCastingChildren(viewBean.id)) {
+                if (!toNotAdd.contains("android:clipChildren") && !injectHandler.contains("clipChildren")) {
+                    widgetTag.addAttribute("android", "clipChildren", "false");
+                }
+                if (!toNotAdd.contains("android:clipToPadding") && !injectHandler.contains("clipToPadding")) {
+                    widgetTag.addAttribute("android", "clipToPadding", "false");
+                }
+            }
             if (viewBean.getClassInfo().matchesType("ViewGroup")) {
                 writeViewGravity(widgetTag, viewBean);
             }
@@ -523,6 +557,11 @@ public class LayoutGenerator {
         writeLayoutMargin(floatingActionButtonTag, viewBean);
         writeLayoutGravity(floatingActionButtonTag, viewBean);
 
+        int fabShadowDp = resolveShadowDp(viewBean, injectHandler);
+        if (fabShadowDp > 0 && !toNotAdd.contains("android:elevation") && !injectHandler.contains("elevation")) {
+            floatingActionButtonTag.addAttribute("android", "elevation", fabShadowDp + "dp");
+        }
+
         String resName = viewBean.image.resName;
         if (resName != null && !resName.isEmpty() && !resName.equals("NONE") &&
                 !toNotAdd.contains("app:srcCompat") && !injectHandler.contains("srcCompat")) {
@@ -532,6 +571,9 @@ public class LayoutGenerator {
             aci.inject(floatingActionButtonTag, "FloatingActionButton");
         }
         addCommonAttributes(floatingActionButtonTag, viewBean);
+        if (!viewBean.inject.isEmpty()) {
+            floatingActionButtonTag.addAttributeValue(viewBean.inject.replaceAll(" ", ""));
+        }
         xmlTag.addChildNode(floatingActionButtonTag);
     }
 
@@ -1029,6 +1071,90 @@ public class LayoutGenerator {
         Pattern pattern = attrPatternCache.computeIfAbsent(attrName,
                 name -> Pattern.compile("(android|app) *?: *?" + name));
         return pattern.matcher(inject).find();
+    }
+
+    private int resolveElevationDp(InjectAttributeHandler injectHandler, int fallbackDp) {
+        String elevation = injectHandler.getAttributeValueOf("elevation");
+        return elevation.isEmpty() ? fallbackDp : PropertiesUtil.resolveSize(elevation, fallbackDp);
+    }
+
+    private int resolveShadowDp(ViewBean viewBean, InjectAttributeHandler injectHandler) {
+        if (viewBean.type == ViewBeans.VIEW_TYPE_LAYOUT_CARDVIEW) {
+            String cardElevation = injectHandler.getAttributeValueOf("cardElevation");
+            if (!cardElevation.isEmpty()) {
+                return PropertiesUtil.resolveSize(cardElevation, viewBean.layout.elevation);
+            }
+        }
+        return resolveElevationDp(injectHandler, viewBean.layout.elevation);
+    }
+
+    private boolean hasShadowCastingChildren(String parentId) {
+        for (ViewBean child : views) {
+            if (belongsToParent(parentId, child.parent)) {
+                if (hasShadowCastingSelf(child)) {
+                    return true;
+                }
+                if (child.getClassInfo().matchesType("ViewGroup") && hasShadowCastingChildren(child.id)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean belongsToParent(String parentId, String childParent) {
+        if ("root".equals(parentId)) {
+            return childParent == null || childParent.isEmpty() || childParent.equals("root");
+        }
+        return parentId.equals(childParent);
+    }
+
+    private boolean hasShadowCastingSelf(ViewBean viewBean) {
+        return resolveShadowDp(viewBean, new InjectAttributeHandler(viewBean)) > 0;
+    }
+
+    private boolean supportsChildClippingAttrs(String className) {
+        return className != null
+                && !className.equalsIgnoreCase("merge")
+                && !className.equalsIgnoreCase("include");
+    }
+
+    private boolean shouldUseBoundsOutline(ViewBean viewBean, InjectAttributeHandler injectHandler, int elevationDp) {
+        if (elevationDp <= 0 || viewBean.type == ViewBeans.VIEW_TYPE_LAYOUT_CARDVIEW || hasExplicitBackground(viewBean, injectHandler)) {
+            return false;
+        }
+
+        ClassInfo classInfo = viewBean.getClassInfo();
+        return !classInfo.isExactType("FloatingActionButton")
+                && !classInfo.isExactType("MaterialButton")
+                && !classInfo.isExactType("SearchView")
+                && !classInfo.isExactType("CalendarView")
+                && !classInfo.isExactType("BottomNavigationView")
+                && !classInfo.isExactType("TabLayout")
+                && !classInfo.isExactType("Spinner")
+                && !classInfo.isExactType("AutoCompleteTextView")
+                && !classInfo.isExactType("MultiAutoCompleteTextView")
+                && !classInfo.isExactType("SignInButton")
+                && !classInfo.isExactType("SeekBar")
+                && !classInfo.isExactType("ProgressBar")
+                && !classInfo.matchesType("CompoundButton");
+    }
+
+    private boolean hasExplicitBackground(ViewBean viewBean, InjectAttributeHandler injectHandler) {
+        return viewBean.layout.backgroundColor != 0xffffff
+                || viewBean.layout.backgroundResColor != null
+                || (viewBean.layout.backgroundResource != null && !"NONE".equalsIgnoreCase(viewBean.layout.backgroundResource))
+                || injectHandler.contains("background")
+                || injectHandler.contains("cardBackgroundColor")
+                || hasAttr("background", viewBean)
+                || hasAttr("cardBackgroundColor", viewBean);
+    }
+
+    private boolean shouldPreserveDefaultBackground(ViewBean viewBean) {
+        ClassInfo classInfo = viewBean.getClassInfo();
+        return classInfo.isExactType("Button")
+                || classInfo.isExactType("EditText")
+                || classInfo.isExactType("MaterialButton");
     }
 
     public Set<String> readAttributesToReplace(ViewBean viewBean) {
