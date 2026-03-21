@@ -1,3 +1,84 @@
+# v7.0.0-beta6
+
+## ✨ New Features
+
+### Resources Editor
+- **Dimens support** — Resources Editor now supports `dimens.xml` editing with validation and UX enhancements
+- **Color resources for more widgets** — Support color resources for BottomAppBar, CollapsingToolbar, CardView backgrounds
+
+### Logic Editor
+- **Continue block** — New `continue` block for loop control flow
+- **Chunked block loading** — Logic editor loads blocks in chunks for improved performance with large projects
+- **Block palette search optimization** — Faster search and rendering in block palette
+- **Extra block metadata caching** — Cached loading for better editor responsiveness
+- **Block search fix** — Search now matches visible block text correctly
+
+### UI Designer
+- **Elevation property** — New elevation property for views with live preview in designer
+- **Elevation preview** — Restored elevation preview using GradientDrawable fix
+
+### Local Library Management
+- **Import package indexing** — Index and browse import packages from local libraries
+- **Lazy rebuild UI** — Rebuild import package index on demand with progress UI
+
+### Other
+- **Store page states** — Remember page states and accessibility settings
+- **Remember last restore directory** — File picker remembers the last used restore directory
+- **Variable/list management UI** — Refactored variable and list management with references UI
+
+## 🐛 Bug Fixes
+
+### Crash Prevention (30+ fixes)
+- **HashMap safety** — Prevent NPE and ClassCastException from `HashMap<String,Object>.get()` across 28 files
+- **String indexing guards** — Guard `charAt()`, `substring()`, `split()[index]` across BlockUtil, ComponentCodeGenerator, AndroidManifestInjector, PropertyInputItem, FileUtil, ReturnMoreblockManager, and more
+- **Stale position guards** — Guard `getLayoutPosition()` against `NO_POSITION` in all click listeners
+- **Editor dialog guards** — Guard stale index access in block, command, and listener editor dialogs
+- **Lifecycle guards** — Guard async UI callbacks against destroyed lifecycle; guard fragment arguments and extras against null
+- **Context safety** — Harden context casts and unsafe map value reads
+- **Build callback guards** — Guard DesignActivity build progress and cancel callbacks
+
+### UI Fixes
+- **AsdDialog** — Enable keyboard for find/replace dialog
+- **CollapsingToolbarLayout** — Restore contentScrim default to `?attr/colorPrimary`
+- **Button/EditText/MaterialButton** — Restore default background in preview; fix SignInButton defaults reset inside loop
+- **BlockBean Parcelable** — Add `dataAvail()` guards for new fields
+- **InnerAddComponentBottomSheet** — Add missing return after `dismissAllowingStateLoss`
+- **Logic editor pane** — Fix pane size updates
+- **Resource ID resolution** — Eliminate `Invalid ID 0x00000000` errors
+- **ManageLocalLibrary** — Fix static call and `getParentFile` null check
+
+### Performance
+- **replaceAll → replace** — Replace unnecessary regex `replaceAll()` with literal `replace()` across 15+ files for parsing safety and performance
+
+## ♻️ Refactoring
+
+### Custom Event System
+- **POJOs for custom blocks** — Replace `HashMap<String,Object>` with typed POJOs for custom events, listeners, and components
+- **Centralized paths** — Centralize custom event system file paths
+- **ComponentsHandler** — Normalize naming and harden safety checks
+
+### Code Quality
+- **Unified logging** — Migrate to `LogUtil` across 23 files
+- **CommandBlock cleanup** — Clean up and record maintainability review
+- **ViewPane imports** — Replace FQN references with imports, remove unused BitmapFactory
+- **Decompilation residue** — Rename decompilation residue variables across multiple files
+- **Resource refs** — Use resource refs for colors/strings in view editor
+- **Editor/palette resources** — Add editor and palette color and string resources
+- **Comment cleanup** — Update stale obfuscated class name references, clarify ambiguous comments, fix stale Javadoc links
+
+## 📖 Documentation
+
+- Calibrate project data format docs against current source code
+- Update hardcoded-strings analysis to use `pro.sketchware.core` package paths
+- Mark completed items in block-programming bottleneck analysis, firebase, and i18n docs
+- Polish project documentation and reclassify documentation index
+
+---
+
+**Full Changelog**: https://github.com/webmturn/Sketchware-Pro/compare/v7.0.0-beta-05...v7.0.0-beta-06
+
+---
+
 # v7.0.0-beta4
 
 ## 🐛 Bug Fixes
