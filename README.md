@@ -3,11 +3,9 @@
 </p>
 
 # Sketchware Pro
-[![GitHub contributors](https://img.shields.io/github/contributors/Sketchware-Pro/Sketchware-Pro)](https://github.com/Sketchware-Pro/Sketchware-Pro/graphs/contributors)
-[![GitHub last commit](https://img.shields.io/github/last-commit/Sketchware-Pro/Sketchware-Pro)](https://github.com/Sketchware-Pro/Sketchware-Pro/commits/)
-[![Discord server stats](https://img.shields.io/discord/790686719753846785)](http://discord.gg/kq39yhT4rX)
-[![Total downloads](https://img.shields.io/github/downloads/Sketchware-Pro/Sketchware-Pro/total)](https://github.com/Sketchware-Pro/Sketchware-Pro/releases)
-[![Repository Size](https://img.shields.io/github/repo-size/Sketchware-Pro/Sketchware-Pro)](https://github.com/Sketchware-Pro/Sketchware-Pro)
+[![GitHub last commit](https://img.shields.io/github/last-commit/webmturn/Sketchware-Pro)](https://github.com/webmturn/Sketchware-Pro/commits/)
+[![Repository Size](https://img.shields.io/github/repo-size/webmturn/Sketchware-Pro)](https://github.com/webmturn/Sketchware-Pro)
+[![Upstream](https://img.shields.io/badge/upstream-Sketchware--Pro-blue)](https://github.com/Sketchware-Pro/Sketchware-Pro)
 
 Welcome to Sketchware Pro! Here you'll find the source code of many classes in Sketchware Pro and, most importantly, the place to contribute to Sketchware Pro.
 
@@ -21,7 +19,7 @@ Welcome to Sketchware Pro! Here you'll find the source code of many classes in S
 ### Build Steps
 1. Clone the repository:
    ```bash
-   git clone https://github.com/Sketchware-Pro/Sketchware-Pro.git
+   git clone https://github.com/webmturn/Sketchware-Pro.git
    ```
 2. Open the project in Android Studio.
 3. Wait for Gradle sync to complete. If `google-services.json` is missing, a mock file is generated automatically during the pre-build step.
@@ -95,12 +93,6 @@ Examples:
 ## Thanks for Contributing
 
 Thank you for contributing to Sketchware Pro! Your contributions help keep Sketchware Pro alive. Each accepted contribution will be noted down in the "About Team" activity. We'll use your GitHub name and profile picture initially, but they can be changed, of course.
-
-## Discord
-
-Want to chat with us, discuss changes, or just hang out? We have a Discord server just for that.
-
-[![Join our Discord server!](https://invidget.switchblade.xyz/kq39yhT4rX)](http://discord.gg/kq39yhT4rX)
 
 ## Disclaimer
 
