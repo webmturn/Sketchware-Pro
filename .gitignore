@@ -35,6 +35,7 @@ local.properties
 
 # Android Studio captures folder
 captures/
+.feedback_images/
 
 # IntelliJ
 *.iml
