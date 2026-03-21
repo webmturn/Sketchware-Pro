@@ -18,9 +18,10 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Objects;
 
 import mod.hey.studios.util.Helper;
@@ -76,7 +77,11 @@ public class ArraysEditor extends Fragment {
         boolean isSkippingMode = updateMode == 1;
         boolean isMergeAndReplace = updateMode == 2;
 
+        ArrayList<ArrayModel> existingArrays = new ArrayList<>(arraysList);
+        HashMap<Integer, String> existingNotes = new HashMap<>(notesMap);
+
         ArrayList<ArrayModel> defaultArrays = arraysEditorManager.parseArraysFile(FileUtil.readFileIfExist(filePath));
+        HashMap<Integer, String> defaultNotes = new HashMap<>(arraysEditorManager.notesMap);
 
         if (isSkippingMode) {
             HashSet<String> existingArrayNames = new HashSet<>();
@@ -105,9 +110,9 @@ public class ArraysEditor extends Fragment {
 
         activity.runOnUiThread(() -> {
             if (!isAdded() || getActivity() == null || binding == null || activity.isFinishing() || activity.isDestroyed()) return;
-            notesMap = new HashMap<>(arraysEditorManager.notesMap);
+            notesMap = rebuildNotesMap(existingArrays, existingNotes, defaultArrays, defaultNotes, arraysList);
             adapter = new ArraysAdapter(arraysList, this, notesMap);
-            binding.recyclerView.setAdapter(adapter);
+            ArraysEditor.this.binding.recyclerView.setAdapter(adapter);
             activity.checkForInvalidResources();
             updateNoContentLayout();
             if (hasUnsavedChangesStatus) {
@@ -171,7 +176,8 @@ public class ArraysEditor extends Fragment {
             if (!header.isEmpty()) {
                 notesMap.put(notifyPosition, header);
             }
-            adapter.notifyItemInserted(notifyPosition);
+            adapter = new ArraysAdapter(arraysList, this, notesMap);
+            ArraysEditor.this.binding.recyclerView.setAdapter(adapter);
             updateNoContentLayout();
             hasUnsavedChanges = true;
         });
@@ -181,19 +187,52 @@ public class ArraysEditor extends Fragment {
         dialog.show();
     }
 
-    public void showEditArrayDialog(int position) {
-        if (position < 0 || position >= arraysList.size()) {
+    private <T> HashMap<Integer, String> rebuildNotesMap(ArrayList<T> existingItems,
+                                                         HashMap<Integer, String> existingNotes,
+                                                         ArrayList<T> importedItems,
+                                                         HashMap<Integer, String> importedNotes,
+                                                         ArrayList<T> finalItems) {
+        IdentityHashMap<T, Integer> existingIndexes = new IdentityHashMap<>();
+        for (int i = 0; i < existingItems.size(); i++) {
+            existingIndexes.put(existingItems.get(i), i);
+        }
+
+        IdentityHashMap<T, Integer> importedIndexes = new IdentityHashMap<>();
+        for (int i = 0; i < importedItems.size(); i++) {
+            importedIndexes.put(importedItems.get(i), i);
+        }
+
+        HashMap<Integer, String> rebuiltNotes = new HashMap<>();
+        for (int i = 0; i < finalItems.size(); i++) {
+            T item = finalItems.get(i);
+
+            Integer importedIndex = importedIndexes.get(item);
+            if (importedIndex != null && importedNotes.containsKey(importedIndex)) {
+                rebuiltNotes.put(i, importedNotes.get(importedIndex));
+                continue;
+            }
+
+            Integer existingIndex = existingIndexes.get(item);
+            if (existingIndex != null && existingNotes.containsKey(existingIndex)) {
+                rebuiltNotes.put(i, existingNotes.get(existingIndex));
+            }
+        }
+
+        return rebuiltNotes;
+    }
+
+    public void showEditArrayDialog(ArrayModel array, int originalIndex) {
+        if (array == null || originalIndex < 0) {
             SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
             return;
         }
-        ArrayModel array = arraysList.get(position);
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(requireActivity());
         ArraysEditorAddBinding binding = ArraysEditorAddBinding.inflate(getLayoutInflater());
 
         binding.arrayName.setText(array.getArrayName());
         binding.arrayType.setText(array.getArrayType().name());
-        if (notesMap.containsKey(position)) {
-            binding.arrayHeaderInput.setText(notesMap.get(position));
+        if (notesMap.containsKey(originalIndex)) {
+            binding.arrayHeaderInput.setText(notesMap.get(originalIndex));
         }
         binding.arrayType.setOnClickListener(view -> {
             String[] arrayTypes = {"STRING", "INTEGER", "OBJECT"};
@@ -211,6 +250,12 @@ public class ArraysEditor extends Fragment {
             String arrayName = Objects.requireNonNull(binding.arrayName.getText()).toString();
             String arrayType = Objects.requireNonNull(binding.arrayType.getText()).toString();
             String header = Objects.requireNonNull(binding.arrayHeaderInput.getText()).toString();
+            int currentIndex = arraysList.indexOf(array);
+
+            if (currentIndex < 0) {
+                SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+                return;
+            }
 
             if (arrayName.isEmpty()) {
                 SketchwareUtil.toastError(Helper.getResString(R.string.error_array_name_empty));
@@ -230,25 +275,35 @@ public class ArraysEditor extends Fragment {
                 return;
             }
             if (header.isEmpty()) {
-                notesMap.remove(position);
+                notesMap.remove(currentIndex);
             } else {
-                notesMap.put(position, header);
+                notesMap.put(currentIndex, header);
             }
-            adapter.notifyItemChanged(position);
+            adapter = new ArraysAdapter(arraysList, this, notesMap);
+            ArraysEditor.this.binding.recyclerView.setAdapter(adapter);
             hasUnsavedChanges = true;
         });
         dialog.setNeutralButton(Helper.getResString(R.string.common_word_delete), (d, which) -> new MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.common_word_warning)
                 .setMessage(String.format(Helper.getResString(R.string.dialog_msg_delete_confirm), array.getArrayName()))
                 .setPositiveButton(R.string.common_word_yes, (d2, w) -> {
-                    if (position < 0 || position >= arraysList.size()) {
+                    int currentIndex = arraysList.indexOf(array);
+                    if (currentIndex < 0) {
                         SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
                         d.dismiss();
                         return;
                     }
-                    arraysList.remove(position);
-                    notesMap.remove(position);
-                    adapter.notifyItemRemoved(position);
+                    arraysList.remove(array);
+                    notesMap.remove(currentIndex);
+                    HashMap<Integer, String> reindexedNotes = new HashMap<>();
+                    for (java.util.Map.Entry<Integer, String> entry : notesMap.entrySet()) {
+                        int noteIndex = entry.getKey();
+                        reindexedNotes.put(noteIndex > currentIndex ? noteIndex - 1 : noteIndex, entry.getValue());
+                    }
+                    notesMap.clear();
+                    notesMap.putAll(reindexedNotes);
+                    adapter = new ArraysAdapter(arraysList, this, notesMap);
+                    ArraysEditor.this.binding.recyclerView.setAdapter(adapter);
                     d.dismiss();
                     updateNoContentLayout();
                     hasUnsavedChanges = true;
@@ -260,12 +315,11 @@ public class ArraysEditor extends Fragment {
         dialog.show();
     }
 
-    public void showArrayAttributesDialog(int position) {
-        if (position < 0 || position >= arraysList.size()) {
+    public void showArrayAttributesDialog(ArrayModel array) {
+        if (array == null) {
             SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
             return;
         }
-        ArrayModel array = arraysList.get(position);
         BottomSheetDialog dialog = new BottomSheetDialog(requireContext());
         var binding = PropertyPopupParentAttrBinding.inflate(getLayoutInflater());
         dialog.setContentView(binding.getRoot());

@@ -34,7 +34,9 @@ public class ArraysEditorManager {
         int arrayIndex = 0;
         for (ArrayModel array : arraysList) {
             if (notesMap.containsKey(arrayIndex)) {
-                xml.append("    <!--").append(notesMap.get(arrayIndex)).append("-->\n");
+                for (String comment : notesMap.get(arrayIndex).split("\n")) {
+                    xml.append("    <!-- ").append(comment).append(" -->\n");
+                }
             }
 
             String arrayTag = getArrayTag(array.getArrayType());
@@ -50,6 +52,12 @@ public class ArraysEditorManager {
 
             xml.append("    </").append(arrayTag).append(">\n");
             arrayIndex++;
+        }
+
+        if (notesMap.containsKey(arraysList.size())) {
+            for (String comment : notesMap.get(arraysList.size()).split("\n")) {
+                xml.append("    <!-- ").append(comment).append(" -->\n");
+            }
         }
 
         xml.append("</resources>");
@@ -83,7 +91,7 @@ public class ArraysEditorManager {
                 if (node.getNodeType() == Node.COMMENT_NODE) {
                     Comment comment = (Comment) node;
                     String commentText = comment.getTextContent().trim();
-                    notesMap.put(arrays.size(), commentText);
+                    notesMap.merge(arrays.size(), commentText, (a, b) -> a + "\n" + b);
                 } else if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().endsWith("array")) {
                     Element element = (Element) node;
                     String arrayName = element.getAttribute("name");

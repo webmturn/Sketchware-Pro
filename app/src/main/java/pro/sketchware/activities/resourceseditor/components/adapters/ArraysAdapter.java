@@ -18,14 +18,14 @@ import pro.sketchware.databinding.PalletCustomviewBinding;
 
 public class ArraysAdapter extends RecyclerView.Adapter<ArraysAdapter.ArrayViewHolder> {
 
-    private final List<ArrayModel> arraysList;
     private final List<ArrayModel> originalList;
+    private List<ArrayModel> filteredList;
     private final HashMap<Integer, String> notesMap;
     private final Fragment fragment;
 
     public ArraysAdapter(ArrayList<ArrayModel> arraysList, Fragment fragment, HashMap<Integer, String> notesMap) {
-        this.arraysList = arraysList;
         originalList = new ArrayList<>(arraysList);
+        filteredList = new ArrayList<>(arraysList);
         this.notesMap = notesMap;
         this.fragment = fragment;
     }
@@ -40,22 +40,26 @@ public class ArraysAdapter extends RecyclerView.Adapter<ArraysAdapter.ArrayViewH
 
     @Override
     public void onBindViewHolder(@NonNull ArrayViewHolder holder, int position) {
-        ArrayModel array = arraysList.get(position);
+        ArrayModel array = filteredList.get(position);
         holder.bind(array);
     }
 
     @Override
     public int getItemCount() {
-        return arraysList.size();
+        return filteredList.size();
     }
 
     public void filter(String newText) {
-        arraysList.clear();
-
-        for (ArrayModel array : originalList) {
-            if (array.getArrayName().toLowerCase().contains(newText)) {
-                arraysList.add(array);
+        if (newText == null || newText.isEmpty()) {
+            filteredList = new ArrayList<>(originalList);
+        } else {
+            ArrayList<ArrayModel> filtered = new ArrayList<>();
+            for (ArrayModel array : originalList) {
+                if (array.getArrayName().toLowerCase().contains(newText)) {
+                    filtered.add(array);
+                }
             }
+            filteredList = filtered;
         }
 
         notifyDataSetChanged();
@@ -73,8 +77,9 @@ public class ArraysAdapter extends RecyclerView.Adapter<ArraysAdapter.ArrayViewH
         public void bind(ArrayModel array) {
             binding.title.setText(array.getArrayName());
             binding.sub.setText(array.getArrayType().name());
-            if (notesMap.containsKey(getAbsoluteAdapterPosition())) {
-                binding.tvTitle.setText(notesMap.get(getAbsoluteAdapterPosition()));
+            int originalIndex = originalList.indexOf(array);
+            if (originalIndex >= 0 && notesMap.containsKey(originalIndex)) {
+                binding.tvTitle.setText(notesMap.get(originalIndex));
                 binding.tvTitle.setVisibility(View.VISIBLE);
             } else {
                 binding.tvTitle.setVisibility(View.GONE);
@@ -82,13 +87,13 @@ public class ArraysAdapter extends RecyclerView.Adapter<ArraysAdapter.ArrayViewH
 
             binding.backgroundCard.setOnClickListener(view -> {
                 if (fragment instanceof ArraysEditor arraysEditor) {
-                    arraysEditor.showArrayAttributesDialog(getAbsoluteAdapterPosition());
+                    arraysEditor.showArrayAttributesDialog(array);
                 }
             });
 
             binding.backgroundCard.setOnLongClickListener(view -> {
                 if (fragment instanceof ArraysEditor arraysEditor) {
-                    arraysEditor.showEditArrayDialog(getAbsoluteAdapterPosition());
+                    arraysEditor.showEditArrayDialog(array, originalIndex);
                 }
                 return true;
             });

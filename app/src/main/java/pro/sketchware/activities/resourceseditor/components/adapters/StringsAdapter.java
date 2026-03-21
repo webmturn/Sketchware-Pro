@@ -64,8 +64,9 @@ public class StringsAdapter extends RecyclerView.Adapter<StringsAdapter.ViewHold
         holder.binding.title.setText(key);
         holder.binding.sub.setText(text);
 
-        if (notesMap.containsKey(position)) {
-            holder.binding.tvTitle.setText(notesMap.get(position));
+        int originalIndex = originalData.indexOf(item);
+        if (originalIndex >= 0 && notesMap.containsKey(originalIndex)) {
+            holder.binding.tvTitle.setText(notesMap.get(originalIndex));
             holder.binding.tvTitle.setVisibility(View.VISIBLE);
         } else {
             holder.binding.tvTitle.setVisibility(View.GONE);
@@ -73,6 +74,10 @@ public class StringsAdapter extends RecyclerView.Adapter<StringsAdapter.ViewHold
 
         holder.binding.backgroundCard.setOnClickListener(v -> {
             int adapterPosition = holder.getAbsoluteAdapterPosition();
+            if (adapterPosition == RecyclerView.NO_POSITION || adapterPosition >= filteredData.size()) {
+                SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+                return;
+            }
             HashMap<String, Object> currentItem = filteredData.get(adapterPosition);
 
             MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(activity);
@@ -95,7 +100,8 @@ public class StringsAdapter extends RecyclerView.Adapter<StringsAdapter.ViewHold
             });
             dialogBinding.stringKeyInput.setText((String) currentItem.get("key"));
             dialogBinding.stringValueInput.setText((String) currentItem.get("text"));
-            dialogBinding.stringHeaderInput.setText(notesMap.getOrDefault(adapterPosition, ""));
+            int origIdx = originalData.indexOf(currentItem);
+            dialogBinding.stringHeaderInput.setText(origIdx >= 0 ? notesMap.getOrDefault(origIdx, "") : "");
 
             if ("app_name".equals(currentItem.get("key"))) {
                 dialogBinding.stringKeyInput.setEnabled(false);
@@ -112,12 +118,20 @@ public class StringsAdapter extends RecyclerView.Adapter<StringsAdapter.ViewHold
                 currentItem.put("key", keyInput);
                 currentItem.put("text", valueInput);
                 String note = Objects.requireNonNull(dialogBinding.stringHeaderInput.getText()).toString().trim();
-                if (note.isEmpty()) {
-                    notesMap.remove(adapterPosition);
-                } else {
-                    notesMap.put(adapterPosition, note);
+                int filteredIndex = filteredData.indexOf(currentItem);
+                int oi = originalData.indexOf(currentItem);
+                if (oi >= 0) {
+                    if (note.isEmpty()) {
+                        notesMap.remove(oi);
+                    } else {
+                        notesMap.put(oi, note);
+                    }
                 }
-                notifyItemChanged(adapterPosition);
+                if (filteredIndex >= 0) {
+                    notifyItemChanged(filteredIndex);
+                } else {
+                    notifyDataSetChanged();
+                }
                 activity.stringsEditor.hasUnsavedChanges = true;
             });
 
@@ -127,8 +141,27 @@ public class StringsAdapter extends RecyclerView.Adapter<StringsAdapter.ViewHold
                     if (isXmlStringUsed(key)) {
                         SketchwareUtil.toastError(Helper.getResString(R.string.logic_editor_title_remove_xml_string_error));
                     } else {
-                        filteredData.remove(adapterPosition);
-                        notifyItemRemoved(adapterPosition);
+                        int filteredIndex = filteredData.indexOf(currentItem);
+                        int removedIndex = originalData.indexOf(currentItem);
+                        if (filteredIndex < 0 || removedIndex < 0) {
+                            SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+                            return;
+                        }
+                        filteredData.remove(filteredIndex);
+                        originalData.remove(currentItem);
+                        activity.stringsEditor.listmap.remove(currentItem);
+                        if (removedIndex >= 0) {
+                            notesMap.remove(removedIndex);
+                            HashMap<Integer, String> reindexedNotes = new HashMap<>();
+                            for (Map.Entry<Integer, String> entry : notesMap.entrySet()) {
+                                int noteIndex = entry.getKey();
+                                reindexedNotes.put(noteIndex > removedIndex ? noteIndex - 1 : noteIndex, entry.getValue());
+                            }
+                            notesMap.clear();
+                            notesMap.putAll(reindexedNotes);
+                        }
+                        notifyItemRemoved(filteredIndex);
+                        notifyItemRangeChanged(filteredIndex, filteredData.size() - filteredIndex);
                         activity.stringsEditor.updateNoContentLayout();
                         activity.stringsEditor.hasUnsavedChanges = true;
                     }

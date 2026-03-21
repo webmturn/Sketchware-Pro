@@ -18,6 +18,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.Objects;
 
 import mod.hey.studios.util.Helper;
@@ -68,6 +69,9 @@ public class StringsEditor extends Fragment {
         boolean isMergeAndReplace = updateMode == 2;
         stringsEditorManager.isDefaultVariant = activity.variant.isEmpty();
 
+        ArrayList<HashMap<String, Object>> existingStrings = new ArrayList<>(listmap);
+        HashMap<Integer, String> existingNotes = new HashMap<>(notesMap);
+
         ArrayList<HashMap<String, Object>> defaultStrings = new ArrayList<>();
         if ((activity.variant.isEmpty() || hasUnsavedChanges) && !FileUtil.isExistFile(filePath)) {
             String generatedContent = activity.projectFilePaths.getXMLString();
@@ -75,7 +79,7 @@ public class StringsEditor extends Fragment {
         } else {
             stringsEditorManager.convertXmlStringsToListMap(FileUtil.readFileIfExist(filePath), defaultStrings);
         }
-        notesMap = new HashMap<>(stringsEditorManager.notesMap);
+        HashMap<Integer, String> defaultNotes = new HashMap<>(stringsEditorManager.notesMap);
 
         if (isSkippingMode) {
             HashSet<String> existingKeys = new HashSet<>();
@@ -115,6 +119,7 @@ public class StringsEditor extends Fragment {
 
         activity.runOnUiThread(() -> {
             if (!isAdded() || getActivity() == null || binding == null || activity.isFinishing() || activity.isDestroyed()) return;
+            notesMap = rebuildNotesMap(existingStrings, existingNotes, defaultStrings, defaultNotes, listmap);
             adapter = new StringsAdapter(activity, listmap, notesMap);
             binding.recyclerView.setAdapter(adapter);
             activity.checkForInvalidResources();
@@ -180,20 +185,46 @@ public class StringsEditor extends Fragment {
         HashMap<String, Object> map = new HashMap<>();
         map.put("key", key);
         map.put("text", text);
-        if (listmap.isEmpty()) {
-            listmap.add(map);
-            adapter.notifyItemInserted(0);
-            if (!note.isEmpty()) {
-                notesMap.put(0, note);
-            }
-            return;
-        }
         listmap.add(map);
-        int notifyPosition = listmap.size() - 1;
         if (!note.isEmpty()) {
-            notesMap.put(notifyPosition, note);
+            notesMap.put(listmap.size() - 1, note);
         }
-        adapter.notifyItemInserted(notifyPosition);
+        adapter = new StringsAdapter(activity, listmap, notesMap);
+        binding.recyclerView.setAdapter(adapter);
+    }
+
+    private <T> HashMap<Integer, String> rebuildNotesMap(ArrayList<T> existingItems,
+                                                         HashMap<Integer, String> existingNotes,
+                                                         ArrayList<T> importedItems,
+                                                         HashMap<Integer, String> importedNotes,
+                                                         ArrayList<T> finalItems) {
+        IdentityHashMap<T, Integer> existingIndexes = new IdentityHashMap<>();
+        for (int i = 0; i < existingItems.size(); i++) {
+            existingIndexes.put(existingItems.get(i), i);
+        }
+
+        IdentityHashMap<T, Integer> importedIndexes = new IdentityHashMap<>();
+        for (int i = 0; i < importedItems.size(); i++) {
+            importedIndexes.put(importedItems.get(i), i);
+        }
+
+        HashMap<Integer, String> rebuiltNotes = new HashMap<>();
+        for (int i = 0; i < finalItems.size(); i++) {
+            T item = finalItems.get(i);
+
+            Integer importedIndex = importedIndexes.get(item);
+            if (importedIndex != null && importedNotes.containsKey(importedIndex)) {
+                rebuiltNotes.put(i, importedNotes.get(importedIndex));
+                continue;
+            }
+
+            Integer existingIndex = existingIndexes.get(item);
+            if (existingIndex != null && existingNotes.containsKey(existingIndex)) {
+                rebuiltNotes.put(i, existingNotes.get(existingIndex));
+            }
+        }
+
+        return rebuiltNotes;
     }
 
     public void saveStringsFile() {

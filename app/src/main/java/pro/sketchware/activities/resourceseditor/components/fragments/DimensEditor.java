@@ -14,6 +14,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.Objects;
 
 import mod.hey.studios.util.Helper;
@@ -30,7 +31,7 @@ import pro.sketchware.utility.XmlUtil;
 
 public class DimensEditor extends Fragment {
 
-    public static String contentPath;
+    public String contentPath;
     public final ArrayList<DimenModel> dimenList = new ArrayList<>();
     public DimensAdapter adapter;
     public boolean hasUnsavedChanges;
@@ -58,6 +59,9 @@ public class DimensEditor extends Fragment {
         contentPath = filePath;
         dimensEditorManager.contentPath = contentPath;
 
+        ArrayList<DimenModel> existingDimens = new ArrayList<>(dimenList);
+        HashMap<Integer, String> existingNotes = new HashMap<>(notesMap);
+
         ArrayList<DimenModel> parsedDimens = new ArrayList<>();
 
         if (FileUtil.isExistFile(contentPath)) {
@@ -65,7 +69,7 @@ public class DimensEditor extends Fragment {
         } else {
             dimensEditorManager.notesMap.clear();
         }
-        notesMap = new HashMap<>(dimensEditorManager.notesMap);
+        HashMap<Integer, String> parsedNotes = new HashMap<>(dimensEditorManager.notesMap);
 
         boolean isSkippingMode = updateMode == 1;
         boolean isMergeAndReplace = updateMode == 2;
@@ -95,6 +99,7 @@ public class DimensEditor extends Fragment {
 
         activity.runOnUiThread(() -> {
             if (!isAdded() || getActivity() == null || binding == null || activity.isFinishing() || activity.isDestroyed()) return;
+            notesMap = rebuildNotesMap(existingDimens, existingNotes, parsedDimens, parsedNotes, dimenList);
             adapter = new DimensAdapter(dimenList, activity, notesMap);
             binding.recyclerView.setAdapter(adapter);
             activity.checkForInvalidResources();
@@ -120,9 +125,10 @@ public class DimensEditor extends Fragment {
         DimenEditorAddBinding dialogBinding = DimenEditorAddBinding.inflate(getLayoutInflater());
 
         if (dimenModel != null) {
+            int originalIndex = dimenList.indexOf(dimenModel);
             dialogBinding.dimenKeyInput.setText(dimenModel.getDimenName());
             dialogBinding.dimenValueInput.setText(dimenModel.getDimenValue());
-            dialogBinding.stringHeaderInput.setText(notesMap.getOrDefault(position, ""));
+            dialogBinding.stringHeaderInput.setText(originalIndex >= 0 ? notesMap.getOrDefault(originalIndex, "") : "");
             dialog.setTitle(R.string.dimen_title_edit);
         } else {
             dialog.setTitle(R.string.dimen_title_create);
@@ -138,16 +144,20 @@ public class DimensEditor extends Fragment {
             }
 
             if (dimenModel != null) {
+                int idx = dimenList.indexOf(dimenModel);
                 dimenModel.setDimenName(key);
                 dimenModel.setDimenValue(value);
 
-                String headerInput = Objects.requireNonNull(dialogBinding.stringHeaderInput.getText()).toString();
-                if (headerInput.isEmpty()) {
-                    notesMap.remove(position);
-                } else {
-                    notesMap.put(position, headerInput);
+                if (idx >= 0) {
+                    String headerInput = Objects.requireNonNull(dialogBinding.stringHeaderInput.getText()).toString();
+                    if (headerInput.isEmpty()) {
+                        notesMap.remove(idx);
+                    } else {
+                        notesMap.put(idx, headerInput);
+                    }
                 }
-                adapter.notifyItemChanged(position);
+                adapter = new DimensAdapter(dimenList, activity, notesMap);
+                binding.recyclerView.setAdapter(adapter);
             } else {
                 addDimen(key, value, Objects.requireNonNull(dialogBinding.stringHeaderInput.getText()).toString());
             }
@@ -157,9 +167,21 @@ public class DimensEditor extends Fragment {
 
         if (dimenModel != null) {
             dialog.setNeutralButton(R.string.common_word_delete, (v1, which) -> {
-                dimenList.remove(position);
-                adapter.notifyItemRemoved(position);
-                adapter.notifyItemRangeChanged(position, dimenList.size());
+                int idx = dimenList.indexOf(dimenModel);
+                if (idx >= 0) {
+                    dimenList.remove(idx);
+                    notesMap.remove(idx);
+                    // Reindex: shift all comment keys above the deleted position down by 1
+                    HashMap<Integer, String> reindexed = new HashMap<>();
+                    for (java.util.Map.Entry<Integer, String> entry : notesMap.entrySet()) {
+                        int k = entry.getKey();
+                        reindexed.put(k > idx ? k - 1 : k, entry.getValue());
+                    }
+                    notesMap.clear();
+                    notesMap.putAll(reindexed);
+                }
+                adapter = new DimensAdapter(dimenList, activity, notesMap);
+                binding.recyclerView.setAdapter(adapter);
                 updateNoContentLayout();
                 hasUnsavedChanges = true;
                 v1.dismiss();
@@ -179,12 +201,46 @@ public class DimensEditor extends Fragment {
             }
         }
         dimenList.add(new DimenModel(name, value));
-        int notifyPosition = dimenList.size() - 1;
         if (!note.isEmpty()) {
-            notesMap.put(notifyPosition, note);
+            notesMap.put(dimenList.size() - 1, note);
         }
-        adapter.notifyItemInserted(notifyPosition);
+        adapter = new DimensAdapter(dimenList, activity, notesMap);
+        binding.recyclerView.setAdapter(adapter);
         SketchwareUtil.toast(Helper.getResString(R.string.common_word_saved));
+    }
+
+    private <T> HashMap<Integer, String> rebuildNotesMap(ArrayList<T> existingItems,
+                                                         HashMap<Integer, String> existingNotes,
+                                                         ArrayList<T> importedItems,
+                                                         HashMap<Integer, String> importedNotes,
+                                                         ArrayList<T> finalItems) {
+        IdentityHashMap<T, Integer> existingIndexes = new IdentityHashMap<>();
+        for (int i = 0; i < existingItems.size(); i++) {
+            existingIndexes.put(existingItems.get(i), i);
+        }
+
+        IdentityHashMap<T, Integer> importedIndexes = new IdentityHashMap<>();
+        for (int i = 0; i < importedItems.size(); i++) {
+            importedIndexes.put(importedItems.get(i), i);
+        }
+
+        HashMap<Integer, String> rebuiltNotes = new HashMap<>();
+        for (int i = 0; i < finalItems.size(); i++) {
+            T item = finalItems.get(i);
+
+            Integer importedIndex = importedIndexes.get(item);
+            if (importedIndex != null && importedNotes.containsKey(importedIndex)) {
+                rebuiltNotes.put(i, importedNotes.get(importedIndex));
+                continue;
+            }
+
+            Integer existingIndex = existingIndexes.get(item);
+            if (existingIndex != null && existingNotes.containsKey(existingIndex)) {
+                rebuiltNotes.put(i, existingNotes.get(existingIndex));
+            }
+        }
+
+        return rebuiltNotes;
     }
 
     public void saveDimensFile() {

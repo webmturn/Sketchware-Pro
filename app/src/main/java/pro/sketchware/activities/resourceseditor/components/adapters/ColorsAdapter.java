@@ -45,8 +45,9 @@ public class ColorsAdapter extends RecyclerView.Adapter<ColorsAdapter.ViewHolder
         ColorModel colorModel = filteredData.get(position);
         String colorName = colorModel.getColorName();
         String colorValue = colorModel.getColorValue();
-        if (notesMap.containsKey(position)) {
-            holder.itemBinding.tvTitle.setText(notesMap.get(position));
+        int originalIndex = originalData.indexOf(colorModel);
+        if (originalIndex >= 0 && notesMap.containsKey(originalIndex)) {
+            holder.itemBinding.tvTitle.setText(notesMap.get(originalIndex));
             holder.itemBinding.tvTitle.setVisibility(View.VISIBLE);
         } else {
             holder.itemBinding.tvTitle.setVisibility(View.GONE);

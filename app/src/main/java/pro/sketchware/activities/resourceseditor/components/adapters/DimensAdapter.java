@@ -39,8 +39,9 @@ public class DimensAdapter extends RecyclerView.Adapter<DimensAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         DimenModel dimenModel = filteredData.get(position);
-        if (notesMap.containsKey(position)) {
-            holder.itemBinding.tvTitle.setText(notesMap.get(position));
+        int originalIndex = originalData.indexOf(dimenModel);
+        if (originalIndex >= 0 && notesMap.containsKey(originalIndex)) {
+            holder.itemBinding.tvTitle.setText(notesMap.get(originalIndex));
             holder.itemBinding.tvTitle.setVisibility(View.VISIBLE);
         } else {
             holder.itemBinding.tvTitle.setVisibility(View.GONE);

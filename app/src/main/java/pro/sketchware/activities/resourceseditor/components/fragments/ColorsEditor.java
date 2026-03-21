@@ -21,6 +21,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.Objects;
 
 import mod.hey.studios.util.Helper;
@@ -73,6 +74,8 @@ public class ColorsEditor extends Fragment {
         boolean isMergeAndReplace = updateMode == 2;
         colorsEditorManager.isDefaultVariant = activity.variant.isEmpty();
         isNightVariant = activity.variant.contains("night");
+        ArrayList<ColorModel> existingColors = new ArrayList<>(colorList);
+        HashMap<Integer, String> existingNotes = new HashMap<>(notesMap);
 
         ArrayList<ColorModel> defaultColors = new ArrayList<>();
 
@@ -82,7 +85,7 @@ public class ColorsEditor extends Fragment {
         } else {
             colorsEditorManager.parseColorsXML(defaultColors, FileUtil.readFileIfExist(contentPath));
         }
-        notesMap = new HashMap<>(colorsEditorManager.notesMap);
+        HashMap<Integer, String> defaultNotes = new HashMap<>(colorsEditorManager.notesMap);
 
         if (isSkippingMode) {
             HashSet<String> existingColorNames = new HashSet<>();
@@ -111,6 +114,7 @@ public class ColorsEditor extends Fragment {
 
         activity.runOnUiThread(() -> {
             if (!isAdded() || getActivity() == null || binding == null || activity.isFinishing() || activity.isDestroyed()) return;
+            notesMap = rebuildNotesMap(existingColors, existingNotes, defaultColors, defaultNotes, colorList);
             adapter = new ColorsAdapter(colorsEditorManager, colorList, activity, notesMap);
             binding.recyclerView.setAdapter(adapter);
             activity.checkForInvalidResources();
@@ -146,6 +150,7 @@ public class ColorsEditor extends Fragment {
     public void showColorEditDialog(ColorModel colorModel, int position) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(activity);
         ColorEditorAddBinding dialogBinding = ColorEditorAddBinding.inflate(getLayoutInflater());
+        int originalIndex = colorModel != null ? colorList.indexOf(colorModel) : -1;
 
         if (colorModel != null) {
             dialogBinding.colorKeyInput.setText(colorModel.getColorName());
@@ -153,7 +158,7 @@ public class ColorsEditor extends Fragment {
             if (defaultColors.containsKey(colorModel.getColorName())) {
                 dialogBinding.colorKeyInput.setEnabled(false);
             }
-            dialogBinding.stringHeaderInput.setText(notesMap.getOrDefault(position, ""));
+            dialogBinding.stringHeaderInput.setText(originalIndex >= 0 ? notesMap.getOrDefault(originalIndex, "") : "");
             dialogBinding.colorPreview.setBackgroundColor(PropertiesUtil.parseColor(colorsEditorManager.getColorValue(activity.getApplicationContext(), colorModel.getColorValue(), 3, isNightVariant)));
             dialogBinding.importantNote.setVisibility(defaultColors.containsKey(colorModel.getColorName()) ? View.VISIBLE : View.GONE);
 
@@ -223,16 +228,22 @@ public class ColorsEditor extends Fragment {
             }
 
             if (colorModel != null) {
+                int currentIndex = colorList.indexOf(colorModel);
+                if (currentIndex < 0) {
+                    SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+                    return;
+                }
                 colorModel.setColorName(key);
                 colorModel.setColorValue(value);
 
                 String headerInput = Objects.requireNonNull(dialogBinding.stringHeaderInput.getText()).toString();
                 if (headerInput.isEmpty()) {
-                    notesMap.remove(position);
+                    notesMap.remove(currentIndex);
                 } else {
-                    notesMap.put(position, headerInput);
+                    notesMap.put(currentIndex, headerInput);
                 }
-                adapter.notifyItemChanged(position);
+                adapter = new ColorsAdapter(colorsEditorManager, colorList, activity, notesMap);
+                binding.recyclerView.setAdapter(adapter);
 
             } else {
                 addColor(key, value, Objects.requireNonNull(dialogBinding.stringHeaderInput.getText()).toString());
@@ -261,9 +272,23 @@ public class ColorsEditor extends Fragment {
 
         if (colorModel != null && !defaultColors.containsKey(colorModel.getColorName())) {
             dialog.setNeutralButton(R.string.common_word_delete, (v1, which) -> {
-                colorList.remove(position);
-                adapter.notifyItemRemoved(position);
-                adapter.notifyItemRangeChanged(position, colorList.size());
+                int currentIndex = colorList.indexOf(colorModel);
+                if (currentIndex >= 0) {
+                    colorList.remove(colorModel);
+                    notesMap.remove(currentIndex);
+                    HashMap<Integer, String> reindexedNotes = new HashMap<>();
+                    for (java.util.Map.Entry<Integer, String> entry : notesMap.entrySet()) {
+                        int noteIndex = entry.getKey();
+                        reindexedNotes.put(noteIndex > currentIndex ? noteIndex - 1 : noteIndex, entry.getValue());
+                    }
+                    notesMap.clear();
+                    notesMap.putAll(reindexedNotes);
+                } else {
+                    SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+                    return;
+                }
+                adapter = new ColorsAdapter(colorsEditorManager, colorList, activity, notesMap);
+                binding.recyclerView.setAdapter(adapter);
                 updateNoContentLayout();
                 hasUnsavedChanges = true;
                 v1.dismiss();
@@ -288,8 +313,43 @@ public class ColorsEditor extends Fragment {
         if (!note.isEmpty()) {
             notesMap.put(notifyPosition, note);
         }
-        adapter.notifyItemInserted(notifyPosition);
+        adapter = new ColorsAdapter(colorsEditorManager, colorList, activity, notesMap);
+        binding.recyclerView.setAdapter(adapter);
         SketchwareUtil.toast(Helper.getResString(R.string.common_word_saved));
+    }
+
+    private <T> HashMap<Integer, String> rebuildNotesMap(ArrayList<T> existingItems,
+                                                         HashMap<Integer, String> existingNotes,
+                                                         ArrayList<T> importedItems,
+                                                         HashMap<Integer, String> importedNotes,
+                                                         ArrayList<T> finalItems) {
+        IdentityHashMap<T, Integer> existingIndexes = new IdentityHashMap<>();
+        for (int i = 0; i < existingItems.size(); i++) {
+            existingIndexes.put(existingItems.get(i), i);
+        }
+
+        IdentityHashMap<T, Integer> importedIndexes = new IdentityHashMap<>();
+        for (int i = 0; i < importedItems.size(); i++) {
+            importedIndexes.put(importedItems.get(i), i);
+        }
+
+        HashMap<Integer, String> rebuiltNotes = new HashMap<>();
+        for (int i = 0; i < finalItems.size(); i++) {
+            T item = finalItems.get(i);
+
+            Integer importedIndex = importedIndexes.get(item);
+            if (importedIndex != null && importedNotes.containsKey(importedIndex)) {
+                rebuiltNotes.put(i, importedNotes.get(importedIndex));
+                continue;
+            }
+
+            Integer existingIndex = existingIndexes.get(item);
+            if (existingIndex != null && existingNotes.containsKey(existingIndex)) {
+                rebuiltNotes.put(i, existingNotes.get(existingIndex));
+            }
+        }
+
+        return rebuiltNotes;
     }
 
     public void saveColorsFile() {

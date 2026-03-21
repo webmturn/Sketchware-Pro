@@ -34,7 +34,9 @@ public class StylesEditorManager {
         for (StyleModel style : stylesList) {
 
             if (notesMap.containsKey(styleIndex)) {
-                xmlBuilder.append("    <!--").append(notesMap.get(styleIndex)).append("-->\n");
+                for (String comment : notesMap.get(styleIndex).split("\n")) {
+                    xmlBuilder.append("    <!-- ").append(comment).append(" -->\n");
+                }
             }
 
             String parentStyle = style.getParent() != null && !style.getParent().isEmpty() ? style.getParent() : null;
@@ -51,6 +53,12 @@ public class StylesEditorManager {
 
             xmlBuilder.append("    </style>\n");
             styleIndex++;
+        }
+
+        if (notesMap.containsKey(stylesList.size())) {
+            for (String comment : notesMap.get(stylesList.size()).split("\n")) {
+                xmlBuilder.append("    <!-- ").append(comment).append(" -->\n");
+            }
         }
 
         xmlBuilder.append("</resources>");
@@ -76,7 +84,7 @@ public class StylesEditorManager {
                 if (node.getNodeType() == Node.COMMENT_NODE) {
                     Comment comment = (Comment) node;
                     String commentText = comment.getTextContent().trim();
-                    notesMap.put(styles.size(), commentText);
+                    notesMap.merge(styles.size(), commentText, (a, b) -> a + "\n" + b);
                 } else if (node.getNodeType() == Node.ELEMENT_NODE && "style".equals(node.getNodeName())) {
                     Element element = (Element) node;
                     String styleName = element.getAttribute("name");

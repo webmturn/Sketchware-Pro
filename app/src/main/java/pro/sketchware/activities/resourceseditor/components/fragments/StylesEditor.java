@@ -18,6 +18,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
@@ -70,6 +71,9 @@ public class StylesEditor extends Fragment {
         boolean isSkippingMode = updateMode == 1;
         boolean isMergeAndReplace = updateMode == 2;
 
+        ArrayList<StyleModel> existingStyles = new ArrayList<>(stylesList);
+        HashMap<Integer, String> existingNotes = new HashMap<>(notesMap);
+
         ArrayList<StyleModel> defaultStyles;
 
         if ((activity.variant.isEmpty() || hasUnsavedChanges) && !FileUtil.isExistFile(filePath)) {
@@ -78,6 +82,8 @@ public class StylesEditor extends Fragment {
         } else {
             defaultStyles = stylesEditorManager.parseStylesFile(FileUtil.readFileIfExist(filePath));
         }
+
+        HashMap<Integer, String> defaultNotes = new HashMap<>(stylesEditorManager.notesMap);
 
         if (isSkippingMode) {
             HashSet<String> existingStyleNames = new HashSet<>();
@@ -106,7 +112,7 @@ public class StylesEditor extends Fragment {
 
         activity.runOnUiThread(() -> {
             if (!isAdded() || getActivity() == null || binding == null || activity.isFinishing() || activity.isDestroyed()) return;
-            notesMap = new HashMap<>(stylesEditorManager.notesMap);
+            notesMap = rebuildNotesMap(existingStyles, existingNotes, defaultStyles, defaultNotes, stylesList);
             adapter = new StylesAdapter(stylesList, this, notesMap);
             binding.recyclerView.setAdapter(adapter);
             activity.checkForInvalidResources();
@@ -153,7 +159,8 @@ public class StylesEditor extends Fragment {
                 notesMap.put(notifyPosition, header);
             }
             hasUnsavedChanges = true;
-            adapter.notifyItemInserted(notifyPosition);
+            adapter = new StylesAdapter(stylesList, this, notesMap);
+            StylesEditor.this.binding.recyclerView.setAdapter(adapter);
             updateNoContentLayout();
         });
         dialog.setNegativeButton(Helper.getResString(R.string.cancel), null);
@@ -161,15 +168,52 @@ public class StylesEditor extends Fragment {
         dialog.show();
     }
 
-    public void showEditStyleDialog(int position) {
-        StyleModel style = stylesList.get(position);
+    private <T> HashMap<Integer, String> rebuildNotesMap(ArrayList<T> existingItems,
+                                                         HashMap<Integer, String> existingNotes,
+                                                         ArrayList<T> importedItems,
+                                                         HashMap<Integer, String> importedNotes,
+                                                         ArrayList<T> finalItems) {
+        IdentityHashMap<T, Integer> existingIndexes = new IdentityHashMap<>();
+        for (int i = 0; i < existingItems.size(); i++) {
+            existingIndexes.put(existingItems.get(i), i);
+        }
+
+        IdentityHashMap<T, Integer> importedIndexes = new IdentityHashMap<>();
+        for (int i = 0; i < importedItems.size(); i++) {
+            importedIndexes.put(importedItems.get(i), i);
+        }
+
+        HashMap<Integer, String> rebuiltNotes = new HashMap<>();
+        for (int i = 0; i < finalItems.size(); i++) {
+            T item = finalItems.get(i);
+
+            Integer importedIndex = importedIndexes.get(item);
+            if (importedIndex != null && importedNotes.containsKey(importedIndex)) {
+                rebuiltNotes.put(i, importedNotes.get(importedIndex));
+                continue;
+            }
+
+            Integer existingIndex = existingIndexes.get(item);
+            if (existingIndex != null && existingNotes.containsKey(existingIndex)) {
+                rebuiltNotes.put(i, existingNotes.get(existingIndex));
+            }
+        }
+
+        return rebuiltNotes;
+    }
+
+    public void showEditStyleDialog(StyleModel style, int originalIndex) {
+        if (style == null || originalIndex < 0) {
+            SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+            return;
+        }
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(requireActivity());
         StyleEditorAddBinding binding = StyleEditorAddBinding.inflate(getLayoutInflater());
 
         binding.styleName.setText(style.getStyleName());
         binding.styleParent.setText(style.getParent());
-        if (notesMap.containsKey(position)) {
-            binding.styleHeaderInput.setText(notesMap.get(position));
+        if (notesMap.containsKey(originalIndex)) {
+            binding.styleHeaderInput.setText(notesMap.get(originalIndex));
         }
 
         dialog.setTitle(R.string.style_title_edit);
@@ -177,6 +221,12 @@ public class StylesEditor extends Fragment {
             String styleName = Objects.requireNonNull(binding.styleName.getText()).toString();
             String parent = Objects.requireNonNull(binding.styleParent.getText()).toString();
             String header = Objects.requireNonNull(binding.styleHeaderInput.getText()).toString();
+            int currentIndex = stylesList.indexOf(style);
+
+            if (currentIndex < 0) {
+                SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+                return;
+            }
 
             if (styleName.isEmpty()) {
                 SketchwareUtil.toastError(Helper.getResString(R.string.error_style_name_empty));
@@ -186,20 +236,35 @@ public class StylesEditor extends Fragment {
             style.setStyleName(styleName);
             style.setParent(parent);
             if (header.isEmpty()) {
-                notesMap.remove(position);
+                notesMap.remove(currentIndex);
             } else {
-                notesMap.put(position, header);
+                notesMap.put(currentIndex, header);
             }
             hasUnsavedChanges = true;
-            adapter.notifyItemChanged(position);
+            adapter = new StylesAdapter(stylesList, this, notesMap);
+            StylesEditor.this.binding.recyclerView.setAdapter(adapter);
         });
         dialog.setNeutralButton(Helper.getResString(R.string.common_word_delete), (d, which) -> new MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.common_word_warning)
                 .setMessage(String.format(Helper.getResString(R.string.dialog_msg_delete_confirm), style.getStyleName()))
                 .setPositiveButton(R.string.common_word_yes, (d2, w) -> {
-                    stylesList.remove(position);
-                    notesMap.remove(position);
-                    adapter.notifyItemRemoved(position);
+                    int currentIndex = stylesList.indexOf(style);
+                    if (currentIndex < 0) {
+                        SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+                        d.dismiss();
+                        return;
+                    }
+                    stylesList.remove(style);
+                    notesMap.remove(currentIndex);
+                    HashMap<Integer, String> reindexedNotes = new HashMap<>();
+                    for (java.util.Map.Entry<Integer, String> entry : notesMap.entrySet()) {
+                        int noteIndex = entry.getKey();
+                        reindexedNotes.put(noteIndex > currentIndex ? noteIndex - 1 : noteIndex, entry.getValue());
+                    }
+                    notesMap.clear();
+                    notesMap.putAll(reindexedNotes);
+                    adapter = new StylesAdapter(stylesList, this, notesMap);
+                    StylesEditor.this.binding.recyclerView.setAdapter(adapter);
                     d.dismiss();
                     updateNoContentLayout();
                     hasUnsavedChanges = true;
@@ -212,8 +277,11 @@ public class StylesEditor extends Fragment {
         dialog.show();
     }
 
-    public void showStyleAttributesDialog(int position) {
-        StyleModel style = stylesList.get(position);
+    public void showStyleAttributesDialog(StyleModel style) {
+        if (style == null) {
+            SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+            return;
+        }
         BottomSheetDialog dialog = new BottomSheetDialog(requireContext());
         var binding = PropertyPopupParentAttrBinding.inflate(getLayoutInflater());
         dialog.setContentView(binding.getRoot());

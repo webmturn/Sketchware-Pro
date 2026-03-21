@@ -46,7 +46,7 @@ public class StringsEditorManager {
                 Node node = childNodes.item(i);
                 if (node.getNodeType() == Node.COMMENT_NODE) {
                     // Save comments in notesMap
-                    notesMap.put(listMap.size(), node.getNodeValue().trim());
+                    notesMap.merge(listMap.size(), node.getNodeValue().trim(), (a, b) -> a + "\n" + b);
                 } else if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals("string")) {
                     addToListMap(listMap, (Element) node);
                 }
@@ -102,7 +102,9 @@ public class StringsEditorManager {
         xmlString.append("<resources>\n");
         for (int i = 0; i < listMap.size(); i++) {
             if (notesMap.containsKey(i)) {
-                xmlString.append("    <!-- ").append(notesMap.get(i)).append(" -->\n");
+                for (String comment : notesMap.get(i).split("\n")) {
+                    xmlString.append("    <!-- ").append(comment).append(" -->\n");
+                }
             }
             HashMap<String, Object> map = listMap.get(i);
             Object keyValue = map.get("key");
@@ -119,6 +121,12 @@ public class StringsEditorManager {
             }
             xmlString.append(">").append(escapedText).append("</string>\n");
         }
+        if (notesMap.containsKey(listMap.size())) {
+            for (String comment : notesMap.get(listMap.size()).split("\n")) {
+                xmlString.append("    <!-- ").append(comment).append(" -->\n");
+            }
+        }
+
         xmlString.append("</resources>");
         return xmlString.toString();
     }

@@ -38,7 +38,7 @@ public class DimensEditorManager {
                 Node node = childNodes.item(i);
 
                 if (node.getNodeType() == Node.COMMENT_NODE) {
-                    notesMap.put(dimenList.size(), node.getNodeValue().trim());
+                    notesMap.merge(dimenList.size(), node.getNodeValue().trim(), (a, b) -> a + "\n" + b);
                 } else if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals("dimen")) {
                     Element element = (Element) node;
                     String dimenName = element.getAttribute("name");
@@ -57,12 +57,20 @@ public class DimensEditorManager {
 
         for (int i = 0; i < dimenList.size(); i++) {
             if (notesMap.containsKey(i)) {
-                xmlBuilder.append("    <!--").append(notesMap.get(i)).append("-->\n");
+                for (String comment : notesMap.get(i).split("\n")) {
+                    xmlBuilder.append("    <!-- ").append(comment).append(" -->\n");
+                }
             }
 
             DimenModel dimenModel = dimenList.get(i);
             xmlBuilder.append("    <dimen name=\"").append(dimenModel.getDimenName()).append("\">")
                     .append(dimenModel.getDimenValue()).append("</dimen>\n");
+        }
+
+        if (notesMap.containsKey(dimenList.size())) {
+            for (String comment : notesMap.get(dimenList.size()).split("\n")) {
+                xmlBuilder.append("    <!-- ").append(comment).append(" -->\n");
+            }
         }
 
         xmlBuilder.append("</resources>");

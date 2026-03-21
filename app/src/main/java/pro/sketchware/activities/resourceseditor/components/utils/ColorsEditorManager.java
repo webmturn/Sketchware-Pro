@@ -6,6 +6,7 @@ import static mod.hey.studios.util.ProjectFile.getDefaultColor;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 
@@ -52,16 +53,22 @@ public class ColorsEditorManager {
     private final ArrayList<ColorModel> resColorsList = new ArrayList<>();
     private final ArrayList<ColorModel> resColorsNightList = new ArrayList<>();
 
+    private final String projectId;
     private final Material3LibraryManager material3LibraryManager;
 
     public ColorsEditorManager() {
-        material3LibraryManager = new Material3LibraryManager(sc_id);
+        this(sc_id);
+    }
+
+    public ColorsEditorManager(String projectId) {
+        this.projectId = projectId;
+        material3LibraryManager = new Material3LibraryManager(projectId);
         initialize();
     }
 
     public void initialize() {
-        String filePath = SketchwarePaths.getDataPath(sc_id) + "/files/resource/values/colors.xml";
-        String filePathNight = SketchwarePaths.getDataPath(sc_id) + "/files/resource/values-night/colors.xml";
+        String filePath = SketchwarePaths.getDataPath(projectId) + "/files/resource/values/colors.xml";
+        String filePathNight = SketchwarePaths.getDataPath(projectId) + "/files/resource/values-night/colors.xml";
         parseColorsXML(resColorsList, FileUtil.readFileIfExist(filePath));
         parseColorsXML(resColorsNightList, FileUtil.readFileIfExist(filePathNight));
     }
@@ -75,26 +82,46 @@ public class ColorsEditorManager {
     }
 
     public String getColorValue(Context context, String colorValue, int referencingLimit, boolean isNightVariant) {
+        Integer resolvedColor = resolveColorInt(context, colorValue, referencingLimit, isNightVariant);
+        return resolvedColor != null ? formatColor(resolvedColor) : defaultHexColor;
+    }
+
+    public Integer resolveColorInt(Context context, String colorValue, int referencingLimit) {
+        return resolveColorInt(context, colorValue, referencingLimit, false);
+    }
+
+    public Integer resolveColorInt(Context context, String colorValue, int referencingLimit, boolean isNightVariant) {
         if (colorValue == null || referencingLimit <= 0) {
-            return defaultHexColor;
+            return null;
         }
 
         if (colorValue.startsWith("#")) {
-            return colorValue;
+            return PropertiesUtil.isHexColor(colorValue) ? PropertiesUtil.parseColor(colorValue) : null;
         }
         if (colorValue.startsWith("?attr/") || colorValue.startsWith("?")) {
             String attrName = colorValue.startsWith("?attr/") ? colorValue.substring(6) : colorValue.substring(1);
-            return getColorValueFromAttrs(context, attrName, referencingLimit - 1, isNightVariant);
+            return getColorIntFromAttrs(context, attrName, referencingLimit - 1, isNightVariant);
         }
         if (colorValue.startsWith("@color/")) {
-            return getColorValueFromXml(context, colorValue.substring(7), referencingLimit - 1, isNightVariant);
+            return getColorIntFromXml(context, colorValue.substring(7), referencingLimit - 1, isNightVariant);
         } else if (colorValue.startsWith("@android:color/")) {
-            return getColorValueFromSystem(colorValue, context);
+            return getColorIntFromSystem(colorValue, context);
         }
-        return defaultHexColor;
+        return null;
+    }
+
+    private String formatColor(int colorInt) {
+        return Color.alpha(colorInt) != 0xFF
+                ? String.format("#%08X", colorInt)
+                : String.format("#%06X", (0xFFFFFF & colorInt));
     }
 
     public String getColorValueFromAttrs(Context context, String attrName, int referencingLimit, boolean isNightVariant) {
+        Integer resolvedColor = getColorIntFromAttrs(context, attrName, referencingLimit, isNightVariant);
+        return resolvedColor != null ? formatColor(resolvedColor) : defaultHexColor;
+    }
+
+    public Integer getColorIntFromAttrs(Context context, String attrName, int referencingLimit, boolean isNightVariant) {
         try {
             int attrId = context.getResources().getIdentifier(attrName, "attr", context.getPackageName());
 
@@ -113,48 +140,50 @@ public class ColorsEditorManager {
                         themedContext = new ContextThemeWrapper(context, R.style.ThemeOverlay_SketchwarePro_ViewEditor_Material3_NON_DYNAMIC_Light);
                     }
                 }
-                return String.format("#%06X", (0xFFFFFF & MaterialColors.getColor(themedContext, attrId, "getColorValue")));
+                return MaterialColors.getColor(themedContext, attrId, "getColorValue");
             }
         } catch (Exception e) {
             Log.w("ColorsEditorManager", "Failed to get Material color for attribute: " + attrName, e);
         }
-        return defaultHexColor;
+        return null;
     }
 
-    private String getColorValueFromSystem(String colorValue, Context context) {
+    private Integer getColorIntFromSystem(String colorValue, Context context) {
         String colorName = colorValue.substring(15);
         int colorId = context.getResources().getIdentifier(colorName, "color", "android");
+        if (colorId == 0) {
+            return null;
+        }
         try {
-            int colorInt = ContextCompat.getColor(context, colorId);
-            return String.format("#%06X", (0xFFFFFF & colorInt));
+            return ContextCompat.getColor(context, colorId);
         } catch (android.content.res.Resources.NotFoundException e) {
-            return defaultHexColor;
+            return null;
         }
     }
 
-    private String getColorValueFromXml(Context context, String colorName, int referencingLimit, boolean isNightVariant) {
+    private Integer getColorIntFromXml(Context context, String colorName, int referencingLimit, boolean isNightVariant) {
         if (isNightVariant) {
             for (ColorModel colorModel : resColorsNightList) {
                 if (colorModel.getColorName().equals(colorName)) {
-                    return getColorValue(context, colorModel.getColorValue(), referencingLimit);
+                    return resolveColorInt(context, colorModel.getColorValue(), referencingLimit, true);
                 }
             }
 
             for (ColorModel colorModel : resColorsList) {
                 if (colorModel.getColorName().equals(colorName)) {
-                    return getColorValue(context, colorModel.getColorValue(), referencingLimit);
+                    return resolveColorInt(context, colorModel.getColorValue(), referencingLimit, true);
                 }
             }
 
         } else {
             for (ColorModel colorModel : resColorsList) {
                 if (colorModel.getColorName().equals(colorName)) {
-                    return getColorValue(context, colorModel.getColorValue(), referencingLimit);
+                    return resolveColorInt(context, colorModel.getColorValue(), referencingLimit, false);
                 }
             }
         }
 
-        return defaultHexColor;
+        return null;
     }
 
     public void parseColorsXML(ArrayList<ColorModel> colorList, String colorXml) {
@@ -180,7 +209,7 @@ public class ColorsEditorManager {
 
                 if (node.getNodeType() == Node.COMMENT_NODE) {
                     // Save comments in notesMap
-                    notesMap.put(colorList.size(), node.getNodeValue().trim());
+                    notesMap.merge(colorList.size(), node.getNodeValue().trim(), (a, b) -> a + "\n" + b);
                 } else if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals("color")) {
                     Element element = (Element) node;
                     String colorName = element.getAttribute("name");
@@ -200,8 +229,8 @@ public class ColorsEditorManager {
                 }
             }
 
-            if (isDefaultVariant && defaultColors != null && sc_id != null) {
-                HashMap<String, Object> metadata = ProjectListManager.getProjectById(sc_id);
+            if (isDefaultVariant && defaultColors != null && projectId != null) {
+                HashMap<String, Object> metadata = ProjectListManager.getProjectById(projectId);
                 Set<String> missingKeys = new HashSet<>(defaultColors.keySet());
                 foundPrimaryColors.forEach(missingKeys::remove);
 
@@ -227,7 +256,7 @@ public class ColorsEditorManager {
 
             // Save the updated XML if changes are detected
             if (hasChanges) {
-                XmlUtil.saveXml(SketchwarePaths.getDataPath(sc_id) + "/files/resource/values/colors.xml", convertListToXml(colorList, notesMap));
+                XmlUtil.saveXml(SketchwarePaths.getDataPath(projectId) + "/files/resource/values/colors.xml", convertListToXml(colorList, notesMap));
             }
 
         } catch (Exception e) {
@@ -241,7 +270,9 @@ public class ColorsEditorManager {
 
         for (int i = 0; i < colorList.size(); i++) {
             if (notesMap.containsKey(i)) {
-                xmlBuilder.append("    <!--").append(notesMap.get(i)).append("-->\n");
+                for (String comment : notesMap.get(i).split("\n")) {
+                    xmlBuilder.append("    <!-- ").append(comment).append(" -->\n");
+                }
             }
 
             ColorModel colorModel = colorList.get(i);
@@ -249,8 +280,13 @@ public class ColorsEditorManager {
                     .append(colorModel.getColorValue()).append("</color>\n");
         }
 
+        if (notesMap.containsKey(colorList.size())) {
+            for (String comment : notesMap.get(colorList.size()).split("\n")) {
+                xmlBuilder.append("    <!-- ").append(comment).append(" -->\n");
+            }
+        }
+
         xmlBuilder.append("</resources>");
         return xmlBuilder.toString();
     }
-
 }

@@ -22,14 +22,14 @@ import pro.sketchware.databinding.PalletCustomviewBinding;
 
 public class StylesAdapter extends RecyclerView.Adapter<StylesAdapter.StyleViewHolder> {
 
-    private final List<StyleModel> stylesList;
     private final List<StyleModel> originalList;
+    private List<StyleModel> filteredList;
     private final HashMap<Integer, String> notesMap;
     private final Fragment fragment;
 
     public StylesAdapter(ArrayList<StyleModel> stylesList, Fragment fragment, HashMap<Integer, String> notesMap) {
-        this.stylesList = stylesList;
         originalList = new ArrayList<>(stylesList);
+        filteredList = new ArrayList<>(stylesList);
         this.notesMap = notesMap;
         this.fragment = fragment;
     }
@@ -44,22 +44,26 @@ public class StylesAdapter extends RecyclerView.Adapter<StylesAdapter.StyleViewH
 
     @Override
     public void onBindViewHolder(@NonNull StyleViewHolder holder, int position) {
-        StyleModel style = stylesList.get(position);
+        StyleModel style = filteredList.get(position);
         holder.bind(style);
     }
 
     @Override
     public int getItemCount() {
-        return stylesList.size();
+        return filteredList.size();
     }
 
     public void filter(String newText) {
-        stylesList.clear();
-
-        for (StyleModel style : originalList) {
-            if (style.getStyleName().toLowerCase().contains(newText)) {
-                stylesList.add(style);
+        if (newText == null || newText.isEmpty()) {
+            filteredList = new ArrayList<>(originalList);
+        } else {
+            ArrayList<StyleModel> filtered = new ArrayList<>();
+            for (StyleModel style : originalList) {
+                if (style.getStyleName().toLowerCase().contains(newText)) {
+                    filtered.add(style);
+                }
             }
+            filteredList = filtered;
         }
 
         notifyDataSetChanged();
@@ -81,8 +85,9 @@ public class StylesAdapter extends RecyclerView.Adapter<StylesAdapter.StyleViewH
             } else {
                 binding.sub.setText(style.getParent());
             }
-            if (notesMap.containsKey(getAbsoluteAdapterPosition())) {
-                binding.tvTitle.setText(notesMap.get(getAbsoluteAdapterPosition()));
+            int originalIndex = originalList.indexOf(style);
+            if (originalIndex >= 0 && notesMap.containsKey(originalIndex)) {
+                binding.tvTitle.setText(notesMap.get(originalIndex));
                 binding.tvTitle.setVisibility(View.VISIBLE);
             } else {
                 binding.tvTitle.setVisibility(View.GONE);
@@ -90,17 +95,17 @@ public class StylesAdapter extends RecyclerView.Adapter<StylesAdapter.StyleViewH
 
             binding.backgroundCard.setOnClickListener(view -> {
                 if (fragment instanceof StylesEditor stylesEditor) {
-                    stylesEditor.showStyleAttributesDialog(getAbsoluteAdapterPosition());
+                    stylesEditor.showStyleAttributesDialog(style);
                 } else if (fragment instanceof ThemesEditor themesEditor) {
-                    themesEditor.showThemeAttributesDialog(getAbsoluteAdapterPosition());
+                    themesEditor.showThemeAttributesDialog(style);
                 }
             });
 
             binding.backgroundCard.setOnLongClickListener(view -> {
                 if (fragment instanceof StylesEditor stylesEditor) {
-                    stylesEditor.showEditStyleDialog(getAbsoluteAdapterPosition());
+                    stylesEditor.showEditStyleDialog(style, originalIndex);
                 } else if (fragment instanceof ThemesEditor themesEditor) {
-                    themesEditor.showEditThemeDialog(getAbsoluteAdapterPosition());
+                    themesEditor.showEditThemeDialog(style, originalIndex);
                 }
                 return true;
             });
