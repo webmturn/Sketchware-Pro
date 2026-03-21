@@ -1377,7 +1377,7 @@ public class ViewPane extends RelativeLayout {
     private void updateTextView(TextView textView, ViewBean viewBean) {
         String textContent = viewBean.text.text;
         if (textContent != null && textContent.contains("\\n")) {
-            textContent = viewBean.text.text.replaceAll("\\\\n", "\n");
+            textContent = viewBean.text.text.replace("\\n", "\n");
         }
         textView.setText(textContent.startsWith(stringsStart) ? getXmlString(textContent) : textContent);
         String textFont = new InjectAttributeHandler(viewBean).getAttributeValueOf("fontFamily");

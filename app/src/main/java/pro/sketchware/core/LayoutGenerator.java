@@ -295,7 +295,7 @@ public class LayoutGenerator {
             if (!hasAttr("background", viewBean) && !toNotAdd.contains("android:background") && !injectHandler.contains("background")) {
                 boolean isNinePatchBackground = backgroundResource.endsWith(".9");
                 xmlTag.addAttribute("android", "background", "@drawable/" +
-                        (isNinePatchBackground ? backgroundResource.replaceAll("\\.9", "") :
+                        (isNinePatchBackground ? backgroundResource.replace(".9", "") :
                                 backgroundResource));
             }
         }
