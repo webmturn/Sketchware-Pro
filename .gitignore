@@ -60,10 +60,6 @@ freeline_project_description.json
 fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots
-fastlane/test_output
-fastlane/readme.md
-.idea/render.experimental.xml
-.DS_Store
 
 # For users who uses android ide for building app
 .androidide/
@@ -71,9 +67,6 @@ fastlane/readme.md
 release/
 app/libs/
 run_x/
-
-# Windsurf IDE config
-.windsurfrules
 
 # Refactoring work notes
 refactoring-naming-map.md
@@ -86,17 +79,5 @@ scripts/
 # Gradle user home (custom GRADLE_USER_HOME inside project)
 .gradle-user-home/
 
-# Codex AI temp files
-.codex-temp/
-
-# Claude local IDE settings
-.claude/settings.local.json
-
-# Local AI conversation exports
-ai_conversations/
-
 # Temporary Java files
 tmp_*.java
-
-# Cursor IDE
-.cursor/
