@@ -117,9 +117,15 @@ public class BlockBean extends SelectableBean implements Parcelable {
         subStack1 = parcel.readInt();
         subStack2 = parcel.readInt();
         nextBlock = parcel.readInt();
-        disabled = parcel.readByte() != 0;
-        collapsed = parcel.readByte() != 0;
-        collapsed2 = parcel.readByte() != 0;
+        if (parcel.dataAvail() > 0) {
+            disabled = parcel.readByte() != 0;
+        }
+        if (parcel.dataAvail() > 0) {
+            collapsed = parcel.readByte() != 0;
+        }
+        if (parcel.dataAvail() > 0) {
+            collapsed2 = parcel.readByte() != 0;
+        }
         buildClassInfo();
     }
 
