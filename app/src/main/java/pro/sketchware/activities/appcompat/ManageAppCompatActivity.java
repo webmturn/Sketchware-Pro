@@ -84,7 +84,7 @@ public class ManageAppCompatActivity extends BaseAppCompatActivity {
                         + "/.sketchware/data/"
                         + sc_id
                         + "/injection/appcompat/"
-                        + filename.replaceAll(".xml", "");
+                        + filename.replace(".xml", "");
         if (!FileUtil.isExistFile(path) || FileUtil.readFile(path).isEmpty()) {
             activityInjections =
                     new Gson()

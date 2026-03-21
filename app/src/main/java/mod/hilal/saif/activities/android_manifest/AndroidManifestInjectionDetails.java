@@ -49,7 +49,7 @@ public class AndroidManifestInjectionDetails extends BaseAppCompatActivity {
 
         if (getIntent().hasExtra("sc_id") && getIntent().hasExtra("file_name") && getIntent().hasExtra("type")) {
             src_id = getIntent().getStringExtra("sc_id");
-            activityName = getIntent().getStringExtra("file_name").replaceAll(".java", "");
+            activityName = getIntent().getStringExtra("file_name").replace(".java", "");
             type = getIntent().getStringExtra("type");
         } else {
             finish();

@@ -56,7 +56,7 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
 
         if (getIntent().hasExtra("sc_id") && getIntent().hasExtra("file_name")) {
             sc_id = getIntent().getStringExtra("sc_id");
-            currentActivityName = getIntent().getStringExtra("file_name").replaceAll(".java", "");
+            currentActivityName = getIntent().getStringExtra("file_name").replace(".java", "");
         }
 
         setupCustomToolbar();
