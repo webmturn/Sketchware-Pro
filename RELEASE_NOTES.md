@@ -79,6 +79,100 @@
 
 ---
 
+# v7.0.0-beta5
+
+## ✨ New Features
+
+### Block System
+- **Block disable/enable** — Disable individual blocks via PopupMenu toggle; disabled blocks are skipped during code generation, drawn with diagonal stripe overlay, and serialized with Parcel/copy/isEqual support
+- **Try-catch-finally blocks** — New `catchBlock`/`finallyBlock` chain blocks with backward-compatible `tryCatch`
+- **Collapsible control substacks** — Control blocks can now be collapsed
+- **Continue block** reverted (re-added in beta6)
+- **Int variable type** (`VARIABLE_TYPE_INT = 4`) — Added then reverted due to issues
+
+### Block Search
+- **Palette search** — Search block names and specs within the palette panel
+- **Canvas search** — Search placed blocks in the logic editor canvas
+- **Block Manager search** — Search palette names and block names/specs in Block Manager
+- **Integrated into LogicEditorActivity** with string resources
+
+### Dependency Resolver
+- **Dependency tree visualization** — View full dependency tree of resolved libraries
+- **Resolution timeout notification** — `onResolutionTimeout` callback notifies user when tree resolution times out
+- **3 caching optimizations** — Faster resolution with parent POM fix
+- **Min API level** — `setMinApiLevel` added to `compileJarWithFallback`
+- **Built-in dependency detection** — Narrowed `isBuiltInDependency` to specific androidx groupIds
+- **Sub-dependency hiding** — Hide sub-dependencies from main library list, fix dependency parent field
+
+### Crash Monitoring
+- **Persistent crash log system** — Automatic crash logging with viewer in About page
+
+### UI Modernization
+- **Material 3 upgrades** — CheckBox → MaterialCheckBox (22 layouts), RadioButton → MaterialRadioButton, CardView → MaterialCardView, Spinner → AppCompatSpinner, CheckBox → MaterialSwitch in project settings (6 instances)
+- **ProGuard page** — Refactored to Material 3 style with AppBarLayout + card sections
+- **RTL support** — Fix `paddingLeft/Right`, `marginLeft/Right`, `layout_gravity`, FAB positioning across 20+ layouts
+- **Project list** — Add ripple to items, remove NestedScrollView wrapping RecyclerView for performance
+- **Compile log** — Increase font size, add copy button
+- **Import XML** — Reorganized in bottom popup menu (view tab only)
+
+## 🐛 Bug Fixes
+
+### Crash Prevention
+- **ViewPropertyItems** — Fix #1982 ClassCastException
+- **SubDepAdapter** — Fix NPE: field init calls `getResources()` before context attach
+- **Gson parsing** — Null guard for `enabledLibs` after parsing
+- **ImageView recycling** — Clear both Glide and Coil requests before rebinding to prevent stale SVG/bitmap conflicts
+- **SwipeRefreshLayout** — Add scroll callback for correct pull-to-refresh with RecyclerView
+
+### Build System
+- **Dexing OOM** — Fix dexing out-of-memory, resolver hang, and dependency resolution performance
+- **LayoutGenerator BuildConfig** — Ensure correct `sc_id` usage
+- **Resource leak, CME risk, Uri inconsistency, stale cache** — Multiple build system bug fixes
+- **Compiled app display issues** — Fix transparent colors, Force Dark, AAPT2
+- **XmlLayoutParser** — Fix `parseColorValue` stripping alpha channel
+- **Atomic file writes** — Reliable `readFileBytes` in `EncryptedFileUtil`
+- **Save on success only** — Only save version code on successful save; notify user on save failure
+
+### Dependency Resolver Fixes
+- **Root artifact skipped** by `skipFilter` in `resolveDependencyTree`
+- **Stale expandedBoms cache** across resolution sessions
+- **Wrong androidx.graphics groupId** + duplicate entries on re-download
+- **Local library dependency handling** improvements
+
+### Other
+- **Nested block disable overlay** — Propagate disabled overlay through nested blocks
+- **Block preview fallback color** — From white to palette/default purple
+- **Magic numbers** — Replace with named constants (WrongConstant lint)
+- **Thread safety** — Fix singletons and shared state
+- **ProGuard/R8 rules** — Clean up default rules
+
+## ⚡ Performance
+
+- **Palette panel** — Optimize opening performance (P1-P4), eliminate duplicate loading, cache file listings (P5a/P5b)
+- **ViewPane** — Cache `getXmlString` XML parsing (H8), replace `findViewWithTag` with HashMap index in BlockPane (H1)
+- **Save operations** — Async `saveAllBackup` in LogicEditorActivity and 5 remaining callers (H5/H5b)
+- **Sound list** — Async audio metadata loading in adapters
+- **7 files** — Fix performance bottlenecks and bugs
+
+## ♻️ Refactoring
+
+- **BlocksHandler migration** — Migrate BlocksHandler blocks to BlockCodeRegistry
+- **About page** — Upgrade legacy CardView layouts (fixed UTF-8 encoding)
+- **Dead code removal** — Delete BuildingDialog, QuizBoard
+
+## 📖 Documentation
+
+- Add comprehensive development manual
+- Add Javadoc to bean, code generation, and core classes (batch 1-5)
+- Add Sketchware project data format documentation
+- Update 5 documentation files to match current codebase
+
+---
+
+**Full Changelog**: https://github.com/webmturn/Sketchware-Pro/compare/v7.0.0-beta-04...v7.0.0-beta-05
+
+---
+
 # v7.0.0-beta4
 
 ## 🐛 Bug Fixes
