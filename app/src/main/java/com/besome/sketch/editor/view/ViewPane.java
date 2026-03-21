@@ -2,12 +2,14 @@ package com.besome.sketch.editor.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.NinePatch;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.NinePatchDrawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -16,6 +18,7 @@ import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewOutlineProvider;
 import android.view.ViewParent;
 import android.widget.CalendarView;
 import android.widget.CompoundButton;
@@ -429,7 +432,7 @@ public class ViewPane extends RelativeLayout {
                             VectorDrawableLoader vectorDrawableLoader = new VectorDrawableLoader();
                             ImageView tempImageView = new AppCompatImageView(getContext()) {
                                 @Override
-                                public void setImageDrawable(android.graphics.drawable.Drawable drawable) {
+                                public void setImageDrawable(Drawable drawable) {
                                     fab.setImageDrawable(drawable);
                                 }
                             };
@@ -1056,17 +1059,17 @@ public class ViewPane extends RelativeLayout {
         if (elevationDp > 0) {
             float elevationPx = ViewUtil.dpToPx(getContext(), elevationDp);
             view.setElevation(elevationPx);
-            android.graphics.drawable.Drawable bg = view.getBackground();
+            Drawable bg = view.getBackground();
             boolean useBoundsOutline = shouldUseBoundsOutline(view, bg);
-            if (!useBoundsOutline && bg instanceof android.graphics.drawable.ColorDrawable colorDrawable) {
-                android.graphics.drawable.GradientDrawable gd = new android.graphics.drawable.GradientDrawable();
+            if (!useBoundsOutline && bg instanceof ColorDrawable colorDrawable) {
+                GradientDrawable gd = new GradientDrawable();
                 gd.setColor(colorDrawable.getColor());
-                gd.setShape(android.graphics.drawable.GradientDrawable.RECTANGLE);
+                gd.setShape(GradientDrawable.RECTANGLE);
                 view.setBackground(gd);
             }
             view.setOutlineProvider(useBoundsOutline
-                    ? android.view.ViewOutlineProvider.BOUNDS
-                    : android.view.ViewOutlineProvider.BACKGROUND);
+                    ? ViewOutlineProvider.BOUNDS
+                    : ViewOutlineProvider.BACKGROUND);
             view.invalidateOutline();
             view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
                 @Override
@@ -1096,14 +1099,14 @@ public class ViewPane extends RelativeLayout {
         return injectedElevation >= 0 ? injectedElevation : fallbackDp;
     }
 
-    private boolean shouldUseBoundsOutline(View view, android.graphics.drawable.Drawable background) {
+    private boolean shouldUseBoundsOutline(View view, Drawable background) {
         if (view instanceof ItemButton || view instanceof ItemEditText) {
             return true;
         }
         if (background == null) {
             return true;
         }
-        if (background instanceof android.graphics.drawable.ColorDrawable colorDrawable) {
+        if (background instanceof ColorDrawable colorDrawable) {
             return Color.alpha(colorDrawable.getColor()) == 0;
         }
         return background.getAlpha() == 0;
