@@ -315,7 +315,9 @@ public class BackupFactory {
                     .replace("$timeInMs", String.valueOf(Calendar.getInstance(Locale.ENGLISH).getTimeInMillis()));
             Matcher matcher = Pattern.compile("\\$time\\((.*?)\\)").matcher(customFileName);
             while (matcher.find()) {
-                finalFileName = finalFileName.replaceFirst(Pattern.quote(Objects.requireNonNull(matcher.group(0))), getFormattedDateFrom(matcher.group(1)));
+                finalFileName = finalFileName.replaceFirst(
+                        Pattern.quote(Objects.requireNonNull(matcher.group(0))),
+                        Matcher.quoteReplacement(getFormattedDateFrom(matcher.group(1))));
             }
         } catch (Exception ignored) {
             SketchwareUtil.toastError(Helper.getResString(R.string.error_parse_backup_filename));

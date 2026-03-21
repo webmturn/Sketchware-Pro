@@ -423,8 +423,8 @@ public class ProjectFilePaths {
             sketchApplicationFileContent = PACKAGE_PLACEHOLDER_PATTERN.matcher(sketchApplicationFileContent).replaceAll(packageName);
 
             if (applyMultiDex) {
-                sketchApplicationFileContent = sketchApplicationFileContent.replaceAll(
-                        "Application \\{", "androidx.multidex.MultiDexApplication {");
+                sketchApplicationFileContent = sketchApplicationFileContent.replace(
+                        "Application {", "androidx.multidex.MultiDexApplication {");
             }
             if (logcatEnabled) {
                 sketchApplicationFileContent = sketchApplicationFileContent.replace(
@@ -441,9 +441,9 @@ public class ProjectFilePaths {
                         .replace("import android.util.Log;", "import android.util.Log;\nimport com.google.android.material.color.DynamicColors;");
             }
             if (!notUsingCustomApplicationClass) {
-                sketchApplicationFileContent = sketchApplicationFileContent.replaceAll(
+                sketchApplicationFileContent = sketchApplicationFileContent.replace(
                         "public class SketchApplication", "public class " + customClassSimpleName);
-                sketchApplicationFileContent = sketchApplicationFileContent.replaceAll(
+                sketchApplicationFileContent = sketchApplicationFileContent.replace(
                         "package " + packageName + ";", "package " + customClassPackage + ";");
 
                 String imports = "import android.util.Log;\nimport " + packageName + ".DebugActivity;";

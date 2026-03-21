@@ -44,7 +44,7 @@ public class PropertiesUtil {
             if (TextUtils.isEmpty(value) || reference == null) {
                 return defaultValue;
             }
-            return Integer.parseInt(reference.second);
+            return (int) Float.parseFloat(reference.second);
         } catch (NumberFormatException e) {
             return defaultValue;
         }
