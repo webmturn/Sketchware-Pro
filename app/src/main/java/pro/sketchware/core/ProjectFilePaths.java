@@ -233,7 +233,7 @@ public class ProjectFilePaths {
 
         projectSettings = new ProjectSettings(sc_id);
         fileUtil = new EncryptedFileUtil(true);
-        packageNameAsFolders = packageName.replaceAll("\\.", File.separator);
+        packageNameAsFolders = packageName.replace(".", File.separator);
         binDirectoryPath = projectMyscPath + "bin";
         compiledClassesPath = binDirectoryPath + File.separator + "classes";
         proguardClassesPath = binDirectoryPath + File.separator + "classes_proguard.jar";
