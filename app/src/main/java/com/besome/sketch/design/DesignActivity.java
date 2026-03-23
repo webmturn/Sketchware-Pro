@@ -136,7 +136,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     private final ExecutorService backgroundExecutor = Executors.newSingleThreadExecutor();
     public static String sc_id;
     private final Handler handler = new Handler(Looper.getMainLooper());
-    private final FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
+    private final FirebaseCrashlytics crashlytics = getFirebaseCrashlytics();
     private ImageView xmlLayoutOrientation;
     private boolean isRestoringData;
     private int currentTabNumber;
@@ -693,8 +693,10 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             ProjectLoader projectLoader = new ProjectLoader(this, savedInstanceState);
             projectLoader.execute();
         } catch (Exception e) {
-            crashlytics.log("ProjectLoader failed");
-            crashlytics.recordException(e);
+            if (crashlytics != null) {
+                crashlytics.log("ProjectLoader failed");
+                crashlytics.recordException(e);
+            }
         } finally {
             SystemLogPrinter.stop();
         }
@@ -752,7 +754,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 try {
                     saveChangesAndCloseProject();
                 } catch (Exception e) {
-                    crashlytics.recordException(e);
+                    if (crashlytics != null) crashlytics.recordException(e);
                     dismissLoadingDialog();
                 }
             }
@@ -765,7 +767,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                     DiscardChangesProjectCloser discardChangesProjectCloser = new DiscardChangesProjectCloser(this);
                     discardChangesProjectCloser.execute();
                 } catch (Exception e) {
-                    crashlytics.recordException(e);
+                    if (crashlytics != null) crashlytics.recordException(e);
                     dismissLoadingDialog();
                 }
             }
@@ -1659,6 +1661,14 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             } else {
                 return position == 1 ? new EventListFragment() : new ComponentListFragment();
             }
+        }
+    }
+
+    private static FirebaseCrashlytics getFirebaseCrashlytics() {
+        try {
+            return FirebaseCrashlytics.getInstance();
+        } catch (IllegalStateException e) {
+            return null;
         }
     }
 }

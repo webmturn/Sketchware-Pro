@@ -117,6 +117,10 @@ public class BlockBean extends SelectableBean implements Parcelable {
         subStack1 = parcel.readInt();
         subStack2 = parcel.readInt();
         nextBlock = parcel.readInt();
+        // dataAvail() returns remaining bytes in the ENTIRE Parcel, not just this object.
+        // This is safe because BlockBean is never stored via putParcelableArrayList;
+        // blocks are serialized as JSON through ProjectDataStore. If that ever changes,
+        // replace with a version-marker approach (write version int before all fields).
         if (parcel.dataAvail() > 0) {
             disabled = parcel.readByte() != 0;
         }

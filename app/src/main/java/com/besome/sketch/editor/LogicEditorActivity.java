@@ -143,7 +143,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final int[] locationBuffer = new int[2];
-    private final FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
+    private final FirebaseCrashlytics crashlytics = getFirebaseCrashlytics();
     public ProjectFileBean projectFile;
     public PaletteBlock paletteBlock;
     public BlockPane blockPane;
@@ -231,7 +231,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
      * @param onComplete run when loading is fully done (pane visible, dialog dismissed).
      */
     private void loadEventBlocks(Runnable onComplete) {
-        crashlytics.log("Loading event blocks");
+        if (crashlytics != null) crashlytics.log("Loading event blocks");
         ArrayList<BlockBean> eventBlocks = ProjectDataManager.getProjectDataManager(scId).getBlocks(projectFile.getJavaName(), id + "_" + eventName);
         if (eventBlocks != null) {
             if (eventBlocks.isEmpty()) {
@@ -454,7 +454,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         try {
             new Handler(Looper.getMainLooper()).postDelayed(() -> new ProjectSaver(this).execute(), 500L);
         } catch (Exception e) {
-            crashlytics.recordException(e);
+            if (crashlytics != null) crashlytics.recordException(e);
         }
     }
 
@@ -1324,7 +1324,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             BlockCollectionManager.getInstance().addBlock(collectionName, collectionBlocks, true);
             editorDrawer.addBlockCollection(collectionName, collectionBlocks).setOnTouchListener(this);
         } catch (Exception e) {
-            crashlytics.recordException(e);
+            if (crashlytics != null) crashlytics.recordException(e);
         }
     }
 
@@ -1509,8 +1509,10 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             try {
                 typeface = Typeface.createFromFile(ProjectDataManager.getResourceManager(scId).getFontPath(fontName));
             } catch (RuntimeException e) {
-                crashlytics.log("Loading font preview");
-                crashlytics.recordException(e);
+                if (crashlytics != null) {
+                    crashlytics.log("Loading font preview");
+                    crashlytics.recordException(e);
+                }
                 typeface = Typeface.DEFAULT;
                 preview.setText(Helper.getResString(R.string.font_load_failed));
             }
@@ -2990,5 +2992,13 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             intent.putExtra("scroll_to_block_id", blockId);
         }
         startActivity(intent);
+    }
+
+    private static FirebaseCrashlytics getFirebaseCrashlytics() {
+        try {
+            return FirebaseCrashlytics.getInstance();
+        } catch (IllegalStateException e) {
+            return null;
+        }
     }
 }

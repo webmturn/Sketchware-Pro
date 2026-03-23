@@ -251,8 +251,14 @@ public class LayoutGenerator {
                             xmlTag.addAttribute("app", "cardBackgroundColor", formatColor(color));
                         }
                     } else if (xmlTag.getCleanRootElementName().equals("MaterialButton")) {
-                        if (!toNotAdd.contains("app:backgroundTint") && !injectHandler.contains("backgroundTint")) {
-                            xmlTag.addAttribute("app", "backgroundTint", backgroundResColor == null ? formatColor(color) : backgroundResColor);
+                        if (!toNotAdd.contains("app:backgroundTint") && !injectHandler.contains("backgroundTint") && backgroundResColor != null) {
+                            if (backgroundResColor.startsWith("?") || backgroundResColor.startsWith("@color/")) {
+                                xmlTag.addAttribute("app", "backgroundTint", backgroundResColor);
+                            } else {
+                                xmlTag.addAttribute("app", "backgroundTint", "@color/" + backgroundResColor);
+                            }
+                        } else if (!toNotAdd.contains("app:backgroundTint") && !injectHandler.contains("backgroundTint")) {
+                            xmlTag.addAttribute("app", "backgroundTint", formatColor(color));
                         }
                     } else if (xmlTag.getCleanRootElementName().equals("CollapsingToolbarLayout")) {
                         if (!toNotAdd.contains("app:contentScrim") && !injectHandler.contains("contentScrim") && backgroundResColor != null) {
@@ -313,7 +319,15 @@ public class LayoutGenerator {
                     }
                 } else if (xmlTag.getCleanRootElementName().equals("MaterialButton")) {
                     if (!toNotAdd.contains("app:backgroundTint") && !injectHandler.contains("backgroundTint")) {
-                        xmlTag.addAttribute("app", "backgroundTint", backgroundResColor == null ? "@android:color/transparent" : backgroundResColor);
+                        if (backgroundResColor != null) {
+                            if (backgroundResColor.startsWith("?") || backgroundResColor.startsWith("@color/")) {
+                                xmlTag.addAttribute("app", "backgroundTint", backgroundResColor);
+                            } else {
+                                xmlTag.addAttribute("app", "backgroundTint", "@color/" + backgroundResColor);
+                            }
+                        } else {
+                            xmlTag.addAttribute("app", "backgroundTint", "@android:color/transparent");
+                        }
                     }
                 } else {
                     if (!hasAttr("background", viewBean) && !toNotAdd.contains("android:background") && !injectHandler.contains("background")) {
