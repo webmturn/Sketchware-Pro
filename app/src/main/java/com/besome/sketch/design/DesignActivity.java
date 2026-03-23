@@ -1494,17 +1494,26 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         private void doInBackground() {
             DesignActivity activity = getActivity();
             if (activity != null) {
-                var sc_id = DesignActivity.sc_id;
-                ResourceManager rm = ProjectDataManager.getResourceManager(sc_id);
-                if (rm.hasLazyBackup()) {
-                    rm.restoreImagesFromTemp();
-                    rm.restoreSoundsFromTemp();
-                    rm.restoreFontsFromTemp();
+                try {
+                    var sc_id = DesignActivity.sc_id;
+                    ResourceManager rm = ProjectDataManager.getResourceManager(sc_id);
+                    if (rm.hasLazyBackup()) {
+                        rm.restoreImagesFromTemp();
+                        rm.restoreSoundsFromTemp();
+                        rm.restoreFontsFromTemp();
+                    }
+                    ProjectDataManager.discardAll();
+                } catch (Exception e) {
+                    if (activity.crashlytics != null) {
+                        activity.crashlytics.log("DiscardChangesProjectCloser cleanup failed");
+                        activity.crashlytics.recordException(e);
+                    }
+                } finally {
+                    activity.runOnUiThread(() -> {
+                        activity.dismissLoadingDialog();
+                        activity.finish();
+                    });
                 }
-                activity.runOnUiThread(() -> {
-                    activity.dismissLoadingDialog();
-                    activity.finish();
-                });
             }
         }
     }

@@ -8,7 +8,7 @@ package pro.sketchware.core;
  * one is created. All managers follow the same lifecycle:
  * <ol>
  *   <li>{@code getXxxManager(sc_id)} — creates or returns cached instance</li>
- *   <li>{@code closeXxxManager()} — persists data and releases the instance</li>
+ *   <li>{@code closeXxxManager()} — persists pending changes to backup and releases the instance</li>
  * </ol>
  *
  * @see ProjectDataStore
@@ -26,8 +26,8 @@ public class ProjectDataManager {
     /**
      * Clears all cached manager instances without saving.
      * <p>
-     * Unlike the individual {@code closeXxx()} methods, this does <b>not</b>
-     * call {@code resetProject()} or {@code resetAll()} — data is discarded.
+     * Unlike the individual {@code closeXxx()} methods, this does not persist
+     * pending changes to backup or data files.
      */
     public static void clearAll() {
         projectDataStore = null;
@@ -37,49 +37,72 @@ public class ProjectDataManager {
     }
 
     /**
-     * Saves pending changes via {@link ProjectDataStore#resetProject()} and
+     * Discards unsaved changes for all cached manager instances and releases them.
+     * <p>
+     * This removes backup files and temporary resource copies so discarded edits
+     * are not offered for restore later.
+     */
+    public static void discardAll() {
+        if (projectDataStore != null) {
+            projectDataStore.deleteBackupFiles();
+        }
+        if (projectFileManager != null) {
+            projectFileManager.deleteBackup();
+        }
+        if (resourceManager != null) {
+            resourceManager.deleteBackup();
+            resourceManager.deleteTempDirs();
+        }
+        if (libraryManager != null) {
+            libraryManager.deleteBackup();
+        }
+        clearAll();
+    }
+
+    /**
+     * Saves pending changes via {@link ProjectDataStore#saveAllBackup()} and
      * releases the cached {@link ProjectDataStore} instance.
      * Does nothing if no data manager is currently open.
      */
     public static void closeDataManager() {
         if (projectDataStore != null) {
-            projectDataStore.resetProject();
+            projectDataStore.saveAllBackup();
             projectDataStore = null;
         }
     }
 
     /**
-     * Saves pending changes via {@link ProjectFileManager#resetAll()} and
+     * Saves pending changes via {@link ProjectFileManager#saveToBackup()} and
      * releases the cached {@link ProjectFileManager} instance.
      * Does nothing if no file manager is currently open.
      */
     public static void closeFileManager() {
         if (projectFileManager != null) {
-            projectFileManager.resetAll();
+            projectFileManager.saveToBackup();
             projectFileManager = null;
         }
     }
 
     /**
-     * Saves pending changes via {@link LibraryManager#resetAll()} and
+     * Saves pending changes via {@link LibraryManager#saveToBackup()} and
      * releases the cached {@link LibraryManager} instance.
      * Does nothing if no library manager is currently open.
      */
     public static void closeLibraryManager() {
         if (libraryManager != null) {
-            libraryManager.resetAll();
+            libraryManager.saveToBackup();
             libraryManager = null;
         }
     }
 
     /**
-     * Saves pending changes via {@link ResourceManager#resetAll()} and
+     * Saves pending changes via {@link ResourceManager#saveToBackup()} and
      * releases the cached {@link ResourceManager} instance.
      * Does nothing if no resource manager is currently open.
      */
     public static void closeResourceManager() {
         if (resourceManager != null) {
-            resourceManager.resetAll();
+            resourceManager.saveToBackup();
             resourceManager = null;
         }
     }
