@@ -1,20 +1,15 @@
 package com.besome.sketch.lib.base;
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface.OnCancelListener;
 import android.graphics.Color;
 import android.os.AsyncTask.Status;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.SystemBarStyle;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -33,9 +28,6 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
 
     public FirebaseAnalytics mAnalytics;
 
-    @Deprecated
-    public Context context;
-    public Activity parent;
     protected ProgressDialog progressDialog;
     private LoadingDialog lottieDialog;
     private ArrayList<BaseAsyncTask> taskList;
@@ -102,7 +94,6 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = getApplicationContext();
         taskList = new ArrayList<>();
         lottieDialog = new LoadingDialog(this);
         ProjectListManager.initializeDb(getApplicationContext(), false);
@@ -133,22 +124,6 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
         if (lottieDialog != null && lottieDialog.isShowing()) {
             lottieDialog.resumeAnimation();
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (parent != null) {
-            return parent.onCreateOptionsMenu(menu);
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (parent != null) {
-            return parent.onOptionsItemSelected(item);
-        }
-        return false;
     }
 
     public void handleInsets(View root) {

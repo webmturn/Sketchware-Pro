@@ -39,45 +39,49 @@ public class ProjectDataManager {
     /**
      * Saves pending changes via {@link ProjectDataStore#resetProject()} and
      * releases the cached {@link ProjectDataStore} instance.
-     *
-     * @throws NullPointerException if no data manager is currently open
+     * Does nothing if no data manager is currently open.
      */
     public static void closeDataManager() {
-        projectDataStore.resetProject();
-        projectDataStore = null;
+        if (projectDataStore != null) {
+            projectDataStore.resetProject();
+            projectDataStore = null;
+        }
     }
 
     /**
      * Saves pending changes via {@link ProjectFileManager#resetAll()} and
      * releases the cached {@link ProjectFileManager} instance.
-     *
-     * @throws NullPointerException if no file manager is currently open
+     * Does nothing if no file manager is currently open.
      */
     public static void closeFileManager() {
-        projectFileManager.resetAll();
-        projectFileManager = null;
+        if (projectFileManager != null) {
+            projectFileManager.resetAll();
+            projectFileManager = null;
+        }
     }
 
     /**
      * Saves pending changes via {@link LibraryManager#resetAll()} and
      * releases the cached {@link LibraryManager} instance.
-     *
-     * @throws NullPointerException if no library manager is currently open
+     * Does nothing if no library manager is currently open.
      */
     public static void closeLibraryManager() {
-        libraryManager.resetAll();
-        libraryManager = null;
+        if (libraryManager != null) {
+            libraryManager.resetAll();
+            libraryManager = null;
+        }
     }
 
     /**
      * Saves pending changes via {@link ResourceManager#resetAll()} and
      * releases the cached {@link ResourceManager} instance.
-     *
-     * @throws NullPointerException if no resource manager is currently open
+     * Does nothing if no resource manager is currently open.
      */
     public static void closeResourceManager() {
-        resourceManager.resetAll();
-        resourceManager = null;
+        if (resourceManager != null) {
+            resourceManager.resetAll();
+            resourceManager = null;
+        }
     }
 
     /**

@@ -162,7 +162,9 @@ public class FileUtil {
     }
 
     public static String readFile(String path) {
-        createNewFileIfNotPresent(path);
+        if (!isExistFile(path)) {
+            return "";
+        }
 
         StringBuilder sb = new StringBuilder();
         try (FileReader fr = new FileReader(path)) {
