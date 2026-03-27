@@ -1,3 +1,21 @@
+# v7.0.0-beta6.1
+
+## 🐛 Bug Fixes
+
+### XML Generation
+- **XmlBuilder NPE** — Fix `NullPointerException` in `AttributeBuilder.toCode()` caused by implicit mutable state; `newlineIndent` is now passed as a local parameter, eliminating the crash on single raw attribute injection
+
+### UI Designer — Editor Preview
+- **Container preview invisible** — Fix `LinearLayout`, `RelativeLayout`, `HorizontalScrollView`, `VerticalScrollView`, `CardView` previews not rendering borders or selection overlay due to missing `setWillNotDraw(false)`
+- **Widget preview invisible** — Fix `ProgressBar`, `AdView`, `ListView`, `RecyclerView`, `TabLayout`, `BottomNavigationView` previews with the same drawing flag issue
+- **Special widget preview invisible** — Fix `BadgeView`, `PatternLockView`, `LottieAnimationView`, `YoutubePlayerView`, `OTPView`, `CodeView` placeholder previews not rendering selection overlay
+
+---
+
+**Full Changelog**: https://github.com/webmturn/Sketchware-Pro/compare/v7.0.0-beta-06...v7.0.0-beta6.1
+
+---
+
 # v7.0.0-beta6
 
 ## ✨ New Features
