@@ -10,7 +10,6 @@ public class XmlBuilder {
     private final boolean isInlineAttributes;
     private final String rootElementName;
     private final ArrayList<AttributeBuilder> attributes;
-    private String newlineIndent;
     private int indentationLevel;
     private String nodeValue;
 
@@ -65,14 +64,15 @@ public class XmlBuilder {
         resultCode.append("<");
         resultCode.append(rootElementName);
         for (AttributeBuilder attr : attributes) {
+            String attributeNewlineIndent = null;
             if (attributes.size() <= 1 || isInlineAttributes) {
                 resultCode.append(" ");
             } else {
                 resultCode.append("\r\n");
                 resultCode.append(addIndent(1));
-                newlineIndent = "\r\n" + addIndent(1);
+                attributeNewlineIndent = "\r\n" + addIndent(1);
             }
-            resultCode.append(attr.toCode());
+            resultCode.append(attr.toCode(attributeNewlineIndent));
         }
         if (childNodes.size() <= 0) {
             if (nodeValue == null || nodeValue.length() <= 0) {
@@ -128,13 +128,14 @@ public class XmlBuilder {
             this.value = value;
         }
 
-        private String toCode() {
+        private String toCode(String newlineIndent) {
+            String safeValue = value == null ? "" : value;
             if (namespace != null && !namespace.isEmpty()) {
-                return namespace + ":" + attr + "=" + "\"" + value + "\"";
+                return namespace + ":" + attr + "=" + "\"" + safeValue + "\"";
             } else if (attr == null || attr.length() <= 0) {
-                return newlineIndent != null ? value.replace("\n", newlineIndent) : value;
+                return newlineIndent != null ? safeValue.replace("\n", newlineIndent) : safeValue;
             } else {
-                return attr + "=" + "\"" + value + "\"";
+                return attr + "=" + "\"" + safeValue + "\"";
             }
         }
     }
