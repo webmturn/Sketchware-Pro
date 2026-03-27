@@ -20,7 +20,6 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import java.util.ArrayList;
 
 import pro.sketchware.core.BaseAsyncTask;
-import pro.sketchware.core.ProjectListManager;
 import pro.sketchware.dialogs.ProgressDialog;
 import pro.sketchware.utility.UI;
 
@@ -96,7 +95,6 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         taskList = new ArrayList<>();
         lottieDialog = new LoadingDialog(this);
-        ProjectListManager.initializeDb(getApplicationContext(), false);
         progressDialog = new ProgressDialog(this);
         mAnalytics = null;
     }

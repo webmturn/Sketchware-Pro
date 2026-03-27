@@ -132,7 +132,7 @@ public class XmlBuilder {
             if (namespace != null && !namespace.isEmpty()) {
                 return namespace + ":" + attr + "=" + "\"" + value + "\"";
             } else if (attr == null || attr.length() <= 0) {
-                return value.replace("\n", newlineIndent);
+                return newlineIndent != null ? value.replace("\n", newlineIndent) : value;
             } else {
                 return attr + "=" + "\"" + value + "\"";
             }

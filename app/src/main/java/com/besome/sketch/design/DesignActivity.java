@@ -1089,6 +1089,26 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         protected DesignActivity getActivity() {
             return activityRef.get();
         }
+
+        /**
+         * Persists all project data (views, logic, files, resources, libraries) in parallel.
+         *
+         * @return {@code true} if data was saved successfully
+         */
+        protected static boolean saveProjectDataToFiles(String sc_id) {
+            ProjectDataManager.getResourceManager(sc_id).cleanupAllResources();
+            ExecutorService pool = Executors.newFixedThreadPool(4);
+            CompletableFuture<Boolean> dataFuture = CompletableFuture.supplyAsync(
+                () -> ProjectDataManager.getProjectDataManager(sc_id).saveAllData(), pool);
+            CompletableFuture.allOf(
+                CompletableFuture.runAsync(() -> ProjectDataManager.getFileManager(sc_id).saveToData(), pool),
+                dataFuture,
+                CompletableFuture.runAsync(() -> ProjectDataManager.getResourceManager(sc_id).saveToData(), pool),
+                CompletableFuture.runAsync(() -> ProjectDataManager.getLibraryManager(sc_id).saveToData(), pool)
+            ).join();
+            pool.shutdown();
+            return dataFuture.join();
+        }
     }
 
     private static class BuildTask extends BaseTask implements BuildProgressReceiver {
@@ -1533,18 +1553,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             DesignActivity activity = getActivity();
             if (activity != null) {
                 var sc_id = DesignActivity.sc_id;
-                ProjectDataManager.getResourceManager(sc_id).cleanupAllResources();
-                ExecutorService pool = Executors.newFixedThreadPool(4);
-                CompletableFuture<Boolean> dataFuture = CompletableFuture.supplyAsync(
-                    () -> ProjectDataManager.getProjectDataManager(sc_id).saveAllData(), pool);
-                CompletableFuture.allOf(
-                    CompletableFuture.runAsync(() -> ProjectDataManager.getFileManager(sc_id).saveToData(), pool),
-                    dataFuture,
-                    CompletableFuture.runAsync(() -> ProjectDataManager.getResourceManager(sc_id).saveToData(), pool),
-                    CompletableFuture.runAsync(() -> ProjectDataManager.getLibraryManager(sc_id).saveToData(), pool)
-                ).join();
-                pool.shutdown();
-                boolean dataSaved = dataFuture.join();
+                boolean dataSaved = saveProjectDataToFiles(sc_id);
                 activity.runOnUiThread(() -> {
                     if (dataSaved) {
                         SketchToast.toast(activity.getApplicationContext(), Helper.getResString(R.string.common_message_complete_save), SketchToast.TOAST_NORMAL).show();
@@ -1576,18 +1585,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             DesignActivity activity = getActivity();
             if (activity != null) {
                 var sc_id = DesignActivity.sc_id;
-                ProjectDataManager.getResourceManager(sc_id).cleanupAllResources();
-                ExecutorService pool = Executors.newFixedThreadPool(4);
-                CompletableFuture<Boolean> dataFuture = CompletableFuture.supplyAsync(
-                    () -> ProjectDataManager.getProjectDataManager(sc_id).saveAllData(), pool);
-                CompletableFuture.allOf(
-                    CompletableFuture.runAsync(() -> ProjectDataManager.getFileManager(sc_id).saveToData(), pool),
-                    dataFuture,
-                    CompletableFuture.runAsync(() -> ProjectDataManager.getResourceManager(sc_id).saveToData(), pool),
-                    CompletableFuture.runAsync(() -> ProjectDataManager.getLibraryManager(sc_id).saveToData(), pool)
-                ).join();
-                pool.shutdown();
-                boolean dataSaved = dataFuture.join();
+                boolean dataSaved = saveProjectDataToFiles(sc_id);
                 ProjectDataManager.getResourceManager(sc_id).deleteTempDirs();
                 activity.runOnUiThread(() -> {
                     if (dataSaved) {
