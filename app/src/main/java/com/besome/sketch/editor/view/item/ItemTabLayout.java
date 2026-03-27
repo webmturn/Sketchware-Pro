@@ -33,6 +33,7 @@ public class ItemTabLayout extends TabLayout implements ItemView {
         rect = new Rect();
 
         setDrawingCacheEnabled(true);
+        setWillNotDraw(false);
         setClickable(false);
         setFocusable(false);
         addTab(newTab().setText(Helper.getResString(R.string.editor_preview_tab1)), true);

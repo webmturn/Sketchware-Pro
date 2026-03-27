@@ -40,6 +40,7 @@ public class ItemListView extends ListView implements ItemView {
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setStrokeWidth(ViewUtil.dpToPx(getContext(), 2.0f));
         setDrawingCacheEnabled(true);
+        setWillNotDraw(false);
         exampleData.add("List item 1");
         exampleData.add("List item 2");
         exampleData.add("List item 3");

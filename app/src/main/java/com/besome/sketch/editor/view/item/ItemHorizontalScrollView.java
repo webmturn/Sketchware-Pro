@@ -35,6 +35,7 @@ public class ItemHorizontalScrollView extends FrameLayout implements ItemView, S
 
     private void initialize(Context context) {
         setDrawingCacheEnabled(true);
+        setWillNotDraw(false);
         setMinimumWidth((int) ViewUtil.dpToPx(context, 32.0f));
         setMinimumHeight((int) ViewUtil.dpToPx(context, 32.0f));
         drawPaint = new Paint(Paint.ANTI_ALIAS_FLAG);

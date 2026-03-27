@@ -34,6 +34,7 @@ public class ItemProgressBar extends LinearLayout implements ItemView {
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(0x9599d5d0);
         setDrawingCacheEnabled(true);
+        setWillNotDraw(false);
         imageView = new ImageView(getContext());
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,

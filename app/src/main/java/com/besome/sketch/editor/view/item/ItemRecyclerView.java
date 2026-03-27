@@ -43,6 +43,7 @@ public class ItemRecyclerView extends RecyclerView implements ItemView, EditorLi
         paint.setStrokeWidth(ViewUtil.dpToPx(getContext(), 2.0f));
         rect = new Rect();
         setDrawingCacheEnabled(true);
+        setWillNotDraw(false);
         setLayoutManager(new LinearLayoutManager(context));
         setListItem(android.R.layout.simple_list_item_1);
     }

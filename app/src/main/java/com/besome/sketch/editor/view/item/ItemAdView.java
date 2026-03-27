@@ -34,6 +34,7 @@ public class ItemAdView extends LinearLayout implements ItemView {
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(0x9599d5d0);
         setDrawingCacheEnabled(true);
+        setWillNotDraw(false);
         imgView = new ImageView(getContext());
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(-1, -2);
         imgView.setLayoutParams(layoutParams);

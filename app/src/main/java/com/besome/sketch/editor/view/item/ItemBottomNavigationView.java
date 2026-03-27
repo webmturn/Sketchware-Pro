@@ -33,6 +33,7 @@ public class ItemBottomNavigationView extends BottomNavigationView implements It
         rect = new Rect();
 
         setDrawingCacheEnabled(true);
+        setWillNotDraw(false);
         setFocusable(false);
         setClickable(false);
         var menu = getMenu();
