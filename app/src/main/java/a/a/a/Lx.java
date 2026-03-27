@@ -3089,8 +3089,8 @@ public class Lx {
                         continue;
                     }
                     appendIndent(formattedCode, indentLevel);
+                    isNewLine = false;
                 }
-                isNewLine = false;
             }
 
             if (processingSingleLineComment) {
