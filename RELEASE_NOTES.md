@@ -12,7 +12,7 @@
 
 ---
 
-**Full Changelog**: https://github.com/webmturn/Sketchware-Pro/compare/v7.0.0-beta-06...v7.0.0-beta6.1
+**Full Changelog**: https://github.com/webmturn/Sketchware-Pro/compare/v7.0.0-beta-06...v7.0.0-beta-06-01
 
 ---
 
