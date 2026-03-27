@@ -302,7 +302,7 @@ public class BaseBlockView extends RelativeLayout {
     reflectionPaint.setColor(-1593835521);
     reflectionPaint.setStyle(Paint.Style.STROKE);
     reflectionPaint.setStrokeWidth(reflectionStrokeWidth);
-    setLayerType(1, null);
+    setLayerType(View.LAYER_TYPE_SOFTWARE, null);
     setBlockSize(baseWidth, (textHeight + topSpacing + bottomSpacing), false);
   }
   

@@ -46,8 +46,8 @@ public class CodeFormatter {
                         continue;
                     }
                     appendIndent(formattedCode, indentLevel);
+                    isNewLine = false;
                 }
-                isNewLine = false;
             }
 
             if (processingSingleLineComment) {
@@ -118,16 +118,19 @@ public class CodeFormatter {
                             }
                             if (isNewLine) {
                                 appendIndent(formattedCode, indentLevel);
+                                isNewLine = false;
                             }
                             formattedCode.append(codeBit);
                         } else if (nextChar == '!' || nextChar == '?') {
                             if (isNewLine) {
                                 appendIndent(formattedCode, indentLevel);
+                                isNewLine = false;
                             }
                             formattedCode.append(codeBit);
                         } else {
                             if (isNewLine) {
                                 appendIndent(formattedCode, indentLevel);
+                                isNewLine = false;
                             }
                             formattedCode.append(codeBit);
                             indentLevel += 1;
@@ -145,6 +148,7 @@ public class CodeFormatter {
                     } else {
                         if (isNewLine) {
                             appendIndent(formattedCode, indentLevel);
+                            isNewLine = false;
                         }
                         formattedCode.append(codeBit);
                     }

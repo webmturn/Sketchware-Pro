@@ -96,7 +96,7 @@ public class PaletteBlock extends LinearLayout {
     }
 
     public void runBulkUpdate(Runnable action) {
-        boolean canSuppressLayout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2;
+        boolean canSuppressLayout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q;
         if (canSuppressLayout) {
             suppressLayout(true);
         }

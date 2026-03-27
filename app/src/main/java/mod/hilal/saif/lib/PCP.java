@@ -19,6 +19,6 @@ public class PCP implements ColorPickerDialog.OnColorPickedListener {
 
     @Override
     public void onResourceColorPicked(String color, int i2) {
-        toSetText.setText(String.format("#%08X", color));
+        toSetText.setText(String.format("#%08X", i2));
     }
 }
