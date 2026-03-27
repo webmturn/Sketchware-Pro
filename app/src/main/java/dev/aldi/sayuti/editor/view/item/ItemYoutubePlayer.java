@@ -32,6 +32,7 @@ public class ItemYoutubePlayer extends LinearLayout implements ItemView {
         rect = new Rect();
 
         setDrawingCacheEnabled(true);
+        setWillNotDraw(false);
         ImageView imageView = new ImageView(getContext());
         imageView.setLayoutParams(new LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
