@@ -62,7 +62,10 @@ public class AddFontActivity extends BaseDialogActivity implements View.OnClickL
         fontNameValidator = new FontNameValidator(this, binding.tiInput, uq.b, intent.getStringArrayListExtra("font_names"));
         if (intent.getIntExtra("request_code", -1) == 272) {
             e(Helper.getResString(R.string.design_manager_font_title_edit_font));
-            binding.edInput.setText(((ProjectResourceBean) intent.getParcelableExtra("resource_bean")).resName);
+            ProjectResourceBean resourceBean = intent.getParcelableExtra("resource_bean");
+            if (resourceBean != null) {
+                binding.edInput.setText(resourceBean.resName);
+            }
             binding.addToCollectionCheckbox.setEnabled(false);
         }
         addBasicTextChangedListener(binding.edInput, str -> {
