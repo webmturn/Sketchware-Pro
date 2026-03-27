@@ -79,7 +79,7 @@ public class ViewBeans {
     }
 
     public static int getViewTypeByTypeName(String typeName) {
-        return views.inverse().containsKey(typeName) ? views.inverse().get(typeName) : 0;
+        return views.inverse().getOrDefault(typeName, 0);
     }
 
     public static String getViewTypeName(int id) {

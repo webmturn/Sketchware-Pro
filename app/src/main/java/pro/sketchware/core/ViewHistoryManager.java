@@ -49,7 +49,7 @@ public class ViewHistoryManager {
     if (!positionMap.containsKey(key))
       return; 
     ArrayList historyEntries = historyMap.get(key);
-    int position = ((Integer)positionMap.get(key)).intValue();
+    int position = positionMap.getOrDefault(key, 0);
     if (historyEntries == null)
       return; 
     for (int j = historyEntries.size(); j > position; j--)
@@ -60,6 +60,7 @@ public class ViewHistoryManager {
     if (!historyMap.containsKey(key))
       initHistory(key); 
     ArrayList<HistoryViewBean> entries = historyMap.get(key);
+    if (entries == null) return;
     entries.add(historyViewBean);
     if (entries.size() > MAX_HISTORY_STEPS) {
       entries.remove(0);
@@ -97,7 +98,7 @@ public class ViewHistoryManager {
   public final void decrementPosition(String key) {
     if (!positionMap.containsKey(key))
       initHistory(key); 
-    int position = ((Integer)positionMap.get(key)).intValue();
+    int position = positionMap.getOrDefault(key, 0);
     if (position == 0)
       return; 
     positionMap.put(key, Integer.valueOf(position - 1));
@@ -124,7 +125,7 @@ public class ViewHistoryManager {
   public final void incrementPosition(String key) {
     if (!positionMap.containsKey(key))
       initHistory(key); 
-    int position = ((Integer)positionMap.get(key)).intValue();
+    int position = positionMap.getOrDefault(key, 0);
     positionMap.put(key, Integer.valueOf(position + 1));
   }
   
@@ -134,26 +135,32 @@ public class ViewHistoryManager {
   }
   
   public boolean canRedo(String key) {
-    return !positionMap.containsKey(key) ? false : ((((Integer)positionMap.get(key)).intValue() < ((ArrayList)historyMap.get(key)).size()));
+    if (!positionMap.containsKey(key)) return false;
+    ArrayList<HistoryViewBean> entries = historyMap.get(key);
+    return entries != null && positionMap.getOrDefault(key, 0) < entries.size();
   }
   
   public boolean canUndo(String key) {
-    return !positionMap.containsKey(key) ? false : ((((Integer)positionMap.get(key)).intValue() > 0));
+    return positionMap.getOrDefault(key, 0) > 0;
   }
   
   public HistoryViewBean redo(String key) {
     if (!canRedo(key))
       return null; 
-    int position = ((Integer)positionMap.get(key)).intValue();
+    int position = positionMap.getOrDefault(key, 0);
     incrementPosition(key);
-    return ((HistoryViewBean)((ArrayList<HistoryViewBean>)historyMap.get(key)).get(position - 1 + 1)).clone();
+    ArrayList<HistoryViewBean> entries = historyMap.get(key);
+    if (entries == null || position >= entries.size()) return null;
+    return entries.get(position).clone();
   }
   
   public HistoryViewBean undo(String key) {
     if (!canUndo(key))
       return null; 
-    int position = ((Integer)positionMap.get(key)).intValue();
+    int position = positionMap.getOrDefault(key, 0);
     decrementPosition(key);
-    return ((HistoryViewBean)((ArrayList<HistoryViewBean>)historyMap.get(key)).get(position - 1)).clone();
+    ArrayList<HistoryViewBean> entries = historyMap.get(key);
+    if (entries == null || position - 1 < 0) return null;
+    return entries.get(position - 1).clone();
   }
 }

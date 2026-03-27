@@ -85,7 +85,7 @@ public class BlockHistoryManager {
     if (!positionMap.containsKey(historyKey))
       return; 
     ArrayList historyEntries = historyMap.get(historyKey);
-    int position = ((Integer)positionMap.get(historyKey)).intValue();
+    int position = positionMap.getOrDefault(historyKey, 0);
     if (historyEntries == null)
       return; 
     for (int j = historyEntries.size(); j > position; j--)
@@ -131,6 +131,7 @@ public class BlockHistoryManager {
     if (!historyMap.containsKey(historyKey))
       initHistory(historyKey); 
     ArrayList<HistoryBlockBean> historyEntries = historyMap.get(historyKey);
+    if (historyEntries == null) return;
     historyEntries.add(historyBlockBean);
     if (historyEntries.size() > MAX_HISTORY_STEPS) {
       historyEntries.remove(0);
@@ -201,7 +202,7 @@ public class BlockHistoryManager {
   public final void decrementPosition(String historyKey) {
     if (!positionMap.containsKey(historyKey))
       initHistory(historyKey); 
-    int position = ((Integer)positionMap.get(historyKey)).intValue();
+    int position = positionMap.getOrDefault(historyKey, 0);
     if (position == 0)
       return; 
     positionMap.put(historyKey, Integer.valueOf(position - 1));
@@ -210,7 +211,7 @@ public class BlockHistoryManager {
   public final void incrementPosition(String historyKey) {
     if (!positionMap.containsKey(historyKey))
       initHistory(historyKey); 
-    int position = ((Integer)positionMap.get(historyKey)).intValue();
+    int position = positionMap.getOrDefault(historyKey, 0);
     positionMap.put(historyKey, Integer.valueOf(position + 1));
   }
   
@@ -226,7 +227,9 @@ public class BlockHistoryManager {
    * @return {@code true} if there are future history entries to redo
    */
   public boolean canRedo(String historyKey) {
-    return !positionMap.containsKey(historyKey) ? false : ((((Integer)positionMap.get(historyKey)).intValue() < ((ArrayList)historyMap.get(historyKey)).size()));
+    if (!positionMap.containsKey(historyKey)) return false;
+    ArrayList<HistoryBlockBean> entries = historyMap.get(historyKey);
+    return entries != null && positionMap.getOrDefault(historyKey, 0) < entries.size();
   }
   
   /**
@@ -236,7 +239,7 @@ public class BlockHistoryManager {
    * @return {@code true} if there are past history entries to undo
    */
   public boolean canUndo(String historyKey) {
-    return !positionMap.containsKey(historyKey) ? false : ((((Integer)positionMap.get(historyKey)).intValue() > 0));
+    return positionMap.getOrDefault(historyKey, 0) > 0;
   }
   
   /**
@@ -248,9 +251,11 @@ public class BlockHistoryManager {
   public HistoryBlockBean redo(String historyKey) {
     if (!canRedo(historyKey))
       return null; 
-    int position = ((Integer)positionMap.get(historyKey)).intValue();
+    int position = positionMap.getOrDefault(historyKey, 0);
     incrementPosition(historyKey);
-    return ((HistoryBlockBean)((ArrayList<HistoryBlockBean>)historyMap.get(historyKey)).get(position - 1 + 1)).clone();
+    ArrayList<HistoryBlockBean> entries = historyMap.get(historyKey);
+    if (entries == null || position >= entries.size()) return null;
+    return entries.get(position).clone();
   }
   
   /**
@@ -262,8 +267,10 @@ public class BlockHistoryManager {
   public HistoryBlockBean undo(String historyKey) {
     if (!canUndo(historyKey))
       return null; 
-    int position = ((Integer)positionMap.get(historyKey)).intValue();
+    int position = positionMap.getOrDefault(historyKey, 0);
     decrementPosition(historyKey);
-    return ((HistoryBlockBean)((ArrayList<HistoryBlockBean>)historyMap.get(historyKey)).get(position - 1)).clone();
+    ArrayList<HistoryBlockBean> entries = historyMap.get(historyKey);
+    if (entries == null || position - 1 < 0) return null;
+    return entries.get(position - 1).clone();
   }
 }

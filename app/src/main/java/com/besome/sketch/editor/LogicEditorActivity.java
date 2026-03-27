@@ -626,16 +626,13 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             }
         }
         for (BlockBean block : clonedBlocks) {
-            if (idMapping.containsKey(Integer.valueOf(block.id))) {
-                block.id = String.valueOf(idMapping.get(Integer.valueOf(block.id)));
-            } else {
-                block.id = "";
-            }
+            Integer mappedId = idMapping.get(Integer.valueOf(block.id));
+            block.id = mappedId != null ? String.valueOf(mappedId) : "";
             for (int j = 0; j < block.parameters.size(); j++) {
                 String parameter = block.parameters.get(j);
                 if (parameter != null && !parameter.isEmpty() && parameter.charAt(0) == '@') {
                     int parameterId = Integer.parseInt(parameter.substring(1));
-                    int parameterAsBlockId = idMapping.containsKey(parameterId) ? idMapping.get(parameterId) : 0;
+                    int parameterAsBlockId = idMapping.getOrDefault(parameterId, 0);
                     if (parameterAsBlockId >= 0) {
                         block.parameters.set(j, '@' + String.valueOf(parameterAsBlockId));
                     } else {
@@ -643,14 +640,14 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     }
                 }
             }
-            if (block.subStack1 >= 0 && idMapping.containsKey(block.subStack1)) {
-                block.subStack1 = idMapping.get(block.subStack1);
+            if (block.subStack1 >= 0) {
+                block.subStack1 = idMapping.getOrDefault(block.subStack1, block.subStack1);
             }
-            if (block.subStack2 >= 0 && idMapping.containsKey(block.subStack2)) {
-                block.subStack2 = idMapping.get(block.subStack2);
+            if (block.subStack2 >= 0) {
+                block.subStack2 = idMapping.getOrDefault(block.subStack2, block.subStack2);
             }
-            if (block.nextBlock >= 0 && idMapping.containsKey(block.nextBlock)) {
-                block.nextBlock = idMapping.get(block.nextBlock);
+            if (block.nextBlock >= 0) {
+                block.nextBlock = idMapping.getOrDefault(block.nextBlock, block.nextBlock);
             }
         }
         BlockView firstBlock = null;

@@ -669,7 +669,10 @@ public class ProjectDataStore {
   public ArrayList<ViewBean> getViewWithChildren(String fileName, ViewBean viewBean) {
     ArrayList<ViewBean> result = new ArrayList<>();
     result.add(viewBean);
-    result.addAll(getChildViews(viewMap.get(fileName), viewBean));
+    ArrayList<ViewBean> views = viewMap.get(fileName);
+    if (views != null) {
+      result.addAll(getChildViews(views, viewBean));
+    }
     return result;
   }
   
