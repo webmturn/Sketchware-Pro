@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -904,7 +905,9 @@ public class ProjectDataStore {
   }
   
   public boolean hasLogicBackup() {
-    return fileUtil.exists(SketchwarePaths.getBackupPath(projectId) + File.separator + "logic");
+    return hasDistinctBackup(
+        SketchwarePaths.getBackupPath(projectId) + File.separator + "logic",
+        SketchwarePaths.getDataPath(projectId) + File.separator + "logic");
   }
   
   public boolean isVariableUsedInBlocks(String fileName, String data, String extra) {
@@ -1039,7 +1042,19 @@ public class ProjectDataStore {
   }
   
   public boolean hasViewBackup() {
-    return fileUtil.exists(SketchwarePaths.getBackupPath(projectId) + File.separator + "view");
+    return hasDistinctBackup(
+        SketchwarePaths.getBackupPath(projectId) + File.separator + "view",
+        SketchwarePaths.getDataPath(projectId) + File.separator + "view");
+  }
+
+  private boolean hasDistinctBackup(String backupPath, String dataPath) {
+    if (!fileUtil.exists(backupPath))
+      return false; 
+    byte[] backupBytes = fileUtil.readFileBytes(backupPath);
+    if (backupBytes == null || backupBytes.length == 0)
+      return false; 
+    byte[] dataBytes = fileUtil.readFileBytes(dataPath);
+    return dataBytes == null || !Arrays.equals(backupBytes, dataBytes);
   }
   
   public boolean hasComponent(String fileName, int index, String data) {
@@ -1121,6 +1136,8 @@ public class ProjectDataStore {
   
   public void loadLogicFromBackup() {
     String logicPath = SketchwarePaths.getBackupPath(projectId) + File.separator + "logic";
+    if (!hasDistinctBackup(logicPath, SketchwarePaths.getDataPath(projectId) + File.separator + "logic"))
+      return; 
     try (BufferedReader reader = new BufferedReader(new StringReader(fileUtil.decryptToString(fileUtil.readFileBytes(logicPath))))) {
       readLogicData(reader);
     } catch (Exception e) {
@@ -1228,6 +1245,8 @@ public class ProjectDataStore {
   
   public void loadViewFromBackup() {
     String viewPath = SketchwarePaths.getBackupPath(projectId) + File.separator + "view";
+    if (!hasDistinctBackup(viewPath, SketchwarePaths.getDataPath(projectId) + File.separator + "view"))
+      return; 
     try (BufferedReader reader = new BufferedReader(new StringReader(fileUtil.decryptToString(fileUtil.readFileBytes(viewPath))))) {
       readViewData(reader);
     } catch (Exception e) {

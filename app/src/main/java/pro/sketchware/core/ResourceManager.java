@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ResourceManager {
   public static StringSignature cacheSignature;
@@ -390,14 +391,14 @@ public class ResourceManager {
   public String getFontDirPath() {
     return fontDirPath;
   }
-  
+
   public ArrayList<String> getFontNames() {
     ArrayList<String> fontNames = new ArrayList<>();
     for (ProjectResourceBean bean : fonts)
       fontNames.add(bean.resName); 
     return fontNames;
   }
-  
+
   public boolean hasFont(String name) {
     for (ProjectResourceBean bean : fonts) {
       if (bean.resName.equals(name))
@@ -405,11 +406,11 @@ public class ResourceManager {
     } 
     return false;
   }
-  
+
   public String getImageDirPath() {
     return imageDirPath;
   }
-  
+
   public boolean hasImage(String name) {
     for (ProjectResourceBean bean : images) {
       if (bean.resName.equals(name))
@@ -417,14 +418,14 @@ public class ResourceManager {
     } 
     return false;
   }
-  
+
   public ArrayList<String> getImageNames() {
     ArrayList<String> imageNames = new ArrayList<>();
     for (ProjectResourceBean bean : images)
       imageNames.add(bean.resName); 
     return imageNames;
   }
-  
+
   public boolean hasSound(String name) {
     for (ProjectResourceBean bean : sounds) {
       if (bean.resName.equals(name))
@@ -432,28 +433,41 @@ public class ResourceManager {
     } 
     return false;
   }
-  
+
   public String getSoundDirPath() {
     return soundDirPath;
   }
-  
+
   public ArrayList<String> getSoundNames() {
     ArrayList<String> soundNames = new ArrayList<>();
     for (ProjectResourceBean bean : sounds)
       soundNames.add(bean.resName); 
     return soundNames;
   }
-  
+
   public boolean hasBackup() {
-    String backupPath = SketchwarePaths.getBackupPath(projectId) + File.separator + "resource";
-    return fileUtil.exists(backupPath);
+    return hasDistinctBackup(
+        SketchwarePaths.getBackupPath(projectId) + File.separator + "resource",
+        SketchwarePaths.getDataPath(projectId) + File.separator + "resource");
   }
-  
+
+  private boolean hasDistinctBackup(String backupPath, String dataPath) {
+    if (!fileUtil.exists(backupPath))
+      return false; 
+    byte[] backupBytes = fileUtil.readFileBytes(backupPath);
+    if (backupBytes == null || backupBytes.length == 0)
+      return false; 
+    byte[] dataBytes = fileUtil.readFileBytes(dataPath);
+    return dataBytes == null || !Arrays.equals(backupBytes, dataBytes);
+  }
+
   public void loadFromBackup() {
+    String resourcePath = SketchwarePaths.getBackupPath(projectId) + File.separator + "resource";
+    if (!hasDistinctBackup(resourcePath, SketchwarePaths.getDataPath(projectId) + File.separator + "resource"))
+      return; 
     images = new ArrayList<>();
     sounds = new ArrayList<>();
     fonts = new ArrayList<>();
-    String resourcePath = SketchwarePaths.getBackupPath(projectId) + File.separator + "resource";
     try (BufferedReader bufferedReader = new BufferedReader(new StringReader(fileUtil.decryptToString(fileUtil.readFileBytes(resourcePath))))) {
       parseResourceData(bufferedReader);
     } catch (Exception e) {

@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ProjectFileManager {
   public ArrayList<String> xmlNames;
@@ -247,22 +248,30 @@ public class ProjectFileManager {
       fileUtil.writeBytes(filePath, fileUtil.encryptString(contentBuffer.toString()));
     } catch (Exception e) {
       Log.e("ProjectFileManager", "Failed to write file", e);
-    } 
-  }
-
-  public final void initializeDefaults() {
-    activities = new ArrayList<>();
-    customViews = new ArrayList<>();
-    addFile(0, "main");
+    }
   }
 
   public boolean hasBackup() {
-    return fileUtil.exists(SketchwarePaths.getBackupPath(projectId) + File.separator + "file");
+    return hasDistinctBackup(
+        SketchwarePaths.getBackupPath(projectId) + File.separator + "file",
+        SketchwarePaths.getDataPath(projectId) + File.separator + "file");
+  }
+
+  private boolean hasDistinctBackup(String backupPath, String dataPath) {
+    if (!fileUtil.exists(backupPath))
+      return false;
+    byte[] backupBytes = fileUtil.readFileBytes(backupPath);
+    if (backupBytes == null || backupBytes.length == 0)
+      return false;
+    byte[] dataBytes = fileUtil.readFileBytes(dataPath);
+    return dataBytes == null || !Arrays.equals(backupBytes, dataBytes);
   }
 
   public void loadFromBackup() {
-    initializeDefaults();
     String filePath = SketchwarePaths.getBackupPath(projectId) + File.separator + "file";
+    if (!hasDistinctBackup(filePath, SketchwarePaths.getDataPath(projectId) + File.separator + "file"))
+      return; 
+    initializeDefaults();
     try (BufferedReader reader = new BufferedReader(new StringReader(fileUtil.decryptToString(fileUtil.readFileBytes(filePath))))) {
       parseFileData(reader);
     } catch (Exception e) {

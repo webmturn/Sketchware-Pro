@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Arrays;
 
 public class LibraryManager {
   public String projectId;
@@ -174,13 +175,26 @@ public class LibraryManager {
   }
   
   public boolean hasBackup() {
-    String libraryPath = SketchwarePaths.getBackupPath(projectId) + File.separator + "library";
-    return fileUtil.exists(libraryPath);
+    return hasDistinctBackup(
+        SketchwarePaths.getBackupPath(projectId) + File.separator + "library",
+        SketchwarePaths.getDataPath(projectId) + File.separator + "library");
+  }
+
+  private boolean hasDistinctBackup(String backupPath, String dataPath) {
+    if (!fileUtil.exists(backupPath))
+      return false; 
+    byte[] backupBytes = fileUtil.readFileBytes(backupPath);
+    if (backupBytes == null || backupBytes.length == 0)
+      return false; 
+    byte[] dataBytes = fileUtil.readFileBytes(dataPath);
+    return dataBytes == null || !Arrays.equals(backupBytes, dataBytes);
   }
   
   public void loadFromBackup() {
-    initializeDefaults();
     String basePath = SketchwarePaths.getBackupPath(projectId) + File.separator + "library";
+    if (!hasDistinctBackup(basePath, SketchwarePaths.getDataPath(projectId) + File.separator + "library"))
+      return; 
+    initializeDefaults();
     try (BufferedReader bufferedReader = new BufferedReader(new StringReader(fileUtil.decryptToString(fileUtil.readFileBytes(basePath))))) {
       parseLibraryData(bufferedReader);
     } catch (Exception e) {

@@ -229,11 +229,11 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     }
 
     private void loadProject(boolean haveSavedState) {
-        projectFile = getDefaultProjectFile();
         ProjectDataManager.getProjectDataManager(sc_id, haveSavedState);
         ProjectDataManager.getFileManager(sc_id, haveSavedState);
         ResourceManager resourceManager = ProjectDataManager.getResourceManager(sc_id, haveSavedState);
         ProjectDataManager.getLibraryManager(sc_id, haveSavedState);
+        projectFile = getDefaultProjectFile();
         ViewHistoryManager.getInstance(sc_id);
         BlockHistoryManager.getInstance(sc_id);
         // Resource backup is now lazy — ensureBackedUp() is called
