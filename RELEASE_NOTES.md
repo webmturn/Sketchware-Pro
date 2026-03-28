@@ -1,3 +1,25 @@
+# v7.0.0-beta6.2
+
+## 🐛 Bug Fixes
+
+### Project Data Integrity
+- **Blocks/moreblocks loss on update** — Fix regression where saved blocks and moreblocks disappear after app updates; add `hasDistinctBackup` helper that rejects empty or byte-identical backup files across `ProjectDataStore`, `ProjectFileManager`, `LibraryManager`, and `ResourceManager`; guard all `loadFromBackup` entry points to prevent clearing in-memory state from an invalid backup; fix `DesignActivity` load order to correctly respect the load strategy flag
+
+### Logic Editor — Favorite Collections
+- **Collection persistence** — Fix favorite block and moreblock collections not persisting; override `loadCollections()` in `BlockCollectionManager` and `MoreBlockCollectionManager` with line-by-line JSON parsing to match the storage format
+- **Collection deselection** — Fix `ManageCollectionActivity.unselectToBeDeletedItems()` missing `case 4` for built-in block collections, causing the wrong collection type to be cleared on deletion
+- **Collection name display** — Fix `DefinitionBlockView` not showing the collection name as its block spec; add `getCollectionName()` accessor for downstream use
+
+### Custom Block Manager
+- **Block type preview** — Fix custom block type preview showing incorrect shapes in `BlocksManagerCreatorActivity` and `BlocksManagerDetailsActivity`; extract `BlockTypeUtils.normalizeStoredBlockType()` to canonicalize legacy stored values (`"regular"`, localized display labels) to internal single-character codes
+- **Palette search indexing** — Fix `ExtraPaletteBlock` search index being off, causing the wrong block to be highlighted when selecting a search result
+
+---
+
+**Full Changelog**: https://github.com/webmturn/Sketchware-Pro/compare/v7.0.0-beta-06-01...v7.0.0-beta-06-02
+
+---
+
 # v7.0.0-beta6.1
 
 ## 🐛 Bug Fixes
