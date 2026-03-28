@@ -1,12 +1,17 @@
 package pro.sketchware.core;
 
+import android.util.Log;
+
 import com.besome.sketch.beans.BlockBean;
 import com.besome.sketch.beans.CollectionBean;
 import com.besome.sketch.beans.MoreBlockCollectionBean;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 
 public class MoreBlockCollectionManager extends BaseCollectionManager {
@@ -70,6 +75,26 @@ public class MoreBlockCollectionManager extends BaseCollectionManager {
 
     public void initializePaths() {
         collectionFilePath = SketchwarePaths.getCollectionPath() + File.separator + "more_block" + File.separator + "list";
+    }
+
+    @Override
+    public void loadCollections() {
+        collections = new ArrayList<>();
+        try {
+            if (fileUtil.exists(collectionFilePath)) {
+                String content = fileUtil.readFile(collectionFilePath);
+                try (BufferedReader reader = new BufferedReader(new StringReader(content))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        if (line.isEmpty()) continue;
+                        CollectionBean bean = gson.fromJson(line, CollectionBean.class);
+                        collections.add(bean);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            Log.e("MoreBlockCollectionManager", "Failed to load collections", e);
+        }
     }
 
     public ArrayList<MoreBlockCollectionBean> getMoreBlocks() {

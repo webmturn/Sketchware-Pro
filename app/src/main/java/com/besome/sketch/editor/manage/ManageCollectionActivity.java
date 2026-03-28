@@ -598,8 +598,14 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
                 }
                 break;
 
-            default:
+            case 4:
                 for (BlockCollectionBean bean : blocks) {
+                    bean.isSelected = false;
+                }
+                break;
+
+            default:
+                for (MoreBlockCollectionBean bean : moreBlocks) {
                     bean.isSelected = false;
                 }
                 break;

@@ -10,13 +10,21 @@ import java.util.ArrayList;
 
 public class DefinitionBlockView extends BlockView {
   public ArrayList<BlockBean> blockData;
+
+  private final String collectionName;
   
   public TextView definitionLabel;
   
   public DefinitionBlockView(Context context, String key, String value, String extra, String extra2, ArrayList<BlockBean> list) {
     super(context, -1, extra2, key, value, extra);
+    collectionName = extra2;
     blockData = list;
     blockTypeInt = 2;
+    setSpec(collectionName);
+  }
+
+  public String getCollectionName() {
+    return collectionName;
   }
   
   private TextView createDefinitionLabel(String input) {

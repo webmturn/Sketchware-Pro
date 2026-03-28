@@ -2411,7 +2411,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 BlockView deletedBlock = (BlockView) v;
                 if (deletedBlock.getBlockType() == 2) {
                     toggleDrawerVisibility(true);
-                    showDeleteFavoriteDialog(deletedBlock.spec);
+                    showDeleteFavoriteDialog(((DefinitionBlockView) deletedBlock).getCollectionName());
                 } else {
                     activeIconDelete(false);
                     int id;
@@ -2476,7 +2476,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             } else if (logicTopMenu.isDetailActive) {
                 setDetailActive(false);
                 if (v instanceof DefinitionBlockView) {
-                    showBlockCollection(((DefinitionBlockView) v).spec);
+                    showBlockCollection(((DefinitionBlockView) v).getCollectionName());
                 }
             } else if (logicTopMenu.isCopyActive) {
                 setCopyActive(false);

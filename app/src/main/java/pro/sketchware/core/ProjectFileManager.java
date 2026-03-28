@@ -50,6 +50,12 @@ public class ProjectFileManager {
     fileUtil.deleteFileByPath(SketchwarePaths.getBackupPath(projectId) + File.separator + "file");
   }
   
+  public final void initializeDefaults() {
+    activities = new ArrayList<>();
+    customViews = new ArrayList<>();
+    addFile(0, "main");
+  }
+
   public void addFile(int index, String fileName) {
     ProjectFileBean projectFileBean = new ProjectFileBean(index, fileName);
     if (index == 0) {
