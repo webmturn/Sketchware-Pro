@@ -39,6 +39,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import dev.pranav.filepicker.FilePickerCallback;
 import dev.pranav.filepicker.FilePickerDialogFragment;
 import dev.pranav.filepicker.FilePickerOptions;
+import mod.hilal.saif.blocks.BlockTypeUtils;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.utility.FileUtil;
@@ -600,9 +601,8 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
 
             Object blockType = block.get("type");
             if (blockType instanceof String) {
-                switch ((String) blockType) {
+                switch (BlockTypeUtils.normalizeStoredBlockType(BlocksManagerDetailsActivity.this, (String) blockType)) {
                     case " ":
-                    case "regular":
                         spec.setBackgroundResource(R.drawable.block_ori);
                         break;
 

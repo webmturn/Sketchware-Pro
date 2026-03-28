@@ -35,6 +35,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import mod.hilal.saif.blocks.BlockTypeUtils;
 import pro.sketchware.core.BlockView;
 import mod.hey.studios.util.Helper;
 import mod.hilal.saif.lib.PCP;
@@ -64,6 +65,7 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
     private int blockPosition = 0;
     private String palletColour = "";
     private String path = "";
+    private String selectedBlockType = " ";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -116,55 +118,25 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
 
         binding.type.setOnClickListener(view -> binding.selectType.performClick());
         binding.selectType.setOnClickListener(v -> {
-            List<String> types = Arrays.asList(
-                    "regular", "c", "e", "s", "b",
-                    "d", "v", "a", "f", "l", "p", "h"
-            );
-            List<String> choices = Arrays.asList(
-                    Helper.getResString(R.string.blocks_type_regular),
-                    Helper.getResString(R.string.blocks_type_if),
-                    Helper.getResString(R.string.blocks_type_if_else),
-                    Helper.getResString(R.string.blocks_type_string),
-                    Helper.getResString(R.string.blocks_type_boolean),
-                    Helper.getResString(R.string.blocks_type_number),
-                    Helper.getResString(R.string.blocks_type_variable),
-                    Helper.getResString(R.string.blocks_type_map),
-                    Helper.getResString(R.string.blocks_type_stop),
-                    Helper.getResString(R.string.blocks_type_list),
-                    Helper.getResString(R.string.blocks_type_component),
-                    Helper.getResString(R.string.blocks_type_header)
-            );
-            AtomicInteger choice = new AtomicInteger();
+            List<String> types = BlockTypeUtils.getSelectableBlockTypes();
+            List<String> choices = new ArrayList<>();
+            for (String type : types) {
+                choices.add(BlockTypeUtils.getDisplayBlockTypeLabel(this, type));
+            }
+            int selectedIndex = types.indexOf(selectedBlockType);
+            AtomicInteger choice = new AtomicInteger(selectedIndex >= 0 ? selectedIndex : 0);
             new MaterialAlertDialogBuilder(this).setTitle(R.string.blocks_type_title)
                     .setSingleChoiceItems(choices.toArray(new String[0]),
-                            types.indexOf(Helper.getText(binding.type)), (dialog, which) -> choice.set(which))
-                    .setPositiveButton(R.string.common_word_save, (dialog, which) -> binding.type.setText(types.get(choice.get())))
+                            selectedIndex >= 0 ? selectedIndex : 0, (dialog, which) -> choice.set(which))
+                    .setPositiveButton(R.string.common_word_save, (dialog, which) -> setSelectedBlockType(types.get(choice.get())))
                     .setNegativeButton(R.string.common_word_cancel, null)
                     .create().show();
-        });
-
-        binding.type.addTextChangedListener(new BaseTextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.toString().equals("e")) {
-                    AutoTransition transition = new AutoTransition();
-                    transition.setDuration(300L);
-                    TransitionManager.beginDelayedTransition(binding.scrollView, transition);
-                    binding.spec2Layout.setVisibility(View.VISIBLE);
-                } else {
-                    AutoTransition transition = new AutoTransition();
-                    transition.setDuration(300L);
-                    TransitionManager.beginDelayedTransition(binding.scrollView, transition);
-                    binding.spec2Layout.setVisibility(View.GONE);
-                }
-                updateBlockSpec(s.toString(), Helper.getText(binding.colour));
-            }
         });
 
         binding.spec.addTextChangedListener(new BaseTextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                updateBlockSpec(Helper.getText(binding.type), Helper.getText(binding.colour));
+                updateBlockSpec(selectedBlockType, Helper.getText(binding.colour));
             }
         });
 
@@ -184,7 +156,7 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
                     binding.colourLayout.setError(null);
                     binding.colourLayout.setErrorEnabled(false);
                 }
-                updateBlockSpec(Helper.getText(binding.type), s.toString());
+                updateBlockSpec(selectedBlockType, s.toString());
             }
         });
 
@@ -198,9 +170,6 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
             if (matcher.find()) {
                 SketchwareUtil.showMessage(getApplicationContext(), Helper.getResString(R.string.error_invalid_block_params));
                 return;
-            }
-            if (Helper.getText(binding.type).isEmpty()) {
-                binding.type.setText(" ");
             }
             if (mode.equals("add")) {
                 addBlock();
@@ -267,8 +236,11 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
     private void inputProperties() {
         binding.name.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         binding.name.setMaxLines(1);
-        binding.type.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        binding.type.setInputType(InputType.TYPE_NULL);
         binding.type.setMaxLines(1);
+        binding.type.setKeyListener(null);
+        binding.type.setCursorVisible(false);
+        binding.type.setLongClickable(false);
         binding.typename.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         binding.typename.setMaxLines(1);
         binding.spec.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
@@ -278,6 +250,7 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
         binding.spec2.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         binding.spec2.setMaxLines(1);
         binding.spec2Layout.setVisibility(View.GONE);
+        setSelectedBlockType(" ");
     }
 
     private void addParameters() {
@@ -339,12 +312,7 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
 
         Object typeObject = block.get("type");
         if (typeObject instanceof String typeString) {
-
-            if (typeString.equals(" ")) {
-                binding.type.setText(Helper.getResString(R.string.block_type_regular));
-            } else {
-                binding.type.setText(typeString);
-            }
+            setSelectedBlockType(typeString);
         } else {
             binding.typeLayout.setError(Helper.getResString(R.string.error_invalid_type_data));
             binding.typeLayout.setErrorEnabled(true);
@@ -432,9 +400,23 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
         blocksList = new ArrayList<>();
     }
 
+    private void setSelectedBlockType(String rawType) {
+        selectedBlockType = BlockTypeUtils.normalizeStoredBlockType(this, rawType);
+        binding.type.setText(BlockTypeUtils.getDisplayBlockTypeLabel(this, selectedBlockType));
+        updateSpec2Visibility();
+        updateBlockSpec(selectedBlockType, Helper.getText(binding.colour));
+    }
+
+    private void updateSpec2Visibility() {
+        AutoTransition transition = new AutoTransition();
+        transition.setDuration(300L);
+        TransitionManager.beginDelayedTransition(binding.scrollView, transition);
+        binding.spec2Layout.setVisibility("e".equals(selectedBlockType) ? View.VISIBLE : View.GONE);
+    }
+
     private void updateBlockSpec(String specId, String color) {
         binding.blockArea.removeAllViews();
-        var blockType = specId.equalsIgnoreCase("regular") ? " " : specId;
+        var blockType = BlockTypeUtils.normalizeStoredBlockType(this, specId);
         try {
             var block = new BlockView(this, -1, Helper.getText(binding.spec), blockType, Helper.getText(binding.name));
             block.blockColor = PropertiesUtil.isHexColor(color) ? PropertiesUtil.parseColor(color)
@@ -460,17 +442,11 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
     private void addBlock() {
         HashMap<String, Object> tempMap = new HashMap<>();
         tempMap.put("name", Helper.getText(binding.name));
-        if (Helper.getText(binding.type).equals("regular")) {
-            tempMap.put("type", " ");
-        } else if (Helper.getText(binding.type).isEmpty()) {
-            tempMap.put("type", " ");
-        } else {
-            tempMap.put("type", Helper.getText(binding.type));
-        }
+        tempMap.put("type", selectedBlockType);
         tempMap.put("typeName", Helper.getText(binding.typename));
         tempMap.put("spec", Helper.getText(binding.spec));
         tempMap.put("color", Helper.getText(binding.colour));
-        if (Helper.getText(binding.type).equals("e")) {
+        if ("e".equals(selectedBlockType)) {
             tempMap.put("spec2", Helper.getText(binding.spec2));
         }
         if (!TextUtils.isEmpty(Helper.getText(binding.customImport))) {
@@ -487,15 +463,11 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
     private void insertBlockAt(int position) {
         HashMap<String, Object> tempMap = new HashMap<>();
         tempMap.put("name", Helper.getText(binding.name));
-        if (Helper.getText(binding.type).equals("regular") || Helper.getText(binding.type).isEmpty()) {
-            tempMap.put("type", " ");
-        } else {
-            tempMap.put("type", Helper.getText(binding.type));
-        }
+        tempMap.put("type", selectedBlockType);
         tempMap.put("typeName", Helper.getText(binding.typename));
         tempMap.put("spec", Helper.getText(binding.spec));
         tempMap.put("color", Helper.getText(binding.colour));
-        if (Helper.getText(binding.type).equals("e")) {
+        if ("e".equals(selectedBlockType)) {
             tempMap.put("spec2", Helper.getText(binding.spec2));
         }
         if (!TextUtils.isEmpty(Helper.getText(binding.customImport))) {
@@ -512,15 +484,11 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
     private void editBlock(int position) {
         HashMap<String, Object> tempMap = blocksList.get(position);
         tempMap.put("name", Helper.getText(binding.name));
-        if (Helper.getText(binding.type).equals("regular") || Helper.getText(binding.type).isEmpty()) {
-            tempMap.put("type", " ");
-        } else {
-            tempMap.put("type", Helper.getText(binding.type));
-        }
+        tempMap.put("type", selectedBlockType);
         tempMap.put("typeName", Helper.getText(binding.typename));
         tempMap.put("spec", Helper.getText(binding.spec));
         tempMap.put("color", Helper.getText(binding.colour));
-        if (Helper.getText(binding.type).equals("e")) {
+        if ("e".equals(selectedBlockType)) {
             tempMap.put("spec2", Helper.getText(binding.spec2));
         }
         tempMap.put("imports", Helper.getText(binding.customImport));

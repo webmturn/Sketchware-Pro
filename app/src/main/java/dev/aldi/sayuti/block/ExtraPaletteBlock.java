@@ -32,6 +32,7 @@ import mod.hey.studios.editor.manage.block.ExtraBlockInfo;
 import mod.hey.studios.editor.manage.block.v2.BlockLoader;
 import mod.hey.studios.editor.view.IdGenerator;
 import mod.hey.studios.util.Helper;
+import mod.hilal.saif.blocks.BlockTypeUtils;
 import mod.hey.studios.moreblock.ReturnMoreblockManager;
 import mod.hilal.saif.activities.tools.ConfigActivity;
 import mod.hilal.saif.blocks.BlocksHandler;
@@ -1875,6 +1876,7 @@ public class ExtraPaletteBlock {
             SketchwareUtil.toastError(String.format(Helper.getResString(R.string.extra_block_error_invalid_block_type), paletteBlocks));
             return;
         }
+        typeString = BlockTypeUtils.normalizeStoredBlockType(logicEditor, typeString);
 
         if (typeString.equals("h")) {
             Object spec = map.get("spec");
