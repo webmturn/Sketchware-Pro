@@ -214,7 +214,7 @@ public class ExtraPaletteBlock {
                     blockType,
                     null,
                     opCode,
-                    buildPaletteSearchText(spec, blockType, null, opCode)));
+                    buildSearchTextForSpecBlock(blockType, spec, opCode)));
             return placeholderView;
         }
 
@@ -226,7 +226,7 @@ public class ExtraPaletteBlock {
                     blockType,
                     componentType,
                     opCode,
-                    buildPaletteSearchText(spec, blockType, componentType, opCode)));
+                    buildSearchTextForComponentBlock(blockType, spec, opCode, componentType)));
             return placeholderView;
         }
     }
@@ -929,6 +929,14 @@ public class ExtraPaletteBlock {
         String resolvedSearchText = searchText.toString().toLowerCase(Locale.ROOT);
         cachedPaletteSearchTexts.put(cacheKey, resolvedSearchText);
         return resolvedSearchText;
+    }
+
+    private String buildSearchTextForSpecBlock(String displaySpec, String actualBlockType, String opCode) {
+        return buildPaletteSearchText(displaySpec, actualBlockType, null, opCode);
+    }
+
+    private String buildSearchTextForComponentBlock(String displaySpec, String actualBlockType, String actualComponentType, String actualOpCode) {
+        return buildPaletteSearchText(displaySpec, actualBlockType, actualComponentType, actualOpCode);
     }
 
     private void appendSearchText(StringBuilder searchText, String value) {
