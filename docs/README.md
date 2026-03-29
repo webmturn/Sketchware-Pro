@@ -17,7 +17,7 @@ Documents are grouped by purpose so that long-term references, active proposals,
 | Document | Description |
 |----------|-------------|
 | [code-generation-system-analysis.md](code-generation-system-analysis.md) | Deep dive into the code generation pipeline: BlockInterpreter, ActivityCodeGenerator, EventCodeGenerator, ComponentCodeGenerator |
-| [builtin-blocks-analysis.md](builtin-blocks-analysis.md) | Complete catalog of 174+ built-in block opcodes with generated Java code |
+| [builtin-blocks-analysis.md](builtin-blocks-analysis.md) | Historical 2026-02-27 snapshot of the built-in block catalog and gap analysis; not a current complete capability list |
 | [block-programming-bottleneck-analysis.md](block-programming-bottleneck-analysis.md) | Analysis of block programming system bottlenecks and extension capabilities |
 | [ui-designer-analysis.md](ui-designer-analysis.md) | Deep dive into the UI designer: ViewEditorFragment, ViewEditor, ViewPane, LayoutGenerator |
 

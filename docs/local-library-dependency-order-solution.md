@@ -1,25 +1,16 @@
 # 本地库依赖顺序方案
-
 ## 问题
-
-`local_library` JSON 中库的顺序会影响 classpath 和 DEX 合并顺序。当前无 Maven 式依赖解析，可能出现：
+`dependency-tree.json` 已经用于子依赖展示、共享删除保护和启用/禁用防护；但 `local_library` JSON 中库的顺序仍会直接影响 classpath 和 DEX 合并顺序，当前尚未实现构建期拓扑排序或版本冲突检测，因此仍可能出现：
 - 依赖库排在依赖方之后 → 类解析顺序错误
 - 多库版本冲突 → 先出现的版本生效，用户难以感知
-
 ---
-
 ## 方案一：拓扑排序（推荐，改动小）
-
 ### 思路
-
 利用已有的 `dependency-tree.json` 构建依赖图，对 `projectUsedLibs` 做拓扑排序，使**依赖项排在依赖方之前**。
-
 ### 依赖关系来源
-
 - **根库**：有 `dependency-tree.json`，其中 `builtIn: false` 的条目为本地子依赖
 - **子依赖**：无 dependency-tree，视为叶子节点
 - **独立库**：无 dependency-tree，视为叶子节点
-
 ### 实现步骤
 
 1. **在 `LocalLibrariesUtil` 或 `ManageLocalLibrary` 中新增**：

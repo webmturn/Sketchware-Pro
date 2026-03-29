@@ -1,6 +1,7 @@
 # Sketchware-Pro UI 设计器深度分析报告
 
 > 生成日期：2026-03-03
+> 修订日期：2026-03-29
 > 数据来源：`ViewEditorFragment.java`、`ViewEditor.java`、`ViewPane.java`、`LayoutGenerator.java`、`ViewBean.java`、`ViewHistoryManager.java`
 
 ---
@@ -27,13 +28,13 @@ ViewEditorFragment (Fragment 协调器)
 
 ### 2.1 类型常量体系
 
-`ViewBean.type` 是整型常量，跨三个包定义：
+`ViewBean.type` 是整型常量，主要跨两个包定义：
 
 | 包 | 常量范围 | 数量 | 示例 |
 |---|---|---|---|
 | `com.besome.sketch.beans.ViewBean` | 0–18 | 19 | LINEAR=0, BUTTON=3, TEXTVIEW=4, FAB=16 |
-| `mod.agus.jcoderz.beans.ViewBeans` | 19–40+ | ~20 | CARDVIEW=19, TABLAYOUT=25, VIEWPAGER=26 |
-| 总计 | 0–40+ | ~40 | |
+| `mod.agus.jcoderz.beans.ViewBeans` | 19–48 | 30 | RADIOBUTTON=19, CARDVIEW=36, RECYCLERVIEW=48 |
+| 总计 | 0–48 | 49 | |
 
 核心常量（`ViewBean.java`）：
 
@@ -165,11 +166,11 @@ public View createItemView(ViewBean viewBean) {
 | SEEKBAR (14) | ItemSeekBar | SeekBar |
 | CALENDARVIEW (15) | ItemCalendarView | CalendarView |
 | FAB (16) | ItemFloatingActionButton | FloatingActionButton |
-| CARDVIEW (19) | ItemCardView | CardView |
-| RECYCLERVIEW (21) | ItemRecyclerView | RecyclerView |
-| TABLAYOUT (25) | ItemTabLayout | TabLayout |
-| VIEWPAGER (26) | ItemViewPager | ViewPager |
-| BOTTOMNAVIGATION (27) | ItemBottomNavigationView | BottomNavigationView |
+| CARDVIEW (36) | ItemCardView | CardView |
+| RECYCLERVIEW (48) | ItemRecyclerView | RecyclerView |
+| TABLAYOUT (30) | ItemTabLayout | TabLayout |
+| VIEWPAGER (31) | ItemViewPager | ViewPager |
+| BOTTOMNAVIGATION (32) | ItemBottomNavigationView | BottomNavigationView |
 
 ### 4.2 updateItemView() — 属性同步
 
@@ -336,7 +337,7 @@ public final void addHistoryEntry(String key, HistoryViewBean historyViewBean) {
 | 自定义 XML 属性注入 | ✅ | `viewBean.inject` 字段 |
 | 自定义根布局 | ✅ | `InjectRootLayoutManager` |
 | **新 widget 类型扩展** | ❌ | 需改 5+ 处代码（硬编码 switch） |
-| **XML 导入** | ❌ | 无反向 XML→ViewBean 解析 |
+| **XML 导入** | ✅ | `XmlLayoutParser` + `ViewEditorFragment.performImport()` |
 | **ConstraintLayout 完整支持** | ❌ | 缺少约束编辑 UI |
 | **撤销步数运行时可调** | ⚠️ | 常量已提取，但尚无 UI 设置入口 |
 | 未知类型安全降级 | ✅ | 已修复（不再修改原始 ViewBean.type） |
@@ -390,17 +391,20 @@ public class WidgetRegistry {
 
 **改进方向**：声明式属性描述（注解或配置文件），由统一引擎同时驱动预览和 XML 生成。
 
-### 9.3 ⭐⭐ 无 XML 导入功能
+### 9.3 ⭐⭐ XML 导入已实现，但仍有边界限制
 
-**现状**：`LayoutGenerator` 有 `toXmlString()`（ViewBean → XML），但无反向 `fromXmlString()`（XML → ViewBean）。
+**现状**：`ViewEditorFragment.performImport()` 已接入 `XmlLayoutParser.parse()`，可以把布局 XML 解析成 `ViewBean` 列表并写回当前页面。
 
-`LayoutGenerator.java` 中有 `XmlPullParser` 相关 import，但无实际 XML 导入逻辑。
+**当前能力**：
+1. 支持常见 Android 原生标签以及已注册的扩展视图
+2. 能处理 `android:id`、父子层级、常见布局属性和部分 `tools:listitem`
+3. 未识别标签/属性会回退到 `convert` / `inject`
+4. ID 冲突会自动重命名并同步更新批次内引用
 
-**改进方案**：
-1. 实现 `XmlLayoutParser`，使用 `XmlPullParser` 解析 XML
-2. 将 XML 标签名反向映射到 `ViewBean.type`（通过 ClassInfo 反查）
-3. 提取属性并填入 `ViewBean` 各字段
-4. 处理嵌套结构为父子关系
+**仍有限制**：
+1. ConstraintLayout 仍缺少完整约束编辑支持
+2. 解析不到的 `@dimen/...` / 未覆盖属性会保留到 `inject`
+3. 最终效果仍受 `ClassInfo` / `ViewPane` / `LayoutGenerator` 已支持控件范围限制
 
 ### 9.4 ⭐⭐ 无 ConstraintLayout 支持
 
@@ -451,7 +455,7 @@ private View getUnknownItemView(ViewBean bean) {
 |---|---|---|---|
 | 🔴 关键 | `getUnknownItemView()` 数据损坏修复 | 2 行 | ✅ 已修复 |
 | 🟡 中等 | 历史步数命名常量化 | 5 行/文件 | ✅ 已修复 |
-| 🟡 中等 | XML 导入功能 | ~500 行新代码 | 待实施 |
+| 🟡 中等 | XML 导入功能 | ~500 行新代码 | ✅ 已实现 |
 | 🟠 长期 | WidgetTypeDescriptor 注册表 | 大型重构 | 建议大版本时处理 |
 | 🟠 长期 | 声明式属性系统 | 大型重构 | 建议与注册表一起处理 |
 | 🔵 远期 | ConstraintLayout 完整支持 | 极大 | 需约束编辑 UI |
