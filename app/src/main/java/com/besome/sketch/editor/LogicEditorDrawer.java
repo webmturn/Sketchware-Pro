@@ -85,6 +85,7 @@ public class LogicEditorDrawer extends LinearLayout {
                     && ((DefinitionBlockView) childAt).getCollectionName().equals(collectionName)) {
                 favorite.removeViewAt(i + 1);
                 favorite.removeViewAt(i);
+                break;
             }
         }
     }

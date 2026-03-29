@@ -2410,6 +2410,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             } else if (logicTopMenu.isDeleteActive) {
                 BlockView deletedBlock = (BlockView) v;
                 if (deletedBlock.getBlockType() == 2) {
+                    activeIconDelete(false);
                     toggleDrawerVisibility(true);
                     showDeleteFavoriteDialog(((DefinitionBlockView) deletedBlock).getCollectionName());
                 } else {
