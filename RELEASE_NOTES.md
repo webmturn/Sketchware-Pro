@@ -1,18 +1,44 @@
-# v7.0.0-beta6.2
+﻿# v7.0.0-beta6.3
 
-## 🐛 Bug Fixes
+##  Bug Fixes
 
-### Project Data Integrity
-- **Blocks/moreblocks loss on update** — Fix regression where saved blocks and moreblocks disappear after app updates; add `hasDistinctBackup` helper that rejects empty or byte-identical backup files across `ProjectDataStore`, `ProjectFileManager`, `LibraryManager`, and `ResourceManager`; guard all `loadFromBackup` entry points to prevent clearing in-memory state from an invalid backup; fix `DesignActivity` load order to correctly respect the load strategy flag
-
-### Logic Editor — Favorite Collections
-- **Collection persistence** — Fix favorite block and moreblock collections not persisting; override `loadCollections()` in `BlockCollectionManager` and `MoreBlockCollectionManager` with line-by-line JSON parsing to match the storage format
-- **Collection deselection** — Fix `ManageCollectionActivity.unselectToBeDeletedItems()` missing `case 4` for built-in block collections, causing the wrong collection type to be cleared on deletion
-- **Collection name display** — Fix `DefinitionBlockView` not showing the collection name as its block spec; add `getCollectionName()` accessor for downstream use
+### Language Overrides
+- **Import handling**  Fix language override import handling so imported string overrides apply more reliably across Activities.
+- **Application context recursion**  Fix recursive locale context application access and preserve language override behavior when retrieving the application context.
+- **Resource wrapper caching**  Cache wrapped language override resources and application context to avoid recreating wrapper objects on repeated access.
 
 ### Custom Block Manager
-- **Block type preview** — Fix custom block type preview showing incorrect shapes in `BlocksManagerCreatorActivity` and `BlocksManagerDetailsActivity`; extract `BlockTypeUtils.normalizeStoredBlockType()` to canonicalize legacy stored values (`"regular"`, localized display labels) to internal single-character codes
-- **Palette search indexing** — Fix `ExtraPaletteBlock` search index being off, causing the wrong block to be highlighted when selecting a search result
+- **Palette actions during search**  Fix `BlocksManager` search results using filtered adapter positions as source indices, so open/edit/delete/insert actions target the correct palette.
+
+### Logic Editor  Favorite Collections
+- **Favorite deletion cleanup**  Fix favorite block deletion UI cleanup so delete mode exits correctly and the drawer removes only the matching pair of views.
+
+### Crash Reporting
+- **Clipboard size guard**  Guard crash report clipboard copy size and fall back to truncated content when the full report is too large to copy.
+
+### Resource Management
+- **Null/empty project paths**  Harden resource manager screens against null or empty `sc_id` and `dir_path` values to prevent lifecycle-order crashes.
+
+---
+
+**Full Changelog**: https://github.com/webmturn/Sketchware-Pro/compare/v7.0.0-beta-06-02...v7.0.0-beta-06-03
+
+---
+# v7.0.0-beta6.2
+
+## 馃悰 Bug Fixes
+
+### Project Data Integrity
+- **Blocks/moreblocks loss on update** 鈥?Fix regression where saved blocks and moreblocks disappear after app updates; add `hasDistinctBackup` helper that rejects empty or byte-identical backup files across `ProjectDataStore`, `ProjectFileManager`, `LibraryManager`, and `ResourceManager`; guard all `loadFromBackup` entry points to prevent clearing in-memory state from an invalid backup; fix `DesignActivity` load order to correctly respect the load strategy flag
+
+### Logic Editor 鈥?Favorite Collections
+- **Collection persistence** 鈥?Fix favorite block and moreblock collections not persisting; override `loadCollections()` in `BlockCollectionManager` and `MoreBlockCollectionManager` with line-by-line JSON parsing to match the storage format
+- **Collection deselection** 鈥?Fix `ManageCollectionActivity.unselectToBeDeletedItems()` missing `case 4` for built-in block collections, causing the wrong collection type to be cleared on deletion
+- **Collection name display** 鈥?Fix `DefinitionBlockView` not showing the collection name as its block spec; add `getCollectionName()` accessor for downstream use
+
+### Custom Block Manager
+- **Block type preview** 鈥?Fix custom block type preview showing incorrect shapes in `BlocksManagerCreatorActivity` and `BlocksManagerDetailsActivity`; extract `BlockTypeUtils.normalizeStoredBlockType()` to canonicalize legacy stored values (`"regular"`, localized display labels) to internal single-character codes
+- **Palette search indexing** 鈥?Fix `ExtraPaletteBlock` search index being off, causing the wrong block to be highlighted when selecting a search result
 
 ---
 
@@ -22,15 +48,15 @@
 
 # v7.0.0-beta6.1
 
-## 🐛 Bug Fixes
+## 馃悰 Bug Fixes
 
 ### XML Generation
-- **XmlBuilder NPE** — Fix `NullPointerException` in `AttributeBuilder.toCode()` caused by implicit mutable state; `newlineIndent` is now passed as a local parameter, eliminating the crash on single raw attribute injection
+- **XmlBuilder NPE** 鈥?Fix `NullPointerException` in `AttributeBuilder.toCode()` caused by implicit mutable state; `newlineIndent` is now passed as a local parameter, eliminating the crash on single raw attribute injection
 
-### UI Designer — Editor Preview
-- **Container preview invisible** — Fix `LinearLayout`, `RelativeLayout`, `HorizontalScrollView`, `VerticalScrollView`, `CardView` previews not rendering borders or selection overlay due to missing `setWillNotDraw(false)`
-- **Widget preview invisible** — Fix `ProgressBar`, `AdView`, `ListView`, `RecyclerView`, `TabLayout`, `BottomNavigationView` previews with the same drawing flag issue
-- **Special widget preview invisible** — Fix `BadgeView`, `PatternLockView`, `LottieAnimationView`, `YoutubePlayerView`, `OTPView`, `CodeView` placeholder previews not rendering selection overlay
+### UI Designer 鈥?Editor Preview
+- **Container preview invisible** 鈥?Fix `LinearLayout`, `RelativeLayout`, `HorizontalScrollView`, `VerticalScrollView`, `CardView` previews not rendering borders or selection overlay due to missing `setWillNotDraw(false)`
+- **Widget preview invisible** 鈥?Fix `ProgressBar`, `AdView`, `ListView`, `RecyclerView`, `TabLayout`, `BottomNavigationView` previews with the same drawing flag issue
+- **Special widget preview invisible** 鈥?Fix `BadgeView`, `PatternLockView`, `LottieAnimationView`, `YoutubePlayerView`, `OTPView`, `CodeView` placeholder previews not rendering selection overlay
 
 ---
 
@@ -40,73 +66,73 @@
 
 # v7.0.0-beta6
 
-## ✨ New Features
+## 鉁?New Features
 
 ### Resources Editor
-- **Dimens support** — Resources Editor now supports `dimens.xml` editing with validation and UX enhancements
-- **Color resources for more widgets** — Support color resources for BottomAppBar, CollapsingToolbar, CardView backgrounds
+- **Dimens support** 鈥?Resources Editor now supports `dimens.xml` editing with validation and UX enhancements
+- **Color resources for more widgets** 鈥?Support color resources for BottomAppBar, CollapsingToolbar, CardView backgrounds
 
 ### Logic Editor
-- **Continue block** — New `continue` block for loop control flow
-- **Chunked block loading** — Logic editor loads blocks in chunks for improved performance with large projects
-- **Block palette search optimization** — Faster search and rendering in block palette
-- **Extra block metadata caching** — Cached loading for better editor responsiveness
-- **Block search fix** — Search now matches visible block text correctly
+- **Continue block** 鈥?New `continue` block for loop control flow
+- **Chunked block loading** 鈥?Logic editor loads blocks in chunks for improved performance with large projects
+- **Block palette search optimization** 鈥?Faster search and rendering in block palette
+- **Extra block metadata caching** 鈥?Cached loading for better editor responsiveness
+- **Block search fix** 鈥?Search now matches visible block text correctly
 
 ### UI Designer
-- **Elevation property** — New elevation property for views with live preview in designer
-- **Elevation preview** — Restored elevation preview using GradientDrawable fix
+- **Elevation property** 鈥?New elevation property for views with live preview in designer
+- **Elevation preview** 鈥?Restored elevation preview using GradientDrawable fix
 
 ### Local Library Management
-- **Import package indexing** — Index and browse import packages from local libraries
-- **Lazy rebuild UI** — Rebuild import package index on demand with progress UI
+- **Import package indexing** 鈥?Index and browse import packages from local libraries
+- **Lazy rebuild UI** 鈥?Rebuild import package index on demand with progress UI
 
 ### Other
-- **Store page states** — Remember page states and accessibility settings
-- **Remember last restore directory** — File picker remembers the last used restore directory
-- **Variable/list management UI** — Refactored variable and list management with references UI
+- **Store page states** 鈥?Remember page states and accessibility settings
+- **Remember last restore directory** 鈥?File picker remembers the last used restore directory
+- **Variable/list management UI** 鈥?Refactored variable and list management with references UI
 
-## 🐛 Bug Fixes
+## 馃悰 Bug Fixes
 
 ### Crash Prevention (30+ fixes)
-- **HashMap safety** — Prevent NPE and ClassCastException from `HashMap<String,Object>.get()` across 28 files
-- **String indexing guards** — Guard `charAt()`, `substring()`, `split()[index]` across BlockUtil, ComponentCodeGenerator, AndroidManifestInjector, PropertyInputItem, FileUtil, ReturnMoreblockManager, and more
-- **Stale position guards** — Guard `getLayoutPosition()` against `NO_POSITION` in all click listeners
-- **Editor dialog guards** — Guard stale index access in block, command, and listener editor dialogs
-- **Lifecycle guards** — Guard async UI callbacks against destroyed lifecycle; guard fragment arguments and extras against null
-- **Context safety** — Harden context casts and unsafe map value reads
-- **Build callback guards** — Guard DesignActivity build progress and cancel callbacks
+- **HashMap safety** 鈥?Prevent NPE and ClassCastException from `HashMap<String,Object>.get()` across 28 files
+- **String indexing guards** 鈥?Guard `charAt()`, `substring()`, `split()[index]` across BlockUtil, ComponentCodeGenerator, AndroidManifestInjector, PropertyInputItem, FileUtil, ReturnMoreblockManager, and more
+- **Stale position guards** 鈥?Guard `getLayoutPosition()` against `NO_POSITION` in all click listeners
+- **Editor dialog guards** 鈥?Guard stale index access in block, command, and listener editor dialogs
+- **Lifecycle guards** 鈥?Guard async UI callbacks against destroyed lifecycle; guard fragment arguments and extras against null
+- **Context safety** 鈥?Harden context casts and unsafe map value reads
+- **Build callback guards** 鈥?Guard DesignActivity build progress and cancel callbacks
 
 ### UI Fixes
-- **AsdDialog** — Enable keyboard for find/replace dialog
-- **CollapsingToolbarLayout** — Restore contentScrim default to `?attr/colorPrimary`
-- **Button/EditText/MaterialButton** — Restore default background in preview; fix SignInButton defaults reset inside loop
-- **BlockBean Parcelable** — Add `dataAvail()` guards for new fields
-- **InnerAddComponentBottomSheet** — Add missing return after `dismissAllowingStateLoss`
-- **Logic editor pane** — Fix pane size updates
-- **Resource ID resolution** — Eliminate `Invalid ID 0x00000000` errors
-- **ManageLocalLibrary** — Fix static call and `getParentFile` null check
+- **AsdDialog** 鈥?Enable keyboard for find/replace dialog
+- **CollapsingToolbarLayout** 鈥?Restore contentScrim default to `?attr/colorPrimary`
+- **Button/EditText/MaterialButton** 鈥?Restore default background in preview; fix SignInButton defaults reset inside loop
+- **BlockBean Parcelable** 鈥?Add `dataAvail()` guards for new fields
+- **InnerAddComponentBottomSheet** 鈥?Add missing return after `dismissAllowingStateLoss`
+- **Logic editor pane** 鈥?Fix pane size updates
+- **Resource ID resolution** 鈥?Eliminate `Invalid ID 0x00000000` errors
+- **ManageLocalLibrary** 鈥?Fix static call and `getParentFile` null check
 
 ### Performance
-- **replaceAll → replace** — Replace unnecessary regex `replaceAll()` with literal `replace()` across 15+ files for parsing safety and performance
+- **replaceAll 鈫?replace** 鈥?Replace unnecessary regex `replaceAll()` with literal `replace()` across 15+ files for parsing safety and performance
 
-## ♻️ Refactoring
+## 鈾伙笍 Refactoring
 
 ### Custom Event System
-- **POJOs for custom blocks** — Replace `HashMap<String,Object>` with typed POJOs for custom events, listeners, and components
-- **Centralized paths** — Centralize custom event system file paths
-- **ComponentsHandler** — Normalize naming and harden safety checks
+- **POJOs for custom blocks** 鈥?Replace `HashMap<String,Object>` with typed POJOs for custom events, listeners, and components
+- **Centralized paths** 鈥?Centralize custom event system file paths
+- **ComponentsHandler** 鈥?Normalize naming and harden safety checks
 
 ### Code Quality
-- **Unified logging** — Migrate to `LogUtil` across 23 files
-- **CommandBlock cleanup** — Clean up and record maintainability review
-- **ViewPane imports** — Replace FQN references with imports, remove unused BitmapFactory
-- **Decompilation residue** — Rename decompilation residue variables across multiple files
-- **Resource refs** — Use resource refs for colors/strings in view editor
-- **Editor/palette resources** — Add editor and palette color and string resources
-- **Comment cleanup** — Update stale obfuscated class name references, clarify ambiguous comments, fix stale Javadoc links
+- **Unified logging** 鈥?Migrate to `LogUtil` across 23 files
+- **CommandBlock cleanup** 鈥?Clean up and record maintainability review
+- **ViewPane imports** 鈥?Replace FQN references with imports, remove unused BitmapFactory
+- **Decompilation residue** 鈥?Rename decompilation residue variables across multiple files
+- **Resource refs** 鈥?Use resource refs for colors/strings in view editor
+- **Editor/palette resources** 鈥?Add editor and palette color and string resources
+- **Comment cleanup** 鈥?Update stale obfuscated class name references, clarify ambiguous comments, fix stale Javadoc links
 
-## 📖 Documentation
+## 馃摉 Documentation
 
 - Calibrate project data format docs against current source code
 - Update hardcoded-strings analysis to use `pro.sketchware.core` package paths
@@ -121,57 +147,57 @@
 
 # v7.0.0-beta5
 
-## ✨ New Features
+## 鉁?New Features
 
 ### Block System
-- **Block disable/enable** — Disable individual blocks via PopupMenu toggle; disabled blocks are skipped during code generation, drawn with diagonal stripe overlay, and serialized with Parcel/copy/isEqual support
-- **Try-catch-finally blocks** — New `catchBlock`/`finallyBlock` chain blocks with backward-compatible `tryCatch`
-- **Collapsible control substacks** — Control blocks can now be collapsed
+- **Block disable/enable** 鈥?Disable individual blocks via PopupMenu toggle; disabled blocks are skipped during code generation, drawn with diagonal stripe overlay, and serialized with Parcel/copy/isEqual support
+- **Try-catch-finally blocks** 鈥?New `catchBlock`/`finallyBlock` chain blocks with backward-compatible `tryCatch`
+- **Collapsible control substacks** 鈥?Control blocks can now be collapsed
 - **Continue block** reverted (re-added in beta6)
-- **Int variable type** (`VARIABLE_TYPE_INT = 4`) — Added then reverted due to issues
+- **Int variable type** (`VARIABLE_TYPE_INT = 4`) 鈥?Added then reverted due to issues
 
 ### Block Search
-- **Palette search** — Search block names and specs within the palette panel
-- **Canvas search** — Search placed blocks in the logic editor canvas
-- **Block Manager search** — Search palette names and block names/specs in Block Manager
+- **Palette search** 鈥?Search block names and specs within the palette panel
+- **Canvas search** 鈥?Search placed blocks in the logic editor canvas
+- **Block Manager search** 鈥?Search palette names and block names/specs in Block Manager
 - **Integrated into LogicEditorActivity** with string resources
 
 ### Dependency Resolver
-- **Dependency tree visualization** — View full dependency tree of resolved libraries
-- **Resolution timeout notification** — `onResolutionTimeout` callback notifies user when tree resolution times out
-- **3 caching optimizations** — Faster resolution with parent POM fix
-- **Min API level** — `setMinApiLevel` added to `compileJarWithFallback`
-- **Built-in dependency detection** — Narrowed `isBuiltInDependency` to specific androidx groupIds
-- **Sub-dependency hiding** — Hide sub-dependencies from main library list, fix dependency parent field
+- **Dependency tree visualization** 鈥?View full dependency tree of resolved libraries
+- **Resolution timeout notification** 鈥?`onResolutionTimeout` callback notifies user when tree resolution times out
+- **3 caching optimizations** 鈥?Faster resolution with parent POM fix
+- **Min API level** 鈥?`setMinApiLevel` added to `compileJarWithFallback`
+- **Built-in dependency detection** 鈥?Narrowed `isBuiltInDependency` to specific androidx groupIds
+- **Sub-dependency hiding** 鈥?Hide sub-dependencies from main library list, fix dependency parent field
 
 ### Crash Monitoring
-- **Persistent crash log system** — Automatic crash logging with viewer in About page
+- **Persistent crash log system** 鈥?Automatic crash logging with viewer in About page
 
 ### UI Modernization
-- **Material 3 upgrades** — CheckBox → MaterialCheckBox (22 layouts), RadioButton → MaterialRadioButton, CardView → MaterialCardView, Spinner → AppCompatSpinner, CheckBox → MaterialSwitch in project settings (6 instances)
-- **ProGuard page** — Refactored to Material 3 style with AppBarLayout + card sections
-- **RTL support** — Fix `paddingLeft/Right`, `marginLeft/Right`, `layout_gravity`, FAB positioning across 20+ layouts
-- **Project list** — Add ripple to items, remove NestedScrollView wrapping RecyclerView for performance
-- **Compile log** — Increase font size, add copy button
-- **Import XML** — Reorganized in bottom popup menu (view tab only)
+- **Material 3 upgrades** 鈥?CheckBox 鈫?MaterialCheckBox (22 layouts), RadioButton 鈫?MaterialRadioButton, CardView 鈫?MaterialCardView, Spinner 鈫?AppCompatSpinner, CheckBox 鈫?MaterialSwitch in project settings (6 instances)
+- **ProGuard page** 鈥?Refactored to Material 3 style with AppBarLayout + card sections
+- **RTL support** 鈥?Fix `paddingLeft/Right`, `marginLeft/Right`, `layout_gravity`, FAB positioning across 20+ layouts
+- **Project list** 鈥?Add ripple to items, remove NestedScrollView wrapping RecyclerView for performance
+- **Compile log** 鈥?Increase font size, add copy button
+- **Import XML** 鈥?Reorganized in bottom popup menu (view tab only)
 
-## 🐛 Bug Fixes
+## 馃悰 Bug Fixes
 
 ### Crash Prevention
-- **ViewPropertyItems** — Fix #1982 ClassCastException
-- **SubDepAdapter** — Fix NPE: field init calls `getResources()` before context attach
-- **Gson parsing** — Null guard for `enabledLibs` after parsing
-- **ImageView recycling** — Clear both Glide and Coil requests before rebinding to prevent stale SVG/bitmap conflicts
-- **SwipeRefreshLayout** — Add scroll callback for correct pull-to-refresh with RecyclerView
+- **ViewPropertyItems** 鈥?Fix #1982 ClassCastException
+- **SubDepAdapter** 鈥?Fix NPE: field init calls `getResources()` before context attach
+- **Gson parsing** 鈥?Null guard for `enabledLibs` after parsing
+- **ImageView recycling** 鈥?Clear both Glide and Coil requests before rebinding to prevent stale SVG/bitmap conflicts
+- **SwipeRefreshLayout** 鈥?Add scroll callback for correct pull-to-refresh with RecyclerView
 
 ### Build System
-- **Dexing OOM** — Fix dexing out-of-memory, resolver hang, and dependency resolution performance
-- **LayoutGenerator BuildConfig** — Ensure correct `sc_id` usage
-- **Resource leak, CME risk, Uri inconsistency, stale cache** — Multiple build system bug fixes
-- **Compiled app display issues** — Fix transparent colors, Force Dark, AAPT2
-- **XmlLayoutParser** — Fix `parseColorValue` stripping alpha channel
-- **Atomic file writes** — Reliable `readFileBytes` in `EncryptedFileUtil`
-- **Save on success only** — Only save version code on successful save; notify user on save failure
+- **Dexing OOM** 鈥?Fix dexing out-of-memory, resolver hang, and dependency resolution performance
+- **LayoutGenerator BuildConfig** 鈥?Ensure correct `sc_id` usage
+- **Resource leak, CME risk, Uri inconsistency, stale cache** 鈥?Multiple build system bug fixes
+- **Compiled app display issues** 鈥?Fix transparent colors, Force Dark, AAPT2
+- **XmlLayoutParser** 鈥?Fix `parseColorValue` stripping alpha channel
+- **Atomic file writes** 鈥?Reliable `readFileBytes` in `EncryptedFileUtil`
+- **Save on success only** 鈥?Only save version code on successful save; notify user on save failure
 
 ### Dependency Resolver Fixes
 - **Root artifact skipped** by `skipFilter` in `resolveDependencyTree`
@@ -180,27 +206,27 @@
 - **Local library dependency handling** improvements
 
 ### Other
-- **Nested block disable overlay** — Propagate disabled overlay through nested blocks
-- **Block preview fallback color** — From white to palette/default purple
-- **Magic numbers** — Replace with named constants (WrongConstant lint)
-- **Thread safety** — Fix singletons and shared state
-- **ProGuard/R8 rules** — Clean up default rules
+- **Nested block disable overlay** 鈥?Propagate disabled overlay through nested blocks
+- **Block preview fallback color** 鈥?From white to palette/default purple
+- **Magic numbers** 鈥?Replace with named constants (WrongConstant lint)
+- **Thread safety** 鈥?Fix singletons and shared state
+- **ProGuard/R8 rules** 鈥?Clean up default rules
 
-## ⚡ Performance
+## 鈿?Performance
 
-- **Palette panel** — Optimize opening performance (P1-P4), eliminate duplicate loading, cache file listings (P5a/P5b)
-- **ViewPane** — Cache `getXmlString` XML parsing (H8), replace `findViewWithTag` with HashMap index in BlockPane (H1)
-- **Save operations** — Async `saveAllBackup` in LogicEditorActivity and 5 remaining callers (H5/H5b)
-- **Sound list** — Async audio metadata loading in adapters
-- **7 files** — Fix performance bottlenecks and bugs
+- **Palette panel** 鈥?Optimize opening performance (P1-P4), eliminate duplicate loading, cache file listings (P5a/P5b)
+- **ViewPane** 鈥?Cache `getXmlString` XML parsing (H8), replace `findViewWithTag` with HashMap index in BlockPane (H1)
+- **Save operations** 鈥?Async `saveAllBackup` in LogicEditorActivity and 5 remaining callers (H5/H5b)
+- **Sound list** 鈥?Async audio metadata loading in adapters
+- **7 files** 鈥?Fix performance bottlenecks and bugs
 
-## ♻️ Refactoring
+## 鈾伙笍 Refactoring
 
-- **BlocksHandler migration** — Migrate BlocksHandler blocks to BlockCodeRegistry
-- **About page** — Upgrade legacy CardView layouts (fixed UTF-8 encoding)
-- **Dead code removal** — Delete BuildingDialog, QuizBoard
+- **BlocksHandler migration** 鈥?Migrate BlocksHandler blocks to BlockCodeRegistry
+- **About page** 鈥?Upgrade legacy CardView layouts (fixed UTF-8 encoding)
+- **Dead code removal** 鈥?Delete BuildingDialog, QuizBoard
 
-## 📖 Documentation
+## 馃摉 Documentation
 
 - Add comprehensive development manual
 - Add Javadoc to bean, code generation, and core classes (batch 1-5)
@@ -215,35 +241,35 @@
 
 # v7.0.0-beta4
 
-## 🐛 Bug Fixes
+## 馃悰 Bug Fixes
 
 ### Property Editor & View Pane
-- **PropertyIndentItem** — Fix dialog not closing when `valueChangeListener` is null; move `v.dismiss()` outside listener check
-- **ViewPane.findItemViewByTag** — Add null/empty check for `tag` to prevent `charAt(0)` crash
-- **ViewPropertyItems** — Add `settings != null` guard before `settings.getValue()` to prevent NPE
-- **ViewPropertyItems** — Add null/empty checks for `bean.id` and `currentId` before `charAt(0)`
-- **ViewPropertyItems** — Add `!blockBean.parameters.isEmpty()` before `parameters.get(0)` to prevent IndexOutOfBoundsException
-- **ViewPane.updateViewBeanProperties** — Replace `view.getTag().toString()` with null-safe `view.getTag() != null ? view.getTag().toString() : ""` (5 places)
-- **ViewPane** — Add null/empty checks for `viewBean.id` before `charAt(0)` (3 places in `addViewAndUpdateIndex`, `moveView`, `updateItemView`)
-- **ViewPane.getXmlString** — Add null checks for `map.get("key")` and `map.get("text")` to prevent NPE when parsing strings.xml
+- **PropertyIndentItem** 鈥?Fix dialog not closing when `valueChangeListener` is null; move `v.dismiss()` outside listener check
+- **ViewPane.findItemViewByTag** 鈥?Add null/empty check for `tag` to prevent `charAt(0)` crash
+- **ViewPropertyItems** 鈥?Add `settings != null` guard before `settings.getValue()` to prevent NPE
+- **ViewPropertyItems** 鈥?Add null/empty checks for `bean.id` and `currentId` before `charAt(0)`
+- **ViewPropertyItems** 鈥?Add `!blockBean.parameters.isEmpty()` before `parameters.get(0)` to prevent IndexOutOfBoundsException
+- **ViewPane.updateViewBeanProperties** 鈥?Replace `view.getTag().toString()` with null-safe `view.getTag() != null ? view.getTag().toString() : ""` (5 places)
+- **ViewPane** 鈥?Add null/empty checks for `viewBean.id` before `charAt(0)` (3 places in `addViewAndUpdateIndex`, `moveView`, `updateItemView`)
+- **ViewPane.getXmlString** 鈥?Add null checks for `map.get("key")` and `map.get("text")` to prevent NPE when parsing strings.xml
 
 ### values-night Colors
 - Add `editor_*` and `palette_*` color definitions to `values-night/colors.xml` for dark theme support
 
 ### Other Modules
-- **EventListFragment** — Fix `LinearLayoutManager(null)` → use `parent.getContext()`
-- **SoundImportFragment** — Fix `LinearLayoutManager(null)` → use `requireContext()`
-- **LogicClickListener** — Fix 4× `LinearLayoutManager(null)` → use `logicEditor`
-- **LibrarySettingsImporter** — Fix `LinearLayoutManager(null)` → use `activity`
-- **ExcludeBuiltInLibrariesActivity** — Fix `LinearLayoutManager(null)` → use `this`
-- **LibraryDownloaderDialogFragment** — Fix `LinearLayoutManager(getContext())` → use `requireContext()`; add `getActivity() != null` guards before `showAnErrorOccurredDialog` (4 places) to prevent NPE when fragment is detached
-- **LogicEditorActivity** — Fix undefined variable `ss`: use `fieldBlock` for `showAtLocation` anchor, use `viewBean` for `getClassInfo()` (pre-existing compilation errors)
+- **EventListFragment** 鈥?Fix `LinearLayoutManager(null)` 鈫?use `parent.getContext()`
+- **SoundImportFragment** 鈥?Fix `LinearLayoutManager(null)` 鈫?use `requireContext()`
+- **LogicClickListener** 鈥?Fix 4脳 `LinearLayoutManager(null)` 鈫?use `logicEditor`
+- **LibrarySettingsImporter** 鈥?Fix `LinearLayoutManager(null)` 鈫?use `activity`
+- **ExcludeBuiltInLibrariesActivity** 鈥?Fix `LinearLayoutManager(null)` 鈫?use `this`
+- **LibraryDownloaderDialogFragment** 鈥?Fix `LinearLayoutManager(getContext())` 鈫?use `requireContext()`; add `getActivity() != null` guards before `showAnErrorOccurredDialog` (4 places) to prevent NPE when fragment is detached
+- **LogicEditorActivity** 鈥?Fix undefined variable `ss`: use `fieldBlock` for `showAtLocation` anchor, use `viewBean` for `getClassInfo()` (pre-existing compilation errors)
 
 ---
 
 # v7.0.0-beta3
 
-## ✨ New Features
+## 鉁?New Features
 
 ### SQLite Database Component (type 29)
 - **12 blocks** for full SQLite CRUD operations
@@ -259,79 +285,79 @@
 
 ### Dependency Resolver (Localized)
 - **Replaced remote module** (`com.github.Cosmic-Ide:DependencyResolver`) with local `:resolver` module
-- **BOM support** — Automatically resolves Bill of Materials for version management
-- **Dependency tree caching** — `dependency-tree.json` avoids redundant resolution
-- **Built-in dependency detection** — Skips AndroidX, Firebase, Kotlin, etc. that are already bundled
-- **EPERM auto-retry** — Falls back to app-specific storage on FUSE-restricted devices
+- **BOM support** 鈥?Automatically resolves Bill of Materials for version management
+- **Dependency tree caching** 鈥?`dependency-tree.json` avoids redundant resolution
+- **Built-in dependency detection** 鈥?Skips AndroidX, Firebase, Kotlin, etc. that are already bundled
+- **EPERM auto-retry** 鈥?Falls back to app-specific storage on FUSE-restricted devices
 
 ### Library Management UI
-- **Sub-dependency viewer** — See all transitive dependencies of a root library
-- **Cascade toggling** — Enable/disable root library cascades to sub-dependencies
-- **Smart deletion** — Shared sub-dependencies retained, orphan detection and cleanup
+- **Sub-dependency viewer** 鈥?See all transitive dependencies of a root library
+- **Cascade toggling** 鈥?Enable/disable root library cascades to sub-dependencies
+- **Smart deletion** 鈥?Shared sub-dependencies retained, orphan detection and cleanup
 - **Version conflict detection** and built-in dependency badges
 
 ### Logic Editor
-- **Variable and list rename** — Rename variables/lists across all blocks in an activity
+- **Variable and list rename** 鈥?Rename variables/lists across all blocks in an activity
 - **New blocks**: `getClipboard`, `getExceptionMessage`
 
-### Build System — Incremental Java Compilation
-- **Skip ECJ entirely** when no Java files changed and R.java is stable — saves 2-10s per build
-- **Partial recompile** — only changed Activity files recompiled; unchanged `.class` files reused
+### Build System 鈥?Incremental Java Compilation
+- **Skip ECJ entirely** when no Java files changed and R.java is stable 鈥?saves 2-10s per build
+- **Partial recompile** 鈥?only changed Activity files recompiled; unchanged `.class` files reused
 - CRC32-based hash cache (`bin/build_hashes.json`) survives across builds, reset on full clean
 - **Full recompile triggered** automatically when: R.java changes (resource IDs), classpath changes, user custom Java/Broadcast/Service files change, or ProGuard is enabled
-- **Stale `.class` cleanup** — deleted Activities have their `.class` and inner-class files removed from `bin/classes/` automatically
+- **Stale `.class` cleanup** 鈥?deleted Activities have their `.class` and inner-class files removed from `bin/classes/` automatically
 - 4 files changed: `IncrementalBuildCache` (new), `ProjectFilePaths.cleanRJavaOnly()`, `ProjectBuilder.compileJavaCode()`, `DesignActivity`
-- **Fix: `computeCodeGenCacheKey()` missing system file inputs** — Custom event/listener/component definition files (`events.json`, `listeners.json`, `component.json`) now included in the code generation cache key; previously, modifying a custom event's code template wouldn't invalidate the cache
+- **Fix: `computeCodeGenCacheKey()` missing system file inputs** 鈥?Custom event/listener/component definition files (`events.json`, `listeners.json`, `component.json`) now included in the code generation cache key; previously, modifying a custom event's code template wouldn't invalidate the cache
 
-## 🐛 Bug Fixes
+## 馃悰 Bug Fixes
 
 ### Editor Performance
-- **Fix editor tab swiping lag** — Skip unnecessary full view rebuild (990 views) on tab switch; dirty-check ensures rebuild only when Activity file changes
-- **Fix ViewPane NPE** — 6 null/exists checks for `BitmapFactory.decodeFile` and `NinePatchDecoder.decodeFile`
-- **Remove debug log storm** — `ViewEditor` was logging full stack traces for every custom-ID view
+- **Fix editor tab swiping lag** 鈥?Skip unnecessary full view rebuild (990 views) on tab switch; dirty-check ensures rebuild only when Activity file changes
+- **Fix ViewPane NPE** 鈥?6 null/exists checks for `BitmapFactory.decodeFile` and `NinePatchDecoder.decodeFile`
+- **Remove debug log storm** 鈥?`ViewEditor` was logging full stack traces for every custom-ID view
 
 ### Component & Lifecycle
-- **Fix Gyroscope sensor** — Lifecycle management and type mismatch
-- **Fix lifecycle event generation** — Accumulate multi-component events, preserve auto-cleanup with user events, fix ViewBinding ID resolution
+- **Fix Gyroscope sensor** 鈥?Lifecycle management and type mismatch
+- **Fix lifecycle event generation** 鈥?Accumulate multi-component events, preserve auto-cleanup with user events, fix ViewBinding ID resolution
 - **Fix ClassCastException** in `ViewPropertyItems` for `property_text_size`
 
 ### Library Downloads
-- **Fix FUSE EPERM** — Auto-retry with fallback path for Huawei/Samsung devices
-- **Fix backup/restore** — Reliability improvements for local library restore
-- **Fix libType enforcement** — Correct `libType` based on section key during deserialization
-- **Fix DependencyResolver crash** — Catch `IOException` to prevent thread crash
+- **Fix FUSE EPERM** 鈥?Auto-retry with fallback path for Huawei/Samsung devices
+- **Fix backup/restore** 鈥?Reliability improvements for local library restore
+- **Fix libType enforcement** 鈥?Correct `libType` based on section key during deserialization
+- **Fix DependencyResolver crash** 鈥?Catch `IOException` to prevent thread crash
 
 ### Notification Component Fixes
 - 8 incremental fixes: block colors, translations, permission, channel ID, small icon, anonymous class compatibility, params size guards
 
 ### Performance
-- **O(1) DEX merge estimation** — Replace O(n) method counting with header-based approach
+- **O(1) DEX merge estimation** 鈥?Replace O(n) method counting with header-based approach
 
 ### UI Designer
 - **Fix `ViewPane.getUnknownItemView()` data corruption**
-- **`ViewHistoryManager.MAX_HISTORY_STEPS`** — Hard-coded 50 extracted to named constant; easy to adjust in one place
+- **`ViewHistoryManager.MAX_HISTORY_STEPS`** 鈥?Hard-coded 50 extracted to named constant; easy to adjust in one place
 
 ### Logic Editor
-- **`BlockHistoryManager.MAX_HISTORY_STEPS`** — Same change for consistency; both editors now share the same configurable pattern
+- **`BlockHistoryManager.MAX_HISTORY_STEPS`** 鈥?Same change for consistency; both editors now share the same configurable pattern
 
-## ♻️ Refactoring
+## 鈾伙笍 Refactoring
 
-### Code Generation System — Registry Pattern
-- **`BlockCodeRegistry`** — All 200+ block opcodes migrated from `BlockInterpreter`'s 1400-line switch to a `HashMap<String, BlockCodeHandler>` registry; new blocks can be added via `BlockCodeRegistry.register()` without modifying `BlockInterpreter`
-- **`EventCodeRegistry`** — All 40+ event templates migrated from `ComponentCodeGenerator.getEventCode()`'s 310-line switch to a `HashMap<String, EventCodeHandler>` registry
-- **`BlockCodeHandler` / `EventCodeHandler`** — New `@FunctionalInterface` contracts for block code generation and event code templates
-- **`BlockInterpreter`** — `getBlockCode()` now delegates to `BlockCodeRegistry`; legacy switch fully removed
-- **`ComponentCodeGenerator`** — `getEventCode()` now delegates to `EventCodeRegistry`
+### Code Generation System 鈥?Registry Pattern
+- **`BlockCodeRegistry`** 鈥?All 200+ block opcodes migrated from `BlockInterpreter`'s 1400-line switch to a `HashMap<String, BlockCodeHandler>` registry; new blocks can be added via `BlockCodeRegistry.register()` without modifying `BlockInterpreter`
+- **`EventCodeRegistry`** 鈥?All 40+ event templates migrated from `ComponentCodeGenerator.getEventCode()`'s 310-line switch to a `HashMap<String, EventCodeHandler>` registry
+- **`BlockCodeHandler` / `EventCodeHandler`** 鈥?New `@FunctionalInterface` contracts for block code generation and event code templates
+- **`BlockInterpreter`** 鈥?`getBlockCode()` now delegates to `BlockCodeRegistry`; legacy switch fully removed
+- **`ComponentCodeGenerator`** 鈥?`getEventCode()` now delegates to `EventCodeRegistry`
 
-- **BlockSpecRegistry** — Replace decompiled hashCode switch with HashMap
-- **ProjectDataStore** — Replace decompiled enum switches, delete `ScreenOrientationConstants` and `KeyboardSettingConstants`
-- **ProjectDataParser** — Replace decompiled hashCode/enum switches, clean up fields
-- **StringResource** — Replace decompiled hashCode switch with Set
-- **BlockPane** — Replace decompiled hashCode switches with Map lookups
+- **BlockSpecRegistry** 鈥?Replace decompiled hashCode switch with HashMap
+- **ProjectDataStore** 鈥?Replace decompiled enum switches, delete `ScreenOrientationConstants` and `KeyboardSettingConstants`
+- **ProjectDataParser** 鈥?Replace decompiled hashCode/enum switches, clean up fields
+- **StringResource** 鈥?Replace decompiled hashCode switch with Set
+- **BlockPane** 鈥?Replace decompiled hashCode switches with Map lookups
 - **Code style cleanup** across 30+ files (this. prefixes, FQN imports, verbose conditionals)
 - **Decompiler artifact cleanup** across 17 files
 
-## 🌐 i18n
+## 馃寪 i18n
 
 - Chinese translations for SQLite component, library category titles, onSQLiteError event
 - Localized dependency resolver event descriptions
@@ -344,7 +370,7 @@
 
 # v7.0.0-beta2
 
-## 🔥 Firebase Libraries Upgrade (v19.x → BOM 33.7.0)
+## 馃敟 Firebase Libraries Upgrade (v19.x 鈫?BOM 33.7.0)
 
 The built-in Firebase libraries have been upgraded from severely outdated v19.x (2019-2020) to versions compatible with BOM 33.7.0:
 
@@ -363,22 +389,22 @@ The built-in Firebase libraries have been upgraded from severely outdated v19.x 
 - **Fixed FCM crash**: `ManageEvent.java` `onCompleteRegister` template now guards `task.getResult()` with `isSuccessful()` check
 - **35 libraries** total downloaded, DEX-generated, and packed into assets
 
-## ✨ New Features
+## 鉁?New Features
 
-- **Project pin feature** — Pin important projects to the top
-- **Event list search & sort** — Search and sort events in the event manager
-- **Material 3 slider dialogs** — Hybrid slider dialogs for numeric widget properties
-- **Library downloader UX** — Advanced progress tracking and improved download experience
-- **Local library sorting** — Enabled libraries shown first
-- **Project options improvements** — Display project ID, project name, rearranged options by frequency
-- **Theme preset reset** — Button to reset theme colors to defaults
-- **Language settings** — Optimized with built-in locale picker and i18n fixes
-- **SwipeRefreshLayout** — Added as a built-in library
-- **MapView listeners** — Initialized by default
-- **Add Event keyboard** — Adjusted for keyboard visibility
-- **Project data encryption** — Toggle setting for encrypted project data storage
+- **Project pin feature** 鈥?Pin important projects to the top
+- **Event list search & sort** 鈥?Search and sort events in the event manager
+- **Material 3 slider dialogs** 鈥?Hybrid slider dialogs for numeric widget properties
+- **Library downloader UX** 鈥?Advanced progress tracking and improved download experience
+- **Local library sorting** 鈥?Enabled libraries shown first
+- **Project options improvements** 鈥?Display project ID, project name, rearranged options by frequency
+- **Theme preset reset** 鈥?Button to reset theme colors to defaults
+- **Language settings** 鈥?Optimized with built-in locale picker and i18n fixes
+- **SwipeRefreshLayout** 鈥?Added as a built-in library
+- **MapView listeners** 鈥?Initialized by default
+- **Add Event keyboard** 鈥?Adjusted for keyboard visibility
+- **Project data encryption** 鈥?Toggle setting for encrypted project data storage
 
-## 🐛 Bug Fixes (102 fixes)
+## 馃悰 Bug Fixes (102 fixes)
 
 ### Crash Prevention
 - **109 crash-safety fixes** across the codebase:
@@ -409,27 +435,28 @@ The built-in Firebase libraries have been upgraded from severely outdated v19.x 
 - View not selectable when Disabled
 - Removed ANR-causing font
 
-## ♻️ Refactoring (146 changes)
+## 鈾伙笍 Refactoring (146 changes)
 
 - **JAR source integration**: Decompiled JAR classes integrated as Java source with proper naming
 - **Class renames**: `a.a.a` package classes renamed for readability with full reference updates
 - **String externalization**: ~15 commits extracting hardcoded strings to string resources for i18n
 - **ViewBinding migration**: Multiple activities migrated to ViewBinding
-- **Deprecated API migration**: `startActivityForResult` → `ActivityResultLauncher`, `onBackPressed` → `OnBackPressedCallback`, `getColor()` → `ContextCompat`
+- **Deprecated API migration**: `startActivityForResult` 鈫?`ActivityResultLauncher`, `onBackPressed` 鈫?`OnBackPressedCallback`, `getColor()` 鈫?`ContextCompat`
 - **Thread safety**: `ExecutorService` migration, `volatile` singletons, synchronized access
 - **Exception narrowing**: ~20 commits replacing broad `catch(Exception)` with specific exception types
-- **Logging**: `printStackTrace()` → `Log.e()`, stale log tags replaced with class names
+- **Logging**: `printStackTrace()` 鈫?`Log.e()`, stale log tags replaced with class names
 - **Removed unused code**: Facebook ads, OneSignal, DynamicLinks components removed
 
-## 📦 Dependencies
+## 馃摝 Dependencies
 
-- R8: 8.9.35 → 8.11.18
+- R8: 8.9.35 鈫?8.11.18
 - Lottie: updated to 6.6.7
 - Material: updated to 1.14.0-alpha05
-- androidx.activity: 1.10.1 → 1.11.0
+- androidx.activity: 1.10.1 鈫?1.11.0
 - android.jar: platform-34 added
 - Built-in libraries versions updated
 
 ---
 
 **Full Changelog**: https://github.com/webmturn/Sketchware-Pro/compare/v7.0.0-beta-01...v7.0.0-beta-02
+
