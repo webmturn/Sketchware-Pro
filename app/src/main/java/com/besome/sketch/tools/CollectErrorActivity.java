@@ -20,6 +20,9 @@ import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.SketchwareUtil;
 
 public class CollectErrorActivity extends BaseAppCompatActivity {
+    private static final int MAX_CLIPBOARD_TEXT_CHARS = 180000;
+    private static final int FALLBACK_CLIPBOARD_TEXT_CHARS = 20000;
+
     @SuppressLint("SetTextI18n")
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,10 +58,50 @@ public class CollectErrorActivity extends BaseAppCompatActivity {
         });
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
             ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-            ClipData clip = ClipData.newPlainText("crash_report", "```\n" + report + "\n```");
-            clipboard.setPrimaryClip(clip);
-            SketchwareUtil.toast(Helper.getResString(R.string.toast_copied), Toast.LENGTH_LONG);
+            if (clipboard == null) {
+                SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+                return;
+            }
+
+            try {
+                clipboard.setPrimaryClip(ClipData.newPlainText("crash_report", buildClipboardText(report, MAX_CLIPBOARD_TEXT_CHARS)));
+                SketchwareUtil.toast(Helper.getResString(R.string.toast_copied), Toast.LENGTH_LONG);
+            } catch (RuntimeException e) {
+                Log.e("CollectErrorActivity", "Failed to copy full crash report to clipboard", e);
+                try {
+                    clipboard.setPrimaryClip(ClipData.newPlainText("crash_report", buildClipboardText(report, FALLBACK_CLIPBOARD_TEXT_CHARS)));
+                    SketchwareUtil.toast(Helper.getResString(R.string.toast_copied), Toast.LENGTH_LONG);
+                } catch (RuntimeException inner) {
+                    Log.e("CollectErrorActivity", "Failed to copy fallback crash report to clipboard", inner);
+                    SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+                }
+            }
         });
+    }
+
+    private String buildClipboardText(String report, int maxLength) {
+        String formattedReport = formatClipboardText(report);
+        if (formattedReport.length() <= maxLength) {
+            return formattedReport;
+        }
+
+        String truncatedNotice = "\n\n[Crash report truncated for clipboard. Original length: "
+                + report.length() + " chars]\n\n";
+        int availableReportLength = maxLength - truncatedNotice.length() - 8;
+        if (availableReportLength <= 0) {
+            return formatClipboardText(truncatedNotice.trim());
+        }
+
+        int headLength = availableReportLength / 2;
+        int tailLength = availableReportLength - headLength;
+        String truncatedReport = report.substring(0, headLength)
+                + truncatedNotice
+                + report.substring(report.length() - tailLength);
+        return formatClipboardText(truncatedReport);
+    }
+
+    private String formatClipboardText(String text) {
+        return "```\n" + text + "\n```";
     }
 
     /**
