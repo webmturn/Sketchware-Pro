@@ -1,5 +1,6 @@
 package pro.sketchware.utility;
 
+import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -43,8 +44,9 @@ public final class CrashLogManager {
      */
     @NonNull
     public static File getCrashDir() {
-        File externalDir = SketchApplication.getContext().getExternalFilesDir(null);
-        File base = (externalDir != null) ? externalDir : SketchApplication.getContext().getCacheDir();
+        Context appContext = SketchApplication.getAppContext();
+        File externalDir = appContext.getExternalFilesDir(null);
+        File base = (externalDir != null) ? externalDir : appContext.getCacheDir();
         File dir = new File(base, CRASH_DIR_NAME);
         if (!dir.exists()) {
             dir.mkdirs();
@@ -100,13 +102,14 @@ public final class CrashLogManager {
 
         // App info
         try {
-            PackageInfo info = SketchApplication.getContext().getPackageManager()
-                    .getPackageInfo(SketchApplication.getContext().getPackageName(), 0);
+            Context appContext = SketchApplication.getAppContext();
+            PackageInfo info = appContext.getPackageManager()
+                    .getPackageInfo(appContext.getPackageName(), 0);
             sb.append("App Version: ").append(info.versionName)
                     .append(" (").append(info.versionCode).append(")\n");
             long apkSize = new File(info.applicationInfo.sourceDir).length();
             sb.append("APK Size: ")
-                    .append(Formatter.formatFileSize(SketchApplication.getContext(), apkSize))
+                    .append(Formatter.formatFileSize(appContext, apkSize))
                     .append(" (").append(apkSize).append(" B)\n");
         } catch (PackageManager.NameNotFoundException ignored) {
         }

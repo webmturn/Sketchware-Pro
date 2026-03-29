@@ -201,7 +201,7 @@ public class ProjectBuilder {
     public static boolean hasFileChanged(String fileInAssets, String targetFile) {
         File compareToFile = new File(targetFile);
         EncryptedFileUtil fileUtil = new EncryptedFileUtil();
-        long lengthOfFileInAssets = fileUtil.getAssetFileSize(SketchApplication.getContext(), fileInAssets);
+        long lengthOfFileInAssets = fileUtil.getAssetFileSize(SketchApplication.getAppContext(), fileInAssets);
         long length = compareToFile.exists() ? compareToFile.length() : 0;
         if (lengthOfFileInAssets == length) {
             return false;
@@ -210,7 +210,7 @@ public class ProjectBuilder {
         /* Delete the file */
         fileUtil.deleteDirectory(compareToFile);
         /* Copy the file from assets to local storage */
-        fileUtil.copyAssetFile(SketchApplication.getContext(), fileInAssets, targetFile);
+        fileUtil.copyAssetFile(SketchApplication.getAppContext(), fileInAssets, targetFile);
         return true;
     }
 

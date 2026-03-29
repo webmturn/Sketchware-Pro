@@ -15,7 +15,7 @@ public class CodeEditorLanguages {
     private static final String TAG = "CodeEditorLanguages";
 
     static {
-        FileProviderRegistry.getInstance().addFileProvider(new AssetsFileResolver(SketchApplication.getContext().getAssets()));
+        FileProviderRegistry.getInstance().addFileProvider(new AssetsFileResolver(SketchApplication.getAppContext().getAssets()));
         Throwable t;
         try {
             GrammarRegistry.getInstance().loadGrammars("textmate/languages.json");

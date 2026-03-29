@@ -39,6 +39,10 @@ public class SketchApplication extends Application {
     private static Context cachedLocaleContext;
     private static String cachedLocaleTag;
 
+    public static Context getAppContext() {
+        return mApplicationContext;
+    }
+
     /**
      * Returns the best available context, preferring the current foreground Activity
      * for correct theme/locale resolution. Falls back to a locale-configured

@@ -16,7 +16,7 @@ import pro.sketchware.core.EncryptedFileUtil;
 import pro.sketchware.SketchApplication;
 
 public class BuiltInLibraries {
-    public static final File EXTRACTED_COMPILE_ASSETS_PATH = new File(SketchApplication.getContext().getFilesDir(), "libs");
+    public static final File EXTRACTED_COMPILE_ASSETS_PATH = new File(SketchApplication.getAppContext().getFilesDir(), "libs");
     public static final File EXTRACTED_BUILT_IN_LIBRARIES_PATH = new File(EXTRACTED_COMPILE_ASSETS_PATH, "libs");
     public static final File EXTRACTED_BUILT_IN_LIBRARY_DEX_FILES_PATH = new File(EXTRACTED_COMPILE_ASSETS_PATH, "dexs");
 

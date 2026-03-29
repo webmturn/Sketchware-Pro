@@ -109,8 +109,8 @@ public class ResourceCompiler {
             this.buildHelper = buildHelper;
             this.aapt2 = aapt2;
             this.buildAppBundle = buildAppBundle;
-            compiledBuiltInLibraryResourcesDirectory = new File(SketchApplication.getContext().getCacheDir(), "compiledLibs");
-            compiledLocalLibraryResourcesDirectory = new File(SketchApplication.getContext().getCacheDir(), "compiledLocalLibs");
+            compiledBuiltInLibraryResourcesDirectory = new File(SketchApplication.getAppContext().getCacheDir(), "compiledLibs");
+            compiledLocalLibraryResourcesDirectory = new File(SketchApplication.getAppContext().getCacheDir(), "compiledLocalLibs");
         }
 
         @Override
@@ -394,7 +394,7 @@ public class ResourceCompiler {
         private boolean isBuiltInLibraryRecompilingNeeded(File cachedCompiledResources) {
             if (cachedCompiledResources.exists()) {
                 try {
-                    Context context = SketchApplication.getContext();
+                    Context context = SketchApplication.getAppContext();
                     return context.getPackageManager().getPackageInfo(context.getPackageName(), 0)
                             .lastUpdateTime > cachedCompiledResources.lastModified();
                 } catch (PackageManager.NameNotFoundException e) {

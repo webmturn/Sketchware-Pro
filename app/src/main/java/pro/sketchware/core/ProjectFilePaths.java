@@ -768,7 +768,7 @@ public class ProjectFilePaths {
      * Get source code files that are viewable in SrcCodeViewer
      */
     public ArrayList<SrcCodeBean> generateSourceCodeBeans(ProjectFileManager projectFileManager, ProjectDataStore projectDataManager, BuiltInLibraryManager builtInLibraryManager) {
-        generateDebugFiles(SketchApplication.getContext());
+        generateDebugFiles(SketchApplication.getAppContext());
         CommandBlock.clearTempCommands();
 
         String javaDir = FileUtil.getExternalStorageDir() + "/.sketchware/data/" + sc_id + "/files/java/";
@@ -798,7 +798,7 @@ public class ProjectFilePaths {
         }
 
         // Code generation cache: skip regeneration if inputs haven't changed
-        File codegenCacheDir = new File(SketchApplication.getContext().getCacheDir(), "codegenCache/" + sc_id);
+        File codegenCacheDir = new File(SketchApplication.getAppContext().getCacheDir(), "codegenCache/" + sc_id);
         String cacheKey = computeCodeGenCacheKey();
         boolean cacheHit = false;
 
@@ -1041,7 +1041,7 @@ public class ProjectFilePaths {
         }
 
         if (isManifestFile) {
-            ProjectBuilder builder = new ProjectBuilder(SketchApplication.getContext(), this);
+            ProjectBuilder builder = new ProjectBuilder(SketchApplication.getAppContext(), this);
             builder.buildBuiltInLibraryInformation();
             ManifestGenerator manifestGenerator = new ManifestGenerator(buildConfig, projectFileManager.getActivities(), builder.getBuiltInLibraryManager());
             manifestGenerator.setProjectFilePaths(this);
@@ -1192,7 +1192,7 @@ public class ProjectFilePaths {
         // Sketchware-Pro app install time — invalidates cache whenever the APK is reinstalled,
         // even if versionCode stays the same (e.g. debug builds with template fixes).
         try {
-            Context ctx = SketchApplication.getContext();
+            Context ctx = SketchApplication.getAppContext();
             PackageInfo pkgInfo = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0);
             key.append('|').append(pkgInfo.versionCode).append('|').append(pkgInfo.lastUpdateTime);
         } catch (PackageManager.NameNotFoundException ignored) {

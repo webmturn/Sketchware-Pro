@@ -176,7 +176,7 @@ public class SketchwarePaths {
     }
 
     public static String getExtractedIconPackStoreLocation() {
-        return new File(SketchApplication.getContext().getFilesDir(), "iconpack").getAbsolutePath();
+        return new File(SketchApplication.getAppContext().getFilesDir(), "iconpack").getAbsolutePath();
     }
 
     public static String getImagesPath() {

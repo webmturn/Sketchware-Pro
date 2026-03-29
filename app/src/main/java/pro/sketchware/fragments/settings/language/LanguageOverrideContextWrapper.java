@@ -28,9 +28,11 @@ public class LanguageOverrideContextWrapper extends ContextWrapper {
     @Override
     public Context getApplicationContext() {
         Context baseApplicationContext = super.getApplicationContext();
-        if (baseApplicationContext == null || baseApplicationContext == getBaseContext()) {
-            return this;
+        if (baseApplicationContext != null) {
+            return baseApplicationContext;
         }
-        return wrap(baseApplicationContext);
+
+        Context baseContext = getBaseContext();
+        return baseContext != null ? baseContext : this;
     }
 }

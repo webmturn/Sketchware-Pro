@@ -20,7 +20,7 @@ public class CodeEditorColorSchemes {
     private static final String TAG = "CodeEditorColorSchemes";
 
     static {
-        AssetManager assets = SketchApplication.getContext().getAssets();
+        AssetManager assets = SketchApplication.getAppContext().getAssets();
 
         FileProviderRegistry.getInstance().addFileProvider(new AssetsFileResolver(assets));
         ThemeRegistry registry = ThemeRegistry.getInstance();

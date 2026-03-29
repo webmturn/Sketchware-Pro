@@ -30,7 +30,7 @@ public class FilePathUtil {
         if (sketchwareLocalLibsFallback == null) {
             synchronized (FilePathUtil.class) {
                 if (sketchwareLocalLibsFallback == null) {
-                    File externalFilesDir = SketchApplication.getContext().getExternalFilesDir(null);
+                    File externalFilesDir = SketchApplication.getAppContext().getExternalFilesDir(null);
                     sketchwareLocalLibsFallback = new File(externalFilesDir, "local_libs");
                 }
             }
