@@ -457,6 +457,11 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             sc_id = savedInstanceState.getString("sc_id");
         }
 
+        if (sc_id == null || sc_id.isEmpty()) {
+            finish();
+            return;
+        }
+
         prefP1 = new SharedPrefsHelper(getApplicationContext(), "P1");
         prefP12 = new SharedPrefsHelper(getApplicationContext(), "P12");
 

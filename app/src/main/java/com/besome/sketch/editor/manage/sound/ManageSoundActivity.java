@@ -78,6 +78,11 @@ public class ManageSoundActivity extends BaseAppCompatActivity implements ViewPa
         });
         sc_id = savedInstanceState == null ? getIntent().getStringExtra("sc_id") : savedInstanceState.getString("sc_id");
 
+        if (sc_id == null || sc_id.isEmpty()) {
+            finish();
+            return;
+        }
+
         binding.viewPager.setAdapter(new PagerAdapter(getSupportFragmentManager()));
         binding.viewPager.setOffscreenPageLimit(TAB_COUNT);
         binding.viewPager.addOnPageChangeListener(this);

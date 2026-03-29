@@ -220,20 +220,31 @@ public class ImportFontFragment extends BaseFragment implements MenuProvider {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         EncryptedFileUtil = new EncryptedFileUtil();
-        EncryptedFileUtil.mkdirs(dirPath);
         projectResourceBeans = new ArrayList<>();
         if (savedInstanceState == null) {
             sc_id = requireActivity().getIntent().getStringExtra("sc_id");
-            dirPath = ProjectDataManager.getResourceManager(sc_id).getFontDirPath();
-            ArrayList<ProjectResourceBean> resourceBeans = ProjectDataManager.getResourceManager(sc_id).fonts;
-            if (resourceBeans != null) {
-                projectResourceBeans.addAll(resourceBeans);
+            if (sc_id != null && !sc_id.isEmpty()) {
+                dirPath = ProjectDataManager.getResourceManager(sc_id).getFontDirPath();
+                ArrayList<ProjectResourceBean> resourceBeans = ProjectDataManager.getResourceManager(sc_id).fonts;
+                if (resourceBeans != null) {
+                    projectResourceBeans.addAll(resourceBeans);
+                }
             }
         } else {
             sc_id = savedInstanceState.getString("sc_id");
             dirPath = savedInstanceState.getString("dir_path");
             projectResourceBeans = savedInstanceState.getParcelableArrayList("fonts");
         }
+
+        if (projectResourceBeans == null) {
+            projectResourceBeans = new ArrayList<>();
+        }
+
+        if ((dirPath == null || dirPath.isEmpty()) && sc_id != null && !sc_id.isEmpty()) {
+            dirPath = ProjectDataManager.getResourceManager(sc_id).getFontDirPath();
+        }
+
+        EncryptedFileUtil.mkdirs(dirPath);
 
         adapter.notifyDataSetChanged();
         toggleEmptyStateVisibility();

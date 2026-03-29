@@ -55,6 +55,7 @@ public class EncryptedFileUtil {
    * @return the file size in bytes, or {@code -1} on error
    */
   public long getAssetFileSize(Context context, String value) {
+    if (context == null || value == null || value.isEmpty()) return -1L;
     try (InputStream inputStream = context.getAssets().open(value)) {
       return inputStream.available();
     } catch (IOException e) {
@@ -90,6 +91,7 @@ public class EncryptedFileUtil {
    * @param value   the destination file path on local storage
    */
   public void copyAssetFile(Context context, String key, String value) {
+    if (key == null || key.isEmpty() || value == null || value.isEmpty()) return;
     int sepIdx = value.lastIndexOf(File.separator);
     if (sepIdx > 0) {
       mkdirs(value.substring(0, sepIdx));
@@ -154,11 +156,15 @@ public class EncryptedFileUtil {
   }
   
   public void recreateDirectory(String value) {
+    if (value == null || value.isEmpty()) return;
     deleteDirectoryByPath(value);
     mkdirs(value);
   }
   
   public void copyFile(String key, String value) throws IOException {
+    if (key == null || key.isEmpty() || value == null || value.isEmpty()) {
+      throw new IOException("copyFile: null or empty path (src=" + key + ", dst=" + value + ")");
+    }
     try (FileInputStream fis = new FileInputStream(key);
          FileOutputStream fos = new FileOutputStream(value, false)) {
       byte[] buf = new byte[1024];
@@ -173,6 +179,7 @@ public class EncryptedFileUtil {
   }
   
   public void deleteRecursiveByPath(String value, boolean flag) {
+    if (value == null || value.isEmpty()) return;
     deleteRecursive(new File(value), flag);
   }
   
@@ -185,6 +192,7 @@ public class EncryptedFileUtil {
    * @return {@code true} if the write succeeded
    */
   public boolean writeBytes(String value, byte[] data) {
+    if (value == null || value.isEmpty() || data == null) return false;
     int separatorIdx = value.lastIndexOf(File.separator);
     if (separatorIdx > 0)
       mkdirs(value.substring(0, separatorIdx)); 
@@ -211,6 +219,7 @@ public class EncryptedFileUtil {
   }
   
   public String readAssetFile(Context context, String value) {
+    if (value == null || value.isEmpty()) return "";
     StringBuilder sb = new StringBuilder();
     try (InputStream is = context.getAssets().open(value.trim());
          BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
@@ -230,6 +239,7 @@ public class EncryptedFileUtil {
   }
   
   public void deleteDirectoryByPath(String value) {
+    if (value == null || value.isEmpty()) return;
     deleteRecursiveByPath(value, true);
   }
   
@@ -242,6 +252,7 @@ public class EncryptedFileUtil {
    * @return {@code true} if the write succeeded
    */
   public boolean writeText(String key, String value) {
+    if (key == null || key.isEmpty()) return false;
     int separatorIdx = key.lastIndexOf(File.separator);
     if (separatorIdx > 0)
       mkdirs(key.substring(0, separatorIdx)); 
@@ -297,6 +308,7 @@ public class EncryptedFileUtil {
   }
   
   public void deleteFileByPath(String value) {
+    if (value == null || value.isEmpty()) return;
     deleteFile(new File(value));
   }
   
@@ -331,14 +343,15 @@ public class EncryptedFileUtil {
   }
   
   public boolean exists(String value) {
-    return new File(value).exists();
+    return value != null && !value.isEmpty() && new File(value).exists();
   }
   
   public boolean mkdirs(String value) {
-    return !exists(value) && new File(value).mkdirs();
+    return value != null && !value.isEmpty() && !exists(value) && new File(value).mkdirs();
   }
   
   public String readFile(String value) {
+    if (value == null || value.isEmpty()) return "";
     return readFileContent(new File(value));
   }
   
@@ -349,6 +362,7 @@ public class EncryptedFileUtil {
    * @return the file contents, or {@code null} if the file is empty or an error occurs
    */
   public byte[] readFileBytes(String value) {
+    if (value == null || value.isEmpty()) return null;
     try (FileInputStream fis = new FileInputStream(value);
          ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
       byte[] buf = new byte[4096];

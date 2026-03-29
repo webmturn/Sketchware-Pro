@@ -37,6 +37,7 @@ import pro.sketchware.core.BitmapUtil;
 import pro.sketchware.core.EncryptedFileUtil;
 import pro.sketchware.core.BlockConstants;
 import pro.sketchware.core.CompileException;
+import pro.sketchware.core.ProjectDataManager;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 
@@ -148,6 +149,9 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
         existingImages = intent.getParcelableArrayListExtra("images");
         sc_id = intent.getStringExtra("sc_id");
         dir_path = intent.getStringExtra("dir_path");
+        if ((dir_path == null || dir_path.isEmpty()) && sc_id != null && !sc_id.isEmpty()) {
+            dir_path = ProjectDataManager.getResourceManager(sc_id).getImageDirPath();
+        }
         image = intent.getParcelableExtra("edit_target");
         if (image != null) {
             editing = true;

@@ -23,7 +23,6 @@ import java.io.File;
 import java.util.ArrayList;
 
 import pro.sketchware.core.FontCollectionManager;
-import pro.sketchware.core.EncryptedFileUtil;
 import pro.sketchware.core.BaseFragment;
 import pro.sketchware.core.SketchwarePaths;
 import mod.hey.studios.util.Helper;
@@ -38,7 +37,6 @@ public class FontManagerFragment extends BaseFragment {
     private ActivityResultLauncher<Intent> importFontLauncher;
     public String sc_id;
     public fontAdapter adapter;
-    public String dirPath = "";
     public ArrayList<ProjectResourceBean> projectResourceBeans;
     private FrManageFontListBinding binding;
     private ManageFontBinding actBinding;
@@ -144,14 +142,10 @@ public class FontManagerFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        new EncryptedFileUtil().mkdirs(dirPath);
-
         if (savedInstanceState == null) {
             sc_id = requireActivity().getIntent().getStringExtra("sc_id");
-            dirPath = requireActivity().getIntent().getStringExtra("dir_path");
         } else {
             sc_id = savedInstanceState.getString("sc_id");
-            dirPath = savedInstanceState.getString("dir_path");
         }
 
         loadProjectResources();
@@ -181,7 +175,6 @@ public class FontManagerFragment extends BaseFragment {
     public void onSaveInstanceState(@NonNull Bundle bundle) {
         super.onSaveInstanceState(bundle);
         bundle.putString("sc_id", sc_id);
-        bundle.putString("dir_path", dirPath);
     }
 
     public class fontAdapter extends RecyclerView.Adapter<fontAdapter.fontHolder> {

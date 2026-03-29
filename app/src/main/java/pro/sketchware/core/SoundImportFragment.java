@@ -67,8 +67,10 @@ public class SoundImportFragment extends BaseFragment {
             sc_id = savedInstanceState.getString("sc_id");
             dirPath = savedInstanceState.getString("dir_path");
         }
+        if ((dirPath == null || dirPath.isEmpty()) && sc_id != null && !sc_id.isEmpty()) {
+            dirPath = ProjectDataManager.getResourceManager(sc_id).getSoundDirPath();
+        }
         EncryptedFileUtil fileUtil = new EncryptedFileUtil();
-        // create dirs if they don't exist
         fileUtil.mkdirs(dirPath);
         loadProjectSounds();
 

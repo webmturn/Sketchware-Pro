@@ -97,6 +97,11 @@ public class ManageImageActivity extends BaseAppCompatActivity implements ViewPa
             sc_id = savedInstanceState.getString("sc_id");
         }
 
+        if (sc_id == null || sc_id.isEmpty()) {
+            finish();
+            return;
+        }
+
         binding.viewPager.setAdapter(new PagerAdapter(getSupportFragmentManager()));
         binding.viewPager.setOffscreenPageLimit(2);
         binding.viewPager.addOnPageChangeListener(this);

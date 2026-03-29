@@ -38,6 +38,7 @@ import pro.sketchware.core.ResourceNameValidator;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.BlockConstants;
 import pro.sketchware.core.CompileException;
+import pro.sketchware.core.ProjectDataManager;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;
 import pro.sketchware.R;
@@ -138,6 +139,9 @@ public class AddSoundActivity extends BaseDialogActivity implements View.OnClick
         ArrayList<String> existingSoundNames = intent.getStringArrayListExtra("sound_names");
         sc_id = intent.getStringExtra("sc_id");
         soundsDirectory = intent.getStringExtra("dir_path");
+        if ((soundsDirectory == null || soundsDirectory.isEmpty()) && sc_id != null && !sc_id.isEmpty()) {
+            soundsDirectory = ProjectDataManager.getResourceManager(sc_id).getSoundDirPath();
+        }
         int requestCode = intent.getIntExtra("request_code", -1);
         nowPlayingFilename = findViewById(R.id.file_name);
         nowPlayingProgress = findViewById(R.id.current_time);

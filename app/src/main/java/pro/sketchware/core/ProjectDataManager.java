@@ -23,6 +23,12 @@ public class ProjectDataManager {
     private static ResourceManager resourceManager;
     private static LibraryManager libraryManager;
 
+    private static void requireProjectId(String sc_id) {
+        if (sc_id == null || sc_id.isEmpty()) {
+            throw new IllegalArgumentException("sc_id must not be null or empty");
+        }
+    }
+
     /**
      * Clears all cached manager instances without saving.
      * <p>
@@ -127,6 +133,7 @@ public class ProjectDataManager {
      * @return the project data store instance
      */
     public static synchronized ProjectDataStore getProjectDataManager(String sc_id, boolean load) {
+        requireProjectId(sc_id);
         if (projectDataStore != null && !sc_id.equals(projectDataStore.projectId)) {
             closeDataManager();
         }
@@ -170,6 +177,7 @@ public class ProjectDataManager {
      * @return the project file manager instance
      */
     public static synchronized ProjectFileManager getFileManager(String sc_id, boolean load) {
+        requireProjectId(sc_id);
         if (projectFileManager != null && !sc_id.equals(projectFileManager.projectId)) {
             closeFileManager();
         }
@@ -205,6 +213,7 @@ public class ProjectDataManager {
      * @return the library manager instance
      */
     public static synchronized LibraryManager getLibraryManager(String sc_id, boolean load) {
+        requireProjectId(sc_id);
         if (libraryManager != null && !sc_id.equals(libraryManager.projectId)) {
             closeLibraryManager();
         }
@@ -240,6 +249,7 @@ public class ProjectDataManager {
      * @return the resource manager instance
      */
     public static synchronized ResourceManager getResourceManager(String sc_id, boolean load) {
+        requireProjectId(sc_id);
         if (resourceManager != null && !sc_id.equals(resourceManager.projectId)) {
             closeResourceManager();
         }

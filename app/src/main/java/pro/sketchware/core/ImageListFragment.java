@@ -156,10 +156,13 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
 
     private void initialize() {
         sc_id = requireActivity().getIntent().getStringExtra("sc_id");
-        projectImagesDirectory = ProjectDataManager.getResourceManager(sc_id).getImageDirPath();
-        ArrayList<ProjectResourceBean> imagesList = ProjectDataManager.getResourceManager(sc_id).images;
         svgUtils = new SvgUtils(requireContext());
         svgUtils.initImageLoader();
+        if (sc_id == null || sc_id.isEmpty()) {
+            return;
+        }
+        projectImagesDirectory = ProjectDataManager.getResourceManager(sc_id).getImageDirPath();
+        ArrayList<ProjectResourceBean> imagesList = ProjectDataManager.getResourceManager(sc_id).images;
         if (imagesList != null) {
             for (ProjectResourceBean next : imagesList) {
                 if (next.flipVertical == 0) {
@@ -299,6 +302,12 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
             sc_id = savedInstanceState.getString("sc_id");
             projectImagesDirectory = savedInstanceState.getString("dir_path");
             images = savedInstanceState.getParcelableArrayList("images");
+        }
+        if (images == null) {
+            images = new ArrayList<>();
+        }
+        if ((projectImagesDirectory == null || projectImagesDirectory.isEmpty()) && sc_id != null && !sc_id.isEmpty()) {
+            projectImagesDirectory = ProjectDataManager.getResourceManager(sc_id).getImageDirPath();
         }
         // mkdirs
         new EncryptedFileUtil().mkdirs(projectImagesDirectory);

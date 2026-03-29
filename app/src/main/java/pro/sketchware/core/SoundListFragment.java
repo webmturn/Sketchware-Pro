@@ -121,15 +121,16 @@ public class SoundListFragment extends BaseFragment implements MenuProvider {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        new EncryptedFileUtil().mkdirs(dirPath);
         sounds = new ArrayList<>();
         if (savedInstanceState == null) {
             sc_id = requireActivity().getIntent().getStringExtra("sc_id");
-            dirPath = ProjectDataManager.getResourceManager(sc_id).getSoundDirPath();
-            ArrayList<ProjectResourceBean> soundsList = ProjectDataManager.getResourceManager(sc_id).sounds;
-            if (soundsList != null) {
-                for (ProjectResourceBean projectResourceBean : soundsList) {
-                    sounds.add(projectResourceBean.clone());
+            if (sc_id != null && !sc_id.isEmpty()) {
+                dirPath = ProjectDataManager.getResourceManager(sc_id).getSoundDirPath();
+                ArrayList<ProjectResourceBean> soundsList = ProjectDataManager.getResourceManager(sc_id).sounds;
+                if (soundsList != null) {
+                    for (ProjectResourceBean projectResourceBean : soundsList) {
+                        sounds.add(projectResourceBean.clone());
+                    }
                 }
             }
         } else {
@@ -137,6 +138,13 @@ public class SoundListFragment extends BaseFragment implements MenuProvider {
             dirPath = savedInstanceState.getString("dir_path");
             sounds = savedInstanceState.getParcelableArrayList("sounds");
         }
+        if (sounds == null) {
+            sounds = new ArrayList<>();
+        }
+        if ((dirPath == null || dirPath.isEmpty()) && sc_id != null && !sc_id.isEmpty()) {
+            dirPath = ProjectDataManager.getResourceManager(sc_id).getSoundDirPath();
+        }
+        new EncryptedFileUtil().mkdirs(dirPath);
         adapter.notifyDataSetChanged();
         updateNoSoundsTextVisibility();
     }

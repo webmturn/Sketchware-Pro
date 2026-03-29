@@ -149,13 +149,8 @@ public class PropertyActivity extends BaseAppCompatActivity implements PropertyC
         });
         imageManagerLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
-                    if (result.getResultCode() == RESULT_OK && ProjectDataManager.getResourceManager(sc_id) != null && result.getData() != null) {
-                        String resultScId = result.getData().getStringExtra("sc_id");
-                        ArrayList<ProjectResourceBean> resultList = result.getData().getParcelableArrayListExtra("result");
-                        if (ProjectDataManager.getResourceManager(resultScId) != null) {
-                            ProjectDataManager.getResourceManager(resultScId).setImages(resultList);
-                            validateImageResources();
-                        }
+                    if (result.getResultCode() == RESULT_OK && sc_id != null && !sc_id.isEmpty()) {
+                        validateImageResources();
                     }
                 });
         setContentView(R.layout.property);
@@ -194,6 +189,11 @@ public class PropertyActivity extends BaseAppCompatActivity implements PropertyC
             sc_id = getIntent().getStringExtra("sc_id");
             projectFileBean = getIntent().getParcelableExtra("project_file");
             viewBean = getIntent().getParcelableExtra("bean");
+        }
+
+        if (sc_id == null || sc_id.isEmpty()) {
+            finish();
+            return;
         }
 
         String viewId;
