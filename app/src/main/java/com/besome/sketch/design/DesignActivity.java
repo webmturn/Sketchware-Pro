@@ -1559,13 +1559,13 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             if (activity != null) {
                 var sc_id = DesignActivity.sc_id;
                 boolean dataSaved = saveProjectDataToFiles(sc_id);
+                if (dataSaved) {
+                    ProjectDataManager.getResourceManager(sc_id).deleteTempDirs();
+                }
                 activity.runOnUiThread(() -> {
                     if (dataSaved) {
                         SketchToast.toast(activity.getApplicationContext(), Helper.getResString(R.string.common_message_complete_save), SketchToast.TOAST_NORMAL).show();
                         activity.saveVersionCodeInformationToProject();
-                        // Reset backup state after save — next resource modification
-                        // will trigger a fresh backup.
-                        ProjectDataManager.getResourceManager(sc_id).resetBackupState();
                     } else {
                         SketchToast.toast(activity.getApplicationContext(), Helper.getResString(R.string.common_message_save_failed), SketchToast.TOAST_WARNING).show();
                     }
@@ -1591,7 +1591,9 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             if (activity != null) {
                 var sc_id = DesignActivity.sc_id;
                 boolean dataSaved = saveProjectDataToFiles(sc_id);
-                ProjectDataManager.getResourceManager(sc_id).deleteTempDirs();
+                if (dataSaved) {
+                    ProjectDataManager.getResourceManager(sc_id).deleteTempDirs();
+                }
                 activity.runOnUiThread(() -> {
                     if (dataSaved) {
                         SketchToast.toast(activity.getApplicationContext(), Helper.getResString(R.string.common_message_complete_save), SketchToast.TOAST_NORMAL).show();
