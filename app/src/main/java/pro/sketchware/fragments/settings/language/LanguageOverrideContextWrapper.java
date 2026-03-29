@@ -39,7 +39,7 @@ public class LanguageOverrideContextWrapper extends ContextWrapper {
             return baseContext != null ? baseContext : this;
         }
         if (baseApplicationContext == baseContext) {
-            return this;
+            return baseApplicationContext;
         }
         if (overrideApplicationContext == null) {
             overrideApplicationContext = wrap(baseApplicationContext);
