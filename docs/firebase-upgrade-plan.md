@@ -1,6 +1,7 @@
 # Firebase 内置库升级实施计划
 
 > **✅ 状态：已完成。** 此升级已在 v7.0.0-beta2 中实施。以下内容保留作为历史参考。
+> **说明：** 文中的部分类名 / 行号来自实施当时的代码结构；当前仓库中，生成项目 Gradle 的逻辑已迁移到 `GradleFileGenerator`，FCM 相关传递依赖也已由 `BuiltInLibraries` 依赖树自动覆盖。
 
 ## 概述
 
@@ -70,7 +71,7 @@ Sketchware-Pro 内置的 Firebase 库版本为 v19.x（2019-2020 年），已严
 
 **文件修改：**
 
-1. `ComponentCodeGenerator.java:98`
+1. `ComponentCodeGenerator.java:98`（实施时位置；当前实现位于 `GradleFileGenerator.getBuildGradleString()`）
    ```java
    // 当前（不匹配）：
    content.append("implementation platform('com.google.firebase:firebase-bom:34.1.0')\r\n");
@@ -473,11 +474,8 @@ new BuiltInLibrary(FIREBASE_MEASUREMENT_CONNECTOR, List.of(PLAY_SERVICES_BASEMEN
 
 ```java
 // ProjectBuilder.java:768-779
-// 无需修改 — firebase-installations 会通过 BuiltInLibrary 依赖树自动引入
-// 但如需显式添加（安全起见）：
-if (projectFilePaths.buildConfig.constVarComponent.isFCMUsed) {
-    builtInLibraryManager.addLibrary(BuiltInLibraries.FIREBASE_INSTALLATIONS);
-}
+// 最终结论：无需显式添加
+// firebase-installations 会通过 BuiltInLibrary 依赖树自动引入
 ```
 
 #### 4.4 更新 ExtLibSelected.java
@@ -495,7 +493,8 @@ if (component.isFCMUsed) {
 #### 4.5 更新 ComponentCodeGenerator.java 的 build.gradle 生成
 
 ```java
-// ComponentCodeGenerator.java:98
+// 实施时：ComponentCodeGenerator.java:98
+// 当前仓库：GradleFileGenerator.getBuildGradleString()
 // 更新 BOM 版本号为与内置库匹配的版本
 content.append("implementation platform('com.google.firebase:firebase-bom:33.7.0')\r\n");
 ```
@@ -600,12 +599,12 @@ firebase-upgrade/phase-4-declarations
 
 | 文件 | 阶段 | 变更类型 |
 |------|------|--------|
-| `ComponentCodeGenerator.java` | 1, 4 | 修改 BOM 版本号 (34.1.0 → 33.7.0) |
+| `ComponentCodeGenerator.java` / `GradleFileGenerator.java` | 1, 4 | 修改 BOM 版本号 (34.1.0 → 33.7.0；当前代码位于 `GradleFileGenerator`) |
 | `ComponentTypeMapper.java` | 2 | 移除 FirebaseInstanceId/InstanceIdResult import |
 | `ManifestGenerator.java` | 2 | 移除 firebase-iid Registrar + c2dm 权限 |
 | `EditorManifest.java` | 2 | 移除 FirebaseInstanceIdReceiver |
 | `app/src/main/assets/libs/libs.zip` | 3 | 替换/新增/删除 ~38 个库的 JAR + res 文件 |
 | `app/src/main/assets/libs/dexs.zip` | 3 | 替换/新增/删除 ~38 个库的 DEX 文件 |
 | `BuiltInLibraries.java` | 4 | 新增 ~15 个版本常量 + 更新 ~15 个 + 完整依赖树重建 |
-| `ProjectBuilder.java` | 4 | 可能需要添加 firebase-installations 显式引入 |
+| `ProjectBuilder.java` | 4 | 最终无需显式添加 `firebase-installations`，由依赖树自动引入 |
 | `ExtLibSelected.java` | 4 | 验证 FCM 依赖链 |

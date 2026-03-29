@@ -1,6 +1,6 @@
 # 本地库（Local Library）问题审查
 
-> 审查日期：2026-03-13
+> 审查日期：2026-03-29
 
 ---
 
@@ -47,6 +47,7 @@
 | 子依赖过滤展示 | `LocalLibrariesUtil.getAllLocalLibraries()` — 仅展示根库和独立库 |
 | 共享子依赖删除 | `deleteSelectedLocalLibraries()` — 多根库共享的子依赖保留并提示 |
 | 孤立库检测与清理 | `getOrphanLibraries()` + ManageLocalLibraryActivity 清理入口 |
+| 子依赖禁用保护 | `SubDependenciesActivity` + `buildEnabledRootDependencyState()` — 阻止关闭仍被启用根库依赖的子依赖 |
 | 多 DEX 支持 | `ManageLocalLibrary.getExtraDexes()` — 收集 classes2.dex 等 |
 | 双路径回退 | `FilePathUtil` 主路径 + fallback 路径，兼容 FUSE 限制 |
 
@@ -54,7 +55,7 @@
 
 ### 依赖顺序与冲突解析
 
-`local_library` JSON 中库的顺序会影响 classpath 和 DEX 合并顺序。当前无 Maven 式依赖解析，依赖顺序由用户配置决定，可能出现版本冲突需手动调整。
+`dependency-tree.json` 目前已用于下载后展示子依赖关系、共享引用保护和子依赖开关防护；但构建时的 `local_library` 迭代顺序仍直接取决于 JSON 中的顺序，classpath 和 DEX 合并尚未按依赖拓扑排序，也没有版本冲突检测。
 
 ---
 

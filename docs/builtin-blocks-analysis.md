@@ -1,13 +1,15 @@
 # Sketchware-Pro 内置 Block 分析报告
 
 > 生成日期：2026-02-27
+> 修订日期：2026-03-29
 > 数据来源：`BlockInterpreter.java`（代码生成）、`BlockSpecRegistry.java`（spec/参数定义）
+> 注意：本文是 **2026-02-27 的分析快照**。当前项目已在此后继续新增/调整内置块（如 `Notification` / `SQLite` 相关块），因此本文的“缺失分析”章节仅可作为历史审查记录，不能直接视为当前能力清单。
 
 ---
 
-## 一、现有内置 Block 完整清单
+## 一、当时的内置 Block 清单（2026-02-27 快照）
 
-共 **174 个** 内置 opcode（不含运算符 `+` `-` `*` `/` `%` `>` `<` `=` `&&` `||`）。
+当时共 **174 个** 内置 opcode（不含运算符 `+` `-` `*` `/` `%` `>` `<` `=` `&&` `||`）。
 
 ### 1. 控制流（6 个）
 
@@ -553,7 +555,7 @@
 
 ---
 
-## 三、缺失分析：建议补充的 Block（经三轮审查）
+## 三、历史缺失分析：建议补充的 Block（经三轮审查）
 
 > **重要发现**：项目存在**两套 block 系统**：
 > 1. **核心块**（`BlockCodeRegistry.java` + `BlockSpecRegistry.java`）— ~174 个，通过注册表模式管理
@@ -610,7 +612,7 @@
 
 | 初始建议 | 为什么不需要 |
 |----------|-------------|
-| `showNotification` | 太复杂（需 Channel + PendingIntent + 图标），需 5-6 个块 |
+| `showNotification` | **该结论现已过时**：当前项目已提供 `Notification` 组件块（如 `notifCreateChannel`、`notifShow` 等），本行仅保留作历史审查记录 |
 | `showSnackbar` | Toast 已覆盖大部分场景 |
 | `logDebug` | Sketchware 用户看不到 logcat，用 Toast 调试 |
 | `openUrlInBrowser` | **已可实现**：`intentSetAction` + `intentSetData` + `startActivity` |

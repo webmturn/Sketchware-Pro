@@ -1,7 +1,8 @@
 # 代码生成系统深度分析
 
 > 分析日期：2026-03-03
-> 涉及模块：BlockInterpreter · ActivityCodeGenerator · EventCodeGenerator · ComponentCodeGenerator · BlockLoader
+> 修订日期：2026-03-29
+> 涉及模块：BlockInterpreter · ActivityCodeGenerator · EventCodeGenerator · ComponentCodeGenerator · GradleFileGenerator · BlockLoader
 
 ---
 
@@ -11,7 +12,7 @@
 2. [BlockInterpreter 分析](#2-blockinterpreter-分析)
 3. [ActivityCodeGenerator 分析](#3-activitycodegenerator-分析)
 4. [EventCodeGenerator 分析](#4-eventcodegenerator-分析)
-5. [ComponentCodeGenerator 分析](#5-componentcodegenerator-分析)
+5. [ComponentCodeGenerator 与 GradleFileGenerator 分析](#5-componentcodegenerator-与-gradlefilegenerator-分析)
 6. [Extra Block 扩展系统](#6-extra-block-扩展系统)
 7. [完整代码生成链路](#7-完整代码生成链路)
 8. [系统限制与问题](#8-系统限制与问题)
@@ -35,8 +36,8 @@
             ActivityCodeGenerator
             (组装完整 .java 文件)
                     ↓
-            ComponentCodeGenerator
-            (build.gradle / 字段声明 / 格式化)
+            ComponentCodeGenerator / GradleFileGenerator
+            (字段声明 / 事件模板 / Gradle 文件生成)
 ```
 
 ### 1.2 关键文件
@@ -46,7 +47,8 @@
 | `BlockInterpreter.java` | 390 | 将单个 Block 的 opcode 翻译为 Java 代码片段 |
 | `ActivityCodeGenerator.java` | 1202 | 组装完整的 Activity/Fragment Java 源文件 |
 | `EventCodeGenerator.java` | 458 | 管理事件分类（View/Component/Activity/Drawer）并生成监听器 |
-| `ComponentCodeGenerator.java` | 904 | build.gradle 生成、字段声明、事件代码模板、代码格式化 |
+| `ComponentCodeGenerator.java` | 905 | 字段声明、事件代码模板、代码格式化、兼容 Gradle 转发入口 |
+| `GradleFileGenerator.java` | 272 | 生成项目 `build.gradle` / `settings.gradle` |
 | `BlockLoader.java` | 283 | 加载 Extra Block 自定义块定义 |
 | `ExtraBlockInfo.java` | 60 | Extra Block 数据模型 |
 
@@ -254,24 +256,22 @@ for (EventBean eventBean : events) {
 // Gyroscope → onDestroy
 ```
 
-## 5. ComponentCodeGenerator 分析
-
-**文件**: `pro/sketchware/core/ComponentCodeGenerator.java` (904 行)
+## 5. ComponentCodeGenerator 与 GradleFileGenerator 分析
 
 ### 5.1 核心职责
 
-`ComponentCodeGenerator` 是一个 **多功能静态工具类**，职责涵盖：
+`ComponentCodeGenerator` 目前主要负责组件相关 Java 代码生成：
 
-1. **build.gradle 生成** — `getBuildGradleString()`
-2. **settings.gradle 生成** — `getSettingsGradle()`
-3. **字段声明生成** — `getFieldDeclaration()`
-4. **组件初始化代码** — `getComponentInitializerCode()`
-5. **事件代码模板** — `getEventCode()` (60+ 事件类型)
-6. **onActivityResult 代码** — `getOnActivityResultCode()`
-7. **Adapter 类名生成** — `getAdapterClassName()`
-8. **代码格式化** — `formatCode()`
+1. **字段声明生成** — `getFieldDeclaration()`
+2. **组件初始化代码** — `getComponentInitializerCode()`
+3. **事件代码模板** — `getEventCode()` (60+ 事件类型)
+4. **onActivityResult 代码** — `getOnActivityResultCode()`
+5. **Adapter 类名生成** — `getAdapterClassName()`
+6. **代码格式化** — `formatCode()`
 
-### 5.2 build.gradle 生成 (`getBuildGradleString()`)
+**兼容层**：`getBuildGradleString()` 与 `getSettingsGradle()` 仍保留在 `ComponentCodeGenerator` 中，但只是转发到 `GradleFileGenerator` 的废弃兼容入口。
+
+### 5.2 build.gradle 生成（实际由 `GradleFileGenerator.getBuildGradleString()` 实现）
 
 动态构建 `app/build.gradle`：
 - **plugins**: `com.android.application`
@@ -279,7 +279,7 @@ for (EventBean eventBean : events) {
 - **buildFeatures**: viewBinding（可选）
 - **dependencies**: 根据项目使用的功能按需添加：
   - AppCompat + Material Design
-  - Firebase BOM + Auth/Database/Storage/Messaging
+  - Firebase BOM 33.7.0 + Auth/Database/Storage/Messaging
   - Play Services (Ads, Maps, Auth)
   - Glide, Gson, OkHttp
   - CircleImageView, YouTubePlayer, CodeView, Lottie, OTPView, PatternLockView
@@ -448,8 +448,8 @@ String formattedCode = String.format(blockInfo.getCode(), parameters.toArray(new
 │  └─────────────────────────────────────────────────────────┘    │
 │                                                                 │
 │  同时生成:                                                       │
-│  ├── ComponentCodeGenerator.getBuildGradleString() → build.gradle│
-│  ├── ComponentCodeGenerator.getSettingsGradle() → settings.gradle│
+│  ├── GradleFileGenerator.getBuildGradleString() → build.gradle   │
+│  ├── GradleFileGenerator.getSettingsGradle() → settings.gradle   │
 │  └── LayoutGenerator.generateLayoutXml() → res/layout/*.xml     │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -478,11 +478,11 @@ String (格式化后的最终代码)
 
 ~~**影响**: 添加新功能的开发成本高、代码冲突概率大。~~
 
-### 8.2 Fragment 后处理脆弱性（中等，已部分缓解）
+### 8.2 Fragment 代码生成上下文化（中等，已部分缓解）
 
 **位置**: `ActivityCodeGenerator.generateCode()`
 
-**现状**: `CodeContext` 已覆盖大部分内置生成路径，但 `ActivityCodeGenerator` 仍保留 7 处 Fragment fallback 替换，用于处理 Extra Block 与部分绕过 `CodeContext` 的代码片段。
+**现状**: `CodeContext` 已被注入 `BlockInterpreter`、`ActivityCodeGenerator` 和 `ComponentCodeGenerator` 的主要生成路径，用于在生成阶段产出更适合 Fragment / Activity 的 API 调用。
 
 **影响**: 相比早期实现已明显收缩，但后处理仍是脆弱点，尤其对自定义块生成代码的兼容性依然依赖字符串模式匹配。
 
@@ -524,25 +524,25 @@ String (格式化后的最终代码)
 ### 8.7 ComponentCodeGenerator 职责过重（设计）
 
 **问题**:
-- 904 行的单一类，承担了至少 8 种不同职责
-- build.gradle 生成、事件代码模板、字段声明、代码格式化等功能耦合在一起
-- 任何依赖变更（如新增内置库）都需要修改此文件
-- 违反单一职责原则 (SRP)
+- `ComponentCodeGenerator` 已把 Gradle 文件生成抽离到 `GradleFileGenerator`，但组件字段、事件模板、格式化等职责仍集中在单类中
+- `GradleFileGenerator` 仍以字符串拼接和硬编码版本号维护依赖配置
+- 依赖变更或生成策略调整仍需要直接修改 Java 源码
+- 整体上仍有继续按职责细分的空间
 
 ### 8.8 硬编码库版本号（维护）
 
-**位置**: `ComponentCodeGenerator.getBuildGradleString()` 第 88-164 行
+**位置**: `GradleFileGenerator.getBuildGradleString()` 第 87-160 行
 
 **问题**:
-- 所有内置库的版本号硬编码在 Java 代码中
+- 内置库版本号仍硬编码在 Java 代码中
 - 更新库版本需要修改源代码并重新编译
 - 无法让用户自定义或覆盖库版本
 
 ```java
 // 示例：硬编码的版本号
 "implementation 'androidx.appcompat:appcompat:1.7.1'"
-"implementation 'com.google.android.material:material:1.13.0'"
-"implementation 'com.github.bumptech.glide:glide:5.0.4'"
+"implementation 'com.google.android.material:material:1.12.0'"
+"implementation 'com.github.bumptech.glide:glide:4.16.0'"
 ```
 
 ### 8.9 拼写错误导致的潜在 Bug
@@ -624,13 +624,12 @@ public class CodeContext {
 - 继续减少 `ActivityCodeGenerator.generateCode()` 中的 fallback replace 逻辑
 - 为 Extra Block / 自定义块提供更稳定的上下文化方式
 
-### 9.4 拆分 ComponentCodeGenerator（中优先级）
+### 9.4 继续拆分 ComponentCodeGenerator（中优先级）
 
-将 904 行的 `ComponentCodeGenerator` 拆分为独立职责类：
+在已抽离 `GradleFileGenerator` 的基础上，继续把剩余的 `ComponentCodeGenerator` 拆分为独立职责类：
 
 ```
-ComponentCodeGenerator (904 行)
-  → GradleFileGenerator      (build.gradle / settings.gradle 生成)
+ComponentCodeGenerator (905 行)
   → FieldDeclarationGenerator (字段声明)
   → EventTemplateGenerator    (事件代码模板)
   → CodeFormatter             (代码格式化)
@@ -645,8 +644,8 @@ ComponentCodeGenerator (904 行)
 // assets/library_versions.json
 {
   "androidx.appcompat:appcompat": "1.7.1",
-  "com.google.android.material:material": "1.13.0",
-  "com.github.bumptech.glide:glide": "5.0.4"
+  "com.google.android.material:material": "1.12.0",
+  "com.github.bumptech.glide:glide": "4.16.0"
 }
 ```
 
@@ -676,7 +675,7 @@ ComponentCodeGenerator (904 行)
           ┌──────────▼──┐   ┌──▼─────────────────┐
           │EventCode    │   │ComponentCode        │
           │Generator    │   │Generator            │
-          │(458 行)     │   │(904 行)             │
+          │(458 行)     │   │(905 行)             │
           └──────┬──────┘   └─────────────────────┘
                  │ 对每个事件创建
                  ▼
@@ -693,4 +692,4 @@ ComponentCodeGenerator (904 行)
 
 ---
 
-*文档版本: 1.2 | 最后更新: 2026-03-15*
+*文档版本: 1.2 | 最后更新: 2026-03-29*

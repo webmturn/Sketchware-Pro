@@ -39,6 +39,8 @@
 | `btnSelectImage` | Button | 选择图片按钮 |
 | `btnSubmit` | Button | 提交按钮 |
 | `imagePreview` | ImageView | 图片预览 |
+| `editUser` | EditText | 用户名输入 |
+| `editPassword` | EditText | 密码输入 |
 | `editTitle` | EditText | 帖子标题输入 |
 | `editContent` | EditText | 帖子内容输入 |
 
