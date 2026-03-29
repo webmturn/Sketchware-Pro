@@ -85,7 +85,7 @@ public class LanguageOverrideManager {
             }
         }
         resIdOverrides = Collections.unmodifiableMap(newMap);
-        active = true;
+        active = !newMap.isEmpty();
         loaded = true;
     }
 
@@ -134,7 +134,7 @@ public class LanguageOverrideManager {
     /**
      * Saves imported strings to SharedPreferences and reloads into memory.
      */
-    public void applyOverrides(@NonNull Context context, @NonNull Map<String, String> strings) {
+    public int applyOverrides(@NonNull Context context, @NonNull Map<String, String> strings) {
         SharedPreferences.Editor editor = context
                 .getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit();
         editor.clear();
@@ -144,6 +144,7 @@ public class LanguageOverrideManager {
         }
         editor.apply();
         reload(context);
+        return getOverrideCount();
     }
 
     /**

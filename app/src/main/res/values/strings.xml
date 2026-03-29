@@ -3079,7 +3079,7 @@ Do you want to continue?"</string>
     <string name="language_settings_imported">Successfully imported %d strings</string>
     <string name="language_settings_import_error">Import failed: %s</string>
     <string name="language_settings_import_success_title">Import Successful</string>
-    <string name="language_settings_import_success_msg">Successfully imported %d strings.\n\nThe translations are now active. Some UI elements may need the app to be restarted to fully reflect the changes.</string>
+    <string name="language_settings_import_success_msg">Import complete.\n\nTotal strings: %1$d\nMatched: %2$d\nFailed: %3$d\n\nThe translations are now active. Some UI elements may need the app to be restarted to fully reflect the changes.</string>
     <string name="language_settings_help">How it works:\n\n1. Tap \"Export Strings\" to generate an XML file with all app strings.\n2. Translate the strings in the exported file.\n3. Tap \"Import Strings\" to load your translated file.\n\nThe imported strings will override the default display language. You can clear the override at any time to restore the defaults.</string>
 
     <!-- ========== 编辑器 (Editors) ========== -->

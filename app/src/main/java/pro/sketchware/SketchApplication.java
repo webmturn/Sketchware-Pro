@@ -17,6 +17,7 @@ import androidx.core.os.LocaleListCompat;
 import com.besome.sketch.tools.CollectErrorActivity;
 
 import pro.sketchware.core.ProjectListManager;
+import pro.sketchware.fragments.settings.language.LanguageOverrideContextWrapper;
 import pro.sketchware.fragments.settings.language.LanguageOverrideManager;
 import pro.sketchware.utility.CrashLogManager;
 import pro.sketchware.utility.theme.ThemeManager;
@@ -58,11 +59,12 @@ public class SketchApplication extends Application {
             Configuration config = new Configuration(
                     mApplicationContext.getResources().getConfiguration());
             config.setLocale(appLocales.get(0));
-            cachedLocaleContext = mApplicationContext.createConfigurationContext(config);
+            cachedLocaleContext = LanguageOverrideContextWrapper.wrap(
+                    mApplicationContext.createConfigurationContext(config));
             cachedLocaleTag = tag;
             return cachedLocaleContext;
         }
-        return mApplicationContext;
+        return LanguageOverrideContextWrapper.wrap(mApplicationContext);
     }
 
     @Override

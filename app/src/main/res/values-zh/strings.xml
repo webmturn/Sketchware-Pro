@@ -333,7 +333,11 @@
     <string name="language_settings_import_confirm_title">确认导入</string>
     <string name="language_settings_import_confirm_msg">即将导入 %d 个字符串覆盖。继续吗？</string>
     <string name="language_settings_import_success_title">导入成功</string>
-    <string name="language_settings_import_success_msg">已成功导入 %d 个字符串覆盖</string>
+    <string name="language_settings_import_success_msg">导入完成。
+
+总字符串数：%1$d
+匹配成功：%2$d
+匹配失败：%3$d</string>
     <string name="language_settings_clear_confirm_title">清除覆盖</string>
     <string name="language_settings_clear_confirm_msg">确定要清除所有语言覆盖并恢复为英文吗？</string>
 

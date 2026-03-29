@@ -1,11 +1,13 @@
 package com.besome.sketch.lib.base;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface.OnCancelListener;
 import android.graphics.Color;
 import android.os.AsyncTask.Status;
 import android.os.Build;
 import android.os.Bundle;
+
 import android.view.View;
 
 import androidx.activity.EdgeToEdge;
@@ -21,6 +23,7 @@ import java.util.ArrayList;
 
 import pro.sketchware.core.BaseAsyncTask;
 import pro.sketchware.dialogs.ProgressDialog;
+import pro.sketchware.fragments.settings.language.LanguageOverrideContextWrapper;
 import pro.sketchware.utility.UI;
 
 public abstract class BaseAppCompatActivity extends AppCompatActivity {
@@ -30,6 +33,11 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
     protected ProgressDialog progressDialog;
     private LoadingDialog lottieDialog;
     private ArrayList<BaseAsyncTask> taskList;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LanguageOverrideContextWrapper.wrap(newBase));
+    }
 
     public void addTask(BaseAsyncTask task) {
         taskList.add(task);

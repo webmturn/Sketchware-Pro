@@ -171,8 +171,8 @@ public class LanguageSettingsFragment extends BaseFragment {
                 .setMessage(R.string.language_settings_clear_confirm_msg)
                 .setPositiveButton(R.string.common_word_yes, (dialog, which) -> {
                     LanguageOverrideManager.getInstance().clearOverrides(requireContext());
-                    refreshUI();
                     SketchwareUtil.toast(Helper.getResString(R.string.language_settings_cleared));
+                    recreateHostActivity();
                 })
                 .setNegativeButton(R.string.common_word_no, null)
                 .show();
@@ -181,6 +181,12 @@ public class LanguageSettingsFragment extends BaseFragment {
     private void refreshUI() {
         setupCurrentLanguage();
         setupOverrideStatus();
+    }
+
+    private void recreateHostActivity() {
+        if (getActivity() != null) {
+            getActivity().recreate();
+        }
     }
 
     private static final Pattern NON_TRANSLATABLE_PATTERN = Pattern.compile(
@@ -372,14 +378,16 @@ public class LanguageSettingsFragment extends BaseFragment {
     }
 
     private void applyImportedStrings(TreeMap<String, String> strings) {
-        LanguageOverrideManager.getInstance().applyOverrides(requireContext(), strings);
+        int totalCount = strings.size();
+        int matchedCount = LanguageOverrideManager.getInstance().applyOverrides(requireContext(), strings);
+        int failedCount = Math.max(0, totalCount - matchedCount);
         refreshUI();
         new MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.language_settings_import_success_title)
                 .setMessage(String.format(
                         Helper.getResString(R.string.language_settings_import_success_msg),
-                        strings.size()))
-                .setPositiveButton(R.string.common_word_ok, null)
+                        totalCount, matchedCount, failedCount))
+                .setPositiveButton(R.string.common_word_ok, (dialog, which) -> recreateHostActivity())
                 .show();
     }
 
