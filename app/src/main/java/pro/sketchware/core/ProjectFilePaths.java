@@ -24,6 +24,7 @@ import com.besome.sketch.editor.manage.library.material3.Material3LibraryManager
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -709,22 +710,18 @@ public class ProjectFilePaths {
         }
     }
 
-    /**
-     * Generates the project's files, such as layouts, Java files, but also build.gradle and secrets.xml.
-     */
     public void generateProjectFiles(ProjectFileManager projectFileManager, ProjectDataStore projectDataManger, LibraryManager projectLibraryManager, BuiltInLibraryManager builtInLibraryManager) {
-        ArrayList<SrcCodeBean> srcCodeBeans = generateSourceCodeBeans(projectFileManager, projectDataManger, builtInLibraryManager);
+        ArrayList<SrcCodeBean> srcCodeBeans = generateSourceCodeBeans(projectFileManager, projectDataManger, projectLibraryManager, builtInLibraryManager);
         if (buildConfig.isFileProviderUsed) {
             XmlBuilder pathsTag = new XmlBuilder("paths");
             pathsTag.addAttribute("xmlns", "android", "http://schemas.android.com/apk/res/android");
             XmlBuilder externalPathTag = new XmlBuilder("external-path");
-            externalPathTag.addAttribute("", "name", "external_files");
+            externalPathTag.addAttribute("", "name", "files_path");
             externalPathTag.addAttribute("", "path", ".");
             pathsTag.addChildNode(externalPathTag);
-            srcCodeBeans.add(new SrcCodeBean("provider_paths.xml",
-                    CommandBlock.applyCommands("xml/provider_paths.xml", pathsTag.toCode())));
+            String filePath = "xml/file_paths.xml";
+            writeProjectFile(filePath, pathsTag.toCode());
         }
-
         for (SrcCodeBean bean : srcCodeBeans) {
             writeProjectFile(bean.srcFileName, bean.source);
         }
@@ -754,7 +751,6 @@ public class ProjectFilePaths {
                 }
             }
             if (buildConfig.isMapUsed) {
-                // if p3 is false, then "translatable="false" will be added
                 xmlBuilder.addString("google_maps_key", projectLibraryManager.getGoogleMap().data, false);
             }
             String filePath = "values/secrets.xml";
@@ -764,10 +760,14 @@ public class ProjectFilePaths {
         generateGradleFiles();
     }
 
+    public ArrayList<SrcCodeBean> generateSourceCodeBeans(ProjectFileManager projectFileManager, ProjectDataStore projectDataManager, BuiltInLibraryManager builtInLibraryManager) {
+        return generateSourceCodeBeans(projectFileManager, projectDataManager, ProjectDataManager.getLibraryManager(sc_id), builtInLibraryManager);
+    }
+
     /**
      * Get source code files that are viewable in SrcCodeViewer
      */
-    public ArrayList<SrcCodeBean> generateSourceCodeBeans(ProjectFileManager projectFileManager, ProjectDataStore projectDataManager, BuiltInLibraryManager builtInLibraryManager) {
+    public ArrayList<SrcCodeBean> generateSourceCodeBeans(ProjectFileManager projectFileManager, ProjectDataStore projectDataManager, LibraryManager projectLibraryManager, BuiltInLibraryManager builtInLibraryManager) {
         generateDebugFiles(SketchApplication.getAppContext());
         CommandBlock.clearTempCommands();
 
@@ -799,7 +799,7 @@ public class ProjectFilePaths {
 
         // Code generation cache: skip regeneration if inputs haven't changed
         File codegenCacheDir = new File(SketchApplication.getAppContext().getCacheDir(), "codegenCache/" + sc_id);
-        String cacheKey = computeCodeGenCacheKey();
+        String cacheKey = computeCodeGenCacheKey(projectFileManager, projectDataManager, projectLibraryManager);
         boolean cacheHit = false;
 
         File cacheKeyFile = new File(codegenCacheDir, "cache.key");
@@ -1164,33 +1164,72 @@ public class ProjectFilePaths {
      * Computes a cache key for code generation based on all input data files and settings.
      * If any input changes, the key changes and cached code is invalidated.
      */
-    private String computeCodeGenCacheKey() {
+    private String computeCodeGenCacheKey(ProjectFileManager projectFileManager, ProjectDataStore projectDataManager, LibraryManager projectLibraryManager) {
         StringBuilder key = new StringBuilder(256);
 
-        // Data files that determine generated code
         String dataPath = SketchwarePaths.getDataPath(sc_id);
-        appendFileInfo(key, new File(dataPath, "logic"));
-        appendFileInfo(key, new File(dataPath, "view"));
-        appendFileInfo(key, new File(dataPath, "file"));
-        appendFileInfo(key, new File(dataPath, "library"));
+
+        try {
+            if (projectDataManager != null) {
+                StringBuilder logicBuffer = new StringBuilder();
+                projectDataManager.serializeLogicData(logicBuffer);
+                appendTextInfo(key, logicBuffer);
+            } else {
+                appendFileInfo(key, new File(dataPath, "logic"));
+            }
+        } catch (Exception e) {
+            appendFileInfo(key, new File(dataPath, "logic"));
+        }
+
+        try {
+            if (projectDataManager != null) {
+                StringBuilder viewBuffer = new StringBuilder();
+                projectDataManager.serializeViewData(viewBuffer);
+                appendTextInfo(key, viewBuffer);
+            } else {
+                appendFileInfo(key, new File(dataPath, "view"));
+            }
+        } catch (Exception e) {
+            appendFileInfo(key, new File(dataPath, "view"));
+        }
+
+        try {
+            if (projectFileManager != null) {
+                StringBuilder fileBuffer = new StringBuilder();
+                projectFileManager.serializeFiles(fileBuffer);
+                appendTextInfo(key, fileBuffer);
+            } else {
+                appendFileInfo(key, new File(dataPath, "file"));
+            }
+        } catch (Exception e) {
+            appendFileInfo(key, new File(dataPath, "file"));
+        }
+
+        try {
+            if (projectLibraryManager != null) {
+                StringBuilder libraryBuffer = new StringBuilder();
+                projectLibraryManager.serializeLibraries(libraryBuffer);
+                appendTextInfo(key, libraryBuffer);
+            } else {
+                appendFileInfo(key, new File(dataPath, "library"));
+            }
+        } catch (Exception e) {
+            appendFileInfo(key, new File(dataPath, "library"));
+        }
+
         appendFileInfo(key, new File(dataPath, "project_config"));
 
-        // Extra blocks definition file
         appendFileInfo(key, ExtraBlockFile.EXTRA_BLOCKS_DATA_FILE);
 
-        // Per-project custom blocks definition
         appendFileInfo(key, new File(dataPath, "custom_blocks"));
 
-        // Global system files — custom event/listener/component definitions affect generated code
         appendFileInfo(key, new File(EventsHandler.CUSTOM_EVENTS_FILE_PATH));
         appendFileInfo(key, new File(EventsHandler.CUSTOM_LISTENER_FILE_PATH));
         appendFileInfo(key, new File(SketchwarePaths.getAbsolutePathOf(SketchwarePaths.CUSTOM_COMPONENT_FILE)));
 
-        // Export mode
         key.append(isAndroidStudioExport ? '1' : '0');
+        appendTextInfo(key, packageName);
 
-        // Sketchware-Pro app install time — invalidates cache whenever the APK is reinstalled,
-        // even if versionCode stays the same (e.g. debug builds with template fixes).
         try {
             Context ctx = SketchApplication.getAppContext();
             PackageInfo pkgInfo = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0);
@@ -1199,6 +1238,13 @@ public class ProjectFilePaths {
         }
 
         return key.toString();
+    }
+
+    private static void appendTextInfo(StringBuilder key, CharSequence text) {
+        byte[] bytes = text == null ? new byte[0] : text.toString().getBytes(StandardCharsets.UTF_8);
+        CRC32 crc = new CRC32();
+        crc.update(bytes, 0, bytes.length);
+        key.append(crc.getValue()).append('|').append(bytes.length).append('|');
     }
 
     private static void appendFileInfo(StringBuilder key, File file) {

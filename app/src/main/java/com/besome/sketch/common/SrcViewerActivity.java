@@ -84,7 +84,7 @@ public class SrcViewerActivity extends BaseAppCompatActivity {
                 ProjectFilePaths.initializeMetadata(libraryManager, fileManager, dataManager, pro.sketchware.core.ProjectFilePaths.ExportType.SOURCE_CODE_VIEWING);
                 ProjectBuilder builder = new ProjectBuilder(this, ProjectFilePaths);
                 builder.buildBuiltInLibraryInformation();
-                sourceCodeBeans = ProjectFilePaths.generateSourceCodeBeans(fileManager, dataManager, builder.getBuiltInLibraryManager());
+                sourceCodeBeans = ProjectFilePaths.generateSourceCodeBeans(fileManager, dataManager, libraryManager, builder.getBuiltInLibraryManager());
 
                 runOnUiThread(() -> {
                     if (isFinishing() || isDestroyed()) return;
