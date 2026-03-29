@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 public class LanguageOverrideContextWrapper extends ContextWrapper {
 
     private LanguageOverrideResources overrideResources;
+    private Context overrideApplicationContext;
 
     private LanguageOverrideContextWrapper(@NonNull Context base) {
         super(base);
@@ -33,11 +34,16 @@ public class LanguageOverrideContextWrapper extends ContextWrapper {
     @Override
     public Context getApplicationContext() {
         Context baseApplicationContext = super.getApplicationContext();
-        if (baseApplicationContext != null) {
-            return baseApplicationContext;
-        }
-
         Context baseContext = getBaseContext();
-        return baseContext != null ? baseContext : this;
+        if (baseApplicationContext == null) {
+            return baseContext != null ? baseContext : this;
+        }
+        if (baseApplicationContext == baseContext) {
+            return this;
+        }
+        if (overrideApplicationContext == null) {
+            overrideApplicationContext = wrap(baseApplicationContext);
+        }
+        return overrideApplicationContext;
     }
 }
