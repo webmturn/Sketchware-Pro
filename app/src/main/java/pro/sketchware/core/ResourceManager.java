@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
 
 public class ResourceManager {
   public static StringSignature cacheSignature;
@@ -109,8 +110,8 @@ public class ResourceManager {
       if (!file.exists())
         file.mkdirs(); 
       for (ProjectResourceBean projectResourceBean : fonts) {
-        String sourcePath = fontDirPath + File.separator + projectResourceBean.resFullName.toLowerCase();
-        String destPath = destDir + File.separator + projectResourceBean.resFullName.toLowerCase();
+        String sourcePath = fontDirPath + File.separator + projectResourceBean.resFullName;
+        String destPath = destDir + File.separator + projectResourceBean.resFullName.toLowerCase(Locale.ROOT);
         try {
           fileUtil.copyFile(sourcePath, destPath);
         } catch (Exception e) {
@@ -188,8 +189,8 @@ public class ResourceManager {
       if (!file.exists())
         file.mkdirs(); 
       for (ProjectResourceBean projectResourceBean : images) {
-        String sourcePath = imageDirPath + File.separator + projectResourceBean.resFullName.toLowerCase();
-        String destPath = destDir + File.separator + projectResourceBean.resFullName.toLowerCase();
+        String sourcePath = imageDirPath + File.separator + projectResourceBean.resFullName;
+        String destPath = destDir + File.separator + projectResourceBean.resFullName.toLowerCase(Locale.ROOT);
         try {
           fileUtil.copyFile(sourcePath, destPath);
         } catch (Exception e) {
@@ -229,8 +230,8 @@ public class ResourceManager {
       if (!file.exists())
         file.mkdirs(); 
       for (ProjectResourceBean projectResourceBean : sounds) {
-        String sourcePath = soundDirPath + File.separator + projectResourceBean.resFullName.toLowerCase();
-        String destPath = destDir + File.separator + projectResourceBean.resFullName.toLowerCase();
+        String sourcePath = soundDirPath + File.separator + projectResourceBean.resFullName;
+        String destPath = destDir + File.separator + projectResourceBean.resFullName.toLowerCase(Locale.ROOT);
         try {
           fileUtil.copyFile(sourcePath, destPath);
         } catch (Exception e) {

@@ -250,7 +250,7 @@ public class SoundListFragment extends BaseFragment implements MenuProvider {
             if (projectResourceBean.isNew) {
                 String fullName = projectResourceBean.resFullName;
                 int dotIdx = fullName.lastIndexOf(".");
-                String substring = dotIdx >= 0 ? fullName.substring(dotIdx) : "";
+                String substring = dotIdx >= 0 ? fullName.substring(dotIdx).toLowerCase(Locale.ROOT) : "";
                 sounds.set(i, new ProjectResourceBean(ProjectResourceBean.PROJECT_RES_TYPE_FILE, projectResourceBean.resName, projectResourceBean.resName + substring));
             }
         }
