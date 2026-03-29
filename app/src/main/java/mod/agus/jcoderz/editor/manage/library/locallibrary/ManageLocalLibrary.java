@@ -31,7 +31,8 @@ public class ManageLocalLibrary {
         String localLibraryConfigPath = FilePathUtil.getPathLocalLibrary(projectId);
         if (FileUtil.isExistFile(localLibraryConfigPath)) {
             try {
-                list = new Gson().fromJson(FileUtil.readFile(localLibraryConfigPath), Helper.TYPE_MAP_LIST);
+                Gson gson = new Gson();
+                list = gson.fromJson(FileUtil.readFile(localLibraryConfigPath), Helper.TYPE_MAP_LIST);
 
                 if (list == null) {
                     LogUtil.w(getClass().getSimpleName(), "Read null from file " + localLibraryConfigPath + ", deleting invalid configuration.");
@@ -41,15 +42,36 @@ public class ManageLocalLibrary {
 
                     // fall-through to shared error handler
                 } else {
-                    list.removeIf(entry -> {
-                        Object name = entry.get("name");
-                        if (name instanceof String) {
-                            File primaryLibDir = new File(FilePathUtil.getLocalLibsDir(), (String) name);
-                            File fallbackLibDir = new File(FilePathUtil.getLocalLibsFallbackDir(), (String) name);
-                            return !primaryLibDir.exists() && !fallbackLibDir.exists();
+                    ArrayList<HashMap<String, Object>> normalizedList = new ArrayList<>();
+                    boolean changed = false;
+                    for (HashMap<String, Object> entry : list) {
+                        Object nameObject = entry.get("name");
+                        if (!(nameObject instanceof String) || ((String) nameObject).isEmpty()) {
+                            changed = true;
+                            continue;
                         }
-                        return true;
-                    });
+
+                        String name = (String) nameObject;
+                        File primaryLibDir = new File(FilePathUtil.getLocalLibsDir(), name);
+                        File fallbackLibDir = new File(FilePathUtil.getLocalLibsFallbackDir(), name);
+                        if (!primaryLibDir.exists() && !fallbackLibDir.exists()) {
+                            changed = true;
+                            continue;
+                        }
+
+                        Object dependencyObject = entry.get("dependency");
+                        String dependency = dependencyObject instanceof String && !((String) dependencyObject).isEmpty()
+                                ? (String) dependencyObject : null;
+                        HashMap<String, Object> normalizedEntry = LocalLibrariesUtil.createLibraryMap(name, dependency);
+                        normalizedList.add(normalizedEntry);
+                        if (!entry.equals(normalizedEntry)) {
+                            changed = true;
+                        }
+                    }
+                    list = normalizedList;
+                    if (changed) {
+                        FileUtil.writeFile(localLibraryConfigPath, gson.toJson(list));
+                    }
                     return;
                 }
             } catch (JsonParseException e) {
