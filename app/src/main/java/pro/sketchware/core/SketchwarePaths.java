@@ -236,12 +236,24 @@ public class SketchwarePaths {
         return getAbsolutePathOf(RESOURCES_SOUNDS_PATH);
     }
 
+    public static String getTempFontsPath(String sc_id) {
+        return getAbsolutePathOf(TEMP_FONTS_PATH + File.separator + sc_id);
+    }
+
     public static String getTempFontsPath() {
         return getAbsolutePathOf(TEMP_FONTS_PATH);
     }
 
+    public static String getTempImagesPath(String sc_id) {
+        return getAbsolutePathOf(TEMP_IMAGES_PATH + File.separator + sc_id);
+    }
+
     public static String getTempImagesPath() {
         return getAbsolutePathOf(TEMP_IMAGES_PATH);
+    }
+
+    public static String getTempSoundsPath(String sc_id) {
+        return getAbsolutePathOf(TEMP_SOUNDS_PATH + File.separator + sc_id);
     }
 
     public static String getTempSoundsPath() {

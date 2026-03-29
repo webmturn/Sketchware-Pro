@@ -284,7 +284,7 @@ public class ResourceManager {
   
   public void backupFonts() {
     if (fontsBackedUp || projectId.isEmpty()) return;
-    String tempPath = SketchwarePaths.getTempFontsPath();
+    String tempPath = SketchwarePaths.getTempFontsPath(projectId);
     try {
       fileUtil.deleteDirectoryByPath(tempPath);
       File sourceDir = new File(fontDirPath);
@@ -308,7 +308,7 @@ public class ResourceManager {
   
   public void backupImages() {
     if (imagesBackedUp || projectId.isEmpty()) return;
-    String tempPath = SketchwarePaths.getTempImagesPath();
+    String tempPath = SketchwarePaths.getTempImagesPath(projectId);
     try {
       fileUtil.deleteDirectoryByPath(tempPath);
       File sourceDir = new File(imageDirPath);
@@ -330,7 +330,7 @@ public class ResourceManager {
   
   public void backupSounds() {
     if (soundsBackedUp || projectId.isEmpty()) return;
-    String tempPath = SketchwarePaths.getTempSoundsPath();
+    String tempPath = SketchwarePaths.getTempSoundsPath(projectId);
     try {
       fileUtil.deleteDirectoryByPath(tempPath);
       File sourceDir = new File(soundDirPath);
@@ -353,9 +353,9 @@ public class ResourceManager {
   }
   
   public void deleteTempDirs() {
-    String tempImagesPath = SketchwarePaths.getTempImagesPath();
-    String tempSoundsPath = SketchwarePaths.getTempSoundsPath();
-    String tempFontsPath = SketchwarePaths.getTempFontsPath();
+    String tempImagesPath = SketchwarePaths.getTempImagesPath(projectId);
+    String tempSoundsPath = SketchwarePaths.getTempSoundsPath(projectId);
+    String tempFontsPath = SketchwarePaths.getTempFontsPath(projectId);
     try {
       fileUtil.deleteDirectoryByPath(tempImagesPath);
       fileUtil.deleteDirectoryByPath(tempSoundsPath);
@@ -523,10 +523,14 @@ public class ResourceManager {
   }
 
   public void restoreFontsFromTemp() {
-    String tempPath = SketchwarePaths.getTempFontsPath();
+    String tempPath = SketchwarePaths.getTempFontsPath(projectId);
+    File sourceDir = new File(tempPath);
+    if (!sourceDir.exists() || !sourceDir.isDirectory()) {
+      Log.w("ResourceManager", "Skipped restoring fonts from missing temp dir: " + tempPath);
+      return;
+    }
     try {
       fileUtil.deleteDirectory(new File(fontDirPath));
-      File sourceDir = new File(tempPath);
       File destDir = new File(fontDirPath);
       fileUtil.copyDirectory(sourceDir, destDir);
     } catch (Exception e) {
@@ -535,10 +539,14 @@ public class ResourceManager {
   }
   
   public void restoreImagesFromTemp() {
-    String tempPath = SketchwarePaths.getTempImagesPath();
+    String tempPath = SketchwarePaths.getTempImagesPath(projectId);
+    File sourceDir = new File(tempPath);
+    if (!sourceDir.exists() || !sourceDir.isDirectory()) {
+      Log.w("ResourceManager", "Skipped restoring images from missing temp dir: " + tempPath);
+      return;
+    }
     try {
       fileUtil.deleteDirectory(new File(imageDirPath));
-      File sourceDir = new File(tempPath);
       File destDir = new File(imageDirPath);
       fileUtil.copyDirectory(sourceDir, destDir);
     } catch (Exception e) {
@@ -547,10 +555,14 @@ public class ResourceManager {
   }
   
   public void restoreSoundsFromTemp() {
-    String tempPath = SketchwarePaths.getTempSoundsPath();
+    String tempPath = SketchwarePaths.getTempSoundsPath(projectId);
+    File sourceDir = new File(tempPath);
+    if (!sourceDir.exists() || !sourceDir.isDirectory()) {
+      Log.w("ResourceManager", "Skipped restoring sounds from missing temp dir: " + tempPath);
+      return;
+    }
     try {
       fileUtil.deleteDirectory(new File(soundDirPath));
-      File sourceDir = new File(tempPath);
       File destDir = new File(soundDirPath);
       fileUtil.copyDirectory(sourceDir, destDir);
     } catch (Exception e) {
