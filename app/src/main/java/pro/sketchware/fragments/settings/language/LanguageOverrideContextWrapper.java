@@ -8,6 +8,8 @@ import androidx.annotation.NonNull;
 
 public class LanguageOverrideContextWrapper extends ContextWrapper {
 
+    private LanguageOverrideResources overrideResources;
+
     private LanguageOverrideContextWrapper(@NonNull Context base) {
         super(base);
     }
@@ -22,7 +24,10 @@ public class LanguageOverrideContextWrapper extends ContextWrapper {
 
     @Override
     public Resources getResources() {
-        return new LanguageOverrideResources(super.getResources());
+        if (overrideResources == null) {
+            overrideResources = new LanguageOverrideResources(super.getResources());
+        }
+        return overrideResources;
     }
 
     @Override
