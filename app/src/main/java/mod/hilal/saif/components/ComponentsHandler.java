@@ -27,16 +27,12 @@ import pro.sketchware.SketchApplication;
 import pro.sketchware.model.CustomComponent;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.SketchwareUtil;
-//responsible code :
-//ComponentBean == sketchware / beans
-//Manage components == agus /component
-//Manage events components == agus/editor/event
-//TypeVarComponent == agus / lib
-//TypeClassComponent == agus/lib
-//importClass== dev.aldi.sayuti.editor.manage
 
 public class ComponentsHandler {
 
+    private static final int ASYNC_TASK_COMPONENT_ID = 36;
+    private static final String ASYNC_TASK_TYPE_NAME = "AsyncTask";
+    private static final Gson GSON = new Gson();
     private static ArrayList<CustomComponent> cachedCustomComponents = readCustomComponents();
 
     /**
@@ -45,115 +41,152 @@ public class ComponentsHandler {
     private ComponentsHandler() {
     }
 
+    private static final class ComponentMatch {
+
+        private final int index;
+        private final CustomComponent component;
+
+        private ComponentMatch(int index, CustomComponent component) {
+            this.index = index;
+            this.component = component;
+        }
+    }
+
+    private static void reportNullComponent(int index) {
+        SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_null), index));
+    }
+
+    private static int getComponentIdOrReport(CustomComponent component, int index, int errorResId) {
+        int idVal = component.getIdAsInt();
+        if (idVal == -1) {
+            SketchwareUtil.toastError(String.format(Helper.getResString(errorResId), index + 1), Toast.LENGTH_LONG);
+        }
+        return idVal;
+    }
+
+    private static ComponentMatch findComponentById(int id) {
+        for (int i = 0; i < cachedCustomComponents.size(); i++) {
+            CustomComponent component = cachedCustomComponents.get(i);
+            if (component == null) {
+                reportNullComponent(i);
+                continue;
+            }
+            if (component.getIdAsInt() == id) {
+                return new ComponentMatch(i, component);
+            }
+        }
+        return null;
+    }
+
+    private static ComponentMatch findComponentByTypeName(String typeName) {
+        for (int i = 0; i < cachedCustomComponents.size(); i++) {
+            CustomComponent component = cachedCustomComponents.get(i);
+            if (component == null) {
+                reportNullComponent(i);
+                continue;
+            }
+            if (typeName.equals(component.getTypeName())) {
+                return new ComponentMatch(i, component);
+            }
+        }
+        return null;
+    }
+
+    private static ComponentMatch findComponentByName(String name) {
+        for (int i = 0; i < cachedCustomComponents.size(); i++) {
+            CustomComponent component = cachedCustomComponents.get(i);
+            if (component == null) {
+                reportNullComponent(i);
+                continue;
+            }
+            if (name.equals(component.getName())) {
+                return new ComponentMatch(i, component);
+            }
+        }
+        return null;
+    }
+
+    private static ComponentMatch findComponentByVarName(String varName) {
+        for (int i = 0; i < cachedCustomComponents.size(); i++) {
+            CustomComponent component = cachedCustomComponents.get(i);
+            if (component == null) {
+                reportNullComponent(i);
+                continue;
+            }
+            if (varName.equals(component.getVarName())) {
+                return new ComponentMatch(i, component);
+            }
+        }
+        return null;
+    }
+
+    private static ArrayList<CustomComponent> parseCustomComponents(String content) throws JsonSyntaxException {
+        return GSON.fromJson(content, new TypeToken<ArrayList<CustomComponent>>(){}.getType());
+    }
+
     /**
      * Called at {@link ComponentBean#getComponentTypeByTypeName(String)}.
      */
-    // give typeName and return id
     public static int getIdByTypeName(String name) {
-        if (name.equals("AsyncTask")) {
-            return 36;
+        if (name.equals(ASYNC_TASK_TYPE_NAME)) {
+            return ASYNC_TASK_COMPONENT_ID;
         }
 
-        for (int i = 0; i < cachedCustomComponents.size(); i++) {
-            CustomComponent component = cachedCustomComponents.get(i);
-            if (component != null) {
-                if (name.equals(component.getTypeName())) {
-                    int idVal = component.getIdAsInt();
-                    if (idVal != -1) {
-                        return idVal;
-                    } else {
-                        SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_id_in), i + 1), Toast.LENGTH_LONG);
-                        break;
-                    }
-                }
-            } else {
-                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_null), i));
-            }
+        ComponentMatch match = findComponentByTypeName(name);
+        if (match == null) {
+            return -1;
         }
-
-        return -1;
+        int idVal = getComponentIdOrReport(match.component, match.index, R.string.component_error_invalid_id_in);
+        return idVal != -1 ? idVal : -1;
     }
 
     /**
      * Called at {@link ComponentBean#getComponentTypeName(int)}.
      */
-    // give id and return typeName
     public static String getTypeNameById(int id) {
-        if (id == 36) {
-            return "AsyncTask";
+        if (id == ASYNC_TASK_COMPONENT_ID) {
+            return ASYNC_TASK_TYPE_NAME;
         }
 
-        for (int i = 0; i < cachedCustomComponents.size(); i++) {
-            CustomComponent component = cachedCustomComponents.get(i);
-            if (component != null) {
-                if (component.getIdAsInt() == id) {
-                    return component.getTypeName();
-                }
-            } else {
-                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_null), i), Toast.LENGTH_LONG);
-            }
-        }
-
-        return "";
+        ComponentMatch match = findComponentById(id);
+        return match != null ? match.component.getTypeName() : "";
     }
 
     /**
      * Called at {@link ComponentBean#getComponentName(Context, int)}.
      */
-    // give id and return name
     public static String getNameById(int id) {
-        if (id == 36) {
-            return "AsyncTask";
+        if (id == ASYNC_TASK_COMPONENT_ID) {
+            return ASYNC_TASK_TYPE_NAME;
         }
 
-        for (int i = 0; i < cachedCustomComponents.size(); i++) {
-            CustomComponent component = cachedCustomComponents.get(i);
-            if (component != null) {
-                if (component.getIdAsInt() == id) {
-                    return component.getName();
-                }
-            } else {
-                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_null), i));
-            }
-        }
-        return "component";
+        ComponentMatch match = findComponentById(id);
+        return match != null ? match.component.getName() : "component";
     }
 
     /**
      * Called at {@link ComponentBean#getIconResource(int)}.
      */
-    // give id and return icon
     public static int getIconById(int id) {
-        if (id == 36) {
+        if (id == ASYNC_TASK_COMPONENT_ID) {
             return R.drawable.ic_cycle_color_48dp;
         }
 
-        for (int i = 0; i < cachedCustomComponents.size(); i++) {
-            CustomComponent component = cachedCustomComponents.get(i);
-            if (component != null) {
-                if (component.getIdAsInt() == id) {
-                    try {
-                        return OldResourceIdMapper.getDrawableFromOldResourceId(Integer.parseInt(component.getIcon()));
-                    } catch (NumberFormatException e) {
-                        SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_icon), i + 1), Toast.LENGTH_LONG);
-                        break;
-                    }
-                }
-            } else {
-                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_null), i));
-            }
+        ComponentMatch match = findComponentById(id);
+        if (match == null) {
+            return R.drawable.color_new_96;
         }
-
-        return R.drawable.color_new_96;
+        try {
+            return OldResourceIdMapper.getDrawableFromOldResourceId(Integer.parseInt(match.component.getIcon()));
+        } catch (NumberFormatException e) {
+            SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_icon), match.index + 1), Toast.LENGTH_LONG);
+            return R.drawable.color_new_96;
+        }
     }
 
     /**
      * @return Descriptions of Components, both built-in ones and Custom Components'
      */
-    // give id and return description
-    //goto ComponentAddActivity
-    //remove lines: 2303 to 2307
-    //call this method using v0 as id and move result to v0
     public static String getDescription(int id) {
         int componentBeanDescriptionResId = ComponentBean.getDescStrResource(id);
         if (componentBeanDescriptionResId != 0) {
@@ -167,106 +200,61 @@ public class ComponentsHandler {
      * @return Component description of a Custom Component
      */
     public static String getCustomDescription(int id) {
-        for (int i = 0; i < cachedCustomComponents.size(); i++) {
-            CustomComponent component = cachedCustomComponents.get(i);
-            if (component != null) {
-                if (component.getIdAsInt() == id) {
-                    return component.getDescription();
-                }
-            } else {
-                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_null), i));
-            }
-        }
-
-        return "new component";
+        ComponentMatch match = findComponentById(id);
+        return match != null ? match.component.getDescription() : "new component";
     }
 
     /**
      * Called at {@link ComponentBean#getComponentDocsUrlByTypeName(int)}.
      */
-    // give id and return docs url
     public static String getDocsUrlById(int id) {
-        if (id != 36) {
-            for (int i = 0; i < cachedCustomComponents.size(); i++) {
-                CustomComponent component = cachedCustomComponents.get(i);
-                if (component != null) {
-                    if (component.getIdAsInt() == id) {
-                        return component.getUrl();
-                    }
-                } else {
-                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_null), i));
-                }
-            }
+        if (id == ASYNC_TASK_COMPONENT_ID) {
+            return "";
         }
 
-        return "";
+        ComponentMatch match = findComponentById(id);
+        return match != null ? match.component.getUrl() : "";
     }
 
     /**
      * Called at {@link ComponentBean#buildClassInfo()}.
      */
     public static String getBuildClassById(int id) {
-        if (id == 36) {
-            return "AsyncTask";
+        if (id == ASYNC_TASK_COMPONENT_ID) {
+            return ASYNC_TASK_TYPE_NAME;
         }
 
-        for (int i = 0; i < cachedCustomComponents.size(); i++) {
-            CustomComponent component = cachedCustomComponents.get(i);
-            if (component != null) {
-                if (component.getIdAsInt() == id) {
-                    return component.getBuildClass();
-                }
-            } else {
-                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_null), i));
-            }
-        }
-
-        return "";
+        ComponentMatch match = findComponentById(id);
+        return match != null ? match.component.getBuildClass() : "";
     }
-
-    // mod section
 
     /**
      * Adds Custom Components to available Components section.
      * Used at {@link com.besome.sketch.editor.component.AddComponentBottomSheet#onCreate(Bundle)}.
      */
-    // add components to sk
-    //structure : list.add(new ComponentBean(27));
     public static void addCustomComponents(ArrayList<ComponentBean> list) {
-        list.add(new ComponentBean(36));
+        list.add(new ComponentBean(ASYNC_TASK_COMPONENT_ID));
 
         for (int i = 0; i < cachedCustomComponents.size(); i++) {
             CustomComponent component = cachedCustomComponents.get(i);
-            if (component != null) {
-                int idVal = component.getIdAsInt();
-                if (idVal != -1) {
-                    list.add(new ComponentBean(idVal));
-                } else {
-                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_id_for), i + 1), Toast.LENGTH_LONG);
-                }
-            } else {
-                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_null), i));
+            if (component == null) {
+                reportNullComponent(i);
+                continue;
+            }
+            int idVal = getComponentIdOrReport(component, i, R.string.component_error_invalid_id_for);
+            if (idVal != -1) {
+                list.add(new ComponentBean(idVal));
             }
         }
     }
 
     public static String getVarNameById(int id) {
-        if (id == 36) {
+        if (id == ASYNC_TASK_COMPONENT_ID) {
             return "#";
         }
 
-        for (int i = 0; i < cachedCustomComponents.size(); i++) {
-            CustomComponent component = cachedCustomComponents.get(i);
-            if (component != null) {
-                if (component.getIdAsInt() == id) {
-                    return component.getVarName();
-                }
-            } else {
-                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_null), i));
-            }
-        }
-
-        return "";
+        ComponentMatch match = findComponentById(id);
+        return match != null ? match.component.getVarName() : "";
     }
 
     /**
@@ -275,22 +263,12 @@ public class ComponentsHandler {
      */
     @NonNull
     public static String getClassByTypeName(@NonNull String name) {
-        if (name.equals("AsyncTask")) {
+        if (name.equals(ASYNC_TASK_TYPE_NAME)) {
             return "Component.AsyncTask";
         }
 
-        for (int i = 0, customComponentsSize = cachedCustomComponents.size(); i < customComponentsSize; i++) {
-            CustomComponent component = cachedCustomComponents.get(i);
-            if (component != null) {
-                if (name.equals(component.getTypeName())) {
-                    return component.getClassName();
-                }
-            } else {
-                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_null), i));
-            }
-        }
-
-        return "Component";
+        ComponentMatch match = findComponentByTypeName(name);
+        return match != null ? match.component.getClassName() : "Component";
     }
 
     /**
@@ -298,58 +276,35 @@ public class ComponentsHandler {
      * to get Custom Components' fields.
      */
     public static String getExtraVar(String name, String code, String varName) {
-        for (int i = 0; i < cachedCustomComponents.size(); i++) {
-            CustomComponent component = cachedCustomComponents.get(i);
-            if (component != null) {
-                if (name.equals(component.getName())) {
-                    String additionalVar = component.getAdditionalVar();
-                    if (TextUtils.isEmpty(additionalVar)) {
-                        return code;
-                    } else {
-                        return code + "\r\n" + additionalVar.replace("###", varName);
-                    }
-                }
-            } else {
-                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_null), i));
-            }
+        ComponentMatch match = findComponentByName(name);
+        if (match == null) {
+            return code;
         }
-
-        return code;
+        String additionalVar = match.component.getAdditionalVar();
+        return TextUtils.isEmpty(additionalVar) ? code : code + "\r\n" + additionalVar.replace("###", varName);
     }
 
-    // define extra variable
     public static String getDefineExtraVar(String name, String varName) {
-        for (int i = 0; i < cachedCustomComponents.size(); i++) {
-            CustomComponent component = cachedCustomComponents.get(i);
-            if (component != null) {
-                if (name.equals(component.getName())) {
-                    String defineAdditionalVar = component.getDefineAdditionalVar();
-                    if (TextUtils.isEmpty(defineAdditionalVar)) {
-                        break;
-                    } else {
-                        return defineAdditionalVar.replace("###", varName);
-                    }
-                }
-            } else {
-                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_null), i));
-            }
+        ComponentMatch match = findComponentByName(name);
+        if (match == null) {
+            return "";
         }
-
-        return "";
+        String defineAdditionalVar = match.component.getDefineAdditionalVar();
+        return TextUtils.isEmpty(defineAdditionalVar) ? "" : defineAdditionalVar.replace("###", varName);
     }
 
     public static void getImports(String name, ArrayList<String> arrayList) {
         for (int i = 0; i < cachedCustomComponents.size(); i++) {
             CustomComponent component = cachedCustomComponents.get(i);
-            if (component != null) {
-                if (name.equals(component.getVarName())) {
-                    String imports = component.getImports();
-                    if (!imports.isEmpty()) {
-                        arrayList.addAll(Arrays.asList(imports.split("\n")));
-                    }
+            if (component == null) {
+                reportNullComponent(i);
+                continue;
+            }
+            if (name.equals(component.getVarName())) {
+                String imports = component.getImports();
+                if (!imports.isEmpty()) {
+                    arrayList.addAll(Arrays.asList(imports.split("\n")));
                 }
-            } else {
-                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_null), i));
             }
         }
     }
@@ -365,9 +320,9 @@ public class ComponentsHandler {
     private static ArrayList<CustomComponent> readCustomComponents() {
         ArrayList<CustomComponent> data;
         if (FileUtil.isExistFile(getPath())) {
+            String content = FileUtil.readFile(getPath());
             try {
-                data = new Gson().fromJson(FileUtil.readFile(getPath()),
-                        new TypeToken<ArrayList<CustomComponent>>(){}.getType());
+                data = parseCustomComponents(content);
             } catch (JsonSyntaxException e) {
                 data = new ArrayList<>();
                 SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_read_failed), e.getMessage()));
@@ -416,8 +371,7 @@ public class ComponentsHandler {
 
         List<CustomComponent> components;
         try {
-            components = new Gson().fromJson(content,
-                    new TypeToken<ArrayList<CustomComponent>>(){}.getType());
+            components = parseCustomComponents(content);
         } catch (JsonSyntaxException e) {
             return new Pair<>(Optional.of(Helper.getResString(R.string.publish_message_dialog_invalid_json)), Collections.emptyList());
         }
