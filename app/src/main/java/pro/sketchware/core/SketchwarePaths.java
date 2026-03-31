@@ -260,10 +260,13 @@ public class SketchwarePaths {
         return getAbsolutePathOf(TEMP_SOUNDS_PATH);
     }
 
+    public static String getTempCommandsPath() {
+        return getAbsolutePathOf(".sketchware" + File.separator + "temp" + File.separator + "commands");
+    }
+
     public static String getUploadPath() {
         return getAbsolutePathOf(UPLOAD_PATH);
     }
-
 
     public static String getCustomComponent() {
         return getAbsolutePathOf(CUSTOM_COMPONENT_FILE);
