@@ -384,7 +384,7 @@ public class ProjectFilePaths {
                         BuildSettings.SETTING_ENABLE_LOGCAT, BuildSettings.SETTING_GENERIC_VALUE_TRUE)
                 .equals(BuildSettings.SETTING_GENERIC_VALUE_TRUE);
 
-        String javaDir = FileUtil.getExternalStorageDir() + "/.sketchware/data/" + sc_id + "/files/java/";
+        String javaDir = SketchwarePaths.getProjectJavaPath(sc_id) + File.separator;
 
         File debugActivityFile = new File(javaDir, "DebugActivity.java");
         if (!debugActivityFile.exists()) {
@@ -776,8 +776,8 @@ public class ProjectFilePaths {
         generateDebugFiles(SketchApplication.getAppContext());
         CommandBlock.clearTempCommands();
         try {
-            String javaDir = FileUtil.getExternalStorageDir() + "/.sketchware/data/" + sc_id + "/files/java/";
-            String layoutDir = FileUtil.getExternalStorageDir() + "/.sketchware/data/" + sc_id + "/files/resource/layout/";
+            String javaDir = SketchwarePaths.getProjectJavaPath(sc_id) + File.separator;
+            String layoutDir = SketchwarePaths.getProjectLayoutPath(sc_id) + File.separator;
             List<File> javaFiles;
             {
                 File[] files = new File(javaDir).listFiles();
@@ -907,7 +907,7 @@ public class ProjectFilePaths {
                 FileUtil.writeFile(cacheKeyFile.getAbsolutePath(), cacheKey);
             }
 
-            var path = SketchwarePaths.getDataPath(sc_id) + "/command";
+            var path = SketchwarePaths.getProjectCommandPath(sc_id);
             var newXMLCommand = Boolean.parseBoolean(projectSettings.getValue(ProjectSettings.SETTING_NEW_XML_COMMAND, ProjectSettings.SETTING_GENERIC_VALUE_FALSE));
             if (newXMLCommand && FileUtil.isExistFile(path)) {
                 FileUtil.copyFile(path, SketchwarePaths.getTempCommandsPath());
@@ -1076,7 +1076,7 @@ public class ProjectFilePaths {
     private void prepareXmlCommands(ProjectFileManager projectFileManager, ProjectDataStore projectDataManager) {
         ArrayList<ProjectFileBean> projectFiles = new ArrayList<>(projectFileManager.getActivities());
         projectFiles.addAll(new ArrayList<>(projectFileManager.getCustomViews()));
-        String commandFilePath = SketchwarePaths.getDataPath(sc_id) + "/command";
+        String commandFilePath = SketchwarePaths.getProjectCommandPath(sc_id);
         boolean newXMLCommand = Boolean.parseBoolean(projectSettings.getValue(ProjectSettings.SETTING_NEW_XML_COMMAND, ProjectSettings.SETTING_GENERIC_VALUE_FALSE));
         if (newXMLCommand && FileUtil.isExistFile(commandFilePath)) {
             FileUtil.copyFile(commandFilePath, SketchwarePaths.getTempCommandsPath());
@@ -1092,7 +1092,7 @@ public class ProjectFilePaths {
     }
 
     public String getXMLString() {
-        String filePath = SketchwarePaths.getDataPath(sc_id) + "/files/resource/values/strings.xml";
+        String filePath = SketchwarePaths.getProjectResourceValuesFilePath(sc_id, "strings.xml");
         if (FileUtil.isExistFile(filePath) && exportingType == ExportType.SOURCE_CODE_VIEWING) {
             return FileUtil.readFile(filePath);
         }
@@ -1102,7 +1102,7 @@ public class ProjectFilePaths {
     }
 
     public String getXMLColor() {
-        String filePath = SketchwarePaths.getDataPath(sc_id) + "/files/resource/values/colors.xml";
+        String filePath = SketchwarePaths.getProjectResourceValuesFilePath(sc_id, "colors.xml");
         if (FileUtil.isExistFile(filePath) && exportingType == ExportType.SOURCE_CODE_VIEWING) {
             return FileUtil.readFile(filePath);
         }
@@ -1116,7 +1116,7 @@ public class ProjectFilePaths {
     }
 
     public String getXMLStyle() {
-        String filePath = SketchwarePaths.getDataPath(sc_id) + "/files/resource/values/styles.xml";
+        String filePath = SketchwarePaths.getProjectResourceValuesFilePath(sc_id, "styles.xml");
         if (FileUtil.isExistFile(filePath) && exportingType == ExportType.SOURCE_CODE_VIEWING) {
             return FileUtil.readFile(filePath);
         }
@@ -1195,7 +1195,7 @@ public class ProjectFilePaths {
         }
 
         boolean newXMLCommand = Boolean.parseBoolean(projectSettings.getValue(ProjectSettings.SETTING_NEW_XML_COMMAND, ProjectSettings.SETTING_GENERIC_VALUE_FALSE));
-        String storedCommandPath = SketchwarePaths.getDataPath(sc_id) + "/command";
+        String storedCommandPath = SketchwarePaths.getProjectCommandPath(sc_id);
         if (!newXMLCommand || !FileUtil.isExistFile(storedCommandPath)) {
             return CommandBlock.applyCommands(fileName, sourceCode);
         }

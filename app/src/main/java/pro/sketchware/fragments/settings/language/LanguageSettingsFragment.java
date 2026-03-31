@@ -28,6 +28,7 @@ import java.util.TreeMap;
 import java.util.regex.Pattern;
 
 import pro.sketchware.core.BaseFragment;
+import pro.sketchware.core.SketchwarePaths;
 import dev.pranav.filepicker.FilePickerCallback;
 import dev.pranav.filepicker.FilePickerDialogFragment;
 import dev.pranav.filepicker.FilePickerOptions;
@@ -40,7 +41,7 @@ import pro.sketchware.utility.UI;
 
 public class LanguageSettingsFragment extends BaseFragment {
 
-    private static final String EXPORT_DIR = FileUtil.getExternalStorageDir() + "/.sketchware/data/system/i18n/";
+    private static final String EXPORT_DIR = SketchwarePaths.getSystemI18nPath();
 
     private FragmentSettingsLanguageBinding binding;
 

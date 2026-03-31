@@ -9,7 +9,6 @@ import static dev.aldi.sayuti.editor.manage.LocalLibrariesUtil.rewriteLocalLibFi
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -47,6 +46,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import pro.sketchware.core.BaseAsyncTask;
+import pro.sketchware.core.SketchwarePaths;
 import pro.sketchware.core.UIHelper;
 import mod.hey.studios.build.BuildSettings;
 import mod.hey.studios.util.Helper;
@@ -729,8 +729,7 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
 
     private Runnable repoDialogRefresh;
 
-    private static final String REPOSITORIES_JSON_PATH = Environment.getExternalStorageDirectory()
-            .getAbsolutePath() + "/.sketchware/libs/repositories.json";
+    private static final String REPOSITORIES_JSON_PATH = SketchwarePaths.getRepositoriesJsonPath();
 
     private static final String[] BUILTIN_REPOS = {
             "Maven Central", "Google Maven", "Jitpack", "Sonatype Snapshots"

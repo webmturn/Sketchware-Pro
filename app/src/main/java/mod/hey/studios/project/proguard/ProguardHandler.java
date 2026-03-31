@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import pro.sketchware.core.ProjectBuilder;
+import pro.sketchware.core.SketchwarePaths;
 import mod.hey.studios.util.Helper;
 import mod.jbk.build.BuildProgressReceiver;
 import mod.jbk.util.LogUtil;
@@ -21,8 +22,8 @@ public class ProguardHandler {
 
     public ProguardHandler(String sc_id) {
         DEFAULT_PROGUARD_RULES_PATH = createDefaultRules(sc_id);
-        config_path = FileUtil.getExternalStorageDir() + "/.sketchware/data/" + sc_id + "/proguard";
-        fm_config_path = FileUtil.getExternalStorageDir() + "/.sketchware/data/" + sc_id + "/proguard_fm";
+        config_path = SketchwarePaths.getProjectProguardConfigPath(sc_id);
+        fm_config_path = SketchwarePaths.getProjectProguardFullModeConfigPath(sc_id);
 
         if (!FileUtil.isExistFile(config_path)) {
             FileUtil.writeFile(config_path, getDefaultConfig());
@@ -30,7 +31,7 @@ public class ProguardHandler {
     }
 
     private static String createAndroidRules() {
-        String rulePath = FileUtil.getExternalStorageDir() + "/.sketchware/libs/android-proguard-rules.pro";
+        String rulePath = SketchwarePaths.getAndroidProguardRulesPath();
 
         if (!FileUtil.isExistFile(rulePath)) {
             FileUtil.writeFile(rulePath, """
@@ -85,7 +86,7 @@ public class ProguardHandler {
     }
 
     private static String createDefaultRules(String sc_id) {
-        String path = FileUtil.getExternalStorageDir() + "/.sketchware/data/" + sc_id + "/proguard-rules.pro";
+        String path = SketchwarePaths.getProjectProguardRulesPath(sc_id);
 
         if (!FileUtil.isExistFile(path)) {
             FileUtil.writeFile(path, """

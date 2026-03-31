@@ -11,14 +11,5 @@ public class ProjectTracker {
 
     public static void setScId(String a) {
         SC_ID = a;
-
-        //tested and working
-        /*FileUtil.writeFile(
-            new File(
-                Environment.getExternalStorageDirectory(),
-                ".sketchware/debug.txt"
-            ).getAbsolutePath(),
-            SC_ID
-        );*/
     }
 }

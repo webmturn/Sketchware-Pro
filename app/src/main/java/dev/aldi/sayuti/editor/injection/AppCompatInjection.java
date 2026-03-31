@@ -1,7 +1,5 @@
 package dev.aldi.sayuti.editor.injection;
 
-import android.os.Environment;
-
 import com.besome.sketch.beans.ProjectFileBean;
 import com.google.gson.Gson;
 
@@ -14,6 +12,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import pro.sketchware.core.BuildConfig;
+import pro.sketchware.core.SketchwarePaths;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.xml.XmlBuilder;
@@ -38,8 +37,7 @@ public class AppCompatInjection {
     private static List<? extends Map<String, Object>> readAppCompatInjections(String sc_id, String activityFilename) {
         String toParse;
 
-        File injectionFile = new File(Environment.getExternalStorageDirectory(),
-                ".sketchware/data/" + sc_id + "/injection/appcompat/" + activityFilename);
+        File injectionFile = new File(SketchwarePaths.getAppCompatInjectionPath(sc_id, activityFilename));
         String fileContent;
         if (injectionFile.exists() && !(fileContent = FileUtil.readFile(injectionFile.getAbsolutePath())).isEmpty()) {
             toParse = fileContent;

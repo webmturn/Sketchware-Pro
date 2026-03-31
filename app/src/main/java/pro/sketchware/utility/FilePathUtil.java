@@ -1,15 +1,14 @@
 package pro.sketchware.utility;
 
-import android.os.Environment;
-
 import java.io.File;
 
 import pro.sketchware.SketchApplication;
+import pro.sketchware.core.SketchwarePaths;
 
 public class FilePathUtil {
 
-    private static final File SKETCHWARE_DATA = new File(Environment.getExternalStorageDirectory(), ".sketchware/data/");
-    private static final File SKETCHWARE_LOCAL_LIBS = new File(Environment.getExternalStorageDirectory(), ".sketchware/libs/local_libs");
+    private static final File SKETCHWARE_DATA = new File(SketchwarePaths.getAbsolutePathOf(SketchwarePaths.DATA_PATH));
+    private static final File SKETCHWARE_LOCAL_LIBS = new File(SketchwarePaths.getLibsPath(), "local_libs");
     private static volatile File sketchwareLocalLibsFallback;
 
     /**

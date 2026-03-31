@@ -7,11 +7,12 @@ import java.io.PrintStream;
 import kellinwood.logging.LogManager;
 import kellinwood.logging.Logger;
 import mod.jbk.util.LogUtil;
+import pro.sketchware.core.SketchwarePaths;
 import pro.sketchware.utility.FileUtil;
 
 public class SystemLogPrinter {
 
-    private static final String PATH = FileUtil.getExternalStorageDir().concat("/.sketchware/debug.txt");
+    private static final String PATH = SketchwarePaths.getDebugLogPath();
     private static PrintStream ps;
 
     public static void start() {

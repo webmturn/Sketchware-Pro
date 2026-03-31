@@ -388,7 +388,7 @@ public class ProjectBuilder {
         }
 
         /* Add JARs from project's classpath */
-        String classpathDirectoryPath = FileUtil.getExternalStorageDir() + "/.sketchware/data/" + projectFilePaths.sc_id + "/files/classpath/";
+        String classpathDirectoryPath = SketchwarePaths.getProjectClasspathPath(projectFilePaths.sc_id) + File.separator;
         ArrayList<String> classpathJarPaths = FileUtil.listFiles(classpathDirectoryPath, "jar");
         classpath.append(":").append(TextUtils.join(":", classpathJarPaths));
 

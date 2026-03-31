@@ -1,7 +1,6 @@
 package mod.hey.studios.project.backup;
 
 import android.content.Context;
-import android.os.Environment;
 
 import pro.sketchware.utility.FilePathUtil;
 import android.util.Log;
@@ -44,6 +43,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import pro.sketchware.core.ProjectListManager;
 import pro.sketchware.core.MapValueHelper;
+import pro.sketchware.core.SketchwarePaths;
 import dev.aldi.sayuti.editor.manage.LocalLibrariesUtil;
 import mod.hey.studios.editor.manage.block.ExtraBlockInfo;
 import mod.hey.studios.editor.manage.block.v2.BlockLoader;
@@ -85,8 +85,7 @@ public class BackupFactory {
     }
 
     public static String getBackupDir() {
-        return new File(Environment.getExternalStorageDirectory(), ConfigActivity.getBackupPath())
-                .getAbsolutePath();
+        return SketchwarePaths.getAbsolutePathOf(ConfigActivity.getBackupPath());
     }
 
     private static File getAllLocalLibsDir() {
@@ -139,8 +138,7 @@ public class BackupFactory {
     }
 
     public static String getNewScId() {
-        File myscList = new File(Environment.getExternalStorageDirectory(),
-                ".sketchware/mysc/list/");
+        File myscList = new File(SketchwarePaths.getProjectListBasePath());
 
         ArrayList<String> list = new ArrayList<>();
         FileUtil.listDir(myscList.getAbsolutePath(), list);
@@ -614,22 +612,25 @@ public class BackupFactory {
     }
 
     private File getDataDir() {
-        return new File(Environment.getExternalStorageDirectory(),
-                ".sketchware/data/" + sc_id);
+        return new File(SketchwarePaths.getDataPath(sc_id));
     }
 
     private File getResDir(String subfolder) {
-        return new File(Environment.getExternalStorageDirectory(),
-                ".sketchware/resources/" + subfolder + "/" + sc_id);
+        String resourcePath = switch (subfolder) {
+            case "fonts" -> SketchwarePaths.getFontsResourcePath();
+            case "icons" -> SketchwarePaths.getIconsPath();
+            case "images" -> SketchwarePaths.getImagesPath();
+            case "sounds" -> SketchwarePaths.getSoundsPath();
+            default -> SketchwarePaths.getAbsolutePathOf(SketchwarePaths.RESOURCES_PATH + File.separator + subfolder);
+        };
+        return new File(resourcePath, sc_id);
     }
 
     private File getProjectPath() {
-        return new File(Environment.getExternalStorageDirectory(),
-                ".sketchware/mysc/list/" + sc_id + "/project");
+        return new File(SketchwarePaths.getProjectListPath(sc_id), "project");
     }
 
     private File getLocalLibsPath() {
-        return new File(Environment.getExternalStorageDirectory(),
-                ".sketchware/data/" + sc_id + "/local_library");
+        return new File(SketchwarePaths.getProjectLocalLibraryPath(sc_id));
     }
 }

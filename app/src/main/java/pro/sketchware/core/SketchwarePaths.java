@@ -11,6 +11,7 @@ public class SketchwarePaths {
 
     public static final String PROVIDED_STRINGS_PATH = "sketchware" + File.separator + "localization" + File.separator + "strings_provided.xml";
     public static final String SIGNED_APK_PATH = "sketchware" + File.separator + "signed_apk";
+    public static final String SIGNED_AAB_PATH = "sketchware" + File.separator + "signed_aab";
     public static final String KEYSTORE_DIR_PATH = "sketchware" + File.separator + "keystore";
     public static final String KEYSTORE_FILE_PATH = "sketchware" + File.separator + "keystore" + File.separator + "release_key.jks";
     public static final String SERVICE_ACCOUNT_PATH = "sketchware" + File.separator + "service_account";
@@ -44,8 +45,15 @@ public class SketchwarePaths {
     public static final String CUSTOM_EVENTS_FILE = EXTRA_SYSTEM_DATA + File.separator + "events.json";
     public static final String CUSTOM_LISTENERS_FILE = EXTRA_SYSTEM_DATA + File.separator + "listeners.json";
     public static final String CUSTOM_COMPONENT_FILE = EXTRA_SYSTEM_DATA + File.separator + "component.json";
+    public static final String REPOSITORIES_JSON_FILE = LIBS_PATH + File.separator + "repositories.json";
     public static final String EXTRA_DATA_EXPORT = EXTRA_SYSTEM_DATA + File.separator + "export";
     public static final String EVENT_EXPORT_PATH = EXTRA_DATA_EXPORT + File.separator + "events";
+    public static final String SYSTEM_TEMP_PATH = EXTRA_SYSTEM_DATA + File.separator + "temp";
+    public static final String SYSTEM_I18N_PATH = EXTRA_SYSTEM_DATA + File.separator + "i18n";
+    public static final String SETTINGS_PATH = DATA_PATH + File.separator + "settings.json";
+    public static final String DEBUG_LOG_PATH = ".sketchware" + File.separator + "debug.txt";
+    public static final String LOGCAT_PATH = ".sketchware" + File.separator + "logcat";
+    public static final String BLOCK_EXPORT_PATH = RESOURCES_PATH + File.separator + "block" + File.separator + "export";
 
     public static String getAbsolutePathOf(String relativePath) {
         return new File(Environment.getExternalStorageDirectory(), relativePath).getAbsolutePath();
@@ -67,6 +75,53 @@ public class SketchwarePaths {
 
     public static String getBackupPath(String sc_id) {
         return getAbsolutePathOf(BACKUP_PATH + File.separator + sc_id);
+    }
+
+    public static String getSettingsPath() {
+        return getAbsolutePathOf(SETTINGS_PATH);
+    }
+
+    public static String getDebugLogPath() {
+        return getAbsolutePathOf(DEBUG_LOG_PATH);
+    }
+
+    public static String getRepositoriesJsonPath() {
+        return getAbsolutePathOf(REPOSITORIES_JSON_FILE);
+    }
+
+    public static String getBlockExportPath() {
+        return getAbsolutePathOf(BLOCK_EXPORT_PATH);
+    }
+
+    public static String getBlockSelectorMenuPath() {
+        return getAbsolutePathOf(RESOURCES_PATH + File.separator + "block" + File.separator + "My Block"
+                + File.separator + "menu.json");
+    }
+
+    public static String getBlockSelectorExportMenuPath() {
+        return getBlockExportPath() + File.separator + "menu" + File.separator + "All_Menus.json";
+    }
+
+    public static String getBlockManagerBlockFilePath() {
+        return getAbsolutePathOf(RESOURCES_PATH + File.separator + "block" + File.separator + "My Block"
+                + File.separator + "block.json");
+    }
+
+    public static String getBlockManagerPaletteFilePath() {
+        return getAbsolutePathOf(RESOURCES_PATH + File.separator + "block" + File.separator + "My Block"
+                + File.separator + "palette.json");
+    }
+
+    public static String getSystemI18nPath() {
+        return getAbsolutePathOf(SYSTEM_I18N_PATH);
+    }
+
+    public static String getLogcatPath(String packageName) {
+        return getAbsolutePathOf(LOGCAT_PATH) + File.separator + packageName;
+    }
+
+    public static String getLogcatPath(String packageName, String fileName) {
+        return getLogcatPath(packageName) + File.separator + fileName;
     }
 
     public static void clearPreferenceData(Context context, String preferenceName) {
@@ -151,6 +206,100 @@ public class SketchwarePaths {
         return getAbsolutePathOf(DATA_PATH + File.separator + sc_id);
     }
 
+    public static String getProjectAssetsPath(String sc_id) {
+        return getDataPath(sc_id) + File.separator + "files" + File.separator + "assets";
+    }
+
+    public static String getProjectNativeLibsPath(String sc_id) {
+        return getDataPath(sc_id) + File.separator + "files" + File.separator + "native_libs";
+    }
+
+    public static String getProjectJavaPath(String sc_id) {
+        return getDataPath(sc_id) + File.separator + "files" + File.separator + "java";
+    }
+
+    public static String getProjectLayoutPath(String sc_id) {
+        return getDataPath(sc_id) + File.separator + "files" + File.separator + "resource"
+                + File.separator + "layout";
+    }
+
+    public static String getProjectClasspathPath(String sc_id) {
+        return getDataPath(sc_id) + File.separator + "files" + File.separator + "classpath";
+    }
+
+    public static String getProjectCommandPath(String sc_id) {
+        return getDataPath(sc_id) + File.separator + "command";
+    }
+
+    public static String getProjectSettingsPath(String sc_id) {
+        return getDataPath(sc_id) + File.separator + "project_config";
+    }
+
+    public static String getProjectBuildConfigPath(String sc_id) {
+        return getDataPath(sc_id) + File.separator + "build_config";
+    }
+
+    public static String getProjectStringfogConfigPath(String sc_id) {
+        return getDataPath(sc_id) + File.separator + "stringfog";
+    }
+
+    public static String getProjectLocalLibraryPath(String sc_id) {
+        return getDataPath(sc_id) + File.separator + "local_library";
+    }
+
+    public static String getProjectCustomBlocksPath(String sc_id) {
+        return getDataPath(sc_id) + File.separator + "custom_blocks";
+    }
+
+    public static String getProjectExcludedBuiltInLibrariesPath(String sc_id) {
+        return getDataPath(sc_id) + File.separator + "excluded_library";
+    }
+
+    public static String getProjectProguardConfigPath(String sc_id) {
+        return getDataPath(sc_id) + File.separator + "proguard";
+    }
+
+    public static String getProjectProguardFullModeConfigPath(String sc_id) {
+        return getDataPath(sc_id) + File.separator + "proguard_fm";
+    }
+
+    public static String getProjectProguardRulesPath(String sc_id) {
+        return getDataPath(sc_id) + File.separator + "proguard-rules.pro";
+    }
+
+    public static String getProjectResourceValuesFilePath(String sc_id, String fileName) {
+        return getDataPath(sc_id) + File.separator + "files" + File.separator + "resource"
+                + File.separator + "values" + File.separator + fileName;
+    }
+
+    public static String getAndroidManifestInjectionPath(String sc_id) {
+        return getDataPath(sc_id) + File.separator + "Injection" + File.separator + "androidmanifest";
+    }
+
+    public static String getAndroidManifestAttributesPath(String sc_id) {
+        return getAndroidManifestInjectionPath(sc_id) + File.separator + "attributes.json";
+    }
+
+    public static String getAndroidManifestLauncherActivityPath(String sc_id) {
+        return getAndroidManifestInjectionPath(sc_id) + File.separator + "activity_launcher.txt";
+    }
+
+    public static String getAndroidManifestActivitiesComponentsPath(String sc_id) {
+        return getAndroidManifestInjectionPath(sc_id) + File.separator + "activities_components.json";
+    }
+
+    public static String getAndroidManifestAppComponentsPath(String sc_id) {
+        return getAndroidManifestInjectionPath(sc_id) + File.separator + "app_components.txt";
+    }
+
+    public static String getAppCompatInjectionPath(String sc_id) {
+        return getDataPath(sc_id) + File.separator + "injection" + File.separator + "appcompat";
+    }
+
+    public static String getAppCompatInjectionPath(String sc_id, String activityFilename) {
+        return getAppCompatInjectionPath(sc_id) + File.separator + activityFilename;
+    }
+
     public static String getDownloadPath() {
         return getAbsolutePathOf(".sketchware" + File.separator + "download");
     }
@@ -216,6 +365,10 @@ public class SketchwarePaths {
         return getAbsolutePathOf(SIGNED_APK_PATH);
     }
 
+    public static String getSignedAabPath() {
+        return getAbsolutePathOf(SIGNED_AAB_PATH);
+    }
+
     public static String getServiceAccountPath() {
         return getAbsolutePathOf(SERVICE_ACCOUNT_PATH);
     }
@@ -226,6 +379,10 @@ public class SketchwarePaths {
 
     public static String getLibsPath() {
         return getAbsolutePathOf(LIBS_PATH);
+    }
+
+    public static String getAndroidProguardRulesPath() {
+        return getLibsPath() + File.separator + "android-proguard-rules.pro";
     }
 
     public static String getSketchwarePath() {
@@ -262,6 +419,14 @@ public class SketchwarePaths {
 
     public static String getTempCommandsPath() {
         return getAbsolutePathOf(".sketchware" + File.separator + "temp" + File.separator + "commands");
+    }
+
+    public static String getSystemTempPath() {
+        return getAbsolutePathOf(SYSTEM_TEMP_PATH);
+    }
+
+    public static String getSystemTempFilePath(String fileName) {
+        return getSystemTempPath() + File.separator + fileName;
     }
 
     public static String getUploadPath() {

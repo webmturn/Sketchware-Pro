@@ -12,7 +12,6 @@ public class AndroidLogManager extends LogManager {
     static {
         setLoggerFactory( AndroidLoggerFactory.getInstance());
         addLogWriter(DEFAULT_WRITER, new AndroidLogWriter());
-        //addLogWriter("FileWriter", new AndroidLogfileWriter( new File( Environment.getExternalStorageDirectory(), "MyApp.log")));
     }
 
     public static AndroidLogger getAndroidLogger( String name) {

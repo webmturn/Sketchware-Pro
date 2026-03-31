@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import mod.jbk.util.LogUtil;
+import pro.sketchware.core.SketchwarePaths;
 import pro.sketchware.utility.FileUtil;
 
 public class LogicHandler {
@@ -100,7 +101,7 @@ public class LogicHandler {
                     newStr = newStr.concat("\n").concat(arr2.get(i));
                 }
             }
-            FileUtil.writeFile(FileUtil.getExternalStorageDir().concat("/.sketchware/data/system/temp/").concat(javaName), newStr);
+            FileUtil.writeFile(SketchwarePaths.getSystemTempFilePath(javaName), newStr);
         } catch (Exception e) {
             LogUtil.e("LogicHandler", "Failed to process Java code file: " + javaName, e);
         }

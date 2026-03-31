@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import pro.sketchware.core.ComponentCodeGenerator;
+import pro.sketchware.core.SketchwarePaths;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.OldResourceIdMapper;
 import pro.sketchware.R;
@@ -310,7 +311,7 @@ public class ComponentsHandler {
     }
 
     public static String getPath() {
-        return FileUtil.getExternalStorageDir().concat("/.sketchware/data/system/component.json");
+        return SketchwarePaths.getCustomComponent();
     }
 
     /**

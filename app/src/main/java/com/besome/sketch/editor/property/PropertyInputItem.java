@@ -56,6 +56,7 @@ import pro.sketchware.core.NumberRangeValidator;
 import pro.sketchware.core.LengthRangeValidator;
 import pro.sketchware.core.ProjectDataManager;
 import pro.sketchware.core.ProjectListManager;
+import pro.sketchware.core.SketchwarePaths;
 import pro.sketchware.core.UIHelper;
 import pro.sketchware.core.BlockConstants;
 import pro.sketchware.core.ViewUtil;
@@ -621,7 +622,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
     }
 
     private void loadStringsListMap() {
-        String filePath = FileUtil.getExternalStorageDir().concat("/.sketchware/data/").concat(sc_id.concat("/files/resource/values/strings.xml"));
+        String filePath = SketchwarePaths.getProjectResourceValuesFilePath(sc_id, "strings.xml");
         StringsEditorManager stringsEditorManager = new StringsEditorManager();
         stringsEditorManager.convertXmlStringsToListMap(FileUtil.readFileIfExist(filePath), stringsListMap);
 

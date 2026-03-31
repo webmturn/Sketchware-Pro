@@ -32,6 +32,7 @@ import java.util.Map;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;
 import pro.sketchware.R;
+import pro.sketchware.core.SketchwarePaths;
 import pro.sketchware.utility.UI;
 import pro.sketchware.databinding.DialogCreateNewFileLayoutBinding;
 import pro.sketchware.databinding.PreferenceActivityBinding;
@@ -40,7 +41,7 @@ import pro.sketchware.utility.SketchwareUtil;
 
 public class ConfigActivity extends BaseAppCompatActivity {
 
-    public static final File SETTINGS_FILE = new File(FileUtil.getExternalStorageDir(), ".sketchware/data/settings.json");
+    public static final File SETTINGS_FILE = new File(SketchwarePaths.getSettingsPath());
     public static final String SETTING_ALWAYS_SHOW_BLOCKS = "always-show-blocks";
     public static final String SETTING_BACKUP_DIRECTORY = "backup-dir";
     public static final String SETTING_ROOT_AUTO_INSTALL_PROJECTS = "root-auto-install-projects";

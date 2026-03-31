@@ -1,6 +1,5 @@
 package mod.agus.jcoderz.editor.manage.library.locallibrary;
 
-import android.os.Environment;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -17,6 +16,7 @@ import dev.aldi.sayuti.editor.manage.LocalLibraryImportPackageIndex;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;
 import pro.sketchware.R;
+import pro.sketchware.core.SketchwarePaths;
 import pro.sketchware.utility.FilePathUtil;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.SketchwareUtil;
@@ -149,8 +149,7 @@ public class ManageLocalLibrary {
 
         for (String packageName : getPackageNames()) {
             if (!packageName.isEmpty()) {
-                File projectGenFolder = new File(Environment.getExternalStorageDirectory(),
-                        ".sketchware/mysc/".concat(projectId).concat("/gen"));
+                File projectGenFolder = new File(SketchwarePaths.getMyscPath(projectId), "gen");
                 String rJavaPath = packageName.replace(".", File.separator)
                         .concat(File.separator).concat("R.java");
                 genPaths.add(new File(projectGenFolder, rJavaPath).getAbsolutePath());

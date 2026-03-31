@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -613,9 +612,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
                     publishProgress(Helper.getResString(R.string.build_progress_signing_bundle));
 
                     String createdBundlePath = AppBundleCompiler.getDefaultAppBundleOutputFile(project_metadata).getAbsolutePath();
-                    String signedAppBundleDirectoryPath = FileUtil.getExternalStorageDir()
-                            + File.separator + "sketchware"
-                            + File.separator + "signed_aab";
+                    String signedAppBundleDirectoryPath = SketchwarePaths.getSignedAabPath();
                     FileUtil.makeDir(signedAppBundleDirectoryPath);
                     String outputPath = signedAppBundleDirectoryPath + File.separator +
                             Uri.fromFile(new File(createdBundlePath)).getLastPathSegment();
@@ -755,7 +752,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
             }
 
             String aabFilename = getCorrectResultFilename(project_metadata.projectName + ".aab");
-            if (buildingAppBundle && new File(Environment.getExternalStorageDirectory(), "sketchware" + File.separator + "signed_aab" + File.separator + aabFilename).exists()) {
+            if (buildingAppBundle && new File(SketchwarePaths.getSignedAabPath(), aabFilename).exists()) {
                 MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(act);
                 dialog.setIcon(R.drawable.open_box_48);
                 dialog.setTitle(Helper.getResString(R.string.export_aab_finished_title));

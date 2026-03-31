@@ -4,7 +4,6 @@ import static com.google.android.material.color.MaterialColors.harmonizeWithPrim
 
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Environment;
 import android.view.ContextThemeWrapper;
 
 import com.google.gson.Gson;
@@ -23,6 +22,7 @@ import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.SketchApplication;
+import pro.sketchware.core.SketchwarePaths;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.SketchwareUtil;
 
@@ -81,8 +81,7 @@ public class BlockLoader {
     private static void loadProjectBlocks(String sc_id) {
         cachedProjectId = sc_id;
         projectBlockCache = new HashMap<>();
-        File customBlocksConfig = new File(Environment.getExternalStorageDirectory(),
-                ".sketchware/data/" + sc_id + "/custom_blocks");
+        File customBlocksConfig = new File(SketchwarePaths.getProjectCustomBlocksPath(sc_id));
         if (customBlocksConfig.exists()) {
             try {
                 ArrayList<ExtraBlockInfo> extraBlocks = new Gson().fromJson(

@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +33,7 @@ import java.util.regex.Pattern;
 
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
+import pro.sketchware.core.SketchwarePaths;
 import pro.sketchware.databinding.ActivityLogcatreaderBinding;
 import pro.sketchware.databinding.EasyDeleteEdittextBinding;
 import pro.sketchware.databinding.ViewLogcatItemBinding;
@@ -159,7 +159,7 @@ public class LogReaderActivity extends BaseAppCompatActivity {
         }
         try {
             String fileName = Calendar.getInstance(Locale.ENGLISH).getTimeInMillis() + ".txt";
-            String filePath = Environment.getExternalStorageDirectory() + "/.sketchware/logcat/" + packageName + "/" + fileName;
+            String filePath = SketchwarePaths.getLogcatPath(packageName, fileName);
             String stars = "*".repeat(95);
             String blank = " ".repeat(87);
             createNewFileIfNotPresent(filePath);

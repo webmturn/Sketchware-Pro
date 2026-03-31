@@ -3,7 +3,7 @@ package mod.hey.studios.build;
 import java.io.Serializable;
 
 import mod.hey.studios.project.ProjectSettings;
-import pro.sketchware.utility.FileUtil;
+import pro.sketchware.core.SketchwarePaths;
 
 public class BuildSettings extends ProjectSettings implements Serializable {
 
@@ -29,6 +29,6 @@ public class BuildSettings extends ProjectSettings implements Serializable {
 
     @Override
     public String getPath() {
-        return FileUtil.getExternalStorageDir() + "/.sketchware/data/" + sc_id + "/build_config";
+        return SketchwarePaths.getProjectBuildConfigPath(sc_id);
     }
 }

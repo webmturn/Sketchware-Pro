@@ -5,7 +5,6 @@ import static com.besome.sketch.editor.view.ViewEditor.shakeView;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +42,7 @@ import mod.khaled.logcat.LogReaderActivity;
 import pro.sketchware.R;
 import pro.sketchware.activities.editor.component.ManageCustomComponentActivity;
 import pro.sketchware.activities.settings.SettingsActivity;
+import pro.sketchware.core.SketchwarePaths;
 import pro.sketchware.databinding.ActivityAppSettingsBinding;
 import pro.sketchware.databinding.DialogSelectApkToSignBinding;
 import pro.sketchware.utility.FileUtil;
@@ -200,8 +200,7 @@ public class AppSettings extends BaseAppCompatActivity {
             }
             String input_apk_path = Helper.getText(apk_path_txt);
             String output_apk_file_name = Uri.fromFile(new File(input_apk_path)).getLastPathSegment();
-            String output_apk_path = new File(Environment.getExternalStorageDirectory(),
-                    "sketchware/signed_apk/" + output_apk_file_name).getAbsolutePath();
+            String output_apk_path = new File(SketchwarePaths.getSignedApkPath(), output_apk_file_name).getAbsolutePath();
 
             if (new File(output_apk_path).exists()) {
                 MaterialAlertDialogBuilder confirmOverwrite = new MaterialAlertDialogBuilder(this);
