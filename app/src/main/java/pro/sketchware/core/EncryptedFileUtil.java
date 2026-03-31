@@ -52,15 +52,15 @@ public class EncryptedFileUtil {
    * Returns the size of an asset file in bytes.
    *
    * @param context the Android context
-   * @param value   the asset path relative to {@code assets/}
+   * @param assetPath   the asset path relative to {@code assets/}
    * @return the file size in bytes, or {@code -1} on error
    */
-  public long getAssetFileSize(Context context, String value) {
-    if (context == null || value == null || value.isEmpty()) return -1L;
-    try (InputStream inputStream = context.getAssets().open(value)) {
+  public long getAssetFileSize(Context context, String assetPath) {
+    if (context == null || assetPath == null || assetPath.isEmpty()) return -1L;
+    try (InputStream inputStream = context.getAssets().open(assetPath)) {
       return inputStream.available();
     } catch (IOException e) {
-      Log.w("EncryptedFileUtil", "Failed to get asset file size: " + value, e);
+      Log.w("EncryptedFileUtil", "Failed to get asset file size: " + assetPath, e);
       return -1L;
     }
   }
@@ -88,27 +88,27 @@ public class EncryptedFileUtil {
    * Copies an asset file to local storage, creating parent directories as needed.
    *
    * @param context the Android context
-   * @param key     the asset path relative to {@code assets/}
-   * @param value   the destination file path on local storage
+   * @param assetPath     the asset path relative to {@code assets/}
+   * @param destinationPath   the destination file path on local storage
    */
-  public void copyAssetFile(Context context, String key, String value) {
-    if (key == null || key.isEmpty() || value == null || value.isEmpty()) return;
-    int sepIdx = value.lastIndexOf(File.separator);
+  public void copyAssetFile(Context context, String assetPath, String destinationPath) {
+    if (assetPath == null || assetPath.isEmpty() || destinationPath == null || destinationPath.isEmpty()) return;
+    int sepIdx = destinationPath.lastIndexOf(File.separator);
     if (sepIdx > 0) {
-      mkdirs(value.substring(0, sepIdx));
+      mkdirs(destinationPath.substring(0, sepIdx));
     }
-    try (InputStream is = context.getAssets().open(key);
-         FileOutputStream fos = new FileOutputStream(value, false)) {
+    try (InputStream is = context.getAssets().open(assetPath);
+         FileOutputStream fos = new FileOutputStream(destinationPath, false)) {
       byte[] buf = new byte[1024];
       int len;
       while ((len = is.read(buf)) > 0) {
         fos.write(buf, 0, len);
       }
       if (encryptionEnabled) {
-        Log.d(getClass().getSimpleName(), "assetFile =>" + value + " copy success.");
+        Log.d(getClass().getSimpleName(), "assetFile =>" + destinationPath + " copy success.");
       }
     } catch (IOException e) {
-      Log.w("EncryptedFileUtil", "Failed to copy asset file: " + key, e);
+      Log.w("EncryptedFileUtil", "Failed to copy asset file: " + assetPath, e);
     }
   }
   
@@ -156,21 +156,21 @@ public class EncryptedFileUtil {
     } 
   }
   
-  public void recreateDirectory(String value) {
-    if (value == null || value.isEmpty()) return;
-    deleteDirectoryByPath(value);
-    mkdirs(value);
+  public void recreateDirectory(String dirPath) {
+    if (dirPath == null || dirPath.isEmpty()) return;
+    deleteDirectoryByPath(dirPath);
+    mkdirs(dirPath);
   }
   
-  public void copyFile(String key, String value) throws IOException {
-    if (key == null || key.isEmpty() || value == null || value.isEmpty()) {
-      throw new IOException("copyFile: null or empty path (src=" + key + ", dst=" + value + ")");
+  public void copyFile(String sourcePath, String destinationPath) throws IOException {
+    if (sourcePath == null || sourcePath.isEmpty() || destinationPath == null || destinationPath.isEmpty()) {
+      throw new IOException("copyFile: null or empty path (src=" + sourcePath + ", dst=" + destinationPath + ")");
     }
-    try (FileInputStream fis = new FileInputStream(key);
-         FileOutputStream fos = new FileOutputStream(value, false)) {
+    try (FileInputStream fis = new FileInputStream(sourcePath);
+         FileOutputStream fos = new FileOutputStream(destinationPath, false)) {
       byte[] buf = new byte[1024];
       if (encryptionEnabled) {
-        Log.d(getClass().getSimpleName(), "src=" + key + ",dest=" + value);
+        Log.d(getClass().getSimpleName(), "src=" + sourcePath + ",dest=" + destinationPath);
       }
       int len;
       while ((len = fis.read(buf)) > 0) {
@@ -179,26 +179,26 @@ public class EncryptedFileUtil {
     }
   }
   
-  public void deleteRecursiveByPath(String value, boolean flag) {
-    if (value == null || value.isEmpty()) return;
-    deleteRecursive(new File(value), flag);
+  public void deleteRecursiveByPath(String path, boolean deleteRoot) {
+    if (path == null || path.isEmpty()) return;
+    deleteRecursive(new File(path), deleteRoot);
   }
   
   /**
    * Atomically writes raw bytes to a file using a tmp-file + rename strategy.
    * Creates parent directories if they don't exist.
    *
-   * @param value the destination file path
+   * @param filePath the destination file path
    * @param data  the bytes to write
    * @return {@code true} if the write succeeded
    */
-  public boolean writeBytes(String value, byte[] data) {
-    if (value == null || value.isEmpty() || data == null) return false;
-    int separatorIdx = value.lastIndexOf(File.separator);
+  public boolean writeBytes(String filePath, byte[] data) {
+    if (filePath == null || filePath.isEmpty() || data == null) return false;
+    int separatorIdx = filePath.lastIndexOf(File.separator);
     if (separatorIdx > 0)
-      mkdirs(value.substring(0, separatorIdx)); 
-    File file = new File(value);
-    File tmpFile = new File(value + ".tmp");
+      mkdirs(filePath.substring(0, separatorIdx));
+    File file = new File(filePath);
+    File tmpFile = new File(filePath + ".tmp");
     try (FileOutputStream fos = new FileOutputStream(tmpFile)) {
       fos.write(data);
       fos.getFD().sync();
@@ -211,7 +211,7 @@ public class EncryptedFileUtil {
       // renameTo can fail across filesystems; fall back to delete+rename
       file.delete();
       if (!tmpFile.renameTo(file)) {
-        Log.e("EncryptedFileUtil", "Atomic rename failed for: " + value);
+        Log.e("EncryptedFileUtil", "Atomic rename failed for: " + filePath);
         tmpFile.delete();
         return false;
       }
@@ -219,10 +219,10 @@ public class EncryptedFileUtil {
     return true;
   }
   
-  public String readAssetFile(Context context, String value) {
-    if (value == null || value.isEmpty()) return "";
+  public String readAssetFile(Context context, String assetPath) {
+    if (assetPath == null || assetPath.isEmpty()) return "";
     StringBuilder sb = new StringBuilder();
-    try (InputStream is = context.getAssets().open(value.trim());
+    try (InputStream is = context.getAssets().open(assetPath.trim());
          BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
       String line;
       while ((line = reader.readLine()) != null) {
@@ -230,7 +230,7 @@ public class EncryptedFileUtil {
         sb.append("\r\n");
       }
     } catch (IOException e) {
-      Log.w("EncryptedFileUtil", "Failed to read asset file: " + value, e);
+      Log.w("EncryptedFileUtil", "Failed to read asset file: " + assetPath, e);
     }
     return sb.toString();
   }
@@ -239,29 +239,29 @@ public class EncryptedFileUtil {
     file.delete();
   }
   
-  public void deleteDirectoryByPath(String value) {
-    if (value == null || value.isEmpty()) return;
-    deleteRecursiveByPath(value, true);
+  public void deleteDirectoryByPath(String dirPath) {
+    if (dirPath == null || dirPath.isEmpty()) return;
+    deleteRecursiveByPath(dirPath, true);
   }
   
   /**
    * Atomically writes a UTF-8 text string to a file using a tmp-file + rename strategy.
    * Creates parent directories if they don't exist.
    *
-   * @param key   the destination file path
-   * @param value the text content to write
+   * @param filePath   the destination file path
+   * @param content the text content to write
    * @return {@code true} if the write succeeded
    */
-  public boolean writeText(String key, String value) {
-    if (key == null || key.isEmpty()) return false;
-    int separatorIdx = key.lastIndexOf(File.separator);
+  public boolean writeText(String filePath, String content) {
+    if (filePath == null || filePath.isEmpty()) return false;
+    int separatorIdx = filePath.lastIndexOf(File.separator);
     if (separatorIdx > 0)
-      mkdirs(key.substring(0, separatorIdx)); 
-    File file = new File(key);
-    File tmpFile = new File(key + ".tmp");
+      mkdirs(filePath.substring(0, separatorIdx));
+    File file = new File(filePath);
+    File tmpFile = new File(filePath + ".tmp");
     try (FileOutputStream fos = new FileOutputStream(tmpFile);
          Writer fw = new OutputStreamWriter(fos, StandardCharsets.UTF_8)) {
-      fw.write(value);
+      fw.write(content);
       fw.flush();
       fos.getFD().sync();
     } catch (IOException e) {
@@ -272,7 +272,7 @@ public class EncryptedFileUtil {
     if (!tmpFile.renameTo(file)) {
       file.delete();
       if (!tmpFile.renameTo(file)) {
-        Log.e("EncryptedFileUtil", "Atomic rename failed for: " + key);
+        Log.e("EncryptedFileUtil", "Atomic rename failed for: " + filePath);
         tmpFile.delete();
         return false;
       }
@@ -308,9 +308,9 @@ public class EncryptedFileUtil {
     return sb.toString();
   }
   
-  public void deleteFileByPath(String value) {
-    if (value == null || value.isEmpty()) return;
-    deleteFile(new File(value));
+  public void deleteFileByPath(String filePath) {
+    if (filePath == null || filePath.isEmpty()) return;
+    deleteFile(new File(filePath));
   }
   
   /**
@@ -331,40 +331,40 @@ public class EncryptedFileUtil {
    * Encrypts a string for storage. Returns plaintext UTF-8 bytes if
    * encryption is disabled in {@link ConfigActivity} settings.
    *
-   * @param value the string to encrypt
+   * @param content the string to encrypt
    * @return encrypted bytes, or plaintext UTF-8 bytes if encryption is disabled
    * @throws Exception if encryption fails
    */
-  public byte[] encryptString(String value) throws GeneralSecurityException {
+  public byte[] encryptString(String content) throws GeneralSecurityException {
     if (!ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_PROJECT_DATA_ENCRYPTION)) {
       // Encryption disabled — write as plaintext UTF-8 bytes
-      return value.getBytes(StandardCharsets.UTF_8);
+      return content.getBytes(StandardCharsets.UTF_8);
     }
-    return encrypt(value.getBytes(StandardCharsets.UTF_8));
+    return encrypt(content.getBytes(StandardCharsets.UTF_8));
   }
   
-  public boolean exists(String value) {
-    return value != null && !value.isEmpty() && new File(value).exists();
+  public boolean exists(String path) {
+    return path != null && !path.isEmpty() && new File(path).exists();
   }
   
-  public boolean mkdirs(String value) {
-    return value != null && !value.isEmpty() && !exists(value) && new File(value).mkdirs();
+  public boolean mkdirs(String dirPath) {
+    return dirPath != null && !dirPath.isEmpty() && !exists(dirPath) && new File(dirPath).mkdirs();
   }
   
-  public String readFile(String value) {
-    if (value == null || value.isEmpty()) return "";
-    return readFileContent(new File(value));
+  public String readFile(String filePath) {
+    if (filePath == null || filePath.isEmpty()) return "";
+    return readFileContent(new File(filePath));
   }
   
   /**
    * Reads the entire contents of a file as a byte array.
    *
-   * @param value the file path to read
+   * @param filePath the file path to read
    * @return the file contents, or {@code null} if the file is empty or an error occurs
    */
-  public byte[] readFileBytes(String value) {
-    if (value == null || value.isEmpty()) return null;
-    try (FileInputStream fis = new FileInputStream(value);
+  public byte[] readFileBytes(String filePath) {
+    if (filePath == null || filePath.isEmpty()) return null;
+    try (FileInputStream fis = new FileInputStream(filePath);
          ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
       byte[] buf = new byte[4096];
       int len;
@@ -374,7 +374,7 @@ public class EncryptedFileUtil {
       byte[] data = bos.toByteArray();
       return data.length > 0 ? data : null;
     } catch (IOException e) {
-      Log.w("EncryptedFileUtil", "Failed to read file bytes: " + value, e);
+      Log.w("EncryptedFileUtil", "Failed to read file bytes: " + filePath, e);
     }
     return null;
   }
