@@ -726,36 +726,42 @@ public class ProjectFilePaths {
             writeProjectFile(bean.srcFileName, bean.source);
         }
         if (buildConfig.isFirebaseEnabled || buildConfig.isAdMobEnabled || buildConfig.isMapUsed) {
-            ProjectLibraryBean firebaseLibrary = projectLibraryManager.getFirebaseDB();
-            XmlBuilderHelper xmlBuilder = new XmlBuilderHelper();
-            xmlBuilder.addInteger("google_play_services_version", 12451000);
-            if (buildConfig.isFirebaseEnabled) {
-                String databaseUrl;
-                String projectId;
-                String libraryData = firebaseLibrary.data;
-                if (libraryData.contains(".")) {
-                    databaseUrl = "https://" + libraryData;
-                    projectId = libraryData.trim().replaceAll(FIREBASE_DATABASE_STORAGE_LOCATION_MATCHER, "");
-                } else {
-                    databaseUrl = "https://" + libraryData + ".firebaseio.com";
-                    projectId = libraryData;
+            CommandBlock.clearTempCommands();
+            try {
+                prepareXmlCommands(projectFileManager, projectDataManger);
+                ProjectLibraryBean firebaseLibrary = projectLibraryManager.getFirebaseDB();
+                XmlBuilderHelper xmlBuilder = new XmlBuilderHelper();
+                xmlBuilder.addInteger("google_play_services_version", 12451000);
+                if (buildConfig.isFirebaseEnabled) {
+                    String databaseUrl;
+                    String projectId;
+                    String libraryData = firebaseLibrary.data;
+                    if (libraryData.contains(".")) {
+                        databaseUrl = "https://" + libraryData;
+                        projectId = libraryData.trim().replaceAll(FIREBASE_DATABASE_STORAGE_LOCATION_MATCHER, "");
+                    } else {
+                        databaseUrl = "https://" + libraryData + ".firebaseio.com";
+                        projectId = libraryData;
+                    }
+                    xmlBuilder.addString("firebase_database_url", databaseUrl, false);
+                    xmlBuilder.addString("project_id", projectId, false);
+                    xmlBuilder.addString("google_app_id", firebaseLibrary.reserved1, false);
+                    if (firebaseLibrary.reserved2 != null && !firebaseLibrary.reserved2.isEmpty()) {
+                        xmlBuilder.addString("google_api_key", firebaseLibrary.reserved2, false);
+                    }
+                    if (firebaseLibrary.reserved3 != null && !firebaseLibrary.reserved3.isEmpty()) {
+                        xmlBuilder.addString("google_storage_bucket", firebaseLibrary.reserved3, false);
+                    }
                 }
-                xmlBuilder.addString("firebase_database_url", databaseUrl, false);
-                xmlBuilder.addString("project_id", projectId, false);
-                xmlBuilder.addString("google_app_id", firebaseLibrary.reserved1, false);
-                if (firebaseLibrary.reserved2 != null && !firebaseLibrary.reserved2.isEmpty()) {
-                    xmlBuilder.addString("google_api_key", firebaseLibrary.reserved2, false);
+                if (buildConfig.isMapUsed) {
+                    xmlBuilder.addString("google_maps_key", projectLibraryManager.getGoogleMap().data, false);
                 }
-                if (firebaseLibrary.reserved3 != null && !firebaseLibrary.reserved3.isEmpty()) {
-                    xmlBuilder.addString("google_storage_bucket", firebaseLibrary.reserved3, false);
-                }
+                String filePath = "values/secrets.xml";
+                fileUtil.writeText(resDirectoryPath + File.separator + filePath,
+                        CommandBlock.applyCommands(filePath, xmlBuilder.toCode()));
+            } finally {
+                CommandBlock.clearTempCommands();
             }
-            if (buildConfig.isMapUsed) {
-                xmlBuilder.addString("google_maps_key", projectLibraryManager.getGoogleMap().data, false);
-            }
-            String filePath = "values/secrets.xml";
-            fileUtil.writeText(resDirectoryPath + File.separator + filePath,
-                    CommandBlock.applyCommands(filePath, xmlBuilder.toCode()));
         }
         generateGradleFiles();
     }
@@ -770,230 +776,236 @@ public class ProjectFilePaths {
     public ArrayList<SrcCodeBean> generateSourceCodeBeans(ProjectFileManager projectFileManager, ProjectDataStore projectDataManager, LibraryManager projectLibraryManager, BuiltInLibraryManager builtInLibraryManager) {
         generateDebugFiles(SketchApplication.getAppContext());
         CommandBlock.clearTempCommands();
-
-        String javaDir = FileUtil.getExternalStorageDir() + "/.sketchware/data/" + sc_id + "/files/java/";
-        String layoutDir = FileUtil.getExternalStorageDir() + "/.sketchware/data/" + sc_id + "/files/resource/layout/";
-        List<File> javaFiles;
-        {
-            File[] files = new File(javaDir).listFiles();
-            if (files == null) files = new File[0];
-            javaFiles = Arrays.asList(files);
-        }
-        List<File> layoutFiles;
-        {
-            File[] files = new File(layoutDir).listFiles();
-            if (files == null) files = new File[0];
-            layoutFiles = Arrays.asList(files);
-        }
-
-        // Generate Activities unless a custom version of it exists already
-        // at /Internal storage/.sketchware/data/<sc_id>/files/java/
-        ArrayList<SrcCodeBean> srcCodeBeans = new ArrayList<>();
-
-        List<ProjectFileBean> activitiesToGenerate = new ArrayList<>();
-        for (ProjectFileBean activity : projectFileManager.getActivities()) {
-            if (!javaFiles.contains(new File(javaDir + activity.getJavaName()))) {
-                activitiesToGenerate.add(activity);
+        try {
+            String javaDir = FileUtil.getExternalStorageDir() + "/.sketchware/data/" + sc_id + "/files/java/";
+            String layoutDir = FileUtil.getExternalStorageDir() + "/.sketchware/data/" + sc_id + "/files/resource/layout/";
+            List<File> javaFiles;
+            {
+                File[] files = new File(javaDir).listFiles();
+                if (files == null) files = new File[0];
+                javaFiles = Arrays.asList(files);
             }
-        }
-
-        // Code generation cache: skip regeneration if inputs haven't changed
-        File codegenCacheDir = new File(SketchApplication.getAppContext().getCacheDir(), "codegenCache/" + sc_id);
-        String cacheKey = computeCodeGenCacheKey(projectFileManager, projectDataManager, projectLibraryManager);
-        boolean cacheHit = false;
-
-        File cacheKeyFile = new File(codegenCacheDir, "cache.key");
-        if (cacheKeyFile.exists()) {
-            try {
-                String cachedKey = FileUtil.readFile(cacheKeyFile.getAbsolutePath());
-                if (cacheKey.equals(cachedKey)) {
-                    // Try to load all activities from cache
-                    boolean allCached = true;
-                    ArrayList<SrcCodeBean> cachedBeans = new ArrayList<>();
-                    for (ProjectFileBean activity : activitiesToGenerate) {
-                        File cachedFile = new File(codegenCacheDir, activity.getJavaName() + ".code");
-                        if (cachedFile.exists()) {
-                            String cachedCode = FileUtil.readFile(cachedFile.getAbsolutePath());
-                            cachedBeans.add(new SrcCodeBean(activity.getJavaName(),
-                                    ActivityCodeGenerator.applyCommands(cachedCode)));
-                        } else {
-                            allCached = false;
-                            break;
-                        }
-                    }
-                    if (allCached) {
-                        srcCodeBeans.addAll(cachedBeans);
-                        cacheHit = true;
-                    }
-                }
-            } catch (Exception e) {
-                Log.e("ProjectFilePaths", "Cache read failed", e);
+            List<File> layoutFiles;
+            {
+                File[] files = new File(layoutDir).listFiles();
+                if (files == null) files = new File[0];
+                layoutFiles = Arrays.asList(files);
             }
-        }
 
-        int threadCount = 0;
-        if (!cacheHit) {
-            // Cache miss: generate code and save to cache
-            codegenCacheDir.mkdirs();
+            // Generate Activities unless a custom version of it exists already
+            // at /Internal storage/.sketchware/data/<sc_id>/files/java/
+            ArrayList<SrcCodeBean> srcCodeBeans = new ArrayList<>();
 
-            // Pre-build shared objects once for all Activities (optimization)
-            ManageLocalLibrary sharedMll = new ManageLocalLibrary(projectDataManager.projectId);
-            HashMap<String, Map<String, Object>> sharedExtraBlocksMap = ActivityCodeGenerator.buildExtraBlocksMap(getExtraBlockData());
-            Material3LibraryManager sharedMaterialLibraryManager = new Material3LibraryManager(projectDataManager.projectId);
-
-            // Pre-warm BlockLoader caches to avoid race conditions during parallel execution
-            BlockLoader.getBlockFromProject(sc_id, "");
-
-            threadCount = activitiesToGenerate.isEmpty() ? 0
-                    : Math.min(Runtime.getRuntime().availableProcessors(), activitiesToGenerate.size());
-            if (threadCount <= 1) {
-                for (ProjectFileBean activity : activitiesToGenerate) {
-                    String phase1Code = new ActivityCodeGenerator(buildConfig, activity, projectDataManager,
-                            sharedMll, projectSettings, sharedExtraBlocksMap, sharedMaterialLibraryManager)
-                            .generateCode(isAndroidStudioExport, sc_id, false);
-                    srcCodeBeans.add(new SrcCodeBean(activity.getJavaName(),
-                            ActivityCodeGenerator.applyCommands(phase1Code)));
-                    FileUtil.writeFile(new File(codegenCacheDir, activity.getJavaName() + ".code").getAbsolutePath(), phase1Code);
+            List<ProjectFileBean> activitiesToGenerate = new ArrayList<>();
+            for (ProjectFileBean activity : projectFileManager.getActivities()) {
+                if (!javaFiles.contains(new File(javaDir + activity.getJavaName()))) {
+                    activitiesToGenerate.add(activity);
                 }
-            } else {
-                ExecutorService executor = Executors.newFixedThreadPool(threadCount);
+            }
+
+            // Code generation cache: skip regeneration if inputs haven't changed
+            File codegenCacheDir = new File(SketchApplication.getAppContext().getCacheDir(), "codegenCache/" + sc_id);
+            String cacheKey = computeCodeGenCacheKey(projectFileManager, projectDataManager, projectLibraryManager);
+            boolean cacheHit = false;
+
+            File cacheKeyFile = new File(codegenCacheDir, "cache.key");
+            if (cacheKeyFile.exists()) {
                 try {
-                    List<Future<Pair<String, String>>> futures = new ArrayList<>();
-
-                    for (ProjectFileBean activity : activitiesToGenerate) {
-                        futures.add(executor.submit(() -> {
-                            String rawCode = new ActivityCodeGenerator(buildConfig, activity, projectDataManager,
-                                    sharedMll, projectSettings, sharedExtraBlocksMap, sharedMaterialLibraryManager)
-                                    .generateCode(isAndroidStudioExport, sc_id, false);
-                            return new Pair<>(activity.getJavaName(), rawCode);
-                        }));
-                    }
-
-                    // Phase 2: Apply command blocks serially (CommandBlock is not thread-safe)
-                    for (int i = 0; i < futures.size(); i++) {
-                        try {
-                            Pair<String, String> result = futures.get(i).get();
-                            srcCodeBeans.add(new SrcCodeBean(result.first,
-                                    ActivityCodeGenerator.applyCommands(result.second)));
-                            FileUtil.writeFile(new File(codegenCacheDir, result.first + ".code").getAbsolutePath(), result.second);
-                        } catch (Exception e) {
-                            Log.e("ProjectFilePaths", "Parallel code generation failed, falling back to serial", e);
-                            ProjectFileBean activity = activitiesToGenerate.get(i);
-                            String phase1Code = new ActivityCodeGenerator(buildConfig, activity, projectDataManager,
-                                    sharedMll, projectSettings, sharedExtraBlocksMap, sharedMaterialLibraryManager)
-                                    .generateCode(isAndroidStudioExport, sc_id, false);
-                            srcCodeBeans.add(new SrcCodeBean(activity.getJavaName(),
-                                    ActivityCodeGenerator.applyCommands(phase1Code)));
-                            FileUtil.writeFile(new File(codegenCacheDir, activity.getJavaName() + ".code").getAbsolutePath(), phase1Code);
+                    String cachedKey = FileUtil.readFile(cacheKeyFile.getAbsolutePath());
+                    if (cacheKey.equals(cachedKey)) {
+                        // Try to load all activities from cache
+                        boolean allCached = true;
+                        ArrayList<SrcCodeBean> cachedBeans = new ArrayList<>();
+                        for (ProjectFileBean activity : activitiesToGenerate) {
+                            File cachedFile = new File(codegenCacheDir, activity.getJavaName() + ".code");
+                            if (cachedFile.exists()) {
+                                String cachedCode = FileUtil.readFile(cachedFile.getAbsolutePath());
+                                cachedBeans.add(new SrcCodeBean(activity.getJavaName(),
+                                        ActivityCodeGenerator.applyCommands(cachedCode)));
+                            } else {
+                                allCached = false;
+                                break;
+                            }
+                        }
+                        if (allCached) {
+                            srcCodeBeans.addAll(cachedBeans);
+                            cacheHit = true;
                         }
                     }
-                } finally {
-                    executor.shutdownNow();
+                } catch (Exception e) {
+                    Log.e("ProjectFilePaths", "Cache read failed", e);
                 }
             }
-            // Save cache key after successful generation
-            FileUtil.writeFile(cacheKeyFile.getAbsolutePath(), cacheKey);
-        }
 
-        var path = SketchwarePaths.getDataPath(sc_id) + "/command";
-        var newXMLCommand = Boolean.parseBoolean(projectSettings.getValue(ProjectSettings.SETTING_NEW_XML_COMMAND, ProjectSettings.SETTING_GENERIC_VALUE_FALSE));
-        if (newXMLCommand && FileUtil.isExistFile(path)) {
-            FileUtil.copyFile(path, FileUtil.getExternalStorageDir().concat("/.sketchware/temp/commands"));
-        }
+            if (!cacheHit) {
+                CommandBlock.clearTempCommands();
+            }
 
-        var viewBindingBuilder = new ViewBindingBuilder(List.of(), new File("."), packageName);
+            int threadCount = 0;
+            if (!cacheHit) {
+                // Cache miss: generate code and save to cache
+                codegenCacheDir.mkdirs();
 
-        // Generate layouts unless a custom version of it exists already
-        // at /Internal storage/.sketchware/data/<sc_id>/files/resource/layout/
-        ArrayList<ProjectFileBean> regularLayouts = projectFileManager.getActivities();
-        for (ProjectFileBean layout : regularLayouts) {
-            String xmlName = layout.getXmlName();
-            LayoutGenerator layoutGenerator = new LayoutGenerator(buildConfig, layout);
-            layoutGenerator.setViews(ProjectDataStore.getSortedRootViews(projectDataManager.getViews(xmlName)), projectDataManager.getFabView(xmlName));
-            var ogFile = new File(layoutDir + xmlName);
-            if (!layoutFiles.contains(ogFile)) {
-                srcCodeBeans.add(new SrcCodeBean(xmlName, CommandBlock.applyCommands(xmlName, layoutGenerator.toXmlString())));
+                // Pre-build shared objects once for all Activities (optimization)
+                ManageLocalLibrary sharedMll = new ManageLocalLibrary(projectDataManager.projectId);
+                HashMap<String, Map<String, Object>> sharedExtraBlocksMap = ActivityCodeGenerator.buildExtraBlocksMap(getExtraBlockData());
+                Material3LibraryManager sharedMaterialLibraryManager = new Material3LibraryManager(projectDataManager.projectId);
 
-                if (isViewBindingEnable()) {
-                    var privFile = new File(context.getCacheDir(), xmlName);
-                    FileUtil.writeFile(privFile.getAbsolutePath(), CommandBlock.applyCommands(xmlName, layoutGenerator.toXmlString()));
-                    var code = viewBindingBuilder.generateBindingForLayout(privFile);
-                    srcCodeBeans.add(new SrcCodeBean(
-                            ViewBindingBuilder.generateFileNameForLayout(xmlName.replace(".xml", "")) + ".java",
-                            CommandBlock.applyCommands(xmlName, code)
-                    ));
+                // Pre-warm BlockLoader caches to avoid race conditions during parallel execution
+                BlockLoader.getBlockFromProject(sc_id, "");
+
+                threadCount = activitiesToGenerate.isEmpty() ? 0
+                        : Math.min(Runtime.getRuntime().availableProcessors(), activitiesToGenerate.size());
+                if (threadCount <= 1) {
+                    for (ProjectFileBean activity : activitiesToGenerate) {
+                        String phase1Code = new ActivityCodeGenerator(buildConfig, activity, projectDataManager,
+                                sharedMll, projectSettings, sharedExtraBlocksMap, sharedMaterialLibraryManager)
+                                .generateCode(isAndroidStudioExport, sc_id, false);
+                        srcCodeBeans.add(new SrcCodeBean(activity.getJavaName(),
+                                ActivityCodeGenerator.applyCommands(phase1Code)));
+                        FileUtil.writeFile(new File(codegenCacheDir, activity.getJavaName() + ".code").getAbsolutePath(), phase1Code);
+                    }
+                } else {
+                    ExecutorService executor = Executors.newFixedThreadPool(threadCount);
+                    try {
+                        List<Future<Pair<String, String>>> futures = new ArrayList<>();
+
+                        for (ProjectFileBean activity : activitiesToGenerate) {
+                            futures.add(executor.submit(() -> {
+                                String rawCode = new ActivityCodeGenerator(buildConfig, activity, projectDataManager,
+                                        sharedMll, projectSettings, sharedExtraBlocksMap, sharedMaterialLibraryManager)
+                                        .generateCode(isAndroidStudioExport, sc_id, false);
+                                return new Pair<>(activity.getJavaName(), rawCode);
+                            }));
+                        }
+
+                        // Phase 2: Apply command blocks serially (CommandBlock is not thread-safe)
+                        for (int i = 0; i < futures.size(); i++) {
+                            try {
+                                Pair<String, String> result = futures.get(i).get();
+                                srcCodeBeans.add(new SrcCodeBean(result.first,
+                                        ActivityCodeGenerator.applyCommands(result.second)));
+                                FileUtil.writeFile(new File(codegenCacheDir, result.first + ".code").getAbsolutePath(), result.second);
+                            } catch (Exception e) {
+                                Log.e("ProjectFilePaths", "Parallel code generation failed, falling back to serial", e);
+                                ProjectFileBean activity = activitiesToGenerate.get(i);
+                                String phase1Code = new ActivityCodeGenerator(buildConfig, activity, projectDataManager,
+                                        sharedMll, projectSettings, sharedExtraBlocksMap, sharedMaterialLibraryManager)
+                                        .generateCode(isAndroidStudioExport, sc_id, false);
+                                srcCodeBeans.add(new SrcCodeBean(activity.getJavaName(),
+                                        ActivityCodeGenerator.applyCommands(phase1Code)));
+                                FileUtil.writeFile(new File(codegenCacheDir, activity.getJavaName() + ".code").getAbsolutePath(), phase1Code);
+                            }
+                        }
+                    } finally {
+                        executor.shutdownNow();
+                    }
+                }
+                // Save cache key after successful generation
+                FileUtil.writeFile(cacheKeyFile.getAbsolutePath(), cacheKey);
+            }
+
+            var path = SketchwarePaths.getDataPath(sc_id) + "/command";
+            var newXMLCommand = Boolean.parseBoolean(projectSettings.getValue(ProjectSettings.SETTING_NEW_XML_COMMAND, ProjectSettings.SETTING_GENERIC_VALUE_FALSE));
+            if (newXMLCommand && FileUtil.isExistFile(path)) {
+                FileUtil.copyFile(path, SketchwarePaths.getTempCommandsPath());
+            }
+
+            var viewBindingBuilder = new ViewBindingBuilder(List.of(), new File("."), packageName);
+
+            // Generate layouts unless a custom version of it exists already
+            // at /Internal storage/.sketchware/data/<sc_id>/files/resource/layout/
+            ArrayList<ProjectFileBean> regularLayouts = projectFileManager.getActivities();
+            for (ProjectFileBean layout : regularLayouts) {
+                String xmlName = layout.getXmlName();
+                LayoutGenerator layoutGenerator = new LayoutGenerator(buildConfig, layout);
+                layoutGenerator.setViews(ProjectDataStore.getSortedRootViews(projectDataManager.getViews(xmlName)), projectDataManager.getFabView(xmlName));
+                var ogFile = new File(layoutDir + xmlName);
+                if (!layoutFiles.contains(ogFile)) {
+                    srcCodeBeans.add(new SrcCodeBean(xmlName, CommandBlock.applyCommands(xmlName, layoutGenerator.toXmlString())));
+
+                    if (isViewBindingEnable()) {
+                        var privFile = new File(context.getCacheDir(), xmlName);
+                        FileUtil.writeFile(privFile.getAbsolutePath(), CommandBlock.applyCommands(xmlName, layoutGenerator.toXmlString()));
+                        var code = viewBindingBuilder.generateBindingForLayout(privFile);
+                        srcCodeBeans.add(new SrcCodeBean(
+                                ViewBindingBuilder.generateFileNameForLayout(xmlName.replace(".xml", "")) + ".java",
+                                code
+                        ));
+                    }
                 }
             }
-        }
 
-        ArrayList<ProjectFileBean> customViewFiles = projectFileManager.getCustomViews();
-        for (ProjectFileBean customViewFile : customViewFiles) {
-            String xmlName = customViewFile.getXmlName();
-            LayoutGenerator layoutGenerator = new LayoutGenerator(buildConfig, customViewFile);
-            layoutGenerator.setViews(ProjectDataStore.getSortedRootViews(projectDataManager.getViews(xmlName)));
-            var ogFile = new File(layoutDir + xmlName);
-            if (!layoutFiles.contains(ogFile)) {
-                srcCodeBeans.add(new SrcCodeBean(xmlName, CommandBlock.applyCommands(xmlName, layoutGenerator.toXmlString())));
+            ArrayList<ProjectFileBean> customViewFiles = projectFileManager.getCustomViews();
+            for (ProjectFileBean customViewFile : customViewFiles) {
+                String xmlName = customViewFile.getXmlName();
+                LayoutGenerator layoutGenerator = new LayoutGenerator(buildConfig, customViewFile);
+                layoutGenerator.setViews(ProjectDataStore.getSortedRootViews(projectDataManager.getViews(xmlName)));
+                var ogFile = new File(layoutDir + xmlName);
+                if (!layoutFiles.contains(ogFile)) {
+                    srcCodeBeans.add(new SrcCodeBean(xmlName, CommandBlock.applyCommands(xmlName, layoutGenerator.toXmlString())));
 
-                if (isViewBindingEnable()) {
-                    var privFile = new File(context.getCacheDir(), xmlName);
-                    FileUtil.writeFile(privFile.getAbsolutePath(), CommandBlock.applyCommands(xmlName, layoutGenerator.toXmlString()));
-                    var code = viewBindingBuilder.generateBindingForLayout(privFile);
-                    srcCodeBeans.add(new SrcCodeBean(
-                            ViewBindingBuilder.generateFileNameForLayout(xmlName.replace(".xml", "")) + ".java",
-                            CommandBlock.applyCommands(xmlName, code)
-                    ));
+                    if (isViewBindingEnable()) {
+                        var privFile = new File(context.getCacheDir(), xmlName);
+                        FileUtil.writeFile(privFile.getAbsolutePath(), CommandBlock.applyCommands(xmlName, layoutGenerator.toXmlString()));
+                        var code = viewBindingBuilder.generateBindingForLayout(privFile);
+                        srcCodeBeans.add(new SrcCodeBean(
+                                ViewBindingBuilder.generateFileNameForLayout(xmlName.replace(".xml", "")) + ".java",
+                                code
+                        ));
+                    }
                 }
             }
-        }
 
-        ManifestGenerator manifestGenerator = new ManifestGenerator(buildConfig, projectFileManager.getActivities(), builtInLibraryManager);
-        manifestGenerator.setProjectFilePaths(this);
+            ManifestGenerator manifestGenerator = new ManifestGenerator(buildConfig, projectFileManager.getActivities(), builtInLibraryManager);
+            manifestGenerator.setProjectFilePaths(this);
 
-        // Make generated classes viewable
-        if (!javaFiles.contains(new File(javaDir + "SketchwareUtil.java"))) {
-            srcCodeBeans.add(new SrcCodeBean("SketchwareUtil.java",
-                    ComponentTemplates.getSketchwareUtilCode(packageName, material3LibraryManager.isMaterial3Enabled())));
-        }
-
-        if (!javaFiles.contains(new File(javaDir + "FileUtil.java"))) {
-            srcCodeBeans.add(new SrcCodeBean("FileUtil.java",
-                    ComponentTemplates.getFileUtilCode(packageName)));
-        }
-
-        if (!javaFiles.contains(new File(javaDir + "RequestNetwork.java")) && buildConfig.isHttp3Used) {
-            srcCodeBeans.add(new SrcCodeBean("RequestNetwork.java",
-                    ComponentCodeGenerator.formatCode(ComponentTemplates.getRequestNetworkCode(packageName), false)));
-        }
-
-        if (!FileUtil.isExistFile(javaDir + "RequestNetworkController.java") && buildConfig.isHttp3Used) {
-            srcCodeBeans.add(new SrcCodeBean("RequestNetworkController.java",
-                    ComponentCodeGenerator.formatCode(ComponentTemplates.getRequestNetworkControllerCode(packageName), false)));
-        }
-
-        if (!javaFiles.contains(new File(javaDir + "BluetoothConnect.java")) && buildConfig.hasPermission(BuildConfig.PERMISSION_BLUETOOTH)) {
-            srcCodeBeans.add(new SrcCodeBean("BluetoothConnect.java",
-                    ComponentCodeGenerator.formatCode(ComponentTemplates.getBluetoothConnectCode(packageName), false)));
-        }
-
-        if (!javaFiles.contains(new File(javaDir + "BluetoothController.java")) && buildConfig.hasPermission(BuildConfig.PERMISSION_BLUETOOTH)) {
-            srcCodeBeans.add(new SrcCodeBean("BluetoothController.java",
-                    ComponentCodeGenerator.formatCode(ComponentTemplates.getBluetoothControllerCode(packageName), false)));
-        }
-
-        if (buildConfig.isMapUsed) {
-            if (!javaFiles.contains(new File(javaDir + "GoogleMapController.java")) && buildConfig.isMapUsed) {
-                srcCodeBeans.add(new SrcCodeBean("GoogleMapController.java",
-                        ComponentCodeGenerator.formatCode(ComponentTemplates.getGoogleMapControllerCode(packageName), false)));
+            // Make generated classes viewable
+            if (!javaFiles.contains(new File(javaDir + "SketchwareUtil.java"))) {
+                srcCodeBeans.add(new SrcCodeBean("SketchwareUtil.java",
+                        ComponentTemplates.getSketchwareUtilCode(packageName, material3LibraryManager.isMaterial3Enabled())));
             }
-        }
 
-        srcCodeBeans.add(new SrcCodeBean("AndroidManifest.xml", CommandBlock.applyCommands("AndroidManifest.xml", manifestGenerator.generateManifest())));
-        srcCodeBeans.add(new SrcCodeBean("styles.xml", getXMLStyle()));
-        srcCodeBeans.add(new SrcCodeBean("colors.xml", getXMLColor()));
-        srcCodeBeans.add(new SrcCodeBean("strings.xml", getXMLString()));
-        CommandBlock.clearTempCommands();
-        return srcCodeBeans;
+            if (!javaFiles.contains(new File(javaDir + "FileUtil.java"))) {
+                srcCodeBeans.add(new SrcCodeBean("FileUtil.java",
+                        ComponentTemplates.getFileUtilCode(packageName)));
+            }
+
+            if (!javaFiles.contains(new File(javaDir + "RequestNetwork.java")) && buildConfig.isHttp3Used) {
+                srcCodeBeans.add(new SrcCodeBean("RequestNetwork.java",
+                        ComponentCodeGenerator.formatCode(ComponentTemplates.getRequestNetworkCode(packageName), false)));
+            }
+
+            if (!FileUtil.isExistFile(javaDir + "RequestNetworkController.java") && buildConfig.isHttp3Used) {
+                srcCodeBeans.add(new SrcCodeBean("RequestNetworkController.java",
+                        ComponentCodeGenerator.formatCode(ComponentTemplates.getRequestNetworkControllerCode(packageName), false)));
+            }
+
+            if (!javaFiles.contains(new File(javaDir + "BluetoothConnect.java")) && buildConfig.hasPermission(BuildConfig.PERMISSION_BLUETOOTH)) {
+                srcCodeBeans.add(new SrcCodeBean("BluetoothConnect.java",
+                        ComponentCodeGenerator.formatCode(ComponentTemplates.getBluetoothConnectCode(packageName), false)));
+            }
+
+            if (!javaFiles.contains(new File(javaDir + "BluetoothController.java")) && buildConfig.hasPermission(BuildConfig.PERMISSION_BLUETOOTH)) {
+                srcCodeBeans.add(new SrcCodeBean("BluetoothController.java",
+                        ComponentCodeGenerator.formatCode(ComponentTemplates.getBluetoothControllerCode(packageName), false)));
+            }
+
+            if (buildConfig.isMapUsed) {
+                if (!javaFiles.contains(new File(javaDir + "GoogleMapController.java")) && buildConfig.isMapUsed) {
+                    srcCodeBeans.add(new SrcCodeBean("GoogleMapController.java",
+                            ComponentCodeGenerator.formatCode(ComponentTemplates.getGoogleMapControllerCode(packageName), false)));
+                }
+            }
+
+            srcCodeBeans.add(new SrcCodeBean("AndroidManifest.xml", CommandBlock.applyCommands("AndroidManifest.xml", manifestGenerator.generateManifest())));
+            srcCodeBeans.add(new SrcCodeBean("styles.xml", getXMLStyle()));
+            srcCodeBeans.add(new SrcCodeBean("colors.xml", getXMLColor()));
+            srcCodeBeans.add(new SrcCodeBean("strings.xml", getXMLString()));
+            return srcCodeBeans;
+        } finally {
+            CommandBlock.clearTempCommands();
+        }
     }
 
     private boolean isViewBindingEnable() {
@@ -1008,59 +1020,73 @@ public class ProjectFilePaths {
     public String getFileSrc(String filename, ProjectFileManager projectFileManager, ProjectDataStore projectDataManager, LibraryManager projectLibraryManager) {
         initializeMetadata(projectLibraryManager, projectFileManager, projectDataManager);
         CommandBlock.clearTempCommands();
-        boolean isJavaFile = filename.endsWith(".java");
-        boolean isXmlFile = filename.endsWith(".xml");
-        boolean isManifestFile = filename.equals("AndroidManifest.xml");
-        ArrayList<ProjectFileBean> files = new ArrayList<>(projectFileManager.getActivities());
-        files.addAll(new ArrayList<>(projectFileManager.getCustomViews()));
-        if (isXmlFile) {
-            var path = SketchwarePaths.getDataPath(sc_id) + "/command";
-            var newXMLCommand = Boolean.parseBoolean(projectSettings.getValue(ProjectSettings.SETTING_NEW_XML_COMMAND, ProjectSettings.SETTING_GENERIC_VALUE_FALSE));
-            if (newXMLCommand && FileUtil.isExistFile(path)) {
-                FileUtil.copyFile(path, FileUtil.getExternalStorageDir().concat("/.sketchware/temp/commands"));
-            } else {
+        try {
+            boolean isJavaFile = filename.endsWith(".java");
+            boolean isXmlFile = filename.endsWith(".xml");
+            boolean isManifestFile = filename.equals("AndroidManifest.xml");
+            ArrayList<ProjectFileBean> files = new ArrayList<>(projectFileManager.getActivities());
+            files.addAll(new ArrayList<>(projectFileManager.getCustomViews()));
+            if (isXmlFile) {
                 /*
                  Generating every java file is necessary to make command blocks for xml work
                  */
-                for (ProjectFileBean file : files) {
-                    CommandBlock.collectXmlCommandBlocks(new ActivityCodeGenerator(buildConfig, file, projectDataManager).generateCode(isAndroidStudioExport, sc_id));
+                prepareXmlCommands(projectFileManager, projectDataManager);
+            }
+
+            switch (filename) {
+                case "strings.xml" -> {
+                    return getXMLString();
+                }
+                case "colors.xml" -> {
+                    return getXMLColor();
+                }
+                case "styles.xml" -> {
+                    return getXMLStyle();
+                }
+            }
+
+            if (isManifestFile) {
+                ProjectBuilder builder = new ProjectBuilder(SketchApplication.getAppContext(), this);
+                builder.buildBuiltInLibraryInformation();
+                ManifestGenerator manifestGenerator = new ManifestGenerator(buildConfig, projectFileManager.getActivities(), builder.getBuiltInLibraryManager());
+                manifestGenerator.setProjectFilePaths(this);
+                return CommandBlock.applyCommands("AndroidManifest.xml", manifestGenerator.generateManifest());
+            }
+
+            for (ProjectFileBean file : files) {
+                if (filename.equals(isJavaFile ? file.getJavaName() : file.getXmlName())) {
+                    if (isJavaFile) {
+                        return new ActivityCodeGenerator(buildConfig, file, projectDataManager).generateCode(isAndroidStudioExport, sc_id);
+                    } else if (isXmlFile) {
+                        LayoutGenerator xmlGenerator = new LayoutGenerator(buildConfig, file);
+                        xmlGenerator.setViews(ProjectDataStore.getSortedRootViews(projectDataManager.getViews(filename)), projectDataManager.getFabView(filename));
+                        return CommandBlock.applyCommands(filename, xmlGenerator.toXmlString());
+                    }
+                }
+            }
+
+            return "";
+        } finally {
+            CommandBlock.clearTempCommands();
+        }
+    }
+
+    private void prepareXmlCommands(ProjectFileManager projectFileManager, ProjectDataStore projectDataManager) {
+        ArrayList<ProjectFileBean> files = new ArrayList<>(projectFileManager.getActivities());
+        files.addAll(new ArrayList<>(projectFileManager.getCustomViews()));
+        String path = SketchwarePaths.getDataPath(sc_id) + "/command";
+        boolean newXMLCommand = Boolean.parseBoolean(projectSettings.getValue(ProjectSettings.SETTING_NEW_XML_COMMAND, ProjectSettings.SETTING_GENERIC_VALUE_FALSE));
+        if (newXMLCommand && FileUtil.isExistFile(path)) {
+            FileUtil.copyFile(path, SketchwarePaths.getTempCommandsPath());
+        } else {
+            for (ProjectFileBean file : files) {
+                try {
+                    CommandBlock.collectXmlCommandBlocks(new ActivityCodeGenerator(buildConfig, file, projectDataManager).generateCode(isAndroidStudioExport, sc_id, false));
+                } catch (RuntimeException e) {
+                    Log.e("ProjectFilePaths", "Failed to prepare XML commands", e);
                 }
             }
         }
-
-        switch (filename) {
-            case "strings.xml" -> {
-                return getXMLString();
-            }
-            case "colors.xml" -> {
-                return getXMLColor();
-            }
-            case "styles.xml" -> {
-                return getXMLStyle();
-            }
-        }
-
-        if (isManifestFile) {
-            ProjectBuilder builder = new ProjectBuilder(SketchApplication.getAppContext(), this);
-            builder.buildBuiltInLibraryInformation();
-            ManifestGenerator manifestGenerator = new ManifestGenerator(buildConfig, projectFileManager.getActivities(), builder.getBuiltInLibraryManager());
-            manifestGenerator.setProjectFilePaths(this);
-            return CommandBlock.applyCommands("AndroidManifest.xml", manifestGenerator.generateManifest());
-        }
-
-        for (ProjectFileBean file : files) {
-            if (filename.equals(isJavaFile ? file.getJavaName() : file.getXmlName())) {
-                if (isJavaFile) {
-                    return new ActivityCodeGenerator(buildConfig, file, projectDataManager).generateCode(isAndroidStudioExport, sc_id);
-                } else if (isXmlFile) {
-                    LayoutGenerator xmlGenerator = new LayoutGenerator(buildConfig, file);
-                    xmlGenerator.setViews(ProjectDataStore.getSortedRootViews(projectDataManager.getViews(filename)), projectDataManager.getFabView(filename));
-                    return CommandBlock.applyCommands(filename, xmlGenerator.toXmlString());
-                }
-            }
-        }
-
-        return "";
     }
 
     public String getXMLString() {
@@ -1070,7 +1096,7 @@ public class ProjectFilePaths {
         }
         XmlBuilderHelper stringsFileBuilder = new XmlBuilderHelper();
         stringsFileBuilder.addNonTranslatableString("app_name", applicationName);
-        return CommandBlock.applyCommands("strings.xml", stringsFileBuilder.toCode());
+        return applyStoredXmlCommandsIfNeeded("strings.xml", stringsFileBuilder.toCode());
     }
 
     public String getXMLColor() {
@@ -1084,7 +1110,7 @@ public class ProjectFilePaths {
         colorsFileBuilder.addColor("colorAccent", String.format("#%06X", colorAccent & 0xffffff));
         colorsFileBuilder.addColor("colorControlHighlight", String.format("#%06X", colorControlHighlight & 0xffffff));
         colorsFileBuilder.addColor("colorControlNormal", String.format("#%06X", colorControlNormal & 0xffffff));
-        return CommandBlock.applyCommands("colors.xml", colorsFileBuilder.toCode());
+        return applyStoredXmlCommandsIfNeeded("colors.xml", colorsFileBuilder.toCode());
     }
 
     public String getXMLStyle() {
@@ -1106,7 +1132,7 @@ public class ProjectFilePaths {
             stylesFileBuilder.addStyle("AppTheme.DebugActivity", "AppTheme");
             stylesFileBuilder.addItemToStyle("AppTheme.DebugActivity", "windowActionBar", "true");
             stylesFileBuilder.addItemToStyle("AppTheme.DebugActivity", "windowNoTitle", "false");
-            return CommandBlock.applyCommands("styles.xml", stylesFileBuilder.toCode());
+            return applyStoredXmlCommandsIfNeeded("styles.xml", stylesFileBuilder.toCode());
         } else if (buildConfig.isAppCompatEnabled) {
             boolean useNewMaterialComponentsTheme = projectSettings.getValue(ProjectSettings.SETTING_ENABLE_BRIDGELESS_THEMES,
                     BuildSettings.SETTING_GENERIC_VALUE_FALSE).equals(BuildSettings.SETTING_GENERIC_VALUE_TRUE);
@@ -1132,7 +1158,7 @@ public class ProjectFilePaths {
             stylesFileBuilder.addItemToStyle("AppTheme.DebugActivity", "actionBarTheme", "@style/Widget.MaterialComponents.ActionBar.Primary");
             stylesFileBuilder.addItemToStyle("AppTheme.DebugActivity", "windowActionBar", "true");
             stylesFileBuilder.addItemToStyle("AppTheme.DebugActivity", "windowNoTitle", "false");
-            return CommandBlock.applyCommands("styles.xml", stylesFileBuilder.toCode());
+            return applyStoredXmlCommandsIfNeeded("styles.xml", stylesFileBuilder.toCode());
         } else {
             XmlBuilderHelper stylesFileBuilder = new XmlBuilderHelper();
             stylesFileBuilder.addStyle("AppTheme", "@android:style/Theme.Material.Light.DarkActionBar");
@@ -1156,7 +1182,28 @@ public class ProjectFilePaths {
             stylesFileBuilder.addStyle("NoStatusBar", "AppTheme");
             stylesFileBuilder.addItemToStyle("NoStatusBar", "android:windowFullscreen", "true");
             stylesFileBuilder.addStyle("AppTheme.DebugActivity", "AppTheme");
-            return CommandBlock.applyCommands("styles.xml", stylesFileBuilder.toCode());
+            return applyStoredXmlCommandsIfNeeded("styles.xml", stylesFileBuilder.toCode());
+        }
+    }
+
+    private String applyStoredXmlCommandsIfNeeded(String fileName, String sourceCode) {
+        String tempCommandPath = SketchwarePaths.getTempCommandsPath();
+        if (CommandBlock.hasTempCommands()) {
+            return CommandBlock.applyCommands(fileName, sourceCode);
+        }
+
+        boolean newXMLCommand = Boolean.parseBoolean(projectSettings.getValue(ProjectSettings.SETTING_NEW_XML_COMMAND, ProjectSettings.SETTING_GENERIC_VALUE_FALSE));
+        String storedCommandPath = SketchwarePaths.getDataPath(sc_id) + "/command";
+        if (!newXMLCommand || !FileUtil.isExistFile(storedCommandPath)) {
+            return CommandBlock.applyCommands(fileName, sourceCode);
+        }
+
+        CommandBlock.clearTempCommands();
+        try {
+            FileUtil.copyFile(storedCommandPath, tempCommandPath);
+            return CommandBlock.applyCommands(fileName, sourceCode);
+        } finally {
+            CommandBlock.clearTempCommands();
         }
     }
 
