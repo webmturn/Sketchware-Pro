@@ -30,12 +30,11 @@ public abstract class BaseAsyncTask extends AsyncTask<Void, String, String> {
             }
             doWork();
             return "";
-        } catch (Exception e) {
+        } catch (SketchwareException e) {
             Log.e("BaseAsyncTask", e.getMessage(), e);
-            // the bytecode's lying
-            if (e instanceof SketchwareException) {
-                return e.getMessage();
-            }
+            return e.getMessage();
+        } catch (RuntimeException e) {
+            Log.e("BaseAsyncTask", e.getMessage(), e);
             Context context = getContext();
             if (context != null) {
                 return Helper.getResString(R.string.common_error_an_error_occurred) + "[" + e.getMessage() + "]";

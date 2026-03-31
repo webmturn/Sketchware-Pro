@@ -23,6 +23,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import org.spongycastle.jce.provider.BouncyCastleProvider;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.security.Security;
 import java.util.concurrent.ExecutorService;
@@ -251,7 +252,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
             runOnUiThread(() -> {
                 if (!isFinishing() && !isDestroyed()) initializeAfterExportedSourceViews(exportedFilename);
             });
-        } catch (Exception e) {
+        } catch (IOException | RuntimeException e) {
             runOnUiThread(() -> {
                 if (isFinishing() || isDestroyed()) return;
                 Log.e("ProjectExporter", "While trying to export project's sources: "
@@ -317,7 +318,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
             backgroundExecutor.execute(() -> {
                 try {
                     exportSrc();
-                } catch (Exception e) {
+                } catch (RuntimeException e) {
                     Log.e("ExportProjectActivity", "Failed to export source", e);
                 }
             });

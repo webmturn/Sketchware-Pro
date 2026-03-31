@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.security.GeneralSecurityException;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -72,12 +73,12 @@ public class EncryptedFileUtil {
    * @return the decoded string, or empty string if data is null
    * @throws Exception if both decryption and plaintext fallback fail
    */
-  public String decryptToString(byte[] data) throws Exception {
+  public String decryptToString(byte[] data) {
     if (data == null) return "";
     // Auto-detect: try decryption first, fall back to plaintext
     try {
       return new String(decrypt(data), StandardCharsets.UTF_8);
-    } catch (Exception e) {
+    } catch (GeneralSecurityException e) {
       // Decryption failed — data is likely plaintext
       return new String(data, StandardCharsets.UTF_8);
     }
@@ -286,7 +287,7 @@ public class EncryptedFileUtil {
    * @return the decrypted plaintext bytes
    * @throws Exception if decryption fails
    */
-  public byte[] decrypt(byte[] data) throws Exception {
+  public byte[] decrypt(byte[] data) throws GeneralSecurityException {
     Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
     byte[] bytes = "sketchwaresecure".getBytes();
     cipher.init(2, new SecretKeySpec(bytes, "AES"), new IvParameterSpec(bytes));
@@ -319,7 +320,7 @@ public class EncryptedFileUtil {
    * @return the ciphertext bytes
    * @throws Exception if encryption fails
    */
-  public byte[] encrypt(byte[] data) throws Exception {
+  public byte[] encrypt(byte[] data) throws GeneralSecurityException {
     Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
     byte[] bytes = "sketchwaresecure".getBytes();
     cipher.init(1, new SecretKeySpec(bytes, "AES"), new IvParameterSpec(bytes));
@@ -334,12 +335,12 @@ public class EncryptedFileUtil {
    * @return encrypted bytes, or plaintext UTF-8 bytes if encryption is disabled
    * @throws Exception if encryption fails
    */
-  public byte[] encryptString(String value) throws Exception {
+  public byte[] encryptString(String value) throws GeneralSecurityException {
     if (!ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_PROJECT_DATA_ENCRYPTION)) {
       // Encryption disabled — write as plaintext UTF-8 bytes
       return value.getBytes(StandardCharsets.UTF_8);
     }
-    return encrypt(value.getBytes("UTF-8"));
+    return encrypt(value.getBytes(StandardCharsets.UTF_8));
   }
   
   public boolean exists(String value) {

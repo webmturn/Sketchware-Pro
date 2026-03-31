@@ -513,7 +513,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                     FileUtil.deleteFile(projectFilePaths.projectMyscPath);
                     updateBottomMenu();
                     runOnUiThread(() -> SketchwareUtil.toast(Helper.getResString(R.string.design_toast_clean_temp_done)));
-                } catch (Exception e) {
+                } catch (RuntimeException e) {
                     Log.e("DesignActivity", "Failed to clean temporary files", e);
                 }
             });
@@ -697,7 +697,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         try {
             ProjectLoader projectLoader = new ProjectLoader(this, savedInstanceState);
             projectLoader.execute();
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             if (crashlytics != null) {
                 crashlytics.log("ProjectLoader failed");
                 crashlytics.recordException(e);
@@ -758,7 +758,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 v.dismiss();
                 try {
                     saveChangesAndCloseProject();
-                } catch (Exception e) {
+                } catch (RuntimeException e) {
                     if (crashlytics != null) crashlytics.recordException(e);
                     dismissLoadingDialog();
                 }
@@ -771,7 +771,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                     showLoadingDialog();
                     DiscardChangesProjectCloser discardChangesProjectCloser = new DiscardChangesProjectCloser(this);
                     discardChangesProjectCloser.execute();
-                } catch (Exception e) {
+                } catch (RuntimeException e) {
                     if (crashlytics != null) crashlytics.recordException(e);
                     dismissLoadingDialog();
                 }
@@ -862,7 +862,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                     var scheme = filename.endsWith(".xml") ? CodeViewerActivity.SCHEME_XML : CodeViewerActivity.SCHEME_JAVA;
                     launchActivity(CodeViewerActivity.class, null, new Pair<>("code", code), new Pair<>("sc_id", sc_id), new Pair<>("scheme", scheme));
                 });
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 Log.e("DesignActivity", "Failed to generate source code", e);
                 runOnUiThread(() -> { dismissLoadingDialog(); SketchwareUtil.toast(Helper.getResString(R.string.design_error_generate_source)); });
             }
@@ -919,7 +919,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                     dismissLoadingDialog();
                     launchActivity(ViewCodeEditorActivity.class, openViewCodeEditor, new Pair<>("title", filename), new Pair<>("content", content));
                 });
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 Log.e("DesignActivity", "Failed to generate view code", e);
                 runOnUiThread(() -> { dismissLoadingDialog(); SketchwareUtil.toast(Helper.getResString(R.string.design_error_generate_code)); });
             }
@@ -1103,16 +1103,17 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         protected static boolean saveProjectDataToFiles(String sc_id) {
             ProjectDataManager.getResourceManager(sc_id).cleanupAllResources();
             ExecutorService pool = Executors.newFixedThreadPool(4);
+            CompletableFuture<Boolean> fileFuture = CompletableFuture.supplyAsync(
+                () -> ProjectDataManager.getFileManager(sc_id).saveToData(), pool);
             CompletableFuture<Boolean> dataFuture = CompletableFuture.supplyAsync(
                 () -> ProjectDataManager.getProjectDataManager(sc_id).saveAllData(), pool);
-            CompletableFuture.allOf(
-                CompletableFuture.runAsync(() -> ProjectDataManager.getFileManager(sc_id).saveToData(), pool),
-                dataFuture,
-                CompletableFuture.runAsync(() -> ProjectDataManager.getResourceManager(sc_id).saveToData(), pool),
-                CompletableFuture.runAsync(() -> ProjectDataManager.getLibraryManager(sc_id).saveToData(), pool)
-            ).join();
+            CompletableFuture<Boolean> resourceFuture = CompletableFuture.supplyAsync(
+                () -> ProjectDataManager.getResourceManager(sc_id).saveToData(), pool);
+            CompletableFuture<Boolean> libraryFuture = CompletableFuture.supplyAsync(
+                () -> ProjectDataManager.getLibraryManager(sc_id).saveToData(), pool);
+            CompletableFuture.allOf(fileFuture, dataFuture, resourceFuture, libraryFuture).join();
             pool.shutdown();
-            return dataFuture.join();
+            return fileFuture.join() && dataFuture.join() && resourceFuture.join() && libraryFuture.join();
         }
     }
 
@@ -1528,7 +1529,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                         rm.restoreFontsFromTemp();
                     }
                     ProjectDataManager.discardAll();
-                } catch (Exception e) {
+                } catch (RuntimeException e) {
                     if (activity.crashlytics != null) {
                         activity.crashlytics.log("DiscardChangesProjectCloser cleanup failed");
                         activity.crashlytics.recordException(e);

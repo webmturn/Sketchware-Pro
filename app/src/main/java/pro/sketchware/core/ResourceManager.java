@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
@@ -74,8 +75,44 @@ public class ResourceManager {
     cleanupUnusedSounds();
     cleanupUnusedFonts();
   }
+
+  private String decryptFileToString(String filePath) throws IOException {
+    byte[] fileBytes = fileUtil.readFileBytes(filePath);
+    if (fileBytes == null && new File(filePath).length() > 0L)
+      throw new IOException("Failed to read resource data file: " + filePath);
+    return fileUtil.decryptToString(fileBytes);
+  }
+
+  private byte[] encryptStringForStorage(String content, String filePath) throws IOException {
+    try {
+      return fileUtil.encryptString(content);
+    } catch (GeneralSecurityException e) {
+      throw new IOException("Failed to encrypt resource data file: " + filePath, e);
+    }
+  }
+
+  private void loadFromPath(String resourcePath, String sourceName) {
+    try (BufferedReader bufferedReader = new BufferedReader(new StringReader(decryptFileToString(resourcePath)))) {
+      parseResourceData(bufferedReader);
+    } catch (IOException | RuntimeException e) {
+      Log.w("ResourceManager", "Failed to load " + sourceName + " for project " + projectId + " from " + resourcePath, e);
+    }
+  }
   
   public void parseResourceData(BufferedReader reader) throws IOException {
+    ArrayList<ProjectResourceBean> parsedImages = new ArrayList<>();
+    ArrayList<ProjectResourceBean> parsedSounds = new ArrayList<>();
+    ArrayList<ProjectResourceBean> parsedFonts = new ArrayList<>();
+    parseResourceData(reader, parsedImages, parsedSounds, parsedFonts);
+    images = parsedImages;
+    sounds = parsedSounds;
+    fonts = parsedFonts;
+  }
+
+  private void parseResourceData(BufferedReader reader,
+      ArrayList<ProjectResourceBean> targetImages,
+      ArrayList<ProjectResourceBean> targetSounds,
+      ArrayList<ProjectResourceBean> targetFonts) throws IOException {
     StringBuilder contentBuffer = new StringBuilder();
     String sectionName = "";
     while (true) {
@@ -86,7 +123,7 @@ public class ResourceManager {
         if (line.charAt(0) == '@') {
           StringBuilder tempBuffer = contentBuffer;
           if (sectionName.length() > 0) {
-            parseResourceSection(sectionName, contentBuffer.toString());
+            parseResourceSection(sectionName, contentBuffer.toString(), targetImages, targetSounds, targetFonts);
             tempBuffer = new StringBuilder();
           } 
           sectionName = line.substring(1);
@@ -98,7 +135,7 @@ public class ResourceManager {
         continue;
       } 
       if (sectionName.length() > 0)
-        parseResourceSection(sectionName, contentBuffer.toString()); 
+        parseResourceSection(sectionName, contentBuffer.toString(), targetImages, targetSounds, targetFonts);
       return;
     } 
   }
@@ -114,7 +151,7 @@ public class ResourceManager {
         String destPath = destDir + File.separator + projectResourceBean.resFullName.toLowerCase(Locale.ROOT);
         try {
           fileUtil.copyFile(sourcePath, destPath);
-        } catch (Exception e) {
+        } catch (IOException e) {
           Log.w("ResourceManager", "Failed to copy font: " + projectResourceBean.resFullName, e);
         } 
       } 
@@ -122,6 +159,13 @@ public class ResourceManager {
   }
   
   public void parseResourceSection(String key, String value) {
+    parseResourceSection(key, value, images, sounds, fonts);
+  }
+
+  private void parseResourceSection(String key, String value,
+      ArrayList<ProjectResourceBean> targetImages,
+      ArrayList<ProjectResourceBean> targetSounds,
+      ArrayList<ProjectResourceBean> targetFonts) {
     if (value.trim().length() <= 0) return;
     try (BufferedReader reader = new BufferedReader(new StringReader(value))) {
       String line;
@@ -129,14 +173,14 @@ public class ResourceManager {
         if (line.trim().length() <= 0 || line.trim().charAt(0) != '{') continue;
         ProjectResourceBean bean = gson.fromJson(line, ProjectResourceBean.class);
         if (key.equals("images")) {
-          images.add(bean);
+          targetImages.add(bean);
         } else if (key.equals("sounds")) {
-          sounds.add(bean);
+          targetSounds.add(bean);
         } else if (key.equals("fonts")) {
-          fonts.add(bean);
+          targetFonts.add(bean);
         }
       }
-    } catch (Exception e) {
+    } catch (IOException | RuntimeException e) {
       Log.w("ResourceManager", "Failed to parse resource section: " + key, e);
     }
   }
@@ -193,7 +237,7 @@ public class ResourceManager {
         String destPath = destDir + File.separator + projectResourceBean.resFullName.toLowerCase(Locale.ROOT);
         try {
           fileUtil.copyFile(sourcePath, destPath);
-        } catch (Exception e) {
+        } catch (IOException e) {
           Log.w("ResourceManager", "Failed to copy image: " + projectResourceBean.resFullName, e);
         } 
       } 
@@ -234,7 +278,7 @@ public class ResourceManager {
         String destPath = destDir + File.separator + projectResourceBean.resFullName.toLowerCase(Locale.ROOT);
         try {
           fileUtil.copyFile(sourcePath, destPath);
-        } catch (Exception e) {
+        } catch (IOException e) {
           Log.w("ResourceManager", "Failed to copy sound: " + projectResourceBean.resFullName, e);
         } 
       } 
@@ -291,7 +335,7 @@ public class ResourceManager {
       File destDir = new File(tempPath);
       fileUtil.copyDirectory(sourceDir, destDir);
       fontsBackedUp = true;
-    } catch (Exception e) {
+    } catch (IOException e) {
       Log.w("ResourceManager", "Failed to backup fonts", e);
     } 
   }
@@ -315,7 +359,7 @@ public class ResourceManager {
       File destDir = new File(tempPath);
       fileUtil.copyDirectory(sourceDir, destDir);
       imagesBackedUp = true;
-    } catch (Exception e) {
+    } catch (IOException e) {
       Log.w("ResourceManager", "Failed to backup images", e);
     } 
   }
@@ -337,7 +381,7 @@ public class ResourceManager {
       File destDir = new File(tempPath);
       fileUtil.copyDirectory(sourceDir, destDir);
       soundsBackedUp = true;
-    } catch (Exception e) {
+    } catch (IOException e) {
       Log.w("ResourceManager", "Failed to backup sounds", e);
     } 
   }
@@ -356,13 +400,9 @@ public class ResourceManager {
     String tempImagesPath = SketchwarePaths.getTempImagesPath(projectId);
     String tempSoundsPath = SketchwarePaths.getTempSoundsPath(projectId);
     String tempFontsPath = SketchwarePaths.getTempFontsPath(projectId);
-    try {
-      fileUtil.deleteDirectoryByPath(tempImagesPath);
-      fileUtil.deleteDirectoryByPath(tempSoundsPath);
-      fileUtil.deleteDirectoryByPath(tempFontsPath);
-    } catch (Exception e) {
-      Log.w("ResourceManager", "Failed to delete temp dirs", e);
-    }
+    fileUtil.deleteDirectoryByPath(tempImagesPath);
+    fileUtil.deleteDirectoryByPath(tempSoundsPath);
+    fileUtil.deleteDirectoryByPath(tempFontsPath);
     resetBackupState();
   }
   
@@ -462,32 +502,25 @@ public class ResourceManager {
     return dataBytes == null || !Arrays.equals(backupBytes, dataBytes);
   }
 
+  private boolean hasUsableBackup(String backupPath) {
+    if (!fileUtil.exists(backupPath))
+      return false;
+    byte[] backupBytes = fileUtil.readFileBytes(backupPath);
+    return backupBytes != null && backupBytes.length > 0;
+  }
+
   public void loadFromBackup() {
     String resourcePath = SketchwarePaths.getBackupPath(projectId) + File.separator + "resource";
-    if (!hasDistinctBackup(resourcePath, SketchwarePaths.getDataPath(projectId) + File.separator + "resource"))
+    if (!hasUsableBackup(resourcePath))
       return; 
-    images = new ArrayList<>();
-    sounds = new ArrayList<>();
-    fonts = new ArrayList<>();
-    try (BufferedReader bufferedReader = new BufferedReader(new StringReader(fileUtil.decryptToString(fileUtil.readFileBytes(resourcePath))))) {
-      parseResourceData(bufferedReader);
-    } catch (Exception e) {
-      Log.w("ResourceManager", "Failed to load from backup", e);
-    }
+    loadFromPath(resourcePath, "resource backup");
   }
   
   public void loadFromData() {
-    images = new ArrayList<>();
-    sounds = new ArrayList<>();
-    fonts = new ArrayList<>();
     String dataPath = SketchwarePaths.getDataPath(projectId) + File.separator + "resource";
     if (!fileUtil.exists(dataPath))
       return; 
-    try (BufferedReader bufferedReader = new BufferedReader(new StringReader(fileUtil.decryptToString(fileUtil.readFileBytes(dataPath))))) {
-      parseResourceData(bufferedReader);
-    } catch (Exception e) {
-      Log.w("ResourceManager", "Failed to load from data", e);
-    }
+    loadFromPath(dataPath, "resource data");
   }
   
   public void resetAll() {
@@ -533,7 +566,7 @@ public class ResourceManager {
       fileUtil.deleteDirectory(new File(fontDirPath));
       File destDir = new File(fontDirPath);
       fileUtil.copyDirectory(sourceDir, destDir);
-    } catch (Exception e) {
+    } catch (IOException e) {
       Log.w("ResourceManager", "Failed to restore fonts from temp", e);
     } 
   }
@@ -549,7 +582,7 @@ public class ResourceManager {
       fileUtil.deleteDirectory(new File(imageDirPath));
       File destDir = new File(imageDirPath);
       fileUtil.copyDirectory(sourceDir, destDir);
-    } catch (Exception e) {
+    } catch (IOException e) {
       Log.w("ResourceManager", "Failed to restore images from temp", e);
     } 
   }
@@ -565,33 +598,40 @@ public class ResourceManager {
       fileUtil.deleteDirectory(new File(soundDirPath));
       File destDir = new File(soundDirPath);
       fileUtil.copyDirectory(sourceDir, destDir);
-    } catch (Exception e) {
+    } catch (IOException e) {
       Log.w("ResourceManager", "Failed to restore sounds from temp", e);
     } 
   }
   
-  public void saveToData() {
+  public boolean saveToData() {
     String resourcePath = SketchwarePaths.getDataPath(projectId) + File.separator + "resource";
     StringBuilder contentBuffer = new StringBuilder();
     serializeResources(contentBuffer);
     try {
-      byte[] bytes = fileUtil.encryptString(contentBuffer.toString());
-      fileUtil.writeBytes(resourcePath, bytes);
-    } catch (Exception e) {
-      Log.w("ResourceManager", "Failed to save to data", e);
+      boolean saved = fileUtil.writeBytes(resourcePath, encryptStringForStorage(contentBuffer.toString(), resourcePath));
+      if (!saved)
+        Log.w("ResourceManager", "Failed to write resource data for project " + projectId + " to " + resourcePath);
+      if (saved)
+        deleteBackup();
+      return saved;
+    } catch (IOException | RuntimeException e) {
+      Log.w("ResourceManager", "Failed to save resource data for project " + projectId + " to " + resourcePath, e);
     } 
-    deleteBackup();
+    return false;
   }
   
-  public void saveToBackup() {
+  public boolean saveToBackup() {
     String backupPath = SketchwarePaths.getBackupPath(projectId) + File.separator + "resource";
     StringBuilder contentBuffer = new StringBuilder();
     serializeResources(contentBuffer);
     try {
-      byte[] bytes = fileUtil.encryptString(contentBuffer.toString());
-      fileUtil.writeBytes(backupPath, bytes);
-    } catch (Exception e) {
-      Log.w("ResourceManager", "Failed to save to backup", e);
+      boolean saved = fileUtil.writeBytes(backupPath, encryptStringForStorage(contentBuffer.toString(), backupPath));
+      if (!saved)
+        Log.w("ResourceManager", "Failed to write resource backup for project " + projectId + " to " + backupPath);
+      return saved;
+    } catch (IOException | RuntimeException e) {
+      Log.w("ResourceManager", "Failed to save resource backup for project " + projectId + " to " + backupPath, e);
     } 
+    return false;
   }
 }

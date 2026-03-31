@@ -16,6 +16,7 @@ import com.google.gson.GsonBuilder;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -193,6 +194,37 @@ public class ProjectDataStore {
     String backupDir = SketchwarePaths.getBackupPath(projectId);
     fileUtil.deleteFileByPath(backupDir + File.separator + "view");
     fileUtil.deleteFileByPath(backupDir + File.separator + "logic");
+  }
+
+  private String decryptFileToString(String filePath) throws IOException {
+    byte[] fileBytes = fileUtil.readFileBytes(filePath);
+    if (fileBytes == null && new File(filePath).length() > 0L)
+      throw new IOException("Failed to read project data file: " + filePath);
+    return fileUtil.decryptToString(fileBytes);
+  }
+
+  private byte[] encryptStringForStorage(String content, String filePath) throws IOException {
+    try {
+      return fileUtil.encryptString(content);
+    } catch (GeneralSecurityException e) {
+      throw new IOException("Failed to encrypt project data file: " + filePath, e);
+    }
+  }
+
+  private void loadLogicFromPath(String logicPath, String sourceName) {
+    try (BufferedReader reader = new BufferedReader(new StringReader(decryptFileToString(logicPath)))) {
+      readLogicData(reader);
+    } catch (IOException | RuntimeException e) {
+      Log.e("ProjectDataStore", "Failed to load " + sourceName + " for project " + projectId + " from " + logicPath, e);
+    }
+  }
+
+  private void loadViewFromPath(String viewPath, String sourceName) {
+    try (BufferedReader reader = new BufferedReader(new StringReader(decryptFileToString(viewPath)))) {
+      readViewData(reader);
+    } catch (IOException | RuntimeException e) {
+      Log.e("ProjectDataStore", "Failed to load " + sourceName + " for project " + projectId + " from " + viewPath, e);
+    }
   }
   
   /**
@@ -393,12 +425,12 @@ public class ProjectDataStore {
    * @throws IOException if reading fails
    */
   public void readLogicData(BufferedReader reader) throws IOException {
-    if (variableMap != null) variableMap.clear();
-    if (listMap != null) listMap.clear();
-    if (moreBlockMap != null) moreBlockMap.clear();
-    if (componentMap != null) componentMap.clear();
-    if (eventMap != null) eventMap.clear();
-    if (blockMap != null) blockMap.clear();
+    HashMap<String, ArrayList<Pair<Integer, String>>> parsedVariableMap = new HashMap<>();
+    HashMap<String, ArrayList<Pair<Integer, String>>> parsedListMap = new HashMap<>();
+    HashMap<String, ArrayList<Pair<String, String>>> parsedMoreBlockMap = new HashMap<>();
+    HashMap<String, ArrayList<ComponentBean>> parsedComponentMap = new HashMap<>();
+    HashMap<String, ArrayList<EventBean>> parsedEventMap = new HashMap<>();
+    HashMap<String, HashMap<String, ArrayList<BlockBean>>> parsedBlockMap = new HashMap<>();
     StringBuilder contentBuffer = new StringBuilder();
     String sectionName = "";
     while (true) {
@@ -409,7 +441,9 @@ public class ProjectDataStore {
         if (line.charAt(0) == '@') {
           StringBuilder tempBuffer = contentBuffer;
           if (sectionName.length() > 0) {
-            parseLogicSection(sectionName, contentBuffer.toString());
+            parseLogicSection(sectionName, contentBuffer.toString(), parsedVariableMap,
+                parsedListMap, parsedMoreBlockMap, parsedComponentMap, parsedEventMap,
+                parsedBlockMap);
             tempBuffer = new StringBuilder();
           } 
           sectionName = line.substring(1);
@@ -421,7 +455,15 @@ public class ProjectDataStore {
         continue;
       } 
       if (sectionName.length() > 0 && contentBuffer.length() > 0)
-        parseLogicSection(sectionName, contentBuffer.toString()); 
+        parseLogicSection(sectionName, contentBuffer.toString(), parsedVariableMap,
+            parsedListMap, parsedMoreBlockMap, parsedComponentMap, parsedEventMap,
+            parsedBlockMap);
+      variableMap = parsedVariableMap;
+      listMap = parsedListMap;
+      moreBlockMap = parsedMoreBlockMap;
+      componentMap = parsedComponentMap;
+      eventMap = parsedEventMap;
+      blockMap = parsedBlockMap;
       return;
     } 
   }
@@ -732,9 +774,9 @@ public class ProjectDataStore {
     if (fabMap.containsKey(fileBean.getXmlName()))
       fabMap.remove(fileBean.getXmlName()); 
     removeEventsByTarget(fileBean.getJavaName(), "_fab");
-  }
-  
-  public void removeMapViews(ProjectLibraryBean libraryBean, ProjectFileManager fileManager) {
+}
+
+public void removeMapViews(ProjectLibraryBean libraryBean, ProjectFileManager fileManager) {
     if (libraryBean.useYn.equals("Y"))
       return; 
     for (ProjectFileBean projectFileBean : fileManager.getActivities()) {
@@ -743,11 +785,11 @@ public class ProjectDataStore {
           removeView(projectFileBean, viewBean); 
       } 
     } 
-  }
-  
-  public void readViewData(BufferedReader reader) throws IOException {
-    if (viewMap != null) viewMap.clear();
-    if (fabMap != null) fabMap.clear();
+}
+
+public void readViewData(BufferedReader reader) throws IOException {
+    HashMap<String, ArrayList<ViewBean>> parsedViewMap = new HashMap<>();
+    HashMap<String, ViewBean> parsedFabMap = new HashMap<>();
     StringBuilder contentBuffer = new StringBuilder();
     String sectionName = "";
     while (true) {
@@ -758,7 +800,7 @@ public class ProjectDataStore {
         if (line.charAt(0) == '@') {
           StringBuilder tempBuffer = contentBuffer;
           if (sectionName.length() > 0) {
-            parseViewSection(sectionName, contentBuffer.toString());
+            parseViewSection(sectionName, contentBuffer.toString(), parsedViewMap, parsedFabMap);
             tempBuffer = new StringBuilder();
           } 
           sectionName = line.substring(1);
@@ -770,7 +812,9 @@ public class ProjectDataStore {
         continue;
       } 
       if (sectionName.length() > 0 && contentBuffer.length() > 0)
-        parseViewSection(sectionName, contentBuffer.toString()); 
+        parseViewSection(sectionName, contentBuffer.toString(), parsedViewMap, parsedFabMap);
+      viewMap = parsedViewMap;
+      fabMap = parsedFabMap;
       return;
     } 
   }
@@ -1056,6 +1100,13 @@ public class ProjectDataStore {
     byte[] dataBytes = fileUtil.readFileBytes(dataPath);
     return dataBytes == null || !Arrays.equals(backupBytes, dataBytes);
   }
+
+  private boolean hasUsableBackup(String backupPath) {
+    if (!fileUtil.exists(backupPath))
+      return false;
+    byte[] backupBytes = fileUtil.readFileBytes(backupPath);
+    return backupBytes != null && backupBytes.length > 0;
+  }
   
   public boolean hasComponent(String fileName, int index, String data) {
     ArrayList<ComponentBean> components = componentMap.get(fileName);
@@ -1090,11 +1141,7 @@ public class ProjectDataStore {
     String logicPath = SketchwarePaths.getDataPath(projectId) + File.separator + "logic";
     if (!fileUtil.exists(logicPath))
       return;
-    try (BufferedReader reader = new BufferedReader(new StringReader(fileUtil.decryptToString(fileUtil.readFileBytes(logicPath))))) {
-      readLogicData(reader);
-    } catch (Exception e) {
-      Log.e("ProjectDataStore", "Failed to load logic data", e);
-    }
+    loadLogicFromPath(logicPath, "logic data");
   }
   
   public boolean hasListVariable(String fileName, int index, String data) {
@@ -1136,13 +1183,9 @@ public class ProjectDataStore {
   
   public void loadLogicFromBackup() {
     String logicPath = SketchwarePaths.getBackupPath(projectId) + File.separator + "logic";
-    if (!hasDistinctBackup(logicPath, SketchwarePaths.getDataPath(projectId) + File.separator + "logic"))
+    if (!hasUsableBackup(logicPath))
       return; 
-    try (BufferedReader reader = new BufferedReader(new StringReader(fileUtil.decryptToString(fileUtil.readFileBytes(logicPath))))) {
-      readLogicData(reader);
-    } catch (Exception e) {
-      Log.e("ProjectDataStore", "Failed to load logic backup", e);
-    }
+    loadLogicFromPath(logicPath, "logic backup");
   }
   
   public boolean hasComponentOfType(String fileName, int index) {
@@ -1198,11 +1241,7 @@ public class ProjectDataStore {
     String viewPath = SketchwarePaths.getDataPath(projectId) + File.separator + "view";
     if (!fileUtil.exists(viewPath))
       return;
-    try (BufferedReader reader = new BufferedReader(new StringReader(fileUtil.decryptToString(fileUtil.readFileBytes(viewPath))))) {
-      readViewData(reader);
-    } catch (Exception e) {
-      Log.e("ProjectDataStore", "Failed to load view data", e);
-    }
+    loadViewFromPath(viewPath, "view data");
   }
   
   public void removeComponentsByType(String fileName, int index) {
@@ -1245,13 +1284,9 @@ public class ProjectDataStore {
   
   public void loadViewFromBackup() {
     String viewPath = SketchwarePaths.getBackupPath(projectId) + File.separator + "view";
-    if (!hasDistinctBackup(viewPath, SketchwarePaths.getDataPath(projectId) + File.separator + "view"))
+    if (!hasUsableBackup(viewPath))
       return; 
-    try (BufferedReader reader = new BufferedReader(new StringReader(fileUtil.decryptToString(fileUtil.readFileBytes(viewPath))))) {
-      readViewData(reader);
-    } catch (Exception e) {
-      Log.e("ProjectDataStore", "Failed to load view backup", e);
-    }
+    loadViewFromPath(viewPath, "view backup");
   }
   
   public boolean hasView(String fileName, String data) {
@@ -1275,7 +1310,13 @@ public class ProjectDataStore {
   }
   
   @SuppressWarnings("unchecked")
-  public void parseLogicSection(String fileName, String data) {
+  private void parseLogicSection(String fileName, String data,
+      HashMap<String, ArrayList<Pair<Integer, String>>> targetVariableMap,
+      HashMap<String, ArrayList<Pair<Integer, String>>> targetListMap,
+      HashMap<String, ArrayList<Pair<String, String>>> targetMoreBlockMap,
+      HashMap<String, ArrayList<ComponentBean>> targetComponentMap,
+      HashMap<String, ArrayList<EventBean>> targetEventMap,
+      HashMap<String, HashMap<String, ArrayList<BlockBean>>> targetBlockMap) {
     if (data.length() <= 0)
       return; 
     try {
@@ -1284,32 +1325,37 @@ public class ProjectDataStore {
       ProjectDataParser.DataType dataType = parser.getDataType();
       switch (dataType) {
         case VARIABLE:
-          variableMap.put(parsedFileName, (ArrayList<Pair<Integer, String>>)parser.parseData(data));
+          targetVariableMap.put(parsedFileName, (ArrayList<Pair<Integer, String>>)parser.parseData(data));
           break;
         case LIST:
-          listMap.put(parsedFileName, (ArrayList<Pair<Integer, String>>)parser.parseData(data));
+          targetListMap.put(parsedFileName, (ArrayList<Pair<Integer, String>>)parser.parseData(data));
           break;
         case COMPONENT:
-          componentMap.put(parsedFileName, (ArrayList<ComponentBean>)parser.parseData(data));
+          targetComponentMap.put(parsedFileName, (ArrayList<ComponentBean>)parser.parseData(data));
           break;
         case EVENT:
-          eventMap.put(parsedFileName, (ArrayList<EventBean>)parser.parseData(data));
+          targetEventMap.put(parsedFileName, (ArrayList<EventBean>)parser.parseData(data));
           break;
         case MORE_BLOCK:
-          moreBlockMap.put(parsedFileName, (ArrayList<Pair<String, String>>)parser.parseData(data));
+          targetMoreBlockMap.put(parsedFileName, (ArrayList<Pair<String, String>>)parser.parseData(data));
           break;
         case EVENT_BLOCK:
-          if (!blockMap.containsKey(parsedFileName)) {
-            blockMap.put(parsedFileName, new HashMap<String, ArrayList<BlockBean>>());
+          if (!targetBlockMap.containsKey(parsedFileName)) {
+            targetBlockMap.put(parsedFileName, new HashMap<String, ArrayList<BlockBean>>());
           }
-          blockMap.get(parsedFileName).put(parser.getEventKey(), parser.parseData(data));
+          targetBlockMap.get(parsedFileName).put(parser.getEventKey(), parser.parseData(data));
           break;
         default:
           return;
       }
-    } catch (Exception e) {
-      Log.e("ProjectDataStore", "Failed to parse logic section", e);
+    } catch (RuntimeException e) {
+      Log.e("ProjectDataStore", "Failed to parse logic section '" + fileName + "' for project " + projectId, e);
     } 
+  }
+
+  public void parseLogicSection(String fileName, String data) {
+    parseLogicSection(fileName, data, variableMap, listMap, moreBlockMap, componentMap,
+        eventMap, blockMap);
   }
   
   public ArrayList<Pair<Integer, String>> getListVariables(String fileName) {
@@ -1333,19 +1379,25 @@ public class ProjectDataStore {
   }
   
   @SuppressWarnings("unchecked")
-  public void parseViewSection(String fileName, String data) {
+  private void parseViewSection(String fileName, String data,
+      HashMap<String, ArrayList<ViewBean>> targetViewMap,
+      HashMap<String, ViewBean> targetFabMap) {
     try {
       ProjectDataParser parser = new ProjectDataParser(fileName);
       String parsedFileName = parser.getFileName();
       ProjectDataParser.DataType dataType = parser.getDataType();
       if (dataType == ProjectDataParser.DataType.VIEW) {
-        viewMap.put(parsedFileName, parser.parseData(data));
+        targetViewMap.put(parsedFileName, parser.parseData(data));
       } else if (dataType == ProjectDataParser.DataType.FAB) {
-        fabMap.put(parsedFileName, parser.parseData(data));
+        targetFabMap.put(parsedFileName, parser.parseData(data));
       }
-    } catch (Exception e) {
-      Log.e("ProjectDataStore", "Failed to parse view section", e);
+    } catch (RuntimeException e) {
+      Log.e("ProjectDataStore", "Failed to parse view section '" + fileName + "' for project " + projectId, e);
     } 
+  }
+
+  public void parseViewSection(String fileName, String data) {
+    parseViewSection(fileName, data, viewMap, fabMap);
   }
   
   public ArrayList<Pair<Integer, String>> getVariables(String fileName) {
@@ -1392,9 +1444,12 @@ public class ProjectDataStore {
     StringBuilder contentBuffer = new StringBuilder();
     serializeLogicData(contentBuffer);
     try {
-      return fileUtil.writeBytes(filePath, fileUtil.encryptString(contentBuffer.toString()));
-    } catch (Exception e) {
-      Log.e("ProjectDataStore", "Failed to save logic file", e);
+      boolean saved = fileUtil.writeBytes(filePath, encryptStringForStorage(contentBuffer.toString(), filePath));
+      if (!saved)
+        Log.e("ProjectDataStore", "Failed to write logic file for project " + projectId + " to " + filePath);
+      return saved;
+    } catch (IOException | RuntimeException e) {
+      Log.e("ProjectDataStore", "Failed to save logic file for project " + projectId + " to " + filePath, e);
       return false;
     } 
   }
@@ -1421,9 +1476,12 @@ public class ProjectDataStore {
     StringBuilder contentBuffer = new StringBuilder();
     serializeViewData(contentBuffer);
     try {
-      return fileUtil.writeBytes(filePath, fileUtil.encryptString(contentBuffer.toString()));
-    } catch (Exception e) {
-      Log.e("ProjectDataStore", "Failed to save view file", e);
+      boolean saved = fileUtil.writeBytes(filePath, encryptStringForStorage(contentBuffer.toString(), filePath));
+      if (!saved)
+        Log.e("ProjectDataStore", "Failed to write view file for project " + projectId + " to " + filePath);
+      return saved;
+    } catch (IOException | RuntimeException e) {
+      Log.e("ProjectDataStore", "Failed to save view file for project " + projectId + " to " + filePath, e);
       return false;
     } 
   }

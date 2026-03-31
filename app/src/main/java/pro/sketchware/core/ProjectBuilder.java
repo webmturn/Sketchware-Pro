@@ -21,6 +21,7 @@ import com.android.sdklib.build.ApkBuilder;
 import com.android.sdklib.build.ApkCreationException;
 import com.android.sdklib.build.DuplicateFileException;
 import com.android.sdklib.build.SealedApkException;
+import com.android.tools.r8.CompilationFailedException;
 import com.github.megatronking.stringfog.plugin.StringFogClassInjector;
 import com.github.megatronking.stringfog.plugin.StringFogMappingPrinter;
 import com.iyxan23.zipalignjava.InvalidZipException;
@@ -68,6 +69,7 @@ import mod.jbk.build.BuildProgressReceiver;
 import mod.jbk.build.BuiltInLibraries;
 import mod.jbk.build.compiler.dex.DexCompiler;
 import mod.jbk.build.compiler.resource.ResourceCompiler;
+import mod.jbk.diagnostic.MissingFileException;
 import mod.jbk.util.LogUtil;
 import mod.jbk.util.TestkeySignBridge;
 import mod.pranav.build.JarBuilder;
@@ -219,7 +221,7 @@ public class ProjectBuilder {
      *
      * @throws Exception Thrown when anything goes wrong while compiling resources
      */
-    public void compileResources() throws Exception {
+    public void compileResources() throws IOException, SimpleException, MissingFileException {
         timestampResourceCompilationStarted = System.currentTimeMillis();
         ResourceCompiler compiler = new ResourceCompiler(
                 this,
@@ -280,7 +282,7 @@ public class ProjectBuilder {
      *
      * @throws Exception Thrown if the compiler had any problems compiling
      */
-    public void createDexFilesFromClasses() throws Exception {
+    public void createDexFilesFromClasses() throws CompilationFailedException, ReflectiveOperationException, IOException {
         FileUtil.makeDir(projectFilePaths.binDirectoryPath + File.separator + "dex");
         if (proguard.isShrinkingEnabled() && proguard.isR8Enabled()) return;
 
@@ -299,7 +301,7 @@ public class ProjectBuilder {
             try {
                 DexCompiler.compileDexFiles(this);
                 LogUtil.d(TAG, "D8 took " + (System.currentTimeMillis() - savedTimeMillis) + " ms");
-            } catch (Exception e) {
+            } catch (CompilationFailedException | RuntimeException e) {
                 LogUtil.e(TAG, "D8 failed to process .class files", e);
                 throw e;
             }
@@ -324,7 +326,7 @@ public class ProjectBuilder {
 
                 Main.run(arguments);
                 LogUtil.d(TAG, "Dx took " + (System.currentTimeMillis() - savedTimeMillis) + " ms");
-            } catch (Exception e) {
+            } catch (ReflectiveOperationException | IOException | RuntimeException e) {
                 LogUtil.e(TAG, "Dx failed to process .class files", e);
                 throw e;
             }
@@ -434,7 +436,7 @@ public class ProjectBuilder {
      * @return List of result DEX files which were merged or couldn't be merged with others.
      * @throws Exception Thrown if merging had problems
      */
-    private Collection<File> dexLibraries(File outputDirectory, List<File> dexes) throws Exception {
+    private Collection<File> dexLibraries(File outputDirectory, List<File> dexes) throws IOException {
         int lastDexNumber = 1;
         Collection<File> resultDexFiles = new LinkedList<>();
         LinkedList<Dex> dexObjects = new LinkedList<>();
@@ -832,7 +834,7 @@ public class ProjectBuilder {
      *
      * @throws Exception Thrown if merging failed
      */
-    public void getDexFilesReady() throws Exception {
+    public void getDexFilesReady() throws IOException {
         long savedTimeMillis = System.currentTimeMillis();
         ArrayList<File> dexes = new ArrayList<>();
 
@@ -937,18 +939,31 @@ public class ProjectBuilder {
      */
     public void maybeExtractAapt2() throws SketchwareException {
         var abi = Build.SUPPORTED_ABIS[0];
+        String assetPath = "aapt/aapt2-" + abi;
         try {
-            if (hasFileChanged("aapt/aapt2-" + abi, aapt2Binary.getAbsolutePath())) {
+            try (var ignored = context.getAssets().open(assetPath)) {
+            } catch (FileNotFoundException e) {
+                throw e;
+            } catch (IOException e) {
+                throw new IOException("Failed to read AAPT2 asset: " + assetPath, e);
+            }
+            boolean extracted = hasFileChanged(assetPath, aapt2Binary.getAbsolutePath());
+            if (!aapt2Binary.exists()) {
+                throw new IOException("AAPT2 binary was not extracted to " + aapt2Binary.getAbsolutePath());
+            }
+            if (extracted) {
                 Os.chmod(aapt2Binary.getAbsolutePath(), S_IRUSR | S_IWUSR | S_IXUSR);
             }
-        } catch (Exception e) {
+        } catch (FileNotFoundException e) {
             LogUtil.e(TAG, "Failed to extract AAPT2 binaries", e);
-            // noinspection ConstantValue: the bytecode's lying
             throw new SketchwareException(
-                    e instanceof FileNotFoundException fileNotFoundException ?
-                            "Looks like the device's architecture (" + abi + ") isn't supported.\n"
-                                    + Log.getStackTraceString(fileNotFoundException)
-                            : "Couldn't extract AAPT2 binaries! Message: " + e.getMessage()
+                    "Looks like the device's architecture (" + abi + ") isn't supported.\n"
+                            + Log.getStackTraceString(e)
+            );
+        } catch (IOException | android.system.ErrnoException | RuntimeException e) {
+            LogUtil.e(TAG, "Failed to extract AAPT2 binaries", e);
+            throw new SketchwareException(
+                    "Couldn't extract AAPT2 binaries! Message: " + e.getMessage()
             );
         }
     }

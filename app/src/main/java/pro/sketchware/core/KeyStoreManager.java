@@ -3,12 +3,15 @@ package pro.sketchware.core;
 import android.util.Log;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
+import java.security.GeneralSecurityException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.SecureRandom;
@@ -35,41 +38,37 @@ public class KeyStoreManager {
     keyStore = (KeyStore)new JksKeyStore();
   }
   
-  public String getFirstAlias() throws Exception {
+  public String getFirstAlias() throws KeyStoreException {
     Enumeration<String> enumeration = keyStore.aliases();
     return enumeration.hasMoreElements() ? enumeration.nextElement() : "";
   }
   
-  public void loadKeyStore(InputStream inputStream, String password) throws Exception {
+  public void loadKeyStore(InputStream inputStream, String password) throws IOException, GeneralSecurityException {
     if (inputStream == null)
       return; 
-    try {
-      keyStore.load(inputStream, password.toCharArray());
-    } catch (Exception exception) {
+    try (InputStream closeableInputStream = inputStream) {
+      keyStore.load(closeableInputStream, password.toCharArray());
+    } catch (IOException | GeneralSecurityException exception) {
       Log.w("KeyStoreManager", "Failed to load keystore", exception);
-      throw new Exception(exception.getMessage());
-    } finally {
-      try {
-        inputStream.close();
-      } catch (Exception exception) {
-        Log.w("KeyStoreManager", "Failed to close input stream", exception);
-      }
+      throw exception;
     }
   }
   
-  public void loadKeyStoreFromFile(String key, String value) throws Exception {
+  public void loadKeyStoreFromFile(String key, String value) throws IOException, GeneralSecurityException {
     loadKeyStore(new FileInputStream(new File(key)), value);
   }
   
-  public void generateAndSaveKeyStore(String key, String value, int index, String extra, String tag) throws Exception {
+  public void generateAndSaveKeyStore(String key, String value, int index, String extra, String tag) throws IOException, GeneralSecurityException {
     byte[] bytes = generateKeyPair(value, index, extra, tag);
     File file = new File(SketchwarePaths.getKeystoreDirPath());
-    if (!file.exists())
-      file.mkdirs(); 
-    (new EncryptedFileUtil()).writeBytes(key, bytes);
+    if (!file.exists() && !file.mkdirs())
+      throw new IOException("Failed to create keystore directory: " + file.getAbsolutePath());
+    boolean saved = (new EncryptedFileUtil()).writeBytes(key, bytes);
+    if (!saved)
+      throw new IOException("Failed to write keystore: " + key);
   }
   
-  public final byte[] exportKeyStore(String password) throws Exception {
+  public final byte[] exportKeyStore(String password) throws IOException, GeneralSecurityException {
     if (keyStore == null)
       return null; 
     keyBuffer = ByteBuffer.allocate(8192);
@@ -86,7 +85,7 @@ public class KeyStoreManager {
     return bytes;
   }
   
-  public byte[] generateKeyPair(String key, int index, String value, String extra) throws Exception {
+  public byte[] generateKeyPair(String key, int index, String value, String extra) throws IOException, GeneralSecurityException {
     try {
       KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
       keyPairGenerator.initialize(1024, SecureRandom.getInstance("SHA1PRNG"));
@@ -114,14 +113,12 @@ public class KeyStoreManager {
       keyStore.setKeyEntry(value, keyPair.getPrivate(), extra.toCharArray(), new Certificate[] { x509Certificate });
       return exportKeyStore(extra);
     } catch (LoadKeystoreException loadKeystoreException) {
-      Log.e("ERROR", "Failed to access keystore. incorrect passward");
+      Log.e("KeyStoreManager", "Failed to access keystore", loadKeystoreException);
       throw loadKeystoreException;
-    } catch (Exception exception) {
-      throw exception;
     } 
   }
   
-  public ZipSigner createZipSigner(String input) throws Exception {
+  public ZipSigner createZipSigner(String input) throws GeneralSecurityException, ClassNotFoundException, IllegalAccessException, InstantiationException {
     ZipSigner zipSigner = new ZipSigner();
     zipSigner.issueLoadingCertAndKeysProgressEvent();
     String alias = getFirstAlias();

@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.security.GeneralSecurityException;
 import java.util.Arrays;
 
 public class LibraryManager {
@@ -37,81 +38,120 @@ public class LibraryManager {
     String backupPath = SketchwarePaths.getBackupPath(projectId) + File.separator + "library";
     fileUtil.deleteFileByPath(backupPath);
   }
+
+  private String decryptFileToString(String filePath) throws IOException {
+    byte[] fileBytes = fileUtil.readFileBytes(filePath);
+    if (fileBytes == null && new File(filePath).length() > 0L)
+      throw new IOException("Failed to read library metadata file: " + filePath);
+    return fileUtil.decryptToString(fileBytes);
+  }
+
+  private byte[] encryptStringForStorage(String content, String filePath) throws IOException {
+    try {
+      return fileUtil.encryptString(content);
+    } catch (GeneralSecurityException e) {
+      throw new IOException("Failed to encrypt library metadata file: " + filePath, e);
+    }
+  }
+
+  private void loadFromPath(String filePath, String sourceName) {
+    try (BufferedReader bufferedReader = new BufferedReader(new StringReader(decryptFileToString(filePath)))) {
+      parseLibraryData(bufferedReader);
+    } catch (IOException | RuntimeException e) {
+      Log.w("LibraryManager", "Failed to load " + sourceName + " for project " + projectId + " from " + filePath, e);
+    }
+  }
+
+  private static final class LibraryState {
+    private ProjectLibraryBean firebaseDB = new ProjectLibraryBean(0);
+    private ProjectLibraryBean compat = new ProjectLibraryBean(1);
+    private ProjectLibraryBean admob = new ProjectLibraryBean(2);
+    private ProjectLibraryBean googleMap = new ProjectLibraryBean(3);
+  }
   
   public void setAdmob(ProjectLibraryBean libraryBean) {
     admob = libraryBean;
   }
   
   public void parseLibraryData(BufferedReader reader) throws IOException {
-    try {
-      StringBuilder contentBuffer = new StringBuilder();
-      String sectionName = "";
-      while (true) {
-        String line = reader.readLine();
-        if (line != null) {
-          if (line.length() <= 0)
-            continue; 
-          if (line.charAt(0) == '@') {
-            StringBuilder tempBuffer = contentBuffer;
-            if (sectionName.length() > 0) {
-              parseLibrarySection(sectionName, contentBuffer.toString());
-              tempBuffer = new StringBuilder();
-            } 
-            sectionName = line.substring(1);
-            contentBuffer = tempBuffer;
-            continue;
+    LibraryState parsedState = new LibraryState();
+    StringBuilder contentBuffer = new StringBuilder();
+    String sectionName = "";
+    while (true) {
+      String line = reader.readLine();
+      if (line != null) {
+        if (line.length() <= 0)
+          continue;
+        if (line.charAt(0) == '@') {
+          StringBuilder tempBuffer = contentBuffer;
+          if (sectionName.length() > 0) {
+            parseLibrarySection(sectionName, contentBuffer.toString(), parsedState);
+            tempBuffer = new StringBuilder();
           } 
-          contentBuffer.append(line);
-          contentBuffer.append("\n");
+          sectionName = line.substring(1);
+          contentBuffer = tempBuffer;
           continue;
         } 
-        if (sectionName.length() > 0)
-          parseLibrarySection(sectionName, contentBuffer.toString()); 
-        if (firebaseDB == null)
-          firebaseDB = new ProjectLibraryBean(0); 
-        if (compat == null)
-          compat = new ProjectLibraryBean(1); 
-        if (admob == null)
-          admob = new ProjectLibraryBean(2); 
-        if (googleMap == null)
-          googleMap = new ProjectLibraryBean(3); 
-        return;
+        contentBuffer.append(line);
+        contentBuffer.append("\n");
+        continue;
       } 
-    } catch (Exception exception) {
-      throw exception;
+      if (sectionName.length() > 0)
+        parseLibrarySection(sectionName, contentBuffer.toString(), parsedState);
+      firebaseDB = parsedState.firebaseDB;
+      compat = parsedState.compat;
+      admob = parsedState.admob;
+      googleMap = parsedState.googleMap;
+      return;
     } 
   }
   
-  public final void writeToFile(String value) {
+  public final boolean writeToFile(String value) {
     StringBuilder contentBuffer = new StringBuilder();
     serializeLibraries(contentBuffer);
     try {
-      byte[] bytes = fileUtil.encryptString(contentBuffer.toString());
-      fileUtil.writeBytes(value, bytes);
-    } catch (Exception e) {
-      Log.w("LibraryManager", "Failed to write file", e);
+      boolean saved = fileUtil.writeBytes(value, encryptStringForStorage(contentBuffer.toString(), value));
+      if (!saved)
+        Log.w("LibraryManager", "Failed to write library metadata for project " + projectId + " to " + value);
+      return saved;
+    } catch (IOException | RuntimeException e) {
+      Log.w("LibraryManager", "Failed to write library metadata for project " + projectId + " to " + value, e);
     } 
+    return false;
   }
   
   public void parseLibrarySection(String key, String value) {
+    LibraryState currentState = new LibraryState();
+    currentState.firebaseDB = firebaseDB;
+    currentState.compat = compat;
+    currentState.admob = admob;
+    currentState.googleMap = googleMap;
+    parseLibrarySection(key, value, currentState);
+    firebaseDB = currentState.firebaseDB;
+    compat = currentState.compat;
+    admob = currentState.admob;
+    googleMap = currentState.googleMap;
+  }
+
+  private void parseLibrarySection(String key, String value, LibraryState targetState) {
     if (value.length() <= 0)
       return; 
-    try (BufferedReader bufferedReader = new BufferedReader(new StringReader(value))) {
+    try {
       ProjectLibraryBean bean = gson.fromJson(value, ProjectLibraryBean.class);
       if (key.equals("firebaseDB")) {
         bean.libType = ProjectLibraryBean.PROJECT_LIB_TYPE_FIREBASE;
-        firebaseDB = bean;
+        targetState.firebaseDB = bean;
       } else if (key.equals("compat")) {
         bean.libType = ProjectLibraryBean.PROJECT_LIB_TYPE_COMPAT;
-        compat = bean;
+        targetState.compat = bean;
       } else if (key.equals("admob")) {
         bean.libType = ProjectLibraryBean.PROJECT_LIB_TYPE_ADMOB;
-        admob = bean;
+        targetState.admob = bean;
       } else if (key.equals("googleMap")) {
         bean.libType = ProjectLibraryBean.PROJECT_LIB_TYPE_GOOGLE_MAP;
-        googleMap = bean;
+        targetState.googleMap = bean;
       }
-    } catch (Exception e) {
+    } catch (RuntimeException e) {
       Log.w("LibraryManager", "Failed to parse library section: " + key, e);
     }
   }
@@ -182,36 +222,33 @@ public class LibraryManager {
 
   private boolean hasDistinctBackup(String backupPath, String dataPath) {
     if (!fileUtil.exists(backupPath))
-      return false; 
+      return false;
     byte[] backupBytes = fileUtil.readFileBytes(backupPath);
     if (backupBytes == null || backupBytes.length == 0)
-      return false; 
+      return false;
     byte[] dataBytes = fileUtil.readFileBytes(dataPath);
     return dataBytes == null || !Arrays.equals(backupBytes, dataBytes);
+  }
+
+  private boolean hasUsableBackup(String backupPath) {
+    if (!fileUtil.exists(backupPath))
+      return false;
+    byte[] backupBytes = fileUtil.readFileBytes(backupPath);
+    return backupBytes != null && backupBytes.length > 0;
   }
   
   public void loadFromBackup() {
     String basePath = SketchwarePaths.getBackupPath(projectId) + File.separator + "library";
-    if (!hasDistinctBackup(basePath, SketchwarePaths.getDataPath(projectId) + File.separator + "library"))
+    if (!hasUsableBackup(basePath))
       return; 
-    initializeDefaults();
-    try (BufferedReader bufferedReader = new BufferedReader(new StringReader(fileUtil.decryptToString(fileUtil.readFileBytes(basePath))))) {
-      parseLibraryData(bufferedReader);
-    } catch (Exception e) {
-      Log.w("LibraryManager", "Failed to load from backup", e);
-    }
+    loadFromPath(basePath, "library backup");
   }
   
   public void loadFromData() {
-    initializeDefaults();
     String dataPath = SketchwarePaths.getDataPath(projectId) + File.separator + "library";
     if (!fileUtil.exists(dataPath))
       return; 
-    try (BufferedReader bufferedReader = new BufferedReader(new StringReader(fileUtil.decryptToString(fileUtil.readFileBytes(dataPath))))) {
-      parseLibraryData(bufferedReader);
-    } catch (Exception e) {
-      Log.w("LibraryManager", "Failed to load from data", e);
-    }
+    loadFromPath(dataPath, "library data");
   }
   
   public void resetAll() {
@@ -219,12 +256,14 @@ public class LibraryManager {
     initializeDefaults();
   }
   
-  public void saveToBackup() {
-    writeToFile(SketchwarePaths.getBackupPath(projectId) + File.separator + "library");
+  public boolean saveToBackup() {
+    return writeToFile(SketchwarePaths.getBackupPath(projectId) + File.separator + "library");
   }
   
-  public void saveToData() {
-    writeToFile(SketchwarePaths.getDataPath(projectId) + File.separator + "library");
-    deleteBackup();
+  public boolean saveToData() {
+    boolean saved = writeToFile(SketchwarePaths.getDataPath(projectId) + File.separator + "library");
+    if (saved)
+      deleteBackup();
+    return saved;
   }
 }

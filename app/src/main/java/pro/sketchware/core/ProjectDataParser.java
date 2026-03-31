@@ -12,6 +12,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 
@@ -24,7 +25,7 @@ public class ProjectDataParser {
   
   private static final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
   
-  public ProjectDataParser(String key) throws Exception {
+  public ProjectDataParser(String key) {
     parseKey(key);
   }
   
@@ -35,7 +36,7 @@ public class ProjectDataParser {
       while (reader.peek() != JsonToken.END_DOCUMENT) {
         result.add(gson.fromJson(reader, BlockBean.class));
       }
-    } catch (Exception e) {
+    } catch (IOException | RuntimeException e) {
       Log.w("ProjectDataParser", "Failed to parse block beans", e);
     }
     return result;
@@ -48,7 +49,7 @@ public class ProjectDataParser {
       while (reader.peek() != JsonToken.END_DOCUMENT) {
         result.add(gson.fromJson(reader, ViewBean.class));
       }
-    } catch (Exception e) {
+    } catch (IOException | RuntimeException e) {
       Log.w("ProjectDataParser", "Failed to parse view beans", e);
     }
     return result;
@@ -86,7 +87,7 @@ public class ProjectDataParser {
         bean.initValue();
         result.add(bean);
       }
-    } catch (Exception e) {
+    } catch (IOException | RuntimeException e) {
       Log.w("ProjectDataParser", "Failed to parse component beans", e);
     }
     return result;
@@ -105,7 +106,7 @@ public class ProjectDataParser {
         bean.initValue();
         result.add(bean);
       }
-    } catch (Exception e) {
+    } catch (IOException | RuntimeException e) {
       Log.w("ProjectDataParser", "Failed to parse event beans", e);
     }
     return result;
@@ -126,13 +127,13 @@ public class ProjectDataParser {
         String value = line.substring(line.indexOf(":") + 1);
         result.add(new Pair<>(key, value));
       }
-    } catch (Exception e) {
+    } catch (IOException | RuntimeException e) {
       Log.w("ProjectDataParser", "Failed to parse more block functions", e);
     }
     return result;
   }
   
-  public final void parseKey(String rawKey) throws Exception {
+  public final void parseKey(String rawKey) {
     String keyPart = rawKey.trim();
     if (keyPart.contains(".xml")) {
       int extEndIdx = keyPart.indexOf(".xml") + 4;
@@ -142,28 +143,28 @@ public class ProjectDataParser {
       } else {
         keyPart = keyPart.substring(extEndIdx);
         if (keyPart.isEmpty()) {
-          throw new Exception("invalid key : No separator");
+          throw new IllegalArgumentException("invalid key : No separator");
         }
         if (keyPart.charAt(0) == '_' && keyPart.substring(1).equals("fab")) {
           dataType = DataType.FAB;
         } else if (keyPart.charAt(0) != '_') {
-          throw new Exception("invalid key : No separator");
+          throw new IllegalArgumentException("invalid key : No separator");
         } else {
-          throw new Exception("invalid key : Unknown type string");
+          throw new IllegalArgumentException("invalid key : Unknown type string");
         }
       }
     } else if (keyPart.contains(".java")) {
       int extEndIdx = keyPart.indexOf(".java") + 5;
       fileName = keyPart.substring(0, extEndIdx);
       if (keyPart.length() == extEndIdx) {
-        throw new Exception("invalid key : No data type");
+        throw new IllegalArgumentException("invalid key : No data type");
       }
       keyPart = keyPart.substring(extEndIdx);
       if (keyPart.isEmpty()) {
-        throw new Exception("invalid key : No separator");
+        throw new IllegalArgumentException("invalid key : No separator");
       }
       if (keyPart.charAt(0) != '_') {
-        throw new Exception("invalid key : No separator");
+        throw new IllegalArgumentException("invalid key : No separator");
       }
       keyPart = keyPart.substring(1);
       switch (keyPart) {
@@ -178,7 +179,7 @@ public class ProjectDataParser {
           break;
       }
     } else {
-      throw new Exception("invalid key : No filename");
+      throw new IllegalArgumentException("invalid key : No filename");
     }
   }
   
@@ -193,7 +194,7 @@ public class ProjectDataParser {
         String value = line.substring(line.indexOf(":") + 1);
         result.add(new Pair<>(Integer.valueOf(key), value));
       }
-    } catch (Exception e) {
+    } catch (IOException | RuntimeException e) {
       Log.w("ProjectDataParser", "Failed to parse list variables", e);
     }
     return result;
@@ -210,7 +211,7 @@ public class ProjectDataParser {
         String value = line.substring(line.indexOf(":") + 1);
         result.add(new Pair<>(Integer.valueOf(key), value));
       }
-    } catch (Exception e) {
+    } catch (IOException | RuntimeException e) {
       Log.w("ProjectDataParser", "Failed to parse variables", e);
     }
     return result;
