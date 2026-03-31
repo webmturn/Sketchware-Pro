@@ -325,8 +325,8 @@ public class BlockPane extends RelativeLayout {
     } 
   }
   
-  public void createHeaderBlock(String key, String value) {
-    this.dragBlock = new BlockView(getContext(), 0, key, "h", value);
+  public void createHeaderBlock(String headerSpec, String opCode) {
+    this.dragBlock = new BlockView(getContext(), 0, headerSpec, "h", opCode);
     BlockView rs = this.dragBlock;
     rs.blockPane = this;
     addView((View)rs);

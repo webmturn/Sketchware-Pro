@@ -203,9 +203,9 @@ public class ResourceManager {
     } 
   }
   
-  public void setFonts(ArrayList<ProjectResourceBean> list) {
+  public void setFonts(ArrayList<ProjectResourceBean> fonts) {
     backupFonts();
-    fonts = list;
+    this.fonts = fonts;
   }
   
   public void cleanupUnusedFonts() {
@@ -244,9 +244,9 @@ public class ResourceManager {
     } 
   }
   
-  public void setImages(ArrayList<ProjectResourceBean> list) {
+  public void setImages(ArrayList<ProjectResourceBean> images) {
     backupImages();
-    images = list;
+    this.images = images;
   }
   
   public void cleanupUnusedImages() {
@@ -285,9 +285,9 @@ public class ResourceManager {
     } 
   }
   
-  public void setSounds(ArrayList<ProjectResourceBean> list) {
+  public void setSounds(ArrayList<ProjectResourceBean> sounds) {
     backupSounds();
-    sounds = list;
+    this.sounds = sounds;
   }
   
   public String getFontPath(String name) {

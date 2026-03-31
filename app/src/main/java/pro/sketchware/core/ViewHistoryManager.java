@@ -18,8 +18,8 @@ public class ViewHistoryManager {
   
   public String scId;
   
-  public ViewHistoryManager(String key) {
-    scId = key;
+  public ViewHistoryManager(String scId) {
+    this.scId = scId;
     historyMap = new HashMap<>();
     positionMap = new HashMap<>();
   }
@@ -34,132 +34,132 @@ public class ViewHistoryManager {
     instance = null;
   }
   
-  public static ViewHistoryManager getInstance(String key) {
+  public static ViewHistoryManager getInstance(String scId) {
     if (instance == null) {
       synchronized (ViewHistoryManager.class) {
-        if (instance == null || !instance.scId.equals(key)) {
-          instance = new ViewHistoryManager(key);
+        if (instance == null || !instance.scId.equals(scId)) {
+          instance = new ViewHistoryManager(scId);
         }
       }
     }
     return instance;
   }
   
-  public final void trimFutureHistory(String key) {
-    if (!positionMap.containsKey(key))
+  public final void trimFutureHistory(String layoutFileName) {
+    if (!positionMap.containsKey(layoutFileName))
       return; 
-    ArrayList historyEntries = historyMap.get(key);
-    int position = positionMap.getOrDefault(key, 0);
+    ArrayList historyEntries = historyMap.get(layoutFileName);
+    int position = positionMap.getOrDefault(layoutFileName, 0);
     if (historyEntries == null)
       return; 
     for (int j = historyEntries.size(); j > position; j--)
       historyEntries.remove(j - 1); 
   }
   
-  public final void addHistoryEntry(String key, HistoryViewBean historyViewBean) {
-    if (!historyMap.containsKey(key))
-      initHistory(key); 
-    ArrayList<HistoryViewBean> entries = historyMap.get(key);
+  public final void addHistoryEntry(String layoutFileName, HistoryViewBean historyViewBean) {
+    if (!historyMap.containsKey(layoutFileName))
+      initHistory(layoutFileName);
+    ArrayList<HistoryViewBean> entries = historyMap.get(layoutFileName);
     if (entries == null) return;
     entries.add(historyViewBean);
     if (entries.size() > MAX_HISTORY_STEPS) {
       entries.remove(0);
     } else {
-      incrementPosition(key);
+      incrementPosition(layoutFileName);
     } 
   }
   
-  public void recordAdd(String key, ViewBean viewBean) {
+  public void recordAdd(String layoutFileName, ViewBean viewBean) {
     ArrayList<ViewBean> views = new ArrayList<>();
     views.add(viewBean);
-    recordAddMultiple(key, views);
+    recordAddMultiple(layoutFileName, views);
   }
   
-  public void recordUpdate(String key, ViewBean prevViewData, ViewBean currentViewData) {
+  public void recordUpdate(String layoutFileName, ViewBean prevViewData, ViewBean currentViewData) {
     if (prevViewData.isEqual(currentViewData))
       return; 
     HistoryViewBean historyViewBean = new HistoryViewBean();
     historyViewBean.actionUpdate(prevViewData, currentViewData);
-    if (!historyMap.containsKey(key))
-      initHistory(key); 
-    trimFutureHistory(key);
-    addHistoryEntry(key, historyViewBean);
+    if (!historyMap.containsKey(layoutFileName))
+      initHistory(layoutFileName);
+    trimFutureHistory(layoutFileName);
+    addHistoryEntry(layoutFileName, historyViewBean);
   }
   
-  public void recordAddMultiple(String key, ArrayList<ViewBean> list) {
+  public void recordAddMultiple(String layoutFileName, ArrayList<ViewBean> viewBeans) {
     HistoryViewBean historyViewBean = new HistoryViewBean();
-    historyViewBean.actionAdd(list);
-    if (!historyMap.containsKey(key))
-      initHistory(key); 
-    trimFutureHistory(key);
-    addHistoryEntry(key, historyViewBean);
+    historyViewBean.actionAdd(viewBeans);
+    if (!historyMap.containsKey(layoutFileName))
+      initHistory(layoutFileName);
+    trimFutureHistory(layoutFileName);
+    addHistoryEntry(layoutFileName, historyViewBean);
   }
   
-  public final void decrementPosition(String key) {
-    if (!positionMap.containsKey(key))
-      initHistory(key); 
-    int position = positionMap.getOrDefault(key, 0);
+  public final void decrementPosition(String layoutFileName) {
+    if (!positionMap.containsKey(layoutFileName))
+      initHistory(layoutFileName);
+    int position = positionMap.getOrDefault(layoutFileName, 0);
     if (position == 0)
       return; 
-    positionMap.put(key, Integer.valueOf(position - 1));
+    positionMap.put(layoutFileName, Integer.valueOf(position - 1));
   }
   
-  public void recordMove(String key, ViewBean viewBean) {
+  public void recordMove(String layoutFileName, ViewBean viewBean) {
     HistoryViewBean historyViewBean = new HistoryViewBean();
     historyViewBean.actionMove(viewBean);
-    if (!historyMap.containsKey(key))
-      initHistory(key); 
-    trimFutureHistory(key);
-    addHistoryEntry(key, historyViewBean);
+    if (!historyMap.containsKey(layoutFileName))
+      initHistory(layoutFileName);
+    trimFutureHistory(layoutFileName);
+    addHistoryEntry(layoutFileName, historyViewBean);
   }
   
-  public void recordRemove(String key, ArrayList<ViewBean> list) {
+  public void recordRemove(String layoutFileName, ArrayList<ViewBean> viewBeans) {
     HistoryViewBean historyViewBean = new HistoryViewBean();
-    historyViewBean.actionRemove(list);
-    if (!historyMap.containsKey(key))
-      initHistory(key); 
-    trimFutureHistory(key);
-    addHistoryEntry(key, historyViewBean);
+    historyViewBean.actionRemove(viewBeans);
+    if (!historyMap.containsKey(layoutFileName))
+      initHistory(layoutFileName);
+    trimFutureHistory(layoutFileName);
+    addHistoryEntry(layoutFileName, historyViewBean);
   }
   
-  public final void incrementPosition(String key) {
-    if (!positionMap.containsKey(key))
-      initHistory(key); 
-    int position = positionMap.getOrDefault(key, 0);
-    positionMap.put(key, Integer.valueOf(position + 1));
+  public final void incrementPosition(String layoutFileName) {
+    if (!positionMap.containsKey(layoutFileName))
+      initHistory(layoutFileName);
+    int position = positionMap.getOrDefault(layoutFileName, 0);
+    positionMap.put(layoutFileName, Integer.valueOf(position + 1));
   }
   
-  public void initHistory(String key) {
-    historyMap.put(key, new ArrayList<>());
-    positionMap.put(key, Integer.valueOf(0));
+  public void initHistory(String layoutFileName) {
+    historyMap.put(layoutFileName, new ArrayList<>());
+    positionMap.put(layoutFileName, Integer.valueOf(0));
   }
   
-  public boolean canRedo(String key) {
-    if (!positionMap.containsKey(key)) return false;
-    ArrayList<HistoryViewBean> entries = historyMap.get(key);
-    return entries != null && positionMap.getOrDefault(key, 0) < entries.size();
+  public boolean canRedo(String layoutFileName) {
+    if (!positionMap.containsKey(layoutFileName)) return false;
+    ArrayList<HistoryViewBean> entries = historyMap.get(layoutFileName);
+    return entries != null && positionMap.getOrDefault(layoutFileName, 0) < entries.size();
   }
   
-  public boolean canUndo(String key) {
-    return positionMap.getOrDefault(key, 0) > 0;
+  public boolean canUndo(String layoutFileName) {
+    return positionMap.getOrDefault(layoutFileName, 0) > 0;
   }
   
-  public HistoryViewBean redo(String key) {
-    if (!canRedo(key))
+  public HistoryViewBean redo(String layoutFileName) {
+    if (!canRedo(layoutFileName))
       return null; 
-    int position = positionMap.getOrDefault(key, 0);
-    incrementPosition(key);
-    ArrayList<HistoryViewBean> entries = historyMap.get(key);
+    int position = positionMap.getOrDefault(layoutFileName, 0);
+    incrementPosition(layoutFileName);
+    ArrayList<HistoryViewBean> entries = historyMap.get(layoutFileName);
     if (entries == null || position >= entries.size()) return null;
     return entries.get(position).clone();
   }
   
-  public HistoryViewBean undo(String key) {
-    if (!canUndo(key))
+  public HistoryViewBean undo(String layoutFileName) {
+    if (!canUndo(layoutFileName))
       return null; 
-    int position = positionMap.getOrDefault(key, 0);
-    decrementPosition(key);
-    ArrayList<HistoryViewBean> entries = historyMap.get(key);
+    int position = positionMap.getOrDefault(layoutFileName, 0);
+    decrementPosition(layoutFileName);
+    ArrayList<HistoryViewBean> entries = historyMap.get(layoutFileName);
     if (entries == null || position - 1 < 0) return null;
     return entries.get(position - 1).clone();
   }

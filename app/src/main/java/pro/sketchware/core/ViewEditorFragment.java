@@ -84,7 +84,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
             }
 
             @Override
-            public void onPropertyRequested(String s, ViewBean viewBean) {
+            public void onPropertyRequested(String xmlName, ViewBean viewBean) {
                 openPropertyActivity(viewBean);
             }
         });

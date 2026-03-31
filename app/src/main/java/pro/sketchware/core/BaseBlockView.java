@@ -103,7 +103,7 @@ public class BaseBlockView extends RelativeLayout {
   
   public int blockWidth;
   
-  public BaseBlockView(Context context, String key, String value, boolean flag) {
+  public BaseBlockView(Context context, String blockType, String typeName, boolean isEditable) {
     super(context);
     borderWidth = 3;
     minHeight = 12;
@@ -138,14 +138,14 @@ public class BaseBlockView extends RelativeLayout {
     defaultBlockColor = 805306368;
     classInfo = null;
     this.context = context;
-    blockType = key;
-    if (value != null && value.indexOf(".") > 0) {
-      componentType = value.substring(0, value.indexOf("."));
+    this.blockType = blockType;
+    if (typeName != null && typeName.indexOf(".") > 0) {
+      this.componentType = typeName.substring(0, typeName.indexOf("."));
     } else {
-      componentType = value;
+      this.componentType = typeName;
     }
     initClassInfo();
-    String type = blockType;
+    String type = this.blockType;
     switch (type) {
       case " ": topSpacing = 4; shapeType = 4; break;
       case "b": leftIndent = 8; rightIndent = 5; shapeType = 2; break;
@@ -163,13 +163,13 @@ public class BaseBlockView extends RelativeLayout {
       case "a": shapeType = 1; break;
     }
     blockColor = defaultBlockColor;
-    isEditable = flag;
+    this.isEditable = isEditable;
     setWillNotDraw(false);
     initDensityAndPaints(context);
   }
   
-  public BaseBlockView(Context context, String blockType, boolean flag) {
-    this(context, blockType, "", flag);
+  public BaseBlockView(Context context, String blockType, boolean isEditable) {
+    this(context, blockType, "", isEditable);
   }
   
   private float[] getBooleanReflections() {

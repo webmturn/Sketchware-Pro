@@ -33,20 +33,20 @@ public class MoreBlockCollectionManager extends BaseCollectionManager {
         return instance;
     }
 
-    public MoreBlockCollectionBean getMoreBlockByName(String name) {
-        for (CollectionBean bean : collections) {
-            if (bean.name.equals(name)) {
-                return new MoreBlockCollectionBean(bean.name, bean.reserved1, ProjectDataParser.parseBlockBeans(moreBlockGson, bean.data));
+    public MoreBlockCollectionBean getMoreBlockByName(String moreBlockName) {
+        for (CollectionBean collection : collections) {
+            if (collection.name.equals(moreBlockName)) {
+                return new MoreBlockCollectionBean(collection.name, collection.reserved1, ProjectDataParser.parseBlockBeans(moreBlockGson, collection.data));
             }
         }
         return null;
     }
 
-    public void addMoreBlock(String name, String spec, ArrayList<BlockBean> blocks, boolean save) throws CompileException {
+    public void addMoreBlock(String moreBlockName, String moreBlockSpec, ArrayList<BlockBean> blocks, boolean save) throws CompileException {
         if (collections == null) initialize();
         if (moreBlockGson == null) initializeGson();
-        for (CollectionBean bean : collections) {
-            if (bean.name.equals(name)) {
+        for (CollectionBean collection : collections) {
+            if (collection.name.equals(moreBlockName)) {
                 throw new CompileException("duplicate_name");
             }
         }
@@ -54,22 +54,22 @@ public class MoreBlockCollectionManager extends BaseCollectionManager {
         for (BlockBean block : blocks) {
             contentBuilder.append(moreBlockGson.toJson(block)).append("\n");
         }
-        collections.add(new CollectionBean(name, contentBuilder.toString(), spec));
+        collections.add(new CollectionBean(moreBlockName, contentBuilder.toString(), moreBlockSpec));
         if (save) saveCollections();
     }
 
     public void renameMoreBlock(String oldName, String newName, boolean save) {
-        for (CollectionBean bean : collections) {
-            if (bean.name.equals(oldName)) {
-                bean.name = newName;
+        for (CollectionBean collection : collections) {
+            if (collection.name.equals(oldName)) {
+                collection.name = newName;
                 break;
             }
         }
         if (save) saveCollections();
     }
 
-    public void removeMoreBlock(String name, boolean save) {
-        collections.removeIf(bean -> bean.name.equals(name));
+    public void removeMoreBlock(String moreBlockName, boolean save) {
+        collections.removeIf(collection -> collection.name.equals(moreBlockName));
         if (save) saveCollections();
     }
 
@@ -87,8 +87,8 @@ public class MoreBlockCollectionManager extends BaseCollectionManager {
                     String line;
                     while ((line = reader.readLine()) != null) {
                         if (line.isEmpty()) continue;
-                        CollectionBean bean = gson.fromJson(line, CollectionBean.class);
-                        collections.add(bean);
+                        CollectionBean collection = gson.fromJson(line, CollectionBean.class);
+                        collections.add(collection);
                     }
                 }
             }
@@ -101,8 +101,8 @@ public class MoreBlockCollectionManager extends BaseCollectionManager {
         if (collections == null) initialize();
         if (moreBlockGson == null) initializeGson();
         ArrayList<MoreBlockCollectionBean> result = new ArrayList<>();
-        for (CollectionBean bean : collections) {
-            result.add(new MoreBlockCollectionBean(bean.name, bean.reserved1, ProjectDataParser.parseBlockBeans(moreBlockGson, bean.data)));
+        for (CollectionBean collection : collections) {
+            result.add(new MoreBlockCollectionBean(collection.name, collection.reserved1, ProjectDataParser.parseBlockBeans(moreBlockGson, collection.data)));
         }
         return result;
     }
@@ -110,8 +110,8 @@ public class MoreBlockCollectionManager extends BaseCollectionManager {
     public ArrayList<String> getMoreBlockNames() {
         if (collections == null) initialize();
         ArrayList<String> names = new ArrayList<>();
-        for (CollectionBean bean : collections) {
-            names.add(bean.name);
+        for (CollectionBean collection : collections) {
+            names.add(collection.name);
         }
         return names;
     }

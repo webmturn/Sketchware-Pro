@@ -47,8 +47,8 @@ public class SketchwarePaths {
     public static final String EXTRA_DATA_EXPORT = EXTRA_SYSTEM_DATA + File.separator + "export";
     public static final String EVENT_EXPORT_PATH = EXTRA_DATA_EXPORT + File.separator + "events";
 
-    public static String getAbsolutePathOf(String path) {
-        return new File(Environment.getExternalStorageDirectory(), path).getAbsolutePath();
+    public static String getAbsolutePathOf(String relativePath) {
+        return new File(Environment.getExternalStorageDirectory(), relativePath).getAbsolutePath();
     }
 
     public static String getCollectionPath() {

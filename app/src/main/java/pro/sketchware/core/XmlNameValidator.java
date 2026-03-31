@@ -20,51 +20,51 @@ public class XmlNameValidator extends BaseValidator {
   
   public Pattern namePattern = Pattern.compile("^[a-z][a-z0-9_]*");
   
-  public XmlNameValidator(Context context, TextInputLayout textInputLayout, String[] strings, ArrayList<String> list1, ArrayList<String> list2) {
+  public XmlNameValidator(Context context, TextInputLayout textInputLayout, String[] reservedNames, ArrayList<String> xmlNames, ArrayList<String> javaNames) {
     super(context, textInputLayout);
-    reservedNames = strings;
-    xmlNames = list1;
-    javaNames = list2;
+    this.reservedNames = reservedNames;
+    this.xmlNames = xmlNames;
+    this.javaNames = javaNames;
     batchCount = 1;
   }
   
-  public void setBatchCount(int index) {
-    batchCount = index;
+  public void setBatchCount(int batchCount) {
+    this.batchCount = batchCount;
     validate(getText());
   }
   
-  public void setJavaNames(ArrayList<String> list) {
-    javaNames = list;
+  public void setJavaNames(ArrayList<String> javaNames) {
+    this.javaNames = javaNames;
   }
   
-  public final void validate(String value) {
+  public final void validate(String candidateName) {
     String conflictList = "";
-    if (value.length() < 3) {
+    if (candidateName.length() < 3) {
       textInputLayout.setErrorEnabled(true);
       textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(context, R.string.invalid_value_min_lenth, new Object[] { Integer.valueOf(3) }));
       valid = false;
       return;
     } 
-    if (value.length() > 70) {
+    if (candidateName.length() > 70) {
       textInputLayout.setErrorEnabled(true);
       textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(context, R.string.invalid_value_max_lenth, new Object[] { Integer.valueOf(70) }));
       valid = false;
       return;
     } 
-    if (value.equals("default_image") || "NONE".toLowerCase().equals(value.toLowerCase())) {
+    if (candidateName.equals("default_image") || "NONE".toLowerCase().equals(candidateName.toLowerCase())) {
       textInputLayout.setErrorEnabled(true);
       textInputLayout.setError(StringResource.getInstance().getTranslatedString(context, R.string.common_message_name_unavailable));
       valid = false;
       return;
     } 
     if (batchCount == 1) {
-      if (!value.equals(currentName) && xmlNames.indexOf(value) >= 0) {
+      if (!candidateName.equals(currentName) && xmlNames.indexOf(candidateName) >= 0) {
         textInputLayout.setErrorEnabled(true);
         textInputLayout.setError(StringResource.getInstance().getTranslatedString(context, R.string.common_message_name_unavailable));
         valid = false;
         return;
       } 
-      if (!value.equals(currentName) && javaNames.indexOf(value) >= 0) {
+      if (!candidateName.equals(currentName) && javaNames.indexOf(candidateName) >= 0) {
         textInputLayout.setErrorEnabled(true);
         textInputLayout.setError(StringResource.getInstance().getTranslatedString(context, R.string.common_message_name_unavailable));
         valid = false;
@@ -73,12 +73,12 @@ public class XmlNameValidator extends BaseValidator {
     } else {
       ArrayList<String> candidateNames = new ArrayList<>();
       for (int batchIdx = 1; batchIdx <= batchCount; batchIdx++) {
-        candidateNames.add(value + "_" + batchIdx);
+        candidateNames.add(candidateName + "_" + batchIdx);
       } 
       ArrayList<String> conflictNames = new ArrayList<>();
-      for (String candidateName : candidateNames) {
-        if (xmlNames.indexOf(candidateName) >= 0)
-          conflictNames.add(candidateName); 
+      for (String generatedName : candidateNames) {
+        if (xmlNames.indexOf(generatedName) >= 0)
+          conflictNames.add(generatedName);
       } 
       if (conflictNames.size() > 0) {
         textInputLayout.setErrorEnabled(true);
@@ -101,7 +101,7 @@ public class XmlNameValidator extends BaseValidator {
     int found = 0;
     while (true) {
       if (found < nameCount) {
-        if (value.equals(parts[found])) {
+        if (candidateName.equals(parts[found])) {
           found = 1;
           break;
         } 
@@ -117,13 +117,13 @@ public class XmlNameValidator extends BaseValidator {
       valid = false;
       return;
     } 
-    if (!Character.isLetter(value.charAt(0))) {
+    if (!Character.isLetter(candidateName.charAt(0))) {
       textInputLayout.setErrorEnabled(true);
       textInputLayout.setError(StringResource.getInstance().getTranslatedString(context, R.string.logic_editor_message_variable_name_must_start_letter));
       valid = false;
       return;
     } 
-    if (namePattern.matcher(value).matches()) {
+    if (namePattern.matcher(candidateName).matches()) {
       textInputLayout.setErrorEnabled(false);
       valid = true;
     } else {
@@ -133,8 +133,8 @@ public class XmlNameValidator extends BaseValidator {
     } 
   }
   
-  public void setCurrentName(String value) {
-    currentName = value;
+  public void setCurrentName(String currentName) {
+    this.currentName = currentName;
   }
   
   public CharSequence filter(CharSequence text, int x, int y, Spanned spanned, int width, int height) {

@@ -18,49 +18,49 @@ public class FileNameValidator extends BaseValidator {
   
   public Pattern namePattern = Pattern.compile("^[a-z][a-z0-9_]*");
   
-  public FileNameValidator(Context context, TextInputLayout textInputLayout, String[] strings, ArrayList<String> list) {
+  public FileNameValidator(Context context, TextInputLayout textInputLayout, String[] reservedNames, ArrayList<String> existingNames) {
     super(context, textInputLayout);
-    reservedNames = strings;
-    existingNames = list;
+    this.reservedNames = reservedNames;
+    this.existingNames = existingNames;
     batchCount = 1;
   }
   
-  public FileNameValidator(Context context, TextInputLayout textInputLayout, String[] strings, ArrayList<String> list, String currentName) {
+  public FileNameValidator(Context context, TextInputLayout textInputLayout, String[] reservedNames, ArrayList<String> existingNames, String currentName) {
     super(context, textInputLayout);
-    reservedNames = strings;
-    existingNames = list;
+    this.reservedNames = reservedNames;
+    this.existingNames = existingNames;
     this.currentName = currentName;
     batchCount = 1;
   }
   
-  public void setBatchCount(int index) {
-    batchCount = index;
+  public void setBatchCount(int batchCount) {
+    this.batchCount = batchCount;
     if (getText().length() > 0)
       validate(getText()); 
   }
   
-  public final void validate(String input) {
-    String conflictList = input;
-    if (conflictList.length() < 3) {
+  public final void validate(String candidateName) {
+    String conflictList = "";
+    if (candidateName.length() < 3) {
       textInputLayout.setErrorEnabled(true);
       textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(context, R.string.invalid_value_min_lenth, new Object[] { Integer.valueOf(3) }));
       valid = false;
       return;
     } 
-    if (conflictList.length() > 70) {
+    if (candidateName.length() > 70) {
       textInputLayout.setErrorEnabled(true);
       textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(context, R.string.invalid_value_max_lenth, new Object[] { Integer.valueOf(70) }));
       valid = false;
       return;
     } 
-    if (conflictList.equals("default_image") || "NONE".toLowerCase().equals(conflictList.toLowerCase())) {
+    if (candidateName.equals("default_image") || "NONE".toLowerCase().equals(candidateName.toLowerCase())) {
       textInputLayout.setErrorEnabled(true);
       textInputLayout.setError(StringResource.getInstance().getTranslatedString(context, R.string.common_message_name_unavailable));
       valid = false;
       return;
     } 
     if (batchCount == 1) {
-      if (!conflictList.equals(currentName) && existingNames.indexOf(conflictList) >= 0) {
+      if (!candidateName.equals(currentName) && existingNames.indexOf(candidateName) >= 0) {
         textInputLayout.setErrorEnabled(true);
         textInputLayout.setError(StringResource.getInstance().getTranslatedString(context, R.string.common_message_name_unavailable));
         valid = false;
@@ -69,12 +69,12 @@ public class FileNameValidator extends BaseValidator {
     } else {
       ArrayList<String> candidateNames = new ArrayList<>();
       for (int batchIdx = 1; batchIdx <= batchCount; batchIdx++) {
-        candidateNames.add(conflictList + "_" + batchIdx);
+        candidateNames.add(candidateName + "_" + batchIdx);
       } 
       ArrayList<String> conflictNames = new ArrayList<>();
-      for (String candidateName : candidateNames) {
-        if (existingNames.indexOf(candidateName) >= 0)
-          conflictNames.add(candidateName); 
+      for (String generatedName : candidateNames) {
+        if (existingNames.indexOf(generatedName) >= 0)
+          conflictNames.add(generatedName);
       } 
       if (conflictNames.size() > 0) {
         textInputLayout.setErrorEnabled(true);
@@ -97,7 +97,7 @@ public class FileNameValidator extends BaseValidator {
     int found = 0;
     while (true) {
       if (found < nameCount) {
-        if (conflictList.equals(parts[found])) {
+        if (candidateName.equals(parts[found])) {
           found = 1;
           break;
         } 
@@ -113,13 +113,13 @@ public class FileNameValidator extends BaseValidator {
       valid = false;
       return;
     } 
-    if (!Character.isLetter(conflictList.charAt(0))) {
+    if (!Character.isLetter(candidateName.charAt(0))) {
       textInputLayout.setErrorEnabled(true);
       textInputLayout.setError(StringResource.getInstance().getTranslatedString(context, R.string.logic_editor_message_variable_name_must_start_letter));
       valid = false;
       return;
     } 
-    if (namePattern.matcher(conflictList).matches()) {
+    if (namePattern.matcher(candidateName).matches()) {
       textInputLayout.setErrorEnabled(false);
       valid = true;
     } else {

@@ -3,31 +3,31 @@ package pro.sketchware.core;
 import java.util.Map;
 
 public class MapValueHelper {
-  public static int get(Map<String, Object> map, String key, int index) {
-    Object value = get(map, key, Integer.valueOf(index));
-    return (value instanceof Integer) ? ((Integer)get(map, key, Integer.valueOf(index))).intValue() : ((value instanceof Double) ? ((Double)get(map, key, Integer.valueOf(index))).intValue() : index);
+  public static int get(Map<String, Object> valueMap, String mapKey, int defaultValue) {
+    Object storedValue = get(valueMap, mapKey, Integer.valueOf(defaultValue));
+    return (storedValue instanceof Integer) ? ((Integer)get(valueMap, mapKey, Integer.valueOf(defaultValue))).intValue() : ((storedValue instanceof Double) ? ((Double)get(valueMap, mapKey, Integer.valueOf(defaultValue))).intValue() : defaultValue);
   }
   
-  public static Object get(Map<String, Object> map, String key, Object defaultValue) {
-    if (map == null)
-      return defaultValue; 
-    Object result = map.get(key);
-    return (result == null) ? defaultValue : result;
+  public static Object get(Map<String, Object> valueMap, String mapKey, Object fallbackValue) {
+    if (valueMap == null)
+      return fallbackValue;
+    Object storedValue = valueMap.get(mapKey);
+    return (storedValue == null) ? fallbackValue : storedValue;
   }
   
-  public static boolean get(Map<String, Object> map, String key) {
-    return ((Boolean)get(map, key, Boolean.valueOf(false))).booleanValue();
+  public static boolean get(Map<String, Object> valueMap, String mapKey) {
+    return ((Boolean)get(valueMap, mapKey, Boolean.valueOf(false))).booleanValue();
   }
   
-  public static boolean get(Map<String, Object> map, String key, boolean flag) {
-    return ((Boolean)get(map, key, Boolean.valueOf(flag))).booleanValue();
+  public static boolean get(Map<String, Object> valueMap, String mapKey, boolean defaultValue) {
+    return ((Boolean)get(valueMap, mapKey, Boolean.valueOf(defaultValue))).booleanValue();
   }
   
-  public static int getInt(Map<String, Object> map, String key) {
-    return get(map, key, -1);
+  public static int getInt(Map<String, Object> valueMap, String mapKey) {
+    return get(valueMap, mapKey, -1);
   }
   
-  public static String getString(Map<String, Object> map, String key) {
-    return (String)get(map, key, "");
+  public static String getString(Map<String, Object> valueMap, String mapKey) {
+    return (String)get(valueMap, mapKey, "");
   }
 }

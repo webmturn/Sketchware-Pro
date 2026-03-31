@@ -89,8 +89,8 @@ public class ViewFilesAdapter extends BaseFragment {
     }
   }
   
-  public void setSelectionMode(boolean flag) {
-    isSelectionMode = Boolean.valueOf(flag);
+  public void setSelectionMode(boolean selectionModeEnabled) {
+    isSelectionMode = Boolean.valueOf(selectionModeEnabled);
     deselectAll();
     adapter.notifyDataSetChanged();
   }

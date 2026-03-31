@@ -33,30 +33,30 @@ public class BlockCollectionManager extends BaseCollectionManager {
         return instance;
     }
 
-    public BlockCollectionBean getBlockByName(String name) {
-        for (CollectionBean bean : collections) {
-            if (bean.name.equals(name)) {
-                return new BlockCollectionBean(bean.name, ProjectDataParser.parseBlockBeans(blockGson, bean.data));
+    public BlockCollectionBean getBlockByName(String blockName) {
+        for (CollectionBean collection : collections) {
+            if (collection.name.equals(blockName)) {
+                return new BlockCollectionBean(collection.name, ProjectDataParser.parseBlockBeans(blockGson, collection.data));
             }
         }
         return null;
     }
 
     public void renameBlock(String oldName, String newName, boolean save) {
-        for (CollectionBean bean : collections) {
-            if (bean.name.equals(oldName)) {
-                bean.name = newName;
+        for (CollectionBean collection : collections) {
+            if (collection.name.equals(oldName)) {
+                collection.name = newName;
                 break;
             }
         }
         if (save) saveCollections();
     }
 
-    public void addBlock(String name, ArrayList<BlockBean> blocks, boolean save) throws CompileException {
+    public void addBlock(String blockName, ArrayList<BlockBean> blocks, boolean save) throws CompileException {
         if (collections == null) initialize();
         if (blockGson == null) initializeGson();
-        for (CollectionBean bean : collections) {
-            if (bean.name.equals(name)) {
+        for (CollectionBean collection : collections) {
+            if (collection.name.equals(blockName)) {
                 throw new CompileException("duplicate_name");
             }
         }
@@ -64,12 +64,12 @@ public class BlockCollectionManager extends BaseCollectionManager {
         for (BlockBean block : blocks) {
             contentBuilder.append(blockGson.toJson(block)).append("\n");
         }
-        collections.add(new CollectionBean(name, contentBuilder.toString()));
+        collections.add(new CollectionBean(blockName, contentBuilder.toString()));
         if (save) saveCollections();
     }
 
-    public void removeBlock(String name, boolean save) {
-        collections.removeIf(bean -> bean.name.equals(name));
+    public void removeBlock(String blockName, boolean save) {
+        collections.removeIf(collection -> collection.name.equals(blockName));
         if (save) saveCollections();
     }
 
@@ -89,8 +89,8 @@ public class BlockCollectionManager extends BaseCollectionManager {
                     String line;
                     while ((line = reader.readLine()) != null) {
                         if (line.isEmpty()) continue;
-                        CollectionBean bean = gson.fromJson(line, CollectionBean.class);
-                        collections.add(bean);
+                        CollectionBean collection = gson.fromJson(line, CollectionBean.class);
+                        collections.add(collection);
                     }
                 }
             }
@@ -103,8 +103,8 @@ public class BlockCollectionManager extends BaseCollectionManager {
         if (collections == null) initialize();
         if (blockGson == null) initializeGson();
         ArrayList<BlockCollectionBean> result = new ArrayList<>();
-        for (CollectionBean bean : collections) {
-            result.add(new BlockCollectionBean(bean.name, ProjectDataParser.parseBlockBeans(blockGson, bean.data)));
+        for (CollectionBean collection : collections) {
+            result.add(new BlockCollectionBean(collection.name, ProjectDataParser.parseBlockBeans(blockGson, collection.data)));
         }
         return result;
     }
@@ -112,8 +112,8 @@ public class BlockCollectionManager extends BaseCollectionManager {
     public ArrayList<String> getBlockNames() {
         if (collections == null) initialize();
         ArrayList<String> names = new ArrayList<>();
-        for (CollectionBean bean : collections) {
-            names.add(bean.name);
+        for (CollectionBean collection : collections) {
+            names.add(collection.name);
         }
         return names;
     }

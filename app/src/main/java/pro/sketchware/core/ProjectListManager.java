@@ -14,19 +14,19 @@ import mod.jbk.util.LogUtil;
 public class ProjectListManager {
     public static SharedPrefsHelper sharedPrefsHelper;
 
-    private static String decryptProjectJson(EncryptedFileUtil fileUtil, String path) throws IOException {
-        byte[] fileBytes = fileUtil.readFileBytes(path);
-        if (fileBytes == null && new File(path).length() > 0L) {
-            throw new IOException("Failed to read project metadata file: " + path);
+    private static String decryptProjectJson(EncryptedFileUtil fileUtil, String projectMetadataPath) throws IOException {
+        byte[] fileBytes = fileUtil.readFileBytes(projectMetadataPath);
+        if (fileBytes == null && new File(projectMetadataPath).length() > 0L) {
+            throw new IOException("Failed to read project metadata file: " + projectMetadataPath);
         }
         return fileUtil.decryptToString(fileBytes);
     }
 
-    private static byte[] encryptProjectJson(EncryptedFileUtil fileUtil, String jsonData, String path) throws IOException {
+    private static byte[] encryptProjectJson(EncryptedFileUtil fileUtil, String jsonData, String projectMetadataPath) throws IOException {
         try {
             return fileUtil.encryptString(jsonData);
         } catch (GeneralSecurityException e) {
-            throw new IOException("Failed to encrypt project metadata file: " + path, e);
+            throw new IOException("Failed to encrypt project metadata file: " + projectMetadataPath, e);
         }
     }
 
@@ -38,17 +38,17 @@ public class ProjectListManager {
         if (listFiles == null) {
             return projects;
         }
-        for (File file : listFiles) {
+        for (File projectDirectory : listFiles) {
             try {
-                if (new File(file, projectFileName).exists()) {
-                    String path = file.getAbsolutePath() + File.separator + projectFileName;
-                    HashMap<String, Object> parsedProject = GsonMapHelper.fromJson(decryptProjectJson(fileUtil, path));
-                    if (MapValueHelper.getString(parsedProject, "sc_id").equals(file.getName())) {
+                if (new File(projectDirectory, projectFileName).exists()) {
+                    String projectMetadataPath = projectDirectory.getAbsolutePath() + File.separator + projectFileName;
+                    HashMap<String, Object> parsedProject = GsonMapHelper.fromJson(decryptProjectJson(fileUtil, projectMetadataPath));
+                    if (MapValueHelper.getString(parsedProject, "sc_id").equals(projectDirectory.getName())) {
                         projects.add(parsedProject);
                     }
                 }
             } catch (IOException | RuntimeException e) {
-                LogUtil.e("ProjectListManager", "Failed to load project metadata from " + file.getAbsolutePath(), e);
+                LogUtil.e("ProjectListManager", "Failed to load project metadata from " + projectDirectory.getAbsolutePath(), e);
             }
         }
         return projects;
@@ -64,10 +64,10 @@ public class ProjectListManager {
     }
 
     public static void deleteProject(Context context, String projectId) {
-        File file = new File(SketchwarePaths.getProjectListPath(projectId));
-        if (file.exists()) {
+        File projectDirectory = new File(SketchwarePaths.getProjectListPath(projectId));
+        if (projectDirectory.exists()) {
             EncryptedFileUtil fileUtil = new EncryptedFileUtil();
-            fileUtil.deleteDirectory(file);
+            fileUtil.deleteDirectory(projectDirectory);
             fileUtil.deleteDirectoryByPath(SketchwarePaths.getMyscPath(projectId));
             fileUtil.deleteDirectoryByPath(SketchwarePaths.getImagesPath() + File.separator + projectId);
             fileUtil.deleteDirectoryByPath(SketchwarePaths.getSoundsPath() + File.separator + projectId);
@@ -89,21 +89,20 @@ public class ProjectListManager {
     }
 
     public static void saveProject(String projectId, HashMap<String, Object> projectData) {
-        File file = new File(SketchwarePaths.getProjectListBasePath());
-        if (!file.exists()) {
-            file.mkdirs();
+        File projectListBaseDir = new File(SketchwarePaths.getProjectListBasePath());
+        if (!projectListBaseDir.exists()) {
+            projectListBaseDir.mkdirs();
         }
-        String path = SketchwarePaths.getProjectListPath(projectId);
-        path = path + File.separator + "project";
+        String projectMetadataPath = SketchwarePaths.getProjectListPath(projectId) + File.separator + "project";
         String jsonData = GsonMapHelper.toJson(projectData);
         EncryptedFileUtil fileUtil = new EncryptedFileUtil();
         try {
-            boolean saved = fileUtil.writeBytes(path, encryptProjectJson(fileUtil, jsonData, path));
+            boolean saved = fileUtil.writeBytes(projectMetadataPath, encryptProjectJson(fileUtil, jsonData, projectMetadataPath));
             if (!saved) {
-                LogUtil.e("ProjectListManager", "Failed to write project metadata for " + projectId + " to " + path);
+                LogUtil.e("ProjectListManager", "Failed to write project metadata for " + projectId + " to " + projectMetadataPath);
             }
         } catch (IOException | RuntimeException e) {
-            LogUtil.e("ProjectListManager", "Failed to save project metadata for " + projectId + " to " + path, e);
+            LogUtil.e("ProjectListManager", "Failed to save project metadata for " + projectId + " to " + projectMetadataPath, e);
         }
     }
 
@@ -125,28 +124,28 @@ public class ProjectListManager {
         if (!new File(projectDir).exists()) {
             return null;
         }
-        String path = projectDir + File.separator + "project";
+        String projectMetadataPath = projectDir + File.separator + "project";
         try {
-            HashMap<String, Object> parsedProject = GsonMapHelper.fromJson(decryptProjectJson(fileUtil, path));
+            HashMap<String, Object> parsedProject = GsonMapHelper.fromJson(decryptProjectJson(fileUtil, projectMetadataPath));
             try {
                 return !MapValueHelper.getString(parsedProject, "sc_id").equals(projectId) ? null : parsedProject;
             } catch (RuntimeException e) {
-                LogUtil.e("ProjectListManager", "Failed to validate project metadata for " + projectId + " from " + path, e);
+                LogUtil.e("ProjectListManager", "Failed to validate project metadata for " + projectId + " from " + projectMetadataPath, e);
                 return parsedProject;
             }
         } catch (IOException | RuntimeException e) {
-            LogUtil.e("ProjectListManager", "Failed to load project metadata for " + projectId + " from " + path, e);
+            LogUtil.e("ProjectListManager", "Failed to load project metadata for " + projectId + " from " + projectMetadataPath, e);
             return null;
         }
     }
 
     public static void updateProject(String projectId, HashMap<String, Object> projectData) {
-        File file = new File(SketchwarePaths.getProjectListPath(projectId));
-        if (file.exists()) {
-            String path = file + File.separator + "project";
+        File projectDirectory = new File(SketchwarePaths.getProjectListPath(projectId));
+        if (projectDirectory.exists()) {
+            String projectMetadataPath = projectDirectory + File.separator + "project";
             EncryptedFileUtil fileUtil = new EncryptedFileUtil();
             try {
-                HashMap<String, Object> existingProject = GsonMapHelper.fromJson(decryptProjectJson(fileUtil, path));
+                HashMap<String, Object> existingProject = GsonMapHelper.fromJson(decryptProjectJson(fileUtil, projectMetadataPath));
                 if (MapValueHelper.getString(existingProject, "sc_id").equals(projectId)) {
                     if (projectData.containsKey("isIconAdaptive")) {
                         existingProject.put("isIconAdaptive", projectData.get("isIconAdaptive"));
@@ -165,13 +164,13 @@ public class ProjectListManager {
                     existingProject.put("color_primary_dark", projectData.get("color_primary_dark"));
                     existingProject.put("color_control_highlight", projectData.get("color_control_highlight"));
                     existingProject.put("color_control_normal", projectData.get("color_control_normal"));
-                    boolean saved = fileUtil.writeBytes(path, encryptProjectJson(fileUtil, GsonMapHelper.toJson(existingProject), path));
+                    boolean saved = fileUtil.writeBytes(projectMetadataPath, encryptProjectJson(fileUtil, GsonMapHelper.toJson(existingProject), projectMetadataPath));
                     if (!saved) {
-                        LogUtil.e("ProjectListManager", "Failed to write updated project metadata for " + projectId + " to " + path);
+                        LogUtil.e("ProjectListManager", "Failed to write updated project metadata for " + projectId + " to " + projectMetadataPath);
                     }
                 }
             } catch (IOException | RuntimeException e) {
-                LogUtil.e("ProjectListManager", "Failed to update project metadata for " + projectId + " at " + path, e);
+                LogUtil.e("ProjectListManager", "Failed to update project metadata for " + projectId + " at " + projectMetadataPath, e);
             }
         }
     }

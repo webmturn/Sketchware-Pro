@@ -3,20 +3,20 @@ package pro.sketchware.core;
 import mod.jbk.util.LogUtil;
 
 public class VersionCodeValidator {
-  public static boolean isValid(String input) {
+  public static boolean isValid(String versionCodeText) {
     return true;
   }
   
-  public static boolean isInRange(String input) {
+  public static boolean isInRange(String versionCodeText) {
     try {
-      if (Integer.valueOf(input).intValue() >= Integer.valueOf("200").intValue()) {
-        int inputValue = Integer.valueOf(input).intValue();
-        int maxValue = Integer.valueOf("600").intValue();
-        if (inputValue < maxValue)
+      if (Integer.valueOf(versionCodeText).intValue() >= Integer.valueOf("200").intValue()) {
+        int versionCode = Integer.valueOf(versionCodeText).intValue();
+        int maxVersionCode = Integer.valueOf("600").intValue();
+        if (versionCode < maxVersionCode)
           return true; 
       } 
-    } catch (Exception exception) {
-      LogUtil.w("VersionCodeValidator", "Failed to validate version code: " + input, exception);
+    } catch (Exception e) {
+      LogUtil.w("VersionCodeValidator", "Failed to validate version code: " + versionCodeText, e);
     }
     return false;
   }

@@ -40,10 +40,10 @@ public abstract class BaseCollectionManager {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     if (line.isEmpty()) continue;
-                    CollectionBean bean = gson.fromJson(line, CollectionBean.class);
-                    String path = dataDirPath + File.separator + bean.data;
-                    if (fileUtil.exists(path)) {
-                        collections.add(bean);
+                    CollectionBean collection = gson.fromJson(line, CollectionBean.class);
+                    String collectionDataPath = dataDirPath + File.separator + collection.data;
+                    if (fileUtil.exists(collectionDataPath)) {
+                        collections.add(collection);
                     }
                 }
             }
@@ -62,8 +62,8 @@ public abstract class BaseCollectionManager {
     public void saveCollections() {
         if (collections == null) return;
         StringBuilder contentBuilder = new StringBuilder(1024);
-        for (CollectionBean bean : collections) {
-            contentBuilder.append(gson.toJson(bean)).append("\n");
+        for (CollectionBean collection : collections) {
+            contentBuilder.append(gson.toJson(collection)).append("\n");
         }
         try {
             fileUtil.deleteFileByPath(collectionFilePath);

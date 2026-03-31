@@ -33,11 +33,11 @@ public class FormatUtil {
     } 
   }
   
-  public static String formatFileSize(int index) {
+  public static String formatFileSize(int byteCount) {
     String formatted;
-    if (index < 0)
+    if (byteCount < 0)
       return "0"; 
-    float sizeValue = index;
+    float sizeValue = byteCount;
     if (sizeValue >= 1024.0F && sizeValue < 1048576.0F) {
       sizeValue /= 1024.0F;
       formatted = (new DecimalFormat("#.#KB")).format(sizeValue);
@@ -48,7 +48,7 @@ public class FormatUtil {
       sizeValue /= 1.07374182E9F;
       formatted = (new DecimalFormat("#.#GB")).format(sizeValue);
     } else {
-      formatted = index + "B";
+      formatted = byteCount + "B";
     } 
     return formatted;
   }
@@ -63,33 +63,33 @@ public class FormatUtil {
     return hexBuffer.toString();
   }
   
-  public static void copyToClipboard(Context context, String key, String value) {
-    ((ClipboardManager)context.getSystemService(Context.CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText(key, value));
+  public static void copyToClipboard(Context context, String label, String text) {
+    ((ClipboardManager)context.getSystemService(Context.CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText(label, text));
   }
   
-  public static byte[] hexStringToBytes(String value) {
-    int length = value.length();
+  public static byte[] hexStringToBytes(String hexString) {
+    int length = hexString.length();
     byte[] bytes = new byte[(length + 1) / 2];
     int charIdx = 0;
     byte byteIdx = 1;
     if (length % 2 == 1) {
-      bytes[0] = (byte)hexCharToInt(value.charAt(0));
+      bytes[0] = (byte)hexCharToInt(hexString.charAt(0));
       charIdx = 1;
     } else {
       byteIdx = 0;
     } 
     while (charIdx < length) {
       int nextCharIdx = charIdx + 1;
-      bytes[byteIdx] = (byte)(hexCharToInt(value.charAt(charIdx)) << 4 | hexCharToInt(value.charAt(nextCharIdx)));
+      bytes[byteIdx] = (byte)(hexCharToInt(hexString.charAt(charIdx)) << 4 | hexCharToInt(hexString.charAt(nextCharIdx)));
       byteIdx++;
       charIdx = nextCharIdx + 1;
     } 
     return bytes;
   }
   
-  public static String formatNumber(int index) {
+  public static String formatNumber(int value) {
     String formatted;
-    float numValue = index;
+    float numValue = value;
     if (numValue >= 1000.0F && numValue < 1000000.0F) {
       numValue /= 1000.0F;
       formatted = (new DecimalFormat("#.#K")).format(numValue);
@@ -100,7 +100,7 @@ public class FormatUtil {
       numValue /= 1.0E9F;
       formatted = (new DecimalFormat("#.#G")).format(numValue);
     } else {
-      formatted = String.valueOf(index);
+      formatted = String.valueOf(value);
     } 
     return formatted;
   }
@@ -132,13 +132,13 @@ public class FormatUtil {
     }
   }
   
-  public static String formatWithCommas(int index) {
-    return (new DecimalFormat("#,###")).format(index);
+  public static String formatWithCommas(int value) {
+    return (new DecimalFormat("#,###")).format(value);
   }
   
-  public static ArrayList<String> parseBlockSpec(String value) {
+  public static ArrayList<String> parseBlockSpec(String blockSpec) {
     ArrayList<String> tokens = new ArrayList<>();
-    StringScanner scanner = new StringScanner(value);
+    StringScanner scanner = new StringScanner(blockSpec);
     while (!scanner.isAtEnd()) {
       String token = scanner.nextToken();
       if (token.length() > 0)

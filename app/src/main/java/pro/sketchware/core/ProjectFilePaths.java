@@ -1026,8 +1026,8 @@ public class ProjectFilePaths {
             boolean isJavaFile = filename.endsWith(".java");
             boolean isXmlFile = filename.endsWith(".xml");
             boolean isManifestFile = filename.equals("AndroidManifest.xml");
-            ArrayList<ProjectFileBean> files = new ArrayList<>(projectFileManager.getActivities());
-            files.addAll(new ArrayList<>(projectFileManager.getCustomViews()));
+            ArrayList<ProjectFileBean> projectFiles = new ArrayList<>(projectFileManager.getActivities());
+            projectFiles.addAll(new ArrayList<>(projectFileManager.getCustomViews()));
             if (isXmlFile) {
                 /*
                  Generating every java file is necessary to make command blocks for xml work
@@ -1055,12 +1055,12 @@ public class ProjectFilePaths {
                 return CommandBlock.applyCommands("AndroidManifest.xml", manifestGenerator.generateManifest());
             }
 
-            for (ProjectFileBean file : files) {
-                if (filename.equals(isJavaFile ? file.getJavaName() : file.getXmlName())) {
+            for (ProjectFileBean projectFile : projectFiles) {
+                if (filename.equals(isJavaFile ? projectFile.getJavaName() : projectFile.getXmlName())) {
                     if (isJavaFile) {
-                        return new ActivityCodeGenerator(buildConfig, file, projectDataManager).generateCode(isAndroidStudioExport, sc_id);
+                        return new ActivityCodeGenerator(buildConfig, projectFile, projectDataManager).generateCode(isAndroidStudioExport, sc_id);
                     } else if (isXmlFile) {
-                        LayoutGenerator xmlGenerator = new LayoutGenerator(buildConfig, file);
+                        LayoutGenerator xmlGenerator = new LayoutGenerator(buildConfig, projectFile);
                         xmlGenerator.setViews(ProjectDataStore.getSortedRootViews(projectDataManager.getViews(filename)), projectDataManager.getFabView(filename));
                         return CommandBlock.applyCommands(filename, xmlGenerator.toXmlString());
                     }
@@ -1074,16 +1074,16 @@ public class ProjectFilePaths {
     }
 
     private void prepareXmlCommands(ProjectFileManager projectFileManager, ProjectDataStore projectDataManager) {
-        ArrayList<ProjectFileBean> files = new ArrayList<>(projectFileManager.getActivities());
-        files.addAll(new ArrayList<>(projectFileManager.getCustomViews()));
-        String path = SketchwarePaths.getDataPath(sc_id) + "/command";
+        ArrayList<ProjectFileBean> projectFiles = new ArrayList<>(projectFileManager.getActivities());
+        projectFiles.addAll(new ArrayList<>(projectFileManager.getCustomViews()));
+        String commandFilePath = SketchwarePaths.getDataPath(sc_id) + "/command";
         boolean newXMLCommand = Boolean.parseBoolean(projectSettings.getValue(ProjectSettings.SETTING_NEW_XML_COMMAND, ProjectSettings.SETTING_GENERIC_VALUE_FALSE));
-        if (newXMLCommand && FileUtil.isExistFile(path)) {
-            FileUtil.copyFile(path, SketchwarePaths.getTempCommandsPath());
+        if (newXMLCommand && FileUtil.isExistFile(commandFilePath)) {
+            FileUtil.copyFile(commandFilePath, SketchwarePaths.getTempCommandsPath());
         } else {
-            for (ProjectFileBean file : files) {
+            for (ProjectFileBean projectFile : projectFiles) {
                 try {
-                    CommandBlock.collectXmlCommandBlocks(new ActivityCodeGenerator(buildConfig, file, projectDataManager).generateCode(isAndroidStudioExport, sc_id, false));
+                    CommandBlock.collectXmlCommandBlocks(new ActivityCodeGenerator(buildConfig, projectFile, projectDataManager).generateCode(isAndroidStudioExport, sc_id, false));
                 } catch (RuntimeException e) {
                     Log.e("ProjectFilePaths", "Failed to prepare XML commands", e);
                 }

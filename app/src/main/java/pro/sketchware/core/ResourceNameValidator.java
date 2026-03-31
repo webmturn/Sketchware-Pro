@@ -20,78 +20,78 @@ public class ResourceNameValidator extends BaseValidator {
   
   public Pattern namePattern = Pattern.compile("^[a-z][a-z0-9_]*");
   
-  public ResourceNameValidator(Context context, TextInputLayout textInputLayout, String[] strings, ArrayList<String> list) {
+  public ResourceNameValidator(Context context, TextInputLayout textInputLayout, String[] reservedNames, ArrayList<String> existingNames) {
     super(context, textInputLayout);
-    reservedNames = strings;
-    existingNames = list;
+    this.reservedNames = reservedNames;
+    this.existingNames = existingNames;
   }
   
-  public ResourceNameValidator(Context context, TextInputLayout textInputLayout, String[] strings, ArrayList<String> list, String input) {
+  public ResourceNameValidator(Context context, TextInputLayout textInputLayout, String[] reservedNames, ArrayList<String> existingNames, String currentName) {
     super(context, textInputLayout);
-    reservedNames = strings;
-    existingNames = list;
-    currentName = input;
+    this.reservedNames = reservedNames;
+    this.existingNames = existingNames;
+    this.currentName = currentName;
   }
   
-  public CharSequence filter(CharSequence text, int x, int y, Spanned spanned, int width, int height) {
+  public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
     return null;
   }
   
-  public void onTextChanged(CharSequence text, int x, int y, int width) {
-    String input = text.toString().trim();
-    if (input.length() < 3) {
+  public void onTextChanged(CharSequence text, int start, int before, int count) {
+    String candidateName = text.toString().trim();
+    if (candidateName.length() < 3) {
       textInputLayout.setErrorEnabled(true);
       textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(context, R.string.invalid_value_min_lenth, new Object[] { Integer.valueOf(3) }));
       valid = false;
       return;
     } 
-    if (input.length() > 70) {
+    if (candidateName.length() > 70) {
       textInputLayout.setErrorEnabled(true);
       textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(context, R.string.invalid_value_max_lenth, new Object[] { Integer.valueOf(70) }));
       valid = false;
       return;
     } 
-    if (input.equals("default_image") || "NONE".toLowerCase().equals(input.toLowerCase())) {
+    if (candidateName.equals("default_image") || "NONE".toLowerCase().equals(candidateName.toLowerCase())) {
       textInputLayout.setErrorEnabled(true);
       textInputLayout.setError(StringResource.getInstance().getTranslatedString(context, R.string.common_message_name_unavailable));
       valid = false;
       return;
     } 
-    if (!input.equals(currentName) && existingNames.indexOf(input) >= 0) {
+    if (!candidateName.equals(currentName) && existingNames.indexOf(candidateName) >= 0) {
       textInputLayout.setErrorEnabled(true);
       textInputLayout.setError(StringResource.getInstance().getTranslatedString(context, R.string.common_message_name_unavailable));
       valid = false;
       return;
     } 
     String[] parts = reservedNames;
-    y = parts.length;
-    x = 0;
+    int reservedNameCount = parts.length;
+    int reservedNameIdx = 0;
     while (true) {
-      if (x < y) {
-        String reservedName = parts[x];
-        if (text.toString().equals(reservedName)) {
-          x = 1;
+      if (reservedNameIdx < reservedNameCount) {
+        String reservedName = parts[reservedNameIdx];
+        if (candidateName.equals(reservedName)) {
+          reservedNameIdx = 1;
           break;
         } 
-        x++;
+        reservedNameIdx++;
         continue;
       } 
-      x = 0;
+      reservedNameIdx = 0;
       break;
     } 
-    if (x != 0) {
+    if (reservedNameIdx != 0) {
       textInputLayout.setErrorEnabled(true);
       textInputLayout.setError(StringResource.getInstance().getTranslatedString(context, R.string.logic_editor_message_reserved_keywords));
       valid = false;
       return;
     } 
-    if (!Character.isLetter(text.charAt(0))) {
+    if (!Character.isLetter(candidateName.charAt(0))) {
       textInputLayout.setErrorEnabled(true);
       textInputLayout.setError(StringResource.getInstance().getTranslatedString(context, R.string.logic_editor_message_variable_name_must_start_letter));
       valid = false;
       return;
     } 
-    if (namePattern.matcher(text.toString()).matches()) {
+    if (namePattern.matcher(candidateName).matches()) {
       textInputLayout.setErrorEnabled(false);
       valid = true;
     } else {

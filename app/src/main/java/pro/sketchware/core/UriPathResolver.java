@@ -71,10 +71,10 @@ public final class UriPathResolver {
       fileName = fileName.replaceAll("[^a-zA-Z0-9._-]", "_");
       File cacheFile = new File(context.getCacheDir(), fileName);
       try (OutputStream os = new FileOutputStream(cacheFile)) {
-        byte[] buf = new byte[4096];
+        byte[] buffer = new byte[4096];
         int len;
-        while ((len = is.read(buf)) > 0) {
-          os.write(buf, 0, len);
+        while ((len = is.read(buffer)) > 0) {
+          os.write(buffer, 0, len);
         }
       }
       return cacheFile.getAbsolutePath();
@@ -84,10 +84,10 @@ public final class UriPathResolver {
     }
   }
   
-  public static String queryDataColumn(Context context, Uri uri, String input, String[] strings) {
+  public static String queryDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
     android.database.Cursor cursor = null;
     try {
-      cursor = context.getContentResolver().query(uri, new String[]{"_data"}, input, strings, null);
+      cursor = context.getContentResolver().query(uri, new String[]{"_data"}, selection, selectionArgs, null);
       if (cursor != null && cursor.moveToFirst()) {
         String result = cursor.getString(cursor.getColumnIndexOrThrow("_data"));
         return result;

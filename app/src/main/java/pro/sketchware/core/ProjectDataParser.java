@@ -19,19 +19,19 @@ import java.util.ArrayList;
 public class ProjectDataParser {
   private String fileName;
   
-  private String eventKey;
+  private String blockKey;
   
   private DataType dataType;
   
   private static final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
   
-  public ProjectDataParser(String key) {
-    parseKey(key);
+  public ProjectDataParser(String sectionKey) {
+    parseKey(sectionKey);
   }
   
-  public static ArrayList<BlockBean> parseBlockBeans(Gson gson, String data) {
+  public static ArrayList<BlockBean> parseBlockBeans(Gson gson, String sectionContent) {
     ArrayList<BlockBean> result = new ArrayList<>();
-    try (JsonReader reader = new JsonReader(new StringReader(data))) {
+    try (JsonReader reader = new JsonReader(new StringReader(sectionContent))) {
       reader.setLenient(true);
       while (reader.peek() != JsonToken.END_DOCUMENT) {
         result.add(gson.fromJson(reader, BlockBean.class));
@@ -42,9 +42,9 @@ public class ProjectDataParser {
     return result;
   }
   
-  public static ArrayList<ViewBean> parseViewBeans(Gson gson, String data) {
+  public static ArrayList<ViewBean> parseViewBeans(Gson gson, String sectionContent) {
     ArrayList<ViewBean> result = new ArrayList<>();
-    try (JsonReader reader = new JsonReader(new StringReader(data))) {
+    try (JsonReader reader = new JsonReader(new StringReader(sectionContent))) {
       reader.setLenient(true);
       while (reader.peek() != JsonToken.END_DOCUMENT) {
         result.add(gson.fromJson(reader, ViewBean.class));
@@ -60,16 +60,16 @@ public class ProjectDataParser {
   }
   
   @SuppressWarnings("unchecked")
-  public <T> T parseData(String data) {
+  public <T> T parseData(String sectionContent) {
     switch (dataType) {
-      case VIEW:        return (T) parseViewBeans(gson, data);
-      case FAB:         return (T) parseFabViewBean(data);
-      case VARIABLE:    return (T) parseVariables(data);
-      case LIST:        return (T) parseListVariables(data);
-      case COMPONENT:   return (T) parseComponentBeans(data);
-      case EVENT:       return (T) parseEventBeans(data);
-      case MORE_BLOCK:  return (T) parseMoreBlockFunctions(data);
-      case EVENT_BLOCK: return (T) parseBlockBeans(gson, data);
+      case VIEW:        return (T) parseViewBeans(gson, sectionContent);
+      case FAB:         return (T) parseFabViewBean(sectionContent);
+      case VARIABLE:    return (T) parseVariables(sectionContent);
+      case LIST:        return (T) parseListVariables(sectionContent);
+      case COMPONENT:   return (T) parseComponentBeans(sectionContent);
+      case EVENT:       return (T) parseEventBeans(sectionContent);
+      case MORE_BLOCK:  return (T) parseMoreBlockFunctions(sectionContent);
+      case EVENT_BLOCK: return (T) parseBlockBeans(gson, sectionContent);
       default:          return null;
     }
   }
@@ -78,14 +78,14 @@ public class ProjectDataParser {
     return fileName;
   }
   
-  public ArrayList<ComponentBean> parseComponentBeans(String data) {
+  public ArrayList<ComponentBean> parseComponentBeans(String sectionContent) {
     ArrayList<ComponentBean> result = new ArrayList<>();
-    try (JsonReader reader = new JsonReader(new StringReader(data))) {
+    try (JsonReader reader = new JsonReader(new StringReader(sectionContent))) {
       reader.setLenient(true);
       while (reader.peek() != JsonToken.END_DOCUMENT) {
-        ComponentBean bean = gson.fromJson(reader, ComponentBean.class);
-        bean.initValue();
-        result.add(bean);
+        ComponentBean parsedComponent = gson.fromJson(reader, ComponentBean.class);
+        parsedComponent.initValue();
+        result.add(parsedComponent);
       }
     } catch (IOException | RuntimeException e) {
       Log.w("ProjectDataParser", "Failed to parse component beans", e);
@@ -93,18 +93,18 @@ public class ProjectDataParser {
     return result;
   }
   
-  public String getEventKey() {
-    return eventKey;
+  public String getBlockKey() {
+    return blockKey;
   }
   
-  public ArrayList<EventBean> parseEventBeans(String data) {
+  public ArrayList<EventBean> parseEventBeans(String sectionContent) {
     ArrayList<EventBean> result = new ArrayList<>();
-    try (JsonReader reader = new JsonReader(new StringReader(data))) {
+    try (JsonReader reader = new JsonReader(new StringReader(sectionContent))) {
       reader.setLenient(true);
       while (reader.peek() != JsonToken.END_DOCUMENT) {
-        EventBean bean = gson.fromJson(reader, EventBean.class);
-        bean.initValue();
-        result.add(bean);
+        EventBean parsedEvent = gson.fromJson(reader, EventBean.class);
+        parsedEvent.initValue();
+        result.add(parsedEvent);
       }
     } catch (IOException | RuntimeException e) {
       Log.w("ProjectDataParser", "Failed to parse event beans", e);
@@ -112,20 +112,20 @@ public class ProjectDataParser {
     return result;
   }
   
-  public ViewBean parseFabViewBean(String data) {
-    return (data.trim().length() <= 0 || data.trim().charAt(0) != '{') ? new ViewBean("_fab", 16) : gson.fromJson(data, ViewBean.class);
+  public ViewBean parseFabViewBean(String sectionContent) {
+    return (sectionContent.trim().length() <= 0 || sectionContent.trim().charAt(0) != '{') ? new ViewBean("_fab", 16) : gson.fromJson(sectionContent, ViewBean.class);
   }
   
-  public ArrayList<Pair<String, String>> parseMoreBlockFunctions(String data) {
+  public ArrayList<Pair<String, String>> parseMoreBlockFunctions(String sectionContent) {
     ArrayList<Pair<String, String>> result = new ArrayList<>();
-    try (BufferedReader reader = new BufferedReader(new StringReader(data))) {
+    try (BufferedReader reader = new BufferedReader(new StringReader(sectionContent))) {
       String line;
       while ((line = reader.readLine()) != null) {
         if (line.trim().length() <= 0) continue;
         if (!line.contains(":")) continue;
-        String key = line.substring(0, line.indexOf(":"));
-        String value = line.substring(line.indexOf(":") + 1);
-        result.add(new Pair<>(key, value));
+        String moreBlockName = line.substring(0, line.indexOf(":"));
+        String moreBlockSpec = line.substring(line.indexOf(":") + 1);
+        result.add(new Pair<>(moreBlockName, moreBlockSpec));
       }
     } catch (IOException | RuntimeException e) {
       Log.w("ProjectDataParser", "Failed to parse more block functions", e);
@@ -133,41 +133,41 @@ public class ProjectDataParser {
     return result;
   }
   
-  public final void parseKey(String rawKey) {
-    String keyPart = rawKey.trim();
-    if (keyPart.contains(".xml")) {
-      int extEndIdx = keyPart.indexOf(".xml") + 4;
-      fileName = keyPart.substring(0, extEndIdx);
-      if (keyPart.length() == extEndIdx) {
+  public final void parseKey(String rawSectionKey) {
+    String sectionKey = rawSectionKey.trim();
+    if (sectionKey.contains(".xml")) {
+      int extEndIdx = sectionKey.indexOf(".xml") + 4;
+      fileName = sectionKey.substring(0, extEndIdx);
+      if (sectionKey.length() == extEndIdx) {
         dataType = DataType.VIEW;
       } else {
-        keyPart = keyPart.substring(extEndIdx);
-        if (keyPart.isEmpty()) {
+        sectionKey = sectionKey.substring(extEndIdx);
+        if (sectionKey.isEmpty()) {
           throw new IllegalArgumentException("invalid key : No separator");
         }
-        if (keyPart.charAt(0) == '_' && keyPart.substring(1).equals("fab")) {
+        if (sectionKey.charAt(0) == '_' && sectionKey.substring(1).equals("fab")) {
           dataType = DataType.FAB;
-        } else if (keyPart.charAt(0) != '_') {
+        } else if (sectionKey.charAt(0) != '_') {
           throw new IllegalArgumentException("invalid key : No separator");
         } else {
           throw new IllegalArgumentException("invalid key : Unknown type string");
         }
       }
-    } else if (keyPart.contains(".java")) {
-      int extEndIdx = keyPart.indexOf(".java") + 5;
-      fileName = keyPart.substring(0, extEndIdx);
-      if (keyPart.length() == extEndIdx) {
+    } else if (sectionKey.contains(".java")) {
+      int extEndIdx = sectionKey.indexOf(".java") + 5;
+      fileName = sectionKey.substring(0, extEndIdx);
+      if (sectionKey.length() == extEndIdx) {
         throw new IllegalArgumentException("invalid key : No data type");
       }
-      keyPart = keyPart.substring(extEndIdx);
-      if (keyPart.isEmpty()) {
+      sectionKey = sectionKey.substring(extEndIdx);
+      if (sectionKey.isEmpty()) {
         throw new IllegalArgumentException("invalid key : No separator");
       }
-      if (keyPart.charAt(0) != '_') {
+      if (sectionKey.charAt(0) != '_') {
         throw new IllegalArgumentException("invalid key : No separator");
       }
-      keyPart = keyPart.substring(1);
-      switch (keyPart) {
+      sectionKey = sectionKey.substring(1);
+      switch (sectionKey) {
         case "var":        dataType = DataType.VARIABLE;  break;
         case "list":       dataType = DataType.LIST;      break;
         case "components": dataType = DataType.COMPONENT; break;
@@ -175,7 +175,7 @@ public class ProjectDataParser {
         case "func":       dataType = DataType.MORE_BLOCK; break;
         default:
           dataType = DataType.EVENT_BLOCK;
-          eventKey = keyPart;
+          blockKey = sectionKey;
           break;
       }
     } else {
@@ -183,16 +183,16 @@ public class ProjectDataParser {
     }
   }
   
-  public ArrayList<Pair<Integer, String>> parseListVariables(String data) {
+  public ArrayList<Pair<Integer, String>> parseListVariables(String sectionContent) {
     ArrayList<Pair<Integer, String>> result = new ArrayList<>();
-    try (BufferedReader reader = new BufferedReader(new StringReader(data))) {
+    try (BufferedReader reader = new BufferedReader(new StringReader(sectionContent))) {
       String line;
       while ((line = reader.readLine()) != null) {
         if (line.trim().length() <= 0) continue;
         if (!line.contains(":")) continue;
-        String key = line.substring(0, line.indexOf(":"));
-        String value = line.substring(line.indexOf(":") + 1);
-        result.add(new Pair<>(Integer.valueOf(key), value));
+        String listType = line.substring(0, line.indexOf(":"));
+        String listName = line.substring(line.indexOf(":") + 1);
+        result.add(new Pair<>(Integer.valueOf(listType), listName));
       }
     } catch (IOException | RuntimeException e) {
       Log.w("ProjectDataParser", "Failed to parse list variables", e);
@@ -200,16 +200,16 @@ public class ProjectDataParser {
     return result;
   }
   
-  public ArrayList<Pair<Integer, String>> parseVariables(String data) {
+  public ArrayList<Pair<Integer, String>> parseVariables(String sectionContent) {
     ArrayList<Pair<Integer, String>> result = new ArrayList<>();
-    try (BufferedReader reader = new BufferedReader(new StringReader(data))) {
+    try (BufferedReader reader = new BufferedReader(new StringReader(sectionContent))) {
       String line;
       while ((line = reader.readLine()) != null) {
         if (line.trim().length() <= 0) continue;
         if (!line.contains(":")) continue;
-        String key = line.substring(0, line.indexOf(":"));
-        String value = line.substring(line.indexOf(":") + 1);
-        result.add(new Pair<>(Integer.valueOf(key), value));
+        String variableType = line.substring(0, line.indexOf(":"));
+        String variableName = line.substring(line.indexOf(":") + 1);
+        result.add(new Pair<>(Integer.valueOf(variableType), variableName));
       }
     } catch (IOException | RuntimeException e) {
       Log.w("ProjectDataParser", "Failed to parse variables", e);

@@ -138,31 +138,31 @@ public class StringResource {
     return result.toString();
   }
   
-  private String resolveTranslationString(Context context, boolean useTranslation, String key) {
+  private String resolveTranslationString(Context context, boolean useTranslation, String translationKey) {
     if (useTranslation) {
-      String value = blockTranslations.get(key);
-      return value != null ? value : "";
+      String translationValue = blockTranslations.get(translationKey);
+      return translationValue != null ? translationValue : "";
     }
     try {
       return context.getResources().getString(
-          context.getResources().getIdentifier(key, "string", context.getPackageName()));
+          context.getResources().getIdentifier(translationKey, "string", context.getPackageName()));
     } catch (Exception e) {
       return "";
     }
   }
 
-  private String decodeTranslationValue(String value) {
-    return value.replace("\\'", "'")
+  private String decodeTranslationValue(String translationValue) {
+    return translationValue.replace("\\'", "'")
         .replace("\\\"", "\"")
         .replace("\\n", "\n");
   }
 
   private String replaceFirstLiteral(String text, String target, String replacement) {
-    int index = text.indexOf(target);
-    if (index < 0) {
+    int matchIndex = text.indexOf(target);
+    if (matchIndex < 0) {
       return text;
     }
-    return text.substring(0, index) + replacement + text.substring(index + target.length());
+    return text.substring(0, matchIndex) + replacement + text.substring(matchIndex + target.length());
   }
   
   public String getTranslatedStringFromRes(Resources resources, int resId) {
@@ -174,9 +174,9 @@ public class StringResource {
         isLoaded = false;
         blockTranslations = loadTranslationsFromFile(translationDir);
       }
-      String value = blockTranslations.get(resEntryName);
-      if (value != null && !value.isEmpty()) {
-        return decodeTranslationValue(value);
+      String translationValue = blockTranslations.get(resEntryName);
+      if (translationValue != null && !translationValue.isEmpty()) {
+        return decodeTranslationValue(translationValue);
       }
       return resources.getString(resId);
     } catch (Exception exception) {
@@ -193,9 +193,9 @@ public class StringResource {
       blockTranslations = loadTranslationsFromFile(translationDir);
     }
     try {
-      String value = blockTranslations.get(resEntryName);
-      if (value != null && !value.isEmpty()) {
-        String template = decodeTranslationValue(value);
+      String translationValue = blockTranslations.get(resEntryName);
+      if (translationValue != null && !translationValue.isEmpty()) {
+        String template = decodeTranslationValue(translationValue);
         int replaceCount = 0;
         for (Object formatArg : formatArgs) {
           if (!template.contains("%s")) break;

@@ -11,19 +11,19 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class BitmapUtil {
-  public static int calculateSampleSize(BitmapFactory.Options options, int x, int y) {
+  public static int calculateSampleSize(BitmapFactory.Options options, int targetWidth, int targetHeight) {
     int outWidth = options.outWidth;
     int outHeight = options.outHeight;
     int sampleSize = 1;
     int candidate = 1;
-    if (outHeight > y || outWidth > x) {
+    if (outHeight > targetHeight || outWidth > targetWidth) {
       outHeight /= 2;
       outWidth /= 2;
       while (true) {
         sampleSize = candidate;
-        if (outHeight / candidate >= y) {
+        if (outHeight / candidate >= targetHeight) {
           sampleSize = candidate;
-          if (outWidth / candidate >= x) {
+          if (outWidth / candidate >= targetWidth) {
             candidate *= 2;
             continue;
           } 
@@ -52,57 +52,57 @@ public class BitmapUtil {
     return orientation;
   }
   
-  public static Bitmap rotateBitmap(Bitmap bitmap, int index) {
+  public static Bitmap rotateBitmap(Bitmap bitmap, int rotationDegrees) {
     Matrix matrix = new Matrix();
-    matrix.postRotate(index);
+    matrix.postRotate(rotationDegrees);
     return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, false);
   }
   
-  public static Bitmap scaleAndRotateBitmap(Bitmap bitmap, int x, int y, int width) {
+  public static Bitmap scaleAndRotateBitmap(Bitmap bitmap, int rotationDegrees, int scaleX, int scaleY) {
     Matrix matrix = new Matrix();
-    matrix.setScale(y, width);
-    matrix.postRotate(x);
+    matrix.setScale(scaleX, scaleY);
+    matrix.postRotate(rotationDegrees);
     return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, false);
   }
   
-  public static Bitmap decodeWithSampleSize(String filePath, int index) {
+  public static Bitmap decodeWithSampleSize(String filePath, int sampleSize) {
     BitmapFactory.Options options = new BitmapFactory.Options();
-    options.inSampleSize = index;
+    options.inSampleSize = sampleSize;
     return BitmapFactory.decodeFile(filePath, options);
   }
   
-  public static Bitmap decodeSampledBitmap(String filePath, int x, int y) {
+  public static Bitmap decodeSampledBitmap(String filePath, int targetWidth, int targetHeight) {
     BitmapFactory.Options options = new BitmapFactory.Options();
     options.inJustDecodeBounds = true;
     BitmapFactory.decodeFile(filePath, options);
-    options.inSampleSize = calculateSampleSize(options, x, y);
+    options.inSampleSize = calculateSampleSize(options, targetWidth, targetHeight);
     options.inJustDecodeBounds = false;
     return BitmapFactory.decodeFile(filePath, options);
   }
   
-  public static void processAndSaveBitmap(String key, String value, int x, int y, int width) {
-    Bitmap bitmap = decodeSampledBitmap(key, 512, 512);
+  public static void processAndSaveBitmap(String sourcePath, String destinationPath, int rotationDegrees, int scaleX, int scaleY) {
+    Bitmap bitmap = decodeSampledBitmap(sourcePath, 512, 512);
     if (bitmap == null) {
-      Log.w("BitmapUtil", "Failed to decode bitmap: " + key);
+      Log.w("BitmapUtil", "Failed to decode bitmap: " + sourcePath);
       return;
     }
     int rotation = 0;
     try {
-      rotation = getExifRotation(key);
+      rotation = getExifRotation(sourcePath);
     } catch (IOException e) {
-      Log.w("BitmapUtil", "Failed to get EXIF rotation: " + key, e);
+      Log.w("BitmapUtil", "Failed to get EXIF rotation: " + sourcePath, e);
     }
     Bitmap rotated = bitmap;
     if (rotation > 0) {
       rotated = rotateBitmap(bitmap, rotation);
     }
-    Bitmap result = scaleAndRotateBitmap(rotated, x, y, width);
-    try (FileOutputStream fos = new FileOutputStream(new File(value))) {
+    Bitmap result = scaleAndRotateBitmap(rotated, rotationDegrees, scaleX, scaleY);
+    try (FileOutputStream fos = new FileOutputStream(new File(destinationPath))) {
       result.compress(Bitmap.CompressFormat.PNG, 100, fos);
       fos.flush();
       result.recycle();
     } catch (Exception e) {
-      Log.w("BitmapUtil", "Failed to save bitmap: " + value, e);
+      Log.w("BitmapUtil", "Failed to save bitmap: " + destinationPath, e);
     }
   }
 }
