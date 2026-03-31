@@ -250,29 +250,29 @@ public class XmlLayoutParser {
      * Parses all XML attributes into the appropriate ViewBean fields.
      * Unrecognized attributes are appended to viewBean.inject.
      */
-    private static void parseAttributes(XmlPullParser parser, ViewBean bean, List<String> warnings,
+    private static void parseAttributes(XmlPullParser parser, ViewBean viewBean, List<String> warnings,
                                            Map<String, String> dimenMap) {
         StringBuilder injectBuilder = new StringBuilder();
-        if (bean.inject != null && !bean.inject.isEmpty()) {
-            injectBuilder.append(bean.inject);
+        if (viewBean.inject != null && !viewBean.inject.isEmpty()) {
+            injectBuilder.append(viewBean.inject);
         }
 
         int attrCount = parser.getAttributeCount();
         for (int i = 0; i < attrCount; i++) {
-            String ns = parser.getAttributeNamespace(i);
-            String name = parser.getAttributeName(i);
-            String value = parser.getAttributeValue(i);
-            String prefix = parser.getAttributePrefix(i);
+            String namespaceUri = parser.getAttributeNamespace(i);
+            String attrName = parser.getAttributeName(i);
+            String attrValue = parser.getAttributeValue(i);
+            String attrPrefix = parser.getAttributePrefix(i);
 
             // Skip xmlns declarations and android:id (handled separately)
-            if ("id".equals(name) && "http://schemas.android.com/apk/res/android".equals(ns)) {
+            if ("id".equals(attrName) && "http://schemas.android.com/apk/res/android".equals(namespaceUri)) {
                 continue;
             }
 
-            boolean handled = tryParseLayoutAttribute(name, value, bean, injectBuilder, warnings, dimenMap)
-                    || tryParseTextAttribute(name, value, bean, injectBuilder, warnings, dimenMap)
-                    || tryParseImageAttribute(name, value, bean)
-                    || tryParseViewAttribute(name, value, bean);
+            boolean handled = tryParseLayoutAttribute(attrName, attrValue, viewBean, injectBuilder, warnings, dimenMap)
+                    || tryParseTextAttribute(attrName, attrValue, viewBean, injectBuilder, warnings, dimenMap)
+                    || tryParseImageAttribute(attrName, attrValue, viewBean)
+                    || tryParseViewAttribute(attrName, attrValue, viewBean);
 
             if (!handled) {
                 // Unrecognized attribute → inject
@@ -280,116 +280,116 @@ public class XmlLayoutParser {
                 // xmlns:tools="..." in InjectAttributeHandler/readAttributesToReplace,
                 // so it MUST start with whitespace for valid XML parsing.
                 String qualifiedName;
-                if (prefix != null && !prefix.isEmpty()) {
-                    qualifiedName = prefix + ":" + name;
-                } else if (ns != null && !ns.isEmpty()) {
-                    qualifiedName = name;
+                if (attrPrefix != null && !attrPrefix.isEmpty()) {
+                    qualifiedName = attrPrefix + ":" + attrName;
+                } else if (namespaceUri != null && !namespaceUri.isEmpty()) {
+                    qualifiedName = attrName;
                 } else {
-                    qualifiedName = name;
+                    qualifiedName = attrName;
                 }
-                injectBuilder.append("\n").append(qualifiedName).append("=\"").append(value).append("\"");
+                injectBuilder.append("\n").append(qualifiedName).append("=\"").append(attrValue).append("\"");
             }
         }
 
         String inject = injectBuilder.toString();
-        bean.inject = inject.isEmpty() ? null : inject;
+        viewBean.inject = inject.isEmpty() ? null : inject;
     }
 
     // ====================== Layout Attributes ======================
 
-    private static boolean tryParseLayoutAttribute(String name, String value, ViewBean bean,
+    private static boolean tryParseLayoutAttribute(String attrName, String attrValue, ViewBean viewBean,
                                                     StringBuilder injectBuilder, List<String> warnings,
                                                     Map<String, String> dimenMap) {
-        switch (name) {
+        switch (attrName) {
             case "layout_width":
-                return parseDimensionToLayout(name, value, bean, true, injectBuilder, warnings, dimenMap);
+                return parseDimensionToLayout(attrName, attrValue, viewBean, true, injectBuilder, warnings, dimenMap);
             case "layout_height":
-                return parseDimensionToLayout(name, value, bean, false, injectBuilder, warnings, dimenMap);
+                return parseDimensionToLayout(attrName, attrValue, viewBean, false, injectBuilder, warnings, dimenMap);
             case "orientation":
-                bean.layout.orientation = "horizontal".equals(value)
+                viewBean.layout.orientation = "horizontal".equals(attrValue)
                         ? LayoutBean.ORIENTATION_HORIZONTAL
                         : LayoutBean.ORIENTATION_VERTICAL;
                 return true;
             case "gravity":
-                bean.layout.gravity = parseGravity(value);
+                viewBean.layout.gravity = parseGravity(attrValue);
                 return true;
             case "layout_gravity":
-                bean.layout.layoutGravity = parseGravity(value);
+                viewBean.layout.layoutGravity = parseGravity(attrValue);
                 return true;
             case "layout_weight":
-                bean.layout.weight = parseDpValue(value, 0);
+                viewBean.layout.weight = parseDpValue(attrValue, 0);
                 return true;
             case "cardElevation":
-                if (bean.type == ViewBeans.VIEW_TYPE_LAYOUT_CARDVIEW) {
-                    bean.layout.elevation = parseCardElevationOrInject(value, injectBuilder, warnings, dimenMap);
+                if (viewBean.type == ViewBeans.VIEW_TYPE_LAYOUT_CARDVIEW) {
+                    viewBean.layout.elevation = parseCardElevationOrInject(attrValue, injectBuilder, warnings, dimenMap);
                     return true;
                 }
                 return false;
             case "elevation":
-                bean.layout.elevation = parseDpOrInject(name, value, bean, injectBuilder, warnings, dimenMap);
+                viewBean.layout.elevation = parseDpOrInject(attrName, attrValue, viewBean, injectBuilder, warnings, dimenMap);
                 return true;
             case "weightSum":
-                bean.layout.weightSum = parseDpValue(value, 0);
+                viewBean.layout.weightSum = parseDpValue(attrValue, 0);
                 return true;
             case "layout_marginLeft":
             case "layout_marginStart":
-                bean.layout.marginLeft = parseDpOrInject(name, value, bean, injectBuilder, warnings, dimenMap);
+                viewBean.layout.marginLeft = parseDpOrInject(attrName, attrValue, viewBean, injectBuilder, warnings, dimenMap);
                 return true;
             case "layout_marginTop":
-                bean.layout.marginTop = parseDpOrInject(name, value, bean, injectBuilder, warnings, dimenMap);
+                viewBean.layout.marginTop = parseDpOrInject(attrName, attrValue, viewBean, injectBuilder, warnings, dimenMap);
                 return true;
             case "layout_marginRight":
             case "layout_marginEnd":
-                bean.layout.marginRight = parseDpOrInject(name, value, bean, injectBuilder, warnings, dimenMap);
+                viewBean.layout.marginRight = parseDpOrInject(attrName, attrValue, viewBean, injectBuilder, warnings, dimenMap);
                 return true;
             case "layout_marginBottom":
-                bean.layout.marginBottom = parseDpOrInject(name, value, bean, injectBuilder, warnings, dimenMap);
+                viewBean.layout.marginBottom = parseDpOrInject(attrName, attrValue, viewBean, injectBuilder, warnings, dimenMap);
                 return true;
             case "layout_margin":
-                int margin = parseDpOrInject(name, value, bean, injectBuilder, warnings, dimenMap);
-                bean.layout.marginLeft = margin;
-                bean.layout.marginTop = margin;
-                bean.layout.marginRight = margin;
-                bean.layout.marginBottom = margin;
+                int margin = parseDpOrInject(attrName, attrValue, viewBean, injectBuilder, warnings, dimenMap);
+                viewBean.layout.marginLeft = margin;
+                viewBean.layout.marginTop = margin;
+                viewBean.layout.marginRight = margin;
+                viewBean.layout.marginBottom = margin;
                 return true;
             case "paddingLeft":
             case "paddingStart":
-                bean.layout.paddingLeft = parseDpOrInject(name, value, bean, injectBuilder, warnings, dimenMap);
+                viewBean.layout.paddingLeft = parseDpOrInject(attrName, attrValue, viewBean, injectBuilder, warnings, dimenMap);
                 return true;
             case "paddingTop":
-                bean.layout.paddingTop = parseDpOrInject(name, value, bean, injectBuilder, warnings, dimenMap);
+                viewBean.layout.paddingTop = parseDpOrInject(attrName, attrValue, viewBean, injectBuilder, warnings, dimenMap);
                 return true;
             case "paddingRight":
             case "paddingEnd":
-                bean.layout.paddingRight = parseDpOrInject(name, value, bean, injectBuilder, warnings, dimenMap);
+                viewBean.layout.paddingRight = parseDpOrInject(attrName, attrValue, viewBean, injectBuilder, warnings, dimenMap);
                 return true;
             case "paddingBottom":
-                bean.layout.paddingBottom = parseDpOrInject(name, value, bean, injectBuilder, warnings, dimenMap);
+                viewBean.layout.paddingBottom = parseDpOrInject(attrName, attrValue, viewBean, injectBuilder, warnings, dimenMap);
                 return true;
             case "padding":
-                int padding = parseDpOrInject(name, value, bean, injectBuilder, warnings, dimenMap);
-                bean.layout.paddingLeft = padding;
-                bean.layout.paddingTop = padding;
-                bean.layout.paddingRight = padding;
-                bean.layout.paddingBottom = padding;
+                int padding = parseDpOrInject(attrName, attrValue, viewBean, injectBuilder, warnings, dimenMap);
+                viewBean.layout.paddingLeft = padding;
+                viewBean.layout.paddingTop = padding;
+                viewBean.layout.paddingRight = padding;
+                viewBean.layout.paddingBottom = padding;
                 return true;
             case "cardBackgroundColor":
-                if (bean.type == ViewBeans.VIEW_TYPE_LAYOUT_CARDVIEW) {
-                    return parseColorBackedBackground(value, bean);
+                if (viewBean.type == ViewBeans.VIEW_TYPE_LAYOUT_CARDVIEW) {
+                    return parseColorBackedBackground(attrValue, viewBean);
                 }
                 return false;
             case "backgroundTint":
-                if (bean.type == ViewBeans.VIEW_TYPE_WIDGET_MATERIALBUTTON) {
-                    return parseColorBackedBackground(value, bean);
+                if (viewBean.type == ViewBeans.VIEW_TYPE_WIDGET_MATERIALBUTTON) {
+                    return parseColorBackedBackground(attrValue, viewBean);
                 }
                 return false;
             case "contentScrim":
-                if (bean.type == ViewBeans.VIEW_TYPE_LAYOUT_COLLAPSINGTOOLBARLAYOUT) {
-                    return parseColorBackedBackground(value, bean);
+                if (viewBean.type == ViewBeans.VIEW_TYPE_LAYOUT_COLLAPSINGTOOLBARLAYOUT) {
+                    return parseColorBackedBackground(attrValue, viewBean);
                 }
                 return false;
             case "background":
-                return parseBackground(value, bean);
+                return parseBackground(attrValue, viewBean);
             default:
                 return false;
         }
@@ -399,34 +399,34 @@ public class XmlLayoutParser {
      * Parses layout_width or layout_height. Handles match_parent, wrap_content, dp values,
      * and @dimen/ references (方案 B: inject override).
      */
-    private static boolean parseDimensionToLayout(String attrName, String value, ViewBean bean,
+    private static boolean parseDimensionToLayout(String attrName, String attrValue, ViewBean viewBean,
                                                    boolean isWidth, StringBuilder injectBuilder,
                                                    List<String> warnings, Map<String, String> dimenMap) {
-        if ("match_parent".equals(value) || "fill_parent".equals(value)) {
-            if (isWidth) bean.layout.width = ViewGroup.LayoutParams.MATCH_PARENT;
-            else bean.layout.height = ViewGroup.LayoutParams.MATCH_PARENT;
-        } else if ("wrap_content".equals(value)) {
-            if (isWidth) bean.layout.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-            else bean.layout.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        } else if (value.startsWith("@dimen/")) {
+        if ("match_parent".equals(attrValue) || "fill_parent".equals(attrValue)) {
+            if (isWidth) viewBean.layout.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            else viewBean.layout.height = ViewGroup.LayoutParams.MATCH_PARENT;
+        } else if ("wrap_content".equals(attrValue)) {
+            if (isWidth) viewBean.layout.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+            else viewBean.layout.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        } else if (attrValue.startsWith("@dimen/")) {
             // Try to resolve via dimenMap first
             if (dimenMap != null) {
-                String resolved = dimenMap.get(value.substring("@dimen/".length()));
+                String resolved = dimenMap.get(attrValue.substring("@dimen/".length()));
                 if (resolved != null) {
                     int dp = parseDpValue(resolved, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    if (isWidth) bean.layout.width = dp;
-                    else bean.layout.height = dp;
+                    if (isWidth) viewBean.layout.width = dp;
+                    else viewBean.layout.height = dp;
                     return true;
                 }
             }
             // Fallback: inject override
-            injectBuilder.append("\n").append("android:").append(attrName).append("=\"").append(value).append("\"");
-            warnings.add("@dimen/ reference '" + value + "' for " + attrName
+            injectBuilder.append("\n").append("android:").append(attrName).append("=\"").append(attrValue).append("\"");
+            warnings.add("@dimen/ reference '" + attrValue + "' for " + attrName
                     + " preserved in inject (bean defaults to wrap_content)");
         } else {
-            int dp = parseDpValue(value, ViewGroup.LayoutParams.WRAP_CONTENT);
-            if (isWidth) bean.layout.width = dp;
-            else bean.layout.height = dp;
+            int dp = parseDpValue(attrValue, ViewGroup.LayoutParams.WRAP_CONTENT);
+            if (isWidth) viewBean.layout.width = dp;
+            else viewBean.layout.height = dp;
         }
         return true;
     }
@@ -435,34 +435,34 @@ public class XmlLayoutParser {
      * Parses a dp/px value or @dimen/ reference. If @dimen/, tries dimenMap first,
      * then falls back to inject override and returns 0.
      */
-    private static int parseDpOrInject(String attrName, String value, ViewBean bean,
+    private static int parseDpOrInject(String attrName, String attrValue, ViewBean viewBean,
                                         StringBuilder injectBuilder, List<String> warnings,
                                         Map<String, String> dimenMap) {
-        if (value.startsWith("@dimen/")) {
-            String dimenName = value.substring("@dimen/".length());
+        if (attrValue.startsWith("@dimen/")) {
+            String dimenName = attrValue.substring("@dimen/".length());
             if (dimenMap != null && dimenMap.containsKey(dimenName)) {
                 return parseDpValue(dimenMap.get(dimenName), 0);
             }
             // Fallback: inject override
-            injectBuilder.append("\n").append("android:").append(attrName).append("=\"").append(value).append("\"");
-            warnings.add("@dimen/ reference '" + value + "' for " + attrName + " preserved in inject");
+            injectBuilder.append("\n").append("android:").append(attrName).append("=\"").append(attrValue).append("\"");
+            warnings.add("@dimen/ reference '" + attrValue + "' for " + attrName + " preserved in inject");
             return 0;
         }
-        return parseDpValue(value, 0);
+        return parseDpValue(attrValue, 0);
     }
 
-    private static int parseCardElevationOrInject(String value, StringBuilder injectBuilder,
+    private static int parseCardElevationOrInject(String attrValue, StringBuilder injectBuilder,
                                                   List<String> warnings, Map<String, String> dimenMap) {
-        if (value.startsWith("@dimen/")) {
-            String dimenName = value.substring("@dimen/".length());
+        if (attrValue.startsWith("@dimen/")) {
+            String dimenName = attrValue.substring("@dimen/".length());
             if (dimenMap != null && dimenMap.containsKey(dimenName)) {
                 return parseDpValue(dimenMap.get(dimenName), 0);
             }
-            injectBuilder.append("\n").append("app:cardElevation=\"").append(value).append("\"");
-            warnings.add("@dimen/ reference '" + value + "' for cardElevation preserved in inject");
+            injectBuilder.append("\n").append("app:cardElevation=\"").append(attrValue).append("\"");
+            warnings.add("@dimen/ reference '" + attrValue + "' for cardElevation preserved in inject");
             return 0;
         }
-        return parseDpValue(value, 0);
+        return parseDpValue(attrValue, 0);
     }
 
     /**
@@ -494,48 +494,48 @@ public class XmlLayoutParser {
     /**
      * Parses a dimension value like "16dp", "16px", "16sp", "16" to an integer.
      */
-    private static int parseDpValue(String value, int defaultValue) {
-        if (value == null || value.isEmpty()) return defaultValue;
+    private static int parseDpValue(String dimensionValue, int defaultValue) {
+        if (dimensionValue == null || dimensionValue.isEmpty()) return defaultValue;
         // Strip unit suffixes
-        String num = value.replaceAll("(dp|dip|sp|px|pt|in|mm)$", "");
+        String numericPortion = dimensionValue.replaceAll("(dp|dip|sp|px|pt|in|mm)$", "");
         try {
-            return (int) Float.parseFloat(num);
+            return (int) Float.parseFloat(numericPortion);
         } catch (NumberFormatException e) {
             return defaultValue;
         }
     }
 
-    private static boolean parseBackground(String value, ViewBean bean) {
-        if (value.startsWith("#")) {
-            bean.layout.backgroundColor = parseColorValue(value);
+    private static boolean parseBackground(String backgroundValue, ViewBean viewBean) {
+        if (backgroundValue.startsWith("#")) {
+            viewBean.layout.backgroundColor = parseColorValue(backgroundValue);
             return true;
-        } else if (value.startsWith("@color/") || value.startsWith("?attr/") || value.startsWith("?")) {
-            bean.layout.backgroundColor = 1; // non-default to trigger LayoutGenerator output
-            bean.layout.backgroundResColor = value;
+        } else if (backgroundValue.startsWith("@color/") || backgroundValue.startsWith("?attr/") || backgroundValue.startsWith("?")) {
+            viewBean.layout.backgroundColor = 1; // non-default to trigger LayoutGenerator output
+            viewBean.layout.backgroundResColor = backgroundValue;
             return true;
-        } else if (value.startsWith("@drawable/") || value.startsWith("@mipmap/")) {
-            String resName = value.substring(value.indexOf('/') + 1);
-            bean.layout.backgroundResource = resName;
+        } else if (backgroundValue.startsWith("@drawable/") || backgroundValue.startsWith("@mipmap/")) {
+            String resName = backgroundValue.substring(backgroundValue.indexOf('/') + 1);
+            viewBean.layout.backgroundResource = resName;
             return true;
         }
         // Other background values (e.g., @android:color/) — fall through to inject
         return false;
     }
 
-    private static boolean parseColorBackedBackground(String value, ViewBean bean) {
-        if (value.startsWith("#")) {
-            bean.layout.backgroundColor = parseColorValue(value);
-            bean.layout.backgroundResColor = null;
+    private static boolean parseColorBackedBackground(String backgroundValue, ViewBean viewBean) {
+        if (backgroundValue.startsWith("#")) {
+            viewBean.layout.backgroundColor = parseColorValue(backgroundValue);
+            viewBean.layout.backgroundResColor = null;
             return true;
         }
-        if (value.startsWith("@color/") || value.startsWith("?attr/") || value.startsWith("?")) {
-            bean.layout.backgroundColor = 1;
-            bean.layout.backgroundResColor = value;
+        if (backgroundValue.startsWith("@color/") || backgroundValue.startsWith("?attr/") || backgroundValue.startsWith("?")) {
+            viewBean.layout.backgroundColor = 1;
+            viewBean.layout.backgroundResColor = backgroundValue;
             return true;
         }
-        if ("@android:color/transparent".equals(value)) {
-            bean.layout.backgroundColor = 0;
-            bean.layout.backgroundResColor = null;
+        if ("@android:color/transparent".equals(backgroundValue)) {
+            viewBean.layout.backgroundColor = 0;
+            viewBean.layout.backgroundResColor = null;
             return true;
         }
         return false;
@@ -543,70 +543,70 @@ public class XmlLayoutParser {
 
     // ====================== Text Attributes ======================
 
-    private static boolean tryParseTextAttribute(String name, String value, ViewBean bean,
+    private static boolean tryParseTextAttribute(String attrName, String attrValue, ViewBean viewBean,
                                                    StringBuilder injectBuilder, List<String> warnings,
                                                    Map<String, String> dimenMap) {
-        switch (name) {
+        switch (attrName) {
             case "text":
-                bean.text.text = value;
+                viewBean.text.text = attrValue;
                 return true;
             case "textSize":
-                if (value.startsWith("@dimen/")) {
-                    String dimenName = value.substring("@dimen/".length());
+                if (attrValue.startsWith("@dimen/")) {
+                    String dimenName = attrValue.substring("@dimen/".length());
                     if (dimenMap != null && dimenMap.containsKey(dimenName)) {
-                        bean.text.textSize = parseDpValue(dimenMap.get(dimenName), 12);
+                        viewBean.text.textSize = parseDpValue(dimenMap.get(dimenName), 12);
                     } else {
                         // Fallback: inject override
-                        injectBuilder.append("\n").append("android:textSize=\"").append(value).append("\"");
-                        warnings.add("@dimen/ reference '" + value + "' for textSize preserved in inject");
+                        injectBuilder.append("\n").append("android:textSize=\"").append(attrValue).append("\"");
+                        warnings.add("@dimen/ reference '" + attrValue + "' for textSize preserved in inject");
                     }
                 } else {
-                    bean.text.textSize = parseDpValue(value, 12);
+                    viewBean.text.textSize = parseDpValue(attrValue, 12);
                 }
                 return true;
             case "textColor":
-                if (value.startsWith("#")) {
-                    bean.text.textColor = parseColorValue(value);
-                } else if (value.startsWith("@color/") || value.startsWith("?attr/") || value.startsWith("?")) {
-                    bean.text.textColor = 1; // non-default to trigger output
-                    bean.text.resTextColor = value;
+                if (attrValue.startsWith("#")) {
+                    viewBean.text.textColor = parseColorValue(attrValue);
+                } else if (attrValue.startsWith("@color/") || attrValue.startsWith("?attr/") || attrValue.startsWith("?")) {
+                    viewBean.text.textColor = 1; // non-default to trigger output
+                    viewBean.text.resTextColor = attrValue;
                 } else {
                     return false; // e.g., @android:color/black → fall through to inject
                 }
                 return true;
             case "textColorHint":
-                if (value.startsWith("#")) {
-                    bean.text.hintColor = parseColorValue(value);
-                } else if (value.startsWith("@color/") || value.startsWith("?attr/") || value.startsWith("?")) {
-                    bean.text.hintColor = 1;
-                    bean.text.resHintColor = value;
+                if (attrValue.startsWith("#")) {
+                    viewBean.text.hintColor = parseColorValue(attrValue);
+                } else if (attrValue.startsWith("@color/") || attrValue.startsWith("?attr/") || attrValue.startsWith("?")) {
+                    viewBean.text.hintColor = 1;
+                    viewBean.text.resHintColor = attrValue;
                 } else {
                     return false; // fall through to inject
                 }
                 return true;
             case "hint":
-                bean.text.hint = value;
+                viewBean.text.hint = attrValue;
                 return true;
             case "textStyle":
-                bean.text.textType = parseTextStyle(value);
+                viewBean.text.textType = parseTextStyle(attrValue);
                 return true;
             case "singleLine":
-                bean.text.singleLine = "true".equals(value) ? 1 : 0;
+                viewBean.text.singleLine = "true".equals(attrValue) ? 1 : 0;
                 return true;
             case "lines":
-                bean.text.line = parseDpValue(value, 0);
+                viewBean.text.line = parseDpValue(attrValue, 0);
                 return true;
             case "maxLines":
-                bean.text.line = parseDpValue(value, 0);
+                viewBean.text.line = parseDpValue(attrValue, 0);
                 return true;
             default:
                 return false;
         }
     }
 
-    private static int parseTextStyle(String value) {
-        if (value == null) return TextBean.TEXT_TYPE_NORMAL;
-        return switch (value) {
+    private static int parseTextStyle(String textStyleValue) {
+        if (textStyleValue == null) return TextBean.TEXT_TYPE_NORMAL;
+        return switch (textStyleValue) {
             case "bold" -> TextBean.TEXT_TYPE_BOLD;
             case "italic" -> TextBean.TEXT_TYPE_ITALIC;
             case "bold|italic", "italic|bold" -> TextBean.TEXT_TYPE_BOLDITALIC;
@@ -616,32 +616,32 @@ public class XmlLayoutParser {
 
     // ====================== Image Attributes ======================
 
-    private static boolean tryParseImageAttribute(String name, String value, ViewBean bean) {
-        switch (name) {
+    private static boolean tryParseImageAttribute(String attrName, String attrValue, ViewBean viewBean) {
+        switch (attrName) {
             case "src":
             case "srcCompat":
-                if (value.startsWith("@drawable/")) {
-                    bean.image.resName = value.substring("@drawable/".length());
+                if (attrValue.startsWith("@drawable/")) {
+                    viewBean.image.resName = attrValue.substring("@drawable/".length());
                     return true;
-                } else if (value.startsWith("@mipmap/")) {
-                    bean.image.resName = value.substring("@mipmap/".length());
+                } else if (attrValue.startsWith("@mipmap/")) {
+                    viewBean.image.resName = attrValue.substring("@mipmap/".length());
                     return true;
                 }
                 return false; // other src values (e.g., @color/) → fall through to inject
             case "scaleType":
-                bean.image.scaleType = parseScaleType(value);
+                viewBean.image.scaleType = parseScaleType(attrValue);
                 return true;
             case "rotation":
-                bean.image.rotate = parseDpValue(value, 0);
+                viewBean.image.rotate = parseDpValue(attrValue, 0);
                 return true;
             default:
                 return false;
         }
     }
 
-    private static String parseScaleType(String value) {
-        if (value == null) return ImageBean.SCALE_TYPE_CENTER;
-        return switch (value) {
+    private static String parseScaleType(String scaleTypeValue) {
+        if (scaleTypeValue == null) return ImageBean.SCALE_TYPE_CENTER;
+        return switch (scaleTypeValue) {
             case "center" -> ImageBean.SCALE_TYPE_CENTER;
             case "fitXY" -> ImageBean.SCALE_TYPE_FIT_XY;
             case "fitStart" -> ImageBean.SCALE_TYPE_FIT_START;
@@ -655,22 +655,22 @@ public class XmlLayoutParser {
 
     // ====================== View Attributes ======================
 
-    private static boolean tryParseViewAttribute(String name, String value, ViewBean bean) {
-        switch (name) {
+    private static boolean tryParseViewAttribute(String attrName, String attrValue, ViewBean viewBean) {
+        switch (attrName) {
             case "alpha":
                 try {
-                    bean.alpha = Float.parseFloat(value);
+                    viewBean.alpha = Float.parseFloat(attrValue);
                 } catch (NumberFormatException ignored) {
                 }
                 return true;
             case "clickable":
-                bean.clickable = "true".equals(value) ? 1 : 0;
+                viewBean.clickable = "true".equals(attrValue) ? 1 : 0;
                 return true;
             case "enabled":
-                bean.enabled = "true".equals(value) ? 1 : 0;
+                viewBean.enabled = "true".equals(attrValue) ? 1 : 0;
                 return true;
             case "checked":
-                bean.checked = "true".equals(value) ? 1 : 0;
+                viewBean.checked = "true".equals(attrValue) ? 1 : 0;
                 return true;
             default:
                 return false;
@@ -679,10 +679,10 @@ public class XmlLayoutParser {
 
     // ====================== Utility ======================
 
-    private static int parseGravity(String value) {
-        if (value == null || value.isEmpty()) return LayoutBean.GRAVITY_NONE;
+    private static int parseGravity(String gravityValue) {
+        if (gravityValue == null || gravityValue.isEmpty()) return LayoutBean.GRAVITY_NONE;
         int gravity = 0;
-        for (String part : value.split("\\|")) {
+        for (String part : gravityValue.split("\\|")) {
             gravity |= switch (part.trim()) {
                 case "center" -> LayoutBean.GRAVITY_CENTER;
                 case "center_horizontal" -> LayoutBean.GRAVITY_CENTER_HORIZONTAL;
@@ -701,9 +701,9 @@ public class XmlLayoutParser {
      * Parses a hex color string (#RGB, #RRGGBB, #AARRGGBB) to an integer.
      * Returns the full ARGB color value (alpha preserved).
      */
-    private static int parseColorValue(String value) {
+    private static int parseColorValue(String colorString) {
         try {
-            return Color.parseColor(value);
+            return Color.parseColor(colorString);
         } catch (IllegalArgumentException e) {
             return 0xFFFFFFFF;
         }

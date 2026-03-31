@@ -6,11 +6,11 @@ import java.util.HashMap;
 public class GsonMapHelper {
   private static final Gson GSON = new Gson();
 
-  public static String toJson(HashMap<String, Object> map) {
-    return GSON.toJson(map);
+  public static String toJson(HashMap<String, Object> valueMap) {
+    return GSON.toJson(valueMap);
   }
   
-  public static HashMap<String, Object> fromJson(String input) {
-    return (HashMap<String, Object>)GSON.fromJson(input, (new HashMapTypeToken()).getType());
+  public static HashMap<String, Object> fromJson(String jsonText) {
+    return (HashMap<String, Object>)GSON.fromJson(jsonText, (new HashMapTypeToken()).getType());
   }
 }

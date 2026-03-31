@@ -899,9 +899,9 @@ public class BlockSpecRegistry {
     public static ArrayList<String> getBlockParams(String blockName) {
         String[] params = BLOCK_PARAMS.get(blockName);
         if (params == null) return new ArrayList<>();
-        ArrayList<String> list = new ArrayList<>(params.length);
-        Collections.addAll(list, params);
-        return list;
+        ArrayList<String> blockParams = new ArrayList<>(params.length);
+        Collections.addAll(blockParams, params);
+        return blockParams;
     }
 
     /**
@@ -913,9 +913,9 @@ public class BlockSpecRegistry {
     public static ArrayList<String> getBlockMenuItems(String blockName) {
         String[] items = EVENT_MENUS.get(blockName);
         if (items == null) return new ArrayList<>();
-        ArrayList<String> list = new ArrayList<>(items.length);
-        Collections.addAll(list, items);
-        return list;
+        ArrayList<String> menuItems = new ArrayList<>(items.length);
+        Collections.addAll(menuItems, items);
+        return menuItems;
     }
 
     /**

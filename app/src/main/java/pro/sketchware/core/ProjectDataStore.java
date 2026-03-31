@@ -983,13 +983,13 @@ public void readViewData(BufferedReader reader) throws IOException {
     if (blockEntryMap == null)
       return references;
     for (Map.Entry<String, ArrayList<BlockBean>> entry : blockEntryMap.entrySet()) {
-      String eventKey = entry.getKey();
+      String blockEntryKey = entry.getKey();
       for (BlockBean blockBean : entry.getValue()) {
         ClassInfo blockClassInfo = blockBean.getClassInfo();
         if (blockClassInfo != null
             && (isList ? blockClassInfo.isList() : blockClassInfo.isVariable())
             && blockBean.spec.equals(variableName)) {
-          references.add(new VariableReference(eventKey, blockBean.opCode, blockBean.spec, blockBean.id));
+          references.add(new VariableReference(blockEntryKey, blockBean.opCode, blockBean.spec, blockBean.id));
           continue;
         }
         ArrayList<ClassInfo> paramClassInfos = blockBean.getParamClassInfo();
@@ -1000,7 +1000,7 @@ public void readViewData(BufferedReader reader) throws IOException {
                 && (isList ? paramClassInfo.isList() : paramClassInfo.isVariable())
                 && b < blockBean.parameters.size()
                 && blockBean.parameters.get(b).equals(variableName)) {
-              references.add(new VariableReference(eventKey, blockBean.opCode, blockBean.spec, blockBean.id));
+              references.add(new VariableReference(blockEntryKey, blockBean.opCode, blockBean.spec, blockBean.id));
               break;
             }
           }
@@ -1011,13 +1011,13 @@ public void readViewData(BufferedReader reader) throws IOException {
   }
   
   public static class VariableReference {
-    public final String eventKey;
+    public final String blockEntryKey;
     public final String opCode;
     public final String blockSpec;
     public final String blockId;
     
-    public VariableReference(String eventKey, String opCode, String blockSpec, String blockId) {
-      this.eventKey = eventKey;
+    public VariableReference(String blockEntryKey, String opCode, String blockSpec, String blockId) {
+      this.blockEntryKey = blockEntryKey;
       this.opCode = opCode;
       this.blockSpec = blockSpec;
       this.blockId = blockId;
@@ -1343,7 +1343,7 @@ public void readViewData(BufferedReader reader) throws IOException {
           if (!targetBlockMap.containsKey(parsedFileName)) {
             targetBlockMap.put(parsedFileName, new HashMap<String, ArrayList<BlockBean>>());
           }
-          targetBlockMap.get(parsedFileName).put(parser.getEventKey(), parser.parseData(sectionContent));
+          targetBlockMap.get(parsedFileName).put(parser.getBlockKey(), parser.parseData(sectionContent));
           break;
         default:
           return;

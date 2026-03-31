@@ -47,14 +47,14 @@ public class LogicClickListener implements View.OnClickListener {
     private final ProjectDataStore projectDataManager;
     private final LogicEditorActivity logicEditor;
     private final ProjectFileBean projectFile;
-    private final String eventName;
+    private final String currentBlockEntryKey;
     private final String javaName;
 
     public LogicClickListener(LogicEditorActivity logicEditor) {
         this.logicEditor = logicEditor;
         projectDataManager = ProjectDataManager.getProjectDataManager(logicEditor.scId);
         projectFile = logicEditor.projectFile;
-        eventName = logicEditor.id + "_" + logicEditor.eventName;
+        currentBlockEntryKey = logicEditor.id + "_" + logicEditor.eventName;
         javaName = logicEditor.projectFile.getJavaName();
     }
 
@@ -313,10 +313,10 @@ public class LogicClickListener implements View.OnClickListener {
                         boolean inUse;
                         if (isList) {
                             inUse = logicEditor.blockPane.hasListReference(name)
-                                    || projectDataManager.isListUsedInBlocks(javaName, name, eventName);
+                                    || projectDataManager.isListUsedInBlocks(javaName, name, currentBlockEntryKey);
                         } else {
                             inUse = logicEditor.blockPane.hasMapReference(name)
-                                    || projectDataManager.isVariableUsedInBlocks(javaName, name, eventName);
+                                    || projectDataManager.isVariableUsedInBlocks(javaName, name, currentBlockEntryKey);
                         }
                         if (inUse) {
                             SketchwareUtil.toastError(Helper.getResString(isList
@@ -465,7 +465,7 @@ public class LogicClickListener implements View.OnClickListener {
 
         LinkedHashMap<String, List<ProjectDataStore.VariableReference>> grouped = new LinkedHashMap<>();
         for (ProjectDataStore.VariableReference ref : references) {
-            grouped.computeIfAbsent(ref.eventKey, k -> new LinkedList<>()).add(ref);
+            grouped.computeIfAbsent(ref.blockEntryKey, k -> new LinkedList<>()).add(ref);
         }
 
         int horizontalPadding = dpToPx(20);
@@ -476,11 +476,11 @@ public class LogicClickListener implements View.OnClickListener {
         List<Item> data = new ArrayList<>();
         ArrayList<ProjectDataStore.VariableReference> refByPosition = new ArrayList<>();
         for (Map.Entry<String, List<ProjectDataStore.VariableReference>> entry : grouped.entrySet()) {
-            String eventKey = entry.getKey();
+            String blockEntryKey = entry.getKey();
             List<ProjectDataStore.VariableReference> refs = entry.getValue();
-            boolean isCurrentEvent = eventKey.equals(eventName);
-            String suffix = isCurrentEvent ? " ★" : "";
-            data.add(new Item(eventKey + " (" + refs.size() + ")" + suffix));
+            boolean isCurrentEntry = blockEntryKey.equals(currentBlockEntryKey);
+            String suffix = isCurrentEntry ? " ★" : "";
+            data.add(new Item(blockEntryKey + " (" + refs.size() + ")" + suffix));
             refByPosition.add(null);
             for (ProjectDataStore.VariableReference ref : refs) {
                 data.add(new Item(ref.opCode, true));
@@ -503,7 +503,7 @@ public class LogicClickListener implements View.OnClickListener {
             ProjectDataStore.VariableReference ref = refByPosition.get(position);
             if (ref == null) return;
             dialog.dismiss();
-            if (ref.eventKey.equals(eventName)) {
+            if (ref.blockEntryKey.equals(currentBlockEntryKey)) {
                 BlockView blockView = logicEditor.blockPane.findBlockByString(ref.blockId);
                 if (blockView != null) {
                     logicEditor.blockPane.clearSearchHighlight();
@@ -513,21 +513,21 @@ public class LogicClickListener implements View.OnClickListener {
                     logicEditor.scrollToBlock(blockView);
                 }
             } else {
-                navigateToEventByKey(ref.eventKey, ref.blockId);
+                navigateToEventByKey(ref.blockEntryKey, ref.blockId);
             }
         });
     }
 
-    private void navigateToEventByKey(String eventKey, String blockId) {
+    private void navigateToEventByKey(String blockEntryKey, String blockId) {
         ArrayList<EventBean> events = projectDataManager.getEvents(javaName);
         for (EventBean event : events) {
-            String key = event.targetId + "_" + event.eventName;
-            if (key.equals(eventKey)) {
+            String eventBlockEntryKey = event.targetId + "_" + event.eventName;
+            if (eventBlockEntryKey.equals(blockEntryKey)) {
                 logicEditor.navigateToEvent(event.targetId, event.eventName, blockId);
                 return;
             }
         }
-        SketchwareUtil.toast(eventKey);
+        SketchwareUtil.toast(blockEntryKey);
     }
 
     private static class RenameAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

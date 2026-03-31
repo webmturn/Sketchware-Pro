@@ -15,12 +15,12 @@ public class DefinitionBlockView extends BlockView {
   
   public TextView definitionLabel;
   
-  public DefinitionBlockView(Context context, String key, String value, String extra, String extra2, ArrayList<BlockBean> list) {
-    super(context, -1, extra2, key, value, extra);
-    collectionName = extra2;
-    blockData = list;
+  public DefinitionBlockView(Context context, String blockType, String typeName, String opCode, String collectionName, ArrayList<BlockBean> blockData) {
+    super(context, -1, collectionName, blockType, typeName, opCode);
+    this.collectionName = collectionName;
+    this.blockData = blockData;
     blockTypeInt = 2;
-    setSpec(collectionName);
+    setSpec(this.collectionName);
   }
 
   public String getCollectionName() {

@@ -388,9 +388,9 @@ public class ProjectBuilder {
         }
 
         /* Add JARs from project's classpath */
-        String path = FileUtil.getExternalStorageDir() + "/.sketchware/data/" + projectFilePaths.sc_id + "/files/classpath/";
-        ArrayList<String> jars = FileUtil.listFiles(path, "jar");
-        classpath.append(":").append(TextUtils.join(":", jars));
+        String classpathDirectoryPath = FileUtil.getExternalStorageDir() + "/.sketchware/data/" + projectFilePaths.sc_id + "/files/classpath/";
+        ArrayList<String> classpathJarPaths = FileUtil.listFiles(classpathDirectoryPath, "jar");
+        classpath.append(":").append(TextUtils.join(":", classpathJarPaths));
 
         return classpath.toString();
     }
@@ -892,8 +892,8 @@ public class ProjectBuilder {
             }
         }
 
-        for (String file : FileUtil.listFiles(projectFilePaths.binDirectoryPath + File.separator + "dex", "dex")) {
-            dexes.add(new File(file));
+        for (String dexFilePath : FileUtil.listFiles(projectFilePaths.binDirectoryPath + File.separator + "dex", "dex")) {
+            dexes.add(new File(dexFilePath));
         }
 
         LogUtil.d(TAG, "Will merge these " + dexes.size() + " DEX files to classes.dex: " + dexes);

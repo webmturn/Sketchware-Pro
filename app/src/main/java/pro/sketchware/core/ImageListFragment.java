@@ -206,32 +206,30 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
         }
         int index = 0;
         for (ProjectResourceBean image : images) {
-            if (image.isNew || image.isEdited) {
-                try {
-                    String path;
-                    if (image.savedPos == 0) {
-                        path = getImagePath(image);
-                    } else {
-                        path = image.resFullName;
-                    }
-
-
-                    String imageBasePath = projectImagesDirectory + File.separator + image.resName;
-                    Log.d("svg", "full name : " + image.resFullName);
-                    if (image.resFullName.endsWith(".svg")) {
-                        // convert the svg to vectors
-                        String svgPath = fpu.getSvgFullPath(sc_id, image.resName);
-                        copyFile(path, svgPath);
-                        Map<String, Object> colorInfo = colorMap.get(index);
-                        Object colorHexValue = colorInfo != null ? colorInfo.get("colorHex") : null;
-                        String colorHex = colorHexValue != null ? colorHexValue.toString() : "#FFFFFF";
-                        svgUtils.convert(svgPath, projectImagesDirectory, colorHex);
-                    } else {
-                        BitmapUtil.processAndSaveBitmap(path, image.isNinePatch() ? imageBasePath + ".9.png" : imageBasePath + ".png", image.rotate, image.flipHorizontal, image.flipVertical);
-                    }
-                } catch (Exception e) {
-                    Log.e("ImageListFragment", e.getMessage(), e);
+            try {
+                String sourcePath;
+                if (image.savedPos == 0) {
+                    sourcePath = getImagePath(image);
+                } else {
+                    sourcePath = image.resFullName;
                 }
+
+
+                String imageBasePath = projectImagesDirectory + File.separator + image.resName;
+                Log.d("svg", "full name : " + image.resFullName);
+                if (image.resFullName.endsWith(".svg")) {
+                    // convert the svg to vectors
+                    String svgPath = fpu.getSvgFullPath(sc_id, image.resName);
+                    copyFile(sourcePath, svgPath);
+                    Map<String, Object> colorInfo = colorMap.get(index);
+                    Object colorHexValue = colorInfo != null ? colorInfo.get("colorHex") : null;
+                    String colorHex = colorHexValue != null ? colorHexValue.toString() : "#FFFFFF";
+                    svgUtils.convert(svgPath, projectImagesDirectory, colorHex);
+                } else {
+                    BitmapUtil.processAndSaveBitmap(sourcePath, image.isNinePatch() ? imageBasePath + ".9.png" : imageBasePath + ".png", image.rotate, image.flipHorizontal, image.flipVertical);
+                }
+            } catch (Exception e) {
+                Log.e("ImageListFragment", e.getMessage(), e);
             }
             index++;
         }

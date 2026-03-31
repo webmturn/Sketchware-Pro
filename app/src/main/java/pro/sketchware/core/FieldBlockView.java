@@ -30,8 +30,8 @@ public class FieldBlockView extends BaseBlockView {
   
   public int isDefinitionBlock = 0;
   
-  public FieldBlockView(Context context, String key, String value) {
-    super(context, key, value, true);
+  public FieldBlockView(Context context, String blockType, String typeName) {
+    super(context, blockType, typeName, true);
     fieldContext = context;
     initSs(context);
   }

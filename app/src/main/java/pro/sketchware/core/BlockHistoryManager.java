@@ -38,15 +38,15 @@ public class BlockHistoryManager {
   }
   
   /**
-   * Builds a composite history key from file name, event name, and extra data.
+   * Builds a composite history key from file name, entry ID, and entry name.
    *
-   * @param key   the Java filename (e.g. {@code "MainActivity.java"})
-   * @param value the event/MoreBlock name (e.g. {@code "btn1_onClick"})
-   * @param extra additional qualifier
-   * @return the composite key in format {@code "key_value_extra"}
+   * @param fileName the Java filename (e.g. {@code "MainActivity.java"})
+   * @param entryId the identifier segment for the logic entry (e.g. a target ID, MoreBlock name, or {@code "onCreate"})
+   * @param entryName the logic entry name (e.g. {@code "onClick"}, {@code "moreBlock"}, or {@code "initializeLogic"})
+   * @return the composite key in format {@code "fileName_entryId_entryName"}
    */
-  public static String buildKey(String key, String value, String extra) {
-    return key + "_" + value + "_" + extra;
+  public static String buildKey(String fileName, String entryId, String entryName) {
+    return fileName + "_" + entryId + "_" + entryName;
   }
   
   /**

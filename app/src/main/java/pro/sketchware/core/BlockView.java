@@ -73,19 +73,19 @@ public class BlockView extends BaseBlockView {
 
   private String paletteSearchTextCache;
   
-  public BlockView(Context context, int index, String key, String value, String extra) {
-    super(context, value, false);
-    setTag(Integer.valueOf(index));
-    spec = key;
-    opCode = extra;
+  public BlockView(Context context, int blockId, String spec, String blockType, String opCode) {
+    super(context, blockType, false);
+    setTag(Integer.valueOf(blockId));
+    this.spec = spec;
+    this.opCode = opCode;
     initBlock();
   }
   
-  public BlockView(Context context, int index, String key, String value, String extra, String tag) {
-    super(context, value, extra, false);
-    setTag(Integer.valueOf(index));
-    spec = key;
-    opCode = tag;
+  public BlockView(Context context, int blockId, String spec, String blockType, String typeName, String opCode) {
+    super(context, blockType, typeName, false);
+    setTag(Integer.valueOf(blockId));
+    this.spec = spec;
+    this.opCode = opCode;
     initBlock();
   }
   

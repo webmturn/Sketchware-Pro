@@ -9,39 +9,39 @@ public class SharedPrefsHelper {
   
   public SharedPreferences.Editor editor;
   
-  public SharedPrefsHelper(Context context, String value) {
-    prefs = context.getSharedPreferences(value, Context.MODE_PRIVATE);
+  public SharedPrefsHelper(Context context, String prefsName) {
+    prefs = context.getSharedPreferences(prefsName, Context.MODE_PRIVATE);
     editor = prefs.edit();
   }
   
-  public int getInt(String value, int index) {
-    return prefs.getInt(value, index);
+  public int getInt(String preferenceKey, int defaultValue) {
+    return prefs.getInt(preferenceKey, defaultValue);
   }
   
-  public String getString(String key, String value) {
-    return prefs.getString(key, value);
+  public String getString(String preferenceKey, String defaultValue) {
+    return prefs.getString(preferenceKey, defaultValue);
   }
   
-  public void put(String key, Object data) {
-    put(key, data, true);
+  public void put(String preferenceKey, Object storedValue) {
+    put(preferenceKey, storedValue, true);
   }
   
-  public void put(String key, Object data, boolean flag) {
-    if (data instanceof String) {
-      editor.putString(key, (String)data);
-    } else if (data instanceof Integer) {
-      editor.putInt(key, ((Integer)data).intValue());
-    } else if (data instanceof Long) {
-      editor.putLong(key, ((Long)data).longValue());
-    } else if (data instanceof Boolean) {
-      editor.putBoolean(key, ((Boolean)data).booleanValue());
+  public void put(String preferenceKey, Object storedValue, boolean applyImmediately) {
+    if (storedValue instanceof String) {
+      editor.putString(preferenceKey, (String)storedValue);
+    } else if (storedValue instanceof Integer) {
+      editor.putInt(preferenceKey, ((Integer)storedValue).intValue());
+    } else if (storedValue instanceof Long) {
+      editor.putLong(preferenceKey, ((Long)storedValue).longValue());
+    } else if (storedValue instanceof Boolean) {
+      editor.putBoolean(preferenceKey, ((Boolean)storedValue).booleanValue());
     } 
-    if (flag)
+    if (applyImmediately)
       editor.apply(); 
   }
   
-  public void putMap(String key, HashMap<String, Object> map) {
-    put(key, GsonMapHelper.toJson(map));
+  public void putMap(String preferenceKey, HashMap<String, Object> valueMap) {
+    put(preferenceKey, GsonMapHelper.toJson(valueMap));
   }
   
   public boolean clearAll() {
@@ -50,14 +50,14 @@ public class SharedPrefsHelper {
     return true;
   }
   
-  public boolean remove(String value) {
-    editor.remove(value);
+  public boolean remove(String preferenceKey) {
+    editor.remove(preferenceKey);
     editor.apply();
     return true;
   }
   
-  public boolean getBoolean(String value, boolean flag) {
-    return prefs.getBoolean(value, flag);
+  public boolean getBoolean(String preferenceKey, boolean defaultValue) {
+    return prefs.getBoolean(preferenceKey, defaultValue);
   }
   
   public boolean commit() {
@@ -65,38 +65,38 @@ public class SharedPrefsHelper {
     return true;
   }
   
-  public boolean contains(String value) {
-    return prefs.contains(value);
+  public boolean contains(String preferenceKey) {
+    return prefs.contains(preferenceKey);
   }
   
   public HashMap<String, Object> getAll() {
-    HashMap<Object, Object> result;
+    HashMap<Object, Object> allEntries;
     try {
-      result = (HashMap)prefs.getAll();
+      allEntries = (HashMap)prefs.getAll();
     } catch (Exception exception) {
-      result = new HashMap<>();
+      allEntries = new HashMap<>();
     } 
-    return (HashMap)result;
+    return (HashMap)allEntries;
   }
   
-  public boolean getBooleanDefault(String value) {
-    return prefs.getBoolean(value, false);
+  public boolean getBooleanDefault(String preferenceKey) {
+    return prefs.getBoolean(preferenceKey, false);
   }
   
-  public int getIntDefault(String value) {
-    return getInt(value, 0);
+  public int getIntDefault(String preferenceKey) {
+    return getInt(preferenceKey, 0);
   }
   
-  public long getLong(String value) {
-    return prefs.getLong(value, 0L);
+  public long getLong(String preferenceKey) {
+    return prefs.getLong(preferenceKey, 0L);
   }
   
-  public String getStringDefault(String value) {
-    return getString(value, "");
+  public String getStringDefault(String preferenceKey) {
+    return getString(preferenceKey, "");
   }
   
-  public HashMap<String, Object> getMap(String value) {
-    value = getStringDefault(value);
-    return value.isEmpty() ? new HashMap<>() : GsonMapHelper.fromJson(value);
+  public HashMap<String, Object> getMap(String preferenceKey) {
+    String jsonText = getStringDefault(preferenceKey);
+    return jsonText.isEmpty() ? new HashMap<>() : GsonMapHelper.fromJson(jsonText);
   }
 }

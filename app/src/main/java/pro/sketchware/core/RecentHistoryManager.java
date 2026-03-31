@@ -35,28 +35,28 @@ public class RecentHistoryManager {
       database = new SharedPrefsHelper(context, "P26"); 
   }
   
-  public void addRecentItem(String key, String value) {
-    ArrayList<String> existingList = recentMap.get(key);
+  public void addRecentItem(String category, String item) {
+    ArrayList<String> existingList = recentMap.get(category);
     ArrayList<String> historyList = existingList;
     if (existingList == null) {
       historyList = new ArrayList<>();
-      recentMap.put(key, historyList);
+      recentMap.put(category, historyList);
     } 
-    if (historyList.contains(value))
-      historyList.remove(value); 
-    historyList.add(0, value);
+    if (historyList.contains(item))
+      historyList.remove(item);
+    historyList.add(0, item);
     if (historyList.size() > maxItems)
       historyList.remove(historyList.size() - 1); 
   }
   
   public void saveToDatabase() {
-    for (String key : recentMap.keySet()) {
+    for (String category : recentMap.keySet()) {
       StringBuilder entryBuilder = new StringBuilder();
-      for (String item : recentMap.get(key)) {
+      for (String item : recentMap.get(category)) {
         entryBuilder.append(item);
         entryBuilder.append(",");
       } 
-      database.put(key, entryBuilder.toString());
+      database.put(category, entryBuilder.toString());
     } 
   }
   

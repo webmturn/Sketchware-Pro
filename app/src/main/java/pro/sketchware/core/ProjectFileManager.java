@@ -215,8 +215,8 @@ public class ProjectFileManager {
         buffer.append(gson.toJson(projectFileBean, ProjectFileBean.class)).append("\n");
   }
   
-  public void setActivities(ArrayList<ProjectFileBean> list) {
-    activities = list;
+  public void setActivities(ArrayList<ProjectFileBean> activities) {
+    this.activities = activities;
   }
   
   public ProjectFileBean getFileByXmlName(String xmlName) {
@@ -256,8 +256,8 @@ public class ProjectFileManager {
     } 
   }
   
-  public void setCustomViews(ArrayList<ProjectFileBean> list) {
-    customViews = list;
+  public void setCustomViews(ArrayList<ProjectFileBean> customViews) {
+    this.customViews = customViews;
   }
 
   public ArrayList<ProjectFileBean> getCustomViews() {

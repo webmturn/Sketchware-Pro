@@ -22,18 +22,18 @@ public class FontCollectionManager extends BaseCollectionManager {
         return instance;
     }
 
-    public ProjectResourceBean getResourceByName(String name) {
+    public ProjectResourceBean getResourceByName(String resourceName) {
         for (ProjectResourceBean resource : getResources()) {
-            if (resource.resName.equals(name)) return resource;
+            if (resource.resName.equals(resourceName)) return resource;
         }
         return null;
     }
 
     public void renameResource(ProjectResourceBean resourceBean, String newName, boolean save) {
         for (int i = collections.size() - 1; i >= 0; i--) {
-            CollectionBean bean = collections.get(i);
-            if (bean.name.equals(resourceBean.resName)) {
-                bean.name = newName;
+            CollectionBean collection = collections.get(i);
+            if (collection.name.equals(resourceBean.resName)) {
+                collection.name = newName;
                 break;
             }
         }
@@ -46,8 +46,8 @@ public class FontCollectionManager extends BaseCollectionManager {
 
     public void addResource(String sourcePath, ProjectResourceBean resourceBean, boolean save) throws CompileException {
         if (collections == null) initialize();
-        for (CollectionBean bean : collections) {
-            if (bean.name.equals(resourceBean.resName)) {
+        for (CollectionBean collection : collections) {
+            if (collection.name.equals(resourceBean.resName)) {
                 throw new CompileException("duplicate_name");
             }
         }
@@ -76,13 +76,13 @@ public class FontCollectionManager extends BaseCollectionManager {
         if (save) saveCollections();
     }
 
-    public void removeResource(String name, boolean save) {
+    public void removeResource(String resourceName, boolean save) {
         Iterator<CollectionBean> it = collections.iterator();
         while (it.hasNext()) {
-            CollectionBean bean = it.next();
-            if (bean.name.equals(name)) {
+            CollectionBean collection = it.next();
+            if (collection.name.equals(resourceName)) {
                 it.remove();
-                fileUtil.deleteFileByPath(dataDirPath + File.separator + bean.data);
+                fileUtil.deleteFileByPath(dataDirPath + File.separator + collection.data);
                 break;
             }
         }
@@ -95,9 +95,9 @@ public class FontCollectionManager extends BaseCollectionManager {
         dataDirPath = basePath + "data";
     }
 
-    public boolean hasResource(String name) {
+    public boolean hasResource(String resourceName) {
         for (ProjectResourceBean resource : getResources()) {
-            if (resource.resName.equals(name)) return true;
+            if (resource.resName.equals(resourceName)) return true;
         }
         return false;
     }
@@ -110,8 +110,8 @@ public class FontCollectionManager extends BaseCollectionManager {
     public ArrayList<ProjectResourceBean> getResources() {
         if (collections == null) initialize();
         ArrayList<ProjectResourceBean> resources = new ArrayList<>();
-        for (CollectionBean bean : collections) {
-            resources.add(new ProjectResourceBean(ProjectResourceBean.PROJECT_RES_TYPE_FILE, bean.name, bean.data));
+        for (CollectionBean collection : collections) {
+            resources.add(new ProjectResourceBean(ProjectResourceBean.PROJECT_RES_TYPE_FILE, collection.name, collection.data));
         }
         return resources;
     }

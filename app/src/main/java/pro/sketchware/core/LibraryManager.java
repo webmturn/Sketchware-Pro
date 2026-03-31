@@ -27,8 +27,8 @@ public class LibraryManager {
   
   public Gson gson;
   
-  public LibraryManager(String value) {
-    projectId = value;
+  public LibraryManager(String projectId) {
+    this.projectId = projectId;
     fileUtil = new EncryptedFileUtil();
     gson = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
     initializeDefaults();
@@ -106,53 +106,53 @@ public class LibraryManager {
     } 
   }
   
-  public final boolean writeToFile(String value) {
+  public final boolean writeToFile(String filePath) {
     StringBuilder contentBuffer = new StringBuilder();
     serializeLibraries(contentBuffer);
     try {
-      boolean saved = fileUtil.writeBytes(value, encryptStringForStorage(contentBuffer.toString(), value));
+      boolean saved = fileUtil.writeBytes(filePath, encryptStringForStorage(contentBuffer.toString(), filePath));
       if (!saved)
-        Log.w("LibraryManager", "Failed to write library metadata for project " + projectId + " to " + value);
+        Log.w("LibraryManager", "Failed to write library metadata for project " + projectId + " to " + filePath);
       return saved;
     } catch (IOException | RuntimeException e) {
-      Log.w("LibraryManager", "Failed to write library metadata for project " + projectId + " to " + value, e);
+      Log.w("LibraryManager", "Failed to write library metadata for project " + projectId + " to " + filePath, e);
     } 
     return false;
   }
   
-  public void parseLibrarySection(String key, String value) {
+  public void parseLibrarySection(String sectionName, String sectionContent) {
     LibraryState currentState = new LibraryState();
     currentState.firebaseDB = firebaseDB;
     currentState.compat = compat;
     currentState.admob = admob;
     currentState.googleMap = googleMap;
-    parseLibrarySection(key, value, currentState);
+    parseLibrarySection(sectionName, sectionContent, currentState);
     firebaseDB = currentState.firebaseDB;
     compat = currentState.compat;
     admob = currentState.admob;
     googleMap = currentState.googleMap;
   }
 
-  private void parseLibrarySection(String key, String value, LibraryState targetState) {
-    if (value.length() <= 0)
+  private void parseLibrarySection(String sectionName, String sectionContent, LibraryState targetState) {
+    if (sectionContent.length() <= 0)
       return; 
     try {
-      ProjectLibraryBean bean = gson.fromJson(value, ProjectLibraryBean.class);
-      if (key.equals("firebaseDB")) {
-        bean.libType = ProjectLibraryBean.PROJECT_LIB_TYPE_FIREBASE;
-        targetState.firebaseDB = bean;
-      } else if (key.equals("compat")) {
-        bean.libType = ProjectLibraryBean.PROJECT_LIB_TYPE_COMPAT;
-        targetState.compat = bean;
-      } else if (key.equals("admob")) {
-        bean.libType = ProjectLibraryBean.PROJECT_LIB_TYPE_ADMOB;
-        targetState.admob = bean;
-      } else if (key.equals("googleMap")) {
-        bean.libType = ProjectLibraryBean.PROJECT_LIB_TYPE_GOOGLE_MAP;
-        targetState.googleMap = bean;
+      ProjectLibraryBean parsedLibrary = gson.fromJson(sectionContent, ProjectLibraryBean.class);
+      if (sectionName.equals("firebaseDB")) {
+        parsedLibrary.libType = ProjectLibraryBean.PROJECT_LIB_TYPE_FIREBASE;
+        targetState.firebaseDB = parsedLibrary;
+      } else if (sectionName.equals("compat")) {
+        parsedLibrary.libType = ProjectLibraryBean.PROJECT_LIB_TYPE_COMPAT;
+        targetState.compat = parsedLibrary;
+      } else if (sectionName.equals("admob")) {
+        parsedLibrary.libType = ProjectLibraryBean.PROJECT_LIB_TYPE_ADMOB;
+        targetState.admob = parsedLibrary;
+      } else if (sectionName.equals("googleMap")) {
+        parsedLibrary.libType = ProjectLibraryBean.PROJECT_LIB_TYPE_GOOGLE_MAP;
+        targetState.googleMap = parsedLibrary;
       }
     } catch (RuntimeException e) {
-      Log.w("LibraryManager", "Failed to parse library section: " + key, e);
+      Log.w("LibraryManager", "Failed to parse library section: " + sectionName, e);
     }
   }
   
