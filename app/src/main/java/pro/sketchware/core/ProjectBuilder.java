@@ -140,9 +140,9 @@ public class ProjectBuilder {
      * project settings, and AAPT2 binary path.
      *
      * @param context the Android context
-     * @param yqVar   the project file paths configuration
+     * @param projectFilePaths   the project file paths configuration
      */
-    public ProjectBuilder(Context context, ProjectFilePaths yqVar) {
+    public ProjectBuilder(Context context, ProjectFilePaths projectFilePaths) {
         /* Detect some bad behaviour of the app */
         StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
                 .detectAll()
@@ -166,28 +166,28 @@ public class ProjectBuilder {
         }
 
         aapt2Binary = new File(context.getCacheDir(), "aapt2");
-        buildSettings = new BuildSettings(yqVar.sc_id);
+        buildSettings = new BuildSettings(projectFilePaths.sc_id);
         this.context = context;
-        projectFilePaths = yqVar;
+        this.projectFilePaths = projectFilePaths;
         filePathUtil = new FilePathUtil();
-        localLibraryManager = new ManageLocalLibrary(yqVar.sc_id);
-        builtInLibraryManager = new BuiltInLibraryManager(yqVar.sc_id);
+        localLibraryManager = new ManageLocalLibrary(projectFilePaths.sc_id);
+        builtInLibraryManager = new BuiltInLibraryManager(projectFilePaths.sc_id);
         File defaultAndroidJar = new File(BuiltInLibraries.EXTRACTED_COMPILE_ASSETS_PATH, "android.jar");
         androidJarPath = buildSettings.getValue(BuildSettings.SETTING_ANDROID_JAR_PATH, defaultAndroidJar.getAbsolutePath());
-        proguard = new ProguardHandler(yqVar.sc_id);
-        settings = new ProjectSettings(yqVar.sc_id);
+        proguard = new ProguardHandler(projectFilePaths.sc_id);
+        settings = new ProjectSettings(projectFilePaths.sc_id);
     }
 
     /**
      * Creates a new project builder with a progress receiver for UI updates.
      *
-     * @param buildAsyncTask the progress receiver to report build steps to
+     * @param progressReceiver the progress receiver to report build steps to
      * @param context        the Android context
-     * @param yqVar          the project file paths configuration
+     * @param projectFilePaths          the project file paths configuration
      */
-    public ProjectBuilder(BuildProgressReceiver buildAsyncTask, Context context, ProjectFilePaths yqVar) {
-        this(context, yqVar);
-        progressReceiver = buildAsyncTask;
+    public ProjectBuilder(BuildProgressReceiver progressReceiver, Context context, ProjectFilePaths projectFilePaths) {
+        this(context, projectFilePaths);
+        this.progressReceiver = progressReceiver;
     }
 
     /**

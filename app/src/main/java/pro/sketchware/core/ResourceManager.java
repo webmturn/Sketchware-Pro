@@ -47,11 +47,11 @@ public class ResourceManager {
         SketchwarePaths.getFontsResourcePath() + File.separator + projectId);
   }
   
-  public ResourceManager(String key, String value, String extra, String tag) {
-    imageDirPath = value;
-    soundDirPath = extra;
-    fontDirPath = tag;
-    projectId = key;
+  public ResourceManager(String projectId, String imageDirPath, String soundDirPath, String fontDirPath) {
+    this.imageDirPath = imageDirPath;
+    this.soundDirPath = soundDirPath;
+    this.fontDirPath = fontDirPath;
+    this.projectId = projectId;
     refreshCacheSignature();
     fileUtil = new EncryptedFileUtil(false);
     images = new ArrayList<>();
@@ -158,30 +158,30 @@ public class ResourceManager {
     } 
   }
   
-  public void parseResourceSection(String key, String value) {
-    parseResourceSection(key, value, images, sounds, fonts);
+  public void parseResourceSection(String sectionName, String sectionContent) {
+    parseResourceSection(sectionName, sectionContent, images, sounds, fonts);
   }
 
-  private void parseResourceSection(String key, String value,
+  private void parseResourceSection(String sectionName, String sectionContent,
       ArrayList<ProjectResourceBean> targetImages,
       ArrayList<ProjectResourceBean> targetSounds,
       ArrayList<ProjectResourceBean> targetFonts) {
-    if (value.trim().length() <= 0) return;
-    try (BufferedReader reader = new BufferedReader(new StringReader(value))) {
+    if (sectionContent.trim().length() <= 0) return;
+    try (BufferedReader reader = new BufferedReader(new StringReader(sectionContent))) {
       String line;
       while ((line = reader.readLine()) != null) {
         if (line.trim().length() <= 0 || line.trim().charAt(0) != '{') continue;
-        ProjectResourceBean bean = gson.fromJson(line, ProjectResourceBean.class);
-        if (key.equals("images")) {
-          targetImages.add(bean);
-        } else if (key.equals("sounds")) {
-          targetSounds.add(bean);
-        } else if (key.equals("fonts")) {
-          targetFonts.add(bean);
+        ProjectResourceBean parsedResource = gson.fromJson(line, ProjectResourceBean.class);
+        if (sectionName.equals("images")) {
+          targetImages.add(parsedResource);
+        } else if (sectionName.equals("sounds")) {
+          targetSounds.add(parsedResource);
+        } else if (sectionName.equals("fonts")) {
+          targetFonts.add(parsedResource);
         }
       }
     } catch (IOException | RuntimeException e) {
-      Log.w("ResourceManager", "Failed to parse resource section: " + key, e);
+      Log.w("ResourceManager", "Failed to parse resource section: " + sectionName, e);
     }
   }
   

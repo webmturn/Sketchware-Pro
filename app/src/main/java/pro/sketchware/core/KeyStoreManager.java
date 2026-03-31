@@ -54,44 +54,44 @@ public class KeyStoreManager {
     }
   }
   
-  public void loadKeyStoreFromFile(String key, String value) throws IOException, GeneralSecurityException {
-    loadKeyStore(new FileInputStream(new File(key)), value);
+  public void loadKeyStoreFromFile(String keyStorePath, String password) throws IOException, GeneralSecurityException {
+    loadKeyStore(new FileInputStream(new File(keyStorePath)), password);
   }
   
-  public void generateAndSaveKeyStore(String key, String value, int index, String extra, String tag) throws IOException, GeneralSecurityException {
-    byte[] bytes = generateKeyPair(value, index, extra, tag);
-    File file = new File(SketchwarePaths.getKeystoreDirPath());
-    if (!file.exists() && !file.mkdirs())
-      throw new IOException("Failed to create keystore directory: " + file.getAbsolutePath());
-    boolean saved = (new EncryptedFileUtil()).writeBytes(key, bytes);
+  public void generateAndSaveKeyStore(String keyStorePath, String distinguishedName, int validityYears, String alias, String password) throws IOException, GeneralSecurityException {
+    byte[] keyStoreBytes = generateKeyPair(distinguishedName, validityYears, alias, password);
+    File keystoreDir = new File(SketchwarePaths.getKeystoreDirPath());
+    if (!keystoreDir.exists() && !keystoreDir.mkdirs())
+      throw new IOException("Failed to create keystore directory: " + keystoreDir.getAbsolutePath());
+    boolean saved = (new EncryptedFileUtil()).writeBytes(keyStorePath, keyStoreBytes);
     if (!saved)
-      throw new IOException("Failed to write keystore: " + key);
+      throw new IOException("Failed to write keystore: " + keyStorePath);
   }
   
   public final byte[] exportKeyStore(String password) throws IOException, GeneralSecurityException {
     if (keyStore == null)
       return null; 
     keyBuffer = ByteBuffer.allocate(8192);
-    KeyStoreOutputStream hI = new KeyStoreOutputStream(this);
-    keyStore.store(hI, password.toCharArray());
-    byte[] bytes = new byte[keyBuffer.position()];
-    System.arraycopy(keyBuffer.array(), 0, bytes, 0, keyBuffer.position());
-    int length = bytes.length;
-    String hexStr = "";
-    for (int byteIdx = 0; byteIdx < length; byteIdx++) {
-      byte currentByte = bytes[byteIdx];
-      hexStr = hexStr + String.format("%02X", new Object[] { Byte.valueOf(currentByte) });
+    KeyStoreOutputStream keyStoreOutputStream = new KeyStoreOutputStream(this);
+    keyStore.store(keyStoreOutputStream, password.toCharArray());
+    byte[] keyStoreBytes = new byte[keyBuffer.position()];
+    System.arraycopy(keyBuffer.array(), 0, keyStoreBytes, 0, keyBuffer.position());
+    int keyStoreLength = keyStoreBytes.length;
+    String hexString = "";
+    for (int byteIdx = 0; byteIdx < keyStoreLength; byteIdx++) {
+      byte currentByte = keyStoreBytes[byteIdx];
+      hexString = hexString + String.format("%02X", new Object[] { Byte.valueOf(currentByte) });
     } 
-    return bytes;
+    return keyStoreBytes;
   }
   
-  public byte[] generateKeyPair(String key, int index, String value, String extra) throws IOException, GeneralSecurityException {
+  public byte[] generateKeyPair(String distinguishedName, int validityYears, String alias, String password) throws IOException, GeneralSecurityException {
     try {
       KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
       keyPairGenerator.initialize(1024, SecureRandom.getInstance("SHA1PRNG"));
       KeyPair keyPair = keyPairGenerator.generateKeyPair();
       X509V3CertificateGenerator x509V3CertificateGenerator = new X509V3CertificateGenerator();
-      X509Principal x509Principal = new X509Principal(key);
+      X509Principal x509Principal = new X509Principal(distinguishedName);
       SecureRandom secureRandom = new SecureRandom();
       int randomInt = secureRandom.nextInt();
       int serialNumber = randomInt;
@@ -101,7 +101,7 @@ public class KeyStoreManager {
       x509V3CertificateGenerator.setIssuerDN((X509Name)x509Principal);
       Date date = new Date(System.currentTimeMillis());
       x509V3CertificateGenerator.setNotBefore(date);
-      date = new Date(System.currentTimeMillis() + index * 31536000000L);
+      date = new Date(System.currentTimeMillis() + validityYears * 31536000000L);
       x509V3CertificateGenerator.setNotAfter(date);
       x509V3CertificateGenerator.setSubjectDN((X509Name)x509Principal);
       x509V3CertificateGenerator.setPublicKey(keyPair.getPublic());
@@ -109,16 +109,16 @@ public class KeyStoreManager {
       X509Certificate x509Certificate = x509V3CertificateGenerator.generateX509Certificate(keyPair.getPrivate());
       JksKeyStore jksKeyStore = new JksKeyStore();
       keyStore = (KeyStore)jksKeyStore;
-      keyStore.load(null, extra.toCharArray());
-      keyStore.setKeyEntry(value, keyPair.getPrivate(), extra.toCharArray(), new Certificate[] { x509Certificate });
-      return exportKeyStore(extra);
+      keyStore.load(null, password.toCharArray());
+      keyStore.setKeyEntry(alias, keyPair.getPrivate(), password.toCharArray(), new Certificate[] { x509Certificate });
+      return exportKeyStore(password);
     } catch (LoadKeystoreException loadKeystoreException) {
       Log.e("KeyStoreManager", "Failed to access keystore", loadKeystoreException);
       throw loadKeystoreException;
     } 
   }
   
-  public ZipSigner createZipSigner(String input) throws GeneralSecurityException, ClassNotFoundException, IllegalAccessException, InstantiationException {
+  public ZipSigner createZipSigner(String unused) throws GeneralSecurityException, ClassNotFoundException, IllegalAccessException, InstantiationException {
     ZipSigner zipSigner = new ZipSigner();
     zipSigner.issueLoadingCertAndKeysProgressEvent();
     String alias = getFirstAlias();

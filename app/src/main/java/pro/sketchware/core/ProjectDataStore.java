@@ -120,11 +120,11 @@ public class ProjectDataStore {
    * Returns the component at the given index for the specified Java file.
    *
    * @param fileName the Java filename key (e.g. {@code "MainActivity.java"})
-   * @param index    the component's position in the list
+   * @param componentIndex    the component's position in the list
    * @return the component bean, or {@code null} if the file has no components
    */
-  public ComponentBean getComponent(String fileName, int index) {
-    return !componentMap.containsKey(fileName) ? null : componentMap.get(fileName).get(index);
+  public ComponentBean getComponent(String fileName, int componentIndex) {
+    return !componentMap.containsKey(fileName) ? null : componentMap.get(fileName).get(componentIndex);
   }
   
   /**
@@ -174,17 +174,17 @@ public class ProjectDataStore {
    * Returns the block chain for a specific event/MoreBlock in the given file.
    *
    * @param fileName the Java filename key (e.g. {@code "MainActivity.java"})
-   * @param data     the event or MoreBlock identifier (e.g. {@code "onCreate"},
+   * @param blockKey     the event or MoreBlock identifier (e.g. {@code "onCreate"},
    *                 {@code "btn1_onClick"}, {@code "myFunc_moreBlock_blocks"})
    * @return the list of blocks in the chain, or an empty list
    */
-  public ArrayList<BlockBean> getBlocks(String fileName, String data) {
+  public ArrayList<BlockBean> getBlocks(String fileName, String blockKey) {
     if (!blockMap.containsKey(fileName))
       return new ArrayList<>(); 
     HashMap<String, ArrayList<BlockBean>> blockEntryMap = blockMap.get(fileName);
-    if (blockEntryMap == null || !blockEntryMap.containsKey(data))
+    if (blockEntryMap == null || !blockEntryMap.containsKey(blockKey))
       return new ArrayList<>();
-    return blockEntryMap.get(data);
+    return blockEntryMap.get(blockKey);
   }
   
   /**
@@ -492,42 +492,42 @@ public class ProjectDataStore {
    * Adds a new event to the specified file.
    *
    * @param fileName the Java filename key
-   * @param x        the event target type
-   * @param y        the event type
-   * @param data     the target ID (e.g. view ID or component ID)
-   * @param extra    additional event data
+   * @param eventType         the event type
+   * @param targetType        the event target type
+   * @param targetId          the target ID (e.g. view ID or component ID)
+   * @param eventName         the event name
    */
-  public void addEvent(String fileName, int x, int y, String data, String extra) {
+  public void addEvent(String fileName, int eventType, int targetType, String targetId, String eventName) {
     if (!eventMap.containsKey(fileName))
       eventMap.put(fileName, new ArrayList<>()); 
-    eventMap.get(fileName).add(new EventBean(x, y, data, extra));
+    eventMap.get(fileName).add(new EventBean(eventType, targetType, targetId, eventName));
   }
   
   /**
    * Adds a new component to the specified file.
    *
    * @param fileName the Java filename key
-   * @param index    the component type index (see {@link ComponentBean} type constants)
-   * @param data     the component ID
+   * @param componentType    the component type index (see {@link ComponentBean} type constants)
+   * @param componentId     the component ID
    */
-  public void addComponent(String fileName, int index, String data) {
+  public void addComponent(String fileName, int componentType, String componentId) {
     if (!componentMap.containsKey(fileName))
       componentMap.put(fileName, new ArrayList<>()); 
-    componentMap.get(fileName).add(new ComponentBean(index, data));
+    componentMap.get(fileName).add(new ComponentBean(componentType, componentId));
   }
   
   /**
    * Adds a new component with an extra parameter to the specified file.
    *
    * @param fileName the Java filename key
-   * @param index    the component type index
-   * @param data     the component ID
-   * @param extra    additional configuration parameter
+   * @param componentType    the component type index
+   * @param componentId     the component ID
+   * @param parameterValue    additional configuration parameter
    */
-  public void addComponentWithParam(String fileName, int index, String data, String extra) {
+  public void addComponentWithParam(String fileName, int componentType, String componentId, String parameterValue) {
     if (!componentMap.containsKey(fileName))
       componentMap.put(fileName, new ArrayList<>()); 
-    componentMap.get(fileName).add(new ComponentBean(index, data, extra));
+    componentMap.get(fileName).add(new ComponentBean(componentType, componentId, parameterValue));
   }
   
   /**
@@ -536,10 +536,10 @@ public class ProjectDataStore {
    *
    * @param fileName       the Java filename key
    * @param classInfo      the class info of the removed element
-   * @param data           the ID of the removed element
+   * @param targetId           the ID of the removed element
    * @param skipCustomView if {@code true}, skips onBindCustomView event handlers
    */
-  public void removeBlockReferences(String fileName, ClassInfo classInfo, String data, boolean skipCustomView) {
+  public void removeBlockReferences(String fileName, ClassInfo classInfo, String targetId, boolean skipCustomView) {
     if (!blockMap.containsKey(fileName))
       return; 
     HashMap<String, ArrayList<BlockBean>> blockEntryMap = blockMap.get(fileName);
@@ -554,7 +554,7 @@ public class ProjectDataStore {
       for (int i = blockBeans.size() - 1; i >= 0; i--) {
         BlockBean blockBean = blockBeans.get(i);
         ClassInfo blockClassInfo = blockBean.getClassInfo();
-        if (blockClassInfo != null && blockClassInfo.isExactType(classInfo.getClassName()) && blockBean.spec.equals(data)) {
+        if (blockClassInfo != null && blockClassInfo.isExactType(classInfo.getClassName()) && blockBean.spec.equals(targetId)) {
           blockBeans.remove(i);
           continue;
         }
@@ -562,7 +562,7 @@ public class ProjectDataStore {
         if (paramClassInfos != null && !paramClassInfos.isEmpty()) {
           for (int b = 0; b < paramClassInfos.size(); b++) {
             ClassInfo paramClassInfo = paramClassInfos.get(b);
-            if (paramClassInfo != null && classInfo.isAssignableFrom(paramClassInfo) && blockBean.parameters.get(b).equals(data))
+            if (paramClassInfo != null && classInfo.isAssignableFrom(paramClassInfo) && blockBean.parameters.get(b).equals(targetId))
               blockBean.parameters.set(b, ""); 
           }
         }
@@ -582,16 +582,16 @@ public class ProjectDataStore {
     viewMap.get(fileName).add(viewBean);
   }
   
-  public void addMoreBlock(String fileName, String data, String extra) {
+  public void addMoreBlock(String fileName, String moreBlockName, String moreBlockSpec) {
     if (!moreBlockMap.containsKey(fileName))
       moreBlockMap.put(fileName, new ArrayList<>()); 
-    moreBlockMap.get(fileName).add(new Pair<>(data, extra));
+    moreBlockMap.get(fileName).add(new Pair<>(moreBlockName, moreBlockSpec));
   }
   
-  public void putBlocks(String fileName, String data, ArrayList<BlockBean> list) {
+  public void putBlocks(String fileName, String blockKey, ArrayList<BlockBean> blocks) {
     if (!blockMap.containsKey(fileName))
       blockMap.put(fileName, new HashMap<>()); 
-    blockMap.get(fileName).put(data, list);
+    blockMap.get(fileName).put(blockKey, blocks);
   }
   
   public final void serializeLogicData(StringBuilder buffer) {
@@ -682,20 +682,20 @@ public class ProjectDataStore {
     }
   }
   
-  public String getMoreBlockSpec(String fileName, String data) {
+  public String getMoreBlockSpec(String fileName, String moreBlockName) {
     if (!moreBlockMap.containsKey(fileName))
       return ""; 
     ArrayList<Pair<String, String>> moreBlocks = moreBlockMap.get(fileName);
     if (moreBlocks == null)
       return ""; 
     for (Pair<String, String> moreBlockEntry : moreBlocks) {
-      if (moreBlockEntry.first.equals(data))
+      if (moreBlockEntry.first.equals(moreBlockName))
         return moreBlockEntry.second; 
     } 
     return "";
   }
   
-  public ArrayList<String> getComponentIdsByType(String fileName, int index) {
+  public ArrayList<String> getComponentIdsByType(String fileName, int componentType) {
     ArrayList<String> componentIds = new ArrayList<>();
     if (!componentMap.containsKey(fileName))
       return componentIds; 
@@ -703,7 +703,7 @@ public class ProjectDataStore {
     if (components == null)
       return componentIds; 
     for (ComponentBean componentBean : components) {
-      if (componentBean.type == index)
+      if (componentBean.type == componentType)
         componentIds.add(componentBean.componentId); 
     } 
     return componentIds;
@@ -819,10 +819,10 @@ public void readViewData(BufferedReader reader) throws IOException {
     } 
   }
   
-  public void addListVariable(String fileName, int index, String data) {
+  public void addListVariable(String fileName, int listType, String listName) {
     if (!listMap.containsKey(fileName))
       listMap.put(fileName, new ArrayList<>()); 
-    listMap.get(fileName).add(new Pair<>(index, data));
+    listMap.get(fileName).add(new Pair<>(listType, listName));
   }
   
   public void removeComponent(String fileName, ComponentBean componentBean) {
@@ -867,22 +867,22 @@ public void readViewData(BufferedReader reader) throws IOException {
     }
   }
   
-  public boolean isListUsedInBlocks(String fileName, String data, String extra) {
+  public boolean isListUsedInBlocks(String fileName, String listName, String excludedEventKey) {
     HashMap<String, ArrayList<BlockBean>> blockEntryMap = blockMap.get(fileName);
     if (blockEntryMap == null)
       return false; 
     for (Map.Entry<String, ArrayList<BlockBean>> entry : blockEntryMap.entrySet()) {
-      if (entry.getKey().equals(extra))
+      if (entry.getKey().equals(excludedEventKey))
         continue; 
       for (BlockBean blockBean : entry.getValue()) {
         ClassInfo blockClassInfo = blockBean.getClassInfo();
-        if (blockClassInfo != null && blockClassInfo.isList() && blockBean.spec.equals(data))
+        if (blockClassInfo != null && blockClassInfo.isList() && blockBean.spec.equals(listName))
           return true; 
         ArrayList<ClassInfo> paramClassInfos = blockBean.getParamClassInfo();
         if (paramClassInfos != null && !paramClassInfos.isEmpty())
           for (int b = 0; b < paramClassInfos.size(); b++) {
             ClassInfo paramClassInfo = paramClassInfos.get(b);
-            if (paramClassInfo != null && paramClassInfo.isList() && blockBean.parameters.get(b).equals(data))
+            if (paramClassInfo != null && paramClassInfo.isList() && blockBean.parameters.get(b).equals(listName))
               return true; 
           }  
       } 
@@ -890,13 +890,13 @@ public void readViewData(BufferedReader reader) throws IOException {
     return false;
   }
   
-  public ViewBean getViewBean(String fileName, String data) {
+  public ViewBean getViewBean(String fileName, String viewId) {
     ArrayList<ViewBean> views = viewMap.get(fileName);
     if (views == null)
       return null; 
     for (int b = 0; b < views.size(); b++) {
       ViewBean viewBean = views.get(b);
-      if (data.equals(viewBean.id))
+      if (viewId.equals(viewBean.id))
         return viewBean; 
     } 
     return null;
@@ -914,7 +914,7 @@ public void readViewData(BufferedReader reader) throws IOException {
     return listNames;
   }
   
-  public ArrayList<ComponentBean> getComponentsByType(String fileName, int index) {
+  public ArrayList<ComponentBean> getComponentsByType(String fileName, int componentType) {
     ArrayList<ComponentBean> filteredComponents = new ArrayList<>();
     if (!componentMap.containsKey(fileName))
       return filteredComponents; 
@@ -922,7 +922,7 @@ public void readViewData(BufferedReader reader) throws IOException {
     if (components == null)
       return filteredComponents; 
     for (ComponentBean componentBean : components) {
-      if (componentBean.type == index)
+      if (componentBean.type == componentType)
         filteredComponents.add(componentBean); 
     } 
     return filteredComponents;
@@ -942,10 +942,10 @@ public void readViewData(BufferedReader reader) throws IOException {
     } 
   }
   
-  public void addVariable(String fileName, int index, String data) {
+  public void addVariable(String fileName, int variableType, String variableName) {
     if (!variableMap.containsKey(fileName))
       variableMap.put(fileName, new ArrayList<>()); 
-    variableMap.get(fileName).add(new Pair<>(index, data));
+    variableMap.get(fileName).add(new Pair<>(variableType, variableName));
   }
   
   public boolean hasLogicBackup() {
@@ -954,22 +954,22 @@ public void readViewData(BufferedReader reader) throws IOException {
         SketchwarePaths.getDataPath(projectId) + File.separator + "logic");
   }
   
-  public boolean isVariableUsedInBlocks(String fileName, String data, String extra) {
+  public boolean isVariableUsedInBlocks(String fileName, String variableName, String excludedEventKey) {
     HashMap<String, ArrayList<BlockBean>> blockEntryMap = blockMap.get(fileName);
     if (blockEntryMap == null)
       return false; 
     for (Map.Entry<String, ArrayList<BlockBean>> entry : blockEntryMap.entrySet()) {
-      if (entry.getKey().equals(extra))
+      if (entry.getKey().equals(excludedEventKey))
         continue; 
       for (BlockBean blockBean : entry.getValue()) {
         ClassInfo blockClassInfo = blockBean.getClassInfo();
-        if (blockClassInfo != null && blockClassInfo.isVariable() && blockBean.spec.equals(data))
+        if (blockClassInfo != null && blockClassInfo.isVariable() && blockBean.spec.equals(variableName))
           return true; 
         ArrayList<ClassInfo> paramClassInfos = blockBean.getParamClassInfo();
         if (paramClassInfos != null && !paramClassInfos.isEmpty())
           for (int b = 0; b < paramClassInfos.size(); b++) {
             ClassInfo paramClassInfo = paramClassInfos.get(b);
-            if (paramClassInfo != null && paramClassInfo.isVariable() && blockBean.parameters.get(b).equals(data))
+            if (paramClassInfo != null && paramClassInfo.isVariable() && blockBean.parameters.get(b).equals(variableName))
               return true; 
           }  
       } 
@@ -1029,7 +1029,7 @@ public void readViewData(BufferedReader reader) throws IOException {
     return views != null ? views : new ArrayList<>();
   }
   
-  public ArrayList<String> getListNamesByType(String fileName, int index) {
+  public ArrayList<String> getListNamesByType(String fileName, int listType) {
     ArrayList<String> filteredNames = new ArrayList<>();
     if (!listMap.containsKey(fileName))
       return filteredNames; 
@@ -1037,26 +1037,26 @@ public void readViewData(BufferedReader reader) throws IOException {
     if (listVars == null)
       return filteredNames; 
     for (Pair<Integer, String> listEntry : listVars) {
-      if (listEntry.first == index)
+      if (listEntry.first == listType)
         filteredNames.add(listEntry.second); 
     } 
     return filteredNames;
   }
   
-  public ArrayList<Pair<Integer, String>> getViewsByType(String fileName, String data) {
+  public ArrayList<Pair<Integer, String>> getViewsByType(String fileName, String viewTypeName) {
     ArrayList<Pair<Integer, String>> filteredViews = new ArrayList<>();
     ArrayList<ViewBean> viewBeans = viewMap.get(fileName);
     if (viewBeans == null)
       return filteredViews; 
     for (ViewBean viewBean : viewBeans) {
       Pair<Integer, String> pair;
-      if (data.equals("CheckBox")) {
+      if (viewTypeName.equals("CheckBox")) {
         if (viewBean.getClassInfo().matchesType("CompoundButton")) {
           pair = new Pair<>(viewBean.type, viewBean.id);
         } else {
           continue;
         } 
-      } else if (viewBean.getClassInfo().matchesType(data)) {
+      } else if (viewBean.getClassInfo().matchesType(viewTypeName)) {
         pair = new Pair<>(viewBean.type, viewBean.id);
       } else {
         continue;
@@ -1066,7 +1066,7 @@ public void readViewData(BufferedReader reader) throws IOException {
     return filteredViews;
   }
   
-  public void removeEvent(String fileName, String data, String extra) {
+  public void removeEvent(String fileName, String targetId, String eventName) {
     if (!eventMap.containsKey(fileName))
       return; 
     ArrayList<EventBean> events = eventMap.get(fileName);
@@ -1074,7 +1074,7 @@ public void readViewData(BufferedReader reader) throws IOException {
       return; 
     for (int i = events.size() - 1; i >= 0; i--) {
       EventBean eventBean = events.get(i);
-      if (eventBean.targetId.equals(data) && extra.equals(eventBean.eventName)) {
+      if (eventBean.targetId.equals(targetId) && eventName.equals(eventBean.eventName)) {
         events.remove(i);
         HashMap<String, ArrayList<BlockBean>> fileBlocks = blockMap != null ? blockMap.get(fileName) : null;
         if (fileBlocks != null) {
@@ -1108,12 +1108,12 @@ public void readViewData(BufferedReader reader) throws IOException {
     return backupBytes != null && backupBytes.length > 0;
   }
   
-  public boolean hasComponent(String fileName, int index, String data) {
+  public boolean hasComponent(String fileName, int componentType, String componentId) {
     ArrayList<ComponentBean> components = componentMap.get(fileName);
     if (components == null)
       return false; 
     for (ComponentBean componentBean : components) {
-      if (componentBean.type == index && componentBean.componentId.equals(data))
+      if (componentBean.type == componentType && componentBean.componentId.equals(componentId))
         return true; 
     } 
     return false;
@@ -1123,7 +1123,7 @@ public void readViewData(BufferedReader reader) throws IOException {
     return !componentMap.containsKey(fileName) ? new ArrayList<>() : componentMap.get(fileName);
   }
   
-  public ArrayList<String> getVariableNamesByType(String fileName, int index) {
+  public ArrayList<String> getVariableNamesByType(String fileName, int variableType) {
     ArrayList<String> varNames = new ArrayList<>();
     if (!variableMap.containsKey(fileName))
       return varNames; 
@@ -1131,7 +1131,7 @@ public void readViewData(BufferedReader reader) throws IOException {
     if (varEntries == null)
       return varNames; 
     for (Pair<Integer, String> varEntry : varEntries) {
-      if (varEntry.first == index)
+      if (varEntry.first == variableType)
         varNames.add(varEntry.second); 
     } 
     return varNames;
@@ -1144,31 +1144,31 @@ public void readViewData(BufferedReader reader) throws IOException {
     loadLogicFromPath(logicPath, "logic data");
   }
   
-  public boolean hasListVariable(String fileName, int index, String data) {
+  public boolean hasListVariable(String fileName, int listType, String listName) {
     ArrayList<Pair<Integer, String>> listVars = listMap.get(fileName);
     if (listVars == null)
       return false; 
     for (Pair<Integer, String> listEntry : listVars) {
-      if (listEntry.first == index && listEntry.second.equals(data))
+      if (listEntry.first == listType && listEntry.second.equals(listName))
         return true; 
     } 
     return false;
   }
   
-  public boolean hasCompoundButtonView(String fileName, String data) {
+  public boolean hasCompoundButtonView(String fileName, String viewId) {
     ArrayList<ViewBean> views = viewMap.get(fileName);
     if (views == null)
       return false; 
     for (ViewBean viewBean : views) {
-      if (viewBean.getClassInfo().matchesType("CompoundButton") && viewBean.id.equals(data))
+      if (viewBean.getClassInfo().matchesType("CompoundButton") && viewBean.id.equals(viewId))
         return true; 
     } 
     return false;
   }
   
-  public ArrayList<ViewBean> getCustomViewBeans(String input) {
+  public ArrayList<ViewBean> getCustomViewBeans(String xmlName) {
     ArrayList<ViewBean> customViews = new ArrayList<>();
-    ArrayList<ViewBean> viewBeans = viewMap.get(input);
+    ArrayList<ViewBean> viewBeans = viewMap.get(xmlName);
     if (viewBeans == null)
       return customViews; 
     for (ViewBean viewBean : viewBeans) {
@@ -1188,33 +1188,33 @@ public void readViewData(BufferedReader reader) throws IOException {
     loadLogicFromPath(logicPath, "logic backup");
   }
   
-  public boolean hasComponentOfType(String fileName, int index) {
+  public boolean hasComponentOfType(String fileName, int componentType) {
     ArrayList<ComponentBean> components = componentMap.get(fileName);
     if (components == null)
       return false; 
     for (ComponentBean component : components) {
-      if (component.type == index)
+      if (component.type == componentType)
         return true; 
     } 
     return false;
   }
   
-  public boolean hasVariable(String fileName, int index, String data) {
+  public boolean hasVariable(String fileName, int variableType, String variableName) {
     ArrayList<Pair<Integer, String>> varEntries = variableMap.get(fileName);
     if (varEntries == null)
       return false; 
     for (Pair<Integer, String> varEntry : varEntries) {
-      if (varEntry.first == index && varEntry.second.equals(data))
+      if (varEntry.first == variableType && varEntry.second.equals(variableName))
         return true; 
     } 
     return false;
   }
   
-  public boolean isMoreBlockUsed(String fileName, String data) {
+  public boolean isMoreBlockUsed(String fileName, String moreBlockName) {
     HashMap<String, ArrayList<BlockBean>> blockEntryMap = blockMap.get(fileName);
     if (blockEntryMap == null)
       return false; 
-    String moreBlockKey = data + "_moreBlock";
+    String moreBlockKey = moreBlockName + "_moreBlock";
     for (Map.Entry<String, ArrayList<BlockBean>> entry : blockEntryMap.entrySet()) {
       if (entry.getKey().equals(moreBlockKey))
         continue; 
@@ -1225,7 +1225,7 @@ public void readViewData(BufferedReader reader) throws IOException {
           String funcName = specStr;
           if (spaceIdx > 0)
             funcName = specStr.substring(0, spaceIdx); 
-          if (funcName.equals(data))
+          if (funcName.equals(moreBlockName))
             return true; 
         } 
       } 
@@ -1244,33 +1244,33 @@ public void readViewData(BufferedReader reader) throws IOException {
     loadViewFromPath(viewPath, "view data");
   }
   
-  public void removeComponentsByType(String fileName, int index) {
+  public void removeComponentsByType(String fileName, int componentType) {
     if (!componentMap.containsKey(fileName))
       return; 
-    ArrayList<ComponentBean> components = getComponentsByType(fileName, index);
+    ArrayList<ComponentBean> components = getComponentsByType(fileName, componentType);
     if (components != null && !components.isEmpty()) {
       for (ComponentBean component : components)
         removeComponent(fileName, component); 
     } 
   }
   
-  public boolean hasViewOfType(String fileName, int index, String data) {
+  public boolean hasViewOfType(String fileName, int viewType, String viewId) {
     ArrayList<ViewBean> views = viewMap.get(fileName);
     if (views == null)
       return false; 
     for (ViewBean viewBean : views) {
-      if (viewBean.type == index && viewBean.id.equals(data))
+      if (viewBean.type == viewType && viewBean.id.equals(viewId))
         return true; 
     } 
     return false;
   }
   
-  public boolean hasTextView(String fileName, String data) {
+  public boolean hasTextView(String fileName, String viewId) {
     ArrayList<ViewBean> views = viewMap.get(fileName);
     if (views == null)
       return false; 
     for (ViewBean viewBean : views) {
-      if (viewBean.getClassInfo().matchesType("TextView") && viewBean.id.equals(data))
+      if (viewBean.getClassInfo().matchesType("TextView") && viewBean.id.equals(viewId))
         return true; 
     } 
     return false;
@@ -1289,12 +1289,12 @@ public void readViewData(BufferedReader reader) throws IOException {
     loadViewFromPath(viewPath, "view backup");
   }
   
-  public boolean hasView(String fileName, String data) {
+  public boolean hasView(String fileName, String viewId) {
     ArrayList<ViewBean> views = viewMap.get(fileName);
     if (views == null)
       return false; 
     for (ViewBean viewBean : views) {
-      if (viewBean.id.equals(data))
+      if (viewBean.id.equals(viewId))
         return true; 
     } 
     return false;
@@ -1310,51 +1310,51 @@ public void readViewData(BufferedReader reader) throws IOException {
   }
   
   @SuppressWarnings("unchecked")
-  private void parseLogicSection(String fileName, String data,
+  private void parseLogicSection(String sectionKey, String sectionContent,
       HashMap<String, ArrayList<Pair<Integer, String>>> targetVariableMap,
       HashMap<String, ArrayList<Pair<Integer, String>>> targetListMap,
       HashMap<String, ArrayList<Pair<String, String>>> targetMoreBlockMap,
       HashMap<String, ArrayList<ComponentBean>> targetComponentMap,
       HashMap<String, ArrayList<EventBean>> targetEventMap,
       HashMap<String, HashMap<String, ArrayList<BlockBean>>> targetBlockMap) {
-    if (data.length() <= 0)
+    if (sectionContent.length() <= 0)
       return; 
     try {
-      ProjectDataParser parser = new ProjectDataParser(fileName);
+      ProjectDataParser parser = new ProjectDataParser(sectionKey);
       String parsedFileName = parser.getFileName();
       ProjectDataParser.DataType dataType = parser.getDataType();
       switch (dataType) {
         case VARIABLE:
-          targetVariableMap.put(parsedFileName, (ArrayList<Pair<Integer, String>>)parser.parseData(data));
+          targetVariableMap.put(parsedFileName, (ArrayList<Pair<Integer, String>>)parser.parseData(sectionContent));
           break;
         case LIST:
-          targetListMap.put(parsedFileName, (ArrayList<Pair<Integer, String>>)parser.parseData(data));
+          targetListMap.put(parsedFileName, (ArrayList<Pair<Integer, String>>)parser.parseData(sectionContent));
           break;
         case COMPONENT:
-          targetComponentMap.put(parsedFileName, (ArrayList<ComponentBean>)parser.parseData(data));
+          targetComponentMap.put(parsedFileName, (ArrayList<ComponentBean>)parser.parseData(sectionContent));
           break;
         case EVENT:
-          targetEventMap.put(parsedFileName, (ArrayList<EventBean>)parser.parseData(data));
+          targetEventMap.put(parsedFileName, (ArrayList<EventBean>)parser.parseData(sectionContent));
           break;
         case MORE_BLOCK:
-          targetMoreBlockMap.put(parsedFileName, (ArrayList<Pair<String, String>>)parser.parseData(data));
+          targetMoreBlockMap.put(parsedFileName, (ArrayList<Pair<String, String>>)parser.parseData(sectionContent));
           break;
         case EVENT_BLOCK:
           if (!targetBlockMap.containsKey(parsedFileName)) {
             targetBlockMap.put(parsedFileName, new HashMap<String, ArrayList<BlockBean>>());
           }
-          targetBlockMap.get(parsedFileName).put(parser.getEventKey(), parser.parseData(data));
+          targetBlockMap.get(parsedFileName).put(parser.getEventKey(), parser.parseData(sectionContent));
           break;
         default:
           return;
       }
     } catch (RuntimeException e) {
-      Log.e("ProjectDataStore", "Failed to parse logic section '" + fileName + "' for project " + projectId, e);
+      Log.e("ProjectDataStore", "Failed to parse logic section '" + sectionKey + "' for project " + projectId, e);
     } 
   }
 
-  public void parseLogicSection(String fileName, String data) {
-    parseLogicSection(fileName, data, variableMap, listMap, moreBlockMap, componentMap,
+  public void parseLogicSection(String sectionKey, String sectionContent) {
+    parseLogicSection(sectionKey, sectionContent, variableMap, listMap, moreBlockMap, componentMap,
         eventMap, blockMap);
   }
   
@@ -1379,25 +1379,25 @@ public void readViewData(BufferedReader reader) throws IOException {
   }
   
   @SuppressWarnings("unchecked")
-  private void parseViewSection(String fileName, String data,
+  private void parseViewSection(String sectionKey, String sectionContent,
       HashMap<String, ArrayList<ViewBean>> targetViewMap,
       HashMap<String, ViewBean> targetFabMap) {
     try {
-      ProjectDataParser parser = new ProjectDataParser(fileName);
+      ProjectDataParser parser = new ProjectDataParser(sectionKey);
       String parsedFileName = parser.getFileName();
       ProjectDataParser.DataType dataType = parser.getDataType();
       if (dataType == ProjectDataParser.DataType.VIEW) {
-        targetViewMap.put(parsedFileName, parser.parseData(data));
+        targetViewMap.put(parsedFileName, parser.parseData(sectionContent));
       } else if (dataType == ProjectDataParser.DataType.FAB) {
-        targetFabMap.put(parsedFileName, parser.parseData(data));
+        targetFabMap.put(parsedFileName, parser.parseData(sectionContent));
       }
     } catch (RuntimeException e) {
-      Log.e("ProjectDataStore", "Failed to parse view section '" + fileName + "' for project " + projectId, e);
+      Log.e("ProjectDataStore", "Failed to parse view section '" + sectionKey + "' for project " + projectId, e);
     } 
   }
 
-  public void parseViewSection(String fileName, String data) {
-    parseViewSection(fileName, data, viewMap, fabMap);
+  public void parseViewSection(String sectionKey, String sectionContent) {
+    parseViewSection(sectionKey, sectionContent, viewMap, fabMap);
   }
   
   public ArrayList<Pair<Integer, String>> getVariables(String fileName) {
@@ -1417,13 +1417,13 @@ public void readViewData(BufferedReader reader) throws IOException {
     return viewOk && logicOk;
   }
   
-  public void removeBlockEntry(String fileName, String data) {
+  public void removeBlockEntry(String fileName, String blockKey) {
     if (!blockMap.containsKey(fileName))
       return; 
     HashMap<String, ArrayList<BlockBean>> blockEntryMap = blockMap.get(fileName);
     if (blockEntryMap == null)
       return; 
-    blockEntryMap.remove(data);
+    blockEntryMap.remove(blockKey);
   }
   
   public void removeViewTypeEvents(String fileName) {
@@ -1433,11 +1433,11 @@ public void readViewData(BufferedReader reader) throws IOException {
     events.removeIf(event -> event.eventType == 4);
   }
   
-  public void removeViewEventsByTarget(String fileName, String data) {
+  public void removeViewEventsByTarget(String fileName, String targetId) {
     if (!eventMap.containsKey(fileName))
       return; 
     ArrayList<EventBean> events = eventMap.get(fileName);
-    events.removeIf(event -> event.eventType == 4 && event.targetId.equals(data));
+    events.removeIf(event -> event.eventType == 4 && event.targetId.equals(targetId));
   }
   
   public final boolean saveLogicFile(String filePath) {
@@ -1454,7 +1454,7 @@ public void readViewData(BufferedReader reader) throws IOException {
     } 
   }
   
-  public void removeEventsByTarget(String fileName, String data) {
+  public void removeEventsByTarget(String fileName, String targetId) {
     if (!eventMap.containsKey(fileName))
       return; 
     ArrayList<EventBean> events = eventMap.get(fileName);
@@ -1463,7 +1463,7 @@ public void readViewData(BufferedReader reader) throws IOException {
     HashMap<String, ArrayList<BlockBean>> fileBlocks = blockMap != null ? blockMap.get(fileName) : null;
     for (int i = events.size() - 1; i >= 0; i--) {
       EventBean eventBean = events.get(i);
-      if (eventBean.targetId.equals(data)) {
+      if (eventBean.targetId.equals(targetId)) {
         events.remove(i);
         if (fileBlocks != null) {
           fileBlocks.remove(eventBean.targetId + "_" + eventBean.eventName);
@@ -1486,47 +1486,47 @@ public void readViewData(BufferedReader reader) throws IOException {
     } 
   }
   
-  public void removeMoreBlock(String fileName, String data) {
+  public void removeMoreBlock(String fileName, String moreBlockName) {
     if (!moreBlockMap.containsKey(fileName))
       return; 
     ArrayList<Pair<String, String>> moreBlocks = moreBlockMap.get(fileName);
     if (moreBlocks == null)
       return; 
     for (Pair<String, String> moreBlockEntry : moreBlocks) {
-      if (moreBlockEntry.first.equals(data)) {
+      if (moreBlockEntry.first.equals(moreBlockName)) {
         moreBlocks.remove(moreBlockEntry);
         break;
       } 
     } 
-    String blockKey = data + "_moreBlock";
+    String blockKey = moreBlockName + "_moreBlock";
     HashMap<String, ArrayList<BlockBean>> blockEntryMap = blockMap.get(fileName);
     if (blockEntryMap != null) {
       blockEntryMap.remove(blockKey);
     } 
   }
   
-  public void removeListVariable(String fileName, String data) {
+  public void removeListVariable(String fileName, String listName) {
     if (!listMap.containsKey(fileName))
       return; 
     ArrayList<Pair<Integer, String>> listVars = listMap.get(fileName);
     if (listVars == null)
       return; 
     for (Pair<Integer, String> listEntry : listVars) {
-      if (listEntry.second.equals(data)) {
+      if (listEntry.second.equals(listName)) {
         listVars.remove(listEntry);
         break;
       } 
     } 
   }
   
-  public void removeVariable(String fileName, String data) {
+  public void removeVariable(String fileName, String variableName) {
     if (!variableMap.containsKey(fileName))
       return; 
     ArrayList<Pair<Integer, String>> varEntries = variableMap.get(fileName);
     if (varEntries == null)
       return; 
     for (Pair<Integer, String> varEntry : varEntries) {
-      if (varEntry.second.equals(data)) {
+      if (varEntry.second.equals(variableName)) {
         varEntries.remove(varEntry);
         break;
       } 
@@ -1624,30 +1624,30 @@ public void readViewData(BufferedReader reader) throws IOException {
     }
   }
   
-  public boolean hasViewType(String fileName, int index) {
+  public boolean hasViewType(String fileName, int viewType) {
     ArrayList<ViewBean> views = viewMap.get(fileName);
     if (views == null)
       return false;
     for (ViewBean viewBean : views) {
-      if (viewBean.type == index)
+      if (viewBean.type == viewType)
         return true; 
     } 
     return false;
   }
   
-  public boolean hasViewMatchingType(String fileName, String data) {
+  public boolean hasViewMatchingType(String fileName, String viewTypeName) {
     ArrayList<ViewBean> views = viewMap.get(fileName);
     if (views == null)
       return false;
     for (ViewBean viewBean : views) {
-      if (viewBean.getClassInfo().matchesType(data))
+      if (viewBean.getClassInfo().matchesType(viewTypeName))
         return true; 
     } 
     return false;
   }
   
-  public final String getSimpleClassName(String input) {
-    String simpleName = input;
+  public final String getSimpleClassName(String className) {
+    String simpleName = className;
     if (simpleName.contains(".")) {
       String[] parts = simpleName.split("\\.");
       simpleName = parts[parts.length - 1];

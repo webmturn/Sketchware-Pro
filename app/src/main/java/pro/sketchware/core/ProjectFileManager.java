@@ -80,9 +80,9 @@ public class ProjectFileManager {
     }
   }
 
-  public void addFile(int index, String fileName) {
-    ProjectFileBean projectFileBean = new ProjectFileBean(index, fileName);
-    if (index == 0) {
+  public void addFile(int fileType, String fileName) {
+    ProjectFileBean projectFileBean = new ProjectFileBean(fileType, fileName);
+    if (fileType == 0) {
       activities.add(projectFileBean);
     } else {
       customViews.add(projectFileBean);
@@ -162,9 +162,9 @@ public class ProjectFileManager {
         parsedBean.setOptionsByTheme();
         if (parsedBean.fileName.equals("main")) {
           ProjectFileBean existingMain = null;
-          for (ProjectFileBean fb : targetActivities) {
-            if (fb.fileName.equals("main")) {
-              existingMain = fb;
+          for (ProjectFileBean activityFile : targetActivities) {
+            if (activityFile.fileName.equals("main")) {
+              existingMain = activityFile;
               break;
             }
           }
@@ -238,17 +238,17 @@ public class ProjectFileManager {
     return activities;
   }
   
-  public void removeFile(int index, String fileName) {
-    if (index == 0) {
+  public void removeFile(int fileType, String fileName) {
+    if (fileType == 0) {
       for (ProjectFileBean projectFileBean : activities) {
-        if (projectFileBean.fileType == index && projectFileBean.fileName.equals(fileName)) {
+        if (projectFileBean.fileType == fileType && projectFileBean.fileName.equals(fileName)) {
           activities.remove(projectFileBean);
           break;
         } 
       } 
     } else {
       for (ProjectFileBean projectFileBean : customViews) {
-        if (projectFileBean.fileType == index && projectFileBean.fileName.equals(fileName)) {
+        if (projectFileBean.fileType == fileType && projectFileBean.fileName.equals(fileName)) {
           customViews.remove(projectFileBean);
           break;
         } 
