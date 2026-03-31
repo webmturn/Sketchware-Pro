@@ -32,6 +32,7 @@ import pro.sketchware.core.FieldBlockView;
 import pro.sketchware.core.ProjectDataStore;
 import pro.sketchware.core.ProjectDataManager;
 import pro.sketchware.core.BlockConstants;
+import pro.sketchware.core.SketchwarePaths;
 import pro.sketchware.core.ViewUtil;
 import dev.pranav.filepicker.FilePickerCallback;
 import dev.pranav.filepicker.FilePickerDialogFragment;
@@ -66,8 +67,6 @@ public class ExtraMenuBean {
     public static final String[] patternFlags = {"CANON_EQ", "CASE_INSENSITIVE", "COMMENTS", "DOTALL", "LITERAL", "MULTILINE", "UNICODE_CASE", "UNIX_LINES"};
     public static final String[] permission = {"CAMERA", "READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE", "ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION", "RECORD_AUDIO", "READ_CONTACTS", "WRITE_CONTACTS", "READ_SMS", "SEND_SMS", "READ_PHONE_STATE", "CALL_PHONE", "READ_CALENDAR", "WRITE_CALENDAR", "BLUETOOTH", "BLUETOOTH_ADMIN"};
 
-    private final String ASSETS_PATH = FileUtil.getExternalStorageDir() + "/.sketchware/data/%s/files/assets/";
-    private final String NATIVE_PATH = FileUtil.getExternalStorageDir() + "/.sketchware/data/%s/files/native_libs/";
     private final DefaultExtraMenuBean defaultExtraMenu;
     private final FilePathUtil fpu;
     private final FileResConfig frc;
@@ -597,7 +596,7 @@ public class ExtraMenuBean {
             case "ResString":
                 title = Helper.getResString(R.string.logic_editor_title_select_res_string);
 
-                String filePath = FileUtil.getExternalStorageDir().concat("/.sketchware/data/").concat(sc_id.concat("/files/resource/values/strings.xml"));
+                String filePath = SketchwarePaths.getProjectResourceValuesFilePath(sc_id, "strings.xml");
                 ArrayList<HashMap<String, Object>> StringsListMap = new ArrayList<>();
                 StringsEditorManager stringsEditorManager = new StringsEditorManager();
                 stringsEditorManager.convertXmlStringsToListMap(FileUtil.readFileIfExist(filePath), StringsListMap);
@@ -792,11 +791,11 @@ public class ExtraMenuBean {
         String path = null;
         if (menuName.equals("Assets")) {
             mOptions.setTitle(Helper.getResString(R.string.menu_select_asset));
-            path = String.format(ASSETS_PATH, sc_id);
+            path = SketchwarePaths.getProjectAssetsPath(sc_id) + File.separator;
             markedPath.add(0, path + ss.getArgValue().toString());
         } else if (menuName.equals("NativeLib")) {
             mOptions.setTitle(Helper.getResString(R.string.menu_select_native_lib));
-            path = String.format(NATIVE_PATH, sc_id);
+            path = SketchwarePaths.getProjectNativeLibsPath(sc_id) + File.separator;
             markedPath.add(0, path + ss.getArgValue().toString());
         }
         String[] pathSegments = path.split("/");

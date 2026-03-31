@@ -1,6 +1,5 @@
 package mod.agus.jcoderz.editor.manage.block.makeblock;
 
-import android.os.Environment;
 import android.util.Pair;
 
 import org.json.JSONArray;
@@ -10,6 +9,7 @@ import org.json.JSONObject;
 import java.io.File;
 
 import mod.jbk.util.LogUtil;
+import pro.sketchware.core.SketchwarePaths;
 import pro.sketchware.utility.FileUtil;
 
 /**
@@ -21,7 +21,7 @@ public class BlockMenu {
     public static Pair<String, String[]> getMenu(String name) {
         Pair<String, String[]> result = null;
         Pair<String, String[]> fallback = new Pair<>("Select a " + name + " Variable", new String[0]);
-        File file = new File(Environment.getExternalStorageDirectory(), ".sketchware/resources/block/My Block/menu.json");
+        File file = new File(SketchwarePaths.getBlockSelectorMenuPath());
         if (!file.exists()) {
             result = fallback;
         } else {

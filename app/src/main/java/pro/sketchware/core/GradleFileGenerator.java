@@ -161,7 +161,7 @@ public class GradleFileGenerator {
         }
 
         String sc_id = metadata.sc_id;
-        String local_lib_file = FileUtil.getExternalStorageDir() + "/.sketchware/data/" + sc_id + "/local_library";
+        String local_lib_file = SketchwarePaths.getProjectLocalLibraryPath(sc_id);
         String fileContent = FileUtil.readFile(local_lib_file);
 
         if (!fileContent.isEmpty()) {

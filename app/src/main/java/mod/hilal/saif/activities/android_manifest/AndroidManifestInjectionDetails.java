@@ -24,6 +24,7 @@ import mod.hey.studios.code.SrcCodeEditor;
 import mod.hey.studios.util.Helper;
 import mod.remaker.view.CustomAttributeView;
 import pro.sketchware.R;
+import pro.sketchware.core.SketchwarePaths;
 import pro.sketchware.databinding.ActivityManageCustomAttributeBinding;
 import pro.sketchware.databinding.CustomDialogAttributeBinding;
 import pro.sketchware.databinding.DialogCreateNewFileLayoutBinding;
@@ -55,7 +56,7 @@ public class AndroidManifestInjectionDetails extends BaseAppCompatActivity {
             finish();
             return;
         }
-        ATTRIBUTES_FILE_PATH = FileUtil.getExternalStorageDir().concat("/.sketchware/data/").concat(src_id).concat("/Injection/androidmanifest/attributes.json");
+        ATTRIBUTES_FILE_PATH = SketchwarePaths.getAndroidManifestAttributesPath(src_id);
         setupConst();
         setToolbar();
         setupViews();

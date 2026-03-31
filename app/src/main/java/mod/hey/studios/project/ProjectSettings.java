@@ -2,7 +2,6 @@ package mod.hey.studios.project;
 
 import android.app.Application;
 import android.content.pm.ApplicationInfo;
-import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Checkable;
@@ -13,11 +12,11 @@ import android.widget.RadioGroup;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
-import java.io.File;
 import java.util.HashMap;
 
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;
+import pro.sketchware.core.SketchwarePaths;
 import pro.sketchware.utility.FileUtil;
 
 public class ProjectSettings {
@@ -105,7 +104,7 @@ public class ProjectSettings {
     }
 
     public String getPath() {
-        return new File(Environment.getExternalStorageDirectory(), ".sketchware/data/" + sc_id + "/project_config").getAbsolutePath();
+        return SketchwarePaths.getProjectSettingsPath(sc_id);
     }
 
     public String getValue(String key, String defaultValue) {

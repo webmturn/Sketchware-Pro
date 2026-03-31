@@ -3,7 +3,6 @@ package mod.jbk.editor.manage.library;
 import androidx.activity.OnBackPressedCallback;
 import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
@@ -51,6 +50,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import pro.sketchware.core.BaseAsyncTask;
+import pro.sketchware.core.SketchwarePaths;
 import mod.hey.studios.util.Helper;
 import mod.jbk.build.BuiltInLibraries;
 import mod.jbk.util.LogUtil;
@@ -70,8 +70,7 @@ public class ExcludeBuiltInLibrariesActivity extends BaseAppCompatActivity {
     private Pair<Boolean, List<BuiltInLibraries.BuiltInLibrary>> config;
 
     private static File getConfigPath(String sc_id) {
-        return new File(Environment.getExternalStorageDirectory(),
-                ".sketchware" + File.separator + "data" + File.separator + sc_id + File.separator + "excluded_library");
+        return new File(SketchwarePaths.getProjectExcludedBuiltInLibrariesPath(sc_id));
     }
 
     private static void saveConfig(String sc_id, boolean isExcludingEnabled, List<BuiltInLibraries.BuiltInLibrary> excludedLibraries) {

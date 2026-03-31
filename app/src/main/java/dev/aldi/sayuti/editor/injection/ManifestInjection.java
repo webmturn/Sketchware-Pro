@@ -1,8 +1,10 @@
 package dev.aldi.sayuti.editor.injection;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import pro.sketchware.core.BuildConfig;
+import pro.sketchware.core.SketchwarePaths;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.xml.XmlBuilder;
 
@@ -20,7 +22,8 @@ public class ManifestInjection {
     }
 
     public void injectManifestAttributes(XmlBuilder nx, String fileName, String activityName) {
-        path = FileUtil.getExternalStorageDir() + "/.sketchware/data/" + buildConfig.sc_id + "/injection/manifest/" + fileName;
+        path = SketchwarePaths.getDataPath(buildConfig.sc_id) + File.separator + "injection"
+                + File.separator + "manifest" + File.separator + fileName;
         if (FileUtil.isExistFile(path)) {
             FileUtil.readFile(path).isEmpty();
         }

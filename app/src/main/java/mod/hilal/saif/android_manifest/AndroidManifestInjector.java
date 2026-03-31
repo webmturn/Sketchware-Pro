@@ -2,8 +2,6 @@ package mod.hilal.saif.android_manifest;
 
 import static pro.sketchware.utility.GsonUtils.getGson;
 
-import android.os.Environment;
-
 import com.google.gson.JsonParseException;
 
 import java.io.File;
@@ -13,6 +11,7 @@ import java.util.HashMap;
 
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
+import pro.sketchware.core.SketchwarePaths;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.SketchwareUtil;
 import pro.sketchware.xml.XmlBuilder;
@@ -20,27 +19,19 @@ import pro.sketchware.xml.XmlBuilder;
 public class AndroidManifestInjector {
 
     public static File getPathAndroidManifestAttributeInjection(String sc_id) {
-        return new File(Environment.getExternalStorageDirectory(),
-                ".sketchware" + File.separator + "data" + File.separator + sc_id + File.separator +
-                        "Injection" + File.separator + "androidmanifest" + File.separator + "attributes.json");
+        return new File(SketchwarePaths.getAndroidManifestAttributesPath(sc_id));
     }
 
     public static File getPathAndroidManifestLauncherActivity(String sc_id) {
-        return new File(Environment.getExternalStorageDirectory(),
-                ".sketchware" + File.separator + "data" + File.separator + sc_id + File.separator +
-                        "Injection" + File.separator + "androidmanifest" + File.separator + "activity_launcher.txt");
+        return new File(SketchwarePaths.getAndroidManifestLauncherActivityPath(sc_id));
     }
 
     public static File getPathAndroidManifestActivitiesComponents(String sc_id) {
-        return new File(Environment.getExternalStorageDirectory(),
-                ".sketchware" + File.separator + "data" + File.separator + sc_id + File.separator +
-                        "Injection" + File.separator + "androidmanifest" + File.separator + "activities_components.json");
+        return new File(SketchwarePaths.getAndroidManifestActivitiesComponentsPath(sc_id));
     }
 
     public static File getPathAndroidManifestAppComponents(String sc_id) {
-        return new File(Environment.getExternalStorageDirectory(),
-                ".sketchware" + File.separator + "data" + File.separator + sc_id + File.separator +
-                        "Injection" + File.separator + "androidmanifest" + File.separator + "app_components.txt");
+        return new File(SketchwarePaths.getAndroidManifestAppComponentsPath(sc_id));
     }
 
     private static ArrayList<HashMap<String, Object>> readAndroidManifestAttributeInjections(String sc_id) {

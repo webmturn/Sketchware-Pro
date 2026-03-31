@@ -1,7 +1,5 @@
 package dev.aldi.sayuti.block;
 
-import android.os.Environment;
-
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -11,15 +9,14 @@ import java.util.HashMap;
 import mod.hey.studios.util.Helper;
 import mod.hilal.saif.blocks.BlocksHandler;
 import pro.sketchware.R;
+import pro.sketchware.core.SketchwarePaths;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.SketchwareUtil;
 
 public class ExtraBlockFile {
 
-    public static final File EXTRA_BLOCKS_DATA_FILE = new File(Environment.getExternalStorageDirectory(),
-            ".sketchware/resources/block/My Block/block.json");
-    public static final File EXTRA_BLOCKS_PALETTE_FILE = new File(Environment.getExternalStorageDirectory(),
-            ".sketchware/resources/block/My Block/palette.json");
+    public static final File EXTRA_BLOCKS_DATA_FILE = new File(SketchwarePaths.getBlockManagerBlockFilePath());
+    public static final File EXTRA_BLOCKS_PALETTE_FILE = new File(SketchwarePaths.getBlockManagerPaletteFilePath());
 
     public static ArrayList<HashMap<String, Object>> buildInBlocks = new ArrayList<>();
     private static final ArrayList<HashMap<String, Object>> cachedExtraBlocks = new ArrayList<>();

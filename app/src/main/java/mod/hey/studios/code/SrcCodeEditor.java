@@ -43,6 +43,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
 import pro.sketchware.core.ComponentCodeGenerator;
+import pro.sketchware.core.SketchwarePaths;
 import io.github.rosemoe.sora.langs.java.JavaLanguage;
 import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
 import io.github.rosemoe.sora.widget.CodeEditor;
@@ -256,7 +257,7 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
         binding.editor.setTypefaceText(EditorUtils.getTypeface(this));
 
         if (fromAndroidManifest) {
-            String filePath = FileUtil.getExternalStorageDir() + "/.sketchware/data/" + scId + "/Injection/androidmanifest/activities_components.json";
+            String filePath = SketchwarePaths.getAndroidManifestActivitiesComponentsPath(scId);
             if (FileUtil.isExistFile(filePath)) {
                 ArrayList<HashMap<String, Object>> activityComponents;
                 try {
@@ -323,7 +324,7 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
         beforeContent = binding.editor.getText().toString();
 
         if (fromAndroidManifest) {
-            String filePath = FileUtil.getExternalStorageDir() + "/.sketchware/data/" + scId + "/Injection/androidmanifest/activities_components.json";
+            String filePath = SketchwarePaths.getAndroidManifestActivitiesComponentsPath(scId);
             if (FileUtil.isExistFile(filePath)) {
                 ArrayList<HashMap<String, Object>> activitiesComponents;
                 try {

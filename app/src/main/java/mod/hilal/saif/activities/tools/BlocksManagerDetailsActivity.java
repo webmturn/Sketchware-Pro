@@ -42,12 +42,13 @@ import dev.pranav.filepicker.FilePickerOptions;
 import mod.hilal.saif.blocks.BlockTypeUtils;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
+import pro.sketchware.core.SketchwarePaths;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.SketchwareUtil;
 
 public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
 
-    private static final String BLOCK_EXPORT_PATH = new File(FileUtil.getExternalStorageDir(), ".sketchware/resources/block/export/").getAbsolutePath();
+    private static final String BLOCK_EXPORT_PATH = SketchwarePaths.getBlockExportPath();
 
     private final ArrayList<HashMap<String, Object>> filtered_list = new ArrayList<>();
     private final ArrayList<Integer> reference_list = new ArrayList<>();
