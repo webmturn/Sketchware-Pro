@@ -81,46 +81,49 @@ public class ManageXMLCommandActivity extends BaseAppCompatActivity {
         var projectDataManager = ProjectDataManager.getProjectDataManager(sc_id);
         projectFilePaths.initializeMetadata(projectLibraryManager, projectFileManager, projectDataManager);
         CommandBlock.clearTempCommands();
-        ArrayList<ProjectFileBean> files = new ArrayList<>(projectFileManager.getActivities());
-        files.addAll(new ArrayList<>(projectFileManager.getCustomViews()));
-
-        if (files.isEmpty()) {
-            FileUtil.writeFile(path, "[]");
-            return;
-        }
-
-        // Pre-warm BlockLoader caches to avoid race conditions during parallel execution
-        BlockLoader.getBlockFromProject(sc_id, "");
-
-        // Phase 1: Generate code for all activities in parallel (expensive step)
-        int cpus = Math.max(1, Runtime.getRuntime().availableProcessors());
-        ExecutorService pool = Executors.newFixedThreadPool(Math.min(cpus, files.size()));
         try {
-            List<CompletableFuture<String>> futures = new ArrayList<>(files.size());
-            for (ProjectFileBean file : files) {
-                futures.add(CompletableFuture.supplyAsync(() ->
-                        new ActivityCodeGenerator(projectFilePaths.buildConfig, file, projectDataManager)
-                                .generateCode(false, sc_id), pool));
+            ArrayList<ProjectFileBean> files = new ArrayList<>(projectFileManager.getActivities());
+            files.addAll(new ArrayList<>(projectFileManager.getCustomViews()));
+
+            if (files.isEmpty()) {
+                FileUtil.writeFile(path, "[]");
+                return;
             }
 
-            // Phase 2: Apply CBForXml serially (not thread-safe)
-            for (CompletableFuture<String> future : futures) {
-                try {
-                    CommandBlock.collectXmlCommandBlocks(future.get());
-                } catch (Exception e) {
-                    Log.e("ManageXMLCommand", "Code generation failed", e);
+            // Pre-warm BlockLoader caches to avoid race conditions during parallel execution
+            BlockLoader.getBlockFromProject(sc_id, "");
+
+            // Phase 1: Generate code for all activities in parallel (expensive step)
+            int cpus = Math.max(1, Runtime.getRuntime().availableProcessors());
+            ExecutorService pool = Executors.newFixedThreadPool(Math.min(cpus, files.size()));
+            try {
+                List<CompletableFuture<String>> futures = new ArrayList<>(files.size());
+                for (ProjectFileBean file : files) {
+                    futures.add(CompletableFuture.supplyAsync(() ->
+                            new ActivityCodeGenerator(projectFilePaths.buildConfig, file, projectDataManager)
+                                    .generateCode(false, sc_id, false), pool));
                 }
+
+                // Phase 2: Apply CBForXml serially (not thread-safe)
+                for (CompletableFuture<String> future : futures) {
+                    try {
+                        CommandBlock.collectXmlCommandBlocks(future.get());
+                    } catch (Exception e) {
+                        Log.e("ManageXMLCommand", "Code generation failed", e);
+                    }
+                }
+            } finally {
+                pool.shutdown();
+            }
+
+            String commandPath = SketchwarePaths.getTempCommandsPath();
+            if (FileUtil.isExistFile(commandPath)) {
+                FileUtil.copyFile(commandPath, path);
+            } else {
+                FileUtil.writeFile(path, "[]");
             }
         } finally {
-            pool.shutdown();
-        }
-
-        String commandPath = FileUtil.getExternalStorageDir().concat("/.sketchware/temp/commands");
-        if (FileUtil.isExistFile(commandPath)) {
-            FileUtil.copyFile(commandPath, path);
             CommandBlock.clearTempCommands();
-        } else {
-            FileUtil.writeFile(path, "[]");
         }
     }
 

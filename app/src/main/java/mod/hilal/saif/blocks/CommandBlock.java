@@ -4,8 +4,6 @@ import android.util.Pair;
 
 import com.google.gson.Gson;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -13,6 +11,7 @@ import java.util.regex.PatternSyntaxException;
 
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;
+import pro.sketchware.core.SketchwarePaths;
 import pro.sketchware.utility.FileUtil;
 
 /**
@@ -30,8 +29,7 @@ import pro.sketchware.utility.FileUtil;
 public class CommandBlock {
 
     private static final String TAG = "CommandBlock";
-    private static final String TEMP_COMMANDS_PATH = FileUtil.getExternalStorageDir().concat("/.sketchware/temp/commands");
-    private static final String TEMP_LOG_PATH = FileUtil.getExternalStorageDir().concat("/.sketchware/temp/log.txt");
+    private static final String TEMP_COMMANDS_PATH = SketchwarePaths.getTempCommandsPath();
     private static final String JAVA_COMMAND_START_MARKER = "/*-JX4UA2y_f1OckjjvxWI.bQwRei-sLEsBmds7ArsRfi0xSFEP3Php97kjdMCs5ed";
     private static final String JAVA_COMMAND_END_MARKER = "BpWI8U4flOpx8Ke66QTlZYBA_NEusQ7BN-D0wvZs7ArsRfi0.EP3Php97kjdMCs*/";
     private static final String XML_COMMAND_START_MARKER = "/*AXAVajPNTpbJjsz-NGVTp08YDzfI-04kA7ZsuCl4GHqTQQiuWL45sV6Vf4gwK";
@@ -42,6 +40,12 @@ public class CommandBlock {
     private static final String KEY_BEFORE = "before";
     private static final String KEY_COMMAND = "command";
     private static final String KEY_INPUT = "input";
+    private static final String COMMAND_FIND_REPLACE = "find-replace";
+    private static final String COMMAND_FIND_REPLACE_FIRST = "find-replace-first";
+    private static final String COMMAND_FIND_REPLACE_ALL = "find-replace-all";
+    private static final String COMMAND_INSERT = "insert";
+    private static final String COMMAND_ADD = "add";
+    private static final String COMMAND_REPLACE = "replace";
     private static final Gson GSON = new Gson();
 
     public static String applyCommands(String fileName, String sourceCode) {
@@ -52,10 +56,20 @@ public class CommandBlock {
         }
         for (HashMap<String, Object> commandEntry : commandData) {
             if (fileName.equals(getInputName(getStringValue(commandEntry, KEY_INPUT)))) {
-                result = applyStoredCommand(result, commandEntry);
+                String previousResult = result;
+                try {
+                    result = applyStoredCommand(result, commandEntry);
+                } catch (RuntimeException e) {
+                    LogUtil.e(TAG, "Failed to apply stored command", e);
+                    result = previousResult;
+                }
             }
         }
         return result;
+    }
+
+    public static boolean hasTempCommands() {
+        return !readStoredCommands().isEmpty();
     }
 
     private static ArrayList<HashMap<String, Object>> readStoredCommands() {
@@ -79,7 +93,7 @@ public class CommandBlock {
     }
 
     private static String applyStoredCommand(String sourceCode, HashMap<String, Object> commandDefinition) {
-        ArrayList<String> lines = new ArrayList<>(Arrays.asList(sourceCode.split("\n")));
+        ArrayList<String> lines = splitLines(sourceCode);
         String reference = getStringValue(commandDefinition, KEY_REFERENCE);
         int distance = getNumericValue(commandDefinition, KEY_DISTANCE);
         int after = getNumericValue(commandDefinition, KEY_AFTER);
@@ -87,25 +101,12 @@ public class CommandBlock {
         String command = getStringValue(commandDefinition, KEY_COMMAND);
         String input = getExceptFirstLine(getStringValue(commandDefinition, KEY_INPUT));
 
-        if (command.equals("find-replace")) {
-            return sourceCode.replace(reference, input);
-        }
-        if (command.equals("find-replace-first")) {
-            try {
-                return sourceCode.replaceFirst(reference, input);
-            } catch (PatternSyntaxException e) {
-                LogUtil.e(TAG, "Failed to apply replaceFirst command", e);
-                return sourceCode;
-            }
+        if (reference.isEmpty()) {
+            return sourceCode;
         }
 
-        if (command.equals("find-replace-all")) {
-            try {
-                return sourceCode.replaceAll(reference, input);
-            } catch (PatternSyntaxException e) {
-                LogUtil.e(TAG, "Failed to apply replaceAll command", e);
-                return sourceCode;
-            }
+        if (isTextReplacementCommand(command)) {
+            return applyTextReplacementCommand(sourceCode, command, reference, input);
         }
 
         int index = getIndex(lines, reference);
@@ -113,97 +114,15 @@ public class CommandBlock {
             return sourceCode;
         }
 
-        if (command.equals("insert")) {
-            if ((index + distance - before) < 0) {
-                lines.add(0, input);
-            } else if ((index + distance - before) > (lines.size() - 1)) {
-                lines.add(input);
-            } else {
-                lines.add(index + distance - before, input);
-            }
+        if (COMMAND_INSERT.equals(command)) {
+            addLine(lines, index + distance - before, input);
         }
-        if (command.equals("add")) {
-            if ((index + distance + after + 1) < 0) {
-                lines.add(0, input);
-            } else if ((index + distance + after + 1) > (lines.size() - 1)) {
-                lines.add(input);
-            } else {
-                lines.add(index + distance + after + 1, input);
-            }
+        if (COMMAND_ADD.equals(command)) {
+            addLine(lines, index + distance + after + 1, input);
         }
 
-        //old method
-        /*
-        if(command.equals("replace")){
-            int xxx = (int)(index + distance - before -1);
-            if ( xxx <0 ){ xxx = 0; }
-
-            int ff = (int)(index + distance - before);
-            if ( ff <0 ){ ff = 0; }
-            int tt = (int)(index + distance + after +1);
-            if ( tt > a.size() ){ tt = a.size(); }
-            a.subList(ff , tt).clear();
-
-            if (xxx > a.size()-2){
-                a.add(input);
-            } else {
-                a.add((int)(xxx+1) , input);
-            }
-        }
-        */
-
-        if (command.equals("replace")) {
-            if (before == 0 && after == 0) {
-                int lineToChange = index + distance;
-                if (lineToChange < 0) {
-                    lineToChange = 0;
-                }
-                if (lineToChange > (lines.size() - 1)) {
-                    lineToChange = lines.size() - 1;
-                }
-                lines.set(lineToChange, input);
-            } else {
-                int lineToChange = index + distance;
-                if (lineToChange <= 0) { // ignore backend
-                    lineToChange = 0;
-                    int from = 1;
-                    int to = after + 1;
-                    if (to > (lines.size() - 1)) {
-                        to = lines.size() - 1;
-                    }
-                    lines.subList(from, to).clear();
-                    lines.set(0, input);
-                } else if (lineToChange >= (lines.size() - 1)) { //ignore frontend
-                    lineToChange = lines.size() - 1;
-                    int from = lineToChange - before;
-                    int to = lineToChange;
-                    if (from < 0) {
-                        from = 0;
-                    }
-                    lines.set(lineToChange, input);
-                    lines.subList(from, to).clear();
-                } else {  //handle everything
-                    if (before < 0) {
-                        before = 0;
-                    }
-                    if (after < 0) {
-                        after = 0;
-                    }
-                    int from = lineToChange + 1;
-                    int to = lineToChange + after;
-                    if (to > (lines.size() - 1)) {
-                        to = lines.size() - 1;
-                    }
-                    lines.subList(from, to).clear();
-                    lines.set(lineToChange, input);
-                    from = lineToChange - before;
-                    to = lineToChange;
-                    if (from < 0) {
-                        from = 0;
-                    }
-                    lines.subList(from, to).clear();
-                }
-            }
+        if (COMMAND_REPLACE.equals(command)) {
+            applyReplaceCommand(lines, index, distance, before, after, input);
         }
 
         return joinLines(lines);
@@ -220,7 +139,7 @@ public class CommandBlock {
     }
 
     public static String getExceptFirstLine(String sourceCode) {
-        ArrayList<String> lines = new ArrayList<>(Arrays.asList(sourceCode.split("\n")));
+        ArrayList<String> lines = splitLines(sourceCode);
         if (!lines.isEmpty()) {
             lines.remove(0);
         } else {
@@ -230,7 +149,7 @@ public class CommandBlock {
     }
 
     private static String getFirstLine(String sourceCode) {
-        ArrayList<String> lines = new ArrayList<>(Arrays.asList(sourceCode.split("\n")));
+        ArrayList<String> lines = splitLines(sourceCode);
         if (!lines.isEmpty()) {
             return lines.get(0);
         } else {
@@ -260,13 +179,15 @@ public class CommandBlock {
             return RC;
         } catch (RuntimeException e) {
             LogUtil.e(TAG, "Failed to collect XML command blocks", e);
-            writeLog("Failed to collect XML command blocks", e);
             return removeCommandBlocks(sourceCode, XML_COMMAND_START_MARKER, XML_COMMAND_END_MARKER);
         }
     }
 
     // Write Temporary File
     private static void appendCommandsToTempFile(ArrayList<HashMap<String, Object>> list) {
+        if (list.isEmpty()) {
+            return;
+        }
         ArrayList<HashMap<String, Object>> data = readStoredCommands();
         data.addAll(list);
         FileUtil.writeFile(TEMP_COMMANDS_PATH, GSON.toJson(data));
@@ -294,43 +215,161 @@ public class CommandBlock {
             return RC;
         } catch (RuntimeException e) {
             LogUtil.e(TAG, "Failed to apply command blocks", e);
-            writeLog("Failed to apply command blocks", e);
-            return removeCommandBlocks(sourceCode, JAVA_COMMAND_START_MARKER, JAVA_COMMAND_END_MARKER);
+            String sanitizedSource = removeCommandBlocks(sourceCode, JAVA_COMMAND_START_MARKER, JAVA_COMMAND_END_MARKER);
+            return removeCommandBlocks(sanitizedSource, XML_COMMAND_START_MARKER, XML_COMMAND_END_MARKER);
         }
-    }
-
-    private static void writeLog(String message, Throwable throwable) {
-        String text = "";
-        if (FileUtil.isExistFile(TEMP_LOG_PATH)) {
-            text = FileUtil.readFile(TEMP_LOG_PATH);
-        }
-        StringBuilder logEntry = new StringBuilder();
-        logEntry.append("\n=>").append(message);
-        if (throwable != null) {
-            StringWriter stringWriter = new StringWriter();
-            PrintWriter printWriter = new PrintWriter(stringWriter);
-            throwable.printStackTrace(printWriter);
-            printWriter.flush();
-            logEntry.append("\n").append(stringWriter);
-        }
-        FileUtil.writeFile(TEMP_LOG_PATH, text.concat(logEntry.toString()));
     }
 
     private static void collectCommandBlocks(ArrayList<HashMap<String, Object>> commandDefinitions, String sourceCode, String startMarker, String endMarker) {
-        ArrayList<String> lines = new ArrayList<>(Arrays.asList(sourceCode.split("\n")));
+        ArrayList<String> lines = splitLines(sourceCode);
         boolean isInsideCommandBlock = false;
         int startIndex = -1;
         for (int i = 0; i < lines.size(); i++) {
+            String line = lines.get(i);
             if (isInsideCommandBlock) {
-                if (lines.get(i).contains(endMarker)) {
+                if (line.contains(startMarker)) {
+                    logDiscardedCommandBlock(startIndex);
+                    startIndex = i;
+                    if (line.contains(endMarker)) {
+                        Pair<Integer, Integer> blockRange = new Pair<>(startIndex, i);
+                        tryAddCommandDefinition(lines, commandDefinitions, blockRange);
+                        isInsideCommandBlock = false;
+                        startIndex = -1;
+                    }
+                    continue;
+                }
+                if (line.contains(endMarker)) {
                     Pair<Integer, Integer> blockRange = new Pair<>(startIndex, i);
-                    addCommandDefinition(lines, commandDefinitions, blockRange);
+                    tryAddCommandDefinition(lines, commandDefinitions, blockRange);
                     isInsideCommandBlock = false;
                     startIndex = -1;
                 }
-            } else if (lines.get(i).contains(startMarker)) {
+            } else if (line.contains(startMarker)) {
                 startIndex = i;
-                isInsideCommandBlock = true;
+                if (line.contains(endMarker)) {
+                    Pair<Integer, Integer> blockRange = new Pair<>(startIndex, i);
+                    tryAddCommandDefinition(lines, commandDefinitions, blockRange);
+                    startIndex = -1;
+                } else {
+                    isInsideCommandBlock = true;
+                }
+            }
+        }
+        if (isInsideCommandBlock) {
+            logDiscardedCommandBlock(startIndex);
+        }
+    }
+
+    private static void logDiscardedCommandBlock(int startIndex) {
+        if (startIndex >= 0) {
+            LogUtil.e(TAG, "Discarding unterminated command block starting at line " + (startIndex + 1));
+        }
+    }
+
+    private static void tryAddCommandDefinition(ArrayList<String> lines, ArrayList<HashMap<String, Object>> commandDefinitions, Pair<Integer, Integer> blockRange) {
+        try {
+            addCommandDefinition(lines, commandDefinitions, blockRange);
+        } catch (RuntimeException e) {
+            LogUtil.e(TAG, "Failed to parse command block", e);
+        }
+    }
+
+    private static ArrayList<String> splitLines(String sourceCode) {
+        return new ArrayList<>(Arrays.asList(sourceCode.split("\n")));
+    }
+
+    private static boolean isTextReplacementCommand(String command) {
+        return COMMAND_FIND_REPLACE.equals(command)
+                || COMMAND_FIND_REPLACE_FIRST.equals(command)
+                || COMMAND_FIND_REPLACE_ALL.equals(command);
+    }
+
+    private static String applyTextReplacementCommand(String sourceCode, String command, String reference, String input) {
+        if (reference.isEmpty()) {
+            return sourceCode;
+        }
+        if (COMMAND_FIND_REPLACE.equals(command)) {
+            return sourceCode.replace(reference, input);
+        }
+        if (COMMAND_FIND_REPLACE_FIRST.equals(command)) {
+            try {
+                return sourceCode.replaceFirst(reference, input);
+            } catch (PatternSyntaxException e) {
+                LogUtil.e(TAG, "Failed to apply replaceFirst command", e);
+                return sourceCode;
+            }
+        }
+        if (COMMAND_FIND_REPLACE_ALL.equals(command)) {
+            try {
+                return sourceCode.replaceAll(reference, input);
+            } catch (PatternSyntaxException e) {
+                LogUtil.e(TAG, "Failed to apply replaceAll command", e);
+                return sourceCode;
+            }
+        }
+        return sourceCode;
+    }
+
+    private static void addLine(ArrayList<String> lines, int lineIndex, String input) {
+        if (lineIndex < 0) {
+            lines.add(0, input);
+        } else if (lineIndex > (lines.size() - 1)) {
+            lines.add(input);
+        } else {
+            lines.add(lineIndex, input);
+        }
+    }
+
+    private static void applyReplaceCommand(ArrayList<String> lines, int index, int distance, int before, int after, String input) {
+        if (before < 0) {
+            before = 0;
+        }
+        if (after < 0) {
+            after = 0;
+        }
+        if (before == 0 && after == 0) {
+            int lineToChange = index + distance;
+            if (lineToChange < 0) {
+                lineToChange = 0;
+            }
+            if (lineToChange > (lines.size() - 1)) {
+                lineToChange = lines.size() - 1;
+            }
+            lines.set(lineToChange, input);
+        } else {
+            int lineToChange = index + distance;
+            if (lineToChange <= 0) {
+                lineToChange = 0;
+                int from = 1;
+                int to = after + 1;
+                if (to > (lines.size() - 1)) {
+                    to = lines.size() - 1;
+                }
+                lines.subList(from, to).clear();
+                lines.set(0, input);
+            } else if (lineToChange >= (lines.size() - 1)) {
+                lineToChange = lines.size() - 1;
+                int from = lineToChange - before;
+                int to = lineToChange;
+                if (from < 0) {
+                    from = 0;
+                }
+                lines.set(lineToChange, input);
+                lines.subList(from, to).clear();
+            } else {
+                int from = lineToChange + 1;
+                int to = lineToChange + after;
+                if (to > (lines.size() - 1)) {
+                    to = lines.size() - 1;
+                }
+                lines.subList(from, to).clear();
+                lines.set(lineToChange, input);
+                from = lineToChange - before;
+                to = lineToChange;
+                if (from < 0) {
+                    from = 0;
+                }
+                lines.subList(from, to).clear();
             }
         }
     }
@@ -340,145 +379,46 @@ public class CommandBlock {
     }
 
     private static String applyCollectedCommands(ArrayList<HashMap<String, Object>> commandDefinitions, String sourceCode) {
-        ArrayList<String> lines = new ArrayList<>(Arrays.asList(sourceCode.split("\n")));
+        ArrayList<String> lines = splitLines(sourceCode);
         for (HashMap<String, Object> commandDefinition : commandDefinitions) {
-            String reference = getStringValue(commandDefinition, KEY_REFERENCE);
-            int distance = getNumericValue(commandDefinition, KEY_DISTANCE);
-            int after = getNumericValue(commandDefinition, KEY_AFTER);
-            int before = getNumericValue(commandDefinition, KEY_BEFORE);
-            String command = getStringValue(commandDefinition, KEY_COMMAND);
-            String input = getStringValue(commandDefinition, KEY_INPUT);
+            ArrayList<String> previousLines = new ArrayList<>(lines);
+            try {
+                String reference = getStringValue(commandDefinition, KEY_REFERENCE);
+                int distance = getNumericValue(commandDefinition, KEY_DISTANCE);
+                int after = getNumericValue(commandDefinition, KEY_AFTER);
+                int before = getNumericValue(commandDefinition, KEY_BEFORE);
+                String command = getStringValue(commandDefinition, KEY_COMMAND);
+                String input = getStringValue(commandDefinition, KEY_INPUT);
 
-            if (command.equals("find-replace")) {
-                String temp = joinLines(lines);
-                temp = temp.replace(reference, input);
-                lines = new ArrayList<>(Arrays.asList(temp.split("\n")));
-                continue;
-            }
-            if (command.equals("find-replace-first")) {
-                try {
-                    String temp = joinLines(lines);
-                    temp = temp.replaceFirst(reference, input);
-                    lines = new ArrayList<>(Arrays.asList(temp.split("\n")));
-                    continue;
-                } catch (PatternSyntaxException e) {
-                    LogUtil.e(TAG, "Failed to apply replaceFirst command", e);
+                if (reference.isEmpty()) {
                     continue;
                 }
-            }
 
-            if (command.equals("find-replace-all")) {
-                try {
-                    String temp = joinLines(lines);
-                    temp = temp.replaceAll(reference, input);
-                    lines = new ArrayList<>(Arrays.asList(temp.split("\n")));
-                    continue;
-                } catch (PatternSyntaxException e) {
-                    LogUtil.e(TAG, "Failed to apply replaceAll command", e);
+                if (isTextReplacementCommand(command)) {
+                    lines = splitLines(applyTextReplacementCommand(joinLines(lines), command, reference, input));
                     continue;
                 }
-            }
 
-            int index = getIndex(lines, reference);
-            if (index == -1) {
-                continue;
-            }
-
-
-            if (command.equals("insert")) {
-                if ((index + distance - before) < 0) {
-                    lines.add(0, input);
-                } else if ((index + distance - before) > (lines.size() - 1)) {
-                    lines.add(input);
-                } else {
-                    lines.add(index + distance - before, input);
+                int index = getIndex(lines, reference);
+                if (index == -1) {
+                    continue;
                 }
-                continue;
-            }
-            if (command.equals("add")) {
-                if ((index + distance + after + 1) < 0) {
-                    lines.add(0, input);
-                } else if ((index + distance + after + 1) > (lines.size() - 1)) {
-                    lines.add(input);
-                } else {
-                    lines.add(index + distance + after + 1, input);
+
+                if (COMMAND_INSERT.equals(command)) {
+                    addLine(lines, index + distance - before, input);
+                    continue;
                 }
-                continue;
-            }
-
-            ///old method
-        /*
-        if(command.equals("replace")){
-            boolean isZ = false;
-            int xxx = (int)(index + distance - before -1);
-            if ( xxx <=0 ){ isZ = true; xxx = 0; }
-
-            int ff = (int)(index + distance - before);
-            if ( ff <0 ){ ff = 0; }
-            int tt = (int)(index + distance + after +1);
-            if ( tt > a.size() ){ tt = a.size(); }
-            a.subList(ff , tt).clear();
-            //// fix bug
-            if (xxx > a.size()-2){
-                a.add(input);
-            } else if(isZ) {
-                a.add(0, input);
-            } else {
-                a.add((int)(xxx+1) , input);
-            } continue ;}*/
-
-            if (command.equals("replace")) {
-                if (before == 0 && after == 0) {
-                    int lineToChange = index + distance;
-                    if (lineToChange < 0) {
-                        lineToChange = 0;
-                    }
-                    if (lineToChange > (lines.size() - 1)) {
-                        lineToChange = lines.size() - 1;
-                    }
-                    lines.set(lineToChange, input);
-                } else {
-                    int lineToChange = index + distance;
-                    if (lineToChange <= 0) { // ignore backend
-                        lineToChange = 0;
-                        int from = 1;
-                        int to = after + 1;
-                        if (to > (lines.size() - 1)) {
-                            to = lines.size() - 1;
-                        }
-                        lines.subList(from, to).clear();
-                        lines.set(0, input);
-                    } else if (lineToChange >= (lines.size() - 1)) { //ignore frontend
-                        lineToChange = lines.size() - 1;
-                        int from = lineToChange - before;
-                        int to = lineToChange;
-                        if (from < 0) {
-                            from = 0;
-                        }
-                        lines.set(lineToChange, input);
-                        lines.subList(from, to).clear();
-                    } else {  //handle everything
-                        if (before < 0) {
-                            before = 0;
-                        }
-                        if (after < 0) {
-                            after = 0;
-                        }
-                        int from = lineToChange + 1;
-                        int to = lineToChange + after;
-                        if (to > (lines.size() - 1)) {
-                            to = lines.size() - 1;
-                        }
-                        lines.subList(from, to).clear();
-                        lines.set(lineToChange, input);
-                        from = lineToChange - before;
-                        to = lineToChange;
-                        if (from < 0) {
-                            from = 0;
-                        }
-                        lines.subList(from, to).clear();
-                    }
+                if (COMMAND_ADD.equals(command)) {
+                    addLine(lines, index + distance + after + 1, input);
+                    continue;
                 }
+
+                if (COMMAND_REPLACE.equals(command)) {
+                    applyReplaceCommand(lines, index, distance, before, after, input);
+                }
+            } catch (RuntimeException e) {
+                LogUtil.e(TAG, "Failed to apply collected command", e);
+                lines = previousLines;
             }
         }
 
@@ -506,22 +446,33 @@ public class CommandBlock {
     }
 
     private static String removeCommandBlocks(String sourceCode, String startMarker, String endMarker) {
-        ArrayList<String> lines = new ArrayList<>(Arrays.asList(sourceCode.split("\n")));
+        ArrayList<String> lines = splitLines(sourceCode);
         ArrayList<String> resultLines = new ArrayList<>();
-        boolean shouldKeepLine = true;
-        for (int i = 0; i < lines.size(); i++) {
-            if (shouldKeepLine) {
-                if (!lines.get(i).contains(startMarker)) {
-                    resultLines.add(lines.get(i));
+        ArrayList<String> bufferedBlockLines = new ArrayList<>();
+        boolean isInsideCommandBlock = false;
+        for (String line : lines) {
+            if (!isInsideCommandBlock) {
+                if (line.contains(startMarker)) {
+                    bufferedBlockLines.clear();
+                    bufferedBlockLines.add(line);
+                    if (!line.contains(endMarker)) {
+                        isInsideCommandBlock = true;
+                    }
+                } else {
+                    resultLines.add(line);
                 }
+                continue;
             }
 
-            if (lines.get(i).contains(startMarker)) {
-                shouldKeepLine = false;
+            bufferedBlockLines.add(line);
+            if (line.contains(endMarker)) {
+                bufferedBlockLines.clear();
+                isInsideCommandBlock = false;
             }
-            if (lines.get(i).contains(endMarker)) {
-                shouldKeepLine = true;
-            }
+        }
+
+        if (isInsideCommandBlock) {
+            resultLines.addAll(bufferedBlockLines);
         }
 
         return joinLines(resultLines);
@@ -535,9 +486,20 @@ public class CommandBlock {
         String command;
         String input = "";
 
+        if (blockRange.second - blockRange.first < 6) {
+            LogUtil.e(TAG, "Skipping malformed command block with insufficient header lines at lines "
+                    + (blockRange.first + 1) + "-" + (blockRange.second + 1));
+            return;
+        }
+
         String line = lines.get(blockRange.first + 1);
         String jsonReference = line.substring(line.indexOf(">") + 1);
         ArrayList<String> parsedReference = GSON.fromJson(jsonReference, Helper.TYPE_STRING);
+        if (parsedReference == null || parsedReference.isEmpty()) {
+            LogUtil.e(TAG, "Skipping malformed command block with empty reference at lines "
+                    + (blockRange.first + 1) + "-" + (blockRange.second + 1));
+            return;
+        }
         reference = parsedReference.get(0);
 
         line = lines.get(blockRange.first + 2);
