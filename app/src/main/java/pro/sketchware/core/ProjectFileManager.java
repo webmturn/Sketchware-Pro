@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -56,6 +57,29 @@ public class ProjectFileManager {
     addFile(0, "main");
   }
 
+  private String decryptFileToString(String filePath) throws IOException {
+    byte[] fileBytes = fileUtil.readFileBytes(filePath);
+    if (fileBytes == null && new File(filePath).length() > 0L)
+      throw new IOException("Failed to read project file metadata: " + filePath);
+    return fileUtil.decryptToString(fileBytes);
+  }
+
+  private byte[] encryptStringForStorage(String content, String filePath) throws IOException {
+    try {
+      return fileUtil.encryptString(content);
+    } catch (GeneralSecurityException e) {
+      throw new IOException("Failed to encrypt project file metadata: " + filePath, e);
+    }
+  }
+
+  private void loadFromPath(String filePath, String sourceName) {
+    try (BufferedReader reader = new BufferedReader(new StringReader(decryptFileToString(filePath)))) {
+      parseFileData(reader);
+    } catch (IOException | RuntimeException e) {
+      Log.e("ProjectFileManager", "Failed to load " + sourceName + " for project " + projectId + " from " + filePath, e);
+    }
+  }
+
   public void addFile(int index, String fileName) {
     ProjectFileBean projectFileBean = new ProjectFileBean(index, fileName);
     if (index == 0) {
@@ -89,6 +113,9 @@ public class ProjectFileManager {
   }
   
   public void parseFileData(BufferedReader reader) throws IOException {
+    ArrayList<ProjectFileBean> parsedActivities = new ArrayList<>();
+    ArrayList<ProjectFileBean> parsedCustomViews = new ArrayList<>();
+    parsedActivities.add(new ProjectFileBean(0, "main"));
     StringBuilder contentBuffer = new StringBuilder();
     String sectionName = "";
     while (true) {
@@ -99,7 +126,7 @@ public class ProjectFileManager {
         if (line.charAt(0) == '@') {
           StringBuilder tempBuffer = contentBuffer;
           if (!sectionName.isEmpty()) {
-            parseFileSection(sectionName, contentBuffer.toString());
+            parseFileSection(sectionName, contentBuffer.toString(), parsedActivities, parsedCustomViews);
             tempBuffer = new StringBuilder();
           } 
           sectionName = line.substring(1);
@@ -111,13 +138,17 @@ public class ProjectFileManager {
         continue;
       } 
       if (!sectionName.isEmpty())
-        parseFileSection(sectionName, contentBuffer.toString()); 
+        parseFileSection(sectionName, contentBuffer.toString(), parsedActivities, parsedCustomViews);
+      activities = parsedActivities;
+      customViews = parsedCustomViews;
       refreshNameLists();
       return;
     } 
   }
   
-  public void parseFileSection(String sectionName, String content) {
+  private void parseFileSection(String sectionName, String content,
+      ArrayList<ProjectFileBean> targetActivities,
+      ArrayList<ProjectFileBean> targetCustomViews) {
     if (sectionName.equals("activity")) {
       if (content.isEmpty())
         return; 
@@ -131,7 +162,7 @@ public class ProjectFileManager {
         parsedBean.setOptionsByTheme();
         if (parsedBean.fileName.equals("main")) {
           ProjectFileBean existingMain = null;
-          for (ProjectFileBean fb : activities) {
+          for (ProjectFileBean fb : targetActivities) {
             if (fb.fileName.equals("main")) {
               existingMain = fb;
               break;
@@ -140,10 +171,10 @@ public class ProjectFileManager {
           if (existingMain != null) {
             existingMain.copy(parsedBean);
           } else {
-            activities.add(0, parsedBean);
+            targetActivities.add(0, parsedBean);
           } 
         } else {
-          activities.add(parsedBean);
+          targetActivities.add(parsedBean);
         } 
         if (newlineIdx >= remaining.length() - 1)
           break; 
@@ -152,7 +183,7 @@ public class ProjectFileManager {
     } else if (sectionName.equals("customview")) {
       if (content.isEmpty())
         return; 
-      customViews = new ArrayList<>();
+      targetCustomViews.clear();
       String remaining = content;
       while (true) {
         int newlineIdx = remaining.indexOf("\n");
@@ -161,12 +192,16 @@ public class ProjectFileManager {
         String jsonLine = remaining.substring(0, newlineIdx);
         ProjectFileBean parsedBean = gson.fromJson(jsonLine, ProjectFileBean.class);
         parsedBean.setOptionsByTheme();
-        customViews.add(parsedBean);
+        targetCustomViews.add(parsedBean);
         if (newlineIdx >= remaining.length() - 1)
           break; 
         remaining = remaining.substring(newlineIdx + 1);
       } 
     } 
+  }
+
+  public void parseFileSection(String sectionName, String content) {
+    parseFileSection(sectionName, content, activities, customViews);
   }
   
   public final void serializeFiles(StringBuilder buffer) {
@@ -247,14 +282,18 @@ public class ProjectFileManager {
     return xmlNames;
   }
 
-  public final void writeToFile(String filePath) {
+  public final boolean writeToFile(String filePath) {
     StringBuilder contentBuffer = new StringBuilder();
     serializeFiles(contentBuffer);
     try {
-      fileUtil.writeBytes(filePath, fileUtil.encryptString(contentBuffer.toString()));
-    } catch (Exception e) {
-      Log.e("ProjectFileManager", "Failed to write file", e);
+      boolean saved = fileUtil.writeBytes(filePath, encryptStringForStorage(contentBuffer.toString(), filePath));
+      if (!saved)
+        Log.e("ProjectFileManager", "Failed to write file data for project " + projectId + " to " + filePath);
+      return saved;
+    } catch (IOException | RuntimeException e) {
+      Log.e("ProjectFileManager", "Failed to write file data for project " + projectId + " to " + filePath, e);
     }
+    return false;
   }
 
   public boolean hasBackup() {
@@ -273,29 +312,25 @@ public class ProjectFileManager {
     return dataBytes == null || !Arrays.equals(backupBytes, dataBytes);
   }
 
+  private boolean hasUsableBackup(String backupPath) {
+    if (!fileUtil.exists(backupPath))
+      return false;
+    byte[] backupBytes = fileUtil.readFileBytes(backupPath);
+    return backupBytes != null && backupBytes.length > 0;
+  }
+
   public void loadFromBackup() {
     String filePath = SketchwarePaths.getBackupPath(projectId) + File.separator + "file";
-    if (!hasDistinctBackup(filePath, SketchwarePaths.getDataPath(projectId) + File.separator + "file"))
+    if (!hasUsableBackup(filePath))
       return; 
-    initializeDefaults();
-    try (BufferedReader reader = new BufferedReader(new StringReader(fileUtil.decryptToString(fileUtil.readFileBytes(filePath))))) {
-      parseFileData(reader);
-    } catch (Exception e) {
-      Log.e("ProjectFileManager", "Failed to load backup", e);
-    }
-    refreshNameLists();
+    loadFromPath(filePath, "file backup");
   }
 
   public void loadFromData() {
-    initializeDefaults();
     String filePath = SketchwarePaths.getDataPath(projectId) + File.separator + "file";
     if (!fileUtil.exists(filePath))
       return; 
-    try (BufferedReader reader = new BufferedReader(new StringReader(fileUtil.decryptToString(fileUtil.readFileBytes(filePath))))) {
-      parseFileData(reader);
-    } catch (Exception e) {
-      Log.e("ProjectFileManager", "Failed to load data", e);
-    }
+    loadFromPath(filePath, "file data");
   }
 
   public void refreshNameLists() {
@@ -327,12 +362,14 @@ public class ProjectFileManager {
     initializeDefaults();
   }
 
-  public void saveToBackup() {
-    writeToFile(SketchwarePaths.getBackupPath(projectId) + File.separator + "file");
+  public boolean saveToBackup() {
+    return writeToFile(SketchwarePaths.getBackupPath(projectId) + File.separator + "file");
   }
 
-  public void saveToData() {
-    writeToFile(SketchwarePaths.getDataPath(projectId) + File.separator + "file");
-    deleteBackup();
+  public boolean saveToData() {
+    boolean saved = writeToFile(SketchwarePaths.getDataPath(projectId) + File.separator + "file");
+    if (saved)
+      deleteBackup();
+    return saved;
   }
 }

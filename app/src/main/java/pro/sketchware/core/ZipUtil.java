@@ -45,12 +45,12 @@ public class ZipUtil {
             }
             zis.closeEntry();
             fos.flush();
-          } catch (Exception e) {
+          } catch (IOException | RuntimeException e) {
             Log.w("ZipUtil", "Failed to extract entry: " + entry.getName(), e);
           }
         }
       }
-    } catch (Exception e) {
+    } catch (IOException | RuntimeException e) {
       Log.e("ZipUtil", "Failed to extract asset zip: " + key, e);
       throw new RuntimeException(e);
     }
@@ -112,7 +112,7 @@ public class ZipUtil {
             }
             zis.closeEntry();
             fos.flush();
-          } catch (Exception e) {
+          } catch (IOException | RuntimeException e) {
             Log.w("ZipUtil", "Failed to extract entry: " + entry.getName(), e);
           }
         }
@@ -132,7 +132,7 @@ public class ZipUtil {
       for (String path : list1) {
         addDirectoryToZip(path, new File(path), zos, list2);
       }
-    } catch (Exception e) {
+    } catch (IOException | RuntimeException e) {
       Log.w("ZipUtil", "Failed to create zip file: " + zipFilePath, e);
     }
   }
@@ -152,7 +152,7 @@ public class ZipUtil {
       while ((len = bis.read(buf)) > 0) {
         zipOut.write(buf, 0, len);
       }
-    } catch (Exception e) {
+    } catch (IOException | RuntimeException e) {
       Log.w("ZipUtil", "Failed to add file to zip: " + key + value, e);
     } finally {
       try { if (zipOut != null) zipOut.closeEntry(); } catch (IOException e) { Log.w("ZipUtil", "Failed to close zip entry", e); }
@@ -169,7 +169,7 @@ public class ZipUtil {
         baos.write(buf, 0, len);
       }
       return baos.toByteArray();
-    } catch (Exception e) {
+    } catch (IOException | RuntimeException e) {
       Log.w("ZipUtil", "Failed to read file to bytes: " + filePath, e);
     }
     return null;

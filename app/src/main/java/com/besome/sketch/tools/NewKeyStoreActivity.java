@@ -115,7 +115,7 @@ public class NewKeyStoreActivity extends BaseAppCompatActivity implements OnClic
             try {
                 keyStoreManager.generateAndSaveKeyStore(SketchwarePaths.getKeystoreFilePath(), dnBuilder.toString(), validityInYears, Helper.getText(alias), text);
                 showDoneDialog(true, text);
-            } catch (Exception e) {
+            } catch (java.io.IOException | java.security.GeneralSecurityException e) {
                 Log.e("NewKeyStoreActivity", e.getMessage(), e);
                 showDoneDialog(false, null);
             }

@@ -29,6 +29,11 @@ public class ProjectDataManager {
         }
     }
 
+    private static IllegalStateException createManagerCloseFailure(String managerName, String currentProjectId, String requestedProjectId) {
+        return new IllegalStateException("Failed to save " + managerName + " backup for project "
+                + currentProjectId + " before switching to project " + requestedProjectId);
+    }
+
     /**
      * Clears all cached manager instances without saving.
      * <p>
@@ -70,11 +75,14 @@ public class ProjectDataManager {
      * releases the cached {@link ProjectDataStore} instance.
      * Does nothing if no data manager is currently open.
      */
-    public static void closeDataManager() {
+    public static boolean closeDataManager() {
         if (projectDataStore != null) {
-            projectDataStore.saveAllBackup();
+            if (!projectDataStore.saveAllBackup()) {
+                return false;
+            }
             projectDataStore = null;
         }
+        return true;
     }
 
     /**
@@ -82,11 +90,14 @@ public class ProjectDataManager {
      * releases the cached {@link ProjectFileManager} instance.
      * Does nothing if no file manager is currently open.
      */
-    public static void closeFileManager() {
+    public static boolean closeFileManager() {
         if (projectFileManager != null) {
-            projectFileManager.saveToBackup();
+            if (!projectFileManager.saveToBackup()) {
+                return false;
+            }
             projectFileManager = null;
         }
+        return true;
     }
 
     /**
@@ -94,11 +105,14 @@ public class ProjectDataManager {
      * releases the cached {@link LibraryManager} instance.
      * Does nothing if no library manager is currently open.
      */
-    public static void closeLibraryManager() {
+    public static boolean closeLibraryManager() {
         if (libraryManager != null) {
-            libraryManager.saveToBackup();
+            if (!libraryManager.saveToBackup()) {
+                return false;
+            }
             libraryManager = null;
         }
+        return true;
     }
 
     /**
@@ -106,11 +120,14 @@ public class ProjectDataManager {
      * releases the cached {@link ResourceManager} instance.
      * Does nothing if no resource manager is currently open.
      */
-    public static void closeResourceManager() {
+    public static boolean closeResourceManager() {
         if (resourceManager != null) {
-            resourceManager.saveToBackup();
+            if (!resourceManager.saveToBackup()) {
+                return false;
+            }
             resourceManager = null;
         }
+        return true;
     }
 
     /**
@@ -135,7 +152,10 @@ public class ProjectDataManager {
     public static synchronized ProjectDataStore getProjectDataManager(String sc_id, boolean load) {
         requireProjectId(sc_id);
         if (projectDataStore != null && !sc_id.equals(projectDataStore.projectId)) {
-            closeDataManager();
+            String currentProjectId = projectDataStore.projectId;
+            if (!closeDataManager()) {
+                throw createManagerCloseFailure("project data", currentProjectId, sc_id);
+            }
         }
         if (projectDataStore == null) {
             projectDataStore = new ProjectDataStore(sc_id);
@@ -179,7 +199,10 @@ public class ProjectDataManager {
     public static synchronized ProjectFileManager getFileManager(String sc_id, boolean load) {
         requireProjectId(sc_id);
         if (projectFileManager != null && !sc_id.equals(projectFileManager.projectId)) {
-            closeFileManager();
+            String currentProjectId = projectFileManager.projectId;
+            if (!closeFileManager()) {
+                throw createManagerCloseFailure("project file", currentProjectId, sc_id);
+            }
         }
         if (projectFileManager == null) {
             projectFileManager = new ProjectFileManager(sc_id);
@@ -215,7 +238,10 @@ public class ProjectDataManager {
     public static synchronized LibraryManager getLibraryManager(String sc_id, boolean load) {
         requireProjectId(sc_id);
         if (libraryManager != null && !sc_id.equals(libraryManager.projectId)) {
-            closeLibraryManager();
+            String currentProjectId = libraryManager.projectId;
+            if (!closeLibraryManager()) {
+                throw createManagerCloseFailure("library", currentProjectId, sc_id);
+            }
         }
         if (libraryManager == null) {
             libraryManager = new LibraryManager(sc_id);
@@ -251,7 +277,10 @@ public class ProjectDataManager {
     public static synchronized ResourceManager getResourceManager(String sc_id, boolean load) {
         requireProjectId(sc_id);
         if (resourceManager != null && !sc_id.equals(resourceManager.projectId)) {
-            closeResourceManager();
+            String currentProjectId = resourceManager.projectId;
+            if (!closeResourceManager()) {
+                throw createManagerCloseFailure("resource", currentProjectId, sc_id);
+            }
         }
         if (resourceManager == null) {
             resourceManager = new ResourceManager(sc_id);

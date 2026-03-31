@@ -21,7 +21,6 @@ import com.besome.sketch.beans.ProjectLibraryBean;
 import com.besome.sketch.beans.SrcCodeBean;
 import com.besome.sketch.beans.ViewBean;
 import com.besome.sketch.editor.manage.library.material3.Material3LibraryManager;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -30,6 +29,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -337,7 +337,7 @@ public class ProjectFilePaths {
     public void extractAssetsToRes(Context context, String assetZipName) {
         try {
             ZipUtil.extractAssetZip(context, assetZipName, resDirectoryPath);
-        } catch (Exception ex) {
+        } catch (RuntimeException ex) {
             Log.e("ProjectFilePaths", ex.getMessage(), ex);
         }
     }
@@ -348,7 +348,7 @@ public class ProjectFilePaths {
     public void copyAppIcon(String iconPath) {
         try {
             fileUtil.copyFile(iconPath, resDirectoryPath + File.separator + "mipmap-xhdpi" + File.separator + "ic_launcher.png");
-        } catch (Exception ex) {
+        } catch (IOException ex) {
             Log.e("ProjectFilePaths", ex.getMessage(), ex);
         }
     }
@@ -370,10 +370,9 @@ public class ProjectFilePaths {
      */
 
     public void createLauncherIconXml(String content) {
-        try {
-            fileUtil.writeText(resDirectoryPath + File.separator + "mipmap-anydpi-v26" + File.separator + "ic_launcher.xml", content);
-        } catch (Exception ex) {
-            Log.e("ProjectFilePaths", ex.getMessage(), ex);
+        String iconPath = resDirectoryPath + File.separator + "mipmap-anydpi-v26" + File.separator + "ic_launcher.xml";
+        if (!fileUtil.writeText(iconPath, content)) {
+            Log.e("ProjectFilePaths", "Failed to write launcher icon xml: " + iconPath);
         }
     }
 
@@ -832,8 +831,8 @@ public class ProjectFilePaths {
                             cacheHit = true;
                         }
                     }
-                } catch (Exception e) {
-                    Log.e("ProjectFilePaths", "Cache read failed", e);
+                } catch (RuntimeException e) {
+                    Log.e("ProjectFilePaths", "Failed to read code generation cache for project " + sc_id + " from " + cacheKeyFile.getAbsolutePath(), e);
                 }
             }
 
@@ -886,9 +885,12 @@ public class ProjectFilePaths {
                                 srcCodeBeans.add(new SrcCodeBean(result.first,
                                         ActivityCodeGenerator.applyCommands(result.second)));
                                 FileUtil.writeFile(new File(codegenCacheDir, result.first + ".code").getAbsolutePath(), result.second);
-                            } catch (Exception e) {
-                                Log.e("ProjectFilePaths", "Parallel code generation failed, falling back to serial", e);
+                            } catch (InterruptedException | ExecutionException | RuntimeException e) {
+                                if (e instanceof InterruptedException) {
+                                    Thread.currentThread().interrupt();
+                                }
                                 ProjectFileBean activity = activitiesToGenerate.get(i);
+                                Log.e("ProjectFilePaths", "Parallel code generation failed for " + activity.getJavaName() + " in project " + sc_id + "; falling back to serial generation", e);
                                 String phase1Code = new ActivityCodeGenerator(buildConfig, activity, projectDataManager,
                                         sharedMll, projectSettings, sharedExtraBlocksMap, sharedMaterialLibraryManager)
                                         .generateCode(isAndroidStudioExport, sc_id, false);
@@ -1224,7 +1226,8 @@ public class ProjectFilePaths {
             } else {
                 appendFileInfo(key, new File(dataPath, "logic"));
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
+            Log.w("ProjectFilePaths", "Falling back to on-disk logic signature for project " + sc_id, e);
             appendFileInfo(key, new File(dataPath, "logic"));
         }
 
@@ -1236,7 +1239,8 @@ public class ProjectFilePaths {
             } else {
                 appendFileInfo(key, new File(dataPath, "view"));
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
+            Log.w("ProjectFilePaths", "Falling back to on-disk view signature for project " + sc_id, e);
             appendFileInfo(key, new File(dataPath, "view"));
         }
 
@@ -1248,7 +1252,8 @@ public class ProjectFilePaths {
             } else {
                 appendFileInfo(key, new File(dataPath, "file"));
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
+            Log.w("ProjectFilePaths", "Falling back to on-disk file signature for project " + sc_id, e);
             appendFileInfo(key, new File(dataPath, "file"));
         }
 
@@ -1260,7 +1265,8 @@ public class ProjectFilePaths {
             } else {
                 appendFileInfo(key, new File(dataPath, "library"));
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
+            Log.w("ProjectFilePaths", "Falling back to on-disk library signature for project " + sc_id, e);
             appendFileInfo(key, new File(dataPath, "library"));
         }
 
