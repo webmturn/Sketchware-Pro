@@ -1,6 +1,5 @@
 package mod.pranav.dependency.resolver
 
-import android.os.Environment
 import com.android.tools.r8.CompilationMode
 import com.android.tools.r8.D8
 import com.android.tools.r8.D8Command
@@ -17,6 +16,7 @@ import org.cosmic.ide.dependency.resolver.api.Repository
 import org.cosmic.ide.dependency.resolver.eventReciever
 import org.cosmic.ide.dependency.resolver.getArtifact
 import org.cosmic.ide.dependency.resolver.repositories
+import pro.sketchware.core.SketchwarePaths
 import pro.sketchware.utility.FilePathUtil
 import java.io.File
 import java.nio.file.Files
@@ -126,12 +126,7 @@ class DependencyResolver(
         return null
     }
 
-    private val repositoriesJson = Paths.get(
-        Environment.getExternalStorageDirectory().absolutePath,
-        ".sketchware",
-        "libs",
-        "repositories.json"
-    )
+    private val repositoriesJson = Paths.get(SketchwarePaths.getRepositoriesJsonPath())
 
     init {
         if (Files.notExists(repositoriesJson)) {

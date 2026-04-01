@@ -50,6 +50,7 @@ import java.util.Objects;
 import mod.hey.studios.editor.manage.block.v2.BlockLoader;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
+import pro.sketchware.core.SketchwarePaths;
 import pro.sketchware.databinding.ActivityBlocksManagerBinding;
 import pro.sketchware.databinding.DialogBlockConfigurationBinding;
 import pro.sketchware.databinding.DialogPaletteBinding;
@@ -318,8 +319,8 @@ public class BlocksManager extends BaseAppCompatActivity {
 
         DialogBlockConfigurationBinding dialogBinding = DialogBlockConfigurationBinding.inflate(getLayoutInflater());
 
-        dialogBinding.palettesPath.setText(pallet_dir.replace(FileUtil.getExternalStorageDir(), ""));
-        dialogBinding.blocksPath.setText(blocks_dir.replace(FileUtil.getExternalStorageDir(), ""));
+        dialogBinding.palettesPath.setText(SketchwarePaths.toExternalStorageRelativePath(pallet_dir));
+        dialogBinding.blocksPath.setText(SketchwarePaths.toExternalStorageRelativePath(blocks_dir));
 
         dialog.setView(dialogBinding.getRoot());
 
@@ -369,10 +370,14 @@ public class BlocksManager extends BaseAppCompatActivity {
     }
 
     private void readSettings() {
-        pallet_dir = FileUtil.getExternalStorageDir() + ConfigActivity.getStringSettingValueOrSetAndGet(ConfigActivity.SETTING_BLOCKMANAGER_DIRECTORY_PALETTE_FILE_PATH,
-                (String) ConfigActivity.getDefaultValue(ConfigActivity.SETTING_BLOCKMANAGER_DIRECTORY_PALETTE_FILE_PATH));
-        blocks_dir = FileUtil.getExternalStorageDir() + ConfigActivity.getStringSettingValueOrSetAndGet(ConfigActivity.SETTING_BLOCKMANAGER_DIRECTORY_BLOCK_FILE_PATH,
-                (String) ConfigActivity.getDefaultValue(ConfigActivity.SETTING_BLOCKMANAGER_DIRECTORY_BLOCK_FILE_PATH));
+        pallet_dir = SketchwarePaths.resolveExternalStorageRelativePath(
+                ConfigActivity.getStringSettingValueOrSetAndGet(
+                        ConfigActivity.SETTING_BLOCKMANAGER_DIRECTORY_PALETTE_FILE_PATH,
+                        (String) ConfigActivity.getDefaultValue(ConfigActivity.SETTING_BLOCKMANAGER_DIRECTORY_PALETTE_FILE_PATH)));
+        blocks_dir = SketchwarePaths.resolveExternalStorageRelativePath(
+                ConfigActivity.getStringSettingValueOrSetAndGet(
+                        ConfigActivity.SETTING_BLOCKMANAGER_DIRECTORY_BLOCK_FILE_PATH,
+                        (String) ConfigActivity.getDefaultValue(ConfigActivity.SETTING_BLOCKMANAGER_DIRECTORY_BLOCK_FILE_PATH)));
 
         if (FileUtil.isExistFile(blocks_dir) && isValidJson(FileUtil.readFile(blocks_dir))) {
             try {

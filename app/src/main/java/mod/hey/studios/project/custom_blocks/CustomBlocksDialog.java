@@ -24,11 +24,13 @@ import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import pro.sketchware.core.BlockView;
+import pro.sketchware.core.SketchwarePaths;
 import mod.hey.studios.editor.manage.block.ExtraBlockInfo;
 import mod.hey.studios.editor.manage.block.v2.BlockLoader;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;
 import mod.hilal.saif.activities.tools.ConfigActivity;
+
 import pro.sketchware.R;
 import pro.sketchware.databinding.DialogPaletteBinding;
 import pro.sketchware.databinding.ItemCustomBlockBinding;
@@ -156,13 +158,15 @@ public class CustomBlocksDialog {
     }
 
     private String getConfigPath(String settingKey) {
-        return FileUtil.getExternalStorageDir() + ConfigActivity.getStringSettingValueOrSetAndGet(
-                settingKey, (String) ConfigActivity.getDefaultValue(settingKey));
+        return SketchwarePaths.resolveExternalStorageRelativePath(
+                ConfigActivity.getStringSettingValueOrSetAndGet(
+                        settingKey, (String) ConfigActivity.getDefaultValue(settingKey)));
     }
 
     private ArrayList<HashMap<String, Object>> loadJsonList(String path) {
         ArrayList<HashMap<String, Object>> result = new ArrayList<>();
         if (FileUtil.isExistFile(path)) {
+
             try {
                 String content = FileUtil.readFile(path);
                 if (!content.isEmpty()) {

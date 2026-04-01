@@ -56,7 +56,7 @@ import pro.sketchware.utility.SketchwareUtil;
 
 public class BackupFactory {
     public static final String EXTENSION = "swb";
-    public static final String DEF_PATH = ".sketchware/backups/";
+    public static final String DEF_PATH = SketchwarePaths.BACKUPS_PATH + File.separator;
 
     // WARNING: These crypto constants are part of the original Sketchware project file format.
     // Do NOT change them �?doing so will break reading/writing of all existing project files
@@ -85,7 +85,7 @@ public class BackupFactory {
     }
 
     public static String getBackupDir() {
-        return SketchwarePaths.getAbsolutePathOf(ConfigActivity.getBackupPath());
+        return SketchwarePaths.resolveExternalStorageRelativePath(ConfigActivity.getBackupPath());
     }
 
     private static File getAllLocalLibsDir() {

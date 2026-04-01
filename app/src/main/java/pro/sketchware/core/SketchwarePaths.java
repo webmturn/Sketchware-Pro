@@ -54,9 +54,58 @@ public class SketchwarePaths {
     public static final String DEBUG_LOG_PATH = ".sketchware" + File.separator + "debug.txt";
     public static final String LOGCAT_PATH = ".sketchware" + File.separator + "logcat";
     public static final String BLOCK_EXPORT_PATH = RESOURCES_PATH + File.separator + "block" + File.separator + "export";
+    public static final String BACKUPS_PATH = ".sketchware" + File.separator + "backups";
 
     public static String getAbsolutePathOf(String relativePath) {
-        return new File(Environment.getExternalStorageDirectory(), relativePath).getAbsolutePath();
+        return resolveExternalStoragePath(relativePath);
+    }
+
+    public static String resolveExternalStoragePath(String path) {
+        if (path == null || path.isEmpty()) {
+            return path;
+        }
+        String externalStoragePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        if (path.equals(externalStoragePath) || path.startsWith(externalStoragePath + File.separator)) {
+            return path;
+        }
+        if (path.equals(File.separator + ".sketchware")
+                || path.startsWith(File.separator + ".sketchware" + File.separator)
+                || path.equals(File.separator + "sketchware")
+                || path.startsWith(File.separator + "sketchware" + File.separator)) {
+            return new File(externalStoragePath, path.substring(1)).getAbsolutePath();
+        }
+        if (new File(path).isAbsolute()) {
+            return path;
+        }
+        return new File(externalStoragePath, path).getAbsolutePath();
+    }
+
+    public static String resolveExternalStorageRelativePath(String path) {
+        if (path == null || path.isEmpty()) {
+            return path;
+        }
+        String externalStoragePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        if (path.equals(externalStoragePath) || path.startsWith(externalStoragePath + File.separator)) {
+            return path;
+        }
+        if (path.startsWith(File.separator)) {
+            return new File(externalStoragePath, path.substring(1)).getAbsolutePath();
+        }
+        return new File(externalStoragePath, path).getAbsolutePath();
+    }
+
+    public static String toExternalStorageRelativePath(String path) {
+        if (path == null || path.isEmpty()) {
+            return path;
+        }
+        String externalStoragePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        if (path.equals(externalStoragePath)) {
+            return File.separator;
+        }
+        if (path.startsWith(externalStoragePath + File.separator)) {
+            return path.substring(externalStoragePath.length());
+        }
+        return path;
     }
 
     public static String getCollectionPath() {
@@ -75,6 +124,10 @@ public class SketchwarePaths {
 
     public static String getBackupPath(String sc_id) {
         return getAbsolutePathOf(BACKUP_PATH + File.separator + sc_id);
+    }
+
+    public static String getBackupsPath() {
+        return getAbsolutePathOf(BACKUPS_PATH);
     }
 
     public static String getSettingsPath() {
