@@ -88,10 +88,70 @@ public class SketchwarePaths {
         if (path.equals(externalStoragePath) || path.startsWith(externalStoragePath + File.separator)) {
             return path;
         }
+        if (isLikelyAbsoluteStoragePath(path)) {
+            return path;
+        }
         if (path.startsWith(File.separator)) {
             return new File(externalStoragePath, path.substring(1)).getAbsolutePath();
         }
         return new File(externalStoragePath, path).getAbsolutePath();
+    }
+
+    private static boolean isLikelyAbsoluteStoragePath(String path) {
+        if (matchesKnownAbsoluteStoragePathPrefix(path)) {
+            return true;
+        }
+        Context appContext = SketchApplication.getAppContext();
+        if (appContext == null) {
+            return false;
+        }
+        File[] externalFilesDirs = appContext.getExternalFilesDirs(null);
+        if (externalFilesDirs == null) {
+            return false;
+        }
+        for (File externalFilesDir : externalFilesDirs) {
+            String storageRootPath = getExternalStorageRootPath(externalFilesDir);
+            if (storageRootPath != null
+                    && (path.equals(storageRootPath)
+                    || path.startsWith(storageRootPath + File.separator))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean matchesKnownAbsoluteStoragePathPrefix(String path) {
+        return path.equals(File.separator + "storage")
+                || path.startsWith(File.separator + "storage" + File.separator)
+                || path.equals(File.separator + "mnt")
+                || path.startsWith(File.separator + "mnt" + File.separator)
+                || path.equals(File.separator + "sdcard")
+                || path.startsWith(File.separator + "sdcard" + File.separator)
+                || path.equals(File.separator + "sdcard0")
+                || path.startsWith(File.separator + "sdcard0" + File.separator)
+                || path.equals(File.separator + "sdcard1")
+                || path.startsWith(File.separator + "sdcard1" + File.separator)
+                || path.equals(File.separator + "external_sd")
+                || path.startsWith(File.separator + "external_sd" + File.separator)
+                || path.equals(File.separator + "extSdCard")
+                || path.startsWith(File.separator + "extSdCard" + File.separator)
+                || path.equals(File.separator + "Removable")
+                || path.startsWith(File.separator + "Removable" + File.separator)
+                || path.equals(File.separator + "removable")
+                || path.startsWith(File.separator + "removable" + File.separator);
+    }
+
+    private static String getExternalStorageRootPath(File externalFilesDir) {
+        if (externalFilesDir == null) {
+            return null;
+        }
+        String path = externalFilesDir.getAbsolutePath();
+        String androidDataPath = File.separator + "Android" + File.separator + "data" + File.separator;
+        int androidDataIndex = path.indexOf(androidDataPath);
+        if (androidDataIndex <= 0) {
+            return null;
+        }
+        return path.substring(0, androidDataIndex);
     }
 
     public static String toExternalStorageRelativePath(String path) {
