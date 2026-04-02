@@ -43,8 +43,10 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import pro.sketchware.core.ZipUtil;
-import pro.sketchware.core.BaseAsyncTask;
+import pro.sketchware.core.BackgroundTasks;
 import pro.sketchware.core.ResourceNameValidator;
+import pro.sketchware.core.SketchToast;
+import pro.sketchware.core.TaskHost;
 import pro.sketchware.core.UIHelper;
 import pro.sketchware.core.EncryptedFileUtil;
 import pro.sketchware.core.BlockConstants;
@@ -235,10 +237,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
         icons = new ArrayList<>();
         currentPage = 0; // Reset currentPage to zero
         Log.d("icons", allIconPaths.toString());
-        runOnUiThread(() -> {
-            if (isFinishing() || isDestroyed()) return;
-            loadMoreItems();
-        });
+        TaskHost.of(this).postToUi(this::loadMoreItems);
     }
 
     private void loadMoreItems() {
@@ -431,25 +430,28 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
         }
     }
 
-    private static class InitialIconLoader extends BaseAsyncTask {
+    private static class InitialIconLoader {
         private final WeakReference<ImportIconActivity> activity;
 
         public InitialIconLoader(ImportIconActivity activity) {
-            super(activity);
             this.activity = new WeakReference<>(activity);
-            activity.addTask(this);
         }
 
-        @Override
-        public void onSuccess() {
+        public void execute() {
             var activity = this.activity.get();
-            if (activity == null || activity.isFinishing() || activity.isDestroyed()) return;
+            if (activity == null) return;
+            BackgroundTasks.runSerial(TaskHost.of(activity), "ImportIconActivity$InitialIconLoader",
+                    this::doWork, this::onSuccess, this::onError);
+        }
+
+        private void onSuccess() {
+            var activity = this.activity.get();
+            if (activity == null) return;
             activity.dismissLoadingDialog();
             activity.setIconColor();
         }
 
-        @Override
-        public void doWork() {
+        private void doWork() {
             var activity = this.activity.get();
             if (activity == null) return;
             if (!activity.doExtractedIconsExist()) {
@@ -457,51 +459,69 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
             }
         }
 
-        @Override
-        public void onError(String errorMessage) {
+        private void onError(Throwable error) {
             var activity = this.activity.get();
-            if (activity == null || activity.isFinishing() || activity.isDestroyed()) return;
+            if (activity == null) return;
             activity.dismissLoadingDialog();
+            SketchToast.warning(activity, buildErrorMessage(error), 1).show();
+        }
+
+        private String buildErrorMessage(Throwable error) {
+            String errorMessage = error != null ? error.getMessage() : null;
+            if (errorMessage == null || errorMessage.isEmpty()) {
+                return Helper.getResString(R.string.common_error_an_error_occurred);
+            }
+            return Helper.getResString(R.string.common_error_an_error_occurred) + "[" + errorMessage + "]";
         }
 
     }
 
-    private static class IconColorChangedIconLoader extends BaseAsyncTask {
+    private static class IconColorChangedIconLoader {
         private final WeakReference<ImportIconActivity> activity;
 
         public IconColorChangedIconLoader(ImportIconActivity activity) {
-            super(activity);
             this.activity = new WeakReference<>(activity);
-            activity.addTask(this);
-            activity.showLoadingDialog();
         }
 
-        @Override
-        public void onSuccess() {
+        public void execute() {
             var activity = this.activity.get();
-            if (activity == null || activity.isFinishing() || activity.isDestroyed()) return;
+            if (activity == null) return;
+            activity.showLoadingDialog();
+            BackgroundTasks.runSerial(TaskHost.of(activity), "ImportIconActivity$IconColorChangedIconLoader",
+                    this::doWork, this::onSuccess, this::onError);
+        }
+
+        private void onSuccess() {
+            var activity = this.activity.get();
+            if (activity == null) return;
             activity.dismissLoadingDialog();
             activity.selectedIconPosition = -1;
         }
 
-        @Override
-        public void doWork() {
+        private void doWork() {
             var activity = this.activity.get();
             if (activity == null) return;
             activity.listIcons();
-            activity.runOnUiThread(() -> {
-                if (activity.isFinishing() || activity.isDestroyed()) return;
+            TaskHost.of(activity).postToUi(() -> {
                 if (activity.searchView != null) {
                     activity.searchView.setQuery("", false);
                 }
             });
         }
 
-        @Override
-        public void onError(String errorMessage) {
+        private void onError(Throwable error) {
             var activity = this.activity.get();
-            if (activity == null || activity.isFinishing() || activity.isDestroyed()) return;
+            if (activity == null) return;
             activity.dismissLoadingDialog();
+            SketchToast.warning(activity, buildErrorMessage(error), 1).show();
+        }
+
+        private String buildErrorMessage(Throwable error) {
+            String errorMessage = error != null ? error.getMessage() : null;
+            if (errorMessage == null || errorMessage.isEmpty()) {
+                return Helper.getResString(R.string.common_error_an_error_occurred);
+            }
+            return Helper.getResString(R.string.common_error_an_error_occurred) + "[" + errorMessage + "]";
         }
     }
 }

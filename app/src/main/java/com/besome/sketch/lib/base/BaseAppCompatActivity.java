@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface.OnCancelListener;
 import android.graphics.Color;
-import android.os.AsyncTask.Status;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -19,9 +18,6 @@ import androidx.core.view.WindowInsetsCompat;
 import com.besome.sketch.lib.ui.LoadingDialog;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
-import java.util.ArrayList;
-
-import pro.sketchware.core.BaseAsyncTask;
 import pro.sketchware.dialogs.ProgressDialog;
 import pro.sketchware.fragments.settings.language.LanguageOverrideContextWrapper;
 import pro.sketchware.utility.UI;
@@ -32,15 +28,10 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
 
     protected ProgressDialog progressDialog;
     private LoadingDialog lottieDialog;
-    private ArrayList<BaseAsyncTask> taskList;
 
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(LanguageOverrideContextWrapper.wrap(newBase));
-    }
-
-    public void addTask(BaseAsyncTask task) {
-        taskList.add(task);
     }
 
     public void showProgressDialogWithCancel(OnCancelListener cancelListener) {
@@ -54,15 +45,6 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.setMessage(message);
         }
-    }
-
-    public void cancelAllTasks() {
-        for (BaseAsyncTask task : taskList) {
-            if (task.getStatus() != Status.FINISHED && !task.isCancelled()) {
-                task.cancel(true);
-            }
-        }
-        taskList.clear();
     }
 
     public void dismissLoadingDialog() {
@@ -85,7 +67,6 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
             progressDialog = null;
             progressDialog = new ProgressDialog(this);
         }
-
     }
 
     public boolean isStoragePermissionGranted() {
@@ -101,7 +82,6 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        taskList = new ArrayList<>();
         lottieDialog = new LoadingDialog(this);
         progressDialog = new ProgressDialog(this);
         mAnalytics = null;
@@ -109,7 +89,6 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
 
     @Override
     public void onDestroy() {
-        cancelAllTasks();
         if (lottieDialog != null && lottieDialog.isShowing()) {
             lottieDialog.cancelAnimation();
         }

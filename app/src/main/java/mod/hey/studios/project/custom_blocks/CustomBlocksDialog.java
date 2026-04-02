@@ -23,8 +23,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import pro.sketchware.core.BackgroundTasks;
 import pro.sketchware.core.BlockView;
 import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.TaskHost;
 import mod.hey.studios.editor.manage.block.ExtraBlockInfo;
 import mod.hey.studios.editor.manage.block.v2.BlockLoader;
 import mod.hey.studios.util.Helper;
@@ -46,6 +48,18 @@ public class CustomBlocksDialog {
     private CustomBlocksManager customBlocksManager;
     private ArrayList<BlockBean> customBlocks;
 
+    private static final class LoadResult {
+        private final CustomBlocksManager customBlocksManager;
+        private final ArrayList<BlockBean> customBlocks;
+        private final int missingBlocks;
+
+        private LoadResult(CustomBlocksManager customBlocksManager, ArrayList<BlockBean> customBlocks, int missingBlocks) {
+            this.customBlocksManager = customBlocksManager;
+            this.customBlocks = customBlocks;
+            this.missingBlocks = missingBlocks;
+        }
+    }
+
     public void show(Activity context, String sc_id) {
         this.sc_id = sc_id;
 
@@ -58,64 +72,53 @@ public class CustomBlocksDialog {
                 .setView(dialogBinding.getRoot())
                 .show();
 
-        new Thread(() -> {
-            customBlocksManager = new CustomBlocksManager(context, sc_id);
-            customBlocks = customBlocksManager.getUsedBlocks();
+        BackgroundTasks.callIo(TaskHost.of(context), "CustomBlocksDialog", () -> {
+            CustomBlocksManager loadedManager = new CustomBlocksManager(context, sc_id);
+            ArrayList<BlockBean> usedBlocks = loadedManager.getUsedBlocks();
+            int missingBlocks = (int) usedBlocks.stream().filter(this::isMissingBlock).count();
+            return new LoadResult(loadedManager, usedBlocks, missingBlocks);
+        }, result -> {
+            customBlocksManager = result.customBlocksManager;
+            customBlocks = result.customBlocks;
 
-            int missingBlocks = (int) customBlocks.stream().filter(this::isMissingBlock).count();
-
-            if (!customBlocks.isEmpty()) {
-
-                HashMap<Integer, BlockView> preloadedBlocks = new HashMap<>();
-                for (int i = 0; i < customBlocks.size(); i++) {
-                    BlockBean block = customBlocks.get(i);
-                    preloadedBlocks.put(i, createBlock(context, block));
-                }
-
-                context.runOnUiThread(() -> {
-                    if (context.isFinishing() || context.isDestroyed()) return;
-
-                    String subtitle = String.format(Helper.getResString(R.string.custom_blocks_used_count), customBlocks.size());
-
-                    if (missingBlocks > 0) {
-                        String errorMsg = (missingBlocks == 1)
-                                ? Helper.getResString(R.string.custom_blocks_missing_one)
-                                : String.format(Helper.getResString(R.string.custom_blocks_missing_multi), missingBlocks);
-                        SketchwareUtil.toastError(errorMsg);
-                    }
-
-                    dialogBinding.subtitle.setText(subtitle);
-                    BlocksAdapter adapter = new BlocksAdapter(customBlocks, preloadedBlocks);
-                    dialogBinding.recyclerView.setAdapter(adapter);
-                    dialogBinding.progressIndicator.setVisibility(View.GONE);
-
-                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
-                        ArrayList<BlockBean> selectedBeans = new ArrayList<>();
-                        for (BlockBean bean : customBlocks) {
-                            if (bean.isSelected) {
-                                selectedBeans.add(bean);
-                            }
-                        }
-
-                        if (selectedBeans.isEmpty()) {
-                            SketchwareUtil.toastError(Helper.getResString(R.string.blocks_error_select_at_least_one));
-                            return;
-                        }
-
-                        importAll(context, customBlocksManager, selectedBeans);
-                        dialog.dismiss();
-                    });
-                });
-
-            } else {
-                context.runOnUiThread(() -> {
-                    if (context.isFinishing() || context.isDestroyed()) return;
-                    dialogBinding.subtitle.setText(Helper.getResString(R.string.custom_blocks_none_used));
-                    dialogBinding.progressIndicator.setVisibility(View.GONE);
-                });
+            if (customBlocks.isEmpty()) {
+                dialogBinding.subtitle.setText(Helper.getResString(R.string.custom_blocks_none_used));
+                dialogBinding.progressIndicator.setVisibility(View.GONE);
+                return;
             }
 
-        }).start();
+            String subtitle = String.format(Helper.getResString(R.string.custom_blocks_used_count), customBlocks.size());
+            if (result.missingBlocks > 0) {
+                String errorMsg = result.missingBlocks == 1
+                        ? Helper.getResString(R.string.custom_blocks_missing_one)
+                        : String.format(Helper.getResString(R.string.custom_blocks_missing_multi), result.missingBlocks);
+                SketchwareUtil.toastError(errorMsg);
+            }
+
+            dialogBinding.subtitle.setText(subtitle);
+            dialogBinding.recyclerView.setAdapter(new BlocksAdapter(customBlocks, new HashMap<>()));
+            dialogBinding.progressIndicator.setVisibility(View.GONE);
+
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+                ArrayList<BlockBean> selectedBeans = new ArrayList<>();
+                for (BlockBean bean : customBlocks) {
+                    if (bean.isSelected) {
+                        selectedBeans.add(bean);
+                    }
+                }
+
+                if (selectedBeans.isEmpty()) {
+                    SketchwareUtil.toastError(Helper.getResString(R.string.blocks_error_select_at_least_one));
+                    return;
+                }
+
+                importAll(context, customBlocksManager, selectedBeans);
+                dialog.dismiss();
+            });
+        }, error -> {
+            dialogBinding.subtitle.setText(Helper.getResString(R.string.common_error_an_error_occurred));
+            dialogBinding.progressIndicator.setVisibility(View.GONE);
+        });
     }
 
     private void importAll(Context context, CustomBlocksManager customBlocksManager, ArrayList<BlockBean> list) {
@@ -351,13 +354,16 @@ public class CustomBlocksDialog {
 
                 View view = preloadedBlocks.get(position);
                 if (view != null) {
+
                     ViewParent parent = view.getParent();
                     if (parent instanceof ViewGroup) {
                         ((ViewGroup) parent).removeView(view);
                     }
                     container.addView(view);
                 } else {
-                    container.addView(createBlock(context, block));
+                    View createdView = createBlock(context, block);
+                    preloadedBlocks.put(position, (BlockView) createdView);
+                    container.addView(createdView);
                 }
             }
 

@@ -21,9 +21,11 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 
 import java.lang.ref.WeakReference;
 
-import pro.sketchware.core.BaseAsyncTask;
+import pro.sketchware.core.BackgroundTasks;
 import pro.sketchware.core.ImageCollectionManager;
 import pro.sketchware.core.ImageCollectionFragment;
+import pro.sketchware.core.SketchToast;
+import pro.sketchware.core.TaskHost;
 import pro.sketchware.core.UIHelper;
 import pro.sketchware.core.ImageListFragment;
 import pro.sketchware.R;
@@ -138,17 +140,21 @@ public class ManageImageActivity extends BaseAppCompatActivity implements ViewPa
         }
     }
 
-    private static class SaveImagesAsyncTask extends BaseAsyncTask {
+    private static class SaveImagesAsyncTask {
         private final WeakReference<ManageImageActivity> activity;
 
         public SaveImagesAsyncTask(ManageImageActivity activity) {
-            super(activity);
             this.activity = new WeakReference<>(activity);
-            activity.addTask(this);
         }
 
-        @Override
-        public void onSuccess() {
+        public void execute() {
+            var activity = this.activity.get();
+            if (activity == null) return;
+            BackgroundTasks.runSerial(TaskHost.of(activity), "ManageImageActivity$SaveImagesAsyncTask",
+                    this::doWork, this::onSuccess, this::onError);
+        }
+
+        private void onSuccess() {
             var activity = this.activity.get();
             if (activity == null) return;
             activity.dismissLoadingDialog();
@@ -157,18 +163,25 @@ public class ManageImageActivity extends BaseAppCompatActivity implements ViewPa
             ImageCollectionManager.getInstance().clearCollections();
         }
 
-        @Override
-        public void doWork() {
+        private void doWork() {
             var activity = this.activity.get();
             if (activity == null) return;
             activity.projectImagesFragment.saveImages();
         }
 
-        @Override
-        public void onError(String errorMessage) {
+        private void onError(Throwable error) {
             var activity = this.activity.get();
             if (activity == null) return;
             activity.dismissLoadingDialog();
+            SketchToast.warning(activity, buildErrorMessage(error), 1).show();
+        }
+
+        private String buildErrorMessage(Throwable error) {
+            String errorMessage = error != null ? error.getMessage() : null;
+            if (errorMessage == null || errorMessage.isEmpty()) {
+                return Helper.getResString(R.string.common_error_an_error_occurred);
+            }
+            return Helper.getResString(R.string.common_error_an_error_occurred) + "[" + errorMessage + "]";
         }
     }
 

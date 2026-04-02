@@ -22,6 +22,7 @@ import com.besome.sketch.lib.ui.CircleImageView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -31,8 +32,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import mod.jbk.util.LogUtil;
+import pro.sketchware.core.BackgroundTasks;
 import pro.sketchware.core.LibraryManager;
 import pro.sketchware.core.ProjectListManager;
+import pro.sketchware.core.TaskHost;
 import pro.sketchware.core.UIHelper;
 import pro.sketchware.core.ViewUtil;
 import pro.sketchware.core.SketchwarePaths;
@@ -68,25 +71,28 @@ public class LibrarySettingsImporter {
         RecyclerView recyclerView = root.findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        new Thread(() -> {
-            try {
-                loadProjects();
-                activity.runOnUiThread(() -> {
-                    if (activity.isFinishing() || activity.isDestroyed()) return;
-                    animationView.cancelAnimation();
-                    animationView.setVisibility(View.GONE);
-                    root.removeView(animationView);
-                    recyclerView.setVisibility(View.VISIBLE);
-                    adapter = new ProjectAdapter();
-                    recyclerView.setAdapter(adapter);
-                });
-            } catch (Exception e) {
-                LogUtil.e("LibrarySettingsImporter", "Failed to load projects", e);
-            }
-        }).start();
+        BackgroundTasks.runIo(TaskHost.of(activity), "LibrarySettingsImporter", this::loadProjects, () -> {
+            animationView.cancelAnimation();
+            animationView.setVisibility(View.GONE);
+            root.removeView(animationView);
+            recyclerView.setVisibility(View.VISIBLE);
+            adapter = new ProjectAdapter();
+            recyclerView.setAdapter(adapter);
+        }, error -> {
+            projects = Collections.emptyList();
+            animationView.cancelAnimation();
+            animationView.setVisibility(View.GONE);
+            root.removeView(animationView);
+            recyclerView.setVisibility(View.VISIBLE);
+            adapter = new ProjectAdapter();
+            recyclerView.setAdapter(adapter);
+        });
         dialog.setView(root);
         dialog.setPositiveButton(R.string.common_word_select, (v, which) -> {
             if (!UIHelper.isClickThrottled()) {
+                if (adapter == null) {
+                    return;
+                }
                 if (adapter.selectedProjectIndex >= 0) {
                     var settings = (ProjectLibraryBean) projects.get(adapter.selectedProjectIndex).get("settings");
                     for (var listener : onProjectSelectedListeners) {

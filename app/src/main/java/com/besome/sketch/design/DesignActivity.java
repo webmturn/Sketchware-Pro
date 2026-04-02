@@ -79,6 +79,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import pro.sketchware.core.BackgroundTasks;
 import pro.sketchware.core.SharedPrefsHelper;
 import pro.sketchware.core.DeviceUtil;
 import pro.sketchware.core.LayoutGenerator;
@@ -92,6 +93,7 @@ import pro.sketchware.core.ProjectDataStore;
 import pro.sketchware.core.ProjectDataManager;
 import pro.sketchware.core.ResourceManager;
 import pro.sketchware.core.ProjectListManager;
+import pro.sketchware.core.TaskHost;
 import pro.sketchware.core.UIHelper;
 import pro.sketchware.core.EventListFragment;
 import pro.sketchware.core.SketchwarePaths;
@@ -132,8 +134,6 @@ import pro.sketchware.utility.ThemeUtils;
 import pro.sketchware.utility.apk.ApkSignatures;
 
 public class DesignActivity extends BaseAppCompatActivity implements View.OnClickListener {
-
-    private final ExecutorService backgroundExecutor = Executors.newSingleThreadExecutor();
     public static String sc_id;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final FirebaseCrashlytics crashlytics = getFirebaseCrashlytics();
@@ -358,38 +358,44 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
      * Opens the debug APK to install.
      */
     private void installBuiltApk() {
-        if (!ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_ROOT_AUTO_INSTALL_PROJECTS)) {
-            requestPackageInstallerInstall();
-        } else {
-            File apkUri = new File(projectFilePaths.finalToInstallApkPath);
-            long length = apkUri.length();
-            Shell.getShell(shell -> {
-                if (shell.isRoot()) {
-                    List<String> stdout = new LinkedList<>();
-                    List<String> stderr = new LinkedList<>();
+        TaskHost taskHost = TaskHost.of(this);
+        taskHost.postToUi(() -> {
+            if (!ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_ROOT_AUTO_INSTALL_PROJECTS)) {
+                requestPackageInstallerInstall();
+            } else {
+                File apkUri = new File(projectFilePaths.finalToInstallApkPath);
+                long length = apkUri.length();
+                Shell.getShell(shell -> {
+                    if (shell.isRoot()) {
+                        List<String> stdout = new LinkedList<>();
+                        List<String> stderr = new LinkedList<>();
 
-                    Shell.cmd("cat " + apkUri + " | pm install -S " + length).to(stdout, stderr).submit(result -> {
-                        if (result.isSuccess()) {
-                            SketchwareUtil.toast(Helper.getResString(R.string.design_toast_package_installed));
-                            if (ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_ROOT_AUTO_OPEN_AFTER_INSTALLING)) {
-                                Intent launcher = getPackageManager().getLaunchIntentForPackage(projectFilePaths.packageName);
-                                if (launcher != null) {
-                                    startActivity(launcher);
-                                } else {
-                                    SketchwareUtil.toastError(Helper.getResString(R.string.design_error_cannot_launch));
-                                }
-                            }
-                        } else {
-                            SketchwareUtil.toastError(String.format(Helper.getResString(R.string.design_error_install_failed), result.getCode()), Toast.LENGTH_LONG);
-                            LogUtil.e("DesignActivity", "Failed to install package, result code: " + result.getCode() + ". stdout: " + stdout + ", stderr: " + stderr);
-                        }
-                    });
-                } else {
-                    SketchwareUtil.toastError(Helper.getResString(R.string.design_error_no_root_access));
-                    requestPackageInstallerInstall();
-                }
-            });
-        }
+                        Shell.cmd("cat " + apkUri + " | pm install -S " + length).to(stdout, stderr).submit(result ->
+                                taskHost.postToUi(() -> {
+                                    if (result.isSuccess()) {
+                                        SketchwareUtil.toast(Helper.getResString(R.string.design_toast_package_installed));
+                                        if (ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_ROOT_AUTO_OPEN_AFTER_INSTALLING)) {
+                                            Intent launcher = getPackageManager().getLaunchIntentForPackage(projectFilePaths.packageName);
+                                            if (launcher != null) {
+                                                startActivity(launcher);
+                                            } else {
+                                                SketchwareUtil.toastError(Helper.getResString(R.string.design_error_cannot_launch));
+                                            }
+                                        }
+                                    } else {
+                                        SketchwareUtil.toastError(String.format(Helper.getResString(R.string.design_error_install_failed), result.getCode()), Toast.LENGTH_LONG);
+                                        LogUtil.e("DesignActivity", "Failed to install package, result code: " + result.getCode() + ". stdout: " + stdout + ", stderr: " + stderr);
+                                    }
+                                }));
+                    } else {
+                        taskHost.postToUi(() -> {
+                            SketchwareUtil.toastError(Helper.getResString(R.string.design_error_no_root_access));
+                            requestPackageInstallerInstall();
+                        });
+                    }
+                });
+            }
+        });
     }
 
     private void requestPackageInstallerInstall() {
@@ -482,8 +488,10 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
 
         btnRun = findViewById(R.id.btn_run);
         btnRun.setOnClickListener(v -> {
-            if (currentBuildTask != null && !currentBuildTask.canceled && !currentBuildTask.isBuildFinished) {
-                currentBuildTask.cancelBuild();
+            if (currentBuildTask != null && !currentBuildTask.isBuildFinished) {
+                if (!currentBuildTask.canceled) {
+                    currentBuildTask.cancelBuild();
+                }
                 return;
             }
 
@@ -508,15 +516,10 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             return true;
         });
         bottomMenu.add(Menu.NONE, 2, Menu.NONE, Helper.getResString(R.string.design_menu_clean_temp)).setVisible(false).setOnMenuItemClickListener(item -> {
-            backgroundExecutor.execute(() -> {
-                try {
-                    FileUtil.deleteFile(projectFilePaths.projectMyscPath);
-                    updateBottomMenu();
-                    runOnUiThread(() -> SketchwareUtil.toast(Helper.getResString(R.string.design_toast_clean_temp_done)));
-                } catch (RuntimeException e) {
-                    Log.e("DesignActivity", "Failed to clean temporary files", e);
-                }
-            });
+            BackgroundTasks.runIo(TaskHost.of(this), "DesignActivity", () -> FileUtil.deleteFile(projectFilePaths.projectMyscPath), () -> {
+                updateBottomMenu();
+                SketchwareUtil.toast(Helper.getResString(R.string.design_toast_clean_temp_done));
+            }, error -> Log.e("DesignActivity", "Failed to clean temporary files", error));
             return true;
         });
         bottomMenu.add(Menu.NONE, 3, Menu.NONE, Helper.getResString(R.string.design_menu_show_last_error)).setOnMenuItemClickListener(item -> {
@@ -653,7 +656,6 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     public void onDestroy() {
         super.onDestroy();
         unregisterReceiver(buildCancelReceiver);
-        backgroundExecutor.shutdownNow();
     }
 
     @Override
@@ -848,24 +850,24 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     private void showCurrentActivitySrcCode() {
         if (projectFile == null) return;
         showLoadingDialog();
-        backgroundExecutor.execute(() -> {
-            try {
-                var filename = Helper.getText(fileName);
-                var code = new ProjectFilePaths(getApplicationContext(), sc_id).getFileSrc(filename, ProjectDataManager.getFileManager(sc_id), ProjectDataManager.getProjectDataManager(sc_id), ProjectDataManager.getLibraryManager(sc_id));
-                runOnUiThread(() -> {
-                    if (isFinishing()) return;
-                    dismissLoadingDialog();
-                    if (code.isEmpty()) {
-                        SketchwareUtil.toast(Helper.getResString(R.string.design_error_generate_source));
-                        return;
-                    }
-                    var scheme = filename.endsWith(".xml") ? CodeViewerActivity.SCHEME_XML : CodeViewerActivity.SCHEME_JAVA;
-                    launchActivity(CodeViewerActivity.class, null, new Pair<>("code", code), new Pair<>("sc_id", sc_id), new Pair<>("scheme", scheme));
-                });
-            } catch (RuntimeException e) {
-                Log.e("DesignActivity", "Failed to generate source code", e);
-                runOnUiThread(() -> { dismissLoadingDialog(); SketchwareUtil.toast(Helper.getResString(R.string.design_error_generate_source)); });
+        String filename = Helper.getText(fileName);
+        BackgroundTasks.callIo(TaskHost.of(this), "DesignActivity", () ->
+                new ProjectFilePaths(getApplicationContext(), sc_id).getFileSrc(
+                        filename,
+                        ProjectDataManager.getFileManager(sc_id),
+                        ProjectDataManager.getProjectDataManager(sc_id),
+                        ProjectDataManager.getLibraryManager(sc_id)), code -> {
+            dismissLoadingDialog();
+            if (code.isEmpty()) {
+                SketchwareUtil.toast(Helper.getResString(R.string.design_error_generate_source));
+                return;
             }
+            var scheme = filename.endsWith(".xml") ? CodeViewerActivity.SCHEME_XML : CodeViewerActivity.SCHEME_JAVA;
+            launchActivity(CodeViewerActivity.class, null, new Pair<>("code", code), new Pair<>("sc_id", sc_id), new Pair<>("scheme", scheme));
+        }, error -> {
+            Log.e("DesignActivity", "Failed to generate source code", error);
+            dismissLoadingDialog();
+            SketchwareUtil.toast(Helper.getResString(R.string.design_error_generate_source));
         });
     }
 
@@ -903,26 +905,23 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     void toViewCodeEditor() {
         if (projectFile == null) return;
         showLoadingDialog();
-        backgroundExecutor.execute(() -> {
-            try {
-                String filename = Helper.getText(fileName);
-                // var ProjectFilePaths = new ProjectFilePaths(getApplicationContext(), sc_id);
-                var xmlGenerator = new LayoutGenerator(projectFilePaths.buildConfig, projectFile);
-                var projectDataManager = ProjectDataManager.getProjectDataManager(sc_id);
-                var viewBeans = projectDataManager.getViews(filename);
-                var viewFab = projectDataManager.getFabView(filename);
-                xmlGenerator.setExcludeAppCompat(true);
-                xmlGenerator.setViews(ProjectDataStore.getSortedRootViews(viewBeans), viewFab);
-                String content = xmlGenerator.toXmlString();
-                runOnUiThread(() -> {
-                    if (isFinishing()) return;
-                    dismissLoadingDialog();
-                    launchActivity(ViewCodeEditorActivity.class, openViewCodeEditor, new Pair<>("title", filename), new Pair<>("content", content));
-                });
-            } catch (RuntimeException e) {
-                Log.e("DesignActivity", "Failed to generate view code", e);
-                runOnUiThread(() -> { dismissLoadingDialog(); SketchwareUtil.toast(Helper.getResString(R.string.design_error_generate_code)); });
-            }
+        String filename = Helper.getText(fileName);
+        ProjectFileBean currentProjectFile = projectFile;
+        BackgroundTasks.callIo(TaskHost.of(this), "DesignActivity", () -> {
+            var xmlGenerator = new LayoutGenerator(projectFilePaths.buildConfig, currentProjectFile);
+            var projectDataManager = ProjectDataManager.getProjectDataManager(sc_id);
+            var viewBeans = projectDataManager.getViews(filename);
+            var viewFab = projectDataManager.getFabView(filename);
+            xmlGenerator.setExcludeAppCompat(true);
+            xmlGenerator.setViews(ProjectDataStore.getSortedRootViews(viewBeans), viewFab);
+            return xmlGenerator.toXmlString();
+        }, content -> {
+            dismissLoadingDialog();
+            launchActivity(ViewCodeEditorActivity.class, openViewCodeEditor, new Pair<>("title", filename), new Pair<>("content", content));
+        }, error -> {
+            Log.e("DesignActivity", "Failed to generate view code", error);
+            dismissLoadingDialog();
+            SketchwareUtil.toast(Helper.getResString(R.string.design_error_generate_code));
         });
     }
 
@@ -1120,7 +1119,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     private static class BuildTask extends BaseTask implements BuildProgressReceiver {
         public static final String ACTION_CANCEL_BUILD = "com.besome.sketch.design.ACTION_CANCEL_BUILD";
         private static final String CHANNEL_ID = "build_notification_channel";
-        private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+        private final ExecutorService executorService = BackgroundTasks.createSingleThreadExecutor("DesignBuild");
         private final NotificationManager notificationManager;
         private final int notificationId = 1;
         private final MaterialButton btnRun;
@@ -1154,9 +1153,9 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             DesignActivity activity = getActivity();
             if (activity == null) return;
 
-            activity.runOnUiThread(() -> {
+            postToUi(activity, () -> {
                 buildStartTime = System.currentTimeMillis();
-                updateRunButton(true);
+                updateRunButton(activity, true);
                 activity.prefP1.put("P1I10", true);
                 activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -1166,9 +1165,9 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
 
         private void doInBackground() {
             DesignActivity activity = getActivity();
-            if (activity == null) return;
 
             try {
+                if (activity == null) return;
                 var q = activity.projectFilePaths;
                 var sc_id = DesignActivity.sc_id;
                 onProgress("Deleting temporary files...", 1);
@@ -1291,12 +1290,9 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                     return;
                 }
 
-                activity.installBuiltApk();
-                isBuildFinished = true;
+                postToUi(activity, activity::installBuiltApk);
             } catch (MissingFileException e) {
-                isBuildFinished = true;
-                activity.runOnUiThread(() -> {
-                    if (activity.isFinishing() || activity.isDestroyed()) return;
+                postToUi(activity, () -> {
                     boolean isMissingDirectory = e.isMissingDirectory();
 
                     MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(activity);
@@ -1317,22 +1313,12 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                     dialog.show();
                 });
             } catch (SimpleException simpleException) {
-                isBuildFinished = true;
-                activity.runOnUiThread(() -> {
-                    if (!activity.isFinishing() && !activity.isDestroyed()) {
-                        activity.indicateCompileErrorOccurred(simpleException.getMessage());
-                    }
-                });
+                postToUi(activity, () -> activity.indicateCompileErrorOccurred(simpleException.getMessage()));
             } catch (Throwable tr) {
-                isBuildFinished = true;
                 LogUtil.e("DesignActivity$BuildTask", "Failed to build project", tr);
-                activity.runOnUiThread(() -> {
-                    if (!activity.isFinishing() && !activity.isDestroyed()) {
-                        activity.indicateCompileErrorOccurred(Log.getStackTraceString(tr));
-                    }
-                });
+                postToUi(activity, () -> activity.indicateCompileErrorOccurred(Log.getStackTraceString(tr)));
             } finally {
-                activity.runOnUiThread(this::onPostExecute);
+                onPostExecute(activity);
             }
         }
 
@@ -1343,8 +1329,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             DesignActivity activity = getActivity();
             if (activity == null) return;
 
-            activity.runOnUiThread(() -> {
-                if (activity.isFinishing() || activity.isDestroyed()) return;
+            postToUi(activity, () -> {
                 progressBar.setIndeterminate(step == -1);
                 if (!canceled) {
                     updateNotification(progress + " (" + step + " / " + totalSteps + ")");
@@ -1365,21 +1350,22 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             });
         }
 
-        private void onPostExecute() {
+        private void onPostExecute(DesignActivity activity) {
+            isBuildFinished = true;
             executorService.shutdown();
-            DesignActivity activity = getActivity();
+            if (isShowingNotification) {
+                notificationManager.cancel(notificationId);
+                isShowingNotification = false;
+            }
             if (activity == null) return;
 
-            activity.runOnUiThread(() -> {
-                if (!activity.isDestroyed()) {
-                    if (isShowingNotification) {
-                        notificationManager.cancel(notificationId);
-                        isShowingNotification = false;
-                    }
-                    updateRunButton(false);
-                    activity.updateBottomMenu();
-                    activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            postToUi(activity, () -> {
+                if (activity.currentBuildTask == this) {
+                    activity.currentBuildTask = null;
                 }
+                updateRunButton(activity, false);
+                activity.updateBottomMenu();
+                activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             });
         }
 
@@ -1391,11 +1377,8 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 isShowingNotification = false;
             }
             DesignActivity activity = getActivity();
-            if (activity != null && !activity.isFinishing() && !activity.isDestroyed()) {
-                activity.runOnUiThread(() -> {
-                    if (activity.isFinishing() || activity.isDestroyed()) return;
-                    activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                });
+            if (activity != null) {
+                postToUi(activity, () -> activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON));
             }
         }
 
@@ -1465,8 +1448,14 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             notificationManager.createNotificationChannel(channel);
         }
 
-        private void updateRunButton(boolean isRunning) {
-            var context = getActivity();
+        private void postToUi(DesignActivity activity, Runnable action) {
+            if (activity == null || action == null) {
+                return;
+            }
+            TaskHost.of(activity).postToUi(action);
+        }
+
+        private void updateRunButton(Context context, boolean isRunning) {
             btnRun.setBackgroundTintList(ColorStateList.valueOf(ThemeUtils.getColor(context, isRunning ? R.attr.colorErrorContainer : R.attr.colorPrimary)));
             btnRun.setIcon(ContextCompat.getDrawable(context, isRunning ? R.drawable.ic_mtrl_stop : R.drawable.ic_mtrl_run));
             btnRun.setIconTint(ColorStateList.valueOf(ThemeUtils.getColor(context, isRunning ? R.attr.colorOnErrorContainer : R.attr.colorSurfaceContainerLowest)));
@@ -1486,22 +1475,34 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         }
 
         public void execute() {
-            getActivity().showLoadingDialog();
-            new Thread(this::doInBackground).start();
+            DesignActivity activity = getActivity();
+            if (activity == null) {
+                return;
+            }
+            activity.showLoadingDialog();
+            BackgroundTasks.runIo(TaskHost.of(activity), "DesignActivity$ProjectLoader", this::doInBackground, () -> {
+                DesignActivity currentActivity = getActivity();
+                if (currentActivity == null) {
+                    return;
+                }
+                currentActivity.updateBottomMenu();
+                currentActivity.refresh();
+                currentActivity.dismissLoadingDialog();
+                if (savedInstanceState == null) {
+                    currentActivity.checkForUnsavedProjectData();
+                }
+            }, error -> {
+                DesignActivity currentActivity = getActivity();
+                if (currentActivity != null) {
+                    currentActivity.dismissLoadingDialog();
+                }
+            });
         }
 
         private void doInBackground() {
             DesignActivity activity = getActivity();
             if (activity != null) {
                 activity.loadProject(savedInstanceState != null);
-                activity.runOnUiThread(() -> {
-                    activity.updateBottomMenu();
-                    activity.refresh();
-                    activity.dismissLoadingDialog();
-                    if (savedInstanceState == null) {
-                        activity.checkForUnsavedProjectData();
-                    }
-                });
             }
         }
     }
@@ -1513,8 +1514,24 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         }
 
         public void execute() {
-            getActivity().showLoadingDialog();
-            new Thread(this::doInBackground).start();
+            DesignActivity activity = getActivity();
+            if (activity == null) {
+                return;
+            }
+            activity.showLoadingDialog();
+            BackgroundTasks.runIo(TaskHost.of(activity), "DesignActivity$DiscardChangesProjectCloser", this::doInBackground, () -> {
+                DesignActivity currentActivity = getActivity();
+                if (currentActivity != null) {
+                    currentActivity.dismissLoadingDialog();
+                    currentActivity.finish();
+                }
+            }, error -> {
+                DesignActivity currentActivity = getActivity();
+                if (currentActivity != null) {
+                    currentActivity.dismissLoadingDialog();
+                    currentActivity.finish();
+                }
+            });
         }
 
         private void doInBackground() {
@@ -1534,11 +1551,6 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                         activity.crashlytics.log("DiscardChangesProjectCloser cleanup failed");
                         activity.crashlytics.recordException(e);
                     }
-                } finally {
-                    activity.runOnUiThread(() -> {
-                        activity.dismissLoadingDialog();
-                        activity.finish();
-                    });
                 }
             }
         }
@@ -1551,28 +1563,39 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         }
 
         public void execute() {
-            getActivity().showLoadingDialog();
-            new Thread(this::doInBackground).start();
+            DesignActivity activity = getActivity();
+            if (activity == null) {
+                return;
+            }
+            activity.showLoadingDialog();
+            BackgroundTasks.callIo(TaskHost.of(activity), "DesignActivity$ProjectSaver", this::doInBackground, dataSaved -> {
+                DesignActivity currentActivity = getActivity();
+                if (currentActivity == null) {
+                    return;
+                }
+                if (dataSaved) {
+                    SketchToast.toast(currentActivity.getApplicationContext(), Helper.getResString(R.string.common_message_complete_save), SketchToast.TOAST_NORMAL).show();
+                    currentActivity.saveVersionCodeInformationToProject();
+                } else {
+                    SketchToast.toast(currentActivity.getApplicationContext(), Helper.getResString(R.string.common_message_save_failed), SketchToast.TOAST_WARNING).show();
+                }
+                currentActivity.dismissLoadingDialog();
+            }, error -> {
+                DesignActivity currentActivity = getActivity();
+                if (currentActivity != null) {
+                    SketchToast.toast(currentActivity.getApplicationContext(), Helper.getResString(R.string.common_message_save_failed), SketchToast.TOAST_WARNING).show();
+                    currentActivity.dismissLoadingDialog();
+                }
+            });
         }
 
-        private void doInBackground() {
-            DesignActivity activity = getActivity();
-            if (activity != null) {
-                var sc_id = DesignActivity.sc_id;
-                boolean dataSaved = saveProjectDataToFiles(sc_id);
-                if (dataSaved) {
-                    ProjectDataManager.getResourceManager(sc_id).deleteTempDirs();
-                }
-                activity.runOnUiThread(() -> {
-                    if (dataSaved) {
-                        SketchToast.toast(activity.getApplicationContext(), Helper.getResString(R.string.common_message_complete_save), SketchToast.TOAST_NORMAL).show();
-                        activity.saveVersionCodeInformationToProject();
-                    } else {
-                        SketchToast.toast(activity.getApplicationContext(), Helper.getResString(R.string.common_message_save_failed), SketchToast.TOAST_WARNING).show();
-                    }
-                    activity.dismissLoadingDialog();
-                });
+        private boolean doInBackground() {
+            var currentScId = DesignActivity.sc_id;
+            boolean dataSaved = saveProjectDataToFiles(currentScId);
+            if (dataSaved) {
+                ProjectDataManager.getResourceManager(currentScId).deleteTempDirs();
             }
+            return dataSaved;
         }
     }
 
@@ -1583,30 +1606,41 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         }
 
         public void execute() {
-            getActivity().showLoadingDialog();
-            new Thread(this::doInBackground).start();
+            DesignActivity activity = getActivity();
+            if (activity == null) {
+                return;
+            }
+            activity.showLoadingDialog();
+            BackgroundTasks.callIo(TaskHost.of(activity), "DesignActivity$SaveChangesProjectCloser", this::doInBackground, dataSaved -> {
+                DesignActivity currentActivity = getActivity();
+                if (currentActivity == null) {
+                    return;
+                }
+                if (dataSaved) {
+                    SketchToast.toast(currentActivity.getApplicationContext(), Helper.getResString(R.string.common_message_complete_save), SketchToast.TOAST_NORMAL).show();
+                    currentActivity.saveVersionCodeInformationToProject();
+                    currentActivity.dismissLoadingDialog();
+                    currentActivity.finish();
+                } else {
+                    SketchToast.toast(currentActivity.getApplicationContext(), Helper.getResString(R.string.common_message_save_failed), SketchToast.TOAST_WARNING).show();
+                    currentActivity.dismissLoadingDialog();
+                }
+            }, error -> {
+                DesignActivity currentActivity = getActivity();
+                if (currentActivity != null) {
+                    SketchToast.toast(currentActivity.getApplicationContext(), Helper.getResString(R.string.common_message_save_failed), SketchToast.TOAST_WARNING).show();
+                    currentActivity.dismissLoadingDialog();
+                }
+            });
         }
 
-        private void doInBackground() {
-            DesignActivity activity = getActivity();
-            if (activity != null) {
-                var sc_id = DesignActivity.sc_id;
-                boolean dataSaved = saveProjectDataToFiles(sc_id);
-                if (dataSaved) {
-                    ProjectDataManager.getResourceManager(sc_id).deleteTempDirs();
-                }
-                activity.runOnUiThread(() -> {
-                    if (dataSaved) {
-                        SketchToast.toast(activity.getApplicationContext(), Helper.getResString(R.string.common_message_complete_save), SketchToast.TOAST_NORMAL).show();
-                        activity.saveVersionCodeInformationToProject();
-                        activity.dismissLoadingDialog();
-                        activity.finish();
-                    } else {
-                        SketchToast.toast(activity.getApplicationContext(), Helper.getResString(R.string.common_message_save_failed), SketchToast.TOAST_WARNING).show();
-                        activity.dismissLoadingDialog();
-                    }
-                });
+        private boolean doInBackground() {
+            var currentScId = DesignActivity.sc_id;
+            boolean dataSaved = saveProjectDataToFiles(currentScId);
+            if (dataSaved) {
+                ProjectDataManager.getResourceManager(currentScId).deleteTempDirs();
             }
+            return dataSaved;
         }
     }
 
@@ -1617,7 +1651,11 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         }
 
         public void execute() {
-            new Thread(this::doInBackground).start();
+            DesignActivity activity = getActivity();
+            if (activity == null) {
+                return;
+            }
+            BackgroundTasks.runIo(TaskHost.of(activity), "DesignActivity$UnsavedChangesSaver", this::doInBackground, null, null);
         }
 
         private void doInBackground() {

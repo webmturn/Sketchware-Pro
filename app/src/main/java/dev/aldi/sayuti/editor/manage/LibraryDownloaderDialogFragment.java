@@ -39,6 +39,8 @@ import mod.hey.studios.util.Helper;
 import mod.jbk.build.BuiltInLibraries;
 import mod.pranav.dependency.resolver.DependencyResolver;
 import pro.sketchware.R;
+import pro.sketchware.core.BackgroundTasks;
+import pro.sketchware.core.TaskHost;
 import pro.sketchware.databinding.LibraryDownloaderDialogBinding;
 import pro.sketchware.utility.FilePathUtil;
 import pro.sketchware.utility.FileUtil;
@@ -350,9 +352,8 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
                                 downloadExecutor.execute(() -> finalizeDownloadedLibraries(
                                         dependencies, dependencyCoordinates, handler));
                             } else {
-                                new Thread(() -> finalizeDownloadedLibraries(
-                                        dependencies, dependencyCoordinates, handler),
-                                        "LibraryDownloadFinalizer").start();
+                                BackgroundTasks.runIo(TaskHost.of(LibraryDownloaderDialogFragment.this), "LibraryDownloaderDialogFragment", () ->
+                                        finalizeDownloadedLibraries(dependencies, dependencyCoordinates, handler), null, null);
                             }
                         });
                     }

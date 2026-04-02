@@ -26,8 +26,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
+import pro.sketchware.core.BackgroundTasks;
 import pro.sketchware.core.ProjectDataManager;
 import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.TaskHost;
 import pro.sketchware.core.ViewUtil;
 import pro.sketchware.core.ProjectFilePaths;
 import mod.hey.studios.code.SrcCodeEditor;
@@ -390,27 +392,19 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
 
     private void showQuickManifestSourceDialog() {
         showLoadingDialog();
-        new Thread(() -> {
-            try {
-                String source = new ProjectFilePaths(getApplicationContext(), sc_id).getFileSrc("AndroidManifest.xml", ProjectDataManager.getFileManager(sc_id), ProjectDataManager.getProjectDataManager(sc_id), ProjectDataManager.getLibraryManager(sc_id));
-
-                runOnUiThread(() -> {
-                    if (isFinishing() || isDestroyed()) return;
-                    dismissLoadingDialog();
-                    var intent = new Intent(this, CodeViewerActivity.class);
-                    intent.putExtra("code", !source.isEmpty() ? source : "Failed to generate source.");
-                    intent.putExtra("sc_id", sc_id);
-                    intent.putExtra("scheme", CodeViewerActivity.SCHEME_XML);
-                    startActivity(intent);
-                });
-            } catch (Exception e) {
-                LogUtil.e("AndroidManifestInjection", "Failed to generate manifest source", e);
-                runOnUiThread(() -> {
-                    if (isFinishing() || isDestroyed()) return;
-                    dismissLoadingDialog();
-                });
-            }
-        }).start();
+        BackgroundTasks.callIo(TaskHost.of(this), "AndroidManifestInjection", () ->
+                new ProjectFilePaths(getApplicationContext(), sc_id).getFileSrc(
+                        "AndroidManifest.xml",
+                        ProjectDataManager.getFileManager(sc_id),
+                        ProjectDataManager.getProjectDataManager(sc_id),
+                        ProjectDataManager.getLibraryManager(sc_id)), source -> {
+            dismissLoadingDialog();
+            var intent = new Intent(this, CodeViewerActivity.class);
+            intent.putExtra("code", !source.isEmpty() ? source : "Failed to generate source.");
+            intent.putExtra("sc_id", sc_id);
+            intent.putExtra("scheme", CodeViewerActivity.SCHEME_XML);
+            startActivity(intent);
+        }, error -> dismissLoadingDialog());
     }
 
     private void makeup(LibraryItemView parent, int icon, String title, String description) {

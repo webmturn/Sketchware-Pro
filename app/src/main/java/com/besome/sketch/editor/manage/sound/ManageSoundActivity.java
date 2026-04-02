@@ -18,9 +18,11 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 
 import java.lang.ref.WeakReference;
 
-import pro.sketchware.core.BaseAsyncTask;
+import pro.sketchware.core.BackgroundTasks;
+import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.SoundCollectionManager;
 import pro.sketchware.core.SoundImportFragment;
+import pro.sketchware.core.TaskHost;
 import pro.sketchware.core.UIHelper;
 import pro.sketchware.core.SoundListFragment;
 import pro.sketchware.R;
@@ -116,17 +118,21 @@ public class ManageSoundActivity extends BaseAppCompatActivity implements ViewPa
         }
     }
 
-    private static class SaveAsyncTask extends BaseAsyncTask {
+    private static class SaveAsyncTask {
         private final WeakReference<ManageSoundActivity> activityWeakReference;
 
         public SaveAsyncTask(ManageSoundActivity activity) {
-            super(activity);
             activityWeakReference = new WeakReference<>(activity);
-            activity.addTask(this);
         }
 
-        @Override
-        public void onSuccess() {
+        public void execute() {
+            var activity = activityWeakReference.get();
+            if (activity == null) return;
+            BackgroundTasks.runSerial(TaskHost.of(activity), "ManageSoundActivity$SaveAsyncTask",
+                    this::doWork, this::onSuccess, this::onError);
+        }
+
+        private void onSuccess() {
             var activity = activityWeakReference.get();
             if (activity == null) return;
             activity.dismissLoadingDialog();
@@ -135,18 +141,25 @@ public class ManageSoundActivity extends BaseAppCompatActivity implements ViewPa
             SoundCollectionManager.getInstance().clearCollections();
         }
 
-        @Override
-        public void doWork() {
+        private void doWork() {
             var activity = activityWeakReference.get();
             if (activity == null) return;
             activity.projectSounds.saveSounds();
         }
 
-        @Override
-        public void onError(String errorMessage) {
+        private void onError(Throwable error) {
             var activity = activityWeakReference.get();
             if (activity == null) return;
             activity.dismissLoadingDialog();
+            SketchToast.warning(activity, buildErrorMessage(error), 1).show();
+        }
+
+        private String buildErrorMessage(Throwable error) {
+            String errorMessage = error != null ? error.getMessage() : null;
+            if (errorMessage == null || errorMessage.isEmpty()) {
+                return Helper.getResString(R.string.common_error_an_error_occurred);
+            }
+            return Helper.getResString(R.string.common_error_an_error_occurred) + "[" + errorMessage + "]";
         }
     }
 

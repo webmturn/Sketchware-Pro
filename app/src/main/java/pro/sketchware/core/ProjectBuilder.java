@@ -285,11 +285,11 @@ public class ProjectBuilder {
     public void createDexFilesFromClasses() throws CompilationFailedException, ReflectiveOperationException, IOException {
         FileUtil.makeDir(projectFilePaths.binDirectoryPath + File.separator + "dex");
         if (proguard.isShrinkingEnabled() && proguard.isR8Enabled()) return;
+        File dexOutputDir = new File(projectFilePaths.binDirectoryPath, "dex");
+        File[] existingDexFiles = dexOutputDir.exists() ? dexOutputDir.listFiles((dir, name) -> name.endsWith(".dex")) : null;
 
         if (isD8Enabled()) {
             long savedTimeMillis = System.currentTimeMillis();
-            File dexOutputDir = new File(projectFilePaths.binDirectoryPath, "dex");
-            File[] existingDexFiles = dexOutputDir.exists() ? dexOutputDir.listFiles() : null;
             if (!classFilesChanged && existingDexFiles != null && existingDexFiles.length > 0) {
                 LogUtil.d(TAG, "Skipping D8: no .class files changed (incremental). Saved ~"
                         + (System.currentTimeMillis() - savedTimeMillis) + " ms");
@@ -307,6 +307,14 @@ public class ProjectBuilder {
             }
         } else {
             long savedTimeMillis = System.currentTimeMillis();
+            if (!classFilesChanged && existingDexFiles != null && existingDexFiles.length > 0) {
+                LogUtil.d(TAG, "Skipping Dx: no .class files changed (incremental). Saved ~"
+                        + (System.currentTimeMillis() - savedTimeMillis) + " ms");
+                if (progressReceiver != null) {
+                    progressReceiver.onProgress("DEX is up to date (no changes)", 17);
+                }
+                return;
+            }
             List<String> args = Arrays.asList(
                     "--debug",
                     "--verbose",

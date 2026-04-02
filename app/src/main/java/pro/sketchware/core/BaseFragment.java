@@ -31,12 +31,6 @@ public class BaseFragment extends Fragment {
         }
     }
 
-    public void addTask(BaseAsyncTask task) {
-        if (getActivity() instanceof BaseAppCompatActivity) {
-            ((BaseAppCompatActivity) getActivity()).addTask(task);
-        }
-    }
-
     public void showProgressDialog() {
         if (getActivity() instanceof BaseAppCompatActivity) {
             ((BaseAppCompatActivity) getActivity()).showLoadingDialog();

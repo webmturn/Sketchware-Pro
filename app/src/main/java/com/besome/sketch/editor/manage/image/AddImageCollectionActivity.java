@@ -26,9 +26,10 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+import pro.sketchware.core.BackgroundTasks;
 import pro.sketchware.core.SketchwareException;
+import pro.sketchware.core.TaskHost;
 import pro.sketchware.core.UriPathResolver;
-import pro.sketchware.core.BaseAsyncTask;
 import pro.sketchware.core.ImageCollectionManager;
 import pro.sketchware.core.FileNameValidator;
 import pro.sketchware.core.SketchToast;
@@ -288,17 +289,21 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
         return SketchwarePaths.getCollectionPath() + File.separator + "image" + File.separator + "data" + File.separator + projectResourceBean.resFullName;
     }
 
-    private static class SaveAsyncTask extends BaseAsyncTask {
+    private static class SaveAsyncTask {
         private final WeakReference<AddImageCollectionActivity> activity;
 
         public SaveAsyncTask(AddImageCollectionActivity activity) {
-            super(activity.getApplicationContext());
             this.activity = new WeakReference<>(activity);
-            activity.addTask(this);
         }
 
-        @Override
-        public void onSuccess() {
+        public void execute() {
+            var activity = this.activity.get();
+            if (activity == null) return;
+            BackgroundTasks.runSerial(TaskHost.of(activity), "AddImageCollectionActivity$SaveAsyncTask",
+                    this::doWork, this::onSuccess, this::onError);
+        }
+
+        private void onSuccess() {
             var activity = this.activity.get();
             if (activity == null) return;
             SketchToast.toast(activity.getApplicationContext(), activity.getString(
@@ -308,12 +313,10 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
             activity.finish();
         }
 
-        @Override
-        public void doWork() throws SketchwareException {
+        private void doWork() throws SketchwareException {
             var activity = this.activity.get();
             if (activity == null) return;
             try {
-                publishProgress("Now processing..");
                 if (!activity.editing) {
                     var image = new ProjectResourceBean(ProjectResourceBean.PROJECT_RES_TYPE_FILE,
                             Helper.getText(activity.ed_input_edittext).trim(), activity.imageFilePath);
@@ -356,11 +359,19 @@ public class AddImageCollectionActivity extends BaseDialogActivity implements Vi
             }
         }
 
-        @Override
-        public void onError(String errorMessage) {
+        private void onError(Throwable error) {
             var activity = this.activity.get();
             if (activity == null) return;
             activity.dismissLoadingDialog();
+            SketchToast.warning(activity, buildErrorMessage(error), 1).show();
+        }
+
+        private String buildErrorMessage(Throwable error) {
+            String errorMessage = error != null ? error.getMessage() : null;
+            if (errorMessage == null || errorMessage.isEmpty()) {
+                return Helper.getResString(R.string.common_error_an_error_occurred);
+            }
+            return errorMessage;
         }
     }
 }

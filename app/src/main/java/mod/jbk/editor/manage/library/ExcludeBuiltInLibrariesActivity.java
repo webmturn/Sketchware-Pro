@@ -49,8 +49,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import pro.sketchware.core.BaseAsyncTask;
+import pro.sketchware.core.BackgroundTasks;
 import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.TaskHost;
 import mod.hey.studios.util.Helper;
 import mod.jbk.build.BuiltInLibraries;
 import mod.jbk.util.LogUtil;
@@ -341,17 +342,21 @@ public class ExcludeBuiltInLibrariesActivity extends BaseAppCompatActivity {
         dialog.show();
     }
 
-    private static class SaveConfigTask extends BaseAsyncTask {
+    private static class SaveConfigTask {
         private final WeakReference<ExcludeBuiltInLibrariesActivity> activity;
 
         public SaveConfigTask(ExcludeBuiltInLibrariesActivity activity) {
-            super(activity);
             this.activity = new WeakReference<>(activity);
-            activity.addTask(this);
         }
 
-        @Override
-        public void onSuccess() {
+        public void execute() {
+            var act = activity.get();
+            if (act == null) return;
+            BackgroundTasks.runSerial(TaskHost.of(act), "ExcludeBuiltInLibrariesActivity$SaveConfigTask",
+                    this::doWork, this::onSuccess, this::onError);
+        }
+
+        private void onSuccess() {
             var act = activity.get();
             if (act == null) return;
             act.dismissLoadingDialog();
@@ -359,18 +364,24 @@ public class ExcludeBuiltInLibrariesActivity extends BaseAppCompatActivity {
             act.finish();
         }
 
-        @Override
-        public void onError(String s) {
+        private void onError(Throwable error) {
             var act = activity.get();
             if (act == null) return;
-            act.onSaveError("Couldn't save configuration: " + s);
+            act.onSaveError("Couldn't save configuration: " + buildErrorMessage(error));
         }
 
-        @Override
-        public void doWork() {
+        private void doWork() {
             var act = activity.get();
             if (act == null) return;
             saveConfig(act.sc_id, act.isExcludingEnabled, act.excludedLibraries);
+        }
+
+        private String buildErrorMessage(Throwable error) {
+            String errorMessage = error != null ? error.getMessage() : null;
+            if (errorMessage == null || errorMessage.isEmpty()) {
+                return Helper.getResString(R.string.common_error_an_error_occurred);
+            }
+            return errorMessage;
         }
 
     }

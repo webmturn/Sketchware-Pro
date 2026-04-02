@@ -26,8 +26,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
+import pro.sketchware.core.BackgroundTasks;
 import pro.sketchware.core.SharedPrefsHelper;
 import pro.sketchware.core.ProjectListManager;
+import pro.sketchware.core.TaskHost;
 import pro.sketchware.core.UIHelper;
 import pro.sketchware.core.SketchwarePaths;
 import pro.sketchware.core.MapValueHelper;
@@ -215,21 +217,12 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
         progressDialog.show();
 
         String scId = MapValueHelper.getString(projectMap, "sc_id");
-        new Thread(() -> {
-            try {
-                ProjectListManager.deleteProject(activity, scId);
-                activity.runOnUiThread(() -> {
-                    if (activity.isFinishing() || activity.isDestroyed()) return;
-                    progressDialog.dismiss();
-                    shownProjects.remove(position);
-                    notifyDataSetChanged();
-                    allProjects.remove(projectMap);
-                });
-            } catch (Exception e) {
-                LogUtil.e("ProjectsAdapter", "Failed to delete project: " + scId, e);
-                activity.runOnUiThread(() -> { if (!activity.isFinishing() && !activity.isDestroyed()) progressDialog.dismiss(); });
-            }
-        }).start();
+        BackgroundTasks.runSerial(TaskHost.of(activity), "ProjectsAdapter", () -> ProjectListManager.deleteProject(activity, scId), () -> {
+            progressDialog.dismiss();
+            shownProjects.remove(position);
+            notifyDataSetChanged();
+            allProjects.remove(projectMap);
+        }, error -> progressDialog.dismiss());
     }
 
     private void toProjectSettingOrRequestPermission(HashMap<String, Object> project, int index) {

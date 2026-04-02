@@ -45,8 +45,9 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import pro.sketchware.core.BaseAsyncTask;
+import pro.sketchware.core.BackgroundTasks;
 import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.TaskHost;
 import pro.sketchware.core.UIHelper;
 import mod.hey.studios.build.BuildSettings;
 import mod.hey.studios.util.Helper;
@@ -449,31 +450,33 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
         void invoke(LocalLibrary library);
     }
 
-    private static class LoadLocalLibrariesTask extends BaseAsyncTask {
+    private static class LoadLocalLibrariesTask {
         private final WeakReference<ManageLocalLibraryActivity> activity;
 
         public LoadLocalLibrariesTask(ManageLocalLibraryActivity activity) {
-            super(activity);
             this.activity = new WeakReference<>(activity);
-            activity.addTask(this);
         }
 
-        @Override
-        public void onSuccess() {
+        public void execute() {
+            var act = activity.get();
+            if (act == null) return;
+            BackgroundTasks.runSerial(TaskHost.of(act), "ManageLocalLibraryActivity$LoadLocalLibrariesTask",
+                    this::doWork, this::onSuccess, this::onError);
+        }
+
+        private void onSuccess() {
             var act = activity.get();
             if (act == null) return;
             act.dismissLoadingDialog();
         }
 
-        @Override
-        public void onError(String idk) {
+        private void onError(Throwable error) {
             var act = activity.get();
             if (act == null) return;
             act.dismissLoadingDialog();
         }
 
-        @Override
-        public void doWork() {
+        private void doWork() {
             var act = activity.get();
             if (act == null) return;
             try {

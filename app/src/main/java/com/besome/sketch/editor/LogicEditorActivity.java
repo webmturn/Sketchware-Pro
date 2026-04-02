@@ -88,12 +88,13 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 
+import pro.sketchware.core.BackgroundTasks;
 import pro.sketchware.core.SharedPrefsHelper;
 import pro.sketchware.core.FormatUtil;
 import pro.sketchware.core.BlockInterpreter;
 import pro.sketchware.core.DeviceUtil;
-import pro.sketchware.core.BaseAsyncTask;
 import pro.sketchware.core.BlockCollectionManager;
+import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.UniqueNameValidator;
 import pro.sketchware.core.LayoutGenerator;
 import pro.sketchware.core.MoreBlockCollectionManager;
@@ -108,6 +109,7 @@ import pro.sketchware.core.ProjectDataStore;
 import pro.sketchware.core.ProjectDataManager;
 import pro.sketchware.core.BuildConfig;
 import pro.sketchware.core.ResourceManager;
+import pro.sketchware.core.TaskHost;
 import pro.sketchware.core.UIHelper;
 import pro.sketchware.core.SketchwareConstants;
 import pro.sketchware.core.BlockConstants;
@@ -2186,34 +2188,6 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.logic_menu, menu);
-        menu.findItem(R.id.menu_logic_redo).setEnabled(projectFile != null && BlockHistoryManager.getInstance(scId).canRedo(buildHistoryKey()));
-        menu.findItem(R.id.menu_logic_undo).setEnabled(projectFile != null && BlockHistoryManager.getInstance(scId).canUndo(buildHistoryKey()));
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem menuItem) {
-        int itemId = menuItem.getItemId();
-
-        if (itemId == R.id.menu_block_helper) {
-            togglePaletteVisibility(false);
-            toggleDrawerVisibility(!isDrawerVisible);
-        } else if (itemId == R.id.menu_logic_redo) {
-            redo();
-        } else if (itemId == R.id.menu_logic_undo) {
-            undo();
-        } else if (itemId == R.id.menu_logic_showsource) {
-            showSourceCode();
-        } else if (itemId == R.id.menu_logic_search) {
-            toggleCanvasSearch();
-        }
-
-        return super.onOptionsItemSelected(menuItem);
-    }
-
-    @Override
     public void onPostCreate(Bundle bundle) {
         super.onPostCreate(bundle);
         showLoadingDialog();
@@ -2283,6 +2257,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         bundle.putString("scroll_to_block_id", pendingScrollBlockId);
         bundle.putParcelable("project_file", projectFile);
         super.onSaveInstanceState(bundle);
+        if (blockPane == null || blockPane.getRoot() == null) return;
         ArrayList<BlockBean> blocks = blockPane.getBlocks();
         ProjectDataStore projectDataStore = ProjectDataManager.getProjectDataManager(scId);
         String javaName = projectFile.getJavaName();
@@ -2292,6 +2267,34 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                 projectDataStore.saveAllBackup();
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.logic_menu, menu);
+        menu.findItem(R.id.menu_logic_redo).setEnabled(projectFile != null && BlockHistoryManager.getInstance(scId).canRedo(buildHistoryKey()));
+        menu.findItem(R.id.menu_logic_undo).setEnabled(projectFile != null && BlockHistoryManager.getInstance(scId).canUndo(buildHistoryKey()));
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem menuItem) {
+        int itemId = menuItem.getItemId();
+
+        if (itemId == R.id.menu_block_helper) {
+            togglePaletteVisibility(false);
+            toggleDrawerVisibility(!isDrawerVisible);
+        } else if (itemId == R.id.menu_logic_redo) {
+            redo();
+        } else if (itemId == R.id.menu_logic_undo) {
+            undo();
+        } else if (itemId == R.id.menu_logic_showsource) {
+            showSourceCode();
+        } else if (itemId == R.id.menu_logic_search) {
+            toggleCanvasSearch();
+        }
+
+        return super.onOptionsItemSelected(menuItem);
     }
 
     @Override
@@ -2736,37 +2739,47 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
     }
 
-    private static class ProjectSaver extends BaseAsyncTask {
+    private static class ProjectSaver {
         private final WeakReference<LogicEditorActivity> activity;
 
         public ProjectSaver(LogicEditorActivity logicEditorActivity) {
-            super(logicEditorActivity);
             activity = new WeakReference<>(logicEditorActivity);
-            logicEditorActivity.addTask(this);
         }
 
-        @Override
-        public void onSuccess() {
+        public void execute() {
+            var act = activity.get();
+            if (act == null) return;
+            BackgroundTasks.runSerial(TaskHost.of(act), "LogicEditorActivity$ProjectSaver",
+                    this::doWork, this::onSuccess, this::onError);
+        }
+
+        private void doWork() {
+            var act = activity.get();
+            if (act == null) return;
+            act.saveBlocks();
+        }
+
+        private void onSuccess() {
             var act = activity.get();
             if (act == null) return;
             act.dismissLoadingDialog();
             act.finish();
         }
 
-        @Override
-        public void onError(String errorMessage) {
-            Toast.makeText(getContext(), R.string.common_error_failed_to_save, Toast.LENGTH_SHORT).show();
+        private void onError(Throwable error) {
             var act = activity.get();
             if (act == null) return;
+            Toast.makeText(act, R.string.common_error_failed_to_save, Toast.LENGTH_SHORT).show();
             act.dismissLoadingDialog();
+            SketchToast.warning(act, buildErrorMessage(error), 1).show();
         }
 
-        @Override
-        public void doWork() {
-            var act = activity.get();
-            if (act == null) return;
-            publishProgress("Now saving..");
-            act.saveBlocks();
+        private String buildErrorMessage(Throwable error) {
+            String errorMessage = error != null ? error.getMessage() : null;
+            if (errorMessage == null || errorMessage.isEmpty()) {
+                return Helper.getResString(R.string.common_error_an_error_occurred);
+            }
+            return Helper.getResString(R.string.common_error_an_error_occurred) + "[" + errorMessage + "]";
         }
     }
 
@@ -2778,7 +2791,16 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
 
         public void execute() {
-            new Thread(this::doInBackground).start();
+            LogicEditorActivity activity = getActivity();
+            if (activity == null) {
+                return;
+            }
+            BackgroundTasks.runIo(TaskHost.of(activity), "LogicEditorActivity$LoadEventBlocksTask", this::doInBackground, null, error -> {
+                LogicEditorActivity currentActivity = getActivity();
+                if (currentActivity != null) {
+                    currentActivity.dismissLoadingDialog();
+                }
+            });
         }
 
         private void doInBackground() {

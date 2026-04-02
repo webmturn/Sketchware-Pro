@@ -42,7 +42,9 @@ import mod.khaled.logcat.LogReaderActivity;
 import pro.sketchware.R;
 import pro.sketchware.activities.editor.component.ManageCustomComponentActivity;
 import pro.sketchware.activities.settings.SettingsActivity;
+import pro.sketchware.core.BackgroundTasks;
 import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.TaskHost;
 import pro.sketchware.databinding.ActivityAppSettingsBinding;
 import pro.sketchware.databinding.DialogSelectApkToSignBinding;
 import pro.sketchware.utility.FileUtil;
@@ -245,39 +247,28 @@ public class AppSettings extends BaseAppCompatActivity {
                 .create();
 
         ApkSigner signer = new ApkSigner();
-        new Thread(() -> {
-            try {
-                ApkSigner.LogCallback callback = line -> runOnUiThread(() -> {
-                        if (isFinishing() || isDestroyed()) return;
-                        tv_log.setText(Helper.getText(tv_log) + line);
-                });
+        BackgroundTasks.runIo(TaskHost.of(this), "AppSettings", () -> {
+            ApkSigner.LogCallback callback = line -> BackgroundTasks.postMain(() -> {
+                if (isFinishing() || isDestroyed()) return;
+                tv_log.setText(Helper.getText(tv_log) + line);
+            });
 
-                if (useTestkey) {
-                    signer.signWithTestKey(inputApkPath, outputApkPath, callback);
-                } else {
-                    signer.signWithKeyStore(inputApkPath, outputApkPath,
-                            keyStorePath, keyStorePassword, keyStoreKeyAlias, keyPassword, callback);
-                }
-
-                runOnUiThread(() -> {
-                    if (isFinishing() || isDestroyed()) return;
-                    if (ApkSigner.LogCallback.errorCount.get() == 0) {
-                        building_dialog.dismiss();
-                        SketchwareUtil.toast(String.format(Helper.getResString(R.string.apk_sign_success),
-                                        Uri.fromFile(new File(outputApkPath)).getLastPathSegment()),
-                                Toast.LENGTH_LONG);
-                    } else {
-                        tv_progress.setText(Helper.getResString(R.string.signing_error_occurred));
-                    }
-                });
-            } catch (Exception e) {
-                LogUtil.e("AppSettings", "Failed to sign APK", e);
-                runOnUiThread(() -> {
-                    if (isFinishing() || isDestroyed()) return;
-                    tv_progress.setText(Helper.getResString(R.string.signing_failed_format, e.getMessage()));
-                });
+            if (useTestkey) {
+                signer.signWithTestKey(inputApkPath, outputApkPath, callback);
+            } else {
+                signer.signWithKeyStore(inputApkPath, outputApkPath,
+                        keyStorePath, keyStorePassword, keyStoreKeyAlias, keyPassword, callback);
             }
-        }).start();
+        }, () -> {
+            if (ApkSigner.LogCallback.errorCount.get() == 0) {
+                building_dialog.dismiss();
+                SketchwareUtil.toast(String.format(Helper.getResString(R.string.apk_sign_success),
+                                Uri.fromFile(new File(outputApkPath)).getLastPathSegment()),
+                        Toast.LENGTH_LONG);
+            } else {
+                tv_progress.setText(Helper.getResString(R.string.signing_error_occurred));
+            }
+        }, error -> tv_progress.setText(Helper.getResString(R.string.signing_failed_format, error.getMessage())));
 
         building_dialog.show();
     }

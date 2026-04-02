@@ -38,12 +38,13 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import pro.sketchware.core.BackgroundTasks;
 import pro.sketchware.core.SketchwareException;
 import pro.sketchware.core.ViewFilesFragment;
-import pro.sketchware.core.BaseAsyncTask;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.ProjectDataStore;
 import pro.sketchware.core.ProjectDataManager;
+import pro.sketchware.core.TaskHost;
 import pro.sketchware.core.UIHelper;
 import pro.sketchware.core.SketchwarePaths;
 import pro.sketchware.core.ViewFilesAdapter;
@@ -335,17 +336,21 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
         super.onSaveInstanceState(newState);
     }
 
-    private static class SaveViewAsyncTask extends BaseAsyncTask {
+    private static class SaveViewAsyncTask {
         private final WeakReference<ManageViewActivity> activity;
 
         public SaveViewAsyncTask(ManageViewActivity activity) {
-            super(activity.getApplicationContext());
             this.activity = new WeakReference<>(activity);
-            activity.addTask(this);
         }
 
-        @Override
-        public void onSuccess() {
+        public void execute() {
+            var activity = this.activity.get();
+            if (activity == null) return;
+            BackgroundTasks.runSerial(TaskHost.of(activity), "ManageViewActivity$SaveViewAsyncTask",
+                    this::doWork, this::onSuccess, this::onError);
+        }
+
+        private void onSuccess() {
             var activity = this.activity.get();
             if (activity == null) return;
             activity.dismissLoadingDialog();
@@ -353,26 +358,32 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
             activity.finish();
         }
 
-        @Override
-        public void onError(String errorMessage) {
+        private void onError(Throwable error) {
             var activity = this.activity.get();
             if (activity == null) return;
             activity.dismissLoadingDialog();
+            SketchToast.warning(activity, buildErrorMessage(error), 1).show();
         }
 
-        @Override
-        public void doWork() throws SketchwareException {
+        private void doWork() {
             var activity = this.activity.get();
             if (activity == null) return;
             try {
-                publishProgress(Helper.getResString(R.string.common_message_progress));
+                TaskHost.of(activity).postToUi(() -> activity.setProgressMessage(Helper.getResString(R.string.common_message_progress)));
                 activity.saveAndSyncFiles();
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 Log.e("ManageViewActivity", e.getMessage(), e);
-                throw new SketchwareException(Helper.getResString(R.string.common_error_unknown));
+                throw new RuntimeException(Helper.getResString(R.string.common_error_unknown), e);
             }
         }
 
+        private String buildErrorMessage(Throwable error) {
+            String errorMessage = error != null ? error.getMessage() : null;
+            if (errorMessage == null || errorMessage.isEmpty()) {
+                return Helper.getResString(R.string.common_error_an_error_occurred);
+            }
+            return errorMessage;
+        }
     }
 
     public class ViewPagerAdapter extends FragmentPagerAdapter {

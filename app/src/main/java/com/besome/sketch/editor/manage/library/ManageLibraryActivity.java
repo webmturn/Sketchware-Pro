@@ -33,8 +33,9 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import pro.sketchware.core.BaseAsyncTask;
+import pro.sketchware.core.BackgroundTasks;
 import pro.sketchware.core.ProjectDataManager;
+import pro.sketchware.core.TaskHost;
 import pro.sketchware.core.UIHelper;
 import dev.aldi.sayuti.editor.manage.ManageLocalLibraryActivity;
 import mod.hey.studios.activity.managers.nativelib.ManageNativelibsActivity;
@@ -426,18 +427,22 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
         dialog.show();
     }
 
-    private static class SaveLibraryTask extends BaseAsyncTask {
+    private static class SaveLibraryTask {
 
         private final WeakReference<ManageLibraryActivity> activity;
 
         public SaveLibraryTask(ManageLibraryActivity activity) {
-            super(activity);
             this.activity = new WeakReference<>(activity);
-            activity.addTask(this);
         }
 
-        @Override
-        public void onSuccess() {
+        public void execute() {
+            var act = activity.get();
+            if (act == null) return;
+            BackgroundTasks.runSerial(TaskHost.of(act), "ManageLibraryActivity$SaveLibraryTask",
+                    this::doWork, this::onSuccess, this::onError);
+        }
+
+        private void onSuccess() {
             var act = activity.get();
             if (act == null) return;
             act.dismissLoadingDialog();
@@ -451,15 +456,13 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
             act.finish();
         }
 
-        @Override
-        public void onError(String idk) {
+        private void onError(Throwable error) {
             var act = activity.get();
             if (act == null) return;
             act.dismissLoadingDialog();
         }
 
-        @Override
-        public void doWork() {
+        private void doWork() {
             var act = activity.get();
             if (act == null) return;
             try {

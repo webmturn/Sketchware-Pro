@@ -28,7 +28,9 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.function.Consumer;
 
+import pro.sketchware.core.BackgroundTasks;
 import pro.sketchware.core.SketchToast;
+import pro.sketchware.core.TaskHost;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;
 import pro.sketchware.R;
@@ -134,14 +136,14 @@ public class SketchwareUtil {
     }
 
     public static void copySafDocumentToTempFile(Uri document, Activity context, String tempFileExtension, Consumer<File> tempFileConsumer, Consumer<IOException> exceptionHandler) {
-        new Thread(() -> {
-            try (ParcelFileDescriptor parcelFileDescriptor = context.getContentResolver().openFileDescriptor(document, "r"); 
+        BackgroundTasks.callIo(TaskHost.of(context), "SketchwareUtil", () -> {
+            try (ParcelFileDescriptor parcelFileDescriptor = context.getContentResolver().openFileDescriptor(document, "r");
                  FileInputStream inputStream = new FileInputStream(parcelFileDescriptor.getFileDescriptor())) {
-                
+
                 File temporaryFile = File.createTempFile("document", "." + tempFileExtension);
-                try (FileOutputStream outputStream = new FileOutputStream(temporaryFile); 
+                try (FileOutputStream outputStream = new FileOutputStream(temporaryFile);
                      BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream)) {
-                    
+
                     byte[] buffer = new byte[4096];
                     int length;
                     while ((length = inputStream.read(buffer)) > 0) {
@@ -149,11 +151,15 @@ public class SketchwareUtil {
                     }
                 }
 
-                context.runOnUiThread(() -> tempFileConsumer.accept(temporaryFile));
-            } catch (IOException e) {
-                exceptionHandler.accept(e);
+                return temporaryFile;
             }
-        }).start();
+        }, tempFileConsumer, exceptionHandler == null ? null : error -> {
+            if (error instanceof IOException) {
+                exceptionHandler.accept((IOException) error);
+            } else {
+                exceptionHandler.accept(new IOException(error));
+            }
+        });
     }
 
     /**
