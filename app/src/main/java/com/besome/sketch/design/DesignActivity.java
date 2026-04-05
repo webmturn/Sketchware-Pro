@@ -1171,7 +1171,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 var q = activity.projectFilePaths;
                 var sc_id = DesignActivity.sc_id;
                 onProgress("Deleting temporary files...", 1);
-                FileUtil.deleteFile(q.projectMyscPath);
+                FileUtil.deleteFile(q.generatedFilesPath);
 
                 q.createBuildDirectories(activity.getApplicationContext());
                 q.deleteValuesV21Directory();
@@ -1192,34 +1192,87 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 }
 
                 onProgress("Generating source code...", 2);
-                ResourceManager ResourceManager = ProjectDataManager.getResourceManager(sc_id);
-                ResourceManager.copyImagesToDir(q.resDirectoryPath + File.separator + "drawable-xhdpi");
-                ResourceManager = ProjectDataManager.getResourceManager(sc_id);
-                ResourceManager.copySoundsToDir(q.resDirectoryPath + File.separator + "raw");
-                ResourceManager = ProjectDataManager.getResourceManager(sc_id);
-                ResourceManager.copyFontsToDir(q.assetsPath + File.separator + "fonts");
+                long generateSourceStepStarted = System.currentTimeMillis();
+                long copyImagesStarted = System.currentTimeMillis();
+                ResourceManager resourceManager = ProjectDataManager.getResourceManager(sc_id);
+                resourceManager.copyImagesToDir(q.resDirectoryPath + File.separator + "drawable-xhdpi");
+                long copyImagesDuration = System.currentTimeMillis() - copyImagesStarted;
+                long copySoundsStarted = System.currentTimeMillis();
+                resourceManager = ProjectDataManager.getResourceManager(sc_id);
+                resourceManager.copySoundsToDir(q.resDirectoryPath + File.separator + "raw");
+                long copySoundsDuration = System.currentTimeMillis() - copySoundsStarted;
+                long copyFontsStarted = System.currentTimeMillis();
+                resourceManager = ProjectDataManager.getResourceManager(sc_id);
+                resourceManager.copyFontsToDir(q.assetsPath + File.separator + "fonts");
+                long copyFontsDuration = System.currentTimeMillis() - copyFontsStarted;
+                Log.d("DesignActivity$BuildTask", "Step 2 timing: copied resources (images=" + copyImagesDuration
+                        + " ms, sounds=" + copySoundsDuration
+                        + " ms, fonts=" + copyFontsDuration + " ms)");
+                long builderInitializationStarted = System.currentTimeMillis();
                 ProjectBuilder builder = new ProjectBuilder(this, activity.getApplicationContext(), q);
+                long builderInitializationDuration = System.currentTimeMillis() - builderInitializationStarted;
+                Log.d("DesignActivity$BuildTask", "Step 2 timing: ProjectBuilder initialization took "
+                        + builderInitializationDuration + " ms");
 
                 var fileManager = ProjectDataManager.getFileManager(sc_id);
                 var dataManager = ProjectDataManager.getProjectDataManager(sc_id);
                 var libraryManager = ProjectDataManager.getLibraryManager(sc_id);
+                long metadataInitializationStarted = System.currentTimeMillis();
                 q.initializeMetadata(libraryManager, fileManager, dataManager);
+                long metadataInitializationDuration = System.currentTimeMillis() - metadataInitializationStarted;
+                Log.d("DesignActivity$BuildTask", "Step 2 timing: initializeMetadata took "
+                        + metadataInitializationDuration + " ms");
+                long builtInLibraryInformationStarted = System.currentTimeMillis();
                 builder.buildBuiltInLibraryInformation();
+                long builtInLibraryInformationDuration = System.currentTimeMillis() - builtInLibraryInformationStarted;
+                Log.d("DesignActivity$BuildTask", "Step 2 timing: buildBuiltInLibraryInformation took "
+                        + builtInLibraryInformationDuration + " ms, builtInLibraryCount="
+                        + builder.getBuiltInLibraryManager().getLibraries().size());
+                long generateProjectFilesStarted = System.currentTimeMillis();
                 q.generateProjectFiles(fileManager, dataManager, libraryManager, builder.getBuiltInLibraryManager());
+                long generateProjectFilesDuration = System.currentTimeMillis() - generateProjectFilesStarted;
+                Log.d("DesignActivity$BuildTask", "Step 2 timing: generateProjectFiles took "
+                        + generateProjectFilesDuration + " ms");
+                long incrementalPrecheckStarted = System.currentTimeMillis();
                 pro.sketchware.core.IncrementalBuildCache buildCache =
                         new pro.sketchware.core.IncrementalBuildCache(q.binDirectoryPath);
                 buildCache.load();
-                boolean incrementalMode = new File(q.compiledClassesPath).exists()
-                        && buildCache.hasCacheFile()
-                        && !builder.proguard.isShrinkingEnabled()
-                        && !buildCache.isClasspathChanged(builder.getClasspath());
+                String buildClasspath = builder.getClasspath();
+                boolean compiledClassesAvailable = new File(q.compiledClassesPath).exists()
+                        && !FileUtil.listFilesRecursively(new File(q.compiledClassesPath), ".class").isEmpty();
+                boolean cacheFileExists = buildCache.hasCacheFile();
+                boolean proguardShrinkingEnabled = builder.proguard.isShrinkingEnabled();
+                boolean classpathChanged = buildCache.isClasspathChanged(buildClasspath);
+                boolean cacheMigrationRequired = buildCache.requiresFullRebuildMigration();
+                boolean incrementalMode = compiledClassesAvailable
+                        && cacheFileExists
+                        && !proguardShrinkingEnabled
+                        && !classpathChanged
+                        && !cacheMigrationRequired;
+                Log.d("DesignActivity$BuildTask", "Incremental build precheck: mode=" + incrementalMode
+                        + ", compiledClassesAvailable=" + compiledClassesAvailable
+                        + ", cacheFileExists=" + cacheFileExists
+                        + ", proguardShrinkingEnabled=" + proguardShrinkingEnabled
+                        + ", classpathChanged=" + classpathChanged
+                        + ", cacheMigrationRequired=" + cacheMigrationRequired
+                        + ", classpathHash=" + Integer.toHexString(buildClasspath.hashCode())
+                        + ", classpathLength=" + buildClasspath.length());
+                Log.d("DesignActivity$BuildTask", "Step 2 timing: build cache load + classpath + incremental precheck took "
+                        + (System.currentTimeMillis() - incrementalPrecheckStarted) + " ms");
                 builder.preloadedBuildCache = buildCache;
+                long prepareBuildDirectoriesStarted = System.currentTimeMillis();
                 if (incrementalMode) {
+                    Log.d("DesignActivity$BuildTask", "Build cache strategy: incremental mode, cleaning only R.java directory");
                     q.cleanRJavaOnly();
                 } else {
+                    Log.d("DesignActivity$BuildTask", "Build cache strategy: full rebuild, cleaning bin and R.java directories");
                     q.cleanBuildCache();
                 }
                 q.prepareBuildDirectories();
+                Log.d("DesignActivity$BuildTask", "Step 2 timing: cache cleanup + prepareBuildDirectories took "
+                        + (System.currentTimeMillis() - prepareBuildDirectoriesStarted) + " ms");
+                Log.d("DesignActivity$BuildTask", "Step 2 total timing: "
+                        + (System.currentTimeMillis() - generateSourceStepStarted) + " ms");
                 builder.maybeExtractAapt2();
                 if (canceled) {
                     return;

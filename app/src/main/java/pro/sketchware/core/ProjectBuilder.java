@@ -291,7 +291,7 @@ public class ProjectBuilder {
         if (isD8Enabled()) {
             long savedTimeMillis = System.currentTimeMillis();
             if (!classFilesChanged && existingDexFiles != null && existingDexFiles.length > 0) {
-                LogUtil.d(TAG, "Skipping D8: no .class files changed (incremental). Saved ~"
+                Log.d(TAG, "Skipping D8: no .class files changed (incremental). Saved ~"
                         + (System.currentTimeMillis() - savedTimeMillis) + " ms");
                 if (progressReceiver != null) {
                     progressReceiver.onProgress("DEX is up to date (no changes)", 17);
@@ -300,7 +300,7 @@ public class ProjectBuilder {
             }
             try {
                 DexCompiler.compileDexFiles(this);
-                LogUtil.d(TAG, "D8 took " + (System.currentTimeMillis() - savedTimeMillis) + " ms");
+                Log.d(TAG, "D8 took " + (System.currentTimeMillis() - savedTimeMillis) + " ms");
             } catch (CompilationFailedException | RuntimeException e) {
                 LogUtil.e(TAG, "D8 failed to process .class files", e);
                 throw e;
@@ -308,7 +308,7 @@ public class ProjectBuilder {
         } else {
             long savedTimeMillis = System.currentTimeMillis();
             if (!classFilesChanged && existingDexFiles != null && existingDexFiles.length > 0) {
-                LogUtil.d(TAG, "Skipping Dx: no .class files changed (incremental). Saved ~"
+                Log.d(TAG, "Skipping Dx: no .class files changed (incremental). Saved ~"
                         + (System.currentTimeMillis() - savedTimeMillis) + " ms");
                 if (progressReceiver != null) {
                     progressReceiver.onProgress("DEX is up to date (no changes)", 17);
@@ -324,7 +324,7 @@ public class ProjectBuilder {
             );
 
             try {
-                LogUtil.d(TAG, "Running Dx with these arguments: " + args);
+                Log.d(TAG, "Running Dx with these arguments: " + args);
 
                 Main.clearInternTables();
                 Main.Arguments arguments = new Main.Arguments();
@@ -333,7 +333,7 @@ public class ProjectBuilder {
                 parseMethod.invoke(arguments, (Object) args.toArray(new String[0]));
 
                 Main.run(arguments);
-                LogUtil.d(TAG, "Dx took " + (System.currentTimeMillis() - savedTimeMillis) + " ms");
+                Log.d(TAG, "Dx took " + (System.currentTimeMillis() - savedTimeMillis) + " ms");
             } catch (ReflectiveOperationException | IOException | RuntimeException e) {
                 LogUtil.e(TAG, "Dx failed to process .class files", e);
                 throw e;
@@ -561,69 +561,116 @@ public class ProjectBuilder {
         String currentClasspath = getClasspath();
         boolean classesExist = new File(projectFilePaths.compiledClassesPath).exists()
                 && !FileUtil.listFilesRecursively(new File(projectFilePaths.compiledClassesPath), ".class").isEmpty();
+        boolean cacheFileExists = cache.hasCacheFile();
+        boolean proguardShrinkingEnabled = proguard.isShrinkingEnabled();
+        boolean classpathChanged = cache.isClasspathChanged(currentClasspath);
+        boolean cacheMigrationRequired = cache.requiresFullRebuildMigration();
 
         boolean canIncremental = classesExist
-                && cache.hasCacheFile()
-                && !proguard.isShrinkingEnabled()
-                && !cache.isClasspathChanged(currentClasspath);
+                && cacheFileExists
+                && !proguardShrinkingEnabled
+                && !classpathChanged
+                && !cacheMigrationRequired;
+
+        Log.d(TAG, "Incremental compile precheck: canIncremental=" + canIncremental
+                + ", classesExist=" + classesExist
+                + ", cacheFileExists=" + cacheFileExists
+                + ", proguardShrinkingEnabled=" + proguardShrinkingEnabled
+                + ", classpathChanged=" + classpathChanged
+                + ", cacheMigrationRequired=" + cacheMigrationRequired
+                + ", classpathHash=" + Integer.toHexString(currentClasspath.hashCode())
+                + ", classpathLength=" + currentClasspath.length());
 
         if (!canIncremental) {
-            LogUtil.d(TAG, "Incremental build not possible, doing full ECJ recompile");
+            Log.d(TAG, "Incremental build not possible, doing full ECJ recompile"
+                    + " (classesExist=" + classesExist
+                    + ", cacheFileExists=" + cacheFileExists
+                    + ", proguardShrinkingEnabled=" + proguardShrinkingEnabled
+                    + ", classpathChanged=" + classpathChanged
+                    + ", cacheMigrationRequired=" + cacheMigrationRequired + ")");
             runEclipseCompiler(collectAllSourcePaths(), currentClasspath, savedTimeMillis);
             updateCacheAfterSuccessfulBuild(cache, currentClasspath);
             return;
-        }
-
-        if (cache.isRJavaChanged(projectFilePaths.rJavaDirectoryPath)) {
-            LogUtil.d(TAG, "R.java changed \u2013 resource IDs may have been reassigned, doing full ECJ recompile");
-            for (File stale : FileUtil.listFilesRecursively(new File(projectFilePaths.compiledClassesPath), ".class")) {
-                stale.delete();
-            }
-            runEclipseCompiler(collectAllSourcePaths(), currentClasspath, savedTimeMillis);
-            updateCacheAfterSuccessfulBuild(cache, currentClasspath);
-            return;
-        }
-
-        for (String customDir : getCustomJavaDirectories()) {
-            if (FileUtil.isExistFile(customDir)) {
-                for (File f : FileUtil.listFilesRecursively(new File(customDir), ".java")) {
-                    if (cache.isDirtyFile(f)) {
-                        LogUtil.d(TAG, "User custom Java file changed: " + f.getName() + " \u2013 doing full ECJ recompile");
-                        runEclipseCompiler(collectAllSourcePaths(), currentClasspath, savedTimeMillis);
-                        updateCacheAfterSuccessfulBuild(cache, currentClasspath);
-                        return;
-                    }
-                }
-            }
         }
 
         List<File> allJavaFiles = FileUtil.listFilesRecursively(
                 new File(projectFilePaths.javaFilesPath), ".java");
+        List<File> customJavaFiles = new ArrayList<>();
+        for (String customDir : getCustomJavaDirectories()) {
+            if (FileUtil.isExistFile(customDir)) {
+                customJavaFiles.addAll(FileUtil.listFilesRecursively(new File(customDir), ".java"));
+            }
+        }
 
         Set<String> currentJavaPaths = new HashSet<>();
         for (File f : allJavaFiles) currentJavaPaths.add(f.getAbsolutePath());
+        for (File f : customJavaFiles) currentJavaPaths.add(f.getAbsolutePath());
 
         List<String> stalePaths = new ArrayList<>();
         for (String cachedPath : cache.getAllCachedFilePaths()) {
-            if (cachedPath.startsWith(projectFilePaths.javaFilesPath) && !currentJavaPaths.contains(cachedPath)) {
-                deleteOldClassFiles(new File(cachedPath));
+            boolean generatedSourceDeleted = isPathWithin(cachedPath, projectFilePaths.javaFilesPath)
+                    && !currentJavaPaths.contains(cachedPath);
+            boolean customSourceDeleted = isCustomJavaSourcePath(cachedPath)
+                    && !currentJavaPaths.contains(cachedPath);
+            if (generatedSourceDeleted || customSourceDeleted) {
+                deleteOldClassFiles(cachedPath, cache);
                 stalePaths.add(cachedPath);
-                LogUtil.d(TAG, "Incremental build: source deleted, removed stale .class for: " + new File(cachedPath).getName());
+                Log.d(TAG, (customSourceDeleted ? "Custom Java source deleted: " : "Generated Java source deleted: ")
+                        + new File(cachedPath).getName()
+                        + " – doing full ECJ recompile to validate remaining references safely");
             }
         }
         for (String p : stalePaths) cache.removeFromCache(p);
 
+        List<File> dirtyCustomJavaFiles = new ArrayList<>();
+        for (File customJavaFile : customJavaFiles) {
+            if (cache.isDirtyFile(customJavaFile)) {
+                dirtyCustomJavaFiles.add(customJavaFile);
+            }
+        }
+
         List<String> dirtyFilePaths = new ArrayList<>();
         for (File javaFile : allJavaFiles) {
             if (cache.isDirtyFile(javaFile)) {
-                deleteOldClassFiles(javaFile);
                 dirtyFilePaths.add(javaFile.getAbsolutePath());
             }
         }
 
+        boolean rJavaChanged = cache.isRJavaChanged(projectFilePaths.rJavaDirectoryPath);
+        Log.d(TAG, "Incremental compile checkpoint: rJavaChanged=" + rJavaChanged
+                + ", rJavaDir=" + projectFilePaths.rJavaDirectoryPath);
+        if (rJavaChanged || !dirtyCustomJavaFiles.isEmpty() || !stalePaths.isEmpty()) {
+            String appRJavaRelativePath = projectFilePaths.packageNameAsFolders + File.separator + "R.java";
+            boolean appRJavaChanged = cache.isRJavaFileChanged(projectFilePaths.rJavaDirectoryPath, appRJavaRelativePath);
+            ArrayList<String> rJavaChanges = cache.describeRJavaChanges(projectFilePaths.rJavaDirectoryPath, 20);
+            Log.d(TAG, "Incremental compile checkpoint: appRJavaChanged=" + appRJavaChanged
+                    + ", appRJavaPath=" + appRJavaRelativePath);
+            Log.d(TAG, "Incremental compile checkpoint: rJavaChanges=" + rJavaChanges);
+            if (rJavaChanged) {
+                Log.d(TAG, "R.java changed – resource IDs may have been reassigned, doing full ECJ recompile");
+            }
+            if (!dirtyCustomJavaFiles.isEmpty()) {
+                Log.d(TAG, "User custom Java files changed: " + dirtyCustomJavaFiles.size()
+                        + " – doing full ECJ recompile");
+            }
+            if (!stalePaths.isEmpty()) {
+                Log.d(TAG, "Java source set changed: removed " + stalePaths.size()
+                        + " source file(s) – doing full ECJ recompile");
+            }
+            for (String dirtyFilePath : dirtyFilePaths) {
+                deleteOldClassFiles(dirtyFilePath, cache);
+            }
+            for (File dirtyCustomJavaFile : dirtyCustomJavaFiles) {
+                deleteOldClassFiles(dirtyCustomJavaFile.getAbsolutePath(), cache);
+            }
+            runEclipseCompiler(collectAllSourcePaths(), currentClasspath, savedTimeMillis);
+            updateCacheAfterSuccessfulBuild(cache, currentClasspath);
+            return;
+        }
+
         if (dirtyFilePaths.isEmpty()) {
             classFilesChanged = false;
-            LogUtil.d(TAG, "Incremental build: no Java files changed, skipping ECJ entirely. Saved ~"
+            Log.d(TAG, "Incremental build: no Java files changed, skipping ECJ entirely. Saved ~"
                     + (System.currentTimeMillis() - savedTimeMillis) + " ms");
             if (progressReceiver != null) {
                 progressReceiver.onProgress("Java is up to date (incremental build, no changes)", 13);
@@ -631,7 +678,10 @@ public class ProjectBuilder {
             return;
         }
 
-        LogUtil.d(TAG, "Incremental build: compiling " + dirtyFilePaths.size() + " changed file(s) out of " + allJavaFiles.size());
+        for (String dirtyFilePath : dirtyFilePaths) {
+            deleteOldClassFiles(dirtyFilePath, cache);
+        }
+        Log.d(TAG, "Incremental build: compiling " + dirtyFilePaths.size() + " changed file(s) out of " + allJavaFiles.size());
         if (progressReceiver != null) {
             progressReceiver.onProgress("Java is compiling... (incremental: " + dirtyFilePaths.size()
                     + " of " + allJavaFiles.size() + " file(s) changed)", 13);
@@ -716,13 +766,14 @@ public class ProjectBuilder {
     }
 
     private void updateCacheAfterSuccessfulBuild(IncrementalBuildCache cache, String classpath) {
+        cache.clearTrackedJavaSources();
         for (File f : FileUtil.listFilesRecursively(new File(projectFilePaths.javaFilesPath), ".java")) {
-            cache.markFileClean(f);
+            cache.markFileClean(f, getCurrentCompiledClassBasePath(f));
         }
         for (String customDir : getCustomJavaDirectories()) {
             if (FileUtil.isExistFile(customDir)) {
                 for (File f : FileUtil.listFilesRecursively(new File(customDir), ".java")) {
-                    cache.markFileClean(f);
+                    cache.markFileClean(f, getCurrentCompiledClassBasePath(f));
                 }
             }
         }
@@ -739,34 +790,144 @@ public class ProjectBuilder {
         return dirs;
     }
 
+    private boolean isCustomJavaSourcePath(String absolutePath) {
+        for (String customDir : getCustomJavaDirectories()) {
+            if (isPathWithin(absolutePath, customDir)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isPathWithin(String absolutePath, String rootPath) {
+        return absolutePath.equals(rootPath) || absolutePath.startsWith(rootPath + File.separator);
+    }
+
     /**
      * Deletes all {@code .class} files associated with the given {@code .java} source file
      * (including inner-class files like {@code Foo$1.class}) before recompiling that file,
      * so that stale inner-class files cannot accumulate in the output directory.
      */
-    private void deleteOldClassFiles(File javaFile) {
-        String base = projectFilePaths.javaFilesPath;
-        String absolutePath = javaFile.getAbsolutePath();
-        if (!absolutePath.startsWith(base)) return;
+    private void deleteOldClassFiles(String sourcePath, IncrementalBuildCache cache) {
+        for (String classRel : getCompiledClassBasePathCandidates(sourcePath, cache)) {
+            int lastSep = classRel.lastIndexOf(File.separator);
+            File classDir = lastSep >= 0
+                    ? new File(projectFilePaths.compiledClassesPath + File.separator + classRel.substring(0, lastSep))
+                    : new File(projectFilePaths.compiledClassesPath);
+            String baseName = lastSep >= 0 ? classRel.substring(lastSep + 1) : classRel;
+
+            if (!classDir.exists()) continue;
+            String topLevelClassName = baseName + ".class";
+            String innerClassPrefix = baseName + "$";
+            File[] toDelete = classDir.listFiles(
+                    f -> {
+                        String fileName = f.getName();
+                        return fileName.equals(topLevelClassName)
+                                || (fileName.startsWith(innerClassPrefix) && fileName.endsWith(".class"));
+                    });
+            if (toDelete != null) {
+                for (File f : toDelete) {
+                    if (!f.delete()) LogUtil.w(TAG, "Could not delete stale class file: " + f.getAbsolutePath());
+                }
+            }
+        }
+    }
+
+    private List<String> getCompiledClassBasePathCandidates(String sourcePath, IncrementalBuildCache cache) {
+        ArrayList<String> candidates = new ArrayList<>(3);
+        addCompiledClassBasePathCandidate(candidates, cache.getStoredCompiledClassBasePath(sourcePath));
+        addCompiledClassBasePathCandidate(candidates, getCurrentCompiledClassBasePath(new File(sourcePath)));
+        addCompiledClassBasePathCandidate(candidates, getSourcePathDerivedClassBasePath(sourcePath));
+        return candidates;
+    }
+
+    private void addCompiledClassBasePathCandidate(List<String> candidates, String candidate) {
+        if (candidate != null && !candidate.isEmpty() && !candidates.contains(candidate)) {
+            candidates.add(candidate);
+        }
+    }
+
+    private String getCurrentCompiledClassBasePath(File javaFile) {
+        if (!javaFile.exists() || !javaFile.getName().endsWith(".java")) {
+            return null;
+        }
+
+        String simpleName = javaFile.getName();
+        simpleName = simpleName.substring(0, simpleName.length() - 5);
+        String packageName = extractPackageName(FileUtil.readFile(javaFile.getAbsolutePath()));
+        if (packageName.isEmpty()) {
+            return simpleName;
+        }
+        return packageName.replace(".", File.separator) + File.separator + simpleName;
+    }
+
+    private String extractPackageName(String sourceCode) {
+        boolean inBlockComment = false;
+        for (String line : sourceCode.split("\\R")) {
+            String trimmedLine = line.replace("\uFEFF", "").trim();
+            if (trimmedLine.isEmpty()) {
+                continue;
+            }
+
+            if (inBlockComment) {
+                int blockCommentEndIndex = trimmedLine.indexOf("*/");
+                if (blockCommentEndIndex < 0) {
+                    continue;
+                }
+                trimmedLine = trimmedLine.substring(blockCommentEndIndex + 2).trim();
+                inBlockComment = false;
+                if (trimmedLine.isEmpty()) {
+                    continue;
+                }
+            }
+
+            while (trimmedLine.startsWith("/*")) {
+                int blockCommentEndIndex = trimmedLine.indexOf("*/", 2);
+                if (blockCommentEndIndex < 0) {
+                    inBlockComment = true;
+                    trimmedLine = "";
+                    break;
+                }
+                trimmedLine = trimmedLine.substring(blockCommentEndIndex + 2).trim();
+            }
+
+            if (trimmedLine.isEmpty() || trimmedLine.startsWith("//") || trimmedLine.startsWith("*")) {
+                continue;
+            }
+
+            if (trimmedLine.startsWith("package ")) {
+                int semicolonIndex = trimmedLine.indexOf(';');
+                String packageName = semicolonIndex >= 0
+                        ? trimmedLine.substring("package ".length(), semicolonIndex).trim()
+                        : trimmedLine.substring("package ".length()).trim();
+                return packageName;
+            }
+            break;
+        }
+        return "";
+    }
+
+    private String getSourcePathDerivedClassBasePath(String absolutePath) {
+        String base = getManagedJavaSourceRoot(absolutePath);
+        if (base == null) {
+            return null;
+        }
 
         String rel = absolutePath.substring(base.length());
         if (rel.startsWith(File.separator)) rel = rel.substring(1);
-        String classRel = rel.replace(".java", "");
+        return rel.endsWith(".java") ? rel.substring(0, rel.length() - 5) : rel;
+    }
 
-        int lastSep = classRel.lastIndexOf(File.separator);
-        File classDir = lastSep >= 0
-                ? new File(projectFilePaths.compiledClassesPath + File.separator + classRel.substring(0, lastSep))
-                : new File(projectFilePaths.compiledClassesPath);
-        String baseName = lastSep >= 0 ? classRel.substring(lastSep + 1) : classRel;
-
-        if (!classDir.exists()) return;
-        File[] toDelete = classDir.listFiles(
-                f -> f.getName().startsWith(baseName) && f.getName().endsWith(".class"));
-        if (toDelete != null) {
-            for (File f : toDelete) {
-                if (!f.delete()) LogUtil.w(TAG, "Could not delete stale class file: " + f.getAbsolutePath());
+    private String getManagedJavaSourceRoot(String absolutePath) {
+        if (isPathWithin(absolutePath, projectFilePaths.javaFilesPath)) {
+            return projectFilePaths.javaFilesPath;
+        }
+        for (String customDir : getCustomJavaDirectories()) {
+            if (isPathWithin(absolutePath, customDir)) {
+                return customDir;
             }
         }
+        return null;
     }
 
     /**
@@ -776,6 +937,7 @@ public class ProjectBuilder {
      * @throws SketchwareException if APK assembly fails (e.g. duplicate files)
      */
     public void buildApk() throws SketchwareException {
+        long savedTimeMillis = System.currentTimeMillis();
         String firstDexPath = dexesToAddButNotMerge.isEmpty() ? projectFilePaths.classesDexPath : dexesToAddButNotMerge.remove(0).getAbsolutePath();
         try {
             ApkBuilder apkBuilder = new ApkBuilder(new File(projectFilePaths.unsignedUnalignedApkPath), new File(projectFilePaths.resourcesApkPath), new File(firstDexPath), null, null, System.out);
@@ -829,7 +991,8 @@ public class ProjectBuilder {
             message += "Archive path: " + e.getArchivePath();
             throw new SketchwareException(message);
         }
-        LogUtil.d(TAG, "Time passed since starting to compile resources until building the unsigned APK: " +
+        Log.d(TAG, "Building APK took " + (System.currentTimeMillis() - savedTimeMillis) + " ms");
+        Log.d(TAG, "Time passed since starting to compile resources until building the unsigned APK: " +
                 (System.currentTimeMillis() - timestampResourceCompilationStarted) + " ms");
     }
 
@@ -915,7 +1078,7 @@ public class ProjectBuilder {
                 try {
                     String cached = new String(java.nio.file.Files.readAllBytes(fingerprintFile.toPath()));
                     if (dexFingerprint.equals(cached)) {
-                        LogUtil.d(TAG, "Skipping DEX merge: all input DEX files unchanged (cached). Saved ~"
+                        Log.d(TAG, "Skipping DEX merge: all input DEX files unchanged (cached). Saved ~"
                                 + (System.currentTimeMillis() - savedTimeMillis) + " ms");
                         if (progressReceiver != null) {
                             progressReceiver.onProgress("DEX merge is up to date (cached)", 18);
@@ -923,7 +1086,7 @@ public class ProjectBuilder {
                         return;
                     }
                 } catch (IOException e) {
-                    LogUtil.d(TAG, "Failed to read DEX merge fingerprint, will re-merge: " + e.getMessage());
+                    Log.d(TAG, "Failed to read DEX merge fingerprint, will re-merge: " + e.getMessage());
                 }
             }
             dexLibraries(new File(projectFilePaths.binDirectoryPath), dexes);
@@ -931,12 +1094,12 @@ public class ProjectBuilder {
             try {
                 java.nio.file.Files.write(fingerprintFile.toPath(), dexFingerprint.getBytes());
             } catch (IOException e) {
-                LogUtil.d(TAG, "Failed to save DEX merge fingerprint: " + e.getMessage());
+                Log.d(TAG, "Failed to save DEX merge fingerprint: " + e.getMessage());
             }
-            LogUtil.d(TAG, "Merging DEX files took " + (System.currentTimeMillis() - savedTimeMillis) + " ms");
+            Log.d(TAG, "Merging DEX files took " + (System.currentTimeMillis() - savedTimeMillis) + " ms");
         } else {
             dexesToAddButNotMerge = dexes;
-            LogUtil.d(TAG, "Skipped merging DEX files due to debug build with minSdkVersion >= 21");
+            Log.d(TAG, "Skipped merging DEX files due to debug build with minSdkVersion >= 21");
         }
     }
 
@@ -1036,7 +1199,9 @@ public class ProjectBuilder {
      * This method uses apksigner, but kellinwood's zipsigner as fallback.
      */
     public void signDebugApk() throws GeneralSecurityException, IOException, ClassNotFoundException, IllegalAccessException, InstantiationException {
+        long savedTimeMillis = System.currentTimeMillis();
         TestkeySignBridge.signWithTestkey(projectFilePaths.unsignedUnalignedApkPath, projectFilePaths.finalToInstallApkPath);
+        Log.d(TAG, "Signing debug APK took " + (System.currentTimeMillis() - savedTimeMillis) + " ms");
     }
 
     /**

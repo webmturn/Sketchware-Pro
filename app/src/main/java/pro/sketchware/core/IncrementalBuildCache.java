@@ -5,6 +5,8 @@ import com.google.gson.Gson;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -26,17 +28,24 @@ public class IncrementalBuildCache {
 
     private static final String TAG = "IncrementalBuildCache";
     private static final String CACHE_FILE_NAME = "build_hashes.json";
+    private static final int CACHE_FORMAT_VERSION = 2;
 
     private final String cacheFilePath;
 
     private Map<String, Long> fileHashes = new HashMap<>();
+    private Map<String, String> compiledClassBasePaths = new HashMap<>();
     private long classpathHash = 0L;
     private long rJavaHash = 0L;
+    private Map<String, Long> rJavaFileHashes = new HashMap<>();
+    private boolean requiresFullRebuildMigration = false;
 
     private static class CacheData {
+        int cacheFormatVersion = 0;
         Map<String, Long> fileHashes = new HashMap<>();
+        Map<String, String> compiledClassBasePaths = new HashMap<>();
         long classpathHash = 0L;
         long rJavaHash = 0L;
+        Map<String, Long> rJavaFileHashes = new HashMap<>();
     }
 
     public IncrementalBuildCache(String binDirectoryPath) {
@@ -50,6 +59,12 @@ public class IncrementalBuildCache {
 
     /** Loads stored hashes from the cache file. No-op if the file doesn't exist. */
     public void load() {
+        fileHashes = new HashMap<>();
+        compiledClassBasePaths = new HashMap<>();
+        classpathHash = 0L;
+        rJavaHash = 0L;
+        rJavaFileHashes = new HashMap<>();
+        requiresFullRebuildMigration = false;
         if (!hasCacheFile()) return;
         try {
             String content = FileUtil.readFileIfExist(cacheFilePath);
@@ -57,32 +72,42 @@ public class IncrementalBuildCache {
             CacheData data = new Gson().fromJson(content, CacheData.class);
             if (data != null) {
                 fileHashes = data.fileHashes != null ? data.fileHashes : new HashMap<>();
+                compiledClassBasePaths = data.compiledClassBasePaths != null ? data.compiledClassBasePaths : new HashMap<>();
                 classpathHash = data.classpathHash;
                 rJavaHash = data.rJavaHash;
+                rJavaFileHashes = data.rJavaFileHashes != null ? data.rJavaFileHashes : new HashMap<>();
+                requiresFullRebuildMigration = shouldRequireFullRebuildMigration(data.cacheFormatVersion);
+                if (requiresFullRebuildMigration) {
+                    LogUtil.d(TAG, "Loaded incompatible or incomplete build cache metadata; next build will do a one-time full rebuild migration");
+                }
             }
         } catch (Exception e) {
             LogUtil.w(TAG, "Failed to read build hash cache, will do full recompile: " + e.getMessage());
-            fileHashes = new HashMap<>();
-            classpathHash = 0L;
-            rJavaHash = 0L;
         }
     }
 
     /** Persists the current hash state to disk after a successful build. */
     public void save() {
         CacheData data = new CacheData();
+        data.cacheFormatVersion = CACHE_FORMAT_VERSION;
         data.fileHashes = fileHashes;
+        data.compiledClassBasePaths = compiledClassBasePaths;
         data.classpathHash = classpathHash;
         data.rJavaHash = rJavaHash;
+        data.rJavaFileHashes = rJavaFileHashes;
         FileUtil.writeFile(cacheFilePath, new Gson().toJson(data));
+        requiresFullRebuildMigration = false;
     }
 
     /** Deletes the cache file, forcing a full recompile on the next build. */
     public void invalidate() {
         FileUtil.deleteFile(cacheFilePath);
         fileHashes.clear();
+        compiledClassBasePaths.clear();
         classpathHash = 0L;
         rJavaHash = 0L;
+        rJavaFileHashes.clear();
+        requiresFullRebuildMigration = false;
     }
 
     /**
@@ -97,7 +122,21 @@ public class IncrementalBuildCache {
 
     /** Records the current CRC32 of a Java file as "clean" in the in-memory map. */
     public void markFileClean(File javaFile) {
+        markFileClean(javaFile, null);
+    }
+
+    public void markFileClean(File javaFile, String compiledClassBasePath) {
         fileHashes.put(javaFile.getAbsolutePath(), computeFileCRC32(javaFile));
+        if (compiledClassBasePath == null || compiledClassBasePath.isEmpty()) {
+            compiledClassBasePaths.remove(javaFile.getAbsolutePath());
+        } else {
+            compiledClassBasePaths.put(javaFile.getAbsolutePath(), compiledClassBasePath);
+        }
+    }
+
+    public void clearTrackedJavaSources() {
+        fileHashes.clear();
+        compiledClassBasePaths.clear();
     }
 
     /**
@@ -111,6 +150,21 @@ public class IncrementalBuildCache {
     /** Removes a single path from the in-memory hash cache (does not save to disk). */
     public void removeFromCache(String absolutePath) {
         fileHashes.remove(absolutePath);
+        compiledClassBasePaths.remove(absolutePath);
+    }
+
+    public String getStoredCompiledClassBasePath(String absolutePath) {
+        return compiledClassBasePaths.get(absolutePath);
+    }
+
+    public boolean requiresFullRebuildMigration() {
+        return requiresFullRebuildMigration;
+    }
+
+    private boolean shouldRequireFullRebuildMigration(int cacheFormatVersion) {
+        return !fileHashes.isEmpty()
+                && (cacheFormatVersion != CACHE_FORMAT_VERSION
+                || compiledClassBasePaths.size() < fileHashes.size());
     }
 
     /** Returns true if the classpath has changed since the last successful build. */
@@ -133,9 +187,54 @@ public class IncrementalBuildCache {
         return rJavaHash == 0L || rJavaHash != current;
     }
 
+    public boolean isRJavaFileChanged(String rJavaDirectoryPath, String relativeFilePath) {
+        Map<String, Long> currentHashes = computeRelativeFileCRC32s(new File(rJavaDirectoryPath));
+        Long stored = rJavaFileHashes.get(relativeFilePath);
+        Long current = currentHashes.get(relativeFilePath);
+        if (stored == null) {
+            return current != null;
+        }
+        return !stored.equals(current);
+    }
+
+    public ArrayList<String> describeRJavaChanges(String rJavaDirectoryPath, int maxEntries) {
+        Map<String, Long> currentHashes = computeRelativeFileCRC32s(new File(rJavaDirectoryPath));
+        ArrayList<String> descriptions = new ArrayList<>();
+
+        ArrayList<String> currentPaths = new ArrayList<>(currentHashes.keySet());
+        currentPaths.sort(String::compareTo);
+        for (String relativePath : currentPaths) {
+            Long stored = rJavaFileHashes.get(relativePath);
+            Long current = currentHashes.get(relativePath);
+            if (stored == null) {
+                descriptions.add("new:" + relativePath);
+            } else if (!stored.equals(current)) {
+                descriptions.add("changed:" + relativePath);
+            }
+        }
+
+        ArrayList<String> previousPaths = new ArrayList<>(rJavaFileHashes.keySet());
+        previousPaths.sort(String::compareTo);
+        for (String relativePath : previousPaths) {
+            if (!currentHashes.containsKey(relativePath)) {
+                descriptions.add("deleted:" + relativePath);
+            }
+        }
+
+        if (maxEntries > 0 && descriptions.size() > maxEntries) {
+            ArrayList<String> limited = new ArrayList<>(descriptions.subList(0, maxEntries));
+            limited.add("...+" + (descriptions.size() - maxEntries) + " more");
+            return limited;
+        }
+
+        return descriptions;
+    }
+
     /** Stores the current CRC32 of the R.java directory. */
     public void storeRJavaHash(String rJavaDirectoryPath) {
-        rJavaHash = computeDirectoryCRC32(new File(rJavaDirectoryPath));
+        File rJavaDirectory = new File(rJavaDirectoryPath);
+        rJavaHash = computeDirectoryCRC32(rJavaDirectory);
+        rJavaFileHashes = computeRelativeFileCRC32s(rJavaDirectory);
     }
 
     // -------------------------------------------------------------------------
@@ -158,24 +257,69 @@ public class IncrementalBuildCache {
     private static long computeStringCRC32(String s) {
         if (s == null) return 0L;
         CRC32 crc = new CRC32();
-        crc.update(s.getBytes());
+        byte[] bytes = s.getBytes(StandardCharsets.UTF_8);
+        crc.update(bytes, 0, bytes.length);
         return crc.getValue();
     }
 
     private static long computeDirectoryCRC32(File directory) {
         if (!directory.exists() || !directory.isDirectory()) return 0L;
-        List<File> files = FileUtil.listFilesRecursively(directory, null);
+        List<File> files = FileUtil.listFilesRecursively(directory, ".java");
         files.sort((a, b) -> a.getAbsolutePath().compareTo(b.getAbsolutePath()));
         CRC32 crc = new CRC32();
+        String rootPath = directory.getAbsolutePath();
         for (File file : files) {
+            String relativePath = toRelativePath(rootPath, file);
+            if (shouldIgnoreRJavaRelativePath(relativePath)) {
+                continue;
+            }
+            updateCrcWithUtf8(crc, relativePath);
+            crc.update(0);
             try (FileInputStream fis = new FileInputStream(file)) {
                 byte[] buf = new byte[8192];
                 int len;
                 while ((len = fis.read(buf)) != -1) crc.update(buf, 0, len);
+                crc.update(0);
             } catch (IOException e) {
                 LogUtil.d("IncrementalBuildCache", "Failed to compute CRC for " + file.getName() + ": " + e.getMessage());
             }
         }
         return crc.getValue();
+    }
+
+    private static Map<String, Long> computeRelativeFileCRC32s(File directory) {
+        Map<String, Long> hashes = new HashMap<>();
+        if (!directory.exists() || !directory.isDirectory()) return hashes;
+
+        String rootPath = directory.getAbsolutePath();
+        List<File> files = FileUtil.listFilesRecursively(directory, ".java");
+        files.sort((a, b) -> a.getAbsolutePath().compareTo(b.getAbsolutePath()));
+        for (File file : files) {
+            String relativePath = toRelativePath(rootPath, file);
+            if (shouldIgnoreRJavaRelativePath(relativePath)) {
+                continue;
+            }
+            hashes.put(relativePath, computeFileCRC32(file));
+        }
+
+        return hashes;
+    }
+
+    private static String toRelativePath(String rootPath, File file) {
+        String absolutePath = file.getAbsolutePath();
+        String relativePath = absolutePath.substring(rootPath.length());
+        if (relativePath.startsWith(File.separator)) {
+            relativePath = relativePath.substring(1);
+        }
+        return relativePath;
+    }
+
+    private static void updateCrcWithUtf8(CRC32 crc, String text) {
+        byte[] bytes = text.getBytes(StandardCharsets.UTF_8);
+        crc.update(bytes, 0, bytes.length);
+    }
+
+    private static boolean shouldIgnoreRJavaRelativePath(String relativePath) {
+        return "R.java".equals(relativePath);
     }
 }

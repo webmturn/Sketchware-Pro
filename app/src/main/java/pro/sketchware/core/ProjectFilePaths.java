@@ -710,7 +710,29 @@ public class ProjectFilePaths {
     }
 
     public void generateProjectFiles(ProjectFileManager projectFileManager, ProjectDataStore projectDataManger, LibraryManager projectLibraryManager, BuiltInLibraryManager builtInLibraryManager) {
+        long generateProjectFilesStarted = System.currentTimeMillis();
+        long generateSourceCodeBeansStarted = System.currentTimeMillis();
         ArrayList<SrcCodeBean> srcCodeBeans = generateSourceCodeBeans(projectFileManager, projectDataManger, projectLibraryManager, builtInLibraryManager);
+        long generateSourceCodeBeansDuration = System.currentTimeMillis() - generateSourceCodeBeansStarted;
+        int javaBeanCount = 0;
+        int xmlBeanCount = 0;
+        int otherBeanCount = 0;
+        for (SrcCodeBean bean : srcCodeBeans) {
+            if (bean.srcFileName.endsWith(".java")) {
+                javaBeanCount++;
+            } else if (bean.srcFileName.endsWith(".xml")) {
+                xmlBeanCount++;
+            } else {
+                otherBeanCount++;
+            }
+        }
+        Log.d("ProjectFilePaths", "generateProjectFiles: generateSourceCodeBeans produced " + srcCodeBeans.size()
+                + " bean(s) (java=" + javaBeanCount
+                + ", xml=" + xmlBeanCount
+                + ", other=" + otherBeanCount
+                + ") in " + generateSourceCodeBeansDuration + " ms");
+        int writtenProjectFileCount = 0;
+        long writeProjectFilesStarted = System.currentTimeMillis();
         if (buildConfig.isFileProviderUsed) {
             XmlBuilder pathsTag = new XmlBuilder("paths");
             pathsTag.addAttribute("xmlns", "android", "http://schemas.android.com/apk/res/android");
@@ -720,11 +742,16 @@ public class ProjectFilePaths {
             pathsTag.addChildNode(externalPathTag);
             String filePath = "xml/file_paths.xml";
             writeProjectFile(filePath, pathsTag.toCode());
+            writtenProjectFileCount++;
         }
         for (SrcCodeBean bean : srcCodeBeans) {
             writeProjectFile(bean.srcFileName, bean.source);
+            writtenProjectFileCount++;
         }
-        if (buildConfig.isFirebaseEnabled || buildConfig.isAdMobEnabled || buildConfig.isMapUsed) {
+        long writeProjectFilesDuration = System.currentTimeMillis() - writeProjectFilesStarted;
+        boolean generatedSecrets = buildConfig.isFirebaseEnabled || buildConfig.isAdMobEnabled || buildConfig.isMapUsed;
+        long generateSecretsStarted = System.currentTimeMillis();
+        if (generatedSecrets) {
             CommandBlock.clearTempCommands();
             try {
                 prepareXmlCommands(projectFileManager, projectDataManger);
@@ -762,7 +789,16 @@ public class ProjectFilePaths {
                 CommandBlock.clearTempCommands();
             }
         }
+        long generateSecretsDuration = System.currentTimeMillis() - generateSecretsStarted;
+        long generateGradleFilesStarted = System.currentTimeMillis();
         generateGradleFiles();
+        long generateGradleFilesDuration = System.currentTimeMillis() - generateGradleFilesStarted;
+        Log.d("ProjectFilePaths", "generateProjectFiles: wrote " + writtenProjectFileCount
+                + " generated file(s) in " + writeProjectFilesDuration + " ms"
+                + ", generatedSecrets=" + generatedSecrets
+                + " (" + generateSecretsDuration + " ms)"
+                + ", generateGradleFiles=" + generateGradleFilesDuration + " ms"
+                + ", total=" + (System.currentTimeMillis() - generateProjectFilesStarted) + " ms");
     }
 
     public ArrayList<SrcCodeBean> generateSourceCodeBeans(ProjectFileManager projectFileManager, ProjectDataStore projectDataManager, BuiltInLibraryManager builtInLibraryManager) {
@@ -773,6 +809,7 @@ public class ProjectFilePaths {
      * Get source code files that are viewable in SrcCodeViewer
      */
     public ArrayList<SrcCodeBean> generateSourceCodeBeans(ProjectFileManager projectFileManager, ProjectDataStore projectDataManager, LibraryManager projectLibraryManager, BuiltInLibraryManager builtInLibraryManager) {
+        long generateSourceCodeBeansStarted = System.currentTimeMillis();
         generateDebugFiles(SketchApplication.getAppContext());
         CommandBlock.clearTempCommands();
         try {
@@ -805,7 +842,12 @@ public class ProjectFilePaths {
             // Code generation cache: skip regeneration if inputs haven't changed
             File codegenCacheDir = new File(SketchApplication.getAppContext().getCacheDir(), "codegenCache/" + sc_id);
             String cacheKey = computeCodeGenCacheKey(projectFileManager, projectDataManager, projectLibraryManager);
+            String cacheKeyHash = Integer.toHexString(cacheKey.hashCode());
             boolean cacheHit = false;
+            String codegenCacheDecision = "cacheKeyFileMissing";
+            int cachedActivitiesLoaded = 0;
+            int missingCachedFiles = 0;
+            long codegenCacheLookupStarted = System.currentTimeMillis();
 
             File cacheKeyFile = new File(codegenCacheDir, "cache.key");
             if (cacheKeyFile.exists()) {
@@ -823,15 +865,24 @@ public class ProjectFilePaths {
                                         ActivityCodeGenerator.applyCommands(cachedCode)));
                             } else {
                                 allCached = false;
+                                missingCachedFiles = activitiesToGenerate.size() - cachedBeans.size();
                                 break;
                             }
                         }
                         if (allCached) {
                             srcCodeBeans.addAll(cachedBeans);
                             cacheHit = true;
+                            codegenCacheDecision = "hit";
+                            cachedActivitiesLoaded = cachedBeans.size();
+                        } else {
+                            codegenCacheDecision = "keyMatchedButMissingCachedFiles";
+                            cachedActivitiesLoaded = cachedBeans.size();
                         }
+                    } else {
+                        codegenCacheDecision = "cacheKeyChanged";
                     }
                 } catch (RuntimeException e) {
+                    codegenCacheDecision = "cacheReadFailed";
                     Log.e("ProjectFilePaths", "Failed to read code generation cache for project " + sc_id + " from " + cacheKeyFile.getAbsolutePath(), e);
                 }
             }
@@ -840,8 +891,11 @@ public class ProjectFilePaths {
                 CommandBlock.clearTempCommands();
             }
 
+            long codegenCacheLookupDuration = System.currentTimeMillis() - codegenCacheLookupStarted;
             int threadCount = 0;
+            long codeGenerationDuration = 0;
             if (!cacheHit) {
+                long codeGenerationStarted = System.currentTimeMillis();
                 // Cache miss: generate code and save to cache
                 codegenCacheDir.mkdirs();
 
@@ -905,6 +959,7 @@ public class ProjectFilePaths {
                 }
                 // Save cache key after successful generation
                 FileUtil.writeFile(cacheKeyFile.getAbsolutePath(), cacheKey);
+                codeGenerationDuration = System.currentTimeMillis() - codeGenerationStarted;
             }
 
             var path = SketchwarePaths.getProjectCommandPath(sc_id);
@@ -1004,6 +1059,17 @@ public class ProjectFilePaths {
             srcCodeBeans.add(new SrcCodeBean("styles.xml", getXMLStyle()));
             srcCodeBeans.add(new SrcCodeBean("colors.xml", getXMLColor()));
             srcCodeBeans.add(new SrcCodeBean("strings.xml", getXMLString()));
+            Log.d("ProjectFilePaths", "generateSourceCodeBeans: activitiesToGenerate=" + activitiesToGenerate.size()
+                    + ", cache=" + codegenCacheDecision
+                    + ", cachedActivitiesLoaded=" + cachedActivitiesLoaded
+                    + ", missingCachedFiles=" + missingCachedFiles
+                    + ", cacheLookup=" + codegenCacheLookupDuration + " ms"
+                    + ", codeGeneration=" + codeGenerationDuration + " ms"
+                    + ", threadCount=" + threadCount
+                    + ", viewBindingEnabled=" + isViewBindingEnable()
+                    + ", cacheKeyHash=" + cacheKeyHash
+                    + ", totalBeans=" + srcCodeBeans.size()
+                    + ", total=" + (System.currentTimeMillis() - generateSourceCodeBeansStarted) + " ms");
             return srcCodeBeans;
         } finally {
             CommandBlock.clearTempCommands();
