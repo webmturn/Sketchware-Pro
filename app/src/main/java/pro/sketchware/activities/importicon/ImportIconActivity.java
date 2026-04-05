@@ -487,7 +487,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
             var activity = this.activity.get();
             if (activity == null) return;
             activity.showLoadingDialog();
-            BackgroundTasks.runSerial(TaskHost.of(activity), "ImportIconActivity$IconColorChangedIconLoader",
+            BackgroundTasks.runSerialIfAlive(TaskHost.of(activity), "ImportIconActivity$IconColorChangedIconLoader",
                     this::doWork, this::onSuccess, this::onError);
         }
 

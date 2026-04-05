@@ -71,7 +71,7 @@ public class LibrarySettingsImporter {
         RecyclerView recyclerView = root.findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        BackgroundTasks.runIo(TaskHost.of(activity), "LibrarySettingsImporter", this::loadProjects, () -> {
+        BackgroundTasks.runIoIfAlive(TaskHost.of(activity), "LibrarySettingsImporter", this::loadProjects, () -> {
             animationView.cancelAnimation();
             animationView.setVisibility(View.GONE);
             root.removeView(animationView);

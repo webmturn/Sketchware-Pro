@@ -851,7 +851,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         if (projectFile == null) return;
         showLoadingDialog();
         String filename = Helper.getText(fileName);
-        BackgroundTasks.callIo(TaskHost.of(this), "DesignActivity", () ->
+        BackgroundTasks.callIoIfAlive(TaskHost.of(this), "DesignActivity", () ->
                 new ProjectFilePaths(getApplicationContext(), sc_id).getFileSrc(
                         filename,
                         ProjectDataManager.getFileManager(sc_id),
@@ -907,7 +907,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         showLoadingDialog();
         String filename = Helper.getText(fileName);
         ProjectFileBean currentProjectFile = projectFile;
-        BackgroundTasks.callIo(TaskHost.of(this), "DesignActivity", () -> {
+        BackgroundTasks.callIoIfAlive(TaskHost.of(this), "DesignActivity", () -> {
             var xmlGenerator = new LayoutGenerator(projectFilePaths.buildConfig, currentProjectFile);
             var projectDataManager = ProjectDataManager.getProjectDataManager(sc_id);
             var viewBeans = projectDataManager.getViews(filename);
@@ -1480,7 +1480,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 return;
             }
             activity.showLoadingDialog();
-            BackgroundTasks.runIo(TaskHost.of(activity), "DesignActivity$ProjectLoader", this::doInBackground, () -> {
+            BackgroundTasks.runIoIfAlive(TaskHost.of(activity), "DesignActivity$ProjectLoader", this::doInBackground, () -> {
                 DesignActivity currentActivity = getActivity();
                 if (currentActivity == null) {
                     return;

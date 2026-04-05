@@ -31,6 +31,17 @@ public final class BackgroundTasks {
         }, onError);
     }
 
+    public static void runIoIfAlive(TaskHost host, String tag, ThrowingRunnable work, Runnable onSuccess, Consumer<Throwable> onError) {
+        execute(IO_EXECUTOR, host, tag, () -> {
+            work.run();
+            return null;
+        }, ignored -> {
+            if (onSuccess != null) {
+                onSuccess.run();
+            }
+        }, onError, true);
+    }
+
     public static void runSerial(TaskHost host, String tag, ThrowingRunnable work, Runnable onSuccess, Consumer<Throwable> onError) {
         execute(SERIAL_EXECUTOR, host, tag, () -> {
             work.run();
@@ -42,8 +53,23 @@ public final class BackgroundTasks {
         }, onError);
     }
 
+    public static void runSerialIfAlive(TaskHost host, String tag, ThrowingRunnable work, Runnable onSuccess, Consumer<Throwable> onError) {
+        execute(SERIAL_EXECUTOR, host, tag, () -> {
+            work.run();
+            return null;
+        }, ignored -> {
+            if (onSuccess != null) {
+                onSuccess.run();
+            }
+        }, onError, true);
+    }
+
     public static <T> void callIo(TaskHost host, String tag, ThrowingSupplier<T> work, Consumer<T> onSuccess, Consumer<Throwable> onError) {
         execute(IO_EXECUTOR, host, tag, work, onSuccess, onError);
+    }
+
+    public static <T> void callIoIfAlive(TaskHost host, String tag, ThrowingSupplier<T> work, Consumer<T> onSuccess, Consumer<Throwable> onError) {
+        execute(IO_EXECUTOR, host, tag, work, onSuccess, onError, true);
     }
 
     public static <T> void callSerial(TaskHost host, String tag, ThrowingSupplier<T> work, Consumer<T> onSuccess, Consumer<Throwable> onError) {
@@ -69,11 +95,18 @@ public final class BackgroundTasks {
     }
 
     private static <T> void execute(ExecutorService executor, TaskHost host, String tag, ThrowingSupplier<T> work, Consumer<T> onSuccess, Consumer<Throwable> onError) {
+        execute(executor, host, tag, work, onSuccess, onError, false);
+    }
+
+    private static <T> void execute(ExecutorService executor, TaskHost host, String tag, ThrowingSupplier<T> work, Consumer<T> onSuccess, Consumer<Throwable> onError, boolean requireAliveBeforeStart) {
         if (executor == null || host == null || work == null) {
             throw new IllegalArgumentException("Executor, host, and work must not be null");
         }
         String safeTag = tag != null && !tag.isEmpty() ? tag : "BackgroundTasks";
         executor.execute(() -> {
+            if (requireAliveBeforeStart && !host.isAlive()) {
+                return;
+            }
             try {
                 T result = work.get();
                 if (onSuccess != null) {

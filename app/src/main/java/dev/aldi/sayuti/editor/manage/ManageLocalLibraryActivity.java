@@ -460,7 +460,7 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
         public void execute() {
             var act = activity.get();
             if (act == null) return;
-            BackgroundTasks.runSerial(TaskHost.of(act), "ManageLocalLibraryActivity$LoadLocalLibrariesTask",
+            BackgroundTasks.runSerialIfAlive(TaskHost.of(act), "ManageLocalLibraryActivity$LoadLocalLibrariesTask",
                     this::doWork, this::onSuccess, this::onError);
         }
 

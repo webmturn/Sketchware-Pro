@@ -392,7 +392,7 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
 
     private void showQuickManifestSourceDialog() {
         showLoadingDialog();
-        BackgroundTasks.callIo(TaskHost.of(this), "AndroidManifestInjection", () ->
+        BackgroundTasks.callIoIfAlive(TaskHost.of(this), "AndroidManifestInjection", () ->
                 new ProjectFilePaths(getApplicationContext(), sc_id).getFileSrc(
                         "AndroidManifest.xml",
                         ProjectDataManager.getFileManager(sc_id),

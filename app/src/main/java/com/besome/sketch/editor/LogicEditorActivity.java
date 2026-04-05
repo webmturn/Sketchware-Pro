@@ -2795,7 +2795,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             if (activity == null) {
                 return;
             }
-            BackgroundTasks.runIo(TaskHost.of(activity), "LogicEditorActivity$LoadEventBlocksTask", this::doInBackground, null, error -> {
+            BackgroundTasks.runIoIfAlive(TaskHost.of(activity), "LogicEditorActivity$LoadEventBlocksTask", this::doInBackground, null, error -> {
                 LogicEditorActivity currentActivity = getActivity();
                 if (currentActivity != null) {
                     currentActivity.dismissLoadingDialog();

@@ -217,7 +217,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
         progressDialog.show();
 
         String scId = MapValueHelper.getString(projectMap, "sc_id");
-        BackgroundTasks.runSerial(TaskHost.of(activity), "ProjectsAdapter", () -> ProjectListManager.deleteProject(activity, scId), () -> {
+        BackgroundTasks.runIo(TaskHost.of(activity), "ProjectsAdapter", () -> ProjectListManager.deleteProject(activity, scId), () -> {
             progressDialog.dismiss();
             shownProjects.remove(position);
             notifyDataSetChanged();

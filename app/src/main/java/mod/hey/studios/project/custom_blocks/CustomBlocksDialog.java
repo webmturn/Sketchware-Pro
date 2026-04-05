@@ -72,7 +72,7 @@ public class CustomBlocksDialog {
                 .setView(dialogBinding.getRoot())
                 .show();
 
-        BackgroundTasks.callIo(TaskHost.of(context), "CustomBlocksDialog", () -> {
+        BackgroundTasks.callIoIfAlive(TaskHost.of(context), "CustomBlocksDialog", () -> {
             CustomBlocksManager loadedManager = new CustomBlocksManager(context, sc_id);
             ArrayList<BlockBean> usedBlocks = loadedManager.getUsedBlocks();
             int missingBlocks = (int) usedBlocks.stream().filter(this::isMissingBlock).count();
