@@ -1698,9 +1698,12 @@
     <string name="local_library_manager_download">下载库</string>
     <string name="local_library_manager_download_status">下载状态</string>
     <string name="local_library_manager_enter_dependency">输入依赖项</string>
+    <string name="local_library_manager_manifest_merge_disabled">已关闭本地库 Manifest 自动合并</string>
+    <string name="local_library_manager_manifest_merge_enabled">已开启本地库 Manifest 自动合并</string>
     <string name="local_library_manager_no_libraries_body">你还没有任何本地库，试试下载一个。</string>
     <string name="local_library_manager_no_libraries_title">没有可用的本地库</string>
     <string name="local_library_manager_skip_downloading_dependencies">跳过下载子依赖</string>
+    <string name="menu_auto_merge_local_library_manifests">自动合并本地库 Manifest</string>
 
     <!-- ========== 构建 - 完整 ========== -->
     <string name="build_error_failed_create_directory">创建目录失败！</string>

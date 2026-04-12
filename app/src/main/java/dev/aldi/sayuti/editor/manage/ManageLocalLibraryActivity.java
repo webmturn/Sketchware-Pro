@@ -13,6 +13,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -50,6 +51,7 @@ import pro.sketchware.core.SketchwarePaths;
 import pro.sketchware.core.TaskHost;
 import pro.sketchware.core.UIHelper;
 import mod.hey.studios.build.BuildSettings;
+import mod.hey.studios.project.ProjectSettings;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageLocallibrariesBinding;
@@ -66,6 +68,7 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
     private boolean searchBarExpanded;
     private BuildSettings buildSettings;
     private ManageLocallibrariesBinding binding;
+    private ProjectSettings projectSettings;
     private String scId;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
@@ -86,6 +89,9 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
             scId = Objects.requireNonNull(getIntent().getStringExtra("sc_id"));
             buildSettings = new BuildSettings(scId);
             notAssociatedWithProject = scId.equals("system");
+            if (!notAssociatedWithProject) {
+                projectSettings = new ProjectSettings(scId);
+            }
         }
 
         adapter.setOnLocalLibrarySelectedStateChangedListener(item -> {
@@ -110,6 +116,11 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
 
         // Step 2: orphan cleanup menu on SearchBar (available in both project and global view)
         binding.searchBar.inflateMenu(R.menu.menu_search_bar_local_libraries);
+        MenuItem manifestMergeMenuItem = binding.searchBar.getMenu().findItem(R.id.action_toggle_local_library_manifest_merge);
+        if (manifestMergeMenuItem != null) {
+            manifestMergeMenuItem.setVisible(!notAssociatedWithProject);
+            manifestMergeMenuItem.setChecked(isLocalLibraryManifestMergeEnabled());
+        }
         binding.searchBar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.action_manage_repositories) {
                 showManageRepositoriesDialog();
@@ -119,6 +130,9 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
                 return true;
             } else if (item.getItemId() == R.id.action_rebuild_import_indices) {
                 rebuildAllImportIndices();
+                return true;
+            } else if (item.getItemId() == R.id.action_toggle_local_library_manifest_merge) {
+                toggleLocalLibraryManifestMerge(item);
                 return true;
             }
             return false;
@@ -262,6 +276,28 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
             }
         }
         return count;
+    }
+
+    private boolean isLocalLibraryManifestMergeEnabled() {
+        return projectSettings != null
+                && ProjectSettings.SETTING_GENERIC_VALUE_TRUE.equals(projectSettings.getValue(
+                ProjectSettings.SETTING_ENABLE_LOCAL_LIBRARY_MANIFEST_MERGE,
+                ProjectSettings.SETTING_GENERIC_VALUE_FALSE));
+    }
+
+    private void toggleLocalLibraryManifestMerge(MenuItem item) {
+        if (projectSettings == null) {
+            return;
+        }
+
+        boolean enabled = !item.isChecked();
+        item.setChecked(enabled);
+        projectSettings.setValue(
+                ProjectSettings.SETTING_ENABLE_LOCAL_LIBRARY_MANIFEST_MERGE,
+                enabled ? ProjectSettings.SETTING_GENERIC_VALUE_TRUE : ProjectSettings.SETTING_GENERIC_VALUE_FALSE);
+        SketchwareUtil.toast(Helper.getResString(enabled
+                ? R.string.local_library_manager_manifest_merge_enabled
+                : R.string.local_library_manager_manifest_merge_disabled));
     }
 
     // This method is running from the background thread.
