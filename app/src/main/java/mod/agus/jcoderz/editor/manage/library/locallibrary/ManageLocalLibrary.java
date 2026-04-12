@@ -329,6 +329,25 @@ public class ManageLocalLibrary {
         return proguardRules;
     }
 
+    public ArrayList<String> getManifestPaths() {
+        ArrayList<String> manifestPaths = new ArrayList<>();
+
+        for (int i = 0, listSize = list.size(); i < listSize; i++) {
+            HashMap<String, Object> localLibrary = list.get(i);
+            if (localLibrary.containsKey("manifestPath")) {
+                Object manifestPath = localLibrary.get("manifestPath");
+
+                if (manifestPath instanceof String && !((String) manifestPath).isEmpty()) {
+                    manifestPaths.add((String) manifestPath);
+                } else {
+                    LogUtil.w(getClass().getSimpleName(), "Invalid manifestPath entry at index " + i + " for local library " + localLibrary.get("name"));
+                }
+            }
+        }
+
+        return manifestPaths;
+    }
+
     public ArrayList<String> getResLocalLibrary() {
         ArrayList<String> localLibraryRes = new ArrayList<>();
 

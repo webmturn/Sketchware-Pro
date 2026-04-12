@@ -710,7 +710,7 @@ public class ManifestGenerator {
         manifestXml.addChildNode(applicationTag);
         // Needed, as crashing on my SM-A526B with Android 12 / One UI 4.1 / firmware build A526BFXXS1CVD1 otherwise
         //noinspection RegExpRedundantEscape
-        return AndroidManifestInjector.mHolder(manifestXml.toCode(), buildConfig.sc_id).replace("${applicationId}", packageName);
+        return manifestXml.toCode().replace("${applicationId}", packageName);
     }
 
     private void writeJava(XmlBuilder applicationTag, String activityName, ArrayList<HashMap<String, Object>> activityAttrs) {

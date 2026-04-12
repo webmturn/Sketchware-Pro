@@ -17,4 +17,10 @@
         android:title="@string/menu_rebuild_import_indices"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/action_toggle_local_library_manifest_merge"
+        android:checkable="true"
+        android:title="@string/menu_auto_merge_local_library_manifests"
+        app:showAsAction="never" />
+
 </menu>

@@ -44,6 +44,7 @@ import mod.agus.jcoderz.editor.manage.library.locallibrary.ManageLocalLibrary;
 import mod.hey.studios.build.BuildSettings;
 import mod.hey.studios.project.ProjectSettings;
 import mod.hey.studios.util.ProjectFile;
+import mod.hilal.saif.android_manifest.AndroidManifestInjector;
 import mod.hilal.saif.blocks.CommandBlock;
 import mod.pranav.viewbinding.ViewBindingBuilder;
 import pro.sketchware.SketchApplication;
@@ -1055,7 +1056,8 @@ public class ProjectFilePaths {
                 }
             }
 
-            srcCodeBeans.add(new SrcCodeBean("AndroidManifest.xml", CommandBlock.applyCommands("AndroidManifest.xml", manifestGenerator.generateManifest())));
+            String generatedManifest = finalizeGeneratedManifest(manifestGenerator.generateManifest());
+            srcCodeBeans.add(new SrcCodeBean("AndroidManifest.xml", generatedManifest));
             srcCodeBeans.add(new SrcCodeBean("styles.xml", getXMLStyle()));
             srcCodeBeans.add(new SrcCodeBean("colors.xml", getXMLColor()));
             srcCodeBeans.add(new SrcCodeBean("strings.xml", getXMLString()));
@@ -1118,7 +1120,7 @@ public class ProjectFilePaths {
                 builder.buildBuiltInLibraryInformation();
                 ManifestGenerator manifestGenerator = new ManifestGenerator(buildConfig, projectFileManager.getActivities(), builder.getBuiltInLibraryManager());
                 manifestGenerator.setProjectFilePaths(this);
-                return CommandBlock.applyCommands("AndroidManifest.xml", manifestGenerator.generateManifest());
+                return finalizeGeneratedManifest(manifestGenerator.generateManifest());
             }
 
             for (ProjectFileBean projectFile : projectFiles) {
@@ -1275,6 +1277,22 @@ public class ProjectFilePaths {
         }
     }
 
+    private boolean isLocalLibraryManifestMergeEnabled() {
+        return ProjectSettings.SETTING_GENERIC_VALUE_TRUE.equals(
+                projectSettings.getValue(
+                        ProjectSettings.SETTING_ENABLE_LOCAL_LIBRARY_MANIFEST_MERGE,
+                        ProjectSettings.SETTING_GENERIC_VALUE_FALSE));
+    }
+
+    private String finalizeGeneratedManifest(String sourceCode) {
+        String manifest = AndroidManifestInjector.mHolder(sourceCode, sc_id);
+        manifest = manifest.replace("${applicationId}", packageName);
+        if (isLocalLibraryManifestMergeEnabled()) {
+            manifest = LocalLibraryManifestMerger.mergeLocalLibraryManifests(manifest, sc_id, packageName);
+        }
+        return applyStoredXmlCommandsIfNeeded("AndroidManifest.xml", manifest);
+    }
+
     /**
      * Computes a cache key for code generation based on all input data files and settings.
      * If any input changes, the key changes and cached code is invalidated.
@@ -1334,6 +1352,21 @@ public class ProjectFilePaths {
         } catch (RuntimeException e) {
             Log.w("ProjectFilePaths", "Falling back to on-disk library signature for project " + sc_id, e);
             appendFileInfo(key, new File(dataPath, "library"));
+        }
+
+        boolean localLibraryManifestMergeEnabled = isLocalLibraryManifestMergeEnabled();
+        appendTextInfo(key, localLibraryManifestMergeEnabled
+                ? ProjectSettings.SETTING_GENERIC_VALUE_TRUE
+                : ProjectSettings.SETTING_GENERIC_VALUE_FALSE);
+        appendFileInfo(key, new File(dataPath, "local_library"));
+        if (localLibraryManifestMergeEnabled) {
+            try {
+                for (String manifestPath : new ManageLocalLibrary(sc_id).getManifestPaths()) {
+                    appendFileInfo(key, new File(manifestPath));
+                }
+            } catch (RuntimeException e) {
+                Log.w("ProjectFilePaths", "Failed to append local library manifest signatures for project " + sc_id, e);
+            }
         }
 
         appendFileInfo(key, new File(dataPath, "project_config"));

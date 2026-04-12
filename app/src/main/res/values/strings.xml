@@ -2855,9 +2855,12 @@ Do you want to continue?"</string>
     <string name="local_library_manager_download">Download a library</string>
     <string name="local_library_manager_download_status">Download status</string>
     <string name="local_library_manager_enter_dependency">Enter dependency</string>
-    <string name="local_library_manager_no_libraries_body">You don\'t have any Local libraries yet, try downloading one.</string>
-    <string name="local_library_manager_no_libraries_title">No Local libraries available</string>
+    <string name="local_library_manager_manifest_merge_disabled">Local library manifest auto-merge disabled</string>
+    <string name="local_library_manager_manifest_merge_enabled">Local library manifest auto-merge enabled</string>
+    <string name="local_library_manager_no_libraries_body">You don\'t have any local libraries yet, try downloading one.</string>
+    <string name="local_library_manager_no_libraries_title">No local libraries available</string>
     <string name="local_library_manager_skip_downloading_dependencies">Skip downloading sub-dependencies</string>
+    <string name="menu_auto_merge_local_library_manifests">Auto-merge local library manifests</string>
     <string name="select_lib_hint_search">Search for libraries</string>
 
     <!-- ========== 构建系统 (Build System) ========== -->

@@ -212,7 +212,7 @@ public class AndroidManifestInjector {
                                     for (int q = k; q < manifestLines.size(); q++) {
                                         String v = manifestLines.get(q);
                                         String v2 = manifestLines.get(q - 1);
-                                        if (v.matches("^		<[a-zA-Z_-]+[^>]")) {
+                                        if (v.matches("^\t\t<[a-zA-Z_-]+[^>]")) {
                                             boolean hasShortClosing = false, spaceBeforeClosing = false;
 
                                             if (v2.contains("\"/>")) {
@@ -249,7 +249,6 @@ public class AndroidManifestInjector {
             }
         }
 
-        //assemble
         StringBuilder returnValue = new StringBuilder();
         for (String manifestLine : manifestLines) {
             returnValue.append("\n").append(manifestLine);
