@@ -1,4 +1,89 @@
-﻿# v7.0.0-beta6.3
+﻿# v7.0.0-beta7
+
+## ✨ New Features
+
+### Local Library Manifest Auto-Merge
+- **Project-level toggle** — New setting in Local Library Manager to enable automatic AndroidManifest merging from local libraries
+- **DOM-based manifest merger** — Merges `uses-permission`, `uses-feature`, `queries`, and application components (`provider`, `service`, `receiver`, `activity`, `activity-alias`, `meta-data`, `uses-library`) from local library manifests into the project manifest
+- **Conflict detection** — Automatically detects and skips conflicting `provider` authorities; qualifies relative class names with library package names; strips `tools:*` namespace attributes
+- **Placeholder support** — Handles `${applicationId}` and `${packageName}` placeholders in library manifests
+- **Per-library error isolation** — A single malformed library manifest won't break the entire merge; errors are logged and other libraries proceed normally
+
+### Build System
+- **Improved incremental build cache** — Enhanced cache key computation and diagnostics logging for faster repeat builds
+
+## 🐛 Bug Fixes
+
+### Language / i18n (3 fixes)
+- **Import handling** — Fix language override import handling so imported string overrides apply more reliably across Activities
+- **Application context recursion** — Fix recursive locale context application access and preserve language override behavior
+- **Resource wrapper caching** — Cache wrapped language override resources and application context to avoid recreating wrapper objects on repeated access
+
+### Project Data & Storage (5 fixes)
+- **Blocks/moreblocks loss on update** — Fix regression where saved blocks and moreblocks disappear after app updates; add `hasDistinctBackup` validation across data stores
+- **Backup/save flows** — Harden exception handling and project backup/save flows
+- **Resource temp backup restore** — Harden temp backup restore flow
+- **Resource filename normalization** — Normalize filenames during project copy
+- **Local library path normalization** — Normalize local library paths on project load
+
+### Storage Paths (2 fixes)
+- **External volume paths** — Preserve absolute external volume paths instead of incorrectly relativizing them
+- **Codegen cache invalidation** — Invalidate cache for beta6.3 run updates
+
+### Logic Editor — Favorite Collections (3 fixes)
+- **Collection persistence** — Fix favorite block and moreblock collections not persisting
+- **Favorite deletion cleanup** — Fix favorite block deletion UI cleanup so delete mode exits correctly
+- **Collection deselection** — Fix `ManageCollectionActivity` missing `case 4` for built-in block collections
+
+### Custom Block Manager (3 fixes)
+- **Block type preview** — Fix custom block type preview showing incorrect shapes; extract `BlockTypeUtils.normalizeStoredBlockType()` to canonicalize legacy stored values
+- **Palette search indexing** — Fix `ExtraPaletteBlock` search index being off, causing the wrong block to be highlighted
+- **Search source index** — Fix `BlocksManager` search results using filtered adapter positions as source indices
+
+### UI Designer — Editor Preview (3 fixes)
+- **Container preview invisible** — Fix `LinearLayout`, `RelativeLayout`, `HorizontalScrollView`, `VerticalScrollView`, `CardView` previews not rendering due to missing `setWillNotDraw(false)`
+- **Widget preview invisible** — Fix `ProgressBar`, `AdView`, `ListView`, `RecyclerView`, `TabLayout`, `BottomNavigationView` previews with the same drawing flag issue
+- **Special widget preview invisible** — Fix `BadgeView`, `PatternLockView`, `LottieAnimationView`, `YoutubePlayerView`, `OTPView`, `CodeView` placeholder previews
+
+### XML & Code Generation (3 fixes)
+- **XmlBuilder NPE** — Fix `NullPointerException` in `AttributeBuilder.toCode()` caused by implicit mutable state
+- **XmlBuilder attribute serialization** — Harden attribute serialization edge cases
+- **Null-safety guards** — Add null-safety guards for editor, history, and project data paths
+
+### Build & Command Blocks (1 fix)
+- **Command block handling** — Harden temp state handling and malformed block parsing
+
+### UI Fixes (5 fixes)
+- **Event category switching** — Stabilize add-event category switching
+- **Crash report clipboard** — Guard crash report clipboard copy size and fall back to truncated content
+- **Resource manager null safety** — Harden resource manager screens against null or empty `sc_id`
+- **4 confirmed bugs** — Fix color picker, palette, block view, and XML formatting issues
+- **MaterialButton/Crashlytics** — Guard MaterialButton background and add Crashlytics null-safety
+
+### Background Tasks (1 fix)
+- **UI-only task guards** — Guard UI-only tasks with `IfAlive` to prevent crashes on destroyed Activities
+
+## ♻️ Refactoring
+
+- **Background tasks** — Migrate `BaseAsyncTask` and `Thread` usage to `BackgroundTasks`/`TaskHost` for consistent async handling
+- **Storage paths** — Centralize storage path handling in `SketchwarePaths`; unify external-storage path handling
+- **Core naming** — Clarify internal naming across core helpers and project data utilities
+- **Legacy handlers** — Reduce duplication in legacy component and event handlers
+- **Project data management** — Extract `saveProjectDataToFiles`, move `ProjectListManager` init to Application
+- **Base activity** — Simplify base activity and harden file helpers
+- **Manifest pipeline** — Unify manifest post-processing into `finalizeGeneratedManifest()` for both build and preview paths
+
+## 📖 Documentation
+
+- Sync and clarify project documentation
+
+---
+
+**Full Changelog**: https://github.com/webmturn/Sketchware-Pro/compare/v7.0.0-beta-06...v7.0.0-beta-07
+
+---
+
+# v7.0.0-beta6.3
 
 ##  Bug Fixes
 
