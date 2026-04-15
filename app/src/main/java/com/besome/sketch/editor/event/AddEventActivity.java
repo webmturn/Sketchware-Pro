@@ -2,7 +2,9 @@ package com.besome.sketch.editor.event;
 
 
 import mod.hey.studios.util.Helper;
+
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Pair;
@@ -75,22 +77,10 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
     private void toggleEventsPreview() {
         if (eventsToAdd.isEmpty() && !isPreviewCollapsed) {
             isPreviewCollapsed = true;
-            AnimationUtil.rotate(binding.eventsPreview, 300, new Animator.AnimatorListener() {
+            AnimationUtil.collapseView(binding.eventsPreview, 300, new AnimatorListenerAdapter() {
                 @Override
-                public void onAnimationStart(@NonNull Animator animation) {
-                }
-
-                @Override
-                public void onAnimationEnd(@NonNull Animator animation) {
+                public void onAnimationEnd(Animator animation) {
                     binding.eventsPreview.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void onAnimationCancel(@NonNull Animator animation) {
-                }
-
-                @Override
-                public void onAnimationRepeat(@NonNull Animator animation) {
                 }
             });
         } else if (!eventsToAdd.isEmpty() && isPreviewCollapsed) {
@@ -316,6 +306,7 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
         ((SimpleItemAnimator) binding.categoryList.getItemAnimator()).setSupportsChangeAnimations(false);
         eventsToAddAdapter = new EventsToAddAdapter();
         binding.eventsPreview.setLayoutManager(new LinearLayoutManager(getApplicationContext(), RecyclerView.HORIZONTAL, false));
+        binding.eventsPreview.setItemAnimator(null);
         binding.eventsPreview.setAdapter(eventsToAddAdapter);
         isPreviewCollapsed = true;
         binding.eventsPreview.setVisibility(View.GONE);
