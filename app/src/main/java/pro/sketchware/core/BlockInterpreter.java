@@ -274,11 +274,26 @@ public class BlockInterpreter {
         ArrayList<String> params = new ArrayList<>();
         ArrayList<String> paramsTypes = extractParamsTypes(bean.spec);
         for (int i = 0; i < bean.parameters.size(); i++) {
-            String param = getParamValue(bean.parameters.get(i), paramsTypes.get(i));
+            String param = getParamValue(bean.parameters.get(i), getParamType(paramsTypes, i));
             int type = getBlockType(bean, i);
             params.add(resolveParam(param, type, bean.opCode));
         }
         return params;
+    }
+
+    String getParamType(ArrayList<String> paramsTypes, int parameterIndex) {
+        if (parameterIndex < 0 || parameterIndex >= paramsTypes.size()) {
+            return "";
+        }
+        return paramsTypes.get(parameterIndex);
+    }
+
+    ClassInfo getParamClassInfo(BlockBean blockBean, int parameterIndex) {
+        ArrayList<ClassInfo> paramClassInfos = blockBean.getParamClassInfo();
+        if (parameterIndex < 0 || parameterIndex >= paramClassInfos.size()) {
+            return null;
+        }
+        return paramClassInfos.get(parameterIndex);
     }
 
     String getParamValue(String param, String type) {
@@ -379,7 +394,11 @@ public class BlockInterpreter {
     private int getBlockType(BlockBean blockBean, int parameterIndex) {
         int blockType;
 
-        ClassInfo classInfo = blockBean.getParamClassInfo().get(parameterIndex);
+        ClassInfo classInfo = getParamClassInfo(blockBean, parameterIndex);
+
+        if (classInfo == null) {
+            return 3;
+        }
 
         if (classInfo.isExactType("boolean")) {
             blockType = 0;
