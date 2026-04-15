@@ -1274,6 +1274,10 @@ public class LayoutGenerator {
     }
 
     public Set<String> readAttributesToReplace(ViewBean viewBean) {
+        if (viewBean.inject == null || viewBean.inject.isEmpty()) {
+            return Set.of();
+        }
+
         Set<String> toReplace = new HashSet<>();
 
         try {
