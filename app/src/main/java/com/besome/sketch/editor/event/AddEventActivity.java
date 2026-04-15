@@ -451,8 +451,8 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
                             event.isSelected = true;
                             eventsToAdd.add(event);
                             int insertedEventIndex = eventsToAdd.size() - 1;
-                            toggleEventsPreview();
                             eventsToAddAdapter.notifyItemInserted(insertedEventIndex);
+                            toggleEventsPreview();
                         }
                         if (!isBindingInProgress) {
                             notifyItemChanged(lastSelectedEvent);
@@ -467,8 +467,8 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
                         event.isSelected = true;
                         eventsToAdd.add(event);
                         int insertedEventIndex = eventsToAdd.size() - 1;
-                        toggleEventsPreview();
                         eventsToAddAdapter.notifyItemInserted(insertedEventIndex);
+                        toggleEventsPreview();
                     } else if (event.isSelected && !isChecked) {
                         event.isSelected = false;
                         int removedEventIndex = eventsToAdd.indexOf(event);

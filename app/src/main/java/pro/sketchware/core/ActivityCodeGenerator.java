@@ -128,12 +128,12 @@ public class ActivityCodeGenerator {
 
     public String activityResult() {
         ArrayList<BlockBean> blocks = ProjectDataManager.getProjectDataManager(projectDataManager.projectId).getBlocks(projectFileBean.getJavaName(), "onActivityResult_onActivityResult");
-        return ComponentCodeGenerator.formatCode(new BlockInterpreter(projectFileBean.getActivityName(), buildConfig, blocks, isViewBindingEnabled).interpretBlocks(), false);
+        return ComponentCodeGenerator.formatCode(new BlockInterpreter(projectFileBean.getActivityName(), buildConfig, blocks, isViewBindingEnabled, projectFileBean.getXmlName()).interpretBlocks(), false);
     }
 
     public String initializeLogic() {
         ArrayList<BlockBean> blocks = ProjectDataManager.getProjectDataManager(projectDataManager.projectId).getBlocks(projectFileBean.getJavaName(), "initializeLogic_initializeLogic");
-        return ComponentCodeGenerator.formatCode(new BlockInterpreter(projectFileBean.getActivityName(), buildConfig, blocks, isViewBindingEnabled).interpretBlocks(), false);
+        return ComponentCodeGenerator.formatCode(new BlockInterpreter(projectFileBean.getActivityName(), buildConfig, blocks, isViewBindingEnabled, projectFileBean.getXmlName()).interpretBlocks(), false);
     }
 
     private void extraVariables() {
@@ -625,6 +625,9 @@ public class ActivityCodeGenerator {
         sb.append("}").append(EOL);
         String code = sb.toString();
 
+        code = code.replace("LinearLayoutManager(this)", "LinearLayoutManager(getApplicationContext())")
+                .replace("LinearLayoutManager(this,", "LinearLayoutManager(getApplicationContext(),");
+
         // Most Fragment-specific replacements are handled at generation time by CodeContext
         // in BlockCodeRegistry, ComponentCodeGenerator, etc. However, Extra Blocks (BlocksHandler
         // and user-defined custom blocks) bypass CodeContext and use String.format() directly,
@@ -636,9 +639,6 @@ public class ActivityCodeGenerator {
                     .replaceAll("(?<!\\.)getBaseContext\\(\\)", "getActivity().getBaseContext()")
                     .replaceAll("(?<!\\.)getAssets\\(\\)", "getContext().getAssets()")
                     .replaceAll("(?<!\\.)getSupportFragmentManager\\(\\)", "getActivity().getSupportFragmentManager()")
-                    // Extra blocks (BlocksHandler) use "this" as Activity/Context reference
-                    .replace("LinearLayoutManager(this)", "LinearLayoutManager(getContext())")
-                    .replace("LinearLayoutManager(this,", "LinearLayoutManager(getContext(),")
                     .replace("CropImage(this,", "CropImage(getActivity(),");
         }
         if (!isFragment && buildConfig.isAppCompatEnabled) {
@@ -896,7 +896,7 @@ public class ActivityCodeGenerator {
         addImport("java.util.regex.*");
         addImport("java.text.*");
         addImport("org.json.*");
-        onCreateEventCode = new BlockInterpreter(projectFileBean.getActivityName(), buildConfig, projectDataManager.getBlocks(projectFileBean.getJavaName(), "onCreate_initializeLogic"), isViewBindingEnabled).interpretBlocks();
+        onCreateEventCode = new BlockInterpreter(projectFileBean.getActivityName(), buildConfig, projectDataManager.getBlocks(projectFileBean.getJavaName(), "onCreate_initializeLogic"), isViewBindingEnabled, projectFileBean.getXmlName()).interpretBlocks();
     }
 
     private String getDrawerViewInitializer(ViewBean viewBean) {
@@ -912,7 +912,7 @@ public class ActivityCodeGenerator {
             String xmlName = ProjectFileBean.getXmlName(viewBean.customView);
             projectFileBean.getJavaName();
             String eventName = viewBean.id + "_onBindCustomView";
-            String adapterLogic = new BlockInterpreter(projectFileBean.getActivityName(), buildConfig, projectDataManager.getBlocks(projectFileBean.getJavaName(), eventName), isViewBindingEnabled).interpretBlocks();
+            String adapterLogic = new BlockInterpreter(projectFileBean.getActivityName(), buildConfig, projectDataManager.getBlocks(projectFileBean.getJavaName(), eventName), isViewBindingEnabled, projectFileBean.getXmlName()).interpretBlocks();
             String adapterCode;
             if (viewBean.type == ViewBeans.VIEW_TYPE_LAYOUT_VIEWPAGER) {
                 adapterCode = ComponentCodeGenerator.pagerAdapter(codeContext, layoutGenerator, viewBean.id, viewBean.customView, projectDataManager.getViews(xmlName), adapterLogic, isViewBindingEnabled);
@@ -944,7 +944,7 @@ public class ActivityCodeGenerator {
         for (int index = 0, pairsSize = pairs.size(); index < pairsSize; index++) {
             Pair<String, String> next = pairs.get(index);
             String name = next.first + "_moreBlock";
-            String code = ComponentCodeGenerator.getMoreBlockCode(next.first, next.second, new BlockInterpreter(projectFileBean.getActivityName(), buildConfig, projectDataManager.getBlocks(javaName, name), isViewBindingEnabled).interpretBlocks());
+            String code = ComponentCodeGenerator.getMoreBlockCode(next.first, next.second, new BlockInterpreter(projectFileBean.getActivityName(), buildConfig, projectDataManager.getBlocks(javaName, name), isViewBindingEnabled, projectFileBean.getXmlName()).interpretBlocks());
             if (index < (pairsSize - 1)) {
                 moreBlocks.add(code);
             } else {

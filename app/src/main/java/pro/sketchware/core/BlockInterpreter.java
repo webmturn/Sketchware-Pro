@@ -41,6 +41,7 @@ public class BlockInterpreter {
     private static final Pattern EXTRACT_PARAMS_PATTERN = Pattern.compile("%\\w+(?:\\.\\w+)?|%\\w");
     public final boolean isViewBindingEnabled;
     public final CodeContext codeContext;
+    public final String currentXmlName;
     private static final Set<String> viewParamsTypes = Set.of(
             "%m.view", "%m.layout", "%m.textview", "%m.button", "%m.edittext", "%m.imageview", "%m.recyclerview",
             "%m.listview", "%m.gridview", "%m.cardview", "%m.viewpager", "%m.webview", "%m.videoview", "%m.progressbar",
@@ -58,6 +59,10 @@ public class BlockInterpreter {
     private final boolean isActivity;
 
     public BlockInterpreter(String activityName, BuildConfig buildConfig, ArrayList<BlockBean> eventBlocks, boolean isViewBindingEnabled) {
+        this(activityName, buildConfig, eventBlocks, isViewBindingEnabled, null);
+    }
+
+    public BlockInterpreter(String activityName, BuildConfig buildConfig, ArrayList<BlockBean> eventBlocks, boolean isViewBindingEnabled, String currentXmlName) {
         this.activityName = activityName;
 
         isActivity = !(activityName.endsWith("DialogFragmentActivity") || activityName.endsWith("BottomDialogFragmentActivity") || activityName.endsWith("FragmentActivity"));
@@ -66,6 +71,7 @@ public class BlockInterpreter {
         this.buildConfig = buildConfig;
         this.eventBlocks = eventBlocks;
         this.isViewBindingEnabled = isViewBindingEnabled;
+        this.currentXmlName = currentXmlName;
     }
 
     /**

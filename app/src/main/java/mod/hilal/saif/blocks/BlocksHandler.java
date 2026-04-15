@@ -1521,7 +1521,7 @@ public class BlocksHandler {
         blockDef = new HashMap<>();
         blockDef.put("name", "recyclerSetLayoutManager");
         blockDef.put("type", " ");
-        blockDef.put("code", "%s.setLayoutManager(new LinearLayoutManager(this));");
+        blockDef.put("code", "%s.setLayoutManager(new LinearLayoutManager(getApplicationContext()));");
         blockDef.put("color", "#4A6CD4");
         blockDef.put("palette", "-1");
         blockDef.put("spec", "%m.recyclerview setLayoutManager");
@@ -1532,7 +1532,7 @@ public class BlocksHandler {
         blockDef.put("type", " ");
         blockDef.put(
                 "code",
-                "%s.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,"
+                "%s.setLayoutManager(new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.HORIZONTAL,"
                         + " false));");
         blockDef.put("color", "#4A6CD4");
         blockDef.put("palette", "-1");

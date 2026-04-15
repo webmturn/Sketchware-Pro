@@ -3,6 +3,7 @@ package pro.sketchware.core;
 import android.util.Pair;
 
 import com.besome.sketch.beans.BlockBean;
+import com.besome.sketch.beans.ViewBean;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +21,36 @@ import mod.hey.studios.moreblock.ReturnMoreblockManager;
 public class BlockCodeRegistry {
 
     private static final Map<String, BlockCodeHandler> handlers = new HashMap<>(256);
+
+    private static String getCustomViewAdapterTarget(String targetId) {
+        if (targetId.startsWith("binding.drawer.")) {
+            return targetId.substring("binding.drawer.".length());
+        }
+        if (targetId.startsWith("binding.")) {
+            return targetId.substring("binding.".length());
+        }
+        return targetId;
+    }
+
+    private static String getCustomViewAdapterCode(String targetId, String dataSource, BlockInterpreter ctx) {
+        if (targetId.isEmpty()) {
+            return "";
+        }
+        if (ctx.buildConfig != null && ctx.buildConfig.sc_id != null && !ctx.buildConfig.sc_id.isEmpty()
+                && ctx.currentXmlName != null && !ctx.currentXmlName.isEmpty()) {
+            ViewBean viewBean = ProjectDataManager.getProjectDataManager(ctx.buildConfig.sc_id)
+                    .getViewBean(ctx.currentXmlName, getCustomViewAdapterTarget(targetId));
+            if (viewBean != null) {
+                String customView = viewBean.customView;
+                if (customView == null || customView.isEmpty() || customView.equals("none")) {
+                    return "";
+                }
+            }
+        }
+        String adapterTarget = getCustomViewAdapterTarget(targetId);
+        return String.format("%s.setAdapter(new %s(%s));", targetId,
+                ComponentCodeGenerator.getAdapterClassName(adapterTarget, ctx.isViewBindingEnabled), dataSource);
+    }
 
     static {
         registerCoreBlocks();
@@ -392,41 +423,11 @@ public class BlockCodeRegistry {
     }
     private static void registerListWidgetBlocks() {
         register("listSetData", (bean, params, ctx) -> String.format("%s.setAdapter(new ArrayAdapter<String>(%s, android.R.layout.simple_list_item_1, %s));", params.get(0), ctx.codeContext.baseContext(), params.get(1)));
-        register("listSetCustomViewData", (bean, params, ctx) -> {
-            var param = params.get(0);
-            if (param.isEmpty()) return "";
-            var adapter = param;
-            if (ctx.isViewBindingEnabled && adapter.startsWith("binding.")) adapter = adapter.substring("binding.".length());
-            return String.format("%s.setAdapter(new %s(%s));", param, ComponentCodeGenerator.getAdapterClassName(adapter, ctx.isViewBindingEnabled), params.get(1));
-        });
-        register("recyclerSetCustomViewData", (bean, params, ctx) -> {
-            var param = params.get(0);
-            if (param.isEmpty()) return "";
-            var adapter = param;
-            if (ctx.isViewBindingEnabled && adapter.startsWith("binding.")) adapter = adapter.substring("binding.".length());
-            return String.format("%s.setAdapter(new %s(%s));", param, ComponentCodeGenerator.getAdapterClassName(adapter, ctx.isViewBindingEnabled), params.get(1));
-        });
-        register("spnSetCustomViewData", (bean, params, ctx) -> {
-            var param = params.get(0);
-            if (param.isEmpty()) return "";
-            var adapter = param;
-            if (ctx.isViewBindingEnabled && adapter.startsWith("binding.")) adapter = adapter.substring("binding.".length());
-            return String.format("%s.setAdapter(new %s(%s));", param, ComponentCodeGenerator.getAdapterClassName(adapter, ctx.isViewBindingEnabled), params.get(1));
-        });
-        register("pagerSetCustomViewData", (bean, params, ctx) -> {
-            var param = params.get(0);
-            if (param.isEmpty()) return "";
-            var adapter = param;
-            if (ctx.isViewBindingEnabled && adapter.startsWith("binding.")) adapter = adapter.substring("binding.".length());
-            return String.format("%s.setAdapter(new %s(%s));", param, ComponentCodeGenerator.getAdapterClassName(adapter, ctx.isViewBindingEnabled), params.get(1));
-        });
-        register("gridSetCustomViewData", (bean, params, ctx) -> {
-            var param = params.get(0);
-            if (param.isEmpty()) return "";
-            var adapter = param;
-            if (ctx.isViewBindingEnabled && adapter.startsWith("binding.")) adapter = adapter.substring("binding.".length());
-            return String.format("%s.setAdapter(new %s(%s));", param, ComponentCodeGenerator.getAdapterClassName(adapter, ctx.isViewBindingEnabled), params.get(1));
-        });
+        register("listSetCustomViewData", (bean, params, ctx) -> getCustomViewAdapterCode(params.get(0), params.get(1), ctx));
+        register("recyclerSetCustomViewData", (bean, params, ctx) -> getCustomViewAdapterCode(params.get(0), params.get(1), ctx));
+        register("spnSetCustomViewData", (bean, params, ctx) -> getCustomViewAdapterCode(params.get(0), params.get(1), ctx));
+        register("pagerSetCustomViewData", (bean, params, ctx) -> getCustomViewAdapterCode(params.get(0), params.get(1), ctx));
+        register("gridSetCustomViewData", (bean, params, ctx) -> getCustomViewAdapterCode(params.get(0), params.get(1), ctx));
         register("listRefresh", (bean, params, ctx) -> String.format("((BaseAdapter)%s.getAdapter()).notifyDataSetChanged();", params.get(0)));
         register("listSetItemChecked", (bean, params, ctx) -> String.format("%s.setItemChecked((int)(%s), %s);", params.get(0), params.get(1), params.get(2)));
         register("listGetCheckedPosition", (bean, params, ctx) -> String.format("%s.getCheckedItemPosition()", params.get(0)));

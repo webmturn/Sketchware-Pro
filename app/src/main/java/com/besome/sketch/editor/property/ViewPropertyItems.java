@@ -35,6 +35,7 @@ import pro.sketchware.core.UIHelper;
 import pro.sketchware.core.EventRegistry;
 import mod.hey.studios.project.ProjectSettings;
 import mod.pranav.viewbinding.ViewBindingBuilder;
+import mod.agus.jcoderz.beans.ViewBeans;
 import pro.sketchware.R;
 
 public class ViewPropertyItems extends LinearLayout implements PropertyChangedCallback, View.OnClickListener {
@@ -944,47 +945,69 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
             }
         }
 
-        if (bean.type == ViewBean.VIEW_TYPE_WIDGET_LISTVIEW) {
+        if (projectFile.fileType == ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY && supportsCustomViewAdapter(bean.type)) {
             ViewBean viewBean = ProjectDataManager.getProjectDataManager(sc_id).getViewBean(projectFile.getXmlName(), bean.preId);
             String custom = bean.customView;
             if (custom != null && viewBean != null) {
                 String customView = viewBean.customView;
                 if (customView != null && !customView.equals(custom)) {
-                    ArrayList<EventBean> eventBeans = ProjectDataManager.getProjectDataManager(sc_id).getEvents(projectFile.getJavaName());
-                    int size = eventBeans.size();
-
-                    while (true) {
-                        childCount = size - 1;
-                        if (childCount < 0) {
-                            if (bean.customView.isEmpty() || bean.customView.equals("none")) {
-                                Iterator<Entry<String, ArrayList<BlockBean>>> blocks = ProjectDataManager.getProjectDataManager(sc_id).getBlockMap(projectFile.getJavaName()).entrySet().iterator();
-
-                                while (blocks.hasNext()) {
-                                    for (BlockBean blockBean : blocks.next().getValue()) {
-                                        if ("listSetCustomViewData".equals(blockBean.opCode) && !blockBean.parameters.isEmpty() && bean.id.equals(blockBean.parameters.get(0))) {
-                                            blockBean.parameters.set(0, "");
-                                        }
-                                    }
-                                }
-                            }
-                            break;
-                        }
-
-                        EventBean eventBean = eventBeans.get(childCount);
-                        size = childCount;
-                        if (eventBean.targetId.equals(bean.id)) {
-                            if (eventBean.eventName.equals("onBindCustomView")) {
-                                eventBeans.remove(eventBean);
-                                HashMap<String, ArrayList<BlockBean>> blocks = ProjectDataManager.getProjectDataManager(sc_id).getBlockMap(projectFile.getJavaName());
-                                blocks.remove(eventBean.getEventKey());
-                            }
-                        }
+                    clearOnBindCustomViewEvent(bean.id);
+                    if (bean.customView.isEmpty() || bean.customView.equals("none")) {
+                        clearCustomViewDataBlocks(bean.id, getCustomViewDataOpcode(bean.type));
                     }
                 }
             }
         }
     }
 
+    private void clearCustomViewDataBlocks(String viewId, String opcode) {
+        if (opcode.isEmpty()) {
+            return;
+        }
+        Iterator<Entry<String, ArrayList<BlockBean>>> blocks = ProjectDataManager.getProjectDataManager(sc_id).getBlockMap(projectFile.getJavaName()).entrySet().iterator();
+
+        while (blocks.hasNext()) {
+            for (BlockBean blockBean : blocks.next().getValue()) {
+                if (opcode.equals(blockBean.opCode) && !blockBean.parameters.isEmpty() && viewId.equals(blockBean.parameters.get(0))) {
+                    blockBean.parameters.set(0, "");
+                }
+            }
+        }
+    }
+
+    private void clearOnBindCustomViewEvent(String viewId) {
+        ArrayList<EventBean> eventBeans = ProjectDataManager.getProjectDataManager(sc_id).getEvents(projectFile.getJavaName());
+        for (int i = eventBeans.size() - 1; i >= 0; i--) {
+            EventBean eventBean = eventBeans.get(i);
+            if (eventBean.targetId.equals(viewId) && eventBean.eventName.equals("onBindCustomView")) {
+                eventBeans.remove(i);
+                HashMap<String, ArrayList<BlockBean>> blocks = ProjectDataManager.getProjectDataManager(sc_id).getBlockMap(projectFile.getJavaName());
+                blocks.remove(eventBean.getEventKey());
+            }
+        }
+    }
+
+    private String getCustomViewDataOpcode(int viewType) {
+        return switch (viewType) {
+            case ViewBean.VIEW_TYPE_WIDGET_LISTVIEW -> "listSetCustomViewData";
+            case ViewBean.VIEW_TYPE_WIDGET_SPINNER -> "spnSetCustomViewData";
+            case ViewBeans.VIEW_TYPE_WIDGET_GRIDVIEW -> "gridSetCustomViewData";
+            case ViewBeans.VIEW_TYPE_LAYOUT_VIEWPAGER -> "pagerSetCustomViewData";
+            case ViewBeans.VIEW_TYPE_WIDGET_RECYCLERVIEW -> "recyclerSetCustomViewData";
+            default -> "";
+        };
+    }
+
+    private boolean supportsCustomViewAdapter(int viewType) {
+        return switch (viewType) {
+            case ViewBean.VIEW_TYPE_WIDGET_LISTVIEW,
+                 ViewBean.VIEW_TYPE_WIDGET_SPINNER,
+                 ViewBeans.VIEW_TYPE_WIDGET_GRIDVIEW,
+                 ViewBeans.VIEW_TYPE_LAYOUT_VIEWPAGER,
+                 ViewBeans.VIEW_TYPE_WIDGET_RECYCLERVIEW -> true;
+            default -> false;
+        };
+    }
 
     public void setProjectSettings(ProjectSettings settings) {
         this.settings = settings;

@@ -138,7 +138,7 @@ public class EventCodeGenerator {
         for (EventBean eventBean : events) {
             ArrayList<BlockBean> eventLogicBlocks = logicBlocks.get(eventBean.targetId + "_" + eventBean.eventName);
             String eventLogic = (eventLogicBlocks == null || eventLogicBlocks.isEmpty()) ? "" :
-                    new BlockInterpreter(projectFileBean.getActivityName(), buildConfig, eventLogicBlocks, isViewBindingEnabled).interpretBlocks();
+                    new BlockInterpreter(projectFileBean.getActivityName(), buildConfig, eventLogicBlocks, isViewBindingEnabled, projectFileBean.getXmlName()).interpretBlocks();
 
             switch (eventBean.eventType) {
                 case EventBean.EVENT_TYPE_VIEW:
