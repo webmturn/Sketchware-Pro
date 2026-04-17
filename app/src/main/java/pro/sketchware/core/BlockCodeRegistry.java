@@ -109,7 +109,6 @@ public class BlockCodeRegistry {
                 ctx.moreBlock = "_" + (space < 0 ? bean.spec : bean.spec.substring(0, space)) + "()" + ReturnMoreblockManager.getMbEnd(bean.type);
             } else {
                 ArrayList<String> paramsTypes = ctx.extractParamsTypes(bean.spec);
-                ArrayList<ClassInfo> paramClassInfos = bean.getParamClassInfo();
                 StringBuilder sb = new StringBuilder("_").append(bean.spec, 0, space).append("(");
                 boolean hasStringParam = false;
                 for (int i = 0; i < params.size(); i++) {
@@ -117,7 +116,7 @@ public class BlockCodeRegistry {
                     String paramType = ctx.getParamType(paramsTypes, i);
                     String param = ctx.getParamValue(params.get(i), paramType);
                     if (param.isEmpty()) {
-                        ClassInfo info = i >= 0 && i < paramClassInfos.size() ? paramClassInfos.get(i) : null;
+                        ClassInfo info = ctx.getParamClassInfo(bean, i);
                         if ((info != null && info.isExactType("boolean")) || "%b".equals(paramType)) {
                             sb.append("true");
                         } else if ((info != null && info.isExactType("double")) || "%d".equals(paramType)) {
