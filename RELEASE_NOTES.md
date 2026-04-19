@@ -1,4 +1,38 @@
-﻿# v7.0.0-beta7
+﻿# v7.0.0-beta8
+
+## 🐛 Bug Fixes
+
+### Local Library Manifest Merger (1 fix)
+- **Attribute-level merge** — Fix `LocalLibraryManifestMerger` only merging children of `<application>`, silently dropping attributes declared on the library's `<application>` tag and on components (e.g. activities) that already exist in the generated manifest. Attributes like `android:launchMode="singleTop"`, `android:exported`, `android:supportsRtl`, `android:networkSecurityConfig` are now merged with existing-wins semantics; user / XML-command values always win, conflicts are logged. Relates to #6 (RuStore Pay SDK)
+
+### Logic Editor (1 fix)
+- **Source code viewer xmlName** — Fix `LogicEditorActivity.showSourceCode` not passing `xmlName` to `BlockInterpreter`, causing incorrect layout binding in previewed source
+
+### Code Generation (1 fix)
+- **Decompiled block parameter handling** — Harden decompiled block parameter parsing against malformed or unexpected shapes
+
+### Add-Event UI (1 fix)
+- **Collapse animation** — Fix broken collapse animation and disable item animator to prevent flicker during category switching
+
+### General (1 fix)
+- **Multiple bugfixes** — Code generation, event management, and library handling fixes collected into a single change
+
+## ⚡ Performance
+
+- **Background tasks IO pool** — Restore fixed IO pool with adaptive thread count for more predictable concurrency
+- **Add-event startup** — Optimize safe-startup hot paths in the add-event screen
+
+## ♻️ Refactoring
+
+- **Codegen `definedFunc` handler** — Reuse `getParamClassInfo` helper to reduce duplication
+
+---
+
+**Full Changelog**: https://github.com/webmturn/Sketchware-Pro/compare/v7.0.0-beta-07...v7.0.0-beta-08
+
+---
+
+# v7.0.0-beta7
 
 ## ✨ New Features
 
