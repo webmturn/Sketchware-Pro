@@ -89,6 +89,8 @@ public class LocalLibraryManifestMerger {
 
             Element libraryApplicationElement = findDirectChild(libraryManifestElement, "application");
             if (libraryApplicationElement != null) {
+                changed |= mergeApplicationAttributes(generatedManifest, applicationElement,
+                        libraryApplicationElement, packageName);
                 changed |= mergeApplicationChildren(generatedManifest, applicationElement,
                         libraryApplicationElement, packageName, libraryPackageName);
             }
@@ -189,6 +191,7 @@ public class LocalLibraryManifestMerger {
                 applicationElement.appendChild(importedElement);
                 changed = true;
             } else {
+                changed |= mergeAttributes(existingElement, importedElement);
                 changed |= mergeNestedChildren(existingElement, importedElement);
             }
         }
@@ -203,10 +206,87 @@ public class LocalLibraryManifestMerger {
                 targetElement.appendChild(targetElement.getOwnerDocument().importNode(sourceChild, true));
                 changed = true;
             } else {
+                changed |= mergeAttributes(existingChild, sourceChild);
                 changed |= mergeNestedChildren(existingChild, sourceChild);
             }
         }
         return changed;
+    }
+
+    /**
+     * Merges attributes from {@code sourceElement} onto {@code targetElement} using
+     * existing-wins semantics: attributes already present on the target are preserved
+     * (a warning is logged on value conflict), and only attributes missing from the
+     * target are copied over. {@code tools:*} attributes and namespace declarations
+     * are ignored.
+     *
+     * @return whether {@code targetElement} was modified
+     */
+    private static boolean mergeAttributes(Element targetElement, Element sourceElement) {
+        boolean changed = false;
+        NamedNodeMap sourceAttributes = sourceElement.getAttributes();
+        if (sourceAttributes == null) {
+            return false;
+        }
+        for (int i = 0; i < sourceAttributes.getLength(); i++) {
+            Node sourceAttr = sourceAttributes.item(i);
+            String namespaceUri = sourceAttr.getNamespaceURI();
+            String localName = sourceAttr.getLocalName();
+            String nodeName = sourceAttr.getNodeName();
+            String value = sourceAttr.getNodeValue();
+
+            if ("tools".equals(sourceAttr.getPrefix())
+                    || TOOLS_NAMESPACE.equals(namespaceUri)
+                    || (nodeName != null && nodeName.startsWith("tools:"))
+                    || "xmlns".equals(nodeName)
+                    || (nodeName != null && nodeName.startsWith("xmlns:"))) {
+                continue;
+            }
+
+            boolean hasOnTarget;
+            String existingValue;
+            if (namespaceUri != null && localName != null) {
+                hasOnTarget = targetElement.hasAttributeNS(namespaceUri, localName);
+                existingValue = targetElement.getAttributeNS(namespaceUri, localName);
+            } else {
+                hasOnTarget = targetElement.hasAttribute(nodeName);
+                existingValue = targetElement.getAttribute(nodeName);
+            }
+
+            if (hasOnTarget) {
+                if (existingValue != null && !existingValue.equals(value)) {
+                    Log.w(TAG, "Keeping existing attribute '" + nodeName + "=\"" + existingValue
+                            + "\"' on <" + targetElement.getTagName() + ">; ignoring local library value \""
+                            + value + "\"");
+                }
+                continue;
+            }
+
+            if (namespaceUri != null && localName != null) {
+                String prefix = sourceAttr.getPrefix();
+                String qualifiedName = (prefix == null || prefix.isEmpty()) ? localName : prefix + ":" + localName;
+                targetElement.setAttributeNS(namespaceUri, qualifiedName, value);
+            } else {
+                targetElement.setAttribute(nodeName, value);
+            }
+            changed = true;
+        }
+        return changed;
+    }
+
+    /**
+     * Merges attributes declared on the local library's {@code <application>} element
+     * (e.g. {@code android:name}, {@code android:theme}, {@code android:supportsRtl})
+     * onto the generated {@code <application>} element. Placeholders such as
+     * {@code ${applicationId}} are resolved against the project package name; any
+     * {@code tools:*} attributes or namespace declarations are ignored.
+     */
+    private static boolean mergeApplicationAttributes(Document generatedManifest, Element applicationElement,
+                                                      Element libraryApplicationElement, String packageName) {
+        Element shallowCopy = (Element) generatedManifest.importNode(libraryApplicationElement, false);
+        replacePlaceholders(shallowCopy, packageName);
+        stripToolsAttributes(shallowCopy);
+        return mergeAttributes(applicationElement, shallowCopy);
     }
 
     private static boolean containsEquivalentChild(Element parentElement, Element candidateElement) throws Exception {
