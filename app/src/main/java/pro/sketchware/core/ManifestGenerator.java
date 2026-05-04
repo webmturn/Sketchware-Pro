@@ -576,7 +576,7 @@ public class ManifestGenerator {
                     activityTag.addAttribute("android", "hardwareAccelerated", "true");
                     activityTag.addAttribute("android", "supportsPictureInPicture", "true");
                 }
-                if (!AndroidManifestInjector.isActivityThemeUsed(activityTag, buildConfig.sc_id, projectFileBean.getJavaName())) {
+                if (!AndroidManifestInjector.isActivityThemeUsed(buildConfig.sc_id, projectFileBean.getJavaName())) {
                     if (buildConfig.isAppCompatEnabled) {
                         if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FULLSCREEN)) {
                             activityTag.addAttribute("android", "theme", "@style/AppTheme.FullScreen");
@@ -591,7 +591,7 @@ public class ManifestGenerator {
                         activityTag.addAttribute("android", "theme", "@style/NoActionBar");
                     }
                 }
-                if (!AndroidManifestInjector.isActivityOrientationUsed(activityTag, buildConfig.sc_id, projectFileBean.getJavaName())) {
+                if (!AndroidManifestInjector.isActivityOrientationUsed(buildConfig.sc_id, projectFileBean.getJavaName())) {
                     int orientation = projectFileBean.orientation;
                     if (orientation == ProjectFileBean.ORIENTATION_PORTRAIT) {
                         activityTag.addAttribute("android", "screenOrientation", "portrait");
@@ -599,7 +599,7 @@ public class ManifestGenerator {
                         activityTag.addAttribute("android", "screenOrientation", "landscape");
                     }
                 }
-                if (!AndroidManifestInjector.isActivityKeyboardUsed(activityTag, buildConfig.sc_id, projectFileBean.getJavaName())) {
+                if (!AndroidManifestInjector.isActivityKeyboardUsed(buildConfig.sc_id, projectFileBean.getJavaName())) {
                     String keyboardSetting = ActivityConfigConstants.getKeyboardSettingName(projectFileBean.keyboardSetting);
                     if (!keyboardSetting.isEmpty()) {
                         activityTag.addAttribute("android", "windowSoftInputMode", keyboardSetting);

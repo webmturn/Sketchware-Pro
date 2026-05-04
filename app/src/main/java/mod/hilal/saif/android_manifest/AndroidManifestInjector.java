@@ -119,15 +119,15 @@ public class AndroidManifestInjector {
         return false;
     }
 
-    public static boolean isActivityThemeUsed(XmlBuilder nx, String projectId, String actName) {
+    public static boolean isActivityThemeUsed(String projectId, String actName) {
         return isActivityAttributeUsed("android:theme", projectId, actName);
     }
 
-    public static boolean isActivityOrientationUsed(XmlBuilder nx, String projectId, String actName) {
+    public static boolean isActivityOrientationUsed(String projectId, String actName) {
         return isActivityAttributeUsed("android:screenOrientation", projectId, actName);
     }
 
-    public static boolean isActivityKeyboardUsed(XmlBuilder nx, String projectId, String actName) {
+    public static boolean isActivityKeyboardUsed(String projectId, String actName) {
         return isActivityAttributeUsed("android:windowSoftInputMode", projectId, actName);
     }
 
