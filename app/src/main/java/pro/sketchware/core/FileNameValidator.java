@@ -129,11 +129,13 @@ public class FileNameValidator extends BaseValidator {
     } 
   }
   
-  public CharSequence filter(CharSequence text, int x, int y, Spanned spanned, int width, int height) {
+  @Override
+  public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
     return null;
   }
   
-  public void onTextChanged(CharSequence text, int x, int y, int width) {
-    validate(text.toString().trim());
+  @Override
+  public void onTextChanged(CharSequence s, int start, int before, int count) {
+    validate(s.toString().trim());
   }
 }

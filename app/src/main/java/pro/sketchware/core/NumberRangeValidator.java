@@ -14,18 +14,20 @@ public class NumberRangeValidator extends BaseValidator {
   
   public int maxValue;
   
-  public NumberRangeValidator(Context context, TextInputLayout textInputLayout, int x, int y) {
+  public NumberRangeValidator(Context context, TextInputLayout textInputLayout, int minValue, int maxValue) {
     super(context, textInputLayout);
-    minValue = x;
-    maxValue = y;
+    this.minValue = minValue;
+    this.maxValue = maxValue;
   }
   
-  public CharSequence filter(CharSequence text, int x, int y, Spanned spanned, int width, int height) {
+  @Override
+  public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
     return null;
   }
   
-  public void onTextChanged(CharSequence text, int x, int y, int width) {
-    String input = text.toString().trim();
+  @Override
+  public void onTextChanged(CharSequence s, int start, int before, int count) {
+    String input = s.toString().trim();
     if (input.isEmpty()) {
       valid = false;
       return;
