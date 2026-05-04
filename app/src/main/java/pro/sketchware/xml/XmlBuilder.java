@@ -106,8 +106,8 @@ public class XmlBuilder {
     private void setIndentationLevel(int indentSize) {
         indentationLevel = indentSize;
         if (childNodes != null) {
-            for (XmlBuilder nx : childNodes) {
-                nx.setIndentationLevel(indentSize + 1);
+            for (XmlBuilder child : childNodes) {
+                child.setIndentationLevel(indentSize + 1);
             }
         }
     }

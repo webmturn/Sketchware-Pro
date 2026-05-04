@@ -212,39 +212,39 @@ public class EventsHandler {
      * Used in {@link mod.agus.jcoderz.editor.event.ManageEvent#addExtraEvents(ClassInfo, ArrayList)} to retrieve extra
      * Events for Components, such as custom ones.
      */
-    public static void addEvents(ClassInfo gx, ArrayList<String> list) {
-        if (gx.matchesType("Clickable")) {
+    public static void addEvents(ClassInfo classInfo, ArrayList<String> list) {
+        if (classInfo.matchesType("Clickable")) {
             list.add(" onLongClick");
         }
-        if (gx.matchesType("SwipeRefreshLayout")) {
+        if (classInfo.matchesType("SwipeRefreshLayout")) {
             list.add("onSwipeRefreshLayout");
         }
-        if (gx.matchesType("AsyncTask")) {
+        if (classInfo.matchesType("AsyncTask")) {
             list.add("onPreExecute");
             list.add("doInBackground");
             list.add("onProgressUpdate");
             list.add("onPostExecute");
         }
 
-        addCustomEventsForType(gx, list);
+        addCustomEventsForType(classInfo, list);
     }
 
     /**
      * Used in {@link mod.agus.jcoderz.editor.event.ManageEvent#addExtraListeners(ClassInfo, ArrayList)} to get extra
      * listeners for Components and Widgets, such as custom ones.
      */
-    public static void addListeners(ClassInfo gx, ArrayList<String> list) {
-        if (gx.matchesType("Clickable")) {
+    public static void addListeners(ClassInfo classInfo, ArrayList<String> list) {
+        if (classInfo.matchesType("Clickable")) {
             list.add(" onLongClickListener");
         }
-        if (gx.matchesType("SwipeRefreshLayout")) {
+        if (classInfo.matchesType("SwipeRefreshLayout")) {
             list.add("onSwipeRefreshLayoutListener");
         }
-        if (gx.matchesType("AsyncTask")) {
+        if (classInfo.matchesType("AsyncTask")) {
             list.add("AsyncTaskClass");
         }
 
-        addCustomListenersForType(gx, list);
+        addCustomListenersForType(classInfo, list);
     }
 
     /**

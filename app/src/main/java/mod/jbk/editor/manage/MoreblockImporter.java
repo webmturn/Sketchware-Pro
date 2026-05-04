@@ -112,27 +112,27 @@ public class MoreblockImporter {
             ArrayList<ClassInfo> paramClassInfo = next.getParamClassInfo();
             if (!paramClassInfo.isEmpty()) {
                 for (int i = 0; i < paramClassInfo.size(); i++) {
-                    ClassInfo gx = paramClassInfo.get(i);
+                    ClassInfo classInfo = paramClassInfo.get(i);
                     String paramValue = next.parameters.get(i);
                     if (!paramValue.isEmpty() && paramValue.charAt(0) != '@') {
-                        if (gx.isExactType("boolean.SelectBoolean")) {
+                        if (classInfo.isExactType("boolean.SelectBoolean")) {
                             maybeAddVariable(0, paramValue);
-                        } else if (gx.isExactType("double.SelectDouble")) {
+                        } else if (classInfo.isExactType("double.SelectDouble")) {
                             maybeAddVariable(1, paramValue);
-                        } else if (gx.isExactType("String.SelectString")) {
+                        } else if (classInfo.isExactType("String.SelectString")) {
                             maybeAddVariable(2, paramValue);
-                        } else if (gx.isExactType("Map")) {
+                        } else if (classInfo.isExactType("Map")) {
                             maybeAddVariable(3, paramValue);
-                        } else if (gx.isExactType("ListInt")) {
+                        } else if (classInfo.isExactType("ListInt")) {
                             maybeAddList(1, paramValue);
-                        } else if (gx.isExactType("ListString")) {
+                        } else if (classInfo.isExactType("ListString")) {
                             maybeAddList(2, paramValue);
-                        } else if (gx.isExactType("ListMap")) {
+                        } else if (classInfo.isExactType("ListMap")) {
                             maybeAddList(3, paramValue);
-                        } else if (!gx.isExactType("resource_bg") && !gx.isExactType("resource")) {
-                            if (gx.isExactType("sound")) {
+                        } else if (!classInfo.isExactType("resource_bg") && !classInfo.isExactType("resource")) {
+                            if (classInfo.isExactType("sound")) {
                                 maybeAddSound(paramValue);
-                            } else if (gx.isExactType("font")) {
+                            } else if (classInfo.isExactType("font")) {
                                 maybeAddFont(paramValue);
                             }
                         } else {

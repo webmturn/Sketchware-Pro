@@ -21,7 +21,7 @@ public class ManifestInjection {
         arr = injections;
     }
 
-    public void injectManifestAttributes(XmlBuilder nx, String fileName, String activityName) {
+    public void injectManifestAttributes(XmlBuilder xmlBuilder, String fileName, String activityName) {
         path = SketchwarePaths.getDataPath(buildConfig.sc_id) + File.separator + "injection"
                 + File.separator + "manifest" + File.separator + fileName;
         if (FileUtil.isExistFile(path)) {

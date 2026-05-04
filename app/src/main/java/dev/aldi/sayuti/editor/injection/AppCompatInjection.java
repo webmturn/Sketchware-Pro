@@ -67,7 +67,7 @@ public class AppCompatInjection {
         }
     }
 
-    public void inject(XmlBuilder nx, String injectionType) {
+    public void inject(XmlBuilder xmlBuilder, String injectionType) {
         if (projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_TOOLBAR) ||
                 projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER) ||
                 projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB)) {
@@ -89,7 +89,7 @@ public class AppCompatInjection {
             for (Map<String, Object> injection : injections) {
                 Object value;
                 if (injectionType != null && injectionType.equalsIgnoreCase(String.valueOf(injection.get("type"))) && (value = injection.get("value")) instanceof String) {
-                    nx.addAttributeValue((String) value);
+                    xmlBuilder.addAttributeValue((String) value);
                 }
             }
         }
