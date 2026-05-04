@@ -10,10 +10,10 @@ import java.util.Random;
 public class FormatUtil {
   public static int hexCharToInt(char ch) {
     if (ch >= '0' && ch <= '9')
-      return ch - 48; 
-    byte baseChar = 65;
+      return ch - '0';
+    char baseChar = 'A';
     if (ch < 'A' || ch > 'F') {
-      baseChar = 97;
+      baseChar = 'a';
       if (ch < 'a' || ch > 'f') {
         throw new IllegalArgumentException("invalid hex digit '" + ch + "'");
       } 
@@ -22,15 +22,7 @@ public class FormatUtil {
   }
   
   public static String generateRandomId() {
-    Random random = new Random();
-    int randomId = random.nextInt(100000);
-    while (true) {
-      if (randomId < 10000 || randomId > 99999) {
-        randomId = random.nextInt(100000);
-        continue;
-      } 
-      return String.valueOf(randomId);
-    } 
+    return String.valueOf(10000 + new Random().nextInt(90000));
   }
   
   public static String formatFileSize(int byteCount) {
@@ -55,10 +47,10 @@ public class FormatUtil {
   
   public static String bytesToHex(byte[] data) {
     StringBuilder hexBuffer = new StringBuilder(data.length * 2);
-    for (int b = 0; b < data.length; b++) {
-      if ((data[b] & 0xFF) < 16)
+    for (int i = 0; i < data.length; i++) {
+      if ((data[i] & 0xFF) < 16)
         hexBuffer.append("0"); 
-      hexBuffer.append(Long.toString((data[b] & 0xFF), 16));
+      hexBuffer.append(Long.toString((data[i] & 0xFF), 16));
     } 
     return hexBuffer.toString();
   }
@@ -149,11 +141,11 @@ public class FormatUtil {
   
   public static String unescapeString(String value) {
     String result = "";
-    for (int b = 0; b < value.length(); b++) {
-      char c = value.charAt(b);
+    for (int i = 0; i < value.length(); i++) {
+      char c = value.charAt(i);
       if (c == '\\') {
-        if (++b < value.length()) {
-          result = result + value.charAt(b);
+        if (++i < value.length()) {
+          result = result + value.charAt(i);
         }
       } else {
         result = result + c;

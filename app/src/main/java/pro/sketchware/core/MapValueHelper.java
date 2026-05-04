@@ -5,7 +5,9 @@ import java.util.Map;
 public class MapValueHelper {
   public static int get(Map<String, Object> valueMap, String mapKey, int defaultValue) {
     Object storedValue = get(valueMap, mapKey, Integer.valueOf(defaultValue));
-    return (storedValue instanceof Integer) ? ((Integer)get(valueMap, mapKey, Integer.valueOf(defaultValue))).intValue() : ((storedValue instanceof Double) ? ((Double)get(valueMap, mapKey, Integer.valueOf(defaultValue))).intValue() : defaultValue);
+    if (storedValue instanceof Integer) return ((Integer) storedValue).intValue();
+    if (storedValue instanceof Double) return ((Double) storedValue).intValue();
+    return defaultValue;
   }
   
   public static Object get(Map<String, Object> valueMap, String mapKey, Object fallbackValue) {
