@@ -1285,7 +1285,7 @@ public class ProjectFilePaths {
     }
 
     private String finalizeGeneratedManifest(String sourceCode) {
-        String manifest = AndroidManifestInjector.mHolder(sourceCode, sc_id);
+        String manifest = AndroidManifestInjector.injectCustomComponents(sourceCode, sc_id);
         manifest = manifest.replace("${applicationId}", packageName);
         if (isLocalLibraryManifestMergeEnabled() && !isAndroidStudioExport) {
             manifest = LocalLibraryManifestMerger.mergeLocalLibraryManifests(manifest, sc_id, packageName);

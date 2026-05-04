@@ -503,7 +503,7 @@ public class ManifestGenerator {
             writePermission(manifestXml, Manifest.permission.WAKE_LOCK);
             // c2dm permission removed — not needed by Firebase Messaging 24.1.0+
         }
-        AndroidManifestInjector.getP(manifestXml, buildConfig.sc_id);
+        AndroidManifestInjector.injectManifestPermissions(manifestXml, buildConfig.sc_id);
 
         if (buildConfig.isAdMobEnabled || buildConfig.isTextToSpeechUsed || buildConfig.isSpeechToTextUsed) {
             XmlBuilder queries = new XmlBuilder("queries");
@@ -561,7 +561,7 @@ public class ManifestGenerator {
             applicationTag.addAttribute("android", "usesCleartextTraffic", "true");
         }
         applicationTag.addAttribute("android", "forceDarkAllowed", "false");
-        AndroidManifestInjector.getAppAttrs(applicationTag, buildConfig.sc_id);
+        AndroidManifestInjector.injectApplicationAttributes(applicationTag, buildConfig.sc_id);
 
         boolean hasDebugActivity = false;
         for (ProjectFileBean projectFileBean : projectFiles) {
@@ -571,7 +571,7 @@ public class ManifestGenerator {
                 String javaName = projectFileBean.getJavaName();
                 activityTag.addAttribute("android", "name", "." + javaName.substring(0, javaName.indexOf(".java")));
 
-                if (!AndroidManifestInjector.getActivityAttrs(activityTag, buildConfig.sc_id, projectFileBean.getJavaName())) {
+                if (!AndroidManifestInjector.injectActivityAttributes(activityTag, buildConfig.sc_id, projectFileBean.getJavaName())) {
                     activityTag.addAttribute("android", "configChanges", "orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout");
                     activityTag.addAttribute("android", "hardwareAccelerated", "true");
                     activityTag.addAttribute("android", "supportsPictureInPicture", "true");

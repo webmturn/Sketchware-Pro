@@ -68,8 +68,8 @@ public class AndroidManifestInjector {
         return attributes;
     }
 
-    public static void getP(XmlBuilder nx, String id) {
-        ArrayList<HashMap<String, Object>> attributes = readAndroidManifestAttributeInjections(id);
+    public static void injectManifestPermissions(XmlBuilder manifestRoot, String sc_id) {
+        ArrayList<HashMap<String, Object>> attributes = readAndroidManifestAttributeInjections(sc_id);
 
         for (int i = 0; i < attributes.size(); i++) {
             HashMap<String, Object> attribute = attributes.get(i);
@@ -82,7 +82,7 @@ public class AndroidManifestInjector {
                     if ("_application_permissions".equals(name)) {
                         XmlBuilder usesPermissionTag = new XmlBuilder("uses-permission");
                         usesPermissionTag.addAttributeValue((String) value);
-                        nx.addChildNode(usesPermissionTag);
+                        manifestRoot.addChildNode(usesPermissionTag);
                     }
                 } else {
                     SketchwareUtil.toastError(String.format(Helper.getResString(R.string.manifest_error_invalid_value), i + 1));
@@ -93,12 +93,12 @@ public class AndroidManifestInjector {
         }
     }
 
-    public static void getAppAttrs(XmlBuilder nx, String projectId) {
-        addToApp(nx, projectId);
+    public static void injectApplicationAttributes(XmlBuilder applicationTag, String sc_id) {
+        applyApplicationAttributeInjections(applicationTag, sc_id);
     }
 
-    public static boolean getActivityAttrs(XmlBuilder nx, String projectId, String actName) {
-        ArrayList<HashMap<String, Object>> attributes = readAndroidManifestAttributeInjections(projectId);
+    public static boolean injectActivityAttributes(XmlBuilder activityTag, String sc_id, String actName) {
+        ArrayList<HashMap<String, Object>> attributes = readAndroidManifestAttributeInjections(sc_id);
         int javaIdx = actName.indexOf(".java");
         String className = javaIdx >= 0 ? actName.substring(0, javaIdx) : actName;
 
@@ -108,7 +108,7 @@ public class AndroidManifestInjector {
 
             if (name instanceof String) {
                 if (className.equals(name)) {
-                    addToAct(nx, projectId, actName);
+                    applyActivityAttributeInjections(activityTag, sc_id, actName);
                     return true;
                 }
             } else {
@@ -178,13 +178,13 @@ public class AndroidManifestInjector {
         return "main";
     }
 
-    public static void setLauncherActivity(String projectId, String a) {
+    public static void setLauncherActivity(String projectId, String launcherActivityName) {
         FileUtil.writeFile(getPathAndroidManifestLauncherActivity(projectId).getAbsolutePath(),
-                a);
+                launcherActivityName);
     }
 
-    public static String mHolder(String m, String projectId) {
-        ArrayList<String> manifestLines = new ArrayList<>(Arrays.asList(m.split("\n")));
+    public static String injectCustomComponents(String manifestXml, String projectId) {
+        ArrayList<String> manifestLines = new ArrayList<>(Arrays.asList(manifestXml.split("\n")));
 
         String path = getPathAndroidManifestActivitiesComponents(projectId).getAbsolutePath();
         if (FileUtil.isExistFile(path)) {
@@ -192,9 +192,9 @@ public class AndroidManifestInjector {
             try {
                 data = getGson().fromJson(FileUtil.readFile(path), Helper.TYPE_MAP_LIST);
             } catch (JsonParseException e) {
-                return m;
+                return manifestXml;
             }
-            if (data == null) return m;
+            if (data == null) return manifestXml;
             for (int i = 0; i < data.size(); i++) {
                 HashMap<String, Object> activityComponents = data.get(i);
 
@@ -256,8 +256,8 @@ public class AndroidManifestInjector {
         return returnValue.toString();
     }
 
-    public static void addToApp(XmlBuilder nx, String projectId) {
-        ArrayList<HashMap<String, Object>> attributes = readAndroidManifestAttributeInjections(projectId);
+    private static void applyApplicationAttributeInjections(XmlBuilder applicationTag, String sc_id) {
+        ArrayList<HashMap<String, Object>> attributes = readAndroidManifestAttributeInjections(sc_id);
 
         boolean themeInjected = false;
         for (int i = 0; i < attributes.size(); i++) {
@@ -269,7 +269,7 @@ public class AndroidManifestInjector {
                     Object value = attribute.get("value");
 
                     if (value instanceof String) {
-                        nx.addAttributeValue((String) value);
+                        applicationTag.addAttributeValue((String) value);
 
                         if (!themeInjected && ((String) value).contains("android:theme")) {
                             themeInjected = true;
@@ -284,12 +284,12 @@ public class AndroidManifestInjector {
         }
 
         if (!themeInjected) {
-            nx.addAttributeValue("android:theme=\"@style/AppTheme\"");
+            applicationTag.addAttributeValue("android:theme=\"@style/AppTheme\"");
         }
     }
 
-    public static void addToAct(XmlBuilder nx, String projectId, String actName) {
-        ArrayList<HashMap<String, Object>> attributes = readAndroidManifestAttributeInjections(projectId);
+    private static void applyActivityAttributeInjections(XmlBuilder activityTag, String sc_id, String actName) {
+        ArrayList<HashMap<String, Object>> attributes = readAndroidManifestAttributeInjections(sc_id);
         int javaIdx = actName.indexOf(".java");
         String className = javaIdx >= 0 ? actName.substring(0, javaIdx) : actName;
 
@@ -302,7 +302,7 @@ public class AndroidManifestInjector {
                     Object value = attribute.get("value");
 
                     if (value instanceof String) {
-                        nx.addAttributeValue((String) value);
+                        activityTag.addAttributeValue((String) value);
                     } else {
                         SketchwareUtil.toastError(String.format(Helper.getResString(R.string.manifest_error_invalid_value), i + 1));
                     }
