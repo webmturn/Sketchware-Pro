@@ -23,8 +23,8 @@ public class VariableModifierValidator extends BaseValidator {
     }
 
     @Override
-    public void onTextChanged(CharSequence cs, int n, int n2, int n3) {
-        String input = cs.toString();
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        String input = s.toString();
         String trimmedInput = input.trim();
         String[] words = trimmedInput.split("\\s+");
         String reconsInput = String.join(" ", words);

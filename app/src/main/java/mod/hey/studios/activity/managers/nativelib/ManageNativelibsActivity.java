@@ -181,11 +181,11 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
 
         inputText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
                 textInputLayout.setError(null);
             }
 

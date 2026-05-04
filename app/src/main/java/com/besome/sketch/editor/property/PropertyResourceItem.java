@@ -184,8 +184,8 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
         binding.recyclerView.setAdapter(adapter);
 
         binding.searchInput.addTextChangedListener(new android.text.TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int st, int c, int a) {}
-            @Override public void onTextChanged(CharSequence s, int st, int b, int c) {}
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override public void afterTextChanged(Editable s) {
                 adapter.filter(s.toString().toLowerCase());
             }

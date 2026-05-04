@@ -33,12 +33,14 @@ public class ResourceNameValidator extends BaseValidator {
     this.currentName = currentName;
   }
   
+  @Override
   public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
     return null;
   }
   
-  public void onTextChanged(CharSequence text, int start, int before, int count) {
-    String candidateName = text.toString().trim();
+  @Override
+  public void onTextChanged(CharSequence s, int start, int before, int count) {
+    String candidateName = s.toString().trim();
     if (candidateName.length() < 3) {
       textInputLayout.setErrorEnabled(true);
       textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(context, R.string.invalid_value_min_lenth, new Object[] { Integer.valueOf(3) }));
