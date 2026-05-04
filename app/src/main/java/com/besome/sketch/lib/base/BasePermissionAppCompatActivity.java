@@ -15,19 +15,19 @@ import pro.sketchware.R;
 
 public abstract class BasePermissionAppCompatActivity extends BaseAppCompatActivity {
 
-    public boolean checkStoragePermission(int i) {
+    public boolean checkStoragePermission(int requestCode) {
         boolean isGranted = isStoragePermissionGranted();
         if (!isGranted) {
-            showPermissionRequestDialog(i);
+            showPermissionRequestDialog(requestCode);
         }
         return isGranted;
     }
 
-    public abstract void onStoragePermissionGranted(int i);
+    public abstract void onStoragePermissionGranted(int requestCode);
 
-    public abstract void onOpenSettings(int i);
+    public abstract void onOpenSettings(int requestCode);
 
-    public void showPermissionRequestDialog(int i) {
+    public void showPermissionRequestDialog(int requestCode) {
         if (!ThrottleTimer.isThrottled) {
             MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
             dialog.setTitle(Helper.getResString(R.string.common_message_permission_title_storage));
@@ -40,7 +40,7 @@ public abstract class BasePermissionAppCompatActivity extends BaseAppCompatActiv
                                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
                                     Manifest.permission.READ_EXTERNAL_STORAGE
                             },
-                            i);
+                            requestCode);
                     v.dismiss();
                 }
             });
@@ -82,7 +82,7 @@ public abstract class BasePermissionAppCompatActivity extends BaseAppCompatActiv
         }
     }
 
-    public void showPermissionDeniedDialog(int i) {
+    public void showPermissionDeniedDialog(int requestCode) {
         if (!ThrottleTimer.isThrottled) {
             MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
             dialog.setTitle(Helper.getResString(R.string.common_message_permission_title_storage));
@@ -90,7 +90,7 @@ public abstract class BasePermissionAppCompatActivity extends BaseAppCompatActiv
             dialog.setMessage(Helper.getResString(R.string.common_message_permission_storage1));
             dialog.setPositiveButton(Helper.getResString(R.string.common_word_settings), (v, which) -> {
                 if (!UIHelper.isClickThrottled()) {
-                    onOpenSettings(i);
+                    onOpenSettings(requestCode);
                     v.dismiss();
                 }
             });

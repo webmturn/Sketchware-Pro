@@ -92,8 +92,8 @@ public class MainActivity extends BasePermissionAppCompatActivity {
 
     @Override
     // onRequestPermissionsResult but for Storage access only, and only when granted
-    public void onStoragePermissionGranted(int i) {
-        if (i == 9501) {
+    public void onStoragePermissionGranted(int requestCode) {
+        if (requestCode == 9501) {
             allFilesAccessCheck();
 
             if (activeFragment instanceof ProjectsFragment) {
@@ -103,7 +103,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
     }
 
     @Override
-    public void onOpenSettings(int i) {
+    public void onOpenSettings(int requestCode) {
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         intent.setData(Uri.parse("package:" + getApplicationContext().getPackageName()));
         startActivity(intent);

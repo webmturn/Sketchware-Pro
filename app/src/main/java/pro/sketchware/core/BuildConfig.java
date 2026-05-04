@@ -324,12 +324,12 @@ public class BuildConfig {
          */
         public int permissions = 0;
 
-        public void addPermission(int i) {
-            permissions = i | permissions;
+        public void addPermission(int permission) {
+            permissions = permission | permissions;
         }
 
-        public boolean hasPermission(int i) {
-            return (permissions & i) == i;
+        public boolean hasPermission(int permission) {
+            return (permissions & permission) == permission;
         }
 
         /**
