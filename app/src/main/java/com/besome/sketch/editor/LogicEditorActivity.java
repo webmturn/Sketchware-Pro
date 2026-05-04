@@ -319,6 +319,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                         }
                     }
                 }
+                block.recalculateToRoot();
             }
         }
         Choreographer.getInstance().postFrameCallback(frameTimeNanos -> {
