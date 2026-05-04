@@ -65,23 +65,14 @@ public class ResourceNameValidator extends BaseValidator {
       valid = false;
       return;
     } 
-    String[] parts = reservedNames;
-    int reservedNameCount = parts.length;
-    int reservedNameIdx = 0;
-    while (true) {
-      if (reservedNameIdx < reservedNameCount) {
-        String reservedName = parts[reservedNameIdx];
-        if (candidateName.equals(reservedName)) {
-          reservedNameIdx = 1;
-          break;
-        } 
-        reservedNameIdx++;
-        continue;
-      } 
-      reservedNameIdx = 0;
-      break;
-    } 
-    if (reservedNameIdx != 0) {
+    boolean isReserved = false;
+    for (String reservedName : reservedNames) {
+      if (candidateName.equals(reservedName)) {
+        isReserved = true;
+        break;
+      }
+    }
+    if (isReserved) {
       textInputLayout.setErrorEnabled(true);
       textInputLayout.setError(StringResource.getInstance().getTranslatedString(context, R.string.logic_editor_message_reserved_keywords));
       valid = false;

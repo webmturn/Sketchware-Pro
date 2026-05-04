@@ -63,19 +63,11 @@ public class RecentHistoryManager {
   public void loadFromDatabase(String category) {
     if ((ArrayList)recentMap.get(category) == null) {
       String[] parts = database.getStringDefault(category).split(",");
-      int size = parts.length;
-      while (true) {
-        int idx = size - 1;
-        if (idx >= 0) {
-          size = idx;
-          if (!parts[idx].isEmpty()) {
-            addRecentItem(category, parts[idx]);
-            size = idx;
-          } 
-          continue;
-        } 
-        break;
-      } 
+      for (int idx = parts.length - 1; idx >= 0; idx--) {
+        if (!parts[idx].isEmpty()) {
+          addRecentItem(category, parts[idx]);
+        }
+      }
     } 
   }
 }

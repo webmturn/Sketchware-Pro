@@ -159,22 +159,16 @@ public class ViewFilesFragment extends BaseFragment {
     }
 
     public void removeSelectedFiles() {
-        int idx = activitiesFiles.size();
-        while (true) {
-            idx--;
-            if (idx >= 0) {
-                ProjectFileBean projectFileBean = activitiesFiles.get(idx);
-                if (projectFileBean.isSelected) {
-                    activitiesFiles.remove(idx);
-                    if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)) {
-                        ((ManageViewActivity) getActivity()).removeCustomView(ProjectFileBean.getDrawerName(projectFileBean.fileName));
-                    }
+        for (int idx = activitiesFiles.size() - 1; idx >= 0; idx--) {
+            ProjectFileBean projectFileBean = activitiesFiles.get(idx);
+            if (projectFileBean.isSelected) {
+                activitiesFiles.remove(idx);
+                if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)) {
+                    ((ManageViewActivity) getActivity()).removeCustomView(ProjectFileBean.getDrawerName(projectFileBean.fileName));
                 }
-            } else {
-                projectFilesAdapter.notifyDataSetChanged();
-                return;
             }
         }
+        projectFilesAdapter.notifyDataSetChanged();
     }
 
     public void updateGuideVisibility() {

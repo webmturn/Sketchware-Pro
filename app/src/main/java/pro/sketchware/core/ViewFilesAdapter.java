@@ -123,20 +123,12 @@ public class ViewFilesAdapter extends BaseFragment {
   }
   
   public void removeSelectedFiles() {
-    int size = projectFiles.size();
-    while (true) {
-      int idx = size - 1;
-      if (idx >= 0) {
-        size = idx;
-        if (((SelectableBean)projectFiles.get(idx)).isSelected) {
-          projectFiles.remove(idx);
-          size = idx;
-        } 
-        continue;
-      } 
-      adapter.notifyDataSetChanged();
-      return;
-    } 
+    for (int idx = projectFiles.size() - 1; idx >= 0; idx--) {
+      if (((SelectableBean)projectFiles.get(idx)).isSelected) {
+        projectFiles.remove(idx);
+      }
+    }
+    adapter.notifyDataSetChanged();
   }
   
   public void updateEmptyState() {

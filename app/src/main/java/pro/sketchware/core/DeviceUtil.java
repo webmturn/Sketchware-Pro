@@ -59,26 +59,16 @@ public class DeviceUtil {
   }
   
   public static String getAndroidVersionName() {
-    Field[] fields = Build.VERSION_CODES.class.getFields();
-    int fieldCount = fields.length;
-    int fieldIdx = 0;
-    while (true) {
-      if (fieldIdx < fieldCount) {
-        Field field = fields[fieldIdx];
-        String fieldName = field.getName();
-        try {
-          int fieldValue = field.getInt(null);
-          int sdkInt = Build.VERSION.SDK_INT;
-          if (fieldValue == sdkInt)
-            return fieldName; 
-          fieldIdx++;
-          continue;
-        } catch (Exception exception) {
-          Log.w("DeviceUtil", "Failed to get version name field", exception);
-        }
-      } 
-      return "";
-    } 
+    for (Field field : Build.VERSION_CODES.class.getFields()) {
+      try {
+        if (field.getInt(null) == Build.VERSION.SDK_INT)
+          return field.getName();
+      } catch (Exception exception) {
+        Log.w("DeviceUtil", "Failed to get version name field", exception);
+        return "";
+      }
+    }
+    return "";
   }
   
   public static String getDeviceId(Context context) {
