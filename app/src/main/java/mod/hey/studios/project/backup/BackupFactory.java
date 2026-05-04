@@ -459,12 +459,12 @@ public class BackupFactory {
         return outPath;
     }
 
-    public void setBackupLocalLibs(boolean b) {
-        backupLocalLibs = b;
+    public void setBackupLocalLibs(boolean backupLocalLibs) {
+        this.backupLocalLibs = backupLocalLibs;
     }
 
-    public void setBackupCustomBlocks(boolean b) {
-        backupCustomBlocks = b;
+    public void setBackupCustomBlocks(boolean backupCustomBlocks) {
+        this.backupCustomBlocks = backupCustomBlocks;
     }
 
     /************************ RESTORE ************************/

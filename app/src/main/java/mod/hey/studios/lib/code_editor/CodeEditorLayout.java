@@ -233,8 +233,8 @@ public class CodeEditorLayout extends LinearLayout implements TextWatcher {
         v.setOnClickListener(v1 -> popup.show());
     }
 
-    public void setWordWrap(boolean b) {
-        if (b) {
+    public void setWordWrap(boolean enabled) {
+        if (enabled) {
             if (editText.getParent() instanceof HorizontalScrollView
                     && scrollView.getChildAt(0) instanceof HorizontalScrollView hrz) {
                 hrz.removeView(editText);
@@ -256,7 +256,7 @@ public class CodeEditorLayout extends LinearLayout implements TextWatcher {
             editText.invalidate();
         }
 
-        setPreference("word_wrap", b);
+        setPreference("word_wrap", enabled);
     }
 
     private void initialize(int res) {
@@ -296,8 +296,8 @@ public class CodeEditorLayout extends LinearLayout implements TextWatcher {
         return Helper.getText(editText);
     }
 
-    public void setText(CharSequence c) {
-        editText.setText(c);
+    public void setText(CharSequence text) {
+        editText.setText(text);
     }
 
     public void start(List<ColorScheme> list) {

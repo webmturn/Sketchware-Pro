@@ -30,16 +30,16 @@ public class ExtraBlockInfo {
         return color;
     }
 
-    public void setColor(int i) {
-        color = i;
+    public void setColor(int color) {
+        this.color = color;
     }
 
     public int getPaletteColor() {
         return paletteColor;
     }
 
-    public void setPaletteColor(int i) {
-        paletteColor = i;
+    public void setPaletteColor(int paletteColor) {
+        this.paletteColor = paletteColor;
     }
 
     public String getSpec() {

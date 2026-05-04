@@ -74,11 +74,11 @@ public class ItemMultiAutoCompleteTextView extends AppCompatMultiAutoCompleteTex
     }
 
     @Override
-    public void setBackgroundColor(int i) {
-        if (i == 0xffffff) {
+    public void setBackgroundColor(int color) {
+        if (color == 0xffffff) {
             setBackground(drawable);
         } else {
-            super.setBackgroundColor(i);
+            super.setBackgroundColor(color);
         }
     }
 
