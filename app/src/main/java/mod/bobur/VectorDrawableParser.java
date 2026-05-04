@@ -34,64 +34,64 @@ public class VectorDrawableParser {
             return name;
         }
 
-        public void setName(String v) {
-            name = v == null ? "" : v;
+        public void setName(String value) {
+            name = value == null ? "" : value;
         }
 
         public String getRotation() {
             return rotation;
         }
 
-        public void setRotation(String v) {
-            rotation = v == null ? "" : v;
+        public void setRotation(String value) {
+            rotation = value == null ? "" : value;
         }
 
         public String getPivotX() {
             return pivotX;
         }
 
-        public void setPivotX(String v) {
-            pivotX = v == null ? "" : v;
+        public void setPivotX(String value) {
+            pivotX = value == null ? "" : value;
         }
 
         public String getPivotY() {
             return pivotY;
         }
 
-        public void setPivotY(String v) {
-            pivotY = v == null ? "" : v;
+        public void setPivotY(String value) {
+            pivotY = value == null ? "" : value;
         }
 
         public String getScaleX() {
             return scaleX;
         }
 
-        public void setScaleX(String v) {
-            scaleX = v == null ? "" : v;
+        public void setScaleX(String value) {
+            scaleX = value == null ? "" : value;
         }
 
         public String getScaleY() {
             return scaleY;
         }
 
-        public void setScaleY(String v) {
-            scaleY = v == null ? "" : v;
+        public void setScaleY(String value) {
+            scaleY = value == null ? "" : value;
         }
 
         public String getTranslateX() {
             return translateX;
         }
 
-        public void setTranslateX(String v) {
-            translateX = v == null ? "" : v;
+        public void setTranslateX(String value) {
+            translateX = value == null ? "" : value;
         }
 
         public String getTranslateY() {
             return translateY;
         }
 
-        public void setTranslateY(String v) {
-            translateY = v == null ? "" : v;
+        public void setTranslateY(String value) {
+            translateY = value == null ? "" : value;
         }
     }
 
@@ -104,24 +104,24 @@ public class VectorDrawableParser {
             return name;
         }
 
-        public void setName(String v) {
-            name = v == null ? "" : v;
+        public void setName(String value) {
+            name = value == null ? "" : value;
         }
 
         public String getPathData() {
             return pathData;
         }
 
-        public void setPathData(String v) {
-            pathData = v == null ? "" : v;
+        public void setPathData(String value) {
+            pathData = value == null ? "" : value;
         }
 
         public String getFillType() {
             return fillType;
         }
 
-        public void setFillType(String v) {
-            fillType = v == null ? "" : v;
+        public void setFillType(String value) {
+            fillType = value == null ? "" : value;
         }
     }
 
@@ -145,112 +145,112 @@ public class VectorDrawableParser {
             return name;
         }
 
-        public void setName(String v) {
-            name = v == null ? "" : v;
+        public void setName(String value) {
+            name = value == null ? "" : value;
         }
 
         public String getPathData() {
             return pathData;
         }
 
-        public void setPathData(String v) {
-            pathData = v == null ? "" : v;
+        public void setPathData(String value) {
+            pathData = value == null ? "" : value;
         }
 
         public String getFillColor() {
             return fillColor;
         }
 
-        public void setFillColor(String v) {
-            fillColor = v == null ? "" : v;
+        public void setFillColor(String value) {
+            fillColor = value == null ? "" : value;
         }
 
         public String getFillAlpha() {
             return fillAlpha;
         }
 
-        public void setFillAlpha(String v) {
-            fillAlpha = v == null ? "" : v;
+        public void setFillAlpha(String value) {
+            fillAlpha = value == null ? "" : value;
         }
 
         public String getStrokeColor() {
             return strokeColor;
         }
 
-        public void setStrokeColor(String v) {
-            strokeColor = v == null ? "" : v;
+        public void setStrokeColor(String value) {
+            strokeColor = value == null ? "" : value;
         }
 
         public String getStrokeAlpha() {
             return strokeAlpha;
         }
 
-        public void setStrokeAlpha(String v) {
-            strokeAlpha = v == null ? "" : v;
+        public void setStrokeAlpha(String value) {
+            strokeAlpha = value == null ? "" : value;
         }
 
         public String getStrokeWidth() {
             return strokeWidth;
         }
 
-        public void setStrokeWidth(String v) {
-            strokeWidth = v == null ? "" : v;
+        public void setStrokeWidth(String value) {
+            strokeWidth = value == null ? "" : value;
         }
 
         public String getStrokeLineCap() {
             return strokeLineCap;
         }
 
-        public void setStrokeLineCap(String v) {
-            strokeLineCap = v == null ? "" : v;
+        public void setStrokeLineCap(String value) {
+            strokeLineCap = value == null ? "" : value;
         }
 
         public String getStrokeLineJoin() {
             return strokeLineJoin;
         }
 
-        public void setStrokeLineJoin(String v) {
-            strokeLineJoin = v == null ? "" : v;
+        public void setStrokeLineJoin(String value) {
+            strokeLineJoin = value == null ? "" : value;
         }
 
         public String getStrokeMiterLimit() {
             return strokeMiterLimit;
         }
 
-        public void setStrokeMiterLimit(String v) {
-            strokeMiterLimit = v == null ? "" : v;
+        public void setStrokeMiterLimit(String value) {
+            strokeMiterLimit = value == null ? "" : value;
         }
 
         public String getFillType() {
             return fillType;
         }
 
-        public void setFillType(String v) {
-            fillType = v == null ? "" : v;
+        public void setFillType(String value) {
+            fillType = value == null ? "" : value;
         }
 
         public String getTrimPathStart() {
             return trimPathStart;
         }
 
-        public void setTrimPathStart(String v) {
-            trimPathStart = v == null ? "" : v;
+        public void setTrimPathStart(String value) {
+            trimPathStart = value == null ? "" : value;
         }
 
         public String getTrimPathEnd() {
             return trimPathEnd;
         }
 
-        public void setTrimPathEnd(String v) {
-            trimPathEnd = v == null ? "" : v;
+        public void setTrimPathEnd(String value) {
+            trimPathEnd = value == null ? "" : value;
         }
 
         public String getTrimPathOffset() {
             return trimPathOffset;
         }
 
-        public void setTrimPathOffset(String v) {
-            trimPathOffset = v == null ? "" : v;
+        public void setTrimPathOffset(String value) {
+            trimPathOffset = value == null ? "" : value;
         }
 
         public String getResolvedFillColor() {
