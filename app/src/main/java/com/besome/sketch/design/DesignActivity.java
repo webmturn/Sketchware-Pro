@@ -655,7 +655,11 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     @Override
     public void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(buildCancelReceiver);
+        try {
+            unregisterReceiver(buildCancelReceiver);
+        } catch (IllegalArgumentException ignored) {
+            // Receiver was never registered (e.g. onCreate returned early when sc_id was missing)
+        }
     }
 
     @Override
