@@ -8,13 +8,7 @@ import pro.sketchware.R;
 
 public class PresetLayoutFactory {
   public static int getListItemPresetIcon(String presetName) {
-    byte b;
-    if (presetName.hashCode() == 1424216003 && presetName.equals("Basic List Item")) {
-      b = 0;
-    } else {
-      b = -1;
-    } 
-    return (b != 0) ? -1 : R.drawable.activity_preset_1;
+    return "Basic List Item".equals(presetName) ? R.drawable.activity_preset_1 : -1;
   }
   
   public static ViewBean createDefaultTextView() {
@@ -39,23 +33,11 @@ public class PresetLayoutFactory {
   }
   
   public static ArrayList<ViewBean> getListItemPresetViews(String presetName) {
-    byte b;
-    if (presetName.hashCode() == 1424216003 && presetName.equals("Basic List Item")) {
-      b = 0;
-    } else {
-      b = -1;
-    } 
-    return (b != 0) ? new ArrayList<ViewBean>() : createBasicListItemViews();
+    return "Basic List Item".equals(presetName) ? createBasicListItemViews() : new ArrayList<ViewBean>();
   }
   
   public static int getDrawerPresetIcon(String presetName) {
-    byte b;
-    if (presetName.hashCode() == 920477027 && presetName.equals("Basic Drawer")) {
-      b = 0;
-    } else {
-      b = -1;
-    } 
-    return (b != 0) ? -1 : R.drawable.activity_preset_1;
+    return "Basic Drawer".equals(presetName) ? R.drawable.activity_preset_1 : -1;
   }
   
   public static ArrayList<ProjectFileBean> getDrawerPresets() {
@@ -73,13 +55,7 @@ public class PresetLayoutFactory {
   }
   
   public static ArrayList<ViewBean> getDrawerPresetViews(String presetName) {
-    byte b;
-    if (presetName.hashCode() == 920477027 && presetName.equals("Basic Drawer")) {
-      b = 0;
-    } else {
-      b = -1;
-    } 
-    return (b != 0) ? new ArrayList<ViewBean>() : createBasicDrawerViews();
+    return "Basic Drawer".equals(presetName) ? createBasicDrawerViews() : new ArrayList<ViewBean>();
   }
   
   public static int getActivityPresetIcon(String presetName) {
