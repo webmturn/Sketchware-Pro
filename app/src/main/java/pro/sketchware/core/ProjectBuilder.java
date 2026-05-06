@@ -34,11 +34,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.lang.reflect.Method;
 import java.security.GeneralSecurityException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -194,7 +197,8 @@ public class ProjectBuilder {
      * Checks if a file on local storage differs from a file in assets, and if so,
      * replaces the file on local storage with the one in assets.
      * <p/>
-     * The files' sizes are compared, not content.
+     * The file size is checked first as a fast path. If sizes match, SHA-256 is
+     * compared to avoid keeping stale extracted build assets with identical size.
      *
      * @param fileInAssets The file in assets relative to assets/ in the APK
      * @param targetFile   The file on local storage
@@ -205,7 +209,7 @@ public class ProjectBuilder {
         EncryptedFileUtil fileUtil = new EncryptedFileUtil();
         long lengthOfFileInAssets = fileUtil.getAssetFileSize(SketchApplication.getAppContext(), fileInAssets);
         long length = compareToFile.exists() ? compareToFile.length() : 0;
-        if (lengthOfFileInAssets == length) {
+        if (lengthOfFileInAssets == length && hasSameAssetContent(fileInAssets, compareToFile)) {
             return false;
         }
 
@@ -214,6 +218,29 @@ public class ProjectBuilder {
         /* Copy the file from assets to local storage */
         fileUtil.copyAssetFile(SketchApplication.getAppContext(), fileInAssets, targetFile);
         return true;
+    }
+
+    private static boolean hasSameAssetContent(String fileInAssets, File targetFile) {
+        if (!targetFile.exists() || !targetFile.isFile()) {
+            return false;
+        }
+        try (InputStream assetStream = SketchApplication.getAppContext().getAssets().open(fileInAssets);
+             FileInputStream targetStream = new FileInputStream(targetFile)) {
+            return Arrays.equals(computeSha256(assetStream), computeSha256(targetStream));
+        } catch (IOException | NoSuchAlgorithmException e) {
+            Log.w(TAG, "Failed to compare extracted asset content: " + fileInAssets, e);
+            return false;
+        }
+    }
+
+    private static byte[] computeSha256(InputStream inputStream) throws IOException, NoSuchAlgorithmException {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] buffer = new byte[8192];
+        int bytesRead;
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            digest.update(buffer, 0, bytesRead);
+        }
+        return digest.digest();
     }
 
     /**
