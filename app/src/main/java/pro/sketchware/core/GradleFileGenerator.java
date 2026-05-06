@@ -21,6 +21,8 @@ import pro.sketchware.utility.FileUtil;
  */
 public class GradleFileGenerator {
 
+    private static final String FIREBASE_BOM_VERSION = "33.7.0";
+
     /**
      * @return Content of a <code>settings.gradle</code> file, with indentation
      */
@@ -85,14 +87,12 @@ public class GradleFileGenerator {
 
         List<BuiltInLibraries.BuiltInLibrary> excludedLibraries = ExcludeBuiltInLibrariesActivity.getExcludedLibraries(metadata.sc_id);
         if (isLibraryNotExcluded(BuiltInLibraries.ANDROIDX_APPCOMPAT, excludedLibraries) && metadata.isAppCompatEnabled) {
-            content.append("""
-                    implementation 'androidx.appcompat:appcompat:1.7.1'\r
-                    implementation 'com.google.android.material:material:1.12.0'\r
-                    """);
+            content.append(dependency("androidx.appcompat", "appcompat", BuiltInLibraries.ANDROIDX_APPCOMPAT));
+            content.append(dependency("com.google.android.material", "material", BuiltInLibraries.MATERIAL));
         }
 
         if (metadata.isFirebaseEnabled) {
-            content.append("implementation platform('com.google.firebase:firebase-bom:33.7.0')\r\n");
+            content.append("implementation platform('com.google.firebase:firebase-bom:").append(FIREBASE_BOM_VERSION).append("')\r\n");
         }
 
         if (isLibraryNotExcluded(BuiltInLibraries.FIREBASE_AUTH, excludedLibraries) && metadata.isFirebaseAuthUsed) {
@@ -108,40 +108,40 @@ public class GradleFileGenerator {
         }
 
         if (isLibraryNotExcluded(BuiltInLibraries.PLAY_SERVICES_ADS, excludedLibraries) && metadata.isAdMobEnabled) {
-            content.append("implementation 'com.google.android.gms:play-services-ads:23.4.0'\r\n");
+            content.append(dependency("com.google.android.gms", "play-services-ads", BuiltInLibraries.PLAY_SERVICES_ADS));
         }
 
         if (isLibraryNotExcluded(BuiltInLibraries.PLAY_SERVICES_MAPS, excludedLibraries) && metadata.isMapUsed) {
-            content.append("implementation 'com.google.android.gms:play-services-maps:17.0.1'\r\n");
+            content.append(dependency("com.google.android.gms", "play-services-maps", BuiltInLibraries.PLAY_SERVICES_MAPS));
         }
 
         if (isLibraryNotExcluded(BuiltInLibraries.GLIDE, excludedLibraries) && metadata.isGlideUsed) {
-            content.append("implementation 'com.github.bumptech.glide:glide:4.16.0'\r\n");
+            content.append(dependency("com.github.bumptech.glide", "glide", BuiltInLibraries.GLIDE));
         }
 
         if (isLibraryNotExcluded(BuiltInLibraries.GSON, excludedLibraries) && metadata.isGsonUsed) {
-            content.append("implementation 'com.google.code.gson:gson:2.11.0'\r\n");
+            content.append(dependency("com.google.code.gson", "gson", BuiltInLibraries.GSON));
         }
 
         if (isLibraryNotExcluded(BuiltInLibraries.OKHTTP_ANDROID, excludedLibraries) && metadata.isHttp3Used) {
-            content.append("implementation 'com.squareup.okhttp3:okhttp:4.12.0'\r\n");
+            content.append(dependency("com.squareup.okhttp3", "okhttp", BuiltInLibraries.OKHTTP_ANDROID, "okhttp-android"));
         }
 
         ConstVarComponent extraMetadata = metadata.constVarComponent;
         if (isLibraryNotExcluded(BuiltInLibraries.CIRCLEIMAGEVIEW, excludedLibraries) && extraMetadata.isCircleImageViewUsed) {
-            content.append("implementation 'de.hdodenhof:circleimageview:3.1.0'\r\n");
+            content.append(dependency("de.hdodenhof", "circleimageview", BuiltInLibraries.CIRCLEIMAGEVIEW));
         }
 
         if (isLibraryNotExcluded(BuiltInLibraries.ANDROID_YOUTUBE_PLAYER, excludedLibraries) && extraMetadata.isYoutubePlayerUsed) {
-            content.append("implementation 'com.pierfrancescosoffritti:androidyoutubeplayer:10.0.5'\r\n");
+            content.append(dependency("com.pierfrancescosoffritti", "androidyoutubeplayer", BuiltInLibraries.ANDROID_YOUTUBE_PLAYER, "android-youtube-player"));
         }
 
         if (isLibraryNotExcluded(BuiltInLibraries.CODEVIEW, excludedLibraries) && extraMetadata.isCodeViewUsed) {
-            content.append("implementation 'br.tiagohm:codeview:0.4.0'\r\n");
+            content.append(dependency("br.tiagohm", "codeview", BuiltInLibraries.CODEVIEW, "CodeView"));
         }
 
         if (isLibraryNotExcluded(BuiltInLibraries.LOTTIE, excludedLibraries) && extraMetadata.isLottieUsed) {
-            content.append("implementation 'com.airbnb.android:lottie:6.5.2'\r\n");
+            content.append(dependency("com.airbnb.android", "lottie", BuiltInLibraries.LOTTIE));
         }
 
         if (isLibraryNotExcluded(BuiltInLibraries.OTPVIEW, excludedLibraries) && extraMetadata.isOTPViewUsed) {
@@ -153,7 +153,7 @@ public class GradleFileGenerator {
         }
 
         if (isLibraryNotExcluded(BuiltInLibraries.PLAY_SERVICES_AUTH, excludedLibraries) && extraMetadata.isFBGoogleUsed) {
-            content.append("implementation 'com.google.android.gms:play-services-auth:19.0.0'\r\n");
+            content.append(dependency("com.google.android.gms", "play-services-auth", BuiltInLibraries.PLAY_SERVICES_AUTH));
         }
 
         if (isLibraryNotExcluded(BuiltInLibraries.FIREBASE_MESSAGING, excludedLibraries) && extraMetadata.isFCMUsed) {
@@ -183,6 +183,22 @@ public class GradleFileGenerator {
     private static boolean isLibraryNotExcluded(String libraryName, List<BuiltInLibraries.BuiltInLibrary> excludedLibraries) {
         var library = BuiltInLibraries.BuiltInLibrary.ofName(libraryName);
         return library.isPresent() && !excludedLibraries.contains(library.get());
+    }
+
+    private static String dependency(String groupId, String artifactId, String builtInLibraryName) {
+        return dependency(groupId, artifactId, builtInLibraryName, artifactId);
+    }
+
+    private static String dependency(String groupId, String artifactId, String builtInLibraryName, String builtInArtifactName) {
+        return "implementation '" + groupId + ":" + artifactId + ":" + getBuiltInLibraryVersion(builtInLibraryName, builtInArtifactName) + "'\r\n";
+    }
+
+    private static String getBuiltInLibraryVersion(String builtInLibraryName, String artifactName) {
+        String versionPrefix = artifactName + "-";
+        if (!builtInLibraryName.startsWith(versionPrefix)) {
+            throw new IllegalArgumentException("Built-in library name does not start with " + versionPrefix + ": " + builtInLibraryName);
+        }
+        return builtInLibraryName.substring(versionPrefix.length());
     }
 
     private static String resolveDependencyNotation(HashMap<String, Object> library) {
