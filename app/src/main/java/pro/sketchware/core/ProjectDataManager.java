@@ -40,7 +40,7 @@ public class ProjectDataManager {
      * Unlike the individual {@code closeXxx()} methods, this does not persist
      * pending changes to backup or data files.
      */
-    public static void clearAll() {
+    public static synchronized void clearAll() {
         projectDataStore = null;
         projectFileManager = null;
         resourceManager = null;
@@ -53,7 +53,7 @@ public class ProjectDataManager {
      * This removes backup files and temporary resource copies so discarded edits
      * are not offered for restore later.
      */
-    public static void discardAll() {
+    public static synchronized void discardAll() {
         if (projectDataStore != null) {
             projectDataStore.deleteBackupFiles();
         }
@@ -75,7 +75,7 @@ public class ProjectDataManager {
      * releases the cached {@link ProjectDataStore} instance.
      * Does nothing if no data manager is currently open.
      */
-    public static boolean closeDataManager() {
+    public static synchronized boolean closeDataManager() {
         if (projectDataStore != null) {
             if (!projectDataStore.saveAllBackup()) {
                 return false;
@@ -90,7 +90,7 @@ public class ProjectDataManager {
      * releases the cached {@link ProjectFileManager} instance.
      * Does nothing if no file manager is currently open.
      */
-    public static boolean closeFileManager() {
+    public static synchronized boolean closeFileManager() {
         if (projectFileManager != null) {
             if (!projectFileManager.saveToBackup()) {
                 return false;
@@ -105,7 +105,7 @@ public class ProjectDataManager {
      * releases the cached {@link LibraryManager} instance.
      * Does nothing if no library manager is currently open.
      */
-    public static boolean closeLibraryManager() {
+    public static synchronized boolean closeLibraryManager() {
         if (libraryManager != null) {
             if (!libraryManager.saveToBackup()) {
                 return false;
@@ -120,7 +120,7 @@ public class ProjectDataManager {
      * releases the cached {@link ResourceManager} instance.
      * Does nothing if no resource manager is currently open.
      */
-    public static boolean closeResourceManager() {
+    public static synchronized boolean closeResourceManager() {
         if (resourceManager != null) {
             if (!resourceManager.saveToBackup()) {
                 return false;
