@@ -97,6 +97,27 @@ public class BuildConfig {
     public static final int PERMISSION_BLUETOOTH_CONNECT = 2048;
 
     /**
+     * A permission type for {@link BuildConfig#addPermission(String, int)}, {@link BuildConfig#addPermission(int)} and {@link ActivityConfig#addPermission(int)}.
+     *
+     * @see android.Manifest.permission#READ_MEDIA_IMAGES
+     */
+    public static final int PERMISSION_READ_MEDIA_IMAGES = 4096;
+
+    /**
+     * A permission type for {@link BuildConfig#addPermission(String, int)}, {@link BuildConfig#addPermission(int)} and {@link ActivityConfig#addPermission(int)}.
+     *
+     * @see android.Manifest.permission#READ_MEDIA_VIDEO
+     */
+    public static final int PERMISSION_READ_MEDIA_VIDEO = 8192;
+
+    /**
+     * A permission type for {@link BuildConfig#addPermission(String, int)}, {@link BuildConfig#addPermission(int)} and {@link ActivityConfig#addPermission(int)}.
+     *
+     * @see android.Manifest.permission#READ_MEDIA_AUDIO
+     */
+    public static final int PERMISSION_READ_MEDIA_AUDIO = 16384;
+
+    /**
      * Project's package name,
      * e.g. com.jbk.internal.demo.
      */
@@ -349,7 +370,10 @@ public class BuildConfig {
                     || hasPermission(PERMISSION_CAMERA)
                     || hasPermission(PERMISSION_RECORD_AUDIO)
                     || hasPermission(PERMISSION_ACCESS_FINE_LOCATION)
-                    || hasPermission(PERMISSION_BLUETOOTH_CONNECT);
+                    || hasPermission(PERMISSION_BLUETOOTH_CONNECT)
+                    || hasPermission(PERMISSION_READ_MEDIA_IMAGES)
+                    || hasPermission(PERMISSION_READ_MEDIA_VIDEO)
+                    || hasPermission(PERMISSION_READ_MEDIA_AUDIO);
         }
     }
 }

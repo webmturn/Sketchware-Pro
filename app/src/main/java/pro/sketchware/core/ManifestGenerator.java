@@ -481,6 +481,15 @@ public class ManifestGenerator {
             if (buildConfig.hasPermission(BuildConfig.PERMISSION_BLUETOOTH_CONNECT)) {
                 writePermission(manifestXml, Manifest.permission.BLUETOOTH_CONNECT);
             }
+            if (buildConfig.hasPermission(BuildConfig.PERMISSION_READ_MEDIA_IMAGES)) {
+                writePermission(manifestXml, Manifest.permission.READ_MEDIA_IMAGES);
+            }
+            if (buildConfig.hasPermission(BuildConfig.PERMISSION_READ_MEDIA_VIDEO)) {
+                writePermission(manifestXml, Manifest.permission.READ_MEDIA_VIDEO);
+            }
+            if (buildConfig.hasPermission(BuildConfig.PERMISSION_READ_MEDIA_AUDIO)) {
+                writePermission(manifestXml, Manifest.permission.READ_MEDIA_AUDIO);
+            }
             if (buildConfig.hasPermission(BuildConfig.PERMISSION_ACCESS_FINE_LOCATION)) {
                 writePermission(manifestXml, Manifest.permission.ACCESS_FINE_LOCATION);
             }

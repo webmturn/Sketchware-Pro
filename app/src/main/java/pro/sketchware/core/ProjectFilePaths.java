@@ -507,6 +507,18 @@ public class ProjectFilePaths {
         initializeMetadata(projectLibraryManager, projectFileManager, projectDataManager, ExportType.DEBUG_APP);
     }
 
+    private void addImageReadPermissions(String activityName) {
+        buildConfig.addPermission(activityName, BuildConfig.PERMISSION_READ_EXTERNAL_STORAGE);
+        buildConfig.addPermission(activityName, BuildConfig.PERMISSION_READ_MEDIA_IMAGES);
+    }
+
+    private void addAllMediaReadPermissions(String activityName) {
+        buildConfig.addPermission(activityName, BuildConfig.PERMISSION_READ_EXTERNAL_STORAGE);
+        buildConfig.addPermission(activityName, BuildConfig.PERMISSION_READ_MEDIA_IMAGES);
+        buildConfig.addPermission(activityName, BuildConfig.PERMISSION_READ_MEDIA_VIDEO);
+        buildConfig.addPermission(activityName, BuildConfig.PERMISSION_READ_MEDIA_AUDIO);
+    }
+
     public void initializeMetadata(LibraryManager projectLibraryManager, ProjectFileManager projectFileManager, ProjectDataStore projectDataManager, ExportType exportingType) {
         ProjectLibraryBean adMob = projectLibraryManager.getAdmob();
         ProjectLibraryBean appCompat = projectLibraryManager.getCompat();
@@ -568,11 +580,11 @@ public class ProjectFilePaths {
                         buildConfig.isAppCompatEnabled = true;
                         buildConfig.isFileProviderUsed = true;
                         buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_CAMERA);
-                        buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_READ_EXTERNAL_STORAGE);
+                        addImageReadPermissions(activity.getActivityName());
                         buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_WRITE_EXTERNAL_STORAGE);
                     }
                     case ComponentBean.COMPONENT_TYPE_FILE_PICKER ->
-                            buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_READ_EXTERNAL_STORAGE);
+                            addAllMediaReadPermissions(activity.getActivityName());
                     case ComponentBean.COMPONENT_TYPE_FIREBASE -> {
                         buildConfig.isGsonUsed = true;
                         buildConfig.isFirebaseDatabaseUsed = true;
@@ -581,7 +593,7 @@ public class ProjectFilePaths {
                     }
                     case ComponentBean.COMPONENT_TYPE_FIREBASE_STORAGE -> {
                         buildConfig.isFirebaseStorageUsed = true;
-                        buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_READ_EXTERNAL_STORAGE);
+                        addAllMediaReadPermissions(activity.getActivityName());
                         buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_WRITE_EXTERNAL_STORAGE);
                     }
                     case ComponentBean.COMPONENT_TYPE_VIBRATOR ->
@@ -654,12 +666,12 @@ public class ProjectFilePaths {
                         case "fileutilisdir":
                         case "fileutilisfile":
                         case "fileutillength":
-                        case "fileutilStartsWith":
-                        case "fileutilEndsWith":
+                            addAllMediaReadPermissions(activity.getActivityName());
+                            break;
+
                         case "getJpegRotate":
                         case "setImageFilePath":
-                        case "fileutilGetLastSegmentPath":
-                            buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_READ_EXTERNAL_STORAGE);
+                            addImageReadPermissions(activity.getActivityName());
                             break;
 
                         case "fileutilwrite":
@@ -668,6 +680,10 @@ public class ProjectFilePaths {
                         case "fileutilmove":
                         case "fileutildelete":
                         case "fileutilmakedir":
+                            addAllMediaReadPermissions(activity.getActivityName());
+                            buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_WRITE_EXTERNAL_STORAGE);
+                            break;
+
                         case "resizeBitmapFileRetainRatio":
                         case "resizeBitmapFileToSquare":
                         case "resizeBitmapFileToCircle":
@@ -679,7 +695,7 @@ public class ProjectFilePaths {
                         case "setBitmapFileColorFilter":
                         case "setBitmapFileBrightness":
                         case "setBitmapFileContrast":
-                            buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_READ_EXTERNAL_STORAGE);
+                            addImageReadPermissions(activity.getActivityName());
                             buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_WRITE_EXTERNAL_STORAGE);
                             break;
 

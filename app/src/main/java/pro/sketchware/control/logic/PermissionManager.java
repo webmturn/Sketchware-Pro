@@ -68,34 +68,48 @@ public class PermissionManager {
         return !addedPermissions().isEmpty();
     }
 
+    private static void addSystemPermissions(ArrayList<PermissionEntry> permissions, int permissionFlags) {
+        String targetsSdk33OrHigher = "(getApplicationInfo().targetSdkVersion >= 33)";
+        if ((permissionFlags & BuildConfig.PERMISSION_CALL_PHONE) == BuildConfig.PERMISSION_CALL_PHONE) {
+            permissions.add(new PermissionEntry("Manifest.permission.CALL_PHONE", null));
+        }
+        if ((permissionFlags & BuildConfig.PERMISSION_CAMERA) == BuildConfig.PERMISSION_CAMERA) {
+            permissions.add(new PermissionEntry("Manifest.permission.CAMERA", null));
+        }
+        if ((permissionFlags & BuildConfig.PERMISSION_READ_EXTERNAL_STORAGE) == BuildConfig.PERMISSION_READ_EXTERNAL_STORAGE) {
+            permissions.add(new PermissionEntry("Manifest.permission.READ_EXTERNAL_STORAGE", "Build.VERSION.SDK_INT < 33 || !" + targetsSdk33OrHigher));
+        }
+        if ((permissionFlags & BuildConfig.PERMISSION_WRITE_EXTERNAL_STORAGE) == BuildConfig.PERMISSION_WRITE_EXTERNAL_STORAGE) {
+            permissions.add(new PermissionEntry("Manifest.permission.WRITE_EXTERNAL_STORAGE", "Build.VERSION.SDK_INT < 30"));
+        }
+        if ((permissionFlags & BuildConfig.PERMISSION_RECORD_AUDIO) == BuildConfig.PERMISSION_RECORD_AUDIO) {
+            permissions.add(new PermissionEntry("Manifest.permission.RECORD_AUDIO", null));
+        }
+        if ((permissionFlags & BuildConfig.PERMISSION_ACCESS_FINE_LOCATION) == BuildConfig.PERMISSION_ACCESS_FINE_LOCATION) {
+            permissions.add(new PermissionEntry("Manifest.permission.ACCESS_FINE_LOCATION", null));
+        }
+        if ((permissionFlags & BuildConfig.PERMISSION_BLUETOOTH_CONNECT) == BuildConfig.PERMISSION_BLUETOOTH_CONNECT) {
+            permissions.add(new PermissionEntry("Manifest.permission.BLUETOOTH_CONNECT", "Build.VERSION.SDK_INT >= 31"));
+        }
+        if ((permissionFlags & BuildConfig.PERMISSION_READ_MEDIA_IMAGES) == BuildConfig.PERMISSION_READ_MEDIA_IMAGES) {
+            permissions.add(new PermissionEntry("Manifest.permission.READ_MEDIA_IMAGES", "Build.VERSION.SDK_INT >= 33 && " + targetsSdk33OrHigher));
+        }
+        if ((permissionFlags & BuildConfig.PERMISSION_READ_MEDIA_VIDEO) == BuildConfig.PERMISSION_READ_MEDIA_VIDEO) {
+            permissions.add(new PermissionEntry("Manifest.permission.READ_MEDIA_VIDEO", "Build.VERSION.SDK_INT >= 33 && " + targetsSdk33OrHigher));
+        }
+        if ((permissionFlags & BuildConfig.PERMISSION_READ_MEDIA_AUDIO) == BuildConfig.PERMISSION_READ_MEDIA_AUDIO) {
+            permissions.add(new PermissionEntry("Manifest.permission.READ_MEDIA_AUDIO", "Build.VERSION.SDK_INT >= 33 && " + targetsSdk33OrHigher));
+        }
+    }
+
     public String writePermission(boolean isAppCompat, int var1) {
         ArrayList<PermissionEntry> permissions = new ArrayList<>();
         StringBuilder permissionCode = new StringBuilder();
 
         addReqPermission(permissions);
+        addSystemPermissions(permissions, var1);
 
         if (isAppCompat) {
-            if ((var1 & BuildConfig.PERMISSION_CALL_PHONE) == BuildConfig.PERMISSION_CALL_PHONE) {
-                permissions.add(new PermissionEntry("Manifest.permission.CALL_PHONE", null));
-            }
-            if ((var1 & BuildConfig.PERMISSION_CAMERA) == BuildConfig.PERMISSION_CAMERA) {
-                permissions.add(new PermissionEntry("Manifest.permission.CAMERA", null));
-            }
-            if ((var1 & BuildConfig.PERMISSION_READ_EXTERNAL_STORAGE) == BuildConfig.PERMISSION_READ_EXTERNAL_STORAGE) {
-                permissions.add(new PermissionEntry("Manifest.permission.READ_EXTERNAL_STORAGE", null));
-            }
-            if ((var1 & BuildConfig.PERMISSION_WRITE_EXTERNAL_STORAGE) == BuildConfig.PERMISSION_WRITE_EXTERNAL_STORAGE) {
-                permissions.add(new PermissionEntry("Manifest.permission.WRITE_EXTERNAL_STORAGE", null));
-            }
-            if ((var1 & BuildConfig.PERMISSION_RECORD_AUDIO) == BuildConfig.PERMISSION_RECORD_AUDIO) {
-                permissions.add(new PermissionEntry("Manifest.permission.RECORD_AUDIO", null));
-            }
-            if ((var1 & BuildConfig.PERMISSION_ACCESS_FINE_LOCATION) == BuildConfig.PERMISSION_ACCESS_FINE_LOCATION) {
-                permissions.add(new PermissionEntry("Manifest.permission.ACCESS_FINE_LOCATION", null));
-            }
-            if ((var1 & BuildConfig.PERMISSION_BLUETOOTH_CONNECT) == BuildConfig.PERMISSION_BLUETOOTH_CONNECT) {
-                permissions.add(new PermissionEntry("Manifest.permission.BLUETOOTH_CONNECT", "Build.VERSION.SDK_INT >= 31"));
-            }
             removePermission(permissions);
 
             if (!permissions.isEmpty()) {
@@ -118,27 +132,6 @@ public class PermissionManager {
             }
 
         } else {
-            if ((var1 & BuildConfig.PERMISSION_CALL_PHONE) == BuildConfig.PERMISSION_CALL_PHONE) {
-                permissions.add(new PermissionEntry("Manifest.permission.CALL_PHONE", null));
-            }
-            if ((var1 & BuildConfig.PERMISSION_CAMERA) == BuildConfig.PERMISSION_CAMERA) {
-                permissions.add(new PermissionEntry("Manifest.permission.CAMERA", null));
-            }
-            if ((var1 & BuildConfig.PERMISSION_READ_EXTERNAL_STORAGE) == BuildConfig.PERMISSION_READ_EXTERNAL_STORAGE) {
-                permissions.add(new PermissionEntry("Manifest.permission.READ_EXTERNAL_STORAGE", null));
-            }
-            if ((var1 & BuildConfig.PERMISSION_WRITE_EXTERNAL_STORAGE) == BuildConfig.PERMISSION_WRITE_EXTERNAL_STORAGE) {
-                permissions.add(new PermissionEntry("Manifest.permission.WRITE_EXTERNAL_STORAGE", null));
-            }
-            if ((var1 & BuildConfig.PERMISSION_RECORD_AUDIO) == BuildConfig.PERMISSION_RECORD_AUDIO) {
-                permissions.add(new PermissionEntry("Manifest.permission.RECORD_AUDIO", null));
-            }
-            if ((var1 & BuildConfig.PERMISSION_ACCESS_FINE_LOCATION) == BuildConfig.PERMISSION_ACCESS_FINE_LOCATION) {
-                permissions.add(new PermissionEntry("Manifest.permission.ACCESS_FINE_LOCATION", null));
-            }
-            if ((var1 & BuildConfig.PERMISSION_BLUETOOTH_CONNECT) == BuildConfig.PERMISSION_BLUETOOTH_CONNECT) {
-                permissions.add(new PermissionEntry("Manifest.permission.BLUETOOTH_CONNECT", "Build.VERSION.SDK_INT >= 31"));
-            }
             removePermission(permissions);
 
             if (!permissions.isEmpty()) {
@@ -187,7 +180,7 @@ public class PermissionManager {
             if (sdkCondition == null) {
                 return checkExpression;
             }
-            return sdkCondition + " && " + checkExpression;
+            return "(" + sdkCondition + ") && " + checkExpression;
         }
 
         private String getRequestCode() {
@@ -195,7 +188,7 @@ public class PermissionManager {
             if (sdkCondition == null) {
                 return requestCode;
             }
-            return "if (" + sdkCondition + ") {" + ActivityCodeGenerator.EOL + requestCode + ActivityCodeGenerator.EOL + "}";
+            return "if ((" + sdkCondition + ")) {" + ActivityCodeGenerator.EOL + requestCode + ActivityCodeGenerator.EOL + "}";
         }
     }
 }
