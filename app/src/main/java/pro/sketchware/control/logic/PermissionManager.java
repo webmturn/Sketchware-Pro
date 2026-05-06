@@ -39,7 +39,7 @@ public class PermissionManager {
         return permList;
     }
 
-    private String formatPermission(boolean isAppCompat, String permission) {
+    private static String formatPermission(boolean isAppCompat, String permission) {
         if (isAppCompat) {
             return "ContextCompat.checkSelfPermission(this, " + permission + ") == PackageManager.PERMISSION_DENIED";
         } else {
@@ -47,20 +47,18 @@ public class PermissionManager {
         }
     }
 
-    private void addReqPermission(boolean isAppCompat, ArrayList<String> checkPerm, ArrayList<String> reqPerm) {
+    private void addReqPermission(ArrayList<PermissionEntry> permissions) {
         for (String permission : addedPermissions()) {
-            checkPerm.add(formatPermission(isAppCompat, permission));
-            reqPerm.add(permission);
+            permissions.add(new PermissionEntry(permission, null));
         }
     }
 
-    private void removePermission(boolean isAppCompat, ArrayList<String> checkPerm, ArrayList<String> reqPerm) {
+    private void removePermission(ArrayList<PermissionEntry> permissions) {
         for (Entry<String, ArrayList<BlockBean>> blocks : ProjectDataManager.getProjectDataManager(sc_id).getBlockMap(javaName).entrySet()) {
             for (BlockBean block : blocks.getValue()) {
                 if (block.opCode.equals("removePermission") && !block.parameters.get(0).trim().isEmpty()) {
                     String permission = block.parameters.get(0).startsWith("Manifest") ? block.parameters.get(0) : ("Manifest.permission." + block.parameters.get(0));
-                    checkPerm.remove(formatPermission(isAppCompat, permission));
-                    reqPerm.remove(permission);
+                    permissions.removeIf(entry -> entry.permission.equals(permission));
                 }
             }
         }
@@ -71,55 +69,49 @@ public class PermissionManager {
     }
 
     public String writePermission(boolean isAppCompat, int var1) {
-        ArrayList<String> checkPerm = new ArrayList<>();
-        ArrayList<String> addPerm = new ArrayList<>();
+        ArrayList<PermissionEntry> permissions = new ArrayList<>();
         StringBuilder permissionCode = new StringBuilder();
 
-        addReqPermission(isAppCompat, checkPerm, addPerm);
+        addReqPermission(permissions);
 
         if (isAppCompat) {
             if ((var1 & BuildConfig.PERMISSION_CALL_PHONE) == BuildConfig.PERMISSION_CALL_PHONE) {
-                checkPerm.add("ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_DENIED");
-                addPerm.add("Manifest.permission.CALL_PHONE");
+                permissions.add(new PermissionEntry("Manifest.permission.CALL_PHONE", null));
             }
             if ((var1 & BuildConfig.PERMISSION_CAMERA) == BuildConfig.PERMISSION_CAMERA) {
-                checkPerm.add("ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED");
-                addPerm.add("Manifest.permission.CAMERA");
+                permissions.add(new PermissionEntry("Manifest.permission.CAMERA", null));
             }
             if ((var1 & BuildConfig.PERMISSION_READ_EXTERNAL_STORAGE) == BuildConfig.PERMISSION_READ_EXTERNAL_STORAGE) {
-                checkPerm.add("ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED");
-                addPerm.add("Manifest.permission.READ_EXTERNAL_STORAGE");
+                permissions.add(new PermissionEntry("Manifest.permission.READ_EXTERNAL_STORAGE", null));
             }
             if ((var1 & BuildConfig.PERMISSION_WRITE_EXTERNAL_STORAGE) == BuildConfig.PERMISSION_WRITE_EXTERNAL_STORAGE) {
-                checkPerm.add("ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED");
-                addPerm.add("Manifest.permission.WRITE_EXTERNAL_STORAGE");
+                permissions.add(new PermissionEntry("Manifest.permission.WRITE_EXTERNAL_STORAGE", null));
             }
             if ((var1 & BuildConfig.PERMISSION_RECORD_AUDIO) == BuildConfig.PERMISSION_RECORD_AUDIO) {
-                checkPerm.add("ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_DENIED");
-                addPerm.add("Manifest.permission.RECORD_AUDIO");
+                permissions.add(new PermissionEntry("Manifest.permission.RECORD_AUDIO", null));
             }
             if ((var1 & BuildConfig.PERMISSION_ACCESS_FINE_LOCATION) == BuildConfig.PERMISSION_ACCESS_FINE_LOCATION) {
-                checkPerm.add("ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED");
-                addPerm.add("Manifest.permission.ACCESS_FINE_LOCATION");
+                permissions.add(new PermissionEntry("Manifest.permission.ACCESS_FINE_LOCATION", null));
             }
-            removePermission(true, checkPerm, addPerm);
+            if ((var1 & BuildConfig.PERMISSION_BLUETOOTH_CONNECT) == BuildConfig.PERMISSION_BLUETOOTH_CONNECT) {
+                permissions.add(new PermissionEntry("Manifest.permission.BLUETOOTH_CONNECT", "Build.VERSION.SDK_INT >= 31"));
+            }
+            removePermission(permissions);
 
-            if (!checkPerm.isEmpty() && !addPerm.isEmpty()) {
+            if (!permissions.isEmpty()) {
                 permissionCode.append("if (");
 
-                for (int i = 0; i < checkPerm.size(); i++) {
+                for (int i = 0; i < permissions.size(); i++) {
                     if (i != 0) permissionCode.append("\r\n|| ");
-                    permissionCode.append(checkPerm.get(i));
+                    permissionCode.append(permissions.get(i).getCheckExpression(true));
                 }
 
-                permissionCode.append(") {" + ActivityCodeGenerator.EOL + "ActivityCompat.requestPermissions(this, new String[] {");
-
-                for (int i = 0; i < addPerm.size(); i++) {
-                    if (i != 0) permissionCode.append(", ");
-                    permissionCode.append(addPerm.get(i));
+                permissionCode.append(") {" + ActivityCodeGenerator.EOL);
+                permissionCode.append("ArrayList<String> _permissions = new ArrayList<>();" + ActivityCodeGenerator.EOL);
+                for (PermissionEntry permission : permissions) {
+                    permissionCode.append(permission.getRequestCode()).append(ActivityCodeGenerator.EOL);
                 }
-
-                permissionCode.append("}, 1000);" + ActivityCodeGenerator.EOL +
+                permissionCode.append("ActivityCompat.requestPermissions(this, _permissions.toArray(new String[0]), 1000);" + ActivityCodeGenerator.EOL +
                         "} else {" + ActivityCodeGenerator.EOL +
                         "initializeLogic();" + ActivityCodeGenerator.EOL +
                         "}" + ActivityCodeGenerator.EOL);
@@ -127,47 +119,42 @@ public class PermissionManager {
 
         } else {
             if ((var1 & BuildConfig.PERMISSION_CALL_PHONE) == BuildConfig.PERMISSION_CALL_PHONE) {
-                checkPerm.add("checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_DENIED");
-                addPerm.add("Manifest.permission.CALL_PHONE");
+                permissions.add(new PermissionEntry("Manifest.permission.CALL_PHONE", null));
             }
             if ((var1 & BuildConfig.PERMISSION_CAMERA) == BuildConfig.PERMISSION_CAMERA) {
-                checkPerm.add("checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED");
-                addPerm.add("Manifest.permission.CAMERA");
+                permissions.add(new PermissionEntry("Manifest.permission.CAMERA", null));
             }
             if ((var1 & BuildConfig.PERMISSION_READ_EXTERNAL_STORAGE) == BuildConfig.PERMISSION_READ_EXTERNAL_STORAGE) {
-                checkPerm.add("checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED");
-                addPerm.add("Manifest.permission.READ_EXTERNAL_STORAGE");
+                permissions.add(new PermissionEntry("Manifest.permission.READ_EXTERNAL_STORAGE", null));
             }
             if ((var1 & BuildConfig.PERMISSION_WRITE_EXTERNAL_STORAGE) == BuildConfig.PERMISSION_WRITE_EXTERNAL_STORAGE) {
-                checkPerm.add("checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED");
-                addPerm.add("Manifest.permission.WRITE_EXTERNAL_STORAGE");
+                permissions.add(new PermissionEntry("Manifest.permission.WRITE_EXTERNAL_STORAGE", null));
             }
             if ((var1 & BuildConfig.PERMISSION_RECORD_AUDIO) == BuildConfig.PERMISSION_RECORD_AUDIO) {
-                checkPerm.add("checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_DENIED");
-                addPerm.add("Manifest.permission.RECORD_AUDIO");
+                permissions.add(new PermissionEntry("Manifest.permission.RECORD_AUDIO", null));
             }
             if ((var1 & BuildConfig.PERMISSION_ACCESS_FINE_LOCATION) == BuildConfig.PERMISSION_ACCESS_FINE_LOCATION) {
-                checkPerm.add("checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED");
-                addPerm.add("Manifest.permission.ACCESS_FINE_LOCATION");
+                permissions.add(new PermissionEntry("Manifest.permission.ACCESS_FINE_LOCATION", null));
             }
-            removePermission(false, checkPerm, addPerm);
+            if ((var1 & BuildConfig.PERMISSION_BLUETOOTH_CONNECT) == BuildConfig.PERMISSION_BLUETOOTH_CONNECT) {
+                permissions.add(new PermissionEntry("Manifest.permission.BLUETOOTH_CONNECT", "Build.VERSION.SDK_INT >= 31"));
+            }
+            removePermission(permissions);
 
-            if (!checkPerm.isEmpty() && !addPerm.isEmpty()) {
+            if (!permissions.isEmpty()) {
                 permissionCode.append("if (Build.VERSION.SDK_INT >= 23) {" + ActivityCodeGenerator.EOL + "if (");
 
-                for (int i = 0; i < checkPerm.size(); i++) {
+                for (int i = 0; i < permissions.size(); i++) {
                     if (i != 0) permissionCode.append(ActivityCodeGenerator.EOL + "||");
-                    permissionCode.append(checkPerm.get(i));
+                    permissionCode.append(permissions.get(i).getCheckExpression(false));
                 }
 
-                permissionCode.append(") {" + ActivityCodeGenerator.EOL + "requestPermissions(new String[] {");
-
-                for (int i = 0; i < addPerm.size(); i++) {
-                    if (i != 0) permissionCode.append(", ");
-                    permissionCode.append(addPerm.get(i));
+                permissionCode.append(") {" + ActivityCodeGenerator.EOL);
+                permissionCode.append("ArrayList<String> _permissions = new ArrayList<>();" + ActivityCodeGenerator.EOL);
+                for (PermissionEntry permission : permissions) {
+                    permissionCode.append(permission.getRequestCode()).append(ActivityCodeGenerator.EOL);
                 }
-
-                permissionCode.append("}, 1000);" + ActivityCodeGenerator.EOL +
+                permissionCode.append("requestPermissions(_permissions.toArray(new String[0]), 1000);" + ActivityCodeGenerator.EOL +
                         "} else {" + ActivityCodeGenerator.EOL +
                         "initializeLogic();" + ActivityCodeGenerator.EOL +
                         "}" + ActivityCodeGenerator.EOL +
@@ -177,12 +164,38 @@ public class PermissionManager {
             }
         }
 
-        hasPermission = !checkPerm.isEmpty() || !addPerm.isEmpty();
+        hasPermission = !permissions.isEmpty();
 
         if (permissionCode.toString().trim().isEmpty()) {
             return "initializeLogic();" + ActivityCodeGenerator.EOL;
         } else {
             return ActivityCodeGenerator.EOL + permissionCode;
+        }
+    }
+
+    private static class PermissionEntry {
+        private final String permission;
+        private final String sdkCondition;
+
+        private PermissionEntry(String permission, String sdkCondition) {
+            this.permission = permission;
+            this.sdkCondition = sdkCondition;
+        }
+
+        private String getCheckExpression(boolean isAppCompat) {
+            String checkExpression = formatPermission(isAppCompat, permission);
+            if (sdkCondition == null) {
+                return checkExpression;
+            }
+            return sdkCondition + " && " + checkExpression;
+        }
+
+        private String getRequestCode() {
+            String requestCode = "_permissions.add(" + permission + ");";
+            if (sdkCondition == null) {
+                return requestCode;
+            }
+            return "if (" + sdkCondition + ") {" + ActivityCodeGenerator.EOL + requestCode + ActivityCodeGenerator.EOL + "}";
         }
     }
 }

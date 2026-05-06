@@ -443,7 +443,7 @@ public class ManifestGenerator {
         } catch (NumberFormatException ignored) {
             targetSdkVersion = VAR_DEFAULT_TARGET_SDK_VERSION;
         }
-        boolean addRequestLegacyExternalStorage = targetSdkVersion >= 28;
+        boolean addRequestLegacyExternalStorage = targetSdkVersion == 29;
 
         manifestXml.addAttribute("", "package", buildConfig.packageName);
 
@@ -477,6 +477,9 @@ public class ManifestGenerator {
             }
             if (buildConfig.hasPermission(BuildConfig.PERMISSION_BLUETOOTH_ADMIN)) {
                 writePermission(manifestXml, Manifest.permission.BLUETOOTH_ADMIN);
+            }
+            if (buildConfig.hasPermission(BuildConfig.PERMISSION_BLUETOOTH_CONNECT)) {
+                writePermission(manifestXml, Manifest.permission.BLUETOOTH_CONNECT);
             }
             if (buildConfig.hasPermission(BuildConfig.PERMISSION_ACCESS_FINE_LOCATION)) {
                 writePermission(manifestXml, Manifest.permission.ACCESS_FINE_LOCATION);

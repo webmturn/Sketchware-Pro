@@ -90,6 +90,13 @@ public class BuildConfig {
     public static final int PERMISSION_ACCESS_FINE_LOCATION = 1024;
 
     /**
+     * A permission type for {@link BuildConfig#addPermission(String, int)}, {@link BuildConfig#addPermission(int)} and {@link ActivityConfig#addPermission(int)}.
+     *
+     * @see android.Manifest.permission#BLUETOOTH_CONNECT
+     */
+    public static final int PERMISSION_BLUETOOTH_CONNECT = 2048;
+
+    /**
      * Project's package name,
      * e.g. com.jbk.internal.demo.
      */
@@ -341,7 +348,8 @@ public class BuildConfig {
                     || hasPermission(PERMISSION_READ_EXTERNAL_STORAGE) || hasPermission(PERMISSION_WRITE_EXTERNAL_STORAGE)
                     || hasPermission(PERMISSION_CAMERA)
                     || hasPermission(PERMISSION_RECORD_AUDIO)
-                    || hasPermission(PERMISSION_ACCESS_FINE_LOCATION);
+                    || hasPermission(PERMISSION_ACCESS_FINE_LOCATION)
+                    || hasPermission(PERMISSION_BLUETOOTH_CONNECT);
         }
     }
 }

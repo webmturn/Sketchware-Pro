@@ -608,6 +608,7 @@ public class ProjectFilePaths {
                     case ComponentBean.COMPONENT_TYPE_BLUETOOTH_CONNECT -> {
                         buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_BLUETOOTH);
                         buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_BLUETOOTH_ADMIN);
+                        buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_BLUETOOTH_CONNECT);
                     }
                     case ComponentBean.COMPONENT_TYPE_LOCATION_MANAGER ->
                             buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_ACCESS_FINE_LOCATION);
