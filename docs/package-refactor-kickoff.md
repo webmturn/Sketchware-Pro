@@ -93,11 +93,16 @@ These numbers are the empirical baseline. Phase 1 / Phase 2 sessions MUST treat 
 | Reflective calls inside `core/` | **2** (`NinePatchDecoder` → `Bitmap.mNinePatchChunk` system field; `ProjectBuilder` → `dx.command.dexer.Main$Arguments`) | Both target classes outside `core/` — package move is safe |
 | `EncryptedFileUtil` on-disk format | Section-based **plain text** (not Java serialization) | Package renames do not affect saved project data compatibility |
 | Test source code (JUnit / instrumented) | **0** | No automated test suite — verification is `assembleDebug` + manual smoke install |
+| `core/` files importing `com.besome.sketch.beans.*` | **52 files / 113 imports** | Heavy bean coupling is **expected and out-of-scope**. Beans are pure POJOs in another package and stay where they are. |
+| `com.besome.sketch.beans/*` imports of `pro.sketchware.core` | **0** | One-directional coupling — no cycle to break. |
+| `mod.agus.jcoderz.dx/**` imports of `pro.sketchware` | **0** | Vendored dx source is fully isolated. Phase 2 grep can ignore this subtree. |
+| `.kt` files inside `core/` | **0** | `package` declaration rules apply only to `.java` files in this refactor. |
 
 **Conclusions baked into this plan (do not re-question)**:
 
 - Pure package moves + import rewrites can achieve a fully behavior-preserving refactor.
 - No Manifest / resource / proguard / reflection / serialization tail.
+- The `core → com.besome.sketch.beans` dependency stays; **do not propose to move/merge beans** in any plan output.
 - Verification is exclusively: compile clean → assemble clean → install + open app + smoke a sample project.
 
 ---
@@ -111,7 +116,7 @@ Paste this as the **first message** of a new Opus 4.7 High session. Goal: produc
 >
 > 背景与约束已经写在 docs/package-refactor-kickoff.md，请先完整阅读这个文件，然后再阅读以下三类输入：
 >
-> 1. pro.sketchware.core 目录下的全部 124 个 .java 文件（用 list_dir + read_file 拿到文件名列表，再有选择地读取关键文件）
+> 1. pro.sketchware.core 目录下的全部 124 个 .java 文件（**预算提示**：124 文件 × ~12KB ≈ 1.5MB ≈ ~500K tokens 原始输入，加上 2 份支持文档、推理、输出后接近 1M context 上限。建议：用 list_dir 拿全 124 个文件名，**只读完整**于职责归类不明或几 KB 中型以下的文件；对 ProjectFilePaths/ProjectBuilder/LayoutGenerator/ManifestGenerator 这类 50KB+ 大文件，先读顶部 200 行 + 金字塔顶类名/方法签名判定类别，如需完整上下文再按需补读）
 > 2. docs/refactoring-naming-map.md（去混淆历史背景）
 > 3. docs/code-generation-system-analysis.md（codegen 子系统当前架构）
 >
@@ -151,8 +156,9 @@ Paste this as the **first message** of a new Opus 4.7 High session. Goal: produc
 >
 > D. 风险点列表
 >    - 哪些文件被外部（com.besome.sketch / mod.* / dev.* / kellinwood.* / pro.sketchware 其它子包）引用最多 — 用 grep 统计 top 10
->    - 不需要重新统计反射 / 序列化 / Manifest / 资源 XML —— Verified baseline 已确认这些路径全部为 0，直接引用 Verified baseline 表格的结论即可
+>    - 不需要重新统计反射 / 序列化 / Manifest / 资源 XML / .kt 文件 —— Verified baseline 已确认这些路径全部为 0，直接引用 Verified baseline 表格的结论即可
 >    - 列出本次方案中确实跨子包高耦合（例如 ProjectFilePaths 同时引用 codegen 内部多个类）的文件，标注其所属子包及风险
+>    - **不要**在风险表中提议“修复” core → com.besome.sketch.beans 的 113 处依赖。这是预期的、外包依赖，完全在本次重构范围之外。
 >
 > E. 验收 checklist 模板
 >    - 引用 docs/package-refactor-kickoff.md 第 5 节中已经给出的 checklist 模板，不要重复发明，只列出与具体批次相关的额外回归点
@@ -204,10 +210,11 @@ Paste this as the **first message** of a new Opus 4.7 High session. Goal: produc
 >    - 如果编译失败：分析错误，修复 import，重试。最多 3 次。
 >    - 如果 3 次仍失败：停止，把错误贴出来求助，不要硬改。
 > 4. 编译通过后，运行 `git diff --check` 确认无空白错误
-> 5. **行为不变性验证**（重要）：对本批每个被移动的文件，运行：
->    ```
->    git show HEAD:<old-path> > /tmp/before.java
->    git diff --no-index --ignore-blank-lines /tmp/before.java <new-path>
+> 5. **代码内容不变性验证**（重要）：本步在步 6 commit 之前运行，此时 `HEAD` 还指向本批之前的父 commit。对本批每个被移动的文件，使用**跨平台**临时文件路径（PowerShell 上 `$env:TEMP\before.java`，Bash 上 `/tmp/before.java`，**不要硬编 `/tmp/`**）：
+>    ```powershell
+>    # PowerShell
+>    git show HEAD:<old-path> | Out-File -Encoding utf8 "$env:TEMP\before.java"
+>    git diff --no-index --ignore-blank-lines "$env:TEMP\before.java" "<new-path>"
 >    ```
 >    diff 必须**只包含** `package` 声明这一行的变化（以及该文件内部如有 fully-qualified 同包引用导致的等价 import 调整）。如果出现 package + import 之外的代码内容差异，停止并报告。
 > 6. `git add` + `git commit`，commit message 严格使用计划中的草稿
@@ -244,10 +251,11 @@ Paste this as the **first message** of a new Opus 4.7 High session. Goal: produc
 >
 > 任务：
 > 1. `git diff --stat X..HEAD` 看总改动规模
-> 2. 抽样检查 5 个代表性已移动文件，对每个文件运行：
->    ```
->    git show X:<old-path> > /tmp/before.java
->    git diff --no-index --ignore-blank-lines /tmp/before.java <new-path>
+> 2. 抽样检查 5 个代表性已移动文件，对每个文件运行（跨平台临时路径）：
+>    ```powershell
+>    # PowerShell
+>    git show X:<old-path> | Out-File -Encoding utf8 "$env:TEMP\before.java"
+>    git diff --no-index --ignore-blank-lines "$env:TEMP\before.java" "<new-path>"
 >    ```
 >    diff 必须只在 `package` 声明 / 必要的 import 调整 这两类行上有变化
 > 3. 用 grep 全仓搜索本批已迁移类名的旧路径残留：对每个已迁移类 `Foo`，搜索字面量 `import pro.sketchware.core.Foo;`，命中数应当为 0（即旧扁平 import 已被全部替换）
@@ -270,10 +278,11 @@ Paste this as the **first message** of a new Opus 4.7 High session. Goal: produc
 [ ] 当前分支为 refactor/core-package-split（不是 main）
 [ ] 本批移动的文件数 = 计划文档列出的数量（精确匹配）
 [ ] 每个被移动的文件，第一行 package 声明已更新
-[ ] 行为不变性：对本批每个被移动的文件，运行
-      git show HEAD~1:<old-path> > <tmp>
-      git diff --no-index --ignore-blank-lines <tmp> <new-path>
+[ ] 代码内容不变性（commit 后运行、所以用 HEAD~1）：对本批每个被移动的文件，运行（PowerShell）：
+      git show HEAD~1:<old-path> | Out-File -Encoding utf8 "$env:TEMP\before.java"
+      git diff --no-index --ignore-blank-lines "$env:TEMP\before.java" "<new-path>"
    diff 必须只包含 package 声明这一行（以及必要的 import 行）的变化，无其它代码内容改动
+   注：Phase 2 step 5 是 commit **前** 验证用 HEAD；此 checklist 是 commit **后** 验证用 HEAD~1。两者语义一致（都是与本批之前的父 commit 对比），只是由于 commit 时机不同。
 [ ] grep_search 全仓搜索 `import pro.sketchware.core.<旧扁平类名>;` 字面量，命中数 = 0
 [ ] grep_search 全仓搜索 `import pro\.sketchware\.core\.\*;` star import 残留，命中数 = 0
 [ ] .\gradlew.bat :app:compileDebugJavaWithJavac 通过
