@@ -34,7 +34,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import pro.sketchware.core.ActivityCodeGenerator;
+import pro.sketchware.core.codegen.ActivityCodeGenerator;
 import pro.sketchware.core.ProjectFileManager;
 import pro.sketchware.core.ProjectDataManager;
 import pro.sketchware.core.UIHelper;

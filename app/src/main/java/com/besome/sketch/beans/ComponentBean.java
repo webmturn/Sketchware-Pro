@@ -19,7 +19,7 @@ import pro.sketchware.R;
  * <p>
  * Components are stored per-file in {@link pro.sketchware.core.ProjectDataStore#componentMap}
  * and generate Java field declarations and initialization code via
- * {@link pro.sketchware.core.ComponentTypeMapper}.
+ * {@link pro.sketchware.core.codegen.ComponentTypeMapper}.
  *
  * @see pro.sketchware.core.ProjectDataStore
  * @see EventBean

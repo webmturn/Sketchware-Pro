@@ -1,4 +1,5 @@
-package pro.sketchware.core;
+package pro.sketchware.core.codegen;
+import pro.sketchware.core.ClassInfo;
 
 import android.graphics.Color;
 import android.view.ViewGroup;
@@ -23,7 +24,7 @@ import mod.agus.jcoderz.beans.ViewBeans;
 
 /**
  * Parses Android layout XML into a list of {@link ViewBean} objects that Sketchware-Pro
- * can work with. Handles tag name → type resolution, attribute parsing, nesting,
+ * can work with. Handles tag name 鈫?type resolution, attribute parsing, nesting,
  * resource references ({@code @color/}, {@code @string/}, {@code @dimen/}), and
  * unknown attribute fallback to {@code viewBean.inject}.
  */
@@ -142,7 +143,7 @@ public class XmlLayoutParser {
 
         // Stack to track parent IDs for nesting
         List<String> parentStack = new ArrayList<>();
-        // Map view ID → type for setting parentType on children
+        // Map view ID 鈫?type for setting parentType on children
         Map<String, Integer> idToType = new HashMap<>();
         // Track child count per parent for setting index (ordering within parent)
         Map<String, Integer> childCountPerParent = new HashMap<>();
@@ -152,7 +153,7 @@ public class XmlLayoutParser {
             if (eventType == XmlPullParser.START_TAG) {
                 String tagName = parser.getName();
 
-                // Skip <merge> tags — flatten their children
+                // Skip <merge> tags 鈥?flatten their children
                 if ("merge".equals(tagName)) {
                     parentStack.add("root");
                     eventType = parser.next();
@@ -166,7 +167,7 @@ public class XmlLayoutParser {
 
                 if (typeId == null) {
                     typeId = ViewBean.VIEW_TYPE_LAYOUT_LINEAR;
-                    warnings.add("Unknown tag '" + tagName + "' → imported as LinearLayout with convert='" + tagName + "'");
+                    warnings.add("Unknown tag '" + tagName + "' 鈫?imported as LinearLayout with convert='" + tagName + "'");
                 }
 
                 // Generate unique ID
@@ -185,7 +186,7 @@ public class XmlLayoutParser {
                 if (!isKnownType) {
                     bean.convert = tagName;
                 } else if (tagName.contains(".") && !simpleName.equals(tagName)) {
-                    // FQN for a known type — set convert if different from default ClassInfo name
+                    // FQN for a known type 鈥?set convert if different from default ClassInfo name
                     bean.convert = tagName;
                 }
 
@@ -227,7 +228,7 @@ public class XmlLayoutParser {
 
     /**
      * Extracts the simple class name from a potentially fully-qualified name.
-     * e.g., "androidx.cardview.widget.CardView" → "CardView"
+     * e.g., "androidx.cardview.widget.CardView" 鈫?"CardView"
      */
     private static String getSimpleName(String tagName) {
         int dot = tagName.lastIndexOf('.');
@@ -275,8 +276,8 @@ public class XmlLayoutParser {
                     || tryParseViewAttribute(attrName, attrValue, viewBean);
 
             if (!handled) {
-                // Unrecognized attribute → inject
-                // Always prefix with \n — inject is concatenated directly after
+                // Unrecognized attribute 鈫?inject
+                // Always prefix with \n 鈥?inject is concatenated directly after
                 // xmlns:tools="..." in InjectAttributeHandler/readAttributesToReplace,
                 // so it MUST start with whitespace for valid XML parsing.
                 String qualifiedName;
@@ -397,7 +398,7 @@ public class XmlLayoutParser {
 
     /**
      * Parses layout_width or layout_height. Handles match_parent, wrap_content, dp values,
-     * and @dimen/ references (方案 B: inject override).
+     * and @dimen/ references (鏂规 B: inject override).
      */
     private static boolean parseDimensionToLayout(String attrName, String attrValue, ViewBean viewBean,
                                                    boolean isWidth, StringBuilder injectBuilder,
@@ -466,8 +467,8 @@ public class XmlLayoutParser {
     }
 
     /**
-     * Parses a dimens.xml string into a map of dimen name → value string.
-     * Example: {@code <dimen name="toolbar_height">56dp</dimen>} → {"toolbar_height": "56dp"}
+     * Parses a dimens.xml string into a map of dimen name 鈫?value string.
+     * Example: {@code <dimen name="toolbar_height">56dp</dimen>} 鈫?{"toolbar_height": "56dp"}
      */
     public static Map<String, String> parseDimens(String dimesXml) throws XmlPullParserException, IOException {
         Map<String, String> dimenMap = new HashMap<>();
@@ -518,7 +519,7 @@ public class XmlLayoutParser {
             viewBean.layout.backgroundResource = resName;
             return true;
         }
-        // Other background values (e.g., @android:color/) — fall through to inject
+        // Other background values (e.g., @android:color/) 鈥?fall through to inject
         return false;
     }
 
@@ -571,7 +572,7 @@ public class XmlLayoutParser {
                     viewBean.text.textColor = 1; // non-default to trigger output
                     viewBean.text.resTextColor = attrValue;
                 } else {
-                    return false; // e.g., @android:color/black → fall through to inject
+                    return false; // e.g., @android:color/black 鈫?fall through to inject
                 }
                 return true;
             case "textColorHint":
@@ -627,7 +628,7 @@ public class XmlLayoutParser {
                     viewBean.image.resName = attrValue.substring("@mipmap/".length());
                     return true;
                 }
-                return false; // other src values (e.g., @color/) → fall through to inject
+                return false; // other src values (e.g., @color/) 鈫?fall through to inject
             case "scaleType":
                 viewBean.image.scaleType = parseScaleType(attrValue);
                 return true;

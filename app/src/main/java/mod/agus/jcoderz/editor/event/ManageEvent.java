@@ -3,7 +3,7 @@ package mod.agus.jcoderz.editor.event;
 import java.util.ArrayList;
 
 import pro.sketchware.core.ClassInfo;
-import pro.sketchware.core.ComponentCodeGenerator;
+import pro.sketchware.core.codegen.ComponentCodeGenerator;
 import mod.hey.studios.util.Helper;
 import mod.hilal.saif.events.EventsHandler;
 import pro.sketchware.R;
@@ -665,7 +665,7 @@ public class ManageEvent {
     }
 
     /**
-     * @return Code of extra listeners, used in {@link pro.sketchware.core.ComponentCodeGenerator#getListenerCode(String, String, String)}
+     * @return Code of extra listeners, used in {@link pro.sketchware.core.codegen.ComponentCodeGenerator#getListenerCode(String, String, String)}
      */
     public static String getExtraListenerCode(String listenerName, String targetId, String listenerLogic) {
         return switch (listenerName) {

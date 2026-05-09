@@ -1,14 +1,14 @@
 package pro.sketchware.core.build;
 
-import pro.sketchware.core.ActivityCodeGenerator;
+import pro.sketchware.core.codegen.ActivityCodeGenerator;
 import pro.sketchware.core.codegen.BlockConstants;
 import pro.sketchware.core.BuildConfig;
-import pro.sketchware.core.ComponentCodeGenerator;
-import pro.sketchware.core.ComponentTemplates;
+import pro.sketchware.core.codegen.ComponentCodeGenerator;
+import pro.sketchware.core.codegen.ComponentTemplates;
 import pro.sketchware.core.EncryptedFileUtil;
-import pro.sketchware.core.LayoutGenerator;
+import pro.sketchware.core.codegen.LayoutGenerator;
 import pro.sketchware.core.LibraryManager;
-import pro.sketchware.core.LocalLibraryManifestMerger;
+import pro.sketchware.core.codegen.LocalLibraryManifestMerger;
 import pro.sketchware.core.MapValueHelper;
 import pro.sketchware.core.ProjectDataManager;
 import pro.sketchware.core.ProjectDataStore;

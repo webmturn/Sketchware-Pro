@@ -1,4 +1,7 @@
-package pro.sketchware.core;
+package pro.sketchware.core.codegen;
+import pro.sketchware.core.BuildConfig;
+import pro.sketchware.core.BuiltInLibrary;
+import pro.sketchware.core.SketchwarePaths;
 
 import com.google.gson.Gson;
 

@@ -1,6 +1,6 @@
 package pro.sketchware.core.validation;
 
-import pro.sketchware.core.StringResource;
+import pro.sketchware.core.codegen.StringResource;
 
 import android.content.Context;
 import android.text.Spanned;

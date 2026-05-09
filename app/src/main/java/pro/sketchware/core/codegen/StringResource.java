@@ -1,4 +1,5 @@
-package pro.sketchware.core;
+package pro.sketchware.core.codegen;
+import pro.sketchware.core.SketchwarePaths;
 
 import android.content.Context;
 import android.content.res.Resources;

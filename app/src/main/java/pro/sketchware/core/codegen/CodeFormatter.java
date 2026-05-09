@@ -1,5 +1,5 @@
 package pro.sketchware.core.codegen;
-import pro.sketchware.core.ComponentCodeGenerator;
+import pro.sketchware.core.codegen.ComponentCodeGenerator;
 
 /**
  * Formats generated Java and XML code with proper indentation.

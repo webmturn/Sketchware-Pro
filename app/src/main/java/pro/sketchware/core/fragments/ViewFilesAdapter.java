@@ -21,7 +21,7 @@ import pro.sketchware.core.ui.PresetLayoutFactory;
 import pro.sketchware.core.ProjectDataManager;
 import pro.sketchware.core.ProjectDataStore;
 import pro.sketchware.core.SketchwarePaths;
-import pro.sketchware.core.StringResource;
+import pro.sketchware.core.codegen.StringResource;
 
 public class ViewFilesAdapter extends BaseFragment {
   public RecyclerView recyclerView;

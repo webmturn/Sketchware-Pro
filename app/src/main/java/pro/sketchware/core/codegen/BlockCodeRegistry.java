@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 import mod.hey.studios.moreblock.ReturnMoreblockManager;
 import pro.sketchware.core.ClassInfo;
-import pro.sketchware.core.ComponentCodeGenerator;
+import pro.sketchware.core.codegen.ComponentCodeGenerator;
 import pro.sketchware.core.ProjectDataManager;
 import pro.sketchware.core.SketchwareConstants;
 

@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.codegen;
 
 /**
  * Contains generated Java helper class templates (FileUtil, BluetoothController, etc.).

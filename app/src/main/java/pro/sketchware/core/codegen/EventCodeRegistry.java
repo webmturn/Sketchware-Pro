@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import mod.agus.jcoderz.editor.event.ManageEvent;
-import pro.sketchware.core.ComponentCodeGenerator;
+import pro.sketchware.core.codegen.ComponentCodeGenerator;
 
 /**
  * Maps event names to {@link EventCodeHandler} implementations that generate listener code.

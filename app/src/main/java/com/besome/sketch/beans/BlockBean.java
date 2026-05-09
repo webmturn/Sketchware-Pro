@@ -10,7 +10,7 @@ import com.google.gson.annotations.Expose;
 import java.util.ArrayList;
 
 import pro.sketchware.core.ClassInfo;
-import pro.sketchware.core.ComponentTypeMapper;
+import pro.sketchware.core.codegen.ComponentTypeMapper;
 
 /**
  * Represents a single block in the logic editor.

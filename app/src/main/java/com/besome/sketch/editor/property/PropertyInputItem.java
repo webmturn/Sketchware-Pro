@@ -50,7 +50,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import pro.sketchware.core.ActivityCodeGenerator;
+import pro.sketchware.core.codegen.ActivityCodeGenerator;
 import pro.sketchware.core.PropertyChangedCallback;
 import pro.sketchware.core.validation.NumberRangeValidator;
 import pro.sketchware.core.validation.LengthRangeValidator;
@@ -435,7 +435,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
 
     private void updateValueDisplay(TextView textView, float value, boolean isInteger) {
         if (key.equals("property_rotate")) {
-            textView.setText(Math.round(value) + "°");
+            textView.setText(Math.round(value) + "掳");
         } else if (key.equals("property_text_size")) {
             textView.setText(Math.round(value) + "sp");
         } else if (key.equals("property_divider_height") || key.equals("property_elevation")) {

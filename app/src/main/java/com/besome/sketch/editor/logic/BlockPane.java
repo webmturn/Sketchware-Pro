@@ -3,7 +3,7 @@ package com.besome.sketch.editor.logic;
 import pro.sketchware.core.ClassInfo;
 import pro.sketchware.core.ui.BlockView;
 import pro.sketchware.core.ui.BaseBlockView;
-import pro.sketchware.core.ComponentTypeMapper;
+import pro.sketchware.core.codegen.ComponentTypeMapper;
 import pro.sketchware.core.ViewUtil;
 import android.content.Context;
 import android.graphics.Point;
@@ -84,7 +84,7 @@ public class BlockPane extends RelativeLayout {
   }
 
   /**
-   * Adds a block without triggering layout — for batch loading.
+   * Adds a block without triggering layout 鈥?for batch loading.
    * Call requestLayout() once after all blocks are added.
    */
   public void addBlockNoLayout(BlockView blockView) {

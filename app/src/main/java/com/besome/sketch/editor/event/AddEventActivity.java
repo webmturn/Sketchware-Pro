@@ -37,7 +37,7 @@ import java.util.HashSet;
 import java.util.HashMap;
 import java.util.Set;
 
-import pro.sketchware.core.LayoutGenerator;
+import pro.sketchware.core.codegen.LayoutGenerator;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.AnimationUtil;
 import pro.sketchware.core.ProjectDataManager;
