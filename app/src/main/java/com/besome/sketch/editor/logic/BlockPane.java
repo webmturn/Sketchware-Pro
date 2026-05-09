@@ -84,7 +84,7 @@ public class BlockPane extends RelativeLayout {
   }
 
   /**
-   * Adds a block without triggering layout 鈥?for batch loading.
+   * Adds a block without triggering layout — for batch loading.
    * Call requestLayout() once after all blocks are added.
    */
   public void addBlockNoLayout(BlockView blockView) {

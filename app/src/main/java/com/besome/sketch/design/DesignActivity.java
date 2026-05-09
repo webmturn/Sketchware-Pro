@@ -236,7 +236,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         projectFile = getDefaultProjectFile();
         ViewHistoryManager.getInstance(sc_id);
         BlockHistoryManager.getInstance(sc_id);
-        // Resource backup is now lazy 锟?ensureBackedUp() is called
+        // Resource backup is now lazy — ensureBackedUp() is called
         // before any resource modification, not eagerly on project open.
     }
 
@@ -1400,7 +1400,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 long elapsed = (System.currentTimeMillis() - buildStartTime) / 1000;
                 String elapsedStr = String.format("%d:%02d", elapsed / 60, elapsed % 60);
                 if (step >= 1) {
-                    stepInfoText.setText(step + "/" + totalSteps + " 路 " + elapsedStr);
+                    stepInfoText.setText(step + "/" + totalSteps + " · " + elapsedStr);
                 } else {
                     stepInfoText.setText(elapsedStr);
                 }

@@ -435,7 +435,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
 
     private void updateValueDisplay(TextView textView, float value, boolean isInteger) {
         if (key.equals("property_rotate")) {
-            textView.setText(Math.round(value) + "掳");
+            textView.setText(Math.round(value) + "°");
         } else if (key.equals("property_text_size")) {
             textView.setText(Math.round(value) + "sp");
         } else if (key.equals("property_divider_height") || key.equals("property_elevation")) {
