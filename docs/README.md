@@ -34,6 +34,8 @@ Documents are grouped by purpose so that long-term references, active proposals,
 | Document | Description |
 |----------|-------------|
 | [package-refactor-kickoff.md](package-refactor-kickoff.md) | Multi-session kickoff pack for splitting `pro.sketchware.core` (124 flat files) into responsibility-based sub-packages; contains Phase 1/2/3 prompts and acceptance checklist |
+| [package-refactor-plan.md](package-refactor-plan.md) | Phase 1 output: 9-sub-package split / 12-batch sequence / DAG dependency map for `pro.sketchware.core`; consumed by Phase 2 execution sessions |
+| [package-target-architecture.md](package-target-architecture.md) | Target architecture after all six P0/P1/P2 refactors (core split + LogicEditor controllers + BuildStage chain + vendor-dx submodule + codegen Sink layer + naming policy) |
 | [local-library-dependency-order-solution.md](local-library-dependency-order-solution.md) | Unimplemented proposal for local library dependency ordering via topological sort |
 | [lan-web-editing-mvp-plan.md](lan-web-editing-mvp-plan.md) | MVP planning note for LAN-based Web viewing, low-risk editing, and single-writer collaboration |
 
