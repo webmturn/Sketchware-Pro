@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.ui;
 
 import android.content.Context;
 import android.graphics.Rect;

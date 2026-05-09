@@ -36,7 +36,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import mod.hilal.saif.blocks.BlockTypeUtils;
-import pro.sketchware.core.BlockView;
+import pro.sketchware.core.ui.BlockView;
 import mod.hey.studios.util.Helper;
 import mod.hilal.saif.lib.PCP;
 import mod.jbk.util.LogUtil;

@@ -17,7 +17,7 @@ import androidx.viewbinding.ViewBinding;
 import com.besome.sketch.beans.AdTestDeviceBean;
 import com.besome.sketch.beans.ProjectLibraryBean;
 
-import pro.sketchware.core.LibrarySettingsView;
+import pro.sketchware.core.ui.LibrarySettingsView;
 import pro.sketchware.core.AnimationUtil;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;

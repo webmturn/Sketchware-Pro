@@ -6,8 +6,8 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 
 import pro.sketchware.core.FormatUtil;
-import pro.sketchware.core.BlockView;
-import pro.sketchware.core.BaseBlockView;
+import pro.sketchware.core.ui.BlockView;
+import pro.sketchware.core.ui.BaseBlockView;
 import pro.sketchware.core.BlockColorMapper;
 import mod.hey.studios.moreblock.ReturnMoreblockManager;
 

@@ -16,7 +16,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 
-import pro.sketchware.core.LibrarySettingsView;
+import pro.sketchware.core.ui.LibrarySettingsView;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.AnimationUtil;
 import pro.sketchware.core.ViewUtil;

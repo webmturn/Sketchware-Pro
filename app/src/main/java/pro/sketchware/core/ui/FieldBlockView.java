@@ -1,4 +1,6 @@
-package pro.sketchware.core;
+package pro.sketchware.core.ui;
+
+import pro.sketchware.core.BlockColorMapper;
 
 import android.content.Context;
 import android.graphics.Rect;

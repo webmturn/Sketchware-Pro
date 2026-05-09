@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.ui;
 
 import com.besome.sketch.beans.LayoutBean;
 import com.besome.sketch.beans.ProjectFileBean;

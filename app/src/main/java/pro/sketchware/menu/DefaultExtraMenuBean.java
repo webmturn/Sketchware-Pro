@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import pro.sketchware.core.FieldBlockView;
+import pro.sketchware.core.ui.FieldBlockView;
 import pro.sketchware.core.ProjectDataStore;
 import pro.sketchware.core.ProjectDataManager;
 import pro.sketchware.core.BlockConstants;

@@ -59,7 +59,7 @@ import pro.sketchware.core.ViewHistoryManager;
 import pro.sketchware.core.BuildCallback;
 import pro.sketchware.core.ProjectDataManager;
 import pro.sketchware.core.EncryptedFileUtil;
-import pro.sketchware.core.WidgetPaletteIcon;
+import pro.sketchware.core.ui.WidgetPaletteIcon;
 import pro.sketchware.core.ViewUtil;
 import pro.sketchware.core.SketchwarePaths;
 import mod.agus.jcoderz.beans.ViewBeans;

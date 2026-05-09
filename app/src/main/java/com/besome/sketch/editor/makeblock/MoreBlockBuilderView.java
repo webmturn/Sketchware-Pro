@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
-import pro.sketchware.core.BlockView;
+import pro.sketchware.core.ui.BlockView;
 import pro.sketchware.core.IdentifierValidator;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.UIHelper;
