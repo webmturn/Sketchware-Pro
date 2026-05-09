@@ -15,7 +15,7 @@ import android.widget.Toast;
 import com.besome.sketch.beans.ProjectResourceBean;
 import com.besome.sketch.lib.base.BaseDialogActivity;
 
-import pro.sketchware.core.FontCollectionManager;
+import pro.sketchware.core.project.FontCollectionManager;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.UIHelper;
 import pro.sketchware.core.codegen.BlockConstants;

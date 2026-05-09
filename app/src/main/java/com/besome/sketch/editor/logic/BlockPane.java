@@ -1,6 +1,6 @@
 package com.besome.sketch.editor.logic;
 
-import pro.sketchware.core.ClassInfo;
+import pro.sketchware.core.project.ClassInfo;
 import pro.sketchware.core.ui.BlockView;
 import pro.sketchware.core.ui.BaseBlockView;
 import pro.sketchware.core.codegen.ComponentTypeMapper;

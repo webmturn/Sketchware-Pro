@@ -18,7 +18,7 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import java.lang.ref.WeakReference;
 
 import pro.sketchware.core.BackgroundTasks;
-import pro.sketchware.core.FontCollectionManager;
+import pro.sketchware.core.project.FontCollectionManager;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.TaskHost;
 import pro.sketchware.core.UIHelper;

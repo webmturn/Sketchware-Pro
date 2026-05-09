@@ -1,4 +1,7 @@
-package pro.sketchware.core;
+package pro.sketchware.core.project;
+
+import pro.sketchware.core.CompileException;
+import pro.sketchware.core.SketchwarePaths;
 
 import android.util.Log;
 

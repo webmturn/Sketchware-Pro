@@ -1,4 +1,7 @@
-package pro.sketchware.core;
+package pro.sketchware.core.project;
+
+import pro.sketchware.core.CompileException;
+import pro.sketchware.core.SketchwarePaths;
 
 import com.besome.sketch.beans.CollectionBean;
 import com.besome.sketch.beans.ProjectResourceBean;
@@ -8,14 +11,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class FontCollectionManager extends BaseCollectionManager {
-    private static volatile FontCollectionManager instance;
+public class SoundCollectionManager extends BaseCollectionManager {
+    private static volatile SoundCollectionManager instance;
 
-    public static FontCollectionManager getInstance() {
+    public static SoundCollectionManager getInstance() {
         if (instance == null) {
-            synchronized (FontCollectionManager.class) {
+            synchronized (SoundCollectionManager.class) {
                 if (instance == null) {
-                    instance = new FontCollectionManager();
+                    instance = new SoundCollectionManager();
                 }
             }
         }
@@ -30,6 +33,7 @@ public class FontCollectionManager extends BaseCollectionManager {
     }
 
     public void renameResource(ProjectResourceBean resourceBean, String newName, boolean save) {
+        if (collections == null) initialize();
         for (int i = collections.size() - 1; i >= 0; i--) {
             CollectionBean collection = collections.get(i);
             if (collection.name.equals(resourceBean.resName)) {
@@ -61,7 +65,7 @@ public class FontCollectionManager extends BaseCollectionManager {
         if (resourceBean.savedPos == 1) {
             srcPath = resourceBean.resFullName;
         } else {
-            srcPath = SketchwarePaths.getFontsResourcePath() + File.separator + sourcePath + File.separator + resourceBean.resFullName;
+            srcPath = SketchwarePaths.getSoundsPath() + File.separator + sourcePath + File.separator + resourceBean.resFullName;
         }
         if (!fileUtil.exists(srcPath)) {
             throw new CompileException("file_no_exist");
@@ -77,6 +81,7 @@ public class FontCollectionManager extends BaseCollectionManager {
     }
 
     public void removeResource(String resourceName, boolean save) {
+        if (collections == null) initialize();
         Iterator<CollectionBean> it = collections.iterator();
         while (it.hasNext()) {
             CollectionBean collection = it.next();
@@ -90,7 +95,7 @@ public class FontCollectionManager extends BaseCollectionManager {
     }
 
     public void initializePaths() {
-        String basePath = SketchwarePaths.getCollectionPath() + File.separator + "font" + File.separator;
+        String basePath = SketchwarePaths.getCollectionPath() + File.separator + "sound" + File.separator;
         collectionFilePath = basePath + "list";
         dataDirPath = basePath + "data";
     }

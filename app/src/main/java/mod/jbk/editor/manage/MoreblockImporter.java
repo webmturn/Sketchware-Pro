@@ -21,10 +21,10 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import pro.sketchware.core.ClassInfo;
-import pro.sketchware.core.FontCollectionManager;
-import pro.sketchware.core.ImageCollectionManager;
-import pro.sketchware.core.SoundCollectionManager;
+import pro.sketchware.core.project.ClassInfo;
+import pro.sketchware.core.project.FontCollectionManager;
+import pro.sketchware.core.project.ImageCollectionManager;
+import pro.sketchware.core.project.SoundCollectionManager;
 import pro.sketchware.core.validation.IdentifierValidator;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.ProjectDataStore;

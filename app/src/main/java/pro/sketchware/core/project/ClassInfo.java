@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.project;
 
 import mod.hilal.saif.components.ComponentsHandler;
 

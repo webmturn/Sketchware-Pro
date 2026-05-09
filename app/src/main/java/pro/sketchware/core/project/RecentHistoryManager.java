@@ -1,4 +1,6 @@
-package pro.sketchware.core;
+package pro.sketchware.core.project;
+
+import pro.sketchware.core.SharedPrefsHelper;
 
 import android.content.Context;
 import java.util.ArrayList;

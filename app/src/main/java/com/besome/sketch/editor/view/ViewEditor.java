@@ -51,11 +51,11 @@ import java.util.HashMap;
 
 import pro.sketchware.core.SharedPrefsHelper;
 import pro.sketchware.core.DeviceUtil;
-import pro.sketchware.core.ImageCollectionManager;
-import pro.sketchware.core.WidgetCollectionManager;
+import pro.sketchware.core.project.ImageCollectionManager;
+import pro.sketchware.core.project.WidgetCollectionManager;
 import pro.sketchware.core.SimpleCallback;
 import pro.sketchware.core.SketchToast;
-import pro.sketchware.core.ViewHistoryManager;
+import pro.sketchware.core.project.ViewHistoryManager;
 import pro.sketchware.core.BuildCallback;
 import pro.sketchware.core.ProjectDataManager;
 import pro.sketchware.core.EncryptedFileUtil;

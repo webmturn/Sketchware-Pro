@@ -1,6 +1,6 @@
 package pro.sketchware.core.codegen;
 import pro.sketchware.core.BuildConfig;
-import pro.sketchware.core.ClassInfo;
+import pro.sketchware.core.project.ClassInfo;
 import pro.sketchware.core.SketchwareConstants;
 
 import static com.besome.sketch.editor.property.PropertyAttributesItem.RELATIVE_IDS;

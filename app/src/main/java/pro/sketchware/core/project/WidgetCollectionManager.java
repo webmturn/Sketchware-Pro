@@ -1,10 +1,13 @@
-package pro.sketchware.core;
+package pro.sketchware.core.project;
+
+import pro.sketchware.core.CompileException;
+import pro.sketchware.core.SketchwarePaths;
 
 import android.util.Log;
 
-import com.besome.sketch.beans.BlockBean;
-import com.besome.sketch.beans.BlockCollectionBean;
 import com.besome.sketch.beans.CollectionBean;
+import com.besome.sketch.beans.ViewBean;
+import com.besome.sketch.beans.WidgetCollectionBean;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -14,35 +17,35 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 
-public class BlockCollectionManager extends BaseCollectionManager {
-    private static volatile BlockCollectionManager instance;
-    private Gson blockGson;
+public class WidgetCollectionManager extends BaseCollectionManager {
+    private static volatile WidgetCollectionManager instance;
+    private Gson widgetGson;
 
-    public BlockCollectionManager() {
+    public WidgetCollectionManager() {
         initializeGson();
     }
 
-    public static BlockCollectionManager getInstance() {
+    public static WidgetCollectionManager getInstance() {
         if (instance == null) {
-            synchronized (BlockCollectionManager.class) {
+            synchronized (WidgetCollectionManager.class) {
                 if (instance == null) {
-                    instance = new BlockCollectionManager();
+                    instance = new WidgetCollectionManager();
                 }
             }
         }
         return instance;
     }
 
-    public BlockCollectionBean getBlockByName(String blockName) {
+    public WidgetCollectionBean getWidgetByName(String widgetName) {
         for (CollectionBean collection : collections) {
-            if (collection.name.equals(blockName)) {
-                return new BlockCollectionBean(collection.name, ProjectDataParser.parseBlockBeans(blockGson, collection.data));
+            if (collection.name.equals(widgetName)) {
+                return new WidgetCollectionBean(collection.name, ProjectDataParser.parseViewBeans(widgetGson, collection.data));
             }
         }
         return null;
     }
 
-    public void renameBlock(String oldName, String newName, boolean save) {
+    public void renameWidget(String oldName, String newName, boolean save) {
         for (CollectionBean collection : collections) {
             if (collection.name.equals(oldName)) {
                 collection.name = newName;
@@ -52,29 +55,29 @@ public class BlockCollectionManager extends BaseCollectionManager {
         if (save) saveCollections();
     }
 
-    public void addBlock(String blockName, ArrayList<BlockBean> blocks, boolean save) throws CompileException {
+    public void addWidget(String widgetName, ArrayList<ViewBean> widgets, boolean save) throws CompileException {
         if (collections == null) initialize();
-        if (blockGson == null) initializeGson();
+        if (widgetGson == null) initializeGson();
         for (CollectionBean collection : collections) {
-            if (collection.name.equals(blockName)) {
+            if (collection.name.equals(widgetName)) {
                 throw new CompileException("duplicate_name");
             }
         }
         StringBuilder contentBuilder = new StringBuilder();
-        for (BlockBean block : blocks) {
-            contentBuilder.append(blockGson.toJson(block)).append("\n");
+        for (ViewBean widget : widgets) {
+            contentBuilder.append(widgetGson.toJson(widget)).append("\n");
         }
-        collections.add(new CollectionBean(blockName, contentBuilder.toString()));
+        collections.add(new CollectionBean(widgetName, contentBuilder.toString()));
         if (save) saveCollections();
     }
 
-    public void removeBlock(String blockName, boolean save) {
-        collections.removeIf(collection -> collection.name.equals(blockName));
+    public void removeWidget(String widgetName, boolean save) {
+        collections.removeIf(collection -> collection.name.equals(widgetName));
         if (save) saveCollections();
     }
 
     public void initializePaths() {
-        String basePath = SketchwarePaths.getCollectionPath() + File.separator + "block" + File.separator;
+        String basePath = SketchwarePaths.getCollectionPath() + File.separator + "widget" + File.separator;
         collectionFilePath = basePath + "list";
         dataDirPath = basePath + "data";
     }
@@ -95,21 +98,21 @@ public class BlockCollectionManager extends BaseCollectionManager {
                 }
             }
         } catch (IOException e) {
-            Log.e("BlockCollectionManager", "Failed to load collections", e);
+            Log.e("WidgetCollectionManager", "Failed to load collections", e);
         }
     }
 
-    public ArrayList<BlockCollectionBean> getBlocks() {
+    public ArrayList<WidgetCollectionBean> getWidgets() {
         if (collections == null) initialize();
-        if (blockGson == null) initializeGson();
-        ArrayList<BlockCollectionBean> result = new ArrayList<>();
+        if (widgetGson == null) initializeGson();
+        ArrayList<WidgetCollectionBean> result = new ArrayList<>();
         for (CollectionBean collection : collections) {
-            result.add(new BlockCollectionBean(collection.name, ProjectDataParser.parseBlockBeans(blockGson, collection.data)));
+            result.add(new WidgetCollectionBean(collection.name, ProjectDataParser.parseViewBeans(widgetGson, collection.data)));
         }
         return result;
     }
 
-    public ArrayList<String> getBlockNames() {
+    public ArrayList<String> getWidgetNames() {
         if (collections == null) initialize();
         ArrayList<String> names = new ArrayList<>();
         for (CollectionBean collection : collections) {
@@ -119,6 +122,6 @@ public class BlockCollectionManager extends BaseCollectionManager {
     }
 
     public final void initializeGson() {
-        blockGson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        widgetGson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     }
 }

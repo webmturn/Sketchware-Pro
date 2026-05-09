@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.project;
 
 import com.besome.sketch.beans.HistoryViewBean;
 import com.besome.sketch.beans.ViewBean;

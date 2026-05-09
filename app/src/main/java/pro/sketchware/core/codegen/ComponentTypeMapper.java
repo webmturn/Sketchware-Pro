@@ -1,5 +1,5 @@
 package pro.sketchware.core.codegen;
-import pro.sketchware.core.ClassInfo;
+import pro.sketchware.core.project.ClassInfo;
 import pro.sketchware.core.FormatUtil;
 
 import com.besome.sketch.beans.ComponentBean;

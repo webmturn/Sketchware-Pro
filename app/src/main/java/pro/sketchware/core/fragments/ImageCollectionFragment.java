@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import pro.sketchware.R;
 import pro.sketchware.databinding.FrManageImageListBinding;
 import pro.sketchware.databinding.ManageImageListItemBinding;
-import pro.sketchware.core.ImageCollectionManager;
+import pro.sketchware.core.project.ImageCollectionManager;
 import pro.sketchware.core.SketchwarePaths;
 import pro.sketchware.core.UIHelper;
 

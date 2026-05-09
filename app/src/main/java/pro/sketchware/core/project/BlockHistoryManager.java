@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.project;
 
 import com.besome.sketch.beans.BlockBean;
 import com.besome.sketch.beans.HistoryBlockBean;

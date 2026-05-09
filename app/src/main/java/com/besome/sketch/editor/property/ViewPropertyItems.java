@@ -25,11 +25,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
-import pro.sketchware.core.RecentHistoryManager;
-import pro.sketchware.core.ClassInfo;
+import pro.sketchware.core.project.RecentHistoryManager;
+import pro.sketchware.core.project.ClassInfo;
 import pro.sketchware.core.PropertyChangedCallback;
 import pro.sketchware.core.ViewBeanCallback;
-import pro.sketchware.core.ViewHistoryManager;
+import pro.sketchware.core.project.ViewHistoryManager;
 import pro.sketchware.core.ProjectDataManager;
 import pro.sketchware.core.UIHelper;
 import pro.sketchware.core.codegen.EventRegistry;

@@ -8,7 +8,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import pro.sketchware.core.ClassInfo;
+import pro.sketchware.core.project.ClassInfo;
 import pro.sketchware.core.codegen.EventRegistry;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;

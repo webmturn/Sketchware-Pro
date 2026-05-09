@@ -18,8 +18,8 @@ import java.util.ArrayList;
 
 import pro.sketchware.core.DeviceUtil;
 import pro.sketchware.core.validation.UniqueNameValidator;
-import pro.sketchware.core.ImageCollectionManager;
-import pro.sketchware.core.WidgetCollectionManager;
+import pro.sketchware.core.project.ImageCollectionManager;
+import pro.sketchware.core.project.WidgetCollectionManager;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.ResourceManager;
 import pro.sketchware.core.UIHelper;

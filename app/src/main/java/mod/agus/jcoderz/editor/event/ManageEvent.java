@@ -2,7 +2,7 @@ package mod.agus.jcoderz.editor.event;
 
 import java.util.ArrayList;
 
-import pro.sketchware.core.ClassInfo;
+import pro.sketchware.core.project.ClassInfo;
 import pro.sketchware.core.codegen.ComponentCodeGenerator;
 import mod.hey.studios.util.Helper;
 import mod.hilal.saif.events.EventsHandler;

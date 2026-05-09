@@ -13,7 +13,7 @@ import com.besome.sketch.lib.base.BaseDialogActivity;
 import java.io.File;
 import java.util.ArrayList;
 
-import pro.sketchware.core.FontCollectionManager;
+import pro.sketchware.core.project.FontCollectionManager;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.codegen.BlockConstants;
 import pro.sketchware.core.SketchwarePaths;

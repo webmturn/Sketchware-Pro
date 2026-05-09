@@ -9,7 +9,7 @@ import com.google.gson.annotations.Expose;
 
 import java.util.ArrayList;
 
-import pro.sketchware.core.ClassInfo;
+import pro.sketchware.core.project.ClassInfo;
 import pro.sketchware.core.codegen.ComponentTypeMapper;
 
 /**
@@ -198,7 +198,7 @@ public class BlockBean extends SelectableBean implements Parcelable {
 
     /**
      * Checks value equality with another BlockBean by comparing all fields
-     * including parameters. Used by {@link pro.sketchware.core.BlockHistoryManager}
+     * including parameters. Used by {@link pro.sketchware.core.project.BlockHistoryManager}
      * to detect actual changes before recording undo history.
      *
      * @param other the block to compare with

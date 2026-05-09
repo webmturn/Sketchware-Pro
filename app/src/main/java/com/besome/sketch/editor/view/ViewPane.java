@@ -77,7 +77,7 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import pro.sketchware.core.ClassInfo;
+import pro.sketchware.core.project.ClassInfo;
 import pro.sketchware.core.ResourceManager;
 import pro.sketchware.core.ProjectListManager;
 import pro.sketchware.core.ViewUtil;

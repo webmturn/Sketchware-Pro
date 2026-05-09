@@ -54,9 +54,9 @@ import pro.sketchware.core.BuildCallback;
 import pro.sketchware.core.ProjectDataManager;
 import pro.sketchware.core.ProjectDataStore;
 import pro.sketchware.core.ViewEditorCallback;
-import pro.sketchware.core.ViewHistoryManager;
+import pro.sketchware.core.project.ViewHistoryManager;
 import pro.sketchware.core.ViewUtil;
-import pro.sketchware.core.WidgetCollectionManager;
+import pro.sketchware.core.project.WidgetCollectionManager;
 import pro.sketchware.core.codegen.XmlLayoutParser;
 
 public class ViewEditorFragment extends BaseFragment implements MenuProvider {

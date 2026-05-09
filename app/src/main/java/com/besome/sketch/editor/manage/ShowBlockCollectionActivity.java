@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import pro.sketchware.core.DeviceUtil;
-import pro.sketchware.core.BlockCollectionManager;
+import pro.sketchware.core.project.BlockCollectionManager;
 import pro.sketchware.core.validation.UniqueNameValidator;
 import pro.sketchware.core.ui.BlockView;
 import pro.sketchware.core.ui.FieldBlockView;
