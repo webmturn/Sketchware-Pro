@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.fragments;
 
 import android.app.Activity;
 import android.content.Context;

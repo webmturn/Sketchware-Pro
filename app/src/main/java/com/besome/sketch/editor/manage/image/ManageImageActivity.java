@@ -23,11 +23,11 @@ import java.lang.ref.WeakReference;
 
 import pro.sketchware.core.BackgroundTasks;
 import pro.sketchware.core.ImageCollectionManager;
-import pro.sketchware.core.ImageCollectionFragment;
+import pro.sketchware.core.fragments.ImageCollectionFragment;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.TaskHost;
 import pro.sketchware.core.UIHelper;
-import pro.sketchware.core.ImageListFragment;
+import pro.sketchware.core.fragments.ImageListFragment;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageImageBinding;
 

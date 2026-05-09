@@ -84,10 +84,10 @@ import pro.sketchware.core.SharedPrefsHelper;
 import pro.sketchware.core.DeviceUtil;
 import pro.sketchware.core.LayoutGenerator;
 import pro.sketchware.core.ProjectBuilder;
-import pro.sketchware.core.ViewEditorFragment;
+import pro.sketchware.core.fragments.ViewEditorFragment;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.BlockHistoryManager;
-import pro.sketchware.core.ComponentListFragment;
+import pro.sketchware.core.fragments.ComponentListFragment;
 import pro.sketchware.core.ViewHistoryManager;
 import pro.sketchware.core.ProjectDataStore;
 import pro.sketchware.core.ProjectDataManager;
@@ -95,7 +95,7 @@ import pro.sketchware.core.ResourceManager;
 import pro.sketchware.core.ProjectListManager;
 import pro.sketchware.core.TaskHost;
 import pro.sketchware.core.UIHelper;
-import pro.sketchware.core.EventListFragment;
+import pro.sketchware.core.fragments.EventListFragment;
 import pro.sketchware.core.SketchwarePaths;
 import pro.sketchware.core.MapValueHelper;
 import pro.sketchware.core.ProjectFilePaths;
@@ -236,7 +236,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         projectFile = getDefaultProjectFile();
         ViewHistoryManager.getInstance(sc_id);
         BlockHistoryManager.getInstance(sc_id);
-        // Resource backup is now lazy â€” ensureBackedUp() is called
+        // Resource backup is now lazy â€?ensureBackedUp() is called
         // before any resource modification, not eagerly on project open.
     }
 

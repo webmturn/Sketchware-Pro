@@ -40,14 +40,14 @@ import java.util.Iterator;
 
 import pro.sketchware.core.BackgroundTasks;
 import pro.sketchware.core.SketchwareException;
-import pro.sketchware.core.ViewFilesFragment;
+import pro.sketchware.core.fragments.ViewFilesFragment;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.ProjectDataStore;
 import pro.sketchware.core.ProjectDataManager;
 import pro.sketchware.core.TaskHost;
 import pro.sketchware.core.UIHelper;
 import pro.sketchware.core.SketchwarePaths;
-import pro.sketchware.core.ViewFilesAdapter;
+import pro.sketchware.core.fragments.ViewFilesAdapter;
 import pro.sketchware.R;
 
 public class ManageViewActivity extends BaseAppCompatActivity implements OnClickListener, ViewPager.OnPageChangeListener {

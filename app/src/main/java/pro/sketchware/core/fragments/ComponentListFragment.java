@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.fragments;
 
 
 import mod.hey.studios.util.Helper;
@@ -36,6 +36,11 @@ import pro.sketchware.R;
 import pro.sketchware.databinding.FrComponentListBinding;
 import pro.sketchware.databinding.FrLogicListItemComponentBinding;
 import pro.sketchware.databinding.FrLogicListItemEventPreviewBinding;
+import pro.sketchware.core.EventRegistry;
+import pro.sketchware.core.ProjectDataManager;
+import pro.sketchware.core.SketchToast;
+import pro.sketchware.core.UIHelper;
+import pro.sketchware.core.ViewUtil;
 
 public class ComponentListFragment extends BaseFragment implements View.OnClickListener {
 

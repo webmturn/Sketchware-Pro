@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -52,6 +52,19 @@ import mod.hey.studios.moreblock.importer.MoreblockImporterDialog;
 import mod.hey.studios.util.Helper;
 import mod.jbk.editor.manage.MoreblockImporter;
 import pro.sketchware.R;
+import pro.sketchware.core.ClassInfo;
+import pro.sketchware.core.CompileException;
+import pro.sketchware.core.EventRegistry;
+import pro.sketchware.core.FontCollectionManager;
+import pro.sketchware.core.ImageCollectionManager;
+import pro.sketchware.core.MoreBlockCollectionManager;
+import pro.sketchware.core.ProjectDataManager;
+import pro.sketchware.core.ProjectDataStore;
+import pro.sketchware.core.SketchToast;
+import pro.sketchware.core.SoundCollectionManager;
+import pro.sketchware.core.UIHelper;
+import pro.sketchware.core.UniqueNameValidator;
+import pro.sketchware.core.ViewUtil;
 
 public class EventListFragment extends BaseFragment implements View.OnClickListener, MoreblockImporterDialog.CallBack {
 

@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.besome.sketch.beans.ProjectFileBean;
 import com.besome.sketch.editor.manage.view.PresetSettingActivity;
+import pro.sketchware.core.UIHelper;
 
 public class ViewFileEditClickListener implements View.OnClickListener {
   public final ViewFilesAdapter.FileListAdapter adapter;

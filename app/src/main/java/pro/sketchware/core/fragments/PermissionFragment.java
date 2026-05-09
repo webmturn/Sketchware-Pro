@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.fragments;
 
 import android.content.pm.PackageManager;
 
@@ -8,6 +8,8 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import pro.sketchware.R;
+import pro.sketchware.core.ThrottleTimer;
+import pro.sketchware.core.UIHelper;
 
 public abstract class PermissionFragment extends BaseFragment {
     public PermissionFragment() {

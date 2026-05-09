@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.fragments;
 
 import androidx.recyclerview.widget.RecyclerView;
 import com.besome.sketch.editor.manage.view.ManageViewActivity;

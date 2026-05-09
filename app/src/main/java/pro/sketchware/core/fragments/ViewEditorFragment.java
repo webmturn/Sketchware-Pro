@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.fragments;
 
 import android.animation.ObjectAnimator;
 import android.content.Intent;
@@ -50,6 +50,14 @@ import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.utility.SketchwareUtil;
 import pro.sketchware.widgets.WidgetsCreatorManager;
+import pro.sketchware.core.BuildCallback;
+import pro.sketchware.core.ProjectDataManager;
+import pro.sketchware.core.ProjectDataStore;
+import pro.sketchware.core.ViewEditorCallback;
+import pro.sketchware.core.ViewHistoryManager;
+import pro.sketchware.core.ViewUtil;
+import pro.sketchware.core.WidgetCollectionManager;
+import pro.sketchware.core.XmlLayoutParser;
 
 public class ViewEditorFragment extends BaseFragment implements MenuProvider {
 

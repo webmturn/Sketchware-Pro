@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.fragments;
 
 
 import mod.hey.studios.util.Helper;
@@ -32,6 +32,9 @@ import java.util.ArrayList;
 import pro.sketchware.R;
 import pro.sketchware.databinding.FrManageImageListBinding;
 import pro.sketchware.databinding.ManageImageListItemBinding;
+import pro.sketchware.core.ImageCollectionManager;
+import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.UIHelper;
 
 public class ImageCollectionFragment extends BaseFragment implements View.OnClickListener {
 

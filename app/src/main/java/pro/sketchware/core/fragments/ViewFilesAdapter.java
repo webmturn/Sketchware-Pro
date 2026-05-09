@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +17,11 @@ import pro.sketchware.R;
 import com.besome.sketch.beans.SelectableBean;
 import com.besome.sketch.beans.ViewBean;
 import java.util.ArrayList;
+import pro.sketchware.core.PresetLayoutFactory;
+import pro.sketchware.core.ProjectDataManager;
+import pro.sketchware.core.ProjectDataStore;
+import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.StringResource;
 
 public class ViewFilesAdapter extends BaseFragment {
   public RecyclerView recyclerView;

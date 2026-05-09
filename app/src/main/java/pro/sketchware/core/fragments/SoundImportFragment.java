@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.fragments;
 
 
 import mod.hey.studios.util.Helper;
@@ -36,6 +36,11 @@ import pro.sketchware.R;
 import pro.sketchware.databinding.FrManageSoundListBinding;
 import pro.sketchware.databinding.ManageSoundBinding;
 import pro.sketchware.databinding.ManageSoundListItemBinding;
+import pro.sketchware.core.EncryptedFileUtil;
+import pro.sketchware.core.ProjectDataManager;
+import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.SoundCollectionManager;
+import pro.sketchware.core.UIHelper;
 
 public class SoundImportFragment extends BaseFragment {
     private String sc_id;
