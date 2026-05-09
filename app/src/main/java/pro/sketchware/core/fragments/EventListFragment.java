@@ -63,7 +63,7 @@ import pro.sketchware.core.ProjectDataStore;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.SoundCollectionManager;
 import pro.sketchware.core.UIHelper;
-import pro.sketchware.core.UniqueNameValidator;
+import pro.sketchware.core.validation.UniqueNameValidator;
 import pro.sketchware.core.ViewUtil;
 
 public class EventListFragment extends BaseFragment implements View.OnClickListener, MoreblockImporterDialog.CallBack {

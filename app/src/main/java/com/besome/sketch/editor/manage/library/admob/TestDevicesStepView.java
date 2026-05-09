@@ -24,7 +24,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-import pro.sketchware.core.UniqueNameValidator;
+import pro.sketchware.core.validation.UniqueNameValidator;
 import pro.sketchware.core.ui.LibrarySettingsView;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.AnimationUtil;

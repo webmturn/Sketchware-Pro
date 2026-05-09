@@ -17,7 +17,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import pro.sketchware.core.ActivityNameValidator;
+import pro.sketchware.core.validation.ActivityNameValidator;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.ui.PresetLayoutFactory;
 import pro.sketchware.core.BlockConstants;

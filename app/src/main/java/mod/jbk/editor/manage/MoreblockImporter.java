@@ -25,7 +25,7 @@ import pro.sketchware.core.ClassInfo;
 import pro.sketchware.core.FontCollectionManager;
 import pro.sketchware.core.ImageCollectionManager;
 import pro.sketchware.core.SoundCollectionManager;
-import pro.sketchware.core.IdentifierValidator;
+import pro.sketchware.core.validation.IdentifierValidator;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.ProjectDataStore;
 import pro.sketchware.core.ProjectDataManager;

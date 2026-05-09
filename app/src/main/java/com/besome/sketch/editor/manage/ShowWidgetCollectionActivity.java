@@ -17,7 +17,7 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import java.util.ArrayList;
 
 import pro.sketchware.core.DeviceUtil;
-import pro.sketchware.core.UniqueNameValidator;
+import pro.sketchware.core.validation.UniqueNameValidator;
 import pro.sketchware.core.ImageCollectionManager;
 import pro.sketchware.core.WidgetCollectionManager;
 import pro.sketchware.core.SketchToast;

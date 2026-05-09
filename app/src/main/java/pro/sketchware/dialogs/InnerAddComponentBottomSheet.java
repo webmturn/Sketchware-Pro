@@ -23,8 +23,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import pro.sketchware.core.DeviceUtil;
-import pro.sketchware.core.LengthRangeValidator;
-import pro.sketchware.core.IdentifierValidator;
+import pro.sketchware.core.validation.LengthRangeValidator;
+import pro.sketchware.core.validation.IdentifierValidator;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.ProjectDataManager;
 import pro.sketchware.core.UIHelper;

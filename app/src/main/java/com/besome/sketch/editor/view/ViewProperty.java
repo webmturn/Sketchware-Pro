@@ -34,7 +34,7 @@ import pro.sketchware.core.ViewEditorCallback;
 import pro.sketchware.core.FileSelectedCallback;
 import pro.sketchware.core.PropertyChangedCallback;
 import pro.sketchware.core.ViewBeanCallback;
-import pro.sketchware.core.UniqueNameValidator;
+import pro.sketchware.core.validation.UniqueNameValidator;
 import pro.sketchware.core.ImageCollectionManager;
 import pro.sketchware.core.EventSelectedCallback;
 import pro.sketchware.core.WidgetCollectionManager;

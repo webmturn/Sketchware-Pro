@@ -31,7 +31,7 @@ import com.bumptech.glide.Glide;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import pro.sketchware.core.XmlNameValidator;
+import pro.sketchware.core.validation.XmlNameValidator;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.UIHelper;
 import pro.sketchware.core.BlockConstants;

@@ -31,7 +31,7 @@ import pro.sketchware.core.SketchwareException;
 import pro.sketchware.core.TaskHost;
 import pro.sketchware.core.UriPathResolver;
 import pro.sketchware.core.ImageCollectionManager;
-import pro.sketchware.core.FileNameValidator;
+import pro.sketchware.core.validation.FileNameValidator;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.BitmapUtil;
 import pro.sketchware.core.UIHelper;

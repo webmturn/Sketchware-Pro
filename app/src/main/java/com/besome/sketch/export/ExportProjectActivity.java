@@ -46,7 +46,7 @@ import pro.sketchware.core.ProjectListManager;
 import pro.sketchware.core.ResourceManager;
 import pro.sketchware.core.SketchwarePaths;
 import pro.sketchware.core.TaskHost;
-import pro.sketchware.core.VersionCodeValidator;
+import pro.sketchware.core.validation.VersionCodeValidator;
 import pro.sketchware.core.ZipUtil;
 import pro.sketchware.utility.FilePathUtil;
 import pro.sketchware.utility.FileUtil;

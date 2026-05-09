@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.validation;
 
 import android.content.Context;
 import android.text.Editable;

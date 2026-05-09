@@ -21,7 +21,7 @@ import com.google.android.material.button.MaterialButtonToggleGroup;
 
 import java.util.ArrayList;
 
-import pro.sketchware.core.ActivityNameValidator;
+import pro.sketchware.core.validation.ActivityNameValidator;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.ui.PresetLayoutFactory;
 import pro.sketchware.core.BlockConstants;

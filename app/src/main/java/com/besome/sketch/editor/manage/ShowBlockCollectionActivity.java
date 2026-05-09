@@ -22,7 +22,7 @@ import java.util.HashMap;
 
 import pro.sketchware.core.DeviceUtil;
 import pro.sketchware.core.BlockCollectionManager;
-import pro.sketchware.core.UniqueNameValidator;
+import pro.sketchware.core.validation.UniqueNameValidator;
 import pro.sketchware.core.ui.BlockView;
 import pro.sketchware.core.ui.FieldBlockView;
 import pro.sketchware.core.ui.BaseBlockView;
