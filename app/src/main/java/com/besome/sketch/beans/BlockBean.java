@@ -25,8 +25,8 @@ import pro.sketchware.core.ComponentTypeMapper;
  * Blocks form linked chains via {@link #nextBlock} (the next statement) and can contain
  * nested sub-stacks via {@link #subStack1} and {@link #subStack2} (for if/else, repeat, etc.).
  *
- * @see pro.sketchware.core.BlockInterpreter
- * @see pro.sketchware.core.BlockCodeRegistry
+ * @see pro.sketchware.core.codegen.BlockInterpreter
+ * @see pro.sketchware.core.codegen.BlockCodeRegistry
  */
 public class BlockBean extends SelectableBean implements Parcelable {
     public static final Parcelable.Creator<BlockBean> CREATOR = new Parcelable.Creator<>() {

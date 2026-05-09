@@ -32,7 +32,7 @@ import pro.sketchware.core.ViewBeanCallback;
 import pro.sketchware.core.ViewHistoryManager;
 import pro.sketchware.core.ProjectDataManager;
 import pro.sketchware.core.UIHelper;
-import pro.sketchware.core.EventRegistry;
+import pro.sketchware.core.codegen.EventRegistry;
 import mod.hey.studios.project.ProjectSettings;
 import mod.pranav.viewbinding.ViewBindingBuilder;
 import mod.agus.jcoderz.beans.ViewBeans;

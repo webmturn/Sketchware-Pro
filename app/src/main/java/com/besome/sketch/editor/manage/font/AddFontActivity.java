@@ -18,7 +18,7 @@ import com.besome.sketch.lib.base.BaseDialogActivity;
 import pro.sketchware.core.FontCollectionManager;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.UIHelper;
-import pro.sketchware.core.BlockConstants;
+import pro.sketchware.core.codegen.BlockConstants;
 import pro.sketchware.core.CompileException;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;

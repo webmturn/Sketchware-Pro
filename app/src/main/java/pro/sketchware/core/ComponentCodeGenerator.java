@@ -11,6 +11,12 @@ import java.util.Set;
 import mod.hey.studios.moreblock.ReturnMoreblockManager;
 import mod.hilal.saif.components.ComponentsHandler;
 import mod.pranav.viewbinding.ViewBindingBuilder;
+import pro.sketchware.core.codegen.BlockCodeRegistry;
+import pro.sketchware.core.codegen.BlockInterpreter;
+import pro.sketchware.core.codegen.CodeContext;
+import pro.sketchware.core.codegen.CodeFormatter;
+import pro.sketchware.core.codegen.EventCodeRegistry;
+import pro.sketchware.core.codegen.ListenerCodeRegistry;
 
 /**
  * Generates Java source code for component-related operations:

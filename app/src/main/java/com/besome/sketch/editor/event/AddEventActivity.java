@@ -43,7 +43,7 @@ import pro.sketchware.core.AnimationUtil;
 import pro.sketchware.core.ProjectDataManager;
 import pro.sketchware.core.BuildConfig;
 import pro.sketchware.core.UIHelper;
-import pro.sketchware.core.EventRegistry;
+import pro.sketchware.core.codegen.EventRegistry;
 import pro.sketchware.core.fragments.EventListFragment;
 import pro.sketchware.core.ViewUtil;
 import pro.sketchware.R;

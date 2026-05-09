@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.codegen;
 
 import androidx.annotation.DrawableRes;
 
@@ -8,6 +8,7 @@ import mod.agus.jcoderz.editor.event.ManageEvent;
 import mod.hey.studios.util.Helper;
 import mod.hilal.saif.events.EventsHandler;
 import pro.sketchware.R;
+import pro.sketchware.core.ClassInfo;
 
 public class EventRegistry {
 

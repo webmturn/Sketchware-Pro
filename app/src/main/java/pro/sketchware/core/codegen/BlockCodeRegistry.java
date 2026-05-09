@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.codegen;
 
 import android.util.Pair;
 
@@ -11,6 +11,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import mod.hey.studios.moreblock.ReturnMoreblockManager;
+import pro.sketchware.core.ClassInfo;
+import pro.sketchware.core.ComponentCodeGenerator;
+import pro.sketchware.core.ProjectDataManager;
+import pro.sketchware.core.SketchwareConstants;
 
 /**
  * Maps block opcodes to {@link BlockCodeHandler} implementations that generate Java code.

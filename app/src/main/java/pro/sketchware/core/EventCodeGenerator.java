@@ -13,6 +13,9 @@ import java.util.Map;
 import mod.hey.studios.project.ProjectSettings;
 import mod.hilal.saif.components.ComponentExtraCode;
 import mod.pranav.viewbinding.ViewBindingBuilder;
+import pro.sketchware.core.codegen.BlockInterpreter;
+import pro.sketchware.core.codegen.CodeContext;
+import pro.sketchware.core.codegen.EventRegistry;
 
 public class EventCodeGenerator {
 

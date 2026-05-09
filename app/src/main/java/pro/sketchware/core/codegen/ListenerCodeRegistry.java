@@ -1,9 +1,10 @@
-package pro.sketchware.core;
+package pro.sketchware.core.codegen;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import mod.agus.jcoderz.editor.event.ManageEvent;
+import pro.sketchware.core.ComponentCodeGenerator;
 
 /**
  * Registry-based replacement for the switch in

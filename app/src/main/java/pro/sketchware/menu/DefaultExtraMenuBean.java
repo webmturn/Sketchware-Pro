@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 import pro.sketchware.core.ui.FieldBlockView;
 import pro.sketchware.core.ProjectDataStore;
 import pro.sketchware.core.ProjectDataManager;
-import pro.sketchware.core.BlockConstants;
+import pro.sketchware.core.codegen.BlockConstants;
 import pro.sketchware.core.SketchwarePaths;
 import mod.agus.jcoderz.editor.manage.block.makeblock.BlockMenu;
 import mod.hey.studios.util.Helper;

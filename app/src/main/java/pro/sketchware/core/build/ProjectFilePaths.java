@@ -1,7 +1,7 @@
 package pro.sketchware.core.build;
 
 import pro.sketchware.core.ActivityCodeGenerator;
-import pro.sketchware.core.BlockConstants;
+import pro.sketchware.core.codegen.BlockConstants;
 import pro.sketchware.core.BuildConfig;
 import pro.sketchware.core.ComponentCodeGenerator;
 import pro.sketchware.core.ComponentTemplates;

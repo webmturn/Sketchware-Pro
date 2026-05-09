@@ -26,7 +26,7 @@ import java.util.Set;
 import pro.sketchware.core.LayoutGenerator;
 import pro.sketchware.core.ProjectDataManager;
 import pro.sketchware.core.BuildConfig;
-import pro.sketchware.core.BlockColorMapper;
+import pro.sketchware.core.codegen.BlockColorMapper;
 import mod.agus.jcoderz.beans.ViewBeans;
 import mod.hey.studios.editor.manage.block.ExtraBlockInfo;
 import mod.hey.studios.editor.manage.block.v2.BlockLoader;

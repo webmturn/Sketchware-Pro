@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.codegen;
 
 import static com.google.android.material.color.MaterialColors.harmonizeWithPrimary;
 

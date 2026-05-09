@@ -31,7 +31,7 @@ import pro.sketchware.core.ProjectDataStore;
 import pro.sketchware.core.ProjectDataManager;
 import pro.sketchware.core.UIHelper;
 import pro.sketchware.core.EncryptedFileUtil;
-import pro.sketchware.core.BlockConstants;
+import pro.sketchware.core.codegen.BlockConstants;
 import pro.sketchware.core.ViewUtil;
 import pro.sketchware.core.SketchwarePaths;
 import mod.hey.studios.moreblock.ReturnMoreblockManager;

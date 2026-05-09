@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.codegen;
 
 public class BlockConstants {
     public static final String[] COMPONENT_TYPES = {"Intent", "SharedPreferences", "Calendar", "Vibrator", "Timer", "SoundPool", "MediaPlayer", "Dialog", "ObjectAnimator", "Firebase DB", "Interstitial Ad", "Firebase Storage", "Camera", "FilePicker", "RequestNetwork", "TextToSpeech", "SpeechToText", "BluetoothConnect", "ProgressDialog", "RewardedVideoAd", "TimePickerDialog", "Notification"};

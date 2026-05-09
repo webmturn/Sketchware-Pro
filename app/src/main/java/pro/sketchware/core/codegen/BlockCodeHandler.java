@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.codegen;
 
 import com.besome.sketch.beans.BlockBean;
 

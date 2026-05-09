@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.codegen;
 
 public class ActivityConfigConstants {
   public static final String[] THEME_OPTIONS = new String[] { "Default", "NoActionBar", "FullScreen" };

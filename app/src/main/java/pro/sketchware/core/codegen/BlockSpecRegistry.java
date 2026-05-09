@@ -1,9 +1,10 @@
-package pro.sketchware.core;
+package pro.sketchware.core.codegen;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import pro.sketchware.core.StringResource;
 
 /**
  * Central registry mapping block/event opCodes to their specifications.

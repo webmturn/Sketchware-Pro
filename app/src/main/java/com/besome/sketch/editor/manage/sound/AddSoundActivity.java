@@ -36,7 +36,7 @@ import java.util.TimerTask;
 import pro.sketchware.core.SoundCollectionManager;
 import pro.sketchware.core.validation.ResourceNameValidator;
 import pro.sketchware.core.SketchToast;
-import pro.sketchware.core.BlockConstants;
+import pro.sketchware.core.codegen.BlockConstants;
 import pro.sketchware.core.CompileException;
 import pro.sketchware.core.ProjectDataManager;
 import mod.hey.studios.util.Helper;

@@ -18,7 +18,7 @@ import java.util.Optional;
 import pro.sketchware.core.ProjectDataStore;
 import pro.sketchware.core.ProjectFileManager;
 import pro.sketchware.core.ProjectDataManager;
-import pro.sketchware.core.BlockColorMapper;
+import pro.sketchware.core.codegen.BlockColorMapper;
 import pro.sketchware.core.SketchwarePaths;
 import dev.aldi.sayuti.block.ExtraBlockFile;
 import mod.hey.studios.editor.manage.block.ExtraBlockInfo;

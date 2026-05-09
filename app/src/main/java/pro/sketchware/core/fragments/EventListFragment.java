@@ -54,7 +54,7 @@ import mod.jbk.editor.manage.MoreblockImporter;
 import pro.sketchware.R;
 import pro.sketchware.core.ClassInfo;
 import pro.sketchware.core.CompileException;
-import pro.sketchware.core.EventRegistry;
+import pro.sketchware.core.codegen.EventRegistry;
 import pro.sketchware.core.FontCollectionManager;
 import pro.sketchware.core.ImageCollectionManager;
 import pro.sketchware.core.MoreBlockCollectionManager;

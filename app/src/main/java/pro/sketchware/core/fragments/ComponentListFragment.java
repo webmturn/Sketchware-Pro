@@ -36,7 +36,7 @@ import pro.sketchware.R;
 import pro.sketchware.databinding.FrComponentListBinding;
 import pro.sketchware.databinding.FrLogicListItemComponentBinding;
 import pro.sketchware.databinding.FrLogicListItemEventPreviewBinding;
-import pro.sketchware.core.EventRegistry;
+import pro.sketchware.core.codegen.EventRegistry;
 import pro.sketchware.core.ProjectDataManager;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.UIHelper;

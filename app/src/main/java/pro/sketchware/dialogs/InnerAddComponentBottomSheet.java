@@ -28,7 +28,7 @@ import pro.sketchware.core.validation.IdentifierValidator;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.ProjectDataManager;
 import pro.sketchware.core.UIHelper;
-import pro.sketchware.core.BlockConstants;
+import pro.sketchware.core.codegen.BlockConstants;
 import mod.hey.studios.util.Helper;
 import mod.hilal.saif.components.ComponentsHandler;
 import pro.sketchware.R;

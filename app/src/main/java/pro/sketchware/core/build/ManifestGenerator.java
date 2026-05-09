@@ -1,6 +1,6 @@
 package pro.sketchware.core.build;
 
-import pro.sketchware.core.ActivityConfigConstants;
+import pro.sketchware.core.codegen.ActivityConfigConstants;
 import pro.sketchware.core.BuildConfig;
 import pro.sketchware.core.ComponentCodeGenerator;
 import pro.sketchware.core.LayoutGenerator;

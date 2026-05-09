@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.codegen;
 
 
 import com.besome.sketch.beans.BlockBean;
@@ -15,6 +15,8 @@ import mod.hey.studios.editor.manage.block.ExtraBlockInfo;
 import mod.hey.studios.editor.manage.block.v2.BlockLoader;
 import mod.hey.studios.moreblock.ReturnMoreblockManager;
 import mod.pranav.viewbinding.ViewBindingBuilder;
+import pro.sketchware.core.BuildConfig;
+import pro.sketchware.core.ClassInfo;
 
 /**
  * Converts a chain of {@link BlockBean}s into executable Java source code.

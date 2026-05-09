@@ -1,4 +1,5 @@
-package pro.sketchware.core;
+package pro.sketchware.core.codegen;
+import pro.sketchware.core.ActivityCodeGenerator;
 
 /**
  * Provides context-aware code generation helpers that produce correct API calls

@@ -28,6 +28,9 @@ import mod.hilal.saif.blocks.CommandBlock;
 import mod.hilal.saif.events.LogicHandler;
 import mod.pranav.viewbinding.ViewBindingBuilder;
 import pro.sketchware.control.logic.PermissionManager;
+import pro.sketchware.core.codegen.BlockCodeRegistry;
+import pro.sketchware.core.codegen.BlockInterpreter;
+import pro.sketchware.core.codegen.CodeContext;
 
 public class ActivityCodeGenerator {
 

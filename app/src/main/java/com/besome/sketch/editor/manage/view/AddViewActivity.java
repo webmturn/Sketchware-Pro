@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import pro.sketchware.core.validation.ActivityNameValidator;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.ui.PresetLayoutFactory;
-import pro.sketchware.core.BlockConstants;
+import pro.sketchware.core.codegen.BlockConstants;
 import pro.sketchware.core.ViewUtil;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;

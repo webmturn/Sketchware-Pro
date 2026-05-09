@@ -35,7 +35,7 @@ import pro.sketchware.core.validation.FileNameValidator;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.BitmapUtil;
 import pro.sketchware.core.UIHelper;
-import pro.sketchware.core.BlockConstants;
+import pro.sketchware.core.codegen.BlockConstants;
 import pro.sketchware.core.SketchwarePaths;
 import pro.sketchware.core.CompileException;
 import mod.hey.studios.util.Helper;

@@ -14,6 +14,7 @@ import mod.jbk.editor.manage.library.ExcludeBuiltInLibrariesActivity;
 import mod.agus.jcoderz.handle.component.ConstVarComponent;
 import pro.sketchware.utility.FilePathUtil;
 import pro.sketchware.utility.FileUtil;
+import pro.sketchware.core.codegen.CodeFormatter;
 
 /**
  * Generates Gradle build files (settings.gradle, build.gradle) for compiled projects.
