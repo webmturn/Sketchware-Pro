@@ -1,4 +1,7 @@
-package pro.sketchware.core;
+package pro.sketchware.core.build;
+
+import pro.sketchware.core.EncryptedFileUtil;
+import pro.sketchware.core.SketchwarePaths;
 
 import android.util.Log;
 import java.io.File;

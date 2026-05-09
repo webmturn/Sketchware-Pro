@@ -20,7 +20,7 @@ import pro.sketchware.core.validation.LowercaseNameValidator;
 import pro.sketchware.core.validation.LengthRangeValidator;
 import pro.sketchware.core.validation.VariableNameValidator;
 import pro.sketchware.core.SketchToast;
-import pro.sketchware.core.KeyStoreManager;
+import pro.sketchware.core.build.KeyStoreManager;
 import pro.sketchware.core.UIHelper;
 import pro.sketchware.core.SketchwarePaths;
 import mod.hey.studios.util.Helper;

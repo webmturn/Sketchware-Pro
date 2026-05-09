@@ -16,10 +16,10 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import pro.sketchware.core.ProjectBuilder;
+import pro.sketchware.core.build.ProjectBuilder;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.ProjectDataManager;
-import pro.sketchware.core.ProjectFilePaths;
+import pro.sketchware.core.build.ProjectFilePaths;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;
 import pro.sketchware.R;
@@ -81,7 +81,7 @@ public class SrcViewerActivity extends BaseAppCompatActivity {
                 var fileManager = ProjectDataManager.getFileManager(sc_id);
                 var dataManager = ProjectDataManager.getProjectDataManager(sc_id);
                 var libraryManager = ProjectDataManager.getLibraryManager(sc_id);
-                ProjectFilePaths.initializeMetadata(libraryManager, fileManager, dataManager, pro.sketchware.core.ProjectFilePaths.ExportType.SOURCE_CODE_VIEWING);
+                ProjectFilePaths.initializeMetadata(libraryManager, fileManager, dataManager, pro.sketchware.core.build.ProjectFilePaths.ExportType.SOURCE_CODE_VIEWING);
                 ProjectBuilder builder = new ProjectBuilder(this, ProjectFilePaths);
                 builder.buildBuiltInLibraryInformation();
                 sourceCodeBeans = ProjectFilePaths.generateSourceCodeBeans(fileManager, dataManager, libraryManager, builder.getBuiltInLibraryManager());

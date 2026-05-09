@@ -1,4 +1,12 @@
-package pro.sketchware.core;
+package pro.sketchware.core.build;
+
+import pro.sketchware.core.BuildConfig;
+import pro.sketchware.core.BuiltInLibrary;
+import pro.sketchware.core.EncryptedFileUtil;
+import pro.sketchware.core.SimpleException;
+import pro.sketchware.core.SketchwareException;
+import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.ZipUtil;
 
 import static android.system.OsConstants.S_IRUSR;
 import static android.system.OsConstants.S_IWUSR;

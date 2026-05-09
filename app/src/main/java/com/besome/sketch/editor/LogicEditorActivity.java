@@ -115,7 +115,7 @@ import pro.sketchware.core.SketchwareConstants;
 import pro.sketchware.core.BlockConstants;
 import pro.sketchware.core.ViewUtil;
 import pro.sketchware.core.StringResource;
-import pro.sketchware.core.ProjectFilePaths;
+import pro.sketchware.core.build.ProjectFilePaths;
 import dev.aldi.sayuti.block.ExtraPaletteBlock;
 import mod.bobur.VectorDrawableLoader;
 import mod.hey.studios.editor.view.IdGenerator;

@@ -1,4 +1,21 @@
-package pro.sketchware.core;
+package pro.sketchware.core.build;
+
+import pro.sketchware.core.ActivityCodeGenerator;
+import pro.sketchware.core.BlockConstants;
+import pro.sketchware.core.BuildConfig;
+import pro.sketchware.core.ComponentCodeGenerator;
+import pro.sketchware.core.ComponentTemplates;
+import pro.sketchware.core.EncryptedFileUtil;
+import pro.sketchware.core.LayoutGenerator;
+import pro.sketchware.core.LibraryManager;
+import pro.sketchware.core.LocalLibraryManifestMerger;
+import pro.sketchware.core.MapValueHelper;
+import pro.sketchware.core.ProjectDataManager;
+import pro.sketchware.core.ProjectDataStore;
+import pro.sketchware.core.ProjectFileManager;
+import pro.sketchware.core.ProjectListManager;
+import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.ZipUtil;
 
 import static com.besome.sketch.Config.VAR_DEFAULT_MIN_SDK_VERSION;
 import static com.besome.sketch.Config.VAR_DEFAULT_TARGET_SDK_VERSION;

@@ -39,7 +39,7 @@ import pro.sketchware.core.ProjectFileManager;
 import pro.sketchware.core.ProjectDataManager;
 import pro.sketchware.core.UIHelper;
 import pro.sketchware.core.SketchwarePaths;
-import pro.sketchware.core.ProjectFilePaths;
+import pro.sketchware.core.build.ProjectFilePaths;
 import io.github.rosemoe.sora.widget.CodeEditor;
 import io.github.rosemoe.sora.widget.component.Magnifier;
 import mod.hey.studios.editor.manage.block.v2.BlockLoader;

@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import pro.sketchware.core.ProjectBuilder;
+import pro.sketchware.core.build.ProjectBuilder;
 import pro.sketchware.core.SketchwarePaths;
 import mod.hey.studios.util.Helper;
 import mod.jbk.build.BuildProgressReceiver;

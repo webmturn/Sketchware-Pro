@@ -32,7 +32,7 @@ import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.ProjectDataManager;
 import pro.sketchware.core.SketchwareConstants;
 import pro.sketchware.core.SketchwarePaths;
-import pro.sketchware.core.ProjectFilePaths;
+import pro.sketchware.core.build.ProjectFilePaths;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.activities.resourceseditor.components.models.ColorModel;
@@ -79,7 +79,7 @@ public class ColorPickerDialog extends PopupWindow {
         binding = ColorPickerBinding.inflate(activity.getLayoutInflater());
         sc_id = scId;
         projectFilePaths = new ProjectFilePaths(activity, sc_id);
-        projectFilePaths.initializeMetadata(ProjectDataManager.getLibraryManager(sc_id), ProjectDataManager.getFileManager(sc_id), ProjectDataManager.getProjectDataManager(sc_id), pro.sketchware.core.ProjectFilePaths.ExportType.SOURCE_CODE_VIEWING);
+        projectFilePaths.initializeMetadata(ProjectDataManager.getLibraryManager(sc_id), ProjectDataManager.getFileManager(sc_id), ProjectDataManager.getProjectDataManager(sc_id), pro.sketchware.core.build.ProjectFilePaths.ExportType.SOURCE_CODE_VIEWING);
         material3LibraryManager = new Material3LibraryManager(scId);
         colorsEditorManager = new ColorsEditorManager();
         hasMaterialColors = true;

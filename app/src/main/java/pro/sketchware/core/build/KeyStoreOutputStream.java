@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.build;
 
 import java.io.OutputStream;
 

@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.build;
 
 import com.google.gson.Gson;
 

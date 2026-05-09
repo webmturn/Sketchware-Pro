@@ -31,7 +31,7 @@ import pro.sketchware.core.ProjectDataManager;
 import pro.sketchware.core.SketchwarePaths;
 import pro.sketchware.core.TaskHost;
 import pro.sketchware.core.ViewUtil;
-import pro.sketchware.core.ProjectFilePaths;
+import pro.sketchware.core.build.ProjectFilePaths;
 import mod.hey.studios.code.SrcCodeEditor;
 import mod.hey.studios.util.Helper;
 import mod.hilal.saif.android_manifest.AndroidManifestInjector;

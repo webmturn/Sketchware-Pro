@@ -83,7 +83,7 @@ import pro.sketchware.core.BackgroundTasks;
 import pro.sketchware.core.SharedPrefsHelper;
 import pro.sketchware.core.DeviceUtil;
 import pro.sketchware.core.LayoutGenerator;
-import pro.sketchware.core.ProjectBuilder;
+import pro.sketchware.core.build.ProjectBuilder;
 import pro.sketchware.core.fragments.ViewEditorFragment;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.BlockHistoryManager;
@@ -98,7 +98,7 @@ import pro.sketchware.core.UIHelper;
 import pro.sketchware.core.fragments.EventListFragment;
 import pro.sketchware.core.SketchwarePaths;
 import pro.sketchware.core.MapValueHelper;
-import pro.sketchware.core.ProjectFilePaths;
+import pro.sketchware.core.build.ProjectFilePaths;
 import pro.sketchware.core.SimpleException;
 import pro.sketchware.utility.UI;
 import mod.agus.jcoderz.editor.manage.permission.ManagePermissionActivity;
@@ -236,7 +236,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         projectFile = getDefaultProjectFile();
         ViewHistoryManager.getInstance(sc_id);
         BlockHistoryManager.getInstance(sc_id);
-        // Resource backup is now lazy â€?ensureBackedUp() is called
+        // Resource backup is now lazy ï¿½?ensureBackedUp() is called
         // before any resource modification, not eagerly on project open.
     }
 
@@ -1240,8 +1240,8 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 Log.d("DesignActivity$BuildTask", "Step 2 timing: generateProjectFiles took "
                         + generateProjectFilesDuration + " ms");
                 long incrementalPrecheckStarted = System.currentTimeMillis();
-                pro.sketchware.core.IncrementalBuildCache buildCache =
-                        new pro.sketchware.core.IncrementalBuildCache(q.binDirectoryPath);
+                pro.sketchware.core.build.IncrementalBuildCache buildCache =
+                        new pro.sketchware.core.build.IncrementalBuildCache(q.binDirectoryPath);
                 buildCache.load();
                 String buildClasspath = builder.getClasspath();
                 boolean compiledClassesAvailable = new File(q.compiledClassesPath).exists()

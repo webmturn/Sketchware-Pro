@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 import pro.sketchware.core.BuiltInLibrary;
-import pro.sketchware.core.ProjectBuilder;
+import pro.sketchware.core.build.ProjectBuilder;
 import mod.jbk.build.BuiltInLibraries;
 import mod.jbk.editor.manage.library.ExcludeBuiltInLibrariesActivity;
 
