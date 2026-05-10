@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import pro.sketchware.activities.editor.logic.BlockPane;
-import com.besome.sketch.editor.view.LogicEditorScrollView;
+import pro.sketchware.activities.editor.view.LogicEditorScrollView;
 
 public class ViewBlockCollectionEditor extends LogicEditorScrollView {
     private BlockPane blockPane;

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.besome.sketch.editor.view.ViewEditor
+    <pro.sketchware.activities.editor.view.ViewEditor
         android:id="@+id/view_editor"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

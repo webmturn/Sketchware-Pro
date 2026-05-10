@@ -2,7 +2,7 @@ package pro.sketchware.activities.settings;
 
 import pro.sketchware.activities.editor.block.BlocksManager;
 
-import static com.besome.sketch.editor.view.ViewEditor.shakeView;
+import static pro.sketchware.activities.editor.view.ViewEditor.shakeView;
 
 import android.content.Intent;
 import android.net.Uri;

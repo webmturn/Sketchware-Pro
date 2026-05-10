@@ -23,7 +23,7 @@ import pro.sketchware.R;
  * text properties ({@link TextBean}), and image properties ({@link ImageBean}).
  * <p>
  * Views are stored per-XML-file in {@link pro.sketchware.core.project.ProjectDataStore#viewMap}
- * and rendered in the UI designer via {@link com.besome.sketch.editor.view.ViewPane}.
+ * and rendered in the UI designer via {@link pro.sketchware.activities.editor.view.ViewPane}.
  *
  * @see LayoutBean
  * @see TextBean

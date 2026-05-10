@@ -23,7 +23,7 @@
         android:layout_weight="1"
         android:fillViewport="true">
 
-        <com.besome.sketch.editor.view.ViewPane
+        <pro.sketchware.activities.editor.view.ViewPane
             android:id="@+id/pane"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

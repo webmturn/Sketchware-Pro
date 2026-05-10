@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 
 import pro.sketchware.beans.ViewBean;
 import pro.sketchware.beans.WidgetCollectionBean;
-import com.besome.sketch.editor.view.ItemView;
+import pro.sketchware.activities.editor.view.ItemView;
 import pro.sketchware.activities.base.BaseAppCompatActivity;
 
 import java.util.ArrayList;

@@ -21,7 +21,7 @@
 
         <include layout="@layout/logic_canvas_search_bar" />
 
-        <com.besome.sketch.editor.view.ViewLogicEditor
+        <pro.sketchware.activities.editor.view.ViewLogicEditor
             android:id="@+id/editor"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -74,7 +74,7 @@
         android:layout_alignParentTop="true"
         android:translationY="-48dp" />
 
-    <com.besome.sketch.editor.view.ViewDummy
+    <pro.sketchware.activities.editor.view.ViewDummy
         android:id="@+id/dummy"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

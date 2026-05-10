@@ -20,7 +20,7 @@ import android.widget.PopupMenu;
 import androidx.appcompat.app.AlertDialog;
 
 import pro.sketchware.beans.ViewBean;
-import com.besome.sketch.editor.view.ViewEditor;
+import pro.sketchware.activities.editor.view.ViewEditor;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;

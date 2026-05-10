@@ -3,7 +3,7 @@ package pro.sketchware.core.ui;
 import android.content.Context;
 
 import pro.sketchware.beans.ViewBean;
-import com.besome.sketch.editor.view.palette.IconBase;
+import pro.sketchware.activities.editor.view.palette.IconBase;
 
 import java.util.ArrayList;
 

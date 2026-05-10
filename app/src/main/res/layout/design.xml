@@ -191,7 +191,7 @@
             </LinearLayout>
         </LinearLayout>
 
-        <com.besome.sketch.editor.view.ViewProperty
+        <pro.sketchware.activities.editor.view.ViewProperty
             android:id="@+id/view_property"
             android:layout_width="match_parent"
             android:layout_height="170dp"

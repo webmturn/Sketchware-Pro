@@ -82,7 +82,7 @@
             android:orientation="horizontal" />
     </RelativeLayout>
 
-    <com.besome.sketch.editor.view.ViewEvents
+    <pro.sketchware.activities.editor.view.ViewEvents
         android:id="@+id/view_event"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

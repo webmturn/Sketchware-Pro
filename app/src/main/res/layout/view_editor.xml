@@ -21,12 +21,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.besome.sketch.editor.view.palette.PaletteWidget
+            <pro.sketchware.activities.editor.view.palette.PaletteWidget
                 android:id="@+id/palette_widget"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-            <com.besome.sketch.editor.view.palette.PaletteFavorite
+            <pro.sketchware.activities.editor.view.palette.PaletteFavorite
                 android:id="@+id/palette_favorite"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -44,7 +44,7 @@
         tools:ignore="UnusedAttribute" />
 
 
-    <com.besome.sketch.editor.view.ViewDummy
+    <pro.sketchware.activities.editor.view.ViewDummy
         android:id="@+id/dummy"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

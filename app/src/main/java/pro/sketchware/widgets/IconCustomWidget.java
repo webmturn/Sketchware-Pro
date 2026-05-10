@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 import pro.sketchware.beans.LayoutBean;
 import pro.sketchware.beans.ViewBean;
-import com.besome.sketch.editor.view.palette.IconBase;
+import pro.sketchware.activities.editor.view.palette.IconBase;
 
 import java.util.HashMap;
 import java.util.Objects;

@@ -26,10 +26,10 @@ import pro.sketchware.beans.ViewBean;
 import com.besome.sketch.design.DesignActivity;
 import pro.sketchware.activities.editor.LogicEditorActivity;
 import pro.sketchware.activities.editor.PropertyActivity;
-import com.besome.sketch.editor.view.DraggingListener;
-import com.besome.sketch.editor.view.ViewEditor;
-import com.besome.sketch.editor.view.ViewProperty;
-import com.besome.sketch.editor.view.palette.PaletteWidget;
+import pro.sketchware.activities.editor.view.DraggingListener;
+import pro.sketchware.activities.editor.view.ViewEditor;
+import pro.sketchware.activities.editor.view.ViewProperty;
+import pro.sketchware.activities.editor.view.palette.PaletteWidget;
 
 import java.io.IOException;
 import java.util.ArrayList;

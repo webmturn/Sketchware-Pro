@@ -3,8 +3,8 @@ package pro.sketchware.activities.preview;
 import android.os.Bundle;
 
 import pro.sketchware.beans.ViewBean;
-import com.besome.sketch.editor.view.ItemView;
-import com.besome.sketch.editor.view.ViewPane;
+import pro.sketchware.activities.editor.view.ItemView;
+import pro.sketchware.activities.editor.view.ViewPane;
 import pro.sketchware.activities.base.BaseAppCompatActivity;
 
 import java.util.ArrayList;
