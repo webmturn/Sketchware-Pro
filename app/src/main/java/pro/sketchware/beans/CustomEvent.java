@@ -1,4 +1,4 @@
-package pro.sketchware.model;
+package pro.sketchware.beans;
 
 import com.google.gson.annotations.SerializedName;
 

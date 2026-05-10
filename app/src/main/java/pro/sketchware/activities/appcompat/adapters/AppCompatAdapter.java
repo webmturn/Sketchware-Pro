@@ -17,7 +17,7 @@ import java.util.HashMap;
 
 import pro.sketchware.R;
 import pro.sketchware.databinding.CustomViewAttributeBinding;
-import pro.sketchware.listeners.ItemClickListener;
+import pro.sketchware.util.ItemClickListener;
 import pro.sketchware.util.ThemeUtils;
 
 public class AppCompatAdapter

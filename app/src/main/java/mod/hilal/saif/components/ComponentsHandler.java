@@ -25,7 +25,7 @@ import mod.hey.studios.util.Helper;
 import mod.jbk.util.OldResourceIdMapper;
 import pro.sketchware.R;
 import pro.sketchware.SketchApplication;
-import pro.sketchware.model.CustomComponent;
+import pro.sketchware.beans.CustomComponent;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 

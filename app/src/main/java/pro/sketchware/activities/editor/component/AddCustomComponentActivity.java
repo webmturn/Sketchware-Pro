@@ -33,7 +33,7 @@ import mod.hilal.saif.activities.tools.IconSelectorDialog;
 import mod.hilal.saif.components.ComponentsHandler;
 import mod.jbk.util.LogUtil;
 import mod.jbk.util.OldResourceIdMapper;
-import pro.sketchware.model.CustomComponent;
+import pro.sketchware.beans.CustomComponent;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageCustomComponentAddBinding;
 import pro.sketchware.tools.ComponentHelper;

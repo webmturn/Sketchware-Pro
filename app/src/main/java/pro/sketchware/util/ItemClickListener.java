@@ -1,4 +1,4 @@
-package pro.sketchware.listeners;
+package pro.sketchware.util;
 
 public interface ItemClickListener<T> {
 

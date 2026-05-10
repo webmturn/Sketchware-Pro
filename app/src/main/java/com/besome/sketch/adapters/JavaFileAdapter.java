@@ -11,7 +11,7 @@ import com.besome.sketch.beans.ProjectFileBean;
 
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.databinding.FileSelectorPopupSelectJavaListItemBinding;
-import pro.sketchware.listeners.ItemClickListener;
+import pro.sketchware.util.ItemClickListener;
 
 public class JavaFileAdapter extends RecyclerView.Adapter<JavaFileAdapter.ViewHolder> {
 

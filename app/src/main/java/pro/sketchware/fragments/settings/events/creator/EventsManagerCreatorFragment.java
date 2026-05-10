@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import pro.sketchware.core.fragments.BaseFragment;
 import pro.sketchware.fragments.settings.events.EventsManagerConstants;
 import mod.hey.studios.util.Helper;
-import pro.sketchware.model.CustomEvent;
+import pro.sketchware.beans.CustomEvent;
 import mod.hilal.saif.activities.tools.IconSelectorDialog;
 import mod.jbk.util.OldResourceIdMapper;
 import pro.sketchware.R;

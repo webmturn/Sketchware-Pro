@@ -1,4 +1,4 @@
-package pro.sketchware.lib;
+package pro.sketchware.util;
 
 import android.os.SystemClock;
 import android.view.View;

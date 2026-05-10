@@ -15,8 +15,8 @@ import mod.jbk.util.LogUtil;
 import mod.jbk.util.OldResourceIdMapper;
 import pro.sketchware.R;
 import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.model.CustomEvent;
-import pro.sketchware.model.CustomListener;
+import pro.sketchware.beans.CustomEvent;
+import pro.sketchware.beans.CustomListener;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 

@@ -21,7 +21,7 @@ import java.util.Collections;
 import pro.sketchware.core.fragments.BaseFragment;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.OldResourceIdMapper;
-import pro.sketchware.model.CustomEvent;
+import pro.sketchware.beans.CustomEvent;
 import pro.sketchware.R;
 import pro.sketchware.databinding.FragmentEventsManagerDetailsBinding;
 import pro.sketchware.databinding.LayoutEventItemBinding;

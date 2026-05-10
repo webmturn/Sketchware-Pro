@@ -45,7 +45,7 @@ import dev.pranav.filepicker.FilePickerOptions;
 import mod.hey.studios.util.Helper;
 import mod.hilal.saif.components.ComponentsHandler;
 import mod.jbk.util.OldResourceIdMapper;
-import pro.sketchware.model.CustomComponent;
+import pro.sketchware.beans.CustomComponent;
 import pro.sketchware.R;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
