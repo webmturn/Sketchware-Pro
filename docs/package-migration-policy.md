@@ -88,7 +88,7 @@ Tracks the legacy → modern migration progress. **Do not** edit ad hoc; update 
 | `pro.sketchware.core.build.ProjectBuilder` | `pro.sketchware.core.build.stage.*` chain | ⏳ Planned | P1a |
 | `pro.sketchware.core.codegen.*` direct file writes | `pro.sketchware.core.codegen.sink.*` interfaces + `pro.sketchware.core.build.sink.*` impls | ⏳ Planned | P2a |
 | `pro.sketchware.lib.validator.*` (9) | `pro.sketchware.core.validation.*` | ✅ Done (commit `48c6468ac`) | Path B step 5 |
-| `pro.sketchware.utility.*` (25) | `pro.sketchware.util.*` | 🟡 Candidate | Path B step 6 |
+| `pro.sketchware.utility.*` (25) | `pro.sketchware.util.*` | ✅ Done (commit `de5c04f74`) | Path B step 6 |
 | `com.besome.sketch.beans.*` (29) | **Permanent**; cross-package POJO layer | 🛡 Frozen | Per § 1.2 exception |
 | `com.besome.sketch.editor.view.*` (61) | Long-term: `pro.sketchware.editor.view.*` | ⏸ Deferred | Post-P0b/P0c |
 | `com.besome.sketch.editor.{adapters,ctrls,design,export,help,lib,projects,tools}` | Long-term: merge into matching `pro.sketchware.<theme>.*` | ⏸ Deferred | Post-P0c |
