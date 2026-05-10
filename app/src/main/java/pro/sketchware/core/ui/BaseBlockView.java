@@ -750,7 +750,7 @@ public class BaseBlockView extends RelativeLayout {
       boolean isSubStackChild = (parent.subStack1 == childTag || parent.subStack2 == childTag);
       boolean isNextBlockChild = (parent.nextBlock == childTag);
       if (!isSubStackChild && !isNextBlockChild) {
-        // child is a parameter of parent 鈥?parent's disabled state applies
+        // child is a parameter of parent — parent's disabled state applies
         if (parent.disabled) return true;
       } else if (isSubStackChild) {
         if (parent.disabled) return true;

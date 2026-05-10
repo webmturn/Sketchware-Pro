@@ -660,7 +660,7 @@ public class ActivityCodeGenerator {
 
     /**
      * Phase 2 of parallel code generation: applies command blocks only.
-     * NOT thread-safe 鈥?must be called serially due to CommandBlock shared file I/O.
+     * NOT thread-safe — must be called serially due to CommandBlock shared file I/O.
      */
     public static String applyCommands(String formattedCode) {
         return CommandBlock.processCommandBlocks(formattedCode);

@@ -519,7 +519,7 @@ public class ManifestGenerator {
         }
         if (buildConfig.constVarComponent.isFCMUsed) {
             writePermission(manifestXml, Manifest.permission.WAKE_LOCK);
-            // c2dm permission removed 鈥?not needed by Firebase Messaging 24.1.0+
+            // c2dm permission removed — not needed by Firebase Messaging 24.1.0+
         }
         AndroidManifestInjector.injectManifestPermissions(manifestXml, buildConfig.sc_id);
 

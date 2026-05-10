@@ -53,7 +53,7 @@ import pro.sketchware.xml.XmlBuilder;
  *   <li>Layout attributes (width, height, gravity, margins, padding)</li>
  *   <li>Text attributes (text, textSize, textColor, typeface, hint)</li>
  *   <li>Image attributes (src, scaleType)</li>
- *   <li>AppCompat widget upgrades (e.g. Button 鈫?MaterialButton when enabled)</li>
+ *   <li>AppCompat widget upgrades (e.g. Button → MaterialButton when enabled)</li>
  *   <li>Custom inject attributes from user XML injections</li>
  *   <li>Material3 / CollapsingToolbarLayout root wrappers</li>
  * </ul>

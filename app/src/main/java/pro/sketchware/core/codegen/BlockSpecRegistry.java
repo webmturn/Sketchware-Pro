@@ -11,10 +11,10 @@ import pro.sketchware.core.codegen.StringResource;
  * <p>
  * Contains four lookup tables:
  * <ul>
- *   <li><b>BLOCK_PARAMS</b> 鈥?opCode 鈫?parameter type array (e.g. {@code {"%d", "%d"}} for arithmetic)</li>
- *   <li><b>BLOCK_SPECS</b> 鈥?opCode 鈫?display spec string key (used for i18n via StringResource)</li>
- *   <li><b>EVENT_MENUS</b> 鈥?eventName 鈫?menu parameter types for event blocks</li>
- *   <li><b>EVENT_SPECS</b> 鈥?eventName 鈫?display spec string key for event blocks</li>
+ *   <li><b>BLOCK_PARAMS</b> — opCode → parameter type array (e.g. {@code {"%d", "%d"}} for arithmetic)</li>
+ *   <li><b>BLOCK_SPECS</b> — opCode → display spec string key (used for i18n via StringResource)</li>
+ *   <li><b>EVENT_MENUS</b> — eventName → menu parameter types for event blocks</li>
+ *   <li><b>EVENT_SPECS</b> — eventName → display spec string key for event blocks</li>
  * </ul>
  * All tables are populated once at class load via static initializers.
  *

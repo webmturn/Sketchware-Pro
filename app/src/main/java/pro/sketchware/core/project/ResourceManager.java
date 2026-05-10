@@ -536,7 +536,7 @@ public class ResourceManager {
   
   /**
    * Ensures all resource types are backed up before any modification.
-   * Called lazily 鈥?only when resources are about to change.
+   * Called lazily — only when resources are about to change.
    */
   public void ensureBackedUp() {
     backupImages();
