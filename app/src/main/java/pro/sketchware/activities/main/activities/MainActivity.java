@@ -45,11 +45,11 @@ import pro.sketchware.util.CrashLogManager;
 
 import pro.sketchware.core.util.SharedPrefsHelper;
 import pro.sketchware.core.util.DeviceUtil;
-import mod.hey.studios.project.backup.BackupFactory;
-import mod.hey.studios.project.backup.BackupRestoreManager;
+import pro.sketchware.project.BackupFactory;
+import pro.sketchware.project.BackupRestoreManager;
 import mod.hey.studios.util.Helper;
 import mod.hilal.saif.activities.tools.ConfigActivity;
-import mod.tyron.backup.SingleCopyTask;
+import pro.sketchware.project.SingleCopyTask;
 import pro.sketchware.R;
 import pro.sketchware.activities.about.AboutActivity;
 import pro.sketchware.activities.main.fragments.projects.ProjectsFragment;

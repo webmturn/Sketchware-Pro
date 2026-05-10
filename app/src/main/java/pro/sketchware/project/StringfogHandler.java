@@ -1,4 +1,4 @@
-package mod.hey.studios.project.stringfog;
+package pro.sketchware.project;
 
 import com.google.gson.Gson;
 

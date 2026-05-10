@@ -1,8 +1,8 @@
-package mod.hey.studios.project.stringfog;
+package pro.sketchware.project;
 
 
 import mod.hey.studios.util.Helper;
-import mod.hey.studios.project.stringfog.StringfogHandler;
+import pro.sketchware.project.StringfogHandler;
 import pro.sketchware.R;
 import android.os.Bundle;
 import android.view.LayoutInflater;

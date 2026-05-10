@@ -1,4 +1,4 @@
-package mod.hey.studios.project.backup;
+package pro.sketchware.project;
 
 import android.content.Context;
 
@@ -47,7 +47,7 @@ import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.library.LocalLibrariesUtil;
 import pro.sketchware.core.codegen.ExtraBlockInfo;
 import pro.sketchware.core.codegen.BlockLoader;
-import mod.hey.studios.project.custom_blocks.CustomBlocksManager;
+import pro.sketchware.project.CustomBlocksManager;
 import mod.hey.studios.util.Helper;
 import mod.hilal.saif.activities.tools.ConfigActivity;
 import pro.sketchware.R;

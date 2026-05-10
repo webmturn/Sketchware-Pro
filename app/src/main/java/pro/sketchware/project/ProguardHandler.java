@@ -1,4 +1,4 @@
-package mod.hey.studios.project.proguard;
+package pro.sketchware.project;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;

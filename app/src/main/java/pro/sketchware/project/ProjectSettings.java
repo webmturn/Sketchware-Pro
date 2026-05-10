@@ -1,4 +1,4 @@
-package mod.hey.studios.project;
+package pro.sketchware.project;
 
 import android.app.Application;
 import android.content.pm.ApplicationInfo;

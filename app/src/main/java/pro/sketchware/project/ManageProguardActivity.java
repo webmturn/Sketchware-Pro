@@ -1,4 +1,4 @@
-package mod.hey.studios.project.proguard;
+package pro.sketchware.project;
 
 import android.content.Intent;
 import android.os.Bundle;

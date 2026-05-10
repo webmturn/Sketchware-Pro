@@ -49,7 +49,7 @@ import pro.sketchware.core.util.EncryptedFileUtil;
 import pro.sketchware.core.util.ViewUtil;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.util.MapValueHelper;
-import mod.hey.studios.project.ProjectSettings;
+import pro.sketchware.project.ProjectSettings;
 import mod.hey.studios.util.Helper;
 import mod.hey.studios.util.ProjectFile;
 import mod.hilal.saif.activities.tools.ConfigActivity;

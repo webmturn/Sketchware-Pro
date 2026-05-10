@@ -121,7 +121,7 @@ import mod.bobur.VectorDrawableLoader;
 import mod.hey.studios.editor.view.IdGenerator;
 import mod.hey.studios.moreblock.ReturnMoreblockManager;
 import mod.hey.studios.moreblock.importer.MoreblockImporterDialog;
-import mod.hey.studios.project.ProjectSettings;
+import pro.sketchware.project.ProjectSettings;
 import mod.hey.studios.util.Helper;
 import mod.hilal.saif.asd.AsdDialog;
 import mod.jbk.editor.manage.MoreblockImporter;

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import mod.hey.studios.project.ProjectSettings;
+import pro.sketchware.project.ProjectSettings;
 import pro.sketchware.core.codegen.ComponentExtraCode;
 import pro.sketchware.core.build.ViewBindingBuilder;
 import pro.sketchware.core.codegen.BlockInterpreter;

@@ -25,7 +25,7 @@ import mod.agus.jcoderz.beans.ViewBeans;
 import pro.sketchware.library.ManageLocalLibrary;
 import pro.sketchware.core.codegen.ConstVarComponent;
 import pro.sketchware.core.build.BuildSettings;
-import mod.hey.studios.project.ProjectSettings;
+import pro.sketchware.project.ProjectSettings;
 import pro.sketchware.core.codegen.AndroidManifestInjector;
 import pro.sketchware.core.codegen.CommandBlock;
 import pro.sketchware.core.codegen.LogicHandler;

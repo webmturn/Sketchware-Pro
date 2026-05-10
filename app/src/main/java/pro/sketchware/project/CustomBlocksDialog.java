@@ -1,4 +1,4 @@
-package mod.hey.studios.project.custom_blocks;
+package pro.sketchware.project;
 
 import android.app.Activity;
 import android.app.AlertDialog;
