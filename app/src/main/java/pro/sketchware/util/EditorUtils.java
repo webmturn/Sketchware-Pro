@@ -13,8 +13,8 @@ import io.github.rosemoe.sora.langs.java.JavaLanguage;
 import io.github.rosemoe.sora.widget.CodeEditor;
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
 import io.github.rosemoe.sora.widget.schemes.SchemeDarcula;
-import mod.jbk.code.CodeEditorColorSchemes;
-import mod.jbk.code.CodeEditorLanguages;
+import pro.sketchware.lib.code_editor.CodeEditorColorSchemes;
+import pro.sketchware.lib.code_editor.CodeEditorLanguages;
 import pro.sketchware.R;
 
 public class EditorUtils {

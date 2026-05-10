@@ -5,7 +5,7 @@
     android:background="?colorSurface"
     android:fillViewport="true">
 
-    <mod.hey.studios.lib.code_editor.CodeEditorEditText
+    <pro.sketchware.lib.code_editor.CodeEditorEditText
         android:id="@+id/code_editor_edittext"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"

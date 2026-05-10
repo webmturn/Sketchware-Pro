@@ -1,4 +1,4 @@
-package mod.jbk.code;
+package pro.sketchware.lib.code_editor;
 
 import io.github.rosemoe.sora.lang.EmptyLanguage;
 import io.github.rosemoe.sora.lang.Language;

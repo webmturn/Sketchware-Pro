@@ -1,4 +1,4 @@
-package mod.hey.studios.lib.code_editor;
+package pro.sketchware.lib.code_editor;
 
 import java.util.ArrayList;
 import java.util.regex.Pattern;
