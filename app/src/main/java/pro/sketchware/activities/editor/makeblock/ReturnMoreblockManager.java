@@ -1,4 +1,4 @@
-package mod.hey.studios.moreblock;
+package pro.sketchware.activities.editor.makeblock;
 
 import android.util.Pair;
 
@@ -22,7 +22,7 @@ import pro.sketchware.R;
  *   <li>List MoreBlocks in the palette ({@link #listMoreblocks(Iterator, LogicEditorActivity)})</li>
  * </ul>
  *
- * @see mod.hey.studios.moreblock.MoreblockValidator
+ * @see pro.sketchware.activities.editor.makeblock.MoreblockValidator
  */
 public class ReturnMoreblockManager {
 

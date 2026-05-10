@@ -16,7 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import pro.sketchware.core.codegen.ExtraBlockFile;
-import mod.agus.jcoderz.editor.manage.block.palette.PaletteSelector;
+import pro.sketchware.activities.editor.block.PaletteSelector;
 import pro.sketchware.core.codegen.ExtraBlockInfo;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;

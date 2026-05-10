@@ -260,13 +260,13 @@
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name="mod.hilal.saif.activities.tools.BlocksManager"
+            android:name="pro.sketchware.activities.editor.block.BlocksManager"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="mod.hilal.saif.activities.tools.BlocksManagerCreatorActivity"
+            android:name="pro.sketchware.activities.editor.block.BlocksManagerCreatorActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="mod.hilal.saif.activities.tools.BlocksManagerDetailsActivity"
+            android:name="pro.sketchware.activities.editor.block.BlocksManagerDetailsActivity"
             android:configChanges="orientation|screenSize" />
         <activity
             android:name="mod.hilal.saif.activities.tools.ConfigActivity"

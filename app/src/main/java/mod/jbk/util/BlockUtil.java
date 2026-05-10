@@ -9,7 +9,7 @@ import pro.sketchware.core.util.FormatUtil;
 import pro.sketchware.core.ui.BlockView;
 import pro.sketchware.core.ui.BaseBlockView;
 import pro.sketchware.core.codegen.BlockColorMapper;
-import mod.hey.studios.moreblock.ReturnMoreblockManager;
+import pro.sketchware.activities.editor.makeblock.ReturnMoreblockManager;
 
 public class BlockUtil {
     public static void loadMoreblockPreview(ViewGroup blockArea, String spec) {

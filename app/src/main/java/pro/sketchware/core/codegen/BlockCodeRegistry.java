@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import mod.hey.studios.moreblock.ReturnMoreblockManager;
+import pro.sketchware.activities.editor.makeblock.ReturnMoreblockManager;
 import pro.sketchware.core.project.ClassInfo;
 import pro.sketchware.core.codegen.ComponentCodeGenerator;
 import pro.sketchware.core.project.ProjectDataManager;

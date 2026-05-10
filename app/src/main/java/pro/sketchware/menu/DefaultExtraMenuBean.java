@@ -16,7 +16,7 @@ import pro.sketchware.core.project.ProjectDataStore;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.codegen.BlockConstants;
 import pro.sketchware.core.project.SketchwarePaths;
-import mod.agus.jcoderz.editor.manage.block.makeblock.BlockMenu;
+import pro.sketchware.activities.editor.makeblock.BlockMenu;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.util.CustomVariableUtil;

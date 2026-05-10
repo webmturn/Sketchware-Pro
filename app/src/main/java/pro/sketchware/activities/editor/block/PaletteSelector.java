@@ -1,4 +1,4 @@
-package mod.agus.jcoderz.editor.manage.block.palette;
+package pro.sketchware.activities.editor.block;
 
 import android.graphics.Color;
 

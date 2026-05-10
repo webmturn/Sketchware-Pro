@@ -47,10 +47,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import mod.hey.studios.moreblock.ReturnMoreblockManager;
-import mod.hey.studios.moreblock.importer.MoreblockImporterDialog;
+import pro.sketchware.activities.editor.makeblock.ReturnMoreblockManager;
+import pro.sketchware.activities.editor.makeblock.MoreblockImporterDialog;
 import mod.hey.studios.util.Helper;
-import mod.jbk.editor.manage.MoreblockImporter;
+import pro.sketchware.activities.editor.makeblock.MoreblockImporter;
 import pro.sketchware.R;
 import pro.sketchware.core.project.ClassInfo;
 import pro.sketchware.core.exception.CompileException;

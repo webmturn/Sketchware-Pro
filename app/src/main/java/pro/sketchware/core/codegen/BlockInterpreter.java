@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 import pro.sketchware.core.codegen.ExtraBlockInfo;
 import pro.sketchware.core.codegen.BlockLoader;
-import mod.hey.studios.moreblock.ReturnMoreblockManager;
+import pro.sketchware.activities.editor.makeblock.ReturnMoreblockManager;
 import pro.sketchware.core.build.ViewBindingBuilder;
 import pro.sketchware.core.project.BuildConfig;
 import pro.sketchware.core.project.ClassInfo;

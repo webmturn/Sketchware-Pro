@@ -1,4 +1,4 @@
-package mod.hey.studios.moreblock.importer;
+package pro.sketchware.activities.editor.makeblock;
 
 import android.app.Activity;
 import android.text.Editable;

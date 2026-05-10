@@ -1,4 +1,4 @@
-package mod.hey.studios.moreblock;
+package pro.sketchware.activities.editor.makeblock;
 
 import android.content.Context;
 

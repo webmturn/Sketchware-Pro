@@ -1,4 +1,4 @@
-package mod.agus.jcoderz.editor.manage.block.makeblock;
+package pro.sketchware.activities.editor.makeblock;
 
 import android.util.Pair;
 

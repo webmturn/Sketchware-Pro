@@ -1,4 +1,4 @@
-package mod.jbk.editor.manage;
+package pro.sketchware.activities.editor.makeblock;
 
 
 import android.util.Log;
@@ -34,7 +34,7 @@ import pro.sketchware.core.util.EncryptedFileUtil;
 import pro.sketchware.core.codegen.BlockConstants;
 import pro.sketchware.core.util.ViewUtil;
 import pro.sketchware.core.project.SketchwarePaths;
-import mod.hey.studios.moreblock.ReturnMoreblockManager;
+import pro.sketchware.activities.editor.makeblock.ReturnMoreblockManager;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 
