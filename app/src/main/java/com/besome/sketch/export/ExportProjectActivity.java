@@ -19,9 +19,9 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import kellinwood.security.zipsigner.ZipSigner;
-import kellinwood.security.zipsigner.optional.CustomKeySigner;
-import kellinwood.security.zipsigner.optional.LoadKeystoreException;
+import pro.sketchware.third_party.kellinwood.security.zipsigner.ZipSigner;
+import pro.sketchware.third_party.kellinwood.security.zipsigner.optional.CustomKeySigner;
+import pro.sketchware.third_party.kellinwood.security.zipsigner.optional.LoadKeystoreException;
 import pro.sketchware.core.build.compiler.KotlinCompilerBridge;
 import pro.sketchware.project.ProguardHandler;
 import pro.sketchware.project.StringfogHandler;

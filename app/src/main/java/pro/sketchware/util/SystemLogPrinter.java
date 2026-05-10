@@ -4,8 +4,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 
-import kellinwood.logging.LogManager;
-import kellinwood.logging.Logger;
+import pro.sketchware.third_party.kellinwood.logging.LogManager;
+import pro.sketchware.third_party.kellinwood.logging.Logger;
 import pro.sketchware.util.LogUtil;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.FileUtil;
