@@ -39,6 +39,12 @@ Documents are grouped by purpose so that long-term references, active proposals,
 | [local-library-dependency-order-solution.md](local-library-dependency-order-solution.md) | Unimplemented proposal for local library dependency ordering via topological sort |
 | [lan-web-editing-mvp-plan.md](lan-web-editing-mvp-plan.md) | MVP planning note for LAN-based Web viewing, low-risk editing, and single-writer collaboration |
 
+## Policies
+
+| Document | Description |
+|----------|-------------|
+| [package-migration-policy.md](package-migration-policy.md) | Active hard rules for where new `.java` files must live (`pro.sketchware.*` only), naming conventions, sub-package depth budget, migration tracker, PR review checklist, and rejected anti-patterns. Implements P2b. |
+
 ## Historical Plans
 
 | Document | Description |

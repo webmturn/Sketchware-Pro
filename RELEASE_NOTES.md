@@ -1,4 +1,16 @@
-﻿# v7.0.0-beta8
+﻿# Unreleased
+
+## 📚 Documentation
+
+- **Package migration policy** — Add `docs/package-migration-policy.md` codifying where new `.java` files must live (`pro.sketchware.*` only), naming conventions, sub-package depth budget, migration tracker, PR review checklist, and rejected anti-patterns. Implements P2b from `docs/package-target-architecture.md`. Linked from top-level `README.md` Contributing section and `docs/README.md` index.
+
+## 🧹 Chore
+
+- **Repo hygiene** — Delete two zero-byte stale `.java` files under `com.besome.sketch.beans` (`PropertyInputItem.java`, `ViewPropertyItems.java`). They were accidentally created in commit `8536deb7a` as IDE cross-directory refactor residue; the real implementations live under `com.besome.sketch.editor.property/`.
+
+---
+
+# v7.0.0-beta8
 
 ## 🐛 Bug Fixes
 
