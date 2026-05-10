@@ -59,7 +59,7 @@ public class BackupFactory {
     public static final String DEF_PATH = SketchwarePaths.BACKUPS_PATH + File.separator;
 
     // WARNING: These crypto constants are part of the original Sketchware project file format.
-    // Do NOT change them �?doing so will break reading/writing of all existing project files
+    // Do NOT change them — doing so will break reading/writing of all existing project files
     // and backups, as well as compatibility with other Sketchware variants.
     // The key == IV pattern is a known weakness but is required for format compatibility.
     private static final String CIPHER_ALGORITHM = "AES/CBC/PKCS5Padding";
