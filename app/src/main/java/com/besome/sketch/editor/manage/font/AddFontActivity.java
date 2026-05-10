@@ -1,6 +1,6 @@
 package com.besome.sketch.editor.manage.font;
 
-import static mod.hey.studios.util.Helper.addBasicTextChangedListener;
+import static pro.sketchware.util.Helper.addBasicTextChangedListener;
 
 import android.content.Intent;
 import androidx.activity.result.ActivityResultLauncher;
@@ -20,8 +20,8 @@ import pro.sketchware.core.util.SketchToast;
 import pro.sketchware.core.util.UIHelper;
 import pro.sketchware.core.codegen.BlockConstants;
 import pro.sketchware.core.exception.CompileException;
-import mod.hey.studios.util.Helper;
-import mod.jbk.util.LogUtil;
+import pro.sketchware.util.Helper;
+import pro.sketchware.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageFontAddBinding;
 import pro.sketchware.core.validation.FontNameValidator;

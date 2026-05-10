@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 import com.besome.sketch.beans.ProjectLibraryBean;
 import com.besome.sketch.editor.manage.library.LibraryItemView;
 
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 
 @SuppressLint("ViewConstructor")

@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.FilePathUtil;
 

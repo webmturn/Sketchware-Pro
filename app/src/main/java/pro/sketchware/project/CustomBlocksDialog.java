@@ -29,8 +29,8 @@ import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.core.codegen.ExtraBlockInfo;
 import pro.sketchware.core.codegen.BlockLoader;
-import mod.hey.studios.util.Helper;
-import mod.jbk.util.LogUtil;
+import pro.sketchware.util.Helper;
+import pro.sketchware.util.LogUtil;
 import pro.sketchware.activities.settings.ConfigActivity;
 
 import pro.sketchware.R;

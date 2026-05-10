@@ -43,7 +43,7 @@ import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.util.UIHelper;
 import pro.sketchware.core.util.ViewUtil;
 import pro.sketchware.project.ProjectSettings;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 
 public class ViewProperty extends LinearLayout implements PropertyChangedCallback {

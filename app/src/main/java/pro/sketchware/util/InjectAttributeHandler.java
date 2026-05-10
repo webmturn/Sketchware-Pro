@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import mod.jbk.util.LogUtil;
+import pro.sketchware.util.LogUtil;
 
 public class InjectAttributeHandler {
 

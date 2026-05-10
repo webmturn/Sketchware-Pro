@@ -26,7 +26,7 @@ import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.util.UIHelper;
 import pro.sketchware.core.codegen.AppCompatInjection;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.activities.appcompat.adapters.AppCompatAdapter;
 import pro.sketchware.databinding.CustomDialogAttributeBinding;

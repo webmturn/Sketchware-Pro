@@ -5,7 +5,7 @@ import androidx.annotation.DrawableRes;
 import java.util.ArrayList;
 
 import pro.sketchware.activities.editor.ManageEvent;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.core.codegen.EventsHandler;
 import pro.sketchware.R;
 import pro.sketchware.core.project.ClassInfo;

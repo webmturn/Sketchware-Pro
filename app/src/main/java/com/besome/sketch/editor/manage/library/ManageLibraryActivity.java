@@ -39,7 +39,7 @@ import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.core.util.UIHelper;
 import pro.sketchware.library.ManageLocalLibraryActivity;
 import pro.sketchware.activities.editor.ManageNativelibsActivity;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.library.ExcludeBuiltInLibrariesActivity;
 import pro.sketchware.library.ExcludeBuiltInLibrariesLibraryItemView;
 import pro.sketchware.R;

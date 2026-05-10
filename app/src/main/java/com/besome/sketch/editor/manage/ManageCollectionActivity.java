@@ -61,10 +61,10 @@ import pro.sketchware.core.project.WidgetCollectionManager;
 import pro.sketchware.core.util.SketchToast;
 import pro.sketchware.core.util.UIHelper;
 import pro.sketchware.core.project.SketchwarePaths;
-import mod.hey.studios.util.Helper;
-import mod.jbk.util.AudioMetadata;
-import mod.jbk.util.BlockUtil;
-import mod.jbk.util.SoundPlayingAdapter;
+import pro.sketchware.util.Helper;
+import pro.sketchware.util.AudioMetadata;
+import pro.sketchware.util.BlockUtil;
+import pro.sketchware.util.SoundPlayingAdapter;
 import pro.sketchware.R;
 
 public class ManageCollectionActivity extends BaseAppCompatActivity implements View.OnClickListener {

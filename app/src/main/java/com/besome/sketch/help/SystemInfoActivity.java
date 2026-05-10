@@ -13,8 +13,8 @@ import com.besome.sketch.lib.ui.PropertyTwoLineItem;
 
 import pro.sketchware.core.util.DeviceUtil;
 import pro.sketchware.core.util.UIHelper;
-import mod.hey.studios.util.Helper;
-import mod.jbk.util.LogUtil;
+import pro.sketchware.util.Helper;
+import pro.sketchware.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ActivitySystemInfoBinding;
 

@@ -6,7 +6,7 @@ import io.github.rosemoe.sora.langs.textmate.TextMateLanguage;
 import io.github.rosemoe.sora.langs.textmate.registry.FileProviderRegistry;
 import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry;
 import io.github.rosemoe.sora.langs.textmate.registry.provider.AssetsFileResolver;
-import mod.jbk.util.LogUtil;
+import pro.sketchware.util.LogUtil;
 import pro.sketchware.SketchApplication;
 
 public class CodeEditorLanguages {

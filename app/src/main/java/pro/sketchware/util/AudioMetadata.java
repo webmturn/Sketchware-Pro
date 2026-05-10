@@ -1,4 +1,4 @@
-package mod.jbk.util;
+package pro.sketchware.util;
 
 import android.app.Activity;
 import android.media.AudioAttributes;
@@ -15,7 +15,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.util.SketchwareUtil;
 

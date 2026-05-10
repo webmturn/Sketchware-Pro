@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import mod.jbk.util.LogUtil;
+import pro.sketchware.util.LogUtil;
 
 public class LocalLibrary {
     private final String name;

@@ -1,4 +1,4 @@
-package mod.jbk.diagnostic;
+package pro.sketchware.core.build;
 
 import android.content.Context;
 import android.content.Intent;

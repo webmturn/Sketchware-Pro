@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import pro.sketchware.core.project.ClassInfo;
 import pro.sketchware.core.codegen.ComponentCodeGenerator;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.core.codegen.EventsHandler;
 import pro.sketchware.R;
 import pro.sketchware.blocks.generator.components.analyzers.BlockReturnAnalyzer;

@@ -6,7 +6,7 @@ import androidx.activity.OnBackPressedCallback;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
-import mod.jbk.util.AudioMetadata;
+import pro.sketchware.util.AudioMetadata;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -35,7 +35,7 @@ import pro.sketchware.core.validation.XmlNameValidator;
 import pro.sketchware.core.util.SketchToast;
 import pro.sketchware.core.util.UIHelper;
 import pro.sketchware.core.codegen.BlockConstants;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 
 public class ManageSoundImportActivity extends BaseAppCompatActivity implements View.OnClickListener {

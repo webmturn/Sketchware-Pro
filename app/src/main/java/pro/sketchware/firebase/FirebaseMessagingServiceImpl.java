@@ -1,7 +1,7 @@
 package pro.sketchware.firebase;
 
 
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;

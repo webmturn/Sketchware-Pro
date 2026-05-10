@@ -12,7 +12,7 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.material.card.MaterialCardView;
 
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.LogicEditorTopMenuBinding;
 import pro.sketchware.util.ThemeUtils;

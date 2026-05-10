@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Objects;
 
 import pro.sketchware.core.callback.BlockSizeListener;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.PalettesSearchDialogBinding;
 

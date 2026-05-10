@@ -1,4 +1,4 @@
-package mod.hey.studios.util;
+package pro.sketchware.util;
 
 import static pro.sketchware.SketchApplication.getContext;
 

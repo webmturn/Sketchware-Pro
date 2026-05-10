@@ -39,7 +39,7 @@ import pro.sketchware.core.util.EncryptedFileUtil;
 import pro.sketchware.core.codegen.BlockConstants;
 import pro.sketchware.core.exception.CompileException;
 import pro.sketchware.core.project.ProjectDataManager;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 
 public class AddImageActivity extends BaseDialogActivity implements View.OnClickListener {

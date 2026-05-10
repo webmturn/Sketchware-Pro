@@ -1,4 +1,4 @@
-package mod.hey.studios.util;
+package pro.sketchware.util;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -6,7 +6,7 @@ import java.io.PrintStream;
 
 import kellinwood.logging.LogManager;
 import kellinwood.logging.Logger;
-import mod.jbk.util.LogUtil;
+import pro.sketchware.util.LogUtil;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.FileUtil;
 

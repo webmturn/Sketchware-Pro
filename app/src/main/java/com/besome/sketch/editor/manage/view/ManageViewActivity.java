@@ -1,7 +1,7 @@
 package com.besome.sketch.editor.manage.view;
 
 
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import static pro.sketchware.util.SketchwareUtil.dpToPx;
 
 import android.content.Intent;

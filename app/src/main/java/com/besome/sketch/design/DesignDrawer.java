@@ -23,7 +23,7 @@ import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.shape.MaterialShapeUtils;
 import com.google.android.material.shape.ShapeAppearanceModel;
 
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.DesignDrawerItemBinding;
 import pro.sketchware.util.SketchwareUtil;

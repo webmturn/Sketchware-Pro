@@ -1,7 +1,7 @@
 package pro.sketchware.project;
 
 
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.project.StringfogHandler;
 import pro.sketchware.R;
 import android.os.Bundle;

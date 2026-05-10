@@ -1,4 +1,4 @@
-package mod.jbk.util;
+package pro.sketchware.util;
 
 import androidx.annotation.DrawableRes;
 

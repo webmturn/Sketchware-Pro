@@ -24,7 +24,7 @@ import pro.sketchware.core.util.SketchToast;
 import pro.sketchware.core.project.ResourceManager;
 import pro.sketchware.core.util.UIHelper;
 import pro.sketchware.core.project.SketchwarePaths;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageCollectionShowWidgetBinding;
 import pro.sketchware.util.SketchwareUtil;

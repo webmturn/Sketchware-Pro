@@ -17,7 +17,7 @@ import com.besome.sketch.editor.LogicEditorActivity;
 import pro.sketchware.core.codegen.ComponentCodeGenerator;
 import pro.sketchware.core.ui.FieldBlockView;
 import io.github.rosemoe.sora.widget.component.EditorAutoCompletion;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.CodeEditorHsAsdBinding;
 import pro.sketchware.util.CodeEditorPreferences;

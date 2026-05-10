@@ -12,7 +12,7 @@ import java.io.File;
 import java.util.LinkedList;
 
 import pro.sketchware.core.project.SketchwarePaths;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.DialogKeystoreCredentialsBinding;
 import pro.sketchware.util.SketchwareUtil;

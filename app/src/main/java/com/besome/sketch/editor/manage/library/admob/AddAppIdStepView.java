@@ -14,7 +14,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import pro.sketchware.core.ui.LibrarySettingsView;
 import pro.sketchware.core.util.SketchToast;
 import pro.sketchware.core.util.AnimationUtil;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageLibraryAdmobAppIdBinding;
 import pro.sketchware.databinding.ManageLibrarySettingAdmobAppIdAddBinding;

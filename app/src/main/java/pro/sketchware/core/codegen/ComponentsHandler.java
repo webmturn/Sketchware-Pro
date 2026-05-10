@@ -21,8 +21,8 @@ import java.util.Optional;
 
 import pro.sketchware.core.codegen.ComponentCodeGenerator;
 import pro.sketchware.core.project.SketchwarePaths;
-import mod.hey.studios.util.Helper;
-import mod.jbk.util.OldResourceIdMapper;
+import pro.sketchware.util.Helper;
+import pro.sketchware.util.OldResourceIdMapper;
 import pro.sketchware.R;
 import pro.sketchware.SketchApplication;
 import pro.sketchware.beans.CustomComponent;

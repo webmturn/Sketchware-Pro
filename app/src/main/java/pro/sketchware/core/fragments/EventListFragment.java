@@ -49,7 +49,7 @@ import java.util.Set;
 
 import pro.sketchware.activities.editor.makeblock.ReturnMoreblockManager;
 import pro.sketchware.activities.editor.makeblock.MoreblockImporterDialog;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.activities.editor.makeblock.MoreblockImporter;
 import pro.sketchware.R;
 import pro.sketchware.core.project.ClassInfo;

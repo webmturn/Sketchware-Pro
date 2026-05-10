@@ -16,8 +16,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-import mod.hey.studios.util.Helper;
-import mod.jbk.util.OldResourceIdMapper;
+import pro.sketchware.util.Helper;
+import pro.sketchware.util.OldResourceIdMapper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.DialogIconSelectorBinding;
 import pro.sketchware.databinding.ItemIconSelectorBinding;

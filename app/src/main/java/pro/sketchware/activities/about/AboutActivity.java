@@ -27,7 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.activities.about.fragments.BetaChangesFragment;
 import pro.sketchware.activities.about.fragments.ChangeLogFragment;

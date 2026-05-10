@@ -15,7 +15,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.activities.about.adapters.CommitAdapter;
 import pro.sketchware.activities.about.models.AboutAppViewModel;

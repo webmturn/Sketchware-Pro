@@ -7,7 +7,7 @@ import com.besome.sketch.beans.ViewBean;
 import com.besome.sketch.editor.view.AndroidxOrMaterialView;
 import com.besome.sketch.editor.view.palette.IconBase;
 
-import mod.agus.jcoderz.beans.ViewBeans;
+import pro.sketchware.beans.ViewBeans;
 import pro.sketchware.R;
 
 public class IconRecyclerView extends IconBase implements AndroidxOrMaterialView {

@@ -12,7 +12,7 @@ import com.besome.sketch.beans.ViewBean;
 import com.besome.sketch.editor.view.ItemView;
 import com.google.android.material.tabs.TabLayout;
 
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.core.util.ViewUtil;
 

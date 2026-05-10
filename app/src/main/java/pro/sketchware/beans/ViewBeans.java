@@ -1,4 +1,4 @@
-package mod.agus.jcoderz.beans;
+package pro.sketchware.beans;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;

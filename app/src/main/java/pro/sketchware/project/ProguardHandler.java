@@ -9,9 +9,9 @@ import java.util.HashMap;
 
 import pro.sketchware.core.build.ProjectBuilder;
 import pro.sketchware.core.project.SketchwarePaths;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.core.build.BuildProgressReceiver;
-import mod.jbk.util.LogUtil;
+import pro.sketchware.util.LogUtil;
 import pro.sketchware.util.FileUtil;
 
 public class ProguardHandler {

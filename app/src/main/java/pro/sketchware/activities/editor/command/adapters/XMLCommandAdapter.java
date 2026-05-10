@@ -1,7 +1,7 @@
 package pro.sketchware.activities.editor.command.adapters;
 
 
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;

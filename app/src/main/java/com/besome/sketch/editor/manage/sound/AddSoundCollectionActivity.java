@@ -6,7 +6,7 @@ import android.content.Intent;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import android.media.MediaMetadataRetriever;
-import mod.jbk.util.AudioMetadata;
+import pro.sketchware.util.AudioMetadata;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -33,7 +33,7 @@ import pro.sketchware.core.util.SketchToast;
 import pro.sketchware.core.codegen.BlockConstants;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.exception.CompileException;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageSoundAddBinding;
 

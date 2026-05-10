@@ -1,4 +1,4 @@
-package mod.bobur;
+package pro.sketchware.graphics;
 
 import static com.besome.sketch.design.DesignActivity.sc_id;
 

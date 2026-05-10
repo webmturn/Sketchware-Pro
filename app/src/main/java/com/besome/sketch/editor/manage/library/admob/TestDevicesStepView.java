@@ -29,7 +29,7 @@ import pro.sketchware.core.ui.LibrarySettingsView;
 import pro.sketchware.core.util.SketchToast;
 import pro.sketchware.core.util.AnimationUtil;
 import pro.sketchware.core.util.ViewUtil;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 
 public class TestDevicesStepView extends LinearLayout implements LibrarySettingsView, View.OnClickListener {

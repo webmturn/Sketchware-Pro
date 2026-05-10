@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 import pro.sketchware.core.callback.FileSelectedCallback;
 import pro.sketchware.core.util.ViewUtil;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 
 public class ViewProperties extends RelativeLayout implements AdapterView.OnItemSelectedListener {

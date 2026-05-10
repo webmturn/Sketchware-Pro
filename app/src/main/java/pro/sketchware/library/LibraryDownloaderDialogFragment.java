@@ -35,7 +35,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import pro.sketchware.core.build.BuildSettings;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.library.BuiltInLibraries;
 import pro.sketchware.library.DependencyResolver;
 import pro.sketchware.R;

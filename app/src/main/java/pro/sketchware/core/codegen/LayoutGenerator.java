@@ -36,8 +36,8 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import pro.sketchware.core.codegen.AppCompatInjection;
-import mod.agus.jcoderz.beans.ViewBeans;
-import mod.jbk.util.LogUtil;
+import pro.sketchware.beans.ViewBeans;
+import pro.sketchware.util.LogUtil;
 import pro.sketchware.SketchApplication;
 import pro.sketchware.activities.resourceseditor.components.utils.ColorsEditorManager;
 import pro.sketchware.tools.InjectRootLayoutManager;

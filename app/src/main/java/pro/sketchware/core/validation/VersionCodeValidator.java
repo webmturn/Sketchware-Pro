@@ -1,6 +1,6 @@
 package pro.sketchware.core.validation;
 
-import mod.jbk.util.LogUtil;
+import pro.sketchware.util.LogUtil;
 
 public class VersionCodeValidator {
   public static boolean isValid(String versionCodeText) {

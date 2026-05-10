@@ -51,7 +51,7 @@ import io.github.rosemoe.sora.widget.component.EditorAutoCompletion;
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
 import io.github.rosemoe.sora.widget.schemes.SchemeDarcula;
 import io.github.rosemoe.sora.widget.schemes.SchemeVS2019;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import mod.jbk.code.CodeEditorColorSchemes;
 import mod.jbk.code.CodeEditorLanguages;
 import pro.sketchware.util.CodeEditorPreferences;

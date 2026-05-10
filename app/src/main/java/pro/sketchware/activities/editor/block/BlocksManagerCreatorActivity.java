@@ -37,9 +37,9 @@ import java.util.regex.Pattern;
 
 import pro.sketchware.core.codegen.BlockTypeUtils;
 import pro.sketchware.core.ui.BlockView;
-import mod.hey.studios.util.Helper;
-import mod.hilal.saif.lib.PCP;
-import mod.jbk.util.LogUtil;
+import pro.sketchware.util.Helper;
+import pro.sketchware.util.PCP;
+import pro.sketchware.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ActivityBlocksManagerCreatorBinding;
 import pro.sketchware.lib.base.BaseTextWatcher;

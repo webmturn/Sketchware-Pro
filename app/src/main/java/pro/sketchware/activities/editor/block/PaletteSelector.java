@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import pro.sketchware.core.codegen.ExtraBlockFile;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.util.SketchwareUtil;
 

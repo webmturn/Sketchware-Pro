@@ -21,7 +21,7 @@ import static com.besome.sketch.Config.VAR_DEFAULT_MIN_SDK_VERSION;
 import static com.besome.sketch.Config.VAR_DEFAULT_TARGET_SDK_VERSION;
 import static pro.sketchware.core.codegen.ExtraBlockFile.getExtraBlockData;
 
-import static mod.hey.studios.util.ProjectFile.getDefaultColor;
+import static pro.sketchware.util.ProjectFile.getDefaultColor;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -60,7 +60,7 @@ import pro.sketchware.core.codegen.EventsHandler;
 import pro.sketchware.library.ManageLocalLibrary;
 import pro.sketchware.core.build.BuildSettings;
 import pro.sketchware.project.ProjectSettings;
-import mod.hey.studios.util.ProjectFile;
+import pro.sketchware.util.ProjectFile;
 import pro.sketchware.core.codegen.AndroidManifestInjector;
 import pro.sketchware.core.codegen.CommandBlock;
 import pro.sketchware.core.build.ViewBindingBuilder;

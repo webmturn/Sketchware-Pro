@@ -29,7 +29,7 @@ import java.util.Set;
 import pro.sketchware.core.codegen.EditorManifest;
 import pro.sketchware.core.build.BuildSettings;
 import pro.sketchware.project.ProjectSettings;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.core.codegen.AndroidManifestInjector;
 import pro.sketchware.library.BuiltInLibraries;
 import pro.sketchware.util.library.BuiltInLibraryManager;

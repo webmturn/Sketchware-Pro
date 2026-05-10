@@ -22,7 +22,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import pro.sketchware.core.project.ViewHistoryManager;
 import pro.sketchware.core.project.ProjectDataManager;
 import io.github.rosemoe.sora.widget.CodeEditor;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.activities.appcompat.ManageAppCompatActivity;
 import pro.sketchware.activities.preview.LayoutPreviewActivity;

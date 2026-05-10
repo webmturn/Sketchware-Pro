@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import pro.sketchware.core.callback.PropertyChangedCallback;
 import pro.sketchware.core.util.UIHelper;
 import pro.sketchware.core.util.ViewUtil;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.PropertyPopupSelectorSingleBinding;
 

@@ -26,7 +26,7 @@ import java.util.Objects;
 
 import pro.sketchware.core.project.ProjectDataStore;
 import pro.sketchware.core.project.ProjectDataManager;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.activities.resourceseditor.ResourcesEditorActivity;
 import pro.sketchware.databinding.PalletCustomviewBinding;

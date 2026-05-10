@@ -8,7 +8,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 
-import mod.jbk.util.LogUtil;
+import pro.sketchware.util.LogUtil;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.FileUtil;
 

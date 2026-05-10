@@ -10,7 +10,7 @@ import com.besome.sketch.editor.manage.library.material3.Material3LibraryManager
 import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageLibraryManageCompatBinding;
 

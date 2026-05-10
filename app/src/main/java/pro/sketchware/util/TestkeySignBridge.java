@@ -1,9 +1,9 @@
-package mod.jbk.util;
+package pro.sketchware.util;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
-import mod.alucard.tn.apksigner.ApkSigner;
+import pro.sketchware.util.apk.ApkSigner;
 
 public class TestkeySignBridge {
     private TestkeySignBridge() {

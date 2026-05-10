@@ -1,7 +1,7 @@
 package pro.sketchware.core.fragments;
 
 
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;

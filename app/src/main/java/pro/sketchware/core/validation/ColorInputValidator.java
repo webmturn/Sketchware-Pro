@@ -1,7 +1,7 @@
 package pro.sketchware.core.validation;
 
 
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.View;

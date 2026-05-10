@@ -17,7 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 
 import com.besome.sketch.beans.ProjectFileBean;
 import com.besome.sketch.beans.ViewBean;

@@ -50,7 +50,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import pro.sketchware.core.codegen.BlockLoader;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.databinding.ActivityBlocksManagerBinding;

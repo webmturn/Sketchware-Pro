@@ -1,7 +1,7 @@
 package com.besome.sketch.editor.property;
 
 
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.core.util.FormatUtil;
 import com.besome.sketch.editor.PropertyActivity;
 import android.content.Context;
@@ -35,7 +35,7 @@ import pro.sketchware.core.util.UIHelper;
 import pro.sketchware.core.codegen.EventRegistry;
 import pro.sketchware.project.ProjectSettings;
 import pro.sketchware.core.build.ViewBindingBuilder;
-import mod.agus.jcoderz.beans.ViewBeans;
+import pro.sketchware.beans.ViewBeans;
 import pro.sketchware.R;
 
 public class ViewPropertyItems extends LinearLayout implements PropertyChangedCallback, View.OnClickListener {

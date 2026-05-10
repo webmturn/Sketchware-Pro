@@ -32,7 +32,7 @@ import pro.sketchware.core.project.ProjectListManager;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.build.ProjectFilePaths;
 import pro.sketchware.activities.editor.code.SrcCodeEditor;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.activities.resourceseditor.components.adapters.EditorsAdapter;
 import pro.sketchware.activities.resourceseditor.components.fragments.ArraysEditor;

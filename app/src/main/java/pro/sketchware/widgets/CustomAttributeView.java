@@ -1,4 +1,4 @@
-package mod.remaker.view;
+package pro.sketchware.widgets;
 
 import android.content.Context;
 import android.view.LayoutInflater;

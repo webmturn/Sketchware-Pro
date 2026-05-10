@@ -20,7 +20,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.ArrayList;
 
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.core.codegen.ComponentsHandler;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ComponentAddItemBinding;

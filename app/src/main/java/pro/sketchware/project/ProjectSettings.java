@@ -14,8 +14,8 @@ import com.google.gson.JsonSyntaxException;
 
 import java.util.HashMap;
 
-import mod.hey.studios.util.Helper;
-import mod.jbk.util.LogUtil;
+import pro.sketchware.util.Helper;
+import pro.sketchware.util.LogUtil;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.FileUtil;
 

@@ -35,7 +35,7 @@ import pro.sketchware.core.codegen.BlockConstants;
 import pro.sketchware.core.util.ViewUtil;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.activities.editor.makeblock.ReturnMoreblockManager;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 
 public class MoreblockImporter {

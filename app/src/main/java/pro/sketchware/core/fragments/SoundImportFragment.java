@@ -1,7 +1,7 @@
 package pro.sketchware.core.fragments;
 
 
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,8 +30,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import mod.jbk.util.AudioMetadata;
-import mod.jbk.util.SoundPlayingAdapter;
+import pro.sketchware.util.AudioMetadata;
+import pro.sketchware.util.SoundPlayingAdapter;
 import pro.sketchware.R;
 import pro.sketchware.databinding.FrManageSoundListBinding;
 import pro.sketchware.databinding.ManageSoundBinding;

@@ -1,7 +1,7 @@
 package com.besome.sketch.editor.manage.image;
 
 
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import androidx.activity.OnBackPressedCallback;
 import android.app.Activity;
 import android.content.Context;

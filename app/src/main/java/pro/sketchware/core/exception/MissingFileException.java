@@ -1,4 +1,4 @@
-package mod.jbk.diagnostic;
+package pro.sketchware.core.exception;
 
 import java.io.File;
 

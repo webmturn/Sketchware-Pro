@@ -21,8 +21,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import pro.sketchware.activities.editor.code.SrcCodeEditor;
-import mod.hey.studios.util.Helper;
-import mod.remaker.view.CustomAttributeView;
+import pro.sketchware.util.Helper;
+import pro.sketchware.widgets.CustomAttributeView;
 import pro.sketchware.R;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.databinding.ActivityManageCustomAttributeBinding;

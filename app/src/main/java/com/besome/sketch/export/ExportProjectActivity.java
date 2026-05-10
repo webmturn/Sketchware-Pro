@@ -25,12 +25,12 @@ import kellinwood.security.zipsigner.optional.LoadKeystoreException;
 import pro.sketchware.core.build.compiler.KotlinCompilerBridge;
 import pro.sketchware.project.ProguardHandler;
 import pro.sketchware.project.StringfogHandler;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.core.build.BuildProgressReceiver;
 import pro.sketchware.library.BuiltInLibraries;
 import pro.sketchware.core.build.compiler.AppBundleCompiler;
 import pro.sketchware.dialogs.GetKeyStoreCredentialsDialog;
-import mod.jbk.util.TestkeySignBridge;
+import pro.sketchware.util.TestkeySignBridge;
 import org.spongycastle.jce.provider.BouncyCastleProvider;
 
 import pro.sketchware.R;

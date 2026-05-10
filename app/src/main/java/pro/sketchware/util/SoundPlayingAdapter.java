@@ -1,4 +1,4 @@
-package mod.jbk.util;
+package pro.sketchware.util;
 
 import android.media.MediaPlayer;
 import android.view.View;
@@ -18,7 +18,7 @@ import java.nio.file.Path;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.util.SketchwareUtil;
 

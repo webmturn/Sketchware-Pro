@@ -43,7 +43,7 @@ import java.util.Objects;
 import pro.sketchware.core.util.UriPathResolver;
 import pro.sketchware.core.util.BitmapUtil;
 import pro.sketchware.core.project.SketchwarePaths;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ActivityIconCreatorBinding;
 import pro.sketchware.util.FileUtil;

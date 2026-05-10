@@ -11,7 +11,7 @@ import com.besome.sketch.lib.ui.CollapsibleButton;
 
 import java.util.List;
 
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 
 public class CollapsibleCustomComponentLayout extends CollapsibleLayout<CollapsibleButton> {

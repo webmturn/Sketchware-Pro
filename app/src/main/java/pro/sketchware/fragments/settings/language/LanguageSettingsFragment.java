@@ -32,7 +32,7 @@ import pro.sketchware.core.project.SketchwarePaths;
 import dev.pranav.filepicker.FilePickerCallback;
 import dev.pranav.filepicker.FilePickerDialogFragment;
 import dev.pranav.filepicker.FilePickerOptions;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.FragmentSettingsLanguageBinding;
 import pro.sketchware.util.FileUtil;

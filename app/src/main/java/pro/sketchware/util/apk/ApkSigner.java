@@ -1,4 +1,4 @@
-package mod.alucard.tn.apksigner;
+package pro.sketchware.util.apk;
 
 import android.util.Log;
 

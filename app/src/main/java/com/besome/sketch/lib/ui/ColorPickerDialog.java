@@ -33,7 +33,7 @@ import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.SketchwareConstants;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.build.ProjectFilePaths;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.activities.resourceseditor.components.models.ColorModel;
 import pro.sketchware.activities.resourceseditor.components.utils.ColorsEditorManager;

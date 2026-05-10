@@ -16,8 +16,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 
-import mod.hey.studios.util.Helper;
-import mod.jbk.util.BlockUtil;
+import pro.sketchware.util.Helper;
+import pro.sketchware.util.BlockUtil;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageCollectionPopupImportMoreBlockListItemBinding;
 import pro.sketchware.databinding.SearchWithRecyclerViewBinding;

@@ -7,7 +7,7 @@ import com.besome.sketch.editor.LogicEditorActivity;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.activities.settings.ConfigActivity;
 import pro.sketchware.R;
 import pro.sketchware.blocks.ExtraBlocks;

@@ -46,7 +46,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.xmlpull.v1.XmlPullParserException;
 
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.util.SketchwareUtil;
 import pro.sketchware.widgets.WidgetsCreatorManager;

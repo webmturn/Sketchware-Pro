@@ -7,7 +7,7 @@ import androidx.annotation.Nullable;
 import com.besome.sketch.lib.base.BaseAppCompatActivity;
 
 import pro.sketchware.core.codegen.ComponentCodeGenerator;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.databinding.ActivityCodeViewerBinding;
 import pro.sketchware.util.EditorUtils;
 import pro.sketchware.util.UI;

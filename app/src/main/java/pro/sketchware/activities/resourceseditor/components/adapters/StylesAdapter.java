@@ -1,7 +1,7 @@
 package pro.sketchware.activities.resourceseditor.components.adapters;
 
 
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

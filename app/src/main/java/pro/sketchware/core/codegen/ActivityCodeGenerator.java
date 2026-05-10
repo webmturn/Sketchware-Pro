@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import mod.agus.jcoderz.beans.ViewBeans;
+import pro.sketchware.beans.ViewBeans;
 import pro.sketchware.library.ManageLocalLibrary;
 import pro.sketchware.core.codegen.ConstVarComponent;
 import pro.sketchware.core.build.BuildSettings;

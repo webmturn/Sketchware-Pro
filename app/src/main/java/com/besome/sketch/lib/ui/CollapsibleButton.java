@@ -11,7 +11,7 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.StringRes;
 
 import pro.sketchware.core.util.ViewUtil;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 
 public class CollapsibleButton extends LinearLayout {

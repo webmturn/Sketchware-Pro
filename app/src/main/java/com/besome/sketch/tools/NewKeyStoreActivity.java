@@ -23,7 +23,7 @@ import pro.sketchware.core.util.SketchToast;
 import pro.sketchware.core.build.KeyStoreManager;
 import pro.sketchware.core.util.UIHelper;
 import pro.sketchware.core.project.SketchwarePaths;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 
 public class NewKeyStoreActivity extends BaseAppCompatActivity implements OnClickListener {

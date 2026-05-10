@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 import pro.sketchware.core.validation.BaseValidator;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 
 public class MoreblockValidator extends BaseValidator {

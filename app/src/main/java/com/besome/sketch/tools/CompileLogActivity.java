@@ -17,10 +17,10 @@ import androidx.core.view.WindowInsetsCompat;
 import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import mod.hey.studios.util.CompileLogHelper;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.CompileLogHelper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
-import mod.jbk.diagnostic.CompileErrorSaver;
+import pro.sketchware.core.build.CompileErrorSaver;
 import pro.sketchware.databinding.CompileLogBinding;
 import pro.sketchware.util.SketchwareUtil;
 import pro.sketchware.util.UI;

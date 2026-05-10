@@ -29,8 +29,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mod.hey.studios.util.Helper;
-import mod.jbk.util.LogUtil;
+import pro.sketchware.util.Helper;
+import pro.sketchware.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.UI;

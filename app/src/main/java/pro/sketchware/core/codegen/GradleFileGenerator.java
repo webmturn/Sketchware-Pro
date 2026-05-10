@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import pro.sketchware.core.build.BuildSettings;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.library.BuiltInLibraries;
 import pro.sketchware.library.ExcludeBuiltInLibrariesActivity;
 import pro.sketchware.core.codegen.ConstVarComponent;

@@ -47,7 +47,7 @@ import pro.sketchware.core.util.SharedPrefsHelper;
 import pro.sketchware.core.util.DeviceUtil;
 import pro.sketchware.project.BackupFactory;
 import pro.sketchware.project.BackupRestoreManager;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.activities.settings.ConfigActivity;
 import pro.sketchware.project.SingleCopyTask;
 import pro.sketchware.R;

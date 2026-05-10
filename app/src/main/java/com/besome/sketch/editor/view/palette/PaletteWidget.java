@@ -46,7 +46,7 @@ import com.besome.sketch.editor.view.palette.IconRatingBar;
 import com.besome.sketch.editor.view.palette.IconSearchView;
 import com.besome.sketch.editor.view.palette.IconTimePicker;
 import com.besome.sketch.editor.view.palette.IconVideoView;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.widgets.IconCustomWidget;
 

@@ -10,7 +10,7 @@ import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;
 import io.github.rosemoe.sora.langs.textmate.registry.model.ThemeModel;
 import io.github.rosemoe.sora.langs.textmate.registry.provider.AssetsFileResolver;
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
-import mod.jbk.util.LogUtil;
+import pro.sketchware.util.LogUtil;
 import pro.sketchware.SketchApplication;
 
 public class CodeEditorColorSchemes {

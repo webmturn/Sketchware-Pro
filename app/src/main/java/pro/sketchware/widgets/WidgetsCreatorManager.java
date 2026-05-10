@@ -42,7 +42,7 @@ import pro.sketchware.core.fragments.ViewEditorFragment;
 import dev.pranav.filepicker.FilePickerCallback;
 import dev.pranav.filepicker.FilePickerDialogFragment;
 import dev.pranav.filepicker.FilePickerOptions;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.DialogSelectorActionsBinding;
 import pro.sketchware.databinding.WidgetsCreatorDialogBinding;

@@ -10,7 +10,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
-import mod.jbk.util.LogUtil;
+import pro.sketchware.util.LogUtil;
 
 public final class BackgroundTasks {
     private static final int IO_THREAD_COUNT = calculateIoThreadCount();

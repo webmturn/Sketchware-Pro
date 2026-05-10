@@ -23,7 +23,7 @@ import pro.sketchware.core.project.ProjectListManager;
 import dev.pranav.filepicker.FilePickerCallback;
 import dev.pranav.filepicker.FilePickerDialogFragment;
 import dev.pranav.filepicker.FilePickerOptions;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.activities.settings.ConfigActivity;
 import pro.sketchware.R;
 import pro.sketchware.activities.main.fragments.projects.ProjectsFragment;

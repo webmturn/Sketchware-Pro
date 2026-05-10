@@ -13,7 +13,7 @@ import com.google.android.material.color.MaterialColors;
 
 import java.util.List;
 
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 
 public class CollapsibleEventLayout extends CollapsibleLayout<CollapsibleButton> {

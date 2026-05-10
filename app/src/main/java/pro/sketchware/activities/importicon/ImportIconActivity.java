@@ -51,7 +51,7 @@ import pro.sketchware.core.util.UIHelper;
 import pro.sketchware.core.util.EncryptedFileUtil;
 import pro.sketchware.core.codegen.BlockConstants;
 import pro.sketchware.core.project.SketchwarePaths;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.activities.importicon.adapters.IconAdapter;
 import pro.sketchware.activities.resourceseditor.components.utils.ColorsEditorManager;

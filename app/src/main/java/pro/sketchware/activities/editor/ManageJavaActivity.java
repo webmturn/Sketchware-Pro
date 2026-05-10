@@ -37,7 +37,7 @@ import dev.pranav.filepicker.FilePickerCallback;
 import dev.pranav.filepicker.FilePickerDialogFragment;
 import dev.pranav.filepicker.FilePickerOptions;
 import pro.sketchware.activities.editor.code.SrcCodeEditor;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.DialogCreateNewFileLayoutBinding;
 import pro.sketchware.databinding.DialogInputLayoutBinding;

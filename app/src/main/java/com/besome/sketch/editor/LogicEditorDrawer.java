@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 import pro.sketchware.core.ui.DefinitionBlockView;
 import pro.sketchware.core.util.ViewUtil;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.activities.settings.AppSettings;
 import pro.sketchware.R;
 

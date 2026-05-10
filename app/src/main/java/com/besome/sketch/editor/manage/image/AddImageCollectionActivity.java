@@ -38,7 +38,7 @@ import pro.sketchware.core.util.UIHelper;
 import pro.sketchware.core.codegen.BlockConstants;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.exception.CompileException;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 
 public class AddImageCollectionActivity extends BaseDialogActivity implements View.OnClickListener {

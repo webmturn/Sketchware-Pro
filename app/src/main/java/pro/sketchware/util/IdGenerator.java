@@ -1,4 +1,4 @@
-package mod.hey.studios.editor.view;
+package pro.sketchware.util;
 
 public class IdGenerator {
 

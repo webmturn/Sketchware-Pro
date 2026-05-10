@@ -10,9 +10,9 @@ import java.util.Arrays;
 
 import pro.sketchware.core.project.ClassInfo;
 import pro.sketchware.core.codegen.EventRegistry;
-import mod.hey.studios.util.Helper;
-import mod.jbk.util.LogUtil;
-import mod.jbk.util.OldResourceIdMapper;
+import pro.sketchware.util.Helper;
+import pro.sketchware.util.LogUtil;
+import pro.sketchware.util.OldResourceIdMapper;
 import pro.sketchware.R;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.beans.CustomEvent;

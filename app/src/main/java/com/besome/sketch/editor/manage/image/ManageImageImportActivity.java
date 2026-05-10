@@ -31,7 +31,7 @@ import pro.sketchware.core.validation.XmlNameValidator;
 import pro.sketchware.core.util.SketchToast;
 import pro.sketchware.core.util.UIHelper;
 import pro.sketchware.core.codegen.BlockConstants;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 
 public class ManageImageImportActivity extends BaseAppCompatActivity implements View.OnClickListener {

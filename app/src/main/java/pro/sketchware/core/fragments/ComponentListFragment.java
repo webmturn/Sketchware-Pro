@@ -1,7 +1,7 @@
 package pro.sketchware.core.fragments;
 
 
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import android.content.Intent;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;

@@ -17,10 +17,10 @@ import java.util.ArrayList;
 
 import pro.sketchware.core.fragments.BaseFragment;
 import pro.sketchware.fragments.settings.events.EventsManagerConstants;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.beans.CustomEvent;
 import pro.sketchware.dialogs.IconSelectorDialog;
-import mod.jbk.util.OldResourceIdMapper;
+import pro.sketchware.util.OldResourceIdMapper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.FragmentEventsManagerCreatorBinding;
 import pro.sketchware.util.FileUtil;

@@ -3,7 +3,7 @@ package pro.sketchware.core.build.compiler
 import pro.sketchware.core.build.ProjectBuilder
 import pro.sketchware.core.build.BuildSettings
 import pro.sketchware.core.build.compiler.KotlinCompilerUtil.*
-import mod.jbk.util.LogUtil
+import pro.sketchware.util.LogUtil
 import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments
 import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler
 import org.jetbrains.kotlin.config.Services

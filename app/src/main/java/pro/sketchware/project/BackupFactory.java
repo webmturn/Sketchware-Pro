@@ -48,7 +48,7 @@ import pro.sketchware.library.LocalLibrariesUtil;
 import pro.sketchware.core.codegen.ExtraBlockInfo;
 import pro.sketchware.core.codegen.BlockLoader;
 import pro.sketchware.project.CustomBlocksManager;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.activities.settings.ConfigActivity;
 import pro.sketchware.R;
 import pro.sketchware.util.FileUtil;

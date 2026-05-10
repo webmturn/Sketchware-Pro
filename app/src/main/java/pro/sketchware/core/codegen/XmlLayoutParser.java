@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mod.agus.jcoderz.beans.ViewBeans;
+import pro.sketchware.beans.ViewBeans;
 
 /**
  * Parses Android layout XML into a list of {@link ViewBean} objects that Sketchware-Pro

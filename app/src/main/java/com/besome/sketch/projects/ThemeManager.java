@@ -1,12 +1,12 @@
 package com.besome.sketch.projects;
 
-import static mod.hey.studios.util.ProjectFile.getDefaultColor;
+import static pro.sketchware.util.ProjectFile.getDefaultColor;
 
 import android.graphics.Color;
 
 import java.util.Random;
 
-import mod.hey.studios.util.ProjectFile;
+import pro.sketchware.util.ProjectFile;
 
 
 public class ThemeManager {

@@ -1,4 +1,4 @@
-package mod.hey.studios.lib;
+package pro.sketchware.util;
 
 import java.io.EOFException;
 import java.io.FileInputStream;

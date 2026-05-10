@@ -2,7 +2,7 @@ package com.besome.sketch.projects;
 
 
 import android.util.Log;
-import static mod.hey.studios.util.ProjectFile.getDefaultColor;
+import static pro.sketchware.util.ProjectFile.getDefaultColor;
 
 import android.content.Context;
 import android.content.Intent;
@@ -50,8 +50,8 @@ import pro.sketchware.core.util.ViewUtil;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.util.MapValueHelper;
 import pro.sketchware.project.ProjectSettings;
-import mod.hey.studios.util.Helper;
-import mod.hey.studios.util.ProjectFile;
+import pro.sketchware.util.Helper;
+import pro.sketchware.util.ProjectFile;
 import pro.sketchware.activities.settings.ConfigActivity;
 import pro.sketchware.R;
 import pro.sketchware.activities.iconcreator.IconCreatorActivity;

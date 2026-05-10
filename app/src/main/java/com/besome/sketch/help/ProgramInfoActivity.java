@@ -16,7 +16,7 @@ import pro.sketchware.core.util.DeviceUtil;
 import pro.sketchware.core.util.SketchToast;
 import pro.sketchware.core.util.UIHelper;
 import pro.sketchware.core.util.ViewUtil;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ProgramInfoBinding;
 

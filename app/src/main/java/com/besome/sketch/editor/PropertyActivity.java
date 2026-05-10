@@ -44,7 +44,7 @@ import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.util.UIHelper;
 import pro.sketchware.core.ui.UserExperienceLevel;
 import pro.sketchware.project.ProjectSettings;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 
 public class PropertyActivity extends BaseAppCompatActivity implements PropertyChangedCallback {

@@ -31,7 +31,7 @@ import pro.sketchware.core.ui.FirebaseSettingsView;
 import pro.sketchware.core.util.UIHelper;
 import pro.sketchware.core.ui.FirebaseStorageView;
 import pro.sketchware.core.ui.LibraryConfigView;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.library.LibrarySettingsImporter;
 import pro.sketchware.R;
 

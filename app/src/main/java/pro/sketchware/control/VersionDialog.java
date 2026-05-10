@@ -7,7 +7,7 @@ import com.besome.sketch.projects.MyProjectSettingActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import pro.sketchware.core.util.UIHelper;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.DialogAdvancedVersionControlBinding;
 import pro.sketchware.core.validation.VersionNamePostfixValidator;

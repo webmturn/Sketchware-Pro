@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.LinkedHashMap;
 import java.util.Objects;
 
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.activities.resourceseditor.ResourcesEditorActivity;
 import pro.sketchware.activities.resourceseditor.components.adapters.ArraysAdapter;

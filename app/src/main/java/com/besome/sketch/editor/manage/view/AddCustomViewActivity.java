@@ -21,7 +21,7 @@ import pro.sketchware.core.validation.ActivityNameValidator;
 import pro.sketchware.core.util.SketchToast;
 import pro.sketchware.core.ui.PresetLayoutFactory;
 import pro.sketchware.core.codegen.BlockConstants;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 
 public class AddCustomViewActivity extends BaseDialogActivity implements View.OnClickListener {

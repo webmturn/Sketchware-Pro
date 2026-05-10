@@ -11,7 +11,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 import com.besome.sketch.beans.ViewBean;
 import com.besome.sketch.editor.view.ItemView;
 
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.core.util.ViewUtil;
 

@@ -13,7 +13,7 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.Gravity;
 import android.view.View;
-import mod.agus.jcoderz.beans.ViewBeans;
+import pro.sketchware.beans.ViewBeans;
 import pro.sketchware.util.AttributeConstants;
 import pro.sketchware.util.PropertiesUtil;
 

@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import mod.jbk.util.LogUtil;
+import pro.sketchware.util.LogUtil;
 
 public final class LocalLibraryImportPackageIndex {
     private static final String TAG = "LocalLibImportIndex";

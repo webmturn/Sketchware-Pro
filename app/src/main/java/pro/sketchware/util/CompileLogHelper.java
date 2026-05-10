@@ -1,4 +1,4 @@
-package mod.hey.studios.util;
+package pro.sketchware.util;
 
 import android.content.Context;
 import android.graphics.Typeface;

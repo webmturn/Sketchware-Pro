@@ -3,7 +3,7 @@ package pro.sketchware.core.codegen;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import mod.jbk.util.LogUtil;
+import pro.sketchware.util.LogUtil;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.FileUtil;
 

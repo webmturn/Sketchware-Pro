@@ -1,6 +1,6 @@
 package pro.sketchware.fragments.settings.block.selector;
 
-import static mod.hey.studios.util.Helper.addBasicTextChangedListener;
+import static pro.sketchware.util.Helper.addBasicTextChangedListener;
 import static pro.sketchware.util.GsonUtils.getGson;
 
 import android.content.DialogInterface;
@@ -30,7 +30,7 @@ import pro.sketchware.core.fragments.BaseFragment;
 import dev.pranav.filepicker.FilePickerCallback;
 import dev.pranav.filepicker.FilePickerDialogFragment;
 import dev.pranav.filepicker.FilePickerOptions;
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.DialogBlockConfigurationBinding;
 import pro.sketchware.databinding.DialogSelectorActionsBinding;

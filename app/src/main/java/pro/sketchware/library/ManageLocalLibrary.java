@@ -13,8 +13,8 @@ import java.util.LinkedHashSet;
 
 import pro.sketchware.library.LocalLibrariesUtil;
 import pro.sketchware.library.LocalLibraryImportPackageIndex;
-import mod.hey.studios.util.Helper;
-import mod.jbk.util.LogUtil;
+import pro.sketchware.util.Helper;
+import pro.sketchware.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.FilePathUtil;

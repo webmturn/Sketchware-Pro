@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import mod.hey.studios.util.Helper;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;

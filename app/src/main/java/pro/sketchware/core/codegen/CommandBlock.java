@@ -9,8 +9,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.regex.PatternSyntaxException;
 
-import mod.hey.studios.util.Helper;
-import mod.jbk.util.LogUtil;
+import pro.sketchware.util.Helper;
+import pro.sketchware.util.LogUtil;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.FileUtil;
 

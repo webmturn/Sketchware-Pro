@@ -5,8 +5,8 @@ import com.google.gson.JsonSyntaxException;
 
 import java.util.ArrayList;
 
-import mod.hey.studios.util.Helper;
-import mod.jbk.util.LogUtil;
+import pro.sketchware.util.Helper;
+import pro.sketchware.util.LogUtil;
 
 public class FileResConfig {
 
