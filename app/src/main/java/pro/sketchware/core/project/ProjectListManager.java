@@ -10,7 +10,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 
 import mod.jbk.util.LogUtil;
-import pro.sketchware.core.EncryptedFileUtil;
+import pro.sketchware.core.util.EncryptedFileUtil;
 import pro.sketchware.core.util.GsonMapHelper;
 import pro.sketchware.core.util.MapValueHelper;
 import pro.sketchware.core.util.SharedPrefsHelper;

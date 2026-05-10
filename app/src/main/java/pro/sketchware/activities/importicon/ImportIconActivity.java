@@ -42,13 +42,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import pro.sketchware.core.ZipUtil;
+import pro.sketchware.core.util.ZipUtil;
 import pro.sketchware.core.BackgroundTasks;
 import pro.sketchware.core.validation.ResourceNameValidator;
 import pro.sketchware.core.util.SketchToast;
 import pro.sketchware.core.TaskHost;
 import pro.sketchware.core.util.UIHelper;
-import pro.sketchware.core.EncryptedFileUtil;
+import pro.sketchware.core.util.EncryptedFileUtil;
 import pro.sketchware.core.codegen.BlockConstants;
 import pro.sketchware.core.project.SketchwarePaths;
 import mod.hey.studios.util.Helper;

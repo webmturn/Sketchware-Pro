@@ -10,9 +10,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import pro.sketchware.core.ZipUtil;
+import pro.sketchware.core.util.ZipUtil;
 import pro.sketchware.core.build.ProjectBuilder;
-import pro.sketchware.core.EncryptedFileUtil;
+import pro.sketchware.core.util.EncryptedFileUtil;
 import pro.sketchware.SketchApplication;
 
 public class BuiltInLibraries {

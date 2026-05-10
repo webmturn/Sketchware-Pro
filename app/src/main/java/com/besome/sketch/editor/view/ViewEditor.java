@@ -58,7 +58,7 @@ import pro.sketchware.core.util.SketchToast;
 import pro.sketchware.core.project.ViewHistoryManager;
 import pro.sketchware.core.BuildCallback;
 import pro.sketchware.core.project.ProjectDataManager;
-import pro.sketchware.core.EncryptedFileUtil;
+import pro.sketchware.core.util.EncryptedFileUtil;
 import pro.sketchware.core.ui.WidgetPaletteIcon;
 import pro.sketchware.core.util.ViewUtil;
 import pro.sketchware.core.project.SketchwarePaths;

@@ -13,7 +13,7 @@ import java.io.StringReader;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import pro.sketchware.core.EncryptedFileUtil;
+import pro.sketchware.core.util.EncryptedFileUtil;
 
 public class ProjectFileManager {
   public ArrayList<String> xmlNames;

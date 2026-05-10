@@ -30,7 +30,7 @@ import pro.sketchware.core.util.SketchToast;
 import pro.sketchware.core.project.ProjectDataStore;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.util.UIHelper;
-import pro.sketchware.core.EncryptedFileUtil;
+import pro.sketchware.core.util.EncryptedFileUtil;
 import pro.sketchware.core.codegen.BlockConstants;
 import pro.sketchware.core.util.ViewUtil;
 import pro.sketchware.core.project.SketchwarePaths;

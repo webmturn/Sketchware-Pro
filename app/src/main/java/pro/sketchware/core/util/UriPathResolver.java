@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.util;
 
 import android.content.Context;
 import android.net.Uri;

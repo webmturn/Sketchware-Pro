@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import pro.sketchware.core.UriPathResolver;
+import pro.sketchware.core.util.UriPathResolver;
 import pro.sketchware.core.project.SoundCollectionManager;
 import pro.sketchware.core.validation.ResourceNameValidator;
 import pro.sketchware.core.util.SketchToast;

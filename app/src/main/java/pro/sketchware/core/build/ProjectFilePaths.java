@@ -5,7 +5,7 @@ import pro.sketchware.core.codegen.BlockConstants;
 import pro.sketchware.core.project.BuildConfig;
 import pro.sketchware.core.codegen.ComponentCodeGenerator;
 import pro.sketchware.core.codegen.ComponentTemplates;
-import pro.sketchware.core.EncryptedFileUtil;
+import pro.sketchware.core.util.EncryptedFileUtil;
 import pro.sketchware.core.codegen.LayoutGenerator;
 import pro.sketchware.core.project.LibraryManager;
 import pro.sketchware.core.codegen.LocalLibraryManifestMerger;
@@ -15,7 +15,7 @@ import pro.sketchware.core.project.ProjectDataStore;
 import pro.sketchware.core.project.ProjectFileManager;
 import pro.sketchware.core.project.ProjectListManager;
 import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.core.ZipUtil;
+import pro.sketchware.core.util.ZipUtil;
 
 import static com.besome.sketch.Config.VAR_DEFAULT_MIN_SDK_VERSION;
 import static com.besome.sketch.Config.VAR_DEFAULT_TARGET_SDK_VERSION;

@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import pro.sketchware.core.BackgroundTasks;
 import pro.sketchware.core.SketchwareException;
 import pro.sketchware.core.TaskHost;
-import pro.sketchware.core.UriPathResolver;
+import pro.sketchware.core.util.UriPathResolver;
 import pro.sketchware.core.project.ImageCollectionManager;
 import pro.sketchware.core.validation.FileNameValidator;
 import pro.sketchware.core.util.SketchToast;

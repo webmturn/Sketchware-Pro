@@ -35,7 +35,7 @@ import org.spongycastle.jce.provider.BouncyCastleProvider;
 
 import pro.sketchware.R;
 import pro.sketchware.core.BackgroundTasks;
-import pro.sketchware.core.EncryptedFileUtil;
+import pro.sketchware.core.util.EncryptedFileUtil;
 import pro.sketchware.core.project.LibraryManager;
 import pro.sketchware.core.util.MapValueHelper;
 import pro.sketchware.core.build.ProjectBuilder;
@@ -47,7 +47,7 @@ import pro.sketchware.core.project.ResourceManager;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.TaskHost;
 import pro.sketchware.core.validation.VersionCodeValidator;
-import pro.sketchware.core.ZipUtil;
+import pro.sketchware.core.util.ZipUtil;
 import pro.sketchware.utility.FilePathUtil;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.SketchwareUtil;

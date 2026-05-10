@@ -60,7 +60,7 @@ import pro.sketchware.databinding.ManageImageListItemBinding;
 import pro.sketchware.utility.FilePathUtil;
 import pro.sketchware.utility.SvgUtils;
 import pro.sketchware.core.util.BitmapUtil;
-import pro.sketchware.core.EncryptedFileUtil;
+import pro.sketchware.core.util.EncryptedFileUtil;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.ResourceManager;
 import pro.sketchware.core.util.SketchToast;

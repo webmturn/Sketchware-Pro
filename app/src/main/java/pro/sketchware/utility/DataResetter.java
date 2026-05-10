@@ -9,7 +9,7 @@ import java.util.HashMap;
 import pro.sketchware.core.util.SharedPrefsHelper;
 import pro.sketchware.core.util.SketchToast;
 import pro.sketchware.core.project.ProjectListManager;
-import pro.sketchware.core.EncryptedFileUtil;
+import pro.sketchware.core.util.EncryptedFileUtil;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.util.MapValueHelper;
 import mod.hey.studios.util.Helper;

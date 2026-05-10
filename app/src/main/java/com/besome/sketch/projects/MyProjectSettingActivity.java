@@ -45,7 +45,7 @@ import pro.sketchware.core.validation.VariableNameValidator;
 import pro.sketchware.core.project.ProjectListManager;
 import pro.sketchware.core.util.UIHelper;
 import pro.sketchware.core.util.DateTimeUtil;
-import pro.sketchware.core.EncryptedFileUtil;
+import pro.sketchware.core.util.EncryptedFileUtil;
 import pro.sketchware.core.util.ViewUtil;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.util.MapValueHelper;
