@@ -15,7 +15,7 @@ import java.util.Set;
 import java.util.zip.CRC32;
 
 import mod.jbk.util.LogUtil;
-import pro.sketchware.utility.FileUtil;
+import pro.sketchware.util.FileUtil;
 
 /**
  * Tracks CRC32 hashes of Java source files and classpath between builds,

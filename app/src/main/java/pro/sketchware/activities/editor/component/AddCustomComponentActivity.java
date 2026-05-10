@@ -1,6 +1,6 @@
 package pro.sketchware.activities.editor.component;
 
-import static pro.sketchware.utility.GsonUtils.getGson;
+import static pro.sketchware.util.GsonUtils.getGson;
 
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
@@ -37,9 +37,9 @@ import pro.sketchware.model.CustomComponent;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageCustomComponentAddBinding;
 import pro.sketchware.tools.ComponentHelper;
-import pro.sketchware.utility.FileUtil;
-import pro.sketchware.utility.SketchwareUtil;
-import pro.sketchware.utility.UI;
+import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.SketchwareUtil;
+import pro.sketchware.util.UI;
 
 public class AddCustomComponentActivity extends BaseAppCompatActivity implements View.OnClickListener {
 

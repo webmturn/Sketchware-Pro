@@ -1,6 +1,6 @@
 package mod.hilal.saif.activities.tools;
 
-import static pro.sketchware.utility.GsonUtils.getGson;
+import static pro.sketchware.util.GsonUtils.getGson;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
@@ -44,10 +44,10 @@ import pro.sketchware.R;
 import pro.sketchware.databinding.ActivityBlocksManagerCreatorBinding;
 import pro.sketchware.lib.base.BaseTextWatcher;
 import pro.sketchware.lib.highlighter.SimpleHighlighter;
-import pro.sketchware.utility.FileUtil;
-import pro.sketchware.utility.PropertiesUtil;
-import pro.sketchware.utility.SketchwareUtil;
-import pro.sketchware.utility.UI;
+import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.PropertiesUtil;
+import pro.sketchware.util.SketchwareUtil;
+import pro.sketchware.util.UI;
 
 public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
 

@@ -1,6 +1,6 @@
-package pro.sketchware.utility;
+package pro.sketchware.util;
 
-import static pro.sketchware.utility.ThemeUtils.isDarkThemeEnabled;
+import static pro.sketchware.util.ThemeUtils.isDarkThemeEnabled;
 
 import android.content.Context;
 import android.graphics.Typeface;

@@ -41,7 +41,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
-import pro.sketchware.utility.CrashLogManager;
+import pro.sketchware.util.CrashLogManager;
 
 import pro.sketchware.core.util.SharedPrefsHelper;
 import pro.sketchware.core.util.DeviceUtil;
@@ -56,10 +56,10 @@ import pro.sketchware.activities.main.fragments.projects.ProjectsFragment;
 import pro.sketchware.activities.main.fragments.projects_store.ProjectsStoreFragment;
 import pro.sketchware.databinding.MainBinding;
 import pro.sketchware.lib.base.BottomSheetDialogView;
-import pro.sketchware.utility.DataResetter;
-import pro.sketchware.utility.FileUtil;
-import pro.sketchware.utility.SketchwareUtil;
-import pro.sketchware.utility.UI;
+import pro.sketchware.util.DataResetter;
+import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.SketchwareUtil;
+import pro.sketchware.util.UI;
 
 public class MainActivity extends BasePermissionAppCompatActivity {
     private ActivityResultLauncher<Intent> programInfoLauncher;

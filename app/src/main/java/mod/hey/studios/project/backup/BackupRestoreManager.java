@@ -28,8 +28,8 @@ import mod.hilal.saif.activities.tools.ConfigActivity;
 import pro.sketchware.R;
 import pro.sketchware.activities.main.fragments.projects.ProjectsFragment;
 import pro.sketchware.databinding.ProgressMsgBoxBinding;
-import pro.sketchware.utility.FileUtil;
-import pro.sketchware.utility.SketchwareUtil;
+import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.SketchwareUtil;
 
 public class BackupRestoreManager {
 

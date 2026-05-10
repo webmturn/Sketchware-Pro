@@ -42,9 +42,9 @@ import pro.sketchware.databinding.ColorPickerCustomAttrBinding;
 import pro.sketchware.databinding.ColorPickerSimpleHexBinding;
 import pro.sketchware.databinding.ItemAttrBinding;
 import pro.sketchware.core.validation.ColorInputValidator;
-import pro.sketchware.utility.FileUtil;
-import pro.sketchware.utility.PropertiesUtil;
-import pro.sketchware.utility.SketchwareUtil;
+import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.PropertiesUtil;
+import pro.sketchware.util.SketchwareUtil;
 
 public class ColorPickerDialog extends PopupWindow {
 

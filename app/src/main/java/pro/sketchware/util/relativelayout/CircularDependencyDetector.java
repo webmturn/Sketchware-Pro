@@ -1,4 +1,4 @@
-package pro.sketchware.utility.relativelayout;
+package pro.sketchware.util.relativelayout;
 
 import com.besome.sketch.beans.ViewBean;
 

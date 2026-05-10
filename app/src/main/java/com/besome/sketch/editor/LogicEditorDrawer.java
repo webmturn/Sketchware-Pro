@@ -1,6 +1,6 @@
 package com.besome.sketch.editor;
 
-import static pro.sketchware.utility.SketchwareUtil.dpToPx;
+import static pro.sketchware.util.SketchwareUtil.dpToPx;
 
 import android.content.Context;
 import android.content.Intent;

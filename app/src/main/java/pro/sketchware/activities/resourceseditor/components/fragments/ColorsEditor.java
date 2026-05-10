@@ -1,6 +1,6 @@
 package pro.sketchware.activities.resourceseditor.components.fragments;
 
-import static pro.sketchware.utility.UI.animateLayoutChanges;
+import static pro.sketchware.util.UI.animateLayoutChanges;
 
 import android.os.Bundle;
 import android.text.Editable;
@@ -33,10 +33,10 @@ import pro.sketchware.activities.resourceseditor.components.models.ColorModel;
 import pro.sketchware.activities.resourceseditor.components.utils.ColorsEditorManager;
 import pro.sketchware.databinding.ColorEditorAddBinding;
 import pro.sketchware.databinding.ResourcesEditorFragmentBinding;
-import pro.sketchware.utility.FileUtil;
-import pro.sketchware.utility.PropertiesUtil;
-import pro.sketchware.utility.SketchwareUtil;
-import pro.sketchware.utility.XmlUtil;
+import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.PropertiesUtil;
+import pro.sketchware.util.SketchwareUtil;
+import pro.sketchware.util.XmlUtil;
 
 public class ColorsEditor extends Fragment {
 

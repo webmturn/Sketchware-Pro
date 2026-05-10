@@ -3,7 +3,7 @@ package pro.sketchware.activities.resourceseditor.components.adapters;
 import static com.besome.sketch.design.DesignActivity.sc_id;
 import static com.besome.sketch.editor.LogicEditorActivity.getAllJavaFileNames;
 import static com.besome.sketch.editor.LogicEditorActivity.getAllXmlFileNames;
-import static pro.sketchware.utility.UI.animateLayoutChanges;
+import static pro.sketchware.util.UI.animateLayoutChanges;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -31,7 +31,7 @@ import pro.sketchware.R;
 import pro.sketchware.activities.resourceseditor.ResourcesEditorActivity;
 import pro.sketchware.databinding.PalletCustomviewBinding;
 import pro.sketchware.databinding.ViewStringEditorAddBinding;
-import pro.sketchware.utility.SketchwareUtil;
+import pro.sketchware.util.SketchwareUtil;
 
 public class StringsAdapter extends RecyclerView.Adapter<StringsAdapter.ViewHolder> {
 

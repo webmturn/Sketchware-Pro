@@ -1,6 +1,6 @@
 package pro.sketchware.tools;
 
-import static pro.sketchware.utility.PropertiesUtil.parseReferName;
+import static pro.sketchware.util.PropertiesUtil.parseReferName;
 
 import com.besome.sketch.beans.LayoutBean;
 import com.besome.sketch.beans.TextBean;
@@ -14,8 +14,8 @@ import android.util.Pair;
 import android.view.Gravity;
 import android.view.View;
 import mod.agus.jcoderz.beans.ViewBeans;
-import pro.sketchware.utility.AttributeConstants;
-import pro.sketchware.utility.PropertiesUtil;
+import pro.sketchware.util.AttributeConstants;
+import pro.sketchware.util.PropertiesUtil;
 
 public class ViewBeanFactory {
 

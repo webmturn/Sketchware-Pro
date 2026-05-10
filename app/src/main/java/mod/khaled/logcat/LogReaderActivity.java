@@ -1,6 +1,6 @@
 package mod.khaled.logcat;
 
-import static pro.sketchware.utility.FileUtil.createNewFileIfNotPresent;
+import static pro.sketchware.util.FileUtil.createNewFileIfNotPresent;
 
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
@@ -38,8 +38,8 @@ import pro.sketchware.databinding.ActivityLogcatreaderBinding;
 import pro.sketchware.databinding.EasyDeleteEdittextBinding;
 import pro.sketchware.databinding.ViewLogcatItemBinding;
 import pro.sketchware.lib.base.BaseTextWatcher;
-import pro.sketchware.utility.FileUtil;
-import pro.sketchware.utility.SketchwareUtil;
+import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.SketchwareUtil;
 
 public class LogReaderActivity extends BaseAppCompatActivity {
 

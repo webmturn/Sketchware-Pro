@@ -13,7 +13,7 @@ import java.util.Map;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.tools.ViewBeanFactory;
 import pro.sketchware.tools.ViewBeanParser;
-import pro.sketchware.utility.FileUtil;
+import pro.sketchware.util.FileUtil;
 
 public class InjectRootLayoutManager {
     private final String path;

@@ -19,8 +19,8 @@ import pro.sketchware.core.project.SketchwarePaths;
 import mod.agus.jcoderz.editor.manage.block.makeblock.BlockMenu;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
-import pro.sketchware.utility.CustomVariableUtil;
-import pro.sketchware.utility.FileUtil;
+import pro.sketchware.util.CustomVariableUtil;
+import pro.sketchware.util.FileUtil;
 
 public class DefaultExtraMenuBean {
 

@@ -21,7 +21,7 @@ import mod.jbk.util.BlockUtil;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageCollectionPopupImportMoreBlockListItemBinding;
 import pro.sketchware.databinding.SearchWithRecyclerViewBinding;
-import pro.sketchware.utility.SketchwareUtil;
+import pro.sketchware.util.SketchwareUtil;
 
 public class MoreblockImporterDialog extends MaterialAlertDialogBuilder {
 

@@ -1,6 +1,6 @@
 package pro.sketchware.activities.resourceseditor.components.fragments;
 
-import static pro.sketchware.utility.UI.animateLayoutChanges;
+import static pro.sketchware.util.UI.animateLayoutChanges;
 
 import android.os.Bundle;
 import android.text.Editable;
@@ -28,9 +28,9 @@ import pro.sketchware.activities.resourceseditor.components.adapters.StringsAdap
 import pro.sketchware.activities.resourceseditor.components.utils.StringsEditorManager;
 import pro.sketchware.databinding.ResourcesEditorFragmentBinding;
 import pro.sketchware.databinding.ViewStringEditorAddBinding;
-import pro.sketchware.utility.FileUtil;
-import pro.sketchware.utility.SketchwareUtil;
-import pro.sketchware.utility.XmlUtil;
+import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.SketchwareUtil;
+import pro.sketchware.util.XmlUtil;
 
 public class StringsEditor extends Fragment {
     private ResourcesEditorFragmentBinding binding;

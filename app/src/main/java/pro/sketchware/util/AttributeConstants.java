@@ -1,4 +1,4 @@
-package pro.sketchware.utility;
+package pro.sketchware.util;
 
 import com.besome.sketch.beans.ImageBean;
 import com.besome.sketch.beans.LayoutBean;

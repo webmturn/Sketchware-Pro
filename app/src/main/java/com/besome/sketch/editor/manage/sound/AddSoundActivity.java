@@ -42,8 +42,8 @@ import pro.sketchware.core.project.ProjectDataManager;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;
 import pro.sketchware.R;
-import pro.sketchware.utility.FileUtil;
-import pro.sketchware.utility.SketchwareUtil;
+import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.SketchwareUtil;
 
 public class AddSoundActivity extends BaseDialogActivity implements View.OnClickListener {
     private ActivityResultLauncher<Intent> soundPickerLauncher;

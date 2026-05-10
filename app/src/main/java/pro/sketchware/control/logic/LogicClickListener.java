@@ -2,7 +2,7 @@ package pro.sketchware.control.logic;
 
 import static android.text.TextUtils.isEmpty;
 import static pro.sketchware.SketchApplication.getContext;
-import static pro.sketchware.utility.SketchwareUtil.dpToPx;
+import static pro.sketchware.util.SketchwareUtil.dpToPx;
 
 import android.content.Context;
 import android.util.Pair;
@@ -40,7 +40,7 @@ import pro.sketchware.databinding.AddCustomVariableBinding;
 import pro.sketchware.core.validation.VariableModifierValidator;
 import pro.sketchware.core.validation.VariableTypeValidator;
 import pro.sketchware.menu.ExtraMenuBean;
-import pro.sketchware.utility.SketchwareUtil;
+import pro.sketchware.util.SketchwareUtil;
 
 public class LogicClickListener implements View.OnClickListener {
 

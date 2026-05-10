@@ -1,7 +1,7 @@
 package dev.aldi.sayuti.block;
 
-import static pro.sketchware.utility.ThemeUtils.getColor;
-import static pro.sketchware.utility.ThemeUtils.isDarkThemeEnabled;
+import static pro.sketchware.util.ThemeUtils.getColor;
+import static pro.sketchware.util.ThemeUtils.isDarkThemeEnabled;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -41,12 +41,12 @@ import pro.sketchware.R;
 import pro.sketchware.activities.resourceseditor.components.utils.StringsEditorManager;
 import pro.sketchware.blocks.ExtraBlocks;
 import pro.sketchware.control.logic.LogicClickListener;
-import pro.sketchware.utility.CustomVariableUtil;
+import pro.sketchware.util.CustomVariableUtil;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.codegen.StringResource;
-import pro.sketchware.utility.FileResConfig;
-import pro.sketchware.utility.FileUtil;
-import pro.sketchware.utility.SketchwareUtil;
+import pro.sketchware.util.FileResConfig;
+import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.SketchwareUtil;
 
 /**
  * Populates the logic editor's palette with blocks for each category.

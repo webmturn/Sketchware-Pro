@@ -1,6 +1,6 @@
 package pro.sketchware.activities.editor.component;
 
-import static pro.sketchware.utility.GsonUtils.getGson;
+import static pro.sketchware.util.GsonUtils.getGson;
 
 import com.google.gson.JsonSyntaxException;
 import android.content.Intent;
@@ -47,9 +47,9 @@ import mod.hilal.saif.components.ComponentsHandler;
 import mod.jbk.util.OldResourceIdMapper;
 import pro.sketchware.model.CustomComponent;
 import pro.sketchware.R;
-import pro.sketchware.utility.FileUtil;
-import pro.sketchware.utility.SketchwareUtil;
-import pro.sketchware.utility.UI;
+import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.SketchwareUtil;
+import pro.sketchware.util.UI;
 
 public class ManageCustomComponentActivity extends BaseAppCompatActivity {
 

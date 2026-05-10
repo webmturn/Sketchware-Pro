@@ -47,9 +47,9 @@ import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.databinding.ActivityAppSettingsBinding;
 import pro.sketchware.databinding.DialogSelectApkToSignBinding;
-import pro.sketchware.utility.FileUtil;
-import pro.sketchware.utility.SketchwareUtil;
-import pro.sketchware.utility.UI;
+import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.SketchwareUtil;
+import pro.sketchware.util.UI;
 
 public class AppSettings extends BaseAppCompatActivity {
     @Override

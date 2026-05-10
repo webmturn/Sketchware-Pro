@@ -29,9 +29,9 @@ import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.R;
 import pro.sketchware.databinding.FileSelectorPopupSelectXmlActivityItemBinding;
 import pro.sketchware.databinding.FileSelectorPopupSelectXmlBinding;
-import pro.sketchware.utility.SketchwareUtil;
-import pro.sketchware.utility.ThemeUtils;
-import pro.sketchware.utility.UI;
+import pro.sketchware.util.SketchwareUtil;
+import pro.sketchware.util.ThemeUtils;
+import pro.sketchware.util.UI;
 
 public class ViewSelectorActivity extends BaseAppCompatActivity {
     private ActivityResultLauncher<Intent> addActivityLauncher;

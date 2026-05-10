@@ -10,7 +10,7 @@ import java.io.File;
 
 import mod.jbk.util.LogUtil;
 import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.utility.FileUtil;
+import pro.sketchware.util.FileUtil;
 
 /**
  * Helper used in {@link com.besome.sketch.editor.LogicEditorActivity} to get menus for custom

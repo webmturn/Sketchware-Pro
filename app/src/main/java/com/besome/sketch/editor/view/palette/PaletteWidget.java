@@ -1,6 +1,6 @@
 package com.besome.sketch.editor.view.palette;
 
-import static pro.sketchware.utility.SketchwareUtil.dpToPx;
+import static pro.sketchware.util.SketchwareUtil.dpToPx;
 
 import android.content.Context;
 import android.util.AttributeSet;

@@ -134,11 +134,11 @@ public class DeviceUtil {
   }
   
   /**
-   * @deprecated Use {@link pro.sketchware.utility.UI#getStatusBarHeight(Context)} instead.
+   * @deprecated Use {@link pro.sketchware.util.UI#getStatusBarHeight(Context)} instead.
    */
   @Deprecated
   public static int getStatusBarHeight(Context context) {
-    return pro.sketchware.utility.UI.getStatusBarHeight(context);
+    return pro.sketchware.util.UI.getStatusBarHeight(context);
   }
   
   public static Locale getLocale(Context context) {

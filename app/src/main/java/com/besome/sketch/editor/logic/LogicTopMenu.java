@@ -15,7 +15,7 @@ import com.google.android.material.card.MaterialCardView;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.LogicEditorTopMenuBinding;
-import pro.sketchware.utility.ThemeUtils;
+import pro.sketchware.util.ThemeUtils;
 
 public class LogicTopMenu extends LinearLayout {
 

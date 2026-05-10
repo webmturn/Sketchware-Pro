@@ -11,8 +11,8 @@ import com.google.android.material.card.MaterialCardView;
 
 import pro.sketchware.core.fragments.BaseFragment;
 import pro.sketchware.databinding.FragmentSettingsAppearanceBinding;
-import pro.sketchware.utility.UI;
-import pro.sketchware.utility.theme.ThemeManager;
+import pro.sketchware.util.UI;
+import pro.sketchware.util.theme.ThemeManager;
 
 public class SettingsAppearanceFragment extends BaseFragment {
     private FragmentSettingsAppearanceBinding binding;

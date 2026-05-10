@@ -1,4 +1,4 @@
-package pro.sketchware.utility;
+package pro.sketchware.util;
 
 public class XmlUtil {
     public static String replaceXml(String text) {

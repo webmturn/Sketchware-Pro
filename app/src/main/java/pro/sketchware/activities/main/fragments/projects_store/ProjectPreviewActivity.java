@@ -22,8 +22,8 @@ import pro.sketchware.R;
 import pro.sketchware.activities.main.fragments.projects_store.adapters.ProjectScreenshotsAdapter;
 import pro.sketchware.activities.main.fragments.projects_store.api.ProjectModel;
 import pro.sketchware.databinding.FragmentStoreProjectPreviewBinding;
-import pro.sketchware.utility.SketchwareUtil;
-import pro.sketchware.utility.UI;
+import pro.sketchware.util.SketchwareUtil;
+import pro.sketchware.util.UI;
 
 public class ProjectPreviewActivity extends BaseAppCompatActivity {
     private static final long TITLE_CONTAINER_FADE_DURATION = 150L;

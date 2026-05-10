@@ -10,7 +10,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import pro.sketchware.utility.FileUtil;
+import pro.sketchware.util.FileUtil;
 
 public class ImageFactory {
 

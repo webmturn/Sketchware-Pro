@@ -14,7 +14,7 @@ import java.util.Comparator;
 import java.util.Objects;
 
 import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.utility.FileUtil;
+import pro.sketchware.util.FileUtil;
 
 public class VectorDrawableLoader {
     public ArrayList<String> getVectorDrawables(String sc_id) {

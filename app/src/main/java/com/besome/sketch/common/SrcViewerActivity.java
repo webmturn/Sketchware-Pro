@@ -24,9 +24,9 @@ import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.databinding.SrcViewerBinding;
-import pro.sketchware.utility.CodeEditorPreferences;
-import pro.sketchware.utility.EditorUtils;
-import pro.sketchware.utility.UI;
+import pro.sketchware.util.CodeEditorPreferences;
+import pro.sketchware.util.EditorUtils;
+import pro.sketchware.util.UI;
 
 public class SrcViewerActivity extends BaseAppCompatActivity {
 

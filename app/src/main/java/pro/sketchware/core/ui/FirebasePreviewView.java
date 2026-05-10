@@ -12,7 +12,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageLibraryFirebasePreviewBinding;
-import pro.sketchware.utility.SketchwareUtil;
+import pro.sketchware.util.SketchwareUtil;
 
 public class FirebasePreviewView extends LinearLayout implements LibraryConfigView {
 

@@ -20,7 +20,7 @@ import java.util.TimerTask;
 
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
-import pro.sketchware.utility.SketchwareUtil;
+import pro.sketchware.util.SketchwareUtil;
 
 public abstract class SoundPlayingAdapter<VH extends SoundPlayingAdapter.ViewHolder> extends RecyclerView.Adapter<VH> {
     protected final SoundPlayer soundPlayer;

@@ -15,8 +15,8 @@ import mod.hey.studios.util.Helper;
 import mod.jbk.build.BuiltInLibraries;
 import mod.jbk.editor.manage.library.ExcludeBuiltInLibrariesActivity;
 import mod.agus.jcoderz.handle.component.ConstVarComponent;
-import pro.sketchware.utility.FilePathUtil;
-import pro.sketchware.utility.FileUtil;
+import pro.sketchware.util.FilePathUtil;
+import pro.sketchware.util.FileUtil;
 import pro.sketchware.core.codegen.CodeFormatter;
 
 /**

@@ -1,7 +1,7 @@
 package pro.sketchware.widgets;
 
-import static pro.sketchware.utility.GsonUtils.getGson;
-import static pro.sketchware.utility.SketchwareUtil.dpToPx;
+import static pro.sketchware.util.GsonUtils.getGson;
+import static pro.sketchware.util.SketchwareUtil.dpToPx;
 
 import android.app.Activity;
 import android.content.Context;
@@ -47,8 +47,8 @@ import pro.sketchware.R;
 import pro.sketchware.databinding.DialogSelectorActionsBinding;
 import pro.sketchware.databinding.WidgetsCreatorDialogBinding;
 import pro.sketchware.lib.highlighter.SyntaxScheme;
-import pro.sketchware.utility.FileUtil;
-import pro.sketchware.utility.SketchwareUtil;
+import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.SketchwareUtil;
 
 public class WidgetsCreatorManager {
 

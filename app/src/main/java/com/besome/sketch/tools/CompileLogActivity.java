@@ -22,8 +22,8 @@ import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import mod.jbk.diagnostic.CompileErrorSaver;
 import pro.sketchware.databinding.CompileLogBinding;
-import pro.sketchware.utility.SketchwareUtil;
-import pro.sketchware.utility.UI;
+import pro.sketchware.util.SketchwareUtil;
+import pro.sketchware.util.UI;
 
 public class CompileLogActivity extends BaseAppCompatActivity {
 

@@ -1,4 +1,4 @@
-package pro.sketchware.utility;
+package pro.sketchware.util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

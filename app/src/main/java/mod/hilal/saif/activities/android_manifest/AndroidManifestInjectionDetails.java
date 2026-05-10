@@ -1,7 +1,7 @@
 package mod.hilal.saif.activities.android_manifest;
 
-import static pro.sketchware.utility.GsonUtils.getGson;
-import static pro.sketchware.utility.SketchwareUtil.dpToPx;
+import static pro.sketchware.util.GsonUtils.getGson;
+import static pro.sketchware.util.SketchwareUtil.dpToPx;
 
 import com.google.gson.JsonSyntaxException;
 import android.content.Intent;
@@ -28,8 +28,8 @@ import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.databinding.ActivityManageCustomAttributeBinding;
 import pro.sketchware.databinding.CustomDialogAttributeBinding;
 import pro.sketchware.databinding.DialogCreateNewFileLayoutBinding;
-import pro.sketchware.utility.FileUtil;
-import pro.sketchware.utility.ThemeUtils;
+import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.ThemeUtils;
 
 public class AndroidManifestInjectionDetails extends BaseAppCompatActivity {
 

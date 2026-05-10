@@ -14,7 +14,7 @@ import java.util.Objects;
 import pro.sketchware.core.project.BuildConfig;
 import pro.sketchware.core.project.SketchwarePaths;
 import mod.hey.studios.util.Helper;
-import pro.sketchware.utility.FileUtil;
+import pro.sketchware.util.FileUtil;
 import pro.sketchware.xml.XmlBuilder;
 
 public class AppCompatInjection {

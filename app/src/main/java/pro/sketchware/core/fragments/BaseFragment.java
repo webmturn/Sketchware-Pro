@@ -14,7 +14,7 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.transition.MaterialSharedAxis;
 
 import pro.sketchware.R;
-import pro.sketchware.utility.UI;
+import pro.sketchware.util.UI;
 
 public class BaseFragment extends Fragment {
 

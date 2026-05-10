@@ -8,7 +8,7 @@ import java.util.HashMap;
 import dev.aldi.sayuti.block.ExtraBlockFile;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
-import pro.sketchware.utility.SketchwareUtil;
+import pro.sketchware.util.SketchwareUtil;
 
 public class PaletteSelector {
 

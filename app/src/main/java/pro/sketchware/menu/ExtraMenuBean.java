@@ -1,7 +1,7 @@
 package pro.sketchware.menu;
 
 import static android.text.TextUtils.isEmpty;
-import static pro.sketchware.utility.SketchwareUtil.dpToPx;
+import static pro.sketchware.util.SketchwareUtil.dpToPx;
 
 import android.annotation.SuppressLint;
 import android.text.Editable;
@@ -45,10 +45,10 @@ import pro.sketchware.R;
 import pro.sketchware.activities.resourceseditor.components.utils.StringsEditorManager;
 import pro.sketchware.lib.base.BaseTextWatcher;
 import pro.sketchware.lib.highlighter.SimpleHighlighter;
-import pro.sketchware.utility.CustomVariableUtil;
-import pro.sketchware.utility.FilePathUtil;
-import pro.sketchware.utility.FileResConfig;
-import pro.sketchware.utility.FileUtil;
+import pro.sketchware.util.CustomVariableUtil;
+import pro.sketchware.util.FilePathUtil;
+import pro.sketchware.util.FileResConfig;
+import pro.sketchware.util.FileUtil;
 
 public class ExtraMenuBean {
 

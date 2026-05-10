@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import pro.sketchware.core.project.BuildConfig;
 import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.utility.FileUtil;
+import pro.sketchware.util.FileUtil;
 import pro.sketchware.xml.XmlBuilder;
 
 public class ManifestInjection {

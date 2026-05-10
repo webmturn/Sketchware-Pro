@@ -14,7 +14,7 @@ import java.util.LinkedList;
 
 import pro.sketchware.core.build.ProjectBuilder;
 import mod.hey.studios.project.ProjectSettings;
-import pro.sketchware.utility.FileUtil;
+import pro.sketchware.util.FileUtil;
 
 public class DexCompiler {
     public static void compileDexFiles(ProjectBuilder builder) throws CompilationFailedException {

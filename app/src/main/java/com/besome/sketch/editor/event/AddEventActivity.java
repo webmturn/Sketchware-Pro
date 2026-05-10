@@ -47,7 +47,7 @@ import pro.sketchware.core.codegen.EventRegistry;
 import pro.sketchware.core.fragments.EventListFragment;
 import pro.sketchware.core.util.ViewUtil;
 import pro.sketchware.R;
-import pro.sketchware.utility.UI;
+import pro.sketchware.util.UI;
 import pro.sketchware.databinding.LogicPopupAddEventBinding;
 
 public class AddEventActivity extends BaseAppCompatActivity implements View.OnClickListener {

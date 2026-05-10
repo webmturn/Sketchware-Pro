@@ -19,7 +19,7 @@ import pro.sketchware.core.project.ProjectListManager;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.util.MapValueHelper;
 import pro.sketchware.activities.resourceseditor.ResourcesEditorActivity;
-import pro.sketchware.utility.XmlUtil;
+import pro.sketchware.util.XmlUtil;
 
 public class StringsEditorManager {
 

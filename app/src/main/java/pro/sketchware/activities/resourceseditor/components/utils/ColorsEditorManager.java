@@ -36,9 +36,9 @@ import pro.sketchware.core.util.MapValueHelper;
 import pro.sketchware.R;
 import pro.sketchware.SketchApplication;
 import pro.sketchware.activities.resourceseditor.components.models.ColorModel;
-import pro.sketchware.utility.FileUtil;
-import pro.sketchware.utility.PropertiesUtil;
-import pro.sketchware.utility.XmlUtil;
+import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.PropertiesUtil;
+import pro.sketchware.util.XmlUtil;
 
 @SuppressLint("DiscouragedApi")
 public class ColorsEditorManager {

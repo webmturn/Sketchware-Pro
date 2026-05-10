@@ -1,10 +1,10 @@
 package dev.aldi.sayuti.editor.manage;
 
-import static pro.sketchware.utility.FileUtil.deleteFile;
-import static pro.sketchware.utility.FileUtil.isExistFile;
-import static pro.sketchware.utility.FileUtil.listDirAsFile;
-import static pro.sketchware.utility.FileUtil.readFile;
-import static pro.sketchware.utility.FileUtil.writeFile;
+import static pro.sketchware.util.FileUtil.deleteFile;
+import static pro.sketchware.util.FileUtil.isExistFile;
+import static pro.sketchware.util.FileUtil.listDirAsFile;
+import static pro.sketchware.util.FileUtil.readFile;
+import static pro.sketchware.util.FileUtil.writeFile;
 
 import com.google.gson.Gson;
 
@@ -20,7 +20,7 @@ import java.util.Set;
 
 import mod.hey.studios.util.Helper;
 import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.utility.FilePathUtil;
+import pro.sketchware.util.FilePathUtil;
 
 public class LocalLibrariesUtil {
     private static final String MAVEN_COORDINATE_FILE_NAME = "maven-coordinate";

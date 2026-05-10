@@ -1,4 +1,4 @@
-package pro.sketchware.utility.apk;
+package pro.sketchware.util.apk;
 
 
 import android.util.Log;

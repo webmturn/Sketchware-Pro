@@ -17,7 +17,7 @@ import org.cosmic.ide.dependency.resolver.eventReciever
 import org.cosmic.ide.dependency.resolver.getArtifact
 import org.cosmic.ide.dependency.resolver.repositories
 import pro.sketchware.core.project.SketchwarePaths
-import pro.sketchware.utility.FilePathUtil
+import pro.sketchware.util.FilePathUtil
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path

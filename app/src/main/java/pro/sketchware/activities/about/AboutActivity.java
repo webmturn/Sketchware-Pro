@@ -35,9 +35,9 @@ import pro.sketchware.activities.about.fragments.TeamFragment;
 import pro.sketchware.activities.about.models.AboutAppViewModel;
 import pro.sketchware.activities.about.models.AboutResponseModel;
 import pro.sketchware.databinding.ActivityAboutAppBinding;
-import pro.sketchware.utility.CrashLogManager;
-import pro.sketchware.utility.Network;
-import pro.sketchware.utility.SketchwareUtil;
+import pro.sketchware.util.CrashLogManager;
+import pro.sketchware.util.Network;
+import pro.sketchware.util.SketchwareUtil;
 
 public class AboutActivity extends BaseAppCompatActivity {
 

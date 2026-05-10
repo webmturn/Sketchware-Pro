@@ -25,9 +25,9 @@ import pro.sketchware.activities.resourceseditor.components.models.DimenModel;
 import pro.sketchware.activities.resourceseditor.components.utils.DimensEditorManager;
 import pro.sketchware.databinding.DimenEditorAddBinding;
 import pro.sketchware.databinding.ResourcesEditorFragmentBinding;
-import pro.sketchware.utility.FileUtil;
-import pro.sketchware.utility.SketchwareUtil;
-import pro.sketchware.utility.XmlUtil;
+import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.SketchwareUtil;
+import pro.sketchware.util.XmlUtil;
 
 public class DimensEditor extends Fragment {
 

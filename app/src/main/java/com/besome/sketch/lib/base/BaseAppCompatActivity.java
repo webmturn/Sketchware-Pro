@@ -20,7 +20,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 
 import pro.sketchware.dialogs.ProgressDialog;
 import pro.sketchware.fragments.settings.language.LanguageOverrideContextWrapper;
-import pro.sketchware.utility.UI;
+import pro.sketchware.util.UI;
 
 public abstract class BaseAppCompatActivity extends AppCompatActivity {
 

@@ -21,7 +21,7 @@ import pro.sketchware.activities.main.fragments.projects_store.adapters.StorePro
 import pro.sketchware.activities.main.fragments.projects_store.api.SketchubAPI;
 import pro.sketchware.activities.main.fragments.projects_store.classes.CenterZoomListener;
 import pro.sketchware.databinding.FragmentProjectsStoreBinding;
-import pro.sketchware.utility.UI;
+import pro.sketchware.util.UI;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

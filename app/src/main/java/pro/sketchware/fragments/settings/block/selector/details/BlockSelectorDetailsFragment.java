@@ -1,6 +1,6 @@
 package pro.sketchware.fragments.settings.block.selector.details;
 
-import static pro.sketchware.utility.GsonUtils.getGson;
+import static pro.sketchware.util.GsonUtils.getGson;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -25,10 +25,10 @@ import pro.sketchware.databinding.DialogAddCustomActivityBinding;
 import pro.sketchware.databinding.DialogSelectorActionsBinding;
 import pro.sketchware.databinding.FragmentBlockSelectorManagerBinding;
 import pro.sketchware.fragments.settings.block.selector.BlockSelectorConsts;
-import pro.sketchware.utility.UI;
+import pro.sketchware.util.UI;
 import pro.sketchware.fragments.settings.block.selector.Selector;
-import pro.sketchware.utility.FileUtil;
-import pro.sketchware.utility.SketchwareUtil;
+import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.SketchwareUtil;
 
 public class BlockSelectorDetailsFragment extends BaseFragment {
     private int index;

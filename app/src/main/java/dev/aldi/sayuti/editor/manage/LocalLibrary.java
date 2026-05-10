@@ -1,8 +1,8 @@
 package dev.aldi.sayuti.editor.manage;
 
-import static pro.sketchware.utility.FileUtil.formatFileSize;
-import static pro.sketchware.utility.FileUtil.getFileSize;
-import static pro.sketchware.utility.FileUtil.readFile;
+import static pro.sketchware.util.FileUtil.formatFileSize;
+import static pro.sketchware.util.FileUtil.getFileSize;
+import static pro.sketchware.util.FileUtil.readFile;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

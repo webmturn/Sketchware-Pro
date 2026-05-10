@@ -1,8 +1,8 @@
 package dev.aldi.sayuti.editor.manage;
 
-import static pro.sketchware.utility.FileUtil.isExistFile;
-import static pro.sketchware.utility.FileUtil.readFile;
-import static pro.sketchware.utility.FileUtil.writeFile;
+import static pro.sketchware.util.FileUtil.isExistFile;
+import static pro.sketchware.util.FileUtil.readFile;
+import static pro.sketchware.util.FileUtil.writeFile;
 
 import java.io.BufferedInputStream;
 import java.io.File;

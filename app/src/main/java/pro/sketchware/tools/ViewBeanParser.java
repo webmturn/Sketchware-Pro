@@ -1,7 +1,7 @@
 package pro.sketchware.tools;
 
 import static pro.sketchware.SketchApplication.getContext;
-import static pro.sketchware.utility.PropertiesUtil.parseReferName;
+import static pro.sketchware.util.PropertiesUtil.parseReferName;
 
 import android.util.Log;
 import android.util.Pair;
@@ -32,7 +32,7 @@ import java.util.Set;
 import java.util.Stack;
 
 import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.utility.InvokeUtil;
+import pro.sketchware.util.InvokeUtil;
 
 public class ViewBeanParser {
 

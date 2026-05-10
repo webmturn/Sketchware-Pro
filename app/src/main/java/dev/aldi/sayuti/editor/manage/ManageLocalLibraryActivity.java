@@ -57,8 +57,8 @@ import pro.sketchware.R;
 import pro.sketchware.databinding.ManageLocallibrariesBinding;
 import pro.sketchware.databinding.ViewItemLocalLibBinding;
 import pro.sketchware.databinding.ViewItemLocalLibSearchBinding;
-import pro.sketchware.utility.SketchwareUtil;
-import pro.sketchware.utility.UI;
+import pro.sketchware.util.SketchwareUtil;
+import pro.sketchware.util.UI;
 
 public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
     private final LibraryAdapter adapter = new LibraryAdapter();
@@ -784,7 +784,7 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
         if (file.exists()) {
             try {
                 ArrayList<HashMap<String, Object>> list = new Gson().fromJson(
-                        pro.sketchware.utility.FileUtil.readFile(file.getAbsolutePath()),
+                        pro.sketchware.util.FileUtil.readFile(file.getAbsolutePath()),
                         Helper.TYPE_MAP_LIST);
                 if (list != null) return list;
             } catch (Exception e) {
@@ -812,13 +812,13 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
             defaults.add(repo);
         }
         file.getParentFile().mkdirs();
-        pro.sketchware.utility.FileUtil.writeFile(file.getAbsolutePath(), new Gson().toJson(defaults));
+        pro.sketchware.util.FileUtil.writeFile(file.getAbsolutePath(), new Gson().toJson(defaults));
     }
 
     private void saveCustomRepos(ArrayList<HashMap<String, Object>> repos) {
         File file = new File(REPOSITORIES_JSON_PATH);
         file.getParentFile().mkdirs();
-        pro.sketchware.utility.FileUtil.writeFile(file.getAbsolutePath(), new Gson().toJson(repos));
+        pro.sketchware.util.FileUtil.writeFile(file.getAbsolutePath(), new Gson().toJson(repos));
     }
 
     private void showManageRepositoriesDialog() {

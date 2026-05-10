@@ -1,6 +1,6 @@
 package pro.sketchware.fragments.settings.events.details;
 
-import static pro.sketchware.utility.GsonUtils.getGson;
+import static pro.sketchware.util.GsonUtils.getGson;
 
 import com.google.gson.JsonSyntaxException;
 import android.os.Bundle;
@@ -27,9 +27,9 @@ import pro.sketchware.databinding.FragmentEventsManagerDetailsBinding;
 import pro.sketchware.databinding.LayoutEventItemBinding;
 import pro.sketchware.fragments.settings.events.EventsManagerConstants;
 import pro.sketchware.fragments.settings.events.creator.EventsManagerCreatorFragment;
-import pro.sketchware.utility.FileUtil;
-import pro.sketchware.utility.SketchwareUtil;
-import pro.sketchware.utility.UI;
+import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.SketchwareUtil;
+import pro.sketchware.util.UI;
 
 public class EventsManagerDetailsFragment extends BaseFragment {
 

@@ -1,4 +1,4 @@
-package pro.sketchware.utility;
+package pro.sketchware.util;
 
 import static pro.sketchware.SketchApplication.getContext;
 

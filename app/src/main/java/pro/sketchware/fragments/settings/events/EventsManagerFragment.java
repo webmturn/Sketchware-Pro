@@ -35,9 +35,9 @@ import pro.sketchware.databinding.DialogAddNewListenerBinding;
 import pro.sketchware.databinding.FragmentEventsManagerBinding;
 import pro.sketchware.databinding.LayoutEventItemBinding;
 import pro.sketchware.fragments.settings.events.details.EventsManagerDetailsFragment;
-import pro.sketchware.utility.FileUtil;
-import pro.sketchware.utility.SketchwareUtil;
-import pro.sketchware.utility.UI;
+import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.SketchwareUtil;
+import pro.sketchware.util.UI;
 
 public class EventsManagerFragment extends BaseFragment {
 

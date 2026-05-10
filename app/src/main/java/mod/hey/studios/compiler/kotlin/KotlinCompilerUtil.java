@@ -8,7 +8,7 @@ import java.util.List;
 
 import pro.sketchware.core.build.ProjectBuilder;
 import pro.sketchware.core.build.ProjectFilePaths;
-import pro.sketchware.utility.FilePathUtil;
+import pro.sketchware.util.FilePathUtil;
 
 public class KotlinCompilerUtil {
 

@@ -1,6 +1,6 @@
 package mod.hilal.saif.android_manifest;
 
-import static pro.sketchware.utility.GsonUtils.getGson;
+import static pro.sketchware.util.GsonUtils.getGson;
 
 import com.google.gson.JsonParseException;
 
@@ -12,8 +12,8 @@ import java.util.HashMap;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.utility.FileUtil;
-import pro.sketchware.utility.SketchwareUtil;
+import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.SketchwareUtil;
 import pro.sketchware.xml.XmlBuilder;
 
 public class AndroidManifestInjector {

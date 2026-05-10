@@ -1,4 +1,4 @@
-package pro.sketchware.utility;
+package pro.sketchware.util;
 
 import android.graphics.Color;
 import android.text.TextUtils;

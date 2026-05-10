@@ -30,7 +30,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import mod.hey.studios.build.BuildSettings;
 import pro.sketchware.databinding.ProjectConfigLayoutBinding;
-import pro.sketchware.utility.SketchwareUtil;
+import pro.sketchware.util.SketchwareUtil;
 
 public class BuildSettingsBottomSheet extends BottomSheetDialogFragment {
     public static final String TAG = BuildSettingsBottomSheet.class.getSimpleName();

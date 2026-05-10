@@ -58,8 +58,8 @@ import pro.sketchware.activities.resourceseditor.components.utils.ColorsEditorMa
 import pro.sketchware.databinding.DialogFilterIconsLayoutBinding;
 import pro.sketchware.databinding.DialogSaveIconBinding;
 import pro.sketchware.databinding.ImportIconBinding;
-import pro.sketchware.utility.PropertiesUtil;
-import pro.sketchware.utility.SvgUtils;
+import pro.sketchware.util.PropertiesUtil;
+import pro.sketchware.util.SvgUtils;
 
 public class ImportIconActivity extends BaseAppCompatActivity implements IconAdapter.OnIconSelectedListener {
 

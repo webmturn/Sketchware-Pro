@@ -33,9 +33,9 @@ import mod.hey.studios.util.Helper;
 import mod.hilal.saif.android_manifest.AndroidManifestInjector;
 import mod.jbk.build.BuiltInLibraries;
 import pro.sketchware.util.library.BuiltInLibraryManager;
-import pro.sketchware.utility.FilePathUtil;
-import pro.sketchware.utility.FileResConfig;
-import pro.sketchware.utility.FileUtil;
+import pro.sketchware.util.FilePathUtil;
+import pro.sketchware.util.FileResConfig;
+import pro.sketchware.util.FileUtil;
 import pro.sketchware.xml.XmlBuilder;
 
 /**

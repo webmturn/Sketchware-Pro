@@ -10,7 +10,7 @@ import androidx.core.content.ContextCompat;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.CustomToastBinding;
-import pro.sketchware.utility.ThemeUtils;
+import pro.sketchware.util.ThemeUtils;
 
 public class SketchToast {
 

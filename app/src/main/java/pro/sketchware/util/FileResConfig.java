@@ -1,4 +1,4 @@
-package pro.sketchware.utility;
+package pro.sketchware.util;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;

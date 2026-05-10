@@ -48,7 +48,7 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
-import pro.sketchware.utility.SketchwareUtil;
+import pro.sketchware.util.SketchwareUtil;
 import pro.sketchware.widgets.WidgetsCreatorManager;
 import pro.sketchware.core.callback.BuildCallback;
 import pro.sketchware.core.project.ProjectDataManager;

@@ -23,7 +23,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import mod.agus.jcoderz.editor.manage.library.locallibrary.ManageLocalLibrary;
-import pro.sketchware.utility.FileUtil;
+import pro.sketchware.util.FileUtil;
 
 public class LocalLibraryManifestMerger {
     private static final String TAG = "LocalLibraryManifestMerger";

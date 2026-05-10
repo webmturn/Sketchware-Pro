@@ -48,7 +48,7 @@ import pro.sketchware.R;
 import pro.sketchware.activities.main.activities.MainActivity;
 import pro.sketchware.databinding.MyprojectsBinding;
 import pro.sketchware.databinding.SortProjectDialogBinding;
-import pro.sketchware.utility.UI;
+import pro.sketchware.util.UI;
 
 public class ProjectsFragment extends PermissionFragment {
     private ExecutorService executorService;

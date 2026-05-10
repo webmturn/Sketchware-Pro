@@ -1,4 +1,4 @@
-package pro.sketchware.utility;
+package pro.sketchware.util;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;

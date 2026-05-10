@@ -1,7 +1,7 @@
 package com.besome.sketch.editor.logic;
 
-import static pro.sketchware.utility.ThemeUtils.getColor;
-import static pro.sketchware.utility.ThemeUtils.isDarkThemeEnabled;
+import static pro.sketchware.util.ThemeUtils.getColor;
+import static pro.sketchware.util.ThemeUtils.isDarkThemeEnabled;
 
 import android.content.Context;
 import android.graphics.Typeface;

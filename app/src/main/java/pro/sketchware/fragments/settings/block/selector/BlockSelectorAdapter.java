@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import pro.sketchware.databinding.LayoutBlockSelectorBinding;
-import pro.sketchware.utility.UI;
+import pro.sketchware.util.UI;
 
 public class BlockSelectorAdapter extends ListAdapter<Selector, BlockSelectorAdapter.BlockSelectorAdapterViewHolder> {
 

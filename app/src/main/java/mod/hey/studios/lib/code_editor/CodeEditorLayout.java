@@ -34,7 +34,7 @@ import pro.sketchware.core.codegen.ComponentCodeGenerator;
 import pro.sketchware.core.util.ViewUtil;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
-import pro.sketchware.utility.SketchwareUtil;
+import pro.sketchware.util.SketchwareUtil;
 
 /**
  * A lightweight Code Editor with syntax highlighting, auto indentation, word wrap and lines.

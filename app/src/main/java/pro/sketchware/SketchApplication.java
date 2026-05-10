@@ -19,8 +19,8 @@ import com.besome.sketch.tools.CollectErrorActivity;
 import pro.sketchware.core.project.ProjectListManager;
 import pro.sketchware.fragments.settings.language.LanguageOverrideContextWrapper;
 import pro.sketchware.fragments.settings.language.LanguageOverrideManager;
-import pro.sketchware.utility.CrashLogManager;
-import pro.sketchware.utility.theme.ThemeManager;
+import pro.sketchware.util.CrashLogManager;
+import pro.sketchware.util.theme.ThemeManager;
 
 /**
  * Global {@link Application} subclass for Sketchware Pro.

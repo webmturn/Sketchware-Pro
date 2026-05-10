@@ -22,10 +22,10 @@ import pro.sketchware.R;
 import pro.sketchware.databinding.ManagePermissionBinding;
 import pro.sketchware.databinding.ViewItemPermissionBinding;
 import pro.sketchware.lib.base.BaseTextWatcher;
-import pro.sketchware.utility.FilePathUtil;
-import pro.sketchware.utility.FileResConfig;
-import pro.sketchware.utility.FileUtil;
-import pro.sketchware.utility.UI;
+import pro.sketchware.util.FilePathUtil;
+import pro.sketchware.util.FileResConfig;
+import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.UI;
 
 public class ManagePermissionActivity extends BaseAppCompatActivity {
     private PermissionsAdapter adapter;

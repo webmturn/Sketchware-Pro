@@ -1,4 +1,4 @@
-package pro.sketchware.utility;
+package pro.sketchware.util;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;

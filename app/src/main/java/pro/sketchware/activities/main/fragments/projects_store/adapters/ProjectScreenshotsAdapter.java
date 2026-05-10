@@ -1,6 +1,6 @@
 package pro.sketchware.activities.main.fragments.projects_store.adapters;
 
-import static pro.sketchware.utility.UI.loadImageFromUrl;
+import static pro.sketchware.util.UI.loadImageFromUrl;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;

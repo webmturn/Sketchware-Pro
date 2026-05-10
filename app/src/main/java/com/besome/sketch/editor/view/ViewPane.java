@@ -112,14 +112,14 @@ import pro.sketchware.R;
 import pro.sketchware.activities.resourceseditor.components.utils.ColorsEditorManager;
 import pro.sketchware.activities.resourceseditor.components.utils.StringsEditorManager;
 import pro.sketchware.managers.inject.InjectRootLayoutManager;
-import pro.sketchware.utility.FilePathUtil;
-import pro.sketchware.utility.FileUtil;
-import pro.sketchware.utility.InjectAttributeHandler;
-import pro.sketchware.utility.InvokeUtil;
-import pro.sketchware.utility.PropertiesUtil;
-import pro.sketchware.utility.ResourceUtil;
-import pro.sketchware.utility.SvgUtils;
-import pro.sketchware.utility.ThemeUtils;
+import pro.sketchware.util.FilePathUtil;
+import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.InjectAttributeHandler;
+import pro.sketchware.util.InvokeUtil;
+import pro.sketchware.util.PropertiesUtil;
+import pro.sketchware.util.ResourceUtil;
+import pro.sketchware.util.SvgUtils;
+import pro.sketchware.util.ThemeUtils;
 
 public class ViewPane extends RelativeLayout {
     private final String stringsStart = "@string/";

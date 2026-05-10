@@ -31,11 +31,11 @@ import java.util.concurrent.Executors;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ActivitySubDependenciesBinding;
 import pro.sketchware.databinding.ViewItemLocalLibBinding;
-import pro.sketchware.utility.FilePathUtil;
-import pro.sketchware.utility.UI;
+import pro.sketchware.util.FilePathUtil;
+import pro.sketchware.util.UI;
 
-import static pro.sketchware.utility.FileUtil.formatFileSize;
-import static pro.sketchware.utility.FileUtil.getFileSize;
+import static pro.sketchware.util.FileUtil.formatFileSize;
+import static pro.sketchware.util.FileUtil.getFileSize;
 
 public class SubDependenciesActivity extends BaseAppCompatActivity {
 

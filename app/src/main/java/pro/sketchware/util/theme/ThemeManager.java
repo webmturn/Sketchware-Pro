@@ -1,4 +1,4 @@
-package pro.sketchware.utility.theme;
+package pro.sketchware.util.theme;
 
 import android.content.Context;
 import android.content.SharedPreferences;

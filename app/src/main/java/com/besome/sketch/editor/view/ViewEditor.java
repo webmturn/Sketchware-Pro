@@ -66,8 +66,8 @@ import mod.agus.jcoderz.beans.ViewBeans;
 import mod.hey.studios.util.ProjectFile;
 import mod.jbk.util.LogUtil;
 import pro.sketchware.R;
-import pro.sketchware.utility.ThemeUtils;
-import pro.sketchware.utility.UI;
+import pro.sketchware.util.ThemeUtils;
+import pro.sketchware.util.UI;
 import pro.sketchware.widgets.IconCustomWidget;
 import pro.sketchware.widgets.WidgetsCreatorManager;
 

@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pro.sketchware.core.util.ViewUtil;
-import pro.sketchware.utility.PropertiesUtil;
+import pro.sketchware.util.PropertiesUtil;
 
 public class ItemRecyclerView extends RecyclerView implements ItemView, EditorListItem {
 

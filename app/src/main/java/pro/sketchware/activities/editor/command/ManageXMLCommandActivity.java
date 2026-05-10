@@ -1,7 +1,7 @@
 package pro.sketchware.activities.editor.command;
 
-import static pro.sketchware.utility.GsonUtils.getGson;
-import static pro.sketchware.utility.SketchwareUtil.dpToPx;
+import static pro.sketchware.util.GsonUtils.getGson;
+import static pro.sketchware.util.SketchwareUtil.dpToPx;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -52,10 +52,10 @@ import pro.sketchware.R;
 import pro.sketchware.activities.editor.command.adapters.XMLCommandAdapter;
 import pro.sketchware.databinding.ManageXmlCommandAddBinding;
 import pro.sketchware.databinding.ManageXmlCommandBinding;
-import pro.sketchware.utility.FileUtil;
-import pro.sketchware.utility.SketchwareUtil;
-import pro.sketchware.utility.ThemeUtils;
-import pro.sketchware.utility.UI;
+import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.SketchwareUtil;
+import pro.sketchware.util.ThemeUtils;
+import pro.sketchware.util.UI;
 
 public class ManageXMLCommandActivity extends BaseAppCompatActivity {
 

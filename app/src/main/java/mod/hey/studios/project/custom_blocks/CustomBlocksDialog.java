@@ -37,8 +37,8 @@ import pro.sketchware.R;
 import pro.sketchware.databinding.DialogPaletteBinding;
 import pro.sketchware.databinding.ItemCustomBlockBinding;
 import pro.sketchware.databinding.ViewUsedCustomBlocksBinding;
-import pro.sketchware.utility.FileUtil;
-import pro.sketchware.utility.SketchwareUtil;
+import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.SketchwareUtil;
 
 public class CustomBlocksDialog {
 

@@ -3,7 +3,7 @@ package com.besome.sketch.editor.logic;
 import static com.besome.sketch.editor.logic.PaletteSelector.paletteSelectorRecord;
 import static com.google.android.material.color.MaterialColors.harmonizeWithPrimary;
 import static com.google.android.material.color.MaterialColors.isColorLight;
-import static pro.sketchware.utility.ThemeUtils.getColor;
+import static pro.sketchware.util.ThemeUtils.getColor;
 
 import android.content.Context;
 import android.view.LayoutInflater;

@@ -1,8 +1,8 @@
 package pro.sketchware.activities.about.adapters;
 
-import static pro.sketchware.utility.UI.advancedCorners;
-import static pro.sketchware.utility.UI.animateLayoutChanges;
-import static pro.sketchware.utility.UI.shadAnim;
+import static pro.sketchware.util.UI.advancedCorners;
+import static pro.sketchware.util.UI.animateLayoutChanges;
+import static pro.sketchware.util.UI.shadAnim;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
