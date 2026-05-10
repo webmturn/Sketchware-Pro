@@ -6,7 +6,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import pro.sketchware.beans.ProjectLibraryBean;
-import com.besome.sketch.editor.manage.library.firebase.FirebaseActivity;
+import pro.sketchware.activities.editor.manage.library.firebase.FirebaseActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import pro.sketchware.util.Helper;

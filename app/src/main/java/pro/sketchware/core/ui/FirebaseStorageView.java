@@ -6,7 +6,7 @@ import pro.sketchware.util.UIHelper;
 import android.widget.LinearLayout;
 
 import pro.sketchware.beans.ProjectLibraryBean;
-import com.besome.sketch.editor.manage.library.firebase.FirebaseActivity;
+import pro.sketchware.activities.editor.manage.library.firebase.FirebaseActivity;
 
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageLibraryFirebaseStorageUrlSettingsBinding;

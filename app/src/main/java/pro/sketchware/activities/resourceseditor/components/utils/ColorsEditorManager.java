@@ -12,7 +12,7 @@ import android.view.ContextThemeWrapper;
 
 import androidx.core.content.ContextCompat;
 
-import com.besome.sketch.editor.manage.library.material3.Material3LibraryManager;
+import pro.sketchware.activities.editor.manage.library.material3.Material3LibraryManager;
 import com.google.android.material.color.MaterialColors;
 
 import org.w3c.dom.Document;

@@ -59,7 +59,7 @@ import pro.sketchware.activities.editor.manage.ManageCollectionActivity;
 import pro.sketchware.activities.editor.manage.ViewSelectorActivity;
 import pro.sketchware.activities.editor.manage.font.ManageFontActivity;
 import pro.sketchware.activities.editor.manage.image.ManageImageActivity;
-import com.besome.sketch.editor.manage.library.ManageLibraryActivity;
+import pro.sketchware.activities.editor.manage.library.ManageLibraryActivity;
 import pro.sketchware.activities.editor.manage.sound.ManageSoundActivity;
 import pro.sketchware.activities.editor.manage.view.ManageViewActivity;
 import pro.sketchware.activities.base.BaseAppCompatActivity;

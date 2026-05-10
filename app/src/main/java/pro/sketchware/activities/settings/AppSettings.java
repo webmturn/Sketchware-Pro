@@ -19,8 +19,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.besome.sketch.editor.manage.library.LibraryCategoryView;
-import com.besome.sketch.editor.manage.library.LibraryItemView;
+import pro.sketchware.activities.editor.manage.library.LibraryCategoryView;
+import pro.sketchware.activities.editor.manage.library.LibraryItemView;
 import com.besome.sketch.help.SystemSettingActivity;
 import pro.sketchware.activities.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;

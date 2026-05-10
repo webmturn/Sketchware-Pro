@@ -5,7 +5,7 @@ import android.content.Context;
 import androidx.annotation.Nullable;
 
 import pro.sketchware.beans.ProjectLibraryBean;
-import com.besome.sketch.editor.manage.library.LibraryItemView;
+import pro.sketchware.activities.editor.manage.library.LibraryItemView;
 
 import java.util.List;
 

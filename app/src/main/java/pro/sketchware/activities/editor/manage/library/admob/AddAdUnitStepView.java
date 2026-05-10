@@ -1,4 +1,4 @@
-package com.besome.sketch.editor.manage.library.admob;
+package pro.sketchware.activities.editor.manage.library.admob;
 
 import android.content.Context;
 import android.util.AttributeSet;

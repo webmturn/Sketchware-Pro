@@ -1,4 +1,4 @@
-package com.besome.sketch.editor.manage.library;
+package pro.sketchware.activities.editor.manage.library;
 
 
 import android.util.Log;
@@ -19,13 +19,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 
 import pro.sketchware.beans.ProjectLibraryBean;
-import com.besome.sketch.editor.manage.library.admob.AdmobActivity;
-import com.besome.sketch.editor.manage.library.admob.ManageAdmobActivity;
-import com.besome.sketch.editor.manage.library.compat.ManageCompatActivity;
-import com.besome.sketch.editor.manage.library.firebase.ManageFirebaseActivity;
-import com.besome.sketch.editor.manage.library.googlemap.ManageGoogleMapActivity;
-import com.besome.sketch.editor.manage.library.material3.Material3LibraryActivity;
-import com.besome.sketch.editor.manage.library.material3.Material3LibraryItemView;
+import pro.sketchware.activities.editor.manage.library.admob.AdmobActivity;
+import pro.sketchware.activities.editor.manage.library.admob.ManageAdmobActivity;
+import pro.sketchware.activities.editor.manage.library.compat.ManageCompatActivity;
+import pro.sketchware.activities.editor.manage.library.firebase.ManageFirebaseActivity;
+import pro.sketchware.activities.editor.manage.library.googlemap.ManageGoogleMapActivity;
+import pro.sketchware.activities.editor.manage.library.material3.Material3LibraryActivity;
+import pro.sketchware.activities.editor.manage.library.material3.Material3LibraryItemView;
 import pro.sketchware.activities.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 

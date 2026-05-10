@@ -1,4 +1,4 @@
-package com.besome.sketch.editor.manage.library.compat;
+package pro.sketchware.activities.editor.manage.library.compat;
 
 import androidx.activity.OnBackPressedCallback;
 import android.content.Intent;
@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import pro.sketchware.beans.ProjectLibraryBean;
-import com.besome.sketch.editor.manage.library.material3.Material3LibraryManager;
+import pro.sketchware.activities.editor.manage.library.material3.Material3LibraryManager;
 import pro.sketchware.activities.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 

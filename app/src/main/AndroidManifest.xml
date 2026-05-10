@@ -140,7 +140,7 @@
             android:name="pro.sketchware.activities.editor.manage.font.ManageFontImportActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="com.besome.sketch.editor.manage.library.ManageLibraryActivity"
+            android:name="pro.sketchware.activities.editor.manage.library.ManageLibraryActivity"
             android:configChanges="orientation|screenSize" />
         <activity
             android:name="pro.sketchware.activities.editor.manage.ManageCollectionActivity"
@@ -207,22 +207,22 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.Translucent"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name="com.besome.sketch.editor.manage.library.admob.AdmobActivity"
+            android:name="pro.sketchware.activities.editor.manage.library.admob.AdmobActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="com.besome.sketch.editor.manage.library.firebase.FirebaseActivity"
+            android:name="pro.sketchware.activities.editor.manage.library.firebase.FirebaseActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="com.besome.sketch.editor.manage.library.firebase.ManageFirebaseActivity"
+            android:name="pro.sketchware.activities.editor.manage.library.firebase.ManageFirebaseActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="com.besome.sketch.editor.manage.library.admob.ManageAdmobActivity"
+            android:name="pro.sketchware.activities.editor.manage.library.admob.ManageAdmobActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="com.besome.sketch.editor.manage.library.compat.ManageCompatActivity"
+            android:name="pro.sketchware.activities.editor.manage.library.compat.ManageCompatActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="com.besome.sketch.editor.manage.library.googlemap.ManageGoogleMapActivity"
+            android:name="pro.sketchware.activities.editor.manage.library.googlemap.ManageGoogleMapActivity"
             android:configChanges="orientation|screenSize" />
         <activity
             android:name="pro.sketchware.library.ManageLocalLibraryActivity"
@@ -297,7 +297,7 @@
         <activity android:name="pro.sketchware.activities.resourceseditor.ResourcesEditorActivity" />
 
         <activity
-            android:name="com.besome.sketch.editor.manage.library.material3.Material3LibraryActivity"
+            android:name="pro.sketchware.activities.editor.manage.library.material3.Material3LibraryActivity"
             android:configChanges="orientation|screenSize" />
 
         <activity

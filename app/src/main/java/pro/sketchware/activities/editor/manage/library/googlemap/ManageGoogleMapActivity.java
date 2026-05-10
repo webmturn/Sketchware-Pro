@@ -1,4 +1,4 @@
-package com.besome.sketch.editor.manage.library.googlemap;
+package pro.sketchware.activities.editor.manage.library.googlemap;
 
 import android.util.Log;
 import androidx.activity.OnBackPressedCallback;

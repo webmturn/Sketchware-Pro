@@ -12,7 +12,7 @@ import pro.sketchware.beans.BlockBean;
 import pro.sketchware.beans.ComponentBean;
 import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.beans.ViewBean;
-import com.besome.sketch.editor.manage.library.material3.Material3LibraryManager;
+import pro.sketchware.activities.editor.manage.library.material3.Material3LibraryManager;
 
 import java.util.ArrayList;
 import java.util.Collections;

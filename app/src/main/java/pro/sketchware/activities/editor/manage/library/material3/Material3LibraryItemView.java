@@ -1,4 +1,4 @@
-package com.besome.sketch.editor.manage.library.material3;
+package pro.sketchware.activities.editor.manage.library.material3;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -6,7 +6,7 @@ import android.content.Context;
 import androidx.annotation.Nullable;
 
 import pro.sketchware.beans.ProjectLibraryBean;
-import com.besome.sketch.editor.manage.library.LibraryItemView;
+import pro.sketchware.activities.editor.manage.library.LibraryItemView;
 
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
