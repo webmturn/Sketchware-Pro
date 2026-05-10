@@ -331,7 +331,33 @@ Paste this as the **first message** of a new Opus 4.7 High session. Goal: produc
 - 执行期间不要让多个 AI 会话同时并行工作（容易在同一批内争抢 grep 命中）。
 - 执行期间用户尽量不在 Sketchware-Pro 应用本身上做编辑（无关——这是 IDE 工作流，但避免误触 commit 状态）。
 
-### 6.4 "完全完成" 退出条件
+### 6.4 PowerShell 文件编码规则（**强提示**）
+
+> 已发生过的事故：P0a 执行中 Phase 2 模型用 PowerShell 改 `package` 声明行时，因 `Out-File` / `Set-Content` 默认编码不是 UTF-8，导致源文件中的 UTF-8 字符（中文注释、box-drawing 字符、em-dash 等）被破坏；后续不得不追加 `4ea020cab fix(core): restore UTF-8 characters mangled during package split` 修复。Round-2 起手包已在 step 5 验证命令中加 `-Encoding utf8`，但**真正改源码的命令**也必须遵守，记录如下。
+
+**规则**：
+
+- Windows PowerShell 5.1 默认输出编码是 **UTF-16LE（带 BOM）** 或 **Windows-1252**，**不是 UTF-8**。任何写源码文件的命令必须显式指定 UTF-8（无 BOM）。
+- **PowerShell 7+** 的默认编码是 UTF-8，但仍建议显式指定，避免在 5.1 上被同一份脚本误用。
+- 验证命令（生成临时 before/after 比较文件）写法：
+
+  ```powershell
+  git show HEAD:<old-path> | Out-File -Encoding utf8 "$env:TEMP\before.java"
+  ```
+
+  注意：PS 5.1 的 `-Encoding utf8` 实际产出 **UTF-8 with BOM**；`git diff --no-index --ignore-blank-lines` 对 BOM 不敏感，但若要严格无 BOM，用：
+
+  ```powershell
+  [System.IO.File]::WriteAllText("$env:TEMP\before.java", (git show HEAD:<old-path> | Out-String), [System.Text.UTF8Encoding]::new($false))
+  ```
+
+- **改源码内容**（修改 `package` 声明、改 import 等）**禁止使用** PowerShell 的 `Set-Content` / `Out-File` / `>>` / `>`。**统一使用** Cascade 的 `edit` / `multi_edit` 工具，或 `git apply` 应用 patch。这两种方式都保留原文件的 UTF-8 编码与 BOM 状态。
+- **批量替换 import** 时若必须用命令行，使用 `python` / Node.js 等可显式指定编码的脚本，**不要用** PowerShell 原生 `(Get-Content ... | ForEach-Object { $_ -replace ... }) | Set-Content ...` 模式（该模式两端都会踩默认编码坑）。
+- 每批 commit 前的"代码内容不变性验证"步骤，若 diff 出现非 ASCII 行的"伪改动"，立刻怀疑是编码问题，而不是真实代码改动。
+
+**正向证据**：P0a 后续 11 批未再出现编码问题，说明执行模型在 4ea020cab 后已切换到 `edit` 工具改 `package` 行——保持此做法即可。
+
+### 6.5 "完全完成" 退出条件
 
 以下条件全部成立时，方可宣布重构完毕：
 
