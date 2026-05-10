@@ -20,7 +20,7 @@ import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.besome.sketch.beans.ProjectResourceBean;
+import pro.sketchware.beans.ProjectResourceBean;
 import com.besome.sketch.design.DesignActivity;
 import com.bumptech.glide.Glide;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;

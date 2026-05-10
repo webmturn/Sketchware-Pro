@@ -5,7 +5,7 @@ import android.widget.CheckBox;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.besome.sketch.beans.SelectableBean;
+import pro.sketchware.beans.SelectableBean;
 
 public class ViewFileClickListener implements View.OnClickListener {
   public final ViewFilesAdapter.FileListAdapter adapter;

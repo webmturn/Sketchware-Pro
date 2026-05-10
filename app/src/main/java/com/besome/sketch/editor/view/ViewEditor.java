@@ -29,10 +29,10 @@ import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
 
 import pro.sketchware.util.Helper;
-import com.besome.sketch.beans.ProjectFileBean;
-import com.besome.sketch.beans.ProjectResourceBean;
-import com.besome.sketch.beans.ViewBean;
-import com.besome.sketch.beans.WidgetCollectionBean;
+import pro.sketchware.beans.ProjectFileBean;
+import pro.sketchware.beans.ProjectResourceBean;
+import pro.sketchware.beans.ViewBean;
+import pro.sketchware.beans.WidgetCollectionBean;
 import com.besome.sketch.editor.view.item.ItemHorizontalScrollView;
 import com.besome.sketch.editor.view.item.ItemVerticalScrollView;
 import com.besome.sketch.editor.view.palette.IconAdView;

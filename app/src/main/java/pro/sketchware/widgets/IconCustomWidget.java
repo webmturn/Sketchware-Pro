@@ -1,12 +1,12 @@
 package pro.sketchware.widgets;
 
-import static com.besome.sketch.beans.ViewBean.getViewTypeResId;
+import static pro.sketchware.beans.ViewBean.getViewTypeResId;
 
 import android.content.Context;
 import android.view.ViewGroup;
 
-import com.besome.sketch.beans.LayoutBean;
-import com.besome.sketch.beans.ViewBean;
+import pro.sketchware.beans.LayoutBean;
+import pro.sketchware.beans.ViewBean;
 import com.besome.sketch.editor.view.palette.IconBase;
 
 import java.util.HashMap;

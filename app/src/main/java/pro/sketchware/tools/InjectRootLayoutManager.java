@@ -2,7 +2,7 @@ package pro.sketchware.tools;
 
 import android.util.Pair;
 
-import com.besome.sketch.beans.ViewBean;
+import pro.sketchware.beans.ViewBean;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;

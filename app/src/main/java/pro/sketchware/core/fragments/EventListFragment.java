@@ -24,12 +24,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.besome.sketch.beans.BlockBean;
-import com.besome.sketch.beans.ComponentBean;
-import com.besome.sketch.beans.EventBean;
-import com.besome.sketch.beans.MoreBlockCollectionBean;
-import com.besome.sketch.beans.ProjectFileBean;
-import com.besome.sketch.beans.ViewBean;
+import pro.sketchware.beans.BlockBean;
+import pro.sketchware.beans.ComponentBean;
+import pro.sketchware.beans.EventBean;
+import pro.sketchware.beans.MoreBlockCollectionBean;
+import pro.sketchware.beans.ProjectFileBean;
+import pro.sketchware.beans.ViewBean;
 import com.besome.sketch.editor.LogicEditorActivity;
 import com.besome.sketch.editor.event.AddEventActivity;
 import com.besome.sketch.editor.event.CollapsibleEventLayout;

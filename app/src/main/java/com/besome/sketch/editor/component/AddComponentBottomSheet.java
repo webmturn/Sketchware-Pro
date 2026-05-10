@@ -9,8 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.besome.sketch.beans.ComponentBean;
-import com.besome.sketch.beans.ProjectFileBean;
+import pro.sketchware.beans.ComponentBean;
+import pro.sketchware.beans.ProjectFileBean;
 import com.google.android.flexbox.AlignItems;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexWrap;

@@ -5,7 +5,7 @@ import android.graphics.Color;
 import android.view.Gravity;
 import android.view.ViewGroup;
 
-import com.besome.sketch.beans.ViewBean;
+import pro.sketchware.beans.ViewBean;
 import com.besome.sketch.editor.view.AndroidxOrMaterialView;
 import com.besome.sketch.editor.view.palette.IconBase;
 

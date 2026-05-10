@@ -4,10 +4,10 @@ import pro.sketchware.core.project.ClassInfo;
 import android.graphics.Color;
 import android.view.ViewGroup;
 
-import com.besome.sketch.beans.ImageBean;
-import com.besome.sketch.beans.LayoutBean;
-import com.besome.sketch.beans.TextBean;
-import com.besome.sketch.beans.ViewBean;
+import pro.sketchware.beans.ImageBean;
+import pro.sketchware.beans.LayoutBean;
+import pro.sketchware.beans.TextBean;
+import pro.sketchware.beans.ViewBean;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;

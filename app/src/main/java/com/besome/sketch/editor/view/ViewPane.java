@@ -36,10 +36,10 @@ import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.widget.AppCompatImageView;
 
-import com.besome.sketch.beans.ImageBean;
-import com.besome.sketch.beans.LayoutBean;
-import com.besome.sketch.beans.ProjectResourceBean;
-import com.besome.sketch.beans.ViewBean;
+import pro.sketchware.beans.ImageBean;
+import pro.sketchware.beans.LayoutBean;
+import pro.sketchware.beans.ProjectResourceBean;
+import pro.sketchware.beans.ViewBean;
 import com.besome.sketch.design.DesignActivity;
 import com.besome.sketch.editor.manage.library.material3.Material3LibraryManager;
 import com.besome.sketch.editor.view.item.ItemAdView;

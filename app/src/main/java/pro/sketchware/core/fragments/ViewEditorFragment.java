@@ -20,9 +20,9 @@ import androidx.core.view.MenuHost;
 import androidx.core.view.MenuProvider;
 import androidx.lifecycle.Lifecycle;
 
-import com.besome.sketch.beans.HistoryViewBean;
-import com.besome.sketch.beans.ProjectFileBean;
-import com.besome.sketch.beans.ViewBean;
+import pro.sketchware.beans.HistoryViewBean;
+import pro.sketchware.beans.ProjectFileBean;
+import pro.sketchware.beans.ViewBean;
 import com.besome.sketch.design.DesignActivity;
 import com.besome.sketch.editor.LogicEditorActivity;
 import com.besome.sketch.editor.PropertyActivity;

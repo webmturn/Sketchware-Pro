@@ -8,10 +8,10 @@ import static pro.sketchware.core.codegen.ExtraBlockFile.getExtraBlockData;
 import android.text.TextUtils;
 import android.util.Pair;
 
-import com.besome.sketch.beans.BlockBean;
-import com.besome.sketch.beans.ComponentBean;
-import com.besome.sketch.beans.ProjectFileBean;
-import com.besome.sketch.beans.ViewBean;
+import pro.sketchware.beans.BlockBean;
+import pro.sketchware.beans.ComponentBean;
+import pro.sketchware.beans.ProjectFileBean;
+import pro.sketchware.beans.ViewBean;
 import com.besome.sketch.editor.manage.library.material3.Material3LibraryManager;
 
 import java.util.ArrayList;

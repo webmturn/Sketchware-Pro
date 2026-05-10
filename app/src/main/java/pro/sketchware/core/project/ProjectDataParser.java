@@ -3,10 +3,10 @@ package pro.sketchware.core.project;
 import android.util.Log;
 import android.util.Pair;
 
-import com.besome.sketch.beans.BlockBean;
-import com.besome.sketch.beans.ComponentBean;
-import com.besome.sketch.beans.EventBean;
-import com.besome.sketch.beans.ViewBean;
+import pro.sketchware.beans.BlockBean;
+import pro.sketchware.beans.ComponentBean;
+import pro.sketchware.beans.EventBean;
+import pro.sketchware.beans.ViewBean;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;

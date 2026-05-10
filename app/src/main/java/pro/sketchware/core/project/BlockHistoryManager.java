@@ -1,7 +1,7 @@
 package pro.sketchware.core.project;
 
-import com.besome.sketch.beans.BlockBean;
-import com.besome.sketch.beans.HistoryBlockBean;
+import pro.sketchware.beans.BlockBean;
+import pro.sketchware.beans.HistoryBlockBean;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;

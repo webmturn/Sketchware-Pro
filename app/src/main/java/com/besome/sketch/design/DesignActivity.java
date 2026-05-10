@@ -53,7 +53,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.besome.sketch.adapters.JavaFileAdapter;
-import com.besome.sketch.beans.ProjectFileBean;
+import pro.sketchware.beans.ProjectFileBean;
 import com.besome.sketch.common.SrcViewerActivity;
 import com.besome.sketch.editor.manage.ManageCollectionActivity;
 import com.besome.sketch.editor.manage.ViewSelectorActivity;

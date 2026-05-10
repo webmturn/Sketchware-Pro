@@ -19,8 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import pro.sketchware.util.Helper;
 
-import com.besome.sketch.beans.ProjectFileBean;
-import com.besome.sketch.beans.ViewBean;
+import pro.sketchware.beans.ProjectFileBean;
+import pro.sketchware.beans.ViewBean;
 import com.besome.sketch.editor.manage.view.AddViewActivity;
 import com.besome.sketch.editor.manage.view.ManageViewActivity;
 import com.besome.sketch.editor.manage.view.PresetSettingActivity;

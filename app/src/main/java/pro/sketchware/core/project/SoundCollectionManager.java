@@ -3,8 +3,8 @@ package pro.sketchware.core.project;
 import pro.sketchware.core.exception.CompileException;
 import pro.sketchware.core.project.SketchwarePaths;
 
-import com.besome.sketch.beans.CollectionBean;
-import com.besome.sketch.beans.ProjectResourceBean;
+import pro.sketchware.beans.CollectionBean;
+import pro.sketchware.beans.ProjectResourceBean;
 
 import java.io.File;
 import java.io.IOException;

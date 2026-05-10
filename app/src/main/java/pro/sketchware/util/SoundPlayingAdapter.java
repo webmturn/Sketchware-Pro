@@ -11,7 +11,7 @@ import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.besome.sketch.beans.ProjectResourceBean;
+import pro.sketchware.beans.ProjectResourceBean;
 
 import java.io.IOException;
 import java.nio.file.Path;

@@ -18,7 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.besome.sketch.beans.ProjectResourceBean;
+import pro.sketchware.beans.ProjectResourceBean;
 import pro.sketchware.activities.base.BaseAppCompatActivity;
 
 import java.util.ArrayList;

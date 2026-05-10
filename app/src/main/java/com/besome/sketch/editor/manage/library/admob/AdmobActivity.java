@@ -11,7 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
-import com.besome.sketch.beans.ProjectLibraryBean;
+import pro.sketchware.beans.ProjectLibraryBean;
 import pro.sketchware.activities.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 

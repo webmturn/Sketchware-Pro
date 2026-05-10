@@ -19,7 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.besome.sketch.beans.ProjectResourceBean;
+import pro.sketchware.beans.ProjectResourceBean;
 import pro.sketchware.activities.base.BaseDialogActivity;
 import pro.sketchware.widgets.EasyDeleteEditText;
 

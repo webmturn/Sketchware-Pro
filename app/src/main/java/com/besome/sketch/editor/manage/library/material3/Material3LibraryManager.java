@@ -6,7 +6,7 @@ import android.content.Context;
 
 import androidx.annotation.StyleRes;
 
-import com.besome.sketch.beans.ProjectLibraryBean;
+import pro.sketchware.beans.ProjectLibraryBean;
 
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.R;

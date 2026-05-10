@@ -17,7 +17,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.util.Pair;
 
-import com.besome.sketch.beans.ProjectFileBean;
+import pro.sketchware.beans.ProjectFileBean;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 

@@ -1,6 +1,6 @@
 package com.besome.sketch.editor.view;
 
-import com.besome.sketch.beans.ViewBean;
+import pro.sketchware.beans.ViewBean;
 
 // 'sy' is used in ViewPane items, example ItemLinearLayout
 public interface ItemView {

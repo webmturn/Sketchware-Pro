@@ -1,8 +1,8 @@
 package pro.sketchware.core.ui;
 
-import com.besome.sketch.beans.LayoutBean;
-import com.besome.sketch.beans.ProjectFileBean;
-import com.besome.sketch.beans.ViewBean;
+import pro.sketchware.beans.LayoutBean;
+import pro.sketchware.beans.ProjectFileBean;
+import pro.sketchware.beans.ViewBean;
 import java.util.ArrayList;
 import pro.sketchware.R;
 

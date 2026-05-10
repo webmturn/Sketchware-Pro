@@ -4,11 +4,11 @@ import android.graphics.Color;
 import android.util.Pair;
 import android.view.Gravity;
 
-import com.besome.sketch.beans.ColorBean;
-import com.besome.sketch.beans.ImageBean;
-import com.besome.sketch.beans.LayoutBean;
-import com.besome.sketch.beans.TextBean;
-import com.besome.sketch.beans.ViewBean;
+import pro.sketchware.beans.ColorBean;
+import pro.sketchware.beans.ImageBean;
+import pro.sketchware.beans.LayoutBean;
+import pro.sketchware.beans.TextBean;
+import pro.sketchware.beans.ViewBean;
 
 import pro.sketchware.R;
 

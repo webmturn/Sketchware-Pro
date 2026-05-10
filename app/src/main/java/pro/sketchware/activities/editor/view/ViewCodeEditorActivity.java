@@ -12,10 +12,10 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
 
-import com.besome.sketch.beans.HistoryViewBean;
-import com.besome.sketch.beans.ProjectFileBean;
-import com.besome.sketch.beans.ProjectLibraryBean;
-import com.besome.sketch.beans.ViewBean;
+import pro.sketchware.beans.HistoryViewBean;
+import pro.sketchware.beans.ProjectFileBean;
+import pro.sketchware.beans.ProjectLibraryBean;
+import pro.sketchware.beans.ViewBean;
 import pro.sketchware.activities.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 

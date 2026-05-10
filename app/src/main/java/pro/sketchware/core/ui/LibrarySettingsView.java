@@ -1,6 +1,6 @@
 package pro.sketchware.core.ui;
 
-import com.besome.sketch.beans.ProjectLibraryBean;
+import pro.sketchware.beans.ProjectLibraryBean;
 
 public interface LibrarySettingsView {
   void saveToBean(ProjectLibraryBean libraryBean);

@@ -10,8 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.besome.sketch.beans.AdUnitBean;
-import com.besome.sketch.beans.ProjectLibraryBean;
+import pro.sketchware.beans.AdUnitBean;
+import pro.sketchware.beans.ProjectLibraryBean;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;

@@ -14,8 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.besome.sketch.beans.AdTestDeviceBean;
-import com.besome.sketch.beans.ProjectLibraryBean;
+import pro.sketchware.beans.AdTestDeviceBean;
+import pro.sketchware.beans.ProjectLibraryBean;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputLayout;
 

@@ -1,8 +1,8 @@
 package pro.sketchware.util;
 
-import com.besome.sketch.beans.ImageBean;
-import com.besome.sketch.beans.LayoutBean;
-import com.besome.sketch.beans.TextBean;
+import pro.sketchware.beans.ImageBean;
+import pro.sketchware.beans.LayoutBean;
+import pro.sketchware.beans.TextBean;
 
 import java.util.Arrays;
 import java.util.HashMap;

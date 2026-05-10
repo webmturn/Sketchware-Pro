@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.besome.sketch.beans.ColorBean;
+import pro.sketchware.beans.ColorBean;
 import com.besome.sketch.editor.manage.library.material3.Material3LibraryManager;
 import com.besome.sketch.editor.view.ColorGroupItem;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;

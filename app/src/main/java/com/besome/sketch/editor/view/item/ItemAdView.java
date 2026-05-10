@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 
-import com.besome.sketch.beans.ViewBean;
+import pro.sketchware.beans.ViewBean;
 import com.besome.sketch.editor.view.ItemView;
 
 import pro.sketchware.util.ViewUtil;

@@ -1,6 +1,6 @@
 package pro.sketchware.core.callback;
 
-import com.besome.sketch.beans.ViewBean;
+import pro.sketchware.beans.ViewBean;
 
 public interface ViewEditorCallback {
   void onFavoritesChanged();

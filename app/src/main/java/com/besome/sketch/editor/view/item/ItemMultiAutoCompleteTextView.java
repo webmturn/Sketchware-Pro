@@ -8,7 +8,7 @@ import android.graphics.drawable.Drawable;
 
 import androidx.appcompat.widget.AppCompatMultiAutoCompleteTextView;
 
-import com.besome.sketch.beans.ViewBean;
+import pro.sketchware.beans.ViewBean;
 import com.besome.sketch.editor.view.ItemView;
 
 import pro.sketchware.util.ViewUtil;

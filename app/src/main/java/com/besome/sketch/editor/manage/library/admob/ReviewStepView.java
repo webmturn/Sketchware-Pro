@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 
-import com.besome.sketch.beans.AdTestDeviceBean;
-import com.besome.sketch.beans.ProjectLibraryBean;
+import pro.sketchware.beans.AdTestDeviceBean;
+import pro.sketchware.beans.ProjectLibraryBean;
 
 import pro.sketchware.core.ui.LibrarySettingsView;
 import pro.sketchware.graphics.AnimationUtil;

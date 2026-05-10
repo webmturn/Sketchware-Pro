@@ -7,7 +7,7 @@ import android.graphics.Rect;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.besome.sketch.beans.ViewBean;
+import pro.sketchware.beans.ViewBean;
 import com.besome.sketch.editor.view.ItemView;
 import com.besome.sketch.editor.view.ScrollContainer;
 

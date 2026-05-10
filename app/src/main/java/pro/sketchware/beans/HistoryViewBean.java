@@ -1,4 +1,4 @@
-package com.besome.sketch.beans;
+package pro.sketchware.beans;
 
 import androidx.annotation.NonNull;
 
@@ -6,11 +6,12 @@ import java.util.ArrayList;
 
 import pro.sketchware.util.format.ReflectiveToString;
 
-public class ViewHistoryBean extends ReflectiveToString {
+public class HistoryViewBean extends ReflectiveToString {
     public static final int ACTION_TYPE_ADD = 0;
     public static final int ACTION_TYPE_MOVE = 3;
     public static final int ACTION_TYPE_REMOVE = 2;
     public static final int ACTION_TYPE_UPDATE = 1;
+    public static final int ACTION_TYPE_OVERRIDE = 4;
     public int actionType;
     public ArrayList<ViewBean> addedData;
     public ViewBean currentUpdateData;
@@ -52,31 +53,37 @@ public class ViewHistoryBean extends ReflectiveToString {
         currentUpdateData.copy(currentViewBean);
     }
 
-    public void copy(ViewHistoryBean viewHistoryBean) {
-        actionType = viewHistoryBean.actionType;
-        if (viewHistoryBean.prevUpdateData != null) {
+    public void actionOverride(ArrayList<ViewBean> addedBeans, ArrayList<ViewBean> removedBeans) {
+        actionAdd(addedBeans);
+        actionRemove(removedBeans);
+        actionType = ACTION_TYPE_OVERRIDE;
+    }
+
+    public void copy(HistoryViewBean historyViewBean) {
+        actionType = historyViewBean.actionType;
+        if (historyViewBean.prevUpdateData != null) {
             prevUpdateData = new ViewBean();
-            prevUpdateData.copy(viewHistoryBean.prevUpdateData);
+            prevUpdateData.copy(historyViewBean.prevUpdateData);
         }
-        if (viewHistoryBean.currentUpdateData != null) {
+        if (historyViewBean.currentUpdateData != null) {
             currentUpdateData = new ViewBean();
-            currentUpdateData.copy(viewHistoryBean.currentUpdateData);
+            currentUpdateData.copy(historyViewBean.currentUpdateData);
         }
-        if (viewHistoryBean.moveData != null) {
+        if (historyViewBean.moveData != null) {
             moveData = new ViewBean();
-            moveData.copy(viewHistoryBean.moveData);
+            moveData.copy(historyViewBean.moveData);
         }
-        if (viewHistoryBean.addedData != null) {
+        if (historyViewBean.addedData != null) {
             addedData = new ArrayList<>();
-            for (ViewBean addedDatum : viewHistoryBean.addedData) {
+            for (ViewBean addedDatum : historyViewBean.addedData) {
                 ViewBean viewBean = new ViewBean();
                 viewBean.copy(addedDatum);
                 addedData.add(viewBean);
             }
         }
-        if (viewHistoryBean.removedData != null) {
+        if (historyViewBean.removedData != null) {
             removedData = new ArrayList<>();
-            for (ViewBean removedDatum : viewHistoryBean.removedData) {
+            for (ViewBean removedDatum : historyViewBean.removedData) {
                 ViewBean copiedBean = new ViewBean();
                 copiedBean.copy(removedDatum);
                 removedData.add(copiedBean);
@@ -110,9 +117,9 @@ public class ViewHistoryBean extends ReflectiveToString {
 
     @Override
     @NonNull
-    public ViewHistoryBean clone() {
-        ViewHistoryBean viewHistoryBean = new ViewHistoryBean();
-        viewHistoryBean.copy(this);
-        return viewHistoryBean;
+    public HistoryViewBean clone() {
+        HistoryViewBean historyViewBean = new HistoryViewBean();
+        historyViewBean.copy(this);
+        return historyViewBean;
     }
 }

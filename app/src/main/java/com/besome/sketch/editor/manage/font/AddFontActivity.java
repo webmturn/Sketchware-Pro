@@ -12,7 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.besome.sketch.beans.ProjectResourceBean;
+import pro.sketchware.beans.ProjectResourceBean;
 import pro.sketchware.activities.base.BaseDialogActivity;
 
 import pro.sketchware.core.project.FontCollectionManager;

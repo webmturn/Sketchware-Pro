@@ -10,9 +10,9 @@ import android.util.Pair;
 
 import androidx.annotation.ColorInt;
 
-import com.besome.sketch.beans.ComponentBean;
-import com.besome.sketch.beans.ProjectFileBean;
-import com.besome.sketch.beans.ViewBean;
+import pro.sketchware.beans.ComponentBean;
+import pro.sketchware.beans.ProjectFileBean;
+import pro.sketchware.beans.ViewBean;
 import com.besome.sketch.editor.LogicEditorActivity;
 import com.besome.sketch.editor.logic.PaletteBlock;
 import com.besome.sketch.editor.logic.PaletteSelector;

@@ -7,7 +7,7 @@ import android.graphics.Rect;
 
 import androidx.appcompat.widget.AppCompatRadioButton;
 
-import com.besome.sketch.beans.ViewBean;
+import pro.sketchware.beans.ViewBean;
 import com.besome.sketch.editor.view.ItemView;
 
 import pro.sketchware.util.ViewUtil;

@@ -5,9 +5,9 @@ import pro.sketchware.core.project.SketchwarePaths;
 
 import android.util.Log;
 
-import com.besome.sketch.beans.CollectionBean;
-import com.besome.sketch.beans.ViewBean;
-import com.besome.sketch.beans.WidgetCollectionBean;
+import pro.sketchware.beans.CollectionBean;
+import pro.sketchware.beans.ViewBean;
+import pro.sketchware.beans.WidgetCollectionBean;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

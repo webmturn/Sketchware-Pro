@@ -11,9 +11,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.besome.sketch.beans.ComponentBean;
-import com.besome.sketch.beans.ProjectFileBean;
-import com.besome.sketch.beans.ProjectLibraryBean;
+import pro.sketchware.beans.ComponentBean;
+import pro.sketchware.beans.ProjectFileBean;
+import pro.sketchware.beans.ProjectLibraryBean;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 

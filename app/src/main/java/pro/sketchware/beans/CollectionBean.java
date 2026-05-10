@@ -1,4 +1,4 @@
-package com.besome.sketch.beans;
+package pro.sketchware.beans;
 
 public class CollectionBean {
     public String data;

@@ -19,9 +19,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.besome.sketch.beans.ComponentBean;
-import com.besome.sketch.beans.EventBean;
-import com.besome.sketch.beans.ProjectFileBean;
+import pro.sketchware.beans.ComponentBean;
+import pro.sketchware.beans.EventBean;
+import pro.sketchware.beans.ProjectFileBean;
 import com.besome.sketch.editor.LogicEditorActivity;
 import com.besome.sketch.editor.component.AddComponentBottomSheet;
 import com.besome.sketch.editor.component.ComponentEventButton;

@@ -2,8 +2,8 @@ package pro.sketchware.core.project;
 
 import static android.text.TextUtils.isEmpty;
 
-import com.besome.sketch.beans.AdTestDeviceBean;
-import com.besome.sketch.beans.ProjectLibraryBean;
+import pro.sketchware.beans.AdTestDeviceBean;
+import pro.sketchware.beans.ProjectLibraryBean;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -198,19 +198,19 @@ public class BuildConfig {
     public boolean isHttp3Used = false;
 
     /**
-     * If at least 1 TextToSpeech Component ({@link com.besome.sketch.beans.ComponentBean#COMPONENT_TYPE_TEXT_TO_SPEECH})
+     * If at least 1 TextToSpeech Component ({@link pro.sketchware.beans.ComponentBean#COMPONENT_TYPE_TEXT_TO_SPEECH})
      * is used in the project.
      */
     public boolean isTextToSpeechUsed = false;
 
     /**
-     * If at least 1 SpeechToText Component ({@link com.besome.sketch.beans.ComponentBean#COMPONENT_TYPE_SPEECH_TO_TEXT})
+     * If at least 1 SpeechToText Component ({@link pro.sketchware.beans.ComponentBean#COMPONENT_TYPE_SPEECH_TO_TEXT})
      * is used in the project.
      */
     public boolean isSpeechToTextUsed = false;
 
     /**
-     * If at least 1 Notification Component ({@link com.besome.sketch.beans.ComponentBean#COMPONENT_TYPE_NOTIFICATION})
+     * If at least 1 Notification Component ({@link pro.sketchware.beans.ComponentBean#COMPONENT_TYPE_NOTIFICATION})
      * is used in the project.
      */
     public boolean isNotificationUsed = false;

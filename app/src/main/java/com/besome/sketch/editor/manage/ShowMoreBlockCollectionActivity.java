@@ -12,8 +12,8 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 
-import com.besome.sketch.beans.BlockBean;
-import com.besome.sketch.beans.MoreBlockCollectionBean;
+import pro.sketchware.beans.BlockBean;
+import pro.sketchware.beans.MoreBlockCollectionBean;
 import com.besome.sketch.editor.logic.BlockPane;
 import pro.sketchware.activities.base.BaseAppCompatActivity;
 

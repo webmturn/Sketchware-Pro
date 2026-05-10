@@ -2,8 +2,8 @@ package pro.sketchware.core.codegen;
 
 import android.util.Pair;
 
-import com.besome.sketch.beans.BlockBean;
-import com.besome.sketch.beans.ViewBean;
+import pro.sketchware.beans.BlockBean;
+import pro.sketchware.beans.ViewBean;
 
 import java.util.ArrayList;
 import java.util.HashMap;

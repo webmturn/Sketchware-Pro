@@ -1,6 +1,6 @@
 package pro.sketchware.core.build;
 
-import com.besome.sketch.beans.QuizBean;
+import pro.sketchware.beans.QuizBean;
 
 import java.util.ArrayList;
 

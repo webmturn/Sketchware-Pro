@@ -7,7 +7,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 
-import com.besome.sketch.beans.ProjectResourceBean;
+import pro.sketchware.beans.ProjectResourceBean;
 import pro.sketchware.activities.base.BaseDialogActivity;
 
 import java.io.File;

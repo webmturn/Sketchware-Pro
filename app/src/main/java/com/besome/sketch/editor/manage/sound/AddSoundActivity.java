@@ -19,7 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.besome.sketch.beans.ProjectResourceBean;
+import pro.sketchware.beans.ProjectResourceBean;
 import pro.sketchware.activities.base.BaseDialogActivity;
 import com.bumptech.glide.Glide;
 import com.google.android.material.card.MaterialCardView;

@@ -8,7 +8,7 @@ import pro.sketchware.util.Helper;
 import android.content.Context;
 import android.widget.LinearLayout;
 
-import com.besome.sketch.beans.ProjectLibraryBean;
+import pro.sketchware.beans.ProjectLibraryBean;
 import com.besome.sketch.editor.manage.library.firebase.FirebaseActivity;
 
 import pro.sketchware.R;

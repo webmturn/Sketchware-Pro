@@ -15,8 +15,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.besome.sketch.beans.BlockBean;
-import com.besome.sketch.beans.ViewBean;
+import pro.sketchware.beans.BlockBean;
+import pro.sketchware.beans.ViewBean;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;

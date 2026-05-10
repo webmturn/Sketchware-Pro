@@ -25,10 +25,10 @@ import androidx.core.view.ViewPropertyAnimatorCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.besome.sketch.beans.BlockBean;
-import com.besome.sketch.beans.ProjectFileBean;
-import com.besome.sketch.beans.ProjectResourceBean;
-import com.besome.sketch.beans.ViewBean;
+import pro.sketchware.beans.BlockBean;
+import pro.sketchware.beans.ProjectFileBean;
+import pro.sketchware.beans.ProjectResourceBean;
+import pro.sketchware.beans.ViewBean;
 import com.besome.sketch.editor.manage.image.ManageImageActivity;
 import com.besome.sketch.editor.property.PropertyResourceItem;
 import com.besome.sketch.editor.property.ViewPropertyItems;

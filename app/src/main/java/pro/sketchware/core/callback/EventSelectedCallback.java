@@ -1,6 +1,6 @@
 package pro.sketchware.core.callback;
 
-import com.besome.sketch.beans.EventBean;
+import pro.sketchware.beans.EventBean;
 
 public interface EventSelectedCallback {
   void onEventSelected(EventBean eventBean);

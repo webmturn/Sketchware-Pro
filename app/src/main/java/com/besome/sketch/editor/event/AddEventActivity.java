@@ -23,10 +23,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
-import com.besome.sketch.beans.ComponentBean;
-import com.besome.sketch.beans.EventBean;
-import com.besome.sketch.beans.ProjectFileBean;
-import com.besome.sketch.beans.ViewBean;
+import pro.sketchware.beans.ComponentBean;
+import pro.sketchware.beans.EventBean;
+import pro.sketchware.beans.ProjectFileBean;
+import pro.sketchware.beans.ViewBean;
 import com.besome.sketch.editor.makeblock.MoreBlockBuilderView;
 import pro.sketchware.activities.base.BaseAppCompatActivity;
 import com.google.android.material.color.MaterialColors;

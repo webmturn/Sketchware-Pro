@@ -10,10 +10,10 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.besome.sketch.beans.BlockBean;
-import com.besome.sketch.beans.MoreBlockCollectionBean;
-import com.besome.sketch.beans.ProjectFileBean;
-import com.besome.sketch.beans.ProjectResourceBean;
+import pro.sketchware.beans.BlockBean;
+import pro.sketchware.beans.MoreBlockCollectionBean;
+import pro.sketchware.beans.ProjectFileBean;
+import pro.sketchware.beans.ProjectResourceBean;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.File;

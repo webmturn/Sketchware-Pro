@@ -2,7 +2,7 @@ package pro.sketchware.activities.preview;
 
 import android.os.Bundle;
 
-import com.besome.sketch.beans.ViewBean;
+import pro.sketchware.beans.ViewBean;
 import com.besome.sketch.editor.view.ItemView;
 import com.besome.sketch.editor.view.ViewPane;
 import pro.sketchware.activities.base.BaseAppCompatActivity;

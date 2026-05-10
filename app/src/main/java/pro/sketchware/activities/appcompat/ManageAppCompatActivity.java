@@ -10,8 +10,8 @@ import android.widget.PopupMenu;
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
 
-import com.besome.sketch.beans.ProjectFileBean;
-import com.besome.sketch.beans.ProjectLibraryBean;
+import pro.sketchware.beans.ProjectFileBean;
+import pro.sketchware.beans.ProjectLibraryBean;
 import pro.sketchware.activities.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.tabs.TabLayout;

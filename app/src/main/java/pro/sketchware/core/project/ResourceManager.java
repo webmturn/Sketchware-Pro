@@ -2,7 +2,7 @@ package pro.sketchware.core.project;
 
 import android.util.Log;
 
-import com.besome.sketch.beans.ProjectResourceBean;
+import pro.sketchware.beans.ProjectResourceBean;
 import com.bumptech.glide.signature.StringSignature;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

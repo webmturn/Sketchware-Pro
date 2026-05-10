@@ -1,6 +1,6 @@
 package pro.sketchware.core.codegen;
 
-import com.besome.sketch.beans.BlockBean;
+import pro.sketchware.beans.BlockBean;
 
 import java.util.ArrayList;
 

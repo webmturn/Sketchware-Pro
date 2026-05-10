@@ -1,6 +1,6 @@
 package pro.sketchware.util.relativelayout;
 
-import com.besome.sketch.beans.ViewBean;
+import pro.sketchware.beans.ViewBean;
 
 import java.util.ArrayList;
 import java.util.List;

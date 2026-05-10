@@ -1,4 +1,4 @@
-package com.besome.sketch.beans;
+package pro.sketchware.beans;
 
 import android.os.Parcel;
 import android.os.Parcelable;

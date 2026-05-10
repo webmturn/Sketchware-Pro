@@ -13,7 +13,7 @@ import android.view.ViewParent;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.besome.sketch.beans.BlockBean;
+import pro.sketchware.beans.BlockBean;
 import pro.sketchware.widgets.ColorPickerDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.Gson;

@@ -1,7 +1,7 @@
 package pro.sketchware.core.project;
 
-import com.besome.sketch.beans.HistoryViewBean;
-import com.besome.sketch.beans.ViewBean;
+import pro.sketchware.beans.HistoryViewBean;
+import pro.sketchware.beans.ViewBean;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;

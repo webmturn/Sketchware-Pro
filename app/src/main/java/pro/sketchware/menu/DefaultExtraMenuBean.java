@@ -3,7 +3,7 @@ package pro.sketchware.menu;
 import android.net.Uri;
 import android.util.Pair;
 
-import com.besome.sketch.beans.ComponentBean;
+import pro.sketchware.beans.ComponentBean;
 import com.besome.sketch.editor.LogicEditorActivity;
 
 import java.util.ArrayList;

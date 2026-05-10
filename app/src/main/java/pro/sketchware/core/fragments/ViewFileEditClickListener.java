@@ -6,7 +6,7 @@ import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.besome.sketch.beans.ProjectFileBean;
+import pro.sketchware.beans.ProjectFileBean;
 import com.besome.sketch.editor.manage.view.PresetSettingActivity;
 import pro.sketchware.util.UIHelper;
 

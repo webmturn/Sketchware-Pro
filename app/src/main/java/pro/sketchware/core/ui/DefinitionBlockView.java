@@ -5,7 +5,7 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.besome.sketch.beans.BlockBean;
+import pro.sketchware.beans.BlockBean;
 import java.util.ArrayList;
 
 public class DefinitionBlockView extends BlockView {

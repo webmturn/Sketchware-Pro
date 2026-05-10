@@ -13,10 +13,10 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.besome.sketch.beans.AdTestDeviceBean;
-import com.besome.sketch.beans.AdUnitBean;
-import com.besome.sketch.beans.ComponentBean;
-import com.besome.sketch.beans.ProjectFileBean;
+import pro.sketchware.beans.AdTestDeviceBean;
+import pro.sketchware.beans.AdUnitBean;
+import pro.sketchware.beans.ComponentBean;
+import pro.sketchware.beans.ProjectFileBean;
 import com.besome.sketch.editor.LogicEditorActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputLayout;

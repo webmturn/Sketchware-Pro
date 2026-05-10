@@ -4,7 +4,7 @@ import pro.sketchware.util.io.EncryptedFileUtil;
 
 import android.util.Log;
 
-import com.besome.sketch.beans.CollectionBean;
+import pro.sketchware.beans.CollectionBean;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

@@ -2,7 +2,7 @@ package pro.sketchware.util;
 
 import android.util.Pair;
 
-import com.besome.sketch.beans.ViewBean;
+import pro.sketchware.beans.ViewBean;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;

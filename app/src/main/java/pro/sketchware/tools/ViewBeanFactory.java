@@ -2,9 +2,9 @@ package pro.sketchware.tools;
 
 import static pro.sketchware.util.PropertiesUtil.parseReferName;
 
-import com.besome.sketch.beans.LayoutBean;
-import com.besome.sketch.beans.TextBean;
-import com.besome.sketch.beans.ViewBean;
+import pro.sketchware.beans.LayoutBean;
+import pro.sketchware.beans.TextBean;
+import pro.sketchware.beans.ViewBean;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

@@ -9,8 +9,8 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 
-import com.besome.sketch.beans.ViewBean;
-import com.besome.sketch.beans.WidgetCollectionBean;
+import pro.sketchware.beans.ViewBean;
+import pro.sketchware.beans.WidgetCollectionBean;
 import com.besome.sketch.editor.view.ItemView;
 import pro.sketchware.activities.base.BaseAppCompatActivity;
 

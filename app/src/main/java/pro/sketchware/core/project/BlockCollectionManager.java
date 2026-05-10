@@ -5,9 +5,9 @@ import pro.sketchware.core.project.SketchwarePaths;
 
 import android.util.Log;
 
-import com.besome.sketch.beans.BlockBean;
-import com.besome.sketch.beans.BlockCollectionBean;
-import com.besome.sketch.beans.CollectionBean;
+import pro.sketchware.beans.BlockBean;
+import pro.sketchware.beans.BlockCollectionBean;
+import pro.sketchware.beans.CollectionBean;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

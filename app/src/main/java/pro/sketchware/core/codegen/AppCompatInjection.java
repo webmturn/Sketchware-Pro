@@ -1,6 +1,6 @@
 package pro.sketchware.core.codegen;
 
-import com.besome.sketch.beans.ProjectFileBean;
+import pro.sketchware.beans.ProjectFileBean;
 import com.google.gson.Gson;
 
 import java.io.File;
