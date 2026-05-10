@@ -24,7 +24,7 @@ public class CodeContext {
         return activityName;
     }
 
-    // 鈹€鈹€ Context references 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+    // ── Context references ──────────────────────────────────────────
 
     /** {@code getApplicationContext()} or {@code getContext().getApplicationContext()} */
     public String appContext() {
@@ -36,27 +36,27 @@ public class CodeContext {
         return isFragment ? "getActivity().getBaseContext()" : "getBaseContext()";
     }
 
-    /** {@code this} or {@code getContext()} 鈥?for constructors expecting a Context */
+    /** {@code this} or {@code getContext()} — for constructors expecting a Context */
     public String thisContext() {
         return isFragment ? "getContext()" : "this";
     }
 
-    /** {@code this} or {@code getActivity()} 鈥?for constructors expecting an Activity */
+    /** {@code this} or {@code getActivity()} — for constructors expecting an Activity */
     public String thisActivity() {
         return isFragment ? "getActivity()" : "this";
     }
 
-    /** {@code this} or {@code (Activity) getContext()} 鈥?for constructors expecting an Activity with cast */
+    /** {@code this} or {@code (Activity) getContext()} — for constructors expecting an Activity with cast */
     public String thisActivityCast() {
         return isFragment ? "(Activity) getContext()" : "this";
     }
 
-    /** {@code ActivityName.this} or {@code getContext()} 鈥?for qualified this references */
+    /** {@code ActivityName.this} or {@code getContext()} — for qualified this references */
     public String qualifiedThis() {
         return isFragment ? "getContext()" : activityName + ".this";
     }
 
-    // 鈹€鈹€ System services 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+    // ── System services ─────────────────────────────────────────────
 
     /** {@code (Cast) getSystemService} or {@code (Cast) getContext().getSystemService} */
     public String systemService(String castType) {
@@ -65,35 +65,35 @@ public class CodeContext {
                 : "(" + castType + ") getSystemService";
     }
 
-    // 鈹€鈹€ Assets 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+    // ── Assets ──────────────────────────────────────────────────────
 
     /** {@code getAssets()} or {@code getContext().getAssets()} */
     public String assets() {
         return isFragment ? "getContext().getAssets()" : "getAssets()";
     }
 
-    // 鈹€鈹€ SharedPreferences 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+    // ── SharedPreferences ───────────────────────────────────────────
 
     /** {@code getSharedPreferences} or {@code getContext().getSharedPreferences} */
     public String sharedPreferences() {
         return isFragment ? "getContext().getSharedPreferences" : "getSharedPreferences";
     }
 
-    // 鈹€鈹€ UI thread 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+    // ── UI thread ───────────────────────────────────────────────────
 
     /** {@code runOnUiThread} or {@code getActivity().runOnUiThread} */
     public String runOnUiThread() {
         return isFragment ? "getActivity().runOnUiThread" : "runOnUiThread";
     }
 
-    // 鈹€鈹€ Layout inflater 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+    // ── Layout inflater ─────────────────────────────────────────────
 
     /** {@code getLayoutInflater()} or {@code getActivity().getLayoutInflater()} */
     public String layoutInflater() {
         return isFragment ? "getActivity().getLayoutInflater()" : "getLayoutInflater()";
     }
 
-    // 鈹€鈹€ Fragment manager 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+    // ── Fragment manager ────────────────────────────────────────────
 
     /** {@code getSupportFragmentManager()} or {@code getActivity().getSupportFragmentManager()} */
     public String fragmentManager() {
