@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import pro.sketchware.beans.BlockBean;
-import com.besome.sketch.editor.logic.BlockPane;
+import pro.sketchware.activities.editor.logic.BlockPane;
 import com.google.gson.Gson;
 import java.util.ArrayList;
 import pro.sketchware.core.codegen.ExtraBlockInfo;

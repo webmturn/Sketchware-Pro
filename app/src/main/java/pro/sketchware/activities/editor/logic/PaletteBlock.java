@@ -1,4 +1,4 @@
-package com.besome.sketch.editor.logic;
+package pro.sketchware.activities.editor.logic;
 
 import static pro.sketchware.util.ThemeUtils.getColor;
 import static pro.sketchware.util.ThemeUtils.isDarkThemeEnabled;

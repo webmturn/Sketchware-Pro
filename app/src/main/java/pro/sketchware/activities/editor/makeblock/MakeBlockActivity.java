@@ -1,4 +1,4 @@
-package com.besome.sketch.editor.makeblock;
+package pro.sketchware.activities.editor.makeblock;
 
 import android.content.Intent;
 import android.os.Bundle;

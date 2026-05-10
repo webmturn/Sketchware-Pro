@@ -2,7 +2,7 @@ package pro.sketchware.activities.editor.makeblock;
 
 import android.util.Pair;
 
-import com.besome.sketch.editor.LogicEditorActivity;
+import pro.sketchware.activities.editor.LogicEditorActivity;
 import com.google.android.material.chip.ChipGroup;
 
 import java.util.Iterator;

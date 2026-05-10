@@ -7,7 +7,7 @@ import android.text.style.CharacterStyle;
 import android.text.style.ForegroundColorSpan;
 import android.widget.EditText;
 
-import com.besome.sketch.editor.LogicEditorActivity;
+import pro.sketchware.activities.editor.LogicEditorActivity;
 
 import java.util.List;
 import java.util.regex.Matcher;

@@ -1,4 +1,4 @@
-package com.besome.sketch.editor.event;
+package pro.sketchware.activities.editor.event;
 
 
 import pro.sketchware.util.Helper;
@@ -27,7 +27,7 @@ import pro.sketchware.beans.ComponentBean;
 import pro.sketchware.beans.EventBean;
 import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.beans.ViewBean;
-import com.besome.sketch.editor.makeblock.MoreBlockBuilderView;
+import pro.sketchware.activities.editor.makeblock.MoreBlockBuilderView;
 import pro.sketchware.activities.base.BaseAppCompatActivity;
 import com.google.android.material.color.MaterialColors;
 

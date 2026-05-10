@@ -1,4 +1,4 @@
-package com.besome.sketch.editor.makeblock;
+package pro.sketchware.activities.editor.makeblock;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;

@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.besome.sketch.editor.LogicEditorActivity;
+import pro.sketchware.activities.editor.LogicEditorActivity;
 
 import pro.sketchware.core.codegen.ComponentCodeGenerator;
 import pro.sketchware.core.ui.FieldBlockView;

@@ -1,4 +1,4 @@
-package com.besome.sketch.editor;
+package pro.sketchware.activities.editor;
 
 import android.content.Intent;
 import androidx.activity.OnBackPressedCallback;

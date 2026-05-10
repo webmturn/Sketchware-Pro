@@ -13,7 +13,7 @@ import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.FileUtil;
 
 /**
- * Helper used in {@link com.besome.sketch.editor.LogicEditorActivity} to get menus for custom
+ * Helper used in {@link pro.sketchware.activities.editor.LogicEditorActivity} to get menus for custom
  * Menus defined in {@link mod.hilal.saif.activities.tools.BlockSelectorActivity}.
  */
 public class BlockMenu {

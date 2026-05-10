@@ -30,7 +30,7 @@
             tools:ignore="UnusedAttribute" />
     </LinearLayout>
 
-    <com.besome.sketch.editor.LogicEditorDrawer
+    <pro.sketchware.activities.editor.LogicEditorDrawer
         android:id="@+id/right_drawer"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -59,14 +59,14 @@
             android:elevation="16dp"
             android:orientation="horizontal">
 
-            <com.besome.sketch.editor.logic.PaletteBlock
+            <pro.sketchware.activities.editor.logic.PaletteBlock
                 android:id="@+id/palette_block"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </LinearLayout>
     </LinearLayout>
 
-    <com.besome.sketch.editor.logic.LogicTopMenu
+    <pro.sketchware.activities.editor.logic.LogicTopMenu
         android:id="@+id/top_menu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

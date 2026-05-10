@@ -4,7 +4,7 @@ package pro.sketchware.dialogs;
 import android.util.Log;
 import android.view.View;
 
-import com.besome.sketch.editor.LogicEditorActivity;
+import pro.sketchware.activities.editor.LogicEditorActivity;
 
 import pro.sketchware.core.ui.FieldBlockView;
 import io.github.rosemoe.sora.widget.CodeEditor;

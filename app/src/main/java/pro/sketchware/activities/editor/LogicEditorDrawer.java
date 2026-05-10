@@ -1,4 +1,4 @@
-package com.besome.sketch.editor;
+package pro.sketchware.activities.editor;
 
 import static pro.sketchware.util.SketchwareUtil.dpToPx;
 

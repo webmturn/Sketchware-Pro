@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import pro.sketchware.beans.ComponentBean;
 import pro.sketchware.beans.EventBean;
 import pro.sketchware.beans.ProjectFileBean;
-import com.besome.sketch.editor.LogicEditorActivity;
+import pro.sketchware.activities.editor.LogicEditorActivity;
 import com.besome.sketch.editor.component.AddComponentBottomSheet;
 import com.besome.sketch.editor.component.ComponentEventButton;
 import pro.sketchware.widgets.base.CollapsibleViewHolder;

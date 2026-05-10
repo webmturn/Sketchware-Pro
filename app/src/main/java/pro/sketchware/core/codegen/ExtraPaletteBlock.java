@@ -13,9 +13,9 @@ import androidx.annotation.ColorInt;
 import pro.sketchware.beans.ComponentBean;
 import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.beans.ViewBean;
-import com.besome.sketch.editor.LogicEditorActivity;
-import com.besome.sketch.editor.logic.PaletteBlock;
-import com.besome.sketch.editor.logic.PaletteSelector;
+import pro.sketchware.activities.editor.LogicEditorActivity;
+import pro.sketchware.activities.editor.logic.PaletteBlock;
+import pro.sketchware.activities.editor.logic.PaletteSelector;
 
 import java.util.ArrayList;
 import java.util.HashMap;

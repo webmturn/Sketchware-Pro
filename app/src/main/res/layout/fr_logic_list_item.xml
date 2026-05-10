@@ -125,7 +125,7 @@
                 app:dividerInsetEnd="16dp"
                 app:dividerInsetStart="16dp" />
 
-            <com.besome.sketch.editor.event.CollapsibleEventLayout
+            <pro.sketchware.activities.editor.event.CollapsibleEventLayout
                 android:id="@+id/event_option"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

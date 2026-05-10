@@ -1,8 +1,8 @@
 package pro.sketchware.activities.resourceseditor.components.adapters;
 
 import static com.besome.sketch.design.DesignActivity.sc_id;
-import static com.besome.sketch.editor.LogicEditorActivity.getAllJavaFileNames;
-import static com.besome.sketch.editor.LogicEditorActivity.getAllXmlFileNames;
+import static pro.sketchware.activities.editor.LogicEditorActivity.getAllJavaFileNames;
+import static pro.sketchware.activities.editor.LogicEditorActivity.getAllXmlFileNames;
 import static pro.sketchware.util.UI.animateLayoutChanges;
 
 import android.text.Editable;

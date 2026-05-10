@@ -1,4 +1,4 @@
-package com.besome.sketch.editor.logic;
+package pro.sketchware.activities.editor.logic;
 
 import android.content.Context;
 import android.util.AttributeSet;

@@ -58,7 +58,7 @@
             android:inputType="text"
             android:background="@android:color/transparent" />
 
-        <com.besome.sketch.editor.logic.PaletteSelector
+        <pro.sketchware.activities.editor.logic.PaletteSelector
             android:id="@+id/palette_selector"
             android:layout_width="120dp"
             android:layout_height="wrap_content"

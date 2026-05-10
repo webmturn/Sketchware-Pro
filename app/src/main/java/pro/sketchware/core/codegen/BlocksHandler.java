@@ -2,7 +2,7 @@ package pro.sketchware.core.codegen;
 
 import androidx.annotation.ColorInt;
 
-import com.besome.sketch.editor.LogicEditorActivity;
+import pro.sketchware.activities.editor.LogicEditorActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;

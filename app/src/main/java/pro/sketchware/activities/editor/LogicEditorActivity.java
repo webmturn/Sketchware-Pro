@@ -1,4 +1,4 @@
-package com.besome.sketch.editor;
+package pro.sketchware.activities.editor;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
@@ -61,11 +61,11 @@ import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.beans.ViewBean;
 import com.besome.sketch.design.DesignActivity;
 import com.besome.sketch.editor.component.AddComponentBottomSheet;
-import com.besome.sketch.editor.logic.BlockPane;
-import com.besome.sketch.editor.logic.LogicTopMenu;
-import com.besome.sketch.editor.logic.PaletteBlock;
-import com.besome.sketch.editor.logic.PaletteSelector;
-import com.besome.sketch.editor.makeblock.MakeBlockActivity;
+import pro.sketchware.activities.editor.logic.BlockPane;
+import pro.sketchware.activities.editor.logic.LogicTopMenu;
+import pro.sketchware.activities.editor.logic.PaletteBlock;
+import pro.sketchware.activities.editor.logic.PaletteSelector;
+import pro.sketchware.activities.editor.makeblock.MakeBlockActivity;
 import com.besome.sketch.editor.manage.ShowBlockCollectionActivity;
 import com.besome.sketch.editor.view.ViewDummy;
 import com.besome.sketch.editor.view.ViewLogicEditor;

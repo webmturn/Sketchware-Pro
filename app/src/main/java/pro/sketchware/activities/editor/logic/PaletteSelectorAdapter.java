@@ -1,6 +1,6 @@
-package com.besome.sketch.editor.logic;
+package pro.sketchware.activities.editor.logic;
 
-import static com.besome.sketch.editor.logic.PaletteSelector.paletteSelectorRecord;
+import static pro.sketchware.activities.editor.logic.PaletteSelector.paletteSelectorRecord;
 import static com.google.android.material.color.MaterialColors.harmonizeWithPrimary;
 import static com.google.android.material.color.MaterialColors.isColorLight;
 import static pro.sketchware.util.ThemeUtils.getColor;

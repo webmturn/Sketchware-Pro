@@ -1,4 +1,4 @@
-package com.besome.sketch.editor.logic;
+package pro.sketchware.activities.editor.logic;
 
 import pro.sketchware.core.project.ClassInfo;
 import pro.sketchware.core.ui.BlockView;

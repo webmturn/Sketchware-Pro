@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import pro.sketchware.beans.EventBean;
 import pro.sketchware.beans.ProjectFileBean;
-import com.besome.sketch.editor.LogicEditorActivity;
+import pro.sketchware.activities.editor.LogicEditorActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;

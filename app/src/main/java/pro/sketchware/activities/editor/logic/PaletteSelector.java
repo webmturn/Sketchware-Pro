@@ -1,4 +1,4 @@
-package com.besome.sketch.editor.logic;
+package pro.sketchware.activities.editor.logic;
 
 import android.app.Activity;
 import android.content.Context;

@@ -3,7 +3,7 @@ package com.besome.sketch.editor.property;
 
 import pro.sketchware.util.Helper;
 import pro.sketchware.util.format.FormatUtil;
-import com.besome.sketch.editor.PropertyActivity;
+import pro.sketchware.activities.editor.PropertyActivity;
 import android.content.Context;
 import android.util.Pair;
 import android.util.TypedValue;

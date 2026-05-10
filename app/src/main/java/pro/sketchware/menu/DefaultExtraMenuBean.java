@@ -4,7 +4,7 @@ import android.net.Uri;
 import android.util.Pair;
 
 import pro.sketchware.beans.ComponentBean;
-import com.besome.sketch.editor.LogicEditorActivity;
+import pro.sketchware.activities.editor.LogicEditorActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;

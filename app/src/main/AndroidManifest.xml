@@ -65,15 +65,15 @@
             android:configChanges="orientation|screenSize" />
         <activity android:name="com.besome.sketch.help.SystemInfoActivity" />
         <activity
-            android:name="com.besome.sketch.editor.LogicEditorActivity"
+            android:name="pro.sketchware.activities.editor.LogicEditorActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.SketchwarePro.SmallToolbar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
-            android:name="com.besome.sketch.editor.PropertyActivity"
+            android:name="pro.sketchware.activities.editor.PropertyActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="com.besome.sketch.editor.makeblock.MakeBlockActivity"
+            android:name="pro.sketchware.activities.editor.makeblock.MakeBlockActivity"
             android:configChanges="orientation|screenSize" />
         <activity
             android:name="com.besome.sketch.projects.MyProjectSettingActivity"
@@ -150,7 +150,7 @@
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name="com.besome.sketch.editor.event.AddEventActivity"
+            android:name="pro.sketchware.activities.editor.event.AddEventActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.Translucent" />
         <activity
