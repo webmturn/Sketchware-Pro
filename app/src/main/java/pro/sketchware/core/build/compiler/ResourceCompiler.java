@@ -1,4 +1,4 @@
-package mod.jbk.build.compiler.resource;
+package pro.sketchware.core.build.compiler;
 
 import static com.besome.sketch.Config.VAR_DEFAULT_TARGET_SDK_VERSION;
 
@@ -13,9 +13,9 @@ import pro.sketchware.core.project.BuiltInLibrary;
 import pro.sketchware.core.build.ProjectBuilder;
 import pro.sketchware.core.exception.SimpleException;
 import mod.agus.jcoderz.editor.manage.library.locallibrary.ManageLocalLibrary;
-import mod.hey.studios.build.BuildSettings;
+import pro.sketchware.core.build.BuildSettings;
 import mod.hey.studios.project.ProjectSettings;
-import mod.jbk.build.BuildProgressReceiver;
+import pro.sketchware.core.build.BuildProgressReceiver;
 import mod.jbk.build.BuiltInLibraries;
 import mod.jbk.diagnostic.MissingFileException;
 import mod.jbk.util.LogUtil;

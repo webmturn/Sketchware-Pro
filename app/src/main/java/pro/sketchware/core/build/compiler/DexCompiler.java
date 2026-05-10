@@ -1,4 +1,4 @@
-package mod.jbk.build.compiler.dex;
+package pro.sketchware.core.build.compiler;
 
 import com.android.tools.r8.CompilationFailedException;
 import com.android.tools.r8.CompilationMode;

@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 import mod.hey.studios.editor.manage.block.ExtraBlockInfo;
 import mod.hey.studios.editor.manage.block.v2.BlockLoader;
 import mod.hey.studios.moreblock.ReturnMoreblockManager;
-import mod.pranav.viewbinding.ViewBindingBuilder;
+import pro.sketchware.core.build.ViewBindingBuilder;
 import pro.sketchware.core.project.BuildConfig;
 import pro.sketchware.core.project.ClassInfo;
 

@@ -1,8 +1,8 @@
-package mod.hey.studios.compiler.kotlin
+package pro.sketchware.core.build.compiler
 
 import pro.sketchware.core.build.ProjectBuilder
-import mod.hey.studios.build.BuildSettings
-import mod.hey.studios.compiler.kotlin.KotlinCompilerUtil.*
+import pro.sketchware.core.build.BuildSettings
+import pro.sketchware.core.build.compiler.KotlinCompilerUtil.*
 import mod.jbk.util.LogUtil
 import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments
 import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler

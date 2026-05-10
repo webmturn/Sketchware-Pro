@@ -1,17 +1,17 @@
 package pro.sketchware.dialogs;
 
-import static mod.hey.studios.build.BuildSettings.SETTING_ANDROID_JAR_PATH;
-import static mod.hey.studios.build.BuildSettings.SETTING_CLASSPATH;
-import static mod.hey.studios.build.BuildSettings.SETTING_DEXER;
-import static mod.hey.studios.build.BuildSettings.SETTING_ENABLE_LOGCAT;
-import static mod.hey.studios.build.BuildSettings.SETTING_JAVA_VERSION;
-import static mod.hey.studios.build.BuildSettings.SETTING_JAVA_VERSION_10;
-import static mod.hey.studios.build.BuildSettings.SETTING_JAVA_VERSION_11;
-import static mod.hey.studios.build.BuildSettings.SETTING_JAVA_VERSION_1_7;
-import static mod.hey.studios.build.BuildSettings.SETTING_JAVA_VERSION_1_8;
-import static mod.hey.studios.build.BuildSettings.SETTING_JAVA_VERSION_1_9;
-import static mod.hey.studios.build.BuildSettings.SETTING_NO_HTTP_LEGACY;
-import static mod.hey.studios.build.BuildSettings.SETTING_NO_WARNINGS;
+import static pro.sketchware.core.build.BuildSettings.SETTING_ANDROID_JAR_PATH;
+import static pro.sketchware.core.build.BuildSettings.SETTING_CLASSPATH;
+import static pro.sketchware.core.build.BuildSettings.SETTING_DEXER;
+import static pro.sketchware.core.build.BuildSettings.SETTING_ENABLE_LOGCAT;
+import static pro.sketchware.core.build.BuildSettings.SETTING_JAVA_VERSION;
+import static pro.sketchware.core.build.BuildSettings.SETTING_JAVA_VERSION_10;
+import static pro.sketchware.core.build.BuildSettings.SETTING_JAVA_VERSION_11;
+import static pro.sketchware.core.build.BuildSettings.SETTING_JAVA_VERSION_1_7;
+import static pro.sketchware.core.build.BuildSettings.SETTING_JAVA_VERSION_1_8;
+import static pro.sketchware.core.build.BuildSettings.SETTING_JAVA_VERSION_1_9;
+import static pro.sketchware.core.build.BuildSettings.SETTING_NO_HTTP_LEGACY;
+import static pro.sketchware.core.build.BuildSettings.SETTING_NO_WARNINGS;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -28,7 +28,7 @@ import pro.sketchware.R;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-import mod.hey.studios.build.BuildSettings;
+import pro.sketchware.core.build.BuildSettings;
 import pro.sketchware.databinding.ProjectConfigLayoutBinding;
 import pro.sketchware.util.SketchwareUtil;
 

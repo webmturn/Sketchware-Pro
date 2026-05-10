@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import pro.sketchware.core.util.ZipUtil;
+import pro.sketchware.core.build.BuildProgressReceiver;
 import pro.sketchware.core.build.ProjectBuilder;
 import pro.sketchware.core.util.EncryptedFileUtil;
 import pro.sketchware.SketchApplication;

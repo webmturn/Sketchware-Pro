@@ -1,4 +1,4 @@
-package mod.hey.studios.compiler.kotlin;
+package pro.sketchware.core.build.compiler;
 
 import java.io.File;
 import java.util.ArrayList;

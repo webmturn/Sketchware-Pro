@@ -36,7 +36,7 @@ import mod.hilal.saif.blocks.BlockTypeUtils;
 import mod.hey.studios.moreblock.ReturnMoreblockManager;
 import mod.hilal.saif.activities.tools.ConfigActivity;
 import mod.hilal.saif.blocks.BlocksHandler;
-import mod.pranav.viewbinding.ViewBindingBuilder;
+import pro.sketchware.core.build.ViewBindingBuilder;
 import pro.sketchware.R;
 import pro.sketchware.activities.resourceseditor.components.utils.StringsEditorManager;
 import pro.sketchware.blocks.ExtraBlocks;

@@ -1,4 +1,4 @@
-package mod.jbk.build.compiler.bundle;
+package pro.sketchware.core.build.compiler;
 
 import com.android.bundle.Config;
 import com.android.tools.build.bundletool.commands.BuildBundleCommand;

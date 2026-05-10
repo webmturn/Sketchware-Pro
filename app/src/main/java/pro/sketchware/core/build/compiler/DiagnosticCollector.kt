@@ -1,4 +1,4 @@
-package mod.hey.studios.compiler.kotlin
+package pro.sketchware.core.build.compiler
 
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSourceLocation

@@ -27,7 +27,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import mod.agus.jcoderz.editor.manifest.EditorManifest;
-import mod.hey.studios.build.BuildSettings;
+import pro.sketchware.core.build.BuildSettings;
 import mod.hey.studios.project.ProjectSettings;
 import mod.hey.studios.util.Helper;
 import mod.hilal.saif.android_manifest.AndroidManifestInjector;

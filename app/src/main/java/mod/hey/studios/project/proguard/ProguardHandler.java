@@ -10,7 +10,7 @@ import java.util.HashMap;
 import pro.sketchware.core.build.ProjectBuilder;
 import pro.sketchware.core.project.SketchwarePaths;
 import mod.hey.studios.util.Helper;
-import mod.jbk.build.BuildProgressReceiver;
+import pro.sketchware.core.build.BuildProgressReceiver;
 import mod.jbk.util.LogUtil;
 import pro.sketchware.util.FileUtil;
 

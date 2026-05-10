@@ -1,4 +1,4 @@
-package mod.pranav.viewbinding
+package pro.sketchware.core.build
 
 import org.w3c.dom.Node
 import java.io.File

@@ -34,7 +34,7 @@ import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.util.UIHelper;
 import pro.sketchware.core.codegen.EventRegistry;
 import mod.hey.studios.project.ProjectSettings;
-import mod.pranav.viewbinding.ViewBindingBuilder;
+import pro.sketchware.core.build.ViewBindingBuilder;
 import mod.agus.jcoderz.beans.ViewBeans;
 import pro.sketchware.R;
 
