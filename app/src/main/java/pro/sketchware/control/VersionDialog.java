@@ -10,7 +10,7 @@ import pro.sketchware.core.util.UIHelper;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.DialogAdvancedVersionControlBinding;
-import pro.sketchware.lib.validator.VersionNamePostfixValidator;
+import pro.sketchware.core.validation.VersionNamePostfixValidator;
 
 public class VersionDialog {
     private final MyProjectSettingActivity activity;

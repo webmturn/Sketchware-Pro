@@ -41,7 +41,7 @@ import pro.sketchware.databinding.ColorPickerBinding;
 import pro.sketchware.databinding.ColorPickerCustomAttrBinding;
 import pro.sketchware.databinding.ColorPickerSimpleHexBinding;
 import pro.sketchware.databinding.ItemAttrBinding;
-import pro.sketchware.lib.validator.ColorInputValidator;
+import pro.sketchware.core.validation.ColorInputValidator;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.PropertiesUtil;
 import pro.sketchware.utility.SketchwareUtil;

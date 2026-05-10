@@ -1,4 +1,4 @@
-package pro.sketchware.lib.validator;
+package pro.sketchware.core.validation;
 
 
 import mod.hey.studios.util.Helper;
@@ -8,7 +8,6 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.regex.Pattern;
 
-import pro.sketchware.core.validation.BaseValidator;
 import pro.sketchware.R;
 
 public class VersionNamePostfixValidator extends BaseValidator {

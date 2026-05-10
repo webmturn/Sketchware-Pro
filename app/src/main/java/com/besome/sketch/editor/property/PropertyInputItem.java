@@ -71,7 +71,7 @@ import pro.sketchware.databinding.PropertyPopupInputTextBinding;
 import pro.sketchware.databinding.PropertyPopupParentAttrBinding;
 import pro.sketchware.lib.base.BaseTextWatcher;
 import pro.sketchware.lib.highlighter.SyntaxScheme;
-import pro.sketchware.lib.validator.PropertyNameValidator;
+import pro.sketchware.core.validation.PropertyNameValidator;
 import pro.sketchware.utility.FileUtil;
 
 @SuppressLint("ViewConstructor")

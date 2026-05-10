@@ -37,8 +37,8 @@ import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.AddCustomListBinding;
 import pro.sketchware.databinding.AddCustomVariableBinding;
-import pro.sketchware.lib.validator.VariableModifierValidator;
-import pro.sketchware.lib.validator.VariableTypeValidator;
+import pro.sketchware.core.validation.VariableModifierValidator;
+import pro.sketchware.core.validation.VariableTypeValidator;
 import pro.sketchware.menu.ExtraMenuBean;
 import pro.sketchware.utility.SketchwareUtil;
 

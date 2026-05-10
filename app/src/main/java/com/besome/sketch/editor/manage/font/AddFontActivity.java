@@ -24,7 +24,7 @@ import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageFontAddBinding;
-import pro.sketchware.lib.validator.FontNameValidator;
+import pro.sketchware.core.validation.FontNameValidator;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.SketchwareUtil;
 

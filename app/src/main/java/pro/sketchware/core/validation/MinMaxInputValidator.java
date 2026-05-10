@@ -1,4 +1,4 @@
-package pro.sketchware.lib.validator;
+package pro.sketchware.core.validation;
 
 import android.content.Context;
 import android.text.Editable;
@@ -7,8 +7,6 @@ import android.text.InputFilter;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Locale;
-
-import pro.sketchware.core.validation.BaseValidator;
 
 public class MinMaxInputValidator extends BaseValidator {
     public int minValue;
