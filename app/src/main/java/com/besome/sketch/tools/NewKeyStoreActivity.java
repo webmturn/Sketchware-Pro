@@ -16,13 +16,13 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputLayout;
 
-import pro.sketchware.core.LowercaseNameValidator;
-import pro.sketchware.core.LengthRangeValidator;
-import pro.sketchware.core.VariableNameValidator;
-import pro.sketchware.core.SketchToast;
-import pro.sketchware.core.KeyStoreManager;
-import pro.sketchware.core.UIHelper;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.validation.LowercaseNameValidator;
+import pro.sketchware.core.validation.LengthRangeValidator;
+import pro.sketchware.core.validation.VariableNameValidator;
+import pro.sketchware.core.util.SketchToast;
+import pro.sketchware.core.build.KeyStoreManager;
+import pro.sketchware.core.util.UIHelper;
+import pro.sketchware.core.project.SketchwarePaths;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 

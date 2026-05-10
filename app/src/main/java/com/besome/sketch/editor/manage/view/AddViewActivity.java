@@ -21,11 +21,11 @@ import com.google.android.material.button.MaterialButtonToggleGroup;
 
 import java.util.ArrayList;
 
-import pro.sketchware.core.ActivityNameValidator;
-import pro.sketchware.core.SketchToast;
-import pro.sketchware.core.PresetLayoutFactory;
-import pro.sketchware.core.BlockConstants;
-import pro.sketchware.core.ViewUtil;
+import pro.sketchware.core.validation.ActivityNameValidator;
+import pro.sketchware.core.util.SketchToast;
+import pro.sketchware.core.ui.PresetLayoutFactory;
+import pro.sketchware.core.codegen.BlockConstants;
+import pro.sketchware.core.util.ViewUtil;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageScreenActivityAddTempBinding;

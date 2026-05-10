@@ -19,11 +19,11 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 
-import pro.sketchware.core.EventSelectedCallback;
-import pro.sketchware.core.SketchToast;
-import pro.sketchware.core.ProjectDataManager;
-import pro.sketchware.core.EventRegistry;
-import pro.sketchware.core.ViewUtil;
+import pro.sketchware.core.callback.EventSelectedCallback;
+import pro.sketchware.core.util.SketchToast;
+import pro.sketchware.core.project.ProjectDataManager;
+import pro.sketchware.core.codegen.EventRegistry;
+import pro.sketchware.core.util.ViewUtil;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.EventGridItemBinding;

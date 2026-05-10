@@ -13,7 +13,7 @@ import com.besome.sketch.editor.view.ItemView;
 
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
-import pro.sketchware.core.ViewUtil;
+import pro.sketchware.core.util.ViewUtil;
 
 public class ItemSpinner extends AppCompatTextView implements ItemView {
 

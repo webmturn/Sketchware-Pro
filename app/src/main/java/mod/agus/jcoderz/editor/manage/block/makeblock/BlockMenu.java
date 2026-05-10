@@ -9,7 +9,7 @@ import org.json.JSONObject;
 import java.io.File;
 
 import mod.jbk.util.LogUtil;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.utility.FileUtil;
 
 /**

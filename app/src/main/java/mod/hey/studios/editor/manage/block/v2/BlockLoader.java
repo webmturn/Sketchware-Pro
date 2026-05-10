@@ -22,7 +22,7 @@ import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.SketchApplication;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.SketchwareUtil;
 
@@ -224,7 +224,7 @@ public class BlockLoader {
     }
 
     /**
-     * Still used in {@link pro.sketchware.core.BlockView}, so it must exist (for now).
+     * Still used in {@link pro.sketchware.core.ui.BlockView}, so it must exist (for now).
      */
     public static void log(String message) {
         LogUtil.d("BlockLoader", message);

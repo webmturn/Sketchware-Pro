@@ -30,9 +30,9 @@ import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-import pro.sketchware.core.ProjectDataManager;
-import pro.sketchware.core.EncryptedFileUtil;
-import pro.sketchware.core.BaseFragment;
+import pro.sketchware.core.project.ProjectDataManager;
+import pro.sketchware.core.util.EncryptedFileUtil;
+import pro.sketchware.core.fragments.BaseFragment;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.FrManageFontListBinding;

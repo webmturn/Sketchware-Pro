@@ -2,7 +2,7 @@ package pro.sketchware.fragments.settings.events;
 
 import java.io.File;
 
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.project.SketchwarePaths;
 
 public class EventsManagerConstants {
     public static final File EVENT_EXPORT_LOCATION = new File(SketchwarePaths.getAbsolutePathOf(SketchwarePaths.EVENT_EXPORT_PATH));

@@ -10,8 +10,8 @@ import com.besome.sketch.lib.ui.CustomScrollView;
 
 import java.util.ArrayList;
 
-import pro.sketchware.core.WidgetPaletteIcon;
-import pro.sketchware.core.ViewUtil;
+import pro.sketchware.core.ui.WidgetPaletteIcon;
+import pro.sketchware.core.util.ViewUtil;
 import pro.sketchware.R;
 
 public class PaletteFavorite extends LinearLayout {

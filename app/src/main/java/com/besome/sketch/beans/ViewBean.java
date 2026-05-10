@@ -9,8 +9,8 @@ import com.google.gson.annotations.Expose;
 
 import java.util.HashMap;
 
-import pro.sketchware.core.ClassInfo;
-import pro.sketchware.core.ReflectiveToString;
+import pro.sketchware.core.project.ClassInfo;
+import pro.sketchware.core.util.ReflectiveToString;
 import mod.agus.jcoderz.beans.ViewBeans;
 import pro.sketchware.R;
 
@@ -22,13 +22,13 @@ import pro.sketchware.R;
  * layout hierarchy. Views contain sub-beans for layout properties ({@link LayoutBean}),
  * text properties ({@link TextBean}), and image properties ({@link ImageBean}).
  * <p>
- * Views are stored per-XML-file in {@link pro.sketchware.core.ProjectDataStore#viewMap}
+ * Views are stored per-XML-file in {@link pro.sketchware.core.project.ProjectDataStore#viewMap}
  * and rendered in the UI designer via {@link com.besome.sketch.editor.view.ViewPane}.
  *
  * @see LayoutBean
  * @see TextBean
  * @see ImageBean
- * @see pro.sketchware.core.ProjectDataStore
+ * @see pro.sketchware.core.project.ProjectDataStore
  */
 public class ViewBean extends ReflectiveToString implements Parcelable {
     public static final Parcelable.Creator<ViewBean> CREATOR = new Parcelable.Creator<>() {

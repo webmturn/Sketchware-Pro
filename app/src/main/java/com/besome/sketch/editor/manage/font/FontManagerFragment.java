@@ -22,9 +22,9 @@ import com.besome.sketch.beans.ProjectResourceBean;
 import java.io.File;
 import java.util.ArrayList;
 
-import pro.sketchware.core.FontCollectionManager;
-import pro.sketchware.core.BaseFragment;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.project.FontCollectionManager;
+import pro.sketchware.core.fragments.BaseFragment;
+import pro.sketchware.core.project.SketchwarePaths;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;
 import pro.sketchware.R;

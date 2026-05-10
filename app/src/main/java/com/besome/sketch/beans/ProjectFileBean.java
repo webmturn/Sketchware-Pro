@@ -28,8 +28,8 @@ import java.lang.annotation.Target;
  *   <li>{@link #OPTION_ACTIVITY_FAB} (bit 3) — has floating action button</li>
  * </ul>
  *
- * @see pro.sketchware.core.ProjectFileManager
- * @see pro.sketchware.core.ProjectDataStore
+ * @see pro.sketchware.core.project.ProjectFileManager
+ * @see pro.sketchware.core.project.ProjectDataStore
  */
 public class ProjectFileBean extends SelectableBean implements Parcelable {
     public static final Creator<ProjectFileBean> CREATOR = new Creator<>() {

@@ -7,7 +7,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-import pro.sketchware.core.BaseValidator;
+import pro.sketchware.core.validation.BaseValidator;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 

@@ -9,8 +9,8 @@ import com.google.gson.annotations.Expose;
 
 import java.util.ArrayList;
 
-import pro.sketchware.core.ClassInfo;
-import pro.sketchware.core.ComponentTypeMapper;
+import pro.sketchware.core.project.ClassInfo;
+import pro.sketchware.core.codegen.ComponentTypeMapper;
 
 /**
  * Represents a single block in the logic editor.
@@ -25,8 +25,8 @@ import pro.sketchware.core.ComponentTypeMapper;
  * Blocks form linked chains via {@link #nextBlock} (the next statement) and can contain
  * nested sub-stacks via {@link #subStack1} and {@link #subStack2} (for if/else, repeat, etc.).
  *
- * @see pro.sketchware.core.BlockInterpreter
- * @see pro.sketchware.core.BlockCodeRegistry
+ * @see pro.sketchware.core.codegen.BlockInterpreter
+ * @see pro.sketchware.core.codegen.BlockCodeRegistry
  */
 public class BlockBean extends SelectableBean implements Parcelable {
     public static final Parcelable.Creator<BlockBean> CREATOR = new Parcelable.Creator<>() {
@@ -198,7 +198,7 @@ public class BlockBean extends SelectableBean implements Parcelable {
 
     /**
      * Checks value equality with another BlockBean by comparing all fields
-     * including parameters. Used by {@link pro.sketchware.core.BlockHistoryManager}
+     * including parameters. Used by {@link pro.sketchware.core.project.BlockHistoryManager}
      * to detect actual changes before recording undo history.
      *
      * @param other the block to compare with

@@ -79,27 +79,27 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import pro.sketchware.core.BackgroundTasks;
-import pro.sketchware.core.SharedPrefsHelper;
-import pro.sketchware.core.DeviceUtil;
-import pro.sketchware.core.LayoutGenerator;
-import pro.sketchware.core.ProjectBuilder;
-import pro.sketchware.core.ViewEditorFragment;
-import pro.sketchware.core.SketchToast;
-import pro.sketchware.core.BlockHistoryManager;
-import pro.sketchware.core.ComponentListFragment;
-import pro.sketchware.core.ViewHistoryManager;
-import pro.sketchware.core.ProjectDataStore;
-import pro.sketchware.core.ProjectDataManager;
-import pro.sketchware.core.ResourceManager;
-import pro.sketchware.core.ProjectListManager;
-import pro.sketchware.core.TaskHost;
-import pro.sketchware.core.UIHelper;
-import pro.sketchware.core.EventListFragment;
-import pro.sketchware.core.SketchwarePaths;
-import pro.sketchware.core.MapValueHelper;
-import pro.sketchware.core.ProjectFilePaths;
-import pro.sketchware.core.SimpleException;
+import pro.sketchware.core.async.BackgroundTasks;
+import pro.sketchware.core.util.SharedPrefsHelper;
+import pro.sketchware.core.util.DeviceUtil;
+import pro.sketchware.core.codegen.LayoutGenerator;
+import pro.sketchware.core.build.ProjectBuilder;
+import pro.sketchware.core.fragments.ViewEditorFragment;
+import pro.sketchware.core.util.SketchToast;
+import pro.sketchware.core.project.BlockHistoryManager;
+import pro.sketchware.core.fragments.ComponentListFragment;
+import pro.sketchware.core.project.ViewHistoryManager;
+import pro.sketchware.core.project.ProjectDataStore;
+import pro.sketchware.core.project.ProjectDataManager;
+import pro.sketchware.core.project.ResourceManager;
+import pro.sketchware.core.project.ProjectListManager;
+import pro.sketchware.core.async.TaskHost;
+import pro.sketchware.core.util.UIHelper;
+import pro.sketchware.core.fragments.EventListFragment;
+import pro.sketchware.core.project.SketchwarePaths;
+import pro.sketchware.core.util.MapValueHelper;
+import pro.sketchware.core.build.ProjectFilePaths;
+import pro.sketchware.core.callback.SimpleException;
 import pro.sketchware.utility.UI;
 import mod.agus.jcoderz.editor.manage.permission.ManagePermissionActivity;
 import mod.agus.jcoderz.editor.manage.resource.ManageResourceActivity;
@@ -881,7 +881,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         var dialog = new MaterialAlertDialogBuilder(this).create();
         dialog.setTitle(R.string.design_file_selector_title_java);
         dialog.setIcon(R.drawable.ic_mtrl_java);
-        View customView = pro.sketchware.core.ViewUtil.inflateLayout(this, R.layout.file_selector_popup_select_java);
+        View customView = pro.sketchware.core.util.ViewUtil.inflateLayout(this, R.layout.file_selector_popup_select_java);
         RecyclerView recyclerView = customView.findViewById(R.id.file_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL, false));
         var adapter = new JavaFileAdapter(sc_id);
@@ -1240,8 +1240,8 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 Log.d("DesignActivity$BuildTask", "Step 2 timing: generateProjectFiles took "
                         + generateProjectFilesDuration + " ms");
                 long incrementalPrecheckStarted = System.currentTimeMillis();
-                pro.sketchware.core.IncrementalBuildCache buildCache =
-                        new pro.sketchware.core.IncrementalBuildCache(q.binDirectoryPath);
+                pro.sketchware.core.build.IncrementalBuildCache buildCache =
+                        new pro.sketchware.core.build.IncrementalBuildCache(q.binDirectoryPath);
                 buildCache.load();
                 String buildClasspath = builder.getClasspath();
                 boolean compiledClassesAvailable = new File(q.compiledClassesPath).exists()

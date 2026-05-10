@@ -17,12 +17,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
-import pro.sketchware.core.BlockView;
-import pro.sketchware.core.IdentifierValidator;
-import pro.sketchware.core.SketchToast;
-import pro.sketchware.core.UIHelper;
-import pro.sketchware.core.BlockConstants;
-import pro.sketchware.core.ViewUtil;
+import pro.sketchware.core.ui.BlockView;
+import pro.sketchware.core.validation.IdentifierValidator;
+import pro.sketchware.core.util.SketchToast;
+import pro.sketchware.core.util.UIHelper;
+import pro.sketchware.core.codegen.BlockConstants;
+import pro.sketchware.core.util.ViewUtil;
 import mod.hey.studios.moreblock.MoreblockValidator;
 import mod.hey.studios.moreblock.ReturnMoreblockManager;
 import mod.hey.studios.util.Helper;

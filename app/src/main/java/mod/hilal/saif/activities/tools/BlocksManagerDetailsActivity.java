@@ -42,7 +42,7 @@ import dev.pranav.filepicker.FilePickerOptions;
 import mod.hilal.saif.blocks.BlockTypeUtils;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.SketchwareUtil;
 

@@ -2,7 +2,7 @@ package com.besome.sketch.editor.property;
 
 
 import mod.hey.studios.util.Helper;
-import pro.sketchware.core.FormatUtil;
+import pro.sketchware.core.util.FormatUtil;
 import com.besome.sketch.editor.PropertyActivity;
 import android.content.Context;
 import android.util.Pair;
@@ -25,14 +25,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
-import pro.sketchware.core.RecentHistoryManager;
-import pro.sketchware.core.ClassInfo;
-import pro.sketchware.core.PropertyChangedCallback;
-import pro.sketchware.core.ViewBeanCallback;
-import pro.sketchware.core.ViewHistoryManager;
-import pro.sketchware.core.ProjectDataManager;
-import pro.sketchware.core.UIHelper;
-import pro.sketchware.core.EventRegistry;
+import pro.sketchware.core.project.RecentHistoryManager;
+import pro.sketchware.core.project.ClassInfo;
+import pro.sketchware.core.callback.PropertyChangedCallback;
+import pro.sketchware.core.callback.ViewBeanCallback;
+import pro.sketchware.core.project.ViewHistoryManager;
+import pro.sketchware.core.project.ProjectDataManager;
+import pro.sketchware.core.util.UIHelper;
+import pro.sketchware.core.codegen.EventRegistry;
 import mod.hey.studios.project.ProjectSettings;
 import mod.pranav.viewbinding.ViewBindingBuilder;
 import mod.agus.jcoderz.beans.ViewBeans;

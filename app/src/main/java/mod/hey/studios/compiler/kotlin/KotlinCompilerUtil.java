@@ -6,8 +6,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import pro.sketchware.core.ProjectBuilder;
-import pro.sketchware.core.ProjectFilePaths;
+import pro.sketchware.core.build.ProjectBuilder;
+import pro.sketchware.core.build.ProjectFilePaths;
 import pro.sketchware.utility.FilePathUtil;
 
 public class KotlinCompilerUtil {

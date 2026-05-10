@@ -1,0 +1,175 @@
+package pro.sketchware.core.util;
+
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.hardware.SensorManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Build;
+import android.os.Environment;
+import android.os.StatFs;
+import android.util.DisplayMetrics;
+import android.util.Log;
+
+import com.google.android.gms.common.GoogleApiAvailability;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Locale;
+
+public class DeviceUtil {
+  public static int getToolbarHeight(Context context) {
+    return (int)ViewUtil.dpToPx(context, 48.0F);
+  }
+  
+  public static String getCpuAbi() {
+    String abi = "";
+    if (Build.VERSION.SDK_INT >= 21) {
+      String[] parts = Build.SUPPORTED_ABIS;
+      if (parts != null && parts.length > 0) {
+        abi = parts[0];
+      } 
+    } else {
+      abi = Build.CPU_ABI;
+    } 
+    return abi;
+  }
+  
+  public static void updateBadgeCount(Context context, int count) {
+    String className = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName()).getComponent().getClassName();
+    Intent intent = new Intent("android.intent.action.BADGE_COUNT_UPDATE");
+    intent.putExtra("badge_count", count);
+    intent.putExtra("badge_count_package_name", context.getPackageName());
+    intent.putExtra("badge_count_class_name", className);
+    context.sendBroadcast(intent);
+  }
+  
+  public static boolean isGooglePlayAvailable(Activity activity) {
+    GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
+    int resultCode = googleApiAvailability.isGooglePlayServicesAvailable(activity);
+    if (resultCode != 0) {
+      googleApiAvailability.isUserResolvableError(resultCode);
+      return false;
+    } 
+    return true;
+  }
+  
+  public static String getAndroidVersionName() {
+    for (Field field : Build.VERSION_CODES.class.getFields()) {
+      try {
+        if (field.getInt(null) == Build.VERSION.SDK_INT)
+          return field.getName();
+      } catch (Exception exception) {
+        Log.w("DeviceUtil", "Failed to get version name field", exception);
+        return "";
+      }
+    }
+    return "";
+  }
+  
+  public static String getDeviceId(Context context) {
+    return "";
+  }
+  
+  public static boolean hasSensor(Context context, int sensorType) {
+    return ((SensorManager)context.getSystemService(Context.SENSOR_SERVICE)).getDefaultSensor(sensorType) != null;
+  }
+  
+  public static float[] getScreenDpi(Activity activity) {
+    DisplayMetrics displayMetrics = new DisplayMetrics();
+    activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+    return new float[] { displayMetrics.xdpi, displayMetrics.ydpi };
+  }
+  
+  public static long getFreeStorageMB() {
+    try {
+      StatFs statFs = new StatFs(Environment.getExternalStorageDirectory().getPath());
+      return statFs.getFreeBytes() / 1048576L;
+    } catch (Exception exception) {
+      return -1L;
+    } 
+  }
+  
+  public static ArrayList<String> getGoogleAccounts(Context context) {
+    ArrayList<String> accountNames = new ArrayList<>();
+    Account[] accounts = AccountManager.get(context).getAccountsByType("com.google");
+    for (int b = 0; b < accounts.length; b++) {
+      if ((accounts[b]).type.equals("com.google"))
+        accountNames.add((accounts[b]).name); 
+    } 
+    return accountNames;
+  }
+  
+  public static int[] getScreenResolution(Activity activity) {
+    DisplayMetrics displayMetrics = new DisplayMetrics();
+    activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+    return new int[] { displayMetrics.widthPixels, displayMetrics.heightPixels };
+  }
+  
+  public static int getVersionCode(Context context) {
+    int versionCode = 0;
+    try {
+      String packageName = context.getPackageName();
+      versionCode = (context.getPackageManager().getPackageInfo(packageName, 0)).versionCode;
+    } catch (PackageManager.NameNotFoundException e) {
+      Log.w("DeviceUtil", "Failed to get version code", e);
+    } 
+    return versionCode;
+  }
+  
+  public static String getVersionName(Context context) {
+    String versionName;
+    try {
+      String packageName = context.getPackageName();
+      versionName = (context.getPackageManager().getPackageInfo(packageName, 0)).versionName;
+    } catch (PackageManager.NameNotFoundException e) {
+      Log.w("DeviceUtil", "Failed to get version name", e);
+      versionName = "";
+    } 
+    return versionName;
+  }
+  
+  /**
+   * @deprecated Use {@link pro.sketchware.utility.UI#getStatusBarHeight(Context)} instead.
+   */
+  @Deprecated
+  public static int getStatusBarHeight(Context context) {
+    return pro.sketchware.utility.UI.getStatusBarHeight(context);
+  }
+  
+  public static Locale getLocale(Context context) {
+    Locale locale;
+    if (Build.VERSION.SDK_INT >= 24) {
+      locale = context.getResources().getConfiguration().getLocales().get(0);
+    } else {
+      locale = (context.getResources().getConfiguration()).locale;
+    } 
+    return locale;
+  }
+  
+  public static boolean isNetworkAvailable(Context context) {
+    int[] intValues = new int[2];
+    intValues[0] = 0;
+    intValues[1] = 1;
+    try {
+      ConnectivityManager connectivityManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+      int typeCount = intValues.length;
+      for (int typeIdx = 0; typeIdx < typeCount; typeIdx++) {
+        int networkType = intValues[typeIdx];
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if (networkInfo != null) {
+          int activeType = networkInfo.getType();
+          if (activeType == networkType)
+            return true; 
+        } 
+      } 
+    } catch (Exception exception) {
+      Log.w("DeviceUtil", "Failed to check network availability", exception);
+    }
+    return false;
+  }
+}

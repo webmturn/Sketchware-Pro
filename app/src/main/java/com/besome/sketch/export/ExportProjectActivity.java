@@ -34,20 +34,20 @@ import mod.jbk.util.TestkeySignBridge;
 import org.spongycastle.jce.provider.BouncyCastleProvider;
 
 import pro.sketchware.R;
-import pro.sketchware.core.BackgroundTasks;
-import pro.sketchware.core.EncryptedFileUtil;
-import pro.sketchware.core.LibraryManager;
-import pro.sketchware.core.MapValueHelper;
-import pro.sketchware.core.ProjectBuilder;
-import pro.sketchware.core.ProjectDataStore;
-import pro.sketchware.core.ProjectFileManager;
-import pro.sketchware.core.ProjectFilePaths;
-import pro.sketchware.core.ProjectListManager;
-import pro.sketchware.core.ResourceManager;
-import pro.sketchware.core.SketchwarePaths;
-import pro.sketchware.core.TaskHost;
-import pro.sketchware.core.VersionCodeValidator;
-import pro.sketchware.core.ZipUtil;
+import pro.sketchware.core.async.BackgroundTasks;
+import pro.sketchware.core.util.EncryptedFileUtil;
+import pro.sketchware.core.project.LibraryManager;
+import pro.sketchware.core.util.MapValueHelper;
+import pro.sketchware.core.build.ProjectBuilder;
+import pro.sketchware.core.project.ProjectDataStore;
+import pro.sketchware.core.project.ProjectFileManager;
+import pro.sketchware.core.build.ProjectFilePaths;
+import pro.sketchware.core.project.ProjectListManager;
+import pro.sketchware.core.project.ResourceManager;
+import pro.sketchware.core.project.SketchwarePaths;
+import pro.sketchware.core.async.TaskHost;
+import pro.sketchware.core.validation.VersionCodeValidator;
+import pro.sketchware.core.util.ZipUtil;
 import pro.sketchware.utility.FilePathUtil;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.SketchwareUtil;
@@ -482,7 +482,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
         }
 
         /**
-         * pro.sketchware.core.BaseAsyncTask's doWork() - runs in background thread
+         * BaseAsyncTask's doWork() - runs in background thread
          */
         public void doWork() {
             if (canceled) {
@@ -746,7 +746,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
         }
 
         /**
-         * pro.sketchware.core.BaseAsyncTask's onSuccess() - called on the UI thread after successful doWork()
+         * BaseAsyncTask's onSuccess() - called on the UI thread after successful doWork()
          */
         public void onSuccess() {
             var act = activity.get();
@@ -771,7 +771,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
         }
 
         /**
-         * Called by pro.sketchware.core.BaseAsyncTask if doWork() returned a non-empty String,
+         * Called by BaseAsyncTask if doWork() returned a non-empty String,
          * ergo, an error occurred.
          */
         public void onError(String errorMessage) {

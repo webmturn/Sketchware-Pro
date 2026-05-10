@@ -15,9 +15,9 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import pro.sketchware.core.ProjectListManager;
-import pro.sketchware.core.SketchwarePaths;
-import pro.sketchware.core.MapValueHelper;
+import pro.sketchware.core.project.ProjectListManager;
+import pro.sketchware.core.project.SketchwarePaths;
+import pro.sketchware.core.util.MapValueHelper;
 import pro.sketchware.activities.resourceseditor.ResourcesEditorActivity;
 import pro.sketchware.utility.XmlUtil;
 

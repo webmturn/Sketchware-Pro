@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.utility.InvokeUtil;
 
 public class ViewBeanParser {

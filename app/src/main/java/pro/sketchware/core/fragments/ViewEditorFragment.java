@@ -1,0 +1,668 @@
+package pro.sketchware.core.fragments;
+
+import android.animation.ObjectAnimator;
+import android.content.Intent;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import android.content.res.Configuration;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.view.MenuHost;
+import androidx.core.view.MenuProvider;
+import androidx.lifecycle.Lifecycle;
+
+import com.besome.sketch.beans.HistoryViewBean;
+import com.besome.sketch.beans.ProjectFileBean;
+import com.besome.sketch.beans.ViewBean;
+import com.besome.sketch.design.DesignActivity;
+import com.besome.sketch.editor.LogicEditorActivity;
+import com.besome.sketch.editor.PropertyActivity;
+import com.besome.sketch.editor.view.DraggingListener;
+import com.besome.sketch.editor.view.ViewEditor;
+import com.besome.sketch.editor.view.ViewProperty;
+import com.besome.sketch.editor.view.palette.PaletteWidget;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
+import org.xmlpull.v1.XmlPullParserException;
+
+import mod.hey.studios.util.Helper;
+import pro.sketchware.R;
+import pro.sketchware.utility.SketchwareUtil;
+import pro.sketchware.widgets.WidgetsCreatorManager;
+import pro.sketchware.core.callback.BuildCallback;
+import pro.sketchware.core.project.ProjectDataManager;
+import pro.sketchware.core.project.ProjectDataStore;
+import pro.sketchware.core.callback.ViewEditorCallback;
+import pro.sketchware.core.project.ViewHistoryManager;
+import pro.sketchware.core.util.ViewUtil;
+import pro.sketchware.core.project.WidgetCollectionManager;
+import pro.sketchware.core.codegen.XmlLayoutParser;
+
+public class ViewEditorFragment extends BaseFragment implements MenuProvider {
+
+    private ActivityResultLauncher<Intent> propertyLauncher;
+    public ViewEditor viewEditor;
+    private ProjectFileBean projectFileBean;
+    private boolean isFabEnabled = false;
+    private ViewProperty viewProperty;
+    private ObjectAnimator showPropertyViewAnimator;
+    private ObjectAnimator hidePropertyViewAnimator;
+    private boolean isPropertyViewVisible;
+    private boolean isDragging = false;
+    private String sc_id;
+
+    private WidgetsCreatorManager widgetsCreatorManager;
+
+    public ViewEditorFragment() {
+    }
+
+    private void initialize(ViewGroup viewGroup) {
+        MenuHost menuHost = requireActivity();
+        menuHost.addMenuProvider(this, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
+        viewEditor = viewGroup.findViewById(R.id.view_editor);
+        viewEditor.setScreenType(getResources().getConfiguration().orientation);
+        widgetsCreatorManager = new WidgetsCreatorManager(this);
+        viewEditor.widgetsCreatorManager = widgetsCreatorManager;
+        viewProperty = requireActivity().findViewById(R.id.view_property);
+        viewProperty.setOnPropertyListener(new ViewEditorCallback() {
+            @Override
+            public void onFavoritesChanged() {
+                viewEditor.setFavoriteData(WidgetCollectionManager.getInstance().getWidgets());
+            }
+
+            @Override
+            public void onPropertyRequested(String xmlName, ViewBean viewBean) {
+                openPropertyActivity(viewBean);
+            }
+        });
+        viewProperty.setOnPropertyValueChangedListener(viewBean -> {
+            refreshView(viewBean.id);
+            viewProperty.refreshPropertyGroups();
+            invalidateOptionsMenu();
+        });
+        viewProperty.setOnPropertyDeleted(viewBean -> {
+            viewEditor.deleteWidget(viewBean);
+            if (requireActivity() instanceof DesignActivity designActivity) {
+                designActivity.hideViewPropertyView();
+            }
+            SketchwareUtil.toast(Helper.getResString(R.string.common_word_deleted));
+        });
+        viewProperty.setOnEventClickListener(eventBean -> toLogicEditorActivity(eventBean.targetId, eventBean.eventName, eventBean.eventName));
+        viewProperty.setOnPropertyTargetChangeListener(viewEditor::updateSelection);
+        viewEditor.setOnWidgetSelectedListener(new BuildCallback() {
+            @Override
+            public void onSelectionChanged() {
+                updatePropertyViews();
+                viewProperty.refreshPropertyGroups();
+            }
+
+            @Override
+            public void onViewSelected(String viewId) {
+                updatePropertyViews();
+                viewProperty.selectWidgetById(viewId);
+            }
+
+            @Override
+            public void onViewSelectedWithProperty(boolean showProperty, String viewId) {
+                if (!viewId.isEmpty()) {
+                    updatePropertyViews();
+                    viewProperty.selectWidgetById(viewId);
+                    viewProperty.refreshPropertyGroups();
+                }
+
+                ViewEditorFragment.this.togglePropertyView(showProperty);
+            }
+        });
+        viewEditor.setOnDraggingListener(new DraggingListener() {
+            @Override
+            public boolean isAdmobEnabled() {
+                return ProjectDataManager.getLibraryManager(sc_id).getAdmob().isEnabled();
+            }
+
+            @Override
+            public void onDragStarted() {
+                isDragging = true;
+                ((DesignActivity) requireActivity()).setTouchEventEnabled(false);
+            }
+
+            @Override
+            public boolean isGoogleMapEnabled() {
+                return ProjectDataManager.getLibraryManager(sc_id).getGoogleMap().isEnabled();
+            }
+
+            @Override
+            public void onDragEnded() {
+                isDragging = false;
+                ((DesignActivity) requireActivity()).setTouchEventEnabled(true);
+            }
+        });
+        viewEditor.setOnHistoryChangeListener(this::invalidateOptionsMenu);
+        viewEditor.setFavoriteData(WidgetCollectionManager.getInstance().getWidgets());
+    }
+
+    public void initialize(ProjectFileBean projectFileBean) {
+        this.projectFileBean = projectFileBean;
+        isFabEnabled = projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB);
+        viewEditor.initialize(sc_id, projectFileBean);
+        viewEditor.refreshResourceManager();
+        viewProperty.initialize(sc_id, this.projectFileBean);
+        setupPalette();
+        refreshAllViews();
+        invalidateOptionsMenu();
+    }
+
+    private void updateFab(ViewBean viewBean) {
+        viewEditor.removeFab();
+        if (isFabEnabled) viewEditor.addFab(viewBean);
+    }
+
+    private void refreshView(String viewId) {
+        ViewBean viewBean;
+        if (viewId.equals("_fab")) {
+            viewBean = ProjectDataManager.getProjectDataManager(sc_id).getFabView(projectFileBean.getXmlName());
+        } else {
+            viewBean = ProjectDataManager.getProjectDataManager(sc_id).getViewBean(projectFileBean.getXmlName(), viewId);
+        }
+        updateViewDisplay(viewBean);
+        viewProperty.refreshPropertyGroups();
+    }
+
+    private void toLogicEditorActivity(String eventId, String eventName, String eventName2) {
+        Intent intent = new Intent(requireContext(), LogicEditorActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.putExtra("sc_id", sc_id);
+        intent.putExtra("id", eventId);
+        intent.putExtra("event", eventName);
+        intent.putExtra("project_file", projectFileBean);
+        intent.putExtra("event_text", eventName2);
+        requireContext().startActivity(intent);
+    }
+
+    public void loadViews(ArrayList<ViewBean> viewBeans) {
+        viewEditor.refreshResourceManager();
+        viewEditor.loadViews(ProjectDataStore.getSortedRootViews(viewBeans));
+    }
+
+    public void togglePropertyView(boolean showProperty) {
+        startAnimation();
+        if (!isPropertyViewVisible || !showProperty) {
+            cancelAnimations();
+            if (showProperty) {
+                showPropertyViewAnimator.start();
+            } else if (isPropertyViewVisible) {
+                hidePropertyViewAnimator.start();
+            }
+
+            isPropertyViewVisible = showProperty;
+        }
+    }
+
+    public void openPropertyActivity(ViewBean viewBean) {
+        Intent intent = new Intent(requireContext(), PropertyActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.putExtra("sc_id", sc_id);
+        intent.putExtra("bean", viewBean);
+        intent.putExtra("project_file", projectFileBean);
+        propertyLauncher.launch(intent);
+    }
+
+    private void clearAndLoadViews(ArrayList<ViewBean> viewBeans) {
+        clearViewEditor();
+        loadViews(viewBeans);
+    }
+
+    private void cancelAnimations() {
+        if (showPropertyViewAnimator != null && showPropertyViewAnimator.isRunning()) showPropertyViewAnimator.cancel();
+        if (hidePropertyViewAnimator != null && hidePropertyViewAnimator.isRunning()) hidePropertyViewAnimator.cancel();
+    }
+
+    public void updateViewDisplay(ViewBean viewBean) {
+        viewEditor.selectView(viewBean);
+    }
+
+    public void showHidePropertyView(boolean shouldShow) {
+        viewProperty.setVisibility(shouldShow ? View.VISIBLE : View.GONE);
+    }
+
+    public ProjectFileBean getProjectFileBean() {
+        return projectFileBean;
+    }
+
+    public void setupPalette() {
+        viewEditor.removeWidgetsAndLayouts();
+        viewEditor.setPaletteLayoutVisible(View.VISIBLE);
+        viewEditor.addWidgetLayout(PaletteWidget.LayoutType.a, "");
+        viewEditor.addWidgetLayout(PaletteWidget.LayoutType.b, "");
+        viewEditor.addWidget(PaletteWidget.WidgetType.b, "", "TextView", "TextView");
+        viewEditor.addWidgetLayout(PaletteWidget.LayoutType.c, "");
+        viewEditor.addWidgetLayout(PaletteWidget.LayoutType.d, "");
+        viewEditor.extraWidgetLayout("", "RadioGroup");
+        viewEditor.extraWidgetLayout("", "RelativeLayout");
+        widgetsCreatorManager.addWidgetsByTitle("Layouts");
+
+        viewEditor.paletteWidget.extraTitle(Helper.getResString(R.string.logic_editor_category_androidx_components), 0);
+        viewEditor.extraWidgetLayout("", "TabLayout");
+        viewEditor.extraWidgetLayout("", "BottomNavigationView");
+        viewEditor.extraWidgetLayout("", "CollapsingToolbarLayout");
+        viewEditor.extraWidgetLayout("", "CardView");
+        viewEditor.extraWidgetLayout("", "TextInputLayout");
+        viewEditor.extraWidgetLayout("", "SwipeRefreshLayout");
+        widgetsCreatorManager.addWidgetsByTitle("AndroidX");
+
+        viewEditor.addWidget(PaletteWidget.WidgetType.c, "", "EditText", "Edit Text");
+        viewEditor.extraWidget("", "AutoCompleteTextView", "AutoCompleteTextView");
+        viewEditor.extraWidget("", "MultiAutoCompleteTextView", "MultiAutoCompleteTextView");
+        viewEditor.addWidget(PaletteWidget.WidgetType.a, "", "Button", "Button");
+        viewEditor.extraWidget("", "MaterialButton", "MaterialButton");
+        viewEditor.addWidget(PaletteWidget.WidgetType.d, "", "ImageView", "default_image");
+        viewEditor.extraWidget("", "CircleImageView", "default_image");
+        viewEditor.addWidget(PaletteWidget.WidgetType.g, "", "CheckBox", "CheckBox");
+        viewEditor.extraWidget("", "RadioButton", "RadioButton");
+        viewEditor.addWidget(PaletteWidget.WidgetType.i, "", "Switch", "Switch");
+        viewEditor.addWidget(PaletteWidget.WidgetType.j, "", "SeekBar", "SeekBar");
+        viewEditor.addWidget(PaletteWidget.WidgetType.m, "", "ProgressBar", "ProgressBar");
+        viewEditor.extraWidget("", "RatingBar", "RatingBar");
+        viewEditor.extraWidget("", "SearchView", "SearchView");
+        viewEditor.extraWidget("", "VideoView", "VideoView");
+        viewEditor.addWidget(PaletteWidget.WidgetType.h, "", "WebView", "WebView");
+        widgetsCreatorManager.addWidgetsByTitle("Widgets");
+
+        viewEditor.paletteWidget.extraTitle(Helper.getResString(R.string.logic_editor_category_list), 1);
+        viewEditor.addWidget(PaletteWidget.WidgetType.e, "", "ListView", "ListView");
+        viewEditor.extraWidget("", "GridView", "GridView");
+        viewEditor.extraWidget("", "RecyclerView", "RecyclerView");
+        viewEditor.addWidget(PaletteWidget.WidgetType.f, "", "Spinner", "Spinner");
+        viewEditor.extraWidget("", "ViewPager", "ViewPager");
+        widgetsCreatorManager.addWidgetsByTitle("List");
+
+        viewEditor.paletteWidget.extraTitle(Helper.getResString(R.string.logic_editor_category_library), 1);
+        viewEditor.extraWidget("", "WaveSideBar", "WaveSideBar");
+        viewEditor.extraWidget("", "PatternLockView", "PatternLockView");
+        viewEditor.extraWidget("", "CodeView", "CodeView");
+        viewEditor.extraWidget("", "LottieAnimation", "LottieAnimation");
+        viewEditor.extraWidget("", "OTPView", "OTPView");
+        widgetsCreatorManager.addWidgetsByTitle("Library");
+
+        viewEditor.paletteWidget.extraTitle(Helper.getResString(R.string.logic_editor_category_google), 1);
+        viewEditor.addWidget(PaletteWidget.WidgetType.l, "", "AdView", "AdView");
+        viewEditor.addWidget(PaletteWidget.WidgetType.n, "", "MapView", "MapView");
+        viewEditor.extraWidget("", "SignInButton", "SignInButton");
+        viewEditor.extraWidget("", "YoutubePlayer", "YoutubePlayer");
+        widgetsCreatorManager.addWidgetsByTitle("Google");
+
+        viewEditor.paletteWidget.extraTitle(Helper.getResString(R.string.logic_editor_category_date_time), 1);
+        viewEditor.extraWidget("", "AnalogClock", "AnalogClock");
+        viewEditor.extraWidget("", "DigitalClock", "DigitalClock");
+        viewEditor.extraWidget("", "TimePicker", "TimePicker");
+        viewEditor.extraWidget("", "DatePicker", "DatePicker");
+        viewEditor.addWidget(PaletteWidget.WidgetType.k, "", "CalendarView", "CalendarView");
+        widgetsCreatorManager.addWidgetsByTitle("Date & Time");
+        widgetsCreatorManager.addExtraClasses();
+    }
+
+    private void startAnimation() {
+        if (showPropertyViewAnimator == null) {
+            showPropertyViewAnimator = ObjectAnimator.ofFloat(viewProperty, View.TRANSLATION_Y, 0.0F);
+            showPropertyViewAnimator.setDuration(700L);
+            showPropertyViewAnimator.setInterpolator(new DecelerateInterpolator());
+        }
+
+        if (hidePropertyViewAnimator == null) {
+            if (getActivity() == null) return;
+            hidePropertyViewAnimator = ObjectAnimator.ofFloat(viewProperty, View.TRANSLATION_Y, ViewUtil.dpToPx(requireActivity(), (float) viewProperty.getHeight()));
+            hidePropertyViewAnimator.setDuration(300L);
+            hidePropertyViewAnimator.setInterpolator(new DecelerateInterpolator());
+        }
+    }
+
+    public boolean isPropertyViewVisible() {
+        return isPropertyViewVisible;
+    }
+
+    private void onRedo() {
+        if (!isDragging) {
+            HistoryViewBean historyViewBean = ViewHistoryManager.getInstance(sc_id).redo(projectFileBean.getXmlName());
+            if (historyViewBean != null) {
+                int actionType = historyViewBean.getActionType();
+                if (actionType == HistoryViewBean.ACTION_TYPE_ADD) {
+                    for (ViewBean viewBean : historyViewBean.getAddedData()) {
+                        ProjectDataManager.getProjectDataManager(sc_id).addView(projectFileBean.getXmlName(), viewBean);
+                    }
+                    viewEditor.setSelectedItem(viewEditor.addViews(historyViewBean.getAddedData(), false), false);
+                } else if (actionType == HistoryViewBean.ACTION_TYPE_UPDATE) {
+                    ViewBean prevUpdateData = historyViewBean.getPrevUpdateData();
+                    ViewBean currentUpdateData = historyViewBean.getCurrentUpdateData();
+                    if (!prevUpdateData.id.equals(currentUpdateData.id)) {
+                        currentUpdateData.preId = prevUpdateData.id;
+                    }
+
+                    if (currentUpdateData.id.equals("_fab")) {
+                        ProjectDataManager.getProjectDataManager(sc_id).getFabView(projectFileBean.getXmlName()).copy(currentUpdateData);
+                    } else {
+                        ProjectDataManager.getProjectDataManager(sc_id).getViewBean(projectFileBean.getXmlName(), prevUpdateData.id).copy(currentUpdateData);
+                    }
+
+                    viewEditor.setSelectedItem(viewEditor.selectView(currentUpdateData), false);
+                } else if (actionType == HistoryViewBean.ACTION_TYPE_REMOVE) {
+                    for (ViewBean viewBean : historyViewBean.getRemovedData()) {
+                        ProjectDataManager.getProjectDataManager(sc_id).removeView(projectFileBean, viewBean);
+                    }
+                    viewEditor.removeViews(historyViewBean.getRemovedData(), false);
+                    viewEditor.clearSelection();
+                } else if (actionType == HistoryViewBean.ACTION_TYPE_MOVE) {
+                    ViewBean movedData = historyViewBean.getMovedData();
+                    ViewBean viewBean = ProjectDataManager.getProjectDataManager(sc_id).getViewBean(projectFileBean.getXmlName(), movedData.id);
+                    viewBean.copy(movedData);
+                    viewEditor.setSelectedItem(viewEditor.moveView(viewBean, false), false);
+                } else if (actionType == HistoryViewBean.ACTION_TYPE_OVERRIDE) {
+                    ProjectDataManager.getProjectDataManager(sc_id).viewMap.put(projectFileBean.getXmlName(), historyViewBean.getAddedData());
+                    refreshAllViews();
+                }
+            }
+            invalidateOptionsMenu();
+        }
+    }
+
+    public void refreshAllViews() {
+        invalidateOptionsMenu();
+        viewEditor.invalidateXmlStringCache();
+        if (projectFileBean != null) {
+            clearAndLoadViews(ProjectDataManager.getProjectDataManager(sc_id).getViews(projectFileBean.getXmlName()));
+            updateFab(ProjectDataManager.getProjectDataManager(sc_id).getFabView(projectFileBean.getXmlName()));
+        }
+    }
+
+    public void refreshFavorites() {
+        viewEditor.setFavoriteData(WidgetCollectionManager.getInstance().getWidgets());
+    }
+
+    private void invalidateOptionsMenu() {
+        if (getActivity() != null) {
+            getActivity().invalidateOptionsMenu();
+        }
+    }
+
+    public void clearViewEditor() {
+        viewEditor.resetViewPane();
+    }
+
+    private void onUndo() {
+        if (!isDragging) {
+            HistoryViewBean historyViewBean = ViewHistoryManager.getInstance(sc_id).undo(projectFileBean.getXmlName());
+            if (historyViewBean != null) {
+                int actionType = historyViewBean.getActionType();
+                if (actionType == HistoryViewBean.ACTION_TYPE_ADD) {
+                    for (ViewBean view : historyViewBean.getAddedData()) {
+                        ProjectDataManager.getProjectDataManager(sc_id).removeView(projectFileBean, view);
+                    }
+                    viewEditor.removeViews(historyViewBean.getAddedData(), false);
+                    viewEditor.clearSelection();
+                } else if (actionType == HistoryViewBean.ACTION_TYPE_UPDATE) {
+                    ViewBean prevUpdateData = historyViewBean.getPrevUpdateData();
+                    ViewBean currentUpdateData = historyViewBean.getCurrentUpdateData();
+                    if (!prevUpdateData.id.equals(currentUpdateData.id)) {
+                        prevUpdateData.preId = currentUpdateData.id;
+                    }
+                    if (currentUpdateData.id.equals("_fab")) {
+                        ProjectDataManager.getProjectDataManager(sc_id).getFabView(projectFileBean.getXmlName()).copy(prevUpdateData);
+                    } else {
+                        ProjectDataManager.getProjectDataManager(sc_id).getViewBean(projectFileBean.getXmlName(), currentUpdateData.id).copy(prevUpdateData);
+                    }
+                    viewEditor.setSelectedItem(viewEditor.selectView(prevUpdateData), false);
+                } else if (actionType == HistoryViewBean.ACTION_TYPE_REMOVE) {
+                    for (ViewBean view : historyViewBean.getRemovedData()) {
+                        ProjectDataManager.getProjectDataManager(sc_id).addView(projectFileBean.getXmlName(), view);
+                    }
+                    viewEditor.setSelectedItem(viewEditor.addViews(historyViewBean.getRemovedData(), false), false);
+                } else if (actionType == HistoryViewBean.ACTION_TYPE_MOVE) {
+                    ViewBean movedData = historyViewBean.getMovedData();
+                    ViewBean viewBean = ProjectDataManager.getProjectDataManager(sc_id).getViewBean(projectFileBean.getXmlName(), movedData.id);
+                    viewBean.preIndex = movedData.index;
+                    viewBean.index = movedData.preIndex;
+                    viewBean.parent = movedData.preParent;
+                    viewBean.preParent = movedData.parent;
+                    viewBean.parentType = movedData.preParentType;
+                    viewBean.preParentType = movedData.parentType;
+                    viewEditor.setSelectedItem(viewEditor.moveView(viewBean, false), false);
+                } else if (actionType == HistoryViewBean.ACTION_TYPE_OVERRIDE) {
+                    ProjectDataManager.getProjectDataManager(sc_id).viewMap.put(projectFileBean.getXmlName(), historyViewBean.getRemovedData());
+                    refreshAllViews();
+                }
+            }
+            invalidateOptionsMenu();
+        }
+    }
+
+    public void updatePropertyViews() {
+        ArrayList<ViewBean> viewBeanArrayList = ProjectDataStore.getSortedRootViews(ProjectDataManager.getProjectDataManager(sc_id).getViews(projectFileBean.getXmlName()));
+        ViewBean viewBean;
+        if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB)) {
+            viewBean = ProjectDataManager.getProjectDataManager(sc_id).getFabView(projectFileBean.getXmlName());
+        } else {
+            viewBean = null;
+        }
+        viewProperty.addActivityViews(viewBeanArrayList, viewBean);
+    }
+
+    @Override
+    public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+        menuInflater.inflate(R.menu.design_view_menu, menu);
+        menu.findItem(R.id.menu_view_redo).setEnabled(false);
+        menu.findItem(R.id.menu_view_undo).setEnabled(false);
+        if (projectFileBean != null) {
+            menu.findItem(R.id.menu_view_redo).setEnabled(ViewHistoryManager.getInstance(sc_id).canRedo(projectFileBean.getXmlName()));
+            menu.findItem(R.id.menu_view_undo).setEnabled(ViewHistoryManager.getInstance(sc_id).canUndo(projectFileBean.getXmlName()));
+        }
+    }
+
+    @Override
+    public boolean onMenuItemSelected(@NonNull MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.menu_view_redo) {
+            onRedo();
+            return true;
+        } else if (itemId == R.id.menu_view_undo) {
+            onUndo();
+            return true;
+        }
+        return false;
+    }
+
+    public void showImportXmlDialog() {
+        if (projectFileBean == null || sc_id == null) return;
+
+        LinearLayout container = new LinearLayout(requireContext());
+        container.setOrientation(LinearLayout.VERTICAL);
+        int pad = (int) (16 * getResources().getDisplayMetrics().density);
+        container.setPadding(pad, pad, pad, 0);
+
+        TextView layoutLabel = new TextView(requireContext());
+        layoutLabel.setText("Layout XML");
+        layoutLabel.setTextSize(12);
+        container.addView(layoutLabel);
+
+        EditText layoutInput = new EditText(requireContext());
+        layoutInput.setHint(Helper.getResString(R.string.menu_import_xml_layout_hint));
+        layoutInput.setMinLines(5);
+        layoutInput.setMaxLines(12);
+        layoutInput.setGravity(android.view.Gravity.TOP);
+        layoutInput.setHorizontallyScrolling(true);
+        layoutInput.setTextSize(12);
+        container.addView(layoutInput);
+
+        TextView dimensLabel = new TextView(requireContext());
+        dimensLabel.setText("dimens.xml");
+        dimensLabel.setTextSize(12);
+        dimensLabel.setPadding(0, pad / 2, 0, 0);
+        container.addView(dimensLabel);
+
+        EditText dimensInput = new EditText(requireContext());
+        dimensInput.setHint(Helper.getResString(R.string.menu_import_xml_dimens_hint));
+        dimensInput.setMinLines(3);
+        dimensInput.setMaxLines(8);
+        dimensInput.setGravity(android.view.Gravity.TOP);
+        dimensInput.setHorizontallyScrolling(true);
+        dimensInput.setTextSize(12);
+        container.addView(dimensInput);
+
+        ScrollView scrollView = new ScrollView(requireContext());
+        scrollView.addView(container);
+
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(Helper.getResString(R.string.menu_import_xml_title))
+                .setView(scrollView)
+                .setPositiveButton(R.string.common_word_import, (dialog, which) -> {
+                    String layoutXml = layoutInput.getText().toString().trim();
+                    String dimensXml = dimensInput.getText().toString().trim();
+                    if (layoutXml.isEmpty()) return;
+                    performImport(layoutXml, dimensXml.isEmpty() ? null : dimensXml);
+                })
+                .setNegativeButton(R.string.common_word_cancel, null)
+                .show();
+    }
+
+    private void performImport(String layoutXml, String dimensXml) {
+        try {
+            XmlLayoutParser.ParseResult result = XmlLayoutParser.parse(layoutXml, dimensXml);
+            List<ViewBean> parsed = result.viewBeans;
+
+            if (parsed.isEmpty()) {
+                SketchwareUtil.toast(Helper.getResString(R.string.menu_import_xml_empty));
+                return;
+            }
+
+            String fileName = projectFileBean.getXmlName();
+            ArrayList<ViewBean> existingViews = ProjectDataManager.getProjectDataManager(sc_id).getViews(fileName);
+            Set<String> existingIds = new HashSet<>();
+            if (existingViews != null) {
+                for (ViewBean v : existingViews) {
+                    existingIds.add(v.id);
+                }
+            }
+
+            ArrayList<ViewBean> importedViews = new ArrayList<>();
+            for (ViewBean bean : parsed) {
+                if (existingIds.contains(bean.id)) {
+                    String originalId = bean.id;
+                    int suffix = 2;
+                    while (existingIds.contains(originalId + "_" + suffix)) {
+                        suffix++;
+                    }
+                    String newId = originalId + "_" + suffix;
+                    for (ViewBean other : parsed) {
+                        if (originalId.equals(other.parent)) {
+                            other.parent = newId;
+                        }
+                    }
+                    bean.id = newId;
+                    bean.name = newId;
+                }
+                existingIds.add(bean.id);
+                importedViews.add(bean);
+            }
+
+            for (ViewBean bean : importedViews) {
+                ProjectDataManager.getProjectDataManager(sc_id).addView(fileName, bean);
+            }
+
+            viewEditor.addViews(importedViews, true);
+            invalidateOptionsMenu();
+
+            String msg = String.format(Helper.getResString(R.string.menu_import_xml_success), importedViews.size());
+            if (!result.warnings.isEmpty()) {
+                msg += "\n" + result.warnings.size() + " warning(s)";
+            }
+            SketchwareUtil.toast(msg);
+
+        } catch (XmlPullParserException | IOException e) {
+            String msg = String.format(Helper.getResString(R.string.menu_import_xml_error), e.getMessage());
+            SketchwareUtil.toast(msg);
+        }
+    }
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        invalidateOptionsMenu();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfiguration) {
+        super.onConfigurationChanged(newConfiguration);
+        viewEditor.setScreenType(newConfiguration.orientation);
+        viewEditor.isLayoutChanged = true;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        propertyLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (result.getResultCode() == -1 && result.getData() != null) {
+                        updateViewDisplay(result.getData().getParcelableExtra("bean"));
+                    }
+                    Intent data = result.getData();
+                    if (data != null && data.getBooleanExtra("is_edit_image", false)) {
+                        for (ViewBean viewBean : ProjectDataManager.getProjectDataManager(sc_id).getViews(projectFileBean.getXmlName())) {
+                            updateViewDisplay(viewBean);
+                        }
+                        if (isFabEnabled) {
+                            updateViewDisplay(ProjectDataManager.getProjectDataManager(sc_id).getFabView(projectFileBean.getXmlName()));
+                        }
+                    }
+                    invalidateOptionsMenu();
+                });
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater layoutInflater, ViewGroup parent, Bundle bundle) {
+        ViewGroup viewGroup = (ViewGroup) layoutInflater.inflate(R.layout.fr_graphic_editor, parent, false);
+        initialize(viewGroup);
+        if (bundle != null) {
+            sc_id = bundle.getString("sc_id");
+        } else {
+            sc_id = requireActivity().getIntent().getStringExtra("sc_id");
+        }
+
+        return viewGroup;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle newInstanceState) {
+        newInstanceState.putString("sc_id", sc_id);
+        super.onSaveInstanceState(newInstanceState);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (viewProperty != null) {
+            viewProperty.saveProperties();
+        }
+    }
+}

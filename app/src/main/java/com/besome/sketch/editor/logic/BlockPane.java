@@ -1,10 +1,10 @@
 package com.besome.sketch.editor.logic;
 
-import pro.sketchware.core.ClassInfo;
-import pro.sketchware.core.BlockView;
-import pro.sketchware.core.BaseBlockView;
-import pro.sketchware.core.ComponentTypeMapper;
-import pro.sketchware.core.ViewUtil;
+import pro.sketchware.core.project.ClassInfo;
+import pro.sketchware.core.ui.BlockView;
+import pro.sketchware.core.ui.BaseBlockView;
+import pro.sketchware.core.codegen.ComponentTypeMapper;
+import pro.sketchware.core.util.ViewUtil;
 import android.content.Context;
 import android.graphics.Point;
 import android.view.View;
@@ -215,7 +215,7 @@ public class BlockPane extends RelativeLayout {
         for (int b = 0; b < blockView.childViews.size(); b++) {
           View view = blockView.childViews.get(b);
           boolean isBlockView = view instanceof BlockView;
-          if ((isBlockView || view instanceof pro.sketchware.core.FieldBlockView) && (!isBlockView || !view.getTag().toString().equals(excludeBlockId))) {
+          if ((isBlockView || view instanceof pro.sketchware.core.ui.FieldBlockView) && (!isBlockView || !view.getTag().toString().equals(excludeBlockId))) {
             int[] intValues = new int[2];
             view.getLocationOnScreen(intValues);
             addSnapPoint(intValues, view, 0);
@@ -546,7 +546,7 @@ public class BlockPane extends RelativeLayout {
       if (blockView.isParameter) {
         if (view instanceof BlockView)
           this.activeBlock.copyBlockDimensions((BaseBlockView)view, true, false, 0); 
-        if (view instanceof pro.sketchware.core.FieldBlockView)
+        if (view instanceof pro.sketchware.core.ui.FieldBlockView)
           this.activeBlock.copyBlockDimensions((BaseBlockView)view, true, false, 0); 
       } else {
         end = ((Integer)this.currentSnapPoint[2]).intValue();
@@ -614,8 +614,8 @@ public class BlockPane extends RelativeLayout {
         result = ((Integer) ((BlockView) target[1]).getTag()).intValue();
       }
     }
-    if (view instanceof pro.sketchware.core.FieldBlockView) {
-      result = ((Integer) ((pro.sketchware.core.FieldBlockView) view).parentBlock.getTag()).intValue();
+    if (view instanceof pro.sketchware.core.ui.FieldBlockView) {
+      result = ((Integer) ((pro.sketchware.core.ui.FieldBlockView) view).parentBlock.getTag()).intValue();
     }
     return result;
   }

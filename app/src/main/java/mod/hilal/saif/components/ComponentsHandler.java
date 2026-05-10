@@ -19,8 +19,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import pro.sketchware.core.ComponentCodeGenerator;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.codegen.ComponentCodeGenerator;
+import pro.sketchware.core.project.SketchwarePaths;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.OldResourceIdMapper;
 import pro.sketchware.R;
@@ -273,7 +273,7 @@ public class ComponentsHandler {
     }
 
     /**
-     * Used at {@link pro.sketchware.core.ComponentCodeGenerator#getExtraVar(String, String, ComponentCodeGenerator.AccessModifier, String...)}
+     * Used at {@link pro.sketchware.core.codegen.ComponentCodeGenerator#getExtraVar(String, String, ComponentCodeGenerator.AccessModifier, String...)}
      * to get Custom Components' fields.
      */
     public static String getExtraVar(String name, String code, String varName) {

@@ -22,9 +22,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-import pro.sketchware.core.ProjectDataManager;
-import pro.sketchware.core.SketchwarePaths;
-import pro.sketchware.core.UIHelper;
+import pro.sketchware.core.project.ProjectDataManager;
+import pro.sketchware.core.project.SketchwarePaths;
+import pro.sketchware.core.util.UIHelper;
 import dev.aldi.sayuti.editor.injection.AppCompatInjection;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;

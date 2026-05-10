@@ -39,9 +39,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.IntStream;
 
-import pro.sketchware.core.PermissionFragment;
-import pro.sketchware.core.SharedPrefsHelper;
-import pro.sketchware.core.ProjectListManager;
+import pro.sketchware.core.fragments.PermissionFragment;
+import pro.sketchware.core.util.SharedPrefsHelper;
+import pro.sketchware.core.project.ProjectListManager;
 import mod.hey.studios.project.ProjectTracker;
 import mod.hey.studios.project.backup.BackupRestoreManager;
 import pro.sketchware.R;

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import mod.hilal.saif.events.EventsHandler;
-import pro.sketchware.core.EventCodeGenerator;
+import pro.sketchware.core.codegen.EventCodeGenerator;
 import pro.sketchware.utility.FileUtil;
 
 public class ComponentExtraCode {

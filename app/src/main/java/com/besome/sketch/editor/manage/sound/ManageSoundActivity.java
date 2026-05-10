@@ -18,13 +18,13 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 
 import java.lang.ref.WeakReference;
 
-import pro.sketchware.core.BackgroundTasks;
-import pro.sketchware.core.SketchToast;
-import pro.sketchware.core.SoundCollectionManager;
-import pro.sketchware.core.SoundImportFragment;
-import pro.sketchware.core.TaskHost;
-import pro.sketchware.core.UIHelper;
-import pro.sketchware.core.SoundListFragment;
+import pro.sketchware.core.async.BackgroundTasks;
+import pro.sketchware.core.util.SketchToast;
+import pro.sketchware.core.project.SoundCollectionManager;
+import pro.sketchware.core.fragments.SoundImportFragment;
+import pro.sketchware.core.async.TaskHost;
+import pro.sketchware.core.util.UIHelper;
+import pro.sketchware.core.fragments.SoundListFragment;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageSoundBinding;
 

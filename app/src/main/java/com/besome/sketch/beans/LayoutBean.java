@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 
-import pro.sketchware.core.ReflectiveToString;
+import pro.sketchware.core.util.ReflectiveToString;
 
 public class LayoutBean extends ReflectiveToString implements Parcelable {
     public static final Parcelable.Creator<LayoutBean> CREATOR = new Parcelable.Creator<>() {

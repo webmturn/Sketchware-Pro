@@ -20,12 +20,12 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 
 import java.util.ArrayList;
 
-import pro.sketchware.core.ProjectDataStore;
-import pro.sketchware.core.ProjectFileManager;
-import pro.sketchware.core.ProjectDataManager;
-import pro.sketchware.core.UIHelper;
-import pro.sketchware.core.PresetLayoutFactory;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.project.ProjectDataStore;
+import pro.sketchware.core.project.ProjectFileManager;
+import pro.sketchware.core.project.ProjectDataManager;
+import pro.sketchware.core.util.UIHelper;
+import pro.sketchware.core.ui.PresetLayoutFactory;
+import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.R;
 import pro.sketchware.databinding.FileSelectorPopupSelectXmlActivityItemBinding;
 import pro.sketchware.databinding.FileSelectorPopupSelectXmlBinding;

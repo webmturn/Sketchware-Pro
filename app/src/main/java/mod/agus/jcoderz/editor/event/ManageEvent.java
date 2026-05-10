@@ -2,8 +2,8 @@ package mod.agus.jcoderz.editor.event;
 
 import java.util.ArrayList;
 
-import pro.sketchware.core.ClassInfo;
-import pro.sketchware.core.ComponentCodeGenerator;
+import pro.sketchware.core.project.ClassInfo;
+import pro.sketchware.core.codegen.ComponentCodeGenerator;
 import mod.hey.studios.util.Helper;
 import mod.hilal.saif.events.EventsHandler;
 import pro.sketchware.R;
@@ -12,7 +12,7 @@ import pro.sketchware.blocks.generator.components.analyzers.BlockReturnAnalyzer;
 public class ManageEvent {
 
     /**
-     * Used in {@link pro.sketchware.core.EventRegistry#getEventsForClass(ClassInfo)} to retrieve extra Events of Components.
+     * Used in {@link pro.sketchware.core.codegen.EventRegistry#getEventsForClass(ClassInfo)} to retrieve extra Events of Components.
      */
     public static void addExtraEvents(ClassInfo classInfo, ArrayList<String> events) {
         if (classInfo.matchesType("RatingBar")) {
@@ -77,7 +77,7 @@ public class ManageEvent {
     }
 
     /**
-     * Used in {@link pro.sketchware.core.EventRegistry#getListenersForClass(ClassInfo)}
+     * Used in {@link pro.sketchware.core.codegen.EventRegistry#getListenersForClass(ClassInfo)}
      * to get extra listeners for Components and Widgets.
      */
     public static void addExtraListeners(ClassInfo classInfo, ArrayList<String> listeners) {
@@ -157,7 +157,7 @@ public class ManageEvent {
     }
 
     /**
-     * Used in {@link pro.sketchware.core.EventRegistry#getEventsForListener(String)} to get extra listeners' Events.
+     * Used in {@link pro.sketchware.core.codegen.EventRegistry#getEventsForListener(String)} to get extra listeners' Events.
      */
     public static void addEventsForListener(String eventName, ArrayList<String> list) {
         switch (eventName) {
@@ -665,7 +665,7 @@ public class ManageEvent {
     }
 
     /**
-     * @return Code of extra listeners, used in {@link pro.sketchware.core.ComponentCodeGenerator#getListenerCode(String, String, String)}
+     * @return Code of extra listeners, used in {@link pro.sketchware.core.codegen.ComponentCodeGenerator#getListenerCode(String, String, String)}
      */
     public static String getExtraListenerCode(String listenerName, String targetId, String listenerLogic) {
         return switch (listenerName) {

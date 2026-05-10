@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 
 import com.google.android.material.card.MaterialCardView;
 
-import pro.sketchware.core.BaseFragment;
+import pro.sketchware.core.fragments.BaseFragment;
 import pro.sketchware.databinding.FragmentSettingsAppearanceBinding;
 import pro.sketchware.utility.UI;
 import pro.sketchware.utility.theme.ThemeManager;

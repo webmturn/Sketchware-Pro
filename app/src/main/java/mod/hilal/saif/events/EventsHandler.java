@@ -8,13 +8,13 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import pro.sketchware.core.ClassInfo;
-import pro.sketchware.core.EventRegistry;
+import pro.sketchware.core.project.ClassInfo;
+import pro.sketchware.core.codegen.EventRegistry;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;
 import mod.jbk.util.OldResourceIdMapper;
 import pro.sketchware.R;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.model.CustomEvent;
 import pro.sketchware.model.CustomListener;
 import pro.sketchware.utility.FileUtil;

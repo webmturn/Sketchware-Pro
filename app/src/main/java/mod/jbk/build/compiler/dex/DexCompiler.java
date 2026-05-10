@@ -12,7 +12,7 @@ import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import pro.sketchware.core.ProjectBuilder;
+import pro.sketchware.core.build.ProjectBuilder;
 import mod.hey.studios.project.ProjectSettings;
 import pro.sketchware.utility.FileUtil;
 

@@ -16,14 +16,14 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 
 import java.util.ArrayList;
 
-import pro.sketchware.core.DeviceUtil;
-import pro.sketchware.core.UniqueNameValidator;
-import pro.sketchware.core.ImageCollectionManager;
-import pro.sketchware.core.WidgetCollectionManager;
-import pro.sketchware.core.SketchToast;
-import pro.sketchware.core.ResourceManager;
-import pro.sketchware.core.UIHelper;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.util.DeviceUtil;
+import pro.sketchware.core.validation.UniqueNameValidator;
+import pro.sketchware.core.project.ImageCollectionManager;
+import pro.sketchware.core.project.WidgetCollectionManager;
+import pro.sketchware.core.util.SketchToast;
+import pro.sketchware.core.project.ResourceManager;
+import pro.sketchware.core.util.UIHelper;
+import pro.sketchware.core.project.SketchwarePaths;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageCollectionShowWidgetBinding;

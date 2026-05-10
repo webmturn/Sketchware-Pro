@@ -11,8 +11,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import pro.sketchware.core.ProjectDataStore;
-import pro.sketchware.core.ProjectDataManager;
+import pro.sketchware.core.project.ProjectDataStore;
+import pro.sketchware.core.project.ProjectDataManager;
 import mod.hilal.saif.activities.tools.ConfigActivity;
 
 public class ExtraBlocks {

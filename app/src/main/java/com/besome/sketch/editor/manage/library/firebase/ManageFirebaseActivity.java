@@ -30,9 +30,9 @@ import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import pro.sketchware.core.SharedPrefsHelper;
-import pro.sketchware.core.DeviceUtil;
-import pro.sketchware.core.SketchToast;
+import pro.sketchware.core.util.SharedPrefsHelper;
+import pro.sketchware.core.util.DeviceUtil;
+import pro.sketchware.core.util.SketchToast;
 import dev.pranav.filepicker.FilePickerCallback;
 import dev.pranav.filepicker.FilePickerDialogFragment;
 import dev.pranav.filepicker.FilePickerOptions;

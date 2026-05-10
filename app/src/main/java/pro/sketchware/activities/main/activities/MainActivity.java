@@ -43,8 +43,8 @@ import java.util.Objects;
 
 import pro.sketchware.utility.CrashLogManager;
 
-import pro.sketchware.core.SharedPrefsHelper;
-import pro.sketchware.core.DeviceUtil;
+import pro.sketchware.core.util.SharedPrefsHelper;
+import pro.sketchware.core.util.DeviceUtil;
 import mod.hey.studios.project.backup.BackupFactory;
 import mod.hey.studios.project.backup.BackupRestoreManager;
 import mod.hey.studios.util.Helper;

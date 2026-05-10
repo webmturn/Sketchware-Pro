@@ -40,9 +40,9 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Objects;
 
-import pro.sketchware.core.UriPathResolver;
-import pro.sketchware.core.BitmapUtil;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.util.UriPathResolver;
+import pro.sketchware.core.util.BitmapUtil;
+import pro.sketchware.core.project.SketchwarePaths;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ActivityIconCreatorBinding;

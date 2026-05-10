@@ -24,7 +24,7 @@ import mod.hey.studios.code.SrcCodeEditor;
 import mod.hey.studios.util.Helper;
 import mod.remaker.view.CustomAttributeView;
 import pro.sketchware.R;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.databinding.ActivityManageCustomAttributeBinding;
 import pro.sketchware.databinding.CustomDialogAttributeBinding;
 import pro.sketchware.databinding.DialogCreateNewFileLayoutBinding;

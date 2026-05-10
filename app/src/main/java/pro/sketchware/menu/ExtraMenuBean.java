@@ -28,12 +28,12 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import pro.sketchware.core.FieldBlockView;
-import pro.sketchware.core.ProjectDataStore;
-import pro.sketchware.core.ProjectDataManager;
-import pro.sketchware.core.BlockConstants;
-import pro.sketchware.core.SketchwarePaths;
-import pro.sketchware.core.ViewUtil;
+import pro.sketchware.core.ui.FieldBlockView;
+import pro.sketchware.core.project.ProjectDataStore;
+import pro.sketchware.core.project.ProjectDataManager;
+import pro.sketchware.core.codegen.BlockConstants;
+import pro.sketchware.core.project.SketchwarePaths;
+import pro.sketchware.core.util.ViewUtil;
 import dev.pranav.filepicker.FilePickerCallback;
 import dev.pranav.filepicker.FilePickerDialogFragment;
 import dev.pranav.filepicker.FilePickerOptions;

@@ -27,8 +27,8 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
-import pro.sketchware.core.BaseFragment;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.fragments.BaseFragment;
+import pro.sketchware.core.project.SketchwarePaths;
 import dev.pranav.filepicker.FilePickerCallback;
 import dev.pranav.filepicker.FilePickerDialogFragment;
 import dev.pranav.filepicker.FilePickerOptions;

@@ -1,0 +1,301 @@
+package pro.sketchware.core.codegen;
+
+import static com.google.android.material.color.MaterialColors.harmonizeWithPrimary;
+
+import android.content.Context;
+import android.view.ContextThemeWrapper;
+
+import pro.sketchware.R;
+import pro.sketchware.SketchApplication;
+import pro.sketchware.menu.DefaultExtraMenuBean;
+
+/**
+ * Maps block opCodes to their display colors using Material You color harmonization.
+ * <p>
+ * Colors are assigned by category (view operations, variable operations, list operations,
+ * control flow, operators, math, etc.) and harmonized with the app primary color
+ * via harmonizeWithPrimary.
+ *
+ * @see BlockSpecRegistry
+ * @see BlockCodeRegistry
+ */
+public class BlockColorMapper {
+    /**
+     * Returns the harmonized color for a block, using the application context.
+     *
+     * @param opcode    the block opCode
+     * @param blockType the block type character
+     * @return the ARGB color int
+     */
+    public static int getBlockColor(String opcode, String blockType) {
+        Context context = new ContextThemeWrapper(SketchApplication.getContext(), R.style.Theme_SketchwarePro);
+        return getBlockColor(context, opcode, blockType);
+    }
+
+    /**
+     * Returns the harmonized color for a block, using the given themed context.
+     * <p>
+     * Color assignment rules:
+     * <ul>
+     *   <li>Hat blocks ({@code "h"}) → orange {@code #c88330}</li>
+     *   <li>View operations → blue {@code #4a6cd4}</li>
+     *   <li>Variable operations → orange {@code #ee7d16}</li>
+     *   <li>List operations → dark orange {@code #cc5b22}</li>
+     *   <li>Control flow (if/repeat) → gold {@code #e1a92a}</li>
+     *   <li>Operators/strings → green {@code #5cb722}</li>
+     *   <li>Math → teal {@code #23b9a9}</li>
+     *   <li>Component references → light blue {@code #2ca5e2}</li>
+     * </ul>
+     *
+     * @param context   a themed context for color harmonization
+     * @param opcode    the block opCode
+     * @param blockType the block type character
+     * @return the ARGB color int
+     */
+    public static int getBlockColor(Context context, String opcode, String blockType) {
+        int viewType = harmonizeWithPrimary(context, 0xff4a6cd4);
+
+        if (blockType.equals("h")) {
+            return harmonizeWithPrimary(context, 0xffc88330);
+        }
+
+        return switch (opcode) {
+            case "getResStr" -> harmonizeWithPrimary(context, 0xff7c83db);
+            case "getVar" -> switch (blockType) {
+                case "v" -> viewType;
+                case "p" -> harmonizeWithPrimary(context, 0xff2ca5e2);
+                case "l" -> harmonizeWithPrimary(context, 0xffcc5b22);
+                default -> harmonizeWithPrimary(context, 0xffee7d16);
+            };
+            case "addListInt", "insertListInt", "deleteList", "getAtListInt", "indexListInt",
+                 "lengthList", "containListInt", "clearList", "addListStr", "insertListStr",
+                 "getAtListStr", "indexListStr", "containListStr", "addListMap", "insertListMap",
+                 "getAtListMap", "setListMap", "containListMap", "addMapToList", "insertMapToList",
+                 "getMapInList" -> harmonizeWithPrimary(context, 0xffcc5b22);
+            case "setVarBoolean", "setVarInt", "increaseInt", "decreaseInt", "setVarString",
+                 "mapCreateNew", "mapPut", "mapGet", "mapContainKey", "mapRemoveKey", "mapSize",
+                 "mapIsEmpty", "mapClear", "mapGetAllKeys" ->
+                    harmonizeWithPrimary(context, 0xffee7d16);
+            case "repeat", "forever", "break", "continue", "if", "ifElse" ->
+                    harmonizeWithPrimary(context, 0xffe1a92a);
+            case "true", "false", "<", "=", ">", "&&", "||", "not", "+", "-", "*", "/", "%",
+                 "random", "stringLength", "stringJoin", "stringIndex", "stringLastIndex",
+                 "stringSub", "stringEquals", "stringContains", "stringReplace",
+                 "stringReplaceFirst", "stringReplaceAll", "toNumber", "trim", "toUpperCase",
+                 "toLowerCase", "toString", "toStringWithDecimal", "toStringFormat",
+                 "addSourceDirectly", "strToMap", "mapToStr", "strToListMap", "listMapToStr" ->
+                    harmonizeWithPrimary(context, 0xff5cb722);
+            case "mathGetDip", "mathGetDisplayWidth", "mathGetDisplayHeight", "mathPi", "mathE",
+                 "mathPow", "mathMin", "mathMax", "mathSqrt", "mathAbs", "mathRound", "mathCeil",
+                 "mathFloor", "mathSin", "mathCos", "mathTan", "mathAsin", "mathAcos", "mathAtan",
+                 "mathExp", "mathLog", "mathLog10", "mathToRadian", "mathToDegree" ->
+                    harmonizeWithPrimary(context, 0xff23b9a9);
+            case "viewOnClick", "isDrawerOpen", "openDrawer", "closeDrawer", "setEnable",
+                 "getEnable", "setVisible", "setClickable", "setText", "setTypeface", "getText",
+                 "setBgColor", "setBgResource", "setTextColor", "setImage", "setColorFilter",
+                 "requestFocus", "setRotate", "getRotate", "setAlpha", "getAlpha",
+                 "setTranslationX", "getTranslationX", "setTranslationY", "getTranslationY",
+                 "setScaleX", "getScaleX", "setScaleY", "getScaleY", "getLocationX", "getLocationY",
+                 "setChecked", "getChecked", "seekBarGetMax", "seekBarGetProgress", "seekBarSetMax",
+                 "seekBarSetProgress", "setThumbResource", "setTrackResource", "listSetData",
+                 "listSetCustomViewData", "listRefresh", "listSetItemChecked",
+                 "listGetCheckedPosition", "listGetCheckedPositions", "listGetCheckedCount",
+                 "listSmoothScrollTo", "spnSetData", "spnRefresh", "spnSetSelection",
+                 "spnGetSelection", "webViewLoadUrl", "webViewGetUrl", "webViewSetCacheMode",
+                 "webViewCanGoBack", "webViewCanGoForward", "webViewGoBack", "webViewGoForward",
+                 "webViewClearCache", "webViewClearHistory", "webViewStopLoading", "webViewZoomIn",
+                 "webViewZoomOut", "calendarViewGetDate", "calendarViewSetDate",
+                 "calendarViewSetMinDate", "calnedarViewSetMaxDate", "calendarViewSetMaxDate", "adViewLoadAd",
+                 "setImageFilePath", "setImageUrl", "setHint", "setHintTextColor",
+                 "progressBarSetIndeterminate", "mapViewSetMapType", "mapViewMoveCamera",
+                 "mapViewZoomTo", "mapViewZoomIn", "mapViewZoomOut", "mapViewAddMarker",
+                 "mapViewSetMarkerInfo", "mapViewSetMarkerPosition", "mapViewSetMarkerColor",
+                 "mapViewSetMarkerIcon", "mapViewSetMarkerVisible" -> viewType;
+            case "doToast", "copyToClipboard", "setTitle", "intentSetAction", "intentSetData",
+                 "intentSetScreen", "intentPutExtra", "intentSetFlags", "startActivity",
+                 "intentGetString", "finishActivity", "fileGetData", "fileSetData",
+                 "fileRemoveData", "calendarGetNow", "calendarAdd", "calendarSet", "calendarFormat",
+                 "calendarDiff", "calendarGetTime", "calendarSetTime", "vibratorAction",
+                 "timerAfter", "timerEvery", "timerCancel", "dialogSetTitle", "dialogSetMessage",
+                 "dialogOkButton", "dialogCancelButton", "dialogNeutralButton", "dialogShow",
+                 "dialogDismiss", "mediaplayerCreate", "mediaplayerStart", "mediaplayerPause",
+                 "mediaplayerSeek", "mediaplayerGetCurrent", "mediaplayerGetDuration",
+                 "mediaplayerIsPlaying", "mediaplayerSetLooping", "mediaplayerIsLooping",
+                 "mediaplayerReset", "mediaplayerRelease", "soundpoolCreate", "soundpoolLoad",
+                 "soundpoolStreamPlay", "soundpoolStreamStop", "objectanimatorSetTarget",
+                 "objectanimatorSetProperty", "objectanimatorSetValue", "objectanimatorSetFromTo",
+                 "objectanimatorSetDuration", "objectanimatorSetRepeatMode",
+                 "objectanimatorSetRepeatCount", "objectanimatorSetInterpolator",
+                 "objectanimatorStart", "objectanimatorCancel", "objectanimatorIsRunning",
+                 "firebaseAdd", "firebaseDelete", "firebasePush", "firebaseGetPushKey",
+                 "firebaseGetChildren", "firebaseauthCreateUser", "firebaseauthSignInUser",
+                 "firebaseauthSignInAnonymously", "firebaseauthIsLoggedIn",
+                 "firebaseauthGetCurrentUser", "firebaseauthGetUid", "firebaseauthResetPassword",
+                 "firebaseauthSignOutUser", "firebaseStartListen", "firebaseStopListen",
+                 "gyroscopeStartListen", "gyroscopeStopListen", "interstitialadCreate",
+                 "interstitialadLoadAd", "interstitialadShow", "firebasestorageUploadFile",
+                 "firebasestorageDownloadFile", "firebasestorageDelete", "camerastarttakepicture",
+                 "filepickerstartpickfiles", "requestnetworkSetParams", "requestnetworkSetHeaders",
+                 "requestnetworkStartRequestNetwork", "requestnetworkUploadFile",
+                 "googleSignInInit", "googleSignInLaunch", "googleSignOut",
+                 "phoneAuthSendCode", "phoneAuthResendCode", "phoneAuthSignIn",
+                 "fcmGetToken", "fcmSubscribeTopic", "fcmUnsubscribeTopic",
+                 "textToSpeechSetPitch",
+                 "textToSpeechSetSpeechRate", "textToSpeechSpeak", "textToSpeechIsSpeaking",
+                 "textToSpeechStop", "textToSpeechShutdown", "speechToTextStartListening",
+                 "speechToTextStopListening", "speechToTextShutdown",
+                 "bluetoothConnectReadyConnection", "bluetoothConnectReadyConnectionToUuid",
+                 "bluetoothConnectStartConnection", "bluetoothConnectStartConnectionToUuid",
+                 "bluetoothConnectStopConnection", "bluetoothConnectSendData",
+                 "bluetoothConnectIsBluetoothEnabled", "bluetoothConnectIsBluetoothActivated",
+                 "bluetoothConnectActivateBluetooth", "bluetoothConnectGetPairedDevices",
+                 "bluetoothConnectGetRandomUuid", "locationManagerRequestLocationUpdates",
+                 "locationManagerRemoveUpdates", "notifCreateChannel", "notifSetChannel", "notifSetTitle", "notifSetContent",
+                 "notifSetSmallIcon", "notifSetAutoCancel", "notifSetPriority",
+                 "notifSetClickIntent", "notifShow", "notifCancel" -> harmonizeWithPrimary(context, 0xff2ca5e2);
+            case "sqliteOpen", "sqliteClose", "sqliteExecSQL", "sqliteRawQuery",
+                 "sqliteMoveToFirst", "sqliteMoveToNext", "sqliteIsAfterLast",
+                 "sqliteGetString", "sqliteGetNumber", "sqliteGetCount",
+                 "sqliteCloseCursor", "sqliteIsOpen",
+                 "sqliteBeginTransaction", "sqliteSetTransactionSuccessful",
+                 "sqliteEndTransaction", "sqliteForEachRow",
+                 "sqliteEnableWAL", "sqliteCursorIsNull" -> harmonizeWithPrimary(context, 0xffa1887f);
+            case "fileutildelete", "fileutilcopy", "fileutilwrite", "fileutilread", "fileutilmove",
+                 "fileutilisexist", "fileutilmakedir", "fileutillistdir", "fileutilisdir",
+                 "fileutilisfile", "fileutillength", "fileutilStartsWith", "fileutilEndsWith",
+                 "fileutilGetLastSegmentPath", "getExternalStorageDir", "getPackageDataDir",
+                 "getPublicDir", "resizeBitmapFileRetainRatio", "resizeBitmapFileToSquare",
+                 "resizeBitmapFileToCircle", "resizeBitmapFileWithRoundedBorder",
+                 "cropBitmapFileFromCenter", "rotateBitmapFile", "scaleBitmapFile",
+                 "skewBitmapFile", "setBitmapFileColorFilter", "setBitmapFileBrightness",
+                 "setBitmapFileContrast", "getJpegRotate" ->
+                    harmonizeWithPrimary(context, 0xffa1887f);
+            default -> 0xff8a55d7;
+        };
+    }
+
+    public static String getListTypeName(int listType) {
+        return switch (listType) {
+            case 1 -> "List Number";
+            case 2 -> "List String";
+            case 3 -> "List Map";
+            default -> "";
+        };
+    }
+
+    public static String getComponentCategory(String blockName) {
+        return switch (blockName) {
+            case "spinner", "adview", "textview", "switch", "imageview", "calendarview", "view",
+                 "progressbar", "webview", "listview", "checkbox", "edittext", "mapview" -> "v";
+            case "soundpool", "requestnetwork", "objectanimator", "dialog", "texttospeech",
+                 "intent", "locationmanager", "firebase", "speechtotext", "calendar", "file",
+                 "firebaseauth", "timer", "gyroscope", "mediaplayer", "bluetoothconnect",
+                 "vibrator", "firebasestorage", "phoneauth",
+                 "googlelogin", "cloudmessage", "notification", "sqlite" -> "p";
+            case "varMap" -> "a";
+            case "listInt", "listMap", "listStr" -> "l";
+            default -> "v";
+        };
+    }
+
+    public static String getMapTypeName(int componentType) {
+        return componentType == 3 ? "Map" : "";
+    }
+
+    /**
+     * @return The placeholder name for block menu from its type name
+     */
+    public static String getComponentDisplayName(String typeName) {
+        return switch (typeName) {
+            case "spinner" -> "Spinner";
+            case "tablayout" -> "TabLayout";
+            case "soundpool" -> "SoundPool";
+            case "requestnetwork" -> "RequestNetwork";
+            case "filepicker" -> "FilePicker";
+            case "patternview" -> "PatternLockView";
+            case "objectanimator" -> "ObjectAnimator";
+            case "viewpager" -> "ViewPager";
+            case "adview" -> "AdView";
+            case "progressdialog" -> "ProgressDialog";
+            case "camera" -> "Camera";
+            case "dialog" -> "Dialog";
+            case "datepickerdialog" -> "DatePickerDialog";
+            case "texttospeech" -> "TextToSpeech";
+            case "intent" -> "Intent";
+            case "textview" -> "TextView";
+            case "locationmanager" -> "LocationManager";
+            case "switch" -> "Switch";
+            case "imageview" -> "ImageView";
+            case "varInt" -> "Number";
+            case "varMap" -> "Map";
+            case "varStr" -> "String";
+            case "searchview" -> "SearchView";
+            case "firebase" -> "Firebase DB";
+            case "bottomnavigation" -> "BottomNavigation";
+            case "calendarview" -> "CalendarView";
+            case "speechtotext" -> "SpeechToText";
+            case "calendar" -> "Calendar";
+            case "actv" -> "AutoComplete";
+            case "file" -> "SharedPreferences";
+            case "list" -> "List";
+            case "view" -> "View";
+            case "radiobutton" -> "RadioButton";
+            case "firebaseauth" -> "Firebase Auth";
+            case "mactv" -> "MultiAutoComplete";
+            case "timer" -> "Timer";
+            case "listInt" -> "List Number";
+            case "listMap" -> "List Map";
+            case "listStr" -> "List String";
+            case "varBool" -> "Boolean";
+            case "gridview" -> "GridView";
+            case "gyroscope" -> "Gyroscope";
+            case "ratingbar" -> "RatingBar";
+            case "videoad" -> "VideoAd";
+            case "mediaplayer" -> "MediaPlayer";
+            case "notification" -> "Notification";
+            case "sqlite" -> "SQLiteDatabase";
+            case "bluetoothconnect" -> "BluetoothConnect";
+            case "mapview" -> "MapView";
+            case "vibrator" -> "Vibrator";
+            case "progressbar" -> "ProgressBar";
+            case "webview" -> "WebView";
+            case "interstitialad" -> "InterstitialAd";
+            case "videoview" -> "VideoView";
+            case "listBool" -> "List Boolean";
+            case "listview" -> "ListView";
+            case "checkbox" -> "CheckBox";
+            case "edittext" -> "EditText";
+            case "firebasestorage" -> "FirebaseStorage";
+            case "timepickerdialog" -> "TimePickerDialog";
+            case "seekbar" -> "SeekBar";
+            case "sidebar" -> "WaveSideBar";
+            case "badgeview" -> "BadgeView";
+            case "circleimageview" -> "CircleImageView";
+            case "customViews" -> "CustomView";
+            case "asynctask" -> "AsyncTask";
+            case "activity" -> "Context";
+            case "otpview" -> "OTPView";
+            case "lottie" -> "LottieAnimation";
+            case "phoneauth" -> "FirebasePhoneAuth";
+            case "codeview" -> "CodeView";
+            case "recyclerview" -> "RecyclerView";
+            case "resource" -> "Image";
+            case "googlelogin" -> "FirebaseGoogleSignIn";
+            case "youtubeview" -> "YoutubePlayer";
+            case "cardview" -> "CardView";
+            case "radiogroup" -> "RadioGroup";
+            case "color" -> "Color";
+            case "textinputlayout" -> "TextInputLayout";
+            case "collapsingtoolbar" -> "CollapsingToolbarLayout";
+            case "cloudmessage" -> "FirebaseCloudMessage";
+            case "resource_bg" -> "BackgroundImage";
+            case "datepicker" -> "DatePicker";
+            case "timepicker" -> "TimePicker";
+            case "swiperefreshlayout" -> "SwipeRefreshLayout";
+            case "signinbutton" -> "SignInButton";
+            case "materialButton" -> "MaterialButton";
+            case "fragmentAdapter" -> "FragmentAdapter";
+            default -> DefaultExtraMenuBean.getName(typeName);
+        };
+    }
+}
