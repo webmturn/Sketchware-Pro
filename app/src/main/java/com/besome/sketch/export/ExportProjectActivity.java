@@ -482,7 +482,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
         }
 
         /**
-         * pro.sketchware.core.BaseAsyncTask's doWork() - runs in background thread
+         * BaseAsyncTask's doWork() - runs in background thread
          */
         public void doWork() {
             if (canceled) {
@@ -746,7 +746,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
         }
 
         /**
-         * pro.sketchware.core.BaseAsyncTask's onSuccess() - called on the UI thread after successful doWork()
+         * BaseAsyncTask's onSuccess() - called on the UI thread after successful doWork()
          */
         public void onSuccess() {
             var act = activity.get();
@@ -771,7 +771,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
         }
 
         /**
-         * Called by pro.sketchware.core.BaseAsyncTask if doWork() returned a non-empty String,
+         * Called by BaseAsyncTask if doWork() returned a non-empty String,
          * ergo, an error occurred.
          */
         public void onError(String errorMessage) {
