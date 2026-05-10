@@ -14,14 +14,14 @@
 |--------|---------|------|
 | `pro/` | 383 | 目标包，已合并 v1 的 167 文件 |
 | `com/besome/sketch/` | 253 | 旧主包，**待整体迁移** |
-| `com/`（其他） | 1 | 残留 |
+| `com/bumptech/glide/signature/` | 1 | **Glide 反射桥接** —— 用户补丁的 package-private 类，需放在 `com.bumptech.glide.signature` 包下才能访问内部成员，**不能简单合入 pro.sketchware** |
 | `kellinwood/` | 44 | **第三方库**（Ken Ellinwood zipsigner/zipio/logging），来源外部 |
 
 ### 1.2 双重 util — 命名风格分裂
 
 | 包 | 文件数 | 命名特征 | 代表文件 |
 |----|-------|---------|---------|
-| `pro.sketchware.util` | 36（顶层）+ 9（子包） | 混合命名（`Helper`、`UI`、`Network`、`FileUtil`、`SketchwareUtil` 等） | `Helper.java`、`SketchwareUtil.java`、`FileUtil.java` |
+| `pro.sketchware.util` | 35（顶层）+ 9（子包） | 混合命名（`Helper`、`UI`、`Network`、`FileUtil`、`SketchwareUtil` 等） | `Helper.java`、`SketchwareUtil.java`、`FileUtil.java` |
 | `pro.sketchware.core.util` | 18 | 一致后缀 `XxxUtil`（Kotlin 风格） | `BitmapUtil.java`、`DateTimeUtil.java`、`ZipUtil.java` |
 
 **重叠风险点**：
@@ -45,12 +45,12 @@
 ### 1.4 fragment 分散三处
 
 ```
-pro.sketchware.core.fragments/                15 files  通用编辑器/管理 fragment
-pro.sketchware.activities.main.fragments/     12 files  主页 fragment 树（projects、projects_store/{adapters,api,classes}）
-pro.sketchware.fragments.settings/            15 files  设置子 fragment（appearance 1、block/selector{,/details} 6、events{,/creator,/details} 4、language 4）
+pro.sketchware.core.fragments/                15 files  通用编辑器/管理 fragment（与 activity 解耦）
+pro.sketchware.activities.main.fragments/     12 files  主页 fragment 树（projects、projects_store/{adapters,api,classes}）—— 与 MainActivity 强耦合
+pro.sketchware.fragments.settings/            15 files  设置子 fragment（appearance 1、block/selector{,/details} 6、events{,/creator,/details} 4、language 4）—— 与 SettingsActivity 强耦合
 ```
 
-三个位置的 fragment 性质差异大，但定位重叠，需要统一规则。
+三处性质差异大：core 一支属于通用层，main / settings 两支与 activity 强耦合。处理策略见 §3.1（main 保留原位、settings 改入 `activities.settings.fragments/`、`pro.sketchware.fragments/` 顶层删除）。
 
 ### 1.5 com.besome.sketch 子包分布（253 文件）
 
@@ -113,11 +113,11 @@ import kellinwood.*         共 35 处
 
 ### 1.8 res/**/*.xml 视图标签依赖（v1 漏报项）
 
-实测 **34 处**布局 XML 直接以 FQN 引用 `com.besome.sketch.*` 类（v1 Phase 8 已确立的 XML 同步模式）：
+实测 **41 行匹配 / 21 个 layout 文件**（包含开标签 + 闭合标签；自闭合 widget 计 1 行，双标签 widget 计 2 行）直接以 FQN 引用 `com.besome.sketch.*` 类（v1 Phase 8 已确立的 XML 同步模式）：
 
-| FQN 类 | XML 引用次数 | 涉及阶段 |
-|--------|------------|---------|
-| `com.besome.sketch.lib.ui.{EasyDeleteEditText,CustomScrollView,CustomHorizontalScrollView,CustomViewPager,CircleImageView}` | 14+ | Phase 12 |
+| FQN 类 | XML 行匹配 | 涉及阶段 |
+|--------|-----------|---------|
+| `com.besome.sketch.lib.ui.{EasyDeleteEditText,CustomScrollView,CustomHorizontalScrollView,CustomViewPager,CircleImageView}`（含闭合标签） | 21 | Phase 12 |
 | `com.besome.sketch.editor.view.{ViewPane,ViewProperty,ViewEditor,ViewDummy,ViewEvents,ViewLogicEditor}` | 8 | Phase 14b |
 | `com.besome.sketch.editor.view.palette.{PaletteWidget,PaletteFavorite}` | 2 | Phase 14b |
 | `com.besome.sketch.editor.logic.{PaletteBlock,LogicTopMenu,PaletteSelector}` | 3 | Phase 14a |
@@ -127,8 +127,11 @@ import kellinwood.*         共 35 处
 | `com.besome.sketch.editor.manage.ViewBlockCollectionEditor` | 1 | Phase 14c |
 | `com.besome.sketch.design.DesignDrawer` | 1 | Phase 15 |
 | `com.besome.sketch.MainDrawer` | 1 | Phase 15 |
+| **合计** | **41** | |
 
-**所有 Phase 必须在源代码 FQN 替换的同时同步更新 res/**/*.xml**，并在残留扫描中明确包含 XML 文件。
+**统计口径**：使用 `Select-String -Pattern '<com\.besome\.sketch\.'` 跨 `app/src/main/res/layout/*.xml` 计行匹配数。每个 widget 实例若在 XML 中以 `<X .../>`（自闭合）出现计 1 行；若以 `<X>...</X>` 出现，开标签 + 闭合标签共计 2 行。**lib.ui 这一类含较多双标签实例，故行数（21）>=widget 实例数**。
+
+**所有 Phase 必须在源代码 FQN 替换的同时同步更新 res/**/*.xml**，并在残留扫描中明确包含 XML 文件（同时匹配开标签和闭合标签）。
 
 ---
 
@@ -205,31 +208,37 @@ app/src/main/java/
     └── kellinwood/                       (保留作者名作 vendor 标识；下设 logging/、security/zipsigner/、zipio/)
 ```
 
-**注意**：`com/`、`kellinwood/` 顶层包将完全消失（kellinwood 内容下沉到 `pro.sketchware.third_party.kellinwood`）。
+**注意**：`com/besome/`、`kellinwood/` 顶层包将完全消失（kellinwood 内容下沉到 `pro.sketchware.third_party.kellinwood`）。`com/bumptech/glide/signature/` 因 Glide 反射桥接的 package-private 约束**必须保留在原位**。
 
 ### 2.2 不再需要的包
 
 迁移完成后应删除（顶层目录）：
 
 - `com/besome/sketch/`
-- `com/`（如无其他子包）
+- `com/besome/`（如无其他子包）
 - `kellinwood/`（移到 `pro.sketchware.third_party.kellinwood`，保留 logging/security/zipio 内部子树原样）
+
+**保留**：
+
+- `com/bumptech/glide/signature/`（1 文件）—— Glide 反射桥接，必须留在 `com.bumptech.glide.signature` 包下才能访问 Glide 内部 package-private 成员。**Phase 15 退出条件须改为"`com/besome/` 不存在"，不要求"`com/` 不存在"**。
 
 ---
 
 ## 三、关键设计决策
 
-### 3.1 Fragment 三处合并的策略
+### 3.1 Fragment 三处分散的处理策略
 
-**决策**：三处 fragment 全部归到 `pro.sketchware.core.fragments`，按 fragment 用途分子目录：
+**边界声明**：`pro.sketchware.core.fragments/` 仅承载**与具体 activity 解耦的通用编辑器/管理 fragment**（不依赖某个 activity 的 view binding 或回调契约）。带有 activity 上下文耦合或网络/数据支撑代码的 fragment 应跟随其 activity 入 `pro.sketchware.activities.<activity>.fragments/`。
+
+**决策**：
 
 | 旧位置 | 新位置 | 原因 |
 |--------|--------|------|
-| `pro.sketchware.core.fragments.*` | 保留 | 已是 core fragments 的家 |
-| `pro.sketchware.activities.main.fragments.*` | `pro.sketchware.core.fragments.main.*` | 主页 fragment 也是 fragment |
-| `pro.sketchware.fragments.settings.*` | `pro.sketchware.core.fragments.settings.*` | 设置 fragment 也是 fragment |
+| `pro.sketchware.core.fragments.*`（15 文件） | 保留 | 已是 core fragments 的家 |
+| `pro.sketchware.activities.main.fragments.*`（12 文件，含 `projects_store/{adapters,api,classes}` 支撑代码） | **保留原位** | 这些 fragment 与 `MainActivity` 强耦合，且其 `projects_store/` 子目录是 fragment 私有的网络/数据层，移入 core 会让 core 同时承载 UI 和数据访问，违反 core 包"无 activity 依赖"的隐含语义 |
+| `pro.sketchware.fragments.settings.*`（15 文件） | `pro.sketchware.activities.settings.fragments.*` | 设置 fragment 与 `SettingsActivity` 强耦合，应与 activity 同级而非进 core |
 
-迁移后顶层 `pro.sketchware.fragments` 整个删除。
+迁移后顶层 `pro.sketchware.fragments/` 整个删除。`pro.sketchware.activities.main.fragments/` 与 `pro.sketchware.activities.settings.fragments/` 保留为各 activity 的私有 fragment 容器。
 
 ### 3.2 双重 util 合并的策略
 
@@ -240,20 +249,22 @@ app/src/main/java/
 | `util/` 顶层 | 现 `pro.sketchware.util` 顶层（保留通用工具如 Helper、SketchwareUtil） |
 | `util/format/`（新建） | `core.util.{DateTimeUtil,FormatUtil,ReflectiveToString}` |
 | `util/io/`（新建） | `core.util.{EncryptedFileUtil,UriPathResolver,ZipUtil,SharedPrefsHelper}` |
-| `util/graphics/`（已存在 `graphics/`，合并） | `core.util.{BitmapUtil,NinePatchDecoder,AnimationUtil}` → 进 `pro.sketchware.graphics` |
+| `pro.sketchware.graphics/`（**顶层包**，已存在） | `core.util.{BitmapUtil,NinePatchDecoder,AnimationUtil}` → 合入此处（**不进 `util/graphics/`**） |
 | `util/`（合入顶层） | `core.util.{ViewUtil,UIHelper,SketchToast,DeviceUtil,ThrottleTimer,GsonMapHelper,MapValueHelper,HashMapTypeToken}` |
 
 合并时若发现同名/同功能（例如 `pro.sketchware.util.UI` vs `pro.sketchware.core.util.UIHelper`），需要单独 review，可能保留较新/更完善的一份。
 
-⚠️ **扁平化警告**：合入后 `pro.sketchware.util/` 顶层将达到 **44 文件**（原 36 + 来自 core.util 顶层的 8）。这接近功能分类的极限。Phase 10 完成后建议**单独评估**是否再细分（例如 `util/cache/`、`util/string/`），**或**接受平铺现状。本计划不强制此细分。
+⚠️ **扁平化警告**：合入后 `pro.sketchware.util/` 顶层将达到 **43 文件**（原 35 + 来自 `core.util` 顶层的 8）。这接近功能分类的极限。Phase 10 完成后建议**单独评估**是否再细分（例如 `util/cache/`、`util/string/`），**或**接受平铺现状。本计划不强制此细分。
 
 ### 3.3 com.besome.sketch.lib 拆分的策略
 
 | 旧位置 | 新位置 |
 |--------|--------|
 | `com.besome.sketch.lib.base.{BaseAppCompatActivity,BaseDialogActivity,BaseBottomSheetDialogActivity,BasePermissionAppCompatActivity}` | `pro.sketchware.activities.base/` |
-| `com.besome.sketch.lib.base.{BaseWidget,CollapsibleLayout,CollapsibleViewHolder}` | `pro.sketchware.widgets/`（视图层基类） |
-| `com.besome.sketch.lib.ui.*` 全 12 文件 | `pro.sketchware.widgets/` |
+| `com.besome.sketch.lib.base.{BaseWidget,CollapsibleLayout,CollapsibleViewHolder}` | `pro.sketchware.widgets.base/`（**新建子包**，专放 widget 抽象基类） |
+| `com.besome.sketch.lib.ui.*` 全 12 文件 | `pro.sketchware.widgets/`（具体 widget 实现） |
+
+**子包分层理由**：`widgets/` 顶层放具体 widget（`CircleImageView`、`LoadingDialog`、`EasyDeleteEditText` 等可直接 `<x>` 标签引用的视图类）；`widgets.base/` 放抽象基类（`BaseWidget`、`CollapsibleLayout` 等用于继承而非直接实例化）。避免抽象与具体在同一包混杂。
 
 ### 3.4 kellinwood 处理策略
 
@@ -267,8 +278,8 @@ app/src/main/java/
 
 **特别注意（v1 未涉及，v2 新发现）**：
 
-1. **字符串字面量反射**：`kellinwood.security.zipsigner.ZipSigner` 含 `Class.forName("kellinwood.security.zipsigner.optional.SignatureBlockGenerator")`。Phase 11 必须**同步替换字符串字面量**，不可只换 `import`。
-2. **拼写错误保留**：`kellinwood/logging/DeaultLoggerFactory.java`（应为 `DefaultLoggerFactory`）系上游 vendor 原样拼写。Phase 11 **保留原拼写**（属 vendored 代码），并在 commit message 标注以避免 reviewer 误判为新引入错误。
+1. **字符串字面量反射**：`@app/src/main/java/kellinwood/security/zipsigner/ZipSigner.java:533` 含 `Class.forName("kellinwood.security.zipsigner.optional.SignatureBlockGenerator")`。Phase 11 必须**同步替换字符串字面量**，不可只换 `import`。实测仅此 1 处反射调用（用 `rg 'Class\.forName.*kellinwood'` 全仓验证）。
+2. **拼写错误保留**：`@app/src/main/java/kellinwood/logging/DeaultLoggerFactory.java`（应为 `DefaultLoggerFactory`）系上游 vendor 原样拼写。Phase 11 **保留原拼写**（属 vendored 代码），并在 commit message 标注以避免 reviewer 误判为新引入错误。
 
 ---
 
@@ -280,59 +291,64 @@ app/src/main/java/
 
 | Task | 文件数 | 备注 |
 |------|-------|------|
-| 10.1 fragment 三处合并到 `core.fragments/{main,settings}` | 12 + 15 = 27 | 同时删除 `pro.sketchware.fragments/` 顶层；注意 `main.fragments` 下含 adapters/api/classes 支撑代码（须随迁） |
+| 10.1 `pro.sketchware.fragments.settings/` 15 → `pro.sketchware.activities.settings.fragments/` | 15 | 与 `SettingsActivity` 同级；同时删除 `pro.sketchware.fragments/` 顶层。`activities.main.fragments/` 12 文件**保留原位**（见 §3.1） |
 | 10.2 `core.util` 非图形部分 → `util/{format,io}` 与顶层合入 | 15 | format 3 + io 4 + 顶层合入 8；检查同名冲突（`util.UI` vs `core.util.UIHelper` 等） |
-| 10.3 `core.util` 中图形相关迁到 `graphics/` | 3 | BitmapUtil/NinePatchDecoder/AnimationUtil |
+| 10.3 `core.util` 中图形相关迁到 `pro.sketchware.graphics/`（顶层包） | 3 | BitmapUtil/NinePatchDecoder/AnimationUtil |
 
-**预估**：~45 文件、3 commit、1–2 小时
+**预估**：~33 文件、3 commit、1–2 小时
 
 #### Phase 11 — kellinwood 重命名为 third_party.kellinwood
 
 | Task | 文件数 |
 |------|-------|
 | 11.1 `kellinwood/**` → `pro.sketchware.third_party.kellinwood/**`（保留 logging/security/zipio 子树） | 44 |
-| 11.2 更新 35 处 `import kellinwood.` | — |
-| 11.3 更新 1 处 `Class.forName("kellinwood.…")` 字符串字面量 | — |
+| 11.2 更新 `import kellinwood.` —— 范围**两类全覆盖**：(a) 非 vendor 文件中的 import；(b) vendor 文件之间的内部互引 import | — |
+| 11.3 更新 1 处 `Class.forName("kellinwood.…")` 字符串字面量（`@app/src/main/java/kellinwood/security/zipsigner/ZipSigner.java:533`） | — |
 | 11.4 保留 `DeaultLoggerFactory` 拼写错误（vendor 原样），在 commit message 中说明 | — |
 
 **预估**：~44 文件、1 commit、30 分钟
+
+⚠️ **范围澄清**：`§1.6` 给出的"35 处 `import kellinwood.`"是非 vendor 文件中的 import 计数。vendor 内部还有 vendor → vendor 的 import（例如 `ZipSigner.java` 引用 `kellinwood.logging.LoggerInterface` 等）。Phase 11 必须**同时**重写这两类 import，否则 vendor 子模块之间会因 package 不一致而编译失败。验证脚本须用 `rg 'kellinwood\.' app/src/main/java/` 全量归零（含字符串字面量 + javadoc）。
 
 #### Phase 12 — com.besome.sketch lib 拆分（含 Activity 基类）
 
 | Task | 文件数 |
 |------|-------|
 | 12.1 `com.besome.sketch.lib.base.Base*Activity` 4 个 → `pro.sketchware.activities.base/` | 4 |
-| 12.2 `com.besome.sketch.lib.base.{BaseWidget,CollapsibleLayout,CollapsibleViewHolder}` → `widgets/` | 3 |
-| 12.3 `com.besome.sketch.lib.ui/*` 12 个 → `widgets/` | 12 |
+| 12.2 `com.besome.sketch.lib.base.{BaseWidget,CollapsibleLayout,CollapsibleViewHolder}` → `pro.sketchware.widgets.base/` | 3 |
+| 12.3 `com.besome.sketch.lib.ui/*` 12 个 → `pro.sketchware.widgets/` | 12 |
 
-**预估**：~19 文件 + **实测 85 处 import** + **14+ 处 res/**/*.xml widget 标签**、1–2 commit、1 小时
+**预估**：~19 文件 + **实测 85 处 import** + **21 行 res/**/*.xml widget 标签**（含闭合标签）、1–2 commit、1 小时
 
-⚠️ **风险**：实测 **79 个文件**继承 4 个 `Base*Activity` 之一；`com.besome.sketch.lib.ui.*` 在 14+ 处 XML 中作 widget 标签（`<com.besome.sketch.lib.ui.EasyDeleteEditText>` 等），必须同步更新。
+⚠️ **风险**：实测 **79 个文件**继承 4 个 `Base*Activity` 之一；`com.besome.sketch.lib.ui.*` 在 21 行 XML 中作 widget 标签（`<com.besome.sketch.lib.ui.EasyDeleteEditText>` 等，含开标签 + 闭合标签），必须同步更新（参见 §1.8）。
 
 #### Phase 13 — com.besome.sketch.beans 整体迁移
 
 | Task | 文件数 |
 |------|-------|
-| 13.1 `com.besome.sketch.beans/*` 27 个 → `pro.sketchware.beans/` | 27 |
-| 13.2 与现有 `pro.sketchware.beans/` 5 个文件合并（检查命名冲突） | — |
+| 13.1 **前置同名扫描**：`git ls-files app/src/main/java/pro/sketchware/beans` + `git ls-files app/src/main/java/com/besome/sketch/beans`，diff 类名集合 | — |
+| 13.2 若发现同名：**重命名旧 `pro.sketchware.beans/` 一方**（依据 v1 实证规则"使用最广的保留名称"——27 文件方一定是被引用最广的），然后再执行 13.3 | — |
+| 13.3 `com.besome.sketch.beans/*` 27 个 → `pro.sketchware.beans/` | 27 |
+| 13.4 验证：`pro.sketchware.beans/` 最终文件数 = 27 + 5 - 重命名抵消数 | — |
 
-**预估**：~27 文件 + **实测 392 处 import**、1 commit、1 小时
+**预估**：~27 文件 + **实测 392 处 import**、1 commit（如有重命名则 2 commit：先重命名，再迁移）、1 小时
 
-⚠️ **风险**：bean 类是数据流核心，使用最广泛。392 import 行远超第二名 editor 的 283，是 com.besome.sketch 中最被引用的子包。Phase 13 前先做 `pro.sketchware.beans` 5 文件与 `com.besome.sketch.beans` 27 文件的同名扫描。
+⚠️ **风险**：bean 类是数据流核心，使用最广泛。392 import 行远超第二名 editor 的 283，是 com.besome.sketch 中最被引用的子包。**冲突处理顺序非常关键**：必须先重命名旧 `pro.sketchware.beans/` 中冲突类（影响 5 文件 × N 个引用），再迁入 27 个新 bean，**反过来会让 27 个迁入文件覆盖旧的同名类，运行时崩溃**。
 
 #### Phase 14 — com.besome.sketch.editor 主体迁移（最大）
 
-按 v1 风格分多个子 commit：
+按 v1 风格分多个子 commit。**14b 因 import 改动量大（约 305 处 import + 130 文件迁移 + 11 行 XML），单 commit diff 易超 800 行影响 review，故拆为 14b₁ + 14b₂**：
 
-| 子阶段 | 范围 | 文件数 | Manifest Activity | XML 标签 |
+| 子阶段 | 范围 | 文件数 | Manifest Activity | XML 标签（行匹配） |
 |--------|------|-------|-------------------|---------|
 | 14a | `com.besome.sketch.editor` 顶层 + `event/`、`logic/`、`makeblock/` | 3 + 2 + 5 + 3 = 13 | 4（editor 2、event 1、makeblock 1） | 5（LogicEditorDrawer + 3 logic + CollapsibleEventLayout） |
-| 14b | `editor/component/`、`property/`、`view/`（含 palette、item） | 3 + 16 + 14 + 52 + 45 = 130 | 0 | 11（6 view + 2 palette + CollapsibleComponentLayout + 其余） |
+| 14b₁ | `editor/component/`、`property/`（小且独立） | 3 + 16 = 19 | 0 | 1（CollapsibleComponentLayout） |
+| 14b₂ | `editor/view/`（含 palette、item） | 14 + 52 + 45 = 111 | 0 | 10（6 view + 2 palette + 其余） |
 | 14c | `editor/manage/`（含 font/image/sound/view 子包，**不含** library） | 6 + 6 + 4 + 4 + 4 = 24 | 21 | 1（ViewBlockCollectionEditor） |
 | 14d | `editor/manage/library/*`（含 admob/compat/firebase/googlemap/material3） | 4 + 7 + 1 + 2 + 1 + 3 = 18 | 8 | 0 |
 
-**预估**：~185 文件、4 commit、3–4 小时
-**关键约束**：14a→14b→14c→14d 必须**逐 commit** 通过 `:app:compileDebugJavaWithJavac`；不允许跨子阶段中间态合并。理由：palette/item 大量引用 view 顶层，editor 顶层 `LogicEditorActivity` 引用 view 子树；任意中间态停留都会出现“已搬走的 X 引用尚在原位的 Y”。
+**预估**：~185 文件、5 commit、3–4 小时
+**关键约束**：14a→14b₁→14b₂→14c→14d 必须**逐 commit** 通过 `:app:compileDebugJavaWithJavac`；不允许跨子阶段中间态合并。理由：palette/item 大量引用 view 顶层，editor 顶层 `LogicEditorActivity` 引用 view 子树；任意中间态停留都会出现"已搬走的 X 引用尚在原位的 Y"。
 
 #### Phase 15 — com.besome.sketch 收尾（其余子包）
 
@@ -350,7 +366,7 @@ app/src/main/java/
 
 **预估**：~22 文件、2–3 commit、1–2 小时
 **Manifest 影响**：11 处（common/design/export/help/projects/tools）
-**完成本阶段后**：删除 `com/` 顶层目录
+**完成本阶段后**：删除 `com/besome/` 顶层目录（**保留 `com/bumptech/glide/signature/`**，见 §2.2）
 
 ---
 
@@ -372,23 +388,25 @@ Phase 12 ─ lib 拆分（先于 13/14，因为很多类继承 Base*Activity）
 Phase 13 ─ beans（先于 14，因为 editor 大量引用 bean）
         │
         ▼
-Phase 14 ─ editor 主体（最大，4 个子 commit）
+Phase 14 ─ editor 主体（最大，5 个子 commit：14a/14b₁/14b₂/14c/14d）
         │
         ▼
-Phase 15 ─ 收尾子包（删除 com/ 顶层）
+Phase 15 ─ 收尾子包（删除 com/besome/ 顶层；保留 com/bumptech/glide/signature/）
 ```
 
 ### 总规模与时间预估
 
 | 项 | 文件数 | commit | 时间 |
 |----|-------|--------|------|
-| Phase 10 | ~45 | 3 | 1–2 h |
+| Phase 10 | ~33 | 3 | 1–2 h |
 | Phase 11 | ~44 | 1 | 30 m |
 | Phase 12 | ~19 | 1–2 | 1 h |
-| Phase 13 | ~27 | 1 | 1 h |
-| Phase 14 | ~185 | 4 | 3–4 h |
+| Phase 13 | ~27 | 1–2 | 1 h |
+| Phase 14 | ~185 | 5 | 3–4 h |
 | Phase 15 | ~22 | 2–3 | 1–2 h |
-| **合计** | **~342** | **12–14** | **8–12 h** |
+| **合计** | **~330** | **13–16** | **8–12 h** |
+
+**计数口径**：合计 330 = 净迁移文件 ~286（kellinwood 44 + com.besome.sketch 净迁移约 242，因为 `com/bumptech/glide/signature/` 1 文件保留原位且 `pro.sketchware.activities.main.fragments/` 12 文件不迁移）+ pro 内部重组 ~44（10.2/10.3 共 18 + Phase 13 同名重命名可能产生若干重命名 commit + Phase 12 widgets 拆分内部调整）。同一文件可能在不同 Phase 中各计 1 次（例如 Phase 13 重命名后 Phase 14 仍引用该 bean）。**Phase 14 的 5 commit** 含 14b₁ + 14b₂ 拆分。
 
 ---
 
@@ -396,14 +414,14 @@ Phase 15 ─ 收尾子包（删除 com/ 顶层）
 
 | 风险 | 影响 | 缓解 |
 |------|------|------|
-| Phase 12 Base*Activity 牵动几乎所有 Activity import | 实测 79 文件继承 + 85 import 行 | 使用 v1 实证有效的“longest-prefix-first 全局替换 + 自动残留扫描”流程；同步更新 14+ 处 XML widget 标签 |
+| Phase 12 Base*Activity 牵动几乎所有 Activity import | 实测 79 文件继承 + 85 import 行 | 使用 v1 实证有效的"longest-prefix-first 全局替换 + 自动残留扫描"流程；同步更新 21 行 XML widget 标签（含闭合标签） |
 | Phase 13 beans 类型在 res/xml 也被引用（XML inflate） | 运行时 InflateException | Phase 13 与所有 Phase 残留扫描必须**包含 res/**/*.xml**（v1 仅 Phase 8 单独处理 XML，v2 起每 Phase 必检） |
-| **res/**/*.xml 中 34 处 FQN 视图标签**（**新增**） | 运行时 InflateException | §1.8 已表格化 → 每 Phase 任务包含对应 XML 更新；扫描脚本默认覆盖 res/ |
-| **Phase 14 子阶段必须各自通过编译**（**新增**） | 跨子阶段中间态合并将带入崩溃 | 14a→14b→14c→14d 每个子 commit 单独运行 `:app:compileDebugJavaWithJavac` 通过后才进入下一子阶段 |
-| Phase 14 子阶段间 Manifest 同步 | 中间态 ANR | 每个子 commit 自带对应 Activity 声明（14a:4、14c:21、14d:8） |
+| **res/**/*.xml 中 41 行 FQN 视图标签**（**新增**，跨 21 个 layout 文件） | 运行时 InflateException | §1.8 已表格化 → 每 Phase 任务包含对应 XML 更新；扫描脚本默认覆盖 res/，同时匹配开标签 `<com.besome.sketch.` 与闭合标签 `</com.besome.sketch.` |
+| **Phase 14 子阶段必须各自通过编译**（**新增**） | 跨子阶段中间态合并将带入崩溃 | 14a→14b₁→14b₂→14c→14d 每个子 commit 单独运行 `:app:compileDebugJavaWithJavac` 通过后才进入下一子阶段 |
+| Phase 14 子阶段间 Manifest 同步 | 中间态 ANR | 每个子 commit 自带对应 Activity 声明（14a:4、14c:21、14d:8）；14b₁/14b₂ 不涉及 Manifest |
 | **Phase 15.9 `tools/` 同名冲突**（**新增**） | 同名类合并失败 | Phase 15.9 前先 diff `pro.sketchware.tools/` 5 文件 vs `com.besome.sketch.tools/` 3 文件类名 |
 | **Phase 11 字符串字面量反射**（**新增**） | 反射失败 → 运行时 ClassNotFoundException | 全局替换覆盖 `Class.forName("kellinwood…")` 字符串字面量（1 处） |
-| Phase 14 palette 52 + item 45 文件已在 v1 通过非迁移方式接受了来自 mod/dev 的新文件 | 该处可能已含部分 pro.sketchware 引用 | Phase 14b 前先做依赖扫描确定起点状态 |
+| Phase 14 palette 52 + item 45 文件已在 v1 通过非迁移方式接受了来自 mod/dev 的新文件 | 该处可能已含部分 pro.sketchware 引用 | Phase 14b₂ 前先做依赖扫描确定起点状态 |
 | 跨 Phase 时间窗 build 必须始终绿 | 任意中间态被合并将带入崩溃 | 每个 commit 必须 `:app:compileDebugJavaWithJavac` 通过 |
 | 同名类冲突（双重 util 合并、双重 beans 合并） | 编译失败 | Phase 10、13 开始前先做同名扫描 |
 | Kotlin 文件 package 声明与 Java 不同 | 漏改 .kt 包名 | v1 已实证：`.kt` 用正则匹配换行后的 package（不带 `;`） |
@@ -426,7 +444,7 @@ Phase 15 ─ 收尾子包（删除 com/ 顶层）
 
 5. **commit message 格式**：`refactor(<scope>): <verb> <subject>`，正文说明文件来源与目标包，列出 Manifest/XML/javadoc 副作用
 
-6. **空目录及时清理**：每个 Phase commit 前清空被腾出的源目录。完成 Phase 15 后顶层 `com/`、`kellinwood/` 必须不存在
+6. **空目录及时清理**：每个 Phase commit 前清空被腾出的源目录。完成 Phase 15 后 `com/besome/`、`kellinwood/` 必须不存在；`com/bumptech/glide/signature/` 保留（见 §2.2）
 
 ---
 
@@ -440,7 +458,7 @@ Phase 15 ─ 收尾子包（删除 com/ 顶层）
 
 **需要预留较大维护窗口再执行**：
 - Phase 12（lib 拆分）—— 由于 Base*Activity 牵动面广，建议安排独立 PR 周期
-- Phase 13（beans）—— 600+ import 改动，可能在 IDE 中引发持久的索引重建
+- Phase 13（beans）—— 392 处 import 改动 + 27 文件搬移，可能在 IDE 中引发持久的索引重建
 - Phase 14（editor 主体）—— 文件最多、子 commit 最多，建议在团队代码冻结期或独立 feature freeze 周内完成
 
 **永久评估项**：
