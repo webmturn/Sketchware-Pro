@@ -43,10 +43,10 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import pro.sketchware.core.util.ZipUtil;
-import pro.sketchware.core.BackgroundTasks;
+import pro.sketchware.core.async.BackgroundTasks;
 import pro.sketchware.core.validation.ResourceNameValidator;
 import pro.sketchware.core.util.SketchToast;
-import pro.sketchware.core.TaskHost;
+import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.core.util.UIHelper;
 import pro.sketchware.core.util.EncryptedFileUtil;
 import pro.sketchware.core.codegen.BlockConstants;

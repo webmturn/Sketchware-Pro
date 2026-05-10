@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.async;
 
 import android.os.Handler;
 import android.os.Looper;

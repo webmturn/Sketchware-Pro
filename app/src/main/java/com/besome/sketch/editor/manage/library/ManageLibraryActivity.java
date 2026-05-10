@@ -33,9 +33,9 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import pro.sketchware.core.BackgroundTasks;
+import pro.sketchware.core.async.BackgroundTasks;
 import pro.sketchware.core.project.ProjectDataManager;
-import pro.sketchware.core.TaskHost;
+import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.core.util.UIHelper;
 import dev.aldi.sayuti.editor.manage.ManageLocalLibraryActivity;
 import mod.hey.studios.activity.managers.nativelib.ManageNativelibsActivity;

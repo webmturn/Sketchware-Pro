@@ -26,10 +26,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-import pro.sketchware.core.BackgroundTasks;
+import pro.sketchware.core.async.BackgroundTasks;
 import pro.sketchware.core.util.SharedPrefsHelper;
 import pro.sketchware.core.project.ProjectListManager;
-import pro.sketchware.core.TaskHost;
+import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.core.util.UIHelper;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.util.MapValueHelper;

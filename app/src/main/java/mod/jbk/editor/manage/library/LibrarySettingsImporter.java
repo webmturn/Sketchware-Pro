@@ -32,10 +32,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import mod.jbk.util.LogUtil;
-import pro.sketchware.core.BackgroundTasks;
+import pro.sketchware.core.async.BackgroundTasks;
 import pro.sketchware.core.project.LibraryManager;
 import pro.sketchware.core.project.ProjectListManager;
-import pro.sketchware.core.TaskHost;
+import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.core.util.UIHelper;
 import pro.sketchware.core.util.ViewUtil;
 import pro.sketchware.core.project.SketchwarePaths;

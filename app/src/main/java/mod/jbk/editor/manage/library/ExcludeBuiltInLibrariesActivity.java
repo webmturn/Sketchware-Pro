@@ -49,9 +49,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import pro.sketchware.core.BackgroundTasks;
+import pro.sketchware.core.async.BackgroundTasks;
 import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.core.TaskHost;
+import pro.sketchware.core.async.TaskHost;
 import mod.hey.studios.util.Helper;
 import mod.jbk.build.BuiltInLibraries;
 import mod.jbk.util.LogUtil;

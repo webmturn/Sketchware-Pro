@@ -37,10 +37,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import pro.sketchware.core.BackgroundTasks;
+import pro.sketchware.core.async.BackgroundTasks;
 import pro.sketchware.core.util.DeviceUtil;
 import pro.sketchware.core.util.SketchToast;
-import pro.sketchware.core.TaskHost;
+import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.core.validation.VariableNameValidator;
 import pro.sketchware.core.project.ProjectListManager;
 import pro.sketchware.core.util.UIHelper;

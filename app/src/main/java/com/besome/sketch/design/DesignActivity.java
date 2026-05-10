@@ -79,7 +79,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import pro.sketchware.core.BackgroundTasks;
+import pro.sketchware.core.async.BackgroundTasks;
 import pro.sketchware.core.util.SharedPrefsHelper;
 import pro.sketchware.core.util.DeviceUtil;
 import pro.sketchware.core.codegen.LayoutGenerator;
@@ -93,7 +93,7 @@ import pro.sketchware.core.project.ProjectDataStore;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.ResourceManager;
 import pro.sketchware.core.project.ProjectListManager;
-import pro.sketchware.core.TaskHost;
+import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.core.util.UIHelper;
 import pro.sketchware.core.fragments.EventListFragment;
 import pro.sketchware.core.project.SketchwarePaths;

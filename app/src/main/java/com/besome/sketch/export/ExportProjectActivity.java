@@ -34,7 +34,7 @@ import mod.jbk.util.TestkeySignBridge;
 import org.spongycastle.jce.provider.BouncyCastleProvider;
 
 import pro.sketchware.R;
-import pro.sketchware.core.BackgroundTasks;
+import pro.sketchware.core.async.BackgroundTasks;
 import pro.sketchware.core.util.EncryptedFileUtil;
 import pro.sketchware.core.project.LibraryManager;
 import pro.sketchware.core.util.MapValueHelper;
@@ -45,7 +45,7 @@ import pro.sketchware.core.build.ProjectFilePaths;
 import pro.sketchware.core.project.ProjectListManager;
 import pro.sketchware.core.project.ResourceManager;
 import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.core.TaskHost;
+import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.core.validation.VersionCodeValidator;
 import pro.sketchware.core.util.ZipUtil;
 import pro.sketchware.utility.FilePathUtil;

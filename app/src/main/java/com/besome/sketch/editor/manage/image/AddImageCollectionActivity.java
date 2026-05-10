@@ -26,9 +26,9 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-import pro.sketchware.core.BackgroundTasks;
+import pro.sketchware.core.async.BackgroundTasks;
 import pro.sketchware.core.callback.SketchwareException;
-import pro.sketchware.core.TaskHost;
+import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.core.util.UriPathResolver;
 import pro.sketchware.core.project.ImageCollectionManager;
 import pro.sketchware.core.validation.FileNameValidator;

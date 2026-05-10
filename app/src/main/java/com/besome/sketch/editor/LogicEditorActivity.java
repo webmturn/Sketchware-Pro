@@ -88,7 +88,7 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 
-import pro.sketchware.core.BackgroundTasks;
+import pro.sketchware.core.async.BackgroundTasks;
 import pro.sketchware.core.util.SharedPrefsHelper;
 import pro.sketchware.core.util.FormatUtil;
 import pro.sketchware.core.codegen.BlockInterpreter;
@@ -109,7 +109,7 @@ import pro.sketchware.core.project.ProjectDataStore;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.BuildConfig;
 import pro.sketchware.core.project.ResourceManager;
-import pro.sketchware.core.TaskHost;
+import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.core.util.UIHelper;
 import pro.sketchware.core.project.SketchwareConstants;
 import pro.sketchware.core.codegen.BlockConstants;

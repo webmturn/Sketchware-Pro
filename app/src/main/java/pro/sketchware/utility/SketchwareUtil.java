@@ -28,9 +28,9 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.function.Consumer;
 
-import pro.sketchware.core.BackgroundTasks;
+import pro.sketchware.core.async.BackgroundTasks;
 import pro.sketchware.core.util.SketchToast;
-import pro.sketchware.core.TaskHost;
+import pro.sketchware.core.async.TaskHost;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;
 import pro.sketchware.R;

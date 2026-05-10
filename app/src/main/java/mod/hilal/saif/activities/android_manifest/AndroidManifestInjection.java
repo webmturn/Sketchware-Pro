@@ -26,10 +26,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-import pro.sketchware.core.BackgroundTasks;
+import pro.sketchware.core.async.BackgroundTasks;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.core.TaskHost;
+import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.core.util.ViewUtil;
 import pro.sketchware.core.build.ProjectFilePaths;
 import mod.hey.studios.code.SrcCodeEditor;
