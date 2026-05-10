@@ -1,11 +1,11 @@
 package pro.sketchware.core.build;
 
-import pro.sketchware.core.BuildConfig;
-import pro.sketchware.core.BuiltInLibrary;
+import pro.sketchware.core.project.BuildConfig;
+import pro.sketchware.core.project.BuiltInLibrary;
 import pro.sketchware.core.EncryptedFileUtil;
 import pro.sketchware.core.SimpleException;
 import pro.sketchware.core.SketchwareException;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.ZipUtil;
 
 import static android.system.OsConstants.S_IRUSR;

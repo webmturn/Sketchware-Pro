@@ -38,7 +38,7 @@ import pro.sketchware.core.BitmapUtil;
 import pro.sketchware.core.EncryptedFileUtil;
 import pro.sketchware.core.codegen.BlockConstants;
 import pro.sketchware.core.CompileException;
-import pro.sketchware.core.ProjectDataManager;
+import pro.sketchware.core.project.ProjectDataManager;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 

@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.project;
 
 import android.util.Log;
 
@@ -13,6 +13,7 @@ import java.io.StringReader;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import pro.sketchware.core.EncryptedFileUtil;
 
 public class ProjectFileManager {
   public ArrayList<String> xmlNames;

@@ -1,7 +1,7 @@
 package pro.sketchware.core.codegen;
-import pro.sketchware.core.BuildConfig;
+import pro.sketchware.core.project.BuildConfig;
 import pro.sketchware.core.project.ClassInfo;
-import pro.sketchware.core.ProjectDataStore;
+import pro.sketchware.core.project.ProjectDataStore;
 
 import com.besome.sketch.beans.BlockBean;
 import com.besome.sketch.beans.ComponentBean;

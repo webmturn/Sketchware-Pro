@@ -24,8 +24,8 @@ import java.util.Locale;
 import java.util.Set;
 
 import pro.sketchware.core.codegen.LayoutGenerator;
-import pro.sketchware.core.ProjectDataManager;
-import pro.sketchware.core.BuildConfig;
+import pro.sketchware.core.project.ProjectDataManager;
+import pro.sketchware.core.project.BuildConfig;
 import pro.sketchware.core.codegen.BlockColorMapper;
 import mod.agus.jcoderz.beans.ViewBeans;
 import mod.hey.studios.editor.manage.block.ExtraBlockInfo;
@@ -42,7 +42,7 @@ import pro.sketchware.activities.resourceseditor.components.utils.StringsEditorM
 import pro.sketchware.blocks.ExtraBlocks;
 import pro.sketchware.control.logic.LogicClickListener;
 import pro.sketchware.utility.CustomVariableUtil;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.codegen.StringResource;
 import pro.sketchware.utility.FileResConfig;
 import pro.sketchware.utility.FileUtil;

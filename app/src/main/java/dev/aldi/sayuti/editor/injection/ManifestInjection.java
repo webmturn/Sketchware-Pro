@@ -3,8 +3,8 @@ package dev.aldi.sayuti.editor.injection;
 import java.io.File;
 import java.util.ArrayList;
 
-import pro.sketchware.core.BuildConfig;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.project.BuildConfig;
+import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.xml.XmlBuilder;
 

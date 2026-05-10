@@ -1,7 +1,7 @@
 package pro.sketchware.core.codegen;
-import pro.sketchware.core.BuildConfig;
-import pro.sketchware.core.ProjectDataManager;
-import pro.sketchware.core.ProjectDataStore;
+import pro.sketchware.core.project.BuildConfig;
+import pro.sketchware.core.project.ProjectDataManager;
+import pro.sketchware.core.project.ProjectDataStore;
 
 import static dev.aldi.sayuti.block.ExtraBlockFile.getExtraBlockData;
 

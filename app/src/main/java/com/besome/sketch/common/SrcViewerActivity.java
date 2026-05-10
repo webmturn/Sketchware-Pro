@@ -18,7 +18,7 @@ import java.util.concurrent.Executors;
 
 import pro.sketchware.core.build.ProjectBuilder;
 import pro.sketchware.core.SketchToast;
-import pro.sketchware.core.ProjectDataManager;
+import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.build.ProjectFilePaths;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;

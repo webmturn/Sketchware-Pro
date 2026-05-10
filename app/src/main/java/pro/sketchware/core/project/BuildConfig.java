@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.project;
 
 import static android.text.TextUtils.isEmpty;
 

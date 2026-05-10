@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.project;
 
 import android.content.Context;
 import android.os.Environment;
@@ -6,6 +6,7 @@ import android.os.Environment;
 import java.io.File;
 
 import pro.sketchware.SketchApplication;
+import pro.sketchware.core.SharedPrefsHelper;
 
 public class SketchwarePaths {
 

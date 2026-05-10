@@ -33,7 +33,7 @@ import java.util.regex.Pattern;
 
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.databinding.ActivityLogcatreaderBinding;
 import pro.sketchware.databinding.EasyDeleteEdittextBinding;
 import pro.sketchware.databinding.ViewLogcatItemBinding;

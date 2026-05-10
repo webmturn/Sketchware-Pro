@@ -33,7 +33,7 @@ import pro.sketchware.R;
 import pro.sketchware.databinding.FrManageImageListBinding;
 import pro.sketchware.databinding.ManageImageListItemBinding;
 import pro.sketchware.core.project.ImageCollectionManager;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.UIHelper;
 
 public class ImageCollectionFragment extends BaseFragment implements View.OnClickListener {

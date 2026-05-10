@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.project;
 
 import android.util.Log;
 
@@ -14,6 +14,7 @@ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
+import pro.sketchware.core.EncryptedFileUtil;
 
 public class ResourceManager {
   public static StringSignature cacheSignature;
@@ -535,7 +536,7 @@ public class ResourceManager {
   
   /**
    * Ensures all resource types are backed up before any modification.
-   * Called lazily — only when resources are about to change.
+   * Called lazily 鈥?only when resources are about to change.
    */
   public void ensureBackedUp() {
     backupImages();

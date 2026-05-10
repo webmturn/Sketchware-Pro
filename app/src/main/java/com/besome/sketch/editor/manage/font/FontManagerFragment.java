@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 import pro.sketchware.core.project.FontCollectionManager;
 import pro.sketchware.core.fragments.BaseFragment;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.project.SketchwarePaths;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;
 import pro.sketchware.R;

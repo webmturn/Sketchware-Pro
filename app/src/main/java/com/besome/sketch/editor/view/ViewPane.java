@@ -78,10 +78,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import pro.sketchware.core.project.ClassInfo;
-import pro.sketchware.core.ResourceManager;
-import pro.sketchware.core.ProjectListManager;
+import pro.sketchware.core.project.ResourceManager;
+import pro.sketchware.core.project.ProjectListManager;
 import pro.sketchware.core.ViewUtil;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.MapValueHelper;
 import pro.sketchware.core.NinePatchDecoder;
 import dev.aldi.sayuti.editor.view.item.ItemBadgeView;

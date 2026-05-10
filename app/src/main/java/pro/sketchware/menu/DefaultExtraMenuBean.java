@@ -12,10 +12,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import pro.sketchware.core.ui.FieldBlockView;
-import pro.sketchware.core.ProjectDataStore;
-import pro.sketchware.core.ProjectDataManager;
+import pro.sketchware.core.project.ProjectDataStore;
+import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.codegen.BlockConstants;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.project.SketchwarePaths;
 import mod.agus.jcoderz.editor.manage.block.makeblock.BlockMenu;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;

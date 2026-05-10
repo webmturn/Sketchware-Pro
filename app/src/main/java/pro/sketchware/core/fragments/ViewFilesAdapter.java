@@ -18,9 +18,9 @@ import com.besome.sketch.beans.SelectableBean;
 import com.besome.sketch.beans.ViewBean;
 import java.util.ArrayList;
 import pro.sketchware.core.ui.PresetLayoutFactory;
-import pro.sketchware.core.ProjectDataManager;
-import pro.sketchware.core.ProjectDataStore;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.project.ProjectDataManager;
+import pro.sketchware.core.project.ProjectDataStore;
+import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.codegen.StringResource;
 
 public class ViewFilesAdapter extends BaseFragment {

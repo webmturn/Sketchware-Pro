@@ -39,7 +39,7 @@ import pro.sketchware.core.project.ImageCollectionManager;
 import pro.sketchware.core.EventSelectedCallback;
 import pro.sketchware.core.project.WidgetCollectionManager;
 import pro.sketchware.core.SketchToast;
-import pro.sketchware.core.ProjectDataManager;
+import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.UIHelper;
 import pro.sketchware.core.ViewUtil;
 import mod.hey.studios.project.ProjectSettings;

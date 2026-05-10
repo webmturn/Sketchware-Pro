@@ -3,7 +3,7 @@ package pro.sketchware.utility;
 import java.io.File;
 
 import pro.sketchware.SketchApplication;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.project.SketchwarePaths;
 
 public class FilePathUtil {
 

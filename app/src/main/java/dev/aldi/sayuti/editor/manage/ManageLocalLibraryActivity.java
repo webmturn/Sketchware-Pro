@@ -47,7 +47,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import pro.sketchware.core.BackgroundTasks;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.TaskHost;
 import pro.sketchware.core.UIHelper;
 import mod.hey.studios.build.BuildSettings;

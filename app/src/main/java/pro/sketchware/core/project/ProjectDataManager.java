@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.project;
 
 /**
  * Singleton factory for obtaining project-scoped manager instances.
@@ -7,8 +7,8 @@ package pro.sketchware.core;
  * If a different project ID is requested, the previous manager is closed and a new
  * one is created. All managers follow the same lifecycle:
  * <ol>
- *   <li>{@code getXxxManager(sc_id)} — creates or returns cached instance</li>
- *   <li>{@code closeXxxManager()} — persists pending changes to backup and releases the instance</li>
+ *   <li>{@code getXxxManager(sc_id)} 鈥?creates or returns cached instance</li>
+ *   <li>{@code closeXxxManager()} 鈥?persists pending changes to backup and releases the instance</li>
  * </ol>
  *
  * @see ProjectDataStore

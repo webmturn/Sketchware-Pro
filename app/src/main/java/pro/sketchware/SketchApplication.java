@@ -16,7 +16,7 @@ import androidx.core.os.LocaleListCompat;
 
 import com.besome.sketch.tools.CollectErrorActivity;
 
-import pro.sketchware.core.ProjectListManager;
+import pro.sketchware.core.project.ProjectListManager;
 import pro.sketchware.fragments.settings.language.LanguageOverrideContextWrapper;
 import pro.sketchware.fragments.settings.language.LanguageOverrideManager;
 import pro.sketchware.utility.CrashLogManager;

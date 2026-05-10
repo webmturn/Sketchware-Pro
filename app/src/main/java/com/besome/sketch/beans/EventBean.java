@@ -5,8 +5,8 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 
-import pro.sketchware.core.ProjectDataStore;
-import pro.sketchware.core.ProjectDataManager;
+import pro.sketchware.core.project.ProjectDataStore;
+import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.R;
 
 /**

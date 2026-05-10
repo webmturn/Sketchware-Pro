@@ -35,10 +35,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import pro.sketchware.core.codegen.ActivityCodeGenerator;
-import pro.sketchware.core.ProjectFileManager;
-import pro.sketchware.core.ProjectDataManager;
+import pro.sketchware.core.project.ProjectFileManager;
+import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.UIHelper;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.build.ProjectFilePaths;
 import io.github.rosemoe.sora.widget.CodeEditor;
 import io.github.rosemoe.sora.widget.component.Magnifier;

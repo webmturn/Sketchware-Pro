@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import pro.sketchware.core.BackgroundTasks;
 import pro.sketchware.core.ui.BlockView;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.TaskHost;
 import mod.hey.studios.editor.manage.block.ExtraBlockInfo;
 import mod.hey.studios.editor.manage.block.v2.BlockLoader;

@@ -13,8 +13,8 @@ import java.util.stream.Collectors;
 import mod.hey.studios.moreblock.ReturnMoreblockManager;
 import pro.sketchware.core.project.ClassInfo;
 import pro.sketchware.core.codegen.ComponentCodeGenerator;
-import pro.sketchware.core.ProjectDataManager;
-import pro.sketchware.core.SketchwareConstants;
+import pro.sketchware.core.project.ProjectDataManager;
+import pro.sketchware.core.project.SketchwareConstants;
 
 /**
  * Maps block opcodes to {@link BlockCodeHandler} implementations that generate Java code.

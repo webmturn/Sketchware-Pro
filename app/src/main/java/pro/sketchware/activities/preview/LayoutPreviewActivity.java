@@ -9,7 +9,7 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 
 import java.util.ArrayList;
 
-import pro.sketchware.core.ProjectDataManager;
+import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.UIHelper;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;

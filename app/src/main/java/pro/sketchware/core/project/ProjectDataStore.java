@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.project;
 
 import android.util.Log;
 import android.util.Pair;
@@ -30,6 +30,7 @@ import java.util.concurrent.Executors;
 
 import pro.sketchware.core.project.ClassInfo;
 import pro.sketchware.core.project.ProjectDataParser;
+import pro.sketchware.core.EncryptedFileUtil;
 
 /**
  * In-memory store for all editable project data: views, blocks, variables, lists,

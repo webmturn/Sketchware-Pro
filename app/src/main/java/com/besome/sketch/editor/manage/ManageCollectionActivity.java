@@ -60,7 +60,7 @@ import pro.sketchware.core.project.SoundCollectionManager;
 import pro.sketchware.core.project.WidgetCollectionManager;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.UIHelper;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.project.SketchwarePaths;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.AudioMetadata;
 import mod.jbk.util.BlockUtil;

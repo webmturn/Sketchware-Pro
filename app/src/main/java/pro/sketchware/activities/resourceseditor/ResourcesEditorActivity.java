@@ -27,9 +27,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import pro.sketchware.core.ProjectDataManager;
-import pro.sketchware.core.ProjectListManager;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.project.ProjectDataManager;
+import pro.sketchware.core.project.ProjectListManager;
+import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.build.ProjectFilePaths;
 import mod.hey.studios.code.SrcCodeEditor;
 import mod.hey.studios.util.Helper;

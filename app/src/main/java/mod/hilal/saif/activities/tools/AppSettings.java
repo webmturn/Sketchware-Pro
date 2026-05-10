@@ -43,7 +43,7 @@ import pro.sketchware.R;
 import pro.sketchware.activities.editor.component.ManageCustomComponentActivity;
 import pro.sketchware.activities.settings.SettingsActivity;
 import pro.sketchware.core.BackgroundTasks;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.TaskHost;
 import pro.sketchware.databinding.ActivityAppSettingsBinding;
 import pro.sketchware.databinding.DialogSelectApkToSignBinding;

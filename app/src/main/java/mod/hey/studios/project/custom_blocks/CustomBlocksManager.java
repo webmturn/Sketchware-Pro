@@ -15,11 +15,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-import pro.sketchware.core.ProjectDataStore;
-import pro.sketchware.core.ProjectFileManager;
-import pro.sketchware.core.ProjectDataManager;
+import pro.sketchware.core.project.ProjectDataStore;
+import pro.sketchware.core.project.ProjectFileManager;
+import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.codegen.BlockColorMapper;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.project.SketchwarePaths;
 import dev.aldi.sayuti.block.ExtraBlockFile;
 import mod.hey.studios.editor.manage.block.ExtraBlockInfo;
 import mod.hey.studios.editor.manage.block.v2.BlockLoader;

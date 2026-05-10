@@ -2,7 +2,7 @@ package pro.sketchware.core.project;
 
 import pro.sketchware.core.BitmapUtil;
 import pro.sketchware.core.CompileException;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.project.SketchwarePaths;
 
 import com.besome.sketch.beans.CollectionBean;
 import com.besome.sketch.beans.ProjectResourceBean;

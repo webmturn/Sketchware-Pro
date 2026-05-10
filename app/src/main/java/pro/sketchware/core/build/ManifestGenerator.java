@@ -1,10 +1,10 @@
 package pro.sketchware.core.build;
 
 import pro.sketchware.core.codegen.ActivityConfigConstants;
-import pro.sketchware.core.BuildConfig;
+import pro.sketchware.core.project.BuildConfig;
 import pro.sketchware.core.codegen.ComponentCodeGenerator;
 import pro.sketchware.core.codegen.LayoutGenerator;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.project.SketchwarePaths;
 
 import static android.text.TextUtils.isEmpty;
 import static com.besome.sketch.Config.VAR_DEFAULT_TARGET_SDK_VERSION;

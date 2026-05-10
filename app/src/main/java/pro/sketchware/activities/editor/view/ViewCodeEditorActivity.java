@@ -20,7 +20,7 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import pro.sketchware.core.project.ViewHistoryManager;
-import pro.sketchware.core.ProjectDataManager;
+import pro.sketchware.core.project.ProjectDataManager;
 import io.github.rosemoe.sora.widget.CodeEditor;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;

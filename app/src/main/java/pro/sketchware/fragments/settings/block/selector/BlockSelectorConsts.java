@@ -2,7 +2,7 @@ package pro.sketchware.fragments.settings.block.selector;
 
 import java.io.File;
 
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.project.SketchwarePaths;
 
 public class BlockSelectorConsts {
     public static final File BLOCK_SELECTORS_FILE = new File(SketchwarePaths.getBlockSelectorMenuPath());

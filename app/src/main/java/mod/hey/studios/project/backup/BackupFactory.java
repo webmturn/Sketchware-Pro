@@ -41,9 +41,9 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import pro.sketchware.core.ProjectListManager;
+import pro.sketchware.core.project.ProjectListManager;
 import pro.sketchware.core.MapValueHelper;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.project.SketchwarePaths;
 import dev.aldi.sayuti.editor.manage.LocalLibrariesUtil;
 import mod.hey.studios.editor.manage.block.ExtraBlockInfo;
 import mod.hey.studios.editor.manage.block.v2.BlockLoader;

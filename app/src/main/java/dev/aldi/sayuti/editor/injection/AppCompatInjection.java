@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import pro.sketchware.core.BuildConfig;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.project.BuildConfig;
+import pro.sketchware.core.project.SketchwarePaths;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.utility.FileUtil;
 import pro.sketchware.xml.XmlBuilder;

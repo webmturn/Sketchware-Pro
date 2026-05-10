@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import pro.sketchware.core.codegen.ComponentCodeGenerator;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.project.SketchwarePaths;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.OldResourceIdMapper;
 import pro.sketchware.R;

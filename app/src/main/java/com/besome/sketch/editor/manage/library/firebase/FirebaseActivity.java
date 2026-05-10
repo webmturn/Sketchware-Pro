@@ -25,7 +25,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import pro.sketchware.core.DeviceUtil;
 import pro.sketchware.core.SketchToast;
-import pro.sketchware.core.LibraryManager;
+import pro.sketchware.core.project.LibraryManager;
 import pro.sketchware.core.ui.FirebasePreviewView;
 import pro.sketchware.core.ui.FirebaseSettingsView;
 import pro.sketchware.core.UIHelper;

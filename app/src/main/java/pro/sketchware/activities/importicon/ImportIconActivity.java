@@ -50,7 +50,7 @@ import pro.sketchware.core.TaskHost;
 import pro.sketchware.core.UIHelper;
 import pro.sketchware.core.EncryptedFileUtil;
 import pro.sketchware.core.codegen.BlockConstants;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.project.SketchwarePaths;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.activities.importicon.adapters.IconAdapter;

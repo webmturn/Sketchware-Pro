@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pro.sketchware.core.BackgroundTasks;
-import pro.sketchware.core.ProjectDataManager;
+import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.TaskHost;
 import pro.sketchware.core.UIHelper;
 import dev.aldi.sayuti.editor.manage.ManageLocalLibraryActivity;

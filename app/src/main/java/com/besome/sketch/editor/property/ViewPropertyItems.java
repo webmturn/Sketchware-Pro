@@ -30,7 +30,7 @@ import pro.sketchware.core.project.ClassInfo;
 import pro.sketchware.core.PropertyChangedCallback;
 import pro.sketchware.core.ViewBeanCallback;
 import pro.sketchware.core.project.ViewHistoryManager;
-import pro.sketchware.core.ProjectDataManager;
+import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.UIHelper;
 import pro.sketchware.core.codegen.EventRegistry;
 import mod.hey.studios.project.ProjectSettings;

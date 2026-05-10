@@ -30,8 +30,8 @@ import java.util.Set;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import pro.sketchware.core.ProjectListManager;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.project.ProjectListManager;
+import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.MapValueHelper;
 import pro.sketchware.R;
 import pro.sketchware.SketchApplication;

@@ -16,7 +16,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import pro.sketchware.core.PropertyChangedCallback;
 import pro.sketchware.core.UIHelper;
-import pro.sketchware.core.SketchwareConstants;
+import pro.sketchware.core.project.SketchwareConstants;
 import pro.sketchware.core.ViewUtil;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;

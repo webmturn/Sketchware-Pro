@@ -14,7 +14,7 @@ import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;
 import mod.jbk.util.OldResourceIdMapper;
 import pro.sketchware.R;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.model.CustomEvent;
 import pro.sketchware.model.CustomListener;
 import pro.sketchware.utility.FileUtil;

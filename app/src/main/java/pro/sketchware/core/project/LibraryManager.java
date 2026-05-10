@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.project;
 
 import android.util.Log;
 
@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
+import pro.sketchware.core.EncryptedFileUtil;
 
 public class LibraryManager {
   public String projectId;

@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import pro.sketchware.core.project.FontCollectionManager;
 import pro.sketchware.core.SketchToast;
 import pro.sketchware.core.codegen.BlockConstants;
-import pro.sketchware.core.SketchwarePaths;
+import pro.sketchware.core.project.SketchwarePaths;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageFontAddBinding;

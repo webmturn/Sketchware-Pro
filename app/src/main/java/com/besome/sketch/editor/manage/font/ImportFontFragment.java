@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-import pro.sketchware.core.ProjectDataManager;
+import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.EncryptedFileUtil;
 import pro.sketchware.core.fragments.BaseFragment;
 import mod.hey.studios.util.Helper;

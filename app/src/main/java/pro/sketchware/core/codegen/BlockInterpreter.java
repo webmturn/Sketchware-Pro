@@ -15,7 +15,7 @@ import mod.hey.studios.editor.manage.block.ExtraBlockInfo;
 import mod.hey.studios.editor.manage.block.v2.BlockLoader;
 import mod.hey.studios.moreblock.ReturnMoreblockManager;
 import mod.pranav.viewbinding.ViewBindingBuilder;
-import pro.sketchware.core.BuildConfig;
+import pro.sketchware.core.project.BuildConfig;
 import pro.sketchware.core.project.ClassInfo;
 
 /**
