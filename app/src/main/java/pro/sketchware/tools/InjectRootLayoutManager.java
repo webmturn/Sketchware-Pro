@@ -1,4 +1,4 @@
-package pro.sketchware.managers.inject;
+package pro.sketchware.tools;
 
 import android.util.Pair;
 

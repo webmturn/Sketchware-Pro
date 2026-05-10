@@ -111,7 +111,7 @@ import mod.jbk.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.activities.resourceseditor.components.utils.ColorsEditorManager;
 import pro.sketchware.activities.resourceseditor.components.utils.StringsEditorManager;
-import pro.sketchware.managers.inject.InjectRootLayoutManager;
+import pro.sketchware.tools.InjectRootLayoutManager;
 import pro.sketchware.util.FilePathUtil;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.InjectAttributeHandler;

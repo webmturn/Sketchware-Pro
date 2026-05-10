@@ -27,7 +27,7 @@ import pro.sketchware.R;
 import pro.sketchware.activities.appcompat.ManageAppCompatActivity;
 import pro.sketchware.activities.preview.LayoutPreviewActivity;
 import pro.sketchware.databinding.ViewCodeEditorBinding;
-import pro.sketchware.managers.inject.InjectRootLayoutManager;
+import pro.sketchware.tools.InjectRootLayoutManager;
 import pro.sketchware.tools.ViewBeanParser;
 import pro.sketchware.util.CodeEditorPreferences;
 import pro.sketchware.util.EditorUtils;

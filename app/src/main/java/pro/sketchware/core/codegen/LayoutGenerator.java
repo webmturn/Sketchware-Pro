@@ -40,7 +40,7 @@ import mod.agus.jcoderz.beans.ViewBeans;
 import mod.jbk.util.LogUtil;
 import pro.sketchware.SketchApplication;
 import pro.sketchware.activities.resourceseditor.components.utils.ColorsEditorManager;
-import pro.sketchware.managers.inject.InjectRootLayoutManager;
+import pro.sketchware.tools.InjectRootLayoutManager;
 import pro.sketchware.util.InjectAttributeHandler;
 import pro.sketchware.util.PropertiesUtil;
 import pro.sketchware.util.xml.XmlBuilder;
