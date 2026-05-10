@@ -110,6 +110,7 @@ dependencies {
     compileOnly libs.kotlin.compiler
 
     implementation project(':resolver')
+    implementation project(':vendor-dx')
     implementation libs.filepicker
 
     implementation libs.libsu
