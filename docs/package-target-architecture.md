@@ -82,7 +82,7 @@ Sketchware-Pro/
 │       │   │   │   │   ├── ResourceStage.java       # AAPT2
 │       │   │   │   │   ├── JavaCompileStage.java    # ECJ + ViewBinding
 │       │   │   │   │   ├── KotlinCompileStage.java  # 可选，已有 KotlinCompiler 桥接
-│       │   │   │   │   ├── DexStage.java            # D8 默认 / dx 回退
+│       │   │   │   │   ├── DexStage.java            # D8 / dx 二选，读 BuildSettings.SETTING_DEXER（默认 dx）
 │       │   │   │   │   ├── ShrinkStage.java         # R8 + ProGuard + Stringfog
 │       │   │   │   │   └── SignStage.java           # apksigner + zipalign
 │       │   │   │   └── sink/               # ⬅ P2a NEW (Sink 实现)
@@ -180,7 +180,7 @@ Sketchware-Pro/
 |---|---|
 | `compileResources`, `maybeExtractAapt2`, `buildBuiltInLibraryInformation` | `ResourceStage` |
 | `compileJavaCode`, `runEclipseCompiler`, `collectAllSourcePaths`, `getCustomJavaDirectories`, `isCustomJavaSourcePath`, `deleteOldClassFiles`, `getCompiledClassBasePathCandidates`, `addCompiledClassBasePathCandidate`, `getCurrentCompiledClassBasePath`, `extractPackageName`, `getSourcePathDerivedClassBasePath`, `getManagedJavaSourceRoot`, `updateCacheAfterSuccessfulBuild`, `generateViewBinding` | `JavaCompileStage` |
-| `createDexFilesFromClasses`, `getDexFilesReady`, `dexLibraries`, `mergeDexes`, `computeDexMergeFingerprint`, `isD8Enabled`, `getDxRunningText` | `DexStage`（默认 D8，dx 通过 `:vendor-dx` 回退） |
+| `createDexFilesFromClasses`, `getDexFilesReady`, `dexLibraries`, `mergeDexes`, `computeDexMergeFingerprint`, `isD8Enabled`, `getDxRunningText` | `DexStage`（D8 / dx 二选逻辑封在内部，读 `BuildSettings.SETTING_DEXER`。**P1a 不改默认值**，只调代码位置） |
 | `runR8`, `runProguard`, `runStringfog`, `proguardAddLibConfigs`, `proguardAddRjavaRules`, `getRJavaRules`, `getProguardClasspath` | `ShrinkStage` |
 | `signDebugApk`, `runZipalign` | `SignStage` |
 | `buildApk`, `setBuildAppBundle` | 留在 `ProjectBuilder`（编排器） |
@@ -248,17 +248,28 @@ public final class ProjectBuilder {
 ### 4.3 设计原则
 
 - **Stage 之间通过 `BuildContext` 单向传递**：上游只写自己的输出字段；下游只读上游已写字段。无 Stage ↔ Stage 直接调用
-- **D8 vs dx 选择封装在 `DexStage` 内部**：外部不感知；通过 `BuildSettings.isD8Enabled` 切换
+- **D8 vs dx 选择封装在 `DexStage` 内部**：外部不感知；仍读现有的 `BuildSettings.SETTING_DEXER`。**P1a 严格不改默认值**，也不删除 dx 分支。“切默认”与“下线 dx”是两个独立的后续决策，与 P1a 架构改造无关
 - **可测试性**：每个 Stage 独立类，可 mock `BuildContext` 单测（前提是 P0a 完成后增加测试基础设施 — 当前 baseline `Test source code: 0`）
 - **可观察**：`BuildProgressReceiver.onStage(name)` 让 UI 显示当前阶段
+- **行为零变化**：P1a 是纯结构重构；同一工程、同一 BuildSettings、同一 D8/dx 选项，产出 APK 必须 byte-for-byte 一致
 
 ### 4.4 退出条件
 
 - [ ] `ProjectBuilder.java` ≤ 15 KB（仅 ctx 构造 + `buildApk` 入口）
 - [ ] 6 个 Stage 文件位于 `pro/sketchware/core/build/stage/`，每个 ≤ 20 KB
-- [ ] `BuildSettings.isD8Enabled` 默认 `true`（开关已存在，P1a 改默认值）
-- [ ] 在示例工程上跑：D8 路径成功打包 + 切换到 dx 路径仍成功打包
-- [ ] 生成的 APK byte-for-byte 与 P1a 之前一致（用同一示例工程做 reproducible build 比对）
+- [ ] `BuildSettings.SETTING_DEXER` 默认值与 P1a 之前一致（当前为 `SETTING_DEXER_DX`，P1a 不动它）
+- [ ] 在示例工程上跑两道路径验证都能走通：默认（dx）路径打包成功 + 手动打开 D8 开关后路径仍成功打包
+- [ ] 生成的 APK byte-for-byte 与 P1a 之前一致（同一工程 + 同一 BuildSettings + 同一快照下 reproducible build 比对）
+
+### 4.5 不在 P1a 范围内（独立后续决策）
+
+以下事项是 P1a 完成后**可以变得容易**、但并不随 P1a 一同交付：
+
+- **切默认 dx → D8**：仅需改一行 `BuildSettings.SETTING_DEXER_DX` → `SETTING_DEXER_D8`；P1a 后由于 D8/dx 分支已集中在 `DexStage`，回归面小、可单测覆盖。切不切以及何时切，由用户反馈 + 产品节奏决定。
+- **下线 dx 路径**：删 `DexStage` 中 dx 分支 + 删 `:vendor-dx` 子模块（P1b 产物）。必须在默认已切 D8 且运行多个版本无回归后才考虑。
+- **为 `DexStage` 加单测**：依赖项目添加测试基础设施（当前 `Test source code: 0`）。
+
+这些不作为 P1a 退出条件。P1a 只交付“架构改造 + 行为零变化”。
 
 ---
 
