@@ -12,7 +12,7 @@ import pro.sketchware.core.project.ClassInfo;
 import pro.sketchware.core.codegen.EventRegistry;
 import pro.sketchware.util.Helper;
 import pro.sketchware.util.LogUtil;
-import pro.sketchware.util.OldResourceIdMapper;
+import pro.sketchware.core.project.OldResourceIdMapper;
 import pro.sketchware.R;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.beans.CustomEvent;

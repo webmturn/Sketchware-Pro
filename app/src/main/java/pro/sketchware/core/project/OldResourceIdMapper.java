@@ -1,4 +1,4 @@
-package pro.sketchware.util;
+package pro.sketchware.core.project;
 
 import androidx.annotation.DrawableRes;
 

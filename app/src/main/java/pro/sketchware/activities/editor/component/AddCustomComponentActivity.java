@@ -32,7 +32,7 @@ import pro.sketchware.util.Helper;
 import pro.sketchware.dialogs.IconSelectorDialog;
 import pro.sketchware.core.codegen.ComponentsHandler;
 import pro.sketchware.util.LogUtil;
-import pro.sketchware.util.OldResourceIdMapper;
+import pro.sketchware.core.project.OldResourceIdMapper;
 import pro.sketchware.beans.CustomComponent;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageCustomComponentAddBinding;

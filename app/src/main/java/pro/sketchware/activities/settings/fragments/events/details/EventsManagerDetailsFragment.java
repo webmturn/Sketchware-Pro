@@ -20,7 +20,7 @@ import java.util.Collections;
 
 import pro.sketchware.core.fragments.BaseFragment;
 import pro.sketchware.util.Helper;
-import pro.sketchware.util.OldResourceIdMapper;
+import pro.sketchware.core.project.OldResourceIdMapper;
 import pro.sketchware.beans.CustomEvent;
 import pro.sketchware.R;
 import pro.sketchware.databinding.FragmentEventsManagerDetailsBinding;

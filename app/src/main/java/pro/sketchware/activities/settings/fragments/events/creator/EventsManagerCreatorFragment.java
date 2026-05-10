@@ -20,7 +20,7 @@ import pro.sketchware.activities.settings.fragments.events.EventsManagerConstant
 import pro.sketchware.util.Helper;
 import pro.sketchware.beans.CustomEvent;
 import pro.sketchware.dialogs.IconSelectorDialog;
-import pro.sketchware.util.OldResourceIdMapper;
+import pro.sketchware.core.project.OldResourceIdMapper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.FragmentEventsManagerCreatorBinding;
 import pro.sketchware.util.FileUtil;
