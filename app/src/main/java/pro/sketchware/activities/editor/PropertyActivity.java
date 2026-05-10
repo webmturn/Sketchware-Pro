@@ -30,8 +30,8 @@ import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.beans.ProjectResourceBean;
 import pro.sketchware.beans.ViewBean;
 import com.besome.sketch.editor.manage.image.ManageImageActivity;
-import com.besome.sketch.editor.property.PropertyResourceItem;
-import com.besome.sketch.editor.property.ViewPropertyItems;
+import pro.sketchware.activities.editor.property.PropertyResourceItem;
+import pro.sketchware.activities.editor.property.ViewPropertyItems;
 import pro.sketchware.activities.base.BaseAppCompatActivity;
 import pro.sketchware.widgets.CustomScrollView;
 

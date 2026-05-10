@@ -23,8 +23,8 @@ import pro.sketchware.beans.ComponentBean;
 import pro.sketchware.beans.EventBean;
 import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.activities.editor.LogicEditorActivity;
-import com.besome.sketch.editor.component.AddComponentBottomSheet;
-import com.besome.sketch.editor.component.ComponentEventButton;
+import pro.sketchware.activities.editor.component.AddComponentBottomSheet;
+import pro.sketchware.activities.editor.component.ComponentEventButton;
 import pro.sketchware.widgets.base.CollapsibleViewHolder;
 import pro.sketchware.widgets.CollapsibleButton;
 

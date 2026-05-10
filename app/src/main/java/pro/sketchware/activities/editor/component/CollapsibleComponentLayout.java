@@ -1,4 +1,4 @@
-package com.besome.sketch.editor.component;
+package pro.sketchware.activities.editor.component;
 
 import android.content.Context;
 import android.graphics.PorterDuff;

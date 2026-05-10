@@ -231,7 +231,7 @@ public class ComponentsHandler {
 
     /**
      * Adds Custom Components to available Components section.
-     * Used at {@link com.besome.sketch.editor.component.AddComponentBottomSheet#onCreate(Bundle)}.
+     * Used at {@link pro.sketchware.activities.editor.component.AddComponentBottomSheet#onCreate(Bundle)}.
      */
     public static void addCustomComponents(ArrayList<ComponentBean> list) {
         list.add(new ComponentBean(ASYNC_TASK_COMPONENT_ID));

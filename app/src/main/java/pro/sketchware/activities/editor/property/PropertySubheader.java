@@ -1,4 +1,4 @@
-package com.besome.sketch.editor.property;
+package pro.sketchware.activities.editor.property;
 
 import android.content.Context;
 import android.view.View;

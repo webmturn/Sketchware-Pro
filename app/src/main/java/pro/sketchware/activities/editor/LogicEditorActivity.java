@@ -60,7 +60,7 @@ import pro.sketchware.beans.MoreBlockCollectionBean;
 import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.beans.ViewBean;
 import com.besome.sketch.design.DesignActivity;
-import com.besome.sketch.editor.component.AddComponentBottomSheet;
+import pro.sketchware.activities.editor.component.AddComponentBottomSheet;
 import pro.sketchware.activities.editor.logic.BlockPane;
 import pro.sketchware.activities.editor.logic.LogicTopMenu;
 import pro.sketchware.activities.editor.logic.PaletteBlock;

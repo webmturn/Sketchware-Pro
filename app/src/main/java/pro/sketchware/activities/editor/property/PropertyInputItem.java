@@ -1,4 +1,4 @@
-package com.besome.sketch.editor.property;
+package pro.sketchware.activities.editor.property;
 
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;

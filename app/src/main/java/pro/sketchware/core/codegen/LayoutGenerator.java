@@ -3,7 +3,7 @@ import pro.sketchware.core.project.BuildConfig;
 import pro.sketchware.core.project.ClassInfo;
 import pro.sketchware.core.project.SketchwareConstants;
 
-import static com.besome.sketch.editor.property.PropertyAttributesItem.RELATIVE_IDS;
+import static pro.sketchware.activities.editor.property.PropertyAttributesItem.RELATIVE_IDS;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
