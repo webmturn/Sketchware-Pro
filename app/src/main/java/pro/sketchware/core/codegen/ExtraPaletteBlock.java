@@ -34,7 +34,7 @@ import mod.hey.studios.editor.view.IdGenerator;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.core.codegen.BlockTypeUtils;
 import pro.sketchware.activities.editor.makeblock.ReturnMoreblockManager;
-import mod.hilal.saif.activities.tools.ConfigActivity;
+import pro.sketchware.activities.settings.ConfigActivity;
 import pro.sketchware.core.codegen.BlocksHandler;
 import pro.sketchware.core.build.ViewBindingBuilder;
 import pro.sketchware.R;

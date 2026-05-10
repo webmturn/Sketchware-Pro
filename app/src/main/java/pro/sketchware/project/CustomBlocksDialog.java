@@ -31,7 +31,7 @@ import pro.sketchware.core.codegen.ExtraBlockInfo;
 import pro.sketchware.core.codegen.BlockLoader;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;
-import mod.hilal.saif.activities.tools.ConfigActivity;
+import pro.sketchware.activities.settings.ConfigActivity;
 
 import pro.sketchware.R;
 import pro.sketchware.databinding.DialogPaletteBinding;

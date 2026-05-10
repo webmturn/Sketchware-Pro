@@ -269,10 +269,10 @@
             android:name="pro.sketchware.activities.editor.block.BlocksManagerDetailsActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="mod.hilal.saif.activities.tools.ConfigActivity"
+            android:name="pro.sketchware.activities.settings.ConfigActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="mod.hilal.saif.activities.tools.AppSettings"
+            android:name="pro.sketchware.activities.settings.AppSettings"
             android:configChanges="orientation|screenSize" />
         <activity
             android:name="pro.sketchware.activities.about.AboutActivity"

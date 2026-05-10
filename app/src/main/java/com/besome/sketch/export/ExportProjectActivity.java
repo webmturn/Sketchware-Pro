@@ -29,7 +29,7 @@ import mod.hey.studios.util.Helper;
 import pro.sketchware.core.build.BuildProgressReceiver;
 import pro.sketchware.library.BuiltInLibraries;
 import pro.sketchware.core.build.compiler.AppBundleCompiler;
-import mod.jbk.export.GetKeyStoreCredentialsDialog;
+import pro.sketchware.dialogs.GetKeyStoreCredentialsDialog;
 import mod.jbk.util.TestkeySignBridge;
 import org.spongycastle.jce.provider.BouncyCastleProvider;
 

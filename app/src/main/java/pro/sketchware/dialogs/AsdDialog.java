@@ -1,4 +1,4 @@
-package mod.hilal.saif.asd;
+package pro.sketchware.dialogs;
 
 import android.app.Activity;
 import android.app.Dialog;

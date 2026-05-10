@@ -48,7 +48,7 @@ import pro.sketchware.core.util.DeviceUtil;
 import pro.sketchware.project.BackupFactory;
 import pro.sketchware.project.BackupRestoreManager;
 import mod.hey.studios.util.Helper;
-import mod.hilal.saif.activities.tools.ConfigActivity;
+import pro.sketchware.activities.settings.ConfigActivity;
 import pro.sketchware.project.SingleCopyTask;
 import pro.sketchware.R;
 import pro.sketchware.activities.about.AboutActivity;

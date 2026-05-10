@@ -49,7 +49,7 @@ import pro.sketchware.core.codegen.ExtraBlockInfo;
 import pro.sketchware.core.codegen.BlockLoader;
 import pro.sketchware.project.CustomBlocksManager;
 import mod.hey.studios.util.Helper;
-import mod.hilal.saif.activities.tools.ConfigActivity;
+import pro.sketchware.activities.settings.ConfigActivity;
 import pro.sketchware.R;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
@@ -118,8 +118,8 @@ public class BackupFactory {
 
         try {
             byte[] data;
-            if (mod.hilal.saif.activities.tools.ConfigActivity.isSettingEnabled(
-                    mod.hilal.saif.activities.tools.ConfigActivity.SETTING_PROJECT_DATA_ENCRYPTION)) {
+            if (pro.sketchware.activities.settings.ConfigActivity.isSettingEnabled(
+                    pro.sketchware.activities.settings.ConfigActivity.SETTING_PROJECT_DATA_ENCRYPTION)) {
                 Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
                 cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(LEGACY_KEY, "AES"), new IvParameterSpec(LEGACY_KEY));
                 data = cipher.doFinal((string.trim()).getBytes(java.nio.charset.StandardCharsets.UTF_8));

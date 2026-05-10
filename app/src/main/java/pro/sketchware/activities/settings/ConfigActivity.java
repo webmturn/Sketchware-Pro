@@ -1,4 +1,4 @@
-package mod.hilal.saif.activities.tools;
+package pro.sketchware.activities.settings;
 
 import static pro.sketchware.util.GsonUtils.getGson;
 

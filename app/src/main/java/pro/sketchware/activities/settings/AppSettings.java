@@ -1,4 +1,4 @@
-package mod.hilal.saif.activities.tools;
+package pro.sketchware.activities.settings;
 
 import pro.sketchware.activities.editor.block.BlocksManager;
 

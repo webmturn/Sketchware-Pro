@@ -114,7 +114,7 @@ import pro.sketchware.project.StringfogHandler;
 import mod.hey.studios.util.Helper;
 import mod.hey.studios.util.SystemLogPrinter;
 import pro.sketchware.activities.editor.manifest.AndroidManifestInjection;
-import mod.hilal.saif.activities.tools.ConfigActivity;
+import pro.sketchware.activities.settings.ConfigActivity;
 import pro.sketchware.core.build.BuildProgressReceiver;
 import pro.sketchware.library.BuiltInLibraries;
 import mod.jbk.diagnostic.CompileErrorSaver;

@@ -1,4 +1,4 @@
-package mod.hilal.saif.asd;
+package pro.sketchware.dialogs;
 
 import android.graphics.drawable.GradientDrawable;
 

@@ -1,6 +1,6 @@
 package pro.sketchware.activities.editor.block;
 
-import mod.hilal.saif.activities.tools.ConfigActivity;
+import pro.sketchware.activities.settings.ConfigActivity;
 
 import static pro.sketchware.util.GsonUtils.getGson;
 

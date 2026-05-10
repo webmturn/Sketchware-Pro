@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 import pro.sketchware.core.project.ProjectDataStore;
 import pro.sketchware.core.project.ProjectDataManager;
-import mod.hilal.saif.activities.tools.ConfigActivity;
+import pro.sketchware.activities.settings.ConfigActivity;
 
 public class ExtraBlocks {
 

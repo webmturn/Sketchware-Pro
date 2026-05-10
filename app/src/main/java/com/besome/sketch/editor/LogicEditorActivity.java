@@ -123,7 +123,7 @@ import pro.sketchware.activities.editor.makeblock.ReturnMoreblockManager;
 import pro.sketchware.activities.editor.makeblock.MoreblockImporterDialog;
 import pro.sketchware.project.ProjectSettings;
 import mod.hey.studios.util.Helper;
-import mod.hilal.saif.asd.AsdDialog;
+import pro.sketchware.dialogs.AsdDialog;
 import pro.sketchware.activities.editor.makeblock.MoreblockImporter;
 import mod.jbk.util.BlockUtil;
 import mod.jbk.util.LogUtil;

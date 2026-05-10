@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import pro.sketchware.core.ui.DefinitionBlockView;
 import pro.sketchware.core.util.ViewUtil;
 import mod.hey.studios.util.Helper;
-import mod.hilal.saif.activities.tools.AppSettings;
+import pro.sketchware.activities.settings.AppSettings;
 import pro.sketchware.R;
 
 public class LogicEditorDrawer extends LinearLayout {
