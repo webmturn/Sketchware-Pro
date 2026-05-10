@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package mod.agus.jcoderz.multidex;
+package pro.sketchware.core.build.multidex;
 
 import mod.agus.jcoderz.dx.cf.attrib.AttRuntimeVisibleAnnotations;
 import mod.agus.jcoderz.dx.cf.direct.DirectClassFile;

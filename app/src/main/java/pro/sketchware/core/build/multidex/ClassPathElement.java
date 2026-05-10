@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package mod.agus.jcoderz.multidex;
+package pro.sketchware.core.build.multidex;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package mod.agus.jcoderz.multidex;
+package pro.sketchware.core.build.multidex;
 
 import mod.agus.jcoderz.dx.cf.direct.DirectClassFile;
 import mod.agus.jcoderz.dx.cf.direct.StdAttributeFactory;
@@ -35,9 +35,9 @@ class Path {
     static ClassPathElement getClassPathElement(File file)
             throws ZipException, IOException {
         if (file.isDirectory()) {
-            return new mod.agus.jcoderz.multidex.FolderPathElement(file);
+            return new pro.sketchware.core.build.multidex.FolderPathElement(file);
         } else if (file.isFile()) {
-            return new mod.agus.jcoderz.multidex.ArchivePathElement(new ZipFile(file));
+            return new pro.sketchware.core.build.multidex.ArchivePathElement(new ZipFile(file));
         } else if (file.exists()) {
             throw new IOException("\"" + file.getPath() +
                     "\" is not a directory neither a zip file");

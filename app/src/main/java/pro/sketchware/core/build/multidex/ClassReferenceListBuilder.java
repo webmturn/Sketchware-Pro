@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package mod.agus.jcoderz.multidex;
+package pro.sketchware.core.build.multidex;
 
 import mod.agus.jcoderz.dx.cf.direct.DirectClassFile;
 import mod.agus.jcoderz.dx.cf.iface.FieldList;
@@ -41,17 +41,17 @@ import java.util.zip.ZipFile;
 public class ClassReferenceListBuilder {
     private static final String CLASS_EXTENSION = ".class";
 
-    private final mod.agus.jcoderz.multidex.Path path;
+    private final pro.sketchware.core.build.multidex.Path path;
     private final Set<String> classNames = new HashSet<String>();
 
-    public ClassReferenceListBuilder(mod.agus.jcoderz.multidex.Path path) {
+    public ClassReferenceListBuilder(pro.sketchware.core.build.multidex.Path path) {
         this.path = path;
     }
 
     /**
      * Kept for compatibility with the gradle integration, this method just forwards to
-     * {@link mod.agus.jcoderz.multidex.MainDexListBuilder#main(String[])}.
-     * @deprecated use {@link mod.agus.jcoderz.multidex.MainDexListBuilder#main(String[])} instead.
+     * {@link pro.sketchware.core.build.multidex.MainDexListBuilder#main(String[])}.
+     * @deprecated use {@link pro.sketchware.core.build.multidex.MainDexListBuilder#main(String[])} instead.
      */
     @Deprecated
     public static void main(String[] args) {
