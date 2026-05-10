@@ -1,4 +1,4 @@
-package pro.sketchware.fragments.settings.block.selector;
+package pro.sketchware.activities.settings.fragments.block.selector;
 
 import android.os.Parcel;
 import android.os.Parcelable;

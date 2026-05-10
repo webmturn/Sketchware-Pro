@@ -1,4 +1,4 @@
-package pro.sketchware.fragments.settings.appearance;
+package pro.sketchware.activities.settings.fragments.appearance;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

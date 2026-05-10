@@ -1,4 +1,4 @@
-package pro.sketchware.fragments.settings.block.selector;
+package pro.sketchware.activities.settings.fragments.block.selector;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;

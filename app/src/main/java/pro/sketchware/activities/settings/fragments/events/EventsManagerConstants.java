@@ -1,4 +1,4 @@
-package pro.sketchware.fragments.settings.events;
+package pro.sketchware.activities.settings.fragments.events;
 
 import java.io.File;
 

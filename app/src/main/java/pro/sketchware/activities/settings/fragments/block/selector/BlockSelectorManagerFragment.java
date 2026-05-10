@@ -1,4 +1,4 @@
-package pro.sketchware.fragments.settings.block.selector;
+package pro.sketchware.activities.settings.fragments.block.selector;
 
 import static pro.sketchware.util.Helper.addBasicTextChangedListener;
 import static pro.sketchware.util.GsonUtils.getGson;
@@ -35,7 +35,7 @@ import pro.sketchware.R;
 import pro.sketchware.databinding.DialogBlockConfigurationBinding;
 import pro.sketchware.databinding.DialogSelectorActionsBinding;
 import pro.sketchware.databinding.FragmentBlockSelectorManagerBinding;
-import pro.sketchware.fragments.settings.block.selector.details.BlockSelectorDetailsFragment;
+import pro.sketchware.activities.settings.fragments.block.selector.details.BlockSelectorDetailsFragment;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 import pro.sketchware.util.UI;

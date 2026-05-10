@@ -1,4 +1,4 @@
-package pro.sketchware.fragments.settings.events.details;
+package pro.sketchware.activities.settings.fragments.events.details;
 
 import static pro.sketchware.util.GsonUtils.getGson;
 
@@ -25,8 +25,8 @@ import pro.sketchware.beans.CustomEvent;
 import pro.sketchware.R;
 import pro.sketchware.databinding.FragmentEventsManagerDetailsBinding;
 import pro.sketchware.databinding.LayoutEventItemBinding;
-import pro.sketchware.fragments.settings.events.EventsManagerConstants;
-import pro.sketchware.fragments.settings.events.creator.EventsManagerCreatorFragment;
+import pro.sketchware.activities.settings.fragments.events.EventsManagerConstants;
+import pro.sketchware.activities.settings.fragments.events.creator.EventsManagerCreatorFragment;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 import pro.sketchware.util.UI;

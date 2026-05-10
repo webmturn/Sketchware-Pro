@@ -1,4 +1,4 @@
-package pro.sketchware.fragments.settings.block.selector.details;
+package pro.sketchware.activities.settings.fragments.block.selector.details;
 
 import static pro.sketchware.util.GsonUtils.getGson;
 
@@ -24,9 +24,9 @@ import pro.sketchware.R;
 import pro.sketchware.databinding.DialogAddCustomActivityBinding;
 import pro.sketchware.databinding.DialogSelectorActionsBinding;
 import pro.sketchware.databinding.FragmentBlockSelectorManagerBinding;
-import pro.sketchware.fragments.settings.block.selector.BlockSelectorConsts;
+import pro.sketchware.activities.settings.fragments.block.selector.BlockSelectorConsts;
 import pro.sketchware.util.UI;
-import pro.sketchware.fragments.settings.block.selector.Selector;
+import pro.sketchware.activities.settings.fragments.block.selector.Selector;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 

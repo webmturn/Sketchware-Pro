@@ -1,4 +1,4 @@
-package pro.sketchware.fragments.settings.block.selector.details;
+package pro.sketchware.activities.settings.fragments.block.selector.details;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import pro.sketchware.databinding.LayoutBlockSelectorBinding;
-import pro.sketchware.fragments.settings.block.selector.BlockSelectorAdapter.OnClickListener;
+import pro.sketchware.activities.settings.fragments.block.selector.BlockSelectorAdapter.OnClickListener;
 import pro.sketchware.util.UI;
 
 public class BlockSelectorDetailsAdapter extends ListAdapter<String, BlockSelectorDetailsAdapter.BlockSelectorDetailsAdapterViewHolder> {

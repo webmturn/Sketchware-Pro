@@ -7,10 +7,10 @@ import androidx.fragment.app.Fragment;
 import com.besome.sketch.lib.base.BaseAppCompatActivity;
 
 import pro.sketchware.databinding.ActivitySettingsBinding;
-import pro.sketchware.fragments.settings.appearance.SettingsAppearanceFragment;
-import pro.sketchware.fragments.settings.block.selector.BlockSelectorManagerFragment;
-import pro.sketchware.fragments.settings.events.EventsManagerFragment;
-import pro.sketchware.fragments.settings.language.LanguageSettingsFragment;
+import pro.sketchware.activities.settings.fragments.appearance.SettingsAppearanceFragment;
+import pro.sketchware.activities.settings.fragments.block.selector.BlockSelectorManagerFragment;
+import pro.sketchware.activities.settings.fragments.events.EventsManagerFragment;
+import pro.sketchware.activities.settings.fragments.language.LanguageSettingsFragment;
 
 public class SettingsActivity extends BaseAppCompatActivity {
 

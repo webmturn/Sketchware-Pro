@@ -19,7 +19,7 @@ import com.besome.sketch.lib.ui.LoadingDialog;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import pro.sketchware.dialogs.ProgressDialog;
-import pro.sketchware.fragments.settings.language.LanguageOverrideContextWrapper;
+import pro.sketchware.activities.settings.fragments.language.LanguageOverrideContextWrapper;
 import pro.sketchware.util.UI;
 
 public abstract class BaseAppCompatActivity extends AppCompatActivity {

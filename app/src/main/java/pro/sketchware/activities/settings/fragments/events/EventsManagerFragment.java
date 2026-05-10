@@ -1,4 +1,4 @@
-package pro.sketchware.fragments.settings.events;
+package pro.sketchware.activities.settings.fragments.events;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -34,7 +34,7 @@ import pro.sketchware.R;
 import pro.sketchware.databinding.DialogAddNewListenerBinding;
 import pro.sketchware.databinding.FragmentEventsManagerBinding;
 import pro.sketchware.databinding.LayoutEventItemBinding;
-import pro.sketchware.fragments.settings.events.details.EventsManagerDetailsFragment;
+import pro.sketchware.activities.settings.fragments.events.details.EventsManagerDetailsFragment;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 import pro.sketchware.util.UI;

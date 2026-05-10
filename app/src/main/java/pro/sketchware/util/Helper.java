@@ -69,7 +69,7 @@ public class Helper {
     }
 
     public static String getResString(@StringRes int resId) {
-        String override = pro.sketchware.fragments.settings.language.LanguageOverrideManager
+        String override = pro.sketchware.activities.settings.fragments.language.LanguageOverrideManager
                 .getInstance().getOverride(resId);
         if (override != null) return override;
         return getContext().getString(resId);

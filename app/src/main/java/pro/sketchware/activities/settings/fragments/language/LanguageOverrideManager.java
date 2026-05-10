@@ -1,4 +1,4 @@
-package pro.sketchware.fragments.settings.language;
+package pro.sketchware.activities.settings.fragments.language;
 
 import android.content.Context;
 import android.content.SharedPreferences;

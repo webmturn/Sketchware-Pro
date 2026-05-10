@@ -1,4 +1,4 @@
-package pro.sketchware.fragments.settings.events.creator;
+package pro.sketchware.activities.settings.fragments.events.creator;
 
 import static pro.sketchware.util.GsonUtils.getGson;
 
@@ -16,7 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 import java.util.ArrayList;
 
 import pro.sketchware.core.fragments.BaseFragment;
-import pro.sketchware.fragments.settings.events.EventsManagerConstants;
+import pro.sketchware.activities.settings.fragments.events.EventsManagerConstants;
 import pro.sketchware.util.Helper;
 import pro.sketchware.beans.CustomEvent;
 import pro.sketchware.dialogs.IconSelectorDialog;
