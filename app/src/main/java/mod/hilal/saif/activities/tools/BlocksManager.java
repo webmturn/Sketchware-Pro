@@ -47,7 +47,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
-import mod.hey.studios.editor.manage.block.v2.BlockLoader;
+import pro.sketchware.core.codegen.BlockLoader;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.core.project.SketchwarePaths;

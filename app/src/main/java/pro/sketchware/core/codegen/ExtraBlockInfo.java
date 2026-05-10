@@ -1,4 +1,4 @@
-package mod.hey.studios.editor.manage.block;
+package pro.sketchware.core.codegen;
 
 public class ExtraBlockInfo {
 

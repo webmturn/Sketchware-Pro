@@ -1,6 +1,6 @@
 package pro.sketchware.core.project;
 
-import mod.hilal.saif.components.ComponentsHandler;
+import pro.sketchware.core.codegen.ComponentsHandler;
 
 public class ClassInfo {
     public String className;

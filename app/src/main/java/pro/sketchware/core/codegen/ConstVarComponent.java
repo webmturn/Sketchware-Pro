@@ -1,4 +1,4 @@
-package mod.agus.jcoderz.handle.component;
+package pro.sketchware.core.codegen;
 
 import java.util.ArrayList;
 import java.util.HashMap;

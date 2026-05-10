@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import dev.aldi.sayuti.editor.injection.AppCompatInjection;
+import pro.sketchware.core.codegen.AppCompatInjection;
 import mod.agus.jcoderz.beans.ViewBeans;
 import mod.jbk.util.LogUtil;
 import pro.sketchware.SketchApplication;

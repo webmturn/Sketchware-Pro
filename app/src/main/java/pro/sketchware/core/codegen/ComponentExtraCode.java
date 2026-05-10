@@ -1,11 +1,11 @@
-package mod.hilal.saif.components;
+package pro.sketchware.core.codegen;
 
 import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import mod.hilal.saif.events.EventsHandler;
+import pro.sketchware.core.codegen.EventsHandler;
 import pro.sketchware.core.codegen.EventCodeGenerator;
 import pro.sketchware.util.FileUtil;
 

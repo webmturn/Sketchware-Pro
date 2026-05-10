@@ -1,4 +1,4 @@
-package dev.aldi.sayuti.editor.injection;
+package pro.sketchware.core.codegen;
 
 import java.io.File;
 import java.util.ArrayList;

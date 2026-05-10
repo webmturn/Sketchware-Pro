@@ -25,7 +25,7 @@ import java.util.Objects;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.util.UIHelper;
-import dev.aldi.sayuti.editor.injection.AppCompatInjection;
+import pro.sketchware.core.codegen.AppCompatInjection;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.activities.appcompat.adapters.AppCompatAdapter;

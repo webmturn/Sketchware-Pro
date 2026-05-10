@@ -34,7 +34,7 @@ import pro.sketchware.core.util.ViewUtil;
 import pro.sketchware.core.build.ProjectFilePaths;
 import mod.hey.studios.code.SrcCodeEditor;
 import mod.hey.studios.util.Helper;
-import mod.hilal.saif.android_manifest.AndroidManifestInjector;
+import pro.sketchware.core.codegen.AndroidManifestInjector;
 import mod.jbk.util.LogUtil;
 import mod.remaker.view.CustomAttributeView;
 import pro.sketchware.R;

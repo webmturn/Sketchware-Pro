@@ -1,4 +1,4 @@
-package mod.hilal.saif.events;
+package pro.sketchware.core.codegen;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;

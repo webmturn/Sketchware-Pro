@@ -21,7 +21,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import java.util.ArrayList;
 
 import mod.hey.studios.util.Helper;
-import mod.hilal.saif.components.ComponentsHandler;
+import pro.sketchware.core.codegen.ComponentsHandler;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ComponentAddItemBinding;
 import pro.sketchware.databinding.LogicAddComponentBinding;

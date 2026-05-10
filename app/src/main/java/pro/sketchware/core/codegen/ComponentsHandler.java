@@ -1,4 +1,4 @@
-package mod.hilal.saif.components;
+package pro.sketchware.core.codegen;
 
 import android.content.Context;
 import android.os.Bundle;

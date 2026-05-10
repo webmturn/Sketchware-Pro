@@ -7,8 +7,8 @@ import com.besome.sketch.editor.manage.library.material3.Material3LibraryManager
 
 import java.util.ArrayList;
 
-import mod.hilal.saif.components.ComponentsHandler;
-import mod.hilal.saif.events.EventsHandler;
+import pro.sketchware.core.codegen.ComponentsHandler;
+import pro.sketchware.core.codegen.EventsHandler;
 import pro.sketchware.menu.DefaultExtraMenuBean;
 
 public class ComponentTypeMapper {

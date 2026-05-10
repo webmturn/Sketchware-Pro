@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.HashMap;
 
-import mod.hilal.saif.blocks.CommandBlock;
+import pro.sketchware.core.codegen.CommandBlock;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ItemXmlCommandBinding;
 import pro.sketchware.util.ItemClickListener;

@@ -1,4 +1,4 @@
-package mod.hey.studios.editor.manage.block.v2;
+package pro.sketchware.core.codegen;
 
 import static com.google.android.material.color.MaterialColors.harmonizeWithPrimary;
 
@@ -15,9 +15,9 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import dev.aldi.sayuti.block.ExtraBlockFile;
+import pro.sketchware.core.codegen.ExtraBlockFile;
 import mod.agus.jcoderz.editor.manage.block.palette.PaletteSelector;
-import mod.hey.studios.editor.manage.block.ExtraBlockInfo;
+import pro.sketchware.core.codegen.ExtraBlockInfo;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;
 import pro.sketchware.R;

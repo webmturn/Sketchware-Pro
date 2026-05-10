@@ -1,4 +1,4 @@
-package mod.hilal.saif.android_manifest;
+package pro.sketchware.core.codegen;
 
 import static pro.sketchware.util.GsonUtils.getGson;
 

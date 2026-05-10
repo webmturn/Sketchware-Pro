@@ -30,7 +30,7 @@ import dev.pranav.filepicker.FilePickerDialogFragment;
 import dev.pranav.filepicker.FilePickerOptions;
 import mod.hey.studios.util.Helper;
 import mod.hilal.saif.activities.tools.IconSelectorDialog;
-import mod.hilal.saif.components.ComponentsHandler;
+import pro.sketchware.core.codegen.ComponentsHandler;
 import mod.jbk.util.LogUtil;
 import mod.jbk.util.OldResourceIdMapper;
 import pro.sketchware.beans.CustomComponent;

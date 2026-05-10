@@ -26,11 +26,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import mod.agus.jcoderz.editor.manifest.EditorManifest;
+import pro.sketchware.core.codegen.EditorManifest;
 import pro.sketchware.core.build.BuildSettings;
 import mod.hey.studios.project.ProjectSettings;
 import mod.hey.studios.util.Helper;
-import mod.hilal.saif.android_manifest.AndroidManifestInjector;
+import pro.sketchware.core.codegen.AndroidManifestInjector;
 import mod.jbk.build.BuiltInLibraries;
 import pro.sketchware.util.library.BuiltInLibraryManager;
 import pro.sketchware.util.FilePathUtil;

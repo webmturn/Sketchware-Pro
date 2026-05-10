@@ -14,8 +14,8 @@ import com.besome.sketch.beans.BlockBean;
 import com.besome.sketch.editor.logic.BlockPane;
 import com.google.gson.Gson;
 import java.util.ArrayList;
-import mod.hey.studios.editor.manage.block.ExtraBlockInfo;
-import mod.hey.studios.editor.manage.block.v2.BlockLoader;
+import pro.sketchware.core.codegen.ExtraBlockInfo;
+import pro.sketchware.core.codegen.BlockLoader;
 import mod.hey.studios.project.ProjectTracker;
 
 public class BlockView extends BaseBlockView {

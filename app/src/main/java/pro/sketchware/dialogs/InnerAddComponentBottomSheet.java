@@ -30,7 +30,7 @@ import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.util.UIHelper;
 import pro.sketchware.core.codegen.BlockConstants;
 import mod.hey.studios.util.Helper;
-import mod.hilal.saif.components.ComponentsHandler;
+import pro.sketchware.core.codegen.ComponentsHandler;
 import pro.sketchware.R;
 import pro.sketchware.databinding.LogicAddComponentDialogBinding;
 import pro.sketchware.util.DebouncedClickListener;

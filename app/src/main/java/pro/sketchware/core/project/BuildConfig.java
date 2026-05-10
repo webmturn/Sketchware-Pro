@@ -8,7 +8,7 @@ import com.besome.sketch.beans.ProjectLibraryBean;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import mod.agus.jcoderz.handle.component.ConstVarComponent;
+import pro.sketchware.core.codegen.ConstVarComponent;
 
 public class BuildConfig {
 

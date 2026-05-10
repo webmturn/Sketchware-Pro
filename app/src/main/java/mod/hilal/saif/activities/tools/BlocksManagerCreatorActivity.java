@@ -35,7 +35,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import mod.hilal.saif.blocks.BlockTypeUtils;
+import pro.sketchware.core.codegen.BlockTypeUtils;
 import pro.sketchware.core.ui.BlockView;
 import mod.hey.studios.util.Helper;
 import mod.hilal.saif.lib.PCP;

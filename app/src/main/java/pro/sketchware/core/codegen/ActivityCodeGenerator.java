@@ -3,7 +3,7 @@ import pro.sketchware.core.project.BuildConfig;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.ProjectDataStore;
 
-import static dev.aldi.sayuti.block.ExtraBlockFile.getExtraBlockData;
+import static pro.sketchware.core.codegen.ExtraBlockFile.getExtraBlockData;
 
 import android.text.TextUtils;
 import android.util.Pair;
@@ -23,12 +23,12 @@ import java.util.regex.Pattern;
 
 import mod.agus.jcoderz.beans.ViewBeans;
 import mod.agus.jcoderz.editor.manage.library.locallibrary.ManageLocalLibrary;
-import mod.agus.jcoderz.handle.component.ConstVarComponent;
+import pro.sketchware.core.codegen.ConstVarComponent;
 import pro.sketchware.core.build.BuildSettings;
 import mod.hey.studios.project.ProjectSettings;
-import mod.hilal.saif.android_manifest.AndroidManifestInjector;
-import mod.hilal.saif.blocks.CommandBlock;
-import mod.hilal.saif.events.LogicHandler;
+import pro.sketchware.core.codegen.AndroidManifestInjector;
+import pro.sketchware.core.codegen.CommandBlock;
+import pro.sketchware.core.codegen.LogicHandler;
 import pro.sketchware.core.build.ViewBindingBuilder;
 import pro.sketchware.control.logic.PermissionManager;
 import pro.sketchware.core.codegen.BlockCodeRegistry;

@@ -1,4 +1,4 @@
-package dev.aldi.sayuti.block;
+package pro.sketchware.core.codegen;
 
 import static pro.sketchware.util.ThemeUtils.getColor;
 import static pro.sketchware.util.ThemeUtils.isDarkThemeEnabled;
@@ -28,14 +28,14 @@ import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.BuildConfig;
 import pro.sketchware.core.codegen.BlockColorMapper;
 import mod.agus.jcoderz.beans.ViewBeans;
-import mod.hey.studios.editor.manage.block.ExtraBlockInfo;
-import mod.hey.studios.editor.manage.block.v2.BlockLoader;
+import pro.sketchware.core.codegen.ExtraBlockInfo;
+import pro.sketchware.core.codegen.BlockLoader;
 import mod.hey.studios.editor.view.IdGenerator;
 import mod.hey.studios.util.Helper;
-import mod.hilal.saif.blocks.BlockTypeUtils;
+import pro.sketchware.core.codegen.BlockTypeUtils;
 import mod.hey.studios.moreblock.ReturnMoreblockManager;
 import mod.hilal.saif.activities.tools.ConfigActivity;
-import mod.hilal.saif.blocks.BlocksHandler;
+import pro.sketchware.core.codegen.BlocksHandler;
 import pro.sketchware.core.build.ViewBindingBuilder;
 import pro.sketchware.R;
 import pro.sketchware.activities.resourceseditor.components.utils.StringsEditorManager;

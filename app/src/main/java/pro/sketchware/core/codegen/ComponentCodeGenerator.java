@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 import mod.hey.studios.moreblock.ReturnMoreblockManager;
-import mod.hilal.saif.components.ComponentsHandler;
+import pro.sketchware.core.codegen.ComponentsHandler;
 import pro.sketchware.core.build.ViewBindingBuilder;
 import pro.sketchware.core.codegen.BlockCodeRegistry;
 import pro.sketchware.core.codegen.BlockInterpreter;

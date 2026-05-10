@@ -19,7 +19,7 @@ import pro.sketchware.core.util.ZipUtil;
 
 import static com.besome.sketch.Config.VAR_DEFAULT_MIN_SDK_VERSION;
 import static com.besome.sketch.Config.VAR_DEFAULT_TARGET_SDK_VERSION;
-import static dev.aldi.sayuti.block.ExtraBlockFile.getExtraBlockData;
+import static pro.sketchware.core.codegen.ExtraBlockFile.getExtraBlockData;
 
 import static mod.hey.studios.util.ProjectFile.getDefaultColor;
 
@@ -54,15 +54,15 @@ import java.util.regex.Pattern;
 
 import android.util.Pair;
 
-import dev.aldi.sayuti.block.ExtraBlockFile;
-import mod.hey.studios.editor.manage.block.v2.BlockLoader;
-import mod.hilal.saif.events.EventsHandler;
+import pro.sketchware.core.codegen.ExtraBlockFile;
+import pro.sketchware.core.codegen.BlockLoader;
+import pro.sketchware.core.codegen.EventsHandler;
 import mod.agus.jcoderz.editor.manage.library.locallibrary.ManageLocalLibrary;
 import pro.sketchware.core.build.BuildSettings;
 import mod.hey.studios.project.ProjectSettings;
 import mod.hey.studios.util.ProjectFile;
-import mod.hilal.saif.android_manifest.AndroidManifestInjector;
-import mod.hilal.saif.blocks.CommandBlock;
+import pro.sketchware.core.codegen.AndroidManifestInjector;
+import pro.sketchware.core.codegen.CommandBlock;
 import pro.sketchware.core.build.ViewBindingBuilder;
 import pro.sketchware.SketchApplication;
 import pro.sketchware.util.library.BuiltInLibraryManager;
