@@ -59,7 +59,7 @@ import pro.sketchware.beans.HistoryBlockBean;
 import pro.sketchware.beans.MoreBlockCollectionBean;
 import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.beans.ViewBean;
-import com.besome.sketch.design.DesignActivity;
+import pro.sketchware.activities.design.DesignActivity;
 import pro.sketchware.activities.editor.component.AddComponentBottomSheet;
 import pro.sketchware.activities.editor.logic.BlockPane;
 import pro.sketchware.activities.editor.logic.LogicTopMenu;

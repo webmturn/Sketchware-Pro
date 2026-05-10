@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import pro.sketchware.beans.ProjectResourceBean;
-import com.besome.sketch.design.DesignActivity;
+import pro.sketchware.activities.design.DesignActivity;
 import com.bumptech.glide.Glide;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 

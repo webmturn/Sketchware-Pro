@@ -23,7 +23,7 @@ import androidx.lifecycle.Lifecycle;
 import pro.sketchware.beans.HistoryViewBean;
 import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.beans.ViewBean;
-import com.besome.sketch.design.DesignActivity;
+import pro.sketchware.activities.design.DesignActivity;
 import pro.sketchware.activities.editor.LogicEditorActivity;
 import pro.sketchware.activities.editor.PropertyActivity;
 import pro.sketchware.activities.editor.view.DraggingListener;

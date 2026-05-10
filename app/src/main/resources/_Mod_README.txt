@@ -47,7 +47,7 @@ I made this part specifically for my fellow modders who want to contribute to Sk
 
 » DEX info
 
-   classes.dex  -> Contains most of Sketchware's classes, including the packages a.a.a and com.besome.sketch.
+   classes.dex  -> Contains most of Sketchware's classes, now unified under pro.sketchware.* (formerly a.a.a and com.besome.sketch).
 
    classes2.dex -> Nothing exciting, only libraries such as AndroidX, Glide, AdMob, ProGuard, StringFog, ASM etc.
 

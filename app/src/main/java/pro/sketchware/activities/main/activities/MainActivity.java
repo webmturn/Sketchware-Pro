@@ -30,7 +30,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import pro.sketchware.activities.base.BasePermissionAppCompatActivity;
-import com.besome.sketch.tools.CollectErrorActivity;
+import pro.sketchware.activities.tools.CollectErrorActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseApp;

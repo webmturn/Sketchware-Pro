@@ -1,4 +1,4 @@
-package com.besome.sketch.design;
+package pro.sketchware.activities.design;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;

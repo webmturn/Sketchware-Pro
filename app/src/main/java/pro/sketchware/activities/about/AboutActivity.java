@@ -17,7 +17,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import pro.sketchware.activities.base.BaseAppCompatActivity;
-import com.besome.sketch.tools.CollectErrorActivity;
+import pro.sketchware.activities.tools.CollectErrorActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.gson.Gson;

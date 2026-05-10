@@ -28,7 +28,7 @@ import androidx.exifinterface.media.ExifInterface;
 
 import pro.sketchware.activities.base.BaseAppCompatActivity;
 import pro.sketchware.widgets.ColorPickerDialog;
-import com.besome.sketch.projects.MyProjectSettingActivity;
+import pro.sketchware.activities.projects.MyProjectSettingActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

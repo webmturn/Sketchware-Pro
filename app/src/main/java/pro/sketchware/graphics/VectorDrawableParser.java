@@ -1,6 +1,6 @@
 package pro.sketchware.graphics;
 
-import static com.besome.sketch.design.DesignActivity.sc_id;
+import static pro.sketchware.activities.design.DesignActivity.sc_id;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

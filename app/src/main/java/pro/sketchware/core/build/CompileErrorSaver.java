@@ -3,7 +3,7 @@ package pro.sketchware.core.build;
 import android.content.Context;
 import android.content.Intent;
 
-import com.besome.sketch.tools.CompileLogActivity;
+import pro.sketchware.activities.tools.CompileLogActivity;
 
 import pro.sketchware.util.FilePathUtil;
 import pro.sketchware.util.FileUtil;

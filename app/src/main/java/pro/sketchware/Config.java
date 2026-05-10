@@ -1,4 +1,4 @@
-package com.besome.sketch;
+package pro.sketchware;
 
 public class Config {
     public static final int VAR_DEFAULT_MIN_SDK_VERSION = 21;

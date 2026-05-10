@@ -1,4 +1,4 @@
-package com.besome.sketch.help;
+package pro.sketchware.activities.help;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;

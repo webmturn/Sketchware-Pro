@@ -1,4 +1,4 @@
-package com.besome.sketch.ctrls;
+package pro.sketchware.core.ctrls;
 
 import android.content.Context;
 import android.view.LayoutInflater;

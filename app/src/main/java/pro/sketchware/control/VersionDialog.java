@@ -3,7 +3,7 @@ package pro.sketchware.control;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 
-import com.besome.sketch.projects.MyProjectSettingActivity;
+import pro.sketchware.activities.projects.MyProjectSettingActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import pro.sketchware.util.UIHelper;

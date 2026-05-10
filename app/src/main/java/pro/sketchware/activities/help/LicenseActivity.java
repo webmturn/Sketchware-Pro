@@ -1,4 +1,4 @@
-package com.besome.sketch.help;
+package pro.sketchware.activities.help;
 
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;

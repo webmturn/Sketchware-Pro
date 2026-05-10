@@ -1,4 +1,4 @@
-package com.besome.sketch.design;
+package pro.sketchware.activities.design;
 
 import android.app.Activity;
 import android.app.NotificationChannel;
@@ -52,9 +52,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
-import com.besome.sketch.adapters.JavaFileAdapter;
+import pro.sketchware.adapters.JavaFileAdapter;
 import pro.sketchware.beans.ProjectFileBean;
-import com.besome.sketch.common.SrcViewerActivity;
+import pro.sketchware.common.SrcViewerActivity;
 import pro.sketchware.activities.editor.manage.ManageCollectionActivity;
 import pro.sketchware.activities.editor.manage.ViewSelectorActivity;
 import pro.sketchware.activities.editor.manage.font.ManageFontActivity;
@@ -64,7 +64,7 @@ import pro.sketchware.activities.editor.manage.sound.ManageSoundActivity;
 import pro.sketchware.activities.editor.manage.view.ManageViewActivity;
 import pro.sketchware.activities.base.BaseAppCompatActivity;
 import pro.sketchware.widgets.CustomViewPager;
-import com.besome.sketch.tools.CompileLogActivity;
+import pro.sketchware.activities.tools.CompileLogActivity;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
@@ -1123,7 +1123,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     }
 
     private static class BuildTask extends BaseTask implements BuildProgressReceiver {
-        public static final String ACTION_CANCEL_BUILD = "com.besome.sketch.design.ACTION_CANCEL_BUILD";
+        public static final String ACTION_CANCEL_BUILD = "pro.sketchware.activities.design.ACTION_CANCEL_BUILD";
         private static final String CHANNEL_ID = "build_notification_channel";
         private final ExecutorService executorService = BackgroundTasks.createSingleThreadExecutor("DesignBuild");
         private final NotificationManager notificationManager;

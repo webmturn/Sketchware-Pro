@@ -10,7 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.besome.sketch.ctrls.ViewIdSpinnerItem;
+import pro.sketchware.core.ctrls.ViewIdSpinnerItem;
 
 import java.util.ArrayList;
 

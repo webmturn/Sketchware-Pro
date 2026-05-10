@@ -40,7 +40,7 @@ import pro.sketchware.beans.ImageBean;
 import pro.sketchware.beans.LayoutBean;
 import pro.sketchware.beans.ProjectResourceBean;
 import pro.sketchware.beans.ViewBean;
-import com.besome.sketch.design.DesignActivity;
+import pro.sketchware.activities.design.DesignActivity;
 import pro.sketchware.activities.editor.manage.library.material3.Material3LibraryManager;
 import pro.sketchware.activities.editor.view.item.ItemAdView;
 import pro.sketchware.activities.editor.view.item.ItemBottomNavigationView;

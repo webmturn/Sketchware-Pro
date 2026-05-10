@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.os.LocaleListCompat;
 
-import com.besome.sketch.tools.CollectErrorActivity;
+import pro.sketchware.activities.tools.CollectErrorActivity;
 
 import pro.sketchware.core.project.ProjectListManager;
 import pro.sketchware.activities.settings.fragments.language.LanguageOverrideContextWrapper;

@@ -21,7 +21,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import pro.sketchware.activities.editor.manage.library.LibraryCategoryView;
 import pro.sketchware.activities.editor.manage.library.LibraryItemView;
-import com.besome.sketch.help.SystemSettingActivity;
+import pro.sketchware.activities.help.SystemSettingActivity;
 import pro.sketchware.activities.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 

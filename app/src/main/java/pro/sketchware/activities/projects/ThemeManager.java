@@ -1,4 +1,4 @@
-package com.besome.sketch.projects;
+package pro.sketchware.activities.projects;
 
 import static pro.sketchware.util.ProjectFile.getDefaultColor;
 

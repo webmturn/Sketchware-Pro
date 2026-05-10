@@ -1,6 +1,6 @@
 package pro.sketchware.activities.resourceseditor.components.utils;
 
-import static com.besome.sketch.design.DesignActivity.sc_id;
+import static pro.sketchware.activities.design.DesignActivity.sc_id;
 import static pro.sketchware.util.ProjectFile.getDefaultColor;
 
 import android.annotation.SuppressLint;

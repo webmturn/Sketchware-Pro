@@ -1,4 +1,4 @@
-package com.besome.sketch;
+package pro.sketchware.activities.main;
 
 import static com.google.android.material.theme.overlay.MaterialThemeOverlay.wrap;
 
@@ -17,8 +17,8 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.besome.sketch.help.ProgramInfoActivity;
-import com.besome.sketch.tools.NewKeyStoreActivity;
+import pro.sketchware.activities.help.ProgramInfoActivity;
+import pro.sketchware.activities.tools.NewKeyStoreActivity;
 import com.google.android.material.navigation.NavigationView;
 
 import pro.sketchware.activities.main.activities.MainActivity;

@@ -1,4 +1,4 @@
-package com.besome.sketch.adapters;
+package pro.sketchware.adapters;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -13,9 +13,9 @@ import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.besome.sketch.export.ExportProjectActivity;
+import pro.sketchware.activities.export.ExportProjectActivity;
 import pro.sketchware.widgets.LoadingDialog;
-import com.besome.sketch.projects.MyProjectSettingActivity;
+import pro.sketchware.activities.projects.MyProjectSettingActivity;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 

@@ -52,18 +52,18 @@
         </provider>
 
         <activity
-            android:name="com.besome.sketch.common.SrcViewerActivity"
+            android:name="pro.sketchware.common.SrcViewerActivity"
             android:configChanges="orientation|screenSize" />
         <activity
             android:name="pro.sketchware.activities.importicon.ImportIconActivity"
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name="com.besome.sketch.help.LicenseActivity" />
-        <activity android:name="com.besome.sketch.help.ProgramInfoActivity" />
+        <activity android:name="pro.sketchware.activities.help.LicenseActivity" />
+        <activity android:name="pro.sketchware.activities.help.ProgramInfoActivity" />
         <activity
-            android:name="com.besome.sketch.help.SystemSettingActivity"
+            android:name="pro.sketchware.activities.help.SystemSettingActivity"
             android:configChanges="orientation|screenSize" />
-        <activity android:name="com.besome.sketch.help.SystemInfoActivity" />
+        <activity android:name="pro.sketchware.activities.help.SystemInfoActivity" />
         <activity
             android:name="pro.sketchware.activities.editor.LogicEditorActivity"
             android:configChanges="orientation|screenSize"
@@ -76,19 +76,19 @@
             android:name="pro.sketchware.activities.editor.makeblock.MakeBlockActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="com.besome.sketch.projects.MyProjectSettingActivity"
+            android:name="pro.sketchware.activities.projects.MyProjectSettingActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
-        <activity android:name="com.besome.sketch.tools.CompileLogActivity" />
-        <activity android:name="com.besome.sketch.tools.CollectErrorActivity" />
+        <activity android:name="pro.sketchware.activities.tools.CompileLogActivity" />
+        <activity android:name="pro.sketchware.activities.tools.CollectErrorActivity" />
         <activity
-            android:name="com.besome.sketch.tools.NewKeyStoreActivity"
+            android:name="pro.sketchware.activities.tools.NewKeyStoreActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="com.besome.sketch.export.ExportProjectActivity"
+            android:name="pro.sketchware.activities.export.ExportProjectActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="com.besome.sketch.design.DesignActivity"
+            android:name="pro.sketchware.activities.design.DesignActivity"
             android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden|keyboard"
             android:windowSoftInputMode="stateHidden"
             android:theme="@style/Theme.SketchwarePro.SmallToolbar" />

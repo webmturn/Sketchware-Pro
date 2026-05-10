@@ -1,7 +1,7 @@
 package pro.sketchware.project;
 
-import static com.besome.sketch.Config.VAR_DEFAULT_MIN_SDK_VERSION;
-import static com.besome.sketch.Config.VAR_DEFAULT_TARGET_SDK_VERSION;
+import static pro.sketchware.Config.VAR_DEFAULT_MIN_SDK_VERSION;
+import static pro.sketchware.Config.VAR_DEFAULT_TARGET_SDK_VERSION;
 
 import android.app.Activity;
 import android.view.View;
