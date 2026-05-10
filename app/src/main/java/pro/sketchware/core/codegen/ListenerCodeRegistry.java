@@ -3,7 +3,7 @@ package pro.sketchware.core.codegen;
 import java.util.HashMap;
 import java.util.Map;
 
-import mod.agus.jcoderz.editor.event.ManageEvent;
+import pro.sketchware.activities.editor.ManageEvent;
 import pro.sketchware.core.codegen.ComponentCodeGenerator;
 
 /**

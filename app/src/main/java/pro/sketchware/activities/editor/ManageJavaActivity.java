@@ -1,4 +1,4 @@
-package mod.hey.studios.activity.managers.java;
+package pro.sketchware.activities.editor;
 
 import androidx.activity.OnBackPressedCallback;
 import android.content.DialogInterface;
@@ -36,7 +36,7 @@ import java.util.regex.Pattern;
 import dev.pranav.filepicker.FilePickerCallback;
 import dev.pranav.filepicker.FilePickerDialogFragment;
 import dev.pranav.filepicker.FilePickerOptions;
-import mod.hey.studios.code.SrcCodeEditor;
+import pro.sketchware.activities.editor.code.SrcCodeEditor;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.DialogCreateNewFileLayoutBinding;

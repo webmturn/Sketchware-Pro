@@ -1,4 +1,4 @@
-package mod.hey.studios.activity.managers.assets;
+package pro.sketchware.activities.editor;
 
 import androidx.activity.OnBackPressedCallback;
 import android.annotation.SuppressLint;
@@ -37,7 +37,7 @@ import dev.pranav.filepicker.FilePickerCallback;
 import dev.pranav.filepicker.FilePickerDialogFragment;
 import dev.pranav.filepicker.FilePickerOptions;
 import dev.pranav.filepicker.SelectionMode;
-import mod.hey.studios.code.SrcCodeEditor;
+import pro.sketchware.activities.editor.code.SrcCodeEditor;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.DialogCreateNewFileLayoutBinding;

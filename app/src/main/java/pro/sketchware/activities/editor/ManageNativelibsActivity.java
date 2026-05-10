@@ -1,4 +1,4 @@
-package mod.hey.studios.activity.managers.nativelib;
+package pro.sketchware.activities.editor;
 
 import androidx.activity.OnBackPressedCallback;
 import android.content.DialogInterface;

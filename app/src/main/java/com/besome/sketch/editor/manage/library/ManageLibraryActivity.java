@@ -38,7 +38,7 @@ import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.core.util.UIHelper;
 import pro.sketchware.library.ManageLocalLibraryActivity;
-import mod.hey.studios.activity.managers.nativelib.ManageNativelibsActivity;
+import pro.sketchware.activities.editor.ManageNativelibsActivity;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.library.ExcludeBuiltInLibrariesActivity;
 import pro.sketchware.library.ExcludeBuiltInLibrariesLibraryItemView;

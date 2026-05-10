@@ -1,4 +1,4 @@
-package mod.agus.jcoderz.editor.manage.permission;
+package pro.sketchware.activities.editor;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

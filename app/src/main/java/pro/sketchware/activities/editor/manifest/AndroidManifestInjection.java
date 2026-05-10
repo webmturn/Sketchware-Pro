@@ -1,4 +1,4 @@
-package mod.hilal.saif.activities.android_manifest;
+package pro.sketchware.activities.editor.manifest;
 
 import static pro.sketchware.util.GsonUtils.getGson;
 
@@ -32,7 +32,7 @@ import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.core.util.ViewUtil;
 import pro.sketchware.core.build.ProjectFilePaths;
-import mod.hey.studios.code.SrcCodeEditor;
+import pro.sketchware.activities.editor.code.SrcCodeEditor;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.core.codegen.AndroidManifestInjector;
 import mod.jbk.util.LogUtil;

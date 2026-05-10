@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import pro.sketchware.library.ManageLocalLibrary;
-import mod.hey.studios.code.SrcCodeEditor;
+import pro.sketchware.activities.editor.code.SrcCodeEditor;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageProguardBinding;
 

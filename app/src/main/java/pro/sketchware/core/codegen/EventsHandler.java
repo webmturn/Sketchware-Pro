@@ -209,7 +209,7 @@ public class EventsHandler {
     }
 
     /**
-     * Used in {@link mod.agus.jcoderz.editor.event.ManageEvent#addExtraEvents(ClassInfo, ArrayList)} to retrieve extra
+     * Used in {@link pro.sketchware.activities.editor.ManageEvent#addExtraEvents(ClassInfo, ArrayList)} to retrieve extra
      * Events for Components, such as custom ones.
      */
     public static void addEvents(ClassInfo classInfo, ArrayList<String> list) {
@@ -230,7 +230,7 @@ public class EventsHandler {
     }
 
     /**
-     * Used in {@link mod.agus.jcoderz.editor.event.ManageEvent#addExtraListeners(ClassInfo, ArrayList)} to get extra
+     * Used in {@link pro.sketchware.activities.editor.ManageEvent#addExtraListeners(ClassInfo, ArrayList)} to get extra
      * listeners for Components and Widgets, such as custom ones.
      */
     public static void addListeners(ClassInfo classInfo, ArrayList<String> list) {
@@ -248,7 +248,7 @@ public class EventsHandler {
     }
 
     /**
-     * Used in {@link mod.agus.jcoderz.editor.event.ManageEvent#addEventsForListener(String, ArrayList)} to get extra
+     * Used in {@link pro.sketchware.activities.editor.ManageEvent#addEventsForListener(String, ArrayList)} to get extra
      * listeners' Events, such as custom ones.
      */
     public static void addEventsToListener(String name, ArrayList<String> list) {

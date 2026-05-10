@@ -1,4 +1,4 @@
-package mod.agus.jcoderz.editor.manage.resource;
+package pro.sketchware.activities.editor;
 
 import androidx.activity.OnBackPressedCallback;
 import android.annotation.SuppressLint;
@@ -36,7 +36,7 @@ import dev.pranav.filepicker.FilePickerDialogFragment;
 import dev.pranav.filepicker.FilePickerOptions;
 import dev.pranav.filepicker.SelectionMode;
 import mod.bobur.VectorDrawableLoader;
-import mod.hey.studios.code.SrcCodeEditor;
+import pro.sketchware.activities.editor.code.SrcCodeEditor;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;
 import pro.sketchware.R;

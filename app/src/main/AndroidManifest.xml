@@ -231,32 +231,32 @@
             android:name="pro.sketchware.library.SubDependenciesActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="mod.agus.jcoderz.editor.manage.permission.ManagePermissionActivity"
+            android:name="pro.sketchware.activities.editor.ManagePermissionActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="mod.agus.jcoderz.editor.manage.resource.ManageResourceActivity"
+            android:name="pro.sketchware.activities.editor.ManageResourceActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="mod.hey.studios.activity.managers.assets.ManageAssetsActivity"
+            android:name="pro.sketchware.activities.editor.ManageAssetsActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="mod.hey.studios.activity.managers.java.ManageJavaActivity"
+            android:name="pro.sketchware.activities.editor.ManageJavaActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="mod.hey.studios.activity.managers.nativelib.ManageNativelibsActivity"
+            android:name="pro.sketchware.activities.editor.ManageNativelibsActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="mod.hey.studios.code.SrcCodeEditor"
+            android:name="pro.sketchware.activities.editor.code.SrcCodeEditor"
             android:configChanges="orientation|screenSize" />
         <activity
             android:name="pro.sketchware.project.ManageProguardActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="mod.hilal.saif.activities.android_manifest.AndroidManifestInjection"
+            android:name="pro.sketchware.activities.editor.manifest.AndroidManifestInjection"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="mod.hilal.saif.activities.android_manifest.AndroidManifestInjectionDetails"
+            android:name="pro.sketchware.activities.editor.manifest.AndroidManifestInjectionDetails"
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
@@ -284,7 +284,7 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.Translucent"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name="mod.khaled.logcat.LogReaderActivity"
+            android:name="pro.sketchware.activities.editor.LogReaderActivity"
             android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize" />
 
         <activity

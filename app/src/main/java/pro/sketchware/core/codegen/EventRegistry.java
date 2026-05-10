@@ -4,7 +4,7 @@ import androidx.annotation.DrawableRes;
 
 import java.util.ArrayList;
 
-import mod.agus.jcoderz.editor.event.ManageEvent;
+import pro.sketchware.activities.editor.ManageEvent;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.core.codegen.EventsHandler;
 import pro.sketchware.R;

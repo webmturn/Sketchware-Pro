@@ -1,4 +1,4 @@
-package mod.hey.studios.code;
+package pro.sketchware.activities.editor.code;
 
 import static pro.sketchware.util.GsonUtils.getGson;
 

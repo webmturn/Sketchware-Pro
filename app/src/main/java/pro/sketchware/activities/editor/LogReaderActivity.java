@@ -1,4 +1,4 @@
-package mod.khaled.logcat;
+package pro.sketchware.activities.editor;
 
 import static pro.sketchware.util.FileUtil.createNewFileIfNotPresent;
 

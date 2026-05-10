@@ -1,4 +1,4 @@
-package mod.hilal.saif.activities.android_manifest;
+package pro.sketchware.activities.editor.manifest;
 
 import static pro.sketchware.util.GsonUtils.getGson;
 import static pro.sketchware.util.SketchwareUtil.dpToPx;
@@ -20,7 +20,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import mod.hey.studios.code.SrcCodeEditor;
+import pro.sketchware.activities.editor.code.SrcCodeEditor;
 import mod.hey.studios.util.Helper;
 import mod.remaker.view.CustomAttributeView;
 import pro.sketchware.R;
