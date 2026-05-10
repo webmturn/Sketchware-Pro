@@ -27,7 +27,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import pro.sketchware.core.async.BackgroundTasks;
-import pro.sketchware.core.callback.SketchwareException;
+import pro.sketchware.core.exception.SketchwareException;
 import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.core.util.UriPathResolver;
 import pro.sketchware.core.project.ImageCollectionManager;
@@ -37,7 +37,7 @@ import pro.sketchware.core.util.BitmapUtil;
 import pro.sketchware.core.util.UIHelper;
 import pro.sketchware.core.codegen.BlockConstants;
 import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.core.callback.CompileException;
+import pro.sketchware.core.exception.CompileException;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 

@@ -212,7 +212,7 @@ public class ViewProperty extends LinearLayout implements PropertyChangedCallbac
                         }
                     }
                 }
-                try { WidgetCollectionManager.getInstance().addWidget(widgetName, viewBeans, true); } catch (pro.sketchware.core.callback.CompileException ignored) {}
+                try { WidgetCollectionManager.getInstance().addWidget(widgetName, viewBeans, true); } catch (pro.sketchware.core.exception.CompileException ignored) {}
                 if (propertyListener != null) {
                     propertyListener.onFavoritesChanged();
                 }
