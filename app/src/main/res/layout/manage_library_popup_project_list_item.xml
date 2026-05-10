@@ -30,7 +30,7 @@
                 android:layout_centerInParent="true"
                 android:contentDescription="@null" />
 
-            <com.besome.sketch.lib.ui.CircleImageView
+            <pro.sketchware.widgets.CircleImageView
                 android:id="@+id/img_icon"
                 android:layout_width="40dp"
                 android:layout_height="40dp"

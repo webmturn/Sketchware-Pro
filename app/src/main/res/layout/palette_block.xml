@@ -5,7 +5,7 @@
     android:background="?attr/colorSurfaceContainer"
     android:orientation="horizontal">
 
-    <com.besome.sketch.lib.ui.CustomScrollView
+    <pro.sketchware.widgets.CustomScrollView
         android:id="@+id/scroll"
         android:layout_width="0dp"
         android:layout_height="match_parent"
@@ -24,7 +24,7 @@
                 android:paddingStart="8dp"
                 android:paddingLeft="8dp" />
 
-            <com.besome.sketch.lib.ui.CustomHorizontalScrollView
+            <pro.sketchware.widgets.CustomHorizontalScrollView
                 android:id="@+id/scroll_horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -35,9 +35,9 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="8dp" />
-            </com.besome.sketch.lib.ui.CustomHorizontalScrollView>
+            </pro.sketchware.widgets.CustomHorizontalScrollView>
         </LinearLayout>
-    </com.besome.sketch.lib.ui.CustomScrollView>
+    </pro.sketchware.widgets.CustomScrollView>
 
     <LinearLayout
         android:layout_width="120dp"

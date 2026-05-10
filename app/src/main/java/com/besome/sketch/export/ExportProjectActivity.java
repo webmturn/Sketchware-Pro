@@ -16,7 +16,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.besome.sketch.lib.base.BaseAppCompatActivity;
+import pro.sketchware.activities.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import pro.sketchware.third_party.kellinwood.security.zipsigner.ZipSigner;

@@ -7,9 +7,9 @@ import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import com.besome.sketch.lib.base.BaseAppCompatActivity;
-import com.besome.sketch.lib.ui.PropertyOneLineItem;
-import com.besome.sketch.lib.ui.PropertyTwoLineItem;
+import pro.sketchware.activities.base.BaseAppCompatActivity;
+import pro.sketchware.widgets.PropertyOneLineItem;
+import pro.sketchware.widgets.PropertyTwoLineItem;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import pro.sketchware.util.DeviceUtil;

@@ -29,7 +29,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.besome.sketch.lib.base.BasePermissionAppCompatActivity;
+import pro.sketchware.activities.base.BasePermissionAppCompatActivity;
 import com.besome.sketch.tools.CollectErrorActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;

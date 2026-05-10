@@ -12,7 +12,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.besome.sketch.beans.ProjectLibraryBean;
-import com.besome.sketch.lib.base.BaseAppCompatActivity;
+import pro.sketchware.activities.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import pro.sketchware.util.DeviceUtil;

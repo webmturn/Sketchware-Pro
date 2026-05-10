@@ -5,7 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.preference.PreferenceFragmentCompat;
 
-import com.besome.sketch.lib.base.BaseAppCompatActivity;
+import pro.sketchware.activities.base.BaseAppCompatActivity;
 
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;

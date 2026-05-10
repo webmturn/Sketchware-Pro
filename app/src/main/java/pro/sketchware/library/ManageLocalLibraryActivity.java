@@ -27,7 +27,7 @@ import androidx.annotation.Nullable;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.besome.sketch.lib.base.BaseAppCompatActivity;
+import pro.sketchware.activities.base.BaseAppCompatActivity;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;

@@ -1,4 +1,4 @@
-package com.besome.sketch.lib.ui;
+package pro.sketchware.widgets;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

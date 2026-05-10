@@ -20,8 +20,8 @@ import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.besome.sketch.lib.base.BaseAppCompatActivity;
-import com.besome.sketch.lib.ui.ColorPickerDialog;
+import pro.sketchware.activities.base.BaseAppCompatActivity;
+import pro.sketchware.widgets.ColorPickerDialog;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.JsonParseException;

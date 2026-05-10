@@ -1,4 +1,4 @@
-package com.besome.sketch.lib.base;
+package pro.sketchware.activities.base;
 
 import android.Manifest;
 import android.content.Context;
@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.besome.sketch.lib.ui.LoadingDialog;
+import pro.sketchware.widgets.LoadingDialog;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import pro.sketchware.dialogs.ProgressDialog;

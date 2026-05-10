@@ -1,4 +1,4 @@
-package com.besome.sketch.lib.ui;
+package pro.sketchware.widgets;
 
 import android.app.Dialog;
 import android.content.Context;

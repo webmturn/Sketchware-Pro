@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.content.res.AppCompatResources;
 
-import com.besome.sketch.lib.base.BaseAppCompatActivity;
+import pro.sketchware.activities.base.BaseAppCompatActivity;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 

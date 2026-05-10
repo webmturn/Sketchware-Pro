@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 
-import com.besome.sketch.lib.base.BaseAppCompatActivity;
+import pro.sketchware.activities.base.BaseAppCompatActivity;
 
 import pro.sketchware.core.codegen.ComponentCodeGenerator;
 import pro.sketchware.util.Helper;

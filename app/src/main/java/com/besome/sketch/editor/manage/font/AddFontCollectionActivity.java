@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.besome.sketch.beans.ProjectResourceBean;
-import com.besome.sketch.lib.base.BaseDialogActivity;
+import pro.sketchware.activities.base.BaseDialogActivity;
 
 import java.io.File;
 import java.util.ArrayList;

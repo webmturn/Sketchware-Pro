@@ -26,7 +26,7 @@ import com.besome.sketch.editor.manage.library.firebase.ManageFirebaseActivity;
 import com.besome.sketch.editor.manage.library.googlemap.ManageGoogleMapActivity;
 import com.besome.sketch.editor.manage.library.material3.Material3LibraryActivity;
 import com.besome.sketch.editor.manage.library.material3.Material3LibraryItemView;
-import com.besome.sketch.lib.base.BaseAppCompatActivity;
+import pro.sketchware.activities.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.lang.ref.WeakReference;

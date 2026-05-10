@@ -17,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 
 import com.besome.sketch.beans.ProjectResourceBean;
-import com.besome.sketch.lib.base.BaseDialogActivity;
+import pro.sketchware.activities.base.BaseDialogActivity;
 import com.bumptech.glide.Glide;
 import com.google.android.material.card.MaterialCardView;
 

@@ -2,7 +2,7 @@ package pro.sketchware.util;
 
 import android.widget.TextView;
 
-import com.besome.sketch.lib.ui.ColorPickerDialog;
+import pro.sketchware.widgets.ColorPickerDialog;
 
 public class PCP implements ColorPickerDialog.OnColorPickedListener {
 

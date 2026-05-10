@@ -23,9 +23,9 @@ import androidx.annotation.NonNull;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.besome.sketch.lib.base.BaseAppCompatActivity;
-import com.besome.sketch.lib.base.CollapsibleViewHolder;
-import com.besome.sketch.lib.ui.CollapsibleButton;
+import pro.sketchware.activities.base.BaseAppCompatActivity;
+import pro.sketchware.widgets.base.CollapsibleViewHolder;
+import pro.sketchware.widgets.CollapsibleButton;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 

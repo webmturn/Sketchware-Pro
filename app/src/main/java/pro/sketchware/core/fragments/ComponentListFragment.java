@@ -25,8 +25,8 @@ import com.besome.sketch.beans.ProjectFileBean;
 import com.besome.sketch.editor.LogicEditorActivity;
 import com.besome.sketch.editor.component.AddComponentBottomSheet;
 import com.besome.sketch.editor.component.ComponentEventButton;
-import com.besome.sketch.lib.base.CollapsibleViewHolder;
-import com.besome.sketch.lib.ui.CollapsibleButton;
+import pro.sketchware.widgets.base.CollapsibleViewHolder;
+import pro.sketchware.widgets.CollapsibleButton;
 
 import java.util.ArrayList;
 import java.util.Arrays;

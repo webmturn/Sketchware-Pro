@@ -3,7 +3,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.besome.sketch.lib.ui.CustomScrollView
+    <pro.sketchware.widgets.CustomScrollView
         android:id="@+id/scv"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -13,5 +13,5 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" />
-    </com.besome.sketch.lib.ui.CustomScrollView>
+    </pro.sketchware.widgets.CustomScrollView>
 </LinearLayout>

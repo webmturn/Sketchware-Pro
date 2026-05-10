@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.besome.sketch.beans.ProjectFileBean;
 import com.besome.sketch.beans.ViewBean;
-import com.besome.sketch.lib.base.BaseDialogActivity;
+import pro.sketchware.activities.base.BaseDialogActivity;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 

@@ -7,9 +7,9 @@ import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.provider.Settings;
 
-import com.besome.sketch.lib.base.BaseAppCompatActivity;
-import com.besome.sketch.lib.ui.PropertyOneLineItem;
-import com.besome.sketch.lib.ui.PropertyTwoLineItem;
+import pro.sketchware.activities.base.BaseAppCompatActivity;
+import pro.sketchware.widgets.PropertyOneLineItem;
+import pro.sketchware.widgets.PropertyTwoLineItem;
 
 import pro.sketchware.util.DeviceUtil;
 import pro.sketchware.util.UIHelper;

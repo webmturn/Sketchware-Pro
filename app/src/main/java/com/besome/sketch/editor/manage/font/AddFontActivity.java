@@ -13,7 +13,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.besome.sketch.beans.ProjectResourceBean;
-import com.besome.sketch.lib.base.BaseDialogActivity;
+import pro.sketchware.activities.base.BaseDialogActivity;
 
 import pro.sketchware.core.project.FontCollectionManager;
 import pro.sketchware.util.SketchToast;

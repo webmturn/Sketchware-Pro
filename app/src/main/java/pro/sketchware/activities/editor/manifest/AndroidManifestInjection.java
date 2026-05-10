@@ -17,7 +17,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.besome.sketch.editor.manage.library.LibraryCategoryView;
 import com.besome.sketch.editor.manage.library.LibraryItemView;
-import com.besome.sketch.lib.base.BaseAppCompatActivity;
+import pro.sketchware.activities.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 

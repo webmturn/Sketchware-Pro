@@ -20,8 +20,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.besome.sketch.beans.ProjectResourceBean;
-import com.besome.sketch.lib.base.BaseDialogActivity;
-import com.besome.sketch.lib.ui.EasyDeleteEditText;
+import pro.sketchware.activities.base.BaseDialogActivity;
+import pro.sketchware.widgets.EasyDeleteEditText;
 
 import java.io.File;
 import java.lang.ref.WeakReference;

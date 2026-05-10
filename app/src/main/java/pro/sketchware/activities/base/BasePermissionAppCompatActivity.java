@@ -1,4 +1,4 @@
-package com.besome.sketch.lib.base;
+package pro.sketchware.activities.base;
 
 import android.Manifest;
 

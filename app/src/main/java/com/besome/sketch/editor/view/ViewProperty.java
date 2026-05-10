@@ -23,7 +23,7 @@ import com.besome.sketch.beans.ProjectFileBean;
 import com.besome.sketch.beans.ViewBean;
 import com.besome.sketch.ctrls.ViewIdSpinnerItem;
 import com.besome.sketch.editor.property.ViewPropertyItems;
-import com.besome.sketch.lib.ui.CustomHorizontalScrollView;
+import pro.sketchware.widgets.CustomHorizontalScrollView;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;

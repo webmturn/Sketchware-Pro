@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 
 import androidx.annotation.NonNull;
 
-import com.besome.sketch.lib.base.CollapsibleLayout;
+import pro.sketchware.widgets.base.CollapsibleLayout;
 
 import java.util.List;
 

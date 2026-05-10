@@ -35,7 +35,7 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <com.besome.sketch.lib.ui.CustomScrollView
+    <pro.sketchware.widgets.CustomScrollView
         android:id="@+id/scv"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -78,5 +78,5 @@
                 android:paddingRight="4dp"
                 android:paddingBottom="4dp" />
         </LinearLayout>
-    </com.besome.sketch.lib.ui.CustomScrollView>
+    </pro.sketchware.widgets.CustomScrollView>
 </LinearLayout>

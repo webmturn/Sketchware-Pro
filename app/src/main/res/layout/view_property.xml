@@ -58,7 +58,7 @@
         android:paddingTop="6dp"
         android:orientation="horizontal">
 
-        <com.besome.sketch.lib.ui.CustomHorizontalScrollView
+        <pro.sketchware.widgets.CustomHorizontalScrollView
             android:id="@+id/hcv_property"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -71,7 +71,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal" />
-        </com.besome.sketch.lib.ui.CustomHorizontalScrollView>
+        </pro.sketchware.widgets.CustomHorizontalScrollView>
 
         <LinearLayout
             android:id="@+id/layout_property_see_all"

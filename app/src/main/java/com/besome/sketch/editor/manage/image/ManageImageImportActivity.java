@@ -20,8 +20,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.besome.sketch.beans.ProjectResourceBean;
-import com.besome.sketch.lib.base.BaseAppCompatActivity;
-import com.besome.sketch.lib.ui.EasyDeleteEditText;
+import pro.sketchware.activities.base.BaseAppCompatActivity;
+import pro.sketchware.widgets.EasyDeleteEditText;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 

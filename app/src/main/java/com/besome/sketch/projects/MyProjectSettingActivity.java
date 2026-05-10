@@ -24,8 +24,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.transition.AutoTransition;
 import androidx.transition.TransitionManager;
 
-import com.besome.sketch.lib.base.BaseAppCompatActivity;
-import com.besome.sketch.lib.ui.ColorPickerDialog;
+import pro.sketchware.activities.base.BaseAppCompatActivity;
+import pro.sketchware.widgets.ColorPickerDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.File;

@@ -1,4 +1,4 @@
-package com.besome.sketch.lib.base;
+package pro.sketchware.widgets.base;
 
 import android.content.Context;
 import android.view.Gravity;

@@ -31,8 +31,8 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.besome.sketch.lib.base.BaseAppCompatActivity;
-import com.besome.sketch.lib.ui.ColorPickerDialog;
+import pro.sketchware.activities.base.BaseAppCompatActivity;
+import pro.sketchware.widgets.ColorPickerDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;

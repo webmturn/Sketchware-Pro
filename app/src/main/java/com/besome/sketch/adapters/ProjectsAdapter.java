@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.besome.sketch.export.ExportProjectActivity;
-import com.besome.sketch.lib.ui.LoadingDialog;
+import pro.sketchware.widgets.LoadingDialog;
 import com.besome.sketch.projects.MyProjectSettingActivity;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;

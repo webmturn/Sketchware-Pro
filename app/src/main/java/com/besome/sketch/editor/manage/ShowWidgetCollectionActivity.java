@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import com.besome.sketch.beans.ViewBean;
 import com.besome.sketch.beans.WidgetCollectionBean;
 import com.besome.sketch.editor.view.ItemView;
-import com.besome.sketch.lib.base.BaseAppCompatActivity;
+import pro.sketchware.activities.base.BaseAppCompatActivity;
 
 import java.util.ArrayList;
 

@@ -15,7 +15,7 @@ import androidx.annotation.NonNull;
 import com.besome.sketch.beans.BlockBean;
 import com.besome.sketch.beans.BlockCollectionBean;
 import com.besome.sketch.editor.logic.BlockPane;
-import com.besome.sketch.lib.base.BaseAppCompatActivity;
+import pro.sketchware.activities.base.BaseAppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;

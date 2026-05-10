@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.besome.sketch.lib.ui.ColorPickerDialog;
+import pro.sketchware.widgets.ColorPickerDialog;
 
 import java.util.Objects;
 

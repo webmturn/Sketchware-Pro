@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 
 import androidx.core.widget.NestedScrollView;
 
-import com.besome.sketch.lib.base.BaseAppCompatActivity;
+import pro.sketchware.activities.base.BaseAppCompatActivity;
 import com.google.android.material.chip.Chip;
 import com.google.gson.Gson;
 

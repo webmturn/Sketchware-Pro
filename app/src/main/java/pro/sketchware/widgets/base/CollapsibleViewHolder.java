@@ -1,4 +1,4 @@
-package com.besome.sketch.lib.base;
+package pro.sketchware.widgets.base;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

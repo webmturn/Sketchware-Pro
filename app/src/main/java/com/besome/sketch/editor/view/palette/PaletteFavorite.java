@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.besome.sketch.beans.ViewBean;
-import com.besome.sketch.lib.ui.CustomScrollView;
+import pro.sketchware.widgets.CustomScrollView;
 
 import java.util.ArrayList;
 

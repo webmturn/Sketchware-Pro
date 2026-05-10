@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.besome.sketch.beans.BlockBean;
-import com.besome.sketch.lib.ui.CustomScrollView;
+import pro.sketchware.widgets.CustomScrollView;
 import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;

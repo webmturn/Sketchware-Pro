@@ -32,8 +32,8 @@ import com.besome.sketch.beans.ViewBean;
 import com.besome.sketch.editor.manage.image.ManageImageActivity;
 import com.besome.sketch.editor.property.PropertyResourceItem;
 import com.besome.sketch.editor.property.ViewPropertyItems;
-import com.besome.sketch.lib.base.BaseAppCompatActivity;
-import com.besome.sketch.lib.ui.CustomScrollView;
+import pro.sketchware.activities.base.BaseAppCompatActivity;
+import pro.sketchware.widgets.CustomScrollView;
 
 import java.util.ArrayList;
 import java.util.Map;

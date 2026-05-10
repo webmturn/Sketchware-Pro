@@ -38,7 +38,7 @@ import com.besome.sketch.editor.manage.font.AddFontActivity;
 import com.besome.sketch.editor.manage.font.AddFontCollectionActivity;
 import com.besome.sketch.editor.manage.image.AddImageCollectionActivity;
 import com.besome.sketch.editor.manage.sound.AddSoundCollectionActivity;
-import com.besome.sketch.lib.base.BaseAppCompatActivity;
+import pro.sketchware.activities.base.BaseAppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.google.android.material.button.MaterialButton;

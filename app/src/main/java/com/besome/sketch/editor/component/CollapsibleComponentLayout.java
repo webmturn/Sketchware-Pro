@@ -8,8 +8,8 @@ import android.util.AttributeSet;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.besome.sketch.lib.base.CollapsibleLayout;
-import com.besome.sketch.lib.ui.CollapsibleButton;
+import pro.sketchware.widgets.base.CollapsibleLayout;
+import pro.sketchware.widgets.CollapsibleButton;
 import com.google.android.material.color.MaterialColors;
 
 import java.util.List;

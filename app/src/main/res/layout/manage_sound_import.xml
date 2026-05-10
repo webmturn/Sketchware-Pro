@@ -135,7 +135,7 @@
                         tools:text="@string/design_manager_sound_title_apply_same_naming" />
                 </LinearLayout>
 
-                <com.besome.sketch.lib.ui.EasyDeleteEditText
+                <pro.sketchware.widgets.EasyDeleteEditText
                     android:id="@+id/ed_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

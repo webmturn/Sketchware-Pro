@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import com.besome.sketch.lib.base.BaseAppCompatActivity;
+import pro.sketchware.activities.base.BaseAppCompatActivity;
 
 import pro.sketchware.databinding.ActivitySettingsBinding;
 import pro.sketchware.activities.settings.fragments.appearance.SettingsAppearanceFragment;

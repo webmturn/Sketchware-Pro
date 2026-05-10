@@ -10,7 +10,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.besome.sketch.beans.SrcCodeBean;
 import com.besome.sketch.ctrls.CommonSpinnerItem;
-import com.besome.sketch.lib.base.BaseAppCompatActivity;
+import pro.sketchware.activities.base.BaseAppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
