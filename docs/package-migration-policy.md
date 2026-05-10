@@ -89,6 +89,7 @@ Tracks the legacy → modern migration progress. **Do not** edit ad hoc; update 
 | `pro.sketchware.core.codegen.*` direct file writes | `pro.sketchware.core.codegen.sink.*` interfaces + `pro.sketchware.core.build.sink.*` impls | ⏳ Planned | P2a |
 | `pro.sketchware.lib.validator.*` (9) | `pro.sketchware.core.validation.*` | ✅ Done (commit `48c6468ac`) | Path B step 5 |
 | `pro.sketchware.utility.*` (25) | `pro.sketchware.util.*` | ✅ Done (commit `de5c04f74`) | Path B step 6 |
+| `pro.sketchware.{model,listeners,xml,managers}/` + `pro.sketchware.lib.DebouncedClickListener` (8 files / 4 micro-packages) | `pro.sketchware.beans.*` (3 POJOs), `pro.sketchware.util.*` (2 listeners), `pro.sketchware.util.xml.*` (2 builders), `pro.sketchware.tools.*` (1 manager) | ✅ Done (commits `34eb36581`, `e2c6b5029`, `c371c0222`) | Path B step 7 |
 | `com.besome.sketch.beans.*` (29) | **Permanent**; cross-package POJO layer | 🛡 Frozen | Per § 1.2 exception |
 | `com.besome.sketch.editor.view.*` (61) | Long-term: `pro.sketchware.editor.view.*` | ⏸ Deferred | Post-P0b/P0c |
 | `com.besome.sketch.editor.{adapters,ctrls,design,export,help,lib,projects,tools}` | Long-term: merge into matching `pro.sketchware.<theme>.*` | ⏸ Deferred | Post-P0c |
