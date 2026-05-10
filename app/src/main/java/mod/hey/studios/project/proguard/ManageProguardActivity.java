@@ -11,7 +11,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import mod.agus.jcoderz.editor.manage.library.locallibrary.ManageLocalLibrary;
+import pro.sketchware.library.ManageLocalLibrary;
 import mod.hey.studios.code.SrcCodeEditor;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageProguardBinding;

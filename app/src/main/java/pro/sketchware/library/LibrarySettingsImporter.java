@@ -1,4 +1,4 @@
-package mod.jbk.editor.manage.library;
+package pro.sketchware.library;
 
 import android.app.Activity;
 import android.net.Uri;

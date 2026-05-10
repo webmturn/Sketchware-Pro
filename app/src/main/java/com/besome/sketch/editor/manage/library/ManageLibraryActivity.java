@@ -37,11 +37,11 @@ import pro.sketchware.core.async.BackgroundTasks;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.core.util.UIHelper;
-import dev.aldi.sayuti.editor.manage.ManageLocalLibraryActivity;
+import pro.sketchware.library.ManageLocalLibraryActivity;
 import mod.hey.studios.activity.managers.nativelib.ManageNativelibsActivity;
 import mod.hey.studios.util.Helper;
-import mod.jbk.editor.manage.library.ExcludeBuiltInLibrariesActivity;
-import mod.jbk.editor.manage.library.ExcludeBuiltInLibrariesLibraryItemView;
+import pro.sketchware.library.ExcludeBuiltInLibrariesActivity;
+import pro.sketchware.library.ExcludeBuiltInLibrariesLibraryItemView;
 import pro.sketchware.R;
 import pro.sketchware.util.UI;
 

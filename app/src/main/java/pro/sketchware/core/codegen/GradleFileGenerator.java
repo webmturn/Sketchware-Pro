@@ -12,8 +12,8 @@ import java.util.List;
 
 import pro.sketchware.core.build.BuildSettings;
 import mod.hey.studios.util.Helper;
-import mod.jbk.build.BuiltInLibraries;
-import mod.jbk.editor.manage.library.ExcludeBuiltInLibrariesActivity;
+import pro.sketchware.library.BuiltInLibraries;
+import pro.sketchware.library.ExcludeBuiltInLibrariesActivity;
 import pro.sketchware.core.codegen.ConstVarComponent;
 import pro.sketchware.util.FilePathUtil;
 import pro.sketchware.util.FileUtil;

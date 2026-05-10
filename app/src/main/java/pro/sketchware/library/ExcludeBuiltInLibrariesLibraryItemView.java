@@ -1,4 +1,4 @@
-package mod.jbk.editor.manage.library;
+package pro.sketchware.library;
 
 import android.content.Context;
 
@@ -9,7 +9,7 @@ import com.besome.sketch.editor.manage.library.LibraryItemView;
 
 import java.util.List;
 
-import mod.jbk.build.BuiltInLibraries;
+import pro.sketchware.library.BuiltInLibraries;
 
 public class ExcludeBuiltInLibrariesLibraryItemView extends LibraryItemView {
     private final String sc_id;

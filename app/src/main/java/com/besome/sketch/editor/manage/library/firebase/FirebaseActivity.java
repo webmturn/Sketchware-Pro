@@ -32,7 +32,7 @@ import pro.sketchware.core.util.UIHelper;
 import pro.sketchware.core.ui.FirebaseStorageView;
 import pro.sketchware.core.ui.LibraryConfigView;
 import mod.hey.studios.util.Helper;
-import mod.jbk.editor.manage.library.LibrarySettingsImporter;
+import pro.sketchware.library.LibrarySettingsImporter;
 import pro.sketchware.R;
 
 public class FirebaseActivity extends BaseAppCompatActivity implements View.OnClickListener {

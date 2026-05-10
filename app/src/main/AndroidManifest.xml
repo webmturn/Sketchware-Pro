@@ -225,10 +225,10 @@
             android:name="com.besome.sketch.editor.manage.library.googlemap.ManageGoogleMapActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="dev.aldi.sayuti.editor.manage.ManageLocalLibraryActivity"
+            android:name="pro.sketchware.library.ManageLocalLibraryActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="dev.aldi.sayuti.editor.manage.SubDependenciesActivity"
+            android:name="pro.sketchware.library.SubDependenciesActivity"
             android:configChanges="orientation|screenSize" />
         <activity
             android:name="mod.agus.jcoderz.editor.manage.permission.ManagePermissionActivity"
@@ -277,7 +277,7 @@
         <activity
             android:name="pro.sketchware.activities.about.AboutActivity"
             android:configChanges="orientation|screenSize" />
-        <activity android:name="mod.jbk.editor.manage.library.ExcludeBuiltInLibrariesActivity" />
+        <activity android:name="pro.sketchware.library.ExcludeBuiltInLibrariesActivity" />
         <activity
             android:name="com.besome.sketch.editor.manage.view.PresetSettingActivity"
             android:configChanges="orientation|screenSize"

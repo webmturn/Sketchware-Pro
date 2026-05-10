@@ -22,7 +22,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import mod.agus.jcoderz.beans.ViewBeans;
-import mod.agus.jcoderz.editor.manage.library.locallibrary.ManageLocalLibrary;
+import pro.sketchware.library.ManageLocalLibrary;
 import pro.sketchware.core.codegen.ConstVarComponent;
 import pro.sketchware.core.build.BuildSettings;
 import mod.hey.studios.project.ProjectSettings;

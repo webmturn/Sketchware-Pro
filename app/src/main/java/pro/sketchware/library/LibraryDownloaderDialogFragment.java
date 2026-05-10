@@ -1,4 +1,4 @@
-package dev.aldi.sayuti.editor.manage;
+package pro.sketchware.library;
 
 import static android.net.ConnectivityManager.NetworkCallback;
 import android.content.Context;
@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
-import static dev.aldi.sayuti.editor.manage.LocalLibrariesUtil.createLibraryMap;
+import static pro.sketchware.library.LocalLibrariesUtil.createLibraryMap;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -36,8 +36,8 @@ import java.util.concurrent.Executors;
 
 import pro.sketchware.core.build.BuildSettings;
 import mod.hey.studios.util.Helper;
-import mod.jbk.build.BuiltInLibraries;
-import mod.pranav.dependency.resolver.DependencyResolver;
+import pro.sketchware.library.BuiltInLibraries;
+import pro.sketchware.library.DependencyResolver;
 import pro.sketchware.R;
 import pro.sketchware.core.async.BackgroundTasks;
 import pro.sketchware.core.async.TaskHost;

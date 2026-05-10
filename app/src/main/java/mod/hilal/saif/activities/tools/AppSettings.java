@@ -29,7 +29,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import dev.aldi.sayuti.editor.manage.ManageLocalLibraryActivity;
+import pro.sketchware.library.ManageLocalLibraryActivity;
 import dev.pranav.filepicker.FilePickerCallback;
 import dev.pranav.filepicker.FilePickerDialogFragment;
 import dev.pranav.filepicker.FilePickerOptions;

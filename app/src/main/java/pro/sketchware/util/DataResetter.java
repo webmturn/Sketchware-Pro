@@ -13,7 +13,7 @@ import pro.sketchware.core.util.EncryptedFileUtil;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.util.MapValueHelper;
 import mod.hey.studios.util.Helper;
-import mod.jbk.build.BuiltInLibraries;
+import pro.sketchware.library.BuiltInLibraries;
 import pro.sketchware.R;
 import pro.sketchware.activities.main.activities.MainActivity;
 

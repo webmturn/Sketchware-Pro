@@ -2,7 +2,7 @@ package pro.sketchware.core.project;
 
 import java.util.Objects;
 
-import mod.jbk.build.BuiltInLibraries;
+import pro.sketchware.library.BuiltInLibraries;
 import pro.sketchware.util.library.BuiltInLibraryUtils;
 
 /**

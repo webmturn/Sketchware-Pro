@@ -57,7 +57,7 @@ import android.util.Pair;
 import pro.sketchware.core.codegen.ExtraBlockFile;
 import pro.sketchware.core.codegen.BlockLoader;
 import pro.sketchware.core.codegen.EventsHandler;
-import mod.agus.jcoderz.editor.manage.library.locallibrary.ManageLocalLibrary;
+import pro.sketchware.library.ManageLocalLibrary;
 import pro.sketchware.core.build.BuildSettings;
 import mod.hey.studios.project.ProjectSettings;
 import mod.hey.studios.util.ProjectFile;

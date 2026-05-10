@@ -1,9 +1,9 @@
-package dev.aldi.sayuti.editor.manage;
+package pro.sketchware.library;
 
-import static dev.aldi.sayuti.editor.manage.LocalLibrariesUtil.buildEnabledRootDependencyState;
-import static dev.aldi.sayuti.editor.manage.LocalLibrariesUtil.createLibraryMap;
-import static dev.aldi.sayuti.editor.manage.LocalLibrariesUtil.getLocalLibraries;
-import static dev.aldi.sayuti.editor.manage.LocalLibrariesUtil.rewriteLocalLibFile;
+import static pro.sketchware.library.LocalLibrariesUtil.buildEnabledRootDependencyState;
+import static pro.sketchware.library.LocalLibrariesUtil.createLibraryMap;
+import static pro.sketchware.library.LocalLibrariesUtil.getLocalLibraries;
+import static pro.sketchware.library.LocalLibrariesUtil.rewriteLocalLibFile;
 
 import android.content.Intent;
 import android.os.Bundle;

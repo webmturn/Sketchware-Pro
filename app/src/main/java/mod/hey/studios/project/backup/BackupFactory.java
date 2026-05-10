@@ -44,7 +44,7 @@ import javax.crypto.spec.SecretKeySpec;
 import pro.sketchware.core.project.ProjectListManager;
 import pro.sketchware.core.util.MapValueHelper;
 import pro.sketchware.core.project.SketchwarePaths;
-import dev.aldi.sayuti.editor.manage.LocalLibrariesUtil;
+import pro.sketchware.library.LocalLibrariesUtil;
 import pro.sketchware.core.codegen.ExtraBlockInfo;
 import pro.sketchware.core.codegen.BlockLoader;
 import mod.hey.studios.project.custom_blocks.CustomBlocksManager;

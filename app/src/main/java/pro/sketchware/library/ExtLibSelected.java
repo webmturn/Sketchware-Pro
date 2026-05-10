@@ -1,7 +1,7 @@
-package mod.agus.jcoderz.editor.library;
+package pro.sketchware.library;
 
 import pro.sketchware.core.codegen.ConstVarComponent;
-import mod.jbk.build.BuiltInLibraries;
+import pro.sketchware.library.BuiltInLibraries;
 import pro.sketchware.util.library.BuiltInLibraryManager;
 
 public class ExtLibSelected {

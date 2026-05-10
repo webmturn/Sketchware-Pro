@@ -1,4 +1,4 @@
-package dev.aldi.sayuti.editor.manage;
+package pro.sketchware.library;
 
 import androidx.annotation.NonNull;
 import java.util.Locale;

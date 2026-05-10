@@ -8,8 +8,8 @@ import java.util.Optional;
 
 import pro.sketchware.core.project.BuiltInLibrary;
 import pro.sketchware.core.build.ProjectBuilder;
-import mod.jbk.build.BuiltInLibraries;
-import mod.jbk.editor.manage.library.ExcludeBuiltInLibrariesActivity;
+import pro.sketchware.library.BuiltInLibraries;
+import pro.sketchware.library.ExcludeBuiltInLibrariesActivity;
 
 /**
  * A class to keep track of a project's built-in libraries.

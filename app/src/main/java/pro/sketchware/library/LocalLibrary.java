@@ -1,4 +1,4 @@
-package dev.aldi.sayuti.editor.manage;
+package pro.sketchware.library;
 
 import static pro.sketchware.util.FileUtil.formatFileSize;
 import static pro.sketchware.util.FileUtil.getFileSize;

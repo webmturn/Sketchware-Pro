@@ -1,4 +1,4 @@
-package mod.agus.jcoderz.editor.manage.library.locallibrary;
+package pro.sketchware.library;
 
 import android.widget.Toast;
 
@@ -11,8 +11,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 
-import dev.aldi.sayuti.editor.manage.LocalLibrariesUtil;
-import dev.aldi.sayuti.editor.manage.LocalLibraryImportPackageIndex;
+import pro.sketchware.library.LocalLibrariesUtil;
+import pro.sketchware.library.LocalLibraryImportPackageIndex;
 import mod.hey.studios.util.Helper;
 import mod.jbk.util.LogUtil;
 import pro.sketchware.R;

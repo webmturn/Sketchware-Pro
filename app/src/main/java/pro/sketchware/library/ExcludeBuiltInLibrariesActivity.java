@@ -1,4 +1,4 @@
-package mod.jbk.editor.manage.library;
+package pro.sketchware.library;
 
 import androidx.activity.OnBackPressedCallback;
 import android.content.res.TypedArray;
@@ -53,7 +53,7 @@ import pro.sketchware.core.async.BackgroundTasks;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.async.TaskHost;
 import mod.hey.studios.util.Helper;
-import mod.jbk.build.BuiltInLibraries;
+import pro.sketchware.library.BuiltInLibraries;
 import mod.jbk.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.databinding.DialogSelectLibrariesBinding;

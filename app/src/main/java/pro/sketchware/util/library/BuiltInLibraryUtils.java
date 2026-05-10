@@ -1,7 +1,7 @@
 package pro.sketchware.util.library;
 
-import mod.jbk.build.BuiltInLibraries;
-import mod.jbk.build.BuiltInLibraries.BuiltInLibrary;
+import pro.sketchware.library.BuiltInLibraries;
+import pro.sketchware.library.BuiltInLibraries.BuiltInLibrary;
 
 public class BuiltInLibraryUtils {
 

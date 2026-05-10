@@ -1,4 +1,4 @@
-package mod.pranav.dependency.resolver
+package pro.sketchware.library
 
 import com.android.tools.r8.CompilationMode
 import com.android.tools.r8.D8
@@ -9,7 +9,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 import pro.sketchware.core.build.BuildSettings
 import mod.hey.studios.util.Helper
-import mod.jbk.build.BuiltInLibraries
+import pro.sketchware.library.BuiltInLibraries
 import org.cosmic.ide.dependency.resolver.api.Artifact
 import org.cosmic.ide.dependency.resolver.api.EventReciever
 import org.cosmic.ide.dependency.resolver.api.Repository
