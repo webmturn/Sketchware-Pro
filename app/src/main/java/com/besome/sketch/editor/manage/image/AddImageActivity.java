@@ -34,7 +34,7 @@ import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.core.project.ImageCollectionManager;
 import pro.sketchware.core.validation.FileNameValidator;
 import pro.sketchware.util.SketchToast;
-import pro.sketchware.core.util.BitmapUtil;
+import pro.sketchware.graphics.BitmapUtil;
 import pro.sketchware.util.io.EncryptedFileUtil;
 import pro.sketchware.core.codegen.BlockConstants;
 import pro.sketchware.core.exception.CompileException;

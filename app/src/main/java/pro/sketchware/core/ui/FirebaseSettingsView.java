@@ -1,6 +1,6 @@
 package pro.sketchware.core.ui;
 
-import pro.sketchware.core.util.AnimationUtil;
+import pro.sketchware.graphics.AnimationUtil;
 import pro.sketchware.util.SketchToast;
 
 

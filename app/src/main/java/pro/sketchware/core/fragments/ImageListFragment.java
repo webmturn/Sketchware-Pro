@@ -59,7 +59,7 @@ import pro.sketchware.databinding.FrManageImageListBinding;
 import pro.sketchware.databinding.ManageImageListItemBinding;
 import pro.sketchware.util.FilePathUtil;
 import pro.sketchware.util.SvgUtils;
-import pro.sketchware.core.util.BitmapUtil;
+import pro.sketchware.graphics.BitmapUtil;
 import pro.sketchware.util.io.EncryptedFileUtil;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.ResourceManager;

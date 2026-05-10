@@ -1,4 +1,4 @@
-package pro.sketchware.core.util;
+package pro.sketchware.graphics;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

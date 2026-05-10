@@ -83,7 +83,7 @@ import pro.sketchware.core.project.ProjectListManager;
 import pro.sketchware.util.ViewUtil;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.MapValueHelper;
-import pro.sketchware.core.util.NinePatchDecoder;
+import pro.sketchware.graphics.NinePatchDecoder;
 import com.besome.sketch.editor.view.item.ItemBadgeView;
 import com.besome.sketch.editor.view.item.ItemCircleImageView;
 import com.besome.sketch.editor.view.item.ItemCodeView;

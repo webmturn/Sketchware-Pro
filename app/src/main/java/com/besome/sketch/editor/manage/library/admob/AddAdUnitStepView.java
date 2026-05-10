@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import pro.sketchware.core.validation.LengthRangeValidator;
 import pro.sketchware.core.ui.LibrarySettingsView;
 import pro.sketchware.util.SketchToast;
-import pro.sketchware.core.util.AnimationUtil;
+import pro.sketchware.graphics.AnimationUtil;
 import pro.sketchware.util.ViewUtil;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;

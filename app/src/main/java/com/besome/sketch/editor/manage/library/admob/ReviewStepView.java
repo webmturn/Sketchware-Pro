@@ -18,7 +18,7 @@ import com.besome.sketch.beans.AdTestDeviceBean;
 import com.besome.sketch.beans.ProjectLibraryBean;
 
 import pro.sketchware.core.ui.LibrarySettingsView;
-import pro.sketchware.core.util.AnimationUtil;
+import pro.sketchware.graphics.AnimationUtil;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageLibraryAdmobPreviewBinding;

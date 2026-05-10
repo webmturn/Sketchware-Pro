@@ -1,4 +1,4 @@
-package pro.sketchware.core.util;
+package pro.sketchware.graphics;
 
 import android.animation.Animator;
 import android.animation.ArgbEvaluator;
