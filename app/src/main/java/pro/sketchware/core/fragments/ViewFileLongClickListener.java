@@ -6,7 +6,7 @@ import android.widget.CheckBox;
 import androidx.recyclerview.widget.RecyclerView;
 
 import pro.sketchware.beans.SelectableBean;
-import com.besome.sketch.editor.manage.view.ManageViewActivity;
+import pro.sketchware.activities.editor.manage.view.ManageViewActivity;
 
 public class ViewFileLongClickListener implements View.OnLongClickListener {
   public final ViewFilesAdapter.FileListAdapter adapter;

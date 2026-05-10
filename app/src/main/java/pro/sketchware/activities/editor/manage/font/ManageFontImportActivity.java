@@ -1,4 +1,4 @@
-package com.besome.sketch.editor.manage.font;
+package pro.sketchware.activities.editor.manage.font;
 
 import androidx.activity.OnBackPressedCallback;
 import android.annotation.SuppressLint;

@@ -1,4 +1,4 @@
-package com.besome.sketch.editor.manage;
+package pro.sketchware.activities.editor.manage;
 
 import android.content.Context;
 import android.content.res.Configuration;
@@ -13,7 +13,7 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 
 import pro.sketchware.beans.BlockBean;
-import pro.sketchware.beans.BlockCollectionBean;
+import pro.sketchware.beans.MoreBlockCollectionBean;
 import pro.sketchware.activities.editor.logic.BlockPane;
 import pro.sketchware.activities.base.BaseAppCompatActivity;
 
@@ -21,76 +21,75 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import pro.sketchware.util.DeviceUtil;
-import pro.sketchware.core.project.BlockCollectionManager;
 import pro.sketchware.core.validation.UniqueNameValidator;
+import pro.sketchware.core.project.MoreBlockCollectionManager;
 import pro.sketchware.core.ui.BlockView;
 import pro.sketchware.core.ui.FieldBlockView;
 import pro.sketchware.core.ui.BaseBlockView;
 import pro.sketchware.util.SketchToast;
 import pro.sketchware.util.Helper;
+import pro.sketchware.util.UI;
+import pro.sketchware.util.BlockUtil;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageCollectionShowBlockBinding;
 import pro.sketchware.tools.ImageFactory;
 import pro.sketchware.util.SketchwareUtil;
-import pro.sketchware.util.UI;
 
-public class ShowBlockCollectionActivity extends BaseAppCompatActivity implements View.OnClickListener {
+public class ShowMoreBlockCollectionActivity extends BaseAppCompatActivity implements View.OnClickListener {
 
-    private String blockName;
+    private String moreBlockName;
     private BlockPane pane;
-    private EditText blockNameEditorText;
-    private UniqueNameValidator blockNameValidator;
-
+    private EditText moreBlockNameEditorText;
+    private UniqueNameValidator moreBlockNameValidator;
     private ManageCollectionShowBlockBinding binding;
 
-    private void addBlocks(ArrayList<BlockBean> blocks) {
-        HashMap<Integer, BlockView> blockIdsWithBlocks = new HashMap<>();
-        BlockView firstBlock = null;
+    private void addBlocks(ArrayList<BlockBean> blockBeans) {
+        HashMap<Integer, BlockView> blockViewMap = new HashMap<>();
 
         boolean isFirstBlock = true;
-        for (BlockBean blockBean : blocks) {
+        for (BlockBean blockBean : blockBeans) {
             BlockView block = getBlock(blockBean);
             int blockId = (Integer) block.getTag();
+            blockViewMap.put(blockId, block);
 
-            blockIdsWithBlocks.put(blockId, block);
             pane.nextBlockId = Math.max(pane.nextBlockId, blockId + 1);
-            pane.addBlock(block, 10, 10);
+            pane.addBlock(block, 0, 0);
 
             if (isFirstBlock) {
-                firstBlock = block;
+                pane.getRoot().setNextBlock(block);
                 isFirstBlock = false;
             }
         }
 
-        for (BlockBean blockBean : blocks) {
-            BlockView block = blockIdsWithBlocks.get(Integer.valueOf(blockBean.id));
+        for (BlockBean blockBean : blockBeans) {
+            BlockView block = blockViewMap.get(Integer.valueOf(blockBean.id));
 
             if (block != null) {
                 int subStack1Id = blockBean.subStack1;
                 BlockView subStack1;
-                if (subStack1Id >= 0 && (subStack1 = blockIdsWithBlocks.get(subStack1Id)) != null) {
+                if (subStack1Id >= 0 && (subStack1 = blockViewMap.get(subStack1Id)) != null) {
                     block.setSubstack1Block(subStack1);
                 }
 
                 int subStack2Id = blockBean.subStack2;
                 BlockView subStack2;
-                if (subStack2Id >= 0 && (subStack2 = blockIdsWithBlocks.get(subStack2Id)) != null) {
+                if (subStack2Id >= 0 && (subStack2 = blockViewMap.get(subStack2Id)) != null) {
                     block.setSubstack2Block(subStack2);
                 }
 
                 int nextBlockId = blockBean.nextBlock;
                 BlockView nextBlock;
-                if (nextBlockId >= 0 && (nextBlock = blockIdsWithBlocks.get(nextBlockId)) != null) {
+                if (nextBlockId >= 0 && (nextBlock = blockViewMap.get(nextBlockId)) != null) {
                     block.setNextBlock(nextBlock);
                 }
 
                 ArrayList<String> parameters = blockBean.parameters;
                 for (int i = 0; i < parameters.size() && i < block.childViews.size(); i++) {
-                    String parameter = blockBean.parameters.get(i);
+                    String parameter = parameters.get(i);
 
                     if (parameter != null && !parameter.isEmpty()) {
                         if (parameter.charAt(0) == '@') {
-                            BlockView parameterBlock = blockIdsWithBlocks.get(Integer.valueOf(parameter.substring(1)));
+                            BlockView parameterBlock = blockViewMap.get(Integer.valueOf(parameter.substring(1)));
                             if (parameterBlock != null && block.childViews.get(i) instanceof BaseBlockView) {
                                 block.replaceParameter((BaseBlockView) block.childViews.get(i), parameterBlock);
                             }
@@ -102,25 +101,30 @@ public class ShowBlockCollectionActivity extends BaseAppCompatActivity implement
                 }
             }
         }
-        if (firstBlock != null) {
-            firstBlock.layoutChain();
-        }
+        pane.getRoot().layoutChain();
         pane.updatePaneSize();
     }
 
+    private void addHeaderBlock(String spec) {
+        pane.createHeaderBlock(spec, "moreBlock");
+        var header = pane.getRoot();
+        BlockUtil.loadPreviewBlockVariables(pane, header, spec);
+        header.layoutChain();
+    }
+
     private void resizeBottomViews() {
-        int screenHeight = getResources().getDisplayMetrics().heightPixels;
+        int height = getResources().getDisplayMetrics().heightPixels;
         binding.layoutButton.measure(0, 0);
         binding.editor.setLayoutParams(new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                ((screenHeight - DeviceUtil.getToolbarHeight((Context) this)) - UI.getStatusBarHeight(this)) - binding.layoutButton.getMeasuredHeight()));
+                ((height - DeviceUtil.getToolbarHeight((Context) this)) - UI.getStatusBarHeight(this)) - binding.layoutButton.getMeasuredHeight()));
         binding.editor.requestLayout();
     }
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.save_button && blockNameValidator.isValid()) {
-            BlockCollectionManager.getInstance().renameBlock(blockName, Helper.getText(blockNameEditorText), true);
+        if (v.getId() == R.id.save_button && moreBlockNameValidator.isValid()) {
+            MoreBlockCollectionManager.getInstance().renameMoreBlock(moreBlockName, Helper.getText(moreBlockNameEditorText), true);
             SketchToast.toast(getApplicationContext(), Helper.getResString(R.string.design_manager_message_edit_complete), SketchToast.TOAST_NORMAL).show();
             finish();
         }
@@ -137,24 +141,25 @@ public class ShowBlockCollectionActivity extends BaseAppCompatActivity implement
         super.onCreate(savedInstanceState);
         binding = ManageCollectionShowBlockBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setTitle(Helper.getResString(R.string.design_manager_block_detail_actionbar_title));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         binding.toolbar.setNavigationOnClickListener(Helper.getBackPressedClickListener(this));
 
-        blockName = getIntent().getStringExtra("block_name");
+        moreBlockName = getIntent().getStringExtra("block_name");
         binding.editor.setScrollEnabled(true);
         pane = binding.editor.getBlockPane();
 
-        blockNameEditorText = binding.edInput.getEditText();
-        blockNameEditorText.setPrivateImeOptions("defaultInputmode=english;");
-        blockNameEditorText.setText(blockName);
+        moreBlockNameEditorText = binding.edInput.getEditText();
+        moreBlockNameEditorText.setPrivateImeOptions("defaultInputmode=english;");
+        moreBlockNameEditorText.setText(moreBlockName);
         binding.edInput.setHint(Helper.getResString(R.string.design_manager_block_hint_enter_block_name));
 
         binding.saveButton.setText(Helper.getResString(R.string.common_word_save));
         binding.saveButton.setOnClickListener(this);
-        blockNameValidator = new UniqueNameValidator(this, binding.edInput.getTextInputLayout(), BlockCollectionManager.getInstance().getBlockNames());
+        moreBlockNameValidator = new UniqueNameValidator(this, binding.edInput.getTextInputLayout(), MoreBlockCollectionManager.getInstance().getMoreBlockNames());
     }
 
     @Override
@@ -167,12 +172,13 @@ public class ShowBlockCollectionActivity extends BaseAppCompatActivity implement
     public void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
-        BlockCollectionBean block = BlockCollectionManager.getInstance().getBlockByName(blockName);
-        if (block != null) {
-            addBlocks(block.blocks);
+        MoreBlockCollectionBean moreBlock = MoreBlockCollectionManager.getInstance().getMoreBlockByName(moreBlockName);
+        if (moreBlock != null) {
+            addHeaderBlock(moreBlock.spec);
+            addBlocks(moreBlock.blocks);
             resizeBottomViews();
         } else {
-            SketchwareUtil.toastError(Helper.getResString(R.string.error_corrupt_block));
+            SketchwareUtil.toastError(Helper.getResString(R.string.error_corrupt_more_block));
             finish();
         }
     }
@@ -193,8 +199,8 @@ public class ShowBlockCollectionActivity extends BaseAppCompatActivity implement
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == 12) {
-            if (ImageFactory.saveBitmap(binding.editor.getChildAt(0), blockName).exists()) {
-                SketchwareUtil.toast(String.format(Helper.getResString(R.string.toast_block_image_saved), blockName));
+            if (ImageFactory.saveBitmap(binding.editor.getChildAt(0), moreBlockName).exists()) {
+                SketchwareUtil.toast(String.format(Helper.getResString(R.string.toast_block_image_saved), moreBlockName));
             } else {
                 SketchwareUtil.toastError(Helper.getResString(R.string.error_save_image_failed));
             }

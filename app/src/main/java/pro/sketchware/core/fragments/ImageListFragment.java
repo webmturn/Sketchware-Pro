@@ -29,8 +29,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import pro.sketchware.beans.ProjectResourceBean;
-import com.besome.sketch.editor.manage.image.AddImageActivity;
-import com.besome.sketch.editor.manage.image.ManageImageActivity;
+import pro.sketchware.activities.editor.manage.image.AddImageActivity;
+import pro.sketchware.activities.editor.manage.image.ManageImageActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;

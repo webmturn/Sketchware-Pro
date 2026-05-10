@@ -1,7 +1,7 @@
 package pro.sketchware.core.fragments;
 
 import androidx.recyclerview.widget.RecyclerView;
-import com.besome.sketch.editor.manage.view.ManageViewActivity;
+import pro.sketchware.activities.editor.manage.view.ManageViewActivity;
 
 public class ViewFileScrollListener extends RecyclerView.OnScrollListener {
   public final ViewFilesAdapter filesAdapter;

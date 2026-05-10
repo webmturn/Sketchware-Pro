@@ -20,8 +20,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import pro.sketchware.beans.ProjectResourceBean;
-import com.besome.sketch.editor.manage.image.ManageImageActivity;
-import com.besome.sketch.editor.manage.image.ManageImageImportActivity;
+import pro.sketchware.activities.editor.manage.image.ManageImageActivity;
+import pro.sketchware.activities.editor.manage.image.ManageImageImportActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.google.android.material.card.MaterialCardView;

@@ -1,4 +1,4 @@
-package com.besome.sketch.editor.manage.image;
+package pro.sketchware.activities.editor.manage.image;
 
 
 import pro.sketchware.util.Helper;

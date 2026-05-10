@@ -24,8 +24,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import pro.sketchware.beans.ProjectResourceBean;
-import com.besome.sketch.editor.manage.sound.AddSoundActivity;
-import com.besome.sketch.editor.manage.sound.ManageSoundActivity;
+import pro.sketchware.activities.editor.manage.sound.AddSoundActivity;
+import pro.sketchware.activities.editor.manage.sound.ManageSoundActivity;
 
 import java.io.File;
 import java.nio.file.Path;

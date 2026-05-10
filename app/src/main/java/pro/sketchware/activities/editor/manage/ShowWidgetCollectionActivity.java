@@ -1,4 +1,4 @@
-package com.besome.sketch.editor.manage;
+package pro.sketchware.activities.editor.manage;
 
 import android.content.res.Configuration;
 import android.os.Bundle;

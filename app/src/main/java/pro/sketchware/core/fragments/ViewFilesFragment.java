@@ -21,9 +21,9 @@ import pro.sketchware.util.Helper;
 
 import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.beans.ViewBean;
-import com.besome.sketch.editor.manage.view.AddViewActivity;
-import com.besome.sketch.editor.manage.view.ManageViewActivity;
-import com.besome.sketch.editor.manage.view.PresetSettingActivity;
+import pro.sketchware.activities.editor.manage.view.AddViewActivity;
+import pro.sketchware.activities.editor.manage.view.ManageViewActivity;
+import pro.sketchware.activities.editor.manage.view.PresetSettingActivity;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package com.besome.sketch.editor.manage;
+package pro.sketchware.activities.editor.manage;
 
 import android.content.Intent;
 import androidx.activity.result.ActivityResultLauncher;
@@ -13,9 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.beans.ViewBean;
-import com.besome.sketch.editor.manage.view.AddCustomViewActivity;
-import com.besome.sketch.editor.manage.view.AddViewActivity;
-import com.besome.sketch.editor.manage.view.PresetSettingActivity;
+import pro.sketchware.activities.editor.manage.view.AddCustomViewActivity;
+import pro.sketchware.activities.editor.manage.view.AddViewActivity;
+import pro.sketchware.activities.editor.manage.view.PresetSettingActivity;
 import pro.sketchware.activities.base.BaseAppCompatActivity;
 
 import java.util.ArrayList;

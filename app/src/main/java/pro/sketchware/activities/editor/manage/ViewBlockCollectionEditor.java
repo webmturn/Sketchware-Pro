@@ -1,4 +1,4 @@
-package com.besome.sketch.editor.manage;
+package pro.sketchware.activities.editor.manage;
 
 import android.content.Context;
 import android.util.AttributeSet;

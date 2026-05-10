@@ -1,11 +1,10 @@
-package com.besome.sketch.editor.manage.sound;
+package pro.sketchware.activities.editor.manage.font;
 
-
-import pro.sketchware.util.Helper;
 import androidx.activity.OnBackPressedCallback;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -19,30 +18,20 @@ import pro.sketchware.activities.base.BaseAppCompatActivity;
 import java.lang.ref.WeakReference;
 
 import pro.sketchware.core.async.BackgroundTasks;
+import pro.sketchware.core.project.FontCollectionManager;
 import pro.sketchware.util.SketchToast;
-import pro.sketchware.core.project.SoundCollectionManager;
-import pro.sketchware.core.fragments.SoundImportFragment;
 import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.util.UIHelper;
-import pro.sketchware.core.fragments.SoundListFragment;
+import pro.sketchware.util.Helper;
 import pro.sketchware.R;
-import pro.sketchware.databinding.ManageSoundBinding;
+import pro.sketchware.databinding.ManageFontBinding;
 
-public class ManageSoundActivity extends BaseAppCompatActivity implements ViewPager.OnPageChangeListener {
+public class ManageFontActivity extends BaseAppCompatActivity {
 
-    private final int TAB_COUNT = 2;
-    public ManageSoundBinding binding;
-    public SoundListFragment projectSounds;
-    public SoundImportFragment collectionSounds;
+    public ImportFontFragment projectFontsFragment;
+    public FontManagerFragment collectionFontsFragment;
+    public ManageFontBinding binding;
     private String sc_id;
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-    }
-
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,34 +39,34 @@ public class ManageSoundActivity extends BaseAppCompatActivity implements ViewPa
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if (projectSounds.isSelecting) {
-                    projectSounds.setSelecting(false);
-                } else if (collectionSounds.isSelecting()) {
-                    collectionSounds.resetSelection();
+                if (projectFontsFragment.isSelecting) {
+                    projectFontsFragment.setSelectingMode(false);
+                } else if (collectionFontsFragment.isSelecting()) {
+                    collectionFontsFragment.resetSelection();
                 } else {
                     showLoadingDialog();
                     try {
-                        projectSounds.stopPlayback();
-                        collectionSounds.stopPlayback();
-                        new Handler(Looper.getMainLooper()).postDelayed(() -> new SaveAsyncTask(ManageSoundActivity.this).execute(), 500L);
+                        new Handler(Looper.getMainLooper()).postDelayed(() -> new SaveAsyncTask(ManageFontActivity.this).execute(), 500L);
                     } catch (Exception e) {
                         dismissLoadingDialog();
                     }
                 }
             }
         });
-        if (!super.isStoragePermissionGranted()) {
+
+        binding = ManageFontBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        if (!isStoragePermissionGranted()) {
             finish();
         }
-
-        binding = ManageSoundBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
 
         binding.toolbar.setNavigationOnClickListener(v -> {
             if (!UIHelper.isClickThrottled()) {
                 getOnBackPressedDispatcher().onBackPressed();
             }
         });
+
         sc_id = savedInstanceState == null ? getIntent().getStringExtra("sc_id") : savedInstanceState.getString("sc_id");
 
         if (sc_id == null || sc_id.isEmpty()) {
@@ -85,16 +74,44 @@ public class ManageSoundActivity extends BaseAppCompatActivity implements ViewPa
             return;
         }
 
-        binding.viewPager.setAdapter(new PagerAdapter(getSupportFragmentManager()));
-        binding.viewPager.setOffscreenPageLimit(TAB_COUNT);
-        binding.viewPager.addOnPageChangeListener(this);
+        binding.viewPager.setAdapter(new TabLayoutAdapter(getSupportFragmentManager()));
+        binding.viewPager.setOffscreenPageLimit(2);
+        binding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                binding.layoutBtnGroup.setVisibility(View.GONE);
+                binding.layoutBtnImport.setVisibility(View.GONE);
+                collectionFontsFragment.resetSelection();
+                projectFontsFragment.setSelectingMode(false);
+                changeFabState(position == 0);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+
         binding.tabLayout.setupWithViewPager(binding.viewPager);
+    }
+
+    public void changeFabState(boolean state) {
+        if (state) {
+            binding.fab.animate().translationY(0F).setDuration(200L).start();
+            binding.fab.show();
+        } else {
+            binding.fab.animate().translationY(400F).setDuration(200L).start();
+            binding.fab.hide();
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (!super.isStoragePermissionGranted()) {
+        if (!isStoragePermissionGranted()) {
             finish();
         }
     }
@@ -105,30 +122,17 @@ public class ManageSoundActivity extends BaseAppCompatActivity implements ViewPa
         super.onSaveInstanceState(outState);
     }
 
-    @Override
-    public void onPageSelected(int position) {
-        projectSounds.setSelecting(false);
-        collectionSounds.resetSelection();
-        if (position == 0) {
-            binding.fab.show();
-            collectionSounds.stopPlayback();
-        } else {
-            binding.fab.hide();
-            projectSounds.stopPlayback();
-        }
-    }
-
     private static class SaveAsyncTask {
-        private final WeakReference<ManageSoundActivity> activityWeakReference;
+        private final WeakReference<ManageFontActivity> activityWeakReference;
 
-        public SaveAsyncTask(ManageSoundActivity activity) {
+        public SaveAsyncTask(ManageFontActivity activity) {
             activityWeakReference = new WeakReference<>(activity);
         }
 
         public void execute() {
             var activity = activityWeakReference.get();
             if (activity == null) return;
-            BackgroundTasks.runSerial(TaskHost.of(activity), "ManageSoundActivity$SaveAsyncTask",
+            BackgroundTasks.runSerial(TaskHost.of(activity), "ManageFontActivity$SaveAsyncTask",
                     this::doWork, this::onSuccess, this::onError);
         }
 
@@ -138,13 +142,13 @@ public class ManageSoundActivity extends BaseAppCompatActivity implements ViewPa
             activity.dismissLoadingDialog();
             activity.setResult(RESULT_OK);
             activity.finish();
-            SoundCollectionManager.getInstance().clearCollections();
+            FontCollectionManager.getInstance().clearCollections();
         }
 
         private void doWork() {
             var activity = activityWeakReference.get();
             if (activity == null) return;
-            activity.projectSounds.saveSounds();
+            activity.projectFontsFragment.processResources();
         }
 
         private void onError(Throwable error) {
@@ -163,29 +167,28 @@ public class ManageSoundActivity extends BaseAppCompatActivity implements ViewPa
         }
     }
 
-    private class PagerAdapter extends FragmentPagerAdapter {
-        private final String[] titles;
+    private class TabLayoutAdapter extends FragmentPagerAdapter {
+        private final String[] labels = new String[2];
 
-        public PagerAdapter(FragmentManager fragmentManager) {
+        public TabLayoutAdapter(FragmentManager fragmentManager) {
             super(fragmentManager);
-            titles = new String[TAB_COUNT];
-            titles[0] = Helper.getResString(R.string.design_manager_tab_title_this_project);
-            titles[1] = Helper.getResString(R.string.design_manager_tab_title_my_collection);
+            labels[0] = Helper.getResString(R.string.design_manager_tab_title_this_project);
+            labels[1] = Helper.getResString(R.string.design_manager_tab_title_my_collection);
         }
 
         @Override
         public int getCount() {
-            return TAB_COUNT;
+            return 2;
         }
 
         @Override
         @NonNull
-        public Object instantiateItem(@NonNull ViewGroup viewGroup, int position) {
-            Fragment fragment = (Fragment) super.instantiateItem(viewGroup, position);
-            if (position != 0) {
-                collectionSounds = (SoundImportFragment) fragment;
+        public Object instantiateItem(@NonNull ViewGroup container, int position) {
+            Fragment fragment = (Fragment) super.instantiateItem(container, position);
+            if (position == 0) {
+                projectFontsFragment = (ImportFontFragment) fragment;
             } else {
-                projectSounds = (SoundListFragment) fragment;
+                collectionFontsFragment = (FontManagerFragment) fragment;
             }
             return fragment;
         }
@@ -193,12 +196,12 @@ public class ManageSoundActivity extends BaseAppCompatActivity implements ViewPa
         @Override
         @NonNull
         public Fragment getItem(int position) {
-            return position == 0 ? new SoundListFragment() : new SoundImportFragment();
+            return position == 0 ? new ImportFontFragment() : new FontManagerFragment();
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return titles[position];
+            return labels[position];
         }
     }
 }

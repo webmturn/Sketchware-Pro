@@ -119,34 +119,34 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.besome.sketch.editor.manage.view.ManageViewActivity"
+            android:name="pro.sketchware.activities.editor.manage.view.ManageViewActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="com.besome.sketch.editor.manage.sound.ManageSoundActivity"
+            android:name="pro.sketchware.activities.editor.manage.sound.ManageSoundActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="com.besome.sketch.editor.manage.sound.ManageSoundImportActivity"
+            android:name="pro.sketchware.activities.editor.manage.sound.ManageSoundImportActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="com.besome.sketch.editor.manage.image.ManageImageActivity"
+            android:name="pro.sketchware.activities.editor.manage.image.ManageImageActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="com.besome.sketch.editor.manage.image.ManageImageImportActivity"
+            android:name="pro.sketchware.activities.editor.manage.image.ManageImageImportActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="com.besome.sketch.editor.manage.font.ManageFontActivity"
+            android:name="pro.sketchware.activities.editor.manage.font.ManageFontActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="com.besome.sketch.editor.manage.font.ManageFontImportActivity"
+            android:name="pro.sketchware.activities.editor.manage.font.ManageFontImportActivity"
             android:configChanges="orientation|screenSize" />
         <activity
             android:name="com.besome.sketch.editor.manage.library.ManageLibraryActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="com.besome.sketch.editor.manage.ManageCollectionActivity"
+            android:name="pro.sketchware.activities.editor.manage.ManageCollectionActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="com.besome.sketch.editor.manage.ShowWidgetCollectionActivity"
+            android:name="pro.sketchware.activities.editor.manage.ShowWidgetCollectionActivity"
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
@@ -154,55 +154,55 @@
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.Translucent" />
         <activity
-            android:name="com.besome.sketch.editor.manage.ViewSelectorActivity"
+            android:name="pro.sketchware.activities.editor.manage.ViewSelectorActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.Translucent"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name="com.besome.sketch.editor.manage.view.AddViewActivity"
+            android:name="pro.sketchware.activities.editor.manage.view.AddViewActivity"
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name="com.besome.sketch.editor.manage.view.AddCustomViewActivity"
-            android:configChanges="orientation|screenSize"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.Translucent"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity
-            android:name="com.besome.sketch.editor.manage.image.AddImageActivity"
+            android:name="pro.sketchware.activities.editor.manage.view.AddCustomViewActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.Translucent"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name="com.besome.sketch.editor.manage.sound.AddSoundActivity"
+            android:name="pro.sketchware.activities.editor.manage.image.AddImageActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.Translucent"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name="com.besome.sketch.editor.manage.font.AddFontActivity"
+            android:name="pro.sketchware.activities.editor.manage.sound.AddSoundActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.Translucent"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name="com.besome.sketch.editor.manage.ShowBlockCollectionActivity"
+            android:name="pro.sketchware.activities.editor.manage.font.AddFontActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.Translucent"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
+            android:name="pro.sketchware.activities.editor.manage.ShowBlockCollectionActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.Translucent"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name="com.besome.sketch.editor.manage.ShowMoreBlockCollectionActivity"
+            android:name="pro.sketchware.activities.editor.manage.ShowMoreBlockCollectionActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.Translucent"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name="com.besome.sketch.editor.manage.image.AddImageCollectionActivity"
+            android:name="pro.sketchware.activities.editor.manage.image.AddImageCollectionActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.Translucent"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name="com.besome.sketch.editor.manage.sound.AddSoundCollectionActivity"
+            android:name="pro.sketchware.activities.editor.manage.sound.AddSoundCollectionActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.Translucent"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name="com.besome.sketch.editor.manage.font.AddFontCollectionActivity"
+            android:name="pro.sketchware.activities.editor.manage.font.AddFontCollectionActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.Translucent"
             android:windowSoftInputMode="adjustResize|stateHidden" />
@@ -279,7 +279,7 @@
             android:configChanges="orientation|screenSize" />
         <activity android:name="pro.sketchware.library.ExcludeBuiltInLibrariesActivity" />
         <activity
-            android:name="com.besome.sketch.editor.manage.view.PresetSettingActivity"
+            android:name="pro.sketchware.activities.editor.manage.view.PresetSettingActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.Translucent"
             android:windowSoftInputMode="adjustResize|stateHidden" />

@@ -1,4 +1,4 @@
-package com.besome.sketch.editor.manage.view;
+package pro.sketchware.activities.editor.manage.view;
 
 import android.content.Intent;
 import android.os.Bundle;

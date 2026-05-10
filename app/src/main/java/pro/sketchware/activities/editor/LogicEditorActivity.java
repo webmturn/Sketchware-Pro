@@ -66,7 +66,7 @@ import pro.sketchware.activities.editor.logic.LogicTopMenu;
 import pro.sketchware.activities.editor.logic.PaletteBlock;
 import pro.sketchware.activities.editor.logic.PaletteSelector;
 import pro.sketchware.activities.editor.makeblock.MakeBlockActivity;
-import com.besome.sketch.editor.manage.ShowBlockCollectionActivity;
+import pro.sketchware.activities.editor.manage.ShowBlockCollectionActivity;
 import pro.sketchware.activities.editor.view.ViewDummy;
 import pro.sketchware.activities.editor.view.ViewLogicEditor;
 import pro.sketchware.activities.base.BaseAppCompatActivity;

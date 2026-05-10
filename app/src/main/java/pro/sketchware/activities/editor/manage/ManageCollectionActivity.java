@@ -1,4 +1,4 @@
-package com.besome.sketch.editor.manage;
+package pro.sketchware.activities.editor.manage;
 
 import android.content.Intent;
 import android.util.Log;
@@ -34,10 +34,10 @@ import pro.sketchware.beans.ProjectResourceBean;
 import pro.sketchware.beans.SelectableBean;
 import pro.sketchware.beans.ViewBean;
 import pro.sketchware.beans.WidgetCollectionBean;
-import com.besome.sketch.editor.manage.font.AddFontActivity;
-import com.besome.sketch.editor.manage.font.AddFontCollectionActivity;
-import com.besome.sketch.editor.manage.image.AddImageCollectionActivity;
-import com.besome.sketch.editor.manage.sound.AddSoundCollectionActivity;
+import pro.sketchware.activities.editor.manage.font.AddFontActivity;
+import pro.sketchware.activities.editor.manage.font.AddFontCollectionActivity;
+import pro.sketchware.activities.editor.manage.image.AddImageCollectionActivity;
+import pro.sketchware.activities.editor.manage.sound.AddSoundCollectionActivity;
 import pro.sketchware.activities.base.BaseAppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
