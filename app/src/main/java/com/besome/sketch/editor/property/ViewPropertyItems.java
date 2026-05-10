@@ -27,8 +27,8 @@ import java.util.Map.Entry;
 
 import pro.sketchware.core.project.RecentHistoryManager;
 import pro.sketchware.core.project.ClassInfo;
-import pro.sketchware.core.PropertyChangedCallback;
-import pro.sketchware.core.ViewBeanCallback;
+import pro.sketchware.core.callback.PropertyChangedCallback;
+import pro.sketchware.core.callback.ViewBeanCallback;
 import pro.sketchware.core.project.ViewHistoryManager;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.util.UIHelper;

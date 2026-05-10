@@ -1,6 +1,6 @@
 package pro.sketchware.core.project;
 
-import pro.sketchware.core.CompileException;
+import pro.sketchware.core.callback.CompileException;
 import pro.sketchware.core.project.SketchwarePaths;
 
 import com.besome.sketch.beans.CollectionBean;

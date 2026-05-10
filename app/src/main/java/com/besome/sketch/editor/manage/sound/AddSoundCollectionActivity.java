@@ -32,7 +32,7 @@ import pro.sketchware.core.validation.ResourceNameValidator;
 import pro.sketchware.core.util.SketchToast;
 import pro.sketchware.core.codegen.BlockConstants;
 import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.core.CompileException;
+import pro.sketchware.core.callback.CompileException;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageSoundAddBinding;

@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.callback;
 
 /**
  * Exception thrown during Sketchware project compilation/build operations.

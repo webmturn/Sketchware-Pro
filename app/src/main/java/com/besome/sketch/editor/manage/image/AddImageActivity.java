@@ -27,7 +27,7 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-import pro.sketchware.core.SketchwareException;
+import pro.sketchware.core.callback.SketchwareException;
 import pro.sketchware.core.util.UriPathResolver;
 import pro.sketchware.core.BackgroundTasks;
 import pro.sketchware.core.TaskHost;
@@ -37,7 +37,7 @@ import pro.sketchware.core.util.SketchToast;
 import pro.sketchware.core.util.BitmapUtil;
 import pro.sketchware.core.util.EncryptedFileUtil;
 import pro.sketchware.core.codegen.BlockConstants;
-import pro.sketchware.core.CompileException;
+import pro.sketchware.core.callback.CompileException;
 import pro.sketchware.core.project.ProjectDataManager;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;

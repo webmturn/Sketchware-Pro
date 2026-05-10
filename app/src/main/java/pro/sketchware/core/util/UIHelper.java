@@ -16,7 +16,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import pro.sketchware.core.ViewEnableRunnable;
+import pro.sketchware.core.callback.ViewEnableRunnable;
 
 public class UIHelper {
   public static long lastClickTime;

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 import pro.sketchware.core.project.BuiltInLibrary;
 import pro.sketchware.core.build.ProjectBuilder;
-import pro.sketchware.core.SimpleException;
+import pro.sketchware.core.callback.SimpleException;
 import mod.agus.jcoderz.editor.manage.library.locallibrary.ManageLocalLibrary;
 import mod.hey.studios.build.BuildSettings;
 import mod.hey.studios.project.ProjectSettings;

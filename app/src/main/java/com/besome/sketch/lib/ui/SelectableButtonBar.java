@@ -11,7 +11,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import pro.sketchware.core.IntCallback;
+import pro.sketchware.core.callback.IntCallback;
 import pro.sketchware.core.util.ViewUtil;
 import pro.sketchware.R;
 

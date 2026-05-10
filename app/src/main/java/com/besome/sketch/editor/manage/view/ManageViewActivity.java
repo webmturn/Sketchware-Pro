@@ -39,7 +39,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import pro.sketchware.core.BackgroundTasks;
-import pro.sketchware.core.SketchwareException;
+import pro.sketchware.core.callback.SketchwareException;
 import pro.sketchware.core.fragments.ViewFilesFragment;
 import pro.sketchware.core.util.SketchToast;
 import pro.sketchware.core.project.ProjectDataStore;

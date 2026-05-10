@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import pro.sketchware.core.PropertyChangedCallback;
+import pro.sketchware.core.callback.PropertyChangedCallback;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.ResourceManager;
 import pro.sketchware.core.util.UIHelper;

@@ -102,7 +102,7 @@ import pro.sketchware.core.ui.BlockView;
 import pro.sketchware.core.ui.FieldBlockView;
 import pro.sketchware.core.ui.BaseBlockView;
 import pro.sketchware.core.ui.DefinitionBlockView;
-import pro.sketchware.core.BlockSizeListener;
+import pro.sketchware.core.callback.BlockSizeListener;
 import pro.sketchware.core.validation.IdentifierValidator;
 import pro.sketchware.core.project.BlockHistoryManager;
 import pro.sketchware.core.project.ProjectDataStore;

@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.callback;
 
 public class SimpleException extends Exception {
   public SimpleException(String message) {

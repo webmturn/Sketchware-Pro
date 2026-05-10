@@ -30,13 +30,13 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 
-import pro.sketchware.core.ViewEditorCallback;
-import pro.sketchware.core.FileSelectedCallback;
-import pro.sketchware.core.PropertyChangedCallback;
-import pro.sketchware.core.ViewBeanCallback;
+import pro.sketchware.core.callback.ViewEditorCallback;
+import pro.sketchware.core.callback.FileSelectedCallback;
+import pro.sketchware.core.callback.PropertyChangedCallback;
+import pro.sketchware.core.callback.ViewBeanCallback;
 import pro.sketchware.core.validation.UniqueNameValidator;
 import pro.sketchware.core.project.ImageCollectionManager;
-import pro.sketchware.core.EventSelectedCallback;
+import pro.sketchware.core.callback.EventSelectedCallback;
 import pro.sketchware.core.project.WidgetCollectionManager;
 import pro.sketchware.core.util.SketchToast;
 import pro.sketchware.core.project.ProjectDataManager;
@@ -212,7 +212,7 @@ public class ViewProperty extends LinearLayout implements PropertyChangedCallbac
                         }
                     }
                 }
-                try { WidgetCollectionManager.getInstance().addWidget(widgetName, viewBeans, true); } catch (pro.sketchware.core.CompileException ignored) {}
+                try { WidgetCollectionManager.getInstance().addWidget(widgetName, viewBeans, true); } catch (pro.sketchware.core.callback.CompileException ignored) {}
                 if (propertyListener != null) {
                     propertyListener.onFavoritesChanged();
                 }

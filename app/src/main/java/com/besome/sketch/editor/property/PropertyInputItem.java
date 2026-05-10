@@ -51,7 +51,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import pro.sketchware.core.codegen.ActivityCodeGenerator;
-import pro.sketchware.core.PropertyChangedCallback;
+import pro.sketchware.core.callback.PropertyChangedCallback;
 import pro.sketchware.core.validation.NumberRangeValidator;
 import pro.sketchware.core.validation.LengthRangeValidator;
 import pro.sketchware.core.project.ProjectDataManager;

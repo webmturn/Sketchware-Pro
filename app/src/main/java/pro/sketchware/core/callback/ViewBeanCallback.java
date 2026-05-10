@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.callback;
 
 import com.besome.sketch.beans.ViewBean;
 

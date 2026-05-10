@@ -99,7 +99,7 @@ import pro.sketchware.core.fragments.EventListFragment;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.util.MapValueHelper;
 import pro.sketchware.core.build.ProjectFilePaths;
-import pro.sketchware.core.SimpleException;
+import pro.sketchware.core.callback.SimpleException;
 import pro.sketchware.utility.UI;
 import mod.agus.jcoderz.editor.manage.permission.ManagePermissionActivity;
 import mod.agus.jcoderz.editor.manage.resource.ManageResourceActivity;

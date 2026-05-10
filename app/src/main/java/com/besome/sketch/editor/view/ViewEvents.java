@@ -19,7 +19,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 
-import pro.sketchware.core.EventSelectedCallback;
+import pro.sketchware.core.callback.EventSelectedCallback;
 import pro.sketchware.core.util.SketchToast;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.codegen.EventRegistry;
