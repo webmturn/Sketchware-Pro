@@ -41,7 +41,7 @@ import java.util.Map;
 import pro.sketchware.core.PropertyChangedCallback;
 import pro.sketchware.core.project.ViewHistoryManager;
 import pro.sketchware.core.project.ProjectDataManager;
-import pro.sketchware.core.UIHelper;
+import pro.sketchware.core.util.UIHelper;
 import pro.sketchware.core.ui.UserExperienceLevel;
 import mod.hey.studios.project.ProjectSettings;
 import mod.hey.studios.util.Helper;

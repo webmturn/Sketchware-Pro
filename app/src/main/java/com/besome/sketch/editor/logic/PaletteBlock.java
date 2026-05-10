@@ -20,7 +20,7 @@ import java.util.Locale;
 import pro.sketchware.R;
 import pro.sketchware.core.ui.BaseBlockView;
 import pro.sketchware.core.ui.BlockView;
-import pro.sketchware.core.ViewUtil;
+import pro.sketchware.core.util.ViewUtil;
 import pro.sketchware.databinding.PaletteBlockBinding;
 
 public class PaletteBlock extends LinearLayout {

@@ -1,6 +1,6 @@
 package pro.sketchware.core.ui;
 
-import pro.sketchware.core.SharedPrefsHelper;
+import pro.sketchware.core.util.SharedPrefsHelper;
 
 import android.content.Context;
 

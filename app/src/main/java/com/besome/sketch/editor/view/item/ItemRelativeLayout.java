@@ -13,7 +13,7 @@ import com.besome.sketch.beans.ViewBean;
 import com.besome.sketch.editor.view.ItemView;
 import com.besome.sketch.editor.view.ScrollContainer;
 
-import pro.sketchware.core.ViewUtil;
+import pro.sketchware.core.util.ViewUtil;
 
 public class ItemRelativeLayout extends RelativeLayout implements ItemView, ScrollContainer {
 

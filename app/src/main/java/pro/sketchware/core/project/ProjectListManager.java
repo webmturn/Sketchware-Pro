@@ -11,9 +11,9 @@ import java.util.HashMap;
 
 import mod.jbk.util.LogUtil;
 import pro.sketchware.core.EncryptedFileUtil;
-import pro.sketchware.core.GsonMapHelper;
-import pro.sketchware.core.MapValueHelper;
-import pro.sketchware.core.SharedPrefsHelper;
+import pro.sketchware.core.util.GsonMapHelper;
+import pro.sketchware.core.util.MapValueHelper;
+import pro.sketchware.core.util.SharedPrefsHelper;
 
 public class ProjectListManager {
     public static SharedPrefsHelper sharedPrefsHelper;

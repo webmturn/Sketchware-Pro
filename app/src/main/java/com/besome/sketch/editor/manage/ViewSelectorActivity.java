@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import pro.sketchware.core.project.ProjectDataStore;
 import pro.sketchware.core.project.ProjectFileManager;
 import pro.sketchware.core.project.ProjectDataManager;
-import pro.sketchware.core.UIHelper;
+import pro.sketchware.core.util.UIHelper;
 import pro.sketchware.core.ui.PresetLayoutFactory;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.R;

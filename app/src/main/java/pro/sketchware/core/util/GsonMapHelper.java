@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.util;
 
 import com.google.gson.Gson;
 import java.util.HashMap;

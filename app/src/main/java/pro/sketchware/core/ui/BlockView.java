@@ -1,7 +1,7 @@
 package pro.sketchware.core.ui;
 
 import pro.sketchware.core.codegen.BlockColorMapper;
-import pro.sketchware.core.FormatUtil;
+import pro.sketchware.core.util.FormatUtil;
 import pro.sketchware.core.codegen.StringResource;
 
 import android.content.Context;

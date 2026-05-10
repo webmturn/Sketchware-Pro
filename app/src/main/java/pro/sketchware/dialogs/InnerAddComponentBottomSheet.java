@@ -22,12 +22,12 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import pro.sketchware.core.DeviceUtil;
+import pro.sketchware.core.util.DeviceUtil;
 import pro.sketchware.core.validation.LengthRangeValidator;
 import pro.sketchware.core.validation.IdentifierValidator;
-import pro.sketchware.core.SketchToast;
+import pro.sketchware.core.util.SketchToast;
 import pro.sketchware.core.project.ProjectDataManager;
-import pro.sketchware.core.UIHelper;
+import pro.sketchware.core.util.UIHelper;
 import pro.sketchware.core.codegen.BlockConstants;
 import mod.hey.studios.util.Helper;
 import mod.hilal.saif.components.ComponentsHandler;

@@ -1,6 +1,6 @@
 package pro.sketchware.core.project;
 
-import pro.sketchware.core.BitmapUtil;
+import pro.sketchware.core.util.BitmapUtil;
 import pro.sketchware.core.CompileException;
 import pro.sketchware.core.project.SketchwarePaths;
 

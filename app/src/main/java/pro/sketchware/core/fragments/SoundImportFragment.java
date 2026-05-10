@@ -40,7 +40,7 @@ import pro.sketchware.core.EncryptedFileUtil;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.project.SoundCollectionManager;
-import pro.sketchware.core.UIHelper;
+import pro.sketchware.core.util.UIHelper;
 
 public class SoundImportFragment extends BaseFragment {
     private String sc_id;

@@ -9,7 +9,7 @@ import pro.sketchware.core.EncryptedFileUtil;
 import pro.sketchware.core.codegen.LayoutGenerator;
 import pro.sketchware.core.project.LibraryManager;
 import pro.sketchware.core.codegen.LocalLibraryManifestMerger;
-import pro.sketchware.core.MapValueHelper;
+import pro.sketchware.core.util.MapValueHelper;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.ProjectDataStore;
 import pro.sketchware.core.project.ProjectFileManager;

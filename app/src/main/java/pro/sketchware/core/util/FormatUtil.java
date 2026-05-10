@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.util;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;

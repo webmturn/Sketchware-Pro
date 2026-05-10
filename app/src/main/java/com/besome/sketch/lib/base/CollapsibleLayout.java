@@ -16,7 +16,7 @@ import androidx.annotation.Nullable;
 
 import java.util.List;
 
-import pro.sketchware.core.ViewUtil;
+import pro.sketchware.core.util.ViewUtil;
 import pro.sketchware.R;
 
 public abstract class CollapsibleLayout<T extends View> extends FrameLayout {

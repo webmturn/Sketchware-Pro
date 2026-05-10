@@ -36,7 +36,7 @@ import java.util.List;
 import pro.sketchware.core.BackgroundTasks;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.TaskHost;
-import pro.sketchware.core.UIHelper;
+import pro.sketchware.core.util.UIHelper;
 import dev.aldi.sayuti.editor.manage.ManageLocalLibraryActivity;
 import mod.hey.studios.activity.managers.nativelib.ManageNativelibsActivity;
 import mod.hey.studios.util.Helper;

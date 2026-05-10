@@ -38,9 +38,9 @@ import pro.sketchware.databinding.FrLogicListItemComponentBinding;
 import pro.sketchware.databinding.FrLogicListItemEventPreviewBinding;
 import pro.sketchware.core.codegen.EventRegistry;
 import pro.sketchware.core.project.ProjectDataManager;
-import pro.sketchware.core.SketchToast;
-import pro.sketchware.core.UIHelper;
-import pro.sketchware.core.ViewUtil;
+import pro.sketchware.core.util.SketchToast;
+import pro.sketchware.core.util.UIHelper;
+import pro.sketchware.core.util.ViewUtil;
 
 public class ComponentListFragment extends BaseFragment implements View.OnClickListener {
 

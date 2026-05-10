@@ -14,8 +14,8 @@ import com.besome.sketch.lib.ui.ColorPickerDialog;
 import java.util.Objects;
 
 import pro.sketchware.core.PropertyChangedCallback;
-import pro.sketchware.core.UIHelper;
-import pro.sketchware.core.ViewUtil;
+import pro.sketchware.core.util.UIHelper;
+import pro.sketchware.core.util.ViewUtil;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 

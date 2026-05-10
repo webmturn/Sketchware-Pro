@@ -24,8 +24,8 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import java.util.ArrayList;
 
 import pro.sketchware.core.validation.XmlNameValidator;
-import pro.sketchware.core.SketchToast;
-import pro.sketchware.core.UIHelper;
+import pro.sketchware.core.util.SketchToast;
+import pro.sketchware.core.util.UIHelper;
 import pro.sketchware.core.codegen.BlockConstants;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;

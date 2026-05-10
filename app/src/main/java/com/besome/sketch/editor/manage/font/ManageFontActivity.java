@@ -19,9 +19,9 @@ import java.lang.ref.WeakReference;
 
 import pro.sketchware.core.BackgroundTasks;
 import pro.sketchware.core.project.FontCollectionManager;
-import pro.sketchware.core.SketchToast;
+import pro.sketchware.core.util.SketchToast;
 import pro.sketchware.core.TaskHost;
-import pro.sketchware.core.UIHelper;
+import pro.sketchware.core.util.UIHelper;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageFontBinding;

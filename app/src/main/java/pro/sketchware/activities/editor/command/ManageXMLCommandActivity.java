@@ -37,7 +37,7 @@ import java.util.concurrent.Executors;
 import pro.sketchware.core.codegen.ActivityCodeGenerator;
 import pro.sketchware.core.project.ProjectFileManager;
 import pro.sketchware.core.project.ProjectDataManager;
-import pro.sketchware.core.UIHelper;
+import pro.sketchware.core.util.UIHelper;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.build.ProjectFilePaths;
 import io.github.rosemoe.sora.widget.CodeEditor;

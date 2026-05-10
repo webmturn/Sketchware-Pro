@@ -33,7 +33,7 @@ import pro.sketchware.core.ui.PresetLayoutFactory;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.ProjectDataStore;
 import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.core.UIHelper;
+import pro.sketchware.core.util.UIHelper;
 
 public class ViewFilesFragment extends BaseFragment {
 

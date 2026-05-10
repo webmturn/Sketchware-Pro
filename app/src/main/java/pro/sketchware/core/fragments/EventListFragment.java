@@ -60,11 +60,11 @@ import pro.sketchware.core.project.ImageCollectionManager;
 import pro.sketchware.core.project.MoreBlockCollectionManager;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.ProjectDataStore;
-import pro.sketchware.core.SketchToast;
+import pro.sketchware.core.util.SketchToast;
 import pro.sketchware.core.project.SoundCollectionManager;
-import pro.sketchware.core.UIHelper;
+import pro.sketchware.core.util.UIHelper;
 import pro.sketchware.core.validation.UniqueNameValidator;
-import pro.sketchware.core.ViewUtil;
+import pro.sketchware.core.util.ViewUtil;
 
 public class EventListFragment extends BaseFragment implements View.OnClickListener, MoreblockImporterDialog.CallBack {
 

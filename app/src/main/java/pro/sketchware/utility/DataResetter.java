@@ -6,12 +6,12 @@ import android.content.Intent;
 
 import java.util.HashMap;
 
-import pro.sketchware.core.SharedPrefsHelper;
-import pro.sketchware.core.SketchToast;
+import pro.sketchware.core.util.SharedPrefsHelper;
+import pro.sketchware.core.util.SketchToast;
 import pro.sketchware.core.project.ProjectListManager;
 import pro.sketchware.core.EncryptedFileUtil;
 import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.core.MapValueHelper;
+import pro.sketchware.core.util.MapValueHelper;
 import mod.hey.studios.util.Helper;
 import mod.jbk.build.BuiltInLibraries;
 import pro.sketchware.R;

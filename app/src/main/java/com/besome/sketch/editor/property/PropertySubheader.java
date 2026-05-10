@@ -6,7 +6,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import pro.sketchware.core.ViewUtil;
+import pro.sketchware.core.util.ViewUtil;
 import pro.sketchware.R;
 
 public class PropertySubheader extends RelativeLayout {

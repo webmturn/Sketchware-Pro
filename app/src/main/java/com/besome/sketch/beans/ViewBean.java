@@ -10,7 +10,7 @@ import com.google.gson.annotations.Expose;
 import java.util.HashMap;
 
 import pro.sketchware.core.project.ClassInfo;
-import pro.sketchware.core.ReflectiveToString;
+import pro.sketchware.core.util.ReflectiveToString;
 import mod.agus.jcoderz.beans.ViewBeans;
 import pro.sketchware.R;
 

@@ -14,7 +14,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import pro.sketchware.core.project.FontCollectionManager;
-import pro.sketchware.core.SketchToast;
+import pro.sketchware.core.util.SketchToast;
 import pro.sketchware.core.codegen.BlockConstants;
 import pro.sketchware.core.project.SketchwarePaths;
 import mod.hey.studios.util.Helper;

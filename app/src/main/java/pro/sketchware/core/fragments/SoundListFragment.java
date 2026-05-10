@@ -45,7 +45,7 @@ import pro.sketchware.utility.FileUtil;
 import pro.sketchware.utility.SketchwareUtil;
 import pro.sketchware.core.EncryptedFileUtil;
 import pro.sketchware.core.project.ProjectDataManager;
-import pro.sketchware.core.UIHelper;
+import pro.sketchware.core.util.UIHelper;
 
 public class SoundListFragment extends BaseFragment implements MenuProvider {
 

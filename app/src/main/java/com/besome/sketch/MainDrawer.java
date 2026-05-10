@@ -23,7 +23,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import pro.sketchware.activities.main.activities.MainActivity;
 
-import pro.sketchware.core.UIHelper;
+import pro.sketchware.core.util.UIHelper;
 import dev.chrisbanes.insetter.Insetter;
 import dev.chrisbanes.insetter.Side;
 import mod.hilal.saif.activities.tools.AppSettings;

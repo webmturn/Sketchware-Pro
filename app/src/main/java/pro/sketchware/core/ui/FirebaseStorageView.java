@@ -1,7 +1,7 @@
 package pro.sketchware.core.ui;
 
-import pro.sketchware.core.AnimationUtil;
-import pro.sketchware.core.UIHelper;
+import pro.sketchware.core.util.AnimationUtil;
+import pro.sketchware.core.util.UIHelper;
 
 import android.widget.LinearLayout;
 

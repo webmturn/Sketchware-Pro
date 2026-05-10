@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pro.sketchware.core.BlockSizeListener;
-import pro.sketchware.core.ViewUtil;
+import pro.sketchware.core.util.ViewUtil;
 import pro.sketchware.R;
 import pro.sketchware.databinding.PaletteSelectorItemBinding;
 

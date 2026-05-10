@@ -41,7 +41,7 @@ import java.util.HashMap;
 import java.util.Objects;
 
 import pro.sketchware.core.UriPathResolver;
-import pro.sketchware.core.BitmapUtil;
+import pro.sketchware.core.util.BitmapUtil;
 import pro.sketchware.core.project.SketchwarePaths;
 import mod.hey.studios.util.Helper;
 import pro.sketchware.R;

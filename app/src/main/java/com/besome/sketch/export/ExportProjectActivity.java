@@ -37,7 +37,7 @@ import pro.sketchware.R;
 import pro.sketchware.core.BackgroundTasks;
 import pro.sketchware.core.EncryptedFileUtil;
 import pro.sketchware.core.project.LibraryManager;
-import pro.sketchware.core.MapValueHelper;
+import pro.sketchware.core.util.MapValueHelper;
 import pro.sketchware.core.build.ProjectBuilder;
 import pro.sketchware.core.project.ProjectDataStore;
 import pro.sketchware.core.project.ProjectFileManager;

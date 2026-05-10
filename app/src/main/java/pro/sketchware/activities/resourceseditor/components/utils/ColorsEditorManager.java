@@ -32,7 +32,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import pro.sketchware.core.project.ProjectListManager;
 import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.core.MapValueHelper;
+import pro.sketchware.core.util.MapValueHelper;
 import pro.sketchware.R;
 import pro.sketchware.SketchApplication;
 import pro.sketchware.activities.resourceseditor.components.models.ColorModel;

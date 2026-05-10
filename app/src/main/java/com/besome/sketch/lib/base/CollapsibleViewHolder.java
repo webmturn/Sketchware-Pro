@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.Collections;
 import java.util.Set;
 
-import pro.sketchware.core.AnimationUtil;
+import pro.sketchware.core.util.AnimationUtil;
 
 public abstract class CollapsibleViewHolder extends RecyclerView.ViewHolder {
     private final int animationDurationInMs;

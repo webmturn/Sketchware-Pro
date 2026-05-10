@@ -55,7 +55,7 @@ import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.ProjectDataStore;
 import pro.sketchware.core.ViewEditorCallback;
 import pro.sketchware.core.project.ViewHistoryManager;
-import pro.sketchware.core.ViewUtil;
+import pro.sketchware.core.util.ViewUtil;
 import pro.sketchware.core.project.WidgetCollectionManager;
 import pro.sketchware.core.codegen.XmlLayoutParser;
 

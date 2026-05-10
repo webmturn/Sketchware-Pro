@@ -2,7 +2,7 @@ package com.besome.sketch.editor.property;
 
 
 import mod.hey.studios.util.Helper;
-import pro.sketchware.core.FormatUtil;
+import pro.sketchware.core.util.FormatUtil;
 import com.besome.sketch.editor.PropertyActivity;
 import android.content.Context;
 import android.util.Pair;
@@ -31,7 +31,7 @@ import pro.sketchware.core.PropertyChangedCallback;
 import pro.sketchware.core.ViewBeanCallback;
 import pro.sketchware.core.project.ViewHistoryManager;
 import pro.sketchware.core.project.ProjectDataManager;
-import pro.sketchware.core.UIHelper;
+import pro.sketchware.core.util.UIHelper;
 import pro.sketchware.core.codegen.EventRegistry;
 import mod.hey.studios.project.ProjectSettings;
 import mod.pranav.viewbinding.ViewBindingBuilder;

@@ -1,6 +1,6 @@
 package com.besome.sketch.beans;
 
-import pro.sketchware.core.ReflectiveToString;
+import pro.sketchware.core.util.ReflectiveToString;
 
 public class CollapsibleBean extends ReflectiveToString {
     public int buttonPressed = -1;

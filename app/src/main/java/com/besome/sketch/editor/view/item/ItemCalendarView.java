@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import com.besome.sketch.beans.ViewBean;
 import com.besome.sketch.editor.view.ItemView;
 
-import pro.sketchware.core.ViewUtil;
+import pro.sketchware.core.util.ViewUtil;
 
 public class ItemCalendarView extends CalendarView implements ItemView {
 

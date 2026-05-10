@@ -1,4 +1,4 @@
-package pro.sketchware.core;
+package pro.sketchware.core.util;
 
 import android.content.Context;
 import android.graphics.ColorFilter;
@@ -15,6 +15,8 @@ import android.view.animation.Transformation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+
+import pro.sketchware.core.ViewEnableRunnable;
 
 public class UIHelper {
   public static long lastClickTime;

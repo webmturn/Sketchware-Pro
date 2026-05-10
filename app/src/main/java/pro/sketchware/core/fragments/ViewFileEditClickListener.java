@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.besome.sketch.beans.ProjectFileBean;
 import com.besome.sketch.editor.manage.view.PresetSettingActivity;
-import pro.sketchware.core.UIHelper;
+import pro.sketchware.core.util.UIHelper;
 
 public class ViewFileEditClickListener implements View.OnClickListener {
   public final ViewFilesAdapter.FileListAdapter adapter;
