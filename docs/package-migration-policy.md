@@ -84,7 +84,7 @@ Tracks the legacy → modern migration progress. **Do not** edit ad hoc; update 
 | `pro.sketchware.core.*` (124 flat) | `pro.sketchware.core.{async,build,callback,codegen,fragments,project,ui,util,validation}` | ✅ Done | P0a (`package-refactor-plan.md`) |
 | `com.besome.sketch.editor.LogicEditorActivity` | `pro.sketchware.editor.logic.*` controllers (Activity stays) | ⏳ Planned | P0b |
 | `com.besome.sketch.editor.DesignActivity` | Same pattern as P0b | 🟡 Candidate | P0c (not yet scheduled) |
-| `mod.agus.jcoderz.dx/` | `:vendor-dx` Gradle module | ⏳ Planned | P1b |
+| `mod.agus.jcoderz.{dx,dex}/` | `:vendor-dx` Gradle module | ✅ Done (commit `f9ba8eaf3`) | P1b |
 | `pro.sketchware.core.build.ProjectBuilder` | `pro.sketchware.core.build.stage.*` chain | ⏳ Planned | P1a |
 | `pro.sketchware.core.codegen.*` direct file writes | `pro.sketchware.core.codegen.sink.*` interfaces + `pro.sketchware.core.build.sink.*` impls | ⏳ Planned | P2a |
 | `pro.sketchware.lib.validator.*` (9) | `pro.sketchware.core.validation.*` | ✅ Done (commit `48c6468ac`) | Path B step 5 |
