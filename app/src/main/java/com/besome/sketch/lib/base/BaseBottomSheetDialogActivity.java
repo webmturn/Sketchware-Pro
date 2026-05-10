@@ -17,8 +17,8 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
-import pro.sketchware.core.util.UIHelper;
-import pro.sketchware.core.util.ViewUtil;
+import pro.sketchware.util.UIHelper;
+import pro.sketchware.util.ViewUtil;
 import pro.sketchware.R;
 
 public class BaseBottomSheetDialogActivity extends BaseAppCompatActivity {

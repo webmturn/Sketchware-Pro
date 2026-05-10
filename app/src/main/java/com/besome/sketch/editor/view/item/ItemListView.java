@@ -13,7 +13,7 @@ import com.besome.sketch.editor.view.ItemView;
 
 import java.util.ArrayList;
 
-import pro.sketchware.core.util.ViewUtil;
+import pro.sketchware.util.ViewUtil;
 
 public class ItemListView extends ListView implements ItemView {
 

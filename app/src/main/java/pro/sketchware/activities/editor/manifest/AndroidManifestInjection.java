@@ -30,7 +30,7 @@ import pro.sketchware.core.async.BackgroundTasks;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.async.TaskHost;
-import pro.sketchware.core.util.ViewUtil;
+import pro.sketchware.util.ViewUtil;
 import pro.sketchware.core.build.ProjectFilePaths;
 import pro.sketchware.activities.editor.code.SrcCodeEditor;
 import pro.sketchware.util.Helper;

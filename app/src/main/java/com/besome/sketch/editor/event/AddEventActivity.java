@@ -38,14 +38,14 @@ import java.util.HashMap;
 import java.util.Set;
 
 import pro.sketchware.core.codegen.LayoutGenerator;
-import pro.sketchware.core.util.SketchToast;
+import pro.sketchware.util.SketchToast;
 import pro.sketchware.core.util.AnimationUtil;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.BuildConfig;
-import pro.sketchware.core.util.UIHelper;
+import pro.sketchware.util.UIHelper;
 import pro.sketchware.core.codegen.EventRegistry;
 import pro.sketchware.core.fragments.EventListFragment;
-import pro.sketchware.core.util.ViewUtil;
+import pro.sketchware.util.ViewUtil;
 import pro.sketchware.R;
 import pro.sketchware.util.UI;
 import pro.sketchware.databinding.LogicPopupAddEventBinding;

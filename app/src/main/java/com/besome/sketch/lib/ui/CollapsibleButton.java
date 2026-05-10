@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.StringRes;
 
-import pro.sketchware.core.util.ViewUtil;
+import pro.sketchware.util.ViewUtil;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 

@@ -17,7 +17,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import pro.sketchware.core.build.ProjectBuilder;
-import pro.sketchware.core.util.SketchToast;
+import pro.sketchware.util.SketchToast;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.build.ProjectFilePaths;
 import pro.sketchware.util.Helper;

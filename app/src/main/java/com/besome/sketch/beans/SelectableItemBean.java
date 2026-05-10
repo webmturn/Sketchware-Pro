@@ -3,7 +3,7 @@ package com.besome.sketch.beans;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import pro.sketchware.core.util.ReflectiveToString;
+import pro.sketchware.util.format.ReflectiveToString;
 
 public class SelectableItemBean extends ReflectiveToString implements Parcelable {
     public static final Parcelable.Creator<SelectableItemBean> CREATOR = new Parcelable.Creator<>() {

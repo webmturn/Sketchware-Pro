@@ -16,8 +16,8 @@ import com.besome.sketch.beans.ProjectResourceBean;
 import com.besome.sketch.lib.base.BaseDialogActivity;
 
 import pro.sketchware.core.project.FontCollectionManager;
-import pro.sketchware.core.util.SketchToast;
-import pro.sketchware.core.util.UIHelper;
+import pro.sketchware.util.SketchToast;
+import pro.sketchware.util.UIHelper;
 import pro.sketchware.core.codegen.BlockConstants;
 import pro.sketchware.core.exception.CompileException;
 import pro.sketchware.util.Helper;

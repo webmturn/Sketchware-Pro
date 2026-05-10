@@ -19,10 +19,10 @@ import java.util.regex.Pattern;
 
 import pro.sketchware.core.ui.BlockView;
 import pro.sketchware.core.validation.IdentifierValidator;
-import pro.sketchware.core.util.SketchToast;
-import pro.sketchware.core.util.UIHelper;
+import pro.sketchware.util.SketchToast;
+import pro.sketchware.util.UIHelper;
 import pro.sketchware.core.codegen.BlockConstants;
-import pro.sketchware.core.util.ViewUtil;
+import pro.sketchware.util.ViewUtil;
 import pro.sketchware.activities.editor.makeblock.MoreblockValidator;
 import pro.sketchware.activities.editor.makeblock.ReturnMoreblockManager;
 import pro.sketchware.util.Helper;

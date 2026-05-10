@@ -42,7 +42,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import pro.sketchware.core.project.ProjectListManager;
-import pro.sketchware.core.util.MapValueHelper;
+import pro.sketchware.util.MapValueHelper;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.library.LocalLibrariesUtil;
 import pro.sketchware.core.codegen.ExtraBlockInfo;

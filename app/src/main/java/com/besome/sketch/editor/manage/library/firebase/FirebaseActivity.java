@@ -23,12 +23,12 @@ import com.besome.sketch.beans.ProjectLibraryBean;
 import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import pro.sketchware.core.util.DeviceUtil;
-import pro.sketchware.core.util.SketchToast;
+import pro.sketchware.util.DeviceUtil;
+import pro.sketchware.util.SketchToast;
 import pro.sketchware.core.project.LibraryManager;
 import pro.sketchware.core.ui.FirebasePreviewView;
 import pro.sketchware.core.ui.FirebaseSettingsView;
-import pro.sketchware.core.util.UIHelper;
+import pro.sketchware.util.UIHelper;
 import pro.sketchware.core.ui.FirebaseStorageView;
 import pro.sketchware.core.ui.LibraryConfigView;
 import pro.sketchware.util.Helper;

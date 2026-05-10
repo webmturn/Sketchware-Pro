@@ -16,7 +16,7 @@ import com.google.android.material.card.MaterialCardView;
 import java.util.ArrayList;
 
 import pro.sketchware.core.ui.DefinitionBlockView;
-import pro.sketchware.core.util.ViewUtil;
+import pro.sketchware.util.ViewUtil;
 import pro.sketchware.util.Helper;
 import pro.sketchware.activities.settings.AppSettings;
 import pro.sketchware.R;

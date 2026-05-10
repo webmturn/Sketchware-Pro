@@ -1,4 +1,4 @@
-package pro.sketchware.core.util;
+package pro.sketchware.util;
 
 public class ThrottleTimer {
   public static boolean isThrottled;

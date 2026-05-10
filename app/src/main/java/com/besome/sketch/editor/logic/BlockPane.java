@@ -4,7 +4,7 @@ import pro.sketchware.core.project.ClassInfo;
 import pro.sketchware.core.ui.BlockView;
 import pro.sketchware.core.ui.BaseBlockView;
 import pro.sketchware.core.codegen.ComponentTypeMapper;
-import pro.sketchware.core.util.ViewUtil;
+import pro.sketchware.util.ViewUtil;
 import android.content.Context;
 import android.graphics.Point;
 import android.view.View;

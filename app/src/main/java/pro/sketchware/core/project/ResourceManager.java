@@ -14,7 +14,7 @@ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
-import pro.sketchware.core.util.EncryptedFileUtil;
+import pro.sketchware.util.io.EncryptedFileUtil;
 
 public class ResourceManager {
   public static StringSignature cacheSignature;

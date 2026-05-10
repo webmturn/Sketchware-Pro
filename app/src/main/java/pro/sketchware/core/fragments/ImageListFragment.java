@@ -60,10 +60,10 @@ import pro.sketchware.databinding.ManageImageListItemBinding;
 import pro.sketchware.util.FilePathUtil;
 import pro.sketchware.util.SvgUtils;
 import pro.sketchware.core.util.BitmapUtil;
-import pro.sketchware.core.util.EncryptedFileUtil;
+import pro.sketchware.util.io.EncryptedFileUtil;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.ResourceManager;
-import pro.sketchware.core.util.SketchToast;
+import pro.sketchware.util.SketchToast;
 
 public class ImageListFragment extends BaseFragment implements MenuProvider {
 

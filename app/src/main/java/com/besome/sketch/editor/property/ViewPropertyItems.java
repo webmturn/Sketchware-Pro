@@ -2,7 +2,7 @@ package com.besome.sketch.editor.property;
 
 
 import pro.sketchware.util.Helper;
-import pro.sketchware.core.util.FormatUtil;
+import pro.sketchware.util.format.FormatUtil;
 import com.besome.sketch.editor.PropertyActivity;
 import android.content.Context;
 import android.util.Pair;
@@ -31,7 +31,7 @@ import pro.sketchware.core.callback.PropertyChangedCallback;
 import pro.sketchware.core.callback.ViewBeanCallback;
 import pro.sketchware.core.project.ViewHistoryManager;
 import pro.sketchware.core.project.ProjectDataManager;
-import pro.sketchware.core.util.UIHelper;
+import pro.sketchware.util.UIHelper;
 import pro.sketchware.core.codegen.EventRegistry;
 import pro.sketchware.project.ProjectSettings;
 import pro.sketchware.core.build.ViewBindingBuilder;

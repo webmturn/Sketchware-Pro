@@ -29,7 +29,7 @@ import java.util.Random;
 import java.util.function.Consumer;
 
 import pro.sketchware.core.async.BackgroundTasks;
-import pro.sketchware.core.util.SketchToast;
+import pro.sketchware.util.SketchToast;
 import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.util.Helper;
 import pro.sketchware.util.LogUtil;

@@ -11,8 +11,8 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import com.besome.sketch.lib.ui.PropertyOneLineItem;
 import com.besome.sketch.lib.ui.PropertyTwoLineItem;
 
-import pro.sketchware.core.util.DeviceUtil;
-import pro.sketchware.core.util.UIHelper;
+import pro.sketchware.util.DeviceUtil;
+import pro.sketchware.util.UIHelper;
 import pro.sketchware.util.Helper;
 import pro.sketchware.util.LogUtil;
 import pro.sketchware.R;
@@ -68,7 +68,7 @@ public class SystemInfoActivity extends BaseAppCompatActivity {
                     startActivity(intent);
                 } catch (ActivityNotFoundException e) {
                     LogUtil.w("SystemInfoActivity", "Developer options not found on this device", e);
-                    pro.sketchware.core.util.SketchToast.toast(SystemInfoActivity.this, Helper.getResString(R.string.error_dev_options_unavailable), pro.sketchware.core.util.SketchToast.TOAST_WARNING).show();
+                    pro.sketchware.util.SketchToast.toast(SystemInfoActivity.this, Helper.getResString(R.string.error_dev_options_unavailable), pro.sketchware.util.SketchToast.TOAST_WARNING).show();
                 }
             }
         });

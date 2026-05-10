@@ -12,7 +12,7 @@ import com.besome.sketch.beans.ProjectLibraryBean;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import pro.sketchware.core.ui.LibrarySettingsView;
-import pro.sketchware.core.util.SketchToast;
+import pro.sketchware.util.SketchToast;
 import pro.sketchware.core.util.AnimationUtil;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;

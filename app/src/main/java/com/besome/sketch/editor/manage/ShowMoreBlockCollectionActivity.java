@@ -20,13 +20,13 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import pro.sketchware.core.util.DeviceUtil;
+import pro.sketchware.util.DeviceUtil;
 import pro.sketchware.core.validation.UniqueNameValidator;
 import pro.sketchware.core.project.MoreBlockCollectionManager;
 import pro.sketchware.core.ui.BlockView;
 import pro.sketchware.core.ui.FieldBlockView;
 import pro.sketchware.core.ui.BaseBlockView;
-import pro.sketchware.core.util.SketchToast;
+import pro.sketchware.util.SketchToast;
 import pro.sketchware.util.Helper;
 import pro.sketchware.util.UI;
 import pro.sketchware.util.BlockUtil;

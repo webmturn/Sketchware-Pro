@@ -10,10 +10,10 @@ import java.util.Comparator;
 import java.util.HashMap;
 
 import pro.sketchware.util.LogUtil;
-import pro.sketchware.core.util.EncryptedFileUtil;
-import pro.sketchware.core.util.GsonMapHelper;
-import pro.sketchware.core.util.MapValueHelper;
-import pro.sketchware.core.util.SharedPrefsHelper;
+import pro.sketchware.util.io.EncryptedFileUtil;
+import pro.sketchware.util.GsonMapHelper;
+import pro.sketchware.util.MapValueHelper;
+import pro.sketchware.util.io.SharedPrefsHelper;
 
 public class ProjectListManager {
     public static SharedPrefsHelper sharedPrefsHelper;

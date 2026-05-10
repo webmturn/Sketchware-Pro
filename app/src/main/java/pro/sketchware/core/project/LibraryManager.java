@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
-import pro.sketchware.core.util.EncryptedFileUtil;
+import pro.sketchware.util.io.EncryptedFileUtil;
 
 public class LibraryManager {
   public String projectId;

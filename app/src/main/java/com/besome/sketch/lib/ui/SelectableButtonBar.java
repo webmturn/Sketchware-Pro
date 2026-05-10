@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pro.sketchware.core.callback.IntCallback;
-import pro.sketchware.core.util.ViewUtil;
+import pro.sketchware.util.ViewUtil;
 import pro.sketchware.R;
 
 public class SelectableButtonBar extends LinearLayout {

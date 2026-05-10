@@ -30,7 +30,7 @@ import java.util.concurrent.Executors;
 
 import pro.sketchware.core.project.ClassInfo;
 import pro.sketchware.core.project.ProjectDataParser;
-import pro.sketchware.core.util.EncryptedFileUtil;
+import pro.sketchware.util.io.EncryptedFileUtil;
 
 /**
  * In-memory store for all editable project data: views, blocks, variables, lists,

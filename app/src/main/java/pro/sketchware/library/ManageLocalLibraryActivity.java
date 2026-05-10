@@ -49,7 +49,7 @@ import java.util.concurrent.Executors;
 import pro.sketchware.core.async.BackgroundTasks;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.async.TaskHost;
-import pro.sketchware.core.util.UIHelper;
+import pro.sketchware.util.UIHelper;
 import pro.sketchware.core.build.BuildSettings;
 import pro.sketchware.project.ProjectSettings;
 import pro.sketchware.util.Helper;

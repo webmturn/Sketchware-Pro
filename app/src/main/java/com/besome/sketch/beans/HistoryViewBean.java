@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 
-import pro.sketchware.core.util.ReflectiveToString;
+import pro.sketchware.util.format.ReflectiveToString;
 
 public class HistoryViewBean extends ReflectiveToString {
     public static final int ACTION_TYPE_ADD = 0;

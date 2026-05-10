@@ -15,7 +15,7 @@ import com.besome.sketch.ctrls.ViewIdSpinnerItem;
 import java.util.ArrayList;
 
 import pro.sketchware.core.callback.FileSelectedCallback;
-import pro.sketchware.core.util.ViewUtil;
+import pro.sketchware.util.ViewUtil;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 

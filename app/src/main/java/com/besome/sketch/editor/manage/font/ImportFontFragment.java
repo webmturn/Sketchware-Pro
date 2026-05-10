@@ -31,7 +31,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import pro.sketchware.core.project.ProjectDataManager;
-import pro.sketchware.core.util.EncryptedFileUtil;
+import pro.sketchware.util.io.EncryptedFileUtil;
 import pro.sketchware.core.fragments.BaseFragment;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;

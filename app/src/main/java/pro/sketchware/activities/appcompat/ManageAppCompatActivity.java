@@ -24,7 +24,7 @@ import java.util.Objects;
 
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.core.util.UIHelper;
+import pro.sketchware.util.UIHelper;
 import pro.sketchware.core.codegen.AppCompatInjection;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;

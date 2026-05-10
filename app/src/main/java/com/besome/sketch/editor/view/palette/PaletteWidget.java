@@ -15,7 +15,7 @@ import com.google.android.material.color.MaterialColors;
 
 import java.util.HashMap;
 
-import pro.sketchware.core.util.ViewUtil;
+import pro.sketchware.util.ViewUtil;
 import com.besome.sketch.editor.view.palette.IconBadgeView;
 import com.besome.sketch.editor.view.palette.IconBottomNavigationView;
 import com.besome.sketch.editor.view.palette.IconCardView;

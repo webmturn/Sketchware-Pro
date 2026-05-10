@@ -2,7 +2,7 @@ package pro.sketchware.core.ui;
 
 import pro.sketchware.core.project.ClassInfo;
 import pro.sketchware.core.codegen.ComponentTypeMapper;
-import pro.sketchware.core.util.ViewUtil;
+import pro.sketchware.util.ViewUtil;
 
 import android.content.Context;
 import android.graphics.Canvas;

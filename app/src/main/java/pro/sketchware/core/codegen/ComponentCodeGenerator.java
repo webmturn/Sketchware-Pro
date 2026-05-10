@@ -1,6 +1,6 @@
 package pro.sketchware.core.codegen;
 import pro.sketchware.core.project.BuildConfig;
-import pro.sketchware.core.util.FormatUtil;
+import pro.sketchware.util.format.FormatUtil;
 
 import android.text.TextUtils;
 

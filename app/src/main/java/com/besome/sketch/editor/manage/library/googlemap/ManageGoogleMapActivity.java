@@ -19,10 +19,10 @@ import com.besome.sketch.lib.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.materialswitch.MaterialSwitch;
 
-import pro.sketchware.core.util.DeviceUtil;
-import pro.sketchware.core.util.SketchToast;
+import pro.sketchware.util.DeviceUtil;
+import pro.sketchware.util.SketchToast;
 import pro.sketchware.core.project.LibraryManager;
-import pro.sketchware.core.util.UIHelper;
+import pro.sketchware.util.UIHelper;
 import pro.sketchware.util.Helper;
 import pro.sketchware.library.LibrarySettingsImporter;
 import pro.sketchware.R;

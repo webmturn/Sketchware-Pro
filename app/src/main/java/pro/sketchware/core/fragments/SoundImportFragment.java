@@ -36,11 +36,11 @@ import pro.sketchware.R;
 import pro.sketchware.databinding.FrManageSoundListBinding;
 import pro.sketchware.databinding.ManageSoundBinding;
 import pro.sketchware.databinding.ManageSoundListItemBinding;
-import pro.sketchware.core.util.EncryptedFileUtil;
+import pro.sketchware.util.io.EncryptedFileUtil;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.project.SoundCollectionManager;
-import pro.sketchware.core.util.UIHelper;
+import pro.sketchware.util.UIHelper;
 
 public class SoundImportFragment extends BaseFragment {
     private String sc_id;

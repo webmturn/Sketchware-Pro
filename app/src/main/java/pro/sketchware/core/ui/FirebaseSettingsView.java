@@ -1,7 +1,7 @@
 package pro.sketchware.core.ui;
 
 import pro.sketchware.core.util.AnimationUtil;
-import pro.sketchware.core.util.SketchToast;
+import pro.sketchware.util.SketchToast;
 
 
 import pro.sketchware.util.Helper;

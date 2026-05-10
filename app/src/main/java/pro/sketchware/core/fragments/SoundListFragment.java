@@ -43,9 +43,9 @@ import pro.sketchware.databinding.ManageSoundBinding;
 import pro.sketchware.databinding.ManageSoundListItemBinding;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
-import pro.sketchware.core.util.EncryptedFileUtil;
+import pro.sketchware.util.io.EncryptedFileUtil;
 import pro.sketchware.core.project.ProjectDataManager;
-import pro.sketchware.core.util.UIHelper;
+import pro.sketchware.util.UIHelper;
 
 public class SoundListFragment extends BaseFragment implements MenuProvider {
 

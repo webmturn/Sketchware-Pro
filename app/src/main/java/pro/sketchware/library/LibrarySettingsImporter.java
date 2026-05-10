@@ -36,10 +36,10 @@ import pro.sketchware.core.async.BackgroundTasks;
 import pro.sketchware.core.project.LibraryManager;
 import pro.sketchware.core.project.ProjectListManager;
 import pro.sketchware.core.async.TaskHost;
-import pro.sketchware.core.util.UIHelper;
-import pro.sketchware.core.util.ViewUtil;
+import pro.sketchware.util.UIHelper;
+import pro.sketchware.util.ViewUtil;
 import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.core.util.MapValueHelper;
+import pro.sketchware.util.MapValueHelper;
 import pro.sketchware.R;
 
 public class LibrarySettingsImporter {

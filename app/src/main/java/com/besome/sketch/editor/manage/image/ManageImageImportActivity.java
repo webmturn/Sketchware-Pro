@@ -28,8 +28,8 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import java.util.ArrayList;
 
 import pro.sketchware.core.validation.XmlNameValidator;
-import pro.sketchware.core.util.SketchToast;
-import pro.sketchware.core.util.UIHelper;
+import pro.sketchware.util.SketchToast;
+import pro.sketchware.util.UIHelper;
 import pro.sketchware.core.codegen.BlockConstants;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;

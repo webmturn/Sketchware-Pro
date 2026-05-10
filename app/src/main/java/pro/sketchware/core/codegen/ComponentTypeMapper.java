@@ -1,6 +1,6 @@
 package pro.sketchware.core.codegen;
 import pro.sketchware.core.project.ClassInfo;
-import pro.sketchware.core.util.FormatUtil;
+import pro.sketchware.util.format.FormatUtil;
 
 import com.besome.sketch.beans.ComponentBean;
 import com.besome.sketch.editor.manage.library.material3.Material3LibraryManager;

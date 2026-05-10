@@ -27,12 +27,12 @@ import java.util.List;
 import java.util.Objects;
 
 import pro.sketchware.core.async.BackgroundTasks;
-import pro.sketchware.core.util.SharedPrefsHelper;
+import pro.sketchware.util.io.SharedPrefsHelper;
 import pro.sketchware.core.project.ProjectListManager;
 import pro.sketchware.core.async.TaskHost;
-import pro.sketchware.core.util.UIHelper;
+import pro.sketchware.util.UIHelper;
 import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.core.util.MapValueHelper;
+import pro.sketchware.util.MapValueHelper;
 import pro.sketchware.project.ProjectSettingsDialog;
 import pro.sketchware.project.BackupRestoreManager;
 import pro.sketchware.util.Helper;

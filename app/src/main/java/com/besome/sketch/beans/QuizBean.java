@@ -1,6 +1,6 @@
 package com.besome.sketch.beans;
 
-import pro.sketchware.core.util.ReflectiveToString;
+import pro.sketchware.util.format.ReflectiveToString;
 
 public class QuizBean extends ReflectiveToString {
     public static final int QUIZ_TYPE_ANSWER = 2;

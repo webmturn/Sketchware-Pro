@@ -13,7 +13,7 @@ import com.besome.sketch.editor.view.ItemView;
 
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
-import pro.sketchware.core.util.ViewUtil;
+import pro.sketchware.util.ViewUtil;
 
 public class ItemMapView extends AppCompatTextView implements ItemView {
 

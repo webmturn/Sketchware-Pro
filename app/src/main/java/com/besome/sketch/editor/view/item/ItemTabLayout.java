@@ -14,7 +14,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
-import pro.sketchware.core.util.ViewUtil;
+import pro.sketchware.util.ViewUtil;
 
 public class ItemTabLayout extends TabLayout implements ItemView {
 

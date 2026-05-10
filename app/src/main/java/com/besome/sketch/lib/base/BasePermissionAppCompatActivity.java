@@ -8,8 +8,8 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import pro.sketchware.core.util.ThrottleTimer;
-import pro.sketchware.core.util.UIHelper;
+import pro.sketchware.util.ThrottleTimer;
+import pro.sketchware.util.UIHelper;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 

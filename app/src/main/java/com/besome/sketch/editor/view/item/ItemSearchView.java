@@ -10,7 +10,7 @@ import android.widget.SearchView;
 import com.besome.sketch.beans.ViewBean;
 import com.besome.sketch.editor.view.ItemView;
 
-import pro.sketchware.core.util.ViewUtil;
+import pro.sketchware.util.ViewUtil;
 
 public class ItemSearchView extends SearchView implements ItemView {
 
