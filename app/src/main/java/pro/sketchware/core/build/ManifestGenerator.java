@@ -36,7 +36,7 @@ import pro.sketchware.util.library.BuiltInLibraryManager;
 import pro.sketchware.util.FilePathUtil;
 import pro.sketchware.util.FileResConfig;
 import pro.sketchware.util.FileUtil;
-import pro.sketchware.xml.XmlBuilder;
+import pro.sketchware.util.xml.XmlBuilder;
 
 /**
  * Generates the {@code AndroidManifest.xml} for a Sketchware project.

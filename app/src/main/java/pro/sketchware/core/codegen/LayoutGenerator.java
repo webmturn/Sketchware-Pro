@@ -43,7 +43,7 @@ import pro.sketchware.activities.resourceseditor.components.utils.ColorsEditorMa
 import pro.sketchware.managers.inject.InjectRootLayoutManager;
 import pro.sketchware.util.InjectAttributeHandler;
 import pro.sketchware.util.PropertiesUtil;
-import pro.sketchware.xml.XmlBuilder;
+import pro.sketchware.util.xml.XmlBuilder;
 
 /**
  * Generates Android XML layout files from a project's {@link ViewBean} tree.
@@ -59,7 +59,7 @@ import pro.sketchware.xml.XmlBuilder;
  * </ul>
  *
  * @see ViewBean
- * @see pro.sketchware.xml.XmlBuilder
+ * @see pro.sketchware.util.xml.XmlBuilder
  * @see ProjectBuilder
  */
 @SuppressLint("RtlHardcoded")

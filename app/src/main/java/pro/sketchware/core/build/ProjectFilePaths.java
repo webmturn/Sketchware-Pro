@@ -67,8 +67,8 @@ import mod.pranav.viewbinding.ViewBindingBuilder;
 import pro.sketchware.SketchApplication;
 import pro.sketchware.util.library.BuiltInLibraryManager;
 import pro.sketchware.util.FileUtil;
-import pro.sketchware.xml.XmlBuilder;
-import pro.sketchware.xml.XmlBuilderHelper;
+import pro.sketchware.util.xml.XmlBuilder;
+import pro.sketchware.util.xml.XmlBuilderHelper;
 
 public class ProjectFilePaths {
 

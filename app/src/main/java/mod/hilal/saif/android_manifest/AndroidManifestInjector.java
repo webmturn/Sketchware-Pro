@@ -14,7 +14,7 @@ import pro.sketchware.R;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
-import pro.sketchware.xml.XmlBuilder;
+import pro.sketchware.util.xml.XmlBuilder;
 
 public class AndroidManifestInjector {
 
