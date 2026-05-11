@@ -225,10 +225,10 @@
             android:name="pro.sketchware.activities.editor.manage.library.googlemap.ManageGoogleMapActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="pro.sketchware.library.ManageLocalLibraryActivity"
+            android:name="pro.sketchware.activities.editor.manage.library.ManageLocalLibraryActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="pro.sketchware.library.SubDependenciesActivity"
+            android:name="pro.sketchware.activities.editor.manage.library.SubDependenciesActivity"
             android:configChanges="orientation|screenSize" />
         <activity
             android:name="pro.sketchware.activities.editor.ManagePermissionActivity"
@@ -277,7 +277,7 @@
         <activity
             android:name="pro.sketchware.activities.about.AboutActivity"
             android:configChanges="orientation|screenSize" />
-        <activity android:name="pro.sketchware.library.ExcludeBuiltInLibrariesActivity" />
+        <activity android:name="pro.sketchware.activities.editor.manage.library.ExcludeBuiltInLibrariesActivity" />
         <activity
             android:name="pro.sketchware.activities.editor.manage.view.PresetSettingActivity"
             android:configChanges="orientation|screenSize"

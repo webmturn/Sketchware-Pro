@@ -1,4 +1,4 @@
-package pro.sketchware.library;
+package pro.sketchware.activities.editor.manage.library;
 
 import static pro.sketchware.util.library.LocalLibrariesUtil.createLibraryMap;
 import static pro.sketchware.util.library.LocalLibrariesUtil.deleteSelectedLocalLibraries;
@@ -46,6 +46,7 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import pro.sketchware.activities.editor.manage.library.downloader.LibraryDownloaderDialogFragment;
 import pro.sketchware.core.async.BackgroundTasks;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.async.TaskHost;

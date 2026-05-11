@@ -1,4 +1,4 @@
-package pro.sketchware.library;
+package pro.sketchware.activities.editor.manage.library.downloader;
 
 import androidx.annotation.NonNull;
 import java.util.Locale;

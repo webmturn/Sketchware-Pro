@@ -1,4 +1,4 @@
-package pro.sketchware.library
+package pro.sketchware.core.build.dependency
 
 import com.android.tools.r8.CompilationMode
 import com.android.tools.r8.D8

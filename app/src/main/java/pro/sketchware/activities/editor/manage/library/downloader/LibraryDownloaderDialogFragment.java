@@ -1,4 +1,4 @@
-package pro.sketchware.library;
+package pro.sketchware.activities.editor.manage.library.downloader;
 
 import static android.net.ConnectivityManager.NetworkCallback;
 import android.content.Context;
@@ -39,7 +39,7 @@ import pro.sketchware.util.Helper;
 import pro.sketchware.util.library.BuiltInLibraries;
 import pro.sketchware.util.library.LocalLibrariesUtil;
 import pro.sketchware.util.library.LocalLibraryImportPackageIndex;
-import pro.sketchware.library.DependencyResolver;
+import pro.sketchware.core.build.dependency.DependencyResolver;
 import pro.sketchware.R;
 import pro.sketchware.core.async.BackgroundTasks;
 import pro.sketchware.core.async.TaskHost;

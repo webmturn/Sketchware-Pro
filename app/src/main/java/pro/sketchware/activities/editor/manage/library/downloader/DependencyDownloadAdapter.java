@@ -1,4 +1,4 @@
-package pro.sketchware.library;
+package pro.sketchware.activities.editor.manage.library.downloader;
 
 import android.view.LayoutInflater;
 import android.view.View;

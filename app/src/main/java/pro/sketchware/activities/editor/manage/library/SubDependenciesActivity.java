@@ -1,4 +1,4 @@
-package pro.sketchware.library;
+package pro.sketchware.activities.editor.manage.library;
 
 import static pro.sketchware.util.library.LocalLibrariesUtil.buildEnabledRootDependencyState;
 import static pro.sketchware.util.library.LocalLibrariesUtil.createLibraryMap;

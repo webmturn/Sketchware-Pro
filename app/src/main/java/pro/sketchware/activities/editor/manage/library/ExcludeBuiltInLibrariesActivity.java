@@ -1,4 +1,4 @@
-package pro.sketchware.library;
+package pro.sketchware.activities.editor.manage.library;
 
 import androidx.activity.OnBackPressedCallback;
 import android.content.res.TypedArray;

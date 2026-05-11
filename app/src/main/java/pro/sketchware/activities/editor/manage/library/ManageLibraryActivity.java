@@ -37,11 +37,11 @@ import pro.sketchware.core.async.BackgroundTasks;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.util.UIHelper;
-import pro.sketchware.library.ManageLocalLibraryActivity;
+
 import pro.sketchware.activities.editor.ManageNativelibsActivity;
 import pro.sketchware.util.Helper;
-import pro.sketchware.library.ExcludeBuiltInLibrariesActivity;
-import pro.sketchware.library.ExcludeBuiltInLibrariesLibraryItemView;
+
+
 import pro.sketchware.R;
 import pro.sketchware.util.UI;
 

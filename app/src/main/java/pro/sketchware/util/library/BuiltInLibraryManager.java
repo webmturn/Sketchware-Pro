@@ -27,7 +27,7 @@ public class BuiltInLibraryManager {
     /**
      * Add a built-in library to the project libraries list.
      * Won't add a library if it's in the list already,
-     * or it got excluded with {@link ExcludeBuiltInLibrariesActivity}.
+     * or it got excluded with {@link pro.sketchware.activities.editor.manage.library.ExcludeBuiltInLibrariesActivity}.
      *
      * @param libraryName The built-in library's name, e.g. material-1.0.0
      */
