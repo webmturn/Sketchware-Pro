@@ -1,4 +1,4 @@
-package pro.sketchware.library;
+package pro.sketchware.util.library;
 
 import android.widget.Toast;
 
@@ -11,8 +11,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 
-import pro.sketchware.library.LocalLibrariesUtil;
-import pro.sketchware.library.LocalLibraryImportPackageIndex;
+import pro.sketchware.util.library.LocalLibrariesUtil;
+import pro.sketchware.util.library.LocalLibraryImportPackageIndex;
 import pro.sketchware.util.Helper;
 import pro.sketchware.util.LogUtil;
 import pro.sketchware.R;

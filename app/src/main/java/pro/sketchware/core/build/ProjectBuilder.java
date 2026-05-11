@@ -68,7 +68,7 @@ import mod.agus.jcoderz.dx.command.dexer.Main;
 import mod.agus.jcoderz.dx.merge.CollisionPolicy;
 import mod.agus.jcoderz.dx.merge.DexMerger;
 import pro.sketchware.library.ExtLibSelected;
-import pro.sketchware.library.ManageLocalLibrary;
+import pro.sketchware.util.library.ManageLocalLibrary;
 import pro.sketchware.core.build.BuildSettings;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;

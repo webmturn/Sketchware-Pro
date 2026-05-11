@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import pro.sketchware.core.project.BuiltInLibrary;
 import pro.sketchware.core.build.ProjectBuilder;
 import pro.sketchware.core.exception.SimpleException;
-import pro.sketchware.library.ManageLocalLibrary;
+import pro.sketchware.util.library.ManageLocalLibrary;
 import pro.sketchware.core.build.BuildSettings;
 import pro.sketchware.project.ProjectSettings;
 import pro.sketchware.core.build.BuildProgressReceiver;

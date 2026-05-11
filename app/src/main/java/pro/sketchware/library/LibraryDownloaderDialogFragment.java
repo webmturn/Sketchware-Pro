@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
-import static pro.sketchware.library.LocalLibrariesUtil.createLibraryMap;
+import static pro.sketchware.util.library.LocalLibrariesUtil.createLibraryMap;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,6 +37,8 @@ import java.util.concurrent.Executors;
 import pro.sketchware.core.build.BuildSettings;
 import pro.sketchware.util.Helper;
 import pro.sketchware.util.library.BuiltInLibraries;
+import pro.sketchware.util.library.LocalLibrariesUtil;
+import pro.sketchware.util.library.LocalLibraryImportPackageIndex;
 import pro.sketchware.library.DependencyResolver;
 import pro.sketchware.R;
 import pro.sketchware.core.async.BackgroundTasks;

@@ -22,7 +22,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import pro.sketchware.beans.ViewBeans;
-import pro.sketchware.library.ManageLocalLibrary;
+import pro.sketchware.util.library.ManageLocalLibrary;
 import pro.sketchware.core.project.ConstVarComponent;
 import pro.sketchware.core.build.BuildSettings;
 import pro.sketchware.project.ProjectSettings;

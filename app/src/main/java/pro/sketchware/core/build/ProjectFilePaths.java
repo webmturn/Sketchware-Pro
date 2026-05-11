@@ -57,7 +57,7 @@ import android.util.Pair;
 import pro.sketchware.core.codegen.ExtraBlockFile;
 import pro.sketchware.core.codegen.BlockLoader;
 import pro.sketchware.core.codegen.EventsHandler;
-import pro.sketchware.library.ManageLocalLibrary;
+import pro.sketchware.util.library.ManageLocalLibrary;
 import pro.sketchware.core.build.BuildSettings;
 import pro.sketchware.project.ProjectSettings;
 import pro.sketchware.util.ProjectFile;

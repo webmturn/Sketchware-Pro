@@ -22,7 +22,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import pro.sketchware.library.ManageLocalLibrary;
+import pro.sketchware.util.library.ManageLocalLibrary;
 import pro.sketchware.util.FileUtil;
 
 public class LocalLibraryManifestMerger {

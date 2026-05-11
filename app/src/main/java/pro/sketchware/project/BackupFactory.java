@@ -44,7 +44,7 @@ import javax.crypto.spec.SecretKeySpec;
 import pro.sketchware.core.project.ProjectListManager;
 import pro.sketchware.util.MapValueHelper;
 import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.library.LocalLibrariesUtil;
+import pro.sketchware.util.library.LocalLibrariesUtil;
 import pro.sketchware.core.codegen.ExtraBlockInfo;
 import pro.sketchware.core.codegen.BlockLoader;
 import pro.sketchware.project.CustomBlocksManager;

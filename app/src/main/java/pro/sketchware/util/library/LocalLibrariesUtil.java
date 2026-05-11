@@ -1,4 +1,4 @@
-package pro.sketchware.library;
+package pro.sketchware.util.library;
 
 import static pro.sketchware.util.FileUtil.deleteFile;
 import static pro.sketchware.util.FileUtil.isExistFile;
