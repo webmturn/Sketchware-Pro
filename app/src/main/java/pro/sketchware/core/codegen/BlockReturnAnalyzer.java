@@ -1,4 +1,4 @@
-package pro.sketchware.blocks.generator.components.analyzers;
+package pro.sketchware.core.codegen;
 
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.stmt.*;

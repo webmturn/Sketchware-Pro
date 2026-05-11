@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import pro.sketchware.core.project.ClassInfo;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
-import pro.sketchware.blocks.generator.components.analyzers.BlockReturnAnalyzer;
 
 public class ManageEvent {
 

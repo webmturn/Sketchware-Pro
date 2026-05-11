@@ -10,7 +10,6 @@ import java.util.HashMap;
 import pro.sketchware.util.Helper;
 import pro.sketchware.activities.settings.ConfigActivity;
 import pro.sketchware.R;
-import pro.sketchware.blocks.ExtraBlocks;
 import pro.sketchware.util.ThemeUtils;
 
 public class BlocksHandler {
