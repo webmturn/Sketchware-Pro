@@ -14,6 +14,8 @@
 ## A. 目标子包划分（9 个，覆盖 124 文件，无重复无遗漏）
 
 > 硬约束兑现：拆分完成后 `pro.sketchware.core/` 自身不直接保留任何 `.java`，全部下沉到下面 9 个子包目录中。124 = 2 + 13 + 18 + 12 + 22 + 23 + 7 + 12 + 15。
+>
+> **历史更新（Path D step 1，commit `bb37d7b19`）**：P0a 落地后，3 个异常类型 `CompileException` / `SimpleException` / `SketchwareException` 从 `core.callback` 拆出到新的 `core.exception` 子包，使当前 `core/` 子包数从 9 扩展为 10（`async / build / callback / codegen / exception / fragments / project / ui / util / validation`，外加 P0a 之外新增的 `core.ctrls`）。本计划文档保留原始 9 子包划分以匹配 P0a 批次执行的 commit 链；当前实际子包结构见 `docs/package-migration-policy.md` § 4.1 P0a 行与 `docs/package-target-architecture.md` § 0.4。
 
 ### A.1 `pro.sketchware.core.async` — 后台执行基础设施（2 文件）
 

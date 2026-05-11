@@ -29,43 +29,41 @@
 
 | 顶层包 | 文件 | 状态 |
 |--------|-----|------|
-| `pro/sketchware/` | 678 | **唯一业务命名空间** |
+| `pro/sketchware/` | 687 | **唯一业务命名空间** |
 | `com/bumptech/glide/signature/` | 1 | Glide 反射桥接（package-private 约束，永久保留） |
 | `mod/` | — | 不存在（v1 已清空） |
 | `kellinwood/` | — | 不存在（v2 已迁到 `pro.sketchware.third_party.kellinwood/`） |
 | `com/besome/sketch/` | — | 不存在（v2 已全部迁移） |
 
-### 0.3 pro.sketchware/ 一级子包（22 个 + 2 顶层文件）
+### 0.3 pro.sketchware/ 一级子包（16 个 + 1 顶层文件）
 
 | 包 | 文件 | 角色 |
 |----|-----|------|
-| `activities/` | 300 | 全部 Activity（按业务模块分子包） |
-| `core/` | 154 | 业务核心层（async / build / callback / codegen / ctrls / exception / fragments / project / ui / validation） |
-| `util/` | 60 | 工具类（顶层 44 + 7 子包 16：apk/format/io/library/relativelayout/theme/xml） |
+| `activities/` | 306 | 全部 Activity（按业务模块分子包） |
+| `core/` | 160 | 业务核心层（async / build / callback / codegen / ctrls / exception / fragments / project / ui / validation） |
+| `util/` | 71 | 工具类（顶层 45 + 7 子包 26：apk/format/io/library/relativelayout/theme/xml） |
 | `third_party/` | 44 | vendored 第三方（kellinwood/） |
 | `beans/` | 32 | 跨包共享 POJO |
-| `widgets/` | 18 | UI 组件（含 widgets.base/ 抽象基类 3 个） |
-| `library/` | 16 | 项目库管理 |
-| `project/` | 13 | 项目实体 |
-| `lib/` | 12 | 编辑器子系统基础设施（code_editor/highlighter/iconcreator/base） |
+| `widgets/` | 20 | UI 组件（含 widgets.base/ 抽象基类 4 个） |
+| `lib/` | 13 | 编辑器子系统基础设施（code_editor/highlighter/iconcreator/base） |
+| `project/` | 13 | 项目实体（用户层项目设置/备份/ProGuard，**与 core.project 命名重影，候选拆散**） |
 | `dialogs/` | 8 | Dialog |
 | `tools/` | 5 | 非 Activity 工具类 |
 | `graphics/` | 5 | 图形处理（BitmapUtil/AnimationUtil/NinePatchDecoder/VectorDrawable*） |
-| `control/` | 3 | 控件 |
-| `adapters/` | 2 | RecyclerView Adapter |
-| `blocks/` | 2 | 块相关 |
-| `menu/` | 2 | 菜单 |
-| `common/` | 1 | （仅 SrcViewerActivity，候选合入 activities.tools/） |
-| `firebase/` | 1 | （候选并入 library/ 或 core/） |
-| 顶层 | `Config.java`, `SketchApplication.java` | Config 候选并入 `core.build.BuildDefaults` |
+| `adapters/` | 2 | RecyclerView Adapter（候选并入 activities/<feature>） |
+| `blocks/` | 2 | 块相关（`ExtraBlocks` + 深层 `blocks.generator.components.analyzers.BlockReturnAnalyzer`） |
+| `control/` | 2 | 控件（候选拆到 dialogs/ 与 activities.editor.logic/） |
+| `menu/` | 2 | 菜单 bean（候选并入 beans/） |
+| `firebase/` | 1 | `FirebaseMessagingServiceImpl`（Manifest 锁定，保留原位） |
+| 顶层 | `SketchApplication.java` | 仅 Application 入口 |
 
-### 0.4 pro.sketchware.core 内部分布（154 文件）
+### 0.4 pro.sketchware.core 内部分布（160 文件）
 
 | 子包 | 文件 |
 |------|-----|
 | `codegen/` | 39 |
-| `build/` | 27 |
-| `project/` | 22 |
+| `build/` | 29 |
+| `project/` | 26 |
 | `validation/` | 21 |
 | `fragments/` | 15 |
 | `ui/` | 12 |
@@ -74,22 +72,22 @@
 | `async/` | 2 |
 | `ctrls/` | 2 |
 
-### 0.5 pro.sketchware.activities.editor 内部分布（212 文件）
+### 0.5 pro.sketchware.activities.editor 内部分布（217 文件）
 
 | 子包 | 文件 |
 |------|-----|
-| `view/`（含 palette 52 + item 45） | 113 |
-| `manage/`（含 font/image/sound/view 子包 + library/ 子包 18） | 42 |
+| `view/`（含 palette 52 + item 45 + 顶层 16） | 113 |
+| `manage/`（含 font 6 / image 4 / sound 4 / view 4 + library/ 子包 25 + 顶层 6） | 49 |
 | `property/` | 16 |
 | `makeblock/` | 8 |
 | `component/` | 6 |
 | `logic/` | 5 |
-| `block/` | 4 |
+| `block/` | 3 |
 | `event/` | 2 |
 | `command/` | 2 |
 | `manifest/` | 2 |
 | `code/` | 1 |
-| 顶层 | 11（含 `LogicEditorActivity`、`PropertyActivity`、`LogicEditorDrawer` 等） |
+| 顶层 | 10（含 `LogicEditorActivity`、`PropertyActivity`、`LogicEditorDrawer` 等） |
 
 ---
 
@@ -118,13 +116,12 @@ Sketchware-Pro/
 │   └── src/main/java/
 │       ├── com/bumptech/glide/signature/StringSignature.java   # Glide 反射桥接（永久保留）
 │       └── pro/sketchware/
-│           ├── Config.java                  # 2 静态常量（候选并入 SketchApplication 或 core.build）
 │           ├── SketchApplication.java
 │           │
-│           ├── activities/                  # 300 文件
-│           │   ├── about/   appcompat/   base/   common/(?)
-│           │   ├── design/                  # 含 DesignActivity (80.2 KB) ←── P0c 目标
-│           │   ├── editor/                  # 212 文件
+│           ├── activities/                  # 306 文件
+│           │   ├── about/   appcompat/   base/
+│           │   ├── design/                  # 含 DesignActivity (80.3 KB) ←── P0c 目标
+│           │   ├── editor/                  # 217 文件
 │           │   │   ├── LogicEditorActivity.java    # 143.8 KB ←── P0b 目标
 │           │   │   ├── PropertyActivity.java
 │           │   │   ├── LogicEditorDrawer.java
@@ -135,24 +132,24 @@ Sketchware-Pro/
 │           │   ├── main/                    # 含 MainDrawer.java
 │           │   ├── preview/   projects/   resourceseditor/   settings/   tools/
 │           │
-│           ├── core/                        # 154 文件
-│           │   ├── async/(2)   build/(27)   callback/(10)   codegen/(39)
+│           ├── core/                        # 160 文件
+│           │   ├── async/(2)   build/(29)   callback/(10)   codegen/(39)
 │           │   │                            # ProjectBuilder.java (68.5 KB) ←── P1a 目标
 │           │   │                            # ProjectFilePaths.java (81.1 KB)
 │           │   ├── ctrls/(2)   exception/(4)   fragments/(15)
-│           │   ├── project/(22)             # ProjectDataStore.java (67.9 KB)
+│           │   ├── project/(26)             # ProjectDataStore.java (67.9 KB)
 │           │   ├── ui/(12)   validation/(21)
 │           │
-│           ├── adapters/   beans/(32)   blocks/   common/   control/
-│           ├── dialogs/(8)   firebase/   graphics/(5)
-│           ├── lib/(12) — base/ code_editor/ highlighter/ iconcreator/
-│           ├── library/(16)   menu/   project/(13)
+│           ├── adapters/(2)   beans/(32)   blocks/(2)   control/(2)
+│           ├── dialogs/(8)   firebase/(1)   graphics/(5)
+│           ├── lib/(13) — base/ code_editor/ highlighter/ iconcreator/
+│           ├── menu/(2)   project/(13)
 │           ├── third_party/                 # vendored 第三方
 │           │   └── kellinwood/(44)          # logging/ + security/zipsigner/ + zipio/
 │           ├── tools/(5)                    # 非 Activity 工具类
-│           ├── util/(60)                    # 顶层 44 + apk/format/io/library/relativelayout/theme/xml
-│           └── widgets/(18)
-│               └── base/(3)                 # BaseWidget / CollapsibleLayout / CollapsibleViewHolder
+│           ├── util/(71)                    # 顶层 45 + apk/format/io/library/relativelayout/theme/xml
+│           └── widgets/(20)
+│               └── base/(4)                 # BaseWidget / CollapsibleLayout / CollapsibleViewHolder + package-info
 │
 ├── vendor-dx/                                # 已存在的 Gradle 子模块
 │   └── src/main/java/mod/agus/jcoderz/dx/
