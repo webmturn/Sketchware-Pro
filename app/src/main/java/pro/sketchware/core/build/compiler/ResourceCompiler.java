@@ -1,6 +1,6 @@
 package pro.sketchware.core.build.compiler;
 
-import static pro.sketchware.Config.VAR_DEFAULT_TARGET_SDK_VERSION;
+import static pro.sketchware.core.build.BuildDefaults.VAR_DEFAULT_TARGET_SDK_VERSION;
 
 import android.content.Context;
 import android.content.pm.PackageManager;

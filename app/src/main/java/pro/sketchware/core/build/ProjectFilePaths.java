@@ -17,8 +17,8 @@ import pro.sketchware.core.project.ProjectListManager;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.io.ZipUtil;
 
-import static pro.sketchware.Config.VAR_DEFAULT_MIN_SDK_VERSION;
-import static pro.sketchware.Config.VAR_DEFAULT_TARGET_SDK_VERSION;
+import static pro.sketchware.core.build.BuildDefaults.VAR_DEFAULT_MIN_SDK_VERSION;
+import static pro.sketchware.core.build.BuildDefaults.VAR_DEFAULT_TARGET_SDK_VERSION;
 import static pro.sketchware.core.codegen.ExtraBlockFile.getExtraBlockData;
 
 import static pro.sketchware.util.ProjectFile.getDefaultColor;

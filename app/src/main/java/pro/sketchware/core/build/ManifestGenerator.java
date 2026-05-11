@@ -7,7 +7,7 @@ import pro.sketchware.core.codegen.LayoutGenerator;
 import pro.sketchware.core.project.SketchwarePaths;
 
 import static android.text.TextUtils.isEmpty;
-import static pro.sketchware.Config.VAR_DEFAULT_TARGET_SDK_VERSION;
+import static pro.sketchware.core.build.BuildDefaults.VAR_DEFAULT_TARGET_SDK_VERSION;
 
 import android.Manifest;
 import android.app.Service;
