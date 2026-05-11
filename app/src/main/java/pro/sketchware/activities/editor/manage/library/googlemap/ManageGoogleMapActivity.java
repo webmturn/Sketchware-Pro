@@ -24,7 +24,7 @@ import pro.sketchware.util.SketchToast;
 import pro.sketchware.core.project.LibraryManager;
 import pro.sketchware.util.UIHelper;
 import pro.sketchware.util.Helper;
-import pro.sketchware.library.LibrarySettingsImporter;
+import pro.sketchware.activities.editor.manage.library.LibrarySettingsImporter;
 import pro.sketchware.R;
 
 public class ManageGoogleMapActivity extends BaseAppCompatActivity implements View.OnClickListener {
