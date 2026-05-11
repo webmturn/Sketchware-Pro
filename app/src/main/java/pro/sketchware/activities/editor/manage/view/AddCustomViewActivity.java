@@ -20,7 +20,7 @@ import java.util.Objects;
 import pro.sketchware.core.validation.ActivityNameValidator;
 import pro.sketchware.util.SketchToast;
 import pro.sketchware.core.ui.PresetLayoutFactory;
-import pro.sketchware.core.codegen.BlockConstants;
+import pro.sketchware.core.project.BlockConstants;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 

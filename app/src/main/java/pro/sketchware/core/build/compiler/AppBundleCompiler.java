@@ -23,7 +23,7 @@ import pro.sketchware.core.build.ProjectBuilder;
 import pro.sketchware.core.build.ProjectFilePaths;
 import pro.sketchware.core.exception.SimpleException;
 import pro.sketchware.library.ManageLocalLibrary;
-import pro.sketchware.library.BuiltInLibraries;
+import pro.sketchware.util.library.BuiltInLibraries;
 import pro.sketchware.util.LogUtil;
 import pro.sketchware.util.FilePathUtil;
 

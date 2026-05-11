@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import pro.sketchware.R;
-import pro.sketchware.activities.editor.ManageEvent;
 import pro.sketchware.core.codegen.BlockSpecRegistry;
 
 public class StringResource {

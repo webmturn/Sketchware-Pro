@@ -12,9 +12,9 @@ import java.util.List;
 
 import pro.sketchware.core.build.BuildSettings;
 import pro.sketchware.util.Helper;
-import pro.sketchware.library.BuiltInLibraries;
-import pro.sketchware.library.ExcludeBuiltInLibrariesActivity;
-import pro.sketchware.core.codegen.ConstVarComponent;
+import pro.sketchware.util.library.BuiltInLibraries;
+import pro.sketchware.util.library.ExcludeBuiltInLibrariesConfig;
+import pro.sketchware.core.project.ConstVarComponent;
 import pro.sketchware.util.FilePathUtil;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.core.codegen.CodeFormatter;
@@ -89,7 +89,7 @@ public class GradleFileGenerator {
                 .append("dependencies {\r\n")
                 .append("implementation fileTree(dir: 'libs', include: ['*.jar'])\r\n");
 
-        List<BuiltInLibraries.BuiltInLibrary> excludedLibraries = ExcludeBuiltInLibrariesActivity.getExcludedLibraries(metadata.sc_id);
+        List<BuiltInLibraries.BuiltInLibrary> excludedLibraries = ExcludeBuiltInLibrariesConfig.getExcludedLibraries(metadata.sc_id);
         if (isLibraryNotExcluded(BuiltInLibraries.ANDROIDX_APPCOMPAT, excludedLibraries) && metadata.isAppCompatEnabled) {
             content.append(dependency("androidx.appcompat", "appcompat", BuiltInLibraries.ANDROIDX_APPCOMPAT));
             content.append(dependency("com.google.android.material", "material", BuiltInLibraries.MATERIAL));

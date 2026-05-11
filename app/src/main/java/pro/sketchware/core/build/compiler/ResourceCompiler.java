@@ -16,7 +16,7 @@ import pro.sketchware.library.ManageLocalLibrary;
 import pro.sketchware.core.build.BuildSettings;
 import pro.sketchware.project.ProjectSettings;
 import pro.sketchware.core.build.BuildProgressReceiver;
-import pro.sketchware.library.BuiltInLibraries;
+import pro.sketchware.util.library.BuiltInLibraries;
 import pro.sketchware.core.exception.MissingFileException;
 import pro.sketchware.util.LogUtil;
 import pro.sketchware.SketchApplication;

@@ -1,7 +1,5 @@
 package pro.sketchware.core.project;
 
-import pro.sketchware.core.codegen.ComponentsHandler;
-
 public class ClassInfo {
     public String className;
     public String[] classPath;

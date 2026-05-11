@@ -21,7 +21,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import java.util.ArrayList;
 
 import pro.sketchware.util.Helper;
-import pro.sketchware.core.codegen.ComponentsHandler;
+import pro.sketchware.core.project.ComponentsHandler;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ComponentAddItemBinding;
 import pro.sketchware.databinding.LogicAddComponentBinding;

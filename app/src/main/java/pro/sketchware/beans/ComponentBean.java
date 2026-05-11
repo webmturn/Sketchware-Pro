@@ -7,7 +7,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 
 import pro.sketchware.core.project.ClassInfo;
-import pro.sketchware.core.codegen.ComponentsHandler;
+import pro.sketchware.core.project.ComponentsHandler;
 import pro.sketchware.R;
 
 /**

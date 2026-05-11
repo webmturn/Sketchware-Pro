@@ -13,7 +13,7 @@ import pro.sketchware.util.io.EncryptedFileUtil;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.MapValueHelper;
 import pro.sketchware.util.Helper;
-import pro.sketchware.library.BuiltInLibraries;
+import pro.sketchware.util.library.BuiltInLibraries;
 import pro.sketchware.R;
 import pro.sketchware.activities.main.activities.MainActivity;
 

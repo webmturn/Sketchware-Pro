@@ -7,7 +7,7 @@ import android.view.ContextThemeWrapper;
 
 import pro.sketchware.R;
 import pro.sketchware.SketchApplication;
-import pro.sketchware.menu.DefaultExtraMenuBean;
+import pro.sketchware.util.MenuNameMapper;
 
 /**
  * Maps block opCodes to their display colors using Material You color harmonization.
@@ -295,7 +295,7 @@ public class BlockColorMapper {
             case "signinbutton" -> "SignInButton";
             case "materialButton" -> "MaterialButton";
             case "fragmentAdapter" -> "FragmentAdapter";
-            default -> DefaultExtraMenuBean.getName(typeName);
+            default -> MenuNameMapper.getName(typeName);
         };
     }
 }

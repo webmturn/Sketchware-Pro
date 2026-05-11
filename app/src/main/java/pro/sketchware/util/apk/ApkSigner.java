@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import pro.sketchware.library.BuiltInLibraries;
+import pro.sketchware.util.library.BuiltInLibraries;
 
 public class ApkSigner {
 

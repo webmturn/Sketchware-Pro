@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
-import pro.sketchware.activities.editor.makeblock.ReturnMoreblockManager;
-import pro.sketchware.core.codegen.ComponentsHandler;
+import pro.sketchware.util.MoreblockSpecUtils;
+import pro.sketchware.core.project.ComponentsHandler;
 import pro.sketchware.core.build.ViewBindingBuilder;
 import pro.sketchware.core.codegen.BlockCodeRegistry;
 import pro.sketchware.core.codegen.BlockInterpreter;
@@ -272,8 +272,8 @@ public class ComponentCodeGenerator {
      */
     public static String getMoreBlockCode(String moreBlockName, String moreBlockSpec, String moreBlockLogic) {
         StringBuilder code = new StringBuilder();
-        code.append("public ").append(ReturnMoreblockManager.getMbTypeCode(moreBlockName))
-                .append(" _").append(ReturnMoreblockManager.getMbName(moreBlockName)).append("(");
+        code.append("public ").append(MoreblockSpecUtils.getMbTypeCode(moreBlockName))
+                .append(" _").append(MoreblockSpecUtils.getMbName(moreBlockName)).append("(");
         ArrayList<String> parameterSpecs = FormatUtil.parseBlockSpec(moreBlockSpec);
         boolean isFirstParameter = true;
 

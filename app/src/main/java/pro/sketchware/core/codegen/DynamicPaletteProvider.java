@@ -1,16 +1,15 @@
-package pro.sketchware.activities.editor.block;
+package pro.sketchware.core.codegen;
 
 import android.graphics.Color;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import pro.sketchware.core.codegen.ExtraBlockFile;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.util.SketchwareUtil;
 
-public class PaletteSelector {
+public class DynamicPaletteProvider {
 
     private final ArrayList<HashMap<String, Object>> list = new ArrayList<>();
     private int start = 9;

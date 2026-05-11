@@ -58,7 +58,7 @@ import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.ProjectListManager;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.UIHelper;
-import pro.sketchware.core.codegen.BlockConstants;
+import pro.sketchware.core.project.BlockConstants;
 import pro.sketchware.util.ViewUtil;
 import pro.sketchware.util.MapValueHelper;
 import pro.sketchware.util.Helper;

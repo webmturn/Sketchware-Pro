@@ -12,7 +12,7 @@ import pro.sketchware.beans.BlockBean;
 import pro.sketchware.beans.ComponentBean;
 import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.beans.ViewBean;
-import pro.sketchware.activities.editor.manage.library.material3.Material3LibraryManager;
+import pro.sketchware.util.library.Material3LibraryManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,14 +23,13 @@ import java.util.regex.Pattern;
 
 import pro.sketchware.beans.ViewBeans;
 import pro.sketchware.library.ManageLocalLibrary;
-import pro.sketchware.core.codegen.ConstVarComponent;
+import pro.sketchware.core.project.ConstVarComponent;
 import pro.sketchware.core.build.BuildSettings;
 import pro.sketchware.project.ProjectSettings;
 import pro.sketchware.core.codegen.AndroidManifestInjector;
 import pro.sketchware.core.codegen.CommandBlock;
 import pro.sketchware.core.codegen.LogicHandler;
 import pro.sketchware.core.build.ViewBindingBuilder;
-import pro.sketchware.control.logic.PermissionManager;
 import pro.sketchware.core.codegen.BlockCodeRegistry;
 import pro.sketchware.core.codegen.BlockInterpreter;
 import pro.sketchware.core.codegen.CodeContext;

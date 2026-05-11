@@ -6,10 +6,11 @@ import androidx.annotation.Nullable;
 
 import pro.sketchware.beans.ProjectLibraryBean;
 import pro.sketchware.activities.editor.manage.library.LibraryItemView;
+import pro.sketchware.util.library.ExcludeBuiltInLibrariesConfig;
 
 import java.util.List;
 
-import pro.sketchware.library.BuiltInLibraries;
+import pro.sketchware.util.library.BuiltInLibraries;
 
 public class ExcludeBuiltInLibrariesLibraryItemView extends LibraryItemView {
     private final String sc_id;
@@ -21,8 +22,8 @@ public class ExcludeBuiltInLibrariesLibraryItemView extends LibraryItemView {
 
     @Override
     public void setData(@Nullable ProjectLibraryBean projectLibraryBean) {
-        boolean excludingEnabled = ExcludeBuiltInLibrariesActivity.isExcludingEnabled(sc_id);
-        List<BuiltInLibraries.BuiltInLibrary> excludedLibraries = ExcludeBuiltInLibrariesActivity.getExcludedLibraries(sc_id);
+        boolean excludingEnabled = ExcludeBuiltInLibrariesConfig.isExcludingEnabled(sc_id);
+        List<BuiltInLibraries.BuiltInLibrary> excludedLibraries = ExcludeBuiltInLibrariesConfig.getExcludedLibraries(sc_id);
         icon.setImageResource(ExcludeBuiltInLibrariesActivity.getItemIcon());
         title.setText(ExcludeBuiltInLibrariesActivity.getItemTitle());
         description.setText(

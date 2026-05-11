@@ -1,4 +1,4 @@
-package pro.sketchware.activities.editor.manage.library.material3;
+package pro.sketchware.util.library;
 
 import static pro.sketchware.SketchApplication.getContext;
 

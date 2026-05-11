@@ -3,13 +3,13 @@ import pro.sketchware.core.project.ClassInfo;
 import pro.sketchware.util.format.FormatUtil;
 
 import pro.sketchware.beans.ComponentBean;
-import pro.sketchware.activities.editor.manage.library.material3.Material3LibraryManager;
+import pro.sketchware.util.library.Material3LibraryManager;
 
 import java.util.ArrayList;
 
-import pro.sketchware.core.codegen.ComponentsHandler;
+import pro.sketchware.core.project.ComponentsHandler;
 import pro.sketchware.core.codegen.EventsHandler;
-import pro.sketchware.menu.DefaultExtraMenuBean;
+import pro.sketchware.util.MenuNameMapper;
 
 public class ComponentTypeMapper {
     /**
@@ -224,7 +224,7 @@ public class ComponentTypeMapper {
             case "notification", "Notification" -> "Notification";
             case "sqlite", "SQLiteDatabase" -> "SQLiteDatabase";
             case "fragmentAdapter" -> "FragmentAdapter";
-            default -> DefaultExtraMenuBean.getName(name);
+            default -> MenuNameMapper.getName(name);
         };
     }
 

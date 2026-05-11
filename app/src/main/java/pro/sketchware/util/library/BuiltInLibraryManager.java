@@ -8,8 +8,7 @@ import java.util.Optional;
 
 import pro.sketchware.core.project.BuiltInLibrary;
 import pro.sketchware.core.build.ProjectBuilder;
-import pro.sketchware.library.BuiltInLibraries;
-import pro.sketchware.library.ExcludeBuiltInLibrariesActivity;
+import pro.sketchware.util.library.BuiltInLibraries;
 
 /**
  * A class to keep track of a project's built-in libraries.
@@ -22,7 +21,7 @@ public class BuiltInLibraryManager {
     private final List<BuiltInLibraries.BuiltInLibrary> excludedLibraries;
 
     public BuiltInLibraryManager(String projectId) {
-        excludedLibraries = ExcludeBuiltInLibrariesActivity.getExcludedLibraries(projectId);
+        excludedLibraries = ExcludeBuiltInLibrariesConfig.getExcludedLibraries(projectId);
     }
 
     /**

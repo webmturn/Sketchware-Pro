@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import pro.sketchware.core.validation.XmlNameValidator;
 import pro.sketchware.util.SketchToast;
 import pro.sketchware.util.UIHelper;
-import pro.sketchware.core.codegen.BlockConstants;
+import pro.sketchware.core.project.BlockConstants;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageFontImportBinding;

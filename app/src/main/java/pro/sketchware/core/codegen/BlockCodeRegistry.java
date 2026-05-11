@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import pro.sketchware.activities.editor.makeblock.ReturnMoreblockManager;
+import pro.sketchware.util.MoreblockSpecUtils;
 import pro.sketchware.core.project.ClassInfo;
 import pro.sketchware.core.codegen.ComponentCodeGenerator;
 import pro.sketchware.core.project.ProjectDataManager;
@@ -110,7 +110,7 @@ public class BlockCodeRegistry {
             String opcode;
             if (bean.parameters.isEmpty()) {
                 opcode = bean.type;
-                ctx.moreBlock = "_" + (space < 0 ? bean.spec : bean.spec.substring(0, space)) + "()" + ReturnMoreblockManager.getMbEnd(bean.type);
+                ctx.moreBlock = "_" + (space < 0 ? bean.spec : bean.spec.substring(0, space)) + "()" + MoreblockSpecUtils.getMbEnd(bean.type);
             } else {
                 ArrayList<String> paramsTypes = ctx.extractParamsTypes(bean.spec);
                 StringBuilder sb = new StringBuilder("_").append(bean.spec, 0, space).append("(");
@@ -133,7 +133,7 @@ public class BlockCodeRegistry {
                     }
                 }
                 opcode = sb.toString();
-                ctx.moreBlock = opcode + ")" + ReturnMoreblockManager.getMbEnd(bean.type);
+                ctx.moreBlock = opcode + ")" + MoreblockSpecUtils.getMbEnd(bean.type);
                 if (hasStringParam) ctx.moreBlock = bean.type;
             }
             String op = opcode;

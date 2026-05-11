@@ -18,7 +18,7 @@ import pro.sketchware.activities.base.BaseDialogActivity;
 import pro.sketchware.core.project.FontCollectionManager;
 import pro.sketchware.util.SketchToast;
 import pro.sketchware.util.UIHelper;
-import pro.sketchware.core.codegen.BlockConstants;
+import pro.sketchware.core.project.BlockConstants;
 import pro.sketchware.core.exception.CompileException;
 import pro.sketchware.util.Helper;
 import pro.sketchware.util.LogUtil;

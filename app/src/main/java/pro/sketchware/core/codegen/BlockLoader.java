@@ -16,7 +16,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import pro.sketchware.core.codegen.ExtraBlockFile;
-import pro.sketchware.activities.editor.block.PaletteSelector;
 import pro.sketchware.core.codegen.ExtraBlockInfo;
 import pro.sketchware.util.Helper;
 import pro.sketchware.util.LogUtil;
@@ -110,7 +109,7 @@ public class BlockLoader {
     }
 
     private static void loadCustomBlocks() {
-        ArrayList<HashMap<String, Object>> palettes = new PaletteSelector().getPaletteSelector();
+        ArrayList<HashMap<String, Object>> palettes = new DynamicPaletteProvider().getPaletteSelector();
 
         blocks = new ArrayList<>();
         blocksByName = new HashMap<>();

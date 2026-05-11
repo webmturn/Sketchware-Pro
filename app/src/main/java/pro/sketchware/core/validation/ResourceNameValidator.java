@@ -1,7 +1,5 @@
 package pro.sketchware.core.validation;
 
-import pro.sketchware.core.codegen.StringResource;
-
 import android.content.Context;
 import android.text.Spanned;
 import com.google.android.material.textfield.TextInputLayout;
@@ -45,25 +43,25 @@ public class ResourceNameValidator extends BaseValidator {
     String candidateName = s.toString().trim();
     if (candidateName.length() < 3) {
       textInputLayout.setErrorEnabled(true);
-      textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(context, R.string.invalid_value_min_lenth, new Object[] { Integer.valueOf(3) }));
+      textInputLayout.setError(context.getString(R.string.invalid_value_min_lenth, Integer.valueOf(3)));
       valid = false;
       return;
     } 
     if (candidateName.length() > 70) {
       textInputLayout.setErrorEnabled(true);
-      textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(context, R.string.invalid_value_max_lenth, new Object[] { Integer.valueOf(70) }));
+      textInputLayout.setError(context.getString(R.string.invalid_value_max_lenth, Integer.valueOf(70)));
       valid = false;
       return;
     } 
     if (candidateName.equals("default_image") || "NONE".toLowerCase().equals(candidateName.toLowerCase())) {
       textInputLayout.setErrorEnabled(true);
-      textInputLayout.setError(StringResource.getInstance().getTranslatedString(context, R.string.common_message_name_unavailable));
+      textInputLayout.setError(context.getString(R.string.common_message_name_unavailable));
       valid = false;
       return;
     } 
     if (!candidateName.equals(currentName) && existingNames.indexOf(candidateName) >= 0) {
       textInputLayout.setErrorEnabled(true);
-      textInputLayout.setError(StringResource.getInstance().getTranslatedString(context, R.string.common_message_name_unavailable));
+      textInputLayout.setError(context.getString(R.string.common_message_name_unavailable));
       valid = false;
       return;
     } 
@@ -76,13 +74,13 @@ public class ResourceNameValidator extends BaseValidator {
     }
     if (isReserved) {
       textInputLayout.setErrorEnabled(true);
-      textInputLayout.setError(StringResource.getInstance().getTranslatedString(context, R.string.logic_editor_message_reserved_keywords));
+      textInputLayout.setError(context.getString(R.string.logic_editor_message_reserved_keywords));
       valid = false;
       return;
     } 
     if (!Character.isLetter(candidateName.charAt(0))) {
       textInputLayout.setErrorEnabled(true);
-      textInputLayout.setError(StringResource.getInstance().getTranslatedString(context, R.string.logic_editor_message_variable_name_must_start_letter));
+      textInputLayout.setError(context.getString(R.string.logic_editor_message_variable_name_must_start_letter));
       valid = false;
       return;
     } 
@@ -91,7 +89,7 @@ public class ResourceNameValidator extends BaseValidator {
       valid = true;
     } else {
       textInputLayout.setErrorEnabled(true);
-      textInputLayout.setError(StringResource.getInstance().getTranslatedString(context, R.string.invalid_value_rule_4));
+      textInputLayout.setError(context.getString(R.string.invalid_value_rule_4));
       valid = false;
     } 
   }

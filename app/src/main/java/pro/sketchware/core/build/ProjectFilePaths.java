@@ -1,7 +1,7 @@
 package pro.sketchware.core.build;
 
 import pro.sketchware.core.codegen.ActivityCodeGenerator;
-import pro.sketchware.core.codegen.BlockConstants;
+import pro.sketchware.core.project.BlockConstants;
 import pro.sketchware.core.project.BuildConfig;
 import pro.sketchware.core.codegen.ComponentCodeGenerator;
 import pro.sketchware.core.codegen.ComponentTemplates;
@@ -37,7 +37,7 @@ import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.beans.ProjectLibraryBean;
 import pro.sketchware.beans.SrcCodeBean;
 import pro.sketchware.beans.ViewBean;
-import pro.sketchware.activities.editor.manage.library.material3.Material3LibraryManager;
+import pro.sketchware.util.library.Material3LibraryManager;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

@@ -21,7 +21,7 @@ import pro.sketchware.core.ui.BlockView;
 import pro.sketchware.core.validation.IdentifierValidator;
 import pro.sketchware.util.SketchToast;
 import pro.sketchware.util.UIHelper;
-import pro.sketchware.core.codegen.BlockConstants;
+import pro.sketchware.core.project.BlockConstants;
 import pro.sketchware.util.ViewUtil;
 import pro.sketchware.activities.editor.makeblock.MoreblockValidator;
 import pro.sketchware.activities.editor.makeblock.ReturnMoreblockManager;

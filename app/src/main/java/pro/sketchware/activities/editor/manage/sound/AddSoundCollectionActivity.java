@@ -30,7 +30,7 @@ import pro.sketchware.util.io.UriPathResolver;
 import pro.sketchware.core.project.SoundCollectionManager;
 import pro.sketchware.core.validation.ResourceNameValidator;
 import pro.sketchware.util.SketchToast;
-import pro.sketchware.core.codegen.BlockConstants;
+import pro.sketchware.core.project.BlockConstants;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.exception.CompileException;
 import pro.sketchware.util.Helper;

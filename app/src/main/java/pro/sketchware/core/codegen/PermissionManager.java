@@ -1,11 +1,10 @@
-package pro.sketchware.control.logic;
+package pro.sketchware.core.codegen;
 
 import pro.sketchware.beans.BlockBean;
 
 import java.util.ArrayList;
 import java.util.Map.Entry;
 
-import pro.sketchware.core.codegen.ActivityCodeGenerator;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.BuildConfig;
 

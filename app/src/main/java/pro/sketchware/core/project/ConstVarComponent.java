@@ -1,4 +1,4 @@
-package pro.sketchware.core.codegen;
+package pro.sketchware.core.project;
 
 import java.util.ArrayList;
 import java.util.HashMap;

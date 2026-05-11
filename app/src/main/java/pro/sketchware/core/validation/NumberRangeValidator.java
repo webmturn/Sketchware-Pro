@@ -1,7 +1,5 @@
 package pro.sketchware.core.validation;
 
-import pro.sketchware.core.codegen.StringResource;
-
 import android.content.Context;
 import android.text.Spanned;
 import com.google.android.material.textfield.TextInputLayout;
@@ -38,11 +36,11 @@ public class NumberRangeValidator extends BaseValidator {
       int parsedValue = Integer.parseInt(input);
       if (parsedValue < minValue) {
         textInputLayout.setErrorEnabled(true);
-        textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(context, R.string.invalid_value_min_lenth, new Object[] { Integer.valueOf(minValue) }));
+        textInputLayout.setError(context.getString(R.string.invalid_value_min_lenth, Integer.valueOf(minValue)));
         valid = false;
       } else if (parsedValue > maxValue) {
         textInputLayout.setErrorEnabled(true);
-        textInputLayout.setError(StringResource.getInstance().getTranslatedStringFormatted(context, R.string.invalid_value_max_lenth, new Object[] { Integer.valueOf(maxValue) }));
+        textInputLayout.setError(context.getString(R.string.invalid_value_max_lenth, Integer.valueOf(maxValue)));
         valid = false;
       } else {
         textInputLayout.setErrorEnabled(false);
@@ -50,7 +48,7 @@ public class NumberRangeValidator extends BaseValidator {
       }
     } catch (NumberFormatException numberFormatException) {
       textInputLayout.setErrorEnabled(true);
-      textInputLayout.setError(StringResource.getInstance().getTranslatedString(context, R.string.logic_editor_message_variable_name_must_start_letter));
+      textInputLayout.setError(context.getString(R.string.logic_editor_message_variable_name_must_start_letter));
       valid = false;
     }
   }

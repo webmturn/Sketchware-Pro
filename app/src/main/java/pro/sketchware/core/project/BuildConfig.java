@@ -8,8 +8,6 @@ import pro.sketchware.beans.ProjectLibraryBean;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import pro.sketchware.core.codegen.ConstVarComponent;
-
 public class BuildConfig {
 
     /**

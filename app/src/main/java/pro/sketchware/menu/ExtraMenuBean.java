@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
 import pro.sketchware.core.ui.FieldBlockView;
 import pro.sketchware.core.project.ProjectDataStore;
 import pro.sketchware.core.project.ProjectDataManager;
-import pro.sketchware.core.codegen.BlockConstants;
+import pro.sketchware.core.project.BlockConstants;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.ViewUtil;
 import dev.pranav.filepicker.FilePickerCallback;

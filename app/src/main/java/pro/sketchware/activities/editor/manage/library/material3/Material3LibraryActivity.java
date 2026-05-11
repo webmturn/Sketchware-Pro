@@ -15,6 +15,7 @@ import java.util.Objects;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageLibraryMaterial3Binding;
+import pro.sketchware.util.library.Material3LibraryManager;
 
 public class Material3LibraryActivity extends BaseAppCompatActivity {
 

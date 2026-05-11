@@ -10,6 +10,7 @@ import pro.sketchware.activities.editor.manage.library.LibraryItemView;
 
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
+import pro.sketchware.util.library.Material3LibraryManager;
 
 @SuppressLint("ViewConstructor")
 public class Material3LibraryItemView extends LibraryItemView {

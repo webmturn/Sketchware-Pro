@@ -112,7 +112,7 @@ import pro.sketchware.core.project.ResourceManager;
 import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.util.UIHelper;
 import pro.sketchware.core.project.SketchwareConstants;
-import pro.sketchware.core.codegen.BlockConstants;
+import pro.sketchware.core.project.BlockConstants;
 import pro.sketchware.util.ViewUtil;
 import pro.sketchware.core.codegen.StringResource;
 import pro.sketchware.core.build.ProjectFilePaths;

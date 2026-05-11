@@ -1,4 +1,4 @@
-package pro.sketchware.core.codegen;
+package pro.sketchware.core.project;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -19,7 +19,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import pro.sketchware.core.codegen.ComponentCodeGenerator;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.Helper;
 import pro.sketchware.core.project.OldResourceIdMapper;

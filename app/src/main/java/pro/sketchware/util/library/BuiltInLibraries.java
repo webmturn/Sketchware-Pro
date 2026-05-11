@@ -1,4 +1,4 @@
-package pro.sketchware.library;
+package pro.sketchware.util.library;
 
 import android.os.Parcel;
 import android.os.Parcelable;

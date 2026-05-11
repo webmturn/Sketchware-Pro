@@ -23,7 +23,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -37,6 +36,7 @@ import pro.sketchware.databinding.PropertyPopupParentAttrBinding;
 import pro.sketchware.databinding.PropertySwitchItemSinglelineBinding;
 import pro.sketchware.util.SketchwareUtil;
 import pro.sketchware.util.relativelayout.CircularDependencyDetector;
+import pro.sketchware.util.relativelayout.RelativeLayoutAttributes;
 
 @SuppressLint("ViewConstructor")
 public class PropertyAttributesItem extends LinearLayout implements View.OnClickListener {
@@ -59,17 +59,7 @@ public class PropertyAttributesItem extends LinearLayout implements View.OnClick
 
             "android:layout_alignBaseline"
     };
-    public static List<String> RELATIVE_IDS = Arrays.asList(
-            "android:layout_alignStart", "android:layout_alignEnd",
-            "android:layout_alignLeft", "android:layout_alignRight",
-            "android:layout_alignTop", "android:layout_alignBottom",
-
-            "android:layout_alignBaseline",
-
-            "android:layout_toStartOf", "android:layout_toEndOf",
-            "android:layout_toLeftOf", "android:layout_toRightOf",
-            "android:layout_above", "android:layout_below"
-    );
+    public static List<String> RELATIVE_IDS = RelativeLayoutAttributes.RELATIVE_ID_ATTRIBUTES;
 
     private final ArrayList<ViewBean> beans = new ArrayList<>();
     private String key = "";

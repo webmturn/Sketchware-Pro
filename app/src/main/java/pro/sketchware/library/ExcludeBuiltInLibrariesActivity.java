@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -27,13 +26,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.transition.TransitionManager;
 
 import pro.sketchware.activities.base.BaseAppCompatActivity;
+import pro.sketchware.util.library.ExcludeBuiltInLibrariesConfig;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.transition.MaterialFadeThrough;
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
 
-import java.io.File;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -44,21 +40,18 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import pro.sketchware.core.async.BackgroundTasks;
-import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.util.Helper;
-import pro.sketchware.library.BuiltInLibraries;
+import pro.sketchware.util.library.BuiltInLibraries;
 import pro.sketchware.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.databinding.DialogSelectLibrariesBinding;
 import pro.sketchware.databinding.ManageLibraryExcludeBuiltinLibrariesBinding;
-import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 
 public class ExcludeBuiltInLibrariesActivity extends BaseAppCompatActivity {
@@ -69,69 +62,6 @@ public class ExcludeBuiltInLibrariesActivity extends BaseAppCompatActivity {
     private boolean isExcludingEnabled;
     private List<BuiltInLibraries.BuiltInLibrary> excludedLibraries;
     private Pair<Boolean, List<BuiltInLibraries.BuiltInLibrary>> config;
-
-    private static File getConfigPath(String sc_id) {
-        return new File(SketchwarePaths.getProjectExcludedBuiltInLibrariesPath(sc_id));
-    }
-
-    private static void saveConfig(String sc_id, boolean isExcludingEnabled, List<BuiltInLibraries.BuiltInLibrary> excludedLibraries) {
-        List<String> excludedLibraryNames = excludedLibraries.stream()
-                .map(BuiltInLibraries.BuiltInLibrary::getName)
-                .collect(Collectors.toList());
-        Pair<Boolean, List<String>> config = new Pair<>(isExcludingEnabled, excludedLibraryNames);
-        FileUtil.writeFile(getConfigPath(sc_id).getAbsolutePath(), new Gson().toJson(config));
-    }
-
-    @Nullable
-    private static Pair<Boolean, List<BuiltInLibraries.BuiltInLibrary>> readConfig(String sc_id) {
-        File configPath = getConfigPath(sc_id);
-        if (configPath.isFile()) {
-            String content = FileUtil.readFile(configPath.getAbsolutePath());
-
-            String errorMessage;
-            try {
-                Pair<Boolean, List<String>> config = new Gson().fromJson(content, new TypeToken<>() {
-                });
-                if (config != null) {
-                    List<BuiltInLibraries.BuiltInLibrary> libraries = config.second.stream()
-                            .map(s -> {
-                                Optional<BuiltInLibraries.BuiltInLibrary> library = BuiltInLibraries.BuiltInLibrary.ofName(s);
-                                return library.orElse(null);
-                            })
-                            .filter(Objects::nonNull)
-                            .collect(Collectors.toList());
-                    return new Pair<>(config.first, libraries);
-                }
-                errorMessage = "read config was null";
-                // fall-through to shared handler
-            } catch (JsonSyntaxException e) {
-                errorMessage = Log.getStackTraceString(e);
-                // fall-through to shared handler
-            }
-
-            LogUtil.e(TAG, "Couldn't parse config: " + errorMessage);
-        }
-        return null;
-    }
-
-    public static boolean isExcludingEnabled(String sc_id) {
-        Pair<Boolean, List<BuiltInLibraries.BuiltInLibrary>> config = readConfig(sc_id);
-        if (config != null) {
-            return config.first;
-        } else {
-            return false;
-        }
-    }
-
-    @NonNull
-    public static List<BuiltInLibraries.BuiltInLibrary> getExcludedLibraries(String sc_id) {
-        Pair<Boolean, List<BuiltInLibraries.BuiltInLibrary>> config = readConfig(sc_id);
-        if (config != null) {
-            return config.second;
-        } else {
-            return Collections.emptyList();
-        }
-    }
 
     @DrawableRes
     public static int getItemIcon() {
@@ -197,7 +127,7 @@ public class ExcludeBuiltInLibrariesActivity extends BaseAppCompatActivity {
             isExcludingEnabled = isChecked;
             refresh();
         });
-        config = readConfig(sc_id);
+        config = ExcludeBuiltInLibrariesConfig.readConfig(sc_id);
     }
 
     @Override
@@ -242,8 +172,8 @@ public class ExcludeBuiltInLibrariesActivity extends BaseAppCompatActivity {
     public void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         if (savedInstanceState == null) {
-            isExcludingEnabled = isExcludingEnabled(sc_id);
-            excludedLibraries = getExcludedLibraries(sc_id);
+            isExcludingEnabled = ExcludeBuiltInLibrariesConfig.isExcludingEnabled(sc_id);
+            excludedLibraries = ExcludeBuiltInLibrariesConfig.getExcludedLibraries(sc_id);
         } else {
             isExcludingEnabled = savedInstanceState.getBoolean("isExcludingEnabled");
             excludedLibraries = savedInstanceState.getParcelableArrayList("excludedLibraryNames");
@@ -281,7 +211,7 @@ public class ExcludeBuiltInLibrariesActivity extends BaseAppCompatActivity {
         dialog.setTitle(Helper.getResString(R.string.common_word_reset));
         dialog.setMessage(R.string.library_msg_reset_confirm);
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_reset), (v, which) -> {
-            saveConfig(sc_id, false, Collections.emptyList());
+            ExcludeBuiltInLibrariesConfig.saveConfig(sc_id, false, Collections.emptyList());
             binding.libSwitch.setChecked(false);
             excludedLibraries = Collections.emptyList();
             refresh();
@@ -373,7 +303,7 @@ public class ExcludeBuiltInLibrariesActivity extends BaseAppCompatActivity {
         private void doWork() {
             var act = activity.get();
             if (act == null) return;
-            saveConfig(act.sc_id, act.isExcludingEnabled, act.excludedLibraries);
+            ExcludeBuiltInLibrariesConfig.saveConfig(act.sc_id, act.isExcludingEnabled, act.excludedLibraries);
         }
 
         private String buildErrorMessage(Throwable error) {

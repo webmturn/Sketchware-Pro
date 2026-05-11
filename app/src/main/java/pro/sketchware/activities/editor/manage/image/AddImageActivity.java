@@ -36,7 +36,7 @@ import pro.sketchware.core.validation.FileNameValidator;
 import pro.sketchware.util.SketchToast;
 import pro.sketchware.graphics.BitmapUtil;
 import pro.sketchware.util.io.EncryptedFileUtil;
-import pro.sketchware.core.codegen.BlockConstants;
+import pro.sketchware.core.project.BlockConstants;
 import pro.sketchware.core.exception.CompileException;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.util.Helper;

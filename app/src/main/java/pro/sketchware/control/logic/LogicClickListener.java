@@ -31,7 +31,7 @@ import java.util.Map;
 import pro.sketchware.core.validation.IdentifierValidator;
 import pro.sketchware.core.project.ProjectDataStore;
 import pro.sketchware.core.project.ProjectDataManager;
-import pro.sketchware.core.codegen.BlockConstants;
+import pro.sketchware.core.project.BlockConstants;
 import pro.sketchware.core.ui.BlockView;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
@@ -479,7 +479,7 @@ public class LogicClickListener implements View.OnClickListener {
             String blockEntryKey = entry.getKey();
             List<ProjectDataStore.VariableReference> refs = entry.getValue();
             boolean isCurrentEntry = blockEntryKey.equals(currentBlockEntryKey);
-            String suffix = isCurrentEntry ? " ★" : "";
+            String suffix = isCurrentEntry ? " \u2605" : "";
             data.add(new Item(blockEntryKey + " (" + refs.size() + ")" + suffix));
             refByPosition.add(null);
             for (ProjectDataStore.VariableReference ref : refs) {

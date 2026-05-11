@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import pro.sketchware.beans.ProjectLibraryBean;
-import pro.sketchware.activities.editor.manage.library.material3.Material3LibraryManager;
+import pro.sketchware.util.library.Material3LibraryManager;
 import pro.sketchware.activities.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 

@@ -116,7 +116,7 @@ import pro.sketchware.util.SystemLogPrinter;
 import pro.sketchware.activities.editor.manifest.AndroidManifestInjection;
 import pro.sketchware.activities.settings.ConfigActivity;
 import pro.sketchware.core.build.BuildProgressReceiver;
-import pro.sketchware.library.BuiltInLibraries;
+import pro.sketchware.util.library.BuiltInLibraries;
 import pro.sketchware.core.build.CompileErrorSaver;
 import pro.sketchware.core.exception.MissingFileException;
 import pro.sketchware.util.LogUtil;
@@ -236,7 +236,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         projectFile = getDefaultProjectFile();
         ViewHistoryManager.getInstance(sc_id);
         BlockHistoryManager.getInstance(sc_id);
-        // Resource backup is now lazy â€” ensureBackedUp() is called
+        // Resource backup is now lazy â€?ensureBackedUp() is called
         // before any resource modification, not eagerly on project open.
     }
 

@@ -43,7 +43,7 @@ import dev.pranav.filepicker.FilePickerCallback;
 import dev.pranav.filepicker.FilePickerDialogFragment;
 import dev.pranav.filepicker.FilePickerOptions;
 import pro.sketchware.util.Helper;
-import pro.sketchware.core.codegen.ComponentsHandler;
+import pro.sketchware.core.project.ComponentsHandler;
 import pro.sketchware.core.project.OldResourceIdMapper;
 import pro.sketchware.beans.CustomComponent;
 import pro.sketchware.R;

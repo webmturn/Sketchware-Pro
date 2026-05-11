@@ -3,7 +3,7 @@ import pro.sketchware.core.project.BuildConfig;
 import pro.sketchware.core.project.ClassInfo;
 import pro.sketchware.core.project.SketchwareConstants;
 
-import static pro.sketchware.activities.editor.property.PropertyAttributesItem.RELATIVE_IDS;
+import static pro.sketchware.util.relativelayout.RelativeLayoutAttributes.RELATIVE_ID_ATTRIBUTES;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
@@ -18,7 +18,7 @@ import pro.sketchware.beans.LayoutBean;
 import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.beans.TextBean;
 import pro.sketchware.beans.ViewBean;
-import pro.sketchware.activities.editor.manage.library.material3.Material3LibraryManager;
+import pro.sketchware.util.library.Material3LibraryManager;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -565,7 +565,7 @@ public class LayoutGenerator {
         if (!viewBean.parentAttributes.isEmpty()) {
             viewBean.parentAttributes.forEach((key, value) -> {
                 String[] parts = key.split(":");
-                widgetTag.addAttribute(parts[0], parts[1], RELATIVE_IDS.contains(key) ? "@id/" + value : value);
+                widgetTag.addAttribute(parts[0], parts[1], RELATIVE_ID_ATTRIBUTES.contains(key) ? "@id/" + value : value);
             });
         }
 

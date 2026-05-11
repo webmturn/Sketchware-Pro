@@ -9,7 +9,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 import pro.sketchware.core.build.BuildSettings
 import pro.sketchware.util.Helper
-import pro.sketchware.library.BuiltInLibraries
+import pro.sketchware.util.library.BuiltInLibraries
 import org.cosmic.ide.dependency.resolver.api.Artifact
 import org.cosmic.ide.dependency.resolver.api.EventReciever
 import org.cosmic.ide.dependency.resolver.api.Repository

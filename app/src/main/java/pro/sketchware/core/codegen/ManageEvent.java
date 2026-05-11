@@ -1,11 +1,9 @@
-package pro.sketchware.activities.editor;
+package pro.sketchware.core.codegen;
 
 import java.util.ArrayList;
 
 import pro.sketchware.core.project.ClassInfo;
-import pro.sketchware.core.codegen.ComponentCodeGenerator;
 import pro.sketchware.util.Helper;
-import pro.sketchware.core.codegen.EventsHandler;
 import pro.sketchware.R;
 import pro.sketchware.blocks.generator.components.analyzers.BlockReturnAnalyzer;
 

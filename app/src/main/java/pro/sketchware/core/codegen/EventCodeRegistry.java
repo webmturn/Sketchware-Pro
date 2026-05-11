@@ -3,9 +3,6 @@ package pro.sketchware.core.codegen;
 import java.util.HashMap;
 import java.util.Map;
 
-import pro.sketchware.activities.editor.ManageEvent;
-import pro.sketchware.core.codegen.ComponentCodeGenerator;
-
 /**
  * Maps event names to {@link EventCodeHandler} implementations that generate listener code.
  * Replaced the former giant switch in
