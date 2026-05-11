@@ -23,7 +23,6 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import pro.sketchware.adapters.ProjectsAdapter;
 import pro.sketchware.activities.design.DesignActivity;
 import pro.sketchware.activities.editor.manage.library.ProjectComparator;
 import pro.sketchware.activities.projects.MyProjectSettingActivity;

@@ -52,7 +52,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
-import pro.sketchware.adapters.JavaFileAdapter;
 import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.activities.tools.SrcViewerActivity;
 import pro.sketchware.activities.editor.manage.ManageCollectionActivity;
@@ -236,7 +235,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         projectFile = getDefaultProjectFile();
         ViewHistoryManager.getInstance(sc_id);
         BlockHistoryManager.getInstance(sc_id);
-        // Resource backup is now lazy â€?ensureBackedUp() is called
+        // Resource backup is now lazy ï¿½?ensureBackedUp() is called
         // before any resource modification, not eagerly on project open.
     }
 

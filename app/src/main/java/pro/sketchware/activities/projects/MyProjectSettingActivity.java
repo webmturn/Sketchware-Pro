@@ -55,7 +55,7 @@ import pro.sketchware.util.ProjectFile;
 import pro.sketchware.activities.settings.ConfigActivity;
 import pro.sketchware.R;
 import pro.sketchware.activities.iconcreator.IconCreatorActivity;
-import pro.sketchware.control.VersionDialog;
+import pro.sketchware.dialogs.VersionDialog;
 import pro.sketchware.databinding.MyprojectSettingBinding;
 import pro.sketchware.core.validation.AppNameValidator;
 import pro.sketchware.core.validation.PackageNameValidator;

@@ -1,4 +1,4 @@
-package pro.sketchware.control;
+package pro.sketchware.dialogs;
 
 import android.text.TextUtils;
 import android.view.LayoutInflater;

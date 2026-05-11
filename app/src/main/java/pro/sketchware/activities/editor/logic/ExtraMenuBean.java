@@ -1,4 +1,4 @@
-package pro.sketchware.menu;
+package pro.sketchware.activities.editor.logic;
 
 import static android.text.TextUtils.isEmpty;
 import static pro.sketchware.util.SketchwareUtil.dpToPx;

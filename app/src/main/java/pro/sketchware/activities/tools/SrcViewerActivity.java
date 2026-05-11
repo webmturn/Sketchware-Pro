@@ -9,7 +9,7 @@ import android.widget.BaseAdapter;
 import androidx.core.view.WindowInsetsCompat;
 
 import pro.sketchware.beans.SrcCodeBean;
-import pro.sketchware.core.ctrls.CommonSpinnerItem;
+import pro.sketchware.widgets.CommonSpinnerItem;
 import pro.sketchware.activities.base.BaseAppCompatActivity;
 
 import java.util.ArrayList;

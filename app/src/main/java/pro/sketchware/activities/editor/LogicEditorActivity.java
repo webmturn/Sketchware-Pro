@@ -133,7 +133,7 @@ import pro.sketchware.activities.editor.view.CodeViewerActivity;
 import pro.sketchware.activities.resourceseditor.ResourcesEditorActivity;
 import pro.sketchware.databinding.ImagePickerItemBinding;
 import pro.sketchware.databinding.SearchWithRecyclerViewBinding;
-import pro.sketchware.menu.ExtraMenuBean;
+import pro.sketchware.activities.editor.logic.ExtraMenuBean;
 import pro.sketchware.util.FilePathUtil;
 import pro.sketchware.util.SvgUtils;
 

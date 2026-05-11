@@ -1,4 +1,4 @@
-package pro.sketchware.adapters;
+package pro.sketchware.activities.main.fragments.projects;
 
 import android.app.Activity;
 import android.content.Intent;

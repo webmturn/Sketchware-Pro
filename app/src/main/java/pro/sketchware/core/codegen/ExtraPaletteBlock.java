@@ -40,7 +40,7 @@ import pro.sketchware.core.build.ViewBindingBuilder;
 import pro.sketchware.R;
 import pro.sketchware.activities.resourceseditor.components.utils.StringsEditorManager;
 import pro.sketchware.blocks.ExtraBlocks;
-import pro.sketchware.control.logic.LogicClickListener;
+import pro.sketchware.activities.editor.logic.LogicClickListener;
 import pro.sketchware.util.CustomVariableUtil;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.codegen.StringResource;

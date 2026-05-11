@@ -1,4 +1,4 @@
-package pro.sketchware.menu;
+package pro.sketchware.activities.editor.logic;
 
 import android.net.Uri;
 import android.util.Pair;

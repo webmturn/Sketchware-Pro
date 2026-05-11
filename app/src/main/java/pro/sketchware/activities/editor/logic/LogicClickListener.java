@@ -1,4 +1,4 @@
-package pro.sketchware.control.logic;
+package pro.sketchware.activities.editor.logic;
 
 import static android.text.TextUtils.isEmpty;
 import static pro.sketchware.SketchApplication.getContext;
@@ -39,7 +39,6 @@ import pro.sketchware.databinding.AddCustomListBinding;
 import pro.sketchware.databinding.AddCustomVariableBinding;
 import pro.sketchware.core.validation.VariableModifierValidator;
 import pro.sketchware.core.validation.VariableTypeValidator;
-import pro.sketchware.menu.ExtraMenuBean;
 import pro.sketchware.util.SketchwareUtil;
 
 public class LogicClickListener implements View.OnClickListener {

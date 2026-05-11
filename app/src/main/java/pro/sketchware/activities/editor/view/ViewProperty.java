@@ -21,7 +21,7 @@ import android.widget.TextView;
 
 import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.beans.ViewBean;
-import pro.sketchware.core.ctrls.ViewIdSpinnerItem;
+import pro.sketchware.widgets.ViewIdSpinnerItem;
 import pro.sketchware.activities.editor.property.ViewPropertyItems;
 import pro.sketchware.widgets.CustomHorizontalScrollView;
 import com.google.android.material.card.MaterialCardView;

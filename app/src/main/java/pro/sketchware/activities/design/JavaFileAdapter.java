@@ -1,4 +1,4 @@
-package pro.sketchware.adapters;
+package pro.sketchware.activities.design;
 
 import android.view.LayoutInflater;
 import android.view.View;
