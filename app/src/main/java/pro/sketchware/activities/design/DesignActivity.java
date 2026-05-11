@@ -54,7 +54,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import pro.sketchware.adapters.JavaFileAdapter;
 import pro.sketchware.beans.ProjectFileBean;
-import pro.sketchware.common.SrcViewerActivity;
+import pro.sketchware.activities.tools.SrcViewerActivity;
 import pro.sketchware.activities.editor.manage.ManageCollectionActivity;
 import pro.sketchware.activities.editor.manage.ViewSelectorActivity;
 import pro.sketchware.activities.editor.manage.font.ManageFontActivity;

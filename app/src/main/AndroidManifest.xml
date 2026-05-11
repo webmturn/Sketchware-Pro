@@ -52,7 +52,7 @@
         </provider>
 
         <activity
-            android:name="pro.sketchware.common.SrcViewerActivity"
+            android:name="pro.sketchware.activities.tools.SrcViewerActivity"
             android:configChanges="orientation|screenSize" />
         <activity
             android:name="pro.sketchware.activities.importicon.ImportIconActivity"

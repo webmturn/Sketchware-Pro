@@ -1,4 +1,4 @@
-package pro.sketchware.common;
+package pro.sketchware.activities.tools;
 
 import android.os.Bundle;
 import android.view.View;
