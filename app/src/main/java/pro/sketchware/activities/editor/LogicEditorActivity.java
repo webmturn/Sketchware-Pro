@@ -121,7 +121,7 @@ import pro.sketchware.graphics.VectorDrawableLoader;
 import pro.sketchware.util.IdGenerator;
 import pro.sketchware.activities.editor.makeblock.ReturnMoreblockManager;
 import pro.sketchware.activities.editor.makeblock.MoreblockImporterDialog;
-import pro.sketchware.project.ProjectSettings;
+import pro.sketchware.core.project.ProjectSettings;
 import pro.sketchware.util.Helper;
 import pro.sketchware.dialogs.AsdDialog;
 import pro.sketchware.activities.editor.makeblock.MoreblockImporter;

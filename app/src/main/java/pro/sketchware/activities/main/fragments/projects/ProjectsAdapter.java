@@ -33,8 +33,6 @@ import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.util.UIHelper;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.MapValueHelper;
-import pro.sketchware.project.ProjectSettingsDialog;
-import pro.sketchware.project.BackupRestoreManager;
 import pro.sketchware.util.Helper;
 import pro.sketchware.util.LogUtil;
 import pro.sketchware.R;

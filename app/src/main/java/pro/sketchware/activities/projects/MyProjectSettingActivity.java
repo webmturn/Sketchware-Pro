@@ -49,7 +49,7 @@ import pro.sketchware.util.io.EncryptedFileUtil;
 import pro.sketchware.util.ViewUtil;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.MapValueHelper;
-import pro.sketchware.project.ProjectSettings;
+import pro.sketchware.core.project.ProjectSettings;
 import pro.sketchware.util.Helper;
 import pro.sketchware.util.ProjectFile;
 import pro.sketchware.activities.settings.ConfigActivity;

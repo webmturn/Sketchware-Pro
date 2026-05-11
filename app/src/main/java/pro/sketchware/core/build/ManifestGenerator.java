@@ -28,7 +28,7 @@ import java.util.Set;
 
 import pro.sketchware.core.codegen.EditorManifest;
 import pro.sketchware.core.build.BuildSettings;
-import pro.sketchware.project.ProjectSettings;
+import pro.sketchware.core.project.ProjectSettings;
 import pro.sketchware.util.Helper;
 import pro.sketchware.core.codegen.AndroidManifestInjector;
 import pro.sketchware.util.library.BuiltInLibraries;
@@ -519,7 +519,7 @@ public class ManifestGenerator {
         }
         if (buildConfig.constVarComponent.isFCMUsed) {
             writePermission(manifestXml, Manifest.permission.WAKE_LOCK);
-            // c2dm permission removed â€?not needed by Firebase Messaging 24.1.0+
+            // c2dm permission removed ï¿½?not needed by Firebase Messaging 24.1.0+
         }
         AndroidManifestInjector.injectManifestPermissions(manifestXml, buildConfig.sc_id);
 

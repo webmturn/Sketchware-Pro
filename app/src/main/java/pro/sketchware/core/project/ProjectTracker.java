@@ -1,4 +1,4 @@
-package pro.sketchware.project;
+package pro.sketchware.core.project;
 
 //6.3.0
 public class ProjectTracker {

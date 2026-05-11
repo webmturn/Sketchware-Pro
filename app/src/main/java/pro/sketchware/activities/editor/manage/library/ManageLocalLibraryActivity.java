@@ -52,7 +52,7 @@ import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.util.UIHelper;
 import pro.sketchware.core.build.BuildSettings;
-import pro.sketchware.project.ProjectSettings;
+import pro.sketchware.core.project.ProjectSettings;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageLocallibrariesBinding;

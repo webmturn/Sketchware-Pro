@@ -1,4 +1,4 @@
-package pro.sketchware.project
+package pro.sketchware.activities.main.fragments.projects
 
 import android.annotation.SuppressLint
 import android.content.Context

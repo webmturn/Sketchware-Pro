@@ -42,7 +42,7 @@ import pro.sketchware.util.SketchToast;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.util.UIHelper;
 import pro.sketchware.util.ViewUtil;
-import pro.sketchware.project.ProjectSettings;
+import pro.sketchware.core.project.ProjectSettings;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 

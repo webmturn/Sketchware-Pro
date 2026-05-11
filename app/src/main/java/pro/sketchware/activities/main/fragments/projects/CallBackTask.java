@@ -1,4 +1,4 @@
-package pro.sketchware.project;
+package pro.sketchware.activities.main.fragments.projects;
 
 public interface CallBackTask {
 

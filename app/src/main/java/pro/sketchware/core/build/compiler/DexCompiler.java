@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import pro.sketchware.core.build.ProjectBuilder;
-import pro.sketchware.project.ProjectSettings;
+import pro.sketchware.core.project.ProjectSettings;
 import pro.sketchware.util.FileUtil;
 
 public class DexCompiler {

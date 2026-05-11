@@ -1,4 +1,4 @@
-package pro.sketchware.project;
+package pro.sketchware.activities.main.fragments.projects;
 
 import android.content.Context;
 
@@ -47,7 +47,7 @@ import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.library.LocalLibrariesUtil;
 import pro.sketchware.core.codegen.ExtraBlockInfo;
 import pro.sketchware.core.codegen.BlockLoader;
-import pro.sketchware.project.CustomBlocksManager;
+import pro.sketchware.activities.design.CustomBlocksManager;
 import pro.sketchware.util.Helper;
 import pro.sketchware.activities.settings.ConfigActivity;
 import pro.sketchware.R;

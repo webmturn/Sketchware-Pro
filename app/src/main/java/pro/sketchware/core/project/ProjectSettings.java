@@ -1,4 +1,4 @@
-package pro.sketchware.project;
+package pro.sketchware.core.project;
 
 import android.app.Application;
 import android.content.pm.ApplicationInfo;

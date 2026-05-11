@@ -43,7 +43,7 @@ import pro.sketchware.core.project.ViewHistoryManager;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.util.UIHelper;
 import pro.sketchware.core.ui.UserExperienceLevel;
-import pro.sketchware.project.ProjectSettings;
+import pro.sketchware.core.project.ProjectSettings;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 

@@ -14,7 +14,7 @@ import pro.sketchware.core.build.ProjectBuilder;
 import pro.sketchware.core.exception.SimpleException;
 import pro.sketchware.util.library.ManageLocalLibrary;
 import pro.sketchware.core.build.BuildSettings;
-import pro.sketchware.project.ProjectSettings;
+import pro.sketchware.core.project.ProjectSettings;
 import pro.sketchware.core.build.BuildProgressReceiver;
 import pro.sketchware.util.library.BuiltInLibraries;
 import pro.sketchware.core.exception.MissingFileException;

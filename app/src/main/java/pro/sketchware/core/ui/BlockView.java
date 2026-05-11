@@ -16,7 +16,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import pro.sketchware.core.codegen.ExtraBlockInfo;
 import pro.sketchware.core.codegen.BlockLoader;
-import pro.sketchware.project.ProjectTracker;
+import pro.sketchware.core.project.ProjectTracker;
 
 public class BlockView extends BaseBlockView {
   public String spec;

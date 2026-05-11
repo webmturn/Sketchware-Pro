@@ -1,4 +1,4 @@
-package pro.sketchware.project;
+package pro.sketchware.activities.design;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import pro.sketchware.core.project.ProguardHandler;
 import pro.sketchware.util.library.ManageLocalLibrary;
 import pro.sketchware.activities.editor.code.SrcCodeEditor;
 import pro.sketchware.R;

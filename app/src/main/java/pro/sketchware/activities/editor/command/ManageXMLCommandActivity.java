@@ -43,7 +43,7 @@ import pro.sketchware.core.build.ProjectFilePaths;
 import io.github.rosemoe.sora.widget.CodeEditor;
 import io.github.rosemoe.sora.widget.component.Magnifier;
 import pro.sketchware.core.codegen.BlockLoader;
-import pro.sketchware.project.ProjectSettings;
+import pro.sketchware.core.project.ProjectSettings;
 import pro.sketchware.util.Helper;
 import pro.sketchware.core.codegen.CommandBlock;
 import pro.sketchware.lib.code_editor.CodeEditorColorSchemes;

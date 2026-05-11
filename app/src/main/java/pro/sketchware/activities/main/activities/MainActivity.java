@@ -45,11 +45,11 @@ import pro.sketchware.util.CrashLogManager;
 
 import pro.sketchware.util.io.SharedPrefsHelper;
 import pro.sketchware.util.DeviceUtil;
-import pro.sketchware.project.BackupFactory;
-import pro.sketchware.project.BackupRestoreManager;
+import pro.sketchware.activities.main.fragments.projects.BackupFactory;
+import pro.sketchware.activities.main.fragments.projects.BackupRestoreManager;
 import pro.sketchware.util.Helper;
 import pro.sketchware.activities.settings.ConfigActivity;
-import pro.sketchware.project.SingleCopyTask;
+import pro.sketchware.activities.main.fragments.projects.SingleCopyTask;
 import pro.sketchware.R;
 import pro.sketchware.activities.about.AboutActivity;
 import pro.sketchware.activities.main.fragments.projects.ProjectsFragment;

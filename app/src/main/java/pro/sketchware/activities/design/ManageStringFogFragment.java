@@ -1,8 +1,8 @@
-package pro.sketchware.project;
+package pro.sketchware.activities.design;
 
 
 import pro.sketchware.util.Helper;
-import pro.sketchware.project.StringfogHandler;
+import pro.sketchware.core.project.StringfogHandler;
 import pro.sketchware.R;
 import android.os.Bundle;
 import android.view.LayoutInflater;

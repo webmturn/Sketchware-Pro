@@ -33,7 +33,7 @@ import pro.sketchware.core.project.ViewHistoryManager;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.util.UIHelper;
 import pro.sketchware.core.codegen.EventRegistry;
-import pro.sketchware.project.ProjectSettings;
+import pro.sketchware.core.project.ProjectSettings;
 import pro.sketchware.core.build.ViewBindingBuilder;
 import pro.sketchware.beans.ViewBeans;
 import pro.sketchware.R;

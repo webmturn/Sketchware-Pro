@@ -1,4 +1,4 @@
-package pro.sketchware.project;
+package pro.sketchware.activities.main.fragments.projects;
 
 import static pro.sketchware.core.build.BuildDefaults.VAR_DEFAULT_MIN_SDK_VERSION;
 import static pro.sketchware.core.build.BuildDefaults.VAR_DEFAULT_TARGET_SDK_VERSION;
@@ -9,6 +9,7 @@ import android.view.View;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
+import pro.sketchware.core.project.ProjectSettings;
 import pro.sketchware.databinding.DialogProjectSettingsBinding;
 
 public class ProjectSettingsDialog {

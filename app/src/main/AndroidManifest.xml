@@ -250,7 +250,7 @@
             android:name="pro.sketchware.activities.editor.code.SrcCodeEditor"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="pro.sketchware.project.ManageProguardActivity"
+            android:name="pro.sketchware.activities.design.ManageProguardActivity"
             android:configChanges="orientation|screenSize" />
         <activity
             android:name="pro.sketchware.activities.editor.manifest.AndroidManifestInjection"

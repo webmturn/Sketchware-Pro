@@ -1,4 +1,4 @@
-package pro.sketchware.project;
+package pro.sketchware.activities.design;
 
 import android.app.Activity;
 import android.app.AlertDialog;

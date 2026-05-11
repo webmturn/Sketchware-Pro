@@ -2,7 +2,7 @@ package pro.sketchware.core.build;
 
 import java.io.Serializable;
 
-import pro.sketchware.project.ProjectSettings;
+import pro.sketchware.core.project.ProjectSettings;
 import pro.sketchware.core.project.SketchwarePaths;
 
 public class BuildSettings extends ProjectSettings implements Serializable {
