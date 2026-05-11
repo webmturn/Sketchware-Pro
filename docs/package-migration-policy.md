@@ -114,7 +114,7 @@ As of mid-2026, both the v1 (`mod.*` / `dev.*` → `pro.sketchware.*`) and v2 (`
 | `com.besome.sketch.editor.LogicEditorActivity` (now at `pro.sketchware.activities.editor.LogicEditorActivity`, ~147 KB) | `pro.sketchware.activities.editor.logic.*` controllers (Activity stays as thin host) | ⏳ Planned | P0b |
 | `pro.sketchware.activities.design.DesignActivity` (same god-class shape) | Same controller-split pattern as P0b | 🟡 Candidate | P0c (not yet scheduled) |
 | `pro.sketchware.core.build.ProjectBuilder` (~70 KB god class) | `pro.sketchware.core.build.stage.*` chain | ⏳ Planned | P1a |
-| `pro.sketchware.core.codegen.*` direct file writes | `pro.sketchware.core.codegen.sink.*` interfaces + `pro.sketchware.core.build.sink.*` impls | ⏳ Planned | P2a |
+| `pro.sketchware.core.build.ProjectFilePaths` 26 IO call sites (writeProjectFile / generateGradleFiles / createLauncherIconXml / copyAppIcon / generateDebugFiles / secrets.xml / codegen cache) | `pro.sketchware.core.codegen.sink.{ProjectArtifactSink,ArtifactKind}` interfaces + `pro.sketchware.core.build.sink.{BuildDir,AndroidStudioExport,SourceViewing,InMemory}Sink` impls | ⏳ Planned | P2a — design in [`p2a-codegen-sink-plan.md`](p2a-codegen-sink-plan.md) |
 
 Legend: ✅ Done · ⏳ Planned (has design doc) · 🟡 Candidate (low-risk, mechanical) · ⏸ Deferred
 
