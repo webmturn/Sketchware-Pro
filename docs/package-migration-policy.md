@@ -2,7 +2,7 @@
 
 > **Status**: Active rule. PRs adding `.java` files outside the rules below may be asked to relocate.
 >
-> **Scope**: `app/src/main/java/**` only. The `vendor-dx` module (planned by P1b) and `kellinwood/`, `dev/aldi/sayuti/`, `mod/agus/jcoderz/dx/` vendored sources are out of scope.
+> **Scope**: `app/src/main/java/**` only. The `:vendor-dx` Gradle module (delivered by P1b) and any `pro.sketchware.third_party.*` vendored sources (`kellinwood/` lives there now) are out of scope.
 
 This document is the implementation of the P2b item in [`package-target-architecture.md`](package-target-architecture.md). It exists so a fresh contributor can answer "where does my new file go?" in under a minute, and so reviewers have a single citation when the answer is "not here".
 
@@ -30,15 +30,15 @@ Acceptable destinations (by responsibility):
 | Top-level Activities (App-level entry points) | `pro.sketchware.activities.<theme>.*` |
 | App-level Settings fragments | `pro.sketchware.fragments.settings.*` |
 | Dialogs not tied to Logic/View editor | `pro.sketchware.dialogs.*` |
-| Future logic-editor controllers (P0b output) | `pro.sketchware.editor.logic.*` |
-| Future view-editor controllers | `pro.sketchware.editor.view.*` |
+| Future logic-editor controllers (P0b output) | `pro.sketchware.activities.editor.logic.*` (extends existing supporting classes such as `BlockPane`, `LogicTopMenu`) |
+| Future view-editor controllers (P0c output) | `pro.sketchware.activities.editor.view.*` (extends existing migrated `view/`, `view/item/`, `view/palette/`) |
 
-### 1.2 `com.besome.sketch.*` is FROZEN
+### 1.2 `com.besome.sketch.*` is ELIMINATED
 
-- **No** new `.java` file may be added under `com.besome.sketch.*`.
-- Bug fixes that add a method to an existing class **are allowed**.
-- Renaming, splitting, or extending the API of an existing class **must** put the new file in `pro.sketchware.*` (the new file then references the legacy class until that is migrated separately).
-- **Exception**: `com.besome.sketch.beans.*` is the cross-package POJO layer. New `.java` files here are still discouraged; prefer `pro.sketchware.beans/`. New beans here are accepted only when an existing legacy bean must be subclassed/extended in place.
+- v2 Phase 11–15 fully removed `com.besome.sketch.*`. The directory no longer exists in `app/src/main/java/`.
+- **No** new `.java` file may be created under `com.besome.sketch.*`. Re-introducing the package (even for "compat" or "to keep diffs small") is rejected on sight.
+- The earlier "`com.besome.sketch.beans.*` is permanent" carve-out is **withdrawn** — the bean layer now lives at `pro.sketchware.beans.*` (see § 4.1, Phase 13).
+- The only legacy file that physically remains outside `pro.sketchware.*` is `com/bumptech/glide/signature/StringSignature.java`, kept on purpose as a Glide package-private reflection bridge. Do not add anything else next to it.
 
 ### 1.3 `mod.*` is FROZEN to mainline contributions
 
@@ -46,9 +46,11 @@ Acceptable destinations (by responsibility):
 - Mainline (non-`mod.*`) PRs **must not** add new `.java` files inside `mod.*`.
 - Bug fixes in existing `mod.*` files are allowed; widening their API surface is not.
 
-### 1.4 `dev.aldi.sayuti/` and `kellinwood.*` are FROZEN entirely
+### 1.4 `dev.aldi.sayuti/` and root-level `kellinwood/` are ELIMINATED; `pro.sketchware.third_party.*` is FROZEN
 
-These are single-author or vendored libraries. Treat them as read-only. Touch only for bug fixes against the existing API.
+- Root-level `kellinwood/` was relocated to `pro.sketchware.third_party.kellinwood/` in v2 Phase 11; root-level `dev.aldi.sayuti/` was removed in v1.
+- `pro.sketchware.third_party.*` is the new home for vendored / third-author code (currently the kellinwood ZipSigner sources). Treat the whole sub-tree as read-only — touch only for bug fixes against the existing API; do not refactor identifiers, package names, or layout.
+- New vendored drops MUST land under `pro.sketchware.third_party.<vendor>/` rather than at the `java/` root.
 
 ---
 
@@ -79,23 +81,42 @@ These are single-author or vendored libraries. Treat them as read-only. Touch on
 
 Tracks the legacy → modern migration progress. **Do not** edit ad hoc; update only when a sub-package finishes a planned refactor batch.
 
+As of mid-2026, both the v1 (`mod.*` / `dev.*` → `pro.sketchware.*`) and v2 (`com.besome.sketch.*` + `kellinwood/` → `pro.sketchware.*`) plans have fully landed. The only legacy file that physically remains outside `pro.sketchware.*` is `com/bumptech/glide/signature/StringSignature.java` (Glide package-private reflection bridge, permanently kept). All rows below marked "✅ Done" are historical and retained for audit / blame context.
+
+### 4.1 Completed migrations
+
+| Legacy location | Target location | Tracking item | Key commit(s) |
+|---|---|---|---|
+| `pro.sketchware.core.*` (124 flat files) | `pro.sketchware.core.{async,build,callback,codegen,exception,fragments,project,ui,util,validation}` | P0a (`package-refactor-plan.md`, 12 batches) | `a1c07e0e3`, `3cced5ca1`, `d02572af6`, `8fabe2834`, `be9b6a480`, `fe1d86516`, `1f56ddabb`, `e213fab21`, `94c32fb15`, `423fb655b`, `00b2a795b`, `0cc7e3adb` |
+| `mod.agus.jcoderz.{dx,dex}/` | `:vendor-dx` Gradle module | P1b | `f9ba8eaf3` |
+| `pro.sketchware.lib.validator.*` (9) | `pro.sketchware.core.validation.*` | Path B step 5 | `48c6468ac` |
+| `pro.sketchware.utility.*` (25) | `pro.sketchware.util.*` | Path B step 6 | `de5c04f74` |
+| `pro.sketchware.{model,listeners,xml,managers}/` + `pro.sketchware.lib.DebouncedClickListener` (8 files / 4 micro-packages) | `pro.sketchware.beans.*` (3 POJOs), `pro.sketchware.util.*` (2 listeners), `pro.sketchware.util.xml.*` (2 builders), `pro.sketchware.tools.*` (1 manager) | Path B step 7 | `34eb36581`, `e2c6b5029`, `c371c0222` |
+| `pro.sketchware.core.callback.{Compile,Simple,Sketchware}Exception` (3) | `pro.sketchware.core.exception.*` | Path D step 1 | `bb37d7b19` |
+| `kellinwood/` (44 files) | `pro.sketchware.third_party.kellinwood/` | v2 Phase 11 | `0e4b0e1e1` |
+| `com.besome.sketch.lib.*` | `pro.sketchware.activities.base.*` + `pro.sketchware.widgets.*` | v2 Phase 12 | `3700c25a5` |
+| `com.besome.sketch.beans.*` (29) | `pro.sketchware.beans.*` (unified POJO layer) | v2 Phase 13 | `779902e0b`, `b32cbd171` (zero-byte cleanup) |
+| `com.besome.sketch.editor.view.*` (61) | `pro.sketchware.activities.editor.view.*` (incl. `item/` + `palette/`) | v2 Phase 14 | `a0d145938`, `0b7083e7a` |
+| `com.besome.sketch.editor.{event,logic,makeblock}` | `pro.sketchware.activities.editor.{event,logic,makeblock}` | v2 Phase 14 | `cc575e45d` |
+| `com.besome.sketch.editor.{component,property}` | `pro.sketchware.activities.editor.{component,property}` | v2 Phase 14 | `31dab2dfb` |
+| `com.besome.sketch.editor.manage` (excl. library) | `pro.sketchware.activities.editor.manage` | v2 Phase 14 | `ef35aea03` |
+| `com.besome.sketch.editor.manage.library` | `pro.sketchware.activities.editor.manage.library` | v2 Phase 14 | `c25bbefcd` |
+| `com.besome.sketch.editor.{block,makeblock}` management screens | `pro.sketchware.activities.editor.{block,makeblock}` management screens | v2 Phase 14 | `f6f6d02a8` |
+| `com.besome.sketch.editor.{manifest,permission,resource, …}` misc editor screens | `pro.sketchware.activities.editor.*` | v2 Phase 14 | `d1d94b47d` |
+| `com.besome.sketch.editor.{settings, dialogs, code editor UI}` | `pro.sketchware.activities.settings.*` / `pro.sketchware.dialogs.*` / consolidated code-editor widgets | v2 Phase 14 | `c793755f2`, `b6946d3b5` |
+| `com.besome.sketch.editor.{adapters,ctrls,design,export,help,lib,projects,tools}` | matching `pro.sketchware.<theme>.*` under `pro.sketchware.activities.*` and/or `pro.sketchware.adapters` etc. | v2 Phase 15 | same chain as Phase 14 |
+| Residual obfuscated / old-style `util`, `graphics`, custom block/event/component handlers | `pro.sketchware.util.*`, `pro.sketchware.graphics.*`, `pro.sketchware.core.codegen.*` handlers | v2 Phase 15 follow-ups | `3651947e6`, `abe7f6a9d`, `787a90f0c`, `f218ac163`, `bf58e13ee`, `532afd536`, `311530b79`, `0c2054118` |
+
+### 4.2 Still pending
+
 | Legacy location | Target location | Status | Tracking item |
 |---|---|---|---|
-| `pro.sketchware.core.*` (124 flat) | `pro.sketchware.core.{async,build,callback,codegen,fragments,project,ui,util,validation}` | ✅ Done | P0a (`package-refactor-plan.md`) |
-| `com.besome.sketch.editor.LogicEditorActivity` | `pro.sketchware.editor.logic.*` controllers (Activity stays) | ⏳ Planned | P0b |
-| `com.besome.sketch.editor.DesignActivity` | Same pattern as P0b | 🟡 Candidate | P0c (not yet scheduled) |
-| `mod.agus.jcoderz.{dx,dex}/` | `:vendor-dx` Gradle module | ✅ Done (commit `f9ba8eaf3`) | P1b |
-| `pro.sketchware.core.build.ProjectBuilder` | `pro.sketchware.core.build.stage.*` chain | ⏳ Planned | P1a |
+| `com.besome.sketch.editor.LogicEditorActivity` (now at `pro.sketchware.activities.editor.LogicEditorActivity`, ~147 KB) | `pro.sketchware.activities.editor.logic.*` controllers (Activity stays as thin host) | ⏳ Planned | P0b |
+| `pro.sketchware.activities.design.DesignActivity` (same god-class shape) | Same controller-split pattern as P0b | 🟡 Candidate | P0c (not yet scheduled) |
+| `pro.sketchware.core.build.ProjectBuilder` (~70 KB god class) | `pro.sketchware.core.build.stage.*` chain | ⏳ Planned | P1a |
 | `pro.sketchware.core.codegen.*` direct file writes | `pro.sketchware.core.codegen.sink.*` interfaces + `pro.sketchware.core.build.sink.*` impls | ⏳ Planned | P2a |
-| `pro.sketchware.lib.validator.*` (9) | `pro.sketchware.core.validation.*` | ✅ Done (commit `48c6468ac`) | Path B step 5 |
-| `pro.sketchware.utility.*` (25) | `pro.sketchware.util.*` | ✅ Done (commit `de5c04f74`) | Path B step 6 |
-| `pro.sketchware.{model,listeners,xml,managers}/` + `pro.sketchware.lib.DebouncedClickListener` (8 files / 4 micro-packages) | `pro.sketchware.beans.*` (3 POJOs), `pro.sketchware.util.*` (2 listeners), `pro.sketchware.util.xml.*` (2 builders), `pro.sketchware.tools.*` (1 manager) | ✅ Done (commits `34eb36581`, `e2c6b5029`, `c371c0222`) | Path B step 7 |
-| `pro.sketchware.core.callback.{Compile,Simple,Sketchware}Exception` (3) | `pro.sketchware.core.exception.*` | ✅ Done (commit `bb37d7b19`) | Path D step 1 |
-| `com.besome.sketch.beans.*` (29) | **Permanent**; cross-package POJO layer | 🛡 Frozen | Per § 1.2 exception |
-| `com.besome.sketch.editor.view.*` (61) | Long-term: `pro.sketchware.editor.view.*` | ⏸ Deferred | Post-P0b/P0c |
-| `com.besome.sketch.editor.{adapters,ctrls,design,export,help,lib,projects,tools}` | Long-term: merge into matching `pro.sketchware.<theme>.*` | ⏸ Deferred | Post-P0c |
 
-Legend: ✅ Done · ⏳ Planned (has design doc) · 🟡 Candidate (low-risk, mechanical) · ⏸ Deferred · 🛡 Frozen
+Legend: ✅ Done · ⏳ Planned (has design doc) · 🟡 Candidate (low-risk, mechanical) · ⏸ Deferred
 
 ---
 
