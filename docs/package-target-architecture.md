@@ -467,6 +467,7 @@ public final class FileLayoutSink implements LayoutSink {
 
 - v1 包迁移：`docs/package-migration-plan.md`
 - v2 包迁移：`docs/package-migration-plan-v2.md`
+- 命名策略（P2b 落地物）：`docs/package-naming-policy.md`
 - 通用迁移策略：`docs/package-migration-policy.md`
 - 上游架构记录：`docs/DEVELOPMENT.md` / `docs/code-generation-system-analysis.md`
 - 既往审计：`docs/android-development-tool-audit-review.md`
