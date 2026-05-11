@@ -1,83 +1,73 @@
 ★★★★★★★★★★★★★★★★★★★★★★★
-★★★  Sketchware Pro v6.3.0 ★★★
+★★★      Sketchware Pro      ★★★
 ★★★★★★★★★★★★★★★★★★★★★★★
 
-This is an advanced Sketchware Mod that was re-modded from the Sketchware Revolution by Agus Jcoderz.
-Please give credit when you re-mod or share. Our Main team includes:
+Sketchware Pro is a community-maintained open-source fork of Sketchware, originally re-modded from "Sketchware Revolution" by Agus JCoderZ. The full source lives on GitHub and pull requests are welcome.
 
-- Aldi Sayuti
-- Hilal Saif
-- Mike Anderson (Hey! Studios)
-- Jbk0
-- Hasrat
+For the current version, release notes, active maintainers, and full credits, look at:
 
-Contributors & Special Thanks:
+  - In-app: About → Team / Change Log
+  - Repository: https://github.com/Sketchware-Pro/Sketchware-Pro/
+  - RELEASE_NOTES.md, LICENSE.md, and docs/ at the repository root
 
-- IndoSW                (for Direct Code Editor support)
-- Agus JCoderZ          (for the base mod, Sketchware Revolution)
-- Auwal Emptyset        (for library downloading source)
-- Ani1nonly
-- Dava
-- Ilyasse Salama        (for the new About Sketchware Pro activity)
-- Zarzo
-- AlucardTN             (for some miscellaneous stuff)
-- tyron                 (for .swb file Intent filter)
-- Iyxan23               (for some miscellaneous stuff)
-- Aliveness             (for an improved pretty-print & replaceable generated files)
-- khaled                (for the HUGE Android 11+ storage performance fix & other fixes)
-- Zirus                 (for an improved project backup dialog)
-- Pranav                (for an improved MainActivity)
+This file is a static APK resource and is intentionally NOT the source of truth for those details — anything below is kept as a historical credits snapshot, not a live roster.
 
-Make sure to look in-app for an up-to-date list of our team.
 
-DISCLAIMER: This mod was not meant for any harmful purposes, such as harming Sketchware; Quite the opposite actually: It was made to keep Sketchware alive.
-Please use it on your own discretion and buy the Sketchware Premium subscription every month to support the original Sketchware team, even if you don't use it. 
+Main team (historical snapshot):
 
-We love Sketchware very much, and we are grateful to Sketchware's developers for making such an amazing app,
-but unfortunately, we haven't received updates for a long time.
-That's why we decided to keep Sketchware alive by making this mod, plus we don't demand any money - It's completely free :)
-Also, starting with version 6.4.0 of the Mod, we've made some source code open source! You can check it out at https://github.com/Sketchware-Pro/Sketchware-Pro/,
-and if you want to contribute, go fork it and open a pull request! We'd love to see new amazing features getting added to Sketchware Pro :D
+  - Aldi Sayuti
+  - Hilal Saif
+  - Mike Anderson (Hey! Studios)
+  - Jbk0
+  - Hasrat
 
-★ The change log can be found in the mod's Main Drawer.
+
+Contributors & special thanks (historical snapshot):
+
+  - IndoSW                (Direct Code Editor support)
+  - Agus JCoderZ          (base mod, Sketchware Revolution)
+  - Auwal Emptyset        (library downloading source)
+  - Ani1nonly
+  - Dava
+  - Ilyasse Salama        (new About Sketchware Pro activity)
+  - Zarzo
+  - AlucardTN             (miscellaneous fixes)
+  - tyron                 (.swb file Intent filter)
+  - Iyxan23               (miscellaneous fixes)
+  - Aliveness             (improved pretty-print & replaceable generated files)
+  - khaled                (Android 11+ storage performance fix and other fixes)
+  - Zirus                 (improved project backup dialog)
+  - Pranav                (improved MainActivity)
+
+For the up-to-date team, contributors, and changelog, please use the in-app About screen and the GitHub repository above rather than this file.
 
 **** FOR MODDERS ****
 
-I made this part specifically for my fellow modders who want to contribute to Sketchware Pro's development. Think of it as a little documentation :)
+The original mod was structured around heavily obfuscated classes (Fx, Jx, Lx, Ox, Dp, yq, ...) and a forest of per-contributor packages (mod.*, dev.aldi.*, id.indosw.*). That layout no longer exists. Both refactors are complete:
 
-» DEX info
+  - v1: all contributor namespaces (mod.agus, mod.hey, mod.hilal, mod.jbk, mod.pranav, mod.tyron, mod.bobur, mod.khaled, mod.alucard, mod.remaker, dev.aldi) folded into pro.sketchware.*
+  - v2: the entire com.besome.sketch.* tree migrated into pro.sketchware.*; the obfuscated a.a.a package became pro.sketchware.core and every class/method/field was renamed to a readable name.
 
-   classes.dex  -> Contains most of Sketchware's classes, now unified under pro.sketchware.* (formerly a.a.a and com.besome.sketch).
+Today essentially all Sketchware Pro source lives under a single business package: pro.sketchware.*. The only legacy survivor on disk is com/bumptech/glide/signature/StringSignature.java, kept on purpose as a package-private reflection bridge for Glide.
 
-   classes2.dex -> Nothing exciting, only libraries such as AndroidX, Glide, AdMob, ProGuard, StringFog, ASM etc.
+Where things live now (high level):
 
-   classes3.dex -> More libraries, including Gson, Firebase, kellinwood ZipSigner, okhttp3, etc.
+  - pro.sketchware.SketchApplication        Application entry point
+  - pro.sketchware.activities.*             All Activities/Fragments (editor, design, settings, projects, ...)
+  - pro.sketchware.core.*                   Project model, code generation, build pipeline, validators, async helpers
+  - pro.sketchware.core.codegen.*           Block / event / layout / manifest / component code generators
+  - pro.sketchware.core.build.*             Project builder, incremental cache, key store, compiler/multidex wrappers
+  - pro.sketchware.core.project.*           ProjectDataStore, ProjectFileManager, LibraryManager, ResourceManager, SketchwarePaths
+  - pro.sketchware.library.*                Built-in libraries, local library, dependency resolver
+  - pro.sketchware.util.*                   Shared utilities
+  - pro.sketchware.widgets.* / lib.*        Custom views and editor-feature scaffolding
+  - pro.sketchware.third_party.kellinwood.* Vendored ZipSigner sources
 
-   classes4.dex -> Contains some compiler libraries including Dx, ecj, MultiDex, etc. but also FilePicker, CodeEditor, etc.
+For the authoritative, up-to-date map please read:
 
-   classes5.dex -> Contains all modders' classes: 
-       Agus JCoderZ        -> mod.agus.jcoderz
-       Aldi Sayuti         -> dev.aldi.sayuti
-       Hilal Saif          -> mod.hilal.saif
-       Hey! Studios DEV    -> mod.hey.studios
-       Ilyasse Salama      -> mod.ilyasse
-       IndoSW              -> id.indosw.mod
-       Jbk0                -> mod.jbk
-       tyron               -> mod.tyron
+  - docs/package-target-architecture.md     current target layout + open refactor items
+  - docs/package-migration-policy.md        hard rules for where new .java files go
+  - docs/package-naming-policy.md           naming conventions for new packages
+  - docs/DEVELOPMENT.md                     full developer handbook
 
-     and, Sketchware's most important classes that are modified for the Mod, including:
-       Fx -> Responsible for generating the code of each block. Cannot be decompiled properly due to its HUGE size, you may want to edit this one by smali.
-       Jx -> Responsible for generating the source code of activities.
-       Lx -> Responsible for generating source codes of stuff such as listeners etc.
-       Ox -> Responsible for generating the XML source of layouts.
-
-   classes6.dex -> This one is all about the compilation. Contains ProGuard, StringFog handler classes/activities, and:
-       Dp -> Responsible for the whole compilation process of projects. Was modified to fix MultiDex bug and to add library support.
-       yq -> Organizes Sketchware projects' file paths.
-       
-   classes7.dex -> Contains both ProGuard and d8/r8
-   
-   classes8.dex -> Contains some dependencies of bundletool, this is the only DEX supposed to be of version 038!
-   
-   classes9.dex -> Contains bundletool & its dependencies
-
+The DEX layout produced by the release build is now decided by R8/D8 sharding rather than the hand-curated classes1..classes9 split described in the previous version of this file, so per-DEX class lists here are no longer meaningful.

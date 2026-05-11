@@ -36,6 +36,7 @@ Documents are grouped by purpose so that long-term references, active proposals,
 | [package-refactor-kickoff.md](package-refactor-kickoff.md) | Multi-session kickoff pack for splitting `pro.sketchware.core` (124 flat files) into responsibility-based sub-packages; contains Phase 1/2/3 prompts and acceptance checklist |
 | [package-refactor-plan.md](package-refactor-plan.md) | Phase 1 output: 9-sub-package split / 12-batch sequence / DAG dependency map for `pro.sketchware.core`; consumed by Phase 2 execution sessions |
 | [package-target-architecture.md](package-target-architecture.md) | Target architecture after all six P0/P1/P2 refactors (core split + LogicEditor controllers + BuildStage chain + vendor-dx submodule + codegen Sink layer + naming policy) |
+| [package-migration-plan-v2.md](package-migration-plan-v2.md) | Planning-stage proposal for the next two follow-ups left over from v1: tidying `pro.sketchware.*` sub-packages and migrating `com.besome.sketch.*` into `pro.sketchware.*`. Not yet scheduled for execution. |
 | [local-library-dependency-order-solution.md](local-library-dependency-order-solution.md) | Unimplemented proposal for local library dependency ordering via topological sort |
 | [lan-web-editing-mvp-plan.md](lan-web-editing-mvp-plan.md) | MVP planning note for LAN-based Web viewing, low-risk editing, and single-writer collaboration |
 
@@ -44,12 +45,14 @@ Documents are grouped by purpose so that long-term references, active proposals,
 | Document | Description |
 |----------|-------------|
 | [package-migration-policy.md](package-migration-policy.md) | Active hard rules for where new `.java` files must live (`pro.sketchware.*` only), naming conventions, sub-package depth budget, migration tracker, PR review checklist, and rejected anti-patterns. Implements P2b. |
+| [package-naming-policy.md](package-naming-policy.md) | Active naming policy for package layout (P2b deliverable of `package-target-architecture.md`): forbids old top-level packages from regrowing, defines where new files must land, and what reviewers/auto checks enforce. |
 
 ## Historical Plans
 
 | Document | Description |
 |----------|-------------|
 | [firebase-upgrade-plan.md](firebase-upgrade-plan.md) | Archived Firebase upgrade implementation plan; completed in v7.0.0-beta2 |
+| [package-migration-plan.md](package-migration-plan.md) | Historical v1 plan that eliminated `mod.*` / `dev.*` contributor namespaces (167 files into `pro.sketchware.*` / `com.besome.sketch.*`). All 9 phases merged to `main`; kept as the precondition record cited by the v2 plan. |
 
 ## Refactoring Archives
 

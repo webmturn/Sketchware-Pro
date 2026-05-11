@@ -1,6 +1,6 @@
 # Sketchware-Pro 包结构迁移方案
 
-> 状态：待审批  
+> **状态**：已完成（historical）。v1 计划全部 9 个 Phase 已合并到 `main`，167 文件迁移完成，最新提交 `f3b54f93c`。保留作为 v2 计划（`package-migration-plan-v2.md`）的先决条件凭据。
 > 日期：2026-05-10  
 > 范围：消除 `mod.*` / `dev.*` 贡献者命名空间，统一到 `pro.sketchware` / `com.besome.sketch`
 

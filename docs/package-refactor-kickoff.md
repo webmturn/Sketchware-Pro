@@ -1,5 +1,7 @@
 # Package Refactor Kickoff Pack
 
+> **Status**: active. Multi-session kickoff pack consumed by `package-refactor-plan.md` (Phase 1 output) and ongoing Phase 2 execution batches. Do not delete while batches are still in flight.
+
 This document is the **kickoff pack** for the multi-session package restructuring of `pro.sketchware.core` (currently 124 flat files / ~1.5 MB).
 
 It is split into:

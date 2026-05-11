@@ -1,5 +1,7 @@
 # pro.sketchware.core 包拆分重构方案
 
+> **状态**：active（Phase 1 输出，正在被 Phase 2 模型按批执行）。
+>
 > 输入凭据：
 > - 验收基线：`docs/package-refactor-kickoff.md` § 1.4 (124 文件 / 260 外部引用方 / 764 imports / 反射/序列化/Manifest/资源/.kt 全部 0)
 > - 历史命名：`docs/refactoring-naming-map.md`
