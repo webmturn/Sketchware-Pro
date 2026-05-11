@@ -69,9 +69,9 @@ release/
 app/libs/
 run_x/
 
-# Refactoring work notes
-refactoring-naming-map.md
-refactoring-method-naming.md
+# Refactoring work notes (legacy root-level scratch files only; docs/ copies are tracked)
+/refactoring-naming-map.md
+/refactoring-method-naming.md
 jar_list.txt
 
 # Test scripts and project data
@@ -82,3 +82,10 @@ scripts/
 
 # Temporary Java files
 tmp_*.java
+
+# Codex / AI assistant working directories and logs
+.codex-*/
+.codex-*.log
+
+# AI assistant conversation transcripts (local working notes, not source)
+ai_conversations/
