@@ -1,8 +1,6 @@
-package pro.sketchware.library;
+package pro.sketchware.util.library;
 
 import pro.sketchware.core.project.ConstVarComponent;
-import pro.sketchware.util.library.BuiltInLibraries;
-import pro.sketchware.util.library.BuiltInLibraryManager;
 
 public class ExtLibSelected {
 
