@@ -104,16 +104,16 @@ import proguard.ProGuard;
  * <p>
  * The typical build sequence called from the UI is:
  * <ol>
- *   <li>{@link #maybeExtractAapt2()} â€?extract AAPT2 binary from assets</li>
- *   <li>{@link #buildBuiltInLibraryInformation()} â€?resolve which built-in libraries are needed</li>
- *   <li>{@link #compileResources()} â€?AAPT2 compile + link</li>
- *   <li>{@link #generateViewBinding()} â€?generate ViewBinding Java sources (optional)</li>
- *   <li>{@link #compileJavaCode()} â€?ECJ incremental compilation</li>
- *   <li>{@link #createDexFilesFromClasses()} â€?D8/Dx conversion</li>
- *   <li>{@link #getDexFilesReady()} â€?merge library DEX files</li>
- *   <li>{@link #buildApk()} â€?assemble unsigned APK</li>
- *   <li>{@link #runZipalign(String, String)} â€?align the APK</li>
- *   <li>{@link #signDebugApk()} â€?sign with testkey</li>
+ *   <li>{@link #maybeExtractAapt2()} â€”extract AAPT2 binary from assets</li>
+ *   <li>{@link #buildBuiltInLibraryInformation()} â€”resolve which built-in libraries are needed</li>
+ *   <li>{@link #compileResources()} â€”AAPT2 compile + link</li>
+ *   <li>{@link #generateViewBinding()} â€”generate ViewBinding Java sources (optional)</li>
+ *   <li>{@link #compileJavaCode()} â€”ECJ incremental compilation</li>
+ *   <li>{@link #createDexFilesFromClasses()} â€”D8/Dx conversion</li>
+ *   <li>{@link #getDexFilesReady()} â€”merge library DEX files</li>
+ *   <li>{@link #buildApk()} â€”assemble unsigned APK</li>
+ *   <li>{@link #runZipalign(String, String)} â€”align the APK</li>
+ *   <li>{@link #signDebugApk()} â€”sign with testkey</li>
  * </ol>
  *
  * @see BuildProgressReceiver
@@ -652,7 +652,7 @@ public class ProjectBuilder {
                 stalePaths.add(cachedPath);
                 Log.d(TAG, (customSourceDeleted ? "Custom Java source deleted: " : "Generated Java source deleted: ")
                         + new File(cachedPath).getName()
-                        + " â€?doing full ECJ recompile to validate remaining references safely");
+                        + " â€”doing full ECJ recompile to validate remaining references safely");
             }
         }
         for (String p : stalePaths) cache.removeFromCache(p);
@@ -682,15 +682,15 @@ public class ProjectBuilder {
                     + ", appRJavaPath=" + appRJavaRelativePath);
             Log.d(TAG, "Incremental compile checkpoint: rJavaChanges=" + rJavaChanges);
             if (rJavaChanged) {
-                Log.d(TAG, "R.java changed â€?resource IDs may have been reassigned, doing full ECJ recompile");
+                Log.d(TAG, "R.java changed â€”resource IDs may have been reassigned, doing full ECJ recompile");
             }
             if (!dirtyCustomJavaFiles.isEmpty()) {
                 Log.d(TAG, "User custom Java files changed: " + dirtyCustomJavaFiles.size()
-                        + " â€?doing full ECJ recompile");
+                        + " â€”doing full ECJ recompile");
             }
             if (!stalePaths.isEmpty()) {
                 Log.d(TAG, "Java source set changed: removed " + stalePaths.size()
-                        + " source file(s) â€?doing full ECJ recompile");
+                        + " source file(s) â€”doing full ECJ recompile");
             }
             for (String dirtyFilePath : dirtyFilePaths) {
                 deleteOldClassFiles(dirtyFilePath, cache);
