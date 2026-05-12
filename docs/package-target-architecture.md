@@ -29,59 +29,61 @@
 
 | 顶层包 | 文件 | 状态 |
 |--------|-----|------|
-| `pro/sketchware/` | 687 | **唯一业务命名空间** |
+`=| `pro/sketchware/` | 686 | **唯一业务命名空间** |
 | `com/bumptech/glide/signature/` | 1 | Glide 反射桥接（package-private 约束，永久保留） |
 | `mod/` | — | 不存在（v1 已清空） |
 | `kellinwood/` | — | 不存在（v2 已迁到 `pro.sketchware.third_party.kellinwood/`） |
 | `com/besome/sketch/` | — | 不存在（v2 已全部迁移） |
 
-### 0.3 pro.sketchware/ 一级子包（16 个 + 1 顶层文件）
+### 0.3 pro.sketchware/ 一级子包（11 个 + 1 顶层文件）
 
 | 包 | 文件 | 角色 |
 |----|-----|------|
-| `activities/` | 306 | 全部 Activity（按业务模块分子包） |
-| `core/` | 160 | 业务核心层（async / build / callback / codegen / ctrls / exception / fragments / project / ui / validation） |
+| `activities/` | 319 | 全部 Activity（按业务模块分子包） |
+| `core/` | 164 | 业务核心层（async / build / callback / codegen / exception / fragments / project / ui / validation） |
 | `util/` | 71 | 工具类（顶层 45 + 7 子包 26：apk/format/io/library/relativelayout/theme/xml） |
 | `third_party/` | 44 | vendored 第三方（kellinwood/） |
 | `beans/` | 32 | 跨包共享 POJO |
-| `widgets/` | 20 | UI 组件（含 widgets.base/ 抽象基类 4 个） |
+| `widgets/` | 22 | UI 组件（含 widgets.base/ 抽象基类 4 个 + spinner item 对） |
 | `lib/` | 13 | 编辑器子系统基础设施（code_editor/highlighter/iconcreator/base） |
-| `project/` | 13 | 项目实体（用户层项目设置/备份/ProGuard，**与 core.project 命名重影，候选拆散**） |
-| `dialogs/` | 8 | Dialog |
+| `dialogs/` | 9 | Dialog |
 | `tools/` | 5 | 非 Activity 工具类 |
 | `graphics/` | 5 | 图形处理（BitmapUtil/AnimationUtil/NinePatchDecoder/VectorDrawable*） |
-| `adapters/` | 2 | RecyclerView Adapter（候选并入 activities/<feature>） |
-| `blocks/` | 2 | 块相关（`ExtraBlocks` + 深层 `blocks.generator.components.analyzers.BlockReturnAnalyzer`） |
-| `control/` | 2 | 控件（候选拆到 dialogs/ 与 activities.editor.logic/） |
-| `menu/` | 2 | 菜单 bean（候选并入 beans/） |
 | `firebase/` | 1 | `FirebaseMessagingServiceImpl`（Manifest 锁定，保留原位） |
 | 顶层 | `SketchApplication.java` | 仅 Application 入口 |
 
-### 0.4 pro.sketchware.core 内部分布（160 文件）
+> **已解散顶层包（commit 链 `c3dd51b72` → `8e305b85f`）**：
+> - `menu/` (2) → `activities.editor.logic/`（ExtraMenuBean + DefaultExtraMenuBean）
+> - `control/` (2) → `dialogs/`（VersionDialog）与 `activities.editor.logic/`（LogicClickListener）
+> - `adapters/` (2) → 各自 caller 包（JavaFileAdapter→activities.design/，ProjectsAdapter→activities.main.fragments.projects/）
+> - `blocks/` (2) → `core.codegen/`（ExtraBlocks + BlockReturnAnalyzer）
+> - `project/` (13) → 拆到 `core.project/` (+4)、`activities.design/` (+4)、`activities.main.fragments.projects/` (+5，其中 CallBackTask 后续删除)
+> - `core.ctrls/` (2) → `widgets/`（CommonSpinnerItem + ViewIdSpinnerItem）
+
+### 0.4 pro.sketchware.core 内部分布（164 文件）
 
 | 子包 | 文件 |
 |------|-----|
-| `codegen/` | 39 |
+| `codegen/` | 41 |
+| `project/` | 30 |
 | `build/` | 29 |
-| `project/` | 26 |
 | `validation/` | 21 |
 | `fragments/` | 15 |
 | `ui/` | 12 |
 | `callback/` | 10 |
 | `exception/` | 4 |
 | `async/` | 2 |
-| `ctrls/` | 2 |
 
-### 0.5 pro.sketchware.activities.editor 内部分布（217 文件）
+### 0.5 pro.sketchware.activities.editor 内部分布（220 文件）
 
 | 子包 | 文件 |
 |------|-----|
 | `view/`（含 palette 52 + item 45 + 顶层 16） | 113 |
 | `manage/`（含 font 6 / image 4 / sound 4 / view 4 + library/ 子包 25 + 顶层 6） | 49 |
 | `property/` | 16 |
+| `logic/` | 8 |
 | `makeblock/` | 8 |
 | `component/` | 6 |
-| `logic/` | 5 |
 | `block/` | 3 |
 | `event/` | 2 |
 | `command/` | 2 |
@@ -118,38 +120,42 @@ Sketchware-Pro/
 │       └── pro/sketchware/
 │           ├── SketchApplication.java
 │           │
-│           ├── activities/                  # 306 文件
+│           ├── activities/                  # 319 文件
 │           │   ├── about/   appcompat/   base/
-│           │   ├── design/                  # 含 DesignActivity (80.3 KB) ←── P0c 目标
-│           │   ├── editor/                  # 217 文件
+│           │   ├── design/(7)               # 含 DesignActivity (80.3 KB) ←── P0c 目标
+│           │   │                            # + CustomBlocksDialog/Manager、ManageProguardActivity、ManageStringFogFragment、JavaFileAdapter
+│           │   ├── editor/                  # 220 文件
 │           │   │   ├── LogicEditorActivity.java    # 143.8 KB ←── P0b 目标
 │           │   │   ├── PropertyActivity.java
 │           │   │   ├── LogicEditorDrawer.java
 │           │   │   ├── block/   code/   command/   component/   event/
-│           │   │   ├── logic/(5)            # P0b 控制器入此包
+│           │   │   ├── logic/(8)            # P0b 控制器入此包；含 LogicClickListener、ExtraMenuBean、DefaultExtraMenuBean
 │           │   │   ├── makeblock/   manage/ (含 library/)   manifest/   property/   view/(113)
 │           │   ├── export/   help/   iconcreator/   importicon/
 │           │   ├── main/                    # 含 MainDrawer.java
+│           │   │   └── fragments/projects/(5)  # ProjectsFragment、ProjectsAdapter、BackupFactory、BackupRestoreManager、SingleCopyTask、ProjectSettingsDialog
 │           │   ├── preview/   projects/   resourceseditor/   settings/   tools/
 │           │
-│           ├── core/                        # 160 文件
-│           │   ├── async/(2)   build/(29)   callback/(10)   codegen/(39)
+│           ├── core/                        # 164 文件
+│           │   ├── async/(2)   build/(29)   callback/(10)   codegen/(41)
 │           │   │                            # ProjectBuilder.java (68.5 KB) ←── P1a 目标
 │           │   │                            # ProjectFilePaths.java (81.1 KB)
-│           │   ├── ctrls/(2)   exception/(4)   fragments/(15)
-│           │   ├── project/(26)             # ProjectDataStore.java (67.9 KB)
+│           │   │                            # codegen/ 含 ExtraBlocks、BlockReturnAnalyzer
+│           │   ├── exception/(4)   fragments/(15)
+│           │   ├── project/(30)             # ProjectDataStore.java (67.9 KB)
+│           │   │                            # + ProjectSettings、ProguardHandler、StringfogHandler、ProjectTracker
 │           │   ├── ui/(12)   validation/(21)
 │           │
-│           ├── adapters/(2)   beans/(32)   blocks/(2)   control/(2)
-│           ├── dialogs/(8)   firebase/(1)   graphics/(5)
+│           ├── beans/(32)
+│           ├── dialogs/(9)   firebase/(1)   graphics/(5)
 │           ├── lib/(13) — base/ code_editor/ highlighter/ iconcreator/
-│           ├── menu/(2)   project/(13)
 │           ├── third_party/                 # vendored 第三方
 │           │   └── kellinwood/(44)          # logging/ + security/zipsigner/ + zipio/
 │           ├── tools/(5)                    # 非 Activity 工具类
 │           ├── util/(71)                    # 顶层 45 + apk/format/io/library/relativelayout/theme/xml
-│           └── widgets/(20)
+│           └── widgets/(22)
 │               └── base/(4)                 # BaseWidget / CollapsibleLayout / CollapsibleViewHolder + package-info
+│                                            # 顶层 spinner item: CommonSpinnerItem、ViewIdSpinnerItem
 │
 ├── vendor-dx/                                # 已存在的 Gradle 子模块
 │   └── src/main/java/mod/agus/jcoderz/dx/
