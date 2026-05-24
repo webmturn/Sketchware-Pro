@@ -36,7 +36,7 @@ import java.util.Locale;
 
 import pro.sketchware.util.Helper;
 import pro.sketchware.util.AudioMetadata;
-import pro.sketchware.util.SoundPlayingAdapter;
+import pro.sketchware.activities.editor.manage.sound.SoundPlayingAdapter;
 import pro.sketchware.R;
 import pro.sketchware.databinding.FrManageSoundListBinding;
 import pro.sketchware.databinding.ManageSoundBinding;

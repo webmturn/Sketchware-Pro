@@ -1,4 +1,4 @@
-package pro.sketchware.util;
+package pro.sketchware.activities.editor.manage.sound;
 
 import android.media.MediaPlayer;
 import android.view.View;
@@ -18,7 +18,9 @@ import java.nio.file.Path;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import pro.sketchware.util.AudioMetadata;
 import pro.sketchware.util.Helper;
+import pro.sketchware.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.util.SketchwareUtil;
 
