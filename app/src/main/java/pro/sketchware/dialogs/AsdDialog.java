@@ -20,7 +20,7 @@ import io.github.rosemoe.sora.widget.component.EditorAutoCompletion;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.CodeEditorHsAsdBinding;
-import pro.sketchware.util.CodeEditorPreferences;
+import pro.sketchware.lib.code_editor.CodeEditorPreferences;
 import pro.sketchware.util.EditorUtils;
 import pro.sketchware.util.SketchwareUtil;
 

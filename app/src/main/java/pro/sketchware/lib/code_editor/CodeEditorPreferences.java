@@ -1,4 +1,4 @@
-package pro.sketchware.util;
+package pro.sketchware.lib.code_editor;
 
 import android.app.Activity;
 import android.content.Context;

@@ -24,7 +24,7 @@ import pro.sketchware.util.Helper;
 import pro.sketchware.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.databinding.SrcViewerBinding;
-import pro.sketchware.util.CodeEditorPreferences;
+import pro.sketchware.lib.code_editor.CodeEditorPreferences;
 import pro.sketchware.util.EditorUtils;
 import pro.sketchware.util.UI;
 

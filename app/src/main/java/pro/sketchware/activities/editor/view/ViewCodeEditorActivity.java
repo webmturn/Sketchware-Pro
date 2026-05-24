@@ -29,7 +29,7 @@ import pro.sketchware.activities.preview.LayoutPreviewActivity;
 import pro.sketchware.databinding.ViewCodeEditorBinding;
 import pro.sketchware.tools.InjectRootLayoutManager;
 import pro.sketchware.tools.ViewBeanParser;
-import pro.sketchware.util.CodeEditorPreferences;
+import pro.sketchware.lib.code_editor.CodeEditorPreferences;
 import pro.sketchware.util.EditorUtils;
 import pro.sketchware.util.SketchwareUtil;
 import pro.sketchware.util.relativelayout.CircularDependencyDetector;

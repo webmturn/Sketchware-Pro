@@ -54,7 +54,7 @@ import io.github.rosemoe.sora.widget.schemes.SchemeVS2019;
 import pro.sketchware.util.Helper;
 import pro.sketchware.lib.code_editor.CodeEditorColorSchemes;
 import pro.sketchware.lib.code_editor.CodeEditorLanguages;
-import pro.sketchware.util.CodeEditorPreferences;
+import pro.sketchware.lib.code_editor.CodeEditorPreferences;
 import pro.sketchware.R;
 import pro.sketchware.activities.preview.LayoutPreviewActivity;
 import pro.sketchware.databinding.CodeEditorHsBinding;
