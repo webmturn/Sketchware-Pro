@@ -23,7 +23,6 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.util.ArrayList;
 
 import pro.sketchware.core.validation.LengthRangeValidator;
-import pro.sketchware.core.ui.LibrarySettingsView;
 import pro.sketchware.util.SketchToast;
 import pro.sketchware.graphics.AnimationUtil;
 import pro.sketchware.util.ViewUtil;

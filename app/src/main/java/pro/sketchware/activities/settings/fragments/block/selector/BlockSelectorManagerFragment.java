@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import pro.sketchware.core.fragments.BaseFragment;
+import pro.sketchware.activities.base.BaseFragment;
 import dev.pranav.filepicker.FilePickerCallback;
 import dev.pranav.filepicker.FilePickerDialogFragment;
 import dev.pranav.filepicker.FilePickerOptions;
@@ -56,7 +56,7 @@ public class BlockSelectorManagerFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         configureToolbar(binding.toolbar);
 
-        adapter = new BlockSelectorAdapter((selector, index) -> openFragment(BlockSelectorDetailsFragment.newInstance(index, selectors)), (selector, index) -> showActionsDialog(index));
+        adapter = new BlockSelectorAdapter((selector, index) -> openFragment(R.id.settings_fragment_container, BlockSelectorDetailsFragment.newInstance(index, selectors)), (selector, index) -> showActionsDialog(index));
 
         if (FileUtil.isExistFile(BlockSelectorConsts.BLOCK_SELECTORS_FILE.getAbsolutePath())) {
             selectors = parseJson(FileUtil.readFile(BlockSelectorConsts.BLOCK_SELECTORS_FILE.getAbsolutePath()));

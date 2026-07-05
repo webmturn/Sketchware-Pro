@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 import pro.sketchware.beans.ProjectLibraryBean;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import pro.sketchware.core.ui.LibrarySettingsView;
 import pro.sketchware.util.SketchToast;
 import pro.sketchware.graphics.AnimationUtil;
 import pro.sketchware.util.Helper;

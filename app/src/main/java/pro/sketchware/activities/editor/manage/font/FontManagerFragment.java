@@ -23,7 +23,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import pro.sketchware.core.project.FontCollectionManager;
-import pro.sketchware.core.fragments.BaseFragment;
+import pro.sketchware.activities.base.BaseFragment;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.Helper;
 import pro.sketchware.util.LogUtil;

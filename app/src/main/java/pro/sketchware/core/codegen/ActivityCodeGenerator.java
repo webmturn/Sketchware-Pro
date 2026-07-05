@@ -634,7 +634,7 @@ public class ActivityCodeGenerator {
                 .replace("LinearLayoutManager(this,", "LinearLayoutManager(getApplicationContext(),");
 
         // Most Fragment-specific replacements are handled at generation time by CodeContext
-        // in BlockCodeRegistry, ComponentCodeGenerator, etc. However, Extra Blocks (BlocksHandler
+        // in BlockCodeRegistry, ComponentCodeGenerator, etc. However, Extra Blocks (built-in
         // and user-defined custom blocks) bypass CodeContext and use String.format() directly,
         // so we keep a fallback safety net for patterns they may produce.
         if (isFragment) {

@@ -39,7 +39,7 @@ import pro.sketchware.core.codegen.AppCompatInjection;
 import pro.sketchware.beans.ViewBeans;
 import pro.sketchware.util.LogUtil;
 import pro.sketchware.SketchApplication;
-import pro.sketchware.activities.resourceseditor.components.utils.ColorsEditorManager;
+import pro.sketchware.core.resources.ColorResourceResolver;
 import pro.sketchware.tools.InjectRootLayoutManager;
 import pro.sketchware.util.InjectAttributeHandler;
 import pro.sketchware.util.PropertiesUtil;
@@ -75,7 +75,7 @@ public class LayoutGenerator {
     private ArrayList<ViewBean> views;
     private XmlBuilder rootLayout = null;
     private XmlBuilder collapsingToolbarLayout = null;
-    private ColorsEditorManager colorsEditorManager;
+    private ColorResourceResolver colorResourceResolver;
     private boolean excludeAppCompat;
 
     public LayoutGenerator(BuildConfig buildConfig, ProjectFileBean projectFileBean) {
@@ -1259,10 +1259,10 @@ public class LayoutGenerator {
             return null;
         }
         try {
-            if (colorsEditorManager == null) {
-                colorsEditorManager = new ColorsEditorManager(buildConfig.sc_id);
+            if (colorResourceResolver == null) {
+                colorResourceResolver = new ColorResourceResolver(buildConfig.sc_id);
             }
-            return colorsEditorManager.resolveColorInt(SketchApplication.getContext(), backgroundValue, 4);
+            return colorResourceResolver.resolveColorInt(SketchApplication.getContext(), backgroundValue, 4);
         } catch (Exception e) {
             LogUtil.e("LayoutGenerator", "Failed to resolve background color for outline detection", e);
             return null;

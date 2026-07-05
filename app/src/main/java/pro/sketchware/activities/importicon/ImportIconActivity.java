@@ -54,7 +54,7 @@ import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.activities.importicon.adapters.IconAdapter;
-import pro.sketchware.activities.resourceseditor.components.utils.ColorsEditorManager;
+import pro.sketchware.core.resources.ColorResourceResolver;
 import pro.sketchware.databinding.DialogFilterIconsLayoutBinding;
 import pro.sketchware.databinding.DialogSaveIconBinding;
 import pro.sketchware.databinding.ImportIconBinding;
@@ -321,7 +321,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
             });
             colorPicker.materialColorAttr((attr, attrColor) -> {
                 attr = "?attr/" + attr;
-                selected_color = PropertiesUtil.parseColor(new ColorsEditorManager().getColorValue(getApplicationContext(), attr, 3));
+                selected_color = PropertiesUtil.parseColor(new ColorResourceResolver(sc_id).getColorValue(getApplicationContext(), attr, 3));
                 selected_color_hex = attr;
                 dialogBinding.selectColour.setText(selected_color_hex);
                 adapter.setSelectedColor(selected_color);

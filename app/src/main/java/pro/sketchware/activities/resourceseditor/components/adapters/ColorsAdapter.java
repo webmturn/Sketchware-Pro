@@ -12,8 +12,8 @@ import java.util.HashMap;
 import java.util.stream.Collectors;
 
 import pro.sketchware.activities.resourceseditor.ResourcesEditorActivity;
-import pro.sketchware.activities.resourceseditor.components.models.ColorModel;
 import pro.sketchware.activities.resourceseditor.components.utils.ColorsEditorManager;
+import pro.sketchware.core.resources.ColorModel;
 import pro.sketchware.databinding.PalletCustomviewBinding;
 import pro.sketchware.util.PropertiesUtil;
 

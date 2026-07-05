@@ -21,10 +21,10 @@ import java.lang.ref.WeakReference;
 import pro.sketchware.core.async.BackgroundTasks;
 import pro.sketchware.util.SketchToast;
 import pro.sketchware.core.project.SoundCollectionManager;
-import pro.sketchware.core.fragments.SoundImportFragment;
+import pro.sketchware.activities.editor.manage.sound.fragments.SoundImportFragment;
 import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.util.UIHelper;
-import pro.sketchware.core.fragments.SoundListFragment;
+import pro.sketchware.activities.editor.manage.sound.fragments.SoundListFragment;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageSoundBinding;
 

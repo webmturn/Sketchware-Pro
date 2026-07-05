@@ -18,7 +18,7 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import pro.sketchware.core.fragments.BaseFragment;
+import pro.sketchware.activities.base.BaseFragment;
 import pro.sketchware.util.Helper;
 import pro.sketchware.core.project.OldResourceIdMapper;
 import pro.sketchware.beans.CustomEvent;
@@ -72,7 +72,7 @@ public class EventsManagerDetailsFragment extends BaseFragment {
             args.putString("lis_name", listName);
             EventsManagerCreatorFragment fragment = new EventsManagerCreatorFragment();
             fragment.setArguments(args);
-            openFragment(fragment);
+            openFragment(R.id.settings_fragment_container, fragment);
         });
         refreshList();
         UI.addSystemWindowInsetToPadding(binding.appBarLayout, true, true, true, true);
@@ -191,7 +191,7 @@ public class EventsManagerDetailsFragment extends BaseFragment {
                 args.putString("_code", item.getCode());
                 EventsManagerCreatorFragment fragment = new EventsManagerCreatorFragment();
                 fragment.setArguments(args);
-                openFragment(fragment);
+                openFragment(R.id.settings_fragment_container, fragment);
             });
             holder.itemView.setOnLongClickListener(v -> {
                 new MaterialAlertDialogBuilder(requireContext())
@@ -213,7 +213,7 @@ public class EventsManagerDetailsFragment extends BaseFragment {
                             args.putString("_code", item.getCode());
                             EventsManagerCreatorFragment fragment = new EventsManagerCreatorFragment();
                             fragment.setArguments(args);
-                            openFragment(fragment);
+                            openFragment(R.id.settings_fragment_container, fragment);
                         })
                         .setNegativeButton(R.string.common_word_cancel, (di, i) -> di.dismiss())
                         .show();

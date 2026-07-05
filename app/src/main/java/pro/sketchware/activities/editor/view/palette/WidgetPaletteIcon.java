@@ -1,0 +1,39 @@
+package pro.sketchware.activities.editor.view.palette;
+
+import android.content.Context;
+
+import pro.sketchware.beans.ViewBean;
+
+import java.util.ArrayList;
+
+public class WidgetPaletteIcon extends IconBase {
+    private final String widgetName;
+    private final ArrayList<ViewBean> viewBeans;
+
+    public WidgetPaletteIcon(Context context, String widgetName, ArrayList<ViewBean> viewBeans) {
+        super(context);
+        this.widgetName = widgetName;
+        this.viewBeans = viewBeans;
+        initialize();
+    }
+
+    private void initialize() {
+        setWidgetNameTextSize(11);
+        setWidgetName(widgetName);
+        setWidgetImage(ViewBean.getViewTypeResId(viewBeans.get(0).type));
+    }
+
+    @Override
+    public ViewBean getBean() {
+        return viewBeans.get(0);
+    }
+
+    public ArrayList<ViewBean> getData() {
+        return viewBeans;
+    }
+
+    @Override
+    public String getName() {
+        return widgetName;
+    }
+}

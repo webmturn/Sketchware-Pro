@@ -116,7 +116,7 @@ import pro.sketchware.core.project.BlockConstants;
 import pro.sketchware.util.ViewUtil;
 import pro.sketchware.core.codegen.StringResource;
 import pro.sketchware.core.build.ProjectFilePaths;
-import pro.sketchware.core.codegen.ExtraPaletteBlock;
+import pro.sketchware.activities.editor.logic.ExtraPaletteBlock;
 import pro.sketchware.graphics.VectorDrawableLoader;
 import pro.sketchware.util.IdGenerator;
 import pro.sketchware.activities.editor.makeblock.ReturnMoreblockManager;

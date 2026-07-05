@@ -15,7 +15,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
 
-import pro.sketchware.core.fragments.BaseFragment;
+import pro.sketchware.activities.base.BaseFragment;
 import pro.sketchware.activities.settings.fragments.events.EventsManagerConstants;
 import pro.sketchware.util.Helper;
 import pro.sketchware.beans.CustomEvent;

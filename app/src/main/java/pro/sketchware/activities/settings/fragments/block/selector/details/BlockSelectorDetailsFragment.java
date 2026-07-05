@@ -18,7 +18,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-import pro.sketchware.core.fragments.BaseFragment;
+import pro.sketchware.activities.base.BaseFragment;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.DialogAddCustomActivityBinding;

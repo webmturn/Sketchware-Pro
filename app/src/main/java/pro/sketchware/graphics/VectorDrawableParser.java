@@ -15,7 +15,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.SketchApplication;
-import pro.sketchware.activities.resourceseditor.components.utils.ColorsEditorManager;
+import pro.sketchware.core.resources.ColorResourceResolver;
 import pro.sketchware.util.FileUtil;
 
 public class VectorDrawableParser {
@@ -285,8 +285,9 @@ public class VectorDrawableParser {
     private final ArrayList<Path> paths = new ArrayList<>();
     private final ArrayList<ClipPath> clipPaths = new ArrayList<>();
 
-    private ColorsEditorManager colors;
+    private ColorResourceResolver colors;
     private String colorsXmlPath = "";
+    private String loadedColorsXmlPath = "";
 
     public VectorDrawableParser(String vectorDrawableAsString) {
         if (!isValidVector(vectorDrawableAsString)) {
@@ -380,10 +381,13 @@ public class VectorDrawableParser {
         }
     }
 
-    private ColorsEditorManager colors() {
-        if (colors == null) colors = new ColorsEditorManager();
+    private ColorResourceResolver colors() {
+        if (colors == null) colors = new ColorResourceResolver(sc_id);
         ensureColorsXmlPath();
-        if (!isEmpty(colorsXmlPath)) colors.contentPath = colorsXmlPath;
+        if (!isEmpty(colorsXmlPath) && !colorsXmlPath.equals(loadedColorsXmlPath)) {
+            colors.loadColorsFromPath(colorsXmlPath, false);
+            loadedColorsXmlPath = colorsXmlPath;
+        }
         return colors;
     }
 

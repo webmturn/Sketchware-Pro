@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import pro.sketchware.core.validation.UniqueNameValidator;
-import pro.sketchware.core.ui.LibrarySettingsView;
 import pro.sketchware.util.SketchToast;
 import pro.sketchware.graphics.AnimationUtil;
 import pro.sketchware.util.ViewUtil;

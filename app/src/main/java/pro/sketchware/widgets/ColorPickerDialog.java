@@ -35,8 +35,8 @@ import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.build.ProjectFilePaths;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
-import pro.sketchware.activities.resourceseditor.components.models.ColorModel;
-import pro.sketchware.activities.resourceseditor.components.utils.ColorsEditorManager;
+import pro.sketchware.core.resources.ColorModel;
+import pro.sketchware.core.resources.ColorResourceResolver;
 import pro.sketchware.databinding.ColorPickerBinding;
 import pro.sketchware.databinding.ColorPickerCustomAttrBinding;
 import pro.sketchware.databinding.ColorPickerSimpleHexBinding;
@@ -66,7 +66,7 @@ public class ColorPickerDialog extends PopupWindow {
     private boolean hasMaterialColors;
     private Material3LibraryManager material3LibraryManager;
     private ProjectFilePaths projectFilePaths;
-    private ColorsEditorManager colorsEditorManager;
+    private ColorResourceResolver colorResourceResolver;
 
     public ColorPickerDialog(Activity activity, int color, boolean isTransparentColor, boolean isNoneColor) {
         super(activity);
@@ -81,7 +81,7 @@ public class ColorPickerDialog extends PopupWindow {
         projectFilePaths = new ProjectFilePaths(activity, sc_id);
         projectFilePaths.initializeMetadata(ProjectDataManager.getLibraryManager(sc_id), ProjectDataManager.getFileManager(sc_id), ProjectDataManager.getProjectDataManager(sc_id), pro.sketchware.core.build.ProjectFilePaths.ExportType.SOURCE_CODE_VIEWING);
         material3LibraryManager = new Material3LibraryManager(scId);
-        colorsEditorManager = new ColorsEditorManager();
+        colorResourceResolver = new ColorResourceResolver(scId);
         hasMaterialColors = true;
         initialize(activity, color, isTransparentColor, isNoneColor);
     }
@@ -302,7 +302,7 @@ public class ColorPickerDialog extends PopupWindow {
                     return;
                 }
 
-                Integer lightColorValue = colorsEditorManager.getColorIntFromAttrs(activity, input, 1, false);
+                Integer lightColorValue = colorResourceResolver.getColorIntFromAttrs(activity, input, 1, false);
 
                 if (lightColorValue == null) {
                     dialogBinding.inputLayout.setError(Helper.getResString(R.string.unknown_attr));
@@ -310,7 +310,7 @@ public class ColorPickerDialog extends PopupWindow {
                 }
                 dialogBinding.inputLayout.setError(null);
                 int lightColor = lightColorValue;
-                Integer darkColorValue = colorsEditorManager.getColorIntFromAttrs(activity, input, 1, true);
+                Integer darkColorValue = colorResourceResolver.getColorIntFromAttrs(activity, input, 1, true);
                 int darkColor = darkColorValue != null ? darkColorValue : lightColor;
 
                 // viewBinding don't support include , so here we should use findViewById
@@ -575,8 +575,8 @@ public class ColorPickerDialog extends PopupWindow {
         ArrayList<ColorModel> colorList = new ArrayList<>();
         ArrayList<ColorModel> colorNightList = new ArrayList<>();
 
-        colorsEditorManager.parseColorsXML(colorList, projectFilePaths.getXMLColor());
-        colorsEditorManager.parseColorsXML(colorNightList, FileUtil.readFileIfExist(fileNightPath));
+        colorResourceResolver.parseColorsXML(colorList, projectFilePaths.getXMLColor());
+        colorResourceResolver.parseColorsXML(colorNightList, FileUtil.readFileIfExist(fileNightPath));
 
         HashMap<String, String> nightColorsMap = new HashMap<>();
         for (ColorModel nightColorModel : colorNightList) {
@@ -584,10 +584,10 @@ public class ColorPickerDialog extends PopupWindow {
         }
 
         for (ColorModel colorModel : colorList) {
-            int color = PropertiesUtil.parseColor(colorsEditorManager.getColorValue(activity.getApplicationContext(), colorModel.getColorValue(), 3));
+            int color = PropertiesUtil.parseColor(colorResourceResolver.getColorValue(activity.getApplicationContext(), colorModel.getColorValue(), 3));
             int colorNight;
             if (nightColorsMap.containsKey(colorModel.getColorName())) {
-                colorNight = PropertiesUtil.parseColor(colorsEditorManager.getColorValue(activity.getApplicationContext(), nightColorsMap.get(colorModel.getColorName()), 3, true));
+                colorNight = PropertiesUtil.parseColor(colorResourceResolver.getColorValue(activity.getApplicationContext(), nightColorsMap.get(colorModel.getColorName()), 3, true));
             } else {
                 colorNight = -1;
             }
@@ -724,8 +724,8 @@ public class ColorPickerDialog extends PopupWindow {
             Attribute attribute = attributeList.get(position);
             holder.binding.tvAttrName.setText(attribute.name());
 
-            int lightColor = PropertiesUtil.parseColor(colorsEditorManager.getColorValueFromAttrs(activity, attribute.name(), 1, false));
-            int darkColor = PropertiesUtil.parseColor(colorsEditorManager.getColorValueFromAttrs(activity, attribute.name(), 1, true));
+            int lightColor = PropertiesUtil.parseColor(colorResourceResolver.getColorValueFromAttrs(activity, attribute.name(), 1, false));
+            int darkColor = PropertiesUtil.parseColor(colorResourceResolver.getColorValueFromAttrs(activity, attribute.name(), 1, true));
 
             holder.binding.darkContainer.setBackgroundColor(darkColor);
             holder.binding.lightContainer.setBackgroundColor(lightColor);

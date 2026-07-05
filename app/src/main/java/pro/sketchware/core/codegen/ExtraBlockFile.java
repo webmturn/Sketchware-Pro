@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import pro.sketchware.util.Helper;
-import pro.sketchware.core.codegen.BlocksHandler;
+import pro.sketchware.core.codegen.BuiltInBlockDefinitions;
 import pro.sketchware.R;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.FileUtil;
@@ -74,7 +74,7 @@ public class ExtraBlockFile {
         }
 
         buildInBlocks.clear();
-        BlocksHandler.builtInBlocks(buildInBlocks);
+        BuiltInBlockDefinitions.builtInBlocks(buildInBlocks);
         extraBlocks.addAll(buildInBlocks);
 
         cachedExtraBlocks.addAll(extraBlocks);

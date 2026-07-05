@@ -41,7 +41,7 @@ import pro.sketchware.activities.resourceseditor.components.fragments.DimensEdit
 import pro.sketchware.activities.resourceseditor.components.fragments.StringsEditor;
 import pro.sketchware.activities.resourceseditor.components.fragments.StylesEditor;
 import pro.sketchware.activities.resourceseditor.components.fragments.ThemesEditor;
-import pro.sketchware.activities.resourceseditor.components.models.ColorModel;
+import pro.sketchware.core.resources.ColorModel;
 import pro.sketchware.databinding.ResourcesEditorImportDialogBinding;
 import pro.sketchware.databinding.ResourcesEditorsActivityBinding;
 import pro.sketchware.databinding.ResourcesVariantSelectorDialogBinding;

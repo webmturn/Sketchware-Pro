@@ -12,7 +12,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 
-import pro.sketchware.core.ui.PresetLayoutFactory;
+import pro.sketchware.activities.editor.manage.view.PresetLayoutFactory;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 

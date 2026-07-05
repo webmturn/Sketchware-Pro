@@ -10,7 +10,7 @@ import pro.sketchware.widgets.CustomScrollView;
 
 import java.util.ArrayList;
 
-import pro.sketchware.core.ui.WidgetPaletteIcon;
+import pro.sketchware.activities.editor.view.palette.WidgetPaletteIcon;
 import pro.sketchware.util.ViewUtil;
 import pro.sketchware.R;
 

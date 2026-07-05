@@ -44,7 +44,7 @@ import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.BuildConfig;
 import pro.sketchware.util.UIHelper;
 import pro.sketchware.core.codegen.EventRegistry;
-import pro.sketchware.core.fragments.EventListFragment;
+import pro.sketchware.activities.design.fragments.EventListFragment;
 import pro.sketchware.util.ViewUtil;
 import pro.sketchware.R;
 import pro.sketchware.util.UI;

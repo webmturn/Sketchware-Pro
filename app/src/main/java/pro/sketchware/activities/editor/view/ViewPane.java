@@ -109,7 +109,7 @@ import pro.sketchware.graphics.VectorDrawableLoader;
 import pro.sketchware.util.ProjectFile;
 import pro.sketchware.util.LogUtil;
 import pro.sketchware.R;
-import pro.sketchware.activities.resourceseditor.components.utils.ColorsEditorManager;
+import pro.sketchware.core.resources.ColorResourceResolver;
 import pro.sketchware.activities.resourceseditor.components.utils.StringsEditorManager;
 import pro.sketchware.tools.InjectRootLayoutManager;
 import pro.sketchware.util.FilePathUtil;
@@ -133,7 +133,7 @@ public class ViewPane extends RelativeLayout {
     private ResourceManager resourcesManager;
     private String sc_id;
     private SvgUtils svgUtils;
-    private ColorsEditorManager colorsEditorManager;
+    private ColorResourceResolver colorResourceResolver;
     private int defaultTextColor = 0; // need to save the original color before changes, cause using getDefaultColor() returns the current text color
     private int defaultHintColor = 0;
     private Material3LibraryManager material3LibraryManager;
@@ -234,7 +234,7 @@ public class ViewPane extends RelativeLayout {
     public void initialize(String sc_id, boolean isPreviewMode) {
         this.sc_id = sc_id;
         material3LibraryManager = new Material3LibraryManager(getContext(), sc_id);
-        colorsEditorManager = new ColorsEditorManager();
+        colorResourceResolver = new ColorResourceResolver(sc_id);
         int viewEditorThemeOverlay = material3LibraryManager.getViewEditorThemeOverlay();
         context = new ContextThemeWrapper(getContext(), viewEditorThemeOverlay);
         svgUtils = new SvgUtils(context);
@@ -1161,7 +1161,7 @@ public class ViewPane extends RelativeLayout {
                 view.setBackgroundColor(bg);
             }
         } else {
-            view.setBackgroundColor(PropertiesUtil.parseColor(colorsEditorManager.getColorValue(context, viewBean.layout.backgroundResColor, 3, material3LibraryManager.canUseNightVariantColors())));
+            view.setBackgroundColor(PropertiesUtil.parseColor(colorResourceResolver.getColorValue(context, viewBean.layout.backgroundResColor, 3, material3LibraryManager.canUseNightVariantColors())));
         }
         if (viewBean.parentType == ViewBean.VIEW_TYPE_LAYOUT_LINEAR) {
             LinearLayout.LayoutParams layoutParams2 = new LinearLayout.LayoutParams(width, height);
@@ -1410,7 +1410,7 @@ public class ViewPane extends RelativeLayout {
                     viewBean.text.textColor == 0xffffff ? defaultTextColor : viewBean.text.textColor
             );
         } else {
-            textView.setTextColor(PropertiesUtil.parseColor(colorsEditorManager.getColorValue(context, viewBean.text.resTextColor, 3, material3LibraryManager.canUseNightVariantColors())));
+            textView.setTextColor(PropertiesUtil.parseColor(colorResourceResolver.getColorValue(context, viewBean.text.resTextColor, 3, material3LibraryManager.canUseNightVariantColors())));
         }
         textView.setTextSize(viewBean.text.textSize);
         textView.setLines(viewBean.text.line);
@@ -1459,7 +1459,7 @@ public class ViewPane extends RelativeLayout {
                     viewBean.text.hintColor == 0xffffff ? defaultHintColor : viewBean.text.hintColor
             );
         } else {
-            editText.setHintTextColor(PropertiesUtil.parseColor(colorsEditorManager.getColorValue(context, viewBean.text.resHintColor, 3, material3LibraryManager.canUseNightVariantColors())));
+            editText.setHintTextColor(PropertiesUtil.parseColor(colorResourceResolver.getColorValue(context, viewBean.text.resHintColor, 3, material3LibraryManager.canUseNightVariantColors())));
         }
     }
 
@@ -1476,10 +1476,10 @@ public class ViewPane extends RelativeLayout {
             if (bean.layout.backgroundResColor == null) {
                 cardView.setCardBackgroundColor(bean.layout.backgroundColor);
             } else {
-                cardView.setCardBackgroundColor(PropertiesUtil.parseColor(colorsEditorManager.getColorValue(context, bean.layout.backgroundResColor, 3, material3LibraryManager.canUseNightVariantColors())));
+                cardView.setCardBackgroundColor(PropertiesUtil.parseColor(colorResourceResolver.getColorValue(context, bean.layout.backgroundResColor, 3, material3LibraryManager.canUseNightVariantColors())));
             }
         } else {
-            cardView.setCardBackgroundColor(PropertiesUtil.parseColor(colorsEditorManager.getColorValue(context, cardBackgroundColor, 3, material3LibraryManager.canUseNightVariantColors())));
+            cardView.setCardBackgroundColor(PropertiesUtil.parseColor(colorResourceResolver.getColorValue(context, cardBackgroundColor, 3, material3LibraryManager.canUseNightVariantColors())));
         }
 
         int fallbackElevation = bean.layout.elevation > 0 ? bean.layout.elevation : 4;
@@ -1532,7 +1532,7 @@ public class ViewPane extends RelativeLayout {
         String radius = handler.getAttributeValueOf("cornerRadius");
         String stroke = handler.getAttributeValueOf("strokeWidth");
         if (!backgroundTint.isEmpty()) {
-            Integer tintColor = colorsEditorManager.resolveColorInt(context, backgroundTint, 3, material3LibraryManager.canUseNightVariantColors());
+            Integer tintColor = colorResourceResolver.resolveColorInt(context, backgroundTint, 3, material3LibraryManager.canUseNightVariantColors());
             if (tintColor != null) {
                 materialButton.setBackgroundTintList(ColorStateList.valueOf(tintColor));
             }

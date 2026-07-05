@@ -40,14 +40,14 @@ import java.util.Iterator;
 
 import pro.sketchware.core.async.BackgroundTasks;
 import pro.sketchware.core.exception.SketchwareException;
-import pro.sketchware.core.fragments.ViewFilesFragment;
+import pro.sketchware.activities.editor.manage.view.fragments.ViewFilesFragment;
 import pro.sketchware.util.SketchToast;
 import pro.sketchware.core.project.ProjectDataStore;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.util.UIHelper;
 import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.core.fragments.ViewFilesAdapter;
+import pro.sketchware.activities.editor.manage.view.fragments.CustomViewFilesFragment;
 import pro.sketchware.R;
 
 public class ManageViewActivity extends BaseAppCompatActivity implements OnClickListener, ViewPager.OnPageChangeListener {
@@ -64,7 +64,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
     private boolean selecting = false;
     private String isAppCompatEnabled = "N";
     private ViewFilesFragment activitiesFragment;
-    private ViewFilesAdapter customViewsFragment;
+    private CustomViewFilesFragment customViewsFragment;
     private ViewPager viewPager;
     private String sc_id;
 
@@ -409,7 +409,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
             Fragment fragment = (Fragment) super.instantiateItem(container, position);
             if (position != 0) {
-                customViewsFragment = (ViewFilesAdapter) fragment;
+                customViewsFragment = (CustomViewFilesFragment) fragment;
             } else {
                 activitiesFragment = (ViewFilesFragment) fragment;
             }
@@ -420,7 +420,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
         @Override
         @NonNull
         public Fragment getItem(int position) {
-            return position != 0 ? new ViewFilesAdapter() : new ViewFilesFragment();
+            return position != 0 ? new CustomViewFilesFragment() : new ViewFilesFragment();
         }
     }
 }

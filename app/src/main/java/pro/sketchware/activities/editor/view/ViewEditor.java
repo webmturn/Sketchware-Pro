@@ -59,7 +59,7 @@ import pro.sketchware.core.project.ViewHistoryManager;
 import pro.sketchware.core.callback.BuildCallback;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.util.io.EncryptedFileUtil;
-import pro.sketchware.core.ui.WidgetPaletteIcon;
+import pro.sketchware.activities.editor.view.palette.WidgetPaletteIcon;
 import pro.sketchware.util.ViewUtil;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.beans.ViewBeans;
@@ -69,7 +69,7 @@ import pro.sketchware.R;
 import pro.sketchware.util.ThemeUtils;
 import pro.sketchware.util.UI;
 import pro.sketchware.widgets.IconCustomWidget;
-import pro.sketchware.widgets.WidgetsCreatorManager;
+import pro.sketchware.activities.editor.view.palette.WidgetsCreatorManager;
 
 @SuppressLint({"ClickableViewAccessibility", "SetTextI18n"})
 public class ViewEditor extends RelativeLayout implements View.OnTouchListener {

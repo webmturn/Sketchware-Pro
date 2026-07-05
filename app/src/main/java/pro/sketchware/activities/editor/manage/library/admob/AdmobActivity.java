@@ -16,7 +16,6 @@ import pro.sketchware.activities.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import pro.sketchware.util.DeviceUtil;
-import pro.sketchware.core.ui.LibrarySettingsView;
 import pro.sketchware.util.SketchToast;
 import pro.sketchware.core.project.LibraryManager;
 import pro.sketchware.util.UIHelper;

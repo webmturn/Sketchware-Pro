@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.util.io.EncryptedFileUtil;
-import pro.sketchware.core.fragments.BaseFragment;
+import pro.sketchware.activities.base.BaseFragment;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.FrManageFontListBinding;

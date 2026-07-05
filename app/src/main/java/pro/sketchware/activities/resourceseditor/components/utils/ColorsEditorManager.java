@@ -3,18 +3,6 @@ package pro.sketchware.activities.resourceseditor.components.utils;
 import static pro.sketchware.activities.design.DesignActivity.sc_id;
 import static pro.sketchware.util.ProjectFile.getDefaultColor;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.ContextWrapper;
-import android.graphics.Color;
-import android.util.Log;
-import android.view.ContextThemeWrapper;
-
-import androidx.core.content.ContextCompat;
-
-import pro.sketchware.util.library.Material3LibraryManager;
-import com.google.android.material.color.MaterialColors;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -32,158 +20,28 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import pro.sketchware.core.project.ProjectListManager;
 import pro.sketchware.core.project.SketchwarePaths;
+import pro.sketchware.core.resources.ColorModel;
+import pro.sketchware.core.resources.ColorResourceResolver;
 import pro.sketchware.util.MapValueHelper;
-import pro.sketchware.R;
 import pro.sketchware.SketchApplication;
-import pro.sketchware.activities.resourceseditor.components.models.ColorModel;
-import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.PropertiesUtil;
 import pro.sketchware.util.XmlUtil;
 
-@SuppressLint("DiscouragedApi")
-public class ColorsEditorManager {
+public class ColorsEditorManager extends ColorResourceResolver {
 
     public String contentPath;
     public boolean isDataLoadingFailed;
     public boolean isDefaultVariant = true;
-    public final String defaultHexColor = "#00000000";
 
     public HashMap<String, String> defaultColors;
     public HashMap<Integer, String> notesMap = new HashMap<>();
-    private final ArrayList<ColorModel> resColorsList = new ArrayList<>();
-    private final ArrayList<ColorModel> resColorsNightList = new ArrayList<>();
-
-    private final String projectId;
-    private final Material3LibraryManager material3LibraryManager;
 
     public ColorsEditorManager() {
         this(sc_id);
     }
 
     public ColorsEditorManager(String projectId) {
-        this.projectId = projectId;
-        material3LibraryManager = new Material3LibraryManager(projectId);
-        initialize();
-    }
-
-    public void initialize() {
-        String filePath = SketchwarePaths.getDataPath(projectId) + "/files/resource/values/colors.xml";
-        String filePathNight = SketchwarePaths.getDataPath(projectId) + "/files/resource/values-night/colors.xml";
-        parseColorsXML(resColorsList, FileUtil.readFileIfExist(filePath));
-        parseColorsXML(resColorsNightList, FileUtil.readFileIfExist(filePathNight));
-    }
-
-    public ArrayList<ColorModel> getResColorsList() {
-        return resColorsList;
-    }
-
-    public String getColorValue(Context context, String colorValue, int referencingLimit) {
-        return getColorValue(context, colorValue, referencingLimit, false);
-    }
-
-    public String getColorValue(Context context, String colorValue, int referencingLimit, boolean isNightVariant) {
-        Integer resolvedColor = resolveColorInt(context, colorValue, referencingLimit, isNightVariant);
-        return resolvedColor != null ? formatColor(resolvedColor) : defaultHexColor;
-    }
-
-    public Integer resolveColorInt(Context context, String colorValue, int referencingLimit) {
-        return resolveColorInt(context, colorValue, referencingLimit, false);
-    }
-
-    public Integer resolveColorInt(Context context, String colorValue, int referencingLimit, boolean isNightVariant) {
-        if (colorValue == null || referencingLimit <= 0) {
-            return null;
-        }
-
-        if (colorValue.startsWith("#")) {
-            return PropertiesUtil.isHexColor(colorValue) ? PropertiesUtil.parseColor(colorValue) : null;
-        }
-        if (colorValue.startsWith("?attr/") || colorValue.startsWith("?")) {
-            String attrName = colorValue.startsWith("?attr/") ? colorValue.substring(6) : colorValue.substring(1);
-            return getColorIntFromAttrs(context, attrName, referencingLimit - 1, isNightVariant);
-        }
-        if (colorValue.startsWith("@color/")) {
-            return getColorIntFromXml(context, colorValue.substring(7), referencingLimit - 1, isNightVariant);
-        } else if (colorValue.startsWith("@android:color/")) {
-            return getColorIntFromSystem(colorValue, context);
-        }
-        return null;
-    }
-
-    private String formatColor(int colorInt) {
-        return Color.alpha(colorInt) != 0xFF
-                ? String.format("#%08X", colorInt)
-                : String.format("#%06X", (0xFFFFFF & colorInt));
-    }
-
-    public String getColorValueFromAttrs(Context context, String attrName, int referencingLimit, boolean isNightVariant) {
-        Integer resolvedColor = getColorIntFromAttrs(context, attrName, referencingLimit, isNightVariant);
-        return resolvedColor != null ? formatColor(resolvedColor) : defaultHexColor;
-    }
-
-    public Integer getColorIntFromAttrs(Context context, String attrName, int referencingLimit, boolean isNightVariant) {
-        try {
-            int attrId = context.getResources().getIdentifier(attrName, "attr", context.getPackageName());
-
-            if (attrId != 0 && referencingLimit > 0) {
-                Context themedContext;
-                if (isNightVariant) {
-                    if (material3LibraryManager.isDynamicColorsEnabled()) {
-                        themedContext = new ContextThemeWrapper(context, R.style.ThemeOverlay_SketchwarePro_ViewEditor_Material3_Dark);
-                    } else {
-                        themedContext = new ContextThemeWrapper(context, R.style.ThemeOverlay_SketchwarePro_ViewEditor_Material3_NON_DYNAMIC_Dark);
-                    }
-                } else {
-                    if (material3LibraryManager.isDynamicColorsEnabled()) {
-                        themedContext = new ContextThemeWrapper(context, R.style.ThemeOverlay_SketchwarePro_ViewEditor_Material3_Light);
-                    } else {
-                        themedContext = new ContextThemeWrapper(context, R.style.ThemeOverlay_SketchwarePro_ViewEditor_Material3_NON_DYNAMIC_Light);
-                    }
-                }
-                return MaterialColors.getColor(themedContext, attrId, "getColorValue");
-            }
-        } catch (Exception e) {
-            Log.w("ColorsEditorManager", "Failed to get Material color for attribute: " + attrName, e);
-        }
-        return null;
-    }
-
-    private Integer getColorIntFromSystem(String colorValue, Context context) {
-        String colorName = colorValue.substring(15);
-        int colorId = context.getResources().getIdentifier(colorName, "color", "android");
-        if (colorId == 0) {
-            return null;
-        }
-        try {
-            return ContextCompat.getColor(context, colorId);
-        } catch (android.content.res.Resources.NotFoundException e) {
-            return null;
-        }
-    }
-
-    private Integer getColorIntFromXml(Context context, String colorName, int referencingLimit, boolean isNightVariant) {
-        if (isNightVariant) {
-            for (ColorModel colorModel : resColorsNightList) {
-                if (colorModel.getColorName().equals(colorName)) {
-                    return resolveColorInt(context, colorModel.getColorValue(), referencingLimit, true);
-                }
-            }
-
-            for (ColorModel colorModel : resColorsList) {
-                if (colorModel.getColorName().equals(colorName)) {
-                    return resolveColorInt(context, colorModel.getColorValue(), referencingLimit, true);
-                }
-            }
-
-        } else {
-            for (ColorModel colorModel : resColorsList) {
-                if (colorModel.getColorName().equals(colorName)) {
-                    return resolveColorInt(context, colorModel.getColorValue(), referencingLimit, false);
-                }
-            }
-        }
-
-        return null;
+        super(projectId);
     }
 
     public void parseColorsXML(ArrayList<ColorModel> colorList, String colorXml) {
@@ -229,8 +87,8 @@ public class ColorsEditorManager {
                 }
             }
 
-            if (isDefaultVariant && defaultColors != null && projectId != null) {
-                HashMap<String, Object> metadata = ProjectListManager.getProjectById(projectId);
+            if (isDefaultVariant && defaultColors != null && getProjectId() != null) {
+                HashMap<String, Object> metadata = ProjectListManager.getProjectById(getProjectId());
                 Set<String> missingKeys = new HashSet<>(defaultColors.keySet());
                 foundPrimaryColors.forEach(missingKeys::remove);
 
@@ -256,7 +114,7 @@ public class ColorsEditorManager {
 
             // Save the updated XML if changes are detected
             if (hasChanges) {
-                XmlUtil.saveXml(SketchwarePaths.getDataPath(projectId) + "/files/resource/values/colors.xml", convertListToXml(colorList, notesMap));
+                XmlUtil.saveXml(SketchwarePaths.getDataPath(getProjectId()) + "/files/resource/values/colors.xml", convertListToXml(colorList, notesMap));
             }
 
         } catch (Exception e) {

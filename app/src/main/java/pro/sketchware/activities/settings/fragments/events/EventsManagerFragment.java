@@ -22,7 +22,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import pro.sketchware.core.fragments.BaseFragment;
+import pro.sketchware.activities.base.BaseFragment;
 import dev.pranav.filepicker.FilePickerCallback;
 import dev.pranav.filepicker.FilePickerDialogFragment;
 import dev.pranav.filepicker.FilePickerOptions;
@@ -86,7 +86,7 @@ public class EventsManagerFragment extends BaseFragment {
             }
             return false;
         });
-        binding.activityEvents.setOnClickListener(v -> openFragment(new EventsManagerDetailsFragment()));
+        binding.activityEvents.setOnClickListener(v -> openFragment(R.id.settings_fragment_container, new EventsManagerDetailsFragment()));
         binding.activityEventsDescription.setText(getNumOfEvents(""));
         binding.fabNewListener.setOnClickListener(v -> showAddNewListenerDialog());
         refreshList();
@@ -347,7 +347,7 @@ public class EventsManagerFragment extends BaseFragment {
             holder.binding.eventTitle.setText(name);
             holder.binding.eventSubtitle.setText(getNumOfEvents(name));
 
-            holder.itemView.setOnClickListener(v -> openFragment(EventsManagerDetailsFragment.newInstance(name)));
+            holder.itemView.setOnClickListener(v -> openFragment(R.id.settings_fragment_container, EventsManagerDetailsFragment.newInstance(name)));
 
             holder.itemView.setOnLongClickListener(v -> {
                 new MaterialAlertDialogBuilder(context)
