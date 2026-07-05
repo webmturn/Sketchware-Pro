@@ -116,7 +116,6 @@ import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.InjectAttributeHandler;
 import pro.sketchware.util.InvokeUtil;
 import pro.sketchware.util.PropertiesUtil;
-import pro.sketchware.util.ResourceUtil;
 import pro.sketchware.util.SvgUtils;
 import pro.sketchware.util.ThemeUtils;
 
@@ -1386,8 +1385,7 @@ public class ViewPane extends RelativeLayout {
         if (textFont != null && !textFont.isEmpty()) {
             if (textFont.startsWith("@font/")) {
                 textFont = textFont.substring(6);
-                String textFontPath =
-                        new ResourceUtil(sc_id, "font").getResourcePathFromName(textFont);
+                String textFontPath = resourcesManager != null ? resourcesManager.getFontPath(textFont) : "";
                 textView.setTypeface(
                         textFontPath != null
                                 && !textFontPath.isEmpty()

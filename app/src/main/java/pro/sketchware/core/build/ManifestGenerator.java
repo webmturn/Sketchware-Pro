@@ -34,7 +34,7 @@ import pro.sketchware.core.codegen.AndroidManifestInjector;
 import pro.sketchware.util.library.BuiltInLibraries;
 import pro.sketchware.util.library.BuiltInLibraryManager;
 import pro.sketchware.util.FilePathUtil;
-import pro.sketchware.util.FileResConfig;
+import pro.sketchware.core.project.FileResConfig;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.xml.XmlBuilder;
 

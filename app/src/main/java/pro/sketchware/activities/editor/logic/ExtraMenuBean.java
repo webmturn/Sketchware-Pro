@@ -47,7 +47,7 @@ import pro.sketchware.lib.base.BaseTextWatcher;
 import pro.sketchware.lib.highlighter.SimpleHighlighter;
 import pro.sketchware.util.CustomVariableUtil;
 import pro.sketchware.util.FilePathUtil;
-import pro.sketchware.util.FileResConfig;
+import pro.sketchware.core.project.FileResConfig;
 import pro.sketchware.util.FileUtil;
 
 public class ExtraMenuBean {

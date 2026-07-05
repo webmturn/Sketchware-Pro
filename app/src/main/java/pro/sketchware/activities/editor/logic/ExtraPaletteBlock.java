@@ -40,7 +40,7 @@ import pro.sketchware.core.resources.StringResourceResolver;
 import pro.sketchware.util.CustomVariableUtil;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.codegen.StringResource;
-import pro.sketchware.util.FileResConfig;
+import pro.sketchware.core.project.FileResConfig;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 

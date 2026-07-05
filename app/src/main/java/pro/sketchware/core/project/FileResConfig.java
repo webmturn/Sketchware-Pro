@@ -1,10 +1,12 @@
-package pro.sketchware.util;
+package pro.sketchware.core.project;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import java.util.ArrayList;
 
+import pro.sketchware.util.FilePathUtil;
+import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.Helper;
 import pro.sketchware.util.LogUtil;
 

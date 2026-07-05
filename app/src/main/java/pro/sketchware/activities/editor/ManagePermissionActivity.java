@@ -23,7 +23,7 @@ import pro.sketchware.databinding.ManagePermissionBinding;
 import pro.sketchware.databinding.ViewItemPermissionBinding;
 import pro.sketchware.lib.base.BaseTextWatcher;
 import pro.sketchware.util.FilePathUtil;
-import pro.sketchware.util.FileResConfig;
+import pro.sketchware.core.project.FileResConfig;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.UI;
 
