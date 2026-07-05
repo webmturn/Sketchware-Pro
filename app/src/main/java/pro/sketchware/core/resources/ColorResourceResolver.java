@@ -40,7 +40,7 @@ public class ColorResourceResolver {
 
     public ColorResourceResolver(String projectId) {
         this.projectId = projectId;
-        material3LibraryManager = new Material3LibraryManager(projectId);
+        material3LibraryManager = projectId == null || projectId.isEmpty() ? null : new Material3LibraryManager(projectId);
         loadProjectColors();
     }
 
@@ -108,6 +108,9 @@ public class ColorResourceResolver {
     }
 
     public Integer getColorIntFromAttrs(Context context, String attrName, int referencingLimit, boolean isNightVariant) {
+        if (material3LibraryManager == null) {
+            return null;
+        }
         try {
             int attrId = context.getResources().getIdentifier(attrName, "attr", context.getPackageName());
 

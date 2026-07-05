@@ -36,7 +36,7 @@ import pro.sketchware.activities.editor.makeblock.ReturnMoreblockManager;
 import pro.sketchware.activities.settings.ConfigActivity;
 import pro.sketchware.core.build.ViewBindingBuilder;
 import pro.sketchware.R;
-import pro.sketchware.activities.resourceseditor.components.utils.StringsEditorManager;
+import pro.sketchware.core.resources.StringResourceResolver;
 import pro.sketchware.util.CustomVariableUtil;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.codegen.StringResource;
@@ -1004,17 +1004,18 @@ public class ExtraPaletteBlock {
 
         switch (paletteId) {
             case -1:
+                StringResourceResolver stringResourceResolver = new StringResourceResolver();
                 if (cachedStringsListMap == null) {
                     cachedStringsListMap = new ArrayList<>();
                     String filePath = SketchwarePaths.getDataPath(sc_id) + "/files/resource/values/strings.xml";
-                    new StringsEditorManager().convertXmlStringsToListMap(FileUtil.readFileIfExist(filePath), cachedStringsListMap);
+                    stringResourceResolver.convertXmlStringsToListMap(FileUtil.readFileIfExist(filePath), cachedStringsListMap);
                 }
 
                 logicEditor.addPaletteLabel(Helper.getResString(R.string.logic_editor_panel_button_open_resources_editor), "openResourcesEditor");
 
                 logicEditor.createPaletteBlock("s", "getResString");
                 logicEditor.addPaletteCategory(Helper.getResString(R.string.logic_editor_category_saved_res_strings), getTitleBgColor());
-                if (!new StringsEditorManager().isXmlStringsExist(cachedStringsListMap, "app_name")) {
+                if (!stringResourceResolver.isXmlStringsExist(cachedStringsListMap, "app_name")) {
                     logicEditor.createPaletteBlockWithSpec("app_name", "s", "getResStr").setTag("S98ZCSapp_name");
                 }
 

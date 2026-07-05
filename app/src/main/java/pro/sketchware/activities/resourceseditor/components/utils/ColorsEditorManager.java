@@ -1,6 +1,5 @@
 package pro.sketchware.activities.resourceseditor.components.utils;
 
-import static pro.sketchware.activities.design.DesignActivity.sc_id;
 import static pro.sketchware.util.ProjectFile.getDefaultColor;
 
 import org.w3c.dom.Document;
@@ -37,7 +36,7 @@ public class ColorsEditorManager extends ColorResourceResolver {
     public HashMap<Integer, String> notesMap = new HashMap<>();
 
     public ColorsEditorManager() {
-        this(sc_id);
+        this(null);
     }
 
     public ColorsEditorManager(String projectId) {
@@ -46,6 +45,7 @@ public class ColorsEditorManager extends ColorResourceResolver {
 
     public void parseColorsXML(ArrayList<ColorModel> colorList, String colorXml) {
         isDataLoadingFailed = false;
+        String safeColorXml = colorXml == null ? "" : colorXml;
         ArrayList<String> foundPrimaryColors = new ArrayList<>();
         ArrayList<ColorModel> colorOrderList = new ArrayList<>();
         ArrayList<ColorModel> otherColors = new ArrayList<>();
@@ -57,7 +57,7 @@ public class ColorsEditorManager extends ColorResourceResolver {
             // Parse the XML using DocumentBuilder
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(new InputSource(new StringReader(colorXml)));
+            Document document = builder.parse(new InputSource(new StringReader(safeColorXml)));
             document.getDocumentElement().normalize();
 
             NodeList childNodes = document.getDocumentElement().getChildNodes();
@@ -113,12 +113,12 @@ public class ColorsEditorManager extends ColorResourceResolver {
             }
 
             // Save the updated XML if changes are detected
-            if (hasChanges) {
+            if (hasChanges && getProjectId() != null) {
                 XmlUtil.saveXml(SketchwarePaths.getDataPath(getProjectId()) + "/files/resource/values/colors.xml", convertListToXml(colorList, notesMap));
             }
 
         } catch (Exception e) {
-            isDataLoadingFailed = !colorXml.trim().isEmpty();
+            isDataLoadingFailed = !safeColorXml.trim().isEmpty();
         }
     }
 

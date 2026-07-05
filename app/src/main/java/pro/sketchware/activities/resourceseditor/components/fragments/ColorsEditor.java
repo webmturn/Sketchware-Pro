@@ -143,7 +143,7 @@ public class ColorsEditor extends Fragment {
         defaultColors.put("colorControlHighlight", ProjectFile.COLOR_CONTROL_HIGHLIGHT);
         defaultColors.put("colorControlNormal", ProjectFile.COLOR_CONTROL_NORMAL);
 
-        colorsEditorManager = new ColorsEditorManager();
+        colorsEditorManager = new ColorsEditorManager(activity.sc_id);
         colorsEditorManager.defaultColors = defaultColors;
     }
 

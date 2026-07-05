@@ -394,7 +394,7 @@ public class ManageResourceActivity extends BaseAppCompatActivity {
                     if (FileUtil.isImageFile(path)) {
                         Glide.with(ManageResourceActivity.this).load(new File(path)).into(binding.icon);
                     } else if (path.endsWith(".xml") && "drawable".equals(getLastDirectory(path))) {
-                        new VectorDrawableLoader().setImageVectorFromFile(binding.icon, path);
+                        new VectorDrawableLoader().setImageVectorFromFile(binding.icon, path, numProj);
                     } else {
                         binding.icon.setImageResource(R.drawable.ic_mtrl_file);
                     }

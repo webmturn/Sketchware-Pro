@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import pro.sketchware.beans.ProjectResourceBean;
-import pro.sketchware.activities.design.DesignActivity;
 import com.bumptech.glide.Glide;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -176,7 +175,7 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
         SearchWithRecyclerViewBinding binding = SearchWithRecyclerViewBinding.inflate(LayoutInflater.from(getContext()));
 
         ArrayList<String> images = ProjectDataManager.getResourceManager(scId).getImageNames();
-        images.addAll(new VectorDrawableLoader().getVectorDrawables(DesignActivity.sc_id));
+        images.addAll(new VectorDrawableLoader().getVectorDrawables(scId));
         images.add(0, useDefaultImage ? "default_image" : "NONE");
 
         ImagePickerAdapter adapter = new ImagePickerAdapter(images, value);
@@ -305,7 +304,7 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
                     }
                 } else {
                     VectorDrawableLoader vectorDrawableLoader = new VectorDrawableLoader();
-                    vectorDrawableLoader.setImageVectorFromFile(imageView, vectorDrawableLoader.getVectorFullPath(DesignActivity.sc_id, image));
+                    vectorDrawableLoader.setImageVectorFromFile(imageView, vectorDrawableLoader.getVectorFullPath(scId, image), scId);
                 }
             }
         } catch (Exception e) {

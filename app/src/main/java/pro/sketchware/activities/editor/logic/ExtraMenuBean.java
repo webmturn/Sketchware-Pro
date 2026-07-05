@@ -42,7 +42,7 @@ import pro.sketchware.util.Helper;
 import pro.sketchware.activities.settings.ConfigActivity;
 import pro.sketchware.dialogs.AsdDialog;
 import pro.sketchware.R;
-import pro.sketchware.activities.resourceseditor.components.utils.StringsEditorManager;
+import pro.sketchware.core.resources.StringResourceResolver;
 import pro.sketchware.lib.base.BaseTextWatcher;
 import pro.sketchware.lib.highlighter.SimpleHighlighter;
 import pro.sketchware.util.CustomVariableUtil;
@@ -598,10 +598,10 @@ public class ExtraMenuBean {
 
                 String filePath = SketchwarePaths.getProjectResourceValuesFilePath(sc_id, "strings.xml");
                 ArrayList<HashMap<String, Object>> StringsListMap = new ArrayList<>();
-                StringsEditorManager stringsEditorManager = new StringsEditorManager();
-                stringsEditorManager.convertXmlStringsToListMap(FileUtil.readFileIfExist(filePath), StringsListMap);
+                StringResourceResolver stringResourceResolver = new StringResourceResolver();
+                stringResourceResolver.convertXmlStringsToListMap(FileUtil.readFileIfExist(filePath), StringsListMap);
 
-                if (!stringsEditorManager.isXmlStringsExist(StringsListMap, "app_name")) {
+                if (!stringResourceResolver.isXmlStringsExist(StringsListMap, "app_name")) {
                     menus.add("R.string.app_name");
                 }
                 for (HashMap<String, Object> map : StringsListMap) {

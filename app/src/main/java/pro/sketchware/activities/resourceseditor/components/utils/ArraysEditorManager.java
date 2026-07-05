@@ -18,9 +18,9 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import pro.sketchware.activities.resourceseditor.ResourcesEditorActivity;
 import pro.sketchware.activities.resourceseditor.components.fragments.ArraysEditor.ARRAYS_TYPES;
 import pro.sketchware.activities.resourceseditor.components.models.ArrayModel;
+import pro.sketchware.util.XmlUtil;
 
 public class ArraysEditorManager {
 
@@ -46,7 +46,7 @@ public class ArraysEditorManager {
             for (Map.Entry<String, String> entry : array.getAttributes().entrySet()) {
                 String itemName = entry.getKey().isEmpty() ? "item" + itemIndex : entry.getKey();
                 xml.append("        <item name=\"").append(itemName).append("\">")
-                        .append(ResourcesEditorActivity.escapeXml(entry.getValue())).append("</item>\n");
+                        .append(XmlUtil.escapeXml(entry.getValue())).append("</item>\n");
                 itemIndex++;
             }
 

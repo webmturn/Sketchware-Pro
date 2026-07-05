@@ -18,8 +18,8 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import pro.sketchware.activities.resourceseditor.ResourcesEditorActivity;
 import pro.sketchware.activities.resourceseditor.components.models.StyleModel;
+import pro.sketchware.util.XmlUtil;
 
 public class StylesEditorManager {
 
@@ -48,7 +48,7 @@ public class StylesEditorManager {
 
             Map<String, String> attributes = style.getAttributes();
             for (Map.Entry<String, String> entry : attributes.entrySet()) {
-                xmlBuilder.append("        <item name=\"").append(entry.getKey()).append("\">").append(ResourcesEditorActivity.escapeXml(entry.getValue())).append("</item>\n");
+                xmlBuilder.append("        <item name=\"").append(entry.getKey()).append("\">").append(XmlUtil.escapeXml(entry.getValue())).append("</item>\n");
             }
 
             xmlBuilder.append("    </style>\n");

@@ -1,7 +1,5 @@
 package pro.sketchware.graphics;
 
-import static pro.sketchware.activities.design.DesignActivity.sc_id;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -285,11 +283,22 @@ public class VectorDrawableParser {
     private final ArrayList<Path> paths = new ArrayList<>();
     private final ArrayList<ClipPath> clipPaths = new ArrayList<>();
 
+    private final String projectId;
     private ColorResourceResolver colors;
     private String colorsXmlPath = "";
     private String loadedColorsXmlPath = "";
 
     public VectorDrawableParser(String vectorDrawableAsString) {
+        this(vectorDrawableAsString, null);
+    }
+
+    public VectorDrawableParser(String vectorDrawableAsString, String projectId) {
+        this(vectorDrawableAsString, projectId, null);
+    }
+
+    public VectorDrawableParser(String vectorDrawableAsString, String projectId, String colorsXmlPath) {
+        this.projectId = projectId;
+        this.colorsXmlPath = colorsXmlPath == null ? "" : colorsXmlPath;
         if (!isValidVector(vectorDrawableAsString)) {
             throw new IllegalArgumentException("Not a valid VectorDrawable XML.");
         }
@@ -382,7 +391,7 @@ public class VectorDrawableParser {
     }
 
     private ColorResourceResolver colors() {
-        if (colors == null) colors = new ColorResourceResolver(sc_id);
+        if (colors == null) colors = new ColorResourceResolver(projectId);
         ensureColorsXmlPath();
         if (!isEmpty(colorsXmlPath) && !colorsXmlPath.equals(loadedColorsXmlPath)) {
             colors.loadColorsFromPath(colorsXmlPath, false);
@@ -392,14 +401,14 @@ public class VectorDrawableParser {
     }
 
     private void ensureColorsXmlPath() {
-        if (!isEmpty(colorsXmlPath)) return;
+        if (!isEmpty(colorsXmlPath) || isEmpty(projectId)) return;
 
-        String p1 = SketchwarePaths.getDataPath(sc_id) + "/files/resource/values/colors.xml";
+        String p1 = SketchwarePaths.getDataPath(projectId) + "/files/resource/values/colors.xml";
         if (FileUtil.isExistFile(p1)) {
             colorsXmlPath = p1;
             return;
         }
-        String p2 = SketchwarePaths.getMyscPath(sc_id) + "/app/src/main/res/values/colors.xml";
+        String p2 = SketchwarePaths.getMyscPath(projectId) + "/app/src/main/res/values/colors.xml";
         if (FileUtil.isExistFile(p2)) {
             colorsXmlPath = p2;
         }

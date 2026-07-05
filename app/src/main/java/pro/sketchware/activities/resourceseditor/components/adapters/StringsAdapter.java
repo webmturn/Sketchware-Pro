@@ -1,6 +1,5 @@
 package pro.sketchware.activities.resourceseditor.components.adapters;
 
-import static pro.sketchware.activities.design.DesignActivity.sc_id;
 import static pro.sketchware.activities.editor.LogicEditorActivity.getAllJavaFileNames;
 import static pro.sketchware.activities.editor.LogicEditorActivity.getAllXmlFileNames;
 import static pro.sketchware.util.UI.animateLayoutChanges;
@@ -197,11 +196,11 @@ public class StringsAdapter extends RecyclerView.Adapter<StringsAdapter.ViewHold
     }
 
     public boolean isXmlStringUsed(String key) {
-        if ("app_name".equals(key) || sc_id == null) {
+        if ("app_name".equals(key) || activity.sc_id == null) {
             return false;
         }
 
-        String projectScId = sc_id;
+        String projectScId = activity.sc_id;
         ProjectDataStore projectDataManager = ProjectDataManager.getProjectDataManager(projectScId);
 
         return isStringUsedInJavaFiles(projectScId, projectDataManager, key) || isStringUsedInXmlFiles(projectScId, projectDataManager, key);

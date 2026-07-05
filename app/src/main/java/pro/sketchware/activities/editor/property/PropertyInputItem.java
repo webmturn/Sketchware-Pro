@@ -64,7 +64,7 @@ import pro.sketchware.util.MapValueHelper;
 import pro.sketchware.util.Helper;
 import pro.sketchware.util.LogUtil;
 import pro.sketchware.R;
-import pro.sketchware.activities.resourceseditor.components.utils.StringsEditorManager;
+import pro.sketchware.core.resources.StringResourceResolver;
 import pro.sketchware.databinding.PropertyInputItemBinding;
 import pro.sketchware.databinding.PropertyPopupHybridBinding;
 import pro.sketchware.databinding.PropertyPopupInputTextBinding;
@@ -623,10 +623,10 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
 
     private void loadStringsListMap() {
         String filePath = SketchwarePaths.getProjectResourceValuesFilePath(sc_id, "strings.xml");
-        StringsEditorManager stringsEditorManager = new StringsEditorManager();
-        stringsEditorManager.convertXmlStringsToListMap(FileUtil.readFileIfExist(filePath), stringsListMap);
+        StringResourceResolver stringResourceResolver = new StringResourceResolver();
+        stringResourceResolver.convertXmlStringsToListMap(FileUtil.readFileIfExist(filePath), stringsListMap);
 
-        if (!stringsEditorManager.isXmlStringsExist(stringsListMap, "app_name") &&
+        if (!stringResourceResolver.isXmlStringsExist(stringsListMap, "app_name") &&
                 filePath != null) {
             HashMap<String, Object> map = new HashMap<>();
             map.put("key", "app_name");

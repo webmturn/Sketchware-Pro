@@ -57,11 +57,29 @@ public class VectorDrawableLoader {
     }
 
     public void setImageVectorFromFile(ImageView imageView, String filePath) throws Exception {
-        VectorDrawableParser attrs = new VectorDrawableParser(FileUtil.readFile(filePath));
+        setImageVectorFromFile(imageView, filePath, null);
+    }
+
+    public void setImageVectorFromFile(ImageView imageView, String filePath, String projectId) throws Exception {
+        VectorDrawableParser attrs = new VectorDrawableParser(FileUtil.readFile(filePath), projectId, getColorsXmlPath(filePath));
         String svg = attrs.toSvg();
 
         SVG svgObj = SVG.getFromString(svg);
         Picture picture = svgObj.renderToPicture();
         imageView.setImageDrawable(new PictureDrawable(picture));
+    }
+
+    private String getColorsXmlPath(String vectorDrawablePath) {
+        if (vectorDrawablePath == null || vectorDrawablePath.isEmpty()) return "";
+
+        File directory = new File(vectorDrawablePath).getParentFile();
+        while (directory != null) {
+            if ("resource".equals(directory.getName())) {
+                File colorsFile = new File(new File(directory, "values"), "colors.xml");
+                return colorsFile.isFile() ? colorsFile.getAbsolutePath() : "";
+            }
+            directory = directory.getParentFile();
+        }
+        return "";
     }
 }

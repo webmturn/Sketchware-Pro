@@ -1,0 +1,121 @@
+package pro.sketchware.core.resources;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+
+import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import pro.sketchware.util.XmlUtil;
+
+public class StringResourceResolver {
+
+    public boolean isDataLoadingFailed;
+    public boolean hasAppNameKey;
+    public HashMap<Integer, String> notesMap = new HashMap<>();
+
+    public void convertXmlStringsToListMap(final String xmlString, final ArrayList<HashMap<String, Object>> listMap) {
+        isDataLoadingFailed = false;
+        hasAppNameKey = false;
+        String safeXmlString = xmlString == null ? "" : xmlString;
+        try {
+            listMap.clear();
+            notesMap.clear();
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            ByteArrayInputStream input = new ByteArrayInputStream(safeXmlString.getBytes(StandardCharsets.UTF_8));
+            Document doc = builder.parse(new InputSource(input));
+            Element root = doc.getDocumentElement();
+            if (root == null) return;
+            root.normalize();
+            NodeList childNodes = root.getChildNodes();
+            for (int i = 0; i < childNodes.getLength(); i++) {
+                Node node = childNodes.item(i);
+                if (node.getNodeType() == Node.COMMENT_NODE) {
+                    notesMap.merge(listMap.size(), node.getNodeValue().trim(), (a, b) -> a + "\n" + b);
+                } else if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals("string")) {
+                    addToListMap(listMap, (Element) node);
+                }
+            }
+        } catch (Exception ignored) {
+            isDataLoadingFailed = !safeXmlString.trim().isEmpty();
+        }
+    }
+
+    private void addToListMap(ArrayList<HashMap<String, Object>> list, Element node) {
+        HashMap<String, Object> map = new HashMap<>();
+        String key = node.getAttribute("name");
+        String value = node.getTextContent().replace("\\", "");
+        map.put("key", key);
+        map.put("text", value);
+
+        for (int i = 0; i < node.getAttributes().getLength(); i++) {
+            Node attr = node.getAttributes().item(i);
+            String attrName = attr.getNodeName();
+            String attrValue = attr.getNodeValue();
+
+            if (!attrName.equals("name")) {
+                map.put(attrName, attrValue);
+            }
+        }
+
+        if (key.equals("app_name")) {
+            hasAppNameKey = true;
+            list.add(0, map);
+        } else {
+            list.add(map);
+        }
+    }
+
+    public boolean isXmlStringsExist(ArrayList<HashMap<String, Object>> listMap, String value) {
+        for (Map<String, Object> map : listMap) {
+            if (map.containsKey("key") && value.equals(map.get("key"))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public String convertListMapToXmlStrings(final ArrayList<HashMap<String, Object>> listMap, HashMap<Integer, String> notesMap) {
+        StringBuilder xmlString = new StringBuilder();
+        xmlString.append("<resources>\n");
+        for (int i = 0; i < listMap.size(); i++) {
+            if (notesMap.containsKey(i)) {
+                for (String comment : notesMap.get(i).split("\n")) {
+                    xmlString.append("    <!-- ").append(comment).append(" -->\n");
+                }
+            }
+            HashMap<String, Object> map = listMap.get(i);
+            Object keyValue = map.get("key");
+            String key = keyValue != null ? keyValue.toString() : "";
+            Object textValue = map.getOrDefault("text", "");
+            String text = textValue != null ? textValue.toString() : "";
+            String escapedText = XmlUtil.escapeXml(text);
+            xmlString.append("    <string name=\"").append(key).append("\"");
+            for (String mapKey : map.keySet()) {
+                if (mapKey.equals("text") || mapKey.equals("key")) continue;
+                Object translatableValue = map.get(mapKey);
+                String translatable = translatableValue != null ? translatableValue.toString() : "";
+                xmlString.append(" ").append(mapKey).append("=\"").append(translatable).append("\"");
+            }
+            xmlString.append(">").append(escapedText).append("</string>\n");
+        }
+        if (notesMap.containsKey(listMap.size())) {
+            for (String comment : notesMap.get(listMap.size()).split("\n")) {
+                xmlString.append("    <!-- ").append(comment).append(" -->\n");
+            }
+        }
+
+        xmlString.append("</resources>");
+        return xmlString.toString();
+    }
+}

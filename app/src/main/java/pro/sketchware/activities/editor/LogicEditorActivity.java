@@ -59,7 +59,6 @@ import pro.sketchware.beans.HistoryBlockBean;
 import pro.sketchware.beans.MoreBlockCollectionBean;
 import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.beans.ViewBean;
-import pro.sketchware.activities.design.DesignActivity;
 import pro.sketchware.activities.editor.component.AddComponentBottomSheet;
 import pro.sketchware.activities.editor.logic.BlockPane;
 import pro.sketchware.activities.editor.logic.LogicTopMenu;
@@ -591,7 +590,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             }
         } else {
             try {
-                new VectorDrawableLoader().setImageVectorFromFile(imageView, new VectorDrawableLoader().getVectorFullPath(DesignActivity.sc_id, name));
+                new VectorDrawableLoader().setImageVectorFromFile(imageView, new VectorDrawableLoader().getVectorFullPath(scId, name), scId);
             } catch (Exception e) {
                 imageView.setImageResource(R.drawable.ic_remove_grey600_24dp);
             }
@@ -831,7 +830,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         ArrayList<String> images = ProjectDataManager.getResourceManager(scId).getImageNames();
-        images.addAll(new VectorDrawableLoader().getVectorDrawables(DesignActivity.sc_id));
+        images.addAll(new VectorDrawableLoader().getVectorDrawables(scId));
         if (selectingImage) {
             images.add(0, "default_image");
         } else if (selectingBackgroundImage) {

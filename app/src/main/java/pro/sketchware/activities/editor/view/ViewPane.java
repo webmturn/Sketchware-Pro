@@ -40,7 +40,6 @@ import pro.sketchware.beans.ImageBean;
 import pro.sketchware.beans.LayoutBean;
 import pro.sketchware.beans.ProjectResourceBean;
 import pro.sketchware.beans.ViewBean;
-import pro.sketchware.activities.design.DesignActivity;
 import pro.sketchware.util.library.Material3LibraryManager;
 import pro.sketchware.activities.editor.view.item.ItemAdView;
 import pro.sketchware.activities.editor.view.item.ItemBottomNavigationView;
@@ -110,7 +109,7 @@ import pro.sketchware.util.ProjectFile;
 import pro.sketchware.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.core.resources.ColorResourceResolver;
-import pro.sketchware.activities.resourceseditor.components.utils.StringsEditorManager;
+import pro.sketchware.core.resources.StringResourceResolver;
 import pro.sketchware.tools.InjectRootLayoutManager;
 import pro.sketchware.util.FilePathUtil;
 import pro.sketchware.util.FileUtil;
@@ -437,7 +436,7 @@ public class ViewPane extends RelativeLayout {
                                     fab.setImageDrawable(drawable);
                                 }
                             };
-                            vectorDrawableLoader.setImageVectorFromFile(tempImageView, vectorDrawableLoader.getVectorFullPath(DesignActivity.sc_id, viewBean.image.resName));
+                            vectorDrawableLoader.setImageVectorFromFile(tempImageView, vectorDrawableLoader.getVectorFullPath(sc_id, viewBean.image.resName), sc_id);
                         }
                     }
                 } catch (Exception exception) {
@@ -552,12 +551,12 @@ public class ViewPane extends RelativeLayout {
                             }
                         } else {
                             VectorDrawableLoader vectorDrawableLoader = new VectorDrawableLoader();
-                            vectorDrawableLoader.setImageVectorFromFile((ImageView) view, vectorDrawableLoader.getVectorFullPath(DesignActivity.sc_id, imgResName));
+                            vectorDrawableLoader.setImageVectorFromFile((ImageView) view, vectorDrawableLoader.getVectorFullPath(sc_id, imgResName), sc_id);
                         }
                     }
                 } catch (Exception vectorException) {
                     if (crashlytics != null) crashlytics.recordException(vectorException);
-                    FileUtil.deleteFile(new VectorDrawableLoader().getVectorFullPath(DesignActivity.sc_id, imgResName));
+                    FileUtil.deleteFile(new VectorDrawableLoader().getVectorFullPath(sc_id, imgResName));
                     viewBean.image.resName = "default_image";
                     ((ImageView) view).setImageResource(R.drawable.default_image);
                 }
@@ -1426,8 +1425,8 @@ public class ViewPane extends RelativeLayout {
             xmlStringCacheScId = sc_id;
             String filePath = SketchwarePaths.getDataPath(sc_id) + "/files/resource/values/strings.xml";
             ArrayList<HashMap<String, Object>> stringsListMap = new ArrayList<>();
-            StringsEditorManager stringsEditorManager = new StringsEditorManager();
-            stringsEditorManager.convertXmlStringsToListMap(FileUtil.readFileIfExist(filePath), stringsListMap);
+            StringResourceResolver stringResourceResolver = new StringResourceResolver();
+            stringResourceResolver.convertXmlStringsToListMap(FileUtil.readFileIfExist(filePath), stringsListMap);
             for (HashMap<String, Object> map : stringsListMap) {
                 Object keyObj = map.get("key");
                 Object textObj = map.get("text");

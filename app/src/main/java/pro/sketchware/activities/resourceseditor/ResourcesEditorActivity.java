@@ -49,6 +49,7 @@ import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.PropertiesUtil;
 import pro.sketchware.util.SketchwareUtil;
 import pro.sketchware.util.UI;
+import pro.sketchware.util.XmlUtil;
 
 public class ResourcesEditorActivity extends BaseAppCompatActivity {
 
@@ -74,14 +75,7 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
     private int currentTabPosition = 0;
 
     public static String escapeXml(String text) {
-        if (text == null) return "";
-        return text.replace("&", "&amp;")
-                .replace("<", "&lt;")
-                .replace(">", "&gt;")
-                .replace("\"", "&quot;")
-                .replace("'", "\\'")
-                .replace("\n", "&#10;")
-                .replace("\r", "&#13;");
+        return XmlUtil.escapeXml(text);
     }
 
     @Override
